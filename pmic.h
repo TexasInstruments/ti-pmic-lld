@@ -176,8 +176,8 @@ extern "C" {
 /* @} */
 
 /**
- *  \anchor Pmic_InstType
- *  \name PMIC Instance Type
+ *  \anchor Pmic_ValidParamCfg
+ *  \name  PMIC Config Structure Param Bits
  *
  *  @{
  */

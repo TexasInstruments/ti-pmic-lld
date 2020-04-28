@@ -33,7 +33,7 @@
 
 /**
  *  \ingroup DRV_PMIC_MODULE
- *  \defgroup DRV_PMIC_CORE_MODULE PMIC Driver Common Data types
+ *  \defgroup DRV_PMIC_CORE_MODULE PMIC Common Driver API
  *            This is PMIC driver common parameters and API
  *
  *  @{
@@ -84,7 +84,7 @@ extern "C" {
  * \brief: PMIC Recovery Counter Configuration
  *
  *  \param  cfgType       Recovery Counter Configuration Type as Counter
- *                        Threshold or CCounter Clear
+ *                        Threshold or Counter Clear
  *  \param  thrVal        Recovery Counter Threshold Value
  *  \param  clrVal        Recovery Counter Clear Value
  */

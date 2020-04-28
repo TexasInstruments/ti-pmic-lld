@@ -34,7 +34,7 @@
 /**
  *  \ingroup DRV_PMIC_MODULE
  *  \defgroup DRV_PMIC_TYPE_MODULE PMIC Driver Common Data types
- *            This is PMIC driver common parameters and API
+ *            This is PMIC driver common data types
  *
  *  @{
  */
