@@ -105,21 +105,12 @@ pmic_LIB_LIST += pmic
 
 
 #
-# RTC  test
+# Applications Specific scripts
 #
-export rtc_test_app_COMP_LIST = rtc_test_app
-rtc_test_app_RELPATH = ti/drv/pmic/test/rtc_test
-rtc_test_app_PATH = $(PDK_PMIC_COMP_PATH)/test/rtc_test
-export rtc_test_app_BOARD_DEPENDENCY = yes
-export rtc_test_app_CORE_DEPENDENCY = no
-export rtc_test_app_MAKEFILE = -f makefile IS_BAREMETAL=yes
-rtc_test_app_PKG_LIST = rtc_test_app
-rtc_test_app_INCLUDE = $(rtc_test_app_PATH)
-export rtc_test_app_BOARDLIST = = $(drvpmic_BOARDLIST)
-export rtc_test_app_$(SOC)_CORELIST = $(drvpmic_j721e_CORELIST)
 
-pmic_EXAMPLE_LIST += rtc_test_app
-
+#
+# Export Libraries and Apps to Build Env
+#
 export pmic_LIB_LIST
 export pmic_EXAMPLE_LIST
 export drvpmic_LIB_LIST = $(pmic_LIB_LIST)
