@@ -51,7 +51,8 @@ INCLUDE_EXTERNAL_INTERFACES = pdk
 SRCS_COMMON += pmic_core.c pmic_io.c
 
 PACKAGE_SRCS_COMMON = pmic.h pmic_component.mk makefile .gitignore include
-PACKAGE_SRCS_COMMON += $(SRCDIR)
+PACKAGE_SRCS_COMMON += src
+
 CFLAGS_LOCAL_COMMON = $(PDK_CFLAGS)
 
 # Core/SoC/platform specific source files and CFLAGS
