@@ -48,7 +48,8 @@ INCDIR = . include include/cfg/tps65941 src src/cfg/tps65941
 INCLUDE_EXTERNAL_INTERFACES = pdk
 
 # Common source files and CFLAGS across all platforms and cores
-SRCS_COMMON += pmic_core.c pmic_io.c pmic_gpio.c pmic_gpio_tps65941.c pmic_rtc.c
+SRCS_COMMON += pmic_core.c pmic_io.c pmic_gpio.c pmic_gpio_tps65941.c
+SRCS_COMMON += pmic_rtc.c pmic_irq_status.c
 
 PACKAGE_SRCS_COMMON = pmic.h pmic_component.mk makefile .gitignore include
 PACKAGE_SRCS_COMMON += src

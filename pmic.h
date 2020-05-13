@@ -62,6 +62,7 @@
 #include <pmic_core.h>
 #include <pmic_gpio.h>
 #include <pmic_rtc.h>
+#include <pmic_irq.h>
 
 #ifdef __cplusplus
 extern "C" {
