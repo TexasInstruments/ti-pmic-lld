@@ -41,14 +41,14 @@ include $(PDK_INSTALL_PATH)/ti/build/Rules.make
 
 
 SRCDIR = src src/cfg/tps65941
-INCDIR = . include include/cfg/tps65941 src
+INCDIR = . include include/cfg/tps65941 src src/cfg/tps65941
 
 # List all the external components/interfaces, whose interface header files
 # need to be included for this component
 INCLUDE_EXTERNAL_INTERFACES = pdk
 
 # Common source files and CFLAGS across all platforms and cores
-SRCS_COMMON += pmic_core.c pmic_io.c
+SRCS_COMMON += pmic_core.c pmic_io.c pmic_gpio.c pmic_gpio_tps65941.c pmic_rtc.c
 
 PACKAGE_SRCS_COMMON = pmic.h pmic_component.mk makefile .gitignore include
 PACKAGE_SRCS_COMMON += src
