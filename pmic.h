@@ -60,6 +60,7 @@
 /* ========================================================================= */
 #include <pmic_types.h>
 #include <pmic_core.h>
+#include <pmic_gpio.h>
 
 #ifdef __cplusplus
 extern "C" {
