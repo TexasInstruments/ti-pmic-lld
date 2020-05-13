@@ -32,7 +32,7 @@
  *****************************************************************************/
 /**
  *  \ingroup DRV_PMIC_GPIO_MODULE
- *  \defgroup DRV_PMIC_GPIO_MODULE PMIC GPIO Driver API for TPS65941 Leo PMIC
+ *  \defgroup DRV_PMIC_GPIO_LEO_MODULE PMIC GPIO TPS65941 Leo Driver API
  *            These are PMIC GPIO driver params and API for TPS65941 Leo PMIC
  *
  *  @{
