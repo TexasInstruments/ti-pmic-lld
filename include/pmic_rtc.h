@@ -535,6 +535,37 @@ int32_t  Pmic_rtcGetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle,
 int32_t  Pmic_rtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
                         uint8_t            enableRtc);
 
+/*!
+ * \brief   Enable/Disable the RTC Timer Interrupt.
+ *          This function is used to enable/disable the RTC timer interrupt.
+ *
+ * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
+ * \param   enableIntr        [IN]    Parameter to enable/disable Timer
+ *                                    Interrupt
+ *                                    Valid values: \ref Pmic_RtcTimerIntrEnable
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t  Pmic_rtcEnableTimerIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                 bool               enableIntr);
+
+/*!
+ * \brief   Enable/Disable the RTC Alarm Interrupt.
+ *          This function is used to enable/disable the RTC alarm interrupt.
+ *
+ * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
+ * \param   enableIntr        [IN]    Parameter to enable/disable alarm
+ *                                    Interrupt
+ *                                    Valid values: \ref Pmic_RtcAlramIntrEnable
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t  Pmic_rtcEnableAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                 bool               enableIntr);
+
+
 #ifdef __cplusplus
 }
 

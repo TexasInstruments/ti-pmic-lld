@@ -1328,6 +1328,39 @@ static int32_t Pmic_enableAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle)
                              PMIC_RTC_ALARM_INTR_ENABLE);
 
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                                PMIC_RTC_INTERRUPTS_REGADDR,
+                                                regData);
+        }
+    }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief   This function is used to enable the Alarm Interrupt.
+ */
+static int32_t Pmic_disableAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData    = 0U;
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        /* Disabling Alarm Interrupt */
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                            PMIC_RTC_INTERRUPTS_REGADDR,
+                                            &regData);
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            HW_REG_SET_FIELD(regData,
+                             PMIC_RTC_INTERRUPTS_IT_ALARM,
+                             PMIC_RTC_ALARM_INTR_DISABLE);
+
+            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                                PMIC_RTC_INTERRUPTS_REGADDR,
                                                regData);
         }
@@ -1795,6 +1828,74 @@ static int32_t Pmic_rtcStart(Pmic_CoreHandle_t *pPmicCoreHandle)
             /* RTC is still frozen */
             pmicStatus = PMIC_ST_ERR_RTC_STOP_FAIL;
         }
+    }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief   This function is used to enable the Alarm Interrupt.
+ */
+static int32_t Pmic_enableTimerIntr(Pmic_CoreHandle_t *pPmicCoreHandle)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData    = 0U;
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+            /* Enabling the RTC Timer Intr */
+            pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                                PMIC_RTC_INTERRUPTS_REGADDR,
+                                                &regData);
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                HW_REG_SET_FIELD(regData,
+                             PMIC_RTC_INTERRUPTS_IT_TIMER,
+                             PMIC_RTC_TIMER_INTR_ENABLE);
+
+                pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                                   PMIC_RTC_INTERRUPTS_REGADDR,
+                                                   regData);
+            }
+    }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief   This function is used to enable the Alarm Interrupt.
+ */
+static int32_t Pmic_disableTimerIntr(Pmic_CoreHandle_t *pPmicCoreHandle)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData    = 0U;
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+            /* Disabling the RTC Timer Intr */
+            pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                                PMIC_RTC_INTERRUPTS_REGADDR,
+                                                &regData);
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                HW_REG_SET_FIELD(regData,
+                                 PMIC_RTC_INTERRUPTS_IT_TIMER,
+                                 PMIC_RTC_TIMER_INTR_DISABLE);
+
+                pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                                   PMIC_RTC_INTERRUPTS_REGADDR,
+                                                   regData);
+            }
     }
 
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -2356,6 +2457,94 @@ int32_t  Pmic_rtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
         else
         {
             pmicStatus = Pmic_rtcStart(pPmicCoreHandle);
+        }
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief   Enable/Disable the RTC Alarm Interrupt.
+ *          This function is used to enable/disable the RTC alarm interrupt.
+ *
+ * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
+ * \param   enableIntr        [IN]    Parameter to enable/disable Alarm INTR.
+ *                                   Valid values: \ref Pmic_RtcAlramIntrEnable
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t  Pmic_rtcEnableAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                 bool               enableIntr)
+{
+    int32_t  pmicStatus  = PMIC_ST_SUCCESS;
+    /* Flag to define Critical section started or not */
+
+    if(NULL == pPmicCoreHandle)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        if(PMIC_RTC_ALARM_INTR_ENABLE == enableIntr)
+        {
+            pmicStatus = Pmic_enableAlarmIntr(pPmicCoreHandle);
+        }
+        else
+        {
+            pmicStatus = Pmic_disableAlarmIntr(pPmicCoreHandle);
+        }
+    }
+
+    return pmicStatus;
+}
+
+
+/*!
+ * \brief   Enable/Disable the RTC Timer Interrupt.
+ *          This function is used to enable/disable the RTC timer interrupt.
+ *
+ * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
+ * \param   enableIntr        [IN]    Parameter to enable/disable Timer INTR.
+ *                                   Valid values: \ref Pmic_RtcTimerIntrEnable
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t  Pmic_rtcEnableTimerIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                 bool               enableIntr)
+{
+    int32_t  pmicStatus  = PMIC_ST_SUCCESS;
+
+    if(NULL == pPmicCoreHandle)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        if(PMIC_RTC_TIMER_INTR_DISABLE == enableIntr)
+        {
+            /* Disabling the RTC Timer Intr */
+            pmicStatus = Pmic_disableTimerIntr(pPmicCoreHandle);
+        }
+        else
+        {
+            /* Enabling the RTC Timer Intr */
+            pmicStatus = Pmic_enableTimerIntr(pPmicCoreHandle);
         }
     }
 
