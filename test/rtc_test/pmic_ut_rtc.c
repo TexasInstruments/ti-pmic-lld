@@ -905,7 +905,7 @@ static bool test_pmic_rtc_time(void *pPmicCoreHandle)
 
     if((dateCfg.day          != dateCfg_rd.day)   ||
        (dateCfg.month        != dateCfg_rd.month) ||
-       ((dateCfg.year % 100) != dateCfg_rd.year)  ||
+       (dateCfg.year         != dateCfg_rd.year)  ||
        (dateCfg.week         != dateCfg_rd.week))
     {
         pmic_log("Failed %s with status: %d\n\t",__func__, status);
@@ -1236,7 +1236,7 @@ static bool test_pmic_rtc_setTimePrmValTest_year(void *pPmicCoreHandle)
     int32_t      status      = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t *handle = pPmicCoreHandle;
     Pmic_RtcTime_t timeCfg    = {0x0U, 30U, 30U, 6U, 0U, 1U};
-    Pmic_RtcDate_t dateCfg    = {PMIC_RTC_DATE_CFG_WEEK_VALID_SHIFT, 15U, 6U,
+    Pmic_RtcDate_t dateCfg    = {PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT, 15U, 6U,
                                  2055U, 1U};
 
     dateCfg.year              = PMIC_RTC_INVALID_YEAR;
@@ -1602,306 +1602,306 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
 {
     {
         test_pmic_rtc_alarmIntr,
-        TID_7373_T01_01,
+        5990,
         "SetRtcAlarmIntr : Set RTC Alarm interrupt"
     },
     {
         test_pmic_rtc_setAlarmIntrPrmValTest_handle,
-        TID_7373_T01_02,
+        5991,
         "SetRtcAlarmIntr : Parameter validation for 'handle'"
     },
     {
         test_pmic_rtc_setAlarmIntrPrmValTest_timeCfg,
-        TID_7373_T01_03,
+        6087,
         "SetRtcAlarmIntr : Parameter validation for 'timeCfg'"
     },
     {
         test_pmic_rtc_setAlarmIntrPrmValTest_dateCfg,
-        TID_7373_T01_04,
+        6088,
         "SetRtcAlarmIntr : Parameter validation for 'dataCfg'"
     },
     {
         test_pmic_rtc_setAlarmIntrPrmValTest_seconds,
-        TID_7373_T01_05,
+        6090,
         "SetRtcAlarmIntr : Parameter validation for 'seconds'"
     },
     {
         test_pmic_rtc_setAlarmIntrPrmValTest_minutes,
-        TID_7373_T01_06,
+        6091,
         "SetRtcAlarmIntr : Parameter validation for 'minutes'"
     },
     {
         test_pmic_rtc_setAlarmIntrPrmValTest_timeMode,
-        TID_7373_T01_07,
+        6092,
         "SetRtcAlarmIntr : Parameter validation for 'timeMode'"
     },
     {
         test_pmic_rtc_setAlarmIntrPrmValTest_meridianMode,
-        TID_7373_T01_08,
+        6093,
         "SetRtcAlarmIntr : Parameter validation for 'meridianMode'"
     },
     {
         test_pmic_rtc_setAlarmIntrPrmValTest_hour12,
-        TID_7373_T01_09,
+        6094,
         "SetRtcAlarmIntr : Parameter validation for 'hour' when 'timeMode' = 1"
     },
     {
         test_pmic_rtc_setAlarmIntrPrmValTest_hour24,
-        TID_7373_T01_10,
+        6095,
         "SetRtcAlarmIntr : Parameter validation for 'hour' when 'timeMode' = 0"
     },
     {
         test_pmic_rtc_setAlarmIntrPrmValTest_hour,
-        TID_7373_T01_11,
+        6096,
         "SetRtcAlarmIntr : Negative test for 'hour ' = 0, when 'timeMode' = 1" },
     {
         test_pmic_rtc_setAlarmIntrPrmValTest_month,
-        TID_7373_T01_12,
+        6099,
         "SetRtcAlarmIntr : Negative test for 'month ' = 0"
     },
     {
         test_pmic_rtc_setAlarmIntrPrmValTest_day,
-        TID_7373_T01_13,
+        6100,
         "SetRtcAlarmIntr : Negative test for 'day' = 0"
     },
     {
         test_pmic_rtc_setAlarmIntrPrmValTest_year,
-        TID_7373_T01_14,
+        6101,
         "SetRtcAlarmIntr : Parameter range validation for 'year'"
     },
     {
         test_pmic_rtc_setAlarmIntrPrmValTest_month_range,
-        TID_7373_T01_15,
+        6102,
         "SetRtcAlarmIntr : Parameter range validation for 'month'"
     },
     {
         test_pmic_rtc_setAlarmIntrPrmValTest_day_month,
-        TID_7373_T01_16,
+        6103,
         "SetRtcAlarmIntr : Parameter range validation for 'day' for months with 30 days"
     },
     {
         test_pmic_rtc_setAlarmIntrPrmValTest_feb_leapyear,
-        TID_7373_T01_17,
+        6104,
         "SetRtcAlarmIntr : Parameter range validation for 'day' for leap year('year' %4 = 0 ) and 'month' = 2 (february)"
     },
     {
         test_pmic_rtc_setAlarmIntrPrmValTest_feb_nonleapyear,
-        TID_7373_T01_18,
+        6107,
         "SetRtcAlarmIntr : Parameter range validation for 'day' for Non-leap year('year' %4 != 0 ) and 'month' = 2 (february)"
     },
     {
         test_pmic_rtc_setAlarmIntrPrmValTest_day_month31,
-        TID_7373_T01_19,
+        6108,
         "SetRtcAlarmIntr : Parameter range validation for 'day', for months with 31 days)"
     },
     {
         test_pmic_rtc_alarmIntr,
-        TID_7373_T01_20,
+        6109,
         "GetRtcAlarmIntr : Test Get RTC Alarm interrupt API"
     },
     {
         test_pmic_rtc_getAlarmIntrPrmValTest_handle,
-        TID_7373_T01_21,
+        6110,
         "GetRtcAlarmIntr : Parameter validation for 'handle'"
     },
     {
         test_pmic_rtc_getAlarmIntrPrmValTest_timeCfg,
-        TID_7373_T01_22,
+        6111,
         "GetRtcAlarmIntr : Parameter validation for 'timeCfg'"
     },
     {
         test_pmic_rtc_getAlarmIntrPrmValTest_dateCfg,
-        TID_7373_T01_23,
+        6112,
         "GetRtcAlarmIntr : Parameter validation for 'dataCfg'"
     },
     {
         test_pmic_rtc_timer,
-        TID_7373_T01_24,
+        6113,
         "SetRtcTimerIntr : Test Set RTC Timer interrupt"
     },
     {
         test_pmic_rtc_setTimerIntrPrmValTest_handle,
-        TID_7373_T01_25,
+        6114,
         "SetRtcTimerIntr : Parameter validation for 'handle'"
     },
     {
         test_pmic_rtc_setTimerIntrPrmValTest_timerPeriod,
-        TID_7373_T01_26,
+        6115,
         "SetRtcTimerIntr : Parameter validation for 'timerPeriod'"
     },
     {
         test_pmic_rtc_timer,
-        TID_7373_T01_27,
+        6116,
         "GetRtcTimer : Test Get RTC Timer interrupt"
     },
     {
         test_pmic_rtc_getTimerIntrPrmValTest_handle,
-        TID_7373_T01_28,
+        6117,
         "GetRtcTimer : Parameter validation for 'handle'"
     },
     {
         test_pmic_rtc_getTimerIntrPrmValTest_timerPeriod,
-        TID_7373_T01_29,
+        6118,
         "GetRtcTimer : Parameter validation for 'timerPeriod'"
     },
     {
         test_pmic_rtc_disable,
-        TID_7373_T01_30,
+        6119,
         "DisableRtc : Test RTC Disable"
     },
     {
         test_pmic_rtc_disablePrmValTest_handle,
-        TID_7373_T01_31,
+        6120,
         "DisableRtc : Parameter validation for 'handle'"
     },
     {
         test_pmic_rtc_enable,
-        TID_7373_T01_32,
+        6121,
         "EnableRtc : Test RTC Enable"
     },
     {
         test_pmic_rtc_enablePrmValTest_handle,
-        TID_7373_T01_33,
+        6122,
         "EnableRtc : Parameter validation for 'handle'"
     },
     {
         test_pmic_rtc_time,
-        TID_7373_T01_34,
+        6158,
         "SetRtc : Test RTC Set Time"
     },
     {
         test_pmic_rtc_setTimePrmValTest_handle,
-        TID_7373_T01_35,
+        6159,
         "SetRtc : Parameter validation for 'handle'"
     },
     {
         test_pmic_rtc_setTimePrmValTest_timeCfg,
-        TID_7373_T01_36,
+        6160,
         "SetRtc : Parameter validation for 'timeCfg'"
     },
     {
         test_pmic_rtc_setTimePrmValTest_dateCfg,
-        TID_7373_T01_37,
+        6161,
         "SetRtc : Parameter validation for 'dataCfg'"
     },
     {
         test_pmic_rtc_setTimePrmValTest_seconds,
-        TID_7373_T01_38,
+        6162,
         "SetRtc : Parameter validation for 'seconds'"
     },
     {
         test_pmic_rtc_setTimePrmValTest_minutes,
-        TID_7373_T01_39,
+        6163,
         "SetRtc : Parameter validation for 'minutes'"
     },
     {
         test_pmic_rtc_setTimePrmValTest_timeMode,
-        TID_7373_T01_40,
+        6164,
         "SetRtc : Parameter validation for 'timeMode'"
     },
     {
         test_pmic_rtc_setTimePrmValTest_meridianMode,
-        TID_7373_T01_41,
+        6165,
         "SetRtc : Parameter validation for 'meridianMode'"
     },
     {
         test_pmic_rtc_setTimePrmValTest_hour12,
-        TID_7373_T01_42,
+        6166,
         "SetRtc : Parameter validation for 'hour' when 'timeMode' = 1"
     },
     {
         test_pmic_rtc_setTimePrmValTest_hour24,
-        TID_7373_T01_43,
+        6167,
         "SetRtc : Parameter validation for 'hour' when 'timeMode' = 0"
     },
     {
         test_pmic_rtc_setTimePrmValTest_hour,
-        TID_7373_T01_44,
+        6168,
         "SetRtc : Negative test for 'hour ' = 0, when 'timeMode' = 1"
     },
     {
         test_pmic_rtc_setTimePrmValTest_month,
-        TID_7373_T01_45,
+        6169,
         "SetRtc : Negative test for 'month ' = 0"
     },
     {
         test_pmic_rtc_setTimePrmValTest_day,
-        TID_7373_T01_46,
+        6290,
         "SetRtc : Negative test for 'day' = 0"
     },
     {
         test_pmic_rtc_setTimePrmValTest_year,
-        TID_7373_T01_47,
+        6170,
         "SetRtc : Parameter range validation for 'year'"
     },
     {
         test_pmic_rtc_setTimePrmValTest_month_range,
-        TID_7373_T01_48,
+        6171,
         "SetRtc : Parameter range validation for 'month'"
     },
     {
        test_pmic_rtc_setTimePrmValTest_day_month,
-       TID_7373_T01_49,
+       6172,
        "SetRtc : Parameter range validation for 'day' for months with 30 days"
     },
     {
         test_pmic_rtc_setTimePrmValTest_feb_leapyear,
-        TID_7373_T01_50,
+        6173,
         "SetRtc : Parameter range validation for 'day' for leap year('year' %4 = 0 ) and 'month' = 2 (february)"
     },
     {
         test_pmic_rtc_setTimePrmValTest_feb_nonleapyear,
-        TID_7373_T01_51,
+        6174,
         "SetRtc : Parameter range validation for 'day' for Non-leap year('year' %4 != 0 ) and 'month' = 2 (february)"
     },
     {
         test_pmic_rtc_setTimePrmValTest_day_month31,
-        TID_7373_T01_52,
+        6175,
         "SetRtc : Parameter range validation for 'day', for months with 31 days)"
     },
     {
         test_pmic_rtc_time,
-        TID_7373_T01_53,
+        6176,
         "GetRtc : Test RTC Get Time"
     },
     {
         test_pmic_rtc_getTimePrmValTest_handle,
-        TID_7373_T01_54,
+        6177,
         "GetRtc : Parameter validation for 'handle'"
     },
     {
         test_pmic_rtc_getTimePrmValTest_timeCfg,
-        TID_7373_T01_55,
+        6178,
         "GetRtc : Parameter validation for 'timeCfg'"
     },
     {
         test_pmic_rtc_getTimePrmValTest_dateCfg,
-        TID_7373_T01_56,
+        6179,
         "GetRtc : Parameter validation for 'dataCfg'"
     },
     {
         test_pmic_rtc_setFreqComp,
-        TID_7373_T01_57,
+        6180,
         "SetRtcFreqCompen : Test RTC set RTC frequency compensation"
     },
     {
         test_pmic_rtc_setFreqCompPrmValTest_handle,
-        TID_7373_T01_58,
+        6181,
         "SetRtcFreqCompen : Parameter validation for 'handle'"
     },
     {
         test_pmic_rtc_getFreqComp,
-        TID_7373_T01_59,
+        6182,
         "GetRtcFreqCompen : Test RTC get RTC frequency compensation"
     },
     {
         test_pmic_rtc_getFreqCompPrmValTest_handle,
-        TID_7373_T01_60,
+        6183,
         "GetRtcFreqCompen : Parameter validation for 'handle'"
     },
     {
         test_pmic_rtc_getFreqCompPrmValTest_compensation,
-        TID_7373_T01_61,
+        6287,
         "GetRtcFreqCompen : Parameter validation for 'compensation'"
     },
     {
@@ -1955,9 +1955,6 @@ static void test_pmic_rtc_testApp(void)
 
     pmic_log("\n All tests have passed. \n");
 
-    while (true)
-    {
-    }
 }
 
 /*!

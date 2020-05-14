@@ -127,6 +127,24 @@ export pmic_rtc_testapp_SBL_APPIMAGEGEN
 pmic_EXAMPLE_LIST += pmic_rtc_testapp
 
 #
+# GPIO  test
+#
+export pmic_gpio_testapp_COMP_LIST = pmic_gpio_testapp
+pmic_gpio_testapp_RELPATH = ti/drv/pmic/test/gpio_test
+pmic_gpio_testapp_PATH = $(PDK_PMIC_COMP_PATH)/test/gpio_test
+export pmic_gpio_testapp_BOARD_DEPENDENCY = yes
+export pmic_gpio_testapp_CORE_DEPENDENCY = no
+export pmic_gpio_testapp_MAKEFILE = -f makefile IS_BAREMETAL=yes
+pmic_gpio_testapp_PKG_LIST = pmic_gpio_testapp
+pmic_gpio_testapp_INCLUDE = $(pmic_gpio_testapp_PATH)
+export pmic_gpio_testapp_BOARDLIST = $(drvpmic_BOARDLIST)
+export pmic_gpio_testapp_$(SOC)_CORELIST = $(drvpmic_$(SOC)_CORELIST)
+pmic_gpio_testapp_SBL_APPIMAGEGEN = yes
+export pmic_gpio_testapp_SBL_APPIMAGEGEN
+
+pmic_EXAMPLE_LIST += pmic_gpio_testapp
+
+#
 # Export Libraries and Apps to Build Env
 #
 export pmic_LIB_LIST

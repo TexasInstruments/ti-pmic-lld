@@ -548,16 +548,16 @@ static  void test_pmic_appDeInit(Pmic_CoreHandle_t *pmicCoreHandle)
 {
     if(PMIC_INTF_SINGLE_I2C == pmicCoreHandle->commMode)
     {
-        test_pmic_i2c_lld_intf_release(pmicCoreHandle->pCommHandle);
+        test_pmic_i2c_lld_intf_release(&pmicCoreHandle->pCommHandle);
     }
     else if(PMIC_INTF_DUAL_I2C == pmicCoreHandle->commMode)
     {
-        test_pmic_i2c_lld_intf_release(pmicCoreHandle->pCommHandle);
-        test_pmic_i2c_lld_intf_release(pmicCoreHandle->pQACommHandle);
+        test_pmic_i2c_lld_intf_release(&pmicCoreHandle->pCommHandle);
+        test_pmic_i2c_lld_intf_release(&pmicCoreHandle->pQACommHandle);
     }
     else if(PMIC_INTF_SPI  == pmicCoreHandle->commMode)
     {
-        test_pmic_spi_lld_intf_release(pmicCoreHandle->pCommHandle);
+        test_pmic_spi_lld_intf_release(&pmicCoreHandle->pCommHandle);
     }
 
     Pmic_deinit(pmicCoreHandle);
@@ -618,7 +618,7 @@ bool test_pmic_common(Pmic_Ut_Tests_t *pmicTestcase,
     pmic_log("%s(): %d: Running...\n", __func__, __LINE__);
 
     ret = test_pmic_appInit(&pmicCoreHandle, pmicCfgData);
-    TEST_ASSERT(PMIC_ST_SUCCESS == ret);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, ret);
 
     for (i = 0U; ; i++)
     {
