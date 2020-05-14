@@ -100,13 +100,31 @@ export pmic_CORE_DEPENDENCY = no
 pmic_PKG_LIST = pmic
 pmic_INCLUDE = $(pmic_PATH)
 export pmic_SOCLIST = $(drvpmic_SOCLIST)
-export pmic_$(SOC)_CORELIST =  $(drvpmic_j721e_CORELIST)
+export pmic_$(SOC)_CORELIST =  $(drvpmic_$(SOC)_CORELIST)
 pmic_LIB_LIST += pmic
 
 
 #
 # Applications Specific scripts
 #
+
+#
+# RTC  test
+#
+export pmic_rtc_testapp_COMP_LIST = pmic_rtc_testapp
+pmic_rtc_testapp_RELPATH = ti/drv/pmic/test/rtc_test
+pmic_rtc_testapp_PATH = $(PDK_PMIC_COMP_PATH)/test/rtc_test
+export pmic_rtc_testapp_BOARD_DEPENDENCY = yes
+export pmic_rtc_testapp_CORE_DEPENDENCY = no
+export pmic_rtc_testapp_MAKEFILE = -f makefile IS_BAREMETAL=yes
+pmic_rtc_testapp_PKG_LIST = pmic_rtc_testapp
+pmic_rtc_testapp_INCLUDE = $(pmic_rtc_testapp_PATH)
+export pmic_rtc_testapp_BOARDLIST = $(drvpmic_BOARDLIST)
+export pmic_rtc_testapp_$(SOC)_CORELIST = $(drvpmic_$(SOC)_CORELIST)
+pmic_rtc_testapp_SBL_APPIMAGEGEN = yes
+export pmic_rtc_testapp_SBL_APPIMAGEGEN
+
+pmic_EXAMPLE_LIST += pmic_rtc_testapp
 
 #
 # Export Libraries and Apps to Build Env

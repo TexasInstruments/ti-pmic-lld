@@ -417,8 +417,6 @@ static int32_t Pmic_rtcGetMeridianMode(Pmic_CoreHandle_t *pPmicCoreHandle,
                                                 &regData);
         }
 
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             /* Operation for Alarm */
@@ -436,6 +434,8 @@ static int32_t Pmic_rtcGetMeridianMode(Pmic_CoreHandle_t *pPmicCoreHandle,
             }
         }
     }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
 }
@@ -1863,6 +1863,8 @@ int32_t  Pmic_rtcSetAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
                               Pmic_RtcDate_t    *pDateCfg)
 {
     int32_t  pmicStatus  = PMIC_ST_SUCCESS;
+    Pmic_RtcTime_t timeCfg = {0U};
+    Pmic_RtcDate_t dateCfg = {0U};
 
     if(NULL == pPmicCoreHandle)
     {
@@ -1888,22 +1890,25 @@ int32_t  Pmic_rtcSetAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
         pmicStatus = PMIC_ST_ERR_INSUFFICIENT_CFG;
     }
 
+    timeCfg = *pTimeCfg;
+    dateCfg = *pDateCfg;
+
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         /* Verify time and date */
-        pmicStatus = Pmic_rtcCheckDateTime(pPmicCoreHandle, pTimeCfg, pDateCfg);
+        pmicStatus = Pmic_rtcCheckDateTime(pPmicCoreHandle, &timeCfg, &dateCfg);
     }
 
     /* Set Alarm Time */
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = Pmic_alarmSetTime(pPmicCoreHandle, pTimeCfg);
+        pmicStatus = Pmic_alarmSetTime(pPmicCoreHandle, &timeCfg);
     }
 
     /* Set Alarmr Date */
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = Pmic_alarmSetDate(pPmicCoreHandle, pDateCfg);
+        pmicStatus = Pmic_alarmSetDate(pPmicCoreHandle, &dateCfg);
     }
 
     /* Enable Alarm Interrupt */
@@ -2105,6 +2110,8 @@ int32_t  Pmic_rtcSetTimeDateInfo(Pmic_CoreHandle_t *pPmicCoreHandle,
                                  Pmic_RtcDate_t    *pDateCfg)
 {
     int32_t  pmicStatus  = PMIC_ST_SUCCESS;
+    Pmic_RtcTime_t timeCfg = {0U};
+    Pmic_RtcDate_t dateCfg = {0U};
 
     if(NULL == pPmicCoreHandle)
     {
@@ -2130,10 +2137,13 @@ int32_t  Pmic_rtcSetTimeDateInfo(Pmic_CoreHandle_t *pPmicCoreHandle,
         pmicStatus = PMIC_ST_ERR_INSUFFICIENT_CFG;
     }
 
+    timeCfg = *pTimeCfg;
+    dateCfg = *pDateCfg;
+
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         /* Caliing the function to validate the time and date for errors */
-        pmicStatus = Pmic_rtcCheckDateTime(pPmicCoreHandle, pTimeCfg, pDateCfg);
+        pmicStatus = Pmic_rtcCheckDateTime(pPmicCoreHandle, &timeCfg, &dateCfg);
     }
 
     if(PMIC_ST_SUCCESS == pmicStatus)
@@ -2145,13 +2155,13 @@ int32_t  Pmic_rtcSetTimeDateInfo(Pmic_CoreHandle_t *pPmicCoreHandle,
     /* Set PMIC RTC Time */
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = Pmic_rtcSetTime(pPmicCoreHandle, pTimeCfg);
+        pmicStatus = Pmic_rtcSetTime(pPmicCoreHandle, &timeCfg);
     }
 
     /* Set PMIC RTC Date */
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = Pmic_rtcSetDate(pPmicCoreHandle, pDateCfg);
+        pmicStatus = Pmic_rtcSetDate(pPmicCoreHandle, &dateCfg);
     }
 
     if(PMIC_ST_SUCCESS == pmicStatus)
