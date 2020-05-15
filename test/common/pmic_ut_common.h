@@ -60,12 +60,6 @@
 #include <ti/drv/i2c/I2C.h>
 #include <ti/drv/i2c/soc/I2C_soc.h>
 
-/* SPI specific headers */
-#include <ti/drv/spi/SPI.h>
-#include <ti/drv/spi/soc/SPI_soc.h>
-#include <ti/drv/spi/test/src/SPI_log.h>
-#include <ti/drv/spi/test/src/SPI_test.h>
-
 /* Timer specific headers */
 #include <ti/board/src/j721e_evm/include/board_utils.h>
 

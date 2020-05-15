@@ -447,7 +447,7 @@ void test_pmic_criticalSectionStopFn(void)
 static int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
                                  Pmic_CoreCfg_t     *pmicConfigData)
 {
-    int32_t pmicStatus;
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t *pmicHandle = NULL;
 
     /* Initialize Pmic Semaphore */

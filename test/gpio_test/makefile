@@ -60,7 +60,7 @@ INCLUDE_INTERNAL_INTERFACES = pmic
 COMP_LIST_COMMON = csl csl_init i2c osal_nonos sciclient uart board pmic
 
 # Common source files and CFLAGS across all platforms and cores
-PACKAGE_SRCS_COMMON = .
+PACKAGE_SRCS_COMMON = . ../common
 
 CFLAGS_LOCAL_COMMON += -DUNITY_INCLUDE_CONFIG_H
 
