@@ -426,6 +426,27 @@ typedef struct Pmic_GpioInOutCfg_s
     uint8_t  outRegBitPos;
 } Pmic_GpioInOutCfg_t;
 
+/*!
+* \brief   PMIC gpio details object structure
+*
+* \param   intRegAddr         Register Address of the gpio interrupt
+* \param   intRegBitPos       Register bit position of gpio interrupt
+* \param   intRiseRegAddr     Register Address of gpio rise interrupt
+* \param   intRiseRegBitPos   Register bit position of gpio rise interrupt
+* \param   intFallRegAddr     Register Address of gpio fall interrupt
+* \param   intFallRegBitPos   Register bit position of gpio fall interrupt
+*/
+typedef struct Pmic_GpioIntRegCfg_s
+{
+    uint8_t  intRegAddr;
+    uint8_t  intRegBitPos;
+    uint8_t  intRegPolBitPos;
+    uint8_t  intRiseRegAddr;
+    uint8_t  intRiseRegBitPos;
+    uint8_t  intFallRegAddr;
+    uint8_t  intFallRegBitPos;
+} Pmic_GpioIntRegCfg_t;
+
 /*==========================================================================*/
 /*                         Function Declarations                            */
 /*==========================================================================*/

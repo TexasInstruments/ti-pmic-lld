@@ -76,6 +76,35 @@ static int32_t Pmic_get_gpioInOutCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /*!
+ * \brief   This function is used to get the PMIC GPIO configuration
+ */
+static int32_t Pmic_get_gpioIntRegCfg(Pmic_CoreHandle_t    *pPmicCoreHandle,
+                                      Pmic_GpioIntRegCfg_t **pGpioIntRegCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    if(NULL == pGpioIntRegCfg)
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        switch(pPmicCoreHandle->pmicDeviceType)
+        {
+        case PMIC_DEV_LEO_TPS6594:
+            pmic_get_tps65941_gpioIntRegCfg(pGpioIntRegCfg);
+            break;
+        default:
+            status = PMIC_ST_ERR_INV_DEVICE;
+            break;
+        }
+    }
+
+    return status;
+}
+
+/*!
  * \brief   This function is used to set the GPIO Pin Functionality
  */
 static int32_t Pmic_gpioParamCheck(Pmic_CoreHandle_t *pPmicCoreHandle,
@@ -665,6 +694,161 @@ static int32_t Pmic_gpioGetOutputSignalType(Pmic_CoreHandle_t *pPmicCoreHandle,
     return status;
 }
 
+/*!
+ * \brief   This function is used to Enable GPIO Interrupt
+ */
+static int32_t Pmic_gpioIntrEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                   uint8_t            pin,
+                                   uint8_t            intrType,
+                                   uint8_t            maskPol)
+{
+    int32_t status                       = PMIC_ST_SUCCESS;
+    uint8_t regData                      = 0U;
+    Pmic_GpioIntRegCfg_t *pGpioIntRegCfg = NULL;
+
+    status = Pmic_get_gpioIntRegCfg(pPmicCoreHandle, &pGpioIntRegCfg);
+
+    if (PMIC_ST_SUCCESS == status)
+    {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        pGpioIntRegCfg[pin].intRegAddr,
+                                        &regData);
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        BIT_POS_SET_VAL(regData,
+                        pGpioIntRegCfg[pin].intRegBitPos,
+                        PMIC_GPIO_INT_ENABLE);
+        BIT_POS_SET_VAL(regData,
+                        pGpioIntRegCfg[pin].intRegPolBitPos,
+                        maskPol);
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                        pGpioIntRegCfg[pin].intRegAddr,
+                                        regData);
+    }
+
+    if((PMIC_ST_SUCCESS == status) &&
+       (PMIC_GPIO_FALL_INTERRUPT == intrType))
+    {
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        pGpioIntRegCfg[pin].intFallRegAddr,
+                                        &regData);
+        if(PMIC_ST_SUCCESS == status)
+        {
+            BIT_POS_SET_VAL(regData,
+                            pGpioIntRegCfg[pin].intFallRegBitPos,
+                            PMIC_GPIO_INT_ENABLE);
+            status = Pmic_commIntf_sendByte(
+                                        pPmicCoreHandle,
+                                        pGpioIntRegCfg[pin].intFallRegAddr,
+                                        regData);
+        }
+    }
+
+    if((PMIC_ST_SUCCESS == status) &&
+        (PMIC_GPIO_RISE_INTERRUPT == intrType))
+    {
+            status = Pmic_commIntf_recvByte(
+                                        pPmicCoreHandle,
+                                        pGpioIntRegCfg[pin].intRiseRegAddr,
+                                        &regData);
+        if(PMIC_ST_SUCCESS == status)
+        {
+            BIT_POS_SET_VAL(regData,
+                            pGpioIntRegCfg[pin].intRiseRegBitPos,
+                            PMIC_GPIO_INT_ENABLE);
+            status = Pmic_commIntf_sendByte(
+                                        pPmicCoreHandle,
+                                        pGpioIntRegCfg[pin].intRiseRegAddr,
+                                        regData);
+        }
+    }
+
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return status;
+}
+
+/*!
+ * \brief   This function is used to Disable GPIO Interrupt
+ */
+static int32_t Pmic_gpioIntrDisable(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                    uint8_t            pin)
+{
+    int32_t status                       = PMIC_ST_SUCCESS;
+    uint8_t regData                      = 0U;
+    Pmic_GpioIntRegCfg_t *pGpioIntRegCfg = NULL;
+
+    status = Pmic_get_gpioIntRegCfg(pPmicCoreHandle, &pGpioIntRegCfg);
+
+    if (PMIC_ST_SUCCESS == status)
+    {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        pGpioIntRegCfg[pin].intRegAddr,
+                                        &regData);
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        BIT_POS_SET_VAL(regData,
+                        pGpioIntRegCfg[pin].intRegBitPos,
+                        PMIC_GPIO_INT_MASK);
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                        pGpioIntRegCfg[pin].intRegAddr,
+                                        regData);
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        pGpioIntRegCfg[pin].intFallRegAddr,
+                                        &regData);
+        if((PMIC_ST_SUCCESS == status) &&
+           (BIT_POS_GET_VAL(regData, pGpioIntRegCfg[pin].intFallRegBitPos) ==
+            PMIC_GPIO_INT_ENABLE))
+        {
+            BIT_POS_SET_VAL(regData,
+                            pGpioIntRegCfg[pin].intFallRegBitPos,
+                            PMIC_GPIO_INT_MASK);
+            status = Pmic_commIntf_sendByte(
+                                        pPmicCoreHandle,
+                                        pGpioIntRegCfg[pin].intFallRegAddr,
+                                        regData);
+        }
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        pGpioIntRegCfg[pin].intRiseRegAddr,
+                                        &regData);
+        if((PMIC_ST_SUCCESS == status) &&
+           (BIT_POS_GET_VAL(regData,
+                            pGpioIntRegCfg[pin].intRiseRegBitPos) ==
+            PMIC_GPIO_INT_ENABLE))
+        {
+            BIT_POS_SET_VAL(regData,
+                            pGpioIntRegCfg[pin].intRiseRegBitPos,
+                            PMIC_GPIO_INT_MASK);
+            status = Pmic_commIntf_sendByte(
+                                        pPmicCoreHandle,
+                                        pGpioIntRegCfg[pin].intRiseRegAddr,
+                                        regData);
+        }
+    }
+
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return status;
+}
+
 /*
  * \brief   PMIC GPIO set configuration function
  *          This function is used to set the required configuration for the
@@ -1028,6 +1212,59 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
                 *pPinValue = PMIC_GPIO_LOW;
             }
         }
+    }
+
+    return status;
+}
+
+/*
+* \brief   PMIC GPIO interrupt configuration function
+*          This function is used to enable GPIO pin Interrupts
+*
+* \param   pPmicCoreHandle [IN]    PMIC Interface Handle
+* \param   pin             [IN]    PMIC GPIO number
+*                                  Valid values \ref Pmic_GpioPin
+* \param   intrType        [IN]    Interrupt type \ref Pmic_GpioInterruptCfg
+* \param   maskPol         [IN]    FSM trigger masking polarity select for GPIO
+*                                  Valid values refer
+*                                  \ref Pmic_GpioInterruptPolCfg
+*
+* \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+*          For valid values \ref Pmic_ErrorCodes
+*/
+int32_t Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
+                         uint8_t            pin,
+                         uint8_t            intrType,
+                         uint8_t            maskPol)
+{
+    int32_t status       = PMIC_ST_SUCCESS;
+
+    /* Parameter Validation */
+    status = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
+
+    if((PMIC_ST_SUCCESS == status) && (intrType > PMIC_GPIO_DISABLE_INTERRUPT))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if((PMIC_ST_SUCCESS == status) && (maskPol > PMIC_GPIO_POL_HIGH))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if((PMIC_ST_SUCCESS == status) &&
+       (PMIC_GPIO_DISABLE_INTERRUPT == intrType))
+    {
+        status = Pmic_gpioIntrDisable(pPmicCoreHandle, pin);
+    }
+
+    if((PMIC_ST_SUCCESS == status) &&
+       (PMIC_GPIO_DISABLE_INTERRUPT != intrType))
+    {
+        status = Pmic_gpioIntrEnable(pPmicCoreHandle,
+                                     pin,
+                                     intrType,
+                                     maskPol);
     }
 
     return status;

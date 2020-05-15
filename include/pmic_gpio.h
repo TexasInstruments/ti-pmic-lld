@@ -321,6 +321,26 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
                           uint8_t            pin,
                           uint8_t           *pPinValue);
 
+/*!
+* \brief   PMIC GPIO interrupt configuration function
+*          This function is used to enable GPIO pin Interrupts
+*
+* \param   pPmicCoreHandle [IN]    PMIC Interface Handle
+* \param   pin             [IN]    PMIC GPIO number
+*                                  Valid values \ref Pmic_GpioPin
+* \param   intrType        [IN]    Interrupt type \ref Pmic_GpioInterruptCfg
+* \param   maskPol         [IN]    FSM trigger masking polarity select for GPIO
+*                                  Valid values refer
+*                                  \ref Pmic_GpioInterruptPolCfg
+*
+* \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+*          For valid values \ref Pmic_ErrorCodes
+*/
+int32_t Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
+                         uint8_t            pin,
+                         uint8_t            intrType,
+                         uint8_t            maskPol);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

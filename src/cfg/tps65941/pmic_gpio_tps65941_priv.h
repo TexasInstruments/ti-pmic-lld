@@ -124,6 +124,7 @@ extern "C" {
 /*==========================================================================*/
 
 void pmic_get_tps65941_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg);
+void pmic_get_tps65941_gpioIntRegCfg(Pmic_GpioIntRegCfg_t **pGpioIntRegCfg);
 
 #ifdef __cplusplus
 }
