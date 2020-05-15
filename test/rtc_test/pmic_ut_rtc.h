@@ -39,6 +39,7 @@
 
 #include <pmic_ut_common.h>
 #include <pmic_rtc.h>
+#include <pmic_irq.h>
 
 /*!
  * \brief   RTC invalid date/time macros
@@ -93,3 +94,5 @@
                                     (PMIC_RTC_DATE_CFG_DAY_VALID_SHIFT | \
                                      PMIC_RTC_DATE_CFG_MONTH_VALID_SHIFT | \
                                      PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT)
+
+#define PMIC_RTC_TIMEOUT                (5U)

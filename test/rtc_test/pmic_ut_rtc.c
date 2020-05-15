@@ -418,7 +418,7 @@ static bool test_pmic_rtc_setAlarmIntrPrmValTest_year(void *pPmicCoreHandle)
     int32_t      status      = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t *handle = pPmicCoreHandle;
     Pmic_RtcTime_t timeCfg    = {0U, 30U, 30U, 6U, 0U, 1U};
-    Pmic_RtcDate_t dateCfg    = {PMIC_RTC_DATE_CFG_WEEK_VALID_SHIFT, 15U, 6U,
+    Pmic_RtcDate_t dateCfg    = {PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT, 15U, 6U,
                                  2055U, 1U};
 
     dateCfg.year              = PMIC_RTC_INVALID_YEAR;
@@ -1596,6 +1596,372 @@ static bool test_pmic_rtc_getFreqCompPrmValTest_compensation
 }
 
 /*!
+ * \brief   Mask or Unmask All interrupts
+ *
+ * \param   mask              [IN]    Parameter to mask/unmask all INTRs
+ *                                    Valid values: \ref Pmic_IrqMaskFlag
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+static int32_t pmic_irqMaskAll(Pmic_CoreHandle_t *pHandle, bool mask)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    /* Mask or Unmask all interrupts */
+    status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_BUCK1_2_MASK, mask);
+    if(PMIC_ST_SUCCESS == status)
+    {
+        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_BUCK3_4_MASK, mask);
+    }
+    if(PMIC_ST_SUCCESS == status)
+    {
+        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_BUCK5_MASK, mask);
+    }
+    if(PMIC_ST_SUCCESS == status)
+    {
+        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_LDO1_2_MASK, mask);
+    }
+    if(PMIC_ST_SUCCESS == status)
+    {
+        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_LDO3_4_MASK, mask);
+    }
+    if(PMIC_ST_SUCCESS == status)
+    {
+        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_VMON_MASK, mask);
+    }
+    if(PMIC_ST_SUCCESS == status)
+    {
+        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_GPIO1_8_FALL_MASK,
+                                                                    mask);
+    }
+    if(PMIC_ST_SUCCESS == status)
+    {
+        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_GPIO1_8_RISE_MASK,
+                                                                    mask);
+    }
+    if(PMIC_ST_SUCCESS == status)
+    {
+        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_GPIO9_11_MASK, mask);
+    }
+    if(PMIC_ST_SUCCESS == status)
+    {
+        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_MISC_MASK, mask);
+    }
+    if(PMIC_ST_SUCCESS == status)
+    {
+        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_MODERATE_ERR_MASK,
+                                                                    mask);
+    }
+    if(PMIC_ST_SUCCESS == status)
+    {
+        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_FSM_ERR_MASK, mask);
+    }
+    if(PMIC_ST_SUCCESS == status)
+    {
+        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_COMM_ERR_MASK, mask);
+    }
+    if(PMIC_ST_SUCCESS == status)
+    {
+        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_READBACK_ERR_MASK,
+                                                                      mask);
+    }
+    if(PMIC_ST_SUCCESS == status)
+    {
+        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_ESM_MASK, mask);
+    }
+    if(PMIC_ST_SUCCESS == status)
+    {
+        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_STARTUP_MASK, mask);
+    }
+    if(PMIC_ST_SUCCESS == status)
+    {
+        if(mask)
+        {
+            status = Pmic_rtcEnableAlarmIntr(pHandle,
+                                             PMIC_RTC_ALARM_INTR_DISABLE);
+            if(PMIC_ST_SUCCESS == status)
+            {
+                status = Pmic_rtcEnableTimerIntr(pHandle,
+                                                 PMIC_RTC_TIMER_INTR_DISABLE);
+            }
+        }
+        else
+        {
+            status = Pmic_rtcEnableAlarmIntr(pHandle,
+                                             PMIC_RTC_ALARM_INTR_ENABLE);
+            if(PMIC_ST_SUCCESS == status)
+            {
+                status = Pmic_rtcEnableTimerIntr(pHandle,
+                                                 PMIC_RTC_TIMER_INTR_ENABLE);
+            }
+       }
+    }
+
+    return status;
+}
+
+/*
+ * FIXME: Below test case is causing reset to J721 EVM.
+ *        TO avoid reset used dalay as workaround for the testcase
+ */
+/*!
+ * \brief   RTC time interrupt
+ *
+ * \retval  PMIC_UT_SUCCESS in case of success or
+ *          PMIC_UT_FAILURE in case of failure.
+ */
+static bool test_rtc_timer_irq(void *pPmicCoreHandle)
+{
+    int32_t            status       = PMIC_ST_SUCCESS;
+    int8_t             timeout      = 10U;
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    Pmic_RtcTime_t     timeCfg_cr   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
+    Pmic_RtcDate_t     dateCfg_cr   = { 0x0F, 0U, 0U, 0U, 0U};
+    Pmic_RtcTime_t     timeCfg_rd   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
+    Pmic_RtcDate_t     dateCfg_rd   = { 0x0F, 0U, 0U, 0U, 0U};
+    uint8_t            clearIRQ     = 1U;
+    uint32_t           pErrStat     = 0U;
+    uint32_t           errBitStatus = 0U;
+    bool               tstStatus    = PMIC_UT_FAILURE;
+    uint8_t timerPeriod = 0U;
+
+    Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
+    Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
+
+    pHandle                         = pPmicCoreHandle;
+
+    status = Pmic_rtcSetTimeDateInfo(pHandle, &validTimeCfg, &validDateCfg);
+    if(status != PMIC_ST_SUCCESS)
+    {
+        return PMIC_UT_FAILURE;
+    }
+
+    /* MASKING all Interrupts */
+    status = pmic_irqMaskAll(pHandle, 1U);
+    if(status != PMIC_ST_SUCCESS)
+    {
+        return PMIC_UT_FAILURE;
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_rd, &dateCfg_rd);
+        if(PMIC_ST_SUCCESS != status)
+        {
+            pmic_log("%d Failed %s with status: %d\n\t",__LINE__,__func__,
+                                                        status);
+            return PMIC_UT_FAILURE;
+        }
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        status = Pmic_rtcGetTimerIntr(pHandle, &timerPeriod);
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {        status = Pmic_rtcSetTimerIntr(pHandle,
+                                           PMIC_RTC_SECOND_INTR_PERIOD);
+        if(PMIC_ST_SUCCESS != status)
+        {
+            pmic_log("%d Failed %s with status: %d\n\t",__LINE__,__func__,
+                                                        status);
+            return PMIC_UT_FAILURE;
+        }
+    }
+
+    status = Pmic_rtcEnableTimerIntr(pHandle, PMIC_RTC_TIMER_INTR_ENABLE);
+
+    while(timeout--)
+    {
+        /* Added delay as workaround to avoid reset on J721 EVM */
+        Osal_delay(5000U);
+        status = Pmic_irqGetErrStatus(pHandle, &pErrStat, clearIRQ);
+        if(PMIC_ST_SUCCESS == status)
+        {
+            /* Extract offsets and error code */
+            errBitStatus = PMIC_IRQID_BITMASK (pErrStat);
+
+            if(PMIC_INT_RTC_STATUS_TIMER_MASK == errBitStatus)
+            {
+                /* Disable the timer interrupt  */
+                status = Pmic_rtcEnableTimerIntr(pHandle,
+                                                 PMIC_RTC_TIMER_INTR_DISABLE);
+
+                tstStatus = PMIC_UT_SUCCESS;
+                break;
+            }
+        }
+        status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
+        if(PMIC_ST_SUCCESS != status)
+        {
+            tstStatus = PMIC_UT_FAILURE;
+        }
+    }
+
+    /* UNMASKING all Interrupts */
+    status = pmic_irqMaskAll(pHandle, 0U);
+    if(status != PMIC_ST_SUCCESS)
+    {
+        return PMIC_UT_FAILURE;
+    }
+
+    status = Pmic_rtcSetTimerIntr(pHandle, timerPeriod);
+    return tstStatus;
+}
+
+/*
+ * FIXME: Below test case is causing reset to J721 EVM.
+ *        TO avoid reset used dalay as workaround for the testcase
+ */
+/*!
+ * \brief   RTC Alarm interrupt
+ *
+ * \retval  PMIC_UT_SUCCESS in case of success or
+ *          PMIC_UT_FAILURE in case of failure.
+ */
+static bool test_rtc_alarm_irq(void *pPmicCoreHandle)
+{
+    int32_t            status       = PMIC_ST_SUCCESS;
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    pHandle                         = pPmicCoreHandle;
+    Pmic_RtcTime_t     timeCfg_cr   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
+    Pmic_RtcDate_t     dateCfg_cr   = { 0x0F, 0U, 0U, 0U, 0U};
+    Pmic_RtcTime_t     timeCfg_rd   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
+    Pmic_RtcDate_t     dateCfg_rd   = { 0x0F, 0U, 0U, 0U, 0U};
+
+    uint8_t            clearIRQ     = 1U;
+    uint32_t           errBitStatus = 0U;
+    uint32_t           pErrStat     = 0U;
+    bool               tstStatus    = PMIC_UT_FAILURE;
+    int8_t             timeout      = 10U;
+
+    Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
+    Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
+
+    status = Pmic_rtcSetTimeDateInfo(pHandle, &validTimeCfg, &validDateCfg);
+    if(status != PMIC_ST_SUCCESS)
+    {
+        return PMIC_UT_FAILURE;
+    }
+
+    /* MASKING all Interrupts */
+    status = pmic_irqMaskAll(pHandle, 1U);
+    if(status != PMIC_ST_SUCCESS)
+    {
+        return PMIC_UT_FAILURE;
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        /* Get the current time value */
+        status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_rd, &dateCfg_rd);
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        timeCfg_rd.seconds = timeCfg_rd.seconds + 3U;
+        status   = Pmic_rtcSetAlarmIntr(pHandle, &timeCfg_rd, &dateCfg_rd);
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        /* Get the current time for timeout */
+        status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        while(timeout--)
+        {
+            /* Added delay as workaround to avoid reset on J721 EVM */
+            Osal_delay(10000U);
+            status = Pmic_irqGetErrStatus(pHandle, &pErrStat, clearIRQ);
+            if(PMIC_ST_SUCCESS == status)
+            {
+                /* Extract Level 1, Level 2 register offsets and error code */
+                errBitStatus   = PMIC_IRQID_BITMASK (pErrStat);
+
+                if(PMIC_INT_RTC_STATUS_ALARM_MASK == errBitStatus)
+                {
+                    /* Interrupt received */
+                    /* Disable the alarm interrupt */
+                    status = Pmic_rtcEnableAlarmIntr(pHandle,
+                                                  PMIC_RTC_ALARM_INTR_DISABLE);
+
+                    /* clear the interrupt */
+                    if(PMIC_ST_SUCCESS == status)
+                    {
+                        tstStatus = PMIC_UT_SUCCESS;
+                        break;
+                    }
+                }
+            }
+
+            status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
+            if(PMIC_ST_SUCCESS != status)
+            {
+                break;
+            }
+        }
+    }
+
+    /* UNMASKING all Interrupts */
+    status = pmic_irqMaskAll(pHandle, 0U);
+    if(status != PMIC_ST_SUCCESS)
+    {
+        return PMIC_UT_FAILURE;
+    }
+
+    if(status != PMIC_ST_SUCCESS)
+    {
+        return PMIC_UT_FAILURE;
+    }
+
+    return tstStatus;
+}
+
+/*!
+ * \brief   Parameter validation for 'handle'
+ *
+ * \retval  PMIC_UT_SUCCESS in case of success or
+ *          PMIC_UT_FAILURE in case of failure.
+ */
+static bool test_rtc_enable_alarm_interrupt_test_handle(void *pPmicCoreHandle)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    status = Pmic_rtcEnableAlarmIntr(NULL, PMIC_RTC_ALARM_INTR_DISABLE);
+    if(PMIC_ST_ERR_INV_HANDLE != status)
+    {
+        pmic_log("%d Failed %s with status: %d\n\t",__LINE__,__func__, status);
+        return PMIC_UT_FAILURE;
+    }
+
+    return PMIC_UT_SUCCESS;
+}
+
+/*!
+ * \brief   Parameter validation for 'handle'
+ *
+ * \retval  PMIC_UT_SUCCESS in case of success or
+ *          PMIC_UT_FAILURE in case of failure.
+ */
+static bool test_rtc_enable_timer_interrupt_test_handle(void *pPmicCoreHandle)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    status = Pmic_rtcEnableTimerIntr(NULL, PMIC_RTC_TIMER_INTR_DISABLE);
+    if(PMIC_ST_ERR_INV_HANDLE != status)
+    {
+        pmic_log("%d Failed %s with status: %d\n\t",__LINE__,__func__, status);
+        return PMIC_UT_FAILURE;
+    }
+
+    return PMIC_UT_SUCCESS;
+}
+
+/*!
  * \brief   PMIC RTC Test Cases
  */
 static Pmic_Ut_Tests_t pmic_rtc_tests[] =
@@ -1903,6 +2269,34 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
         test_pmic_rtc_getFreqCompPrmValTest_compensation,
         6287,
         "GetRtcFreqCompen : Parameter validation for 'compensation'"
+    },
+/*
+ * FIXME: Below test case is causing reset to J721 EVM.
+ *        TO avoid reset used dalay as workaround for the testcase
+ */
+    {
+        test_rtc_timer_irq,
+        1111,/* Dummy */
+        "\r\n test_rtc_timer_irq   :    Test rtc timer interrupt"
+    },
+/*
+ * FIXME: Below test case is causing reset to J721 EVM.
+ *        TO avoid reset used dalay as workaround for the testcase
+ */
+    {
+        test_rtc_alarm_irq,
+        2222,/* Dummy */
+        "\r\n test_rtc_alarm_irq   :    Test rtc alarm interrupt"
+    },
+    {
+        test_rtc_enable_timer_interrupt_test_handle,
+        3333,/* Dummy */
+        "\r\n Pmic_rtcEnableTimerIntr   :    Parameter validation for 'handle'"
+    },
+    {
+        test_rtc_enable_alarm_interrupt_test_handle,
+        4444,/* Dummy */
+        "\r\n Pmic_rtcEnableAlarmIntr   :    Parameter validation for 'handle'"
     },
     {
         NULL,
