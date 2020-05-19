@@ -606,7 +606,8 @@ void tearDown(void)
  *          PMIC_UT_FAILURE in case of failure.
  */
 bool test_pmic_common(Pmic_Ut_Tests_t *pmicTestcase,
-                      Pmic_CoreCfg_t  *pmicCfgData)
+                      Pmic_CoreCfg_t  *pmicCfgData,
+                      const char      *ptagName)
 {
     bool        testResult       = PMIC_UT_SUCCESS;
     uint32_t    i                = 0U;
@@ -635,14 +636,16 @@ bool test_pmic_common(Pmic_Ut_Tests_t *pmicTestcase,
             sprintf(testId, "%d", pTestcase->testId);
             pmic_log("\n |TEST RESULT|PASS|%s|\n", testId);
             pmic_log("\n |TEST END|:: %s ::\n", testId);
-            pmic_log("\n |TEST RESULT|:: PMIC RTC Test Case %s Successful!! ::\n", testId);
+            pmic_log("\n |TEST RESULT|:: PMIC %s Test Case "
+                         "%s Successful!! ::\n", ptagName, testId);
         }
         else
         {
             sprintf(testId, "%d", pTestcase->testId);
             pmic_log("\n |TEST RESULT|PASS|%s|\n", testId);
             pmic_log("\n |TEST END|:: %s ::\n", testId);
-            pmic_log("\n |TEST RESULT|:: PMIC RTC Test Case %s Unsuccessful!! ::\n", testId);
+            pmic_log("\n |TEST RESULT|:: PMIC %s Test Case "
+                         "%s Unsuccessful!! ::\n", ptagName, testId);
 
             testResult = PMIC_UT_FAILURE;
         }

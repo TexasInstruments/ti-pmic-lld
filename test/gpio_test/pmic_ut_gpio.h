@@ -44,11 +44,4 @@
 /*                             Macros & Typedefs                             */
 /* ========================================================================= */
 
-/*!
- * \brief   Gpio test ID definitions
- */
-#define TID_7348_T09_15                 (15U)
-#define TID_7357_T01_23                 (69U)
-#define TID_7357_T01_24                 (70U)
-#define TID_7357_T01_25                 (71U)
-#define TID_7357_T01_26                 (72U)
+/* None */

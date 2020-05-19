@@ -159,7 +159,8 @@ void test_pmic_criticalSectionStopFn(void);
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_common(Pmic_Ut_Tests_t *pmic_Test, Pmic_CoreCfg_t *pmicCfgData);
+bool test_pmic_common(Pmic_Ut_Tests_t *pmic_Test, Pmic_CoreCfg_t *pmicCfgData,
+                                                          const char *ptagName);
 
 /*!
  * \brief   Configures UART pinmux and initialization for the UART Prints

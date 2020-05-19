@@ -2344,7 +2344,7 @@ static void test_pmic_rtc_testApp(void)
     pmicConfigData.validParams         |= (PMIC_CFG_COMM_HANDLE_VALID_SHIFT |
                                            PMIC_CFG_QASLAVEADDR_VALID_SHIFT);
 
-    testResult = test_pmic_common(pmic_rtc_tests, &pmicConfigData);
+    testResult = test_pmic_common(pmic_rtc_tests, &pmicConfigData, "RTC");
     TEST_ASSERT(PMIC_UT_SUCCESS == testResult);
 
     pmic_log("\n All tests have passed. \n");

@@ -67,7 +67,7 @@ static bool test_pmic_gpio_setCfgGpioPin_nSLEEP1(void *pmicHandle)
 
     for(pin = 0U; pin < sizeof(pins)/sizeof(pins[0U]); pin++)
     {
-        /* PMICA GPIO3 pin Causing hang on J721 EVM */
+        /* PMICA GPIO3 pin Causing Reset on J721 EVM */
         if((3U == pins[pin]) && (handle.slaveAddr == LEO_PMICA_WDG_SLAVE_ADDR))
         {
             continue;
@@ -128,7 +128,7 @@ static bool test_pmic_gpio_setCfgGpioPin_nSLEEP2(void *pmicHandle)
 
     for(pin = 0U; pin < sizeof(pins)/sizeof(pins[0U]); pin++)
     {
-        /* PMICA GPIO3 pin Causing hang on J721 EVM */
+        /* PMICA GPIO3 pin Causing Reset on J721 EVM */
         if((3U == pins[pin]) && (handle.slaveAddr == LEO_PMICA_WDG_SLAVE_ADDR))
         {
             continue;
@@ -287,7 +287,7 @@ static bool test_pmic_gpio_setCfgGpioPin_wakeup1(void *pmicHandle)
 
     for(pin = 0U; pin < sizeof(pins)/sizeof(pins[0U]); pin++)
     {
-        /* PMICA GPIO3 pin Causing hang on J721 EVM */
+        /* PMICA GPIO3 pin Causing Reset on J721 EVM */
         if((3U == pins[pin]) && (handle.slaveAddr == LEO_PMICA_WDG_SLAVE_ADDR))
         {
             continue;
@@ -348,7 +348,7 @@ static bool test_pmic_gpio_setCfgGpioPin_wakeup2(void *pmicHandle)
 
     for(pin = 0U; pin < sizeof(pins)/sizeof(pins[0U]); pin++)
     {
-        /* PMICA GPIO3 pin Causing hang on J721 EVM */
+        /* PMICA GPIO3 pin Causing Reset on J721 EVM */
         if((3U == pins[pin]) && (handle.slaveAddr == LEO_PMICA_WDG_SLAVE_ADDR))
         {
             continue;
@@ -691,7 +691,7 @@ static bool test_pmic_gpio_setCfgGpioPin_wdt(void *pmicHandle)
     return PMIC_UT_SUCCESS;
 }
 
-/* FIXME: PMICA GPIO3 pin Causing hang on J721 EVM */
+/* FIXME: PMICA GPIO3 pin Causing Reset on J721 EVM */
 #if 0
 /*!
  * \brief   configure gpio pin3 as ESM Error pin for SOC
@@ -1074,7 +1074,7 @@ static bool test_pmic_gpio_setCfgGpioPin_clk32KOUT(void *pmicHandle)
 
     for(pin = 0U; pin < sizeof(pins)/sizeof(pins[0U]); pin++)
     {
-        /* PMICA GPIO3 pin Causing hang on J721 EVM */
+        /* PMICA GPIO3 pin Causing Reset on J721 EVM */
         if((3U == pins[pin]) && (handle.slaveAddr == LEO_PMICA_WDG_SLAVE_ADDR))
         {
             continue;
@@ -2061,12 +2061,6 @@ static bool test_pmic_gpio_setValueGpioPin5_input(void *pmicHandle)
     return PMIC_UT_SUCCESS;
 }
 
-/*
- * FIXME:
- * Below interrupt testcases are causing reset J721 EVM.
- * THose will be fixed later
- */
-#if 0
 static void pmic_all_intMask(Pmic_CoreHandle_t *pHandle)
 {
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pHandle;
@@ -2078,7 +2072,7 @@ static void pmic_all_intMask(Pmic_CoreHandle_t *pHandle)
     Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_LDO1_2_MASK, PMIC_IRQ_MASK);
     Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_LDO3_4_MASK, PMIC_IRQ_MASK);
     Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_VMON_MASK, PMIC_IRQ_MASK);
-    //Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_GPIO1_8_FALL_MASK, PMIC_IRQ_MASK);
+    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_GPIO1_8_FALL_MASK, PMIC_IRQ_MASK);
     Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_GPIO1_8_RISE_MASK, PMIC_IRQ_MASK);
     Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_GPIO9_11_MASK, PMIC_IRQ_MASK);
     Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_MISC_MASK, PMIC_IRQ_MASK);
@@ -2127,7 +2121,7 @@ static void pmic_all_intUnMask(Pmic_CoreHandle_t *pHandle)
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio1_fall_interrupt(void *pmicHandle)
+static bool test_pmic_gpio1_fall_interrupt(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -2137,7 +2131,6 @@ bool test_pmic_gpio1_fall_interrupt(void *pmicHandle)
     uint8_t maskPol           = PMIC_GPIO_POL_LOW;
     const uint8_t clearIRQ    = 0U;
     uint8_t errStat           = 0U;
-    //uint8_t regData           = 0U;
     uint32_t pErrStat         = 0U;
     uint32_t irqL1            = 0U;
     uint32_t irqL2            = 0U;
@@ -2154,23 +2147,7 @@ bool test_pmic_gpio1_fall_interrupt(void *pmicHandle)
     };
 
     /* MASKING all Interrupts */
-    /* pmic_all_intMask(&handle); */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_BUCK1_2_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_BUCK3_4_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_BUCK5_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_LDO1_2_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_LDO3_4_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_VMON_MASK, PMIC_IRQ_MASK);
-    //Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_GPIO1_8_FALL_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_GPIO1_8_RISE_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_GPIO9_11_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_MISC_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_MODERATE_ERR_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_FSM_ERR_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_COMM_ERR_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_READBACK_ERR_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_ESM_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_STARTUP_MASK, PMIC_IRQ_MASK);
+    pmic_all_intMask(&handle);
 
     /* Un Masking GPIO 1 FALL Interrupt */
     Pmic_irqMaskIntr(&handle, PMIC_IRQ_GPIO1_FALL_MASK, PMIC_IRQ_UNMASK);
@@ -2217,6 +2194,7 @@ bool test_pmic_gpio1_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
+    Osal_delay(50U);
     while (intRc)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
@@ -2264,7 +2242,7 @@ bool test_pmic_gpio1_fall_interrupt(void *pmicHandle)
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio1_rise_interrupt(void *pmicHandle)
+static bool test_pmic_gpio1_rise_interrupt(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -2326,6 +2304,7 @@ bool test_pmic_gpio1_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
+    Osal_delay(50U);
     while(intRc)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
@@ -2373,7 +2352,7 @@ bool test_pmic_gpio1_rise_interrupt(void *pmicHandle)
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio2_fall_interrupt(void *pmicHandle)
+static bool test_pmic_gpio2_fall_interrupt(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -2435,6 +2414,7 @@ bool test_pmic_gpio2_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
+    Osal_delay(50U);
     while(intRc)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
@@ -2482,7 +2462,7 @@ bool test_pmic_gpio2_fall_interrupt(void *pmicHandle)
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio2_rise_interrupt(void *pmicHandle)
+static bool test_pmic_gpio2_rise_interrupt(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -2544,6 +2524,7 @@ bool test_pmic_gpio2_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
+    Osal_delay(50U);
     while(intRc)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
@@ -2585,13 +2566,15 @@ bool test_pmic_gpio2_rise_interrupt(void *pmicHandle)
     return PMIC_UT_SUCCESS;
 }
 
+/* FIXME: PMICA GPIO3 pin Causing Reset on J721 EVM */
+#if 0
 /*!
  * \brief   Test to verify GPIO3 fall interrupt
  *
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio3_fall_interrupt(void *pmicHandle)
+static bool test_pmic_gpio3_fall_interrupt(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -2653,6 +2636,7 @@ bool test_pmic_gpio3_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
+    Osal_delay(50U);
     while(intRc)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
@@ -2700,7 +2684,7 @@ bool test_pmic_gpio3_fall_interrupt(void *pmicHandle)
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio3_rise_interrupt(void *pmicHandle)
+static bool test_pmic_gpio3_rise_interrupt(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -2762,6 +2746,7 @@ bool test_pmic_gpio3_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
+    Osal_delay(50U);
     while(intRc)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
@@ -2802,14 +2787,17 @@ bool test_pmic_gpio3_rise_interrupt(void *pmicHandle)
 
     return PMIC_UT_SUCCESS;
 }
+#endif
 
+/* FIXME: PMICA GPIO4 pin Causing hang on J721 EVM */
+#if 0
 /*!
  * \brief   Test to verify GPIO4 fall interrupt
  *
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio4_fall_interrupt(void *pmicHandle)
+static bool test_pmic_gpio4_fall_interrupt(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -2871,6 +2859,7 @@ bool test_pmic_gpio4_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
+    Osal_delay(50U);
     while(intRc)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
@@ -2918,7 +2907,7 @@ bool test_pmic_gpio4_fall_interrupt(void *pmicHandle)
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio4_rise_interrupt(void *pmicHandle)
+static bool test_pmic_gpio4_rise_interrupt(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -2980,6 +2969,7 @@ bool test_pmic_gpio4_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
+    Osal_delay(50U);
     while(intRc)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
@@ -3021,6 +3011,7 @@ bool test_pmic_gpio4_rise_interrupt(void *pmicHandle)
     return PMIC_UT_SUCCESS;
 
 }
+#endif
 
 /*!
  * \brief   Test to verify GPIO5 fall interrupt
@@ -3028,7 +3019,7 @@ bool test_pmic_gpio4_rise_interrupt(void *pmicHandle)
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio5_fall_interrupt(void *pmicHandle)
+static bool test_pmic_gpio5_fall_interrupt(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -3092,6 +3083,7 @@ bool test_pmic_gpio5_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
+    Osal_delay(50U);
     while(intRc)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
@@ -3139,7 +3131,7 @@ bool test_pmic_gpio5_fall_interrupt(void *pmicHandle)
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio5_rise_interrupt(void *pmicHandle)
+static bool test_pmic_gpio5_rise_interrupt(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -3201,6 +3193,7 @@ bool test_pmic_gpio5_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
+    Osal_delay(50U);
     while(intRc)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
@@ -3248,7 +3241,7 @@ bool test_pmic_gpio5_rise_interrupt(void *pmicHandle)
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio6_fall_interrupt(void *pmicHandle)
+static bool test_pmic_gpio6_fall_interrupt(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -3310,6 +3303,7 @@ bool test_pmic_gpio6_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
+    Osal_delay(50U);
     while(intRc)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
@@ -3357,7 +3351,7 @@ bool test_pmic_gpio6_fall_interrupt(void *pmicHandle)
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio6_rise_interrupt(void *pmicHandle)
+static bool test_pmic_gpio6_rise_interrupt(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -3419,6 +3413,7 @@ bool test_pmic_gpio6_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
+    Osal_delay(50U);
     while(intRc)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
@@ -3460,13 +3455,15 @@ bool test_pmic_gpio6_rise_interrupt(void *pmicHandle)
     return PMIC_UT_SUCCESS;
 }
 
+/* FIXME: On J721 EVM, GPIO7 interrupt Causing reset */
+#if 0
 /*!
  * \brief   Test to verify GPIO7 fall interrupt
  *
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio7_fall_interrupt(void *pmicHandle)
+static bool test_pmic_gpio7_fall_interrupt(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -3528,6 +3525,7 @@ bool test_pmic_gpio7_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
+    Osal_delay(50U);
     while(intRc)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
@@ -3575,7 +3573,7 @@ bool test_pmic_gpio7_fall_interrupt(void *pmicHandle)
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio7_rise_interrupt(void *pmicHandle)
+static bool test_pmic_gpio7_rise_interrupt(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -3637,6 +3635,7 @@ bool test_pmic_gpio7_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
+    Osal_delay(50U);
     while(intRc)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
@@ -3677,6 +3676,7 @@ bool test_pmic_gpio7_rise_interrupt(void *pmicHandle)
 
     return PMIC_UT_SUCCESS;
 }
+#endif
 
 /*!
  * \brief   Test to verify GPIO8 fall interrupt
@@ -3684,7 +3684,7 @@ bool test_pmic_gpio7_rise_interrupt(void *pmicHandle)
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio8_fall_interrupt(void *pmicHandle)
+static bool test_pmic_gpio8_fall_interrupt(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -3746,6 +3746,7 @@ bool test_pmic_gpio8_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
+    Osal_delay(50U);
     while(intRc)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
@@ -3793,7 +3794,7 @@ bool test_pmic_gpio8_fall_interrupt(void *pmicHandle)
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio8_rise_interrupt(void *pmicHandle)
+static bool test_pmic_gpio8_rise_interrupt(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -3855,6 +3856,7 @@ bool test_pmic_gpio8_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
+    Osal_delay(50U);
     while(intRc)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
@@ -3896,13 +3898,15 @@ bool test_pmic_gpio8_rise_interrupt(void *pmicHandle)
     return PMIC_UT_SUCCESS;
 }
 
+/* FIXME: On J721 EVM, GPIO-9,10,11 interrupts Causing reset */
+#if 0
 /*!
  * \brief   Test to verify GPIO9 fall interrupt
  *
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio9_fall_interrupt(void *pmicHandle)
+static bool test_pmic_gpio9_fall_interrupt(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -3918,7 +3922,7 @@ bool test_pmic_gpio9_fall_interrupt(void *pmicHandle)
     uint8_t intRc             = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
-        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
+        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
         PMIC_GPIO_HIGH,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
@@ -3964,6 +3968,7 @@ bool test_pmic_gpio9_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
+    Osal_delay(50U);
     while(intRc)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
@@ -4011,7 +4016,7 @@ bool test_pmic_gpio9_fall_interrupt(void *pmicHandle)
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio9_rise_interrupt(void *pmicHandle)
+static bool test_pmic_gpio9_rise_interrupt(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -4073,6 +4078,7 @@ bool test_pmic_gpio9_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
+    Osal_delay(50U);
     while(intRc)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
@@ -4120,7 +4126,7 @@ bool test_pmic_gpio9_rise_interrupt(void *pmicHandle)
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio10_fall_interrupt(void *pmicHandle)
+static bool test_pmic_gpio10_fall_interrupt(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -4182,6 +4188,7 @@ bool test_pmic_gpio10_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
+    Osal_delay(50U);
     while(intRc)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
@@ -4229,7 +4236,7 @@ bool test_pmic_gpio10_fall_interrupt(void *pmicHandle)
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio10_rise_interrupt(void *pmicHandle)
+static bool test_pmic_gpio10_rise_interrupt(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -4291,6 +4298,7 @@ bool test_pmic_gpio10_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
+    Osal_delay(50U);
     while(intRc)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
@@ -4338,7 +4346,7 @@ bool test_pmic_gpio10_rise_interrupt(void *pmicHandle)
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio11_fall_interrupt(void *pmicHandle)
+static bool test_pmic_gpio11_fall_interrupt(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -4400,6 +4408,7 @@ bool test_pmic_gpio11_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
+    Osal_delay(50U);
     while(intRc)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
@@ -4447,7 +4456,7 @@ bool test_pmic_gpio11_fall_interrupt(void *pmicHandle)
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio11_rise_interrupt(void *pmicHandle)
+static bool test_pmic_gpio11_rise_interrupt(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -4509,6 +4518,7 @@ bool test_pmic_gpio11_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
+    Osal_delay(50U);
     while(intRc)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
@@ -4557,7 +4567,7 @@ bool test_pmic_gpio11_rise_interrupt(void *pmicHandle)
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio_intr_pv_handle(void *pmicHandle)
+static bool test_pmic_gpio_intr_pv_handle(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -4607,7 +4617,7 @@ bool test_pmic_gpio_intr_pv_handle(void *pmicHandle)
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio_intr_pv_pin(void *pmicHandle)
+static bool test_pmic_gpio_intr_pv_pin(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -4657,7 +4667,7 @@ bool test_pmic_gpio_intr_pv_pin(void *pmicHandle)
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio_intr_pv_intrType(void *pmicHandle)
+static bool test_pmic_gpio_intr_pv_intrType(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -4707,7 +4717,7 @@ bool test_pmic_gpio_intr_pv_intrType(void *pmicHandle)
  * \retval  PMIC_UT_SUCCESS in case of success or
  *          PMIC_UT_FAILURE in case of failure.
  */
-bool test_pmic_gpio_intr_pv_maskPol(void *pmicHandle)
+static bool test_pmic_gpio_intr_pv_maskPol(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
@@ -4820,7 +4830,7 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         6197,
         "Pmic_gpioSetConfiguration : configure gpio pin as watchdog trigger function"
     },
-/* FIXME: PMICA GPIO3 pin Causing hang on J721 EVM */
+/* FIXME: PMICA GPIO3 pin Causing Reset on J721 EVM */
 #if 0
     {
         test_pmic_gpio_setCfgGpioPin3_esm_soc,
@@ -4832,11 +4842,6 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         test_pmic_gpio_setCfgGpioPin7_esm_mcu,
         6199,
         "Pmic_gpioSetConfiguration : configure gpio pin 7 as ESM Error Pins for MCU"
-    },
-    {
-        test_pmic_gpio_setCfgGpioPin5_spmi_sclk,
-        6200,
-        "Pmic_gpioSetConfiguration : configure gpio pin 5 as SPMI SCLK function"
     },
     {
         test_pmic_gpio_setCfgGpioPin6_spmi_sdata,
@@ -4866,7 +4871,7 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
 /* TODO: Need to check feasible or not */
 /*  {
       test_pmic_gpio_setCfgGpioPin10_clk32KOUT,
-      TID_7348_T10_21,
+      6206,
       "Pmic_gpioSetConfiguration : configure gpio pin 10 as CLK32KOUT function"
     },
 */
@@ -4995,146 +5000,151 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         6231,
         "Pmic_gpioSetValue : Set GPIO signal level for an input GPIO pin"
     },
-/*
- * FIXME:
- * Below interrupt testcases are causing reset J721 EVM.
- * THose will be fixed later
- */
-#if 0
     {
         test_pmic_gpio1_fall_interrupt,
-        TID_7357_T01_01,
+        1001, /* Dummy */
         "\r\n GPIO1 Fall Interrupt Test"
     },
     {
         test_pmic_gpio1_rise_interrupt,
-        TID_7357_T01_02,
+        1002, /* Dummy */
         "\r\n GPIO1 Rise Interrupt Test"
     },
     {
         test_pmic_gpio2_fall_interrupt,
-        TID_7357_T01_03,
+        1003, /* Dummy */
         "\r\n GPIO2 Fall Interrupt Test"
     },
     {
         test_pmic_gpio2_rise_interrupt,
-        TID_7357_T01_04,
+        1004, /* Dummy */
         "\r\n GPIO2 Rise Interrupt Test"
     },
+/* FIXME: PMICA GPIO3 pin Causing reset on J721 EVM */
+#if 0
     {
         test_pmic_gpio3_fall_interrupt,
-        TID_7357_T01_05,
+        1005, /* Dummy */
         "\r\n GPIO3 Fall Interrupt Test"
     },
     {
         test_pmic_gpio3_rise_interrupt,
-        TID_7357_T01_06,
+        1006, /* Dummy */
         "\r\n GPIO3 Rise Interrupt Test"
     },
+#endif
+/* FIXME: PMICA GPIO4 pin Causing hang on J721 EVM */
+#if 0
     {
         test_pmic_gpio4_fall_interrupt,
-        TID_7357_T01_07,
+        1007, /* Dummy */
         "\r\n GPIO4 Fall Interrupt Test"
     },
     {
         test_pmic_gpio4_rise_interrupt,
-        TID_7357_T01_08,
+        1008, /* Dummy */
         "\r\n GPIO4 Rise Interrupt Test"
     },
+#endif
     {
         test_pmic_gpio5_fall_interrupt,
-        TID_7357_T01_09,
+        1009, /* Dummy */
         "\r\n GPIO5 Fall Interrupt Test"
     },
     {
         test_pmic_gpio5_rise_interrupt,
-        TID_7357_T01_10,
+        1010, /* Dummy */
         "\r\n GPIO5 Rise Interrupt Test"
     },
     {
         test_pmic_gpio6_fall_interrupt,
-        TID_7357_T01_11,
+        1011, /* Dummy */
         "\r\n GPIO6 Fall Interrupt Test"
     },
     {
         test_pmic_gpio6_rise_interrupt,
-        TID_7357_T01_12,
+        1012, /* Dummy */
         "\r\n GPIO6 Rise Interrupt Test"
     },
-    /*{
+/* FIXME: On J721 EVM, GPIO7 interrupt Causing reset */
+#if 0
+    {
         test_pmic_gpio7_fall_interrupt,
-        TID_7357_T01_13,
+        1013, /* Dummy */
         "\r\n GPIO7 Fall Interrupt Test"
     },
     {
         test_pmic_gpio7_rise_interrupt,
-        TID_7357_T01_14,
+        1014, /* Dummy */
         "\r\n GPIO7 Rise Interrupt Test"
-    },*/
+    },
+#endif
     {
         test_pmic_gpio8_fall_interrupt,
-        TID_7357_T01_15,
+        1015, /* Dummy */
         "\r\n GPIO8 Fall Interrupt Test"
     },
     {
         test_pmic_gpio8_rise_interrupt,
-        TID_7357_T01_16,
+        1016, /* Dummy */
         "\r\n GPIO8 Rise Interrupt Test"
     },
-    /*{
+/* FIXME: On J721 EVM, GPIO-9,10,11 interrupts Causing reset */
+#if 0
+    {
         test_pmic_gpio9_fall_interrupt,
-        TID_7357_T01_17,
+        1017, /* Dummy */
         "\r\n GPIO9 Fall Interrupt Test"
     },
     {
         test_pmic_gpio9_rise_interrupt,
-        TID_7357_T01_18,
+        1018, /* Dummy */
         "\r\n GPIO9 Rise Interrupt Test"
     },
     {
         test_pmic_gpio10_fall_interrupt,
-        TID_7357_T01_19,
+        1019, /* Dummy */
         "\r\n GPIO10 Fall Interrupt Test"
     },
     {
         test_pmic_gpio10_rise_interrupt,
-        TID_7357_T01_20,
+        1020, /* Dummy */
         "\r\n GPIO10 Rise Interrupt Test"
     },
     {
         test_pmic_gpio11_fall_interrupt,
-        TID_7357_T01_21,
+        1021, /* Dummy */
         "\r\n GPIO11 Fall Interrupt Test"
     },
     {
         test_pmic_gpio11_rise_interrupt,
-        TID_7357_T01_22,
+        1022, /* Dummy */
         "\r\n GPIO11 Rise Interrupt Test"
-    },*/
+    },
 #endif
     {
         test_pmic_gpio_intr_pv_handle,
-        TID_7357_T01_23,
+        1023, /* Dummy */
         "\r\n Parameter validation for handle"
     },
     {
         test_pmic_gpio_intr_pv_pin,
-        TID_7357_T01_24,
+        1024, /* Dummy */
         "\r\n Parameter validation for pin"
     },
     {
         test_pmic_gpio_intr_pv_intrType,
-        TID_7357_T01_25,
+        1025, /* Dummy */
         "\r\n Parameter validation for intrType"
     },
     {
         test_pmic_gpio_intr_pv_maskPol,
-        TID_7357_T01_26,
+        1026, /* Dummy */
         "\r\n Parameter validation for maskPol"
     },
     {
         test_pmic_gpio_setCfgGpioPin5_spmi_sclk,
-        TID_7348_T09_15,
+        1027, /* Dummy */
         "Pmic_gpioSetConfiguration : configure gpio pin 5 as SPMI SCLK function"
     },
     {
@@ -5183,7 +5193,7 @@ static void test_pmic_gpio_testApp(void)
     pmicConfigData.validParams         |= (PMIC_CFG_COMM_HANDLE_VALID_SHIFT |
                                            PMIC_CFG_QASLAVEADDR_VALID_SHIFT);
 
-    testResult = test_pmic_common(pmic_gpio_tests, &pmicConfigData);
+    testResult = test_pmic_common(pmic_gpio_tests, &pmicConfigData, "GPIO");
     TEST_ASSERT(PMIC_UT_SUCCESS == testResult);
 
     pmic_log("\n All tests have passed. \n");
