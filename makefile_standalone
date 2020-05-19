@@ -1,0 +1,93 @@
+#
+# Copyright (c) 2019, Texas Instruments Incorporated
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+#
+# *  Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+# *  Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+#
+# *  Neither the name of Texas Instruments Incorporated nor the names of
+#    its contributors may be used to endorse or promote products derived
+#    from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+# THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+# PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+# OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+# WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+# OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+# EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+#
+ifdef OS
+	RM = del
+	FixPath = $(subst /,\,$1)
+	unix_to_dos = $(subst /,\,$1)
+	OSP = windows
+
+else
+	ifeq ($(shell uname), Linux)
+	RM = rm -f
+	FixPath = $1
+	OSP = unix
+endif
+endif
+
+CC           =  gcc
+INC          = -Iinclude -I. -Iinclude/cfg/tps65941/ \
+	       -I./src   -I./src/cfg/tps65941
+CFLAGS       = -fPIC $(INC) -Wall
+LDFLAGS      = -shared
+
+DEBUGFLAGS   = -O0 -g -D _DEBUG
+RELEASEFLAGS = -O2 -D NDEBUG
+build ?= release
+
+ifeq ($(build), debug)
+    CFLAGS += $(DEBUGFLAGS)
+    TARGET  = lib/pmic_lib_$(build).so
+endif
+
+ifeq ($(build), release)
+    CFLAGS += $(RELEASEFLAGS)
+    TARGET  = lib/pmic_lib_$(build).so
+endif
+
+$(info $(OSP))
+SOURCES = src/pmic_core.c  src/pmic_io.c  src/pmic_gpio.c src/cfg/tps65941/pmic_gpio_tps65941.c  src/pmic_rtc.c
+OBJECTS = $(SOURCES:.c=.o)
+
+all: $(TARGET)
+$(TARGET): $(OBJECTS)
+	 $(call FixPath,$(CC) $(FLAGS) $(LDFLAGS)  -o $(TARGET) $(OBJECTS))
+	 $(call FixPath,${RM} ${OBJECTS})
+
+help:
+	    @echo "# make help"
+	    @echo "# ------------------------------------------------------"
+	    @echo "#  make [OPTIONAL MAKE VARIABLES] Note: use gmake for windows"
+	    @echo "Supported targets: "
+	    @echo "------------------"
+	    @echo "all            : Builds the library"
+	    @echo "clean          : Cleans the library"
+	    @echo "Optional make variables:"
+	    @echo "------------------------"
+	    @echo "CC=[Cross-compiler to be used]"
+	    @echo "    Default: gcc"
+	    @echo "BUILD_PROFILE=[release debug]"
+	    @echo "    Default: release"
+	    @echo "OS=[Windows_NT linux]"
+	    @echo "    Default: Windows_NT"
+clean:
+	${RM} $(call FixPath, ${TARGET})

@@ -1,2 +1,1 @@
-Dummy FIle
-To be removed once other content is available.
+1. Added PMIC Driver Userguide for Standalone Usecase
