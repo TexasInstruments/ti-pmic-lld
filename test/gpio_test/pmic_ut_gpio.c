@@ -68,7 +68,7 @@ static bool test_pmic_gpio_setCfgGpioPin_nSLEEP1(void *pmicHandle)
     for(pin = 0U; pin < sizeof(pins)/sizeof(pins[0U]); pin++)
     {
         /* PMICA GPIO3 pin Causing Reset on J721 EVM */
-        if((3U == pins[pin]) && (handle.slaveAddr == LEO_PMICA_WDG_SLAVE_ADDR))
+        if((3U == pins[pin]) && (handle.slaveAddr == LEO_PMICA_SLAVE_ADDR))
         {
             continue;
         }
@@ -129,7 +129,7 @@ static bool test_pmic_gpio_setCfgGpioPin_nSLEEP2(void *pmicHandle)
     for(pin = 0U; pin < sizeof(pins)/sizeof(pins[0U]); pin++)
     {
         /* PMICA GPIO3 pin Causing Reset on J721 EVM */
-        if((3U == pins[pin]) && (handle.slaveAddr == LEO_PMICA_WDG_SLAVE_ADDR))
+        if((3U == pins[pin]) && (handle.slaveAddr == LEO_PMICA_SLAVE_ADDR))
         {
             continue;
         }
@@ -288,7 +288,7 @@ static bool test_pmic_gpio_setCfgGpioPin_wakeup1(void *pmicHandle)
     for(pin = 0U; pin < sizeof(pins)/sizeof(pins[0U]); pin++)
     {
         /* PMICA GPIO3 pin Causing Reset on J721 EVM */
-        if((3U == pins[pin]) && (handle.slaveAddr == LEO_PMICA_WDG_SLAVE_ADDR))
+        if((3U == pins[pin]) && (handle.slaveAddr == LEO_PMICA_SLAVE_ADDR))
         {
             continue;
         }
@@ -349,7 +349,7 @@ static bool test_pmic_gpio_setCfgGpioPin_wakeup2(void *pmicHandle)
     for(pin = 0U; pin < sizeof(pins)/sizeof(pins[0U]); pin++)
     {
         /* PMICA GPIO3 pin Causing Reset on J721 EVM */
-        if((3U == pins[pin]) && (handle.slaveAddr == LEO_PMICA_WDG_SLAVE_ADDR))
+        if((3U == pins[pin]) && (handle.slaveAddr == LEO_PMICA_SLAVE_ADDR))
         {
             continue;
         }
@@ -1075,7 +1075,7 @@ static bool test_pmic_gpio_setCfgGpioPin_clk32KOUT(void *pmicHandle)
     for(pin = 0U; pin < sizeof(pins)/sizeof(pins[0U]); pin++)
     {
         /* PMICA GPIO3 pin Causing Reset on J721 EVM */
-        if((3U == pins[pin]) && (handle.slaveAddr == LEO_PMICA_WDG_SLAVE_ADDR))
+        if((3U == pins[pin]) && (handle.slaveAddr == LEO_PMICA_SLAVE_ADDR))
         {
             continue;
         }
@@ -5002,34 +5002,34 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
     },
     {
         test_pmic_gpio1_fall_interrupt,
-        1001, /* Dummy */
+        6234,
         "\r\n GPIO1 Fall Interrupt Test"
     },
     {
         test_pmic_gpio1_rise_interrupt,
-        1002, /* Dummy */
+        6235,
         "\r\n GPIO1 Rise Interrupt Test"
     },
     {
         test_pmic_gpio2_fall_interrupt,
-        1003, /* Dummy */
+        6236,
         "\r\n GPIO2 Fall Interrupt Test"
     },
     {
         test_pmic_gpio2_rise_interrupt,
-        1004, /* Dummy */
+        6237,
         "\r\n GPIO2 Rise Interrupt Test"
     },
 /* FIXME: PMICA GPIO3 pin Causing reset on J721 EVM */
 #if 0
     {
         test_pmic_gpio3_fall_interrupt,
-        1005, /* Dummy */
+        6238,
         "\r\n GPIO3 Fall Interrupt Test"
     },
     {
         test_pmic_gpio3_rise_interrupt,
-        1006, /* Dummy */
+        6239,
         "\r\n GPIO3 Rise Interrupt Test"
     },
 #endif
@@ -5037,114 +5037,114 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
 #if 0
     {
         test_pmic_gpio4_fall_interrupt,
-        1007, /* Dummy */
+        6240,
         "\r\n GPIO4 Fall Interrupt Test"
     },
     {
         test_pmic_gpio4_rise_interrupt,
-        1008, /* Dummy */
+        6241,
         "\r\n GPIO4 Rise Interrupt Test"
     },
 #endif
     {
         test_pmic_gpio5_fall_interrupt,
-        1009, /* Dummy */
+        6242,
         "\r\n GPIO5 Fall Interrupt Test"
     },
     {
         test_pmic_gpio5_rise_interrupt,
-        1010, /* Dummy */
+        6243,
         "\r\n GPIO5 Rise Interrupt Test"
     },
     {
         test_pmic_gpio6_fall_interrupt,
-        1011, /* Dummy */
+        6244,
         "\r\n GPIO6 Fall Interrupt Test"
     },
     {
         test_pmic_gpio6_rise_interrupt,
-        1012, /* Dummy */
+        6245,
         "\r\n GPIO6 Rise Interrupt Test"
     },
 /* FIXME: On J721 EVM, GPIO7 interrupt Causing reset */
 #if 0
     {
         test_pmic_gpio7_fall_interrupt,
-        1013, /* Dummy */
+        6246,
         "\r\n GPIO7 Fall Interrupt Test"
     },
     {
         test_pmic_gpio7_rise_interrupt,
-        1014, /* Dummy */
+        6247,
         "\r\n GPIO7 Rise Interrupt Test"
     },
 #endif
     {
         test_pmic_gpio8_fall_interrupt,
-        1015, /* Dummy */
+        6248,
         "\r\n GPIO8 Fall Interrupt Test"
     },
     {
         test_pmic_gpio8_rise_interrupt,
-        1016, /* Dummy */
+        6249,
         "\r\n GPIO8 Rise Interrupt Test"
     },
 /* FIXME: On J721 EVM, GPIO-9,10,11 interrupts Causing reset */
 #if 0
     {
         test_pmic_gpio9_fall_interrupt,
-        1017, /* Dummy */
+        6250,
         "\r\n GPIO9 Fall Interrupt Test"
     },
     {
         test_pmic_gpio9_rise_interrupt,
-        1018, /* Dummy */
+        6251,
         "\r\n GPIO9 Rise Interrupt Test"
     },
     {
         test_pmic_gpio10_fall_interrupt,
-        1019, /* Dummy */
+        6252,
         "\r\n GPIO10 Fall Interrupt Test"
     },
     {
         test_pmic_gpio10_rise_interrupt,
-        1020, /* Dummy */
+        6253,
         "\r\n GPIO10 Rise Interrupt Test"
     },
     {
         test_pmic_gpio11_fall_interrupt,
-        1021, /* Dummy */
+        6254,
         "\r\n GPIO11 Fall Interrupt Test"
     },
     {
         test_pmic_gpio11_rise_interrupt,
-        1022, /* Dummy */
+        6255,
         "\r\n GPIO11 Rise Interrupt Test"
     },
 #endif
     {
         test_pmic_gpio_intr_pv_handle,
-        1023, /* Dummy */
+        6256,
         "\r\n Parameter validation for handle"
     },
     {
         test_pmic_gpio_intr_pv_pin,
-        1024, /* Dummy */
+        6257,
         "\r\n Parameter validation for pin"
     },
     {
         test_pmic_gpio_intr_pv_intrType,
-        1025, /* Dummy */
+        6258,
         "\r\n Parameter validation for intrType"
     },
     {
         test_pmic_gpio_intr_pv_maskPol,
-        1026, /* Dummy */
+        6259,
         "\r\n Parameter validation for maskPol"
     },
     {
         test_pmic_gpio_setCfgGpioPin5_spmi_sclk,
-        1027, /* Dummy */
+        6200,
         "Pmic_gpioSetConfiguration : configure gpio pin 5 as SPMI SCLK function"
     },
     {
@@ -5167,7 +5167,7 @@ static void test_pmic_gpio_testApp(void)
     pmicConfigData.pmicDeviceType      = PMIC_DEV_LEO_TPS6594;
     pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
 
-    pmicConfigData.commMode            = PMIC_INTF_SINGLE_I2C;
+    pmicConfigData.commMode            = PMIC_INTF_DUAL_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
     pmicConfigData.slaveAddr           = LEO_PMICA_SLAVE_ADDR;

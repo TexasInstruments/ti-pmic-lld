@@ -123,7 +123,16 @@ extern "C" {
 /*                         Function Declarations                            */
 /*==========================================================================*/
 
+/*!
+ * \brief  Function to get the PMIC GPIO Pins with Input Ouput Configuration
+ *         for TPS65941 Leo PMIC
+ */
 void pmic_get_tps65941_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg);
+
+/*!
+ * \brief  Function to get the PMIC GPIO Interrupt Register array for
+ *         TPS65941 Leo PMIC
+ */
 void pmic_get_tps65941_gpioIntRegCfg(Pmic_GpioIntRegCfg_t **pGpioIntRegCfg);
 
 #ifdef __cplusplus

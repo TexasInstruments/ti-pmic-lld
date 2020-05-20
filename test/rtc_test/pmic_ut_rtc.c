@@ -2276,7 +2276,7 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
  */
     {
         test_rtc_timer_irq,
-        1111,/* Dummy */
+        6266,
         "\r\n test_rtc_timer_irq   :    Test rtc timer interrupt"
     },
 /*
@@ -2285,17 +2285,17 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
  */
     {
         test_rtc_alarm_irq,
-        2222,/* Dummy */
+        6267,
         "\r\n test_rtc_alarm_irq   :    Test rtc alarm interrupt"
     },
     {
         test_rtc_enable_timer_interrupt_test_handle,
-        3333,/* Dummy */
+        6268,
         "\r\n Pmic_rtcEnableTimerIntr   :    Parameter validation for 'handle'"
     },
     {
         test_rtc_enable_alarm_interrupt_test_handle,
-        4444,/* Dummy */
+        6269,
         "\r\n Pmic_rtcEnableAlarmIntr   :    Parameter validation for 'handle'"
     },
     {
