@@ -80,7 +80,6 @@ static bool test_pmic_gpio_setCfgGpioPin_nSLEEP1(void *pmicHandle)
             return PMIC_UT_FAILURE;
         }
 
-        Osal_delay(50U);
         pmicStatus = Pmic_gpioGetConfiguration(&handle,
                                                pins[pin],
                                                &gpioCfg_rd);
@@ -141,7 +140,6 @@ static bool test_pmic_gpio_setCfgGpioPin_nSLEEP2(void *pmicHandle)
             return PMIC_UT_FAILURE;
         }
 
-        Osal_delay(50U);
         pmicStatus = Pmic_gpioGetConfiguration(&handle,
                                                pins[pin],
                                                &gpioCfg_rd);
@@ -193,7 +191,6 @@ static bool test_pmic_gpio_setCfgGpioPin1_nRstOut_soc(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -242,7 +239,6 @@ static bool test_pmic_gpio_setCfgGpioPin11_nRstOut_soc(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -300,7 +296,6 @@ static bool test_pmic_gpio_setCfgGpioPin_wakeup1(void *pmicHandle)
             return PMIC_UT_FAILURE;
         }
 
-        Osal_delay(50U);
         pmicStatus = Pmic_gpioGetConfiguration(&handle,
                                                pins[pin],
                                                &gpioCfg_rd);
@@ -361,7 +356,6 @@ static bool test_pmic_gpio_setCfgGpioPin_wakeup2(void *pmicHandle)
             return PMIC_UT_FAILURE;
         }
 
-        Osal_delay(50U);
         pmicStatus = Pmic_gpioGetConfiguration(&handle,
                                                pins[pin],
                                                &gpioCfg_rd);
@@ -420,7 +414,6 @@ static bool test_pmic_gpio_setCfgGpioPin_gpio(void *pmicHandle)
             return PMIC_UT_FAILURE;
         }
 
-        Osal_delay(50U);
         pmicStatus = Pmic_gpioGetConfiguration(&handle,
                                                pins[pin],
                                                &gpioCfg_rd);
@@ -472,7 +465,6 @@ static bool test_pmic_gpio_setCfgGpioPin1_i2c2_sclk(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -521,7 +513,6 @@ static bool test_pmic_gpio_setCfgGpioPin2_i2c2_sda(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -570,7 +561,6 @@ static bool test_pmic_gpio_setCfgGpioPin1_spi_cs(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -619,7 +609,6 @@ static bool test_pmic_gpio_setCfgGpioPin2_spi_sdo(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -671,7 +660,6 @@ static bool test_pmic_gpio_setCfgGpioPin_wdt(void *pmicHandle)
             return PMIC_UT_FAILURE;
         }
 
-        Osal_delay(50U);
         pmicStatus = Pmic_gpioGetConfiguration(&handle,
                                                pins[pin],
                                                &gpioCfg_rd);
@@ -725,7 +713,6 @@ static bool test_pmic_gpio_setCfgGpioPin3_esm_soc(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -775,7 +762,6 @@ static bool test_pmic_gpio_setCfgGpioPin7_esm_mcu(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -824,7 +810,6 @@ static bool test_pmic_gpio_setCfgGpioPin5_spmi_sclk(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -873,7 +858,6 @@ static bool test_pmic_gpio_setCfgGpioPin6_spmi_sdata(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -928,7 +912,6 @@ static bool test_pmic_gpio_setCfgGpioPin_syncCLKOUT(void *pmicHandle)
             return PMIC_UT_FAILURE;
         }
 
-        Osal_delay(50U);
         pmicStatus = Pmic_gpioGetConfiguration(&handle,
                                                pins[pin],
                                                &gpioCfg_rd);
@@ -980,7 +963,6 @@ static bool test_pmic_gpio_setCfgGpioPin9_syncCLKOUT(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -1029,7 +1011,6 @@ static bool test_pmic_gpio_setCfgGpioPin10_synCLKIN(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -1087,7 +1068,6 @@ static bool test_pmic_gpio_setCfgGpioPin_clk32KOUT(void *pmicHandle)
             return PMIC_UT_FAILURE;
         }
 
-        Osal_delay(50U);
         pmicStatus = Pmic_gpioGetConfiguration(&handle,
                                                pins[pin],
                                                &gpioCfg_rd);
@@ -1143,7 +1123,6 @@ static bool test_pmic_gpio_setCfgGpioPin10_clk32KOUT(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -1193,7 +1172,6 @@ static bool test_pmic_gpio_setCfgGpioPin8_wdg_disable(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -1242,7 +1220,6 @@ static bool test_pmic_gpio_setCfgGpioPin9_wdg_disable(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -1291,7 +1268,6 @@ static bool test_pmic_gpio_setCfgGpioPin9_good_power(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -1635,7 +1611,6 @@ static bool test_pmic_gpio_getCfgGpioPin(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -1776,7 +1751,6 @@ static bool test_pmic_gpio_getValueGpioPin1_signalLevel(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -1906,7 +1880,6 @@ static bool test_pmic_gpio_setValueGpioPin1_signalLevel(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -2037,7 +2010,6 @@ static bool test_pmic_gpio_setValueGpioPin5_input(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -2159,7 +2131,6 @@ static bool test_pmic_gpio1_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -2280,7 +2251,6 @@ static bool test_pmic_gpio1_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -2390,7 +2360,6 @@ static bool test_pmic_gpio2_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -2406,7 +2375,7 @@ static bool test_pmic_gpio2_fall_interrupt(void *pmicHandle)
     }
 
     pinValue = PMIC_GPIO_LOW;
-    Osal_delay(50U);
+
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -2500,7 +2469,6 @@ static bool test_pmic_gpio2_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -2612,7 +2580,6 @@ static bool test_pmic_gpio3_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -2722,7 +2689,6 @@ static bool test_pmic_gpio3_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -2835,7 +2801,6 @@ static bool test_pmic_gpio4_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -2945,7 +2910,6 @@ static bool test_pmic_gpio4_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -3059,7 +3023,6 @@ static bool test_pmic_gpio5_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -3169,7 +3132,6 @@ static bool test_pmic_gpio5_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -3279,7 +3241,6 @@ static bool test_pmic_gpio6_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -3389,7 +3350,6 @@ static bool test_pmic_gpio6_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -3501,7 +3461,6 @@ static bool test_pmic_gpio7_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -3611,7 +3570,6 @@ static bool test_pmic_gpio7_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -3722,7 +3680,6 @@ static bool test_pmic_gpio8_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -3832,7 +3789,6 @@ static bool test_pmic_gpio8_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -3944,7 +3900,6 @@ static bool test_pmic_gpio9_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -4054,7 +4009,6 @@ static bool test_pmic_gpio9_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -4164,7 +4118,6 @@ static bool test_pmic_gpio10_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -4274,7 +4227,6 @@ static bool test_pmic_gpio10_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -4384,7 +4336,6 @@ static bool test_pmic_gpio11_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -4494,7 +4445,6 @@ static bool test_pmic_gpio11_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -4593,7 +4543,6 @@ static bool test_pmic_gpio_intr_pv_handle(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -4643,7 +4592,6 @@ static bool test_pmic_gpio_intr_pv_pin(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, 1U, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -4693,7 +4641,6 @@ static bool test_pmic_gpio_intr_pv_intrType(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -4743,7 +4690,6 @@ static bool test_pmic_gpio_intr_pv_maskPol(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
