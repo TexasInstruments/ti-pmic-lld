@@ -1978,10 +1978,25 @@ int32_t  Pmic_rtcSetAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
         pmicStatus = PMIC_ST_ERR_INV_DEVICE;
     }
 
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       ((NULL == pTimeCfg) || (NULL == pDateCfg)))
+    if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+        if(NULL == pTimeCfg)
+        {
+            pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+        }
+        else
+        {
+            timeCfg = *pTimeCfg;
+        }
+
+        if(NULL == pDateCfg)
+        {
+            pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+        }
+        else
+        {
+            dateCfg = *pDateCfg;
+        }
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
@@ -1991,13 +2006,12 @@ int32_t  Pmic_rtcSetAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
         pmicStatus = PMIC_ST_ERR_INSUFFICIENT_CFG;
     }
 
-    timeCfg = *pTimeCfg;
-    dateCfg = *pDateCfg;
-
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         /* Verify time and date */
-        pmicStatus = Pmic_rtcCheckDateTime(pPmicCoreHandle, &timeCfg, &dateCfg);
+        pmicStatus = Pmic_rtcCheckDateTime(pPmicCoreHandle,
+                                           &timeCfg,
+                                           &dateCfg);
     }
 
     /* Set Alarm Time */
@@ -2225,10 +2239,25 @@ int32_t  Pmic_rtcSetTimeDateInfo(Pmic_CoreHandle_t *pPmicCoreHandle,
         pmicStatus = PMIC_ST_ERR_INV_DEVICE;
     }
 
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       ((NULL == pTimeCfg) || (NULL == pDateCfg)))
+    if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+        if(NULL == pTimeCfg)
+        {
+            pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+        }
+        else
+        {
+            timeCfg = *pTimeCfg;
+        }
+
+        if(NULL == pDateCfg)
+        {
+            pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+        }
+        else
+        {
+            dateCfg = *pDateCfg;
+        }
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
@@ -2237,9 +2266,6 @@ int32_t  Pmic_rtcSetTimeDateInfo(Pmic_CoreHandle_t *pPmicCoreHandle,
     {
         pmicStatus = PMIC_ST_ERR_INSUFFICIENT_CFG;
     }
-
-    timeCfg = *pTimeCfg;
-    dateCfg = *pDateCfg;
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
