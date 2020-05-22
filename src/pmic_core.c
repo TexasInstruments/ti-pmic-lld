@@ -38,6 +38,8 @@
  */
 
 #include <pmic_core_priv.h>
+#include <pmic_rtc_tps65941_priv.h>
+#include <pmic_fsm_priv.h>
 
 static const Pmic_DevSubSysInfo_t pmicSubSysInfo[] =
 {
@@ -54,6 +56,46 @@ static const Pmic_DevSubSysInfo_t pmicSubSysInfo[] =
         .wdgEnable  = true
     }
 };
+
+/*!
+ * \brief   Function to setup nSLEEP signals
+ */
+static int32_t Pmic_nSleepSignalsSetup(Pmic_CoreHandle_t *pmicHandle)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+    uint8_t regVal = 0U;
+
+    Pmic_criticalSectionStart(pmicHandle);
+    pmicStatus = Pmic_commIntf_recvByte(pmicHandle,
+                                        PMIC_RTC_CTRL_2_REGADDR,
+                                        &regData);
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        regVal = HW_REG_GET_FIELD(regData, PMIC_RTC_CTRL_2_STARTUP_DEST);
+
+        pmicStatus = Pmic_commIntf_recvByte(pmicHandle,
+                                            PMIC_FSM_NSLEEP_TRIGGERS_REGADDR,
+                                            &regData);
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        HW_REG_SET_FIELD(regData,
+                         PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B,
+                         (BIT_POS_GET_VAL(regVal, 1U)));
+        HW_REG_SET_FIELD(regData,
+                         PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B,
+                         (BIT_POS_GET_VAL(regVal, 0U)));
+        pmicStatus = Pmic_commIntf_sendByte(pmicHandle,
+                                            PMIC_FSM_NSLEEP_TRIGGERS_REGADDR,
+                                            regData);
+    }
+
+    Pmic_criticalSectionStop(pmicHandle);
+
+    return pmicStatus;
+}
 
 /*!
  * \brief: Checks the validParam bit position is set or not in validParamVal
@@ -472,6 +514,11 @@ int32_t Pmic_init(Pmic_CoreCfg_t      *pPmicConfigData,
                 default:
                     pmicStatus = PMIC_ST_ERR_INV_DEVICE;
             }
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            pmicStatus = Pmic_nSleepSignalsSetup(pPmicCoreHandle);
         }
 
         if(PMIC_ST_SUCCESS == pmicStatus)

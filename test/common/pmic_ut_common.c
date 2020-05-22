@@ -38,7 +38,6 @@
  */
 
 #include <pmic_ut_common.h>
-#include <pmic_gpio.h>
 
 /*!
  * \brief   OS specific Critical section locking Variable
@@ -599,6 +598,14 @@ void tearDown(void)
     /* Do nothing */
 }
 
+static void Pmic_intClr(Pmic_CoreHandle_t *pmicHandle)
+{
+    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
+    uint32_t pErrStat         = 0U;
+
+    Pmic_irqGetErrStatus(&handle, &pErrStat, 1U);
+}
+
 /*!
  * \brief   Pmic Unity Tests Common function
  *
@@ -620,6 +627,8 @@ bool test_pmic_common(Pmic_Ut_Tests_t *pmicTestcase,
 
     ret = test_pmic_appInit(&pmicCoreHandle, pmicCfgData);
     TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, ret);
+
+    Pmic_intClr(pmicCoreHandle);
 
     for (i = 0U; ; i++)
     {

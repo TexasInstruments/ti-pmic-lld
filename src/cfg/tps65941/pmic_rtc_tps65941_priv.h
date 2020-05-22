@@ -164,7 +164,7 @@ extern "C" {
 #define PMIC_RTC_CTRL_1_STOP_RTC_SHIFT                (0x00U)
 
 #define PMIC_RTC_CTRL_2_FIRST_STARTUP_DONE_SHIFT      (0x07U)
-#define PMIC_RTC_CTRL_2_STARTUP_DEST_SHIFT            (0x06U)
+#define PMIC_RTC_CTRL_2_STARTUP_DEST_SHIFT            (0x05U)
 #define PMIC_RTC_CTRL_2_FAST_BIST_SHIFT               (0x04U)
 #define PMIC_RTC_CTRL_2_LP_STANDBY_SEL_SHIFT          (0x03U)
 #define PMIC_RTC_CTRL_2_XTAL_SEL_SHIFT                (0x01U)
@@ -295,7 +295,7 @@ extern "C" {
 #define PMIC_RTC_CTRL_2_FIRST_STARTUP_DONE_MASK       (uint8_t)(0x01<<        \
                                       PMIC_RTC_CTRL_2_FIRST_STARTUP_DONE_SHIFT)
 
-#define PMIC_RTC_CTRL_2_STARTUP_DEST_MASK             (uint8_t)(0x01<<        \
+#define PMIC_RTC_CTRL_2_STARTUP_DEST_MASK             (uint8_t)(0x03<<        \
                                             PMIC_RTC_CTRL_2_STARTUP_DEST_SHIFT)
 
 #define PMIC_RTC_CTRL_2_FAST_BIST_MASK                (uint8_t)(0x01<<        \
