@@ -2106,7 +2106,6 @@ static bool test_pmic_gpio1_fall_interrupt(void *pmicHandle)
     uint32_t pErrStat         = 0U;
     uint32_t irqL1            = 0U;
     uint32_t irqL2            = 0U;
-    uint8_t  intRc            = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -2138,17 +2137,6 @@ static bool test_pmic_gpio1_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    /* To Clear Interrupts at Startup */
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_irqGetErrStatus(&handle, &pErrStat, 1U);
-
-        Pmic_irqGetErrStatus(&handle, &pErrStat, 1U);
-
-        Pmic_irqGetErrStatus(&handle, &pErrStat, 1U);
-
-    }
-
     pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -2157,7 +2145,6 @@ static bool test_pmic_gpio1_fall_interrupt(void *pmicHandle)
     }
 
     pinValue = PMIC_GPIO_LOW;
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -2165,8 +2152,7 @@ static bool test_pmic_gpio1_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
-    while (intRc)
+    while(1U)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -2179,7 +2165,6 @@ static bool test_pmic_gpio1_fall_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO1_MASK == irqL2) ||
                (PMIC_INT_GPIO1_MASK  == errStat))
             {
-                intRc = 0U;
                 pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
                 pmicStatus = Pmic_gpioSetIntr(&handle,
@@ -2190,19 +2175,20 @@ static bool test_pmic_gpio1_fall_interrupt(void *pmicHandle)
                 {
                     /* clear the interrupt */
                     pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    break;
                 }
             }
         }
     }
+
+    /* UN-MASKING all Interrupts */
+    pmic_all_intUnMask(&handle);
 
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
         pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
         return PMIC_UT_FAILURE;
     }
-
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
 
     return PMIC_UT_SUCCESS;
 }
@@ -2226,7 +2212,6 @@ static bool test_pmic_gpio1_rise_interrupt(void *pmicHandle)
     uint32_t pErrStat         = 0U;
     uint32_t irqL1            = 0U;
     uint32_t irqL2            = 0U;
-    uint8_t  intRc            = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -2266,7 +2251,6 @@ static bool test_pmic_gpio1_rise_interrupt(void *pmicHandle)
     }
 
     pinValue = PMIC_GPIO_HIGH;
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -2274,8 +2258,7 @@ static bool test_pmic_gpio1_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
-    while(intRc)
+    while(1U)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -2288,8 +2271,7 @@ static bool test_pmic_gpio1_rise_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO1_MASK == irqL2) ||
                (PMIC_INT_GPIO1_MASK  == errStat))
             {
-                intRc = 0U;
-                pmic_log("\nInterrupt Received\n ");
+                pmic_log("\n Interrupt Received \n ");
                 /* Disable the GPIO Interrupt  */
                 pmicStatus = Pmic_gpioSetIntr(&handle,
                                               pin,
@@ -2299,19 +2281,20 @@ static bool test_pmic_gpio1_rise_interrupt(void *pmicHandle)
                 {
                     /* clear the interrupt */
                     pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    break;
                 }
             }
         }
     }
+
+    /* UN-MASKING all Interrupts */
+    pmic_all_intUnMask(&handle);
 
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
         pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
         return PMIC_UT_FAILURE;
     }
-
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
 
     return PMIC_UT_SUCCESS;
 }
@@ -2335,7 +2318,6 @@ static bool test_pmic_gpio2_fall_interrupt(void *pmicHandle)
     uint32_t pErrStat         = 0U;
     uint32_t irqL1            = 0U;
     uint32_t irqL2            = 0U;
-    uint8_t intRc             = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -2375,7 +2357,6 @@ static bool test_pmic_gpio2_fall_interrupt(void *pmicHandle)
     }
 
     pinValue = PMIC_GPIO_LOW;
-
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -2383,8 +2364,7 @@ static bool test_pmic_gpio2_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
-    while(intRc)
+    while(1U)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -2397,7 +2377,6 @@ static bool test_pmic_gpio2_fall_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO2_MASK == irqL2) ||
                (PMIC_INT_GPIO2_MASK  == errStat))
             {
-                intRc = 0U;
                 pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
                 pmicStatus = Pmic_gpioSetIntr(&handle,
@@ -2408,19 +2387,20 @@ static bool test_pmic_gpio2_fall_interrupt(void *pmicHandle)
                 {
                     /* clear the interrupt */
                     pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    break;
                 }
             }
         }
     }
+
+    /* UN-MASKING all Interrupts */
+    pmic_all_intUnMask(&handle);
 
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
         pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
         return PMIC_UT_FAILURE;
     }
-
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
 
     return PMIC_UT_SUCCESS;
 }
@@ -2444,7 +2424,6 @@ static bool test_pmic_gpio2_rise_interrupt(void *pmicHandle)
     uint32_t pErrStat         = 0U;
     uint32_t irqL1            = 0U;
     uint32_t irqL2            = 0U;
-    uint8_t intRc             = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -2484,7 +2463,6 @@ static bool test_pmic_gpio2_rise_interrupt(void *pmicHandle)
     }
 
     pinValue = PMIC_GPIO_HIGH;
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -2492,8 +2470,7 @@ static bool test_pmic_gpio2_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
-    while(intRc)
+    while(1U)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -2506,7 +2483,6 @@ static bool test_pmic_gpio2_rise_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO2_MASK == irqL2) ||
                (PMIC_INT_GPIO2_MASK  == errStat))
             {
-                intRc = 0U;
                 pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
                 pmicStatus = Pmic_gpioSetIntr(&handle,
@@ -2517,19 +2493,20 @@ static bool test_pmic_gpio2_rise_interrupt(void *pmicHandle)
                 {
                     /* clear the interrupt */
                     pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    break;
                 }
             }
         }
     }
+
+    /* UN-MASKING all Interrupts */
+    pmic_all_intUnMask(&handle);
 
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
         pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
         return PMIC_UT_FAILURE;
     }
-
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
 
     return PMIC_UT_SUCCESS;
 }
@@ -2555,7 +2532,6 @@ static bool test_pmic_gpio3_fall_interrupt(void *pmicHandle)
     uint32_t pErrStat         = 0U;
     uint32_t irqL1            = 0U;
     uint32_t irqL2            = 0U;
-    uint8_t intRc             = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -2595,7 +2571,6 @@ static bool test_pmic_gpio3_fall_interrupt(void *pmicHandle)
     }
 
     pinValue = PMIC_GPIO_LOW;
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -2603,8 +2578,7 @@ static bool test_pmic_gpio3_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
-    while(intRc)
+    while(1U)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -2617,7 +2591,6 @@ static bool test_pmic_gpio3_fall_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO3_MASK == irqL2) ||
                (PMIC_INT_GPIO3_MASK  == errStat))
             {
-                intRc = 0U;
                 pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
                 pmicStatus = Pmic_gpioSetIntr(&handle,
@@ -2628,19 +2601,20 @@ static bool test_pmic_gpio3_fall_interrupt(void *pmicHandle)
                 {
                     /* clear the interrupt */
                     pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    break;
                 }
             }
         }
     }
+
+    /* UN-MASKING all Interrupts */
+    pmic_all_intUnMask(&handle);
 
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
         pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
         return PMIC_UT_FAILURE;
     }
-
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
 
     return PMIC_UT_SUCCESS;
 }
@@ -2664,7 +2638,6 @@ static bool test_pmic_gpio3_rise_interrupt(void *pmicHandle)
     uint32_t pErrStat         = 0U;
     uint32_t irqL1            = 0U;
     uint32_t irqL2            = 0U;
-    uint8_t intRc             = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -2704,7 +2677,6 @@ static bool test_pmic_gpio3_rise_interrupt(void *pmicHandle)
     }
 
     pinValue = PMIC_GPIO_HIGH;
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -2712,8 +2684,7 @@ static bool test_pmic_gpio3_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
-    while(intRc)
+    while(1U)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -2726,7 +2697,6 @@ static bool test_pmic_gpio3_rise_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO3_MASK == irqL2) ||
                (PMIC_INT_GPIO3_MASK  == errStat))
             {
-                intRc = 0U;
                 pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
                 pmicStatus = Pmic_gpioSetIntr(&handle,
@@ -2737,19 +2707,20 @@ static bool test_pmic_gpio3_rise_interrupt(void *pmicHandle)
                 {
                     /* clear the interrupt */
                     pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    break;
                 }
             }
         }
     }
+
+    /* UN-MASKING all Interrupts */
+    pmic_all_intUnMask(&handle);
 
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
         pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
         return PMIC_UT_FAILURE;
     }
-
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
 
     return PMIC_UT_SUCCESS;
 }
@@ -2776,7 +2747,6 @@ static bool test_pmic_gpio4_fall_interrupt(void *pmicHandle)
     uint32_t pErrStat         = 0U;
     uint32_t irqL1            = 0U;
     uint32_t irqL2            = 0U;
-    uint8_t intRc             = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -2816,7 +2786,6 @@ static bool test_pmic_gpio4_fall_interrupt(void *pmicHandle)
     }
 
     pinValue = PMIC_GPIO_LOW;
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -2824,8 +2793,7 @@ static bool test_pmic_gpio4_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
-    while(intRc)
+    while(1U)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -2838,7 +2806,6 @@ static bool test_pmic_gpio4_fall_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO4_MASK == irqL2) ||
                (PMIC_INT_GPIO4_MASK  == errStat))
             {
-                intRc = 0U;
                 pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
                 pmicStatus = Pmic_gpioSetIntr(&handle,
@@ -2849,19 +2816,20 @@ static bool test_pmic_gpio4_fall_interrupt(void *pmicHandle)
                 {
                     /* clear the interrupt */
                     pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    break;
                 }
             }
         }
     }
+
+    /* UN-MASKING all Interrupts */
+    pmic_all_intUnMask(&handle);
 
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
         pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
         return PMIC_UT_FAILURE;
     }
-
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
 
     return PMIC_UT_SUCCESS;
 }
@@ -2885,7 +2853,6 @@ static bool test_pmic_gpio4_rise_interrupt(void *pmicHandle)
     uint32_t pErrStat         = 0U;
     uint32_t irqL1            = 0U;
     uint32_t irqL2            = 0U;
-    uint8_t intRc             = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -2925,7 +2892,6 @@ static bool test_pmic_gpio4_rise_interrupt(void *pmicHandle)
     }
 
     pinValue = PMIC_GPIO_HIGH;
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -2933,8 +2899,7 @@ static bool test_pmic_gpio4_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
-    while(intRc)
+    while(1U)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -2947,7 +2912,6 @@ static bool test_pmic_gpio4_rise_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO4_MASK == irqL2) ||
                (PMIC_INT_GPIO4_MASK  == errStat))
             {
-                intRc = 0U;
                 pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
                 pmicStatus = Pmic_gpioSetIntr(&handle,
@@ -2958,19 +2922,20 @@ static bool test_pmic_gpio4_rise_interrupt(void *pmicHandle)
                 {
                     /* clear the interrupt */
                     pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    break;
                 }
             }
         }
     }
+
+    /* UN-MASKING all Interrupts */
+    pmic_all_intUnMask(&handle);
 
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
         pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
         return PMIC_UT_FAILURE;
     }
-
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
 
     return PMIC_UT_SUCCESS;
 
@@ -2996,7 +2961,6 @@ static bool test_pmic_gpio5_fall_interrupt(void *pmicHandle)
     uint32_t pErrStat         = 0U;
     uint32_t irqL1            = 0U;
     uint32_t irqL2            = 0U;
-    uint8_t intRc             = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -3038,7 +3002,6 @@ static bool test_pmic_gpio5_fall_interrupt(void *pmicHandle)
     }
 
     pinValue = PMIC_GPIO_LOW;
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -3046,8 +3009,7 @@ static bool test_pmic_gpio5_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
-    while(intRc)
+    while(1U)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -3060,7 +3022,6 @@ static bool test_pmic_gpio5_fall_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO5_MASK == irqL2) ||
                (PMIC_INT_GPIO5_MASK  == errStat))
             {
-               intRc = 0U;
                pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
                 pmicStatus = Pmic_gpioSetIntr(&handle,
@@ -3071,19 +3032,20 @@ static bool test_pmic_gpio5_fall_interrupt(void *pmicHandle)
                 {
                     /* clear the interrupt */
                     pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    break;
                 }
             }
         }
     }
+
+    /* UN-MASKING all Interrupts */
+    pmic_all_intUnMask(&handle);
 
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
         pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
         return PMIC_UT_FAILURE;
     }
-
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
 
     return PMIC_UT_SUCCESS;
 }
@@ -3107,7 +3069,6 @@ static bool test_pmic_gpio5_rise_interrupt(void *pmicHandle)
     uint32_t pErrStat         = 0U;
     uint32_t irqL1            = 0U;
     uint32_t irqL2            = 0U;
-    uint8_t intRc             = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -3147,7 +3108,6 @@ static bool test_pmic_gpio5_rise_interrupt(void *pmicHandle)
     }
 
     pinValue = PMIC_GPIO_HIGH;
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -3155,8 +3115,7 @@ static bool test_pmic_gpio5_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
-    while(intRc)
+    while(1U)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -3169,7 +3128,6 @@ static bool test_pmic_gpio5_rise_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO5_MASK == irqL2) ||
                (PMIC_INT_GPIO5_MASK  == errStat))
             {
-                intRc = 0U;
                 pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
                 pmicStatus = Pmic_gpioSetIntr(&handle,
@@ -3180,19 +3138,20 @@ static bool test_pmic_gpio5_rise_interrupt(void *pmicHandle)
                 {
                     /* clear the interrupt */
                     pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    break;
                 }
             }
         }
     }
+
+    /* UN-MASKING all Interrupts */
+    pmic_all_intUnMask(&handle);
 
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
         pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
         return PMIC_UT_FAILURE;
     }
-
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
 
     return PMIC_UT_SUCCESS;
 }
@@ -3216,7 +3175,6 @@ static bool test_pmic_gpio6_fall_interrupt(void *pmicHandle)
     uint32_t pErrStat         = 0U;
     uint32_t irqL1            = 0U;
     uint32_t irqL2            = 0U;
-    uint8_t intRc             = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -3256,7 +3214,6 @@ static bool test_pmic_gpio6_fall_interrupt(void *pmicHandle)
     }
 
     pinValue = PMIC_GPIO_LOW;
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -3264,8 +3221,7 @@ static bool test_pmic_gpio6_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
-    while(intRc)
+    while(1U)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -3278,7 +3234,6 @@ static bool test_pmic_gpio6_fall_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO6_MASK == irqL2) ||
                (PMIC_INT_GPIO6_MASK  == errStat))
             {
-                intRc = 0U;
                 pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
                 pmicStatus = Pmic_gpioSetIntr(&handle,
@@ -3289,19 +3244,20 @@ static bool test_pmic_gpio6_fall_interrupt(void *pmicHandle)
                 {
                     /* clear the interrupt */
                     pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    break;
                 }
             }
         }
     }
+
+    /* UN-MASKING all Interrupts */
+    pmic_all_intUnMask(&handle);
 
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
         pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
         return PMIC_UT_FAILURE;
     }
-
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
 
     return PMIC_UT_SUCCESS;
 }
@@ -3325,7 +3281,6 @@ static bool test_pmic_gpio6_rise_interrupt(void *pmicHandle)
     uint32_t pErrStat         = 0U;
     uint32_t irqL1            = 0U;
     uint32_t irqL2            = 0U;
-    uint8_t intRc             = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -3365,7 +3320,6 @@ static bool test_pmic_gpio6_rise_interrupt(void *pmicHandle)
     }
 
     pinValue = PMIC_GPIO_HIGH;
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -3373,8 +3327,7 @@ static bool test_pmic_gpio6_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
-    while(intRc)
+    while(1U)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -3387,7 +3340,6 @@ static bool test_pmic_gpio6_rise_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO6_MASK == irqL2) ||
                (PMIC_INT_GPIO6_MASK  == errStat))
             {
-                intRc = 0U;
                 pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
                 pmicStatus = Pmic_gpioSetIntr(&handle,
@@ -3398,19 +3350,20 @@ static bool test_pmic_gpio6_rise_interrupt(void *pmicHandle)
                 {
                     /* clear the interrupt */
                     pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    break;
                 }
             }
         }
     }
+
+    /* UN-MASKING all Interrupts */
+    pmic_all_intUnMask(&handle);
 
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
         pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
         return PMIC_UT_FAILURE;
     }
-
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
 
     return PMIC_UT_SUCCESS;
 }
@@ -3436,7 +3389,6 @@ static bool test_pmic_gpio7_fall_interrupt(void *pmicHandle)
     uint32_t pErrStat         = 0U;
     uint32_t irqL1            = 0U;
     uint32_t irqL2            = 0U;
-    uint8_t intRc             = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -3476,7 +3428,6 @@ static bool test_pmic_gpio7_fall_interrupt(void *pmicHandle)
     }
 
     pinValue = PMIC_GPIO_LOW;
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -3484,8 +3435,7 @@ static bool test_pmic_gpio7_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
-    while(intRc)
+    while(1U)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -3498,7 +3448,6 @@ static bool test_pmic_gpio7_fall_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO7_MASK == irqL2) ||
                (PMIC_INT_GPIO7_MASK  == errStat))
             {
-                intRc = 0U;
                 pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
                 pmicStatus = Pmic_gpioSetIntr(&handle,
@@ -3509,19 +3458,20 @@ static bool test_pmic_gpio7_fall_interrupt(void *pmicHandle)
                 {
                     /* clear the interrupt */
                     pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    break;
                 }
             }
         }
     }
+
+    /* UN-MASKING all Interrupts */
+    pmic_all_intUnMask(&handle);
 
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
         pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
         return PMIC_UT_FAILURE;
     }
-
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
 
     return PMIC_UT_SUCCESS;
 }
@@ -3545,7 +3495,6 @@ static bool test_pmic_gpio7_rise_interrupt(void *pmicHandle)
     uint32_t pErrStat         = 0U;
     uint32_t irqL1            = 0U;
     uint32_t irqL2            = 0U;
-    uint8_t intRc             = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -3585,7 +3534,6 @@ static bool test_pmic_gpio7_rise_interrupt(void *pmicHandle)
     }
 
     pinValue = PMIC_GPIO_HIGH;
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -3593,8 +3541,7 @@ static bool test_pmic_gpio7_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
-    while(intRc)
+    while(1U)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -3607,7 +3554,6 @@ static bool test_pmic_gpio7_rise_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO7_MASK == irqL2) ||
                (PMIC_INT_GPIO7_MASK  == errStat))
             {
-                intRc = 0U;
                 pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
                 pmicStatus = Pmic_gpioSetIntr(&handle,
@@ -3618,19 +3564,20 @@ static bool test_pmic_gpio7_rise_interrupt(void *pmicHandle)
                 {
                     /* clear the interrupt */
                     pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    break;
                 }
             }
         }
     }
+
+    /* UN-MASKING all Interrupts */
+    pmic_all_intUnMask(&handle);
 
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
         pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
         return PMIC_UT_FAILURE;
     }
-
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
 
     return PMIC_UT_SUCCESS;
 }
@@ -3655,7 +3602,6 @@ static bool test_pmic_gpio8_fall_interrupt(void *pmicHandle)
     uint32_t pErrStat         = 0U;
     uint32_t irqL1            = 0U;
     uint32_t irqL2            = 0U;
-    uint8_t intRc             = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -3695,7 +3641,6 @@ static bool test_pmic_gpio8_fall_interrupt(void *pmicHandle)
     }
 
     pinValue = PMIC_GPIO_LOW;
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -3703,8 +3648,7 @@ static bool test_pmic_gpio8_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
-    while(intRc)
+    while(1U)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -3717,7 +3661,6 @@ static bool test_pmic_gpio8_fall_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO8_MASK == irqL2) ||
                (PMIC_INT_GPIO8_MASK  == errStat))
             {
-                intRc = 0U;
                 pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
                 pmicStatus = Pmic_gpioSetIntr(&handle,
@@ -3728,19 +3671,20 @@ static bool test_pmic_gpio8_fall_interrupt(void *pmicHandle)
                 {
                     /* clear the interrupt */
                     pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    break;
                 }
             }
         }
     }
+
+    /* UN-MASKING all Interrupts */
+    pmic_all_intUnMask(&handle);
 
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
         pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
         return PMIC_UT_FAILURE;
     }
-
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
 
     return PMIC_UT_SUCCESS;
 }
@@ -3764,7 +3708,6 @@ static bool test_pmic_gpio8_rise_interrupt(void *pmicHandle)
     uint32_t pErrStat         = 0U;
     uint32_t irqL1            = 0U;
     uint32_t irqL2            = 0U;
-    uint8_t intRc             = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -3804,7 +3747,6 @@ static bool test_pmic_gpio8_rise_interrupt(void *pmicHandle)
     }
 
     pinValue = PMIC_GPIO_HIGH;
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -3812,8 +3754,7 @@ static bool test_pmic_gpio8_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
-    while(intRc)
+    while(1U)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -3826,7 +3767,6 @@ static bool test_pmic_gpio8_rise_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO8_MASK == irqL2) ||
                (PMIC_INT_GPIO8_MASK  == errStat))
             {
-                intRc = 0U;
                 pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
                 pmicStatus = Pmic_gpioSetIntr(&handle,
@@ -3837,19 +3777,20 @@ static bool test_pmic_gpio8_rise_interrupt(void *pmicHandle)
                 {
                     /* clear the interrupt */
                     pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    break;
                 }
             }
         }
     }
+
+    /* UN-MASKING all Interrupts */
+    pmic_all_intUnMask(&handle);
 
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
         pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
         return PMIC_UT_FAILURE;
     }
-
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
 
     return PMIC_UT_SUCCESS;
 }
@@ -3875,7 +3816,6 @@ static bool test_pmic_gpio9_fall_interrupt(void *pmicHandle)
     uint32_t pErrStat         = 0U;
     uint32_t irqL1            = 0U;
     uint32_t irqL2            = 0U;
-    uint8_t intRc             = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -3915,7 +3855,6 @@ static bool test_pmic_gpio9_fall_interrupt(void *pmicHandle)
     }
 
     pinValue = PMIC_GPIO_LOW;
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -3923,8 +3862,7 @@ static bool test_pmic_gpio9_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
-    while(intRc)
+    while(1U)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -3937,7 +3875,6 @@ static bool test_pmic_gpio9_fall_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO9_MASK == irqL2) ||
                (PMIC_INT_GPIO9_MASK  == errStat))
             {
-                intRc = 0U;
                 pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
                 pmicStatus = Pmic_gpioSetIntr(&handle,
@@ -3948,19 +3885,20 @@ static bool test_pmic_gpio9_fall_interrupt(void *pmicHandle)
                 {
                     /* clear the interrupt */
                     pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    break;
                 }
             }
         }
     }
+
+    /* UN-MASKING all Interrupts */
+    pmic_all_intUnMask(&handle);
 
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
         pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
         return PMIC_UT_FAILURE;
     }
-
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
 
     return PMIC_UT_SUCCESS;
 }
@@ -3984,7 +3922,6 @@ static bool test_pmic_gpio9_rise_interrupt(void *pmicHandle)
     uint32_t pErrStat         = 0U;
     uint32_t irqL1            = 0U;
     uint32_t irqL2            = 0U;
-    uint8_t intRc             = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -4024,7 +3961,6 @@ static bool test_pmic_gpio9_rise_interrupt(void *pmicHandle)
     }
 
     pinValue = PMIC_GPIO_HIGH;
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -4032,8 +3968,7 @@ static bool test_pmic_gpio9_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
-    while(intRc)
+    while(1U)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -4046,7 +3981,6 @@ static bool test_pmic_gpio9_rise_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO9_MASK == irqL2) ||
                (PMIC_INT_GPIO9_MASK  == errStat))
             {
-                intRc = 0U;
                 pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
                 pmicStatus = Pmic_gpioSetIntr(&handle,
@@ -4057,19 +3991,20 @@ static bool test_pmic_gpio9_rise_interrupt(void *pmicHandle)
                 {
                     /* clear the interrupt */
                     pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    break;
                 }
             }
         }
     }
+
+    /* UN-MASKING all Interrupts */
+    pmic_all_intUnMask(&handle);
 
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
         pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
         return PMIC_UT_FAILURE;
     }
-
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
 
     return PMIC_UT_SUCCESS;
 }
@@ -4093,7 +4028,6 @@ static bool test_pmic_gpio10_fall_interrupt(void *pmicHandle)
     uint32_t pErrStat         = 0U;
     uint32_t irqL1            = 0U;
     uint32_t irqL2            = 0U;
-    uint8_t intRc             = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -4133,7 +4067,6 @@ static bool test_pmic_gpio10_fall_interrupt(void *pmicHandle)
     }
 
     pinValue = PMIC_GPIO_LOW;
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -4141,8 +4074,7 @@ static bool test_pmic_gpio10_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
-    while(intRc)
+    while(1U)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -4155,7 +4087,6 @@ static bool test_pmic_gpio10_fall_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO10_MASK == irqL2) ||
                (PMIC_INT_GPIO10_MASK  == errStat))
             {
-                intRc = 0U;
                 pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
                 pmicStatus = Pmic_gpioSetIntr(&handle,
@@ -4166,19 +4097,20 @@ static bool test_pmic_gpio10_fall_interrupt(void *pmicHandle)
                 {
                     /* clear the interrupt */
                     pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    break;
                 }
             }
         }
     }
+
+    /* UN-MASKING all Interrupts */
+    pmic_all_intUnMask(&handle);
 
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
         pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
         return PMIC_UT_FAILURE;
     }
-
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
 
     return PMIC_UT_SUCCESS;
 }
@@ -4202,7 +4134,6 @@ static bool test_pmic_gpio10_rise_interrupt(void *pmicHandle)
     uint32_t pErrStat         = 0U;
     uint32_t irqL1            = 0U;
     uint32_t irqL2            = 0U;
-    uint8_t intRc             = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -4242,7 +4173,6 @@ static bool test_pmic_gpio10_rise_interrupt(void *pmicHandle)
     }
 
     pinValue = PMIC_GPIO_HIGH;
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -4250,8 +4180,7 @@ static bool test_pmic_gpio10_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
-    while(intRc)
+    while(1U)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -4264,7 +4193,6 @@ static bool test_pmic_gpio10_rise_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO10_MASK == irqL2) ||
                (PMIC_INT_GPIO10_MASK  == errStat))
             {
-                intRc = 0U;
                 pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
                 pmicStatus = Pmic_gpioSetIntr(&handle,
@@ -4275,19 +4203,20 @@ static bool test_pmic_gpio10_rise_interrupt(void *pmicHandle)
                 {
                     /* clear the interrupt */
                     pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    break;
                 }
             }
         }
     }
+
+    /* UN-MASKING all Interrupts */
+    pmic_all_intUnMask(&handle);
 
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
         pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
         return PMIC_UT_FAILURE;
     }
-
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
 
     return PMIC_UT_SUCCESS;
 }
@@ -4311,7 +4240,6 @@ static bool test_pmic_gpio11_fall_interrupt(void *pmicHandle)
     uint32_t pErrStat         = 0U;
     uint32_t irqL1            = 0U;
     uint32_t irqL2            = 0U;
-    uint8_t intRc             = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -4351,7 +4279,6 @@ static bool test_pmic_gpio11_fall_interrupt(void *pmicHandle)
     }
 
     pinValue = PMIC_GPIO_LOW;
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -4359,8 +4286,7 @@ static bool test_pmic_gpio11_fall_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
-    while(intRc)
+    while(1U)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -4373,7 +4299,6 @@ static bool test_pmic_gpio11_fall_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO11_MASK == irqL2) ||
                (PMIC_INT_GPIO11_MASK  == errStat))
             {
-                intRc = 0U;
                 pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
                 pmicStatus = Pmic_gpioSetIntr(&handle,
@@ -4384,19 +4309,20 @@ static bool test_pmic_gpio11_fall_interrupt(void *pmicHandle)
                 {
                     /* clear the interrupt */
                     pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    break;
                 }
             }
         }
     }
+
+    /* UN-MASKING all Interrupts */
+    pmic_all_intUnMask(&handle);
 
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
         pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
         return PMIC_UT_FAILURE;
     }
-
-    /* MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
 
     return PMIC_UT_SUCCESS;
 }
@@ -4420,7 +4346,6 @@ static bool test_pmic_gpio11_rise_interrupt(void *pmicHandle)
     uint32_t pErrStat         = 0U;
     uint32_t irqL1            = 0U;
     uint32_t irqL2            = 0U;
-    uint8_t intRc             = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -4460,7 +4385,6 @@ static bool test_pmic_gpio11_rise_interrupt(void *pmicHandle)
     }
 
     pinValue = PMIC_GPIO_HIGH;
-    Osal_delay(50U);
     pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -4468,8 +4392,7 @@ static bool test_pmic_gpio11_rise_interrupt(void *pmicHandle)
         return PMIC_UT_FAILURE;
     }
 
-    Osal_delay(50U);
-    while(intRc)
+    while(1U)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -4482,7 +4405,6 @@ static bool test_pmic_gpio11_rise_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO11_MASK == irqL2) ||
                (PMIC_INT_GPIO11_MASK  == errStat))
             {
-               intRc = 0U;
                 pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
                 pmicStatus = Pmic_gpioSetIntr(&handle,
@@ -4493,19 +4415,20 @@ static bool test_pmic_gpio11_rise_interrupt(void *pmicHandle)
                 {
                     /* clear the interrupt */
                     pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    break;
                 }
             }
         }
     }
+
+    /* UN-MASKING all Interrupts */
+    pmic_all_intUnMask(&handle);
 
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
         pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
         return PMIC_UT_FAILURE;
     }
-
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
 
     return PMIC_UT_SUCCESS;
 }

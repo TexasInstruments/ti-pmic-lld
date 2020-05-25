@@ -1713,17 +1713,14 @@ static int32_t pmic_irqMaskAll(Pmic_CoreHandle_t *pHandle, bool mask)
 static bool test_rtc_timer_irq(void *pPmicCoreHandle)
 {
     int32_t            status       = PMIC_ST_SUCCESS;
-    int8_t             timeout      = 10U;
     Pmic_CoreHandle_t  *pHandle     = NULL;
-    Pmic_RtcTime_t     timeCfg_cr   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
-    Pmic_RtcDate_t     dateCfg_cr   = { 0x0F, 0U, 0U, 0U, 0U};
     Pmic_RtcTime_t     timeCfg_rd   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
     Pmic_RtcDate_t     dateCfg_rd   = { 0x0F, 0U, 0U, 0U, 0U};
     uint8_t            clearIRQ     = 1U;
     uint32_t           pErrStat     = 0U;
     uint32_t           errBitStatus = 0U;
     bool               tstStatus    = PMIC_UT_FAILURE;
-    uint8_t timerPeriod = 0U;
+    uint8_t            timerPeriod  = 0U;
 
     Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
     Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
@@ -1772,10 +1769,8 @@ static bool test_rtc_timer_irq(void *pPmicCoreHandle)
 
     status = Pmic_rtcEnableTimerIntr(pHandle, PMIC_RTC_TIMER_INTR_ENABLE);
 
-    while(timeout--)
+    while(1)
     {
-        /* Added delay as workaround to avoid reset on J721 EVM */
-        Osal_delay(5000U);
         status = Pmic_irqGetErrStatus(pHandle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == status)
         {
@@ -1791,11 +1786,6 @@ static bool test_rtc_timer_irq(void *pPmicCoreHandle)
                 tstStatus = PMIC_UT_SUCCESS;
                 break;
             }
-        }
-        status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
-        if(PMIC_ST_SUCCESS != status)
-        {
-            tstStatus = PMIC_UT_FAILURE;
         }
     }
 
@@ -1825,8 +1815,6 @@ static bool test_rtc_alarm_irq(void *pPmicCoreHandle)
     int32_t            status       = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t  *pHandle     = NULL;
     pHandle                         = pPmicCoreHandle;
-    Pmic_RtcTime_t     timeCfg_cr   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
-    Pmic_RtcDate_t     dateCfg_cr   = { 0x0F, 0U, 0U, 0U, 0U};
     Pmic_RtcTime_t     timeCfg_rd   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
     Pmic_RtcDate_t     dateCfg_rd   = { 0x0F, 0U, 0U, 0U, 0U};
 
@@ -1834,7 +1822,6 @@ static bool test_rtc_alarm_irq(void *pPmicCoreHandle)
     uint32_t           errBitStatus = 0U;
     uint32_t           pErrStat     = 0U;
     bool               tstStatus    = PMIC_UT_FAILURE;
-    int8_t             timeout      = 10U;
 
     Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
     Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
@@ -1866,16 +1853,8 @@ static bool test_rtc_alarm_irq(void *pPmicCoreHandle)
 
     if(PMIC_ST_SUCCESS == status)
     {
-        /* Get the current time for timeout */
-        status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
-    }
-
-    if(PMIC_ST_SUCCESS == status)
-    {
-        while(timeout--)
+        while(1)
         {
-            /* Added delay as workaround to avoid reset on J721 EVM */
-            Osal_delay(10000U);
             status = Pmic_irqGetErrStatus(pHandle, &pErrStat, clearIRQ);
             if(PMIC_ST_SUCCESS == status)
             {
@@ -1896,12 +1875,6 @@ static bool test_rtc_alarm_irq(void *pPmicCoreHandle)
                         break;
                     }
                 }
-            }
-
-            status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
-            if(PMIC_ST_SUCCESS != status)
-            {
-                break;
             }
         }
     }
