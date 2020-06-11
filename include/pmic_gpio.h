@@ -52,6 +52,7 @@
 /* ========================================================================== */
 #include <pmic_core.h>
 #include <cfg/tps6594x/pmic_gpio_tps6594x.h>
+#include <cfg/lp8764x/pmic_gpio_lp8764x.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -80,9 +81,12 @@ extern "C" {
                                                 PMIC_GPIO_CFG_DEGLITCH_VALID)
 #define PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT    (0x01U << \
                                                 PMIC_GPIO_CFG_PINFUNC_VALID)
-/** \brief Valid only for TPS6594x Leo device and NPWRON pin */
+/** \brief Valid only for TPS6594x Leo device and NPWRON/Enable pin */
 #define PMIC_NPWRON_CFG_POLARITY_VALID_SHIFT (0x01U << \
                                                 PMIC_NPWRON_CFG_POLARITY_VALID)
+/** \brief Valid only for LP8764x Hera device and Enable pin */
+#define PMIC_ENABLE_CFG_POLARITY_VALID_SHIFT    (1U << \
+                                           PMIC_ENABLE_CFG_POLARITY_VALID)
 /* @} */
 
 /**
@@ -234,12 +238,14 @@ extern "C" {
  * \param   pinFunc             pin mux function
  *                              Valid values for TPS6594x Leo Device
  *                              \ref Pmic_Tps6594xLeo_GpioPinFunc
+ *                              Valid values for LP8764x HERA Device
+ *                              \ref Pmic_Lp8764xHera_GpioPinFunc.
  *                                Valid only when PMIC_GPIO_CFG_PINFUNC_VALID
  *                                bit is set.
  * \param   pinPolarity         Configure pin polarity
- *                              Valid only for NPWRON pin.
+ *                              Valid only for NPWRON or Enable pin.
  *                                Valid only when PMIC_NPWRON_CFG_POLARITY_VALID
- *                                bit is set.
+ *                                or PMIC_ENABLE_CFG_POLARITY_VALID bit is set.
  */
 typedef struct Pmic_GpioCfg_s
 {
@@ -264,6 +270,8 @@ typedef struct Pmic_GpioCfg_s
  * \param   pin             [IN]    PMIC GPIO pin number
  *                                   Valid values for TPS6594x Leo Device
  *                                   \ref Pmic_Tps6594xLeo_GpioPin
+ *                                   Valid values for LP8764x HERA Device
+ *                                   \ref Pmic_Lp8764xHera_GpioPin
  * \param   pGpioCfg        [IN]    pointer to set required configuration for
  *                                  the specified GPIO pin
  *
@@ -283,6 +291,8 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \param   pin             [IN]    PMIC GPIO pin number
  *                                   Valid values for TPS6594x Leo Device
  *                                   \ref Pmic_Tps6594xLeo_GpioPin
+ *                                   Valid values for LP8764x HERA Device
+ *                                   \ref Pmic_Lp8764xHera_GpioPin
  * \param   pGpioCfg        [OUT]   Pointer to store specified GPIO pin
  *                                  configuration
  *
@@ -302,6 +312,8 @@ int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \param   pin             [IN]    PMIC GPIO pin number
  *                                   Valid values for TPS6594x Leo Device
  *                                   \ref Pmic_Tps6594xLeo_GpioPin
+ *                                   Valid values for LP8764x HERA Device
+ *                                   \ref Pmic_Lp8764xHera_GpioPin
  * \param   pinValue        [IN]    PMIC GPIO signal level High/Low to be
  *                                  configured
  *                                  Valid values \ref Pmic_Gpio_SignalLvl
@@ -321,6 +333,8 @@ int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \param   pin             [IN]    PMIC GPIO pin number
  *                                   Valid values for TPS6594x Leo Device
  *                                   \ref Pmic_Tps6594xLeo_GpioPin
+ *                                   Valid values for LP8764x HERA Device
+ *                                   \ref Pmic_Lp8764xHera_GpioPin
  * \param   pPinValue       [OUT]   To store PMIC GPIO signal level High/Low
  *                                  Valid values \ref Pmic_Gpio_SignalLvl
  *
@@ -339,6 +353,8 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \param   pin             [IN]    PMIC GPIO number
  *                                   Valid values for TPS6594x Leo Device
  *                                   \ref Pmic_Tps6594xLeo_GpioPin
+ *                                   Valid values for LP8764x HERA Device
+ *                                   \ref Pmic_Lp8764xHera_GpioPin
  * \param   intrType        [IN]    Interrupt type \ref Pmic_GpioInterruptCfg
  * \param   maskPol         [IN]    FSM trigger masking polarity select for GPIO
  *                                  Valid values refer

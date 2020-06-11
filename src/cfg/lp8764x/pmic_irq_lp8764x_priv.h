@@ -32,14 +32,14 @@
  *****************************************************************************/
 
 /**
- * \file   pmic_irq_tps6594x_priv.h
+ * \file   pmic_irq_lp8764x_priv.h
  *
  * \brief  The macro definitions, structures and function prototypes for
  *         configuring PMIC IRQ
  */
 
-#ifndef PMIC_IRQ_TPS6594X_PRIV_H_
-#define PMIC_IRQ_TPS6594X_PRIV_H_
+#ifndef PMIC_IRQ_LP8764X_PRIV_H_
+#define PMIC_IRQ_LP8764X_PRIV_H_
 
 /* ========================================================================= */
 /*                             Include Files                                 */
@@ -53,58 +53,35 @@ extern "C" {
 /*                             Macros & Typedefs                             */
 /* ========================================================================= */
 
-#define PMIC_INT_GPIO11_MASK                   (0x04U)
 #define PMIC_INT_NPWRON_START_MASK             (0x01U)
-#define PMIC_INT_RTC_STATUS_TIMER_MASK         (0x20U)
-#define PMIC_INT_RTC_STATUS_ALARM_MASK         (0x40U)
-#define PMIC_INT_RTC_STATUS_POWER_UP_MASK      (0x80U)
 #define PMIC_INT_NPWRON_LONG_MASK              (0x20U)
 
 /*!
  * \brief: IRQ Mask Bits to validate error bits
  */
-#define PMIC_INT_GPIO9_11_MASK                 (0x07U)
-#define PMIC_INT_RTC_MASK                      (0x60U)
-
-/*!
- * \brief: INT_STARTUP Sources
- */
-#define PMIC_INT_RTC_STATUS_REGADDDR           (0xC4U)
-
+#define PMIC_INT_GPIO9_10_MASK                 (0x03U)
 
 /*!
  * \brief: Interrupt MASK registers address
  */
-#define PMIC_IRQ_MASK_GPIO9_11_REGADDR        (0x51U)
+#define PMIC_IRQ_MASK_GPIO9_10_REGADDR        (0x51U)
 
 /*!
  * \brief: MASK value for Interrupts
  */
-#define PMIC_IRQ_MASK_GPIO9_11                (0x3FU)
+#define PMIC_IRQ_MASK_GPIO9_10                (0x1BU)
 
 /*!
- * \brief: Individual interrupt bitmasks for GPIO9_11 RISE/FALL
+ * \brief: Individual interrupt bitmasks for GPIO9_10 RISE/FALL
  */
-#define PMIC_TPS6594_IRQ_GPIO11_RISE          (0x20U)
-#define PMIC_TPS6594_IRQ_GPIO10_RISE          (0x10U)
-#define PMIC_TPS6594_IRQ_GPIO9_RISE           (0x08U)
-#define PMIC_TPS6594_IRQ_GPIO11_FALL          (0x04U)
-#define PMIC_TPS6594_IRQ_GPIO10_FALL          (0x02U)
-#define PMIC_TPS6594_IRQ_GPIO9_FALL           (0x01U)
-
-/*!
- * \brief: Individual interrupt bitmasks for GPIO9_11 FALL
- */
-#define PMIC_IRQ_NPWRON_START                 (0x1U)
-
-/*!
- * \brief: Individual interrupt bitmasks for STARTUP Error
- */
-#define PMIC_IRQ_NPWRON_LONG                  (0x6U)
+#define PMIC_LP8764X_IRQ_GPIO10_RISE                  (0x10U)
+#define PMIC_LP8764X_IRQ_GPIO9_RISE                   (0x8U)
+#define PMIC_LP8764X_IRQ_GPIO10_FALL                  (0x2U)
+#define PMIC_LP8764X_IRQ_GPIO9_FALL                   (0x1U)
 
 #ifdef __cplusplus
 }
 
 #endif /* __cplusplus */
 
-#endif /* PMIC_IRQ_TPS6594X_PRIV_H_ */
+#endif /* PMIC_IRQ_LP8764X_PRIV_H_ */

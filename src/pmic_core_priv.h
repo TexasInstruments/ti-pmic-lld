@@ -63,7 +63,12 @@ extern "C" {
 #define PMIC_LEO_DEV_REV_ID                 (0x08U)
 /* On J7 2.0 EVM, PMIC_LEO_DEV_REV_ID will be 0x03 */
 /* #define PMIC_LEO_DEV_REV_ID              (0x03U) */
-#define PMIC_HERA_DEV_REV_ID                (0xFFU)
+
+/*
+ * To check pmic_lld for Hera, Changed REV ID value to 0x08
+ * Revision ID should be changed as mentioned in PDK-6422
+ */
+#define PMIC_HERA_DEV_REV_ID                (0x08U)
 
 
 /*!
@@ -73,12 +78,24 @@ extern "C" {
 #define PMIC_RECOV_CNT_REG_2_REGADDR        (0x84U)
 
 /*!
+ * \brief: HERA PMIC StartUP Control Register
+ */
+#define PMIC_STARTUP_CTRL_REGADDR           (0xC3U)
+
+/*!
  * \brief: PMIC Recovery Counter Register Shift and Mask Values
  */
 #define PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_MASK         (0x10U)
 #define PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_SHIFT        (0x04U)
 #define PMIC_RECOV_CNT_REG_2_RECOV_CNT_THR_MASK         (0x0FU)
 #define PMIC_RECOV_CNT_REG_2_RECOV_CNT_THR_SHIFT        (0x00U)
+
+/*!
+ * \brief: HERA PMIC StartUP Shift and Mask Values
+ */
+#define PMIC_STARTUP_CTRL_STARTUP_DEST_MASK                   \
+             ((uint8_t)(0x03 << PMIC_STARTUP_CTRL_STARTUP_DEST_SHIFT))
+#define PMIC_STARTUP_CTRL_STARTUP_DEST_SHIFT            (0x05U)
 
 /*!
  * \brief: PMIC Recovery Counter Threshold Max Value

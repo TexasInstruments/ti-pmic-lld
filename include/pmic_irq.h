@@ -55,6 +55,8 @@
 #include <pmic_core_priv.h>
 #include <pmic_irq_tps6594x_priv.h>
 #include <pmic_irq_priv.h>
+#include <cfg/tps6594x/pmic_irq_tps6594x.h>
+#include <cfg/lp8764x/pmic_irq_lp8764x.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -622,22 +624,6 @@ extern "C" {
                                           | PMIC_IRQ_MASK_GPIO1_8_RISE_REGADDR
 #define PMIC_IRQ_GPIO1_RISE_MASK  ((uint16_t)PMIC_IRQ_GPIO1_RISE       << 8U) \
                                           | PMIC_IRQ_MASK_GPIO1_8_RISE_REGADDR
-
-
-#define PMIC_IRQ_MASK_GPIO9_11_MASK  ((uint16_t)PMIC_IRQ_MASK_GPIO9_11 << 8U) \
-                                              | PMIC_IRQ_MASK_GPIO9_11_REGADDR
-#define PMIC_IRQ_GPIO11_RISE_MASK    ((uint16_t)PMIC_IRQ_GPIO11_RISE   << 8U) \
-                                              | PMIC_IRQ_MASK_GPIO9_11_REGADDR
-#define PMIC_IRQ_GPIO10_RISE_MASK    ((uint16_t)PMIC_IRQ_GPIO10_RISE   << 8U) \
-                                              | PMIC_IRQ_MASK_GPIO9_11_REGADDR
-#define PMIC_IRQ_GPIO9_RISE_MASK     ((uint16_t)PMIC_IRQ_GPIO9_RISE    << 8U) \
-                                              | PMIC_IRQ_MASK_GPIO9_11_REGADDR
-#define PMIC_IRQ_GPIO11_FALL_MASK    ((uint16_t)PMIC_IRQ_GPIO11_FALL   << 8U) \
-                                              | PMIC_IRQ_MASK_GPIO9_11_REGADDR
-#define PMIC_IRQ_GPIO10_FALL_MASK    ((uint16_t)PMIC_IRQ_GPIO10_FALL   << 8U) \
-                                              | PMIC_IRQ_MASK_GPIO9_11_REGADDR
-#define PMIC_IRQ_GPIO9_FALL_MASK     ((uint16_t)PMIC_IRQ_GPIO9_FALL    << 8U) \
-                                              | PMIC_IRQ_MASK_GPIO9_11_REGADDR
 
 
 #define PMIC_IRQ_MASK_STARTUP_MASK  ((uint16_t)PMIC_IRQ_MASK_STARTUP   << 8U) \

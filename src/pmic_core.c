@@ -81,6 +81,12 @@ int32_t Pmic_nSleepSignalsSetup(Pmic_CoreHandle_t *pPmicCoreHandle)
             srcBitMask = PMIC_RTC_CTRL_2_STARTUP_DEST_MASK;
             srcBitShift = PMIC_RTC_CTRL_2_STARTUP_DEST_SHIFT;
             break;
+         case PMIC_DEV_HERA_LP8764X:
+            srcRegAddr = PMIC_STARTUP_CTRL_REGADDR;
+            dstRegAddr = PMIC_FSM_NSLEEP_TRIGGERS_REGADDR;
+            srcBitMask = PMIC_STARTUP_CTRL_STARTUP_DEST_MASK;
+            srcBitShift = PMIC_STARTUP_CTRL_STARTUP_DEST_SHIFT;
+            break;
          default:
             pmicStatus = PMIC_ST_ERR_INV_DEVICE;
             break;

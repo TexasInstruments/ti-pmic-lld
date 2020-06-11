@@ -145,6 +145,8 @@ extern "C" {
 /** \brief Error Code for Insufficient input configuration params for PMIC
  *         Device Initialization */
 #define PMIC_ST_ERR_INSUFFICIENT_CFG                    (-((int32_t)31))
+/** \brief Error Code for any other failures */
+#define PMIC_ST_ERR_FAIL                                (-((int32_t)32))
 /* @} */
 
 /**

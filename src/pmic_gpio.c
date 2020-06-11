@@ -45,6 +45,7 @@
 #include <pmic_core_priv.h>
 #include <pmic_io_priv.h>
 #include <pmic_gpio_tps6594x_priv.h>
+#include <pmic_gpio_lp8764x_priv.h>
 
 /*!
  * \brief   This function is used to get the PMIC GPIO configuration
@@ -65,6 +66,9 @@ static int32_t Pmic_get_gpioInOutCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
         {
             case PMIC_DEV_LEO_TPS6594X:
                 pmic_get_tps6594x_gpioInOutCfg(pGpioInOutCfg);
+                break;
+            case PMIC_DEV_HERA_LP8764X:
+                pmic_get_lp8764x_gpioInOutCfg(pGpioInOutCfg);
                 break;
             default:
                 status = PMIC_ST_ERR_INV_DEVICE;
@@ -95,6 +99,9 @@ static int32_t Pmic_get_gpioIntRegCfg(Pmic_CoreHandle_t     *pPmicCoreHandle,
             case PMIC_DEV_LEO_TPS6594X:
                 pmic_get_tps6594x_gpioIntRegCfg(pGpioIntRegCfg);
                 break;
+            case PMIC_DEV_HERA_LP8764X:
+                pmic_get_lp8764x_gpioIntRegCfg(pGpioIntRegCfg);
+                break;
             default:
                 status = PMIC_ST_ERR_INV_DEVICE;
                 break;
@@ -118,6 +125,13 @@ static int32_t Pmic_gpioValidatePin(uint8_t pmicDeviceType,
         case PMIC_DEV_LEO_TPS6594X:
             if((pin < PMIC_TPS6594X_GPIO_PIN_MIN) ||
                (pin > PMIC_TPS6594X_GPIO_PIN_MAX))
+            {
+                status = PMIC_ST_ERR_INV_PARAM;
+            }
+            break;
+        case PMIC_DEV_HERA_LP8764X:
+            if((pin < PMIC_LP8764X_GPIO_PIN_MIN) ||
+               (pin > PMIC_LP8764X_GPIO_PIN_MAX))
             {
                 status = PMIC_ST_ERR_INV_PARAM;
             }
@@ -207,6 +221,16 @@ static int32_t Pmic_gpioSelectRegister(uint8_t pmicDeviceType,
             if(PMIC_NPWRON_ENABLE_PIN == pin)
             {
                 *regAddr = PMIC_NPWRON_CONF_REGADDR;
+            }
+            else
+            {
+                *regAddr = inOutCfgRegAddr;
+            }
+            break;
+        case PMIC_DEV_HERA_LP8764X:
+            if(PMIC_NPWRON_ENABLE_PIN == pin)
+            {
+                *regAddr = PMIC_ENABLE_CONF_REGADDR;
             }
             else
             {
@@ -362,6 +386,10 @@ static int32_t Pmic_gpioSetPinPolarity(Pmic_CoreHandle_t *pPmicCoreHandle,
             regAddr = PMIC_NPWRON_CONF_REGADDR;
             bitPos = PMIC_NPWRON_CONF_NPWRON_POL_SHIFT;
             break;
+        case PMIC_DEV_HERA_LP8764X:
+            regAddr = PMIC_ENABLE_CONF_REGADDR;
+            bitPos = PMIC_ENABLE_CONF_ENABLE_POL_SHIFT;
+            break;
         default:
             status = PMIC_ST_ERR_INV_DEVICE;
             break;
@@ -406,6 +434,10 @@ static int32_t Pmic_gpioGetPinPolarity(Pmic_CoreHandle_t *pPmicCoreHandle,
         case PMIC_DEV_LEO_TPS6594X:
             regAddr = PMIC_NPWRON_CONF_REGADDR;
             bitPos = PMIC_NPWRON_CONF_NPWRON_POL_SHIFT;
+            break;
+        case PMIC_DEV_HERA_LP8764X:
+            regAddr = PMIC_ENABLE_CONF_REGADDR;
+            bitPos = PMIC_ENABLE_CONF_ENABLE_POL_SHIFT;
             break;
         default:
             status = PMIC_ST_ERR_INV_DEVICE;
@@ -1018,6 +1050,8 @@ static int32_t Pmic_gpioIntrDisable(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \param   pin             [IN]    PMIC GPIO pin number
  *                                   Valid values for TPS6594x Leo Device
  *                                   \ref Pmic_Tps6594xLeo_GpioPin
+ *                                   Valid values for LP8764x HERA Device
+ *                                   \ref Pmic_Lp8764xHera_GpioPin
  * \param   pGpioCfg        [IN]    pointer to set required configuration for
  *                                  the specified GPIO pin
  *
@@ -1134,6 +1168,8 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \param   pin             [IN]    PMIC GPIO pin number
  *                                   Valid values for TPS6594x Leo Device
  *                                   \ref Pmic_Tps6594xLeo_GpioPin
+ *                                   Valid values for LP8764x HERA Device
+ *                                   \ref Pmic_Lp8764xHera_GpioPin
  * \param   pGpioCfg        [OUT]   Pointer to store specified GPIO pin
  *                                  configuration
  *
@@ -1201,6 +1237,8 @@ int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \param   pin             [IN]    PMIC GPIO pin number
  *                                   Valid values for TPS6594x Leo Device
  *                                   \ref Pmic_Tps6594xLeo_GpioPin
+ *                                   Valid values for LP8764x HERA Device
+ *                                   \ref Pmic_Lp8764xHera_GpioPin
  * \param   pinValue        [IN]    PMIC GPIO signal level High/Low to be
  *                                  configured
  *                                  Valid values \ref Pmic_Gpio_SignalLvl
@@ -1287,6 +1325,8 @@ int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \param   pin             [IN]    PMIC GPIO pin number
  *                                   Valid values for TPS6594x Leo Device
  *                                   \ref Pmic_Tps6594xLeo_GpioPin
+ *                                   Valid values for LP8764x HERA Device
+ *                                   \ref Pmic_Lp8764xHera_GpioPin
  * \param   pPinValue       [OUT]   To store PMIC GPIO signal level High/Low
  *                                  Valid values \ref Pmic_Gpio_SignalLvl
  *
@@ -1355,6 +1395,8 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \param   pin             [IN]    PMIC GPIO number
  *                                   Valid values for TPS6594x Leo Device
  *                                   \ref Pmic_Tps6594xLeo_GpioPin
+ *                                   Valid values for LP8764x HERA Device
+ *                                   \ref Pmic_Lp8764xHera_GpioPin
  * \param   intrType        [IN]    Interrupt type \ref Pmic_GpioInterruptCfg
  * \param   maskPol         [IN]    FSM trigger masking polarity select for GPIO
  *                                  Valid values refer
