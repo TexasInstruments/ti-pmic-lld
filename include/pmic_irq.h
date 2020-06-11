@@ -53,7 +53,7 @@
 /* ==========================================================================*/
 #include <pmic_core.h>
 #include <pmic_core_priv.h>
-#include <pmic_irq_tps65941_priv.h>
+#include <pmic_irq_tps6594x_priv.h>
 #include <pmic_irq_priv.h>
 
 #ifdef __cplusplus

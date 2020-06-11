@@ -44,7 +44,7 @@
 
 #include <pmic_core_priv.h>
 #include <pmic_io_priv.h>
-#include <pmic_gpio_tps65941_priv.h>
+#include <pmic_gpio_tps6594x_priv.h>
 
 /*!
  * \brief   This function is used to get the PMIC GPIO configuration
@@ -63,8 +63,8 @@ static int32_t Pmic_get_gpioInOutCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
     {
         switch(pPmicCoreHandle->pmicDeviceType)
         {
-            case PMIC_DEV_LEO_TPS6594:
-                pmic_get_tps6594_gpioInOutCfg(pGpioInOutCfg);
+            case PMIC_DEV_LEO_TPS6594X:
+                pmic_get_tps6594x_gpioInOutCfg(pGpioInOutCfg);
                 break;
             default:
                 status = PMIC_ST_ERR_INV_DEVICE;
@@ -92,8 +92,8 @@ static int32_t Pmic_get_gpioIntRegCfg(Pmic_CoreHandle_t     *pPmicCoreHandle,
     {
         switch(pPmicCoreHandle->pmicDeviceType)
         {
-            case PMIC_DEV_LEO_TPS6594:
-                pmic_get_tps6594_gpioIntRegCfg(pGpioIntRegCfg);
+            case PMIC_DEV_LEO_TPS6594X:
+                pmic_get_tps6594x_gpioIntRegCfg(pGpioIntRegCfg);
                 break;
             default:
                 status = PMIC_ST_ERR_INV_DEVICE;
@@ -115,9 +115,9 @@ static int32_t Pmic_gpioValidatePin(uint8_t pmicDeviceType,
 
     switch(pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594:
-            if((pin < PMIC_TPS6594_GPIO_PIN_MIN) ||
-               (pin > PMIC_TPS6594_GPIO_PIN_MAX))
+        case PMIC_DEV_LEO_TPS6594X:
+            if((pin < PMIC_TPS6594X_GPIO_PIN_MIN) ||
+               (pin > PMIC_TPS6594X_GPIO_PIN_MAX))
             {
                 status = PMIC_ST_ERR_INV_PARAM;
             }
@@ -203,7 +203,7 @@ static int32_t Pmic_gpioSelectRegister(uint8_t pmicDeviceType,
 
     switch(pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594:
+        case PMIC_DEV_LEO_TPS6594X:
             if(PMIC_NPWRON_ENABLE_PIN == pin)
             {
                 *regAddr = PMIC_NPWRON_CONF_REGADDR;
@@ -358,7 +358,7 @@ static int32_t Pmic_gpioSetPinPolarity(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     switch(pPmicCoreHandle->pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594:
+        case PMIC_DEV_LEO_TPS6594X:
             regAddr = PMIC_NPWRON_CONF_REGADDR;
             bitPos = PMIC_NPWRON_CONF_NPWRON_POL_SHIFT;
             break;
@@ -403,7 +403,7 @@ static int32_t Pmic_gpioGetPinPolarity(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     switch(pPmicCoreHandle->pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594:
+        case PMIC_DEV_LEO_TPS6594X:
             regAddr = PMIC_NPWRON_CONF_REGADDR;
             bitPos = PMIC_NPWRON_CONF_NPWRON_POL_SHIFT;
             break;
@@ -1016,8 +1016,8 @@ static int32_t Pmic_gpioIntrDisable(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
  * \param   pin             [IN]    PMIC GPIO pin number
- *                                   Valid values for TPS6594 Leo Device
- *                                   \ref Pmic_Tps6594Leo_GpioPin
+ *                                   Valid values for TPS6594x Leo Device
+ *                                   \ref Pmic_Tps6594xLeo_GpioPin
  * \param   pGpioCfg        [IN]    pointer to set required configuration for
  *                                  the specified GPIO pin
  *
@@ -1042,7 +1042,7 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
        (true == pmic_validParamCheck(pGpioCfg->validParams,
                                      PMIC_GPIO_CFG_PINFUNC_VALID)))
     {
-        if(pGpioCfg->pinFunc > PMIC_TPS6594_GPIO_PINFUNC_MAX)
+        if(pGpioCfg->pinFunc > PMIC_TPS6594X_GPIO_PINFUNC_MAX)
         {
             status = PMIC_ST_ERR_INV_GPIO_FUNC;
         }
@@ -1132,8 +1132,8 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
  * \param   pin             [IN]    PMIC GPIO pin number
- *                                   Valid values for TPS6594 Leo Device
- *                                   \ref Pmic_Tps6594Leo_GpioPin
+ *                                   Valid values for TPS6594x Leo Device
+ *                                   \ref Pmic_Tps6594xLeo_GpioPin
  * \param   pGpioCfg        [OUT]   Pointer to store specified GPIO pin
  *                                  configuration
  *
@@ -1199,8 +1199,8 @@ int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
  * \param   pin             [IN]    PMIC GPIO pin number
- *                                   Valid values for TPS6594 Leo Device
- *                                   \ref Pmic_Tps6594Leo_GpioPin
+ *                                   Valid values for TPS6594x Leo Device
+ *                                   \ref Pmic_Tps6594xLeo_GpioPin
  * \param   pinValue        [IN]    PMIC GPIO signal level High/Low to be
  *                                  configured
  *                                  Valid values \ref Pmic_Gpio_SignalLvl
@@ -1285,8 +1285,8 @@ int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
  * \param   pin             [IN]    PMIC GPIO pin number
- *                                   Valid values for TPS6594 Leo Device
- *                                   \ref Pmic_Tps6594Leo_GpioPin
+ *                                   Valid values for TPS6594x Leo Device
+ *                                   \ref Pmic_Tps6594xLeo_GpioPin
  * \param   pPinValue       [OUT]   To store PMIC GPIO signal level High/Low
  *                                  Valid values \ref Pmic_Gpio_SignalLvl
  *
@@ -1353,8 +1353,8 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
  * \param   pin             [IN]    PMIC GPIO number
- *                                   Valid values for TPS6594 Leo Device
- *                                   \ref Pmic_Tps6594Leo_GpioPin
+ *                                   Valid values for TPS6594x Leo Device
+ *                                   \ref Pmic_Tps6594xLeo_GpioPin
  * \param   intrType        [IN]    Interrupt type \ref Pmic_GpioInterruptCfg
  * \param   maskPol         [IN]    FSM trigger masking polarity select for GPIO
  *                                  Valid values refer
@@ -1409,7 +1409,7 @@ int32_t Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief   PMIC GPIO NPWRON/Enable pin set configuration function
  *          This function is used to set the required configuration for the
  *          NPWRON OR ENABLE pin when corresponding bit field is set.
- *          NPWRON is valid only for TPS6594 Leo Device
+ *          NPWRON is valid only for TPS6594x Leo Device
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
  * \param   pGpioCfg        [IN]    Pointer to set NPWRON or ENABLE GPIO pin
@@ -1427,13 +1427,13 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
     /* Validation of input Parameters */
     status = Pmic_gpioNpoweronEnableParamCheck(pPmicCoreHandle, pGpioCfg);
 
-    if(PMIC_DEV_LEO_TPS6594 == pPmicCoreHandle->pmicDeviceType)
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         if((PMIC_ST_SUCCESS == status) &&
            (true == pmic_validParamCheck(pGpioCfg->validParams,
                                          PMIC_GPIO_CFG_PINFUNC_VALID)))
         {
-            if(pGpioCfg->pinFunc > PMIC_TPS6594_NPWRON_PINFUNC_NPWRON)
+            if(pGpioCfg->pinFunc > PMIC_TPS6594X_NPWRON_PINFUNC_NPWRON)
             {
                 status = PMIC_ST_ERR_INV_GPIO_FUNC;
             }
@@ -1526,7 +1526,7 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
  * \brief   PMIC GPIO NPWRON/Enable pin get configuration function
  *          This function is used to read the configuration for the
  *          NPWRON OR ENABLE pin when corresponding bit field is set.
- *          NPWRON is valid only for TPS6594 Leo Device
+ *          NPWRON is valid only for TPS6594x Leo Device
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
  * \param   pGpioCfg        [OUT]   Pointer to store NPWRON OR ENABLE GPIO pin
@@ -1544,7 +1544,7 @@ int32_t Pmic_gpioGetNPwronEnablePinConfiguration(
     /* Parameter Validation */
     status = Pmic_gpioNpoweronEnableParamCheck(pPmicCoreHandle, pGpioCfg);
 
-    if(PMIC_DEV_LEO_TPS6594 == pPmicCoreHandle->pmicDeviceType)
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         if((PMIC_ST_SUCCESS == status) &&
            (true == pmic_validParamCheck(pGpioCfg->validParams,

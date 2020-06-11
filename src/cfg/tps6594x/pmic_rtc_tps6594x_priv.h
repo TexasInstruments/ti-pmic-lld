@@ -32,14 +32,14 @@
  *****************************************************************************/
 
 /**
- * \file   pmic_rtc_tps65941_priv.h
+ * \file   pmic_rtc_tps6594x_priv.h
  *
  * \brief  The macro definitions, structures and function prototypes for
  *         configuring PMIC RTC
  */
 
-#ifndef PMIC_RTC_TPS65941_PRIV_H_
-#define PMIC_RTC_TPS65941_PRIV_H_
+#ifndef PMIC_RTC_TPS6594X_PRIV_H_
+#define PMIC_RTC_TPS6594X_PRIV_H_
 
 /* ========================================================================= */
 /*                             Include Files                                 */
@@ -341,4 +341,4 @@ extern "C" {
 
 #endif /* __cplusplus */
 
-#endif /* PMIC_RTC_TPS65941_PRIV_H_ */
+#endif /* PMIC_RTC_TPS6594X_PRIV_H_ */

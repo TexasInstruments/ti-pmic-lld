@@ -176,7 +176,7 @@ static int32_t Pmic_irqValidate(Pmic_CoreHandle_t *pPmicCoreHandle,
                     /* Any of the bits 0-7 are valid, so no error */
                     break;
                 case PMIC_INT_BUCK5_REGADDDR:
-                    if(PMIC_DEV_HERA_LP8764  ==
+                    if(PMIC_DEV_HERA_LP8764X  ==
                        pPmicCoreHandle->pmicDeviceType)
                     {
                         /* BUCK5 not supported by HERA */
@@ -189,7 +189,7 @@ static int32_t Pmic_irqValidate(Pmic_CoreHandle_t *pPmicCoreHandle,
             }
             break;
         case PMIC_INT_LDO_VMON_REGADDDR:
-            if(PMIC_DEV_HERA_LP8764 == pPmicCoreHandle->pmicDeviceType)
+            if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
             {
                 /* LDO-VMON not supported by HERA */
                 pmicStatus = PMIC_ST_ERR_INV_INT;
@@ -221,7 +221,7 @@ static int32_t Pmic_irqValidate(Pmic_CoreHandle_t *pPmicCoreHandle,
                     /* Any of the bits 0-7 are valid, so no error */
                     break;
                 case PMIC_INT_UNUSED_REGADDDR:
-                    if(PMIC_DEV_LEO_TPS6594      ==
+                    if(PMIC_DEV_LEO_TPS6594X      ==
                        pPmicCoreHandle->pmicDeviceType)
                     {
                         pmicStatus = Pmic_errorBitMaskCheck(errBitStatus,
@@ -242,7 +242,7 @@ static int32_t Pmic_irqValidate(Pmic_CoreHandle_t *pPmicCoreHandle,
             switch(irqL2RegAddr)
             {
                 case PMIC_INT_RTC_STATUS_REGADDDR:
-                    if(PMIC_DEV_LEO_TPS6594      ==
+                    if(PMIC_DEV_LEO_TPS6594X      ==
                        pPmicCoreHandle->pmicDeviceType)
                     {
                         pmicStatus = Pmic_errorBitMaskCheck(errBitStatus,
@@ -314,7 +314,7 @@ static int32_t Pmic_irqValidate(Pmic_CoreHandle_t *pPmicCoreHandle,
                                                        PMIC_INT_RDBK_ERR_MASK);
                     break;
                 case PMIC_INT_ESM_REGADDDR:
-                    if(PMIC_DEV_HERA_LP8764 ==
+                    if(PMIC_DEV_HERA_LP8764X ==
                        pPmicCoreHandle->pmicDeviceType)
                     {
                         pmicStatus = Pmic_errorBitMaskCheck(errBitStatus,
@@ -372,7 +372,7 @@ static int32_t Pmic_irqGetL1Error(Pmic_CoreHandle_t *pPmicCoreHandle,
                 break;
 
             case PMIC_INT_TOP_LDO_VMON_MASK:
-                if(PMIC_DEV_HERA_LP8764  ==
+                if(PMIC_DEV_HERA_LP8764X  ==
                    pPmicCoreHandle->pmicDeviceType)
                 {
                     /*LDO-VMON not supported by HERA*/
@@ -454,7 +454,7 @@ static int32_t Pmic_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle,
             {
                 (*regAddr) = PMIC_INT_BUCK3_4_REGADDDR;
             }
-            else if((PMIC_DEV_LEO_TPS6594 ==
+            else if((PMIC_DEV_LEO_TPS6594X ==
                      pPmicCoreHandle->pmicDeviceType) &&
                     (regValue & PMIC_INT_BUCK_BUCK5_INT_MASK))
             {
@@ -464,7 +464,7 @@ static int32_t Pmic_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle,
 
             break;
         case PMIC_INT_LDO_VMON_REGADDDR:
-            if(PMIC_DEV_HERA_LP8764 == pPmicCoreHandle->pmicDeviceType)
+            if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
             {
                 /* LDO-VMON not supported by HERA */
                 break;
@@ -669,7 +669,7 @@ static int32_t Pmic_irqGetError(Pmic_CoreHandle_t *pPmicCoreHandle,
 
             break;
         case PMIC_INT_BUCK5_REGADDDR:
-            if(PMIC_DEV_HERA_LP8764  ==
+            if(PMIC_DEV_HERA_LP8764X  ==
                pPmicCoreHandle->pmicDeviceType)
             {
                 /* BUCK5 not supported by HERA */
@@ -684,7 +684,7 @@ static int32_t Pmic_irqGetError(Pmic_CoreHandle_t *pPmicCoreHandle,
             break;
         case PMIC_INT_LDO1_2_REGADDDR:
         case PMIC_INT_LDO3_4_REGADDDR:
-            if(PMIC_DEV_HERA_LP8764  ==
+            if(PMIC_DEV_HERA_LP8764X  ==
                pPmicCoreHandle->pmicDeviceType)
             {
                 /* LDO-VMON not supported by HERA */
@@ -702,7 +702,7 @@ static int32_t Pmic_irqGetError(Pmic_CoreHandle_t *pPmicCoreHandle,
 
             break;
         case PMIC_INT_VMON_REGADDDR:
-            if(PMIC_DEV_HERA_LP8764  ==
+            if(PMIC_DEV_HERA_LP8764X  ==
                pPmicCoreHandle->pmicDeviceType)
             {
                 /* LDO-VMON not supported by HERA */
@@ -768,7 +768,7 @@ static int32_t Pmic_irqGetError(Pmic_CoreHandle_t *pPmicCoreHandle,
                 (*errBitStatus) = Pmic_getErrBitStatus((*regValue), 3U, 3U);
             }
             else if((pPmicCoreHandle->pmicDeviceType ==
-                     PMIC_DEV_LEO_TPS6594) &&
+                     PMIC_DEV_LEO_TPS6594X) &&
                     ((*regValue) & PMIC_INT_ESM_SOC_MASK))
             {
                 /* ESM_SOC not supported by HERA */

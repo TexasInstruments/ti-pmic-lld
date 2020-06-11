@@ -32,15 +32,15 @@
  *****************************************************************************/
 
 /**
- * \file   pmic_gpio_tps65941_priv.h
+ * \file   pmic_gpio_tps6594x_priv.h
  *
  * \brief  The macro definitions, structures and function prototypes for
- *         TPS6594 Leo PMIC driver specific PMIC gpio configuration
+ *         TPS6594x Leo PMIC driver specific PMIC gpio configuration
  *
  */
 
-#ifndef PMIC_GPIO_TPS65941_PRIV_H_
-#define PMIC_GPIO_TPS65941_PRIV_H_
+#ifndef PMIC_GPIO_TPS6594X_PRIV_H_
+#define PMIC_GPIO_TPS6594X_PRIV_H_
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -112,14 +112,14 @@ extern "C" {
 /*!
  * \brief  Max and Min PMIC GPIO pin supported
  */
-#define PMIC_TPS6594_GPIO_PIN_MIN              (1U)
-#define PMIC_TPS6594_GPIO_PIN_MAX              (11U)
+#define PMIC_TPS6594X_GPIO_PIN_MIN              (1U)
+#define PMIC_TPS6594X_GPIO_PIN_MAX              (11U)
 
 /** \brief Max value for GPIO Pin Function */
-#define PMIC_TPS6594_GPIO_PINFUNC_MAX          (7U)
+#define PMIC_TPS6594X_GPIO_PINFUNC_MAX          (7U)
 
 /** \brief Max value for NPWRON/ENABLE pin Function */
-#define PMIC_TPS6594_NPWRON_PINFUNC_MAX        (1U)
+#define PMIC_TPS6594X_NPWRON_PINFUNC_MAX        (1U)
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
@@ -136,7 +136,7 @@ extern "C" {
  * \param  pGpioInOutCfg   [OUT]  Pointer to store gpio Input Ouput
  *                                configuration
  */
-void pmic_get_tps6594_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg);
+void pmic_get_tps6594x_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg);
 
 /*!
  * \brief  Get PMIC GPIO pin Interrupt Register configuration
@@ -146,10 +146,10 @@ void pmic_get_tps6594_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg);
  * \param   pGpioIntRegCfg   [OUT]  Pointer to store gpio Interrupt Register
  *                                  configuration
 */
-void pmic_get_tps6594_gpioIntRegCfg(Pmic_GpioIntRegCfg_t **pGpioIntRegCfg);
+void pmic_get_tps6594x_gpioIntRegCfg(Pmic_GpioIntRegCfg_t **pGpioIntRegCfg);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif/* PMIC_GPIO_TPS65941_PRIV_H_ */
+#endif/* PMIC_GPIO_TPS6594X_PRIV_H_ */

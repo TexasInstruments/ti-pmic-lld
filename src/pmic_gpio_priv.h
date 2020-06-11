@@ -407,7 +407,7 @@ extern "C" {
 
 /*!
  * \brief  GPIO NPWRON/Enable PIN
- *          NPWRON is valid only for TPS6594 Leo Device
+ *          NPWRON is valid only for TPS6594x Leo Device
  */
 #define PMIC_NPWRON_ENABLE_PIN                            (0U)
 /*==========================================================================*/

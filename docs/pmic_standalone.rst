@@ -10,7 +10,7 @@ The power-management integrated circuit (PMIC) is designed for powering
 embedded systems or system on chip(SoC) in Automotive or Industrial
 applications. 
 
-The PMIC Driver supports Leo PMIC TPS65941. The Leo PMIC contains eleven GPIOs 
+The PMIC Driver supports Leo PMIC TPS6594x. The Leo PMIC contains eleven GPIOs
 each with multiple functions and configurable features. The Leo PMIC includes
 Real Time Clock (RTC) which provides the alarm and time-keeping functions. It 
 provides time information and calendar information. RTC can generate timer 
@@ -93,7 +93,7 @@ Steps to be followed for PMIC Initialization of Main I2C Bus
         PMIC_CFG_COMM_IO_WR_VALID_SHIFT | PMIC_CFG_COMM_IO_RD_VALID_SHIFT \
         PMIC_CFG_CRITSEC_START_VALID_SHIFT | PMIC_CFG_CRITSEC_STOP_VALID_SHIFT ,
         PMIC_MAIN_INST,
-        PMIC_DEV_LEO_TPS6594, // Leo PMIC TPS65941 Slave device
+        PMIC_DEV_LEO_TPS6594X, // Leo PMIC TPS6594X Slave device
         PMIC_INTF_DUAL_I2C,
         LEO_PMICA_SLAVE_ADDR,
         0,

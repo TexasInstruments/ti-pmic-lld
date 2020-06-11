@@ -38,18 +38,18 @@
  */
 
 #include <pmic_core_priv.h>
-#include <pmic_rtc_tps65941_priv.h>
+#include <pmic_rtc_tps6594x_priv.h>
 #include <pmic_fsm_priv.h>
 
 static const Pmic_DevSubSysInfo_t pmicSubSysInfo[] =
 {
-     /* PMIC_DEV_LEO_TPS6594 */
+     /* PMIC_DEV_LEO_TPS6594x */
     {
         .gpioEnable = true,
         .rtcEnable  = true,
         .wdgEnable  = true
     },
-     /* PMIC_DEV_HERA_LP8764 */
+     /* PMIC_DEV_HERA_LP8764x */
     {
         .gpioEnable = true,
         .rtcEnable  = false,
@@ -75,7 +75,7 @@ int32_t Pmic_nSleepSignalsSetup(Pmic_CoreHandle_t *pPmicCoreHandle)
 
     switch(pPmicCoreHandle->pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594:
+        case PMIC_DEV_LEO_TPS6594X:
             srcRegAddr = PMIC_RTC_CTRL_2_REGADDR;
             dstRegAddr = PMIC_FSM_NSLEEP_TRIGGERS_REGADDR;
             srcBitMask = PMIC_RTC_CTRL_2_STARTUP_DEST_MASK;
@@ -327,8 +327,8 @@ int32_t Pmic_init(Pmic_CoreCfg_t      *pPmicConfigData,
        (true == pmic_validParamCheck(pPmicConfigData->validParams,
                                      PMIC_CFG_DEVICE_TYPE_VALID)))
     {
-       if((PMIC_DEV_HERA_LP8764 != pPmicConfigData->pmicDeviceType) &&
-          (PMIC_DEV_LEO_TPS6594 != pPmicConfigData->pmicDeviceType))
+       if((PMIC_DEV_HERA_LP8764X != pPmicConfigData->pmicDeviceType) &&
+          (PMIC_DEV_LEO_TPS6594X != pPmicConfigData->pmicDeviceType))
         {
             pmicStatus = PMIC_ST_ERR_INV_PARAM;
         }
@@ -522,13 +522,13 @@ int32_t Pmic_init(Pmic_CoreCfg_t      *pPmicConfigData,
             /* Validate if the device requested is the one on the bus */
             switch (pPmicCoreHandle->pmicDeviceType)
             {
-                case PMIC_DEV_HERA_LP8764:
+                case PMIC_DEV_HERA_LP8764X:
                     if(PMIC_HERA_DEV_REV_ID != regVal)
                     {
                         pmicStatus = PMIC_ST_ERR_INV_DEVICE;
                     }
                     break;
-                case PMIC_DEV_LEO_TPS6594:
+                case PMIC_DEV_LEO_TPS6594X:
                     if(PMIC_LEO_DEV_REV_ID != regVal)
                     {
                         pmicStatus = PMIC_ST_ERR_INV_DEVICE;

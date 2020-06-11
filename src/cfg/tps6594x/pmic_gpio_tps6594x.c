@@ -32,9 +32,9 @@
  *****************************************************************************/
 
 /**
-*   \file    pmic_gpio_tps65941.c
+*   \file    pmic_gpio_tps6594x.c
 *
-*   \brief   This file contains the TPS6594 Leo PMIC GPIO Specific
+*   \brief   This file contains the TPS6594x Leo PMIC GPIO Specific
 *            configuration API's and structures
 *
 */
@@ -43,10 +43,10 @@
 #include <pmic_gpio.h>
 #include <pmic_core_priv.h>
 #include <pmic_io_priv.h>
-#include <pmic_gpio_tps65941_priv.h>
+#include <pmic_gpio_tps6594x_priv.h>
 
 /* PMIC GPIO Pins with Input Ouput Configuration */
-static Pmic_GpioInOutCfg_t tps6594_gpioInOutCfg[] =
+static Pmic_GpioInOutCfg_t tps6594x_gpioInOutCfg[] =
 {
     {
         PMIC_GPIO1_CONF_REGADDR,
@@ -127,7 +127,7 @@ static Pmic_GpioInOutCfg_t tps6594_gpioInOutCfg[] =
 };
 
 /* PMIC GPIO Interrupt Register array */
-static Pmic_GpioIntRegCfg_t tps6594_gpioIntRegCfg[] =
+static Pmic_GpioIntRegCfg_t tps6594x_gpioIntRegCfg[] =
 {
     {
         PMIC_FSM_TRIG_MASK_1_REGADDR,
@@ -238,9 +238,9 @@ static Pmic_GpioIntRegCfg_t tps6594_gpioIntRegCfg[] =
  * \param  pGpioInOutCfg   [OUT]  Pointer to store gpio Input Ouput
  *                                configuration
  */
-void pmic_get_tps6594_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg)
+void pmic_get_tps6594x_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg)
 {
-    *pGpioInOutCfg = tps6594_gpioInOutCfg;
+    *pGpioInOutCfg = tps6594x_gpioInOutCfg;
 }
 
 /*!
@@ -251,9 +251,9 @@ void pmic_get_tps6594_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg)
  * \param   pGpioIntRegCfg   [OUT]  Pointer to store gpio Interrupt Register
  *                                  configuration
 */
-void pmic_get_tps6594_gpioIntRegCfg(Pmic_GpioIntRegCfg_t **pGpioIntRegCfg)
+void pmic_get_tps6594x_gpioIntRegCfg(Pmic_GpioIntRegCfg_t **pGpioIntRegCfg)
 {
-    *pGpioIntRegCfg = tps6594_gpioIntRegCfg;
+    *pGpioIntRegCfg = tps6594x_gpioIntRegCfg;
 }
 
 /*!
@@ -269,8 +269,8 @@ void pmic_get_tps6594_gpioIntRegCfg(Pmic_GpioIntRegCfg_t **pGpioIntRegCfg)
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_gpioTps6594NPwronPinGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                          uint8_t           *pPinValue)
+int32_t Pmic_gpioTps6594xNPwronPinGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                           uint8_t           *pPinValue)
 {
     int32_t status   = PMIC_ST_SUCCESS;
     uint8_t regData  = 0U;

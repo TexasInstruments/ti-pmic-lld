@@ -32,14 +32,14 @@
  *****************************************************************************/
 
 /**
- * \file   pmic_irq_tps65941_priv.h
+ * \file   pmic_irq_tps6594x_priv.h
  *
  * \brief  The macro definitions, structures and function prototypes for
  *         configuring PMIC IRQ
  */
 
-#ifndef PMIC_IRQ_TPS65941_PRIV_H_
-#define PMIC_IRQ_TPS65941_PRIV_H_
+#ifndef PMIC_IRQ_TPS6594X_PRIV_H_
+#define PMIC_IRQ_TPS6594X_PRIV_H_
 
 /* ========================================================================= */
 /*                             Include Files                                 */
@@ -103,4 +103,4 @@ extern "C" {
 
 #endif /* __cplusplus */
 
-#endif /* PMIC_IRQ_TPS65941_PRIV_H_ */
+#endif /* PMIC_IRQ_TPS6594X_PRIV_H_ */

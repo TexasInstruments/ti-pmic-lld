@@ -5031,7 +5031,7 @@ static void test_pmic_gpio_testApp(void)
     Pmic_CoreCfg_t pmicConfigData = {0U};
 
      /* Fill parameters to pmicConfigData */
-    pmicConfigData.pmicDeviceType      = PMIC_DEV_LEO_TPS6594;
+    pmicConfigData.pmicDeviceType      = PMIC_DEV_LEO_TPS6594X;
     pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
 
     pmicConfigData.commMode            = PMIC_INTF_DUAL_I2C;

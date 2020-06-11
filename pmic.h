@@ -153,8 +153,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_DEV_LEO_TPS6594   (0U)
-#define PMIC_DEV_HERA_LP8764   (1U)
+#define PMIC_DEV_LEO_TPS6594X  (0U)
+#define PMIC_DEV_HERA_LP8764X  (1U)
 /* @} */
 
 /**

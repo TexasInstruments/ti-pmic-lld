@@ -45,8 +45,8 @@ endif
 endif
 
 CC           =  gcc
-INC          = -Iinclude -I. -Iinclude/cfg/tps65941/ \
-	       -I./src   -I./src/cfg/tps65941
+INC          = -Iinclude -I. -Iinclude/cfg/tps6594x/ \
+	       -I./src   -I./src/cfg/tps6594x
 CFLAGS       = -fPIC $(INC) -Wall
 LDFLAGS      = -shared
 
@@ -65,7 +65,7 @@ ifeq ($(build), release)
 endif
 
 $(info $(OSP))
-SOURCES = src/pmic_core.c  src/pmic_io.c  src/pmic_gpio.c src/cfg/tps65941/pmic_gpio_tps65941.c  src/pmic_rtc.c
+SOURCES = src/pmic_core.c  src/pmic_io.c  src/pmic_gpio.c src/cfg/tps6594x/pmic_gpio_tps6594x.c  src/pmic_rtc.c
 OBJECTS = $(SOURCES:.c=.o)
 
 all: $(TARGET)

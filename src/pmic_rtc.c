@@ -40,7 +40,7 @@
  */
 #include <pmic_rtc.h>
 #include <pmic_core_priv.h>
-#include <pmic_rtc_tps65941_priv.h>
+#include <pmic_rtc_tps6594x_priv.h>
 
 /*!
  * \brief   This function is used to set the RTC/Alarm seconds.
