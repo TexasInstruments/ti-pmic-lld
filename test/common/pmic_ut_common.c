@@ -137,22 +137,22 @@ static int32_t test_pmic_dual_i2c_pin_setup(Pmic_CoreHandle_t *pPmicHandle)
 
     gpioCfg.validParams      = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
                                PMIC_GPIO_CFG_OD_VALID_SHIFT;
-    gpioCfg.pinFunc          = PMIC_GPIO_PINFUNC_SCL_I2C2_CS_SPI;
+    gpioCfg.pinFunc          = PMIC_TPS6594_GPIO_PINFUNC_GPIO1_SCL_I2C2_CS_SPI;
     gpioCfg.outputSignalType = PMIC_GPIO_OPEN_DRAIN_OUTPUT;
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicHandle,
-                                           PMIC_GPIO1_PIN,
+                                           PMIC_TPS6594_GPIO1_PIN,
                                            &gpioCfg);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
                               PMIC_GPIO_CFG_OD_VALID_SHIFT;
-        gpioCfg.pinFunc     = PMIC_GPIO_PINFUNC_SDA_I2C2_SDO_SPI;
+        gpioCfg.pinFunc     = PMIC_TPS6594_GPIO_PINFUNC_GPIO2_SDA_I2C2_SDO_SPI;
         gpioCfg.outputSignalType = PMIC_GPIO_OPEN_DRAIN_OUTPUT;
 
         pmicStatus = Pmic_gpioSetConfiguration(pPmicHandle,
-                                               PMIC_GPIO2_PIN,
+                                               PMIC_TPS6594_GPIO2_PIN,
                                                &gpioCfg);
     }
 
@@ -485,6 +485,11 @@ static int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
             /* Get PMIC core Handle for Main Instance */
             pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
         }
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Setup nSLEEP signals */
+            pmicStatus = Pmic_nSleepSignalsSetup(pmicHandle);
+        }
     }
     /* For DUAL I2C Instance */
     else if(PMIC_INTF_DUAL_I2C == pmicConfigData->commMode)
@@ -496,6 +501,12 @@ static int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
         {
             /* Get PMIC core Handle for Main Instance */
             pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Setup nSLEEP signals */
+            pmicStatus = Pmic_nSleepSignalsSetup(pmicHandle);
         }
 
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -516,7 +527,6 @@ static int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
             /* Get PMIC core Handle for both Instances */
             pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
         }
-
     }
     /* For SPI Instance */
     else if(PMIC_INTF_SPI  == pmicConfigData->commMode)
@@ -527,6 +537,12 @@ static int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
         {
             /* Get PMIC core Handle for SPI Instances */
             pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Setup nSLEEP signals */
+            pmicStatus = Pmic_nSleepSignalsSetup(pmicHandle);
         }
     }
 
