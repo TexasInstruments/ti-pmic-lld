@@ -127,6 +127,14 @@ int32_t Pmic_SetRecoveryCntCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
 int32_t Pmic_getRecoveryCntCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                uint8_t           *pRecovCntCfgVal);
 
+/*!
+ * \brief: Function call to setup nSLEEP signals
+ *         This function setup nSLEEP signal bits with STARTUP_DEST
+ *
+ *  \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
+ */
+int32_t Pmic_nSleepSignalsSetup(Pmic_CoreHandle_t *pPmicCoreHandle);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

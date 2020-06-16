@@ -232,7 +232,8 @@ extern "C" {
  *                                Valid only when PMIC_GPIO_CFG_DEGLITCH_VALID
  *                                bit is set.
  * \param   pinFunc             pin mux function
- *                              Valid values \ref Pmic_GpioPinFunc
+ *                              Valid values for TPS6594 Leo Device
+ *                              \ref Pmic_Tps6594Leo_GpioPinFunc
  *                                Valid only when PMIC_GPIO_CFG_PINFUNC_VALID
  *                                bit is set.
  * \param   pinPolarity         Configure pin polarity
@@ -261,7 +262,8 @@ typedef struct Pmic_GpioCfg_s
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
  * \param   pin             [IN]    PMIC GPIO pin number
- *                                  Valid values \ref Pmic_GpioPin
+ *                                   Valid values for TPS6594 Leo Device
+ *                                   \ref Pmic_Tps6594Leo_GpioPin
  * \param   pGpioCfg        [IN]    pointer to set required configuration for
  *                                  the specified GPIO pin
  *
@@ -279,7 +281,8 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
  * \param   pin             [IN]    PMIC GPIO pin number
- *                                  Valid values \ref Pmic_GpioPin
+ *                                   Valid values for TPS6594 Leo Device
+ *                                   \ref Pmic_Tps6594Leo_GpioPin
  * \param   pGpioCfg        [OUT]   Pointer to store specified GPIO pin
  *                                  configuration
  *
@@ -297,7 +300,8 @@ int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
  * \param   pin             [IN]    PMIC GPIO pin number
- *                                  Valid values \ref Pmic_GpioPin
+ *                                   Valid values for TPS6594 Leo Device
+ *                                   \ref Pmic_Tps6594Leo_GpioPin
  * \param   pinValue        [IN]    PMIC GPIO signal level High/Low to be
  *                                  configured
  *                                  Valid values \ref Pmic_Gpio_SignalLvl
@@ -315,7 +319,8 @@ int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
  * \param   pin             [IN]    PMIC GPIO pin number
- *                                  Valid values \ref Pmic_GpioPin
+ *                                   Valid values for TPS6594 Leo Device
+ *                                   \ref Pmic_Tps6594Leo_GpioPin
  * \param   pPinValue       [OUT]   To store PMIC GPIO signal level High/Low
  *                                  Valid values \ref Pmic_Gpio_SignalLvl
  *
@@ -327,20 +332,21 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
                           uint8_t           *pPinValue);
 
 /*!
-* \brief   PMIC GPIO interrupt configuration function
-*          This function is used to enable GPIO pin Interrupts
-*
-* \param   pPmicCoreHandle [IN]    PMIC Interface Handle
-* \param   pin             [IN]    PMIC GPIO number
-*                                  Valid values \ref Pmic_GpioPin
-* \param   intrType        [IN]    Interrupt type \ref Pmic_GpioInterruptCfg
-* \param   maskPol         [IN]    FSM trigger masking polarity select for GPIO
-*                                  Valid values refer
-*                                  \ref Pmic_GpioInterruptPolCfg
-*
-* \return  PMIC_ST_SUCCESS in case of success or appropriate error code
-*          For valid values \ref Pmic_ErrorCodes
-*/
+ * \brief   PMIC GPIO interrupt configuration function
+ *          This function is used to enable GPIO pin Interrupts
+ *
+ * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
+ * \param   pin             [IN]    PMIC GPIO number
+ *                                   Valid values for TPS6594 Leo Device
+ *                                   \ref Pmic_Tps6594Leo_GpioPin
+ * \param   intrType        [IN]    Interrupt type \ref Pmic_GpioInterruptCfg
+ * \param   maskPol         [IN]    FSM trigger masking polarity select for GPIO
+ *                                  Valid values refer
+ *                                  \ref Pmic_GpioInterruptPolCfg
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
 int32_t Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
                          uint8_t            pin,
                          uint8_t            intrType,

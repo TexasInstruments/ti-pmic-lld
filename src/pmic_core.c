@@ -58,24 +58,47 @@ static const Pmic_DevSubSysInfo_t pmicSubSysInfo[] =
 };
 
 /*!
- * \brief   Function to setup nSLEEP signals
+ * \brief: Function call to setup nSLEEP signals
+ *         This function setup nSLEEP signal bits with STARTUP_DEST
+ *
+ *  \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
  */
-static int32_t Pmic_nSleepSignalsSetup(Pmic_CoreHandle_t *pmicHandle)
+int32_t Pmic_nSleepSignalsSetup(Pmic_CoreHandle_t *pPmicCoreHandle)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t srcRegAddr = 0U;
+    uint8_t srcBitMask = 0U;
+    uint8_t srcBitShift = 0U;
+    uint8_t dstRegAddr = 0U;
     uint8_t regData = 0U;
     uint8_t regVal = 0U;
 
-    Pmic_criticalSectionStart(pmicHandle);
-    pmicStatus = Pmic_commIntf_recvByte(pmicHandle,
-                                        PMIC_RTC_CTRL_2_REGADDR,
-                                        &regData);
+    switch(pPmicCoreHandle->pmicDeviceType)
+    {
+        case PMIC_DEV_LEO_TPS6594:
+            srcRegAddr = PMIC_RTC_CTRL_2_REGADDR;
+            dstRegAddr = PMIC_FSM_NSLEEP_TRIGGERS_REGADDR;
+            srcBitMask = PMIC_RTC_CTRL_2_STARTUP_DEST_MASK;
+            srcBitShift = PMIC_RTC_CTRL_2_STARTUP_DEST_SHIFT;
+            break;
+         default:
+            pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+            break;
+    }
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        regVal = HW_REG_GET_FIELD(regData, PMIC_RTC_CTRL_2_STARTUP_DEST);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                            srcRegAddr,
+                                            &regData);
+    }
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        regVal = (regData & srcBitMask) >> srcBitShift;
 
-        pmicStatus = Pmic_commIntf_recvByte(pmicHandle,
-                                            PMIC_FSM_NSLEEP_TRIGGERS_REGADDR,
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                            dstRegAddr,
                                             &regData);
     }
 
@@ -87,12 +110,12 @@ static int32_t Pmic_nSleepSignalsSetup(Pmic_CoreHandle_t *pmicHandle)
         HW_REG_SET_FIELD(regData,
                          PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B,
                          (BIT_POS_GET_VAL(regVal, 0U)));
-        pmicStatus = Pmic_commIntf_sendByte(pmicHandle,
-                                            PMIC_FSM_NSLEEP_TRIGGERS_REGADDR,
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                            dstRegAddr,
                                             regData);
     }
 
-    Pmic_criticalSectionStop(pmicHandle);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
 }
@@ -514,11 +537,6 @@ int32_t Pmic_init(Pmic_CoreCfg_t      *pPmicConfigData,
                 default:
                     pmicStatus = PMIC_ST_ERR_INV_DEVICE;
             }
-        }
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            pmicStatus = Pmic_nSleepSignalsSetup(pPmicCoreHandle);
         }
 
         if(PMIC_ST_SUCCESS == pmicStatus)
