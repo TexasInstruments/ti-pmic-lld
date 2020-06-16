@@ -80,6 +80,9 @@ extern "C" {
                                                 PMIC_GPIO_CFG_DEGLITCH_VALID)
 #define PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT    (0x01U << \
                                                 PMIC_GPIO_CFG_PINFUNC_VALID)
+/** \brief Valid only for TPS6594 Leo device and NPWRON pin */
+#define PMIC_NPWRON_CFG_POLARITY_VALID_SHIFT (0x01U << \
+                                                PMIC_NPWRON_CFG_POLARITY_VALID)
 /* @} */
 
 /**
@@ -153,6 +156,8 @@ extern "C" {
 #define PMIC_GPIO_CFG_PULL_VALID           (0x02U)
 #define PMIC_GPIO_CFG_DEGLITCH_VALID       (0x03U)
 #define PMIC_GPIO_CFG_PINFUNC_VALID        (0x04U)
+/** \brief Valid only for TPS6594 Leo device and NPWRON pin */
+#define PMIC_NPWRON_CFG_POLARITY_VALID     (0x05U)
 /*  @} */
 
 /**
@@ -230,8 +235,8 @@ extern "C" {
  *                              Valid values \ref Pmic_GpioPinFunc
  *                                Valid only when PMIC_GPIO_CFG_PINFUNC_VALID
  *                                bit is set.
- * \param   pinPolarity         Configure pin polarity. Valid only for NPWRON
- *                              pin.
+ * \param   pinPolarity         Configure pin polarity
+ *                              Valid only for NPWRON pin.
  *                                Valid only when PMIC_NPWRON_CFG_POLARITY_VALID
  *                                bit is set.
  */

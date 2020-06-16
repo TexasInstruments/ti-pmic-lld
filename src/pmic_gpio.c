@@ -159,7 +159,7 @@ static int32_t Pmic_gpioSetPinFunc(Pmic_CoreHandle_t *pPmicCoreHandle,
     if (PMIC_ST_SUCCESS == status)
     {
         /* Setting pin function */
-        if(PMIC_NPWRON_PIN != pin)
+        if(PMIC_TPS6594_NPWRON_PIN != pin)
         {
             /* setting GPIO pin function */
             HW_REG_SET_FIELD(regData,
@@ -215,7 +215,7 @@ static int32_t Pmic_gpioGetPinFunc(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == status)
     {
-        if(PMIC_NPWRON_PIN != pin)
+        if(PMIC_TPS6594_NPWRON_PIN != pin)
         {
             pGpioCfg->pinFunc = HW_REG_GET_FIELD(regData,
                                                  PMIC_GPIOX_CONF_GPIO_SEL);
@@ -301,7 +301,7 @@ static int32_t Pmic_gpioGetPinPolarity(Pmic_CoreHandle_t *pPmicCoreHandle,
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
-    if((PMIC_ST_SUCCESS == status) && (PMIC_NPWRON_PIN == pin))
+    if((PMIC_ST_SUCCESS == status) && (PMIC_TPS6594_NPWRON_PIN == pin))
     {
         /* Reading NPWRON/ENABLE pin polarity */
         pGpioCfg->pinPolarity = HW_REG_GET_FIELD(regData,
@@ -501,7 +501,7 @@ static int32_t Pmic_gpioGetPinDir(Pmic_CoreHandle_t *pPmicCoreHandle,
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
-    if((PMIC_ST_SUCCESS == status) && (PMIC_NPWRON_PIN != pin))
+    if((PMIC_ST_SUCCESS == status) && (PMIC_TPS6594_NPWRON_PIN != pin))
     {
         /* Reading gpio direction */
         pGpioCfg->pinDir = HW_REG_GET_FIELD(regData, PMIC_GPIOX_CONF_GPIO_DIR);
@@ -619,7 +619,7 @@ static int32_t Pmic_gpioSetOutputSignalType(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if (PMIC_ST_SUCCESS == status)
     {
-        if(PMIC_NPWRON_PIN != pin)
+        if(PMIC_TPS6594_NPWRON_PIN != pin)
         {
             /* selecting output type */
             HW_REG_SET_FIELD(regData,
@@ -675,7 +675,7 @@ static int32_t Pmic_gpioGetOutputSignalType(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == status)
     {
-        if(PMIC_NPWRON_PIN != pin)
+        if(PMIC_TPS6594_NPWRON_PIN != pin)
         {
             /* Reading output signal type */
             pGpioCfg->outputSignalType = HW_REG_GET_FIELD(
@@ -842,16 +842,16 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
        (true == pmic_validParamCheck(pGpioCfg->validParams,
                                      PMIC_GPIO_CFG_PINFUNC_VALID)))
     {
-        if(PMIC_NPWRON_PIN != pin)
+        if(PMIC_TPS6594_NPWRON_PIN != pin)
         {
-            if(pGpioCfg->pinFunc >= PMIC_GPIO_PINFUNC_MAX)
+            if(pGpioCfg->pinFunc > PMIC_TPS6594_GPIO_PINFUNC_MAX)
             {
                 status = PMIC_ST_ERR_INV_GPIO_FUNC;
             }
         }
         else
         {
-            if(pGpioCfg->pinFunc > PMIC_NPWRON_PINFUNC_NONE)
+            if(pGpioCfg->pinFunc > PMIC_TPS6594_NPWRON_PINFUNC_NPWRON)
             {
                 status = PMIC_ST_ERR_INV_GPIO_FUNC;
             }
@@ -865,7 +865,7 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == status) &&
-       (PMIC_NPWRON_PIN == pin) &&
+       (PMIC_TPS6594_NPWRON_PIN == pin) &&
        (true == pmic_validParamCheck(pGpioCfg->validParams,
                                      PMIC_NPWRON_CFG_POLARITY_VALID)))
     {
@@ -882,7 +882,7 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == status) &&
-       (PMIC_NPWRON_PIN != pin) &&
+       (PMIC_TPS6594_NPWRON_PIN != pin) &&
        (true == pmic_validParamCheck(pGpioCfg->validParams,
                                      PMIC_GPIO_CFG_DIR_VALID)))
     {
@@ -974,7 +974,7 @@ int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == status)
     {
-        if(PMIC_NPWRON_PIN != pin)
+        if(PMIC_TPS6594_NPWRON_PIN != pin)
         {
             if(true == pmic_validParamCheck(pGpioCfg->validParams,
                                             PMIC_GPIO_CFG_DIR_VALID))
@@ -1052,7 +1052,7 @@ int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
     status = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
 
     if((PMIC_ST_SUCCESS == status) &&
-       ((PMIC_NPWRON_PIN == pin)))
+       ((PMIC_TPS6594_NPWRON_PIN == pin)))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -1203,7 +1203,7 @@ int32_t Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
     /* Parameter Validation */
     status = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
 
-    if((PMIC_ST_SUCCESS == status) && (PMIC_NPWRON_PIN == pin))
+    if((PMIC_ST_SUCCESS == status) && (PMIC_TPS6594_NPWRON_PIN == pin))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
