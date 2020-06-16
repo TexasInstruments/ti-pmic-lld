@@ -35,7 +35,7 @@
  * \file   pmic_gpio_tps65941_priv.h
  *
  * \brief  The macro definitions, structures and function prototypes for
- *         TPS65941 Leo PMIC driver specific PMIC gpio configuration
+ *         TPS6594 Leo PMIC driver specific PMIC gpio configuration
  *
  */
 
@@ -58,27 +58,26 @@ extern "C" {
 /*!
  * \brief  GPIO Register Offsets
  */
-#define PMIC_GPIO11_CONF_REGADDR                (0x3BU)
-#define PMIC_NPWRON_CONF_REGADDR                (0x3CU)
+#define PMIC_GPIO11_CONF_REGADDR                 (0x3BU)
+#define PMIC_NPWRON_CONF_REGADDR                 (0x3CU)
 
 /*!
  * \brief  NPWRON Register bit fields
  */
-#define PMIC_NPWRON_CONF_NPWRON_SEL_SHIFT           (0x06U)
-#define PMIC_NPWRON_CONF_NPWRON_POL_SHIFT           (0x05U)
-#define PMIC_NPWRON_CONF_NPWRON_OD_SHIFT            (0x00U)
+#define PMIC_NPWRON_CONF_NPWRON_SEL_SHIFT        (0x06U)
+#define PMIC_NPWRON_CONF_NPWRON_POL_SHIFT        (0x05U)
+#define PMIC_NPWRON_CONF_NPWRON_OD_SHIFT         (0x00U)
 
 /*!
  * \brief  GPIO IN Register bit fields
  */
-#define PMIC_GPIO_IN_2_GPIO11_IN_SHIFT        (0x02U)
-#define PMIC_GPIO_IN_2_NPWRON_IN_SHIFT        (0x03U)
+#define PMIC_GPIO_IN_2_GPIO11_IN_SHIFT           (0x02U)
+#define PMIC_GPIO_IN_2_NPWRON_IN_SHIFT           (0x03U)
 
 /*!
  * \brief  GPIO OUT Register bit fields
  */
-#define PMIC_GPIO_OUT_2_GPIO11_OUT_SHIFT        (0x02U)
-#define PMIC_NPWRON_OUT_REG_UNAVAILABLE         (0x00U)
+#define PMIC_GPIO_OUT_2_GPIO11_OUT_SHIFT         (0x02U)
 
 /*!
  * \brief  NPWRON Register bit mask values
@@ -111,10 +110,16 @@ extern "C" {
                                               PMIC_GPIO_OUT_2_GPIO11_OUT_SHIFT)
 
 /*!
- * \brief  Max PMIC GPIO pin supported
+ * \brief  Max and Min PMIC GPIO pin supported
  */
-#define PMIC_GPIO_PIN_MAX               (11U)
+#define PMIC_TPS6594_GPIO_PIN_MIN              (1U)
+#define PMIC_TPS6594_GPIO_PIN_MAX              (11U)
 
+/** \brief Max value for GPIO Pin Function */
+#define PMIC_TPS6594_GPIO_PINFUNC_MAX          (7U)
+
+/** \brief Max value for NPWRON/ENABLE pin Function */
+#define PMIC_TPS6594_NPWRON_PINFUNC_MAX        (1U)
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
@@ -124,16 +129,24 @@ extern "C" {
 /*==========================================================================*/
 
 /*!
- * \brief  Function to get the PMIC GPIO Pins with Input Ouput Configuration
- *         for TPS65941 Leo PMIC
+ * \brief  Get PMIC GPIO pin Input Ouput Configuration
+ *         This function is used to read the PMIC GPIO Pins with Input Ouput
+ *         Configuration
+ *
+ * \param  pGpioInOutCfg   [OUT]  Pointer to store gpio Input Ouput
+ *                                configuration
  */
-void pmic_get_tps65941_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg);
+void pmic_get_tps6594_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg);
 
 /*!
- * \brief  Function to get the PMIC GPIO Interrupt Register array for
- *         TPS65941 Leo PMIC
- */
-void pmic_get_tps65941_gpioIntRegCfg(Pmic_GpioIntRegCfg_t **pGpioIntRegCfg);
+ * \brief  Get PMIC GPIO pin Interrupt Register configuration
+ *         This function is used to read the PMIC GPIO Interrupt Register
+ *         configuration
+ *
+ * \param   pGpioIntRegCfg   [OUT]  Pointer to store gpio Interrupt Register
+ *                                  configuration
+*/
+void pmic_get_tps6594_gpioIntRegCfg(Pmic_GpioIntRegCfg_t **pGpioIntRegCfg);
 
 #ifdef __cplusplus
 }

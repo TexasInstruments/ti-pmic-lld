@@ -59,8 +59,12 @@ extern "C" {
  */
 #define PMIC_DEV_REV_REGADDR                (0x01U)
 #define PMIC_WDG_LONGWIN_CFG_REGADDR        (0x405U)
+/* On J7 1.0 EVM, PMIC_LEO_DEV_REV_ID is 0x08 */
 #define PMIC_LEO_DEV_REV_ID                 (0x08U)
+/* On J7 2.0 EVM, PMIC_LEO_DEV_REV_ID will be 0x03 */
+/* #define PMIC_LEO_DEV_REV_ID              (0x03U) */
 #define PMIC_HERA_DEV_REV_ID                (0xFFU)
+
 
 /*!
  * \brief: PMIC Recovery Counter Control and Status Registers

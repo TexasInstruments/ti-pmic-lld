@@ -405,6 +405,11 @@ extern "C" {
                                 (uint8_t)(0x01 <<  \
                                 PMIC_FSM_TRIG_MASK_3_GPIO11_FSM_MASK_POL_SHIFT)
 
+/*!
+ * \brief  GPIO NPWRON/Enable PIN
+ *          NPWRON is valid only for TPS6594 Leo Device
+ */
+#define PMIC_NPWRON_ENABLE_PIN                            (0U)
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/

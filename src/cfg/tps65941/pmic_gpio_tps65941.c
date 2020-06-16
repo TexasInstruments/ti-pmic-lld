@@ -34,24 +34,20 @@
 /**
 *   \file    pmic_gpio_tps65941.c
 *
-*   \brief   This file contains the TPS65941 Leo PMIC GPIO Specific
+*   \brief   This file contains the TPS6594 Leo PMIC GPIO Specific
 *            configuration API's and structures
 *
 */
 
 #include <pmic_types.h>
+#include <pmic_gpio.h>
+#include <pmic_core_priv.h>
+#include <pmic_io_priv.h>
 #include <pmic_gpio_tps65941_priv.h>
 
 /* PMIC GPIO Pins with Input Ouput Configuration */
-static Pmic_GpioInOutCfg_t tps65941_gpioInOutCfg[] =
+static Pmic_GpioInOutCfg_t tps6594_gpioInOutCfg[] =
 {
-    {
-        PMIC_NPWRON_CONF_REGADDR,
-        PMIC_NPWRON_OUT_REG_UNAVAILABLE,
-        PMIC_GPIO_IN_2_REGADDR,
-        PMIC_GPIO_IN_2_NPWRON_IN_SHIFT,
-        PMIC_NPWRON_OUT_REG_UNAVAILABLE
-    },
     {
         PMIC_GPIO1_CONF_REGADDR,
         PMIC_GPIO_OUT_1_REGADDR,
@@ -131,11 +127,8 @@ static Pmic_GpioInOutCfg_t tps65941_gpioInOutCfg[] =
 };
 
 /* PMIC GPIO Interrupt Register array */
-static Pmic_GpioIntRegCfg_t tps65941_gpioIntRegCfg[] =
+static Pmic_GpioIntRegCfg_t tps6594_gpioIntRegCfg[] =
 {
-    {
-        PMIC_NPWRON_OUT_REG_UNAVAILABLE
-    },
     {
         PMIC_FSM_TRIG_MASK_1_REGADDR,
         PMIC_FSM_TRIG_MASK_1_GPIO1_FSM_MASK_SHIFT,
@@ -237,25 +230,94 @@ static Pmic_GpioIntRegCfg_t tps65941_gpioIntRegCfg[] =
     }
 };
 
-/*
- * \brief   Get TPS65941 GPIO config
- *          This function is used to get TPS65941 GPIO configuration
+/*!
+ * \brief  PMIC GPIO pin get Input Ouput Configuration function
+ *         This function is used to read the PMIC GPIO Pins with Input Ouput
+ *         Configuration
  *
- * \param   pGpioInOutCfg   [OUT]  to store tps65941 gpio configuration
+ * \param  pGpioInOutCfg   [OUT]  Pointer to store gpio Input Ouput
+ *                                configuration
  */
-void pmic_get_tps65941_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg)
+void pmic_get_tps6594_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg)
 {
-    *pGpioInOutCfg = tps65941_gpioInOutCfg;
+    *pGpioInOutCfg = tps6594_gpioInOutCfg;
 }
 
-/*
- * \brief   Get TPS65941 GPIO Interrupt Register config
- *          This function is used to get TPS65941 GPIO Interrupt register
- *          configuration
+/*!
+ * \brief  Get PMIC GPIO Pin Interrupt Register configuration
+ *         This function is used to read the PMIC GPIO Interrupt Register
+ *         configuration
  *
- * \param   pGpioInOutCfg   [OUT]  to store tps65941 gpio configuration
- */
-void pmic_get_tps65941_gpioIntRegCfg(Pmic_GpioIntRegCfg_t **pGpioIntRegCfg)
+ * \param   pGpioIntRegCfg   [OUT]  Pointer to store gpio Interrupt Register
+ *                                  configuration
+*/
+void pmic_get_tps6594_gpioIntRegCfg(Pmic_GpioIntRegCfg_t **pGpioIntRegCfg)
 {
-    *pGpioIntRegCfg = tps65941_gpioIntRegCfg;
+    *pGpioIntRegCfg = tps6594_gpioIntRegCfg;
+}
+
+/*!
+ * \brief   PMIC GPIO NPWRON pin get value function
+ *          This function is used to read the signal level of the NPWRON
+ *          gpio pin.
+ *
+ * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
+ * \param   pPinValue       [OUT]   Pointer to store PMIC GPIO signal level
+ *                                  High/Low
+ *                                  Valid values \ref Pmic_Gpio_SignalLvl
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_gpioTps6594NPwronPinGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                          uint8_t           *pPinValue)
+{
+    int32_t status   = PMIC_ST_SUCCESS;
+    uint8_t regData  = 0U;
+    uint8_t regAddr  = 0U;
+    uint8_t bitPos   = 0U;
+
+    /* Parameter Validation */
+    if(NULL == pPmicCoreHandle)
+    {
+        status = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if((PMIC_ST_SUCCESS == status) &&
+       (false == pPmicCoreHandle->pPmic_SubSysInfo->gpioEnable))
+    {
+        status = PMIC_ST_ERR_INV_DEVICE;
+    }
+
+    if((PMIC_ST_SUCCESS == status) && (NULL == pPinValue))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        /* Start Critical Section */
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+
+        /* Reading the NPWRON pin value */
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
+        /* Stop Critical Section */
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+
+        if(PMIC_ST_SUCCESS == status)
+        {
+            if(0U != BIT_POS_GET_VAL(regData, bitPos))
+            {
+                *pPinValue = PMIC_GPIO_HIGH;
+            }
+            else
+            {
+                *pPinValue = PMIC_GPIO_LOW;
+            }
+        }
+    }
+
+    return status;
 }

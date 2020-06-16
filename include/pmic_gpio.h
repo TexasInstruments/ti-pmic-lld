@@ -346,10 +346,44 @@ int32_t Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
                          uint8_t            intrType,
                          uint8_t            maskPol);
 
+/*!
+ * \brief   PMIC GPIO NPWRON/Enable pin set configuration function
+ *          This function is used to set the required configuration for the
+ *          NPWRON OR ENABLE pin when corresponding bit field is set.
+ *          NPWRON is valid only for TPS6594 Leo Device
+ *
+ * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
+ * \param   pGpioCfg        [IN]    Pointer to set NPWRON or ENABLE GPIO pin
+ *                                  configuration
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
+                                            Pmic_CoreHandle_t *pPmicCoreHandle,
+                                            Pmic_GpioCfg_t    *pGpioCfg);
+
+/*!
+ * \brief   PMIC GPIO NPWRON/Enable pin get configuration function
+ *          This function is used to read the configuration for the
+ *          NPWRON OR ENABLE pin when corresponding bit field is set.
+ *          NPWRON is valid only for TPS6594 Leo Device
+ *
+ * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
+ * \param   pGpioCfg        [OUT]   Pointer to store NPWRON OR ENABLE GPIO pin
+ *                                  configuration
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_gpioGetNPwronEnablePinConfiguration(
+                                            Pmic_CoreHandle_t *pPmicCoreHandle,
+                                            Pmic_GpioCfg_t    *pGpioCfg);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif/* PMIC_GPIO_H_ */
+#endif /* PMIC_GPIO_H_ */
 
 /* @} */

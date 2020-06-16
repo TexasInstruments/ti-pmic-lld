@@ -68,7 +68,6 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_TPS6594_NPWRON_PIN                            (0U)
 #define PMIC_TPS6594_GPIO1_PIN                             (1U)
 #define PMIC_TPS6594_GPIO2_PIN                             (2U)
 #define PMIC_TPS6594_GPIO3_PIN                             (3U)
@@ -170,9 +169,6 @@ extern "C" {
 /** \brief NPWRON Signal Function for NPWRON/ENABLE pin */
 #define PMIC_TPS6594_NPWRON_PINFUNC_NPWRON                 (1U)
 /*  @} */
-
-/* GPIO pin function max value */
-#define PMIC_TPS6594_GPIO_PINFUNC_MAX                      (7U)
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
