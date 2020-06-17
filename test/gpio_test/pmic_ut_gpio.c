@@ -39,23 +39,339 @@
 
 #include <pmic_ut_gpio.h>
 
+/* Pointer holds the pPmicCoreHandle */
+Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
+
+/*!
+ * \brief   PMIC GPIO Test Cases
+ */
+static Pmic_Ut_Tests_t pmic_gpio_tests[] =
+{
+    /*! testID
+     *  testDesc
+     */
+    {
+        6185,
+        "Pmic_gpioSetConfiguration : configure a gpio pin as NSLEEP1 function"
+    },
+    {
+        6186,
+        "Pmic_gpioSetConfiguration : configure a gpio pin as NSLEEP2 function"
+    },
+    {
+        6187,
+        "Pmic_gpioSetConfiguration : configure gpio pin as NRSTOUT_SOC function"
+    },
+    {
+        6188,
+        "Pmic_gpioSetConfiguration : configure gpio pin as NRSTOUT_SOC function"
+    },
+    {
+        6189,
+        "Pmic_gpioSetConfiguration : configure a gpio pin as WAKEUP1 function"
+    },
+    {
+        6190,
+        "Pmic_gpioSetConfiguration : configure a gpio pin as WAKEUP2 function"
+    },
+    {
+        6191,
+        "Pmic_gpioSetConfiguration : configure a gpio pin as general purpose input/output function"
+    },
+    {
+        6192,
+        "Pmic_gpioSetConfiguration : configure gpio pin as I2C2 SCLK function"
+    },
+    {
+        6193,
+        "Pmic_gpioSetConfiguration : configure gpio pin as I2C2 SDA function"
+    },
+    {
+        6195,
+        "Pmic_gpioSetConfiguration : configure gpio pin as SPI CS function"
+    },
+    {
+        6196,
+        "Pmic_gpioSetConfiguration : configure gpio pin as SPI SDO function"
+    },
+    {
+        6197,
+        "Pmic_gpioSetConfiguration : configure gpio pin as watchdog trigger function"
+    },
+/* FIXME: PMICA GPIO3 pin Causing Reset on J721 EVM */
+#if 0
+    {
+        6198,
+        "Pmic_gpioSetConfiguration : configure gpio pin 3 as ESM Error Pins for SOC"
+    },
+#endif
+    {
+        6199,
+        "Pmic_gpioSetConfiguration : configure gpio pin as ESM Error Pins for MCU"
+    },
+    {
+        6201,
+        "Pmic_gpioSetConfiguration : configure gpio pin as SPMI SDATA function"
+    },
+    {
+        6202,
+        "Pmic_gpioSetConfiguration : configure gpio pin as SYNCCLKOUT function"
+    },
+    {
+        6203,
+        "Pmic_gpioSetConfiguration : configure gpio pin as SYNCCLKOUT function"
+    },
+    {
+        6204,
+        "Pmic_gpioSetConfiguration : configure gpio pin 10 as SYNCLKIN function"
+    },
+    {
+        6205,
+        "Pmic_gpioSetConfiguration : configure gpio pin as CLK32KOUT function"
+    },
+/* TODO: Need to check feasible or not */
+/*  {
+      6206,
+      "Pmic_gpioSetConfiguration : configure gpio pin 10 as CLK32KOUT function"
+    },
+*/
+    {
+        6207,
+        "Pmic_gpioSetConfiguration : configure gpio pin as Watchdog disable function"
+    },
+    {
+        6208,
+        "Pmic_gpioSetConfiguration : configure gpio pin as Watchdog disable function"
+    },
+    {
+        6209,
+        "Pmic_gpioSetConfiguration : configure gpio pin as Power Good Indication line function"
+    },
+    {
+        6210,
+        "Pmic_gpioSetConfiguration : Parameter validation for handle"
+    },
+    {
+        6211,
+        "Pmic_gpioSetConfiguration : Parameter validation for pin "
+    },
+    {
+        6212,
+        "Pmic_gpioSetConfiguration : Parameter validation for GpioCfg"
+    },
+    {
+        6213,
+        "Pmic_gpioSetConfiguration : Gpio pin configuration validation for pinDir "
+    },
+    {
+        6214,
+        "Pmic_gpioSetConfiguration : Gpio pin configuration validation for outputSignalType"
+    },
+    {
+        6215,
+        "Pmic_gpioSetConfiguration : Gpio pin configuration validation for deglitchEnable "
+    },
+    {
+        6216,
+        "Pmic_gpioSetConfiguration : Gpio pin configuration validation for pinFunc"
+    },
+    {
+        6217,
+        "Pmic_gpioSetNPwronEnablePinConfiguration : nPWRON pin configuration validation for pinFunc "
+    },
+    {
+        6218,
+        "Pmic_gpioSetNPwronEnablePinConfiguration : nPWRON pin configuration validation for pinPolarity"
+    },
+    {
+        6219,
+        "Pmic_gpioGetConfiguration : Get required gpio pin configuration"
+    },
+    {
+        6220,
+        "Pmic_gpioGetConfiguration : Parameter validation for handle"
+    },
+    {
+        6221,
+        "Pmic_gpioGetConfiguration : Parameter validation for pin"
+    },
+    {
+        6222,
+        "Pmic_gpioGetConfiguration : Parameter validation for GpioCfg"
+    },
+    {
+        6223,
+        "Pmic_gpioGetValue : Get GPIO signal level "
+    },
+    {
+        6224,
+        "Pmic_gpioGetValue : Parameter validation for handle"
+    },
+    {
+        6225,
+        "Pmic_gpioGetValue : Parameter validation for pin"
+    },
+    {
+        6226,
+        "Pmic_gpioGetValue : Parameter validation for pinValue "
+    },
+    {
+        6227,
+        "Pmic_gpioSetValue : Set GPIO signal level "
+    },
+    {
+        6228,
+        "Pmic_gpioSetValue : Parameter validation for handle"
+    },
+    {
+        6229,
+        "Pmic_gpioSetValue : Parameter validation for pin "
+    },
+    {
+        6230,
+        "Pmic_gpioSetValue : Parameter validation for pinValue "
+    },
+    {
+        6231,
+        "Pmic_gpioSetValue : Set GPIO signal level for an input GPIO pin"
+    },
+    {
+        6234,
+        "Pmic_gpioSetIntr : GPIO1 Fall Interrupt Test"
+    },
+    {
+        6235,
+        "Pmic_gpioSetIntr : GPIO1 Rise Interrupt Test"
+    },
+    {
+        6236,
+        "Pmic_gpioSetIntr : GPIO2 Fall Interrupt Test"
+    },
+    {
+        6237,
+        "Pmic_gpioSetIntr : GPIO2 Rise Interrupt Test"
+    },
+/* FIXME: PMICA GPIO3 pin Causing reset on J721 EVM */
+#if 0
+    {
+        6238,
+        "Pmic_gpioSetIntr : GPIO3 Fall Interrupt Test"
+    },
+    {
+        6239,
+        "Pmic_gpioSetIntr : GPIO3 Rise Interrupt Test"
+    },
+#endif
+/* FIXME: PMICA GPIO4 pin Causing hang on J721 EVM */
+#if 0
+    {
+        6240,
+        "Pmic_gpioSetIntr : GPIO4 Fall Interrupt Test"
+    },
+    {
+        6241,
+        "Pmic_gpioSetIntr : GPIO4 Rise Interrupt Test"
+    },
+#endif
+    {
+        6242,
+        "Pmic_gpioSetIntr : GPIO5 Fall Interrupt Test"
+    },
+    {
+        6243,
+        "Pmic_gpioSetIntr : GPIO5 Rise Interrupt Test"
+    },
+    {
+        6244,
+        "Pmic_gpioSetIntr : GPIO6 Fall Interrupt Test"
+    },
+    {
+        6245,
+        "Pmic_gpioSetIntr : GPIO6 Rise Interrupt Test"
+    },
+/* FIXME: On J721 EVM, GPIO7 interrupt Causing reset */
+#if 0
+    {
+        6246,
+        "Pmic_gpioSetIntr : GPIO7 Fall Interrupt Test"
+    },
+    {
+        6247,
+        "Pmic_gpioSetIntr : GPIO7 Rise Interrupt Test"
+    },
+#endif
+    {
+        6248,
+        "Pmic_gpioSetIntr : GPIO8 Fall Interrupt Test"
+    },
+    {
+        6249,
+        "Pmic_gpioSetIntr : GPIO8 Rise Interrupt Test"
+    },
+/* FIXME: On J721 EVM, GPIO-9,10,11 interrupts Causing reset */
+#if 0
+    {
+        6250,
+        "Pmic_gpioSetIntr : GPIO9 Fall Interrupt Test"
+    },
+    {
+        6251,
+        "Pmic_gpioSetIntr : GPIO9 Rise Interrupt Test"
+    },
+    {
+        6252,
+        "Pmic_gpioSetIntr : GPIO10 Fall Interrupt Test"
+    },
+    {
+        6253,
+        "Pmic_gpioSetIntr : GPIO10 Rise Interrupt Test"
+    },
+    {
+        6254,
+        "Pmic_gpioSetIntr : GPIO11 Fall Interrupt Test"
+    },
+    {
+        6255,
+        "Pmic_gpioSetIntr : GPIO11 Rise Interrupt Test"
+    },
+#endif
+    {
+        6256,
+        "Pmic_gpioSetIntr : Parameter validation for handle"
+    },
+    {
+        6257,
+        "Pmic_gpioSetIntr : Parameter validation for pin"
+    },
+    {
+        6258,
+        "Pmic_gpioSetIntr : Parameter validation for intrType"
+    },
+    {
+        6259,
+        "Pmic_gpioSetIntr : Parameter validation for maskPol"
+    },
+    {
+        6200,
+        "Pmic_gpioSetConfiguration : configure gpio pin as SPMI SCLK function"
+    },
+    {
+        0xFF,
+        NULL,
+    }
+};
+
 /*!
  * \brief   configure a gpio pin as NSLEEP1 function
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_setCfgGpioPin_nSLEEP1(void *pmicHandle)
+static void test_pmic_gpio_setCfgGpioPin_nSLEEP1(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
     int pin                   = 0U;
-    uint8_t pins[]           = { 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U, 9U, 10U, 11U};
+    uint8_t pins[]            = { 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U, 9U, 10U, 11U};
     uint8_t pinMax = 0;
-    Pmic_GpioCfg_t gpioCfg   =
+    Pmic_GpioCfg_t gpioCfg =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
         PMIC_GPIO_HIGH,
@@ -66,62 +382,48 @@ static bool test_pmic_gpio_setCfgGpioPin_nSLEEP1(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6185, pmic_gpio_tests);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         pinMax = PMIC_TPS6594X_GPIO11_PIN;
         gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1;
     }
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         pinMax = PMIC_LP8764X_GPIO10_PIN;
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_NSLEEP1;
     }
+
     for(pin = 0U; pin < pinMax; pin++)
     {
-        /* PMICA GPIO3 pin Causing Reset on J721 EVM */
-        if((3U == pins[pin]) && (handle.slaveAddr == LEO_PMICA_SLAVE_ADDR))
+        /* PMIC-A GPIO3 pin Causing Reset on J721 EVM */
+        if((3U == pins[pin]) &&
+           (pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR))
         {
             continue;
         }
 
-        pmicStatus = Pmic_gpioSetConfiguration(&handle, pins[pin], &gpioCfg);
-        if(PMIC_ST_SUCCESS != pmicStatus)
-        {
-            pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-            return PMIC_UT_FAILURE;
-        }
+        pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle,
+                                               pins[pin],
+                                               &gpioCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-        pmicStatus = Pmic_gpioGetConfiguration(&handle,
+        pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle,
                                                pins[pin],
                                                &gpioCfg_rd);
-        if(PMIC_ST_SUCCESS != pmicStatus)
-        {
-            pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-            return PMIC_UT_FAILURE;
-        }
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-        if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
-        {
-            pmic_log("Failed %s for GPIO-%d\n\t",__func__, pin);
-            return PMIC_UT_FAILURE;
-        }
+        TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
     }
-
-    return PMIC_UT_SUCCESS;
 }
 
 /*!
  * \brief   configure a gpio pin as NSLEEP2 function
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_setCfgGpioPin_nSLEEP2(void *pmicHandle)
+static void test_pmic_gpio_setCfgGpioPin_nSLEEP2(void)
 {
     int32_t pmicStatus       = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle = *(Pmic_CoreHandle_t *)pmicHandle;
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
     int pin                  = 0U;
     uint8_t pins[]           = { 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U, 9U, 10U, 11U};
@@ -137,63 +439,50 @@ static bool test_pmic_gpio_setCfgGpioPin_nSLEEP2(void *pmicHandle)
     };
     uint8_t pinMax = 0;
 
-    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6186, pmic_gpio_tests);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         pinMax = PMIC_TPS6594X_GPIO11_PIN;
         gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1;
     }
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         pinMax = PMIC_LP8764X_GPIO10_PIN;
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_NSLEEP2;
     }
+
     for(pin = 0U; pin < pinMax; pin++)
     {
         /* PMICA GPIO3 pin Causing Reset on J721 EVM */
-        if((3U == pins[pin]) && (handle.slaveAddr == LEO_PMICA_SLAVE_ADDR))
+        if((3U == pins[pin]) &&
+           (pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR))
         {
             continue;
         }
 
-        pmicStatus = Pmic_gpioSetConfiguration(&handle, pins[pin], &gpioCfg);
-        if(PMIC_ST_SUCCESS != pmicStatus)
-        {
-            pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-            return PMIC_UT_FAILURE;
-        }
+        pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle,
+                                               pins[pin],
+                                               &gpioCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-        pmicStatus = Pmic_gpioGetConfiguration(&handle,
+        pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle,
                                                pins[pin],
                                                &gpioCfg_rd);
-        if(PMIC_ST_SUCCESS != pmicStatus)
-        {
-            pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-            return PMIC_UT_FAILURE;
-        }
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-        if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
-        {
-            pmic_log("Failed %s\n\t",__func__);
-            return PMIC_UT_FAILURE;
-        }
+        TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
     }
-
-    return PMIC_UT_SUCCESS;
 }
 
 /*!
- * \brief   configure gpio pin1 as NRSTOUT_SOC function
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
+ * \brief   configure gpio pin as NRSTOUT_SOC function
  */
-static bool test_pmic_gpio_setCfgGpioPin1_nRstOut_soc(void *pmicHandle)
+static void test_pmic_gpio_setCfgGpioPin_nRstOut_soc(void)
 {
     int32_t pmicStatus       = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle = *(Pmic_CoreHandle_t *)pmicHandle;
-    int pin                  = 1U;
+    uint8_t pins[]           = { 1U, 11U};
+    int pin                  = 0U;
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
     Pmic_GpioCfg_t gpioCfg   =
     {
@@ -206,108 +495,41 @@ static bool test_pmic_gpio_setCfgGpioPin1_nRstOut_soc(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6187, pmic_gpio_tests);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO1_GPIO11_NRSTOUT_SOC;
     }
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        pins[0U] = 1U;
+        pins[1U] = 10U;
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO1_GPIO10_NRSTOUT_SOC;
     }
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
+    for(pin = 0U; pin < (sizeof(pins)/sizeof(pins[0U])); pin++)
     {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+        pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle,
+                                               pins[pin],
+                                               &gpioCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+        pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle,
+                                               pins[pin],
+                                               &gpioCfg_rd);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
-    {
-        pmic_log("Failed %s\n\t",__func__);
-        return PMIC_UT_FAILURE;
+        TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
     }
-
-    return PMIC_UT_SUCCESS;
-}
-
-/*!
- * \brief   configure gpio pin11 as NRSTOUT_SOC function
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
- */
-static bool test_pmic_gpio_setCfgGpioPin11_nRstOut_soc(void *pmicHandle)
-{
-    int32_t pmicStatus       = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle = *(Pmic_CoreHandle_t *)pmicHandle;
-    int pin                  = 11U;
-    Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
-    Pmic_GpioCfg_t gpioCfg   =
-    {
-        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
-        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
-        PMIC_GPIO_PULL_DOWN,
-        PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594X_GPIO_PINFUNC_GPIO1_GPIO11_NRSTOUT_SOC,
-        PMIC_GPIO_HIGH
-    };
-
-    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
-    {
-        pin = 11U;
-        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO1_GPIO11_NRSTOUT_SOC;
-    }
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
-    {
-        pin = 10U;
-        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO1_GPIO10_NRSTOUT_SOC;
-    }
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
-    {
-        pmic_log("Failed %s\n\t",__func__);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
 }
 
 /*!
  * \brief   configure a gpio pin as WAKEUP1 function
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_setCfgGpioPin_wakeup1(void *pmicHandle)
+static void test_pmic_gpio_setCfgGpioPin_wakeup1(void)
 {
     int32_t pmicStatus       = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle = *(Pmic_CoreHandle_t *)pmicHandle;
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
     int pin                  = 0U;
     uint8_t pins[]           = { 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U, 9U, 10U, 11U};
@@ -323,62 +545,48 @@ static bool test_pmic_gpio_setCfgGpioPin_wakeup1(void *pmicHandle)
     };
     uint8_t pinMax = 0;
 
-    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6189, pmic_gpio_tests);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         pinMax = PMIC_TPS6594X_GPIO11_PIN;
         gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_WKUP1;
     }
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         pinMax = PMIC_LP8764X_GPIO10_PIN;
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_WKUP1;
     }
+
     for(pin = 0U; pin < pinMax; pin++)
     {
         /* PMICA GPIO3 pin Causing Reset on J721 EVM */
-        if((3U == pins[pin]) && (handle.slaveAddr == LEO_PMICA_SLAVE_ADDR))
+        if((3U == pins[pin]) &&
+           (pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR))
         {
             continue;
         }
 
-        pmicStatus = Pmic_gpioSetConfiguration(&handle, pins[pin], &gpioCfg);
-        if(PMIC_ST_SUCCESS != pmicStatus)
-        {
-            pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-            return PMIC_UT_FAILURE;
-        }
+        pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle,
+                                               pins[pin],
+                                               &gpioCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-        pmicStatus = Pmic_gpioGetConfiguration(&handle,
+        pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle,
                                                pins[pin],
                                                &gpioCfg_rd);
-        if(PMIC_ST_SUCCESS != pmicStatus)
-        {
-            pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-            return PMIC_UT_FAILURE;
-        }
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-        if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
-        {
-            pmic_log("Failed %s\n\t",__func__);
-            return PMIC_UT_FAILURE;
-        }
+        TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
     }
-
-    return PMIC_UT_SUCCESS;
 }
 
 /*!
  * \brief   configure a gpio pin as WAKEUP2 function
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_setCfgGpioPin_wakeup2(void *pmicHandle)
+static void test_pmic_gpio_setCfgGpioPin_wakeup2(void)
 {
     int32_t pmicStatus       = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle = *(Pmic_CoreHandle_t *)pmicHandle;
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
     int pin                  = 0U;
     uint8_t pins[]           = { 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U, 9U, 10U, 11U};
@@ -394,62 +602,48 @@ static bool test_pmic_gpio_setCfgGpioPin_wakeup2(void *pmicHandle)
     };
     uint8_t pinMax = 0;
 
-    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6190, pmic_gpio_tests);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         pinMax = PMIC_TPS6594X_GPIO11_PIN;
         gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_WKUP2;
     }
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         pinMax = PMIC_LP8764X_GPIO10_PIN;
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_WKUP2;
     }
+
     for(pin = 0U; pin < pinMax; pin++)
     {
         /* PMICA GPIO3 pin Causing Reset on J721 EVM */
-        if((3U == pins[pin]) && (handle.slaveAddr == LEO_PMICA_SLAVE_ADDR))
+        if((3U == pins[pin]) &&
+           (pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR))
         {
             continue;
         }
 
-        pmicStatus = Pmic_gpioSetConfiguration(&handle, pins[pin], &gpioCfg);
-        if(PMIC_ST_SUCCESS != pmicStatus)
-        {
-            pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-            return PMIC_UT_FAILURE;
-        }
+        pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle,
+                                               pins[pin],
+                                               &gpioCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-        pmicStatus = Pmic_gpioGetConfiguration(&handle,
+        pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle,
                                                pins[pin],
                                                &gpioCfg_rd);
-        if(PMIC_ST_SUCCESS != pmicStatus)
-        {
-            pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-            return PMIC_UT_FAILURE;
-        }
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-        if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
-        {
-            pmic_log("Failed %s\n\t",__func__);
-            return PMIC_UT_FAILURE;
-        }
+        TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
     }
-
-    return PMIC_UT_SUCCESS;
 }
 
 /*!
  * \brief   configure a gpio pin as general purpose I/O function
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_setCfgGpioPin_gpio(void *pmicHandle)
+static void test_pmic_gpio_setCfgGpioPin_gpio(void)
 {
     int32_t pmicStatus       = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle = *(Pmic_CoreHandle_t *)pmicHandle;
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
     int pin                  = 0U;
     uint8_t pins[]           = { 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U, 9U, 10U, 11U};
@@ -465,63 +659,50 @@ static bool test_pmic_gpio_setCfgGpioPin_gpio(void *pmicHandle)
     };
     uint8_t pinMax = 0;
 
-    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6191, pmic_gpio_tests);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         pinMax = PMIC_TPS6594X_GPIO11_PIN;
         gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO;
     }
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         pinMax = PMIC_LP8764X_GPIO10_PIN;
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO;
     }
+
     for(pin = 0U; pin < pinMax; pin++)
     {
-        /* On J721, PMIC-A GPIO11 connected to H_SOC_PORz, which resets entire SOC
-         * because of this reason disabling GPIOCFG test on PMIC GPIO11 pin.
+        /* On J721, PMIC-A GPIO11 connected to H_SOC_PORz,
+         * which resets entire SOC because of this reason disabling GPIOCFG
+         * test on PMIC GPIO11 pin.
          */
-        if(11U == (pins[pin]) && (handle.slaveAddr == LEO_PMICA_SLAVE_ADDR))
+        if(11U == (pins[pin]) && (pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR))
         {
             continue;
         }
-        pmicStatus = Pmic_gpioSetConfiguration(&handle, pins[pin], &gpioCfg);
-        if(PMIC_ST_SUCCESS != pmicStatus)
-        {
-            pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-            return PMIC_UT_FAILURE;
-        }
 
-        pmicStatus = Pmic_gpioGetConfiguration(&handle,
+        pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle,
+                                               pins[pin],
+                                               &gpioCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle,
                                                pins[pin],
                                                &gpioCfg_rd);
-        if(PMIC_ST_SUCCESS != pmicStatus)
-        {
-            pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-            return PMIC_UT_FAILURE;
-        }
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-        if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
-        {
-            pmic_log("Failed %s\n\t",__func__);
-            return PMIC_UT_FAILURE;
-        }
+        TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
     }
-
-    return PMIC_UT_SUCCESS;
 }
 
 /*!
- * \brief   configure gpio pin1 as I2C2 SCLK function
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
+ * \brief   configure gpio pin as I2C2 SCLK function
  */
-static bool test_pmic_gpio_setCfgGpioPin1_i2c2_sclk(void *pmicHandle)
+static void test_pmic_gpio_setCfgGpioPin_i2c2_sclk(void)
 {
     int32_t pmicStatus       = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle = *(Pmic_CoreHandle_t *)pmicHandle;
     int pin                  = 1U;
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
     Pmic_GpioCfg_t gpioCfg   =
@@ -535,51 +716,34 @@ static bool test_pmic_gpio_setCfgGpioPin1_i2c2_sclk(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6192, pmic_gpio_tests);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         pin = 1U;
         gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO1_SCL_I2C2_CS_SPI;
     }
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         pin = 2U;
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO2_SCL_I2C2;
     }
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
 
-    pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
-    {
-        pmic_log("Failed %s\n\t",__func__);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
 }
 
 /*!
- * \brief   configure gpio pin2 as I2C2 SDA function
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
+ * \brief   configure gpio pin as I2C2 SDA function
  */
-static bool test_pmic_gpio_setCfgGpioPin2_i2c2_sda(void *pmicHandle)
+static void test_pmic_gpio_setCfgGpioPin_i2c2_sda(void)
 {
     int32_t pmicStatus       = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle = *(Pmic_CoreHandle_t *)pmicHandle;
     int pin                  = 2U;
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
     Pmic_GpioCfg_t gpioCfg   =
@@ -593,51 +757,34 @@ static bool test_pmic_gpio_setCfgGpioPin2_i2c2_sda(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6193, pmic_gpio_tests);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         pin = 2U;
         gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO2_SDA_I2C2_SDO_SPI;
     }
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         pin = 3U;
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO3_SDA_I2C2;
     }
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
 
-    pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
-    {
-        pmic_log("Failed %s\n\t",__func__);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
 }
 
 /*!
- * \brief   configure gpio pin1 as SPI CS function
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
+ * \brief   configure gpio pin as SPI CS function
  */
-static bool test_pmic_gpio_setCfgGpioPin1_spi_cs(void *pmicHandle)
+static void test_pmic_gpio_setCfgGpioPin_spi_cs(void)
 {
     int32_t pmicStatus       = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle = *(Pmic_CoreHandle_t *)pmicHandle;
     int pin                  = 1U;
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
     Pmic_GpioCfg_t gpioCfg   =
@@ -651,51 +798,34 @@ static bool test_pmic_gpio_setCfgGpioPin1_spi_cs(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6195, pmic_gpio_tests);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         pin = 1U;
         gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO1_SCL_I2C2_CS_SPI;
     }
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         pin = 2U;
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO2_CS_SPI;
     }
-    pmicStatus=Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
 
-    pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
-    {
-        pmic_log("Failed %s\n\t",__func__);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
 }
 
 /*!
- * \brief   configure gpio pin2 as SPI SDO function
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
+ * \brief   configure gpio pin as SPI SDO function
  */
-static bool test_pmic_gpio_setCfgGpioPin2_spi_sdo(void *pmicHandle)
+static void test_pmic_gpio_setCfgGpioPin_spi_sdo(void)
 {
     int32_t pmicStatus       = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle = *(Pmic_CoreHandle_t *)pmicHandle;
     int pin                  = 2U;
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
     Pmic_GpioCfg_t gpioCfg   =
@@ -709,51 +839,34 @@ static bool test_pmic_gpio_setCfgGpioPin2_spi_sdo(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6196, pmic_gpio_tests);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         pin = 2U;
         gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO2_SDA_I2C2_SDO_SPI;
     }
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         pin = 3U;
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO3_SDO_SPI;
     }
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
 
-    pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
-    {
-        pmic_log("Failed %s\n\t",__func__);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
 }
 
 /*!
  * \brief   configure a gpio pin as Watchdog Trigger function
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_setCfgGpioPin_wdt(void *pmicHandle)
+static void test_pmic_gpio_setCfgGpioPin_wdt(void)
 {
     int32_t pmicStatus       = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle = *(Pmic_CoreHandle_t *)pmicHandle;
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
     int pin                  = 0U;
     uint8_t pins[]           = {2U, 11U};
@@ -769,62 +882,44 @@ static bool test_pmic_gpio_setCfgGpioPin_wdt(void *pmicHandle)
     };
     uint8_t pinMax = 0;
 
+    test_pmic_print_unity_testcase_info(6197, pmic_gpio_tests);
+
     pinMax = sizeof(pins)/sizeof(pins[0U]);
-    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO2_GPIO11_TRIG_WDOG;
     }
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         pins[1U] = 4U;
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO2_TRIG_WDOG;
     }
+
     for(pin = 0U; pin < pinMax; pin++)
     {
-        if((PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType) && (4U == pins[1U]))
-        {
-            gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO4_TRIG_WDOG;
-        }
-        pmicStatus = Pmic_gpioSetConfiguration(&handle, pins[pin], &gpioCfg);
-        if(PMIC_ST_SUCCESS != pmicStatus)
-        {
-            pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-            return PMIC_UT_FAILURE;
-        }
+        pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle,
+                                               pins[pin],
+                                               &gpioCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-        pmicStatus = Pmic_gpioGetConfiguration(&handle,
+
+        pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle,
                                                pins[pin],
                                                &gpioCfg_rd);
-        if(PMIC_ST_SUCCESS != pmicStatus)
-        {
-            pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-            return PMIC_UT_FAILURE;
-        }
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-        if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
-        {
-            pmic_log("Failed %s\n\t",__func__);
-            return PMIC_UT_FAILURE;
-        }
+        TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
     }
-
-    return PMIC_UT_SUCCESS;
 }
 
 /* FIXME: PMICA GPIO3 pin Causing Reset on J721 EVM */
 #if 0
 /*!
  * \brief   configure gpio pin3 as ESM Error pin for SOC
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_setCfgGpioPin3_esm_soc(void *pmicHandle)
+static void test_pmic_gpio_setCfgGpioPin3_esm_soc(void)
 {
     int32_t pmicStatus       = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle = *(Pmic_CoreHandle_t *)pmicHandle;
     int pin                  = 3U;
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
     Pmic_GpioCfg_t gpioCfg   =
@@ -838,46 +933,28 @@ static bool test_pmic_gpio_setCfgGpioPin3_esm_soc(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
-    {
-        return PMIC_UT_SUCCESS;
-    }
-    pmicStatus=Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    test_pmic_print_unity_testcase_info(6198, pmic_gpio_tests);
 
-    pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
-    if(PMIC_ST_SUCCESS != pmicStatus)
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
+        TEST_IGNORE();
     }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
-    {
-        pmic_log("Failed %s\n\t",__func__);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
 }
 #endif
 
 /*!
- * \brief   configure gpio pin7 as ESM Error pin for MCU
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
+ * \brief   configure gpio pin as ESM Error pin for MCU
  */
-static bool test_pmic_gpio_setCfgGpioPin7_esm_mcu(void *pmicHandle)
+static void test_pmic_gpio_setCfgGpioPin_esm_mcu(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     int pin                   = 7U;
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
     Pmic_GpioCfg_t gpioCfg    =
@@ -891,45 +968,28 @@ static bool test_pmic_gpio_setCfgGpioPin7_esm_mcu(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6199, pmic_gpio_tests);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        return PMIC_UT_SUCCESS;
-    }
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
+        TEST_IGNORE();
     }
 
-    pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
-    {
-        pmic_log("Failed %s\n\t",__func__);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
 }
 
 /*!
- * \brief   configure gpio pin5 as SPMI SCLK function
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
+ * \brief   configure gpio pin as SPMI SCLK function
  */
-static bool test_pmic_gpio_setCfgGpioPin5_spmi_sclk(void *pmicHandle)
+static void test_pmic_gpio_setCfgGpioPin_spmi_sclk(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     int pin                   = 5U;
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
     Pmic_GpioCfg_t gpioCfg    =
@@ -943,50 +1003,33 @@ static bool test_pmic_gpio_setCfgGpioPin5_spmi_sclk(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6200, pmic_gpio_tests);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO5_SCLK_SPMI;
     }
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         pin = 8U;
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO8_SCLK_SPMI;
     }
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
 
-    pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
-    {
-        pmic_log("Failed %s\n\t",__func__);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
 }
 
 /*!
- * \brief   configure gpio pin6 as SPMI SDATA function
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
+ * \brief   configure gpio pin as SPMI SDATA function
  */
-static bool test_pmic_gpio_setCfgGpioPin6_spmi_sdata(void *pmicHandle)
+static void test_pmic_gpio_setCfgGpioPin_spmi_sdata(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     int pin                   = 6U;
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
     Pmic_GpioCfg_t gpioCfg    =
@@ -1000,56 +1043,36 @@ static bool test_pmic_gpio_setCfgGpioPin6_spmi_sdata(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6201, pmic_gpio_tests);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO6_SDATA_SPMI;
     }
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         pin = 9U;
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO9_SDATA_SPMI;
     }
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
-    {
-        pmic_log("Failed %s\n\t",__func__);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
 }
 
 /*!
  * \brief   configure a gpio pin as SYNCCLKOUT function
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_setCfgGpioPin_syncCLKOUT(void *pmicHandle)
+static void test_pmic_gpio_setCfgGpioPin_syncCLKOUT(void)
 {
     int32_t pmicStatus         = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle   = *(Pmic_CoreHandle_t *)pmicHandle;
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
     int pin                    = 0U;
-    uint8_t pins[]             = {8U,
-    /*! On J721 EVM, PMICA GPIO10 SYNCCLKOUT functionality is not supported
-     *  10U */
-    };
+    uint8_t pins[]             = {8U, 10U, 9U};
+    uint8_t pinMax             = 3;
     Pmic_GpioCfg_t gpioCfg =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
@@ -1061,112 +1084,56 @@ static bool test_pmic_gpio_setCfgGpioPin_syncCLKOUT(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6202, pmic_gpio_tests);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
+        pinMax = 3U;
         gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO8_GPIO10_SYNCCLKOUT;
     }
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         pins[0U] = 5U;
         pins[1U] = 6U;
+        pinMax = 2U;
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO5_GPIO6_SYNCCLKOUT;
     }
-    for(pin = 0U; pin < sizeof(pins)/sizeof(pins[0U]); pin++)
+
+    for(pin = 0U; pin < pinMax; pin++)
     {
-        pmicStatus = Pmic_gpioSetConfiguration(&handle, pins[pin], &gpioCfg);
-        if(PMIC_ST_SUCCESS != pmicStatus)
+        /*!
+         * On J721 EVM, PMICA GPIO10 SYNCCLKOUT functionality
+         * is not supported
+         */
+        if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
+           (10U == pins[pin]))
         {
-            pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-            return PMIC_UT_FAILURE;
+            continue;
+        }
+        if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
+           (9U == pins[pin]))
+        {
+            gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO9_SYNCCLKOUT;
         }
 
-        pmicStatus = Pmic_gpioGetConfiguration(&handle,
+        pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pins[pin], &gpioCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle,
                                                pins[pin],
                                                &gpioCfg_rd);
-        if(PMIC_ST_SUCCESS != pmicStatus)
-        {
-            pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-            return PMIC_UT_FAILURE;
-        }
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-        if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
-        {
-            pmic_log("Failed %s\n\t",__func__);
-            return PMIC_UT_FAILURE;
-        }
+        TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
     }
-
-    return PMIC_UT_SUCCESS;
 }
 
 /*!
- * \brief   configure gpio pin9 as SYNCCLKOUT function
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
+ * \brief   configure gpio pin as SYNCCLKIN function
  */
-static bool test_pmic_gpio_setCfgGpioPin9_syncCLKOUT(void *pmicHandle)
+static void test_pmic_gpio_setCfgGpioPin_synCLKIN(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
-    int pin                   = 9U;
-    Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
-    Pmic_GpioCfg_t gpioCfg    =
-    {
-        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
-        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
-        PMIC_GPIO_PULL_DOWN,
-        PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594X_GPIO_PINFUNC_GPIO9_SYNCCLKOUT,
-        PMIC_GPIO_HIGH
-    };
-
-    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
-    {
-        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO9_SYNCCLKOUT;
-    }
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
-    {
-        return PMIC_UT_SUCCESS;
-    }
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
-    {
-        pmic_log("Failed %s\n\t",__func__);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
-}
-
-/*!
- * \brief   configure gpio pin10 as SYNCCLKIN function
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
- */
-static bool test_pmic_gpio_setCfgGpioPin10_synCLKIN(void *pmicHandle)
-{
-    int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     int pin                   = 10U;
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
     Pmic_GpioCfg_t gpioCfg    =
@@ -1180,50 +1147,33 @@ static bool test_pmic_gpio_setCfgGpioPin10_synCLKIN(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6204, pmic_gpio_tests);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO10_SYNCCLKIN;
     }
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         pin = 5U;
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO5_SYNCCLKIN;
     }
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
 
-    pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
-    {
-        pmic_log("Failed %s\n\t",__func__);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
 }
 
 /*!
  * \brief   configure a gpio pin as CLK32KOUT function
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_setCfgGpioPin_clk32KOUT(void *pmicHandle)
+static void test_pmic_gpio_setCfgGpioPin_clk32KOUT(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
     int pin                   = 0U;
     uint8_t pins[]            = {3U, 4U, 8U};
@@ -1238,58 +1188,44 @@ static bool test_pmic_gpio_setCfgGpioPin_clk32KOUT(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6205, pmic_gpio_tests);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        return PMIC_UT_SUCCESS;
+        TEST_IGNORE();
     }
+
     for(pin = 0U; pin < sizeof(pins)/sizeof(pins[0U]); pin++)
     {
         /* PMICA GPIO3 pin Causing Reset on J721 EVM */
-        if((3U == pins[pin]) && (handle.slaveAddr == LEO_PMICA_SLAVE_ADDR))
+        if((3U == pins[pin]) &&
+           (pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR))
         {
             continue;
         }
 
-        pmicStatus = Pmic_gpioSetConfiguration(&handle, pins[pin], &gpioCfg);
-        if(PMIC_ST_SUCCESS != pmicStatus)
-        {
-            pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-            return PMIC_UT_FAILURE;
-        }
+        pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle,
+                                               pins[pin],
+                                               &gpioCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-        pmicStatus = Pmic_gpioGetConfiguration(&handle,
+        pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle,
                                                pins[pin],
                                                &gpioCfg_rd);
-        if(PMIC_ST_SUCCESS != pmicStatus)
-        {
-            pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-            return PMIC_UT_FAILURE;
-        }
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-        if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
-        {
-            pmic_log("Failed %s\n\t",__func__);
-            return PMIC_UT_FAILURE;
-        }
+        TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
     }
-
-    return PMIC_UT_SUCCESS;
 }
 
 /* TODO: Need to check feasible or not */
 #if 0
 /*!
  * \brief   configure gpio pin10 as CLK32KOUT function
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure
  */
-static bool test_pmic_gpio_setCfgGpioPin10_clk32KOUT(void *pmicHandle)
+static void test_pmic_gpio_setCfgGpioPin10_clk32KOUT(void)
 {
     int32_t pmicStatus       = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle = *(Pmic_CoreHandle_t *)pmicHandle;
     /* On J721 EVM, PMICA GPIO10 CLK32KOUT functionality is not supported */
     int pin                  = 10U;
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
@@ -1304,44 +1240,31 @@ static bool test_pmic_gpio_setCfgGpioPin10_clk32KOUT(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    test_pmic_print_unity_testcase_info(6206, pmic_gpio_tests);
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
     /* On J721 EVM, PMICA GPIO10 CLK32KOUT functionality is not supported */
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
-    {
-        pmic_log("Failed %s\n\t",__func__);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
 }
 #endif
 
 /*!
- * \brief   configure gpio pin8 as Watchdog disable function
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
+ * \brief   configure gpio pin as Watchdog disable function
  */
-static bool test_pmic_gpio_setCfgGpioPin8_wdg_disable(void *pmicHandle)
+static void test_pmic_gpio_setCfgGpioPin_wdg_disable(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
-    int pin                   = 8U;
+    int pin                   = 0U;
+    int pins[]                = {8U, 9U};
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
     Pmic_GpioCfg_t gpioCfg    =
     {
@@ -1354,97 +1277,41 @@ static bool test_pmic_gpio_setCfgGpioPin8_wdg_disable(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6207, pmic_gpio_tests);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        return PMIC_UT_SUCCESS;
-    }
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
+        TEST_IGNORE();
     }
 
-    pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
-    if(PMIC_ST_SUCCESS != pmicStatus)
+    for(pin = 0U; pin < (sizeof(pins)/sizeof(pins[0])); pin++)
     {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+        if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
+           (pins[pin] == 9U))
+        {
+            gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO9_DISABLE_WDOG;
+        }
 
-    if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
-    {
-        pmic_log("Failed %s\n\t",__func__);
-        return PMIC_UT_FAILURE;
-    }
+        pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle,
+                                               pins[pin],
+                                               &gpioCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    return PMIC_UT_SUCCESS;
+        pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle,
+                                               pins[pin],
+                                               &gpioCfg_rd);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
+    }
 }
 
 /*!
- * \brief   configure gpio pin9 as Watchdog disable function
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
+ * \brief   configure gpio pin as Power Good Indication line function
  */
-static bool test_pmic_gpio_setCfgGpioPin9_wdg_disable(void *pmicHandle)
+static void test_pmic_gpio_setCfgGpioPin_good_power(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
-    int pin                   = 9U;
-    Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
-    Pmic_GpioCfg_t gpioCfg    =
-    {
-        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
-        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
-        PMIC_GPIO_PULL_DOWN,
-        PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594X_GPIO_PINFUNC_GPIO9_DISABLE_WDOG,
-        PMIC_GPIO_HIGH
-    };
-
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
-    {
-        return PMIC_UT_SUCCESS;
-    }
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
-    {
-        pmic_log("Failed %s\n\t",__func__);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
-}
-
-/*!
- * \brief   configure gpio pin9 as Power Good Indication line function
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
- */
-static bool test_pmic_gpio_setCfgGpioPin9_good_power(void *pmicHandle)
-{
-    int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     int pin                   = 0U;
     int pins[3U]              = {9U};
     int pinMax = 0U;
@@ -1460,12 +1327,14 @@ static bool test_pmic_gpio_setCfgGpioPin9_good_power(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6209, pmic_gpio_tests);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         pinMax = 1U;
         gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO9_PGOOD;
     }
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         pins[0] = 9U;
         pins[1] = 1U;
@@ -1475,43 +1344,24 @@ static bool test_pmic_gpio_setCfgGpioPin9_good_power(void *pmicHandle)
     }
     for(pin = 0U; pin < pinMax; pin++)
     {
-        if((PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType) && (pin > 1))
+        if((PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType) && (pin > 0))
         {
             gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO1_GPIO6_PGOOD;
         }
-        pmicStatus = Pmic_gpioSetConfiguration(&handle, pins[pin], &gpioCfg);
-        if(PMIC_ST_SUCCESS != pmicStatus)
-        {
-            pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-            return PMIC_UT_FAILURE;
-        }
+        pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pins[pin], &gpioCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-        pmicStatus = Pmic_gpioGetConfiguration(&handle, pins[pin], &gpioCfg_rd);
-        if(PMIC_ST_SUCCESS != pmicStatus)
-        {
-            pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-            return PMIC_UT_FAILURE;
-        }
+        pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pins[pin], &gpioCfg_rd);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-        if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
-        {
-            pmic_log("Failed %s\n\t",__func__);
-            return PMIC_UT_FAILURE;
-        }
+        TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
     }
-
-    return PMIC_UT_SUCCESS;
 }
 
 /*!
  * \brief   Parameter validation for handle
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_setCfgPrmValTest_handle(void *pmicHandle)
+static void test_pmic_gpio_setCfgPrmValTest_handle(void)
 {
     int32_t pmicStatus     = PMIC_ST_SUCCESS;
     uint8_t pin            = 1U;
@@ -1526,28 +1376,18 @@ static bool test_pmic_gpio_setCfgPrmValTest_handle(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    pmicStatus = Pmic_gpioSetConfiguration(NULL, pin, &gpioCfg);
-    if(pmicStatus != PMIC_ST_ERR_INV_HANDLE)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    test_pmic_print_unity_testcase_info(6210, pmic_gpio_tests);
 
-    return PMIC_UT_SUCCESS;
+    pmicStatus = Pmic_gpioSetConfiguration(NULL, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_HANDLE);
 }
 
 /*!
  * \brief   Parameter validation for pin
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_setCfgPrmValTest_pin(void *pmicHandle)
+static void test_pmic_gpio_setCfgPrmValTest_pin(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 12U;
     Pmic_GpioCfg_t gpioCfg    =
     {
@@ -1560,52 +1400,32 @@ static bool test_pmic_gpio_setCfgPrmValTest_pin(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(pmicStatus != PMIC_ST_ERR_INV_PARAM)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    test_pmic_print_unity_testcase_info(6211, pmic_gpio_tests);
 
-    return PMIC_UT_SUCCESS;
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
 }
 
 /*!
  * \brief   Parameter validation for GpioCfg
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_setCfgPrmValTest_gpioCfg(void *pmicHandle)
+static void test_pmic_gpio_setCfgPrmValTest_gpioCfg(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 1U;
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, NULL);
-    if(pmicStatus != PMIC_ST_ERR_NULL_PARAM)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    test_pmic_print_unity_testcase_info(6212, pmic_gpio_tests);
 
-    return PMIC_UT_SUCCESS;
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
 }
 
 /*!
  * \brief   Parameter validation for pinDir
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_setCfgPrmValTest_pinDir(void *pmicHandle)
+static void test_pmic_gpio_setCfgPrmValTest_pinDir(void)
 {
     int32_t pmicStatus       = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin              = 1U;
     Pmic_GpioCfg_t gpioCfg   =
     {
@@ -1618,28 +1438,18 @@ static bool test_pmic_gpio_setCfgPrmValTest_pinDir(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(pmicStatus != PMIC_ST_ERR_INV_PARAM)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    test_pmic_print_unity_testcase_info(6213, pmic_gpio_tests);
 
-    return PMIC_UT_SUCCESS;
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
 }
 
 /*!
  * \brief   Parameter validation for outputSignalType
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_setCfgPrmValTest_outputSignalType(void *pmicHandle)
+static void test_pmic_gpio_setCfgPrmValTest_outputSignalType(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
@@ -1652,28 +1462,18 @@ static bool test_pmic_gpio_setCfgPrmValTest_outputSignalType(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(pmicStatus != PMIC_ST_ERR_INV_PARAM)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    test_pmic_print_unity_testcase_info(6214, pmic_gpio_tests);
 
-    return PMIC_UT_SUCCESS;
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
 }
 
 /*!
  * \brief   Parameter validation for deglitchEnable
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_setCfgPrmValTest_deglitchEnable(void *pmicHandle)
+static void test_pmic_gpio_setCfgPrmValTest_deglitchEnable(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
@@ -1686,28 +1486,18 @@ static bool test_pmic_gpio_setCfgPrmValTest_deglitchEnable(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(pmicStatus != PMIC_ST_ERR_INV_PARAM)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    test_pmic_print_unity_testcase_info(6215, pmic_gpio_tests);
 
-    return PMIC_UT_SUCCESS;
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
 }
 
 /*!
  * \brief   Parameter validation for pinFunc
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_setCfgPrmValTest_pinFunc_case1(void *pmicHandle)
+static void test_pmic_gpio_setCfgPrmValTest_pinFunc_case1(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
@@ -1720,28 +1510,18 @@ static bool test_pmic_gpio_setCfgPrmValTest_pinFunc_case1(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(pmicStatus != PMIC_ST_ERR_INV_GPIO_FUNC)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    test_pmic_print_unity_testcase_info(6216, pmic_gpio_tests);
 
-    return PMIC_UT_SUCCESS;
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_GPIO_FUNC);
 }
 
 /*!
  * \brief   Parameter validation for nPWRON pinFunc
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_nPWRON_setCfgPrmValTest_pinFunc(void *pmicHandle)
+static void test_pmic_nPWRON_setCfgPrmValTest_pinFunc(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
@@ -1753,32 +1533,24 @@ static bool test_pmic_nPWRON_setCfgPrmValTest_pinFunc(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6217, pmic_gpio_tests);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        return PMIC_UT_SUCCESS;
-    }
-    pmicStatus = Pmic_gpioSetNPwronEnablePinConfiguration(&handle, &gpioCfg);
-    if(pmicStatus != PMIC_ST_ERR_INV_GPIO_FUNC)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
+        TEST_IGNORE();
     }
 
-    return PMIC_UT_SUCCESS;
+    pmicStatus = Pmic_gpioSetNPwronEnablePinConfiguration(pPmicCoreHandle,
+                                                          &gpioCfg);
+    TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_GPIO_FUNC);
 }
 
 /*!
  * \brief   Parameter validation for nPWRON pinPolarity
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_nPWRON_setCfgPrmValTest_pinPolarity(void *pmicHandle)
+static void test_pmic_nPWRON_setCfgPrmValTest_pinPolarity(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_NPWRON_CFG_POLARITY_VALID_SHIFT,
@@ -1790,32 +1562,19 @@ static bool test_pmic_nPWRON_setCfgPrmValTest_pinPolarity(void *pmicHandle)
         0x02U
     };
 
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
-    {
-        return PMIC_UT_SUCCESS;
-    }
-    pmicStatus = Pmic_gpioSetNPwronEnablePinConfiguration(&handle, &gpioCfg);
-    if(pmicStatus != PMIC_ST_ERR_INV_PARAM)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    test_pmic_print_unity_testcase_info(6218, pmic_gpio_tests);
 
-    return PMIC_UT_SUCCESS;
+    pmicStatus = Pmic_gpioSetNPwronEnablePinConfiguration(pPmicCoreHandle,
+                                                          &gpioCfg);
+    TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
 }
 
 /*!
  * \brief   Get required GPIO pin configuration
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_getCfgGpioPin(void *pmicHandle)
+static void test_pmic_gpio_getCfgGpioPin(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     int pin                   = 1U;
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
     Pmic_GpioCfg_t gpioCfg    =
@@ -1829,46 +1588,30 @@ static bool test_pmic_gpio_getCfgGpioPin(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6219, pmic_gpio_tests);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1;
     }
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_NSLEEP1;
     }
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
 
-    pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
-    {
-        pmic_log("Failed %s\n\t",__func__);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
 }
 
 /*!
  * \brief   Parameter validation for handle
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_getCfgPrmValTest_handle(void *pmicHandle)
+static void test_pmic_gpio_getCfgPrmValTest_handle(void)
 {
     int32_t pmicStatus     = PMIC_ST_SUCCESS;
     uint8_t pin            = 1U;
@@ -1883,28 +1626,18 @@ static bool test_pmic_gpio_getCfgPrmValTest_handle(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    pmicStatus = Pmic_gpioGetConfiguration(NULL, pin, &gpioCfg);
-    if(pmicStatus != PMIC_ST_ERR_INV_HANDLE)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    test_pmic_print_unity_testcase_info(6220, pmic_gpio_tests);
 
-    return PMIC_UT_SUCCESS;
+    pmicStatus = Pmic_gpioGetConfiguration(NULL, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_HANDLE);
 }
 
 /*!
  * \brief   Parameter validation for pin
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_getCfgPrmValTest_pin(void *pmicHandle)
+static void test_pmic_gpio_getCfgPrmValTest_pin(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 12U;
     Pmic_GpioCfg_t gpioCfg    =
     {
@@ -1917,52 +1650,32 @@ static bool test_pmic_gpio_getCfgPrmValTest_pin(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg);
-    if(pmicStatus != PMIC_ST_ERR_INV_PARAM)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    test_pmic_print_unity_testcase_info(6221, pmic_gpio_tests);
 
-    return PMIC_UT_SUCCESS;
+    pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
 }
 
 /*!
  * \brief   Parameter validation for GpioCfg
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_getCfgPrmValTest_gpioCfg(void *pmicHandle)
+static void test_pmic_gpio_getCfgPrmValTest_gpioCfg(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 1U;
 
-    pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, NULL);
-    if(pmicStatus != PMIC_ST_ERR_NULL_PARAM)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    test_pmic_print_unity_testcase_info(6222, pmic_gpio_tests);
 
-    return PMIC_UT_SUCCESS;
+    pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, NULL);
+    TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_NULL_PARAM);
 }
 
 /*!
  * \brief   Get GPIO signal level
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_getValueGpioPin1_signalLevel(void *pmicHandle)
+static void test_pmic_gpio_getValueGpioPin1_signalLevel(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 1U;
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t pinValue_rd;
@@ -1977,129 +1690,78 @@ static bool test_pmic_gpio_getValueGpioPin1_signalLevel(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6223, pmic_gpio_tests);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO;
     }
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO;
     }
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioGetValue(&handle, pin, &pinValue_rd);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioGetValue(pPmicCoreHandle, pin, &pinValue_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    if(pinValue != pinValue_rd)
-    {
-        pmic_log("Failed %s\n\t",__func__);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(pinValue, pinValue_rd);
 }
 
 /*!
  * \brief   Parameter validation for handle
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_getValuePrmValTest_handle(void *pmicHandle)
+static void test_pmic_gpio_getValuePrmValTest_handle(void)
 {
     int32_t pmicStatus   = PMIC_ST_SUCCESS;
     uint8_t pin          = 1U;
     uint8_t pinValue;
 
-    pmicStatus = Pmic_gpioGetValue(NULL, pin, &pinValue);
-    if(pmicStatus != PMIC_ST_ERR_INV_HANDLE)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    test_pmic_print_unity_testcase_info(6224, pmic_gpio_tests);
 
-    return PMIC_UT_SUCCESS;
+    pmicStatus = Pmic_gpioGetValue(NULL, pin, &pinValue);
+    TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_HANDLE);
 }
 
 /*!
  * \brief   Parameter validation for pin
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_getValuePrmValTest_pin(void *pmicHandle)
+static void test_pmic_gpio_getValuePrmValTest_pin(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 12U;
     uint8_t pinValue;
 
-    pmicStatus = Pmic_gpioGetValue(&handle,pin,&pinValue);
-    if(pmicStatus != PMIC_ST_ERR_INV_PARAM)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    test_pmic_print_unity_testcase_info(6225, pmic_gpio_tests);
 
-    return PMIC_UT_SUCCESS;
+    pmicStatus = Pmic_gpioGetValue(pPmicCoreHandle,pin,&pinValue);
+    TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
 }
 
 /*!
  * \brief   Parameter validation for pinValue
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_getValuePrmValTest_pinValue(void *pmicHandle)
+static void test_pmic_gpio_getValuePrmValTest_pinValue(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 1U;
 
-    pmicStatus = Pmic_gpioGetValue(&handle, pin, NULL);
-    if(pmicStatus != PMIC_ST_ERR_NULL_PARAM)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    test_pmic_print_unity_testcase_info(6226, pmic_gpio_tests);
 
-    return PMIC_UT_SUCCESS;
+    pmicStatus = Pmic_gpioGetValue(pPmicCoreHandle, pin, NULL);
+    TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_NULL_PARAM);
 }
 
 /*!
  * \brief   Set GPIO signal level
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_setValueGpioPin1_signalLevel(void *pmicHandle)
+static void test_pmic_gpio_setValueGpioPin1_signalLevel(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 1U;
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t pinValue_rd;
@@ -2114,130 +1776,79 @@ static bool test_pmic_gpio_setValueGpioPin1_signalLevel(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6227, pmic_gpio_tests);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO;
     }
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO;
     }
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioGetValue(&handle, pin, &pinValue_rd);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioGetValue(pPmicCoreHandle, pin, &pinValue_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    if(pinValue != pinValue_rd)
-    {
-        pmic_log("Failed %s\n\t",__func__);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(pinValue, pinValue_rd);
 }
 
 /*!
  * \brief   Parameter validation for handle
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_setValuePrmValTest_handle(void *pmicHandle)
+static void test_pmic_gpio_setValuePrmValTest_handle(void)
 {
     int32_t pmicStatus    = PMIC_ST_SUCCESS;
     uint8_t pin           = 1U;
     uint8_t pinValue      = PMIC_GPIO_HIGH;
 
-    pmicStatus = Pmic_gpioSetValue(NULL, pin, pinValue);
-    if(pmicStatus != PMIC_ST_ERR_INV_HANDLE)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    test_pmic_print_unity_testcase_info(6228, pmic_gpio_tests);
 
-    return PMIC_UT_SUCCESS;
+    pmicStatus = Pmic_gpioSetValue(NULL, pin, pinValue);
+    TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_HANDLE);
 }
 
 /*!
  * \brief   Parameter validation for pin
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_setValuePrmValTest_pin(void *pmicHandle)
+static void test_pmic_gpio_setValuePrmValTest_pin(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 12U;
     uint8_t pinValue          = PMIC_GPIO_HIGH;
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(pmicStatus != PMIC_ST_ERR_INV_PARAM)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    test_pmic_print_unity_testcase_info(6229, pmic_gpio_tests);
 
-    return PMIC_UT_SUCCESS;
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
 }
 
 /*!
  * \brief   Parameter validation for pinValue
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_setValuePrmValTest_pinValue(void *pmicHandle)
+static void test_pmic_gpio_setValuePrmValTest_pinValue(void)
 {
     int32_t pmicStatus       = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin              = 1U;
     uint8_t pinValue         = 2U;
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(pmicStatus != PMIC_ST_ERR_INV_PARAM)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    test_pmic_print_unity_testcase_info(6230, pmic_gpio_tests);
 
-    return PMIC_UT_SUCCESS;
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
 }
 
 /*!
  * \brief   Set GPIO signal level for an input GPIO pin
- *
- * \param   pmicHandle    [IN]     PMIC Interface Handle.
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_setValueGpioPin5_input(void *pmicHandle)
+static void test_pmic_gpio_setValueGpioPin5_input(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t pin               = 5U;
     Pmic_GpioCfg_t gpioCfg    =
@@ -2252,42 +1863,26 @@ static bool test_pmic_gpio_setValueGpioPin5_input(void *pmicHandle)
     };
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
 
-    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6231, pmic_gpio_tests);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO;
     }
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO;
     }
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    if(gpioCfg.pinDir != gpioCfg_rd.pinDir)
-    {
-        pmic_log("Failed %s\n\t",__func__);
-        return PMIC_UT_FAILURE;
-    }
+    TEST_ASSERT_EQUAL(gpioCfg.pinDir, gpioCfg_rd.pinDir);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(pmicStatus != PMIC_ST_ERR_INV_PARAM)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
 }
 
 static void pmic_all_intMask(Pmic_CoreHandle_t *pHandle)
@@ -2346,14 +1941,10 @@ static void pmic_all_intUnMask(Pmic_CoreHandle_t *pHandle)
 
 /*!
  * \brief   Test to verify GPIO1 fall interrupt
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio1_fall_interrupt(void *pmicHandle)
+static void test_pmic_gpio1_testFall_interrupt(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 1U;
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
@@ -2374,48 +1965,34 @@ static bool test_pmic_gpio1_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6234, pmic_gpio_tests);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        return PMIC_UT_SUCCESS;
+        TEST_IGNORE();
     }
     /* MASKING all Interrupts */
-    pmic_all_intMask(&handle);
+    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 1 FALL Interrupt */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_GPIO1_FALL_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO1_FALL_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pinValue = PMIC_GPIO_LOW;
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             irqL1   = PMIC_IRQID_L1REG (pErrStat);
@@ -2426,16 +2003,15 @@ static bool test_pmic_gpio1_fall_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO1_MASK == irqL2) ||
                (PMIC_INT_GPIO1_MASK  == errStat))
             {
-                pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(&handle,
+                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
                                               pin,
                                               PMIC_GPIO_DISABLE_INTERRUPT,
                                               maskPol);
                 if(PMIC_ST_SUCCESS == pmicStatus)
                 {
                     /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
                     break;
                 }
             }
@@ -2443,27 +2019,17 @@ static bool test_pmic_gpio1_fall_interrupt(void *pmicHandle)
     }
 
     /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
+    pmic_all_intUnMask(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
 /*!
  * \brief   Test to verify GPIO1 rise interrupt
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio1_rise_interrupt(void *pmicHandle)
+static void test_pmic_gpio1_testRise_interrupt(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 1U;
     uint8_t pinValue          = PMIC_GPIO_LOW;
     uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
@@ -2484,48 +2050,35 @@ static bool test_pmic_gpio1_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6235, pmic_gpio_tests);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        return PMIC_UT_SUCCESS;
+        TEST_IGNORE();
     }
+
     /* MASKING all Interrupts */
-    pmic_all_intMask(&handle);
+    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 1 RISE Interrupt */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_GPIO1_RISE_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO1_RISE_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pinValue = PMIC_GPIO_HIGH;
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             irqL1   = PMIC_IRQID_L1REG (pErrStat);
@@ -2536,16 +2089,15 @@ static bool test_pmic_gpio1_rise_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO1_MASK == irqL2) ||
                (PMIC_INT_GPIO1_MASK  == errStat))
             {
-                pmic_log("\n Interrupt Received \n ");
                 /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(&handle,
+                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
                                               pin,
                                               PMIC_GPIO_DISABLE_INTERRUPT,
                                               maskPol);
                 if(PMIC_ST_SUCCESS == pmicStatus)
                 {
                     /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
                     break;
                 }
             }
@@ -2553,27 +2105,17 @@ static bool test_pmic_gpio1_rise_interrupt(void *pmicHandle)
     }
 
     /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
+    pmic_all_intUnMask(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
 /*!
  * \brief   Test to verify GPIO2 fall interrupt
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio2_fall_interrupt(void *pmicHandle)
+static void test_pmic_gpio2_testFall_interrupt(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 2U;
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
@@ -2594,48 +2136,34 @@ static bool test_pmic_gpio2_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6236, pmic_gpio_tests);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        return PMIC_UT_SUCCESS;
+        TEST_IGNORE();
     }
     /* MASKING all Interrupts */
-    pmic_all_intMask(&handle);
+    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 2 FALL Interrupt */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_GPIO2_FALL_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO2_FALL_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pinValue = PMIC_GPIO_LOW;
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             irqL1   = PMIC_IRQID_L1REG (pErrStat);
@@ -2646,16 +2174,15 @@ static bool test_pmic_gpio2_fall_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO2_MASK == irqL2) ||
                (PMIC_INT_GPIO2_MASK  == errStat))
             {
-                pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(&handle,
+                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
                                               pin,
                                               PMIC_GPIO_DISABLE_INTERRUPT,
                                               maskPol);
                 if(PMIC_ST_SUCCESS == pmicStatus)
                 {
                     /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
                     break;
                 }
             }
@@ -2663,27 +2190,17 @@ static bool test_pmic_gpio2_fall_interrupt(void *pmicHandle)
     }
 
     /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
+    pmic_all_intUnMask(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
 /*!
  * \brief   Test to verify GPIO2 rise interrupt
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio2_rise_interrupt(void *pmicHandle)
+static void test_pmic_gpio2_testRise_interrupt(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 2U;
     uint8_t pinValue          = PMIC_GPIO_LOW;
     uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
@@ -2704,48 +2221,34 @@ static bool test_pmic_gpio2_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6237, pmic_gpio_tests);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        return PMIC_UT_SUCCESS;
+        TEST_IGNORE();
     }
     /* MASKING all Interrupts */
-    pmic_all_intMask(&handle);
+    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 2 RISE Interrupt */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_GPIO2_RISE_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO2_RISE_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pinValue = PMIC_GPIO_HIGH;
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             irqL1   = PMIC_IRQID_L1REG (pErrStat);
@@ -2756,16 +2259,15 @@ static bool test_pmic_gpio2_rise_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO2_MASK == irqL2) ||
                (PMIC_INT_GPIO2_MASK  == errStat))
             {
-                pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(&handle,
+                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
                                               pin,
                                               PMIC_GPIO_DISABLE_INTERRUPT,
                                               maskPol);
                 if(PMIC_ST_SUCCESS == pmicStatus)
                 {
                     /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
                     break;
                 }
             }
@@ -2773,29 +2275,19 @@ static bool test_pmic_gpio2_rise_interrupt(void *pmicHandle)
     }
 
     /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
+    pmic_all_intUnMask(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
 /* FIXME: PMICA GPIO3 pin Causing Reset on J721 EVM */
 #if 0
 /*!
  * \brief   Test to verify GPIO3 fall interrupt
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio3_fall_interrupt(void *pmicHandle)
+static void test_pmic_gpio3_testFall_interrupt(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 3U;
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
@@ -2816,44 +2308,35 @@ static bool test_pmic_gpio3_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    test_pmic_print_unity_testcase_info(6238, pmic_gpio_tests);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
     /* MASKING all Interrupts */
-    pmic_all_intMask(&handle);
+    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 3 FALL Interrupt */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_GPIO3_FALL_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO3_FALL_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pinValue = PMIC_GPIO_LOW;
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             irqL1   = PMIC_IRQID_L1REG (pErrStat);
@@ -2864,16 +2347,15 @@ static bool test_pmic_gpio3_fall_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO3_MASK == irqL2) ||
                (PMIC_INT_GPIO3_MASK  == errStat))
             {
-                pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(&handle,
+                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
                                               pin,
                                               PMIC_GPIO_DISABLE_INTERRUPT,
                                               maskPol);
                 if(PMIC_ST_SUCCESS == pmicStatus)
                 {
                     /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
                     break;
                 }
             }
@@ -2881,27 +2363,17 @@ static bool test_pmic_gpio3_fall_interrupt(void *pmicHandle)
     }
 
     /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
+    pmic_all_intUnMask(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
 /*!
  * \brief   Test to verify GPIO3 rise interrupt
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio3_rise_interrupt(void *pmicHandle)
+static void test_pmic_gpio3_testRise_interrupt(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 3U;
     uint8_t pinValue          = PMIC_GPIO_LOW;
     uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
@@ -2922,44 +2394,35 @@ static bool test_pmic_gpio3_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    test_pmic_print_unity_testcase_info(6239, pmic_gpio_tests);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
     /* MASKING all Interrupts */
-    pmic_all_intMask(&handle);
+    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 3 RISE Interrupt */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_GPIO3_RISE_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO3_RISE_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pinValue = PMIC_GPIO_HIGH;
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             irqL1   = PMIC_IRQID_L1REG (pErrStat);
@@ -2970,16 +2433,15 @@ static bool test_pmic_gpio3_rise_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO3_MASK == irqL2) ||
                (PMIC_INT_GPIO3_MASK  == errStat))
             {
-                pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(&handle,
+                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
                                               pin,
                                               PMIC_GPIO_DISABLE_INTERRUPT,
                                               maskPol);
                 if(PMIC_ST_SUCCESS == pmicStatus)
                 {
                     /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
                     break;
                 }
             }
@@ -2987,15 +2449,9 @@ static bool test_pmic_gpio3_rise_interrupt(void *pmicHandle)
     }
 
     /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
+    pmic_all_intUnMask(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 #endif
 
@@ -3003,14 +2459,10 @@ static bool test_pmic_gpio3_rise_interrupt(void *pmicHandle)
 #if 0
 /*!
  * \brief   Test to verify GPIO4 fall interrupt
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio4_fall_interrupt(void *pmicHandle)
+static void test_pmic_gpio4_testFall_interrupt(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 4U;
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
@@ -3031,44 +2483,35 @@ static bool test_pmic_gpio4_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    test_pmic_print_unity_testcase_info(6240, pmic_gpio_tests);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
     /* MASKING all Interrupts */
-    pmic_all_intMask(&handle);
+    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 4 FALL Interrupt */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_GPIO4_FALL_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO4_FALL_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pinValue = PMIC_GPIO_LOW;
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             irqL1   = PMIC_IRQID_L1REG (pErrStat);
@@ -3079,16 +2522,15 @@ static bool test_pmic_gpio4_fall_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO4_MASK == irqL2) ||
                (PMIC_INT_GPIO4_MASK  == errStat))
             {
-                pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(&handle,
+                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
                                               pin,
                                               PMIC_GPIO_DISABLE_INTERRUPT,
                                               maskPol);
                 if(PMIC_ST_SUCCESS == pmicStatus)
                 {
                     /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
                     break;
                 }
             }
@@ -3096,27 +2538,17 @@ static bool test_pmic_gpio4_fall_interrupt(void *pmicHandle)
     }
 
     /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
+    pmic_all_intUnMask(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
 /*!
  * \brief   Test to verify GPIO4 rise interrupt
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio4_rise_interrupt(void *pmicHandle)
+static void test_pmic_gpio4_testRise_interrupt(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 4U;
     uint8_t pinValue          = PMIC_GPIO_LOW;
     uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
@@ -3137,44 +2569,35 @@ static bool test_pmic_gpio4_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    test_pmic_print_unity_testcase_info(6241, pmic_gpio_tests);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
     /* MASKING all Interrupts */
-    pmic_all_intMask(&handle);
+    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 4 RISE Interrupt */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_GPIO4_RISE_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO4_RISE_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pinValue = PMIC_GPIO_HIGH;
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             irqL1   = PMIC_IRQID_L1REG (pErrStat);
@@ -3185,16 +2608,15 @@ static bool test_pmic_gpio4_rise_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO4_MASK == irqL2) ||
                (PMIC_INT_GPIO4_MASK  == errStat))
             {
-                pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(&handle,
+                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
                                               pin,
                                               PMIC_GPIO_DISABLE_INTERRUPT,
                                               maskPol);
                 if(PMIC_ST_SUCCESS == pmicStatus)
                 {
                     /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
                     break;
                 }
             }
@@ -3202,29 +2624,18 @@ static bool test_pmic_gpio4_rise_interrupt(void *pmicHandle)
     }
 
     /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
+    pmic_all_intUnMask(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
-
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 #endif
 
 /*!
  * \brief   Test to verify GPIO5 fall interrupt
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio5_fall_interrupt(void *pmicHandle)
+static void test_pmic_gpio5_testFall_interrupt(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 5U;
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
@@ -3245,50 +2656,36 @@ static bool test_pmic_gpio5_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6242, pmic_gpio_tests);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        return PMIC_UT_SUCCESS;
+        TEST_IGNORE();
     }
     /* MASKING all Interrupts */
-    pmic_all_intMask(&handle);
+    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 5 FALL Interrupt */
-    Pmic_irqMaskIntr(&handle,
+    Pmic_irqMaskIntr(pPmicCoreHandle,
                      PMIC_IRQ_GPIO5_FALL_MASK,
                      PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pinValue = PMIC_GPIO_LOW;
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             irqL1   = PMIC_IRQID_L1REG (pErrStat);
@@ -3299,16 +2696,15 @@ static bool test_pmic_gpio5_fall_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO5_MASK == irqL2) ||
                (PMIC_INT_GPIO5_MASK  == errStat))
             {
-               pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(&handle,
+                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
                                               pin,
                                               PMIC_GPIO_DISABLE_INTERRUPT,
                                               maskPol);
                 if(PMIC_ST_SUCCESS == pmicStatus)
                 {
                     /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
                     break;
                 }
             }
@@ -3316,27 +2712,17 @@ static bool test_pmic_gpio5_fall_interrupt(void *pmicHandle)
     }
 
     /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
+    pmic_all_intUnMask(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
 /*!
  * \brief   Test to verify GPIO5 rise interrupt
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio5_rise_interrupt(void *pmicHandle)
+static void test_pmic_gpio5_testRise_interrupt(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 5U;
     uint8_t pinValue          = PMIC_GPIO_LOW;
     uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
@@ -3357,48 +2743,34 @@ static bool test_pmic_gpio5_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6243, pmic_gpio_tests);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        return PMIC_UT_SUCCESS;
+        TEST_IGNORE();
     }
     /* MASKING all Interrupts */
-    pmic_all_intMask(&handle);
+    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 5 RISE Interrupt */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_GPIO5_RISE_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO5_RISE_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pinValue = PMIC_GPIO_HIGH;
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             irqL1   = PMIC_IRQID_L1REG (pErrStat);
@@ -3409,16 +2781,15 @@ static bool test_pmic_gpio5_rise_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO5_MASK == irqL2) ||
                (PMIC_INT_GPIO5_MASK  == errStat))
             {
-                pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(&handle,
+                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
                                               pin,
                                               PMIC_GPIO_DISABLE_INTERRUPT,
                                               maskPol);
                 if(PMIC_ST_SUCCESS == pmicStatus)
                 {
                     /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
                     break;
                 }
             }
@@ -3426,27 +2797,17 @@ static bool test_pmic_gpio5_rise_interrupt(void *pmicHandle)
     }
 
     /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
+    pmic_all_intUnMask(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
 /*!
  * \brief   Test to verify GPIO6 fall interrupt
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio6_fall_interrupt(void *pmicHandle)
+static void test_pmic_gpio6_testFall_interrupt(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 6U;
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
@@ -3467,48 +2828,34 @@ static bool test_pmic_gpio6_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6244, pmic_gpio_tests);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        return PMIC_UT_SUCCESS;
+        TEST_IGNORE();
     }
     /* MASKING all Interrupts */
-    pmic_all_intMask(&handle);
+    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 6 FALL Interrupt */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_GPIO6_FALL_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO6_FALL_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pinValue = PMIC_GPIO_LOW;
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             irqL1   = PMIC_IRQID_L1REG (pErrStat);
@@ -3519,16 +2866,15 @@ static bool test_pmic_gpio6_fall_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO6_MASK == irqL2) ||
                (PMIC_INT_GPIO6_MASK  == errStat))
             {
-                pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(&handle,
+                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
                                               pin,
                                               PMIC_GPIO_DISABLE_INTERRUPT,
                                               maskPol);
                 if(PMIC_ST_SUCCESS == pmicStatus)
                 {
                     /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
                     break;
                 }
             }
@@ -3536,27 +2882,17 @@ static bool test_pmic_gpio6_fall_interrupt(void *pmicHandle)
     }
 
     /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
+    pmic_all_intUnMask(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
 /*!
  * \brief   Test to verify GPIO6 rise interrupt
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio6_rise_interrupt(void *pmicHandle)
+static void test_pmic_gpio6_testRise_interrupt(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 6U;
     uint8_t pinValue          = PMIC_GPIO_LOW;
     uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
@@ -3577,48 +2913,34 @@ static bool test_pmic_gpio6_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6245, pmic_gpio_tests);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        return PMIC_UT_SUCCESS;
+        TEST_IGNORE();
     }
     /* MASKING all Interrupts */
-    pmic_all_intMask(&handle);
+    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 6 RISE Interrupt */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_GPIO6_RISE_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO6_RISE_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pinValue = PMIC_GPIO_HIGH;
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             irqL1   = PMIC_IRQID_L1REG (pErrStat);
@@ -3629,16 +2951,15 @@ static bool test_pmic_gpio6_rise_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO6_MASK == irqL2) ||
                (PMIC_INT_GPIO6_MASK  == errStat))
             {
-                pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(&handle,
+                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
                                               pin,
                                               PMIC_GPIO_DISABLE_INTERRUPT,
                                               maskPol);
                 if(PMIC_ST_SUCCESS == pmicStatus)
                 {
                     /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
                     break;
                 }
             }
@@ -3646,29 +2967,19 @@ static bool test_pmic_gpio6_rise_interrupt(void *pmicHandle)
     }
 
     /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
+    pmic_all_intUnMask(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
 /* FIXME: On J721 EVM, GPIO7 interrupt Causing reset */
 #if 0
 /*!
  * \brief   Test to verify GPIO7 fall interrupt
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio7_fall_interrupt(void *pmicHandle)
+static void test_pmic_gpio7_testFall_interrupt(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 7U;
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
@@ -3689,44 +3000,35 @@ static bool test_pmic_gpio7_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    test_pmic_print_unity_testcase_info(6246, pmic_gpio_tests);
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+
     /* MASKING all Interrupts */
-    pmic_all_intMask(&handle);
+    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 7 FALL Interrupt */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_GPIO7_FALL_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO7_FALL_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pinValue = PMIC_GPIO_LOW;
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             irqL1   = PMIC_IRQID_L1REG (pErrStat);
@@ -3737,16 +3039,15 @@ static bool test_pmic_gpio7_fall_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO7_MASK == irqL2) ||
                (PMIC_INT_GPIO7_MASK  == errStat))
             {
-                pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(&handle,
+                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
                                               pin,
                                               PMIC_GPIO_DISABLE_INTERRUPT,
                                               maskPol);
                 if(PMIC_ST_SUCCESS == pmicStatus)
                 {
                     /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
                     break;
                 }
             }
@@ -3754,27 +3055,17 @@ static bool test_pmic_gpio7_fall_interrupt(void *pmicHandle)
     }
 
     /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
+    pmic_all_intUnMask(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
 /*!
  * \brief   Test to verify GPIO7 rise interrupt
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio7_rise_interrupt(void *pmicHandle)
+static void test_pmic_gpio7_testRise_interrupt(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 7U;
     uint8_t pinValue          = PMIC_GPIO_LOW;
     uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
@@ -3795,44 +3086,35 @@ static bool test_pmic_gpio7_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    test_pmic_print_unity_testcase_info(6247, pmic_gpio_tests);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
     /* MASKING all Interrupts */
-    pmic_all_intMask(&handle);
+    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 7 RISE Interrupt */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_GPIO7_RISE_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO7_RISE_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pinValue = PMIC_GPIO_HIGH;
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             irqL1   = PMIC_IRQID_L1REG (pErrStat);
@@ -3843,16 +3125,15 @@ static bool test_pmic_gpio7_rise_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO7_MASK == irqL2) ||
                (PMIC_INT_GPIO7_MASK  == errStat))
             {
-                pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(&handle,
+                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
                                               pin,
                                               PMIC_GPIO_DISABLE_INTERRUPT,
                                               maskPol);
                 if(PMIC_ST_SUCCESS == pmicStatus)
                 {
                     /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
                     break;
                 }
             }
@@ -3860,28 +3141,18 @@ static bool test_pmic_gpio7_rise_interrupt(void *pmicHandle)
     }
 
     /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
+    pmic_all_intUnMask(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 #endif
 
 /*!
  * \brief   Test to verify GPIO8 fall interrupt
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio8_fall_interrupt(void *pmicHandle)
+static void test_pmic_gpio8_testFall_interrupt(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 8U;
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
@@ -3902,48 +3173,34 @@ static bool test_pmic_gpio8_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6248, pmic_gpio_tests);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        return PMIC_UT_SUCCESS;
+        TEST_IGNORE();
     }
     /* MASKING all Interrupts */
-    pmic_all_intMask(&handle);
+    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 8 FALL Interrupt */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_GPIO8_FALL_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO8_FALL_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pinValue = PMIC_GPIO_LOW;
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             irqL1   = PMIC_IRQID_L1REG (pErrStat);
@@ -3954,16 +3211,15 @@ static bool test_pmic_gpio8_fall_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO8_MASK == irqL2) ||
                (PMIC_INT_GPIO8_MASK  == errStat))
             {
-                pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(&handle,
+                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
                                               pin,
                                               PMIC_GPIO_DISABLE_INTERRUPT,
                                               maskPol);
                 if(PMIC_ST_SUCCESS == pmicStatus)
                 {
                     /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
                     break;
                 }
             }
@@ -3971,27 +3227,17 @@ static bool test_pmic_gpio8_fall_interrupt(void *pmicHandle)
     }
 
     /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
+    pmic_all_intUnMask(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
 /*!
  * \brief   Test to verify GPIO8 rise interrupt
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio8_rise_interrupt(void *pmicHandle)
+static void test_pmic_gpio8_testRise_interrupt(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 8U;
     uint8_t pinValue          = PMIC_GPIO_LOW;
     uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
@@ -4012,48 +3258,34 @@ static bool test_pmic_gpio8_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    test_pmic_print_unity_testcase_info(6249, pmic_gpio_tests);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        return PMIC_UT_SUCCESS;
+        TEST_IGNORE();
     }
     /* MASKING all Interrupts */
-    pmic_all_intMask(&handle);
+    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 8 RISE Interrupt */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_GPIO8_RISE_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO8_RISE_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pinValue = PMIC_GPIO_HIGH;
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             irqL1   = PMIC_IRQID_L1REG (pErrStat);
@@ -4064,16 +3296,15 @@ static bool test_pmic_gpio8_rise_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO8_MASK == irqL2) ||
                (PMIC_INT_GPIO8_MASK  == errStat))
             {
-                pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(&handle,
+                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
                                               pin,
                                               PMIC_GPIO_DISABLE_INTERRUPT,
                                               maskPol);
                 if(PMIC_ST_SUCCESS == pmicStatus)
                 {
                     /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
                     break;
                 }
             }
@@ -4081,29 +3312,19 @@ static bool test_pmic_gpio8_rise_interrupt(void *pmicHandle)
     }
 
     /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
+    pmic_all_intUnMask(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
 /* FIXME: On J721 EVM, GPIO-9,10,11 interrupts Causing reset */
 #if 0
 /*!
  * \brief   Test to verify GPIO9 fall interrupt
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio9_fall_interrupt(void *pmicHandle)
+static void test_pmic_gpio9_testFall_interrupt(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 9U;
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
@@ -4124,44 +3345,37 @@ static bool test_pmic_gpio9_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    test_pmic_print_unity_testcase_info(6250, pmic_gpio_tests);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
     /* MASKING all Interrupts */
-    pmic_all_intMask(&handle);
+    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 9 FALL Interrupt */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_GPIO9_FALL_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqMaskIntr(pPmicCoreHandle,
+                     PMIC_TPS6594X_IRQ_GPIO9_FALL_MASK,
+                     PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pinValue = PMIC_GPIO_LOW;
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             irqL1   = PMIC_IRQID_L1REG (pErrStat);
@@ -4172,16 +3386,15 @@ static bool test_pmic_gpio9_fall_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO9_MASK == irqL2) ||
                (PMIC_INT_GPIO9_MASK  == errStat))
             {
-                pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(&handle,
+                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
                                               pin,
                                               PMIC_GPIO_DISABLE_INTERRUPT,
                                               maskPol);
                 if(PMIC_ST_SUCCESS == pmicStatus)
                 {
                     /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
                     break;
                 }
             }
@@ -4189,27 +3402,17 @@ static bool test_pmic_gpio9_fall_interrupt(void *pmicHandle)
     }
 
     /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
+    pmic_all_intUnMask(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
 /*!
  * \brief   Test to verify GPIO9 rise interrupt
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio9_rise_interrupt(void *pmicHandle)
+static void test_pmic_gpio9_testRise_interrupt(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 9U;
     uint8_t pinValue          = PMIC_GPIO_LOW;
     uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
@@ -4230,44 +3433,35 @@ static bool test_pmic_gpio9_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    test_pmic_print_unity_testcase_info(6251, pmic_gpio_tests);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
     /* MASKING all Interrupts */
-    pmic_all_intMask(&handle);
+    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 9 RISE Interrupt */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_GPIO9_RISE_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO9_RISE_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pinValue = PMIC_GPIO_HIGH;
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             irqL1   = PMIC_IRQID_L1REG (pErrStat);
@@ -4278,16 +3472,15 @@ static bool test_pmic_gpio9_rise_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO9_MASK == irqL2) ||
                (PMIC_INT_GPIO9_MASK  == errStat))
             {
-                pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(&handle,
+                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
                                               pin,
                                               PMIC_GPIO_DISABLE_INTERRUPT,
                                               maskPol);
                 if(PMIC_ST_SUCCESS == pmicStatus)
                 {
                     /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
                     break;
                 }
             }
@@ -4295,27 +3488,17 @@ static bool test_pmic_gpio9_rise_interrupt(void *pmicHandle)
     }
 
     /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
+    pmic_all_intUnMask(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
 /*!
  * \brief   Test to verify GPIO10 fall interrupt
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio10_fall_interrupt(void *pmicHandle)
+static void test_pmic_gpio10_testFall_interrupt(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 10U;
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
@@ -4336,44 +3519,35 @@ static bool test_pmic_gpio10_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    test_pmic_print_unity_testcase_info(6252, pmic_gpio_tests);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
     /* MASKING all Interrupts */
-    pmic_all_intMask(&handle);
+    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 10 FALL Interrupt */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_GPIO10_FALL_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO10_FALL_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pinValue = PMIC_GPIO_LOW;
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             irqL1   = PMIC_IRQID_L1REG (pErrStat);
@@ -4384,16 +3558,15 @@ static bool test_pmic_gpio10_fall_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO10_MASK == irqL2) ||
                (PMIC_INT_GPIO10_MASK  == errStat))
             {
-                pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(&handle,
+                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
                                               pin,
                                               PMIC_GPIO_DISABLE_INTERRUPT,
                                               maskPol);
                 if(PMIC_ST_SUCCESS == pmicStatus)
                 {
                     /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
                     break;
                 }
             }
@@ -4401,27 +3574,17 @@ static bool test_pmic_gpio10_fall_interrupt(void *pmicHandle)
     }
 
     /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
+    pmic_all_intUnMask(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
 /*!
  * \brief   Test to verify GPIO10 rise interrupt
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio10_rise_interrupt(void *pmicHandle)
+static void test_pmic_gpio10_testRise_interrupt(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 10U;
     uint8_t pinValue          = PMIC_GPIO_LOW;
     uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
@@ -4442,44 +3605,35 @@ static bool test_pmic_gpio10_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    test_pmic_print_unity_testcase_info(6253, pmic_gpio_tests);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
     /* MASKING all Interrupts */
-    pmic_all_intMask(&handle);
+    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 10 RISE Interrupt */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_GPIO10_RISE_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO10_RISE_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pinValue = PMIC_GPIO_HIGH;
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             irqL1   = PMIC_IRQID_L1REG (pErrStat);
@@ -4490,16 +3644,15 @@ static bool test_pmic_gpio10_rise_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO10_MASK == irqL2) ||
                (PMIC_INT_GPIO10_MASK  == errStat))
             {
-                pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(&handle,
+                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
                                               pin,
                                               PMIC_GPIO_DISABLE_INTERRUPT,
                                               maskPol);
                 if(PMIC_ST_SUCCESS == pmicStatus)
                 {
                     /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
                     break;
                 }
             }
@@ -4507,27 +3660,17 @@ static bool test_pmic_gpio10_rise_interrupt(void *pmicHandle)
     }
 
     /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
+    pmic_all_intUnMask(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
 /*!
  * \brief   Test to verify GPIO11 fall interrupt
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio11_fall_interrupt(void *pmicHandle)
+static void test_pmic_gpio11_testFall_interrupt(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 11U;
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
@@ -4548,44 +3691,35 @@ static bool test_pmic_gpio11_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    test_pmic_print_unity_testcase_info(6254, pmic_gpio_tests);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
     /* MASKING all Interrupts */
-    pmic_all_intMask(&handle);
+    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 11 FALL Interrupt */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_GPIO11_FALL_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO11_FALL_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pinValue = PMIC_GPIO_LOW;
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             irqL1   = PMIC_IRQID_L1REG (pErrStat);
@@ -4596,16 +3730,15 @@ static bool test_pmic_gpio11_fall_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO11_MASK == irqL2) ||
                (PMIC_INT_GPIO11_MASK  == errStat))
             {
-                pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(&handle,
+                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
                                               pin,
                                               PMIC_GPIO_DISABLE_INTERRUPT,
                                               maskPol);
                 if(PMIC_ST_SUCCESS == pmicStatus)
                 {
                     /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
                     break;
                 }
             }
@@ -4613,27 +3746,17 @@ static bool test_pmic_gpio11_fall_interrupt(void *pmicHandle)
     }
 
     /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
+    pmic_all_intUnMask(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
 /*!
  * \brief   Test to verify GPIO11 rise interrupt
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio11_rise_interrupt(void *pmicHandle)
+static void test_pmic_gpio11_testRise_interrupt(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 11U;
     uint8_t pinValue          = PMIC_GPIO_LOW;
     uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
@@ -4654,44 +3777,35 @@ static bool test_pmic_gpio11_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    test_pmic_print_unity_testcase_info(6255, pmic_gpio_tests);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
     /* MASKING all Interrupts */
-    pmic_all_intMask(&handle);
+    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 11 RISE Interrupt */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_GPIO11_RISE_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO11_RISE_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pinValue = PMIC_GPIO_HIGH;
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(&handle, &pErrStat, clearIRQ);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             irqL1   = PMIC_IRQID_L1REG (pErrStat);
@@ -4702,16 +3816,15 @@ static bool test_pmic_gpio11_rise_interrupt(void *pmicHandle)
                (PMIC_INT_GPIO11_MASK == irqL2) ||
                (PMIC_INT_GPIO11_MASK  == errStat))
             {
-                pmic_log("\nInterrupt Received\n ");
                 /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(&handle,
+                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
                                               pin,
                                               PMIC_GPIO_DISABLE_INTERRUPT,
                                               maskPol);
                 if(PMIC_ST_SUCCESS == pmicStatus)
                 {
                     /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(&handle, pErrStat);
+                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
                     break;
                 }
             }
@@ -4719,28 +3832,18 @@ static bool test_pmic_gpio11_rise_interrupt(void *pmicHandle)
     }
 
     /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(&handle);
+    pmic_all_intUnMask(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 #endif
 
 /*!
  * \brief   Parameter validation for handle
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_intr_pv_handle(void *pmicHandle)
+static void test_pmic_gpio_intr_prmValTest_handle(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 3U;
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
@@ -4756,40 +3859,24 @@ static bool test_pmic_gpio_intr_pv_handle(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    test_pmic_print_unity_testcase_info(6256, pmic_gpio_tests);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetIntr(NULL, pin , intrType, maskPol);
-    if(pmicStatus != PMIC_ST_ERR_INV_HANDLE)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_HANDLE);
 }
 
 /*!
  * \brief   Parameter validation for pin
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_intr_pv_pin(void *pmicHandle)
+static void test_pmic_gpio_intr_prmValTest_pin(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 12U;
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
@@ -4805,40 +3892,24 @@ static bool test_pmic_gpio_intr_pv_pin(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, 1U, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    test_pmic_print_unity_testcase_info(6257, pmic_gpio_tests);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, 1U, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, 1U, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
-    if(pmicStatus != PMIC_ST_ERR_INV_PARAM)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, 1U, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    return PMIC_UT_SUCCESS;
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin, intrType, maskPol);
+    TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
 }
 
 /*!
  * \brief   Parameter validation for intrType
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_intr_pv_intrType(void *pmicHandle)
+static void test_pmic_gpio_intr_prmValTest_intrType(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 1U;
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = 0x3U;
@@ -4854,40 +3925,23 @@ static bool test_pmic_gpio_intr_pv_intrType(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    test_pmic_print_unity_testcase_info(6258, pmic_gpio_tests);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
-    if(pmicStatus != PMIC_ST_ERR_INV_PARAM)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
-
-    return PMIC_UT_SUCCESS;
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin, intrType, maskPol);
+    TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
 }
 
 /*!
  * \brief   Parameter validation for maskPol
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
  */
-static bool test_pmic_gpio_intr_pv_maskPol(void *pmicHandle)
+static void test_pmic_gpio_intr_prmValTest_maskPol(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     uint8_t pin               = 2U;
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
@@ -4903,433 +3957,129 @@ static bool test_pmic_gpio_intr_pv_maskPol(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    test_pmic_print_unity_testcase_info(6259, pmic_gpio_tests);
 
-    pmicStatus = Pmic_gpioSetValue(&handle, pin, pinValue);
-    if(PMIC_ST_SUCCESS != pmicStatus)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmicStatus = Pmic_gpioSetIntr(&handle, pin , intrType, maskPol);
-    if(pmicStatus != PMIC_ST_ERR_INV_PARAM)
-    {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
-    }
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    return PMIC_UT_SUCCESS;
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
 }
 
+#if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
+    (defined(SOC_J721E) || defined(SOC_J7200))
+
 /*!
- * \brief   PMIC GPIO Test Cases
+ * \brief   Run gpio unity test cases
  */
-static Pmic_Ut_Tests_t pmic_gpio_tests[] =
+static void test_pmic_run_testcases(void)
 {
-    /*! testFunc
-     *  testID
-     *  testDesc
-     */
-    {
-        test_pmic_gpio_setCfgGpioPin_nSLEEP1,
-        6185,
-        "Pmic_gpioSetConfiguration : configure a gpio pin as NSLEEP1 function"
-    },
-    {
-        test_pmic_gpio_setCfgGpioPin_nSLEEP2,
-        6186,
-        "Pmic_gpioSetConfiguration : configure a gpio pin as NSLEEP2 function"
-    },
-    {
-        test_pmic_gpio_setCfgGpioPin1_nRstOut_soc,
-        6187,
-        "Pmic_gpioSetConfiguration : configure gpio pin 1 as NRSTOUT_SOC function"
-    },
-    {
-        test_pmic_gpio_setCfgGpioPin11_nRstOut_soc,
-        6188,
-        "Pmic_gpioSetConfiguration : configure gpio pin 11 as NRSTOUT_SOC function"
-    },
-    {
-        test_pmic_gpio_setCfgGpioPin_wakeup1,
-        6189,
-        "Pmic_gpioSetConfiguration : configure a gpio pin as WAKEUP1 function"
-    },
-    {
-        test_pmic_gpio_setCfgGpioPin_wakeup2,
-        6190,
-        "Pmic_gpioSetConfiguration : configure a gpio pin as WAKEUP2 function"
-    },
-    {
-        test_pmic_gpio_setCfgGpioPin_gpio,
-        6191,
-        "Pmic_gpioSetConfiguration : configure a gpio pin as general purpose input/output function"
-    },
-    {
-        test_pmic_gpio_setCfgGpioPin1_i2c2_sclk ,
-        6192,
-        "Pmic_gpioSetConfiguration : configure gpio pin 1 as I2C2 SCLK function"
-    },
-    {
-        test_pmic_gpio_setCfgGpioPin2_i2c2_sda,
-        6193,
-        "Pmic_gpioSetConfiguration : configure gpio pin 2 as I2C2 SDA function"
-    },
-    {
-        test_pmic_gpio_setCfgGpioPin1_spi_cs,
-        6195,
-        "Pmic_gpioSetConfiguration : configure gpio pin 1 as SPI CS function"
-    },
-    {
-        test_pmic_gpio_setCfgGpioPin2_spi_sdo,
-        6196,
-        "Pmic_gpioSetConfiguration : configure gpio pin 2 as SPI SDO function"
-    },
-    {
-        test_pmic_gpio_setCfgGpioPin_wdt,
-        6197,
-        "Pmic_gpioSetConfiguration : configure gpio pin as watchdog trigger function"
-    },
+    pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
+    UNITY_BEGIN();
+
+    RUN_TEST(test_pmic_gpio_setCfgGpioPin_nSLEEP1);
+    RUN_TEST(test_pmic_gpio_setCfgGpioPin_nSLEEP2);
+    RUN_TEST(test_pmic_gpio_setCfgGpioPin_nRstOut_soc);
+    RUN_TEST(test_pmic_gpio_setCfgGpioPin_wakeup1);
+    RUN_TEST(test_pmic_gpio_setCfgGpioPin_wakeup2);
+    RUN_TEST(test_pmic_gpio_setCfgGpioPin_gpio);
+    RUN_TEST(test_pmic_gpio_setCfgGpioPin_i2c2_sclk);
+    RUN_TEST(test_pmic_gpio_setCfgGpioPin_i2c2_sda);
+    RUN_TEST(test_pmic_gpio_setCfgGpioPin_spi_cs);
+    RUN_TEST(test_pmic_gpio_setCfgGpioPin_spi_sdo);
+    RUN_TEST(test_pmic_gpio_setCfgGpioPin_wdt);
 /* FIXME: PMICA GPIO3 pin Causing Reset on J721 EVM */
 #if 0
-    {
-        test_pmic_gpio_setCfgGpioPin3_esm_soc,
-        6198,
-        "Pmic_gpioSetConfiguration : configure gpio pin 3 as ESM Error Pins for SOC"
-    },
+    RUN_TEST(test_pmic_gpio_setCfgGpioPin3_esm_soc);
 #endif
-    {
-        test_pmic_gpio_setCfgGpioPin7_esm_mcu,
-        6199,
-        "Pmic_gpioSetConfiguration : configure gpio pin 7 as ESM Error Pins for MCU"
-    },
-    {
-        test_pmic_gpio_setCfgGpioPin6_spmi_sdata,
-        6201,
-        "Pmic_gpioSetConfiguration : configure gpio pin 6 as SPMI SDATA function"
-    },
-    {
-        test_pmic_gpio_setCfgGpioPin_syncCLKOUT,
-        6202,
-        "Pmic_gpioSetConfiguration : configure gpio pin as SYNCCLKOUT function"
-    },
-    {
-        test_pmic_gpio_setCfgGpioPin9_syncCLKOUT,
-        6203,
-        "Pmic_gpioSetConfiguration : configure gpio pin 9 as SYNCCLKOUT function"
-    },
-    {
-        test_pmic_gpio_setCfgGpioPin10_synCLKIN,
-        6204,
-        "Pmic_gpioSetConfiguration : configure gpio pin 10 as SYNCLKIN function"
-    },
-    {
-        test_pmic_gpio_setCfgGpioPin_clk32KOUT,
-        6205,
-        "Pmic_gpioSetConfiguration : configure gpio pin as CLK32KOUT function"
-    },
+    RUN_TEST(test_pmic_gpio_setCfgGpioPin_esm_mcu);
+    RUN_TEST(test_pmic_gpio_setCfgGpioPin_spmi_sclk);
+    RUN_TEST(test_pmic_gpio_setCfgGpioPin_spmi_sdata);
+    RUN_TEST(test_pmic_gpio_setCfgGpioPin_syncCLKOUT);
+    RUN_TEST(test_pmic_gpio_setCfgGpioPin_synCLKIN);
+    RUN_TEST(test_pmic_gpio_setCfgGpioPin_clk32KOUT);
 /* TODO: Need to check feasible or not */
-/*  {
-      test_pmic_gpio_setCfgGpioPin10_clk32KOUT,
-      6206,
-      "Pmic_gpioSetConfiguration : configure gpio pin 10 as CLK32KOUT function"
-    },
-*/
-    {
-        test_pmic_gpio_setCfgGpioPin8_wdg_disable,
-        6207,
-        "Pmic_gpioSetConfiguration : configure gpio pin 8 as Watchdog disable function"
-    },
-    {
-        test_pmic_gpio_setCfgGpioPin9_wdg_disable,
-        6208,
-        "Pmic_gpioSetConfiguration : configure gpio pin 9 as Watchdog disable function"
-    },
-    {
-        test_pmic_gpio_setCfgGpioPin9_good_power,
-        6209,
-        "Pmic_gpioSetConfiguration : configure gpio pin 9 as Power Good Indication line function"
-    },
-    {
-        test_pmic_gpio_setCfgPrmValTest_handle,
-        6210,
-        "Pmic_gpioSetConfiguration : Parameter validation for handle"
-    },
-    {
-        test_pmic_gpio_setCfgPrmValTest_pin,
-        6211,
-        "Pmic_gpioSetConfiguration : Parameter validation for pin "
-    },
-    {
-        test_pmic_gpio_setCfgPrmValTest_gpioCfg,
-        6212,
-        "Pmic_gpioSetConfiguration : Parameter validation for GpioCfg"
-    },
-    {
-        test_pmic_gpio_setCfgPrmValTest_pinDir,
-        6213,
-        "Pmic_gpioSetConfiguration : Gpio pin configuration validation for pinDir "
-    },
-    {
-        test_pmic_gpio_setCfgPrmValTest_outputSignalType,
-        6214,
-        "Pmic_gpioSetConfiguration : Gpio pin configuration validation for outputSignalType"
-    },
-    {
-        test_pmic_gpio_setCfgPrmValTest_deglitchEnable,
-        6215,
-        "Pmic_gpioSetConfiguration : Gpio pin configuration validation for deglitchEnable "
-    },
-    {
-        test_pmic_gpio_setCfgPrmValTest_pinFunc_case1,
-        6216,
-        "Pmic_gpioSetConfiguration : Gpio pin configuration validation for pinFunc"
-    },
-    {
-        test_pmic_nPWRON_setCfgPrmValTest_pinFunc,
-        6217,
-        "Pmic_gpioSetNPwronEnablePinConfiguration : nPWRON pin configuration validation for pinFunc "
-    },
-    {
-        test_pmic_nPWRON_setCfgPrmValTest_pinPolarity,
-        6218,
-        "Pmic_gpioSetNPwronEnablePinConfiguration: nPWRON pin configuration validation for pinPolarity"
-    },
-    {
-        test_pmic_gpio_getCfgGpioPin,
-        6219,
-        "Pmic_gpioGetConfiguration : Get required gpio pin configuration"
-    },
-    {
-        test_pmic_gpio_getCfgPrmValTest_handle,
-        6220,
-        "Pmic_gpioGetConfiguration : Parameter validation for handle"
-    },
-    {
-        test_pmic_gpio_getCfgPrmValTest_pin,
-        6221,
-        "Pmic_gpioGetConfiguration : Parameter validation for pin"
-    },
-    {
-        test_pmic_gpio_getCfgPrmValTest_gpioCfg,
-        6222,
-        "Pmic_gpioGetConfiguration : Parameter validation for GpioCfg"
-    },
-    {
-        test_pmic_gpio_getValueGpioPin1_signalLevel,
-        6223,
-        "Pmic_gpioGetValue : Get GPIO signal level "
-    },
-    {
-        test_pmic_gpio_getValuePrmValTest_handle,
-        6224,
-        "Pmic_gpioGetValue : Parameter validation for handle"
-    },
-    {
-        test_pmic_gpio_getValuePrmValTest_pin,
-        6225,
-        "Pmic_gpioGetValue : Parameter validation for pin"
-    },
-    {
-        test_pmic_gpio_getValuePrmValTest_pinValue,
-        6226,
-        "Pmic_gpioGetValue : Parameter validation for pinValue "
-    },
-    {
-        test_pmic_gpio_setValueGpioPin1_signalLevel,
-        6227,
-        "Pmic_gpioSetValue : Set GPIO signal level "
-    },
-    {
-        test_pmic_gpio_setValuePrmValTest_handle,
-        6228,
-        "Pmic_gpioSetValue : Parameter validation for handle"
-    },
-    {
-        test_pmic_gpio_setValuePrmValTest_pin,
-        6229,
-        "Pmic_gpioSetValue : Parameter validation for pin "
-    },
-    {
-        test_pmic_gpio_setValuePrmValTest_pinValue,
-        6230,
-        "Pmic_gpioSetValue : Parameter validation for pinValue "
-    },
-    {
-        test_pmic_gpio_setValueGpioPin5_input,
-        6231,
-        "Pmic_gpioSetValue : Set GPIO signal level for an input GPIO pin"
-    },
-    {
-        test_pmic_gpio1_fall_interrupt,
-        6234,
-        "\r\n GPIO1 Fall Interrupt Test"
-    },
-    {
-        test_pmic_gpio1_rise_interrupt,
-        6235,
-        "\r\n GPIO1 Rise Interrupt Test"
-    },
-    {
-        test_pmic_gpio2_fall_interrupt,
-        6236,
-        "\r\n GPIO2 Fall Interrupt Test"
-    },
-    {
-        test_pmic_gpio2_rise_interrupt,
-        6237,
-        "\r\n GPIO2 Rise Interrupt Test"
-    },
+#if 0
+    RUN_TEST(test_pmic_gpio_setCfgGpioPin10_clk32KOUT);
+#endif
+    RUN_TEST(test_pmic_gpio_setCfgGpioPin_wdg_disable);
+    RUN_TEST(test_pmic_gpio_setCfgGpioPin_good_power);
+    RUN_TEST(test_pmic_gpio_setCfgPrmValTest_handle);
+    RUN_TEST(test_pmic_gpio_setCfgPrmValTest_pin);
+    RUN_TEST(test_pmic_gpio_setCfgPrmValTest_gpioCfg);
+    RUN_TEST(test_pmic_gpio_setCfgPrmValTest_pinDir);
+    RUN_TEST(test_pmic_gpio_setCfgPrmValTest_outputSignalType);
+    RUN_TEST(test_pmic_gpio_setCfgPrmValTest_deglitchEnable);
+    RUN_TEST(test_pmic_gpio_setCfgPrmValTest_pinFunc_case1);
+    RUN_TEST(test_pmic_nPWRON_setCfgPrmValTest_pinPolarity);
+    RUN_TEST(test_pmic_gpio_getCfgGpioPin);
+    RUN_TEST(test_pmic_gpio_getCfgPrmValTest_handle);
+    RUN_TEST(test_pmic_gpio_getCfgPrmValTest_pin);
+    RUN_TEST(test_pmic_gpio_getCfgPrmValTest_gpioCfg);
+    RUN_TEST(test_pmic_gpio_getValueGpioPin1_signalLevel);
+    RUN_TEST(test_pmic_gpio_getValuePrmValTest_handle);
+    RUN_TEST(test_pmic_gpio_getValuePrmValTest_pin);
+    RUN_TEST(test_pmic_gpio_getValuePrmValTest_pinValue);
+    RUN_TEST(test_pmic_gpio_setValueGpioPin1_signalLevel);
+    RUN_TEST(test_pmic_gpio_setValuePrmValTest_handle);
+    RUN_TEST(test_pmic_gpio_setValuePrmValTest_pin);
+    RUN_TEST(test_pmic_gpio_setValuePrmValTest_pinValue);
+    RUN_TEST(test_pmic_gpio_setValueGpioPin5_input);
+    RUN_TEST(test_pmic_gpio1_testFall_interrupt);
+    RUN_TEST(test_pmic_gpio1_testRise_interrupt);
+    RUN_TEST(test_pmic_gpio2_testFall_interrupt);
+    RUN_TEST(test_pmic_gpio2_testRise_interrupt);
+    RUN_TEST(test_pmic_nPWRON_setCfgPrmValTest_pinFunc);
 /* FIXME: PMICA GPIO3 pin Causing reset on J721 EVM */
 #if 0
-    {
-        test_pmic_gpio3_fall_interrupt,
-        6238,
-        "\r\n GPIO3 Fall Interrupt Test"
-    },
-    {
-        test_pmic_gpio3_rise_interrupt,
-        6239,
-        "\r\n GPIO3 Rise Interrupt Test"
-    },
+    RUN_TEST(test_pmic_gpio3_testFall_interrupt);
+    RUN_TEST(test_pmic_gpio3_testRise_interrupt);
 #endif
 /* FIXME: PMICA GPIO4 pin Causing hang on J721 EVM */
 #if 0
-    {
-        test_pmic_gpio4_fall_interrupt,
-        6240,
-        "\r\n GPIO4 Fall Interrupt Test"
-    },
-    {
-        test_pmic_gpio4_rise_interrupt,
-        6241,
-        "\r\n GPIO4 Rise Interrupt Test"
-    },
+    RUN_TEST(test_pmic_gpio4_testFall_interrupt);
+    RUN_TEST(test_pmic_gpio4_testRise_interrupt);
 #endif
-    {
-        test_pmic_gpio5_fall_interrupt,
-        6242,
-        "\r\n GPIO5 Fall Interrupt Test"
-    },
-    {
-        test_pmic_gpio5_rise_interrupt,
-        6243,
-        "\r\n GPIO5 Rise Interrupt Test"
-    },
-    {
-        test_pmic_gpio6_fall_interrupt,
-        6244,
-        "\r\n GPIO6 Fall Interrupt Test"
-    },
-    {
-        test_pmic_gpio6_rise_interrupt,
-        6245,
-        "\r\n GPIO6 Rise Interrupt Test"
-    },
+    RUN_TEST(test_pmic_gpio5_testFall_interrupt);
+    RUN_TEST(test_pmic_gpio5_testRise_interrupt);
+    RUN_TEST(test_pmic_gpio6_testFall_interrupt);
+    RUN_TEST(test_pmic_gpio6_testRise_interrupt);
 /* FIXME: On J721 EVM, GPIO7 interrupt Causing reset */
 #if 0
-    {
-        test_pmic_gpio7_fall_interrupt,
-        6246,
-        "\r\n GPIO7 Fall Interrupt Test"
-    },
-    {
-        test_pmic_gpio7_rise_interrupt,
-        6247,
-        "\r\n GPIO7 Rise Interrupt Test"
-    },
+    RUN_TEST(test_pmic_gpio7_testFall_interrupt);
+    RUN_TEST(test_pmic_gpio7_testRise_interrupt);
 #endif
-    {
-        test_pmic_gpio8_fall_interrupt,
-        6248,
-        "\r\n GPIO8 Fall Interrupt Test"
-    },
-    {
-        test_pmic_gpio8_rise_interrupt,
-        6249,
-        "\r\n GPIO8 Rise Interrupt Test"
-    },
+    RUN_TEST(test_pmic_gpio8_testFall_interrupt);
+    RUN_TEST(test_pmic_gpio8_testRise_interrupt);
 /* FIXME: On J721 EVM, GPIO-9,10,11 interrupts Causing reset */
 #if 0
-    {
-        test_pmic_gpio9_fall_interrupt,
-        6250,
-        "\r\n GPIO9 Fall Interrupt Test"
-    },
-    {
-        test_pmic_gpio9_rise_interrupt,
-        6251,
-        "\r\n GPIO9 Rise Interrupt Test"
-    },
-    {
-        test_pmic_gpio10_fall_interrupt,
-        6252,
-        "\r\n GPIO10 Fall Interrupt Test"
-    },
-    {
-        test_pmic_gpio10_rise_interrupt,
-        6253,
-        "\r\n GPIO10 Rise Interrupt Test"
-    },
-    {
-        test_pmic_gpio11_fall_interrupt,
-        6254,
-        "\r\n GPIO11 Fall Interrupt Test"
-    },
-    {
-        test_pmic_gpio11_rise_interrupt,
-        6255,
-        "\r\n GPIO11 Rise Interrupt Test"
-    },
+    RUN_TEST(test_pmic_gpio9_testFall_interrupt);
+    RUN_TEST(test_pmic_gpio9_testRise_interrupt);
+    RUN_TEST(test_pmic_gpio10_testFall_interrupt);
+    RUN_TEST(test_pmic_gpio10_testRise_interrupt);
+    RUN_TEST(test_pmic_gpio11_testFall_interrupt);
+    RUN_TEST(test_pmic_gpio11_testRise_interrupt);
 #endif
-    {
-        test_pmic_gpio_intr_pv_handle,
-        6256,
-        "\r\n Parameter validation for handle"
-    },
-    {
-        test_pmic_gpio_intr_pv_pin,
-        6257,
-        "\r\n Parameter validation for pin"
-    },
-    {
-        test_pmic_gpio_intr_pv_intrType,
-        6258,
-        "\r\n Parameter validation for intrType"
-    },
-    {
-        test_pmic_gpio_intr_pv_maskPol,
-        6259,
-        "\r\n Parameter validation for maskPol"
-    },
-    {
-        test_pmic_gpio_setCfgGpioPin5_spmi_sclk,
-        6200,
-        "Pmic_gpioSetConfiguration : configure gpio pin 5 as SPMI SCLK function"
-    },
-    {
-        NULL,
-    }
-};
+    RUN_TEST(test_pmic_gpio_intr_prmValTest_handle);
+    RUN_TEST(test_pmic_gpio_intr_prmValTest_pin);
+    RUN_TEST(test_pmic_gpio_intr_prmValTest_intrType);
+    RUN_TEST(test_pmic_gpio_intr_prmValTest_maskPol);
 
-#if defined(UNITY_INCLUDE_CONFIG_H) && \
-    (defined(SOC_J721E) || defined(SOC_J7200))
+    UNITY_END();
+}
 
 /*!
  * \brief   GPIO Unity Test App wrapper Function for LEO PMIC-A
  */
-static void test_pmic_leo_pmicA_gpio_testApp(void)
+static int32_t test_pmic_leo_pmicA_gpio_testApp(void)
 {
-    bool testResult = PMIC_UT_FAILURE;
+    int32_t status                = PMIC_ST_SUCCESS;
     Pmic_CoreCfg_t pmicConfigData = {0U};
 
-     /* Fill parameters to pmicConfigData */
+    /* Fill parameters to pmicConfigData */
     pmicConfigData.pmicDeviceType      = PMIC_DEV_LEO_TPS6594X;
     pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
 
@@ -5354,24 +4104,19 @@ static void test_pmic_leo_pmicA_gpio_testApp(void)
     pmicConfigData.pFnPmicCritSecStop   = test_pmic_criticalSectionStopFn;
     pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
 
-    pmicConfigData.validParams         |= PMIC_CFG_COMM_HANDLE_VALID_SHIFT;
-
-    testResult = test_pmic_common(pmic_gpio_tests, &pmicConfigData, "GPIO");
-    TEST_ASSERT(PMIC_UT_SUCCESS == testResult);
-
-    pmic_log("\n All tests have passed. \n");
-
+    status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
+    return status;
 }
 
 /*!
  * \brief   GPIO Unity Test App wrapper Function for LEO PMIC-B
  */
-static void test_pmic_leo_pmicB_gpio_testApp(void)
+static int32_t test_pmic_leo_pmicB_gpio_testApp(void)
 {
-    bool testResult = PMIC_UT_FAILURE;
+    int32_t status                = PMIC_ST_SUCCESS;
     Pmic_CoreCfg_t pmicConfigData = {0U};
 
-     /* Fill parameters to pmicConfigData */
+    /* Fill parameters to pmicConfigData */
     pmicConfigData.pmicDeviceType      = PMIC_DEV_LEO_TPS6594X;
     pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
 
@@ -5396,24 +4141,20 @@ static void test_pmic_leo_pmicB_gpio_testApp(void)
     pmicConfigData.pFnPmicCritSecStop   = test_pmic_criticalSectionStopFn;
     pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
 
-    pmicConfigData.validParams         |= PMIC_CFG_COMM_HANDLE_VALID_SHIFT;
-
-//    testResult = test_pmic_common(pmic_gpio_tests, &pmicConfigData, "GPIO");
-    TEST_ASSERT(PMIC_UT_SUCCESS == testResult);
-
-    pmic_log("\n All tests have passed. \n");
+    status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
+    return status;
 
 }
 
 /*!
  * \brief   GPIO Unity Test App wrapper Function for HERA PMIC
  */
-static void test_pmic_hera_gpio_testApp(void)
+static int32_t test_pmic_hera_gpio_testApp(void)
 {
-    bool testResult = PMIC_UT_FAILURE;
+    int32_t status                = PMIC_ST_SUCCESS;
     Pmic_CoreCfg_t pmicConfigData = {0U};
 
-     /* Fill parameters to pmicConfigData */
+    /* Fill parameters to pmicConfigData */
     pmicConfigData.pmicDeviceType      = PMIC_DEV_HERA_LP8764X;
     pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
 
@@ -5438,12 +4179,8 @@ static void test_pmic_hera_gpio_testApp(void)
     pmicConfigData.pFnPmicCritSecStop   = test_pmic_criticalSectionStopFn;
     pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
 
-    pmicConfigData.validParams         |= PMIC_CFG_COMM_HANDLE_VALID_SHIFT;
-
-    testResult = test_pmic_common(pmic_gpio_tests, &pmicConfigData, "GPIO");
-    TEST_ASSERT(PMIC_UT_SUCCESS == testResult);
-
-    pmic_log("\n All tests have passed. \n");
+    status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
+    return status;
 
 }
 
@@ -5486,37 +4223,38 @@ static void test_pmic_gpio_testapp_runner(void)
         switch(num)
         {
            case 0U:
-               pmic_log("%s(): %d: Begin Unity...\n", __func__, __LINE__);
-               UNITY_BEGIN();
-
-               RUN_TEST(test_pmic_leo_pmicA_gpio_testApp);
-
-               UNITY_END();
-               pmic_log("%s(): %d: End Unity...\n", __func__, __LINE__);
-               /* Function to print results defined in unity_config.h file */
-               print_unityOutputBuffer_usingUARTstdio();
+               /* GPIO Unity Test App wrapper Function for LEO PMIC-A */
+               test_pmic_leo_pmicA_gpio_testApp();
+               /* Run gpio test cases for Leo PMIC-B */
+               test_pmic_run_testcases();
+               /* Deinit pmic handle */
+               if(pPmicCoreHandle != NULL)
+               {
+                   test_pmic_appDeInit(pPmicCoreHandle);
+               }
                break;
            case 1U:
-               pmic_log("%s(): %d: Begin Unity...\n", __func__, __LINE__);
-               UNITY_BEGIN();
+               /* GPIO Unity Test App wrapper Function for LEO PMIC-B */
+               test_pmic_leo_pmicB_gpio_testApp();
 
-               RUN_TEST(test_pmic_leo_pmicB_gpio_testApp);
+               /* TODO: Run gpio test cases for Leo PMIC-B */
 
-               UNITY_END();
-               pmic_log("%s(): %d: End Unity...\n", __func__, __LINE__);
-               /* Function to print results defined in unity_config.h file */
-               print_unityOutputBuffer_usingUARTstdio();
+               /* Deinit pmic handle */
+               if(pPmicCoreHandle != NULL)
+               {
+                   test_pmic_appDeInit(pPmicCoreHandle);
+               }
                break;
            case 2U:
-               pmic_log("%s(): %d: Begin Unity...\n", __func__, __LINE__);
-               UNITY_BEGIN();
-
-               RUN_TEST(test_pmic_hera_gpio_testApp);
-
-               UNITY_END();
-               pmic_log("%s(): %d: End Unity...\n", __func__, __LINE__);
-               /* Function to print results defined in unity_config.h file */
-               print_unityOutputBuffer_usingUARTstdio();
+               /* GPIO Unity Test App wrapper Function for HERA PMIC */
+               test_pmic_hera_gpio_testApp();
+               /* Run gpio test cases for Hera PMIC */
+               test_pmic_run_testcases();
+               /* Deinit pmic handle */
+               if(pPmicCoreHandle != NULL)
+               {
+                   test_pmic_appDeInit(pPmicCoreHandle);
+               }
                break;
            case 3U:
                pmic_log(" \r\n Quit from application\n");
@@ -5543,7 +4281,7 @@ int main()
 
     pmic_log("%s(): %d: %s(%s)\n", __func__, __LINE__, __TIME__, __DATE__);
 
-#if defined(UNITY_INCLUDE_CONFIG_H) && \
+#if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E)             || \
      defined(SOC_J7200))
     test_pmic_gpio_testapp_runner();
