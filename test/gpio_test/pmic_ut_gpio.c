@@ -61,7 +61,7 @@ static bool test_pmic_gpio_setCfgGpioPin_nSLEEP1(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_NSLEEP1,
+        PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1,
         PMIC_GPIO_HIGH
     };
 
@@ -121,7 +121,7 @@ static bool test_pmic_gpio_setCfgGpioPin_nSLEEP2(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_NSLEEP2,
+        PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP2,
         PMIC_GPIO_HIGH
     };
 
@@ -180,7 +180,7 @@ static bool test_pmic_gpio_setCfgGpioPin1_nRstOut_soc(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO1_GPIO11_NRSTOUT_SOC,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO1_GPIO11_NRSTOUT_SOC,
         PMIC_GPIO_HIGH
     };
 
@@ -228,7 +228,7 @@ static bool test_pmic_gpio_setCfgGpioPin11_nRstOut_soc(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO1_GPIO11_NRSTOUT_SOC,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO1_GPIO11_NRSTOUT_SOC,
         PMIC_GPIO_HIGH
     };
 
@@ -277,7 +277,7 @@ static bool test_pmic_gpio_setCfgGpioPin_wakeup1(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_WKUP1,
+        PMIC_TPS6594X_GPIO_PINFUNC_WKUP1,
         PMIC_GPIO_HIGH
     };
 
@@ -337,7 +337,7 @@ static bool test_pmic_gpio_setCfgGpioPin_wakeup2(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_WKUP2,
+        PMIC_TPS6594X_GPIO_PINFUNC_WKUP2,
         PMIC_GPIO_HIGH
     };
 
@@ -401,7 +401,7 @@ static bool test_pmic_gpio_setCfgGpioPin_gpio(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -454,7 +454,7 @@ static bool test_pmic_gpio_setCfgGpioPin1_i2c2_sclk(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO1_SCL_I2C2_CS_SPI,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO1_SCL_I2C2_CS_SPI,
         PMIC_GPIO_HIGH
     };
 
@@ -502,7 +502,7 @@ static bool test_pmic_gpio_setCfgGpioPin2_i2c2_sda(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO2_SDA_I2C2_SDO_SPI,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO2_SDA_I2C2_SDO_SPI,
         PMIC_GPIO_HIGH
     };
 
@@ -550,7 +550,7 @@ static bool test_pmic_gpio_setCfgGpioPin1_spi_cs(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO1_SCL_I2C2_CS_SPI,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO1_SCL_I2C2_CS_SPI,
         PMIC_GPIO_HIGH
     };
 
@@ -598,7 +598,7 @@ static bool test_pmic_gpio_setCfgGpioPin2_spi_sdo(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO2_SDA_I2C2_SDO_SPI,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO2_SDA_I2C2_SDO_SPI,
         PMIC_GPIO_HIGH
     };
 
@@ -647,7 +647,7 @@ static bool test_pmic_gpio_setCfgGpioPin_wdt(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO2_GPIO11_TRIG_WDOG,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO2_GPIO11_TRIG_WDOG,
         PMIC_GPIO_HIGH
     };
 
@@ -702,7 +702,7 @@ static bool test_pmic_gpio_setCfgGpioPin3_esm_soc(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO3_NERR_SOC,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO3_NERR_SOC,
         PMIC_GPIO_HIGH
     };
 
@@ -751,7 +751,7 @@ static bool test_pmic_gpio_setCfgGpioPin7_esm_mcu(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO7_NERR_MCU,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO7_NERR_MCU,
         PMIC_GPIO_HIGH
     };
 
@@ -799,7 +799,7 @@ static bool test_pmic_gpio_setCfgGpioPin5_spmi_sclk(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO5_SCLK_SPMI,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO5_SCLK_SPMI,
         PMIC_GPIO_HIGH
     };
 
@@ -847,7 +847,7 @@ static bool test_pmic_gpio_setCfgGpioPin6_spmi_sdata(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO6_SDATA_SPMI,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO6_SDATA_SPMI,
         PMIC_GPIO_HIGH
     };
 
@@ -899,7 +899,7 @@ static bool test_pmic_gpio_setCfgGpioPin_syncCLKOUT(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO8_GPIO10_SYNCCLKOUT,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO8_GPIO10_SYNCCLKOUT,
         PMIC_GPIO_HIGH
     };
 
@@ -952,7 +952,7 @@ static bool test_pmic_gpio_setCfgGpioPin9_syncCLKOUT(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO9_SYNCCLKOUT,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO9_SYNCCLKOUT,
         PMIC_GPIO_HIGH
     };
 
@@ -1000,7 +1000,7 @@ static bool test_pmic_gpio_setCfgGpioPin10_synCLKIN(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO10_SYNCCLKIN,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO10_SYNCCLKIN,
         PMIC_GPIO_HIGH
     };
 
@@ -1049,7 +1049,7 @@ static bool test_pmic_gpio_setCfgGpioPin_clk32KOUT(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO3_GPIO4_GPIO8_CLK32KOUT,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO3_GPIO4_GPIO8_CLK32KOUT,
         PMIC_GPIO_HIGH
     };
 
@@ -1111,7 +1111,7 @@ static bool test_pmic_gpio_setCfgGpioPin10_clk32KOUT(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO10_CLK32KOUT,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO10_CLK32KOUT,
         PMIC_GPIO_HIGH
     };
 
@@ -1161,7 +1161,7 @@ static bool test_pmic_gpio_setCfgGpioPin8_wdg_disable(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO8_DISABLE_WDOG,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO8_DISABLE_WDOG,
         PMIC_GPIO_HIGH
     };
 
@@ -1209,7 +1209,7 @@ static bool test_pmic_gpio_setCfgGpioPin9_wdg_disable(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO9_DISABLE_WDOG,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO9_DISABLE_WDOG,
         PMIC_GPIO_HIGH
     };
 
@@ -1257,7 +1257,7 @@ static bool test_pmic_gpio_setCfgGpioPin9_good_power(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO9_PGOOD,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO9_PGOOD,
         PMIC_GPIO_HIGH
     };
 
@@ -1303,7 +1303,7 @@ static bool test_pmic_gpio_setCfgPrmValTest_handle(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_NSLEEP1,
+        PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1,
         PMIC_GPIO_HIGH
     };
 
@@ -1337,7 +1337,7 @@ static bool test_pmic_gpio_setCfgPrmValTest_pin(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_NSLEEP1,
+        PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1,
         PMIC_GPIO_HIGH
     };
 
@@ -1395,7 +1395,7 @@ static bool test_pmic_gpio_setCfgPrmValTest_pinDir(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_NSLEEP1,
+        PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1,
         PMIC_GPIO_HIGH
     };
 
@@ -1429,7 +1429,7 @@ static bool test_pmic_gpio_setCfgPrmValTest_outputSignalType(void *pmicHandle)
         0x02,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_NSLEEP1,
+        PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1,
         PMIC_GPIO_HIGH
     };
 
@@ -1463,7 +1463,7 @@ static bool test_pmic_gpio_setCfgPrmValTest_deglitchEnable(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         0x02,
-        PMIC_TPS6594_GPIO_PINFUNC_NSLEEP1,
+        PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1,
         PMIC_GPIO_HIGH
     };
 
@@ -1563,7 +1563,7 @@ static bool test_pmic_nPWRON_setCfgPrmValTest_pinPolarity(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_NSLEEP1,
+        PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1,
         0x02U
     };
 
@@ -1598,7 +1598,7 @@ static bool test_pmic_gpio_getCfgGpioPin(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_NSLEEP1,
+        PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1,
         PMIC_GPIO_HIGH
     };
 
@@ -1644,7 +1644,7 @@ static bool test_pmic_gpio_getCfgPrmValTest_handle(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_NSLEEP1,
+        PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1,
         PMIC_GPIO_HIGH
     };
 
@@ -1678,7 +1678,7 @@ static bool test_pmic_gpio_getCfgPrmValTest_pin(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_NSLEEP1,
+        PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1,
         PMIC_GPIO_HIGH
     };
 
@@ -1738,7 +1738,7 @@ static bool test_pmic_gpio_getValueGpioPin1_signalLevel(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -1867,7 +1867,7 @@ static bool test_pmic_gpio_setValueGpioPin1_signalLevel(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -1996,7 +1996,7 @@ static bool test_pmic_gpio_setValueGpioPin5_input(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_NSLEEP1,
+        PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1,
         PMIC_GPIO_HIGH
     };
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
@@ -2111,7 +2111,7 @@ static bool test_pmic_gpio1_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -2217,7 +2217,7 @@ static bool test_pmic_gpio1_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -2323,7 +2323,7 @@ static bool test_pmic_gpio2_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -2429,7 +2429,7 @@ static bool test_pmic_gpio2_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -2537,7 +2537,7 @@ static bool test_pmic_gpio3_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -2643,7 +2643,7 @@ static bool test_pmic_gpio3_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -2752,7 +2752,7 @@ static bool test_pmic_gpio4_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -2858,7 +2858,7 @@ static bool test_pmic_gpio4_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -2966,7 +2966,7 @@ static bool test_pmic_gpio5_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -3074,7 +3074,7 @@ static bool test_pmic_gpio5_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -3180,7 +3180,7 @@ static bool test_pmic_gpio6_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -3286,7 +3286,7 @@ static bool test_pmic_gpio6_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -3394,7 +3394,7 @@ static bool test_pmic_gpio7_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -3500,7 +3500,7 @@ static bool test_pmic_gpio7_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -3607,7 +3607,7 @@ static bool test_pmic_gpio8_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -3713,7 +3713,7 @@ static bool test_pmic_gpio8_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -3821,7 +3821,7 @@ static bool test_pmic_gpio9_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -3927,7 +3927,7 @@ static bool test_pmic_gpio9_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -4033,7 +4033,7 @@ static bool test_pmic_gpio10_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -4139,7 +4139,7 @@ static bool test_pmic_gpio10_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -4245,7 +4245,7 @@ static bool test_pmic_gpio11_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -4351,7 +4351,7 @@ static bool test_pmic_gpio11_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -4453,7 +4453,7 @@ static bool test_pmic_gpio_intr_pv_handle(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -4502,7 +4502,7 @@ static bool test_pmic_gpio_intr_pv_pin(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -4551,7 +4551,7 @@ static bool test_pmic_gpio_intr_pv_intrType(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
@@ -4600,7 +4600,7 @@ static bool test_pmic_gpio_intr_pv_maskPol(void *pmicHandle)
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594_GPIO_PINFUNC_GPIO,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
 
