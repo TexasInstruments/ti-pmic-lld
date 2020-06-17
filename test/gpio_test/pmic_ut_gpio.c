@@ -54,6 +54,7 @@ static bool test_pmic_gpio_setCfgGpioPin_nSLEEP1(void *pmicHandle)
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
     int pin                   = 0U;
     uint8_t pins[]           = { 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U, 9U, 10U, 11U};
+    uint8_t pinMax = 0;
     Pmic_GpioCfg_t gpioCfg   =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
@@ -65,7 +66,17 @@ static bool test_pmic_gpio_setCfgGpioPin_nSLEEP1(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    for(pin = 0U; pin < sizeof(pins)/sizeof(pins[0U]); pin++)
+    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    {
+        pinMax = PMIC_TPS6594X_GPIO11_PIN;
+        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1;
+    }
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        pinMax = PMIC_LP8764X_GPIO10_PIN;
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_NSLEEP1;
+    }
+    for(pin = 0U; pin < pinMax; pin++)
     {
         /* PMICA GPIO3 pin Causing Reset on J721 EVM */
         if((3U == pins[pin]) && (handle.slaveAddr == LEO_PMICA_SLAVE_ADDR))
@@ -124,8 +135,19 @@ static bool test_pmic_gpio_setCfgGpioPin_nSLEEP2(void *pmicHandle)
         PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP2,
         PMIC_GPIO_HIGH
     };
+    uint8_t pinMax = 0;
 
-    for(pin = 0U; pin < sizeof(pins)/sizeof(pins[0U]); pin++)
+    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    {
+        pinMax = PMIC_TPS6594X_GPIO11_PIN;
+        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1;
+    }
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        pinMax = PMIC_LP8764X_GPIO10_PIN;
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_NSLEEP2;
+    }
+    for(pin = 0U; pin < pinMax; pin++)
     {
         /* PMICA GPIO3 pin Causing Reset on J721 EVM */
         if((3U == pins[pin]) && (handle.slaveAddr == LEO_PMICA_SLAVE_ADDR))
@@ -184,6 +206,15 @@ static bool test_pmic_gpio_setCfgGpioPin1_nRstOut_soc(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    {
+        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO1_GPIO11_NRSTOUT_SOC;
+    }
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO1_GPIO10_NRSTOUT_SOC;
+    }
+
     pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -232,6 +263,16 @@ static bool test_pmic_gpio_setCfgGpioPin11_nRstOut_soc(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    {
+        pin = 11U;
+        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO1_GPIO11_NRSTOUT_SOC;
+    }
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        pin = 10U;
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO1_GPIO10_NRSTOUT_SOC;
+    }
     pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -280,8 +321,19 @@ static bool test_pmic_gpio_setCfgGpioPin_wakeup1(void *pmicHandle)
         PMIC_TPS6594X_GPIO_PINFUNC_WKUP1,
         PMIC_GPIO_HIGH
     };
+    uint8_t pinMax = 0;
 
-    for(pin = 0U; pin < sizeof(pins)/sizeof(pins[0U]); pin++)
+    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    {
+        pinMax = PMIC_TPS6594X_GPIO11_PIN;
+        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_WKUP1;
+    }
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        pinMax = PMIC_LP8764X_GPIO10_PIN;
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_WKUP1;
+    }
+    for(pin = 0U; pin < pinMax; pin++)
     {
         /* PMICA GPIO3 pin Causing Reset on J721 EVM */
         if((3U == pins[pin]) && (handle.slaveAddr == LEO_PMICA_SLAVE_ADDR))
@@ -340,8 +392,19 @@ static bool test_pmic_gpio_setCfgGpioPin_wakeup2(void *pmicHandle)
         PMIC_TPS6594X_GPIO_PINFUNC_WKUP2,
         PMIC_GPIO_HIGH
     };
+    uint8_t pinMax = 0;
 
-    for(pin = 0U; pin < sizeof(pins)/sizeof(pins[0U]); pin++)
+    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    {
+        pinMax = PMIC_TPS6594X_GPIO11_PIN;
+        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_WKUP2;
+    }
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        pinMax = PMIC_LP8764X_GPIO10_PIN;
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_WKUP2;
+    }
+    for(pin = 0U; pin < pinMax; pin++)
     {
         /* PMICA GPIO3 pin Causing Reset on J721 EVM */
         if((3U == pins[pin]) && (handle.slaveAddr == LEO_PMICA_SLAVE_ADDR))
@@ -389,11 +452,7 @@ static bool test_pmic_gpio_setCfgGpioPin_gpio(void *pmicHandle)
     Pmic_CoreHandle_t handle = *(Pmic_CoreHandle_t *)pmicHandle;
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
     int pin                  = 0U;
-    uint8_t pins[]           = { 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U, 9U, 10U,
-    /* On J721, PMIC-A GPIO11 connected to H_SOC_PORz, which resets entire SOC
-     * because of this reason disabling GPIOCFG test on PMIC GPIO11 pin.
-     */
-                     };
+    uint8_t pins[]           = { 1U, 2U, 3U, 4U, 5U, 6U, 7U, 8U, 9U, 10U, 11U};
     Pmic_GpioCfg_t gpioCfg   =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
@@ -404,9 +463,27 @@ static bool test_pmic_gpio_setCfgGpioPin_gpio(void *pmicHandle)
         PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
+    uint8_t pinMax = 0;
 
-    for(pin = 0U; pin < sizeof(pins)/sizeof(pins[0U]); pin++)
+    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
     {
+        pinMax = PMIC_TPS6594X_GPIO11_PIN;
+        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO;
+    }
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        pinMax = PMIC_LP8764X_GPIO10_PIN;
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO;
+    }
+    for(pin = 0U; pin < pinMax; pin++)
+    {
+        /* On J721, PMIC-A GPIO11 connected to H_SOC_PORz, which resets entire SOC
+         * because of this reason disabling GPIOCFG test on PMIC GPIO11 pin.
+         */
+        if(11U == (pins[pin]) && (handle.slaveAddr == LEO_PMICA_SLAVE_ADDR))
+        {
+            continue;
+        }
         pmicStatus = Pmic_gpioSetConfiguration(&handle, pins[pin], &gpioCfg);
         if(PMIC_ST_SUCCESS != pmicStatus)
         {
@@ -458,6 +535,16 @@ static bool test_pmic_gpio_setCfgGpioPin1_i2c2_sclk(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    {
+        pin = 1U;
+        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO1_SCL_I2C2_CS_SPI;
+    }
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        pin = 2U;
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO2_SCL_I2C2;
+    }
     pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -506,6 +593,16 @@ static bool test_pmic_gpio_setCfgGpioPin2_i2c2_sda(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    {
+        pin = 2U;
+        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO2_SDA_I2C2_SDO_SPI;
+    }
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        pin = 3U;
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO3_SDA_I2C2;
+    }
     pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -554,6 +651,16 @@ static bool test_pmic_gpio_setCfgGpioPin1_spi_cs(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    {
+        pin = 1U;
+        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO1_SCL_I2C2_CS_SPI;
+    }
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        pin = 2U;
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO2_CS_SPI;
+    }
     pmicStatus=Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -602,6 +709,16 @@ static bool test_pmic_gpio_setCfgGpioPin2_spi_sdo(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    {
+        pin = 2U;
+        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO2_SDA_I2C2_SDO_SPI;
+    }
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        pin = 3U;
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO3_SDO_SPI;
+    }
     pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -650,9 +767,24 @@ static bool test_pmic_gpio_setCfgGpioPin_wdt(void *pmicHandle)
         PMIC_TPS6594X_GPIO_PINFUNC_GPIO2_GPIO11_TRIG_WDOG,
         PMIC_GPIO_HIGH
     };
+    uint8_t pinMax = 0;
 
-    for(pin = 0U; pin < sizeof(pins)/sizeof(pins[0U]); pin++)
+    pinMax = sizeof(pins)/sizeof(pins[0U]);
+    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
     {
+        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO2_GPIO11_TRIG_WDOG;
+    }
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        pins[1U] = 4U;
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO2_TRIG_WDOG;
+    }
+    for(pin = 0U; pin < pinMax; pin++)
+    {
+        if((PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType) && (4U == pins[1U]))
+        {
+            gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO4_TRIG_WDOG;
+        }
         pmicStatus = Pmic_gpioSetConfiguration(&handle, pins[pin], &gpioCfg);
         if(PMIC_ST_SUCCESS != pmicStatus)
         {
@@ -706,6 +838,10 @@ static bool test_pmic_gpio_setCfgGpioPin3_esm_soc(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        return PMIC_UT_SUCCESS;
+    }
     pmicStatus=Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -755,6 +891,10 @@ static bool test_pmic_gpio_setCfgGpioPin7_esm_mcu(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        return PMIC_UT_SUCCESS;
+    }
     pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -803,6 +943,15 @@ static bool test_pmic_gpio_setCfgGpioPin5_spmi_sclk(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    {
+        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO5_SCLK_SPMI;
+    }
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        pin = 8U;
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO8_SCLK_SPMI;
+    }
     pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -851,6 +1000,15 @@ static bool test_pmic_gpio_setCfgGpioPin6_spmi_sdata(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    {
+        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO6_SDATA_SPMI;
+    }
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        pin = 9U;
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO9_SDATA_SPMI;
+    }
     pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -903,6 +1061,16 @@ static bool test_pmic_gpio_setCfgGpioPin_syncCLKOUT(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    {
+        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO8_GPIO10_SYNCCLKOUT;
+    }
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        pins[0U] = 5U;
+        pins[1U] = 6U;
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO5_GPIO6_SYNCCLKOUT;
+    }
     for(pin = 0U; pin < sizeof(pins)/sizeof(pins[0U]); pin++)
     {
         pmicStatus = Pmic_gpioSetConfiguration(&handle, pins[pin], &gpioCfg);
@@ -956,6 +1124,14 @@ static bool test_pmic_gpio_setCfgGpioPin9_syncCLKOUT(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    {
+        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO9_SYNCCLKOUT;
+    }
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        return PMIC_UT_SUCCESS;
+    }
     pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -1004,6 +1180,15 @@ static bool test_pmic_gpio_setCfgGpioPin10_synCLKIN(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    {
+        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO10_SYNCCLKIN;
+    }
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        pin = 5U;
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO5_SYNCCLKIN;
+    }
     pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -1053,6 +1238,10 @@ static bool test_pmic_gpio_setCfgGpioPin_clk32KOUT(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        return PMIC_UT_SUCCESS;
+    }
     for(pin = 0U; pin < sizeof(pins)/sizeof(pins[0U]); pin++)
     {
         /* PMICA GPIO3 pin Causing Reset on J721 EVM */
@@ -1165,6 +1354,10 @@ static bool test_pmic_gpio_setCfgGpioPin8_wdg_disable(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        return PMIC_UT_SUCCESS;
+    }
     pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -1213,6 +1406,10 @@ static bool test_pmic_gpio_setCfgGpioPin9_wdg_disable(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        return PMIC_UT_SUCCESS;
+    }
     pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -1248,7 +1445,9 @@ static bool test_pmic_gpio_setCfgGpioPin9_good_power(void *pmicHandle)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
-    int pin                   = 9U;
+    int pin                   = 0U;
+    int pins[3U]              = {9U};
+    int pinMax = 0U;
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
     Pmic_GpioCfg_t gpioCfg    =
     {
@@ -1261,24 +1460,44 @@ static bool test_pmic_gpio_setCfgGpioPin9_good_power(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
-    pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
-    if(PMIC_ST_SUCCESS != pmicStatus)
+    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
     {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
+        pinMax = 1U;
+        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO9_PGOOD;
     }
-
-    pmicStatus = Pmic_gpioGetConfiguration(&handle, pin, &gpioCfg_rd);
-    if(PMIC_ST_SUCCESS != pmicStatus)
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
     {
-        pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
-        return PMIC_UT_FAILURE;
+        pins[0] = 9U;
+        pins[1] = 1U;
+        pins[2] = 6U;
+        pinMax = 3U;
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO9_PGOOD;
     }
-
-    if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
+    for(pin = 0U; pin < pinMax; pin++)
     {
-        pmic_log("Failed %s\n\t",__func__);
-        return PMIC_UT_FAILURE;
+        if((PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType) && (pin > 1))
+        {
+            gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO1_GPIO6_PGOOD;
+        }
+        pmicStatus = Pmic_gpioSetConfiguration(&handle, pins[pin], &gpioCfg);
+        if(PMIC_ST_SUCCESS != pmicStatus)
+        {
+            pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
+            return PMIC_UT_FAILURE;
+        }
+
+        pmicStatus = Pmic_gpioGetConfiguration(&handle, pins[pin], &gpioCfg_rd);
+        if(PMIC_ST_SUCCESS != pmicStatus)
+        {
+            pmic_log("Failed %s with status: %d\n\t", __func__, pmicStatus);
+            return PMIC_UT_FAILURE;
+        }
+
+        if(gpioCfg.pinFunc != gpioCfg_rd.pinFunc)
+        {
+            pmic_log("Failed %s\n\t",__func__);
+            return PMIC_UT_FAILURE;
+        }
     }
 
     return PMIC_UT_SUCCESS;
@@ -1534,6 +1753,10 @@ static bool test_pmic_nPWRON_setCfgPrmValTest_pinFunc(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        return PMIC_UT_SUCCESS;
+    }
     pmicStatus = Pmic_gpioSetNPwronEnablePinConfiguration(&handle, &gpioCfg);
     if(pmicStatus != PMIC_ST_ERR_INV_GPIO_FUNC)
     {
@@ -1567,6 +1790,10 @@ static bool test_pmic_nPWRON_setCfgPrmValTest_pinPolarity(void *pmicHandle)
         0x02U
     };
 
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        return PMIC_UT_SUCCESS;
+    }
     pmicStatus = Pmic_gpioSetNPwronEnablePinConfiguration(&handle, &gpioCfg);
     if(pmicStatus != PMIC_ST_ERR_INV_PARAM)
     {
@@ -1602,6 +1829,14 @@ static bool test_pmic_gpio_getCfgGpioPin(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    {
+        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1;
+    }
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_NSLEEP1;
+    }
     pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -1742,6 +1977,14 @@ static bool test_pmic_gpio_getValueGpioPin1_signalLevel(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    {
+        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO;
+    }
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO;
+    }
     pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -1871,6 +2114,14 @@ static bool test_pmic_gpio_setValueGpioPin1_signalLevel(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    {
+        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO;
+    }
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO;
+    }
     pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -2001,6 +2252,14 @@ static bool test_pmic_gpio_setValueGpioPin5_input(void *pmicHandle)
     };
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
 
+    if(PMIC_DEV_LEO_TPS6594X == handle.pmicDeviceType)
+    {
+        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO;
+    }
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO;
+    }
     pmicStatus = Pmic_gpioSetConfiguration(&handle, pin, &gpioCfg);
     if(PMIC_ST_SUCCESS != pmicStatus)
     {
@@ -2115,6 +2374,10 @@ static bool test_pmic_gpio1_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        return PMIC_UT_SUCCESS;
+    }
     /* MASKING all Interrupts */
     pmic_all_intMask(&handle);
 
@@ -2221,6 +2484,10 @@ static bool test_pmic_gpio1_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        return PMIC_UT_SUCCESS;
+    }
     /* MASKING all Interrupts */
     pmic_all_intMask(&handle);
 
@@ -2327,6 +2594,10 @@ static bool test_pmic_gpio2_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        return PMIC_UT_SUCCESS;
+    }
     /* MASKING all Interrupts */
     pmic_all_intMask(&handle);
 
@@ -2433,6 +2704,10 @@ static bool test_pmic_gpio2_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        return PMIC_UT_SUCCESS;
+    }
     /* MASKING all Interrupts */
     pmic_all_intMask(&handle);
 
@@ -2970,6 +3245,10 @@ static bool test_pmic_gpio5_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        return PMIC_UT_SUCCESS;
+    }
     /* MASKING all Interrupts */
     pmic_all_intMask(&handle);
 
@@ -3078,6 +3357,10 @@ static bool test_pmic_gpio5_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        return PMIC_UT_SUCCESS;
+    }
     /* MASKING all Interrupts */
     pmic_all_intMask(&handle);
 
@@ -3184,6 +3467,10 @@ static bool test_pmic_gpio6_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        return PMIC_UT_SUCCESS;
+    }
     /* MASKING all Interrupts */
     pmic_all_intMask(&handle);
 
@@ -3290,6 +3577,10 @@ static bool test_pmic_gpio6_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        return PMIC_UT_SUCCESS;
+    }
     /* MASKING all Interrupts */
     pmic_all_intMask(&handle);
 
@@ -3611,6 +3902,10 @@ static bool test_pmic_gpio8_fall_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        return PMIC_UT_SUCCESS;
+    }
     /* MASKING all Interrupts */
     pmic_all_intMask(&handle);
 
@@ -3717,6 +4012,10 @@ static bool test_pmic_gpio8_rise_interrupt(void *pmicHandle)
         PMIC_GPIO_HIGH
     };
 
+    if(PMIC_DEV_HERA_LP8764X == handle.pmicDeviceType)
+    {
+        return PMIC_UT_SUCCESS;
+    }
     /* MASKING all Interrupts */
     pmic_all_intMask(&handle);
 
@@ -4795,12 +5094,12 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
     {
         test_pmic_nPWRON_setCfgPrmValTest_pinFunc,
         6217,
-        "Pmic_gpioNPwronEnablePinSetConfiguration : nPWRON pin configuration validation for pinFunc "
+        "Pmic_gpioSetNPwronEnablePinConfiguration : nPWRON pin configuration validation for pinFunc "
     },
     {
         test_pmic_nPWRON_setCfgPrmValTest_pinPolarity,
         6218,
-        "Pmic_gpioNPwronEnablePinSetConfiguration: nPWRON pin configuration validation for pinPolarity"
+        "Pmic_gpioSetNPwronEnablePinConfiguration: nPWRON pin configuration validation for pinPolarity"
     },
     {
         test_pmic_gpio_getCfgGpioPin,
@@ -5023,9 +5322,9 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
     (defined(SOC_J721E) || defined(SOC_J7200))
 
 /*!
- * \brief   GPIO Unity Test App wrapper Function
+ * \brief   GPIO Unity Test App wrapper Function for LEO PMIC-A
  */
-static void test_pmic_gpio_testApp(void)
+static void test_pmic_leo_pmicA_gpio_testApp(void)
 {
     bool testResult = PMIC_UT_FAILURE;
     Pmic_CoreCfg_t pmicConfigData = {0U};
@@ -5057,8 +5356,89 @@ static void test_pmic_gpio_testApp(void)
 
     pmicConfigData.validParams         |= PMIC_CFG_COMM_HANDLE_VALID_SHIFT;
 
-    pmicConfigData.validParams         |= (PMIC_CFG_COMM_HANDLE_VALID_SHIFT |
-                                           PMIC_CFG_QASLAVEADDR_VALID_SHIFT);
+    testResult = test_pmic_common(pmic_gpio_tests, &pmicConfigData, "GPIO");
+    TEST_ASSERT(PMIC_UT_SUCCESS == testResult);
+
+    pmic_log("\n All tests have passed. \n");
+
+}
+
+/*!
+ * \brief   GPIO Unity Test App wrapper Function for LEO PMIC-B
+ */
+static void test_pmic_leo_pmicB_gpio_testApp(void)
+{
+    bool testResult = PMIC_UT_FAILURE;
+    Pmic_CoreCfg_t pmicConfigData = {0U};
+
+     /* Fill parameters to pmicConfigData */
+    pmicConfigData.pmicDeviceType      = PMIC_DEV_LEO_TPS6594X;
+    pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
+
+    pmicConfigData.commMode            = PMIC_INTF_SINGLE_I2C;
+    pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
+
+    pmicConfigData.slaveAddr           = LEO_PMICB_SLAVE_ADDR;
+    pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
+
+    pmicConfigData.qaSlaveAddr         = LEO_PMICB_WDG_SLAVE_ADDR;
+    pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoWrite   = test_pmic_regWrite;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStart  = test_pmic_criticalSectionStartFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStop   = test_pmic_criticalSectionStopFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
+
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_HANDLE_VALID_SHIFT;
+
+//    testResult = test_pmic_common(pmic_gpio_tests, &pmicConfigData, "GPIO");
+    TEST_ASSERT(PMIC_UT_SUCCESS == testResult);
+
+    pmic_log("\n All tests have passed. \n");
+
+}
+
+/*!
+ * \brief   GPIO Unity Test App wrapper Function for HERA PMIC
+ */
+static void test_pmic_hera_gpio_testApp(void)
+{
+    bool testResult = PMIC_UT_FAILURE;
+    Pmic_CoreCfg_t pmicConfigData = {0U};
+
+     /* Fill parameters to pmicConfigData */
+    pmicConfigData.pmicDeviceType      = PMIC_DEV_HERA_LP8764X;
+    pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
+
+    pmicConfigData.commMode            = PMIC_INTF_SINGLE_I2C;
+    pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
+
+    pmicConfigData.slaveAddr           = HERA_PMIC_SLAVE_ADDR;
+    pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
+
+    pmicConfigData.qaSlaveAddr         = HERA_PMIC_WDG_SLAVE_ADDR;
+    pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoWrite   = test_pmic_regWrite;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStart  = test_pmic_criticalSectionStartFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStop   = test_pmic_criticalSectionStopFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
+
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_HANDLE_VALID_SHIFT;
 
     testResult = test_pmic_common(pmic_gpio_tests, &pmicConfigData, "GPIO");
     TEST_ASSERT(PMIC_UT_SUCCESS == testResult);
@@ -5066,6 +5446,19 @@ static void test_pmic_gpio_testApp(void)
     pmic_log("\n All tests have passed. \n");
 
 }
+
+static const char pmicTestAppMenu[] =
+{
+    " \r\n ================================================================="
+    " \r\n Menu:"
+    " \r\n ================================================================="
+    " \r\n 0: Pmic Leo device(PMIC A on J721E EVM)"
+    " \r\n 1: Pmic Leo device(PMIC B on J721E EVM)"
+    " \r\n 2: Pmic Hera device"
+    " \r\n 3: quit"
+    " \r\n"
+    " \r\n Enter option: "
+};
 
 /*!
  * \brief   Function to register GPIO Unity Test App wrapper to Unity framework
@@ -5079,15 +5472,60 @@ static void test_pmic_gpio_testapp_runner(void)
      * @cores       : mcu1_0, mcu1_1
      */
 
-    pmic_log("%s(): %d: Begin Unity...\n", __func__, __LINE__);
-    UNITY_BEGIN();
+    int8_t num = -1;
 
-    RUN_TEST(test_pmic_gpio_testApp);
+    while(1U)
+    {
+        pmic_log("%s", pmicTestAppMenu);
+        if(UART_scanFmt("%d", &num) != 0U)
+        {
+            pmic_log("Read from UART Console failed\n");
+            return;
+        }
 
-    UNITY_END();
-    pmic_log("%s(): %d: End Unity...\n", __func__, __LINE__);
-    /* Function to print results defined in unity_config.h file */
-    print_unityOutputBuffer_usingUARTstdio();
+        switch(num)
+        {
+           case 0U:
+               pmic_log("%s(): %d: Begin Unity...\n", __func__, __LINE__);
+               UNITY_BEGIN();
+
+               RUN_TEST(test_pmic_leo_pmicA_gpio_testApp);
+
+               UNITY_END();
+               pmic_log("%s(): %d: End Unity...\n", __func__, __LINE__);
+               /* Function to print results defined in unity_config.h file */
+               print_unityOutputBuffer_usingUARTstdio();
+               break;
+           case 1U:
+               pmic_log("%s(): %d: Begin Unity...\n", __func__, __LINE__);
+               UNITY_BEGIN();
+
+               RUN_TEST(test_pmic_leo_pmicB_gpio_testApp);
+
+               UNITY_END();
+               pmic_log("%s(): %d: End Unity...\n", __func__, __LINE__);
+               /* Function to print results defined in unity_config.h file */
+               print_unityOutputBuffer_usingUARTstdio();
+               break;
+           case 2U:
+               pmic_log("%s(): %d: Begin Unity...\n", __func__, __LINE__);
+               UNITY_BEGIN();
+
+               RUN_TEST(test_pmic_hera_gpio_testApp);
+
+               UNITY_END();
+               pmic_log("%s(): %d: End Unity...\n", __func__, __LINE__);
+               /* Function to print results defined in unity_config.h file */
+               print_unityOutputBuffer_usingUARTstdio();
+               break;
+           case 3U:
+               pmic_log(" \r\n Quit from application\n");
+               return;
+           default:
+               pmic_log(" \r\n Invalid option... Try Again!!!\n");
+               break;
+        }
+    }
 }
 #endif
 

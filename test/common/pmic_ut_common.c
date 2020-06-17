@@ -122,14 +122,14 @@ static int32_t test_pmic_i2c_lld_intf_setup(Pmic_CoreCfg_t  *pPmicConfigData,
 }
 
 /*!
- * \brief   Function to setup the QA I2c interface for PMIC
+ * \brief   Function to setup the QA I2c interface for LEO PMIC
  *
  * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values see \ref Pmic_ErrorCodes
  */
-static int32_t test_pmic_dual_i2c_pin_setup(Pmic_CoreHandle_t *pPmicHandle)
+static int32_t test_pmic_leo_dual_i2c_pin_setup(Pmic_CoreHandle_t *pPmicHandle)
 {
     int32_t pmicStatus     = PMIC_ST_SUCCESS;
     Pmic_GpioCfg_t gpioCfg = {0U};
@@ -153,6 +153,44 @@ static int32_t test_pmic_dual_i2c_pin_setup(Pmic_CoreHandle_t *pPmicHandle)
 
         pmicStatus = Pmic_gpioSetConfiguration(pPmicHandle,
                                                PMIC_TPS6594X_GPIO2_PIN,
+                                               &gpioCfg);
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief   Function to setup the QA I2c interface for HERA PMIC
+ *
+ * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values see \ref Pmic_ErrorCodes
+ */
+static int32_t test_pmic_hera_dual_i2c_pin_setup(Pmic_CoreHandle_t *pPmicHandle)
+{
+    int32_t pmicStatus     = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t gpioCfg = {0U};
+
+
+    gpioCfg.validParams      = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                               PMIC_GPIO_CFG_OD_VALID_SHIFT;
+    gpioCfg.pinFunc          = PMIC_LP8764X_GPIO_PINFUNC_GPIO2_SCL_I2C2;
+    gpioCfg.outputSignalType = PMIC_GPIO_OPEN_DRAIN_OUTPUT;
+
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicHandle,
+                                           PMIC_LP8764X_GPIO2_PIN,
+                                           &gpioCfg);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                              PMIC_GPIO_CFG_OD_VALID_SHIFT;
+        gpioCfg.pinFunc     = PMIC_LP8764X_GPIO_PINFUNC_GPIO3_SDA_I2C2;
+        gpioCfg.outputSignalType = PMIC_GPIO_OPEN_DRAIN_OUTPUT;
+
+        pmicStatus = Pmic_gpioSetConfiguration(pPmicHandle,
+                                               PMIC_LP8764X_GPIO3_PIN,
                                                &gpioCfg);
     }
 
@@ -260,7 +298,7 @@ int32_t test_pmic_regRead(Pmic_CoreHandle_t  *pmicCorehandle,
         if(PMIC_QA_INST == instType)
         {
             transaction.slaveAddress = pmicCorehandle->qaSlaveAddr;
-            ret = I2C_transfer((I2C_Handle)pmicCorehandle->pCommHandle,
+            ret = I2C_transfer((I2C_Handle)pmicCorehandle->pQACommHandle,
                                 &transaction);
             if(ret != I2C_STS_SUCCESS)
             {
@@ -482,6 +520,7 @@ static int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
                                                   PMIC_MAIN_INST);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
+            pmicConfigData->validParams |= PMIC_CFG_COMM_HANDLE_VALID_SHIFT;
             /* Get PMIC core Handle for Main Instance */
             pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
         }
@@ -499,6 +538,7 @@ static int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
                                                   PMIC_MAIN_INST);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
+            pmicConfigData->validParams |= PMIC_CFG_COMM_HANDLE_VALID_SHIFT;
             /* Get PMIC core Handle for Main Instance */
             pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
         }
@@ -511,8 +551,16 @@ static int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            /* Setup Dual I2C functionality to GPIO-1 and GPIO-2 pins */
-            pmicStatus = test_pmic_dual_i2c_pin_setup(pmicHandle);
+            if(PMIC_DEV_LEO_TPS6594X == pmicHandle->pmicDeviceType)
+            {
+                /* Setup leo pmic  Dual I2C functionality to GPIO-1 and GPIO-2 pins */
+                pmicStatus = test_pmic_leo_dual_i2c_pin_setup(pmicHandle);
+            }
+            if(PMIC_DEV_HERA_LP8764X == pmicHandle->pmicDeviceType)
+            {
+                /* Setup hera pmic Dual I2C functionality to GPIO-1 and GPIO-2 pins */
+                pmicStatus = test_pmic_hera_dual_i2c_pin_setup(pmicHandle);
+            }
         }
 
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -524,6 +572,7 @@ static int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
+            pmicConfigData->validParams |= PMIC_CFG_QACOMM_HANDLE_VALID_SHIFT;
             /* Get PMIC core Handle for both Instances */
             pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
         }

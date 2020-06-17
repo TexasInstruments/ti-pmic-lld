@@ -70,13 +70,19 @@
 #endif
 
 /*!
- * \brief   Slave address of PMIC-A and PMIC-B devices
+ * \brief   Slave addresses of LEO PMIC-A and PMIC-B devices
  */
 #define LEO_PMICA_SLAVE_ADDR            (0x48U)
 #define LEO_PMICA_WDG_SLAVE_ADDR        (0x12U)
 
 #define LEO_PMICB_SLAVE_ADDR            (0x4CU)
 #define LEO_PMICB_WDG_SLAVE_ADDR        (0x13U)
+
+/*!
+ * \brief   Slave addresses of HERA PMIC devices
+ */
+#define HERA_PMIC_SLAVE_ADDR            (0x48U)
+#define HERA_PMIC_WDG_SLAVE_ADDR        (0x12U)
 
 /*!
  * \brief   PMIC UT test status
