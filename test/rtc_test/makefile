@@ -49,7 +49,7 @@ SRCS_COMMON += pmic_ut_rtc.c pmic_ut_common.c
 
 SRCDIR += $(PDK_INSTALL_PATH)/ti/build/unit-test/Unity/src $(PDK_INSTALL_PATH)/ti/build/unit-test/config
 INCDIR += $(PDK_INSTALL_PATH)/ti/build/unit-test/Unity/src $(PDK_INSTALL_PATH)/ti/build/unit-test/config
-SRCS_COMMON += unity_config.c unity.c
+SRCS_COMMON += unity.c
 
 # List all the external components/interfaces, whose interface header files
 #  need to be included for this component
@@ -62,7 +62,7 @@ COMP_LIST_COMMON = csl csl_init i2c osal_nonos sciclient uart board pmic
 # Common source files and CFLAGS across all platforms and cores
 PACKAGE_SRCS_COMMON = . ../common
 
-CFLAGS_LOCAL_COMMON += -DUNITY_INCLUDE_CONFIG_H
+CFLAGS_LOCAL_COMMON += -DUNITY_INCLUDE_CONFIG_V2_H
 
 # Core/SoC/platform specific source files and CFLAGS
 # Example:

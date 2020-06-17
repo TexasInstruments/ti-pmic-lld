@@ -63,10 +63,9 @@
 /* Timer specific headers */
 #include <ti/board/src/j721e_evm/include/board_utils.h>
 
-#if defined(UNITY_INCLUDE_CONFIG_H) && \
+#if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
            (defined(SOC_J721E) || defined(SOC_J7200))
 #include <ti/build/unit-test/Unity/src/unity.h>
-#include <ti/build/unit-test/config/unity_config.h>
 #endif
 
 /*!
@@ -95,16 +94,14 @@
 /*!
  *  \brief    Define the Pmic UT test interface
  *
- *  \param   testFunc            Test Function
  *  \param   testId              Test ID
  *  \param   testDesc            Test Description
  *
  */
 typedef struct Pmic_Ut_Tests_s
 {
-    bool     (*testFunc)(void *);
-    int32_t  testId;
-    char     testDesc[140U];
+    uint32_t  testId;
+    char      testDesc[140U];
 } Pmic_Ut_Tests_t;
 
 /*!
@@ -160,15 +157,30 @@ void test_pmic_criticalSectionStartFn(void);
 void test_pmic_criticalSectionStopFn(void);
 
 /*!
- * \brief   Pmic Unity Tests Common function
+ * \brief   Initialize PMIC Instance and corresponding Interface.
  *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
+ * \param   pmicCoreHandle    [OUT]     PMIC Core Handle.
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
+ *          For valid values see \ref Pmic_ErrorCodes
  */
-bool test_pmic_common(Pmic_Ut_Tests_t *pmic_Test, Pmic_CoreCfg_t *pmicCfgData,
-                                                          const char *ptagName);
+int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
+                          Pmic_CoreCfg_t     *pmicConfigData);
+
+/*!
+ * \brief   Deinitialize PMIC Instance and corresponding Interface.
+ *
+ * \param   pmicCoreHandle    [OUT]     PMIC Core Handle.
+ */
+void test_pmic_appDeInit(Pmic_CoreHandle_t *pmicCoreHandle);
 
 /*!
  * \brief   Configures UART pinmux and initialization for the UART Prints
  */
-void test_pmic_uartInit();
+void test_pmic_uartInit(void);
+
+/*!
+ * \brief   Function to print testcase info
+ */
+void test_pmic_print_unity_testcase_info(uint32_t     testId,
+                                         Pmic_Ut_Tests_t *pTest);

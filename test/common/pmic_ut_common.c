@@ -481,8 +481,8 @@ void test_pmic_criticalSectionStopFn(void)
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values see \ref Pmic_ErrorCodes
  */
-static int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
-                                 Pmic_CoreCfg_t     *pmicConfigData)
+int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
+                          Pmic_CoreCfg_t     *pmicConfigData)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t *pmicHandle = NULL;
@@ -553,7 +553,7 @@ static int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
         {
             if(PMIC_DEV_LEO_TPS6594X == pmicHandle->pmicDeviceType)
             {
-                /* Setup leo pmic  Dual I2C functionality to GPIO-1 and GPIO-2 pins */
+                /* Setup leo pmic Dual I2C functionality to GPIO-1 and GPIO-2 pins */
                 pmicStatus = test_pmic_leo_dual_i2c_pin_setup(pmicHandle);
             }
             if(PMIC_DEV_HERA_LP8764X == pmicHandle->pmicDeviceType)
@@ -576,6 +576,7 @@ static int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
             /* Get PMIC core Handle for both Instances */
             pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
         }
+
     }
     /* For SPI Instance */
     else if(PMIC_INTF_SPI  == pmicConfigData->commMode)
@@ -603,12 +604,10 @@ static int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
 
     *pmicCoreHandle = pmicHandle;
 
-    pmic_log("%s(): %d: pmicStatus: %d\n", __func__, __LINE__,  pmicStatus);
-
     return pmicStatus;
 }
 
-static  void test_pmic_appDeInit(Pmic_CoreHandle_t *pmicCoreHandle)
+void test_pmic_appDeInit(Pmic_CoreHandle_t *pmicCoreHandle)
 {
     if(PMIC_INTF_SINGLE_I2C == pmicCoreHandle->commMode)
     {
@@ -631,23 +630,6 @@ static  void test_pmic_appDeInit(Pmic_CoreHandle_t *pmicCoreHandle)
 }
 
 /*!
- * \brief   Function to print Unity Test Cases
- *
- * \param   [IN]  Pmic_Ut_Tests_t table current instance
- */
-static void test_pmic_print_test_desc(Pmic_Ut_Tests_t *pTest)
-{
-    char  testId[16U] = {0U};
-
-    /* Print unit test ID */
-    sprintf(testId, "%d", pTest->testId);
-    pmic_log("\n\n |TEST START|:: %s ::\n", testId);
-
-    /* Print test description */
-    pmic_log("\n |TEST NAME|:: %s ::\n", pTest->testDesc);
-}
-
-/*!
  * \brief   Unity setUp Function
  */
 void setUp(void)
@@ -663,76 +645,9 @@ void tearDown(void)
     /* Do nothing */
 }
 
-static void Pmic_intClr(Pmic_CoreHandle_t *pmicHandle)
-{
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
-    uint32_t pErrStat         = 0U;
-
-    Pmic_irqGetErrStatus(&handle, &pErrStat, 1U);
-}
-
-/*!
- * \brief   Pmic Unity Tests Common function
- *
- * \retval  PMIC_UT_SUCCESS in case of success or
- *          PMIC_UT_FAILURE in case of failure.
- */
-bool test_pmic_common(Pmic_Ut_Tests_t *pmicTestcase,
-                      Pmic_CoreCfg_t  *pmicCfgData,
-                      const char      *ptagName)
-{
-    bool        testResult       = PMIC_UT_SUCCESS;
-    uint32_t    i                = 0U;
-    int32_t     ret              = 0U;
-    char        testId[16U]      = {0U};
-    Pmic_Ut_Tests_t *pTestcase;
-    Pmic_CoreHandle_t *pmicCoreHandle = NULL;
-
-    pmic_log("%s(): %d: Running...\n", __func__, __LINE__);
-
-    ret = test_pmic_appInit(&pmicCoreHandle, pmicCfgData);
-    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, ret);
-
-    Pmic_intClr(pmicCoreHandle);
-
-    for (i = 0U; ; i++)
-    {
-        pTestcase = pmicTestcase++;
-
-        if(NULL == pTestcase->testFunc)
-        {
-            break;
-        }
-
-        test_pmic_print_test_desc(pTestcase);
-        if(PMIC_UT_SUCCESS == pTestcase->testFunc((void *)pmicCoreHandle))
-        {
-            sprintf(testId, "%d", pTestcase->testId);
-            pmic_log("\n |TEST RESULT|PASS|%s|\n", testId);
-            pmic_log("\n |TEST END|:: %s ::\n", testId);
-            pmic_log("\n |TEST RESULT|:: PMIC %s Test Case "
-                         "%s Successful!! ::\n", ptagName, testId);
-        }
-        else
-        {
-            sprintf(testId, "%d", pTestcase->testId);
-            pmic_log("\n |TEST RESULT|PASS|%s|\n", testId);
-            pmic_log("\n |TEST END|:: %s ::\n", testId);
-            pmic_log("\n |TEST RESULT|:: PMIC %s Test Case "
-                         "%s Unsuccessful!! ::\n", ptagName, testId);
-
-            testResult = PMIC_UT_FAILURE;
-        }
-    }
-
-    test_pmic_appDeInit(pmicCoreHandle);
-
-    return testResult;
-}
-
 void test_pmic_uartInit()
 {
-    Board_initCfg           boardCfg;
+    Board_initCfg boardCfg;
 
     boardCfg = BOARD_INIT_PINMUX_CONFIG | BOARD_INIT_UART_STDIO;
     Board_init(boardCfg);
@@ -745,3 +660,48 @@ void InitMmu(void)
     Osal_initMmuDefault();
 }
 #endif
+
+static uint32_t test_pmic_get_unity_testcase_index(uint32_t         testId,
+                                                   Pmic_Ut_Tests_t *pTest)
+{
+    uint32_t i;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    for (i = 0U; ; i++)
+    {
+        if(pTest->testId == testId)
+        {
+            break;
+        }
+        else if(pTest->testId == 0xFF)
+        {
+            status = PMIC_ST_ERR_FAIL;
+            /* Print test Result */
+            pmic_log("\n |TEST RESULT|:: %d ::", testId);
+            TEST_ASSERT_EQUAL_MESSAGE(PMIC_ST_SUCCESS, status, "Invalid Test ID");
+        }
+        pTest++;
+    }
+
+    return i;
+}
+
+/*!
+ * \brief   Function to print testcase info
+ */
+void test_pmic_print_unity_testcase_info(uint32_t         testId,
+                                         Pmic_Ut_Tests_t *pTest)
+{
+    uint32_t index = 0U;
+
+    /* Print unit test ID */
+    pmic_log("\n\n |TEST ID|:: %d ::\n", testId);
+
+    index = test_pmic_get_unity_testcase_index(testId, pTest);
+
+    /* Print test description */
+    pmic_log("\n |TEST NAME|:: %s ::\n", pTest[index].testDesc);
+
+    /* Print test Result */
+    pmic_log("\n |TEST RESULT|:: %d ::", testId);
+}

@@ -38,8 +38,6 @@
  */
 
 #include <pmic_ut_common.h>
-#include <pmic_rtc.h>
-#include <pmic_irq.h>
 
 /*!
  * \brief   RTC invalid date/time macros
