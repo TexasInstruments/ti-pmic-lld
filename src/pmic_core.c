@@ -178,17 +178,19 @@ void Pmic_criticalSectionStop(Pmic_CoreHandle_t *pPmicCoreHandle)
 /*!
  * \brief: Set Recovery Counter Configuration
  *         This function configures PMIC Recovery Counter register controlling
- *         recovery count Threshold and Clear
+ *         recovery count Threshold and Clear, when corresponding validParam
+ *         bit field is set in the Pmic_RecovCntCfg_t structure.
+ *         For more information \ref Pmic_RecovCntCfg_t
  *
  * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * \param   pRecovCnt         [IN]    Pointer to set configuration value for
+ * \param   recovCntCfg       [IN]    Set configuration value for
  *                                    Recovery counter
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_SetRecoveryCntCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                               Pmic_RecovCntCfg_t *pRecovCnt)
+                               Pmic_RecovCntCfg_t  recovCntCfg)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t  regVal;
@@ -198,21 +200,18 @@ int32_t Pmic_SetRecoveryCntCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
         pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
-    if((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pRecovCnt))
-    {
-        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
-    }
-
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((pRecovCnt->cfgType & PMIC_RECOV_CNT_CFLAG_THR) != 0U) &&
-        (pRecovCnt->thrVal > PMIC_RECOV_CNT_THR_MAX)))
+       (true == pmic_validParamCheck(recovCntCfg.validParams,
+                                     PMIC_CFG_RECOV_CNT_THR_VAL_VALID)) &&
+       ((recovCntCfg.thrVal > PMIC_RECOV_CNT_THR_MAX)))
     {
         pmicStatus = PMIC_ST_ERR_INV_PARAM;
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((pRecovCnt->cfgType & PMIC_RECOV_CNT_CFLAG_CLR) != 0U) &&
-        (pRecovCnt->clrVal != 1U)))
+       (true == pmic_validParamCheck(recovCntCfg.validParams,
+                                     PMIC_CFG_RECOV_CNT_CLR_CNT_VALID)) &&
+       (recovCntCfg.clrCnt != 1U))
     {
         pmicStatus = PMIC_ST_ERR_INV_PARAM;
     }
@@ -228,18 +227,20 @@ int32_t Pmic_SetRecoveryCntCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            if((pRecovCnt->cfgType & PMIC_RECOV_CNT_CFLAG_CLR) != 0U)
+            if(true == pmic_validParamCheck(recovCntCfg.validParams,
+                                            PMIC_CFG_RECOV_CNT_CLR_CNT_VALID))
             {
                 HW_REG_SET_FIELD(regVal,
                                  PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR,
-                                 pRecovCnt->clrVal);
+                                 recovCntCfg.clrCnt);
             }
 
-            if((pRecovCnt->cfgType & PMIC_RECOV_CNT_CFLAG_THR) != 0U)
+            if(true == pmic_validParamCheck(recovCntCfg.validParams,
+                                            PMIC_CFG_RECOV_CNT_THR_VAL_VALID))
             {
                 HW_REG_SET_FIELD(regVal,
                                  PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR,
-                                 pRecovCnt->thrVal);
+                                 recovCntCfg.thrVal);
             }
 
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -255,18 +256,21 @@ int32_t Pmic_SetRecoveryCntCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
 }
 
 /*!
- * \brief: Read Recovery Count Configuration
- *         This function reads the recovery count register value
+ * \brief: Get Recovery Counter Configuration
+ *         This function get PMIC Recovery Counter configurations values of
+ *         recovery count Threshold and Clear, when corresponding validParam
+ *         bit field is set in the Pmic_RecovCntCfg_t structure.
+ *         For more information \ref Pmic_RecovCntCfg_t
  *
  * \param   pPmicCoreHandle       [IN]    PMIC Interface Handle.
- * \param   pRecovCntCfgVal       [OUT]   Pointer to store recovery counter
+ * \param   pRecovCntCfg          [OUT]   Pointer to store recovery counter
  *                                        configuration value
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_getRecoveryCntCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               uint8_t           *pRecovCntCfgVal)
+                               Pmic_RecovCntCfg_t *pRecovCntCfg)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t  regVal = 0U;
@@ -276,7 +280,62 @@ int32_t Pmic_getRecoveryCntCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
         pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
-    if((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pRecovCntCfgVal))
+    if((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pRecovCntCfg))
+    {
+        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_RECOV_CNT_REG_2_REGADDR,
+                                        &regVal);
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+            if(true == pmic_validParamCheck(pRecovCntCfg->validParams,
+                                            PMIC_CFG_RECOV_CNT_THR_VAL_VALID))
+            {
+                pRecovCntCfg->thrVal = HW_REG_GET_FIELD(regVal,
+                                          PMIC_RECOV_CNT_REG_2_RECOV_CNT_THR);
+            }
+            if(true == pmic_validParamCheck(pRecovCntCfg->validParams,
+                                            PMIC_CFG_RECOV_CNT_CLR_CNT_VALID))
+            {
+                pRecovCntCfg->clrCnt = HW_REG_GET_FIELD(regVal,
+                                             PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR);
+            }
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief: Read Recovery Count Value
+ *         This function reads the recovery count value
+ *
+ * \param   pPmicCoreHandle       [IN]    PMIC Interface Handle.
+ * \param   pRecovCntVal          [OUT]   Pointer to store recovery count
+ *                                        value
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_getRecoveryCnt(Pmic_CoreHandle_t *pPmicCoreHandle,
+                            uint8_t           *pRecovCntVal)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regVal = 0U;
+
+    if(NULL == pPmicCoreHandle)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pRecovCntVal))
     {
         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
     }
@@ -296,7 +355,7 @@ int32_t Pmic_getRecoveryCntCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        *pRecovCntCfgVal = (regVal & 0x0FU);
+        *pRecovCntVal = HW_REG_GET_FIELD(regVal, PMIC_RECOV_CNT_REG_1_RECOV_CNT_CLR);
     }
 
     return pmicStatus;

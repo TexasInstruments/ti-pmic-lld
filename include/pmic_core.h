@@ -73,8 +73,24 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_RECOV_CNT_CFLAG_THR            (0x01U)
-#define PMIC_RECOV_CNT_CFLAG_CLR            (0x02U)
+#define PMIC_CFG_RECOV_CNT_THR_VAL_VALID      (0U)
+#define PMIC_CFG_RECOV_CNT_CLR_CNT_VALID      (1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_RecoveryCntCfgTypeStructPrmBitShiftVal
+ *  \name   PMIC Recovery Counter Configuration Type Structure Param Bit
+ *          shift values
+ *
+ *  Application can use below shifted values to set the validParams
+ *  struct members defined in Pmic_RecovCntCfg_t structure
+ *
+ *  @{
+ */
+#define PMIC_CFG_RECOV_CNT_THR_VAL_VALID_SHIFT  \
+                       (1U << PMIC_CFG_RECOV_CNT_THR_VAL_VALID)
+#define PMIC_CFG_RECOV_CNT_CLR_CNT_VALID_SHIFT  \
+                       (1U << PMIC_CFG_RECOV_CNT_CLR_CNT_VALID)
 /* @} */
 
 /*==========================================================================*/
@@ -83,16 +99,22 @@ extern "C" {
 /*!
  * \brief: PMIC Recovery Counter Configuration
  *
- *  \param  cfgType       Recovery Counter Configuration Type as Counter
- *                        Threshold or Counter Clear
+ * \param   validParams   Selection of structure parameters to be set,
+ *                        from the combination of \ref Pmic_RecoveryCntCfgType
+ *                        and the corresponding member value must be updated
+ *                        Valid values \ref Pmic_RecoveryCntCfgType
  *  \param  thrVal        Recovery Counter Threshold Value
- *  \param  clrVal        Recovery Counter Clear Value
+ *                         Valid only when PMIC_CFG_RECOV_CNT_THR_VAL_VALID
+ *                         bit is set.
+ *  \param  clrCnt        Clear Recovery Counter Value and value should be 1U.
+ *                         Valid only when PMIC_CFG_RECOV_CNT_CLR_VAL_VALID
+ *                         bit is set.
  */
 typedef struct Pmic_RecovCntCfg_s
 {
-    uint8_t    cfgType;
+    uint8_t    validParams;
     uint8_t    thrVal;
-    uint8_t    clrVal;
+    bool       clrCnt;
 } Pmic_RecovCntCfg_t;
 
 /*==========================================================================*/
@@ -101,31 +123,50 @@ typedef struct Pmic_RecovCntCfg_s
 /*!
  * \brief: Set Recovery Counter Configuration
  *         This function configures PMIC Recovery Counter register controlling
- *         recovery count Threshold and Clear
+ *         recovery count Threshold and Clear, when corresponding validParam
+ *         bit field is set in the Pmic_RecovCntCfg_t structure.
+ *         For more information \ref Pmic_RecovCntCfg_t
  *
  * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * \param   pRecovCnt         [IN]    Pointer to set configuration value for
+ * \param   recovCntCfg       [IN]    Set configuration value for
  *                                    Recovery counter
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_SetRecoveryCntCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                               Pmic_RecovCntCfg_t *pRecovCnt);
+                               Pmic_RecovCntCfg_t  recovCntCfg);
 
 /*!
- * \brief: Read Recovery Count Configuration
- *         This function reads the recovery count register value
+ * \brief: Get Recovery Counter Configuration
+ *         This function get PMIC Recovery Counter configurations values of
+ *         recovery count Threshold and Clear, when corresponding validParam
+ *         bit field is set in the Pmic_RecovCntCfg_t structure.
+ *         For more information \ref Pmic_RecovCntCfg_t
  *
  * \param   pPmicCoreHandle       [IN]    PMIC Interface Handle.
- * \param   pRecovCntCfgVal       [OUT]   Pointer to store recovery counter
+ * \param   pRecovCntCfg          [OUT]   Pointer to store recovery counter
  *                                        configuration value
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_getRecoveryCntCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               uint8_t           *pRecovCntCfgVal);
+int32_t Pmic_getRecoveryCntCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
+                               Pmic_RecovCntCfg_t *pRecovCntCfg);
+
+/*!
+ * \brief: Read Recovery Count Value
+ *         This function reads the recovery count value
+ *
+ * \param   pPmicCoreHandle       [IN]    PMIC Interface Handle.
+ * \param   pRecovCntVal          [OUT]   Pointer to store recovery count
+ *                                        value
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_getRecoveryCnt(Pmic_CoreHandle_t *pPmicCoreHandle,
+                            uint8_t           *pRecovCntVal);
 
 /*!
  * \brief: Function call to setup nSLEEP signals
