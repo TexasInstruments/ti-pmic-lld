@@ -65,10 +65,9 @@ extern "C" {
 /* #define PMIC_LEO_DEV_REV_ID              (0x03U) */
 
 /*
- * To check pmic_lld for Hera, Changed REV ID value to 0x08
- * Revision ID should be changed as mentioned in PDK-6422
+ * Need to be verfied on J7VCL
  */
-#define PMIC_HERA_DEV_REV_ID                (0x08U)
+#define PMIC_HERA_DEV_REV_ID                (0x07U)
 
 
 /*!
@@ -81,6 +80,20 @@ extern "C" {
  * \brief: HERA PMIC StartUP Control Register
  */
 #define PMIC_STARTUP_CTRL_REGADDR           (0xC3U)
+
+/*!
+ * \brief  PMIC RTC Scratchpad register Addresses
+ */
+#define PMIC_RTC_SCRATCH_PAD_REG_1_REGADDR             (0xC9U)
+#define PMIC_RTC_SCRATCH_PAD_REG_2_REGADDR             (0xCAU)
+#define PMIC_RTC_SCRATCH_PAD_REG_3_REGADDR             (0xCBU)
+#define PMIC_RTC_SCRATCH_PAD_REG_4_REGADDR             (0xCCU)
+
+/*!
+ * \brief: PMIC Recovery Counter Register Shift and Mask Values
+ */
+#define PMIC_RECOV_CNT_REG_1_RECOV_CNT_CLR_MASK         (0x0FU)
+#define PMIC_RECOV_CNT_REG_1_RECOV_CNT_CLR_SHIFT        (0x00U)
 
 /*!
  * \brief: PMIC Recovery Counter Register Shift and Mask Values

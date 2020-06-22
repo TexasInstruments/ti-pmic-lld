@@ -115,9 +115,6 @@ extern "C" {
 #define PMIC_TPS6594X_GPIO_PIN_MIN              (1U)
 #define PMIC_TPS6594X_GPIO_PIN_MAX              (11U)
 
-/** \brief Max value for GPIO Pin Function */
-#define PMIC_TPS6594X_GPIO_PINFUNC_MAX          (7U)
-
 /** \brief Max value for NPWRON/ENABLE pin Function */
 #define PMIC_TPS6594X_NPWRON_PINFUNC_MAX        (1U)
 /*==========================================================================*/

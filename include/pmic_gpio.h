@@ -206,6 +206,8 @@ extern "C" {
 #define PMIC_GPIO_INT_MASK                 (1U)
 /*  @} */
 
+/** \brief Max value for GPIO Pin Function */
+#define PMIC_GPIO_PINFUNC_MAX              (7U)
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
@@ -272,15 +274,15 @@ typedef struct Pmic_GpioCfg_s
  *                                   \ref Pmic_Tps6594xLeo_GpioPin
  *                                   Valid values for LP8764x HERA Device
  *                                   \ref Pmic_Lp8764xHera_GpioPin
- * \param   pGpioCfg        [IN]    pointer to set required configuration for
+ * \param   gpioCfg         [IN]    set required configuration for
  *                                  the specified GPIO pin
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                  uint8_t            pin,
-                                  Pmic_GpioCfg_t    *pGpioCfg);
+int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                  const uint8_t        pin,
+                                  const Pmic_GpioCfg_t gpioCfg);
 
 /*!
  * \brief   PMIC GPIO get configuration function
@@ -300,7 +302,7 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                  uint8_t            pin,
+                                  const uint8_t      pin,
                                   Pmic_GpioCfg_t    *pGpioCfg);
 
 /*!
@@ -322,8 +324,8 @@ int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                          uint8_t            pin,
-                          uint8_t            pinValue);
+                          const uint8_t      pin,
+                          const uint8_t      pinValue);
 
 /*!
  * \brief   PMIC GPIO get value function
@@ -342,7 +344,7 @@ int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                          uint8_t            pin,
+                          const uint8_t      pin,
                           uint8_t           *pPinValue);
 
 /*!
@@ -364,9 +366,9 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                         uint8_t            pin,
-                         uint8_t            intrType,
-                         uint8_t            maskPol);
+                         const uint8_t      pin,
+                         const uint8_t      intrType,
+                         const uint8_t      maskPol);
 
 /*!
  * \brief   PMIC GPIO NPWRON/Enable pin set configuration function
@@ -375,15 +377,15 @@ int32_t Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          NPWRON is valid only for TPS6594x Leo Device
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
- * \param   pGpioCfg        [IN]    Pointer to set NPWRON or ENABLE GPIO pin
+ * \param   pGpioCfg        [IN]    Set NPWRON or ENABLE GPIO pin
  *                                  configuration
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
-                                            Pmic_CoreHandle_t *pPmicCoreHandle,
-                                            Pmic_GpioCfg_t    *pGpioCfg);
+                                        Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                        const Pmic_GpioCfg_t gpioCfg);
 
 /*!
  * \brief   PMIC GPIO NPWRON/Enable pin get configuration function

@@ -115,8 +115,8 @@ static int32_t Pmic_get_gpioIntRegCfg(Pmic_CoreHandle_t     *pPmicCoreHandle,
  * \brief   This function is used to validate the PMIC specific pin is valid or
  *          not
  */
-static int32_t Pmic_gpioValidatePin(uint8_t pmicDeviceType,
-                                    uint8_t pin)
+static int32_t Pmic_gpioValidatePin(const uint8_t pmicDeviceType,
+                                    const uint8_t pin)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -173,7 +173,7 @@ static int32_t Pmic_gpioValidateParams(Pmic_CoreHandle_t *pPmicCoreHandle)
  *          is valid for the specific pmic device.
  */
 static int32_t Pmic_gpioParamCheck(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                   uint8_t            pin)
+                                   const uint8_t      pin)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -190,8 +190,8 @@ static int32_t Pmic_gpioParamCheck(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief   This function is used to validate the parameters for NPWRON or
  *          ENABLE pin
  */
-int32_t Pmic_gpioNpoweronEnableParamCheck(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                          Pmic_GpioCfg_t    *pGpioCfg)
+int32_t Pmic_gpioNpoweronEnableParamCheck(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                          Pmic_GpioCfg_t      *pGpioCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -208,10 +208,10 @@ int32_t Pmic_gpioNpoweronEnableParamCheck(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief   This function is used to select the device specific register for
             GPIO pins.
  */
-static int32_t Pmic_gpioSelectRegister(uint8_t pmicDeviceType,
-                                      uint8_t  pin,
-                                      uint8_t  inOutCfgRegAddr,
-                                      uint8_t *regAddr)
+static int32_t Pmic_gpioSelectRegister(uint8_t        pmicDeviceType,
+                                       const uint8_t  pin,
+                                       const uint8_t  inOutCfgRegAddr,
+                                       uint8_t       *pRegAddr)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -220,21 +220,21 @@ static int32_t Pmic_gpioSelectRegister(uint8_t pmicDeviceType,
         case PMIC_DEV_LEO_TPS6594X:
             if(PMIC_NPWRON_ENABLE_PIN == pin)
             {
-                *regAddr = PMIC_NPWRON_CONF_REGADDR;
+                *pRegAddr = PMIC_NPWRON_CONF_REGADDR;
             }
             else
             {
-                *regAddr = inOutCfgRegAddr;
+                *pRegAddr = inOutCfgRegAddr;
             }
             break;
         case PMIC_DEV_HERA_LP8764X:
             if(PMIC_NPWRON_ENABLE_PIN == pin)
             {
-                *regAddr = PMIC_ENABLE_CONF_REGADDR;
+                *pRegAddr = PMIC_ENABLE_CONF_REGADDR;
             }
             else
             {
-                *regAddr = inOutCfgRegAddr;
+                *pRegAddr = inOutCfgRegAddr;
             }
             break;
         default:
@@ -248,9 +248,9 @@ static int32_t Pmic_gpioSelectRegister(uint8_t pmicDeviceType,
 /*!
  * \brief   This function is used to set the GPIO and NPWRON Pin Functionality
  */
-static int32_t Pmic_gpioSetPinFunc(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                   uint8_t            pin,
-                                   Pmic_GpioCfg_t    *pGpioCfg)
+static int32_t Pmic_gpioSetPinFunc(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                   const uint8_t        pin,
+                                   const Pmic_GpioCfg_t gpioCfg)
 {
     int32_t status  = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -289,14 +289,14 @@ static int32_t Pmic_gpioSetPinFunc(Pmic_CoreHandle_t *pPmicCoreHandle,
             /* For nPWRON pin function */
             HW_REG_SET_FIELD(regData,
                              PMIC_NPWRON_CONF_NPWRON_SEL,
-                             pGpioCfg->pinFunc);
+                             gpioCfg.pinFunc);
         }
         else
         {
             /* For GPIO pin function */
             HW_REG_SET_FIELD(regData,
                              PMIC_GPIOX_CONF_GPIO_SEL,
-                             pGpioCfg->pinFunc);
+                             gpioCfg.pinFunc);
         }
         /* Setting GPIO pin function */
         status = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -314,7 +314,7 @@ static int32_t Pmic_gpioSetPinFunc(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief   This function is used to get the GPIO and NPWRON Pin Functionality
  */
 static int32_t Pmic_gpioGetPinFunc(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                   uint8_t            pin,
+                                   const uint8_t      pin,
                                    Pmic_GpioCfg_t    *pGpioCfg)
 {
     int32_t status  = PMIC_ST_SUCCESS;
@@ -371,9 +371,9 @@ static int32_t Pmic_gpioGetPinFunc(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief   This function is used to set the NPWRON Pin Polarity
  */
-static int32_t Pmic_gpioSetPinPolarity(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                       uint8_t            pin,
-                                       Pmic_GpioCfg_t    *pGpioCfg)
+static int32_t Pmic_gpioSetPinPolarity(Pmic_CoreHandle_t    *pPmicCoreHandle,
+                                       const uint8_t         pin,
+                                       const Pmic_GpioCfg_t  gpioCfg)
 {
     int32_t status  = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -407,7 +407,7 @@ static int32_t Pmic_gpioSetPinPolarity(Pmic_CoreHandle_t *pPmicCoreHandle,
     if (PMIC_ST_SUCCESS == status)
     {
         /* Setting NPWRON/ENABLE pin polarity */
-        BIT_POS_SET_VAL(regData, bitPos, pGpioCfg->pinPolarity);
+        BIT_POS_SET_VAL(regData, bitPos, gpioCfg.pinPolarity);
 
         status = Pmic_commIntf_sendByte(pPmicCoreHandle, regAddr, regData);
     }
@@ -470,9 +470,9 @@ static int32_t Pmic_gpioGetPinPolarity(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief   This function is used to set the GPIO and NPWRON Pin Pull Control
  */
-static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                    uint8_t            pin,
-                                    Pmic_GpioCfg_t    *pGpioCfg)
+static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t    *pPmicCoreHandle,
+                                    const uint8_t         pin,
+                                    const Pmic_GpioCfg_t  gpioCfg)
 {
     int32_t status  = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -506,7 +506,7 @@ static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if (PMIC_ST_SUCCESS == status)
     {
-        if(PMIC_GPIO_PULL_DISABLED == pGpioCfg->pullCtrl)
+        if(PMIC_GPIO_PULL_DISABLED == gpioCfg.pullCtrl)
         {
             /* Disable pull-up/pull-down feature */
             HW_REG_SET_FIELD(regData,
@@ -514,8 +514,8 @@ static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
                              PMIC_GPIO_PU_PD_DISABLE);
         }
 
-        if((PMIC_GPIO_PULL_UP == pGpioCfg->pullCtrl) ||
-           (PMIC_GPIO_PULL_DOWN == pGpioCfg->pullCtrl))
+        if((PMIC_GPIO_PULL_UP == gpioCfg.pullCtrl) ||
+           (PMIC_GPIO_PULL_DOWN == gpioCfg.pullCtrl))
         {
             /* Enable pull-up/pull-down feature */
             HW_REG_SET_FIELD(regData,
@@ -529,7 +529,7 @@ static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
                              PMIC_GPIO_PD_SELECT);
         }
 
-        if(PMIC_GPIO_PULL_UP == pGpioCfg->pullCtrl)
+        if(PMIC_GPIO_PULL_UP == gpioCfg.pullCtrl)
         {
             /* select pull-up resistor */
             HW_REG_SET_FIELD(regData,
@@ -552,7 +552,7 @@ static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief   This function is used to get the GPIO and NPWRON Pin Pull Control
  */
 static int32_t Pmic_gpioGetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                    uint8_t            pin,
+                                    const uint8_t      pin,
                                     Pmic_GpioCfg_t    *pGpioCfg)
 {
     int32_t status  = PMIC_ST_SUCCESS;
@@ -609,9 +609,9 @@ static int32_t Pmic_gpioGetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief   This function is used to set the GPIO Pin Direction
  */
-static int32_t Pmic_gpioSetPinDir(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                  uint8_t            pin,
-                                  Pmic_GpioCfg_t    *pGpioCfg)
+static int32_t Pmic_gpioSetPinDir(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                  const uint8_t        pin,
+                                  const Pmic_GpioCfg_t gpioCfg)
 {
     int32_t status  = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -640,7 +640,7 @@ static int32_t Pmic_gpioSetPinDir(Pmic_CoreHandle_t *pPmicCoreHandle,
         /* set gpio pin direction */
         HW_REG_SET_FIELD(regData,
                          PMIC_GPIOX_CONF_GPIO_DIR,
-                         pGpioCfg->pinDir);
+                         gpioCfg.pinDir);
 
         status = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                         pGpioInOutCfg[index].regAddr,
@@ -657,7 +657,7 @@ static int32_t Pmic_gpioSetPinDir(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief   This function is used to get the GPIO Pin Direction
  */
 static int32_t Pmic_gpioGetPinDir(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                  uint8_t            pin,
+                                  const uint8_t      pin,
                                   Pmic_GpioCfg_t    *pGpioCfg)
 {
     int32_t status                     = PMIC_ST_SUCCESS;
@@ -697,9 +697,9 @@ static int32_t Pmic_gpioGetPinDir(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief   This function is used to set the GPIO and NPWRON Deglitch Time
  */
-static int32_t Pmic_gpioSetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                        uint8_t            pin,
-                                        Pmic_GpioCfg_t    *pGpioCfg)
+static int32_t Pmic_gpioSetDeglitchTime(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                        const uint8_t        pin,
+                                        const Pmic_GpioCfg_t gpioCfg)
 {
     int32_t status  = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -736,7 +736,7 @@ static int32_t Pmic_gpioSetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
         /* setting deglitch time */
         HW_REG_SET_FIELD(regData,
                          PMIC_GPIOX_CONF_GPIO_DEGLITCH_EN,
-                         pGpioCfg->deglitchEnable);
+                         gpioCfg.deglitchEnable);
 
         status = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                         regAddr,
@@ -753,7 +753,7 @@ static int32_t Pmic_gpioSetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief   This function is used to get the GPIO and NPWRON Deglitch time
  */
 static int32_t Pmic_gpioGetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                        uint8_t            pin,
+                                        const uint8_t      pin,
                                         Pmic_GpioCfg_t    *pGpioCfg)
 {
     int32_t status  = PMIC_ST_SUCCESS;
@@ -801,9 +801,10 @@ static int32_t Pmic_gpioGetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief   This function is used to set the GPIO Output Signal Type
  */
-static int32_t Pmic_gpioSetOutputSignalType(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                            uint8_t            pin,
-                                            Pmic_GpioCfg_t    *pGpioCfg)
+static int32_t Pmic_gpioSetOutputSignalType(
+                                   Pmic_CoreHandle_t    *pPmicCoreHandle,
+                                   const uint8_t         pin,
+                                   const Pmic_GpioCfg_t  gpioCfg)
 {
     int32_t status  = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -842,14 +843,14 @@ static int32_t Pmic_gpioSetOutputSignalType(Pmic_CoreHandle_t *pPmicCoreHandle,
             /* selecting output type */
             HW_REG_SET_FIELD(regData,
                              PMIC_GPIOX_CONF_GPIO_OD,
-                             pGpioCfg->outputSignalType);
+                             gpioCfg.outputSignalType);
         }
         else
         {
             /* selecting output type */
             HW_REG_SET_FIELD(regData,
                              PMIC_NPWRON_CONF_NPWRON_OD,
-                             pGpioCfg->outputSignalType);
+                             gpioCfg.outputSignalType);
         }
 
         status = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -867,7 +868,7 @@ static int32_t Pmic_gpioSetOutputSignalType(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief   This function is used to get the GPIO Output Signal Type
  */
 static int32_t Pmic_gpioGetOutputSignalType(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                            uint8_t            pin,
+                                            const uint8_t      pin,
                                             Pmic_GpioCfg_t    *pGpioCfg)
 {
     int32_t status  = PMIC_ST_SUCCESS;
@@ -927,9 +928,9 @@ static int32_t Pmic_gpioGetOutputSignalType(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief   This function is used to Enable GPIO Interrupt
  */
 static int32_t Pmic_gpioIntrEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                   uint8_t            pin,
-                                   uint8_t            intrType,
-                                   uint8_t            maskPol)
+                                   const uint8_t      pin,
+                                   const uint8_t      intrType,
+                                   const uint8_t      maskPol)
 {
     int32_t status  = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -1007,7 +1008,7 @@ static int32_t Pmic_gpioIntrEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief   This function is used to Disable GPIO Interrupt
  */
 static int32_t Pmic_gpioIntrDisable(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                    uint8_t            pin)
+                                    const uint8_t      pin)
 {
     int32_t status  = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -1052,31 +1053,26 @@ static int32_t Pmic_gpioIntrDisable(Pmic_CoreHandle_t *pPmicCoreHandle,
  *                                   \ref Pmic_Tps6594xLeo_GpioPin
  *                                   Valid values for LP8764x HERA Device
  *                                   \ref Pmic_Lp8764xHera_GpioPin
- * \param   pGpioCfg        [IN]    pointer to set required configuration for
+ * \param   gpioCfg         [IN]    set required configuration for
  *                                  the specified GPIO pin
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                  uint8_t            pin,
-                                  Pmic_GpioCfg_t    *pGpioCfg)
+int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                  const uint8_t        pin,
+                                  const Pmic_GpioCfg_t gpioCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
     /* Validation of input Parameters */
     status = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
 
-    if((PMIC_ST_SUCCESS == status) && (NULL == pGpioCfg))
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
-    }
-
     if((PMIC_ST_SUCCESS == status) &&
-       (true == pmic_validParamCheck(pGpioCfg->validParams,
+       (true == pmic_validParamCheck(gpioCfg.validParams,
                                      PMIC_GPIO_CFG_PINFUNC_VALID)))
     {
-        if(pGpioCfg->pinFunc > PMIC_TPS6594X_GPIO_PINFUNC_MAX)
+        if(gpioCfg.pinFunc > PMIC_GPIO_PINFUNC_MAX)
         {
             status = PMIC_ST_ERR_INV_GPIO_FUNC;
         }
@@ -1084,15 +1080,15 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
         if(PMIC_ST_SUCCESS == status)
         {
             /* Setting pin function */
-            status = Pmic_gpioSetPinFunc(pPmicCoreHandle, pin, pGpioCfg);
+            status = Pmic_gpioSetPinFunc(pPmicCoreHandle, pin, gpioCfg);
         }
     }
 
     if((PMIC_ST_SUCCESS == status) &&
-       (true == pmic_validParamCheck(pGpioCfg->validParams,
+       (true == pmic_validParamCheck(gpioCfg.validParams,
                                      PMIC_GPIO_CFG_DIR_VALID)))
     {
-        if(pGpioCfg->pinDir > PMIC_GPIO_OUTPUT)
+        if(gpioCfg.pinDir > PMIC_GPIO_OUTPUT)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -1100,15 +1096,15 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
         if(PMIC_ST_SUCCESS == status)
         {
             /* set gpio pin direction */
-            status = Pmic_gpioSetPinDir(pPmicCoreHandle, pin, pGpioCfg);
+            status = Pmic_gpioSetPinDir(pPmicCoreHandle, pin, gpioCfg);
         }
     }
 
     if((PMIC_ST_SUCCESS == status) &&
-       (true == pmic_validParamCheck(pGpioCfg->validParams,
+       (true == pmic_validParamCheck(gpioCfg.validParams,
                                      PMIC_GPIO_CFG_DEGLITCH_VALID)))
     {
-        if(pGpioCfg->deglitchEnable > PMIC_GPIO_DEGLITCH_ENABLE)
+        if(gpioCfg.deglitchEnable > PMIC_GPIO_DEGLITCH_ENABLE)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -1116,15 +1112,15 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
         if(PMIC_ST_SUCCESS == status)
         {
             /* setting deglitch time */
-            status = Pmic_gpioSetDeglitchTime(pPmicCoreHandle, pin, pGpioCfg);
+            status = Pmic_gpioSetDeglitchTime(pPmicCoreHandle, pin, gpioCfg);
         }
     }
 
     if((PMIC_ST_SUCCESS == status) &&
-       (true == pmic_validParamCheck(pGpioCfg->validParams,
+       (true == pmic_validParamCheck(gpioCfg.validParams,
                                      PMIC_GPIO_CFG_OD_VALID)))
     {
-        if(pGpioCfg->outputSignalType > PMIC_GPIO_OPEN_DRAIN_OUTPUT)
+        if(gpioCfg.outputSignalType > PMIC_GPIO_OPEN_DRAIN_OUTPUT)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -1132,18 +1128,18 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
         if(PMIC_ST_SUCCESS == status)
         {
             /* setting open drain */
-            status = Pmic_gpioSetOutputSignalType(pPmicCoreHandle, pin,
-                                                  pGpioCfg);
+            status = Pmic_gpioSetOutputSignalType(pPmicCoreHandle,
+                                                  pin,
+                                                  gpioCfg);
         }
     }
 
     if(PMIC_ST_SUCCESS == status)
     {
-        if(true == pmic_validParamCheck(pGpioCfg->validParams,
+        if(true == pmic_validParamCheck(gpioCfg.validParams,
                                         PMIC_GPIO_CFG_PULL_VALID))
         {
-
-            if(pGpioCfg->pullCtrl > PMIC_GPIO_PULL_UP)
+            if(gpioCfg.pullCtrl > PMIC_GPIO_PULL_UP)
             {
                 status = PMIC_ST_ERR_INV_PARAM;
             }
@@ -1151,7 +1147,7 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
             if(PMIC_ST_SUCCESS == status)
             {
                 /* setting Pull UP/Down */
-                status = Pmic_gpioSetPullCtrl(pPmicCoreHandle, pin, pGpioCfg);
+                status = Pmic_gpioSetPullCtrl(pPmicCoreHandle, pin, gpioCfg);
             }
         }
     }
@@ -1177,7 +1173,7 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                  uint8_t            pin,
+                                  const uint8_t      pin,
                                   Pmic_GpioCfg_t    *pGpioCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -1247,8 +1243,8 @@ int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                          uint8_t            pin,
-                          uint8_t            pinValue)
+                          const uint8_t      pin,
+                          const uint8_t      pinValue)
 {
     int32_t status  = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -1334,7 +1330,7 @@ int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                          uint8_t            pin,
+                          const uint8_t      pin,
                           uint8_t           *pPinValue)
 {
     int32_t status  = PMIC_ST_SUCCESS;
@@ -1406,9 +1402,9 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                         uint8_t            pin,
-                         uint8_t            intrType,
-                         uint8_t            maskPol)
+                         const uint8_t      pin,
+                         const uint8_t      intrType,
+                         const uint8_t      maskPol)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t index  = 0U;
@@ -1438,9 +1434,9 @@ int32_t Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
         else
         {
             status = Pmic_gpioIntrEnable(pPmicCoreHandle,
-                                        index,
-                                        intrType,
-                                        maskPol);
+                                         index,
+                                         intrType,
+                                         maskPol);
         }
     }
 
@@ -1454,28 +1450,28 @@ int32_t Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          NPWRON is valid only for TPS6594x Leo Device
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
- * \param   pGpioCfg        [IN]    Pointer to set NPWRON or ENABLE GPIO pin
+ * \param   gpioCfg         [IN]    Set NPWRON or ENABLE GPIO pin
  *                                  configuration
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
-                                            Pmic_CoreHandle_t *pPmicCoreHandle,
-                                            Pmic_GpioCfg_t    *pGpioCfg)
+                                        Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                        const Pmic_GpioCfg_t gpioCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
     /* Validation of input Parameters */
-    status = Pmic_gpioNpoweronEnableParamCheck(pPmicCoreHandle, pGpioCfg);
+    status = Pmic_gpioValidateParams(pPmicCoreHandle);
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         if((PMIC_ST_SUCCESS == status) &&
-           (true == pmic_validParamCheck(pGpioCfg->validParams,
+           (true == pmic_validParamCheck(gpioCfg.validParams,
                                          PMIC_GPIO_CFG_PINFUNC_VALID)))
         {
-            if(pGpioCfg->pinFunc > PMIC_TPS6594X_NPWRON_PINFUNC_NPWRON)
+            if(gpioCfg.pinFunc > PMIC_TPS6594X_NPWRON_PINFUNC_NPWRON)
             {
                 status = PMIC_ST_ERR_INV_GPIO_FUNC;
             }
@@ -1485,15 +1481,15 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
                 /* Setting NPWRON pin function */
                 status = Pmic_gpioSetPinFunc(pPmicCoreHandle,
                                              PMIC_NPWRON_ENABLE_PIN,
-                                             pGpioCfg);
+                                             gpioCfg);
             }
         }
 
         if((PMIC_ST_SUCCESS == status) &&
-           (true == pmic_validParamCheck(pGpioCfg->validParams,
+           (true == pmic_validParamCheck(gpioCfg.validParams,
                                          PMIC_GPIO_CFG_DEGLITCH_VALID)))
         {
-            if(pGpioCfg->deglitchEnable > PMIC_GPIO_DEGLITCH_ENABLE)
+            if(gpioCfg.deglitchEnable > PMIC_GPIO_DEGLITCH_ENABLE)
             {
                 status = PMIC_ST_ERR_INV_PARAM;
             }
@@ -1503,16 +1499,16 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
                 /* setting NPWRON deglitch time */
                 status = Pmic_gpioSetDeglitchTime(pPmicCoreHandle,
                                                   PMIC_NPWRON_ENABLE_PIN,
-                                                  pGpioCfg);
+                                                  gpioCfg);
             }
         }
 
         if (PMIC_ST_SUCCESS == status)
         {
-            if(true == pmic_validParamCheck(pGpioCfg->validParams,
+            if(true == pmic_validParamCheck(gpioCfg.validParams,
                                             PMIC_GPIO_CFG_PULL_VALID))
             {
-                if(pGpioCfg->pullCtrl > PMIC_GPIO_PULL_UP)
+                if(gpioCfg.pullCtrl > PMIC_GPIO_PULL_UP)
                 {
                     status = PMIC_ST_ERR_INV_PARAM;
                 }
@@ -1520,15 +1516,15 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
                 /* setting NPWRON Pull UP/Down */
                 status = Pmic_gpioSetPullCtrl(pPmicCoreHandle,
                                               PMIC_NPWRON_ENABLE_PIN,
-                                              pGpioCfg);
+                                              gpioCfg);
             }
         }
 
         if((PMIC_ST_SUCCESS == status) &&
-           (true == pmic_validParamCheck(pGpioCfg->validParams,
+           (true == pmic_validParamCheck(gpioCfg.validParams,
                                          PMIC_GPIO_CFG_OD_VALID)))
         {
-            if(pGpioCfg->outputSignalType > PMIC_GPIO_OPEN_DRAIN_OUTPUT)
+            if(gpioCfg.outputSignalType > PMIC_GPIO_OPEN_DRAIN_OUTPUT)
             {
                 status = PMIC_ST_ERR_INV_PARAM;
             }
@@ -1538,16 +1534,16 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
                 /* Setting NPWRON open drain */
                 status = Pmic_gpioSetOutputSignalType(pPmicCoreHandle,
                                                       PMIC_NPWRON_ENABLE_PIN,
-                                                      pGpioCfg);
+                                                      gpioCfg);
             }
         }
     }
 
     if((PMIC_ST_SUCCESS == status) &&
-       (true == pmic_validParamCheck(pGpioCfg->validParams,
+       (true == pmic_validParamCheck(gpioCfg.validParams,
                                      PMIC_NPWRON_CFG_POLARITY_VALID)))
     {
-        if(pGpioCfg->pinPolarity > PMIC_GPIO_POL_HIGH)
+        if(gpioCfg.pinPolarity > PMIC_GPIO_POL_HIGH)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -1557,7 +1553,7 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
             /* Setting NPWRON/ENABLE pin polarity */
             status = Pmic_gpioSetPinPolarity(pPmicCoreHandle,
                                              PMIC_NPWRON_ENABLE_PIN,
-                                             pGpioCfg);
+                                             gpioCfg);
         }
     }
 

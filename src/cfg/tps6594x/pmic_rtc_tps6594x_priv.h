@@ -94,14 +94,6 @@ extern "C" {
 #define PMIC_RTC_RESET_STATUS_REGADDR                 (0xC8U)
 
 /*!
- * \brief  PMIC RTC Scratchpad register Address
- */
-#define PMIC_RTC_SCRATCH_PAD_REG_1_REGADDR             (0xC9U)
-#define PMIC_RTC_SCRATCH_PAD_REG_2_REGADDR             (0xCAU)
-#define PMIC_RTC_SCRATCH_PAD_REG_3_REGADDR             (0xCBU)
-#define PMIC_RTC_SCRATCH_PAD_REG_4_REGADDR             (0xCCU)
-
-/*!
  * \brief  RTC and alarm time bit fields
  */
 #define PMIC_ALARM_SECONDS_ALR_SECOND_1_SHIFT          (0x04U)
@@ -172,7 +164,8 @@ extern "C" {
 
 #define PMIC_RTC_RESET_STATUS_RESET_STATUS_RTC_SHIFT  (0x00U)
 
-#define PMIC_RTC_COMP_MSB_COMP_MSB_RTC_SHIFT          (0x8U)
+#define PMIC_RTC_COMP_MSB_COMP_MSB_RTC_SHIFT          (0x08U)
+#define PMIC_RTC_COMP_LSB_COMP_LSB_RTC_SHIFT          (0x00U)
 
 /*!
  * \brief   PMIC RTC and alarm time and date bit mask
@@ -328,6 +321,10 @@ extern "C" {
 #define PMIC_RTC_RESET_STATUS_RESET_STATUS_RTC_MASK   (uint8_t)(0x01<<        \
                                   PMIC_RTC_RESET_STATUS_RESET_STATUS_RTC_SHIFT)
 
+#define PMIC_RTC_COMP_MSB_COMP_MSB_RTC_MASK           ((uint8_t)0xFF <<       \
+                                  PMIC_RTC_COMP_MSB_COMP_MSB_RTC_SHIFT)
+#define PMIC_RTC_COMP_LSB_COMP_LSB_RTC_MASK           (0xFFU <<               \
+                                  PMIC_RTC_COMP_LSB_COMP_LSB_RTC_SHIFT)
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
