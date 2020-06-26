@@ -142,7 +142,7 @@ static int32_t test_pmic_leo_dual_i2c_pin_setup(Pmic_CoreHandle_t *pPmicHandle)
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicHandle,
                                            PMIC_TPS6594X_GPIO1_PIN,
-                                           &gpioCfg);
+                                           gpioCfg);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -153,7 +153,7 @@ static int32_t test_pmic_leo_dual_i2c_pin_setup(Pmic_CoreHandle_t *pPmicHandle)
 
         pmicStatus = Pmic_gpioSetConfiguration(pPmicHandle,
                                                PMIC_TPS6594X_GPIO2_PIN,
-                                               &gpioCfg);
+                                               gpioCfg);
     }
 
     return pmicStatus;
@@ -180,7 +180,7 @@ static int32_t test_pmic_hera_dual_i2c_pin_setup(Pmic_CoreHandle_t *pPmicHandle)
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicHandle,
                                            PMIC_LP8764X_GPIO2_PIN,
-                                           &gpioCfg);
+                                           gpioCfg);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -191,7 +191,7 @@ static int32_t test_pmic_hera_dual_i2c_pin_setup(Pmic_CoreHandle_t *pPmicHandle)
 
         pmicStatus = Pmic_gpioSetConfiguration(pPmicHandle,
                                                PMIC_LP8764X_GPIO3_PIN,
-                                               &gpioCfg);
+                                               gpioCfg);
     }
 
     return pmicStatus;
@@ -521,6 +521,8 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             pmicConfigData->validParams |= PMIC_CFG_COMM_HANDLE_VALID_SHIFT;
+            /* Update instance type to pmicConfigData */
+            pmicConfigData->instType = PMIC_MAIN_INST;
             /* Get PMIC core Handle for Main Instance */
             pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
         }
@@ -539,6 +541,8 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             pmicConfigData->validParams |= PMIC_CFG_COMM_HANDLE_VALID_SHIFT;
+            /* Update instance type to pmicConfigData */
+            pmicConfigData->instType = PMIC_QA_INST;
             /* Get PMIC core Handle for Main Instance */
             pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
         }

@@ -406,7 +406,7 @@ static void test_pmic_gpio_setCfgGpioPin_nSLEEP1(void)
 
         pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle,
                                                pins[pin],
-                                               &gpioCfg);
+                                               gpioCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
         pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle,
@@ -463,7 +463,7 @@ static void test_pmic_gpio_setCfgGpioPin_nSLEEP2(void)
 
         pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle,
                                                pins[pin],
-                                               &gpioCfg);
+                                               gpioCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
         pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle,
@@ -512,7 +512,7 @@ static void test_pmic_gpio_setCfgGpioPin_nRstOut_soc(void)
     {
         pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle,
                                                pins[pin],
-                                               &gpioCfg);
+                                               gpioCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
         pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle,
@@ -569,7 +569,7 @@ static void test_pmic_gpio_setCfgGpioPin_wakeup1(void)
 
         pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle,
                                                pins[pin],
-                                               &gpioCfg);
+                                               gpioCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
         pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle,
@@ -626,7 +626,7 @@ static void test_pmic_gpio_setCfgGpioPin_wakeup2(void)
 
         pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle,
                                                pins[pin],
-                                               &gpioCfg);
+                                               gpioCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
         pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle,
@@ -685,7 +685,7 @@ static void test_pmic_gpio_setCfgGpioPin_gpio(void)
 
         pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle,
                                                pins[pin],
-                                               &gpioCfg);
+                                               gpioCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
         pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle,
@@ -729,7 +729,7 @@ static void test_pmic_gpio_setCfgGpioPin_i2c2_sclk(void)
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO2_SCL_I2C2;
     }
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
@@ -770,7 +770,7 @@ static void test_pmic_gpio_setCfgGpioPin_i2c2_sda(void)
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO3_SDA_I2C2;
     }
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
@@ -811,7 +811,7 @@ static void test_pmic_gpio_setCfgGpioPin_spi_cs(void)
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO2_CS_SPI;
     }
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
@@ -852,7 +852,7 @@ static void test_pmic_gpio_setCfgGpioPin_spi_sdo(void)
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO3_SDO_SPI;
     }
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
@@ -899,7 +899,7 @@ static void test_pmic_gpio_setCfgGpioPin_wdt(void)
     {
         pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle,
                                                pins[pin],
-                                               &gpioCfg);
+                                               gpioCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
 
@@ -939,7 +939,7 @@ static void test_pmic_gpio_setCfgGpioPin3_esm_soc(void)
     {
         TEST_IGNORE();
     }
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
@@ -975,7 +975,7 @@ static void test_pmic_gpio_setCfgGpioPin_esm_mcu(void)
         TEST_IGNORE();
     }
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
@@ -1015,7 +1015,7 @@ static void test_pmic_gpio_setCfgGpioPin_spmi_sclk(void)
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO8_SCLK_SPMI;
     }
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
@@ -1054,7 +1054,7 @@ static void test_pmic_gpio_setCfgGpioPin_spmi_sdata(void)
         pin = 9U;
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO9_SDATA_SPMI;
     }
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
@@ -1116,7 +1116,7 @@ static void test_pmic_gpio_setCfgGpioPin_syncCLKOUT(void)
             gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO9_SYNCCLKOUT;
         }
 
-        pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pins[pin], &gpioCfg);
+        pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pins[pin], gpioCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
         pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle,
@@ -1159,7 +1159,7 @@ static void test_pmic_gpio_setCfgGpioPin_synCLKIN(void)
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO5_SYNCCLKIN;
     }
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
@@ -1206,7 +1206,7 @@ static void test_pmic_gpio_setCfgGpioPin_clk32KOUT(void)
 
         pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle,
                                                pins[pin],
-                                               &gpioCfg);
+                                               gpioCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
         pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle,
@@ -1247,7 +1247,7 @@ static void test_pmic_gpio_setCfgGpioPin10_clk32KOUT(void)
     }
 
     /* On J721 EVM, PMICA GPIO10 CLK32KOUT functionality is not supported */
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
@@ -1294,7 +1294,7 @@ static void test_pmic_gpio_setCfgGpioPin_wdg_disable(void)
 
         pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle,
                                                pins[pin],
-                                               &gpioCfg);
+                                               gpioCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
         pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle,
@@ -1348,7 +1348,7 @@ static void test_pmic_gpio_setCfgGpioPin_good_power(void)
         {
             gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO1_GPIO6_PGOOD;
         }
-        pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pins[pin], &gpioCfg);
+        pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pins[pin], gpioCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
         pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pins[pin], &gpioCfg_rd);
@@ -1378,7 +1378,7 @@ static void test_pmic_gpio_setCfgPrmValTest_handle(void)
 
     test_pmic_print_unity_testcase_info(6210, pmic_gpio_tests);
 
-    pmicStatus = Pmic_gpioSetConfiguration(NULL, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(NULL, pin, gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_HANDLE);
 }
 
@@ -1402,10 +1402,11 @@ static void test_pmic_gpio_setCfgPrmValTest_pin(void)
 
     test_pmic_print_unity_testcase_info(6211, pmic_gpio_tests);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
 }
 
+#if 0
 /*!
  * \brief   Parameter validation for GpioCfg
  */
@@ -1419,6 +1420,7 @@ static void test_pmic_gpio_setCfgPrmValTest_gpioCfg(void)
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
 }
+#endif
 
 /*!
  * \brief   Parameter validation for pinDir
@@ -1440,7 +1442,7 @@ static void test_pmic_gpio_setCfgPrmValTest_pinDir(void)
 
     test_pmic_print_unity_testcase_info(6213, pmic_gpio_tests);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
 }
 
@@ -1464,7 +1466,7 @@ static void test_pmic_gpio_setCfgPrmValTest_outputSignalType(void)
 
     test_pmic_print_unity_testcase_info(6214, pmic_gpio_tests);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
 }
 
@@ -1488,7 +1490,7 @@ static void test_pmic_gpio_setCfgPrmValTest_deglitchEnable(void)
 
     test_pmic_print_unity_testcase_info(6215, pmic_gpio_tests);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
 }
 
@@ -1512,7 +1514,7 @@ static void test_pmic_gpio_setCfgPrmValTest_pinFunc_case1(void)
 
     test_pmic_print_unity_testcase_info(6216, pmic_gpio_tests);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_GPIO_FUNC);
 }
 
@@ -1541,7 +1543,7 @@ static void test_pmic_nPWRON_setCfgPrmValTest_pinFunc(void)
     }
 
     pmicStatus = Pmic_gpioSetNPwronEnablePinConfiguration(pPmicCoreHandle,
-                                                          &gpioCfg);
+                                                          gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_GPIO_FUNC);
 }
 
@@ -1565,7 +1567,7 @@ static void test_pmic_nPWRON_setCfgPrmValTest_pinPolarity(void)
     test_pmic_print_unity_testcase_info(6218, pmic_gpio_tests);
 
     pmicStatus = Pmic_gpioSetNPwronEnablePinConfiguration(pPmicCoreHandle,
-                                                          &gpioCfg);
+                                                          gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
 }
 
@@ -1599,7 +1601,7 @@ static void test_pmic_gpio_getCfgGpioPin(void)
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_NSLEEP1;
     }
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
@@ -1700,7 +1702,7 @@ static void test_pmic_gpio_getValueGpioPin1_signalLevel(void)
     {
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO;
     }
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -1786,7 +1788,7 @@ static void test_pmic_gpio_setValueGpioPin1_signalLevel(void)
     {
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO;
     }
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -1873,7 +1875,7 @@ static void test_pmic_gpio_setValueGpioPin5_input(void)
     {
         gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO;
     }
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
@@ -1977,7 +1979,7 @@ static void test_pmic_gpio1_testFall_interrupt(void)
     /* Un Masking GPIO 1 FALL Interrupt */
     Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO1_FALL_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -2063,7 +2065,7 @@ static void test_pmic_gpio1_testRise_interrupt(void)
     /* Un Masking GPIO 1 RISE Interrupt */
     Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO1_RISE_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -2148,7 +2150,7 @@ static void test_pmic_gpio2_testFall_interrupt(void)
     /* Un Masking GPIO 2 FALL Interrupt */
     Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO2_FALL_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -2233,7 +2235,7 @@ static void test_pmic_gpio2_testRise_interrupt(void)
     /* Un Masking GPIO 2 RISE Interrupt */
     Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO2_RISE_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -2321,7 +2323,7 @@ static void test_pmic_gpio3_testFall_interrupt(void)
     /* Un Masking GPIO 3 FALL Interrupt */
     Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO3_FALL_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -2407,7 +2409,7 @@ static void test_pmic_gpio3_testRise_interrupt(void)
     /* Un Masking GPIO 3 RISE Interrupt */
     Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO3_RISE_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -2496,7 +2498,7 @@ static void test_pmic_gpio4_testFall_interrupt(void)
     /* Un Masking GPIO 4 FALL Interrupt */
     Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO4_FALL_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -2582,7 +2584,7 @@ static void test_pmic_gpio4_testRise_interrupt(void)
     /* Un Masking GPIO 4 RISE Interrupt */
     Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO4_RISE_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -2670,7 +2672,7 @@ static void test_pmic_gpio5_testFall_interrupt(void)
                      PMIC_IRQ_GPIO5_FALL_MASK,
                      PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -2755,7 +2757,7 @@ static void test_pmic_gpio5_testRise_interrupt(void)
     /* Un Masking GPIO 5 RISE Interrupt */
     Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO5_RISE_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -2840,7 +2842,7 @@ static void test_pmic_gpio6_testFall_interrupt(void)
     /* Un Masking GPIO 6 FALL Interrupt */
     Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO6_FALL_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -2925,7 +2927,7 @@ static void test_pmic_gpio6_testRise_interrupt(void)
     /* Un Masking GPIO 6 RISE Interrupt */
     Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO6_RISE_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -3013,7 +3015,7 @@ static void test_pmic_gpio7_testFall_interrupt(void)
     /* Un Masking GPIO 7 FALL Interrupt */
     Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO7_FALL_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -3099,7 +3101,7 @@ static void test_pmic_gpio7_testRise_interrupt(void)
     /* Un Masking GPIO 7 RISE Interrupt */
     Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO7_RISE_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -3185,7 +3187,7 @@ static void test_pmic_gpio8_testFall_interrupt(void)
     /* Un Masking GPIO 8 FALL Interrupt */
     Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO8_FALL_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -3270,7 +3272,7 @@ static void test_pmic_gpio8_testRise_interrupt(void)
     /* Un Masking GPIO 8 RISE Interrupt */
     Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO8_RISE_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -3360,7 +3362,7 @@ static void test_pmic_gpio9_testFall_interrupt(void)
                      PMIC_TPS6594X_IRQ_GPIO9_FALL_MASK,
                      PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -3446,7 +3448,7 @@ static void test_pmic_gpio9_testRise_interrupt(void)
     /* Un Masking GPIO 9 RISE Interrupt */
     Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO9_RISE_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -3532,7 +3534,7 @@ static void test_pmic_gpio10_testFall_interrupt(void)
     /* Un Masking GPIO 10 FALL Interrupt */
     Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO10_FALL_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -3618,7 +3620,7 @@ static void test_pmic_gpio10_testRise_interrupt(void)
     /* Un Masking GPIO 10 RISE Interrupt */
     Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO10_RISE_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -3704,7 +3706,7 @@ static void test_pmic_gpio11_testFall_interrupt(void)
     /* Un Masking GPIO 11 FALL Interrupt */
     Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO11_FALL_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -3790,7 +3792,7 @@ static void test_pmic_gpio11_testRise_interrupt(void)
     /* Un Masking GPIO 11 RISE Interrupt */
     Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO11_RISE_MASK, PMIC_IRQ_UNMASK);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -3861,7 +3863,7 @@ static void test_pmic_gpio_intr_prmValTest_handle(void)
 
     test_pmic_print_unity_testcase_info(6256, pmic_gpio_tests);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -3894,7 +3896,7 @@ static void test_pmic_gpio_intr_prmValTest_pin(void)
 
     test_pmic_print_unity_testcase_info(6257, pmic_gpio_tests);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, 1U, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, 1U, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, 1U, pinValue);
@@ -3926,7 +3928,7 @@ static void test_pmic_gpio_intr_prmValTest_intrType(void)
     };
 
     test_pmic_print_unity_testcase_info(6258, pmic_gpio_tests);
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -3959,7 +3961,7 @@ static void test_pmic_gpio_intr_prmValTest_maskPol(void)
 
     test_pmic_print_unity_testcase_info(6259, pmic_gpio_tests);
 
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
@@ -4009,7 +4011,9 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_gpio_setCfgGpioPin_good_power);
     RUN_TEST(test_pmic_gpio_setCfgPrmValTest_handle);
     RUN_TEST(test_pmic_gpio_setCfgPrmValTest_pin);
+#if 0
     RUN_TEST(test_pmic_gpio_setCfgPrmValTest_gpioCfg);
+#endif
     RUN_TEST(test_pmic_gpio_setCfgPrmValTest_pinDir);
     RUN_TEST(test_pmic_gpio_setCfgPrmValTest_outputSignalType);
     RUN_TEST(test_pmic_gpio_setCfgPrmValTest_deglitchEnable);

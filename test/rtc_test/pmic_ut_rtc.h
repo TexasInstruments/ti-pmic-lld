@@ -82,7 +82,7 @@
                                     (PMIC_RTC_DATE_CFG_DAY_VALID_SHIFT | \
                                      PMIC_RTC_DATE_CFG_MONTH_VALID_SHIFT | \
                                      PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT | \
-                                     PMIC_RTC_DATE_CFG_WEEK_VALID_SHIFT)
+                                     PMIC_RTC_DATE_CFG_WEEKDAY_VALID_SHIFT)
 
 #define PMIC_RTC_VALID_PARAM_DATE_CFG_DAY_MNTH_VAL  \
                                     (PMIC_RTC_DATE_CFG_DAY_VALID_SHIFT | \
