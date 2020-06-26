@@ -32,9 +32,7 @@
  *****************************************************************************/
 
 /**
- *  \ingroup DRV_PMIC_MODULE
- *  \defgroup DRV_PMIC_TYPE_MODULE PMIC Driver Common Data types
- *            This is PMIC driver common data types
+ *  \addtogroup DRV_PMIC_COMMON_MODULE
  *
  *  @{
  */
@@ -42,7 +40,7 @@
 /**
  *  \file pmic_types.h
  *
- *  \brief PMIC Low Level Driver API/interface data types file.
+ *  \brief PMIC Driver Common data types file.
  */
 
 #ifndef PMIC_TYPES_H_
@@ -67,11 +65,11 @@ extern "C" {
 /*                         Structures and Enums                             */
 /*==========================================================================*/
 /*!
- * \brief: PMIC Subsystem is supported or not
+ * \brief PMIC Subsystems
  *
- *  \param   gpioEnable    PMIC GPIO SubSystem is supported or not
- *  \param   rtcEnable     PMIC RTC SubSystem is supported or not
- *  \param   wdgEnable     PMIC Watchdog SubSystem is supported or not
+ *  \param   gpioEnable    PMIC GPIO SubSystem
+ *  \param   rtcEnable     PMIC RTC SubSystem
+ *  \param   wdgEnable     PMIC Watchdog SubSystem
  */
 typedef struct Pmic_DevSubSysInfo_s
 {
@@ -81,24 +79,26 @@ typedef struct Pmic_DevSubSysInfo_s
 } Pmic_DevSubSysInfo_t;
 
 /*!
- * \brief: PMIC Interface Handle.
- *         Contains various PMIC driver instance specific info -
- *         the PMIC device type, PMIC interface mode, Slave address,
+ * \brief  PMIC Interface Handle.
+ *         Contains various PMIC driver instance specific information. like,
+ *         the PMIC device type, PMIC interface mode, Slave addresses,
  *         various application defined API function pointers for
- *         LLD and Critical sections
- *         Note - Driver will configure the Pmic Handle info. User should Ensure that
- *         Application shall not update/configure the PMIC Handle info.
+ *         LLD and Critical sections.
+ *
+ *         Note: Pmic_init() configures the Pmic Handle information and provide
+ *               pmic core handle to user application. User should ensure that
+ *               application shall not modify the PMIC Handle information.
  *
  *  \param   pPmic_SubSysInfo             PMIC driver subsystem information
- *  \param   drvInitStatus                PMIC Driver initialization status
+ *  \param   drvInitStatus                PMIC Driver initialization status.
  *                                        Valid driver status:
- *                                        Main instance:
- *                                           DRV_INIT_STATUS | PMIC_MAIN_INST
- *                                        QA instance:
- *                                           DRV_INIT_STATUS | PMIC_QA_INST
+ *                                        For Main instance:
+ *                                           DRV_INIT_STATUS | PMIC_MAIN_INST.
+ *                                        For QA instance:
+ *                                           DRV_INIT_STATUS | PMIC_QA_INST.
  *  \param   pmicDeviceType               PMIC device type
  *  \param   commMode                     Interface mode - Single I2C, Dual
- *                                        I2C or SPI
+ *                                        I2C or SPI.
  *  \param   slaveAddr                    Main Interface Slave Address
  *  \param   qaSlaveAddr                  WDOG QA Interface Slave Address
  *  \param   crcEnable                    Parameter to enable/disable CRC

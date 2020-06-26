@@ -58,8 +58,10 @@ static const Pmic_DevSubSysInfo_t pmicSubSysInfo[] =
 };
 
 /*!
- * \brief: Function call to setup nSLEEP signals
+ * \brief  API to setup nSLEEP signals.
  *         This function setup nSLEEP signal bits with STARTUP_DEST
+ * Which is common for all supported PMICs. This API needs to be called
+ * at PMIC init before clearing Enable and Start-Up interrupts.
  *
  *  \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
  */
@@ -127,7 +129,7 @@ int32_t Pmic_nSleepSignalsSetup(Pmic_CoreHandle_t *pPmicCoreHandle)
 }
 
 /*!
- * \brief: Checks the validParam bit position is set or not in validParamVal
+ * \brief  Checks the validParam bit position is set or not in validParamVal
  *         This function checks the given bit position is being set or not in
  *         the validParamVal argument
  *
@@ -146,7 +148,7 @@ bool pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos)
 }
 
 /*!
- * \brief: Function call wrapper to lock PMIC LLD critical section
+ * \brief  Function call wrapper to lock PMIC LLD critical section
  *         This function locks to critical area by calling registred locking
  *         mechanism using pmic core handle.
  *
@@ -161,7 +163,7 @@ void Pmic_criticalSectionStart(Pmic_CoreHandle_t *pPmicCoreHandle)
 }
 
 /*!
- * \brief: Function call wrapper to unlock PMIC LLD critical section
+ * \brief  Function call wrapper to unlock PMIC LLD critical section
  *         This function unlocks to critical area by calling registred locking
  *         mechanism using pmic core handle.
  *
@@ -176,8 +178,8 @@ void Pmic_criticalSectionStop(Pmic_CoreHandle_t *pPmicCoreHandle)
 }
 
 /*!
- * \brief: Set Recovery Counter Configuration
- *         This function configures PMIC Recovery Counter register controlling
+ * \brief  API to Set Recovery Counter Configuration.
+ *         This function configures PMIC Recovery Counter register, controlling
  *         recovery count Threshold and Clear, when corresponding validParam
  *         bit field is set in the Pmic_RecovCntCfg_t structure.
  *         For more information \ref Pmic_RecovCntCfg_t
@@ -256,8 +258,8 @@ int32_t Pmic_SetRecoveryCntCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
 }
 
 /*!
- * \brief: Get Recovery Counter Configuration
- *         This function get PMIC Recovery Counter configurations values of
+ * \brief  API to Get Recovery Counter Configuration.
+ *         This function gets PMIC Recovery Counter configuration values. Like,
  *         recovery count Threshold and Clear, when corresponding validParam
  *         bit field is set in the Pmic_RecovCntCfg_t structure.
  *         For more information \ref Pmic_RecovCntCfg_t
@@ -314,8 +316,8 @@ int32_t Pmic_getRecoveryCntCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /*!
- * \brief: Read Recovery Count Value
- *         This function reads the recovery count value
+ * \brief  API to Read Recovery Count Value.
+ *         This function reads out the recovery count value.
  *
  * \param   pPmicCoreHandle       [IN]    PMIC Interface Handle.
  * \param   pRecovCntVal          [OUT]   Pointer to store recovery count
@@ -362,7 +364,7 @@ int32_t Pmic_getRecoveryCnt(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /*!
- * \brief: Initialize pmic core haandle for PMIC LLD
+ * \brief  API to Initialize pmic core handle for PMIC LLD.
  *         This function gets device configuration from pCoreCfgHandle and
  *         initializes device specific information in pPmicCoreHandle after
  *         validation of given params depends on validParams bitfileds
@@ -370,11 +372,11 @@ int32_t Pmic_getRecoveryCnt(Pmic_CoreHandle_t *pPmicCoreHandle,
  *         confirming that PMIC is accessible for PMIC configuration and
  *         monitor features.
  *
- *  \param   pPmicConfigData [IN]   Handle to driver instance
- *  \param   pPmicCoreHandle [OUT]  Pointer to hold pmic device subsystem info
+ *  \param   pPmicConfigData [IN]   PMIC Configuration data
+ *  \param   pPmicCoreHandle [OUT]  PMIC Interface Handle.
  *
- *  \retval  PMIC_ST_SUCCESS in case of success with valid pCoreCfg parameters
- *           or appropriate error code. For valid values \ref Pmic_ErrorCodes
+ *  \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *           For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_init(Pmic_CoreCfg_t      *pPmicConfigData,
                   Pmic_CoreHandle_t   *pPmicCoreHandle)
@@ -634,13 +636,13 @@ int32_t Pmic_init(Pmic_CoreCfg_t      *pPmicConfigData,
 }
 
 /*!
- * \brief: DeInitilizes an existing PMIC Instance
- *         This function takes in an existing Instance pPmicCoreHandle and
+ * \brief  API to DeInitilizes an existing PMIC Instance.
+ *         This function takes an existing Instance pPmicCoreHandle and
  *         closes the LLD being used for this Instance. It should be called
- *         only once per instance valid pPmicCoreHandle. Should not be called
- *         if Pmic_init() is not called
+ *         only once per valid pPmicCoreHandle. Should not be called
+ *         if Pmic_init() is not called.
  *
- *  \param   pPmicCoreHandle  [IN] Handle to driver instance to be closed
+ *  \param   pPmicCoreHandle  [IN] PMIC Interface Handle.
  *
  *  \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *           For valid values \ref Pmic_ErrorCodes

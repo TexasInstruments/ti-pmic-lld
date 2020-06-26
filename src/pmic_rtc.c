@@ -1891,7 +1891,7 @@ int32_t  Pmic_rtcEnableRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /*!
- * \brief   Sets the alarm Time and Date to PMIC RTC.
+ * \brief   API to Set the alarm Time and Date to PMIC RTC.
  *          This function is used to set the alarm Date and Time parameters
  *          depending upon the bit fields set in validParams of Time and Date
  *          structures in RTC of PMIC Device.
@@ -1951,7 +1951,7 @@ int32_t  Pmic_rtcSetAlarmInfo(Pmic_CoreHandle_t    *pPmicCoreHandle,
 }
 
 /*!
- * \brief   Get the alarm Time and Date from PMIC RTC function.
+ * \brief   API to Get the alarm Time and Date from PMIC RTC function.
  *          This function is used to Get the alarm date and time parameters
  *          depending upon the bit fields set in validParams of Time and Date
  *          structures in RTC of the PMIC Device.
@@ -2007,7 +2007,7 @@ int32_t  Pmic_rtcGetAlarmInfo(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /*!
- * \brief   Set the timer interrupt Period to PMIC RTC.
+ * \brief   API to Set the timer interrupt Period to PMIC RTC.
  *          This function is used to set the timer interrupt Period to
  *          the RTC present in the PMIC.
  *
@@ -2069,7 +2069,7 @@ int32_t  Pmic_rtcSetTimerPeriod(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /*!
- * \brief   Get the timer interrupt period from PMIC RTC.
+ * \brief   API to Get the timer interrupt period from PMIC RTC.
  *          This function is used to get the timer interrupt period from RTC
  *          present in the PMIC.
  *
@@ -2122,7 +2122,7 @@ int32_t  Pmic_rtcGetTimerPeriod(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /*!
- * \brief   Set the RTC Time and Date to PMIC RTC.
+ * \brief   API to Set the RTC Time and Date to PMIC RTC.
  *          This function is used to set the RTC Date and Time parameters
  *          depending upon the bit fields set in validParams of Time and Date
  *          structures in RTC of PMIC Device.
@@ -2192,7 +2192,7 @@ int32_t Pmic_rtcSetTimeDateInfo(Pmic_CoreHandle_t    *pPmicCoreHandle,
 }
 
 /*!
- * \brief   Get the RTC Time and Date from PMIC RTC function.
+ * \brief   API to Get the RTC Time and Date from PMIC RTC function.
  *          This function is used to Get the RTC date and time parameters
  *          depending upon the bit fields set in validParams of Time and Date
  *          structures in RTC of the PMIC Device.
@@ -2256,7 +2256,7 @@ int32_t Pmic_rtcGetTimeDateInfo(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /*!
- * \brief   Set the RTC frequency compensation value.
+ * \brief   API to Set the RTC frequency compensation value.
  *          This function is used to set the frequency compensation
  *          value in the RTC of the PMIC Devicec.
  *
@@ -2293,12 +2293,12 @@ int32_t  Pmic_rtcSetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /*!
- * \brief   Get the RTC frequency compensation value.
+ * \brief   API to Get the RTC frequency compensation value.
  *          This function is used to get the frequency compensation
  *          value from the RTC of the PMIC Devicec.
  *
  * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * \param   pCompensation     [IN]    Pointer to store frequency compensation
+ * \param   pCompensation     [OUT]   Pointer to store frequency compensation
  *                                    value
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
@@ -2448,13 +2448,13 @@ int32_t  Pmic_rtcEnableTimerIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /*!
- * \brief   Get the current status of RTC.
+ * \brief   API to Get the current status of RTC.
  *          This function is used to get the Current state of the RTC
  *          depending on the bit fields set in validParams of
  *          struct Pmic_RtcStatus_t structures.
  *
  * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * \param   pPmicRtcStatus    [IN]    Parameter to hold RTC status.
+ * \param   pPmicRtcStatus    [OUT]   Parameter to hold RTC status.
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes

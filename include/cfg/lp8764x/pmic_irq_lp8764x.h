@@ -31,9 +31,7 @@
  *
  *****************************************************************************/
 /**
- *  \ingroup DRV_PMIC_MODULE
- *  \defgroup DRV_PMIC_IRQ_HERA_MODULE PMIC IRQ LP8764x Hera Driver API
- *            These are PMIC IRQ driver params and API for LP8764x Hera PMIC
+ *  \addtogroup DRV_PMIC_IRQ_MODULE
  *
  *  @{
  */
@@ -41,8 +39,7 @@
 /**
  * \file   pmic_irq_lp8764x.h
  *
- * \brief  PMIC Low Level Driver API/interface file for LP8764x Hera PMIC IRQ
- *         APIs
+ * \brief  LP8764x Hera PMIC IRQ Driver API/interface file.
  *
  */
 
@@ -61,15 +58,10 @@ extern "C" {
 /* ========================================================================== */
 
 /**
- *  \anchor Pmic_IrqInterruptMask
- *  \name   Interrupts Masks specific for PMIC HERA LP8764x
- *
  *  Application can use below shifted values to mask/unmask an interrupt
  *  Bitfield breakup:
  *         Bits 0-7   : Interrupt Mask register address.
  *         Bits 8-15  : Actual interrupt Mask.
- *
- *  @{
  */
 #define PMIC_LP8764X_IRQ_MASK_GPIO9_10_MASK                                    \
                                     (((uint16_t)PMIC_IRQ_MASK_GPIO9_10 << 8U)  \
@@ -90,7 +82,6 @@ extern "C" {
                                     (((uint16_t)PMIC_LP8764X_IRQ_GPIO9_FALL    \
                                                                        << 8U)  \
                                             | PMIC_IRQ_MASK_GPIO9_10_REGADDR)
-/* @} */
 
 #ifdef __cplusplus
 }

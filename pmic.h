@@ -34,14 +34,44 @@
 /**
  *  \defgroup DRV_PMIC_MODULE PMIC Driver
  *
+ *  This is an API guide for PMIC(Power Management Integrated Circuit) Driver.
+ *  PMIC Driver is designed to power up different components on the embedded
+ *  boards or provide supply to MCU(Micro Controller Unit) or
+ *  SoC(System on chip) using APIs provided in the guide.
+ *
+ *  The PMIC Driver supports below mentioned PMIC devices and their
+ *  features or Modules.
+ *
+ *  Supported PMIC Devices are:
+ *    1. TPS6594x (Leo PMIC Device)
+ *    2. LP8764x  (Hera PMIC Device)
+ *
+ *  Above PMICs have multiple functionalities and configurable features. Like,
+ *  Real Time Clock (RTC) which provides Time, Calendar, Alarm and timer,
+ *  Configurable GPIO pins to support wakeup, nSLEEP, PGOOD, nRESET for
+ *  SOC/MCU, GPIOs with configurable PU/PD to enable other chips,
+ *  Have number of BUCK(with different phases) and LDO regulators to provide
+ *  supply to other modules on the board, Have the Voltage Monitor feature
+ *  to monitor and notify for OV, UV, SC and Over Heat(Thermal Monitor).
+ *  Have interrupt feature to notify severe, moderate, fsm Errors and provide
+ *  asynchronous events for all supported features including GPIO External
+ *  Interrupts, Have the WatchDog feature to monitor correct operation of the
+ *  MCU using WDG trigger mode or using WDOG QA mode, Supports I2C(single and
+ *  dual mode) and SPI communication protocols to access the registers for
+ *  Read/Write operations with or without CRC.
+ *
+ *  All above PMICs features can be accessed or configured by using PMIC Driver
+ *  APIs and illustrated in the guide.
+ *
  *  @{
  */
 /* @} */
 
 /**
  *  \ingroup DRV_PMIC_MODULE
- *  \defgroup DRV_PMIC_API_MODULE PMIC Driver API
- *            This is PMIC driver init, and deinit API
+ *  \defgroup DRV_PMIC_API_MODULE PMIC Driver Initialization API
+ *  This is PMIC driver core handle initialization APIs common for all supported
+ *  PMIC devices. Like, Pmic init, and deinit APIs
  *
  *  @{
  */
@@ -49,7 +79,7 @@
 /**
  *  \file pmic.h
  *
- *  \brief PMIC Driver API/interface file.
+ *  \brief PMIC Driver initialization API/interface file.
  */
 
 #ifndef PMIC_H_
@@ -214,7 +244,7 @@ extern "C" {
 #define PMIC_CFG_QASLAVEADDR_VALID_SHIFT   (1U << PMIC_CFG_QASLAVEADDR_VALID)
 #define PMIC_CFG_CRC_ENABLE_VALID_SHIFT    (1U << PMIC_CFG_CRC_ENABLE_VALID)
 #define PMIC_CFG_COMM_HANDLE_VALID_SHIFT   (1U << PMIC_CFG_COMM_HANDLE_VALID)
-#define PMIC_CFG_QACOMM_HANDLE_VALID_SHIFT (1U <<  PMIC_CFG_QACOMM_HANDLE_VALID)
+#define PMIC_CFG_QACOMM_HANDLE_VALID_SHIFT (1U << PMIC_CFG_QACOMM_HANDLE_VALID)
 #define PMIC_CFG_COMM_IO_RD_VALID_SHIFT    (1U << PMIC_CFG_COMM_IO_RD_VALID)
 #define PMIC_CFG_COMM_IO_WR_VALID_SHIFT    (1U << PMIC_CFG_COMM_IO_WR_VALID)
 #define PMIC_CFG_CRITSEC_START_VALID_SHIFT (1U << PMIC_CFG_CRITSEC_START_VALID)
@@ -225,70 +255,75 @@ extern "C" {
 /*                         Structures and Enums                             */
 /*==========================================================================*/
 /*!
- * \brief: PMIC configuration structure.
+ * \brief  PMIC configuration structure.
  *         Contains various parameters which are needed to prepare
- *         PMIC driver handle using Valid param
+ *         PMIC driver handle using Valid params.
  *         like, PMIC device type, PMIC interface mode, Slave address,
  *         various application defined API function pointers for
- *         LLD and Critical sections
+ *         LLD and Critical sections.
  *         Application has to set the corresponding bit in validParams
- *         structure member  to update the driver with Pmic_CoreCfg_t
+ *         structure member to update the driver with Pmic_CoreCfg_t
  *         structure fields.
- *         For Example - If the Application need to configure the PMIC driver
- *         device type as pmicDeviceType struct value then application has
+ *         For Example, If the Application needs to configure the PMIC driver
+ *         pmicDeviceType member of the structure then application has
  *         to set PMIC_CFG_DEVICE_TYPE_VALID bit of validParams struct
- *         and then call pmic_init()
+ *         and then call pmic_init().
  *
- *  \param   validParams                  Validate params Bits
+ *  \param   validParams                  Validate params Bits.
  *                                        Selection of structure parameters to
  *                                        be set, from the combination of
- *                                        Pmic_ValidParamCfg_t and the
+ *                                        \ref Pmic_ValidParamCfg and the
  *                                        corresponding member value must be
- *                                        updated
- *  \param   instType                     Instance type
- *  \param   pmicDeviceType               PMIC device type. Valid only when
+ *                                        updated.
+ *  \param   instType                     Instance type.
+ *                                        For Valid Values: \ref Pmic_InstType.
+ *  \param   pmicDeviceType               PMIC device type.
+ *                                        For Valid Values: \ref Pmic_DeviceType.
+ *                                        Valid only when
  *                                        PMIC_CFG_DEVICE_TYPE_VALID bit of
- *                                        validParams is set
+ *                                        validParams is set.
  *  \param   commMode                     Interface mode - Single I2C, Dual
- *                                        I2C or SPI. Valid only when
+ *                                        I2C or SPI.
+ *                                        For Valid Values: \ref Pmic_CommMode.
+ *                                        Valid only when
  *                                        PMIC_CFG_COMM_MODE_VALID bit of
- *                                        validParams is set
- *  \param   slaveAddr                    Main Interface Slave Address
+ *                                        validParams is set.
+ *  \param   slaveAddr                    Main Interface Slave Address.
  *                                        Valid only when
  *                                        PMIC_CFG_SLAVEADDR_VALID bit of
- *                                        validParams is set
- *  \param   qaSlaveAddr                  WDOG QA Interface Slave Address
+ *                                        validParams is set.
+ *  \param   qaSlaveAddr                  WDOG QA Interface Slave Address.
  *                                        Valid only when
  *                                        PMIC_CFG_QASLAVEADDR_VALID bit
- *                                        of validParams is set
- *  \param   crcEnable                    Parameter to enable/disable CRC
+ *                                        of validParams is set.
+ *  \param   crcEnable                    Parameter to enable/disable CRC.
  *                                        Valid only when
  *                                        PMIC_CFG_CRC_ENABLE_VALID bit
- *                                        of validParams is set
+ *                                        of validParams is set.
  *  \param   pFnPmicCommIoRead            Pointer to I2C/SPI Comm LLD Read
  *                                        Function. Valid only when
  *                                        PMIC_CFG_COMM_IO_RD_VALID bit
- *                                        of validParams is set
+ *                                        of validParams is set.
  *  \param   pFnPmicCommIoWrite           Pointer to I2C/SPI Comm LLD Write
  *                                        Function. Valid only when
  *                                        PMIC_CFG_COMM_IO_WR_VALID bit
- *                                        of validParams is set
+ *                                        of validParams is set.
  *  \param   pCommHandle                  Pointer to Handle for I2C1/SPI
  *                                        Main Interface. Valid only when
  *                                        PMIC_CFG_COMM_HANDLE_VALID bit
- *                                        of validParams is set
+ *                                        of validParams is set.
  *  \param   pQACommHandle                Pointer to Handle for I2C2-QA
  *                                        Interface. Valid only when
  *                                        PMIC_CFG_QACOMM_HANDLE_VALID bit
- *                                        of validParams is set
+ *                                        of validParams is set.
  *  \param   pFnPmicCritSecStart          Pointer to Pmic Critical-Section
  *                                        Start Function. Valid only when
  *                                        PMIC_CFG_CRITSEC_START_VALID bit
- *                                        of validParams is set
+ *                                        of validParams is set.
  *  \param   pFnPmicCritSecStop           Pointer to Pmic Critical-Section
  *                                        Stop Function. Valid only when
  *                                        PMIC_CFG_CRITSECSTOP_VALID bit of
- *                                        validParams is set
+ *                                        validParams is set.
  */
 typedef struct Pmic_CoreCfg_s {
     uint32_t     validParams;
@@ -318,31 +353,31 @@ typedef struct Pmic_CoreCfg_s {
 /*                         Function Declarations                            */
 /*==========================================================================*/
 /*!
- * \brief: Initialize pmic core haandle for PMIC LLD
- *         This function gets device configuration from pCoreCfgHandle and
+ * \brief  API to Initialize pmic core handle for PMIC LLD.
+ *         This function gets device configuration from pCoreCfgData and
  *         initializes device specific information in pPmicCoreHandle after
  *         validation of given params depends on validParams bitfileds
  *         and does some basic validation on PMIC interface I2C/SPI,
  *         confirming that PMIC is accessible for PMIC configuration and
  *         monitor features.
  *
- *  \param   pPmicConfigData [IN]   Handle to driver instance
- *  \param   pPmicCoreHandle [OUT]  Pointer to hold pmic device subsystem info
+ *  \param   pPmicConfigData [IN]   PMIC Configuration data
+ *  \param   pPmicCoreHandle [OUT]  PMIC Interface Handle.
  *
- *  \retval  PMIC_ST_SUCCESS in case of success with valid pCoreCfg parameters
- *           or appropriate error code. For valid values \ref Pmic_ErrorCodes
+ *  \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *           For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_init(Pmic_CoreCfg_t      *pPmicConfigData,
                   Pmic_CoreHandle_t   *pPmicCoreHandle);
 
 /*!
- * \brief: DeInitilizes an existing PMIC Instance
- *         This function takes in an existing Instance pPmicCoreHandle and
+ * \brief  API to DeInitilizes an existing PMIC Instance.
+ *         This function takes an existing Instance pPmicCoreHandle and
  *         closes the LLD being used for this Instance. It should be called
- *         only once per instance valid pPmicCoreHandle. Should not be called
+ *         only once per valid pPmicCoreHandle. Should not be called
  *         if Pmic_init() is not called
  *
- *  \param   pPmicCoreHandle  [IN] Handle to driver instance to be closed
+ *  \param   pPmicCoreHandle  [IN] PMIC Interface Handle.
  *
  *  \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *           For valid values \ref Pmic_ErrorCodes

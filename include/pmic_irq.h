@@ -42,7 +42,7 @@
 /**
  * \file   pmic_irq.h
  *
- * \brief  PMIC Low Level Driver API/interface file for Interrupt API
+ * \brief  PMIC IRQ Driver API/interface file.
  */
 
 #ifndef PMIC_IRQ_H_

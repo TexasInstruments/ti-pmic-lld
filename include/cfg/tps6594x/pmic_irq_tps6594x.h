@@ -31,9 +31,7 @@
  *
  *****************************************************************************/
 /**
- *  \ingroup DRV_PMIC_MODULE
- *  \defgroup DRV_PMIC_IRQ_LEO_MODULE PMIC IRQ TPS6594x LEO Driver API
- *            These are PMIC IRQ driver params and API for TPS6594x LEO PMIC
+ *  \addtogroup DRV_PMIC_IRQ_MODULE
  *
  *  @{
  */
@@ -41,8 +39,7 @@
 /**
  * \file   pmic_irq_tps6594x.h
  *
- * \brief  PMIC Low Level Driver API/interface file for TPS6594x LEO PMIC IRQ
- *         APIs
+ * \brief  TPS6594x LEO PMIC IRQ Driver API/interface file.
  *
  */
 
@@ -61,15 +58,10 @@ extern "C" {
 /* ========================================================================== */
 
 /**
- *  \anchor Pmic_IrqInterruptMask
- *  \name   Interrupts Masks specific for PMIC LEO TPS6594x
- *
  *  Application can use below shifted values to mask/unmask an interrupt
  *  Bitfield breakup:
  *         Bits 0-7   : Interrupt Mask register address.
  *         Bits 8-15  : Actual interrupt Mask.
- *
- *  @{
  */
 #define PMIC_IRQ_MASK_GPIO9_11_MASK                                           \
                                     (((uint16_t)PMIC_IRQ_MASK_GPIO9_11 << 8U) \
@@ -96,7 +88,6 @@ extern "C" {
                                     (((uint16_t)PMIC_TPS6594X_IRQ_GPIO9_FALL  \
                                                                        << 8U) \
                                             | PMIC_IRQ_MASK_GPIO9_11_REGADDR)
-/* @} */
 
 #ifdef __cplusplus
 }

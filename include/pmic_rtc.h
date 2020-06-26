@@ -34,7 +34,13 @@
 /**
  *  \ingroup DRV_PMIC_MODULE
  *  \defgroup DRV_PMIC_RTC_MODULE PMIC RTC Driver API
- *            These are PMIC RTC driver APIs and Parameters
+ *      This Module explains PMIC RTC APIs and their usage. This Module
+ *  has APIs to cover all PMIC RTC features. like, set/get RTC time, Alarm
+ *  time, RTC frequncy compensation, timer interrupt period and enable or
+ *  disable RTC and RTC/Alarm interrupts.
+ *
+ *  Supported PMIC Devices for RTC Module:
+ *  1. TPS6594x (Leo PMIC Device)
  *
  *  @{
  */
@@ -42,7 +48,7 @@
 /**
  * \file   pmic_rtc.h
  *
- * \brief  PMIC Low Level Driver API/interface file for RTC Module
+ * \brief  PMIC Driver RTC API/interface file
  */
 
 #ifndef PMIC_RTC_H_
@@ -327,14 +333,14 @@ typedef struct Pmic_RtcTime_s
  *                                Valid only when PMIC_RTC_DATE_CFG_DAY_VALID
  *                                bit of validParams is set.
  *  \param   month              Value to represent the Month.
- *                                  For valid values
- *                                  \ref Pmic_RtcMonth.
+ *                                  For valid values \ref Pmic_RtcMonth.
  *                                Valid only when PMIC_RTC_DATE_CFG_MONTH_VALID
  *                                bit of validParams is set.
  *  \param   year               Value to represent the Year.
  *                                Valid only when PMIC_RTC_DATE_CFG_YEAR_VALID
  *                                bit of validParams is set.
  *  \param   weekday            Value to represent the weekday of the week.
+ *                              For Valid Values: \ref Pmic_RtcWeekDay.
  *                                Valid only when
  *                                PMIC_RTC_DATE_CFG_WEEKDAY_VALID
  *                                bit of validParams is set.
@@ -375,6 +381,7 @@ typedef struct Pmic_RtcStatus_s
     bool     rtcStatus;
     bool     powerupStatus;
 }Pmic_RtcStatus_t;
+
 /*==========================================================================*/
 /*                         Function Declarations                            */
 /*==========================================================================*/
@@ -497,7 +504,7 @@ int32_t  Pmic_rtcSetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          value from the RTC of the PMIC Devicec.
  *
  * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * \param   pCompensation     [IN]    Pointer to store frequency compensation
+ * \param   pCompensation     [OUT]   Pointer to store frequency compensation
  *                                    value
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
@@ -559,7 +566,7 @@ int32_t  Pmic_rtcEnableAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          struct Pmic_RtcStatus_t structures.
  *
  * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * \param   pPmicRtcStatus    [IN]    Parameter to hold RTC status.
+ * \param   pPmicRtcStatus    [OUT]   Parameter to hold RTC status.
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes

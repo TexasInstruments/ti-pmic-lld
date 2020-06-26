@@ -257,13 +257,13 @@ void pmic_get_tps6594x_gpioIntRegCfg(Pmic_GpioIntRegCfg_t **pGpioIntRegCfg)
 }
 
 /*!
- * \brief   PMIC GPIO NPWRON pin get value function
+ * \brief   API to get PMIC GPIO NPWRON pin value.
  *          This function is used to read the signal level of the NPWRON
- *          gpio pin.
+ *          pin.
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
  * \param   pPinValue       [OUT]   Pointer to store PMIC GPIO signal level
- *                                  High/Low
+ *                                  High/Low.
  *                                  Valid values \ref Pmic_Gpio_SignalLvl
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code

@@ -31,9 +31,7 @@
  *
  *****************************************************************************/
 /**
- *  \ingroup DRV_PMIC_GPIO_MODULE
- *  \defgroup DRV_PMIC_GPIO_HERA_MODULE PMIC GPIO LP8764x Hera Driver API
- *            These are PMIC GPIO driver params and API for LP8764x Hera PMIC
+ *  \addtogroup DRV_PMIC_GPIO_MODULE
  *
  *  @{
  */
@@ -41,8 +39,7 @@
 /**
  * \file   pmic_gpio_lp8764x.h
  *
- * \brief  PMIC Low Level Driver API/interface file for LP8764x Hera PMIC GPIO
- *         APIs
+ * \brief  PMIC LP8764x Hera PMIC GPIO API/interface file.
  *
  */
 

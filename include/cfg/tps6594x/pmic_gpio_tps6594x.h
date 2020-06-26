@@ -31,9 +31,7 @@
  *
  *****************************************************************************/
 /**
- *  \ingroup DRV_PMIC_GPIO_MODULE
- *  \defgroup DRV_PMIC_GPIO_LEO_MODULE PMIC GPIO TPS6594x Leo Driver API
- *            These are PMIC GPIO driver params and API for TPS6594x Leo PMIC
+ *  \addtogroup DRV_PMIC_GPIO_MODULE
  *
  *  @{
  */
@@ -41,8 +39,7 @@
 /**
  * \file   pmic_gpio_tps6594x.h
  *
- * \brief  PMIC Low Level Driver API/interface file for TPS6594x Leo PMIC GPIO
- *         APIs
+ * \brief  PMIC TPS6594x Leo PMIC GPIO API/interface file.
  *
  */
 
@@ -179,13 +176,13 @@ extern "C" {
 /*==========================================================================*/
 
 /*!
- * \brief   PMIC GPIO NPWRON pin get value function
+ * \brief   API to get PMIC GPIO NPWRON pin value.
  *          This function is used to read the signal level of the NPWRON
- *          gpio pin.
+ *          pin.
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
  * \param   pPinValue       [OUT]   Pointer to store PMIC GPIO signal level
- *                                  High/Low
+ *                                  High/Low.
  *                                  Valid values \ref Pmic_Gpio_SignalLvl
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
