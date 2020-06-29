@@ -357,7 +357,6 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
     },
     {
         0xFF,
-        NULL,
     }
 };
 

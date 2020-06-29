@@ -328,7 +328,6 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
     },
     {
         0xFF,
-        NULL,
     },
 };
 
