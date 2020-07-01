@@ -665,8 +665,10 @@ void InitMmu(void)
 }
 #endif
 
-static uint32_t test_pmic_get_unity_testcase_index(uint32_t         testId,
-                                                   Pmic_Ut_Tests_t *pTest)
+static uint32_t test_pmic_get_unity_testcase_index(
+                                             uint32_t         testId,
+                                             Pmic_Ut_Tests_t *pTest,
+                                             uint32_t         num_testcases)
 {
     uint32_t i;
     int32_t status = PMIC_ST_SUCCESS;
@@ -677,12 +679,14 @@ static uint32_t test_pmic_get_unity_testcase_index(uint32_t         testId,
         {
             break;
         }
-        else if(pTest->testId == 0xFF)
+        else if(i >= num_testcases)
         {
             status = PMIC_ST_ERR_FAIL;
             /* Print test Result */
             pmic_log("\n |TEST RESULT|:: %d ::", testId);
-            TEST_ASSERT_EQUAL_MESSAGE(PMIC_ST_SUCCESS, status, "Invalid Test ID");
+            TEST_ASSERT_EQUAL_MESSAGE(PMIC_ST_SUCCESS,
+                                      status,
+                                      "Invalid Test ID");
         }
         pTest++;
     }
@@ -694,14 +698,15 @@ static uint32_t test_pmic_get_unity_testcase_index(uint32_t         testId,
  * \brief   Function to print testcase info
  */
 void test_pmic_print_unity_testcase_info(uint32_t         testId,
-                                         Pmic_Ut_Tests_t *pTest)
+                                         Pmic_Ut_Tests_t *pTest,
+                                         uint32_t         num_testcases)
 {
     uint32_t index = 0U;
 
     /* Print unit test ID */
     pmic_log("\n\n |TEST ID|:: %d ::\n", testId);
 
-    index = test_pmic_get_unity_testcase_index(testId, pTest);
+    index = test_pmic_get_unity_testcase_index(testId, pTest, num_testcases);
 
     /* Print test description */
     pmic_log("\n |TEST NAME|:: %s ::\n", pTest[index].testDesc);

@@ -326,9 +326,6 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
         1004,
         "Pmic_getRtcStatus : Parameter validation for 'ValidParams'"
     },
-    {
-        0xFF,
-    },
 };
 
 /*!
@@ -345,7 +342,9 @@ static void test_pmic_rtc_testSetAlarm(void)
     Pmic_RtcTime_t timeCfg_rd;
     Pmic_RtcDate_t dateCfg_rd;
 
-    test_pmic_print_unity_testcase_info(5990, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(5990,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     timeCfg.timeMode        = PMIC_RTC_12_HOUR_MODE;
 
@@ -379,7 +378,9 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_handle(void)
     Pmic_RtcDate_t dateCfg = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
                               2055U,1U};
 
-    test_pmic_print_unity_testcase_info(5991, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(5991,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcSetAlarmInfo(NULL, timeCfg, dateCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
@@ -394,7 +395,9 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_timeCfg(void)
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_RtcDate_t dateCfg = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
                               2055U, 1U};
-    test_pmic_print_unity_testcase_info(6087, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6087,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, NULL, dateCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
@@ -409,7 +412,9 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_dateCfg(void)
     Pmic_RtcTime_t timeCfg    = {PMIC_RTC_VALID_PARAM_TIME_CFG_VAL, 30U, 30U,
                                  6U, 0U, 1U};
 
-    test_pmic_print_unity_testcase_info(6088, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6088,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
@@ -426,7 +431,9 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_seconds(void)
                                  6U, 0U, 1U};
     Pmic_RtcDate_t dateCfg    = {0x00U, 15U, 6U, 2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6090, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6090,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     timeCfg.seconds = PMIC_RTC_INVALID_SEC_MINUTE;
 
@@ -444,7 +451,9 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_minutes(void)
                                  6U, 0U, 1U};
     Pmic_RtcDate_t dateCfg    = {0x00U, 15U, 6U, 2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6091, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6091,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     timeCfg.minutes           = PMIC_RTC_INVALID_SEC_MINUTE;
 
@@ -462,7 +471,9 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_timeMode(void)
                                  30U, 6U, 0U, 1U};
     Pmic_RtcDate_t dateCfg    = {0x00U, 15U, 6U, 2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6092, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6092,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     timeCfg.timeMode          = PMIC_RTC_INVALID_TIME_MODE;
 
@@ -480,7 +491,9 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_meridianMode(void)
                               30U, 6U, 0U, 1U};
     Pmic_RtcDate_t dateCfg = {0x00U,  15U, 6U, 2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6093, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6093,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     timeCfg.timeMode       = PMIC_RTC_12_HOUR_MODE;
     timeCfg.meridianMode   = PMIC_RTC_INVALID_MERIDIEN_MODE;
@@ -500,7 +513,9 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_hour12(void)
                                30U, 30U, 6U, 0U, 1U};
     Pmic_RtcDate_t dateCfg    = {0x00U, 15U, 6U, 2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6094, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6094,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     timeCfg.timeMode          = PMIC_RTC_12_HOUR_MODE;
     timeCfg.hour              = PMIC_RTC_INVALID_HOUR_13;
@@ -520,7 +535,9 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_hour24(void)
                              30U, 30U, 6U, 0U, 1U};
     Pmic_RtcDate_t dateCfg    = {0x00U, 15U, 6U, 2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6095, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6095,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     timeCfg.timeMode          = PMIC_RTC_24_HOUR_MODE;
     timeCfg.hour              = PMIC_RTC_INVALID_HOUR_25;
@@ -540,7 +557,9 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_hour(void)
                              30U, 30U,6U, 0U, 1U};
     Pmic_RtcDate_t dateCfg    = {0x00, 15U, 6U, 2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6096, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6096,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     timeCfg.timeMode          = PMIC_RTC_12_HOUR_MODE;
     timeCfg.hour              = PMIC_RTC_HOUR_0;
@@ -559,7 +578,9 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_month(void)
     Pmic_RtcDate_t dateCfg    = {PMIC_RTC_DATE_CFG_MONTH_VALID_SHIFT, 15U, 6U,
                                  2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6099, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6099,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     dateCfg.month             = PMIC_RTC_INVALID_MONTH_0;
 
@@ -579,7 +600,9 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_day(void)
 
     dateCfg.day               = PMIC_RTC_INVALID_DAY_0;
 
-    test_pmic_print_unity_testcase_info(6100, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6100,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DATE, status);
@@ -595,7 +618,9 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_year(void)
     Pmic_RtcDate_t dateCfg    = {PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT, 15U, 6U,
                                  2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6101, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6101,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     dateCfg.year              = PMIC_RTC_INVALID_YEAR;
 
@@ -613,7 +638,9 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_month_range(void)
     Pmic_RtcDate_t dateCfg    = {PMIC_RTC_DATE_CFG_MONTH_VALID_SHIFT, 15U, 6U,
                                  2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6102, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6102,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     dateCfg.month             = PMIC_RTC_INVALID_MONTH;
 
@@ -631,7 +658,9 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_day_month(void)
     Pmic_RtcDate_t dateCfg    = {PMIC_RTC_VALID_PARAM_DATE_CFG_DAY_MNTH_VAL,
                                  15U, 6U,2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6103, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6103,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     dateCfg.month             = PMIC_RTC_MONTH_APR;
     dateCfg.day               = PMIC_RTC_INVALID_DAY_31;
@@ -651,7 +680,9 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_feb_leapyear(void)
     Pmic_RtcDate_t dateCfg    = {PMIC_RTC_VALID_PARAM_DATE_CFG_DAY_MNTH_YR_VAL,
                                  15U, 6U,2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6104, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6104,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     dateCfg.month             = PMIC_RTC_MONTH_FEB;
     dateCfg.year              = PMIC_RTC_YEAR_2044;
@@ -672,7 +703,9 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_feb_nonleapyear(void)
     Pmic_RtcDate_t dateCfg    = {PMIC_RTC_VALID_PARAM_DATE_CFG_DAY_MNTH_YR_VAL,
                                  15U, 6U,2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6107, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6107,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     dateCfg.month             = PMIC_RTC_MONTH_FEB;
     dateCfg.year              = PMIC_RTC_YEAR_2045;
@@ -692,7 +725,9 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_day_month31(void)
     Pmic_RtcDate_t dateCfg    = {PMIC_RTC_VALID_PARAM_DATE_CFG_DAY_MNTH_VAL,
                                  15U, 6U,2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6108, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6108,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     dateCfg.month             = PMIC_RTC_MONTH_JUL;
     dateCfg.day               = PMIC_RTC_INVALID_DAY_32;
@@ -715,7 +750,9 @@ static void test_pmic_rtc_testGetAlarm(void)
     Pmic_RtcTime_t timeCfg_rd;
     Pmic_RtcDate_t dateCfg_rd;
 
-    test_pmic_print_unity_testcase_info(6109, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6109,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     timeCfg.timeMode        = PMIC_RTC_12_HOUR_MODE;
 
@@ -749,7 +786,9 @@ static void test_pmic_rtc_getAlarmInfoPrmValTest_handle(void)
     Pmic_RtcDate_t dateCfg    = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL,  15U, 6U,
                                  2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6110, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6110,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcGetAlarmInfo(NULL, &timeCfg, &dateCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
@@ -764,7 +803,9 @@ static void test_pmic_rtc_getAlarmInfoPrmValTest_timeCfg(void)
     Pmic_RtcDate_t dateCfg = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
                               2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6111, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6111,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, NULL, &dateCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
@@ -779,7 +820,9 @@ static void test_pmic_rtc_getAlarmInfoPrmValTest_dateCfg(void)
     Pmic_RtcTime_t timeCfg    = {PMIC_RTC_VALID_PARAM_TIME_CFG_VAL, 30U, 30U,
                                  6U, 0U, 1U};
 
-    test_pmic_print_unity_testcase_info(6112, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6112,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
@@ -793,7 +836,9 @@ static void test_pmic_rtc_testSetTimer(void)
     int32_t status         = PMIC_ST_SUCCESS;
     uint8_t timerPeriod, timerPeriod_rd;
 
-    test_pmic_print_unity_testcase_info(6113, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6113,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     timerPeriod = PMIC_RTC_HOUR_INTR_PERIOD;
 
@@ -814,7 +859,9 @@ static void test_pmic_rtc_setTimerPeriodPrmValTest_handle(void)
     int32_t status       = PMIC_ST_SUCCESS;
     uint8_t  timerPeriod = PMIC_RTC_HOUR_INTR_PERIOD;
 
-    test_pmic_print_unity_testcase_info(6114, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6114,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcSetTimerPeriod(NULL, timerPeriod);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
@@ -828,7 +875,9 @@ static void test_pmic_rtc_setTimerPeriodPrmValTest_timerPeriod(void)
     int32_t status         = PMIC_ST_SUCCESS;
     uint8_t timerPeriod    = PMIC_RTC_HOUR_INTR_PERIOD;
 
-    test_pmic_print_unity_testcase_info(6115, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6115,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     timerPeriod            = 5;
 
@@ -844,7 +893,9 @@ static void test_pmic_rtc_testGetTimer(void)
     int32_t status         = PMIC_ST_SUCCESS;
     uint8_t timerPeriod, timerPeriod_rd;
 
-    test_pmic_print_unity_testcase_info(6116, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6116,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     timerPeriod = PMIC_RTC_HOUR_INTR_PERIOD;
 
@@ -865,7 +916,9 @@ static void test_pmic_rtc_getTimerPeriodPrmValTest_handle(void)
     int32_t status       = PMIC_ST_SUCCESS;
     uint8_t timerPeriod  = PMIC_RTC_HOUR_INTR_PERIOD;
 
-    test_pmic_print_unity_testcase_info(6117, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6117,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcGetTimerPeriod(NULL, &timerPeriod);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
@@ -878,7 +931,9 @@ static void test_pmic_rtc_getTimerPeriodPrmValTest_timerPeriod(void)
 {
     int32_t status    = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(6118, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6118,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcGetTimerPeriod(pPmicCoreHandle, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
@@ -891,7 +946,9 @@ static void test_pmic_rtc_testDisable(void)
 {
     int32_t status         = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(6119, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6119,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcEnable(pPmicCoreHandle, PMIC_RTC_STOP);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -904,7 +961,9 @@ static void test_pmic_rtc_disablePrmValTest_handle(void)
 {
     int32_t status         = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(6120, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6120,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcEnable(NULL, PMIC_RTC_STOP);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
@@ -917,7 +976,9 @@ static void test_pmic_rtc_testEnable(void)
 {
     int32_t status         = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(6121, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6121,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcEnable(pPmicCoreHandle, PMIC_RTC_START);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -930,7 +991,9 @@ static void test_pmic_rtc_enablePrmValTest_handle(void)
 {
     int32_t status         = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(6122, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6122,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcEnable(NULL, PMIC_RTC_START);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
@@ -957,7 +1020,9 @@ static void test_pmic_rtc_testSetTime(void)
     Pmic_RtcTime_t timeCfg_rd;
     Pmic_RtcDate_t dateCfg_rd;
 
-    test_pmic_print_unity_testcase_info(6158, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6158,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     timeCfg.timeMode       = PMIC_RTC_12_HOUR_MODE;
 
@@ -992,7 +1057,9 @@ static void test_pmic_rtc_setTimePrmValTest_handle(void)
     Pmic_RtcDate_t dateCfg    = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
                                  2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6159, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6159,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcSetTimeDateInfo(NULL, timeCfg, dateCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
@@ -1008,7 +1075,9 @@ static void test_pmic_rtc_setTimePrmValTest_timeCfg(void)
     Pmic_RtcDate_t dateCfg = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
                               2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6160, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6160,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, NULL, dateCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
@@ -1023,7 +1092,9 @@ static void test_pmic_rtc_setTimePrmValTest_dateCfg(void)
     Pmic_RtcTime_t timeCfg    = {PMIC_RTC_VALID_PARAM_TIME_CFG_VAL, 30U, 30U,
                                  6U, 0U, 1U};
 
-    test_pmic_print_unity_testcase_info(6161, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6161,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, timeCfg, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
@@ -1040,7 +1111,9 @@ static void test_pmic_rtc_setTimePrmValTest_seconds(void)
                                  6U, 0U, 1U};
     Pmic_RtcDate_t dateCfg    = {0U, 15U, 6U, 2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6162, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6162,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     timeCfg.seconds           = PMIC_RTC_INVALID_SEC_MINUTE;
 
@@ -1058,7 +1131,9 @@ static void test_pmic_rtc_setTimePrmValTest_minutes(void)
                                  6U, 0U, 1U};
     Pmic_RtcDate_t dateCfg    = {0U, 15U, 6U, 2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6163, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6163,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     timeCfg.minutes           = PMIC_RTC_INVALID_SEC_MINUTE;
 
@@ -1076,7 +1151,9 @@ static void test_pmic_rtc_setTimePrmValTest_timeMode(void)
                                  30U, 6U, 0U, 1U};
     Pmic_RtcDate_t dateCfg    = {0x0U, 15U, 6U, 2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6164, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6164,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     timeCfg.timeMode           = PMIC_RTC_INVALID_TIME_MODE;
 
@@ -1094,7 +1171,9 @@ static void test_pmic_rtc_setTimePrmValTest_meridianMode(void)
                               6U, 0U, 1U};
     Pmic_RtcDate_t dateCfg = {0U,  15U, 6U, 2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6165, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6165,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     timeCfg.timeMode       = PMIC_RTC_12_HOUR_MODE;
     timeCfg.meridianMode   = PMIC_RTC_INVALID_MERIDIEN_MODE;
@@ -1113,7 +1192,9 @@ static void test_pmic_rtc_setTimePrmValTest_hour12(void)
                                30U, 30U, 6U, 0U, 1U};
     Pmic_RtcDate_t dateCfg    = {0x0U, 15U, 6U, 2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6166, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6166,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     timeCfg.timeMode          = PMIC_RTC_12_HOUR_MODE;
     timeCfg.hour              = PMIC_RTC_INVALID_HOUR_13;
@@ -1133,7 +1214,9 @@ static void test_pmic_rtc_setTimePrmValTest_hour24(void)
                                30U, 30U, 6U, 0U, 1U};
     Pmic_RtcDate_t dateCfg    = {0x0U, 15U, 6U, 2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6167, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6167,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     timeCfg.timeMode          = PMIC_RTC_12_HOUR_MODE;
     timeCfg.hour              = PMIC_RTC_INVALID_HOUR_25;
@@ -1153,7 +1236,9 @@ static void test_pmic_rtc_setTimePrmValTest_hour(void)
                                30U, 30U, 6U, 0U, 1U};
     Pmic_RtcDate_t dateCfg    = {0U, 15U, 6U, 2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6168, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6168,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     timeCfg.timeMode          = PMIC_RTC_12_HOUR_MODE;
     timeCfg.hour              = PMIC_RTC_INVALID_HOUR_0;
@@ -1172,7 +1257,9 @@ static void test_pmic_rtc_setTimePrmValTest_month(void)
     Pmic_RtcDate_t dateCfg    = {PMIC_RTC_DATE_CFG_MONTH_VALID_SHIFT, 15U, 6U,
                                  2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6169, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6169,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     dateCfg.month             = PMIC_RTC_INVALID_MONTH_0;
 
@@ -1190,7 +1277,9 @@ static void test_pmic_rtc_setTimePrmValTest_day(void)
     Pmic_RtcDate_t dateCfg    = {PMIC_RTC_DATE_CFG_DAY_VALID_SHIFT, 15U, 6U,
                                  2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6290, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6290,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     dateCfg.day               = PMIC_RTC_INVALID_DAY_0;
 
@@ -1208,7 +1297,9 @@ static void test_pmic_rtc_setTimePrmValTest_year(void)
     Pmic_RtcDate_t dateCfg    = {PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT, 15U, 6U,
                                  2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6170, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6170,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     dateCfg.year              = PMIC_RTC_INVALID_YEAR;
 
@@ -1226,7 +1317,9 @@ static void test_pmic_rtc_setTimePrmValTest_month_range(void)
     Pmic_RtcDate_t dateCfg    = {PMIC_RTC_DATE_CFG_MONTH_VALID_SHIFT, 15U, 6U,
                                  2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6171, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6171,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     dateCfg.month             = PMIC_RTC_INVALID_MONTH;
 
@@ -1244,7 +1337,9 @@ static void test_pmic_rtc_setTimePrmValTest_day_month(void)
     Pmic_RtcDate_t dateCfg = {PMIC_RTC_VALID_PARAM_DATE_CFG_DAY_MNTH_VAL, 15U,
                               6U, 2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6172, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6172,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     dateCfg.month          = PMIC_RTC_MONTH_APR;
     dateCfg.day            = PMIC_RTC_INVALID_DAY_31;
@@ -1264,7 +1359,9 @@ static void test_pmic_rtc_setTimePrmValTest_feb_leapyear(void)
     Pmic_RtcDate_t dateCfg = {PMIC_RTC_VALID_PARAM_DATE_CFG_DAY_MNTH_YR_VAL,
                               15U, 6U, 2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6173, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6173,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     dateCfg.month          = PMIC_RTC_MONTH_FEB;
     dateCfg.year           = PMIC_RTC_YEAR_2044;
@@ -1285,7 +1382,9 @@ static void test_pmic_rtc_setTimePrmValTest_feb_nonleapyear(void)
     Pmic_RtcDate_t dateCfg    = {PMIC_RTC_VALID_PARAM_DATE_CFG_DAY_MNTH_YR_VAL,
                                  15U, 6U, 2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6174, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6174,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     dateCfg.month             = PMIC_RTC_MONTH_FEB;
     dateCfg.year              = 2045U;
@@ -1305,7 +1404,9 @@ static void test_pmic_rtc_setTimePrmValTest_day_month31(void)
     Pmic_RtcDate_t dateCfg    = {PMIC_RTC_VALID_PARAM_DATE_CFG_DAY_MNTH_VAL,
                                  15U, 6U, 2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6175, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6175,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     dateCfg.month             = PMIC_RTC_MONTH_JUL;
     dateCfg.day               = PMIC_RTC_INVALID_DAY_32;
@@ -1334,7 +1435,9 @@ static void test_pmic_rtc_testGetTime(void)
     Pmic_RtcTime_t timeCfg_rd;
     Pmic_RtcDate_t dateCfg_rd;
 
-    test_pmic_print_unity_testcase_info(6176, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6176,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     timeCfg.timeMode       = PMIC_RTC_12_HOUR_MODE;
 
@@ -1369,7 +1472,9 @@ static void test_pmic_rtc_getTimePrmValTest_handle(void)
     Pmic_RtcDate_t dateCfg    = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
                                  2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6177, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6177,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcGetTimeDateInfo(NULL, &timeCfg, &dateCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
@@ -1384,7 +1489,9 @@ static void test_pmic_rtc_getTimePrmValTest_timeCfg(void)
     Pmic_RtcDate_t dateCfg = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
                               2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6178, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6178,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcGetTimeDateInfo(pPmicCoreHandle, NULL, &dateCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
@@ -1399,7 +1506,9 @@ static void test_pmic_rtc_getTimePrmValTest_dateCfg(void)
     Pmic_RtcTime_t timeCfg = {PMIC_RTC_VALID_PARAM_TIME_CFG_VAL, 30U, 30U, 6U,
                               0U, 1U};
 
-    test_pmic_print_unity_testcase_info(6179, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6179,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcGetTimeDateInfo(pPmicCoreHandle, &timeCfg, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
@@ -1414,7 +1523,9 @@ static void test_pmic_rtc_testSetFreqComp(void)
     uint16_t compensation = 34952;
     uint16_t compensation_rd = 0U;
 
-    test_pmic_print_unity_testcase_info(6180, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6180,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcSetFreqComp(pPmicCoreHandle, compensation);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -1433,7 +1544,9 @@ static void test_pmic_rtc_setFreqCompPrmValTest_handle(void)
     int32_t status = PMIC_ST_SUCCESS;
     uint16_t compensation = 34952U;
 
-    test_pmic_print_unity_testcase_info(6181, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6181,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcSetFreqComp(NULL, compensation);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
@@ -1448,7 +1561,9 @@ static void test_pmic_rtc_testGetFreqComp(void)
     uint16_t compensation = 34952U;
     uint16_t compensation_rd;
 
-    test_pmic_print_unity_testcase_info(6182, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6182,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcSetFreqComp(pPmicCoreHandle, compensation);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -1467,7 +1582,9 @@ static void test_pmic_rtc_getFreqCompPrmValTest_handle(void)
     int32_t status = PMIC_ST_SUCCESS;
     uint16_t compensation = 34952U;
 
-    test_pmic_print_unity_testcase_info(6183, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6183,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcGetFreqComp(NULL, &compensation);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
@@ -1480,7 +1597,9 @@ static void test_pmic_rtc_getFreqCompPrmValTest_compensation(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(6287, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6287,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcGetFreqComp(pPmicCoreHandle, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
@@ -1611,7 +1730,9 @@ static void test_pmic_rtc_testTimerIntr(void)
     Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
     Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
 
-    test_pmic_print_unity_testcase_info(6266, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6266,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     pHandle                         = pPmicCoreHandle;
 
@@ -1683,7 +1804,9 @@ static void test_pmic_rtc_testAlarmIntr(void)
     Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
     Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
 
-    test_pmic_print_unity_testcase_info(6267, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6267,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -1751,7 +1874,9 @@ static void test_pmic_rtc_enableAlarmInterrupt_PrmValTest_handle(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(6268, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6268,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcEnableAlarmIntr(NULL, PMIC_RTC_ALARM_INTR_DISABLE);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
@@ -1764,7 +1889,9 @@ static void test_pmic_rtc_enableTimerInterrupt_PrmValTest_handle(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(6269, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(6269,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcEnableTimerIntr(NULL, PMIC_RTC_TIMER_INTR_DISABLE);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
@@ -1778,7 +1905,9 @@ static void test_pmic_rtc_testGetRtcStatus_running(void)
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_RtcStatus_t pmicRtcStatus = {0};
 
-    test_pmic_print_unity_testcase_info(1000, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(1000,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcEnable(pPmicCoreHandle, PMIC_RTC_START);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -1798,7 +1927,9 @@ static void test_pmic_rtc_testGetRtcStatus_frozen(void)
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_RtcStatus_t pmicRtcStatus = {0};
 
-    test_pmic_print_unity_testcase_info(1001, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(1001,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcEnable(pPmicCoreHandle, PMIC_RTC_STOP);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -1818,7 +1949,9 @@ static void test_pmic_rtc_getRtcStatus_PrmValTest_handle(void)
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_RtcStatus_t pmicRtcStatus = {0};
 
-    test_pmic_print_unity_testcase_info(1002, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(1002,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_rtcEnable(pPmicCoreHandle, PMIC_RTC_STOP);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -1834,7 +1967,9 @@ static void test_pmic_rtc_getRtcStatus_PrmValTest_rtcStatus(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(1003, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(1003,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_getRtcStatus(pPmicCoreHandle, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
@@ -1848,7 +1983,9 @@ static void test_pmic_rtc_getRtcStatus_PrmValTest_validParams(void)
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_RtcStatus_t pmicRtcStatus = {0};
 
-    test_pmic_print_unity_testcase_info(1004, pmic_rtc_tests);
+    test_pmic_print_unity_testcase_info(1004,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
 
     status = Pmic_getRtcStatus(pPmicCoreHandle, &pmicRtcStatus);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INSUFFICIENT_CFG, status);

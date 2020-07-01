@@ -355,9 +355,6 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         6200,
         "Pmic_gpioSetConfiguration : configure gpio pin as SPMI SCLK function"
     },
-    {
-        0xFF,
-    }
 };
 
 /*!
@@ -381,7 +378,9 @@ static void test_pmic_gpio_setCfgGpioPin_nSLEEP1(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6185, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6185,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -438,7 +437,9 @@ static void test_pmic_gpio_setCfgGpioPin_nSLEEP2(void)
     };
     uint8_t pinMax = 0;
 
-    test_pmic_print_unity_testcase_info(6186, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6186,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -494,7 +495,9 @@ static void test_pmic_gpio_setCfgGpioPin_nRstOut_soc(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6187, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6187,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -544,7 +547,9 @@ static void test_pmic_gpio_setCfgGpioPin_wakeup1(void)
     };
     uint8_t pinMax = 0;
 
-    test_pmic_print_unity_testcase_info(6189, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6189,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -601,7 +606,9 @@ static void test_pmic_gpio_setCfgGpioPin_wakeup2(void)
     };
     uint8_t pinMax = 0;
 
-    test_pmic_print_unity_testcase_info(6190, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6190,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -658,7 +665,9 @@ static void test_pmic_gpio_setCfgGpioPin_gpio(void)
     };
     uint8_t pinMax = 0;
 
-    test_pmic_print_unity_testcase_info(6191, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6191,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -715,7 +724,9 @@ static void test_pmic_gpio_setCfgGpioPin_i2c2_sclk(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6192, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6192,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -756,7 +767,9 @@ static void test_pmic_gpio_setCfgGpioPin_i2c2_sda(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6193, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6193,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -797,7 +810,9 @@ static void test_pmic_gpio_setCfgGpioPin_spi_cs(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6195, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6195,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -838,7 +853,9 @@ static void test_pmic_gpio_setCfgGpioPin_spi_sdo(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6196, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6196,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -881,7 +898,9 @@ static void test_pmic_gpio_setCfgGpioPin_wdt(void)
     };
     uint8_t pinMax = 0;
 
-    test_pmic_print_unity_testcase_info(6197, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6197,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     pinMax = sizeof(pins)/sizeof(pins[0U]);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -932,7 +951,9 @@ static void test_pmic_gpio_setCfgGpioPin3_esm_soc(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6198, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6198,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -967,7 +988,9 @@ static void test_pmic_gpio_setCfgGpioPin_esm_mcu(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6199, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6199,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -1002,7 +1025,9 @@ static void test_pmic_gpio_setCfgGpioPin_spmi_sclk(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6200, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6200,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -1042,7 +1067,9 @@ static void test_pmic_gpio_setCfgGpioPin_spmi_sdata(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6201, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6201,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -1083,7 +1110,9 @@ static void test_pmic_gpio_setCfgGpioPin_syncCLKOUT(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6202, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6202,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -1146,7 +1175,9 @@ static void test_pmic_gpio_setCfgGpioPin_synCLKIN(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6204, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6204,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -1187,7 +1218,9 @@ static void test_pmic_gpio_setCfgGpioPin_clk32KOUT(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6205, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6205,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -1239,7 +1272,10 @@ static void test_pmic_gpio_setCfgGpioPin10_clk32KOUT(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6206, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6206,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         TEST_IGNORE();
@@ -1276,7 +1312,9 @@ static void test_pmic_gpio_setCfgGpioPin_wdg_disable(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6207, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6207,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -1326,7 +1364,9 @@ static void test_pmic_gpio_setCfgGpioPin_good_power(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6209, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6209,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -1375,7 +1415,9 @@ static void test_pmic_gpio_setCfgPrmValTest_handle(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6210, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6210,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_gpioSetConfiguration(NULL, pin, gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_HANDLE);
@@ -1399,7 +1441,9 @@ static void test_pmic_gpio_setCfgPrmValTest_pin(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6211, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6211,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
@@ -1414,7 +1458,9 @@ static void test_pmic_gpio_setCfgPrmValTest_gpioCfg(void)
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     uint8_t pin               = 1U;
 
-    test_pmic_print_unity_testcase_info(6212, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6212,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
@@ -1439,7 +1485,9 @@ static void test_pmic_gpio_setCfgPrmValTest_pinDir(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6213, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6213,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
@@ -1463,7 +1511,9 @@ static void test_pmic_gpio_setCfgPrmValTest_outputSignalType(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6214, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6214,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
@@ -1487,7 +1537,9 @@ static void test_pmic_gpio_setCfgPrmValTest_deglitchEnable(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6215, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6215,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
@@ -1511,7 +1563,9 @@ static void test_pmic_gpio_setCfgPrmValTest_pinFunc_case1(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6216, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6216,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_GPIO_FUNC);
@@ -1534,7 +1588,9 @@ static void test_pmic_nPWRON_setCfgPrmValTest_pinFunc(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6217, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6217,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -1563,7 +1619,9 @@ static void test_pmic_nPWRON_setCfgPrmValTest_pinPolarity(void)
         0x02U
     };
 
-    test_pmic_print_unity_testcase_info(6218, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6218,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_gpioSetNPwronEnablePinConfiguration(pPmicCoreHandle,
                                                           gpioCfg);
@@ -1589,7 +1647,9 @@ static void test_pmic_gpio_getCfgGpioPin(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6219, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6219,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -1627,7 +1687,9 @@ static void test_pmic_gpio_getCfgPrmValTest_handle(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6220, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6220,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_gpioGetConfiguration(NULL, pin, &gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_HANDLE);
@@ -1651,7 +1713,9 @@ static void test_pmic_gpio_getCfgPrmValTest_pin(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6221, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6221,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
@@ -1665,7 +1729,9 @@ static void test_pmic_gpio_getCfgPrmValTest_gpioCfg(void)
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     uint8_t pin               = 1U;
 
-    test_pmic_print_unity_testcase_info(6222, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6222,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, NULL);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_NULL_PARAM);
@@ -1691,7 +1757,9 @@ static void test_pmic_gpio_getValueGpioPin1_signalLevel(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6223, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6223,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -1722,7 +1790,9 @@ static void test_pmic_gpio_getValuePrmValTest_handle(void)
     uint8_t pin          = 1U;
     uint8_t pinValue;
 
-    test_pmic_print_unity_testcase_info(6224, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6224,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_gpioGetValue(NULL, pin, &pinValue);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_HANDLE);
@@ -1737,7 +1807,9 @@ static void test_pmic_gpio_getValuePrmValTest_pin(void)
     uint8_t pin               = 12U;
     uint8_t pinValue;
 
-    test_pmic_print_unity_testcase_info(6225, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6225,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_gpioGetValue(pPmicCoreHandle,pin,&pinValue);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
@@ -1751,7 +1823,9 @@ static void test_pmic_gpio_getValuePrmValTest_pinValue(void)
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     uint8_t pin               = 1U;
 
-    test_pmic_print_unity_testcase_info(6226, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6226,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_gpioGetValue(pPmicCoreHandle, pin, NULL);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_NULL_PARAM);
@@ -1777,7 +1851,9 @@ static void test_pmic_gpio_setValueGpioPin1_signalLevel(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6227, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6227,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -1808,7 +1884,9 @@ static void test_pmic_gpio_setValuePrmValTest_handle(void)
     uint8_t pin           = 1U;
     uint8_t pinValue      = PMIC_GPIO_HIGH;
 
-    test_pmic_print_unity_testcase_info(6228, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6228,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_gpioSetValue(NULL, pin, pinValue);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_HANDLE);
@@ -1823,7 +1901,9 @@ static void test_pmic_gpio_setValuePrmValTest_pin(void)
     uint8_t pin               = 12U;
     uint8_t pinValue          = PMIC_GPIO_HIGH;
 
-    test_pmic_print_unity_testcase_info(6229, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6229,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
@@ -1838,7 +1918,9 @@ static void test_pmic_gpio_setValuePrmValTest_pinValue(void)
     uint8_t pin              = 1U;
     uint8_t pinValue         = 2U;
 
-    test_pmic_print_unity_testcase_info(6230, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6230,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
@@ -1864,7 +1946,9 @@ static void test_pmic_gpio_setValueGpioPin5_input(void)
     };
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
 
-    test_pmic_print_unity_testcase_info(6231, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6231,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -1966,7 +2050,9 @@ static void test_pmic_gpio1_testFall_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6234, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6234,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -2051,7 +2137,9 @@ static void test_pmic_gpio1_testRise_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6235, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6235,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -2137,7 +2225,9 @@ static void test_pmic_gpio2_testFall_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6236, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6236,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -2222,7 +2312,9 @@ static void test_pmic_gpio2_testRise_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6237, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6237,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -2309,7 +2401,9 @@ static void test_pmic_gpio3_testFall_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6238, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6238,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -2395,7 +2489,9 @@ static void test_pmic_gpio3_testRise_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6239, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6239,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -2484,7 +2580,9 @@ static void test_pmic_gpio4_testFall_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6240, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6240,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -2570,7 +2668,9 @@ static void test_pmic_gpio4_testRise_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6241, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6241,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -2657,7 +2757,9 @@ static void test_pmic_gpio5_testFall_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6242, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6242,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -2744,7 +2846,9 @@ static void test_pmic_gpio5_testRise_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6243, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6243,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -2829,7 +2933,9 @@ static void test_pmic_gpio6_testFall_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6244, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6244,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -2914,7 +3020,9 @@ static void test_pmic_gpio6_testRise_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6245, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6245,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -3001,7 +3109,9 @@ static void test_pmic_gpio7_testFall_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6246, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6246,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         TEST_IGNORE();
@@ -3087,7 +3197,9 @@ static void test_pmic_gpio7_testRise_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6247, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6247,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -3174,7 +3286,9 @@ static void test_pmic_gpio8_testFall_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6248, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6248,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -3259,7 +3373,9 @@ static void test_pmic_gpio8_testRise_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6249, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6249,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -3346,7 +3462,9 @@ static void test_pmic_gpio9_testFall_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6250, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6250,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -3434,7 +3552,9 @@ static void test_pmic_gpio9_testRise_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6251, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6251,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -3520,7 +3640,9 @@ static void test_pmic_gpio10_testFall_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6252, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6252,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -3606,7 +3728,9 @@ static void test_pmic_gpio10_testRise_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6253, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6253,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -3778,7 +3902,9 @@ static void test_pmic_gpio11_testRise_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6255, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6255,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -3860,7 +3986,9 @@ static void test_pmic_gpio_intr_prmValTest_handle(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6256, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6256,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -3893,7 +4021,9 @@ static void test_pmic_gpio_intr_prmValTest_pin(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6257, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6257,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, 1U, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -3926,7 +4056,10 @@ static void test_pmic_gpio_intr_prmValTest_intrType(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6258, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6258,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
@@ -3958,7 +4091,9 @@ static void test_pmic_gpio_intr_prmValTest_maskPol(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6259, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6259,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);

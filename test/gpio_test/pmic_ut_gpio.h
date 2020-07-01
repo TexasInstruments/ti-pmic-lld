@@ -44,4 +44,9 @@
 /*                             Macros & Typedefs                             */
 /* ========================================================================= */
 
+/*!
+ * \brief   Numbers of GPIO testcases
+ */
+#define PMIC_GPIO_NUM_OF_TESTCASES     \
+        (sizeof(pmic_gpio_tests)/sizeof(pmic_gpio_tests[0]))
 /* None */

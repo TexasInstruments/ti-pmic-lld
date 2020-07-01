@@ -94,3 +94,9 @@
                                      PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT)
 
 #define PMIC_RTC_TIMEOUT                (5U)
+
+/*!
+ * \brief   Number of RTC testcases
+ */
+#define PMIC_RTC_NUM_OF_TESTCASES     \
+        (sizeof(pmic_rtc_tests)/sizeof(pmic_rtc_tests[0]))

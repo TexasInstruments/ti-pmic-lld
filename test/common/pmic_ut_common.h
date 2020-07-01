@@ -182,5 +182,6 @@ void test_pmic_uartInit(void);
 /*!
  * \brief   Function to print testcase info
  */
-void test_pmic_print_unity_testcase_info(uint32_t     testId,
-                                         Pmic_Ut_Tests_t *pTest);
+void test_pmic_print_unity_testcase_info(uint32_t         testId,
+                                         Pmic_Ut_Tests_t *pTest,
+                                         uint32_t         num_testcases);
