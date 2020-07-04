@@ -47,13 +47,17 @@ static const Pmic_DevSubSysInfo_t pmicSubSysInfo[] =
     {
         .gpioEnable = true,
         .rtcEnable  = true,
-        .wdgEnable  = true
+        .wdgEnable  = true,
+        .buckEnable = true,
+        .ldoEnable  = true
     },
      /* PMIC_DEV_HERA_LP8764x */
     {
         .gpioEnable = true,
         .rtcEnable  = false,
-        .wdgEnable  = true
+        .wdgEnable  = true,
+        .buckEnable = true,
+        .ldoEnable  = false
     }
 };
 

@@ -70,12 +70,16 @@ extern "C" {
  *  \param   gpioEnable    PMIC GPIO SubSystem
  *  \param   rtcEnable     PMIC RTC SubSystem
  *  \param   wdgEnable     PMIC Watchdog SubSystem
+ *  \param   buckEnable    PMIC BUCK SubSystem
+ *  \param   ldoEnable     PMIC LDO SubSystem
  */
 typedef struct Pmic_DevSubSysInfo_s
 {
    bool    gpioEnable;
    bool    rtcEnable;
    bool    wdgEnable;
+   bool    buckEnable;
+   bool    ldoEnable;
 } Pmic_DevSubSysInfo_t;
 
 /*!

@@ -149,6 +149,35 @@ extern "C" {
 /*==========================================================================*/
 /*                         Function Declarations                            */
 /*==========================================================================*/
+
+/*!
+ *  \brief   This function is used to write a specific bit field value
+ */
+static inline void Pmic_setBitField(uint8_t *pRegVal,
+                                    uint8_t  regFieldShift,
+                                    uint8_t  regFieldMask,
+                                    uint8_t  fieldVal)
+{
+    *pRegVal = (((*pRegVal) & (uint8_t) (~(uint8_t) regFieldMask)) |  \
+               ((((uint8_t) fieldVal) << (uint8_t) regFieldShift)  &  \
+                  (uint8_t) regFieldMask));
+}
+
+/*!
+ * \brief   This function is used to read a specific bit field value
+ */
+static inline uint8_t Pmic_getBitField(uint8_t regData,
+                                       uint8_t regFieldShift,
+                                       uint8_t regFieldMask)
+{
+   uint8_t fieldVal;
+
+    fieldVal = (((regData) & (uint8_t) regFieldMask) >>  \
+                 (uint8_t) regFieldShift);
+
+   return fieldVal;
+}
+
 /*!
  * \brief: Checks the validParam bit position is set or not in validParamVal
  *         This function checks the given bit position is being set or not in
