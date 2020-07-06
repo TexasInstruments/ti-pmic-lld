@@ -1044,6 +1044,13 @@ static int32_t Pmic_gpioIntrDisable(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   API to set PMIC GPIO configuration.
+ *
+ * Design:      DID_5808_D01, DID_5808_D02, DID_5808_D03, DID_5808_D04,
+ *              DID_5808_D05, DID_5808_D06, DID_5808_D07, DID_5808_D08,
+ *              DID_5808_D09, DID_5808_D10, DID_5808_D11, DID_5808_D12,
+ *              DID_5808_D14
+ * Requirement: REQ_TAG(PDK-5808)
+ *
  *          This function is used to set the required configuration for the
  *          specified GPIO pin when corresponding bit field is set.
  *
@@ -1157,6 +1164,10 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
 /*!
  * \brief   API to get PMIC GPIO configuration.
+ *
+ * Design:      DID_5808_D13
+ * Requirement: REQ_TAG(PDK-5808)
+ *
  *          This function is used to read the configuration for the specified
  *          GPIO pin when corresponding bit field is set.
  *
@@ -1226,6 +1237,10 @@ int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   API to set PMIC GPIO value.
+ *
+ * Design:      DID_5808_D14
+ * Requirement: REQ_TAG(PDK-5808)
+ *
  *          This function is used to configure the signal level of the
  *          specified GPIO pin.
  *
@@ -1315,6 +1330,10 @@ int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   API to get PMIC GPIO value.
+ *
+ * Design:      DID_5808_D13
+ * Requirement: REQ_TAG(PDK-5808)
+ *
  *          This function is used to read the signal level of the gpio pin
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
@@ -1385,6 +1404,10 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   API to enable/disable GPIO interrupt.
+ *
+ * Design:      DID_5808_D16
+ * Requirement: REQ_TAG(PDK-5808)
+ *
  *          This function is used to enable GPIO pin Interrupts
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
@@ -1445,6 +1468,10 @@ int32_t Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   API to set configuration for NPWRON/Enable pin.
+ *
+ * Design:      DID_5808_D15
+ * Requirement: REQ_TAG(PDK-5808)
+ *
  *          This function is used to set the required configuration for the
  *          NPWRON OR ENABLE pin when corresponding bit field is set.
  *          NPWRON is valid only for TPS6594x Leo Device
@@ -1562,6 +1589,10 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
 
 /*!
  * \brief   API to get configuration for NPWRON/Enable pin.
+ *
+ * Design:      DID_5808_D15
+ * Requirement: REQ_TAG(PDK-5808)
+ *
  *          This function is used to read the configuration for the
  *          NPWRON OR ENABLE pin when corresponding bit field is set.
  *          NPWRON is valid only for TPS6594x Leo Device
