@@ -58,7 +58,8 @@ INCLUDE_EXTERNAL_INTERFACES = pdk i2c
 INCLUDE_INTERNAL_INTERFACES = pmic
 
 # List all the components required by the application
-COMP_LIST_COMMON = csl csl_init i2c osal_nonos sciclient uart board pmic
+COMP_LIST_COMMON = $(PDK_COMMON_BAREMETAL_COMP)
+COMP_LIST_COMMON += pmic #remove this once pmic is added to PDK_COMMON_BAREMETAL_COMP
 
 # Common source files and CFLAGS across all platforms and cores
 PACKAGE_SRCS_COMMON = . ../common
