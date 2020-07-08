@@ -38,7 +38,6 @@
  */
 
 #include <pmic_ut_common.h>
-#include <pmic_gpio.h>
 
 /* ========================================================================= */
 /*                             Macros & Typedefs                             */

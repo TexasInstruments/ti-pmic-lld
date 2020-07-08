@@ -474,6 +474,21 @@ void test_pmic_criticalSectionStopFn(void)
 }
 
 /*!
+ * \brief   PMIC Interrupt decipher and clear function
+ *          This function deciphers all interrupts and clears the status
+ */
+static int32_t Pmic_intrClr(Pmic_CoreHandle_t *pmicHandle)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
+    Pmic_IrqStatus_t errStat  = {0U};
+
+    pmicStatus = Pmic_irqGetErrStatus(&handle, &errStat, true);
+
+    return pmicStatus;
+}
+
+/*!
  * \brief   Initialize PMIC Instance and corresponding Interface.
  *
  * \param   pmicCoreHandle    [OUT]     PMIC Core Handle.
@@ -510,6 +525,7 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
         pmic_log("Failed to allocate memory to pmicHandle\n");
         return PMIC_ST_ERR_INV_HANDLE;
     }
+
     memset(pmicHandle, 0, sizeof(Pmic_CoreHandle_t));
 
     /* For single I2C Instance */
@@ -531,6 +547,11 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
             /* Setup nSLEEP signals */
             pmicStatus = Pmic_nSleepSignalsSetup(pmicHandle);
         }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            pmicStatus = Pmic_intrClr(pmicHandle);
+        }
     }
     /* For DUAL I2C Instance */
     else if(PMIC_INTF_DUAL_I2C == pmicConfigData->commMode)
@@ -551,6 +572,11 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
         {
             /* Setup nSLEEP signals */
             pmicStatus = Pmic_nSleepSignalsSetup(pmicHandle);
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            pmicStatus = Pmic_intrClr(pmicHandle);
         }
 
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -597,6 +623,11 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
         {
             /* Setup nSLEEP signals */
             pmicStatus = Pmic_nSleepSignalsSetup(pmicHandle);
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            pmicStatus = Pmic_intrClr(pmicHandle);
         }
     }
 

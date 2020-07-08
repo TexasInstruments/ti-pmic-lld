@@ -1613,101 +1613,31 @@ static void test_pmic_rtc_getFreqCompPrmValTest_compensation(void)
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-static int32_t pmic_irqMaskAll(Pmic_CoreHandle_t *pHandle, bool mask)
+static void pmic_all_intMask(Pmic_CoreHandle_t *pHandle)
 {
-    int32_t status = PMIC_ST_SUCCESS;
+    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pHandle;
 
-    /* Mask or Unmask all interrupts */
-    status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_BUCK1_2_MASK, mask);
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_BUCK3_4_MASK, mask);
-    }
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_BUCK5_MASK, mask);
-    }
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_LDO1_2_MASK, mask);
-    }
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_LDO3_4_MASK, mask);
-    }
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_VMON_MASK, mask);
-    }
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_GPIO1_8_FALL_MASK,
-                                                                    mask);
-    }
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_GPIO1_8_RISE_MASK,
-                                                                    mask);
-    }
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_GPIO9_11_MASK, mask);
-    }
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_MISC_MASK, mask);
-    }
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_MODERATE_ERR_MASK,
-                                                                    mask);
-    }
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_FSM_ERR_MASK, mask);
-    }
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_COMM_ERR_MASK, mask);
-    }
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_READBACK_ERR_MASK,
-                                                                      mask);
-    }
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_ESM_MASK, mask);
-    }
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_irqMaskIntr(pHandle, PMIC_IRQ_MASK_STARTUP_MASK, mask);
-    }
-    if(PMIC_ST_SUCCESS == status)
-    {
-        if(mask)
-        {
-            status = Pmic_rtcEnableAlarmIntr(pHandle,
-                                             PMIC_RTC_ALARM_INTR_DISABLE);
-            if(PMIC_ST_SUCCESS == status)
-            {
-                status = Pmic_rtcEnableTimerIntr(pHandle,
-                                                 PMIC_RTC_TIMER_INTR_DISABLE);
-            }
-        }
-        else
-        {
-            status = Pmic_rtcEnableAlarmIntr(pHandle,
-                                             PMIC_RTC_ALARM_INTR_ENABLE);
-            if(PMIC_ST_SUCCESS == status)
-            {
-                status = Pmic_rtcEnableTimerIntr(pHandle,
-                                                 PMIC_RTC_TIMER_INTR_ENABLE);
-            }
-       }
-    }
+    /* MASKING all Interrupts */
+    Pmic_irqMaskIntr(&handle, PMIC_IRQ_ALL, PMIC_IRQ_MASK);
+    Pmic_irqGpioMaskIntr(&handle,
+                         PMIC_IRQ_GPIO_ALL_INT_MASK_NUM,
+                         PMIC_IRQ_MASK,
+                         PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
+}
 
-    return status;
+/*!
+ * \brief   UnMask All interrupts
+ */
+static void pmic_all_intUnMask(Pmic_CoreHandle_t *pHandle)
+{
+    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pHandle;
+
+    /* UN-MASKING all Interrupts */
+    Pmic_irqMaskIntr(&handle, PMIC_IRQ_ALL, PMIC_IRQ_UNMASK);
+    Pmic_irqGpioMaskIntr(&handle,
+                         PMIC_IRQ_GPIO_ALL_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
 }
 
 /*!
@@ -1722,9 +1652,9 @@ static void test_pmic_rtc_testTimerIntr(void)
     Pmic_RtcDate_t     dateCfg_cr   = { 0x0F, 0U, 0U, 0U, 0U};
     Pmic_RtcTime_t     timeCfg_rd   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
     Pmic_RtcDate_t     dateCfg_rd   = { 0x0F, 0U, 0U, 0U, 0U};
-    uint8_t            clearIRQ     = 1U;
-    uint32_t           pErrStat     = 0U;
-    uint32_t           errBitStatus = 0U;
+    Pmic_IrqStatus_t errStat        = {0U};
+    bool clearIRQ                   = false;
+    uint8_t  irqNum                 = 0U;
     uint8_t            timerPeriod  = 0U;
 
     Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
@@ -1740,8 +1670,7 @@ static void test_pmic_rtc_testTimerIntr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     /* MASKING all Interrupts */
-    status = pmic_irqMaskAll(pHandle, 1U);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    pmic_all_intMask(pPmicCoreHandle);
 
     status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_rd, &dateCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -1758,13 +1687,26 @@ static void test_pmic_rtc_testTimerIntr(void)
 
     while(timeout--)
     {
-        status = Pmic_irqGetErrStatus(pHandle, &pErrStat, clearIRQ);
-        if(PMIC_ST_SUCCESS == status)
+        status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == status) &&
+           ((errStat.intStatus[PMIC_TPS6594X_RTC_TIMER_INT/32U] & 
+             (1U << (PMIC_TPS6594X_RTC_TIMER_INT % 32U))) != 0U))
         {
-            /* Extract offsets and error code */
-            errBitStatus = PMIC_IRQID_BITMASK (pErrStat);
+            while(PMIC_TPS6594X_RTC_TIMER_INT != irqNum)
+            {
+                status = Pmic_getNextErrorStatus(pHandle,
+                                                 &errStat,
+                                                 &irqNum);
+            }
 
-            if(PMIC_INT_RTC_STATUS_TIMER_MASK == errBitStatus)
+            if(PMIC_ST_SUCCESS == status)
+            {
+                /* clear the interrupt */
+                status = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                              PMIC_TPS6594X_RTC_TIMER_INT);
+            }
+
+            if(PMIC_ST_SUCCESS == status)
             {
                 /* Disable the timer interrupt  */
                 status = Pmic_rtcEnableTimerIntr(pHandle,
@@ -1773,13 +1715,13 @@ static void test_pmic_rtc_testTimerIntr(void)
                 break;
             }
         }
+
         status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
     }
 
-    /* UNMASKING all Interrupts */
-    status = pmic_irqMaskAll(pHandle, 0U);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    /* UN-MASKING all Interrupts */
+    pmic_all_intUnMask(pHandle);
 
     status = Pmic_rtcSetTimerPeriod(pHandle, timerPeriod);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -1798,9 +1740,9 @@ static void test_pmic_rtc_testAlarmIntr(void)
     Pmic_RtcDate_t     dateCfg_cr   = { 0x0F, 0U, 0U, 0U, 0U};
     Pmic_RtcTime_t     timeCfg_rd   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
     Pmic_RtcDate_t     dateCfg_rd   = { 0x0F, 0U, 0U, 0U, 0U};
-    uint8_t            clearIRQ     = 1U;
-    uint32_t           errBitStatus = 0U;
-    uint32_t           pErrStat     = 0U;
+    Pmic_IrqStatus_t errStat        = {0U};
+    bool clearIRQ                   = false;
+    uint8_t  irqNum                 = 0U;
     Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
     Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
 
@@ -1812,7 +1754,7 @@ static void test_pmic_rtc_testAlarmIntr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     /* MASKING all Interrupts */
-    status = pmic_irqMaskAll(pHandle, 1U);
+    pmic_all_intMask(pHandle);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     /* Get the current time value */
@@ -1829,41 +1771,52 @@ static void test_pmic_rtc_testAlarmIntr(void)
     status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    if(PMIC_ST_SUCCESS == status)
+    while(timeout--)
     {
-        while(timeout--)
+        status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == status) &&
+           ((errStat.intStatus[PMIC_TPS6594X_RTC_ALARM_INT/32U] & 
+             (1U << (PMIC_TPS6594X_RTC_ALARM_INT % 32U))) != 0U))
         {
-            status = Pmic_irqGetErrStatus(pHandle, &pErrStat, clearIRQ);
+            while(PMIC_TPS6594X_RTC_ALARM_INT != irqNum)
+            {
+                status = Pmic_getNextErrorStatus(pHandle,
+                                                 &errStat,
+                                                 &irqNum);
+            }
+
             if(PMIC_ST_SUCCESS == status)
             {
-                /* Extract Level 1, Level 2 register offsets and error code */
-                errBitStatus   = PMIC_IRQID_BITMASK (pErrStat);
+                /* clear the interrupt */
+                status = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                              PMIC_TPS6594X_RTC_ALARM_INT);
+            }
 
-                if(PMIC_INT_RTC_STATUS_ALARM_MASK == errBitStatus)
+            if(PMIC_ST_SUCCESS == status)
+            {
+                /* Interrupt received */
+                /* Disable the alarm interrupt */
+                status = Pmic_rtcEnableAlarmIntr(pHandle,
+                                                 PMIC_RTC_ALARM_INTR_DISABLE);
+
+                /* clear the interrupt */
+                if(PMIC_ST_SUCCESS == status)
                 {
-                    /* Interrupt received */
-                    /* Disable the alarm interrupt */
-                    status = Pmic_rtcEnableAlarmIntr(pHandle,
-                                                  PMIC_RTC_ALARM_INTR_DISABLE);
-
-                    /* clear the interrupt */
-                    if(PMIC_ST_SUCCESS == status)
-                    {
-                        break;
-                    }
+                    break;
                 }
             }
+        }
 
-            status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
-            if(PMIC_ST_SUCCESS != status)
-            {
-                break;
-            }
+        status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
+        if(PMIC_ST_SUCCESS != status)
+        {
+            break;
         }
     }
 
-    /* UNMASKING all Interrupts */
-    status = pmic_irqMaskAll(pHandle, 0U);
+    /* UN-MASKING all Interrupts */
+    pmic_all_intUnMask(pHandle);
+
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 

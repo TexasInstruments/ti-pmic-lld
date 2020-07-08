@@ -42,7 +42,8 @@ include $(PDK_INSTALL_PATH)/ti/build/Rules.make
 BUILD_OS_TYPE = baremetal
 
 SRCDIR = . ../common
-INCDIR = . ../common ../../include ../../src/cfg/tps6594x ../../src/
+INCDIR = . ../../include/ ../../include/cfg/tps6594x ../../include/cfg/lp8764x
+INCDIR += ../common
 
 # Common source files across all platforms and cores
 SRCS_COMMON += pmic_ut_rtc.c pmic_ut_common.c

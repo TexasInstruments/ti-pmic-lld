@@ -1975,22 +1975,11 @@ static void pmic_all_intMask(Pmic_CoreHandle_t *pHandle)
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pHandle;
 
     /* MASKING all Interrupts */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_BUCK1_2_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_BUCK3_4_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_BUCK5_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_LDO1_2_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_LDO3_4_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_VMON_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_GPIO1_8_FALL_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_GPIO1_8_RISE_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_GPIO9_11_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_MISC_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_MODERATE_ERR_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_FSM_ERR_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_COMM_ERR_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_READBACK_ERR_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_ESM_MASK, PMIC_IRQ_MASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_STARTUP_MASK, PMIC_IRQ_MASK);
+    Pmic_irqMaskIntr(&handle, PMIC_IRQ_ALL, PMIC_IRQ_MASK);
+    Pmic_irqGpioMaskIntr(&handle,
+                         PMIC_IRQ_GPIO_ALL_INT_MASK_NUM,
+                         PMIC_IRQ_MASK,
+                         PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
 }
 
 static void pmic_all_intUnMask(Pmic_CoreHandle_t *pHandle)
@@ -1998,30 +1987,11 @@ static void pmic_all_intUnMask(Pmic_CoreHandle_t *pHandle)
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pHandle;
 
     /* UN-MASKING all Interrupts */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_BUCK1_2_MASK, PMIC_IRQ_UNMASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_BUCK3_4_MASK, PMIC_IRQ_UNMASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_BUCK5_MASK, PMIC_IRQ_UNMASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_LDO1_2_MASK, PMIC_IRQ_UNMASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_LDO3_4_MASK, PMIC_IRQ_UNMASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_VMON_MASK, PMIC_IRQ_UNMASK);
-    Pmic_irqMaskIntr(&handle,
-                     PMIC_IRQ_MASK_GPIO1_8_FALL_MASK,
-                     PMIC_IRQ_UNMASK);
-    Pmic_irqMaskIntr(&handle,
-                     PMIC_IRQ_MASK_GPIO1_8_RISE_MASK,
-                     PMIC_IRQ_UNMASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_GPIO9_11_MASK, PMIC_IRQ_UNMASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_MISC_MASK, PMIC_IRQ_UNMASK);
-    Pmic_irqMaskIntr(&handle,
-                     PMIC_IRQ_MASK_MODERATE_ERR_MASK,
-                     PMIC_IRQ_UNMASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_FSM_ERR_MASK, PMIC_IRQ_UNMASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_COMM_ERR_MASK, PMIC_IRQ_UNMASK);
-    Pmic_irqMaskIntr(&handle,
-                     PMIC_IRQ_MASK_READBACK_ERR_MASK,
-                     PMIC_IRQ_UNMASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_ESM_MASK, PMIC_IRQ_UNMASK);
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_MASK_STARTUP_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqMaskIntr(&handle, PMIC_IRQ_ALL, PMIC_IRQ_UNMASK);
+    Pmic_irqGpioMaskIntr(&handle,
+                         PMIC_IRQ_GPIO_ALL_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
 }
 
 /*!
@@ -2034,11 +2004,9 @@ static void test_pmic_gpio1_testFall_interrupt(void)
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
     uint8_t maskPol           = PMIC_GPIO_POL_LOW;
-    const uint8_t clearIRQ    = 1U;
-    uint8_t errStat           = 0U;
-    uint32_t pErrStat         = 0U;
-    uint32_t irqL1            = 0U;
-    uint32_t irqL2            = 0U;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -2062,7 +2030,10 @@ static void test_pmic_gpio1_testFall_interrupt(void)
     pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 1 FALL Interrupt */
-    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO1_FALL_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_1_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_FALL_INT_TYPE);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -2079,28 +2050,24 @@ static void test_pmic_gpio1_testFall_interrupt(void)
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_GPIO1_INT/32U] & 
+             (1U << (PMIC_TPS6594X_GPIO1_INT % 32U))) != 0U))
         {
-            irqL1   = PMIC_IRQID_L1REG (pErrStat);
-            irqL2   = PMIC_IRQID_L2REG (pErrStat);
-            errStat = PMIC_IRQID_BITMASK (pErrStat);
-
-            if((PMIC_INT_GPIO1_MASK == irqL1) ||
-               (PMIC_INT_GPIO1_MASK == irqL2) ||
-               (PMIC_INT_GPIO1_MASK  == errStat))
+            while(PMIC_TPS6594X_GPIO1_INT != irqNum)
             {
-                /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
-                                              pin,
-                                              PMIC_GPIO_DISABLE_INTERRUPT,
-                                              maskPol);
-                if(PMIC_ST_SUCCESS == pmicStatus)
-                {
-                    /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
-                    break;
-                }
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_GPIO1_INT);
+                break;
             }
         }
     }
@@ -2121,11 +2088,9 @@ static void test_pmic_gpio1_testRise_interrupt(void)
     uint8_t pinValue          = PMIC_GPIO_LOW;
     uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
     uint8_t maskPol           = PMIC_GPIO_POL_HIGH;
-    const uint8_t clearIRQ    = 1U;
-    uint8_t errStat           = 0U;
-    uint32_t pErrStat         = 0U;
-    uint32_t irqL1            = 0U;
-    uint32_t irqL2            = 0U;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -2150,7 +2115,10 @@ static void test_pmic_gpio1_testRise_interrupt(void)
     pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 1 RISE Interrupt */
-    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO1_RISE_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_1_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_RISE_INT_TYPE);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -2167,28 +2135,24 @@ static void test_pmic_gpio1_testRise_interrupt(void)
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_GPIO1_INT/32U] & 
+             (1U << (PMIC_TPS6594X_GPIO1_INT % 32U))) != 0U))
         {
-            irqL1   = PMIC_IRQID_L1REG (pErrStat);
-            irqL2   = PMIC_IRQID_L2REG (pErrStat);
-            errStat = PMIC_IRQID_BITMASK (pErrStat);
-
-            if((PMIC_INT_GPIO1_MASK == irqL1) ||
-               (PMIC_INT_GPIO1_MASK == irqL2) ||
-               (PMIC_INT_GPIO1_MASK  == errStat))
+            while(PMIC_TPS6594X_GPIO1_INT != irqNum)
             {
-                /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
-                                              pin,
-                                              PMIC_GPIO_DISABLE_INTERRUPT,
-                                              maskPol);
-                if(PMIC_ST_SUCCESS == pmicStatus)
-                {
-                    /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
-                    break;
-                }
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_GPIO1_INT);
+                break;
             }
         }
     }
@@ -2209,11 +2173,9 @@ static void test_pmic_gpio2_testFall_interrupt(void)
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
     uint8_t maskPol           = PMIC_GPIO_POL_LOW;
-    const uint8_t clearIRQ    = 1U;
-    uint8_t errStat           = 0U;
-    uint32_t pErrStat         = 0U;
-    uint32_t irqL1            = 0U;
-    uint32_t irqL2            = 0U;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -2237,7 +2199,10 @@ static void test_pmic_gpio2_testFall_interrupt(void)
     pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 2 FALL Interrupt */
-    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO2_FALL_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_2_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_FALL_INT_TYPE);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -2254,28 +2219,24 @@ static void test_pmic_gpio2_testFall_interrupt(void)
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_GPIO2_INT/32U] & 
+             (1U << (PMIC_TPS6594X_GPIO2_INT % 32U))) != 0U))
         {
-            irqL1   = PMIC_IRQID_L1REG (pErrStat);
-            irqL2   = PMIC_IRQID_L2REG (pErrStat);
-            errStat = PMIC_IRQID_BITMASK (pErrStat);
-
-            if((PMIC_INT_GPIO2_MASK == irqL1) ||
-               (PMIC_INT_GPIO2_MASK == irqL2) ||
-               (PMIC_INT_GPIO2_MASK  == errStat))
+            while(PMIC_TPS6594X_GPIO2_INT != irqNum)
             {
-                /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
-                                              pin,
-                                              PMIC_GPIO_DISABLE_INTERRUPT,
-                                              maskPol);
-                if(PMIC_ST_SUCCESS == pmicStatus)
-                {
-                    /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
-                    break;
-                }
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_GPIO2_INT);
+                break;
             }
         }
     }
@@ -2296,11 +2257,9 @@ static void test_pmic_gpio2_testRise_interrupt(void)
     uint8_t pinValue          = PMIC_GPIO_LOW;
     uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
     uint8_t maskPol           = PMIC_GPIO_POL_HIGH;
-    const uint8_t clearIRQ    = 1U;
-    uint8_t errStat           = 0U;
-    uint32_t pErrStat         = 0U;
-    uint32_t irqL1            = 0U;
-    uint32_t irqL2            = 0U;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -2320,11 +2279,15 @@ static void test_pmic_gpio2_testRise_interrupt(void)
     {
         TEST_IGNORE();
     }
+
     /* MASKING all Interrupts */
     pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 2 RISE Interrupt */
-    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO2_RISE_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_2_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_RISE_INT_TYPE);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -2341,28 +2304,24 @@ static void test_pmic_gpio2_testRise_interrupt(void)
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_GPIO2_INT/32U] & 
+             (1U << (PMIC_TPS6594X_GPIO2_INT % 32U))) != 0U))
         {
-            irqL1   = PMIC_IRQID_L1REG (pErrStat);
-            irqL2   = PMIC_IRQID_L2REG (pErrStat);
-            errStat = PMIC_IRQID_BITMASK (pErrStat);
-
-            if((PMIC_INT_GPIO2_MASK == irqL1) ||
-               (PMIC_INT_GPIO2_MASK == irqL2) ||
-               (PMIC_INT_GPIO2_MASK  == errStat))
+            while(PMIC_TPS6594X_GPIO2_INT != irqNum)
             {
-                /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
-                                              pin,
-                                              PMIC_GPIO_DISABLE_INTERRUPT,
-                                              maskPol);
-                if(PMIC_ST_SUCCESS == pmicStatus)
-                {
-                    /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
-                    break;
-                }
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_GPIO2_INT);
+                break;
             }
         }
     }
@@ -2385,11 +2344,9 @@ static void test_pmic_gpio3_testFall_interrupt(void)
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
     uint8_t maskPol           = PMIC_GPIO_POL_LOW;
-    const uint8_t clearIRQ    = 1U;
-    uint8_t errStat           = 0U;
-    uint32_t pErrStat         = 0U;
-    uint32_t irqL1            = 0U;
-    uint32_t irqL2            = 0U;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -2414,7 +2371,10 @@ static void test_pmic_gpio3_testFall_interrupt(void)
     pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 3 FALL Interrupt */
-    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO3_FALL_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_3_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_FALL_INT_TYPE);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -2431,28 +2391,24 @@ static void test_pmic_gpio3_testFall_interrupt(void)
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_GPIO3_INT/32U] & 
+             (1U << (PMIC_TPS6594X_GPIO3_INT % 32U))) != 0U))
         {
-            irqL1   = PMIC_IRQID_L1REG (pErrStat);
-            irqL2   = PMIC_IRQID_L2REG (pErrStat);
-            errStat = PMIC_IRQID_BITMASK (pErrStat);
-
-            if((PMIC_INT_GPIO3_MASK == irqL1) ||
-               (PMIC_INT_GPIO3_MASK == irqL2) ||
-               (PMIC_INT_GPIO3_MASK  == errStat))
+            while(PMIC_TPS6594X_GPIO3_INT != irqNum)
             {
-                /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
-                                              pin,
-                                              PMIC_GPIO_DISABLE_INTERRUPT,
-                                              maskPol);
-                if(PMIC_ST_SUCCESS == pmicStatus)
-                {
-                    /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
-                    break;
-                }
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_GPIO3_INT);
+                break;
             }
         }
     }
@@ -2473,11 +2429,9 @@ static void test_pmic_gpio3_testRise_interrupt(void)
     uint8_t pinValue          = PMIC_GPIO_LOW;
     uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
     uint8_t maskPol           = PMIC_GPIO_POL_HIGH;
-    const uint8_t clearIRQ    = 1U;
-    uint8_t errStat           = 0U;
-    uint32_t pErrStat         = 0U;
-    uint32_t irqL1            = 0U;
-    uint32_t irqL2            = 0U;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -2502,7 +2456,10 @@ static void test_pmic_gpio3_testRise_interrupt(void)
     pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 3 RISE Interrupt */
-    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO3_RISE_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_3_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_RISE_INT_TYPE);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -2519,28 +2476,24 @@ static void test_pmic_gpio3_testRise_interrupt(void)
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_GPIO3_INT/32U] & 
+             (1U << (PMIC_TPS6594X_GPIO3_INT % 32U))) != 0U))
         {
-            irqL1   = PMIC_IRQID_L1REG (pErrStat);
-            irqL2   = PMIC_IRQID_L2REG (pErrStat);
-            errStat = PMIC_IRQID_BITMASK (pErrStat);
-
-            if((PMIC_INT_GPIO3_MASK == irqL1) ||
-               (PMIC_INT_GPIO3_MASK == irqL2) ||
-               (PMIC_INT_GPIO3_MASK  == errStat))
+            while(PMIC_TPS6594X_GPIO3_INT != irqNum)
             {
-                /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
-                                              pin,
-                                              PMIC_GPIO_DISABLE_INTERRUPT,
-                                              maskPol);
-                if(PMIC_ST_SUCCESS == pmicStatus)
-                {
-                    /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
-                    break;
-                }
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_GPIO3_INT);
+                break;
             }
         }
     }
@@ -2564,11 +2517,9 @@ static void test_pmic_gpio4_testFall_interrupt(void)
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
     uint8_t maskPol           = PMIC_GPIO_POL_LOW;
-    const uint8_t clearIRQ    = 1U;
-    uint8_t errStat           = 0U;
-    uint32_t pErrStat         = 0U;
-    uint32_t irqL1            = 0U;
-    uint32_t irqL2            = 0U;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -2593,7 +2544,10 @@ static void test_pmic_gpio4_testFall_interrupt(void)
     pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 4 FALL Interrupt */
-    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO4_FALL_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_4_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_FALL_INT_TYPE);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -2610,28 +2564,24 @@ static void test_pmic_gpio4_testFall_interrupt(void)
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_GPIO4_INT/32U] & 
+             (1U << (PMIC_TPS6594X_GPIO4_INT % 32U))) != 0U))
         {
-            irqL1   = PMIC_IRQID_L1REG (pErrStat);
-            irqL2   = PMIC_IRQID_L2REG (pErrStat);
-            errStat = PMIC_IRQID_BITMASK (pErrStat);
-
-            if((PMIC_INT_GPIO4_MASK == irqL1) ||
-               (PMIC_INT_GPIO4_MASK == irqL2) ||
-               (PMIC_INT_GPIO4_MASK  == errStat))
+            while(PMIC_TPS6594X_GPIO4_INT != irqNum)
             {
-                /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
-                                              pin,
-                                              PMIC_GPIO_DISABLE_INTERRUPT,
-                                              maskPol);
-                if(PMIC_ST_SUCCESS == pmicStatus)
-                {
-                    /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
-                    break;
-                }
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_GPIO4_INT);
+                break;
             }
         }
     }
@@ -2652,11 +2602,9 @@ static void test_pmic_gpio4_testRise_interrupt(void)
     uint8_t pinValue          = PMIC_GPIO_LOW;
     uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
     uint8_t maskPol           = PMIC_GPIO_POL_HIGH;
-    const uint8_t clearIRQ    = 1U;
-    uint8_t errStat           = 0U;
-    uint32_t pErrStat         = 0U;
-    uint32_t irqL1            = 0U;
-    uint32_t irqL2            = 0U;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -2681,7 +2629,10 @@ static void test_pmic_gpio4_testRise_interrupt(void)
     pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 4 RISE Interrupt */
-    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO4_RISE_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_4_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_RISE_INT_TYPE);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -2698,28 +2649,24 @@ static void test_pmic_gpio4_testRise_interrupt(void)
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_GPIO4_INT/32U] & 
+             (1U << (PMIC_TPS6594X_GPIO4_INT % 32U))) != 0U))
         {
-            irqL1   = PMIC_IRQID_L1REG (pErrStat);
-            irqL2   = PMIC_IRQID_L2REG (pErrStat);
-            errStat = PMIC_IRQID_BITMASK (pErrStat);
-
-            if((PMIC_INT_GPIO4_MASK == irqL1) ||
-               (PMIC_INT_GPIO4_MASK == irqL2) ||
-               (PMIC_INT_GPIO4_MASK  == errStat))
+            while(PMIC_TPS6594X_GPIO4_INT != irqNum)
             {
-                /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
-                                              pin,
-                                              PMIC_GPIO_DISABLE_INTERRUPT,
-                                              maskPol);
-                if(PMIC_ST_SUCCESS == pmicStatus)
-                {
-                    /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
-                    break;
-                }
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_GPIO4_INT);
+                break;
             }
         }
     }
@@ -2741,11 +2688,9 @@ static void test_pmic_gpio5_testFall_interrupt(void)
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
     uint8_t maskPol           = PMIC_GPIO_POL_LOW;
-    const uint8_t clearIRQ    = 1U;
-    uint8_t errStat           = 0U;
-    uint32_t pErrStat         = 0U;
-    uint32_t irqL1            = 0U;
-    uint32_t irqL2            = 0U;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -2769,9 +2714,10 @@ static void test_pmic_gpio5_testFall_interrupt(void)
     pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 5 FALL Interrupt */
-    Pmic_irqMaskIntr(pPmicCoreHandle,
-                     PMIC_IRQ_GPIO5_FALL_MASK,
-                     PMIC_IRQ_UNMASK);
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_5_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_FALL_INT_TYPE);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -2788,28 +2734,24 @@ static void test_pmic_gpio5_testFall_interrupt(void)
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_GPIO5_INT/32U] & 
+             (1U << (PMIC_TPS6594X_GPIO5_INT % 32U))) != 0U))
         {
-            irqL1   = PMIC_IRQID_L1REG (pErrStat);
-            irqL2   = PMIC_IRQID_L2REG (pErrStat);
-            errStat = PMIC_IRQID_BITMASK (pErrStat);
-
-            if((PMIC_INT_GPIO5_MASK == irqL1) ||
-               (PMIC_INT_GPIO5_MASK == irqL2) ||
-               (PMIC_INT_GPIO5_MASK  == errStat))
+            while(PMIC_TPS6594X_GPIO5_INT != irqNum)
             {
-                /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
-                                              pin,
-                                              PMIC_GPIO_DISABLE_INTERRUPT,
-                                              maskPol);
-                if(PMIC_ST_SUCCESS == pmicStatus)
-                {
-                    /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
-                    break;
-                }
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_GPIO5_INT);
+                break;
             }
         }
     }
@@ -2830,11 +2772,9 @@ static void test_pmic_gpio5_testRise_interrupt(void)
     uint8_t pinValue          = PMIC_GPIO_LOW;
     uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
     uint8_t maskPol           = PMIC_GPIO_POL_HIGH;
-    const uint8_t clearIRQ    = 1U;
-    uint8_t errStat           = 0U;
-    uint32_t pErrStat         = 0U;
-    uint32_t irqL1            = 0U;
-    uint32_t irqL2            = 0U;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -2858,7 +2798,10 @@ static void test_pmic_gpio5_testRise_interrupt(void)
     pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 5 RISE Interrupt */
-    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO5_RISE_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_5_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_RISE_INT_TYPE);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -2875,28 +2818,24 @@ static void test_pmic_gpio5_testRise_interrupt(void)
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_GPIO5_INT/32U] & 
+             (1U << (PMIC_TPS6594X_GPIO5_INT % 32U))) != 0U))
         {
-            irqL1   = PMIC_IRQID_L1REG (pErrStat);
-            irqL2   = PMIC_IRQID_L2REG (pErrStat);
-            errStat = PMIC_IRQID_BITMASK (pErrStat);
-
-            if((PMIC_INT_GPIO5_MASK == irqL1) ||
-               (PMIC_INT_GPIO5_MASK == irqL2) ||
-               (PMIC_INT_GPIO5_MASK  == errStat))
+            while(PMIC_TPS6594X_GPIO5_INT != irqNum)
             {
-                /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
-                                              pin,
-                                              PMIC_GPIO_DISABLE_INTERRUPT,
-                                              maskPol);
-                if(PMIC_ST_SUCCESS == pmicStatus)
-                {
-                    /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
-                    break;
-                }
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_GPIO5_INT);
+                break;
             }
         }
     }
@@ -2917,11 +2856,9 @@ static void test_pmic_gpio6_testFall_interrupt(void)
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
     uint8_t maskPol           = PMIC_GPIO_POL_LOW;
-    const uint8_t clearIRQ    = 1U;
-    uint8_t errStat           = 0U;
-    uint32_t pErrStat         = 0U;
-    uint32_t irqL1            = 0U;
-    uint32_t irqL2            = 0U;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -2945,7 +2882,10 @@ static void test_pmic_gpio6_testFall_interrupt(void)
     pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 6 FALL Interrupt */
-    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO6_FALL_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_6_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_FALL_INT_TYPE);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -2962,28 +2902,24 @@ static void test_pmic_gpio6_testFall_interrupt(void)
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_GPIO6_INT/32U] & 
+             (1U << (PMIC_TPS6594X_GPIO6_INT % 32U))) != 0U))
         {
-            irqL1   = PMIC_IRQID_L1REG (pErrStat);
-            irqL2   = PMIC_IRQID_L2REG (pErrStat);
-            errStat = PMIC_IRQID_BITMASK (pErrStat);
-
-            if((PMIC_INT_GPIO6_MASK == irqL1) ||
-               (PMIC_INT_GPIO6_MASK == irqL2) ||
-               (PMIC_INT_GPIO6_MASK  == errStat))
+            while(PMIC_TPS6594X_GPIO6_INT != irqNum)
             {
-                /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
-                                              pin,
-                                              PMIC_GPIO_DISABLE_INTERRUPT,
-                                              maskPol);
-                if(PMIC_ST_SUCCESS == pmicStatus)
-                {
-                    /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
-                    break;
-                }
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_GPIO6_INT);
+                break;
             }
         }
     }
@@ -3004,11 +2940,9 @@ static void test_pmic_gpio6_testRise_interrupt(void)
     uint8_t pinValue          = PMIC_GPIO_LOW;
     uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
     uint8_t maskPol           = PMIC_GPIO_POL_HIGH;
-    const uint8_t clearIRQ    = 1U;
-    uint8_t errStat           = 0U;
-    uint32_t pErrStat         = 0U;
-    uint32_t irqL1            = 0U;
-    uint32_t irqL2            = 0U;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -3032,7 +2966,10 @@ static void test_pmic_gpio6_testRise_interrupt(void)
     pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 6 RISE Interrupt */
-    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO6_RISE_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_6_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_RISE_INT_TYPE);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -3049,28 +2986,24 @@ static void test_pmic_gpio6_testRise_interrupt(void)
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_GPIO6_INT/32U] & 
+             (1U << (PMIC_TPS6594X_GPIO6_INT % 32U))) != 0U))
         {
-            irqL1   = PMIC_IRQID_L1REG (pErrStat);
-            irqL2   = PMIC_IRQID_L2REG (pErrStat);
-            errStat = PMIC_IRQID_BITMASK (pErrStat);
-
-            if((PMIC_INT_GPIO6_MASK == irqL1) ||
-               (PMIC_INT_GPIO6_MASK == irqL2) ||
-               (PMIC_INT_GPIO6_MASK  == errStat))
+            while(PMIC_TPS6594X_GPIO6_INT != irqNum)
             {
-                /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
-                                              pin,
-                                              PMIC_GPIO_DISABLE_INTERRUPT,
-                                              maskPol);
-                if(PMIC_ST_SUCCESS == pmicStatus)
-                {
-                    /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
-                    break;
-                }
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_GPIO6_INT);
+                break;
             }
         }
     }
@@ -3093,11 +3026,9 @@ static void test_pmic_gpio7_testFall_interrupt(void)
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
     uint8_t maskPol           = PMIC_GPIO_POL_LOW;
-    const uint8_t clearIRQ    = 1U;
-    uint8_t errStat           = 0U;
-    uint32_t pErrStat         = 0U;
-    uint32_t irqL1            = 0U;
-    uint32_t irqL2            = 0U;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -3122,7 +3053,10 @@ static void test_pmic_gpio7_testFall_interrupt(void)
     pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 7 FALL Interrupt */
-    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO7_FALL_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_7_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_FALL_INT_TYPE);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -3139,28 +3073,24 @@ static void test_pmic_gpio7_testFall_interrupt(void)
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_GPIO7_INT/32U] & 
+             (1U << (PMIC_TPS6594X_GPIO7_INT % 32U))) != 0U))
         {
-            irqL1   = PMIC_IRQID_L1REG (pErrStat);
-            irqL2   = PMIC_IRQID_L2REG (pErrStat);
-            errStat = PMIC_IRQID_BITMASK (pErrStat);
-
-            if((PMIC_INT_GPIO7_MASK == irqL1) ||
-               (PMIC_INT_GPIO7_MASK == irqL2) ||
-               (PMIC_INT_GPIO7_MASK  == errStat))
+            while(PMIC_TPS6594X_GPIO7_INT != irqNum)
             {
-                /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
-                                              pin,
-                                              PMIC_GPIO_DISABLE_INTERRUPT,
-                                              maskPol);
-                if(PMIC_ST_SUCCESS == pmicStatus)
-                {
-                    /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
-                    break;
-                }
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_GPIO7_INT);
+                break;
             }
         }
     }
@@ -3181,11 +3111,9 @@ static void test_pmic_gpio7_testRise_interrupt(void)
     uint8_t pinValue          = PMIC_GPIO_LOW;
     uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
     uint8_t maskPol           = PMIC_GPIO_POL_HIGH;
-    const uint8_t clearIRQ    = 1U;
-    uint8_t errStat           = 0U;
-    uint32_t pErrStat         = 0U;
-    uint32_t irqL1            = 0U;
-    uint32_t irqL2            = 0U;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -3210,7 +3138,10 @@ static void test_pmic_gpio7_testRise_interrupt(void)
     pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 7 RISE Interrupt */
-    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO7_RISE_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_7_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_RISE_INT_TYPE);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -3227,28 +3158,24 @@ static void test_pmic_gpio7_testRise_interrupt(void)
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_GPIO7_INT/32U] & 
+             (1U << (PMIC_TPS6594X_GPIO7_INT % 32U))) != 0U))
         {
-            irqL1   = PMIC_IRQID_L1REG (pErrStat);
-            irqL2   = PMIC_IRQID_L2REG (pErrStat);
-            errStat = PMIC_IRQID_BITMASK (pErrStat);
-
-            if((PMIC_INT_GPIO7_MASK == irqL1) ||
-               (PMIC_INT_GPIO7_MASK == irqL2) ||
-               (PMIC_INT_GPIO7_MASK  == errStat))
+            while(PMIC_TPS6594X_GPIO7_INT != irqNum)
             {
-                /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
-                                              pin,
-                                              PMIC_GPIO_DISABLE_INTERRUPT,
-                                              maskPol);
-                if(PMIC_ST_SUCCESS == pmicStatus)
-                {
-                    /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
-                    break;
-                }
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_GPIO7_INT);
+                break;
             }
         }
     }
@@ -3270,11 +3197,9 @@ static void test_pmic_gpio8_testFall_interrupt(void)
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
     uint8_t maskPol           = PMIC_GPIO_POL_LOW;
-    const uint8_t clearIRQ    = 1U;
-    uint8_t errStat           = 0U;
-    uint32_t pErrStat         = 0U;
-    uint32_t irqL1            = 0U;
-    uint32_t irqL2            = 0U;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -3298,7 +3223,10 @@ static void test_pmic_gpio8_testFall_interrupt(void)
     pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 8 FALL Interrupt */
-    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO8_FALL_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_8_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_FALL_INT_TYPE);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -3315,28 +3243,24 @@ static void test_pmic_gpio8_testFall_interrupt(void)
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_GPIO8_INT/32U] & 
+             (1U << (PMIC_TPS6594X_GPIO8_INT % 32U))) != 0U))
         {
-            irqL1   = PMIC_IRQID_L1REG (pErrStat);
-            irqL2   = PMIC_IRQID_L2REG (pErrStat);
-            errStat = PMIC_IRQID_BITMASK (pErrStat);
-
-            if((PMIC_INT_GPIO8_MASK == irqL1) ||
-               (PMIC_INT_GPIO8_MASK == irqL2) ||
-               (PMIC_INT_GPIO8_MASK  == errStat))
+            while(PMIC_TPS6594X_GPIO8_INT != irqNum)
             {
-                /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
-                                              pin,
-                                              PMIC_GPIO_DISABLE_INTERRUPT,
-                                              maskPol);
-                if(PMIC_ST_SUCCESS == pmicStatus)
-                {
-                    /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
-                    break;
-                }
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_GPIO8_INT);
+                break;
             }
         }
     }
@@ -3357,11 +3281,9 @@ static void test_pmic_gpio8_testRise_interrupt(void)
     uint8_t pinValue          = PMIC_GPIO_LOW;
     uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
     uint8_t maskPol           = PMIC_GPIO_POL_HIGH;
-    const uint8_t clearIRQ    = 1U;
-    uint8_t errStat           = 0U;
-    uint32_t pErrStat         = 0U;
-    uint32_t irqL1            = 0U;
-    uint32_t irqL2            = 0U;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -3385,7 +3307,10 @@ static void test_pmic_gpio8_testRise_interrupt(void)
     pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 8 RISE Interrupt */
-    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO8_RISE_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_8_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_RISE_INT_TYPE);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -3402,28 +3327,24 @@ static void test_pmic_gpio8_testRise_interrupt(void)
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_GPIO8_INT/32U] & 
+             (1U << (PMIC_TPS6594X_GPIO8_INT % 32U))) != 0U))
         {
-            irqL1   = PMIC_IRQID_L1REG (pErrStat);
-            irqL2   = PMIC_IRQID_L2REG (pErrStat);
-            errStat = PMIC_IRQID_BITMASK (pErrStat);
-
-            if((PMIC_INT_GPIO8_MASK == irqL1) ||
-               (PMIC_INT_GPIO8_MASK == irqL2) ||
-               (PMIC_INT_GPIO8_MASK  == errStat))
+            while(PMIC_TPS6594X_GPIO8_INT != irqNum)
             {
-                /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
-                                              pin,
-                                              PMIC_GPIO_DISABLE_INTERRUPT,
-                                              maskPol);
-                if(PMIC_ST_SUCCESS == pmicStatus)
-                {
-                    /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
-                    break;
-                }
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_GPIO8_INT);
+                break;
             }
         }
     }
@@ -3446,11 +3367,9 @@ static void test_pmic_gpio9_testFall_interrupt(void)
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
     uint8_t maskPol           = PMIC_GPIO_POL_LOW;
-    const uint8_t clearIRQ    = 1U;
-    uint8_t errStat           = 0U;
-    uint32_t pErrStat         = 0U;
-    uint32_t irqL1            = 0U;
-    uint32_t irqL2            = 0U;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -3475,9 +3394,10 @@ static void test_pmic_gpio9_testFall_interrupt(void)
     pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 9 FALL Interrupt */
-    Pmic_irqMaskIntr(pPmicCoreHandle,
-                     PMIC_TPS6594X_IRQ_GPIO9_FALL_MASK,
-                     PMIC_IRQ_UNMASK);
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_9_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_FALL_INT_TYPE);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -3494,28 +3414,24 @@ static void test_pmic_gpio9_testFall_interrupt(void)
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_GPIO9_INT/32U] & 
+             (1U << (PMIC_TPS6594X_GPIO9_INT % 32U))) != 0U))
         {
-            irqL1   = PMIC_IRQID_L1REG (pErrStat);
-            irqL2   = PMIC_IRQID_L2REG (pErrStat);
-            errStat = PMIC_IRQID_BITMASK (pErrStat);
-
-            if((PMIC_INT_GPIO9_MASK == irqL1) ||
-               (PMIC_INT_GPIO9_MASK == irqL2) ||
-               (PMIC_INT_GPIO9_MASK  == errStat))
+            while(PMIC_TPS6594X_GPIO9_INT != irqNum)
             {
-                /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
-                                              pin,
-                                              PMIC_GPIO_DISABLE_INTERRUPT,
-                                              maskPol);
-                if(PMIC_ST_SUCCESS == pmicStatus)
-                {
-                    /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
-                    break;
-                }
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_GPIO9_INT);
+                break;
             }
         }
     }
@@ -3536,11 +3452,9 @@ static void test_pmic_gpio9_testRise_interrupt(void)
     uint8_t pinValue          = PMIC_GPIO_LOW;
     uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
     uint8_t maskPol           = PMIC_GPIO_POL_HIGH;
-    const uint8_t clearIRQ    = 1U;
-    uint8_t errStat           = 0U;
-    uint32_t pErrStat         = 0U;
-    uint32_t irqL1            = 0U;
-    uint32_t irqL2            = 0U;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -3565,7 +3479,10 @@ static void test_pmic_gpio9_testRise_interrupt(void)
     pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 9 RISE Interrupt */
-    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO9_RISE_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_9_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_RISE_INT_TYPE);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -3582,28 +3499,24 @@ static void test_pmic_gpio9_testRise_interrupt(void)
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_GPIO9_INT/32U] & 
+             (1U << (PMIC_TPS6594X_GPIO9_INT % 32U))) != 0U))
         {
-            irqL1   = PMIC_IRQID_L1REG (pErrStat);
-            irqL2   = PMIC_IRQID_L2REG (pErrStat);
-            errStat = PMIC_IRQID_BITMASK (pErrStat);
-
-            if((PMIC_INT_GPIO9_MASK == irqL1) ||
-               (PMIC_INT_GPIO9_MASK == irqL2) ||
-               (PMIC_INT_GPIO9_MASK  == errStat))
+            while(PMIC_TPS6594X_GPIO9_INT != irqNum)
             {
-                /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
-                                              pin,
-                                              PMIC_GPIO_DISABLE_INTERRUPT,
-                                              maskPol);
-                if(PMIC_ST_SUCCESS == pmicStatus)
-                {
-                    /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
-                    break;
-                }
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_GPIO9_INT);
+                break;
             }
         }
     }
@@ -3624,11 +3537,9 @@ static void test_pmic_gpio10_testFall_interrupt(void)
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
     uint8_t maskPol           = PMIC_GPIO_POL_LOW;
-    const uint8_t clearIRQ    = 1U;
-    uint8_t errStat           = 0U;
-    uint32_t pErrStat         = 0U;
-    uint32_t irqL1            = 0U;
-    uint32_t irqL2            = 0U;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -3653,7 +3564,10 @@ static void test_pmic_gpio10_testFall_interrupt(void)
     pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 10 FALL Interrupt */
-    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO10_FALL_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_10_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_FALL_INT_TYPE);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -3670,28 +3584,24 @@ static void test_pmic_gpio10_testFall_interrupt(void)
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_GPIO10_INT/32U] & 
+             (1U << (PMIC_TPS6594X_GPIO10_INT % 32U))) != 0U))
         {
-            irqL1   = PMIC_IRQID_L1REG (pErrStat);
-            irqL2   = PMIC_IRQID_L2REG (pErrStat);
-            errStat = PMIC_IRQID_BITMASK (pErrStat);
-
-            if((PMIC_INT_GPIO10_MASK == irqL1) ||
-               (PMIC_INT_GPIO10_MASK == irqL2) ||
-               (PMIC_INT_GPIO10_MASK  == errStat))
+            while(PMIC_TPS6594X_GPIO10_INT != irqNum)
             {
-                /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
-                                              pin,
-                                              PMIC_GPIO_DISABLE_INTERRUPT,
-                                              maskPol);
-                if(PMIC_ST_SUCCESS == pmicStatus)
-                {
-                    /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
-                    break;
-                }
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_GPIO10_INT);
+                break;
             }
         }
     }
@@ -3712,11 +3622,9 @@ static void test_pmic_gpio10_testRise_interrupt(void)
     uint8_t pinValue          = PMIC_GPIO_LOW;
     uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
     uint8_t maskPol           = PMIC_GPIO_POL_HIGH;
-    const uint8_t clearIRQ    = 1U;
-    uint8_t errStat           = 0U;
-    uint32_t pErrStat         = 0U;
-    uint32_t irqL1            = 0U;
-    uint32_t irqL2            = 0U;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -3741,7 +3649,10 @@ static void test_pmic_gpio10_testRise_interrupt(void)
     pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 10 RISE Interrupt */
-    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO10_RISE_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_10_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_RISE_INT_TYPE);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -3758,28 +3669,24 @@ static void test_pmic_gpio10_testRise_interrupt(void)
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_GPIO10_INT/32U] & 
+             (1U << (PMIC_TPS6594X_GPIO10_INT % 32U))) != 0U))
         {
-            irqL1   = PMIC_IRQID_L1REG (pErrStat);
-            irqL2   = PMIC_IRQID_L2REG (pErrStat);
-            errStat = PMIC_IRQID_BITMASK (pErrStat);
-
-            if((PMIC_INT_GPIO10_MASK == irqL1) ||
-               (PMIC_INT_GPIO10_MASK == irqL2) ||
-               (PMIC_INT_GPIO10_MASK  == errStat))
+            while(PMIC_TPS6594X_GPIO10_INT != irqNum)
             {
-                /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
-                                              pin,
-                                              PMIC_GPIO_DISABLE_INTERRUPT,
-                                              maskPol);
-                if(PMIC_ST_SUCCESS == pmicStatus)
-                {
-                    /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
-                    break;
-                }
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_GPIO10_INT);
+                break;
             }
         }
     }
@@ -3800,11 +3707,9 @@ static void test_pmic_gpio11_testFall_interrupt(void)
     uint8_t pinValue          = PMIC_GPIO_HIGH;
     uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
     uint8_t maskPol           = PMIC_GPIO_POL_LOW;
-    const uint8_t clearIRQ    = 1U;
-    uint8_t errStat           = 0U;
-    uint32_t pErrStat         = 0U;
-    uint32_t irqL1            = 0U;
-    uint32_t irqL2            = 0U;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -3816,7 +3721,9 @@ static void test_pmic_gpio11_testFall_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6254, pmic_gpio_tests);
+    test_pmic_print_unity_testcase_info(6254,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -3827,7 +3734,10 @@ static void test_pmic_gpio11_testFall_interrupt(void)
     pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 11 FALL Interrupt */
-    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO11_FALL_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_11_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_FALL_INT_TYPE);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -3844,28 +3754,24 @@ static void test_pmic_gpio11_testFall_interrupt(void)
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_GPIO11_INT/32U] & 
+             (1U << (PMIC_TPS6594X_GPIO11_INT % 32U))) != 0U))
         {
-            irqL1   = PMIC_IRQID_L1REG (pErrStat);
-            irqL2   = PMIC_IRQID_L2REG (pErrStat);
-            errStat = PMIC_IRQID_BITMASK (pErrStat);
-
-            if((PMIC_INT_GPIO11_MASK == irqL1) ||
-               (PMIC_INT_GPIO11_MASK == irqL2) ||
-               (PMIC_INT_GPIO11_MASK  == errStat))
+            while(PMIC_TPS6594X_GPIO11_INT != irqNum)
             {
-                /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
-                                              pin,
-                                              PMIC_GPIO_DISABLE_INTERRUPT,
-                                              maskPol);
-                if(PMIC_ST_SUCCESS == pmicStatus)
-                {
-                    /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
-                    break;
-                }
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_GPIO11_INT);
+                break;
             }
         }
     }
@@ -3886,11 +3792,9 @@ static void test_pmic_gpio11_testRise_interrupt(void)
     uint8_t pinValue          = PMIC_GPIO_LOW;
     uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
     uint8_t maskPol           = PMIC_GPIO_POL_HIGH;
-    const uint8_t clearIRQ    = 1U;
-    uint8_t errStat           = 0U;
-    uint32_t pErrStat         = 0U;
-    uint32_t irqL1            = 0U;
-    uint32_t irqL2            = 0U;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -3915,7 +3819,10 @@ static void test_pmic_gpio11_testRise_interrupt(void)
     pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 11 RISE Interrupt */
-    Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_IRQ_GPIO11_RISE_MASK, PMIC_IRQ_UNMASK);
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_11_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_RISE_INT_TYPE);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -3932,28 +3839,24 @@ static void test_pmic_gpio11_testRise_interrupt(void)
 
     while(1U)
     {
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &pErrStat, clearIRQ);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_GPIO11_INT/32U] & 
+             (1U << (PMIC_TPS6594X_GPIO11_INT % 32U))) != 0U))
         {
-            irqL1   = PMIC_IRQID_L1REG (pErrStat);
-            irqL2   = PMIC_IRQID_L2REG (pErrStat);
-            errStat = PMIC_IRQID_BITMASK (pErrStat);
-
-            if((PMIC_INT_GPIO11_MASK == irqL1) ||
-               (PMIC_INT_GPIO11_MASK == irqL2) ||
-               (PMIC_INT_GPIO11_MASK  == errStat))
+            while(PMIC_TPS6594X_GPIO11_INT != irqNum)
             {
-                /* Disable the GPIO Interrupt  */
-                pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
-                                              pin,
-                                              PMIC_GPIO_DISABLE_INTERRUPT,
-                                              maskPol);
-                if(PMIC_ST_SUCCESS == pmicStatus)
-                {
-                    /* clear the interrupt */
-                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, pErrStat);
-                    break;
-                }
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_GPIO11_INT);
+                break;
             }
         }
     }
@@ -4043,7 +3946,7 @@ static void test_pmic_gpio_intr_prmValTest_intrType(void)
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     uint8_t pin               = 1U;
     uint8_t pinValue          = PMIC_GPIO_HIGH;
-    uint8_t intrType          = 0x3U;
+    uint8_t intrType          = 0x4U;
     uint8_t maskPol           = PMIC_GPIO_POL_LOW;
     Pmic_GpioCfg_t gpioCfg    =
     {
