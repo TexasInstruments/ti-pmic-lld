@@ -41,6 +41,7 @@
 
 #include <pmic_types.h>
 #include <pmic_gpio.h>
+#include <pmic_irq.h>
 
 #include <pmic_core_priv.h>
 #include <pmic_io_priv.h>
@@ -932,17 +933,17 @@ static int32_t Pmic_gpioIntrEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
                                    const uint8_t      intrType,
                                    const uint8_t      maskPol)
 {
-    int32_t status  = PMIC_ST_SUCCESS;
-    uint8_t regData = 0U;
-
+    int32_t status                       = PMIC_ST_SUCCESS;
+    uint8_t regData                      = 0U;
     Pmic_GpioIntRegCfg_t *pGpioIntRegCfg = NULL;
 
     status = Pmic_get_gpioIntRegCfg(pPmicCoreHandle, &pGpioIntRegCfg);
 
+    /* Start Critical section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
     if (PMIC_ST_SUCCESS == status)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-
         status = Pmic_commIntf_recvByte(pPmicCoreHandle,
                                         pGpioIntRegCfg[pin].intRegAddr,
                                         &regData);
@@ -950,6 +951,8 @@ static int32_t Pmic_gpioIntrEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == status)
     {
+        /* Configuring the GPIOx_FSM_MASK and GPIOx_FSM_MASK_POL fields in the
+           PMIC_FSM_TRIG_MASK Register */
         BIT_POS_SET_VAL(regData,
                         pGpioIntRegCfg[pin].intRegBitPos,
                         PMIC_GPIO_INT_ENABLE);
@@ -961,45 +964,17 @@ static int32_t Pmic_gpioIntrEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
                                         regData);
     }
 
-    if((PMIC_ST_SUCCESS == status) &&
-       (PMIC_GPIO_FALL_INTERRUPT == intrType))
-    {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        pGpioIntRegCfg[pin].intFallRegAddr,
-                                        &regData);
-        if(PMIC_ST_SUCCESS == status)
-        {
-            BIT_POS_SET_VAL(regData,
-                            pGpioIntRegCfg[pin].intFallRegBitPos,
-                            PMIC_GPIO_INT_ENABLE);
-            status = Pmic_commIntf_sendByte(
-                                        pPmicCoreHandle,
-                                        pGpioIntRegCfg[pin].intFallRegAddr,
-                                        regData);
-        }
-    }
-
-    if((PMIC_ST_SUCCESS == status) &&
-        (PMIC_GPIO_RISE_INTERRUPT == intrType))
-    {
-            status = Pmic_commIntf_recvByte(
-                                        pPmicCoreHandle,
-                                        pGpioIntRegCfg[pin].intRiseRegAddr,
-                                        &regData);
-        if(PMIC_ST_SUCCESS == status)
-        {
-            BIT_POS_SET_VAL(regData,
-                            pGpioIntRegCfg[pin].intRiseRegBitPos,
-                            PMIC_GPIO_INT_ENABLE);
-            status = Pmic_commIntf_sendByte(
-                                        pPmicCoreHandle,
-                                        pGpioIntRegCfg[pin].intRiseRegAddr,
-                                        regData);
-        }
-    }
-
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        /* Configuring GPIO MASK Registers */
+        status = Pmic_irqGpioMaskIntr(pPmicCoreHandle, 
+                                      pin,
+                                      PMIC_IRQ_UNMASK,
+                                      intrType);
+    }
 
     return status;
 }
@@ -1010,17 +985,17 @@ static int32_t Pmic_gpioIntrEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
 static int32_t Pmic_gpioIntrDisable(Pmic_CoreHandle_t *pPmicCoreHandle,
                                     const uint8_t      pin)
 {
-    int32_t status  = PMIC_ST_SUCCESS;
-    uint8_t regData = 0U;
-
+    int32_t status                       = PMIC_ST_SUCCESS;
+    uint8_t regData                      = 0U;
     Pmic_GpioIntRegCfg_t *pGpioIntRegCfg = NULL;
 
     status = Pmic_get_gpioIntRegCfg(pPmicCoreHandle, &pGpioIntRegCfg);
 
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
     if (PMIC_ST_SUCCESS == status)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-
         status = Pmic_commIntf_recvByte(pPmicCoreHandle,
                                         pGpioIntRegCfg[pin].intRegAddr,
                                         &regData);
@@ -1028,12 +1003,22 @@ static int32_t Pmic_gpioIntrDisable(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == status)
     {
+        /* Masking the GPIOx_FSM_MASK register */
         BIT_POS_SET_VAL(regData,
                         pGpioIntRegCfg[pin].intRegBitPos,
                         PMIC_GPIO_INT_MASK);
         status = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                         pGpioIntRegCfg[pin].intRegAddr,
                                         regData);
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        /* Masking the GPIO MASK Register */
+        status = Pmic_irqGpioMaskIntr(pPmicCoreHandle, 
+                                      pin,
+                                      PMIC_IRQ_MASK,
+                                      PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
     }
 
     /* Stop Critical Section */

@@ -192,7 +192,8 @@ extern "C" {
  */
 #define PMIC_GPIO_FALL_INTERRUPT        (0U)
 #define PMIC_GPIO_RISE_INTERRUPT        (1U)
-#define PMIC_GPIO_DISABLE_INTERRUPT     (2U)
+#define PMIC_GPIO_FALL_RISE_INTERRUPT   (2U)
+#define PMIC_GPIO_DISABLE_INTERRUPT     (3U)
 /*  @} */
 
 /**

@@ -76,9 +76,6 @@ extern "C" {
 #define PMIC_FSM_TRIG_MASK_1_REGADDR            (0x46U)
 #define PMIC_FSM_TRIG_MASK_2_REGADDR            (0x47U)
 #define PMIC_FSM_TRIG_MASK_3_REGADDR            (0x48U)
-#define PMIC_MASK_GPIO1_8_FALL_REGADDR          (0x4FU)
-#define PMIC_MASK_GPIO1_8_RISE_REGADDR          (0x50U)
-#define PMIC_MASK_GPIO9_11_REGADDR              (0x51U)
 
 /*!
  * \brief  GPIO Register bit fields for all GPIO pins
@@ -119,33 +116,8 @@ extern "C" {
 #define PMIC_GPIO_OUT_2_GPIO10_OUT_SHIFT        (0x01U)
 
 /*!
- * \brief  GPIO Interrupt Mask Register bit fields
+ * \brief  GPIO FSM TRIG Mask Register bit fields
  */
-/*! Bit fields for PMIC_MASK_GPIO1_8_FALL_REG */
-#define PMIC_MASK_GPIO1_8_FALL_GPIO1_FALL_MASK_SHIFT       (0x0U)
-#define PMIC_MASK_GPIO1_8_FALL_GPIO2_FALL_MASK_SHIFT       (0x1U)
-#define PMIC_MASK_GPIO1_8_FALL_GPIO3_FALL_MASK_SHIFT       (0x2U)
-#define PMIC_MASK_GPIO1_8_FALL_GPIO4_FALL_MASK_SHIFT       (0x3U)
-#define PMIC_MASK_GPIO1_8_FALL_GPIO5_FALL_MASK_SHIFT       (0x4U)
-#define PMIC_MASK_GPIO1_8_FALL_GPIO6_FALL_MASK_SHIFT       (0x5U)
-#define PMIC_MASK_GPIO1_8_FALL_GPIO7_FALL_MASK_SHIFT       (0x6U)
-#define PMIC_MASK_GPIO1_8_FALL_GPIO8_FALL_MASK_SHIFT       (0x7U)
-/*! Bit fields for PMIC_MASK_GPIO1_8_RISE_REG */
-#define PMIC_MASK_GPIO1_8_RISE_GPIO1_RISE_MASK_SHIFT       (0x0U)
-#define PMIC_MASK_GPIO1_8_RISE_GPIO2_RISE_MASK_SHIFT       (0x1U)
-#define PMIC_MASK_GPIO1_8_RISE_GPIO3_RISE_MASK_SHIFT       (0x2U)
-#define PMIC_MASK_GPIO1_8_RISE_GPIO4_RISE_MASK_SHIFT       (0x3U)
-#define PMIC_MASK_GPIO1_8_RISE_GPIO5_RISE_MASK_SHIFT       (0x4U)
-#define PMIC_MASK_GPIO1_8_RISE_GPIO6_RISE_MASK_SHIFT       (0x5U)
-#define PMIC_MASK_GPIO1_8_RISE_GPIO7_RISE_MASK_SHIFT       (0x6U)
-#define PMIC_MASK_GPIO1_8_RISE_GPIO8_RISE_MASK_SHIFT       (0x7U)
-/*! Bit fields for PMIC_MASK_GPIO9_11_REG */
-#define PMIC_MASK_GPIO9_11_GPIO9_FALL_MASK_SHIFT           (0x0U)
-#define PMIC_MASK_GPIO9_11_GPIO10_FALL_MASK_SHIFT          (0x1U)
-#define PMIC_MASK_GPIO9_11_GPIO11_FALL_MASK_SHIFT          (0x2U)
-#define PMIC_MASK_GPIO9_11_GPIO9_RISE_MASK_SHIFT           (0x3U)
-#define PMIC_MASK_GPIO9_11_GPIO10_RISE_MASK_SHIFT          (0x4U)
-#define PMIC_MASK_GPIO9_11_GPIO11_RISE_MASK_SHIFT          (0x5U)
 /*! Bit fields for PMIC_FSM_TRIG_MASK_1_REG */
 #define PMIC_FSM_TRIG_MASK_1_GPIO1_FSM_MASK_SHIFT          (0x0U)
 #define PMIC_FSM_TRIG_MASK_1_GPIO1_FSM_MASK_POL_SHIFT      (0x1U)
@@ -264,77 +236,8 @@ extern "C" {
                                             PMIC_GPIO_OUT_2_GPIO10_OUT_SHIFT)
 
 /*!
- * \brief  GPIO Interrupt Mask Register bit mask
+ * \brief  GPIO FSM TRIG Mask Register bit mask
  */
-/*! Bit Mask for PMIC_MASK_GPIO1_8_FALL_REG */
-#define PMIC_MASK_GPIO1_8_FALL_GPIO1_FALL_MASK_MASK      \
-                                (uint8_t)(0x01 <<  \
-                                PMIC_MASK_GPIO1_8_FALL_GPIO1_FALL_MASK_SHIFT)
-#define PMIC_MASK_GPIO1_8_FALL_GPIO2_FALL_MASK_MASK      \
-                                (uint8_t)(0x01 <<  \
-                                PMIC_MASK_GPIO1_8_FALL_GPIO2_FALL_MASK_SHIFT)
-#define PMIC_MASK_GPIO1_8_FALL_GPIO3_FALL_MASK_MASK      \
-                                (uint8_t)(0x01 <<  \
-                                PMIC_MASK_GPIO1_8_FALL_GPIO3_FALL_MASK_SHIFT)
-#define PMIC_MASK_GPIO1_8_FALL_GPIO4_FALL_MASK_MASK      \
-                                (uint8_t)(0x01 <<  \
-                                PMIC_MASK_GPIO1_8_FALL_GPIO4_FALL_MASK_SHIFT)
-#define PMIC_MASK_GPIO1_8_FALL_GPIO5_FALL_MASK_MASK      \
-                                (uint8_t)(0x01 <<  \
-                                PMIC_MASK_GPIO1_8_FALL_GPIO5_FALL_MASK_SHIFT)
-#define PMIC_MASK_GPIO1_8_FALL_GPIO6_FALL_MASK_MASK      \
-                                (uint8_t)(0x01 <<  \
-                                PMIC_MASK_GPIO1_8_FALL_GPIO6_FALL_MASK_SHIFT)
-#define PMIC_MASK_GPIO1_8_FALL_GPIO7_FALL_MASK_MASK      \
-                                (uint8_t)(0x01 <<  \
-                                PMIC_MASK_GPIO1_8_FALL_GPIO7_FALL_MASK_SHIFT)
-#define PMIC_MASK_GPIO1_8_FALL_GPIO8_FALL_MASK_MASK      \
-                                (uint8_t)(0x01 <<  \
-                                PMIC_MASK_GPIO1_8_FALL_GPIO8_FALL_MASK_SHIFT)
-/*! Bit Mask for PMIC_MASK_GPIO1_8_RISE_REG */
-#define PMIC_MASK_GPIO1_8_RISE_GPIO1_RISE_MASK_MASK      \
-                                (uint8_t)(0x01 <<  \
-                                PMIC_MASK_GPIO1_8_RISE_GPIO1_RISE_MASK_SHIFT)
-#define PMIC_MASK_GPIO1_8_RISE_GPIO2_RISE_MASK_MASK      \
-                                (uint8_t)(0x01 <<  \
-                                PMIC_MASK_GPIO1_8_RISE_GPIO2_RISE_MASK_SHIFT)
-#define PMIC_MASK_GPIO1_8_RISE_GPIO3_RISE_MASK_MASK      \
-                                (uint8_t)(0x01 <<  \
-                                PMIC_MASK_GPIO1_8_RISE_GPIO3_RISE_MASK_SHIFT)
-#define PMIC_MASK_GPIO1_8_RISE_GPIO4_RISE_MASK_MASK      \
-                                (uint8_t)(0x01 <<  \
-                                PMIC_MASK_GPIO1_8_RISE_GPIO4_RISE_MASK_SHIFT)
-#define PMIC_MASK_GPIO1_8_RISE_GPIO5_RISE_MASK_MASK      \
-                                (uint8_t)(0x01 <<  \
-                                PMIC_MASK_GPIO1_8_RISE_GPIO5_RISE_MASK_SHIFT)
-#define PMIC_MASK_GPIO1_8_RISE_GPIO6_RISE_MASK_MASK      \
-                                (uint8_t)(0x01 <<  \
-                                PMIC_MASK_GPIO1_8_RISE_GPIO6_RISE_MASK_SHIFT)
-#define PMIC_MASK_GPIO1_8_RISE_GPIO7_RISE_MASK_MASK      \
-                                (uint8_t)(0x01 <<  \
-                                PMIC_MASK_GPIO1_8_RISE_GPIO7_RISE_MASK_SHIFT)
-#define PMIC_MASK_GPIO1_8_RISE_GPIO8_RISE_MASK_MASK      \
-                                (uint8_t)(0x01 <<  \
-                                PMIC_MASK_GPIO1_8_RISE_GPIO8_RISE_MASK_SHIFT)
-/*! Bit Mask for PMIC_MASK_GPIO9_11_REG */
-#define PMIC_MASK_GPIO9_11_GPIO9_FALL_MASK_MASK          \
-                                (uint8_t)(0x01 <<  \
-                                PMIC_MASK_GPIO9_11_GPIO9_FALL_MASK_SHIFT)
-#define PMIC_MASK_GPIO9_11_GPIO10_FALL_MASK_MASK         \
-                                (uint8_t)(0x01 <<  \
-                                PMIC_MASK_GPIO9_11_GPIO10_FALL_MASK_SHIFT)
-#define PMIC_MASK_GPIO9_11_GPIO11_FALL_MASK_MASK         \
-                                (uint8_t)(0x01 <<  \
-                                PMIC_MASK_GPIO9_11_GPIO11_FALL_MASK_SHIFT)
-#define PMIC_MASK_GPIO9_11_GPIO9_RISE_MASK_MASK          \
-                                (uint8_t)(0x01 <<  \
-                                PMIC_MASK_GPIO9_11_GPIO9_RISE_MASK_SHIFT)
-#define PMIC_MASK_GPIO9_11_GPIO10_RISE_MASK_MASK         \
-                                (uint8_t)(0x01 <<  \
-                                PMIC_MASK_GPIO9_11_GPIO10_RISE_MASK_SHIFT)
-#define PMIC_MASK_GPIO9_11_GPIO11_RISE_MASK_MASK         \
-                                (uint8_t)(0x01 <<  \
-                                PMIC_MASK_GPIO9_11_GPIO11_RISE_MASK_SHIFT)
 /*! Bit Mask for PMIC_FSM_TRIG_MASK_1_REG */
 #define PMIC_FSM_TRIG_MASK_1_GPIO1_FSM_MASK_MASK          \
                                 (uint8_t)(0x01 <<  \
@@ -436,20 +339,13 @@ typedef struct Pmic_GpioInOutCfg_s
 *
 * \param   intRegAddr         Register Address of the gpio interrupt
 * \param   intRegBitPos       Register bit position of gpio interrupt
-* \param   intRiseRegAddr     Register Address of gpio rise interrupt
-* \param   intRiseRegBitPos   Register bit position of gpio rise interrupt
-* \param   intFallRegAddr     Register Address of gpio fall interrupt
-* \param   intFallRegBitPos   Register bit position of gpio fall interrupt
+* \param   intRegPolBitPos    Register bit position of gpio polarity
 */
 typedef struct Pmic_GpioIntRegCfg_s
 {
     uint8_t  intRegAddr;
     uint8_t  intRegBitPos;
     uint8_t  intRegPolBitPos;
-    uint8_t  intRiseRegAddr;
-    uint8_t  intRiseRegBitPos;
-    uint8_t  intFallRegAddr;
-    uint8_t  intFallRegBitPos;
 } Pmic_GpioIntRegCfg_t;
 
 /*==========================================================================*/
