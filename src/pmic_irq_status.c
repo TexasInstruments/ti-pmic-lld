@@ -32,976 +32,319 @@
  *****************************************************************************/
 
 /**
- * /file   pmic_irq_status.c
+ * \file   pmic_irq_status.c
  *
- * /brief  This file contains APIs definitions for PMIC Interrupt IRQ Status
+ * \brief  This file contains APIs definitions for PMIC Interrupt IRQ Status
  *         Handler.
  *
  */
 
 #include <pmic_irq.h>
+#include <pmic_core_priv.h>
+#include <pmic_irq_tps6594x_priv.h>
+#include <pmic_irq_lp8764x_priv.h>
+#include <cfg/tps6594x/pmic_irq_tps6594x.h>
+#include <cfg/lp8764x/pmic_irq_lp8764x.h>
 #include <pmic_irq_priv.h>
 
 /*!
- * \brief   Error Bit Mask Status Validation
- * \param   errBitStatus - Error Mask value extracted from
- *          errStat from the application
- * \param   mask  - Expected Error mask value
+ * \brief  Function to Set the intStatus bit position.
  */
-static int32_t Pmic_errorBitMaskCheck(uint32_t errBitStatus,
-                                      uint8_t  mask)
+void Pmic_intrBitSet(Pmic_IrqStatus_t  *pErrStat, uint32_t pos)
+{
+    uint32_t intStatSize = 0U;
+
+    /* Size of intStatus in bits */
+    intStatSize = sizeof(pErrStat->intStatus[0U]) << 3U;
+
+    pErrStat->intStatus[pos / intStatSize] |= (1U << (pos % intStatSize));
+}
+
+/*!
+ * \brief  Function to Clear the intStatus bit position.
+ */
+static void Pmic_intrBitClear(Pmic_IrqStatus_t *pErrStat, uint8_t *pIrqNum)
+{
+    uint32_t intStatSize = 0U;
+
+    /* Size of intStatus in bits */
+    intStatSize = sizeof(pErrStat->intStatus[0U]) << 3U;
+
+    pErrStat->intStatus[(*pIrqNum) / intStatSize] &=
+                                         ~(1U << ((*pIrqNum) % intStatSize));
+}
+
+/*!
+ * \brief  Function to Extract the intStatus bit position.
+ */
+static uint8_t Pmic_intrBitExtract(Pmic_IrqStatus_t *pErrStat,
+                                   uint8_t           maxVal)
+{
+    uint8_t irqNum       = 0U;
+    uint32_t intStatSize = 0U;
+
+    /* Size of intStatus in bits */
+    intStatSize = sizeof(pErrStat->intStatus[0U]) << 3U;
+    for(irqNum = 0U; irqNum < maxVal; irqNum++)
+    {
+        if(((pErrStat->intStatus[irqNum / intStatSize]) & 
+            (1U << (irqNum % intStatSize))) != 0U)
+        {
+            break;
+        }
+    }
+
+    return irqNum;
+}
+
+/*! 
+ * \brief  Function to get the device specific Max IrqNum.
+ */
+static int32_t Pmic_getMaxVal(Pmic_CoreHandle_t  *pPmicCoreHandle,
+                              uint8_t            *maxVal)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    if((errBitStatus & mask) != errBitStatus)
+
+    switch(pPmicCoreHandle->pmicDeviceType)
     {
-        pmicStatus = PMIC_ST_ERR_INV_INT;
-    }
-
-    return pmicStatus;
-}
-
-/*!
- * \brief   Function to get Error bit status
- *
- * \param   regValue   [IN]    Register Value
- * \param   offset     [IN]    Register offset
- * \param   maxBits    [IN]    Maximum bits
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          Where retVal is of enum type #Pmic_Status_t
- */
-static int32_t  Pmic_getErrBitStatus(uint8_t  regValue,
-                                     uint8_t  offset,
-                                     uint32_t maxBits)
-{
-    uint32_t bitIdx = PMIC_INT_INVALID_REGADDR;
-
-    for(bitIdx = offset; bitIdx < maxBits; bitIdx++)
-    {
-        if((regValue & (1U << bitIdx)))
-        {
-            bitIdx = (regValue & (1U << bitIdx));
+        case PMIC_DEV_LEO_TPS6594X:
+            (*maxVal) = PMIC_TPS6594X_IRQ_MAX_NUM;
             break;
-        }
-    }
 
-    return bitIdx;
-}
-
-/*!
- * \brief   This function is used for clearing the interrupt.
- */
-static int32_t Pmic_irqClear(Pmic_CoreHandle_t *pPmicCoreHandle,
-                             const uint32_t     errStat)
-{
-    int32_t  pmicStatus      = PMIC_ST_SUCCESS;
-    uint32_t irqL1RegAddr    = 0U;
-    uint32_t irqL2RegAddr    = 0U;
-    uint32_t errBitStatus    = 0U;
-    uint32_t regAddr         = 0U;
-    uint8_t  regValue        = 0U;
-
-    if(0x00U == errStat)
-    {
-        pmicStatus = PMIC_ST_ERR_INV_INT;
-    }
-
-    /* Extract Level 1, Level 2 register offsets and error code */
-    irqL1RegAddr   = PMIC_IRQID_L1REG(errStat);
-    irqL2RegAddr   = PMIC_IRQID_L2REG(errStat);
-    errBitStatus   = PMIC_IRQID_BITMASK(errStat);
-
-    /*
-     * Find the register to be updated to clear IRQ
-     * If the IRQ status is directly from L1 register, use L1;
-     * else, L2 register contains the IRQ status bits, use L2;
-     */
-    if(0U != irqL2RegAddr)
-    {
-        regAddr = irqL2RegAddr;
-    }
-    else
-    {
-        regAddr = irqL1RegAddr;
-    }
-
-    if(0U != regAddr)
-    {
-        /* Start Critical Section */
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-
-        /* Read, update and write back register */
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            regAddr,
-                                            &regValue);
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            regValue  |= errBitStatus;
-            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                                regAddr,
-                                                regValue);
-        }
-
-        /* Stop Critical Section*/
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
-
-    return pmicStatus;
-}
-
-/*!
- * \brief   This function is validate the interrupt to be cleared.
- */
-static int32_t Pmic_irqValidate(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                const uint32_t     errStat)
-{
-    int32_t  pmicStatus   = PMIC_ST_SUCCESS;
-    uint32_t irqL1RegAddr = 0U;
-    uint32_t irqL2RegAddr = 0U;
-    uint32_t errBitStatus = 0U;
-
-    /* Extract Level 1, Level 2 register offsets and error code */
-    irqL1RegAddr   = PMIC_IRQID_L1REG  (errStat);
-    irqL2RegAddr   = PMIC_IRQID_L2REG  (errStat);
-    errBitStatus   = PMIC_IRQID_BITMASK(errStat);
-
-    /* Validate Level 1 and 2 register offset values and the error code */
-    switch(irqL1RegAddr)
-    {
-        case PMIC_INT_BUCK_REGADDR:
-            switch(irqL2RegAddr)
-            {
-                case PMIC_INT_BUCK1_2_REGADDR:
-                case PMIC_INT_BUCK3_4_REGADDR:
-                    /* Any of the bits 0-7 are valid, so no error */
-                    break;
-                case PMIC_INT_BUCK5_REGADDR:
-                    if(PMIC_DEV_HERA_LP8764  ==
-                       pPmicCoreHandle->pmicDeviceType)
-                    {
-                        /* BUCK5 not supported by HERA */
-                        pmicStatus = PMIC_ST_ERR_INV_INT;
-                    }
-                    break;
-                default:
-                    pmicStatus = PMIC_ST_ERR_INV_INT;
-                    break;
-            }
+        case PMIC_DEV_HERA_LP8764X:
+            (*maxVal) = PMIC_LP8764X_IRQ_MAX_NUM;
             break;
-        case PMIC_INT_LDO_VMON_REGADDR:
-            if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-            {
-                /* LDO-VMON not supported by HERA */
-                pmicStatus = PMIC_ST_ERR_INV_INT;
-            }
 
-            switch(irqL2RegAddr)
-            {
-                case PMIC_INT_LDO1_2_REGADDR:
-                    pmicStatus = Pmic_errorBitMaskCheck(errBitStatus,
-                                                        PMIC_INT_LDO_1_3_MASK);
-                    break;
-                case PMIC_INT_LDO3_4_REGADDR:
-                    pmicStatus = Pmic_errorBitMaskCheck(errBitStatus,
-                                                        PMIC_INT_LDO_2_4_MASK);
-                    break;
-                case PMIC_INT_VMON_REGADDR:
-                    pmicStatus = Pmic_errorBitMaskCheck(errBitStatus,
-                                                       PMIC_INT_LDO_VMON_MASK);
-                    break;
-                default:
-                    pmicStatus = PMIC_ST_ERR_INV_INT;
-                    break;
-            }
-            break;
-        case PMIC_INT_GPIO_REGADDR:
-            switch(irqL2RegAddr)
-            {
-                case PMIC_INT_GPIO1_8_REGADDR:
-                    /* Any of the bits 0-7 are valid, so no error */
-                    break;
-                case PMIC_INT_UNUSED_REGADDR:
-                    if(PMIC_DEV_LEO_TPS6594X      ==
-                       pPmicCoreHandle->pmicDeviceType)
-                    {
-                        pmicStatus = Pmic_errorBitMaskCheck(errBitStatus,
-                                                       PMIC_INT_GPIO9_11_MASK);
-                    }
-                    else
-                    {
-                        pmicStatus = Pmic_errorBitMaskCheck(errBitStatus,
-                                                 PMIC_INT_GPIO_GPIO9_INT_MASK);
-                    }
-                    break;
-                default:
-                    pmicStatus = PMIC_ST_ERR_INV_INT;
-                    break;
-            }
-            break;
-        case PMIC_INT_STARTUP_REGADDR:
-            switch(irqL2RegAddr)
-            {
-                case PMIC_INT_RTC_STATUS_REGADDR:
-                    if(PMIC_DEV_LEO_TPS6594X      ==
-                       pPmicCoreHandle->pmicDeviceType)
-                    {
-                        pmicStatus = Pmic_errorBitMaskCheck(errBitStatus,
-                                                            PMIC_INT_RTC_MASK);
-                    }
-                    else
-                    {
-                        pmicStatus = PMIC_ST_ERR_INV_INT;
-                    }
-
-                    break;
-                case PMIC_INT_UNUSED_REGADDR:
-                    pmicStatus = Pmic_errorBitMaskCheck(errBitStatus,
-                                                        PMIC_INT_STARTUP_MASK);
-                    break;
-                default:
-                    pmicStatus = PMIC_ST_ERR_INV_INT;
-                    break;
-            }
-            break;
-        case PMIC_INT_MISC_REGADDR:
-            switch(irqL2RegAddr)
-            {
-                case PMIC_INT_UNUSED_REGADDR:
-                    pmicStatus = Pmic_errorBitMaskCheck(errBitStatus,
-                                                      PMIC_INT_MISC_WARN_MASK);
-                    break;
-                default:
-                    pmicStatus = PMIC_ST_ERR_INV_INT;
-                    break;
-            }
-            break;
-        case PMIC_INT_MODERATE_ERR_REGADDR:
-            switch(irqL2RegAddr)
-            {
-                case PMIC_INT_UNUSED_REGADDR:
-                    /* Any of the bits 0-7 are valid, so no error */
-                    break;
-                default:
-                    pmicStatus = PMIC_ST_ERR_INV_INT;
-                    break;
-            }
-            break;
-        case PMIC_INT_SEVERE_ERR_REGADDR:
-            switch(irqL2RegAddr)
-            {
-                case PMIC_INT_UNUSED_REGADDR:
-                    pmicStatus = Pmic_errorBitMaskCheck(errBitStatus,
-                                                        PMIC_INT_SEVERE_MASK);
-                    break;
-                default:
-                    pmicStatus = PMIC_ST_ERR_INV_INT;
-                    break;
-            }
-            break;
-        case PMIC_INT_FSM_ERR_REGADDR:
-            switch(irqL2RegAddr)
-            {
-                case PMIC_INT_UNUSED_REGADDR:
-                    pmicStatus = Pmic_errorBitMaskCheck(errBitStatus,
-                                                        PMIC_INT_FSM_ERR_MASK);
-                    break;
-                case PMIC_INT_COMM_ERR_REGADDR:
-                    pmicStatus = Pmic_errorBitMaskCheck(errBitStatus,
-                                                       PMIC_INT_COMM_ERR_MASK);
-                    break;
-                case PMIC_INT_RDBACK_ERR_REGADDR:
-                    pmicStatus = Pmic_errorBitMaskCheck(errBitStatus,
-                                                       PMIC_INT_RDBK_ERR_MASK);
-                    break;
-                case PMIC_INT_ESM_REGADDR:
-                    if(PMIC_DEV_HERA_LP8764X ==
-                       pPmicCoreHandle->pmicDeviceType)
-                    {
-                        pmicStatus = Pmic_errorBitMaskCheck(errBitStatus,
-                                                        PMIC_INT_ESM_MCU_MASK);
-                    }
-                    else
-                    {
-                        pmicStatus = Pmic_errorBitMaskCheck(errBitStatus,
-                                                            PMIC_INT_ESM_MASK);
-                    }
-
-                    break;
-                case PMIC_WD_ERR_STATUS_REGADDR:
-                    pmicStatus = Pmic_errorBitMaskCheck(errBitStatus,
-                                                        PMIC_INT_WD_ERR_MASK);
-                    break;
-                default:
-                    pmicStatus = PMIC_ST_ERR_INV_INT;
-                    break;
-            }
-            break;
         default:
-            /* Not a valid Level 1 Register! */
-            pmicStatus = PMIC_ST_ERR_INV_INT;
+            pmicStatus = PMIC_ST_ERR_INV_DEVICE;
             break;
     }
 
     return pmicStatus;
 }
 
-/*!
- * \brief   This function is get the level-1 error register address.
+/*! 
+ * \brief  Function to get the Device specific Interrupt Configuration
+ *         registers.
  */
-static int32_t Pmic_irqGetL1Error(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                  uint8_t            regValue,
-                                  uint32_t          *regAddr)
-{
-    int32_t  pmicStatus = PMIC_ST_SUCCESS;
-    int32_t  tmp        = 0U;
-
-    /*
-     * Start from highest priority error to get
-     * Level 1 Register offset to get more error info
-     */
-    (*regAddr) = PMIC_INT_UNUSED_REGADDR;
-
-    for(tmp = 7U;
-       (tmp >= 0) && (PMIC_INT_UNUSED_REGADDR == (*regAddr));
-        tmp--)
-    {
-        switch(regValue & (1U << tmp))
-        {
-            case PMIC_INT_TOP_BUCK_INT_MASK:
-                (*regAddr) = PMIC_INT_BUCK_REGADDR;
-                break;
-
-            case PMIC_INT_TOP_LDO_VMON_INT_MASK:
-                if(PMIC_DEV_HERA_LP8764X  ==
-                   pPmicCoreHandle->pmicDeviceType)
-                {
-                    /*LDO-VMON not supported by HERA*/
-                    break;
-                }
-
-                (*regAddr) = PMIC_INT_LDO_VMON_REGADDR;
-                break;
-
-            case PMIC_INT_TOP_GPIO_INT_MASK:
-                (*regAddr) = PMIC_INT_GPIO_REGADDR;
-                break;
-
-            case PMIC_INT_TOP_STARTUP_INT_MASK:
-                (*regAddr) = PMIC_INT_STARTUP_REGADDR;
-                break;
-
-            case PMIC_INT_TOP_MISC_INT_MASK:
-                (*regAddr) = PMIC_INT_MISC_REGADDR;
-                break;
-
-            case PMIC_INT_TOP_MODERATE_ERR_INT_MASK:
-                (*regAddr) = PMIC_INT_MODERATE_ERR_REGADDR;
-                break;
-
-            case PMIC_INT_TOP_SEVERE_ERR_INT_MASK:
-                (*regAddr) = PMIC_INT_SEVERE_ERR_REGADDR;
-                break;
-
-            case PMIC_INT_TOP_FSM_ERR_INT_MASK:
-                (*regAddr) = PMIC_INT_FSM_ERR_REGADDR;
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    /*
-     * If some invalid value is found for register offset,
-     * return error
-     */
-    if(PMIC_INT_UNUSED_REGADDR == (*regAddr))
-    {
-        (*regAddr) = 0U;
-    }
-
-    return pmicStatus;
-}
-
-/*!
- * \brief   This function is get the level-2 error register address.
- */
-static int32_t Pmic_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                  uint8_t            regValue,
-                                  uint32_t          *regAddr,
-                                  uint32_t          *irqL1RegAddr,
-                                  uint32_t          *irqL2RegAddr,
-                                  uint32_t          *errBitStatus)
+static int32_t Pmic_get_intrCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
+                                Pmic_IntrCfg_t    **pIntrCfg)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    /*
-     * Now that we have the Level 1 Register value,
-     * save Level 1 register address to generate final error code
-     */
-    (*irqL1RegAddr) = (*regAddr);
-    (*regAddr)      = PMIC_INT_INVALID_REGADDR;
-
-    /* Get the relevant Level 2 register, if applicable */
-    switch(*irqL1RegAddr)
-    {
-        case PMIC_INT_BUCK_REGADDR:
-            if(regValue & PMIC_INT_BUCK_BUCK1_2_INT_MASK)
-            {
-                (*regAddr) = PMIC_INT_BUCK1_2_REGADDR;
-            }
-            else if(regValue & PMIC_INT_BUCK_BUCK3_4_INT_MASK)
-            {
-                (*regAddr) = PMIC_INT_BUCK3_4_REGADDR;
-            }
-            else if((PMIC_DEV_LEO_TPS6594X ==
-                     pPmicCoreHandle->pmicDeviceType) &&
-                    (regValue & PMIC_INT_BUCK_BUCK5_INT_MASK))
-            {
-                /* BUCK5 not supported by HERA, only LEO supports this */
-                (*regAddr) = PMIC_INT_BUCK5_REGADDR;
-            }
-
-            break;
-        case PMIC_INT_LDO_VMON_REGADDR:
-            if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-            {
-                /* LDO-VMON not supported by HERA */
-                break;
-            }
-
-            if(regValue & PMIC_INT_LDO_VMON_LDO1_2_INT_MASK)
-            {
-                (*regAddr) = PMIC_INT_LDO1_2_REGADDR;
-            }
-            else if(regValue & PMIC_INT_LDO_VMON_LDO3_4_INT_MASK)
-            {
-                (*regAddr) = PMIC_INT_LDO3_4_REGADDR;
-            }
-            else if(regValue & PMIC_INT_LDO_VMON_VCCA_INT_MASK)
-            {
-                (*regAddr) = PMIC_INT_VMON_REGADDR;
-            }
-
-            break;
-        case PMIC_INT_GPIO_REGADDR:
-            if(regValue & PMIC_INT_GPIO_GPIO1_8_INT_MASK)
-            {
-                (*regAddr) = PMIC_INT_GPIO1_8_REGADDR;
-            }
-            else if(regValue & PMIC_INT_GPIO_GPIO9_INT_MASK)
-            {
-                (*regAddr)      = (*irqL1RegAddr);
-                (*irqL2RegAddr) = PMIC_INT_UNUSED_REGADDR;
-                (*errBitStatus) = PMIC_INT_GPIO_GPIO9_INT_MASK;
-            }
-            else if(regValue & PMIC_INT_GPIO_GPIO10_INT_MASK)
-            {
-                (*regAddr)      = (*irqL1RegAddr);
-                (*irqL2RegAddr) = PMIC_INT_UNUSED_REGADDR;
-                (*errBitStatus) = PMIC_INT_GPIO_GPIO10_INT_MASK;
-            }
-            else if(regValue & PMIC_INT_GPIO_GPIO11_INT_MASK)
-            {
-                (*regAddr)      = (*irqL1RegAddr);
-                (*irqL2RegAddr) = PMIC_INT_UNUSED_REGADDR;
-                (*errBitStatus) = PMIC_INT_GPIO_GPIO11_INT_MASK;
-            }
-
-            break;
-        case PMIC_INT_STARTUP_REGADDR:
-            if(regValue & PMIC_INT_STARTUP_NPWRON_START_INT_MASK)
-            {
-                (*regAddr)      = (*irqL1RegAddr);
-                (*irqL2RegAddr) = PMIC_INT_UNUSED_REGADDR;
-                (*errBitStatus) = PMIC_INT_STARTUP_NPWRON_START_INT_MASK;
-            }
-            else if(regValue & PMIC_INT_STARTUP_ENABLE_INT_MASK)
-            {
-                (*regAddr)      = (*irqL1RegAddr);
-                (*irqL2RegAddr) = PMIC_INT_UNUSED_REGADDR;
-                (*errBitStatus) = PMIC_INT_STARTUP_ENABLE_INT_MASK;
-            }
-            else if(regValue & PMIC_INT_STARTUP_FSD_INT_MASK)
-            {
-                (*regAddr)      = (*irqL1RegAddr);
-                (*irqL2RegAddr) = PMIC_INT_UNUSED_REGADDR;
-                (*errBitStatus) = PMIC_INT_STARTUP_FSD_INT_MASK;
-            }
-            else if(regValue & PMIC_INT_STARTUP_RTC_INT_MASK)
-            {
-                (*regAddr) = PMIC_INT_RTC_STATUS_REGADDR;
-            }
-
-            break;
-        case PMIC_INT_MISC_REGADDR:
-            if(regValue & PMIC_INT_MISC_BIST_PASS_INT_MASK)
-            {
-                (*regAddr)      = (*irqL1RegAddr);
-                (*irqL2RegAddr) = PMIC_INT_UNUSED_REGADDR;
-                (*errBitStatus) = PMIC_INT_MISC_BIST_PASS_INT_MASK;
-            }
-            else if(regValue & PMIC_INT_MISC_EXT_CLK_INT_MASK)
-            {
-                (*regAddr)      = (*irqL1RegAddr);
-                (*irqL2RegAddr) = PMIC_INT_UNUSED_REGADDR;
-                (*errBitStatus) = PMIC_INT_MISC_EXT_CLK_INT_MASK;
-            }
-            else if(regValue & PMIC_INT_MISC_TWARN_INT_MASK)
-            {
-                (*regAddr)      = (*irqL1RegAddr);
-                (*irqL2RegAddr) = PMIC_INT_UNUSED_REGADDR;
-                (*errBitStatus) = PMIC_INT_MISC_TWARN_INT_MASK;
-            }
-
-            break;
-        case PMIC_INT_MODERATE_ERR_REGADDR:
-            /* Bits 0-7 are valid in this register */
-            /* Bits 0-7 are final in Hierarchy for this error */
-            (*regAddr)      = (*irqL1RegAddr);
-            (*irqL2RegAddr) = PMIC_INT_UNUSED_REGADDR;
-            (*errBitStatus) = Pmic_getErrBitStatus(regValue, 0U, 8U);
-            break;
-        case PMIC_INT_SEVERE_ERR_REGADDR:
-            if(regValue & (PMIC_INT_SEVERE_TSD_IMM_INT_MASK))
-            {
-                (*regAddr)      = (*irqL1RegAddr);
-                (*irqL2RegAddr) = PMIC_INT_UNUSED_REGADDR;
-                (*errBitStatus) = PMIC_INT_SEVERE_TSD_IMM_INT_MASK;
-            }
-            else if(regValue & PMIC_INT_SEVERE_VCCA_OVP_INT_MASK)
-            {
-                (*regAddr)      = (*irqL1RegAddr);
-                (*irqL2RegAddr) = PMIC_INT_UNUSED_REGADDR;
-                (*errBitStatus) = PMIC_INT_SEVERE_VCCA_OVP_INT_MASK;
-            }
-            else if(regValue & PMIC_INT_SEVERE_PFSM_ERR_INT_MASK)
-            {
-                (*regAddr)      = (*irqL1RegAddr);
-                (*irqL2RegAddr) = PMIC_INT_UNUSED_REGADDR;
-                (*errBitStatus) = PMIC_INT_SEVERE_PFSM_ERR_INT_MASK;
-            }
-
-            break;
-        case PMIC_INT_FSM_ERR_REGADDR:
-            if(regValue & (PMIC_INT_FSM_IMM_SHUTDOWN_INT_MASK))
-            {
-                (*regAddr)      = (*irqL1RegAddr);
-                (*irqL2RegAddr) = PMIC_INT_UNUSED_REGADDR;
-                (*errBitStatus) = PMIC_INT_FSM_IMM_SHUTDOWN_INT_MASK;
-            }
-            else if(regValue & (PMIC_INT_FSM_ORD_SHUTDOWN_INT_MASK))
-            {
-                (*regAddr)      = (*irqL1RegAddr);
-                (*irqL2RegAddr) = PMIC_INT_UNUSED_REGADDR;
-                (*errBitStatus) = PMIC_INT_FSM_ORD_SHUTDOWN_INT_MASK;
-            }
-            else if(regValue & (PMIC_INT_FSM_MCU_PWR_ERR_INT_MASK))
-            {
-                (*regAddr)      = (*irqL1RegAddr);
-                (*irqL2RegAddr) = PMIC_INT_UNUSED_REGADDR;
-                (*errBitStatus) = PMIC_INT_FSM_MCU_PWR_ERR_INT_MASK;
-            }
-            else if(regValue & (PMIC_INT_FSM_SOC_PWR_ERR_INT_MASK))
-            {
-                (*regAddr)      = (*irqL1RegAddr);
-                (*irqL2RegAddr) = PMIC_INT_UNUSED_REGADDR;
-                (*errBitStatus) = PMIC_INT_FSM_SOC_PWR_ERR_INT_MASK;
-            }
-            else if(regValue & PMIC_INT_FSM_COMM_ERR_INT_MASK)
-            {
-                (*regAddr) = PMIC_INT_COMM_ERR_REGADDR;
-            }
-            else if(regValue & PMIC_INT_FSM_READBACK_ERR_INT_MASK)
-            {
-                (*regAddr) = PMIC_INT_RDBACK_ERR_REGADDR;
-            }
-            else if(regValue & PMIC_INT_FSM_ESM_INT_MASK)
-            {
-                (*regAddr) = PMIC_INT_ESM_REGADDR;
-            }
-            else if(regValue & PMIC_INT_FSM_WD_INT_MASK)
-            {
-                (*regAddr) = PMIC_WD_ERR_STATUS_REGADDR;
-            }
-
-            break;
-        default:
-            break;
-    }
-
-    /*
-     * If some invalid value is found for register
-     * offset, return error
-     */
-    if(PMIC_INT_INVALID_REGADDR == (*regAddr))
-    {
-        pmicStatus = PMIC_ST_ERR_INV_INT;
-    }
-
-    return pmicStatus;
-}
-
-/*!
- * \brief   This function is used to generate actual error bitmask.
- */
-static int32_t Pmic_irqGetError(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                uint32_t          *errBitStatus,
-                                uint32_t          *irqL2RegAddr,
-                                uint8_t           *regValue)
-{
-    int32_t  pmicStatus  = PMIC_ST_SUCCESS;
-
-    (*errBitStatus) = PMIC_INT_INVALID_REGADDR;
-    /* Form the actual error bitmask from Level 2 register value */
-    switch((*irqL2RegAddr))
-    {
-        case PMIC_INT_BUCK1_2_REGADDR:
-        case PMIC_INT_BUCK3_4_REGADDR:
-            if((*regValue) & PMIC_INT_BUCK_1_3_MASK)
-            {
-                (*errBitStatus) = Pmic_getErrBitStatus((*regValue), 0U, 4U);
-            }
-            else if(((*regValue) & PMIC_INT_BUCK_2_4_MASK))
-            {
-                (*errBitStatus) = Pmic_getErrBitStatus((*regValue), 4U, 8U);
-            }
-
-            break;
-        case PMIC_INT_BUCK5_REGADDR:
-            if(PMIC_DEV_HERA_LP8764X  ==
-               pPmicCoreHandle->pmicDeviceType)
-            {
-                /* BUCK5 not supported by HERA */
-                break;
-            }
-
-            if((*regValue) & PMIC_INT_BUCK_5_MASK)
-            {
-                (*errBitStatus) = Pmic_getErrBitStatus((*regValue), 0U, 4U);
-            }
-
-            break;
-        case PMIC_INT_LDO1_2_REGADDR:
-        case PMIC_INT_LDO3_4_REGADDR:
-            if(PMIC_DEV_HERA_LP8764X  ==
-               pPmicCoreHandle->pmicDeviceType)
-            {
-                /* LDO-VMON not supported by HERA */
-                break;
-            }
-
-            if((*regValue) & PMIC_INT_LDO_1_3_MASK)
-            {
-                (*errBitStatus) = Pmic_getErrBitStatus((*regValue), 0U, 4U);
-            }
-            else if((*regValue) & PMIC_INT_LDO_2_4_MASK)
-            {
-                (*errBitStatus) = Pmic_getErrBitStatus((*regValue), 4U, 8U);
-            }
-
-            break;
-        case PMIC_INT_VMON_REGADDR:
-            if(PMIC_DEV_HERA_LP8764X  ==
-               pPmicCoreHandle->pmicDeviceType)
-            {
-                /* LDO-VMON not supported by HERA */
-                break;
-            }
-
-            if(((*regValue) & PMIC_INT_LDO_VMON_MASK) ==
-                (*regValue))
-            {
-                (*errBitStatus) = Pmic_getErrBitStatus((*regValue), 0U, 2U);
-            }
-
-            break;
-        case PMIC_INT_GPIO1_8_REGADDR:
-            if((*regValue) & PMIC_INT_GPIO1_8_MASK)
-            {
-                (*errBitStatus) = Pmic_getErrBitStatus((*regValue), 0U, 8U);
-            }
-
-            break;
-        case PMIC_INT_RTC_STATUS_REGADDR:
-            if((*regValue) &
-                PMIC_RTC_STATUS_TIMER_MASK)
-            {
-                (*errBitStatus) = PMIC_RTC_STATUS_TIMER_MASK;
-            }
-            else if((*regValue) &
-                     PMIC_RTC_STATUS_ALARM_MASK)
-            {
-                (*errBitStatus) = PMIC_RTC_STATUS_ALARM_MASK;
-            }
-            else if((*regValue) &
-                     PMIC_RTC_STATUS_POWER_UP_MASK)
-            {
-                (*errBitStatus) =
-                             PMIC_RTC_STATUS_POWER_UP_MASK;
-            }
-
-            break;
-        case PMIC_INT_COMM_ERR_REGADDR:
-            if((*regValue) & PMIC_INT_COMM_ERR_MASK)
-            {
-                (*errBitStatus) = Pmic_getErrBitStatus((*regValue), 0U, 8U);
-            }
-
-            break;
-        case PMIC_INT_RDBACK_ERR_REGADDR:
-            if((*regValue) & PMIC_INT_READBACK_ERR_EN_DRV_READBACK_INT_MASK)
-            {
-                (*errBitStatus) = 
-                                PMIC_INT_READBACK_ERR_EN_DRV_READBACK_INT_MASK;
-            }
-            else if((*regValue) &
-                           PMIC_INT_READBACK_ERR_NRSTOUT_SOC_READBACK_INT_MASK)
-            {
-                (*errBitStatus) =
-                           PMIC_INT_READBACK_ERR_NRSTOUT_SOC_READBACK_INT_MASK;
-            }
-
-            break;
-        case PMIC_INT_ESM_REGADDR:
-            if(((*regValue) & PMIC_INT_ESM_MCU_MASK))
-            {
-                (*errBitStatus) = Pmic_getErrBitStatus((*regValue), 3U, 3U);
-            }
-            else if((pPmicCoreHandle->pmicDeviceType ==
-                     PMIC_DEV_LEO_TPS6594X) &&
-                    ((*regValue) & PMIC_INT_ESM_SOC_MASK))
-            {
-                /* ESM_SOC not supported by HERA */
-                (*errBitStatus) = Pmic_getErrBitStatus((*regValue), 0U, 3U);
-            }
-
-            break;
-        case PMIC_WD_ERR_STATUS_REGADDR:
-            if(((*regValue) & PMIC_INT_WD_ERR_MASK))
-            {
-                (*errBitStatus) = Pmic_getErrBitStatus((*regValue), 0U, 8U);
-            }
-            break;
-        default:
-            break;
-    }
-
-   if(PMIC_INT_INVALID_REGADDR == (*errBitStatus))
-   {
-       pmicStatus = PMIC_ST_ERR_INV_INT;
-   }
-
-    return pmicStatus;
-}
-
-/*!
- * \brief   This function is used to mask Interrupt.
- */
-static int32_t Pmic_maskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                             uint16_t           interruptMask)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint8_t regData    = 0U;
-    uint8_t regAddr    = 0U;
-    uint8_t regMask    = 0U;
-
-    regMask = interruptMask >> 8U;
-    regAddr = (regAddr | interruptMask);
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        /* Masking Interrupt */
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            regAddr,
-                                            &regData);
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            regData = regData | regMask;
-
-            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                                regAddr,
-                                                regData);
-        }
-    }
-
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    return pmicStatus;
-}
-
-/*!
- * \brief   This function is used to un-mask Interrupt.
- */
-static int32_t Pmic_unMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               uint16_t           interruptMask)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint8_t regData    = 0U;
-    uint8_t regAddr    = 0U;
-    uint8_t regMask    = 0U;
-
-    regMask = interruptMask >> 8U;
-    regAddr = regAddr | interruptMask;
-
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        /* Un-Masking Interrupt */
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            regAddr,
-                                            &regData);
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            regData = regData & (~regMask);
-
-            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                                regAddr,
-                                                regData);
-        }
-    }
-
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    return pmicStatus;
-}
-
-/*!
- * \brief   PMIC function to read Error status
- *          This function does the following:
- *             1. This function gets the interrupt status by reading pmic
- *                IRQ register as per IRQ hierarchy defined in device TRM.
- *             2. Decipher error from top register to actual error code.
- *             3. Support clearing interrupt using clearIRQ flag as required.
- *             4. Works with the valid PMIC instance else does not do any
- *                operation.
- *
- * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * \param   pErrStat          [OUT]   Variable to hold error interrupt ID
- * \param   clearIRQ          [IN]    Variable to control whether to clear the
- *                                    IRQ or not.
- *                                    Valid values: \ref Pmic_IrqClearFlag
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
-int32_t  Pmic_irqGetErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
-                              uint32_t          *pErrStat,
-                              bool               clearIRQ)
-{
-    int32_t   pmicStatus    = PMIC_ST_SUCCESS;
-    uint8_t   regValue      = 0U;
-    uint32_t  regAddr       = 0U;
-    uint32_t  irqL1RegAddr  = 0U;
-    uint32_t  irqL2RegAddr  = 0U;
-    uint32_t  errBitStatus  = 0U;
-
-    if(NULL == pPmicCoreHandle)
-    {
-        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (NULL == pErrStat))
+    if(NULL == pIntrCfg)
     {
         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
     }
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        /* Start Critical Section */
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        /* Read Top level Interrupt TOP register in the Hierarchy */
+        switch(pPmicCoreHandle->pmicDeviceType)
+        {
+        case PMIC_DEV_LEO_TPS6594X:
+            pmic_get_tps6594x_intrCfg(pIntrCfg);
+            break;
+
+        case PMIC_DEV_HERA_LP8764X:
+            pmic_get_lp8764x_intrCfg(pIntrCfg);
+            break;
+
+        default:
+            pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+            break;
+        }
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  Function to get the Device specific GPIO Interrupt configuration 
+ *         registers.
+ */
+static int32_t Pmic_get_gpioIntrCfg(Pmic_CoreHandle_t       *pPmicCoreHandle,
+                                    Pmic_GpioIntrTypeCfg_t **pGpioIntrCfg)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+
+    if(NULL == pGpioIntrCfg)
+    {
+        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        switch(pPmicCoreHandle->pmicDeviceType)
+        {
+        case PMIC_DEV_LEO_TPS6594X:
+            pmic_get_tps6594x_intrGpioCfg(pGpioIntrCfg);
+            break;
+
+        case PMIC_DEV_HERA_LP8764X:
+            pmic_get_lp8764x_intrGpioCfg(pGpioIntrCfg);
+            break;
+
+        default:
+            pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+            break;
+        }
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  Function to Mask/Unmask GPIO Interrupts.
+ */
+static int32_t Pmic_irqGpioMask(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                const uint8_t      irqGpioNum,
+                                const bool         mask,
+                                const uint8_t      gpioIntrType)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData    = 0U;
+    Pmic_GpioIntrTypeCfg_t *pGpioIntrCfg = NULL;
+
+    pmicStatus = Pmic_get_gpioIntrCfg(pPmicCoreHandle, &pGpioIntrCfg);
+
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    if((PMIC_IRQ_GPIO_RISE_INT_TYPE == gpioIntrType) ||
+       (PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE == gpioIntrType))
+    {
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            PMIC_INT_TOP_REGADDR,
-                                            &regValue);
-        /* Stop Critical Section */
-        Pmic_criticalSectionStop (pPmicCoreHandle);
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            pmicStatus = Pmic_irqGetL1Error(pPmicCoreHandle,
-                                            regValue,
-                                            &regAddr);
-        }
+                          pGpioIntrCfg[irqGpioNum].gpioRiseIntrMaskRegAddr,
+                          &regData);
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            /* Start Critical Section */
-            Pmic_criticalSectionStart(pPmicCoreHandle);
-            /* Read from Level 1 Register to know more error info */
-            pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                                regAddr,
-                                                &regValue);
-            /* Stop Critical Section */
-            Pmic_criticalSectionStop(pPmicCoreHandle);
+            BIT_POS_SET_VAL(regData,
+                            pGpioIntrCfg[irqGpioNum].gpioRiseMaskBitPos,
+                            mask);
+            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                          pGpioIntrCfg[irqGpioNum].gpioRiseIntrMaskRegAddr,
+                          regData);
         }
+    }
+
+    if((PMIC_IRQ_GPIO_FALL_INT_TYPE == gpioIntrType) || 
+       (PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE == gpioIntrType))
+    {
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                          pGpioIntrCfg[irqGpioNum].gpioFallIntrMaskRegAddr,
+                          &regData);
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            pmicStatus = Pmic_irqGetL2Error(pPmicCoreHandle, regValue,
-                                            &regAddr,        &irqL1RegAddr,
-                                            &irqL2RegAddr,   &errBitStatus);
+            BIT_POS_SET_VAL(regData,
+                            pGpioIntrCfg[irqGpioNum].gpioFallMaskBitPos,
+                            mask);
+            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                          pGpioIntrCfg[irqGpioNum].gpioFallIntrMaskRegAddr,
+                          regData);
         }
+    }
 
-        if((PMIC_ST_SUCCESS == pmicStatus) &&
-           (0U != irqL1RegAddr) &&
-           (irqL1RegAddr != regAddr))
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  Function to Mask/Unmask GPIO Interrupts.
+ */
+static int32_t Pmic_maskGpioIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                 const uint8_t      irqGpioNum,
+                                 const bool         mask,
+                                 const uint8_t      gpioIntrType)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint16_t temp      = 0U;
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (PMIC_IRQ_GPIO_ALL_INT_MASK_NUM != irqGpioNum))
+    {
+        pmicStatus = Pmic_irqGpioMask(pPmicCoreHandle,
+                                      irqGpioNum,
+                                      mask,
+                                      gpioIntrType);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (PMIC_IRQ_GPIO_ALL_INT_MASK_NUM == irqGpioNum))
+    {
+        for(temp = 0U; temp < PMIC_IRQ_GPIO_ALL_INT_MASK_NUM; temp++)
         {
-            /* Save the L2 register value now */
-            irqL2RegAddr = regAddr;
+            pmicStatus = Pmic_irqGpioMask(pPmicCoreHandle,
+                                          temp,
+                                          mask,
+                                          gpioIntrType);
+        }
+    }
 
-            if(PMIC_INT_UNUSED_REGADDR != irqL2RegAddr)
+    return pmicStatus;
+}
+
+/*! 
+ * \brief  Function to clear IRQ status.
+ */
+static int32_t Pmic_irqClear(Pmic_CoreHandle_t *pPmicCoreHandle,
+                             const uint8_t      irqNum)
+{
+    int32_t pmicStatus       = PMIC_ST_SUCCESS;
+    uint8_t regData          = 0U;
+    Pmic_IntrCfg_t *pIntrCfg = NULL;
+
+    pmicStatus = Pmic_get_intrCfg(pPmicCoreHandle, &pIntrCfg);
+
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        pIntrCfg[irqNum].intrClrRegAddr,
+                                        &regData);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        BIT_POS_SET_VAL(regData,
+                        pIntrCfg[irqNum].intrClrBitPos,
+                        PMIC_IRQ_CLEAR);
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                           pIntrCfg[irqNum].intrClrRegAddr,
+                                           regData);
+    }
+
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return pmicStatus;
+}
+
+/*! 
+ * \brief  Function to Clear Interrupt Status register.
+ */
+static int32_t Pmic_irqClearStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                   const uint8_t      irqNum)
+{
+    int32_t pmicStatus       = PMIC_ST_SUCCESS;
+    uint16_t temp            = 0U;
+    uint8_t maxVal           = 0U;
+
+    if((PMIC_ST_SUCCESS == pmicStatus) && (PMIC_IRQ_ALL != irqNum))
+    {
+        pmicStatus = Pmic_irqClear(pPmicCoreHandle, irqNum);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) && (PMIC_IRQ_ALL == irqNum))
+    {
+        pmicStatus = Pmic_getMaxVal(pPmicCoreHandle, &maxVal);
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            for(temp = 0U; temp < maxVal; temp++)
             {
-                /* Start Critical Section */
-                Pmic_criticalSectionStart(pPmicCoreHandle);
-                /* Read from Level 2 Register to know more error info */
-                pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                                    regAddr,
-                                                    &regValue);
-                /* Stop Critical Section */
-                Pmic_criticalSectionStop(pPmicCoreHandle);
-                if(PMIC_ST_SUCCESS == pmicStatus)
-                {
-                    pmicStatus = Pmic_irqGetError(pPmicCoreHandle,
-                                                  &errBitStatus,
-                                                  &irqL2RegAddr,
-                                                  &regValue);
-                }
-            }
-            else
-            {
-                /*
-                 * L2 register is invalid, so previous
-                 * regValue is the Error bitmask
-                 */
-                errBitStatus = regValue;
-            }
-        }
-
-        if(PMIC_INT_UNUSED_REGADDR == irqL2RegAddr)
-        {
-            irqL2RegAddr = 0U;
-        }
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            /*
-             * We have proper values for Level 1, Level 2
-             *  and actual error bitmask,
-             * so we can form the error interrupt ID
-             */
-            (*pErrStat) = PMIC_IRQID(irqL1RegAddr,
-                                     irqL2RegAddr,
-                                     errBitStatus);
-            /* If application wants to clear IRQ immediately, do it now */
-            if((1U == clearIRQ) && (0U != (*pErrStat)))
-            {
-                pmicStatus  = Pmic_irqClear(pPmicCoreHandle, *pErrStat);
-                if(PMIC_ST_SUCCESS != pmicStatus)
-                {
-                    pmicStatus = PMIC_ST_ERR_CLEAR_INT_FAILED;
-                }
+                pmicStatus = Pmic_irqClear(pPmicCoreHandle, temp);
             }
         }
     }
@@ -1009,70 +352,488 @@ int32_t  Pmic_irqGetErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
     return pmicStatus;
 }
 
- /*!
- * \brief: PMIC function to clear Error status
- *         This function does the following:
- *          1. This function clears the IRQ bits in PMIC register for a given
- *             error code.
- *          2. Validates error code given by application and find the IRQ
- *             register that is to be updated.
- *          3. Expected to be called after an error code is generated by
- *             Pmic_irqGetErrStatus().
- *          4. Works with the valid PMIC instance else does not do any
- *             operation
+/*!
+ * \brief  Function to Mask/Unmask Interrupts.
+ */
+static int32_t Pmic_irqMask(Pmic_CoreHandle_t *pPmicCoreHandle,
+                            const uint8_t      irqNum,
+                            const bool         mask,
+                            Pmic_IntrCfg_t    *pIntrCfg)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData    = 0U;
+
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        pIntrCfg[irqNum].intrMaskRegAddr,
+                                        &regData);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        BIT_POS_SET_VAL(regData,
+                        pIntrCfg[irqNum].intrMaskBitPos,
+                        mask);
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                      pIntrCfg[irqNum].intrMaskRegAddr,
+                                      regData);
+    }
+
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  Function to Mask/Unmask PMIC Interrupts except GPIO.
+ */
+static int32_t Pmic_maskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
+                             const uint8_t      irqNum,
+                             const bool         mask)
+{
+    int32_t pmicStatus       = PMIC_ST_SUCCESS;
+    uint16_t temp            = 0U;
+    uint8_t maxVal           = 0U;
+    Pmic_IntrCfg_t *pIntrCfg = NULL;
+
+    pmicStatus = Pmic_get_intrCfg(pPmicCoreHandle, &pIntrCfg);
+
+    if((PMIC_ST_SUCCESS == pmicStatus) && (PMIC_IRQ_ALL != irqNum))
+    {
+        if(PMIC_IRQ_INVALID_REGADDR == pIntrCfg[irqNum].intrMaskRegAddr)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            pmicStatus = Pmic_irqMask(pPmicCoreHandle, irqNum, mask, pIntrCfg);
+        }
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) && (PMIC_IRQ_ALL == irqNum))
+    {
+        pmicStatus = Pmic_getMaxVal(pPmicCoreHandle, &maxVal);
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            for(temp = 0U; temp < maxVal; temp++)
+            {
+                if(PMIC_IRQ_INVALID_REGADDR == pIntrCfg[temp].intrMaskRegAddr)
+                {
+                    continue;
+                }
+
+                pmicStatus = Pmic_irqMask(pPmicCoreHandle, temp, mask, pIntrCfg);
+            }
+        }
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  Function to get the PMIC_INT_TOP Register value.
+ */
+static int32_t Pmic_getIntrTopRegVal(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                     uint8_t           *regValue)
+{
+    int32_t  pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData     = 0U;
+
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    /* Read Top level Interrupt TOP register in the Hierarchy */
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_INT_TOP_REGADDR,
+                                        &regData);
+
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop (pPmicCoreHandle);
+    (*regValue) = regData;
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  Function to get the L1 error registers.
+ */
+static int32_t Pmic_irqGetL1Reg(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                uint8_t            regValue,
+                                uint32_t          *l1RegAddr,
+                                int32_t            count)
+{
+    int32_t  pmicStatus = PMIC_ST_SUCCESS;
+
+    (*l1RegAddr) = PMIC_INT_UNUSED_REGADDR;
+
+    switch(regValue & (1U << count))
+    {
+        case PMIC_INT_TOP_BUCK_INT_MASK:
+             (*l1RegAddr) = PMIC_INT_BUCK_REGADDR;
+             break;
+
+        case PMIC_INT_TOP_LDO_VMON_INT_MASK:
+             if(PMIC_DEV_HERA_LP8764X  == pPmicCoreHandle->pmicDeviceType)
+             {
+                 (*l1RegAddr) = PMIC_INT_VMON_REGADDR;
+             }
+
+             if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+             {
+                 (*l1RegAddr) = PMIC_INT_LDO_VMON_REGADDR;
+             }
+
+             break;
+
+        case PMIC_INT_TOP_GPIO_INT_MASK:
+             (*l1RegAddr) = PMIC_INT_GPIO_REGADDR;
+             break;
+
+        case PMIC_INT_TOP_STARTUP_INT_MASK:
+             (*l1RegAddr) = PMIC_INT_STARTUP_REGADDR;
+             break;
+
+        case PMIC_INT_TOP_MISC_INT_MASK:
+             (*l1RegAddr) = PMIC_INT_MISC_REGADDR;
+             break;
+
+        case PMIC_INT_TOP_MODERATE_ERR_INT_MASK:
+             (*l1RegAddr) = PMIC_INT_MODERATE_ERR_REGADDR;
+             break;
+
+        case PMIC_INT_TOP_SEVERE_ERR_INT_MASK:
+             (*l1RegAddr) = PMIC_INT_SEVERE_ERR_REGADDR;
+             break;
+
+        case PMIC_INT_TOP_FSM_ERR_INT_MASK:
+             (*l1RegAddr) = PMIC_INT_FSM_ERR_REGADDR;
+             break;
+
+        default:
+             break;
+    }
+
+    if(PMIC_INT_UNUSED_REGADDR == (*l1RegAddr))
+    {
+        (*l1RegAddr) = 0U;
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  Function to decipher L2 Error.
+ */
+static int32_t Pmic_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                  uint32_t           l1RegAddr,
+                                  Pmic_IrqStatus_t  *pErrStat)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+
+    switch(pPmicCoreHandle->pmicDeviceType)
+    {
+        case PMIC_DEV_LEO_TPS6594X:
+            pmicStatus = Pmic_tps6594x_irqGetL2Error(pPmicCoreHandle,
+                                                     l1RegAddr,
+                                                     pErrStat);
+            break;
+
+        case PMIC_DEV_HERA_LP8764X:
+            pmicStatus = Pmic_lp8764x_irqGetL2Error(pPmicCoreHandle,
+                                                    l1RegAddr,
+                                                    pErrStat);
+            break;
+
+        default:
+            pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+            break;
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief   Function to Extract Interrupts as per Hierarchy given in TRM and
+ *          clear the bit in pErrStat.
+ */
+static int32_t Pmic_extractErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                     Pmic_IrqStatus_t  *pErrStat,
+                                     uint8_t           *pIrqNum)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t maxVal     = 0U;
+
+    pmicStatus = Pmic_getMaxVal(pPmicCoreHandle, &maxVal);
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        *pIrqNum = Pmic_intrBitExtract(pErrStat, maxVal);
+        /* To clear the Error Bit position after extracting */
+        Pmic_intrBitClear(pErrStat, pIrqNum);
+    }
+
+    else
+    {
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+    }
+
+    return pmicStatus;
+}
+
+/*
+ * \brief   API to read Error status.
+ *          This function does the following:
+ *             1. This function gets the interrupt status by reading pmic
+ *                IRQ register as per IRQ hierarchy defined in device TRM.
+ *             2. Decipher error from top register to actual error code.
+ *             3. Store the status of all Interrupts.
+ *             4. Support clearing interrupts depends on clearIRQ flag.
  *
  * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * \param   errStat           [IN]    Error status
+ * \param   pErrStat          [OUT]   Pointer to store Error status.
+ * \param   clearIRQ          [IN]    Flag to clear Interrupt status after
+ *                                    deciphering the interrupt status.
+ *                                    For valid values: \ref Pmic_IrqClearFlag.
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
+ *          For valid values: \ref Pmic_ErrorCodes.
  */
-int32_t  Pmic_irqClrErrStatus(Pmic_CoreHandle_t      *pPmicCoreHandle,
-                              const uint32_t          errStat)
+int32_t  Pmic_irqGetErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
+                              Pmic_IrqStatus_t  *pErrStat,
+                              const bool         clearIRQ)
 {
-    int32_t   pmicStatus = PMIC_ST_SUCCESS;
-
-   /*
-    * errBitStatus Validation
-    * appm - mask extracted from errStat given by application
-    * expm - expected mask value
-    */
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regValue   = 0U;
+    uint32_t l1RegAddr = 0U;
+    int32_t count      = 0;
 
     if(NULL == pPmicCoreHandle)
     {
         pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
+    if((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pErrStat))
     {
-        pmicStatus = Pmic_irqValidate(pPmicCoreHandle, errStat);
+        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
     }
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = Pmic_irqClear(pPmicCoreHandle, errStat);
+        /* Clearing all Error Status structure members */
+        pErrStat->intStatus[0U] = 0U;
+        pErrStat->intStatus[1U] = 0U;
+        pErrStat->intStatus[2U] = 0U;
+        pErrStat->intStatus[3U] = 0U;
+
+        Pmic_getIntrTopRegVal(pPmicCoreHandle, &regValue);
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            for(count = 7; count >= 0; count--)
+            {
+                l1RegAddr = 0U;
+                pmicStatus = Pmic_irqGetL1Reg(pPmicCoreHandle,
+                                              regValue,
+                                              &l1RegAddr,
+                                              count);
+                if((PMIC_ST_SUCCESS == pmicStatus) && (0U != l1RegAddr))
+                {
+                    pmicStatus = Pmic_irqGetL2Error(pPmicCoreHandle,
+                                                    l1RegAddr,
+                                                    pErrStat);
+
+                    if(PMIC_ST_SUCCESS != pmicStatus)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            if(PMIC_IRQ_CLEAR == clearIRQ)
+            {
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_IRQ_ALL);
+            }
+        }
     }
 
     return pmicStatus;
 }
 
- /*!
- * \brief: PMIC function mask/unmask interrupts
+/*
+ * \brief   API to clear Error status.
+ *          This function does the following:
+ *          1. This function clears the IRQ status in PMIC register for a given
+ *             IRQ Number.
+ *          2. Validates given IRQ Number and find the IRQ register that is 
+ *             to be cleared.
+ *          3. Expected to be called after an IRQ status is deciphered by
+ *             Pmic_irqGetErrStatus().
  *
  * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * \param   interrupt         [IN]    Interrupt details
- *                                    Valid values: \ref Pmic_IrqInterrupt
- * \param   mask              [IN]    Parameter to mask/unmask INTR
- *                                    Valid values: \ref Pmic_IrqMaskFlag
+ * \param   irqNum            [IN]    Interrupt number to clear the status.
+ *                                    Valid values are:
+ *                                    For TPS6594x LEO:
+ *                                    \ref Pmic_tps6594x_IrqNum.
+ *                                    For LP8764x HERA:
+ *                                    \ref Pmic_lp8764x_IrqNum.
+ *                                    For all: \ref Pmic_IrqNum.
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
+ *          For valid values: \ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_irqClrErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
+                             const uint8_t            irqNum)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+
+    if(NULL == pPmicCoreHandle)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) && 
+       (((irqNum > PMIC_TPS6594X_IRQ_MAX_NUM) || 
+        (irqNum > PMIC_LP8764X_IRQ_MAX_NUM))  && (irqNum != PMIC_IRQ_ALL)))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pmicStatus = Pmic_irqClearStatus(pPmicCoreHandle, irqNum);
+    }
+
+    return pmicStatus;
+}
+
+/*
+ * \brief   API to mask/unmask interrupts.
+ *          This function does the following:
+ *          1. This function mask/unmask the given IRQ Number.
+ *          2. Validates given IRQ Number and find the IRQ register that
+ *             is to be masked/unmasked.
+ *
+ * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
+ * \param   irqNum            [IN]    Interrupt status to be cleared.
+ *                                    Valid values are:
+ *                                    For TPS6594x LEO:
+ *                                    \ref Pmic_tps6594x_IrqNum.
+ *                                    For LP8764x HERA:
+ *                                    \ref Pmic_lp8764x_IrqNum.
+ *                                    For all: \ref Pmic_IrqNum.
+ * \param   mask              [IN]    Parameter to mask/unmask INTR.
+ *                                    For valid values: \ref Pmic_IrqMaskFlag.
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
+ *          For valid values: \ref Pmic_ErrorCodes.
  */
 int32_t Pmic_irqMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                         uint16_t           interruptMask,
-                         bool               mask)
+                         const uint8_t      irqNum,
+                         const bool         mask)
 {
-    int32_t  pmicStatus  = PMIC_ST_SUCCESS;
-    /* Flag to define Critical section started or not */
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+
+    if(NULL == pPmicCoreHandle)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) && 
+       (((irqNum > PMIC_TPS6594X_IRQ_MAX_NUM) || 
+        (irqNum > PMIC_LP8764X_IRQ_MAX_NUM))  && (irqNum != PMIC_IRQ_ALL)))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pmicStatus = Pmic_maskIntr(pPmicCoreHandle, irqNum, mask);
+    }
+
+    return pmicStatus;
+}
+
+/*
+ * \brief   API to extract each Error status.
+ *          This function is used to extract each Error status from pErrStat 
+ *          as per the hierarchy given in the TRM. This function clears the 
+ *          Error status after the status is extracted. This API is expected to
+ *          be called after Pmic_irqGetErrStatus.
+ *
+ * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
+ * \param   pErrStat          [IN]    Pointer containing Error Status.
+ * \param   pIrqNum           [OUT]   Pointer to store the IRQ Number extracted
+ *                                    For TPS6594x LEO:
+ *                                    \ref Pmic_tps6594x_IrqNum.
+ *                                    For LP8764x HERA:
+ *                                    \ref Pmic_lp8764x_IrqNum.
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
+ *          For valid values \ref: Pmic_ErrorCodes.
+ */
+int32_t Pmic_getNextErrorStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                Pmic_IrqStatus_t  *pErrStat,
+                                uint8_t           *pIrqNum)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+
+    if(NULL == pPmicCoreHandle)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pErrStat))
+    {
+        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pIrqNum))
+    {
+        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) && 
+       ((pErrStat->intStatus[0U] == 0U) && (pErrStat->intStatus[1U] == 0U) &&
+        (pErrStat->intStatus[2U] == 0U) && (pErrStat->intStatus[3U] == 0U)))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_INT;
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pmicStatus = Pmic_extractErrStatus(pPmicCoreHandle, pErrStat, pIrqNum);
+    }
+
+    return pmicStatus;
+}
+
+/*
+ * \brief   API to mask/unmask GPIO interrupts.
+ *          This function is used to Mask or Unmask GPIO Rise and Fall
+ *          Interrupts based on the GPIO IRQ Number.
+ *
+ * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
+ * \param   irqGpioNum        [IN]    GPIO Interrupt to be masked/unmasked.
+ *                                    Valid values:
+ *                                    For TPS6594x LEO PMIC:
+ *                                    \ref Pmic_tps6594x_IrqGpioNum.
+ *                                    For LP8764x HERA PMIC:
+ *                                    \ref Pmic_lp8764x_IrqGpioNum.
+ *                                    For all: \ref Pmic_IrqGpioNum.
+ * \param   mask              [IN]    Parameter to mask/unmask INTR.
+ *                                    Valid values: \ref Pmic_IrqMaskFlag.
+ * \param   gpioIntrType      [IN]    Parameter to mask GPIO RISE and FALL
+ *                                    Interrupt.
+ *                                    Valid values: \ref Pmic_IrqGpioIntrType.
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
+ *          For valid values \ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_irqGpioMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
+                             const uint8_t      irqGpioNum,
+                             const bool         mask,
+                             const uint8_t      gpioIntrType)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
 
     if(NULL == pPmicCoreHandle)
     {
@@ -1080,24 +841,31 @@ int32_t Pmic_irqMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
+       (gpioIntrType > PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE))
     {
-        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (irqGpioNum > PMIC_IRQ_GPIO_ALL_INT_MASK_NUM))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((irqGpioNum == PMIC_TPS6594X_IRQ_GPIO_11_INT_MASK_NUM) &&
+        (PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
     }
 
     if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            if(PMIC_IRQ_MASK == mask)
-            {
-                pmicStatus = Pmic_maskIntr(pPmicCoreHandle, interruptMask);
-            }
-
-            if(PMIC_IRQ_UNMASK == mask)
-            {
-                pmicStatus = Pmic_unMaskIntr(pPmicCoreHandle, interruptMask);
-
-            }
-        }
+    {
+        pmicStatus = Pmic_maskGpioIntr(pPmicCoreHandle,
+                                       irqGpioNum,
+                                       mask,
+                                       gpioIntrType);
+    }
 
     return pmicStatus;
 }

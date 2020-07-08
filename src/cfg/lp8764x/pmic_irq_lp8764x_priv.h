@@ -35,7 +35,7 @@
  * \file   pmic_irq_lp8764x_priv.h
  *
  * \brief  The macro definitions, structures and function prototypes for
- *         configuring PMIC IRQ
+ *         configuring PMIC IRQ.
  */
 
 #ifndef PMIC_IRQ_LP8764X_PRIV_H_
@@ -52,32 +52,84 @@ extern "C" {
 /* ========================================================================= */
 /*                             Macros & Typedefs                             */
 /* ========================================================================= */
-
-#define PMIC_INT_STARTUP_NPWRON_START_INT_MASK          (0x01U)
-#define PMIC_INT_MODERATE_ERR_NPWRON_LONG_INT_MASK      (0x20U)
+/*!
+ * \brief  Interrupt MASK registers address
+ */
+#define PMIC_MASK_GPIO9_10_REGADDR        (0x51U)
 
 /*!
- * \brief: IRQ Mask Bits to validate error bits
+ * \brief  PMIC Interrupt Registers Mask values and bit positions
  */
-#define PMIC_INT_GPIO9_10_MASK                 (0x03U)
+/*! PMIC_INT_VMON Register Mask values */
+#define PMIC_INT_VMON_VMON2_RV_INT_MASK       (0x80U)
+#define PMIC_INT_VMON_VMON2_UV_INT_MASK       (0x40U)
+#define PMIC_INT_VMON_VMON2_OV_INT_MASK       (0x20U)
+#define PMIC_INT_VMON_VMON1_RV_INT_MASK       (0x10U)
+#define PMIC_INT_VMON_VMON1_UV_INT_MASK       (0x08U)
+#define PMIC_INT_VMON_VMON1_OV_INT_MASK       (0x04U)
+
+/*! PMIC_INT_VMON Register Bit positions */
+#define PMIC_INT_VMON_VMON2_RV_INT_SHIFT      (0x7U)
+#define PMIC_INT_VMON_VMON2_UV_INT_SHIFT      (0x6U)
+#define PMIC_INT_VMON_VMON2_OV_INT_SHIFT      (0x5U)
+#define PMIC_INT_VMON_VMON1_RV_INT_SHIFT      (0x4U)
+#define PMIC_INT_VMON_VMON1_UV_INT_SHIFT      (0x3U)
+#define PMIC_INT_VMON_VMON1_OV_INT_SHIFT      (0x2U)
 
 /*!
- * \brief: Interrupt MASK registers address
+ * \brief  PMIC Interrupt Mask Registers Mask values and bit positions
  */
-#define PMIC_IRQ_MASK_GPIO9_10_REGADDR        (0x51U)
+/*! PMIC_MASK_VMON Register Mask values */
+#define PMIC_MASK_VMON_VMON2_UV_MASK_MASK     (0x40U)
+#define PMIC_MASK_VMON_VMON2_OV_MASK_MASK     (0x20U)
+#define PMIC_MASK_VMON_VMON1_UV_MASK_MASK     (0x08U)
+#define PMIC_MASK_VMON_VMON1_OV_MASK_MASK     (0x04U)
+
+/*! PMIC_MASK_VMON Register Bit positions */
+#define PMIC_MASK_VMON_VMON2_UV_MASK_SHIFT    (0x6U)
+#define PMIC_MASK_VMON_VMON2_OV_MASK_SHIFT    (0x5U)
+#define PMIC_MASK_VMON_VMON1_UV_MASK_SHIFT    (0x3U)
+#define PMIC_MASK_VMON_VMON1_OV_MASK_SHIFT    (0x2U)
 
 /*!
- * \brief: MASK value for Interrupts
+ * \brief  Individual interrupt bitmasks for GPIO9_10 RISE/FALL
  */
-#define PMIC_IRQ_MASK_GPIO9_10                (0x1BU)
+#define PMIC_MASK_GPIO9_10_GPIO10_RISE_MASK_MASK       (0x10U)
+#define PMIC_MASK_GPIO9_10_GPIO9_RISE_MASK_MASK        (0x08U)
+#define PMIC_MASK_GPIO9_10_GPIO10_FALL_MASK_MASK       (0x02U)
+#define PMIC_MASK_GPIO9_10_GPIO9_FALL_MASK_MASK        (0x01U)
+
+/*! PMIC GPIO9_10 MASK Register bit shift values */
+#define PMIC_MASK_GPIO9_10_GPIO10_RISE_MASK_SHIFT       (0x4U)
+#define PMIC_MASK_GPIO9_10_GPIO9_RISE_MASK_SHIFT        (0x3U)
+#define PMIC_MASK_GPIO9_10_GPIO10_FALL_MASK_SHIFT       (0x1U)
+#define PMIC_MASK_GPIO9_10_GPIO9_FALL_MASK_SHIFT        (0x0U)
+
+
+/*==========================================================================*/
+/*                         Structures and Enums                             */
+/*==========================================================================*/
+
+/*==========================================================================*/
+/*                         Function Declarations                            */
+/*==========================================================================*/
+/*!
+ * \brief  Function to get the PMIC Interrupt Registers for LP8764x HERA PMIC.
+ */
+void pmic_get_lp8764x_intrCfg(Pmic_IntrCfg_t **pIntCfg);
 
 /*!
- * \brief: Individual interrupt bitmasks for GPIO9_10 RISE/FALL
+ * \brief  Function to get the PMIC GPIO Interrupt Mask Registers for 
+ *         LP8764x Hera PMIC.
  */
-#define PMIC_LP8764X_IRQ_GPIO10_RISE                  (0x10U)
-#define PMIC_LP8764X_IRQ_GPIO9_RISE                   (0x8U)
-#define PMIC_LP8764X_IRQ_GPIO10_FALL                  (0x2U)
-#define PMIC_LP8764X_IRQ_GPIO9_FALL                   (0x1U)
+void pmic_get_lp8764x_intrGpioCfg(Pmic_GpioIntrTypeCfg_t **pIntGpioCfg);
+
+/*!
+ * \brief  Function to decipher the L2 Error for LP8764x Hera PMIC.
+ */
+int32_t Pmic_lp8764x_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                   uint32_t           l1RegAddr,
+                                   Pmic_IrqStatus_t  *pErrStat);
 
 #ifdef __cplusplus
 }
