@@ -53,8 +53,8 @@ extern "C" {
 /*                             Macros & Typedefs                             */
 /* ========================================================================= */
 
-#define PMIC_INT_NPWRON_START_MASK             (0x01U)
-#define PMIC_INT_NPWRON_LONG_MASK              (0x20U)
+#define PMIC_INT_STARTUP_NPWRON_START_INT_MASK          (0x01U)
+#define PMIC_INT_MODERATE_ERR_NPWRON_LONG_INT_MASK      (0x20U)
 
 /*!
  * \brief: IRQ Mask Bits to validate error bits

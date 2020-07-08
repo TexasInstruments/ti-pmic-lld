@@ -53,12 +53,12 @@ extern "C" {
 /*                             Macros & Typedefs                             */
 /* ========================================================================= */
 
-#define PMIC_INT_GPIO11_MASK                   (0x04U)
-#define PMIC_INT_NPWRON_START_MASK             (0x01U)
-#define PMIC_INT_RTC_STATUS_TIMER_MASK         (0x20U)
-#define PMIC_INT_RTC_STATUS_ALARM_MASK         (0x40U)
-#define PMIC_INT_RTC_STATUS_POWER_UP_MASK      (0x80U)
-#define PMIC_INT_NPWRON_LONG_MASK              (0x20U)
+#define PMIC_INT_GPIO_GPIO11_INT_MASK                   (0x04U)
+#define PMIC_INT_STARTUP_NPWRON_START_INT_MASK          (0x01U)
+#define PMIC_INT_RTC_STATUS_TIMER_MASK                  (0x20U)
+#define PMIC_INT_RTC_STATUS_ALARM_MASK                  (0x40U)
+#define PMIC_INT_RTC_STATUS_POWER_UP_MASK               (0x80U)
+#define PMIC_INT_MODERATE_ERR_NPWRON_LONG_INT_MASK      (0x20U)
 
 /*!
  * \brief: IRQ Mask Bits to validate error bits
@@ -69,8 +69,7 @@ extern "C" {
 /*!
  * \brief: INT_STARTUP Sources
  */
-#define PMIC_INT_RTC_STATUS_REGADDDR           (0xC4U)
-
+#define PMIC_INT_RTC_STATUS_REGADDR           (0xC4U)
 
 /*!
  * \brief: Interrupt MASK registers address
@@ -95,12 +94,12 @@ extern "C" {
 /*!
  * \brief: Individual interrupt bitmasks for GPIO9_11 FALL
  */
-#define PMIC_IRQ_NPWRON_START                 (0x1U)
+#define PMIC_MASK_STARTUP_NPWRON_START_MASK_MASK                 (0x01U)
 
 /*!
  * \brief: Individual interrupt bitmasks for STARTUP Error
  */
-#define PMIC_IRQ_NPWRON_LONG                  (0x6U)
+#define PMIC_MASK_MODERATE_ERR_NPWRON_LONG_MASK_MASK                  (0x20U)
 
 #ifdef __cplusplus
 }

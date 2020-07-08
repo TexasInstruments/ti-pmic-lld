@@ -116,377 +116,377 @@ extern "C" {
  *  @{
  */
 #define PMIC_INT_ID_BUCK1_OV           PMIC_IRQID(                            \
-                                                 PMIC_INT_BUCK_REGADDDR,    \
-                                                 PMIC_INT_BUCK1_2_REGADDDR, \
-                                                 PMIC_INT_BUCK1_OV_MASK)
+                                            PMIC_INT_BUCK_REGADDR,    \
+                                            PMIC_INT_BUCK1_2_REGADDR, \
+                                            PMIC_INT_BUCK1_2_BUCK1_OV_INT_MASK)
 #define PMIC_INT_ID_BUCK1_UV           PMIC_IRQID(                            \
-                                                 PMIC_INT_BUCK_REGADDDR,    \
-                                                 PMIC_INT_BUCK1_2_REGADDDR, \
-                                                 PMIC_INT_BUCK1_UV_MASK)
+                                            PMIC_INT_BUCK_REGADDR,    \
+                                            PMIC_INT_BUCK1_2_REGADDR, \
+                                            PMIC_INT_BUCK1_2_BUCK1_UV_INT_MASK)
 #define PMIC_INT_ID_BUCK1_SC           PMIC_IRQID(                            \
-                                                 PMIC_INT_BUCK_REGADDDR,    \
-                                                 PMIC_INT_BUCK1_2_REGADDDR, \
-                                                 PMIC_INT_BUCK1_SC_MASK)
+                                            PMIC_INT_BUCK_REGADDR,    \
+                                            PMIC_INT_BUCK1_2_REGADDR, \
+                                            PMIC_INT_BUCK1_2_BUCK1_SC_INT_MASK)
 #define PMIC_INT_ID_BUCK1_ILIM         PMIC_IRQID(                            \
-                                                 PMIC_INT_BUCK_REGADDDR,    \
-                                                 PMIC_INT_BUCK1_2_REGADDDR, \
-                                                 PMIC_INT_BUCK1_ILIM_MASK)
+                                          PMIC_INT_BUCK_REGADDR,    \
+                                          PMIC_INT_BUCK1_2_REGADDR, \
+                                          PMIC_INT_BUCK1_2_BUCK1_ILIM_INT_MASK)
 #define PMIC_INT_ID_BUCK2_OV           PMIC_IRQID(                            \
-                                                 PMIC_INT_BUCK_REGADDDR,    \
-                                                 PMIC_INT_BUCK1_2_REGADDDR, \
-                                                 PMIC_INT_BUCK2_OV_MASK)
+                                            PMIC_INT_BUCK_REGADDR,    \
+                                            PMIC_INT_BUCK1_2_REGADDR, \
+                                            PMIC_INT_BUCK1_2_BUCK2_OV_INT_MASK)
 #define PMIC_INT_ID_BUCK2_UV           PMIC_IRQID(                            \
-                                                 PMIC_INT_BUCK_REGADDDR,    \
-                                                 PMIC_INT_BUCK1_2_REGADDDR, \
-                                                 PMIC_INT_BUCK2_UV_MASK)
+                                            PMIC_INT_BUCK_REGADDR,    \
+                                            PMIC_INT_BUCK1_2_REGADDR, \
+                                            PMIC_INT_BUCK1_2_BUCK2_UV_INT_MASK)
 #define PMIC_INT_ID_BUCK2_SC           PMIC_IRQID(                            \
-                                                 PMIC_INT_BUCK_REGADDDR,    \
-                                                 PMIC_INT_BUCK1_2_REGADDDR, \
-                                                 PMIC_INT_BUCK2_SC_MASK)
+                                            PMIC_INT_BUCK_REGADDR,    \
+                                            PMIC_INT_BUCK1_2_REGADDR, \
+                                            PMIC_INT_BUCK1_2_BUCK2_SC_INT_MASK)
 #define PMIC_INT_ID_BUCK2_ILIM         PMIC_IRQID(                            \
-                                                 PMIC_INT_BUCK_REGADDDR,    \
-                                                 PMIC_INT_BUCK1_2_REGADDDR, \
-                                                 PMIC_INT_BUCK2_ILIM_MASK)
+                                         PMIC_INT_BUCK_REGADDR,    \
+                                         PMIC_INT_BUCK1_2_REGADDR, \
+                                         PMIC_INT_BUCK1_2_BUCK2_ILIM_INT_MASK)
 #define PMIC_INT_ID_BUCK3_OV           PMIC_IRQID(                            \
-                                                 PMIC_INT_BUCK_REGADDDR,    \
-                                                 PMIC_INT_BUCK3_4_REGADDDR, \
-                                                 PMIC_INT_BUCK3_OV_MASK)
+                                            PMIC_INT_BUCK_REGADDR,    \
+                                            PMIC_INT_BUCK3_4_REGADDR, \
+                                            PMIC_INT_BUCK3_4_BUCK3_OV_INT_MASK)
 #define PMIC_INT_ID_BUCK3_UV           PMIC_IRQID(                            \
-                                                 PMIC_INT_BUCK_REGADDDR,    \
-                                                 PMIC_INT_BUCK3_4_REGADDDR, \
-                                                 PMIC_INT_BUCK3_UV_MASK)
+                                            PMIC_INT_BUCK_REGADDR,    \
+                                            PMIC_INT_BUCK3_4_REGADDR, \
+                                            PMIC_INT_BUCK3_4_BUCK3_UV_INT_MASK)
 #define PMIC_INT_ID_BUCK3_SC           PMIC_IRQID(                            \
-                                                 PMIC_INT_BUCK_REGADDDR,    \
-                                                 PMIC_INT_BUCK3_4_REGADDDR, \
-                                                 PMIC_INT_BUCK3_SC_MASK)
+                                            PMIC_INT_BUCK_REGADDR,    \
+                                            PMIC_INT_BUCK3_4_REGADDR, \
+                                            PMIC_INT_BUCK3_4_BUCK3_SC_INT_MASK)
 #define PMIC_INT_ID_BUCK3_ILIM         PMIC_IRQID(                            \
-                                                 PMIC_INT_BUCK_REGADDDR,    \
-                                                 PMIC_INT_BUCK3_4_REGADDDR, \
-                                                 PMIC_INT_BUCK3_ILIM_MASK)
+                                          PMIC_INT_BUCK_REGADDR,    \
+                                          PMIC_INT_BUCK3_4_REGADDR, \
+                                          PMIC_INT_BUCK3_4_BUCK3_ILIM_INT_MASK)
 #define PMIC_INT_ID_BUCK4_OV           PMIC_IRQID(                            \
-                                                 PMIC_INT_BUCK_REGADDDR,    \
-                                                 PMIC_INT_BUCK3_4_REGADDDR, \
-                                                 PMIC_INT_BUCK4_OV_MASK)
+                                            PMIC_INT_BUCK_REGADDR,    \
+                                            PMIC_INT_BUCK3_4_REGADDR, \
+                                            PMIC_INT_BUCK3_4_BUCK4_OV_INT_MASK)
 #define PMIC_INT_ID_BUCK4_UV           PMIC_IRQID(                            \
-                                                 PMIC_INT_BUCK_REGADDDR,    \
-                                                 PMIC_INT_BUCK3_4_REGADDDR, \
-                                                 PMIC_INT_BUCK4_UV_MASK)
+                                            PMIC_INT_BUCK_REGADDR,    \
+                                            PMIC_INT_BUCK3_4_REGADDR, \
+                                            PMIC_INT_BUCK3_4_BUCK4_UV_INT_MASK)
 #define PMIC_INT_ID_BUCK4_SC           PMIC_IRQID(                            \
-                                                 PMIC_INT_BUCK_REGADDDR,    \
-                                                 PMIC_INT_BUCK3_4_REGADDDR, \
-                                                 PMIC_INT_BUCK4_SC_MASK)
+                                            PMIC_INT_BUCK_REGADDR,    \
+                                            PMIC_INT_BUCK3_4_REGADDR, \
+                                            PMIC_INT_BUCK3_4_BUCK4_SC_INT_MASK)
 #define PMIC_INT_ID_BUCK4_ILIM         PMIC_IRQID(                            \
-                                                 PMIC_INT_BUCK_REGADDDR,    \
-                                                 PMIC_INT_BUCK3_4_REGADDDR, \
-                                                 PMIC_INT_BUCK4_ILIM_MASK)
+                                          PMIC_INT_BUCK_REGADDR,    \
+                                          PMIC_INT_BUCK3_4_REGADDR, \
+                                          PMIC_INT_BUCK3_4_BUCK4_ILIM_INT_MASK)
 #define PMIC_INT_ID_BUCK5_OV           PMIC_IRQID(                            \
-                                                 PMIC_INT_BUCK_REGADDDR,    \
-                                                 PMIC_INT_BUCK5_REGADDDR,   \
-                                                 PMIC_INT_BUCK5_OV_MASK)
+                                              PMIC_INT_BUCK_REGADDR,    \
+                                              PMIC_INT_BUCK5_REGADDR,   \
+                                              PMIC_INT_BUCK5_BUCK5_OV_INT_MASK)
 #define PMIC_INT_ID_BUCK5_UV           PMIC_IRQID(                            \
-                                                 PMIC_INT_BUCK_REGADDDR,    \
-                                                 PMIC_INT_BUCK5_REGADDDR,   \
-                                                 PMIC_INT_BUCK5_UV_MASK)
+                                              PMIC_INT_BUCK_REGADDR,    \
+                                              PMIC_INT_BUCK5_REGADDR,   \
+                                              PMIC_INT_BUCK5_BUCK5_UV_INT_MASK)
 #define PMIC_INT_ID_BUCK5_SC           PMIC_IRQID(                            \
-                                                 PMIC_INT_BUCK_REGADDDR,    \
-                                                 PMIC_INT_BUCK5_REGADDDR,   \
-                                                 PMIC_INT_BUCK5_SC_MASK)
+                                              PMIC_INT_BUCK_REGADDR,    \
+                                              PMIC_INT_BUCK5_REGADDR,   \
+                                              PMIC_INT_BUCK5_BUCK5_SC_INT_MASK)
 #define PMIC_INT_ID_BUCK5_ILIM         PMIC_IRQID(                            \
-                                                 PMIC_INT_BUCK_REGADDDR,    \
-                                                 PMIC_INT_BUCK5_REGADDDR,   \
-                                                 PMIC_INT_BUCK5_ILIM_MASK)
+                                            PMIC_INT_BUCK_REGADDR,    \
+                                            PMIC_INT_BUCK5_REGADDR,   \
+                                            PMIC_INT_BUCK5_BUCK5_ILIM_INT_MASK)
 
 #define PMIC_INT_ID_LDO1_OV            PMIC_IRQID(                            \
-                                                 PMIC_INT_LDO_VMON_REGADDDR,\
-                                                 PMIC_INT_LDO1_2_REGADDDR,  \
-                                                 PMIC_INT_LDO1_OV_MASK)
+                                             PMIC_INT_LDO_VMON_REGADDR,\
+                                             PMIC_INT_LDO1_2_REGADDR,  \
+                                             PMIC_INT_LDO1_2_LDO1_OV_INT_MASK)
 #define PMIC_INT_ID_LDO1_UV            PMIC_IRQID(                            \
-                                                 PMIC_INT_LDO_VMON_REGADDDR,\
-                                                 PMIC_INT_LDO1_2_REGADDDR,  \
-                                                 PMIC_INT_LDO1_UV_MASK)
+                                             PMIC_INT_LDO_VMON_REGADDR,\
+                                             PMIC_INT_LDO1_2_REGADDR,  \
+                                             PMIC_INT_LDO1_2_LDO1_UV_INT_MASK)
 #define PMIC_INT_ID_LDO1_SC            PMIC_IRQID(                            \
-                                                 PMIC_INT_LDO_VMON_REGADDDR,\
-                                                 PMIC_INT_LDO1_2_REGADDDR,  \
-                                                 PMIC_INT_LDO1_SC_MASK)
+                                             PMIC_INT_LDO_VMON_REGADDR,\
+                                             PMIC_INT_LDO1_2_REGADDR,  \
+                                             PMIC_INT_LDO1_2_LDO1_SC_INT_MASK)
 #define PMIC_INT_ID_LDO1_ILIM          PMIC_IRQID(                            \
-                                                 PMIC_INT_LDO_VMON_REGADDDR,\
-                                                 PMIC_INT_LDO1_2_REGADDDR,  \
-                                                 PMIC_INT_LDO1_ILIM_MASK)
+                                            PMIC_INT_LDO_VMON_REGADDR,\
+                                            PMIC_INT_LDO1_2_REGADDR,  \
+                                            PMIC_INT_LDO1_2_LDO1_ILIM_INT_MASK)
 #define PMIC_INT_ID_LDO2_OV            PMIC_IRQID(                            \
-                                                 PMIC_INT_LDO_VMON_REGADDDR,\
-                                                 PMIC_INT_LDO1_2_REGADDDR,  \
-                                                 PMIC_INT_LDO2_OV_MASK)
+                                             PMIC_INT_LDO_VMON_REGADDR,\
+                                             PMIC_INT_LDO1_2_REGADDR,  \
+                                             PMIC_INT_LDO1_2_LDO2_OV_INT_MASK)
 #define PMIC_INT_ID_LDO2_UV            PMIC_IRQID(                            \
-                                                 PMIC_INT_LDO_VMON_REGADDDR,\
-                                                 PMIC_INT_LDO1_2_REGADDDR,  \
-                                                 PMIC_INT_LDO2_UV_MASK)
+                                             PMIC_INT_LDO_VMON_REGADDR,\
+                                             PMIC_INT_LDO1_2_REGADDR,  \
+                                             PMIC_INT_LDO1_2_LDO2_UV_INT_MASK)
 #define PMIC_INT_ID_LDO2_SC            PMIC_IRQID(                            \
-                                                 PMIC_INT_LDO_VMON_REGADDDR,\
-                                                 PMIC_INT_LDO1_2_REGADDDR,  \
-                                                 PMIC_INT_LDO2_SC_MASK)
+                                             PMIC_INT_LDO_VMON_REGADDR,\
+                                             PMIC_INT_LDO1_2_REGADDR,  \
+                                             PMIC_INT_LDO1_2_LDO2_SC_INT_MASK)
 #define PMIC_INT_ID_LDO2_ILIM          PMIC_IRQID(                            \
-                                                 PMIC_INT_LDO_VMON_REGADDDR,\
-                                                 PMIC_INT_LDO1_2_REGADDDR,  \
-                                                 PMIC_INT_LDO2_ILIM_MASK)
+                                            PMIC_INT_LDO_VMON_REGADDR,\
+                                            PMIC_INT_LDO1_2_REGADDR,  \
+                                            PMIC_INT_LDO1_2_LDO2_ILIM_INT_MASK)
 #define PMIC_INT_ID_LDO3_OV            PMIC_IRQID(                            \
-                                                 PMIC_INT_LDO_VMON_REGADDDR,\
-                                                 PMIC_INT_LDO3_4_REGADDDR,  \
-                                                 PMIC_INT_LDO3_OV_MASK)
+                                             PMIC_INT_LDO_VMON_REGADDR,\
+                                             PMIC_INT_LDO3_4_REGADDR,  \
+                                             PMIC_INT_LDO3_4_LDO3_OV_INT_MASK)
 #define PMIC_INT_ID_LDO3_UV            PMIC_IRQID(                            \
-                                                 PMIC_INT_LDO_VMON_REGADDDR,\
-                                                 PMIC_INT_LDO3_4_REGADDDR,  \
-                                                 PMIC_INT_LDO3_UV_MASK)
+                                             PMIC_INT_LDO_VMON_REGADDR,\
+                                             PMIC_INT_LDO3_4_REGADDR,  \
+                                             PMIC_INT_LDO3_4_LDO3_UV_INT_MASK)
 #define PMIC_INT_ID_LDO3_SC            PMIC_IRQID(                            \
-                                                 PMIC_INT_LDO_VMON_REGADDDR,\
-                                                 PMIC_INT_LDO3_4_REGADDDR,  \
-                                                 PMIC_INT_LDO3_SC_MASK)
+                                             PMIC_INT_LDO_VMON_REGADDR,\
+                                             PMIC_INT_LDO3_4_REGADDR,  \
+                                             PMIC_INT_LDO3_4_LDO3_SC_INT_MASK)
 #define PMIC_INT_ID_LDO3_ILIM          PMIC_IRQID(                            \
-                                                 PMIC_INT_LDO_VMON_REGADDDR,\
-                                                 PMIC_INT_LDO3_4_REGADDDR,  \
-                                                 PMIC_INT_LDO3_ILIM_MASK)
+                                            PMIC_INT_LDO_VMON_REGADDR,\
+                                            PMIC_INT_LDO3_4_REGADDR,  \
+                                            PMIC_INT_LDO3_4_LDO3_ILIM_INT_MASK)
 #define PMIC_INT_ID_LDO4_OV            PMIC_IRQID(                            \
-                                                 PMIC_INT_LDO_VMON_REGADDDR,\
-                                                 PMIC_INT_LDO3_4_REGADDDR,  \
-                                                 PMIC_INT_LDO4_OV_MASK)
+                                             PMIC_INT_LDO_VMON_REGADDR,\
+                                             PMIC_INT_LDO3_4_REGADDR,  \
+                                             PMIC_INT_LDO3_4_LDO4_OV_INT_MASK)
 #define PMIC_INT_ID_LDO4_UV            PMIC_IRQID(                            \
-                                                 PMIC_INT_LDO_VMON_REGADDDR,\
-                                                 PMIC_INT_LDO3_4_REGADDDR,  \
-                                                 PMIC_INT_LDO4_UV_MASK)
+                                             PMIC_INT_LDO_VMON_REGADDR,\
+                                             PMIC_INT_LDO3_4_REGADDR,  \
+                                             PMIC_INT_LDO3_4_LDO4_UV_INT_MASK)
 #define PMIC_INT_ID_LDO4_SC            PMIC_IRQID(                            \
-                                                 PMIC_INT_LDO_VMON_REGADDDR,\
-                                                 PMIC_INT_LDO3_4_REGADDDR,  \
-                                                 PMIC_INT_LDO4_SC_MASK)
+                                             PMIC_INT_LDO_VMON_REGADDR,\
+                                             PMIC_INT_LDO3_4_REGADDR,  \
+                                             PMIC_INT_LDO3_4_LDO4_SC_INT_MASK)
 #define PMIC_INT_ID_LDO4_ILIM          PMIC_IRQID(                            \
-                                                 PMIC_INT_LDO_VMON_REGADDDR,\
-                                                 PMIC_INT_LDO3_4_REGADDDR,  \
-                                                 PMIC_INT_LDO4_ILIM_MASK)
+                                            PMIC_INT_LDO_VMON_REGADDR,\
+                                            PMIC_INT_LDO3_4_REGADDR,  \
+                                            PMIC_INT_LDO3_4_LDO4_ILIM_INT_MASK)
 #define PMIC_INT_ID_GPIO1              PMIC_IRQID(                            \
-                                                 PMIC_INT_GPIO_REGADDDR,    \
-                                                 PMIC_INT_GPIO1_8_REGADDDR, \
-                                                 PMIC_INT_GPIO1_MASK)
+                                             PMIC_INT_GPIO_REGADDR,    \
+                                             PMIC_INT_GPIO1_8_REGADDR, \
+                                             PMIC_INT_GPIO1_8_GPIO1_INT_MASK)
 #define PMIC_INT_ID_GPIO2              PMIC_IRQID(                            \
-                                                 PMIC_INT_GPIO_REGADDDR,    \
-                                                 PMIC_INT_GPIO1_8_REGADDDR, \
-                                                 PMIC_INT_GPIO2_MASK)
+                                             PMIC_INT_GPIO_REGADDR,    \
+                                             PMIC_INT_GPIO1_8_REGADDR, \
+                                             PMIC_INT_GPIO1_8_GPIO2_INT_MASK)
 #define PMIC_INT_ID_GPIO3              PMIC_IRQID(                            \
-                                                 PMIC_INT_GPIO_REGADDDR,    \
-                                                 PMIC_INT_GPIO1_8_REGADDDR, \
-                                                 PMIC_INT_GPIO3_MASK)
+                                             PMIC_INT_GPIO_REGADDR,    \
+                                             PMIC_INT_GPIO1_8_REGADDR, \
+                                             PMIC_INT_GPIO1_8_GPIO3_INT_MASK)
 #define PMIC_INT_ID_GPIO4              PMIC_IRQID(                            \
-                                                 PMIC_INT_GPIO_REGADDDR,    \
-                                                 PMIC_INT_GPIO1_8_REGADDDR, \
-                                                 PMIC_INT_GPIO4_MASK)
+                                             PMIC_INT_GPIO_REGADDR,    \
+                                             PMIC_INT_GPIO1_8_REGADDR, \
+                                             PMIC_INT_GPIO1_8_GPIO4_INT_MASK)
 #define PMIC_INT_ID_GPIO5              PMIC_IRQID(                            \
-                                                 PMIC_INT_GPIO_REGADDDR,    \
-                                                 PMIC_INT_GPIO1_8_REGADDDR, \
-                                                 PMIC_INT_GPIO5_MASK)
+                                             PMIC_INT_GPIO_REGADDR,    \
+                                             PMIC_INT_GPIO1_8_REGADDR, \
+                                             PMIC_INT_GPIO1_8_GPIO5_INT_MASK)
 #define PMIC_INT_ID_GPIO6              PMIC_IRQID(                            \
-                                                 PMIC_INT_GPIO_REGADDDR,    \
-                                                 PMIC_INT_GPIO1_8_REGADDDR, \
-                                                 PMIC_INT_GPIO6_MASK)
+                                             PMIC_INT_GPIO_REGADDR,    \
+                                             PMIC_INT_GPIO1_8_REGADDR, \
+                                             PMIC_INT_GPIO1_8_GPIO6_INT_MASK)
 #define PMIC_INT_ID_GPIO7              PMIC_IRQID(                            \
-                                                 PMIC_INT_GPIO_REGADDDR,    \
-                                                 PMIC_INT_GPIO1_8_REGADDDR, \
-                                                 PMIC_INT_GPIO7_MASK)
+                                             PMIC_INT_GPIO_REGADDR,    \
+                                             PMIC_INT_GPIO1_8_REGADDR, \
+                                             PMIC_INT_GPIO1_8_GPIO7_INT_MASK)
 #define PMIC_INT_ID_GPIO8              PMIC_IRQID(                            \
-                                                 PMIC_INT_GPIO_REGADDDR,    \
-                                                 PMIC_INT_GPIO1_8_REGADDDR, \
-                                                 PMIC_INT_GPIO8_MASK)
+                                             PMIC_INT_GPIO_REGADDR,    \
+                                             PMIC_INT_GPIO1_8_REGADDR, \
+                                             PMIC_INT_GPIO1_8_GPIO8_INT_MASK)
 #define PMIC_INT_ID_GPIO9              PMIC_IRQID(                            \
-                                                 PMIC_INT_GPIO_REGADDDR,    \
+                                                 PMIC_INT_GPIO_REGADDR,    \
                                                  0x0000U,  \
-                                                 PMIC_INT_GPIO9_MASK)
+                                                 PMIC_INT_GPIO_GPIO9_INT_MASK)
 #define PMIC_INT_ID_GPIO10             PMIC_IRQID(                            \
-                                                 PMIC_INT_GPIO_REGADDDR,    \
+                                                 PMIC_INT_GPIO_REGADDR,    \
                                                  0x0000U,  \
-                                                 PMIC_INT_GPIO10_MASK)
+                                                 PMIC_INT_GPIO_GPIO10_INT_MASK)
 #define PMIC_INT_ID_GPIO11             PMIC_IRQID(                            \
-                                                 PMIC_INT_GPIO_REGADDDR,    \
+                                                 PMIC_INT_GPIO_REGADDR,    \
                                                  0x0000U,  \
-                                                 PMIC_INT_GPIO11_MASK)
+                                                 PMIC_INT_GPIO_GPIO11_INT_MASK)
 
 #define PMIC_INT_ID_NPWRON_START       PMIC_IRQID(                            \
-                                                 PMIC_INT_STARTUP_REGADDDR, \
+                                                 PMIC_INT_STARTUP_REGADDR, \
                                                  0x0000U,  \
-                                                 PMIC_INT_NPWRON_START_MASK)
+                                                 PMIC_INT_STARTUP_NPWRON_START_INT_MASK)
 #define PMIC_INT_ID_ENABLE             PMIC_IRQID(                            \
-                                                 PMIC_INT_STARTUP_REGADDDR, \
-                                                 0x0000U,  \
-                                                 PMIC_INT_ENABLE_MASK)
+                                             PMIC_INT_STARTUP_REGADDR, \
+                                             0x0000U,  \
+                                             PMIC_INT_STARTUP_ENABLE_INT_MASK)
 #define PMIC_INT_ID_RTC_TIMER          PMIC_IRQID(                            \
-                                              PMIC_INT_STARTUP_REGADDDR,    \
-                                              PMIC_INT_RTC_STATUS_REGADDDR, \
-                                              PMIC_INT_RTC_STATUS_TIMER_MASK)
+                                              PMIC_INT_STARTUP_REGADDR,    \
+                                              PMIC_INT_RTC_STATUS_REGADDR, \
+                                              PMIC_RTC_STATUS_TIMER_MASK)
 #define PMIC_INT_ID_RTC_ALARM          PMIC_IRQID(                            \
-                                              PMIC_INT_STARTUP_REGADDDR,    \
-                                              PMIC_INT_RTC_STATUS_REGADDDR, \
-                                              PMIC_INT_RTC_STATUS_ALARM_MASK)
+                                              PMIC_INT_STARTUP_REGADDR,    \
+                                              PMIC_INT_RTC_STATUS_REGADDR, \
+                                              PMIC_RTC_STATUS_ALARM_MASK)
 #define PMIC_INT_ID_FSD                PMIC_IRQID(                            \
-                                              PMIC_INT_STARTUP_REGADDDR,    \
+                                              PMIC_INT_STARTUP_REGADDR,    \
                                               0x0000U,     \
-                                              PMIC_INT_FSD_MASK)
+                                              PMIC_INT_STARTUP_FSD_INT_MASK)
 
 #define PMIC_INT_ID_BIST_PASS          PMIC_IRQID(                            \
-                                              PMIC_INT_MISC_WARN_REGADDDR,  \
+                                              PMIC_INT_MISC_REGADDR,  \
                                               0x0000U,     \
-                                              PMIC_INT_BIST_PASS_MASK)
+                                              PMIC_INT_MISC_BIST_PASS_INT_MASK)
 #define PMIC_INT_ID_EXT_CLK            PMIC_IRQID(                            \
-                                              PMIC_INT_MISC_WARN_REGADDDR,  \
+                                              PMIC_INT_MISC_REGADDR,  \
                                               0x0000U,     \
-                                              PMIC_INT_EXT_CLK_MASK)
+                                              PMIC_INT_MISC_EXT_CLK_INT_MASK)
 #define PMIC_INT_ID_TWARN              PMIC_IRQID(                            \
-                                              PMIC_INT_MISC_WARN_REGADDDR,  \
+                                              PMIC_INT_MISC_REGADDR,  \
                                               0x0000U,     \
-                                              PMIC_INT_TWARN_MASK)
+                                              PMIC_INT_MISC_TWARN_INT_MASK)
 
 #define PMIC_INT_ID_TSD_ORD            PMIC_IRQID(                            \
-                                              PMIC_INT_MODERATE_REGADDDR,   \
-                                              0x0000U,     \
-                                              PMIC_INT_TSD_ORD_MASK)
+                                        PMIC_INT_MODERATE_ERR_REGADDR, \
+                                        0x0000U,     \
+                                        PMIC_INT_MODERATE_ERR_TSD_ORD_INT_MASK)
 #define PMIC_INT_ID_BIST_FAIL          PMIC_IRQID(                            \
-                                              PMIC_INT_MODERATE_REGADDDR,   \
-                                              0x0000U,     \
-                                              PMIC_INT_BIST_FAIL_MASK)
+                                      PMIC_INT_MODERATE_ERR_REGADDR, \
+                                      0x0000U,     \
+                                      PMIC_INT_MODERATE_ERR_BIST_FAIL_INT_MASK)
 #define PMIC_INT_ID_REG_CRC_ERR        PMIC_IRQID(                            \
-                                              PMIC_INT_MODERATE_REGADDDR,   \
-                                              0x0000U,     \
-                                              PMIC_INT_REG_CRC_ERR_MASK)
+                                    PMIC_INT_MODERATE_ERR_REGADDR, \
+                                    0x0000U,     \
+                                    PMIC_INT_MODERATE_ERR_REG_CRC_ERR_INT_MASK)
 #define PMIC_INT_ID_RECOV_CNT          PMIC_IRQID(                            \
-                                              PMIC_INT_MODERATE_REGADDDR,   \
-                                              0x0000U,     \
-                                              PMIC_INT_RECOV_CNT_MASK)
+                                      PMIC_INT_MODERATE_ERR_REGADDR, \
+                                      0x0000U,     \
+                                      PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_MASK)
 #define PMIC_INT_ID_SPMI_ERR           PMIC_IRQID(                            \
-                                              PMIC_INT_MODERATE_REGADDDR,   \
-                                              0x0000U,     \
-                                              PMIC_INT_SPMI_ERR_MASK)
+                                      PMIC_INT_MODERATE_ERR_REGADDR, \
+                                      0x0000U,     \
+                                      PMIC_INT_MODERATE_ERR_SPMI_ERR_INT_MASK)
 #define PMIC_INT_ID_NPWRON_LONG        PMIC_IRQID(                            \
-                                              PMIC_INT_MODERATE_REGADDDR,   \
-                                              0x0000U,     \
-                                              PMIC_INT_NPWRON_LONG_MASK)
+                                    PMIC_INT_MODERATE_ERR_REGADDR, \
+                                    0x0000U,     \
+                                    PMIC_INT_MODERATE_ERR_NPWRON_LONG_INT_MASK)
 #define PMIC_INT_ID_NINT_RDBK          PMIC_IRQID(                            \
-                                              PMIC_INT_MODERATE_REGADDDR,   \
-                                              0x0000U,     \
-                                              PMIC_INT_NINT_RDBK_MASK)
+                                  PMIC_INT_MODERATE_ERR_REGADDR, \
+                                  0x0000U,     \
+                                  PMIC_INT_MODERATE_ERR_NINT_READBACK_INT_MASK)
 #define PMIC_INT_ID_NRSTOUT_RDBK       PMIC_IRQID(                            \
-                                              PMIC_INT_MODERATE_REGADDDR,   \
-                                              0x0000U,     \
-                                              PMIC_INT_NRSTOUT_RBDK_MASK)
+                              PMIC_INT_MODERATE_ERR_REGADDR, \
+                              0x0000U,     \
+                              PMIC_INT_MODERATE_ERR_NRSTOUT_READBACK_INT_MASK)
 
 #define PMIC_INT_ID_TSD_IMM            PMIC_IRQID(                            \
-                                              PMIC_INT_SEVERE_REGADDDR,     \
-                                              0x0000U,     \
-                                              PMIC_INT_TSD_IMM_MASK)
+                                          PMIC_INT_SEVERE_ERR_REGADDR,   \
+                                          0x0000U,     \
+                                          PMIC_INT_SEVERE_ERR_TSD_IMM_INT_MASK)
 #define PMIC_INT_ID_VCCA_OVP           PMIC_IRQID(                            \
-                                              PMIC_INT_SEVERE_REGADDDR,     \
-                                              0x0000U,     \
-                                              PMIC_INT_VCCA_OVP_MASK)
+                                          PMIC_INT_SEVERE_ERR_REGADDR,   \
+                                          0x0000U,     \
+                                          PMIC_INT_SEVERE_ERR_VCCA_OVP_INT_MASK)
 #define PMIC_INT_ID_PFSM_ERR           PMIC_IRQID(                            \
-                                              PMIC_INT_SEVERE_REGADDDR,     \
-                                              0x0000U,     \
-                                              PMIC_INT_PFSM_ERR_MASK)
+                                          PMIC_INT_SEVERE_ERR_REGADDR,   \
+                                          0x0000U,     \
+                                          PMIC_INT_SEVERE_ERR_PFSM_ERR_INT_MASK)
 
 #define PMIC_INT_ID_IMM_SHUTDOWN       PMIC_IRQID(                            \
-                                              PMIC_INT_FSM_REGADDDR,        \
-                                              0x0000U,     \
-                                              PMIC_INT_IMM_SHUTDOWN_MASK)
+                                      PMIC_INT_FSM_ERR_REGADDR,       \
+                                      0x0000U,     \
+                                      PMIC_INT_FSM_ERR_IMM_SHUTDOWN_INT_MASK)
 #define PMIC_INT_ID_ORD_SHUTDOWN       PMIC_IRQID(                            \
-                                              PMIC_INT_FSM_REGADDDR,        \
-                                              0x0000U,     \
-                                              PMIC_INT_ORD_SHUTDOWN_MASK)
+                                      PMIC_INT_FSM_ERR_REGADDR,       \
+                                      0x0000U,     \
+                                      PMIC_INT_FSM_ERR_ORD_SHUTDOWN_INT_MASK)
 #define PMIC_INT_ID_MCU_PWR_ERR        PMIC_IRQID(                            \
-                                              PMIC_INT_FSM_REGADDDR,        \
-                                              0x0000U,     \
-                                              PMIC_INT_MCU_PWR_ERR_MASK)
+                                         PMIC_INT_FSM_ERR_REGADDR,       \
+                                         0x0000U,     \
+                                         PMIC_INT_FSM_ERR_MCU_PWR_ERR_INT_MASK)
 #define PMIC_INT_ID_SOC_PWR_ERR        PMIC_IRQID(                            \
-                                              PMIC_INT_FSM_REGADDDR,        \
-                                              0x0000U,     \
-                                              PMIC_INT_SOC_PWR_ERR_MASK)
+                                         PMIC_INT_FSM_ERR_REGADDR,       \
+                                         0x0000U,     \
+                                         PMIC_INT_FSM_ERR_SOC_PWR_ERR_INT_MASK)
 #define PMIC_INT_ID_COMM_FRM_ERR       PMIC_IRQID(                            \
-                                              PMIC_INT_FSM_REGADDDR,        \
-                                              PMIC_INT_COMM_ERR_REGADDDR,   \
-                                              PMIC_INT_COMM_FRM_ERR_MASK)
+                                      PMIC_INT_FSM_ERR_REGADDR,       \
+                                      PMIC_INT_COMM_ERR_REGADDR,     \
+                                      PMIC_INT_COMM_ERR_COMM_FRM_ERR_INT_MASK)
 #define PMIC_INT_ID_COMM_CRC_ERR       PMIC_IRQID(                            \
-                                              PMIC_INT_FSM_REGADDDR,        \
-                                              PMIC_INT_COMM_ERR_REGADDDR,   \
-                                              PMIC_INT_COMM_CRC_ERR_MASK)
+                                      PMIC_INT_FSM_ERR_REGADDR,       \
+                                      PMIC_INT_COMM_ERR_REGADDR,     \
+                                      PMIC_INT_COMM_ERR_COMM_CRC_ERR_INT_MASK)
 #define PMIC_INT_ID_COMM_ADR_ERR       PMIC_IRQID(                            \
-                                              PMIC_INT_FSM_REGADDDR,        \
-                                              PMIC_INT_COMM_ERR_REGADDDR,   \
-                                              PMIC_INT_COMM_ADR_ERR_MASK)
+                                      PMIC_INT_FSM_ERR_REGADDR,       \
+                                      PMIC_INT_COMM_ERR_REGADDR,     \
+                                      PMIC_INT_COMM_ERR_COMM_ADR_ERR_INT_MASK)
 #define PMIC_INT_ID_I2C2_CRC_ERR       PMIC_IRQID(                            \
-                                              PMIC_INT_FSM_REGADDDR,        \
-                                              PMIC_INT_COMM_ERR_REGADDDR,   \
-                                              PMIC_INT_COMM_I2C2_CRC_ERR_MASK)
+                                      PMIC_INT_FSM_ERR_REGADDR,       \
+                                      PMIC_INT_COMM_ERR_REGADDR,     \
+                                      PMIC_INT_COMM_ERR_I2C2_CRC_ERR_INT_MASK)
 #define PMIC_INT_ID_I2C2_ADR_ERR       PMIC_IRQID(                            \
-                                              PMIC_INT_FSM_REGADDDR,        \
-                                              PMIC_INT_COMM_ERR_REGADDDR,   \
-                                              PMIC_INT_COMM_I2C2_ADR_ERR_MASK)
+                                      PMIC_INT_FSM_ERR_REGADDR,       \
+                                      PMIC_INT_COMM_ERR_REGADDR,     \
+                                      PMIC_INT_COMM_ERR_I2C2_ADR_ERR_INT_MASK)
 #define PMIC_INT_ID_EN_DRV_RDBACK      PMIC_IRQID(                            \
-                                            PMIC_INT_FSM_REGADDDR,          \
-                                            PMIC_INT_RDBACK_ERR_REGADDDR,   \
-                                            PMIC_INT_RDBACK_ERR_EN_DRV_MASK)
+                                PMIC_INT_FSM_ERR_REGADDR,         \
+                                PMIC_INT_RDBACK_ERR_REGADDR,     \
+                                PMIC_INT_READBACK_ERR_EN_DRV_READBACK_INT_MASK)
 #define PMIC_INT_ID_NRSTOUT_SOC_RDBACK   PMIC_IRQID(                          \
-                                            PMIC_INT_FSM_REGADDDR,          \
-                                            PMIC_INT_RDBACK_ERR_REGADDDR,   \
-                                            PMIC_INT_RDBACK_ERR_NRST_SOC_MASK)
+                          PMIC_INT_FSM_ERR_REGADDR,         \
+                          PMIC_INT_RDBACK_ERR_REGADDR,     \
+                          PMIC_INT_READBACK_ERR_NRSTOUT_SOC_READBACK_INT_MASK)
 
 #define PMIC_INT_ID_ESM_SOC_PIN        PMIC_IRQID(                            \
-                                                 PMIC_INT_FSM_REGADDDR,     \
-                                                 PMIC_INT_ESM_REGADDDR,     \
-                                                 PMIC_INT_ESM_SOC_PIN_MASK)
+                                             PMIC_INT_FSM_ERR_REGADDR,    \
+                                             PMIC_INT_ESM_REGADDR,       \
+                                             PMIC_INT_ESM_ESM_SOC_PIN_INT_MASK)
 #define PMIC_INT_ID_ESM_SOC_FAIL       PMIC_IRQID(                            \
-                                                 PMIC_INT_FSM_REGADDDR,     \
-                                                 PMIC_INT_ESM_REGADDDR,     \
-                                                 PMIC_INT_ESM_SOC_FAIL_MASK)
+                                            PMIC_INT_FSM_ERR_REGADDR,    \
+                                            PMIC_INT_ESM_REGADDR,       \
+                                            PMIC_INT_ESM_ESM_SOC_FAIL_INT_MASK)
 #define PMIC_INT_ID_ESM_SOC_RST        PMIC_IRQID(                            \
-                                                 PMIC_INT_FSM_REGADDDR,     \
-                                                 PMIC_INT_ESM_REGADDDR,     \
-                                                 PMIC_INT_ESM_SOC_RST_MASK)
+                                             PMIC_INT_FSM_ERR_REGADDR,    \
+                                             PMIC_INT_ESM_REGADDR,       \
+                                             PMIC_INT_ESM_ESM_SOC_RST_INT_MASK)
 #define PMIC_INT_ID_ESM_MCU_PIN        PMIC_IRQID(                            \
-                                                 PMIC_INT_FSM_REGADDDR,     \
-                                                 PMIC_INT_ESM_REGADDDR,     \
-                                                 PMIC_INT_ESM_MCU_PIN_MASK)
+                                             PMIC_INT_FSM_ERR_REGADDR,    \
+                                             PMIC_INT_ESM_REGADDR,       \
+                                             PMIC_INT_ESM_ESM_MCU_PIN_INT_MASK)
 #define PMIC_INT_ID_ESM_MCU_FAIL       PMIC_IRQID(                            \
-                                                 PMIC_INT_FSM_REGADDDR,     \
-                                                 PMIC_INT_ESM_REGADDDR,     \
-                                                 PMIC_INT_ESM_MCU_FAIL_MASK)
+                                            PMIC_INT_FSM_ERR_REGADDR,    \
+                                            PMIC_INT_ESM_REGADDR,       \
+                                            PMIC_INT_ESM_ESM_MCU_FAIL_INT_MASK)
 #define PMIC_INT_ID_ESM_MCU_RST        PMIC_IRQID(                            \
-                                                 PMIC_INT_FSM_REGADDDR,     \
-                                                 PMIC_INT_ESM_REGADDDR,     \
-                                                 PMIC_INT_ESM_MCU_RST_MASK)
+                                             PMIC_INT_FSM_ERR_REGADDR,    \
+                                             PMIC_INT_ESM_REGADDR,       \
+                                             PMIC_INT_ESM_ESM_MCU_RST_INT_MASK)
 
 #define PMIC_INT_ID_WDG_LONGWIN_TIMEOUT  PMIC_IRQID(                          \
-                                          PMIC_INT_FSM_REGADDDR,            \
-                                          PMIC_INT_WD_ERR_STATUS_REGADDDR,  \
-                                          PMIC_INT_WD_ERR_ST_LONGWIN_TOUT_MASK)
+                                PMIC_INT_FSM_ERR_REGADDR,           \
+                                PMIC_WD_ERR_STATUS_REGADDR,    \
+                                PMIC_WD_ERR_STATUS_WD_LONGWIN_TIMEOUT_INT_MASK)
 #define PMIC_INT_ID_WDG_TIMEOUT        PMIC_IRQID(                            \
-                                          PMIC_INT_FSM_REGADDDR,            \
-                                          PMIC_INT_WD_ERR_STATUS_REGADDDR,  \
-                                          PMIC_INT_WD_ERR_ST_TOUT_MASK)
+                                          PMIC_INT_FSM_ERR_REGADDR,           \
+                                          PMIC_WD_ERR_STATUS_REGADDR,    \
+                                          PMIC_WD_ERR_STATUS_WD_TIMEOUT_MASK)
 #define PMIC_INT_ID_WDG_TRIG_EARLY     PMIC_IRQID(                            \
-                                          PMIC_INT_FSM_REGADDDR,            \
-                                          PMIC_INT_WD_ERR_STATUS_REGADDDR,  \
-                                          PMIC_INT_WD_ERR_ST_TRIG_EARLY_MASK)
+                                         PMIC_INT_FSM_ERR_REGADDR,           \
+                                         PMIC_WD_ERR_STATUS_REGADDR,    \
+                                         PMIC_WD_ERR_STATUS_WD_TRIG_EARLY_MASK)
 #define PMIC_INT_ID_WDG_ANSW_EARLY     PMIC_IRQID(                            \
-                                          PMIC_INT_FSM_REGADDDR,            \
-                                          PMIC_INT_WD_ERR_STATUS_REGADDDR,  \
-                                          PMIC_INT_WD_ERR_ST_ANSW_EARLY_MASK)
+                                         PMIC_INT_FSM_ERR_REGADDR,           \
+                                         PMIC_WD_ERR_STATUS_REGADDR,    \
+                                         PMIC_WD_ERR_STATUS_WD_ANSW_EARLY_MASK)
 #define PMIC_INT_ID_WDG_SEQ_ERR        PMIC_IRQID(                            \
-                                          PMIC_INT_FSM_REGADDDR,            \
-                                          PMIC_INT_WD_ERR_STATUS_REGADDDR,  \
-                                          PMIC_INT_WD_ERR_ST_SEQ_ERR_MASK)
+                                          PMIC_INT_FSM_ERR_REGADDR,           \
+                                          PMIC_WD_ERR_STATUS_REGADDR,    \
+                                          PMIC_WD_ERR_STATUS_WD_SEQ_ERR_MASK)
 #define PMIC_INT_ID_WDG_ANSW_ERR       PMIC_IRQID(                            \
-                                          PMIC_INT_FSM_REGADDDR,            \
-                                          PMIC_INT_WD_ERR_STATUS_REGADDDR,  \
-                                          PMIC_INT_WD_ERR_ST_ANSW_ERR_MASK)
+                                          PMIC_INT_FSM_ERR_REGADDR,           \
+                                          PMIC_WD_ERR_STATUS_REGADDR,    \
+                                          PMIC_WD_ERR_STATUS_WD_ANSW_ERR_MASK)
 #define PMIC_INT_ID_WDG_FAIL           PMIC_IRQID(                            \
-                                          PMIC_INT_FSM_REGADDDR,            \
-                                          PMIC_INT_WD_ERR_STATUS_REGADDDR,  \
-                                          PMIC_INT_WD_ERR_ST_FAIL_MASK)
+                                          PMIC_INT_FSM_ERR_REGADDR,           \
+                                          PMIC_WD_ERR_STATUS_REGADDR,    \
+                                          PMIC_WD_ERR_STATUS_WD_FAIL_INT_MASK)
 #define PMIC_INT_ID_WDG_RST            PMIC_IRQID(                            \
-                                          PMIC_INT_FSM_REGADDDR,            \
-                                          PMIC_INT_WD_ERR_STATUS_REGADDDR,  \
-                                          PMIC_INT_WD_ERR_ST_RST_MASK)
+                                          PMIC_INT_FSM_ERR_REGADDR,           \
+                                          PMIC_WD_ERR_STATUS_REGADDR,    \
+                                          PMIC_WD_ERR_STATUS_WD_RST_INT_MASK)
 /* @} */
 
 
@@ -501,216 +501,216 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_IRQ_MASK_BUCK1_2_MASK   ((uint16_t)PMIC_IRQ_MASK_BUCK1_2  << 8U) \
-                                              | PMIC_IRQ_MASK_BUCK1_2_REGADDR
-#define PMIC_IRQ_BUCK2_ILIM_MASK     ((uint16_t)PMIC_IRQ_BUCK2_ILIM    << 8U) \
-                                              | PMIC_IRQ_MASK_BUCK1_2_REGADDR
-#define PMIC_IRQ_BUCK2_UV_MASK       ((uint16_t)PMIC_IRQ_BUCK2_UV      << 8U) \
-                                              | PMIC_IRQ_MASK_BUCK1_2_REGADDR
-#define PMIC_IRQ_BUCK2_OV_MASK       ((uint16_t)PMIC_IRQ_BUCK2_OV      << 8U) \
-                                              | PMIC_IRQ_MASK_BUCK1_2_REGADDR
-#define PMIC_IRQ_BUCK1_ILIM_MASK     ((uint16_t)PMIC_IRQ_BUCK1_ILIM    << 8U) \
-                                              | PMIC_IRQ_MASK_BUCK1_2_REGADDR
-#define PMIC_IRQ_BUCK1_UV_MASK       ((uint16_t)PMIC_IRQ_BUCK1_UV      << 8U) \
-                                              | PMIC_IRQ_MASK_BUCK1_2_REGADDR
-#define PMIC_IRQ_BUCK1_OV_MASK       ((uint16_t)PMIC_IRQ_BUCK1_OV      << 8U) \
-                                              | PMIC_IRQ_MASK_BUCK1_2_REGADDR
+#define PMIC_IRQ_MASK_BUCK1_2_MASK   ((uint16_t)PMIC_MASK_BUCK1_2_MASK  << 8U) \
+                                              | PMIC_MASK_BUCK1_2_REGADDR
+#define PMIC_IRQ_BUCK2_ILIM_MASK     ((uint16_t)PMIC_MASK_BUCK1_2_BUCK2_ILIM_MASK_MASK    << 8U) \
+                                              | PMIC_MASK_BUCK1_2_REGADDR
+#define PMIC_IRQ_BUCK2_UV_MASK       ((uint16_t)PMIC_MASK_BUCK1_2_BUCK2_UV_MASK_MASK      << 8U) \
+                                              | PMIC_MASK_BUCK1_2_REGADDR
+#define PMIC_IRQ_BUCK2_OV_MASK       ((uint16_t)PMIC_MASK_BUCK1_2_BUCK2_OV_MASK_MASK      << 8U) \
+                                              | PMIC_MASK_BUCK1_2_REGADDR
+#define PMIC_IRQ_BUCK1_ILIM_MASK     ((uint16_t)PMIC_MASK_BUCK1_2_BUCK1_ILIM_MASK_MASK    << 8U) \
+                                              | PMIC_MASK_BUCK1_2_REGADDR
+#define PMIC_IRQ_BUCK1_UV_MASK       ((uint16_t)PMIC_MASK_BUCK1_2_BUCK1_UV_MASK_MASK      << 8U) \
+                                              | PMIC_MASK_BUCK1_2_REGADDR
+#define PMIC_IRQ_BUCK1_OV_MASK       ((uint16_t)PMIC_MASK_BUCK1_2_BUCK1_OV_MASK_MASK      << 8U) \
+                                              | PMIC_MASK_BUCK1_2_REGADDR
 
 
-#define PMIC_IRQ_MASK_BUCK3_4_MASK  ((uint16_t)PMIC_IRQ_MASK_BUCK3_4   << 8U) \
-                                             | PMIC_IRQ_MASK_BUCK3_4_REGADDR
-#define PMIC_IRQ_BUCK4_ILIM_MASK    ((uint16_t)PMIC_IRQ_BUCK4_ILIM     << 8U) \
-                                             | PMIC_IRQ_MASK_BUCK3_4_REGADDR
-#define PMIC_IRQ_BUCK4_UV_MASK      ((uint16_t)PMIC_IRQ_BUCK4_UV       << 8U) \
-                                             | PMIC_IRQ_MASK_BUCK3_4_REGADDR
-#define PMIC_IRQ_BUCK4_OV_MASK      ((uint16_t)PMIC_IRQ_BUCK4_OV       << 8U) \
-                                             | PMIC_IRQ_MASK_BUCK3_4_REGADDR
-#define PMIC_IRQ_BUCK3_ILIM_MASK    ((uint16_t)PMIC_IRQ_BUCK3_ILIM     << 8U) \
-                                             | PMIC_IRQ_MASK_BUCK3_4_REGADDR
-#define PMIC_IRQ_BUCK3_UV_MASK      ((uint16_t)PMIC_IRQ_BUCK3_UV       << 8U) \
-                                             | PMIC_IRQ_MASK_BUCK3_4_REGADDR
-#define PMIC_IRQ_BUCK3_OV_MASK      ((uint16_t)PMIC_IRQ_BUCK3_OV       << 8U) \
-                                             | PMIC_IRQ_MASK_BUCK3_4_REGADDR
+#define PMIC_IRQ_MASK_BUCK3_4_MASK  ((uint16_t)PMIC_MASK_BUCK3_4_MASK   << 8U) \
+                                             | PMIC_MASK_BUCK3_4_REGADDR
+#define PMIC_IRQ_BUCK4_ILIM_MASK    ((uint16_t)PMIC_MASK_BUCK3_4_BUCK4_ILIM_MASK_MASK     << 8U) \
+                                             | PMIC_MASK_BUCK3_4_REGADDR
+#define PMIC_IRQ_BUCK4_UV_MASK      ((uint16_t)PMIC_MASK_BUCK3_4_BUCK4_UV_MASK_MASK       << 8U) \
+                                             | PMIC_MASK_BUCK3_4_REGADDR
+#define PMIC_IRQ_BUCK4_OV_MASK      ((uint16_t)PMIC_MASK_BUCK3_4_BUCK4_OV_MASK_MASK       << 8U) \
+                                             | PMIC_MASK_BUCK3_4_REGADDR
+#define PMIC_IRQ_BUCK3_ILIM_MASK    ((uint16_t)PMIC_MASK_BUCK3_4_BUCK3_ILIM_MASK_MASK     << 8U) \
+                                             | PMIC_MASK_BUCK3_4_REGADDR
+#define PMIC_IRQ_BUCK3_UV_MASK      ((uint16_t)PMIC_MASK_BUCK3_4_BUCK3_UV_MASK_MASK       << 8U) \
+                                             | PMIC_MASK_BUCK3_4_REGADDR
+#define PMIC_IRQ_BUCK3_OV_MASK      ((uint16_t)PMIC_MASK_BUCK3_4_BUCK3_OV_MASK_MASK       << 8U) \
+                                             | PMIC_MASK_BUCK3_4_REGADDR
 
 
-#define PMIC_IRQ_MASK_BUCK5_MASK      ((uint16_t)PMIC_IRQ_MASK_BUCK5   << 8U) \
-                                             | PMIC_IRQ_MASK_BUCK5_REGADDR
-#define PMIC_IRQ_BUCK5_ILIM_MASK      ((uint16_t)PMIC_IRQ_BUCK5_ILIM   << 8U) \
-                                             | PMIC_IRQ_MASK_BUCK5_REGADDR
-#define PMIC_IRQ_BUCK5_UV_MASK        ((uint16_t)PMIC_IRQ_BUCK5_UV     << 8U) \
-                                             | PMIC_IRQ_MASK_BUCK5_REGADDR
-#define PMIC_IRQ_BUCK5_OV_MASK        ((uint16_t)PMIC_IRQ_BUCK5_OV     << 8U) \
-                                             | PMIC_IRQ_MASK_BUCK5_REGADDR
+#define PMIC_IRQ_MASK_BUCK5_MASK      ((uint16_t)PMIC_MASK_BUCK5_MASK   << 8U) \
+                                             | PMIC_MASK_BUCK5_REGADDR
+#define PMIC_IRQ_BUCK5_ILIM_MASK      ((uint16_t)PMIC_MASK_BUCK5_BUCK5_ILIM_MASK_MASK   << 8U) \
+                                             | PMIC_MASK_BUCK5_REGADDR
+#define PMIC_IRQ_BUCK5_UV_MASK        ((uint16_t)PMIC_MASK_BUCK5_BUCK5_UV_MASK_MASK     << 8U) \
+                                             | PMIC_MASK_BUCK5_REGADDR
+#define PMIC_IRQ_BUCK5_OV_MASK        ((uint16_t)PMIC_MASK_BUCK5_BUCK5_OV_MASK_MASK     << 8U) \
+                                             | PMIC_MASK_BUCK5_REGADDR
 
 
-#define PMIC_IRQ_MASK_LDO1_2_MASK    ((uint16_t)PMIC_IRQ_MASK_LDO1_2   << 8U) \
-                                              | PMIC_IRQ_MASK_LDO1_2_REGADDR
-#define PMIC_IRQ_LDO2_ILIM_MASK      ((uint16_t)PMIC_IRQ_LDO2_ILIM     << 8U) \
-                                              | PMIC_IRQ_MASK_LDO1_2_REGADDR
-#define PMIC_IRQ_LDO2_UV_MASK        ((uint16_t)PMIC_IRQ_LDO2_UV       << 8U) \
-                                              | PMIC_IRQ_MASK_LDO1_2_REGADDR
-#define PMIC_IRQ_LDO2_OV_MASK        ((uint16_t)PMIC_IRQ_LDO2_OV       << 8U) \
-                                              | PMIC_IRQ_MASK_LDO1_2_REGADDR
-#define PMIC_IRQ_LDO1_ILIM_MASK      ((uint16_t)PMIC_IRQ_LDO1_ILIM     << 8U) \
-                                              | PMIC_IRQ_MASK_LDO1_2_REGADDR
-#define PMIC_IRQ_LDO1_UV_MASK        ((uint16_t)PMIC_IRQ_LDO1_UV       << 8U) \
-                                              | PMIC_IRQ_MASK_LDO1_2_REGADDR
-#define PMIC_IRQ_LDO1_OV_MASK        ((uint16_t)PMIC_IRQ_LDO1_OV       << 8U) \
-                                              | PMIC_IRQ_MASK_LDO1_2_REGADDR
+#define PMIC_IRQ_MASK_LDO1_2_MASK    ((uint16_t)PMIC_MASK_LDO1_2_MASK   << 8U) \
+                                              | PMIC_MASK_LDO1_2_REGADDR
+#define PMIC_IRQ_LDO2_ILIM_MASK      ((uint16_t)PMIC_MASK_LDO1_2_LDO2_ILIM_MASK_MASK     << 8U) \
+                                              | PMIC_MASK_LDO1_2_REGADDR
+#define PMIC_IRQ_LDO2_UV_MASK        ((uint16_t)PMIC_MASK_LDO1_2_LDO2_UV_MASK_MASK       << 8U) \
+                                              | PMIC_MASK_LDO1_2_REGADDR
+#define PMIC_IRQ_LDO2_OV_MASK        ((uint16_t)PMIC_MASK_LDO1_2_LDO2_OV_MASK_MASK       << 8U) \
+                                              | PMIC_MASK_LDO1_2_REGADDR
+#define PMIC_IRQ_LDO1_ILIM_MASK      ((uint16_t)PMIC_MASK_LDO1_2_LDO1_ILIM_MASK_MASK     << 8U) \
+                                              | PMIC_MASK_LDO1_2_REGADDR
+#define PMIC_IRQ_LDO1_UV_MASK        ((uint16_t)PMIC_MASK_LDO1_2_LDO1_UV_MASK_MASK       << 8U) \
+                                              | PMIC_MASK_LDO1_2_REGADDR
+#define PMIC_IRQ_LDO1_OV_MASK        ((uint16_t)PMIC_MASK_LDO1_2_LDO1_OV_MASK_MASK       << 8U) \
+                                              | PMIC_MASK_LDO1_2_REGADDR
 
 
-#define PMIC_IRQ_MASK_LDO3_4_MASK   ((uint16_t)PMIC_IRQ_MASK_LDO3_4    << 8U) \
-                                             | PMIC_IRQ_MASK_LDO3_4_REGADDR
-#define PMIC_IRQ_LDO4_ILIM_MASK     ((uint16_t)PMIC_IRQ_LDO4_ILIM      << 8U) \
-                                             | PMIC_IRQ_MASK_LDO3_4_REGADDR
-#define PMIC_IRQ_LDO4_UV_MASK       ((uint16_t)PMIC_IRQ_LDO4_UV        << 8U) \
-                                             | PMIC_IRQ_MASK_LDO3_4_REGADDR
-#define PMIC_IRQ_LDO4_OV_MASK       ((uint16_t)PMIC_IRQ_LDO4_OV        << 8U) \
-                                             | PMIC_IRQ_MASK_LDO3_4_REGADDR
-#define PMIC_IRQ_LDO3_ILIM_MASK     ((uint16_t)PMIC_IRQ_LDO3_ILIM      << 8U) \
-                                             | PMIC_IRQ_MASK_LDO3_4_REGADDR
-#define PMIC_IRQ_LDO3_UV_MASK       ((uint16_t)PMIC_IRQ_LDO3_UV        << 8U) \
-                                             | PMIC_IRQ_MASK_LDO3_4_REGADDR
-#define PMIC_IRQ_LDO3_OV_MASK       ((uint16_t)PMIC_IRQ_LDO3_OV        << 8U) \
-                                             | PMIC_IRQ_MASK_LDO3_4_REGADDR
+#define PMIC_IRQ_MASK_LDO3_4_MASK   ((uint16_t)PMIC_MASK_LDO3_4_MASK    << 8U) \
+                                             | PMIC_MASK_LDO3_4_REGADDR
+#define PMIC_IRQ_LDO4_ILIM_MASK     ((uint16_t)PMIC_MASK_LDO3_4_LDO4_ILIM_MASK_MASK      << 8U) \
+                                             | PMIC_MASK_LDO3_4_REGADDR
+#define PMIC_IRQ_LDO4_UV_MASK       ((uint16_t)PMIC_MASK_LDO3_4_LDO4_UV_MASK_MASK        << 8U) \
+                                             | PMIC_MASK_LDO3_4_REGADDR
+#define PMIC_IRQ_LDO4_OV_MASK       ((uint16_t)PMIC_MASK_LDO3_4_LDO4_OV_MASK_MASK        << 8U) \
+                                             | PMIC_MASK_LDO3_4_REGADDR
+#define PMIC_IRQ_LDO3_ILIM_MASK     ((uint16_t)PMIC_MASK_LDO3_4_LDO3_ILIM_MASK_MASK      << 8U) \
+                                             | PMIC_MASK_LDO3_4_REGADDR
+#define PMIC_IRQ_LDO3_UV_MASK       ((uint16_t)PMIC_MASK_LDO3_4_LDO3_UV_MASK_MASK        << 8U) \
+                                             | PMIC_MASK_LDO3_4_REGADDR
+#define PMIC_IRQ_LDO3_OV_MASK       ((uint16_t)PMIC_MASK_LDO3_4_LDO3_OV_MASK_MASK        << 8U) \
+                                             | PMIC_MASK_LDO3_4_REGADDR
 
 
-#define PMIC_IRQ_MASK_VMON_MASK       ((uint16_t)PMIC_IRQ_MASK_VMON    << 8U) \
-                                             | PMIC_IRQ_MASK_VMON_REGADDR
-#define PMIC_IRQ_VCCA_UV_MASK         ((uint16_t)PMIC_IRQ_VCCA_UV      << 8U) \
-                                             | PMIC_IRQ_MASK_VMON_REGADDR
-#define PMIC_IRQ_VCCA_OV_MASK         ((uint16_t)PMIC_IRQ_VCCA_OV      << 8U) \
-                                             | PMIC_IRQ_MASK_VMON_REGADDR
+#define PMIC_IRQ_MASK_VMON_MASK       ((uint16_t)PMIC_MASK_VMON_MASK    << 8U) \
+                                             | PMIC_MASK_VMON_REGADDR
+#define PMIC_IRQ_VCCA_UV_MASK         ((uint16_t)PMIC_MASK_VMON_VCCA_UV_MASK_MASK      << 8U) \
+                                             | PMIC_MASK_VMON_REGADDR
+#define PMIC_IRQ_VCCA_OV_MASK         ((uint16_t)PMIC_MASK_VMON_VCCA_OV_MASK_MASK      << 8U) \
+                                             | PMIC_MASK_VMON_REGADDR
 
 
-#define PMIC_IRQ_MASK_GPIO1_8_FALL_MASK ((uint16_t)PMIC_IRQ_MASK_GPIO1_8_FALL \
+#define PMIC_IRQ_MASK_GPIO1_8_FALL_MASK ((uint16_t)PMIC_MASK_GPIO1_8_FALL_MASK \
                                           << 8U)  |                           \
-                                           PMIC_IRQ_MASK_GPIO1_8_FALL_REGADDR
-#define PMIC_IRQ_GPIO8_FALL_MASK   ((uint16_t)PMIC_IRQ_GPIO8_FALL      << 8U) \
-                                          | PMIC_IRQ_MASK_GPIO1_8_FALL_REGADDR
-#define PMIC_IRQ_GPIO7_FALL_MASK   ((uint16_t)PMIC_IRQ_GPIO7_FALL      << 8U) \
-                                          | PMIC_IRQ_MASK_GPIO1_8_FALL_REGADDR
-#define PMIC_IRQ_GPIO6_FALL_MASK   ((uint16_t)PMIC_IRQ_GPIO6_FALL      << 8U) \
-                                          | PMIC_IRQ_MASK_GPIO1_8_FALL_REGADDR
-#define PMIC_IRQ_GPIO5_FALL_MASK   ((uint16_t)PMIC_IRQ_GPIO5_FALL      << 8U) \
-                                          | PMIC_IRQ_MASK_GPIO1_8_FALL_REGADDR
-#define PMIC_IRQ_GPIO4_FALL_MASK   ((uint16_t)PMIC_IRQ_GPIO4_FALL      << 8U) \
-                                          | PMIC_IRQ_MASK_GPIO1_8_FALL_REGADDR
-#define PMIC_IRQ_GPIO3_FALL_MASK   ((uint16_t)PMIC_IRQ_GPIO3_FALL      << 8U) \
-                                          | PMIC_IRQ_MASK_GPIO1_8_FALL_REGADDR
-#define PMIC_IRQ_GPIO2_FALL_MASK   ((uint16_t)PMIC_IRQ_GPIO2_FALL      << 8U) \
-                                          | PMIC_IRQ_MASK_GPIO1_8_FALL_REGADDR
-#define PMIC_IRQ_GPIO1_FALL_MASK   ((uint16_t)PMIC_IRQ_GPIO1_FALL      << 8U) \
-                                          | PMIC_IRQ_MASK_GPIO1_8_FALL_REGADDR
+                                           PMIC_MASK_GPIO1_8_FALL_REGADDR
+#define PMIC_IRQ_GPIO8_FALL_MASK   ((uint16_t)PMIC_IRQ_MASK_GPIO1_8_FALL_GPIO8_FALL_MASK_MASK      << 8U) \
+                                          | PMIC_MASK_GPIO1_8_FALL_REGADDR
+#define PMIC_IRQ_GPIO7_FALL_MASK   ((uint16_t)PMIC_IRQ_MASK_GPIO1_8_FALL_GPIO7_FALL_MASK_MASK      << 8U) \
+                                          | PMIC_MASK_GPIO1_8_FALL_REGADDR
+#define PMIC_IRQ_GPIO6_FALL_MASK   ((uint16_t)PMIC_IRQ_MASK_GPIO1_8_FALL_GPIO6_FALL_MASK_MASK      << 8U) \
+                                          | PMIC_MASK_GPIO1_8_FALL_REGADDR
+#define PMIC_IRQ_GPIO5_FALL_MASK   ((uint16_t)PMIC_IRQ_MASK_GPIO1_8_FALL_GPIO5_FALL_MASK_MASK      << 8U) \
+                                          | PMIC_MASK_GPIO1_8_FALL_REGADDR
+#define PMIC_IRQ_GPIO4_FALL_MASK   ((uint16_t)PMIC_IRQ_MASK_GPIO1_8_FALL_GPIO4_FALL_MASK_MASK      << 8U) \
+                                          | PMIC_MASK_GPIO1_8_FALL_REGADDR
+#define PMIC_IRQ_GPIO3_FALL_MASK   ((uint16_t)PMIC_IRQ_MASK_GPIO1_8_FALL_GPIO3_FALL_MASK_MASK      << 8U) \
+                                          | PMIC_MASK_GPIO1_8_FALL_REGADDR
+#define PMIC_IRQ_GPIO2_FALL_MASK   ((uint16_t)PMIC_IRQ_MASK_GPIO1_8_FALL_GPIO2_FALL_MASK_MASK      << 8U) \
+                                          | PMIC_MASK_GPIO1_8_FALL_REGADDR
+#define PMIC_IRQ_GPIO1_FALL_MASK   ((uint16_t)PMIC_IRQ_MASK_GPIO1_8_FALL_GPIO1_FALL_MASK_MASK      << 8U) \
+                                          | PMIC_MASK_GPIO1_8_FALL_REGADDR
 
 
 #define PMIC_IRQ_MASK_GPIO1_8_RISE_MASK  \
-                                   ((uint16_t)PMIC_IRQ_MASK_GPIO1_8_RISE      \
-                                   << 8U) | PMIC_IRQ_MASK_GPIO1_8_RISE_REGADDR
+                                   ((uint16_t)PMIC_MASK_GPIO1_8_RISE_MASK      \
+                                   << 8U) | PMIC_MASK_GPIO1_8_RISE_REGADDR
 
-#define PMIC_IRQ_GPIO8_RISE_MASK  ((uint16_t)PMIC_IRQ_GPIO8_RISE       << 8U) \
-                                          | PMIC_IRQ_MASK_GPIO1_8_RISE_REGADDR
-#define PMIC_IRQ_GPIO7_RISE_MASK  ((uint16_t)PMIC_IRQ_GPIO7_RISE       << 8U) \
-                                          | PMIC_IRQ_MASK_GPIO1_8_RISE_REGADDR
-#define PMIC_IRQ_GPIO6_RISE_MASK  ((uint16_t)PMIC_IRQ_GPIO6_RISE       << 8U) \
-                                          | PMIC_IRQ_MASK_GPIO1_8_RISE_REGADDR
-#define PMIC_IRQ_GPIO5_RISE_MASK  ((uint16_t)PMIC_IRQ_GPIO5_RISE       << 8U) \
-                                          | PMIC_IRQ_MASK_GPIO1_8_RISE_REGADDR
-#define PMIC_IRQ_GPIO4_RISE_MASK  ((uint16_t)PMIC_IRQ_GPIO4_RISE       << 8U) \
-                                          | PMIC_IRQ_MASK_GPIO1_8_RISE_REGADDR
-#define PMIC_IRQ_GPIO3_RISE_MASK  ((uint16_t)PMIC_IRQ_GPIO3_RISE       << 8U) \
-                                          | PMIC_IRQ_MASK_GPIO1_8_RISE_REGADDR
-#define PMIC_IRQ_GPIO2_RISE_MASK  ((uint16_t)PMIC_IRQ_GPIO2_RISE       << 8U) \
-                                          | PMIC_IRQ_MASK_GPIO1_8_RISE_REGADDR
-#define PMIC_IRQ_GPIO1_RISE_MASK  ((uint16_t)PMIC_IRQ_GPIO1_RISE       << 8U) \
-                                          | PMIC_IRQ_MASK_GPIO1_8_RISE_REGADDR
-
-
-#define PMIC_IRQ_MASK_STARTUP_MASK  ((uint16_t)PMIC_IRQ_MASK_STARTUP   << 8U) \
-                                               | PMIC_IRQ_MASK_STARTUP_REGADDR
-#define PMIC_IRQ_FSD_MASK           ((uint16_t)PMIC_IRQ_FSD            << 8U) \
-                                               | PMIC_IRQ_MASK_STARTUP_REGADDR
-#define PMIC_IRQ_ENABLE_MASK        ((uint16_t)PMIC_IRQ_ENABLE         << 8U) \
-                                               | PMIC_IRQ_MASK_STARTUP_REGADDR
-#define PMIC_IRQ_NPWRON_START_MASK  ((uint16_t)PMIC_IRQ_NPWRON_START   << 8U) \
-                                               | PMIC_IRQ_MASK_STARTUP_REGADDR
+#define PMIC_IRQ_GPIO8_RISE_MASK  ((uint16_t)PMIC_IRQ_MASK_GPIO1_8_RISE_GPIO8_RISE_MASK_MASK       << 8U) \
+                                          | PMIC_MASK_GPIO1_8_RISE_REGADDR
+#define PMIC_IRQ_GPIO7_RISE_MASK  ((uint16_t)PMIC_IRQ_MASK_GPIO1_8_RISE_GPIO7_RISE_MASK_MASK       << 8U) \
+                                          | PMIC_MASK_GPIO1_8_RISE_REGADDR
+#define PMIC_IRQ_GPIO6_RISE_MASK  ((uint16_t)PMIC_IRQ_MASK_GPIO1_8_RISE_GPIO6_RISE_MASK_MASK       << 8U) \
+                                          | PMIC_MASK_GPIO1_8_RISE_REGADDR
+#define PMIC_IRQ_GPIO5_RISE_MASK  ((uint16_t)PMIC_IRQ_MASK_GPIO1_8_RISE_GPIO5_RISE_MASK_MASK       << 8U) \
+                                          | PMIC_MASK_GPIO1_8_RISE_REGADDR
+#define PMIC_IRQ_GPIO4_RISE_MASK  ((uint16_t)PMIC_IRQ_MASK_GPIO1_8_RISE_GPIO4_RISE_MASK_MASK       << 8U) \
+                                          | PMIC_MASK_GPIO1_8_RISE_REGADDR
+#define PMIC_IRQ_GPIO3_RISE_MASK  ((uint16_t)PMIC_IRQ_MASK_GPIO1_8_RISE_GPIO3_RISE_MASK_MASK       << 8U) \
+                                          | PMIC_MASK_GPIO1_8_RISE_REGADDR
+#define PMIC_IRQ_GPIO2_RISE_MASK  ((uint16_t)PMIC_IRQ_MASK_GPIO1_8_RISE_GPIO2_RISE_MASK_MASK       << 8U) \
+                                          | PMIC_MASK_GPIO1_8_RISE_REGADDR
+#define PMIC_IRQ_GPIO1_RISE_MASK  ((uint16_t)PMIC_IRQ_MASK_GPIO1_8_RISE_GPIO1_RISE_MASK_MASK       << 8U) \
+                                          | PMIC_MASK_GPIO1_8_RISE_REGADDR
 
 
-#define PMIC_IRQ_MASK_MISC_MASK       ((uint16_t)PMIC_IRQ_MASK_MISC    << 8U) \
-                                               | PMIC_IRQ_MASK_MISC_REGADDR
-#define PMIC_IRQ_TWARN_MASK           ((uint16_t)PMIC_IRQ_TWARN        << 8U) \
-                                               | PMIC_IRQ_MASK_MISC_REGADDR
-#define PMIC_IRQ_EXT_CLK_MASK         ((uint16_t)PMIC_IRQ_EXT_CLK      << 8U) \
-                                               | PMIC_IRQ_MASK_MISC_REGADDR
-#define PMIC_IRQ_BIST_PASS_MASK       ((uint16_t)PMIC_IRQ_BIST_PASS    << 8U) \
-                                               | PMIC_IRQ_MASK_MISC_REGADDR
+#define PMIC_IRQ_MASK_STARTUP_MASK  ((uint16_t)PMIC_MASK_STARTUP_MASK   << 8U) \
+                                               | PMIC_MASK_STARTUP_REGADDR
+#define PMIC_IRQ_FSD_MASK           ((uint16_t)PMIC_MASK_STARTUP_FSD_MASK_MASK            << 8U) \
+                                               | PMIC_MASK_STARTUP_REGADDR
+#define PMIC_IRQ_ENABLE_MASK        ((uint16_t)PMIC_MASK_STARTUP_ENABLE_MASK_MASK         << 8U) \
+                                               | PMIC_MASK_STARTUP_REGADDR
+#define PMIC_IRQ_NPWRON_START_MASK  ((uint16_t)PMIC_MASK_STARTUP_NPWRON_START_MASK_MASK   << 8U) \
+                                               | PMIC_MASK_STARTUP_REGADDR
 
 
-#define PMIC_IRQ_MASK_MODERATE_ERR_MASK ((uint16_t)PMIC_IRQ_MASK_MODERATE_ERR \
-                                   << 8U) | PMIC_IRQ_MASK_MODERATE_ERR_REGADDR
-#define PMIC_IRQ_NRSTOUT_READBACK_ MASK ((uint16_t)PMIC_IRQ_NRSTOUT_READBACK  \
-                                   << 8U) | PMIC_IRQ_MASK_MODERATE_ERR_REGADDR
-#define PMIC_IRQ_NINT_READBACK_MASK      ((uint16_t)PMIC_IRQ_NINT_READBACK    \
-                                   << 8U) | PMIC_IRQ_MASK_MODERATE_ERR_REGADDR
-#define PMIC_IRQ_NPWRON_LONG_MASK        ((uint16_t)PMIC_IRQ_NPWRON_LONG      \
-                                   << 8U) | PMIC_IRQ_MASK_MODERATE_ERR_REGADDR
-#define PMIC_IRQ_SPMI_ERR_MASK           ((uint16_t)PMIC_IRQ_SPMI_ERR         \
-                                   << 8U) | PMIC_IRQ_MASK_MODERATE_ERR_REGADDR
-#define PMIC_IRQ_REG_CRC_ERR_MASK        ((uint16_t)PMIC_IRQ_REG_CRC_ERR      \
-                                   << 8U) | PMIC_IRQ_MASK_MODERATE_ERR_REGADDR
-#define PMIC_IRQ_BIST_FAIL_MASK          ((uint16_t)PMIC_IRQ_BIST_FAIL        \
-                                   << 8U) | PMIC_IRQ_MASK_MODERATE_ERR_REGADDR
+#define PMIC_IRQ_MASK_MISC_MASK       ((uint16_t)PMIC_MASK_MISC_MASK    << 8U) \
+                                               | PMIC_MASK_MISC_REGADDR
+#define PMIC_IRQ_TWARN_MASK           ((uint16_t)PMIC_MASK_MISC_TWARN_MASK_MASK        << 8U) \
+                                               | PMIC_MASK_MISC_REGADDR
+#define PMIC_IRQ_EXT_CLK_MASK         ((uint16_t)PMIC_MASK_MISC_EXT_CLK_MASK_MASK      << 8U) \
+                                               | PMIC_MASK_MISC_REGADDR
+#define PMIC_IRQ_BIST_PASS_MASK       ((uint16_t)PMIC_MASK_MISC_BIST_PASS_MASK_MASK    << 8U) \
+                                               | PMIC_MASK_MISC_REGADDR
 
 
-#define PMIC_IRQ_MASK_FSM_ERR_MASK   ((uint16_t)PMIC_IRQ_MASK_FSM_ERR  << 8U) \
-                                               | PMIC_IRQ_MASK_FSM_ERR_REGADDR
-#define PMIC_IRQ_SOC_PWR_ERR_MASK    ((uint16_t)PMIC_IRQ_SOC_PWR_ERR   << 8U) \
-                                               | PMIC_IRQ_MASK_FSM_ERR_REGADDR
-#define PMIC_IRQ_MCU_PWR_ERR_MASK    ((uint16_t)PMIC_IRQ_MCU_PWR_ERR   << 8U) \
-                                               | PMIC_IRQ_MASK_FSM_ERR_REGADDR
-#define PMIC_IRQ_ORD_SHUTDOWN_MASK   ((uint16_t)PMIC_IRQ_ORD_SHUTDOWN  << 8U) \
-                                               | PMIC_IRQ_MASK_FSM_ERR_REGADDR
-#define PMIC_IRQ_IMM_SHUTDOWN_MASK   ((uint16_t)PMIC_IRQ_IMM_SHUTDOWN  << 8U) \
-                                               | PMIC_IRQ_MASK_FSM_ERR_REGADDR
+#define PMIC_IRQ_MASK_MODERATE_ERR_MASK ((uint16_t)PMIC_MASK_MODERATE_ERR_MASK \
+                                   << 8U) | PMIC_MASK_MODERATE_ERR_REGADDR
+#define PMIC_IRQ_NRSTOUT_READBACK_ MASK ((uint16_t)PMIC_MASK_MODERATE_ERR_NRSTOUT_READBACK_MASK_MASK  \
+                                   << 8U) | PMIC_MASK_MODERATE_ERR_REGADDR
+#define PMIC_IRQ_NINT_READBACK_MASK      ((uint16_t)PMIC_MASK_MODERATE_ERR_NINT_READBACK_MASK_MASK    \
+                                   << 8U) | PMIC_MASK_MODERATE_ERR_REGADDR
+#define PMIC_IRQ_NPWRON_LONG_MASK        ((uint16_t)PMIC_MASK_MODERATE_ERR_NPWRON_LONG_MASK_MASK      \
+                                   << 8U) | PMIC_MASK_MODERATE_ERR_REGADDR
+#define PMIC_IRQ_SPMI_ERR_MASK           ((uint16_t)PMIC_MASK_MODERATE_ERR_SPMI_ERR_MASK_MASK         \
+                                   << 8U) | PMIC_MASK_MODERATE_ERR_REGADDR
+#define PMIC_IRQ_REG_CRC_ERR_MASK        ((uint16_t)PMIC_MASK_MODERATE_ERR_REG_CRC_ERR_MASK_MASK      \
+                                   << 8U) | PMIC_MASK_MODERATE_ERR_REGADDR
+#define PMIC_IRQ_BIST_FAIL_MASK          ((uint16_t)PMIC_MASK_MODERATE_ERR_BIST_FAIL_MASK_MASK        \
+                                   << 8U) | PMIC_MASK_MODERATE_ERR_REGADDR
 
 
-#define PMIC_IRQ_MASK_COMM_ERR_MASK ((uint16_t)PMIC_IRQ_MASK_COMM_ERR  << 8U) \
-                                              | PMIC_IRQ_MASK_COMM_ERR_REGADDR
-#define PMIC_IRQ_I2C2_ADR_ERR_MASK  ((uint16_t)PMIC_IRQ_I2C2_ADR_ERR   << 8U) \
-                                              | PMIC_IRQ_MASK_COMM_ERR_REGADDR
-#define PMIC_IRQ_I2C2_CRC_ERR_MASK  ((uint16_t)PMIC_IRQ_I2C2_CRC_ERR   << 8U) \
-                                              | PMIC_IRQ_MASK_COMM_ERR_REGADDR
-#define PMIC_IRQ_COMM_ADR_ERR_MASK  ((uint16_t)PMIC_IRQ_COMM_ADR_ERR   << 8U) \
-                                              | PMIC_IRQ_MASK_COMM_ERR_REGADDR
-#define PMIC_IRQ_COMM_CRC_ERR_MASK  ((uint16_t)PMIC_IRQ_COMM_CRC_ERR   << 8U) \
-                                              | PMIC_IRQ_MASK_COMM_ERR_REGADDR
-#define PMIC_IRQ_COMM_FRM_ERR_MASK  ((uint16_t)PMIC_IRQ_COMM_FRM_ERR   << 8U) \
-                                              | PMIC_IRQ_MASK_COMM_ERR_REGADDR
+#define PMIC_IRQ_MASK_FSM_ERR_MASK   ((uint16_t)PMIC_MASK_FSM_ERR_MASK  << 8U) \
+                                               | PMIC_MASK_FSM_ERR_REGADDR
+#define PMIC_IRQ_SOC_PWR_ERR_MASK    ((uint16_t)PMIC_MASK_FSM_ERR_SOC_PWR_ERR_MASK_MASK   << 8U) \
+                                               | PMIC_MASK_FSM_ERR_REGADDR
+#define PMIC_IRQ_MCU_PWR_ERR_MASK    ((uint16_t)PMIC_MASK_FSM_ERR_MCU_PWR_ERR_MASK_MASK   << 8U) \
+                                               | PMIC_MASK_FSM_ERR_REGADDR
+#define PMIC_IRQ_ORD_SHUTDOWN_MASK   ((uint16_t)PMIC_MASK_FSM_ERR_ORD_SHUTDOWN_MASK_MASK  << 8U) \
+                                               | PMIC_MASK_FSM_ERR_REGADDR
+#define PMIC_IRQ_IMM_SHUTDOWN_MASK   ((uint16_t)PMIC_MASK_FSM_ERR_IMM_SHUTDOWN_MASK_MASK  << 8U) \
+                                               | PMIC_MASK_FSM_ERR_REGADDR
+
+
+#define PMIC_IRQ_MASK_COMM_ERR_MASK ((uint16_t)PMIC_MASK_COMM_ERR_MASK  << 8U) \
+                                              | PMIC_MASK_COMM_ERR_REGADDR
+#define PMIC_IRQ_I2C2_ADR_ERR_MASK  ((uint16_t)PMIC_MASK_COMM_ERR_I2C2_ADR_ERR_MASK_MASK   << 8U) \
+                                              | PMIC_MASK_COMM_ERR_REGADDR
+#define PMIC_IRQ_I2C2_CRC_ERR_MASK  ((uint16_t)PMIC_MASK_COMM_ERR_I2C2_CRC_ERR_MASK_MASK   << 8U) \
+                                              | PMIC_MASK_COMM_ERR_REGADDR
+#define PMIC_IRQ_COMM_ADR_ERR_MASK  ((uint16_t)PMIC_MASK_COMM_ERR_COMM_ADR_ERR_MASK_MASK   << 8U) \
+                                              | PMIC_MASK_COMM_ERR_REGADDR
+#define PMIC_IRQ_COMM_CRC_ERR_MASK  ((uint16_t)PMIC_MASK_COMM_ERR_COMM_CRC_ERR_MASK_MASK   << 8U) \
+                                              | PMIC_MASK_COMM_ERR_REGADDR
+#define PMIC_IRQ_COMM_FRM_ERR_MASK  ((uint16_t)PMIC_MASK_COMM_ERR_COMM_FRM_ERR_MASK_MASK   << 8U) \
+                                              | PMIC_MASK_COMM_ERR_REGADDR
 #define PMIC_IRQ_MASK_READBACK_ERR_MASK                                       \
-                                ((uint16_t)PMIC_IRQ_MASK_READBACK_ERR  << 8U) \
-                                | PMIC_IRQ_MASK_READBACK_ERR_REGADDR
+                                ((uint16_t)PMIC_MASK_READBACK_ERR_MASK  << 8U) \
+                                | PMIC_MASK_READBACK_ERR_REGADDR
 #define PMIC_IRQ_NRSTOUT_SOC_READBACK_MASK                                    \
-                             ((uint16_t)PMIC_IRQ_NRSTOUT_SOC_READBACK  << 8U) \
-                             | PMIC_IRQ_MASK_READBACK_ERR_REGADDR
+                             ((uint16_t)PMIC_MASK_READBACK_ERR_NRSTOUT_SOC_READBACK_MASK_MASK  << 8U) \
+                             | PMIC_MASK_READBACK_ERR_REGADDR
 #define PMIC_IRQ_EN_DRV_READBACK_MASK                                         \
-                               ((uint16_t)PMIC_IRQ_EN_DRV_READBACK     << 8U) \
-                               | PMIC_IRQ_MASK_READBACK_ERR_REGADDR
+                               ((uint16_t)PMIC_MASK_READBACK_ERR_EN_DRV_READBACK_MASK_MASK     << 8U) \
+                               | PMIC_MASK_READBACK_ERR_REGADDR
 
 
-#define PMIC_IRQ_MASK_ESM_MASK        ((uint16_t)PMIC_IRQ_MASK_ESM     << 8U) \
-                                               | PMIC_IRQ_MASK_ESM_REGADDR
-#define PMIC_IRQ_ESM_MCU_RST_MASK     ((uint16_t)PMIC_IRQ_ESM_MCU_RST  << 8U) \
-                                               | PMIC_IRQ_MASK_ESM_REGADDR
-#define PMIC_IRQ_ESM_MCU_FAIL_MASK    ((uint16_t)PMIC_IRQ_ESM_MCU_FAIL << 8U) \
-                                               | PMIC_IRQ_MASK_ESM_REGADDR
-#define PMIC_IRQ_ESM_MCU_PIN_MASK     ((uint16_t)PMIC_IRQ_ESM_MCU_PIN  << 8U) \
-                                               | PMIC_IRQ_MASK_ESM_REGADDR
-#define PMIC_IRQ_ESM_SOC_RST_MASK     ((uint16_t)PMIC_IRQ_ESM_SOC_RST  << 8U) \
-                                               | PMIC_IRQ_MASK_ESM_REGADDR
-#define PMIC_IRQ_ESM_SOC_FAIL_MASK    ((uint16_t)PMIC_IRQ_ESM_SOC_FAIL << 8U) \
-                                               | PMIC_IRQ_MASK_ESM_REGADDR
-#define PMIC_IRQ_ESM_SOC_PIN_MASK     ((uint16_t)PMIC_IRQ_ESM_SOC_PIN  << 8U) \
-                                               | PMIC_IRQ_MASK_ESM_REGADDR
+#define PMIC_IRQ_MASK_ESM_MASK        ((uint16_t)PMIC_MASK_ESM_MASK     << 8U) \
+                                               | PMIC_MASK_ESM_REGADDR
+#define PMIC_IRQ_ESM_MCU_RST_MASK     ((uint16_t)PMIC_MASK_ESM_ESM_MCU_RST_MASK_MASK  << 8U) \
+                                               | PMIC_MASK_ESM_REGADDR
+#define PMIC_IRQ_ESM_MCU_FAIL_MASK    ((uint16_t)PMIC_MASK_ESM_ESM_MCU_FAIL_MASK_MASK << 8U) \
+                                               | PMIC_MASK_ESM_REGADDR
+#define PMIC_IRQ_ESM_MCU_PIN_MASK     ((uint16_t)PMIC_MASK_ESM_ESM_MCU_PIN_MASK_MASK  << 8U) \
+                                               | PMIC_MASK_ESM_REGADDR
+#define PMIC_IRQ_ESM_SOC_RST_MASK     ((uint16_t)PMIC_MASK_ESM_ESM_SOC_RST_MASK_MASK  << 8U) \
+                                               | PMIC_MASK_ESM_REGADDR
+#define PMIC_IRQ_ESM_SOC_FAIL_MASK    ((uint16_t)PMIC_MASK_ESM_ESM_SOC_FAIL_MASK_MASK << 8U) \
+                                               | PMIC_MASK_ESM_REGADDR
+#define PMIC_IRQ_ESM_SOC_PIN_MASK     ((uint16_t)PMIC_MASK_ESM_ESM_SOC_PIN_MASK_MASK  << 8U) \
+                                               | PMIC_MASK_ESM_REGADDR
 /* @} */
 
 /*==========================================================================*/
