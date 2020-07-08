@@ -231,12 +231,16 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
         "SetRtc : Negative test for 'day' = 0"
     },
     {
+        7021,
+        "SetRtc: Parameter range validation for 'year'"
+    },
+    {
         6170,
-        "SetRtc : Parameter range validation for 'year'"
+        "SetRtc : Parameter range validation for 'month'"
     },
     {
         6171,
-        "SetRtc : Parameter range validation for 'month'"
+        "SetRtc : Parameter range validation for 'day'"
     },
     {
        6172,
@@ -1297,7 +1301,7 @@ static void test_pmic_rtc_setTimePrmValTest_year(void)
     Pmic_RtcDate_t dateCfg    = {PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT, 15U, 6U,
                                  2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(6170,
+    test_pmic_print_unity_testcase_info(7021,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -1310,18 +1314,38 @@ static void test_pmic_rtc_setTimePrmValTest_year(void)
 /*!
  * \brief   Parameter range validation for 'month'
  */
+static void test_pmic_rtc_setTimePrmValTest_pvmonth(void) 
+{
+    int32_t      status      = PMIC_ST_SUCCESS;
+    Pmic_RtcTime_t timeCfg    = {0x0U, 30U, 30U, 6U, 0U, 1U};
+    Pmic_RtcDate_t dateCfg    = {PMIC_RTC_DATE_CFG_MONTH_VALID_SHIFT, 15U, 6U,
+                                 2055U, 1U};
+
+    test_pmic_print_unity_testcase_info(6170,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    dateCfg.month              = PMIC_RTC_INVALID_MONTH;
+
+    status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DATE, status);
+}
+
+/*!
+ * \brief   Parameter range validation for 'day'
+ */
 static void test_pmic_rtc_setTimePrmValTest_month_range(void)
 {
     int32_t      status      = PMIC_ST_SUCCESS;
     Pmic_RtcTime_t timeCfg    = {0U, 30U, 30U, 6U, 0U, 1U};
-    Pmic_RtcDate_t dateCfg    = {PMIC_RTC_DATE_CFG_MONTH_VALID_SHIFT, 15U, 6U,
+    Pmic_RtcDate_t dateCfg    = {PMIC_RTC_DATE_CFG_DAY_VALID_SHIFT, 15U, 6U,
                                  2055U, 1U};
 
     test_pmic_print_unity_testcase_info(6171,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
-    dateCfg.month             = PMIC_RTC_INVALID_MONTH;
+    dateCfg.day             = PMIC_RTC_INVALID_DAY_32;
 
     status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, timeCfg, dateCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DATE, status);
@@ -2060,9 +2084,10 @@ static void test_pmic_rtc_testapp_runner(void)
     RUN_TEST(test_pmic_rtc_setTimePrmValTest_hour12);
     RUN_TEST(test_pmic_rtc_setTimePrmValTest_hour24);
     RUN_TEST(test_pmic_rtc_setTimePrmValTest_hour);
+    RUN_TEST(test_pmic_rtc_setTimePrmValTest_year);
     RUN_TEST(test_pmic_rtc_setTimePrmValTest_month);
     RUN_TEST(test_pmic_rtc_setTimePrmValTest_day);
-    RUN_TEST(test_pmic_rtc_setTimePrmValTest_year);
+    RUN_TEST(test_pmic_rtc_setTimePrmValTest_pvmonth);
     RUN_TEST(test_pmic_rtc_setTimePrmValTest_month_range);
     RUN_TEST(test_pmic_rtc_setTimePrmValTest_day_month);
     RUN_TEST(test_pmic_rtc_setTimePrmValTest_feb_leapyear);
