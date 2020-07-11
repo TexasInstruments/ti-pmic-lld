@@ -61,7 +61,12 @@
 #include <ti/drv/i2c/soc/I2C_soc.h>
 
 /* Timer specific headers */
+#if defined(SOC_J721E)
 #include <ti/board/src/j721e_evm/include/board_utils.h>
+#endif
+#if defined(SOC_J7200)
+#include <ti/board/src/j7200_evm/include/board_utils.h>
+#endif
 
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
            (defined(SOC_J721E) || defined(SOC_J7200))
