@@ -66,10 +66,12 @@
 #
 ifeq ($(pmic_component_make_include), )
 
-drvpmic_BOARDLIST         = j721e_evm j7200_evm
-drvpmic_SOCLIST           = j721e j7200
-drvpmic_j721e_CORELIST    = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mpu1_0 c66xdsp_1 c66xdsp_2 c7x_1
-drvpmic_j7200_CORELIST    = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mpu1_0
+drvpmic_BOARDLIST           = j721e_evm j7200_evm
+drvpmic_SOCLIST             = j721e j7200
+drvpmic_j721e_CORELIST      = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mpu1_0 c66xdsp_1 c66xdsp_2 c7x_1
+drvpmic_j7200_CORELIST      = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mpu1_0
+drvpmic_app_j721e_CORELIST  = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mpu1_0
+drvpmic_app_j7200_CORELIST  = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mpu1_0
 
 ############################
 # pmic package
@@ -105,7 +107,6 @@ export pmic_SOCLIST = $(drvpmic_SOCLIST)
 export pmic_$(SOC)_CORELIST =  $(drvpmic_$(SOC)_CORELIST)
 pmic_LIB_LIST += pmic
 
-
 #
 # Applications Specific scripts
 #
@@ -122,7 +123,7 @@ export pmic_rtc_testapp_MAKEFILE = -f makefile IS_BAREMETAL=yes
 pmic_rtc_testapp_PKG_LIST = pmic_rtc_testapp
 pmic_rtc_testapp_INCLUDE = $(pmic_rtc_testapp_PATH)
 export pmic_rtc_testapp_BOARDLIST = $(drvpmic_BOARDLIST)
-export pmic_rtc_testapp_$(SOC)_CORELIST = $(drvpmic_$(SOC)_CORELIST)
+export pmic_rtc_testapp_$(SOC)_CORELIST = $(drvpmic_app_$(SOC)_CORELIST)
 pmic_rtc_testapp_SBL_APPIMAGEGEN = yes
 export pmic_rtc_testapp_SBL_APPIMAGEGEN
 
@@ -140,7 +141,7 @@ export pmic_gpio_testapp_MAKEFILE = -f makefile IS_BAREMETAL=yes
 pmic_gpio_testapp_PKG_LIST = pmic_gpio_testapp
 pmic_gpio_testapp_INCLUDE = $(pmic_gpio_testapp_PATH)
 export pmic_gpio_testapp_BOARDLIST = $(drvpmic_BOARDLIST)
-export pmic_gpio_testapp_$(SOC)_CORELIST = $(drvpmic_$(SOC)_CORELIST)
+export pmic_gpio_testapp_$(SOC)_CORELIST = $(drvpmic_app_$(SOC)_CORELIST)
 pmic_gpio_testapp_SBL_APPIMAGEGEN = yes
 export pmic_gpio_testapp_SBL_APPIMAGEGEN
 
