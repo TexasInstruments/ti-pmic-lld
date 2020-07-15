@@ -39,6 +39,9 @@
 
 #include <pmic_ut_common.h>
 
+/* Pointer holds the pPmicCoreHandle for I2C */
+Pmic_CoreHandle_t *pPmicCoreHandleI2C = NULL;
+
 /*!
  * \brief   OS specific Critical section locking Variable
  *          Should be OS specific locking varaible to
@@ -60,6 +63,192 @@ static void test_pmic_setConfigI2C(uint8_t instance, uint32_t baseAddr)
     i2cCfg.baseAddr   = baseAddr;
     i2cCfg.enableIntr = 0U;
     I2C_socSetInitCfg(instance, &i2cCfg);
+}
+
+/**
+ *
+ * \brief    Initalize SPI stub function to access PMIC registers using
+ *           I2C Communication Handle
+ */
+static int32_t test_pmic_spi_stubInit(Pmic_CoreCfg_t  *pPmicConfigData)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    Pmic_CoreCfg_t pmicConfigDataI2c = {0U};
+
+    /* Fill parameters to pmicConfigDataI2C */
+    pmicConfigDataI2c.pmicDeviceType      = pPmicConfigData->pmicDeviceType;
+    pmicConfigDataI2c.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
+
+    pmicConfigDataI2c.commMode            = PMIC_INTF_DUAL_I2C;
+    pmicConfigDataI2c.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
+
+    pmicConfigDataI2c.slaveAddr           = LEO_PMICA_SLAVE_ADDR;
+    pmicConfigDataI2c.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
+
+    pmicConfigDataI2c.qaSlaveAddr         = LEO_PMICA_WDG_SLAVE_ADDR;
+    pmicConfigDataI2c.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+
+    pmicConfigDataI2c.crcEnable           = pPmicConfigData->crcEnable;
+    pmicConfigDataI2c.validParams        |= PMIC_CFG_CRC_ENABLE_VALID_SHIFT;
+
+    pmicConfigDataI2c.pFnPmicCommIoRead   = pPmicConfigData->pFnPmicCommIoRead;
+    pmicConfigDataI2c.validParams        |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
+
+    pmicConfigDataI2c.pFnPmicCommIoWrite  = pPmicConfigData->pFnPmicCommIoWrite;
+    pmicConfigDataI2c.validParams        |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
+
+    pmicConfigDataI2c.pFnPmicCritSecStart =
+                                          pPmicConfigData->pFnPmicCritSecStart;
+    pmicConfigDataI2c.validParams        |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
+
+    pmicConfigDataI2c.pFnPmicCritSecStop  = pPmicConfigData->pFnPmicCritSecStop;
+    pmicConfigDataI2c.validParams        |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
+
+    /*
+     * Recalling appInit function to initialize I2C PMIC Core handle
+     * for Stub Operations
+     */
+    pmicStatus = test_pmic_appInit(&pPmicCoreHandleI2C, &pmicConfigDataI2c);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        /*
+         * Update Valid Communication Handle to make SPI stub
+         * PMIC core handle Init Success
+         */
+        pPmicConfigData->pCommHandle  = pPmicCoreHandleI2C->pCommHandle;
+        pPmicConfigData->validParams |= PMIC_CFG_COMM_HANDLE_VALID_SHIFT;
+    }
+    return pmicStatus;
+}
+
+/**
+ * \brief    Deinitalize SPI stub function
+ */
+static int32_t test_pmic_spi_stubDeinit(void **pCommHandle)
+{
+    test_pmic_appDeInit(pPmicCoreHandleI2C);
+
+    if(NULL == (I2C_Handle)*pCommHandle)
+    {
+        return PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    *pCommHandle = NULL;
+    return PMIC_ST_SUCCESS;
+}
+
+/**
+ * \brief  SPI stub function read operation to read PMIC registers
+ *         using I2C interface
+ */
+int32_t test_pmic_spi_stubRead(Pmic_CoreHandle_t  *pPmicCorehandle,
+                           uint8_t            *pBuf,
+                           uint8_t             bufLen)
+{
+    int32_t pmicStatus = 0;
+    uint8_t instType = 0U;
+    uint16_t regAddr = 0U;
+    bool wdgopn = 0;
+    uint8_t rxBuf[4U] = {0U};
+
+    /* Check for WatchDog Operation */
+    if(0U != (pBuf[1U] & 0x04))
+    {
+        wdgopn = true;
+    }
+
+    /* Update register Address from spi buffer */
+    regAddr = (uint16_t)pBuf[0U];
+    bufLen = 1U;
+
+    /* Find Instance type from wdg operation */
+    if(true == wdgopn)
+    {
+        instType = PMIC_QA_INST;
+    }
+    else
+    {
+        instType = PMIC_MAIN_INST;
+    }
+
+    /* Increase buffer lenth 1 more to get CRC, if CRC is Enabled */
+    if(true == pPmicCorehandle->crcEnable)
+    {
+        bufLen++;
+    }
+
+    /* Call PMIC read with I2C Instance */
+    pmicStatus = test_pmic_regRead(pPmicCoreHandleI2C,
+                                   instType,
+                                   regAddr,
+                                   rxBuf,
+                                   bufLen);
+
+    /* Updating the Recieved Reg Value to SPI Buffer */
+    pBuf[2U] = rxBuf[0U];
+
+    /* Updating the Recieved CRC to SPI Buffer */
+    if(true == pPmicCorehandle->crcEnable)
+    {
+        pBuf[3U] = rxBuf[1U];
+    }
+
+    return pmicStatus;
+}
+
+/**
+ * \brief  SPI stub function write operation to write PMIC registers
+ *         using I2C interface
+ */
+int32_t test_pmic_spi_write(Pmic_CoreHandle_t  *pPmicCorehandle,
+                            uint8_t            *pBuf,
+                            uint8_t             bufLen)
+{
+    int32_t  pmicStatus = 0;
+    uint8_t  instType = 0U;
+    bool     wdgopn = 0;
+    uint16_t regAddr = 0U;
+    uint8_t  txBuf[4U] = {0U};
+
+    /* Update register Address from spi buffer */
+    regAddr = (uint16_t)pBuf[0U];
+
+    /* Check for WatchDog Operation */
+    if(0U != (pBuf[1U] & 0x04U))
+    {
+        wdgopn = true;
+    }
+
+    /* Find Instance type from wdg operation */
+    if(true == wdgopn)
+    {
+        instType = PMIC_QA_INST;
+    }
+    else
+    {
+        instType = PMIC_MAIN_INST;
+    }
+
+    /* Updating the SPI Buffer Reg Value to I2C Buffer */
+    txBuf[0U] = pBuf[2U];
+    bufLen = 1U;
+
+    /* Updating the Recieved CRC to SPI Buffer */
+    if(true == pPmicCorehandle->crcEnable)
+    {
+        txBuf[1U] = pBuf[3U];
+        bufLen++;
+    }
+
+    /* Call PMIC write with I2C Instance */
+    pmicStatus = test_pmic_regWrite(pPmicCoreHandleI2C,
+                                    instType,
+                                    regAddr,
+                                    txBuf,
+                                    bufLen);
+
+    return pmicStatus;
 }
 
 /*!
@@ -238,7 +427,7 @@ int32_t test_pmic_regRead(Pmic_CoreHandle_t  *pmicCorehandle,
                           uint8_t            *pBuf,
                           uint8_t             bufLen)
 {
-    int8_t ret = 0U;
+    int8_t ret     = 0U;
 
     if((PMIC_INTF_SINGLE_I2C == pmicCorehandle->commMode) ||
        (PMIC_INTF_DUAL_I2C   == pmicCorehandle->commMode))
@@ -304,6 +493,15 @@ int32_t test_pmic_regRead(Pmic_CoreHandle_t  *pmicCorehandle,
             {
                 return PMIC_ST_ERR_I2C_COMM_FAIL;
             }
+        }
+    }
+
+    if(PMIC_INTF_SPI == pmicCorehandle->commMode)
+    {
+        if(PMIC_ST_SUCCESS !=
+                 test_pmic_spi_stubRead(pmicCorehandle, pBuf, bufLen))
+        {
+            return PMIC_ST_ERR_SPI_COMM_FAIL;
         }
     }
 
@@ -386,6 +584,15 @@ int32_t test_pmic_regWrite(Pmic_CoreHandle_t  *pmicCorehandle,
         }
     }
 
+    if(PMIC_INTF_SPI == pmicCorehandle->commMode)
+    {
+        if(PMIC_ST_SUCCESS !=
+                   test_pmic_spi_write(pmicCorehandle, pBuf, bufLen))
+        {
+            return PMIC_ST_ERR_SPI_COMM_FAIL;
+        }
+    }
+
     return PMIC_ST_SUCCESS;
 }
 
@@ -402,6 +609,9 @@ int32_t test_pmic_regWrite(Pmic_CoreHandle_t  *pmicCorehandle,
 static int32_t test_pmic_spi_lld_intf_setup(Pmic_CoreCfg_t *pPmicConfigData)
 {
     int32_t ret = PMIC_ST_SUCCESS;
+
+    ret = test_pmic_spi_stubInit(pPmicConfigData);
+
     return ret;
 }
 
@@ -417,6 +627,9 @@ static int32_t test_pmic_spi_lld_intf_setup(Pmic_CoreCfg_t *pPmicConfigData)
 static int32_t test_pmic_spi_lld_intf_release(void **pCommHandle)
 {
     int32_t ret = PMIC_ST_SUCCESS;
+
+    ret = test_pmic_spi_stubDeinit(pCommHandle);
+
     return ret;
 }
 
@@ -615,7 +828,6 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
         pmicStatus = test_pmic_spi_lld_intf_setup(pmicConfigData);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            /* Get PMIC core Handle for SPI Instances */
             pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
         }
 

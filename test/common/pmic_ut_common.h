@@ -89,6 +89,12 @@
 #define HERA_PMIC_WDG_SLAVE_ADDR        (0x12U)
 
 /*!
+ * \brief   LEO PMIC devices on J721E
+ */
+#define LEO_PMICA_DEVICE                (0x01U)
+#define LEO_PMICB_DEVICE                (0x02U)
+
+/*!
  * \brief   PMIC UT test status
  */
 #define PMIC_UT_SUCCESS            (true)

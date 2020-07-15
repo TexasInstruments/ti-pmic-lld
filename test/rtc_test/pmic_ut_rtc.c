@@ -1972,68 +1972,11 @@ static void test_pmic_rtc_getRtcStatus_PrmValTest_validParams(void)
     (defined(SOC_J721E) || defined(SOC_J7200))
 
 /*!
- * \brief   RTC Unity Test App wrapper Function
+ * \brief   Run RTC unity test cases
  */
-static int32_t test_pmic_rtc_testApp(void)
+static void test_pmic_run_testcases(void)
 {
-    int32_t status                = PMIC_ST_SUCCESS;
-    Pmic_CoreCfg_t pmicConfigData = {0U};
-
-     /* Fill parameters to pmicConfigData */
-    pmicConfigData.pmicDeviceType      = PMIC_DEV_LEO_TPS6594X;
-    pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
-
-    pmicConfigData.commMode            = PMIC_INTF_SINGLE_I2C;
-    pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
-
-    pmicConfigData.slaveAddr           = LEO_PMICA_SLAVE_ADDR;
-    pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
-
-    pmicConfigData.qaSlaveAddr         = LEO_PMICA_WDG_SLAVE_ADDR;
-    pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
-
-    pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
-    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
-
-    pmicConfigData.pFnPmicCommIoWrite   = test_pmic_regWrite;
-    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
-
-    pmicConfigData.pFnPmicCritSecStart  = test_pmic_criticalSectionStartFn;
-    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
-
-    pmicConfigData.pFnPmicCritSecStop   = test_pmic_criticalSectionStopFn;
-    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
-
-    pmicConfigData.validParams         |= PMIC_CFG_COMM_HANDLE_VALID_SHIFT;
-
-    pmicConfigData.validParams         |= (PMIC_CFG_COMM_HANDLE_VALID_SHIFT |
-                                           PMIC_CFG_QASLAVEADDR_VALID_SHIFT);
-
-    status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
-    return status;
-}
-
-/*!
- * \brief   Function to register RTC Unity Test App wrapper to Unity framework
- */
-static void test_pmic_rtc_testapp_runner(void)
-{
-    /* @description : Test runner for RTC Test App
-     *
-     * @requirements: PDK-5855
-     *
-     * @cores       : mcu1_0, mcu1_1
-     */
-    int32_t status = 0U;
-
-    status = test_pmic_rtc_testApp();
-    if(PMIC_ST_SUCCESS != status)
-    {
-         pmic_log("PMIC initilisation Failed \n");
-         return;
-    }
-
-    pmic_log("Begin Unity Test Cases...\n");
+    pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
     UNITY_BEGIN();
 
     RUN_TEST(test_pmic_rtc_testSetAlarm);
@@ -2113,8 +2056,145 @@ static void test_pmic_rtc_testapp_runner(void)
     RUN_TEST(test_pmic_rtc_getRtcStatus_PrmValTest_validParams);
 
     UNITY_END();
+}
 
-    test_pmic_appDeInit(pPmicCoreHandle);
+
+/*!
+ * \brief   RTC Unity Test App wrapper Function for LEO PMIC-A
+ */
+static int32_t test_pmic_leo_pmicA_rtc_testApp(void)
+{
+    int32_t status                = PMIC_ST_SUCCESS;
+    Pmic_CoreCfg_t pmicConfigData = {0U};
+
+    /* Fill parameters to pmicConfigData */
+    pmicConfigData.pmicDeviceType      = PMIC_DEV_LEO_TPS6594X;
+    pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
+
+    pmicConfigData.commMode            = PMIC_INTF_DUAL_I2C;
+    pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
+
+    pmicConfigData.slaveAddr           = LEO_PMICA_SLAVE_ADDR;
+    pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
+
+    pmicConfigData.qaSlaveAddr         = LEO_PMICA_WDG_SLAVE_ADDR;
+    pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoWrite   = test_pmic_regWrite;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStart  = test_pmic_criticalSectionStartFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStop   = test_pmic_criticalSectionStopFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
+
+    status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
+    return status;
+}
+
+/*!
+ * \brief   RTC Unity Test App wrapper Function for LEO PMIC-A
+ */
+static int32_t test_pmic_leo_pmicA_spiStub_rtc_testApp(void)
+{
+    int32_t status                = PMIC_ST_SUCCESS;
+    Pmic_CoreCfg_t pmicConfigData = {0U};
+
+    /* Fill parameters to pmicConfigData */
+    pmicConfigData.pmicDeviceType      = PMIC_DEV_LEO_TPS6594X;
+    pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
+
+    pmicConfigData.commMode            = PMIC_INTF_SPI;
+    pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoWrite   = test_pmic_regWrite;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStart  = test_pmic_criticalSectionStartFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStop   = test_pmic_criticalSectionStopFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
+
+    status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
+    return status;
+}
+
+static const char pmicTestAppMenu[] =
+{
+    " \r\n ================================================================="
+    " \r\n Menu:"
+    " \r\n ================================================================="
+    " \r\n 0: Pmic Leo device(PMIC A on J721E EVM Using I2C Interface)"
+    " \r\n 1: Pmic Leo device(PMIC A on J721E EVM Using SPI Stub Functions)"
+    " \r\n 2: quit"
+    " \r\n"
+    " \r\n Enter option: "
+};
+
+/*!
+ * \brief   Function to register RTC Unity Test App wrapper to Unity framework
+ */
+static void test_pmic_rtc_testapp_runner(void)
+{
+    /* @description : Test runner for RTC Test App
+     *
+     * @requirements: PDK-5855
+     *
+     * @cores       : mcu1_0, mcu1_1
+     */
+
+    int8_t num = -1;
+
+    while(1U)
+    {
+        pmic_log("%s", pmicTestAppMenu);
+        if(UART_scanFmt("%d", &num) != 0U)
+        {
+            pmic_log("Read from UART Console failed\n");
+            return;
+        }
+
+        switch(num)
+        {
+           case 0U:
+               /* RTC Unity Test App wrapper Function for LEO PMIC-A */
+               test_pmic_leo_pmicA_rtc_testApp();
+               /* Run rtc test cases for Leo PMIC-A */
+               test_pmic_run_testcases();
+               /* Deinit pmic handle */
+               if(pPmicCoreHandle != NULL)
+               {
+                   test_pmic_appDeInit(pPmicCoreHandle);
+               }
+               break;
+           case 1U:
+               /* RTC Unity Test App wrapper Function for LEO PMIC-A using
+                * SPI stub functions */
+               test_pmic_leo_pmicA_spiStub_rtc_testApp();
+               /* Run rtc test cases for Leo PMIC-A */
+               test_pmic_run_testcases();
+               /* Deinit pmic handle */
+               if(pPmicCoreHandle != NULL)
+               {
+                   test_pmic_appDeInit(pPmicCoreHandle);
+               }
+               break;
+           case 2U:
+               pmic_log(" \r\n Quit from application\n");
+               return;
+           default:
+               pmic_log(" \r\n Invalid option... Try Again!!!\n");
+               break;
+        }
+    }
 }
 #endif
 

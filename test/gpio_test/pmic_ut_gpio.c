@@ -42,6 +42,8 @@
 /* Pointer holds the pPmicCoreHandle */
 Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
 
+static uint8_t leo_pmic_device = 0U;
+
 /*!
  * \brief   PMIC GPIO Test Cases
  */
@@ -397,7 +399,8 @@ static void test_pmic_gpio_setCfgGpioPin_nSLEEP1(void)
     {
         /* PMIC-A GPIO3 pin Causing Reset on J721 EVM */
         if((3U == pins[pin]) &&
-           (pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR))
+           ((pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR) ||
+            (leo_pmic_device == LEO_PMICA_DEVICE)))
         {
             continue;
         }
@@ -456,7 +459,8 @@ static void test_pmic_gpio_setCfgGpioPin_nSLEEP2(void)
     {
         /* PMICA GPIO3 pin Causing Reset on J721 EVM */
         if((3U == pins[pin]) &&
-           (pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR))
+           ((pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR) ||
+            (leo_pmic_device == LEO_PMICA_DEVICE)))
         {
             continue;
         }
@@ -566,7 +570,8 @@ static void test_pmic_gpio_setCfgGpioPin_wakeup1(void)
     {
         /* PMICA GPIO3 pin Causing Reset on J721 EVM */
         if((3U == pins[pin]) &&
-           (pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR))
+           ((pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR) ||
+            (leo_pmic_device == LEO_PMICA_DEVICE)))
         {
             continue;
         }
@@ -625,7 +630,8 @@ static void test_pmic_gpio_setCfgGpioPin_wakeup2(void)
     {
         /* PMICA GPIO3 pin Causing Reset on J721 EVM */
         if((3U == pins[pin]) &&
-           (pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR))
+           ((pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR) ||
+            (leo_pmic_device == LEO_PMICA_DEVICE)))
         {
             continue;
         }
@@ -686,7 +692,9 @@ static void test_pmic_gpio_setCfgGpioPin_gpio(void)
          * which resets entire SOC because of this reason disabling GPIOCFG
          * test on PMIC GPIO11 pin.
          */
-        if(11U == (pins[pin]) && (pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR))
+        if((11U == pins[pin]) &&
+           ((pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR) ||
+            (leo_pmic_device == LEO_PMICA_DEVICE)))
         {
             continue;
         }
@@ -1231,7 +1239,8 @@ static void test_pmic_gpio_setCfgGpioPin_clk32KOUT(void)
     {
         /* PMICA GPIO3 pin Causing Reset on J721 EVM */
         if((3U == pins[pin]) &&
-           (pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR))
+           ((pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR) ||
+            (leo_pmic_device == LEO_PMICA_DEVICE)))
         {
             continue;
         }
@@ -4188,6 +4197,37 @@ static int32_t test_pmic_leo_pmicB_gpio_testApp(void)
 }
 
 /*!
+ * \brief   GPIO Unity Test App wrapper Function for LEO PMIC-A
+ */
+static int32_t test_pmic_leo_pmicA_spiStub_gpio_testApp(void)
+{
+    int32_t status                = PMIC_ST_SUCCESS;
+    Pmic_CoreCfg_t pmicConfigData = {0U};
+
+    /* Fill parameters to pmicConfigData */
+    pmicConfigData.pmicDeviceType      = PMIC_DEV_LEO_TPS6594X;
+    pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
+
+    pmicConfigData.commMode            = PMIC_INTF_SPI;
+    pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoWrite   = test_pmic_regWrite;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStart  = test_pmic_criticalSectionStartFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStop   = test_pmic_criticalSectionStopFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
+
+    status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
+    return status;
+}
+
+/*!
  * \brief   GPIO Unity Test App wrapper Function for HERA PMIC
  */
 static int32_t test_pmic_hera_gpio_testApp(void)
@@ -4230,10 +4270,11 @@ static const char pmicTestAppMenu[] =
     " \r\n ================================================================="
     " \r\n Menu:"
     " \r\n ================================================================="
-    " \r\n 0: Pmic Leo device(PMIC A on J721E EVM)"
-    " \r\n 1: Pmic Leo device(PMIC B on J721E EVM)"
+    " \r\n 0: Pmic Leo device(PMIC A on J721E EVM Using I2C Interface)"
+    " \r\n 1: Pmic Leo device(PMIC B on J721E EVM Using I2C Interface)"
     " \r\n 2: Pmic Hera device"
-    " \r\n 3: quit"
+    " \r\n 3: Pmic Leo device(PMIC A on J721E EVM Using SPI Stub Functions)"
+    " \r\n 4: quit"
     " \r\n"
     " \r\n Enter option: "
 };
@@ -4266,7 +4307,8 @@ static void test_pmic_gpio_testapp_runner(void)
            case 0U:
                /* GPIO Unity Test App wrapper Function for LEO PMIC-A */
                test_pmic_leo_pmicA_gpio_testApp();
-               /* Run gpio test cases for Leo PMIC-B */
+               leo_pmic_device = LEO_PMICA_DEVICE;
+               /* Run gpio test cases for Leo PMIC-A */
                test_pmic_run_testcases();
                /* Deinit pmic handle */
                if(pPmicCoreHandle != NULL)
@@ -4277,6 +4319,7 @@ static void test_pmic_gpio_testapp_runner(void)
            case 1U:
                /* GPIO Unity Test App wrapper Function for LEO PMIC-B */
                test_pmic_leo_pmicB_gpio_testApp();
+               leo_pmic_device = LEO_PMICB_DEVICE;
 
                /* TODO: Run gpio test cases for Leo PMIC-B */
 
@@ -4298,6 +4341,19 @@ static void test_pmic_gpio_testapp_runner(void)
                }
                break;
            case 3U:
+               /* GPIO Unity Test App wrapper Function for LEO PMIC-A using
+                * SPI stub functions */
+               test_pmic_leo_pmicA_spiStub_gpio_testApp();
+               leo_pmic_device = LEO_PMICA_DEVICE;
+               /* Run gpio test cases for Leo PMIC-A */
+               test_pmic_run_testcases();
+               /* Deinit pmic handle */
+               if(pPmicCoreHandle != NULL)
+               {
+                   test_pmic_appDeInit(pPmicCoreHandle);
+               }
+               break;
+           case 4U:
                pmic_log(" \r\n Quit from application\n");
                return;
            default:
@@ -4318,10 +4374,7 @@ int main()
 {
     test_pmic_uartInit();
 
-    pmic_log("PMIC GPIO Unit Test started...\n");
-
-    pmic_log("%s(): %d: %s(%s)\n", __func__, __LINE__, __TIME__, __DATE__);
-
+    pmic_log("GPIO Unity Test Application(%s %s)\n", __TIME__, __DATE__);
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E)             || \
      defined(SOC_J7200))
