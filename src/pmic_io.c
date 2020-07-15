@@ -164,15 +164,13 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
 
         /* Bits 9-11  = PAGE[2:0] */
         spiBuff->n32 |= (regAddr & 0x700U);
+        /* Bit 12  = 0 for Write Request */
+        spiBuff->n32 &= ~PMIC_IO_REQ_RW;
+        buffLength++;
 
         /* Bits 17-24 = WDATA[7:0] */
         spiBuff->n32 |= (txData << 16U);
-
-        /* Bit 12  = 0 for Write Request */
-        spiBuff->n32 &= ~PMIC_IO_REQ_RW;
-
-        /* Update the Buffer length */
-        buffLength = buffLength + 2U;
+        buffLength++;
 
         if(true == pPmicCoreHandle->crcEnable)
         {
@@ -276,21 +274,23 @@ int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
             uint32_t n32;
             /* [0-1] = Header, [2] = Data, [3] = CRC8 */
             uint8_t  buf[PMIC_IO_BUF_SIZE];
-        } *rxBuf;
+        } *spiBuf;
 
-        rxBuf = (union spiBuffer_t *)&rxBuf;
+        spiBuf = (union spiBuffer_t *)&rxBuf;
 
         /* Frame 3 Bytes with IO header+data as per PMIC SPI IO algorithm */
 
         /* Bits 1-8   = ADDR[7:0] */
-        rxBuf->n32  = (regAddr & 0xFFU);
+        spiBuf->n32  = (regAddr & 0xFFU);
+        buffLength++;
 
         /* Bits 9-11  = PAGE[2:0] */
-        rxBuf->n32 |= (regAddr & 0x700U);
+        spiBuf->n32 |= (regAddr & 0x700U);
 
         /* Bit 12  = 1 for Read Request */
-        rxBuf->n32 |= PMIC_IO_REQ_RW;
+        spiBuf->n32 |= PMIC_IO_REQ_RW;
 
+        /* Increment 1 more byte for 8-bit data read from PMIC register */
         buffLength++;
 
         if(true == pPmicCoreHandle->crcEnable)
@@ -298,9 +298,6 @@ int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
             /* Increment 1 more byte to read CRC8 */
             buffLength++;
         }
-
-        /* Increment 1 more byte for 8-bit data read from PMIC register */
-        buffLength++;
     }
 
     if(PMIC_ST_SUCCESS == pmicStatus)
@@ -314,8 +311,8 @@ int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if((PMIC_ST_SUCCESS == pmicStatus) && (true == pPmicCoreHandle->crcEnable))
     {
-        if((rxBuf[buffLength - 1U]) !=
-           (Pmic_getCRC8Val(rxBuf[buffLength - 2U])))
+        if((rxBuf[buffLength - 2U]) !=
+           (Pmic_getCRC8Val(rxBuf[buffLength - 1U])))
         {
             pmicStatus = PMIC_ST_ERR_DATA_IO_CRC;
         }
