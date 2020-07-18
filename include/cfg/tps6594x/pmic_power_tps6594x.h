@@ -93,7 +93,7 @@ extern "C" {
 #define PMIC_TPS6594X_REGULATOR_LDO3      \
             ((uint16_t) ((PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO  << 8)  | 0x8))
 #define PMIC_TPS6594X_REGULATOR_LDO4      \
-            ((uint16_t) ((PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO  << 8) | 0x9))
+            ((uint16_t) ((PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO  << 8)  | 0x9))
 /*  @} */
 
 /**
@@ -248,8 +248,6 @@ extern "C" {
 #define PMIC_TPS6594X_BUCK_FREQ_SEL_2M2                (0x0U)
 /** \brief Used to select frequency as 4.4 Mhz */
 #define PMIC_TPS6594X_BUCK_FREQ_SEL_4M4                (0x1U)
-/** \brief Used to select frequency as 8.8 Mhz */
-#define PMIC_TPS6594X_BUCK_FREQ_SEL_8M8                (0x2U)
 /* @} */
 
 /**
@@ -405,6 +403,297 @@ extern "C" {
 #define PMIC_TPS6594X_POWER_RAIL_SEL_OTHER                 (0x3U)
 /* @} */
 
+/**
+ *  \anchor Pmic_Tps6594xLeo_Pgood_SourceType
+ *  \name   PMIC Power-Good source Type for LEO TPS6594x
+ *
+ *  @{
+ */
+#define PMIC_TPS6594X_PGOOD_SOURCE_TYPE_VCCA              (0U)
+#define PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK              (1U)
+#define PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT           (2U)
+#define PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC       (3U)
+#define PMIC_TPS6594X_PGOOD_SOURCE_TYPE_TDIE              (4U)
+#define PMIC_TPS6594X_PGOOD_SOURCE_TYPE_LDO               (5U)
+/* VMON type is not supported by HERA PMIC */
+/*  @} */
+
+/**
+ *  \anchor Pmic_Tps6594xLeo_Pgood_Source
+ *  \name   PMIC  Power-Good sources for LEO TPS6594x
+ *
+ *  @{
+ */
+#define PMIC_TPS6594X_PGOOD_SOURCE_VCCA        \
+            ((uint16_t) ((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_VCCA  << 8) | 0U))
+#define PMIC_TPS6594X_PGOOD_SOURCE_BUCK1       \
+            ((uint16_t) ((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK  << 8) | 1U))
+#define PMIC_TPS6594X_PGOOD_SOURCE_BUCK2       \
+            ((uint16_t) ((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK  << 8) | 2U))
+#define PMIC_TPS6594X_PGOOD_SOURCE_BUCK3       \
+            ((uint16_t) ((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK  << 8) | 3U))
+#define PMIC_TPS6594X_PGOOD_SOURCE_BUCK4       \
+            ((uint16_t) ((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK  << 8) | 4U))
+#define PMIC_TPS6594X_PGOOD_SOURCE_BUCK5       \
+            ((uint16_t) ((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK  << 8) | 5U))
+#define PMIC_TPS6594X_PGOOD_SOURCE_NRSTOUT     \
+            ((uint16_t)                        \
+            ((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT     << 8) | 6U))
+#define PMIC_TPS6594X_PGOOD_SOURCE_NRSTOUT_SOC \
+            ((uint16_t)                        \
+            ((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC  << 8) | 7U))
+#define PMIC_TPS6594X_PGOOD_SOURCE_TDIE        \
+            ((uint16_t) ((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_TDIE   << 8) | 8U))
+#define PMIC_TPS6594X_PGOOD_SOURCE_LDO1        \
+            ((uint16_t) ((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_LDO   << 8) | 9U))
+#define PMIC_TPS6594X_PGOOD_SOURCE_LDO2        \
+            ((uint16_t) ((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_LDO   << 8) | 10U))
+#define PMIC_TPS6594X_PGOOD_SOURCE_LDO3        \
+            ((uint16_t) ((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_LDO   << 8) | 11U))
+#define PMIC_TPS6594X_PGOOD_SOURCE_LDO4        \
+            ((uint16_t) ((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_LDO   << 8) | 12U))
+/*  @} */
+
+/**
+ *  \anchor Pmic_TPS6594x_Power_Good_Window
+ *  \name Type of voltage monitoring for PGOOD signal:
+ *
+ *  @{
+ */
+/** \brief Only undervoltage is monitored */
+#define PMIC_TPS6594X_POWER_GOOD_UV_MONITOR_ENABLE         (0x0U)
+/** \brief Both undervoltage and overvoltage are monitored */
+#define PMIC_TPS6594X_POWER_GOOD_UV_OV_MONITOR_ENABLE      (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_TPS6594x_Power_Good_Polarity
+ *  \name PGOOD signal polarity
+ *
+ *  @{
+ */
+/** \brief PGOOD signal is high when monitored inputs are valid */
+#define PMIC_TPS6594X_POWER_PGOOD_POL_HIGH                 (0x0U)
+/** \brief PGOOD signal is low when monitored inputs are valid */
+#define PMIC_TPS6594X_POWER_PGOOD_POL_LOW                  (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_TPS6594x_Power_Good_Nrstout_Soc
+ *  \name PGOOD signal source control from nRSTOUT_SOC pin
+ *
+ *  @{
+ */
+/** \brief Signal is Masked */
+#define PMIC_TPS6594X_POWER_PGOOD_SEL_NRSTOUT_SOC_MASKED   (0x0U)
+/** \brief nRSTOUT_SOC pin low state forces PGOOD signal to low */
+#define PMIC_TPS6594X_POWER_PGOOD_SEL_NRSTOUT_SOC          (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_TPS6594x_Power_Good_Nrstout
+ *  \name PGOOD signal source control from nRSTOUT pin
+ *
+ *  @{
+ */
+/** \brief Signal is Masked */
+#define PMIC_TPS6594X_POWER_PGOOD_SEL_NRSTOUT_MASKED       (0x0U)
+/** \brief nRSTOUT pin low state forces PGOOD signal to low */
+#define PMIC_TPS6594X_POWER_PGOOD_SEL_NRSTOUT              (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_TPS6594x_Power_Good_Thermal_Warn
+ *  \name PGOOD signal source control from thermal warning
+ *
+ *  @{
+ */
+/** \brief Signal is Masked */
+#define PMIC_TPS6594X_POWER_PGOOD_SEL_TDIE_WARN_MASKED     (0x0U)
+/** \brief Thermal warning affecting to PGOOD signal */
+#define PMIC_TPS6594X_POWER_PGOOD_SEL_TDIE_WARN            (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_TPS6594x_Power_Good_Vcca
+ *  \name PGOOD signal source control from VCCA monitoring
+ *
+ *  @{
+ */
+/** \brief Signal is Masked */
+#define PMIC_TPS6594X_POWER_PGOOD_SEL_VCCA_DISABLE         (0x0U)
+/** \brief VCCA OV/UV threshold affecting PGOOD signal */
+#define PMIC_TPS6594X_POWER_PGOOD_SEL_VCCA_ENABLE          (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_TPS6594x_Power_Good_Regulator_Signal
+ *  \name PGOOD signal source control for BUCK and LDO monitoring
+ *
+ *  @{
+ */
+/** \brief Signal is Masked */
+#define PMIC_TPS6594X_POWER_PGOOD_SEL_SRC_MASKED           (0x0U)
+/** \brief Powergood threshold voltage */
+#define PMIC_TPS6594X_POWER_PGOOD_SEL_SRC_VOLTAGE          (0x1U)
+/** \brief Powergood threshold voltage AND current limit */
+#define PMIC_TPS6594X_POWER_PGOOD_SEL_SRC_VOLTAGE_CURRENT  (0x2U)
+/* @} */
+
+/**
+ *  \anchor Pmic_TPS6594x_Power_Current_Status
+ *  \name Status whether the output current is above/below current limit level
+ *
+ *  @{
+ */
+/** \brief Status indicating that output current is above current limit
+           level. */
+#define PMIC_TPS6594X_POWER_CURRENT_LIMIT_STATUS_ABOVE_LIMIT         (0x0U)
+/** \brief Status indicating that output current is below current limit
+           level. */
+#define PMIC_TPS6594X_POWER_CURRENT_LIMIT_STATUS_BELOW_LIMIT          (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_TPS6594x_Regulator_Under_Voltage_Status
+ *  \name Status whether the output voltage is above/below voltage threshold
+ *        for LDO and BUCK
+ *
+ *  @{
+ */
+/** \brief Status indicating that output voltage is above under-voltage
+           threshold
+*/
+#define PMIC_TPS6594X_REGULATOR_OUTPUT_UNDER_VOLTAGE_STATUS_ABOVE_UV      (0x0U)
+/** \brief Status indicating that output voltage is below under-voltage
+           threshold
+*/
+#define PMIC_TPS6594X_REGULATOR_OUTPUT_UNDER_VOLTAGE_STATUS_BELOW_UV      (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_TPS6594x_Vcca_Under_Voltage_Status
+ *  \name Status whether the input voltage is above/below under-voltage level
+ *        for VCCA/VMON
+ *
+ *  @{
+ */
+/** \brief Status indicating that input voltage is above under-voltage
+level */
+#define PMIC_TPS6594X_VCCA_INPUT_UNDER_VOLTAGE_STATUS_ABOVE_UV         (0x0U)
+/** \brief Status indicating that input voltage is below under-voltage
+level */
+#define PMIC_TPS6594X_VCCA_INPUT_UNDER_VOLTAGE_STATUS_BELOW_UV       (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_TPS6594x_Regulator_Over_Voltage_Status
+ *  \name Status whether the output voltage is above/below voltage threshold
+ *        for LDO and BUCK
+ *
+ *  @{
+ */
+/** \brief Status indicating that output voltage is above over-voltage
+           threshold
+*/
+#define PMIC_TPS6594X_REGULATOR_OUTPUT_OVER_VOLTAGE_STATUS_ABOVE_OV       (0x0U)
+/** \brief Status indicating that output voltage is below over-voltage
+           threshold
+*/
+#define PMIC_TPS6594X_REGULATOR_OUTPUT_OVER_VOLTAGE_STATUS_BELOW_OV       (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_TPS6594x_Vcca_Over_Voltage_Status
+ *  \name Status whether the input voltage is above/below over-voltage level
+ *        for VCCA/VMON
+ *
+ *  @{
+ */
+/** \brief Status indicating that input voltage is above over-voltage
+level */
+#define PMIC_TPS6594X_VCCA_INPUT_OVER_VOLTAGE_STATUS_ABOVE_OV       (0x0U)
+/** \brief Status indicating that input voltage is below over-voltage
+level */
+#define PMIC_TPS6594X_VCCA_INPUT_OVER_VOLTAGE_STATUS_BELOW_OV       (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_TPS6594x_Vcca_Voltage_Status
+ *  \name Status whether the voltage is above/below over-voltage protection
+ *        level for VCCA
+ *
+ *  @{
+ */
+/** \brief Status indicating that voltage is above over-voltage protection
+level */
+#define PMIC_TPS6594X_VCCA_OVER_VOLTAGE_LVL_STATUS_ABOVE_OV       (0x0U)
+/** \brief Status indicating that voltage is below over-voltage protection
+level */
+#define PMIC_TPS6594X_VCCA_OVER_VOLTAGE_LVL_STATUS_BELOW_OV       (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_TPS6594x_Power_Thermal_Shutdown_Level
+ *  \name   PMIC Thermal shutdown threshold level.
+ *
+ *  @{
+ */
+/** \brief Used to set the Thermal shutdown threshold level to 140 Celsius */
+#define PMIC_TPS6594X_THERMAL_TEMP_TSD_ORD_140C    (0U)
+/** \brief Used to set the Thermal shutdown threshold level to 145 Celsius */
+#define PMIC_TPS6594X_THERMAL_TEMP_TSD_ORD_145C    (1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_TPS6594x_Power_Thermal_Warn_Level
+ *  \name   PMIC Thermal warning threshold level.
+ *
+ *  @{
+ */
+/** \brief Used to set the Thermal warning threshold level to 140 Celsius */
+#define PMIC_TPS6594X_THERMAL_TEMP_WARN_140C       (1U)
+/** \brief Used to set the Thermal warning threshold level to 130 Celsius */
+#define PMIC_TPS6594X_THERMAL_TEMP_WARN_130C       (0U)
+/*  @} */
+
+/**
+ *  \anchor Pmic_Tps6594x_PowerInterruptType
+ *  \name   PMIC Power Interrupt selection
+ *
+ *  @{
+ */
+#define PMIC_TPS6594X_POWER_OV_INT            (0U)
+#define PMIC_TPS6594X_POWER_UV_INT            (1U)
+#define PMIC_TPS6594X_POWER_ILIM_INT          (3U)
+/*  @} */
+
+/**
+ *  \anchor Pmic_Tps6594x_PowerInterruptCommonType
+ *  \name   PMIC Power Interrupt selection
+ *
+ *  @{
+ */
+#define PMIC_TPS6594X_POWER_INTERRUPT_TWARN                 (0U)
+#define PMIC_TPS6594X_POWER_INTERRUPT_NRSTOUT_READBACK      (1U)
+#define PMIC_TPS6594X_POWER_INTERRUPT_SOC_PWR_ERR           (2U)
+#define PMIC_TPS6594X_POWER_INTERRUPT_MCU_PWR_ERR           (3U)
+#define PMIC_TPS6594X_POWER_INTERRUPT_ORD_SHUTDOWN          (4U)
+#define PMIC_TPS6594X_POWER_INTERRUPT_IMM_SHUTDOWN          (5U)
+#define PMIC_TPS6594X_POWER_INTERRUPT_NRSTOUT_SOC_READBACK  (6U)
+#define PMIC_TPS6594X_POWER_INTERRUPT_EN_DRV_READBACK       (7U)
+/*  @} */
+
+/**
+ *  \anchor Pmic_Tps6594x_PowerLdoRtcCfg
+ *  \name   PMIC Power LDORTC enable/disable
+ *
+ *  @{
+ */
+#define PMIC_TPS6594X_REGULATOR_LDORTC_ENABLE           (0U)
+#define PMIC_TPS6594X_REGULATOR_LDORTC_DISABLE          (1U)
+/*  @} */
+
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
@@ -412,6 +701,34 @@ extern "C" {
 /*==========================================================================*/
 /*                         Function Declarations                            */
 /*==========================================================================*/
+
+/*!
+ * \brief   API to enable/disable LODRTC regulator
+ *          This function is used to enable/disble power Interrupts
+ *
+ * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
+ * \param   ldortcEnable       [IN]    Enable/Disable the LDORTC.
+ *                                     \ref Pmic_Tps6594x_PowerLdoRtcCfg
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_powerSetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
+                            bool               ldortcEnable);
+
+/*!
+ * \brief   API to get enable/disable status for LODRTC regulator
+ *          This function is used to enable/disble power Interrupts
+ *
+ * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
+ * \param   pLdortcEnable      [IN]    Pointer to hold Enable/Disable status.
+ *                                     \ref Pmic_Tps6594x_PowerLdoRtcCfg
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_powerGetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
+                            bool              *pLdortcEnable);
 
 #ifdef __cplusplus
 }

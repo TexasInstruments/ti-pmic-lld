@@ -678,3 +678,126 @@ int32_t Pmic_deinit(Pmic_CoreHandle_t  *pPmicCoreHandle)
 
     return pmicStatus;
 }
+
+static int32_t Pmic_getScratchPadRegAddr(uint8_t  scratchPadRegId,
+                                         uint8_t *pRegAddr)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    switch(scratchPadRegId)
+    {
+        case PMIC_SCRATCH_PAD_REG_1 :
+            *pRegAddr = PMIC_SCRATCH_PAD_REG_1_REGADDR;
+            break;
+        case PMIC_SCRATCH_PAD_REG_2 :
+            *pRegAddr = PMIC_SCRATCH_PAD_REG_2_REGADDR;
+            break;
+        case PMIC_SCRATCH_PAD_REG_3 :
+            *pRegAddr = PMIC_SCRATCH_PAD_REG_3_REGADDR;
+            break;
+        case PMIC_SCRATCH_PAD_REG_4 :
+            *pRegAddr = PMIC_SCRATCH_PAD_REG_4_REGADDR;
+            break;
+        default:
+            status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    return status;
+}
+
+/*!
+ * \brief   API to set/write value in/to scratchpad register.
+ *          This function is used write data to scratchpad register of PMIC
+ *
+ * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
+ * \param   scratchPadRegNum   [IN]    ScratchPad register number
+ *                                     \ref Pmic_ScratchPad_Sel
+ * \param   data               [IN]    Data/Value to be written to scratchpad.
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_setScratchPadValue(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                uint8_t            scratchPadRegId,
+                                uint8_t            data)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regAddr;
+
+    if(NULL == pPmicCoreHandle)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (scratchPadRegId > PMIC_SCRATCH_PAD_REG_4))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pmicStatus = Pmic_getScratchPadRegAddr(scratchPadRegId, &regAddr);
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, regAddr, data);
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief   API to get/read data from scratchpad register.
+ *          This function is used read data from scratchpad register of PMIC
+ *
+ * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
+ * \param   scratchPadRegNum   [IN]    ScratchPad register number
+ *                                     \ref Pmic_ScratchPad_Sel
+ * \param   data               [OUT]   Parameter to hold the Data/Value read
+ *                                     from scratchpad.
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_getScratchPadValue(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                uint8_t            scratchPadRegId,
+                                uint8_t            *pData)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regAddr;
+
+    if(NULL == pPmicCoreHandle)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (scratchPadRegId > PMIC_SCRATCH_PAD_REG_4))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (NULL == pData))
+    {
+        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pmicStatus = Pmic_getScratchPadRegAddr(scratchPadRegId, &regAddr);
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, pData);
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
+
+    return pmicStatus;
+}

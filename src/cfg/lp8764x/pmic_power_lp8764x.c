@@ -49,16 +49,16 @@ static Pmic_powerRsrcRegCfg_t lp8764x_pwrRsrcRegCfg[] =
 {
     {
         PMIC_VCCA_VMON_CTRL_REGADDR,
-        PMIC_POWER_INVALID_REGADDR,
-        PMIC_POWER_INVALID_REGADDR,
-        PMIC_POWER_INVALID_REGADDR,
+        PMIC_INVALID_REGADDR,
+        PMIC_INVALID_REGADDR,
+        PMIC_INVALID_REGADDR,
         PMIC_VCCA_PG_WINDOW_REGADDR,
-        PMIC_MASK_VMON_REGADDR,
+        PMIC_LP8764X_VCCA_OV_INT,
         PMIC_STAT_VMON_REGADDR,
-        PMIC_RAIL_SEL_3_REGADDR,
+        PMIC_INVALID_BIT_SHIFT,
         PMIC_RAIL_SEL_3_VCCA_GRP_SEL_SHIFT,
-        PMIC_POWER_INVALID_REGADDR,
-        PMIC_POWER_INVALID_REGADDR
+        PMIC_INVALID_BIT_SHIFT,
+        PMIC_INVALID_BIT_SHIFT
     },
     {
         PMIC_BUCK1_CTRL_REGADDR,
@@ -66,12 +66,12 @@ static Pmic_powerRsrcRegCfg_t lp8764x_pwrRsrcRegCfg[] =
         PMIC_BUCK1_VOUT_1_REGADDR,
         PMIC_BUCK1_VOUT_2_REGADDR,
         PMIC_BUCK1_PG_WIN_REGADDR,
-        PMIC_MASK_BUCK1_2_REGADDR,
+        PMIC_LP8764X_BUCK1_OV_INT,
         PMIC_STAT_BUCK1_2_REGADDR,
         PMIC_RAIL_SEL_1_REGADDR,
         PMIC_RAIL_SEL_1_BUCK1_GRP_SEL_SHIFT,
-        PMIC_POWER_INVALID_REGADDR,
-        PMIC_POWER_INVALID_REGADDR,
+        PMIC_INVALID_REGADDR,
+        PMIC_INVALID_BIT_SHIFT,
         PMIC_LP8764X_BUCK1_FREQ_SEL_SHIFT
     },
     {
@@ -80,12 +80,12 @@ static Pmic_powerRsrcRegCfg_t lp8764x_pwrRsrcRegCfg[] =
         PMIC_BUCK2_VOUT_1_REGADDR,
         PMIC_BUCK2_VOUT_2_REGADDR,
         PMIC_BUCK2_PG_WIN_REGADDR,
-        PMIC_MASK_BUCK1_2_REGADDR,
+        PMIC_LP8764X_BUCK2_OV_INT,
         PMIC_STAT_BUCK1_2_REGADDR,
         PMIC_RAIL_SEL_1_REGADDR,
         PMIC_RAIL_SEL_1_BUCK2_GRP_SEL_SHIFT,
-        PMIC_POWER_INVALID_REGADDR,
-        PMIC_POWER_INVALID_REGADDR,
+        PMIC_INVALID_REGADDR,
+        PMIC_INVALID_BIT_SHIFT,
         PMIC_LP8764X_BUCK2_FREQ_SEL_SHIFT
     },
     {
@@ -94,12 +94,12 @@ static Pmic_powerRsrcRegCfg_t lp8764x_pwrRsrcRegCfg[] =
         PMIC_BUCK3_VOUT_1_REGADDR,
         PMIC_BUCK3_VOUT_2_REGADDR,
         PMIC_BUCK3_PG_WIN_REGADDR,
-        PMIC_MASK_BUCK3_4_REGADDR,
+        PMIC_LP8764X_BUCK3_OV_INT,
         PMIC_STAT_BUCK3_4_REGADDR,
         PMIC_RAIL_SEL_1_REGADDR,
         PMIC_RAIL_SEL_1_BUCK3_GRP_SEL_SHIFT,
-        PMIC_POWER_INVALID_REGADDR,
-        PMIC_POWER_INVALID_REGADDR,
+        PMIC_INVALID_REGADDR,
+        PMIC_INVALID_BIT_SHIFT,
         PMIC_LP8764X_BUCK3_FREQ_SEL_SHIFT
     },
     {
@@ -108,43 +108,129 @@ static Pmic_powerRsrcRegCfg_t lp8764x_pwrRsrcRegCfg[] =
         PMIC_BUCK4_VOUT_1_REGADDR,
         PMIC_BUCK4_VOUT_2_REGADDR,
         PMIC_BUCK4_PG_WIN_REGADDR,
-        PMIC_MASK_BUCK3_4_REGADDR,
+        PMIC_LP8764X_BUCK4_OV_INT,
         PMIC_STAT_BUCK3_4_REGADDR,
         PMIC_RAIL_SEL_1_REGADDR,
         PMIC_RAIL_SEL_1_BUCK4_GRP_SEL_SHIFT,
-        PMIC_POWER_INVALID_REGADDR,
-        PMIC_POWER_INVALID_REGADDR,
+        PMIC_INVALID_REGADDR,
+        PMIC_INVALID_BIT_SHIFT,
         PMIC_LP8764X_BUCK1_FREQ_SEL_SHIFT
     },
     {
         PMIC_VCCA_VMON_CTRL_REGADDR,
         PMIC_VMON_CONF_REGADDR,
-        PMIC_POWER_INVALID_REGADDR,
-        PMIC_POWER_INVALID_REGADDR,
+        PMIC_INVALID_REGADDR,
+        PMIC_INVALID_REGADDR,
         PMIC_VMON1_PG_WINDOW_REGADDR,
-        PMIC_MASK_VMON_REGADDR,
+        PMIC_LP8764X_VMON1_OV_INT,
         PMIC_STAT_VMON_REGADDR,
         PMIC_RAIL_SEL_3_REGADDR,
         PMIC_RAIL_SEL_3_VMON1_GRP_SEL_SHIFT,
-        PMIC_POWER_INVALID_REGADDR,
-        PMIC_POWER_INVALID_REGADDR,
-        PMIC_POWER_INVALID_REGADDR
+        PMIC_INVALID_REGADDR,
+        PMIC_INVALID_BIT_SHIFT,
+        PMIC_INVALID_BIT_SHIFT
     },
     {
         PMIC_VCCA_VMON_CTRL_REGADDR,
         PMIC_VMON_CONF_REGADDR,
-        PMIC_POWER_INVALID_REGADDR,
-        PMIC_POWER_INVALID_REGADDR,
+        PMIC_INVALID_REGADDR,
+        PMIC_INVALID_REGADDR,
         PMIC_VMON2_PG_WINDOW_REGADDR,
-        PMIC_MASK_VMON_REGADDR,
+        PMIC_LP8764X_VMON2_OV_INT,
         PMIC_STAT_VMON_REGADDR,
         PMIC_RAIL_SEL_3_REGADDR,
         PMIC_RAIL_SEL_3_VMON2_GRP_SEL_SHIFT,
-        PMIC_POWER_INVALID_REGADDR,
-        PMIC_POWER_INVALID_REGADDR,
-        PMIC_POWER_INVALID_REGADDR
+        PMIC_INVALID_REGADDR,
+        PMIC_INVALID_BIT_SHIFT,
+        PMIC_INVALID_BIT_SHIFT
     }
 };
+
+static Pmic_powerPgoodSrcRegCfg_t lp8764x_pgoodSrcRegCfg[] =
+{
+    {
+        PMIC_PGOOD_SEL_4_REGADDR,
+        PMIC_PGOOD_SEL_4_PGOOD_SEL_VCCA_SHIFT,
+    },
+    {
+        PMIC_PGOOD_SEL_1_REGADDR,
+        PMIC_PGOOD_SEL_1_PGOOD_SEL_BUCK1_SHIFT,
+    },
+    {
+        PMIC_PGOOD_SEL_1_REGADDR,
+        PMIC_PGOOD_SEL_1_PGOOD_SEL_BUCK2_SHIFT,
+    },
+    {
+        PMIC_PGOOD_SEL_1_REGADDR,
+        PMIC_PGOOD_SEL_1_PGOOD_SEL_BUCK3_SHIFT,
+    },
+    {
+        PMIC_PGOOD_SEL_1_REGADDR,
+        PMIC_PGOOD_SEL_1_PGOOD_SEL_BUCK4_SHIFT,
+    },
+    {
+        PMIC_PGOOD_SEL_4_REGADDR,
+        PMIC_PGOOD_SEL_4_PGOOD_SEL_NRSTOUT_SHIFT,
+    },
+    {
+        PMIC_PGOOD_SEL_4_REGADDR,
+        PMIC_PGOOD_SEL_4_PGOOD_SEL_NRSTOUT_SOC_SHIFT,
+    },
+    {
+        PMIC_PGOOD_SEL_4_REGADDR,
+        PMIC_PGOOD_SEL_4_PGOOD_SEL_TDIE_WARN_SHIFT,
+    },
+    {
+        PMIC_PGOOD_SEL_4_REGADDR,
+        PMIC_PGOOD_SEL_4_PGOOD_SEL_VMON1_SHIFT,
+    },
+    {
+        PMIC_PGOOD_SEL_4_REGADDR,
+        PMIC_PGOOD_SEL_4_PGOOD_SEL_VMON2_SHIFT,
+    },
+};
+
+static Pmic_powerIntCfg_t lp8764x_pwrIntCfg[] =
+{
+    {
+        PMIC_LP8764X_TWARN_INT,
+    },
+    {
+        PMIC_LP8764X_NRSTOUT_READBACK_INT,
+    },
+    {
+        PMIC_LP8764X_SOC_PWR_ERR_INT,
+    },
+    {
+        PMIC_LP8764X_MCU_PWR_ERR_INT,
+    },
+    {
+        PMIC_LP8764X_ORD_SHUTDOWN_INT,
+    },
+    {
+        PMIC_LP8764X_IMM_SHUTOWN_INT,
+    },
+    {
+        PMIC_LP8764X_NRSTOUT_SOC_READBACK_INT,
+    },
+    {
+        PMIC_LP8764X_EN_DRV_READBACK_INT,
+    },
+
+};
+
+/*!
+ * \brief  PMIC power common interrupt get Configuration function
+ *         This function is used to read the interrupt
+ *         Configuration
+ *
+ * \param  pwrRsrcRegCfg   [OUT]  Pointer to store power interrupt
+ *                                number.
+ */
+void pmic_get_lp8764x_pwrCommonIntCfg(Pmic_powerIntCfg_t **pPwrCommonIntCfg)
+{
+    *pPwrCommonIntCfg = lp8764x_pwrIntCfg;
+}
 
 /*!
  * \brief  PMIC power resources get Configuration function
@@ -160,22 +246,36 @@ void pmic_get_lp8764x_pwrRsrceRegCfg(Pmic_powerRsrcRegCfg_t **pPwrRsrcRegCfg)
 }
 
 /*!
+ * \brief  PMIC power get Configuration function
+ *         This function is used to read the PMIC pgood sources register
+ *         Configuration
+ *
+ * \param  pPgoodSrcRegCfg   [OUT]  Pointer to store power-good source register
+ *                                  configuration
+ */
+void pmic_get_lp8764x_pwrPgoodSrcRegCfg(
+                                   Pmic_powerPgoodSrcRegCfg_t **pPgoodSrcRegCfg)
+{
+    *pPgoodSrcRegCfg = lp8764x_pgoodSrcRegCfg;
+}
+
+/*!
  * \brief   This function is used to convert the millivolt value to vset value
  *          for HERA LP8764x PMIC
  */
 int32_t Pmic_powerLP8764xConvertVoltage2VSetVal(
-                                            Pmic_CoreHandle_t *pPmicCoreHandle,
-                                            uint16_t           millivolt,
-                                            uint16_t           pwrRsrc,
-                                            uint16_t          *pBaseMillivolt,
-                                            uint8_t           *pMillivoltStep,
-                                            uint8_t           *pBaseVoutCode)
+                                             Pmic_CoreHandle_t *pPmicCoreHandle,
+                                             uint16_t           millivolt,
+                                             uint16_t           pwrRsrc,
+                                             uint16_t          *pBaseMillivolt,
+                                             uint8_t           *pMillivoltStep,
+                                             uint8_t           *pBaseVoutCode)
 {
     int32_t status = PMIC_ST_SUCCESS;
     bool    vmonRange;
     uint8_t pwrRsrcType;
 
-    pwrRsrcType  = Pmic_powerGetPwrRsrcType(pwrRsrc);
+    pwrRsrcType = Pmic_powerGetPwrRsrcType(pwrRsrc);
 
     switch(pwrRsrcType)
     {
@@ -196,19 +296,19 @@ int32_t Pmic_powerLP8764xConvertVoltage2VSetVal(
                (PMIC_LP8764X_VMON_RANGE_0V3_3V34 == vmonRange))
             {
                 status = Pmic_powerBuckVmonConvertVoltage2VSetVal(
-                                                                millivolt,
-                                                                pBaseMillivolt,
-                                                                pMillivoltStep,
-                                                                pBaseVoutCode);
+                                                                 millivolt,
+                                                                 pBaseMillivolt,
+                                                                 pMillivoltStep,
+                                                                 pBaseVoutCode);
             }
             else if((PMIC_ST_SUCCESS == status) &&
                     (PMIC_LP8764X_VMON_RANGE_3V35_5V == vmonRange))
             {
                 status = Pmic_powerVmonRange1ConvertVoltage2VSetVal(
-                                                                millivolt,
-                                                                pBaseMillivolt,
-                                                                pMillivoltStep,
-                                                                pBaseVoutCode);
+                                                                 millivolt,
+                                                                 pBaseMillivolt,
+                                                                 pMillivoltStep,
+                                                                 pBaseVoutCode);
             }
 
             break;
@@ -225,18 +325,18 @@ int32_t Pmic_powerLP8764xConvertVoltage2VSetVal(
  *          for PMIC HERA LP8764x
  */
 int32_t Pmic_powerLP8764xConvertVSetVal2Voltage(
-                                            Pmic_CoreHandle_t *pPmicCoreHandle,
-                                            uint8_t           *pVSetVal,
-                                            uint16_t           pwrRsrc,
-                                            uint16_t          *pBaseMillivolt,
-                                            uint8_t           *pMillivoltStep,
-                                            uint8_t           *pBaseVoutCode)
+                                             Pmic_CoreHandle_t *pPmicCoreHandle,
+                                             uint8_t           *pVSetVal,
+                                             uint16_t           pwrRsrc,
+                                             uint16_t          *pBaseMillivolt,
+                                             uint8_t           *pMillivoltStep,
+                                             uint8_t           *pBaseVoutCode)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    bool    vmonRange;
-    uint8_t pwrRsrcType;
+    bool    vmonRange = 0U;
+    uint8_t pwrRsrcType = 0U;
 
-    pwrRsrcType  = Pmic_powerGetPwrRsrcType(pwrRsrc);
+    pwrRsrcType = Pmic_powerGetPwrRsrcType(pwrRsrc);
 
     switch(pwrRsrcType)
     {
@@ -274,6 +374,124 @@ int32_t Pmic_powerLP8764xConvertVSetVal2Voltage(
         default:
             status = PMIC_ST_ERR_INV_PARAM;
             break;
+    }
+
+    return status;
+}
+
+/*!
+ * \brief   This function is to validate the power good source limit for the
+ *          specific PMIC device.
+ */
+int32_t Pmic_validate_lp8764x_pGoodSrcType(uint16_t pgoodSrc)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t  pGoodSrcType = 0U;
+
+    pGoodSrcType = Pmic_powerGetPwrRsrcType(pgoodSrc);
+
+    if(PMIC_LP8764X_PGOOD_SOURCE_TYPE_VCCA == pGoodSrcType)
+    {
+        if(pgoodSrc != PMIC_LP8764X_PGOOD_SOURCE_VCCA)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+    else if(PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT == pGoodSrcType)
+    {
+        if(pgoodSrc != PMIC_LP8764X_PGOOD_SOURCE_NRSTOUT)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+    else if(PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC == pGoodSrcType)
+    {
+        if(pgoodSrc != PMIC_LP8764X_PGOOD_SOURCE_NRSTOUT_SOC)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+    else if(PMIC_LP8764X_PGOOD_SOURCE_TYPE_TDIE == pGoodSrcType)
+    {
+        if(pgoodSrc != PMIC_LP8764X_PGOOD_SOURCE_TDIE)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+    else if(PMIC_LP8764X_PGOOD_SOURCE_TYPE_BUCK == pGoodSrcType)
+    {
+        if((pgoodSrc > PMIC_LP8764X_PGOOD_BUCK_MAX) ||
+           (pgoodSrc < PMIC_LP8764X_PGOOD_BUCK_MIN))
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+    else if(PMIC_LP8764X_PGOOD_SOURCE_TYPE_VMON == pGoodSrcType)
+    {
+        if((pgoodSrc > PMIC_LP8764X_PGOOD_VMON_MAX) ||
+           (pgoodSrc < PMIC_LP8764X_PGOOD_VMON_MIN))
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+    else
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    return status;
+}
+
+/*!
+ * \brief   This function is to validate the power good signal source selection
+ *          limit for the specific PMIC device.
+ */
+int32_t Pmic_validate_lp8764x_pGoodSelType(uint16_t pgoodSrc,
+                                           uint8_t pgoodSelType)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t  pGoodSrcType = 0U;
+
+    pGoodSrcType = Pmic_powerGetPwrRsrcType(pgoodSrc);
+    if((PMIC_LP8764X_PGOOD_SOURCE_TYPE_VCCA == pGoodSrcType) ||
+       (PMIC_LP8764X_PGOOD_SOURCE_TYPE_VMON == pGoodSrcType))
+    {
+        if(pgoodSelType > PMIC_LP8764X_POWER_PGOOD_SEL_VCCA_VMON_ENABLE)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+    else if(PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT == pGoodSrcType)
+    {
+        if(pgoodSelType > PMIC_LP8764X_POWER_PGOOD_SEL_NRSTOUT)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+    else if(PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC == pGoodSrcType)
+    {
+        if(pgoodSelType > PMIC_LP8764X_POWER_PGOOD_SEL_NRSTOUT_SOC)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+    else if(PMIC_LP8764X_PGOOD_SOURCE_TYPE_TDIE == pGoodSrcType)
+    {
+        if(pgoodSelType > PMIC_LP8764X_POWER_PGOOD_SEL_TDIE_WARN)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+    else if(PMIC_LP8764X_PGOOD_SOURCE_TYPE_BUCK == pGoodSrcType)
+    {
+        if(pgoodSelType > PMIC_LP8764X_POWER_PGOOD_SEL_SRC_VOLTAGE_CURRENT)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+    else
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
     }
 
     return status;

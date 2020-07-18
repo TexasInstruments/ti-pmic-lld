@@ -95,6 +95,18 @@ extern "C" {
                        (1U << PMIC_CFG_RECOV_CNT_CLR_CNT_VALID)
 /* @} */
 
+/**
+ *  \anchor Pmic_ScratchPad_Sel
+ *  \name   PMIC Scratchpad register selection
+ *
+ *  @{
+ */
+#define PMIC_SCRATCH_PAD_REG_1             (01U)
+#define PMIC_SCRATCH_PAD_REG_2             (02U)
+#define PMIC_SCRATCH_PAD_REG_3             (03U)
+#define PMIC_SCRATCH_PAD_REG_4             (04U)
+/*  @} */
+
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
@@ -180,6 +192,38 @@ int32_t Pmic_getRecoveryCnt(Pmic_CoreHandle_t *pPmicCoreHandle,
  */
 int32_t Pmic_nSleepSignalsSetup(Pmic_CoreHandle_t *pPmicCoreHandle);
 
+/*!
+ * \brief   API to set/write value in/to scratchpad register.
+ *          This function is used write data to scratchpad register of PMIC
+ *
+ * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
+ * \param   scratchPadRegNum   [IN]    ScratchPad register number
+ *                                     \ref Pmic_ScratchPad_Sel
+ * \param   data               [IN]    Data/Value to be written to scratchpad.
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_setScratchPadValue(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                uint8_t            scratchPadRegNum,
+                                uint8_t            data);
+
+/*!
+ * \brief   API to get/read data from scratchpad register.
+ *          This function is used read data from scratchpad register of PMIC
+ *
+ * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
+ * \param   scratchPadRegNum   [IN]    ScratchPad register number
+ *                                     \ref Pmic_ScratchPad_Sel
+ * \param   pData               [OUT]   Parameter to hold the Data/Value read
+ *                                     from scratchpad.
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_getScratchPadValue(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                uint8_t            scratchPadRegNum,
+                                uint8_t            *pData);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

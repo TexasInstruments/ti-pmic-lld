@@ -71,6 +71,11 @@ extern "C" {
 /* @} */
 
 /*!
+ *  * \brief  PMIC Rail bit field
+ *   */
+#define PMIC_REGULATOR_LDO_RV_TIMEOUT_SEL_BITFIELD              (15U)
+
+/*!
  * \brief  PMIC Power Volatage range for BUCK regulator
  */
 #define PMIC_TPS6594X_REGULATOR_BUCK_MIN_VOLTAGE     PMIC_POWER_VOLTAGE_300MV
@@ -107,6 +112,14 @@ extern "C" {
                                 PMIC_TPS6594X_REGULATOR_BUCK_SLEW_RATE_0MV31
 
 /*!
+ * \brief  PMIC Power LDO Residual voltage check Timeout range for LDO regulator
+ */
+#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_MIN            \
+                                PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_0MS5
+#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_MAX            \
+                                PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_16MS
+
+/*!
  * \brief  PMIC Power Buck regulator range
  */
 #define PMIC_TPS6594X_BUCK_MIN   PMIC_TPS6594X_REGULATOR_BUCK1
@@ -118,10 +131,47 @@ extern "C" {
 #define PMIC_TPS6594X_LDO_MIN   PMIC_TPS6594X_REGULATOR_LDO1
 #define PMIC_TPS6594X_LDO_MAX   PMIC_TPS6594X_REGULATOR_LDO4
 
+/*!
+ * \brief  PMIC PowerGood Buck regulator range
+ */
+#define PMIC_TPS6594X_PGOOD_BUCK_MIN   PMIC_TPS6594X_PGOOD_SOURCE_BUCK1
+#define PMIC_TPS6594X_PGOOD_BUCK_MAX   PMIC_TPS6594X_PGOOD_SOURCE_BUCK5
+
+/*!
+ * \brief  PMIC PowerGood Ldo regulator range
+ */
+#define PMIC_TPS6594X_PGOOD_LDO_MIN   PMIC_TPS6594X_PGOOD_SOURCE_LDO1
+#define PMIC_TPS6594X_PGOOD_LDO_MAX   PMIC_TPS6594X_PGOOD_SOURCE_LDO4
+
+/*!
+ * \brief  PMIC Power Ldo regulator range
+ */
+#define PMIC_TPS6594X_BUCK_FREQ_SE_MIN    PMIC_TPS6594X_BUCK_FREQ_SEL_2M2
+#define PMIC_TPS6594X_BUCK_FREQ_SE_MAX    PMIC_TPS6594X_BUCK_FREQ_SEL_4M4
+
+/*!
+ * \brief  PMIC Power RAIL group range
+ */
+#define PMIC_TPS6594X_POWER_RAIL_SEL_MIN    PMIC_TPS6594X_POWER_RAIL_SEL_NONE
+#define PMIC_TPS6594X_POWER_RAIL_SEL_MAX    PMIC_TPS6594X_POWER_RAIL_SEL_OTHER
+
+/*!
+ * \brief  PMIC Power LDO pull down ressistor range
+ */
+#define PMIC_TPS6594X_REGULATOR_LDO_PLDN_VAL_MIN    \
+                                     PMIC_TPS6594X_REGULATOR_LDO_PLDN_VAL_50KOHM
+#define PMIC_TPS6594X_REGULATOR_LDO_PLDN_VAL_MAX    \
+                                     PMIC_TPS6594X_REGULATOR_LDO_PLDN_VAL_500OHM
+
+/*!
+ * \brief  PMIC Power Common Interrupt Range
+ */
+#define PMIC_TPS6594X_POWER_COMMON_INTERRUPT_MAX   \
+                                   PMIC_TPS6594X_POWER_INTERRUPT_EN_DRV_READBACK
+
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
-
 
 /*==========================================================================*/
 /*                         Function Declarations                            */
@@ -137,7 +187,26 @@ extern "C" {
  */
 void pmic_get_tps6594x_pwrRsrceRegCfg(Pmic_powerRsrcRegCfg_t **pPwrRsrcRegCfg);
 
+/*!
+ * \brief  PMIC power interrupt get Configuration function
+ *         This function is used to read the power interrupt
+ *         Configuration
+ *
+ * \param  pwrRsrcRegCfg   [OUT]  Pointer to store power interrupt
+ *                                number.
+ */
+void pmic_get_tps6594x_pwrCommonIntCfg(Pmic_powerIntCfg_t **pPwrCommonIntCfg);
 
+/*!
+ * \brief  PMIC power get Configuration function
+ *         This function is used to read the PMIC pgood sources register
+ *         Configuration
+ *
+ * \param  pPgoodSrcRegCfg   [OUT]  Pointer to store power-good source register
+ *                                  configuration
+ */
+void pmic_get_tps6594x_pwrPgoodSrcRegCfg(
+                                  Pmic_powerPgoodSrcRegCfg_t **pPgoodSrcRegCfg);
 /*!
  * \brief   This function is used to convert the millivolt value to vset value
  *          for LEO TPS6594x PMIC
@@ -158,6 +227,18 @@ int32_t Pmic_powerTPS6594xConvertVSet2Voltage(uint8_t  *pVSetVal,
                                               uint8_t  *pMillivoltStep,
                                               uint8_t  *pBaseVoutCode);
 
+/*!
+ * \brief   This function is to validate the power good signal source selection
+ *          limit for the specific PMIC device.
+ */
+int32_t Pmic_validate_tps6594x_pGoodSrcType(uint16_t pgoodSrc);
+
+/*!
+ * \brief   This function is to validate the power good signal source selection
+ *          limit for the specific PMIC device.
+ */
+int32_t Pmic_validate_tps6594x_pGoodSelType(uint16_t pgoodSrc,
+                                            uint8_t pgoodSelType);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

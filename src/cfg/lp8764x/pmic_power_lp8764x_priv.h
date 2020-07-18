@@ -151,11 +151,39 @@ extern "C" {
 #define PMIC_LP8764X_BUCK_MAX   PMIC_LP8764X_REGULATOR_BUCK4
 
 /*!
- * \brief  PMIC Power Ldo regulator range
+ * \brief  PMIC Power VMON range
  */
-#define PMIC_LP8764X_VMON_MAX    PMIC_LP8764X_POWER_SOURCE_VMON1
-#define PMIC_LP8764X_VMON_MIN    PMIC_LP8764X_POWER_SOURCE_VMON2
+#define PMIC_LP8764X_VMON_MIN   PMIC_LP8764X_POWER_SOURCE_VMON1
+#define PMIC_LP8764X_VMON_MAX   PMIC_LP8764X_POWER_SOURCE_VMON2
 
+/*!
+ * \brief  PMIC Power Buck frequency range
+ */
+#define PMIC_LP8764X_BUCK_FREQ_SE_MIN    PMIC_LP8764X_BUCK_FREQ_SEL_2M2
+#define PMIC_LP8764X_BUCK_FREQ_SE_MAX    PMIC_LP8764X_BUCK_FREQ_SEL_8M8
+
+/*!
+ * \brief  PMIC Power RAIL group range
+ */
+#define PMIC_LP8764X_POWER_RAIL_SEL_MIN    PMIC_LP8764X_POWER_RAIL_SEL_NONE
+#define PMIC_LP8764X_POWER_RAIL_SEL_MAX    PMIC_LP8764X_POWER_RAIL_SEL_OTHER
+
+/*!
+ * \brief  PMIC Power Buck regulator range
+ */
+#define PMIC_LP8764X_PGOOD_BUCK_MIN   PMIC_LP8764X_PGOOD_SOURCE_BUCK1
+#define PMIC_LP8764X_PGOOD_BUCK_MAX   PMIC_LP8764X_PGOOD_SOURCE_BUCK4
+
+/*!
+ * \brief  PMIC Power VMON range
+ */
+#define PMIC_LP8764X_PGOOD_VMON_MIN   PMIC_LP8764X_PGOOD_SOURCE_VMON1
+#define PMIC_LP8764X_PGOOD_VMON_MAX   PMIC_LP8764X_PGOOD_SOURCE_VMON2
+/*!
+ * \brief  PMIC Power Common Interrupt Range
+ */
+#define PMIC_LP8764X_POWER_COMMON_INTERRUPT_MAX   \
+                                    PMIC_LP8764X_POWER_INTERRUPT_EN_DRV_READBACK
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
@@ -173,6 +201,27 @@ extern "C" {
  *                                configuration
  */
 void pmic_get_lp8764x_pwrRsrceRegCfg(Pmic_powerRsrcRegCfg_t **pPwrRsrcRegCfg);
+
+/*!
+ * \brief  PMIC power common interrupt get Configuration function
+ *         This function is used to read the interrupt
+ *         Configuration
+ *
+ * \param  pwrRsrcRegCfg   [OUT]  Pointer to store power interrupt
+ *                                number.
+ */
+void pmic_get_lp8764x_pwrCommonIntCfg(Pmic_powerIntCfg_t **pPwrCommonIntCfg);
+
+/*!
+ * \brief  PMIC power get Configuration function
+ *         This function is used to read the PMIC pgood sources register
+ *         Configuration
+ *
+ * \param  pPgoodSrcRegCfg   [OUT]  Pointer to store power-good source register
+ *                                  configuration
+ */
+void pmic_get_lp8764x_pwrPgoodSrcRegCfg(
+                                  Pmic_powerPgoodSrcRegCfg_t **pPgoodSrcRegCfg);
 
 /*!
  * \brief   This function is used to convert the millivolt value to vset value
@@ -197,6 +246,19 @@ int32_t Pmic_powerLP8764xConvertVSetVal2Voltage(
                                             uint16_t          *pBaseMillivolt,
                                             uint8_t           *pMillivoltStep,
                                             uint8_t           *pBaseVoutCode);
+
+/*!
+ * \brief   This function is to validate the power good source limit for the
+ *          specific PMIC device.
+ */
+int32_t Pmic_validate_lp8764x_pGoodSrcType(uint16_t pgoodSrc);
+
+/*!
+ * \brief   This function is to validate the power good signal source selection
+ *          limit for the specific PMIC device.
+ */
+int32_t Pmic_validate_lp8764x_pGoodSelType(uint16_t pgoodSrc,
+                                           uint8_t pgoodSelType);
 
 #ifdef __cplusplus
 }

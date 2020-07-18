@@ -203,12 +203,6 @@ extern "C" {
 #define PMIC_FSM_TRIG_MASK_3_REGADDR              (0x48U)
 
 /*!
- * \brief  PMIC power invalid register address
- */
-#define PMIC_POWER_INVALID_REGADDR                (0xFFU)
-
-
-/*!
  * \brief  PMIC power voltage levels
  */
 #define PMIC_POWER_VOLTAGE_300MV                  (uint16_t) (300U)
@@ -252,7 +246,7 @@ extern "C" {
 #define PMIC_LDOX_CTRL_LDOX_PLDN_SHIFT                           (5U)
 #define PMIC_VCCA_VMON_CTRL_VMON_DEGLITCH_SEL_SHIFT              (5U)
 #define PMIC_REGULATOR_CTRL_REGULATOR_VMON_EN_SHIFT              (4U)
-#define PMIC_VCCA_CTRL_VCCA_VMON_EN_SHIFT                        (0U)
+#define PMIC_VCCA_VMON_CTRL_VCCA_VMON_EN_SHIFT                   (0U)
 #define PMIC_VCCA_VMON_CTRL_VMON2_EN_SHIFT                       (3U)
 #define PMIC_VCCA_VMON_CTRL_VMON1_EN_SHIFT                       (1U)
 #define PMIC_BUCKX_CTRL_BUCKX_VSEL_SHIFT                         (3U)
@@ -351,6 +345,11 @@ extern "C" {
 #define PMIC_MASK_MISC_TWARN_MASK_SHIFT                     (3U)
 
 /*!
+ * \brief  PMIC Power Resource Interrupt bit field
+ */
+#define PMIC_PWR_RSRC_INTR_MASK_BITFIELD                  (1U)
+
+/*!
  * \brief  PMIC Power Resources Status bit fields
  */
 #define PMIC_STAT_BUCKX_Y_BUCK2_4_ILIM_STAT_SHIFT           (7U)
@@ -381,7 +380,10 @@ extern "C" {
 
 #define PMIC_STAT_VMON_VMON1_UV_STAT_SHIFT                  (3U)
 #define PMIC_STAT_VMON_VMON1_OV_STAT_SHIFT                  (2U)
-
+/*!
+ * \brief  PMIC Power Resources Status bit field
+ */
+#define PMIC_POWER_RESOURCE_STATUS_BITFIELD               (1U)
 /*!
  * \brief  PMIC Thermal status for die bit fields
  */
@@ -414,6 +416,12 @@ extern "C" {
 #define PMIC_PGOOD_SEL_4_PGOOD_SEL_VMON2_SHIFT              (2U)
 #define PMIC_PGOOD_SEL_4_PGOOD_SEL_VMON1_SHIFT              (1U)
 #define PMIC_PGOOD_SEL_4_PGOOD_SEL_VCCA_SHIFT               (0U)
+
+/*!
+ * \brief  PMIC Power-good signal source control bit  field
+ */
+#define PMIC_PGOOD_SEL_PGOOD_SRC_BITFIELD                   (0x1U)
+#define PMIC_PGOOD_SEL_PGOOD_SRC_REGULATOR_BITFIELD         (0x3U)
 
 /*!
  * \brief  PMIC Thermal warning and shutdown threshold levels bit fields
@@ -449,6 +457,14 @@ extern "C" {
 #define PMIC_LDO_RV_TIMEOUT_REG_LDO2_4_RV_TIMEOUT_SHIFT     (4U)
 #define PMIC_LDO_RV_TIMEOUT_REG_LDO1_3_RV_TIMEOUT_SHIFT     (0U)
 
+/*!
+ * \brief  PMIC FSM TRIG bit fields
+ */
+#define PMIC_FSM_TRIG_SEL_1_SEVERE_ERR_TRIG_SHIFT     (6U)
+#define PMIC_FSM_TRIG_SEL_1_OTHER_RAIL_TRIG_SHIFT     (4U)
+#define PMIC_FSM_TRIG_SEL_1_SOC_RAIL_TRIG_SHIFT       (2U)
+#define PMIC_FSM_TRIG_SEL_1_MCU_RAIL_TRIG_SHIFT       (0U)
+#define PMIC_FSM_TRIG_SEL_2_MODERATE_ERR_TRIG_SHIFT   (0U)
 
 /*!
  * \brief  PMIC power resources and vmon control bit masks.
@@ -474,9 +490,9 @@ extern "C" {
 #define PMIC_REGULATOR_CTRL_REGULATOR_VMON_EN_MASK                  \
                        (uint8_t)(0x01 <<                            \
                        PMIC_REGULATOR_CTRL_REGULATOR_VMON_EN_SHIFT)
-#define PMIC_VCCA_CTRL_VCCA_VMON_EN_MASK                            \
+#define PMIC_VCCA_VMON_CTRL_VCCA_VMON_EN_MASK                       \
                        (uint8_t)(0x01 <<                            \
-                       PMIC_VCCA_CTRL_VCCA_VMON_EN_SHIFT)
+                       PMIC_VCCA_VMON_CTRL_VCCA_VMON_EN_SHIFT)
 #define PMIC_VCCA_VMON_CTRL_VMON2_EN_MASK                           \
                        (uint8_t)(0x01 <<                            \
                        PMIC_VCCA_VMON_CTRL_VMON2_EN_SHIFT)
@@ -531,20 +547,20 @@ extern "C" {
  */
 #define PMIC_LDORTC_CTRL_LDORTC_DIS_MASK        \
                               (uint8_t)(0x01 <<        \
-                               PMIC_LDORTC_CTRL_LDORTC_DIS_SHIFT)
+                              PMIC_LDORTC_CTRL_LDORTC_DIS_SHIFT)
 
 /*!
  * \brief  LDO VOUT register bit masks
  */
 #define PMIC_LDO1_2_3_VOUT_LDO1_2_3_BYPASS_MASK        \
                               (uint8_t)(0x01 <<        \
-                               PMIC_LDO1_2_3_VOUT_LDO1_2_3_BYPASS_SHIFT)
+                              PMIC_LDO1_2_3_VOUT_LDO1_2_3_BYPASS_SHIFT)
 #define PMIC_LDO1_2_3_VOUT_LDO1_2_3_VSET_MASK          \
                               (uint8_t)(0x3F <<        \
-                               PMIC_LDO1_2_3_VOUT_LDO1_2_3_VSET_SHIFT)
+                              PMIC_LDO1_2_3_VOUT_LDO1_2_3_VSET_SHIFT)
 #define PMIC_LDO4_VOUT_LDO4_VSET_MASK                  \
                               (uint8_t)(0x7F <<        \
-                               PMIC_LDO4_VOUT_LDO4_VSET_SHIFT)
+                              PMIC_LDO4_VOUT_LDO4_VSET_SHIFT)
 
 /*!
  * \brief  PMIC Power-good level for VCCA pin bit masks
@@ -566,15 +582,15 @@ extern "C" {
                                            PMIC_RAIL_SEL_1_BUCK4_GRP_SEL_SHIFT)
 #define PMIC_RAIL_SEL_2_BUCK5_GRP_SEL_MASK          (uint8_t)(0x03 <<  \
                                            PMIC_RAIL_SEL_2_BUCK5_GRP_SEL_SHIFT)
-#define PMIC_RAIL_SEL_2_LDO1_GRP_SEL_MASK          (uint8_t)(0x03 <<  \
+#define PMIC_RAIL_SEL_2_LDO1_GRP_SEL_MASK           (uint8_t)(0x03 <<  \
                                            PMIC_RAIL_SEL_2_LDO1_GRP_SEL_SHIFT)
-#define PMIC_RAIL_SEL_2_LDO2_GRP_SEL_MASK          (uint8_t)(0x03 <<  \
+#define PMIC_RAIL_SEL_2_LDO2_GRP_SEL_MASK           (uint8_t)(0x03 <<  \
                                            PMIC_RAIL_SEL_2_LDO2_GRP_SEL_SHIFT)
-#define PMIC_RAIL_SEL_2_LDO3_GRP_SEL_MASK          (uint8_t)(0x03 <<  \
+#define PMIC_RAIL_SEL_2_LDO3_GRP_SEL_MASK           (uint8_t)(0x03 <<  \
                                            PMIC_RAIL_SEL_2_LDO3_GRP_SEL_SHIFT)
-#define PMIC_RAIL_SEL_3_LDO4_GRP_SEL_MASK          (uint8_t)(0x03 <<  \
+#define PMIC_RAIL_SEL_3_LDO4_GRP_SEL_MASK           (uint8_t)(0x03 <<  \
                                            PMIC_RAIL_SEL_3_LDO4_GRP_SEL_SHIFT)
-#define PMIC_RAIL_SEL_3_VCCA_GRP_SEL_MASK          (uint8_t)(0x03 <<  \
+#define PMIC_RAIL_SEL_3_VCCA_GRP_SEL_MASK           (uint8_t)(0x03 <<  \
                                            PMIC_RAIL_SEL_3_VCCA_GRP_SEL_SHIFT)
 #define PMIC_RAIL_SEL_3_VMON1_GRP_SEL_MASK          (uint8_t)(0x03 <<  \
                                            PMIC_RAIL_SEL_3_VMON1_GRP_SEL_SHIFT)
@@ -731,7 +747,6 @@ extern "C" {
                                      (uint8_t)(0x01 <<              \
                                      PMIC_STAT_VMON_VMON1_OV_STAT_SHIFT)
 
-
 /*!
  * \brief  PMIC Thermal status for die bit masks
  */
@@ -809,11 +824,9 @@ extern "C" {
 /*!
  * \brief  PMIC Thermal warning and shutdown threshold levels bit masks
  */
-#define PMIC_CONFIG_1_TWARN_LEVEL_MASK                              \
-                                             (uint8_t)(0x01 <<      \
+#define PMIC_CONFIG_1_TWARN_LEVEL_MASK           (uint8_t)(0x01 <<  \
                                              PMIC_CONFIG_1_TWARN_LEVEL_SHIFT)
-#define PMIC_CONFIG_1_TSD_ORD_LEVEL_MASK                            \
-                                             (uint8_t)(0x01 <<      \
+#define PMIC_CONFIG_1_TSD_ORD_LEVEL_MASK         (uint8_t)(0x01 <<  \
                                              PMIC_CONFIG_1_TSD_ORD_LEVEL_SHIFT)
 
 /*!
@@ -825,7 +838,7 @@ extern "C" {
                                            PMIC_BUCK_RESET_BUCK4_RESET_SHIFT)
 #define PMIC_BUCK_RESET_BUCK3_RESET_MASK         (uint8_t)(0x01 <<  \
                                            PMIC_BUCK_RESET_BUCK3_RESET_SHIFT)
-#define PMIC_BUCK_RESET_BUCK2_RESET_MASK          (uint8_t)(0x01 <<  \
+#define PMIC_BUCK_RESET_BUCK2_RESET_MASK         (uint8_t)(0x01 <<  \
                                            PMIC_BUCK_RESET_BUCK2_RESET_SHIFT)
 #define PMIC_BUCK_RESET_BUCK1_RESET_MASK         (uint8_t)(0x01 <<  \
                                            PMIC_BUCK_RESET_BUCK1_RESET_SHIFT)
@@ -833,13 +846,13 @@ extern "C" {
 /*!
  * \brief  PMIC BUCK frequency selection bit masks
  */
-#define PMIC_LP8764X_BUCK4_FREQ_SEL_MASK         (uint8_t)(0x03 <<  \
+#define PMIC_LP8764X_BUCK4_FREQ_SEL_MASK          (uint8_t)(0x03 <<  \
                                            PMIC_LP8764X_BUCK4_FREQ_SEL_SHIFT)
-#define PMIC_LP8764X_BUCK3_FREQ_SEL_MASK         (uint8_t)(0x03 <<  \
+#define PMIC_LP8764X_BUCK3_FREQ_SEL_MASK          (uint8_t)(0x03 <<  \
                                            PMIC_LP8764X_BUCK3_FREQ_SEL_SHIFT)
-#define PMIC_LP8764X_BUCK2_FREQ_SEL_MASK         (uint8_t)(0x03 <<  \
+#define PMIC_LP8764X_BUCK2_FREQ_SEL_MASK          (uint8_t)(0x03 <<  \
                                            PMIC_LP8764X_BUCK2_FREQ_SEL_SHIFT)
-#define PMIC_LP8764X_BUCK1_FREQ_SEL_MASK         (uint8_t)(0x03 <<  \
+#define PMIC_LP8764X_BUCK1_FREQ_SEL_MASK          (uint8_t)(0x03 <<  \
                                            PMIC_LP8764X_BUCK1_FREQ_SEL_SHIFT)
 #define PMIC_TPS6594X_BUCK5_FREQ_SEL_MASK         (uint8_t)(0x01 <<  \
                                            PMIC_TPS6594X_BUCK5_FREQ_SEL_SHIFT)
@@ -855,12 +868,32 @@ extern "C" {
 /*!
  * \brief  PMIC LDO residual voltage bit masks
  */
-#define PMIC_LDO_RV_TIMEOUT_REG_LDO2_4_RV_TIMEOUT_MASK      \
+#define PMIC_LDO_RV_TIMEOUT_REG_LDO2_4_RV_TIMEOUT_MASK        \
                              (uint8_t)(0x0F <<                \
                              PMIC_LDO_RV_TIMEOUT_REG_LDO2_4_RV_TIMEOUT_SHIFT)
-#define PMIC_LDO_RV_TIMEOUT_REG_LDO1_3_RV_TIMEOUT_MASK      \
+#define PMIC_LDO_RV_TIMEOUT_REG_LDO1_3_RV_TIMEOUT_MASK        \
                              (uint8_t)(0x0F <<                \
                              PMIC_LDO_RV_TIMEOUT_REG_LDO1_3_RV_TIMEOUT_SHIFT)
+
+/*!
+ * \brief  PMIC FSM TRIG bit fields masks
+ */
+#define PMIC_FSM_TRIG_SEL_1_SEVERE_ERR_TRIG_MASK            \
+                             (uint8_t)(0x03 <<              \
+                             PMIC_FSM_TRIG_SEL_1_SEVERE_ERR_TRIG_SHIFT)
+#define PMIC_FSM_TRIG_SEL_1_OTHER_RAIL_TRIG_MASK            \
+                             (uint8_t)(0x03 <<              \
+                             PMIC_FSM_TRIG_SEL_1_OTHER_RAIL_TRIG_SHIFT)
+#define PMIC_FSM_TRIG_SEL_1_SOC_RAIL_TRIG_MASK              \
+                             (uint8_t)(0x03F <<             \
+                             PMIC_FSM_TRIG_SEL_1_SOC_RAIL_TRIG_SHIFT)
+#define PMIC_FSM_TRIG_SEL_1_MCU_RAIL_TRIG_MASK              \
+                             (uint8_t)(0x03 <<              \
+                             PMIC_FSM_TRIG_SEL_1_MCU_RAIL_TRIG_SHIFT)
+#define PMIC_FSM_TRIG_SEL_2_MODERATE_ERR_TRIG_MASK          \
+                             (uint8_t)(0x03 <<              \
+                             PMIC_FSM_TRIG_SEL_2_MODERATE_ERR_TRIG_SHIFT)
+
 /*!
  * \brief  PMIC power VSET Range Values
  */
@@ -886,45 +919,45 @@ extern "C" {
 /**
  * \brief   PMIC power resource details object structure
  *
- * \param ctrlRegAddr          Control Register address of the power resources
+ * \param ctrlRegAddr           Control Register address of the power resources
  *
- * \param configRegAddr        Configuration Register address of the power
- *                             resources
+ * \param configRegAddr         Configuration Register address of the power
+ *                              resources
  *
- * \param vout1RegAddr         Register address of the power resource to set
- *                             the Voltage when output voltage register is
- *                             selected as VOUT1
+ * \param vout1RegAddr          Register address of the power resource to set
+ *                              the Voltage when output voltage register is
+ *                              selected as VOUT1
  *
- * \param vout2RegAddr         Register address of the power resource to set
- *                             the Voltage when output voltage register is
- *                             selected as VOUT2
+ * \param vout2RegAddr          Register address of the power resource to set
+ *                              the Voltage when output voltage register is
+ *                              selected as VOUT2
  *
- * \param pgWindowRegAddr      Register address of the power resource to
- *                             configure PowerGood Window configuration values.
+ * \param pgWindowRegAddr       Register address of the power resource to
+ *                              configure PowerGood Window configuration values.
  *
- * \param irqRegAddr           Interrupt masking/unmasking register address of
- *                             the power resource
+ * \param irqRegAddr            Interrupt masking/unmasking register address of
+ *                              the power resource
  *
- * \param statusRegAddr        Status Register address of the power resource
- *                             which indicates when output volatage is above
- *                             over volatge, below under voltage and above
- *                             current limit level
+ * \param statusRegAddr         Status Register address of the power resource
+ *                              which indicates when output volatage is above
+ *                              over volatge, below under voltage and above
+ *                              current limit level
  *
- * \param railGrpRegAddr       Rail group selection Register address of the
- *                             power resources
+ * \param railGrpRegAddr        Rail group selection Register address of the
+ *                              power resources
  *
- * \param railGrpBitShiftVal   Shift bits for the rail group selection of
- *                             the power resources
+ * \param railGrpBitShiftVal    Shift bits for the rail group selection of
+ *                              the power resources
  *
- * \param ldoRvTimeOutRegAddr  Residual voltage timeout register address of
- *                             the LDO power regulator.
+ * \param ldoRvTimeOutRegAddr   Residual voltage timeout register address of
+ *                              the LDO power regulator.
  *
  * \param ldoRvTimeOutBitShiftVal
- *                             Shift bits for the Residual voltage timeout for
- *                             the LDO power regulator.
+ *                              Shift bits for the Residual voltage timeout for
+ *                              the LDO power regulator.
  *
- * \param buckFreqBitShiftVal  Shift bits for the buck frequency of the power
- *                             buck regulator.
+ * \param buckFreqBitShiftVal   Shift bits for the buck frequency of the power
+ *                              buck regulator.
  *
  */
 typedef struct Pmic_powerResourceRegCfg_s
@@ -934,14 +967,45 @@ typedef struct Pmic_powerResourceRegCfg_s
     uint8_t vout1RegAddr;
     uint8_t vout2RegAddr;
     uint8_t pgWindowRegAddr;
-    uint8_t irqRegAddr;
+    uint8_t irqNumber;
     uint8_t statusRegAddr;
     uint8_t railGrpRegAddr;
     uint8_t railGrpBitShiftVal;
     uint8_t ldoRvTimeOutRegAddr;
     uint8_t ldoRvTimeOutBitShiftVal;
     uint8_t buckFreqBitShiftVal;
+    uint8_t iLimStatBitShift;
+    uint8_t uvStatBitShift;
+    uint8_t ovStatBitShift;
 }Pmic_powerRsrcRegCfg_t;
+
+/**
+ * \brief   PMIC power resource details object structure
+ *
+ * \param regAddr          Register address of the Pgood sources.
+ *
+ * \param maskValue        Register mask value for the Pgood sources.
+ *
+ * \param shiftValue         Shift bits for the Pgood sources.
+ *
+ *
+ */
+typedef struct Pmic_powerPgoodSrcRegCfg_s
+{
+    uint8_t regAddr;
+    uint8_t shiftValue;
+}Pmic_powerPgoodSrcRegCfg_t;
+
+/**
+ * \brief   PMIC power interrupts Numbers
+ *
+ * \param inqNum         Interrupt number for respective interrupt
+ */
+typedef struct Pmic_powerIntCfg_s
+{
+    uint8_t irqNum;
+
+}Pmic_powerIntCfg_t;
 
 /*==========================================================================*/
 /*                         Function Declarations                            */
@@ -1003,7 +1067,7 @@ int32_t Pmic_powerLdoConvertVoltage2VSetVal(uint16_t  millivolt,
  *          when the selected voltage monitoring range for VMON is
  *          PMIC_LP8764X_VMON_RANGE_3V35_5V
  */
-int32_t Pmic_powerVmonRange1ConvertVoltage2VSetVal(uint16_t millivolt,
+int32_t Pmic_powerVmonRange1ConvertVoltage2VSetVal(uint16_t  millivolt,
                                                    uint16_t *pBaseMillivolt,
                                                    uint8_t  *pMillivoltStep,
                                                    uint8_t  *pBaseVoutCode);

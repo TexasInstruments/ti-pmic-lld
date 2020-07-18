@@ -76,7 +76,7 @@ extern "C" {
  *  @{
  */
 #define PMIC_LP8764X_POWER_SOURCE_VCCA     \
-               ((uint16_t)((PMIC_LP8764X_POWER_RESOURCE_TYPE_VCCA << 8) | 0x0))
+               ((uint16_t) ((PMIC_LP8764X_POWER_RESOURCE_TYPE_VCCA << 8) | 0x0))
 #define PMIC_LP8764X_REGULATOR_BUCK1       \
                ((uint16_t) ((PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK << 8) | 0x1))
 #define PMIC_LP8764X_REGULATOR_BUCK2       \
@@ -315,7 +315,6 @@ extern "C" {
 #define PMIC_LP8764X_PG_OV_UV_THRESHOLD_LVL_100_OR_10     (7U)
 /*  @} */
 
-
 /**
  *  \anchor Pmic_LP8764x_Power_Rail_Sel
  *  \name   PMIC Rail group selection for all power resources.
@@ -331,6 +330,267 @@ extern "C" {
 /** \brief Used to select rail group as other rail group */
 #define PMIC_LP8764X_POWER_RAIL_SEL_OTHER                 (0x3U)
 /* @} */
+
+/**
+ *  \anchor Pmic_Lp8764xHera_Pgood_SourceType
+ *  \name   PMIC Power-Good source Type for HERA LP8764x
+ *
+ *  @{
+ */
+#define PMIC_LP8764X_PGOOD_SOURCE_TYPE_VCCA              (0U)
+#define PMIC_LP8764X_PGOOD_SOURCE_TYPE_BUCK              (1U)
+#define PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT           (2U)
+#define PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC       (3U)
+#define PMIC_LP8764X_PGOOD_SOURCE_TYPE_TDIE              (4U)
+/* LDO type is not supported by HERA PMIC */
+#define PMIC_LP8764X_PGOOD_SOURCE_TYPE_VMON              (6U)
+/*  @} */
+
+/**
+ *  \anchor Pmic_Lp8764xHera_Pgood_Source
+ *  \name   PMIC  Power-Good sources for HERA LP8764x
+ *
+ *  @{
+ */
+#define PMIC_LP8764X_PGOOD_SOURCE_VCCA     \
+            ((uint16_t) ((PMIC_LP8764X_PGOOD_SOURCE_TYPE_VCCA  << 8) | 0U))
+#define PMIC_LP8764X_PGOOD_SOURCE_BUCK1     \
+            ((uint16_t) ((PMIC_LP8764X_PGOOD_SOURCE_TYPE_BUCK  << 8) | 1U))
+#define PMIC_LP8764X_PGOOD_SOURCE_BUCK2     \
+            ((uint16_t) ((PMIC_LP8764X_PGOOD_SOURCE_TYPE_BUCK  << 8) | 2U))
+#define PMIC_LP8764X_PGOOD_SOURCE_BUCK3     \
+            ((uint16_t) ((PMIC_LP8764X_PGOOD_SOURCE_TYPE_BUCK  << 8) | 3U))
+#define PMIC_LP8764X_PGOOD_SOURCE_BUCK4     \
+            ((uint16_t) ((PMIC_LP8764X_PGOOD_SOURCE_TYPE_BUCK  << 8) | 4U))
+#define PMIC_LP8764X_PGOOD_SOURCE_NRSTOUT      \
+            ((uint16_t) ((PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT   << 8) | 5U))
+#define PMIC_LP8764X_PGOOD_SOURCE_NRSTOUT_SOC      \
+            ((uint16_t) ((PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC  << 8) | 6U))
+#define PMIC_LP8764X_PGOOD_SOURCE_TDIE      \
+            ((uint16_t) ((PMIC_LP8764X_PGOOD_SOURCE_TYPE_TDIE   << 8) | 7U))
+#define PMIC_LP8764X_PGOOD_SOURCE_VMON1      \
+            ((uint16_t) ((PMIC_LP8764X_PGOOD_SOURCE_TYPE_VMON  << 8) | 8U))
+#define PMIC_LP8764X_PGOOD_SOURCE_VMON2      \
+            ((uint16_t) ((PMIC_LP8764X_PGOOD_SOURCE_TYPE_VMON  << 8) | 9U))
+/*  @} */
+
+/**
+ *  \anchor Pmic_LP8764x_Power_Good_Window
+ *  \name Type of voltage monitoring for PGOOD signal:
+ *
+ *  @{
+ */
+/** \brief Only undervoltage is monitored */
+#define PMIC_LP8764X_POWER_GOOD_UV_MONITOR_ENABLE         (0x0U)
+/** \brief Both undervoltage and overvoltage are monitored */
+#define PMIC_LP8764X_POWER_GOOD_UV_OV_MONITOR_ENABLE      (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_LP8764x_Power_Good_Polarity
+ *  \name PGOOD signal polarity
+ *
+ *  @{
+ */
+/** \brief PGOOD signal is high when monitored inputs are valid */
+#define PMIC_LP8764X_POWER_PGOOD_POL_HIGH                 (0x0U)
+/** \brief PGOOD signal is low when monitored inputs are valid */
+#define PMIC_LP8764X_POWER_PGOOD_POL_LOW                  (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_LP8764x_Power_Good_Nrstout_Soc
+ *  \name PGOOD signal source control from nRSTOUT_SOC pin
+ *
+ *  @{
+ */
+/** \brief Signal is Masked */
+#define PMIC_LP8764X_POWER_PGOOD_SEL_NRSTOUT_SOC_MASKED   (0x0U)
+/** \brief nRSTOUT_SOC pin low state forces PGOOD signal to low */
+#define PMIC_LP8764X_POWER_PGOOD_SEL_NRSTOUT_SOC          (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_LP8764x_Power_Good_Nrstout
+ *  \name PGOOD signal source control from nRSTOUT pin
+ *
+ *  @{
+ */
+/** \brief Signal is Masked */
+#define PMIC_LP8764X_POWER_PGOOD_SEL_NRSTOUT_MASKED       (0x0U)
+/** \brief nRSTOUT pin low state forces PGOOD signal to low */
+#define PMIC_LP8764X_POWER_PGOOD_SEL_NRSTOUT              (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_LP8764x_Power_Good_Thermal_Warn
+ *  \name PGOOD signal source control from thermal warning
+ *
+ *  @{
+ */
+/** \brief Signal is Masked */
+#define PMIC_LP8764X_POWER_PGOOD_SEL_TDIE_WARN_MASKED     (0x0U)
+/** \brief Thermal warning affecting to PGOOD signal */
+#define PMIC_LP8764X_POWER_PGOOD_SEL_TDIE_WARN            (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_LP8764x_Power_Good_Vcca_Vmon
+ *  \name PGOOD signal source control from VCCA monitoring
+ *
+ *  @{
+ */
+/** \brief Signal is Masked */
+#define PMIC_LP8764X_POWER_PGOOD_SEL_VCCA_VMON_DISABLE         (0x0U)
+/** \brief VCCA/VMON OV/UV threshold affecting PGOOD signal */
+#define PMIC_LP8764X_POWER_PGOOD_SEL_VCCA_VMON_ENABLE          (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_LP8764x_Power_Good_Buck_Signal
+ *  \name PGOOD signal source control for BUCK and LDO monitoring
+ *
+ *  @{
+ */
+/** \brief Signal is Masked */
+#define PMIC_LP8764X_POWER_PGOOD_SEL_SRC_MASKED           (0x0U)
+/** \brief Powergood threshold voltage */
+#define PMIC_LP8764X_POWER_PGOOD_SEL_SRC_VOLTAGE          (0x1U)
+/** \brief Powergood threshold voltage AND current limit */
+#define PMIC_LP8764X_POWER_PGOOD_SEL_SRC_VOLTAGE_CURRENT  (0x2U)
+/* @} */
+
+/**
+ *  \anchor Pmic_LP8764x_Power_Current_Status
+ *  \name Status whether the output current is above/below current limit level
+ *
+ *  @{
+ */
+/** \brief Status indicating that output current is above current limit
+           level. */
+#define PMIC_LP8764X_POWER_CURRENT_LIMIT_STATUS_ABOVE_LIMIT         (0x0U)
+/** \brief Status indicating that output current is below current limit
+           level. */
+#define PMIC_LP8764X_POWER_CURRENT_LIMIT_STATUS_BELOW_LIMIT          (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_LP8764x_Regulator_Under_Voltage_Status
+ *  \name Status whether the output voltage is above/below voltage threshold
+ *        for LDO and BUCK
+ *
+ *  @{
+ */
+/** \brief Status indicating that output voltage is above under-voltage
+           threshold
+*/
+#define PMIC_LP8764X_REGULATOR_OUTPUT_UNDER_VOLTAGE_STATUS_ABOVE_UV       (0x0U)
+/** \brief Status indicating that output voltage is below under-voltage
+           threshold
+*/
+#define PMIC_LP8764X_REGULATOR_OUTPUT_UNDER_VOLTAGE_STATUS_BELOW_UV       (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_LP8764x_Vcca_Vmon_Under_Voltage_Status
+ *  \name Status whether the input voltage is above/below under-voltage level
+ *        for VCCA/VMON
+ *
+ *  @{
+ */
+/** \brief Status indicating that input voltage is above under-voltage
+level */
+#define PMIC_LP8764X_VCCA_VMON_INPUT_UNDER_VOLTAGE_STATUS_ABOVE_UV        (0x0U)
+/** \brief Status indicating that input voltage is below under-voltage
+level */
+#define PMIC_LP8764X_VCCA_VMON_INPUT_UNDER_VOLTAGE_STATUS_BELOW_UV        (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_LP8764x_Regulator_Over_Voltage_Status
+ *  \name Status whether the output voltage is above/below voltage threshold
+ *        for LDO and BUCK
+ *
+ *  @{
+ */
+/** \brief Status indicating that output voltage is above over-voltage
+           threshold
+*/
+#define PMIC_LP8764X_REGULATOR_OUTPUT_OVER_VOLTAGE_STATUS_ABOVE_OV       (0x0U)
+/** \brief Status indicating that output voltage is below over-voltage
+           threshold
+*/
+#define PMIC_LP8764X_REGULATOR_OUTPUT_OVER_VOLTAGE_STATUS_BELOW_OV       (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_LP8764x_Vcca_Vmon_Over_Voltage_Status
+ *  \name Status whether the input voltage is above/below over-voltage level
+ *        for VCCA/VMON
+ *
+ *  @{
+ */
+/** \brief Status indicating that input voltage is above over-voltage
+level */
+#define PMIC_LP8764X_VCCA_VMON_INPUT_OVER_VOLTAGE_STATUS_ABOVE_OV       (0x0U)
+/** \brief Status indicating that input voltage is below over-voltage
+level */
+#define PMIC_LP8764X_VCCA_VMON_INPUT_OVER_VOLTAGE_STATUS_BELOW_OV       (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_LP8764x_Vcca_Voltage_Status
+ *  \name Status whether the voltage is above/below over-voltage protection
+ *        level for VCCA
+ *
+ *  @{
+ */
+/** \brief Status indicating that voltage is above over-voltage protection
+level */
+#define PMIC_LP8764X_VCCA_OVER_VOLTAGE_LVL_STATUS_ABOVE_OV       (0x0U)
+/** \brief Status indicating that voltage is below over-voltage protection
+level */
+#define PMIC_LP8764X_VCCA_OVER_VOLTAGE_LVL_STATUS_BELOW_OV       (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_LP8764x_Power_Thermal_Warn_Level
+ *  \name   PMIC Thermal warning threshold level.
+ *
+ *  @{
+ */
+/** \brief Used to set the Thermal warning threshold level to 120 Celsius */
+#define PMIC_LP8764X_THERMAL_TEMP_WARN_120C       (0U)
+/** \brief Used to set the Thermal warning threshold level to 130 Celsius */
+#define PMIC_LP8764X_THERMAL_TEMP_WARN_130C       (1U)
+/*  @} */
+
+/**
+ *  \anchor Pmic_LP8764x_PowerInterruptType
+ *  \name   PMIC Power Interrupt selection
+ *
+ *  @{
+ */
+#define PMIC_LP8764X_POWER_OV_INT          (0U)
+#define PMIC_LP8764X_POWER_UV_INT          (1U)
+#define PMIC_LP8764X_POWER_ILIM_INT        (3U)
+/*  @} */
+
+/**
+ *  \anchor Pmic_LP8764x_PowerInterruptCommonType
+ *  \name   PMIC Power Interrupt selection
+ *
+ *  @{
+ */
+#define PMIC_LP8764X_POWER_INTERRUPT_TWARN                      (0U)
+#define PMIC_LP8764X_POWER_INTERRUPT_NRSTOUT_READBACK           (1U)
+#define PMIC_LP8764X_POWER_INTERRUPT_SOC_PWR_ERR                (2U)
+#define PMIC_LP8764X_POWER_INTERRUPT_MCU_PWR_ERR                (3U)
+#define PMIC_LP8764X_POWER_INTERRUPT_ORD_SHUTDOWN               (4U)
+#define PMIC_LP8764X_POWER_INTERRUPT_IMM_SHUTDOWN               (5U)
+#define PMIC_LP8764X_POWER_INTERRUPT_NRSTOUT_SOC_READBACK       (6U)
+#define PMIC_LP8764X_POWER_INTERRUPT_EN_DRV_READBACK            (7U)
+/*  @} */
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */

@@ -69,7 +69,6 @@ extern "C" {
  */
 #define PMIC_HERA_DEV_REV_ID                (0x07U)
 
-
 /*!
  * \brief: PMIC Recovery Counter Control and Status Registers
  */
@@ -82,12 +81,22 @@ extern "C" {
 #define PMIC_STARTUP_CTRL_REGADDR           (0xC3U)
 
 /*!
- * \brief  PMIC RTC Scratchpad register Addresses
+ * \brief  PMIC invalid register address
  */
-#define PMIC_RTC_SCRATCH_PAD_REG_1_REGADDR             (0xC9U)
-#define PMIC_RTC_SCRATCH_PAD_REG_2_REGADDR             (0xCAU)
-#define PMIC_RTC_SCRATCH_PAD_REG_3_REGADDR             (0xCBU)
-#define PMIC_RTC_SCRATCH_PAD_REG_4_REGADDR             (0xCCU)
+#define PMIC_INVALID_REGADDR                (0xFFU)
+
+/*!
+ * \brief  PMIC invalid BIT SHIFT value
+ */
+#define PMIC_INVALID_BIT_SHIFT              (0xFFU)
+
+/*!
+ * \brief  PMIC Scratchpad register Addresses
+ */
+#define PMIC_SCRATCH_PAD_REG_1_REGADDR             (0xC9U)
+#define PMIC_SCRATCH_PAD_REG_2_REGADDR             (0xCAU)
+#define PMIC_SCRATCH_PAD_REG_3_REGADDR             (0xCBU)
+#define PMIC_SCRATCH_PAD_REG_4_REGADDR             (0xCCU)
 
 /*!
  * \brief: PMIC Recovery Counter Register Shift and Mask Values
@@ -144,7 +153,6 @@ extern "C" {
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
-
 
 /*==========================================================================*/
 /*                         Function Declarations                            */
