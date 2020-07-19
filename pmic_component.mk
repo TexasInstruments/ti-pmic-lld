@@ -148,6 +148,24 @@ export pmic_gpio_testapp_SBL_APPIMAGEGEN
 pmic_EXAMPLE_LIST += pmic_gpio_testapp
 
 #
+# POWER  test
+#
+export pmic_power_testapp_COMP_LIST = pmic_power_testapp
+pmic_power_testapp_RELPATH = ti/drv/pmic/test/power_test
+pmic_power_testapp_PATH = $(PDK_PMIC_COMP_PATH)/test/power_test
+export pmic_power_testapp_BOARD_DEPENDENCY = yes
+export pmic_power_testapp_CORE_DEPENDENCY = no
+export pmic_power_testapp_MAKEFILE = -f makefile IS_BAREMETAL=yes
+pmic_power_testapp_PKG_LIST = pmic_power_testapp
+pmic_power_testapp_INCLUDE = $(pmic_power_testapp_PATH)
+export pmic_power_testapp_BOARDLIST = $(drvpmic_BOARDLIST)
+export pmic_power_testapp_$(SOC)_CORELIST = $(drvpmic_app_$(SOC)_CORELIST)
+pmic_power_testapp_SBL_APPIMAGEGEN = yes
+export pmic_power_testapp_SBL_APPIMAGEGEN
+
+pmic_EXAMPLE_LIST += pmic_power_testapp
+
+#
 # Export Libraries and Apps to Build Env
 #
 export pmic_LIB_LIST
