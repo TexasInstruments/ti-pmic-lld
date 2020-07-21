@@ -94,6 +94,7 @@
 #include <pmic_rtc.h>
 #include <pmic_irq.h>
 #include <pmic_power.h>
+#include <pmic_wdg.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -114,68 +115,69 @@ extern "C" {
 #define PMIC_ST_SUCCESS                                 (0)
 /** \brief Error Code for Invalid input Handle */
 #define PMIC_ST_ERR_INV_HANDLE                          (-((int32_t)1))
-/** \brief Error Code for Invalid Voltage Value */
-#define PMIC_ST_ERR_INV_VOLTAGE                         (-((int32_t)2))
-/** \brief Error Code for Invalid Power resource Value */
-#define PMIC_ST_ERR_INV_REGULATOR                       (-((int32_t)3))
-/** \brief Error Code for I2C Communication Fail */
-#define PMIC_ST_ERR_I2C_COMM_FAIL                       (-((int32_t)4))
-/** \brief Error Code for SPI Communication Fail */
-#define PMIC_ST_ERR_SPI_COMM_FAIL                       (-((int32_t)5))
-/** \brief Error Code for Interface Init Fail */
-#define PMIC_ST_ERR_COMM_INTF_INIT_FAIL                 (-((int32_t)6))
-/** \brief Error Code for Invalid input GPIO PIN */
-#define PMIC_ST_ERR_INV_GPIO                            (-((int32_t)7))
-/** \brief Error Code for Invalid GPIO Functionality */
-#define PMIC_ST_ERR_INV_GPIO_FUNC                       (-((int32_t)8))
-/** \brief Error Code for input GPIO handle is invalid */
-#define PMIC_ST_ERR_INV_GPIO_LINE_PARAMS                (-((int32_t)9))
 /** \brief Error Code when input Param is NULL */
-#define PMIC_ST_ERR_NULL_PARAM                          (-((int32_t)10))
+#define PMIC_ST_ERR_NULL_PARAM                          (-((int32_t)2))
 /** \brief Error Code for Invalid input Param */
-#define PMIC_ST_ERR_INV_PARAM                           (-((int32_t)11))
-/** \brief Error Code for input ESM TargetID is invalid */
-#define PMIC_ST_ERR_INV_ESM_TARGET                      (-((int32_t)12))
-/** \brief Error Code for ESM Operation Mode is invalid */
-#define PMIC_ST_ERR_INV_ESM_MODE                        (-((int32_t)13))
-/** \brief Error Code for Interface Selected is not working properly */
-#define PMIC_ST_ERR_INTF_SETUP_FAILED                   (-((int32_t)14))
+#define PMIC_ST_ERR_INV_PARAM                           (-((int32_t)3))
 /** \brief Error Code for Invalid PMIC Device */
-#define PMIC_ST_ERR_INV_DEVICE                          (-((int32_t)15))
-/** \brief Error Code for Invalid Pin for GPIO Configuration */
-#define PMIC_ST_ERR_PIN_NOT_GPIO                        (-((int32_t)16))
-/** \brief Error Code for Invalid Watchdog Configuration Mode */
-#define PMIC_ST_ERR_INV_WDG_MODE                        (-((int32_t)17))
-/** \brief Error Code for Watchdog Window 1 0r 2 duration */
-#define PMIC_ST_ERR_INV_WDG_WINDOW                      (-((int32_t)18))
-/** \brief Error Code for Invalid Temperature Threshold value */
-#define PMIC_ST_ERR_INV_TEMP_THRESHOLD                  (-((int32_t)19))
-/** \brief Error Code for Invalid Power Good Threshold Value */
-#define PMIC_ST_ERR_INV_PGOOD_LEVEL                     (-((int32_t)20))
-/** \brief Error Code for Invalid Interrupt */
-#define PMIC_ST_ERR_INV_INT                             (-((int32_t)21))
-/** \brief Error Code when Interrupts Clear is failed */
-#define PMIC_ST_ERR_CLEAR_INT_FAILED                    (-((int32_t)22))
-/** \brief Error Code if Pmic_init() function called before PMIC driver is
- *         initialized */
-#define PMIC_ST_ERR_UNINIT                              (-((int32_t)23))
-/** \brief Error Code for IO data failure when CRC is enabled */
-#define PMIC_ST_ERR_DATA_IO_CRC                         (-((int32_t)24))
+#define PMIC_ST_ERR_INV_DEVICE                          (-((int32_t)4))
 /** \brief Error Code when input Function pointer is NULL */
-#define PMIC_ST_ERR_NULL_FPTR                           (-((int32_t)25))
-/** \brief Error Code for Invalid Time */
-#define PMIC_ST_ERR_INV_TIME                            (-((int32_t)26))
-/** \brief Error Code for Invalid Date */
-#define PMIC_ST_ERR_INV_DATE                            (-((int32_t)27))
-/** \brief Error Code for RTC Stop command failure */
-#define PMIC_ST_ERR_RTC_STOP_FAIL                       (-((int32_t)28))
-/** \brief Error Code for Invalid Watchdog Answer Count */
-#define PMIC_ST_ERR_INV_ANSWER_COUNT                    (-((int32_t)29))
+#define PMIC_ST_ERR_NULL_FPTR                           (-((int32_t)5))
 /** \brief Error Code for Invalid PMIC Subsystem */
-#define PMIC_ST_ERR_INV_SUBSYSTEM                       (-((int32_t)30))
+#define PMIC_ST_ERR_INV_SUBSYSTEM                       (-((int32_t)6))
 /** \brief Error Code for Insufficient input configuration params for PMIC
  *         Device Initialization */
-#define PMIC_ST_ERR_INSUFFICIENT_CFG                    (-((int32_t)31))
+#define PMIC_ST_ERR_INSUFFICIENT_CFG                    (-((int32_t)7))
+/** \brief Error Code for I2C Communication Fail */
+#define PMIC_ST_ERR_I2C_COMM_FAIL                       (-((int32_t)8))
+/** \brief Error Code for SPI Communication Fail */
+#define PMIC_ST_ERR_SPI_COMM_FAIL                       (-((int32_t)9))
+/** \brief Error Code for IO data failure when CRC is enabled */
+#define PMIC_ST_ERR_DATA_IO_CRC                         (-((int32_t)10))
+/** \brief Error Code for Interface Selected is not working properly */
+#define PMIC_ST_ERR_INTF_SETUP_FAILED                   (-((int32_t)11))
+/** \brief Error Code for Interface Init Fail */
+#define PMIC_ST_ERR_COMM_INTF_INIT_FAIL                 (-((int32_t)12))
+/** \brief Error Code if Pmic_init() function called before PMIC driver is
+ *         initialized */
+#define PMIC_ST_ERR_UNINIT                              (-((int32_t)13))
+/** \brief Error Code for Invalid Voltage Value */
+#define PMIC_ST_ERR_INV_VOLTAGE                         (-((int32_t)14))
+/** \brief Error Code for Invalid Power resource Value */
+#define PMIC_ST_ERR_INV_REGULATOR                       (-((int32_t)15))
+/** \brief Error Code for Invalid Power Good Threshold Value */
+#define PMIC_ST_ERR_INV_PGOOD_LEVEL                     (-((int32_t)16))
+/** \brief Error Code for Invalid Temperature Threshold value */
+#define PMIC_ST_ERR_INV_TEMP_THRESHOLD                  (-((int32_t)17))
+/** \brief Error Code for Invalid input GPIO PIN */
+#define PMIC_ST_ERR_INV_GPIO                            (-((int32_t)18))
+/** \brief Error Code for Invalid GPIO Functionality */
+#define PMIC_ST_ERR_INV_GPIO_FUNC                       (-((int32_t)19))
+/** \brief Error Code for input GPIO handle is invalid */
+#define PMIC_ST_ERR_INV_GPIO_LINE_PARAMS                (-((int32_t)20))
+/** \brief Error Code for Invalid Pin for GPIO Configuration */
+#define PMIC_ST_ERR_PIN_NOT_GPIO                        (-((int32_t)21))
+/** \brief Error Code for Invalid Watchdog longwindow or Window-1
+ *         or Window-2 duration */
+#define PMIC_ST_ERR_INV_WDG_WINDOW                      (-((int32_t)22))
+/** \brief Error Code for Invalid Watchdog Answer */
+#define PMIC_ST_ERR_INV_WDG_ANSWER                      (-((int32_t)23))
+/** \brief Error Code for Watchdog early Answer */
+#define PMIC_ST_ERR_WDG_EARLY_ANSWER                    (-((int32_t)24))
+/** \brief Error Code for input ESM TargetID is invalid */
+#define PMIC_ST_ERR_INV_ESM_TARGET                      (-((int32_t)25))
+/** \brief Error Code for ESM Operation Mode is invalid */
+#define PMIC_ST_ERR_INV_ESM_MODE                        (-((int32_t)26))
+/** \brief Error Code for Invalid Interrupt */
+#define PMIC_ST_ERR_INV_INT                             (-((int32_t)27))
+/** \brief Error Code when Interrupts Clear is failed */
+#define PMIC_ST_ERR_CLEAR_INT_FAILED                    (-((int32_t)28))
+/** \brief Error Code for Invalid Time */
+#define PMIC_ST_ERR_INV_TIME                            (-((int32_t)29))
+/** \brief Error Code for Invalid Date */
+#define PMIC_ST_ERR_INV_DATE                            (-((int32_t)30))
+/** \brief Error Code for RTC Stop command failure */
+#define PMIC_ST_ERR_RTC_STOP_FAIL                       (-((int32_t)31))
 /** \brief Error Code for any other failures */
 #define PMIC_ST_ERR_FAIL                                (-((int32_t)32))
 /* @} */
