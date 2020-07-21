@@ -166,6 +166,24 @@ export pmic_power_testapp_SBL_APPIMAGEGEN
 pmic_EXAMPLE_LIST += pmic_power_testapp
 
 #
+# WDG  test
+#
+export pmic_wdg_testapp_COMP_LIST = pmic_wdg_testapp
+pmic_wdg_testapp_RELPATH = ti/drv/pmic/test/wdg_test
+pmic_wdg_testapp_PATH = $(PDK_PMIC_COMP_PATH)/test/wdg_test
+export pmic_wdg_testapp_BOARD_DEPENDENCY = yes
+export pmic_wdg_testapp_CORE_DEPENDENCY = no
+export pmic_wdg_testapp_MAKEFILE = -f makefile IS_BAREMETAL=yes
+pmic_wdg_testapp_PKG_LIST = pmic_rtc_testapp
+pmic_wdg_testapp_INCLUDE = $(pmic_wdg_testapp_PATH)
+export pmic_wdg_testapp_BOARDLIST = $(drvpmic_BOARDLIST)
+export pmic_wdg_testapp_$(SOC)_CORELIST = $(drvpmic_app_$(SOC)_CORELIST)
+pmic_wdg_testapp_SBL_APPIMAGEGEN = yes
+export pmic_wdg_testapp_SBL_APPIMAGEGEN
+
+pmic_EXAMPLE_LIST += pmic_wdg_testapp
+
+#
 # Export Libraries and Apps to Build Env
 #
 export pmic_LIB_LIST

@@ -457,8 +457,18 @@ int32_t test_pmic_regRead(Pmic_CoreHandle_t  *pmicCorehandle,
         if(PMIC_QA_INST == instType)
         {
             transaction.slaveAddress = pmicCorehandle->qaSlaveAddr;
-            ret = I2C_transfer((I2C_Handle)pmicCorehandle->pQACommHandle,
-                                &transaction);
+            if(PMIC_INTF_SINGLE_I2C == pmicCorehandle->commMode)
+            {
+                ret = I2C_transfer((I2C_Handle)
+                                   pmicCorehandle->pCommHandle,
+                                   &transaction);
+            }
+            if(PMIC_INTF_DUAL_I2C == pmicCorehandle->commMode)
+            {
+                ret = I2C_transfer((I2C_Handle)
+                                   pmicCorehandle->pQACommHandle,
+                                   &transaction);
+            }
             if(ret != I2C_STS_SUCCESS)
             {
                 return PMIC_ST_ERR_I2C_COMM_FAIL;
@@ -487,8 +497,18 @@ int32_t test_pmic_regRead(Pmic_CoreHandle_t  *pmicCorehandle,
         if(PMIC_QA_INST == instType)
         {
             transaction.slaveAddress = pmicCorehandle->qaSlaveAddr;
-            ret = I2C_transfer((I2C_Handle)pmicCorehandle->pQACommHandle,
-                                &transaction);
+            if(PMIC_INTF_SINGLE_I2C == pmicCorehandle->commMode)
+            {
+                ret = I2C_transfer((I2C_Handle)
+                                   pmicCorehandle->pCommHandle,
+                                   &transaction);
+            }
+            if(PMIC_INTF_DUAL_I2C == pmicCorehandle->commMode)
+            {
+                ret = I2C_transfer((I2C_Handle)
+                                   pmicCorehandle->pQACommHandle,
+                                   &transaction);
+            }
             if(ret != I2C_STS_SUCCESS)
             {
                 return PMIC_ST_ERR_I2C_COMM_FAIL;
@@ -574,9 +594,18 @@ int32_t test_pmic_regWrite(Pmic_CoreHandle_t  *pmicCorehandle,
         /* For WDOG QA I2C BUS */
         if(PMIC_QA_INST == instType)
         {
-            ret = I2C_transfer((I2C_Handle)
-                                pmicCorehandle->pQACommHandle,
-                                &transaction);
+            if(PMIC_INTF_SINGLE_I2C == pmicCorehandle->commMode)
+            {
+                ret = I2C_transfer((I2C_Handle)
+                                   pmicCorehandle->pCommHandle,
+                                   &transaction);
+            }
+            if(PMIC_INTF_DUAL_I2C == pmicCorehandle->commMode)
+            {
+                ret = I2C_transfer((I2C_Handle)
+                                   pmicCorehandle->pQACommHandle,
+                                   &transaction);
+            }
             if(ret != I2C_STS_SUCCESS)
             {
                 return PMIC_ST_ERR_I2C_COMM_FAIL;
@@ -776,7 +805,7 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
         {
             pmicConfigData->validParams |= PMIC_CFG_COMM_HANDLE_VALID_SHIFT;
             /* Update instance type to pmicConfigData */
-            pmicConfigData->instType = PMIC_QA_INST;
+            pmicConfigData->instType = PMIC_MAIN_INST;
             /* Get PMIC core Handle for Main Instance */
             pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
         }
@@ -816,7 +845,9 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             pmicConfigData->validParams |= PMIC_CFG_QACOMM_HANDLE_VALID_SHIFT;
-            /* Get PMIC core Handle for both Instances */
+            /* Update instance type to pmicConfigData */
+            pmicConfigData->instType = PMIC_QA_INST;
+            /* Get PMIC core Handle for QA Instances */
             pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
         }
 
