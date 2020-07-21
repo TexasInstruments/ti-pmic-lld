@@ -32,6 +32,8 @@
 #
 ifdef OS
 	RM = del
+	RMDIR = rmdir
+	MKDIR = mkdir
 	FixPath = $(subst /,\,$1)
 	unix_to_dos = $(subst /,\,$1)
 	OSP = windows
@@ -39,16 +41,19 @@ ifdef OS
 else
 	ifeq ($(shell uname), Linux)
 	RM = rm -f
+	RMDIR = rm -rf
+	MKDIR = mkdir -p
 	FixPath = $1
 	OSP = unix
 endif
 endif
 
 CC           =  gcc
-INC          = -Iinclude -I. -Iinclude/cfg/tps6594x/ \
-	       -I./src   -I./src/cfg/tps6594x
+INC          = -Iinclude -I. -Iinclude/cfg/tps6594x/ -Iinclude/cfg/lp8764x/ \
+	       -I./src   -I./src/cfg/tps6594x/  -I./src/cfg/lp8764x/
 CFLAGS       = -fPIC $(INC) -Wall
 LDFLAGS      = -shared
+LIB_DIR      = lib
 
 DEBUGFLAGS   = -O0 -g -D _DEBUG
 RELEASEFLAGS = -O2 -D NDEBUG
@@ -56,20 +61,21 @@ build ?= release
 
 ifeq ($(build), debug)
     CFLAGS += $(DEBUGFLAGS)
-    TARGET  = lib/pmic_lib_$(build).so
+    TARGET  = $(LIB_DIR)/pmic_lib_$(build).so
 endif
 
 ifeq ($(build), release)
     CFLAGS += $(RELEASEFLAGS)
-    TARGET  = lib/pmic_lib_$(build).so
+    TARGET  = $(LIB_DIR)/pmic_lib_$(build).so
 endif
 
 $(info $(OSP))
-SOURCES = src/pmic_core.c  src/pmic_io.c  src/pmic_gpio.c src/cfg/tps6594x/pmic_gpio_tps6594x.c  src/pmic_rtc.c
+SOURCES = src/pmic_core.c  src/pmic_io.c  src/pmic_gpio.c  src/cfg/tps6594x/pmic_gpio_tps6594x.c  src/pmic_rtc.c  src/pmic_irq_status.c src/cfg/lp8764x/pmic_gpio_lp8764x.c  src/pmic_power.c src/cfg/lp8764x/pmic_power_lp8764x.c  src/cfg/tps6594x/pmic_power_tps6594x.c  src/cfg/tps6594x/pmic_irq_tps6594x.c  src/cfg/lp8764x/pmic_irq_lp8764x.c
 OBJECTS = $(SOURCES:.c=.o)
 
 all: $(TARGET)
 $(TARGET): $(OBJECTS)
+	 $(call FixPath, $(MKDIR) $(LIB_DIR))
 	 $(call FixPath,$(CC) $(FLAGS) $(LDFLAGS)  -o $(TARGET) $(OBJECTS))
 	 $(call FixPath,${RM} ${OBJECTS})
 
@@ -91,3 +97,4 @@ help:
 	    @echo "    Default: Windows_NT"
 clean:
 	${RM} $(call FixPath, ${TARGET})
+	${RMDIR} $(call FixPath, $(LIB_DIR))
