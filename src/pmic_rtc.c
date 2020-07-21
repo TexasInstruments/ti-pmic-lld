@@ -2480,17 +2480,18 @@ int32_t  Pmic_getRtcStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
          pmicStatus = PMIC_ST_ERR_INSUFFICIENT_CFG;
     }
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+
         /* Checking RTC status */
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
                                             PMIC_RTC_STATUS_REGADDR,
                                             &regData);
-    }
 
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {

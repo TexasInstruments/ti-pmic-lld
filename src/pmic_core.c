@@ -291,14 +291,18 @@ int32_t Pmic_getRecoveryCntCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    /* Start Critical Section */
-    Pmic_criticalSectionStart(pPmicCoreHandle);
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
 
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_RECOV_CNT_REG_2_REGADDR,
-                                        &regVal);
-    /* Stop Critical Section */
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+        /* Start Critical Section */
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                            PMIC_RECOV_CNT_REG_2_REGADDR,
+                                            &regVal);
+        /* Stop Critical Section */
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
