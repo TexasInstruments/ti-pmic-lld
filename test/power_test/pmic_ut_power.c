@@ -51,683 +51,683 @@ static Pmic_Ut_Tests_t pmic_power_tests[] =
      *  testDesc
      */
     {
-        0,
+        7130,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for handle"
     },
     {
-        00,
+        7299,
         "Pmic_powerGetPwrResourceCfg : Parameter validation for handle"
     },
     {
-        1,
+        7131,
         "Pmic_powerSetPwrResourceCfg : Test Enable residual voltage checking"
     },
     {
-        2,
+        7132,
         "Pmic_powerSetPwrResourceCfg : Test Disable residual voltage checking"
     },
     {
-        3,
+        7133,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for Power Resource for rvCheckEn."
     },
     {
-        4,
+        7134,
         "Pmic_powerSetPwrResourceCfg : Test Enable buck pull down checking for Buck regulator"
     },
     {
-        5,
+        7135,
         "Pmic_powerSetPwrResourceCfg : Test Disable buck pull down checking for Buck regulator"
     },
     {
-        6,
+        7136,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for Power Resource for buckPullDownEn."
     },
     {
-        7,
+        7137,
         "Pmic_powerSetPwrResourceCfg : Test Enable the Voltage monitor."
     },
     {
-        8,
+        7138,
         "Pmic_powerSetPwrResourceCfg : Test Disable the Voltage monitor."
     },
     {
-        9,
+        7139,
         "Pmic_powerSetPwrResourceCfg :  Parameter validation for Power Resource for vmonEn."
     },
     {
-        10,
+        7143,
         "Pmic_powerSetPwrResourceCfg : Test Select output voltage register for buck as VOUT1."
     },
     {
-        11,
+        7144,
         "Pmic_powerSetPwrResourceCfg : Test Select output voltage register for buck as VOUT2."
     },
     {
-        12,
+        7145,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for Power Resource for buckVoutSel."
     },
     {
-        13,
+        7146,
         "Pmic_powerSetPwrResourceCfg : Test Select Auto Mode for BUCK"
     },
     {
-        14,
+        7147,
         "Pmic_powerSetPwrResourceCfg : Test Select PWM Mode for BUCK"
     },
     {
-        15,
+        7148,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for Power Resource for buckFpwmMode."
     },
     {
-        16,
+        7149,
         "Pmic_powerSetPwrResourceCfg : Test Select Multi phase with PWM Mode for BUCK"
     },
     {
-        17,
+        7150,
         "Pmic_powerSetPwrResourceCfg : Test Select AUTO Mode with Automatic phase adding and shedding for BUCK"
     },
     {
-        18,
+        7151,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for Power Resource for buckFpwmMpMode."
     },
     {
-        19,
+        7152,
         "Pmic_powerSetPwrResourceCfg : Test Disable the power regulator."
     },
     {
-        20,
+        7153,
         "Pmic_powerSetPwrResourceCfg : Test Enable the power regulator."
     },
     {
-        21,
+        7154,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for Power Resource for regulatorEn."
     },
     {
-        22,
+        7155,
         "Pmic_powerSetPwrResourceCfg : Test Switch peak current limit for BUCK regulator for 6.5Amp."
     },
     {
-        23,
+        7156,
         "Pmic_powerSetPwrResourceCfg : Test Switch peak current limit for BUCK regulator for 5.5Amp."
     },
     {
-        24,
+        7157,
         "Pmic_powerSetPwrResourceCfg : Test Switch peak current limit for BUCK regulator for 4.5Amp."
     },
     {
-        25,
+        7158,
         "Pmic_powerSetPwrResourceCfg : Test Switch peak current limit for BUCK regulator for 3.5Amp."
     },
     {
-        26,
+        7159,
         "Pmic_powerSetPwrResourceCfg : Test Switch peak current limit for BUCK regulator for 2.5Amp."
     },
     {
-        27,
+        7160,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for Power Resource for buckCurrentLimit."
     },
     {
-        28,
+        7161,
         "Pmic_powerSetPwrResourceCfg : Parameter range validation for buckCurrentLimit."
     },
     {
-        29,
+        7162,
         "Pmic_powerSetPwrResourceCfg : Test Output voltage slew rate for BUCK & VMON for 33MV."
     },
     {
-        30,
+        7163,
         "Pmic_powerSetPwrResourceCfg : Test Output voltage slew rate for BUCK & VMON for 20MV."
     },
     {
-        31,
+        7164,
         "Pmic_powerSetPwrResourceCfg : Test Output voltage slew rate for BUCK & VMON for 10MV."
     },
     {
-        32,
+        7165,
         "Pmic_powerSetPwrResourceCfg : Test Output voltage slew rate for BUCK & VMON for 5MV."
     },
     {
-        33,
+        7166,
         "Pmic_powerSetPwrResourceCfg : Test Output voltage slew rate for BUCK & VMON for 2.5MV."
     },
     {
-        34,
+        7167,
         "Pmic_powerSetPwrResourceCfg : Test Output voltage slew rate for BUCK & VMON for 1.3MV."
     },
     {
-        35,
+        7168,
         "Pmic_powerSetPwrResourceCfg : Test Output voltage slew rate for BUCK & VMON for 0.63MV."
     },
     {
-        36,
+        7169,
         "Pmic_powerSetPwrResourceCfg : Test Output voltage slew rate for BUCK & VMON for 0.31MV."
     },
     {
-        37,
+        7170,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for Power Resource for buckVmonSlewRate."
     },
     {
-        38,
+        7171,
         "Pmic_powerSetPwrResourceCfg : Parameter range validation for buckVmonSlewRate."
     },
     {
-        39,
+        7172,
         "Pmic_powerSetPwrResourceCfg : Test Selects the resistor value for output pull-down resistor for LDO for 50Kohm."
     },
     {
-        40,
+        7173,
         "Pmic_powerSetPwrResourceCfg : Test Selects the resistor value for output pull-down resistor for LDO for 125Kohm"
     },
     {
-        41,
+        7174,
         "Pmic_powerSetPwrResourceCfg : Test Selects the resistor value for output pull-down resistor for LDO for 250Kohm"
     },
     {
-        42,
+        7175,
         "Pmic_powerSetPwrResourceCfg : Test Selects the resistor value for output pull-down resistor for LDO for 500Kohm"
     },
     {
-        43,
+        7176,
         "Pmic_powerSetPwrResourceCfg : Test Enable Slow Ramp for LDO"
     },
     {
-        44,
+        7177,
         "Pmic_powerSetPwrResourceCfg : Test Disable Slow Ramp for LDO"
     },
     {
-        45,
+        7178,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for Power Resource for ldoPullDownSel."
     },
     {
-        46,
+        7179,
         "Pmic_powerSetPwrResourceCfg : Parameter range validation for ldoPullDownSel."
     },
     {
-        47,
+        7180,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for Power Resource for ldoSlowRampEn."
     },
     {
-        48,
+        7181,
         "Pmic_powerSetPwrResourceCfg : Test Voltage level in miliVolts for regulators"
     },
     {
-        49,
+        7182,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for Power Resource for voltage_mV."
     },
     {
-        50,
+        7183,
         "Pmic_powerSetPwrResourceCfg : Parameter range validation for voltage_mV."
     },
     {
-        54,
-        "Pmic_powerSetPwrResourceCfg : Test Powergood level for VCCA pin"
+        7184,
+        "Pmic_powerSetPwrResourceCfg : Test Powergood level 5V for VCCA pin"
     },
     {
-        55,
-        "Pmic_powerSetPwrResourceCfg : Test Powergood level for VCCA pin"
+        7185,
+        "Pmic_powerSetPwrResourceCfg : Test Powergood level 3.3V for VCCA pin"
     },
     {
-        56,
+        7186,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for Power Resource for vccaPwrGudLvl."
     },
     {
-        57,
+        7187,
         "Pmic_powerSetPwrResourceCfg : Test Rail group selection for power resources as group none."
     },
     {
-        58,
+        7188,
         "Pmic_powerSetPwrResourceCfg : Test Rail group selection for power resources as group mcu."
     },
     {
-        59,
+        7189,
         "Pmic_powerSetPwrResourceCfg : Test Rail group selection for power resources as group soc."
     },
     {
-        60,
+        7190,
         "Pmic_powerSetPwrResourceCfg : Test Rail group selection for power resources as group other."
     },
     {
-        61,
+        7191,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for Power Resource for railGrpSel."
     },
     {
-        62,
+        7192,
         "Pmic_powerSetPwrResourceCfg : Parameter range validation for railGrpSel."
     },
     {
-        63,
+        7193,
         "Pmic_powerSetPwrResourceCfg : Test BUCK switching frequency for 4.4M."
     },
     {
-        64,
+        7194,
         "Pmic_powerSetPwrResourceCfg : Test BUCK switching frequency for 2.2M."
     },
     {
-        65,
+        7195,
         "Pmic_powerSetPwrResourceCfg : Test BUCK switching frequency for 8.8M."
     },
     {
-        66,
+        7196,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for Power Resource for buckFreqSel."
     },
     {
-        67,
+        7197,
         "Pmic_powerSetPwrResourceCfg : Parameter range validation for buckFreqSel."
     },
     {
-        68,
+        7198,
         "Pmic_powerSetPwrResourceCfg : Test LDO Bypass Regulator LDO mode"
     },
     {
-        69,
+        7199,
         "Pmic_powerSetPwrResourceCfg : Test LDO Linear Regulator LDO mode"
     },
     {
-        70,
+        7200,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for Power Resource for ldoBypassModeEn."
     },
     {
-        71,
+        7201,
         "Pmic_powerSetPwrResourceCfg : Test LDO residual voltage check timeout select for 0.5MS."
     },
     {
-        72,
+        7202,
         "Pmic_powerSetPwrResourceCfg : Test LDO residual voltage check timeout select for 1MS."
     },
     {
-        73,
+        7203,
         "Pmic_powerSetPwrResourceCfg : Test LDO residual voltage check timeout select for 1.5MS."
     },
     {
-        74,
+        7204,
         "Pmic_powerSetPwrResourceCfg : Test LDO residual voltage check timeout select for 2MS."
     },
     {
-        75,
+        7205,
         "Pmic_powerSetPwrResourceCfg : Test LDO residual voltage check timeout select for 2.5MS."
     },
     {
-        76,
+        7206,
         "Pmic_powerSetPwrResourceCfg : Test LDO residual voltage check timeout select for 3MS."
     },
     {
-        77,
+        7207,
         "Pmic_powerSetPwrResourceCfg : Test LDO residual voltage check timeout select for 3.5MS."
     },
     {
-        78,
+        7208,
         "Pmic_powerSetPwrResourceCfg : Test LDO residual voltage check timeout select for 4MS."
     },
     {
-        79,
+        7209,
         "Pmic_powerSetPwrResourceCfg : Test LDO residual voltage check timeout select for 6MS."
     },
     {
-        80,
+        7210,
         "Pmic_powerSetPwrResourceCfg : Test LDO residual voltage check timeout select for 8MS."
     },
     {
-        81,
+        7211,
         "Pmic_powerSetPwrResourceCfg : Test LDO residual voltage check timeout select for 10MS."
     },
     {
-        82,
+        7212,
         "Pmic_powerSetPwrResourceCfg : Test LDO residual voltage check timeout select for 12MS."
     },
     {
-        83,
+        7213,
         "Pmic_powerSetPwrResourceCfg : Test LDO residual voltage check timeout select for 14MS."
     },
     {
-        84,
+        7214,
         "Pmic_powerSetPwrResourceCfg : Test LDO residual voltage check timeout select for 16MS."
     },
     {
-        85,
+        7215,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for Power Resource for ldoRvTimeoutSel."
     },
     {
-        86,
+        7216,
         "Pmic_powerSetPwrResourceCfg : Parameter range validation for ldoRvTimeoutSel."
     },
     {
-        87,
+        7217,
         "Pmic_powerSetPwrResourceCfg : Test OV/UV voltage monitoring range for vmonRange for range1."
     },
     {
-        88,
+        7218,
         "Pmic_powerSetPwrResourceCfg : Test OV/UV voltage monitoring range for vmonRange for range2."
     },
     {
-        89,
+        7219,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for Power Resource for vmonRange."
     },
     {
-        90,
+        7300,
         "Pmic_powerGetPwrResourceCfg : Parameter validation for Pmic_PowerResourceCfg_t"
     },
     {
-        91,
+        7221,
         "Pmic_powerSetCommonConfig : Test pgoodWindow uv monitor enable"
     },
     {
-        92,
+        7222,
         "Pmic_powerSetCommonConfig : Test pgoodWindow uv and ov monitor enable"
     },
     {
-        93,
+        7223,
         "Pmic_powerSetCommonConfig : Test Enable pgoodPolarity high"
     },
     {
-        94,
+        7224,
         "Pmic_powerSetCommonConfig : Test Enable pgoodPolarity low"
     },
     {
-        95,
+        7252,
         "Pmic_powerSetConfigPowerGood : Test pgoodSelType as voltage current"
     },
     {
-        96,
+        7253,
         "Pmic_powerSetConfigPowerGood : Test pgoodSelType as voltage"
     },
     {
-        97,
+        7254,
         "Pmic_powerSetConfigPowerGood : Test pgoodSelType as masked"
     },
     {
-        98,
+        7255,
         "Pmic_powerSetConfigPowerGood : Test pgoodSelType as NRSTOUT"
     },
     {
-        99,
+        7256,
         "Pmic_powerSetConfigPowerGood : Test pgoodSelType as NRSTOUT SOC"
     },
     {
-        100,
+        7257,
         "Pmic_powerSetConfigPowerGood : Test pgoodSelType as TDIE WARN"
     },
     {
-        101,
+        7258,
         "Pmic_powerSetConfigPowerGood : Test pgoodSelType as VCCA"
     },
     {
-        102,
+        7259,
         "Pmic_powerSetConfigPowerGood : Test pgoodSelType as VMON"
     },
     {
-        103,
+        7261,
         "Pmic_powerGetPwrRsrcStat : Test get currentLimitLvlStat"
     },
     {
-        104,
+        7262,
         "Pmic_powerGetPwrRsrcStat : Test get underVoltageTholdStat"
     },
     {
-        105,
+        7263,
         "Pmic_powerGetPwrRsrcStat : Test get overVoltageTholdStat"
     },
     {
-        106,
+        7264,
         "Pmic_powerGetPwrRsrcStat : Test get overVoltageProtectionLvlStat"
     },
     {
-        107,
+        7266,
         "Pmic_powerSetThermalConfig : Test thermalWarnThold as low"
     },
     {
-        108,
+        7267,
         "Pmic_powerSetThermalConfig : Test thermalWarnThold as high"
     },
     {
-        109,
+        7268,
         "Pmic_powerSetThermalConfig : Test thermalShutdownThold as low"
     },
     {
-        110,
+        7269,
         "Pmic_powerSetThermalConfig : Test thermalShutdownThold as high"
     },
     {
-        111,
+        7271,
         "Pmic_powerSetPwrRsrcIntr : Test Enable OV interrupt"
     },
     {
-        112,
+        7272,
         "Pmic_powerSetPwrRsrcIntr : Test Disable OV interrupt"
     },
     {
-        113,
+        7273,
         "Pmic_powerSetPwrRsrcIntr : Test Enable UV interrupt"
     },
     {
-        114,
+        7274,
         "Pmic_powerSetPwrRsrcIntr : Test Disable UV interrupt"
     },
     {
-        115,
+        7275,
         "Pmic_powerSetPwrRsrcIntr : Test Enable ILIM interrupt"
     },
     {
-        116,
+        7276,
         "Pmic_powerSetPwrRsrcIntr : Test Disable ILIM interrupt"
     },
     {
-        117,
+        7280,
         "Pmic_powerSetIntr : Test Enable TWARN interrupt"
     },
     {
-        118,
+        7281,
         "Pmic_powerSetIntr : Test Disable TWARN interrupt"
     },
     {
-        119,
+        7282,
         "Pmic_powerSetIntr : Test Enable NRSTOUT_READBACK interrupt"
     },
     {
-        120,
+        7283,
         "Pmic_powerSetIntr : Test Disable NRSTOUT_READBACK interrupt"
     },
     {
-        121,
+        7284,
         "Pmic_powerSetIntr : Test Enable SOC_PWR_ERR interrupt"
     },
     {
-        122,
+        7285,
         "Pmic_powerSetIntr : Test Disable SOC_PWR_ERR interrupt"
     },
     {
-        123,
+        7286,
         "Pmic_powerSetIntr : Test Enable MCU_PWR_ERR interrupt"
     },
     {
-        124,
+        7287,
         "Pmic_powerSetIntr : Test Disable MCU_PWR_ERR interrupt"
     },
     {
-        125,
+        7288,
         "Pmic_powerSetIntr : Test Enable ORD_SHUTDOWN interrupt"
     },
     {
-        126,
+        7289,
         "Pmic_powerSetIntr : Test Disable ORD_SHUTDOWN interrupt"
     },
     {
-        127,
+        7290,
         "Pmic_powerSetIntr : Test Enable IMM_SHUTDOWN interrupt"
     },
     {
-        128,
+        7291,
         "Pmic_powerSetIntr : Test Disable IMM_SHUTDOWN interrupt"
     },
     {
-        129,
+        7292,
         "Pmic_powerSetIntr : Test Enable NRSTOUT_SOC_READBACK interrupt"
     },
     {
-        130,
+        7293,
         "Pmic_powerSetIntr : Test Disable NRSTOUT_SOC_READBACK interrupt"
     },
     {
-        131,
+        7294,
         "Pmic_powerSetIntr : Test Enable EN_DRV_READBACK interrupt"
     },
     {
-        132,
+        7295,
         "Pmic_powerSetIntr : Test Disable EN_DRV_READBACK interrupt"
     },
     {
-        133,
+        7225,
         "Pmic_powerSetCommonConfig : Test deglitchTimeSel as 4us"
     },
     {
-        134,
+        7226,
         "Pmic_powerSetCommonConfig : Test deglitchTimeSel as 20us"
     },
     {
-        135,
+        7227,
         "Pmic_powerSetCommonConfig : Test severeErrorTrig as Immediate shutdown"
     },
     {
-        136,
+        7228,
         "Pmic_powerSetCommonConfig : Test severeErrorTrig as oderly shutdown"
     },
     {
-        137,
+        7229,
         "Pmic_powerSetCommonConfig : Test severeErrorTrig as mcu power error"
     },
     {
-        138,
+        7230,
         "Pmic_powerSetCommonConfig : Test severeErrorTrig as soc power error"
     },
     {
-        139,
+        7231,
         "Pmic_powerSetCommonConfig : Test otherRailTrig as Immediate shutdown"
     },
     {
-        140,
+        7232,
         "Pmic_powerSetCommonConfig : Test otherRailTrig as oderly shutdown"
     },
     {
-        141,
+        7233,
         "Pmic_powerSetCommonConfig : Test otherRailTrig as mcu power error"
     },
     {
-        142,
+        7234,
         "Pmic_powerSetCommonConfig : Test otherRailTrig as soc power error"
     },
     {
-        143,
+        7235,
         "Pmic_powerSetCommonConfig : Test socRailTrig as Immediate shutdown"
     },
     {
-        144,
+        7236,
         "Pmic_powerSetCommonConfig : Test socRailTrig as oderly shutdown"
     },
     {
-        145,
+        7237,
         "Pmic_powerSetCommonConfig : Test socRailTrig as mcu power error"
     },
     {
-        146,
+        7238,
         "Pmic_powerSetCommonConfig : Test socRailTrig as soc power error"
     },
     {
-        147,
+        7239,
         "Pmic_powerSetCommonConfig : Test mcuRailTrig as Immediate shutdown"
     },
     {
-        148,
+        7240,
         "Pmic_powerSetCommonConfig : Test mcuRailTrig as oderly shutdown"
     },
     {
-        149,
+        7241,
         "Pmic_powerSetCommonConfig : Test mcuRailTrig as mcu power error"
     },
     {
-        150,
+        7242,
         "Pmic_powerSetCommonConfig : Test mcuRailTrig as soc power error"
     },
     {
-        151,
+        7243,
         "Pmic_powerSetCommonConfig : Test moderateRailTrig as Immediate shutdown"
     },
     {
-        152,
+        7244,
         "Pmic_powerSetCommonConfig : Test moderateRailTrig as oderly shutdown"
     },
     {
-        153,
+        7245,
         "Pmic_powerSetCommonConfig : Test moderateRailTrig as mcu power error"
     },
     {
-        154,
+        7246,
         "Pmic_powerSetCommonConfig : Test moderateRailTrig as soc power error"
     },
     {
-        155,
+        7297,
         "Pmic_powerSetLdoRtc : Test Enable ldortcRegulator"
     },
     {
-        156,
+        7298,
         "Pmic_powerSetLdoRtc : Test Disable ldortcRegulator"
     },
     {
-        157,
-        "Pmic_powerSetPwrRsrcIntr : Test moderateRailTrig as mcu power error"
+        7277,
+        "Pmic_powerSetPwrRsrcIntr : Parameter validation for Power Resource for intrEnable."
     },
     {
-        158,
+        7278,
         "Pmic_powerSetPwrRsrcIntr : Parameter validation for intrType"
     },
     {
-        159,
+        7247,
         "Pmic_powerSetCommonConfig : Parameter validation for severeErrorTrig"
     },
     {
-        160,
+        7248,
         "Pmic_powerSetCommonConfig : Parameter validation for otherRailTrig"
     },
     {
-        161,
+        7249,
         "Pmic_powerSetCommonConfig : Parameter validation for socRailTrig"
     },
     {
-        162,
+        7250,
         "Pmic_powerSetCommonConfig : Parameter validation for mcuRailTrig"
     },
     {
-        163,
+        7251,
         "Pmic_powerSetCommonConfig : Parameter validation for moderateRailTrig"
     },
     {
-        166,
+        7301,
         "Pmic_powerGetCommonConfig : Parameter validation for handle"
     },
     {
-        167,
+        7260,
         "Pmic_powerSetConfigPowerGood : Parameter validation for handle"
     },
     {
-        168,
+        7302,
         "Pmic_powerGetConfigPowerGood : Parameter validation for handle"
     },
     {
-        169,
+        7265,
         "Pmic_powerGetPwrRsrcStat : Parameter validation for handle"
     },
     {
-        170,
+        7270,
         "Pmic_powerSetThermalConfig : Parameter validation for handle"
     },
     {
-        171,
+        7303,
         "Pmic_powerGetThermalConfig : Parameter validation for handle"
     },
     {
-        172,
+        7279,
         "Pmic_powerSetPwrRsrcIntr : Parameter validation for handle"
     },
     {
-        173,
+        7296,
         "Pmic_powerSetIntr : Parameter validation for handle"
     },
     {
@@ -819,7 +819,7 @@ static Pmic_Ut_Tests_t pmic_power_tests[] =
         "Pmic_powerSetIntr : Test Set Disable EN_DRV_READBACK interrupt"
     },
     {
-        201,
+        7220,
         "Pmic_powerSetCommonConfig : Parameter validation for handle"
     },
 
@@ -837,7 +837,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_handle(void)
         PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(0,
+    test_pmic_print_unity_testcase_info(7130,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -857,7 +857,7 @@ static void test_pmic_powerGetPowerResourceConfigPrmValTest_handle(void)
         PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(00,
+    test_pmic_print_unity_testcase_info(7299,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -882,7 +882,7 @@ static void test_pmic_powerSetPowerResourceConfig_rvCheckEn_enable(void)
         PMIC_CFG_REGULATOR_VMON_RV_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(1,
+    test_pmic_print_unity_testcase_info(7131,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -960,7 +960,7 @@ static void test_pmic_powerSetPowerResourceConfig_rvCheckEn_disable(void)
         PMIC_CFG_REGULATOR_VMON_RV_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(2,
+    test_pmic_print_unity_testcase_info(7132,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -1045,7 +1045,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_rvCheckEn(vo
         pwrRsrc = PMIC_LP8764X_VMON_MAX + 1;
     }
 
-    test_pmic_print_unity_testcase_info(3,
+    test_pmic_print_unity_testcase_info(7133,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
@@ -1071,7 +1071,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckPullDownEn_enable(void)
         PMIC_CFG_REGULATOR_BUCK_PLDN_EN_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(4,
+    test_pmic_print_unity_testcase_info(7134,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -1123,7 +1123,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckPullDownEn_disable(void)
         PMIC_CFG_REGULATOR_BUCK_PLDN_EN_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(5,
+    test_pmic_print_unity_testcase_info(7135,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -1171,7 +1171,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_buckPullDown
         PMIC_CFG_REGULATOR_BUCK_PLDN_EN_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(6,
+    test_pmic_print_unity_testcase_info(7136,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -1208,7 +1208,7 @@ static void test_pmic_powerSetPowerResourceConfig_vmonEn_enable(void)
         PMIC_CFG_VMON_EN_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(7,
+    test_pmic_print_unity_testcase_info(7137,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -1314,7 +1314,7 @@ static void test_pmic_powerSetPowerResourceConfig_vmonEn_disable(void)
         PMIC_CFG_VMON_EN_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(8,
+    test_pmic_print_unity_testcase_info(7138,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -1426,7 +1426,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_vmonEn(void)
         pwrRsrc = PMIC_LP8764X_VMON_MAX + 1;
     }
 
-    test_pmic_print_unity_testcase_info(9,
+    test_pmic_print_unity_testcase_info(7139,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -1454,7 +1454,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckVoutSel_vout1(void)
         PMIC_CFG_REGULATOR_BUCK_VOUT_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(10,
+    test_pmic_print_unity_testcase_info(7143,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -1506,7 +1506,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckVoutSel_vout2(void)
         PMIC_CFG_REGULATOR_BUCK_VOUT_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(11,
+    test_pmic_print_unity_testcase_info(7144,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -1571,7 +1571,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_buckVoutSel(
         PMIC_CFG_REGULATOR_BUCK_VOUT_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(12,
+    test_pmic_print_unity_testcase_info(7145,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -1608,7 +1608,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckFpwmMode_auto(void)
         PMIC_CFG_REGULATOR_BUCK_FPWM_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(13,
+    test_pmic_print_unity_testcase_info(7146,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -1660,7 +1660,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckFpwmMode_pwm(void)
         PMIC_CFG_REGULATOR_BUCK_FPWM_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(14,
+    test_pmic_print_unity_testcase_info(7147,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -1708,7 +1708,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_buckFpwmMode
         PMIC_CFG_REGULATOR_BUCK_FPWM_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(15,
+    test_pmic_print_unity_testcase_info(7148,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -1745,7 +1745,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckFpwmMpMode_multiPhase(void
         PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(16,
+    test_pmic_print_unity_testcase_info(7149,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -1804,7 +1804,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckFpwmMpMode_auto(void)
         PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(17,
+    test_pmic_print_unity_testcase_info(7150,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -1859,7 +1859,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_buckFpwmMpMo
         PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(18,
+    test_pmic_print_unity_testcase_info(7151,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -1897,7 +1897,7 @@ static void test_pmic_powerSetPowerResourceConfig_regulatorEn_disable(void)
         PMIC_CFG_REGULATOR_EN_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(19,
+    test_pmic_print_unity_testcase_info(7152,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -2009,7 +2009,7 @@ static void test_pmic_powerSetPowerResourceConfig_regulatorEn_enable(void)
         PMIC_CFG_REGULATOR_EN_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(20,
+    test_pmic_print_unity_testcase_info(7153,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -2077,7 +2077,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_regulatorEn(
         PMIC_CFG_REGULATOR_EN_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(21,
+    test_pmic_print_unity_testcase_info(7154,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -2114,7 +2114,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckCurrentLimit_6A5(void)
         PMIC_CFG_REGULATOR_BUCK_ILIM_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(22,
+    test_pmic_print_unity_testcase_info(7155,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -2163,7 +2163,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckCurrentLimit_5A5(void)
         PMIC_CFG_REGULATOR_BUCK_ILIM_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(23,
+    test_pmic_print_unity_testcase_info(7156,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -2214,7 +2214,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckCurrentLimit_4A5(void)
         PMIC_CFG_REGULATOR_BUCK_ILIM_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(24,
+    test_pmic_print_unity_testcase_info(7157,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -2265,7 +2265,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckCurrentLimit_3A5(void)
         PMIC_CFG_REGULATOR_BUCK_ILIM_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(25,
+    test_pmic_print_unity_testcase_info(7158,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -2316,7 +2316,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckCurrentLimit_2A5(void)
         PMIC_CFG_REGULATOR_BUCK_ILIM_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(26,
+    test_pmic_print_unity_testcase_info(7159,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -2363,7 +2363,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_buckCurrentL
         PMIC_CFG_REGULATOR_BUCK_ILIM_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(27,
+    test_pmic_print_unity_testcase_info(7160,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -2396,7 +2396,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_buckCurrentLimit(v
         PMIC_CFG_REGULATOR_BUCK_ILIM_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(28,
+    test_pmic_print_unity_testcase_info(7161,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -2444,7 +2444,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckVmonSlewRate_33MV(void)
         PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(29,
+    test_pmic_print_unity_testcase_info(7162,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -2519,7 +2519,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckVmonSlewRate_20MV(void)
         PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(30,
+    test_pmic_print_unity_testcase_info(7163,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -2594,7 +2594,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckVmonSlewRate_10MV(void)
         PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(31,
+    test_pmic_print_unity_testcase_info(7164,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -2669,7 +2669,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckVmonSlewRate_05MV(void)
         PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(32,
+    test_pmic_print_unity_testcase_info(7165,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -2744,7 +2744,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckVmonSlewRate_2MV5(void)
         PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(33,
+    test_pmic_print_unity_testcase_info(7166,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -2819,7 +2819,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckVmonSlewRate_1MV3(void)
         PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(34,
+    test_pmic_print_unity_testcase_info(7167,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -2894,7 +2894,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckVmonSlewRate_0MV63(void)
         PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(35,
+    test_pmic_print_unity_testcase_info(7168,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -2969,7 +2969,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckVmonSlewRate_0MV31(void)
         PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(36,
+    test_pmic_print_unity_testcase_info(7169,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -3040,7 +3040,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_buckVmonSlew
         PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(37,
+    test_pmic_print_unity_testcase_info(7170,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -3074,7 +3074,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_buckVmonSlewRate(v
         PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(38,
+    test_pmic_print_unity_testcase_info(7171,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -3131,7 +3131,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoPullDownSel_50KOHM(void)
         PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(39,
+    test_pmic_print_unity_testcase_info(7172,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -3181,7 +3181,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoPullDownSel_125OHM(void)
         PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(40,
+    test_pmic_print_unity_testcase_info(7173,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -3231,7 +3231,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoPullDownSel_250OHM(void)
         PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(41,
+    test_pmic_print_unity_testcase_info(7174,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -3281,7 +3281,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoPullDownSel_500OHM(void)
         PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(42,
+    test_pmic_print_unity_testcase_info(7175,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -3332,7 +3332,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoSlowRampEn_enable(void)
         PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(43,
+    test_pmic_print_unity_testcase_info(7176,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -3382,7 +3382,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoSlowRampEn_disable(void)
         PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(44,
+    test_pmic_print_unity_testcase_info(7177,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -3429,7 +3429,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_ldoPullDownS
         PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(45,
+    test_pmic_print_unity_testcase_info(7178,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -3463,7 +3463,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_ldoPullDownSel(voi
         PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(46,
+    test_pmic_print_unity_testcase_info(7179,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -3502,7 +3502,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_ldoSlowRampE
         PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(47,
+    test_pmic_print_unity_testcase_info(7180,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -3541,7 +3541,7 @@ static void test_pmic_powerSetPowerResourceConfig_voltage_mV(void)
         PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(48,
+    test_pmic_print_unity_testcase_info(7181,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -3689,7 +3689,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_voltage_mV(v
         PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(49,
+    test_pmic_print_unity_testcase_info(7182,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -3723,7 +3723,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_voltage_mV(void)
         PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(50,
+    test_pmic_print_unity_testcase_info(7183,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -3766,7 +3766,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_voltage_mV(void)
 }
 
 /*!
- * \brief   Pmic_powerSetPwrResourceCfg : Test Powergood level for VCCA pin
+ * \brief   Pmic_powerSetPwrResourceCfg : Test Powergood level 5V for VCCA pin
  */
 static void test_pmic_powerSetPowerResourceConfig_vccaPwrGudLvl_5V(void)
 {
@@ -3792,7 +3792,7 @@ static void test_pmic_powerSetPowerResourceConfig_vccaPwrGudLvl_5V(void)
         pPowerCfg.vccaPwrGudLvl = PMIC_LP8764X_VCCA_PG_5V_LEVEL;
     }
 
-    test_pmic_print_unity_testcase_info(54,
+    test_pmic_print_unity_testcase_info(7184,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -3811,7 +3811,7 @@ static void test_pmic_powerSetPowerResourceConfig_vccaPwrGudLvl_5V(void)
 }
 
 /*!
- * \brief   Pmic_powerSetPwrResourceCfg : Test Powergood level for VCCA pin
+ * \brief   Pmic_powerSetPwrResourceCfg : Test Powergood level 3.3V for VCCA pin
  */
 static void test_pmic_powerSetPowerResourceConfig_vccaPwrGudLvl_3V3(void)
 {
@@ -3837,7 +3837,7 @@ static void test_pmic_powerSetPowerResourceConfig_vccaPwrGudLvl_3V3(void)
         pPowerCfg.vccaPwrGudLvl = PMIC_LP8764X_VCCA_PG_3V3_LEVEL;
     }
 
-    test_pmic_print_unity_testcase_info(55,
+    test_pmic_print_unity_testcase_info(7185,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -3878,7 +3878,7 @@ static void test_pmic_powerSetPowerResourceConfig_vccaPwrGudLvl_3V3(void)
         pwrRsrc = PMIC_LP8764X_REGULATOR_BUCK1;
     }
 
-    test_pmic_print_unity_testcase_info(56,
+    test_pmic_print_unity_testcase_info(7186,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -3906,7 +3906,7 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_none(void)
         PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(57,
+    test_pmic_print_unity_testcase_info(7187,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -4067,7 +4067,7 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_mcu(void)
         PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(58,
+    test_pmic_print_unity_testcase_info(7188,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -4214,7 +4214,7 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_soc(void)
         PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(59,
+    test_pmic_print_unity_testcase_info(7189,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -4361,7 +4361,7 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_other(void)
         PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(60,
+    test_pmic_print_unity_testcase_info(7190,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -4504,7 +4504,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_railGrpSel(v
         PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(61,
+    test_pmic_print_unity_testcase_info(7191,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -4538,7 +4538,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_railGrpSel(void)
         PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(62,
+    test_pmic_print_unity_testcase_info(7192,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -4601,7 +4601,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckFreqSel_4M4(void)
         PMIC_CFG_REGULATOR_BUCK_FREQ_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(63,
+    test_pmic_print_unity_testcase_info(7193,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -4672,7 +4672,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckFreqSel_2M2(void)
         PMIC_CFG_REGULATOR_BUCK_FREQ_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(64,
+    test_pmic_print_unity_testcase_info(7194,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -4725,7 +4725,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckFreqSel_8M8(void)
         PMIC_CFG_REGULATOR_BUCK_FREQ_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(65,
+    test_pmic_print_unity_testcase_info(7195,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -4772,7 +4772,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckFreqSel_8M8(void)
         PMIC_CFG_REGULATOR_BUCK_FREQ_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(66,
+    test_pmic_print_unity_testcase_info(7196,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -4806,7 +4806,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_buckFreqSel(void)
         PMIC_CFG_REGULATOR_BUCK_FREQ_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(67,
+    test_pmic_print_unity_testcase_info(7197,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -4852,7 +4852,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoBypassModeEn_bypass(void)
         PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(68,
+    test_pmic_print_unity_testcase_info(7198,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -4924,7 +4924,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoBypassModeEn_linear(void)
         PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(69,
+    test_pmic_print_unity_testcase_info(7199,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -4970,7 +4970,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_ldoBypassMod
         PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(70,
+    test_pmic_print_unity_testcase_info(7200,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -5008,7 +5008,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_0MS5(void)
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(71,
+    test_pmic_print_unity_testcase_info(7201,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -5057,7 +5057,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_1MS(void)
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(72,
+    test_pmic_print_unity_testcase_info(7202,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -5106,7 +5106,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_1MS5(void)
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(73,
+    test_pmic_print_unity_testcase_info(7203,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -5155,7 +5155,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_2MS(void)
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(74,
+    test_pmic_print_unity_testcase_info(7204,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -5204,7 +5204,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_2MS5(void)
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(75,
+    test_pmic_print_unity_testcase_info(7205,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -5253,7 +5253,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_3MS(void)
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(76,
+    test_pmic_print_unity_testcase_info(7206,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -5302,7 +5302,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_3MS5(void)
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(77,
+    test_pmic_print_unity_testcase_info(7207,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -5351,7 +5351,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_4MS(void)
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(78,
+    test_pmic_print_unity_testcase_info(7208,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -5400,7 +5400,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_6MS(void)
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(79,
+    test_pmic_print_unity_testcase_info(7209,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -5449,7 +5449,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_8MS(void)
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(80,
+    test_pmic_print_unity_testcase_info(7210,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -5498,7 +5498,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_10MS(void)
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(81,
+    test_pmic_print_unity_testcase_info(7211,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -5547,7 +5547,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_12MS(void)
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(82,
+    test_pmic_print_unity_testcase_info(7212,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -5596,7 +5596,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_14MS(void)
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(83,
+    test_pmic_print_unity_testcase_info(7213,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -5645,7 +5645,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_16MS(void)
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(84,
+    test_pmic_print_unity_testcase_info(7214,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -5690,7 +5690,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_16MS(void)
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(85,
+    test_pmic_print_unity_testcase_info(7215,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -5725,7 +5725,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_ldoRvTimeoutSel(vo
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(86,
+    test_pmic_print_unity_testcase_info(7216,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -5768,7 +5768,7 @@ static void test_pmic_powerSetPowerResourceConfig_vmonRange_range1(void)
         PMIC_CFG_VMON_RANGE_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(87,
+    test_pmic_print_unity_testcase_info(7217,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -5818,7 +5818,7 @@ static void test_pmic_powerSetPowerResourceConfig_vmonRange_range2(void)
         PMIC_CFG_VMON_RANGE_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(88,
+    test_pmic_print_unity_testcase_info(7218,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -5863,7 +5863,7 @@ static void test_pmic_powerSetPowerResourceConfig_vmonRange_range2(void)
         PMIC_CFG_VMON_RANGE_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(89,
+    test_pmic_print_unity_testcase_info(7219,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -5891,7 +5891,7 @@ static void test_pmic_powerGetPowerResourceConfigPrmValTest_Pmic_PowerResourceCf
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
     uint16_t pwrRsrc = 0U;
 
-    test_pmic_print_unity_testcase_info(90,
+    test_pmic_print_unity_testcase_info(7300,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -5910,7 +5910,7 @@ static void test_pmic_powerSetCommonConfigPrmValTest_handle(void)
         PMIC_POWER_PGOOD_WINDOW_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(201,
+    test_pmic_print_unity_testcase_info(7220,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -5935,7 +5935,7 @@ static void test_pmic_powerSetCommonConfig_pgoodWindow_uv(void)
         PMIC_POWER_PGOOD_WINDOW_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(91,
+    test_pmic_print_unity_testcase_info(7221,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -5967,7 +5967,7 @@ static void test_pmic_powerSetCommonConfig_pgoodWindow_uv_ov(void)
         PMIC_POWER_PGOOD_WINDOW_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(92,
+    test_pmic_print_unity_testcase_info(7222,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -6000,7 +6000,7 @@ static void test_pmic_powerSetCommonConfig_pgoodPolarity_high(void)
         PMIC_POWER_PGOOD_POL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(93,
+    test_pmic_print_unity_testcase_info(7223,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     pwrCommonCfg.pgoodPolarity = PMIC_POWER_PGOOD_POL_HIGH;
@@ -6032,7 +6032,7 @@ static void test_pmic_powerSetCommonConfig_pgoodPolarity_low(void)
         PMIC_CFG_REGULATOR_BUCK_PLDN_EN_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(94,
+    test_pmic_print_unity_testcase_info(7224,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -6060,7 +6060,7 @@ static void test_pmic_powerSetConfigPowerGood_pgoodSelType_voltageCurrent(void)
     uint8_t  pPgoodSelType_rd;
     uint16_t pwrRsrcMin, pwrRsrcMax;
 
-    test_pmic_print_unity_testcase_info(95,
+    test_pmic_print_unity_testcase_info(7252,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -6127,7 +6127,7 @@ static void test_pmic_powerSetConfigPowerGood_pgoodSelType_voltage(void)
     uint8_t  pPgoodSelType_rd;
     uint16_t pwrRsrcMin, pwrRsrcMax;
 
-    test_pmic_print_unity_testcase_info(96,
+    test_pmic_print_unity_testcase_info(7253,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -6194,7 +6194,7 @@ static void test_pmic_powerSetConfigPowerGood_pgoodSelType_masked(void)
     uint8_t  pPgoodSelType_rd;
     uint16_t pwrRsrcMin, pwrRsrcMax;
 
-    test_pmic_print_unity_testcase_info(97,
+    test_pmic_print_unity_testcase_info(7254,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -6378,7 +6378,7 @@ static void test_pmic_powerSetConfigPowerGood_pgoodSelType_nRSTOUT(void)
     uint8_t  pgoodSelType;
     uint8_t  pPgoodSelType_rd;
 
-    test_pmic_print_unity_testcase_info(98,
+    test_pmic_print_unity_testcase_info(7255,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -6417,7 +6417,7 @@ static void test_pmic_powerSetConfigPowerGood_pgoodSelType_nRSTOUTSoc(void)
     uint8_t  pgoodSelType;
     uint8_t  pPgoodSelType_rd;
 
-    test_pmic_print_unity_testcase_info(99,
+    test_pmic_print_unity_testcase_info(7256,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -6456,7 +6456,7 @@ static void test_pmic_powerSetConfigPowerGood_pgoodSelType_tdieWarn(void)
     uint8_t  pgoodSelType;
     uint8_t  pPgoodSelType_rd;
 
-    test_pmic_print_unity_testcase_info(100,
+    test_pmic_print_unity_testcase_info(7257,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -6495,7 +6495,7 @@ static void test_pmic_powerSetConfigPowerGood_pgoodSelType_vcca(void)
     uint8_t  pgoodSelType;
     uint8_t  pPgoodSelType_rd;
 
-    test_pmic_print_unity_testcase_info(101,
+    test_pmic_print_unity_testcase_info(7258,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -6535,7 +6535,7 @@ static void test_pmic_powerSetConfigPowerGood_pgoodSelType_vmon(void)
     uint8_t  pPgoodSelType_rd;
     uint16_t pwrRsrcMin, pwrRsrcMax;
 
-    test_pmic_print_unity_testcase_info(102,
+    test_pmic_print_unity_testcase_info(7259,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -6580,7 +6580,7 @@ static void test_pmic_powerGetPwrRsrcStat_currentLimitLvlStat(void)
     uint16_t pwrResource;
     uint16_t pwrRsrcMin, pwrRsrcMax;
 
-    test_pmic_print_unity_testcase_info(103,
+    test_pmic_print_unity_testcase_info(7261,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -6632,7 +6632,7 @@ static void test_pmic_powerGetPwrRsrcStat_underVoltageTholdStat(void)
     uint16_t pwrResource;
     uint16_t pwrRsrcMin, pwrRsrcMax;
 
-    test_pmic_print_unity_testcase_info(104,
+    test_pmic_print_unity_testcase_info(7262,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -6714,7 +6714,7 @@ static void test_pmic_powerGetPwrRsrcStat_overVoltageTholdStat(void)
     uint16_t pwrResource;
     uint16_t pwrRsrcMin, pwrRsrcMax;
 
-    test_pmic_print_unity_testcase_info(105,
+    test_pmic_print_unity_testcase_info(7263,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -6795,7 +6795,7 @@ static void test_pmic_powerGetPwrRsrcStat_overVoltageProtectionLvlStat(void)
 
     uint16_t pwrResource;
 
-    test_pmic_print_unity_testcase_info(106,
+    test_pmic_print_unity_testcase_info(7264,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -6842,7 +6842,7 @@ static void test_pmic_powerSetThermalConfig_thermalWarnThold_low(void)
         thermalThreshold.thermalWarnThold = PMIC_LP8764X_THERMAL_TEMP_WARN_120C;
     }
 
-    test_pmic_print_unity_testcase_info(107,
+    test_pmic_print_unity_testcase_info(7266,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -6882,7 +6882,7 @@ static void test_pmic_powerSetThermalConfig_thermalWarnThold_high(void)
         thermalThreshold.thermalWarnThold = PMIC_LP8764X_THERMAL_TEMP_WARN_130C;
     }
 
-    test_pmic_print_unity_testcase_info(108,
+    test_pmic_print_unity_testcase_info(7267,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -6923,7 +6923,7 @@ static void test_pmic_powerSetThermalConfig_thermalShutdownThold_low(void)
         TEST_IGNORE();
     }
 
-    test_pmic_print_unity_testcase_info(109,
+    test_pmic_print_unity_testcase_info(7268,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -6965,7 +6965,7 @@ static void test_pmic_powerSetThermalConfig_thermalShutdownThold_high(void)
         TEST_IGNORE();
     }
 
-    test_pmic_print_unity_testcase_info(110,
+    test_pmic_print_unity_testcase_info(7269,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -6994,7 +6994,7 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_enable(void)
     bool intrEnable;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(111,
+    test_pmic_print_unity_testcase_info(7271,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -7088,7 +7088,7 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_disable(void)
     bool intrEnable;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(112,
+    test_pmic_print_unity_testcase_info(7272,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -7181,7 +7181,7 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_enable(void)
     bool intrEnable;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(113,
+    test_pmic_print_unity_testcase_info(7273,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -7274,7 +7274,7 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_disable(void)
     bool intrEnable;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(114,
+    test_pmic_print_unity_testcase_info(7274,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -7368,7 +7368,7 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_enable(void)
     bool intrEnable;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(115,
+    test_pmic_print_unity_testcase_info(7275,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -7432,7 +7432,7 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_disable(void)
     bool intrEnable;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(116,
+    test_pmic_print_unity_testcase_info(7276,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -7493,7 +7493,7 @@ static void test_pmic_powerSetPwrRsrcIntr_twarn_enable(void)
     bool intrEnable;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(117,
+    test_pmic_print_unity_testcase_info(7280,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -7522,7 +7522,7 @@ static void test_pmic_powerSetPwrRsrcIntr_twarn_disable(void)
     bool intrEnable;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(118,
+    test_pmic_print_unity_testcase_info(7281,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -7551,7 +7551,7 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_enable(void)
     bool intrEnable;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(119,
+    test_pmic_print_unity_testcase_info(7282,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -7580,7 +7580,7 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_disable(void)
     bool intrEnable;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(120,
+    test_pmic_print_unity_testcase_info(7283,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -7609,7 +7609,7 @@ static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_enable(void)
     bool intrEnable;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(121,
+    test_pmic_print_unity_testcase_info(7284,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -7638,7 +7638,7 @@ static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_disable(void)
     bool intrEnable;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(122,
+    test_pmic_print_unity_testcase_info(7285,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -7667,7 +7667,7 @@ static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_enable(void)
     bool intrEnable;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(123,
+    test_pmic_print_unity_testcase_info(7286,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -7696,7 +7696,7 @@ static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_disable(void)
     bool intrEnable;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(124,
+    test_pmic_print_unity_testcase_info(7287,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -7725,7 +7725,7 @@ static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_enable(void)
     bool intrEnable;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(125,
+    test_pmic_print_unity_testcase_info(7288,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -7754,7 +7754,7 @@ static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_disable(void)
     bool intrEnable;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(126,
+    test_pmic_print_unity_testcase_info(7289,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -7783,7 +7783,7 @@ static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_enable(void)
     bool intrEnable;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(127,
+    test_pmic_print_unity_testcase_info(7290,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -7812,7 +7812,7 @@ static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_disable(void)
     bool intrEnable;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(128,
+    test_pmic_print_unity_testcase_info(7291,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -7841,7 +7841,7 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_enable(void)
     bool intrEnable;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(129,
+    test_pmic_print_unity_testcase_info(7292,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -7870,7 +7870,7 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_disable(void)
     bool intrEnable;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(130,
+    test_pmic_print_unity_testcase_info(7293,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -7899,7 +7899,7 @@ static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_enable(void)
     bool intrEnable;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(131,
+    test_pmic_print_unity_testcase_info(7294,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -7928,7 +7928,7 @@ static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_disable(void)
     bool intrEnable;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(132,
+    test_pmic_print_unity_testcase_info(7295,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -7962,7 +7962,7 @@ static void test_pmic_powerSetCommonConfig_deglitchTimeSel_4(void)
         PMIC_CFG_DEGLITCH_TIME_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(133,
+    test_pmic_print_unity_testcase_info(7225,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8004,7 +8004,7 @@ static void test_pmic_powerSetCommonConfig_deglitchTimeSel_20(void)
         PMIC_CFG_DEGLITCH_TIME_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(134,
+    test_pmic_print_unity_testcase_info(7226,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8046,7 +8046,7 @@ static void test_pmic_powerSetCommonConfig_severeErrorTrig_imm(void)
         PMIC_SEVERE_ERR_TRIG_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(135,
+    test_pmic_print_unity_testcase_info(7227,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8078,7 +8078,7 @@ static void test_pmic_powerSetCommonConfig_severeErrorTrig_odrShtDwn(void)
         PMIC_SEVERE_ERR_TRIG_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(136,
+    test_pmic_print_unity_testcase_info(7228,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8110,7 +8110,7 @@ static void test_pmic_powerSetCommonConfig_severeErrorTrig_McuPwrErr(void)
         PMIC_SEVERE_ERR_TRIG_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(137,
+    test_pmic_print_unity_testcase_info(7229,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8142,7 +8142,7 @@ static void test_pmic_powerSetCommonConfig_severeErrorTrig_SocPwrErr(void)
         PMIC_SEVERE_ERR_TRIG_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(138,
+    test_pmic_print_unity_testcase_info(7230,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8174,7 +8174,7 @@ static void test_pmic_powerSetCommonConfig_otherRailTrig_imm(void)
         PMIC_OTHER_RAIL_TRIG_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(139,
+    test_pmic_print_unity_testcase_info(7231,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8206,7 +8206,7 @@ static void test_pmic_powerSetCommonConfig_otherRailTrig_odrShtDwn(void)
         PMIC_OTHER_RAIL_TRIG_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(140,
+    test_pmic_print_unity_testcase_info(7232,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8238,7 +8238,7 @@ static void test_pmic_powerSetCommonConfig_otherRailTrig_McuPwrErr(void)
         PMIC_OTHER_RAIL_TRIG_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(141,
+    test_pmic_print_unity_testcase_info(7233,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8270,7 +8270,7 @@ static void test_pmic_powerSetCommonConfig_otherRailTrig_SocPwrErr(void)
         PMIC_OTHER_RAIL_TRIG_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(142,
+    test_pmic_print_unity_testcase_info(7234,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8302,7 +8302,7 @@ static void test_pmic_powerSetCommonConfig_socRailTrig_imm(void)
         PMIC_SOC_RAIL_TRIG_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(143,
+    test_pmic_print_unity_testcase_info(7235,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8334,7 +8334,7 @@ static void test_pmic_powerSetCommonConfig_socRailTrig_odrShtDwn(void)
         PMIC_SOC_RAIL_TRIG_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(144,
+    test_pmic_print_unity_testcase_info(7236,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8366,7 +8366,7 @@ static void test_pmic_powerSetCommonConfig_socRailTrig_McuPwrErr(void)
         PMIC_SOC_RAIL_TRIG_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(145,
+    test_pmic_print_unity_testcase_info(7237,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8398,7 +8398,7 @@ static void test_pmic_powerSetCommonConfig_socRailTrig_SocPwrErr(void)
         PMIC_SOC_RAIL_TRIG_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(146,
+    test_pmic_print_unity_testcase_info(7238,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8430,7 +8430,7 @@ static void test_pmic_powerSetCommonConfig_mcuRailTrig_imm(void)
         PMIC_MCU_RAIL_TRIG_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(147,
+    test_pmic_print_unity_testcase_info(7239,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8462,7 +8462,7 @@ static void test_pmic_powerSetCommonConfig_mcuRailTrig_odrShtDwn(void)
         PMIC_MCU_RAIL_TRIG_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(148,
+    test_pmic_print_unity_testcase_info(7240,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8494,7 +8494,7 @@ static void test_pmic_powerSetCommonConfig_mcuRailTrig_McuPwrErr(void)
         PMIC_MCU_RAIL_TRIG_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(149,
+    test_pmic_print_unity_testcase_info(7241,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8526,7 +8526,7 @@ static void test_pmic_powerSetCommonConfig_mcuRailTrig_SocPwrErr(void)
         PMIC_MCU_RAIL_TRIG_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(150,
+    test_pmic_print_unity_testcase_info(7242,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8558,7 +8558,7 @@ static void test_pmic_powerSetCommonConfig_moderateRailTrig_imm(void)
         PMIC_MODERATE_ERR_TRIG_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(151,
+    test_pmic_print_unity_testcase_info(7243,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8590,7 +8590,7 @@ static void test_pmic_powerSetCommonConfig_moderateRailTrig_odrShtDwn(void)
         PMIC_MODERATE_ERR_TRIG_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(152,
+    test_pmic_print_unity_testcase_info(7244,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8622,7 +8622,7 @@ static void test_pmic_powerSetCommonConfig_moderateRailTrig_McuPwrErr(void)
         PMIC_MODERATE_ERR_TRIG_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(153,
+    test_pmic_print_unity_testcase_info(7245,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8654,7 +8654,7 @@ static void test_pmic_powerSetCommonConfig_moderateRailTrig_SocPwrErr(void)
         PMIC_MODERATE_ERR_TRIG_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(154,
+    test_pmic_print_unity_testcase_info(7246,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8679,7 +8679,7 @@ static void test_pmic_powerSetLdoRtc_ldortcEnable_enable(void)
     bool ldortcEnable;
     bool ldortcEnable_rd;
 
-    test_pmic_print_unity_testcase_info(155,
+    test_pmic_print_unity_testcase_info(7297,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8710,7 +8710,7 @@ static void test_pmic_powerSetLdoRtc_ldortcEnable_disable(void)
     bool ldortcEnable;
     bool ldortcEnable_rd;
 
-    test_pmic_print_unity_testcase_info(156,
+    test_pmic_print_unity_testcase_info(7298,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8755,7 +8755,7 @@ static void test_Pmic_powerSetPwrRsrcIntrPrmValTest_PwrRsrc_intrEnable(void)
         pwrResource = PMIC_TPS6594X_LDO_MAX + 1;
     }
 
-    test_pmic_print_unity_testcase_info(157,
+    test_pmic_print_unity_testcase_info(7277,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8778,7 +8778,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_intrType(void)
     bool intrEnable;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(158,
+    test_pmic_print_unity_testcase_info(7278,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8841,7 +8841,7 @@ static void test_pmic_powerSetCommonConfigPrmValTest_severeErrorTrig_SocPwrErr(v
         PMIC_SEVERE_ERR_TRIG_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(159,
+    test_pmic_print_unity_testcase_info(7247,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8863,7 +8863,7 @@ static void test_pmic_powerSetCommonConfigPrmValTest_otherRailTrig_SocPwrErr(voi
         PMIC_OTHER_RAIL_TRIG_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(160,
+    test_pmic_print_unity_testcase_info(7248,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8885,7 +8885,7 @@ static void test_pmic_powerSetCommonConfigPrmValTest_socRailTrig_SocPwrErr(void)
         PMIC_SOC_RAIL_TRIG_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(161,
+    test_pmic_print_unity_testcase_info(7249,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8907,7 +8907,7 @@ static void test_pmic_powerSetCommonConfigPrmValTest_mcuRailTrig_SocPwrErr(void)
         PMIC_MCU_RAIL_TRIG_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(162,
+    test_pmic_print_unity_testcase_info(7250,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8929,7 +8929,7 @@ static void test_pmic_powerSetCommonConfigPrmValTest_moderateRailTrig_SocPwrErr(
         PMIC_MODERATE_ERR_TRIG_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(163,
+    test_pmic_print_unity_testcase_info(7251,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8951,7 +8951,7 @@ static void test_pmic_powerGetCommonConfigPrmValTest_handle(void)
         PMIC_POWER_PGOOD_WINDOW_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(166,
+    test_pmic_print_unity_testcase_info(7301,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -8968,7 +8968,7 @@ static void test_pmic_powerSetConfigPowerGoodgPrmValTest_handle(void)
     uint16_t pgoodSrcSel;
     uint8_t  pgoodSelType;
 
-    test_pmic_print_unity_testcase_info(167,
+    test_pmic_print_unity_testcase_info(7260,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -8998,7 +8998,7 @@ static void test_pmic_powerGetConfigPowerGoodPrmValTest_handle(void)
     uint16_t pgoodSrcSel;
     uint8_t  pgoodSelType;
 
-    test_pmic_print_unity_testcase_info(168,
+    test_pmic_print_unity_testcase_info(7302,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -9033,7 +9033,7 @@ static void test_pmic_powerGetPwrRsrcStatPrmValTest_handle(void)
     uint16_t pwrResource;
     uint16_t pwrRsrcMin, pwrRsrcMax;
 
-    test_pmic_print_unity_testcase_info(169,
+    test_pmic_print_unity_testcase_info(7265,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -9080,7 +9080,7 @@ static void test_pmic_powerSetThermalConfigPrmValTest_handle(void)
                                         PMIC_LP8764X_THERMAL_TEMP_WARN_130C + 1;
     }
 
-    test_pmic_print_unity_testcase_info(170,
+    test_pmic_print_unity_testcase_info(7270,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -9111,7 +9111,7 @@ static void test_pmic_powerGetThermalConfigPrmValTest_handle(void)
                                         PMIC_LP8764X_THERMAL_TEMP_WARN_130C + 1;
     }
 
-    test_pmic_print_unity_testcase_info(171,
+    test_pmic_print_unity_testcase_info(7303,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -9144,7 +9144,7 @@ static void test_Pmic_powerSetPwrRsrcIntrConfigPrmValTest_handle(void)
         pwrResource = PMIC_TPS6594X_LDO_MAX ;
     }
 
-    test_pmic_print_unity_testcase_info(172,
+    test_pmic_print_unity_testcase_info(7279,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -9165,7 +9165,7 @@ static void test_pmic_powerSetPwrRsrcIntrPrmValTest_handle(void)
     bool intrEnable;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(173,
+    test_pmic_print_unity_testcase_info(7296,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 

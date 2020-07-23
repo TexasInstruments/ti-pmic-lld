@@ -1597,7 +1597,6 @@ static int32_t Pmic_powerSetVoltage(Pmic_CoreHandle_t *pPmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == status)
         {
-            bitMask = bitMask << bitPos;
             Pmic_setBitField(&regData, bitPos, bitMask, vSetVal);
             status = Pmic_commIntf_sendByte(pPmicCoreHandle, regAddr, regData);
         }
@@ -1650,7 +1649,6 @@ static int32_t Pmic_powerGetVoltage(Pmic_CoreHandle_t *pPmicCoreHandle,
                                               &bitMask);
         if(PMIC_ST_SUCCESS == status)
         {
-            bitMask = bitMask << bitPos;
             vSetVal = Pmic_getBitField(regData, bitPos, bitMask);
         }
     }
@@ -1916,7 +1914,6 @@ static int32_t Pmic_powerSetBuckVmonSlewRate(
 
         if(PMIC_ST_SUCCESS == status)
         {
-            bitMask = bitMask << bitPos;
             Pmic_setBitField(&regData, bitPos, bitMask, buckVmonSlewRate);
             status = Pmic_commIntf_sendByte(
                                      pPmicCoreHandle,
@@ -1969,7 +1966,6 @@ static int32_t Pmic_powerGetBuckVmonSlewRate(Pmic_CoreHandle_t *pPmicCoreHandle,
                                                 &bitMask);
         if(PMIC_ST_SUCCESS == status)
         {
-            bitMask    = bitMask << bitPos;
             *pSlewRate = Pmic_getBitField(regData, bitPos, bitMask);
         }
     }
@@ -5005,24 +5001,27 @@ static int32_t Pmic_validateIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
         status = PMIC_ST_ERR_INV_HANDLE;
     }
 
-    switch(pPmicCoreHandle->pmicDeviceType)
+    if(PMIC_ST_SUCCESS == status)
     {
-        case PMIC_DEV_HERA_LP8764X:
-            if(intrType > PMIC_TPS6594X_POWER_COMMON_INTERRUPT_MAX)
-            {
-                status = PMIC_ST_ERR_INV_PARAM;
-            }
+        switch(pPmicCoreHandle->pmicDeviceType)
+        {
+            case PMIC_DEV_HERA_LP8764X:
+                if(intrType > PMIC_LP8764X_POWER_COMMON_INTERRUPT_MAX)
+                {
+                    status = PMIC_ST_ERR_INV_PARAM;
+                }
 
-            break;
-        case PMIC_DEV_LEO_TPS6594X:
-            if(intrType > PMIC_TPS6594X_POWER_COMMON_INTERRUPT_MAX)
-            {
-                status = PMIC_ST_ERR_INV_PARAM;
-            }
+                break;
+            case PMIC_DEV_LEO_TPS6594X:
+                if(intrType > PMIC_TPS6594X_POWER_COMMON_INTERRUPT_MAX)
+                {
+                    status = PMIC_ST_ERR_INV_PARAM;
+                }
 
-            break;
-        default:
-            status = PMIC_ST_ERR_INV_PARAM;
+                break;
+            default:
+                status = PMIC_ST_ERR_INV_PARAM;
+        }
     }
 
     return status;
