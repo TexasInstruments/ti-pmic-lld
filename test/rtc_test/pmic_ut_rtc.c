@@ -38,6 +38,7 @@
  */
 
 #include <pmic_ut_rtc.h>
+#include <pmic_fsm.h>
 
 /* Pointer to Pmic Core Handle */
 Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
@@ -329,6 +330,34 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
     {
         1004,
         "Pmic_getRtcStatus : Parameter validation for 'ValidParams'"
+    },
+    {
+        1,
+        "Pmic_fsmDeviceOffRequestCfg/Pmic_fsmEnableI2cTrigger : RTC Wakeup using Timer Interrupt'"
+    },
+    {
+        2,
+        "Pmic_fsmDeviceOffRequestCfg/Pmic_fsmEnableI2cTrigger :  RTC Wakeup using Alarm Interrupt'"
+    },
+    {
+        3,
+        "Pmic_fsmDeviceOffRequestCfg :  Parameter validation for 'handle'"
+    },
+    {
+        4,
+        "Pmic_fsmDeviceOffRequestCfg :  Parameter validation for 'eventType'"
+    },
+    {
+        5,
+        "Pmic_fsmEnableI2cTrigger :  Parameter validation for 'handle'"
+    },
+    {
+        6,
+        "Pmic_fsmEnableI2cTrigger :  Parameter validation for 'i2cTriggerType'"
+    },
+    {
+        7,
+        "Pmic_nSleepSignalsSetup :  Parameter validation for 'handle'"
     },
 };
 
@@ -1314,7 +1343,7 @@ static void test_pmic_rtc_setTimePrmValTest_year(void)
 /*!
  * \brief   Parameter range validation for 'month'
  */
-static void test_pmic_rtc_setTimePrmValTest_pvmonth(void) 
+static void test_pmic_rtc_setTimePrmValTest_pvmonth(void)
 {
     int32_t      status      = PMIC_ST_SUCCESS;
     Pmic_RtcTime_t timeCfg    = {0x0U, 30U, 30U, 6U, 0U, 1U};
@@ -1630,41 +1659,6 @@ static void test_pmic_rtc_getFreqCompPrmValTest_compensation(void)
 }
 
 /*!
- * \brief   Mask or Unmask All interrupts
- *
- * \param   mask              [IN]    Parameter to mask/unmask all INTRs
- *                                    Valid values: \ref Pmic_IrqMaskFlag
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
-static void pmic_all_intMask(Pmic_CoreHandle_t *pHandle)
-{
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pHandle;
-
-    /* MASKING all Interrupts */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_ALL, PMIC_IRQ_MASK);
-    Pmic_irqGpioMaskIntr(&handle,
-                         PMIC_IRQ_GPIO_ALL_INT_MASK_NUM,
-                         PMIC_IRQ_MASK,
-                         PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
-}
-
-/*!
- * \brief   UnMask All interrupts
- */
-static void pmic_all_intUnMask(Pmic_CoreHandle_t *pHandle)
-{
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pHandle;
-
-    /* UN-MASKING all Interrupts */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_ALL, PMIC_IRQ_UNMASK);
-    Pmic_irqGpioMaskIntr(&handle,
-                         PMIC_IRQ_GPIO_ALL_INT_MASK_NUM,
-                         PMIC_IRQ_UNMASK,
-                         PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
-}
-
-/*!
  * \brief   RTC time interrupt
  */
 static void test_pmic_rtc_testTimerIntr(void)
@@ -1693,9 +1687,6 @@ static void test_pmic_rtc_testTimerIntr(void)
     status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    /* MASKING all Interrupts */
-    pmic_all_intMask(pPmicCoreHandle);
-
     status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_rd, &dateCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -1713,7 +1704,7 @@ static void test_pmic_rtc_testTimerIntr(void)
     {
         status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
         if((PMIC_ST_SUCCESS == status) &&
-           ((errStat.intStatus[PMIC_TPS6594X_RTC_TIMER_INT/32U] & 
+           ((errStat.intStatus[PMIC_TPS6594X_RTC_TIMER_INT/32U] &
              (1U << (PMIC_TPS6594X_RTC_TIMER_INT % 32U))) != 0U))
         {
             while(PMIC_TPS6594X_RTC_TIMER_INT != irqNum)
@@ -1743,9 +1734,6 @@ static void test_pmic_rtc_testTimerIntr(void)
         status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
     }
-
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(pHandle);
 
     status = Pmic_rtcSetTimerPeriod(pHandle, timerPeriod);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -1777,10 +1765,6 @@ static void test_pmic_rtc_testAlarmIntr(void)
     status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    /* MASKING all Interrupts */
-    pmic_all_intMask(pHandle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
     /* Get the current time value */
     status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_rd, &dateCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -1799,7 +1783,7 @@ static void test_pmic_rtc_testAlarmIntr(void)
     {
         status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
         if((PMIC_ST_SUCCESS == status) &&
-           ((errStat.intStatus[PMIC_TPS6594X_RTC_ALARM_INT/32U] & 
+           ((errStat.intStatus[PMIC_TPS6594X_RTC_ALARM_INT/32U] &
              (1U << (PMIC_TPS6594X_RTC_ALARM_INT % 32U))) != 0U))
         {
             while(PMIC_TPS6594X_RTC_ALARM_INT != irqNum)
@@ -1837,9 +1821,6 @@ static void test_pmic_rtc_testAlarmIntr(void)
             break;
         }
     }
-
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(pHandle);
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
@@ -1968,6 +1949,320 @@ static void test_pmic_rtc_getRtcStatus_PrmValTest_validParams(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INSUFFICIENT_CFG, status);
 }
 
+/*!
+ * \brief   RTC  wakeup using time interrupt
+ */
+static void test_pmic_rtc_testWakeup_TimerIntr(void)
+{
+    int32_t            status       = PMIC_ST_SUCCESS;
+    int8_t             timeout      = 10U;
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    Pmic_RtcTime_t     timeCfg_cr   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
+    Pmic_RtcDate_t     dateCfg_cr   = { 0x0F, 0U, 0U, 0U, 0U};
+    Pmic_RtcTime_t     timeCfg_rd   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
+    Pmic_RtcDate_t     dateCfg_rd   = { 0x0F, 0U, 0U, 0U, 0U};
+    Pmic_IrqStatus_t errStat        = {0U};
+    bool clearIRQ                   = false;
+    uint8_t  irqNum                 = 0U;
+    uint8_t            timerPeriod  = 0U;
+
+    Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
+    Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
+    bool standByState = 0U;
+    uint32_t timerIntrdelayTime = 70000U;  // Timer Interrupt configured for 1 minute (60 Sec)
+    uint32_t delayTime = 80000U;  // Added delay for workaround
+    uint8_t i = 0U;
+
+    test_pmic_print_unity_testcase_info(1,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    pHandle                         = pPmicCoreHandle;
+
+    status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_rd, &dateCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcGetTimerPeriod(pHandle, &timerPeriod);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    for(i=0; i< 2; i++)
+    {
+        irqNum = 0;
+
+        if(i == 0)
+        {
+          standByState = PMIC_FSM_STANBY_STATE;
+        }
+        else
+        {
+          standByState = PMIC_FSM_LP_STANBY_STATE;
+        }
+        status = Pmic_rtcSetTimerPeriod(pHandle,
+                                               PMIC_RTC_MINUTE_INTR_PERIOD);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        status = Pmic_rtcEnableTimerIntr(pHandle, PMIC_RTC_TIMER_INTR_ENABLE);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        /*To avoid DAP reset*/
+        Osal_delay(delayTime);
+
+        status = Pmic_fsmDeviceOffRequestCfg(pHandle,
+                                             PMIC_FSM_I2C_TRIGGER0_EVENT_TYPE,
+                                             standByState);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        status = Pmic_fsmEnableI2cTrigger(pHandle, PMIC_FSM_I2C_TRIGGER0_TYPE);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        Osal_delay(timerIntrdelayTime);
+
+        while(timeout--)
+        {
+            status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
+            if((PMIC_ST_SUCCESS == status) &&
+               ((errStat.intStatus[PMIC_TPS6594X_RTC_TIMER_INT/32U] &
+                 (1U << (PMIC_TPS6594X_RTC_TIMER_INT % 32U))) != 0U))
+            {
+                while(PMIC_TPS6594X_RTC_TIMER_INT != irqNum)
+                {
+                    status = Pmic_getNextErrorStatus(pHandle,
+                                                     &errStat,
+                                                     &irqNum);
+                }
+
+                if(PMIC_ST_SUCCESS == status)
+                {
+                    /* clear the interrupt */
+                    status = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_RTC_TIMER_INT);
+                }
+
+                if(PMIC_ST_SUCCESS == status)
+                {
+                    /* Disable the timer interrupt  */
+                    status = Pmic_rtcEnableTimerIntr(pHandle,
+                                                     PMIC_RTC_TIMER_INTR_DISABLE);
+
+                    break;
+                }
+            }
+
+            status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
+            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+        }
+    }
+
+    status = Pmic_rtcSetTimerPeriod(pHandle, timerPeriod);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+}
+
+/*!
+ * \brief   RTC wakeup using Alarm interrupt
+ */
+static void test_pmic_rtc_testWakeup_AlarmIntr(void)
+{
+    int32_t            status       = PMIC_ST_SUCCESS;
+    int8_t             timeout      = 10U;
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    pHandle                         = pPmicCoreHandle;
+    Pmic_RtcTime_t     timeCfg_cr   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
+    Pmic_RtcDate_t     dateCfg_cr   = { 0x0F, 0U, 0U, 0U, 0U};
+    Pmic_RtcTime_t     timeCfg_rd   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
+    Pmic_RtcDate_t     dateCfg_rd   = { 0x0F, 0U, 0U, 0U, 0U};
+    Pmic_IrqStatus_t errStat        = {0U};
+    bool clearIRQ                   = false;
+    uint8_t  irqNum                 = 0U;
+    Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
+    Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
+    bool standByState = 0U;
+    uint32_t alarmIntrdelayTime = 70000U;  // Alarm Interrupt configured for 1 minute (60 Sec)
+    uint32_t delayTimeBefore = 80000U;  // Added delay for workaround
+    uint32_t delayTimeAfter = 80000U;  // Added delay for workaround
+    uint8_t i = 0U;
+
+    test_pmic_print_unity_testcase_info(2,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    /* Get the current time value */
+    status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_rd, &dateCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    for(i=0; i< 2; i++)
+    {
+        irqNum = 0;
+
+        if(i == 0)
+        {
+          standByState = PMIC_FSM_STANBY_STATE;
+        }
+        else
+        {
+          standByState = PMIC_FSM_LP_STANBY_STATE;
+        }
+
+        timeCfg_rd.minutes = timeCfg_rd.minutes + 1U;
+        status   = Pmic_rtcSetAlarmInfo(pHandle, timeCfg_rd, dateCfg_rd);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        /* Set Alarm Interupt */
+        status = Pmic_rtcEnableAlarmIntr(pHandle, PMIC_RTC_ALARM_INTR_ENABLE);
+        /* Get the current time for timeout */
+        status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        /*To avoid DAP reset for FSM I2C0_Trigger*/
+        Osal_delay(delayTimeBefore);
+
+        status = Pmic_fsmDeviceOffRequestCfg(pHandle,
+                                             PMIC_FSM_I2C_TRIGGER0_EVENT_TYPE,
+                                             standByState);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        /*To avoid DAP reset for FSM I2C0_Trigger*/
+        Osal_delay(delayTimeAfter);
+
+        status = Pmic_fsmEnableI2cTrigger(pHandle, PMIC_FSM_I2C_TRIGGER0_TYPE);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        Osal_delay(alarmIntrdelayTime);
+
+        while(timeout--)
+        {
+            status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
+            if((PMIC_ST_SUCCESS == status) &&
+               ((errStat.intStatus[PMIC_TPS6594X_RTC_ALARM_INT/32U] &
+                 (1U << (PMIC_TPS6594X_RTC_ALARM_INT % 32U))) != 0U))
+            {
+                while(PMIC_TPS6594X_RTC_ALARM_INT != irqNum)
+                {
+                    status = Pmic_getNextErrorStatus(pHandle,
+                                                     &errStat,
+                                                     &irqNum);
+                }
+
+                if(PMIC_ST_SUCCESS == status)
+                {
+                    /* clear the interrupt */
+                    status = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_RTC_ALARM_INT);
+                }
+
+                if(PMIC_ST_SUCCESS == status)
+                {
+                    /* Interrupt received */
+                    /* Disable the alarm interrupt */
+                    status = Pmic_rtcEnableAlarmIntr(pHandle,
+                                                     PMIC_RTC_ALARM_INTR_DISABLE);
+
+                    /* clear the interrupt */
+                    if(PMIC_ST_SUCCESS == status)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
+            if(PMIC_ST_SUCCESS != status)
+            {
+                break;
+            }
+        }
+    }
+}
+
+/*!
+ * \brief   Parameter validation for 'handle'
+ */
+static void test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_handle(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    bool standByState = PMIC_FSM_STANBY_STATE;
+
+    test_pmic_print_unity_testcase_info(3,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmDeviceOffRequestCfg(NULL,
+                                         PMIC_FSM_I2C_TRIGGER0_EVENT_TYPE,
+                                         standByState);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+}
+
+/*!
+ * \brief   Parameter validation for 'eventType'
+ */
+static void test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_eventType(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    bool standByState = PMIC_FSM_STANBY_STATE;
+    uint8_t evenType = 1U;
+
+    test_pmic_print_unity_testcase_info(4,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmDeviceOffRequestCfg(pPmicCoreHandle,
+                                         evenType,
+                                         standByState);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+}
+
+/*!
+ * \brief   Parameter validation for 'handle'
+ */
+static void test_pmic_rtc_fsmEnI2cTrigger_PrmValTest_handle(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(5,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmEnableI2cTrigger(NULL, PMIC_FSM_I2C_TRIGGER0_TYPE);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+}
+
+/*!
+ * \brief   Parameter validation for 'i2cTriggerType'
+ */
+static void test_pmic_rtc_fsmEnI2cTrigger_PrmValTest_i2cTriggerType(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    bool i2cTriggerType = 1U;
+
+    test_pmic_print_unity_testcase_info(6,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle, i2cTriggerType);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+}
+
+/*!
+ * \brief   Parameter validation for 'handle'
+ */
+static void test_pmic_rtc_nSleepSignalsSetup_PrmValTest_handle(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(7,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    status = Pmic_nSleepSignalsSetup(NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+}
+
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E) || defined(SOC_J7200))
 
@@ -2054,6 +2349,13 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_rtc_getRtcStatus_PrmValTest_handle);
     RUN_TEST(test_pmic_rtc_getRtcStatus_PrmValTest_rtcStatus);
     RUN_TEST(test_pmic_rtc_getRtcStatus_PrmValTest_validParams);
+    RUN_TEST(test_pmic_rtc_testWakeup_TimerIntr);
+    RUN_TEST(test_pmic_rtc_testWakeup_AlarmIntr);
+    RUN_TEST(test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_handle);
+    RUN_TEST(test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_eventType);
+    RUN_TEST(test_pmic_rtc_fsmEnI2cTrigger_PrmValTest_handle);
+    RUN_TEST(test_pmic_rtc_fsmEnI2cTrigger_PrmValTest_i2cTriggerType);
+    RUN_TEST(test_pmic_rtc_nSleepSignalsSetup_PrmValTest_handle);
 
     UNITY_END();
 }
