@@ -70,6 +70,11 @@ extern "C" {
 #define PMIC_HERA_DEV_REV_ID                (0x07U)
 
 /*!
+ * \brief  PMIC power Configuration Register Address
+ */
+#define PMIC_CONFIG_1_REGADDR               (0x7DU)
+
+/*!
  * \brief: PMIC Recovery Counter Control and Status Registers
  */
 #define PMIC_RECOV_CNT_REG_1_REGADDR        (0x83U)
@@ -99,25 +104,73 @@ extern "C" {
 #define PMIC_SCRATCH_PAD_REG_4_REGADDR             (0xCCU)
 
 /*!
- * \brief: PMIC Recovery Counter Register Shift and Mask Values
+ * \brief  PMIC CONFIG_1 register Shift Values
  */
-#define PMIC_RECOV_CNT_REG_1_RECOV_CNT_CLR_MASK         (0x0FU)
-#define PMIC_RECOV_CNT_REG_1_RECOV_CNT_CLR_SHIFT        (0x00U)
+#define PMIC_CONFIG_1_TWARN_LEVEL_SHIFT                     (0U)
+#define PMIC_CONFIG_1_TSD_ORD_LEVEL_SHIFT                   (1U)
+#define PMIC_CONFIG_1_I2C1_HS_SHIFT                         (3U)
+#define PMIC_CONFIG_1_I2C2_HS_SHIFT                         (4U)
+#define PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_SHIFT                (5U)
+#define PMIC_CONFIG_1_NSLEEP1_MASK_SHIFT                    (6U)
+#define PMIC_CONFIG_1_NSLEEP2_MASK_SHIFT                    (7U)
 
 /*!
- * \brief: PMIC Recovery Counter Register Shift and Mask Values
+ * \brief: PMIC Recovery Counter Register 1 Shift Values
  */
-#define PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_MASK         (0x10U)
+#define PMIC_RECOV_CNT_REG_1_RECOV_CNT_SHIFT        (0x00U)
+
+/*!
+ * \brief: PMIC Recovery Counter Register 2 Shift Values
+ */
 #define PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_SHIFT        (0x04U)
-#define PMIC_RECOV_CNT_REG_2_RECOV_CNT_THR_MASK         (0x0FU)
 #define PMIC_RECOV_CNT_REG_2_RECOV_CNT_THR_SHIFT        (0x00U)
 
 /*!
- * \brief: HERA PMIC StartUP Shift and Mask Values
+ * \brief: HERA PMIC StartUP Shift Values
  */
-#define PMIC_STARTUP_CTRL_STARTUP_DEST_MASK                   \
-             ((uint8_t)(0x03 << PMIC_STARTUP_CTRL_STARTUP_DEST_SHIFT))
-#define PMIC_STARTUP_CTRL_STARTUP_DEST_SHIFT            (0x05U)
+#define PMIC_STARTUP_CTRL_LP_STANDBY_SEL_SHIFT        (0x03U)
+#define PMIC_STARTUP_CTRL_STARTUP_DEST_SHIFT          (0x05U)
+
+
+/*!
+ * \brief: PMIC Recovery Counter Register 1 Mask Values
+ */
+#define PMIC_RECOV_CNT_REG_1_RECOV_CNT_MASK                   \
+                       ((uint8_t)(0x0F << PMIC_RECOV_CNT_REG_1_RECOV_CNT_SHIFT))
+
+/*!
+ * \brief: PMIC Recovery Counter Register 2 Mask Values
+ */
+#define PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_MASK                   \
+                   ((uint8_t)(0x01 << PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_SHIFT))
+#define PMIC_RECOV_CNT_REG_2_RECOV_CNT_THR_MASK                   \
+                   ((uint8_t)(0x0F << PMIC_RECOV_CNT_REG_2_RECOV_CNT_THR_SHIFT))
+
+/*!
+ * \brief: HERA PMIC StartUP Mask Values
+ */
+#define PMIC_STARTUP_CTRL_LP_STANDBY_SEL_MASK                   \
+                     ((uint8_t)(0x01 << PMIC_STARTUP_CTRL_LP_STANDBY_SEL_SHIFT))
+#define PMIC_STARTUP_CTRL_STARTUP_DEST_MASK                     \
+                     ((uint8_t)(0x03 << PMIC_STARTUP_CTRL_STARTUP_DEST_SHIFT))
+
+/*!
+ * \brief  PMIC CONFIG_1 register bit masks
+ */
+#define PMIC_CONFIG_1_TWARN_LEVEL_MASK                              \
+                         ((uint8_t)(0x01 << PMIC_CONFIG_1_TWARN_LEVEL_SHIFT))
+#define PMIC_CONFIG_1_TSD_ORD_LEVEL_MASK                            \
+                         ((uint8_t)(0x01 << PMIC_CONFIG_1_TSD_ORD_LEVEL_SHIFT))
+#define PMIC_CONFIG_1_I2C1_HS_MASK                                  \
+                         ((uint8_t)(0x01 << PMIC_CONFIG_1_I2C1_HS_SHIFT))
+#define PMIC_CONFIG_1_I2C2_HS_MASK                                  \
+                         ((uint8_t)(0x01 << PMIC_CONFIG_1_I2C2_HS_SHIFT))
+#define PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_MASK                         \
+                         ((uint8_t)(0x01 << PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_SHIFT))
+#define PMIC_CONFIG_1_NSLEEP1_MASK_MASK                             \
+                         ((uint8_t)(0x01 << PMIC_CONFIG_1_NSLEEP1_MASK_SHIFT))
+#define PMIC_CONFIG_1_NSLEEP2_MASK_MASK                             \
+                         ((uint8_t)(0x01 << PMIC_CONFIG_1_NSLEEP2_MASK_SHIFT))
 
 /*!
  * \brief: PMIC Recovery Counter Threshold Max Value

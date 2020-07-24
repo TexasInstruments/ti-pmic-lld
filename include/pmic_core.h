@@ -68,7 +68,7 @@ extern "C" {
  *         Used to validate Handle to avoid corrupted PmicHandle usage.
  *         on Success: (DRV_INIT_SUCCESS | Pmic_InstType_t)
  */
-#define DRV_INIT_SUCCESS 	                    (0xABCD0000U)
+#define DRV_INIT_SUCCESS                      (0xABCD0000U)
 
 /**
  *  \anchor Pmic_RecoveryCntCfgType
@@ -107,6 +107,17 @@ extern "C" {
 #define PMIC_SCRATCH_PAD_REG_4             (04U)
 /*  @} */
 
+/**
+ *  \anchor Pmic_Nsleep_FSM_config
+ *  \name   PMIC Nsleep FSM configuration
+ *
+ *  @{
+ */
+#define PMIC_NSLEEP1B_FSM_UNMASK              (0U)
+#define PMIC_NSLEEP1B_FSM_MASK                (1U)
+#define PMIC_NSLEEP2B_FSM_UNMASK              (0U)
+#define PMIC_NSLEEP2B_FSM_MASK                (1U)
+/*  @} */
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
@@ -224,6 +235,7 @@ int32_t Pmic_setScratchPadValue(Pmic_CoreHandle_t *pPmicCoreHandle,
 int32_t Pmic_getScratchPadValue(Pmic_CoreHandle_t *pPmicCoreHandle,
                                 uint8_t            scratchPadRegNum,
                                 uint8_t            *pData);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

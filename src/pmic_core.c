@@ -79,55 +79,65 @@ int32_t Pmic_nSleepSignalsSetup(Pmic_CoreHandle_t *pPmicCoreHandle)
     uint8_t regData = 0U;
     uint8_t regVal = 0U;
 
-    switch(pPmicCoreHandle->pmicDeviceType)
+    if(NULL == pPmicCoreHandle)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            srcRegAddr = PMIC_RTC_CTRL_2_REGADDR;
-            dstRegAddr = PMIC_FSM_NSLEEP_TRIGGERS_REGADDR;
-            srcBitMask = PMIC_RTC_CTRL_2_STARTUP_DEST_MASK;
-            srcBitShift = PMIC_RTC_CTRL_2_STARTUP_DEST_SHIFT;
-            break;
-         case PMIC_DEV_HERA_LP8764X:
-            srcRegAddr = PMIC_STARTUP_CTRL_REGADDR;
-            dstRegAddr = PMIC_FSM_NSLEEP_TRIGGERS_REGADDR;
-            srcBitMask = PMIC_STARTUP_CTRL_STARTUP_DEST_MASK;
-            srcBitShift = PMIC_STARTUP_CTRL_STARTUP_DEST_SHIFT;
-            break;
-         default:
-            pmicStatus = PMIC_ST_ERR_INV_DEVICE;
-            break;
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
+        switch(pPmicCoreHandle->pmicDeviceType)
+        {
+            case PMIC_DEV_LEO_TPS6594X:
+                srcRegAddr = PMIC_RTC_CTRL_2_REGADDR;
+                dstRegAddr = PMIC_FSM_NSLEEP_TRIGGERS_REGADDR;
+                srcBitMask = PMIC_RTC_CTRL_2_STARTUP_DEST_MASK;
+                srcBitShift = PMIC_RTC_CTRL_2_STARTUP_DEST_SHIFT;
+                break;
+             case PMIC_DEV_HERA_LP8764X:
+                srcRegAddr = PMIC_STARTUP_CTRL_REGADDR;
+                dstRegAddr = PMIC_FSM_NSLEEP_TRIGGERS_REGADDR;
+                srcBitMask = PMIC_STARTUP_CTRL_STARTUP_DEST_MASK;
+                srcBitShift = PMIC_STARTUP_CTRL_STARTUP_DEST_SHIFT;
+                break;
+             default:
+                pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+                break;
+        }
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
                                             srcRegAddr,
                                             &regData);
-    }
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        regVal = (regData & srcBitMask) >> srcBitShift;
 
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            dstRegAddr,
-                                            &regData);
-    }
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            regVal = (regData & srcBitMask) >> srcBitShift;
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        HW_REG_SET_FIELD(regData,
-                         PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B,
-                         (BIT_POS_GET_VAL(regVal, 1U)));
-        HW_REG_SET_FIELD(regData,
-                         PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B,
-                         (BIT_POS_GET_VAL(regVal, 0U)));
-        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                            dstRegAddr,
-                                            regData);
-    }
+            pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                                dstRegAddr,
+                                                &regData);
+        }
 
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            HW_REG_SET_FIELD(regData,
+                             PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B,
+                             (BIT_POS_GET_VAL(regVal, 1U)));
+            HW_REG_SET_FIELD(regData,
+                             PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B,
+                             (BIT_POS_GET_VAL(regVal, 0U)));
+            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                                dstRegAddr,
+                                                regData);
+        }
+
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
 
     return pmicStatus;
 }
@@ -365,7 +375,8 @@ int32_t Pmic_getRecoveryCnt(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        *pRecovCntVal = HW_REG_GET_FIELD(regVal, PMIC_RECOV_CNT_REG_1_RECOV_CNT_CLR);
+        *pRecovCntVal = HW_REG_GET_FIELD(regVal,
+                                         PMIC_RECOV_CNT_REG_1_RECOV_CNT);
     }
 
     return pmicStatus;

@@ -4461,7 +4461,7 @@ static int32_t Pmic_getPgoodSelType(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t bitMask;
     uint8_t shiftVal;
     uint8_t regData = 0U;
-   
+
     Pmic_powerPgoodSrcRegCfg_t *pPGoodSrcRegCfg = NULL;
 
     /* Get PMIC power-good sources register configuration */
@@ -6057,7 +6057,7 @@ int32_t Pmic_powerGetPwrThermalStat(Pmic_CoreHandle_t       *pPmicCoreHandle,
 
 /**
  * \brief    API to configure the thermal temperature threshold level for PMIC.
- * 
+ *
  *          To configure the the thermal wrarning threshold temperature level,
  *          the application has to configure the below defined structure
  *          member of the Pmic_PowerThermalCfg_t:
@@ -6113,7 +6113,7 @@ int32_t Pmic_powerSetThermalConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
  * \brief   Get the PMIC thermal threshold value function.
  *          This function is used to get the thermal temperature threshold
  *          value for the PMIC.
- * 
+ *
  *          To get the the thermal wrarning threshold temperature level,
  *          the application has to configure the below defined structure
  *          member of the Pmic_PowerThermalCfg_t:

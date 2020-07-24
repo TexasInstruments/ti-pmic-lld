@@ -169,11 +169,6 @@ extern "C" {
 #define PMIC_RAIL_SEL_3_REGADDR                   (0x43U)
 
 /*!
- * \brief  PMIC power Configuration Register Address
- */
-#define PMIC_CONFIG_1_REGADDR                     (0x7DU)
-
-/*!
  * \brief  PMIC BUCK RESET Register Address
  */
 #define PMIC_BUCK_RESET_REG_REGADDR               (0x87U)
@@ -422,12 +417,6 @@ extern "C" {
  */
 #define PMIC_PGOOD_SEL_PGOOD_SRC_BITFIELD                   (0x1U)
 #define PMIC_PGOOD_SEL_PGOOD_SRC_REGULATOR_BITFIELD         (0x3U)
-
-/*!
- * \brief  PMIC Thermal warning and shutdown threshold levels bit fields
- */
-#define PMIC_CONFIG_1_TWARN_LEVEL_SHIFT                     (0U)
-#define PMIC_CONFIG_1_TSD_ORD_LEVEL_SHIFT                   (1U)
 
 /*!
  * \brief  PMIC BUCK reset bit fields
@@ -820,14 +809,6 @@ extern "C" {
 #define PMIC_PGOOD_SEL_4_PGOOD_SEL_VCCA_MASK                        \
                                   (uint8_t)(0x01 <<                 \
                                   PMIC_PGOOD_SEL_4_PGOOD_SEL_VCCA_SHIFT)
-
-/*!
- * \brief  PMIC Thermal warning and shutdown threshold levels bit masks
- */
-#define PMIC_CONFIG_1_TWARN_LEVEL_MASK           (uint8_t)(0x01 <<  \
-                                             PMIC_CONFIG_1_TWARN_LEVEL_SHIFT)
-#define PMIC_CONFIG_1_TSD_ORD_LEVEL_MASK         (uint8_t)(0x01 <<  \
-                                             PMIC_CONFIG_1_TSD_ORD_LEVEL_SHIFT)
 
 /*!
  * \brief  PMIC BUCK reset bit masks

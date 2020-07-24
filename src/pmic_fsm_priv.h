@@ -53,15 +53,31 @@ extern "C" {
 /* ========================================================================= */
 
 /*!
+ * \brief   PMIC FSM I2C TRIGGER Register Address
+ */
+#define PMIC_FSM_I2C_TRIGGERS_REGADDR       (0x85U)
+
+/*!
  * \brief   PMIC FSM NSLEEP TRIGGER Register Address
  */
 #define PMIC_FSM_NSLEEP_TRIGGERS_REGADDR    (0x86U)
+
+/*!
+ * \brief   PMIC FSM I2C TRIGGER Register Bit Fields
+ */
+#define PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_0_SHIFT    (0x0U)
 
 /*!
  * \brief   PMIC FSM NSLEEP TRIGGER Register Bit Fields
  */
 #define PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B_SHIFT    (0x0U)
 #define PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B_SHIFT    (0x1U)
+
+/*!
+ * \brief   PMIC FSM NSLEEP TRIGGER Register Bit Mask
+ */
+#define PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_0_MASK    (uint8_t)  \
+                            (0x01U << PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_0_SHIFT)
 
 /*!
  * \brief   PMIC FSM NSLEEP TRIGGER Register Bit Mask
