@@ -264,8 +264,6 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         "Pmic_gpioSetIntr : GPIO3 Rise Interrupt Test"
     },
 #endif
-/* FIXME: PMICA GPIO4 pin Causing hang on J721 EVM */
-#if 0
     {
         6240,
         "Pmic_gpioSetIntr : GPIO4 Fall Interrupt Test"
@@ -274,7 +272,6 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         6241,
         "Pmic_gpioSetIntr : GPIO4 Rise Interrupt Test"
     },
-#endif
     {
         6242,
         "Pmic_gpioSetIntr : GPIO5 Fall Interrupt Test"
@@ -357,6 +354,14 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         6200,
         "Pmic_gpioSetConfiguration : configure gpio pin as SPMI SCLK function"
     },
+    {
+        7374,
+        "Pmic_irqMaskIntr/Pmic_irqGpioMaskIntr : Masking all interrupts test"
+    },
+    {
+        7375,
+        "Pmic_irqMaskIntr/Pmic_irqGpioMaskIntr : UnMasking all interrupts test"
+    }
 };
 
 /*!
@@ -372,7 +377,7 @@ static void test_pmic_gpio_setCfgGpioPin_nSLEEP1(void)
     Pmic_GpioCfg_t gpioCfg =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -431,7 +436,7 @@ static void test_pmic_gpio_setCfgGpioPin_nSLEEP2(void)
     Pmic_GpioCfg_t gpioCfg   =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -491,7 +496,7 @@ static void test_pmic_gpio_setCfgGpioPin_nRstOut_soc(void)
     Pmic_GpioCfg_t gpioCfg   =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -542,7 +547,7 @@ static void test_pmic_gpio_setCfgGpioPin_wakeup1(void)
     Pmic_GpioCfg_t gpioCfg   =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -602,7 +607,7 @@ static void test_pmic_gpio_setCfgGpioPin_wakeup2(void)
     Pmic_GpioCfg_t gpioCfg   =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -662,7 +667,7 @@ static void test_pmic_gpio_setCfgGpioPin_gpio(void)
     Pmic_GpioCfg_t gpioCfg   =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -724,7 +729,7 @@ static void test_pmic_gpio_setCfgGpioPin_i2c2_sclk(void)
     Pmic_GpioCfg_t gpioCfg   =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -767,7 +772,7 @@ static void test_pmic_gpio_setCfgGpioPin_i2c2_sda(void)
     Pmic_GpioCfg_t gpioCfg   =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -810,7 +815,7 @@ static void test_pmic_gpio_setCfgGpioPin_spi_cs(void)
     Pmic_GpioCfg_t gpioCfg   =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -853,7 +858,7 @@ static void test_pmic_gpio_setCfgGpioPin_spi_sdo(void)
     Pmic_GpioCfg_t gpioCfg   =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -897,7 +902,7 @@ static void test_pmic_gpio_setCfgGpioPin_wdt(void)
     Pmic_GpioCfg_t gpioCfg   =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -951,7 +956,7 @@ static void test_pmic_gpio_setCfgGpioPin3_esm_soc(void)
     Pmic_GpioCfg_t gpioCfg   =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -988,7 +993,7 @@ static void test_pmic_gpio_setCfgGpioPin_esm_mcu(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -1025,7 +1030,7 @@ static void test_pmic_gpio_setCfgGpioPin_spmi_sclk(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -1067,7 +1072,7 @@ static void test_pmic_gpio_setCfgGpioPin_spmi_sdata(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -1110,7 +1115,7 @@ static void test_pmic_gpio_setCfgGpioPin_syncCLKOUT(void)
     Pmic_GpioCfg_t gpioCfg =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -1175,7 +1180,7 @@ static void test_pmic_gpio_setCfgGpioPin_synCLKIN(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -1218,7 +1223,7 @@ static void test_pmic_gpio_setCfgGpioPin_clk32KOUT(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -1273,7 +1278,7 @@ static void test_pmic_gpio_setCfgGpioPin10_clk32KOUT(void)
     Pmic_GpioCfg_t gpioCfg   =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -1313,7 +1318,7 @@ static void test_pmic_gpio_setCfgGpioPin_wdg_disable(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -1365,7 +1370,7 @@ static void test_pmic_gpio_setCfgGpioPin_good_power(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -1416,7 +1421,7 @@ static void test_pmic_gpio_setCfgPrmValTest_handle(void)
     Pmic_GpioCfg_t gpioCfg =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -1442,7 +1447,7 @@ static void test_pmic_gpio_setCfgPrmValTest_pin(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -1512,7 +1517,7 @@ static void test_pmic_gpio_setCfgPrmValTest_outputSignalType(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_OD_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         0x02,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -1538,7 +1543,7 @@ static void test_pmic_gpio_setCfgPrmValTest_deglitchEnable(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         0x02,
@@ -1564,7 +1569,7 @@ static void test_pmic_gpio_setCfgPrmValTest_pinFunc_case1(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -1589,7 +1594,7 @@ static void test_pmic_nPWRON_setCfgPrmValTest_pinFunc(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -1620,7 +1625,7 @@ static void test_pmic_nPWRON_setCfgPrmValTest_pinPolarity(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_NPWRON_CFG_POLARITY_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -1648,7 +1653,7 @@ static void test_pmic_gpio_getCfgGpioPin(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -1688,7 +1693,7 @@ static void test_pmic_gpio_getCfgPrmValTest_handle(void)
     Pmic_GpioCfg_t gpioCfg =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -1714,7 +1719,7 @@ static void test_pmic_gpio_getCfgPrmValTest_pin(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -1758,7 +1763,7 @@ static void test_pmic_gpio_getValueGpioPin1_signalLevel(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -1852,7 +1857,7 @@ static void test_pmic_gpio_setValueGpioPin1_signalLevel(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -1946,7 +1951,7 @@ static void test_pmic_gpio_setValueGpioPin5_input(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_LOW,
+        PMIC_GPIO_INPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -1979,30 +1984,6 @@ static void test_pmic_gpio_setValueGpioPin5_input(void)
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
 }
 
-static void pmic_all_intMask(Pmic_CoreHandle_t *pHandle)
-{
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pHandle;
-
-    /* MASKING all Interrupts */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_ALL, PMIC_IRQ_MASK);
-    Pmic_irqGpioMaskIntr(&handle,
-                         PMIC_IRQ_GPIO_ALL_INT_MASK_NUM,
-                         PMIC_IRQ_MASK,
-                         PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
-}
-
-static void pmic_all_intUnMask(Pmic_CoreHandle_t *pHandle)
-{
-    Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pHandle;
-
-    /* UN-MASKING all Interrupts */
-    Pmic_irqMaskIntr(&handle, PMIC_IRQ_ALL, PMIC_IRQ_UNMASK);
-    Pmic_irqGpioMaskIntr(&handle,
-                         PMIC_IRQ_GPIO_ALL_INT_MASK_NUM,
-                         PMIC_IRQ_UNMASK,
-                         PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
-}
-
 /*!
  * \brief   Test to verify GPIO1 fall interrupt
  */
@@ -2019,7 +2000,7 @@ static void test_pmic_gpio1_testFall_interrupt(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -2035,8 +2016,6 @@ static void test_pmic_gpio1_testFall_interrupt(void)
     {
         TEST_IGNORE();
     }
-    /* MASKING all Interrupts */
-    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 1 FALL Interrupt */
     Pmic_irqGpioMaskIntr(pPmicCoreHandle,
@@ -2081,9 +2060,6 @@ static void test_pmic_gpio1_testFall_interrupt(void)
         }
     }
 
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(pPmicCoreHandle);
-
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
@@ -2103,7 +2079,7 @@ static void test_pmic_gpio1_testRise_interrupt(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -2119,9 +2095,6 @@ static void test_pmic_gpio1_testRise_interrupt(void)
     {
         TEST_IGNORE();
     }
-
-    /* MASKING all Interrupts */
-    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 1 RISE Interrupt */
     Pmic_irqGpioMaskIntr(pPmicCoreHandle,
@@ -2166,9 +2139,6 @@ static void test_pmic_gpio1_testRise_interrupt(void)
         }
     }
 
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(pPmicCoreHandle);
-
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
@@ -2188,7 +2158,7 @@ static void test_pmic_gpio2_testFall_interrupt(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -2204,8 +2174,6 @@ static void test_pmic_gpio2_testFall_interrupt(void)
     {
         TEST_IGNORE();
     }
-    /* MASKING all Interrupts */
-    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 2 FALL Interrupt */
     Pmic_irqGpioMaskIntr(pPmicCoreHandle,
@@ -2250,9 +2218,6 @@ static void test_pmic_gpio2_testFall_interrupt(void)
         }
     }
 
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(pPmicCoreHandle);
-
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
@@ -2272,7 +2237,7 @@ static void test_pmic_gpio2_testRise_interrupt(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -2288,9 +2253,6 @@ static void test_pmic_gpio2_testRise_interrupt(void)
     {
         TEST_IGNORE();
     }
-
-    /* MASKING all Interrupts */
-    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 2 RISE Interrupt */
     Pmic_irqGpioMaskIntr(pPmicCoreHandle,
@@ -2335,9 +2297,6 @@ static void test_pmic_gpio2_testRise_interrupt(void)
         }
     }
 
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(pPmicCoreHandle);
-
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
@@ -2359,7 +2318,7 @@ static void test_pmic_gpio3_testFall_interrupt(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -2375,9 +2334,6 @@ static void test_pmic_gpio3_testFall_interrupt(void)
     {
         TEST_IGNORE();
     }
-
-    /* MASKING all Interrupts */
-    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 3 FALL Interrupt */
     Pmic_irqGpioMaskIntr(pPmicCoreHandle,
@@ -2422,9 +2378,6 @@ static void test_pmic_gpio3_testFall_interrupt(void)
         }
     }
 
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(pPmicCoreHandle);
-
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
@@ -2444,7 +2397,7 @@ static void test_pmic_gpio3_testRise_interrupt(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -2460,9 +2413,6 @@ static void test_pmic_gpio3_testRise_interrupt(void)
     {
         TEST_IGNORE();
     }
-
-    /* MASKING all Interrupts */
-    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 3 RISE Interrupt */
     Pmic_irqGpioMaskIntr(pPmicCoreHandle,
@@ -2507,15 +2457,10 @@ static void test_pmic_gpio3_testRise_interrupt(void)
         }
     }
 
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(pPmicCoreHandle);
-
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 #endif
 
-/* FIXME: PMICA GPIO4 pin Causing hang on J721 EVM */
-#if 0
 /*!
  * \brief   Test to verify GPIO4 fall interrupt
  */
@@ -2532,7 +2477,7 @@ static void test_pmic_gpio4_testFall_interrupt(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -2548,9 +2493,6 @@ static void test_pmic_gpio4_testFall_interrupt(void)
     {
         TEST_IGNORE();
     }
-
-    /* MASKING all Interrupts */
-    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 4 FALL Interrupt */
     Pmic_irqGpioMaskIntr(pPmicCoreHandle,
@@ -2595,9 +2537,6 @@ static void test_pmic_gpio4_testFall_interrupt(void)
         }
     }
 
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(pPmicCoreHandle);
-
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
@@ -2617,7 +2556,7 @@ static void test_pmic_gpio4_testRise_interrupt(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -2633,9 +2572,6 @@ static void test_pmic_gpio4_testRise_interrupt(void)
     {
         TEST_IGNORE();
     }
-
-    /* MASKING all Interrupts */
-    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 4 RISE Interrupt */
     Pmic_irqGpioMaskIntr(pPmicCoreHandle,
@@ -2680,12 +2616,8 @@ static void test_pmic_gpio4_testRise_interrupt(void)
         }
     }
 
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(pPmicCoreHandle);
-
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
-#endif
 
 /*!
  * \brief   Test to verify GPIO5 fall interrupt
@@ -2703,7 +2635,7 @@ static void test_pmic_gpio5_testFall_interrupt(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -2719,8 +2651,6 @@ static void test_pmic_gpio5_testFall_interrupt(void)
     {
         TEST_IGNORE();
     }
-    /* MASKING all Interrupts */
-    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 5 FALL Interrupt */
     Pmic_irqGpioMaskIntr(pPmicCoreHandle,
@@ -2765,9 +2695,6 @@ static void test_pmic_gpio5_testFall_interrupt(void)
         }
     }
 
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(pPmicCoreHandle);
-
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
@@ -2787,7 +2714,7 @@ static void test_pmic_gpio5_testRise_interrupt(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -2803,8 +2730,6 @@ static void test_pmic_gpio5_testRise_interrupt(void)
     {
         TEST_IGNORE();
     }
-    /* MASKING all Interrupts */
-    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 5 RISE Interrupt */
     Pmic_irqGpioMaskIntr(pPmicCoreHandle,
@@ -2849,9 +2774,6 @@ static void test_pmic_gpio5_testRise_interrupt(void)
         }
     }
 
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(pPmicCoreHandle);
-
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
@@ -2871,7 +2793,7 @@ static void test_pmic_gpio6_testFall_interrupt(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -2887,8 +2809,6 @@ static void test_pmic_gpio6_testFall_interrupt(void)
     {
         TEST_IGNORE();
     }
-    /* MASKING all Interrupts */
-    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 6 FALL Interrupt */
     Pmic_irqGpioMaskIntr(pPmicCoreHandle,
@@ -2933,9 +2853,6 @@ static void test_pmic_gpio6_testFall_interrupt(void)
         }
     }
 
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(pPmicCoreHandle);
-
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
@@ -2955,7 +2872,7 @@ static void test_pmic_gpio6_testRise_interrupt(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -2971,8 +2888,6 @@ static void test_pmic_gpio6_testRise_interrupt(void)
     {
         TEST_IGNORE();
     }
-    /* MASKING all Interrupts */
-    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 6 RISE Interrupt */
     Pmic_irqGpioMaskIntr(pPmicCoreHandle,
@@ -3017,9 +2932,6 @@ static void test_pmic_gpio6_testRise_interrupt(void)
         }
     }
 
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(pPmicCoreHandle);
-
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
@@ -3041,7 +2953,7 @@ static void test_pmic_gpio7_testFall_interrupt(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -3056,10 +2968,6 @@ static void test_pmic_gpio7_testFall_interrupt(void)
     {
         TEST_IGNORE();
     }
-
-
-    /* MASKING all Interrupts */
-    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 7 FALL Interrupt */
     Pmic_irqGpioMaskIntr(pPmicCoreHandle,
@@ -3104,9 +3012,6 @@ static void test_pmic_gpio7_testFall_interrupt(void)
         }
     }
 
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(pPmicCoreHandle);
-
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
@@ -3126,7 +3031,7 @@ static void test_pmic_gpio7_testRise_interrupt(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -3142,9 +3047,6 @@ static void test_pmic_gpio7_testRise_interrupt(void)
     {
         TEST_IGNORE();
     }
-
-    /* MASKING all Interrupts */
-    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 7 RISE Interrupt */
     Pmic_irqGpioMaskIntr(pPmicCoreHandle,
@@ -3189,9 +3091,6 @@ static void test_pmic_gpio7_testRise_interrupt(void)
         }
     }
 
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(pPmicCoreHandle);
-
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 #endif
@@ -3212,7 +3111,7 @@ static void test_pmic_gpio8_testFall_interrupt(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -3228,8 +3127,6 @@ static void test_pmic_gpio8_testFall_interrupt(void)
     {
         TEST_IGNORE();
     }
-    /* MASKING all Interrupts */
-    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 8 FALL Interrupt */
     Pmic_irqGpioMaskIntr(pPmicCoreHandle,
@@ -3274,9 +3171,6 @@ static void test_pmic_gpio8_testFall_interrupt(void)
         }
     }
 
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(pPmicCoreHandle);
-
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
@@ -3296,7 +3190,7 @@ static void test_pmic_gpio8_testRise_interrupt(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -3312,8 +3206,6 @@ static void test_pmic_gpio8_testRise_interrupt(void)
     {
         TEST_IGNORE();
     }
-    /* MASKING all Interrupts */
-    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 8 RISE Interrupt */
     Pmic_irqGpioMaskIntr(pPmicCoreHandle,
@@ -3358,9 +3250,6 @@ static void test_pmic_gpio8_testRise_interrupt(void)
         }
     }
 
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(pPmicCoreHandle);
-
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
@@ -3382,7 +3271,7 @@ static void test_pmic_gpio9_testFall_interrupt(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -3398,9 +3287,6 @@ static void test_pmic_gpio9_testFall_interrupt(void)
     {
         TEST_IGNORE();
     }
-
-    /* MASKING all Interrupts */
-    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 9 FALL Interrupt */
     Pmic_irqGpioMaskIntr(pPmicCoreHandle,
@@ -3445,9 +3331,6 @@ static void test_pmic_gpio9_testFall_interrupt(void)
         }
     }
 
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(pPmicCoreHandle);
-
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
@@ -3467,7 +3350,7 @@ static void test_pmic_gpio9_testRise_interrupt(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -3483,9 +3366,6 @@ static void test_pmic_gpio9_testRise_interrupt(void)
     {
         TEST_IGNORE();
     }
-
-    /* MASKING all Interrupts */
-    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 9 RISE Interrupt */
     Pmic_irqGpioMaskIntr(pPmicCoreHandle,
@@ -3530,9 +3410,6 @@ static void test_pmic_gpio9_testRise_interrupt(void)
         }
     }
 
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(pPmicCoreHandle);
-
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
@@ -3552,7 +3429,7 @@ static void test_pmic_gpio10_testFall_interrupt(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -3568,9 +3445,6 @@ static void test_pmic_gpio10_testFall_interrupt(void)
     {
         TEST_IGNORE();
     }
-
-    /* MASKING all Interrupts */
-    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 10 FALL Interrupt */
     Pmic_irqGpioMaskIntr(pPmicCoreHandle,
@@ -3615,9 +3489,6 @@ static void test_pmic_gpio10_testFall_interrupt(void)
         }
     }
 
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(pPmicCoreHandle);
-
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
@@ -3637,7 +3508,7 @@ static void test_pmic_gpio10_testRise_interrupt(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -3653,9 +3524,6 @@ static void test_pmic_gpio10_testRise_interrupt(void)
     {
         TEST_IGNORE();
     }
-
-    /* MASKING all Interrupts */
-    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 10 RISE Interrupt */
     Pmic_irqGpioMaskIntr(pPmicCoreHandle,
@@ -3700,9 +3568,6 @@ static void test_pmic_gpio10_testRise_interrupt(void)
         }
     }
 
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(pPmicCoreHandle);
-
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
@@ -3722,7 +3587,7 @@ static void test_pmic_gpio11_testFall_interrupt(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -3738,9 +3603,6 @@ static void test_pmic_gpio11_testFall_interrupt(void)
     {
         TEST_IGNORE();
     }
-
-    /* MASKING all Interrupts */
-    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 11 FALL Interrupt */
     Pmic_irqGpioMaskIntr(pPmicCoreHandle,
@@ -3785,9 +3647,6 @@ static void test_pmic_gpio11_testFall_interrupt(void)
         }
     }
 
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(pPmicCoreHandle);
-
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
@@ -3807,7 +3666,7 @@ static void test_pmic_gpio11_testRise_interrupt(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -3823,9 +3682,6 @@ static void test_pmic_gpio11_testRise_interrupt(void)
     {
         TEST_IGNORE();
     }
-
-    /* MASKING all Interrupts */
-    pmic_all_intMask(pPmicCoreHandle);
 
     /* Un Masking GPIO 11 RISE Interrupt */
     Pmic_irqGpioMaskIntr(pPmicCoreHandle,
@@ -3870,9 +3726,6 @@ static void test_pmic_gpio11_testRise_interrupt(void)
         }
     }
 
-    /* UN-MASKING all Interrupts */
-    pmic_all_intUnMask(pPmicCoreHandle);
-
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 #endif
@@ -3890,7 +3743,7 @@ static void test_pmic_gpio_intr_prmValTest_handle(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -3925,7 +3778,7 @@ static void test_pmic_gpio_intr_prmValTest_pin(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -3960,7 +3813,7 @@ static void test_pmic_gpio_intr_prmValTest_intrType(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -3995,7 +3848,7 @@ static void test_pmic_gpio_intr_prmValTest_maskPol(void)
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_HIGH,
+        PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
         PMIC_GPIO_DEGLITCH_ENABLE,
@@ -4016,6 +3869,176 @@ static void test_pmic_gpio_intr_prmValTest_maskPol(void)
     pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
 }
+
+/*!
+ * \brief   Masking all interrupts test
+ */
+static void test_pmic_gpio_intr_irqMaskAll_interrupt(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    uint8_t pin               = 1U;
+    uint8_t pinValue          = PMIC_GPIO_HIGH;
+    uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
+    uint8_t maskPol           = PMIC_GPIO_POL_LOW;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    Pmic_GpioCfg_t gpioCfg    =
+    {
+        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
+        PMIC_GPIO_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(7374,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* Masking All GPIO Interrupts */
+    pmicStatus = Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                                      PMIC_IRQ_GPIO_ALL_INT_MASK_NUM,
+                                      PMIC_IRQ_MASK,
+                                      PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* Masking All Interrupts */
+    pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                  PMIC_IRQ_ALL,
+                                  PMIC_IRQ_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pinValue = PMIC_GPIO_LOW;
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    if((0U == errStat.intStatus[0U]) &&
+       (0U == errStat.intStatus[1U]) &&
+       (0U == errStat.intStatus[2U]) &&
+       (0U == errStat.intStatus[3U]))
+    {
+        pmicStatus = PMIC_ST_SUCCESS;
+    }
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+}
+
+/*!
+ * \brief   UnMasking all interrupts test
+ */
+static void test_pmic_gpio_intr_irqUnMaskAll_interrupt(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    uint8_t pin               = 1U;
+    uint8_t pinValue          = PMIC_GPIO_HIGH;
+    uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
+    uint8_t maskPol           = PMIC_GPIO_POL_LOW;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
+    Pmic_GpioCfg_t gpioCfg    =
+    {
+        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
+        PMIC_GPIO_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(7375,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    /* Un Masking all GPIO Interrupts */
+    pmicStatus = Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                                      PMIC_IRQ_GPIO_ALL_INT_MASK_NUM,
+                                      PMIC_IRQ_UNMASK,
+                                      PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* Un Masking all Interrupts */
+    pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                  PMIC_IRQ_ALL,
+                                  PMIC_IRQ_UNMASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pinValue = PMIC_GPIO_LOW;
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    while(1U)
+    {
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_GPIO1_INT/32U] & 
+             (1U << (PMIC_TPS6594X_GPIO1_INT % 32U))) != 0U))
+        {
+            while(PMIC_TPS6594X_GPIO1_INT != irqNum)
+            {
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_GPIO1_INT);
+                break;
+            }
+        }
+    }
+
+    /* Masking All GPIO Interrupts */
+    pmicStatus = Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                                      PMIC_IRQ_GPIO_ALL_INT_MASK_NUM,
+                                      PMIC_IRQ_MASK,
+                                      PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* Masking All Interrupts */
+    pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                  PMIC_IRQ_ALL,
+                                  PMIC_IRQ_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+}
+
 
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E) || defined(SOC_J7200))
@@ -4088,11 +4111,8 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_gpio3_testFall_interrupt);
     RUN_TEST(test_pmic_gpio3_testRise_interrupt);
 #endif
-/* FIXME: PMICA GPIO4 pin Causing hang on J721 EVM */
-#if 0
     RUN_TEST(test_pmic_gpio4_testFall_interrupt);
     RUN_TEST(test_pmic_gpio4_testRise_interrupt);
-#endif
     RUN_TEST(test_pmic_gpio5_testFall_interrupt);
     RUN_TEST(test_pmic_gpio5_testRise_interrupt);
     RUN_TEST(test_pmic_gpio6_testFall_interrupt);
@@ -4117,6 +4137,8 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_gpio_intr_prmValTest_pin);
     RUN_TEST(test_pmic_gpio_intr_prmValTest_intrType);
     RUN_TEST(test_pmic_gpio_intr_prmValTest_maskPol);
+    RUN_TEST(test_pmic_gpio_intr_irqMaskAll_interrupt);
+    RUN_TEST(test_pmic_gpio_intr_irqUnMaskAll_interrupt);
 
     UNITY_END();
 }
