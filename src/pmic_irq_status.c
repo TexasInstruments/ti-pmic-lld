@@ -98,6 +98,37 @@ static uint8_t Pmic_intrBitExtract(Pmic_IrqStatus_t *pErrStat,
 }
 
 /*! 
+ * \brief  Function to Check the device specific Max IrqNum.
+ */
+static int32_t Pmic_irqValidateIrqNum(Pmic_CoreHandle_t  *pPmicCoreHandle,
+                                      const uint8_t       irqNum)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+
+    switch(pPmicCoreHandle->pmicDeviceType)
+    {
+        case PMIC_DEV_LEO_TPS6594X:
+            if((irqNum > PMIC_TPS6594X_IRQ_MAX_NUM) &&
+               (irqNum != PMIC_IRQ_ALL))
+            {
+                pmicStatus = PMIC_ST_ERR_INV_PARAM;
+            }
+            break;
+        case PMIC_DEV_HERA_LP8764X:
+            if((irqNum > PMIC_LP8764X_IRQ_MAX_NUM) && (irqNum != PMIC_IRQ_ALL))
+            {
+                pmicStatus = PMIC_ST_ERR_INV_PARAM;
+            }
+        default:
+            pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+            break;
+    }
+
+    return pmicStatus;
+}
+
+
+/*! 
  * \brief  Function to get the device specific Max IrqNum.
  */
 static int32_t Pmic_getMaxVal(Pmic_CoreHandle_t  *pPmicCoreHandle,
@@ -275,7 +306,7 @@ static int32_t Pmic_maskGpioIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
     if((PMIC_ST_SUCCESS == pmicStatus) &&
        (PMIC_IRQ_GPIO_ALL_INT_MASK_NUM == irqGpioNum))
     {
-        for(temp = 0U; temp < PMIC_IRQ_GPIO_ALL_INT_MASK_NUM; temp++)
+        for(temp = 0U; temp < (PMIC_IRQ_GPIO_ALL_INT_MASK_NUM - 1U); temp++)
         {
             pmicStatus = Pmic_irqGpioMask(pPmicCoreHandle,
                                           temp,
@@ -693,11 +724,9 @@ int32_t Pmic_irqClrErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
         pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
-    if((PMIC_ST_SUCCESS == pmicStatus) && 
-       (((irqNum > PMIC_TPS6594X_IRQ_MAX_NUM) || 
-        (irqNum > PMIC_LP8764X_IRQ_MAX_NUM))  && (irqNum != PMIC_IRQ_ALL)))
+    if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        pmicStatus = Pmic_irqValidateIrqNum(pPmicCoreHandle, irqNum);
     }
 
     if(PMIC_ST_SUCCESS == pmicStatus)
@@ -739,11 +768,9 @@ int32_t Pmic_irqMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
         pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
-    if((PMIC_ST_SUCCESS == pmicStatus) && 
-       (((irqNum > PMIC_TPS6594X_IRQ_MAX_NUM) || 
-        (irqNum > PMIC_LP8764X_IRQ_MAX_NUM))  && (irqNum != PMIC_IRQ_ALL)))
+    if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        pmicStatus = Pmic_irqValidateIrqNum(pPmicCoreHandle, irqNum);
     }
 
     if(PMIC_ST_SUCCESS == pmicStatus)
