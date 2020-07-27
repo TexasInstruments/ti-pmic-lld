@@ -51,130 +51,127 @@ static Pmic_Ut_Tests_t pmic_wdg_tests[] =
      *  testDesc
      */
     {
-        1001,
+        7327,
         "Pmic_wdgSetCfg : configure all watchdog parameters"
     },
     {
-        1002,
+        7328,
         "Pmic_wdgSetCfg : Parameter validation for 'handle'"
     },
     {
-        1003,
+        7329,
         "Pmic_wdgSetCfg : Parameter validation for `longWindowi_ms' min value"
     },
     {
-        1004,
+        7330,
         "Pmic_wdgSetCfg : Parameter validation for `longWindow_ms' max value"
     },
     {
-        1005,
+        7331,
         "Pmic_wdgSetCfg : Parameter validation for `win1Duration_us' min value"
     },
     {
-        1006,
+        7332,
         "Pmic_wdgSetCfg : Parameter validation for `win1Duration_us' max value"
     },
     {
-        1007,
+        7333,
         "Pmic_wdgSetCfg : Parameter validation for `win2Duration_us' min value"
     },
     {
-        1008,
+        7334,
         "Pmic_wdgSetCfg : Parameter validation for `win2Duration_us' max value"
     },
     {
-        1009,
-        "Pmic_wdgSetCfg : Parameter validation for `win2Duration_us' max value"
+        7335,
+        "Pmic_wdgSetCfg : Parameter validation for `failThreshold' max value"
     },
     {
-        1010,
-        "Pmic_wdgSetCfg : Parameter validation for `win2Duration_us' max Value"
+        7336,
+        "Pmic_wdgSetCfg : Parameter validation for `rstThreshold' max Value"
     },
     {
-        1011,
+        7337,
         "Pmic_wdgSetCfg : Parameter validation for `qaFdbk' max value"
     },
     {
-        1012,
+        7338,
         "Pmic_wdgSetCfg : Parameter validation for `qaLfsr' max value"
     },
     {
-        1013,
+        7339,
         "Pmic_wdgSetCfg : Parameter validation for `qaQuesSeed' max Value"
     },
-
     {
-        1014,
+        7340,
         "Pmic_wdgGetCfg : Get all watchdog parameters"
     },
     {
-        1015,
+        7341,
         "Pmic_wdgGetCfg : Parameter validation for 'handle'"
     },
     {
-        1016,
+        7342,
         "Pmic_wdgGetCfg : Parameter validation for 'WdgCfg'"
     },
     {
-        1017,
+        7343,
         "Pmic_wdgEnable : Parameter validation for 'handle'"
     },
     {
-        1018,
+        7344,
         "Pmic_wdgDisable : Parameter validation for 'WdgCfg'"
     },
-
     {
-        1019,
+        7345,
         "Pmic_wdgStartQaSequence : Parameter validation for 'handle'"
     },
     {
-        1020,
+        7346,
         "Pmic_wdgStartQaSequence : Test wdg QA sequences"
     },
     {
-        1021,
+        7347,
         "Pmic_wdgStartQaSequence : Test wdg QA sequences with different QA feedback values"
     },
     {
-        1022,
+        7348,
         "Pmic_wdgStartQaSequence : Test wdg QA sequences with different QA LFSR values"
     },
     {
-        1023,
+        7349,
         "Pmic_wdgStartQaSequence : Test wdg QA sequences with different QA Question Seed values"
     },
     {
-        1024,
+        7350,
         "Pmic_wdgGetFailCount : Test get wdg failcount"
     },
     {
-        1025,
+        7351,
         "Pmic_wdgGetFailCount : Parameter validation for 'handle'"
     },
     {
-        1026,
+        7352,
         "Pmic_wdgGetFailCount : Parameter validation for 'failCount'"
     },
-
     {
-        1027,
+        7353,
         "Pmic_wdgGetErrorStatus: Get all watchdog error status"
     },
     {
-        1028,
+        7354,
         "Pmic_wdgGetErrorStatus : Parameter validation for 'handle'"
     },
     {
-        1029,
+        7355,
         "Pmic_wdgGetErrorStatus : Parameter validation for 'errStatus'"
     },
     {
-        1030,
+        7356,
         "Pmic_wdgStartTriggerSequence : Test wdg trigger sequence"
     },
     {
-        1031,
+        7357,
         "Pmic_wdgStartTriggerSequence : Parameter validation for 'handle'"
     },
 };
@@ -203,7 +200,7 @@ static void test_pmic_wdg_setCfg_forallparams(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_5,
     };
 
-    test_pmic_print_unity_testcase_info(1001U,
+    test_pmic_print_unity_testcase_info(7327,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -257,7 +254,7 @@ static void test_pmic_wdg_setCfg_prmValTest_handle(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_5,
     };
 
-    test_pmic_print_unity_testcase_info(1002U,
+    test_pmic_print_unity_testcase_info(7328,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -288,7 +285,7 @@ static void test_pmic_wdg_setCfg_prmValTest_longwinMin(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_5,
     };
 
-    test_pmic_print_unity_testcase_info(1003U,
+    test_pmic_print_unity_testcase_info(7329,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -319,7 +316,7 @@ static void test_pmic_wdg_setCfg_prmValTest_longwinMax(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_5,
     };
 
-    test_pmic_print_unity_testcase_info(1004U,
+    test_pmic_print_unity_testcase_info(7330,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -350,7 +347,7 @@ static void test_pmic_wdg_setCfg_prmValTest_win1Min(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_5,
     };
 
-    test_pmic_print_unity_testcase_info(1005U,
+    test_pmic_print_unity_testcase_info(7331,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -381,7 +378,7 @@ static void test_pmic_wdg_setCfg_prmValTest_win1Max(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_5,
     };
 
-    test_pmic_print_unity_testcase_info(1006U,
+    test_pmic_print_unity_testcase_info(7332,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -412,7 +409,7 @@ static void test_pmic_wdg_setCfg_prmValTest_win2Min(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_5,
     };
 
-    test_pmic_print_unity_testcase_info(1007U,
+    test_pmic_print_unity_testcase_info(7333,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -443,7 +440,7 @@ static void test_pmic_wdg_setCfg_prmValTest_win2Max(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_5,
     };
 
-    test_pmic_print_unity_testcase_info(1008U,
+    test_pmic_print_unity_testcase_info(7334,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -474,7 +471,7 @@ static void test_pmic_wdg_setCfg_prmValTest_failThresholdMax(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_5,
     };
 
-    test_pmic_print_unity_testcase_info(1009U,
+    test_pmic_print_unity_testcase_info(7335,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -505,7 +502,7 @@ static void test_pmic_wdg_setCfg_prmValTest_rstThresholdMax(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_5,
     };
 
-    test_pmic_print_unity_testcase_info(1010U,
+    test_pmic_print_unity_testcase_info(7336,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -536,7 +533,7 @@ static void test_pmic_wdg_setCfg_prmValTest_qaFdbkMax(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_5,
     };
 
-    test_pmic_print_unity_testcase_info(1011U,
+    test_pmic_print_unity_testcase_info(7337,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -567,7 +564,7 @@ static void test_pmic_wdg_setCfg_prmValTest_qaLfsrMax(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_5,
     };
 
-    test_pmic_print_unity_testcase_info(1012U,
+    test_pmic_print_unity_testcase_info(7338,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -598,7 +595,7 @@ static void test_pmic_wdg_setCfg_prmValTest_qaQuesSeedMax(void)
         16,
     };
 
-    test_pmic_print_unity_testcase_info(1013U,
+    test_pmic_print_unity_testcase_info(7339,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -630,7 +627,7 @@ static void test_pmic_wdg_getCfg_forallparams(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_5,
     };
 
-    test_pmic_print_unity_testcase_info(1014U,
+    test_pmic_print_unity_testcase_info(7340,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -670,7 +667,7 @@ static void test_pmic_wdg_getCfg_prmValTest_handle(void)
     int32_t pmicStatus      = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t wdgCfg = {PMIC_WDG_CFG_SETPARAMS_FORALL, };
 
-    test_pmic_print_unity_testcase_info(1015U,
+    test_pmic_print_unity_testcase_info(7341,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -685,7 +682,7 @@ static void test_pmic_wdg_getCfg_prmValTest_wdgcfgParam(void)
 {
     int32_t pmicStatus      = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(1016U,
+    test_pmic_print_unity_testcase_info(7342,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -700,7 +697,7 @@ static void test_pmic_wdg_enable_prmValTest_handle(void)
 {
     int32_t pmicStatus      = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(1017U,
+    test_pmic_print_unity_testcase_info(7343,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -715,7 +712,7 @@ static void test_pmic_wdg_disable_prmValTest_handle(void)
 {
     int32_t pmicStatus      = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(1018U,
+    test_pmic_print_unity_testcase_info(7344,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -746,7 +743,7 @@ static void test_pmic_wdg_startQaSequence_prmValTest_handle(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_10,
     };
 
-    test_pmic_print_unity_testcase_info(1019U,
+    test_pmic_print_unity_testcase_info(7345,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -790,7 +787,7 @@ static void test_pmic_wdg_startQaSequence(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_10,
     };
 
-    test_pmic_print_unity_testcase_info(1020U,
+    test_pmic_print_unity_testcase_info(7346,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -836,7 +833,7 @@ static void test_pmic_wdg_startQaSequence_testFdbkValues(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_10,
     };
 
-    test_pmic_print_unity_testcase_info(1021U,
+    test_pmic_print_unity_testcase_info(7347,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -896,7 +893,7 @@ static void test_pmic_wdg_startQaSequence_testLfsrValues(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_10,
     };
 
-    test_pmic_print_unity_testcase_info(1022U,
+    test_pmic_print_unity_testcase_info(7348,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -952,7 +949,7 @@ static void test_pmic_wdg_startQaSequence_testQuesSeedValues(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_10,
     };
 
-    test_pmic_print_unity_testcase_info(1023U,
+    test_pmic_print_unity_testcase_info(7349,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -995,7 +992,7 @@ static void test_pmic_wdg_GetFailCount(void)
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t failCount  = 0U;
 
-    test_pmic_print_unity_testcase_info(1024U,
+    test_pmic_print_unity_testcase_info(7350,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -1016,7 +1013,7 @@ static void test_pmic_wdg_GetFailCount_prmValTest_handle(void)
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t failCount  = 0U;
 
-    test_pmic_print_unity_testcase_info(1025U,
+    test_pmic_print_unity_testcase_info(7351,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -1036,7 +1033,7 @@ static void test_pmic_wdg_GetFailCount_prmValTest_invFailCountParam(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(1026U,
+    test_pmic_print_unity_testcase_info(7352,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -1057,7 +1054,7 @@ static void test_pmic_wdg_GetErrorStatus(void)
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     Pmic_WdgErrStatus_t errStatus = {0U};
 
-    test_pmic_print_unity_testcase_info(1027U,
+    test_pmic_print_unity_testcase_info(7353,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -1079,7 +1076,7 @@ static void test_pmic_wdg_GetErrorStatus_prmValTest_handle(void)
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     Pmic_WdgErrStatus_t errStatus = {0U};
 
-    test_pmic_print_unity_testcase_info(1028U,
+    test_pmic_print_unity_testcase_info(7354,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -1100,7 +1097,7 @@ static void test_pmic_wdg_GetErrorStatus_prmValTest_invErrStatParam(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(1029U,
+    test_pmic_print_unity_testcase_info(7355,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -1137,7 +1134,7 @@ static void test_pmic_wdg_StartTriggerSequence(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_10,
     };
 
-    test_pmic_print_unity_testcase_info(1030U,
+    test_pmic_print_unity_testcase_info(7356,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -1182,7 +1179,7 @@ static void test_pmic_wdg_StartTriggerSequence_prmValTest_handle(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_10,
     };
 
-    test_pmic_print_unity_testcase_info(1031U,
+    test_pmic_print_unity_testcase_info(7357,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
