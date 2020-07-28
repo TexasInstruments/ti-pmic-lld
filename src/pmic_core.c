@@ -622,6 +622,7 @@ int32_t Pmic_init(Pmic_CoreCfg_t      *pPmicConfigData,
                     break;
                 default:
                     pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+                    break;
             }
         }
 

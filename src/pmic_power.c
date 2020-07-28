@@ -1538,9 +1538,10 @@ static int32_t Pmic_powerGetVoltageBitField(uint8_t   pmicDeviceType,
                 status = PMIC_ST_ERR_INV_PARAM;
             }
 
-             break;
+            break;
         default :
             status = PMIC_ST_ERR_INV_PARAM;
+            break;
     }
 
     return status;
@@ -3495,6 +3496,7 @@ static int32_t Pmic_powerValidateBuckFrequencyLimit(uint8_t  pmicDeviceType,
             break;
         default:
             pmicStatus = PMIC_ST_ERR_INV_PARAM;
+            break;
     }
 
     return pmicStatus;
