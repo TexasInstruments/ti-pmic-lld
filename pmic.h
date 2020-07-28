@@ -370,8 +370,8 @@ typedef struct Pmic_CoreCfg_s {
  *  \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *           For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_init(Pmic_CoreCfg_t      *pPmicConfigData,
-                  Pmic_CoreHandle_t   *pPmicCoreHandle);
+int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
+                  Pmic_CoreHandle_t    *pPmicCoreHandle);
 
 /*!
  * \brief  API to DeInitilizes an existing PMIC Instance.

@@ -168,7 +168,7 @@ bool pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos)
  *
  *  \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
  */
-void Pmic_criticalSectionStart(Pmic_CoreHandle_t *pPmicCoreHandle)
+void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *pPmicCoreHandle)
 {
     if(NULL != pPmicCoreHandle->pFnPmicCritSecStart)
     {
@@ -183,7 +183,7 @@ void Pmic_criticalSectionStart(Pmic_CoreHandle_t *pPmicCoreHandle)
  *
  *  \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
  */
-void Pmic_criticalSectionStop(Pmic_CoreHandle_t *pPmicCoreHandle)
+void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *pPmicCoreHandle)
 {
     if(NULL != pPmicCoreHandle->pFnPmicCritSecStart)
     {
@@ -397,8 +397,8 @@ int32_t Pmic_getRecoveryCnt(Pmic_CoreHandle_t *pPmicCoreHandle,
  *  \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *           For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_init(Pmic_CoreCfg_t      *pPmicConfigData,
-                  Pmic_CoreHandle_t   *pPmicCoreHandle)
+int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
+                  Pmic_CoreHandle_t    *pPmicCoreHandle)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t  regVal = 0U;

@@ -224,9 +224,9 @@ int32_t Pmic_irqMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes.
  */
-int32_t Pmic_getNextErrorStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                Pmic_IrqStatus_t  *pErrStat,
-                                uint8_t           *pIrqNum);
+int32_t Pmic_getNextErrorStatus(const Pmic_CoreHandle_t *pPmicCoreHandle,
+                                Pmic_IrqStatus_t        *pErrStat,
+                                uint8_t                 *pIrqNum);
 
 /*!
  * \brief   API to mask/unmask GPIO interrupts.

@@ -51,8 +51,8 @@
 /*!
  * \brief   This function is used to get the PMIC GPIO configuration
  */
-static int32_t Pmic_get_gpioInOutCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                     Pmic_GpioInOutCfg_t **pGpioInOutCfg)
+static int32_t Pmic_get_gpioInOutCfg(const Pmic_CoreHandle_t *pPmicCoreHandle,
+                                     Pmic_GpioInOutCfg_t    **pGpioInOutCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -83,8 +83,8 @@ static int32_t Pmic_get_gpioInOutCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief   This function is used to get the PMIC GPIO configuration
  */
-static int32_t Pmic_get_gpioIntRegCfg(Pmic_CoreHandle_t     *pPmicCoreHandle,
-                                      Pmic_GpioIntRegCfg_t **pGpioIntRegCfg)
+static int32_t Pmic_get_gpioIntRegCfg(const Pmic_CoreHandle_t *pPmicCoreHandle,
+                                      Pmic_GpioIntRegCfg_t   **pGpioIntRegCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -151,7 +151,7 @@ static int32_t Pmic_gpioValidatePin(const uint8_t pmicDeviceType,
  *          check for pPmicCoreHandle
  */
 
-static int32_t Pmic_gpioValidateParams(Pmic_CoreHandle_t *pPmicCoreHandle)
+static int32_t Pmic_gpioValidateParams(const Pmic_CoreHandle_t *pPmicCoreHandle)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -173,8 +173,8 @@ static int32_t Pmic_gpioValidateParams(Pmic_CoreHandle_t *pPmicCoreHandle)
  * \brief   This function is used to validate params and the given gpio pin
  *          is valid for the specific pmic device.
  */
-static int32_t Pmic_gpioParamCheck(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                   const uint8_t      pin)
+static int32_t Pmic_gpioParamCheck(const Pmic_CoreHandle_t *pPmicCoreHandle,
+                                   const uint8_t            pin)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -191,8 +191,8 @@ static int32_t Pmic_gpioParamCheck(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief   This function is used to validate the parameters for NPWRON or
  *          ENABLE pin
  */
-int32_t Pmic_gpioNpoweronEnableParamCheck(Pmic_CoreHandle_t   *pPmicCoreHandle,
-                                          Pmic_GpioCfg_t      *pGpioCfg)
+int32_t Pmic_gpioNpoweronEnableParamCheck(const Pmic_CoreHandle_t *pPmicCoreHandle,
+                                          const Pmic_GpioCfg_t    *pGpioCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 

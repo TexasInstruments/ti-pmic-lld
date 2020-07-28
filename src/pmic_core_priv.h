@@ -258,7 +258,7 @@ bool pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos);
  *
  *  \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
  */
-void Pmic_criticalSectionStart(Pmic_CoreHandle_t *pPmicCoreHandle);
+void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *pPmicCoreHandle);
 
 /*!
  * \brief: Function call wrapper to unlock PMIC LLD critical section
@@ -267,7 +267,7 @@ void Pmic_criticalSectionStart(Pmic_CoreHandle_t *pPmicCoreHandle);
  *
  *  \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
  */
-void Pmic_criticalSectionStop(Pmic_CoreHandle_t *pPmicCoreHandle);
+void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *pPmicCoreHandle);
 
 #ifdef __cplusplus
 }

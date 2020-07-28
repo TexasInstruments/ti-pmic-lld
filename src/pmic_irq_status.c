@@ -63,7 +63,8 @@ void Pmic_intrBitSet(Pmic_IrqStatus_t  *pErrStat, uint32_t pos)
 /*!
  * \brief  Function to Clear the intStatus bit position.
  */
-static void Pmic_intrBitClear(Pmic_IrqStatus_t *pErrStat, uint8_t *pIrqNum)
+static void Pmic_intrBitClear(Pmic_IrqStatus_t *pErrStat,
+                              const uint8_t    *pIrqNum)
 {
     uint32_t intStatSize = 0U;
 
@@ -77,8 +78,8 @@ static void Pmic_intrBitClear(Pmic_IrqStatus_t *pErrStat, uint8_t *pIrqNum)
 /*!
  * \brief  Function to Extract the intStatus bit position.
  */
-static uint8_t Pmic_intrBitExtract(Pmic_IrqStatus_t *pErrStat,
-                                   uint8_t           maxVal)
+static uint8_t Pmic_intrBitExtract(const Pmic_IrqStatus_t *pErrStat,
+                                   uint8_t                 maxVal)
 {
     uint8_t irqNum       = 0U;
     uint32_t intStatSize = 0U;
@@ -131,8 +132,8 @@ static int32_t Pmic_irqValidateIrqNum(Pmic_CoreHandle_t  *pPmicCoreHandle,
 /*! 
  * \brief  Function to get the device specific Max IrqNum.
  */
-static int32_t Pmic_getMaxVal(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                              uint8_t            *maxVal)
+static int32_t Pmic_getMaxVal(const Pmic_CoreHandle_t  *pPmicCoreHandle,
+                              uint8_t                  *maxVal)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
@@ -158,8 +159,8 @@ static int32_t Pmic_getMaxVal(Pmic_CoreHandle_t  *pPmicCoreHandle,
  * \brief  Function to get the Device specific Interrupt Configuration
  *         registers.
  */
-static int32_t Pmic_get_intrCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                                Pmic_IntrCfg_t    **pIntrCfg)
+static int32_t Pmic_get_intrCfg(const Pmic_CoreHandle_t  *pPmicCoreHandle,
+                                Pmic_IntrCfg_t          **pIntrCfg)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
@@ -193,7 +194,7 @@ static int32_t Pmic_get_intrCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
  * \brief  Function to get the Device specific GPIO Interrupt configuration 
  *         registers.
  */
-static int32_t Pmic_get_gpioIntrCfg(Pmic_CoreHandle_t       *pPmicCoreHandle,
+static int32_t Pmic_get_gpioIntrCfg(const Pmic_CoreHandle_t *pPmicCoreHandle,
                                     Pmic_GpioIntrTypeCfg_t **pGpioIntrCfg)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -386,10 +387,10 @@ static int32_t Pmic_irqClearStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief  Function to Mask/Unmask Interrupts.
  */
-static int32_t Pmic_irqMask(Pmic_CoreHandle_t *pPmicCoreHandle,
-                            const uint8_t      irqNum,
-                            const bool         mask,
-                            Pmic_IntrCfg_t    *pIntrCfg)
+static int32_t Pmic_irqMask(Pmic_CoreHandle_t    *pPmicCoreHandle,
+                            const uint8_t         irqNum,
+                            const bool            mask,
+                            const Pmic_IntrCfg_t *pIntrCfg)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData    = 0U;
@@ -491,10 +492,10 @@ static int32_t Pmic_getIntrTopRegVal(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief  Function to get the L1 error registers.
  */
-static int32_t Pmic_irqGetL1Reg(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                uint8_t            regValue,
-                                uint32_t          *l1RegAddr,
-                                int32_t            count)
+static int32_t Pmic_irqGetL1Reg(const Pmic_CoreHandle_t *pPmicCoreHandle,
+                                uint8_t                  regValue,
+                                uint32_t                *l1RegAddr,
+                                int32_t                  count)
 {
     int32_t  pmicStatus = PMIC_ST_SUCCESS;
 
@@ -590,9 +591,9 @@ static int32_t Pmic_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief   Function to Extract Interrupts as per Hierarchy given in TRM and
  *          clear the bit in pErrStat.
  */
-static int32_t Pmic_extractErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                     Pmic_IrqStatus_t  *pErrStat,
-                                     uint8_t           *pIrqNum)
+static int32_t Pmic_extractErrStatus(const Pmic_CoreHandle_t *pPmicCoreHandle,
+                                     Pmic_IrqStatus_t        *pErrStat,
+                                     uint8_t                 *pIrqNum)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t maxVal     = 0U;
@@ -798,9 +799,9 @@ int32_t Pmic_irqMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref: Pmic_ErrorCodes.
  */
-int32_t Pmic_getNextErrorStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                Pmic_IrqStatus_t  *pErrStat,
-                                uint8_t           *pIrqNum)
+int32_t Pmic_getNextErrorStatus(const Pmic_CoreHandle_t *pPmicCoreHandle,
+                                Pmic_IrqStatus_t        *pErrStat,
+                                uint8_t                 *pIrqNum)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 

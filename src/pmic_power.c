@@ -549,10 +549,10 @@ static int32_t Pmic_powerGetRvCheckEn(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief   This function is used to convert the vset value to voltage in mv
             for BUCK/VMON
  */
-int32_t Pmic_powerBuckVmonConvertVSetVal2Voltage(uint8_t   *pVSetVal,
-                                                 uint16_t  *pBaseMillivolt,
-                                                 uint8_t   *pMillivoltStep,
-                                                 uint8_t   *pBaseVoutCode)
+int32_t Pmic_powerBuckVmonConvertVSetVal2Voltage(const uint8_t *pVSetVal,
+                                                 uint16_t      *pBaseMillivolt,
+                                                 uint8_t       *pMillivoltStep,
+                                                 uint8_t       *pBaseVoutCode)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -3327,9 +3327,9 @@ static int32_t Pmic_powerGetPwrRsrcePgoodConfig(
  *          specific PMIC device.
  */
 static int32_t Pmic_powerValidatePwrRsrcLimit(
-                                             Pmic_CoreHandle_t *pPmicCoreHandle,
-                                             uint8_t  pwrRsrcType,
-                                             uint16_t pwrRsrc)
+                                    const Pmic_CoreHandle_t *pPmicCoreHandle,
+                                    uint8_t  pwrRsrcType,
+                                    uint16_t pwrRsrc)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -3412,8 +3412,8 @@ static int32_t Pmic_powerValidatePwrRsrcLimit(
  * \brief   This function is to validate the parameters and power resource
  *           limit for the specific PMIC device.
  */
-static int32_t Pmic_powerParamCheck(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                    uint16_t           pwrResource)
+static int32_t Pmic_powerParamCheck(const Pmic_CoreHandle_t *pPmicCoreHandle,
+                                    uint16_t                 pwrResource)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t pwrRsrcType;
