@@ -590,7 +590,7 @@ static int32_t Pmic_gpioGetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
     if(PMIC_ST_SUCCESS == status)
     {
         /* Reading gpio pull control */
-        if(!(HW_REG_GET_FIELD(regData, PMIC_GPIOX_CONF_GPIO_PU_PD_EN)))
+        if(HW_REG_GET_FIELD(regData, PMIC_GPIOX_CONF_GPIO_PU_PD_EN) == 0U)
         {
             pGpioCfg->pullCtrl = PMIC_GPIO_PULL_DISABLED;
         }
