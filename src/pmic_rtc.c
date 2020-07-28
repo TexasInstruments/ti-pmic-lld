@@ -1140,7 +1140,7 @@ static int32_t Pmic_rtcCheckDate(Pmic_CoreHandle_t    *pPmicCoreHandle,
         if(pmic_validParamCheck(dateCfg.validParams,
                                  PMIC_RTC_DATE_CFG_YEAR_VALID))
         {
-            leapyear = (0U == dateCfg.year % 4U);
+            leapyear = (0U == (dateCfg.year % 4U));
         }
         else
         {
@@ -1149,7 +1149,7 @@ static int32_t Pmic_rtcCheckDate(Pmic_CoreHandle_t    *pPmicCoreHandle,
                                          PMIC_RTC_OPS_FOR_RTC);
             if(PMIC_ST_SUCCESS == pmicStatus)
             {
-                leapyear = (0U == dateCfg.year % 4U);
+                leapyear = (0U == (dateCfg.year % 4U));
             }
         }
     }

@@ -856,7 +856,7 @@ static int32_t Pmic_powerConvertVoltage2VSetVal(
     }
 
     if((PMIC_ST_SUCCESS == status) &&
-       (true == millivolt % millivoltStep))
+       (true == (millivolt % millivoltStep)))
        {
            status = PMIC_ST_ERR_INV_PARAM;
        }
