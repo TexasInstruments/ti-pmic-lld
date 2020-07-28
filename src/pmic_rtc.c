@@ -266,8 +266,7 @@ static int32_t Pmic_rtcGetMinutes(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief   This function is used to set the RTC/Alarm TimeMode.
  */
 static int32_t Pmic_rtcSetTimeMode(Pmic_CoreHandle_t    *pPmicCoreHandle,
-                                   const Pmic_RtcTime_t  timeCfg,
-                                   bool                  operation_type)
+                                   const Pmic_RtcTime_t  timeCfg)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData    = 0U;
@@ -297,8 +296,7 @@ static int32_t Pmic_rtcSetTimeMode(Pmic_CoreHandle_t    *pPmicCoreHandle,
  * \brief   This function is used to get the RTC/Alarm TimeMode.
  */
 static int32_t Pmic_rtcGetTimeMode(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                   Pmic_RtcTime_t    *pTimeCfg,
-                                   bool               operation_type)
+                                   Pmic_RtcTime_t    *pTimeCfg)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData    = 0U;
@@ -955,8 +953,7 @@ static int32_t Pmic_rtcCheckHoursMode(Pmic_CoreHandle_t    *pPmicCoreHandle,
                             PMIC_RTC_TIME_CFG_TIMEMODE_VALID))
     {
         pmicStatus = Pmic_rtcGetTimeMode(pPmicCoreHandle,
-                                         (Pmic_RtcTime_t *)&timeCfg,
-                                         PMIC_RTC_OPS_FOR_RTC);
+                                         (Pmic_RtcTime_t *)&timeCfg);
     }
 
     if(PMIC_ST_SUCCESS == pmicStatus)
@@ -1239,8 +1236,7 @@ static int32_t Pmic_alarmSetTime(Pmic_CoreHandle_t    *pPmicCoreHandle,
     {
         /* Setting  Timemode to PMIC */
         pmicStatus = Pmic_rtcSetTimeMode(pPmicCoreHandle,
-                                         timeCfg,
-                                         PMIC_RTC_OPS_FOR_ALARM);
+                                         timeCfg);
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
@@ -1381,8 +1377,7 @@ static int32_t Pmic_alarmGetTime(Pmic_CoreHandle_t *pPmicCoreHandle,
     {
         /* Getting the TimeMode */
         pmicStatus = Pmic_rtcGetTimeMode(pPmicCoreHandle,
-                                         pTimeCfg,
-                                         PMIC_RTC_OPS_FOR_ALARM);
+                                         pTimeCfg);
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
@@ -1481,8 +1476,7 @@ static int32_t Pmic_rtcSetTime(Pmic_CoreHandle_t *pPmicCoreHandle,
     {
         /* Setting TimeMode to PMIC */
         pmicStatus = Pmic_rtcSetTimeMode(pPmicCoreHandle,
-                                         timeCfg,
-                                         PMIC_RTC_OPS_FOR_RTC);
+                                         timeCfg);
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
@@ -1629,8 +1623,7 @@ static int32_t Pmic_rtcGetTime(Pmic_CoreHandle_t *pPmicCoreHandle,
     {
         /* Getting the TimeMode */
         pmicStatus = Pmic_rtcGetTimeMode(pPmicCoreHandle,
-                                         pTimeCfg,
-                                         PMIC_RTC_OPS_FOR_RTC);
+                                         pTimeCfg);
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&

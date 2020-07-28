@@ -241,7 +241,7 @@ int32_t Pmic_powerLP8764xConvertVoltage2VSetVal(
  */
 int32_t Pmic_powerLP8764xConvertVSetVal2Voltage(
                                             Pmic_CoreHandle_t *pPmicCoreHandle,
-                                            uint8_t           *pVSetVal,
+                                            const uint8_t     *pVSetVal,
                                             uint16_t           pwrRsrc,
                                             uint16_t          *pBaseMillivolt,
                                             uint8_t           *pMillivoltStep,

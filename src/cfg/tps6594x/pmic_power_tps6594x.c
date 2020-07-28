@@ -340,8 +340,7 @@ int32_t Pmic_powerTPS6594xConvertVoltage2VSetVal(uint16_t  millivolt,
     }
     else if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO == pwrRsrcType)
     {
-        status = Pmic_powerLdoConvertVoltage2VSetVal(millivolt,
-                                                     pwrRsrc,
+        status = Pmic_powerLdoConvertVoltage2VSetVal(pwrRsrc,
                                                      pBaseMillivolt,
                                                      pMillivoltStep,
                                                      pBaseVoutCode);
@@ -358,11 +357,11 @@ int32_t Pmic_powerTPS6594xConvertVoltage2VSetVal(uint16_t  millivolt,
  * \brief   This function is used to convert the vset value to voltage in mv
  *          for PMIC LEO TPS6594x
  */
-int32_t Pmic_powerTPS6594xConvertVSet2Voltage(uint8_t  *pVSetVal,
-                                              uint16_t  pwrRsrc,
-                                              uint16_t *pBaseMillivolt,
-                                              uint8_t  *pMillivoltStep,
-                                              uint8_t  *pBaseVoutCode)
+int32_t Pmic_powerTPS6594xConvertVSet2Voltage(const uint8_t  *pVSetVal,
+                                              uint16_t        pwrRsrc,
+                                              uint16_t       *pBaseMillivolt,
+                                              uint8_t        *pMillivoltStep,
+                                              uint8_t        *pBaseVoutCode)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t pwrRsrcType;
@@ -377,8 +376,7 @@ int32_t Pmic_powerTPS6594xConvertVSet2Voltage(uint8_t  *pVSetVal,
     }
     else if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO == pwrRsrcType)
     {
-        status = Pmic_powerLdoConvertVSetVal2Voltage(pVSetVal,
-                                                     pwrRsrc,
+        status = Pmic_powerLdoConvertVSetVal2Voltage(pwrRsrc,
                                                      pBaseMillivolt,
                                                      pMillivoltStep,
                                                      pBaseVoutCode);

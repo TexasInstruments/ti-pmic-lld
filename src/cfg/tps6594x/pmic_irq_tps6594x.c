@@ -1106,8 +1106,7 @@ static int32_t Pmic_tps6594x_getStartupErr(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief  Function to decipher MISC Error.
  */
-static void Pmic_tps6594x_getMiscErr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                     uint8_t            regValue,
+static void Pmic_tps6594x_getMiscErr(uint8_t            regValue,
                                      Pmic_IrqStatus_t  *pErrStat)
 {
     if((regValue & PMIC_INT_MISC_BIST_PASS_INT_MASK) != 0U)
@@ -1129,8 +1128,7 @@ static void Pmic_tps6594x_getMiscErr(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief  Function to decipher MODERATE Error.
  */
-static void Pmic_tps6594x_getModerateErr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                         uint8_t            regValue,
+static void Pmic_tps6594x_getModerateErr(uint8_t            regValue,
                                          Pmic_IrqStatus_t  *pErrStat)
 {
     if((regValue & PMIC_INT_MODERATE_ERR_TSD_ORD_INT_MASK) != 0U)
@@ -1177,8 +1175,7 @@ static void Pmic_tps6594x_getModerateErr(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief  Function to decipher SEVERE Error.
  */
-static void Pmic_tps6594x_getSevereErr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                       uint8_t            regValue,
+static void Pmic_tps6594x_getSevereErr(uint8_t            regValue,
                                        Pmic_IrqStatus_t  *pErrStat)
 {
     if((regValue & PMIC_INT_SEVERE_ERR_TSD_IMM_INT_MASK) != 0U)
@@ -1413,18 +1410,16 @@ int32_t Pmic_tps6594x_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle,
                 break;
 
             case PMIC_INT_MISC_REGADDR:
-                Pmic_tps6594x_getMiscErr(pPmicCoreHandle, regValue, pErrStat);
+                Pmic_tps6594x_getMiscErr(regValue, pErrStat);
                 break;
 
             case PMIC_INT_MODERATE_ERR_REGADDR:
-                Pmic_tps6594x_getModerateErr(pPmicCoreHandle,
-                                             regValue,
+                Pmic_tps6594x_getModerateErr(regValue,
                                              pErrStat);
                 break;
 
             case PMIC_INT_SEVERE_ERR_REGADDR:
-                Pmic_tps6594x_getSevereErr(pPmicCoreHandle,
-                                           regValue,
+                Pmic_tps6594x_getSevereErr(regValue,
                                            pErrStat);
                 break;
 

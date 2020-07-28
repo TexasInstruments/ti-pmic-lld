@@ -305,10 +305,9 @@ int32_t Pmic_powerLP8764xConvertVoltage2VSetVal(
                     (PMIC_LP8764X_VMON_RANGE_3V35_5V == vmonRange))
             {
                 status = Pmic_powerVmonRange1ConvertVoltage2VSetVal(
-                                                                 millivolt,
-                                                                 pBaseMillivolt,
-                                                                 pMillivoltStep,
-                                                                 pBaseVoutCode);
+                                                                pBaseMillivolt,
+                                                                pMillivoltStep,
+                                                                pBaseVoutCode);
             }
 
             break;
@@ -325,12 +324,12 @@ int32_t Pmic_powerLP8764xConvertVoltage2VSetVal(
  *          for PMIC HERA LP8764x
  */
 int32_t Pmic_powerLP8764xConvertVSetVal2Voltage(
-                                             Pmic_CoreHandle_t *pPmicCoreHandle,
-                                             uint8_t           *pVSetVal,
-                                             uint16_t           pwrRsrc,
-                                             uint16_t          *pBaseMillivolt,
-                                             uint8_t           *pMillivoltStep,
-                                             uint8_t           *pBaseVoutCode)
+                                            Pmic_CoreHandle_t *pPmicCoreHandle,
+                                            const uint8_t     *pVSetVal,
+                                            uint16_t           pwrRsrc,
+                                            uint16_t          *pBaseMillivolt,
+                                            uint8_t           *pMillivoltStep,
+                                            uint8_t           *pBaseVoutCode)
 {
     int32_t status = PMIC_ST_SUCCESS;
     bool    vmonRange = 0U;
@@ -364,7 +363,6 @@ int32_t Pmic_powerLP8764xConvertVSetVal2Voltage(
                     (PMIC_LP8764X_VMON_RANGE_3V35_5V == vmonRange))
             {
                 status = Pmic_powerVmonRange1ConvertVSetVal2Voltage(
-                                                                 pVSetVal,
                                                                  pBaseMillivolt,
                                                                  pMillivoltStep,
                                                                  pBaseVoutCode);

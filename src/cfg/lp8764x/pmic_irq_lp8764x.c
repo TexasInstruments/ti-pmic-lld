@@ -655,8 +655,7 @@ static int32_t Pmic_lp8764x_getBuckErr(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief  Function to decipher VMON Error
  */
-static void Pmic_lp8764x_getVmonErr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                    uint8_t            regValue,
+static void Pmic_lp8764x_getVmonErr(uint8_t            regValue,
                                     Pmic_IrqStatus_t  *pErrStat)
 {
     if((regValue & PMIC_INT_VMON_VCCA_OV_INT_MASK) != 0U)
@@ -784,8 +783,7 @@ static int32_t Pmic_lp8764x_getGpioErr(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief  Function to decipher STARTUP Error
  */
-static int32_t Pmic_lp8764x_getStartupErr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                          uint8_t            regValue,
+static int32_t Pmic_lp8764x_getStartupErr(uint8_t            regValue,
                                           Pmic_IrqStatus_t  *pErrStat)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -806,8 +804,7 @@ static int32_t Pmic_lp8764x_getStartupErr(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief  Function to decipher MISC Error
  */
-static void Pmic_lp8764x_getMiscErr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                    uint8_t            regValue,
+static void Pmic_lp8764x_getMiscErr(uint8_t            regValue,
                                     Pmic_IrqStatus_t  *pErrStat)
 {
     if((regValue & PMIC_INT_MISC_BIST_PASS_INT_MASK) != 0U)
@@ -829,8 +826,7 @@ static void Pmic_lp8764x_getMiscErr(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief  Function to decipher MODERATE Error
  */
-static void Pmic_lp8764x_getModerateErr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                        uint8_t            regValue,
+static void Pmic_lp8764x_getModerateErr(uint8_t            regValue,
                                         Pmic_IrqStatus_t  *pErrStat)
 {
     if((regValue & PMIC_INT_MODERATE_ERR_TSD_ORD_INT_MASK) != 0U)
@@ -872,8 +868,7 @@ static void Pmic_lp8764x_getModerateErr(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief  Function to decipher SEVERE Error
  */
-static void Pmic_lp8764x_getSevereErr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                      uint8_t            regValue,
+static void Pmic_lp8764x_getSevereErr(uint8_t            regValue,
                                       Pmic_IrqStatus_t  *pErrStat)
 {
     if((regValue & PMIC_INT_SEVERE_ERR_TSD_IMM_INT_MASK) != 0U)
@@ -1072,8 +1067,7 @@ int32_t Pmic_lp8764x_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle,
                 break;
 
             case PMIC_INT_VMON_REGADDR:
-                Pmic_lp8764x_getVmonErr(pPmicCoreHandle,
-                                        regValue,
+                Pmic_lp8764x_getVmonErr(regValue,
                                         pErrStat);
                 break;
 
@@ -1084,24 +1078,21 @@ int32_t Pmic_lp8764x_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle,
                 break;
 
             case PMIC_INT_STARTUP_REGADDR:
-                pmicStatus = Pmic_lp8764x_getStartupErr(pPmicCoreHandle,
-                                                        regValue,
+                pmicStatus = Pmic_lp8764x_getStartupErr(regValue,
                                                         pErrStat);
                 break;
 
             case PMIC_INT_MISC_REGADDR:
-                Pmic_lp8764x_getMiscErr(pPmicCoreHandle, regValue, pErrStat);
+                Pmic_lp8764x_getMiscErr(regValue, pErrStat);
                 break;
 
             case PMIC_INT_MODERATE_ERR_REGADDR:
-                Pmic_lp8764x_getModerateErr(pPmicCoreHandle,
-                                            regValue,
+                Pmic_lp8764x_getModerateErr(regValue,
                                             pErrStat);
                 break;
 
             case PMIC_INT_SEVERE_ERR_REGADDR:
-                Pmic_lp8764x_getSevereErr(pPmicCoreHandle,
-                                          regValue,
+                Pmic_lp8764x_getSevereErr(regValue,
                                           pErrStat);
                 break;
 

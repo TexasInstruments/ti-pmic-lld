@@ -221,11 +221,11 @@ int32_t Pmic_powerTPS6594xConvertVoltage2VSetVal(uint16_t  millivolt,
  * \brief   This function is used to convert the vset value to voltage in mv
  *          for PMIC LEO TPS6594x
  */
-int32_t Pmic_powerTPS6594xConvertVSet2Voltage(uint8_t  *pVSetVal,
-                                              uint16_t  pwrRsrc,
-                                              uint16_t *pBaseMillivolt,
-                                              uint8_t  *pMillivoltStep,
-                                              uint8_t  *pBaseVoutCode);
+int32_t Pmic_powerTPS6594xConvertVSet2Voltage(const uint8_t  *pVSetVal,
+                                              uint16_t        pwrRsrc,
+                                              uint16_t       *pBaseMillivolt,
+                                              uint8_t        *pMillivoltStep,
+                                              uint8_t        *pBaseVoutCode);
 
 /*!
  * \brief   This function is to validate the power good signal source selection

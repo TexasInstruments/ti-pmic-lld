@@ -373,7 +373,6 @@ static int32_t Pmic_gpioGetPinFunc(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief   This function is used to set the NPWRON Pin Polarity
  */
 static int32_t Pmic_gpioSetPinPolarity(Pmic_CoreHandle_t    *pPmicCoreHandle,
-                                       const uint8_t         pin,
                                        const Pmic_GpioCfg_t  gpioCfg)
 {
     int32_t status  = PMIC_ST_SUCCESS;
@@ -1564,7 +1563,6 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
         {
             /* Setting NPWRON/ENABLE pin polarity */
             status = Pmic_gpioSetPinPolarity(pPmicCoreHandle,
-                                             PMIC_NPWRON_ENABLE_PIN,
                                              gpioCfg);
         }
     }

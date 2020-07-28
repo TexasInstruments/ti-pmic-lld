@@ -596,8 +596,7 @@ int32_t Pmic_powerBuckVmonConvertVSetVal2Voltage(const uint8_t *pVSetVal,
  *          when the selected voltage monitoring range for VMON is
  *          PMIC_LP8764X_VMON_RANGE_3V35_5V
  */
-int32_t Pmic_powerVmonRange1ConvertVSetVal2Voltage(uint8_t  *pVSetVal,
-                                                   uint16_t *pBaseMillivolt,
+int32_t Pmic_powerVmonRange1ConvertVSetVal2Voltage(uint16_t *pBaseMillivolt,
                                                    uint8_t  *pMillivoltStep,
                                                    uint8_t  *pBaseVoutCode)
 {
@@ -614,8 +613,7 @@ int32_t Pmic_powerVmonRange1ConvertVSetVal2Voltage(uint8_t  *pVSetVal,
  * \brief   This function is used to convert the vset value to voltage in mv
  *          for LDO
  */
-int32_t Pmic_powerLdoConvertVSetVal2Voltage(uint8_t  *pVSetVal,
-                                            uint16_t  pwrRsrc,
+int32_t Pmic_powerLdoConvertVSetVal2Voltage(uint16_t  pwrRsrc,
                                             uint16_t *pBaseMillivolt,
                                             uint8_t  *pMillivoltStep,
                                             uint8_t  *pBaseVoutCode)
@@ -736,8 +734,7 @@ int32_t Pmic_powerBuckVmonConvertVoltage2VSetVal(uint16_t millivolt,
  *          when the selected voltage monitoring range for VMON is
  *          PMIC_LP8764X_VMON_RANGE_3V35_5V
  */
-int32_t Pmic_powerVmonRange1ConvertVoltage2VSetVal(uint16_t millivolt,
-                                                   uint16_t *pBaseMillivolt,
+int32_t Pmic_powerVmonRange1ConvertVoltage2VSetVal(uint16_t *pBaseMillivolt,
                                                    uint8_t  *pMillivoltStep,
                                                    uint8_t  *pBaseVoutCode)
 {
@@ -754,8 +751,7 @@ int32_t Pmic_powerVmonRange1ConvertVoltage2VSetVal(uint16_t millivolt,
  * \brief   This function is used to convert the millivolt value to vset value
  *          for LDO Regulators
  */
-int32_t Pmic_powerLdoConvertVoltage2VSetVal(uint16_t  millivolt,
-                                            uint16_t  pwrRsrc,
+int32_t Pmic_powerLdoConvertVoltage2VSetVal(uint16_t  pwrRsrc,
                                             uint16_t *pBaseMillivolt,
                                             uint8_t  *pMillivoltStep,
                                             uint8_t  *pBaseVoutCode)
@@ -3475,7 +3471,6 @@ static int32_t Pmic_powerGetBuckFreqSel(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief   This function is used to validate the buck frequency limit.
  */
 static int32_t Pmic_powerValidateBuckFrequencyLimit(uint8_t  pmicDeviceType,
-                                                    uint16_t pwrRsrc,
                                                     uint8_t  buckFreqSel)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -3523,7 +3518,6 @@ static int32_t Pmic_powerSetBuckFreqSel(Pmic_CoreHandle_t *pPmicCoreHandle,
     {
         pmicStatus = Pmic_powerValidateBuckFrequencyLimit(
                                                 pPmicCoreHandle->pmicDeviceType,
-                                                pwrRsrc,
                                                 buckFreqSel);
     }
 
