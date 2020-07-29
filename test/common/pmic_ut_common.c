@@ -927,7 +927,9 @@ void test_pmic_uartInit()
 {
     Board_initCfg boardCfg;
 
-    boardCfg = BOARD_INIT_PINMUX_CONFIG | BOARD_INIT_UART_STDIO;
+    boardCfg = BOARD_INIT_PINMUX_CONFIG |
+               BOARD_INIT_UART_STDIO    |
+               BOARD_INIT_MODULE_CLOCK;
     Board_init(boardCfg);
 }
 
