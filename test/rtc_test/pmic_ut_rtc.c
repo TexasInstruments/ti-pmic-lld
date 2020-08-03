@@ -312,51 +312,51 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
         "Pmic_rtcEnableAlarmIntr : Parameter validation for 'handle'"
     },
     {
-        1000,
+        6194,
         "Pmic_getRtcStatus : RTC Live Status Validation RTC Current state Running"
     },
     {
-        1001,
+        6089,
         "Pmic_getRtcStatus : RTC Live Status Validation RTC Current state Frozen"
     },
     {
-        1002,
+        7465,
         "Pmic_getRtcStatus : Parameter validation for 'handle'"
     },
     {
-        1003,
+        7466,
         "Pmic_getRtcStatus : Parameter validation for 'RtcStatus'"
     },
     {
-        1004,
+        7467,
         "Pmic_getRtcStatus : Parameter validation for 'ValidParams'"
     },
     {
-        1,
+        7358,
         "Pmic_fsmDeviceOffRequestCfg/Pmic_fsmEnableI2cTrigger : RTC Wakeup using Timer Interrupt'"
     },
     {
-        2,
+        7359,
         "Pmic_fsmDeviceOffRequestCfg/Pmic_fsmEnableI2cTrigger :  RTC Wakeup using Alarm Interrupt'"
     },
     {
-        3,
+        7360,
         "Pmic_fsmDeviceOffRequestCfg :  Parameter validation for 'handle'"
     },
     {
-        4,
+        7361,
         "Pmic_fsmDeviceOffRequestCfg :  Parameter validation for 'eventType'"
     },
     {
-        5,
+        7362,
         "Pmic_fsmEnableI2cTrigger :  Parameter validation for 'handle'"
     },
     {
-        6,
+        7363,
         "Pmic_fsmEnableI2cTrigger :  Parameter validation for 'i2cTriggerType'"
     },
     {
-        7,
+        7364,
         "Pmic_nSleepSignalsSetup :  Parameter validation for 'handle'"
     },
 };
@@ -1863,7 +1863,7 @@ static void test_pmic_rtc_testGetRtcStatus_running(void)
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_RtcStatus_t pmicRtcStatus = {0};
 
-    test_pmic_print_unity_testcase_info(1000,
+    test_pmic_print_unity_testcase_info(6194,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -1885,7 +1885,7 @@ static void test_pmic_rtc_testGetRtcStatus_frozen(void)
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_RtcStatus_t pmicRtcStatus = {0};
 
-    test_pmic_print_unity_testcase_info(1001,
+    test_pmic_print_unity_testcase_info(6089,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -1907,7 +1907,7 @@ static void test_pmic_rtc_getRtcStatus_PrmValTest_handle(void)
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_RtcStatus_t pmicRtcStatus = {0};
 
-    test_pmic_print_unity_testcase_info(1002,
+    test_pmic_print_unity_testcase_info(7465,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -1925,7 +1925,7 @@ static void test_pmic_rtc_getRtcStatus_PrmValTest_rtcStatus(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(1003,
+    test_pmic_print_unity_testcase_info(7466,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -1941,7 +1941,7 @@ static void test_pmic_rtc_getRtcStatus_PrmValTest_validParams(void)
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_RtcStatus_t pmicRtcStatus = {0};
 
-    test_pmic_print_unity_testcase_info(1004,
+    test_pmic_print_unity_testcase_info(7467,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -1973,7 +1973,7 @@ static void test_pmic_rtc_testWakeup_TimerIntr(void)
     uint32_t delayTime = 80000U;  // Added delay for workaround
     uint8_t i = 0U;
 
-    test_pmic_print_unity_testcase_info(1,
+    test_pmic_print_unity_testcase_info(7358,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -2085,7 +2085,7 @@ static void test_pmic_rtc_testWakeup_AlarmIntr(void)
     uint32_t delayTimeAfter = 80000U;  // Added delay for workaround
     uint8_t i = 0U;
 
-    test_pmic_print_unity_testcase_info(2,
+    test_pmic_print_unity_testcase_info(7359,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -2188,7 +2188,7 @@ static void test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_handle(void)
     int32_t status = PMIC_ST_SUCCESS;
     bool standByState = PMIC_FSM_STANBY_STATE;
 
-    test_pmic_print_unity_testcase_info(3,
+    test_pmic_print_unity_testcase_info(7360,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -2207,7 +2207,7 @@ static void test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_eventType(void)
     bool standByState = PMIC_FSM_STANBY_STATE;
     uint8_t evenType = 1U;
 
-    test_pmic_print_unity_testcase_info(4,
+    test_pmic_print_unity_testcase_info(7361,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -2224,7 +2224,7 @@ static void test_pmic_rtc_fsmEnI2cTrigger_PrmValTest_handle(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(5,
+    test_pmic_print_unity_testcase_info(7362,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -2240,7 +2240,7 @@ static void test_pmic_rtc_fsmEnI2cTrigger_PrmValTest_i2cTriggerType(void)
     int32_t status = PMIC_ST_SUCCESS;
     bool i2cTriggerType = 1U;
 
-    test_pmic_print_unity_testcase_info(6,
+    test_pmic_print_unity_testcase_info(7363,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -2255,7 +2255,7 @@ static void test_pmic_rtc_nSleepSignalsSetup_PrmValTest_handle(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(7,
+    test_pmic_print_unity_testcase_info(7364,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
