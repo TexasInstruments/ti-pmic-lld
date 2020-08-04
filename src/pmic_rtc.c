@@ -839,6 +839,7 @@ static int32_t Pmic_rtcGetYear(Pmic_CoreHandle_t *pPmicCoreHandle,
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData    = 0U;
+    uint8_t regVal     = 0U;
 
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
@@ -866,23 +867,30 @@ static int32_t Pmic_rtcGetYear(Pmic_CoreHandle_t *pPmicCoreHandle,
         /* Operation for Alarm */
         if(PMIC_RTC_OPS_FOR_ALARM == operation_type)
         {
+            regVal = HW_REG_GET_FIELD(regData,
+                                      PMIC_ALARM_YEARS_ALR_YEAR_1);
+
             /* Update Year of the Date to pDateCfg */
-            pDateCfg->year = PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC *
-                             (HW_REG_GET_FIELD(regData,
-                                     PMIC_ALARM_YEARS_ALR_YEAR_1));
-            pDateCfg->year = pDateCfg->year +
-                             (HW_REG_GET_FIELD(regData,
-                                     PMIC_ALARM_YEARS_ALR_YEAR_0));
+            pDateCfg->year = ((uint16_t)PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC)
+                                      * regVal;
+
+            regVal = HW_REG_GET_FIELD(regData,
+                                      PMIC_ALARM_YEARS_ALR_YEAR_0);
+
+            pDateCfg->year = pDateCfg->year + regVal;
         }
         else
         {
+            regVal = HW_REG_GET_FIELD(regData,
+                                      PMIC_RTC_YEARS_YEAR_1);
             /* Update Year of the Date to pDateCfg */
-            pDateCfg->year = PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC *
-                             (HW_REG_GET_FIELD(regData,
-                                     PMIC_RTC_YEARS_YEAR_1));
-            pDateCfg->year = pDateCfg->year +
-                             (HW_REG_GET_FIELD(regData,
-                                     PMIC_RTC_YEARS_YEAR_0));
+            pDateCfg->year = ((uint16_t)PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC)
+                                      * regVal;
+
+            regVal = HW_REG_GET_FIELD(regData,
+                                     PMIC_RTC_YEARS_YEAR_0);
+
+            pDateCfg->year = pDateCfg->year + regVal;
         }
             pDateCfg->year += PMIC_RTC_YEAR_MIN;
     }

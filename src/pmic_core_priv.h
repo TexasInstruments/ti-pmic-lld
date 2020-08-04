@@ -181,16 +181,16 @@ extern "C" {
  * \brief: Macro to write a specific field value
  */
 #define HW_REG_SET_FIELD(regVal, REG_FIELD, fieldVal)                         \
-        ((regVal) = ((regVal) & (uint32_t) (~(uint32_t) REG_FIELD##_MASK)) |  \
-        ((((uint32_t) fieldVal) << (uint32_t) REG_FIELD##_SHIFT) &            \
-        (uint32_t) REG_FIELD##_MASK))
+        ((regVal) = ((regVal) & (uint8_t) (~(uint8_t) REG_FIELD##_MASK)) |  \
+        ((((uint8_t) fieldVal) << (uint8_t) REG_FIELD##_SHIFT) &            \
+        (uint8_t) REG_FIELD##_MASK))
 
 /*!
  * \brief: Macro to extract a specific field value
  */
 #define HW_REG_GET_FIELD(regVal, REG_FIELD)                                   \
-        (((regVal) & (uint32_t) REG_FIELD##_MASK) >>                          \
-        (uint32_t) REG_FIELD##_SHIFT)
+        (((regVal) & (uint8_t) REG_FIELD##_MASK) >>                          \
+        (uint8_t) REG_FIELD##_SHIFT)
 
 /*!
  * \brief: Macro to write a specific bit field value
