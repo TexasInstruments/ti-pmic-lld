@@ -1717,7 +1717,7 @@ static int32_t Pmic_rtcSetFreqCompensateVal(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_criticalSectionStart (pPmicCoreHandle);
 
     /* Writing the LSB */
-    regData = (compensation & PMIC_RTC_COMP_LSB_COMP_LSB_RTC_MASK);
+    regData = (uint8_t)(compensation & PMIC_RTC_COMP_LSB_COMP_LSB_RTC_MASK);
     pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                         PMIC_RTC_COMP_LSB_REGADDR,
                                         regData);
@@ -1725,8 +1725,8 @@ static int32_t Pmic_rtcSetFreqCompensateVal(Pmic_CoreHandle_t *pPmicCoreHandle,
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         /* Writing the MSB register */
-        regData = ((compensation & PMIC_RTC_COMP_MSB_COMP_MSB_RTC_MASK) >>
-                   PMIC_RTC_COMP_MSB_COMP_MSB_RTC_SHIFT);
+        regData = (uint8_t)((compensation & PMIC_RTC_COMP_MSB_COMP_MSB_RTC_MASK)
+                             >> PMIC_RTC_COMP_MSB_COMP_MSB_RTC_SHIFT);
 
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_RTC_COMP_MSB_REGADDR,

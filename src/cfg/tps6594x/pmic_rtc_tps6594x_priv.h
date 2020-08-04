@@ -321,7 +321,7 @@ extern "C" {
 #define PMIC_RTC_RESET_STATUS_RESET_STATUS_RTC_MASK   (uint8_t)(0x01U <<      \
                                   PMIC_RTC_RESET_STATUS_RESET_STATUS_RTC_SHIFT)
 
-#define PMIC_RTC_COMP_MSB_COMP_MSB_RTC_MASK           (uint8_t)(0xFFU <<      \
+#define PMIC_RTC_COMP_MSB_COMP_MSB_RTC_MASK           (uint16_t)(0xFFU <<     \
                                   PMIC_RTC_COMP_MSB_COMP_MSB_RTC_SHIFT)
 #define PMIC_RTC_COMP_LSB_COMP_LSB_RTC_MASK           (uint8_t)(0xFFU <<      \
                                   PMIC_RTC_COMP_LSB_COMP_LSB_RTC_SHIFT)
