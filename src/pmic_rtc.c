@@ -1111,7 +1111,7 @@ static int32_t Pmic_rtcCheckDate(Pmic_CoreHandle_t    *pPmicCoreHandle,
                                  const Pmic_RtcDate_t  dateCfg)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    bool leapyear = false;
+    bool leapyear = (bool)false;
 
     if(pmic_validParamCheck(dateCfg.validParams,
                             PMIC_RTC_DATE_CFG_MONTH_VALID) &&
