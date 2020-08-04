@@ -1856,7 +1856,7 @@ int32_t  Pmic_rtcEnableRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
         if(PMIC_RTC_STOP == enableRtc)
         {
             /* Stopping the RTC */
-            regData &= ~(PMIC_RTC_CTRL_1_STOP_RTC_MASK);
+            regData &= (uint8_t)(~(PMIC_RTC_CTRL_1_STOP_RTC_MASK));
         }
         else
         {
