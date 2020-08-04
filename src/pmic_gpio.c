@@ -522,21 +522,21 @@ static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t    *pPmicCoreHandle,
                              PMIC_GPIOX_CONF_GPIO_PU_PD_EN,
                              PMIC_GPIO_PU_PD_ENABLE);
 
-            /* clear pull-up/pull-down select field */
-            /* Select pull-down resistor */
-            HW_REG_SET_FIELD(regData,
-                             PMIC_GPIOX_CONF_GPIO_PU_SEL,
-                             PMIC_GPIO_PD_SELECT);
+            if(PMIC_GPIO_PULL_UP == gpioCfg.pullCtrl)
+            {
+                /* select pull-up resistor */
+                HW_REG_SET_FIELD(regData,
+                                 PMIC_GPIOX_CONF_GPIO_PU_SEL,
+                                 PMIC_GPIO_PU_SELECT);
+            }
+            else
+            {
+                /* Select pull-down resistor */
+                HW_REG_SET_FIELD(regData,
+                                 PMIC_GPIOX_CONF_GPIO_PU_SEL,
+                                 PMIC_GPIO_PD_SELECT);
+            }
         }
-
-        if(PMIC_GPIO_PULL_UP == gpioCfg.pullCtrl)
-        {
-            /* select pull-up resistor */
-            HW_REG_SET_FIELD(regData,
-                             PMIC_GPIOX_CONF_GPIO_PU_SEL,
-                             PMIC_GPIO_PU_SELECT);
-        }
-
         status = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                         regAddr,
                                         regData);

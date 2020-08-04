@@ -240,7 +240,7 @@ extern "C" {
  *                                Valid only when PMIC_GPIO_CFG_OD_VALID
  *                                bit is set.
  * \param   pullCtrl            pullup/pull down control.
- *                              Valid values \ref Pmic_Gpio_PU_PD_Sel.
+ *                              Valid values \ref Pmic_GpioPinPullCtrl.
  *                                Valid only when PMIC_GPIO_CFG_PULL_VALID
  *                                bit is set.
  * \param   deglitchEnable      signal deglitch time enable/disable.

@@ -131,12 +131,10 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         6205,
         "Pmic_gpioSetConfiguration : configure gpio pin as CLK32KOUT function"
     },
-/* TODO: Need to check feasible or not */
-/*  {
+    {
       6206,
       "Pmic_gpioSetConfiguration : configure gpio pin 10 as CLK32KOUT function"
     },
-*/
     {
         6207,
         "Pmic_gpioSetConfiguration : configure gpio pin as Watchdog disable function"
@@ -307,7 +305,7 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         6249,
         "Pmic_gpioSetIntr : GPIO8 Rise Interrupt Test"
     },
-/* FIXME: On J721 EVM, GPIO-9,10,11 interrupts Causing reset */
+/* FIXME: On J721 EVM, GPIO-9,11 interrupts Causing reset */
 #if 0
     {
         6250,
@@ -317,6 +315,7 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         6251,
         "Pmic_gpioSetIntr : GPIO9 Rise Interrupt Test"
     },
+#endif
     {
         6252,
         "Pmic_gpioSetIntr : GPIO10 Fall Interrupt Test"
@@ -325,6 +324,7 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         6253,
         "Pmic_gpioSetIntr : GPIO10 Rise Interrupt Test"
     },
+#if 0
     {
         6254,
         "Pmic_gpioSetIntr : GPIO11 Fall Interrupt Test"
@@ -410,6 +410,12 @@ static void test_pmic_gpio_setCfgGpioPin_nSLEEP1(void)
             continue;
         }
 
+        if(((1U != pins[pin]) || (2U != pins[pin]) || (10U != pins[pin])) &&
+           (LEO_PMICB_DEVICE == leo_pmic_device))
+        {
+            continue;
+        }
+
         pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle,
                                                pins[pin],
                                                gpioCfg);
@@ -470,6 +476,12 @@ static void test_pmic_gpio_setCfgGpioPin_nSLEEP2(void)
             continue;
         }
 
+        if(((1U != pins[pin]) || (2U != pins[pin]) || (10U != pins[pin])) &&
+           (LEO_PMICB_DEVICE == leo_pmic_device))
+        {
+            continue;
+        }
+
         pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle,
                                                pins[pin],
                                                gpioCfg);
@@ -521,6 +533,12 @@ static void test_pmic_gpio_setCfgGpioPin_nRstOut_soc(void)
 
     for(pin = 0U; pin < (sizeof(pins)/sizeof(pins[0U])); pin++)
     {
+        if((1U != pins[pin]) &&
+           (LEO_PMICB_DEVICE == leo_pmic_device))
+        {
+            continue;
+        }
+
         pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle,
                                                pins[pin],
                                                gpioCfg);
@@ -577,6 +595,12 @@ static void test_pmic_gpio_setCfgGpioPin_wakeup1(void)
         if((3U == pins[pin]) &&
            ((pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR) ||
             (leo_pmic_device == LEO_PMICA_DEVICE)))
+        {
+            continue;
+        }
+
+        if(((1U != pins[pin]) || (2U != pins[pin]) || (10U != pins[pin])) &&
+           (LEO_PMICB_DEVICE == leo_pmic_device))
         {
             continue;
         }
@@ -641,6 +665,12 @@ static void test_pmic_gpio_setCfgGpioPin_wakeup2(void)
             continue;
         }
 
+        if(((1U != pins[pin]) || (2U != pins[pin]) || (10U != pins[pin])) &&
+           (LEO_PMICB_DEVICE == leo_pmic_device))
+        {
+            continue;
+        }
+
         pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle,
                                                pins[pin],
                                                gpioCfg);
@@ -700,6 +730,12 @@ static void test_pmic_gpio_setCfgGpioPin_gpio(void)
         if((11U == pins[pin]) &&
            ((pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR) ||
             (leo_pmic_device == LEO_PMICA_DEVICE)))
+        {
+            continue;
+        }
+
+        if(((1U != pins[pin]) || (2U != pins[pin]) || (10U != pins[pin])) &&
+           (LEO_PMICB_DEVICE == leo_pmic_device))
         {
             continue;
         }
@@ -928,6 +964,11 @@ static void test_pmic_gpio_setCfgGpioPin_wdt(void)
 
     for(pin = 0U; pin < pinMax; pin++)
     {
+        if((2U != pins[pin]) && (LEO_PMICB_DEVICE == leo_pmic_device))
+        {
+            continue;
+        }
+
         pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle,
                                                pins[pin],
                                                gpioCfg);
@@ -968,6 +1009,11 @@ static void test_pmic_gpio_setCfgGpioPin3_esm_soc(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
+
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         TEST_IGNORE();
@@ -1005,6 +1051,11 @@ static void test_pmic_gpio_setCfgGpioPin_esm_mcu(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
+
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         TEST_IGNORE();
@@ -1041,6 +1092,11 @@ static void test_pmic_gpio_setCfgGpioPin_spmi_sclk(void)
     test_pmic_print_unity_testcase_info(6200,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -1083,6 +1139,11 @@ static void test_pmic_gpio_setCfgGpioPin_spmi_sdata(void)
     test_pmic_print_unity_testcase_info(6201,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -1155,6 +1216,11 @@ static void test_pmic_gpio_setCfgGpioPin_syncCLKOUT(void)
            (9U == pins[pin]))
         {
             gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO9_SYNCCLKOUT;
+        }
+
+        if((10U != pins[pin]) && (LEO_PMICB_DEVICE == leo_pmic_device))
+        {
+            continue;
         }
 
         pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pins[pin], gpioCfg);
@@ -1235,6 +1301,11 @@ static void test_pmic_gpio_setCfgGpioPin_clk32KOUT(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
+
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         TEST_IGNORE();
@@ -1264,8 +1335,6 @@ static void test_pmic_gpio_setCfgGpioPin_clk32KOUT(void)
     }
 }
 
-/* TODO: Need to check feasible or not */
-#if 0
 /*!
  * \brief   configure gpio pin10 as CLK32KOUT function
  */
@@ -1290,6 +1359,11 @@ static void test_pmic_gpio_setCfgGpioPin10_clk32KOUT(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
+    if(LEO_PMICA_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
+
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         TEST_IGNORE();
@@ -1304,7 +1378,6 @@ static void test_pmic_gpio_setCfgGpioPin10_clk32KOUT(void)
 
     TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
 }
-#endif
 
 /*!
  * \brief   configure gpio pin as Watchdog disable function
@@ -1329,6 +1402,11 @@ static void test_pmic_gpio_setCfgGpioPin_wdg_disable(void)
     test_pmic_print_unity_testcase_info(6207,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -1381,6 +1459,11 @@ static void test_pmic_gpio_setCfgGpioPin_good_power(void)
     test_pmic_print_unity_testcase_info(6209,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -1943,11 +2026,11 @@ static void test_pmic_gpio_setValuePrmValTest_pinValue(void)
 /*!
  * \brief   Set GPIO signal level for an input GPIO pin
  */
-static void test_pmic_gpio_setValueGpioPin5_input(void)
+static void test_pmic_gpio_setValueGpioPin1_input(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     uint8_t pinValue          = PMIC_GPIO_HIGH;
-    uint8_t pin               = 5U;
+    uint8_t pin               = 1U;
     Pmic_GpioCfg_t gpioCfg    =
     {
         PMIC_GPIO_CFG_DIR_VALID_SHIFT,
@@ -2007,6 +2090,16 @@ static void test_pmic_gpio1_testFall_interrupt(void)
         PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
+
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                              PMIC_GPIO_CFG_DIR_VALID_SHIFT |
+                              PMIC_GPIO_CFG_OD_VALID_SHIFT |
+                              PMIC_GPIO_CFG_PULL_VALID_SHIFT;
+        gpioCfg.outputSignalType = PMIC_GPIO_PUSH_PULL_OUTPUT;
+        gpioCfg.pullCtrl = PMIC_GPIO_PULL_UP;
+    }
 
     test_pmic_print_unity_testcase_info(6234,
                                         pmic_gpio_tests,
@@ -2087,6 +2180,16 @@ static void test_pmic_gpio1_testRise_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                              PMIC_GPIO_CFG_DIR_VALID_SHIFT |
+                              PMIC_GPIO_CFG_OD_VALID_SHIFT |
+                              PMIC_GPIO_CFG_PULL_VALID_SHIFT;
+        gpioCfg.outputSignalType = PMIC_GPIO_PUSH_PULL_OUTPUT;
+        gpioCfg.pullCtrl = PMIC_GPIO_PULL_UP;
+    }
+
     test_pmic_print_unity_testcase_info(6235,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
@@ -2166,6 +2269,16 @@ static void test_pmic_gpio2_testFall_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                              PMIC_GPIO_CFG_DIR_VALID_SHIFT |
+                              PMIC_GPIO_CFG_OD_VALID_SHIFT |
+                              PMIC_GPIO_CFG_PULL_VALID_SHIFT;
+        gpioCfg.outputSignalType = PMIC_GPIO_PUSH_PULL_OUTPUT;
+        gpioCfg.pullCtrl = PMIC_GPIO_PULL_UP;
+    }
+
     test_pmic_print_unity_testcase_info(6236,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
@@ -2244,6 +2357,16 @@ static void test_pmic_gpio2_testRise_interrupt(void)
         PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
         PMIC_GPIO_HIGH
     };
+
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                              PMIC_GPIO_CFG_DIR_VALID_SHIFT |
+                              PMIC_GPIO_CFG_OD_VALID_SHIFT |
+                              PMIC_GPIO_CFG_PULL_VALID_SHIFT;
+        gpioCfg.outputSignalType = PMIC_GPIO_PUSH_PULL_OUTPUT;
+        gpioCfg.pullCtrl = PMIC_GPIO_PULL_UP;
+    }
 
     test_pmic_print_unity_testcase_info(6237,
                                         pmic_gpio_tests,
@@ -2330,6 +2453,11 @@ static void test_pmic_gpio3_testFall_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
+
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         TEST_IGNORE();
@@ -2408,6 +2536,11 @@ static void test_pmic_gpio3_testRise_interrupt(void)
     test_pmic_print_unity_testcase_info(6239,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -2489,6 +2622,11 @@ static void test_pmic_gpio4_testFall_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
+
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         TEST_IGNORE();
@@ -2567,6 +2705,11 @@ static void test_pmic_gpio4_testRise_interrupt(void)
     test_pmic_print_unity_testcase_info(6241,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -2647,6 +2790,11 @@ static void test_pmic_gpio5_testFall_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
+
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         TEST_IGNORE();
@@ -2725,6 +2873,11 @@ static void test_pmic_gpio5_testRise_interrupt(void)
     test_pmic_print_unity_testcase_info(6243,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -2805,6 +2958,11 @@ static void test_pmic_gpio6_testFall_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
+
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         TEST_IGNORE();
@@ -2883,6 +3041,11 @@ static void test_pmic_gpio6_testRise_interrupt(void)
     test_pmic_print_unity_testcase_info(6245,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -2964,6 +3127,12 @@ static void test_pmic_gpio7_testFall_interrupt(void)
     test_pmic_print_unity_testcase_info(6246,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
+
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         TEST_IGNORE();
@@ -3042,6 +3211,11 @@ static void test_pmic_gpio7_testRise_interrupt(void)
     test_pmic_print_unity_testcase_info(6247,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -3123,6 +3297,11 @@ static void test_pmic_gpio8_testFall_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
+
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         TEST_IGNORE();
@@ -3202,6 +3381,11 @@ static void test_pmic_gpio8_testRise_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
+
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         TEST_IGNORE();
@@ -3253,7 +3437,7 @@ static void test_pmic_gpio8_testRise_interrupt(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
-/* FIXME: On J721 EVM, GPIO-9,10,11 interrupts Causing reset */
+/* FIXME: On J721 EVM, GPIO-9,11 interrupts Causing reset */
 #if 0
 /*!
  * \brief   Test to verify GPIO9 fall interrupt
@@ -3282,6 +3466,11 @@ static void test_pmic_gpio9_testFall_interrupt(void)
     test_pmic_print_unity_testcase_info(6250,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -3362,6 +3551,11 @@ static void test_pmic_gpio9_testRise_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
+
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         TEST_IGNORE();
@@ -3412,6 +3606,7 @@ static void test_pmic_gpio9_testRise_interrupt(void)
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
+#endif
 
 /*!
  * \brief   Test to verify GPIO10 fall interrupt
@@ -3437,9 +3632,24 @@ static void test_pmic_gpio10_testFall_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                              PMIC_GPIO_CFG_DIR_VALID_SHIFT |
+                              PMIC_GPIO_CFG_OD_VALID_SHIFT |
+                              PMIC_GPIO_CFG_PULL_VALID_SHIFT;
+        gpioCfg.outputSignalType = PMIC_GPIO_PUSH_PULL_OUTPUT;
+        gpioCfg.pullCtrl = PMIC_GPIO_PULL_UP;
+    }
+
     test_pmic_print_unity_testcase_info(6252,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(LEO_PMICA_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -3516,9 +3726,24 @@ static void test_pmic_gpio10_testRise_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                              PMIC_GPIO_CFG_DIR_VALID_SHIFT |
+                              PMIC_GPIO_CFG_OD_VALID_SHIFT |
+                              PMIC_GPIO_CFG_PULL_VALID_SHIFT;
+        gpioCfg.outputSignalType = PMIC_GPIO_PUSH_PULL_OUTPUT;
+        gpioCfg.pullCtrl = PMIC_GPIO_PULL_UP;
+    }
+
     test_pmic_print_unity_testcase_info(6253,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(LEO_PMICA_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -3571,6 +3796,7 @@ static void test_pmic_gpio10_testRise_interrupt(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
+#if 0
 /*!
  * \brief   Test to verify GPIO11 fall interrupt
  */
@@ -3598,6 +3824,11 @@ static void test_pmic_gpio11_testFall_interrupt(void)
     test_pmic_print_unity_testcase_info(6254,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -3677,6 +3908,11 @@ static void test_pmic_gpio11_testRise_interrupt(void)
     test_pmic_print_unity_testcase_info(6255,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -3893,6 +4129,16 @@ static void test_pmic_gpio_intr_irqMaskAll_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                              PMIC_GPIO_CFG_DIR_VALID_SHIFT |
+                              PMIC_GPIO_CFG_OD_VALID_SHIFT |
+                              PMIC_GPIO_CFG_PULL_VALID_SHIFT;
+        gpioCfg.outputSignalType = PMIC_GPIO_PUSH_PULL_OUTPUT;
+        gpioCfg.pullCtrl = PMIC_GPIO_PULL_UP;
+    }
+
     test_pmic_print_unity_testcase_info(7374,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
@@ -3969,6 +4215,11 @@ static void test_pmic_gpio_intr_irqUnMaskAll_interrupt(void)
     test_pmic_print_unity_testcase_info(7375,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -4072,10 +4323,7 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_gpio_setCfgGpioPin_syncCLKOUT);
     RUN_TEST(test_pmic_gpio_setCfgGpioPin_synCLKIN);
     RUN_TEST(test_pmic_gpio_setCfgGpioPin_clk32KOUT);
-/* TODO: Need to check feasible or not */
-#if 0
     RUN_TEST(test_pmic_gpio_setCfgGpioPin10_clk32KOUT);
-#endif
     RUN_TEST(test_pmic_gpio_setCfgGpioPin_wdg_disable);
     RUN_TEST(test_pmic_gpio_setCfgGpioPin_good_power);
     RUN_TEST(test_pmic_gpio_setCfgPrmValTest_handle);
@@ -4100,7 +4348,7 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_gpio_setValuePrmValTest_handle);
     RUN_TEST(test_pmic_gpio_setValuePrmValTest_pin);
     RUN_TEST(test_pmic_gpio_setValuePrmValTest_pinValue);
-    RUN_TEST(test_pmic_gpio_setValueGpioPin5_input);
+    RUN_TEST(test_pmic_gpio_setValueGpioPin1_input);
     RUN_TEST(test_pmic_gpio1_testFall_interrupt);
     RUN_TEST(test_pmic_gpio1_testRise_interrupt);
     RUN_TEST(test_pmic_gpio2_testFall_interrupt);
@@ -4124,12 +4372,14 @@ static void test_pmic_run_testcases(void)
 #endif
     RUN_TEST(test_pmic_gpio8_testFall_interrupt);
     RUN_TEST(test_pmic_gpio8_testRise_interrupt);
-/* FIXME: On J721 EVM, GPIO-9,10,11 interrupts Causing reset */
+/* FIXME: On J721 EVM, GPIO-9,11 interrupts Causing reset */
 #if 0
     RUN_TEST(test_pmic_gpio9_testFall_interrupt);
     RUN_TEST(test_pmic_gpio9_testRise_interrupt);
+#endif
     RUN_TEST(test_pmic_gpio10_testFall_interrupt);
     RUN_TEST(test_pmic_gpio10_testRise_interrupt);
+#if 0
     RUN_TEST(test_pmic_gpio11_testFall_interrupt);
     RUN_TEST(test_pmic_gpio11_testRise_interrupt);
 #endif
@@ -4342,8 +4592,8 @@ static void test_pmic_gpio_testapp_runner(void)
                /* GPIO Unity Test App wrapper Function for LEO PMIC-B */
                test_pmic_leo_pmicB_gpio_testApp();
                leo_pmic_device = LEO_PMICB_DEVICE;
-
-               /* TODO: Run gpio test cases for Leo PMIC-B */
+               /* Run gpio test cases for Leo PMIC-B */
+               test_pmic_run_testcases();
 
                /* Deinit pmic handle */
                if(pPmicCoreHandle != NULL)
