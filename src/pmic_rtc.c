@@ -2500,16 +2500,28 @@ int32_t  Pmic_getRtcStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
         if(0U != (pmic_validParamCheck(pPmicRtcStatus->validParams,
                                        PMIC_RTC_CFG_RTC_STATUS_VALID)))
         {
-            pPmicRtcStatus->rtcStatus = HW_REG_GET_FIELD(regData,
-                                                   PMIC_RTC_STATUS_RUN);
+            if(HW_REG_GET_FIELD(regData, PMIC_RTC_STATUS_RUN) == 0U)
+            {
+                pPmicRtcStatus->rtcStatus = (bool)false;
+            }
+            else
+            {
+                pPmicRtcStatus->rtcStatus = (bool)true;
+            }
         }
 
         /* Get RTC POWER-UP status */
         if(0U != (pmic_validParamCheck(pPmicRtcStatus->validParams,
                                        PMIC_RTC_CFG_POWERUP_STATUS_VALID)))
         {
-            pPmicRtcStatus->rtcStatus = HW_REG_GET_FIELD(regData,
-                                                   PMIC_RTC_STATUS_POWER_UP);
+            if(HW_REG_GET_FIELD(regData, PMIC_RTC_STATUS_POWER_UP) == 0U)
+            {
+                pPmicRtcStatus->rtcStatus = (bool)false;
+            }
+            else
+            {
+                pPmicRtcStatus->rtcStatus = (bool)true;
+            }
         }
     }
 
