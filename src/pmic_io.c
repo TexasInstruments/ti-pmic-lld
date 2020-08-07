@@ -135,8 +135,9 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
             /* Update slave and register address for Watchdog write access */
             regAddr = (regAddr & PMIC_WDG_PAGEADDR_MASK);
 
-            if((PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode) &&
-               (NULL != pPmicCoreHandle->pQACommHandle))
+            if(((PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode) &&
+               (NULL != pPmicCoreHandle->pQACommHandle)) ||
+               (PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode))
             {
                 /* QA instance shall be used for WDOG in DUAL-I2C mode */
                 instType = (uint8_t)PMIC_QA_INST;
@@ -257,8 +258,9 @@ int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
             /* If register is of Watchdog, update slave and register address */
             regAddr   = (regAddr & PMIC_WDG_PAGEADDR_MASK);
 
-            if((PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode) &&
-               (NULL != pPmicCoreHandle->pQACommHandle))
+            if(((PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode) &&
+               (NULL != pPmicCoreHandle->pQACommHandle)) ||
+               (PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode))
             {
                 /* QACommHandle shall be used for WDOG in DUAL-I2C mode */
                 instType = (uint8_t)PMIC_QA_INST;
