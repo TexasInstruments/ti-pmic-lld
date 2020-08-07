@@ -57,14 +57,6 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
         "SetRtcAlarmIntr : Parameter validation for 'handle'"
     },
     {
-        6087,
-        "SetRtcAlarmIntr : Parameter validation for 'timeCfg'"
-    },
-    {
-        6088,
-        "SetRtcAlarmIntr : Parameter validation for 'dataCfg'"
-    },
-    {
         6090,
         "SetRtcAlarmIntr : Parameter validation for 'seconds'"
     },
@@ -90,7 +82,8 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
     },
     {
         6096,
-        "SetRtcAlarmIntr : Negative test for 'hour ' = 0, when 'timeMode' = 1" },
+        "SetRtcAlarmIntr : Negative test for 'hour ' = 0, when 'timeMode' = 1"
+    },
     {
         6099,
         "SetRtcAlarmIntr : Negative test for 'month ' = 0"
@@ -186,14 +179,6 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
     {
         6159,
         "SetRtc : Parameter validation for 'handle'"
-    },
-    {
-        6160,
-        "SetRtc : Parameter validation for 'timeCfg'"
-    },
-    {
-        6161,
-        "SetRtc : Parameter validation for 'dataCfg'"
     },
     {
         6162,
@@ -418,41 +403,6 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_handle(void)
     status = Pmic_rtcSetAlarmInfo(NULL, timeCfg, dateCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
 }
-
-#if 0
-/*!
- * \brief   Parameter validation for 'timeCfg'
- */
-static void test_pmic_rtc_setAlarmInfoPrmValTest_timeCfg(void)
-{
-    int32_t status = PMIC_ST_SUCCESS;
-    Pmic_RtcDate_t dateCfg = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
-                              2055U, 1U};
-    test_pmic_print_unity_testcase_info(6087,
-                                        pmic_rtc_tests,
-                                        PMIC_RTC_NUM_OF_TESTCASES);
-
-    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, NULL, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
-}
-
-/*!
- * \brief   Parameter validation for 'dataCfg'
- */
-static void test_pmic_rtc_setAlarmInfoPrmValTest_dateCfg(void)
-{
-    int32_t      status       = PMIC_ST_SUCCESS;
-    Pmic_RtcTime_t timeCfg    = {PMIC_RTC_VALID_PARAM_TIME_CFG_VAL, 30U, 30U,
-                                 6U, 0U, 1U};
-
-    test_pmic_print_unity_testcase_info(6088,
-                                        pmic_rtc_tests,
-                                        PMIC_RTC_NUM_OF_TESTCASES);
-
-    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, NULL);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
-}
-#endif
 
 /*!
  * \brief   Parameter validation for 'seconds'
@@ -1097,42 +1047,6 @@ static void test_pmic_rtc_setTimePrmValTest_handle(void)
     status = Pmic_rtcSetTimeDateInfo(NULL, timeCfg, dateCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
 }
-
-#if 0
-/*!
- * \brief   Parameter validation for 'timeCfg'
- */
-static void test_pmic_rtc_setTimePrmValTest_timeCfg(void)
-{
-    int32_t status         = PMIC_ST_SUCCESS;
-    Pmic_RtcDate_t dateCfg = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
-                              2055U, 1U};
-
-    test_pmic_print_unity_testcase_info(6160,
-                                        pmic_rtc_tests,
-                                        PMIC_RTC_NUM_OF_TESTCASES);
-
-    status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, NULL, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
-}
-
-/*!
- * \brief   Parameter validation for 'dataCfg'
- */
-static void test_pmic_rtc_setTimePrmValTest_dateCfg(void)
-{
-    int32_t      status      = PMIC_ST_SUCCESS;
-    Pmic_RtcTime_t timeCfg    = {PMIC_RTC_VALID_PARAM_TIME_CFG_VAL, 30U, 30U,
-                                 6U, 0U, 1U};
-
-    test_pmic_print_unity_testcase_info(6161,
-                                        pmic_rtc_tests,
-                                        PMIC_RTC_NUM_OF_TESTCASES);
-
-    status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, timeCfg, NULL);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
-}
-#endif
 
 /*!
  * \brief   Parameter validation for 'seconds'
@@ -2276,10 +2190,6 @@ static void test_pmic_run_testcases(void)
 
     RUN_TEST(test_pmic_rtc_testSetAlarm);
     RUN_TEST(test_pmic_rtc_setAlarmInfoPrmValTest_handle);
-#if 0
-    RUN_TEST(test_pmic_rtc_setAlarmInfoPrmValTest_timeCfg);
-    RUN_TEST(test_pmic_rtc_setAlarmInfoPrmValTest_dateCfg);
-#endif
     RUN_TEST(test_pmic_rtc_setAlarmInfoPrmValTest_seconds);
     RUN_TEST(test_pmic_rtc_setAlarmInfoPrmValTest_minutes);
     RUN_TEST(test_pmic_rtc_setAlarmInfoPrmValTest_timeMode);
@@ -2311,10 +2221,6 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_rtc_enablePrmValTest_handle);
     RUN_TEST(test_pmic_rtc_testSetTime);
     RUN_TEST(test_pmic_rtc_setTimePrmValTest_handle);
-#if 0
-    RUN_TEST(test_pmic_rtc_setTimePrmValTest_timeCfg);
-    RUN_TEST(test_pmic_rtc_setTimePrmValTest_dateCfg);
-#endif
     RUN_TEST(test_pmic_rtc_setTimePrmValTest_seconds);
     RUN_TEST(test_pmic_rtc_setTimePrmValTest_minutes);
     RUN_TEST(test_pmic_rtc_setTimePrmValTest_timeMode);

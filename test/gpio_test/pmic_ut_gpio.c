@@ -42,7 +42,7 @@
 /* Pointer holds the pPmicCoreHandle */
 Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
 
-static uint8_t leo_pmic_device = 0U;
+static uint8_t pmic_device_info = 0U;
 
 /*!
  * \brief   PMIC GPIO Test Cases
@@ -62,10 +62,6 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
     },
     {
         6187,
-        "Pmic_gpioSetConfiguration : configure gpio pin as NRSTOUT_SOC function"
-    },
-    {
-        6188,
         "Pmic_gpioSetConfiguration : configure gpio pin as NRSTOUT_SOC function"
     },
     {
@@ -100,13 +96,10 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         6197,
         "Pmic_gpioSetConfiguration : configure gpio pin as watchdog trigger function"
     },
-/* FIXME: PMICA GPIO3 pin Causing Reset on J721 EVM */
-#if 0
     {
         6198,
         "Pmic_gpioSetConfiguration : configure gpio pin 3 as ESM Error Pins for SOC"
     },
-#endif
     {
         6199,
         "Pmic_gpioSetConfiguration : configure gpio pin as ESM Error Pins for MCU"
@@ -117,10 +110,6 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
     },
     {
         6202,
-        "Pmic_gpioSetConfiguration : configure gpio pin as SYNCCLKOUT function"
-    },
-    {
-        6203,
         "Pmic_gpioSetConfiguration : configure gpio pin as SYNCCLKOUT function"
     },
     {
@@ -154,10 +143,6 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
     {
         6211,
         "Pmic_gpioSetConfiguration : Parameter validation for pin "
-    },
-    {
-        6212,
-        "Pmic_gpioSetConfiguration : Parameter validation for GpioCfg"
     },
     {
         6213,
@@ -251,8 +236,6 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         6237,
         "Pmic_gpioSetIntr : GPIO2 Rise Interrupt Test"
     },
-/* FIXME: PMICA GPIO3 pin Causing reset on J721 EVM */
-#if 0
     {
         6238,
         "Pmic_gpioSetIntr : GPIO3 Fall Interrupt Test"
@@ -261,7 +244,6 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         6239,
         "Pmic_gpioSetIntr : GPIO3 Rise Interrupt Test"
     },
-#endif
     {
         6240,
         "Pmic_gpioSetIntr : GPIO4 Fall Interrupt Test"
@@ -286,8 +268,6 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         6245,
         "Pmic_gpioSetIntr : GPIO6 Rise Interrupt Test"
     },
-/* FIXME: On J721 EVM, GPIO7 interrupt Causing reset */
-#if 0
     {
         6246,
         "Pmic_gpioSetIntr : GPIO7 Fall Interrupt Test"
@@ -296,7 +276,6 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         6247,
         "Pmic_gpioSetIntr : GPIO7 Rise Interrupt Test"
     },
-#endif
     {
         6248,
         "Pmic_gpioSetIntr : GPIO8 Fall Interrupt Test"
@@ -305,8 +284,6 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         6249,
         "Pmic_gpioSetIntr : GPIO8 Rise Interrupt Test"
     },
-/* FIXME: On J721 EVM, GPIO-9,11 interrupts Causing reset */
-#if 0
     {
         6250,
         "Pmic_gpioSetIntr : GPIO9 Fall Interrupt Test"
@@ -315,7 +292,6 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         6251,
         "Pmic_gpioSetIntr : GPIO9 Rise Interrupt Test"
     },
-#endif
     {
         6252,
         "Pmic_gpioSetIntr : GPIO10 Fall Interrupt Test"
@@ -324,7 +300,6 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         6253,
         "Pmic_gpioSetIntr : GPIO10 Rise Interrupt Test"
     },
-#if 0
     {
         6254,
         "Pmic_gpioSetIntr : GPIO11 Fall Interrupt Test"
@@ -333,7 +308,6 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         6255,
         "Pmic_gpioSetIntr : GPIO11 Rise Interrupt Test"
     },
-#endif
     {
         6256,
         "Pmic_gpioSetIntr : Parameter validation for handle"
@@ -391,9 +365,23 @@ static void test_pmic_gpio_setCfgGpioPin_nSLEEP1(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        pinMax = PMIC_TPS6594X_GPIO11_PIN;
-        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1;
+        if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+        {
+            pinMax = PMIC_TPS6594X_GPIO11_PIN;
+            gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1;
+        }
+
+        if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO11 pin of PMIC-B is connected to 'EN_3V3IO_LDSW'
+             * on J721EVM board causing hang, when programming NSLEEP1 signal.
+             */
+            pinMax = PMIC_TPS6594X_GPIO10_PIN;
+            gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1;
+        }
     }
+
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         pinMax = PMIC_LP8764X_GPIO10_PIN;
@@ -404,14 +392,16 @@ static void test_pmic_gpio_setCfgGpioPin_nSLEEP1(void)
     {
         /* PMIC-A GPIO3 pin Causing Reset on J721 EVM */
         if((3U == pins[pin]) &&
-           ((pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR) ||
-            (leo_pmic_device == LEO_PMICA_DEVICE)))
+           (J721E_LEO_PMICA_DEVICE == pmic_device_info))
         {
             continue;
         }
 
+        /* GPIO Pins 1, 2 and 10 are supported on PMIC-B on J721EVM.
+         * Refer to PDK-7457 for more details
+         */
         if(((1U != pins[pin]) || (2U != pins[pin]) || (10U != pins[pin])) &&
-           (LEO_PMICB_DEVICE == leo_pmic_device))
+           (J721E_LEO_PMICB_DEVICE == pmic_device_info))
         {
             continue;
         }
@@ -457,8 +447,20 @@ static void test_pmic_gpio_setCfgGpioPin_nSLEEP2(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        pinMax = PMIC_TPS6594X_GPIO11_PIN;
-        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1;
+        if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+        {
+            pinMax = PMIC_TPS6594X_GPIO11_PIN;
+            gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1;
+        }
+        if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO11 pin of PMIC-B is connected to 'EN_3V3IO_LDSW'
+             * on J721EVM board causing hang, when programming NSLEEP2 signal.
+             */
+            pinMax = PMIC_TPS6594X_GPIO10_PIN;
+            gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1;
+        }
     }
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -470,14 +472,16 @@ static void test_pmic_gpio_setCfgGpioPin_nSLEEP2(void)
     {
         /* PMICA GPIO3 pin Causing Reset on J721 EVM */
         if((3U == pins[pin]) &&
-           ((pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR) ||
-            (leo_pmic_device == LEO_PMICA_DEVICE)))
+           (pmic_device_info == J721E_LEO_PMICA_DEVICE))
         {
             continue;
         }
 
+        /* GPIO Pins 1, 2 and 10 are supported on PMIC-B on J721EVM.
+         * Refer to PDK-7457 for more details
+         */
         if(((1U != pins[pin]) || (2U != pins[pin]) || (10U != pins[pin])) &&
-           (LEO_PMICB_DEVICE == leo_pmic_device))
+           (J721E_LEO_PMICB_DEVICE == pmic_device_info))
         {
             continue;
         }
@@ -533,9 +537,12 @@ static void test_pmic_gpio_setCfgGpioPin_nRstOut_soc(void)
 
     for(pin = 0U; pin < (sizeof(pins)/sizeof(pins[0U])); pin++)
     {
-        if((1U != pins[pin]) &&
-           (LEO_PMICB_DEVICE == leo_pmic_device))
+        if((J721E_LEO_PMICB_DEVICE == pmic_device_info) && (11U == pins[pin]))
         {
+            /*
+             * GPIO11 pin of PMIC-B is connected to 'EN_3V3IO_LDSW'
+             * on J721EVM board causing hang, when programming NRSTOUT signal.
+             */
             continue;
         }
 
@@ -580,8 +587,21 @@ static void test_pmic_gpio_setCfgGpioPin_wakeup1(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        pinMax = PMIC_TPS6594X_GPIO11_PIN;
-        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_WKUP1;
+        if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+        {
+            pinMax = PMIC_TPS6594X_GPIO11_PIN;
+            gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_WKUP1;
+        }
+
+        if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO11 pin of PMIC-B is connected to 'EN_3V3IO_LDSW'
+             * on J721EVM board causing hang, when programming WKUP1 signal.
+             */
+            pinMax = PMIC_TPS6594X_GPIO10_PIN;
+            gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_WKUP1;
+        }
     }
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -593,14 +613,16 @@ static void test_pmic_gpio_setCfgGpioPin_wakeup1(void)
     {
         /* PMICA GPIO3 pin Causing Reset on J721 EVM */
         if((3U == pins[pin]) &&
-           ((pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR) ||
-            (leo_pmic_device == LEO_PMICA_DEVICE)))
+           (pmic_device_info == J721E_LEO_PMICA_DEVICE))
         {
             continue;
         }
 
+        /* GPIO Pins 1, 2 and 10 are supported on PMIC-B on J721EVM.
+         * Refer to PDK-7457 for more details
+         */
         if(((1U != pins[pin]) || (2U != pins[pin]) || (10U != pins[pin])) &&
-           (LEO_PMICB_DEVICE == leo_pmic_device))
+           (J721E_LEO_PMICB_DEVICE == pmic_device_info))
         {
             continue;
         }
@@ -646,8 +668,21 @@ static void test_pmic_gpio_setCfgGpioPin_wakeup2(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        pinMax = PMIC_TPS6594X_GPIO11_PIN;
-        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_WKUP2;
+        if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+        {
+            pinMax = PMIC_TPS6594X_GPIO11_PIN;
+            gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_WKUP2;
+        }
+
+        if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO11 pin of PMIC-B is connected to 'EN_3V3IO_LDSW'
+             * on J721EVM board causing hang, when programming WKUP1 signal.
+             */
+            pinMax = PMIC_TPS6594X_GPIO10_PIN;
+            gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_WKUP2;
+        }
     }
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -659,14 +694,16 @@ static void test_pmic_gpio_setCfgGpioPin_wakeup2(void)
     {
         /* PMICA GPIO3 pin Causing Reset on J721 EVM */
         if((3U == pins[pin]) &&
-           ((pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR) ||
-            (leo_pmic_device == LEO_PMICA_DEVICE)))
+           (pmic_device_info == J721E_LEO_PMICA_DEVICE))
         {
             continue;
         }
 
+        /* GPIO Pins 1, 2 and 10 are supported on PMIC-B on J721EVM.
+         * Refer to PDK-7457 for more details
+         */
         if(((1U != pins[pin]) || (2U != pins[pin]) || (10U != pins[pin])) &&
-           (LEO_PMICB_DEVICE == leo_pmic_device))
+           (J721E_LEO_PMICB_DEVICE == pmic_device_info))
         {
             continue;
         }
@@ -723,19 +760,20 @@ static void test_pmic_gpio_setCfgGpioPin_gpio(void)
 
     for(pin = 0U; pin < pinMax; pin++)
     {
-        /* On J721, PMIC-A GPIO11 connected to H_SOC_PORz,
-         * which resets entire SOC because of this reason disabling GPIOCFG
-         * test on PMIC GPIO11 pin.
+        /* On J721E, PMIC-A GPIO11 is connected to H_SOC_PORz,
+         * which resets entire SOC.
          */
         if((11U == pins[pin]) &&
-           ((pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR) ||
-            (leo_pmic_device == LEO_PMICA_DEVICE)))
+           (pmic_device_info == J721E_LEO_PMICA_DEVICE))
         {
             continue;
         }
 
+        /* GPIO Pins 1, 2 and 10 are supported on PMIC-B on J721EVM.
+         * Refer to PDK-7457 for more details
+         */
         if(((1U != pins[pin]) || (2U != pins[pin]) || (10U != pins[pin])) &&
-           (LEO_PMICB_DEVICE == leo_pmic_device))
+           (J721E_LEO_PMICB_DEVICE == pmic_device_info))
         {
             continue;
         }
@@ -964,8 +1002,12 @@ static void test_pmic_gpio_setCfgGpioPin_wdt(void)
 
     for(pin = 0U; pin < pinMax; pin++)
     {
-        if((2U != pins[pin]) && (LEO_PMICB_DEVICE == leo_pmic_device))
+        if((J721E_LEO_PMICB_DEVICE == pmic_device_info) && (11U == pins[pin]))
         {
+            /*
+             * GPIO11 pin of PMIC-B is connected to 'EN_3V3IO_LDSW'
+             * on J721EVM board causing hang, when programming TRIG_WDOG signal
+             */
             continue;
         }
 
@@ -984,8 +1026,6 @@ static void test_pmic_gpio_setCfgGpioPin_wdt(void)
     }
 }
 
-/* FIXME: PMICA GPIO3 pin Causing Reset on J721 EVM */
-#if 0
 /*!
  * \brief   configure gpio pin3 as ESM Error pin for SOC
  */
@@ -1009,7 +1049,19 @@ static void test_pmic_gpio_setCfgGpioPin3_esm_soc(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO3 pin of PMIC-A is connected to 'EN_MCU3V3_LDSW'
+             * on J721EVM board causing hang, when programming NERR_SOC signal.
+             */
+            TEST_IGNORE();
+        }
+    }
+
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
         TEST_IGNORE();
     }
@@ -1026,7 +1078,6 @@ static void test_pmic_gpio_setCfgGpioPin3_esm_soc(void)
 
     TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
 }
-#endif
 
 /*!
  * \brief   configure gpio pin as ESM Error pin for MCU
@@ -1051,7 +1102,7 @@ static void test_pmic_gpio_setCfgGpioPin_esm_mcu(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
         TEST_IGNORE();
     }
@@ -1093,7 +1144,7 @@ static void test_pmic_gpio_setCfgGpioPin_spmi_sclk(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
         TEST_IGNORE();
     }
@@ -1140,7 +1191,7 @@ static void test_pmic_gpio_setCfgGpioPin_spmi_sdata(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
         TEST_IGNORE();
     }
@@ -1218,7 +1269,10 @@ static void test_pmic_gpio_setCfgGpioPin_syncCLKOUT(void)
             gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO9_SYNCCLKOUT;
         }
 
-        if((10U != pins[pin]) && (LEO_PMICB_DEVICE == leo_pmic_device))
+        /* GPIO Pins 1, 2 and 10 are supported on PMIC-B on J721EVM.
+         * Refer to PDK-7457 for more details
+         */
+        if((10U != pins[pin]) && (J721E_LEO_PMICB_DEVICE == pmic_device_info))
         {
             continue;
         }
@@ -1301,7 +1355,7 @@ static void test_pmic_gpio_setCfgGpioPin_clk32KOUT(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
         TEST_IGNORE();
     }
@@ -1315,8 +1369,7 @@ static void test_pmic_gpio_setCfgGpioPin_clk32KOUT(void)
     {
         /* PMICA GPIO3 pin Causing Reset on J721 EVM */
         if((3U == pins[pin]) &&
-           ((pPmicCoreHandle->slaveAddr == LEO_PMICA_SLAVE_ADDR) ||
-            (leo_pmic_device == LEO_PMICA_DEVICE)))
+           (pmic_device_info == J721E_LEO_PMICA_DEVICE))
         {
             continue;
         }
@@ -1341,7 +1394,6 @@ static void test_pmic_gpio_setCfgGpioPin_clk32KOUT(void)
 static void test_pmic_gpio_setCfgGpioPin10_clk32KOUT(void)
 {
     int32_t pmicStatus       = PMIC_ST_SUCCESS;
-    /* On J721 EVM, PMICA GPIO10 CLK32KOUT functionality is not supported */
     int pin                  = 10U;
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
     Pmic_GpioCfg_t gpioCfg   =
@@ -1359,9 +1411,12 @@ static void test_pmic_gpio_setCfgGpioPin10_clk32KOUT(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICA_DEVICE == leo_pmic_device)
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        if(pmic_device_info == J721E_LEO_PMICA_DEVICE)
+        {
+            TEST_IGNORE();
+        }
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -1403,7 +1458,7 @@ static void test_pmic_gpio_setCfgGpioPin_wdg_disable(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
         TEST_IGNORE();
     }
@@ -1460,7 +1515,7 @@ static void test_pmic_gpio_setCfgGpioPin_good_power(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
         TEST_IGNORE();
     }
@@ -1545,24 +1600,6 @@ static void test_pmic_gpio_setCfgPrmValTest_pin(void)
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
 }
-
-#if 0
-/*!
- * \brief   Parameter validation for GpioCfg
- */
-static void test_pmic_gpio_setCfgPrmValTest_gpioCfg(void)
-{
-    int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    uint8_t pin               = 1U;
-
-    test_pmic_print_unity_testcase_info(6212,
-                                        pmic_gpio_tests,
-                                        PMIC_GPIO_NUM_OF_TESTCASES);
-
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, NULL);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
-}
-#endif
 
 /*!
  * \brief   Parameter validation for pinDir
@@ -2091,7 +2128,7 @@ static void test_pmic_gpio1_testFall_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
         gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
                               PMIC_GPIO_CFG_DIR_VALID_SHIFT |
@@ -2180,7 +2217,7 @@ static void test_pmic_gpio1_testRise_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
         gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
                               PMIC_GPIO_CFG_DIR_VALID_SHIFT |
@@ -2269,7 +2306,7 @@ static void test_pmic_gpio2_testFall_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
         gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
                               PMIC_GPIO_CFG_DIR_VALID_SHIFT |
@@ -2358,7 +2395,7 @@ static void test_pmic_gpio2_testRise_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
         gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
                               PMIC_GPIO_CFG_DIR_VALID_SHIFT |
@@ -2423,8 +2460,6 @@ static void test_pmic_gpio2_testRise_interrupt(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
-/* FIXME: PMICA GPIO3 pin Causing Reset on J721 EVM */
-#if 0
 /*!
  * \brief   Test to verify GPIO3 fall interrupt
  */
@@ -2453,9 +2488,24 @@ static void test_pmic_gpio3_testFall_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO3 pin of PMIC-A is connected to 'EN_MCU3V3_LDSW'
+             * on J721EVM board causing hang, when programming fall interrupt.
+             */
+             TEST_IGNORE();
+        }
+        if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO3 pin of PMIC-B is connected to 'EN_DDR0V6_BUCK'
+             * on J721EVM board causing hang, when programming fall interrupt.
+             */
+            TEST_IGNORE();
+        }
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -2537,9 +2587,24 @@ static void test_pmic_gpio3_testRise_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO3 pin of PMIC-A is connected to 'EN_MCU3V3_LDSW'
+             * on J721EVM board causing hang, when programming rise interrupt.
+             */
+             TEST_IGNORE();
+        }
+        if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO3 pin of PMIC-B is connected to 'EN_DDR0V6_BUCK'
+             * on J721EVM board causing hang, when programming rise interrupt.
+             */
+            TEST_IGNORE();
+        }
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -2592,7 +2657,6 @@ static void test_pmic_gpio3_testRise_interrupt(void)
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
-#endif
 
 /*!
  * \brief   Test to verify GPIO4 fall interrupt
@@ -2622,9 +2686,16 @@ static void test_pmic_gpio4_testFall_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO4 pin of PMIC-B is connected to 'H_DDR_RET_1V1'
+             * on J721EVM board causing hang, when programming fall interrupt.
+             */
+            TEST_IGNORE();
+        }
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -2706,9 +2777,16 @@ static void test_pmic_gpio4_testRise_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO4 pin of PMIC-B is connected to 'H_DDR_RET_1V1'
+             * on J721EVM board causing hang, when programming rise interrupt.
+             */
+            TEST_IGNORE();
+        }
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -2790,9 +2868,16 @@ static void test_pmic_gpio5_testFall_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO5 pin of PMIC-B is connected to 'LEOA_SCLK'
+             * on J721EVM causing block, when programming fall interrupt signal.
+             */
+            TEST_IGNORE();
+        }
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -2874,9 +2959,16 @@ static void test_pmic_gpio5_testRise_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO5 pin of PMIC-B is connected to 'LEOA_SCLK'
+             * on J721EVM causing block, when programming rise` interrupt signal.
+             */
+            TEST_IGNORE();
+        }
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -2958,9 +3050,16 @@ static void test_pmic_gpio6_testFall_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO6 pin of PMIC-B is connected to 'LEOA_SDATA' and receives
+             * on J721EVM causing hang, when programming fall interrupt signal.
+             */
+            TEST_IGNORE();
+        }
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -3042,9 +3141,16 @@ static void test_pmic_gpio6_testRise_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO6 pin of PMIC-B is connected to 'LEOA_SDATA' and receives
+             * on J721EVM causing hang, when programming rise interrupt signal.
+             */
+            TEST_IGNORE();
+        }
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -3098,8 +3204,6 @@ static void test_pmic_gpio6_testRise_interrupt(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
-/* FIXME: On J721 EVM, GPIO7 interrupt Causing reset */
-#if 0
 /*!
  * \brief   Test to verify GPIO7 fall interrupt
  */
@@ -3128,9 +3232,24 @@ static void test_pmic_gpio7_testFall_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO7 pin of PMIC-A is connected to 'SOC_SAFETY_ERRZ'
+             * on J721EVM board causing hang, when programming fall interrupt.
+             */
+            TEST_IGNORE();
+        }
+        if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO7 pin of PMIC-B is connected to 'EN_RAM0V85_LDO'
+             * on J721EVM board causing hang, when programming fall interrupt.
+             */
+            TEST_IGNORE();
+        }
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -3212,9 +3331,24 @@ static void test_pmic_gpio7_testRise_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO7 pin of PMIC-A is connected to 'SOC_SAFETY_ERRZ'
+             * on J721EVM board causing hang, when programming rise interrupt.
+             */
+            TEST_IGNORE();
+        }
+        if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO7 pin of PMIC-B is connected to 'EN_RAM0V85_LDO'
+             * on J721EVM board causing hang, when programming rise interrupt.
+             */
+            TEST_IGNORE();
+        }
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -3267,7 +3401,6 @@ static void test_pmic_gpio7_testRise_interrupt(void)
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
-#endif
 
 /*!
  * \brief   Test to verify GPIO8 fall interrupt
@@ -3297,9 +3430,16 @@ static void test_pmic_gpio8_testFall_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO8 pin of PMIC-B is connected to 'EN_PHYCORE_LDO'
+             * on J721EVM causing hang, when programming fall interrupt signal.
+             */
+            TEST_IGNORE();
+        }
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -3381,9 +3521,16 @@ static void test_pmic_gpio8_testRise_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO8 pin of PMIC-B is connected to 'EN_PHYCORE_LDO'
+             * on J721EVM causing hang, when programming fall interrupt signal.
+             */
+            TEST_IGNORE();
+        }
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -3437,8 +3584,6 @@ static void test_pmic_gpio8_testRise_interrupt(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
-/* FIXME: On J721 EVM, GPIO-9,11 interrupts Causing reset */
-#if 0
 /*!
  * \brief   Test to verify GPIO9 fall interrupt
  */
@@ -3467,9 +3612,24 @@ static void test_pmic_gpio9_testFall_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO9 pin of PMIC-A is connected to 'GND'
+             * on J721EVM board causing hang, when programming fall interrupt.
+             */
+            TEST_IGNORE();
+        }
+        if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO9 pin of PMIC-B is connected to 'EN_VPP1V8_LDO'
+             * on J721EVM board causing hang, when programming fall interrupt.
+             */
+            TEST_IGNORE();
+        }
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -3551,9 +3711,24 @@ static void test_pmic_gpio9_testRise_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO9 pin of PMIC-A is connected to 'GND'
+             * on J721EVM board causing hang, when programming rise interrupt.
+             */
+            TEST_IGNORE();
+        }
+        if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO9 pin of PMIC-B is connected to 'EN_VPP1V8_LDO'
+             * on J721EVM board causing hang, when programming rise interrupt.
+             */
+            TEST_IGNORE();
+        }
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -3606,7 +3781,6 @@ static void test_pmic_gpio9_testRise_interrupt(void)
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
-#endif
 
 /*!
  * \brief   Test to verify GPIO10 fall interrupt
@@ -3632,7 +3806,7 @@ static void test_pmic_gpio10_testFall_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
         gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
                               PMIC_GPIO_CFG_DIR_VALID_SHIFT |
@@ -3646,9 +3820,16 @@ static void test_pmic_gpio10_testFall_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICA_DEVICE == leo_pmic_device)
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO10 pin of PMIC-A is connected to 'PMIC_POWER_EN1'
+             * on J721EVM board causing hang, when programming fall interrupt.
+             */
+            TEST_IGNORE();
+        }
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -3726,7 +3907,7 @@ static void test_pmic_gpio10_testRise_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
         gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
                               PMIC_GPIO_CFG_DIR_VALID_SHIFT |
@@ -3740,9 +3921,16 @@ static void test_pmic_gpio10_testRise_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICA_DEVICE == leo_pmic_device)
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO10 pin of PMIC-A is connected to 'PMIC_POWER_EN1'
+             * on J721EVM board causing hang, when programming rise interrupt.
+             */
+            TEST_IGNORE();
+        }
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -3796,7 +3984,6 @@ static void test_pmic_gpio10_testRise_interrupt(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
-#if 0
 /*!
  * \brief   Test to verify GPIO11 fall interrupt
  */
@@ -3825,9 +4012,24 @@ static void test_pmic_gpio11_testFall_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO11 pin of PMIC-A is connected to 'H_SOC_PORz'
+             * on J721EVM board causing hang, when programming fall interrupt.
+             */
+            TEST_IGNORE();
+        }
+        if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO11 pin of PMIC-B is connected to 'EN_3V3IO_LDSW'
+             * on J721EVM board causing hang, when programming fall interrupt.
+             */
+            TEST_IGNORE();
+        }
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -3909,9 +4111,24 @@ static void test_pmic_gpio11_testRise_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO11 pin of PMIC-A is connected to 'H_SOC_PORz'
+             * on J721EVM board causing hang, when programming rise interrupt.
+             */
+            TEST_IGNORE();
+        }
+        if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+        {
+            /*
+             * GPIO11 pin of PMIC-B is connected to 'EN_3V3IO_LDSW'
+             * on J721EVM board causing hang, when programming rise interrupt.
+             */
+            TEST_IGNORE();
+        }
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -3964,7 +4181,6 @@ static void test_pmic_gpio11_testRise_interrupt(void)
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
-#endif
 
 /*!
  * \brief   Parameter validation for handle
@@ -4129,7 +4345,7 @@ static void test_pmic_gpio_intr_irqMaskAll_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
         gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
                               PMIC_GPIO_CFG_DIR_VALID_SHIFT |
@@ -4216,7 +4432,7 @@ static void test_pmic_gpio_intr_irqUnMaskAll_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(LEO_PMICB_DEVICE == leo_pmic_device)
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
         TEST_IGNORE();
     }
@@ -4313,10 +4529,7 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_gpio_setCfgGpioPin_spi_cs);
     RUN_TEST(test_pmic_gpio_setCfgGpioPin_spi_sdo);
     RUN_TEST(test_pmic_gpio_setCfgGpioPin_wdt);
-/* FIXME: PMICA GPIO3 pin Causing Reset on J721 EVM */
-#if 0
     RUN_TEST(test_pmic_gpio_setCfgGpioPin3_esm_soc);
-#endif
     RUN_TEST(test_pmic_gpio_setCfgGpioPin_esm_mcu);
     RUN_TEST(test_pmic_gpio_setCfgGpioPin_spmi_sclk);
     RUN_TEST(test_pmic_gpio_setCfgGpioPin_spmi_sdata);
@@ -4328,9 +4541,6 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_gpio_setCfgGpioPin_good_power);
     RUN_TEST(test_pmic_gpio_setCfgPrmValTest_handle);
     RUN_TEST(test_pmic_gpio_setCfgPrmValTest_pin);
-#if 0
-    RUN_TEST(test_pmic_gpio_setCfgPrmValTest_gpioCfg);
-#endif
     RUN_TEST(test_pmic_gpio_setCfgPrmValTest_pinDir);
     RUN_TEST(test_pmic_gpio_setCfgPrmValTest_outputSignalType);
     RUN_TEST(test_pmic_gpio_setCfgPrmValTest_deglitchEnable);
@@ -4354,35 +4564,24 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_gpio2_testFall_interrupt);
     RUN_TEST(test_pmic_gpio2_testRise_interrupt);
     RUN_TEST(test_pmic_nPWRON_setCfgPrmValTest_pinFunc);
-/* FIXME: PMICA GPIO3 pin Causing reset on J721 EVM */
-#if 0
     RUN_TEST(test_pmic_gpio3_testFall_interrupt);
     RUN_TEST(test_pmic_gpio3_testRise_interrupt);
-#endif
     RUN_TEST(test_pmic_gpio4_testFall_interrupt);
     RUN_TEST(test_pmic_gpio4_testRise_interrupt);
     RUN_TEST(test_pmic_gpio5_testFall_interrupt);
     RUN_TEST(test_pmic_gpio5_testRise_interrupt);
     RUN_TEST(test_pmic_gpio6_testFall_interrupt);
     RUN_TEST(test_pmic_gpio6_testRise_interrupt);
-/* FIXME: On J721 EVM, GPIO7 interrupt Causing reset */
-#if 0
     RUN_TEST(test_pmic_gpio7_testFall_interrupt);
     RUN_TEST(test_pmic_gpio7_testRise_interrupt);
-#endif
     RUN_TEST(test_pmic_gpio8_testFall_interrupt);
     RUN_TEST(test_pmic_gpio8_testRise_interrupt);
-/* FIXME: On J721 EVM, GPIO-9,11 interrupts Causing reset */
-#if 0
     RUN_TEST(test_pmic_gpio9_testFall_interrupt);
     RUN_TEST(test_pmic_gpio9_testRise_interrupt);
-#endif
     RUN_TEST(test_pmic_gpio10_testFall_interrupt);
     RUN_TEST(test_pmic_gpio10_testRise_interrupt);
-#if 0
     RUN_TEST(test_pmic_gpio11_testFall_interrupt);
     RUN_TEST(test_pmic_gpio11_testRise_interrupt);
-#endif
     RUN_TEST(test_pmic_gpio_intr_prmValTest_handle);
     RUN_TEST(test_pmic_gpio_intr_prmValTest_pin);
     RUN_TEST(test_pmic_gpio_intr_prmValTest_intrType);
@@ -4579,7 +4778,7 @@ static void test_pmic_gpio_testapp_runner(void)
            case 0U:
                /* GPIO Unity Test App wrapper Function for LEO PMIC-A */
                test_pmic_leo_pmicA_gpio_testApp();
-               leo_pmic_device = LEO_PMICA_DEVICE;
+               pmic_device_info = J721E_LEO_PMICA_DEVICE;
                /* Run gpio test cases for Leo PMIC-A */
                test_pmic_run_testcases();
                /* Deinit pmic handle */
@@ -4591,7 +4790,7 @@ static void test_pmic_gpio_testapp_runner(void)
            case 1U:
                /* GPIO Unity Test App wrapper Function for LEO PMIC-B */
                test_pmic_leo_pmicB_gpio_testApp();
-               leo_pmic_device = LEO_PMICB_DEVICE;
+               pmic_device_info = J721E_LEO_PMICB_DEVICE;
                /* Run gpio test cases for Leo PMIC-B */
                test_pmic_run_testcases();
 
@@ -4616,7 +4815,7 @@ static void test_pmic_gpio_testapp_runner(void)
                /* GPIO Unity Test App wrapper Function for LEO PMIC-A using
                 * SPI stub functions */
                test_pmic_leo_pmicA_spiStub_gpio_testApp();
-               leo_pmic_device = LEO_PMICA_DEVICE;
+               pmic_device_info = J721E_LEO_PMICA_DEVICE;
                /* Run gpio test cases for Leo PMIC-A */
                test_pmic_run_testcases();
                /* Deinit pmic handle */
