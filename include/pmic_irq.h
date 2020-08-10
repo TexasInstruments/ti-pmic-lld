@@ -103,8 +103,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_IRQ_UNMASK           (0U)
-#define PMIC_IRQ_MASK             (1U)
+#define PMIC_IRQ_UNMASK           (bool)false
+#define PMIC_IRQ_MASK             (bool)true
 /* @} */
 
 /**

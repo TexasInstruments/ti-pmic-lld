@@ -161,7 +161,7 @@ static int32_t Pmic_gpioValidateParams(const Pmic_CoreHandle_t *pPmicCoreHandle)
     }
 
     if((PMIC_ST_SUCCESS == status) &&
-       (false == pPmicCoreHandle->pPmic_SubSysInfo->gpioEnable))
+       ((bool)false == pPmicCoreHandle->pPmic_SubSysInfo->gpioEnable))
     {
         status = PMIC_ST_ERR_INV_DEVICE;
     }
@@ -191,8 +191,9 @@ static int32_t Pmic_gpioParamCheck(const Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief   This function is used to validate the parameters for NPWRON or
  *          ENABLE pin
  */
-int32_t Pmic_gpioNpoweronEnableParamCheck(const Pmic_CoreHandle_t *pPmicCoreHandle,
-                                          const Pmic_GpioCfg_t    *pGpioCfg)
+static int32_t Pmic_gpioNpoweronEnableParamCheck(
+                                      const Pmic_CoreHandle_t *pPmicCoreHandle,
+                                      const Pmic_GpioCfg_t    *pGpioCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -1060,8 +1061,8 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
     status = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
 
     if((PMIC_ST_SUCCESS == status) &&
-       (true == pmic_validParamCheck(gpioCfg.validParams,
-                                     PMIC_GPIO_CFG_PINFUNC_VALID)))
+       ((bool)true == pmic_validParamCheck(gpioCfg.validParams,
+                                           PMIC_GPIO_CFG_PINFUNC_VALID)))
     {
         if(gpioCfg.pinFunc > PMIC_GPIO_PINFUNC_MAX)
         {
@@ -1076,8 +1077,8 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == status) &&
-       (true == pmic_validParamCheck(gpioCfg.validParams,
-                                     PMIC_GPIO_CFG_DIR_VALID)))
+       ((bool)true == pmic_validParamCheck(gpioCfg.validParams,
+                                           PMIC_GPIO_CFG_DIR_VALID)))
     {
         if(gpioCfg.pinDir > PMIC_GPIO_OUTPUT)
         {
@@ -1092,8 +1093,8 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == status) &&
-       (true == pmic_validParamCheck(gpioCfg.validParams,
-                                     PMIC_GPIO_CFG_DEGLITCH_VALID)))
+       ((bool)true == pmic_validParamCheck(gpioCfg.validParams,
+                                           PMIC_GPIO_CFG_DEGLITCH_VALID)))
     {
         if(gpioCfg.deglitchEnable > PMIC_GPIO_DEGLITCH_ENABLE)
         {
@@ -1108,8 +1109,8 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == status) &&
-       (true == pmic_validParamCheck(gpioCfg.validParams,
-                                     PMIC_GPIO_CFG_OD_VALID)))
+       ((bool)true == pmic_validParamCheck(gpioCfg.validParams,
+                                           PMIC_GPIO_CFG_OD_VALID)))
     {
         if(gpioCfg.outputSignalType > PMIC_GPIO_OPEN_DRAIN_OUTPUT)
         {
@@ -1127,8 +1128,8 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == status)
     {
-        if(true == pmic_validParamCheck(gpioCfg.validParams,
-                                        PMIC_GPIO_CFG_PULL_VALID))
+        if((bool)true == pmic_validParamCheck(gpioCfg.validParams,
+                                              PMIC_GPIO_CFG_PULL_VALID))
         {
             if(gpioCfg.pullCtrl > PMIC_GPIO_PULL_UP)
             {
@@ -1182,36 +1183,36 @@ int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == status) &&
-       (true == pmic_validParamCheck(pGpioCfg->validParams,
-                                     PMIC_GPIO_CFG_DIR_VALID)))
+       ((bool)true == pmic_validParamCheck(pGpioCfg->validParams,
+                                           PMIC_GPIO_CFG_DIR_VALID)))
     {
         status = Pmic_gpioGetPinDir(pPmicCoreHandle, pin, pGpioCfg);
     }
 
     if((PMIC_ST_SUCCESS == status) &&
-       (true == pmic_validParamCheck(pGpioCfg->validParams,
-                                     PMIC_GPIO_CFG_OD_VALID)))
+       ((bool)true == pmic_validParamCheck(pGpioCfg->validParams,
+                                           PMIC_GPIO_CFG_OD_VALID)))
     {
         status = Pmic_gpioGetOutputSignalType(pPmicCoreHandle, pin, pGpioCfg);
     }
 
     if((PMIC_ST_SUCCESS == status) &&
-       (true == pmic_validParamCheck(pGpioCfg->validParams,
-                                     PMIC_GPIO_CFG_DEGLITCH_VALID)))
+       ((bool)true == pmic_validParamCheck(pGpioCfg->validParams,
+                                           PMIC_GPIO_CFG_DEGLITCH_VALID)))
     {
         status = Pmic_gpioGetDeglitchTime(pPmicCoreHandle, pin, pGpioCfg);
     }
 
     if((PMIC_ST_SUCCESS == status) &&
-       (true == pmic_validParamCheck(pGpioCfg->validParams,
-                                     PMIC_GPIO_CFG_PINFUNC_VALID)))
+       ((bool)true == pmic_validParamCheck(pGpioCfg->validParams,
+                                           PMIC_GPIO_CFG_PINFUNC_VALID)))
     {
         status = Pmic_gpioGetPinFunc(pPmicCoreHandle, pin, pGpioCfg);
     }
 
     if((PMIC_ST_SUCCESS == status) &&
-       (true == pmic_validParamCheck(pGpioCfg->validParams,
-                                        PMIC_GPIO_CFG_PULL_VALID)))
+       ((bool)true == pmic_validParamCheck(pGpioCfg->validParams,
+                                           PMIC_GPIO_CFG_PULL_VALID)))
     {
         status = Pmic_gpioGetPullCtrl(pPmicCoreHandle, pin, pGpioCfg);
     }
@@ -1479,8 +1480,8 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         if((PMIC_ST_SUCCESS == status) &&
-           (true == pmic_validParamCheck(gpioCfg.validParams,
-                                         PMIC_GPIO_CFG_PINFUNC_VALID)))
+           ((bool)true == pmic_validParamCheck(gpioCfg.validParams,
+                                               PMIC_GPIO_CFG_PINFUNC_VALID)))
         {
             if(gpioCfg.pinFunc > PMIC_TPS6594X_NPWRON_PINFUNC_NPWRON)
             {
@@ -1497,8 +1498,8 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
         }
 
         if((PMIC_ST_SUCCESS == status) &&
-           (true == pmic_validParamCheck(gpioCfg.validParams,
-                                         PMIC_GPIO_CFG_DEGLITCH_VALID)))
+           ((bool)true == pmic_validParamCheck(gpioCfg.validParams,
+                                               PMIC_GPIO_CFG_DEGLITCH_VALID)))
         {
             if(gpioCfg.deglitchEnable > PMIC_GPIO_DEGLITCH_ENABLE)
             {
@@ -1516,8 +1517,8 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
 
         if (PMIC_ST_SUCCESS == status)
         {
-            if(true == pmic_validParamCheck(gpioCfg.validParams,
-                                            PMIC_GPIO_CFG_PULL_VALID))
+            if((bool)true == pmic_validParamCheck(gpioCfg.validParams,
+                                                  PMIC_GPIO_CFG_PULL_VALID))
             {
                 if(gpioCfg.pullCtrl > PMIC_GPIO_PULL_UP)
                 {
@@ -1532,8 +1533,8 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
         }
 
         if((PMIC_ST_SUCCESS == status) &&
-           (true == pmic_validParamCheck(gpioCfg.validParams,
-                                         PMIC_GPIO_CFG_OD_VALID)))
+           ((bool)true == pmic_validParamCheck(gpioCfg.validParams,
+                                               PMIC_GPIO_CFG_OD_VALID)))
         {
             if(gpioCfg.outputSignalType > PMIC_GPIO_OPEN_DRAIN_OUTPUT)
             {
@@ -1551,8 +1552,8 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
     }
 
     if((PMIC_ST_SUCCESS == status) &&
-       (true == pmic_validParamCheck(gpioCfg.validParams,
-                                     PMIC_NPWRON_CFG_POLARITY_VALID)))
+       ((bool)true == pmic_validParamCheck(gpioCfg.validParams,
+                                           PMIC_NPWRON_CFG_POLARITY_VALID)))
     {
         if(gpioCfg.pinPolarity > PMIC_GPIO_POL_HIGH)
         {
@@ -1599,8 +1600,8 @@ int32_t Pmic_gpioGetNPwronEnablePinConfiguration(
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         if((PMIC_ST_SUCCESS == status) &&
-           (true == pmic_validParamCheck(pGpioCfg->validParams,
-                                         PMIC_GPIO_CFG_OD_VALID)))
+           ((bool)true == pmic_validParamCheck(pGpioCfg->validParams,
+                                               PMIC_GPIO_CFG_OD_VALID)))
         {
             /* Get nPWRON/Enable output signal type */
             status = Pmic_gpioGetOutputSignalType(pPmicCoreHandle,
@@ -1609,8 +1610,8 @@ int32_t Pmic_gpioGetNPwronEnablePinConfiguration(
         }
 
         if((PMIC_ST_SUCCESS == status) &&
-           (true == pmic_validParamCheck(pGpioCfg->validParams,
-                                         PMIC_GPIO_CFG_DEGLITCH_VALID)))
+           ((bool)true == pmic_validParamCheck(pGpioCfg->validParams,
+                                               PMIC_GPIO_CFG_DEGLITCH_VALID)))
         {
             /* Get nPWRON/Enable pin signal deglitch time */
             status = Pmic_gpioGetDeglitchTime(pPmicCoreHandle,
@@ -1619,8 +1620,8 @@ int32_t Pmic_gpioGetNPwronEnablePinConfiguration(
         }
 
         if((PMIC_ST_SUCCESS == status) &&
-           (true == pmic_validParamCheck(pGpioCfg->validParams,
-                                         PMIC_GPIO_CFG_PINFUNC_VALID)))
+           ((bool)true == pmic_validParamCheck(pGpioCfg->validParams,
+                                               PMIC_GPIO_CFG_PINFUNC_VALID)))
         {
             /* Get nPWRON/Enable pin signal function */
             status = Pmic_gpioGetPinFunc(pPmicCoreHandle,
@@ -1629,8 +1630,8 @@ int32_t Pmic_gpioGetNPwronEnablePinConfiguration(
         }
 
         if((PMIC_ST_SUCCESS == status) &&
-           (true == pmic_validParamCheck(pGpioCfg->validParams,
-                                            PMIC_GPIO_CFG_PULL_VALID)))
+           ((bool)true == pmic_validParamCheck(pGpioCfg->validParams,
+                                               PMIC_GPIO_CFG_PULL_VALID)))
         {
             /* Get nPWRON/Enable pin pull-up/down control */
             status = Pmic_gpioGetPullCtrl(pPmicCoreHandle,
@@ -1641,8 +1642,8 @@ int32_t Pmic_gpioGetNPwronEnablePinConfiguration(
     }
 
     if((PMIC_ST_SUCCESS == status) &&
-       (true == pmic_validParamCheck(pGpioCfg->validParams,
-                                        PMIC_NPWRON_CFG_POLARITY_VALID)))
+       ((bool)true == pmic_validParamCheck(pGpioCfg->validParams,
+                                           PMIC_NPWRON_CFG_POLARITY_VALID)))
     {
         /* Get nPWRON/Enable pin polarity control */
         status = Pmic_gpioGetPinPolarity(pPmicCoreHandle, pGpioCfg);

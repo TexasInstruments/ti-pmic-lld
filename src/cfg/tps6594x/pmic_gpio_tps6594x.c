@@ -241,7 +241,7 @@ int32_t Pmic_gpioTps6594xNPwronPinGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == status) &&
-       (false == pPmicCoreHandle->pPmic_SubSysInfo->gpioEnable))
+       ((bool)false == pPmicCoreHandle->pPmic_SubSysInfo->gpioEnable))
     {
         status = PMIC_ST_ERR_INV_DEVICE;
     }

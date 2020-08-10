@@ -327,11 +327,11 @@ extern "C" {
  */
 typedef struct Pmic_GpioInOutCfg_s
 {
-    uint32_t regAddr;
-    uint32_t outRegAddr;
-    uint32_t inRegAddr;
-    uint8_t  inRegBitPos;
-    uint8_t  outRegBitPos;
+    uint8_t regAddr;
+    uint8_t outRegAddr;
+    uint8_t inRegAddr;
+    uint8_t inRegBitPos;
+    uint8_t outRegBitPos;
 } Pmic_GpioInOutCfg_t;
 
 /*!
