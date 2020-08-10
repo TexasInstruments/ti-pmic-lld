@@ -957,7 +957,7 @@ static int32_t Pmic_rtcCheckHoursMode(Pmic_CoreHandle_t    *pPmicCoreHandle,
     uint8_t timeMode = 0U;
 
     /* Get current TimeMode */
-    if(0U == pmic_validParamCheck(timeCfg.validParams,
+    if((bool)false == pmic_validParamCheck(timeCfg.validParams,
                             PMIC_RTC_TIME_CFG_TIMEMODE_VALID))
     {
         pmicStatus = Pmic_rtcGetTimeMode(pPmicCoreHandle,
@@ -1073,7 +1073,7 @@ static int32_t Pmic_rtcCheckMonthDays(const Pmic_RtcDate_t dateCfg, bool leap)
     else if(PMIC_RTC_MONTH_FEB == dateCfg.month)
     {
         /* February days in leap year */
-        if(true == leap)
+        if((bool)true == leap)
         {
             if((dateCfg.day < PMIC_RTC_DAY_MIN) ||
                (dateCfg.day > PMIC_RTC_LPY_FEB_MNTH_DAY_MAX))
@@ -1162,7 +1162,7 @@ static int32_t Pmic_rtcCheckDate(Pmic_CoreHandle_t    *pPmicCoreHandle,
     /* Get RTC Current Month */
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        if(0U == pmic_validParamCheck(dateCfg.validParams,
+        if((bool)false == pmic_validParamCheck(dateCfg.validParams,
                                  PMIC_RTC_DATE_CFG_MONTH_VALID))
         {
             pmicStatus = Pmic_rtcGetMonth(pPmicCoreHandle,
@@ -1840,11 +1840,12 @@ static int32_t Pmic_setTimerIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief   This function is used to start/stop the RTC present in the PMIC.
  */
-int32_t  Pmic_rtcEnableRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
-                           bool               enableRtc)
+static int32_t  Pmic_rtcEnableRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                  bool               enableRtc)
 {
     int32_t  pmicStatus  = PMIC_ST_SUCCESS;
     uint8_t  regData     = 0U;
+    uint8_t  regVal      = 0U;
 
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
@@ -1878,8 +1879,13 @@ int32_t  Pmic_rtcEnableRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
                                             PMIC_RTC_STATUS_REGADDR,
                                             &regData);
 
+        if((bool)true == enableRtc)
+        {
+            regVal = 1U;
+        }
+
         if((PMIC_ST_SUCCESS == pmicStatus)  &&
-           (enableRtc != HW_REG_GET_FIELD(regData, PMIC_RTC_STATUS_RUN)))
+           (regVal != HW_REG_GET_FIELD(regData, PMIC_RTC_STATUS_RUN)))
         {
             /* Improper RTC status */
             pmicStatus = PMIC_ST_ERR_RTC_STOP_FAIL;
@@ -1916,7 +1922,7 @@ int32_t  Pmic_rtcSetAlarmInfo(Pmic_CoreHandle_t    *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
+       ((bool)false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
     {
         pmicStatus = PMIC_ST_ERR_INV_DEVICE;
     }
@@ -1976,7 +1982,7 @@ int32_t  Pmic_rtcGetAlarmInfo(Pmic_CoreHandle_t *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
+       ((bool)false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
     {
         pmicStatus = PMIC_ST_ERR_INV_DEVICE;
     }
@@ -2032,7 +2038,7 @@ int32_t  Pmic_rtcSetTimerPeriod(Pmic_CoreHandle_t *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
+       ((bool)false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
     {
         pmicStatus = PMIC_ST_ERR_INV_DEVICE;
     }
@@ -2092,7 +2098,7 @@ int32_t  Pmic_rtcGetTimerPeriod(Pmic_CoreHandle_t *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
+       ((bool)false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
     {
         pmicStatus = PMIC_ST_ERR_INV_DEVICE;
     }
@@ -2147,7 +2153,7 @@ int32_t Pmic_rtcSetTimeDateInfo(Pmic_CoreHandle_t    *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
+       ((bool)false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
     {
         pmicStatus = PMIC_ST_ERR_INV_DEVICE;
     }
@@ -2217,7 +2223,7 @@ int32_t Pmic_rtcGetTimeDateInfo(Pmic_CoreHandle_t *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
+       ((bool)false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
     {
         pmicStatus = PMIC_ST_ERR_INV_DEVICE;
     }
@@ -2279,7 +2285,7 @@ int32_t  Pmic_rtcSetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
+       ((bool)false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
     {
         pmicStatus = PMIC_ST_ERR_INV_DEVICE;
     }
@@ -2316,7 +2322,7 @@ int32_t  Pmic_rtcGetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
+       ((bool)false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
     {
         pmicStatus = PMIC_ST_ERR_INV_DEVICE;
     }
@@ -2358,7 +2364,7 @@ int32_t  Pmic_rtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
+       ((bool)false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
     {
         pmicStatus = PMIC_ST_ERR_INV_DEVICE;
     }
@@ -2396,7 +2402,7 @@ int32_t  Pmic_rtcEnableAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
+       ((bool)false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
     {
         pmicStatus = PMIC_ST_ERR_INV_DEVICE;
     }
@@ -2434,7 +2440,7 @@ int32_t  Pmic_rtcEnableTimerIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
+       ((bool)false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
     {
         pmicStatus = PMIC_ST_ERR_INV_DEVICE;
     }
@@ -2497,8 +2503,8 @@ int32_t  Pmic_getRtcStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         /* Get RTC Status */
-        if(0U != (pmic_validParamCheck(pPmicRtcStatus->validParams,
-                                       PMIC_RTC_CFG_RTC_STATUS_VALID)))
+        if((bool)false != (pmic_validParamCheck(pPmicRtcStatus->validParams,
+                                                PMIC_RTC_CFG_RTC_STATUS_VALID)))
         {
             if(HW_REG_GET_FIELD(regData, PMIC_RTC_STATUS_RUN) == 0U)
             {
@@ -2511,8 +2517,8 @@ int32_t  Pmic_getRtcStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
         }
 
         /* Get RTC POWER-UP status */
-        if(0U != (pmic_validParamCheck(pPmicRtcStatus->validParams,
-                                       PMIC_RTC_CFG_POWERUP_STATUS_VALID)))
+        if((bool)false != (pmic_validParamCheck(pPmicRtcStatus->validParams,
+                                            PMIC_RTC_CFG_POWERUP_STATUS_VALID)))
         {
             if(HW_REG_GET_FIELD(regData, PMIC_RTC_STATUS_POWER_UP) == 0U)
             {
