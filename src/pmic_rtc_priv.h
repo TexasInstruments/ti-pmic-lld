@@ -120,8 +120,8 @@ extern "C" {
 /**
  *  \brief PMIC RTC Operations for RTC/ALARM
  */
-#define PMIC_RTC_OPS_FOR_RTC                           (0x0U)
-#define PMIC_RTC_OPS_FOR_ALARM                         (0x1U)
+#define PMIC_RTC_OPS_FOR_RTC                            ((bool)false)
+#define PMIC_RTC_OPS_FOR_ALARM                          ((bool)true)
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */

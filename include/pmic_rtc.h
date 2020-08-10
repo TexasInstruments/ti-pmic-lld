@@ -86,8 +86,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_RTC_ALARM_INTR_ENABLE                     (0x1U)
-#define PMIC_RTC_ALARM_INTR_DISABLE                    (0x0U)
+#define PMIC_RTC_ALARM_INTR_ENABLE                      1U
+#define PMIC_RTC_ALARM_INTR_DISABLE                     0U
 /* @} */
 
 /**
@@ -96,8 +96,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_RTC_TIMER_INTR_ENABLE                     (0x1U)
-#define PMIC_RTC_TIMER_INTR_DISABLE                    (0x0U)
+#define PMIC_RTC_TIMER_INTR_ENABLE                      1U
+#define PMIC_RTC_TIMER_INTR_DISABLE                     0U
 /* @} */
 
 /**
@@ -126,8 +126,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_RTC_STOP                                  (0x0U)
-#define PMIC_RTC_START                                 (0x1U)
+#define PMIC_RTC_STOP                                   0U
+#define PMIC_RTC_START                                  1U
 /* @} */
 
 /**

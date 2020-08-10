@@ -1328,7 +1328,7 @@ static int32_t Pmic_setAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
                                             &regData);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            if(PMIC_RTC_ALARM_INTR_ENABLE == enableIntr)
+            if(((bool)PMIC_RTC_ALARM_INTR_ENABLE) == enableIntr)
             {
                 HW_REG_SET_FIELD(regData,
                                  PMIC_RTC_INTERRUPTS_IT_ALARM,
@@ -1813,7 +1813,7 @@ static int32_t Pmic_setTimerIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            if(PMIC_RTC_TIMER_INTR_DISABLE == enableIntr)
+            if(((bool)PMIC_RTC_TIMER_INTR_DISABLE) == enableIntr)
             {
                 HW_REG_SET_FIELD(regData,
                              PMIC_RTC_INTERRUPTS_IT_TIMER,
@@ -1854,7 +1854,7 @@ static int32_t  Pmic_rtcEnableRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
                                         &regData);
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        if(PMIC_RTC_STOP == enableRtc)
+        if(((bool)PMIC_RTC_STOP) == enableRtc)
         {
             /* Stopping the RTC */
             regData &= (uint8_t)(~(PMIC_RTC_CTRL_1_STOP_RTC_MASK));
@@ -2174,7 +2174,7 @@ int32_t Pmic_rtcSetTimeDateInfo(Pmic_CoreHandle_t    *pPmicCoreHandle,
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         /* Stop RTC */
-        pmicStatus = Pmic_rtcEnable(pPmicCoreHandle, PMIC_RTC_STOP);
+        pmicStatus = Pmic_rtcEnable(pPmicCoreHandle, ((bool)PMIC_RTC_STOP));
     }
 
     /* Set PMIC RTC Time */
@@ -2192,7 +2192,7 @@ int32_t Pmic_rtcSetTimeDateInfo(Pmic_CoreHandle_t    *pPmicCoreHandle,
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         /* Restarting the RTC */
-        pmicStatus = Pmic_rtcEnable(pPmicCoreHandle, PMIC_RTC_START);
+        pmicStatus = Pmic_rtcEnable(pPmicCoreHandle, ((bool)PMIC_RTC_START));
     }
 
     return pmicStatus;
