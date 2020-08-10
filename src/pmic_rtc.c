@@ -954,6 +954,7 @@ static int32_t Pmic_rtcCheckHoursMode(Pmic_CoreHandle_t    *pPmicCoreHandle,
                                       const Pmic_RtcTime_t  timeCfg)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
+    Pmic_RtcTime_t  rtcTimeCfg = {0U};
     uint8_t timeMode = 0U;
 
     /* Get current TimeMode */
@@ -961,13 +962,17 @@ static int32_t Pmic_rtcCheckHoursMode(Pmic_CoreHandle_t    *pPmicCoreHandle,
                             PMIC_RTC_TIME_CFG_TIMEMODE_VALID))
     {
         pmicStatus = Pmic_rtcGetTimeMode(pPmicCoreHandle,
-                                         (Pmic_RtcTime_t *)&timeCfg);
+                                         &rtcTimeCfg);
+        timeMode = rtcTimeCfg.timeMode;
+    }
+    else
+    {
+        timeMode = timeCfg.timeMode;
     }
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        timeMode = timeCfg.timeMode;
-        if((timeCfg.timeMode == PMIC_RTC_12_HOUR_MODE) &&
+        if((PMIC_RTC_12_HOUR_MODE == timeMode) &&
            (pmic_validParamCheck(timeCfg.validParams,
                             PMIC_RTC_TIME_CFG_MERIDIAN_VALID)) &&
             (timeCfg.meridianMode > PMIC_RTC_PM_MODE))
@@ -1053,15 +1058,17 @@ static int32_t Pmic_rtcCheckTime(Pmic_CoreHandle_t    *pPmicCoreHandle,
  * \brief   This function is used to check for errors in date values
  *          w.r.to month
  */
-static int32_t Pmic_rtcCheckMonthDays(const Pmic_RtcDate_t dateCfg, bool leap)
+static int32_t Pmic_rtcCheckMonthDays(const Pmic_RtcDate_t dateCfg,
+                                      bool leap,
+                                      uint8_t month)
 {
     int32_t  pmicStatus = PMIC_ST_SUCCESS;
 
     /* Check months having 30 days */
-    if((PMIC_RTC_MONTH_APR == dateCfg.month)  ||
-       (PMIC_RTC_MONTH_JUN == dateCfg.month)  ||
-       (PMIC_RTC_MONTH_SEP == dateCfg.month)  ||
-       (PMIC_RTC_MONTH_NOV == dateCfg.month))
+    if((PMIC_RTC_MONTH_APR == month)  ||
+       (PMIC_RTC_MONTH_JUN == month)  ||
+       (PMIC_RTC_MONTH_SEP == month)  ||
+       (PMIC_RTC_MONTH_NOV == month))
     {
         if((dateCfg.day < PMIC_RTC_DAY_MIN) ||
            (dateCfg.day > PMIC_RTC_MNTH_DAY_MAX_30))
@@ -1070,7 +1077,7 @@ static int32_t Pmic_rtcCheckMonthDays(const Pmic_RtcDate_t dateCfg, bool leap)
         }
     }
     /* Check February days in year */
-    else if(PMIC_RTC_MONTH_FEB == dateCfg.month)
+    else if(PMIC_RTC_MONTH_FEB == month)
     {
         /* February days in leap year */
         if((bool)true == leap)
@@ -1112,6 +1119,8 @@ static int32_t Pmic_rtcCheckDate(Pmic_CoreHandle_t    *pPmicCoreHandle,
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     bool leapyear = (bool)false;
+    Pmic_RtcDate_t  rtcDateCfg = {0U};
+    uint8_t month = 0U;
 
     if(pmic_validParamCheck(dateCfg.validParams,
                             PMIC_RTC_DATE_CFG_MONTH_VALID) &&
@@ -1150,11 +1159,11 @@ static int32_t Pmic_rtcCheckDate(Pmic_CoreHandle_t    *pPmicCoreHandle,
         else
         {
             pmicStatus = Pmic_rtcGetYear(pPmicCoreHandle,
-                                         (Pmic_RtcDate_t  *)&dateCfg,
+                                         &rtcDateCfg,
                                          PMIC_RTC_OPS_FOR_RTC);
             if(PMIC_ST_SUCCESS == pmicStatus)
             {
-                leapyear = (0U == (dateCfg.year % 4U));
+                leapyear = (0U == (rtcDateCfg.year % 4U));
             }
         }
     }
@@ -1166,24 +1175,31 @@ static int32_t Pmic_rtcCheckDate(Pmic_CoreHandle_t    *pPmicCoreHandle,
                                  PMIC_RTC_DATE_CFG_MONTH_VALID))
         {
             pmicStatus = Pmic_rtcGetMonth(pPmicCoreHandle,
-                                          (Pmic_RtcDate_t  *)&dateCfg,
+                                          &rtcDateCfg,
                                           PMIC_RTC_OPS_FOR_RTC);
-            /* Check the current month to check days */
-            if((PMIC_ST_SUCCESS == pmicStatus) &&
-               ((dateCfg.month > PMIC_RTC_MONTH_DEC) ||
-                (dateCfg.month <= PMIC_RTC_MONTH_JAN)))
-            {
-                pmicStatus = PMIC_ST_ERR_INV_DATE;
-            }
+            month = rtcDateCfg.month;
+        }
+        else
+        {
+            month = dateCfg.month;
+        }
+
+        /* Check the current month to check days */
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((month > PMIC_RTC_MONTH_DEC) ||
+            (month <= PMIC_RTC_MONTH_JAN)))
+        {
+            pmicStatus = PMIC_ST_ERR_INV_DATE;
         }
     }
-
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
        pmic_validParamCheck(dateCfg.validParams,
                             PMIC_RTC_DATE_CFG_DAY_VALID))
     {
-        pmicStatus = Pmic_rtcCheckMonthDays(dateCfg, leapyear);
+        pmicStatus = Pmic_rtcCheckMonthDays(dateCfg,
+                                            leapyear,
+                                            month);
     }
 
     return pmicStatus;
