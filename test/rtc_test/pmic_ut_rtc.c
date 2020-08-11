@@ -1893,17 +1893,17 @@ static void test_pmic_rtc_testWakeup_TimerIntr(void)
 
     pHandle                         = pPmicCoreHandle;
 
-    status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    status = Pmic_rtcGetTimerPeriod(pHandle, &timerPeriod);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
     for(i=0; i< 2; i++)
     {
+        status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_rd, &dateCfg_rd);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        status = Pmic_rtcGetTimerPeriod(pHandle, &timerPeriod);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
         irqNum = 0;
 
         if(i == 0)
@@ -1996,22 +1996,21 @@ static void test_pmic_rtc_testWakeup_AlarmIntr(void)
     bool standByState = 0U;
     uint32_t alarmIntrdelayTime = 70000U;  // Alarm Interrupt configured for 1 minute (60 Sec)
     uint32_t delayTimeBefore = 80000U;  // Added delay for workaround
-    uint32_t delayTimeAfter = 80000U;  // Added delay for workaround
     uint8_t i = 0U;
 
     test_pmic_print_unity_testcase_info(7359,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
-    status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    /* Get the current time value */
-    status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
     for(i=0; i< 2; i++)
     {
+        status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        /* Get the current time value */
+        status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_rd, &dateCfg_rd);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
         irqNum = 0;
 
         if(i == 0)
@@ -2040,9 +2039,6 @@ static void test_pmic_rtc_testWakeup_AlarmIntr(void)
                                              PMIC_FSM_I2C_TRIGGER0_EVENT_TYPE,
                                              standByState);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-        /*To avoid DAP reset for FSM I2C0_Trigger*/
-        Osal_delay(delayTimeAfter);
 
         status = Pmic_fsmEnableI2cTrigger(pHandle, PMIC_FSM_I2C_TRIGGER0_TYPE);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
