@@ -71,9 +71,14 @@ extern "C" {
 #define PMIC_IO_BUF_SIZE                       (4U)
 
 /*!
- * \brief: CRC Buffer Size
+ * \brief: Initial value for CRC
  */
-#define PMIC_CRC_BUF_SIZE                      (256U)
+#define PMIC_COMM_CRC_INITIAL_VALUE            (0xFF)
+
+/*!
+ * \brief: IO READ bits
+ */
+#define PMIC_IO_READ                           (0x01)
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
