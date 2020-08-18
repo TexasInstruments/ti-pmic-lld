@@ -42,6 +42,8 @@
 /* Pointer holds the pPmicCoreHandle */
 Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
 
+static uint8_t pmic_device_info = 0U;
+
 /*!
  * \brief   PMIC POWER Test Cases
  */
@@ -731,91 +733,91 @@ static Pmic_Ut_Tests_t pmic_power_tests[] =
         "Pmic_powerSetIntr : Parameter validation for handle"
     },
     {
-        174,
+        7511,
         "Pmic_powerSetPwrRsrcIntr : Test Set Enable OV interrupt"
     },
     {
-        175,
+        7512,
         "Pmic_powerSetPwrRsrcIntr : Test Set Disable OV interrupt"
     },
     {
-        176,
+        7513,
         "Pmic_powerSetPwrRsrcIntr : Test Set Enable UV interrupt"
     },
     {
-        177,
+        7514,
         "Pmic_powerSetPwrRsrcIntr : Test Set Disable UV interrupt"
     },
     {
-        178,
+        7515,
         "Pmic_powerSetPwrRsrcIntr : Test Set Enable ILIM interrupt"
     },
     {
-        179,
+        7516,
         "Pmic_powerSetPwrRsrcIntr : Test Set Disable ILIM interrupt"
     },
     {
-        180,
+        7517,
         "Pmic_powerSetIntr : Test Set Enable TWARN interrupt"
     },
     {
-        181,
+        7518,
         "Pmic_powerSetIntr : Test Set Disable TWARN interrupt"
     },
     {
-        182,
+        7519,
         "Pmic_powerSetIntr : Test Set Enable NRSTOUT_READBACK interrupt"
     },
     {
-        183,
+        7520,
         "Pmic_powerSetIntr : Test Set Disable NRSTOUT_READBACK interrupt"
     },
     {
-        184,
+        7521,
         "Pmic_powerSetIntr : Test Set Enable SOC_PWR_ERR interrupt"
     },
     {
-        185,
+        7522,
         "Pmic_powerSetIntr : Test Set Disable SOC_PWR_ERR interrupt"
     },
     {
-        186,
+        7523,
         "Pmic_powerSetIntr : Test Set Enable MCU_PWR_ERR interrupt"
     },
     {
-        187,
+        7524,
         "Pmic_powerSetIntr : Test Set Disable MCU_PWR_ERR interrupt"
     },
     {
-        188,
+        7525,
         "Pmic_powerSetIntr : Test Set Enable ORD_SHUTDOWN interrupt"
     },
     {
-        189,
+        7526,
         "Pmic_powerSetIntr : Test Set Disable ORD_SHUTDOWN interrupt"
     },
     {
-        190,
+        7527,
         "Pmic_powerSetIntr : Test Set Enable IMM_SHUTDOWN interrupt"
     },
     {
-        191,
+        7528,
         "Pmic_powerSetIntr : Test Set Disable IMM_SHUTDOWN interrupt"
     },
     {
-        192,
+        7529,
         "Pmic_powerSetIntr : Test Set Enable NRSTOUT_SOC_READBACK interrupt"
     },
     {
-        193,
+        7530,
         "Pmic_powerSetIntr : Test Set Disable NRSTOUT_SOC_READBACK interrupt"
     },
     {
-        194,
+        7531,
         "Pmic_powerSetIntr : Test Set Enable EN_DRV_READBACK interrupt"
     },
     {
-        195,
+        7532,
         "Pmic_powerSetIntr : Test Set Disable EN_DRV_READBACK interrupt"
     },
     {
@@ -1527,7 +1529,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckVoutSel_vout2(void)
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
     {
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICA_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICA_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK3) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK4) ||
@@ -1537,7 +1539,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckVoutSel_vout2(void)
         }
 
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICB_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICB_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK5) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO2)  ||
@@ -1879,7 +1881,6 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_buckFpwmMpMo
 
 }
 
-#if 0
 /*!
  * \brief   Pmic_powerSetPwrResourceCfg : Test Disable the power regulator.
  */
@@ -1901,6 +1902,17 @@ static void test_pmic_powerSetPowerResourceConfig_regulatorEn_disable(void)
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
+    /* PDK-7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         pPowerCfg.regulatorEn = PMIC_TPS6594X_REGULATOR_DISABLE;
@@ -1918,7 +1930,7 @@ static void test_pmic_powerSetPowerResourceConfig_regulatorEn_disable(void)
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
     {
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICA_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICA_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK3) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK4) ||
@@ -1928,7 +1940,7 @@ static void test_pmic_powerSetPowerResourceConfig_regulatorEn_disable(void)
         }
 
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICB_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICB_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK5) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO2)  ||
@@ -1956,7 +1968,7 @@ static void test_pmic_powerSetPowerResourceConfig_regulatorEn_disable(void)
         for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
         {
             if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-                (LEO_PMICA_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+                (J721E_LEO_PMICA_DEVICE == pmic_device_info) &&
                 ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
                  (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK3) ||
                  (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK4) ||
@@ -1966,7 +1978,7 @@ static void test_pmic_powerSetPowerResourceConfig_regulatorEn_disable(void)
             }
 
             if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-                (LEO_PMICB_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+                (J721E_LEO_PMICB_DEVICE == pmic_device_info) &&
                 ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
                  (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK5) ||
                  (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO2)  ||
@@ -1990,7 +2002,6 @@ static void test_pmic_powerSetPowerResourceConfig_regulatorEn_disable(void)
     }
 
 }
-#endif
 
 /*!
  * \brief   Pmic_powerSetPwrResourceCfg : Test Enable the power regulator.
@@ -2120,6 +2131,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckCurrentLimit_6A5(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* Current limit 6.5 is not supported by LEO pmic */
         TEST_IGNORE();
     }
 
@@ -3137,6 +3149,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoPullDownSel_50KOHM(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* LDOs are not present in HERA pmic */
         TEST_IGNORE();
     }
 
@@ -3187,6 +3200,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoPullDownSel_125OHM(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* LDOs are not present in HERA pmic */
         TEST_IGNORE();
     }
 
@@ -3237,6 +3251,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoPullDownSel_250OHM(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* LDOs are not present in HERA pmic */
         TEST_IGNORE();
     }
 
@@ -3287,6 +3302,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoPullDownSel_500OHM(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* LDOs are not present in HERA pmic */
         TEST_IGNORE();
     }
 
@@ -3314,7 +3330,6 @@ static void test_pmic_powerSetPowerResourceConfig_ldoPullDownSel_500OHM(void)
 
 }
 
-#if 0
 /*!
  * \brief   Pmic_powerSetPwrResourceCfg : Test Enable Slow Ramp for LDO
  */
@@ -3336,6 +3351,17 @@ static void test_pmic_powerSetPowerResourceConfig_ldoSlowRampEn_enable(void)
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
+    /* PDK-7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         pPowerCfg.ldoSlowRampEn = PMIC_TPS6594X_REGULATOR_LDO_SLOW_RAMP_ENABLE;
@@ -3345,6 +3371,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoSlowRampEn_enable(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* LDOs are not present in HERA pmic */
         TEST_IGNORE();
     }
 
@@ -3363,7 +3390,6 @@ static void test_pmic_powerSetPowerResourceConfig_ldoSlowRampEn_enable(void)
         TEST_ASSERT_EQUAL(pPowerCfg.ldoSlowRampEn, powerCfg_rd.ldoSlowRampEn);
     }
 }
-#endif
 
 /*!
  * \brief   Pmic_powerSetPwrResourceCfg : Test Disable Slow Ramp for LDO
@@ -3395,6 +3421,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoSlowRampEn_disable(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* LDOs are not present in HERA pmic */
         TEST_IGNORE();
     }
 
@@ -3439,6 +3466,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_ldoPullDownS
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* LDOs are not present in HERA pmic */
         TEST_IGNORE();
     }
 
@@ -3476,6 +3504,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_ldoPullDownSel(voi
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* LDOs are not present in HERA pmic */
         TEST_IGNORE();
     }
 
@@ -3512,6 +3541,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_ldoSlowRampE
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* LDOs are not present in HERA pmic */
         TEST_IGNORE();
     }
 
@@ -3523,13 +3553,33 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_ldoSlowRampE
 }
 
 /*!
+ * PDK-7483
+ * PMIC: BUCK and LDO voltage configuration can't be tested for supported values
+ * on J721E EVM.
+ * voltages should be fixed at their default value, and not adjusted.
+ * Tested voltages:
+ *    PMIC A
+ *      BUCK 2 -> 300mv
+ *      BUCK 5 -> 300mv
+ *      LDO  2 -> 1800mv
+ *      LDO  3 -> 800mv
+ *      LDO  4 -> 1800mv
+ *
+ *   PMIC B
+ *     BUCK 2 -> 300mv
+ *     BUCK 3 -> 300mv
+ *     BUCK 4 -> 300mv
+ *     LDO  1 -> 3300mv
+ *     LDO  3 -> 1800mv
+ */
+
+/*!
  * \brief   Pmic_powerSetPwrResourceCfg : Test Voltage level in miliVolts for regulators
  */
 static void test_pmic_powerSetPowerResourceConfig_voltage_mV(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
-    uint32_t step=0;
 
     Pmic_PowerResourceCfg_t powerCfg_rd =
     {
@@ -3560,7 +3610,7 @@ static void test_pmic_powerSetPowerResourceConfig_voltage_mV(void)
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
     {
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICA_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICA_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK3) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK4) ||
@@ -3570,7 +3620,7 @@ static void test_pmic_powerSetPowerResourceConfig_voltage_mV(void)
         }
 
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICB_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICB_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK5) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO2)  ||
@@ -3579,36 +3629,16 @@ static void test_pmic_powerSetPowerResourceConfig_voltage_mV(void)
             continue;
         }
 
-        step=20;
-        pPowerCfg.voltage_mV = 300U;
-        for(;pPowerCfg.voltage_mV <= 3340;pPowerCfg.voltage_mV+=step)
-        {
-            pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
-                                                     pwrRsrc,
-                                                     pPowerCfg);
-            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-            pmicStatus = Pmic_powerGetPwrResourceCfg(pPmicCoreHandle,
-                                                     pwrRsrc,
-                                                     &powerCfg_rd);
-            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-            TEST_ASSERT_EQUAL(pPowerCfg.voltage_mV, powerCfg_rd.voltage_mV);
-            pmic_log("passed for %dmv \n", pPowerCfg.voltage_mV);
-            if(pPowerCfg.voltage_mV == 580)
-            {
-                pPowerCfg.voltage_mV = 595;step=5;
-            }
-            if(pPowerCfg.voltage_mV == 1095)
-            {
-                pPowerCfg.voltage_mV = 1210;step=10;
-            }
-            if(pPowerCfg.voltage_mV == 1650)
-            {
-                pPowerCfg.voltage_mV = 1640;step=20;
-            }
-        }
-
+        pmicStatus = Pmic_powerGetPwrResourceCfg(pPmicCoreHandle,
+                                                 pwrRsrc,
+                                                 &powerCfg_rd);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        pPowerCfg.voltage_mV = powerCfg_rd.voltage_mV;
+        pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
+                                                 pwrRsrc,
+                                                 pPowerCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        pmic_log("passed for %dmv \n", pPowerCfg.voltage_mV);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -3626,7 +3656,7 @@ static void test_pmic_powerSetPowerResourceConfig_voltage_mV(void)
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
     {
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICA_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICA_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK3) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK4) ||
@@ -3636,7 +3666,7 @@ static void test_pmic_powerSetPowerResourceConfig_voltage_mV(void)
         }
 
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICB_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICB_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK5) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO2)  ||
@@ -3645,32 +3675,15 @@ static void test_pmic_powerSetPowerResourceConfig_voltage_mV(void)
             continue;
         }
 
-        step=50;
-        pPowerCfg.voltage_mV = 600U;
-        if(pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO4)
-        {
-            pPowerCfg.voltage_mV = 1200U;
-            step=25;
-        }
-
-        for(;pPowerCfg.voltage_mV <= 3300;pPowerCfg.voltage_mV+=step)
-        {
-            pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
-                                                     pwrRsrc,
-                                                     pPowerCfg);
-            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-            pmicStatus = Pmic_powerGetPwrResourceCfg(pPmicCoreHandle,
-                                                     pwrRsrc,
-                                                     &powerCfg_rd);
-            TEST_ASSERT_EQUAL(pPowerCfg.voltage_mV, powerCfg_rd.voltage_mV);
-            pmic_log("passed for %dmv \n", pPowerCfg.voltage_mV);
-
-            if((1500 == pPowerCfg.voltage_mV) &&
-               (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO3))
-            {
-                break;
-            }
-        }
+        pmicStatus = Pmic_powerGetPwrResourceCfg(pPmicCoreHandle,
+                                                 pwrRsrc,
+                                                 &powerCfg_rd);
+        pPowerCfg.voltage_mV = powerCfg_rd.voltage_mV;
+        pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
+                                                 pwrRsrc,
+                                                 pPowerCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        pmic_log("passed for %dmv \n", pPowerCfg.voltage_mV);
     }
 
 }
@@ -3954,7 +3967,7 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_none(void)
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
     {
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICA_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICA_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK3) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK4) ||
@@ -3964,7 +3977,7 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_none(void)
         }
 
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICB_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICB_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK5) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO2)  ||
@@ -3994,7 +4007,7 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_none(void)
         for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
         {
             if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-                (LEO_PMICA_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+                (J721E_LEO_PMICA_DEVICE == pmic_device_info) &&
                 ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
                  (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK3) ||
                  (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK4) ||
@@ -4005,7 +4018,7 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_none(void)
             }
 
             if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-                (LEO_PMICB_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+                (J721E_LEO_PMICB_DEVICE == pmic_device_info) &&
                 ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
                  (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK5) ||
                  (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO2)  ||
@@ -4049,7 +4062,7 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_none(void)
         }
     }
 }
-#if 0
+
 /*!
  * \brief   Pmic_powerSetPwrResourceCfg : Test Rail group selection for power resources as group mcu.
  */
@@ -4070,6 +4083,24 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_mcu(void)
     test_pmic_print_unity_testcase_info(7188,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+       /*
+        * Once the PFSM is in operation, user should not change rail grp
+        * setting as this may compromise the system’s functional safety design
+        */
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+       /*
+        * Once the PFSM is in operation, user should not change rail grp
+        * setting as this may compromise the system’s functional safety design
+        */
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -4115,7 +4146,7 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_mcu(void)
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
     {
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICA_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICA_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK2) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK3) ||
@@ -4126,7 +4157,7 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_mcu(void)
         }
 
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICB_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICB_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK5) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO2)  ||
@@ -4163,7 +4194,7 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_mcu(void)
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
     {
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICA_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICA_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK2) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK3) ||
@@ -4174,7 +4205,7 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_mcu(void)
         }
 
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICB_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICB_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK5) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO2)  ||
@@ -4220,6 +4251,24 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_soc(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
+        /*
+         * Once the PFSM is in operation, user should not change rail grp
+         * setting as this may compromise the system’s functional safety design
+         */
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        /*
+         * Once the PFSM is in operation, user should not change rail grp
+         * setting as this may compromise the system’s functional safety design
+         */
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
         pPowerCfg.railGrpSel = PMIC_TPS6594X_POWER_RAIL_SEL_SOC;
         pwrRsrcMin = PMIC_TPS6594X_POWER_SOURCE_VCCA;
         pwrRsrcMax = PMIC_TPS6594X_POWER_SOURCE_VCCA;
@@ -4262,7 +4311,7 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_soc(void)
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
     {
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICA_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICA_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK2) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK3) ||
@@ -4273,7 +4322,7 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_soc(void)
         }
 
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICB_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICB_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK5) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO2)  ||
@@ -4310,7 +4359,7 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_soc(void)
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
     {
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICA_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICA_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK2) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK3) ||
@@ -4321,7 +4370,7 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_soc(void)
         }
 
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICB_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICB_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK5) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO2)  ||
@@ -4367,6 +4416,24 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_other(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
+        /*
+         * Once the PFSM is in operation, user should not change rail grp
+         * setting as this may compromise the system’s functional safety design
+         */
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        /*
+         * Once the PFSM is in operation, user should not change rail grp
+         * setting as this may compromise the system’s functional safety design
+         */
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
         pPowerCfg.railGrpSel = PMIC_TPS6594X_POWER_RAIL_SEL_OTHER;
         pwrRsrcMin = PMIC_TPS6594X_POWER_SOURCE_VCCA;
         pwrRsrcMax = PMIC_TPS6594X_POWER_SOURCE_VCCA;
@@ -4407,7 +4474,7 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_other(void)
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
     {
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICA_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICA_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK2) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK3) ||
@@ -4418,7 +4485,7 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_other(void)
         }
 
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICB_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICB_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK5) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO2)  ||
@@ -4455,7 +4522,7 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_other(void)
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
     {
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICA_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICA_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK2) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK3) ||
@@ -4466,7 +4533,7 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_other(void)
         }
 
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICB_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICB_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK5) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO2)  ||
@@ -4488,7 +4555,6 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_other(void)
         TEST_ASSERT_EQUAL(pPowerCfg.railGrpSel, powerCfg_rd.railGrpSel);
     }
 }
-#endif
 
 /*!
  * \brief   Pmic_powerSetPwrResourceCfg : Parameter validation for Power Resource for railGrpSel.
@@ -4572,6 +4638,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_railGrpSel(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* LDOs are not present in HERA pmic */
         TEST_IGNORE();
     }
 
@@ -4583,7 +4650,9 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_railGrpSel(void)
         TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
     }
 }
- #if 0
+
+/* PDK-7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
+
 /*!
  * \brief   Pmic_powerSetPwrResourceCfg : Test BUCK switching frequency for 4.4M.
  */
@@ -4607,6 +4676,28 @@ static void test_pmic_powerSetPowerResourceConfig_buckFreqSel_4M4(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
+       /*
+        * Buck frequency  should not be changed on the fly as external
+        * components at the output of the buck needs to be changed, and many
+        * internal configuration trim registers also need to be adjusted in
+        * order for the buck to remain in regulation
+        */
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+       /*
+        * Buck frequency  should not be changed on the fly as external
+        * components at the output of the buck needs to be changed, and many
+        * internal configuration trim registers also need to be adjusted in
+        * order for the buck to remain in regulation
+        */
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
         pPowerCfg.buckFreqSel = PMIC_LP8764X_BUCK_FREQ_SEL_4M4;
         pwrRsrcMin = PMIC_TPS6594X_REGULATOR_BUCK1;
         pwrRsrcMax = PMIC_TPS6594X_REGULATOR_BUCK5;
@@ -4622,7 +4713,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckFreqSel_4M4(void)
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
     {
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICA_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICA_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK2) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK3) ||
@@ -4633,7 +4724,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckFreqSel_4M4(void)
         }
 
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICB_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICB_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK5) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO2)  ||
@@ -4653,7 +4744,6 @@ static void test_pmic_powerSetPowerResourceConfig_buckFreqSel_4M4(void)
         TEST_ASSERT_EQUAL(pPowerCfg.buckFreqSel, powerCfg_rd.buckFreqSel);
     }
 }
-#endif
 
 /*!
  * \brief   Pmic_powerSetPwrResourceCfg : Test BUCK switching frequency for 2.2M.
@@ -4675,6 +4765,28 @@ static void test_pmic_powerSetPowerResourceConfig_buckFreqSel_2M2(void)
     test_pmic_print_unity_testcase_info(7194,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+       /*
+        * Buck frequency  should not be changed on the fly as external
+        * components at the output of the buck needs to be changed, and many
+        * internal configuration trim registers also need to be adjusted in
+        * order for the buck to remain in regulation
+        */
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+       /*
+        * Buck frequency  should not be changed on the fly as external
+        * components at the output of the buck needs to be changed, and many
+        * internal configuration trim registers also need to be adjusted in
+        * order for the buck to remain in regulation
+        */
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -4731,6 +4843,23 @@ static void test_pmic_powerSetPowerResourceConfig_buckFreqSel_8M8(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
+       /*
+        * Buck frequency  should not be changed on the fly as external
+        * components at the output of the buck needs to be changed, and many
+        * internal configuration trim registers also need to be adjusted in
+        * order for the buck to remain in regulation
+        */
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+       /*
+        * Buck frequency  should not be changed on the fly as external
+        * components at the output of the buck needs to be changed, and many
+        * internal configuration trim registers also need to be adjusted in
+        * order for the buck to remain in regulation
+        */
         TEST_IGNORE();
     }
 
@@ -4834,7 +4963,6 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_buckFreqSel(void)
     }
 }
 
-#if 0
 /*!
  * \brief   Pmic_powerSetPwrResourceCfg : Test LDO Bypass Regulator LDO mode
  */
@@ -4856,6 +4984,19 @@ static void test_pmic_powerSetPowerResourceConfig_ldoBypassModeEn_bypass(void)
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
+    /* PDK-7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        /*  Setting LDOs in bypass mode - Resulted in DDR issue */
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        /*  Setting LDOs in bypass mode - Resulted in DDR issue */
+        TEST_IGNORE();
+    }
+
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         pPowerCfg.ldoBypassModeEn = PMIC_TPS6594X_REGULATOR_LDO_BYPASS_MODDE;
@@ -4871,7 +5012,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoBypassModeEn_bypass(void)
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
     {
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICA_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICA_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK2) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK3) ||
@@ -4882,7 +5023,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoBypassModeEn_bypass(void)
         }
 
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (LEO_PMICB_SLAVE_ADDR == pPmicCoreHandle->slaveAddr) &&
+            (J721E_LEO_PMICB_DEVICE == pmic_device_info) &&
             ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK5) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO2)  ||
@@ -4903,10 +5044,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoBypassModeEn_bypass(void)
         }
 
 }
-#endif
 
-
-#if 0
 /*!
  * \brief   Pmic_powerSetPwrResourceCfg : Test LDO Linear Regulator LDO mode
  */
@@ -4927,6 +5065,17 @@ static void test_pmic_powerSetPowerResourceConfig_ldoBypassModeEn_linear(void)
     test_pmic_print_unity_testcase_info(7199,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    /* PDK-7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -4955,7 +5104,6 @@ static void test_pmic_powerSetPowerResourceConfig_ldoBypassModeEn_linear(void)
         TEST_ASSERT_EQUAL(pPowerCfg.ldoBypassModeEn, powerCfg_rd.ldoBypassModeEn);
     }
 }
-#endif
 
 /*!
  * \brief   Pmic_powerSetPwrResourceCfg : Parameter validation for Power Resource for ldoBypassModeEn.
@@ -5021,6 +5169,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_0MS5(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* LDOs are not present in HERA pmic */
         TEST_IGNORE();
     }
 
@@ -5070,6 +5219,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_1MS(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* LDOs are not present in HERA pmic */
         TEST_IGNORE();
     }
 
@@ -5119,6 +5269,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_1MS5(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* LDOs are not present in HERA pmic */
         TEST_IGNORE();
     }
 
@@ -5168,6 +5319,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_2MS(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* LDOs are not present in HERA pmic */
         TEST_IGNORE();
     }
 
@@ -5217,6 +5369,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_2MS5(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* LDOs are not present in HERA pmic */
         TEST_IGNORE();
     }
 
@@ -5266,6 +5419,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_3MS(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* LDOs are not present in HERA pmic */
         TEST_IGNORE();
     }
 
@@ -5315,6 +5469,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_3MS5(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* LDOs are not present in HERA pmic */
         TEST_IGNORE();
     }
 
@@ -5364,6 +5519,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_4MS(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* LDOs are not present in HERA pmic */
         TEST_IGNORE();
     }
 
@@ -5413,6 +5569,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_6MS(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* LDOs are not present in HERA pmic */
         TEST_IGNORE();
     }
 
@@ -5462,6 +5619,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_8MS(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* LDOs are not present in HERA pmic */
         TEST_IGNORE();
     }
 
@@ -5511,6 +5669,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_10MS(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* LDOs are not present in HERA pmic */
         TEST_IGNORE();
     }
 
@@ -5560,6 +5719,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_12MS(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* LDOs are not present in HERA pmic */
         TEST_IGNORE();
     }
 
@@ -5609,6 +5769,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_14MS(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* LDOs are not present in HERA pmic */
         TEST_IGNORE();
     }
 
@@ -5658,6 +5819,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_16MS(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* LDOs are not present in HERA pmic */
         TEST_IGNORE();
     }
 
@@ -5739,6 +5901,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_ldoRvTimeoutSel(vo
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* LDOs are not present in HERA pmic */
         TEST_IGNORE();
     }
 
@@ -5781,6 +5944,7 @@ static void test_pmic_powerSetPowerResourceConfig_vmonRange_range1(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* VMON1 and VMON2 are not present in LEO pmic */
         TEST_IGNORE();
     }
 
@@ -5831,6 +5995,7 @@ static void test_pmic_powerSetPowerResourceConfig_vmonRange_range2(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* VMON1 and VMON2 are not present in LEO pmic */
         TEST_IGNORE();
     }
 
@@ -5874,6 +6039,7 @@ static void test_pmic_powerSetPowerResourceConfig_vmonRange_range2(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* VMON1 and VMON2 are not present in LEO pmic */
         TEST_IGNORE();
     }
 
@@ -5917,7 +6083,6 @@ static void test_pmic_powerSetCommonConfigPrmValTest_handle(void)
     pmicStatus = Pmic_powerSetCommonConfig(NULL,  pwrCommonCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
 }
-
 
 /*!
  * \brief   Pmic_powerSetCommonConfig : Test pgoodWindow uv monitor enable
@@ -6540,6 +6705,7 @@ static void test_pmic_powerSetConfigPowerGood_pgoodSelType_vmon(void)
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* VMON1 and VMON2 are not present in LEO pmic */
         TEST_IGNORE();
     }
 
@@ -6920,6 +7086,7 @@ static void test_pmic_powerSetThermalConfig_thermalShutdownThold_low(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
+        /* Thermal tempertaure 140C not supported by HERA pmic */
         TEST_IGNORE();
     }
 
@@ -6938,7 +7105,6 @@ static void test_pmic_powerSetThermalConfig_thermalShutdownThold_low(void)
 
 }
 
-#if 0
 /*!
  * \brief   Pmic_powerSetThermalConfig : Test thermalShutdownThold as high
  */
@@ -6969,6 +7135,17 @@ static void test_pmic_powerSetThermalConfig_thermalShutdownThold_high(void)
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
+    /* PDK-7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
     pmicStatus = Pmic_powerSetThermalConfig(pPmicCoreHandle, thermalThreshold);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
@@ -6979,8 +7156,6 @@ static void test_pmic_powerSetThermalConfig_thermalShutdownThold_high(void)
                       thermalThreshold_rd.thermalShutdownThold);
 
 }
-
-#endif
 
 /*!
  * \brief   Pmic_powerSetPwrRsrcIntr : Test Enable OV interrupt
@@ -7987,7 +8162,6 @@ static void test_pmic_powerSetCommonConfig_deglitchTimeSel_4(void)
 
 }
 
-#if 0
 /*!
  * \brief   Pmic_powerSetCommonConfig : Test deglitchTimeSel as 20us
  */
@@ -8007,6 +8181,17 @@ static void test_pmic_powerSetCommonConfig_deglitchTimeSel_20(void)
     test_pmic_print_unity_testcase_info(7226,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    /* PDK-7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -8028,7 +8213,6 @@ static void test_pmic_powerSetCommonConfig_deglitchTimeSel_20(void)
     TEST_ASSERT_EQUAL(pwrCommonCfg.deglitchTimeSel, powerCfg_rd.deglitchTimeSel);
 
 }
-#endif
 
 /*!
  * \brief   Pmic_powerSetCommonConfig : Test severeErrorTrig as Immediate shutdown
@@ -9183,14 +9367,17 @@ static void test_pmic_powerSetPwrRsrcIntrPrmValTest_handle(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
 }
 
-/*   The below taest cases aer dummy, as power related interrupts cannot be generated
- *   to test masking APIs
+/*!
+ * The below test case is dummy, as power related interrupts cannot be generated
+ * to test masking APIs.
+ * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * can't be tested
  */
-#if 0
+
 /*!
  * \brief   Pmic_powerSetPwrRsrcIntr : Test Set Enable OV interrupt
  */
-static void test_pmic_powerSetPwrRsrcIntr_ov_enable(void)
+static void test_pmic_powerSetPwrRsrcIntr_ov_enabled(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint16_t pwrResource;
@@ -9198,11 +9385,22 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_enable(void)
     uint8_t intrType;
     bool intrEnable;
     Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(174,
+    test_pmic_print_unity_testcase_info(7511,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -9235,14 +9433,14 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_enable(void)
                                              intrType,
                                              intrEnable);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-        status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-        if((PMIC_ST_SUCCESS == status) &&
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
            ((errStat.intStatus[PMIC_TPS6594X_POWER_OV_INT/32U] &
              (1U << (PMIC_TPS6594X_POWER_OV_INT % 32U))) != 0U))
         {
             while(1)
             {
-                status = Pmic_getNextErrorStatus(pHandle,
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                  &errStat,
                                                  &irqNum);
                 if(PMIC_TPS6594X_POWER_OV_INT == irqNum)
@@ -9264,14 +9462,14 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_enable(void)
                                                   intrType,
                                                   intrEnable);
             TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-            status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-            if((PMIC_ST_SUCCESS == status) &&
+            pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+            if((PMIC_ST_SUCCESS == pmicStatus) &&
                ((errStat.intStatus[PMIC_TPS6594X_POWER_OV_INT/32U] &
                  (1U << (PMIC_TPS6594X_POWER_OV_INT % 32U))) != 0U))
             {
                 while(1)
                 {
-                    status = Pmic_getNextErrorStatus(pHandle,
+                    pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                      &errStat,
                                                      &irqNum);
                     if(PMIC_TPS6594X_POWER_OV_INT == irqNum)
@@ -9297,14 +9495,14 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_enable(void)
                                           intrType,
                                           intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-    status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-    if((PMIC_ST_SUCCESS == status) &&
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((errStat.intStatus[PMIC_TPS6594X_POWER_OV_INT/32U] &
          (1U << (PMIC_TPS6594X_POWER_OV_INT % 32U))) != 0U))
     {
         while(1)
         {
-            status = Pmic_getNextErrorStatus(pHandle,
+            pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(PMIC_TPS6594X_POWER_OV_INT == irqNum)
@@ -9325,14 +9523,14 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_enable(void)
                                               intrType,
                                               intrEnable);
             TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-            status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-            if((PMIC_ST_SUCCESS == status) &&
+            pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+            if((PMIC_ST_SUCCESS == pmicStatus) &&
                ((errStat.intStatus[PMIC_TPS6594X_POWER_OV_INT/32U] &
                  (1U << (PMIC_TPS6594X_POWER_OV_INT % 32U))) != 0U))
             {
                 while(1)
                 {
-                    status = Pmic_getNextErrorStatus(pHandle,
+                    pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                      &errStat,
                                                      &irqNum);
                     if(PMIC_TPS6594X_POWER_OV_INT == irqNum)
@@ -9346,9 +9544,16 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_enable(void)
 }
 
 /*!
+ * The below test case is dummy, as power related interrupts cannot be generated
+ * to test masking APIs.
+ * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * can't be tested
+ */
+
+/*!
  * \brief   Pmic_powerSetPwrRsrcIntr : Test Set Disable OV interrupt
  */
-static void test_pmic_powerSetPwrRsrcIntr_ov_disable(void)
+static void test_pmic_powerSetPwrRsrcIntr_ov_disabled(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint16_t pwrResource;
@@ -9356,12 +9561,23 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_disable(void)
     uint8_t intrType;
     bool intrEnable;
     Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(175,
+    test_pmic_print_unity_testcase_info(7512,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -9394,14 +9610,14 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_disable(void)
                                              intrType,
                                              intrEnable);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-        status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-        if((PMIC_ST_SUCCESS == status) &&
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
            ((errStat.intStatus[intrType/32U] &
              (1U << (intrType % 32U))) != 0U))
         {
             while(1)
             {
-                status = Pmic_getNextErrorStatus(pHandle,
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                  &errStat,
                                                  &irqNum);
                 if(intrType == irqNum)
@@ -9427,14 +9643,14 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_disable(void)
                                                   intrType,
                                                   intrEnable);
             TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-            status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-            if((PMIC_ST_SUCCESS == status) &&
+            pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+            if((PMIC_ST_SUCCESS == pmicStatus) &&
                ((errStat.intStatus[intrType/32U] &
                  (1U << (intrType % 32U))) != 0U))
             {
                 while(1)
                 {
-                    status = Pmic_getNextErrorStatus(pHandle,
+                    pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                      &errStat,
                                                      &irqNum);
                     if(intrType == irqNum)
@@ -9464,14 +9680,14 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_disable(void)
                                           intrType,
                                           intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-    status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-    if((PMIC_ST_SUCCESS == status) &&
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
         while(1)
         {
-            status = Pmic_getNextErrorStatus(pHandle,
+            pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
@@ -9496,14 +9712,14 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_disable(void)
                                               intrType,
                                               intrEnable);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-        status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-        if((PMIC_ST_SUCCESS == status) &&
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
            ((errStat.intStatus[intrType/32U] &
              (1U << (intrType % 32U))) != 0U))
         {
             while(1)
             {
-                status = Pmic_getNextErrorStatus(pHandle,
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                  &errStat,
                                                  &irqNum);
                 if(intrType == irqNum)
@@ -9520,9 +9736,16 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_disable(void)
 }
 
 /*!
+ * The below test case is dummy, as power related interrupts cannot be generated
+ * to test masking APIs.
+ * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * can't be tested
+ */
+
+/*!
  * \brief   Pmic_powerSetPwrRsrcIntr : Test Set Enable UV interrupt
  */
-static void test_pmic_powerSetPwrRsrcIntr_uv_enable(void)
+static void test_pmic_powerSetPwrRsrcIntr_uv_enabled(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint16_t pwrResource;
@@ -9530,12 +9753,23 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_enable(void)
     uint8_t intrType;
     bool intrEnable;
     Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(176,
+    test_pmic_print_unity_testcase_info(7513,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -9568,14 +9802,14 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_enable(void)
                                              intrType,
                                              intrEnable);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-        status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-        if((PMIC_ST_SUCCESS == status) &&
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
            ((errStat.intStatus[intrType/32U] &
              (1U << (intrType % 32U))) != 0U))
         {
             while(1)
             {
-                status = Pmic_getNextErrorStatus(pHandle,
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                  &errStat,
                                                  &irqNum);
                 if(intrType == irqNum)
@@ -9598,14 +9832,14 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_enable(void)
                                                   intrType,
                                                   intrEnable);
             TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-            status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-            if((PMIC_ST_SUCCESS == status) &&
+            pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+            if((PMIC_ST_SUCCESS == pmicStatus) &&
                ((errStat.intStatus[intrType/32U] &
                  (1U << (intrType % 32U))) != 0U))
             {
                 while(1)
                 {
-                    status = Pmic_getNextErrorStatus(pHandle,
+                    pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                      &errStat,
                                                      &irqNum);
                     if(intrType == irqNum)
@@ -9632,14 +9866,14 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_enable(void)
                                           intrType,
                                           intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-    status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-    if((PMIC_ST_SUCCESS == status) &&
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
         while(1)
         {
-            status = Pmic_getNextErrorStatus(pHandle,
+            pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
@@ -9660,14 +9894,14 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_enable(void)
                                                   intrType,
                                                   intrEnable);
             TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-            status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-            if((PMIC_ST_SUCCESS == status) &&
+            pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+            if((PMIC_ST_SUCCESS == pmicStatus) &&
                ((errStat.intStatus[intrType/32U] &
                  (1U << (intrType % 32U))) != 0U))
             {
                 while(1)
                 {
-                    status = Pmic_getNextErrorStatus(pHandle,
+                    pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                      &errStat,
                                                      &irqNum);
                     if(intrType == irqNum)
@@ -9679,10 +9913,18 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_enable(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
 }
+
+/*!
+ * The below test case is dummy, as power interrupts cannot be generated
+ * to test masking APIs.
+ * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * can't be tested
+ */
+
 /*!
  * \brief   Pmic_powerSetPwrRsrcIntr : Test Set Disable UV interrupt
  */
-static void test_pmic_powerSetPwrRsrcIntr_uv_disable(void)
+static void test_pmic_powerSetPwrRsrcIntr_uv_disabled(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint16_t pwrResource;
@@ -9690,10 +9932,11 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_disable(void)
     uint8_t intrType;
     bool intrEnable;
     Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(177,
+    test_pmic_print_unity_testcase_info(7514,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -9728,14 +9971,14 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_disable(void)
                                              intrType,
                                              intrEnable);
             TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-            status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-            if((PMIC_ST_SUCCESS == status) &&
+            pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+            if((PMIC_ST_SUCCESS == pmicStatus) &&
                ((errStat.intStatus[intrType/32U] &
                  (1U << (intrType % 32U))) != 0U))
             {
                 while(1)
                 {
-                    status = Pmic_getNextErrorStatus(pHandle,
+                    pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                      &errStat,
                                                      &irqNum);
                     if(intrType == irqNum)
@@ -9761,14 +10004,14 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_disable(void)
                                                   intrType,
                                                   intrEnable);
             TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-            status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-            if((PMIC_ST_SUCCESS == status) &&
+            pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+            if((PMIC_ST_SUCCESS == pmicStatus) &&
                ((errStat.intStatus[intrType/32U] &
                  (1U << (intrType % 32U))) != 0U))
             {
                 while(1)
                 {
-                    status = Pmic_getNextErrorStatus(pHandle,
+                    pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                      &errStat,
                                                      &irqNum);
                     if(intrType == irqNum)
@@ -9798,14 +10041,14 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_disable(void)
                                           intrType,
                                           intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-    status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-    if((PMIC_ST_SUCCESS == status) &&
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
         while(1)
         {
-            status = Pmic_getNextErrorStatus(pHandle,
+            pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
@@ -9830,14 +10073,14 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_disable(void)
                                                 intrType,
                                                 intrEnable);
             TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-            status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-            if((PMIC_ST_SUCCESS == status) &&
+            pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+            if((PMIC_ST_SUCCESS == pmicStatus) &&
                ((errStat.intStatus[intrType/32U] &
                  (1U << (intrType % 32U))) != 0U))
             {
                 while(1)
                 {
-                    status = Pmic_getNextErrorStatus(pHandle,
+                    pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                      &errStat,
                                                      &irqNum);
                     if(intrType == irqNum)
@@ -9855,9 +10098,16 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_disable(void)
 }
 
 /*!
+ * The below test case is dummy, as power interrupts cannot be generated
+ * to test masking APIs.
+ * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * can't be tested
+ */
+
+/*!
  * \brief   Pmic_powerSetPwrRsrcIntr : Test Set Enable ILIM interrupt
  */
-static void test_pmic_powerSetPwrRsrcIntr_ilim_enable(void)
+static void test_pmic_powerSetPwrRsrcIntr_ilim_enabled(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint16_t pwrResource;
@@ -9865,12 +10115,23 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_enable(void)
     uint8_t intrType;
     bool intrEnable;
     Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(178,
+    test_pmic_print_unity_testcase_info(7515,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -9903,14 +10164,14 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_enable(void)
                                              intrType,
                                              intrEnable);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-        status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-        if((PMIC_ST_SUCCESS == status) &&
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
            ((errStat.intStatus[intrType/32U] &
              (1U << (intrType % 32U))) != 0U))
         {
             while(1)
             {
-                status = Pmic_getNextErrorStatus(pHandle,
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                  &errStat,
                                                  &irqNum);
                 if(intrType == irqNum)
@@ -9933,14 +10194,14 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_enable(void)
                                                   intrType,
                                                   intrEnable);
             TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-            status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-            if((PMIC_ST_SUCCESS == status) &&
+            pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+            if((PMIC_ST_SUCCESS == pmicStatus) &&
                ((errStat.intStatus[intrType/32U] &
                  (1U << (intrType % 32U))) != 0U))
             {
                 while(1)
                 {
-                    status = Pmic_getNextErrorStatus(pHandle,
+                    pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                      &errStat,
                                                      &irqNum);
                     if(intrType == irqNum)
@@ -9955,9 +10216,16 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_enable(void)
 }
 
 /*!
+ * The below test case is dummy, as power interrupts cannot be generated
+ * to test masking APIs.
+ * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * can't be tested
+ */
+
+/*!
  * \brief   Pmic_powerSetPwrRsrcIntr : Test Set Disable ILIM interrupt
  */
-static void test_pmic_powerSetPwrRsrcIntr_ilim_disable(void)
+static void test_pmic_powerSetPwrRsrcIntr_ilim_disabled(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint16_t pwrResource;
@@ -9965,12 +10233,23 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_disable(void)
     uint8_t intrType;
     bool intrEnable;
     Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(179,
+    test_pmic_print_unity_testcase_info(7516,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -10003,14 +10282,14 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_disable(void)
                                              intrType,
                                              intrEnable);
             TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-            status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-            if((PMIC_ST_SUCCESS == status) &&
+            pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+            if((PMIC_ST_SUCCESS == pmicStatus) &&
                ((errStat.intStatus[intrType/32U] &
                  (1U << (intrType % 32U))) != 0U))
             {
                 while(1)
                 {
-                    status = Pmic_getNextErrorStatus(pHandle,
+                    pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                      &errStat,
                                                      &irqNum);
                     if(intrType == irqNum)
@@ -10036,14 +10315,14 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_disable(void)
                                                   intrType,
                                                   intrEnable);
             TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-            status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-            if((PMIC_ST_SUCCESS == status) &&
+            pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+            if((PMIC_ST_SUCCESS == pmicStatus) &&
                ((errStat.intStatus[intrType/32U] &
                  (1U << (intrType % 32U))) != 0U))
             {
                 while(1)
                 {
-                    status = Pmic_getNextErrorStatus(pHandle,
+                    pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                      &errStat,
                                                      &irqNum);
                     if(intrType == irqNum)
@@ -10060,20 +10339,38 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_disable(void)
 }
 
 /*!
+ * The below test case is dummy, as thermal interrupts cannot be generated
+ * to test masking APIs.
+ * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * can't be tested
+ */
+
+/*!
  * \brief   Pmic_powerSetIntr : Test Set Enable TWARN interrupt
  */
-static void test_pmic_powerSetPwrRsrcIntr_twarn_enable(void)
+static void test_pmic_powerSetPwrRsrcIntr_twarn_enabled(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t intrType;
     bool intrEnable;
     Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(180,
+    test_pmic_print_unity_testcase_info(7517,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -10089,14 +10386,14 @@ static void test_pmic_powerSetPwrRsrcIntr_twarn_enable(void)
 
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-    status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-    if((PMIC_ST_SUCCESS == status) &&
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
         while(1)
         {
-            status = Pmic_getNextErrorStatus(pHandle,
+            pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
@@ -10106,22 +10403,40 @@ static void test_pmic_powerSetPwrRsrcIntr_twarn_enable(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
 }
+
+/*!
+ * The below test case is dummy, as thermal interrupts cannot be generated
+ * to test masking APIs.
+ * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * can't be tested
+ */
 
 /*!
  * \brief   Pmic_powerSetIntr : Test Set Disable TWARN interrupt
  */
-static void test_pmic_powerSetPwrRsrcIntr_twarn_disable(void)
+static void test_pmic_powerSetPwrRsrcIntr_twarn_disabled(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t intrType;
     bool intrEnable;
     Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(181,
+    test_pmic_print_unity_testcase_info(7518,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -10137,14 +10452,14 @@ static void test_pmic_powerSetPwrRsrcIntr_twarn_disable(void)
 
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-    status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-    if((PMIC_ST_SUCCESS == status) &&
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
         while(1)
         {
-            status = Pmic_getNextErrorStatus(pHandle,
+            pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
@@ -10157,22 +10472,40 @@ static void test_pmic_powerSetPwrRsrcIntr_twarn_disable(void)
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
+
+/*!
+ * The below test case is dummy, as power interrupts cannot be generated
+ * to test masking APIs.
+ * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * can't be tested
+ */
 
 /*!
  * \brief   Pmic_powerSetIntr : Test Set Enable NRSTOUT_READBACK interrupt
  */
-static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_enable(void)
+static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_enabled(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t intrType;
     bool intrEnable;
     Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(182,
+    test_pmic_print_unity_testcase_info(7519,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -10188,14 +10521,14 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_enable(void)
 
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-    status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-    if((PMIC_ST_SUCCESS == status) &&
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
         while(1)
         {
-            status = Pmic_getNextErrorStatus(pHandle,
+            pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
@@ -10204,22 +10537,40 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_enable(void)
     }
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
+
+/*!
+ * The below test case is dummy, as power interrupts cannot be generated
+ * to test masking APIs.
+ * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * can't be tested
+ */
 
 /*!
  * \brief   Pmic_powerSetIntr : Test Set Disable NRSTOUT_READBACK interrupt
  */
-static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_disable(void)
+static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_disabled(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t intrType;
     bool intrEnable;
     Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(183,
+    test_pmic_print_unity_testcase_info(7520,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -10235,14 +10586,14 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_disable(void)
 
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-    status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-    if((PMIC_ST_SUCCESS == status) &&
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
         while(1)
         {
-            status = Pmic_getNextErrorStatus(pHandle,
+            pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
@@ -10255,22 +10606,40 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_disable(void)
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
+
+/*!
+ * The below test case is dummy, as power interrupts cannot be generated
+ * to test masking APIs.
+ * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * can't be tested
+ */
 
 /*!
  * \brief   Pmic_powerSetIntr : Test Set Enable SOC_PWR_ERR interrupt
  */
-static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_enable(void)
+static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_enabled(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t intrType;
     bool intrEnable;
     Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(184,
+    test_pmic_print_unity_testcase_info(7521,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -10286,14 +10655,14 @@ static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_enable(void)
 
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-    status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-    if((PMIC_ST_SUCCESS == status) &&
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
         while(1)
         {
-            status = Pmic_getNextErrorStatus(pHandle,
+            pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
@@ -10304,22 +10673,40 @@ static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_enable(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
 }
+
+/*!
+ * The below test case is dummy, as power interrupts cannot be generated
+ * to test masking APIs.
+ * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * can't be tested
+ */
 
 /*!
  * \brief   Pmic_powerSetIntr : Test Set Disable SOC_PWR_ERR interrupt
  */
-static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_disable(void)
+static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_disabled(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t intrType;
     bool intrEnable;
     Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(185,
+    test_pmic_print_unity_testcase_info(7522,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -10335,14 +10722,14 @@ static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_disable(void)
 
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-    status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-    if((PMIC_ST_SUCCESS == status) &&
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
         while(1)
         {
-            status = Pmic_getNextErrorStatus(pHandle,
+            pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
@@ -10355,22 +10742,40 @@ static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_disable(void)
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
+
+/*!
+ * The below test case is dummy, as power interrupts cannot be generated
+ * to test masking APIs.
+ * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * can't be tested
+ */
 
 /*!
  * \brief   Pmic_powerSetIntr : Test Set Enable MCU_PWR_ERR interrupt
  */
-static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_enable(void)
+static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_enabled(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t intrType;
     bool intrEnable;
     Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(186,
+    test_pmic_print_unity_testcase_info(7523,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -10386,14 +10791,14 @@ static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_enable(void)
 
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-    status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-    if((PMIC_ST_SUCCESS == status) &&
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
         while(1)
         {
-            status = Pmic_getNextErrorStatus(pHandle,
+            pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
@@ -10403,22 +10808,40 @@ static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_enable(void)
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
+
+/*!
+ * The below test case is dummy, as power interrupts cannot be generated
+ * to test masking APIs.
+ * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * can't be tested
+ */
 
 /*!
  * \brief   Pmic_powerSetIntr : Test Set Disable MCU_PWR_ERR interrupt
  */
-static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_disable(void)
+static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_disabled(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t intrType;
     bool intrEnable;
     Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(187,
+    test_pmic_print_unity_testcase_info(7524,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -10434,14 +10857,14 @@ static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_disable(void)
 
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-    status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-    if((PMIC_ST_SUCCESS == status) &&
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
         while(1)
         {
-            status = Pmic_getNextErrorStatus(pHandle,
+            pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
@@ -10455,22 +10878,40 @@ static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_disable(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
 }
+
+/*!
+ * The below test case is dummy, as power interrupts cannot be generated
+ * to test masking APIs.
+ * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * can't be tested
+ */
 
 /*!
  * \brief   Pmic_powerSetIntr : Test Set Enable ORD_SHUTDOWN interrupt
  */
-static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_enable(void)
+static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_enabled(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t intrType;
     bool intrEnable;
     Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(188,
+    test_pmic_print_unity_testcase_info(7525,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -10486,14 +10927,14 @@ static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_enable(void)
 
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-    status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-    if((PMIC_ST_SUCCESS == status) &&
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
         while(1)
         {
-            status = Pmic_getNextErrorStatus(pHandle,
+            pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
@@ -10503,22 +10944,40 @@ static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_enable(void)
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
+
+/*!
+ * The below test case is dummy, as power interrupts cannot be generated
+ * to test masking APIs.
+ * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * can't be tested
+ */
 
 /*!
  * \brief   Pmic_powerSetIntr : Test Set Disable ORD_SHUTDOWN interrupt
  */
-static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_disable(void)
+static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_disabled(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t intrType;
     bool intrEnable;
     Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(190
+    test_pmic_print_unity_testcase_info(7526,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -10534,14 +10993,14 @@ static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_disable(void)
 
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-    status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-    if((PMIC_ST_SUCCESS == status) &&
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
         while(1)
         {
-            status = Pmic_getNextErrorStatus(pHandle,
+            pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
@@ -10554,22 +11013,40 @@ static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_disable(void)
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
+
+/*!
+ * The below test case is dummy, as power interrupts cannot be generated
+ * to test masking APIs.
+ * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * can't be tested
+ */
 
 /*!
  * \brief   Pmic_powerSetIntr : Test Set Enable IMM_SHUTDOWN interrupt
  */
-static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_enable(void)
+static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_enabled(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t intrType;
     bool intrEnable;
     Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(191,
+    test_pmic_print_unity_testcase_info(7527,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -10585,14 +11062,14 @@ static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_enable(void)
 
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-    status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-    if((PMIC_ST_SUCCESS == status) &&
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
         while(1)
         {
-            status = Pmic_getNextErrorStatus(pHandle,
+            pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
@@ -10602,22 +11079,40 @@ static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_enable(void)
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
+
+/*!
+ * The below test case is dummy, as power interrupts cannot be generated
+ * to test masking APIs.
+ * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * can't be tested
+ */
 
 /*!
  * \brief   Pmic_powerSetIntr : Test Set Disable IMM_SHUTDOWN interrupt
  */
-static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_disable(void)
+static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_disabled(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t intrType;
     bool intrEnable;
     Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(192,
+    test_pmic_print_unity_testcase_info(7528,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -10633,14 +11128,14 @@ static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_disable(void)
 
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-    status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-    if((PMIC_ST_SUCCESS == status) &&
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
         while(1)
         {
-            status = Pmic_getNextErrorStatus(pHandle,
+            pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
@@ -10653,22 +11148,40 @@ static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_disable(void)
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
+
+/*!
+ * The below test case is dummy, as power interrupts cannot be generated
+ * to test masking APIs.
+ * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * can't be tested
+ */
 
 /*!
  * \brief   Pmic_powerSetIntr : Test Set Enable NRSTOUT_SOC_READBACK interrupt
  */
-static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_enable(void)
+static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_enabled(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t intrType;
     bool intrEnable;
     Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(193,
+    test_pmic_print_unity_testcase_info(7529,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -10684,14 +11197,14 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_enable(void)
 
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-    status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-    if((PMIC_ST_SUCCESS == status) &&
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
         while(1)
         {
-            status = Pmic_getNextErrorStatus(pHandle,
+            pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
@@ -10701,22 +11214,40 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_enable(void)
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
+
+/*!
+ * The below test case is dummy, as power interrupts cannot be generated
+ * to test masking APIs.
+ * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * can't be tested
+ */
 
 /*!
  * \brief   Pmic_powerSetIntr : Test Set Disable NRSTOUT_SOC_READBACK interrupt
  */
-static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_disable(void)
+static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_disabled(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t intrType;
     bool intrEnable;
     Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(194,
+    test_pmic_print_unity_testcase_info(7530,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -10732,14 +11263,14 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_disable(void)
 
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-    status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-    if((PMIC_ST_SUCCESS == status) &&
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
         while(1)
         {
-            status = Pmic_getNextErrorStatus(pHandle,
+            pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
@@ -10753,22 +11284,40 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_disable(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
 }
+
+/*!
+ * The below test case is dummy, as power interrupts cannot be generated
+ * to test masking APIs.
+ * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * can't be tested
+ */
 
 /*!
  * \brief   Pmic_powerSetIntr : Test Set Enable EN_DRV_READBACK interrupt
  */
-static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_enable(void)
+static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_enabled(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t intrType;
     bool intrEnable;
     Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(195,
+    test_pmic_print_unity_testcase_info(7531,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -10784,14 +11333,14 @@ static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_enable(void)
 
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-    status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-    if((PMIC_ST_SUCCESS == status) &&
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
         while(1)
         {
-            status = Pmic_getNextErrorStatus(pHandle,
+            pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
@@ -10803,20 +11352,38 @@ static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_enable(void)
 }
 
 /*!
+ * The below test case is dummy, as power interrupts cannot be generated
+ * to test masking APIs.
+ * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * can't be tested
+ */
+
+/*!
  * \brief   Pmic_powerSetIntr : Test Set Disable EN_DRV_READBACK interrupt
  */
-static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_disable(void)
+static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_disabled(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t intrType;
     bool intrEnable;
     Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(195,
+    test_pmic_print_unity_testcase_info(7532,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -10832,14 +11399,14 @@ static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_disable(void)
 
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-    status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-    if((PMIC_ST_SUCCESS == status) &&
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
         while(1)
         {
-            status = Pmic_getNextErrorStatus(pHandle,
+            pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
@@ -10852,8 +11419,6 @@ static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_disable(void)
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
-
-#endif
 
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E) || defined(SOC_J7200))
@@ -10886,9 +11451,7 @@ RUN_TEST(test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_buckFpwmMode);
 RUN_TEST(test_pmic_powerSetPowerResourceConfig_buckFpwmMpMode_multiPhase);
 RUN_TEST(test_pmic_powerSetPowerResourceConfig_buckFpwmMpMode_auto);
 RUN_TEST(test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_buckFpwmMpMode);
-#if 0
 RUN_TEST(test_pmic_powerSetPowerResourceConfig_regulatorEn_disable);
-#endif
 RUN_TEST(test_pmic_powerSetPowerResourceConfig_regulatorEn_enable);
 RUN_TEST(test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_regulatorEn);
 RUN_TEST(test_pmic_powerSetPowerResourceConfig_buckCurrentLimit_6A5);
@@ -10914,9 +11477,9 @@ RUN_TEST(test_pmic_powerSetPowerResourceConfig_ldoPullDownSel_250OHM);
 RUN_TEST(test_pmic_powerSetPowerResourceConfig_ldoPullDownSel_500OHM);
 RUN_TEST(test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_ldoPullDownSel);
 RUN_TEST(test_pmic_powerSetPowerResourceConfigPrmRangeTest_ldoPullDownSel);
-#if 0
+
 RUN_TEST(test_pmic_powerSetPowerResourceConfig_ldoSlowRampEn_enable);
-#endif
+
 RUN_TEST(test_pmic_powerSetPowerResourceConfig_ldoSlowRampEn_disable);
 RUN_TEST(test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_ldoSlowRampEn);
 RUN_TEST(test_pmic_powerSetPowerResourceConfig_voltage_mV);
@@ -10926,24 +11489,21 @@ RUN_TEST(test_pmic_powerSetPowerResourceConfig_vccaPwrGudLvl_5V);
 RUN_TEST(test_pmic_powerSetPowerResourceConfig_vccaPwrGudLvl_3V3);
 RUN_TEST(test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_vccaPwrGudLvl);
 RUN_TEST(test_pmic_powerSetPowerResourceConfig_railGrpSel_none);
-#if 0
+
 RUN_TEST(test_pmic_powerSetPowerResourceConfig_railGrpSel_mcu);
 RUN_TEST(test_pmic_powerSetPowerResourceConfig_railGrpSel_soc);
 RUN_TEST(test_pmic_powerSetPowerResourceConfig_railGrpSel_other);
-#endif
+
 RUN_TEST(test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_railGrpSel);
 RUN_TEST(test_pmic_powerSetPowerResourceConfigPrmRangeTest_railGrpSel);
 RUN_TEST(test_pmic_powerSetPowerResourceConfig_buckFreqSel_2M2);
-#if 0
 RUN_TEST(test_pmic_powerSetPowerResourceConfig_buckFreqSel_4M4);
-#endif
 RUN_TEST(test_pmic_powerSetPowerResourceConfig_buckFreqSel_8M8);
 RUN_TEST(test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_buckFreqSel);
 RUN_TEST(test_pmic_powerSetPowerResourceConfigPrmRangeTest_buckFreqSel);
-#if 0
 RUN_TEST(test_pmic_powerSetPowerResourceConfig_ldoBypassModeEn_bypass);
 RUN_TEST(test_pmic_powerSetPowerResourceConfig_ldoBypassModeEn_linear);
-#endif
+
 RUN_TEST(test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_ldoBypassModeEn);
 RUN_TEST(test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_0MS5);
 RUN_TEST(test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_1MS);
@@ -10986,9 +11546,9 @@ RUN_TEST(test_pmic_powerGetPwrRsrcStat_overVoltageProtectionLvlStat);
 RUN_TEST(test_pmic_powerSetThermalConfig_thermalWarnThold_low);
 RUN_TEST(test_pmic_powerSetThermalConfig_thermalWarnThold_high);
 RUN_TEST(test_pmic_powerSetThermalConfig_thermalShutdownThold_low);
-#if 0
+
 RUN_TEST(test_pmic_powerSetThermalConfig_thermalShutdownThold_high);
-#endif
+
 RUN_TEST(test_pmic_powerSetPwrRsrcIntr_ov_enable);
 RUN_TEST(test_pmic_powerSetPwrRsrcIntr_ov_disable);
 RUN_TEST(test_pmic_powerSetPwrRsrcIntr_uv_enable);
@@ -11012,9 +11572,9 @@ RUN_TEST(test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_disable);
 RUN_TEST(test_pmic_powerSetPwrRsrcIntr_en_drv_readback_enable);
 RUN_TEST(test_pmic_powerSetPwrRsrcIntr_en_drv_readback_disable);
 RUN_TEST(test_pmic_powerSetCommonConfig_deglitchTimeSel_4);
-#if 0
+
 RUN_TEST(test_pmic_powerSetCommonConfig_deglitchTimeSel_20);
-#endif
+
 RUN_TEST(test_pmic_powerSetCommonConfig_severeErrorTrig_imm);
 RUN_TEST(test_pmic_powerSetCommonConfig_severeErrorTrig_odrShtDwn);
 RUN_TEST(test_pmic_powerSetCommonConfig_severeErrorTrig_McuPwrErr);
@@ -11051,33 +11611,35 @@ RUN_TEST(test_pmic_powerSetThermalConfigPrmValTest_handle);
 RUN_TEST(test_pmic_powerGetThermalConfigPrmValTest_handle);
 RUN_TEST(test_Pmic_powerSetPwrRsrcIntrConfigPrmValTest_handle);
 RUN_TEST(test_pmic_powerSetPwrRsrcIntrPrmValTest_handle);
-/*   The below taest cases aer dummy, as power related interrupts cannot be generated
- *   to test masking APIs
+/*   The below taest cases aer dummy, as power/thermal related interrupts cannot
+ *   be generated to test masking APIs
+ *
+ *   PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features can't
+ *   be tested
  */
-#if 0
-RUN_TEST(test_pmic_powerSetPwrRsrcIntr_ov_enable);
-RUN_TEST(test_pmic_powerSetPwrRsrcIntr_ov_disable);
-RUN_TEST(test_pmic_powerSetPwrRsrcIntr_uv_enable);
-RUN_TEST(test_pmic_powerSetPwrRsrcIntr_uv_disable);
-RUN_TEST(test_pmic_powerSetPwrRsrcIntr_ilim_enable);
-RUN_TEST(test_pmic_powerSetPwrRsrcIntr_ilim_disable);
-RUN_TEST(test_pmic_powerSetPwrRsrcIntr_twarn_enable);
-RUN_TEST(test_pmic_powerSetPwrRsrcIntr_twarn_disable);
-RUN_TEST(test_pmic_powerSetPwrRsrcIntr_nrstout_readback_enable);
-RUN_TEST(test_pmic_powerSetPwrRsrcIntr_nrstout_readback_disable);
-RUN_TEST(test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_enable);
-RUN_TEST(test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_disable);
-RUN_TEST(test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_enable);
-RUN_TEST(test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_disable);
-RUN_TEST(test_pmic_powerSetPwrRsrcIntr_ord_shutdown_enable);
-RUN_TEST(test_pmic_powerSetPwrRsrcIntr_ord_shutdown_disable);
-RUN_TEST(test_pmic_powerSetPwrRsrcIntr_imm_shutdown_enable);
-RUN_TEST(test_pmic_powerSetPwrRsrcIntr_imm_shutdown_disable);
-RUN_TEST(test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_enable);
-RUN_TEST(test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_disable);
-RUN_TEST(test_pmic_powerSetPwrRsrcIntr_en_drv_readback_enable);
-RUN_TEST(test_pmic_powerSetPwrRsrcIntr_en_drv_readback_disable);
-#endif
+    RUN_TEST(test_pmic_powerSetPwrRsrcIntr_ov_enabled);
+    RUN_TEST(test_pmic_powerSetPwrRsrcIntr_ov_disabled);
+    RUN_TEST(test_pmic_powerSetPwrRsrcIntr_uv_enabled);
+    RUN_TEST(test_pmic_powerSetPwrRsrcIntr_uv_disabled);
+    RUN_TEST(test_pmic_powerSetPwrRsrcIntr_ilim_enabled);
+    RUN_TEST(test_pmic_powerSetPwrRsrcIntr_ilim_disabled);
+    RUN_TEST(test_pmic_powerSetPwrRsrcIntr_twarn_enabled);
+    RUN_TEST(test_pmic_powerSetPwrRsrcIntr_twarn_disabled);
+    RUN_TEST(test_pmic_powerSetPwrRsrcIntr_nrstout_readback_enabled);
+    RUN_TEST(test_pmic_powerSetPwrRsrcIntr_nrstout_readback_disabled);
+    RUN_TEST(test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_enabled);
+    RUN_TEST(test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_disabled);
+    RUN_TEST(test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_enabled);
+    RUN_TEST(test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_disabled);
+    RUN_TEST(test_pmic_powerSetPwrRsrcIntr_ord_shutdown_enabled);
+    RUN_TEST(test_pmic_powerSetPwrRsrcIntr_ord_shutdown_disabled);
+    RUN_TEST(test_pmic_powerSetPwrRsrcIntr_imm_shutdown_enabled);
+    RUN_TEST(test_pmic_powerSetPwrRsrcIntr_imm_shutdown_disabled);
+    RUN_TEST(test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_enabled);
+    RUN_TEST(test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_disabled);
+    RUN_TEST(test_pmic_powerSetPwrRsrcIntr_en_drv_readback_enabled);
+    RUN_TEST(test_pmic_powerSetPwrRsrcIntr_en_drv_readback_disabled);
+
     UNITY_END();
 }
 
@@ -11235,6 +11797,7 @@ static void test_pmic_power_testapp_runner(void)
            case 0U:
                /* POWER Unity Test App wrapper Function for LEO PMIC-A */
                test_pmic_leo_pmicA_power_testApp();
+               pmic_device_info = J721E_LEO_PMICA_DEVICE;
                /* Run power test cases for Leo PMIC-A */
                test_pmic_run_testcases();
                /* Deinit pmic handle */
@@ -11246,6 +11809,7 @@ static void test_pmic_power_testapp_runner(void)
            case 1U:
                /* POWER Unity Test App wrapper Function for LEO PMIC-B */
                test_pmic_leo_pmicB_power_testApp();
+               pmic_device_info = J721E_LEO_PMICB_DEVICE;
                /* Run power test cases for Leo PMIC-B */
                test_pmic_run_testcases();
                /* Deinit pmic handle */
