@@ -2342,7 +2342,8 @@ static const char pmicTestAppMenu[] =
     " \r\n ================================================================="
     " \r\n 0: Pmic Leo device(PMIC A on J721E EVM Using I2C Interface)"
     " \r\n 1: Pmic Leo device(PMIC A on J721E EVM Using SPI Stub Functions)"
-    " \r\n 2: quit"
+    " \r\n 2: Pmic Leo device(PMIC B on J721E EVM)"
+    " \r\n 3: quit"
     " \r\n"
     " \r\n Enter option: "
 };
@@ -2396,6 +2397,10 @@ static void test_pmic_rtc_testapp_runner(void)
                }
                break;
            case 2U:
+               /* RTC Unity Test App wrapper Function for LEO PMIC-B */
+                pmic_log("RTC on LEO PMIC-B not supported due to HW limitation \n");
+               break;
+           case 3U:
                pmic_log(" \r\n Quit from application\n");
                return;
            default:
