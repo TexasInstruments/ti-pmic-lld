@@ -139,6 +139,7 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t  txBuf[PMIC_IO_BUF_SIZE]   = {0};
     uint8_t  crcData[PMIC_IO_BUF_SIZE] = {0};
     uint8_t  crcDataLen = 0;
+    uint16_t pmicRegAddr = regAddr;
 
     if(NULL == pPmicCoreHandle)
     {
@@ -167,7 +168,7 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
         if(0U != (regAddr & PMIC_WDG_PAGEADDR))
         {
             /* Update slave and register address for Watchdog write access */
-            regAddr = (regAddr & PMIC_WDG_PAGEADDR_MASK);
+            pmicRegAddr = (regAddr & PMIC_WDG_PAGEADDR_MASK);
 
             if(((PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode) &&
                (NULL != pPmicCoreHandle->pQACommHandle)) ||
@@ -192,7 +193,7 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
             }
 
             /* Store register address */
-            crcData[crcDataLen++] = (uint8_t)regAddr;
+            crcData[crcDataLen++] = (uint8_t)pmicRegAddr;
             /* Store the data to be transferred */
             crcData[crcDataLen++] = txData;
             /* Increase 1 more byte to store CRC8 */
@@ -215,10 +216,10 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
         /* Frame 3 Bytes with IO header+data as per PMIC SPI IO algorithm */
 
         /* Bits 1-8   = ADDR[7:0] */
-        spiBuff->n32  = (((uint32_t)regAddr) & 0xFFU);
+        spiBuff->n32  = (((uint32_t)pmicRegAddr) & 0xFFU);
 
         /* Bits 9-11  = PAGE[2:0] */
-        spiBuff->n32 |= (((uint32_t)regAddr) & 0x700U);
+        spiBuff->n32 |= (((uint32_t)pmicRegAddr) & 0x700U);
         /* Bit 12  = 0 for Write Request */
         spiBuff->n32 &= ((uint32_t)(~PMIC_IO_REQ_RW));
         buffLength++;
@@ -227,7 +228,7 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
         spiBuff->n32 |= (((uint32_t)txData) << 16U);
         buffLength++;
 
-        if(true == pPmicCoreHandle->crcEnable)
+        if(((bool)true) == pPmicCoreHandle->crcEnable)
         {
             /* Bits 25-32 CRC */
             spiBuff->n32 |= (((uint32_t)Pmic_getCRC8Val(txBuf, buffLength)) << 24U);
@@ -241,7 +242,7 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
     {
         pmicStatus = pPmicCoreHandle->pFnPmicCommIoWrite(pPmicCoreHandle,
                                                          instType,
-                                                         regAddr,
+                                                         pmicRegAddr,
                                                          txBuf,
                                                          buffLength);
     }
@@ -281,6 +282,7 @@ int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t  crcData[PMIC_IO_BUF_SIZE] = {0};
     uint8_t  instType   = PMIC_MAIN_INST;
     uint8_t  crcDataLen = 0;
+    uint16_t pmicRegAddr = regAddr;
 
     if(NULL == pPmicCoreHandle)
     {
@@ -303,7 +305,7 @@ int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
        ((PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode) ||
         (PMIC_INTF_DUAL_I2C   == pPmicCoreHandle->commMode)))
     {
-        if(true == pPmicCoreHandle->crcEnable)
+        if(((bool)true) == pPmicCoreHandle->crcEnable)
         {
             /* increment 1 more byte to read CRC8 */
             buffLength++;
@@ -312,7 +314,7 @@ int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
         if(0U != (regAddr & PMIC_WDG_PAGEADDR))
         {
             /* If register is of Watchdog, update slave and register address */
-            regAddr   = (regAddr & PMIC_WDG_PAGEADDR_MASK);
+            pmicRegAddr   = (regAddr & PMIC_WDG_PAGEADDR_MASK);
 
             if(((PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode) &&
                (NULL != pPmicCoreHandle->pQACommHandle)) ||
@@ -339,11 +341,11 @@ int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
         /* Frame 3 Bytes with IO header+data as per PMIC SPI IO algorithm */
 
         /* Bits 1-8   = ADDR[7:0] */
-        spiBuf->n32  = (((uint32_t)regAddr) & 0xFFU);
+        spiBuf->n32  = (((uint32_t)pmicRegAddr) & 0xFFU);
         buffLength++;
 
         /* Bits 9-11  = PAGE[2:0] */
-        spiBuf->n32 |= (((uint32_t)regAddr) & 0x700U);
+        spiBuf->n32 |= (((uint32_t)pmicRegAddr) & 0x700U);
 
         /* Bit 12  = 1 for Read Request */
         spiBuf->n32 |= PMIC_IO_REQ_RW;
@@ -351,7 +353,7 @@ int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
         /* Increment 1 more byte for 8-bit data read from PMIC register */
         buffLength++;
 
-        if(true == pPmicCoreHandle->crcEnable)
+        if(((bool)true) == pPmicCoreHandle->crcEnable)
         {
             /* Increment 1 more byte to read CRC8 */
             buffLength++;
@@ -362,12 +364,13 @@ int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
     {
         pmicStatus = pPmicCoreHandle->pFnPmicCommIoRead(pPmicCoreHandle,
                                                         instType,
-                                                        regAddr,
+                                                        pmicRegAddr,
                                                         rxBuf,
                                                         buffLength);
     }
 
-    if((PMIC_ST_SUCCESS == pmicStatus) && (true == pPmicCoreHandle->crcEnable))
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pPmicCoreHandle->crcEnable))
     {
         if((PMIC_ST_SUCCESS == pmicStatus) &&
            (PMIC_INTF_SPI == pPmicCoreHandle->commMode))
@@ -395,7 +398,7 @@ int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
             }
 
             /* Store the Register address */
-            crcData[crcDataLen++] = (uint8_t)regAddr;
+            crcData[crcDataLen++] = (uint8_t)pmicRegAddr;
 
             if(PMIC_MAIN_INST == instType)
             {
