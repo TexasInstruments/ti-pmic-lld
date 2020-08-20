@@ -215,22 +215,22 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
         /* Frame 3 Bytes with IO header+data as per PMIC SPI IO algorithm */
 
         /* Bits 1-8   = ADDR[7:0] */
-        spiBuff->n32  = (regAddr & 0xFFU);
+        spiBuff->n32  = (((uint32_t)regAddr) & 0xFFU);
 
         /* Bits 9-11  = PAGE[2:0] */
-        spiBuff->n32 |= (regAddr & 0x700U);
+        spiBuff->n32 |= (((uint32_t)regAddr) & 0x700U);
         /* Bit 12  = 0 for Write Request */
-        spiBuff->n32 &= ~PMIC_IO_REQ_RW;
+        spiBuff->n32 &= ((uint32_t)(~PMIC_IO_REQ_RW));
         buffLength++;
 
         /* Bits 17-24 = WDATA[7:0] */
-        spiBuff->n32 |= (txData << 16U);
+        spiBuff->n32 |= (((uint32_t)txData) << 16U);
         buffLength++;
 
         if(true == pPmicCoreHandle->crcEnable)
         {
             /* Bits 25-32 CRC */
-            spiBuff->n32 |= (Pmic_getCRC8Val(txBuf, buffLength) << 24U);
+            spiBuff->n32 |= (((uint32_t)Pmic_getCRC8Val(txBuf, buffLength)) << 24U);
 
             /* Increment 1 more byte to store CRC8 */
             buffLength++;
@@ -339,11 +339,11 @@ int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
         /* Frame 3 Bytes with IO header+data as per PMIC SPI IO algorithm */
 
         /* Bits 1-8   = ADDR[7:0] */
-        spiBuf->n32  = (regAddr & 0xFFU);
+        spiBuf->n32  = (((uint32_t)regAddr) & 0xFFU);
         buffLength++;
 
         /* Bits 9-11  = PAGE[2:0] */
-        spiBuf->n32 |= (regAddr & 0x700U);
+        spiBuf->n32 |= (((uint32_t)regAddr) & 0x700U);
 
         /* Bit 12  = 1 for Read Request */
         spiBuf->n32 |= PMIC_IO_REQ_RW;
