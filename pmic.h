@@ -96,6 +96,7 @@
 #include <pmic_power.h>
 #include <pmic_wdg.h>
 #include <pmic_esm.h>
+#include <pmic_fsm.h>
 
 #ifdef __cplusplus
 extern "C" {

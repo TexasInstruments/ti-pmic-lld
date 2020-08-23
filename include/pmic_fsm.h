@@ -68,36 +68,58 @@ extern "C" {
 /* ========================================================================== */
 
 /**
- *  \anchor Pmic_Fsm_Event_Type
- *  \name   PMIC FSM Event Type
- *
- *  @{
- */
-#define PMIC_FSM_I2C_TRIGGER0_EVENT_TYPE    (0U)
-/*  @} */
-/**
- *  \anchor Pmic_Fsm_I2c_Trigger_Type
- *  \name   PMIC FSM I2C Trigger Type
+ *  \anchor Pmic_Fsm_Off_Request_Type
+ *  \name   PMIC FSM Off Request Type
  *
  *  @{
  */
 #define PMIC_FSM_I2C_TRIGGER0_TYPE          (0U)
+#define PMIC_FSM_ENABLE_PIN_TYPE            (1U)
+#define PMIC_FSM_NPWRON_PIN_TYPE            (2U)
 /*  @} */
 
 /**
- *  \anchor Pmic_Fsm_LpStandby_State
- *  \name   To Select PMIC LP_STANDBY/ STANBY State
+ *  \anchor Pmic_Fsm_Mission_State
+ *  \name   To Select PMIC FSM  State
  *
  *  @{
  */
 #define PMIC_FSM_STANBY_STATE               (0U)
 #define PMIC_FSM_LP_STANBY_STATE            (1U)
-/*  @} */
+#define PMIC_FSM_ACTIVE_STATE               (2U)
+#define PMIC_FSM_MCU_ONLY_STATE             (3U)
+#define PMIC_FSM_S2R_STATE                  (4U)
+/* @} */
 
-/*!
- * \brief  Used to create PFSM trigger pulse for I2C0
+/**
+ *  \anchor Pmic_Nsleep_Signals
+ *  \name   PMIC Nsleep Signals
+ *
+ *  @{
  */
-#define PMIC_FSM_I2C_TRIGGER_VAL            (1U)
+#define PMIC_NSLEEP1_SIGNAL                 (0U)
+#define PMIC_NSLEEP2_SIGNAL                 (1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_Nsleep_Mask
+ *  \name   PMIC Nsleep Masking/Unmasking
+ *
+ *  @{
+ */
+#define PMIC_NSLEEPX_MASK                   (1U)
+#define PMIC_NSLEEPX_UNMASK                 (0U)
+/* @} */
+
+/**
+ *  \anchor Pmic_Fsm_Lpm_Cntrl
+ *  \name   PMIC LPM Control
+ *
+ *  @{
+ */
+#define PMIC_FSM_LPM_ENABLE                   (1U)
+#define PMIC_FSM_LPM_DISABLE                  (0U)
+/* @} */
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
@@ -107,38 +129,107 @@ extern "C" {
 /*                         Function Declarations                            */
 /*==========================================================================*/
 /*!
- * \brief  API to initiate OFF Request FSM transition
+ * \brief  API to initiate OFF Request FSM transition.
  *         This function initiate OFF Request FSM transition from any other
  *         mission state to the STANDBY state or the LP_STANDBY state
  *
  * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
  * \param   eventType         [IN]    Event Type used to initiate OFF Request
- *                                    Valid values \ref Pmic_Fsm_Event_Type
- * \param   fsmState          [IN]    FSM state
- *                                    Valid values \ref Pmic_Fsm_LpStandby_State
+ *                                    Valid values:
+ *                                    \ref Pmic_Fsm_Off_Request_Type
+ * \param   fsmState          [IN]    FSM state.
+ *                                    Only Valid for:
+ *                                                  PMIC_FSM_STANBY_STATE and
+ *                                                  PMIC_FSM_LP_STANBY_STATE
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_fsmDeviceOffRequestCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
                                     uint8_t             eventType,
-                                    bool                fsmState);
+                                    uint8_t             fsmState);
 
 /*!
- * \brief  API to initiate OFF Request FSM transition
- *         This function initiate OFF Request FSM transition from any other
- *         mission state to the STANDBY state or the LP_STANDBY state
+ * \brief  API to initiate Runtime BIST.
+ *         This function initiates a request to exercise runtime BIST on the
+ *         device
  *
- * \param   pPmicCoreHandle   [IN]   PMIC Interface Handle.
- * \param   i2cTriggerType    [IN]   FSM I2C Trigger type use to initiate OFF
- *                                   Request
- *                                   Valid values \ref Pmic_Fsm_I2c_Trigger_Type
+ * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmEnableI2cTrigger(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                                 bool                i2cTriggerType);
+int32_t Pmic_fsmRuntimeBistRequest(Pmic_CoreHandle_t  *pPmicCoreHandle);
+
+/*!
+ * \brief  API to initiate ON Request FSM transition.
+ *         This function setup nSLEEP signal bits with STARTUP_DEST
+ * Which is common for all supported PMICs. This API needs to be called
+ * at PMIC init before clearing Enable and Start-Up interrupts.
+ *
+ *  \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
+ */
+int32_t Pmic_fsmDeviceOnRequest(Pmic_CoreHandle_t *pPmicCoreHandle);
+
+/*!
+ * \brief  API to Set FSM mission States.
+ *         This function is used for set/change the FSM mission states for PMIC
+ *
+ * \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
+ * \param   pmicState        [IN]  PMIC FSM MISSION STATE
+ *                                 Valid values: \ref Pmic_Fsm_Mission_State
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmSetMissionState(Pmic_CoreHandle_t  *pPmicCoreHandle,
+                                uint8_t             pmicState);
+
+/*!
+ * \brief  API to MASK/UNMASK NSLEEP Signal.
+ *         This function is used for Masking/Unmasking for NSLEEP2 or NSLEEP1
+ *         signal.
+ *
+ * \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
+ * \param   nsleepType       [IN]  NSLEEP signal
+ *                                 Valid values: \ref Pmic_Nsleep_Signals
+ * \param   maskEnable       [IN]  Parameter to select masking/unmasking
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmSetNsleepSignalMask(Pmic_CoreHandle_t  *pPmicCoreHandle,
+                                    bool                nsleepType,
+                                    bool                maskEnable);
+
+/*!
+ * \brief  API to Enable/Disable LPM.
+ *         This function is used for enable/disable Low power mode control
+ *         for PMIC
+ *
+ * \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
+ * \param   lpmEnable        [IN]  PMIC LPM Control
+ *                                 Valid values: \ref Pmic_Fsm_Lpm_Cntrl
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmSetLpmControl(Pmic_CoreHandle_t  *pPmicCoreHandle,
+                              bool                lpmEnable);
+
+/*!
+ * \brief  API to get Enable/Disable status for LPM.
+ *         This function is used get enable/disable status of Low power mode
+ *         control for PMIC
+ *
+ * \param   pPmicCoreHandle  [IN]   PMIC Interface Handle
+ * \param   pLpmEnable       [OUT]  PMIC LPM Control
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmGetLpmControl(Pmic_CoreHandle_t  *pPmicCoreHandle,
+                              bool               *pLpmEnable);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

@@ -194,16 +194,6 @@ int32_t Pmic_getRecoveryCnt(Pmic_CoreHandle_t *pPmicCoreHandle,
                             uint8_t           *pRecovCntVal);
 
 /*!
- * \brief  API to setup nSLEEP signals.
- *         This function setup nSLEEP signal bits with STARTUP_DEST
- * Which is common for all supported PMICs. This API needs to be called
- * at PMIC init before clearing Enable and Start-Up interrupts.
- *
- *  \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
- */
-int32_t Pmic_nSleepSignalsSetup(Pmic_CoreHandle_t *pPmicCoreHandle);
-
-/*!
  * \brief   API to set/write value in/to scratchpad register.
  *          This function is used write data to scratchpad register of PMIC
  *
