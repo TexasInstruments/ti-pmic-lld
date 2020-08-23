@@ -324,26 +324,6 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
         7359,
         "Pmic_fsmDeviceOffRequestCfg/Pmic_fsmEnableI2cTrigger :  RTC Wakeup using Alarm Interrupt'"
     },
-    {
-        7360,
-        "Pmic_fsmDeviceOffRequestCfg :  Parameter validation for 'handle'"
-    },
-    {
-        7361,
-        "Pmic_fsmDeviceOffRequestCfg :  Parameter validation for 'eventType'"
-    },
-    {
-        7362,
-        "Pmic_fsmEnableI2cTrigger :  Parameter validation for 'handle'"
-    },
-    {
-        7363,
-        "Pmic_fsmEnableI2cTrigger :  Parameter validation for 'i2cTriggerType'"
-    },
-    {
-        7364,
-        "Pmic_nSleepSignalsSetup :  Parameter validation for 'handle'"
-    },
 };
 
 /*!
@@ -1925,11 +1905,8 @@ static void test_pmic_rtc_testWakeup_TimerIntr(void)
         Osal_delay(delayTime);
 
         status = Pmic_fsmDeviceOffRequestCfg(pHandle,
-                                             PMIC_FSM_I2C_TRIGGER0_EVENT_TYPE,
+                                             PMIC_FSM_I2C_TRIGGER0_TYPE,
                                              standByState);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-        status = Pmic_fsmEnableI2cTrigger(pHandle, PMIC_FSM_I2C_TRIGGER0_TYPE);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
         Osal_delay(timerIntrdelayTime);
@@ -2036,11 +2013,8 @@ static void test_pmic_rtc_testWakeup_AlarmIntr(void)
         Osal_delay(delayTimeBefore);
 
         status = Pmic_fsmDeviceOffRequestCfg(pHandle,
-                                             PMIC_FSM_I2C_TRIGGER0_EVENT_TYPE,
+                                             PMIC_FSM_I2C_TRIGGER0_TYPE,
                                              standByState);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-        status = Pmic_fsmEnableI2cTrigger(pHandle, PMIC_FSM_I2C_TRIGGER0_TYPE);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
         Osal_delay(alarmIntrdelayTime);
@@ -2088,89 +2062,6 @@ static void test_pmic_rtc_testWakeup_AlarmIntr(void)
             }
         }
     }
-}
-
-/*!
- * \brief   Parameter validation for 'handle'
- */
-static void test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_handle(void)
-{
-    int32_t status = PMIC_ST_SUCCESS;
-    bool standByState = PMIC_FSM_STANBY_STATE;
-
-    test_pmic_print_unity_testcase_info(7360,
-                                        pmic_rtc_tests,
-                                        PMIC_RTC_NUM_OF_TESTCASES);
-
-    status = Pmic_fsmDeviceOffRequestCfg(NULL,
-                                         PMIC_FSM_I2C_TRIGGER0_EVENT_TYPE,
-                                         standByState);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
-}
-
-/*!
- * \brief   Parameter validation for 'eventType'
- */
-static void test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_eventType(void)
-{
-    int32_t status = PMIC_ST_SUCCESS;
-    bool standByState = PMIC_FSM_STANBY_STATE;
-    uint8_t evenType = 1U;
-
-    test_pmic_print_unity_testcase_info(7361,
-                                        pmic_rtc_tests,
-                                        PMIC_RTC_NUM_OF_TESTCASES);
-
-    status = Pmic_fsmDeviceOffRequestCfg(pPmicCoreHandle,
-                                         evenType,
-                                         standByState);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
-}
-
-/*!
- * \brief   Parameter validation for 'handle'
- */
-static void test_pmic_rtc_fsmEnI2cTrigger_PrmValTest_handle(void)
-{
-    int32_t status = PMIC_ST_SUCCESS;
-
-    test_pmic_print_unity_testcase_info(7362,
-                                        pmic_rtc_tests,
-                                        PMIC_RTC_NUM_OF_TESTCASES);
-
-    status = Pmic_fsmEnableI2cTrigger(NULL, PMIC_FSM_I2C_TRIGGER0_TYPE);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
-}
-
-/*!
- * \brief   Parameter validation for 'i2cTriggerType'
- */
-static void test_pmic_rtc_fsmEnI2cTrigger_PrmValTest_i2cTriggerType(void)
-{
-    int32_t status = PMIC_ST_SUCCESS;
-    bool i2cTriggerType = 1U;
-
-    test_pmic_print_unity_testcase_info(7363,
-                                        pmic_rtc_tests,
-                                        PMIC_RTC_NUM_OF_TESTCASES);
-
-    status = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle, i2cTriggerType);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
-}
-
-/*!
- * \brief   Parameter validation for 'handle'
- */
-static void test_pmic_rtc_nSleepSignalsSetup_PrmValTest_handle(void)
-{
-    int32_t status = PMIC_ST_SUCCESS;
-
-    test_pmic_print_unity_testcase_info(7364,
-                                        pmic_rtc_tests,
-                                        PMIC_RTC_NUM_OF_TESTCASES);
-
-    status = Pmic_nSleepSignalsSetup(NULL);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
 }
 
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
@@ -2253,11 +2144,6 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_rtc_getRtcStatus_PrmValTest_validParams);
     RUN_TEST(test_pmic_rtc_testWakeup_TimerIntr);
     RUN_TEST(test_pmic_rtc_testWakeup_AlarmIntr);
-    RUN_TEST(test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_handle);
-    RUN_TEST(test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_eventType);
-    RUN_TEST(test_pmic_rtc_fsmEnI2cTrigger_PrmValTest_handle);
-    RUN_TEST(test_pmic_rtc_fsmEnI2cTrigger_PrmValTest_i2cTriggerType);
-    RUN_TEST(test_pmic_rtc_nSleepSignalsSetup_PrmValTest_handle);
 
     UNITY_END();
 }

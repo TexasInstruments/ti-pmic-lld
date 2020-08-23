@@ -92,6 +92,18 @@ static Pmic_Ut_Tests_t pmic_misc_tests[] =
         7637,
         "Pmic_getRecoveryCnt : Read Recovery Count Value."
     },
+    {
+        37,
+        "Pmic_fsmRuntimeBistRequest : Test RunTime BIST"
+    },
+    {
+        38,
+        "Pmic_fsmRuntimeBistRequest : Parameter validation for 'eventType'."
+    },
+    {
+        39,
+        "Pmic_fsmRuntimeBistRequest : Parameter validation for 'handle'."
+    },
 };
 
 /*!
@@ -317,6 +329,57 @@ static void test_Pmic_getRecoveryCnt_read_recovCntVal(void)
 
 }
 
+/*!
+ * \brief   Pmic_fsmRuntimeBistRequest : Test RunTime BIST.
+ */
+static void test_Pmic_fsmRuntimeBistRequest(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(37,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmRuntimeBistRequest(pPmicCoreHandle, PMIC_FSM_I2C_TRIGGER1_TYPE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+}
+
+/*!
+ * \brief   Pmic_fsmRuntimeBistRequest : Parameter validation for 'eventType'.
+ */
+static void test_Pmic_fsmRuntimeBistRequestPrmValTest_eventType(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+    uint8_t  eventType = 0U;
+
+    eventType = PMIC_FSM_I2C_TRIGGER0_TYPE;
+
+    test_pmic_print_unity_testcase_info(38,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmRuntimeBistRequest(pPmicCoreHandle, eventType);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+}
+
+/*!
+ * \brief   Pmic_fsmRuntimeBistRequest : Parameter validation for 'handle'.
+ */
+static void test_Pmic_fsmRuntimeBistRequestPrmValTest_handle(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+    uint8_t  eventType = 0U;
+
+    eventType = PMIC_FSM_I2C_TRIGGER1_TYPE;
+
+    test_pmic_print_unity_testcase_info(39,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmRuntimeBistRequest(NULL, eventType);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+}
+
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E) || defined(SOC_J7200))
 
@@ -337,6 +400,9 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_getRecoveryCntCfgPrmValTest_recovCntCfg);
     RUN_TEST(test_Pmic_getRecoveryCntPrmValTest_handle);
     RUN_TEST(test_Pmic_getRecoveryCntPrmValTest_recovCntVal);
+    RUN_TEST(test_Pmic_fsmRuntimeBistRequest);
+    RUN_TEST(test_Pmic_fsmRuntimeBistRequestPrmValTest_eventType);
+    RUN_TEST(test_Pmic_fsmRuntimeBistRequestPrmValTest_handle);
 
     UNITY_END();
 }

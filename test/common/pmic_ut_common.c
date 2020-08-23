@@ -747,7 +747,7 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             /* Setup nSLEEP signals */
-            pmicStatus = Pmic_nSleepSignalsSetup(pmicHandle);
+            pmicStatus = Pmic_fsmDeviceOnRequest(pmicHandle);
         }
 
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -773,7 +773,7 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             /* Setup nSLEEP signals */
-            pmicStatus = Pmic_nSleepSignalsSetup(pmicHandle);
+            pmicStatus = Pmic_fsmDeviceOnRequest(pmicHandle);
         }
 
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -825,7 +825,7 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             /* Setup nSLEEP signals */
-            pmicStatus = Pmic_nSleepSignalsSetup(pmicHandle);
+            pmicStatus = Pmic_fsmDeviceOnRequest(pmicHandle);
         }
 
         if(PMIC_ST_SUCCESS == pmicStatus)
