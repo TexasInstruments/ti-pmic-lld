@@ -96,7 +96,7 @@ const uint8_t CRC_8_TABLE[] =
  * \param   length   [IN]     Length of the buffer in bytes.
  * \retval  crc      [OUT]    CRC value for data.
  */
-static uint8_t Pmic_getCRC8Val(uint8_t *data, uint8_t length)
+static uint8_t Pmic_getCRC8Val(const uint8_t *data, uint8_t length)
 {
     uint8_t crc = PMIC_COMM_CRC_INITIAL_VALUE;
     uint8_t i;
@@ -179,25 +179,30 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
             }
         }
 
-        if(true == pPmicCoreHandle->crcEnable)
+        if(((bool)true) == pPmicCoreHandle->crcEnable)
         {
             if(PMIC_MAIN_INST == instType)
             {
                 /* Store the slave address and I2C write request bit */
-                crcData[crcDataLen++] = (pPmicCoreHandle->slaveAddr << 1U);
+                crcData[crcDataLen] = (pPmicCoreHandle->slaveAddr << 1U);
+                crcDataLen++;
             }
             else
             {
                 /* Store the slave address and I2C write request bit */
-                crcData[crcDataLen++] = (pPmicCoreHandle->qaSlaveAddr << 1U);
+                crcData[crcDataLen] = (pPmicCoreHandle->qaSlaveAddr << 1U);
+                crcDataLen++;
             }
 
             /* Store register address */
-            crcData[crcDataLen++] = (uint8_t)pmicRegAddr;
+            crcData[crcDataLen] = (uint8_t)pmicRegAddr;
+            crcDataLen++;
             /* Store the data to be transferred */
-            crcData[crcDataLen++] = txData;
+            crcData[crcDataLen] = txData;
+            crcDataLen++;
             /* Increase 1 more byte to store CRC8 */
-            txBuf[buffLength++]   = Pmic_getCRC8Val(crcData, crcDataLen);
+            txBuf[buffLength]   = Pmic_getCRC8Val(crcData, crcDataLen);
+            buffLength++;
         }
     }
 
@@ -372,8 +377,7 @@ int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
     if((PMIC_ST_SUCCESS == pmicStatus) &&
        (((bool)true) == pPmicCoreHandle->crcEnable))
     {
-        if((PMIC_ST_SUCCESS == pmicStatus) &&
-           (PMIC_INTF_SPI == pPmicCoreHandle->commMode))
+        if(PMIC_INTF_SPI == pPmicCoreHandle->commMode)
         {
             /* Copy SPI frame data to crcData */
             for(crcDataLen = 0; crcDataLen < PMIC_IO_BUF_SIZE; crcDataLen++)
@@ -381,43 +385,51 @@ int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
                 crcData[crcDataLen] = rxBuf[crcDataLen];
             }
         }
-
-        if((PMIC_ST_SUCCESS == pmicStatus) &&
-           ((PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode) ||
-            (PMIC_INTF_DUAL_I2C   == pPmicCoreHandle->commMode)))
+        else if((PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode) ||
+                (PMIC_INTF_DUAL_I2C   == pPmicCoreHandle->commMode))
         {
             if(PMIC_MAIN_INST == instType)
             {
                 /* Store the slave address and I2C write request bit */
-                crcData[crcDataLen++] = (pPmicCoreHandle->slaveAddr << 1U);
+                crcData[crcDataLen] = (pPmicCoreHandle->slaveAddr << 1U);
+                crcDataLen++;
             }
             else
             {
                 /* Store the slave address and I2C write request bit */
-                crcData[crcDataLen++] = (pPmicCoreHandle->qaSlaveAddr << 1U);
+                crcData[crcDataLen] = (pPmicCoreHandle->qaSlaveAddr << 1U);
+                crcDataLen++;
             }
 
             /* Store the Register address */
-            crcData[crcDataLen++] = (uint8_t)pmicRegAddr;
+            crcData[crcDataLen] = (uint8_t)pmicRegAddr;
+            crcDataLen++;
 
             if(PMIC_MAIN_INST == instType)
             {
                 /* Store the slave address and I2C Read request bit */
-                crcData[crcDataLen++] = (pPmicCoreHandle->slaveAddr << 1U) |
-                                        (PMIC_IO_READ);
+                crcData[crcDataLen] = (pPmicCoreHandle->slaveAddr << 1U) |
+                                      (PMIC_IO_READ);
+                crcDataLen++;
             }
             else
             {
                 /* Store the slave address and I2C Read request bit */
-                crcData[crcDataLen++] = (pPmicCoreHandle->qaSlaveAddr << 1U) |
-                                        (PMIC_IO_READ);
+                crcData[crcDataLen] = (pPmicCoreHandle->qaSlaveAddr << 1U) |
+                                      (PMIC_IO_READ);
+                crcDataLen++;
             }
             /* Store the data read */
-            crcData[crcDataLen++] = rxBuf[buffLength - 2U];
+            crcData[crcDataLen] = rxBuf[buffLength - 2U];
+            crcDataLen++;
+        }
+        else
+        {
+            pmicStatus = PMIC_ST_ERR_INV_PARAM;
         }
 
-        if((rxBuf[buffLength - 1U]) !=
-           (Pmic_getCRC8Val(crcData, crcDataLen)))
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((rxBuf[buffLength - 1U]) != (Pmic_getCRC8Val(crcData, crcDataLen))))
         {
             pmicStatus = PMIC_ST_ERR_DATA_IO_CRC;
         }

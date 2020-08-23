@@ -78,7 +78,7 @@ extern "C" {
 /*!
  * \brief: IO READ bits
  */
-#define PMIC_IO_READ                           (0x01)
+#define PMIC_IO_READ                           (0x01U)
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
