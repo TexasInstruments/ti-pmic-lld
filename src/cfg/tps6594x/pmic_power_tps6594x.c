@@ -525,8 +525,9 @@ static int32_t Pmic_powerLdoRtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
             if(PMIC_ST_SUCCESS == status)
             {
                 /* Set ldortcEnable */
-                HW_REG_SET_FIELD(regData,
-                                 PMIC_LDORTC_CTRL_LDORTC_DIS,
+                Pmic_setBitField(&regData,
+                                 PMIC_LDORTC_CTRL_LDORTC_DIS_SHIFT,
+                                 PMIC_LDORTC_CTRL_LDORTC_DIS_MASK,
                                  ldortcEnable);
                 status = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                                 PMIC_LDORTC_CTRL_REGADDR,
@@ -560,8 +561,9 @@ static int32_t Pmic_powerGetLdoRtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
             if(PMIC_ST_SUCCESS == status)
             {
                 /* Get ldortcEnable */
-                *pLdortcEnable = HW_REG_GET_FIELD(regData,
-                                                  PMIC_LDORTC_CTRL_LDORTC_DIS);
+                *pLdortcEnable = Pmic_getBitField(regData,
+                                                  PMIC_LDORTC_CTRL_LDORTC_DIS_SHIFT,
+                                                  PMIC_LDORTC_CTRL_LDORTC_DIS_MASK);
             }
 
             break;

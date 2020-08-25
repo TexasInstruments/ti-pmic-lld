@@ -131,77 +131,64 @@ extern "C" {
 #define PMIC_STARTUP_CTRL_LP_STANDBY_SEL_SHIFT        (0x03U)
 #define PMIC_STARTUP_CTRL_STARTUP_DEST_SHIFT          (0x05U)
 
+/*!
+ * \brief   PMIC StartUp NSLEEP Shift Values
+ */
+#define PMIC_STARTUP_DEST_NSLEEP2B_SHIFT              (0x1U)
+#define PMIC_STARTUP_DEST_NSLEEP1B_SHIFT              (0x0U)
 
 /*!
  * \brief: PMIC Recovery Counter Register 1 Mask Values
  */
 #define PMIC_RECOV_CNT_REG_1_RECOV_CNT_MASK                   \
-                       ((uint8_t)(0x0F << PMIC_RECOV_CNT_REG_1_RECOV_CNT_SHIFT))
+                       ((uint8_t)(0x0FU << PMIC_RECOV_CNT_REG_1_RECOV_CNT_SHIFT))
 
 /*!
  * \brief: PMIC Recovery Counter Register 2 Mask Values
  */
 #define PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_MASK                   \
-                   ((uint8_t)(0x01 << PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_SHIFT))
+                   ((uint8_t)(0x01U << PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_SHIFT))
 #define PMIC_RECOV_CNT_REG_2_RECOV_CNT_THR_MASK                   \
-                   ((uint8_t)(0x0F << PMIC_RECOV_CNT_REG_2_RECOV_CNT_THR_SHIFT))
+                   ((uint8_t)(0x0FU << PMIC_RECOV_CNT_REG_2_RECOV_CNT_THR_SHIFT))
 
 /*!
  * \brief: HERA PMIC StartUP Mask Values
  */
 #define PMIC_STARTUP_CTRL_LP_STANDBY_SEL_MASK                   \
-                     ((uint8_t)(0x01 << PMIC_STARTUP_CTRL_LP_STANDBY_SEL_SHIFT))
+                     ((uint8_t)(0x01U << PMIC_STARTUP_CTRL_LP_STANDBY_SEL_SHIFT))
 #define PMIC_STARTUP_CTRL_STARTUP_DEST_MASK                     \
-                     ((uint8_t)(0x03 << PMIC_STARTUP_CTRL_STARTUP_DEST_SHIFT))
+                     ((uint8_t)(0x03U << PMIC_STARTUP_CTRL_STARTUP_DEST_SHIFT))
 
 /*!
  * \brief  PMIC CONFIG_1 register bit masks
  */
 #define PMIC_CONFIG_1_TWARN_LEVEL_MASK                              \
-                         ((uint8_t)(0x01 << PMIC_CONFIG_1_TWARN_LEVEL_SHIFT))
+                         ((uint8_t)(0x01U << PMIC_CONFIG_1_TWARN_LEVEL_SHIFT))
 #define PMIC_CONFIG_1_TSD_ORD_LEVEL_MASK                            \
-                         ((uint8_t)(0x01 << PMIC_CONFIG_1_TSD_ORD_LEVEL_SHIFT))
+                         ((uint8_t)(0x01U << PMIC_CONFIG_1_TSD_ORD_LEVEL_SHIFT))
 #define PMIC_CONFIG_1_I2C1_HS_MASK                                  \
-                         ((uint8_t)(0x01 << PMIC_CONFIG_1_I2C1_HS_SHIFT))
+                         ((uint8_t)(0x01U << PMIC_CONFIG_1_I2C1_HS_SHIFT))
 #define PMIC_CONFIG_1_I2C2_HS_MASK                                  \
-                         ((uint8_t)(0x01 << PMIC_CONFIG_1_I2C2_HS_SHIFT))
+                         ((uint8_t)(0x01U << PMIC_CONFIG_1_I2C2_HS_SHIFT))
 #define PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_MASK                         \
-                         ((uint8_t)(0x01 << PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_SHIFT))
+                         ((uint8_t)(0x01U << PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_SHIFT))
 #define PMIC_CONFIG_1_NSLEEP1_MASK_MASK                             \
-                         ((uint8_t)(0x01 << PMIC_CONFIG_1_NSLEEP1_MASK_SHIFT))
+                         ((uint8_t)(0x01U << PMIC_CONFIG_1_NSLEEP1_MASK_SHIFT))
 #define PMIC_CONFIG_1_NSLEEP2_MASK_MASK                             \
-                         ((uint8_t)(0x01 << PMIC_CONFIG_1_NSLEEP2_MASK_SHIFT))
+                         ((uint8_t)(0x01U << PMIC_CONFIG_1_NSLEEP2_MASK_SHIFT))
+
+/*!
+ * \brief   PMIC StartUp NSLEEP Mask Values
+ */
+#define PMIC_STARTUP_DEST_NSLEEP2B_MASK                            \
+                         ((uint8_t)(0x01U << PMIC_STARTUP_DEST_NSLEEP2B_SHIFT))
+#define PMIC_STARTUP_DEST_NSLEEP1B_MASK                            \
+                         ((uint8_t)(0x01U << PMIC_STARTUP_DEST_NSLEEP1B_SHIFT))
 
 /*!
  * \brief: PMIC Recovery Counter Threshold Max Value
  */
 #define PMIC_RECOV_CNT_THR_MAX                          (0x0FU)
-
-/*!
- * \brief: Macro to write a specific field value
- */
-#define HW_REG_SET_FIELD(regVal, REG_FIELD, fieldVal)                         \
-        ((regVal) = ((regVal) & (uint8_t) (~(uint8_t) REG_FIELD##_MASK)) |  \
-        ((((uint8_t) fieldVal) << (uint8_t) REG_FIELD##_SHIFT) &            \
-        (uint8_t) REG_FIELD##_MASK))
-
-/*!
- * \brief: Macro to extract a specific field value
- */
-#define HW_REG_GET_FIELD(regVal, REG_FIELD)                                   \
-        (((regVal) & (uint8_t) REG_FIELD##_MASK) >>                          \
-        (uint8_t) REG_FIELD##_SHIFT)
-
-/*!
- * \brief: Macro to write a specific bit field value
- */
-#define BIT_POS_SET_VAL(regVal, pos, fieldVal)                                \
-        (regVal = ((regVal & (~(0x01U << pos))) | (fieldVal << pos)))
-
-/*!
- * \brief: Macro to extract a specific bit field value
- */
-#define BIT_POS_GET_VAL(regVal, pos) ((regVal >> pos) & 0x1U)
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */

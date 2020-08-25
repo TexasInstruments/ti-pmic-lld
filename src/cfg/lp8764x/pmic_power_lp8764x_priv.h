@@ -99,23 +99,23 @@ extern "C" {
  * \brief  PMIC VMON1 and VMON2 slew rate bit masks.
  */
 #define PMIC_VMON_CONF_VMON2_SLEW_RATE_MASK                         \
-                                          (uint8_t)(0x07 <<         \
+                                          (uint8_t)(0x07U <<        \
                                           PMIC_VMON_CONF_VMON2_SLEW_RATE_SHIFT)
 #define PMIC_VMON_CONF_VMON1_SLEW_RATE_MASK                         \
-                                          (uint8_t)(0x07 <<         \
+                                          (uint8_t)(0x07U <<        \
                                           PMIC_VMON_CONF_VMON1_SLEW_RATE_SHIFT)
 /*!
  * \brief  PMIC Power voltage range bit masks
  */
-#define PMIC_VMON_PG_WINDOW_VMON_RANGE_MASK                       \
-                                        (uint8_t)(0x01 <<          \
+#define PMIC_VMON_PG_WINDOW_VMON_RANGE_MASK                        \
+                                        (uint8_t)(0x01U <<         \
                                         PMIC_VMON_PG_WINDOW_VMON_RANGE_SHIFT)
 
 /*!
  * \brief  PMIC Powergood level bit masks
  */
 #define PMIC_VMONX_PG_LEVEL_VMONX_PG_SET_MASK                      \
-                                        (uint8_t)(0xFF <<          \
+                                        (uint8_t)(0xFFU <<         \
                                         PMIC_VMONX_PG_LEVEL_VMONX_PG_SET_SHIFT)
 /*!
  * \brief  PMIC Power Volatage range for BUCK regulator

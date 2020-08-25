@@ -443,6 +443,12 @@ extern "C" {
 #define PMIC_IRQ_INVALID_BIT_SHIFT                                  (0x0U)
 #define PMIC_INVALID_DEVICE                                         (0xFFU)
 
+/*!
+ * \brief Bit field Value for intrMaskBitPos/intrClrBitPos/
+ *        gpioRiseMaskBitPos/gpioFallMaskBitPos
+ */
+#define PMIC_IRQ_MASK_CLR_BITFIELD                                  (1U)
+
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/

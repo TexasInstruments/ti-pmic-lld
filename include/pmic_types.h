@@ -120,15 +120,15 @@ typedef struct Pmic_DevSubSysInfo_s
  *                                        Stop Function
  */
 typedef struct Pmic_CoreHandle_s {
-    Pmic_DevSubSysInfo_t *pPmic_SubSysInfo;
-    uint32_t              drvInitStatus;
-    uint8_t               pmicDeviceType;
-    uint8_t               commMode;
-    uint8_t               slaveAddr;
-    uint8_t               qaSlaveAddr;
-    bool                  crcEnable;
-    void                 *pCommHandle;
-    void                 *pQACommHandle;
+    const Pmic_DevSubSysInfo_t *pPmic_SubSysInfo;
+    uint32_t                    drvInitStatus;
+    uint8_t                     pmicDeviceType;
+    uint8_t                     commMode;
+    uint8_t                     slaveAddr;
+    uint8_t                     qaSlaveAddr;
+    bool                        crcEnable;
+    void                       *pCommHandle;
+    void                       *pQACommHandle;
     int32_t (*pFnPmicCommIoRead)(struct Pmic_CoreHandle_s  *pmicCorehandle,
                                  uint8_t                    instType,
                                  uint16_t                   regAddr,

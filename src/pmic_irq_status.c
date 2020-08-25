@@ -236,6 +236,7 @@ static int32_t Pmic_irqGpioMask(Pmic_CoreHandle_t *pPmicCoreHandle,
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData    = 0U;
     Pmic_GpioIntrTypeCfg_t *pGpioIntrCfg = NULL;
+    uint8_t bitMask    = 0U;
 
     pmicStatus = Pmic_get_gpioIntrCfg(pPmicCoreHandle, &pGpioIntrCfg);
 
@@ -251,9 +252,12 @@ static int32_t Pmic_irqGpioMask(Pmic_CoreHandle_t *pPmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            BIT_POS_SET_VAL(regData,
-                            pGpioIntrCfg[irqGpioNum].gpioRiseMaskBitPos,
-                            mask);
+            bitMask = (PMIC_IRQ_MASK_CLR_BITFIELD <<
+                       pGpioIntrCfg[irqGpioNum].gpioRiseMaskBitPos);
+            Pmic_setBitField(&regData,
+                             pGpioIntrCfg[irqGpioNum].gpioRiseMaskBitPos,
+                             bitMask,
+                             mask);
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                           pGpioIntrCfg[irqGpioNum].gpioRiseIntrMaskRegAddr,
                           regData);
@@ -269,9 +273,12 @@ static int32_t Pmic_irqGpioMask(Pmic_CoreHandle_t *pPmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            BIT_POS_SET_VAL(regData,
-                            pGpioIntrCfg[irqGpioNum].gpioFallMaskBitPos,
-                            mask);
+            bitMask = (PMIC_IRQ_MASK_CLR_BITFIELD <<
+                       pGpioIntrCfg[irqGpioNum].gpioFallMaskBitPos);
+            Pmic_setBitField(&regData,
+                             pGpioIntrCfg[irqGpioNum].gpioFallMaskBitPos,
+                             bitMask,
+                             mask);
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                           pGpioIntrCfg[irqGpioNum].gpioFallIntrMaskRegAddr,
                           regData);
@@ -328,6 +335,7 @@ static int32_t Pmic_irqClear(Pmic_CoreHandle_t *pPmicCoreHandle,
     int32_t pmicStatus       = PMIC_ST_SUCCESS;
     uint8_t regData          = 0U;
     Pmic_IntrCfg_t *pIntrCfg = NULL;
+    uint8_t bitMask          = 0U;
 
     pmicStatus = Pmic_get_intrCfg(pPmicCoreHandle, &pIntrCfg);
 
@@ -340,9 +348,12 @@ static int32_t Pmic_irqClear(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        BIT_POS_SET_VAL(regData,
-                        pIntrCfg[irqNum].intrClrBitPos,
-                        PMIC_IRQ_CLEAR);
+        bitMask = (PMIC_IRQ_MASK_CLR_BITFIELD <<
+                   pIntrCfg[irqNum].intrClrBitPos);
+        Pmic_setBitField(&regData,
+                         pIntrCfg[irqNum].intrClrBitPos,
+                         bitMask,
+                         PMIC_IRQ_CLEAR);
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                            pIntrCfg[irqNum].intrClrRegAddr,
                                            regData);
@@ -394,6 +405,7 @@ static int32_t Pmic_irqMask(Pmic_CoreHandle_t    *pPmicCoreHandle,
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData    = 0U;
+    uint8_t bitMask    = 0U;
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -404,9 +416,12 @@ static int32_t Pmic_irqMask(Pmic_CoreHandle_t    *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        BIT_POS_SET_VAL(regData,
-                        pIntrCfg[irqNum].intrMaskBitPos,
-                        mask);
+        bitMask = (PMIC_IRQ_MASK_CLR_BITFIELD <<
+                   pIntrCfg[irqNum].intrMaskBitPos);
+        Pmic_setBitField(&regData,
+                         pIntrCfg[irqNum].intrMaskBitPos,
+                         bitMask,
+                         mask);
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                       pIntrCfg[irqNum].intrMaskRegAddr,
                                       regData);

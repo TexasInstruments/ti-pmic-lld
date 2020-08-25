@@ -78,6 +78,8 @@ int32_t Pmic_nSleepSignalsSetup(Pmic_CoreHandle_t *pPmicCoreHandle)
     uint8_t dstRegAddr = 0U;
     uint8_t regData = 0U;
     uint8_t regVal = 0U;
+    uint8_t nSleep2BVal = 0U;
+    uint8_t nSleep1BVal = 0U;
 
     if(NULL == pPmicCoreHandle)
     {
@@ -125,12 +127,21 @@ int32_t Pmic_nSleepSignalsSetup(Pmic_CoreHandle_t *pPmicCoreHandle)
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            HW_REG_SET_FIELD(regData,
-                             PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B,
-                             (BIT_POS_GET_VAL(regVal, 1U)));
-            HW_REG_SET_FIELD(regData,
-                             PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B,
-                             (BIT_POS_GET_VAL(regVal, 0U)));
+            nSleep2BVal = Pmic_getBitField(regVal,
+                                           PMIC_STARTUP_DEST_NSLEEP2B_SHIFT,
+                                           PMIC_STARTUP_DEST_NSLEEP2B_MASK);
+            Pmic_setBitField(&regData,
+                             PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B_SHIFT,
+                             PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B_MASK,
+                             nSleep2BVal);
+
+            nSleep1BVal = Pmic_getBitField(regVal,
+                                           PMIC_STARTUP_DEST_NSLEEP1B_SHIFT,
+                                           PMIC_STARTUP_DEST_NSLEEP1B_MASK);
+            Pmic_setBitField(&regData,
+                             PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B_SHIFT,
+                             PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B_MASK,
+                             nSleep1BVal);
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                                 dstRegAddr,
                                                 regData);
@@ -156,7 +167,10 @@ bool pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos)
 {
     bool retVal = (bool)false;
 
-    retVal = ((validParamVal  >> bitPos) & 0x01U);
+    if(((validParamVal  >> bitPos) & 0x01U) != 0U)
+    {
+        retVal = (bool)true;
+    }
 
     return retVal;
 }
@@ -210,6 +224,7 @@ int32_t Pmic_SetRecoveryCntCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t  regVal;
+    uint8_t  clrCntVal = 0U;
 
     if(NULL == pPmicCoreHandle)
     {
@@ -227,7 +242,7 @@ int32_t Pmic_SetRecoveryCntCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
     if((PMIC_ST_SUCCESS == pmicStatus) &&
        (((bool)true) == pmic_validParamCheck(recovCntCfg.validParams,
                                      PMIC_CFG_RECOV_CNT_CLR_CNT_VALID)) &&
-       (recovCntCfg.clrCnt != 1U))
+       (recovCntCfg.clrCnt != ((bool)true)))
     {
         pmicStatus = PMIC_ST_ERR_INV_PARAM;
     }
@@ -246,16 +261,22 @@ int32_t Pmic_SetRecoveryCntCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
             if(((bool)true) == pmic_validParamCheck(recovCntCfg.validParams,
                                             PMIC_CFG_RECOV_CNT_CLR_CNT_VALID))
             {
-                HW_REG_SET_FIELD(regVal,
-                                 PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR,
-                                 recovCntCfg.clrCnt);
+                if((bool)true == recovCntCfg.clrCnt)
+                {
+                    clrCntVal = 1U;
+                }
+                Pmic_setBitField(&regVal,
+                                 PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_SHIFT,
+                                 PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_MASK,
+                                 clrCntVal);
             }
 
             if(((bool)true) == pmic_validParamCheck(recovCntCfg.validParams,
                                             PMIC_CFG_RECOV_CNT_THR_VAL_VALID))
             {
-                HW_REG_SET_FIELD(regVal,
-                                 PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR,
+                Pmic_setBitField(&regVal,
+                                 PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_SHIFT,
+                                 PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_MASK,
                                  recovCntCfg.thrVal);
             }
 
@@ -319,14 +340,25 @@ int32_t Pmic_getRecoveryCntCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
             if(((bool)true) == pmic_validParamCheck(pRecovCntCfg->validParams,
                                             PMIC_CFG_RECOV_CNT_THR_VAL_VALID))
             {
-                pRecovCntCfg->thrVal = HW_REG_GET_FIELD(regVal,
-                                          PMIC_RECOV_CNT_REG_2_RECOV_CNT_THR);
+                pRecovCntCfg->thrVal =
+                      Pmic_getBitField(regVal,
+                                       PMIC_RECOV_CNT_REG_2_RECOV_CNT_THR_SHIFT,
+                                       PMIC_RECOV_CNT_REG_2_RECOV_CNT_THR_MASK);
             }
             if(((bool)true) == pmic_validParamCheck(pRecovCntCfg->validParams,
                                             PMIC_CFG_RECOV_CNT_CLR_CNT_VALID))
             {
-                pRecovCntCfg->clrCnt = HW_REG_GET_FIELD(regVal,
-                                             PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR);
+                if((Pmic_getBitField(
+                               regVal,
+                               PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_SHIFT,
+                               PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_MASK)) != 0U)
+                {
+                    pRecovCntCfg->clrCnt = ((bool)true);
+                }
+                else
+                {
+                    pRecovCntCfg->clrCnt = ((bool)false);
+                }
             }
     }
 
@@ -375,8 +407,9 @@ int32_t Pmic_getRecoveryCnt(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        *pRecovCntVal = HW_REG_GET_FIELD(regVal,
-                                         PMIC_RECOV_CNT_REG_1_RECOV_CNT);
+        *pRecovCntVal = Pmic_getBitField(regVal,
+                                         PMIC_RECOV_CNT_REG_1_RECOV_CNT_SHIFT,
+                                         PMIC_RECOV_CNT_REG_1_RECOV_CNT_MASK);
     }
 
     return pmicStatus;
@@ -586,7 +619,6 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         pPmicCoreHandle->pPmic_SubSysInfo =
-                         (Pmic_DevSubSysInfo_t *)
                          (&pmicSubSysInfo[pPmicCoreHandle->pmicDeviceType]);
     }
 

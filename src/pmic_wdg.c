@@ -91,7 +91,7 @@ static int32_t Pmic_WdgValidatePmicCoreHandle(
                                    Pmic_CoreHandle_t *pPmicCoreHandle)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_DevSubSysInfo_t *pPmic_devSubSysInfo = NULL;
+    const Pmic_DevSubSysInfo_t *pPmic_devSubSysInfo = NULL;
 
     status = Pmic_checkPmicCoreHandle(pPmicCoreHandle);
 
@@ -318,8 +318,9 @@ static int32_t Pmic_WdgSetThresholdValues(Pmic_CoreHandle_t  *pPmicCoreHandle,
         }
         if(PMIC_ST_SUCCESS == status)
         {
-            HW_REG_SET_FIELD(regVal,
-                             PMIC_WD_THR_CFG_WD_FAIL_TH,
+            Pmic_setBitField(&regVal,
+                             PMIC_WD_THR_CFG_WD_FAIL_TH_SHIFT,
+                             PMIC_WD_THR_CFG_WD_FAIL_TH_MASK,
                              wdgCfg.failThreshold);
 
             status = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -351,8 +352,9 @@ static int32_t Pmic_WdgSetThresholdValues(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == status)
         {
-            HW_REG_SET_FIELD(regVal,
-                             PMIC_WD_THR_CFG_WD_RST_TH,
+            Pmic_setBitField(&regVal,
+                             PMIC_WD_THR_CFG_WD_RST_TH_SHIFT,
+                             PMIC_WD_THR_CFG_WD_RST_TH_MASK,
                              wdgCfg.rstThreshold);
 
             status = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -391,8 +393,10 @@ static int32_t Pmic_WdgGetThresholdValues(Pmic_CoreHandle_t  *pPmicCoreHandle,
        (true == pmic_validParamCheck(pWdgCfg->validParams,
                               PMIC_CFG_WDG_FAILTHRESHOLD_VALID)))
     {
-        pWdgCfg->failThreshold = HW_REG_GET_FIELD(regVal,
-                                               PMIC_WD_THR_CFG_WD_FAIL_TH);
+        pWdgCfg->failThreshold = Pmic_getBitField(
+                                               regVal,
+                                               PMIC_WD_THR_CFG_WD_FAIL_TH_SHIFT,
+                                               PMIC_WD_THR_CFG_WD_FAIL_TH_MASK);
 
     }
 
@@ -401,8 +405,10 @@ static int32_t Pmic_WdgGetThresholdValues(Pmic_CoreHandle_t  *pPmicCoreHandle,
        (true == pmic_validParamCheck(pWdgCfg->validParams,
                               PMIC_CFG_WDG_RSTTHRESHOLD_VALID)))
     {
-        pWdgCfg->rstThreshold = HW_REG_GET_FIELD(regVal,
-                                               PMIC_WD_THR_CFG_WD_RST_TH);
+        pWdgCfg->rstThreshold = Pmic_getBitField(
+                                               regVal,
+                                               PMIC_WD_THR_CFG_WD_RST_TH_SHIFT,
+                                               PMIC_WD_THR_CFG_WD_RST_TH_MASK);
     }
 
     /* Get wdg warm reset value */
@@ -410,8 +416,10 @@ static int32_t Pmic_WdgGetThresholdValues(Pmic_CoreHandle_t  *pPmicCoreHandle,
        (true == pmic_validParamCheck(pWdgCfg->validParams,
                                      PMIC_CFG_WDG_RSTENABLE_VALID)))
     {
-        pWdgCfg->rstEnable = HW_REG_GET_FIELD(regVal,
-                                          PMIC_WD_THR_CFG_WD_RST_EN);
+        pWdgCfg->rstEnable = Pmic_getBitField(
+                                          regVal,
+                                          PMIC_WD_THR_CFG_WD_RST_EN_SHIFT,
+                                          PMIC_WD_THR_CFG_WD_RST_EN_MASK);
     }
 
     return status;
@@ -434,8 +442,9 @@ static int32_t Pmic_WdgSetRetToLongWindow(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == status)
     {
-        HW_REG_SET_FIELD(regVal,
-                         PMIC_WD_MODE_REG_WD_RETURN_LONGWIN,
+        Pmic_setBitField(&regVal,
+                         PMIC_WD_MODE_REG_WD_RETURN_LONGWIN_SHIFT,
+                         PMIC_WD_MODE_REG_WD_RETURN_LONGWIN_MASK,
                          enable);
 
         status = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -468,8 +477,9 @@ static int32_t Pmic_WdgSetCtrlParams(Pmic_CoreHandle_t  *pPmicCoreHandle,
                                         &regVal);
         if(PMIC_ST_SUCCESS == status)
         {
-            HW_REG_SET_FIELD(regVal,
-                             PMIC_WD_MODE_REG_WD_MODE_SELECT,
+            Pmic_setBitField(&regVal,
+                             PMIC_WD_MODE_REG_WD_MODE_SELECT_SHIFT,
+                             PMIC_WD_MODE_REG_WD_MODE_SELECT_MASK,
                              wdgCfg.wdgMode);
 
             status = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -494,8 +504,9 @@ static int32_t Pmic_WdgSetCtrlParams(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == status)
         {
-            HW_REG_SET_FIELD(regVal,
-                             PMIC_WD_MODE_REG_WD_PWRHOLD,
+            Pmic_setBitField(&regVal,
+                             PMIC_WD_MODE_REG_WD_PWRHOLD_SHIFT,
+                             PMIC_WD_MODE_REG_WD_PWRHOLD_MASK,
                              wdgCfg.pwrHold);
 
             status = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -520,8 +531,9 @@ static int32_t Pmic_WdgSetCtrlParams(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == status)
         {
-            HW_REG_SET_FIELD(regVal,
-                             PMIC_WD_THR_CFG_WD_RST_EN,
+            Pmic_setBitField(&regVal,
+                             PMIC_WD_THR_CFG_WD_RST_EN_SHIFT,
+                             PMIC_WD_THR_CFG_WD_RST_EN_MASK,
                              wdgCfg.rstEnable);
 
             status = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -567,8 +579,10 @@ static int32_t Pmic_WdgGetCtrlParams(Pmic_CoreHandle_t  *pPmicCoreHandle,
        (true == pmic_validParamCheck(pWdgCfg->validParams,
                                      PMIC_CFG_WDG_WDGMODE_VALID)))
     {
-        pWdgCfg->wdgMode = HW_REG_GET_FIELD(regVal,
-                                PMIC_WD_MODE_REG_WD_MODE_SELECT);
+        pWdgCfg->wdgMode =
+               Pmic_getBitField(regVal,
+                                PMIC_WD_MODE_REG_WD_MODE_SELECT_SHIFT,
+                                PMIC_WD_MODE_REG_WD_MODE_SELECT_MASK);
     }
 
     /* Get wdg power hold vale */
@@ -576,8 +590,10 @@ static int32_t Pmic_WdgGetCtrlParams(Pmic_CoreHandle_t  *pPmicCoreHandle,
        (true == pmic_validParamCheck(pWdgCfg->validParams,
                                      PMIC_CFG_WDG_PWRHOLD_VALID)))
     {
-        pWdgCfg->pwrHold = HW_REG_GET_FIELD(regVal,
-                                          PMIC_WD_MODE_REG_WD_PWRHOLD);
+        pWdgCfg->pwrHold =
+                         Pmic_getBitField(regVal,
+                                          PMIC_WD_MODE_REG_WD_PWRHOLD_SHIFT,
+                                          PMIC_WD_MODE_REG_WD_PWRHOLD_MASK);
     }
 
     /* Get wdg return to long window bit */
@@ -585,8 +601,10 @@ static int32_t Pmic_WdgGetCtrlParams(Pmic_CoreHandle_t  *pPmicCoreHandle,
        (true == pmic_validParamCheck(pWdgCfg->validParams,
                                      PMIC_CFG_WDG_RETLONGWIN_VALID)))
     {
-        pWdgCfg->retLongWin = HW_REG_GET_FIELD(regVal,
-                                   PMIC_WD_MODE_REG_WD_RETURN_LONGWIN);
+        pWdgCfg->retLongWin =
+                  Pmic_getBitField(regVal,
+                                   PMIC_WD_MODE_REG_WD_RETURN_LONGWIN_SHIFT,
+                                   PMIC_WD_MODE_REG_WD_RETURN_LONGWIN_MASK);
     }
 
     return status;
@@ -621,8 +639,9 @@ static int32_t Pmic_WdgSetQaConfigurations(
         }
         if(PMIC_ST_SUCCESS == status)
         {
-            HW_REG_SET_FIELD(regVal,
-                             PMIC_WD_QA_CFG_WD_QA_FDBK,
+            Pmic_setBitField(&regVal,
+                             PMIC_WD_QA_CFG_WD_QA_FDBK_SHIFT,
+                             PMIC_WD_QA_CFG_WD_QA_FDBK_MASK,
                              wdgCfg.qaFdbk);
 
             status = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -654,8 +673,9 @@ static int32_t Pmic_WdgSetQaConfigurations(
 
         if(PMIC_ST_SUCCESS == status)
         {
-            HW_REG_SET_FIELD(regVal,
-                             PMIC_WD_QA_CFG_WD_QA_LFSR,
+            Pmic_setBitField(&regVal,
+                             PMIC_WD_QA_CFG_WD_QA_LFSR_SHIFT,
+                             PMIC_WD_QA_CFG_WD_QA_LFSR_MASK,
                              wdgCfg.qaLfsr);
 
             status = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -687,8 +707,9 @@ static int32_t Pmic_WdgSetQaConfigurations(
 
         if(PMIC_ST_SUCCESS == status)
         {
-            HW_REG_SET_FIELD(regVal,
-                             PMIC_WD_QA_CFG_WD_QUESTION_SEED,
+            Pmic_setBitField(&regVal,
+                             PMIC_WD_QA_CFG_WD_QUESTION_SEED_SHIFT,
+                             PMIC_WD_QA_CFG_WD_QUESTION_SEED_MASK,
                              wdgCfg.qaQuesSeed);
 
             status = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -725,8 +746,10 @@ static int32_t Pmic_WdgGetQaConfigurations(
        (true == pmic_validParamCheck(pWdgCfg->validParams,
                               PMIC_CFG_WDG_QA_FDBK_VALID)))
     {
-        pWdgCfg->qaFdbk = HW_REG_GET_FIELD(regVal,
-                                         PMIC_WD_QA_CFG_WD_QA_FDBK);
+        pWdgCfg->qaFdbk =
+                        Pmic_getBitField(regVal,
+                                         PMIC_WD_QA_CFG_WD_QA_FDBK_SHIFT,
+                                         PMIC_WD_QA_CFG_WD_QA_FDBK_MASK);
     }
 
     /* Get wdg QA LFSR value */
@@ -734,8 +757,10 @@ static int32_t Pmic_WdgGetQaConfigurations(
        (true == pmic_validParamCheck(pWdgCfg->validParams,
                                PMIC_CFG_WDG_QA_LFSR_VALID)))
     {
-        pWdgCfg->qaLfsr = HW_REG_GET_FIELD(regVal,
-                                         PMIC_WD_QA_CFG_WD_QA_LFSR);
+        pWdgCfg->qaLfsr =
+                        Pmic_getBitField(regVal,
+                                         PMIC_WD_QA_CFG_WD_QA_LFSR_SHIFT,
+                                         PMIC_WD_QA_CFG_WD_QA_LFSR_MASK);
     }
 
     /* Get wdg QA Question Seed value */
@@ -743,8 +768,10 @@ static int32_t Pmic_WdgGetQaConfigurations(
        (true == pmic_validParamCheck(pWdgCfg->validParams,
                                PMIC_CFG_WDG_QA_QUES_SEED_VALID)))
     {
-        pWdgCfg->qaQuesSeed = HW_REG_GET_FIELD(regVal,
-                                         PMIC_WD_QA_CFG_WD_QUESTION_SEED);
+        pWdgCfg->qaQuesSeed =
+                        Pmic_getBitField(regVal,
+                                         PMIC_WD_QA_CFG_WD_QUESTION_SEED_SHIFT,
+                                         PMIC_WD_QA_CFG_WD_QUESTION_SEED_MASK);
     }
 
     return status;
@@ -770,7 +797,10 @@ static int32_t Pmic_wdgEnDisState(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == status)
     {
-        HW_REG_SET_FIELD(regVal, PMIC_WD_THR_CFG_WD_EN, enable);
+        Pmic_setBitField(&regVal,
+                         PMIC_WD_THR_CFG_WD_EN_SHIFT,
+                         PMIC_WD_THR_CFG_WD_EN_MASK,
+                         enable);
 
         status = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                         PMIC_WD_THR_CFG_REGADDR,
@@ -807,10 +837,14 @@ static int32_t Pmic_wdgReadQuesandAnswerCount(
 
     if(PMIC_ST_SUCCESS == status)
     {
-        *pQaAnsCnt = HW_REG_GET_FIELD(regVal,
-                                  PMIC_WD_QUESTION_ANSW_CNT_WD_ANSW_CNT);
-        *pQaQuesCnt = HW_REG_GET_FIELD(regVal,
-                                  PMIC_WD_QUESTION_ANSW_CNT_WD_QUESTION);
+        *pQaAnsCnt = Pmic_getBitField(
+                                  regVal,
+                                  PMIC_WD_QUESTION_ANSW_CNT_WD_ANSW_CNT_SHIFT,
+                                  PMIC_WD_QUESTION_ANSW_CNT_WD_ANSW_CNT_MASK);
+        *pQaQuesCnt = Pmic_getBitField(
+                                  regVal,
+                                  PMIC_WD_QUESTION_ANSW_CNT_WD_QUESTION_SHIFT,
+                                  PMIC_WD_QUESTION_ANSW_CNT_WD_QUESTION_MASK);
     }
 
     return status;
@@ -827,7 +861,9 @@ static bool is_wdgBadEventDetected(Pmic_CoreHandle_t *pPmicCoreHandle)
                            PMIC_WD_FAIL_CNT_REG_REGADDR,
                            &regVal);
 
-    return HW_REG_GET_FIELD(regVal, PMIC_WD_FAIL_CNT_REG_WD_BAD_EVENT);
+    return Pmic_getBitField(regVal,
+                            PMIC_WD_FAIL_CNT_REG_WD_BAD_EVENT_SHIFT,
+                            PMIC_WD_FAIL_CNT_REG_WD_BAD_EVENT_MASK);
 }
 
 /*
@@ -932,7 +968,9 @@ static int32_t Pmic_wdgQaWriteAnswers(Pmic_CoreHandle_t *pPmicCoreHandle)
     /* Get wdg QA Feedback value */
     if(PMIC_ST_SUCCESS == status)
     {
-        qaFdbk = HW_REG_GET_FIELD(qaFdbk, PMIC_WD_QA_CFG_WD_QA_FDBK);
+        qaFdbk = Pmic_getBitField(qaFdbk,
+                                  PMIC_WD_QA_CFG_WD_QA_FDBK_SHIFT,
+                                  PMIC_WD_QA_CFG_WD_QA_FDBK_MASK);
     }
 
     for(ansIndex = 3U; ansIndex >= 0; ansIndex--)
@@ -1157,8 +1195,9 @@ int32_t Pmic_wdgStartQaSequence(Pmic_CoreHandle_t *pPmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == status)
         {
-            HW_REG_SET_FIELD(regVal,
-                             PMIC_WD_MODE_REG_WD_MODE_SELECT,
+            Pmic_setBitField(&regVal,
+                             PMIC_WD_MODE_REG_WD_MODE_SELECT_SHIFT,
+                             PMIC_WD_MODE_REG_WD_MODE_SELECT_MASK,
                              PMIC_WDG_QA_MODE);
             /*! Set watchdog mode to QA mode */
             status = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -1345,57 +1384,73 @@ int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t   *pPmicCoreHandle,
        (true == pmic_validParamCheck(pErrStatus->validParams,
                                PMIC_CFG_WD_LONGWIN_TIMEOUT_ERRSTAT_VALID)))
     {
-        pErrStatus->wdLongWinTimeout = HW_REG_GET_FIELD(regVal,
-                              PMIC_WD_ERR_STATUS_WD_LONGWIN_TIMEOUT_INT);
+        pErrStatus->wdLongWinTimeout =
+             Pmic_getBitField(regVal,
+                              PMIC_WD_ERR_STATUS_WD_LONGWIN_TIMEOUT_INT_SHIFT,
+                              PMIC_WD_ERR_STATUS_WD_LONGWIN_TIMEOUT_INT_MASK);
     }
     if((PMIC_ST_SUCCESS == status) &&
        (true == pmic_validParamCheck(pErrStatus->validParams,
                                PMIC_CFG_WD_TIMEOUT_ERRSTAT_VALID)))
     {
-        pErrStatus->wdTimeout = HW_REG_GET_FIELD(regVal,
-                              PMIC_WD_ERR_STATUS_WD_TIMEOUT);
+        pErrStatus->wdTimeout =
+             Pmic_getBitField(regVal,
+                              PMIC_WD_ERR_STATUS_WD_TIMEOUT_SHIFT,
+                              PMIC_WD_ERR_STATUS_WD_TIMEOUT_MASK);
     }
     if((PMIC_ST_SUCCESS == status) &&
        (true == pmic_validParamCheck(pErrStatus->validParams,
                                PMIC_CFG_WD_TRIG_EARLY_ERRSTAT_VALID)))
     {
-        pErrStatus->wdTrigEarly = HW_REG_GET_FIELD(regVal,
-                              PMIC_WD_ERR_STATUS_WD_TRIG_EARLY);
+        pErrStatus->wdTrigEarly =
+             Pmic_getBitField(regVal,
+                              PMIC_WD_ERR_STATUS_WD_TRIG_EARLY_SHIFT,
+                              PMIC_WD_ERR_STATUS_WD_TRIG_EARLY_MASK);
     }
     if((PMIC_ST_SUCCESS == status) &&
        (true == pmic_validParamCheck(pErrStatus->validParams,
                                PMIC_CFG_WD_ANSW_EARLY_ERRSTAT_VALID)))
     {
-        pErrStatus->wdAnswearly = HW_REG_GET_FIELD(regVal,
-                              PMIC_WD_ERR_STATUS_WD_ANSW_EARLY);
+        pErrStatus->wdAnswearly =
+             Pmic_getBitField(regVal,
+                              PMIC_WD_ERR_STATUS_WD_ANSW_EARLY_SHIFT,
+                              PMIC_WD_ERR_STATUS_WD_ANSW_EARLY_MASK);
     }
     if((PMIC_ST_SUCCESS == status) &&
        (true == pmic_validParamCheck(pErrStatus->validParams,
                                PMIC_CFG_WD_SEQ_ERR_ERRSTAT_VALID)))
     {
-        pErrStatus->wdSeqErr = HW_REG_GET_FIELD(regVal,
-                              PMIC_WD_ERR_STATUS_WD_SEQ_ERR);
+        pErrStatus->wdSeqErr =
+             Pmic_getBitField(regVal,
+                              PMIC_WD_ERR_STATUS_WD_SEQ_ERR_SHIFT,
+                              PMIC_WD_ERR_STATUS_WD_SEQ_ERR_MASK);
     }
     if((PMIC_ST_SUCCESS == status) &&
        (true == pmic_validParamCheck(pErrStatus->validParams,
                                PMIC_CFG_WD_ANSW_ERR_ERRSTAT_VALID)))
     {
-        pErrStatus->wdAnswErr = HW_REG_GET_FIELD(regVal,
-                              PMIC_WD_ERR_STATUS_WD_ANSW_ERR);
+        pErrStatus->wdAnswErr =
+             Pmic_getBitField(regVal,
+                              PMIC_WD_ERR_STATUS_WD_ANSW_ERR_SHIFT,
+                              PMIC_WD_ERR_STATUS_WD_ANSW_ERR_MASK);
     }
     if((PMIC_ST_SUCCESS == status) &&
        (true == pmic_validParamCheck(pErrStatus->validParams,
                                PMIC_CFG_WD_FAIL_INT_ERRSTAT_VALID)))
     {
-        pErrStatus->wdFailInt = HW_REG_GET_FIELD(regVal,
-                              PMIC_WD_ERR_STATUS_WD_FAIL_INT);
+        pErrStatus->wdFailInt =
+             Pmic_getBitField(regVal,
+                              PMIC_WD_ERR_STATUS_WD_FAIL_INT_SHIFT,
+                              PMIC_WD_ERR_STATUS_WD_FAIL_INT_MASK);
     }
     if((PMIC_ST_SUCCESS == status) &&
        (true == pmic_validParamCheck(pErrStatus->validParams,
                                PMIC_CFG_WD_RST_INT_ERRSTAT_VALID)))
     {
-        pErrStatus->wdRstInt = HW_REG_GET_FIELD(regVal,
-                              PMIC_WD_ERR_STATUS_WD_RST_INT);
+        pErrStatus->wdRstInt =
+             Pmic_getBitField(regVal,
+                              PMIC_WD_ERR_STATUS_WD_RST_INT_SHIFT,
+                              PMIC_WD_ERR_STATUS_WD_RST_INT_MASK);
     }
 
     return status;
@@ -1443,8 +1498,9 @@ int32_t Pmic_wdgGetFailCount(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == status)
     {
-        *pFailCount = HW_REG_GET_FIELD(regVal,
-                                       PMIC_WD_FAIL_CNT_REG_WD_FAIL_CNT);
+        *pFailCount = Pmic_getBitField(regVal,
+                                       PMIC_WD_FAIL_CNT_REG_WD_FAIL_CNT_SHIFT,
+                                       PMIC_WD_FAIL_CNT_REG_WD_FAIL_CNT_MASK);
     }
 
     return status;
@@ -1497,8 +1553,9 @@ int32_t Pmic_wdgStartTriggerSequence(Pmic_CoreHandle_t *pPmicCoreHandle)
 
         if(PMIC_ST_SUCCESS == status)
         {
-            HW_REG_SET_FIELD(regVal,
-                             PMIC_WD_MODE_REG_WD_MODE_SELECT,
+            Pmic_setBitField(&regVal,
+                             PMIC_WD_MODE_REG_WD_MODE_SELECT_SHIFT,
+                             PMIC_WD_MODE_REG_WD_MODE_SELECT_MASK,
                              PMIC_WDG_TRIGGER_MODE);
             /*! Set watchdog mode to trigger mode */
             status = Pmic_commIntf_sendByte(pPmicCoreHandle,

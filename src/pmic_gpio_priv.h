@@ -313,6 +313,12 @@ extern "C" {
  *          NPWRON is valid only for TPS6594x Leo Device
  */
 #define PMIC_NPWRON_ENABLE_PIN                            (0U)
+
+/*!
+ * \brief  GPIO IN/OUT bit field
+ */
+#define PMIC_GPIO_IN_OUT_X_GPIOX_IN_OUT_BITFIELD          (1U)
+
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/

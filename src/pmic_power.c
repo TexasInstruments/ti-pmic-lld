@@ -413,12 +413,13 @@ static int32_t Pmic_powerGetRsrcRegCfg(uint8_t                  pmicDeviceType,
 }
 
 /*!
- * \brief   This function is used to get the required BitPos of residual
- *          voltage checking for BUCK/LDO/VMON pin.
+ * \brief   This function is used to get the required BitPos and BitMask
+ *           of residual voltage checking for BUCK/LDO/VMON pin.
  */
 static int32_t Pmic_powerGetRvCheckEnBitPos(uint8_t   pmicDeviceType,
                                             uint16_t  pwrRsrc,
-                                            uint8_t  *pBitPos)
+                                            uint8_t  *pBitPos,
+                                            uint8_t  *pBitMask)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -426,21 +427,26 @@ static int32_t Pmic_powerGetRvCheckEnBitPos(uint8_t   pmicDeviceType,
     {
         case PMIC_DEV_LEO_TPS6594X:
             *pBitPos = PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_RV_SEL_SHIFT;
+            *pBitMask = PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_RV_SEL_MASK;
             break;
         case PMIC_DEV_HERA_LP8764X:
             if(PMIC_LP8764X_POWER_SOURCE_VMON1 == pwrRsrc)
             {
                  *pBitPos = PMIC_POWER_VCCA_VMON_CTRL_VMON1_RV_SEL_SHIFT;
+                 *pBitMask = PMIC_POWER_VCCA_VMON_CTRL_VMON1_RV_SEL_MASK;
 
             }
             else if(PMIC_LP8764X_POWER_SOURCE_VMON2 == pwrRsrc)
             {
                 *pBitPos = PMIC_POWER_VCCA_VMON_CTRL_VMON2_RV_SEL_SHIFT;
+                *pBitMask = PMIC_POWER_VCCA_VMON_CTRL_VMON2_RV_SEL_MASK;
             }
             else
             {
                 *pBitPos = \
                         PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_RV_SEL_SHIFT;
+                *pBitMask = \
+                        PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_RV_SEL_MASK;
             }
             break;
         default:
@@ -464,6 +470,7 @@ static int32_t Pmic_powerSetRvCheckEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t bitPos  = 0U;
     uint8_t pwrRsrcIndex = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
+    uint8_t bitMask = 0U;
 
     pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
 
@@ -484,9 +491,13 @@ static int32_t Pmic_powerSetRvCheckEn(Pmic_CoreHandle_t *pPmicCoreHandle,
             pmicStatus = Pmic_powerGetRvCheckEnBitPos(
                                                 pPmicCoreHandle->pmicDeviceType,
                                                 pwrRsrc,
-                                                &bitPos);
+                                                &bitPos,
+                                                &bitMask);
 
-            BIT_POS_SET_VAL(regData, bitPos, residualVoltCheck);
+            Pmic_setBitField(&regData,
+                             bitPos,
+                             bitMask,
+                             residualVoltCheck);
         }
 
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -516,6 +527,7 @@ static int32_t Pmic_powerGetRvCheckEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t bitPos  = 0U;
     uint8_t pwrRsrcIndex = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
+    uint8_t bitMask = 0U;
 
     pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
 
@@ -537,9 +549,10 @@ static int32_t Pmic_powerGetRvCheckEn(Pmic_CoreHandle_t *pPmicCoreHandle,
         pmicStatus = Pmic_powerGetRvCheckEnBitPos(
                                                 pPmicCoreHandle->pmicDeviceType,
                                                 pwrRsrc,
-                                                &bitPos);
+                                                &bitPos,
+                                                &bitMask);
 
-        *pResidualVoltCheck = BIT_POS_GET_VAL(regData, bitPos);
+        *pResidualVoltCheck = Pmic_getBitField(regData, bitPos, bitMask);
     }
 
     return pmicStatus;
@@ -808,8 +821,9 @@ int32_t Pmic_powerGetVmonRange(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        *pVmonRange = HW_REG_GET_FIELD(regData,
-                                       PMIC_VMON_PG_WINDOW_VMON_RANGE);
+        *pVmonRange = Pmic_getBitField(regData,
+                                       PMIC_VMON_PG_WINDOW_VMON_RANGE_SHIFT,
+                                       PMIC_VMON_PG_WINDOW_VMON_RANGE_MASK);
     }
 
     return pmicStatus;
@@ -893,7 +907,10 @@ static int32_t Pmic_powerSetBuckVoutSel(Pmic_CoreHandle_t *pPmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            HW_REG_SET_FIELD(regData, PMIC_BUCKX_CTRL_BUCKX_VSEL, buckVoutSel);
+            Pmic_setBitField(&regData,
+                             PMIC_BUCKX_CTRL_BUCKX_VSEL_SHIFT,
+                             PMIC_BUCKX_CTRL_BUCKX_VSEL_MASK,
+                             buckVoutSel);
 
             pmicStatus = Pmic_commIntf_sendByte(
                                        pPmicCoreHandle,
@@ -937,7 +954,9 @@ static int32_t Pmic_powerGetBuckVoutSel(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        *pBuckVoutSel = HW_REG_GET_FIELD(regData, PMIC_BUCKX_CTRL_BUCKX_VSEL);
+        *pBuckVoutSel = Pmic_getBitField(regData,
+                                         PMIC_BUCKX_CTRL_BUCKX_VSEL_SHIFT,
+                                         PMIC_BUCKX_CTRL_BUCKX_VSEL_MASK);
     }
 
     return pmicStatus;
@@ -970,7 +989,10 @@ static int32_t Pmic_powerSetBuckFpwmMode(Pmic_CoreHandle_t *pPmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            HW_REG_SET_FIELD(regData, PMIC_BUCKX_CTRL_BUCKX_FPWM, buckFpwmMode);
+            Pmic_setBitField(&regData,
+                             PMIC_BUCKX_CTRL_BUCKX_FPWM_SHIFT,
+                             PMIC_BUCKX_CTRL_BUCKX_FPWM_MASK,
+                             buckFpwmMode);
 
             pmicStatus = Pmic_commIntf_sendByte(
                                        pPmicCoreHandle,
@@ -1014,8 +1036,9 @@ static int32_t Pmic_powerGetBuckFpwmMode(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        *pBuckFpwmMode = HW_REG_GET_FIELD(regData,
-                                          PMIC_BUCKX_CTRL_BUCKX_FPWM);
+        *pBuckFpwmMode = Pmic_getBitField(regData,
+                                          PMIC_BUCKX_CTRL_BUCKX_FPWM_SHIFT,
+                                          PMIC_BUCKX_CTRL_BUCKX_FPWM_MASK);
     }
 
     return pmicStatus;
@@ -1049,8 +1072,9 @@ static int32_t Pmic_powerSetBuckFpwmMpMode(Pmic_CoreHandle_t *pPmicCoreHandle,
                                        &regData);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            HW_REG_SET_FIELD(regData,
-                             PMIC_BUCKX_CTRL_BUCKX_FPWM_MP,
+            Pmic_setBitField(&regData,
+                             PMIC_BUCKX_CTRL_BUCKX_FPWM_MP_SHIFT,
+                             PMIC_BUCKX_CTRL_BUCKX_FPWM_MP_MASK,
                              buckFpwmMpMode);
 
             pmicStatus = Pmic_commIntf_sendByte(
@@ -1097,8 +1121,9 @@ static int32_t Pmic_powerGetBuckPwmMpMode(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        *pBuckFpwmMpMode = HW_REG_GET_FIELD(regData,
-                                            PMIC_BUCKX_CTRL_BUCKX_FPWM_MP);
+        *pBuckFpwmMpMode = Pmic_getBitField(regData,
+                                            PMIC_BUCKX_CTRL_BUCKX_FPWM_MP_SHIFT,
+                                            PMIC_BUCKX_CTRL_BUCKX_FPWM_MP_MASK);
     }
 
     return pmicStatus;
@@ -1132,8 +1157,9 @@ static int32_t Pmic_powerSetLdoSlowRampEn(Pmic_CoreHandle_t *pPmicCoreHandle,
                                        &regData);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            HW_REG_SET_FIELD(regData,
-                             PMIC_LDOX_CTRL_LDOX_SLOW_RAMP_EN,
+            Pmic_setBitField(&regData,
+                             PMIC_LDOX_CTRL_LDOX_SLOW_RAMP_EN_SHIFT,
+                             PMIC_LDOX_CTRL_LDOX_SLOW_RAMP_EN_MASK,
                              ldoSlowRampEn);
 
             pmicStatus = Pmic_commIntf_sendByte(
@@ -1179,8 +1205,10 @@ static int32_t Pmic_powerGetLdoSlowRampEn(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        *pLdoSlowRampEn = HW_REG_GET_FIELD(regData,
-                                           PMIC_LDOX_CTRL_LDOX_SLOW_RAMP_EN);
+        *pLdoSlowRampEn =
+                       Pmic_getBitField(regData,
+                                        PMIC_LDOX_CTRL_LDOX_SLOW_RAMP_EN_SHIFT,
+                                        PMIC_LDOX_CTRL_LDOX_SLOW_RAMP_EN_MASK);
     }
 
     return pmicStatus;
@@ -1215,8 +1243,9 @@ static int32_t Pmic_powerSetRegulatorEn(Pmic_CoreHandle_t *pPmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            HW_REG_SET_FIELD(regData,
-                             PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_EN,
+            Pmic_setBitField(&regData,
+                             PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_EN_SHIFT,
+                             PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_EN_MASK,
                              regulatorEn);
 
             pmicStatus = Pmic_commIntf_sendByte(
@@ -1261,9 +1290,10 @@ static int32_t Pmic_powerGetRegulatorEn(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        *pRegulatorEn = HW_REG_GET_FIELD(
-                                  regData,
-                                  PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_EN);
+        *pRegulatorEn = Pmic_getBitField(
+                             regData,
+                             PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_EN_SHIFT,
+                             PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_EN_MASK);
     }
 
     return pmicStatus;
@@ -1742,7 +1772,10 @@ static int32_t Pmic_powerSetBuckCurrentLimit(
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            HW_REG_SET_FIELD(regData, PMIC_BUCKX_CONF_BUCKX_ILIM, currentLimit);
+            Pmic_setBitField(&regData,
+                             PMIC_BUCKX_CONF_BUCKX_ILIM_SHIFT,
+                             PMIC_BUCKX_CONF_BUCKX_ILIM_MASK,
+                             currentLimit);
 
             pmicStatus = Pmic_commIntf_sendByte(
                                      pPmicCoreHandle,
@@ -1785,7 +1818,9 @@ static int32_t Pmic_powerGetBuckCurrentLimit(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        *pCurrentLimit = HW_REG_GET_FIELD(regData, PMIC_BUCKX_CONF_BUCKX_ILIM);
+        *pCurrentLimit = Pmic_getBitField(regData,
+                                          PMIC_BUCKX_CONF_BUCKX_ILIM_SHIFT,
+                                          PMIC_BUCKX_CONF_BUCKX_ILIM_MASK);
     }
 
     return pmicStatus;
@@ -2000,8 +2035,9 @@ static int32_t Pmic_powerSetBuckPullDownEn(Pmic_CoreHandle_t *pPmicCoreHandle,
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             /* Enable/Disable output pull-down resistor for BUCK regulator */
-            HW_REG_SET_FIELD(regData,
-                             PMIC_BUCKX_CTRL_BUCKX_PLDN,
+            Pmic_setBitField(&regData,
+                             PMIC_BUCKX_CTRL_BUCKX_PLDN_SHIFT,
+                             PMIC_BUCKX_CTRL_BUCKX_PLDN_MASK,
                              buckPullDownEn);
             pmicStatus = Pmic_commIntf_sendByte(
                                        pPmicCoreHandle,
@@ -2046,8 +2082,9 @@ static int32_t Pmic_powerGetBuckPullDownEn(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        *pBuckPullDownEn = HW_REG_GET_FIELD(regData,
-                                            PMIC_BUCKX_CTRL_BUCKX_PLDN);
+        *pBuckPullDownEn = Pmic_getBitField(regData,
+                                            PMIC_BUCKX_CTRL_BUCKX_PLDN_SHIFT,
+                                            PMIC_BUCKX_CTRL_BUCKX_PLDN_MASK);
     }
 
     return pmicStatus;
@@ -2114,8 +2151,9 @@ static int32_t Pmic_powerSetLdoPullDownSel(Pmic_CoreHandle_t *pPmicCoreHandle,
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             /* Selects output pull-down resistor for LDO regulator */
-            HW_REG_SET_FIELD(regData,
-                             PMIC_LDOX_CTRL_LDOX_PLDN,
+            Pmic_setBitField(&regData,
+                             PMIC_LDOX_CTRL_LDOX_PLDN_SHIFT,
+                             PMIC_LDOX_CTRL_LDOX_PLDN_MASK,
                              ldoPullDownSel);
 
             pmicStatus = Pmic_commIntf_sendByte(
@@ -2161,7 +2199,9 @@ static int32_t Pmic_powerGetLdoPullDownSel(Pmic_CoreHandle_t *pPmicCoreHandle,
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         /* Get output pull-down resistor for LDO/VMON */
-        *pLdoPullDownSel = HW_REG_GET_FIELD(regData, PMIC_LDOX_CTRL_LDOX_PLDN);
+        *pLdoPullDownSel = Pmic_getBitField(regData,
+                                            PMIC_LDOX_CTRL_LDOX_PLDN_SHIFT,
+                                            PMIC_LDOX_CTRL_LDOX_PLDN_MASK);
     }
 
     return pmicStatus;
@@ -2186,8 +2226,9 @@ static int32_t Pmic_powerSetVccaPwrGudLvl(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        HW_REG_SET_FIELD(regData,
-                         PMIC_VCCA_PG_WINDOW_VCCA_PG_SET,
+        Pmic_setBitField(&regData,
+                         PMIC_VCCA_PG_WINDOW_VCCA_PG_SET_SHIFT,
+                         PMIC_VCCA_PG_WINDOW_VCCA_PG_SET_MASK,
                          vccaPwrGudLvl);
 
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -2262,10 +2303,11 @@ static int32_t Pmic_powerSetLowThreshold(
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            HW_REG_SET_FIELD(
-                          regData,
-                          PMIC_POWER_RESOURCEX_PG_WINDOW_POWER_RESOURCEX_UV_THR,
-                          pwrGudUvThresholdLvl);
+            Pmic_setBitField(
+                   &regData,
+                   PMIC_POWER_RESOURCEX_PG_WINDOW_POWER_RESOURCEX_UV_THR_SHIFT,
+                   PMIC_POWER_RESOURCEX_PG_WINDOW_POWER_RESOURCEX_UV_THR_MASK,
+                   pwrGudUvThresholdLvl);
             pmicStatus = Pmic_commIntf_sendByte(
                                         pPmicCoreHandle,
                                         pPwrRsrcRegCfg[pwrRsrc].pgWindowRegAddr,
@@ -2308,9 +2350,11 @@ static int32_t Pmic_powerGetLowThreshold(
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        *pPwrGudUvThresholdLvl = HW_REG_GET_FIELD(
-                        regData,
-                        PMIC_POWER_RESOURCEX_PG_WINDOW_POWER_RESOURCEX_UV_THR);
+        *pPwrGudUvThresholdLvl =
+          Pmic_getBitField(
+                  regData,
+                  PMIC_POWER_RESOURCEX_PG_WINDOW_POWER_RESOURCEX_UV_THR_SHIFT,
+                  PMIC_POWER_RESOURCEX_PG_WINDOW_POWER_RESOURCEX_UV_THR_MASK);
     }
 
     return pmicStatus;
@@ -2349,9 +2393,11 @@ static int32_t Pmic_powerSetHighThreshold(Pmic_CoreHandle_t *pPmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            HW_REG_SET_FIELD(regData,
-                         PMIC_POWER_RESOURCEX_PG_WINDOW_POWER_RESOURCEX_OV_THR,
-                         powerGoodOvThr);
+            Pmic_setBitField(
+                  &regData,
+                  PMIC_POWER_RESOURCEX_PG_WINDOW_POWER_RESOURCEX_OV_THR_SHIFT,
+                  PMIC_POWER_RESOURCEX_PG_WINDOW_POWER_RESOURCEX_OV_THR_MASK,
+                  powerGoodOvThr);
             pmicStatus = Pmic_commIntf_sendByte(
                                        pPmicCoreHandle,
                                        pPwrRsrcRegCfg[pwrRsrc].pgWindowRegAddr,
@@ -2394,9 +2440,11 @@ static int32_t Pmic_powerGetHighThreshold(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        *pPowerGoodOvThr = HW_REG_GET_FIELD(
-                         regData,
-                         PMIC_POWER_RESOURCEX_PG_WINDOW_POWER_RESOURCEX_OV_THR);
+        *pPowerGoodOvThr =
+           Pmic_getBitField(
+                  regData,
+                  PMIC_POWER_RESOURCEX_PG_WINDOW_POWER_RESOURCEX_OV_THR_SHIFT,
+                  PMIC_POWER_RESOURCEX_PG_WINDOW_POWER_RESOURCEX_OV_THR_MASK);
     }
 
     return pmicStatus;
@@ -2422,8 +2470,10 @@ static int32_t Pmic_powerGetVccaPwrGudLvl(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        *pVccaPwrGudLvl = HW_REG_GET_FIELD(regData,
-                                           PMIC_VCCA_PG_WINDOW_VCCA_PG_SET);
+        *pVccaPwrGudLvl = Pmic_getBitField(
+                                         regData,
+                                         PMIC_VCCA_PG_WINDOW_VCCA_PG_SET_SHIFT,
+                                         PMIC_VCCA_PG_WINDOW_VCCA_PG_SET_MASK);
 
     }
 
@@ -2431,12 +2481,13 @@ static int32_t Pmic_powerGetVccaPwrGudLvl(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /*!
- * \brief   This function is used to get the required Bit Position of VMON
- *          enable/disable status for all power resources
+ * \brief   This function is used to get the required Bit Position and Bit Mask
+ *           of VMON enable/disable status for all power resources
  */
 static int32_t Pmic_powerGetVmonEnBitPos(uint8_t   pmicDeviceType,
                                          uint16_t  pwrRsrc,
-                                         uint8_t   *pBitPos)
+                                         uint8_t   *pBitPos,
+                                         uint8_t   *pBitMask)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t pwrRsrcType;
@@ -2449,10 +2500,12 @@ static int32_t Pmic_powerGetVmonEnBitPos(uint8_t   pmicDeviceType,
                (PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO  == pwrRsrcType))
             {
                *pBitPos = PMIC_REGULATOR_CTRL_REGULATOR_VMON_EN_SHIFT;
+               *pBitMask = PMIC_REGULATOR_CTRL_REGULATOR_VMON_EN_MASK;
             }
             else if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_VCCA == pwrRsrcType)
             {
                *pBitPos = PMIC_VCCA_VMON_CTRL_VCCA_VMON_EN_SHIFT;
+               *pBitMask = PMIC_VCCA_VMON_CTRL_VCCA_VMON_EN_MASK;
             }
             else
             {
@@ -2464,16 +2517,19 @@ static int32_t Pmic_powerGetVmonEnBitPos(uint8_t   pmicDeviceType,
             if(PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType)
             {
                *pBitPos = PMIC_REGULATOR_CTRL_REGULATOR_VMON_EN_SHIFT;
+               *pBitMask = PMIC_REGULATOR_CTRL_REGULATOR_VMON_EN_MASK;
             }
             else if(PMIC_LP8764X_POWER_RESOURCE_TYPE_VMON == pwrRsrcType)
             {
                 if(PMIC_LP8764X_POWER_SOURCE_VMON1 == pwrRsrc)
                 {
                     *pBitPos = PMIC_VCCA_VMON_CTRL_VMON1_EN_SHIFT;
+                    *pBitMask = PMIC_VCCA_VMON_CTRL_VMON1_EN_MASK;
                 }
                 else if(PMIC_LP8764X_POWER_SOURCE_VMON2 == pwrRsrc)
                 {
                     *pBitPos = PMIC_VCCA_VMON_CTRL_VMON2_EN_SHIFT;
+                    *pBitMask = PMIC_VCCA_VMON_CTRL_VMON2_EN_MASK;
                 }
                 else
                 {
@@ -2483,6 +2539,7 @@ static int32_t Pmic_powerGetVmonEnBitPos(uint8_t   pmicDeviceType,
             else if(PMIC_LP8764X_POWER_RESOURCE_TYPE_VCCA == pwrRsrcType)
             {
                *pBitPos = PMIC_VCCA_VMON_CTRL_VCCA_VMON_EN_SHIFT;
+               *pBitMask = PMIC_VCCA_VMON_CTRL_VCCA_VMON_EN_MASK;
             }
             else
             {
@@ -2511,6 +2568,7 @@ static int32_t Pmic_powerSetVmonEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t bitPos  = 0U;
     uint8_t pwrRsrcIndex = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
+    uint8_t bitMask = 0U;
 
     pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
 
@@ -2531,9 +2589,10 @@ static int32_t Pmic_powerSetVmonEn(Pmic_CoreHandle_t *pPmicCoreHandle,
             pmicStatus = Pmic_powerGetVmonEnBitPos(
                                                 pPmicCoreHandle->pmicDeviceType,
                                                 pwrRsrc,
-                                                &bitPos);
+                                                &bitPos,
+                                                &bitMask);
 
-            BIT_POS_SET_VAL(regData, bitPos, vmonEn);
+            Pmic_setBitField(&regData, bitPos, bitMask, vmonEn);
        }
 
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -2563,6 +2622,7 @@ static int32_t Pmic_powerGetvmonEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t bitPos  = 0U;
     uint8_t pwrRsrcIndex = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
+    uint8_t bitMask = 0U;
 
     pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
 
@@ -2585,9 +2645,10 @@ static int32_t Pmic_powerGetvmonEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     {
         pmicStatus = Pmic_powerGetVmonEnBitPos(pPmicCoreHandle->pmicDeviceType,
                                                pwrRsrc,
-                                               &bitPos);
+                                               &bitPos,
+                                               &bitMask);
 
-        *pVmonEn = BIT_POS_GET_VAL(regData, bitPos);
+        *pVmonEn = Pmic_getBitField(regData, bitPos, bitMask);
     }
 
     return pmicStatus;
@@ -2752,8 +2813,9 @@ static int32_t Pmic_powerSetVmonRange(Pmic_CoreHandle_t *pPmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            HW_REG_SET_FIELD(regData,
-                             PMIC_VMON_PG_WINDOW_VMON_RANGE,
+            Pmic_setBitField(&regData,
+                             PMIC_VMON_PG_WINDOW_VMON_RANGE_SHIFT,
+                             PMIC_VMON_PG_WINDOW_VMON_RANGE_MASK,
                              vmonRange);
 
             pmicStatus = Pmic_commIntf_sendByte(
@@ -3441,6 +3503,7 @@ static int32_t Pmic_powerGetBuckFreqSel(Pmic_CoreHandle_t *pPmicCoreHandle,
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     uint8_t pwrRsrcIndex = 0U;
+    uint8_t bitMask = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
     pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
@@ -3459,9 +3522,12 @@ static int32_t Pmic_powerGetBuckFreqSel(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        *pBuckFreqSel = BIT_POS_GET_VAL(
+        bitMask = (PMIC_POWER_BUCKX_FREQ_SEL_BITFIELD <<
+                   pPwrRsrcRegCfg[pwrRsrcIndex].buckFreqBitShiftVal);
+        *pBuckFreqSel = Pmic_getBitField(
                               regData,
-                              pPwrRsrcRegCfg[pwrRsrcIndex].buckFreqBitShiftVal);
+                              pPwrRsrcRegCfg[pwrRsrcIndex].buckFreqBitShiftVal,
+                              bitMask);
     }
 
     return pmicStatus;
@@ -3508,6 +3574,7 @@ static int32_t Pmic_powerSetBuckFreqSel(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t regData = 0U;
     uint8_t pwrRsrcIndex = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
+    uint8_t bitMask = 0U;
 
     pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
 
@@ -3530,9 +3597,12 @@ static int32_t Pmic_powerSetBuckFreqSel(Pmic_CoreHandle_t *pPmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            BIT_POS_SET_VAL(regData,
-                            pPwrRsrcRegCfg[pwrRsrcIndex].buckFreqBitShiftVal,
-                            buckFreqSel);
+            bitMask = (PMIC_POWER_BUCKX_FREQ_SEL_BITFIELD <<
+                       pPwrRsrcRegCfg[pwrRsrcIndex].buckFreqBitShiftVal);
+            Pmic_setBitField(&regData,
+                             pPwrRsrcRegCfg[pwrRsrcIndex].buckFreqBitShiftVal,
+                             bitMask,
+                             buckFreqSel);
         }
 
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -3576,8 +3646,9 @@ static int32_t Pmic_powerSetLdoBypassModeEn(Pmic_CoreHandle_t *pPmicCoreHandle,
                                       &regData);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            HW_REG_SET_FIELD(regData,
-                             PMIC_LDO1_2_3_VOUT_LDO1_2_3_BYPASS,
+            Pmic_setBitField(&regData,
+                             PMIC_LDO1_2_3_VOUT_LDO1_2_3_BYPASS_SHIFT,
+                             PMIC_LDO1_2_3_VOUT_LDO1_2_3_BYPASS_MASK,
                              ldoBypassModeEn);
 
             pmicStatus = Pmic_commIntf_sendByte(
@@ -3622,9 +3693,10 @@ static int32_t Pmic_powerGetLdoBypassModeEn(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        *pLdoBypassModeEn = HW_REG_GET_FIELD(
-                                            regData,
-                                            PMIC_LDO1_2_3_VOUT_LDO1_2_3_BYPASS);
+        *pLdoBypassModeEn = Pmic_getBitField(
+                                      regData,
+                                      PMIC_LDO1_2_3_VOUT_LDO1_2_3_BYPASS_SHIFT,
+                                      PMIC_LDO1_2_3_VOUT_LDO1_2_3_BYPASS_MASK);
     }
 
     return pmicStatus;
@@ -3750,7 +3822,8 @@ static int32_t Pmic_powerGetLdoRvTimeoutSel(
     {
         bitMask = (uint8_t)(PMIC_REGULATOR_LDO_RV_TIMEOUT_SEL_BITFIELD \
                   << pPwrRsrcRegCfg[pwrRsrcIndex].ldoRvTimeOutBitShiftVal);
-        *pLdoResVoltTimeout = Pmic_getBitField(
+        *pLdoResVoltTimeout =
+                   Pmic_getBitField(
                            regData,
                            pPwrRsrcRegCfg[pwrRsrcIndex].ldoRvTimeOutBitShiftVal,
                            bitMask);
@@ -3775,7 +3848,10 @@ static int32_t Pmic_powerSetPgoodWindow(Pmic_CoreHandle_t *pPmicCoreHandle,
                                     &regData);
     if(PMIC_ST_SUCCESS == status)
     {
-        HW_REG_SET_FIELD(regData, PMIC_PGOOD_SEL_4_PGOOD_WINDOW, pgoodWindow);
+        Pmic_setBitField(&regData,
+                         PMIC_PGOOD_SEL_4_PGOOD_WINDOW_SHIFT,
+                         PMIC_PGOOD_SEL_4_PGOOD_WINDOW_MASK,
+                         pgoodWindow);
         status = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                         PMIC_PGOOD_SEL_4_REGADDR,
                                         regData);
@@ -3806,8 +3882,9 @@ static int32_t Pmic_powerGetVoltageMonitoringPg(
 
     if(PMIC_ST_SUCCESS == status)
     {
-        *pPgoodWindow = HW_REG_GET_FIELD(regData,
-                                         PMIC_PGOOD_SEL_4_PGOOD_WINDOW);
+        *pPgoodWindow = Pmic_getBitField(regData,
+                                         PMIC_PGOOD_SEL_4_PGOOD_WINDOW_SHIFT,
+                                         PMIC_PGOOD_SEL_4_PGOOD_WINDOW_MASK);
     }
 
     return status;
@@ -3828,7 +3905,10 @@ static int32_t Pmic_powerSetPgoodPolarity(Pmic_CoreHandle_t *pPmicCoreHandle,
                                     &regData);
     if(PMIC_ST_SUCCESS == status)
     {
-        HW_REG_SET_FIELD(regData, PMIC_PGOOD_SEL_4_PGOOD_POL, pgoodPolarity);
+        Pmic_setBitField(&regData,
+                         PMIC_PGOOD_SEL_4_PGOOD_POL_SHIFT,
+                         PMIC_PGOOD_SEL_4_PGOOD_POL_MASK,
+                         pgoodPolarity);
         status = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                         PMIC_PGOOD_SEL_4_REGADDR,
                                         regData);
@@ -3856,7 +3936,9 @@ static int32_t Pmic_powerGetPgoodPolarity(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == status)
     {
-        *pPgoodPolarity = HW_REG_GET_FIELD(regData, PMIC_PGOOD_SEL_4_PGOOD_POL);
+        *pPgoodPolarity = Pmic_getBitField(regData,
+                                           PMIC_PGOOD_SEL_4_PGOOD_POL_SHIFT,
+                                           PMIC_PGOOD_SEL_4_PGOOD_POL_MASK);
     }
 
     return status;
@@ -3879,8 +3961,9 @@ static int32_t Pmic_powerSetDeglitchTimeSel(Pmic_CoreHandle_t *pPmicCoreHandle,
     if(PMIC_ST_SUCCESS == status)
     {
         /* Set Deglitch time */
-        HW_REG_SET_FIELD(regData,
-                         PMIC_VCCA_VMON_CTRL_VMON_DEGLITCH_SEL,
+        Pmic_setBitField(&regData,
+                         PMIC_VCCA_VMON_CTRL_VMON_DEGLITCH_SEL_SHIFT,
+                         PMIC_VCCA_VMON_CTRL_VMON_DEGLITCH_SEL_MASK,
                          deglitchTimeSel);
         status = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                         PMIC_VCCA_VMON_CTRL_REGADDR,
@@ -3909,9 +3992,10 @@ static int32_t Pmic_powerGetDeglitchTimeSel(Pmic_CoreHandle_t *pPmicCoreHandle,
     if(PMIC_ST_SUCCESS == status)
     {
         /* Get Deglitch time */
-        *pDeglitchTimeSel = HW_REG_GET_FIELD(
-                                         regData,
-                                         PMIC_VCCA_VMON_CTRL_VMON_DEGLITCH_SEL);
+        *pDeglitchTimeSel = Pmic_getBitField(
+                                    regData,
+                                    PMIC_VCCA_VMON_CTRL_VMON_DEGLITCH_SEL_SHIFT,
+                                    PMIC_VCCA_VMON_CTRL_VMON_DEGLITCH_SEL_MASK);
     }
 
     return status;
@@ -3934,9 +4018,10 @@ static int32_t Pmic_powerGetSevereErrorTrig(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == status)
     {
-        *pSevereErrorTrig = HW_REG_GET_FIELD(
-                                           regData,
-                                           PMIC_FSM_TRIG_SEL_1_SEVERE_ERR_TRIG);
+        *pSevereErrorTrig = Pmic_getBitField(
+                                      regData,
+                                      PMIC_FSM_TRIG_SEL_1_SEVERE_ERR_TRIG_SHIFT,
+                                      PMIC_FSM_TRIG_SEL_1_SEVERE_ERR_TRIG_MASK);
     }
 
     return status;
@@ -3959,8 +4044,10 @@ static int32_t Pmic_powerGetOtherRailTrig(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == status)
     {
-        *pOtherRailTrig = HW_REG_GET_FIELD(regData,
-                                           PMIC_FSM_TRIG_SEL_1_OTHER_RAIL_TRIG);
+        *pOtherRailTrig =
+                     Pmic_getBitField(regData,
+                                      PMIC_FSM_TRIG_SEL_1_OTHER_RAIL_TRIG_SHIFT,
+                                      PMIC_FSM_TRIG_SEL_1_OTHER_RAIL_TRIG_MASK);
     }
 
     return status;
@@ -3983,8 +4070,10 @@ static int32_t Pmic_powerGetSocRailTrig(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == status)
     {
-        *pSocRailTrig = HW_REG_GET_FIELD(regData,
-                                         PMIC_FSM_TRIG_SEL_1_SOC_RAIL_TRIG);
+        *pSocRailTrig =
+                  Pmic_getBitField(regData,
+                                   PMIC_FSM_TRIG_SEL_1_SOC_RAIL_TRIG_SHIFT,
+                                   PMIC_FSM_TRIG_SEL_1_SOC_RAIL_TRIG_MASK);
     }
 
     return status;
@@ -4007,8 +4096,10 @@ static int32_t Pmic_powerGetMcuRailTrig(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == status)
     {
-        *pMcuRailTrig = HW_REG_GET_FIELD(regData,
-                                         PMIC_FSM_TRIG_SEL_1_MCU_RAIL_TRIG);
+        *pMcuRailTrig =
+                      Pmic_getBitField(regData,
+                                       PMIC_FSM_TRIG_SEL_1_MCU_RAIL_TRIG_SHIFT,
+                                       PMIC_FSM_TRIG_SEL_1_MCU_RAIL_TRIG_MASK);
     }
 
     return status;
@@ -4032,9 +4123,10 @@ static int32_t Pmic_powerGetModerateRailTrig(
 
     if(PMIC_ST_SUCCESS == status)
     {
-        *pModerateRailTrig = HW_REG_GET_FIELD(
-                                         regData,
-                                         PMIC_FSM_TRIG_SEL_2_MODERATE_ERR_TRIG);
+        *pModerateRailTrig = Pmic_getBitField(
+                                    regData,
+                                    PMIC_FSM_TRIG_SEL_2_MODERATE_ERR_TRIG_SHIFT,
+                                    PMIC_FSM_TRIG_SEL_2_MODERATE_ERR_TRIG_MASK);
     }
 
     return status;
@@ -4074,8 +4166,9 @@ static int32_t Pmic_powerSetSevereErrorTrig(Pmic_CoreHandle_t *pPmicCoreHandle,
                                         &regData);
         if(PMIC_ST_SUCCESS == status)
         {
-            HW_REG_SET_FIELD(regData,
-                             PMIC_FSM_TRIG_SEL_1_SEVERE_ERR_TRIG,
+            Pmic_setBitField(&regData,
+                             PMIC_FSM_TRIG_SEL_1_SEVERE_ERR_TRIG_SHIFT,
+                             PMIC_FSM_TRIG_SEL_1_SEVERE_ERR_TRIG_MASK,
                              severeErrorTrig);
             status = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_FSM_TRIG_SEL_1_REGADDR,
@@ -4107,8 +4200,9 @@ static int32_t Pmic_powerSetOtherRailTrig(Pmic_CoreHandle_t *pPmicCoreHandle,
                                         &regData);
         if(PMIC_ST_SUCCESS == status)
         {
-            HW_REG_SET_FIELD(regData,
-                             PMIC_FSM_TRIG_SEL_1_OTHER_RAIL_TRIG,
+            Pmic_setBitField(&regData,
+                             PMIC_FSM_TRIG_SEL_1_OTHER_RAIL_TRIG_SHIFT,
+                             PMIC_FSM_TRIG_SEL_1_OTHER_RAIL_TRIG_MASK,
                              otherRailTrig);
             status = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_FSM_TRIG_SEL_1_REGADDR,
@@ -4141,8 +4235,9 @@ static int32_t Pmic_powerSetSocRailTrig(Pmic_CoreHandle_t *pPmicCoreHandle,
                                         &regData);
         if(PMIC_ST_SUCCESS == status)
         {
-            HW_REG_SET_FIELD(regData,
-                             PMIC_FSM_TRIG_SEL_1_SOC_RAIL_TRIG,
+            Pmic_setBitField(&regData,
+                             PMIC_FSM_TRIG_SEL_1_SOC_RAIL_TRIG_SHIFT,
+                             PMIC_FSM_TRIG_SEL_1_SOC_RAIL_TRIG_MASK,
                              socRailTrig);
             status = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_FSM_TRIG_SEL_1_REGADDR,
@@ -4175,8 +4270,9 @@ static int32_t Pmic_powerSetMcuRailTrig(Pmic_CoreHandle_t *pPmicCoreHandle,
                                         &regData);
         if(PMIC_ST_SUCCESS == status)
         {
-            HW_REG_SET_FIELD(regData,
-                             PMIC_FSM_TRIG_SEL_1_MCU_RAIL_TRIG,
+            Pmic_setBitField(&regData,
+                             PMIC_FSM_TRIG_SEL_1_MCU_RAIL_TRIG_SHIFT,
+                             PMIC_FSM_TRIG_SEL_1_MCU_RAIL_TRIG_MASK,
                              mcuRailTrig);
             status = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_FSM_TRIG_SEL_1_REGADDR,
@@ -4210,8 +4306,9 @@ static int32_t Pmic_powerSetModerateRailTrig(
                                         &regData);
         if(PMIC_ST_SUCCESS == status)
         {
-            HW_REG_SET_FIELD(regData,
-                             PMIC_FSM_TRIG_SEL_2_MODERATE_ERR_TRIG,
+            Pmic_setBitField(&regData,
+                             PMIC_FSM_TRIG_SEL_2_MODERATE_ERR_TRIG_SHIFT,
+                             PMIC_FSM_TRIG_SEL_2_MODERATE_ERR_TRIG_MASK,
                              moderateRailTrig);
             status = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_FSM_TRIG_SEL_2_REGADDR,
@@ -4515,7 +4612,9 @@ static int32_t Pmic_getThermalWarnStat(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == status)
     {
-        *pStateWarning = HW_REG_GET_FIELD(regData, PMIC_STAT_MISC_TWARN_STAT);
+        *pStateWarning = Pmic_getBitField(regData,
+                                          PMIC_STAT_MISC_TWARN_STAT_SHIFT,
+                                          PMIC_STAT_MISC_TWARN_STAT_MASK);
     }
 
     return status;
@@ -4541,9 +4640,10 @@ static int32_t Pmic_getOderlyShutdownStat(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == status)
     {
-        *pStatOderlyShtDwn = HW_REG_GET_FIELD(
-                                           regData,
-                                           PMIC_STAT_MODERATE_ERR_TSD_ORD_STAT);
+        *pStatOderlyShtDwn = Pmic_getBitField(
+                                      regData,
+                                      PMIC_STAT_MODERATE_ERR_TSD_ORD_STAT_SHIFT,
+                                      PMIC_STAT_MODERATE_ERR_TSD_ORD_STAT_MASK);
     }
 
     return status;
@@ -4570,8 +4670,10 @@ static int32_t Pmic_getImmediateShutdownStat(
 
     if(PMIC_ST_SUCCESS == status)
     {
-        *pStatImmShtDwn = HW_REG_GET_FIELD(regData,
-                                           PMIC_STAT_SEVERE_ERR_TSD_IMM_STAT);
+        *pStatImmShtDwn =
+                      Pmic_getBitField(regData,
+                                       PMIC_STAT_SEVERE_ERR_TSD_IMM_STAT_SHIFT,
+                                       PMIC_STAT_SEVERE_ERR_TSD_IMM_STAT_MASK);
     }
 
     return status;
@@ -4803,9 +4905,10 @@ static int32_t Pmic_setThermalWarnThold(Pmic_CoreHandle_t *pPmicCoreHandle,
     status = Pmic_readThermalThreshold(pPmicCoreHandle, &thresholdRegvalue);
     if(PMIC_ST_SUCCESS == status)
     {
-         HW_REG_SET_FIELD(thresholdRegvalue,
-                          PMIC_CONFIG_1_TWARN_LEVEL,
-                          thermalWarnThold);
+       Pmic_setBitField(&thresholdRegvalue,
+                        PMIC_CONFIG_1_TWARN_LEVEL_SHIFT,
+                        PMIC_CONFIG_1_TWARN_LEVEL_MASK,
+                        thermalWarnThold);
     }
 
     if(PMIC_ST_SUCCESS == status)
@@ -4834,9 +4937,10 @@ static int32_t Pmic_setThermalShutdownThold(
                                                &thresholdRegvalue);
             if(PMIC_ST_SUCCESS == status)
             {
-                HW_REG_SET_FIELD(thresholdRegvalue,
-                                 PMIC_CONFIG_1_TSD_ORD_LEVEL,
-                                 thermalShutdownThold);
+                 Pmic_setBitField(&thresholdRegvalue,
+                                  PMIC_CONFIG_1_TSD_ORD_LEVEL_SHIFT,
+                                  PMIC_CONFIG_1_TSD_ORD_LEVEL_MASK,
+                                  thermalShutdownThold);
             }
 
             if(PMIC_ST_SUCCESS == status)
@@ -4869,8 +4973,9 @@ static int32_t Pmic_getThermalWarnThold(Pmic_CoreHandle_t *pPmicCoreHandle,
     status = Pmic_readThermalThreshold(pPmicCoreHandle, &thresholdRegvalue);
     if(PMIC_ST_SUCCESS == status)
     {
-         *pThermalWarnThold = HW_REG_GET_FIELD(thresholdRegvalue,
-                                               PMIC_CONFIG_1_TWARN_LEVEL);
+         *pThermalWarnThold = Pmic_getBitField(thresholdRegvalue,
+                                               PMIC_CONFIG_1_TWARN_LEVEL_SHIFT,
+                                               PMIC_CONFIG_1_TWARN_LEVEL_MASK);
     }
 
     return status;
@@ -4894,9 +4999,10 @@ static int32_t Pmic_getThermalShutdownThold(
                                                &thresholdRegvalue);
             if(PMIC_ST_SUCCESS == status)
             {
-                *pThermalShutdownThold = HW_REG_GET_FIELD(
-                                                   thresholdRegvalue,
-                                                   PMIC_CONFIG_1_TSD_ORD_LEVEL);
+                *pThermalShutdownThold = Pmic_getBitField(
+                                              thresholdRegvalue,
+                                              PMIC_CONFIG_1_TSD_ORD_LEVEL_SHIFT,
+                                              PMIC_CONFIG_1_TSD_ORD_LEVEL_MASK);
             }
 
             break;

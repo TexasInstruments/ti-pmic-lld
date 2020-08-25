@@ -83,7 +83,7 @@ extern "C" {
  */
 
 #define PMIC_ENABLE_CONF_ENABLE_POL_MASK \
-                    ((uint8_t)(0x01U << PMIC_ENABLE_CONF_ENABLE_POL_SHIFT)
+                    ((uint8_t)(0x01U << PMIC_ENABLE_CONF_ENABLE_POL_SHIFT))
 
 /*!
  * \brief  Bit Mask for PMIC_MASK_GPIO9_10_REG

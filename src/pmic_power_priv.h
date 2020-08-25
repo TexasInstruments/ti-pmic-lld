@@ -894,6 +894,11 @@ extern "C" {
 #define PMIC_POWER_VSET_VAL_0x4                             (0x4)
 #define PMIC_POWER_VSET_VAL_0x20                            (0x20)
 
+/*!
+ * \brief   Bit field Value for buckFreq
+ */
+#define PMIC_POWER_BUCKX_FREQ_SEL_BITFIELD                  (1U)
+
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/

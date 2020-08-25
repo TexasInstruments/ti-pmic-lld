@@ -50,11 +50,12 @@
 
 /*!
  * \brief   This function is used to get the regAddr, mask and shift values to
-            configure standBy/LPStandby State
+ *          configure standBy/LPStandby State
  */
 static int32_t Pmic_fsmGetstandByCfgRegFields(uint8_t  pmicDeviceType,
                                               uint8_t  *pRegAddr,
-                                              uint8_t  *pBitPos)
+                                              uint8_t  *pBitPos,
+                                              uint8_t  *pBitMask)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -63,10 +64,12 @@ static int32_t Pmic_fsmGetstandByCfgRegFields(uint8_t  pmicDeviceType,
         case PMIC_DEV_LEO_TPS6594X:
             *pRegAddr = PMIC_RTC_CTRL_2_REGADDR;
             *pBitPos = PMIC_RTC_CTRL_2_LP_STANDBY_SEL_SHIFT;
+            *pBitMask = PMIC_RTC_CTRL_2_LP_STANDBY_SEL_MASK;
             break;
         case PMIC_DEV_HERA_LP8764X:
             *pRegAddr = PMIC_STARTUP_CTRL_REGADDR;
             *pBitPos = PMIC_STARTUP_CTRL_LP_STANDBY_SEL_SHIFT;
+            *pBitMask = PMIC_STARTUP_CTRL_LP_STANDBY_SEL_MASK;
             break;
         default:
             status = PMIC_ST_ERR_INV_DEVICE;
@@ -96,6 +99,7 @@ int32_t Pmic_fsmDeviceOffRequestCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
     uint8_t regData = 0U;
     uint8_t regAddr = 0U;
     uint8_t bitPos = 0U;
+    uint8_t bitMask = 0U;
 
     if(NULL == pPmicCoreHandle)
     {
@@ -120,12 +124,14 @@ int32_t Pmic_fsmDeviceOffRequestCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
                                                 &regData);
             if(PMIC_ST_SUCCESS == pmicStatus)
             {
-                HW_REG_SET_FIELD(regData,
-                                 PMIC_CONFIG_1_NSLEEP1_MASK,
+                Pmic_setBitField(&regData,
+                                 PMIC_CONFIG_1_NSLEEP1_MASK_SHIFT,
+                                 PMIC_CONFIG_1_NSLEEP1_MASK_MASK,
                                  PMIC_NSLEEP1B_FSM_MASK);
 
-                HW_REG_SET_FIELD(regData,
-                                 PMIC_CONFIG_1_NSLEEP2_MASK,
+                Pmic_setBitField(&regData,
+                                 PMIC_CONFIG_1_NSLEEP2_MASK_SHIFT,
+                                 PMIC_CONFIG_1_NSLEEP2_MASK_MASK,
                                  PMIC_NSLEEP2B_FSM_MASK);
 
                 pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -139,7 +145,8 @@ int32_t Pmic_fsmDeviceOffRequestCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
             pmicStatus = Pmic_fsmGetstandByCfgRegFields(
                                                 pPmicCoreHandle->pmicDeviceType,
                                                 &regAddr,
-                                                &bitPos);
+                                                &bitPos,
+                                                &bitMask);
         }
 
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -150,7 +157,7 @@ int32_t Pmic_fsmDeviceOffRequestCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
         }
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            BIT_POS_SET_VAL(regData, bitPos, fsmState);
+            Pmic_setBitField(&regData, bitPos, bitMask, fsmState);
 
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                                 regAddr,
@@ -205,8 +212,9 @@ int32_t Pmic_fsmEnableI2cTrigger(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            HW_REG_SET_FIELD(regData,
-                             PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_0,
+            Pmic_setBitField(&regData,
+                             PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_0_SHIFT,
+                             PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_0_MASK,
                              PMIC_FSM_I2C_TRIGGER_VAL);
 
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,

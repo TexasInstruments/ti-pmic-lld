@@ -58,12 +58,14 @@ static int32_t Pmic_rtcSetSeconds(Pmic_CoreHandle_t    *pPmicCoreHandle,
     if(PMIC_RTC_OPS_FOR_ALARM == operation_type)
     {
         /* Writing seconds to PMIC */
-        HW_REG_SET_FIELD(regData,
-                         PMIC_ALARM_SECONDS_ALR_SECOND_1,
+        Pmic_setBitField(&regData,
+                         PMIC_ALARM_SECONDS_ALR_SECOND_1_SHIFT,
+                         PMIC_ALARM_SECONDS_ALR_SECOND_1_MASK,
                          (timeCfg.seconds /
                           PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC));
-        HW_REG_SET_FIELD(regData,
-                         PMIC_ALARM_SECONDS_ALR_SECOND_0,
+        Pmic_setBitField(&regData,
+                         PMIC_ALARM_SECONDS_ALR_SECOND_0_SHIFT,
+                         PMIC_ALARM_SECONDS_ALR_SECOND_0_MASK,
                          (timeCfg.seconds %
                           PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC));
 
@@ -75,12 +77,14 @@ static int32_t Pmic_rtcSetSeconds(Pmic_CoreHandle_t    *pPmicCoreHandle,
     else
     {
         /* Writing seconds to PMIC */
-        HW_REG_SET_FIELD(regData,
-                         PMIC_RTC_SECONDS_SECOND_1,
+        Pmic_setBitField(&regData,
+                         PMIC_RTC_SECONDS_SECOND_1_SHIFT,
+                         PMIC_RTC_SECONDS_SECOND_1_MASK,
                          (timeCfg.seconds /
                           PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC));
-        HW_REG_SET_FIELD(regData,
-                         PMIC_RTC_SECONDS_SECOND_0,
+        Pmic_setBitField(&regData,
+                         PMIC_RTC_SECONDS_SECOND_0_SHIFT,
+                         PMIC_RTC_SECONDS_SECOND_0_MASK,
                          (timeCfg.seconds %
                           PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC));
 
@@ -132,21 +136,29 @@ static int32_t Pmic_rtcGetSeconds(Pmic_CoreHandle_t *pPmicCoreHandle,
         {
             /* Update Seconds to pTimeCfg */
             pTimeCfg->seconds = PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC *
-                                (HW_REG_GET_FIELD(regData,
-                                            PMIC_ALARM_SECONDS_ALR_SECOND_1));
+                                (Pmic_getBitField(
+                                        regData,
+                                        PMIC_ALARM_SECONDS_ALR_SECOND_1_SHIFT,
+                                        PMIC_ALARM_SECONDS_ALR_SECOND_1_MASK));
             pTimeCfg->seconds = pTimeCfg->seconds +
-                                (HW_REG_GET_FIELD(regData,
-                                            PMIC_ALARM_SECONDS_ALR_SECOND_0));
+                                (Pmic_getBitField(
+                                        regData,
+                                        PMIC_ALARM_SECONDS_ALR_SECOND_0_SHIFT,
+                                        PMIC_ALARM_SECONDS_ALR_SECOND_0_MASK));
         }
         else
         {
             /* Update Seconds to pTimeCfg */
             pTimeCfg->seconds = PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC *
-                                (HW_REG_GET_FIELD(regData,
-                                                  PMIC_RTC_SECONDS_SECOND_1));
+                                (Pmic_getBitField(
+                                              regData,
+                                              PMIC_RTC_SECONDS_SECOND_1_SHIFT,
+                                              PMIC_RTC_SECONDS_SECOND_1_MASK));
             pTimeCfg->seconds = pTimeCfg->seconds +
-                                (HW_REG_GET_FIELD(regData,
-                                                  PMIC_RTC_SECONDS_SECOND_0));
+                                (Pmic_getBitField(
+                                              regData,
+                                              PMIC_RTC_SECONDS_SECOND_0_SHIFT,
+                                              PMIC_RTC_SECONDS_SECOND_0_MASK));
         }
     }
 
@@ -169,12 +181,14 @@ static int32_t Pmic_rtcSetMinutes(Pmic_CoreHandle_t    *pPmicCoreHandle,
     if(PMIC_RTC_OPS_FOR_ALARM == operation_type)
     {
         /* Writing minutes to PMIC */
-        HW_REG_SET_FIELD(regData,
-                         PMIC_ALARM_MINUTES_ALR_MINUTE_1,
+        Pmic_setBitField(&regData,
+                         PMIC_ALARM_MINUTES_ALR_MINUTE_1_SHIFT,
+                         PMIC_ALARM_MINUTES_ALR_MINUTE_1_MASK,
                          (timeCfg.minutes /
                           PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC));
-        HW_REG_SET_FIELD(regData,
-                         PMIC_ALARM_MINUTES_ALR_MINUTE_0,
+        Pmic_setBitField(&regData,
+                         PMIC_ALARM_MINUTES_ALR_MINUTE_0_SHIFT,
+                         PMIC_ALARM_MINUTES_ALR_MINUTE_0_MASK,
                          (timeCfg.minutes %
                           PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC));
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -185,12 +199,14 @@ static int32_t Pmic_rtcSetMinutes(Pmic_CoreHandle_t    *pPmicCoreHandle,
     else
     {
         /* Writing minutes to PMIC */
-        HW_REG_SET_FIELD(regData,
-                         PMIC_RTC_MINUTES_MINUTE_1,
+        Pmic_setBitField(&regData,
+                         PMIC_RTC_MINUTES_MINUTE_1_SHIFT,
+                         PMIC_RTC_MINUTES_MINUTE_1_MASK,
                          (timeCfg.minutes /
                           PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC));
-        HW_REG_SET_FIELD(regData,
-                         PMIC_RTC_MINUTES_MINUTE_0,
+        Pmic_setBitField(&regData,
+                         PMIC_RTC_MINUTES_MINUTE_0_SHIFT,
+                         PMIC_RTC_MINUTES_MINUTE_0_MASK,
                          (timeCfg.minutes %
                           PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC));
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -241,21 +257,29 @@ static int32_t Pmic_rtcGetMinutes(Pmic_CoreHandle_t *pPmicCoreHandle,
         {
             /* Update Minutes to pTimeCfg */
             pTimeCfg->minutes = PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC *
-                                (HW_REG_GET_FIELD(regData,
-                                            PMIC_ALARM_MINUTES_ALR_MINUTE_1));
+                                (Pmic_getBitField(
+                                        regData,
+                                        PMIC_ALARM_MINUTES_ALR_MINUTE_1_SHIFT,
+                                        PMIC_ALARM_MINUTES_ALR_MINUTE_1_MASK));
             pTimeCfg->minutes = pTimeCfg->minutes +
-                                (HW_REG_GET_FIELD(regData,
-                                            PMIC_ALARM_MINUTES_ALR_MINUTE_0));
+                                (Pmic_getBitField(
+                                        regData,
+                                        PMIC_ALARM_MINUTES_ALR_MINUTE_0_SHIFT,
+                                        PMIC_ALARM_MINUTES_ALR_MINUTE_0_MASK));
         }
         else
         {
             /* Update Minutes to pTimeCfg */
             pTimeCfg->minutes = PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC *
-                                (HW_REG_GET_FIELD(regData,
-                                                 PMIC_RTC_MINUTES_MINUTE_1));
+                                (Pmic_getBitField(
+                                             regData,
+                                             PMIC_RTC_MINUTES_MINUTE_1_SHIFT,
+                                             PMIC_RTC_MINUTES_MINUTE_1_MASK));
             pTimeCfg->minutes = pTimeCfg->minutes +
-                                (HW_REG_GET_FIELD(regData,
-                                                  PMIC_RTC_MINUTES_MINUTE_0));
+                                (Pmic_getBitField(
+                                              regData,
+                                              PMIC_RTC_MINUTES_MINUTE_0_SHIFT,
+                                              PMIC_RTC_MINUTES_MINUTE_0_MASK));
         }
     }
 
@@ -279,8 +303,9 @@ static int32_t Pmic_rtcSetTimeMode(Pmic_CoreHandle_t    *pPmicCoreHandle,
                                         &regData);
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        HW_REG_SET_FIELD(regData,
-                         PMIC_RTC_CTRL_1_MODE_12_24,
+        Pmic_setBitField(&regData,
+                         PMIC_RTC_CTRL_1_MODE_12_24_SHIFT,
+                         PMIC_RTC_CTRL_1_MODE_12_24_MASK,
                          timeCfg.timeMode);
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_RTC_CTRL_1_REGADDR,
@@ -313,8 +338,9 @@ static int32_t Pmic_rtcGetTimeMode(Pmic_CoreHandle_t *pPmicCoreHandle,
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         /* Update TimeMode to pTimeCfg */
-        pTimeCfg->timeMode = HW_REG_GET_FIELD(regData,
-                                              PMIC_RTC_CTRL_1_MODE_12_24);
+        pTimeCfg->timeMode = Pmic_getBitField(regData,
+                                              PMIC_RTC_CTRL_1_MODE_12_24_SHIFT,
+                                              PMIC_RTC_CTRL_1_MODE_12_24_MASK);
     }
 
     return pmicStatus;
@@ -336,8 +362,10 @@ static int32_t Pmic_rtcSetMeridianMode(Pmic_CoreHandle_t    *pPmicCoreHandle,
                                         PMIC_RTC_CTRL_1_REGADDR,
                                         &regData);
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (PMIC_RTC_12_HOUR_MODE == HW_REG_GET_FIELD(regData,
-                                  PMIC_RTC_CTRL_1_MODE_12_24)))
+       (PMIC_RTC_12_HOUR_MODE == Pmic_getBitField(
+                                  regData,
+                                  PMIC_RTC_CTRL_1_MODE_12_24_SHIFT,
+                                  PMIC_RTC_CTRL_1_MODE_12_24_MASK)))
     {
         /* Operation for Alarm */
         if(PMIC_RTC_OPS_FOR_ALARM == operation_type)
@@ -348,8 +376,9 @@ static int32_t Pmic_rtcSetMeridianMode(Pmic_CoreHandle_t    *pPmicCoreHandle,
                                                 &regData);
             if(PMIC_ST_SUCCESS == pmicStatus)
             {
-                HW_REG_SET_FIELD(regData,
-                                 PMIC_ALARM_HOURS_ALR_PM_NAM,
+                Pmic_setBitField(&regData,
+                                 PMIC_ALARM_HOURS_ALR_PM_NAM_SHIFT,
+                                 PMIC_ALARM_HOURS_ALR_PM_NAM_MASK,
                                  timeCfg.meridianMode);
               pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_ALARM_HOURS_REGADDR,
@@ -365,8 +394,9 @@ static int32_t Pmic_rtcSetMeridianMode(Pmic_CoreHandle_t    *pPmicCoreHandle,
                                                 &regData);
             if(PMIC_ST_SUCCESS == pmicStatus)
             {
-                HW_REG_SET_FIELD(regData,
-                                 PMIC_ALARM_HOURS_ALR_PM_NAM,
+                Pmic_setBitField(&regData,
+                                 PMIC_ALARM_HOURS_ALR_PM_NAM_SHIFT,
+                                 PMIC_ALARM_HOURS_ALR_PM_NAM_MASK,
                                  timeCfg.meridianMode);
                 pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                                     PMIC_RTC_HOURS_REGADDR,
@@ -395,8 +425,10 @@ static int32_t Pmic_rtcGetMeridianMode(Pmic_CoreHandle_t *pPmicCoreHandle,
                                         PMIC_RTC_CTRL_1_REGADDR,
                                         &regData);
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (PMIC_RTC_12_HOUR_MODE == HW_REG_GET_FIELD(regData,
-                                  PMIC_RTC_CTRL_1_MODE_12_24)))
+       (PMIC_RTC_12_HOUR_MODE == Pmic_getBitField(
+                                  regData,
+                                  PMIC_RTC_CTRL_1_MODE_12_24_SHIFT,
+                                  PMIC_RTC_CTRL_1_MODE_12_24_MASK)))
     {
         /* Operation for Alarm */
         if(PMIC_RTC_OPS_FOR_ALARM == operation_type)
@@ -421,14 +453,18 @@ static int32_t Pmic_rtcGetMeridianMode(Pmic_CoreHandle_t *pPmicCoreHandle,
             if(PMIC_RTC_OPS_FOR_ALARM == operation_type)
             {
                 /* Update Time Meridian to pTimeCfg */
-                pTimeCfg->meridianMode = HW_REG_GET_FIELD(regData,
-                                            PMIC_ALARM_HOURS_ALR_PM_NAM);
+                pTimeCfg->meridianMode = Pmic_getBitField(
+                                            regData,
+                                            PMIC_ALARM_HOURS_ALR_PM_NAM_SHIFT,
+                                            PMIC_ALARM_HOURS_ALR_PM_NAM_MASK);
             }
             else
             {
                 /* Update Time Meridian to pTimeCfg */
-                pTimeCfg->meridianMode = HW_REG_GET_FIELD(regData,
-                                            PMIC_ALARM_HOURS_ALR_PM_NAM);
+                pTimeCfg->meridianMode = Pmic_getBitField(
+                                            regData,
+                                            PMIC_ALARM_HOURS_ALR_PM_NAM_SHIFT,
+                                            PMIC_ALARM_HOURS_ALR_PM_NAM_MASK);
             }
         }
     }
@@ -459,12 +495,14 @@ static int32_t Pmic_rtcSetHours(Pmic_CoreHandle_t    *pPmicCoreHandle,
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             /* Writing hour to PMIC */
-            HW_REG_SET_FIELD(regData,
-                             PMIC_ALARM_HOURS_ALR_HOUR_1,
+            Pmic_setBitField(&regData,
+                             PMIC_ALARM_HOURS_ALR_HOUR_1_SHIFT,
+                             PMIC_ALARM_HOURS_ALR_HOUR_1_MASK,
                              (timeCfg.hour /
                               PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC));
-            HW_REG_SET_FIELD(regData,
-                             PMIC_ALARM_HOURS_ALR_HOUR_0,
+            Pmic_setBitField(&regData,
+                             PMIC_ALARM_HOURS_ALR_HOUR_0_SHIFT,
+                             PMIC_ALARM_HOURS_ALR_HOUR_0_MASK,
                              (timeCfg.hour %
                               PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC));
 
@@ -482,12 +520,14 @@ static int32_t Pmic_rtcSetHours(Pmic_CoreHandle_t    *pPmicCoreHandle,
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
                 /* Writing hour to PMIC */
-            HW_REG_SET_FIELD(regData,
-                             PMIC_RTC_HOURS_HOUR_1,
+            Pmic_setBitField(&regData,
+                             PMIC_RTC_HOURS_HOUR_1_SHIFT,
+                             PMIC_RTC_HOURS_HOUR_1_MASK,
                              (timeCfg.hour /
                               PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC));
-            HW_REG_SET_FIELD(regData,
-                             PMIC_RTC_HOURS_HOUR_0,
+            Pmic_setBitField(&regData,
+                             PMIC_RTC_HOURS_HOUR_0_SHIFT,
+                             PMIC_RTC_HOURS_HOUR_0_MASK,
                              (timeCfg.hour %
                               PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC));
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -538,21 +578,27 @@ static int32_t Pmic_rtcGetHours(Pmic_CoreHandle_t *pPmicCoreHandle,
         {
             /* Update Hours to pTimeCfg */
             pTimeCfg->hour = PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC *
-                             (HW_REG_GET_FIELD(regData,
-                                               PMIC_ALARM_HOURS_ALR_HOUR_1));
+                             (Pmic_getBitField(
+                                           regData,
+                                           PMIC_ALARM_HOURS_ALR_HOUR_1_SHIFT,
+                                           PMIC_ALARM_HOURS_ALR_HOUR_1_MASK));
             pTimeCfg->hour = pTimeCfg->hour +
-                             (HW_REG_GET_FIELD(regData,
-                                               PMIC_ALARM_HOURS_ALR_HOUR_0));
+                             (Pmic_getBitField(
+                                           regData,
+                                           PMIC_ALARM_HOURS_ALR_HOUR_0_SHIFT,
+                                           PMIC_ALARM_HOURS_ALR_HOUR_0_MASK));
         }
         else
         {
             /* Update Hours to pTimeCfg */
             pTimeCfg->hour = PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC *
-                             (HW_REG_GET_FIELD(regData,
-                                               PMIC_RTC_HOURS_HOUR_1));
+                             (Pmic_getBitField(regData,
+                                               PMIC_RTC_HOURS_HOUR_1_SHIFT,
+                                               PMIC_RTC_HOURS_HOUR_1_MASK));
             pTimeCfg->hour = pTimeCfg->hour +
-                             (HW_REG_GET_FIELD(regData,
-                                               PMIC_RTC_HOURS_HOUR_0));
+                             (Pmic_getBitField(regData,
+                                               PMIC_RTC_HOURS_HOUR_0_SHIFT,
+                                               PMIC_RTC_HOURS_HOUR_0_MASK));
         }
     }
 
@@ -575,12 +621,14 @@ static int32_t Pmic_rtcSetDay(Pmic_CoreHandle_t    *pPmicCoreHandle,
     if(PMIC_RTC_OPS_FOR_ALARM == operation_type)
     {
         /* Setting the day to PMIC */
-        HW_REG_SET_FIELD(regData,
-                         PMIC_ALARM_DAYS_ALR_DAY_1,
+        Pmic_setBitField(&regData,
+                         PMIC_ALARM_DAYS_ALR_DAY_1_SHIFT,
+                         PMIC_ALARM_DAYS_ALR_DAY_1_MASK,
                          (dateCfg.day /
                           PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC));
-        HW_REG_SET_FIELD(regData,
-                         PMIC_ALARM_DAYS_ALR_DAY_0,
+        Pmic_setBitField(&regData,
+                         PMIC_ALARM_DAYS_ALR_DAY_0_SHIFT,
+                         PMIC_ALARM_DAYS_ALR_DAY_0_MASK,
                          (dateCfg.day %
                           PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC));
 
@@ -592,12 +640,14 @@ static int32_t Pmic_rtcSetDay(Pmic_CoreHandle_t    *pPmicCoreHandle,
     else
     {
         /* Setting the day to PMIC */
-        HW_REG_SET_FIELD(regData,
-                         PMIC_RTC_DAYS_DAY_1,
+        Pmic_setBitField(&regData,
+                         PMIC_RTC_DAYS_DAY_1_SHIFT,
+                         PMIC_RTC_DAYS_DAY_1_MASK,
                          (dateCfg.day /
                           PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC));
-        HW_REG_SET_FIELD(regData,
-                         PMIC_RTC_DAYS_DAY_0,
+        Pmic_setBitField(&regData,
+                         PMIC_RTC_DAYS_DAY_0_SHIFT,
+                         PMIC_RTC_DAYS_DAY_0_MASK,
                          (dateCfg.day %
                           PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC));
 
@@ -649,21 +699,29 @@ static int32_t Pmic_rtcGetDay(Pmic_CoreHandle_t *pPmicCoreHandle,
         {
             /* Update Day of the Date to pDateCfg */
             pDateCfg->day = PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC *
-                                     (HW_REG_GET_FIELD(regData,
-                                         PMIC_ALARM_DAYS_ALR_DAY_1));
+                                     (Pmic_getBitField(
+                                         regData,
+                                         PMIC_ALARM_DAYS_ALR_DAY_1_SHIFT,
+                                         PMIC_ALARM_DAYS_ALR_DAY_1_MASK));
             pDateCfg->day = pDateCfg->day +
-                                     (HW_REG_GET_FIELD(regData,
-                                         PMIC_ALARM_DAYS_ALR_DAY_0));
+                                     (Pmic_getBitField(
+                                         regData,
+                                         PMIC_ALARM_DAYS_ALR_DAY_0_SHIFT,
+                                         PMIC_ALARM_DAYS_ALR_DAY_0_MASK));
         }
         else
         {
             /* Update Day of the Date to pDateCfg */
             pDateCfg->day = PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC *
-                                 (HW_REG_GET_FIELD(regData,
-                                     PMIC_RTC_DAYS_DAY_1));
+                                 (Pmic_getBitField(
+                                     regData,
+                                     PMIC_RTC_DAYS_DAY_1_SHIFT,
+                                     PMIC_RTC_DAYS_DAY_1_MASK));
             pDateCfg->day = pDateCfg->day +
-                                 (HW_REG_GET_FIELD(regData,
-                                     PMIC_RTC_DAYS_DAY_0));
+                                 (Pmic_getBitField(
+                                     regData,
+                                     PMIC_RTC_DAYS_DAY_0_SHIFT,
+                                     PMIC_RTC_DAYS_DAY_0_MASK));
         }
     }
 
@@ -686,12 +744,14 @@ static int32_t Pmic_rtcSetMonth(Pmic_CoreHandle_t    *pPmicCoreHandle,
     if(PMIC_RTC_OPS_FOR_ALARM == operation_type)
     {
         /* Setting the month to PMIC */
-        HW_REG_SET_FIELD(regData,
-                         PMIC_ALARM_MONTHS_ALR_MONTH_1,
+        Pmic_setBitField(&regData,
+                         PMIC_ALARM_MONTHS_ALR_MONTH_1_SHIFT,
+                         PMIC_ALARM_MONTHS_ALR_MONTH_1_MASK,
                          (dateCfg.month /
                           PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC));
-        HW_REG_SET_FIELD(regData,
-                         PMIC_ALARM_MONTHS_ALR_MONTH_0,
+        Pmic_setBitField(&regData,
+                         PMIC_ALARM_MONTHS_ALR_MONTH_0_SHIFT,
+                         PMIC_ALARM_MONTHS_ALR_MONTH_0_MASK,
                          (dateCfg.month %
                           PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC));
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -702,12 +762,14 @@ static int32_t Pmic_rtcSetMonth(Pmic_CoreHandle_t    *pPmicCoreHandle,
     else
     {
         /* Setting the month to PMIC */
-        HW_REG_SET_FIELD(regData,
-                         PMIC_RTC_MONTHS_MONTH_1,
+        Pmic_setBitField(&regData,
+                         PMIC_RTC_MONTHS_MONTH_1_SHIFT,
+                         PMIC_RTC_MONTHS_MONTH_1_MASK,
                          (dateCfg.month /
                           PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC));
-        HW_REG_SET_FIELD(regData,
-                         PMIC_RTC_MONTHS_MONTH_0,
+        Pmic_setBitField(&regData,
+                         PMIC_RTC_MONTHS_MONTH_0_SHIFT,
+                         PMIC_RTC_MONTHS_MONTH_0_MASK,
                          (dateCfg.month %
                           PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC));
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -758,21 +820,29 @@ static int32_t Pmic_rtcGetMonth(Pmic_CoreHandle_t *pPmicCoreHandle,
         {
             /* Update Month of the Date to pDateCfg */
             pDateCfg->month = PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC *
-                              (HW_REG_GET_FIELD(regData,
-                                      PMIC_ALARM_MONTHS_ALR_MONTH_1));
+                              (Pmic_getBitField(
+                                      regData,
+                                      PMIC_ALARM_MONTHS_ALR_MONTH_1_SHIFT,
+                                      PMIC_ALARM_MONTHS_ALR_MONTH_1_MASK));
             pDateCfg->month = pDateCfg->month +
-                              (HW_REG_GET_FIELD(regData,
-                                      PMIC_ALARM_MONTHS_ALR_MONTH_0));
+                              (Pmic_getBitField(
+                                      regData,
+                                      PMIC_ALARM_MONTHS_ALR_MONTH_0_SHIFT,
+                                      PMIC_ALARM_MONTHS_ALR_MONTH_0_MASK));
         }
         else
         {
             /* Update Month of the Date to pDateCfg */
             pDateCfg->month = PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC *
-                              (HW_REG_GET_FIELD(regData,
-                                      PMIC_RTC_MONTHS_MONTH_1));
+                              (Pmic_getBitField(
+                                      regData,
+                                      PMIC_RTC_MONTHS_MONTH_1_SHIFT,
+                                      PMIC_RTC_MONTHS_MONTH_1_MASK));
             pDateCfg->month = pDateCfg->month +
-                              (HW_REG_GET_FIELD(regData,
-                                      PMIC_RTC_MONTHS_MONTH_0));
+                              (Pmic_getBitField(
+                                      regData,
+                                      PMIC_RTC_MONTHS_MONTH_0_SHIFT,
+                                      PMIC_RTC_MONTHS_MONTH_0_MASK));
         }
     }
 
@@ -798,12 +868,14 @@ static int32_t Pmic_rtcSetYear(Pmic_CoreHandle_t    *pPmicCoreHandle,
     if(PMIC_RTC_OPS_FOR_ALARM == operation_type)
     {
         /* Setting the year to PMIC */
-        HW_REG_SET_FIELD(regData,
-                         PMIC_ALARM_YEARS_ALR_YEAR_1,
-                         (year / PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC));
-        HW_REG_SET_FIELD(regData,
-                         PMIC_ALARM_YEARS_ALR_YEAR_0,
-                         (year % PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC));
+        Pmic_setBitField(&regData,
+                         PMIC_ALARM_YEARS_ALR_YEAR_1_SHIFT,
+                         PMIC_ALARM_YEARS_ALR_YEAR_1_MASK,
+                         ((uint8_t)(year / PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC)));
+        Pmic_setBitField(&regData,
+                         PMIC_ALARM_YEARS_ALR_YEAR_0_SHIFT,
+                         PMIC_ALARM_YEARS_ALR_YEAR_0_MASK,
+                         ((uint8_t)(year % PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC)));
 
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_ALARM_YEARS_REGADDR,
@@ -813,12 +885,14 @@ static int32_t Pmic_rtcSetYear(Pmic_CoreHandle_t    *pPmicCoreHandle,
     else
     {
         /* Setting the year to PMIC */
-        HW_REG_SET_FIELD(regData,
-                         PMIC_RTC_YEARS_YEAR_1,
-                         (year / PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC));
-        HW_REG_SET_FIELD(regData,
-                         PMIC_RTC_YEARS_YEAR_0,
-                         (year % PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC));
+        Pmic_setBitField(&regData,
+                         PMIC_RTC_YEARS_YEAR_1_SHIFT,
+                         PMIC_RTC_YEARS_YEAR_1_MASK,
+                         ((uint8_t)(year / PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC)));
+        Pmic_setBitField(&regData,
+                         PMIC_RTC_YEARS_YEAR_0_SHIFT,
+                         PMIC_RTC_YEARS_YEAR_0_MASK,
+                         ((uint8_t)(year % PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC)));
 
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_RTC_YEARS_REGADDR,
@@ -867,28 +941,32 @@ static int32_t Pmic_rtcGetYear(Pmic_CoreHandle_t *pPmicCoreHandle,
         /* Operation for Alarm */
         if(PMIC_RTC_OPS_FOR_ALARM == operation_type)
         {
-            regVal = HW_REG_GET_FIELD(regData,
-                                      PMIC_ALARM_YEARS_ALR_YEAR_1);
+            regVal = Pmic_getBitField(regData,
+                                      PMIC_ALARM_YEARS_ALR_YEAR_1_SHIFT,
+                                      PMIC_ALARM_YEARS_ALR_YEAR_1_MASK);
 
             /* Update Year of the Date to pDateCfg */
-            pDateCfg->year = ((uint16_t)PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC)
-                                      * regVal;
+            pDateCfg->year = ((uint16_t)PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC) *
+                                        regVal;
 
-            regVal = HW_REG_GET_FIELD(regData,
-                                      PMIC_ALARM_YEARS_ALR_YEAR_0);
+            regVal = Pmic_getBitField(regData,
+                                      PMIC_ALARM_YEARS_ALR_YEAR_0_SHIFT,
+                                      PMIC_ALARM_YEARS_ALR_YEAR_0_MASK);
 
             pDateCfg->year = pDateCfg->year + regVal;
         }
         else
         {
-            regVal = HW_REG_GET_FIELD(regData,
-                                      PMIC_RTC_YEARS_YEAR_1);
+            regVal = Pmic_getBitField(regData,
+                                      PMIC_RTC_YEARS_YEAR_1_SHIFT,
+                                      PMIC_RTC_YEARS_YEAR_1_MASK);
             /* Update Year of the Date to pDateCfg */
-            pDateCfg->year = ((uint16_t)PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC)
-                                      * regVal;
+            pDateCfg->year = ((uint16_t)PMIC_RTC_CONVERT_4BIT_MSB_TO_DEC) *
+                                        regVal;
 
-            regVal = HW_REG_GET_FIELD(regData,
-                                     PMIC_RTC_YEARS_YEAR_0);
+            regVal = Pmic_getBitField(regData,
+                                      PMIC_RTC_YEARS_YEAR_0_SHIFT,
+                                      PMIC_RTC_YEARS_YEAR_0_MASK);
 
             pDateCfg->year = pDateCfg->year + regVal;
         }
@@ -909,8 +987,10 @@ static int32_t Pmic_rtcSetWeekday(Pmic_CoreHandle_t    *pPmicCoreHandle,
 
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    HW_REG_SET_FIELD(regData, PMIC_RTC_WEEKS_WEEK, dateCfg.weekday);
-
+    Pmic_setBitField(&regData,
+                     PMIC_RTC_WEEKS_WEEK_SHIFT,
+                     PMIC_RTC_WEEKS_WEEK_MASK,
+                     dateCfg.weekday);
     pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                         PMIC_RTC_WEEKS_REGADDR,
                                         regData);
@@ -941,7 +1021,9 @@ static int32_t Pmic_rtcGetWeekday(Pmic_CoreHandle_t *pPmicCoreHandle,
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         /* Update Weekday of the Date to pDateCfg */
-        pDateCfg->weekday = HW_REG_GET_FIELD(regData, PMIC_RTC_WEEKS_WEEK);
+        pDateCfg->weekday = Pmic_getBitField(regData,
+                                             PMIC_RTC_WEEKS_WEEK_SHIFT,
+                                             PMIC_RTC_WEEKS_WEEK_MASK);
     }
 
     return pmicStatus;
@@ -1346,14 +1428,16 @@ static int32_t Pmic_setAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
         {
             if(((bool)PMIC_RTC_ALARM_INTR_ENABLE) == enableIntr)
             {
-                HW_REG_SET_FIELD(regData,
-                                 PMIC_RTC_INTERRUPTS_IT_ALARM,
+                Pmic_setBitField(&regData,
+                                 PMIC_RTC_INTERRUPTS_IT_ALARM_SHIFT,
+                                 PMIC_RTC_INTERRUPTS_IT_ALARM_MASK,
                                  PMIC_RTC_ALARM_INTR_ENABLE);
             }
             else
             {
-                HW_REG_SET_FIELD(regData,
-                                 PMIC_RTC_INTERRUPTS_IT_ALARM,
+                Pmic_setBitField(&regData,
+                                 PMIC_RTC_INTERRUPTS_IT_ALARM_SHIFT,
+                                 PMIC_RTC_INTERRUPTS_IT_ALARM_MASK,
                                  PMIC_RTC_ALARM_INTR_DISABLE);
             }
 
@@ -1593,7 +1677,10 @@ static int32_t Pmic_rtcTriggerShadowRegisters(
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         /* RESETTING the register by writing 0 */
-        HW_REG_SET_FIELD(regData, PMIC_RTC_CTRL_1_GET_TIME, 0U);
+        Pmic_setBitField(&regData,
+                         PMIC_RTC_CTRL_1_GET_TIME_SHIFT,
+                         PMIC_RTC_CTRL_1_GET_TIME_MASK,
+                         0U);
 
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_RTC_CTRL_1_REGADDR,
@@ -1603,7 +1690,10 @@ static int32_t Pmic_rtcTriggerShadowRegisters(
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         /* Writing 1 to copy data from dynamic register to shadowed register */
-        HW_REG_SET_FIELD(regData, PMIC_RTC_CTRL_1_GET_TIME, 1U);
+        Pmic_setBitField(&regData,
+                         PMIC_RTC_CTRL_1_GET_TIME_SHIFT,
+                         PMIC_RTC_CTRL_1_GET_TIME_MASK,
+                         1U);
 
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_RTC_CTRL_1_REGADDR,
@@ -1759,8 +1849,9 @@ static int32_t Pmic_rtcSetFreqCompensateVal(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        HW_REG_SET_FIELD(regData,
-                         PMIC_RTC_CTRL_1_AUTO_COMP,
+        Pmic_setBitField(&regData,
+                         PMIC_RTC_CTRL_1_AUTO_COMP_SHIFT,
+                         PMIC_RTC_CTRL_1_AUTO_COMP_MASK,
                          PMIC_RTC_AUTO_COMP_ON);
 
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -1831,15 +1922,17 @@ static int32_t Pmic_setTimerIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
         {
             if(((bool)PMIC_RTC_TIMER_INTR_DISABLE) == enableIntr)
             {
-                HW_REG_SET_FIELD(regData,
-                             PMIC_RTC_INTERRUPTS_IT_TIMER,
-                             PMIC_RTC_TIMER_INTR_DISABLE);
+                Pmic_setBitField(&regData,
+                                 PMIC_RTC_INTERRUPTS_IT_TIMER_SHIFT,
+                                 PMIC_RTC_INTERRUPTS_IT_TIMER_MASK,
+                                 PMIC_RTC_TIMER_INTR_DISABLE);
             }
             else
             {
-                HW_REG_SET_FIELD(regData,
-                             PMIC_RTC_INTERRUPTS_IT_TIMER,
-                             PMIC_RTC_TIMER_INTR_ENABLE);
+                Pmic_setBitField(&regData,
+                                 PMIC_RTC_INTERRUPTS_IT_TIMER_SHIFT,
+                                 PMIC_RTC_INTERRUPTS_IT_TIMER_MASK,
+                                 PMIC_RTC_TIMER_INTR_ENABLE);
             }
 
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -1878,8 +1971,9 @@ static int32_t  Pmic_rtcEnableRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
         else
         {
             /* Start RTC */
-            HW_REG_SET_FIELD(regData,
-                             PMIC_RTC_CTRL_1_STOP_RTC,
+            Pmic_setBitField(&regData,
+                             PMIC_RTC_CTRL_1_STOP_RTC_SHIFT,
+                             PMIC_RTC_CTRL_1_STOP_RTC_MASK,
                              PMIC_RTC_START);
         }
 
@@ -1901,7 +1995,9 @@ static int32_t  Pmic_rtcEnableRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
         }
 
         if((PMIC_ST_SUCCESS == pmicStatus)  &&
-           (regVal != HW_REG_GET_FIELD(regData, PMIC_RTC_STATUS_RUN)))
+           (regVal != Pmic_getBitField(regData,
+                                          PMIC_RTC_STATUS_RUN_SHIFT,
+                                          PMIC_RTC_STATUS_RUN_MASK)))
         {
             /* Improper RTC status */
             pmicStatus = PMIC_ST_ERR_RTC_STOP_FAIL;
@@ -2075,9 +2171,13 @@ int32_t  Pmic_rtcSetTimerPeriod(Pmic_CoreHandle_t *pPmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            HW_REG_SET_FIELD(regData, PMIC_RTC_INTERRUPTS_EVERY, timerPeriod);
-            HW_REG_SET_FIELD(regData,
-                             PMIC_RTC_INTERRUPTS_IT_TIMER,
+            Pmic_setBitField(&regData,
+                             PMIC_RTC_INTERRUPTS_EVERY_SHIFT,
+                             PMIC_RTC_INTERRUPTS_EVERY_MASK,
+                             timerPeriod);
+            Pmic_setBitField(&regData,
+                             PMIC_RTC_INTERRUPTS_IT_TIMER_SHIFT,
+                             PMIC_RTC_INTERRUPTS_IT_TIMER_MASK,
                              PMIC_RTC_TIMER_INTR_ENABLE);
 
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -2136,8 +2236,9 @@ int32_t  Pmic_rtcGetTimerPeriod(Pmic_CoreHandle_t *pPmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            *pTimerPeriod = HW_REG_GET_FIELD(regData,
-                                             PMIC_RTC_INTERRUPTS_EVERY);
+            *pTimerPeriod = Pmic_getBitField(regData,
+                                             PMIC_RTC_INTERRUPTS_EVERY_SHIFT,
+                                             PMIC_RTC_INTERRUPTS_EVERY_MASK);
         }
     }
 
@@ -2522,7 +2623,9 @@ int32_t  Pmic_getRtcStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
         if((bool)false != (pmic_validParamCheck(pPmicRtcStatus->validParams,
                                                 PMIC_RTC_CFG_RTC_STATUS_VALID)))
         {
-            if(HW_REG_GET_FIELD(regData, PMIC_RTC_STATUS_RUN) == 0U)
+            if(Pmic_getBitField(regData,
+                                PMIC_RTC_STATUS_RUN_SHIFT,
+                                PMIC_RTC_STATUS_RUN_MASK) == 0U)
             {
                 pPmicRtcStatus->rtcStatus = (bool)false;
             }
@@ -2536,7 +2639,9 @@ int32_t  Pmic_getRtcStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
         if((bool)false != (pmic_validParamCheck(pPmicRtcStatus->validParams,
                                             PMIC_RTC_CFG_POWERUP_STATUS_VALID)))
         {
-            if(HW_REG_GET_FIELD(regData, PMIC_RTC_STATUS_POWER_UP) == 0U)
+            if(Pmic_getBitField(regData,
+                                PMIC_RTC_STATUS_POWER_UP_SHIFT,
+                                PMIC_RTC_STATUS_POWER_UP_MASK) == 0U)
             {
                 pPmicRtcStatus->rtcStatus = (bool)false;
             }

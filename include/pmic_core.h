@@ -101,10 +101,10 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_SCRATCH_PAD_REG_1             (01U)
-#define PMIC_SCRATCH_PAD_REG_2             (02U)
-#define PMIC_SCRATCH_PAD_REG_3             (03U)
-#define PMIC_SCRATCH_PAD_REG_4             (04U)
+#define PMIC_SCRATCH_PAD_REG_1             (0x1U)
+#define PMIC_SCRATCH_PAD_REG_2             (0x2U)
+#define PMIC_SCRATCH_PAD_REG_3             (0x3U)
+#define PMIC_SCRATCH_PAD_REG_4             (0x4U)
 /*  @} */
 
 /**
