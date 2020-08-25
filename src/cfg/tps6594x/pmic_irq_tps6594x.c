@@ -1068,7 +1068,7 @@ static int32_t Pmic_tps6594x_getStartupErr(Pmic_CoreHandle_t *pPmicCoreHandle,
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_ENABLE_INT);
     }
 
-    if(regValue & PMIC_INT_STARTUP_FSD_INT_MASK)
+    if((regValue & PMIC_INT_STARTUP_FSD_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_FSD_INT);
     }

@@ -84,7 +84,7 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_IRQ_ALL        (0xFF)
+#define PMIC_IRQ_ALL        (0xFFU)
 /* @} */
 
 /**

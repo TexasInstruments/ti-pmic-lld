@@ -793,7 +793,7 @@ static int32_t Pmic_lp8764x_getStartupErr(uint8_t            regValue,
         Pmic_intrBitSet(pErrStat, PMIC_LP8764X_ENABLE_INT);
     }
 
-    if(regValue & PMIC_INT_STARTUP_FSD_INT_MASK)
+    if((regValue & PMIC_INT_STARTUP_FSD_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_LP8764X_FSD_INT);
     }
