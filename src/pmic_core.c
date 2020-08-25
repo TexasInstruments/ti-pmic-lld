@@ -45,19 +45,19 @@ static const Pmic_DevSubSysInfo_t pmicSubSysInfo[] =
 {
      /* PMIC_DEV_LEO_TPS6594x */
     {
-        .gpioEnable = true,
-        .rtcEnable  = true,
-        .wdgEnable  = true,
-        .buckEnable = true,
-        .ldoEnable  = true
+        .gpioEnable = (bool)true,
+        .rtcEnable  = (bool)true,
+        .wdgEnable  = (bool)true,
+        .buckEnable = (bool)true,
+        .ldoEnable  = (bool)true
     },
      /* PMIC_DEV_HERA_LP8764x */
     {
-        .gpioEnable = true,
-        .rtcEnable  = false,
-        .wdgEnable  = true,
-        .buckEnable = true,
-        .ldoEnable  = false
+        .gpioEnable = (bool)true,
+        .rtcEnable  = (bool)false,
+        .wdgEnable  = (bool)true,
+        .buckEnable = (bool)true,
+        .ldoEnable  = (bool)false
     }
 };
 
@@ -154,7 +154,7 @@ int32_t Pmic_nSleepSignalsSetup(Pmic_CoreHandle_t *pPmicCoreHandle)
  */
 bool pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos)
 {
-    bool retVal = 0U;
+    bool retVal = (bool)false;
 
     retVal = ((validParamVal  >> bitPos) & 0x01U);
 
@@ -217,7 +217,7 @@ int32_t Pmic_SetRecoveryCntCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(recovCntCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(recovCntCfg.validParams,
                                      PMIC_CFG_RECOV_CNT_THR_VAL_VALID)) &&
        ((recovCntCfg.thrVal > PMIC_RECOV_CNT_THR_MAX)))
     {
@@ -225,7 +225,7 @@ int32_t Pmic_SetRecoveryCntCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(recovCntCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(recovCntCfg.validParams,
                                      PMIC_CFG_RECOV_CNT_CLR_CNT_VALID)) &&
        (recovCntCfg.clrCnt != 1U))
     {
@@ -243,7 +243,7 @@ int32_t Pmic_SetRecoveryCntCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            if(true == pmic_validParamCheck(recovCntCfg.validParams,
+            if(((bool)true) == pmic_validParamCheck(recovCntCfg.validParams,
                                             PMIC_CFG_RECOV_CNT_CLR_CNT_VALID))
             {
                 HW_REG_SET_FIELD(regVal,
@@ -251,7 +251,7 @@ int32_t Pmic_SetRecoveryCntCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
                                  recovCntCfg.clrCnt);
             }
 
-            if(true == pmic_validParamCheck(recovCntCfg.validParams,
+            if(((bool)true) == pmic_validParamCheck(recovCntCfg.validParams,
                                             PMIC_CFG_RECOV_CNT_THR_VAL_VALID))
             {
                 HW_REG_SET_FIELD(regVal,
@@ -316,13 +316,13 @@ int32_t Pmic_getRecoveryCntCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-            if(true == pmic_validParamCheck(pRecovCntCfg->validParams,
+            if(((bool)true) == pmic_validParamCheck(pRecovCntCfg->validParams,
                                             PMIC_CFG_RECOV_CNT_THR_VAL_VALID))
             {
                 pRecovCntCfg->thrVal = HW_REG_GET_FIELD(regVal,
                                           PMIC_RECOV_CNT_REG_2_RECOV_CNT_THR);
             }
-            if(true == pmic_validParamCheck(pRecovCntCfg->validParams,
+            if(((bool)true) == pmic_validParamCheck(pRecovCntCfg->validParams,
                                             PMIC_CFG_RECOV_CNT_CLR_CNT_VALID))
             {
                 pRecovCntCfg->clrCnt = HW_REG_GET_FIELD(regVal,
@@ -410,8 +410,8 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
 
     /* Check and update PMIC Handle device type */
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPmicConfigData->validParams,
-                                     PMIC_CFG_DEVICE_TYPE_VALID)))
+       (((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams,
+                                           PMIC_CFG_DEVICE_TYPE_VALID)))
     {
        if((PMIC_DEV_HERA_LP8764X != pPmicConfigData->pmicDeviceType) &&
           (PMIC_DEV_LEO_TPS6594X != pPmicConfigData->pmicDeviceType))
@@ -427,8 +427,8 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
 
     /* Check and update PMIC Handle Comm Mode */
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPmicConfigData->validParams,
-                                     PMIC_CFG_COMM_MODE_VALID)))
+       (((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams,
+                                           PMIC_CFG_COMM_MODE_VALID)))
     {
         if((PMIC_INTF_SINGLE_I2C != pPmicConfigData->commMode) &&
            (PMIC_INTF_DUAL_I2C != pPmicConfigData->commMode)   &&
@@ -444,7 +444,7 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
 
     /* Check and update PMIC Handle Main Slave Address */
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPmicConfigData->validParams,
+       (((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams,
                                      PMIC_CFG_SLAVEADDR_VALID)))
     {
         if((PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode) ||
@@ -456,7 +456,7 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
 
     /* Check and update PMIC Handle QA Slave Address */
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPmicConfigData->validParams,
+       (((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams,
                                      PMIC_CFG_QASLAVEADDR_VALID)))
     {
         if((PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode) ||
@@ -468,7 +468,7 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
 
     /* Check and update PMIC Handle CRC Enable */
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPmicConfigData->validParams,
+       (((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams,
                                      PMIC_CFG_CRC_ENABLE_VALID)))
     {
         pPmicCoreHandle->crcEnable = pPmicConfigData->crcEnable;
@@ -476,7 +476,7 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
 
     /* Check and update PMIC Handle Main Comm Handle */
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPmicConfigData->validParams,
+       (((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams,
                                      PMIC_CFG_COMM_HANDLE_VALID)))
     {
         if(NULL == pPmicConfigData->pCommHandle)
@@ -491,7 +491,7 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
 
     /* Check and update PMIC Handle QA Comm Handle */
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPmicConfigData->validParams,
+       (((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams,
                                      PMIC_CFG_QACOMM_HANDLE_VALID)))
     {
         if(NULL == pPmicConfigData->pQACommHandle)
@@ -509,7 +509,7 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
 
     /* Check and update PMIC Handle Comm IO RD Fn */
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPmicConfigData->validParams,
+       (((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams,
                                      PMIC_CFG_COMM_IO_RD_VALID)))
     {
         if(NULL == pPmicConfigData->pFnPmicCommIoRead)
@@ -525,7 +525,7 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
 
     /* Check and update PMIC Handle Comm IO WR Fn */
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPmicConfigData->validParams,
+       (((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams,
                                      PMIC_CFG_COMM_IO_WR_VALID)))
     {
         if(NULL == pPmicConfigData->pFnPmicCommIoWrite)
@@ -541,7 +541,7 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
 
     /* Check and update PMIC Handle Critical Section Start Fn */
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPmicConfigData->validParams,
+       (((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams,
                                      PMIC_CFG_CRITSEC_START_VALID)))
     {
         if(NULL == pPmicConfigData->pFnPmicCritSecStart)
@@ -557,7 +557,7 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
 
     /* Check and update PMIC Handle Critical Section Stop Fn */
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPmicConfigData->validParams,
+       (((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams,
                                      PMIC_CFG_CRITSEC_STOP_VALID)))
     {
         if(NULL == pPmicConfigData->pFnPmicCritSecStart)
@@ -712,6 +712,7 @@ static int32_t Pmic_getScratchPadRegAddr(uint8_t  scratchPadRegId,
             break;
         default:
             status = PMIC_ST_ERR_INV_PARAM;
+            break;
     }
 
     return status;
