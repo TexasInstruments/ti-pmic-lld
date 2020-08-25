@@ -128,7 +128,7 @@ void pmic_get_lp8764x_intrGpioCfg(Pmic_GpioIntrTypeCfg_t **pIntGpioCfg);
  * \brief  Function to decipher the L2 Error for LP8764x Hera PMIC.
  */
 int32_t Pmic_lp8764x_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                   uint32_t           l1RegAddr,
+                                   uint16_t           l1RegAddr,
                                    Pmic_IrqStatus_t  *pErrStat);
 
 #ifdef __cplusplus

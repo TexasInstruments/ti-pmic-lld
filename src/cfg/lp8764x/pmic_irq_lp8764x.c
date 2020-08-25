@@ -1039,7 +1039,7 @@ static int32_t Pmic_lp8764x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief  Function to decipher the L2 Error for LP8764x Hera PMIC
  */
 int32_t Pmic_lp8764x_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                   uint32_t           l1RegAddr,
+                                   uint16_t           l1RegAddr,
                                    Pmic_IrqStatus_t  *pErrStat)
 {
     int32_t pmicStatus  = PMIC_ST_SUCCESS;

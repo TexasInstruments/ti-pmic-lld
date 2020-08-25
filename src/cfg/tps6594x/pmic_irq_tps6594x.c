@@ -1364,7 +1364,7 @@ static int32_t Pmic_tps6594x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief  Function to decipher the L2 Error for TPS6594x Leo PMIC.
  */
 int32_t Pmic_tps6594x_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                    uint32_t           l1RegAddr,
+                                    uint16_t           l1RegAddr,
                                     Pmic_IrqStatus_t  *pErrStat)
 {
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
