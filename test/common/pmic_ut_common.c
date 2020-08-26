@@ -435,51 +435,11 @@ int32_t test_pmic_regRead(Pmic_CoreHandle_t  *pmicCorehandle,
         I2C_Transaction transaction;
         I2C_transactionInit(&transaction);
 
-        /* Set register offset for read first */
-        transaction.readBuf    = NULL;
-        transaction.readCount  = 0U;
-        transaction.writeBuf   = &regAddr;
-        transaction.writeCount = 1U;
-
-        /* Main I2c BUS */
-        if(PMIC_MAIN_INST == instType)
-        {
-            transaction.slaveAddress = pmicCorehandle->slaveAddr;
-            ret = I2C_transfer((I2C_Handle)pmicCorehandle->pCommHandle,
-                                &transaction);
-            if(ret != I2C_STS_SUCCESS)
-            {
-                return PMIC_ST_ERR_I2C_COMM_FAIL;
-            }
-        }
-
-        /* For WDOG QA I2C BUS */
-        if(PMIC_QA_INST == instType)
-        {
-            transaction.slaveAddress = pmicCorehandle->qaSlaveAddr;
-            if(PMIC_INTF_SINGLE_I2C == pmicCorehandle->commMode)
-            {
-                ret = I2C_transfer((I2C_Handle)
-                                   pmicCorehandle->pCommHandle,
-                                   &transaction);
-            }
-            if(PMIC_INTF_DUAL_I2C == pmicCorehandle->commMode)
-            {
-                ret = I2C_transfer((I2C_Handle)
-                                   pmicCorehandle->pQACommHandle,
-                                   &transaction);
-            }
-            if(ret != I2C_STS_SUCCESS)
-            {
-                return PMIC_ST_ERR_I2C_COMM_FAIL;
-            }
-        }
-
-        /* Do the actual read now */
+        /* Set register offset for read and write */
         transaction.readBuf    = pBuf;
         transaction.readCount  = bufLen;
-        transaction.writeBuf   = NULL;
-        transaction.writeCount = 0U;
+        transaction.writeBuf   = &regAddr;
+        transaction.writeCount = 1U;
 
         /* Main I2c BUS */
         if(PMIC_MAIN_INST == instType)
