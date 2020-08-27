@@ -231,9 +231,6 @@ int32_t Pmic_gpioTps6594xNPwronPinGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
 {
     int32_t status   = PMIC_ST_SUCCESS;
     uint8_t regData  = 0U;
-    uint8_t regAddr  = 0U;
-    uint8_t bitPos   = 0U;
-    uint8_t bitMask  = 0U;
 
     /* Parameter Validation */
     if(NULL == pPmicCoreHandle)
@@ -259,23 +256,16 @@ int32_t Pmic_gpioTps6594xNPwronPinGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
 
         /* Reading the NPWRON pin value */
         status = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        regAddr,
+                                        PMIC_GPIO_IN_2_REGADDR,
                                         &regData);
         /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
 
         if(PMIC_ST_SUCCESS == status)
         {
-            bitMask = (PMIC_GPIO_IN_OUT_X_GPIOX_IN_OUT_BITFIELD <<
-                       bitPos);
-            if(0U != Pmic_getBitField(regData, bitPos, bitMask))
-            {
-                *pPinValue = PMIC_GPIO_HIGH;
-            }
-            else
-            {
-                *pPinValue = PMIC_GPIO_LOW;
-            }
+            *pPinValue= Pmic_getBitField(regData,
+                                         PMIC_GPIO_IN_2_NPWRON_IN_SHIFT,
+                                         PMIC_GPIO_IN_2_NPWRON_IN_MASK);
         }
     }
 

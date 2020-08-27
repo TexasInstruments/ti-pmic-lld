@@ -335,6 +335,18 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
     {
         7375,
         "Pmic_irqMaskIntr/Pmic_irqGpioMaskIntr : UnMasking all interrupts test"
+    },
+    {
+        1000,
+        "Pmic_gpioTps6594xNPwronPinGetValue : Gpio Tps6594x NPwron Get PinValue Test"
+    },
+    {
+        1001,
+        "Pmic_gpioTps6594xNPwronPinGetValue : Parameter validation for handle"
+    },
+    {
+        1002,
+        "Pmic_gpioTps6594xNPwronPinGetValue : Parameter validation for PinValue"
     }
 };
 
@@ -4506,6 +4518,67 @@ static void test_pmic_gpio_intr_irqUnMaskAll_interrupt(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
+/*!
+ * \brief   Gpio Tps6594x NPwron Get PinValue Test
+ */
+static void test_pmic_gpio_testTps6594xNPwronPinGetValue(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    uint8_t pinValue          = PMIC_GPIO_HIGH;
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    test_pmic_print_unity_testcase_info(1000,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_gpioTps6594xNPwronPinGetValue(pPmicCoreHandle, &pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+}
+
+/*!
+ * \brief   Parameter validation for handle
+ */
+static void test_pmic_gpio_tps6594xNPwronPinGetValuePrmValTest_handle(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    uint8_t pinValue          = PMIC_GPIO_HIGH;
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    test_pmic_print_unity_testcase_info(1001,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_gpioTps6594xNPwronPinGetValue(NULL, &pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+}
+
+/*!
+ * \brief   Parameter validation for Pin Value
+ */
+static void test_pmic_gpio_tps6594xNPwronPinGetValuePrmValTest_pinValue(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    test_pmic_print_unity_testcase_info(1002,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_gpioTps6594xNPwronPinGetValue(pPmicCoreHandle, NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+}
 
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E) || defined(SOC_J7200))
@@ -4588,6 +4661,9 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_gpio_intr_prmValTest_maskPol);
     RUN_TEST(test_pmic_gpio_intr_irqMaskAll_interrupt);
     RUN_TEST(test_pmic_gpio_intr_irqUnMaskAll_interrupt);
+    RUN_TEST(test_pmic_gpio_testTps6594xNPwronPinGetValue);
+    RUN_TEST(test_pmic_gpio_tps6594xNPwronPinGetValuePrmValTest_handle);
+    RUN_TEST(test_pmic_gpio_tps6594xNPwronPinGetValuePrmValTest_pinValue);
 
     UNITY_END();
 }
