@@ -1296,10 +1296,7 @@ static int32_t Pmic_rtcCheckDateTime(Pmic_CoreHandle_t    *pPmicCoreHandle,
 {
     int32_t  pmicStatus = PMIC_ST_SUCCESS;
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_rtcCheckTime(pPmicCoreHandle, timeCfg);
-    }
+    pmicStatus = Pmic_rtcCheckTime(pPmicCoreHandle, timeCfg);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -1419,32 +1416,29 @@ static int32_t Pmic_setAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_RTC_INTERRUPTS_REGADDR,
+                                        &regData);
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            PMIC_RTC_INTERRUPTS_REGADDR,
-                                            &regData);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        if(((bool)PMIC_RTC_ALARM_INTR_ENABLE) == enableIntr)
         {
-            if(((bool)PMIC_RTC_ALARM_INTR_ENABLE) == enableIntr)
-            {
-                Pmic_setBitField(&regData,
-                                 PMIC_RTC_INTERRUPTS_IT_ALARM_SHIFT,
-                                 PMIC_RTC_INTERRUPTS_IT_ALARM_MASK,
-                                 PMIC_RTC_ALARM_INTR_ENABLE);
-            }
-            else
-            {
-                Pmic_setBitField(&regData,
-                                 PMIC_RTC_INTERRUPTS_IT_ALARM_SHIFT,
-                                 PMIC_RTC_INTERRUPTS_IT_ALARM_MASK,
-                                 PMIC_RTC_ALARM_INTR_DISABLE);
-            }
-
-            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                                PMIC_RTC_INTERRUPTS_REGADDR,
-                                                regData);
+            Pmic_setBitField(&regData,
+                             PMIC_RTC_INTERRUPTS_IT_ALARM_SHIFT,
+                             PMIC_RTC_INTERRUPTS_IT_ALARM_MASK,
+                             PMIC_RTC_ALARM_INTR_ENABLE);
         }
+        else
+        {
+            Pmic_setBitField(&regData,
+                             PMIC_RTC_INTERRUPTS_IT_ALARM_SHIFT,
+                             PMIC_RTC_INTERRUPTS_IT_ALARM_MASK,
+                             PMIC_RTC_ALARM_INTR_DISABLE);
+        }
+
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                            PMIC_RTC_INTERRUPTS_REGADDR,
+                                            regData);
     }
 
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -1911,34 +1905,31 @@ static int32_t Pmic_setTimerIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
+    /* Enabling the RTC Timer Intr */
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_RTC_INTERRUPTS_REGADDR,
+                                        &regData);
+
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        /* Enabling the RTC Timer Intr */
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            PMIC_RTC_INTERRUPTS_REGADDR,
-                                            &regData);
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        if(((bool)PMIC_RTC_TIMER_INTR_DISABLE) == enableIntr)
         {
-            if(((bool)PMIC_RTC_TIMER_INTR_DISABLE) == enableIntr)
-            {
-                Pmic_setBitField(&regData,
-                                 PMIC_RTC_INTERRUPTS_IT_TIMER_SHIFT,
-                                 PMIC_RTC_INTERRUPTS_IT_TIMER_MASK,
-                                 PMIC_RTC_TIMER_INTR_DISABLE);
-            }
-            else
-            {
-                Pmic_setBitField(&regData,
-                                 PMIC_RTC_INTERRUPTS_IT_TIMER_SHIFT,
-                                 PMIC_RTC_INTERRUPTS_IT_TIMER_MASK,
-                                 PMIC_RTC_TIMER_INTR_ENABLE);
-            }
-
-            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                               PMIC_RTC_INTERRUPTS_REGADDR,
-                                               regData);
+            Pmic_setBitField(&regData,
+                             PMIC_RTC_INTERRUPTS_IT_TIMER_SHIFT,
+                             PMIC_RTC_INTERRUPTS_IT_TIMER_MASK,
+                             PMIC_RTC_TIMER_INTR_DISABLE);
         }
+        else
+        {
+            Pmic_setBitField(&regData,
+                             PMIC_RTC_INTERRUPTS_IT_TIMER_SHIFT,
+                             PMIC_RTC_INTERRUPTS_IT_TIMER_MASK,
+                             PMIC_RTC_TIMER_INTR_ENABLE);
+        }
+
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                            PMIC_RTC_INTERRUPTS_REGADDR,
+                                            regData);
     }
 
     Pmic_criticalSectionStop(pPmicCoreHandle);

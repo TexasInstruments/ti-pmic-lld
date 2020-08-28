@@ -313,8 +313,7 @@ static int32_t Pmic_maskGpioIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t irqGpioId  = 0U;
 
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (PMIC_IRQ_GPIO_ALL_INT_MASK_NUM != irqGpioNum))
+    if(PMIC_IRQ_GPIO_ALL_INT_MASK_NUM != irqGpioNum)
     {
         pmicStatus = Pmic_irqGpioMask(pPmicCoreHandle,
                                       irqGpioNum,
@@ -353,9 +352,12 @@ static int32_t Pmic_irqClear(Pmic_CoreHandle_t *pPmicCoreHandle,
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        pIntrCfg[irqNum].intrClrRegAddr,
-                                        &regData);
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                            pIntrCfg[irqNum].intrClrRegAddr,
+                                            &regData);
+    }
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -386,7 +388,7 @@ static int32_t Pmic_irqClearStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t irqId            = 0U;
     uint8_t maxVal           = 0U;
 
-    if((PMIC_ST_SUCCESS == pmicStatus) && (PMIC_IRQ_ALL != irqNum))
+    if(PMIC_IRQ_ALL != irqNum)
     {
         pmicStatus = Pmic_irqClear(pPmicCoreHandle, irqNum);
     }
@@ -523,13 +525,11 @@ static int32_t Pmic_getIntrTopRegVal(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief  Function to get the L1 error registers.
  */
-static int32_t Pmic_irqGetL1Reg(const Pmic_CoreHandle_t *pPmicCoreHandle,
-                                uint8_t                  regValue,
-                                uint16_t                *l1RegAddr,
-                                uint8_t                  count)
+static void Pmic_irqGetL1Reg(const Pmic_CoreHandle_t *pPmicCoreHandle,
+                             uint8_t                  regValue,
+                             uint16_t                *l1RegAddr,
+                             uint8_t                  count)
 {
-    int32_t  pmicStatus = PMIC_ST_SUCCESS;
-
     (*l1RegAddr) = PMIC_INT_UNUSED_REGADDR;
 
     switch(regValue & (1U << count))
@@ -583,8 +583,6 @@ static int32_t Pmic_irqGetL1Reg(const Pmic_CoreHandle_t *pPmicCoreHandle,
     {
         (*l1RegAddr) = 0U;
     }
-
-    return pmicStatus;
 }
 
 /*!
@@ -698,11 +696,11 @@ int32_t  Pmic_irqGetErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
             for(count = 7U;; count--)
             {
                 l1RegAddr = 0U;
-                pmicStatus = Pmic_irqGetL1Reg(pPmicCoreHandle,
-                                              regValue,
-                                              &l1RegAddr,
-                                              count);
-                if((PMIC_ST_SUCCESS == pmicStatus) && (0U != l1RegAddr))
+                Pmic_irqGetL1Reg(pPmicCoreHandle,
+                                 regValue,
+                                 &l1RegAddr,
+                                 count);
+                if(0U != l1RegAddr)
                 {
                     pmicStatus = Pmic_irqGetL2Error(pPmicCoreHandle,
                                                     l1RegAddr,

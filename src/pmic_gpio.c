@@ -1579,10 +1579,13 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
                     status = PMIC_ST_ERR_INV_PARAM;
                 }
 
-                /* setting NPWRON Pull UP/Down */
-                status = Pmic_gpioSetPullCtrl(pPmicCoreHandle,
-                                              PMIC_NPWRON_ENABLE_PIN,
-                                              gpioCfg);
+                if(PMIC_ST_SUCCESS == status)
+                {
+                    /* setting NPWRON Pull UP/Down */
+                    status = Pmic_gpioSetPullCtrl(pPmicCoreHandle,
+                                                  PMIC_NPWRON_ENABLE_PIN,
+                                                  gpioCfg);
+                }
             }
         }
 
