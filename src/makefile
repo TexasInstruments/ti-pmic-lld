@@ -53,7 +53,7 @@ SRCS_COMMON += pmic_core.c pmic_io.c pmic_gpio.c pmic_gpio_tps6594x.c
 SRCS_COMMON += pmic_rtc.c pmic_irq_status.c  pmic_gpio_lp8764x.c
 SRCS_COMMON += pmic_power.c pmic_power_lp8764x.c pmic_power_tps6594x.c
 SRCS_COMMON += pmic_irq_tps6594x.c pmic_irq_lp8764x.c pmic_wdg.c
-SRCS_COMMON += pmic_fsm.c
+SRCS_COMMON += pmic_fsm.c pmic_esm.c
 
 PACKAGE_SRCS_COMMON = pmic.h pmic_component.mk makefile .gitignore include
 PACKAGE_SRCS_COMMON += src

@@ -72,6 +72,7 @@ extern "C" {
  *  \param   wdgEnable     PMIC Watchdog SubSystem
  *  \param   buckEnable    PMIC BUCK SubSystem
  *  \param   ldoEnable     PMIC LDO SubSystem
+ *  \param   esmEnable     PMIC ESM SubSystem
  */
 typedef struct Pmic_DevSubSysInfo_s
 {
@@ -80,6 +81,7 @@ typedef struct Pmic_DevSubSysInfo_s
    bool    wdgEnable;
    bool    buckEnable;
    bool    ldoEnable;
+   bool    esmEnable;
 } Pmic_DevSubSysInfo_t;
 
 /*!

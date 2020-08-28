@@ -95,6 +95,7 @@
 #include <pmic_irq.h>
 #include <pmic_power.h>
 #include <pmic_wdg.h>
+#include <pmic_esm.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -180,6 +181,11 @@ extern "C" {
 #define PMIC_ST_ERR_RTC_STOP_FAIL                       (-((int32_t)31))
 /** \brief Error Code for any other failures */
 #define PMIC_ST_ERR_FAIL                                (-((int32_t)32))
+/** \brief Error Code for ESM in Start State */
+#define PMIC_ST_ERR_ESM_STARTED                         (-((int32_t)33))
+/** \brief Error Code for Invalid ESM delay1, delay2, HMAX, HMIN, LMAX and 
+ *         LMIN values */
+#define PMIC_ST_ERR_INV_ESM_VAL                         (-((int32_t)34))
 /* @} */
 
 /**

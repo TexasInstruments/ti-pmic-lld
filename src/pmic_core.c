@@ -49,7 +49,8 @@ static const Pmic_DevSubSysInfo_t pmicSubSysInfo[] =
         .rtcEnable  = (bool)true,
         .wdgEnable  = (bool)true,
         .buckEnable = (bool)true,
-        .ldoEnable  = (bool)true
+        .ldoEnable  = (bool)true,
+        .esmEnable  = (bool)true
     },
      /* PMIC_DEV_HERA_LP8764x */
     {
@@ -57,7 +58,8 @@ static const Pmic_DevSubSysInfo_t pmicSubSysInfo[] =
         .rtcEnable  = (bool)false,
         .wdgEnable  = (bool)true,
         .buckEnable = (bool)true,
-        .ldoEnable  = (bool)false
+        .ldoEnable  = (bool)false,
+        .esmEnable  = (bool)true
     }
 };
 

@@ -70,7 +70,7 @@ ifeq ($(build), release)
 endif
 
 $(info $(OSP))
-SOURCES = src/pmic_core.c  src/pmic_io.c  src/pmic_gpio.c  src/cfg/tps6594x/pmic_gpio_tps6594x.c  src/pmic_rtc.c  src/pmic_irq_status.c src/cfg/lp8764x/pmic_gpio_lp8764x.c  src/pmic_power.c src/cfg/lp8764x/pmic_power_lp8764x.c  src/cfg/tps6594x/pmic_power_tps6594x.c  src/cfg/tps6594x/pmic_irq_tps6594x.c  src/cfg/lp8764x/pmic_irq_lp8764x.c src/pmic_wdg.c src/pmic_fsm.c
+SOURCES = src/pmic_core.c  src/pmic_io.c  src/pmic_gpio.c  src/cfg/tps6594x/pmic_gpio_tps6594x.c  src/pmic_rtc.c  src/pmic_irq_status.c src/cfg/lp8764x/pmic_gpio_lp8764x.c  src/pmic_power.c src/cfg/lp8764x/pmic_power_lp8764x.c  src/cfg/tps6594x/pmic_power_tps6594x.c  src/cfg/tps6594x/pmic_irq_tps6594x.c  src/cfg/lp8764x/pmic_irq_lp8764x.c src/pmic_wdg.c src/pmic_fsm.c src/pmic_esm.c
 OBJECTS = $(SOURCES:.c=.o)
 
 all: $(TARGET)
