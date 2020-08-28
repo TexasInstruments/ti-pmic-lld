@@ -209,38 +209,34 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
     if((PMIC_ST_SUCCESS == pmicStatus) &&
        (PMIC_INTF_SPI == pPmicCoreHandle->commMode))
     {
-        union spiBuffer_t
-        {
-            uint32_t n32;
-            /* [0-1] = Header, [2] = Data, [3] = CRC8 */
-            uint8_t  buf[PMIC_IO_BUF_SIZE];
-        } *spiBuff;
+        /*
+         * Frame 3 Bytes with IO header+data as per PMIC SPI IO algorithm
+         * explained in PMIC TRM
+         */
 
-        spiBuff = (union spiBuffer_t *)&txBuf;
-
-        /* Frame 3 Bytes with IO header+data as per PMIC SPI IO algorithm */
-
-        /* Bits 1-8   = ADDR[7:0] */
-        spiBuff->n32  = (((uint32_t)pmicRegAddr) & 0xFFU);
-
-        /* Bits 9-11  = PAGE[2:0] */
-        spiBuff->n32 |= (((uint32_t)pmicRegAddr) & 0x700U);
-        /* Bit 12  = 0 for Write Request */
-        spiBuff->n32 &= ((uint32_t)(~PMIC_IO_REQ_RW));
+        buffLength = 0;
+        /* Set ADDR to txbuf[0], Bits 1-8: ADDR[7:0] */
+        txBuf[buffLength] = (uint8_t)(pmicRegAddr & 0xFFU);
         buffLength++;
 
-        /* Bits 17-24 = WDATA[7:0] */
-        spiBuff->n32 |= (((uint32_t)txData) << 16U);
+        /* Set PAGE to txBuf[1] 2:0 bits, Bits 9-11: PAGE[2:0] */
+        txBuf[buffLength] = (uint8_t)((pmicRegAddr >> 8U) & 0x7U);
+
+        /* Set R/W in txBuf[1] as bit-3, Bit 12: 0 for Write Request */
+        txBuf[buffLength] &= (uint8_t)(~PMIC_IO_REQ_RW);
+        buffLength++;
+
+        /* Set write data to txBuf[2], Bits 17-24: WDATA[7:0] */
+        txBuf[buffLength] = txData;
         buffLength++;
 
         if(((bool)true) == pPmicCoreHandle->crcEnable)
         {
-            /* Bits 25-32 CRC */
-            spiBuff->n32 |= (((uint32_t)Pmic_getCRC8Val(txBuf, buffLength)) << 24U);
-
+            /* Set CRC data to txBuf[3], Bits 25-32 CRC */
+            txBuf[buffLength] = Pmic_getCRC8Val(txBuf, buffLength);
+        }
             /* Increment 1 more byte to store CRC8 */
             buffLength++;
-        }
     }
 
     if(PMIC_ST_SUCCESS == pmicStatus)
@@ -334,26 +330,21 @@ int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
     if((PMIC_ST_SUCCESS == pmicStatus) &&
        (PMIC_INTF_SPI == pPmicCoreHandle->commMode))
     {
-        union spiBuffer_t
-        {
-            uint32_t n32;
-            /* [0-1] = Header, [2] = Data, [3] = CRC8 */
-            uint8_t  buf[PMIC_IO_BUF_SIZE];
-        } *spiBuf;
-
-        spiBuf = (union spiBuffer_t *)&rxBuf;
-
-        /* Frame 3 Bytes with IO header+data as per PMIC SPI IO algorithm */
-
-        /* Bits 1-8   = ADDR[7:0] */
-        spiBuf->n32  = (((uint32_t)pmicRegAddr) & 0xFFU);
+        /*
+         * Frame 3 Bytes with IO header+data as per PMIC SPI IO algorithm
+         * explained in PMIC TRM
+         */
+        buffLength = 0U;
+        /* Set ADDR to rxbuf[0], Bits 1-8: ADDR[7:0] */
+        rxBuf[buffLength] = (uint8_t)(pmicRegAddr & 0xFFU);
         buffLength++;
 
-        /* Bits 9-11  = PAGE[2:0] */
-        spiBuf->n32 |= (((uint32_t)pmicRegAddr) & 0x700U);
+        /* Set PAGE to rxBuf[1] 2:0 bits, Bits 9-11: PAGE[2:0] */
+        rxBuf[buffLength] = (uint8_t)((pmicRegAddr >> 8U) & 0x7U);
 
-        /* Bit 12  = 1 for Read Request */
-        spiBuf->n32 |= PMIC_IO_REQ_RW;
+        /* Set R/W in rxBuf[1] as bit-3, Bit 12: 0 for Write Request */
+        rxBuf[buffLength] |= PMIC_IO_REQ_RW;
+        buffLength++;
 
         /* Increment 1 more byte for 8-bit data read from PMIC register */
         buffLength++;
