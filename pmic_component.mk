@@ -202,6 +202,24 @@ export pmic_misc_testapp_SBL_APPIMAGEGEN
 pmic_EXAMPLE_LIST += pmic_misc_testapp
 
 #
+# ESM  test
+#
+export pmic_esm_testapp_COMP_LIST = pmic_esm_testapp
+pmic_esm_testapp_RELPATH = ti/drv/pmic/test/esm_test
+pmic_esm_testapp_PATH = $(PDK_PMIC_COMP_PATH)/test/esm_test
+export pmic_esm_testapp_BOARD_DEPENDENCY = yes
+export pmic_esm_testapp_CORE_DEPENDENCY = no
+export pmic_esm_testapp_MAKEFILE = -f makefile IS_BAREMETAL=yes
+pmic_esm_testapp_PKG_LIST = pmic_esm_testapp
+pmic_esm_testapp_INCLUDE = $(pmic_esm_testapp_PATH)
+export pmic_esm_testapp_BOARDLIST = $(drvpmic_BOARDLIST)
+export pmic_esm_testapp_$(SOC)_CORELIST = $(drvpmic_app_$(SOC)_CORELIST)
+pmic_esm_testapp_SBL_APPIMAGEGEN = yes
+export pmic_esm_testapp_SBL_APPIMAGEGEN
+
+pmic_EXAMPLE_LIST += pmic_esm_testapp
+
+#
 # Export Libraries and Apps to Build Env
 #
 export pmic_LIB_LIST
