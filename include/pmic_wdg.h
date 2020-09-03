@@ -221,6 +221,11 @@ extern "C" {
 #define PMIC_CFG_WDG_QA_QUES_SEED_VALID      (11U)
 /* @} */
 
+/*!
+ * \brief  Minimum number of iterations to wait for a Good/Bad event.
+ */
+#define PMIC_WDG_WAIT_CNT_MIN_VAL                 (30U)
+
 /**
  *  \anchor Pmic_WdgCfgValidParamBitShiftVal
  *  \name PMIC WatchDog Config Structure Params Bit shift values
@@ -494,12 +499,15 @@ int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \param   num_of_sequences [IN]    number of QA sequences
  *                                   If PMIC_WD_QA_INFINITE_SEQ is used,
  *                                   then API runs for infinite sequence.
- *
+ * \param   maxCnt           [IN]    Number of iterations to wait for an
+ *                                   Good/Bad event. The value should be greater
+ *                                   than or equal to PMIC_WDG_WAIT_CNT_MIN_VAL.
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_wdgStartQaSequence(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                uint32_t           num_of_sequences);
+                                uint32_t           num_of_sequences,
+                                uint32_t           maxCnt);
 
 /*!
  * \brief   API to get PMIC watchdog error status.

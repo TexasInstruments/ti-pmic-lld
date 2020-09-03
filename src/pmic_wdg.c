@@ -68,7 +68,7 @@ static int32_t Pmic_checkPmicCoreHandle(Pmic_CoreHandle_t *pPmicCoreHandle)
         }
         else if(PMIC_INTF_SPI == pPmicCoreHandle->commMode)
         {
-            drvInitStatus = DRV_INIT_SUCCESS;
+            drvInitStatus = DRV_INIT_SUCCESS | PMIC_MAIN_INST;
         }
         else
         {
@@ -91,17 +91,13 @@ static int32_t Pmic_WdgValidatePmicCoreHandle(
                                    Pmic_CoreHandle_t *pPmicCoreHandle)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    const Pmic_DevSubSysInfo_t *pPmic_devSubSysInfo = NULL;
 
     status = Pmic_checkPmicCoreHandle(pPmicCoreHandle);
 
     /* Check the watch dog sub-system supported by pmic device */
     if(PMIC_ST_SUCCESS == status)
     {
-        pPmic_devSubSysInfo =
-         &pPmicCoreHandle->pPmic_SubSysInfo[pPmicCoreHandle->pmicDeviceType];
-
-        if(true != pPmic_devSubSysInfo->wdgEnable)
+        if(true != pPmicCoreHandle->pPmic_SubSysInfo->wdgEnable)
         {
             status = PMIC_ST_ERR_INV_DEVICE;
         }
@@ -1169,19 +1165,30 @@ int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \param   num_of_sequences [IN]    number of QA sequences.
  *                                   If PMIC_WD_QA_INFINITE_SEQ is used,
  *                                   then API runs for infinite sequence.
+ * \param   maxCnt           [IN]    Number of iterations to wait for an
+ *                                   Good/Bad event. The value should be greater
+ *                                   than or equal to PMIC_WDG_WAIT_CNT_MIN_VAL.
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_wdgStartQaSequence(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                uint32_t           num_of_sequences)
+                                uint32_t           num_of_sequences,
+                                uint32_t           maxCnt)
 {
     int32_t status     = PMIC_ST_SUCCESS;
     uint8_t regVal     = 0x0U;
-    uint8_t failCnt     = 0U;
+    uint8_t failCnt    = 0U;
+    uint32_t loopCount = 0U;
 
     /* Validate pPmicCoreHandle and WDG subsystem */
     status = Pmic_WdgValidatePmicCoreHandle(pPmicCoreHandle);
+
+    if((PMIC_ST_SUCCESS == status) &&
+       (maxCnt < PMIC_WDG_WAIT_CNT_MIN_VAL))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
 
     if(PMIC_ST_SUCCESS == status)
     {
@@ -1300,7 +1307,9 @@ int32_t Pmic_wdgStartQaSequence(Pmic_CoreHandle_t *pPmicCoreHandle,
             }
         }
 
-        while(PMIC_ST_SUCCESS == status)
+        /* Update loopCount value for while loop */
+        loopCount = maxCnt;
+        while((PMIC_ST_SUCCESS == status) && (loopCount > 0))
         {
             status = Pmic_commIntf_recvByte(pPmicCoreHandle,
                                             PMIC_WD_FAIL_CNT_REG_REGADDR,
@@ -1324,6 +1333,8 @@ int32_t Pmic_wdgStartQaSequence(Pmic_CoreHandle_t *pPmicCoreHandle,
                 num_of_sequences--;
                 break;
             }
+
+            loopCount--;
         }
     }
 
