@@ -150,18 +150,6 @@ int32_t Pmic_fsmDeviceOffRequestCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
                                     uint8_t             fsmState);
 
 /*!
- * \brief  API to initiate Runtime BIST.
- *         This function initiates a request to exercise runtime BIST on the
- *         device
- *
- * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
-int32_t Pmic_fsmRuntimeBistRequest(Pmic_CoreHandle_t  *pPmicCoreHandle);
-
-/*!
  * \brief  API to initiate ON Request FSM transition.
  *         This function setup nSLEEP signal bits with STARTUP_DEST
  * Which is common for all supported PMICs. This API needs to be called
@@ -230,6 +218,18 @@ int32_t Pmic_fsmSetLpmControl(Pmic_CoreHandle_t  *pPmicCoreHandle,
  */
 int32_t Pmic_fsmGetLpmControl(Pmic_CoreHandle_t  *pPmicCoreHandle,
                               bool               *pLpmEnable);
+/*!
+ * \brief  API to initiate Runtime BIST.
+ *         This function initiates a request to exercise runtime BIST on the
+ *         device
+ *
+ * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmRequestRuntimeBist(Pmic_CoreHandle_t  *pPmicCoreHandle);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

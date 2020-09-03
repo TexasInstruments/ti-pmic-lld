@@ -165,6 +165,8 @@ extern "C" {
 #define PMIC_TPS6594X_NPWRON_PINFUNC_ENABLE                 (0U)
 /** \brief NPWRON Signal Function for NPWRON/ENABLE pin */
 #define PMIC_TPS6594X_NPWRON_PINFUNC_NPWRON                 (1U)
+/** \brief None Function for NPWRON/ENABLE pin */
+#define PMIC_TPS6594X_NPWRON_PINFUNC_NONE                   (2U)
 /*  @} */
 
 /*==========================================================================*/

@@ -203,7 +203,7 @@ static int32_t Pmic_fsmEnableI2cTrigger(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        if(i2cTriggerType == PMIC_FSM_I2C_TRIGGER0_TYPE)
+        if(i2cTriggerType == PMIC_FSM_I2C_TRIGGER0)
         {
             bitShift = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_0_SHIFT;
             bitMask  = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_0_MASK;
@@ -464,7 +464,7 @@ int32_t Pmic_fsmDeviceOffRequestCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmRuntimeBistRequest(Pmic_CoreHandle_t  *pPmicCoreHandle)
+int32_t Pmic_fsmRequestRuntimeBist(Pmic_CoreHandle_t  *pPmicCoreHandle)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 

@@ -1534,7 +1534,7 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
            ((bool)true == pmic_validParamCheck(gpioCfg.validParams,
                                                PMIC_GPIO_CFG_PINFUNC_VALID)))
         {
-            if(gpioCfg.pinFunc > PMIC_TPS6594X_NPWRON_PINFUNC_NPWRON)
+            if(gpioCfg.pinFunc > PMIC_TPS6594X_NPWRON_PINFUNC_NONE)
             {
                 status = PMIC_ST_ERR_INV_GPIO_FUNC;
             }
