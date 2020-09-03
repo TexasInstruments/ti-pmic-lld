@@ -89,19 +89,15 @@ static int32_t Pmic_powerGetNsleepMaskBitField(bool     nsleepType,
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    switch(nsleepType)
+    if(nsleepType == PMIC_NSLEEP1_SIGNAL)
     {
-        case PMIC_NSLEEP1_SIGNAL:
-            *pBitPos  = PMIC_CONFIG_1_NSLEEP1_MASK_SHIFT;
-            *pBitMask = PMIC_CONFIG_1_NSLEEP1_MASK_MASK;
-            break;
-        case PMIC_NSLEEP2_SIGNAL:
-            *pBitPos  = PMIC_CONFIG_1_NSLEEP2_MASK_SHIFT;
-            *pBitMask = PMIC_CONFIG_1_NSLEEP2_MASK_MASK;
-            break;
-        default :
-            status = PMIC_ST_ERR_INV_PARAM;
-            break;
+        *pBitPos  = PMIC_CONFIG_1_NSLEEP1_MASK_SHIFT;
+        *pBitMask = PMIC_CONFIG_1_NSLEEP1_MASK_MASK;
+    }
+    else if(nsleepType == PMIC_NSLEEP2_SIGNAL)
+    {
+        *pBitPos  = PMIC_CONFIG_1_NSLEEP2_MASK_SHIFT;
+        *pBitMask = PMIC_CONFIG_1_NSLEEP2_MASK_MASK;
     }
 
     return status;

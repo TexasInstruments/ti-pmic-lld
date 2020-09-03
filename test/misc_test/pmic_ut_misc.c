@@ -97,10 +97,6 @@ static Pmic_Ut_Tests_t pmic_misc_tests[] =
         "Pmic_fsmRuntimeBistRequest : Test RunTime BIST"
     },
     {
-        38,
-        "Pmic_fsmRuntimeBistRequest : Parameter validation for 'eventType'."
-    },
-    {
         39,
         "Pmic_fsmRuntimeBistRequest : Parameter validation for 'handle'."
     },
@@ -340,27 +336,10 @@ static void test_Pmic_fsmRuntimeBistRequest(void)
                                         pmic_misc_tests,
                                         PMIC_MISC_NUM_OF_TESTCASES);
 
-    status = Pmic_fsmRuntimeBistRequest(pPmicCoreHandle, PMIC_FSM_I2C_TRIGGER1_TYPE);
+    status = Pmic_fsmRuntimeBistRequest(pPmicCoreHandle);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-/*!
- * \brief   Pmic_fsmRuntimeBistRequest : Parameter validation for 'eventType'.
- */
-static void test_Pmic_fsmRuntimeBistRequestPrmValTest_eventType(void)
-{
-    int32_t status     = PMIC_ST_SUCCESS;
-    uint8_t  eventType = 0U;
-
-    eventType = PMIC_FSM_I2C_TRIGGER0_TYPE;
-
-    test_pmic_print_unity_testcase_info(38,
-                                        pmic_misc_tests,
-                                        PMIC_MISC_NUM_OF_TESTCASES);
-
-    status = Pmic_fsmRuntimeBistRequest(pPmicCoreHandle, eventType);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
-}
 
 /*!
  * \brief   Pmic_fsmRuntimeBistRequest : Parameter validation for 'handle'.
@@ -368,15 +347,12 @@ static void test_Pmic_fsmRuntimeBistRequestPrmValTest_eventType(void)
 static void test_Pmic_fsmRuntimeBistRequestPrmValTest_handle(void)
 {
     int32_t status     = PMIC_ST_SUCCESS;
-    uint8_t  eventType = 0U;
-
-    eventType = PMIC_FSM_I2C_TRIGGER1_TYPE;
 
     test_pmic_print_unity_testcase_info(39,
                                         pmic_misc_tests,
                                         PMIC_MISC_NUM_OF_TESTCASES);
 
-    status = Pmic_fsmRuntimeBistRequest(NULL, eventType);
+    status = Pmic_fsmRuntimeBistRequest(NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
 }
 
@@ -401,7 +377,6 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_Pmic_getRecoveryCntPrmValTest_handle);
     RUN_TEST(test_Pmic_getRecoveryCntPrmValTest_recovCntVal);
     RUN_TEST(test_Pmic_fsmRuntimeBistRequest);
-    RUN_TEST(test_Pmic_fsmRuntimeBistRequestPrmValTest_eventType);
     RUN_TEST(test_Pmic_fsmRuntimeBistRequestPrmValTest_handle);
 
     UNITY_END();
