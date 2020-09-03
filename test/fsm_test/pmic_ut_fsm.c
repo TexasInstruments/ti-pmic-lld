@@ -594,7 +594,7 @@ static void test_Pmic_fsmRuntimeBistRequestPrmValTest_handle(void)
                                         pmic_fsm_tests,
                                         PMIC_FSM_NUM_OF_TESTCASES);
 
-    status = Pmic_fsmRuntimeBistRequest(NULL);
+    status = Pmic_fsmRequestRuntimeBist(NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
 }
 

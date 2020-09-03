@@ -93,14 +93,89 @@ static Pmic_Ut_Tests_t pmic_misc_tests[] =
         "Pmic_getRecoveryCnt : Read Recovery Count Value."
     },
     {
-        37,
-        "Pmic_fsmRuntimeBistRequest : Test RunTime BIST"
+        7715,
+        "Pmic_irqGetErrStatus : Test BIST_PASS_INT interrupt."
     },
     {
-        39,
-        "Pmic_fsmRuntimeBistRequest : Parameter validation for 'handle'."
+        7716,
+        "Pmic_irqGetErrStatus : Test FSD_INT interrupt."
+    },
+    {
+        3333,
+        "Pmic_irqGetErrStatus : Test ENABLE_INT interrupt."
     },
 };
+
+
+/*!
+ * \brief   Pmic_irqGetErrStatus : Test ENABLE_INT interrupt.
+ */
+static void test_Pmic_Enable_interrupt(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    bool intrEnable           = PMIC_IRQ_UNMASK;
+
+    Pmic_WdgCfg_t wdgCfg    =
+    {
+        PMIC_WDG_CFG_SETPARAMS_FORALL,
+        3000U,
+        6150U,
+        4950U,
+        PMIC_WDG_FAIL_THRESHOLD_COUNT_7,
+        PMIC_WDG_RESET_THRESHOLD_COUNT_7,
+        PMIC_WDG_QA_MODE,
+        PMIC_WDG_PWRHOLD_DISABLE,
+        PMIC_WDG_RESET_ENABLE,
+        PMIC_WDG_RETLONGWIN_DISABLE,
+        PMIC_WDG_QA_FEEDBACK_VALUE_0,
+        PMIC_WDG_QA_LFSR_VALUE_0,
+        PMIC_WDG_QA_QUES_SEED_VALUE_10,
+    };
+
+    test_pmic_print_unity_testcase_info(3333,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    {
+        TEST_IGNORE();
+    }
+
+    if(startup_type == PMIC_ENABLE_STARTUP_TYPE)
+    {
+        pmic_log("Enable-pin Start-up is detected\n");
+    }
+    else
+    {
+        if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+        {
+            pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                          PMIC_TPS6594X_ENABLE_INT,
+                                          intrEnable);
+            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        }
+        if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+        {
+            pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                          PMIC_LP8764X_ENABLE_INT,
+                                          intrEnable);
+            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        }
+
+        /* Enable WDG Timer */
+        pmicStatus = Pmic_wdgEnable(pPmicCoreHandle);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        /* Set QA parameters */
+        pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        /* Waiting for longwindow time interval expiring */
+        Osal_delay(wdgCfg.longWinDuration_ms);
+    }
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+}
 
 /*!
  * \brief   Pmic_SetRecoveryCntCfg : Test Set Recovery Counter Threshold.
@@ -326,35 +401,449 @@ static void test_Pmic_getRecoveryCnt_read_recovCntVal(void)
 }
 
 /*!
- * \brief   Pmic_fsmRuntimeBistRequest : Test RunTime BIST.
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
  */
-static void test_Pmic_fsmRuntimeBistRequest(void)
-{
-    int32_t status     = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(37,
+#if defined(ENABLE_SAMPLE_TESTCASES)
+/*!
+ * \brief   Pmic_irqGetErrStatus : Test BIST_PASS_INT interrupt.
+ */
+static void test_Pmic_getBistPassInterrupt(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    bool    nsleepType = 0U;
+    bool    maskEnable = 0U;
+
+    test_pmic_print_unity_testcase_info(7715,
                                         pmic_misc_tests,
                                         PMIC_MISC_NUM_OF_TESTCASES);
 
-    status = Pmic_fsmRuntimeBistRequest(pPmicCoreHandle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-}
+    /* Ignored due to not generating BIST_PASS_INT interrupt */
+    TEST_IGNORE();
 
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                      PMIC_TPS6594X_BIST_PASS_INT,
+                                      PMIC_IRQ_UNMASK);
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                      PMIC_LP8764X_BIST_PASS_INT,
+                                      PMIC_IRQ_UNMASK);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    }
+
+    nsleepType = PMIC_NSLEEP1_SIGNAL;
+    maskEnable = PMIC_NSLEEPX_MASK;
+
+    pmicStatus = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle, nsleepType, maskEnable);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    nsleepType = PMIC_NSLEEP2_SIGNAL;
+    maskEnable = PMIC_NSLEEPX_MASK;
+
+    pmicStatus = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle, nsleepType, maskEnable);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_fsmRequestRuntimeBist(pPmicCoreHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        while(1U)
+        {
+            pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+            if((PMIC_ST_SUCCESS == pmicStatus) &&
+               ((errStat.intStatus[PMIC_TPS6594X_BIST_PASS_INT/32U] &
+                 (1U << (PMIC_TPS6594X_BIST_PASS_INT % 32U))) != 0U))
+            {
+                if(PMIC_ST_SUCCESS == pmicStatus)
+                {
+                    /* clear the interrupt */
+                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                      PMIC_TPS6594X_BIST_PASS_INT);
+                    break;
+                }
+            }
+        }
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        while(1U)
+        {
+            pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+            if((PMIC_ST_SUCCESS == pmicStatus) &&
+               ((errStat.intStatus[PMIC_LP8764X_BIST_PASS_INT/32U] &
+                 (1U << (PMIC_LP8764X_BIST_PASS_INT % 32U))) != 0U))
+            {
+                if(PMIC_ST_SUCCESS == pmicStatus)
+                {
+                    /* clear the interrupt */
+                    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                      PMIC_LP8764X_BIST_PASS_INT);
+                    break;
+                }
+            }
+        }
+    }
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+}
 
 /*!
- * \brief   Pmic_fsmRuntimeBistRequest : Parameter validation for 'handle'.
+ * \brief   Pmic_irqGetErrStatus : Test FSD_INT interrupt.
+ *          To test this testcase, user needs to follow below steps
+ *          1. After POR reset, run below test case by setting 'startup_type' variable to
+ *             PMIC_FSD_STARTUP_TYPE.
  */
-static void test_Pmic_fsmRuntimeBistRequestPrmValTest_handle(void)
+static void test_Pmic_FSD_interrupt(void)
 {
-    int32_t status     = PMIC_ST_SUCCESS;
+    int32_t status        = PMIC_ST_SUCCESS;
+    bool intrEnable       = PMIC_IRQ_UNMASK;
 
-    test_pmic_print_unity_testcase_info(39,
+    Pmic_GpioCfg_t gpioCfg    =
+    {
+        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_NPWRON_PINFUNC_NONE,
+        PMIC_GPIO_HIGH
+    };
+
+    Pmic_WdgCfg_t wdgCfg    =
+    {
+        PMIC_WDG_CFG_SETPARAMS_FORALL,
+        3000U,
+        6150U,
+        4950U,
+        PMIC_WDG_FAIL_THRESHOLD_COUNT_7,
+        PMIC_WDG_RESET_THRESHOLD_COUNT_7,
+        PMIC_WDG_QA_MODE,
+        PMIC_WDG_PWRHOLD_DISABLE,
+        PMIC_WDG_RESET_ENABLE,
+        PMIC_WDG_RETLONGWIN_DISABLE,
+        PMIC_WDG_QA_FEEDBACK_VALUE_0,
+        PMIC_WDG_QA_LFSR_VALUE_0,
+        PMIC_WDG_QA_QUES_SEED_VALUE_10,
+    };
+
+    test_pmic_print_unity_testcase_info(7716,
                                         pmic_misc_tests,
                                         PMIC_MISC_NUM_OF_TESTCASES);
 
-    status = Pmic_fsmRuntimeBistRequest(NULL);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+    /* Ignored because, it needs NVM setup */
+    TEST_IGNORE();
+
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    {
+        TEST_IGNORE();
+    }
+
+    if(startup_type == PMIC_FSD_STARTUP_TYPE)
+    {
+        pmic_log("FSD Start-up is detected\n");
+    }
+    else
+    {
+        status = Pmic_gpioSetNPwronEnablePinConfiguration(pPmicCoreHandle,
+                                                              gpioCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+        {
+            status = Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_TPS6594X_FSD_INT, intrEnable);
+            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+        }
+        if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+        {
+            status = Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_LP8764X_FSD_INT, intrEnable);
+            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+        }
+
+        /* Enable WDG Timer */
+        status = Pmic_wdgEnable(pPmicCoreHandle);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        /* Set QA parameters */
+        status = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        /* Waiting for longwindow time interval expiring */
+        Osal_delay(wdgCfg.longWinDuration_ms);
+    }
 }
+/*!
+ * \brief   Pmic_irqGetErrStatus : Test NPWRON_INT interrupt Manual TestCase.
+ *          To test this testcase, user needs to follow below steps
+ *          1. After POR reset, run below test case by setting 'startup_type' variable to
+ *             PMIC_NPWRON_STARTUP_TYPE.
+ */
+static void test_Pmic_NPWRON_interrupt(void)
+{
+    int32_t status        = PMIC_ST_SUCCESS;
+    bool intrEnable       = PMIC_IRQ_UNMASK;
+
+    Pmic_GpioCfg_t gpioCfg    =
+    {
+        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_NPWRON_PINFUNC_NPWRON,
+        PMIC_GPIO_HIGH
+    };
+
+    Pmic_WdgCfg_t wdgCfg    =
+    {
+        PMIC_WDG_CFG_SETPARAMS_FORALL,
+        3000U,
+        6150U,
+        4950U,
+        PMIC_WDG_FAIL_THRESHOLD_COUNT_7,
+        PMIC_WDG_RESET_THRESHOLD_COUNT_7,
+        PMIC_WDG_QA_MODE,
+        PMIC_WDG_PWRHOLD_DISABLE,
+        PMIC_WDG_RESET_ENABLE,
+        PMIC_WDG_RETLONGWIN_DISABLE,
+        PMIC_WDG_QA_FEEDBACK_VALUE_0,
+        PMIC_WDG_QA_LFSR_VALUE_0,
+        PMIC_WDG_QA_QUES_SEED_VALUE_10,
+    };
+
+    test_pmic_print_unity_testcase_info(7716,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(startup_type == PMIC_NPWRON_STARTUP_TYPE)
+    {
+        pmic_log("NPWRON Start-up is detected\n");
+    }
+    else
+    {
+        status = Pmic_gpioSetNPwronEnablePinConfiguration(pPmicCoreHandle,
+                                                              gpioCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+        {
+            status = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                      PMIC_TPS6594X_NPWRON_PINFUNC_NPWRON,
+                                      intrEnable);
+            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+        }
+
+        /* Enable WDG Timer */
+        status = Pmic_wdgEnable(pPmicCoreHandle);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        /* Set QA parameters */
+        status = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        /* Waiting for longwindow time interval expiring */
+        Osal_delay(wdgCfg.longWinDuration_ms);
+    }
+}
+
+/*!
+ * \brief   Pmic_irqGetErrStatus : Test NPWRON_LONG_INT interrupt Manual TestCase.
+ *          To test this testcase, user needs to follow below steps
+ *          1. User has to hold the NPWRON button or Keep low NPWON pin some duration.
+ *          2. Pmic will be reset after first step.
+ *          3. After reset, run below test case by setting 'startup_type' variable to
+ *             PMIC_NPWRON_STARTUP_TYPE.
+ */
+static void test_Pmic_NPWRON_long_interrupt(void)
+{
+    int32_t status        = PMIC_ST_SUCCESS;
+    bool intrEnable       = PMIC_IRQ_UNMASK;
+
+    Pmic_GpioCfg_t gpioCfg    =
+    {
+        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_NPWRON_PINFUNC_NPWRON,
+        PMIC_GPIO_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(4444,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(startup_type == PMIC_NPWRON_STARTUP_TYPE)
+    {
+        pmic_log("NPWRON Start-up is detected\n");
+    }
+    else
+    {
+        status = Pmic_gpioSetNPwronEnablePinConfiguration(pPmicCoreHandle,
+                                                              gpioCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+        {
+            status = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                      PMIC_TPS6594X_NPWRON_LONG_INT,
+                                      intrEnable);
+            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+        }
+
+    }
+}
+
+/*!
+ * \brief   Pmic_commFrmError : Test COMM_FRM_ERROR interrupt Manual TestCase.
+ *          To test this testcase, user needs to follow below steps
+ *          1. PMIC SPI must be enabled by NVM.
+ *          2. Run below test case to get an SPI FRAME Error
+ */
+static void test_Pmic_commFrmErrorIntr(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ = false;
+    uint8_t buffLength = 1U;
+    uint8_t txBuf[PMIC_IO_BUF_SIZE] = {0};
+    uint8_t txData = 0x0FU;
+    uint16_t regAddr = PMIC_SCRATCH_PAD_REG_4_REGADDR;
+    uint16_t pmicRegAddr = regAddr;
+    uint8_t instType = PMIC_MAIN_INST;
+
+    test_pmic_print_unity_testcase_info(5555,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if((NULL == pPmicCoreHandle) && (PMIC_INTF_SPI == pPmicCoreHandle->commMode))
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_INTF_SPI == pPmicCoreHandle->commMode)
+    {
+        /*
+         * Frame 3 Bytes with IO header+data as per PMIC SPI IO algorithm
+         * explained in PMIC TRM
+         */
+
+        buffLength = 0;
+        /* Set ADDR to txbuf[0], Bits 1-8: ADDR[7:0] */
+        txBuf[buffLength] = (uint8_t)(pmicRegAddr & 0xFFU);
+        buffLength++;
+
+        /* Writing wrong value to Set PAGE to txBuf[1] 2:0 bits */
+        txBuf[buffLength] = (uint8_t)((pmicRegAddr >> 8U) & 0x7U);
+
+        /* Set R/W in txBuf[1] as bit-3, Bit 12: 0 for Write Request */
+        txBuf[buffLength] &= (uint8_t)(~PMIC_IO_REQ_RW);
+        buffLength++;
+
+        if(((bool)true) == pPmicCoreHandle->crcEnable)
+        {
+            /* Set CRC data to txBuf[3], Bits 25-32 CRC */
+            txBuf[buffLength] = Pmic_getCRC8Val(txBuf, buffLength);
+            /* Increment 1 more byte to store CRC8 */
+            buffLength++;
+        }
+
+    }
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                      PMIC_TPS6594X_COMM_FRM_ERR_INT,
+                                      PMIC_IRQ_UNMASK);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                      PMIC_LP8764X_COMM_FRM_ERR_INT,
+                                      PMIC_IRQ_UNMASK);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    }
+
+    pmicStatus = test_pmic_regWrite(pPmicCoreHandle,
+                                    instType,
+                                    pmicRegAddr,
+                                    txBuf,
+                                    buffLength);
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        while(1U)
+        {
+            pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+            if(((errStat.intStatus[PMIC_TPS6594X_COMM_FRM_ERR_INT/32U] &
+               (1U << (PMIC_TPS6594X_COMM_FRM_ERR_INT % 32U))) != 0U))
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_TPS6594X_COMM_FRM_ERR_INT);
+                break;
+            }
+        }
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        while(1U)
+        {
+            pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+            if((PMIC_ST_SUCCESS == pmicStatus) &&
+               ((errStat.intStatus[PMIC_LP8764X_COMM_FRM_ERR_INT/32U] &
+                 (1U << (PMIC_LP8764X_COMM_FRM_ERR_INT % 32U))) != 0U))
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  PMIC_LP8764X_COMM_FRM_ERR_INT);
+                break;
+            }
+        }
+    }
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus)
+}
+
+#endif
 
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E) || defined(SOC_J7200))
@@ -376,8 +865,6 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_getRecoveryCntCfgPrmValTest_recovCntCfg);
     RUN_TEST(test_Pmic_getRecoveryCntPrmValTest_handle);
     RUN_TEST(test_Pmic_getRecoveryCntPrmValTest_recovCntVal);
-    RUN_TEST(test_Pmic_fsmRuntimeBistRequest);
-    RUN_TEST(test_Pmic_fsmRuntimeBistRequestPrmValTest_handle);
 
     UNITY_END();
 }
@@ -385,11 +872,23 @@ static void test_pmic_run_testcases(void)
 /*!
  * \brief   Run misc manual test cases
  */
-static void test_pmic_run_testcases_manual(void)
+static void test_pmic_run_testcases_recoverycnt(void)
 {
     pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
     UNITY_BEGIN();
     RUN_TEST(test_Pmic_getRecoveryCnt_read_recovCntVal);
+
+    UNITY_END();
+}
+
+/*!
+ * \brief   Run misc manual test cases
+ */
+static void test_pmic_run_testcases_EnableInterrupt(void)
+{
+    pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
+    UNITY_BEGIN();
+    RUN_TEST(test_Pmic_Enable_interrupt);
 
     UNITY_END();
 }
@@ -553,7 +1052,8 @@ static const char pmicTestAppMenu[] =
     " \r\n 1: Pmic Leo device(PMIC B on J721E EVM)"
     " \r\n 2: Pmic Hera device"
     " \r\n 3: Manual test: Check recovery count"
-    " \r\n 4: quit"
+    " \r\n 4: Manual test: Check Enable Interrupt"
+    " \r\n 5: quit"
     " \r\n"
     " \r\n Enter option: "
 };
@@ -632,7 +1132,7 @@ static void test_pmic_misc_testapp_runner(void)
                    /* Run MISC test cases for Leo PMIC-A */
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
                    /* Run misc manual test cases */
-                   test_pmic_run_testcases_manual();
+                   test_pmic_run_testcases_recoverycnt();
                }
                /* Deinit pmic handle */
                if(pPmicCoreHandle != NULL)
@@ -641,6 +1141,23 @@ static void test_pmic_misc_testapp_runner(void)
                }
                break;
            case 4U:
+               /* Display FSD interrupt */
+               startup_type = PMIC_ENABLE_STARTUP_TYPE;
+               /* MISC Unity Test App wrapper Function */
+               if(PMIC_ST_SUCCESS == test_pmic_misc_manual_testApp())
+               {
+                   /* Run MISC test cases for Leo PMIC-A */
+                    pmic_device_info = J721E_LEO_PMICA_DEVICE;
+                   /* Run misc manual test cases */
+                   test_pmic_run_testcases_EnableInterrupt();
+               }
+               /* Deinit pmic handle */
+               if(pPmicCoreHandle != NULL)
+               {
+                   test_pmic_appDeInit(pPmicCoreHandle);
+               }
+               break;
+           case 5U:
                pmic_log(" \r\n Quit from application\n");
                return;
            default:

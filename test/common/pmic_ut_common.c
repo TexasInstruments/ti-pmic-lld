@@ -42,6 +42,8 @@
 /* Pointer holds the pPmicCoreHandle for I2C */
 Pmic_CoreHandle_t *pPmicCoreHandleI2C = NULL;
 
+uint8_t startup_type = 0U;
+
 /*!
  * \brief   OS specific Critical section locking Variable
  *          Should be OS specific locking varaible to
@@ -720,6 +722,81 @@ void test_pmic_criticalSectionStopFn(void)
 }
 
 /*!
+ * \brief   Get PMIC StartUp Interrupt Type.
+ *          This function deciphers all interrupts and find startup type.
+ */
+static uint32_t get_startup_type(Pmic_CoreHandle_t *pPmicCoreHandle)
+{
+    Pmic_IrqStatus_t errStat  = {0U};
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    uint8_t type = 0U;
+
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, false);
+    switch(pPmicCoreHandle->pmicDeviceType)
+    {
+        case PMIC_DEV_LEO_TPS6594X:
+            switch(startup_type)
+            {
+                case PMIC_ENABLE_STARTUP_TYPE:
+                    if((PMIC_ST_SUCCESS == pmicStatus) &&
+                       ((errStat.intStatus[PMIC_TPS6594X_ENABLE_INT/32U] &
+                        (1U << (PMIC_TPS6594X_ENABLE_INT % 32U))) != 0U))
+                    {
+                        type = PMIC_ENABLE_STARTUP_TYPE;
+                    }
+                    break;
+                case PMIC_NPWRON_STARTUP_TYPE:
+                    if((PMIC_ST_SUCCESS == pmicStatus) &&
+                       ((errStat.intStatus[PMIC_TPS6594X_NPWRON_START_INT/32U] &
+                        (1U << (PMIC_TPS6594X_NPWRON_START_INT % 32U))) != 0U))
+                    {
+                        type = PMIC_NPWRON_STARTUP_TYPE;
+                    }
+                    break;
+                case PMIC_FSD_STARTUP_TYPE:
+                    if((PMIC_ST_SUCCESS == pmicStatus) &&
+                       ((errStat.intStatus[PMIC_TPS6594X_FSD_INT/32U] &
+                        (1U << (PMIC_TPS6594X_FSD_INT % 32U))) != 0U))
+                    {
+                        type = PMIC_FSD_STARTUP_TYPE;
+                    }
+                    break;
+                default:
+                        type = 0U;
+                    break;
+            }
+            break;
+        case PMIC_DEV_HERA_LP8764X:
+            switch(startup_type)
+            {
+                case PMIC_ENABLE_STARTUP_TYPE:
+                    if((PMIC_ST_SUCCESS == pmicStatus) &&
+                       ((errStat.intStatus[PMIC_LP8764X_ENABLE_INT/32U] &
+                        (1U << (PMIC_LP8764X_ENABLE_INT % 32U))) != 0U))
+                    {
+                        type = PMIC_ENABLE_STARTUP_TYPE;
+                    }
+                    break;
+                case PMIC_FSD_STARTUP_TYPE:
+                    if((PMIC_ST_SUCCESS == pmicStatus) &&
+                       ((errStat.intStatus[PMIC_LP8764X_FSD_INT/32U] &
+                        (1U << (PMIC_LP8764X_FSD_INT % 32U))) != 0U))
+                    {
+                        type = PMIC_FSD_STARTUP_TYPE;
+                    }
+                    break;
+                default:
+                    type = 0U;
+                    break;
+            }
+            break;
+    }
+
+    startup_type = type;
+
+    return pmicStatus;
+}
+/*!
  * \brief   PMIC Interrupt decipher and clear function
  *          This function deciphers all interrupts and clears the status
  */
@@ -729,7 +806,14 @@ static int32_t Pmic_intrClr(Pmic_CoreHandle_t *pmicHandle)
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     Pmic_IrqStatus_t errStat  = {0U};
 
-    pmicStatus = Pmic_irqGetErrStatus(&handle, &errStat, true);
+    if(startup_type != 0U)
+    {
+        pmicStatus = get_startup_type(pmicHandle);
+    }
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pmicStatus = Pmic_irqGetErrStatus(&handle, &errStat, true);
+    }
 
     return pmicStatus;
 }

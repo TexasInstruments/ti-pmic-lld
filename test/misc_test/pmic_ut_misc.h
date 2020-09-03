@@ -38,7 +38,7 @@
  */
 
 #include <pmic_ut_common.h>
-#include <pmic_core_priv.h>
+#define PMIC_RECOV_CNT_THR_MAX                          (0x0FU)
 
 /*!
  * \brief  PMIC WDG Valid Params configuration for all

@@ -100,6 +100,15 @@
 #define J721E_LEO_PMICB_DEVICE          (0x02U)
 
 /*!
+ * \brief   PMIC Startup type
+ */
+#define PMIC_ENABLE_STARTUP_TYPE        (0x01U)
+#define PMIC_NPWRON_STARTUP_TYPE        (0x02U)
+#define PMIC_FSD_STARTUP_TYPE           (0x03U)
+
+extern uint8_t startup_type;
+
+/*!
  * \brief   PMIC UT test status
  */
 #define PMIC_UT_SUCCESS            (true)
