@@ -2629,6 +2629,12 @@ int32_t  Pmic_getRtcStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
         pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+    }
+
     if((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pPmicRtcStatus))
     {
          pmicStatus = PMIC_ST_ERR_NULL_PARAM;

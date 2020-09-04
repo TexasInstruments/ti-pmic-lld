@@ -54,235 +54,235 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
 {
     {
         5990,
-        "SetRtcAlarmIntr : Set RTC Alarm interrupt"
+        "Pmic_rtcSetAlarmInfo : Set RTC Alarm interrupt"
     },
     {
         5991,
-        "SetRtcAlarmIntr : Parameter validation for 'handle'"
+        "Pmic_rtcSetAlarmInfo : Parameter validation for 'handle'"
     },
     {
         6090,
-        "SetRtcAlarmIntr : Parameter validation for 'seconds'"
+        "Pmic_rtcSetAlarmInfo : Parameter validation for 'seconds'"
     },
     {
         6091,
-        "SetRtcAlarmIntr : Parameter validation for 'minutes'"
+        "Pmic_rtcSetAlarmInfo : Parameter validation for 'minutes'"
     },
     {
         6092,
-        "SetRtcAlarmIntr : Parameter validation for 'timeMode'"
+        "Pmic_rtcSetAlarmInfo : Parameter validation for 'timeMode'"
     },
     {
         6093,
-        "SetRtcAlarmIntr : Parameter validation for 'meridianMode'"
+        "Pmic_rtcSetAlarmInfo : Parameter validation for 'meridianMode'"
     },
     {
         6094,
-        "SetRtcAlarmIntr : Parameter validation for 'hour' when 'timeMode' = 1"
+        "Pmic_rtcSetAlarmInfo : Parameter validation for 'hour' when 'timeMode' = 1"
     },
     {
         6095,
-        "SetRtcAlarmIntr : Parameter validation for 'hour' when 'timeMode' = 0"
+        "Pmic_rtcSetAlarmInfo : Parameter validation for 'hour' when 'timeMode' = 0"
     },
     {
         6096,
-        "SetRtcAlarmIntr : Negative test for 'hour ' = 0, when 'timeMode' = 1"
+        "Pmic_rtcSetAlarmInfo : Negative test for 'hour ' = 0, when 'timeMode' = 1"
     },
     {
         6099,
-        "SetRtcAlarmIntr : Negative test for 'month ' = 0"
+        "Pmic_rtcSetAlarmInfo : Negative test for 'month ' = 0"
     },
     {
         6100,
-        "SetRtcAlarmIntr : Negative test for 'day' = 0"
+        "Pmic_rtcSetAlarmInfo : Negative test for 'day' = 0"
     },
     {
         6101,
-        "SetRtcAlarmIntr : Parameter range validation for 'year'"
+        "Pmic_rtcSetAlarmInfo : Parameter range validation for 'year'"
     },
     {
         6102,
-        "SetRtcAlarmIntr : Parameter range validation for 'month'"
+        "Pmic_rtcSetAlarmInfo : Parameter range validation for 'month'"
     },
     {
         6103,
-        "SetRtcAlarmIntr : Parameter range validation for 'day' for months with 30 days"
+        "Pmic_rtcSetAlarmInfo : Parameter range validation for 'day' for months with 30 days"
     },
     {
         6104,
-        "SetRtcAlarmIntr : Parameter range validation for 'day' for leap year('year' %4 = 0 ) and 'month' = 2 (february)"
+        "Pmic_rtcSetAlarmInfo : Parameter range validation for 'day' for leap year('year' %4 = 0 ) and 'month' = 2 (february)"
     },
     {
         6107,
-        "SetRtcAlarmIntr : Parameter range validation for 'day' for Non-leap year('year' %4 != 0 ) and 'month' = 2 (february)"
+        "Pmic_rtcSetAlarmInfo : Parameter range validation for 'day' for Non-leap year('year' %4 != 0 ) and 'month' = 2 (february)"
     },
     {
         6108,
-        "SetRtcAlarmIntr : Parameter range validation for 'day', for months with 31 days)"
+        "Pmic_rtcSetAlarmInfo : Parameter range validation for 'day', for months with 31 days)"
     },
     {
         6109,
-        "GetRtcAlarmIntr : Test Get RTC Alarm interrupt API"
+        "Pmic_rtcGetAlarmInfo : Test Get RTC Alarm interrupt API"
     },
     {
         6110,
-        "GetRtcAlarmIntr : Parameter validation for 'handle'"
+        "Pmic_rtcGetAlarmInfo : Parameter validation for 'handle'"
     },
     {
         6111,
-        "GetRtcAlarmIntr : Parameter validation for 'timeCfg'"
+        "Pmic_rtcGetAlarmInfo : Parameter validation for 'timeCfg'"
     },
     {
         6112,
-        "GetRtcAlarmIntr : Parameter validation for 'dataCfg'"
+        "Pmic_rtcGetAlarmInfo : Parameter validation for 'dataCfg'"
     },
     {
         6113,
-        "SetRtcTimerIntr : Test Set RTC Timer interrupt"
+        "Pmic_rtcSetTimerPeriod : Test Set RTC Timer interrupt"
     },
     {
         6114,
-        "SetRtcTimerIntr : Parameter validation for 'handle'"
+        "Pmic_rtcSetTimerPeriod : Parameter validation for 'handle'"
     },
     {
         6115,
-        "SetRtcTimerIntr : Parameter validation for 'timerPeriod'"
+        "Pmic_rtcSetTimerPeriod : Parameter validation for 'timerPeriod'"
     },
     {
         6116,
-        "GetRtcTimer : Test Get RTC Timer interrupt"
+        "Pmic_rtcSetTimerPeriod : Test Get RTC Timer interrupt"
     },
     {
         6117,
-        "GetRtcTimer : Parameter validation for 'handle'"
+        "Pmic_rtcSetTimerPeriod : Parameter validation for 'handle'"
     },
     {
         6118,
-        "GetRtcTimer : Parameter validation for 'timerPeriod'"
+        "Pmic_rtcSetTimerPeriod : Parameter validation for 'timerPeriod'"
     },
     {
         6119,
-        "DisableRtc : Test RTC Disable"
+        "Pmic_rtcEnable : Test RTC Disable"
     },
     {
         6120,
-        "DisableRtc : Parameter validation for 'handle'"
+        "Pmic_rtcEnable : Parameter validation for 'handle'"
     },
     {
         6121,
-        "EnableRtc : Test RTC Enable"
+        "Pmic_rtcEnable : Test RTC Enable"
     },
     {
         6122,
-        "EnableRtc : Parameter validation for 'handle'"
+        "Pmic_rtcEnable : Parameter validation for 'handle'"
     },
     {
         6158,
-        "SetRtc : Test RTC Set Time"
+        "Pmic_rtcSetTimeDateInfo : Test RTC Set Time"
     },
     {
         6159,
-        "SetRtc : Parameter validation for 'handle'"
+        "Pmic_rtcSetTimeDateInfo : Parameter validation for 'handle'"
     },
     {
         6162,
-        "SetRtc : Parameter validation for 'seconds'"
+        "Pmic_rtcSetTimeDateInfo : Parameter validation for 'seconds'"
     },
     {
         6163,
-        "SetRtc : Parameter validation for 'minutes'"
+        "Pmic_rtcSetTimeDateInfo : Parameter validation for 'minutes'"
     },
     {
         6164,
-        "SetRtc : Parameter validation for 'timeMode'"
+        "Pmic_rtcSetTimeDateInfo : Parameter validation for 'timeMode'"
     },
     {
         6165,
-        "SetRtc : Parameter validation for 'meridianMode'"
+        "Pmic_rtcSetTimeDateInfo : Parameter validation for 'meridianMode'"
     },
     {
         6166,
-        "SetRtc : Parameter validation for 'hour' when 'timeMode' = 1"
+        "Pmic_rtcSetTimeDateInfo : Parameter validation for 'hour' when 'timeMode' = 1"
     },
     {
         6167,
-        "SetRtc : Parameter validation for 'hour' when 'timeMode' = 0"
+        "Pmic_rtcSetTimeDateInfo : Parameter validation for 'hour' when 'timeMode' = 0"
     },
     {
         6168,
-        "SetRtc : Negative test for 'hour ' = 0, when 'timeMode' = 1"
+        "Pmic_rtcSetTimeDateInfo : Negative test for 'hour ' = 0, when 'timeMode' = 1"
     },
     {
         6169,
-        "SetRtc : Negative test for 'month ' = 0"
+        "Pmic_rtcSetTimeDateInfo : Negative test for 'month ' = 0"
     },
     {
         6290,
-        "SetRtc : Negative test for 'day' = 0"
+        "Pmic_rtcSetTimeDateInfo : Negative test for 'day' = 0"
     },
     {
         7021,
-        "SetRtc: Parameter range validation for 'year'"
+        "Pmic_rtcSetTimeDateInfo: Parameter range validation for 'year'"
     },
     {
         6170,
-        "SetRtc : Parameter range validation for 'month'"
+        "Pmic_rtcSetTimeDateInfo : Parameter range validation for 'month'"
     },
     {
         6171,
-        "SetRtc : Parameter range validation for 'day'"
+        "Pmic_rtcSetTimeDateInfo : Parameter range validation for 'day'"
     },
     {
        6172,
-       "SetRtc : Parameter range validation for 'day' for months with 30 days"
+       "Pmic_rtcSetTimeDateInfo : Parameter range validation for 'day' for months with 30 days"
     },
     {
         6173,
-        "SetRtc : Parameter range validation for 'day' for leap year('year' %4 = 0 ) and 'month' = 2 (february)"
+        "Pmic_rtcSetTimeDateInfo : Parameter range validation for 'day' for leap year('year' %4 = 0 ) and 'month' = 2 (february)"
     },
     {
         6174,
-        "SetRtc : Parameter range validation for 'day' for Non-leap year('year' %4 != 0 ) and 'month' = 2 (february)"
+        "Pmic_rtcSetTimeDateInfo : Parameter range validation for 'day' for Non-leap year('year' %4 != 0 ) and 'month' = 2 (february)"
     },
     {
         6175,
-        "SetRtc : Parameter range validation for 'day', for months with 31 days)"
+        "Pmic_rtcSetTimeDateInfo : Parameter range validation for 'day', for months with 31 days)"
     },
     {
         6176,
-        "GetRtc : Test RTC Get Time"
+        "Pmic_rtcGetTimeDateInfo : Test RTC Get Time"
     },
     {
         6177,
-        "GetRtc : Parameter validation for 'handle'"
+        "Pmic_rtcGetTimeDateInfo : Parameter validation for 'handle'"
     },
     {
         6178,
-        "GetRtc : Parameter validation for 'timeCfg'"
+        "Pmic_rtcGetTimeDateInfo : Parameter validation for 'timeCfg'"
     },
     {
         6179,
-        "GetRtc : Parameter validation for 'dataCfg'"
+        "Pmic_rtcGetTimeDateInfo : Parameter validation for 'dataCfg'"
     },
     {
         6180,
-        "SetRtcFreqCompen : Test RTC set RTC frequency compensation"
+        "Pmic_rtcSetFreqComp : Test RTC set RTC frequency compensation"
     },
     {
         6181,
-        "SetRtcFreqCompen : Parameter validation for 'handle'"
+        "Pmic_rtcSetFreqComp : Parameter validation for 'handle'"
     },
     {
         6182,
-        "GetRtcFreqCompen : Test RTC get RTC frequency compensation"
+        "Pmic_rtcGetFreqComp : Test RTC get RTC frequency compensation"
     },
     {
         6183,
-        "GetRtcFreqCompen : Parameter validation for 'handle'"
+        "Pmic_rtcGetFreqComp : Parameter validation for 'handle'"
     },
     {
         6287,
-        "GetRtcFreqCompen : Parameter validation for 'compensation'"
+        "Pmic_rtcGetFreqComp : Parameter validation for 'compensation'"
     },
     {
         6266,
@@ -329,13 +329,61 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
         "Pmic_fsmDeviceOffRequestCfg/Pmic_fsmEnableI2cTrigger :  RTC Wakeup using Alarm Interrupt'"
     },
     {
-        1,
+        111,
         "test_rtc_timer_irq : Test rtc timer asynchronous interrupt"
     },
     {
-        2,
+        222,
         "test_rtc_alarm_irq: Test rtc alarm asynchronous interrupt"
-    }
+    },
+    {
+	1,
+        "Pmic_rtcEnable : Negative test for RTC state for HERA"
+    },
+    {
+        2,
+        "Pmic_rtcEnableAlarmIntr : Negative test for RTC Alarm interrupt for HERA"
+    },
+    {
+        3,
+        "Pmic_rtcEnableTimerIntr :Negative test for RTC Timer interrupt for HERA"
+    },
+    {
+        4,
+        "Pmic_rtcGetFreqComp :Negative test for Test RTC for set RTC frequency compensation for HERA"
+    },
+    {
+        5,
+        "Pmic_rtcSetTimeDateInfo : Negative test for Test RTC for Get Time for HERA"
+    },
+    {
+        6,
+        "Pmic_rtcGetAlarmInfo : Negative test for Test RTC Get Alarm for HERA"
+    },
+    {
+        7,
+        "Pmic_rtcSetAlarmInfo : Negative test for Set RTC Alarm interrupt for HERA"
+    },
+    {
+        8,
+        "Pmic_rtcSetTimerPeriod : Negative test for Test Set RTC Timer interrupt Period for hera"
+    },
+    {
+        9,
+        "Pmic_rtcGetTimerPeriod : Negative test for Test Get RTC Timer interrupt for hera"
+    },
+    {
+        10,
+        "Pmic_getRtcStatus : Negative test for RTC Get Status for hera"
+    },
+    {
+        11,
+        "Pmic_rtcGetTimeDateInfo : Negative test for Test RTC for Get Time for HERA"
+    },
+    {
+        12,
+        "Pmic_rtcGetFreqComp : Negative test for Test RTC for get RTC frequency compensation for HERA"
+    },
 };
 
 /*!
@@ -2093,7 +2141,7 @@ static void test_pmic_rtc_testTimerAsyncIntr(void)
     Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
     Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
 
-    test_pmic_print_unity_testcase_info(1,
+    test_pmic_print_unity_testcase_info(111,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -2170,7 +2218,7 @@ static void test_pmic_rtc_testAlarmAsyncIntr(void)
     Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
     Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
 
-    test_pmic_print_unity_testcase_info(2,
+    test_pmic_print_unity_testcase_info(222,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -2226,6 +2274,289 @@ static void test_pmic_rtc_testAlarmAsyncIntr(void)
 
     /* Disable GPIO interrupt on the specific gpio pin */
     GPIO_disableInt(0);
+
+}
+
+/*!
+ * \brief   Pmic_rtcEnable : Negative test for RTC state for HERA
+ */
+static void test_Pmic_rtcEnable_hera_hera(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(1,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+    status = Pmic_rtcEnable(pPmicCoreHandle, PMIC_RTC_START);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+
+}
+
+/*!
+ * \brief   Pmic_rtcEnableAlarmIntr : Negative test for RTC Alarm interrupt for HERA
+ */
+static void test_Pmic_rtcEnableAlarmIntr_hera(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    test_pmic_print_unity_testcase_info(2,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    status = Pmic_rtcEnableAlarmIntr(pPmicCoreHandle, PMIC_RTC_ALARM_INTR_DISABLE);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+
+}
+
+/*!
+ * \brief   Pmic_rtcEnableTimerIntr :Negative test for RTC Timer interrupt for HERA
+ */
+static void test_Pmic_rtcEnableTimerIntr_hera(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    test_pmic_print_unity_testcase_info(3,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    status = Pmic_rtcEnableTimerIntr(pPmicCoreHandle, PMIC_RTC_TIMER_INTR_DISABLE);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+
+}
+
+/*!
+ * \brief   Pmic_rtcGetFreqComp :Negative test for Test RTC for set RTC frequency compensation for HERA
+ */
+static void test_pmic_rtc_testSetFreqComp_hera(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint16_t compensation_rd = 34952;
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    test_pmic_print_unity_testcase_info(4,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    status  = Pmic_rtcSetFreqComp(pPmicCoreHandle, compensation_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+
+}
+
+/*!
+ * \brief   Pmic_rtcSetTimeDateInfo : Negative test for Test RTC for Set Time for HERA
+ */
+static void test_Pmic_rtcSetTimeDateInfo_hera(void)
+{
+    int32_t status         = PMIC_ST_SUCCESS;
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+    Pmic_RtcTime_t timeCfg = {PMIC_RTC_VALID_PARAM_TIME_CFG_VAL, 30U, 30U, 6U,
+                              0U, 1U};
+    Pmic_RtcDate_t dateCfg = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
+                              2055U, 1U};
+
+    test_pmic_print_unity_testcase_info(5,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    timeCfg.timeMode       = PMIC_RTC_12_HOUR_MODE;
+
+    status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+
+}
+
+/*!
+ * \brief   Pmic_rtcGetAlarmInfo : Negative test for Test RTC Get Alarm for HERA
+ */
+static void test_Pmic_rtcGetAlarmInfo_hera(void)
+{
+    int32_t status         = PMIC_ST_SUCCESS;
+
+    Pmic_RtcTime_t timeCfg_rd;
+    Pmic_RtcDate_t dateCfg_rd;
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    test_pmic_print_unity_testcase_info(6,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+
+}
+
+/*!
+ * \brief   Pmic_rtcSetAlarmInfo : Negative test for Set RTC Alarm interrupt for HERA
+ */
+static void test_pmic_rtc_testSetAlarm_hera(void)
+{
+    int32_t status             = PMIC_ST_SUCCESS;
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    Pmic_RtcTime_t timeCfg     = {PMIC_RTC_VALID_PARAM_TIME_CFG_VAL, 30U, 30U,
+                                  6U, 0U, 1U};
+    Pmic_RtcDate_t dateCfg     = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
+                                  2055U, 1U};
+
+    test_pmic_print_unity_testcase_info(7,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    timeCfg.timeMode        = PMIC_RTC_12_HOUR_MODE;
+
+    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+
+}
+
+
+/*!
+ * \brief   Pmic_rtcSetTimerPeriod : Negative test for Test Set RTC Timer interrupt Period for hera
+ */
+static void test_pmic_rtc_testSetTimer_hera(void)
+{
+    int32_t status         = PMIC_ST_SUCCESS;
+    uint8_t timerPeriod;
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    test_pmic_print_unity_testcase_info(8,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    timerPeriod = PMIC_RTC_HOUR_INTR_PERIOD;
+
+    status = Pmic_rtcSetTimerPeriod(pPmicCoreHandle, timerPeriod);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+}
+
+/*!
+ * \brief   Pmic_rtcGetTimerPeriod : Negative test for Test Get RTC Timer period for hera
+ */
+static void test_pmic_rtc_testGetTimer_hera(void)
+{
+    int32_t status         = PMIC_ST_SUCCESS;
+    uint8_t timerPeriod_rd;
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    test_pmic_print_unity_testcase_info(9,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    status = Pmic_rtcGetTimerPeriod(pPmicCoreHandle, &timerPeriod_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+
+}
+
+
+/*!
+ * \brief   Pmic_getRtcStatus : Negative test for RTC Get Status for hera
+ */
+static void test_pmic_rtc_testGetRtcStatus_running_hera(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    Pmic_RtcStatus_t pmicRtcStatus = {0};
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    test_pmic_print_unity_testcase_info(10,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    pmicRtcStatus.validParams |= PMIC_RTC_CFG_RTC_STATUS_VALID_SHIFT;
+    status = Pmic_getRtcStatus(pPmicCoreHandle, &pmicRtcStatus);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+
+}
+
+
+/*!
+ * \brief   Pmic_rtcGetTimeDateInfo : Negative test for Test RTC for Get Time for HERA
+ */
+static void test_pmic_rtc_testGetTime_hera(void)
+{
+    int32_t status         = PMIC_ST_SUCCESS;
+    Pmic_RtcTime_t timeCfg_rd;
+    Pmic_RtcDate_t dateCfg_rd;
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    test_pmic_print_unity_testcase_info(11,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    timeCfg_rd.validParams = PMIC_RTC_VALID_PARAM_TIME_CFG_VAL;
+    dateCfg_rd.validParams = PMIC_RTC_VALID_PARAM_DATE_CFG_VAL;
+
+    status = Pmic_rtcGetTimeDateInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+}
+
+/*!
+ * \brief   Pmic_rtcGetFreqComp : Negative test for Test RTC for get RTC frequency compensation for HERA
+ */
+static void test_pmic_rtc_testGetFreqComp_hera(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint16_t compensation_rd = 0U;
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    test_pmic_print_unity_testcase_info(12,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    status  = Pmic_rtcGetFreqComp(pPmicCoreHandle, &compensation_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+
 }
 
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
@@ -2316,6 +2647,30 @@ static void test_pmic_run_testcases(void)
 
 
 /*!
+ * \brief   Run RTC unity test cases for HERA PMIC
+ */
+static void test_pmic_hera_run_testcases(void)
+{
+    pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
+    UNITY_BEGIN();
+
+    RUN_TEST(test_Pmic_rtcEnable_hera_hera);
+    RUN_TEST(test_Pmic_rtcEnableAlarmIntr_hera);
+    RUN_TEST(test_Pmic_rtcEnableTimerIntr_hera);
+    RUN_TEST(test_pmic_rtc_testSetFreqComp_hera);
+    RUN_TEST(test_Pmic_rtcSetTimeDateInfo_hera);
+    RUN_TEST(test_Pmic_rtcGetAlarmInfo_hera);
+    RUN_TEST(test_pmic_rtc_testSetAlarm_hera);
+    RUN_TEST(test_pmic_rtc_testSetTimer_hera);
+    RUN_TEST(test_pmic_rtc_testGetTimer_hera);
+    RUN_TEST(test_pmic_rtc_testGetRtcStatus_running_hera);
+    RUN_TEST(test_pmic_rtc_testGetTime_hera);
+    RUN_TEST(test_pmic_rtc_testGetFreqComp_hera);
+
+    UNITY_END();
+}
+
+/*!
  * \brief   RTC Unity Test App wrapper Function for LEO PMIC-A
  */
 static int32_t test_pmic_leo_pmicA_rtc_testApp(void)
@@ -2352,44 +2707,6 @@ static int32_t test_pmic_leo_pmicA_rtc_testApp(void)
     return status;
 }
 
-#ifdef SOC_J721E
-/*!
- * \brief   Unity Test App wrapper Function for LEO PMIC-B
- */
-static int32_t test_pmic_leo_pmicB_testApp(void)
-{
-    int32_t status                = PMIC_ST_SUCCESS;
-    Pmic_CoreCfg_t pmicConfigData = {0U};
-
-    /* Fill parameters to pmicConfigData */
-    pmicConfigData.pmicDeviceType      = PMIC_DEV_LEO_TPS6594X;
-    pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
-
-    pmicConfigData.commMode            = PMIC_INTF_SINGLE_I2C;
-    pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
-
-    pmicConfigData.slaveAddr           = LEO_PMICB_SLAVE_ADDR;
-    pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
-
-    pmicConfigData.qaSlaveAddr         = LEO_PMICA_WDG_SLAVE_ADDR;
-    pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
-
-    pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
-    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
-
-    pmicConfigData.pFnPmicCommIoWrite   = test_pmic_regWrite;
-    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
-
-    pmicConfigData.pFnPmicCritSecStart  = test_pmic_criticalSectionStartFn;
-    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
-
-    pmicConfigData.pFnPmicCritSecStop   = test_pmic_criticalSectionStopFn;
-    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
-
-    status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
-    return status;
-}
-#endif
 /*!
  * \brief   RTC Unity Test App wrapper Function for LEO PMIC-A
  */
@@ -2421,11 +2738,90 @@ static int32_t test_pmic_leo_pmicA_spiStub_rtc_testApp(void)
     return status;
 }
 
+/*!
+ * \brief   RTC Unity Test App wrapper Function for HERA PMIC
+ */
+static int32_t test_pmic_hera_rtc_testApp(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    Pmic_CoreCfg_t pmicConfigData = {0U};
+
+    /* Fill parameters to pmicConfigData */
+    pmicConfigData.pmicDeviceType     = PMIC_DEV_HERA_LP8764X;
+    pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
+
+    pmicConfigData.commMode           = PMIC_INTF_SINGLE_I2C;
+    pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
+
+    pmicConfigData.slaveAddr          = HERA_PMIC_SLAVE_ADDR;
+    pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
+
+    pmicConfigData.qaSlaveAddr        = HERA_PMIC_WDG_SLAVE_ADDR;
+    pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoRead   = test_pmic_regRead;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoWrite  = test_pmic_regWrite;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStart = test_pmic_criticalSectionStartFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStop  = test_pmic_criticalSectionStopFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
+
+    status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
+    return status;
+
+}
+
+#ifdef SOC_J721E
+/*!
+ * \brief   RTC Unity Test App wrapper Function for LEO PMIC-B
+ */
+static int32_t test_pmic_leo_pmicB_rtc_testApp(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    Pmic_CoreCfg_t pmicConfigData = {0U};
+
+    /* Fill parameters to pmicConfigData */
+    pmicConfigData.pmicDeviceType     = PMIC_DEV_LEO_TPS6594X;
+    pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
+
+    pmicConfigData.commMode           = PMIC_INTF_SINGLE_I2C;
+    pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
+
+    pmicConfigData.slaveAddr          = LEO_PMICB_SLAVE_ADDR;
+    pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
+
+    pmicConfigData.qaSlaveAddr        = LEO_PMICB_WDG_SLAVE_ADDR;
+    pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoRead   = test_pmic_regRead;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoWrite  = test_pmic_regWrite;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStart = test_pmic_criticalSectionStartFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStop  = test_pmic_criticalSectionStopFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
+
+    status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
+    return status;
+
+}
+#endif
+
 static int32_t setup_pmic_interrupt()
 {
     int32_t status = PMIC_ST_SUCCESS;
 
 #ifdef SOC_J721E
+
     status = test_pmic_leo_pmicA_rtc_testApp();
    /* Deinit pmic handle */
     if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
@@ -2438,7 +2834,7 @@ static int32_t setup_pmic_interrupt()
         Pmic_IrqStatus_t intstat;
         Pmic_irqGetErrStatus(pPmicCoreHandle, &intstat,1);
 
-        status = test_pmic_leo_pmicB_testApp();
+        status = test_pmic_leo_pmicB_rtc_testApp();
        /* Deinit pmic handle */
         if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
         {
@@ -2459,7 +2855,8 @@ static const char pmicTestAppMenu[] =
     " \r\n 0: Pmic Leo device(PMIC A on J721E EVM Using I2C Interface)"
     " \r\n 1: Pmic Leo device(PMIC A on J721E EVM Using SPI Stub Functions)"
     " \r\n 2: Pmic Leo device(PMIC B on J721E EVM)"
-    " \r\n 3: quit"
+    " \r\n 3: Pmic HERA device"
+    " \r\n 4: quit"
     " \r\n"
     " \r\n Enter option: "
 };
@@ -2494,7 +2891,6 @@ static void test_pmic_rtc_testapp_runner(void)
                 {
                    /* RTC Unity Test App wrapper Function for LEO PMIC-A */
                    test_pmic_leo_pmicA_rtc_testApp();
-
                    /* Run rtc test cases for Leo PMIC-A */
                    test_pmic_run_testcases();
                    /* Deinit pmic handle */
@@ -2524,6 +2920,22 @@ static void test_pmic_rtc_testapp_runner(void)
                 pmic_log("RTC on LEO PMIC-B not supported due to HW limitation \n");
                break;
            case 3U:
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+                {
+                   /* RTC Unity Test App wrapper Function for HERA */
+                   if(PMIC_ST_SUCCESS == test_pmic_hera_rtc_testApp())
+                   {
+                       /* Run rtc test cases for Leo PMIC-A */
+                       test_pmic_hera_run_testcases();
+                   }
+                   /* Deinit pmic handle */
+                   if(pPmicCoreHandle != NULL)
+                   {
+                       test_pmic_appDeInit(pPmicCoreHandle);
+                   }
+                }
+               break;
+           case 4U:
                pmic_log(" \r\n Quit from application\n");
                return;
            default:
