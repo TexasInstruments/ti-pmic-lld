@@ -4601,13 +4601,14 @@ static int32_t Pmic_getThermalWarnStat(Pmic_CoreHandle_t  *pPmicCoreHandle,
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
     /* Reading the Thermal Status */
     if(PMIC_ST_SUCCESS == status)
     {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
         status = Pmic_commIntf_recvByte(pPmicCoreHandle,
                                         PMIC_STAT_MISC_REGADDR,
                                         &regData);
+        Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
     if(PMIC_ST_SUCCESS == status)
@@ -4629,13 +4630,14 @@ static int32_t Pmic_getOderlyShutdownStat(Pmic_CoreHandle_t  *pPmicCoreHandle,
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
     /* Reading the Thermal Status */
     if(PMIC_ST_SUCCESS == status)
     {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
         status = Pmic_commIntf_recvByte(pPmicCoreHandle,
                                         PMIC_STAT_MODERATE_ERR_REGADDR,
                                         &regData);
+        Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
     if(PMIC_ST_SUCCESS == status)
@@ -4659,13 +4661,14 @@ static int32_t Pmic_getImmediateShutdownStat(
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
     /* Reading the Thermal Status */
     if(PMIC_ST_SUCCESS == status)
     {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
         status = Pmic_commIntf_recvByte(pPmicCoreHandle,
                                         PMIC_STAT_SEVERE_ERR_REGADDR,
                                         &regData);
+        Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
     if(PMIC_ST_SUCCESS == status)

@@ -824,6 +824,54 @@ static Pmic_Ut_Tests_t pmic_power_tests[] =
         7220,
         "Pmic_powerSetCommonConfig : Parameter validation for handle"
     },
+    {
+        7726,
+        "Pmic_powerGetPwrThermalStat : Parameter validation for handle."
+    },
+    {
+        7727,
+        "Pmic_powerGetPwrThermalStat : Parameter validation for pPwrThermalStatCfg."
+    },
+    {
+        7728,
+        "Pmic_powerGetPwrThermalStat : Test Get Thermal Warn Status."
+    },
+    {
+        7729,
+        "Pmic_powerGetPwrThermalStat : Test Get Oderly Shutdown Status."
+    },
+    {
+        7730,
+        "Pmic_powerGetPwrThermalStat : Test Get immediate Shutdown Status."
+    },
+    {
+        1,
+        "Pmic_powerSetPwrResourceCfg : Negative test LDO Pull down Select for HERA PMIC"
+    },
+    {
+        2,
+        "Pmic_powerSetPwrResourceCfg : Negative test VMON for LEO PMIC."
+    },
+    {
+        3,
+        "Pmic_powerSetThermalConfig : Negative test thermalShutdownThold as 140C for HERA pmic"
+    },
+    {
+        4,
+        "Pmic_powerSetThermalConfig : Negative test for thermalShutdownThold as 145C for HERA pmic"
+    },
+    {
+        5,
+        "Pmic_powerSetLdoRtc : Negative test Disable ldortcRegulator for HERA"
+    },
+    {
+        6,
+        "Pmic_powerSetPwrResourceCfg : Negative test BUCK switching frequency for 8.8M for LEO"
+    },
+    {
+        7,
+        "Pmic_powerGetPwrResourceCfg : Negative test Get Switch peak current limit for BUCK 5"
+    },
 
 };
 
@@ -1891,7 +1939,7 @@ static void test_pmic_powerSetPowerResourceConfig_regulatorEn_disable(void)
     {
         PMIC_CFG_REGULATOR_EN_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -1903,102 +1951,30 @@ static void test_pmic_powerSetPowerResourceConfig_regulatorEn_disable(void)
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
     /* PDK-7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-        TEST_IGNORE();
-    }
-
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         TEST_IGNORE();
     }
 
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    if((PMIC_DEV_LEO_TPS6594X  == pPmicCoreHandle->pmicDeviceType) &&
+       (J721E_LEO_PMICA_DEVICE == pmic_device_info))
     {
         pPowerCfg.regulatorEn = PMIC_TPS6594X_REGULATOR_DISABLE;
-        pwrRsrcMin = PMIC_TPS6594X_REGULATOR_BUCK1;
-        pwrRsrcMax = PMIC_TPS6594X_REGULATOR_BUCK5;
-    }
 
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-    {
-        pPowerCfg.regulatorEn = PMIC_LP8764X_BUCK_REGULATOR_DISABLE;
-        pwrRsrcMin = PMIC_LP8764X_REGULATOR_BUCK1;
-        pwrRsrcMax = PMIC_LP8764X_REGULATOR_BUCK4;
-    }
-
-    for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
-    {
-        if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (J721E_LEO_PMICA_DEVICE == pmic_device_info) &&
-            ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
-             (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK3) ||
-             (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK4) ||
-             (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO1)))
-        {
-            continue;
-        }
-
-        if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (J721E_LEO_PMICB_DEVICE == pmic_device_info) &&
-            ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
-             (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK5) ||
-             (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO2)  ||
-             (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO4)))
-        {
-            continue;
-        }
+        pwrRsrc = PMIC_TPS6594X_REGULATOR_BUCK2;
 
         pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
                                                  pwrRsrc,
                                                  pPowerCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
         pmicStatus = Pmic_powerGetPwrResourceCfg(pPmicCoreHandle,
-                                                      pwrRsrc,
-                                                      &powerCfg_rd);
+                                                 pwrRsrc,
+                                                 &powerCfg_rd);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
         TEST_ASSERT_EQUAL(pPowerCfg.regulatorEn, powerCfg_rd.regulatorEn);
-    }
 
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-        pwrRsrcMin = PMIC_TPS6594X_REGULATOR_LDO1;
-        pwrRsrcMax = PMIC_TPS6594X_REGULATOR_LDO4;
-
-        for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
-        {
-            if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-                (J721E_LEO_PMICA_DEVICE == pmic_device_info) &&
-                ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
-                 (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK3) ||
-                 (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK4) ||
-                 (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO1)))
-            {
-                continue;
-            }
-
-            if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-                (J721E_LEO_PMICB_DEVICE == pmic_device_info) &&
-                ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
-                 (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK5) ||
-                 (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO2)  ||
-                 (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO4)))
-            {
-                continue;
-            }
-
-            pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
-                                                     pwrRsrc,
-                                                     pPowerCfg);
-            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-            pmicStatus = Pmic_powerGetPwrResourceCfg(pPmicCoreHandle,
-                                                          pwrRsrc,
-                                                          &powerCfg_rd);
-            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-            TEST_ASSERT_EQUAL(pPowerCfg.regulatorEn, powerCfg_rd.regulatorEn);
-        }
     }
 
 }
@@ -2013,7 +1989,7 @@ static void test_pmic_powerSetPowerResourceConfig_regulatorEn_enable(void)
     {
         PMIC_CFG_REGULATOR_EN_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -2024,22 +2000,18 @@ static void test_pmic_powerSetPowerResourceConfig_regulatorEn_enable(void)
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-        pPowerCfg.regulatorEn = PMIC_TPS6594X_REGULATOR_ENABLE;
-        pwrRsrcMin = PMIC_TPS6594X_REGULATOR_BUCK1;
-        pwrRsrcMax = PMIC_TPS6594X_REGULATOR_BUCK5;
-    }
-
+    /* PDK-7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        pPowerCfg.regulatorEn = PMIC_LP8764X_BUCK_REGULATOR_ENABLE;
-        pwrRsrcMin = PMIC_LP8764X_REGULATOR_BUCK1;
-        pwrRsrcMax = PMIC_LP8764X_REGULATOR_BUCK4;
+        TEST_IGNORE();
     }
 
-    for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
+    if((PMIC_DEV_LEO_TPS6594X  == pPmicCoreHandle->pmicDeviceType) &&
+       (J721E_LEO_PMICA_DEVICE == pmic_device_info))
     {
+        pwrRsrc = PMIC_TPS6594X_REGULATOR_BUCK2;
+        pPowerCfg.regulatorEn = PMIC_TPS6594X_REGULATOR_ENABLE;
+
         pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
                                                  pwrRsrc,
                                                  pPowerCfg);
@@ -2053,26 +2025,6 @@ static void test_pmic_powerSetPowerResourceConfig_regulatorEn_enable(void)
         TEST_ASSERT_EQUAL(pPowerCfg.regulatorEn, powerCfg_rd.regulatorEn);
     }
 
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-        pwrRsrcMin = PMIC_TPS6594X_REGULATOR_LDO1;
-        pwrRsrcMax = PMIC_TPS6594X_REGULATOR_LDO4;
-
-        for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
-        {
-            pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
-                                                     pwrRsrc,
-                                                     pPowerCfg);
-            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-            pmicStatus = Pmic_powerGetPwrResourceCfg(pPmicCoreHandle,
-                                                     pwrRsrc,
-                                                     &powerCfg_rd);
-            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-            TEST_ASSERT_EQUAL(pPowerCfg.regulatorEn, powerCfg_rd.regulatorEn);
-        }
-    }
 }
 
 /*!
@@ -11420,6 +11372,351 @@ static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_disabled(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
+/*!
+ * \brief   Pmic_powerGetPwrThermalStat : Parameter validation for handle.
+ */
+static void test_pmic_powerPmic_powerGetPwrThermalStatPrmValTest_handle(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    Pmic_PowerThermalStat_t pPwrThermalStatCfg =
+    {
+       PMIC_THERMAL_STAT_WARN_VALID_SHIFT,
+    };
+
+    test_pmic_print_unity_testcase_info(7726,
+                                        pmic_power_tests,
+                                        PMIC_POWER_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_powerGetPwrThermalStat(NULL, &pPwrThermalStatCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+}
+
+/*!
+ * \brief   Pmic_powerGetPwrThermalStat : Parameter validation for pPwrThermalStatCfg.
+ */
+static void test_pmic_powerPmic_powerGetPwrThermalStatPrmValTest_pPwrThermalStatCfg(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(7727,
+                                        pmic_power_tests,
+                                        PMIC_POWER_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_powerGetPwrThermalStat(pPmicCoreHandle, NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+}
+
+/*!
+ * \brief   Pmic_powerGetPwrThermalStat : Test Get Thermal Warn Status.
+ */
+static void test_pmic_powerPmic_powerGetPwrThermalStat_thermalStatus(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    Pmic_PowerThermalStat_t pPwrThermalStatCfg =
+    {
+       PMIC_THERMAL_STAT_WARN_VALID_SHIFT,
+    };
+
+    test_pmic_print_unity_testcase_info(7728,
+                                        pmic_power_tests,
+                                        PMIC_POWER_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_powerGetPwrThermalStat(pPmicCoreHandle, &pPwrThermalStatCfg);
+
+    pmic_log("Status: %d\n",pPwrThermalStatCfg.thermalStateWarning);
+    if(pPwrThermalStatCfg.thermalStateWarning != 0)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+}
+
+/*!
+ * \brief   Pmic_powerGetPwrThermalStat : Test Get Oderly Shutdown Status.
+ */
+static void test_pmic_powerPmic_powerGetPwrThermalStat_OderlyShtDwnStatus(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+
+    Pmic_PowerThermalStat_t pPwrThermalStatCfg =
+    {
+       PMIC_THERMAL_STAT_ORD_SHTDWN_VALID_SHIFT,
+    };
+
+    test_pmic_print_unity_testcase_info(7729,
+                                        pmic_power_tests,
+                                        PMIC_POWER_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_powerGetPwrThermalStat(pPmicCoreHandle, &pPwrThermalStatCfg);
+
+    pmic_log("Status: %d\n",pPwrThermalStatCfg.thermalStateOderlyShtDwn);
+    if(pPwrThermalStatCfg.thermalStateOderlyShtDwn != 0)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+}
+
+/*!
+ * \brief   Pmic_powerGetPwrThermalStat : Test Get immediate Shutdown Status.
+ */
+static void test_pmic_powerPmic_powerGetPwrThermalStat_ImmShtDwnStatus(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+
+    Pmic_PowerThermalStat_t pPwrThermalStatCfg =
+    {
+       PMIC_THERMAL_STAT_IMM_SHTDWN_VALID_SHIFT,
+    };
+
+    test_pmic_print_unity_testcase_info(7730,
+                                        pmic_power_tests,
+                                        PMIC_POWER_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_powerGetPwrThermalStat(pPmicCoreHandle, &pPwrThermalStatCfg);
+
+    pmic_log("Status: %d\n",pPwrThermalStatCfg.thermalStateImmShtDwn);
+    if(pPwrThermalStatCfg.thermalStateImmShtDwn != 0)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+}
+
+/*!
+ * \brief   Pmic_powerSetPwrResourceCfg : Negative test LDO Pull down Select for HERA PMIC.
+ */
+static void test_pmic_powerSetPowerResourceConfig_hera_ldo(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint16_t pwrRsrc;
+
+    Pmic_PowerResourceCfg_t pPowerCfg   =
+    {
+        PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID_SHIFT,
+    };
+
+    test_pmic_print_unity_testcase_info(1,
+                                        pmic_power_tests,
+                                        PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pPowerCfg.ldoPullDownSel = PMIC_TPS6594X_REGULATOR_LDO_PLDN_VAL_50KOHM;
+        pwrRsrc = PMIC_TPS6594X_REGULATOR_LDO1;;
+    }
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
+                                             pwrRsrc,
+                                             pPowerCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+}
+
+/*!
+ * \brief   Pmic_powerSetPwrResourceCfg : Negative test VMON range for LEO PMIC.
+ */
+static void test_pmic_powerSetPowerResourceConfig_leo_vmon(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint16_t pwrRsrc;
+
+    Pmic_PowerResourceCfg_t pPowerCfg   =
+    {
+        PMIC_CFG_VMON_RANGE_VALID_SHIFT,
+    };
+
+    test_pmic_print_unity_testcase_info(2,
+                                        pmic_power_tests,
+                                        PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pPowerCfg.vmonRange = PMIC_LP8764X_VMON_RANGE_0V3_3V34;
+        pwrRsrc = PMIC_LP8764X_POWER_SOURCE_VMON1;
+    }
+
+    pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
+                                             pwrRsrc,
+                                             pPowerCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+}
+
+/*!
+ * \brief   Pmic_powerSetThermalConfig : Negative test thermalShutdownThold as 140C for HERA pmic
+ */
+static void test_pmic_powerSetThermalConfig_hera_thermalShutdownThold_low(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    Pmic_PowerThermalCfg_t thermalThreshold =
+    {
+        PMIC_THERMAL_SHTDWN_VALID_SHIFT,
+    };
+
+    test_pmic_print_unity_testcase_info(3,
+                                        pmic_power_tests,
+                                        PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        thermalThreshold.thermalShutdownThold =
+                                PMIC_TPS6594X_THERMAL_TEMP_TSD_ORD_140C;
+    }
+
+    pmicStatus = Pmic_powerSetThermalConfig(pPmicCoreHandle, thermalThreshold);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+}
+
+/*!
+ * \brief   Pmic_powerSetThermalConfig : Negative test for thermalShutdownThold as 145C for HERA pmic
+ */
+static void test_pmic_powerSetThermalConfig_hera_thermalShutdownThold_high(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(4,
+                                        pmic_power_tests,
+                                        PMIC_POWER_NUM_OF_TESTCASES);
+    Pmic_PowerThermalCfg_t thermalThreshold =
+    {
+        PMIC_THERMAL_SHTDWN_VALID_SHIFT,
+    };
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        thermalThreshold.thermalShutdownThold = PMIC_TPS6594X_THERMAL_TEMP_TSD_ORD_145C;
+    }
+
+    pmicStatus = Pmic_powerSetThermalConfig(pPmicCoreHandle, thermalThreshold);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+}
+
+/*!
+ * \brief   Pmic_powerSetLdoRtc : Negative test Disable ldortcRegulator for HERA
+ */
+static void test_pmic_powerSetLdoRtc_HERA_ldortcEnable_disable(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    bool ldortcEnable;
+
+    test_pmic_print_unity_testcase_info(5,
+                                        pmic_power_tests,
+                                        PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        ldortcEnable = PMIC_TPS6594X_REGULATOR_LDORTC_DISABLE;
+    }
+
+    pmicStatus = Pmic_powerSetLdoRtc(pPmicCoreHandle, ldortcEnable);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+}
+
+/*!
+ * \brief   Pmic_powerSetPwrResourceCfg : Negative test BUCK switching frequency for 8.8M for LEO
+ */
+static void test_pmic_powerSetPowerResourceConfig_LEO_buckFreqSel_8M8(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint16_t pwrRsrc;
+
+    Pmic_PowerResourceCfg_t pPowerCfg   =
+    {
+        PMIC_CFG_REGULATOR_BUCK_FREQ_SEL_VALID_SHIFT,
+    };
+
+    test_pmic_print_unity_testcase_info(6,
+                                        pmic_power_tests,
+                                        PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pPowerCfg.buckFreqSel = PMIC_LP8764X_BUCK_FREQ_SEL_8M8;
+        pwrRsrc = PMIC_LP8764X_REGULATOR_BUCK1;
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
+                                             pwrRsrc,
+                                             pPowerCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+}
+
+/*!
+ * \brief   Pmic_powerGetPwrResourceCfg : Negative test Get Switch peak current limit for BUCK 5
+ */
+static void test_pmic_powerGetPowerResourceConfig_buck5(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint16_t pwrRsrc;
+
+    Pmic_PowerResourceCfg_t powerCfg_rd   =
+    {
+        PMIC_CFG_REGULATOR_BUCK_ILIM_VALID_SHIFT,
+    };
+
+    test_pmic_print_unity_testcase_info(7,
+                                        pmic_power_tests,
+                                        PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pwrRsrc = PMIC_TPS6594X_REGULATOR_BUCK5;
+        pmicStatus = Pmic_powerGetPwrResourceCfg(pPmicCoreHandle,
+                                                 pwrRsrc,
+                                                 &powerCfg_rd);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+   }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pwrRsrc = PMIC_TPS6594X_REGULATOR_BUCK5;
+        pmicStatus = Pmic_powerGetPwrResourceCfg(pPmicCoreHandle,
+                                                 pwrRsrc,
+                                                 &powerCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    }
+}
+
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E) || defined(SOC_J7200))
 
@@ -11640,6 +11937,20 @@ RUN_TEST(test_pmic_powerSetPwrRsrcIntrPrmValTest_handle);
     RUN_TEST(test_pmic_powerSetPwrRsrcIntr_en_drv_readback_enabled);
     RUN_TEST(test_pmic_powerSetPwrRsrcIntr_en_drv_readback_disabled);
 
+RUN_TEST(test_pmic_powerPmic_powerGetPwrThermalStatPrmValTest_handle);
+RUN_TEST(test_pmic_powerPmic_powerGetPwrThermalStatPrmValTest_pPwrThermalStatCfg);
+RUN_TEST(test_pmic_powerPmic_powerGetPwrThermalStat_thermalStatus);
+RUN_TEST(test_pmic_powerPmic_powerGetPwrThermalStat_OderlyShtDwnStatus);
+RUN_TEST(test_pmic_powerPmic_powerGetPwrThermalStat_ImmShtDwnStatus);
+
+RUN_TEST(test_pmic_powerSetPowerResourceConfig_hera_ldo);
+RUN_TEST(test_pmic_powerSetPowerResourceConfig_leo_vmon);
+RUN_TEST(test_pmic_powerSetThermalConfig_hera_thermalShutdownThold_low);
+RUN_TEST(test_pmic_powerSetThermalConfig_hera_thermalShutdownThold_high);
+RUN_TEST(test_pmic_powerSetLdoRtc_HERA_ldortcEnable_disable);
+RUN_TEST(test_pmic_powerSetPowerResourceConfig_LEO_buckFreqSel_8M8);
+RUN_TEST(test_pmic_powerGetPowerResourceConfig_buck5);
+
     UNITY_END();
 }
 
@@ -11756,6 +12067,32 @@ static int32_t test_pmic_hera_power_testApp(void)
 
 }
 
+static int32_t setup_pmic_interrupt()
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+#ifdef SOC_J721E
+
+    status = test_pmic_leo_pmicA_power_testApp();
+   /* Deinit pmic handle */
+    if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+    {
+        test_pmic_appDeInit(pPmicCoreHandle);
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        status = test_pmic_leo_pmicB_power_testApp();
+       /* Deinit pmic handle */
+        if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+        {
+            test_pmic_appDeInit(pPmicCoreHandle);
+        }
+    }
+#endif
+    return status;
+}
+
 static const char pmicTestAppMenu[] =
 {
     " \r\n ================================================================="
@@ -11794,39 +12131,48 @@ static void test_pmic_power_testapp_runner(void)
         switch(num)
         {
            case 0U:
-               /* POWER Unity Test App wrapper Function for LEO PMIC-A */
-               test_pmic_leo_pmicA_power_testApp();
-               pmic_device_info = J721E_LEO_PMICA_DEVICE;
-               /* Run power test cases for Leo PMIC-A */
-               test_pmic_run_testcases();
-               /* Deinit pmic handle */
-               if(pPmicCoreHandle != NULL)
-               {
-                   test_pmic_appDeInit(pPmicCoreHandle);
-               }
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+                {
+                   /* POWER Unity Test App wrapper Function for LEO PMIC-A */
+                   test_pmic_leo_pmicA_power_testApp();
+                   pmic_device_info = J721E_LEO_PMICA_DEVICE;
+                   /* Run power test cases for Leo PMIC-A */
+                   test_pmic_run_testcases();
+                   /* Deinit pmic handle */
+                   if(pPmicCoreHandle != NULL)
+                   {
+                       test_pmic_appDeInit(pPmicCoreHandle);
+                   }
+                }
                break;
            case 1U:
-               /* POWER Unity Test App wrapper Function for LEO PMIC-B */
-               test_pmic_leo_pmicB_power_testApp();
-               pmic_device_info = J721E_LEO_PMICB_DEVICE;
-               /* Run power test cases for Leo PMIC-B */
-               test_pmic_run_testcases();
-               /* Deinit pmic handle */
-               if(pPmicCoreHandle != NULL)
-               {
-                   test_pmic_appDeInit(pPmicCoreHandle);
-               }
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+                {
+                   /* POWER Unity Test App wrapper Function for LEO PMIC-B */
+                   test_pmic_leo_pmicB_power_testApp();
+                   pmic_device_info = J721E_LEO_PMICB_DEVICE;
+                   /* Run power test cases for Leo PMIC-B */
+                   test_pmic_run_testcases();
+                   /* Deinit pmic handle */
+                   if(pPmicCoreHandle != NULL)
+                   {
+                       test_pmic_appDeInit(pPmicCoreHandle);
+                   }
+                }
                break;
            case 2U:
-               /* POWER Unity Test App wrapper Function for HERA PMIC */
-               test_pmic_hera_power_testApp();
-               /* Run power test cases for Hera PMIC */
-               test_pmic_run_testcases();
-               /* Deinit pmic handle */
-               if(pPmicCoreHandle != NULL)
-               {
-                   test_pmic_appDeInit(pPmicCoreHandle);
-               }
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+                {
+                   /* POWER Unity Test App wrapper Function for HERA PMIC */
+                   test_pmic_hera_power_testApp();
+                   /* Run power test cases for Hera PMIC */
+                   test_pmic_run_testcases();
+                   /* Deinit pmic handle */
+                   if(pPmicCoreHandle != NULL)
+                   {
+                       test_pmic_appDeInit(pPmicCoreHandle);
+                   }
+                }
                break;
            case 3U:
                pmic_log(" \r\n Quit from application\n");
