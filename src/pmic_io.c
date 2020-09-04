@@ -215,18 +215,18 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
          */
 
         buffLength = 0;
-        /* Set ADDR to txbuf[0], Bits 1-8: ADDR[7:0] */
+        /* Set ADDR to txbuf[0] with ADDR[7:0] */
         txBuf[buffLength] = (uint8_t)(pmicRegAddr & 0xFFU);
         buffLength++;
 
-        /* Set PAGE to txBuf[1] 2:0 bits, Bits 9-11: PAGE[2:0] */
-        txBuf[buffLength] = (uint8_t)((pmicRegAddr >> 8U) & 0x7U);
+        /* Set PAGE to txBuf[1] 7:5 bits with PAGE[2:0] */
+        txBuf[buffLength] = (uint8_t)(((pmicRegAddr >> 8U) & 0x7U) << 5U);
 
-        /* Set R/W in txBuf[1] as bit-3, Bit 12: 0 for Write Request */
+        /* Set R/W in txBuf[1] as bit-4, for Write Request */
         txBuf[buffLength] &= (uint8_t)(~PMIC_IO_REQ_RW);
         buffLength++;
 
-        /* Set write data to txBuf[2], Bits 17-24: WDATA[7:0] */
+        /* Set write data to txBuf[2], with WDATA[7:0] */
         txBuf[buffLength] = txData;
         buffLength++;
 
@@ -234,9 +234,9 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
         {
             /* Set CRC data to txBuf[3], Bits 25-32 CRC */
             txBuf[buffLength] = Pmic_getCRC8Val(txBuf, buffLength);
-        }
             /* Increment 1 more byte to store CRC8 */
             buffLength++;
+        }
     }
 
     if(PMIC_ST_SUCCESS == pmicStatus)
@@ -335,14 +335,14 @@ int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
          * explained in PMIC TRM
          */
         buffLength = 0U;
-        /* Set ADDR to rxbuf[0], Bits 1-8: ADDR[7:0] */
+        /* Set ADDR to rxbuf[0], with ADDR[7:0] */
         rxBuf[buffLength] = (uint8_t)(pmicRegAddr & 0xFFU);
         buffLength++;
 
-        /* Set PAGE to rxBuf[1] 2:0 bits, Bits 9-11: PAGE[2:0] */
-        rxBuf[buffLength] = (uint8_t)((pmicRegAddr >> 8U) & 0x7U);
+        /* Set PAGE to rxBuf[1] 7:5 bits, with PAGE[2:0] */
+        rxBuf[buffLength] = (uint8_t)(((pmicRegAddr >> 8U) & 0x7U) << 5U);
 
-        /* Set R/W in rxBuf[1] as bit-3, Bit 12: 0 for Write Request */
+        /* Set R/W in rxBuf[1] as bit-4, for read Request */
         rxBuf[buffLength] |= PMIC_IO_REQ_RW;
         buffLength++;
 
@@ -371,7 +371,9 @@ int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
         if(PMIC_INTF_SPI == pPmicCoreHandle->commMode)
         {
             /* Copy SPI frame data to crcData */
-            for(crcDataLen = 0; crcDataLen < PMIC_IO_BUF_SIZE; crcDataLen++)
+            for(crcDataLen = 0;
+                crcDataLen < (PMIC_IO_BUF_SIZE - 1);
+                crcDataLen++)
             {
                 crcData[crcDataLen] = rxBuf[crcDataLen];
             }

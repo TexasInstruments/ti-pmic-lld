@@ -63,7 +63,7 @@ extern "C" {
 /*!
  * \brief: SPI R/W bit Position
  */
-#define PMIC_IO_REQ_RW                         (((uint32_t)1U) << 3U)
+#define PMIC_IO_REQ_RW                         (((uint32_t)1U) << 4U)
 
 /*!
  * \brief: IO Buffer Size
