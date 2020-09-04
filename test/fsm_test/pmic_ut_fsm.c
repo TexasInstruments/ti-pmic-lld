@@ -744,6 +744,7 @@ static int32_t test_pmic_leo_pmicA_fsm_testApp(void)
     return status;
 }
 
+#ifdef SOC_J721E
 /*!
  * \brief   FSM Unity Test App wrapper Function for LEO PMIC-B
  */
@@ -781,6 +782,7 @@ static int32_t test_pmic_leo_pmicB_fsm_testApp(void)
     return status;
 
 }
+#endif
 
 /*!
  * \brief  FSM  Unity Test App wrapper Function for HERA PMIC
