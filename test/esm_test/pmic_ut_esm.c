@@ -239,7 +239,35 @@ static Pmic_Ut_Tests_t pmic_esm_tests[] =
      {
          46,
          "Pmic_esmSetInterrupt: Parameter validation for handle"
-     }
+     },
+     {
+         47,
+         "Pmic_esmStart : Negative test to verify ESM SOC Start for HERA"
+     },
+     {
+         48,
+         "Pmic_esmEnable : Negative test to verify ESM SOC Enable for HERA"
+     },
+     {
+         49,
+         "Pmic_esmSetConfiguration : Negative test to verify PMIC ESM SOC Set configuration for ESM SOC Level Mode for HERA"
+     },
+     {
+         50,
+         "Pmic_esmGetConfiguration : Negative test to verify PMIC ESM SOC Get configuration for ESM SOC Level Mode for HERA"
+     },
+     {
+         51,
+         "Pmic_esmGetErrCnt : Negative test to verify Error count value for HERA"
+     },
+     {
+         52,
+         "Pmic_esmSetInterrupt : Negative test to verify ESM interrupt enable for HERA"
+     },
+     {
+         52,
+         "Pmic_esmGetEnableState : Negative test to verify ESM get state for HERA"
+     },
 };
 
 /*!
@@ -1227,7 +1255,7 @@ static void test_esm_setInterrupt_esmMcuRstIntr_levelMode(void)
         PMIC_ESM_LEVEL_MODE
     };
 
-    Pmic_EsmIntrCfg_t esmIntrCfg = 
+    Pmic_EsmIntrCfg_t esmIntrCfg =
     {
         false,
         false,
@@ -1328,7 +1356,7 @@ static void test_esm_setInterrupt_esmMcuRstIntr_pwmMode(void)
         PMIC_ESM_PWM_MODE
     };
 
-    Pmic_EsmIntrCfg_t esmIntrCfg = 
+    Pmic_EsmIntrCfg_t esmIntrCfg =
     {
         false,
         false,
@@ -1426,7 +1454,7 @@ static void test_esm_setInterrupt_esmMcuFailIntr_levelMode(void)
         PMIC_ESM_LEVEL_MODE
     };
 
-    Pmic_EsmIntrCfg_t esmIntrCfg = 
+    Pmic_EsmIntrCfg_t esmIntrCfg =
     {
         false,
         true,
@@ -1522,7 +1550,7 @@ static void test_esm_setInterrupt_esmMcuFailIntr_pwmMode(void)
         PMIC_ESM_PWM_MODE
     };
 
-    Pmic_EsmIntrCfg_t esmIntrCfg = 
+    Pmic_EsmIntrCfg_t esmIntrCfg =
     {
         false,
         true,
@@ -1620,7 +1648,7 @@ static void test_esm_setInterrupt_esmMcuPinIntr_levelMode(void)
         PMIC_ESM_LEVEL_MODE
     };
 
-    Pmic_EsmIntrCfg_t esmIntrCfg = 
+    Pmic_EsmIntrCfg_t esmIntrCfg =
     {
         true,
         false,
@@ -1716,7 +1744,7 @@ static void test_esm_setInterrupt_esmMcuPinIntr_pwmMode(void)
         PMIC_ESM_PWM_MODE
     };
 
-    Pmic_EsmIntrCfg_t esmIntrCfg = 
+    Pmic_EsmIntrCfg_t esmIntrCfg =
     {
         true,
         false,
@@ -1814,7 +1842,7 @@ static void test_esm_setInterrupt_esmSocRstIntr_levelMode(void)
         PMIC_ESM_LEVEL_MODE
     };
 
-    Pmic_EsmIntrCfg_t esmIntrCfg = 
+    Pmic_EsmIntrCfg_t esmIntrCfg =
     {
         false,
         false,
@@ -1910,7 +1938,7 @@ static void test_esm_setInterrupt_esmSocRstIntr_pwmMode(void)
         PMIC_ESM_PWM_MODE
     };
 
-    Pmic_EsmIntrCfg_t esmIntrCfg = 
+    Pmic_EsmIntrCfg_t esmIntrCfg =
     {
         false,
         false,
@@ -2008,7 +2036,7 @@ static void test_esm_setInterrupt_esmSocFailIntr_levelMode(void)
         PMIC_ESM_LEVEL_MODE
     };
 
-    Pmic_EsmIntrCfg_t esmIntrCfg = 
+    Pmic_EsmIntrCfg_t esmIntrCfg =
     {
         false,
         true,
@@ -2104,7 +2132,7 @@ static void test_esm_setInterrupt_esmSocFailIntr_pwmMode(void)
         PMIC_ESM_PWM_MODE
     };
 
-    Pmic_EsmIntrCfg_t esmIntrCfg = 
+    Pmic_EsmIntrCfg_t esmIntrCfg =
     {
         false,
         true,
@@ -2202,7 +2230,7 @@ static void test_esm_setInterrupt_esmSocPinIntr_levelMode(void)
         PMIC_ESM_LEVEL_MODE
     };
 
-    Pmic_EsmIntrCfg_t esmIntrCfg = 
+    Pmic_EsmIntrCfg_t esmIntrCfg =
     {
         true,
         false,
@@ -2298,7 +2326,7 @@ static void test_esm_setInterrupt_esmSocPinIntr_pwmMode(void)
         PMIC_ESM_PWM_MODE
     };
 
-    Pmic_EsmIntrCfg_t esmIntrCfg = 
+    Pmic_EsmIntrCfg_t esmIntrCfg =
     {
         true,
         false,
@@ -2396,7 +2424,7 @@ static void test_esm_setInterrupt_esmSocAllIntr_pwmMode(void)
         PMIC_ESM_PWM_MODE
     };
 
-    Pmic_EsmIntrCfg_t esmIntrCfg = 
+    Pmic_EsmIntrCfg_t esmIntrCfg =
     {
         true,
         true,
@@ -2531,7 +2559,7 @@ static void test_esm_setInterrupt_esmMcuAllIntr_levelMode(void)
         PMIC_ESM_LEVEL_MODE
     };
 
-    Pmic_EsmIntrCfg_t esmIntrCfg = 
+    Pmic_EsmIntrCfg_t esmIntrCfg =
     {
         true,
         true,
@@ -2666,7 +2694,7 @@ static void test_esm_setInterrupt_esmMcuAllIntrDisabled_levelMode(void)
         PMIC_ESM_LEVEL_MODE
     };
 
-    Pmic_EsmIntrCfg_t esmIntrCfg = 
+    Pmic_EsmIntrCfg_t esmIntrCfg =
     {
         false,
         false,
@@ -2758,7 +2786,7 @@ static void test_esm_setInterrupt_esmSocAllIntrDisable_pwmMode(void)
         PMIC_ESM_PWM_MODE
     };
 
-    Pmic_EsmIntrCfg_t esmIntrCfg = 
+    Pmic_EsmIntrCfg_t esmIntrCfg =
     {
         true,
         true,
@@ -2834,7 +2862,7 @@ static void test_esm_setInterruptPrmValTest_handle(void)
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     bool esmType               = PMIC_ESM_MODE_SOC;
 
-    Pmic_EsmIntrCfg_t esmIntrCfg = 
+    Pmic_EsmIntrCfg_t esmIntrCfg =
     {
         true,
         false,
@@ -2847,6 +2875,191 @@ static void test_esm_setInterruptPrmValTest_handle(void)
 
     pmicStatus = Pmic_esmSetInterrupt(NULL, esmType, esmIntrCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+}
+
+
+/*!
+ * \brief   Pmic_esmStart : Negative test to verify ESM SOC Start for HERA
+ */
+static void test_pmic_esm_startEsm_esmSocStart_hera(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    bool esmType       = PMIC_ESM_MODE_SOC;
+    bool esmState      = PMIC_ESM_START;
+
+    test_pmic_print_unity_testcase_info(47,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, esmState);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
+
+}
+
+/*!
+ * \brief   Pmic_esmEnable : Negative test to verify ESM SOC Enable for HERA
+ */
+static void test_pmic_esm_startEsm_esmSocEnable_hera(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    bool esmType       = PMIC_ESM_MODE_SOC;
+
+    test_pmic_print_unity_testcase_info(48,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    pmicStatus = Pmic_esmEnable(pPmicCoreHandle, esmType, PMIC_ESM_ENABLE);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
+}
+
+/*!
+ * \brief   Pmic_esmSetConfiguration : Negative test to verify PMIC ESM SOC Set configuration for ESM SOC
+ *          Level Mode for HERA
+ */
+static void test_pmic_esm_setConfiguration_esmSocLevelMode_hera(void)
+{
+    int32_t pmicStatus      = PMIC_ST_SUCCESS;
+    bool esmType            = PMIC_ESM_MODE_SOC;
+
+    Pmic_EsmCfg_t esmCfg =
+    {
+        PMIC_ESM_CFG_DELAY1_VALID_SHIFT | PMIC_ESM_CFG_DELAY2_VALID_SHIFT | PMIC_ESM_CFG_MODE_VALID_SHIFT,
+        4096U,
+        2048U,
+        30U,
+        30U,
+        30U,
+        30U,
+        4U,
+        PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE,
+        PMIC_ESM_LEVEL_MODE
+    };
+
+    test_pmic_print_unity_testcase_info(49,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
+}
+
+/*!
+ * \brief   Pmic_esmGetConfiguration : Negative test to verify PMIC ESM SOC Get configuration for ESM SOC
+ *          Level Mode for HERA
+ */
+static void test_pmic_esm_getConfiguration_esmSocLevelMode_hera(void)
+{
+    int32_t pmicStatus      = PMIC_ST_SUCCESS;
+    bool esmType            = PMIC_ESM_MODE_SOC;
+    Pmic_EsmCfg_t esmCfg_rd = {PMIC_ESM_CFG_DELAY1_VALID_SHIFT |
+                               PMIC_ESM_CFG_DELAY2_VALID_SHIFT |
+                               PMIC_ESM_CFG_MODE_VALID_SHIFT,};
+
+
+    test_pmic_print_unity_testcase_info(50,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    pmicStatus = Pmic_esmGetConfiguration(pPmicCoreHandle,
+                                          esmType,
+                                          &esmCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
+}
+
+
+/*!
+ * \brief   Pmic_esmGetErrCnt : Negative test to verify Error count value for HERA
+ */
+static void test_Pmic_esmGetErrCnt_hera(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;;
+    uint8_t esmErrCnt  = 0U;
+    bool esmType       = PMIC_ESM_MODE_SOC;
+
+    test_pmic_print_unity_testcase_info(51,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    pmicStatus = Pmic_esmGetErrCnt(pPmicCoreHandle, esmType, &esmErrCnt);
+
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
+}
+
+
+/*!
+ * \brief   Pmic_esmSetInterrupt : Negative test to verify ESM interrupt enable for HERA
+ */
+static void test_Pmic_esmSetInterrupt_hera(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    bool esmType       = PMIC_ESM_MODE_SOC;
+    Pmic_EsmIntrCfg_t esmIntrCfg =
+    {
+        false,
+        true,
+        false
+    };
+
+    test_pmic_print_unity_testcase_info(52,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    pmicStatus = Pmic_esmSetInterrupt(pPmicCoreHandle, esmType, esmIntrCfg);
+
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
+}
+
+/*!
+ * \brief   Pmic_esmGetEnableState : Negative test to verify ESM get state for HERA
+ */
+static void test_Pmic_esmGetEnableState_hera(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    bool esmType       = PMIC_ESM_MODE_SOC;
+    bool esmState      = false;
+
+    test_pmic_print_unity_testcase_info(53,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        TEST_IGNORE();
+    }
+
+    pmicStatus = Pmic_esmGetEnableState(pPmicCoreHandle, esmType, &esmState);
+
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
 }
 
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
@@ -2907,6 +3120,13 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_esm_setInterrupt_esmMcuAllIntrDisabled_levelMode);
     RUN_TEST(test_esm_setInterrupt_esmSocAllIntrDisable_pwmMode);
     RUN_TEST(test_esm_setInterruptPrmValTest_handle);
+    RUN_TEST(test_pmic_esm_startEsm_esmSocStart_hera);
+    RUN_TEST(test_pmic_esm_startEsm_esmSocEnable_hera);
+    RUN_TEST(test_pmic_esm_setConfiguration_esmSocLevelMode_hera);
+    RUN_TEST(test_pmic_esm_getConfiguration_esmSocLevelMode_hera);
+    RUN_TEST(test_Pmic_esmGetErrCnt_hera);
+    RUN_TEST(test_Pmic_esmSetInterrupt_hera);
+    RUN_TEST(test_Pmic_esmGetEnableState_hera);
 
     UNITY_END();
 }
@@ -3055,6 +3275,33 @@ static int32_t test_pmic_hera_esm_testApp(void)
 
 }
 
+static int32_t setup_pmic_interrupt()
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+#ifdef SOC_J721E
+
+    status = test_pmic_leo_pmicA_esm_testApp();
+   /* Deinit pmic handle */
+    if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+    {
+        test_pmic_appDeInit(pPmicCoreHandle);
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        status = test_pmic_leo_pmicB_esm_testApp();
+       /* Deinit pmic handle */
+        if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+        {
+            test_pmic_appDeInit(pPmicCoreHandle);
+        }
+    }
+#endif
+    return status;
+}
+
+
 static const char pmicTestAppMenu[] =
 {
     " \r\n ================================================================="
@@ -3095,52 +3342,64 @@ static void test_pmic_esm_testapp_runner(void)
         switch(num)
         {
            case 0U:
-               /* ESM Unity Test App wrapper Function for LEO PMIC-A */
-               test_pmic_leo_pmicA_esm_testApp();
-               pmic_device_info = J721E_LEO_PMICA_DEVICE;
-               /* Run esm test cases for Leo PMIC-A */
-               test_pmic_run_testcases();
-               /* Deinit pmic handle */
-               if(pPmicCoreHandle != NULL)
-               {
-                   test_pmic_appDeInit(pPmicCoreHandle);
-               }
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+                {
+                   /* ESM Unity Test App wrapper Function for LEO PMIC-A */
+                   test_pmic_leo_pmicA_esm_testApp();
+                   pmic_device_info = J721E_LEO_PMICA_DEVICE;
+                   /* Run esm test cases for Leo PMIC-A */
+                   test_pmic_run_testcases();
+                   /* Deinit pmic handle */
+                   if(pPmicCoreHandle != NULL)
+                   {
+                       test_pmic_appDeInit(pPmicCoreHandle);
+                   }
+                }
                break;
            case 1U:
-               /* ESM Unity Test App wrapper Function for LEO PMIC-B */
-               test_pmic_leo_pmicB_esm_testApp();
-               pmic_device_info = J721E_LEO_PMICB_DEVICE;
-               pmic_log(" \r\n ESM feature cannot be tested on PMIC-B\n");
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+                {
+                   /* ESM Unity Test App wrapper Function for LEO PMIC-B */
+                   test_pmic_leo_pmicB_esm_testApp();
+                   pmic_device_info = J721E_LEO_PMICB_DEVICE;
+                   pmic_log(" \r\n ESM feature cannot be tested on PMIC-B\n");
 
-               /* Deinit pmic handle */
-               if(pPmicCoreHandle != NULL)
-               {
-                   test_pmic_appDeInit(pPmicCoreHandle);
-               }
+                   /* Deinit pmic handle */
+                   if(pPmicCoreHandle != NULL)
+                   {
+                       test_pmic_appDeInit(pPmicCoreHandle);
+                   }
+                }
                break;
            case 2U:
-               /* ESM Unity Test App wrapper Function for HERA PMIC */
-               test_pmic_hera_esm_testApp();
-               /* Run esm test cases for Hera PMIC */
-               test_pmic_run_testcases();
-               /* Deinit pmic handle */
-               if(pPmicCoreHandle != NULL)
-               {
-                   test_pmic_appDeInit(pPmicCoreHandle);
-               }
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+                {
+                   /* ESM Unity Test App wrapper Function for HERA PMIC */
+                   test_pmic_hera_esm_testApp();
+                   /* Run esm test cases for Hera PMIC */
+                   test_pmic_run_testcases();
+                   /* Deinit pmic handle */
+                   if(pPmicCoreHandle != NULL)
+                   {
+                       test_pmic_appDeInit(pPmicCoreHandle);
+                   }
+                }
                break;
            case 3U:
-               /* ESM Unity Test App wrapper Function for LEO PMIC-A using
-                * SPI stub functions */
-               test_pmic_leo_pmicA_spiStub_esm_testApp();
-               pmic_device_info = J721E_LEO_PMICA_DEVICE;
-               /* Run esm test cases for Leo PMIC-A */
-               test_pmic_run_testcases();
-               /* Deinit pmic handle */
-               if(pPmicCoreHandle != NULL)
-               {
-                   test_pmic_appDeInit(pPmicCoreHandle);
-               }
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+                {
+                   /* ESM Unity Test App wrapper Function for LEO PMIC-A using
+                    * SPI stub functions */
+                   test_pmic_leo_pmicA_spiStub_esm_testApp();
+                   pmic_device_info = J721E_LEO_PMICA_DEVICE;
+                   /* Run esm test cases for Leo PMIC-A */
+                   test_pmic_run_testcases();
+                   /* Deinit pmic handle */
+                   if(pPmicCoreHandle != NULL)
+                   {
+                       test_pmic_appDeInit(pPmicCoreHandle);
+                   }
+                }
                break;
            case 4U:
                pmic_log(" \r\n Quit from application\n");
