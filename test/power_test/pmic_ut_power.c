@@ -11848,7 +11848,7 @@ static void test_pmic_power_testapp_runner(void)
  */
 int main()
 {
-    test_pmic_uartInit();
+    Board_initUART();
 
     pmic_log("PMIC POWER Unit Test started...\n");
 

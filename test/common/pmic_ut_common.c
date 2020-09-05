@@ -49,6 +49,50 @@ Pmic_CoreHandle_t *pPmicCoreHandleI2C = NULL;
  */
 static SemaphoreP_Handle pmic_Sem = NULL;
 
+/*!
+ * \brief   GPIO Driver board specific pin configuration structure
+ */
+GPIO_PinConfig gpioPinConfigs[] =
+{
+    /* Input pin with interrupt enabled */
+    GPIO_DEVICE_CONFIG(J7_WAKEUP_GPIO0_PORT_NUM, J7_WAKEUP_GPIO0_9_PIN_NUM) |
+    GPIO_CFG_IN_INT_FALLING | GPIO_CFG_INPUT
+};
+
+/*!
+ * \brief   GPIO Driver call back functions
+ */
+GPIO_CallbackFxn gpioCallbackFunctions[] =
+{
+    NULL
+};
+
+/*!
+ * \brief   GPIO Driver configuration structure
+ */
+GPIO_v0_Config GPIO_v0_config =
+{
+    gpioPinConfigs,
+    gpioCallbackFunctions,
+    sizeof(gpioPinConfigs) / sizeof(GPIO_PinConfig),
+    sizeof(gpioCallbackFunctions) / sizeof(GPIO_CallbackFxn),
+#ifdef __TI_ARM_V7R4__
+    0x8U
+#else
+#if defined(__C7100__)
+    0x01U
+#else
+    0x20U
+#endif
+#endif
+};
+
+volatile uint32_t pmic_intr_triggered = 0U;
+volatile uint8_t irqNumToClr          = 0U;
+
+/* Pointer holds the pPmicCoreHandle for AppPmicCallbackFxn */
+Pmic_CoreHandle_t *pPmicCoreHandleISR = NULL;
+
 /**
  * \brief    This API Set Config for TI HW I2C instances
  *
@@ -883,14 +927,100 @@ void tearDown(void)
     /* Do nothing */
 }
 
-void test_pmic_uartInit()
+
+/*!
+ * \brief   PMIC Application Callback Function
+ */
+void AppPmicCallbackFxn(void)
+{
+    int32_t status           = PMIC_ST_SUCCESS;
+    Pmic_IrqStatus_t errStat = {0U};
+    uint8_t irqNum           = 0U;
+    pmic_intr_triggered      = 1U;
+
+    status = Pmic_irqGetErrStatus(pPmicCoreHandleISR, &errStat, false);
+    if((PMIC_ST_SUCCESS == status) &&
+       ((errStat.intStatus[irqNumToClr/32U] &
+         (1U << (irqNumToClr % 32U))) != 0U))
+    {
+        while(irqNumToClr != irqNum)
+        {
+            status = Pmic_getNextErrorStatus(pPmicCoreHandleISR,
+                                             &errStat,
+                                             &irqNum);
+        }
+
+        if(PMIC_ST_SUCCESS == status)
+        {
+            /* clear the interrupt */
+            status = Pmic_irqClrErrStatus(pPmicCoreHandleISR,
+                                          irqNumToClr);
+        }
+    }
+}
+
+/*!
+ * \brief   GPIO Interrupt Router Configuration
+ */
+void GPIO_configIntRouter(uint32_t portNum, uint32_t pinNum, uint32_t gpioIntRtrOutIntNum, GPIO_v0_HwAttrs *cfg)
+{
+    GPIO_IntCfg       *intCfg;
+    uint32_t           bankNum;
+
+    intCfg = cfg->intCfg;
+
+    cfg->baseAddr = CSL_WKUP_GPIO0_BASE;
+
+    bankNum = pinNum/16; /* Each GPIO bank has 16 pins */
+
+    /* WKUP GPIO int router input interrupt is the GPIO bank interrupt */
+    intCfg[pinNum].intNum = CSLR_MCU_R5FSS0_CORE0_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_0 + bankNum;
+    intCfg[pinNum].intcMuxNum = INVALID_INTC_MUX_NUM;
+    intCfg[pinNum].intcMuxInEvent = 0;
+    intCfg[pinNum].intcMuxOutEvent = 0;
+}
+
+/*!
+ * \brief   UART Configurations
+ */
+void Board_initUART(void)
 {
     Board_initCfg boardCfg;
 
     boardCfg = BOARD_INIT_PINMUX_CONFIG |
-               BOARD_INIT_UART_STDIO    |
-               BOARD_INIT_MODULE_CLOCK;
+               BOARD_INIT_MODULE_CLOCK  |
+               BOARD_INIT_UART_STDIO;
+
     Board_init(boardCfg);
+}
+
+/*!
+ * \brief   GPIO Configurations.
+ *          This API is required for Asynchronous Interrupts only
+ */
+void App_initGPIO(void)
+{
+    GPIO_v0_HwAttrs gpio_cfg;
+
+    /* Get the default SPI init configurations */
+    GPIO_socGetInitCfg(J7_WAKEUP_GPIO0_PORT_NUM, &gpio_cfg);
+
+    /* change default GPIO port from MAIN GPIO0 to WAKEUP GPIO0 to access TP45 */
+    gpio_cfg.baseAddr = CSL_WKUP_GPIO0_BASE;
+    gpio_cfg.intCfg->intNum = CSLR_MCU_R5FSS0_CORE0_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_0;
+    
+    GPIO_configIntRouter(J7_WAKEUP_GPIO0_PORT_NUM, J7_WAKEUP_GPIO0_9_PIN_NUM, 0, &gpio_cfg);
+
+    /* For J721E EVM, there is not GPIO pin directly connected to LEDs */
+    /* J7ES: use WAKEUP GPIO0_6 --> TP45 for testing */
+    /* Set the default GPIO init configurations */
+    GPIO_socSetInitCfg(J7_WAKEUP_GPIO0_PORT_NUM, &gpio_cfg);
+
+    /* GPIO initialization */
+    GPIO_init();
+
+    /* Set the callback function */
+    GPIO_setCallback(0, AppPmicCallbackFxn);
 }
 
 #if defined(BUILD_MPU) || defined (__C7100__)

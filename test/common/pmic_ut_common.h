@@ -47,6 +47,7 @@
 #include <ti/csl/soc.h>
 #include <ti/csl/hw_types.h>
 #include <ti/csl/csl_timer.h>
+#include <ti/csl/csl_gpio.h>
 
 /* OSAL Header files */
 #include <ti/osal/osal.h>
@@ -59,6 +60,10 @@
 /* I2C Header files */
 #include <ti/drv/i2c/I2C.h>
 #include <ti/drv/i2c/soc/I2C_soc.h>
+
+/* GPIO Header Files */
+#include <ti/drv/gpio/GPIO.h>
+#include <ti/drv/gpio/soc/GPIO_soc.h>
 
 /* Timer specific headers */
 #if defined(SOC_J721E)
@@ -101,6 +106,12 @@
 #define PMIC_UT_FAILURE            (false)
 
 #define pmic_log              (UART_printf)
+
+/*!
+ * \brief   J7ES: use WAKEUP GPIO0_9
+ */
+#define J7_WAKEUP_GPIO0_PORT_NUM         0U /* use WAKEUP GPIO0 */
+#define J7_WAKEUP_GPIO0_9_PIN_NUM        9U /* Pin 9 */
 
 /*!
  *  \brief    Define the Pmic UT test interface
@@ -186,9 +197,15 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
 void test_pmic_appDeInit(Pmic_CoreHandle_t *pmicCoreHandle);
 
 /*!
- * \brief   Configures UART pinmux and initialization for the UART Prints
+ * \brief   UART Configurations
  */
-void test_pmic_uartInit(void);
+void Board_initUART(void);
+
+/*!
+ * \brief   GPIO Configurations.
+ *          This API is required for Asynchronous Interrupts only
+ */
+void App_initGPIO(void);
 
 /*!
  * \brief   Function to print testcase info
@@ -196,3 +213,16 @@ void test_pmic_uartInit(void);
 void test_pmic_print_unity_testcase_info(uint32_t         testId,
                                          Pmic_Ut_Tests_t *pTest,
                                          uint32_t         num_testcases);
+
+/*!
+ * \brief   PMIC Application Callback Function
+ */
+void AppPmicCallbackFxn(void);
+
+/*!
+ * \brief   GPIO Interrupt Router Configuration
+ */
+void GPIO_configIntRouter(uint32_t portNum,
+                          uint32_t pinNum,
+                          uint32_t gpioIntRtrOutIntNum,
+                          GPIO_v0_HwAttrs *cfg);

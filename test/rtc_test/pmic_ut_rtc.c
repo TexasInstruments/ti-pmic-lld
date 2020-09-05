@@ -43,6 +43,10 @@
 /* Pointer to Pmic Core Handle */
 Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
 
+extern volatile uint32_t pmic_intr_triggered;
+extern Pmic_CoreHandle_t *pPmicCoreHandleISR;
+extern volatile uint8_t irqNumToClr;
+
 /*!
  * \brief   PMIC RTC Test Cases
  */
@@ -324,6 +328,14 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
         7359,
         "Pmic_fsmDeviceOffRequestCfg/Pmic_fsmEnableI2cTrigger :  RTC Wakeup using Alarm Interrupt'"
     },
+    {
+        1,
+        "test_rtc_timer_irq : Test rtc timer asynchronous interrupt"
+    },
+    {
+        2,
+        "test_rtc_alarm_irq: Test rtc alarm asynchronous interrupt"
+    }
 };
 
 /*!
@@ -2064,6 +2076,158 @@ static void test_pmic_rtc_testWakeup_AlarmIntr(void)
     }
 }
 
+/*!
+ * \brief   RTC timer Asynchronous Interrupt
+ */
+static void test_pmic_rtc_testTimerAsyncIntr(void)
+{
+    int32_t            status       = PMIC_ST_SUCCESS;
+    int8_t             timeout      = 10U;
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    Pmic_RtcTime_t     timeCfg_cr   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
+    Pmic_RtcDate_t     dateCfg_cr   = { 0x0F, 0U, 0U, 0U, 0U};
+    Pmic_RtcTime_t     timeCfg_rd   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
+    Pmic_RtcDate_t     dateCfg_rd   = { 0x0F, 0U, 0U, 0U, 0U};
+    uint8_t            timerPeriod  = 0U;
+
+    Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
+    Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
+
+    test_pmic_print_unity_testcase_info(1,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    /* Enable GPIO interrupt on the specific gpio pin */
+    GPIO_enableInt(0);
+
+    pHandle             = pPmicCoreHandle;
+    pmic_intr_triggered = 0U;
+    pPmicCoreHandleISR  = pHandle;
+    irqNumToClr         = PMIC_TPS6594X_RTC_TIMER_INT;
+
+    status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_rd, &dateCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcGetTimerPeriod(pHandle, &timerPeriod);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcSetTimerPeriod(pHandle,
+                                           PMIC_RTC_SECOND_INTR_PERIOD);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcEnableTimerIntr(pHandle, PMIC_RTC_TIMER_INTR_ENABLE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    while(timeout--)
+    {
+        /* Wait for Interrupt */
+        if(pmic_intr_triggered != 1U)
+        {
+            status = PMIC_ST_ERR_FAIL;
+        }
+        else
+        {
+            status = PMIC_ST_SUCCESS;
+            break;
+        }
+
+        /* Delay added to avoid timeout */
+        Osal_delay(1000);
+    }
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    /* Disable the timer interrupt  */
+    status = Pmic_rtcEnableTimerIntr(pHandle, PMIC_RTC_TIMER_INTR_DISABLE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcSetTimerPeriod(pHandle, timerPeriod);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    /* Disable GPIO interrupt on the specific gpio pin */
+    GPIO_disableInt(0);
+}
+
+/*!
+ * \brief   RTC Alarm Asynchronous interrupt
+ */
+static void test_pmic_rtc_testAlarmAsyncIntr(void)
+{
+    int32_t            status       = PMIC_ST_SUCCESS;
+    int8_t             timeout      = 10U;
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    pHandle                         = pPmicCoreHandle;
+    Pmic_RtcTime_t     timeCfg_cr   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
+    Pmic_RtcDate_t     dateCfg_cr   = { 0x0F, 0U, 0U, 0U, 0U};
+    Pmic_RtcTime_t     timeCfg_rd   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
+    Pmic_RtcDate_t     dateCfg_rd   = { 0x0F, 0U, 0U, 0U, 0U};
+    Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
+    Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
+
+    test_pmic_print_unity_testcase_info(2,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    /* Enable GPIO interrupt on the specific gpio pin */
+    GPIO_enableInt(0);
+
+    pmic_intr_triggered = 0U;
+    pPmicCoreHandleISR  = pHandle;
+    irqNumToClr         = PMIC_TPS6594X_RTC_ALARM_INT;
+
+    status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    /* Get the current time value */
+    status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_rd, &dateCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    timeCfg_rd.seconds = timeCfg_rd.seconds + 3U;
+    status   = Pmic_rtcSetAlarmInfo(pHandle, timeCfg_rd, dateCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    /* Set Alarm Interupt */
+    status = Pmic_rtcEnableAlarmIntr(pHandle, PMIC_RTC_ALARM_INTR_ENABLE);
+    /* Get the current time for timeout */
+    status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    while(timeout--)
+    {
+        /* Wait for Interrupt */
+        if(pmic_intr_triggered != 1U)
+        {
+            status = PMIC_ST_ERR_FAIL;
+        }
+        else
+        {
+            status = PMIC_ST_SUCCESS;
+            break;
+        }
+
+        /* Delay added to avoid timeout */
+        Osal_delay(1000);
+    }
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    /* Disable the timer interrupt  */
+    status = Pmic_rtcEnableTimerIntr(pHandle, PMIC_RTC_TIMER_INTR_DISABLE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    /* Disable GPIO interrupt on the specific gpio pin */
+    GPIO_disableInt(0);
+}
+
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E) || defined(SOC_J7200))
 
@@ -2144,6 +2308,8 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_rtc_getRtcStatus_PrmValTest_validParams);
     RUN_TEST(test_pmic_rtc_testWakeup_TimerIntr);
     RUN_TEST(test_pmic_rtc_testWakeup_AlarmIntr);
+    RUN_TEST(test_pmic_rtc_testTimerAsyncIntr);
+    RUN_TEST(test_pmic_rtc_testAlarmAsyncIntr);
 
     UNITY_END();
 }
@@ -2186,6 +2352,44 @@ static int32_t test_pmic_leo_pmicA_rtc_testApp(void)
     return status;
 }
 
+#ifdef SOC_J721E
+/*!
+ * \brief   Unity Test App wrapper Function for LEO PMIC-B
+ */
+static int32_t test_pmic_leo_pmicB_testApp(void)
+{
+    int32_t status                = PMIC_ST_SUCCESS;
+    Pmic_CoreCfg_t pmicConfigData = {0U};
+
+    /* Fill parameters to pmicConfigData */
+    pmicConfigData.pmicDeviceType      = PMIC_DEV_LEO_TPS6594X;
+    pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
+
+    pmicConfigData.commMode            = PMIC_INTF_SINGLE_I2C;
+    pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
+
+    pmicConfigData.slaveAddr           = LEO_PMICB_SLAVE_ADDR;
+    pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
+
+    pmicConfigData.qaSlaveAddr         = LEO_PMICA_WDG_SLAVE_ADDR;
+    pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoWrite   = test_pmic_regWrite;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStart  = test_pmic_criticalSectionStartFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStop   = test_pmic_criticalSectionStopFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
+
+    status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
+    return status;
+}
+#endif
 /*!
  * \brief   RTC Unity Test App wrapper Function for LEO PMIC-A
  */
@@ -2214,6 +2418,36 @@ static int32_t test_pmic_leo_pmicA_spiStub_rtc_testApp(void)
     pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
 
     status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
+    return status;
+}
+
+static int32_t setup_pmic_interrupt()
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+#ifdef SOC_J721E
+    status = test_pmic_leo_pmicA_rtc_testApp();
+   /* Deinit pmic handle */
+    if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+    {
+        test_pmic_appDeInit(pPmicCoreHandle);
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        Pmic_IrqStatus_t intstat;
+        Pmic_irqGetErrStatus(pPmicCoreHandle, &intstat,1);
+
+        status = test_pmic_leo_pmicB_testApp();
+       /* Deinit pmic handle */
+        if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+        {
+            Pmic_IrqStatus_t intstat;
+            Pmic_irqGetErrStatus(pPmicCoreHandle, &intstat,1);
+            test_pmic_appDeInit(pPmicCoreHandle);
+        }
+    }
+#endif
     return status;
 }
 
@@ -2256,27 +2490,34 @@ static void test_pmic_rtc_testapp_runner(void)
         switch(num)
         {
            case 0U:
-               /* RTC Unity Test App wrapper Function for LEO PMIC-A */
-               test_pmic_leo_pmicA_rtc_testApp();
-               /* Run rtc test cases for Leo PMIC-A */
-               test_pmic_run_testcases();
-               /* Deinit pmic handle */
-               if(pPmicCoreHandle != NULL)
-               {
-                   test_pmic_appDeInit(pPmicCoreHandle);
-               }
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+                {
+                   /* RTC Unity Test App wrapper Function for LEO PMIC-A */
+                   test_pmic_leo_pmicA_rtc_testApp();
+
+                   /* Run rtc test cases for Leo PMIC-A */
+                   test_pmic_run_testcases();
+                   /* Deinit pmic handle */
+                   if(pPmicCoreHandle != NULL)
+                   {
+                       test_pmic_appDeInit(pPmicCoreHandle);
+                   }
+                }
                break;
            case 1U:
-               /* RTC Unity Test App wrapper Function for LEO PMIC-A using
-                * SPI stub functions */
-               test_pmic_leo_pmicA_spiStub_rtc_testApp();
-               /* Run rtc test cases for Leo PMIC-A */
-               test_pmic_run_testcases();
-               /* Deinit pmic handle */
-               if(pPmicCoreHandle != NULL)
-               {
-                   test_pmic_appDeInit(pPmicCoreHandle);
-               }
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+                {
+                   /* RTC Unity Test App wrapper Function for LEO PMIC-A using
+                    * SPI stub functions */
+                   test_pmic_leo_pmicA_spiStub_rtc_testApp();
+                   /* Run rtc test cases for Leo PMIC-A */
+                   test_pmic_run_testcases();
+                   /* Deinit pmic handle */
+                   if(pPmicCoreHandle != NULL)
+                   {
+                       test_pmic_appDeInit(pPmicCoreHandle);
+                   }
+                }
                break;
            case 2U:
                /* RTC Unity Test App wrapper Function for LEO PMIC-B */
@@ -2301,7 +2542,12 @@ static void test_pmic_rtc_testapp_runner(void)
  */
 int main()
 {
-    test_pmic_uartInit();
+    Board_initUART();
+
+    /* GPIO Configuration
+     * This API is required for Asynchronous Interrupts only
+     */
+    App_initGPIO();
 
     pmic_log("RTC Unity Test Application(%s %s)\n", __TIME__, __DATE__);
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \

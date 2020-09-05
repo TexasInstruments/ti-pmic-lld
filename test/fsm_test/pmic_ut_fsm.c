@@ -989,7 +989,7 @@ static void test_pmic_fsm_testapp_runner(void)
  */
 int main()
 {
-    test_pmic_uartInit();
+    Board_initUART();
 
     pmic_log("PMIC FSM Unity Test Application(%s %s)\n",
                                          __TIME__, __DATE__);

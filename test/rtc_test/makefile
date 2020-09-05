@@ -54,7 +54,7 @@ SRCS_COMMON += unity.c
 
 # List all the external components/interfaces, whose interface header files
 #  need to be included for this component
-INCLUDE_EXTERNAL_INTERFACES = pdk i2c
+INCLUDE_EXTERNAL_INTERFACES = pdk i2c gpio csl
 INCLUDE_INTERNAL_INTERFACES = pmic
 
 # List all the components required by the application

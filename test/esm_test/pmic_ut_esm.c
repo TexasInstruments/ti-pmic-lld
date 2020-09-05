@@ -3161,7 +3161,7 @@ static void test_pmic_esm_testapp_runner(void)
  */
 int main()
 {
-    test_pmic_uartInit();
+    Board_initUART();
 
     pmic_log("ESM Unity Test Application(%s %s)\n", __TIME__, __DATE__);
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
