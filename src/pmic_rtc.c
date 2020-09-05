@@ -2166,10 +2166,6 @@ int32_t  Pmic_rtcSetTimerPeriod(Pmic_CoreHandle_t *pPmicCoreHandle,
                              PMIC_RTC_INTERRUPTS_EVERY_SHIFT,
                              PMIC_RTC_INTERRUPTS_EVERY_MASK,
                              timerPeriod);
-            Pmic_setBitField(&regData,
-                             PMIC_RTC_INTERRUPTS_IT_TIMER_SHIFT,
-                             PMIC_RTC_INTERRUPTS_IT_TIMER_MASK,
-                             PMIC_RTC_TIMER_INTR_ENABLE);
 
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                                 PMIC_RTC_INTERRUPTS_REGADDR,
