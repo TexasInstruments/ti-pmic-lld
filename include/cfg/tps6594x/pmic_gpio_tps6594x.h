@@ -177,6 +177,10 @@ extern "C" {
 
 /*!
  * \brief   API to get PMIC GPIO NPWRON pin value.
+ *
+ * Requirement: REQ_TAG(PDK-5808)
+ * Design: did_pmic_gpio_cfg_readback
+ *
  *          This function is used to read the signal level of the NPWRON
  *          pin.
  *

@@ -388,6 +388,10 @@ typedef struct Pmic_RtcStatus_s
 
 /*!
  * \brief   API to Set the alarm Time and Date to PMIC RTC.
+ *
+ * Requirement: REQ_TAG(PDK-5855)
+ * Design: did_pmic_rtc_cfg_readback
+ *
  *          This function is used to set the alarm Date and Time parameters
  *          depending upon the bit fields set in validParams of Time and Date
  *          structures in RTC of PMIC Device.
@@ -405,6 +409,10 @@ int32_t  Pmic_rtcSetAlarmInfo(Pmic_CoreHandle_t    *pPmicCoreHandle,
 
 /*!
  * \brief   API to Get the alarm Time and Date from PMIC RTC function.
+ *
+ * Requirement: REQ_TAG(PDK-5855)
+ * Design: did_pmic_rtc_cfg_readback
+ *
  *          This function is used to Get the alarm date and time parameters
  *          depending upon the bit fields set in validParams of Time and Date
  *          structures in RTC of the PMIC Device.
@@ -422,6 +430,10 @@ int32_t  Pmic_rtcGetAlarmInfo(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   API to Set the timer interrupt Period to PMIC RTC.
+ *
+ * Requirement: REQ_TAG(PDK-5855)
+ * Design: did_pmic_rtc_cfg_readback
+ *
  *          This function is used to set the timer interrupt Period to
  *          the RTC present in the PMIC.
  *
@@ -438,6 +450,10 @@ int32_t  Pmic_rtcSetTimerPeriod(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   API to Get the timer interrupt period from PMIC RTC.
+ *
+ * Requirement: REQ_TAG(PDK-5855)
+ * Design: did_pmic_rtc_cfg_readback
+ *
  *          This function is used to get the timer interrupt period from RTC
  *          present in the PMIC.
  *
@@ -452,6 +468,10 @@ int32_t  Pmic_rtcGetTimerPeriod(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   API to Set the RTC Time and Date to PMIC RTC.
+ *
+ * Requirement: REQ_TAG(PDK-5855)
+ * Design: did_pmic_rtc_cfg_readback
+ *
  *          This function is used to set the RTC Date and Time parameters
  *          depending upon the bit fields set in validParams of Time and Date
  *          structures in RTC of PMIC Device.
@@ -469,6 +489,10 @@ int32_t  Pmic_rtcSetTimeDateInfo(Pmic_CoreHandle_t    *pPmicCoreHandle,
 
 /*!
  * \brief   API to Get the RTC Time and Date from PMIC RTC function.
+ *
+ * Requirement: REQ_TAG(PDK-5855)
+ * Design: did_pmic_rtc_cfg_readback
+ *
  *          This function is used to Get the RTC date and time parameters
  *          depending upon the bit fields set in validParams of Time and Date
  *          structures in RTC of the PMIC Device.
@@ -486,6 +510,10 @@ int32_t  Pmic_rtcGetTimeDateInfo(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   API to Set the RTC frequency compensation value.
+ *
+ * Requirement: REQ_TAG(PDK-5855)
+ * Design: did_pmic_rtc_cfg_readback
+ *
  *          This function is used to set the frequency compensation
  *          value in the RTC of the PMIC Devicec.
  *
@@ -500,6 +528,10 @@ int32_t  Pmic_rtcSetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   API to Get the RTC frequency compensation value.
+ *
+ * Requirement: REQ_TAG(PDK-5855)
+ * Design: did_pmic_rtc_cfg_readback
+ *
  *          This function is used to get the frequency compensation
  *          value from the RTC of the PMIC Devicec.
  *
@@ -515,6 +547,10 @@ int32_t  Pmic_rtcGetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   API to Enable/Disable the RTC.
+ *
+ * Requirement: REQ_TAG(PDK-5855)
+ * Design: did_pmic_rtc_cfg_readback
+ *
  *          This function is used to Start/Stop the RTC present in PMIC.
  *
  * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
@@ -529,6 +565,10 @@ int32_t  Pmic_rtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   API to Enable/Disable the RTC Timer Interrupt.
+ *
+ * Requirement: REQ_TAG(PDK-5855)
+ * Design: did_pmic_rtc_cfg_readback
+ *
  *          This function is used to enable/disable the RTC timer interrupt.
  *
  * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
@@ -545,6 +585,10 @@ int32_t  Pmic_rtcEnableTimerIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   API to Enable/Disable the RTC Alarm Interrupt.
+ *
+ * Requirement: REQ_TAG(PDK-5855)
+ * Design: did_pmic_rtc_cfg_readback
+ *
  *          This function is used to enable/disable the RTC alarm interrupt.
  *
  * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
@@ -561,6 +605,10 @@ int32_t  Pmic_rtcEnableAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   API to Get the current status of RTC.
+ *
+ * Requirement: REQ_TAG(PDK-5855)
+ * Design: did_pmic_rtc_cfg_readback
+ *
  *          This function is used to get the Current state of the RTC
  *          depending on the bit fields set in validParams of
  *          struct Pmic_RtcStatus_t structures.

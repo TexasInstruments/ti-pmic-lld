@@ -364,6 +364,12 @@ typedef struct Pmic_CoreCfg_s {
 /*==========================================================================*/
 /*!
  * \brief  API to Initialize pmic core handle for PMIC LLD.
+ *
+ * Requirement: REQ_TAG(PDK-5814), REQ_TAG(PDK-5810), REQ_TAG(PDK-5813),
+ *              REQ_TAG(PDK-5843)
+ * Design: did_pmic_comm_intf_cfg, did_pmic_comm_single_i2c_cfg,
+ *         did_pmic_comm_dual_i2c_cfg, did_pmic_comm_spi_cfg
+ *
  *         This function gets device configuration from pCoreCfgData and
  *         initializes device specific information in pPmicCoreHandle after
  *         validation of given params depends on validParams bitfileds
@@ -382,6 +388,10 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
 
 /*!
  * \brief  API to DeInitilizes an existing PMIC Instance.
+ *
+ * Requirement: REQ_TAG(PDK-5814)
+ * Design: did_pmic_comm_intf_cfg
+ *
  *         This function takes an existing Instance pPmicCoreHandle and
  *         closes the LLD being used for this Instance. It should be called
  *         only once per valid pPmicCoreHandle. Should not be called

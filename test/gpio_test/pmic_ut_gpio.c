@@ -4833,7 +4833,8 @@ static void test_pmic_gpio_testapp_runner(void)
 {
     /* @description : Test runner for Gpio Test App
      *
-     * @requirements: PDK-5808
+     * @requirements: PDK-5808, PDK-5812, PDK-5814, PDK-5810, PDK-5813,
+     *                PDK-5843, PDK-5853
      *
      * @cores       : mcu1_0, mcu1_1
      */

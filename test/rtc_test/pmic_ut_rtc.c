@@ -2471,7 +2471,7 @@ static void test_pmic_rtc_testapp_runner(void)
 {
     /* @description : Test runner for RTC Test App
      *
-     * @requirements: PDK-5855
+     * @requirements: PDK-5855, PDK-5813, PDK-5806
      *
      * @cores       : mcu1_0, mcu1_1
      */

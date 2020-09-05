@@ -117,6 +117,10 @@ void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *pPmicCoreHandle)
 
 /*!
  * \brief  API to Set Recovery Counter Configuration.
+ *
+ * Requirement: REQ_TAG(PDK-5809)
+ * Design: did_pmic_err_recov_cnt_cfg_readback
+ *
  *         This function configures PMIC Recovery Counter register, controlling
  *         recovery count Threshold and Clear, when corresponding validParam
  *         bit field is set in the Pmic_RecovCntCfg_t structure.
@@ -204,6 +208,10 @@ int32_t Pmic_SetRecoveryCntCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
 /*!
  * \brief  API to Get Recovery Counter Configuration.
+ *
+ * Requirement: REQ_TAG(PDK-5809)
+ * Design: did_pmic_err_recov_cnt_cfg_readback
+ *
  *         This function gets PMIC Recovery Counter configuration values. Like,
  *         recovery count Threshold and Clear, when corresponding validParam
  *         bit field is set in the Pmic_RecovCntCfg_t structure.
@@ -277,6 +285,10 @@ int32_t Pmic_getRecoveryCntCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief  API to Read Recovery Count Value.
+ *
+ * Requirement: REQ_TAG(PDK-5809)
+ * Design: did_pmic_err_recov_cnt_cfg_readback
+ *
  *         This function reads out the recovery count value.
  *
  * \param   pPmicCoreHandle       [IN]    PMIC Interface Handle.
@@ -327,6 +339,12 @@ int32_t Pmic_getRecoveryCnt(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief  API to Initialize pmic core handle for PMIC LLD.
+ *
+ * Requirement: REQ_TAG(PDK-5814), REQ_TAG(PDK-5810), REQ_TAG(PDK-5813),
+ *              REQ_TAG(PDK-5843)
+ * Design: did_pmic_comm_intf_cfg, did_pmic_comm_single_i2c_cfg,
+ *         did_pmic_comm_dual_i2c_cfg, did_pmic_comm_spi_cfg
+ *
  *         This function gets device configuration from pCoreCfgHandle and
  *         initializes device specific information in pPmicCoreHandle after
  *         validation of given params depends on validParams bitfileds
@@ -599,6 +617,10 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
 
 /*!
  * \brief  API to DeInitilizes an existing PMIC Instance.
+ *
+ * Requirement: REQ_TAG(PDK-5814)
+ * Design: did_pmic_comm_intf_cfg
+ *
  *         This function takes an existing Instance pPmicCoreHandle and
  *         closes the LLD being used for this Instance. It should be called
  *         only once per valid pPmicCoreHandle. Should not be called
@@ -662,6 +684,10 @@ static int32_t Pmic_getScratchPadRegAddr(uint8_t  scratchPadRegId,
 
 /*!
  * \brief   API to set/write value in/to scratchpad register.
+ *
+ * Requirement: REQ_TAG(PDK-5810), REQ_TAG(PDK-5843)
+ * Design: did_pmic_comm_single_i2c_cfg, did_pmic_comm_spi_cfg
+ *
  *          This function is used write data to scratchpad register of PMIC
  *
  * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
@@ -707,6 +733,10 @@ int32_t Pmic_setScratchPadValue(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   API to get/read data from scratchpad register.
+ *
+ * Requirement: REQ_TAG(PDK-5810), REQ_TAG(PDK-5843)
+ * Design: did_pmic_comm_single_i2c_cfg, did_pmic_comm_spi_cfg
+ *
  *          This function is used read data from scratchpad register of PMIC
  *
  * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.

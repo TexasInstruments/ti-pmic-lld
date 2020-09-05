@@ -1387,7 +1387,7 @@ static void test_pmic_wdg_testapp_runner(void)
 {
     /* @description : Test runner for wdg Test App
      *
-     * @requirements: XXXX
+     * @requirements: PDK-5839, PDK-5807, PDK-5813, PDK-5810 
      *
      * @cores       : mcu1_0, mcu1_1
      */

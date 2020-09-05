@@ -643,8 +643,15 @@ static int32_t Pmic_extractErrStatus(const Pmic_CoreHandle_t *pPmicCoreHandle,
     return pmicStatus;
 }
 
-/*
+/*!
  * \brief   API to read Error status.
+ *
+ * Requirement: REQ_TAG(PDK-5805), REQ_TAG(PDK-5842), REQ_TAG(PDK-5832),
+ *              REQ_TAG(PDK-5838), REQ_TAG(PDK-5852), REQ_TAG(PDK-5834),
+ *              REQ_TAG(PDK-5806), REQ_TAG(PDK-5828), REQ_TAG(PDK-5807),
+ *              REQ_TAG(PDK-5846), REQ_TAG(PDK-5812)
+ * Design: did_pmic_irq_cfg_readback
+ *
  *          This function does the following:
  *             1. This function gets the interrupt status by reading pmic
  *                IRQ register as per IRQ hierarchy defined in device TRM.
@@ -727,8 +734,12 @@ int32_t  Pmic_irqGetErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
     return pmicStatus;
 }
 
-/*
+/*!
  * \brief   API to clear Error status.
+ *
+ * Requirement: REQ_TAG(PDK-5805)
+ * Design: did_pmic_irq_cfg_readback
+ *
  *          This function does the following:
  *          1. This function clears the IRQ status in PMIC register for a given
  *             IRQ Number.
@@ -771,8 +782,12 @@ int32_t Pmic_irqClrErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
     return pmicStatus;
 }
 
-/*
+/*!
  * \brief   API to mask/unmask interrupts.
+ *
+ * Requirement: REQ_TAG(PDK-5805)
+ * Design: did_pmic_irq_cfg_readback
+ *
  *          This function does the following:
  *          1. This function mask/unmask the given IRQ Number.
  *          2. Validates given IRQ Number and find the IRQ register that
@@ -815,8 +830,12 @@ int32_t Pmic_irqMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
     return pmicStatus;
 }
 
-/*
+/*!
  * \brief   API to extract each Error status.
+ *
+ * Requirement: REQ_TAG(PDK-5805)
+ * Design: did_pmic_irq_cfg_readback
+ *
  *          This function is used to extract each Error status from pErrStat 
  *          as per the hierarchy given in the TRM. This function clears the 
  *          Error status after the status is extracted. This API is expected to
@@ -868,8 +887,12 @@ int32_t Pmic_getNextErrorStatus(const Pmic_CoreHandle_t *pPmicCoreHandle,
     return pmicStatus;
 }
 
-/*
+/*!
  * \brief   API to mask/unmask GPIO interrupts.
+ *
+ * Requirement: REQ_TAG(PDK-5812)
+ * Design: did_pmic_irq_cfg_readback
+ *
  *          This function is used to Mask or Unmask GPIO Rise and Fall
  *          Interrupts based on the GPIO IRQ Number.
  *

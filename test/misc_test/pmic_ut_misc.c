@@ -565,7 +565,7 @@ static void test_pmic_misc_testapp_runner(void)
 {
     /* @description : Test runner for misc Test App
      *
-     * @requirements: XXXX
+     * @requirements: PDK-5827
      *
      * @cores       : mcu1_0, mcu1_1
      */
@@ -652,7 +652,7 @@ static void test_pmic_misc_testapp_runner(void)
 #endif
 
 /*!
- * \brief   TI RTOS specific GPIO TEST APP main Function
+ * \brief   TI RTOS specific MISC TEST APP main Function
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values see \ref Pmic_ErrorCodes
@@ -661,7 +661,7 @@ int main()
 {
     Board_initUART();
 
-    pmic_log("PMIC Watchdog Unity Test Application(%s %s)\n",
+    pmic_log("PMIC Misc Unity Test Application(%s %s)\n",
                                          __TIME__, __DATE__);
 
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \

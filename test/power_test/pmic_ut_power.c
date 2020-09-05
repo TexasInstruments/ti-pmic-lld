@@ -11776,8 +11776,7 @@ static void test_pmic_power_testapp_runner(void)
 {
     /* @description : Test runner for POWER Test App
      *
-     * @requirements: PDK-5841
-                      PDK-5850
+     * @requirements: PDK-5841, PDK-5850
      *
      * @cores       : mcu1_0, mcu1_1
      */

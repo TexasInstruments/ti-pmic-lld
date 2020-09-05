@@ -147,6 +147,10 @@ typedef struct Pmic_RecovCntCfg_s
 /*==========================================================================*/
 /*!
  * \brief  API to Set Recovery Counter Configuration.
+ *
+ * Requirement: REQ_TAG(PDK-5809)
+ * Design: did_pmic_err_recov_cnt_cfg_readback
+ *
  *         This function configures PMIC Recovery Counter register, controlling
  *         recovery count Threshold and Clear, when corresponding validParam
  *         bit field is set in the Pmic_RecovCntCfg_t structure.
@@ -164,6 +168,10 @@ int32_t Pmic_SetRecoveryCntCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
 /*!
  * \brief  API to Get Recovery Counter Configuration.
+ *
+ * Requirement: REQ_TAG(PDK-5809)
+ * Design: did_pmic_err_recov_cnt_cfg_readback
+ *
  *         This function gets PMIC Recovery Counter configuration values. Like,
  *         recovery count Threshold and Clear, when corresponding validParam
  *         bit field is set in the Pmic_RecovCntCfg_t structure.
@@ -181,6 +189,10 @@ int32_t Pmic_getRecoveryCntCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
 /*!
  * \brief  API to Read Recovery Count Value.
+ *
+ * Requirement: REQ_TAG(PDK-5809)
+ * Design: did_pmic_err_recov_cnt_cfg_readback
+ *
  *         This function reads out the recovery count value.
  *
  * \param   pPmicCoreHandle       [IN]    PMIC Interface Handle.
@@ -195,6 +207,10 @@ int32_t Pmic_getRecoveryCnt(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   API to set/write value in/to scratchpad register.
+ *
+ * Requirement: REQ_TAG(PDK-5810), REQ_TAG(PDK-5843)
+ * Design: did_pmic_comm_single_i2c_cfg, did_pmic_comm_spi_cfg
+ *
  *          This function is used write data to scratchpad register of PMIC
  *
  * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
@@ -211,6 +227,10 @@ int32_t Pmic_setScratchPadValue(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   API to get/read data from scratchpad register.
+ *
+ * Requirement: REQ_TAG(PDK-5810), REQ_TAG(PDK-5843)
+ * Design: did_pmic_comm_single_i2c_cfg, did_pmic_comm_spi_cfg
+ *
  *          This function is used read data from scratchpad register of PMIC
  *
  * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
