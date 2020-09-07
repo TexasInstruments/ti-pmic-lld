@@ -349,11 +349,11 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         "Pmic_gpioTps6594xNPwronPinGetValue : Parameter validation for PinValue"
     },
     {
-        1,
+        7879,
         "Pmic_gpioGetConfiguration : NEgative test for Pin 11 for HERA."
     },
     {
-        2,
+        7880,
         "Pmic_gpioTps6594xNPwronPinGetValue : Negative test for nPWRON Pin for hera"
     },
 };
@@ -418,7 +418,7 @@ static void test_pmic_gpio_setCfgGpioPin_nSLEEP1(void)
         }
 
         /* GPIO Pins 1, 2 and 10 are supported on PMIC-B on J721EVM.
-         * Refer to PDK-7457 for more details
+         * Refer to 7457 for more details
          */
         if(((1U != pins[pin]) || (2U != pins[pin]) || (10U != pins[pin])) &&
            (J721E_LEO_PMICB_DEVICE == pmic_device_info))
@@ -498,7 +498,7 @@ static void test_pmic_gpio_setCfgGpioPin_nSLEEP2(void)
         }
 
         /* GPIO Pins 1, 2 and 10 are supported on PMIC-B on J721EVM.
-         * Refer to PDK-7457 for more details
+         * Refer to 7457 for more details
          */
         if(((1U != pins[pin]) || (2U != pins[pin]) || (10U != pins[pin])) &&
            (J721E_LEO_PMICB_DEVICE == pmic_device_info))
@@ -639,7 +639,7 @@ static void test_pmic_gpio_setCfgGpioPin_wakeup1(void)
         }
 
         /* GPIO Pins 1, 2 and 10 are supported on PMIC-B on J721EVM.
-         * Refer to PDK-7457 for more details
+         * Refer to 7457 for more details
          */
         if(((1U != pins[pin]) || (2U != pins[pin]) || (10U != pins[pin])) &&
            (J721E_LEO_PMICB_DEVICE == pmic_device_info))
@@ -720,7 +720,7 @@ static void test_pmic_gpio_setCfgGpioPin_wakeup2(void)
         }
 
         /* GPIO Pins 1, 2 and 10 are supported on PMIC-B on J721EVM.
-         * Refer to PDK-7457 for more details
+         * Refer to 7457 for more details
          */
         if(((1U != pins[pin]) || (2U != pins[pin]) || (10U != pins[pin])) &&
            (J721E_LEO_PMICB_DEVICE == pmic_device_info))
@@ -790,7 +790,7 @@ static void test_pmic_gpio_setCfgGpioPin_gpio(void)
         }
 
         /* GPIO Pins 1, 2 and 10 are supported on PMIC-B on J721EVM.
-         * Refer to PDK-7457 for more details
+         * Refer to 7457 for more details
          */
         if(((1U != pins[pin]) || (2U != pins[pin]) || (10U != pins[pin])) &&
            (J721E_LEO_PMICB_DEVICE == pmic_device_info))
@@ -1290,7 +1290,7 @@ static void test_pmic_gpio_setCfgGpioPin_syncCLKOUT(void)
         }
 
         /* GPIO Pins 1, 2 and 10 are supported on PMIC-B on J721EVM.
-         * Refer to PDK-7457 for more details
+         * Refer to 7457 for more details
          */
         if((10U != pins[pin]) && (J721E_LEO_PMICB_DEVICE == pmic_device_info))
         {
@@ -4606,7 +4606,7 @@ static void test_pmic_gpio_getCfgPrmValTest_pin_hera(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(1,
+    test_pmic_print_unity_testcase_info(7879,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
@@ -4632,7 +4632,7 @@ static void test_pmic_gpio_testTps6594xNPwronPinGetValue_hera(void)
         TEST_IGNORE();
     }
 
-    test_pmic_print_unity_testcase_info(2,
+    test_pmic_print_unity_testcase_info(7880,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
@@ -4895,8 +4895,8 @@ static void test_pmic_gpio_testapp_runner(void)
 {
     /* @description : Test runner for Gpio Test App
      *
-     * @requirements: PDK-5808, PDK-5812, PDK-5814, PDK-5810, PDK-5813,
-     *                PDK-5843, PDK-5853
+     * @requirements: 5808, 5812, 5814, 5810, 5813,
+     *                5843, 5853
      *
      * @cores       : mcu1_0, mcu1_1
      */

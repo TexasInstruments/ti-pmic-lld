@@ -53,219 +53,219 @@ static Pmic_Ut_Tests_t pmic_esm_tests[] =
      *  TestDesc
      */
      {
-         0,
+         7769,
          "Pmic_esmStart: Test to Start and Stop ESM MCU"
      },
      {
-         1,
+         7770,
          "Pmic_esmStart: Test to Start and Stop ESM SOC"
      },
      {
-         2,
+         7771,
          "Pmic_esmStart: Parameter validation for handle"
      },
      {
-         3,
+         7772,
          "Pmic_esmEnable: Test to Enable and Disable ESM MCU"
      },
      {
-         4,
+         7773,
          "Pmic_esmEnable: Test to Enable and Disable ESM SOC"
      },
      {
-         5,
+         7774,
          "Pmic_esmEnable: Parameter validation for handle"
      },
      {
-         6,
+         7775,
          "Pmic_esmGetEnableState: Test to verify ESM MCU Enable readback"
      },
      {
-         7,
+         7776,
          "Pmic_esmGetEnableState: Test to verify ESM SOC Enable readback"
      },
      {
-         8,
+         7777,
          "Pmic_esmGetEnableState: Parameter validation for handle"
      },
      {
-         9,
+         7778,
          "Pmic_esmGetEnableState: Parameter validation for pEsmState"
      },
      {
-         10,
+         7779,
          "Pmic_esmSetConfiguration: Test to configure ESM MCU in Level Mode"
      },
      {
-         11,
+         7780,
          "Pmic_esmSetConfiguration: Test to configure ESM SOC in Level Mode"
      },
      {
-         12,
+         7781,
          "Pmic_esmSetConfiguration: Test to configure ESM MCU in PWM Mode"
      },
      {
-         13,
+         7782,
          "Pmic_esmSetConfiguration: Test to configure ESM SOC in PWM Mode"
      },
      {
-         14,
+         7783,
          "Pmic_esmSetConfiguration: Parameter validation for handle"
      },
      {
-         15,
+         7784,
          "Pmic_esmSetConfiguration: Parameter validation for esmDelay1"
      },
      {
-         16,
+         7785,
          "Pmic_esmSetConfiguration: Parameter validation for esmDelay2"
      },
      {
-         17,
+         7786,
          "Pmic_esmSetConfiguration: Parameter validation for esmHMAX"
      },
      {
-         18,
+         7787,
          "Pmic_esmSetConfiguration: Parameter validation for esmHMIN"
      },
      {
-         19,
+         7789,
          "Pmic_esmSetConfiguration: Parameter validation for esmLMAX"
      },
      {
-         20,
+         7790,
          "Pmic_esmSetConfiguration: Parameter validation for esmLMIN"
      },
      {
-         21,
+         7791,
          "Pmic_esmSetConfiguration: Parameter validation for esmErrCntThr"
      },
      {
-         22,
+         7792,
          "Pmic_esmGetConfiguration: Test to verify PMIC ESM MCU Get Configuration"
      },
      {
-         23,
+         7793,
          "Pmic_esmGetConfiguration: Test to verify PMIC ESM SOC Get Configuration"
      },
      {
-         24,
+         7794,
          "Pmic_esmGetConfiguration: Parameter validation for handle"
      },
      {
-         25,
+         7795,
          "Pmic_esmGetConfiguration: Parameter validation for pEsmCfg"
      },
      {
-         26,
+         7796,
          "Pmic_esmGetErrCnt: Test to read the current ESM MCU Error Count Value"
      },
      {
-         27,
+         7797,
          "Pmic_esmGetErrCnt: Test to read the current ESM SOC Error Count Value"
      },
      {
-         28,
+         7798,
          "Pmic_esmGetErrCnt: Parameter validation for handle"
      },
      {
-         29,
+         7799,
          "Pmic_esmGetErrCnt: Parameter validation for pEsmErrCnt"
      },
      {
-         30,
+         7836,
          "Pmic_esmSetInterrupt: Test to verify ESM MCU Level Mode RST Interrupt"
      },
      {
-         31,
+         7837,
          "Pmic_esmSetInterrupt: Test to verify ESM MCU PWM Mode RST Interrupt"
      },
      {
-         32,
+         7838,
          "Pmic_esmSetInterrupt: Test to verify ESM MCU Level Mode FAIL Interrupt"
      },
      {
-         33,
+         7839,
          "Pmic_esmSetInterrupt: Test to verify ESM MCU PWM Mode FAIL Interrupt"
      },
      {
-         34,
+         7840,
          "Pmic_esmSetInterrupt: Test to verify ESM MCU Level Mode PIN Interrupt"
      },
      {
-         35,
+         7841,
          "Pmic_esmSetInterrupt: Test to verify ESM MCU PWM Mode PIN Interrupt"
      },
      {
-         36,
+         7842,
          "Pmic_esmSetInterrupt: Test to verify ESM SOC Level Mode RST Interrupt"
      },
      {
-         37,
+         7843,
          "Pmic_esmSetInterrupt: Test to verify ESM SOC PWM Mode RST Interrupt"
      },
      {
-         38,
+         7844,
          "Pmic_esmSetInterrupt: Test to verify ESM SOC Level Mode FAIL Interrupt"
      },
      {
-         39,
+         7845,
          "Pmic_esmSetInterrupt: Test to verify ESM SOC PWM Mode FAIL Interrupt"
      },
      {
-         40,
+         7846,
          "Pmic_esmSetInterrupt: Test to verify ESM SOC Level Mode PIN Interrupt"
      },
      {
-         41,
+         7847,
          "Pmic_esmSetInterrupt: Test to verify ESM SOC PWM Mode PIN Interrupt"
      },
      {
-         42,
+         7848,
          "Pmic_esmSetInterrupt: Test to verify ESM SOC PWM Mode PIN, Fail and RST Interrupts"
      },
      {
-         43,
+         7849,
          "Pmic_esmSetInterrupt: Test to verify ESM MCU Level Mode PIN, Fail and RST Interrupts"
      },
      {
-         44,
+         7850,
          "Pmic_esmSetInterrupt: Test to verify ESM MCU Level Mode PIN, Fail and RST Interrupts disabled"
      },
      {
-         45,
+         7851,
          "Pmic_esmSetInterrupt: Test to verify ESM SOC PWM Mode PIN, Fail and RST Interrupts disabled"
      },
      {
-         46,
+         7852,
          "Pmic_esmSetInterrupt: Parameter validation for handle"
      },
      {
-         47,
+         7853,
          "Pmic_esmStart : Negative test to verify ESM SOC Start for HERA"
      },
      {
-         48,
+         7854,
          "Pmic_esmEnable : Negative test to verify ESM SOC Enable for HERA"
      },
      {
-         49,
+         7855,
          "Pmic_esmSetConfiguration : Negative test to verify PMIC ESM SOC Set configuration for ESM SOC Level Mode for HERA"
      },
      {
-         50,
+         7856,
          "Pmic_esmGetConfiguration : Negative test to verify PMIC ESM SOC Get configuration for ESM SOC Level Mode for HERA"
      },
      {
-         51,
+         7857,
          "Pmic_esmGetErrCnt : Negative test to verify Error count value for HERA"
      },
      {
-         52,
+         7858,
          "Pmic_esmSetInterrupt : Negative test to verify ESM interrupt enable for HERA"
      },
      {
-         52,
+         7859,
          "Pmic_esmGetEnableState : Negative test to verify ESM get state for HERA"
      },
 };
@@ -279,7 +279,7 @@ static void test_pmic_esm_startEsm_esmMcuStart(void)
     bool esmType       = PMIC_ESM_MODE_MCU;
     bool esmState      = PMIC_ESM_START;
 
-    test_pmic_print_unity_testcase_info(0,
+    test_pmic_print_unity_testcase_info(7769,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -306,7 +306,7 @@ static void test_pmic_esm_startEsm_esmSocStart(void)
     bool esmType       = PMIC_ESM_MODE_SOC;
     bool esmState      = PMIC_ESM_START;
 
-    test_pmic_print_unity_testcase_info(1,
+    test_pmic_print_unity_testcase_info(7770,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -338,7 +338,7 @@ static void test_pmic_esm_startEsmPrmValTest_handle(void)
     bool esmType        = PMIC_ESM_MODE_SOC;
     bool esmState       = PMIC_ESM_START;
 
-    test_pmic_print_unity_testcase_info(2,
+    test_pmic_print_unity_testcase_info(7771,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -356,7 +356,7 @@ static void test_pmic_esm_enableEsm_esmMcuEnable(void)
     bool esmToggle     = PMIC_ESM_ENABLE;
     bool esmState      = false;
 
-    test_pmic_print_unity_testcase_info(3,
+    test_pmic_print_unity_testcase_info(7772,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -389,7 +389,7 @@ static void test_pmic_esm_enableEsm_esmSocEnable(void)
     bool esmToggle     = PMIC_ESM_ENABLE;
     bool esmState      = false;
 
-    test_pmic_print_unity_testcase_info(4,
+    test_pmic_print_unity_testcase_info(7773,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -426,7 +426,7 @@ static void test_pmic_esm_enableEsmPrmValTest_handle(void)
     bool esmType       = PMIC_ESM_MODE_SOC;
     bool esmToggle     = PMIC_ESM_ENABLE;
 
-    test_pmic_print_unity_testcase_info(5,
+    test_pmic_print_unity_testcase_info(7774,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -444,7 +444,7 @@ static void test_pmic_esm_getEnableState_esmMcu(void)
     bool esmToggle     = PMIC_ESM_ENABLE;
     bool esmState      = false;
 
-    test_pmic_print_unity_testcase_info(6,
+    test_pmic_print_unity_testcase_info(7775,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -477,7 +477,7 @@ static void test_pmic_esm_getEnableState_esmSoc(void)
     bool esmToggle     = PMIC_ESM_ENABLE;
     bool esmState      = false;
 
-    test_pmic_print_unity_testcase_info(7,
+    test_pmic_print_unity_testcase_info(7776,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -514,7 +514,7 @@ static void test_pmic_esm_getEnableStatePrmValTest_handle(void)
     bool esmType       = PMIC_ESM_MODE_SOC;
     bool esmState      = false;
 
-    test_pmic_print_unity_testcase_info(8,
+    test_pmic_print_unity_testcase_info(7777,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -530,7 +530,7 @@ static void test_pmic_esm_getEnableStatePrmValTest_esmState(void)
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     bool esmType       = PMIC_ESM_MODE_SOC;
 
-    test_pmic_print_unity_testcase_info(9,
+    test_pmic_print_unity_testcase_info(7778,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -563,7 +563,7 @@ static void test_pmic_esm_setConfiguration_esmMcuLevelMode(void)
         PMIC_ESM_LEVEL_MODE
     };
 
-    test_pmic_print_unity_testcase_info(10,
+    test_pmic_print_unity_testcase_info(7779,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -608,7 +608,7 @@ static void test_pmic_esm_setConfiguration_esmSocLevelMode(void)
         PMIC_ESM_LEVEL_MODE
     };
 
-    test_pmic_print_unity_testcase_info(11,
+    test_pmic_print_unity_testcase_info(7780,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -663,7 +663,7 @@ static void test_pmic_esm_setConfiguration_esmMcuPwmMode(void)
         PMIC_ESM_PWM_MODE
     };
 
-    test_pmic_print_unity_testcase_info(12,
+    test_pmic_print_unity_testcase_info(7781,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -718,7 +718,7 @@ static void test_pmic_esm_setConfiguration_esmSocPwmMode(void)
         PMIC_ESM_PWM_MODE
     };
 
-    test_pmic_print_unity_testcase_info(13,
+    test_pmic_print_unity_testcase_info(7782,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -769,7 +769,7 @@ static void test_pmic_esm_setConfigurationPrmValTest_handle(void)
         PMIC_ESM_LEVEL_MODE
     };
 
-    test_pmic_print_unity_testcase_info(14,
+    test_pmic_print_unity_testcase_info(7783,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -801,7 +801,7 @@ static void test_pmic_esm_setConfigurationPrmValTest_esmDelay1(void)
         PMIC_ESM_LEVEL_MODE
     };
 
-    test_pmic_print_unity_testcase_info(15,
+    test_pmic_print_unity_testcase_info(7784,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -833,7 +833,7 @@ static void test_pmic_esm_setConfigurationPrmValTest_esmDelay2(void)
         PMIC_ESM_LEVEL_MODE
     };
 
-    test_pmic_print_unity_testcase_info(16,
+    test_pmic_print_unity_testcase_info(7785,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -865,7 +865,7 @@ static void test_pmic_esm_setConfigurationPrmValTest_esmHmax(void)
         PMIC_ESM_PWM_MODE
     };
 
-    test_pmic_print_unity_testcase_info(17,
+    test_pmic_print_unity_testcase_info(7786,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -897,7 +897,7 @@ static void test_pmic_esm_setConfigurationPrmValTest_esmHmin(void)
         PMIC_ESM_PWM_MODE
     };
 
-    test_pmic_print_unity_testcase_info(18,
+    test_pmic_print_unity_testcase_info(7787,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -929,7 +929,7 @@ static void test_pmic_esm_setConfigurationPrmValTest_esmLmax(void)
         PMIC_ESM_PWM_MODE
     };
 
-    test_pmic_print_unity_testcase_info(19,
+    test_pmic_print_unity_testcase_info(7789,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -961,7 +961,7 @@ static void test_pmic_esm_setConfigurationPrmValTest_esmLmin(void)
         PMIC_ESM_PWM_MODE
     };
 
-    test_pmic_print_unity_testcase_info(20,
+    test_pmic_print_unity_testcase_info(7790,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -993,7 +993,7 @@ static void test_pmic_esm_setConfigurationPrmValTest_esmErrCntThr(void)
         PMIC_ESM_PWM_MODE
     };
 
-    test_pmic_print_unity_testcase_info(21,
+    test_pmic_print_unity_testcase_info(7791,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -1034,7 +1034,7 @@ static void test_pmic_esm_getConfiguration_esmMcuPwmMode(void)
         PMIC_ESM_PWM_MODE
     };
 
-    test_pmic_print_unity_testcase_info(22,
+    test_pmic_print_unity_testcase_info(7792,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -1090,7 +1090,7 @@ static void test_pmic_esm_getConfiguration_esmSocPwmMode(void)
         PMIC_ESM_PWM_MODE
     };
 
-    test_pmic_print_unity_testcase_info(23,
+    test_pmic_print_unity_testcase_info(7793,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -1138,7 +1138,7 @@ static void test_esm_getConfigurationPrmValTest_handle(void)
                                PMIC_ESM_CFG_EN_DRV_VALID_SHIFT |
                                PMIC_ESM_CFG_ERR_CNT_THR_VALID_SHIFT,};
 
-    test_pmic_print_unity_testcase_info(24,
+    test_pmic_print_unity_testcase_info(7794,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -1154,7 +1154,7 @@ static void test_esm_getConfigurationPrmValTest_pEsmCfg(void)
     int32_t pmicStatus      = PMIC_ST_SUCCESS;
     bool esmType            = PMIC_ESM_MODE_MCU;
 
-    test_pmic_print_unity_testcase_info(25,
+    test_pmic_print_unity_testcase_info(7795,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -1171,7 +1171,7 @@ static void test_esm_getErrCnt_esmMcu(void)
     uint8_t esmErrCnt  = 0U;
     bool esmType       = PMIC_ESM_MODE_MCU;
 
-    test_pmic_print_unity_testcase_info(26,
+    test_pmic_print_unity_testcase_info(7796,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -1188,7 +1188,7 @@ static void test_esm_getErrCnt_esmSoc(void)
     uint8_t esmErrCnt  = 0U;
     bool esmType       = PMIC_ESM_MODE_SOC;
 
-    test_pmic_print_unity_testcase_info(27,
+    test_pmic_print_unity_testcase_info(7797,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -1205,7 +1205,7 @@ static void test_esm_getErrCntPrmValTest_handle(void)
     uint8_t esmErrCnt  = 0U;
     bool esmType        = PMIC_ESM_MODE_SOC;
 
-    test_pmic_print_unity_testcase_info(28,
+    test_pmic_print_unity_testcase_info(7798,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -1221,7 +1221,7 @@ static void test_esm_getErrCntPrmValTest_pEsmErrCnt(void)
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     bool esmType        = PMIC_ESM_MODE_SOC;
 
-    test_pmic_print_unity_testcase_info(29,
+    test_pmic_print_unity_testcase_info(7799,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -1273,7 +1273,7 @@ static void test_esm_setInterrupt_esmMcuRstIntr_levelMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(30,
+    test_pmic_print_unity_testcase_info(7836,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -1374,7 +1374,7 @@ static void test_esm_setInterrupt_esmMcuRstIntr_pwmMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(31,
+    test_pmic_print_unity_testcase_info(7837,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -1472,7 +1472,7 @@ static void test_esm_setInterrupt_esmMcuFailIntr_levelMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(32,
+    test_pmic_print_unity_testcase_info(7838,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -1568,7 +1568,7 @@ static void test_esm_setInterrupt_esmMcuFailIntr_pwmMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(33,
+    test_pmic_print_unity_testcase_info(7839,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -1666,7 +1666,7 @@ static void test_esm_setInterrupt_esmMcuPinIntr_levelMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(34,
+    test_pmic_print_unity_testcase_info(7840,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -1762,7 +1762,7 @@ static void test_esm_setInterrupt_esmMcuPinIntr_pwmMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(35,
+    test_pmic_print_unity_testcase_info(7841,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -1860,7 +1860,7 @@ static void test_esm_setInterrupt_esmSocRstIntr_levelMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(36,
+    test_pmic_print_unity_testcase_info(7842,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -1956,7 +1956,7 @@ static void test_esm_setInterrupt_esmSocRstIntr_pwmMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(37,
+    test_pmic_print_unity_testcase_info(7843,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -2054,7 +2054,7 @@ static void test_esm_setInterrupt_esmSocFailIntr_levelMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(38,
+    test_pmic_print_unity_testcase_info(7844,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -2150,7 +2150,7 @@ static void test_esm_setInterrupt_esmSocFailIntr_pwmMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(39,
+    test_pmic_print_unity_testcase_info(7845,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -2248,7 +2248,7 @@ static void test_esm_setInterrupt_esmSocPinIntr_levelMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(40,
+    test_pmic_print_unity_testcase_info(7846,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -2344,7 +2344,7 @@ static void test_esm_setInterrupt_esmSocPinIntr_pwmMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(41,
+    test_pmic_print_unity_testcase_info(7847,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -2442,7 +2442,7 @@ static void test_esm_setInterrupt_esmSocAllIntr_pwmMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(42,
+    test_pmic_print_unity_testcase_info(7848,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -2577,7 +2577,7 @@ static void test_esm_setInterrupt_esmMcuAllIntr_levelMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(43,
+    test_pmic_print_unity_testcase_info(7849,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -2712,7 +2712,7 @@ static void test_esm_setInterrupt_esmMcuAllIntrDisabled_levelMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(44,
+    test_pmic_print_unity_testcase_info(7850,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -2804,7 +2804,7 @@ static void test_esm_setInterrupt_esmSocAllIntrDisable_pwmMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(45,
+    test_pmic_print_unity_testcase_info(7851,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -2869,7 +2869,7 @@ static void test_esm_setInterruptPrmValTest_handle(void)
         false
     };
 
-    test_pmic_print_unity_testcase_info(46,
+    test_pmic_print_unity_testcase_info(7852,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -2887,7 +2887,7 @@ static void test_pmic_esm_startEsm_esmSocStart_hera(void)
     bool esmType       = PMIC_ESM_MODE_SOC;
     bool esmState      = PMIC_ESM_START;
 
-    test_pmic_print_unity_testcase_info(47,
+    test_pmic_print_unity_testcase_info(7853,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -2909,7 +2909,7 @@ static void test_pmic_esm_startEsm_esmSocEnable_hera(void)
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     bool esmType       = PMIC_ESM_MODE_SOC;
 
-    test_pmic_print_unity_testcase_info(48,
+    test_pmic_print_unity_testcase_info(7854,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -2945,7 +2945,7 @@ static void test_pmic_esm_setConfiguration_esmSocLevelMode_hera(void)
         PMIC_ESM_LEVEL_MODE
     };
 
-    test_pmic_print_unity_testcase_info(49,
+    test_pmic_print_unity_testcase_info(7855,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -2971,7 +2971,7 @@ static void test_pmic_esm_getConfiguration_esmSocLevelMode_hera(void)
                                PMIC_ESM_CFG_MODE_VALID_SHIFT,};
 
 
-    test_pmic_print_unity_testcase_info(50,
+    test_pmic_print_unity_testcase_info(7856,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -2996,7 +2996,7 @@ static void test_Pmic_esmGetErrCnt_hera(void)
     uint8_t esmErrCnt  = 0U;
     bool esmType       = PMIC_ESM_MODE_SOC;
 
-    test_pmic_print_unity_testcase_info(51,
+    test_pmic_print_unity_testcase_info(7857,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -3025,7 +3025,7 @@ static void test_Pmic_esmSetInterrupt_hera(void)
         false
     };
 
-    test_pmic_print_unity_testcase_info(52,
+    test_pmic_print_unity_testcase_info(7858,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -3048,7 +3048,7 @@ static void test_Pmic_esmGetEnableState_hera(void)
     bool esmType       = PMIC_ESM_MODE_SOC;
     bool esmState      = false;
 
-    test_pmic_print_unity_testcase_info(53,
+    test_pmic_print_unity_testcase_info(7859,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -3323,7 +3323,7 @@ static void test_pmic_esm_testapp_runner(void)
 {
     /* @description : Test runner for ESM Test App
      *
-     * @requirements: PDK-5833, PDK-5846
+     * @requirements: 5833, 5846
      *
      * @cores       : mcu1_0, mcu1_1
      */

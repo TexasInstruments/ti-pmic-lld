@@ -329,59 +329,59 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
         "Pmic_fsmDeviceOffRequestCfg/Pmic_fsmEnableI2cTrigger :  RTC Wakeup using Alarm Interrupt'"
     },
     {
-        111,
+        7888,
         "test_rtc_timer_irq : Test rtc timer asynchronous interrupt"
     },
     {
-        222,
+        7889,
         "test_rtc_alarm_irq: Test rtc alarm asynchronous interrupt"
     },
     {
-	1,
+        7860,
         "Pmic_rtcEnable : Negative test for RTC state for HERA"
     },
     {
-        2,
+        7861,
         "Pmic_rtcEnableAlarmIntr : Negative test for RTC Alarm interrupt for HERA"
     },
     {
-        3,
+        7862,
         "Pmic_rtcEnableTimerIntr :Negative test for RTC Timer interrupt for HERA"
     },
     {
-        4,
+        7863,
         "Pmic_rtcGetFreqComp :Negative test for Test RTC for set RTC frequency compensation for HERA"
     },
     {
-        5,
+        7864,
         "Pmic_rtcSetTimeDateInfo : Negative test for Test RTC for Get Time for HERA"
     },
     {
-        6,
+        7865,
         "Pmic_rtcGetAlarmInfo : Negative test for Test RTC Get Alarm for HERA"
     },
     {
-        7,
+        7866,
         "Pmic_rtcSetAlarmInfo : Negative test for Set RTC Alarm interrupt for HERA"
     },
     {
-        8,
+        7867,
         "Pmic_rtcSetTimerPeriod : Negative test for Test Set RTC Timer interrupt Period for hera"
     },
     {
-        9,
+        7868,
         "Pmic_rtcGetTimerPeriod : Negative test for Test Get RTC Timer interrupt for hera"
     },
     {
-        10,
+        7869,
         "Pmic_getRtcStatus : Negative test for RTC Get Status for hera"
     },
     {
-        11,
+        7870,
         "Pmic_rtcGetTimeDateInfo : Negative test for Test RTC for Get Time for HERA"
     },
     {
-        12,
+        7871,
         "Pmic_rtcGetFreqComp : Negative test for Test RTC for get RTC frequency compensation for HERA"
     },
 };
@@ -2141,7 +2141,7 @@ static void test_pmic_rtc_testTimerAsyncIntr(void)
     Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
     Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
 
-    test_pmic_print_unity_testcase_info(111,
+    test_pmic_print_unity_testcase_info(7888,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -2218,7 +2218,7 @@ static void test_pmic_rtc_testAlarmAsyncIntr(void)
     Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
     Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
 
-    test_pmic_print_unity_testcase_info(222,
+    test_pmic_print_unity_testcase_info(7889,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -2284,7 +2284,7 @@ static void test_Pmic_rtcEnable_hera_hera(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(1,
+    test_pmic_print_unity_testcase_info(7860,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -2310,7 +2310,7 @@ static void test_Pmic_rtcEnableAlarmIntr_hera(void)
         TEST_IGNORE();
     }
 
-    test_pmic_print_unity_testcase_info(2,
+    test_pmic_print_unity_testcase_info(7861,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -2331,7 +2331,7 @@ static void test_Pmic_rtcEnableTimerIntr_hera(void)
         TEST_IGNORE();
     }
 
-    test_pmic_print_unity_testcase_info(3,
+    test_pmic_print_unity_testcase_info(7862,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -2353,7 +2353,7 @@ static void test_pmic_rtc_testSetFreqComp_hera(void)
         TEST_IGNORE();
     }
 
-    test_pmic_print_unity_testcase_info(4,
+    test_pmic_print_unity_testcase_info(7863,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -2378,7 +2378,7 @@ static void test_Pmic_rtcSetTimeDateInfo_hera(void)
     Pmic_RtcDate_t dateCfg = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
                               2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(5,
+    test_pmic_print_unity_testcase_info(7864,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -2404,7 +2404,7 @@ static void test_Pmic_rtcGetAlarmInfo_hera(void)
         TEST_IGNORE();
     }
 
-    test_pmic_print_unity_testcase_info(6,
+    test_pmic_print_unity_testcase_info(7865,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -2430,7 +2430,7 @@ static void test_pmic_rtc_testSetAlarm_hera(void)
     Pmic_RtcDate_t dateCfg     = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
                                   2055U, 1U};
 
-    test_pmic_print_unity_testcase_info(7,
+    test_pmic_print_unity_testcase_info(7866,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -2455,7 +2455,7 @@ static void test_pmic_rtc_testSetTimer_hera(void)
         TEST_IGNORE();
     }
 
-    test_pmic_print_unity_testcase_info(8,
+    test_pmic_print_unity_testcase_info(7867,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -2478,7 +2478,7 @@ static void test_pmic_rtc_testGetTimer_hera(void)
         TEST_IGNORE();
     }
 
-    test_pmic_print_unity_testcase_info(9,
+    test_pmic_print_unity_testcase_info(7868,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -2501,7 +2501,7 @@ static void test_pmic_rtc_testGetRtcStatus_running_hera(void)
         TEST_IGNORE();
     }
 
-    test_pmic_print_unity_testcase_info(10,
+    test_pmic_print_unity_testcase_info(7869,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -2526,7 +2526,7 @@ static void test_pmic_rtc_testGetTime_hera(void)
         TEST_IGNORE();
     }
 
-    test_pmic_print_unity_testcase_info(11,
+    test_pmic_print_unity_testcase_info(7870,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -2550,7 +2550,7 @@ static void test_pmic_rtc_testGetFreqComp_hera(void)
         TEST_IGNORE();
     }
 
-    test_pmic_print_unity_testcase_info(12,
+    test_pmic_print_unity_testcase_info(7871,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
@@ -2868,7 +2868,7 @@ static void test_pmic_rtc_testapp_runner(void)
 {
     /* @description : Test runner for RTC Test App
      *
-     * @requirements: PDK-5855, PDK-5813, PDK-5806
+     * @requirements: 5855, 5813, 5806
      *
      * @cores       : mcu1_0, mcu1_1
      */

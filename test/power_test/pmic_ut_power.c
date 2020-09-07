@@ -845,31 +845,31 @@ static Pmic_Ut_Tests_t pmic_power_tests[] =
         "Pmic_powerGetPwrThermalStat : Test Get immediate Shutdown Status."
     },
     {
-        1,
+        7872,
         "Pmic_powerSetPwrResourceCfg : Negative test LDO Pull down Select for HERA PMIC"
     },
     {
-        2,
+        7873,
         "Pmic_powerSetPwrResourceCfg : Negative test VMON for LEO PMIC."
     },
     {
-        3,
+        7874,
         "Pmic_powerSetThermalConfig : Negative test thermalShutdownThold as 140C for HERA pmic"
     },
     {
-        4,
+        7875,
         "Pmic_powerSetThermalConfig : Negative test for thermalShutdownThold as 145C for HERA pmic"
     },
     {
-        5,
+        7876,
         "Pmic_powerSetLdoRtc : Negative test Disable ldortcRegulator for HERA"
     },
     {
-        6,
+        7877,
         "Pmic_powerSetPwrResourceCfg : Negative test BUCK switching frequency for 8.8M for LEO"
     },
     {
-        7,
+        7878,
         "Pmic_powerGetPwrResourceCfg : Negative test Get Switch peak current limit for BUCK 5"
     },
 
@@ -1950,7 +1950,7 @@ static void test_pmic_powerSetPowerResourceConfig_regulatorEn_disable(void)
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
-    /* PDK-7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
+    /* 7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         TEST_IGNORE();
@@ -2000,7 +2000,7 @@ static void test_pmic_powerSetPowerResourceConfig_regulatorEn_enable(void)
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
-    /* PDK-7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
+    /* 7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         TEST_IGNORE();
@@ -3303,7 +3303,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoSlowRampEn_enable(void)
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
-    /* PDK-7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
+    /* 7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         TEST_IGNORE();
@@ -3505,7 +3505,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_ldoSlowRampE
 }
 
 /*!
- * PDK-7483
+ * 7483
  * PMIC: BUCK and LDO voltage configuration can't be tested for supported values
  * on J721E EVM.
  * voltages should be fixed at their default value, and not adjusted.
@@ -4603,7 +4603,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_railGrpSel(void)
     }
 }
 
-/* PDK-7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
+/* 7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
 
 /*!
  * \brief   Pmic_powerSetPwrResourceCfg : Test BUCK switching frequency for 4.4M.
@@ -4936,7 +4936,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoBypassModeEn_bypass(void)
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
-    /* PDK-7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
+    /* 7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         /*  Setting LDOs in bypass mode - Resulted in DDR issue */
@@ -5018,7 +5018,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoBypassModeEn_linear(void)
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
-    /* PDK-7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
+    /* 7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         TEST_IGNORE();
@@ -7087,7 +7087,7 @@ static void test_pmic_powerSetThermalConfig_thermalShutdownThold_high(void)
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
-    /* PDK-7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
+    /* 7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         TEST_IGNORE();
@@ -8134,7 +8134,7 @@ static void test_pmic_powerSetCommonConfig_deglitchTimeSel_20(void)
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
-    /* PDK-7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
+    /* 7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         TEST_IGNORE();
@@ -9322,7 +9322,7 @@ static void test_pmic_powerSetPwrRsrcIntrPrmValTest_handle(void)
 /*!
  * The below test case is dummy, as power related interrupts cannot be generated
  * to test masking APIs.
- * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * 7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
  * can't be tested
  */
 
@@ -9498,7 +9498,7 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_enabled(void)
 /*!
  * The below test case is dummy, as power related interrupts cannot be generated
  * to test masking APIs.
- * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * 7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
  * can't be tested
  */
 
@@ -9690,7 +9690,7 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_disabled(void)
 /*!
  * The below test case is dummy, as power related interrupts cannot be generated
  * to test masking APIs.
- * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * 7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
  * can't be tested
  */
 
@@ -9869,7 +9869,7 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_enabled(void)
 /*!
  * The below test case is dummy, as power interrupts cannot be generated
  * to test masking APIs.
- * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * 7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
  * can't be tested
  */
 
@@ -10052,7 +10052,7 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_disabled(void)
 /*!
  * The below test case is dummy, as power interrupts cannot be generated
  * to test masking APIs.
- * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * 7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
  * can't be tested
  */
 
@@ -10170,7 +10170,7 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_enabled(void)
 /*!
  * The below test case is dummy, as power interrupts cannot be generated
  * to test masking APIs.
- * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * 7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
  * can't be tested
  */
 
@@ -10293,7 +10293,7 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_disabled(void)
 /*!
  * The below test case is dummy, as thermal interrupts cannot be generated
  * to test masking APIs.
- * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * 7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
  * can't be tested
  */
 
@@ -10359,7 +10359,7 @@ static void test_pmic_powerSetPwrRsrcIntr_twarn_enabled(void)
 /*!
  * The below test case is dummy, as thermal interrupts cannot be generated
  * to test masking APIs.
- * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * 7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
  * can't be tested
  */
 
@@ -10428,7 +10428,7 @@ static void test_pmic_powerSetPwrRsrcIntr_twarn_disabled(void)
 /*!
  * The below test case is dummy, as power interrupts cannot be generated
  * to test masking APIs.
- * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * 7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
  * can't be tested
  */
 
@@ -10493,7 +10493,7 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_enabled(void)
 /*!
  * The below test case is dummy, as power interrupts cannot be generated
  * to test masking APIs.
- * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * 7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
  * can't be tested
  */
 
@@ -10562,7 +10562,7 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_disabled(void)
 /*!
  * The below test case is dummy, as power interrupts cannot be generated
  * to test masking APIs.
- * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * 7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
  * can't be tested
  */
 
@@ -10629,7 +10629,7 @@ static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_enabled(void)
 /*!
  * The below test case is dummy, as power interrupts cannot be generated
  * to test masking APIs.
- * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * 7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
  * can't be tested
  */
 
@@ -10698,7 +10698,7 @@ static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_disabled(void)
 /*!
  * The below test case is dummy, as power interrupts cannot be generated
  * to test masking APIs.
- * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * 7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
  * can't be tested
  */
 
@@ -10764,7 +10764,7 @@ static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_enabled(void)
 /*!
  * The below test case is dummy, as power interrupts cannot be generated
  * to test masking APIs.
- * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * 7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
  * can't be tested
  */
 
@@ -10834,7 +10834,7 @@ static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_disabled(void)
 /*!
  * The below test case is dummy, as power interrupts cannot be generated
  * to test masking APIs.
- * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * 7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
  * can't be tested
  */
 
@@ -10900,7 +10900,7 @@ static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_enabled(void)
 /*!
  * The below test case is dummy, as power interrupts cannot be generated
  * to test masking APIs.
- * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * 7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
  * can't be tested
  */
 
@@ -10969,7 +10969,7 @@ static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_disabled(void)
 /*!
  * The below test case is dummy, as power interrupts cannot be generated
  * to test masking APIs.
- * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * 7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
  * can't be tested
  */
 
@@ -11035,7 +11035,7 @@ static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_enabled(void)
 /*!
  * The below test case is dummy, as power interrupts cannot be generated
  * to test masking APIs.
- * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * 7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
  * can't be tested
  */
 
@@ -11104,7 +11104,7 @@ static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_disabled(void)
 /*!
  * The below test case is dummy, as power interrupts cannot be generated
  * to test masking APIs.
- * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * 7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
  * can't be tested
  */
 
@@ -11170,7 +11170,7 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_enabled(void)
 /*!
  * The below test case is dummy, as power interrupts cannot be generated
  * to test masking APIs.
- * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * 7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
  * can't be tested
  */
 
@@ -11240,7 +11240,7 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_disabled(void)
 /*!
  * The below test case is dummy, as power interrupts cannot be generated
  * to test masking APIs.
- * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * 7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
  * can't be tested
  */
 
@@ -11306,7 +11306,7 @@ static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_enabled(void)
 /*!
  * The below test case is dummy, as power interrupts cannot be generated
  * to test masking APIs.
- * PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
+ * 7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features
  * can't be tested
  */
 
@@ -11499,7 +11499,7 @@ static void test_pmic_powerSetPowerResourceConfig_hera_ldo(void)
         PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(1,
+    test_pmic_print_unity_testcase_info(7872,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -11534,7 +11534,7 @@ static void test_pmic_powerSetPowerResourceConfig_leo_vmon(void)
         PMIC_CFG_VMON_RANGE_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(2,
+    test_pmic_print_unity_testcase_info(7873,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -11567,7 +11567,7 @@ static void test_pmic_powerSetThermalConfig_hera_thermalShutdownThold_low(void)
         PMIC_THERMAL_SHTDWN_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(3,
+    test_pmic_print_unity_testcase_info(7874,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -11594,7 +11594,7 @@ static void test_pmic_powerSetThermalConfig_hera_thermalShutdownThold_high(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(4,
+    test_pmic_print_unity_testcase_info(7875,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     Pmic_PowerThermalCfg_t thermalThreshold =
@@ -11625,7 +11625,7 @@ static void test_pmic_powerSetLdoRtc_HERA_ldortcEnable_disable(void)
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     bool ldortcEnable;
 
-    test_pmic_print_unity_testcase_info(5,
+    test_pmic_print_unity_testcase_info(7876,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -11657,7 +11657,7 @@ static void test_pmic_powerSetPowerResourceConfig_LEO_buckFreqSel_8M8(void)
         PMIC_CFG_REGULATOR_BUCK_FREQ_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(6,
+    test_pmic_print_unity_testcase_info(7877,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -11692,7 +11692,7 @@ static void test_pmic_powerGetPowerResourceConfig_buck5(void)
         PMIC_CFG_REGULATOR_BUCK_ILIM_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(7,
+    test_pmic_print_unity_testcase_info(7878,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -11911,7 +11911,7 @@ RUN_TEST(test_pmic_powerSetPwrRsrcIntrPrmValTest_handle);
 /*   The below taest cases aer dummy, as power/thermal related interrupts cannot
  *   be generated to test masking APIs
  *
- *   PDK-7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features can't
+ *   7463 PMIC: PMIC Power regulators, VCC and VMON Interrupts features can't
  *   be tested
  */
     RUN_TEST(test_pmic_powerSetPwrRsrcIntr_ov_enabled);
@@ -12113,7 +12113,7 @@ static void test_pmic_power_testapp_runner(void)
 {
     /* @description : Test runner for POWER Test App
      *
-     * @requirements: PDK-5841, PDK-5850
+     * @requirements: 5841, 5850
      *
      * @cores       : mcu1_0, mcu1_1
      */

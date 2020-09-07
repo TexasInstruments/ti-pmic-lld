@@ -119,15 +119,15 @@ static Pmic_Ut_Tests_t pmic_fsm_tests[] =
         "Pmic_fsmDeviceOnRequest : Parameter validation for 'handle'."
     },
     {
-        1,
+        7763,
         "Pmic_fsmGetLpmControl : Parameter validation for 'handle'"
     },
     {
-        2,
+        7764,
         "Pmic_fsmGetLpmControl : Parameter validation for 'lpmEnable'"
     },
     {
-        3,
+        7765,
         "Pmic_fsmSetLpmControl : Parameter validation for 'handle'."
     },
 };
@@ -621,7 +621,7 @@ static void test_Pmic_Pmic_fsmGetLpmControlPrmValTest_handle(void)
     int32_t status     = PMIC_ST_SUCCESS;
     bool lpmEnable;
 
-    test_pmic_print_unity_testcase_info(1,
+    test_pmic_print_unity_testcase_info(7763,
                                         pmic_fsm_tests,
                                         PMIC_FSM_NUM_OF_TESTCASES);
 
@@ -636,7 +636,7 @@ static void test_Pmic_Pmic_fsmGetLpmControlPrmValTest_lpmEnable(void)
 {
     int32_t status     = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(2,
+    test_pmic_print_unity_testcase_info(7764    ,
                                         pmic_fsm_tests,
                                         PMIC_FSM_NUM_OF_TESTCASES);
 
@@ -652,7 +652,7 @@ static void test_Pmic_Pmic_fsmSetLpmControlPrmValTest_handle(void)
     int32_t status = PMIC_ST_SUCCESS;
     bool lpmEnable = PMIC_FSM_LPM_ENABLE;
 
-    test_pmic_print_unity_testcase_info(3,
+    test_pmic_print_unity_testcase_info(7765,
                                         pmic_fsm_tests,
                                         PMIC_FSM_NUM_OF_TESTCASES);
 

@@ -101,7 +101,7 @@ static Pmic_Ut_Tests_t pmic_misc_tests[] =
         "Pmic_irqGetErrStatus : Test FSD_INT interrupt."
     },
     {
-        3333,
+        7768,
         "Pmic_irqGetErrStatus : Test ENABLE_INT interrupt."
     },
 };
@@ -132,7 +132,7 @@ static void test_Pmic_Enable_interrupt(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_10,
     };
 
-    test_pmic_print_unity_testcase_info(3333,
+    test_pmic_print_unity_testcase_info(7768,
                                         pmic_misc_tests,
                                         PMIC_MISC_NUM_OF_TESTCASES);
 
