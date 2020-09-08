@@ -70,8 +70,8 @@ drvpmic_BOARDLIST           = j721e_evm j7200_evm
 drvpmic_SOCLIST             = j721e j7200
 drvpmic_j721e_CORELIST      = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mpu1_0 c66xdsp_1 c66xdsp_2 c7x_1
 drvpmic_j7200_CORELIST      = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mpu1_0
-drvpmic_app_j721e_CORELIST  = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mpu1_0
-drvpmic_app_j7200_CORELIST  = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mpu1_0
+drvpmic_app_j721e_CORELIST  = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1
+drvpmic_app_j7200_CORELIST  = mcu1_0 mcu1_1 mcu2_0 mcu2_1
 
 ############################
 # pmic package
