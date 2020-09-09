@@ -31,7 +31,7 @@
  *
  *****************************************************************************/
 /**
- *  \addtogroup DRV_PMIC_MODULE
+ *  \addtogroup DRV_PMIC_POWER_MODULE
  *
  *  @{
  */
