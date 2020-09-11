@@ -174,6 +174,10 @@ static Pmic_Ut_Tests_t pmic_wdg_tests[] =
         7357,
         "Pmic_wdgStartTriggerSequence : Parameter validation for 'handle'"
     },
+    {
+        7958,
+        "Pmic_wdgStartQaSequence : Parameter validation for 'maxCnt'"
+    },
 };
 
 /*!
@@ -725,8 +729,9 @@ static void test_pmic_wdg_disable_prmValTest_handle(void)
  */
 static void test_pmic_wdg_startQaSequence_prmValTest_handle(void)
 {
-    int32_t pmicStatus      = PMIC_ST_SUCCESS;
-    Pmic_WdgCfg_t wdgCfg    =
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint32_t maxCnt = 0xFFFFFFFFU;
+    Pmic_WdgCfg_t wdgCfg =
     {
         PMIC_WDG_CFG_SETPARAMS_FORALL,
         24000U,
@@ -756,7 +761,7 @@ static void test_pmic_wdg_startQaSequence_prmValTest_handle(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     /* Start Watchdog QA sequence */
-    pmicStatus = Pmic_wdgStartQaSequence(NULL, 5U);
+    pmicStatus = Pmic_wdgStartQaSequence(NULL, 5U, maxCnt);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
 
     /* Disable WDG Timer */
@@ -769,8 +774,9 @@ static void test_pmic_wdg_startQaSequence_prmValTest_handle(void)
  */
 static void test_pmic_wdg_startQaSequence(void)
 {
-    int32_t pmicStatus      = PMIC_ST_SUCCESS;
-    Pmic_WdgCfg_t wdgCfg    =
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint32_t maxCnt = PMIC_WDG_WAIT_CNT_MIN_VAL;
+    Pmic_WdgCfg_t wdgCfg  =
     {
         PMIC_WDG_CFG_SETPARAMS_FORALL,
         750000U,
@@ -800,7 +806,7 @@ static void test_pmic_wdg_startQaSequence(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     /* Start Watchdog QA sequence */
-    pmicStatus = Pmic_wdgStartQaSequence(pPmicCoreHandle, 5U);
+    pmicStatus = Pmic_wdgStartQaSequence(pPmicCoreHandle, 5U, maxCnt);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     /* Disable WDG Timer */
@@ -816,6 +822,7 @@ static void test_pmic_wdg_startQaSequence_testFdbkValues(void)
     int32_t pmicStatus      = PMIC_ST_SUCCESS;
     uint8_t fdbk = 0U;
     Pmic_WdgCfg_t wdgCfg_rd = {0U};
+    uint32_t maxCnt = 0xFFFFFFFFU;
     Pmic_WdgCfg_t wdgCfg    =
     {
         PMIC_WDG_CFG_SETPARAMS_FORALL,
@@ -856,7 +863,7 @@ static void test_pmic_wdg_startQaSequence_testFdbkValues(void)
         TEST_ASSERT_EQUAL(wdgCfg.qaFdbk, wdgCfg_rd.qaFdbk);
 
         /* Start Watchdog QA sequence */
-        pmicStatus = Pmic_wdgStartQaSequence(pPmicCoreHandle, 5);
+        pmicStatus = Pmic_wdgStartQaSequence(pPmicCoreHandle, 5, maxCnt);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
         /* Disable WDG Timer */
@@ -876,6 +883,7 @@ static void test_pmic_wdg_startQaSequence_testLfsrValues(void)
     int32_t pmicStatus      = PMIC_ST_SUCCESS;
     uint8_t lfsr = 0U;
     Pmic_WdgCfg_t wdgCfg_rd = {0U};
+    uint32_t maxCnt = 0xFFFFFFFFU;
     Pmic_WdgCfg_t wdgCfg    =
     {
         PMIC_WDG_CFG_SETPARAMS_FORALL,
@@ -912,7 +920,7 @@ static void test_pmic_wdg_startQaSequence_testLfsrValues(void)
         TEST_ASSERT_EQUAL(wdgCfg.qaLfsr, wdgCfg_rd.qaLfsr);
 
         /* Start Watchdog QA sequence */
-        pmicStatus = Pmic_wdgStartQaSequence(pPmicCoreHandle, 5);
+        pmicStatus = Pmic_wdgStartQaSequence(pPmicCoreHandle, 5, maxCnt);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
         /* Disable WDG Timer */
@@ -932,6 +940,7 @@ static void test_pmic_wdg_startQaSequence_testQuesSeedValues(void)
     int32_t pmicStatus      = PMIC_ST_SUCCESS;
     uint8_t quesSeed = 0U;
     Pmic_WdgCfg_t wdgCfg_rd = {0U};
+    uint32_t maxCnt = 0xFFFFFFFFU;
     Pmic_WdgCfg_t wdgCfg    =
     {
         PMIC_WDG_CFG_SETPARAMS_FORALL,
@@ -972,7 +981,7 @@ static void test_pmic_wdg_startQaSequence_testQuesSeedValues(void)
         TEST_ASSERT_EQUAL(wdgCfg.qaQuesSeed, wdgCfg_rd.qaQuesSeed);
 
         /* Start Watchdog QA sequence */
-        pmicStatus = Pmic_wdgStartQaSequence(pPmicCoreHandle, 5);
+        pmicStatus = Pmic_wdgStartQaSequence(pPmicCoreHandle, 5, maxCnt);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
         /* Disable WDG Timer */
@@ -1110,7 +1119,6 @@ static void test_pmic_wdg_GetErrorStatus_prmValTest_invErrStatParam(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
 }
 
-#if 0
 /*!
  * \brief   Test wdg Trigger sequence
  */
@@ -1138,6 +1146,9 @@ static void test_pmic_wdg_StartTriggerSequence(void)
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
+    /* Test ignored, due to unsupported HW */
+    TEST_IGNORE();
+
     /* Enable WDG Timer */
     pmicStatus = Pmic_wdgEnable(pPmicCoreHandle);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -1154,7 +1165,6 @@ static void test_pmic_wdg_StartTriggerSequence(void)
     pmicStatus = Pmic_wdgDisable(pPmicCoreHandle);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
-#endif
 
 /*!
  * \brief   Test Watchdog trigger mode Parameter validation for 'handle'
@@ -1194,6 +1204,51 @@ static void test_pmic_wdg_StartTriggerSequence_prmValTest_handle(void)
     /* Start Watchdog trigger sequence */
     pmicStatus = Pmic_wdgStartTriggerSequence(NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    /* Disable WDG Timer */
+    pmicStatus = Pmic_wdgDisable(pPmicCoreHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+}
+
+/*!
+ * \brief   Pmic_wdgStartQaSequence : Parameter validation for 'maxCnt'
+ */
+static void test_pmic_wdg_startQaSequence_prmValTest_maxCnt(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint32_t maxCnt = PMIC_WDG_WAIT_CNT_MIN_VAL - 1U;
+    Pmic_WdgCfg_t wdgCfg =
+    {
+        PMIC_WDG_CFG_SETPARAMS_FORALL,
+        24000U,
+        6150U,
+        4950U,
+        PMIC_WDG_FAIL_THRESHOLD_COUNT_7,
+        PMIC_WDG_RESET_THRESHOLD_COUNT_7,
+        PMIC_WDG_QA_MODE,
+        PMIC_WDG_PWRHOLD_DISABLE,
+        PMIC_WDG_RESET_ENABLE,
+        PMIC_WDG_RETLONGWIN_ENABLE,
+        PMIC_WDG_QA_FEEDBACK_VALUE_0,
+        PMIC_WDG_QA_LFSR_VALUE_0,
+        PMIC_WDG_QA_QUES_SEED_VALUE_10,
+    };
+
+    test_pmic_print_unity_testcase_info(7958,
+                                        pmic_wdg_tests,
+                                        PMIC_WDG_NUM_OF_TESTCASES);
+
+    /* Enable WDG Timer */
+    pmicStatus = Pmic_wdgEnable(pPmicCoreHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* Set QA parameters */
+    pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* Start Watchdog QA sequence */
+    pmicStatus = Pmic_wdgStartQaSequence(pPmicCoreHandle, 5U, maxCnt);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
     /* Disable WDG Timer */
     pmicStatus = Pmic_wdgDisable(pPmicCoreHandle);
@@ -1246,10 +1301,9 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_wdg_GetErrorStatus_prmValTest_handle);
     RUN_TEST(test_pmic_wdg_GetErrorStatus_prmValTest_invErrStatParam);
 
-#if 0
     RUN_TEST(test_pmic_wdg_StartTriggerSequence);
-#endif
     RUN_TEST(test_pmic_wdg_StartTriggerSequence_prmValTest_handle);
+    RUN_TEST(test_pmic_wdg_startQaSequence_prmValTest_maxCnt);
 
     UNITY_END();
 }
@@ -1292,9 +1346,9 @@ static int32_t test_pmic_leo_pmicA_wdg_testApp(void)
 }
 
 /*!
- * \brief   WDG Unity Test App wrapper Function for LEO PMIC-B
+ * \brief   WDG Unity Test App wrapper Function for LEO PMIC-A Single I2C
  */
-static int32_t test_pmic_leo_pmicB_wdg_testApp(void)
+static int32_t test_pmic_leo_pmicA_wdg_single_i2c_testApp(void)
 {
     int32_t status                = PMIC_ST_SUCCESS;
     Pmic_CoreCfg_t pmicConfigData = {0U};
@@ -1306,10 +1360,10 @@ static int32_t test_pmic_leo_pmicB_wdg_testApp(void)
     pmicConfigData.commMode            = PMIC_INTF_SINGLE_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigData.slaveAddr           = LEO_PMICB_SLAVE_ADDR;
+    pmicConfigData.slaveAddr           = LEO_PMICA_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
-    pmicConfigData.qaSlaveAddr         = LEO_PMICB_WDG_SLAVE_ADDR;
+    pmicConfigData.qaSlaveAddr         = LEO_PMICA_WDG_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
@@ -1372,8 +1426,8 @@ static const char pmicTestAppMenu[] =
     " \r\n ================================================================="
     " \r\n Menu:"
     " \r\n ================================================================="
-    " \r\n 0: Pmic Leo device(PMIC A on J721E EVM)"
-    " \r\n 1: Pmic Leo device(PMIC B on J721E EVM)"
+    " \r\n 0: Pmic Leo device with Dual I2C(PMIC-A on J721E EVM)"
+    " \r\n 1: Pmic Leo device with Single I2C(PMIC-A on J721E EVM)"
     " \r\n 2: Pmic Hera device"
     " \r\n 3: quit"
     " \r\n"
@@ -1387,7 +1441,7 @@ static void test_pmic_wdg_testapp_runner(void)
 {
     /* @description : Test runner for wdg Test App
      *
-     * @requirements: PDK-5839, PDK-5807, PDK-5813, PDK-5810 
+     * @requirements: PDK-5813, PDK-5810, PDK-5805, PDK-5807, PDK-5854, PDK-5839
      *
      * @cores       : mcu1_0, mcu1_1
      */
@@ -1419,14 +1473,12 @@ static void test_pmic_wdg_testapp_runner(void)
                }
                break;
            case 1U:
-               /* WDG Unity Test App wrapper Function for LEO PMIC-B */
-               if(PMIC_ST_SUCCESS == test_pmic_leo_pmicB_wdg_testApp())
+               /* WDG Unity Test App wrapper Function for LEO PMIC-A */
+               if(PMIC_ST_SUCCESS ==
+                          test_pmic_leo_pmicA_wdg_single_i2c_testApp())
                {
-                   /* TODO : Cuasing Hang on the board */
-#if 0
-                   /* Run WDG test cases for Leo PMIC-B */
+                   /* Run WDG test cases for Leo PMIC-A using Single I2C */
                    test_pmic_run_testcases();
-#endif
                }
 
                /* Deinit pmic handle */

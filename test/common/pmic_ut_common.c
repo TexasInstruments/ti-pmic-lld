@@ -423,7 +423,8 @@ static int32_t test_pmic_i2c_lld_intf_setup(Pmic_CoreCfg_t  *pPmicConfigData,
 }
 
 /*!
- * \brief   Function to setup the QA I2c interface for LEO PMIC
+ * \brief   Function to setup the QA I2c interface for LEO PMIC depending
+ *          upon i2c mode
  *
  * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle
  *
@@ -435,22 +436,53 @@ static int32_t test_pmic_leo_dual_i2c_pin_setup(Pmic_CoreHandle_t *pPmicHandle)
     int32_t pmicStatus     = PMIC_ST_SUCCESS;
     Pmic_GpioCfg_t gpioCfg = {0U};
 
-
     gpioCfg.validParams      = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
                                PMIC_GPIO_CFG_OD_VALID_SHIFT;
-    gpioCfg.pinFunc          = PMIC_TPS6594X_GPIO_PINFUNC_GPIO1_SCL_I2C2_CS_SPI;
-    gpioCfg.outputSignalType = PMIC_GPIO_OPEN_DRAIN_OUTPUT;
+
+    pmicStatus = Pmic_gpioGetConfiguration(pPmicHandle,
+                                           PMIC_TPS6594X_GPIO1_PIN,
+                                           &gpioCfg);
+
+    if(PMIC_INTF_SINGLE_I2C == pPmicHandle->commMode)
+    {
+       if(gpioCfg.pinFunc == PMIC_TPS6594X_GPIO_PINFUNC_GPIO1_SCL_I2C2_CS_SPI)
+       {
+           gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO;
+       }
+    }
+    if(PMIC_INTF_DUAL_I2C == pPmicHandle->commMode)
+    {
+        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO1_SCL_I2C2_CS_SPI;
+        gpioCfg.outputSignalType = PMIC_GPIO_OPEN_DRAIN_OUTPUT;
+    }
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicHandle,
                                            PMIC_TPS6594X_GPIO1_PIN,
                                            gpioCfg);
 
+    gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                          PMIC_GPIO_CFG_OD_VALID_SHIFT;
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
-                              PMIC_GPIO_CFG_OD_VALID_SHIFT;
-        gpioCfg.pinFunc     = PMIC_TPS6594X_GPIO_PINFUNC_GPIO2_SDA_I2C2_SDO_SPI;
-        gpioCfg.outputSignalType = PMIC_GPIO_OPEN_DRAIN_OUTPUT;
+        pmicStatus = Pmic_gpioGetConfiguration(pPmicHandle,
+                                               PMIC_TPS6594X_GPIO2_PIN,
+                                               &gpioCfg);
+    }
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        if(PMIC_INTF_SINGLE_I2C == pPmicHandle->commMode)
+        {
+            if(gpioCfg.pinFunc ==
+               PMIC_TPS6594X_GPIO_PINFUNC_GPIO2_SDA_I2C2_SDO_SPI)
+            {
+                gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO;
+            }
+        }
+        if(PMIC_INTF_DUAL_I2C == pPmicHandle->commMode)
+        {
+            gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO2_SDA_I2C2_SDO_SPI;
+            gpioCfg.outputSignalType = PMIC_GPIO_OPEN_DRAIN_OUTPUT;
+        }
 
         pmicStatus = Pmic_gpioSetConfiguration(pPmicHandle,
                                                PMIC_TPS6594X_GPIO2_PIN,
@@ -461,7 +493,8 @@ static int32_t test_pmic_leo_dual_i2c_pin_setup(Pmic_CoreHandle_t *pPmicHandle)
 }
 
 /*!
- * \brief   Function to setup the QA I2c interface for HERA PMIC
+ * \brief   Function to setup the QA I2c interface for HERA PMIC depending
+ *          upon i2c mode
  *
  * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle
  *
@@ -473,22 +506,52 @@ static int32_t test_pmic_hera_dual_i2c_pin_setup(Pmic_CoreHandle_t *pPmicHandle)
     int32_t pmicStatus     = PMIC_ST_SUCCESS;
     Pmic_GpioCfg_t gpioCfg = {0U};
 
-
     gpioCfg.validParams      = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
                                PMIC_GPIO_CFG_OD_VALID_SHIFT;
-    gpioCfg.pinFunc          = PMIC_LP8764X_GPIO_PINFUNC_GPIO2_SCL_I2C2;
-    gpioCfg.outputSignalType = PMIC_GPIO_OPEN_DRAIN_OUTPUT;
+
+    pmicStatus = Pmic_gpioGetConfiguration(pPmicHandle,
+                                           PMIC_LP8764X_GPIO2_PIN,
+                                           &gpioCfg);
+
+    if(PMIC_INTF_SINGLE_I2C == pPmicHandle->commMode)
+    {
+       if(gpioCfg.pinFunc == PMIC_LP8764X_GPIO_PINFUNC_GPIO2_SCL_I2C2)
+       {
+           gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO;
+       }
+    }
+    if(PMIC_INTF_DUAL_I2C == pPmicHandle->commMode)
+    {
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO2_SCL_I2C2;
+        gpioCfg.outputSignalType = PMIC_GPIO_OPEN_DRAIN_OUTPUT;
+    }
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicHandle,
                                            PMIC_LP8764X_GPIO2_PIN,
                                            gpioCfg);
 
+    gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                          PMIC_GPIO_CFG_OD_VALID_SHIFT;
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
-                              PMIC_GPIO_CFG_OD_VALID_SHIFT;
-        gpioCfg.pinFunc     = PMIC_LP8764X_GPIO_PINFUNC_GPIO3_SDA_I2C2;
-        gpioCfg.outputSignalType = PMIC_GPIO_OPEN_DRAIN_OUTPUT;
+        pmicStatus = Pmic_gpioGetConfiguration(pPmicHandle,
+                                               PMIC_LP8764X_GPIO3_PIN,
+                                               &gpioCfg);
+    }
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        if(PMIC_INTF_SINGLE_I2C == pPmicHandle->commMode)
+        {
+            if(gpioCfg.pinFunc == PMIC_LP8764X_GPIO_PINFUNC_GPIO3_SDA_I2C2)
+            {
+                gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO;
+            }
+        }
+        if(PMIC_INTF_DUAL_I2C == pPmicHandle->commMode)
+        {
+            gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO3_SDA_I2C2;
+            gpioCfg.outputSignalType = PMIC_GPIO_OPEN_DRAIN_OUTPUT;
+        }
 
         pmicStatus = Pmic_gpioSetConfiguration(pPmicHandle,
                                                PMIC_LP8764X_GPIO3_PIN,
@@ -938,6 +1001,16 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
             /* Get PMIC core Handle for Main Instance */
             pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
         }
+        if(PMIC_DEV_LEO_TPS6594X == pmicHandle->pmicDeviceType)
+        {
+            /* Check and De-select I2C2 PINFUNC for GPIO-1 and GPIO-2 */
+            pmicStatus = test_pmic_leo_dual_i2c_pin_setup(pmicHandle);
+        }
+        if(PMIC_DEV_HERA_LP8764X == pmicHandle->pmicDeviceType)
+        {
+            /* Check and De-select I2C2 PINFUNC for GPIO-2 and GPIO-3 */
+            pmicStatus = test_pmic_hera_dual_i2c_pin_setup(pmicHandle);
+        }
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             /* Setup nSLEEP signals */
@@ -979,12 +1052,12 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
         {
             if(PMIC_DEV_LEO_TPS6594X == pmicHandle->pmicDeviceType)
             {
-                /* Setup leo pmic Dual I2C functionality to GPIO-1 and GPIO-2 pins */
+                /* Setup leo pmic Dual I2C functionality to GPIO-1 & GPIO-2 */
                 pmicStatus = test_pmic_leo_dual_i2c_pin_setup(pmicHandle);
             }
             if(PMIC_DEV_HERA_LP8764X == pmicHandle->pmicDeviceType)
             {
-                /* Setup hera pmic Dual I2C functionality to GPIO-1 and GPIO-2 pins */
+                /* Setup hera pmic Dual I2C functionality to GPIO-2 & GPIO-3 */
                 pmicStatus = test_pmic_hera_dual_i2c_pin_setup(pmicHandle);
             }
         }
