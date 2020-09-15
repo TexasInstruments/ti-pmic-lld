@@ -319,6 +319,9 @@ extern "C" {
  */
 #define PMIC_GPIO_IN_OUT_X_GPIOX_IN_OUT_BITFIELD          (1U)
 
+/** \brief Max value for GPIO Pin Function */
+#define PMIC_GPIO_PINFUNC_MAX              (7U)
+
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
