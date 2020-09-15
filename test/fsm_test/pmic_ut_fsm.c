@@ -42,6 +42,8 @@
 /* Pointer holds the pPmicCoreHandle */
 Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
 
+static uint8_t pmic_device_info = 0U;
+
 /*!
  * \brief   PMIC FSM Test Cases
  */
@@ -80,11 +82,11 @@ static Pmic_Ut_Tests_t pmic_fsm_tests[] =
     },
     {
         7700,
-        "Pmic_fsmSetMissionState : Test Set State to LP-Standby."
+        "Pmic_fsmSetMissionState : Manual Test Set State to LP-Standby."
     },
     {
         7701,
-        "Pmic_fsmSetMissionState : Test Set State to Standby."
+        "Pmic_fsmSetMissionState : Manual Test Set State to Standby."
     },
     {
         7702,
@@ -117,19 +119,7 @@ static Pmic_Ut_Tests_t pmic_fsm_tests[] =
     {
         7364,
         "Pmic_fsmDeviceOnRequest : Parameter validation for 'handle'."
-    },
-    {
-        7763,
-        "Pmic_fsmGetLpmControl : Parameter validation for 'handle'"
-    },
-    {
-        7764,
-        "Pmic_fsmGetLpmControl : Parameter validation for 'lpmEnable'"
-    },
-    {
-        7765,
-        "Pmic_fsmSetLpmControl : Parameter validation for 'handle'."
-    },
+    }
 };
 
 /*!
@@ -147,6 +137,11 @@ static void test_Pmic_fsmSetNsleepSignalMask_mask_nsleep1(void)
     test_pmic_print_unity_testcase_info(7693,
                                         pmic_fsm_tests,
                                         PMIC_FSM_NUM_OF_TESTCASES);
+
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    {
+        /* To avoid compile error */
+    }
 
     status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle, nsleepType, maskEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -230,6 +225,9 @@ static void test_Pmic_fsmSetMissionState_mcu(void)
                                         pmic_fsm_tests,
                                         PMIC_FSM_NUM_OF_TESTCASES);
 
+    pmic_log("\r\n Probe TP134 and it should change from High to Low.");
+    pmic_log("\r\n Probe TP133 and it should continue to be in HIGH");
+
     status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
@@ -267,34 +265,19 @@ static void test_Pmic_fsmSetMissionState_s2r(void)
                                         pmic_fsm_tests,
                                         PMIC_FSM_NUM_OF_TESTCASES);
 
+     pmic_log("\r\n Probe TP134 and TP133 and it should change from High to Low.");
+
     status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
 /*!
- * \brief   Pmic_fsmSetMissionState : Test Set State to LP-Standby.
+ * \brief   Pmic_fsmSetMissionState : Manual Test Set State to LP-Standby.
  */
 static void test_Pmic_fsmSetMissionState_lpstandby(void)
 {
-    int32_t status    = PMIC_ST_SUCCESS;
-    uint8_t pmicState = 0U;
-
-    int8_t             timeout      = 10U;
-    Pmic_CoreHandle_t  *pHandle     = NULL;
-    Pmic_RtcTime_t     timeCfg_cr   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
-    Pmic_RtcDate_t     dateCfg_cr   = { 0x0F, 0U, 0U, 0U, 0U};
-    Pmic_RtcTime_t     timeCfg_rd   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
-    Pmic_RtcDate_t     dateCfg_rd   = { 0x0F, 0U, 0U, 0U, 0U};
-    Pmic_IrqStatus_t errStat        = {0U};
-    bool clearIRQ                   = false;
-    uint8_t  irqNum                 = 0U;
-    uint8_t            timerPeriod  = 0U;
-    Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
-    Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
-    uint32_t timerIntrdelayTime = 70000U;  // Timer Interrupt configured for 1 minute (60 Sec)
-    uint32_t delayTime = 80000U;  // Added delay for workaround
-
-    pHandle = pPmicCoreHandle;
+    int32_t status         = PMIC_ST_SUCCESS;
+    uint8_t  pmicState     = 0U;
 
     pmicState = PMIC_FSM_LP_STANBY_STATE;
 
@@ -302,97 +285,23 @@ static void test_Pmic_fsmSetMissionState_lpstandby(void)
                                         pmic_fsm_tests,
                                         PMIC_FSM_NUM_OF_TESTCASES);
 
-    status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
+     pmic_log("\r\n Probe TP134 and TP133 and it should change from High to Low.");
+
+    status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    status = Pmic_rtcGetTimerPeriod(pHandle, &timerPeriod);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    irqNum = 0;
-
-    status = Pmic_rtcSetTimerPeriod(pHandle,
-                                           PMIC_RTC_MINUTE_INTR_PERIOD);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    status = Pmic_rtcEnableTimerIntr(pHandle, PMIC_RTC_TIMER_INTR_ENABLE);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    /*To avoid DAP reset*/
-    Osal_delay(delayTime);
 
     status =  Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    Osal_delay(timerIntrdelayTime);
-
-    while(timeout--)
-    {
-        status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-        if((PMIC_ST_SUCCESS == status) &&
-           ((errStat.intStatus[PMIC_TPS6594X_RTC_TIMER_INT/32U] &
-             (1U << (PMIC_TPS6594X_RTC_TIMER_INT % 32U))) != 0U))
-        {
-            while(PMIC_TPS6594X_RTC_TIMER_INT != irqNum)
-            {
-                status = Pmic_getNextErrorStatus(pHandle,
-                                                 &errStat,
-                                                 &irqNum);
-            }
-
-            if(PMIC_ST_SUCCESS == status)
-            {
-                /* clear the interrupt */
-                status = Pmic_irqClrErrStatus(pPmicCoreHandle,
-                                              PMIC_TPS6594X_RTC_TIMER_INT);
-            }
-
-            if(PMIC_ST_SUCCESS == status)
-            {
-                /* Disable the timer interrupt  */
-                status = Pmic_rtcEnableTimerIntr(pHandle,
-                                                 PMIC_RTC_TIMER_INTR_DISABLE);
-
-                break;
-            }
-        }
-
-        status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-    }
-
-    status = Pmic_rtcSetTimerPeriod(pHandle, timerPeriod);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
 }
 
 /*!
- * \brief   Pmic_fsmSetMissionState : Test Set State to Standby.
+ * \brief   Pmic_fsmSetMissionState : Manual Test Set State to Standby.
  */
 static void test_Pmic_fsmSetMissionState_standby(void)
 {
-    int32_t status    = PMIC_ST_SUCCESS;
-    uint8_t pmicState = 0U;
-
-    int8_t             timeout      = 10U;
-    Pmic_CoreHandle_t  *pHandle     = NULL;
-    Pmic_RtcTime_t     timeCfg_cr   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
-    Pmic_RtcDate_t     dateCfg_cr   = { 0x0F, 0U, 0U, 0U, 0U};
-    Pmic_RtcTime_t     timeCfg_rd   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
-    Pmic_RtcDate_t     dateCfg_rd   = { 0x0F, 0U, 0U, 0U, 0U};
-    Pmic_IrqStatus_t errStat        = {0U};
-    bool clearIRQ                   = false;
-    uint8_t  irqNum                 = 0U;
-    uint8_t            timerPeriod  = 0U;
-    Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
-    Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
-    uint32_t timerIntrdelayTime = 70000U;  // Timer Interrupt configured for 1 minute (60 Sec)
-    uint32_t delayTime = 80000U;  // Added delay for workaround
-
-    pHandle = pPmicCoreHandle;
+    int32_t status         = PMIC_ST_SUCCESS;
+    uint8_t  pmicState     = 0U;
 
     pmicState = PMIC_FSM_STANBY_STATE;
 
@@ -400,69 +309,11 @@ static void test_Pmic_fsmSetMissionState_standby(void)
                                         pmic_fsm_tests,
                                         PMIC_FSM_NUM_OF_TESTCASES);
 
-    status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
+    status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    status = Pmic_rtcGetTimerPeriod(pHandle, &timerPeriod);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    irqNum = 0;
-
-    status = Pmic_rtcSetTimerPeriod(pHandle,
-                                           PMIC_RTC_MINUTE_INTR_PERIOD);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    status = Pmic_rtcEnableTimerIntr(pHandle, PMIC_RTC_TIMER_INTR_ENABLE);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    /*To avoid DAP reset*/
-    Osal_delay(delayTime);
 
     status =  Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
 
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    Osal_delay(timerIntrdelayTime);
-
-    while(timeout--)
-    {
-        status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-        if((PMIC_ST_SUCCESS == status) &&
-           ((errStat.intStatus[PMIC_TPS6594X_RTC_TIMER_INT/32U] &
-             (1U << (PMIC_TPS6594X_RTC_TIMER_INT % 32U))) != 0U))
-        {
-            while(PMIC_TPS6594X_RTC_TIMER_INT != irqNum)
-            {
-                status = Pmic_getNextErrorStatus(pHandle,
-                                                 &errStat,
-                                                 &irqNum);
-            }
-
-            if(PMIC_ST_SUCCESS == status)
-            {
-                /* clear the interrupt */
-                status = Pmic_irqClrErrStatus(pPmicCoreHandle,
-                                              PMIC_TPS6594X_RTC_TIMER_INT);
-            }
-
-            if(PMIC_ST_SUCCESS == status)
-            {
-                /* Disable the timer interrupt  */
-                status = Pmic_rtcEnableTimerIntr(pHandle,
-                                                 PMIC_RTC_TIMER_INTR_DISABLE);
-
-                break;
-            }
-        }
-
-        status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-    }
-
-    status = Pmic_rtcSetTimerPeriod(pHandle, timerPeriod);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
@@ -613,53 +464,6 @@ static void test_Pmic_Pmic_fsmDeviceOnRequestPrmValTest_handle(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
 }
 
-/*!
- * \brief   Pmic_fsmGetLpmControl : Parameter validation for 'handle'.
- */
-static void test_Pmic_Pmic_fsmGetLpmControlPrmValTest_handle(void)
-{
-    int32_t status     = PMIC_ST_SUCCESS;
-    bool lpmEnable;
-
-    test_pmic_print_unity_testcase_info(7763,
-                                        pmic_fsm_tests,
-                                        PMIC_FSM_NUM_OF_TESTCASES);
-
-    status = Pmic_fsmGetLpmControl(NULL, &lpmEnable);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
-}
-
-/*!
- * \brief   Pmic_fsmGetLpmControl : Parameter validation for 'lpmEnable'.
- */
-static void test_Pmic_Pmic_fsmGetLpmControlPrmValTest_lpmEnable(void)
-{
-    int32_t status     = PMIC_ST_SUCCESS;
-
-    test_pmic_print_unity_testcase_info(7764    ,
-                                        pmic_fsm_tests,
-                                        PMIC_FSM_NUM_OF_TESTCASES);
-
-    status = Pmic_fsmGetLpmControl(pPmicCoreHandle, NULL);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
-}
-
-/*!
- * \brief   Pmic_fsmSetLpmControl : Parameter validation for 'handle'.
- */
-static void test_Pmic_Pmic_fsmSetLpmControlPrmValTest_handle(void)
-{
-    int32_t status = PMIC_ST_SUCCESS;
-    bool lpmEnable = PMIC_FSM_LPM_ENABLE;
-
-    test_pmic_print_unity_testcase_info(7765,
-                                        pmic_fsm_tests,
-                                        PMIC_FSM_NUM_OF_TESTCASES);
-
-    status = Pmic_fsmSetLpmControl(NULL, lpmEnable);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
-}
-
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E) || defined(SOC_J7200))
 
@@ -676,8 +480,6 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_Pmic_fsmSetNsleepSignalMask_mask_nsleep2);
     RUN_TEST(test_Pmic_fsmSetNsleepSignalMask_unmask_nsleep2);
     RUN_TEST(test_Pmic_fsmSetMissionState_active);
-    RUN_TEST(test_Pmic_fsmSetMissionState_lpstandby);
-    RUN_TEST(test_Pmic_fsmSetMissionState_standby);
     RUN_TEST(test_Pmic_fsmSetMissionStatePrmValTest_handle);
     RUN_TEST(test_Pmic_fsmSetMissionStatePrmValTest_state);
     RUN_TEST(test_Pmic_fsmSetNsleepSignalMaskStatePrmValTest_handle);
@@ -686,23 +488,6 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_fsmState);
     RUN_TEST(test_Pmic_fsmRuntimeBistRequestPrmValTest_handle);
     RUN_TEST(test_Pmic_Pmic_fsmDeviceOnRequestPrmValTest_handle);
-    RUN_TEST(test_Pmic_Pmic_fsmGetLpmControlPrmValTest_handle);
-    RUN_TEST(test_Pmic_Pmic_fsmGetLpmControlPrmValTest_lpmEnable);
-    RUN_TEST(test_Pmic_Pmic_fsmSetLpmControlPrmValTest_handle);
-
-    UNITY_END();
-}
-
-/*!
- * \brief   Run fsm manual test cases
- */
-static void test_pmic_run_testcases_manual(void)
-{
-    pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
-    UNITY_BEGIN();
-
-    RUN_TEST(test_Pmic_fsmSetMissionState_mcu);
-    RUN_TEST(test_Pmic_fsmSetMissionState_s2r);
 
     UNITY_END();
 }
@@ -722,10 +507,10 @@ static int32_t test_pmic_leo_pmicA_fsm_testApp(void)
     pmicConfigData.commMode            = PMIC_INTF_DUAL_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigData.slaveAddr           = LEO_PMICA_SLAVE_ADDR;
+    pmicConfigData.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
-    pmicConfigData.qaSlaveAddr         = LEO_PMICA_WDG_SLAVE_ADDR;
+    pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
@@ -760,10 +545,10 @@ static int32_t test_pmic_leo_pmicB_fsm_testApp(void)
     pmicConfigData.commMode            = PMIC_INTF_SINGLE_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigData.slaveAddr           = LEO_PMICB_SLAVE_ADDR;
+    pmicConfigData.slaveAddr           = J721E_LEO_PMICB_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
-    pmicConfigData.qaSlaveAddr         = LEO_PMICB_WDG_SLAVE_ADDR;
+    pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICB_WDG_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
@@ -799,10 +584,10 @@ static int32_t test_pmic_hera_fsm_testApp(void)
     pmicConfigData.commMode            = PMIC_INTF_SINGLE_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigData.slaveAddr           = HERA_PMIC_SLAVE_ADDR;
+    pmicConfigData.slaveAddr           = J7VCL_HERA_PMIC_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
-    pmicConfigData.qaSlaveAddr         = HERA_PMIC_WDG_SLAVE_ADDR;
+    pmicConfigData.qaSlaveAddr         = J7VCL_HERA_PMIC_WDG_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
@@ -837,10 +622,10 @@ static int32_t test_pmic_fsm_manual_testApp(void)
     pmicConfigData.commMode            = PMIC_INTF_DUAL_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigData.slaveAddr           = LEO_PMICA_SLAVE_ADDR;
+    pmicConfigData.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
-    pmicConfigData.qaSlaveAddr         = LEO_PMICA_WDG_SLAVE_ADDR;
+    pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
@@ -865,6 +650,7 @@ static int32_t setup_pmic_interrupt()
 
 #ifdef SOC_J721E
 
+    pmic_device_info = J721E_LEO_PMICA_DEVICE;
     status = test_pmic_leo_pmicA_fsm_testApp();
    /* Deinit pmic handle */
     if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
@@ -874,6 +660,7 @@ static int32_t setup_pmic_interrupt()
 
     if(PMIC_ST_SUCCESS == status)
     {
+        pmic_device_info = J721E_LEO_PMICB_DEVICE;
         status = test_pmic_leo_pmicB_fsm_testApp();
        /* Deinit pmic handle */
         if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
@@ -892,11 +679,68 @@ static const char pmicTestAppMenu[] =
     " \r\n ================================================================="
     " \r\n 0: Pmic Leo device(PMIC A on J721E EVM)"
     " \r\n 1: Pmic Hera device"
-    " \r\n 2: Manual test: Set FSM Mission States"
+    " \r\n 2: Pmic Leo device(PMIC A on J721E EVM Manual Testcase for FSM states)"
     " \r\n 3: quit"
     " \r\n"
     " \r\n Enter option: "
 };
+
+static const char pmicTestAppManualTestMenu[] =
+{
+    " \r\n ================================================================="
+    " \r\n Manual Testcase Menu:"
+    " \r\n ================================================================="
+    " \r\n 0: Pmic Leo device(PMIC A on J721E EVM Set FSM Mission States - MCU"
+    " \r\n 1: Pmic Leo device(PMIC A on J721E EVM Set FSM Mission States - S2R"
+    " \r\n 2: Pmic Leo device(PMIC A on J721E EVM Set FSM Mission States - lpStandby"
+    " \r\n 3: Pmic Leo device(PMIC A on J721E EVM Set FSM Mission States - Standby"
+    " \r\n 4: quit"
+    " \r\n"
+    " \r\n Enter option: "
+};
+
+/*!
+ * \brief   Run FSM manual test cases
+ */
+static void test_pmic_run_testcases_manual(void)
+{
+    int8_t menuOption = -1;
+
+    while(1U)
+    {
+        pmic_log("%s", pmicTestAppManualTestMenu);
+        if(UART_scanFmt("%d", &menuOption) != 0U)
+        {
+            pmic_log("Read from UART Console failed\n");
+            return;
+        }
+
+        if(menuOption == 4)
+        {
+            pmic_log(" \r\n Quit \n");
+            break;
+        }   
+
+        switch(menuOption)
+        {
+            case 0U:
+                RUN_TEST(test_Pmic_fsmSetMissionState_mcu);
+               break;
+            case 1U:
+                RUN_TEST(test_Pmic_fsmSetMissionState_s2r);
+               break;
+            case 2U:
+                RUN_TEST(test_Pmic_fsmSetMissionState_lpstandby);
+               break;
+            case 3U:
+                RUN_TEST(test_Pmic_fsmSetMissionState_standby);
+               break;
+            default:
+               pmic_log(" \r\n Invalid option... Try Again!!!\n");
+               break;
+        }
+    }
+}
 
 /*!
  * \brief   Function to register FSM Unity Test App wrapper to Unity framework
@@ -957,6 +801,7 @@ static void test_pmic_fsm_testapp_runner(void)
            case 2U:
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
                 {
+                    pmic_device_info = J721E_LEO_PMICA_DEVICE;
                     /* FSM Manual Test App wrapper Function for LEO PMIC-A*/
                     if(PMIC_ST_SUCCESS == test_pmic_fsm_manual_testApp())
                     {

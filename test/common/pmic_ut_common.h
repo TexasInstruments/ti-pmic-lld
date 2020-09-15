@@ -79,25 +79,34 @@
 #endif
 
 /*!
- * \brief   Slave addresses of LEO PMIC-A and PMIC-B devices
+ * \brief   Slave addresses of J721E LEO PMIC-A and PMIC-B devices
  */
-#define LEO_PMICA_SLAVE_ADDR            (0x48U)
-#define LEO_PMICA_WDG_SLAVE_ADDR        (0x12U)
+#define J721E_LEO_PMICA_SLAVE_ADDR            (0x48U)
+#define J721E_LEO_PMICA_WDG_SLAVE_ADDR        (0x12U)
 
-#define LEO_PMICB_SLAVE_ADDR            (0x4CU)
-#define LEO_PMICB_WDG_SLAVE_ADDR        (0x13U)
+#define J721E_LEO_PMICB_SLAVE_ADDR            (0x4CU)
+#define J721E_LEO_PMICB_WDG_SLAVE_ADDR        (0x13U)
 
 /*!
- * \brief   Slave addresses of HERA PMIC devices
+ * \brief   Slave addresses of J7VCL HERA PMIC devices
  */
-#define HERA_PMIC_SLAVE_ADDR            (0x48U)
-#define HERA_PMIC_WDG_SLAVE_ADDR        (0x12U)
+#define J7VCL_LEO_PMICA_SLAVE_ADDR            (0x48U)
+#define J7VCL_LEO_PMICA_WDG_SLAVE_ADDR        (0x12U)
+
+#define J7VCL_HERA_PMIC_SLAVE_ADDR            (0x4CU)
+#define J7VCL_HERA_PMIC_WDG_SLAVE_ADDR        (0x13U)
 
 /*!
  * \brief   LEO PMIC devices on J721E
  */
 #define J721E_LEO_PMICA_DEVICE          (0x01U)
 #define J721E_LEO_PMICB_DEVICE          (0x02U)
+
+/*!
+ * \brief   PMIC devices on J7VCL EVM
+ */
+#define J7VCL_LEO_PMICA_DEVICE          (0x03U)
+#define J7VCL_HERA_PMICB_DEVICE         (0x04U)
 
 /*!
  * \brief   PMIC Startup type
@@ -214,7 +223,7 @@ void Board_initUART(void);
  * \brief   GPIO Configurations.
  *          This API is required for Asynchronous Interrupts only
  */
-void App_initGPIO(void);
+void App_initGPIO(GPIO_CallbackFxn callback);
 
 /*!
  * \brief   Function to print testcase info
@@ -222,11 +231,6 @@ void App_initGPIO(void);
 void test_pmic_print_unity_testcase_info(uint32_t         testId,
                                          Pmic_Ut_Tests_t *pTest,
                                          uint32_t         num_testcases);
-
-/*!
- * \brief   PMIC Application Callback Function
- */
-void AppPmicCallbackFxn(void);
 
 /*!
  * \brief   GPIO Interrupt Router Configuration

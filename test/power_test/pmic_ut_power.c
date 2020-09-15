@@ -297,26 +297,6 @@ static Pmic_Ut_Tests_t pmic_power_tests[] =
         "Pmic_powerSetPwrResourceCfg : Parameter range validation for railGrpSel."
     },
     {
-        7193,
-        "Pmic_powerSetPwrResourceCfg : Test BUCK switching frequency for 4.4M."
-    },
-    {
-        7194,
-        "Pmic_powerSetPwrResourceCfg : Test BUCK switching frequency for 2.2M."
-    },
-    {
-        7195,
-        "Pmic_powerSetPwrResourceCfg : Test BUCK switching frequency for 8.8M."
-    },
-    {
-        7196,
-        "Pmic_powerSetPwrResourceCfg : Parameter validation for Power Resource for buckFreqSel."
-    },
-    {
-        7197,
-        "Pmic_powerSetPwrResourceCfg : Parameter range validation for buckFreqSel."
-    },
-    {
         7198,
         "Pmic_powerSetPwrResourceCfg : Test LDO Bypass Regulator LDO mode"
     },
@@ -4600,318 +4580,6 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_railGrpSel(void)
                                                  pwrRsrc,
                                                  pPowerCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
-    }
-}
-
-/* 7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
-
-/*!
- * \brief   Pmic_powerSetPwrResourceCfg : Test BUCK switching frequency for 4.4M.
- */
-static void test_pmic_powerSetPowerResourceConfig_buckFreqSel_4M4(void)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    Pmic_PowerResourceCfg_t powerCfg_rd =
-    {
-        PMIC_CFG_REGULATOR_BUCK_FREQ_SEL_VALID_SHIFT,
-    };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
-
-    Pmic_PowerResourceCfg_t pPowerCfg   =
-    {
-        PMIC_CFG_REGULATOR_BUCK_FREQ_SEL_VALID_SHIFT,
-    };
-
-    test_pmic_print_unity_testcase_info(7193,
-                                        pmic_power_tests,
-                                        PMIC_POWER_NUM_OF_TESTCASES);
-
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-       /*
-        * Buck frequency  should not be changed on the fly as external
-        * components at the output of the buck needs to be changed, and many
-        * internal configuration trim registers also need to be adjusted in
-        * order for the buck to remain in regulation
-        */
-        TEST_IGNORE();
-    }
-
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-    {
-       /*
-        * Buck frequency  should not be changed on the fly as external
-        * components at the output of the buck needs to be changed, and many
-        * internal configuration trim registers also need to be adjusted in
-        * order for the buck to remain in regulation
-        */
-        TEST_IGNORE();
-    }
-
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-        pPowerCfg.buckFreqSel = PMIC_LP8764X_BUCK_FREQ_SEL_4M4;
-        pwrRsrcMin = PMIC_TPS6594X_REGULATOR_BUCK1;
-        pwrRsrcMax = PMIC_TPS6594X_REGULATOR_BUCK5;
-    }
-
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-    {
-        pPowerCfg.buckFreqSel = PMIC_LP8764X_BUCK_FREQ_SEL_4M4;
-        pwrRsrcMin = PMIC_LP8764X_REGULATOR_BUCK1;
-        pwrRsrcMax = PMIC_LP8764X_REGULATOR_BUCK4;
-    }
-
-    for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
-    {
-        if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (J721E_LEO_PMICA_DEVICE == pmic_device_info) &&
-            ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
-             (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK2) ||
-             (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK3) ||
-             (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK4) ||
-             (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO1)))
-        {
-            continue;
-        }
-
-        if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (J721E_LEO_PMICB_DEVICE == pmic_device_info) &&
-            ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
-             (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK5) ||
-             (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO2)  ||
-             (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO4)))
-        {
-            continue;
-        }
-
-        pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
-                                                 pwrRsrc,
-                                                 pPowerCfg);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-        pmicStatus = Pmic_powerGetPwrResourceCfg(pPmicCoreHandle,
-                                                 pwrRsrc,
-                                                 &powerCfg_rd);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-        TEST_ASSERT_EQUAL(pPowerCfg.buckFreqSel, powerCfg_rd.buckFreqSel);
-    }
-}
-
-/*!
- * \brief   Pmic_powerSetPwrResourceCfg : Test BUCK switching frequency for 2.2M.
- */
-static void test_pmic_powerSetPowerResourceConfig_buckFreqSel_2M2(void)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    Pmic_PowerResourceCfg_t powerCfg_rd =
-    {
-        PMIC_CFG_REGULATOR_BUCK_FREQ_SEL_VALID_SHIFT,
-    };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
-
-    Pmic_PowerResourceCfg_t pPowerCfg   =
-    {
-        PMIC_CFG_REGULATOR_BUCK_FREQ_SEL_VALID_SHIFT,
-    };
-
-    test_pmic_print_unity_testcase_info(7194,
-                                        pmic_power_tests,
-                                        PMIC_POWER_NUM_OF_TESTCASES);
-
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-       /*
-        * Buck frequency  should not be changed on the fly as external
-        * components at the output of the buck needs to be changed, and many
-        * internal configuration trim registers also need to be adjusted in
-        * order for the buck to remain in regulation
-        */
-        TEST_IGNORE();
-    }
-
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-    {
-       /*
-        * Buck frequency  should not be changed on the fly as external
-        * components at the output of the buck needs to be changed, and many
-        * internal configuration trim registers also need to be adjusted in
-        * order for the buck to remain in regulation
-        */
-        TEST_IGNORE();
-    }
-
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-        pPowerCfg.buckFreqSel = PMIC_LP8764X_BUCK_FREQ_SEL_2M2;
-        pwrRsrcMin = PMIC_TPS6594X_REGULATOR_BUCK1;
-        pwrRsrcMax = PMIC_TPS6594X_REGULATOR_BUCK5;
-    }
-
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-    {
-        pPowerCfg.buckFreqSel = PMIC_LP8764X_BUCK_FREQ_SEL_2M2;
-        pwrRsrcMin = PMIC_LP8764X_REGULATOR_BUCK1;
-        pwrRsrcMax = PMIC_LP8764X_REGULATOR_BUCK4;
-    }
-
-    for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
-    {
-        pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
-                                                 pwrRsrc,
-                                                 pPowerCfg);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-        pmicStatus = Pmic_powerGetPwrResourceCfg(pPmicCoreHandle,
-                                                 pwrRsrc,
-                                                 &powerCfg_rd);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-        TEST_ASSERT_EQUAL(pPowerCfg.buckFreqSel, powerCfg_rd.buckFreqSel);
-
-    }
-
-}
-
-/*!
- * \brief   Pmic_powerSetPwrResourceCfg : Test BUCK switching frequency for 8.8M.
- */
-static void test_pmic_powerSetPowerResourceConfig_buckFreqSel_8M8(void)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    Pmic_PowerResourceCfg_t powerCfg_rd =
-    {
-        PMIC_CFG_REGULATOR_BUCK_FREQ_SEL_VALID_SHIFT,
-    };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
-
-    Pmic_PowerResourceCfg_t pPowerCfg   =
-    {
-        PMIC_CFG_REGULATOR_BUCK_FREQ_SEL_VALID_SHIFT,
-    };
-
-    test_pmic_print_unity_testcase_info(7195,
-                                        pmic_power_tests,
-                                        PMIC_POWER_NUM_OF_TESTCASES);
-
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-       /*
-        * Buck frequency  should not be changed on the fly as external
-        * components at the output of the buck needs to be changed, and many
-        * internal configuration trim registers also need to be adjusted in
-        * order for the buck to remain in regulation
-        */
-        TEST_IGNORE();
-    }
-
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-    {
-       /*
-        * Buck frequency  should not be changed on the fly as external
-        * components at the output of the buck needs to be changed, and many
-        * internal configuration trim registers also need to be adjusted in
-        * order for the buck to remain in regulation
-        */
-        TEST_IGNORE();
-    }
-
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-    {
-        pPowerCfg.buckFreqSel = PMIC_LP8764X_BUCK_FREQ_SEL_8M8;
-        pwrRsrcMin = PMIC_LP8764X_REGULATOR_BUCK1;
-        pwrRsrcMax = PMIC_LP8764X_REGULATOR_BUCK4;
-    }
-
-    for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
-    {
-        pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
-                                                 pwrRsrc,
-                                                 pPowerCfg);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-        pmicStatus = Pmic_powerGetPwrResourceCfg(pPmicCoreHandle,
-                                                 pwrRsrc,
-                                                 &powerCfg_rd);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-        TEST_ASSERT_EQUAL(pPowerCfg.buckFreqSel, powerCfg_rd.buckFreqSel);
-
-    }
-
-}
-
-/*!
- * \brief   Pmic_powerSetPwrResourceCfg : Parameter validation for Power Resource for buckFreqSel.
- */
- static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_buckFreqSel(void)
- {
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint16_t pwrRsrc;
-
-    Pmic_PowerResourceCfg_t pPowerCfg =
-    {
-        PMIC_CFG_REGULATOR_BUCK_FREQ_SEL_VALID_SHIFT,
-    };
-
-    test_pmic_print_unity_testcase_info(7196,
-                                        pmic_power_tests,
-                                        PMIC_POWER_NUM_OF_TESTCASES);
-
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-        pwrRsrc = PMIC_TPS6594X_POWER_SOURCE_VCCA;
-    }
-
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-    {
-        pwrRsrc = PMIC_LP8764X_POWER_SOURCE_VCCA;
-    }
-
-    pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
-                                             pwrRsrc,
-                                             pPowerCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
-
-}
-
-/*!
- * \brief   Pmic_powerSetPwrResourceCfg : Parameter range validation for buckFreqSel.
- */
-static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_buckFreqSel(void)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
-
-    Pmic_PowerResourceCfg_t pPowerCfg   =
-    {
-        PMIC_CFG_REGULATOR_BUCK_FREQ_SEL_VALID_SHIFT,
-    };
-
-    test_pmic_print_unity_testcase_info(7197,
-                                        pmic_power_tests,
-                                        PMIC_POWER_NUM_OF_TESTCASES);
-
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-        pwrRsrcMin = PMIC_TPS6594X_REGULATOR_BUCK1;
-        pwrRsrcMax = PMIC_TPS6594X_REGULATOR_BUCK5;
-        pPowerCfg.buckFreqSel = PMIC_TPS6594X_BUCK_FREQ_SE_MAX + 1;
-    }
-
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-    {
-        pwrRsrcMin = PMIC_LP8764X_REGULATOR_BUCK1;
-        pwrRsrcMax = PMIC_LP8764X_REGULATOR_BUCK4;
-        pPowerCfg.buckFreqSel = PMIC_LP8764X_BUCK_FREQ_SE_MAX + 1;
-    }
-
-    for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
-    {
-        pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
-                                                 pwrRsrc,
-                                                 pPowerCfg);
-        TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
-
     }
 }
 
@@ -9339,6 +9007,8 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_enabled(void)
     Pmic_IrqStatus_t errStat  = {0U};
     bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
+    int8_t timeout = 10U;
+
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
     test_pmic_print_unity_testcase_info(7511,
                                         pmic_power_tests,
@@ -9378,6 +9048,10 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_enabled(void)
     /* The test code expects a over voltage interrupt */
     //dummy_func_generate_over_voltage();
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     for(pwrResource = pwrRsrcMin; pwrResource <= pwrRsrcMax ; pwrResource++)
     {
         pmicStatus = Pmic_powerSetPwrRsrcIntr(pPmicCoreHandle,
@@ -9390,13 +9064,24 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_enabled(void)
            ((errStat.intStatus[PMIC_TPS6594X_POWER_OV_INT/32U] &
              (1U << (PMIC_TPS6594X_POWER_OV_INT % 32U))) != 0U))
         {
-            while(1)
+            timeout = 10U;
+
+            while(timeout--)
             {
+               /* Delay added to avoid timeout */
+                Osal_delay(1000);
+
                 pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                  &errStat,
                                                  &irqNum);
                 if(PMIC_TPS6594X_POWER_OV_INT == irqNum)
                     break;
+            }
+
+            if(0 > timeout)
+            {
+                pmicStatus = PMIC_ST_ERR_FAIL;
+                break;
             }
         }
     }
@@ -9406,6 +9091,10 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_enabled(void)
     {
         pwrRsrcMin = PMIC_TPS6594X_REGULATOR_LDO1;
         pwrRsrcMax = PMIC_TPS6594X_REGULATOR_LDO4;
+
+        /* To clear the interrupts*/
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
         for(pwrResource = pwrRsrcMin; pwrResource <= pwrRsrcMax ; pwrResource++)
         {
@@ -9419,13 +9108,24 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_enabled(void)
                ((errStat.intStatus[PMIC_TPS6594X_POWER_OV_INT/32U] &
                  (1U << (PMIC_TPS6594X_POWER_OV_INT % 32U))) != 0U))
             {
-                while(1)
+                timeout = 10U;
+
+                while(timeout--)
                 {
+                   /* Delay added to avoid timeout */
+                    Osal_delay(1000);
+
                     pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                      &errStat,
                                                      &irqNum);
                     if(PMIC_TPS6594X_POWER_OV_INT == irqNum)
                         break;
+                }
+
+                if(0 > timeout)
+                {
+                    pmicStatus = PMIC_ST_ERR_FAIL;
+                    break;
                 }
             }
         }
@@ -9442,6 +9142,10 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_enabled(void)
         pwrResource = PMIC_LP8764X_POWER_SOURCE_VCCA;
     }
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     pmicStatus = Pmic_powerSetPwrRsrcIntr(pPmicCoreHandle,
                                           pwrResource,
                                           intrType,
@@ -9452,13 +9156,23 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_enabled(void)
        ((errStat.intStatus[PMIC_TPS6594X_POWER_OV_INT/32U] &
          (1U << (PMIC_TPS6594X_POWER_OV_INT % 32U))) != 0U))
     {
-        while(1)
+        timeout = 10U;
+
+        while(timeout--)
         {
+           /* Delay added to avoid timeout */
+            Osal_delay(1000);
+
             pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(PMIC_TPS6594X_POWER_OV_INT == irqNum)
                 break;
+        }
+
+        if(0 > timeout)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
         }
     }
 
@@ -9467,6 +9181,10 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_enabled(void)
     {
         pwrRsrcMin = PMIC_LP8764X_POWER_SOURCE_VMON1;
         pwrRsrcMax = PMIC_LP8764X_POWER_SOURCE_VMON2;
+
+        /* To clear the interrupts*/
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
         for(pwrResource = pwrRsrcMin; pwrResource <= pwrRsrcMax ; pwrResource++)
         {
@@ -9480,13 +9198,24 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_enabled(void)
                ((errStat.intStatus[PMIC_TPS6594X_POWER_OV_INT/32U] &
                  (1U << (PMIC_TPS6594X_POWER_OV_INT % 32U))) != 0U))
             {
-                while(1)
+                timeout = 10U;
+
+                while(timeout--)
                 {
+                   /* Delay added to avoid timeout */
+                    Osal_delay(1000);
+
                     pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                      &errStat,
                                                      &irqNum);
                     if(PMIC_TPS6594X_POWER_OV_INT == irqNum)
                         break;
+                }
+
+                if(0 > timeout)
+                {
+                    pmicStatus = PMIC_ST_ERR_FAIL;
+                    break;
                 }
             }
         }
@@ -9515,6 +9244,7 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_disabled(void)
     Pmic_IrqStatus_t errStat  = {0U};
     bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
+    int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
     test_pmic_print_unity_testcase_info(7512,
@@ -9555,6 +9285,10 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_disabled(void)
     /* The test code expects a over voltage interrupt */
     //dummy_func_generate_over_voltage();
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     for(pwrResource = pwrRsrcMin; pwrResource <= pwrRsrcMax ; pwrResource++)
     {
         pmicStatus = Pmic_powerSetPwrRsrcIntr(pPmicCoreHandle,
@@ -9567,8 +9301,13 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_disabled(void)
            ((errStat.intStatus[intrType/32U] &
              (1U << (intrType % 32U))) != 0U))
         {
-            while(1)
+            timeout = 10U;
+
+            while(timeout--)
             {
+               /* Delay added to avoid timeout */
+                Osal_delay(1000);
+
                 pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                  &errStat,
                                                  &irqNum);
@@ -9577,6 +9316,12 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_disabled(void)
                     pmicStatus = PMIC_ST_ERR_INV_PARAM;
                     break;
                 }
+            }
+
+            if(0 > timeout)
+            {
+                pmicStatus = PMIC_ST_ERR_FAIL;
+                break;
             }
         }
 
@@ -9587,6 +9332,10 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_disabled(void)
     {
         pwrRsrcMin = PMIC_TPS6594X_REGULATOR_LDO1;
         pwrRsrcMax = PMIC_TPS6594X_REGULATOR_LDO4;
+
+        /* To clear the interrupts*/
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
         for(pwrResource = pwrRsrcMin; pwrResource <= pwrRsrcMax ; pwrResource++)
         {
@@ -9600,8 +9349,13 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_disabled(void)
                ((errStat.intStatus[intrType/32U] &
                  (1U << (intrType % 32U))) != 0U))
             {
-                while(1)
+                timeout = 10U;
+
+                while(timeout--)
                 {
+                   /* Delay added to avoid timeout */
+                    Osal_delay(1000);
+
                     pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                      &errStat,
                                                      &irqNum);
@@ -9610,6 +9364,12 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_disabled(void)
                         pmicStatus = PMIC_ST_ERR_INV_PARAM;
                         break;
                     }
+                }
+
+                if(0 > timeout)
+                {
+                    pmicStatus = PMIC_ST_ERR_FAIL;
+                    break;
                 }
             }
 
@@ -9627,6 +9387,10 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_disabled(void)
         pwrResource = PMIC_LP8764X_POWER_SOURCE_VCCA;
     }
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     pmicStatus = Pmic_powerSetPwrRsrcIntr(pPmicCoreHandle,
                                           pwrResource,
                                           intrType,
@@ -9637,8 +9401,13 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_disabled(void)
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
-        while(1)
+        timeout = 10U;
+
+        while(timeout--)
         {
+           /* Delay added to avoid timeout */
+            Osal_delay(1000);
+
             pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
@@ -9648,6 +9417,11 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_disabled(void)
                 break;
             }
         }
+
+        if(0 > timeout)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
+        }
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -9656,6 +9430,10 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_disabled(void)
     {
         pwrRsrcMin = PMIC_LP8764X_POWER_SOURCE_VMON1;
         pwrRsrcMax = PMIC_LP8764X_POWER_SOURCE_VMON2;
+
+        /* To clear the interrupts*/
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
         for(pwrResource = pwrRsrcMin; pwrResource <= pwrRsrcMax ; pwrResource++)
         {
@@ -9669,8 +9447,13 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_disabled(void)
            ((errStat.intStatus[intrType/32U] &
              (1U << (intrType % 32U))) != 0U))
         {
-            while(1)
+            timeout = 10U;
+
+            while(timeout--)
             {
+               /* Delay added to avoid timeout */
+                Osal_delay(1000);
+
                 pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                  &errStat,
                                                  &irqNum);
@@ -9679,6 +9462,12 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_disabled(void)
                     pmicStatus = PMIC_ST_ERR_INV_PARAM;
                     break;
                 }
+            }
+
+            if(0 > timeout)
+            {
+                pmicStatus = PMIC_ST_ERR_FAIL;
+                break;
             }
         }
 
@@ -9707,6 +9496,7 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_enabled(void)
     Pmic_IrqStatus_t errStat  = {0U};
     bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
+    int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
     test_pmic_print_unity_testcase_info(7513,
@@ -9747,6 +9537,10 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_enabled(void)
         pwrRsrcMax = PMIC_LP8764X_REGULATOR_BUCK4;
     }
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     for(pwrResource = pwrRsrcMin; pwrResource <= pwrRsrcMax ; pwrResource++)
     {
         pmicStatus = Pmic_powerSetPwrRsrcIntr(pPmicCoreHandle,
@@ -9759,13 +9553,24 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_enabled(void)
            ((errStat.intStatus[intrType/32U] &
              (1U << (intrType % 32U))) != 0U))
         {
-            while(1)
+            timeout = 10U;
+
+            while(timeout--)
             {
+               /* Delay added to avoid timeout */
+                Osal_delay(1000);
+
                 pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                  &errStat,
                                                  &irqNum);
                 if(intrType == irqNum)
                     break;
+            }
+
+            if(0 > timeout)
+            {
+                pmicStatus = PMIC_ST_ERR_FAIL;
+                break;
             }
         }
     }
@@ -9776,6 +9581,10 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_enabled(void)
     {
         pwrRsrcMin = PMIC_TPS6594X_REGULATOR_LDO1;
         pwrRsrcMax = PMIC_TPS6594X_REGULATOR_LDO4;
+
+        /* To clear the interrupts*/
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
         for(pwrResource = pwrRsrcMin; pwrResource <= pwrRsrcMax ; pwrResource++)
         {
@@ -9789,13 +9598,24 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_enabled(void)
                ((errStat.intStatus[intrType/32U] &
                  (1U << (intrType % 32U))) != 0U))
             {
-                while(1)
+                timeout = 10U;
+
+                while(timeout--)
                 {
+                   /* Delay added to avoid timeout */
+                    Osal_delay(1000);
+
                     pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                      &errStat,
                                                      &irqNum);
                     if(intrType == irqNum)
                         break;
+                }
+
+                if(0 > timeout)
+                {
+                    pmicStatus = PMIC_ST_ERR_FAIL;
+                    break;
                 }
             }
         }
@@ -9813,6 +9633,10 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_enabled(void)
         pwrResource = PMIC_LP8764X_POWER_SOURCE_VCCA;
     }
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     pmicStatus = Pmic_powerSetPwrRsrcIntr(pPmicCoreHandle,
                                           pwrResource,
                                           intrType,
@@ -9823,13 +9647,23 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_enabled(void)
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
-        while(1)
+        timeout = 0U;
+
+        while(timeout--)
         {
+           /* Delay added to avoid timeout */
+            Osal_delay(1000);
+
             pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
                 break;
+        }
+
+        if(0 > timeout)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
         }
     }
 
@@ -9838,6 +9672,10 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_enabled(void)
     {
         pwrRsrcMin = PMIC_LP8764X_POWER_SOURCE_VMON1;
         pwrRsrcMax = PMIC_LP8764X_POWER_SOURCE_VMON2;
+
+        /* To clear the interrupts*/
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
         for(pwrResource = pwrRsrcMin; pwrResource <= pwrRsrcMax ; pwrResource++)
         {
@@ -9851,13 +9689,24 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_enabled(void)
                ((errStat.intStatus[intrType/32U] &
                  (1U << (intrType % 32U))) != 0U))
             {
-                while(1)
+                timeout = 10U;
+
+                while(timeout--)
                 {
+                   /* Delay added to avoid timeout */
+                    Osal_delay(1000);
+
                     pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                      &errStat,
                                                      &irqNum);
                     if(intrType == irqNum)
                         break;
+                }
+
+                if(0 > timeout)
+                {
+                    pmicStatus = PMIC_ST_ERR_FAIL;
+                    break;
                 }
             }
         }
@@ -9886,6 +9735,7 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_disabled(void)
     Pmic_IrqStatus_t errStat  = {0U};
     bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
+    int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
     test_pmic_print_unity_testcase_info(7514,
@@ -9916,6 +9766,10 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_disabled(void)
     /* The test code expects a under voltage interrupt */
     //dummy_func_generate_under_voltage();
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     for(pwrResource = pwrRsrcMin; pwrResource <= pwrRsrcMax ; pwrResource++)
     {
         pmicStatus = Pmic_powerSetPwrRsrcIntr(pPmicCoreHandle,
@@ -9928,8 +9782,13 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_disabled(void)
                ((errStat.intStatus[intrType/32U] &
                  (1U << (intrType % 32U))) != 0U))
             {
-                while(1)
+                timeout = 10U;
+
+                while(timeout--)
                 {
+                   /* Delay added to avoid timeout */
+                    Osal_delay(1000);
+
                     pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                      &errStat,
                                                      &irqNum);
@@ -9938,6 +9797,12 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_disabled(void)
                         pmicStatus = PMIC_ST_ERR_INV_PARAM;
                         break;
                     }
+                }
+
+                if(0 > timeout)
+                {
+                    pmicStatus = PMIC_ST_ERR_FAIL;
+                    break;
                 }
             }
 
@@ -9948,6 +9813,10 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_disabled(void)
     {
         pwrRsrcMin = PMIC_TPS6594X_REGULATOR_LDO1;
         pwrRsrcMax = PMIC_TPS6594X_REGULATOR_LDO4;
+
+        /* To clear the interrupts*/
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
         for(pwrResource = pwrRsrcMin; pwrResource <= pwrRsrcMax ; pwrResource++)
         {
@@ -9961,8 +9830,13 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_disabled(void)
                ((errStat.intStatus[intrType/32U] &
                  (1U << (intrType % 32U))) != 0U))
             {
-                while(1)
+                timeout = 10U;
+
+                while(timeout--)
                 {
+                   /* Delay added to avoid timeout */
+                    Osal_delay(1000);
+
                     pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                      &errStat,
                                                      &irqNum);
@@ -9971,6 +9845,12 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_disabled(void)
                         pmicStatus = PMIC_ST_ERR_INV_PARAM;
                         break;
                     }
+                }
+
+                if(0 > timeout)
+                {
+                    pmicStatus = PMIC_ST_ERR_FAIL;
+                    break;
                 }
             }
 
@@ -9988,6 +9868,10 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_disabled(void)
         pwrResource = PMIC_LP8764X_POWER_SOURCE_VCCA;
     }
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     pmicStatus = Pmic_powerSetPwrRsrcIntr(pPmicCoreHandle,
                                           pwrResource,
                                           intrType,
@@ -9998,8 +9882,13 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_disabled(void)
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
-        while(1)
+        timeout = 10U;
+
+        while(timeout--)
         {
+           /* Delay added to avoid timeout */
+            Osal_delay(1000);
+
             pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
@@ -10009,6 +9898,11 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_disabled(void)
                 break;
             }
         }
+
+        if(0 > timeout)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
+        }
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -10017,6 +9911,10 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_disabled(void)
     {
         pwrRsrcMin = PMIC_LP8764X_POWER_SOURCE_VMON1;
         pwrRsrcMax = PMIC_LP8764X_POWER_SOURCE_VMON2;
+
+        /* To clear the interrupts*/
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
         for(pwrResource = pwrRsrcMin; pwrResource <= pwrRsrcMax ; pwrResource++)
         {
@@ -10030,8 +9928,13 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_disabled(void)
                ((errStat.intStatus[intrType/32U] &
                  (1U << (intrType % 32U))) != 0U))
             {
-                while(1)
+                timeout = 10U;
+
+                while(timeout--)
                 {
+                   /* Delay added to avoid timeout */
+                    Osal_delay(1000);
+
                     pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                      &errStat,
                                                      &irqNum);
@@ -10040,6 +9943,12 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_disabled(void)
                         pmicStatus = PMIC_ST_ERR_INV_PARAM;
                         break;
                     }
+                }
+
+                if(0 > timeout)
+                {
+                    pmicStatus = PMIC_ST_ERR_FAIL;
+                    break;
                 }
             }
 
@@ -10069,6 +9978,7 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_enabled(void)
     Pmic_IrqStatus_t errStat  = {0U};
     bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
+    int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
     test_pmic_print_unity_testcase_info(7515,
@@ -10109,6 +10019,10 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_enabled(void)
     /* The test code expects a current limit interrupt */
     //dummy_func_generate_current_limit();
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     for(pwrResource = pwrRsrcMin; pwrResource <= pwrRsrcMax ; pwrResource++)
     {
         pmicStatus = Pmic_powerSetPwrRsrcIntr(pPmicCoreHandle,
@@ -10121,13 +10035,24 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_enabled(void)
            ((errStat.intStatus[intrType/32U] &
              (1U << (intrType % 32U))) != 0U))
         {
-            while(1)
+            timeout = 10U;
+
+            while(timeout--)
             {
+               /* Delay added to avoid timeout */
+                Osal_delay(1000);
+
                 pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                  &errStat,
                                                  &irqNum);
                 if(intrType == irqNum)
                     break;
+            }
+
+            if(0 > timeout)
+            {
+                pmicStatus = PMIC_ST_ERR_FAIL;
+                break;
             }
         }
     }
@@ -10138,6 +10063,10 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_enabled(void)
     {
         pwrRsrcMin = PMIC_TPS6594X_REGULATOR_LDO1;
         pwrRsrcMax = PMIC_TPS6594X_REGULATOR_LDO4;
+
+        /* To clear the interrupts*/
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
         for(pwrResource = pwrRsrcMin; pwrResource <= pwrRsrcMax ; pwrResource++)
         {
@@ -10151,13 +10080,24 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_enabled(void)
                ((errStat.intStatus[intrType/32U] &
                  (1U << (intrType % 32U))) != 0U))
             {
-                while(1)
+                timeout = 10U;
+
+                while(timeout--)
                 {
+                   /* Delay added to avoid timeout */
+                    Osal_delay(1000);
+
                     pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                      &errStat,
                                                      &irqNum);
                     if(intrType == irqNum)
                         break;
+                }
+
+                if(0 > timeout)
+                {
+                    pmicStatus = PMIC_ST_ERR_FAIL;
+                    break;
                 }
             }
         }
@@ -10187,6 +10127,7 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_disabled(void)
     Pmic_IrqStatus_t errStat  = {0U};
     bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
+    int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
     test_pmic_print_unity_testcase_info(7516,
@@ -10227,6 +10168,10 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_disabled(void)
     /* The test code expects a current limit interrupt */
     //dummy_func_generate_current_limit();
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     for(pwrResource = pwrRsrcMin; pwrResource <= pwrRsrcMax ; pwrResource++)
     {
         pmicStatus = Pmic_powerSetPwrRsrcIntr(pPmicCoreHandle,
@@ -10239,8 +10184,13 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_disabled(void)
                ((errStat.intStatus[intrType/32U] &
                  (1U << (intrType % 32U))) != 0U))
             {
-                while(1)
+                timeout = 10U;
+
+                while(timeout--)
                 {
+                   /* Delay added to avoid timeout */
+                    Osal_delay(1000);
+
                     pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                      &errStat,
                                                      &irqNum);
@@ -10249,6 +10199,12 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_disabled(void)
                         pmicStatus = PMIC_ST_ERR_INV_PARAM;
                         break;
                     }
+                }
+
+                if(0 > timeout)
+                {
+                    pmicStatus = PMIC_ST_ERR_FAIL;
+                    break;
                 }
             }
 
@@ -10259,6 +10215,10 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_disabled(void)
     {
         pwrRsrcMin = PMIC_TPS6594X_REGULATOR_LDO1;
         pwrRsrcMax = PMIC_TPS6594X_REGULATOR_LDO4;
+
+        /* To clear the interrupts*/
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
         for(pwrResource = pwrRsrcMin; pwrResource <= pwrRsrcMax ; pwrResource++)
         {
@@ -10272,8 +10232,13 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_disabled(void)
                ((errStat.intStatus[intrType/32U] &
                  (1U << (intrType % 32U))) != 0U))
             {
-                while(1)
+                timeout = 10U;
+
+                while(timeout--)
                 {
+                   /* Delay added to avoid timeout */
+                    Osal_delay(1000);
+
                     pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                                      &errStat,
                                                      &irqNum);
@@ -10282,6 +10247,12 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_disabled(void)
                         pmicStatus = PMIC_ST_ERR_INV_PARAM;
                         break;
                     }
+                }
+
+                if(0 > timeout)
+                {
+                    pmicStatus = PMIC_ST_ERR_FAIL;
+                    break;
                 }
             }
 
@@ -10308,6 +10279,7 @@ static void test_pmic_powerSetPwrRsrcIntr_twarn_enabled(void)
     Pmic_IrqStatus_t errStat  = {0U};
     bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
+    int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
     test_pmic_print_unity_testcase_info(7517,
@@ -10336,6 +10308,10 @@ static void test_pmic_powerSetPwrRsrcIntr_twarn_enabled(void)
     /* The test code expects a thermal warning interrupt */
     //dummy_func_generate_thermal_warning_irq();
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
@@ -10343,13 +10319,21 @@ static void test_pmic_powerSetPwrRsrcIntr_twarn_enabled(void)
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
-        while(1)
+        while(timeout--)
         {
+           /* Delay added to avoid timeout */
+            Osal_delay(1000);
+
             pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
                 break;
+        }
+
+        if(0 > timeout)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
         }
     }
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -10374,6 +10358,7 @@ static void test_pmic_powerSetPwrRsrcIntr_twarn_disabled(void)
     Pmic_IrqStatus_t errStat  = {0U};
     bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
+    int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
     test_pmic_print_unity_testcase_info(7518,
@@ -10402,6 +10387,10 @@ static void test_pmic_powerSetPwrRsrcIntr_twarn_disabled(void)
     /* The test code expects a thermal warning interrupt */
     //dummy_func_generate_thermal_warning_irq();
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
@@ -10409,8 +10398,11 @@ static void test_pmic_powerSetPwrRsrcIntr_twarn_disabled(void)
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
-        while(1)
+        while(timeout--)
         {
+           /* Delay added to avoid timeout */
+            Osal_delay(1000);
+
             pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
@@ -10419,6 +10411,11 @@ static void test_pmic_powerSetPwrRsrcIntr_twarn_disabled(void)
                 pmicStatus = PMIC_ST_ERR_INV_PARAM;
                 break;
             }
+        }
+
+        if(0 > timeout)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
         }
     }
 
@@ -10443,6 +10440,7 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_enabled(void)
     Pmic_IrqStatus_t errStat  = {0U};
     bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
+    int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
     test_pmic_print_unity_testcase_info(7519,
@@ -10471,6 +10469,10 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_enabled(void)
     /* The test code expects a nRstOut Readback interrupt */
     //dummy_func_generate_nRstOut_RbBck_irq();
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
@@ -10478,13 +10480,21 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_enabled(void)
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
-        while(1)
+        while(timeout--)
         {
+           /* Delay added to avoid timeout */
+            Osal_delay(1000);
+
             pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
                 break;
+        }
+
+        if(0 > timeout)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
         }
     }
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -10508,6 +10518,7 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_disabled(void)
     Pmic_IrqStatus_t errStat  = {0U};
     bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
+    int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
     test_pmic_print_unity_testcase_info(7520,
@@ -10536,6 +10547,10 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_disabled(void)
     /* The test code expects a nRstOut Readback interrupt */
     //dummy_func_generate_nRstOut_RbBck_irq();
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
@@ -10543,8 +10558,11 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_disabled(void)
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
-        while(1)
+        while(timeout--)
         {
+           /* Delay added to avoid timeout */
+            Osal_delay(1000);
+
             pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
@@ -10553,6 +10571,11 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_disabled(void)
                 pmicStatus = PMIC_ST_ERR_INV_PARAM;
                 break;
             }
+        }
+
+        if(0 > timeout)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
         }
     }
 
@@ -10577,6 +10600,7 @@ static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_enabled(void)
     Pmic_IrqStatus_t errStat  = {0U};
     bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
+    int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
     test_pmic_print_unity_testcase_info(7521,
@@ -10605,6 +10629,10 @@ static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_enabled(void)
     /* The test code expects a SOC_PWR_ERR interrupt */
     //dummy_func_generate_soc_pwr_err_irq();
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
@@ -10612,13 +10640,21 @@ static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_enabled(void)
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
-        while(1)
+        while(timeout--)
         {
+           /* Delay added to avoid timeout */
+            Osal_delay(1000);
+
             pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
                 break;
+        }
+
+        if(0 > timeout)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
         }
     }
 
@@ -10644,6 +10680,7 @@ static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_disabled(void)
     Pmic_IrqStatus_t errStat  = {0U};
     bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
+    int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
     test_pmic_print_unity_testcase_info(7522,
@@ -10672,6 +10709,10 @@ static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_disabled(void)
     /* The test code expects a SOC_PWR_ERR interrupt */
     //dummy_func_generate_soc_pwr_err_irq();
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
@@ -10679,8 +10720,11 @@ static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_disabled(void)
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
-        while(1)
+        while(timeout--)
         {
+           /* Delay added to avoid timeout */
+            Osal_delay(1000);
+
             pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
@@ -10689,6 +10733,11 @@ static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_disabled(void)
                 pmicStatus = PMIC_ST_ERR_INV_PARAM;
                 break;
             }
+        }
+
+        if(0 > timeout)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
         }
     }
 
@@ -10713,6 +10762,7 @@ static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_enabled(void)
     Pmic_IrqStatus_t errStat  = {0U};
     bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
+    int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
     test_pmic_print_unity_testcase_info(7523,
@@ -10741,6 +10791,10 @@ static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_enabled(void)
     /* The test code expects a MCU_PWR_ERR interrupt */
     //dummy_func_generate_mcu_pwr_err_irq();
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
@@ -10748,13 +10802,21 @@ static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_enabled(void)
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
-        while(1)
+        while(timeout--)
         {
+           /* Delay added to avoid timeout */
+            Osal_delay(1000);
+
             pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
                 break;
+        }
+
+        if(0 > timeout)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
         }
     }
 
@@ -10779,6 +10841,7 @@ static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_disabled(void)
     Pmic_IrqStatus_t errStat  = {0U};
     bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
+    int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
     test_pmic_print_unity_testcase_info(7524,
@@ -10807,6 +10870,10 @@ static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_disabled(void)
     /* The test code expects a MCU_PWR_ERR interrupt */
     //dummy_func_generate_mcu_pwr_err_irq();
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
@@ -10814,8 +10881,11 @@ static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_disabled(void)
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
-        while(1)
+        while(timeout--)
         {
+           /* Delay added to avoid timeout */
+            Osal_delay(1000);
+
             pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
@@ -10824,6 +10894,11 @@ static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_disabled(void)
                 pmicStatus = PMIC_ST_ERR_INV_PARAM;
                 break;
             }
+        }
+
+        if(0 > timeout)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
         }
     }
 
@@ -10849,6 +10924,7 @@ static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_enabled(void)
     Pmic_IrqStatus_t errStat  = {0U};
     bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
+    int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
     test_pmic_print_unity_testcase_info(7525,
@@ -10877,6 +10953,10 @@ static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_enabled(void)
     /* The test code expects a ORD_SHUTDOWN interrupt */
     //dummy_func_generate_ord_shutdown_irq();
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
@@ -10884,13 +10964,21 @@ static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_enabled(void)
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
-        while(1)
+        while(timeout--)
         {
+           /* Delay added to avoid timeout */
+            Osal_delay(1000);
+
             pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
                 break;
+        }
+
+        if(0 > timeout)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
         }
     }
 
@@ -10915,6 +11003,7 @@ static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_disabled(void)
     Pmic_IrqStatus_t errStat  = {0U};
     bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
+    int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
     test_pmic_print_unity_testcase_info(7526,
@@ -10943,6 +11032,10 @@ static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_disabled(void)
     /* The test code expects a ORD_SHUTDOWN interrupt */
     //dummy_func_generate_ord_shutdown_irq();
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
@@ -10950,8 +11043,11 @@ static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_disabled(void)
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
-        while(1)
+        while(timeout--)
         {
+           /* Delay added to avoid timeout */
+            Osal_delay(1000);
+
             pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
@@ -10960,6 +11056,11 @@ static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_disabled(void)
                 pmicStatus = PMIC_ST_ERR_INV_PARAM;
                 break;
             }
+        }
+
+        if(0 > timeout)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
         }
     }
 
@@ -10984,6 +11085,7 @@ static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_enabled(void)
     Pmic_IrqStatus_t errStat  = {0U};
     bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
+    int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
     test_pmic_print_unity_testcase_info(7527,
@@ -11012,6 +11114,10 @@ static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_enabled(void)
     /* The test code expects a IMM_SHUTDOWN interrupt */
     //dummy_func_generate_imm_shutdown_irq();
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
@@ -11019,13 +11125,21 @@ static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_enabled(void)
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
-        while(1)
+        while(timeout--)
         {
+           /* Delay added to avoid timeout */
+            Osal_delay(1000);
+
             pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
                 break;
+        }
+
+        if(0 > timeout)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
         }
     }
 
@@ -11050,6 +11164,7 @@ static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_disabled(void)
     Pmic_IrqStatus_t errStat  = {0U};
     bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
+    int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
     test_pmic_print_unity_testcase_info(7528,
@@ -11078,6 +11193,10 @@ static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_disabled(void)
     /* The test code expects a IMM_SHUTDOWN interrupt */
     //dummy_func_generate_imm_shutdown_irq();
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
@@ -11085,8 +11204,11 @@ static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_disabled(void)
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
-        while(1)
+        while(timeout--)
         {
+           /* Delay added to avoid timeout */
+            Osal_delay(1000);
+
             pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
@@ -11095,6 +11217,11 @@ static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_disabled(void)
                 pmicStatus = PMIC_ST_ERR_INV_PARAM;
                 break;
             }
+        }
+
+        if(0 > timeout)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
         }
     }
 
@@ -11119,6 +11246,7 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_enabled(void)
     Pmic_IrqStatus_t errStat  = {0U};
     bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
+    int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
     test_pmic_print_unity_testcase_info(7529,
@@ -11147,6 +11275,10 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_enabled(void)
     /* The test code expects a NRSTOUT_SOC_READBACK interrupt */
     //dummy_func_generate_nrstout_soc_readback_irq();
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
@@ -11154,13 +11286,21 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_enabled(void)
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
-        while(1)
+        while(timeout--)
         {
+           /* Delay added to avoid timeout */
+            Osal_delay(1000);
+
             pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
                 break;
+        }
+
+        if(0 > timeout)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
         }
     }
 
@@ -11185,6 +11325,7 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_disabled(void)
     Pmic_IrqStatus_t errStat  = {0U};
     bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
+    int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
     test_pmic_print_unity_testcase_info(7530,
@@ -11213,6 +11354,10 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_disabled(void)
     /* The test code expects a NRSTOUT_SOC_READBACK interrupt */
     //dummy_func_generate_nrstout_soc_readback_irq();
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
@@ -11220,8 +11365,11 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_disabled(void)
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
-        while(1)
+        while(timeout--)
         {
+           /* Delay added to avoid timeout */
+            Osal_delay(1000);
+
             pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
@@ -11230,6 +11378,11 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_disabled(void)
                 pmicStatus = PMIC_ST_ERR_INV_PARAM;
                 break;
             }
+        }
+
+        if(0 > timeout)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
         }
     }
 
@@ -11255,6 +11408,7 @@ static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_enabled(void)
     Pmic_IrqStatus_t errStat  = {0U};
     bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
+    int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
     test_pmic_print_unity_testcase_info(7531,
@@ -11283,6 +11437,10 @@ static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_enabled(void)
     /* The test code expects a EN_DRV_READBACK interrupt */
     //dummy_func_generate_en_drv_readback_irq();
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
@@ -11290,13 +11448,21 @@ static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_enabled(void)
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
-        while(1)
+        while(timeout--)
         {
+           /* Delay added to avoid timeout */
+            Osal_delay(1000);
+
             pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
             if(intrType == irqNum)
                 break;
+        }
+
+        if(0 > timeout)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
         }
     }
 
@@ -11321,6 +11487,7 @@ static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_disabled(void)
     Pmic_IrqStatus_t errStat  = {0U};
     bool clearIRQ             = false;
     uint8_t  irqNum = 0U;
+    int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
     test_pmic_print_unity_testcase_info(7532,
@@ -11349,6 +11516,10 @@ static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_disabled(void)
     /* The test code expects a EN_DRV_READBACK interrupt */
     //dummy_func_generate_en_drv_readback_irq();
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
@@ -11356,8 +11527,11 @@ static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_disabled(void)
        ((errStat.intStatus[intrType/32U] &
          (1U << (intrType % 32U))) != 0U))
     {
-        while(1)
+        while(timeout--)
         {
+           /* Delay added to avoid timeout */
+            Osal_delay(1000);
+
             pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
                                              &errStat,
                                              &irqNum);
@@ -11366,6 +11540,11 @@ static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_disabled(void)
                 pmicStatus = PMIC_ST_ERR_INV_PARAM;
                 break;
             }
+        }
+
+        if(0 > timeout)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
         }
     }
 
@@ -11645,41 +11824,6 @@ static void test_pmic_powerSetLdoRtc_HERA_ldortcEnable_disable(void)
 }
 
 /*!
- * \brief   Pmic_powerSetPwrResourceCfg : Negative test BUCK switching frequency for 8.8M for LEO
- */
-static void test_pmic_powerSetPowerResourceConfig_LEO_buckFreqSel_8M8(void)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint16_t pwrRsrc;
-
-    Pmic_PowerResourceCfg_t pPowerCfg   =
-    {
-        PMIC_CFG_REGULATOR_BUCK_FREQ_SEL_VALID_SHIFT,
-    };
-
-    test_pmic_print_unity_testcase_info(7877,
-                                        pmic_power_tests,
-                                        PMIC_POWER_NUM_OF_TESTCASES);
-
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-        pPowerCfg.buckFreqSel = PMIC_LP8764X_BUCK_FREQ_SEL_8M8;
-        pwrRsrc = PMIC_LP8764X_REGULATOR_BUCK1;
-    }
-
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-    {
-        TEST_IGNORE();
-    }
-
-    pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
-                                             pwrRsrc,
-                                             pPowerCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
-
-}
-
-/*!
  * \brief   Pmic_powerGetPwrResourceCfg : Negative test Get Switch peak current limit for BUCK 5
  */
 static void test_pmic_powerGetPowerResourceConfig_buck5(void)
@@ -11793,11 +11937,6 @@ RUN_TEST(test_pmic_powerSetPowerResourceConfig_railGrpSel_other);
 
 RUN_TEST(test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_railGrpSel);
 RUN_TEST(test_pmic_powerSetPowerResourceConfigPrmRangeTest_railGrpSel);
-RUN_TEST(test_pmic_powerSetPowerResourceConfig_buckFreqSel_2M2);
-RUN_TEST(test_pmic_powerSetPowerResourceConfig_buckFreqSel_4M4);
-RUN_TEST(test_pmic_powerSetPowerResourceConfig_buckFreqSel_8M8);
-RUN_TEST(test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_buckFreqSel);
-RUN_TEST(test_pmic_powerSetPowerResourceConfigPrmRangeTest_buckFreqSel);
 RUN_TEST(test_pmic_powerSetPowerResourceConfig_ldoBypassModeEn_bypass);
 RUN_TEST(test_pmic_powerSetPowerResourceConfig_ldoBypassModeEn_linear);
 
@@ -11948,7 +12087,6 @@ RUN_TEST(test_pmic_powerSetPowerResourceConfig_leo_vmon);
 RUN_TEST(test_pmic_powerSetThermalConfig_hera_thermalShutdownThold_low);
 RUN_TEST(test_pmic_powerSetThermalConfig_hera_thermalShutdownThold_high);
 RUN_TEST(test_pmic_powerSetLdoRtc_HERA_ldortcEnable_disable);
-RUN_TEST(test_pmic_powerSetPowerResourceConfig_LEO_buckFreqSel_8M8);
 RUN_TEST(test_pmic_powerGetPowerResourceConfig_buck5);
 
     UNITY_END();
@@ -11969,10 +12107,10 @@ static int32_t test_pmic_leo_pmicA_power_testApp(void)
     pmicConfigData.commMode           = PMIC_INTF_DUAL_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigData.slaveAddr          = LEO_PMICA_SLAVE_ADDR;
+    pmicConfigData.slaveAddr          = J721E_LEO_PMICA_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
-    pmicConfigData.qaSlaveAddr        = LEO_PMICA_WDG_SLAVE_ADDR;
+    pmicConfigData.qaSlaveAddr        = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.pFnPmicCommIoRead   = test_pmic_regRead;
@@ -12006,10 +12144,10 @@ static int32_t test_pmic_leo_pmicB_power_testApp(void)
     pmicConfigData.commMode           = PMIC_INTF_SINGLE_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigData.slaveAddr          = LEO_PMICB_SLAVE_ADDR;
+    pmicConfigData.slaveAddr          = J721E_LEO_PMICB_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
-    pmicConfigData.qaSlaveAddr        = LEO_PMICB_WDG_SLAVE_ADDR;
+    pmicConfigData.qaSlaveAddr        = J721E_LEO_PMICB_WDG_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.pFnPmicCommIoRead   = test_pmic_regRead;
@@ -12044,10 +12182,10 @@ static int32_t test_pmic_hera_power_testApp(void)
     pmicConfigData.commMode           = PMIC_INTF_SINGLE_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigData.slaveAddr          = HERA_PMIC_SLAVE_ADDR;
+    pmicConfigData.slaveAddr          = J7VCL_HERA_PMIC_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
-    pmicConfigData.qaSlaveAddr        = HERA_PMIC_WDG_SLAVE_ADDR;
+    pmicConfigData.qaSlaveAddr        = J7VCL_HERA_PMIC_WDG_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.pFnPmicCommIoRead   = test_pmic_regRead;
@@ -12073,6 +12211,7 @@ static int32_t setup_pmic_interrupt()
 
 #ifdef SOC_J721E
 
+    pmic_device_info = J721E_LEO_PMICA_DEVICE;
     status = test_pmic_leo_pmicA_power_testApp();
    /* Deinit pmic handle */
     if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
@@ -12082,6 +12221,7 @@ static int32_t setup_pmic_interrupt()
 
     if(PMIC_ST_SUCCESS == status)
     {
+        pmic_device_info = J721E_LEO_PMICB_DEVICE;
         status = test_pmic_leo_pmicB_power_testApp();
        /* Deinit pmic handle */
         if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))

@@ -126,12 +126,6 @@ GPIO_v0_Config GPIO_v0_config =
 #endif
 };
 
-volatile uint32_t pmic_intr_triggered = 0U;
-volatile uint8_t irqNumToClr          = 0U;
-
-/* Pointer holds the pPmicCoreHandle for AppPmicCallbackFxn */
-Pmic_CoreHandle_t *pPmicCoreHandleISR = NULL;
-
 /**
  * \brief    This API Set Config for TI HW I2C instances
  *
@@ -183,10 +177,10 @@ static int32_t test_pmic_spi_stubInit(Pmic_CoreCfg_t  *pPmicConfigData)
     pmicConfigDataI2c.commMode            = PMIC_INTF_DUAL_I2C;
     pmicConfigDataI2c.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigDataI2c.slaveAddr           = LEO_PMICA_SLAVE_ADDR;
+    pmicConfigDataI2c.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
     pmicConfigDataI2c.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
-    pmicConfigDataI2c.qaSlaveAddr         = LEO_PMICA_WDG_SLAVE_ADDR;
+    pmicConfigDataI2c.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
     pmicConfigDataI2c.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
 
     pmicConfigDataI2c.crcEnable           = pPmicConfigData->crcEnable;
@@ -942,6 +936,13 @@ static int32_t Pmic_intrClr(Pmic_CoreHandle_t *pmicHandle)
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         pmicStatus = Pmic_irqGetErrStatus(&handle, &errStat, true);
+        {
+            int i = 0;
+            for(i=0;i<4; i++)
+            {
+                pmic_log("\r\nINT STAT[%d]: 0x%08x", i, errStat.intStatus[i]);
+            }
+        }
     }
 
     return pmicStatus;
@@ -1150,38 +1151,6 @@ void tearDown(void)
     /* Do nothing */
 }
 
-
-/*!
- * \brief   PMIC Application Callback Function
- */
-void AppPmicCallbackFxn(void)
-{
-    int32_t status           = PMIC_ST_SUCCESS;
-    Pmic_IrqStatus_t errStat = {0U};
-    uint8_t irqNum           = 0U;
-    pmic_intr_triggered      = 1U;
-
-    status = Pmic_irqGetErrStatus(pPmicCoreHandleISR, &errStat, false);
-    if((PMIC_ST_SUCCESS == status) &&
-       ((errStat.intStatus[irqNumToClr/32U] &
-         (1U << (irqNumToClr % 32U))) != 0U))
-    {
-        while(irqNumToClr != irqNum)
-        {
-            status = Pmic_getNextErrorStatus(pPmicCoreHandleISR,
-                                             &errStat,
-                                             &irqNum);
-        }
-
-        if(PMIC_ST_SUCCESS == status)
-        {
-            /* clear the interrupt */
-            status = Pmic_irqClrErrStatus(pPmicCoreHandleISR,
-                                          irqNumToClr);
-        }
-    }
-}
-
 /*!
  * \brief   GPIO Interrupt Router Configuration
  */
@@ -1221,7 +1190,7 @@ void Board_initUART(void)
  * \brief   GPIO Configurations.
  *          This API is required for Asynchronous Interrupts only
  */
-void App_initGPIO(void)
+void App_initGPIO(GPIO_CallbackFxn callback)
 {
     GPIO_v0_HwAttrs gpio_cfg;
 
@@ -1243,7 +1212,7 @@ void App_initGPIO(void)
     GPIO_init();
 
     /* Set the callback function */
-    GPIO_setCallback(0, AppPmicCallbackFxn);
+    GPIO_setCallback(0, callback);
 }
 
 #if defined(BUILD_MPU) || defined (__C7100__)

@@ -42,6 +42,8 @@
 /* Pointer holds the pPmicCoreHandle */
 Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
 
+static uint8_t pmic_device_info = 0U;
+
 /*!
  * \brief   PMIC WDG Test Cases
  */
@@ -1146,6 +1148,11 @@ static void test_pmic_wdg_StartTriggerSequence(void)
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    {
+        TEST_IGNORE();
+    }
+
     /* Test ignored, due to unsupported HW */
     TEST_IGNORE();
 
@@ -1323,10 +1330,10 @@ static int32_t test_pmic_leo_pmicA_wdg_testApp(void)
     pmicConfigData.commMode            = PMIC_INTF_DUAL_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigData.slaveAddr           = LEO_PMICA_SLAVE_ADDR;
+    pmicConfigData.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
-    pmicConfigData.qaSlaveAddr         = LEO_PMICA_WDG_SLAVE_ADDR;
+    pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
@@ -1360,10 +1367,10 @@ static int32_t test_pmic_leo_pmicA_wdg_single_i2c_testApp(void)
     pmicConfigData.commMode            = PMIC_INTF_SINGLE_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigData.slaveAddr           = LEO_PMICA_SLAVE_ADDR;
+    pmicConfigData.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
-    pmicConfigData.qaSlaveAddr         = LEO_PMICA_WDG_SLAVE_ADDR;
+    pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
@@ -1398,10 +1405,10 @@ static int32_t test_pmic_hera_wdg_testApp(void)
     pmicConfigData.commMode            = PMIC_INTF_SINGLE_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigData.slaveAddr           = HERA_PMIC_SLAVE_ADDR;
+    pmicConfigData.slaveAddr           = J7VCL_HERA_PMIC_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
-    pmicConfigData.qaSlaveAddr         = HERA_PMIC_WDG_SLAVE_ADDR;
+    pmicConfigData.qaSlaveAddr         = J7VCL_HERA_PMIC_WDG_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
@@ -1420,6 +1427,75 @@ static int32_t test_pmic_hera_wdg_testApp(void)
     return status;
 
 }
+
+#ifdef SOC_J721E
+/*!
+ * \brief   RTC Unity Test App wrapper Function for LEO PMIC-B
+ */
+static int32_t test_pmic_leo_pmicB_wdg_testApp(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    Pmic_CoreCfg_t pmicConfigData = {0U};
+
+    /* Fill parameters to pmicConfigData */
+    pmicConfigData.pmicDeviceType     = PMIC_DEV_LEO_TPS6594X;
+    pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
+
+    pmicConfigData.commMode           = PMIC_INTF_SINGLE_I2C;
+    pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
+
+    pmicConfigData.slaveAddr          = J721E_LEO_PMICB_SLAVE_ADDR;
+    pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
+
+    pmicConfigData.qaSlaveAddr        = J721E_LEO_PMICB_WDG_SLAVE_ADDR;
+    pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoRead   = test_pmic_regRead;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoWrite  = test_pmic_regWrite;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStart = test_pmic_criticalSectionStartFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStop  = test_pmic_criticalSectionStopFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
+
+    status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
+    return status;
+
+}
+#endif
+
+static int32_t setup_pmic_interrupt()
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+#ifdef SOC_J721E
+
+    pmic_device_info = J721E_LEO_PMICA_DEVICE;
+    status = test_pmic_leo_pmicA_wdg_testApp();
+   /* Deinit pmic handle */
+    if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+    {
+        test_pmic_appDeInit(pPmicCoreHandle);
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        pmic_device_info = J721E_LEO_PMICB_DEVICE;
+        status = test_pmic_leo_pmicB_wdg_testApp();
+       /* Deinit pmic handle */
+        if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+        {
+            test_pmic_appDeInit(pPmicCoreHandle);
+        }
+    }
+#endif
+    return status;
+}
+
 
 static const char pmicTestAppMenu[] =
 {
@@ -1460,45 +1536,48 @@ static void test_pmic_wdg_testapp_runner(void)
         switch(num)
         {
            case 0U:
-               /* WDG Unity Test App wrapper Function for LEO PMIC-A */
-               if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_wdg_testApp())
-               {
-                   /* Run WDG test cases for Leo PMIC-A */
-                   test_pmic_run_testcases();
-               }
-               /* Deinit pmic handle */
-               if(pPmicCoreHandle != NULL)
-               {
-                   test_pmic_appDeInit(pPmicCoreHandle);
-               }
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+                {
+                    pmic_device_info = J721E_LEO_PMICA_DEVICE;
+                    /* WDG Unity Test App wrapper Function for LEO PMIC-A */
+                    test_pmic_leo_pmicA_wdg_testApp();
+                    /* Run WDG test cases for Leo PMIC-A */
+                    test_pmic_run_testcases();
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
                break;
            case 1U:
-               /* WDG Unity Test App wrapper Function for LEO PMIC-A */
-               if(PMIC_ST_SUCCESS ==
-                          test_pmic_leo_pmicA_wdg_single_i2c_testApp())
-               {
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+                {
+                   pmic_device_info = J721E_LEO_PMICA_DEVICE;
+                   /* WDG Unity Test App wrapper Function for LEO PMIC-A */
+                   test_pmic_leo_pmicA_wdg_single_i2c_testApp();
                    /* Run WDG test cases for Leo PMIC-A using Single I2C */
                    test_pmic_run_testcases();
-               }
-
-               /* Deinit pmic handle */
-               if(pPmicCoreHandle != NULL)
-               {
-                   test_pmic_appDeInit(pPmicCoreHandle);
-               }
+                   /* Deinit pmic handle */
+                   if(pPmicCoreHandle != NULL)
+                   {
+                       test_pmic_appDeInit(pPmicCoreHandle);
+                   }
+                }
                break;
            case 2U:
-               /* WDG Unity Test App wrapper Function for HERA PMIC */
-               if(PMIC_ST_SUCCESS == test_pmic_hera_wdg_testApp())
-               {
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+                {
+                   /* WDG Unity Test App wrapper Function for HERA PMIC */
+                   test_pmic_hera_wdg_testApp();
                    /* Run wdg test cases for Hera PMIC */
                    test_pmic_run_testcases();
-               }
-               /* Deinit pmic handle */
-               if(pPmicCoreHandle != NULL)
-               {
-                   test_pmic_appDeInit(pPmicCoreHandle);
-               }
+                   /* Deinit pmic handle */
+                   if(pPmicCoreHandle != NULL)
+                   {
+                       test_pmic_appDeInit(pPmicCoreHandle);
+                   }
+                }
                break;
            case 3U:
                pmic_log(" \r\n Quit from application\n");

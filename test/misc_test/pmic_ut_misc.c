@@ -451,13 +451,20 @@ static void test_Pmic_getBistPassInterrupt(void)
     pmicStatus = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle, nsleepType, maskEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     pmicStatus = Pmic_fsmRequestRuntimeBist(pPmicCoreHandle);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        while(1U)
+        while(timeout--)
         {
+            /* Delay added to avoid timeout */
+            Osal_delay(1000);
+
             pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
             if((PMIC_ST_SUCCESS == pmicStatus) &&
                ((errStat.intStatus[PMIC_TPS6594X_BIST_PASS_INT/32U] &
@@ -472,12 +479,22 @@ static void test_Pmic_getBistPassInterrupt(void)
                 }
             }
         }
+
+        if(0 > timeout)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
+        }
+
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        while(1U)
+        while(timeout--)
         {
+            /* Delay added to avoid timeout */
+            Osal_delay(1000);
+
             pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
             if((PMIC_ST_SUCCESS == pmicStatus) &&
                ((errStat.intStatus[PMIC_LP8764X_BIST_PASS_INT/32U] &
@@ -492,9 +509,14 @@ static void test_Pmic_getBistPassInterrupt(void)
                 }
             }
         }
-    }
 
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        if(0 > timeout)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
+        }
+
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    }
 }
 
 /*!
@@ -741,6 +763,7 @@ static void test_Pmic_commFrmErrorIntr(void)
     uint16_t regAddr = PMIC_SCRATCH_PAD_REG_4_REGADDR;
     uint16_t pmicRegAddr = regAddr;
     uint8_t instType = PMIC_MAIN_INST;
+    int8_t  timeout      = 10U;
 
     test_pmic_print_unity_testcase_info(5555,
                                         pmic_misc_tests,
@@ -780,6 +803,11 @@ static void test_Pmic_commFrmErrorIntr(void)
 
     }
 
+    /* To clear the interrupts*/
+    status = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
@@ -806,8 +834,11 @@ static void test_Pmic_commFrmErrorIntr(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        while(1U)
+        while(timeout--)
         {
+            /* Delay added to avoid timeout */
+            Osal_delay(1000);
+
             pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
             TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
@@ -820,12 +851,23 @@ static void test_Pmic_commFrmErrorIntr(void)
                 break;
             }
         }
+
+        if(0 > timeout)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
+        }
+
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        while(1U)
+        while(timeout--)
         {
+            /* Delay added to avoid timeout */
+            Osal_delay(1000);
+
             pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
             TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
             if((PMIC_ST_SUCCESS == pmicStatus) &&
@@ -838,9 +880,14 @@ static void test_Pmic_commFrmErrorIntr(void)
                 break;
             }
         }
-    }
 
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus)
+        if(0 > timeout)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
+        }
+
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    }
 }
 
 #endif
@@ -908,10 +955,10 @@ static int32_t test_pmic_leo_pmicA_misc_testApp(void)
     pmicConfigData.commMode            = PMIC_INTF_DUAL_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigData.slaveAddr           = LEO_PMICA_SLAVE_ADDR;
+    pmicConfigData.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
-    pmicConfigData.qaSlaveAddr         = LEO_PMICA_WDG_SLAVE_ADDR;
+    pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
@@ -945,10 +992,10 @@ static int32_t test_pmic_leo_pmicB_misc_testApp(void)
     pmicConfigData.commMode            = PMIC_INTF_SINGLE_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigData.slaveAddr           = LEO_PMICB_SLAVE_ADDR;
+    pmicConfigData.slaveAddr           = J721E_LEO_PMICB_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
-    pmicConfigData.qaSlaveAddr         = LEO_PMICB_WDG_SLAVE_ADDR;
+    pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICB_WDG_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
@@ -983,10 +1030,10 @@ static int32_t test_pmic_hera_misc_testApp(void)
     pmicConfigData.commMode            = PMIC_INTF_SINGLE_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigData.slaveAddr           = HERA_PMIC_SLAVE_ADDR;
+    pmicConfigData.slaveAddr           = J7VCL_HERA_PMIC_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
-    pmicConfigData.qaSlaveAddr         = HERA_PMIC_WDG_SLAVE_ADDR;
+    pmicConfigData.qaSlaveAddr         = J7VCL_HERA_PMIC_WDG_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
@@ -1021,10 +1068,10 @@ static int32_t test_pmic_misc_manual_testApp(void)
     pmicConfigData.commMode            = PMIC_INTF_DUAL_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigData.slaveAddr           = LEO_PMICA_SLAVE_ADDR;
+    pmicConfigData.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
-    pmicConfigData.qaSlaveAddr         = LEO_PMICA_WDG_SLAVE_ADDR;
+    pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
@@ -1040,6 +1087,34 @@ static int32_t test_pmic_misc_manual_testApp(void)
     pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
 
     status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
+    return status;
+}
+
+static int32_t setup_pmic_interrupt()
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+#ifdef SOC_J721E
+
+    pmic_device_info = J721E_LEO_PMICA_DEVICE;
+    status = test_pmic_leo_pmicA_misc_testApp();
+   /* Deinit pmic handle */
+    if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+    {
+        test_pmic_appDeInit(pPmicCoreHandle);
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        pmic_device_info = J721E_LEO_PMICB_DEVICE;
+        status = test_pmic_leo_pmicB_misc_testApp();
+       /* Deinit pmic handle */
+        if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+        {
+            test_pmic_appDeInit(pPmicCoreHandle);
+        }
+    }
+#endif
     return status;
 }
 
@@ -1084,78 +1159,82 @@ static void test_pmic_misc_testapp_runner(void)
         switch(num)
         {
             case 0U:
-                /* MISC Unity Test App wrapper Function for LEO PMIC-A */
-                if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_misc_testApp())
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
                 {
+                    /* MISC Unity Test App wrapper Function for LEO PMIC-A */
+                    test_pmic_leo_pmicA_misc_testApp();
                    /* Run MISC test cases for Leo PMIC-A */
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
                     test_pmic_run_testcases();
-                }
-                /* Deinit pmic handle */
-                if(pPmicCoreHandle != NULL)
-                {
-                   test_pmic_appDeInit(pPmicCoreHandle);
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                       test_pmic_appDeInit(pPmicCoreHandle);
+                    }
                 }
                 break;
             case 1U:
-                /* MISC Unity Test App wrapper Function for LEO PMIC-B */
-                if(PMIC_ST_SUCCESS == test_pmic_leo_pmicB_misc_testApp())
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
                 {
+                    /* MISC Unity Test App wrapper Function for LEO PMIC-B */
+                    test_pmic_leo_pmicB_misc_testApp();
                     pmic_device_info = J721E_LEO_PMICB_DEVICE;
-                   /* Run MISC test cases for Leo PMIC-B */
-                   test_pmic_run_testcases();
-                }
-
-                /* Deinit pmic handle */
-                if(pPmicCoreHandle != NULL)
-                {
-                   test_pmic_appDeInit(pPmicCoreHandle);
+                    /* Run MISC test cases for Leo PMIC-B */
+                    test_pmic_run_testcases();
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                       test_pmic_appDeInit(pPmicCoreHandle);
+                    }
                 }
                break;
            case 2U:
-               /* MISC Unity Test App wrapper Function for HERA PMIC */
-               if(PMIC_ST_SUCCESS == test_pmic_hera_misc_testApp())
-               {
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+                {
+                   /* MISC Unity Test App wrapper Function for HERA PMIC */
+                   test_pmic_hera_misc_testApp();
                    /* Run misc test cases for Hera PMIC */
                    test_pmic_run_testcases();
-               }
-               /* Deinit pmic handle */
-               if(pPmicCoreHandle != NULL)
-               {
-                   test_pmic_appDeInit(pPmicCoreHandle);
-               }
+                   /* Deinit pmic handle */
+                   if(pPmicCoreHandle != NULL)
+                   {
+                       test_pmic_appDeInit(pPmicCoreHandle);
+                   }
+                }
                break;
            case 3U:
-               /* MISC Unity Test App wrapper Function */
-               if(PMIC_ST_SUCCESS == test_pmic_misc_manual_testApp())
-               {
-                   /* Run MISC test cases for Leo PMIC-A */
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+                {
+                    /* Run MISC test cases for Leo PMIC-A */
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
+                   /* MISC Unity Test App wrapper Function */
+                    test_pmic_misc_manual_testApp();
                    /* Run misc manual test cases */
                    test_pmic_run_testcases_recoverycnt();
-               }
-               /* Deinit pmic handle */
-               if(pPmicCoreHandle != NULL)
-               {
-                   test_pmic_appDeInit(pPmicCoreHandle);
-               }
+                   /* Deinit pmic handle */
+                   if(pPmicCoreHandle != NULL)
+                   {
+                       test_pmic_appDeInit(pPmicCoreHandle);
+                   }
+                }
                break;
            case 4U:
-               /* Display FSD interrupt */
-               startup_type = PMIC_ENABLE_STARTUP_TYPE;
-               /* MISC Unity Test App wrapper Function */
-               if(PMIC_ST_SUCCESS == test_pmic_misc_manual_testApp())
-               {
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+                {
                    /* Run MISC test cases for Leo PMIC-A */
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
+                   /* Display FSD interrupt */
+                   startup_type = PMIC_ENABLE_STARTUP_TYPE;
+                   /* MISC Unity Test App wrapper Function */
+                   test_pmic_misc_manual_testApp();
                    /* Run misc manual test cases */
                    test_pmic_run_testcases_EnableInterrupt();
-               }
-               /* Deinit pmic handle */
-               if(pPmicCoreHandle != NULL)
-               {
-                   test_pmic_appDeInit(pPmicCoreHandle);
-               }
+                   /* Deinit pmic handle */
+                   if(pPmicCoreHandle != NULL)
+                   {
+                       test_pmic_appDeInit(pPmicCoreHandle);
+                   }
+                }
                break;
            case 5U:
                pmic_log(" \r\n Quit from application\n");

@@ -43,9 +43,9 @@
 /* Pointer to Pmic Core Handle */
 Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
 
-extern volatile uint32_t pmic_intr_triggered;
-extern Pmic_CoreHandle_t *pPmicCoreHandleISR;
-extern volatile uint8_t irqNumToClr;
+static uint8_t pmic_device_info = 0U;
+
+volatile uint32_t pmic_intr_triggered;
 
 /*!
  * \brief   PMIC RTC Test Cases
@@ -322,11 +322,11 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
     },
     {
         7358,
-        "Pmic_fsmDeviceOffRequestCfg/Pmic_fsmEnableI2cTrigger : RTC Wakeup using Timer Interrupt'"
+        "Pmic_fsmSetMissionState : RTC Wakeup using Timer Interrupt using LP Standby State"
     },
     {
         7359,
-        "Pmic_fsmDeviceOffRequestCfg/Pmic_fsmEnableI2cTrigger :  RTC Wakeup using Alarm Interrupt'"
+        "Pmic_fsmSetMissionState :  RTC Wakeup using Alarm Interrupt using LP Standby State"
     },
     {
         7888,
@@ -383,6 +383,14 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
     {
         7871,
         "Pmic_rtcGetFreqComp : Negative test for Test RTC for get RTC frequency compensation for HERA"
+    },
+    {
+        8015,
+        "Pmic_fsmSetMissionState : RTC Wakeup using Timer Interrupt using Standby State"
+    },
+    {
+        8016,
+        "Pmic_fsmSetMissionState :  RTC Wakeup using Alarm Interrupt using Standby State"
     },
 };
 
@@ -1644,6 +1652,10 @@ static void test_pmic_rtc_testTimerIntr(void)
     status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_rd, &dateCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
+    /* To clear the interrupts*/
+    status = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
     status = Pmic_rtcGetTimerPeriod(pHandle, &timerPeriod);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -1656,6 +1668,9 @@ static void test_pmic_rtc_testTimerIntr(void)
 
     while(timeout--)
     {
+        /* Delay added to avoid timeout */
+        Osal_delay(1000);
+
         status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
         if((PMIC_ST_SUCCESS == status) &&
            ((errStat.intStatus[PMIC_TPS6594X_RTC_TIMER_INT/32U] &
@@ -1688,6 +1703,13 @@ static void test_pmic_rtc_testTimerIntr(void)
         status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
     }
+
+    if(0 > timeout)
+    {
+        status = PMIC_ST_ERR_FAIL;
+    }
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     status = Pmic_rtcSetTimerPeriod(pHandle, timerPeriod);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -1723,6 +1745,10 @@ static void test_pmic_rtc_testAlarmIntr(void)
     status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_rd, &dateCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
+    /* To clear the interrupts*/
+    status = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
     timeCfg_rd.seconds = timeCfg_rd.seconds + 3U;
     status   = Pmic_rtcSetAlarmInfo(pHandle, timeCfg_rd, dateCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -1735,6 +1761,9 @@ static void test_pmic_rtc_testAlarmIntr(void)
 
     while(timeout--)
     {
+        /* Delay added to avoid timeout */
+        Osal_delay(1000);
+
         status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
         if((PMIC_ST_SUCCESS == status) &&
            ((errStat.intStatus[PMIC_TPS6594X_RTC_ALARM_INT/32U] &
@@ -1776,7 +1805,13 @@ static void test_pmic_rtc_testAlarmIntr(void)
         }
     }
 
+    if(0 > timeout)
+    {
+        status = PMIC_ST_ERR_FAIL;
+    }
+
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
 }
 
 /*!
@@ -1904,28 +1939,17 @@ static void test_pmic_rtc_getRtcStatus_PrmValTest_validParams(void)
 }
 
 /*!
- * \brief   RTC  wakeup using time interrupt
+ * \brief   RTC wakeup using time interrupt for LP Standby State
  */
-static void test_pmic_rtc_testWakeup_TimerIntr(void)
+static void test_pmic_rtc_testWakeup_TimerIntr_lpStandbyState(void)
 {
     int32_t            status       = PMIC_ST_SUCCESS;
-    int8_t             timeout      = 10U;
     Pmic_CoreHandle_t  *pHandle     = NULL;
-    Pmic_RtcTime_t     timeCfg_cr   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
-    Pmic_RtcDate_t     dateCfg_cr   = { 0x0F, 0U, 0U, 0U, 0U};
-    Pmic_RtcTime_t     timeCfg_rd   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
-    Pmic_RtcDate_t     dateCfg_rd   = { 0x0F, 0U, 0U, 0U, 0U};
-    Pmic_IrqStatus_t errStat        = {0U};
-    bool clearIRQ                   = false;
-    uint8_t  irqNum                 = 0U;
     uint8_t            timerPeriod  = 0U;
-
+    int8_t num                      = 0;
     Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
     Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
-    bool standByState = 0U;
-    uint32_t timerIntrdelayTime = 70000U;  // Timer Interrupt configured for 1 minute (60 Sec)
-    uint32_t delayTime = 80000U;  // Added delay for workaround
-    uint8_t i = 0U;
+    Pmic_IrqStatus_t errStat  = {0U};
 
     test_pmic_print_unity_testcase_info(7358,
                                         pmic_rtc_tests,
@@ -1933,195 +1957,239 @@ static void test_pmic_rtc_testWakeup_TimerIntr(void)
 
     pHandle                         = pPmicCoreHandle;
 
-    for(i=0; i< 2; i++)
+    pmic_log("\r\n Probe TP134 and TP133 and it should be High");
+    pmic_log("\r\n Enter 1 to continue");
+    UART_scanFmt("%d", &num);
+
+    status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcGetTimerPeriod(pHandle, &timerPeriod);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    /* To clear the interrupts*/
+    status = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
     {
-        status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-        status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_rd, &dateCfg_rd);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-        status = Pmic_rtcGetTimerPeriod(pHandle, &timerPeriod);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-        irqNum = 0;
-
-        if(i == 0)
+        int i = 0;
+        for(i=0;i<4; i++)
         {
-          standByState = PMIC_FSM_STANBY_STATE;
-        }
-        else
-        {
-          standByState = PMIC_FSM_LP_STANBY_STATE;
-        }
-        status = Pmic_rtcSetTimerPeriod(pHandle,
-                                               PMIC_RTC_MINUTE_INTR_PERIOD);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-        status = Pmic_rtcEnableTimerIntr(pHandle, PMIC_RTC_TIMER_INTR_ENABLE);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-        /*To avoid DAP reset*/
-        Osal_delay(delayTime);
-
-        status = Pmic_fsmDeviceOffRequestCfg(pHandle,
-                                             PMIC_FSM_I2C_TRIGGER0_TYPE,
-                                             standByState);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-        Osal_delay(timerIntrdelayTime);
-
-        while(timeout--)
-        {
-            status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-            if((PMIC_ST_SUCCESS == status) &&
-               ((errStat.intStatus[PMIC_TPS6594X_RTC_TIMER_INT/32U] &
-                 (1U << (PMIC_TPS6594X_RTC_TIMER_INT % 32U))) != 0U))
-            {
-                while(PMIC_TPS6594X_RTC_TIMER_INT != irqNum)
-                {
-                    status = Pmic_getNextErrorStatus(pHandle,
-                                                     &errStat,
-                                                     &irqNum);
-                }
-
-                if(PMIC_ST_SUCCESS == status)
-                {
-                    /* clear the interrupt */
-                    status = Pmic_irqClrErrStatus(pPmicCoreHandle,
-                                                  PMIC_TPS6594X_RTC_TIMER_INT);
-                }
-
-                if(PMIC_ST_SUCCESS == status)
-                {
-                    /* Disable the timer interrupt  */
-                    status = Pmic_rtcEnableTimerIntr(pHandle,
-                                                     PMIC_RTC_TIMER_INTR_DISABLE);
-
-                    break;
-                }
-            }
-
-            status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
-            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+            pmic_log("\r\nINT STAT[%d]: 0x%08x", i, errStat.intStatus[i]);
         }
     }
 
-    status = Pmic_rtcSetTimerPeriod(pHandle, timerPeriod);
+    pmic_log("\r\n Probe TP134 and TP133 and it should be low after 2 sec");
+
+    pmic_log("\r\n Probe TP134 and TP133 and it should be High after 60 sec");
+
+    pmic_log("\r\n After 60sec Rerun the application in UART Boot mode");
+
+    pmic_log("\r\n Also check for RTC Timer interrupt in Interrupt status register");
+
+
+    status = Pmic_rtcSetTimerPeriod(pHandle,
+                                           PMIC_RTC_MINUTE_INTR_PERIOD);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcEnableTimerIntr(pHandle, PMIC_RTC_TIMER_INTR_ENABLE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status =  Pmic_fsmSetMissionState(pPmicCoreHandle, PMIC_FSM_LP_STANBY_STATE);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
 }
 
 /*!
- * \brief   RTC wakeup using Alarm interrupt
+ * \brief   RTC wakeup using time interrupt for Standby State
  */
-static void test_pmic_rtc_testWakeup_AlarmIntr(void)
+static void test_pmic_rtc_testWakeup_TimerIntr_standbyState(void)
 {
     int32_t            status       = PMIC_ST_SUCCESS;
-    int8_t             timeout      = 10U;
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    uint8_t            timerPeriod  = 0U;
+    int8_t num                      = 0;
+    Pmic_IrqStatus_t errStat  = {0U};
+
+    Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
+    Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
+
+    test_pmic_print_unity_testcase_info(8015,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    pHandle                         = pPmicCoreHandle;
+    pmic_log("\r\n Probe TP134 and TP133 and it should be High");
+    pmic_log("\r\n Enter 1 to continue");
+    UART_scanFmt("%d", &num);
+
+    status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcGetTimerPeriod(pHandle, &timerPeriod);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    /* To clear the interrupts*/
+    status = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    {
+        int i = 0;
+        for(i=0;i<4; i++)
+        {
+            pmic_log("\r\nINT STAT[%d]: 0x%08x", i, errStat.intStatus[i]);
+        }
+    }
+
+    pmic_log("\r\n Probe TP134 and TP133 and it should be low after 2 sec");
+
+    pmic_log("\r\n Probe TP134 and TP133 and it should be High after 60 sec");
+
+    pmic_log("\r\n After 60sec Rerun the application in UART Boot mode");
+
+    pmic_log("\r\n Also check for RTC Timer interrupt in Interrupt status register");
+
+    status = Pmic_rtcSetTimerPeriod(pHandle,
+                                           PMIC_RTC_MINUTE_INTR_PERIOD);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcEnableTimerIntr(pHandle, PMIC_RTC_TIMER_INTR_ENABLE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status =  Pmic_fsmSetMissionState(pPmicCoreHandle, PMIC_FSM_STANBY_STATE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+}
+
+/*!
+ * \brief   RTC wakeup using Alarm interrupt for Lp Standby State
+ */
+static void test_pmic_rtc_testWakeup_AlarmIntr_lpStandbyState(void)
+{
+    int32_t            status       = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t  *pHandle     = NULL;
     pHandle                         = pPmicCoreHandle;
     Pmic_RtcTime_t     timeCfg_cr   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
     Pmic_RtcDate_t     dateCfg_cr   = { 0x0F, 0U, 0U, 0U, 0U};
     Pmic_RtcTime_t     timeCfg_rd   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
     Pmic_RtcDate_t     dateCfg_rd   = { 0x0F, 0U, 0U, 0U, 0U};
-    Pmic_IrqStatus_t errStat        = {0U};
-    bool clearIRQ                   = false;
-    uint8_t  irqNum                 = 0U;
     Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
     Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
-    bool standByState = 0U;
-    uint32_t alarmIntrdelayTime = 70000U;  // Alarm Interrupt configured for 1 minute (60 Sec)
-    uint32_t delayTimeBefore = 80000U;  // Added delay for workaround
-    uint8_t i = 0U;
+    int8_t num = 0;
+    Pmic_IrqStatus_t errStat  = {0U};
 
     test_pmic_print_unity_testcase_info(7359,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
-    for(i=0; i< 2; i++)
+    pmic_log("\r\n Probe TP134 and TP133 and it should be High");
+    pmic_log("\r\n Enter 1 to continue");
+    UART_scanFmt("%d", &num);
+
+    status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    /* Get the current time value */
+    status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_rd, &dateCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    /* To clear the interrupts*/
+    status = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
     {
-        status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-        /* Get the current time value */
-        status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_rd, &dateCfg_rd);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-        irqNum = 0;
-
-        if(i == 0)
+        int i = 0;
+        for(i=0;i<4; i++)
         {
-          standByState = PMIC_FSM_STANBY_STATE;
-        }
-        else
-        {
-          standByState = PMIC_FSM_LP_STANBY_STATE;
-        }
-
-        timeCfg_rd.minutes = timeCfg_rd.minutes + 1U;
-        status   = Pmic_rtcSetAlarmInfo(pHandle, timeCfg_rd, dateCfg_rd);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-        /* Set Alarm Interupt */
-        status = Pmic_rtcEnableAlarmIntr(pHandle, PMIC_RTC_ALARM_INTR_ENABLE);
-        /* Get the current time for timeout */
-        status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-        /*To avoid DAP reset for FSM I2C0_Trigger*/
-        Osal_delay(delayTimeBefore);
-
-        status = Pmic_fsmDeviceOffRequestCfg(pHandle,
-                                             PMIC_FSM_I2C_TRIGGER0_TYPE,
-                                             standByState);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-        Osal_delay(alarmIntrdelayTime);
-
-        while(timeout--)
-        {
-            status = Pmic_irqGetErrStatus(pHandle, &errStat, clearIRQ);
-            if((PMIC_ST_SUCCESS == status) &&
-               ((errStat.intStatus[PMIC_TPS6594X_RTC_ALARM_INT/32U] &
-                 (1U << (PMIC_TPS6594X_RTC_ALARM_INT % 32U))) != 0U))
-            {
-                while(PMIC_TPS6594X_RTC_ALARM_INT != irqNum)
-                {
-                    status = Pmic_getNextErrorStatus(pHandle,
-                                                     &errStat,
-                                                     &irqNum);
-                }
-
-                if(PMIC_ST_SUCCESS == status)
-                {
-                    /* clear the interrupt */
-                    status = Pmic_irqClrErrStatus(pPmicCoreHandle,
-                                                  PMIC_TPS6594X_RTC_ALARM_INT);
-                }
-
-                if(PMIC_ST_SUCCESS == status)
-                {
-                    /* Interrupt received */
-                    /* Disable the alarm interrupt */
-                    status = Pmic_rtcEnableAlarmIntr(pHandle,
-                                                     PMIC_RTC_ALARM_INTR_DISABLE);
-
-                    /* clear the interrupt */
-                    if(PMIC_ST_SUCCESS == status)
-                    {
-                        break;
-                    }
-                }
-            }
-
-            status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
-            if(PMIC_ST_SUCCESS != status)
-            {
-                break;
-            }
+            pmic_log("\r\nINT STAT[%d]: 0x%08x", i, errStat.intStatus[i]);
         }
     }
+
+    pmic_log("\r\n Probe TP134 and TP133 and it should be low after 2 sec");
+
+    pmic_log("\r\n Probe TP134 and TP133 and it should be High after 60 sec");
+
+    pmic_log("\r\n After 60sec Rerun the application in UART Boot mode");
+
+    pmic_log("\r\n Also check for RTC Alarm interrupt in Interrupt status register");
+
+
+    timeCfg_rd.minutes = timeCfg_rd.minutes + 1U;
+    status   = Pmic_rtcSetAlarmInfo(pHandle, timeCfg_rd, dateCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    /* Set Alarm Interupt */
+    status = Pmic_rtcEnableAlarmIntr(pHandle, PMIC_RTC_ALARM_INTR_ENABLE);
+    /* Get the current time for timeout */
+    status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status =  Pmic_fsmSetMissionState(pPmicCoreHandle, PMIC_FSM_STANBY_STATE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+}
+
+/*!
+ * \brief   RTC wakeup using Alarm interrupt for Standby State
+ */
+static void test_pmic_rtc_testWakeup_AlarmIntr_standbyState(void)
+{
+    int32_t            status       = PMIC_ST_SUCCESS;
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    pHandle                         = pPmicCoreHandle;
+    Pmic_RtcTime_t     timeCfg_cr   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
+    Pmic_RtcDate_t     dateCfg_cr   = { 0x0F, 0U, 0U, 0U, 0U};
+    Pmic_RtcTime_t     timeCfg_rd   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
+    Pmic_RtcDate_t     dateCfg_rd   = { 0x0F, 0U, 0U, 0U, 0U};
+    Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
+    Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
+    bool standByState = 0U;
+    int8_t num = 0;
+    Pmic_IrqStatus_t errStat  = {0U};
+
+    test_pmic_print_unity_testcase_info(8016,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    pmic_log("\r\n Probe TP134 and TP133 and it should be High");
+    pmic_log("\r\n Enter 1 to continue");
+    UART_scanFmt("%d", &num);
+
+    status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    /* Get the current time value */
+    status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_rd, &dateCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    /* To clear the interrupts*/
+    status = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    {
+        int i = 0;
+        for(i=0;i<4; i++)
+        {
+            pmic_log("\r\nINT STAT[%d]: 0x%08x", i, errStat.intStatus[i]);
+        }
+    }
+
+    pmic_log("\r\n Probe TP134 and TP133 and it should be low after 2 sec");
+
+    pmic_log("\r\n Probe TP134 and TP133 and it should be High after 60 sec");
+
+    pmic_log("\r\n After 60sec Rerun the application in UART Boot mode");
+
+    pmic_log("\r\n Also check for RTC Alarm interrupt in Interrupt status register");
+
+    timeCfg_rd.minutes = timeCfg_rd.minutes + 1U;
+    status   = Pmic_rtcSetAlarmInfo(pHandle, timeCfg_rd, dateCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    /* Set Alarm Interupt */
+    status = Pmic_rtcEnableAlarmIntr(pHandle, PMIC_RTC_ALARM_INTR_ENABLE);
+    /* Get the current time for timeout */
+    status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status =  Pmic_fsmSetMissionState(pPmicCoreHandle, standByState);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
 /*!
@@ -2132,12 +2200,8 @@ static void test_pmic_rtc_testTimerAsyncIntr(void)
     int32_t            status       = PMIC_ST_SUCCESS;
     int8_t             timeout      = 10U;
     Pmic_CoreHandle_t  *pHandle     = NULL;
-    Pmic_RtcTime_t     timeCfg_cr   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
-    Pmic_RtcDate_t     dateCfg_cr   = { 0x0F, 0U, 0U, 0U, 0U};
-    Pmic_RtcTime_t     timeCfg_rd   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
-    Pmic_RtcDate_t     dateCfg_rd   = { 0x0F, 0U, 0U, 0U, 0U};
     uint8_t            timerPeriod  = 0U;
-
+    Pmic_IrqStatus_t errStat        = {0U};
     Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
     Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
 
@@ -2150,13 +2214,12 @@ static void test_pmic_rtc_testTimerAsyncIntr(void)
 
     pHandle             = pPmicCoreHandle;
     pmic_intr_triggered = 0U;
-    pPmicCoreHandleISR  = pHandle;
-    irqNumToClr         = PMIC_TPS6594X_RTC_TIMER_INT;
 
     status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_rd, &dateCfg_rd);
+    /* To clear the interrupts*/
+    status = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     status = Pmic_rtcGetTimerPeriod(pHandle, &timerPeriod);
@@ -2186,13 +2249,15 @@ static void test_pmic_rtc_testTimerAsyncIntr(void)
         Osal_delay(1000);
     }
 
+    if(0 > timeout)
+    {
+        status = PMIC_ST_ERR_FAIL;
+    }
+
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     /* Disable the timer interrupt  */
     status = Pmic_rtcEnableTimerIntr(pHandle, PMIC_RTC_TIMER_INTR_DISABLE);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     status = Pmic_rtcSetTimerPeriod(pHandle, timerPeriod);
@@ -2211,12 +2276,11 @@ static void test_pmic_rtc_testAlarmAsyncIntr(void)
     int8_t             timeout      = 10U;
     Pmic_CoreHandle_t  *pHandle     = NULL;
     pHandle                         = pPmicCoreHandle;
-    Pmic_RtcTime_t     timeCfg_cr   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
-    Pmic_RtcDate_t     dateCfg_cr   = { 0x0F, 0U, 0U, 0U, 0U};
     Pmic_RtcTime_t     timeCfg_rd   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
     Pmic_RtcDate_t     dateCfg_rd   = { 0x0F, 0U, 0U, 0U, 0U};
     Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
     Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
+    Pmic_IrqStatus_t errStat        = {0U};
 
     test_pmic_print_unity_testcase_info(7889,
                                         pmic_rtc_tests,
@@ -2226,10 +2290,12 @@ static void test_pmic_rtc_testAlarmAsyncIntr(void)
     GPIO_enableInt(0);
 
     pmic_intr_triggered = 0U;
-    pPmicCoreHandleISR  = pHandle;
-    irqNumToClr         = PMIC_TPS6594X_RTC_ALARM_INT;
 
     status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    /* To clear the interrupts*/
+    status = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     /* Get the current time value */
@@ -2242,14 +2308,12 @@ static void test_pmic_rtc_testAlarmAsyncIntr(void)
 
     /* Set Alarm Interupt */
     status = Pmic_rtcEnableAlarmIntr(pHandle, PMIC_RTC_ALARM_INTR_ENABLE);
-    /* Get the current time for timeout */
-    status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     while(timeout--)
     {
         /* Wait for Interrupt */
-        if(pmic_intr_triggered != 1U)
+        if(pmic_intr_triggered != 2U)
         {
             status = PMIC_ST_ERR_FAIL;
         }
@@ -2263,13 +2327,15 @@ static void test_pmic_rtc_testAlarmAsyncIntr(void)
         Osal_delay(1000);
     }
 
+    if(0 > timeout)
+    {
+        status = PMIC_ST_ERR_FAIL;
+    }
+
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     /* Disable the timer interrupt  */
     status = Pmic_rtcEnableTimerIntr(pHandle, PMIC_RTC_TIMER_INTR_DISABLE);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     /* Disable GPIO interrupt on the specific gpio pin */
@@ -2280,7 +2346,7 @@ static void test_pmic_rtc_testAlarmAsyncIntr(void)
 /*!
  * \brief   Pmic_rtcEnable : Negative test for RTC state for HERA
  */
-static void test_Pmic_rtcEnable_hera_hera(void)
+static void test_Pmic_rtcEnable_hera(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -2289,7 +2355,7 @@ static void test_Pmic_rtcEnable_hera_hera(void)
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
 
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
     {
         TEST_IGNORE();
     }
@@ -2637,8 +2703,6 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_rtc_getRtcStatus_PrmValTest_handle);
     RUN_TEST(test_pmic_rtc_getRtcStatus_PrmValTest_rtcStatus);
     RUN_TEST(test_pmic_rtc_getRtcStatus_PrmValTest_validParams);
-    RUN_TEST(test_pmic_rtc_testWakeup_TimerIntr);
-    RUN_TEST(test_pmic_rtc_testWakeup_AlarmIntr);
     RUN_TEST(test_pmic_rtc_testTimerAsyncIntr);
     RUN_TEST(test_pmic_rtc_testAlarmAsyncIntr);
 
@@ -2654,7 +2718,7 @@ static void test_pmic_hera_run_testcases(void)
     pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
     UNITY_BEGIN();
 
-    RUN_TEST(test_Pmic_rtcEnable_hera_hera);
+    RUN_TEST(test_Pmic_rtcEnable_hera);
     RUN_TEST(test_Pmic_rtcEnableAlarmIntr_hera);
     RUN_TEST(test_Pmic_rtcEnableTimerIntr_hera);
     RUN_TEST(test_pmic_rtc_testSetFreqComp_hera);
@@ -2685,10 +2749,10 @@ static int32_t test_pmic_leo_pmicA_rtc_testApp(void)
     pmicConfigData.commMode            = PMIC_INTF_DUAL_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigData.slaveAddr           = LEO_PMICA_SLAVE_ADDR;
+    pmicConfigData.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
-    pmicConfigData.qaSlaveAddr         = LEO_PMICA_WDG_SLAVE_ADDR;
+    pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
@@ -2753,10 +2817,10 @@ static int32_t test_pmic_hera_rtc_testApp(void)
     pmicConfigData.commMode           = PMIC_INTF_SINGLE_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigData.slaveAddr          = HERA_PMIC_SLAVE_ADDR;
+    pmicConfigData.slaveAddr          = J7VCL_HERA_PMIC_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
-    pmicConfigData.qaSlaveAddr        = HERA_PMIC_WDG_SLAVE_ADDR;
+    pmicConfigData.qaSlaveAddr        = J7VCL_HERA_PMIC_WDG_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.pFnPmicCommIoRead   = test_pmic_regRead;
@@ -2776,6 +2840,43 @@ static int32_t test_pmic_hera_rtc_testApp(void)
 
 }
 
+/*!
+ * \brief   RTC Manual Test App wrapper Function for LEO PMIC-A
+ */
+static int32_t test_pmic_rtc_manual_testApp(void)
+{
+    int32_t status                = PMIC_ST_SUCCESS;
+    Pmic_CoreCfg_t pmicConfigData = {0U};
+
+    /* Fill parameters to pmicConfigData */
+    pmicConfigData.pmicDeviceType      = PMIC_DEV_LEO_TPS6594X;
+    pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
+
+    pmicConfigData.commMode            = PMIC_INTF_DUAL_I2C;
+    pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
+
+    pmicConfigData.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
+    pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
+
+    pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
+    pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoWrite   = test_pmic_regWrite;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStart  = test_pmic_criticalSectionStartFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStop   = test_pmic_criticalSectionStopFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
+
+    status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
+    return status;
+}
+
 #ifdef SOC_J721E
 /*!
  * \brief   RTC Unity Test App wrapper Function for LEO PMIC-B
@@ -2792,10 +2893,10 @@ static int32_t test_pmic_leo_pmicB_rtc_testApp(void)
     pmicConfigData.commMode           = PMIC_INTF_SINGLE_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigData.slaveAddr          = LEO_PMICB_SLAVE_ADDR;
+    pmicConfigData.slaveAddr          = J721E_LEO_PMICB_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
-    pmicConfigData.qaSlaveAddr        = LEO_PMICB_WDG_SLAVE_ADDR;
+    pmicConfigData.qaSlaveAddr        = J721E_LEO_PMICB_WDG_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.pFnPmicCommIoRead   = test_pmic_regRead;
@@ -2822,6 +2923,7 @@ static int32_t setup_pmic_interrupt()
 
 #ifdef SOC_J721E
 
+    pmic_device_info = J721E_LEO_PMICA_DEVICE;
     status = test_pmic_leo_pmicA_rtc_testApp();
    /* Deinit pmic handle */
     if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
@@ -2831,15 +2933,11 @@ static int32_t setup_pmic_interrupt()
 
     if(PMIC_ST_SUCCESS == status)
     {
-        Pmic_IrqStatus_t intstat;
-        Pmic_irqGetErrStatus(pPmicCoreHandle, &intstat,1);
-
+        pmic_device_info = J721E_LEO_PMICB_DEVICE;
         status = test_pmic_leo_pmicB_rtc_testApp();
        /* Deinit pmic handle */
         if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
         {
-            Pmic_IrqStatus_t intstat;
-            Pmic_irqGetErrStatus(pPmicCoreHandle, &intstat,1);
             test_pmic_appDeInit(pPmicCoreHandle);
         }
     }
@@ -2856,10 +2954,68 @@ static const char pmicTestAppMenu[] =
     " \r\n 1: Pmic Leo device(PMIC A on J721E EVM Using SPI Stub Functions)"
     " \r\n 2: Pmic Leo device(PMIC B on J721E EVM)"
     " \r\n 3: Pmic HERA device"
+    " \r\n 4: Pmic Leo device(PMIC A on J721E EVM Manual Testcase for RTC WKUP)"
+    " \r\n 5: quit"
+    " \r\n"
+    " \r\n Enter option: "
+};
+
+static const char pmicTestAppManualTestMenu[] =
+{
+    " \r\n ================================================================="
+    " \r\n Manual Testcase Menu:"
+    " \r\n ================================================================="
+    " \r\n 0: Pmic Leo device(PMIC A on J721E EVM for RTC WKUP using Timer Interrupt from LP Standby State)"
+    " \r\n 1: Pmic Leo device(PMIC A on J721E EVM for RTC WKUP using Timer Interrupt from Standby State)"
+    " \r\n 2: Pmic Leo device(PMIC A on J721E EVM for RTC WKUP using Alarm Interrupt from LP Standby State)"
+    " \r\n 3: Pmic Leo device(PMIC A on J721E EVM for RTC WKUP using Alarm Interrupt from Standby State)"
     " \r\n 4: quit"
     " \r\n"
     " \r\n Enter option: "
 };
+
+/*!
+ * \brief   Run RTC manual test cases
+ */
+static void test_pmic_run_testcases_manual(void)
+{
+    int8_t menuOption = -1;
+
+    while(1U)
+    {
+        pmic_log("%s", pmicTestAppManualTestMenu);
+        if(UART_scanFmt("%d", &menuOption) != 0U)
+        {
+            pmic_log("Read from UART Console failed\n");
+            return;
+        }
+        
+        if(menuOption == 4)
+        {
+            pmic_log(" \r\n Quit \n");
+            break;
+        }   
+
+        switch(menuOption)
+        {
+            case 0U:
+                RUN_TEST(test_pmic_rtc_testWakeup_TimerIntr_lpStandbyState);
+               break;
+            case 1U:
+                RUN_TEST(test_pmic_rtc_testWakeup_TimerIntr_standbyState);
+               break;
+            case 2U:
+                RUN_TEST(test_pmic_rtc_testWakeup_AlarmIntr_lpStandbyState);
+               break;
+            case 3U:
+                RUN_TEST(test_pmic_rtc_testWakeup_AlarmIntr_standbyState);
+               break;
+            default:
+               pmic_log(" \r\n Invalid option... Try Again!!!\n");
+               break;
+        }
+    }
+}
 
 /*!
  * \brief   Function to register RTC Unity Test App wrapper to Unity framework
@@ -2923,11 +3079,9 @@ static void test_pmic_rtc_testapp_runner(void)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
                 {
                    /* RTC Unity Test App wrapper Function for HERA */
-                   if(PMIC_ST_SUCCESS == test_pmic_hera_rtc_testApp())
-                   {
-                       /* Run rtc test cases for Leo PMIC-A */
-                       test_pmic_hera_run_testcases();
-                   }
+                   test_pmic_hera_rtc_testApp();
+                   /* Run rtc test cases for Leo PMIC-A */
+                   test_pmic_hera_run_testcases();
                    /* Deinit pmic handle */
                    if(pPmicCoreHandle != NULL)
                    {
@@ -2936,6 +3090,21 @@ static void test_pmic_rtc_testapp_runner(void)
                 }
                break;
            case 4U:
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+                {
+                    pmic_device_info = J721E_LEO_PMICA_DEVICE;
+                    /* RTC Manual Test App wrapper Function for LEO PMIC-A */
+                    test_pmic_rtc_manual_testApp();
+                    /* Run Rtc manual test cases */
+                    test_pmic_run_testcases_manual();
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                       test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+               break;
+           case 5U:
                pmic_log(" \r\n Quit from application\n");
                return;
            default:
@@ -2945,6 +3114,45 @@ static void test_pmic_rtc_testapp_runner(void)
     }
 }
 #endif
+
+/*!
+ * \brief   PMIC Application Callback Function
+ */
+void AppPmicCallbackFxn(void)
+{
+    int32_t status           = PMIC_ST_SUCCESS;
+    Pmic_IrqStatus_t errStat = {0U};
+    uint8_t irqNum           = 0U;
+
+    status = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, false);
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        status = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                         &errStat,
+                                         &irqNum);
+        if(PMIC_ST_SUCCESS == status)
+        {
+            switch(irqNum)
+            {
+                case PMIC_TPS6594X_RTC_TIMER_INT:
+                    pmic_intr_triggered = 1U;
+                    /* clear the interrupt */
+                    status = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                              PMIC_TPS6594X_RTC_TIMER_INT);
+                   break;
+                case PMIC_TPS6594X_RTC_ALARM_INT:
+                    pmic_intr_triggered = 2U;
+                    /* clear the interrupt */
+                    status = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                              PMIC_TPS6594X_RTC_ALARM_INT);
+                   break;
+                default:
+                   break;
+            }
+        }
+    }
+}
 
 /*!
  * \brief   TI RTOS specific RTC TEST APP main Function
@@ -2959,7 +3167,7 @@ int main()
     /* GPIO Configuration
      * This API is required for Asynchronous Interrupts only
      */
-    App_initGPIO();
+    App_initGPIO(AppPmicCallbackFxn);
 
     pmic_log("RTC Unity Test Application(%s %s)\n", __TIME__, __DATE__);
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
