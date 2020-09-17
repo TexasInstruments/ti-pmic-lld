@@ -191,34 +191,6 @@ int32_t Pmic_fsmSetNsleepSignalMask(Pmic_CoreHandle_t  *pPmicCoreHandle,
                                     bool                maskEnable);
 
 /*!
- * \brief  API to Enable/Disable LPM.
- *         This function is used for enable/disable Low power mode control
- *         for PMIC
- *
- * \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
- * \param   lpmEnable        [IN]  PMIC LPM Control
- *                                 Valid values: \ref Pmic_Fsm_Lpm_Cntrl
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
-int32_t Pmic_fsmSetLpmControl(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                              bool                lpmEnable);
-
-/*!
- * \brief  API to get Enable/Disable status for LPM.
- *         This function is used get enable/disable status of Low power mode
- *         control for PMIC
- *
- * \param   pPmicCoreHandle  [IN]   PMIC Interface Handle
- * \param   pLpmEnable       [OUT]  PMIC LPM Control
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
-int32_t Pmic_fsmGetLpmControl(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                              bool               *pLpmEnable);
-/*!
  * \brief  API to initiate Runtime BIST.
  *         This function initiates a request to exercise runtime BIST on the
  *         device

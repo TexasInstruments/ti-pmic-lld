@@ -71,8 +71,7 @@ static Pmic_powerRsrcRegCfg_t lp8764x_pwrRsrcRegCfg[] =
         PMIC_RAIL_SEL_1_REGADDR,
         PMIC_RAIL_SEL_1_BUCK1_GRP_SEL_SHIFT,
         PMIC_INVALID_REGADDR,
-        PMIC_INVALID_BIT_SHIFT,
-        PMIC_LP8764X_BUCK1_FREQ_SEL_SHIFT
+        PMIC_INVALID_BIT_SHIFT
     },
     {
         PMIC_BUCK2_CTRL_REGADDR,
@@ -85,8 +84,7 @@ static Pmic_powerRsrcRegCfg_t lp8764x_pwrRsrcRegCfg[] =
         PMIC_RAIL_SEL_1_REGADDR,
         PMIC_RAIL_SEL_1_BUCK2_GRP_SEL_SHIFT,
         PMIC_INVALID_REGADDR,
-        PMIC_INVALID_BIT_SHIFT,
-        PMIC_LP8764X_BUCK2_FREQ_SEL_SHIFT
+        PMIC_INVALID_BIT_SHIFT
     },
     {
         PMIC_BUCK3_CTRL_REGADDR,
@@ -99,8 +97,7 @@ static Pmic_powerRsrcRegCfg_t lp8764x_pwrRsrcRegCfg[] =
         PMIC_RAIL_SEL_1_REGADDR,
         PMIC_RAIL_SEL_1_BUCK3_GRP_SEL_SHIFT,
         PMIC_INVALID_REGADDR,
-        PMIC_INVALID_BIT_SHIFT,
-        PMIC_LP8764X_BUCK3_FREQ_SEL_SHIFT
+        PMIC_INVALID_BIT_SHIFT
     },
     {
         PMIC_BUCK4_CTRL_REGADDR,
@@ -113,8 +110,7 @@ static Pmic_powerRsrcRegCfg_t lp8764x_pwrRsrcRegCfg[] =
         PMIC_RAIL_SEL_1_REGADDR,
         PMIC_RAIL_SEL_1_BUCK4_GRP_SEL_SHIFT,
         PMIC_INVALID_REGADDR,
-        PMIC_INVALID_BIT_SHIFT,
-        PMIC_LP8764X_BUCK1_FREQ_SEL_SHIFT
+        PMIC_INVALID_BIT_SHIFT
     },
     {
         PMIC_VCCA_VMON_CTRL_REGADDR,
@@ -127,7 +123,6 @@ static Pmic_powerRsrcRegCfg_t lp8764x_pwrRsrcRegCfg[] =
         PMIC_RAIL_SEL_3_REGADDR,
         PMIC_RAIL_SEL_3_VMON1_GRP_SEL_SHIFT,
         PMIC_INVALID_REGADDR,
-        PMIC_INVALID_BIT_SHIFT,
         PMIC_INVALID_BIT_SHIFT
     },
     {
@@ -141,7 +136,6 @@ static Pmic_powerRsrcRegCfg_t lp8764x_pwrRsrcRegCfg[] =
         PMIC_RAIL_SEL_3_REGADDR,
         PMIC_RAIL_SEL_3_VMON2_GRP_SEL_SHIFT,
         PMIC_INVALID_REGADDR,
-        PMIC_INVALID_BIT_SHIFT,
         PMIC_INVALID_BIT_SHIFT
     }
 };

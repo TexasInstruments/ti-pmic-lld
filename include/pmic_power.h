@@ -109,8 +109,6 @@ extern "C" {
 /** \brief Valid only for VMON1/VMON2 */
 #define PMIC_CFG_VMON_RANGE_VALID                         (10U)
 /** \brief Valid only for BUCK regulator */
-#define PMIC_CFG_REGULATOR_BUCK_FREQ_SEL_VALID            (11U)
-/** \brief Valid only for BUCK regulator */
 #define PMIC_CFG_REGULATOR_BUCK_ILIM_VALID                (12U)
 /** \brief Valid only for VMON1/VMON2/BUCK */
 #define PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID      (13U)
@@ -158,8 +156,6 @@ extern "C" {
 #define PMIC_CFG_VCCA_PWR_GOOD_LVL_VALID_SHIFT             \
                          (1U << PMIC_CFG_VCCA_PWR_GOOD_LVL_VALID)
 #define PMIC_CFG_VMON_RANGE_VALID_SHIFT      (1U << PMIC_CFG_VMON_RANGE_VALID)
-#define PMIC_CFG_REGULATOR_BUCK_FREQ_SEL_VALID_SHIFT     \
-                         (1U << PMIC_CFG_REGULATOR_BUCK_FREQ_SEL_VALID)
 #define PMIC_CFG_REGULATOR_BUCK_ILIM_VALID_SHIFT         \
                          (1U << PMIC_CFG_REGULATOR_BUCK_ILIM_VALID)
 #define PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID_SHIFT    \
@@ -472,16 +468,6 @@ extern "C" {
  *                               \ref Pmic_LP8764x_Power_Vmon_Range.
  *                               Valid only when
  *                               PMIC_CFG_VMON_RANGE_VALID bit is set
- *  \param   buckFreqSel         Select the BUCK switching frequency.
- *                               Note: Should not be changed while BUCK is in
- *                               operation.
- *                               Valid values for TPS6594x Leo Device
- *                               \ref Pmic_TPS6594x_Buck_Freq_Sel.
- *                               Valid values for LP8764x HERA Device
- *                               \ref Pmic_LP8764x_Buck_Freq_Sel.
- *                               Valid only when
- *                               PMIC_CFG_REGULATOR_BUCK_FREQ_SEL_VALID bit
- *                               is set
  *  \param   buckCurrentLimit    Switch peak current limit for BUCK regulator.
  *                               Valid values for TPS6594x Leo Device
  *                               \ref Pmic_TPS6594x_Buck_Current_Limit.
@@ -555,7 +541,6 @@ typedef struct Pmic_PowerResourceCfg_s
     bool     ldoBypassModeEn;
     bool     vccaPwrGudLvl;
     bool     vmonRange;
-    uint8_t  buckFreqSel;
     uint8_t  buckCurrentLimit;
     uint8_t  buckVmonSlewRate;
     uint8_t  ldoPullDownSel;
@@ -825,7 +810,7 @@ typedef struct Pmic_PowerThermalStat_s
  *          has to configure the below defined structure members of
  *          Pmic_PowerResourceCfg_t:
  *          rvCheckEn, buckPullDownEn, vmonEn, buckVoutRegSel, buckFpwmMode,
- *          buckFpwmMpMode, buckFreqSel, regulatorEn, buckCurrentLimit,
+ *          buckFpwmMpMode, regulatorEn, buckCurrentLimit,
  *          buckVmonSlewRate, voltage_mV, pgUvThresholdLvl,
  *          pgOvThresholdLvl, railGrpSel
  *
@@ -877,7 +862,7 @@ int32_t Pmic_powerSetPwrResourceCfg(
  *          which is stored in the below defined structure members of
  *          Pmic_PowerResourceCfg_t:
  *          rvCheckEn, buckPullDownEn, vmonEn, buckVoutRegSel, buckFpwmMode,
- *          buckFpwmMpMode, buckFreqSel, regulatorEn, buckCurrentLimit,
+ *          buckFpwmMpMode, regulatorEn, buckCurrentLimit,
  *          buckVmonSlewRate, voltage_mV, pgUvThresholdLvl,
  *          pgOvThresholdLvl, railGrpSel
  *

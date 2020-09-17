@@ -546,7 +546,7 @@ static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t    *pPmicCoreHandle,
                 Pmic_setBitField(&regData,
                                  PMIC_GPIOX_CONF_GPIO_PU_SEL_SHIFT,
                                  PMIC_GPIOX_CONF_GPIO_PU_SEL_MASK,
-                                 PMIC_GPIO_PD_SELECT);
+                                 PMIC_GPIO_PU_SELECT);
             }
             else
             {
@@ -554,7 +554,7 @@ static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t    *pPmicCoreHandle,
                 Pmic_setBitField(&regData,
                                  PMIC_GPIOX_CONF_GPIO_PU_SEL_SHIFT,
                                  PMIC_GPIOX_CONF_GPIO_PU_SEL_MASK,
-                                 PMIC_GPIO_PU_SELECT);
+                                 PMIC_GPIO_PD_SELECT);
             }
         }
         status = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -1324,7 +1324,7 @@ int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
             if(Pmic_getBitField(regData,
                                 PMIC_GPIOX_CONF_GPIO_DIR_SHIFT,
                                 PMIC_GPIOX_CONF_GPIO_DIR_MASK) ==
-                                         PMIC_GPIO_OPEN_DRAIN_OUTPUT)
+                                                   PMIC_GPIO_OUTPUT)
             {
                 /* Setting the GPIO value */
                 status = Pmic_commIntf_recvByte(pPmicCoreHandle,

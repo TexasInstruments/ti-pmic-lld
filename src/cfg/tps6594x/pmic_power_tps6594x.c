@@ -58,7 +58,6 @@ static Pmic_powerRsrcRegCfg_t tps6594x_pwrRsrcRegCfg[] =
         PMIC_RAIL_SEL_3_REGADDR,
         PMIC_RAIL_SEL_3_VCCA_GRP_SEL_SHIFT,
         PMIC_INVALID_REGADDR,
-        PMIC_INVALID_BIT_SHIFT,
         PMIC_INVALID_BIT_SHIFT
     },
     {
@@ -72,8 +71,7 @@ static Pmic_powerRsrcRegCfg_t tps6594x_pwrRsrcRegCfg[] =
         PMIC_RAIL_SEL_1_REGADDR,
         PMIC_RAIL_SEL_1_BUCK1_GRP_SEL_SHIFT,
         PMIC_INVALID_REGADDR,
-        PMIC_INVALID_BIT_SHIFT,
-        PMIC_TPS6594X_BUCK1_FREQ_SEL_SHIFT
+        PMIC_INVALID_BIT_SHIFT
     },
     {
         PMIC_BUCK2_CTRL_REGADDR,
@@ -86,8 +84,7 @@ static Pmic_powerRsrcRegCfg_t tps6594x_pwrRsrcRegCfg[] =
         PMIC_STAT_BUCK1_2_REGADDR,
         PMIC_RAIL_SEL_1_BUCK2_GRP_SEL_SHIFT,
         PMIC_INVALID_REGADDR,
-        PMIC_INVALID_BIT_SHIFT,
-        PMIC_TPS6594X_BUCK2_FREQ_SEL_SHIFT
+        PMIC_INVALID_BIT_SHIFT
     },
     {
         PMIC_BUCK3_CTRL_REGADDR,
@@ -100,8 +97,7 @@ static Pmic_powerRsrcRegCfg_t tps6594x_pwrRsrcRegCfg[] =
         PMIC_RAIL_SEL_1_REGADDR,
         PMIC_RAIL_SEL_1_BUCK3_GRP_SEL_SHIFT,
         PMIC_INVALID_REGADDR,
-        PMIC_INVALID_BIT_SHIFT,
-        PMIC_TPS6594X_BUCK3_FREQ_SEL_SHIFT
+        PMIC_INVALID_BIT_SHIFT
     },
     {
         PMIC_BUCK4_CTRL_REGADDR,
@@ -114,8 +110,7 @@ static Pmic_powerRsrcRegCfg_t tps6594x_pwrRsrcRegCfg[] =
         PMIC_RAIL_SEL_1_REGADDR,
         PMIC_RAIL_SEL_1_BUCK4_GRP_SEL_SHIFT,
         PMIC_INVALID_REGADDR,
-        PMIC_INVALID_BIT_SHIFT,
-        PMIC_TPS6594X_BUCK4_FREQ_SEL_SHIFT
+        PMIC_INVALID_BIT_SHIFT
     },
     {
         PMIC_BUCK5_CTRL_REGADDR,
@@ -128,8 +123,7 @@ static Pmic_powerRsrcRegCfg_t tps6594x_pwrRsrcRegCfg[] =
         PMIC_RAIL_SEL_2_REGADDR,
         PMIC_RAIL_SEL_2_BUCK5_GRP_SEL_SHIFT,
         PMIC_INVALID_REGADDR,
-        PMIC_INVALID_BIT_SHIFT,
-        PMIC_TPS6594X_BUCK5_FREQ_SEL_SHIFT
+        PMIC_INVALID_BIT_SHIFT
     },
     {
         PMIC_LDO1_CTRL_REGADDR,
@@ -142,8 +136,7 @@ static Pmic_powerRsrcRegCfg_t tps6594x_pwrRsrcRegCfg[] =
         PMIC_RAIL_SEL_2_REGADDR,
         PMIC_RAIL_SEL_2_LDO1_GRP_SEL_SHIFT,
         PMIC_LDO_RV_TIMEOUT_REG_1_REGADDR,
-        PMIC_LDO_RV_TIMEOUT_REG_LDO1_3_RV_TIMEOUT_SHIFT,
-        PMIC_INVALID_BIT_SHIFT
+        PMIC_LDO_RV_TIMEOUT_REG_LDO1_3_RV_TIMEOUT_SHIFT
     },
     {
         PMIC_LDO2_CTRL_REGADDR,
@@ -156,8 +149,7 @@ static Pmic_powerRsrcRegCfg_t tps6594x_pwrRsrcRegCfg[] =
         PMIC_RAIL_SEL_2_REGADDR,
         PMIC_RAIL_SEL_2_LDO2_GRP_SEL_SHIFT,
         PMIC_LDO_RV_TIMEOUT_REG_1_REGADDR,
-        PMIC_LDO_RV_TIMEOUT_REG_LDO2_4_RV_TIMEOUT_SHIFT,
-        PMIC_INVALID_BIT_SHIFT
+        PMIC_LDO_RV_TIMEOUT_REG_LDO2_4_RV_TIMEOUT_SHIFT
     },
     {
         PMIC_LDO3_CTRL_REGADDR,
@@ -170,8 +162,7 @@ static Pmic_powerRsrcRegCfg_t tps6594x_pwrRsrcRegCfg[] =
         PMIC_RAIL_SEL_2_REGADDR,
         PMIC_RAIL_SEL_2_LDO3_GRP_SEL_SHIFT,
         PMIC_LDO_RV_TIMEOUT_REG_2_REGADDR,
-        PMIC_LDO_RV_TIMEOUT_REG_LDO1_3_RV_TIMEOUT_SHIFT,
-        PMIC_INVALID_BIT_SHIFT
+        PMIC_LDO_RV_TIMEOUT_REG_LDO1_3_RV_TIMEOUT_SHIFT
     },
     {
         PMIC_LDO4_CTRL_REGADDR,
@@ -184,8 +175,7 @@ static Pmic_powerRsrcRegCfg_t tps6594x_pwrRsrcRegCfg[] =
         PMIC_RAIL_SEL_3_REGADDR,
         PMIC_RAIL_SEL_3_LDO4_GRP_SEL_SHIFT,
         PMIC_LDO_RV_TIMEOUT_REG_2_REGADDR,
-        PMIC_LDO_RV_TIMEOUT_REG_LDO2_4_RV_TIMEOUT_SHIFT,
-        PMIC_INVALID_BIT_SHIFT
+        PMIC_LDO_RV_TIMEOUT_REG_LDO2_4_RV_TIMEOUT_SHIFT
     },
 
 };
@@ -597,7 +587,7 @@ int32_t Pmic_powerSetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_powerLdoRtcEnable(pPmicCoreHandle, ldortcEnable);
+        pmicStatus = Pmic_powerLdoRtcEnable(pPmicCoreHandle, ldortcEnable);
     }
 
     return pmicStatus;

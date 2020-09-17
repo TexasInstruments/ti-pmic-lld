@@ -220,20 +220,6 @@ extern "C" {
 /* @} */
 
 /**
- *  \anchor Pmic_LP8764x_Buck_Freq_Sel
- *  \name   PMIC Select switching frequency for BUCK
- *
- *  @{
- */
-/** \brief Used to select frequency as 2.2 Mhz */
-#define PMIC_LP8764X_BUCK_FREQ_SEL_2M2                (0x0U)
-/** \brief Used to select frequency as 4.4 Mhz */
-#define PMIC_LP8764X_BUCK_FREQ_SEL_4M4                (0x1U)
-/** \brief Used to select frequency as 8.8 Mhz */
-#define PMIC_LP8764X_BUCK_FREQ_SEL_8M8                (0x2U)
-/* @} */
-
-/**
  *  \anchor Pmic_LP8764x_Buck_Current_Limit
  *  \name   PMIC Switch Peak Current limit for BUCK Regulator
  *

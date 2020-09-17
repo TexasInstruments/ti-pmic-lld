@@ -291,62 +291,6 @@ static int32_t Pmic_setState(Pmic_CoreHandle_t  *pPmicCoreHandle,
 }
 
 /*!
- * \brief   This function is used to set the defined LPM state.
- */
-static int32_t Pmic_setControl(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                               bool                lpmEnable)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint8_t regData  = 0U;
-
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_FSM_MISC_CTRL_REGADDR,
-                                        &regData);
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_setBitField(&regData,
-                         PMIC_FSM_MISC_CTRL_LPM_EN_SHIFT,
-                         PMIC_FSM_MISC_CTRL_LPM_EN_MASK,
-                         lpmEnable);
-        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                            PMIC_FSM_MISC_CTRL_REGADDR,
-                                            regData);
-    }
-
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    return pmicStatus;
-}
-
-/*!
- * \brief   This function is used to set the LPM control value.
- */
-static int32_t Pmic_getControl(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                               bool               *pLpmEnable)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint8_t regData  = 0U;
-
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_FSM_MISC_CTRL_REGADDR,
-                                        &regData);
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        *pLpmEnable = Pmic_getBitField(regData,
-                                       PMIC_FSM_MISC_CTRL_LPM_EN_SHIFT,
-                                       PMIC_FSM_MISC_CTRL_LPM_EN_MASK);
-    }
-
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    return pmicStatus;
-}
-
-/*!
  * \brief  API to initiate OFF Request FSM transition.
  *         This function initiate OFF Request FSM transition from any other
  *         mission state to the STANDBY state or the LP_STANDBY state
@@ -656,70 +600,6 @@ int32_t Pmic_fsmSetNsleepSignalMask(Pmic_CoreHandle_t  *pPmicCoreHandle,
         }
 
         Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
-
-    return pmicStatus;
-}
-
-/*!
- * \brief  API to set Enable/Disable LPM.
- *         This function is used for enable/disable Low power mode control
- *         for PMIC
- *
- * \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
- * \param   lpmEnable        [IN]  PMIC LPM Control
- *                                 Valid values: \ref Pmic_Fsm_Lpm_Cntrl
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
-int32_t Pmic_fsmSetLpmControl(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                              bool                lpmEnable)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-
-    if(NULL == pPmicCoreHandle)
-    {
-        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
-    }
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_setControl(pPmicCoreHandle, lpmEnable);
-    }
-
-    return pmicStatus;
-}
-
-/*!
- * \brief  API to get Enable/Disable status for LPM.
- *         This function is used get enable/disable status of Low power mode
- *         control for PMIC
- *
- * \param   pPmicCoreHandle  [IN]   PMIC Interface Handle
- * \param   pLpmEnable       [OUT]  PMIC LPM Control
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
-int32_t Pmic_fsmGetLpmControl(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                              bool               *pLpmEnable)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-
-    if(NULL == pPmicCoreHandle)
-    {
-        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
-    }
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (NULL == pLpmEnable))
-    {
-        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_getControl(pPmicCoreHandle, pLpmEnable);
     }
 
     return pmicStatus;

@@ -289,30 +289,30 @@ static int32_t Pmic_esmIntrEnable(Pmic_CoreHandle_t        *pPmicCoreHandle,
         {
             pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
                                           PMIC_TPS6594X_ESM_MCU_PIN_INT,
-                                          esmIntrCfg.esmPinIntr);
+                                          !esmIntrCfg.esmPinIntr);
 
             pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
                                           PMIC_TPS6594X_ESM_MCU_FAIL_INT,
-                                          esmIntrCfg.esmFailIntr);
+                                          !esmIntrCfg.esmFailIntr);
 
             pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
                                           PMIC_TPS6594X_ESM_MCU_RST_INT,
-                                          esmIntrCfg.esmRstIntr);
+                                          !esmIntrCfg.esmRstIntr);
         }
 
         if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
         {
             pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
                                           PMIC_LP8764X_ESM_MCU_PIN_INT,
-                                          esmIntrCfg.esmPinIntr);
+                                          !esmIntrCfg.esmPinIntr);
 
             pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
                                           PMIC_LP8764X_ESM_MCU_FAIL_INT,
-                                          esmIntrCfg.esmFailIntr);
+                                          !esmIntrCfg.esmFailIntr);
 
             pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
                                           PMIC_LP8764X_ESM_MCU_RST_INT,
-                                          esmIntrCfg.esmRstIntr);
+                                          !esmIntrCfg.esmRstIntr);
         }
     }
 
@@ -321,15 +321,15 @@ static int32_t Pmic_esmIntrEnable(Pmic_CoreHandle_t        *pPmicCoreHandle,
     {
         pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
                                       PMIC_TPS6594X_ESM_SOC_PIN_INT,
-                                      esmIntrCfg.esmPinIntr);
+                                      !esmIntrCfg.esmPinIntr);
 
         pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
                                       PMIC_TPS6594X_ESM_SOC_FAIL_INT,
-                                      esmIntrCfg.esmFailIntr);
+                                      !esmIntrCfg.esmFailIntr);
 
         pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
                                       PMIC_TPS6594X_ESM_SOC_RST_INT,
-                                      esmIntrCfg.esmRstIntr);
+                                      !esmIntrCfg.esmRstIntr);
     }
 
     return pmicStatus;
@@ -1127,6 +1127,11 @@ int32_t Pmic_esmGetEnableState(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
+        pmicStatus = Pmic_esmDeviceCheck(pPmicCoreHandle, esmType);
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
         pmicStatus = Pmic_esmGetBaseRegAddr(esmType, &esmBaseRegAddr);
     }
 
@@ -1494,14 +1499,14 @@ int32_t Pmic_esmGetErrCnt(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     pmicStatus = Pmic_esmValidateParams(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_esmDeviceCheck(pPmicCoreHandle, esmType);
-    }
-
     if((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pEsmErrCnt))
     {
         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pmicStatus = Pmic_esmDeviceCheck(pPmicCoreHandle, esmType);
     }
 
     if(PMIC_ST_SUCCESS == pmicStatus)

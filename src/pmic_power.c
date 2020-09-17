@@ -328,7 +328,6 @@ static int32_t Pmic_powerValidatecfgDataPwrRsrctype(uint32_t validPrm,
         case PMIC_CFG_REGULATOR_BUCK_PLDN_EN_VALID:
         case PMIC_CFG_REGULATOR_BUCK_VOUT_SEL_VALID:
         case PMIC_CFG_REGULATOR_BUCK_FPWM_VALID:
-        case PMIC_CFG_REGULATOR_BUCK_FREQ_SEL_VALID:
         case PMIC_CFG_REGULATOR_BUCK_ILIM_VALID:
         case PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID:
             status = Pmic_powerValidateBuckPwrRsrcType(pmicDeviceType,
@@ -3433,16 +3432,16 @@ static int32_t Pmic_powerValidatePwrRsrcLimit(
            }
            else if(PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType)
            {
-                if((pwrRsrc > PMIC_LP8764X_PGOOD_BUCK_MAX) ||
-                   (pwrRsrc < PMIC_LP8764X_PGOOD_BUCK_MIN))
+                if((pwrRsrc > PMIC_LP8764X_BUCK_MAX) ||
+                   (pwrRsrc < PMIC_LP8764X_BUCK_MIN))
                 {
                     status = PMIC_ST_ERR_INV_PARAM;
                 }
            }
            else if(PMIC_LP8764X_POWER_RESOURCE_TYPE_VMON == pwrRsrcType)
            {
-                if((pwrRsrc > PMIC_LP8764X_PGOOD_VMON_MAX) ||
-                   (pwrRsrc < PMIC_LP8764X_PGOOD_VMON_MIN))
+                if((pwrRsrc > PMIC_LP8764X_VMON_MAX) ||
+                   (pwrRsrc < PMIC_LP8764X_VMON_MIN))
                 {
                     status = PMIC_ST_ERR_INV_PARAM;
                 }
@@ -3491,131 +3490,6 @@ static int32_t Pmic_powerParamCheck(const Pmic_CoreHandle_t *pPmicCoreHandle,
     }
 
     return status;
-}
-
-/*!
- * \brief   Thsi function is used to get the switching frequency for BUCK
- */
-static int32_t Pmic_powerGetBuckFreqSel(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                        uint16_t           pwrRsrc,
-                                        uint8_t           *pBuckFreqSel)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint8_t regData = 0U;
-    uint8_t pwrRsrcIndex = 0U;
-    uint8_t bitMask = 0U;
-    Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
-
-    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
-
-    /* Get PMIC power resources register configuration */
-    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                         &pPwrRsrcRegCfg);
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            PMIC_FREQ_SEL_REG_REGADDR,
-                                            &regData);
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        bitMask = (PMIC_POWER_BUCKX_FREQ_SEL_BITFIELD <<
-                   pPwrRsrcRegCfg[pwrRsrcIndex].buckFreqBitShiftVal);
-        *pBuckFreqSel = Pmic_getBitField(
-                              regData,
-                              pPwrRsrcRegCfg[pwrRsrcIndex].buckFreqBitShiftVal,
-                              bitMask);
-    }
-
-    return pmicStatus;
-}
-
- /*!
- * \brief   This function is used to validate the buck frequency limit.
- */
-static int32_t Pmic_powerValidateBuckFrequencyLimit(uint8_t  pmicDeviceType,
-                                                    uint8_t  buckFreqSel)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-
-    switch(pmicDeviceType)
-    {
-        case PMIC_DEV_LEO_TPS6594X:
-            if(buckFreqSel > PMIC_TPS6594X_BUCK_FREQ_SEL_4M4)
-            {
-                pmicStatus = PMIC_ST_ERR_INV_PARAM;
-            }
-            break;
-        case PMIC_DEV_HERA_LP8764X:
-            if(buckFreqSel > PMIC_LP8764X_BUCK_FREQ_SEL_8M8)
-            {
-                pmicStatus = PMIC_ST_ERR_INV_PARAM;
-            }
-            break;
-        default:
-            pmicStatus = PMIC_ST_ERR_INV_PARAM;
-            break;
-    }
-
-    return pmicStatus;
-}
-
-/*!
- * \brief   Thsi function is used to set the switching frequency for BUCK
- */
-static int32_t Pmic_powerSetBuckFreqSel(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                        uint16_t           pwrRsrc,
-                                        uint8_t            buckFreqSel)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint8_t regData = 0U;
-    uint8_t pwrRsrcIndex = 0U;
-    Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
-    uint8_t bitMask = 0U;
-
-    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
-
-    /* Get PMIC power resources register configuration */
-    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                         &pPwrRsrcRegCfg);
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_powerValidateBuckFrequencyLimit(
-                                                pPmicCoreHandle->pmicDeviceType,
-                                                buckFreqSel);
-    }
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            PMIC_FREQ_SEL_REG_REGADDR,
-                                            &regData);
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            bitMask = (PMIC_POWER_BUCKX_FREQ_SEL_BITFIELD <<
-                       pPwrRsrcRegCfg[pwrRsrcIndex].buckFreqBitShiftVal);
-            Pmic_setBitField(&regData,
-                             pPwrRsrcRegCfg[pwrRsrcIndex].buckFreqBitShiftVal,
-                             bitMask,
-                             buckFreqSel);
-        }
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                                PMIC_FREQ_SEL_REG_REGADDR,
-                                                regData);
-        }
-
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
-
-    return pmicStatus;
 }
 
 /*!
@@ -5228,7 +5102,7 @@ static int32_t Pmic_powerIntrEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          has to configure the below defined structure members of
  *          Pmic_PowerResourceCfg_t:
  *          rvCheckEn, buckPullDownEn, vmonEn, buckVoutRegSel, buckFpwmMode,
- *          buckFpwmMpMode, buckFreqSel, regulatorEn, buckCurrentLimit,
+ *          buckFpwmMpMode, regulatorEn, buckCurrentLimit,
  *          buckVmonSlewRate, voltage_mV, pgUvThresholdLvl,
  *          pgOvThresholdLvl, railGrpSel
  *
@@ -5309,23 +5183,6 @@ int32_t Pmic_powerSetPwrResourceCfg(
                                                 pPmicCoreHandle,
                                                 pwrResource,
                                                 pwrResourceCfg.ldoBypassModeEn);
-        }
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pwrResourceCfg.validParams,
-                                     PMIC_CFG_REGULATOR_BUCK_FREQ_SEL_VALID)))
-    {
-        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
-                                         PMIC_CFG_REGULATOR_BUCK_FREQ_SEL_VALID,
-                                         pwrResource,
-                                         pPmicCoreHandle->pmicDeviceType);
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            /* Set Switching frequency for buck regulator */
-            pmicStatus = Pmic_powerSetBuckFreqSel(pPmicCoreHandle,
-                                                  pwrResource,
-                                                  pwrResourceCfg.buckFreqSel);
         }
     }
 
@@ -5419,7 +5276,7 @@ int32_t Pmic_powerSetPwrResourceCfg(
  *          which is stored in the below defined structure members of
  *          Pmic_PowerResourceCfg_t:
  *          rvCheckEn, buckPullDownEn, vmonEn, buckVoutRegSel, buckFpwmMode,
- *          buckFpwmMpMode, buckFreqSel, regulatorEn, buckCurrentLimit,
+ *          buckFpwmMpMode, regulatorEn, buckCurrentLimit,
  *          buckVmonSlewRate, voltage_mV, pgUvThresholdLvl,
  *          pgOvThresholdLvl, railGrpSel
  *
@@ -5505,24 +5362,6 @@ int32_t Pmic_powerGetPwrResourceCfg(
                                            pPmicCoreHandle,
                                            pwrResource,
                                            &(pPwrResourceCfg->ldoBypassModeEn));
-        }
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPwrResourceCfg->validParams,
-                                     PMIC_CFG_REGULATOR_BUCK_FREQ_SEL_VALID)))
-    {
-        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
-                                         PMIC_CFG_REGULATOR_BUCK_FREQ_SEL_VALID,
-                                         pwrResource,
-                                         pPmicCoreHandle->pmicDeviceType);
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            /* Get Switching frequency for buck regulator */
-            pmicStatus = Pmic_powerGetBuckFreqSel(
-                                               pPmicCoreHandle,
-                                               pwrResource,
-                                               &(pPwrResourceCfg->buckFreqSel));
         }
     }
 

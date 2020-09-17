@@ -239,18 +239,6 @@ extern "C" {
 /* @} */
 
 /**
- *  \anchor Pmic_TPS6594x_Buck_Freq_Sel
- *  \name   PMIC Select switching frequency for BUCK
- *
- *  @{
- */
-/** \brief Used to select frequency as 2.2 Mhz */
-#define PMIC_TPS6594X_BUCK_FREQ_SEL_2M2                (0x0U)
-/** \brief Used to select frequency as 4.4 Mhz */
-#define PMIC_TPS6594X_BUCK_FREQ_SEL_4M4                (0x1U)
-/* @} */
-
-/**
  *  \anchor Pmic_TPS6594x_Buck_Current_Limit
  *  \name   PMIC Switch Peak Current limit for BUCK Regulator
  *

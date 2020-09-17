@@ -174,11 +174,6 @@ extern "C" {
 #define PMIC_BUCK_RESET_REG_REGADDR               (0x87U)
 
 /*!
- * \brief  PMIC BUCK Freqency Register Address
- */
-#define PMIC_FREQ_SEL_REG_REGADDR                 (0x8AU)
-
-/*!
  * \brief  PMIC LDO residual voltage timeout Register Address
  */
 #define PMIC_LDO_RV_TIMEOUT_REG_1_REGADDR         (0x8CU)
@@ -426,19 +421,6 @@ extern "C" {
 #define PMIC_BUCK_RESET_BUCK3_RESET_SHIFT                   (2U)
 #define PMIC_BUCK_RESET_BUCK2_RESET_SHIFT                   (1U)
 #define PMIC_BUCK_RESET_BUCK1_RESET_SHIFT                   (0U)
-
-/*!
- * \brief  PMIC BUCK frequecy bit fields
- */
-#define PMIC_LP8764X_BUCK4_FREQ_SEL_SHIFT                  (6U)
-#define PMIC_LP8764X_BUCK3_FREQ_SEL_SHIFT                  (4U)
-#define PMIC_LP8764X_BUCK2_FREQ_SEL_SHIFT                  (2U)
-#define PMIC_LP8764X_BUCK1_FREQ_SEL_SHIFT                  (0U)
-#define PMIC_TPS6594X_BUCK5_FREQ_SEL_SHIFT                 (4U)
-#define PMIC_TPS6594X_BUCK4_FREQ_SEL_SHIFT                 (3U)
-#define PMIC_TPS6594X_BUCK3_FREQ_SEL_SHIFT                 (2U)
-#define PMIC_TPS6594X_BUCK2_FREQ_SEL_SHIFT                 (1U)
-#define PMIC_TPS6594X_BUCK1_FREQ_SEL_SHIFT                 (0U)
 
 /*!
  * \brief  PMIC LDO residual voltage bit fields
@@ -825,28 +807,6 @@ extern "C" {
                                            PMIC_BUCK_RESET_BUCK1_RESET_SHIFT)
 
 /*!
- * \brief  PMIC BUCK frequency selection bit masks
- */
-#define PMIC_LP8764X_BUCK4_FREQ_SEL_MASK          (uint8_t)(0x03 <<  \
-                                           PMIC_LP8764X_BUCK4_FREQ_SEL_SHIFT)
-#define PMIC_LP8764X_BUCK3_FREQ_SEL_MASK          (uint8_t)(0x03 <<  \
-                                           PMIC_LP8764X_BUCK3_FREQ_SEL_SHIFT)
-#define PMIC_LP8764X_BUCK2_FREQ_SEL_MASK          (uint8_t)(0x03 <<  \
-                                           PMIC_LP8764X_BUCK2_FREQ_SEL_SHIFT)
-#define PMIC_LP8764X_BUCK1_FREQ_SEL_MASK          (uint8_t)(0x03 <<  \
-                                           PMIC_LP8764X_BUCK1_FREQ_SEL_SHIFT)
-#define PMIC_TPS6594X_BUCK5_FREQ_SEL_MASK         (uint8_t)(0x01 <<  \
-                                           PMIC_TPS6594X_BUCK5_FREQ_SEL_SHIFT)
-#define PMIC_TPS6594X_BUCK4_FREQ_SEL_MASK         (uint8_t)(0x01 <<  \
-                                           PMIC_TPS6594X_BUCK4_FREQ_SEL_SHIFT)
-#define PMIC_TPS6594X_BUCK3_FREQ_SEL_MASK         (uint8_t)(0x01 <<  \
-                                           PMIC_TPS6594X_BUCK3_FREQ_SEL_SHIFT)
-#define PMIC_TPS6594X_BUCK2_FREQ_SEL_MASK         (uint8_t)(0x01 <<  \
-                                           PMIC_TPS6594X_BUCK2_FREQ_SEL_SHIFT)
-#define PMIC_TPS6594X_BUCK1_FREQ_SEL_MASK         (uint8_t)(0x01 <<  \
-                                           PMIC_TPS6594X_BUCK1_FREQ_SEL_SHIFT)
-
-/*!
  * \brief  PMIC LDO residual voltage bit masks
  */
 #define PMIC_LDO_RV_TIMEOUT_REG_LDO2_4_RV_TIMEOUT_MASK        \
@@ -942,9 +902,6 @@ extern "C" {
  *                              Shift bits for the Residual voltage timeout for
  *                              the LDO power regulator.
  *
- * \param buckFreqBitShiftVal   Shift bits for the buck frequency of the power
- *                              buck regulator.
- *
  */
 typedef struct Pmic_powerResourceRegCfg_s
 {
@@ -959,7 +916,6 @@ typedef struct Pmic_powerResourceRegCfg_s
     uint8_t railGrpBitShiftVal;
     uint8_t ldoRvTimeOutRegAddr;
     uint8_t ldoRvTimeOutBitShiftVal;
-    uint8_t buckFreqBitShiftVal;
     uint8_t iLimStatBitShift;
     uint8_t uvStatBitShift;
     uint8_t ovStatBitShift;
