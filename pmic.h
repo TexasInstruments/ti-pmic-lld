@@ -187,6 +187,8 @@ extern "C" {
 /** \brief Error Code for Invalid ESM delay1, delay2, HMAX, HMIN, LMAX and 
  *         LMIN values */
 #define PMIC_ST_ERR_INV_ESM_VAL                         (-((int32_t)34))
+/** \brief warning Code for Device ID mismatch warning */
+#define PMIC_ST_WARN_INV_DEVICE_ID                      (-((int32_t)35))
 /* @} */
 
 /**

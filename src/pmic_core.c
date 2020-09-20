@@ -571,13 +571,13 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
                 case PMIC_DEV_HERA_LP8764X:
                     if(PMIC_HERA_DEV_REV_ID != regVal)
                     {
-                        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+                        pmicStatus = PMIC_ST_WARN_INV_DEVICE_ID;
                     }
                     break;
                 case PMIC_DEV_LEO_TPS6594X:
                     if(PMIC_LEO_DEV_REV_ID != regVal)
                     {
-                        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+                        pmicStatus = PMIC_ST_WARN_INV_DEVICE_ID;
                     }
                     break;
                 default:
@@ -586,7 +586,8 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
             }
         }
 
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        if((PMIC_ST_SUCCESS == pmicStatus) ||
+           (PMIC_ST_WARN_INV_DEVICE_ID == pmicStatus))
         {
             pPmicCoreHandle->drvInitStatus = DRV_INIT_SUCCESS |
                                              pPmicConfigData->instType;
