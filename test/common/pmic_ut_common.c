@@ -357,6 +357,73 @@ int32_t test_pmic_spi_write(Pmic_CoreHandle_t  *pPmicCorehandle,
     return pmicStatus;
 }
 
+/**
+ * \brief  Function to probe PMIC slave devices on I2C instance
+ */
+static int32_t test_pmic_i2c_devices(Pmic_CoreHandle_t  *pPmicCorehandle,
+                                     uint32_t            instType)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint16_t slaveAddr;
+    I2C_Handle i2cHandle;
+
+    if(PMIC_INTF_SINGLE_I2C == pPmicCorehandle->commMode)
+    {
+	i2cHandle = pPmicCorehandle->pCommHandle;
+        /* For Main PAGE SLAVE ID */
+        slaveAddr = pPmicCorehandle->slaveAddr;
+        if(I2C_STATUS_SUCCESS ==
+                      I2C_control(i2cHandle, I2C_CMD_PROBE, &slaveAddr))
+        {
+            pmic_log("I2C%d: Passed for address 0x%X !!! \r\n",
+                               instType, slaveAddr);
+        }
+        else
+        {
+            status = PMIC_ST_ERR_I2C_COMM_FAIL;
+        }
+        /* For WD PAGE SLAVE ID */
+        slaveAddr = pPmicCorehandle->qaSlaveAddr;
+        if(I2C_STATUS_SUCCESS ==
+                      I2C_control(i2cHandle, I2C_CMD_PROBE, &slaveAddr))
+        {
+            pmic_log("I2C%d: Passed for address 0x%X !!! \r\n",
+                               instType, slaveAddr);
+        }
+        else
+        {
+            status = PMIC_ST_ERR_I2C_COMM_FAIL;
+        }
+    }
+    if(PMIC_INTF_DUAL_I2C == pPmicCorehandle->commMode)
+    {
+        /* Main I2c BUS */
+        if(PMIC_MAIN_INST == instType)
+        {
+            slaveAddr = pPmicCorehandle->slaveAddr;
+	    i2cHandle = pPmicCorehandle->pCommHandle;
+        }
+        /* For WDG QA I2C BUS */
+        else if(PMIC_QA_INST == instType)
+        {
+            slaveAddr = pPmicCorehandle->qaSlaveAddr;
+	    i2cHandle = pPmicCorehandle->pQACommHandle;
+        }
+        if(I2C_STATUS_SUCCESS ==
+                      I2C_control(i2cHandle, I2C_CMD_PROBE, &slaveAddr))
+        {
+            pmic_log("I2C%d: Passed for address 0x%X !!! \r\n",
+                               instType, slaveAddr);
+        }
+        else
+        {
+            status = PMIC_ST_ERR_I2C_COMM_FAIL;
+        }
+    }
+
+    return status;
+}
+
 /*!
  * \brief   Function to setup the I2C lld interface for PMIC
  *
@@ -446,8 +513,8 @@ static int32_t test_pmic_leo_dual_i2c_pin_setup(Pmic_CoreHandle_t *pPmicHandle)
     }
     if(PMIC_INTF_DUAL_I2C == pPmicHandle->commMode)
     {
-        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO1_SCL_I2C2_CS_SPI;
         gpioCfg.outputSignalType = PMIC_GPIO_OPEN_DRAIN_OUTPUT;
+        gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO1_SCL_I2C2_CS_SPI;
     }
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicHandle,
@@ -474,8 +541,8 @@ static int32_t test_pmic_leo_dual_i2c_pin_setup(Pmic_CoreHandle_t *pPmicHandle)
         }
         if(PMIC_INTF_DUAL_I2C == pPmicHandle->commMode)
         {
-            gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO2_SDA_I2C2_SDO_SPI;
             gpioCfg.outputSignalType = PMIC_GPIO_OPEN_DRAIN_OUTPUT;
+            gpioCfg.pinFunc = PMIC_TPS6594X_GPIO_PINFUNC_GPIO2_SDA_I2C2_SDO_SPI;
         }
 
         pmicStatus = Pmic_gpioSetConfiguration(pPmicHandle,
@@ -940,11 +1007,12 @@ static int32_t Pmic_intrClr(Pmic_CoreHandle_t *pmicHandle)
             int i = 0;
             for(i=0;i<4; i++)
             {
-                pmic_log("\r\nINT STAT[%d]: 0x%08x", i, errStat.intStatus[i]);
+                pmic_log("INT STAT[%d]: 0x%08x\n", i, errStat.intStatus[i]);
             }
         }
     }
 
+    pmic_log("\r\n");
     return pmicStatus;
 }
 
@@ -1001,6 +1069,20 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
             pmicConfigData->instType = PMIC_MAIN_INST;
             /* Get PMIC core Handle for Main Instance */
             pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
+            /*
+             * Check for Warning message due to Invalid Device ID.
+             * And continue the application with WARNING message.
+             */
+            if(PMIC_ST_WARN_INV_DEVICE_ID == pmicStatus)
+            {
+                pmic_log("\n*** WARNING: Found Invalid DEVICE ID ***\n\n");
+                pmicStatus = PMIC_ST_SUCCESS;
+            }
+        }
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Probe connected PMIC device on given i2c Instance */
+            test_pmic_i2c_devices(pmicHandle, PMIC_MAIN_INST);
         }
         if(PMIC_DEV_LEO_TPS6594X == pmicHandle->pmicDeviceType)
         {
@@ -1036,8 +1118,21 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
             pmicConfigData->instType = PMIC_MAIN_INST;
             /* Get PMIC core Handle for Main Instance */
             pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
+            /*
+             * Check for Warning message due to Invalid Device ID.
+             * And continue the application with WARNING message.
+             */
+            if(PMIC_ST_WARN_INV_DEVICE_ID == pmicStatus)
+            {
+                pmic_log("\n*** WARNING: Found Invalid DEVICE ID ***\n\n");
+                pmicStatus = PMIC_ST_SUCCESS;
+            }
         }
-
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Probe connected PMIC device on given i2c Instance */
+            test_pmic_i2c_devices(pmicHandle, PMIC_MAIN_INST);
+        }
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             /* Setup nSLEEP signals */
@@ -1078,7 +1173,11 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
             /* Get PMIC core Handle for QA Instances */
             pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
         }
-
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Probe connected PMIC device on given i2c Instance */
+            test_pmic_i2c_devices(pmicHandle, PMIC_QA_INST);
+        }
     }
     /* For SPI Instance */
     else if(PMIC_INTF_SPI  == pmicConfigData->commMode)
@@ -1087,7 +1186,18 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
         pmicStatus = test_pmic_spi_lld_intf_setup(pmicConfigData);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
+            /* Update MAIN instance type to pmicConfigData for SPI */
+            pmicConfigData->instType = PMIC_MAIN_INST;
             pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
+            /*
+             * Check for Warning message due to Invalid Device ID.
+             * And continue the application with WARNING message.
+             */
+            if(PMIC_ST_WARN_INV_DEVICE_ID == pmicStatus)
+            {
+                pmic_log("\n*** WARNING: Found Invalid DEVICE ID ***\n\n");
+                pmicStatus = PMIC_ST_SUCCESS;
+            }
         }
 
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -1163,7 +1273,7 @@ void GPIO_configIntRouter(uint32_t portNum, uint32_t pinNum, uint32_t gpioIntRtr
 
     cfg->baseAddr = CSL_WKUP_GPIO0_BASE;
 
-    bankNum = pinNum/16; /* Each GPIO bank has 16 pins */
+    bankNum = pinNum/32; /* Each GPIO bank has 16 pins */
 
     /* WKUP GPIO int router input interrupt is the GPIO bank interrupt */
     intCfg[pinNum].intNum = CSLR_MCU_R5FSS0_CORE0_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_0 + bankNum;
@@ -1197,15 +1307,13 @@ void App_initGPIO(GPIO_CallbackFxn callback)
     /* Get the default SPI init configurations */
     GPIO_socGetInitCfg(J7_WAKEUP_GPIO0_PORT_NUM, &gpio_cfg);
 
-    /* change default GPIO port from MAIN GPIO0 to WAKEUP GPIO0 to access TP45 */
+    /* change default GPIO port from MAIN GPIO0 to WAKEUP GPIO0 for Intrrupts */
     gpio_cfg.baseAddr = CSL_WKUP_GPIO0_BASE;
     gpio_cfg.intCfg->intNum = CSLR_MCU_R5FSS0_CORE0_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_0;
-    
+
     GPIO_configIntRouter(J7_WAKEUP_GPIO0_PORT_NUM, J7_WAKEUP_GPIO0_9_PIN_NUM, 0, &gpio_cfg);
 
-    /* For J721E EVM, there is not GPIO pin directly connected to LEDs */
-    /* J7ES: use WAKEUP GPIO0_6 --> TP45 for testing */
-    /* Set the default GPIO init configurations */
+    /* Set as the default GPIO init configurations */
     GPIO_socSetInitCfg(J7_WAKEUP_GPIO0_PORT_NUM, &gpio_cfg);
 
     /* GPIO initialization */

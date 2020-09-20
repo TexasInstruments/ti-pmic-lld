@@ -97,16 +97,29 @@
 #define J7VCL_HERA_PMIC_WDG_SLAVE_ADDR        (0x13U)
 
 /*!
+ * \brief  PMIC devices Definitions
+ */
+#define PMICA_DEVICE                    (0x01U)
+#define PMICB_DEVICE                    (0x02U)
+#define PMIC_DEVICE_MASK                (0xFFU)
+
+/*!
+ * \brief  Supported Board definition
+ */
+#define J721E_BOARD                     (0x01U << 8U)
+#define J7VCL_BOARD                     (0x02U << 8U)
+
+/*!
  * \brief   LEO PMIC devices on J721E
  */
-#define J721E_LEO_PMICA_DEVICE          (0x01U)
-#define J721E_LEO_PMICB_DEVICE          (0x02U)
+#define J721E_LEO_PMICA_DEVICE          (J721E_BOARD + PMICA_DEVICE)
+#define J721E_LEO_PMICB_DEVICE          (J721E_BOARD + PMICB_DEVICE)
 
 /*!
  * \brief   PMIC devices on J7VCL EVM
  */
-#define J7VCL_LEO_PMICA_DEVICE          (0x03U)
-#define J7VCL_HERA_PMICB_DEVICE         (0x04U)
+#define J7VCL_LEO_PMICA_DEVICE          (J7VCL_BOARD + PMICA_DEVICE)
+#define J7VCL_HERA_PMICB_DEVICE         (J7VCL_BOARD + PMICB_DEVICE)
 
 /*!
  * \brief   PMIC Startup type
@@ -128,8 +141,8 @@ extern uint8_t startup_type;
 /*!
  * \brief   J7ES: use WAKEUP GPIO0_9
  */
-#define J7_WAKEUP_GPIO0_PORT_NUM         0U /* use WAKEUP GPIO0 */
-#define J7_WAKEUP_GPIO0_9_PIN_NUM        9U /* Pin 9 */
+#define J7_WAKEUP_GPIO0_PORT_NUM         0U  /* use WAKEUP GPIO0 */
+#define J7_WAKEUP_GPIO0_9_PIN_NUM        9U  /* Pin 9 for J721E PMIC Intr */
 
 /*!
  *  \brief    Define the Pmic UT test interface
