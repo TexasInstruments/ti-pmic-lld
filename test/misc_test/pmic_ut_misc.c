@@ -42,7 +42,7 @@
 /* Pointer holds the pPmicCoreHandle */
 Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
 
-static uint8_t pmic_device_info = 0U;
+static uint16_t pmic_device_info = 0U;
 
 /*!
  * \brief   PMIC MISC Test Cases
@@ -401,12 +401,6 @@ static void test_Pmic_getRecoveryCnt_read_recovCntVal(void)
 }
 
 /*!
- * Below test cases are not tested because of HW limitation.
- * Added below test cases as sample for reference.
- */
-
-#if defined(ENABLE_SAMPLE_TESTCASES)
-/*!
  * \brief   Pmic_irqGetErrStatus : Test BIST_PASS_INT interrupt.
  */
 static void test_Pmic_getBistPassInterrupt(void)
@@ -414,15 +408,13 @@ static void test_Pmic_getBistPassInterrupt(void)
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_IrqStatus_t errStat  = {0U};
     bool clearIRQ             = false;
-    bool    nsleepType = 0U;
-    bool    maskEnable = 0U;
+    bool nsleepType = 0U;
+    bool maskEnable = 0U;
+    int8_t timeout = 10U;
 
     test_pmic_print_unity_testcase_info(7715,
                                         pmic_misc_tests,
                                         PMIC_MISC_NUM_OF_TESTCASES);
-
-    /* Ignored due to not generating BIST_PASS_INT interrupt */
-    TEST_IGNORE();
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -439,16 +431,25 @@ static void test_Pmic_getBistPassInterrupt(void)
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     }
 
+    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+        TEST_IGNORE();
+    }
+
     nsleepType = PMIC_NSLEEP1_SIGNAL;
     maskEnable = PMIC_NSLEEPX_MASK;
 
-    pmicStatus = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle, nsleepType, maskEnable);
+    pmicStatus = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                             nsleepType,
+                                             maskEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     nsleepType = PMIC_NSLEEP2_SIGNAL;
     maskEnable = PMIC_NSLEEPX_MASK;
 
-    pmicStatus = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle, nsleepType, maskEnable);
+    pmicStatus = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                             nsleepType,
+                                             maskEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     /* To clear the interrupts*/
@@ -519,6 +520,12 @@ static void test_Pmic_getBistPassInterrupt(void)
     }
 }
 
+/*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
+
+#if defined(ENABLE_SAMPLE_TESTCASES)
 /*!
  * \brief   Pmic_irqGetErrStatus : Test FSD_INT interrupt.
  *          To test this testcase, user needs to follow below steps
@@ -896,9 +903,31 @@ static void test_Pmic_commFrmErrorIntr(void)
     (defined(SOC_J721E) || defined(SOC_J7200))
 
 /*!
- * \brief   Run misc unity test cases
+ * \brief   Run misc unity test cases for Master PMIC
  */
 static void test_pmic_run_testcases(void)
+{
+    pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
+    UNITY_BEGIN();
+
+    RUN_TEST(test_pmic_SetRecoveryCntCfg_threshold);
+    RUN_TEST(test_pmic_SetRecoveryCntCfgPrmValTest_thrVal);
+    RUN_TEST(test_pmic_SetRecoveryCntCfg_clrCnt);
+    RUN_TEST(test_pmic_SetRecoveryCntCfgPrmValTest_clrCnt);
+    RUN_TEST(test_pmic_SetRecoveryCntCfgPrmValTest_handle);
+    RUN_TEST(test_pmic_getRecoveryCntCfgPrmValTest_handle);
+    RUN_TEST(test_pmic_getRecoveryCntCfgPrmValTest_recovCntCfg);
+    RUN_TEST(test_Pmic_getRecoveryCntPrmValTest_handle);
+    RUN_TEST(test_Pmic_getRecoveryCntPrmValTest_recovCntVal);
+    RUN_TEST(test_Pmic_getBistPassInterrupt);
+
+    UNITY_END();
+}
+
+/*!
+ * \brief   Run misc unity test cases for Slave PMIC
+ */
+static void test_pmic_run_slave_testcases(void)
 {
     pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
     UNITY_BEGIN();
@@ -955,11 +984,22 @@ static int32_t test_pmic_leo_pmicA_misc_testApp(void)
     pmicConfigData.commMode            = PMIC_INTF_DUAL_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigData.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
-    pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
+    if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+        pmicConfigData.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
+        pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
-    pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
-    pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+        pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
+        pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+    }
+    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+        pmicConfigData.slaveAddr           = J7VCL_LEO_PMICA_SLAVE_ADDR;
+        pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
+
+        pmicConfigData.qaSlaveAddr         = J7VCL_LEO_PMICA_WDG_SLAVE_ADDR;
+        pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+    }
 
     pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
     pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
@@ -1053,68 +1093,56 @@ static int32_t test_pmic_hera_misc_testApp(void)
 
 }
 
-/*!
- * \brief  MISC  Unity Test App wrapper Function for manual test
- */
-static int32_t test_pmic_misc_manual_testApp(void)
-{
-    int32_t status                = PMIC_ST_SUCCESS;
-    Pmic_CoreCfg_t pmicConfigData = {0U};
-
-    /* Fill parameters to pmicConfigData */
-    pmicConfigData.pmicDeviceType      = PMIC_DEV_LEO_TPS6594X;
-    pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
-
-    pmicConfigData.commMode            = PMIC_INTF_DUAL_I2C;
-    pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
-
-    pmicConfigData.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
-    pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
-
-    pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
-    pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
-
-    pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
-    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
-
-    pmicConfigData.pFnPmicCommIoWrite   = test_pmic_regWrite;
-    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
-
-    pmicConfigData.pFnPmicCritSecStart  = test_pmic_criticalSectionStartFn;
-    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
-
-    pmicConfigData.pFnPmicCritSecStop   = test_pmic_criticalSectionStopFn;
-    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
-
-    status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
-    return status;
-}
-
-static int32_t setup_pmic_interrupt()
+static int32_t setup_pmic_interrupt(uint32_t board)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-#ifdef SOC_J721E
-
-    pmic_device_info = J721E_LEO_PMICA_DEVICE;
-    status = test_pmic_leo_pmicA_misc_testApp();
-   /* Deinit pmic handle */
-    if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+    if(J721E_BOARD == board)
     {
-        test_pmic_appDeInit(pPmicCoreHandle);
-    }
-
-    if(PMIC_ST_SUCCESS == status)
-    {
-        pmic_device_info = J721E_LEO_PMICB_DEVICE;
-        status = test_pmic_leo_pmicB_misc_testApp();
-       /* Deinit pmic handle */
+        pmic_device_info = J721E_LEO_PMICA_DEVICE;
+        status = test_pmic_leo_pmicA_misc_testApp();
+        /* Deinit pmic handle */
         if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
         {
             test_pmic_appDeInit(pPmicCoreHandle);
         }
+
+        if(PMIC_ST_SUCCESS == status)
+        {
+            pmic_device_info = J721E_LEO_PMICB_DEVICE;
+            status = test_pmic_leo_pmicB_misc_testApp();
+            /* Deinit pmic handle */
+            if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+            {
+                test_pmic_appDeInit(pPmicCoreHandle);
+            }
+        }
     }
-#endif
+    else if(J7VCL_BOARD == board)
+    {
+        pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+        status = test_pmic_leo_pmicA_misc_testApp();
+        /* Deinit pmic handle */
+        if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+        {
+            test_pmic_appDeInit(pPmicCoreHandle);
+        }
+
+        if(PMIC_ST_SUCCESS == status)
+        {
+            pmic_device_info = J7VCL_HERA_PMICB_DEVICE;
+            status = test_pmic_hera_misc_testApp();
+            /* Deinit pmic handle */
+            if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+            {
+                test_pmic_appDeInit(pPmicCoreHandle);
+            }
+        }
+    }
+    else
+    {
+        status = PMIC_ST_ERR_INV_DEVICE;
+    }
     return status;
 }
 
@@ -1125,10 +1153,13 @@ static const char pmicTestAppMenu[] =
     " \r\n ================================================================="
     " \r\n 0: Pmic Leo device(PMIC A on J721E EVM)"
     " \r\n 1: Pmic Leo device(PMIC B on J721E EVM)"
-    " \r\n 2: Pmic Hera device"
-    " \r\n 3: Manual test: Check recovery count"
-    " \r\n 4: Manual test: Check Enable Interrupt"
-    " \r\n 5: quit"
+    " \r\n 2: Pmic Leo device(PMIC A on J7VCL EVM)"
+    " \r\n 3: Pmic Hera device(PMIC B on J7VCL EVM)"
+    " \r\n 4: Manual test: Check recovery count on J721E EVM"
+    " \r\n 5: Manual test: Check Enable Interrupt on J721E EVM"
+    " \r\n 6: Manual test: Check recovery count on J7VCL EVM"
+    " \r\n 7: Manual test: Check Enable Interrupt on J7VCL EVM"
+    " \r\n 8: quit"
     " \r\n"
     " \r\n Enter option: "
 };
@@ -1159,13 +1190,15 @@ static void test_pmic_misc_testapp_runner(void)
         switch(num)
         {
             case 0U:
-                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
-                    /* MISC Unity Test App wrapper Function for LEO PMIC-A */
-                    test_pmic_leo_pmicA_misc_testApp();
-                   /* Run MISC test cases for Leo PMIC-A */
+                    /* Run MISC test cases for Leo PMIC-A */
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
-                    test_pmic_run_testcases();
+                    /* MISC Unity Test App wrapper Function for LEO PMIC-A */
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_misc_testApp())
+                    {
+                        test_pmic_run_testcases();
+                    }
                     /* Deinit pmic handle */
                     if(pPmicCoreHandle != NULL)
                     {
@@ -1174,13 +1207,15 @@ static void test_pmic_misc_testapp_runner(void)
                 }
                 break;
             case 1U:
-                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
-                    /* MISC Unity Test App wrapper Function for LEO PMIC-B */
-                    test_pmic_leo_pmicB_misc_testApp();
                     pmic_device_info = J721E_LEO_PMICB_DEVICE;
-                    /* Run MISC test cases for Leo PMIC-B */
-                    test_pmic_run_testcases();
+                    /* MISC Unity Test App wrapper Function for LEO PMIC-B */
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicB_misc_testApp())
+                    {
+                        /* Run MISC test cases for Leo PMIC-B */
+                        test_pmic_run_slave_testcases();
+                    }
                     /* Deinit pmic handle */
                     if(pPmicCoreHandle != NULL)
                     {
@@ -1189,54 +1224,116 @@ static void test_pmic_misc_testapp_runner(void)
                 }
                break;
            case 2U:
-                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
-                   /* MISC Unity Test App wrapper Function for HERA PMIC */
-                   test_pmic_hera_misc_testApp();
-                   /* Run misc test cases for Hera PMIC */
-                   test_pmic_run_testcases();
-                   /* Deinit pmic handle */
-                   if(pPmicCoreHandle != NULL)
-                   {
-                       test_pmic_appDeInit(pPmicCoreHandle);
-                   }
+                    pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+                    /* MISC Unity Test App wrapper Function for LEO PMIC */
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_misc_testApp())
+                    {
+                        /* Run MISC test cases for LEO PMIC-A */
+                        test_pmic_run_testcases();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
                 }
                break;
            case 3U:
-                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
-                    /* Run MISC test cases for Leo PMIC-A */
-                    pmic_device_info = J721E_LEO_PMICA_DEVICE;
-                   /* MISC Unity Test App wrapper Function */
-                    test_pmic_misc_manual_testApp();
-                   /* Run misc manual test cases */
-                   test_pmic_run_testcases_recoverycnt();
-                   /* Deinit pmic handle */
-                   if(pPmicCoreHandle != NULL)
-                   {
-                       test_pmic_appDeInit(pPmicCoreHandle);
-                   }
+                    pmic_device_info = J7VCL_HERA_PMICB_DEVICE;
+                    /* MISC Unity Test App wrapper Function for HERA PMIC */
+                    if(PMIC_ST_SUCCESS == test_pmic_hera_misc_testApp())
+                    {
+                        /* Run MISC test cases for HERA PMIC-B */
+                        test_pmic_run_slave_testcases();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
                 }
                break;
            case 4U:
-                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
-                   /* Run MISC test cases for Leo PMIC-A */
+                    /* Run MISC test cases for Leo PMIC-A */
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
-                   /* Display FSD interrupt */
-                   startup_type = PMIC_ENABLE_STARTUP_TYPE;
-                   /* MISC Unity Test App wrapper Function */
-                   test_pmic_misc_manual_testApp();
-                   /* Run misc manual test cases */
-                   test_pmic_run_testcases_EnableInterrupt();
-                   /* Deinit pmic handle */
-                   if(pPmicCoreHandle != NULL)
-                   {
-                       test_pmic_appDeInit(pPmicCoreHandle);
-                   }
+                    /* MISC Unity Test App wrapper Function */
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_misc_testApp())
+                    {
+                        /* Run misc manual test cases */
+                        test_pmic_run_testcases_recoverycnt();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
                 }
                break;
            case 5U:
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
+                {
+                   /* Run MISC test cases for Leo PMIC-A */
+                    pmic_device_info = J721E_LEO_PMICA_DEVICE;
+                    /* MISC Unity Test App wrapper Function */
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_misc_testApp())
+                    {
+                        /* Display Enable interrupt */
+                        startup_type = PMIC_ENABLE_STARTUP_TYPE;
+                        /* Run misc manual test cases */
+                        test_pmic_run_testcases_EnableInterrupt();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+               break;
+           case 6U:
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
+                {
+                    /* Run MISC test cases for Leo PMIC-A */
+                    pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+                    /* MISC Unity Test App wrapper Function */
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_misc_testApp())
+                    {
+                        /* Run misc manual test cases */
+                        test_pmic_run_testcases_recoverycnt();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+               break;
+           case 7U:
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
+                {
+                   /* Run MISC test cases for Leo PMIC-A */
+                    pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+                    /* MISC Unity Test App wrapper Function */
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_misc_testApp())
+                    {
+                        /* Display Enable interrupt */
+                        startup_type = PMIC_ENABLE_STARTUP_TYPE;
+                        /* Run misc manual test cases */
+                        test_pmic_run_testcases_EnableInterrupt();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+               break;
+           case 8U:
                pmic_log(" \r\n Quit from application\n");
                return;
            default:

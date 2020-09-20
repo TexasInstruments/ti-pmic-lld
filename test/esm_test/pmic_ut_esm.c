@@ -42,7 +42,7 @@
 /* Pointer holds the pPmicCoreHandle */
 Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
 
-static uint8_t pmic_device_info = 0U;
+static uint16_t pmic_device_info = 0U;
 
 /*!
  * \brief   PMIC ESM Test Cases
@@ -1208,6 +1208,10 @@ static void test_esm_getErrCnt_esmSoc(void)
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
+    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
+    {
+        TEST_IGNORE();
+    }
     pmicStatus = Pmic_esmGetErrCnt(pPmicCoreHandle, esmType, &esmErrCnt);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
@@ -1240,6 +1244,11 @@ static void test_esm_getErrCntPrmValTest_pEsmErrCnt(void)
     test_pmic_print_unity_testcase_info(7799,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
+
+    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
+    {
+        TEST_IGNORE();
+    }
 
     pmicStatus = Pmic_esmGetErrCnt(pPmicCoreHandle, esmType, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
@@ -1295,6 +1304,11 @@ static void test_esm_setInterrupt_esmMcuRstIntr_levelMode(void)
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    {
+        TEST_IGNORE();
+    }
+
+    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
     {
         TEST_IGNORE();
     }
@@ -1408,6 +1422,16 @@ static void test_esm_setInterrupt_esmMcuRstIntr_pwmMode(void)
     test_pmic_print_unity_testcase_info(7837,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
+
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    {
+        TEST_IGNORE();
+    }
+
+    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
+    {
+        TEST_IGNORE();
+    }
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -1631,6 +1655,16 @@ static void test_esm_setInterrupt_esmMcuFailIntr_pwmMode(void)
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    {
+        TEST_IGNORE();
+    }
+
+    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
+    {
+        TEST_IGNORE();
+    }
+
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
@@ -1743,6 +1777,16 @@ static void test_esm_setInterrupt_esmMcuPinIntr_levelMode(void)
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    {
+        TEST_IGNORE();
+    }
+
+    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
+    {
+        TEST_IGNORE();
+    }
+
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
@@ -1852,6 +1896,16 @@ static void test_esm_setInterrupt_esmMcuPinIntr_pwmMode(void)
     test_pmic_print_unity_testcase_info(7841,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
+
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    {
+        TEST_IGNORE();
+    }
+
+    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
+    {
+        TEST_IGNORE();
+    }
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -2786,6 +2840,16 @@ static void test_esm_setInterrupt_esmMcuAllIntr_levelMode(void)
     test_pmic_print_unity_testcase_info(7849,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
+
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    {
+        TEST_IGNORE();
+    }
+
+    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
+    {
+        TEST_IGNORE();
+    }
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -3898,6 +3962,54 @@ static void test_pmic_run_testcases(void)
 }
 
 /*!
+ * \brief   Run esm unity test cases
+ */
+static void test_pmic_run_slave_testcases(void)
+{
+    pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
+    UNITY_BEGIN();
+
+    RUN_TEST(test_pmic_esm_startEsmPrmValTest_handle);
+    RUN_TEST(test_pmic_esm_enableEsm_esmMcuEnable);
+    RUN_TEST(test_pmic_esm_enableEsm_esmSocEnable);
+    RUN_TEST(test_pmic_esm_enableEsmPrmValTest_handle);
+    RUN_TEST(test_pmic_esm_getEnableState_esmMcu);
+    RUN_TEST(test_pmic_esm_getEnableState_esmSoc);
+    RUN_TEST(test_pmic_esm_getEnableStatePrmValTest_handle);
+    RUN_TEST(test_pmic_esm_getEnableStatePrmValTest_esmState);
+    RUN_TEST(test_pmic_esm_setConfiguration_esmMcuLevelMode);
+    RUN_TEST(test_pmic_esm_setConfiguration_esmSocLevelMode);
+    RUN_TEST(test_pmic_esm_setConfiguration_esmMcuPwmMode);
+    RUN_TEST(test_pmic_esm_setConfiguration_esmSocPwmMode);
+    RUN_TEST(test_pmic_esm_setConfigurationPrmValTest_handle);
+    RUN_TEST(test_pmic_esm_setConfigurationPrmValTest_esmDelay1);
+    RUN_TEST(test_pmic_esm_setConfigurationPrmValTest_esmDelay2);
+    RUN_TEST(test_pmic_esm_setConfigurationPrmValTest_esmHmax);
+    RUN_TEST(test_pmic_esm_setConfigurationPrmValTest_esmHmin);
+    RUN_TEST(test_pmic_esm_setConfigurationPrmValTest_esmLmax);
+    RUN_TEST(test_pmic_esm_setConfigurationPrmValTest_esmLmin);
+    RUN_TEST(test_pmic_esm_setConfigurationPrmValTest_esmErrCntThr);
+    RUN_TEST(test_pmic_esm_getConfiguration_esmMcuPwmMode);
+    RUN_TEST(test_pmic_esm_getConfiguration_esmSocPwmMode);
+    RUN_TEST(test_esm_getConfigurationPrmValTest_handle);
+    RUN_TEST(test_esm_getConfigurationPrmValTest_pEsmCfg);
+    RUN_TEST(test_esm_getErrCnt_esmMcu);
+    RUN_TEST(test_esm_getErrCnt_esmSoc);
+    RUN_TEST(test_esm_getErrCntPrmValTest_handle);
+    RUN_TEST(test_esm_getErrCntPrmValTest_pEsmErrCnt);
+    RUN_TEST(test_esm_setInterruptPrmValTest_handle);
+    RUN_TEST(test_pmic_esm_startEsm_esmSocStart_hera);
+    RUN_TEST(test_pmic_esm_startEsm_esmSocEnable_hera);
+    RUN_TEST(test_pmic_esm_setConfiguration_esmSocLevelMode_hera);
+    RUN_TEST(test_pmic_esm_getConfiguration_esmSocLevelMode_hera);
+    RUN_TEST(test_Pmic_esmGetErrCnt_hera);
+    RUN_TEST(test_Pmic_esmSetInterrupt_hera);
+    RUN_TEST(test_Pmic_esmGetEnableState_hera);
+
+    UNITY_END();
+}
+
+/*!
  * \brief   ESM Unity Test App wrapper Function for LEO PMIC-A
  */
 static int32_t test_pmic_leo_pmicA_esm_testApp(void)
@@ -3912,11 +4024,22 @@ static int32_t test_pmic_leo_pmicA_esm_testApp(void)
     pmicConfigData.commMode            = PMIC_INTF_DUAL_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigData.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
-    pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
+    if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+        pmicConfigData.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
+        pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
-    pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
-    pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+        pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
+        pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+    }
+    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+        pmicConfigData.slaveAddr           = J7VCL_LEO_PMICA_SLAVE_ADDR;
+        pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
+
+        pmicConfigData.qaSlaveAddr         = J7VCL_LEO_PMICA_WDG_SLAVE_ADDR;
+        pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+    }
 
     pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
     pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
@@ -4041,71 +4164,58 @@ static int32_t test_pmic_hera_esm_testApp(void)
 
 }
 
-/*!
- * \brief   ESM Manual Test App wrapper Function for LEO PMIC-A
- */
-static int32_t test_pmic_esm_manual_testApp(void)
-{
-    int32_t status                = PMIC_ST_SUCCESS;
-    Pmic_CoreCfg_t pmicConfigData = {0U};
-
-    /* Fill parameters to pmicConfigData */
-    pmicConfigData.pmicDeviceType      = PMIC_DEV_LEO_TPS6594X;
-    pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
-
-    pmicConfigData.commMode            = PMIC_INTF_DUAL_I2C;
-    pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
-
-    pmicConfigData.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
-    pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
-
-    pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
-    pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
-
-    pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
-    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
-
-    pmicConfigData.pFnPmicCommIoWrite   = test_pmic_regWrite;
-    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
-
-    pmicConfigData.pFnPmicCritSecStart  = test_pmic_criticalSectionStartFn;
-    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
-
-    pmicConfigData.pFnPmicCritSecStop   = test_pmic_criticalSectionStopFn;
-    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
-
-    status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
-    return status;
-}
-
-static int32_t setup_pmic_interrupt()
+static int32_t setup_pmic_interrupt(uint32_t board)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-#ifdef SOC_J721E
-
-    pmic_device_info = J721E_LEO_PMICA_DEVICE;
-    status = test_pmic_leo_pmicA_esm_testApp();
-   /* Deinit pmic handle */
-    if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+    if(J721E_BOARD == board)
     {
-        test_pmic_appDeInit(pPmicCoreHandle);
-    }
-
-    if(PMIC_ST_SUCCESS == status)
-    {
-        pmic_device_info = J721E_LEO_PMICB_DEVICE;
-        status = test_pmic_leo_pmicB_esm_testApp();
-       /* Deinit pmic handle */
+        pmic_device_info = J721E_LEO_PMICA_DEVICE;
+        status = test_pmic_leo_pmicA_esm_testApp();
+        /* Deinit pmic handle */
         if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
         {
             test_pmic_appDeInit(pPmicCoreHandle);
         }
+
+        if(PMIC_ST_SUCCESS == status)
+        {
+            pmic_device_info = J721E_LEO_PMICB_DEVICE;
+            status = test_pmic_leo_pmicB_esm_testApp();
+            /* Deinit pmic handle */
+            if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+            {
+                test_pmic_appDeInit(pPmicCoreHandle);
+            }
+        }
     }
-#endif
+    else if(J7VCL_BOARD == board)
+    {
+        pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+        status = test_pmic_leo_pmicA_esm_testApp();
+        /* Deinit pmic handle */
+        if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+        {
+            test_pmic_appDeInit(pPmicCoreHandle);
+        }
+
+        if(PMIC_ST_SUCCESS == status)
+        {
+            pmic_device_info = J7VCL_HERA_PMICB_DEVICE;
+            status = test_pmic_hera_esm_testApp();
+            /* Deinit pmic handle */
+            if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+            {
+                test_pmic_appDeInit(pPmicCoreHandle);
+            }
+        }
+    }
+    else
+    {
+        status = PMIC_ST_ERR_INV_DEVICE;
+    }
     return status;
 }
-
 
 static const char pmicTestAppMenu[] =
 {
@@ -4114,22 +4224,12 @@ static const char pmicTestAppMenu[] =
     " \r\n ================================================================="
     " \r\n 0: Pmic Leo device(PMIC A on J721E EVM Using I2C Interface)"
     " \r\n 1: Pmic Leo device(PMIC B on J721E EVM Using I2C Interface)"
-    " \r\n 2: Pmic Hera device"
-    " \r\n 3: Pmic Leo device(PMIC A on J721E EVM Using SPI Stub Functions)"
-    " \r\n 4: Pmic Leo device(PMIC A on J721E EVM Manual Testcase for ESM Interrupts)"
-    " \r\n 5: quit"
-    " \r\n"
-    " \r\n Enter option: "
-};
-
-static const char pmicTestAppManualTestMenu[] =
-{
-    " \r\n ================================================================="
-    " \r\n Manual Testcase Menu:"
-    " \r\n ================================================================="
-    " \r\n 0: Pmic Leo device(PMIC A on J721E EVM for ESM MCU Level Mode)"
-    " \r\n 1: Pmic Leo device(PMIC A on J721E EVM for ESM MCU PWM Mode)"
-    " \r\n 2: quit"
+    " \r\n 2: Pmic Leo device(PMIC A on J7VCL EVM Using I2C Interface)"
+    " \r\n 3: Pmic Hera device(PMIC B on J7VCL EVM Using I2C Interface)"
+    " \r\n 4: Pmic Leo device(PMIC A on J721E EVM Using SPI Stub Functions)"
+    " \r\n 5: Pmic Leo device(PMIC A on J721E EVM Manual Testcase for ESM Interrupts)"
+    " \r\n 6: Pmic Leo device(PMIC A on J7VCL EVM Manual Testcase for ESM Interrupts)"
+    " \r\n 7: quit"
     " \r\n"
     " \r\n Enter option: "
 };
@@ -4144,10 +4244,33 @@ static const char pmicTestAppManualTestSubMenu[] =
     " \r\n 2: ESM RST Interrupt Test"
     " \r\n 3: ESM ALL Interrupt Test" 
     " \r\n 4: ESM Disable Interrupt Test" 
-    " \r\n 5: quit"
+    " \r\n 5: Back to Manual tests Menu"
     " \r\n"
     " \r\n Enter option: "
 };
+
+static void print_pmicTestAppManualTestMenu(uint32_t board)
+{
+    char board_name[10] = {0};
+
+    if(J721E_BOARD == board)
+    {
+        strcpy(board_name, "J721E");
+    }
+    else if(J7VCL_BOARD == board)
+    {
+        strcpy(board_name, "J7VCL");
+    }
+
+    pmic_log(" \r\n =================================================================");
+    pmic_log(" \r\n Manual Testcase Menu:");
+    pmic_log(" \r\n =================================================================");
+    pmic_log(" \r\n 0: Pmic Leo device(PMIC A on %s EVM for ESM MCU Level Mode)", board_name);
+    pmic_log(" \r\n 1: Pmic Leo device(PMIC A on %s EVM for ESM MCU PWM Mode)", board_name);
+    pmic_log(" \r\n 2: Back to Main Menu");
+    pmic_log(" \r\n");
+    pmic_log(" \r\n Enter option: ");
+}
 
 /*!
  * \brief   Run ESM manual test cases for MCU Level mode
@@ -4167,7 +4290,6 @@ static void test_pmic_run_testcases_mcuLevelMode(void)
 
         if(subMenuOption == 5)
         {
-            pmic_log(" \r\n Quit \n");
             break;
         }
         pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
@@ -4216,7 +4338,6 @@ static void test_pmic_run_testcases_mcuPwmMode(void)
 
         if(subMenuOption == 5)
         {
-            pmic_log(" \r\n Quit \n");
             break;
         }
         pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
@@ -4250,13 +4371,13 @@ static void test_pmic_run_testcases_mcuPwmMode(void)
 /*!
  * \brief   Run ESM manual test cases
  */
-static void test_pmic_run_testcases_manual(void)
+static void test_pmic_run_testcases_manual(uint32_t board)
 {
     int8_t menuOption = -1;
 
     while(1U)
     {
-        pmic_log("%s", pmicTestAppManualTestMenu);
+        print_pmicTestAppManualTestMenu(board);
         if(UART_scanFmt("%d", &menuOption) != 0U)
         {
             pmic_log("Read from UART Console failed\n");
@@ -4265,7 +4386,6 @@ static void test_pmic_run_testcases_manual(void)
         
         if(menuOption == 2)
         {
-            pmic_log(" \r\n Quit \n");
             break;
         }   
 
@@ -4309,84 +4429,128 @@ static void test_pmic_esm_testapp_runner(void)
 
         switch(num)
         {
-           case 0U:
-                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
-                {
-                   /* ESM Unity Test App wrapper Function for LEO PMIC-A */
-                   test_pmic_leo_pmicA_esm_testApp();
-                   pmic_device_info = J721E_LEO_PMICA_DEVICE;
-                   /* Run esm test cases for Leo PMIC-A */
-                   test_pmic_run_testcases();
-                   /* Deinit pmic handle */
-                   if(pPmicCoreHandle != NULL)
-                   {
-                       test_pmic_appDeInit(pPmicCoreHandle);
-                   }
-                }
-               break;
-           case 1U:
-                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
-                {
-                   /* ESM Unity Test App wrapper Function for LEO PMIC-B */
-                   test_pmic_leo_pmicB_esm_testApp();
-                   pmic_device_info = J721E_LEO_PMICB_DEVICE;
-                   pmic_log(" \r\n ESM feature cannot be tested on PMIC-B\n");
-
-                   /* Deinit pmic handle */
-                   if(pPmicCoreHandle != NULL)
-                   {
-                       test_pmic_appDeInit(pPmicCoreHandle);
-                   }
-                }
-               break;
-           case 2U:
-                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
-                {
-                   /* ESM Unity Test App wrapper Function for HERA PMIC */
-                   test_pmic_hera_esm_testApp();
-                   /* Run esm test cases for Hera PMIC */
-                   test_pmic_run_testcases();
-                   /* Deinit pmic handle */
-                   if(pPmicCoreHandle != NULL)
-                   {
-                       test_pmic_appDeInit(pPmicCoreHandle);
-                   }
-                }
-               break;
-           case 3U:
-                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
-                {
-                   /* ESM Unity Test App wrapper Function for LEO PMIC-A using
-                    * SPI stub functions */
-                   test_pmic_leo_pmicA_spiStub_esm_testApp();
-                   pmic_device_info = J721E_LEO_PMICA_DEVICE;
-                   /* Run esm test cases for Leo PMIC-A */
-                   test_pmic_run_testcases();
-                   /* Deinit pmic handle */
-                   if(pPmicCoreHandle != NULL)
-                   {
-                       test_pmic_appDeInit(pPmicCoreHandle);
-                   }
-                }
-               break;
-           case 4U:
-                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+            case 0U:
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
-                    /* ESM Manual Test App wrapper Function for LEO PMIC-A */
-                    if(PMIC_ST_SUCCESS == test_pmic_esm_manual_testApp())
+                    /* ESM Unity Test App wrapper Function for LEO PMIC-A */
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_esm_testApp())
                     {
-                        /* Run ESM manual test cases */
-                        test_pmic_run_testcases_manual();
+                        /* Run esm test cases for Leo PMIC-A */
+                        test_pmic_run_testcases();
                     }
                     /* Deinit pmic handle */
                     if(pPmicCoreHandle != NULL)
                     {
-                       test_pmic_appDeInit(pPmicCoreHandle);
+                        test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
-              break;
+                break;
+            case 1U:
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
+                {
+                    pmic_device_info = J721E_LEO_PMICB_DEVICE;
+                    /* ESM Unity Test App wrapper Function for LEO PMIC-B */
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicB_esm_testApp())
+                    {
+                        pmic_log(
+                             " \r\n ESM feature cannot be tested on PMIC-B\n");
+                        test_pmic_run_slave_testcases();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+                break;
+            case 2U:
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
+                {
+                    pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+                    /* ESM Unity Test App wrapper Function for LEO PMIC-A */
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_esm_testApp())
+                    {
+                        /* Run esm test cases for Leo PMIC-A */
+                        test_pmic_run_testcases();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+                break;
+            case 3U:
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
+                {
+                    pmic_device_info = J7VCL_HERA_PMICB_DEVICE;
+                    /* ESM Unity Test App wrapper Function for HERA PMIC */
+                    if(PMIC_ST_SUCCESS == test_pmic_hera_esm_testApp())
+                    {
+                        /* Run esm test cases for Hera PMIC */
+                        test_pmic_run_slave_testcases();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+                break;
+            case 4U:
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
+                {
+                    pmic_device_info = J721E_LEO_PMICA_DEVICE;
+                    /* ESM Unity Test App wrapper Function for LEO PMIC-A using
+                     * SPI stub functions */
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_spiStub_esm_testApp())
+                    {
+                        /* Run esm test cases for Leo PMIC-A */
+                        test_pmic_run_testcases();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+                break;
            case 5U:
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
+                {
+                    pmic_device_info = J721E_LEO_PMICA_DEVICE;
+                    /* ESM Manual Test App wrapper Function for LEO PMIC-A */
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_esm_testApp())
+                    {
+                        /* Run ESM manual test cases */
+                        test_pmic_run_testcases_manual(J721E_BOARD);
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+               break;
+           case 6U:
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
+                {
+                    pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+                    /* ESM Manual Test App wrapper Function for LEO PMIC-A */
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_esm_testApp())
+                    {
+                        /* Run ESM manual test cases */
+                        test_pmic_run_testcases_manual(J7VCL_BOARD);
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+               break;
+           case 7U:
                pmic_log(" \r\n Quit from application\n");
                return;
            default:

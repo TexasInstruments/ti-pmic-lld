@@ -42,7 +42,7 @@
 /* Pointer holds the pPmicCoreHandle */
 Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
 
-static uint8_t pmic_device_info = 0U;
+static uint16_t pmic_device_info = 0U;
 
 /*!
  * \brief   PMIC FSM Test Cases
@@ -137,11 +137,12 @@ static void test_Pmic_fsmSetNsleepSignalMask_mask_nsleep1(void)
     test_pmic_print_unity_testcase_info(7693,
                                         pmic_fsm_tests,
                                         PMIC_FSM_NUM_OF_TESTCASES);
-
+#if 0
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
         /* To avoid compile error */
     }
+#endif
 
     status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle, nsleepType, maskEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -507,11 +508,22 @@ static int32_t test_pmic_leo_pmicA_fsm_testApp(void)
     pmicConfigData.commMode            = PMIC_INTF_DUAL_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigData.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
-    pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
+    if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+        pmicConfigData.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
+        pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
-    pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
-    pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+        pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
+        pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+    }
+    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+        pmicConfigData.slaveAddr           = J7VCL_LEO_PMICA_SLAVE_ADDR;
+        pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
+
+        pmicConfigData.qaSlaveAddr         = J7VCL_LEO_PMICA_WDG_SLAVE_ADDR;
+        pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+    }
 
     pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
     pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
@@ -529,7 +541,6 @@ static int32_t test_pmic_leo_pmicA_fsm_testApp(void)
     return status;
 }
 
-#ifdef SOC_J721E
 /*!
  * \brief   FSM Unity Test App wrapper Function for LEO PMIC-B
  */
@@ -567,7 +578,6 @@ static int32_t test_pmic_leo_pmicB_fsm_testApp(void)
     return status;
 
 }
-#endif
 
 /*!
  * \brief  FSM  Unity Test App wrapper Function for HERA PMIC
@@ -604,73 +614,61 @@ static int32_t test_pmic_hera_fsm_testApp(void)
 
     status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
     return status;
-
 }
 
-/*!
- * \brief   FSM Manual Test App wrapper Function for LEO PMIC-A
- */
-static int32_t test_pmic_fsm_manual_testApp(void)
-{
-    int32_t status                = PMIC_ST_SUCCESS;
-    Pmic_CoreCfg_t pmicConfigData = {0U};
-
-    /* Fill parameters to pmicConfigData */
-    pmicConfigData.pmicDeviceType      = PMIC_DEV_LEO_TPS6594X;
-    pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
-
-    pmicConfigData.commMode            = PMIC_INTF_DUAL_I2C;
-    pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
-
-    pmicConfigData.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
-    pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
-
-    pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
-    pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
-
-    pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
-    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
-
-    pmicConfigData.pFnPmicCommIoWrite   = test_pmic_regWrite;
-    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
-
-    pmicConfigData.pFnPmicCritSecStart  = test_pmic_criticalSectionStartFn;
-    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
-
-    pmicConfigData.pFnPmicCritSecStop   = test_pmic_criticalSectionStopFn;
-    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
-
-    status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
-    return status;
-}
-
-static int32_t setup_pmic_interrupt()
+static int32_t setup_pmic_interrupt(uint32_t board)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-#ifdef SOC_J721E
-
-    pmic_device_info = J721E_LEO_PMICA_DEVICE;
-    status = test_pmic_leo_pmicA_fsm_testApp();
-   /* Deinit pmic handle */
-    if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+    if(J721E_BOARD == board)
     {
-        test_pmic_appDeInit(pPmicCoreHandle);
-    }
-
-    if(PMIC_ST_SUCCESS == status)
-    {
-        pmic_device_info = J721E_LEO_PMICB_DEVICE;
-        status = test_pmic_leo_pmicB_fsm_testApp();
-       /* Deinit pmic handle */
+        pmic_device_info = J721E_LEO_PMICA_DEVICE;
+        status = test_pmic_leo_pmicA_fsm_testApp();
+        /* Deinit pmic handle */
         if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
         {
             test_pmic_appDeInit(pPmicCoreHandle);
         }
+
+        if(PMIC_ST_SUCCESS == status)
+        {
+            pmic_device_info = J721E_LEO_PMICB_DEVICE;
+            status = test_pmic_leo_pmicB_fsm_testApp();
+            /* Deinit pmic handle */
+            if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+            {
+                test_pmic_appDeInit(pPmicCoreHandle);
+            }
+        }
     }
-#endif
+    else if(J7VCL_BOARD == board)
+    {
+        pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+        status = test_pmic_leo_pmicA_fsm_testApp();
+        /* Deinit pmic handle */
+        if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+        {
+            test_pmic_appDeInit(pPmicCoreHandle);
+        }
+
+        if(PMIC_ST_SUCCESS == status)
+        {
+            pmic_device_info = J7VCL_HERA_PMICB_DEVICE;
+            status = test_pmic_hera_fsm_testApp();
+            /* Deinit pmic handle */
+            if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+            {
+                test_pmic_appDeInit(pPmicCoreHandle);
+            }
+        }
+    }
+    else
+    {
+        status = PMIC_ST_ERR_INV_DEVICE;
+    }
     return status;
 }
+
 
 static const char pmicTestAppMenu[] =
 {
@@ -678,37 +676,50 @@ static const char pmicTestAppMenu[] =
     " \r\n Menu:"
     " \r\n ================================================================="
     " \r\n 0: Pmic Leo device(PMIC A on J721E EVM)"
-    " \r\n 1: Pmic Hera device"
-    " \r\n 2: Pmic Leo device(PMIC A on J721E EVM Manual Testcase for FSM states)"
-    " \r\n 3: quit"
+    " \r\n 1: Pmic Leo device(PMIC A on J7VCL EVM)"
+    " \r\n 2: Pmic Hera device(PMIC A on J7VCL EVM)"
+    " \r\n 3: Pmic Leo device(PMIC A on J721E EVM Manual Testcase for FSM states)"
+    " \r\n 4: Pmic Leo device(PMIC A on J7VCL EVM Manual Testcase for FSM states)"
+    " \r\n 5: quit"
     " \r\n"
     " \r\n Enter option: "
 };
 
-static const char pmicTestAppManualTestMenu[] =
+static void print_pmicTestAppManualTestMenu(uint32_t board)
 {
-    " \r\n ================================================================="
-    " \r\n Manual Testcase Menu:"
-    " \r\n ================================================================="
-    " \r\n 0: Pmic Leo device(PMIC A on J721E EVM Set FSM Mission States - MCU"
-    " \r\n 1: Pmic Leo device(PMIC A on J721E EVM Set FSM Mission States - S2R"
-    " \r\n 2: Pmic Leo device(PMIC A on J721E EVM Set FSM Mission States - lpStandby"
-    " \r\n 3: Pmic Leo device(PMIC A on J721E EVM Set FSM Mission States - Standby"
-    " \r\n 4: quit"
-    " \r\n"
-    " \r\n Enter option: "
+    char board_name[10] = {0};
+
+    if(J721E_BOARD == board)
+    {
+        strcpy(board_name, "J721E");
+    }
+    else if(J7VCL_BOARD == board)
+    {
+        strcpy(board_name, "J7VCL");
+    }
+
+    pmic_log(" \r\n =================================================================");
+    pmic_log(" \r\n Manual Testcase Menu:");
+    pmic_log(" \r\n =================================================================");
+    pmic_log(" \r\n 0: Pmic Leo device(PMIC A on %s EVM Set FSM Mission States - MCU", board_name);
+    pmic_log(" \r\n 1: Pmic Leo device(PMIC A on %s EVM Set FSM Mission States - S2R", board_name);
+    pmic_log(" \r\n 2: Pmic Leo device(PMIC A on %s EVM Set FSM Mission States - lpStandby", board_name);
+    pmic_log(" \r\n 3: Pmic Leo device(PMIC A on %s EVM Set FSM Mission States - Standby", board_name);
+    pmic_log(" \r\n 4: Back to Main Menu");
+    pmic_log(" \r\n");
+    pmic_log(" \r\n Enter option: ");
 };
 
 /*!
  * \brief   Run FSM manual test cases
  */
-static void test_pmic_run_testcases_manual(void)
+static void test_pmic_run_testcases_manual(uint32_t board)
 {
     int8_t menuOption = -1;
 
     while(1U)
     {
-        pmic_log("%s", pmicTestAppManualTestMenu);
+        print_pmicTestAppManualTestMenu(board);
         if(UART_scanFmt("%d", &menuOption) != 0U)
         {
             pmic_log("Read from UART Console failed\n");
@@ -717,7 +728,6 @@ static void test_pmic_run_testcases_manual(void)
 
         if(menuOption == 4)
         {
-            pmic_log(" \r\n Quit \n");
             break;
         }   
 
@@ -768,8 +778,9 @@ static void test_pmic_fsm_testapp_runner(void)
         switch(num)
         {
            case 0U:
-                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
+                    pmic_device_info = J721E_LEO_PMICA_DEVICE;
                     /* FSM Unity Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_fsm_testApp())
                     {
@@ -783,8 +794,25 @@ static void test_pmic_fsm_testapp_runner(void)
                 }
                break;
            case 1U:
-                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
+                    pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+                    /* FSM Unity Test App wrapper Function for LEO PMIC-A */
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_fsm_testApp())
+                    {
+                       test_pmic_run_testcases();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                       test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+               break;
+           case 2U:
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
+                {
+                    pmic_device_info = J7VCL_HERA_PMICB_DEVICE;
                     /* FSM Unity Test App wrapper Function for HERA PMIC */
                    if(PMIC_ST_SUCCESS == test_pmic_hera_fsm_testApp())
                    {
@@ -798,15 +826,15 @@ static void test_pmic_fsm_testapp_runner(void)
                    }
                 }
                break;
-           case 2U:
-                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+           case 3U:
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
                     /* FSM Manual Test App wrapper Function for LEO PMIC-A*/
-                    if(PMIC_ST_SUCCESS == test_pmic_fsm_manual_testApp())
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_fsm_testApp())
                     {
                        /* Run fsm manual test cases */
-                       test_pmic_run_testcases_manual();
+                       test_pmic_run_testcases_manual(J721E_BOARD);
                     }
                     /* Deinit pmic handle */
                     if(pPmicCoreHandle != NULL)
@@ -815,7 +843,24 @@ static void test_pmic_fsm_testapp_runner(void)
                     }
                 }
                break;
-           case 3U:
+           case 4U:
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
+                {
+                    pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+                    /* FSM Manual Test App wrapper Function for LEO PMIC-A*/
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_fsm_testApp())
+                    {
+                       /* Run fsm manual test cases */
+                       test_pmic_run_testcases_manual(J7VCL_BOARD);
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                       test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+               break;
+           case 5U:
                pmic_log(" \r\n Quit from application\n");
                return;
            default:
