@@ -43,7 +43,7 @@
 /* Pointer to Pmic Core Handle */
 Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
 
-static uint8_t pmic_device_info = 0U;
+static uint16_t pmic_device_info = 0U;
 
 volatile uint32_t pmic_intr_triggered;
 
@@ -1948,7 +1948,7 @@ static void test_pmic_rtc_testWakeup_TimerIntr_lpStandbyState(void)
     uint8_t            timerPeriod  = 0U;
     int8_t num                      = 0;
     Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
-    Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
+    Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 0U, 30U, 6U, 0U, 1U};
     Pmic_IrqStatus_t errStat  = {0U};
 
     test_pmic_print_unity_testcase_info(7358,
@@ -2011,7 +2011,7 @@ static void test_pmic_rtc_testWakeup_TimerIntr_standbyState(void)
     Pmic_IrqStatus_t errStat  = {0U};
 
     Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
-    Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
+    Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 0U, 30U, 6U, 0U, 1U};
 
     test_pmic_print_unity_testcase_info(8015,
                                         pmic_rtc_tests,
@@ -2072,7 +2072,7 @@ static void test_pmic_rtc_testWakeup_AlarmIntr_lpStandbyState(void)
     Pmic_RtcTime_t     timeCfg_rd   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
     Pmic_RtcDate_t     dateCfg_rd   = { 0x0F, 0U, 0U, 0U, 0U};
     Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
-    Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
+    Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 0U, 30U, 6U, 0U, 1U};
     int8_t num = 0;
     Pmic_IrqStatus_t errStat  = {0U};
 
@@ -2139,7 +2139,7 @@ static void test_pmic_rtc_testWakeup_AlarmIntr_standbyState(void)
     Pmic_RtcTime_t     timeCfg_rd   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
     Pmic_RtcDate_t     dateCfg_rd   = { 0x0F, 0U, 0U, 0U, 0U};
     Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
-    Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 30U, 30U, 6U, 0U, 1U};
+    Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 0U, 30U, 6U, 0U, 1U};
     bool standByState = 0U;
     int8_t num = 0;
     Pmic_IrqStatus_t errStat  = {0U};
@@ -2208,6 +2208,12 @@ static void test_pmic_rtc_testTimerAsyncIntr(void)
     test_pmic_print_unity_testcase_info(7888,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
+
+    /* Need to chekc interrupt issue on J7VCL */
+    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+        TEST_IGNORE();
+    }
 
     /* Enable GPIO interrupt on the specific gpio pin */
     GPIO_enableInt(0);
@@ -2286,6 +2292,12 @@ static void test_pmic_rtc_testAlarmAsyncIntr(void)
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
+    /* Need to chekc interrupt issue on J7VCL */
+    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+        TEST_IGNORE();
+    }
+
     /* Enable GPIO interrupt on the specific gpio pin */
     GPIO_enableInt(0);
 
@@ -2354,8 +2366,7 @@ static void test_Pmic_rtcEnable_hera(void)
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
-
-    if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         TEST_IGNORE();
     }
@@ -2749,11 +2760,22 @@ static int32_t test_pmic_leo_pmicA_rtc_testApp(void)
     pmicConfigData.commMode            = PMIC_INTF_DUAL_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigData.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
-    pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
+    if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+        pmicConfigData.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
+        pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
-    pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
-    pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+        pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
+        pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+    }
+    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+        pmicConfigData.slaveAddr           = J7VCL_LEO_PMICA_SLAVE_ADDR;
+        pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
+
+        pmicConfigData.qaSlaveAddr         = J7VCL_LEO_PMICA_WDG_SLAVE_ADDR;
+        pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+    }
 
     pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
     pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
@@ -2841,44 +2863,6 @@ static int32_t test_pmic_hera_rtc_testApp(void)
 }
 
 /*!
- * \brief   RTC Manual Test App wrapper Function for LEO PMIC-A
- */
-static int32_t test_pmic_rtc_manual_testApp(void)
-{
-    int32_t status                = PMIC_ST_SUCCESS;
-    Pmic_CoreCfg_t pmicConfigData = {0U};
-
-    /* Fill parameters to pmicConfigData */
-    pmicConfigData.pmicDeviceType      = PMIC_DEV_LEO_TPS6594X;
-    pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
-
-    pmicConfigData.commMode            = PMIC_INTF_DUAL_I2C;
-    pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
-
-    pmicConfigData.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
-    pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
-
-    pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
-    pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
-
-    pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
-    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
-
-    pmicConfigData.pFnPmicCommIoWrite   = test_pmic_regWrite;
-    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
-
-    pmicConfigData.pFnPmicCritSecStart  = test_pmic_criticalSectionStartFn;
-    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
-
-    pmicConfigData.pFnPmicCritSecStop   = test_pmic_criticalSectionStopFn;
-    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
-
-    status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
-    return status;
-}
-
-#ifdef SOC_J721E
-/*!
  * \brief   RTC Unity Test App wrapper Function for LEO PMIC-B
  */
 static int32_t test_pmic_leo_pmicB_rtc_testApp(void)
@@ -2913,36 +2897,98 @@ static int32_t test_pmic_leo_pmicB_rtc_testApp(void)
 
     status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
     return status;
-
 }
-#endif
 
-static int32_t setup_pmic_interrupt()
+static int32_t setup_pmic_interrupt(uint32_t board)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-#ifdef SOC_J721E
-
-    pmic_device_info = J721E_LEO_PMICA_DEVICE;
-    status = test_pmic_leo_pmicA_rtc_testApp();
-   /* Deinit pmic handle */
-    if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+    if(J721E_BOARD == board)
     {
-        test_pmic_appDeInit(pPmicCoreHandle);
-    }
-
-    if(PMIC_ST_SUCCESS == status)
-    {
-        pmic_device_info = J721E_LEO_PMICB_DEVICE;
-        status = test_pmic_leo_pmicB_rtc_testApp();
-       /* Deinit pmic handle */
+        pmic_device_info = J721E_LEO_PMICA_DEVICE;
+        status = test_pmic_leo_pmicA_rtc_testApp();
+        /* Deinit pmic handle */
         if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
         {
             test_pmic_appDeInit(pPmicCoreHandle);
         }
+
+        if(PMIC_ST_SUCCESS == status)
+        {
+            pmic_device_info = J721E_LEO_PMICB_DEVICE;
+            status = test_pmic_leo_pmicB_rtc_testApp();
+            /* Deinit pmic handle */
+            if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+            {
+                test_pmic_appDeInit(pPmicCoreHandle);
+            }
+        }
     }
-#endif
+    else if(J7VCL_BOARD == board)
+    {
+        pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+        status = test_pmic_leo_pmicA_rtc_testApp();
+        /* Deinit pmic handle */
+        if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+        {
+            test_pmic_appDeInit(pPmicCoreHandle);
+        }
+
+        if(PMIC_ST_SUCCESS == status)
+        {
+            pmic_device_info = J7VCL_HERA_PMICB_DEVICE;
+            status = test_pmic_hera_rtc_testApp();
+            /* Deinit pmic handle */
+            if((pPmicCoreHandle != NULL) && (PMIC_ST_SUCCESS == status))
+            {
+                test_pmic_appDeInit(pPmicCoreHandle);
+            }
+        }
+    }
+    else
+    {
+        status = PMIC_ST_ERR_INV_DEVICE;
+    }
     return status;
+}
+
+/*!
+ * \brief   PMIC Application Callback Function
+ */
+void AppPmicCallbackFxn(void)
+{
+    int32_t status           = PMIC_ST_SUCCESS;
+    Pmic_IrqStatus_t errStat = {0U};
+    uint8_t irqNum           = 0U;
+
+    status = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, false);
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        status = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                         &errStat,
+                                         &irqNum);
+        if(PMIC_ST_SUCCESS == status)
+        {
+            switch(irqNum)
+            {
+                case PMIC_TPS6594X_RTC_TIMER_INT:
+                    pmic_intr_triggered = 1U;
+                    /* clear the interrupt */
+                    status = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                              PMIC_TPS6594X_RTC_TIMER_INT);
+                   break;
+                case PMIC_TPS6594X_RTC_ALARM_INT:
+                    pmic_intr_triggered = 2U;
+                    /* clear the interrupt */
+                    status = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                              PMIC_TPS6594X_RTC_ALARM_INT);
+                   break;
+                default:
+                   break;
+            }
+        }
+    }
 }
 
 static const char pmicTestAppMenu[] =
@@ -2953,37 +2999,50 @@ static const char pmicTestAppMenu[] =
     " \r\n 0: Pmic Leo device(PMIC A on J721E EVM Using I2C Interface)"
     " \r\n 1: Pmic Leo device(PMIC A on J721E EVM Using SPI Stub Functions)"
     " \r\n 2: Pmic Leo device(PMIC B on J721E EVM)"
-    " \r\n 3: Pmic HERA device"
-    " \r\n 4: Pmic Leo device(PMIC A on J721E EVM Manual Testcase for RTC WKUP)"
-    " \r\n 5: quit"
+    " \r\n 3: Pmic Leo device(PMIC A on J7VCL EVM Using I2C Interface)"
+    " \r\n 4: Pmic HERA device(PMIC B on J7VCL EVM)"
+    " \r\n 5: Pmic Leo device(PMIC A on J721E EVM Manual Testcase for RTC WKUP)"
+    " \r\n 6: Pmic Leo device(PMIC A on J7VCL EVM Manual Testcase for RTC WKUP)"
+    " \r\n 7: quit"
     " \r\n"
     " \r\n Enter option: "
 };
 
-static const char pmicTestAppManualTestMenu[] =
+static void print_pmicTestAppManualTestMenu(uint32_t board)
 {
-    " \r\n ================================================================="
-    " \r\n Manual Testcase Menu:"
-    " \r\n ================================================================="
-    " \r\n 0: Pmic Leo device(PMIC A on J721E EVM for RTC WKUP using Timer Interrupt from LP Standby State)"
-    " \r\n 1: Pmic Leo device(PMIC A on J721E EVM for RTC WKUP using Timer Interrupt from Standby State)"
-    " \r\n 2: Pmic Leo device(PMIC A on J721E EVM for RTC WKUP using Alarm Interrupt from LP Standby State)"
-    " \r\n 3: Pmic Leo device(PMIC A on J721E EVM for RTC WKUP using Alarm Interrupt from Standby State)"
-    " \r\n 4: quit"
-    " \r\n"
-    " \r\n Enter option: "
-};
+    char board_name[10] = {0};
+
+    if(J721E_BOARD == board)
+    {
+        strcpy(board_name, "J721E");
+    }
+    else if(J7VCL_BOARD == board)
+    {
+        strcpy(board_name, "J7VCL");
+    }
+
+pmic_log(" \r\n =================================================================");
+pmic_log(" \r\n Manual Testcase Menu:");
+pmic_log(" \r\n =================================================================");
+pmic_log(" \r\n 0: Pmic Leo device(PMIC A on %s EVM for RTC WKUP using Timer Interrupt from LP Standby State)", board_name);
+pmic_log(" \r\n 1: Pmic Leo device(PMIC A on %s EVM for RTC WKUP using Timer Interrupt from Standby State)", board_name);
+pmic_log(" \r\n 2: Pmic Leo device(PMIC A on %s EVM for RTC WKUP using Alarm Interrupt from LP Standby State)", board_name);
+pmic_log(" \r\n 3: Pmic Leo device(PMIC A on %s EVM for RTC WKUP using Alarm Interrupt from Standby State)", board_name);
+pmic_log(" \r\n 4: Back to Main Menu");
+pmic_log(" \r\n");
+pmic_log(" \r\n Enter option: ");
+}
 
 /*!
  * \brief   Run RTC manual test cases
  */
-static void test_pmic_run_testcases_manual(void)
+static void test_pmic_run_testcases_manual(uint32_t board)
 {
     int8_t menuOption = -1;
 
     while(1U)
     {
-        pmic_log("%s", pmicTestAppManualTestMenu);
+        print_pmicTestAppManualTestMenu(board);
         if(UART_scanFmt("%d", &menuOption) != 0U)
         {
             pmic_log("Read from UART Console failed\n");
@@ -2992,7 +3051,6 @@ static void test_pmic_run_testcases_manual(void)
         
         if(menuOption == 4)
         {
-            pmic_log(" \r\n Quit \n");
             break;
         }   
 
@@ -3042,117 +3100,124 @@ static void test_pmic_rtc_testapp_runner(void)
 
         switch(num)
         {
-           case 0U:
-                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
-                {
-                   /* RTC Unity Test App wrapper Function for LEO PMIC-A */
-                   test_pmic_leo_pmicA_rtc_testApp();
-                   /* Run rtc test cases for Leo PMIC-A */
-                   test_pmic_run_testcases();
-                   /* Deinit pmic handle */
-                   if(pPmicCoreHandle != NULL)
-                   {
-                       test_pmic_appDeInit(pPmicCoreHandle);
-                   }
-                }
-               break;
-           case 1U:
-                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
-                {
-                   /* RTC Unity Test App wrapper Function for LEO PMIC-A using
-                    * SPI stub functions */
-                   test_pmic_leo_pmicA_spiStub_rtc_testApp();
-                   /* Run rtc test cases for Leo PMIC-A */
-                   test_pmic_run_testcases();
-                   /* Deinit pmic handle */
-                   if(pPmicCoreHandle != NULL)
-                   {
-                       test_pmic_appDeInit(pPmicCoreHandle);
-                   }
-                }
-               break;
-           case 2U:
-               /* RTC Unity Test App wrapper Function for LEO PMIC-B */
-                pmic_log("RTC on LEO PMIC-B not supported due to HW limitation \n");
-               break;
-           case 3U:
-                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
-                {
-                   /* RTC Unity Test App wrapper Function for HERA */
-                   test_pmic_hera_rtc_testApp();
-                   /* Run rtc test cases for Leo PMIC-A */
-                   test_pmic_hera_run_testcases();
-                   /* Deinit pmic handle */
-                   if(pPmicCoreHandle != NULL)
-                   {
-                       test_pmic_appDeInit(pPmicCoreHandle);
-                   }
-                }
-               break;
-           case 4U:
-                if(PMIC_ST_SUCCESS == setup_pmic_interrupt())
+            case 0U:
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
-                    /* RTC Manual Test App wrapper Function for LEO PMIC-A */
-                    test_pmic_rtc_manual_testApp();
-                    /* Run Rtc manual test cases */
-                    test_pmic_run_testcases_manual();
+                    /* RTC Unity Test App wrapper Function for LEO PMIC-A */
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_rtc_testApp())
+                    {
+                        /* Run rtc test cases for Leo PMIC-A */
+                        test_pmic_run_testcases();
+                    }
                     /* Deinit pmic handle */
                     if(pPmicCoreHandle != NULL)
                     {
-                       test_pmic_appDeInit(pPmicCoreHandle);
+                        test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
-               break;
+                break;
+            case 1U:
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
+                {
+                    pmic_device_info = J721E_LEO_PMICA_DEVICE;
+                    /* RTC Unity Test App wrapper Function for LEO PMIC-A using
+                     * SPI stub functions */
+                    if(PMIC_ST_SUCCESS ==
+                              test_pmic_leo_pmicA_spiStub_rtc_testApp())
+                    {
+                        /* Run rtc test cases for Leo PMIC-A */
+                        test_pmic_run_testcases();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+                break;
+            case 2U:
+               /* RTC Unity Test App wrapper Function for LEO PMIC-B */
+                pmic_log("RTC on LEO PMIC-B is not supported due to HW limitation\n");
+                break;
+            case 3U:
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
+                {
+                    pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+                    /* RTC Unity Test App wrapper Function for LEO PMIC-A */
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_rtc_testApp())
+                    {
+                        /* Run rtc test cases for Leo PMIC-A */
+                        test_pmic_run_testcases();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+                break;
+            case 4U:
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
+                {
+                    pmic_device_info = J7VCL_HERA_PMICB_DEVICE;
+                    /* RTC Unity Test App wrapper Function for HERA */
+                    if(PMIC_ST_SUCCESS == test_pmic_hera_rtc_testApp())
+                    {
+                        /* Run rtc test cases for Leo PMIC-A */
+                        test_pmic_hera_run_testcases();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+                break;
            case 5U:
-               pmic_log(" \r\n Quit from application\n");
-               return;
-           default:
-               pmic_log(" \r\n Invalid option... Try Again!!!\n");
-               break;
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
+                {
+                    pmic_device_info = J721E_LEO_PMICA_DEVICE;
+                    /* RTC Manual Test App wrapper Function for LEO PMIC-A */
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_rtc_testApp())
+                    {
+                        /* Run Rtc manual test cases */
+                        test_pmic_run_testcases_manual(J721E_BOARD);
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+                break;
+           case 6U:
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
+                {
+                    pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+                    /* RTC Manual Test App wrapper Function for LEO PMIC-A */
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_rtc_testApp())
+                    {
+                        /* Run Rtc manual test cases */
+                        test_pmic_run_testcases_manual(J7VCL_BOARD);
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+                break;
+            case 7U:
+                pmic_log(" \r\n Quit from application\n");
+                return;
+            default:
+                pmic_log(" \r\n Invalid option... Try Again!!!\n");
+                break;
         }
     }
 }
 #endif
-
-/*!
- * \brief   PMIC Application Callback Function
- */
-void AppPmicCallbackFxn(void)
-{
-    int32_t status           = PMIC_ST_SUCCESS;
-    Pmic_IrqStatus_t errStat = {0U};
-    uint8_t irqNum           = 0U;
-
-    status = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, false);
-
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_getNextErrorStatus(pPmicCoreHandle,
-                                         &errStat,
-                                         &irqNum);
-        if(PMIC_ST_SUCCESS == status)
-        {
-            switch(irqNum)
-            {
-                case PMIC_TPS6594X_RTC_TIMER_INT:
-                    pmic_intr_triggered = 1U;
-                    /* clear the interrupt */
-                    status = Pmic_irqClrErrStatus(pPmicCoreHandle,
-                                              PMIC_TPS6594X_RTC_TIMER_INT);
-                   break;
-                case PMIC_TPS6594X_RTC_ALARM_INT:
-                    pmic_intr_triggered = 2U;
-                    /* clear the interrupt */
-                    status = Pmic_irqClrErrStatus(pPmicCoreHandle,
-                                              PMIC_TPS6594X_RTC_ALARM_INT);
-                   break;
-                default:
-                   break;
-            }
-        }
-    }
-}
 
 /*!
  * \brief   TI RTOS specific RTC TEST APP main Function
@@ -3164,8 +3229,8 @@ int main()
 {
     Board_initUART();
 
-    /* GPIO Configuration
-     * This API is required for Asynchronous Interrupts only
+    /*
+     * Initialze and Register ISR handler to J7 Interrupts
      */
     App_initGPIO(AppPmicCallbackFxn);
 
