@@ -446,6 +446,9 @@ static int32_t test_pmic_i2c_lld_intf_setup(Pmic_CoreCfg_t  *pPmicConfigData,
     /* Main I2c BUS */
     if(instType == PMIC_MAIN_INST)
     {
+        /* Initialize i2c core instances */
+        I2C_init();
+
         i2c_instance = 0U;
         test_pmic_setConfigI2C(i2c_instance, CSL_WKUP_I2C0_CFG_BASE);
     }
@@ -456,8 +459,6 @@ static int32_t test_pmic_i2c_lld_intf_setup(Pmic_CoreCfg_t  *pPmicConfigData,
         test_pmic_setConfigI2C(i2c_instance, CSL_MCU_I2C0_CFG_BASE);
     }
 
-    /* Initialize i2c core instances */
-    I2C_init();
     /* Configured i2cParams.bitRate with standard I2C_100kHz */
     I2C_Params_init(&i2cParams);
 
