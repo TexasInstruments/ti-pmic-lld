@@ -290,10 +290,6 @@ static void test_Pmic_fsmSetMissionState_lpstandby(void)
 
     status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    status =  Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
-
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
 /*!
@@ -311,10 +307,6 @@ static void test_Pmic_fsmSetMissionState_standby(void)
                                         PMIC_FSM_NUM_OF_TESTCASES);
 
     status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    status =  Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
-
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
