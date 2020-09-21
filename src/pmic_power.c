@@ -5439,7 +5439,7 @@ int32_t Pmic_powerGetPwrResourceCfg(
  *          Pmic_PowerCommonCfg_t:
  *          deglitchTimeSel
  *
- *          Application can set/selct  trigger selection for :
+ *          Application can set/select  trigger selection for :
  *          severe Error, other rail group, soc rail group, mcu rail group and
  *          Moderate Error
  *          by configuring the following structure members of
@@ -5449,9 +5449,7 @@ int32_t Pmic_powerGetPwrResourceCfg(
  *
  *
  * \param   pPmicCoreHandle  [IN]    PMIC Interface Handle.
- * \param   powerCommonCfg   [IN]    Power configuration
- *                                   Valid values:
- *                                   \ref Pmic_PowerCommonCfg_s
+ * \param   powerCommonCfg   [IN]    Power configuration.
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
@@ -5574,9 +5572,7 @@ int32_t Pmic_powerSetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
  *          moderateRailTrig
  *
  * \param   pPmicCoreHandle  [IN]    PMIC Interface Handle.
- * \param   pPowerCommonCfg  [OUT]   Power configuration
- *                                   Valid values:
- *                                   \ref Pmic_PowerCommonCfg_s
+ * \param   pPowerCommonCfg  [OUT]   Pointer to hold Power configuration.
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
@@ -5829,8 +5825,6 @@ int32_t Pmic_powerGetConfigPowerGood(Pmic_CoreHandle_t *pPmicCoreHandle,
  *                                     \ref Pmic_Lp8764xHera_Power_Resource.
  * \param   pPwrRsrcStatCfg    [OUT]   Pointer to store Power Resource
  *                                     configuration for BUCK/LDO/VMON/VCCA
- *                                     For valid values
- *                                     \ref Pmic_PowerResourceStat_s
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
@@ -6013,9 +6007,7 @@ int32_t Pmic_powerGetPwrThermalStat(Pmic_CoreHandle_t       *pPmicCoreHandle,
  *          thermalShutdownThold
  *
  * \param   pPmicCoreHandle       [IN]    PMIC Interface Handle.
- * \param   thermalThreshold      [IN]    Structure to hold Thermal Cfg
- *                                        For valid values
- *                                        \ref Pmic_PowerThermalCfg_s
+ * \param   thermalThreshold      [IN]    Thermal Configuration.
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
@@ -6069,9 +6061,7 @@ int32_t Pmic_powerSetThermalConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
  *          thermalShutdownThold
  *
  * \param   pPmicCoreHandle       [IN]     PMIC Interface Handle.
- * \param   pThermalThreshold     [OUT]    Structure to hold Thermal Cfg
- *                                         For valid values
- *                                         \ref Pmic_PowerThermalCfg_s
+ * \param   pThermalThreshold     [OUT]    Pointer to hold Thermal Cfg
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
@@ -6117,7 +6107,7 @@ int32_t Pmic_powerGetThermalConfig(Pmic_CoreHandle_t      *pPmicCoreHandle,
 
 /*!
  * \brief   API to enable/disable Power interrupt.
- *          This function is used to enable/disble thermal Interrupts
+ *          This function is used to enable/disable thermal Interrupts
  *
  *
  * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
@@ -6132,6 +6122,7 @@ int32_t Pmic_powerGetThermalConfig(Pmic_CoreHandle_t      *pPmicCoreHandle,
  *                                     Valid values for LP8764x HERA Device
  *                                     \ref Pmic_LP8764x_PowerInterruptType
  * \param   intrEnable         [IN]    Enable/Disable the interrupt.
+ *                                     For Vaild values:
  *                                     \ref Pmic_PowerInterruptCfg
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
@@ -6165,7 +6156,7 @@ int32_t Pmic_powerSetPwrRsrcIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   API to enable/disable Power interrupt.
- *          This function is used to enable/disble power Interrupts
+ *          This function is used to enable/disable power Interrupts
  *
  * \param   pPmicCoreHandle  [IN]    PMIC Interface Handle.
  * \param   intrType         [IN]    Interrupt type
@@ -6174,6 +6165,7 @@ int32_t Pmic_powerSetPwrRsrcIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  *                                   Valid values for LP8764x HERA Device
  *                                   \ref Pmic_LP8764x_PowerInterruptCommonType
  * \param   intrEnable       [IN]    Enable/Disable the interrupt.
+ *                                   For Vaild values:
  *                                   \ref Pmic_PowerInterruptCfg
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code

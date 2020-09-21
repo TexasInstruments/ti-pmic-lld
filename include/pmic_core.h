@@ -37,7 +37,8 @@
  *
  *  PMIC common Driver contains Miscellaneous APIs supported by all supported
  *  PMIC Devices.
- *  Like, PMIC recovery count APIs and PMIC nSLEEP Setup APIs.
+ *  Like, PMIC recovery count APIs, Read/Write Scratchpad registers APIs 
+ *  and PMIC nSLEEP Setup APIs.
  *
  *  @{
  */

@@ -2397,7 +2397,7 @@ int32_t Pmic_rtcGetTimeDateInfo(Pmic_CoreHandle_t *pPmicCoreHandle,
  * Design: did_pmic_rtc_cfg_readback
  *
  *          This function is used to set the frequency compensation
- *          value in the RTC of the PMIC Devicec.
+ *          value in the RTC of the PMIC Device.
  *
  * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
  * \param   compensation      [IN]    PMIC RTC frequency compensation value
@@ -2438,7 +2438,7 @@ int32_t  Pmic_rtcSetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle,
  * Design: did_pmic_rtc_cfg_readback
  *
  *          This function is used to get the frequency compensation
- *          value from the RTC of the PMIC Devicec.
+ *          value from the RTC of the PMIC Device.
  *
  * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
  * \param   pCompensation     [OUT]   Pointer to store frequency compensation

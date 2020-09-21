@@ -94,7 +94,8 @@ extern "C" {
 /**
  *  \anchor Pmic_LP8764x_Regulator_Vmon_RV_Check
  *  \name   PMIC Residual voltage check Enable/Disable
- *          Valid only for VMON1, VMON2, LDO, BUCK
+ *
+ *  Valid only for VMON1, VMON2, LDO, BUCK
  *
  *  @{
  */
@@ -118,9 +119,9 @@ extern "C" {
 
 /**
  *  \anchor Pmic_LP8764x_Vmon_Enable
- *  \name   PMIC Voltage monitor Enable/Disable for BUCK/VMON1/VMON2/VCCA
- *          Enable/Disable OV and UV comparators for VMON1/VMON2/VCCA.
- *          Enable/Disable OV, UV, SC and ILIM for BUCK
+ *  \name   PMIC Voltage monitor Enable/Disable for BUCK/VMON1/VMON2/VCCA. \
+ *          Enable/Disable OV and UV comparators for VMON1/VMON2/VCCA. \
+ *          Enable/Disable OV, UV, SC and ILIM for BUCK \
  *
  *  @{
  */
@@ -133,7 +134,8 @@ extern "C" {
 /**
  *  \anchor Pmic_LP8764x_Regulator_Buck_Vout_Sel
  *  \name   PMIC Select output voltage register for BUCK.
- *          Valid only for BUCK Regulator
+ *
+ *  Valid only for BUCK Regulator
  *
  *  @{
  */
@@ -145,9 +147,10 @@ extern "C" {
 
 /**
  *  \anchor Pmic_LP8764x_Regulator_Pwm_Pfm_Mode
- *  \name   PMIC Select between Automatic transitions between PFM and PWM modes
+ *  \name   PMIC Select between Automatic transitions between PFM and PWM modes \
  *          OR Forced to PWM operation
- *          Valid only for BUCK regulators.
+ *
+ *  Valid only for BUCK regulators.
  *
  *  @{
  */
@@ -159,9 +162,10 @@ extern "C" {
 
 /**
  *  \anchor PMIC_LP8764X_Regulator_Pwm_Mp_Mode
- *  \name   PMIC Select btetween multi-phase operation OR
+ *  \name   PMIC Select btetween multi-phase operation OR \
  *          AUTO mode with Automatic phase adding and shedding.
- *          Valid only for BUCK regulators.
+ *
+ *  Valid only for BUCK regulators.
  *
  *  @{
  */
@@ -264,10 +268,11 @@ extern "C" {
 /**
  *  \anchor Pmic_LP8764x_Pg_Ov_Uv_Threshold_lvl
  *  \name   PMIC Power Good Over/Under voltage threshold level for BUCK/LDO/VCCA
- *          For LDO/BUCK - Over/Under Volatge thershold level are +x1 mv/ +x2 %
- *          or -x1 mv/ -x2 % respectively. For VCCA only perc
- *          For VCCA - Over/Under Volatge thershold level are +x2 % or -x2 %
- *          respectively.
+ *
+ *  For LDO/BUCK - Over/Under Volatge thershold level are +x1 mv/ +x2 %
+ *  or -x1 mv/ -x2 % respectively. For VCCA only perc
+ *  For VCCA - Over/Under Volatge thershold level are +x2 % or -x2 %
+ *  respectively.
  *  @{
  */
 #define PMIC_LP8764X_PG_OV_UV_THRESHOLD_LVL_30_OR_3       (0U)
@@ -462,7 +467,7 @@ extern "C" {
 
 /**
  *  \anchor Pmic_LP8764x_Regulator_Under_Voltage_Status
- *  \name Status whether the output voltage is above/below voltage threshold
+ *  \name Status whether the output voltage is above/below voltage threshold \
  *        for LDO and BUCK
  *
  *  @{
@@ -479,7 +484,7 @@ extern "C" {
 
 /**
  *  \anchor Pmic_LP8764x_Vcca_Vmon_Under_Voltage_Status
- *  \name Status whether the input voltage is above/below under-voltage level
+ *  \name Status whether the input voltage is above/below under-voltage level \
  *        for VCCA/VMON
  *
  *  @{
@@ -494,7 +499,7 @@ level */
 
 /**
  *  \anchor Pmic_LP8764x_Regulator_Over_Voltage_Status
- *  \name Status whether the output voltage is above/below voltage threshold
+ *  \name Status whether the output voltage is above/below voltage threshold \
  *        for LDO and BUCK
  *
  *  @{
@@ -511,7 +516,7 @@ level */
 
 /**
  *  \anchor Pmic_LP8764x_Vcca_Vmon_Over_Voltage_Status
- *  \name Status whether the input voltage is above/below over-voltage level
+ *  \name Status whether the input voltage is above/below over-voltage level \
  *        for VCCA/VMON
  *
  *  @{
@@ -526,7 +531,7 @@ level */
 
 /**
  *  \anchor Pmic_LP8764x_Vcca_Voltage_Status
- *  \name Status whether the voltage is above/below over-voltage protection
+ *  \name Status whether the voltage is above/below over-voltage protection \
  *        level for VCCA
  *
  *  @{

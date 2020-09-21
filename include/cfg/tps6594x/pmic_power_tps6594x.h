@@ -99,6 +99,7 @@ extern "C" {
 /**
  *  \anchor Pmic_TPS6594x_Regulator_RV_Check
  *  \name   PMIC Residual voltage check Enable/Disable
+ *
  *          Valid only for BUCK and LDO regulators
  *
  *  @{
@@ -123,8 +124,8 @@ extern "C" {
 
 /**
  *  \anchor Pmic_TPS6594x_Vmon_Enable
- *  \name   PMIC Voltage monitor Enable/Disable for BUCK/LDO/VCCA
- *          Enable/Disable OV and UV comparators for LDO/VCCA.
+ *  \name   PMIC Voltage monitor Enable/Disable for BUCK/LDO/VCCA.\
+ *          Enable/Disable OV and UV comparators for LDO/VCCA. \
  *          Enable/Disable OV, UV, SC and ILIM for BUCK
  *
  *  @{
@@ -138,7 +139,8 @@ extern "C" {
 /**
  *  \anchor Pmic_TPS6594x_Regulator_Buck_Vout_Sel
  *  \name   PMIC Select output voltage register for BUCK.
- *          Valid only for BUCK Regulator
+ *
+ *  Valid only for BUCK Regulator
  *
  *  @{
  */
@@ -150,9 +152,10 @@ extern "C" {
 
 /**
  *  \anchor Pmic_TPS6594x_Regulator_Pwm_Pfm_Mode
- *  \name   PMIC Select between Automatic transitions between PFM and PWM modes
- *          OR Forced to PWM operation
- *          Valid only for BUCK regulators.
+ *  \name   PMIC Select between Automatic transitions between PFM and PWM modes \
+ *          OR Forced to PWM operation.
+ *
+ *  Valid only for BUCK regulators.
  *
  *  @{
  */
@@ -164,9 +167,10 @@ extern "C" {
 
 /**
  *  \anchor Pmic_TPS6594x_Regulator_Pwm_Mp_Mode
- *  \name   PMIC Select between multi-phase operation OR
+ *  \name   PMIC Select between multi-phase operation OR \
  *          AUTO mode with Automatic phase adding and shedding.
- *          Valid only for BUCK regulators.
+ *
+ *  Valid only for BUCK regulators.
  *
  *  @{
  */
@@ -191,7 +195,8 @@ extern "C" {
 /**
  *  \anchor Pmic_TPS6594x_Regulator_Ldo_Slow_Ramp
  *  \name   PMIC Enable/Disable Slow Ramp for LDO regulator
- *          Valid only for LDO regulators.
+ *
+ *  Valid only for LDO regulators.
  *
  *  @{
  */
@@ -204,7 +209,7 @@ extern "C" {
 /**
  *  \anchor Pmic_TPS6594x_Regulator_Ldo_Mode
  *  \name   PMIC Selects the LDO Bypass or Linear Regulator mode
- *          Valid only for LDO1/LDO2/LDO3 regulators
+ *  Valid only for LDO1/LDO2/LDO3 regulators
  *
  *  @{
  */
@@ -296,8 +301,9 @@ extern "C" {
 
 /**
  *  \anchor Pmic_TPS6594x_Ldo_RV_Timeout
- *  \name   PMIC Selects the LDO Residual voltage check Timeout value
- *          Valid only for LDO regulators (LDO1, 2 and 3 only).
+ *  \name   PMIC Selects the LDO Residual voltage check Timeout value.
+ *
+ *  Valid only for LDO regulators (LDO1, 2 and 3 only).
  *
  *  @{
  */
@@ -338,10 +344,11 @@ extern "C" {
 /**
  *  \anchor Pmic_TPS6594x_Pg_Ov_Uv_Threshold_lvl
  *  \name   PMIC Power Good Over/Under voltage threshold level for BUCK/LDO/VCCA
- *          For LDO/BUCK - Over/Under Volatge thershold level are +x1 mv/ +x2 %
- *          or -x1 mv/ -x2 % respectively.
- *          For VCCA - Over/Under Volatge thershold level are +x2 % or -x2 %
- *          respectively.
+ *
+ *  For LDO/BUCK - Over/Under Volatge thershold level are +x1 mv/ +x2 %
+ *  or -x1 mv/ -x2 % respectively.
+ *  For VCCA - Over/Under Volatge thershold level are +x2 % or -x2 %
+ *  respectively.
  *  @{
  */
 #define PMIC_TPS6594X_PG_OV_UV_THRESHOLD_LVL_30_OR_3       (0U)
@@ -425,11 +432,9 @@ extern "C" {
 #define PMIC_TPS6594X_PGOOD_SOURCE_BUCK5       \
             ((uint16_t) ((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK  << 8) | 5U))
 #define PMIC_TPS6594X_PGOOD_SOURCE_NRSTOUT     \
-            ((uint16_t)                        \
-            ((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT     << 8) | 6U))
+            ((uint16_t) ((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT << 8) | 6U))
 #define PMIC_TPS6594X_PGOOD_SOURCE_NRSTOUT_SOC \
-            ((uint16_t)                        \
-            ((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC  << 8) | 7U))
+           ((uint16_t) ((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC << 8)| 7U))
 #define PMIC_TPS6594X_PGOOD_SOURCE_TDIE        \
             ((uint16_t) ((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_TDIE   << 8) | 8U))
 #define PMIC_TPS6594X_PGOOD_SOURCE_LDO1        \
@@ -544,7 +549,7 @@ extern "C" {
 
 /**
  *  \anchor Pmic_TPS6594x_Regulator_Under_Voltage_Status
- *  \name Status whether the output voltage is above/below voltage threshold
+ *  \name Status whether the output voltage is above/below voltage threshold \
  *        for LDO and BUCK
  *
  *  @{
@@ -561,7 +566,7 @@ extern "C" {
 
 /**
  *  \anchor Pmic_TPS6594x_Vcca_Under_Voltage_Status
- *  \name Status whether the input voltage is above/below under-voltage level
+ *  \name Status whether the input voltage is above/below under-voltage level \
  *        for VCCA/VMON
  *
  *  @{
@@ -576,7 +581,7 @@ level */
 
 /**
  *  \anchor Pmic_TPS6594x_Regulator_Over_Voltage_Status
- *  \name Status whether the output voltage is above/below voltage threshold
+ *  \name Status whether the output voltage is above/below voltage threshold \
  *        for LDO and BUCK
  *
  *  @{
@@ -593,7 +598,7 @@ level */
 
 /**
  *  \anchor Pmic_TPS6594x_Vcca_Over_Voltage_Status
- *  \name Status whether the input voltage is above/below over-voltage level
+ *  \name Status whether the input voltage is above/below over-voltage level \
  *        for VCCA/VMON
  *
  *  @{
@@ -608,7 +613,7 @@ level */
 
 /**
  *  \anchor Pmic_TPS6594x_Vcca_Voltage_Status
- *  \name Status whether the voltage is above/below over-voltage protection
+ *  \name Status whether the voltage is above/below over-voltage protection \
  *        level for VCCA
  *
  *  @{
@@ -696,6 +701,7 @@ level */
  *
  * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
  * \param   ldortcEnable       [IN]    Enable/Disable the LDORTC.
+ *                                     Valid values:
  *                                     \ref Pmic_Tps6594x_PowerLdoRtcCfg
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
@@ -710,6 +716,7 @@ int32_t Pmic_powerSetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
  * \param   pLdortcEnable      [IN]    Pointer to hold Enable/Disable status.
+ *                                     Valid values:
  *                                     \ref Pmic_Tps6594x_PowerLdoRtcCfg
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code

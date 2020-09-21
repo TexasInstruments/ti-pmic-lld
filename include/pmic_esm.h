@@ -260,6 +260,9 @@ typedef struct Pmic_EsmIntrCfg_s
 /*!
  * \brief   API to start PMIC ESM.
  *
+ * Requirement: REQ_TAG(PDK-5814)
+ * Design: did_pmic_comm_intf_cfg
+ *
  *          This function is used to Start/Stop the PMIC ESM_MCU/ESM_SOC
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
@@ -278,9 +281,10 @@ int32_t Pmic_esmStart(Pmic_CoreHandle_t   *pPmicCoreHandle,
                       const bool           esmState);
 
 /*!
- * \brief   API to Enable PMIC ESM.
+ * \brief   API to Enable/Disable PMIC ESM.
  *
- *          This function is used to Enable the PMIC ESM_MCU/ESM_SOC
+ *          This function is used to Enable/Disable the PMIC ESM_MCU/ESM_SOC
+ *          This API must be called only when ESM is in STOP state.
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
  * \param   esmType         [IN]    PMIC ESM Type
@@ -298,9 +302,9 @@ int32_t Pmic_esmEnable(Pmic_CoreHandle_t   *pPmicCoreHandle,
                        const bool           esmToggle);
 
 /*!
- * \brief   API to Read PMIC ESM Enable state.
+ * \brief   API to Read PMIC ESM Enable/Disable state.
  *
- *          This function is used to read the Enable state of
+ *          This function is used to read the Enable/Disable state of
  *          PMIC ESM_MCU/ESM_SOC.
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.

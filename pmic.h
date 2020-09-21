@@ -372,6 +372,7 @@ typedef struct Pmic_CoreCfg_s {
  * Design: did_pmic_comm_intf_cfg, did_pmic_comm_single_i2c_cfg,
  *         did_pmic_comm_dual_i2c_cfg, did_pmic_comm_spi_cfg
  *
+ *
  *         This function gets device configuration from pCoreCfgData and
  *         initializes device specific information in pPmicCoreHandle after
  *         validation of given params depends on validParams bitfileds

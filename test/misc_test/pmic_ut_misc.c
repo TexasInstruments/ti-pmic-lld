@@ -58,7 +58,7 @@ static Pmic_Ut_Tests_t pmic_misc_tests[] =
     },
     {
         7629,
-        "Pmic_SetRecoveryCntCfg : Parameter validation for 'thrVal'."
+        "Pmic_SetRecoveryCntCfg : Parameter validation for thrVal."
     },
     {
         7630,
@@ -66,27 +66,27 @@ static Pmic_Ut_Tests_t pmic_misc_tests[] =
     },
     {
         7631,
-        "Pmic_SetRecoveryCntCfg : Parameter validation for 'clrCnt'."
+        "Pmic_SetRecoveryCntCfg : Parameter validation for clrCnt."
     },
     {
         7632,
-        "Pmic_SetRecoveryCntCfg : Parameter validation for 'handle'."
+        "Pmic_SetRecoveryCntCfg : Parameter validation for handle."
     },
     {
         7633,
-        "Pmic_getRecoveryCntCfg : Parameter validation for 'handle'."
+        "Pmic_getRecoveryCntCfg : Parameter validation for handle."
     },
     {
         7634,
-        "Pmic_getRecoveryCntCfg : Parameter validation for 'recovCntCfg'."
+        "Pmic_getRecoveryCntCfg : Parameter validation for recovCntCfg."
     },
     {
         7635,
-        "Pmic_getRecoveryCnt : Parameter validation for 'handle'."
+        "Pmic_getRecoveryCnt : Parameter validation for handle."
     },
     {
         7636,
-        "Pmic_getRecoveryCnt : Parameter validation for 'recovCntVal'."
+        "Pmic_getRecoveryCnt : Parameter validation for recovCntVal."
     },
     {
         7637,
@@ -205,7 +205,7 @@ static void test_pmic_SetRecoveryCntCfg_threshold(void)
 }
 
 /*!
- * \brief   Pmic_SetRecoveryCntCfg : Parameter validation for 'thrVal'.
+ * \brief   Pmic_SetRecoveryCntCfg : Parameter validation for thrVal.
  */
 static void test_pmic_SetRecoveryCntCfgPrmValTest_thrVal(void)
 {
@@ -245,7 +245,7 @@ static void test_pmic_SetRecoveryCntCfg_clrCnt(void)
 }
 
 /*!
- * \brief   Pmic_SetRecoveryCntCfg : Parameter validation for 'clrCnt'.
+ * \brief   Pmic_SetRecoveryCntCfg : Parameter validation for clrCnt.
  */
 static void test_pmic_SetRecoveryCntCfgPrmValTest_clrCnt(void)
 {
@@ -265,7 +265,7 @@ static void test_pmic_SetRecoveryCntCfgPrmValTest_clrCnt(void)
 }
 
 /*!
- * \brief   Pmic_SetRecoveryCntCfg : Parameter validation for 'handle'.
+ * \brief   Pmic_SetRecoveryCntCfg : Parameter validation for handle.
  */
 static void test_pmic_SetRecoveryCntCfgPrmValTest_handle(void)
 {
@@ -284,7 +284,7 @@ static void test_pmic_SetRecoveryCntCfgPrmValTest_handle(void)
 }
 
 /*!
- * \brief   Pmic_getRecoveryCntCfg : Parameter validation for 'handle'.
+ * \brief   Pmic_getRecoveryCntCfg : Parameter validation for handle.
  */
 static void test_pmic_getRecoveryCntCfgPrmValTest_handle(void)
 {
@@ -301,7 +301,7 @@ static void test_pmic_getRecoveryCntCfgPrmValTest_handle(void)
 }
 
 /*!
- * \brief   Pmic_getRecoveryCntCfg : Parameter validation for 'recovCntCfg'.
+ * \brief   Pmic_getRecoveryCntCfg : Parameter validation for recovCntCfg.
  */
 static void test_pmic_getRecoveryCntCfgPrmValTest_recovCntCfg(void)
 {
@@ -317,7 +317,7 @@ static void test_pmic_getRecoveryCntCfgPrmValTest_recovCntCfg(void)
 }
 
 /*!
- * \brief   Pmic_getRecoveryCnt : Parameter validation for 'handle'.
+ * \brief   Pmic_getRecoveryCnt : Parameter validation for handle.
  */
 static void test_Pmic_getRecoveryCntPrmValTest_handle(void)
 {
@@ -334,7 +334,7 @@ static void test_Pmic_getRecoveryCntPrmValTest_handle(void)
 }
 
 /*!
- * \brief   Pmic_getRecoveryCnt : Parameter validation for 'recovCntVal'.
+ * \brief   Pmic_getRecoveryCnt : Parameter validation for recovCntVal.
  */
 static void test_Pmic_getRecoveryCntPrmValTest_recovCntVal(void)
 {

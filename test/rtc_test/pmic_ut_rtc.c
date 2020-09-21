@@ -58,67 +58,67 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
     },
     {
         5991,
-        "Pmic_rtcSetAlarmInfo : Parameter validation for 'handle'"
+        "Pmic_rtcSetAlarmInfo : Parameter validation for handle"
     },
     {
         6090,
-        "Pmic_rtcSetAlarmInfo : Parameter validation for 'seconds'"
+        "Pmic_rtcSetAlarmInfo : Parameter validation for seconds"
     },
     {
         6091,
-        "Pmic_rtcSetAlarmInfo : Parameter validation for 'minutes'"
+        "Pmic_rtcSetAlarmInfo : Parameter validation for minutes"
     },
     {
         6092,
-        "Pmic_rtcSetAlarmInfo : Parameter validation for 'timeMode'"
+        "Pmic_rtcSetAlarmInfo : Parameter validation for timeMode"
     },
     {
         6093,
-        "Pmic_rtcSetAlarmInfo : Parameter validation for 'meridianMode'"
+        "Pmic_rtcSetAlarmInfo : Parameter validation for meridianMode"
     },
     {
         6094,
-        "Pmic_rtcSetAlarmInfo : Parameter validation for 'hour' when 'timeMode' = 1"
+        "Pmic_rtcSetAlarmInfo : Parameter validation for hour when timeMode = 1"
     },
     {
         6095,
-        "Pmic_rtcSetAlarmInfo : Parameter validation for 'hour' when 'timeMode' = 0"
+        "Pmic_rtcSetAlarmInfo : Parameter validation for hour when timeMode = 0"
     },
     {
         6096,
-        "Pmic_rtcSetAlarmInfo : Negative test for 'hour ' = 0, when 'timeMode' = 1"
+        "Pmic_rtcSetAlarmInfo : Negative test for hour  = 0, when timeMode = 1"
     },
     {
         6099,
-        "Pmic_rtcSetAlarmInfo : Negative test for 'month ' = 0"
+        "Pmic_rtcSetAlarmInfo : Negative test for month  = 0"
     },
     {
         6100,
-        "Pmic_rtcSetAlarmInfo : Negative test for 'day' = 0"
+        "Pmic_rtcSetAlarmInfo : Negative test for day = 0"
     },
     {
         6101,
-        "Pmic_rtcSetAlarmInfo : Parameter range validation for 'year'"
+        "Pmic_rtcSetAlarmInfo : Parameter range validation for year"
     },
     {
         6102,
-        "Pmic_rtcSetAlarmInfo : Parameter range validation for 'month'"
+        "Pmic_rtcSetAlarmInfo : Parameter range validation for month"
     },
     {
         6103,
-        "Pmic_rtcSetAlarmInfo : Parameter range validation for 'day' for months with 30 days"
+        "Pmic_rtcSetAlarmInfo : Parameter range validation for day for months with 30 days"
     },
     {
         6104,
-        "Pmic_rtcSetAlarmInfo : Parameter range validation for 'day' for leap year('year' %4 = 0 ) and 'month' = 2 (february)"
+        "Pmic_rtcSetAlarmInfo : Parameter range validation for day for leap year(year %4 = 0 ) and month = 2 (february)"
     },
     {
         6107,
-        "Pmic_rtcSetAlarmInfo : Parameter range validation for 'day' for Non-leap year('year' %4 != 0 ) and 'month' = 2 (february)"
+        "Pmic_rtcSetAlarmInfo : Parameter range validation for day for Non-leap year(year %4 != 0 ) and month = 2 (february)"
     },
     {
         6108,
-        "Pmic_rtcSetAlarmInfo : Parameter range validation for 'day', for months with 31 days)"
+        "Pmic_rtcSetAlarmInfo : Parameter range validation for day, for months with 31 days)"
     },
     {
         6109,
@@ -126,15 +126,15 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
     },
     {
         6110,
-        "Pmic_rtcGetAlarmInfo : Parameter validation for 'handle'"
+        "Pmic_rtcGetAlarmInfo : Parameter validation for handle"
     },
     {
         6111,
-        "Pmic_rtcGetAlarmInfo : Parameter validation for 'timeCfg'"
+        "Pmic_rtcGetAlarmInfo : Parameter validation for timeCfg"
     },
     {
         6112,
-        "Pmic_rtcGetAlarmInfo : Parameter validation for 'dataCfg'"
+        "Pmic_rtcGetAlarmInfo : Parameter validation for dataCfg"
     },
     {
         6113,
@@ -142,11 +142,11 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
     },
     {
         6114,
-        "Pmic_rtcSetTimerPeriod : Parameter validation for 'handle'"
+        "Pmic_rtcSetTimerPeriod : Parameter validation for handle"
     },
     {
         6115,
-        "Pmic_rtcSetTimerPeriod : Parameter validation for 'timerPeriod'"
+        "Pmic_rtcSetTimerPeriod : Parameter validation for timerPeriod"
     },
     {
         6116,
@@ -154,11 +154,11 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
     },
     {
         6117,
-        "Pmic_rtcSetTimerPeriod : Parameter validation for 'handle'"
+        "Pmic_rtcSetTimerPeriod : Parameter validation for handle"
     },
     {
         6118,
-        "Pmic_rtcSetTimerPeriod : Parameter validation for 'timerPeriod'"
+        "Pmic_rtcSetTimerPeriod : Parameter validation for timerPeriod"
     },
     {
         6119,
@@ -166,7 +166,7 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
     },
     {
         6120,
-        "Pmic_rtcEnable : Parameter validation for 'handle'"
+        "Pmic_rtcEnable : Parameter validation for handle"
     },
     {
         6121,
@@ -174,7 +174,7 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
     },
     {
         6122,
-        "Pmic_rtcEnable : Parameter validation for 'handle'"
+        "Pmic_rtcEnable : Parameter validation for handle"
     },
     {
         6158,
@@ -182,71 +182,71 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
     },
     {
         6159,
-        "Pmic_rtcSetTimeDateInfo : Parameter validation for 'handle'"
+        "Pmic_rtcSetTimeDateInfo : Parameter validation for handle"
     },
     {
         6162,
-        "Pmic_rtcSetTimeDateInfo : Parameter validation for 'seconds'"
+        "Pmic_rtcSetTimeDateInfo : Parameter validation for seconds"
     },
     {
         6163,
-        "Pmic_rtcSetTimeDateInfo : Parameter validation for 'minutes'"
+        "Pmic_rtcSetTimeDateInfo : Parameter validation for minutes"
     },
     {
         6164,
-        "Pmic_rtcSetTimeDateInfo : Parameter validation for 'timeMode'"
+        "Pmic_rtcSetTimeDateInfo : Parameter validation for timeMode"
     },
     {
         6165,
-        "Pmic_rtcSetTimeDateInfo : Parameter validation for 'meridianMode'"
+        "Pmic_rtcSetTimeDateInfo : Parameter validation for meridianMode"
     },
     {
         6166,
-        "Pmic_rtcSetTimeDateInfo : Parameter validation for 'hour' when 'timeMode' = 1"
+        "Pmic_rtcSetTimeDateInfo : Parameter validation for hour when timeMode = 1"
     },
     {
         6167,
-        "Pmic_rtcSetTimeDateInfo : Parameter validation for 'hour' when 'timeMode' = 0"
+        "Pmic_rtcSetTimeDateInfo : Parameter validation for hour when timeMode = 0"
     },
     {
         6168,
-        "Pmic_rtcSetTimeDateInfo : Negative test for 'hour ' = 0, when 'timeMode' = 1"
+        "Pmic_rtcSetTimeDateInfo : Negative test for hour  = 0, when timeMode = 1"
     },
     {
         6169,
-        "Pmic_rtcSetTimeDateInfo : Negative test for 'month ' = 0"
+        "Pmic_rtcSetTimeDateInfo : Negative test for month  = 0"
     },
     {
         6290,
-        "Pmic_rtcSetTimeDateInfo : Negative test for 'day' = 0"
+        "Pmic_rtcSetTimeDateInfo : Negative test for day = 0"
     },
     {
         7021,
-        "Pmic_rtcSetTimeDateInfo: Parameter range validation for 'year'"
+        "Pmic_rtcSetTimeDateInfo: Parameter range validation for year"
     },
     {
         6170,
-        "Pmic_rtcSetTimeDateInfo : Parameter range validation for 'month'"
+        "Pmic_rtcSetTimeDateInfo : Parameter range validation for month"
     },
     {
         6171,
-        "Pmic_rtcSetTimeDateInfo : Parameter range validation for 'day'"
+        "Pmic_rtcSetTimeDateInfo : Parameter range validation for day"
     },
     {
        6172,
-       "Pmic_rtcSetTimeDateInfo : Parameter range validation for 'day' for months with 30 days"
+       "Pmic_rtcSetTimeDateInfo : Parameter range validation for day for months with 30 days"
     },
     {
         6173,
-        "Pmic_rtcSetTimeDateInfo : Parameter range validation for 'day' for leap year('year' %4 = 0 ) and 'month' = 2 (february)"
+        "Pmic_rtcSetTimeDateInfo : Parameter range validation for day for leap year(year %4 = 0 ) and month = 2 (february)"
     },
     {
         6174,
-        "Pmic_rtcSetTimeDateInfo : Parameter range validation for 'day' for Non-leap year('year' %4 != 0 ) and 'month' = 2 (february)"
+        "Pmic_rtcSetTimeDateInfo : Parameter range validation for day for Non-leap year(year %4 != 0 ) and month = 2 (february)"
     },
     {
         6175,
-        "Pmic_rtcSetTimeDateInfo : Parameter range validation for 'day', for months with 31 days)"
+        "Pmic_rtcSetTimeDateInfo : Parameter range validation for day, for months with 31 days)"
     },
     {
         6176,
@@ -254,15 +254,15 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
     },
     {
         6177,
-        "Pmic_rtcGetTimeDateInfo : Parameter validation for 'handle'"
+        "Pmic_rtcGetTimeDateInfo : Parameter validation for handle"
     },
     {
         6178,
-        "Pmic_rtcGetTimeDateInfo : Parameter validation for 'timeCfg'"
+        "Pmic_rtcGetTimeDateInfo : Parameter validation for timeCfg"
     },
     {
         6179,
-        "Pmic_rtcGetTimeDateInfo : Parameter validation for 'dataCfg'"
+        "Pmic_rtcGetTimeDateInfo : Parameter validation for dataCfg"
     },
     {
         6180,
@@ -270,7 +270,7 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
     },
     {
         6181,
-        "Pmic_rtcSetFreqComp : Parameter validation for 'handle'"
+        "Pmic_rtcSetFreqComp : Parameter validation for handle"
     },
     {
         6182,
@@ -278,11 +278,11 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
     },
     {
         6183,
-        "Pmic_rtcGetFreqComp : Parameter validation for 'handle'"
+        "Pmic_rtcGetFreqComp : Parameter validation for handle"
     },
     {
         6287,
-        "Pmic_rtcGetFreqComp : Parameter validation for 'compensation'"
+        "Pmic_rtcGetFreqComp : Parameter validation for compensation"
     },
     {
         6266,
@@ -294,11 +294,11 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
     },
     {
         6268,
-        "Pmic_rtcEnableTimerIntr : Parameter validation for 'handle'"
+        "Pmic_rtcEnableTimerIntr : Parameter validation for handle"
     },
     {
         6269,
-        "Pmic_rtcEnableAlarmIntr : Parameter validation for 'handle'"
+        "Pmic_rtcEnableAlarmIntr : Parameter validation for handle"
     },
     {
         6194,
@@ -310,15 +310,15 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
     },
     {
         7465,
-        "Pmic_getRtcStatus : Parameter validation for 'handle'"
+        "Pmic_getRtcStatus : Parameter validation for handle"
     },
     {
         7466,
-        "Pmic_getRtcStatus : Parameter validation for 'RtcStatus'"
+        "Pmic_getRtcStatus : Parameter validation for RtcStatus"
     },
     {
         7467,
-        "Pmic_getRtcStatus : Parameter validation for 'ValidParams'"
+        "Pmic_getRtcStatus : Parameter validation for ValidParams"
     },
     {
         7358,
@@ -434,7 +434,7 @@ static void test_pmic_rtc_testSetAlarm(void)
 }
 
 /*!
- * \brief   Parameter validation for 'handle'
+ * \brief   Parameter validation for handle
  */
 static void test_pmic_rtc_setAlarmInfoPrmValTest_handle(void)
 {
@@ -453,7 +453,7 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_handle(void)
 }
 
 /*!
- * \brief   Parameter validation for 'seconds'
+ * \brief   Parameter validation for seconds
  */
 static void test_pmic_rtc_setAlarmInfoPrmValTest_seconds(void)
 {
@@ -473,7 +473,7 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_seconds(void)
 }
 
 /*!
- * \brief   Parameter validation for 'minutes'
+ * \brief   Parameter validation for minutes
  */
 static void test_pmic_rtc_setAlarmInfoPrmValTest_minutes(void)
 {
@@ -493,7 +493,7 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_minutes(void)
 }
 
 /*!
- * \brief   Parameter validation for 'timeMode'
+ * \brief   Parameter validation for timeMode
  */
 static void test_pmic_rtc_setAlarmInfoPrmValTest_timeMode(void)
 {
@@ -513,7 +513,7 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_timeMode(void)
 }
 
 /*!
- * \brief   Parameter validation for 'meridianMode'
+ * \brief   Parameter validation for meridianMode
  */
 static void test_pmic_rtc_setAlarmInfoPrmValTest_meridianMode(void)
 {
@@ -534,7 +534,7 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_meridianMode(void)
 }
 
 /*!
- * \brief   Parameter validation for 'hour' when 'timeMode' = 1
+ * \brief   Parameter validation for hour when timeMode = 1
  */
 static void test_pmic_rtc_setAlarmInfoPrmValTest_hour12(void)
 {
@@ -556,7 +556,7 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_hour12(void)
 }
 
 /*!
- * \brief   Parameter validation for 'hour' when 'timeMode' = 0
+ * \brief   Parameter validation for hour when timeMode = 0
  */
 static void test_pmic_rtc_setAlarmInfoPrmValTest_hour24(void)
 {
@@ -578,7 +578,7 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_hour24(void)
 }
 
 /*!
- * \brief   Negative test for 'hour ' = 0U, when 'timeMode' = 1
+ * \brief   Negative test for hour  = 0U, when timeMode = 1
  */
 static void test_pmic_rtc_setAlarmInfoPrmValTest_hour(void)
 {
@@ -600,7 +600,7 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_hour(void)
 }
 
 /*!
- * \brief   Negative test for 'month' = 0
+ * \brief   Negative test for month = 0
  */
 static void test_pmic_rtc_setAlarmInfoPrmValTest_month(void)
 {
@@ -620,7 +620,7 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_month(void)
 }
 
 /*!
- * \brief   Negative test for 'day' = 0
+ * \brief   Negative test for day = 0
  */
 static void test_pmic_rtc_setAlarmInfoPrmValTest_day(void)
 {
@@ -640,7 +640,7 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_day(void)
 }
 
 /*!
- * \brief   Parameter range validation for 'year'
+ * \brief   Parameter range validation for year
  */
 static void test_pmic_rtc_setAlarmInfoPrmValTest_year(void)
 {
@@ -660,7 +660,7 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_year(void)
 }
 
 /*!
- * \brief   Parameter range validation for 'month'
+ * \brief   Parameter range validation for month
  */
 static void test_pmic_rtc_setAlarmInfoPrmValTest_month_range(void)
 {
@@ -680,7 +680,7 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_month_range(void)
 }
 
 /*!
- * \brief   Parameter range validation for 'day'for months with 30 days
+ * \brief   Parameter range validation for dayfor months with 30 days
  */
 static void test_pmic_rtc_setAlarmInfoPrmValTest_day_month(void)
 {
@@ -701,8 +701,8 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_day_month(void)
 }
 
 /*!
- * \brief   Parameter range validation for 'day' for leap
- *          year('year' %4 = 0 ) and 'month' = 2 (february)
+ * \brief   Parameter range validation for day for leap
+ *          year(year %4 = 0 ) and month = 2 (february)
  */
 static void test_pmic_rtc_setAlarmInfoPrmValTest_feb_leapyear(void)
 {
@@ -724,8 +724,8 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_feb_leapyear(void)
 }
 
 /*!
- * \brief   Parameter range validation for 'day' for Non-leap
- *          year('year' %4 != 0 ) and 'month' = 2 (february)
+ * \brief   Parameter range validation for day for Non-leap
+ *          year(year %4 != 0 ) and month = 2 (february)
  */
 static void test_pmic_rtc_setAlarmInfoPrmValTest_feb_nonleapyear(void)
 {
@@ -747,7 +747,7 @@ static void test_pmic_rtc_setAlarmInfoPrmValTest_feb_nonleapyear(void)
 }
 
 /*!
- * \brief   Parameter range validation for 'day', for months with 31 days
+ * \brief   Parameter range validation for day, for months with 31 days
  */
 static void test_pmic_rtc_setAlarmInfoPrmValTest_day_month31(void)
 {
@@ -807,7 +807,7 @@ static void test_pmic_rtc_testGetAlarm(void)
 }
 
 /*!
- * \brief   Parameter validation for 'handle'
+ * \brief   Parameter validation for handle
  */
 static void test_pmic_rtc_getAlarmInfoPrmValTest_handle(void)
 {
@@ -826,7 +826,7 @@ static void test_pmic_rtc_getAlarmInfoPrmValTest_handle(void)
 }
 
 /*!
- * \brief   Parameter validation for 'timeCfg'
+ * \brief   Parameter validation for timeCfg
  */
 static void test_pmic_rtc_getAlarmInfoPrmValTest_timeCfg(void)
 {
@@ -843,7 +843,7 @@ static void test_pmic_rtc_getAlarmInfoPrmValTest_timeCfg(void)
 }
 
 /*!
- * \brief   Parameter validation for 'dataCfg'
+ * \brief   Parameter validation for dataCfg
  */
 static void test_pmic_rtc_getAlarmInfoPrmValTest_dateCfg(void)
 {
@@ -883,7 +883,7 @@ static void test_pmic_rtc_testSetTimer(void)
 }
 
 /*!
- * \brief   Parameter validation for 'handle'
+ * \brief   Parameter validation for handle
  */
 static void test_pmic_rtc_setTimerPeriodPrmValTest_handle(void)
 {
@@ -899,7 +899,7 @@ static void test_pmic_rtc_setTimerPeriodPrmValTest_handle(void)
 }
 
 /*!
- * \brief   Parameter validation for 'timerPeriod'
+ * \brief   Parameter validation for timerPeriod
  */
 static void test_pmic_rtc_setTimerPeriodPrmValTest_timerPeriod(void)
 {
@@ -940,7 +940,7 @@ static void test_pmic_rtc_testGetTimer(void)
 }
 
 /*!
- * \brief   Parameter validation for 'handle'
+ * \brief   Parameter validation for handle
  */
 static void test_pmic_rtc_getTimerPeriodPrmValTest_handle(void)
 {
@@ -956,7 +956,7 @@ static void test_pmic_rtc_getTimerPeriodPrmValTest_handle(void)
 }
 
 /*!
- * \brief   Parameter validation for 'timerPeriod
+ * \brief   Parameter validation for timerPeriod
  */
 static void test_pmic_rtc_getTimerPeriodPrmValTest_timerPeriod(void)
 {
@@ -986,7 +986,7 @@ static void test_pmic_rtc_testDisable(void)
 }
 
 /*!
- * \brief   Parameter validation for 'handle'
+ * \brief   Parameter validation for handle
  */
 static void test_pmic_rtc_disablePrmValTest_handle(void)
 {
@@ -1016,7 +1016,7 @@ static void test_pmic_rtc_testEnable(void)
 }
 
 /*!
- * \brief   Parameter validation for 'handle'
+ * \brief   Parameter validation for handle
  */
 static void test_pmic_rtc_enablePrmValTest_handle(void)
 {
@@ -1078,7 +1078,7 @@ static void test_pmic_rtc_testSetTime(void)
 }
 
 /*!
- * \brief   Parameter validation for 'handle'
+ * \brief   Parameter validation for handle
  */
 static void test_pmic_rtc_setTimePrmValTest_handle(void)
 {
@@ -1097,7 +1097,7 @@ static void test_pmic_rtc_setTimePrmValTest_handle(void)
 }
 
 /*!
- * \brief   Parameter validation for 'seconds'
+ * \brief   Parameter validation for seconds
  */
 static void test_pmic_rtc_setTimePrmValTest_seconds(void)
 {
@@ -1117,7 +1117,7 @@ static void test_pmic_rtc_setTimePrmValTest_seconds(void)
 }
 
 /*!
- * \brief   Parameter validation for 'minutes'
+ * \brief   Parameter validation for minutes
  */
 static void test_pmic_rtc_setTimePrmValTest_minutes(void)
 {
@@ -1137,7 +1137,7 @@ static void test_pmic_rtc_setTimePrmValTest_minutes(void)
 }
 
 /*!
- * \brief   Parameter validation for 'timeMode'
+ * \brief   Parameter validation for timeMode
  */
 static void test_pmic_rtc_setTimePrmValTest_timeMode(void)
 {
@@ -1157,7 +1157,7 @@ static void test_pmic_rtc_setTimePrmValTest_timeMode(void)
 }
 
 /*!
- * \brief   Parameter validation for 'meridianMode'
+ * \brief   Parameter validation for meridianMode
  */
 static void test_pmic_rtc_setTimePrmValTest_meridianMode(void)
 {
@@ -1177,7 +1177,7 @@ static void test_pmic_rtc_setTimePrmValTest_meridianMode(void)
 }
 
 /*!
- * \brief   Parameter validation for 'hour' when 'timeMode' = 1
+ * \brief   Parameter validation for hour when timeMode = 1
  */
 static void test_pmic_rtc_setTimePrmValTest_hour12(void)
 {
@@ -1199,7 +1199,7 @@ static void test_pmic_rtc_setTimePrmValTest_hour12(void)
 }
 
 /*!
- * \brief   Parameter validation for 'hour' when 'timeMode' = 0
+ * \brief   Parameter validation for hour when timeMode = 0
  */
 static void test_pmic_rtc_setTimePrmValTest_hour24(void)
 {
@@ -1221,7 +1221,7 @@ static void test_pmic_rtc_setTimePrmValTest_hour24(void)
 }
 
 /*!
- * \brief   Negative test for 'hour ' = 0U, when 'timeMode' = 1
+ * \brief   Negative test for hour  = 0U, when timeMode = 1
  */
 static void test_pmic_rtc_setTimePrmValTest_hour(void)
 {
@@ -1243,7 +1243,7 @@ static void test_pmic_rtc_setTimePrmValTest_hour(void)
 }
 
 /*!
- * \brief   Negative test for 'month ' = 0
+ * \brief   Negative test for month  = 0
  */
 static void test_pmic_rtc_setTimePrmValTest_month(void)
 {
@@ -1263,7 +1263,7 @@ static void test_pmic_rtc_setTimePrmValTest_month(void)
 }
 
 /*!
- * \brief   Negative test for 'day' = 0
+ * \brief   Negative test for day = 0
  */
 static void test_pmic_rtc_setTimePrmValTest_day(void)
 {
@@ -1283,7 +1283,7 @@ static void test_pmic_rtc_setTimePrmValTest_day(void)
 }
 
 /*!
- * \brief   Parameter range validation for 'year'
+ * \brief   Parameter range validation for year
  */
 static void test_pmic_rtc_setTimePrmValTest_year(void)
 {
@@ -1303,7 +1303,7 @@ static void test_pmic_rtc_setTimePrmValTest_year(void)
 }
 
 /*!
- * \brief   Parameter range validation for 'month'
+ * \brief   Parameter range validation for month
  */
 static void test_pmic_rtc_setTimePrmValTest_pvmonth(void)
 {
@@ -1323,7 +1323,7 @@ static void test_pmic_rtc_setTimePrmValTest_pvmonth(void)
 }
 
 /*!
- * \brief   Parameter range validation for 'day'
+ * \brief   Parameter range validation for day
  */
 static void test_pmic_rtc_setTimePrmValTest_month_range(void)
 {
@@ -1343,7 +1343,7 @@ static void test_pmic_rtc_setTimePrmValTest_month_range(void)
 }
 
 /*!
- * \brief   Parameter range validation for 'day'for months with 30 days
+ * \brief   Parameter range validation for dayfor months with 30 days
  */
 static void test_pmic_rtc_setTimePrmValTest_day_month(void)
 {
@@ -1364,8 +1364,8 @@ static void test_pmic_rtc_setTimePrmValTest_day_month(void)
 }
 
 /*!
- * \brief   Parameter range validation for 'day' for leap
- *          year('year' %4 = 0 ) and 'month' = 2 (february)
+ * \brief   Parameter range validation for day for leap
+ *          year(year %4 = 0 ) and month = 2 (february)
  */
 static void test_pmic_rtc_setTimePrmValTest_feb_leapyear(void)
 {
@@ -1387,8 +1387,8 @@ static void test_pmic_rtc_setTimePrmValTest_feb_leapyear(void)
 }
 
 /*!
- * \brief   Parameter range validation for 'day' for Non-leap
- *          year('year' %4 != 0 ) and 'month' = 2 (february)
+ * \brief   Parameter range validation for day for Non-leap
+ *          year(year %4 != 0 ) and month = 2 (february)
  */
 static void test_pmic_rtc_setTimePrmValTest_feb_nonleapyear(void)
 {
@@ -1410,7 +1410,7 @@ static void test_pmic_rtc_setTimePrmValTest_feb_nonleapyear(void)
 }
 
 /*!
- * \brief   Parameter range validation for 'day', for months with 31 days
+ * \brief   Parameter range validation for day, for months with 31 days
  */
 static void test_pmic_rtc_setTimePrmValTest_day_month31(void)
 {
@@ -1477,7 +1477,7 @@ static void test_pmic_rtc_testGetTime(void)
 }
 
 /*!
- * \brief   Parameter validation for 'handle'
+ * \brief   Parameter validation for handle
  */
 static void test_pmic_rtc_getTimePrmValTest_handle(void)
 {
@@ -1496,7 +1496,7 @@ static void test_pmic_rtc_getTimePrmValTest_handle(void)
 }
 
 /*!
- * \brief   Parameter validation for 'timeCfg'
+ * \brief   Parameter validation for timeCfg
  */
 static void test_pmic_rtc_getTimePrmValTest_timeCfg(void)
 {
@@ -1513,7 +1513,7 @@ static void test_pmic_rtc_getTimePrmValTest_timeCfg(void)
 }
 
 /*!
- * \brief   Parameter validation for 'dataCfg'
+ * \brief   Parameter validation for dataCfg
  */
 static void test_pmic_rtc_getTimePrmValTest_dateCfg(void)
 {
@@ -1552,7 +1552,7 @@ static void test_pmic_rtc_testSetFreqComp(void)
 }
 
 /*!
- * \brief   Parameter validation for 'handle'
+ * \brief   Parameter validation for handle
  */
 static void test_pmic_rtc_setFreqCompPrmValTest_handle(void)
 {
@@ -1590,7 +1590,7 @@ static void test_pmic_rtc_testGetFreqComp(void)
 }
 
 /*!
- * \brief   Parameter validation for 'handle'
+ * \brief   Parameter validation for handle
  */
 static void test_pmic_rtc_getFreqCompPrmValTest_handle(void)
 {
@@ -1606,7 +1606,7 @@ static void test_pmic_rtc_getFreqCompPrmValTest_handle(void)
 }
 
 /*!
- * \brief   Parameter validation for 'compensation'
+ * \brief   Parameter validation for compensation
  */
 static void test_pmic_rtc_getFreqCompPrmValTest_compensation(void)
 {
@@ -1815,7 +1815,7 @@ static void test_pmic_rtc_testAlarmIntr(void)
 }
 
 /*!
- * \brief   Parameter validation for 'handle'
+ * \brief   Parameter validation for handle
  */
 static void test_pmic_rtc_enableAlarmInterrupt_PrmValTest_handle(void)
 {
@@ -1830,7 +1830,7 @@ static void test_pmic_rtc_enableAlarmInterrupt_PrmValTest_handle(void)
 }
 
 /*!
- * \brief   Parameter validation for 'handle'
+ * \brief   Parameter validation for handle
  */
 static void test_pmic_rtc_enableTimerInterrupt_PrmValTest_handle(void)
 {
@@ -1889,7 +1889,7 @@ static void test_pmic_rtc_testGetRtcStatus_frozen(void)
 }
 
 /*!
- * \brief   Parameter validation for 'handle'
+ * \brief   Parameter validation for handle
  */
 static void test_pmic_rtc_getRtcStatus_PrmValTest_handle(void)
 {
@@ -1908,7 +1908,7 @@ static void test_pmic_rtc_getRtcStatus_PrmValTest_handle(void)
 }
 
 /*!
- * \brief   Parameter validation for 'rtcStatus'
+ * \brief   Parameter validation for rtcStatus
  */
 static void test_pmic_rtc_getRtcStatus_PrmValTest_rtcStatus(void)
 {

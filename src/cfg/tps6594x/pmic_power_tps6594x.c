@@ -570,6 +570,7 @@ static int32_t Pmic_powerGetLdoRtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
  * \param   ldortcEnable       [IN]    Enable/Disable the LDORTC.
+ *                                     Valid values:
  *                                     \ref Pmic_Tps6594x_PowerLdoRtcCfg
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
@@ -599,6 +600,7 @@ int32_t Pmic_powerSetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
  * \param   pLdortcEnable      [IN]    Pointer to hold Enable/Disable status.
+ *                                     Valid values:
  *                                     \ref Pmic_Tps6594x_PowerLdoRtcCfg
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code

@@ -102,23 +102,23 @@ static Pmic_Ut_Tests_t pmic_fsm_tests[] =
     },
     {
         7360,
-        "Pmic_fsmDeviceOffRequestCfg :  Parameter validation for 'handle'"
+        "Pmic_fsmDeviceOffRequestCfg :  Parameter validation for handle"
     },
     {
         7361,
-        "Pmic_fsmDeviceOffRequestCfg :  Parameter validation for 'eventType'"
+        "Pmic_fsmDeviceOffRequestCfg :  Parameter validation for eventType"
     },
     {
         7705,
-        "Pmic_fsmDeviceOffRequestCfg :  Parameter validation for 'fsmState'"
+        "Pmic_fsmDeviceOffRequestCfg :  Parameter validation for fsmState"
     },
     {
         7706,
-        "Pmic_fsmRuntimeBistRequest : Parameter validation for 'handle'."
+        "Pmic_fsmRuntimeBistRequest : Parameter validation for handle."
     },
     {
         7364,
-        "Pmic_fsmDeviceOnRequest : Parameter validation for 'handle'."
+        "Pmic_fsmDeviceOnRequest : Parameter validation for handle."
     }
 };
 
@@ -370,7 +370,7 @@ static void test_Pmic_fsmSetNsleepSignalMaskStatePrmValTest_handle(void)
 }
 
 /*!
- * \brief   Parameter validation for 'handle'
+ * \brief   Parameter validation for handle
  */
 static void test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_handle(void)
 {
@@ -388,7 +388,7 @@ static void test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_handle(void)
 }
 
 /*!
- * \brief   Pmic_fsmDeviceOffRequestCfg : Parameter validation for 'eventType'
+ * \brief   Pmic_fsmDeviceOffRequestCfg : Parameter validation for eventType
  */
 static void test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_eventType(void)
 {
@@ -408,7 +408,7 @@ static void test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_eventType(void)
 }
 
 /*!
- * \brief   Pmic_fsmDeviceOffRequestCfg :  Parameter validation for 'fsmState'
+ * \brief   Pmic_fsmDeviceOffRequestCfg :  Parameter validation for fsmState
  */
 static void test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_fsmState(void)
 {
@@ -428,7 +428,7 @@ static void test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_fsmState(void)
 }
 
 /*!
- * \brief   Pmic_fsmRuntimeBistRequest : Parameter validation for 'handle'.
+ * \brief   Pmic_fsmRuntimeBistRequest : Parameter validation for handle.
  */
 static void test_Pmic_fsmRuntimeBistRequestPrmValTest_handle(void)
 {
@@ -443,7 +443,7 @@ static void test_Pmic_fsmRuntimeBistRequestPrmValTest_handle(void)
 }
 
 /*!
- * \brief   Pmic_fsmDeviceOnRequest : Parameter validation for 'handle'.
+ * \brief   Pmic_fsmDeviceOnRequest : Parameter validation for handle.
  */
 static void test_Pmic_Pmic_fsmDeviceOnRequestPrmValTest_handle(void)
 {

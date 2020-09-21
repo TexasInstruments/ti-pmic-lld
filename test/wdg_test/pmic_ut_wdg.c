@@ -58,51 +58,51 @@ static Pmic_Ut_Tests_t pmic_wdg_tests[] =
     },
     {
         7328,
-        "Pmic_wdgSetCfg : Parameter validation for 'handle'"
+        "Pmic_wdgSetCfg : Parameter validation for handle"
     },
     {
         7329,
-        "Pmic_wdgSetCfg : Parameter validation for `longWindowi_ms' min value"
+        "Pmic_wdgSetCfg : Parameter validation for longWindowi_ms min value"
     },
     {
         7330,
-        "Pmic_wdgSetCfg : Parameter validation for `longWindow_ms' max value"
+        "Pmic_wdgSetCfg : Parameter validation for longWindow_ms max value"
     },
     {
         7331,
-        "Pmic_wdgSetCfg : Parameter validation for `win1Duration_us' min value"
+        "Pmic_wdgSetCfg : Parameter validation for win1Duration_us min value"
     },
     {
         7332,
-        "Pmic_wdgSetCfg : Parameter validation for `win1Duration_us' max value"
+        "Pmic_wdgSetCfg : Parameter validation for win1Duration_us max value"
     },
     {
         7333,
-        "Pmic_wdgSetCfg : Parameter validation for `win2Duration_us' min value"
+        "Pmic_wdgSetCfg : Parameter validation for win2Duration_us min value"
     },
     {
         7334,
-        "Pmic_wdgSetCfg : Parameter validation for `win2Duration_us' max value"
+        "Pmic_wdgSetCfg : Parameter validation for win2Duration_us max value"
     },
     {
         7335,
-        "Pmic_wdgSetCfg : Parameter validation for `failThreshold' max value"
+        "Pmic_wdgSetCfg : Parameter validation for failThreshold max value"
     },
     {
         7336,
-        "Pmic_wdgSetCfg : Parameter validation for `rstThreshold' max Value"
+        "Pmic_wdgSetCfg : Parameter validation for rstThreshold max Value"
     },
     {
         7337,
-        "Pmic_wdgSetCfg : Parameter validation for `qaFdbk' max value"
+        "Pmic_wdgSetCfg : Parameter validation for qaFdbk max value"
     },
     {
         7338,
-        "Pmic_wdgSetCfg : Parameter validation for `qaLfsr' max value"
+        "Pmic_wdgSetCfg : Parameter validation for qaLfsr max value"
     },
     {
         7339,
-        "Pmic_wdgSetCfg : Parameter validation for `qaQuesSeed' max Value"
+        "Pmic_wdgSetCfg : Parameter validation for qaQuesSeed max Value"
     },
     {
         7340,
@@ -110,23 +110,23 @@ static Pmic_Ut_Tests_t pmic_wdg_tests[] =
     },
     {
         7341,
-        "Pmic_wdgGetCfg : Parameter validation for 'handle'"
+        "Pmic_wdgGetCfg : Parameter validation for handle"
     },
     {
         7342,
-        "Pmic_wdgGetCfg : Parameter validation for 'WdgCfg'"
+        "Pmic_wdgGetCfg : Parameter validation for WdgCfg"
     },
     {
         7343,
-        "Pmic_wdgEnable : Parameter validation for 'handle'"
+        "Pmic_wdgEnable : Parameter validation for handle"
     },
     {
         7344,
-        "Pmic_wdgDisable : Parameter validation for 'WdgCfg'"
+        "Pmic_wdgDisable : Parameter validation for WdgCfg"
     },
     {
         7345,
-        "Pmic_wdgStartQaSequence : Parameter validation for 'handle'"
+        "Pmic_wdgStartQaSequence : Parameter validation for handle"
     },
     {
         7346,
@@ -150,11 +150,11 @@ static Pmic_Ut_Tests_t pmic_wdg_tests[] =
     },
     {
         7351,
-        "Pmic_wdgGetFailCount : Parameter validation for 'handle'"
+        "Pmic_wdgGetFailCount : Parameter validation for handle"
     },
     {
         7352,
-        "Pmic_wdgGetFailCount : Parameter validation for 'failCount'"
+        "Pmic_wdgGetFailCount : Parameter validation for failCount"
     },
     {
         7353,
@@ -162,11 +162,11 @@ static Pmic_Ut_Tests_t pmic_wdg_tests[] =
     },
     {
         7354,
-        "Pmic_wdgGetErrorStatus : Parameter validation for 'handle'"
+        "Pmic_wdgGetErrorStatus : Parameter validation for handle"
     },
     {
         7355,
-        "Pmic_wdgGetErrorStatus : Parameter validation for 'errStatus'"
+        "Pmic_wdgGetErrorStatus : Parameter validation for errStatus"
     },
     {
         7356,
@@ -174,11 +174,11 @@ static Pmic_Ut_Tests_t pmic_wdg_tests[] =
     },
     {
         7357,
-        "Pmic_wdgStartTriggerSequence : Parameter validation for 'handle'"
+        "Pmic_wdgStartTriggerSequence : Parameter validation for handle"
     },
     {
         7958,
-        "Pmic_wdgStartQaSequence : Parameter validation for 'maxCnt'"
+        "Pmic_wdgStartQaSequence : Parameter validation for maxCnt"
     },
 };
 
@@ -238,7 +238,7 @@ static void test_pmic_wdg_setCfg_forallparams(void)
 }
 
 /*!
- * \brief   Parameter validation for 'handle'
+ * \brief   Parameter validation for handle
  */
 static void test_pmic_wdg_setCfg_prmValTest_handle(void)
 {
@@ -269,7 +269,7 @@ static void test_pmic_wdg_setCfg_prmValTest_handle(void)
 }
 
 /*!
- * \brief   Parameter validation for 'longWinDuration_ms' min Value
+ * \brief   Parameter validation for longWinDuration_ms min Value
  */
 static void test_pmic_wdg_setCfg_prmValTest_longwinMin(void)
 {
@@ -300,7 +300,7 @@ static void test_pmic_wdg_setCfg_prmValTest_longwinMin(void)
 }
 
 /*!
- * \brief   Parameter validation for 'longWinDuration_ms' max Value
+ * \brief   Parameter validation for longWinDuration_ms max Value
  */
 static void test_pmic_wdg_setCfg_prmValTest_longwinMax(void)
 {
@@ -331,7 +331,7 @@ static void test_pmic_wdg_setCfg_prmValTest_longwinMax(void)
 }
 
 /*!
- * \brief   Parameter validation for 'win1Duration_us' min Value
+ * \brief   Parameter validation for win1Duration_us min Value
  */
 static void test_pmic_wdg_setCfg_prmValTest_win1Min(void)
 {
@@ -362,7 +362,7 @@ static void test_pmic_wdg_setCfg_prmValTest_win1Min(void)
 }
 
 /*!
- * \brief   Parameter validation for 'win1Duration_us' max Value
+ * \brief   Parameter validation for win1Duration_us max Value
  */
 static void test_pmic_wdg_setCfg_prmValTest_win1Max(void)
 {
@@ -393,7 +393,7 @@ static void test_pmic_wdg_setCfg_prmValTest_win1Max(void)
 }
 
 /*!
- * \brief   Parameter validation for 'win2Duration_us' min Value
+ * \brief   Parameter validation for win2Duration_us min Value
  */
 static void test_pmic_wdg_setCfg_prmValTest_win2Min(void)
 {
@@ -424,7 +424,7 @@ static void test_pmic_wdg_setCfg_prmValTest_win2Min(void)
 }
 
 /*!
- * \brief   Parameter validation for 'win2Duration_us' max Value
+ * \brief   Parameter validation for win2Duration_us max Value
  */
 static void test_pmic_wdg_setCfg_prmValTest_win2Max(void)
 {
@@ -455,7 +455,7 @@ static void test_pmic_wdg_setCfg_prmValTest_win2Max(void)
 }
 
 /*!
- * \brief   Parameter validation for 'failThreshold' max Value
+ * \brief   Parameter validation for failThreshold max Value
  */
 static void test_pmic_wdg_setCfg_prmValTest_failThresholdMax(void)
 {
@@ -486,7 +486,7 @@ static void test_pmic_wdg_setCfg_prmValTest_failThresholdMax(void)
 }
 
 /*!
- * \brief   Parameter validation for 'rstThreshold' max Value
+ * \brief   Parameter validation for rstThreshold max Value
  */
 static void test_pmic_wdg_setCfg_prmValTest_rstThresholdMax(void)
 {
@@ -517,7 +517,7 @@ static void test_pmic_wdg_setCfg_prmValTest_rstThresholdMax(void)
 }
 
 /*!
- * \brief   Parameter validation for 'qaFdbk' max Value
+ * \brief   Parameter validation for qaFdbk max Value
  */
 static void test_pmic_wdg_setCfg_prmValTest_qaFdbkMax(void)
 {
@@ -548,7 +548,7 @@ static void test_pmic_wdg_setCfg_prmValTest_qaFdbkMax(void)
 }
 
 /*!
- * \brief   Parameter validation for 'qaLfsr' max Value
+ * \brief   Parameter validation for qaLfsr max Value
  */
 static void test_pmic_wdg_setCfg_prmValTest_qaLfsrMax(void)
 {
@@ -579,7 +579,7 @@ static void test_pmic_wdg_setCfg_prmValTest_qaLfsrMax(void)
 }
 
 /*!
- * \brief   Parameter validation for 'qaQuesSeed' max Value
+ * \brief   Parameter validation for qaQuesSeed max Value
  */
 static void test_pmic_wdg_setCfg_prmValTest_qaQuesSeedMax(void)
 {
@@ -666,7 +666,7 @@ static void test_pmic_wdg_getCfg_forallparams(void)
 }
 
 /*!
- * \brief   Parameter validation for 'handle'
+ * \brief   Parameter validation for handle
  */
 static void test_pmic_wdg_getCfg_prmValTest_handle(void)
 {
@@ -682,7 +682,7 @@ static void test_pmic_wdg_getCfg_prmValTest_handle(void)
 }
 
 /*!
- * \brief   Parameter validation for 'wdgCfg'
+ * \brief   Parameter validation for wdgCfg
  */
 static void test_pmic_wdg_getCfg_prmValTest_wdgcfgParam(void)
 {
@@ -697,7 +697,7 @@ static void test_pmic_wdg_getCfg_prmValTest_wdgcfgParam(void)
 }
 
 /*!
- * \brief   Parameter validation for 'handle'
+ * \brief   Parameter validation for handle
  */
 static void test_pmic_wdg_enable_prmValTest_handle(void)
 {
@@ -712,7 +712,7 @@ static void test_pmic_wdg_enable_prmValTest_handle(void)
 }
 
 /*!
- * \brief   Parameter validation for 'handle'
+ * \brief   Parameter validation for handle
  */
 static void test_pmic_wdg_disable_prmValTest_handle(void)
 {
@@ -727,7 +727,7 @@ static void test_pmic_wdg_disable_prmValTest_handle(void)
 }
 
 /*!
- * \brief   Test wdg QA sequence Parameter validation for 'handle'
+ * \brief   Test wdg QA sequence Parameter validation for handle
  */
 static void test_pmic_wdg_startQaSequence_prmValTest_handle(void)
 {
@@ -1017,7 +1017,7 @@ static void test_pmic_wdg_GetFailCount(void)
 }
 
 /*!
- * \brief   Test get wdg failcount Parameter validation for 'handle'
+ * \brief   Test get wdg failcount Parameter validation for handle
  */
 static void test_pmic_wdg_GetFailCount_prmValTest_handle(void)
 {
@@ -1038,7 +1038,7 @@ static void test_pmic_wdg_GetFailCount_prmValTest_handle(void)
 }
 
 /*!
- * \brief   Test get wdg failcount Parameter validation for 'failCount'
+ * \brief   Test get wdg failcount Parameter validation for failCount
  */
 static void test_pmic_wdg_GetFailCount_prmValTest_invFailCountParam(void)
 {
@@ -1080,7 +1080,7 @@ static void test_pmic_wdg_GetErrorStatus(void)
 }
 
 /*!
- * \brief   Test get wdg error status Parameter validation for 'handle'
+ * \brief   Test get wdg error status Parameter validation for handle
  */
 static void test_pmic_wdg_GetErrorStatus_prmValTest_handle(void)
 {
@@ -1102,7 +1102,7 @@ static void test_pmic_wdg_GetErrorStatus_prmValTest_handle(void)
 }
 
 /*!
- * \brief   Test get wdg failcount Parameter validation for 'errStatus'
+ * \brief   Test get wdg failcount Parameter validation for errStatus
  */
 static void test_pmic_wdg_GetErrorStatus_prmValTest_invErrStatParam(void)
 {
@@ -1174,7 +1174,7 @@ static void test_pmic_wdg_StartTriggerSequence(void)
 }
 
 /*!
- * \brief   Test Watchdog trigger mode Parameter validation for 'handle'
+ * \brief   Test Watchdog trigger mode Parameter validation for handle
  */
 static void test_pmic_wdg_StartTriggerSequence_prmValTest_handle(void)
 {
@@ -1218,7 +1218,7 @@ static void test_pmic_wdg_StartTriggerSequence_prmValTest_handle(void)
 }
 
 /*!
- * \brief   Pmic_wdgStartQaSequence : Parameter validation for 'maxCnt'
+ * \brief   Pmic_wdgStartQaSequence : Parameter validation for maxCnt
  */
 static void test_pmic_wdg_startQaSequence_prmValTest_maxCnt(void)
 {

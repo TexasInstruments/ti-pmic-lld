@@ -421,7 +421,7 @@ typedef struct Pmic_WdgErrStatus_s
 /*                            Function Declarations                           */
 /* ========================================================================== */
 /*!
- * \brief   API to Enable Watchdg timer.
+ * \brief   API to Enable Watchdog timer.
  *          This function is used to Enable the PMIC watchdog. User ensure
  *          that, this function needs to be called to enable watchdog timer
  *          before configuring or starting watchdog trigger or QA mode.
@@ -434,7 +434,7 @@ typedef struct Pmic_WdgErrStatus_s
 int32_t Pmic_wdgEnable(Pmic_CoreHandle_t *pPmicCoreHandle);
 
 /*!
- * \brief   API to Disable Watchdg timer.
+ * \brief   API to Disable Watchdog timer.
  *          This function is used to Disable the PMIC watchdog. User ensure
  *          that, after using this function, complete watchdog functionality
  *          and configuration will be deactivated.

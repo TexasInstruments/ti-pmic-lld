@@ -345,7 +345,8 @@ int32_t Pmic_getRecoveryCnt(Pmic_CoreHandle_t *pPmicCoreHandle,
  * Design: did_pmic_comm_intf_cfg, did_pmic_comm_single_i2c_cfg,
  *         did_pmic_comm_dual_i2c_cfg, did_pmic_comm_spi_cfg
  *
- *         This function gets device configuration from pCoreCfgHandle and
+ *
+ *         This function gets device configuration from pCoreCfgData and
  *         initializes device specific information in pPmicCoreHandle after
  *         validation of given params depends on validParams bitfileds
  *         and does some basic validation on PMIC interface I2C/SPI,
