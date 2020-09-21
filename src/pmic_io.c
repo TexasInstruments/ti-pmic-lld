@@ -282,7 +282,7 @@ int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t  rxBuf[PMIC_IO_BUF_SIZE]   = {0};
     uint8_t  crcData[PMIC_IO_BUF_SIZE] = {0};
     uint8_t  instType   = PMIC_MAIN_INST;
-    uint8_t  crcDataLen = 0;
+    uint8_t  crcDataLen = 0U;
     uint16_t pmicRegAddr = regAddr;
 
     if(NULL == pPmicCoreHandle)
@@ -371,8 +371,8 @@ int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
         if(PMIC_INTF_SPI == pPmicCoreHandle->commMode)
         {
             /* Copy SPI frame data to crcData */
-            for(crcDataLen = 0;
-                crcDataLen < (PMIC_IO_BUF_SIZE - 1);
+            for(crcDataLen = 0U;
+                crcDataLen < (PMIC_IO_BUF_SIZE - 1U);
                 crcDataLen++)
             {
                 crcData[crcDataLen] = rxBuf[crcDataLen];
