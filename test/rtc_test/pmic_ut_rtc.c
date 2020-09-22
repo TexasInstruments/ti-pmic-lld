@@ -1948,7 +1948,7 @@ static void test_pmic_rtc_testWakeup_TimerIntr_lpStandbyState(void)
     uint8_t            timerPeriod  = 0U;
     int8_t num                      = 0;
     Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
-    Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 0U, 30U, 6U, 0U, 1U};
+    Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 1U, 30U, 6U, 0U, 1U};
     Pmic_IrqStatus_t errStat  = {0U};
 
     test_pmic_print_unity_testcase_info(7358,
@@ -1961,10 +1961,13 @@ static void test_pmic_rtc_testWakeup_TimerIntr_lpStandbyState(void)
     pmic_log("\r\n Enter 1 to continue");
     UART_scanFmt("%d", &num);
 
-    status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
+    status = Pmic_rtcGetTimerPeriod(pHandle, &timerPeriod);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    status = Pmic_rtcGetTimerPeriod(pHandle, &timerPeriod);
+    status = Pmic_rtcSetTimerPeriod(pHandle, PMIC_RTC_MINUTE_INTR_PERIOD);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     /* To clear the interrupts*/
@@ -1986,17 +1989,24 @@ static void test_pmic_rtc_testWakeup_TimerIntr_lpStandbyState(void)
 
     pmic_log("\r\n Also check for RTC Timer interrupt in Interrupt status register");
 
-
-    status = Pmic_rtcSetTimerPeriod(pHandle,
-                                           PMIC_RTC_MINUTE_INTR_PERIOD);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
     status = Pmic_rtcEnableTimerIntr(pHandle, PMIC_RTC_TIMER_INTR_ENABLE);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    status =  Pmic_fsmSetMissionState(pPmicCoreHandle, PMIC_FSM_LP_STANBY_STATE);
+    status = Pmic_fsmSetNsleepSignalMask(pHandle,
+                                         PMIC_NSLEEP1_SIGNAL,
+                                         PMIC_NSLEEPX_MASK);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
+    status = Pmic_fsmSetNsleepSignalMask(pHandle,
+                                         PMIC_NSLEEP2_SIGNAL,
+                                         PMIC_NSLEEPX_MASK);
+     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    /* Needs Delay to unmask nSleep signals for LP Stand-By State */
+    Osal_delay(10U);
+
+    status =  Pmic_fsmSetMissionState(pPmicCoreHandle, PMIC_FSM_LP_STANBY_STATE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
 /*!
@@ -2053,6 +2063,19 @@ static void test_pmic_rtc_testWakeup_TimerIntr_standbyState(void)
 
     status = Pmic_rtcEnableTimerIntr(pHandle, PMIC_RTC_TIMER_INTR_ENABLE);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmSetNsleepSignalMask(pHandle,
+                                         PMIC_NSLEEP1_SIGNAL,
+                                         PMIC_NSLEEPX_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmSetNsleepSignalMask(pHandle,
+                                         PMIC_NSLEEP2_SIGNAL,
+                                         PMIC_NSLEEPX_MASK);
+     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    /* Needs Delay to unmask nSleep signals for Stand-By State */
+    Osal_delay(10U);
 
     status =  Pmic_fsmSetMissionState(pPmicCoreHandle, PMIC_FSM_STANBY_STATE);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -2121,6 +2144,19 @@ static void test_pmic_rtc_testWakeup_AlarmIntr_lpStandbyState(void)
     status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
+    status = Pmic_fsmSetNsleepSignalMask(pHandle,
+                                         PMIC_NSLEEP1_SIGNAL,
+                                         PMIC_NSLEEPX_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmSetNsleepSignalMask(pHandle,
+                                         PMIC_NSLEEP2_SIGNAL,
+                                         PMIC_NSLEEPX_MASK);
+     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    /* Needs Delay to unmask nSleep signals for LP Stand-By State */
+    Osal_delay(10U);
+
     status =  Pmic_fsmSetMissionState(pPmicCoreHandle, PMIC_FSM_STANBY_STATE);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -2187,6 +2223,19 @@ static void test_pmic_rtc_testWakeup_AlarmIntr_standbyState(void)
     /* Get the current time for timeout */
     status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmSetNsleepSignalMask(pHandle,
+                                         PMIC_NSLEEP1_SIGNAL,
+                                         PMIC_NSLEEPX_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmSetNsleepSignalMask(pHandle,
+                                         PMIC_NSLEEP2_SIGNAL,
+                                         PMIC_NSLEEPX_MASK);
+     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    /* Needs Delay to unmask nSleep signals for Stand-By State */
+    Osal_delay(10U);
 
     status =  Pmic_fsmSetMissionState(pPmicCoreHandle, standByState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);

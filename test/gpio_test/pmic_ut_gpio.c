@@ -5834,13 +5834,23 @@ static void test_pmic_canWkup_test(void)
                                        gpioCfg);
     pmicState = PMIC_FSM_LP_STANBY_STATE;
 
-    TEST_IGNORE();
-
     test_pmic_print_unity_testcase_info(8012,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
     TEST_IGNORE();
+
+    status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                         PMIC_NSLEEP1_SIGNAL,
+                                         PMIC_NSLEEPX_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                         PMIC_NSLEEP2_SIGNAL,
+                                         PMIC_NSLEEPX_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    Osal_delay(10U);
 
     status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -5869,6 +5879,18 @@ static void test_pmic_gpioWkup1_test(void)
 
     TEST_IGNORE();
 
+    status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                         PMIC_NSLEEP1_SIGNAL,
+                                         PMIC_NSLEEPX_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                         PMIC_NSLEEP2_SIGNAL,
+                                         PMIC_NSLEEPX_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    Osal_delay(10U);
+
     status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
@@ -5895,6 +5917,18 @@ static void test_pmic_gpioWkup2_test(void)
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
     TEST_IGNORE();
+
+    status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                         PMIC_NSLEEP1_SIGNAL,
+                                         PMIC_NSLEEPX_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                         PMIC_NSLEEP2_SIGNAL,
+                                         PMIC_NSLEEPX_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    Osal_delay(10U);
 
     status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);

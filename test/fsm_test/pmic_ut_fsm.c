@@ -137,6 +137,7 @@ static void test_Pmic_fsmSetNsleepSignalMask_mask_nsleep1(void)
     test_pmic_print_unity_testcase_info(7693,
                                         pmic_fsm_tests,
                                         PMIC_FSM_NUM_OF_TESTCASES);
+
 #if 0
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
@@ -226,6 +227,16 @@ static void test_Pmic_fsmSetMissionState_mcu(void)
                                         pmic_fsm_tests,
                                         PMIC_FSM_NUM_OF_TESTCASES);
 
+    status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                         PMIC_NSLEEP1_SIGNAL,
+                                         PMIC_NSLEEPX_UNMASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                         PMIC_NSLEEP2_SIGNAL,
+                                         PMIC_NSLEEPX_UNMASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
     pmic_log("\r\n Probe TP134 and it should change from High to Low.");
     pmic_log("\r\n Probe TP133 and it should continue to be in HIGH");
 
@@ -247,9 +258,18 @@ static void test_Pmic_fsmSetMissionState_active(void)
                                         pmic_fsm_tests,
                                         PMIC_FSM_NUM_OF_TESTCASES);
 
-    status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
+    status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                         PMIC_NSLEEP1_SIGNAL,
+                                         PMIC_NSLEEPX_UNMASK);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
+    status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                         PMIC_NSLEEP2_SIGNAL,
+                                         PMIC_NSLEEPX_UNMASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
 /*!
@@ -265,6 +285,16 @@ static void test_Pmic_fsmSetMissionState_s2r(void)
     test_pmic_print_unity_testcase_info(7699,
                                         pmic_fsm_tests,
                                         PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                         PMIC_NSLEEP1_SIGNAL,
+                                         PMIC_NSLEEPX_UNMASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                         PMIC_NSLEEP2_SIGNAL,
+                                         PMIC_NSLEEPX_UNMASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
      pmic_log("\r\n Probe TP134 and TP133 and it should change from High to Low.");
 
@@ -286,6 +316,16 @@ static void test_Pmic_fsmSetMissionState_lpstandby(void)
                                         pmic_fsm_tests,
                                         PMIC_FSM_NUM_OF_TESTCASES);
 
+    status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                         PMIC_NSLEEP1_SIGNAL,
+                                         PMIC_NSLEEPX_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                         PMIC_NSLEEP2_SIGNAL,
+                                         PMIC_NSLEEPX_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
      pmic_log("\r\n Probe TP134 and TP133 and it should change from High to Low.");
 
     status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
@@ -305,6 +345,18 @@ static void test_Pmic_fsmSetMissionState_standby(void)
     test_pmic_print_unity_testcase_info(7701,
                                         pmic_fsm_tests,
                                         PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                         PMIC_NSLEEP1_SIGNAL,
+                                         PMIC_NSLEEPX_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                         PMIC_NSLEEP2_SIGNAL,
+                                         PMIC_NSLEEPX_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    Osal_delay(5U);
 
     status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);

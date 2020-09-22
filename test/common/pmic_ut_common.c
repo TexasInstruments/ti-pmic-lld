@@ -1274,7 +1274,7 @@ void GPIO_configIntRouter(uint32_t portNum, uint32_t pinNum, uint32_t gpioIntRtr
 
     cfg->baseAddr = CSL_WKUP_GPIO0_BASE;
 
-    bankNum = pinNum/32; /* Each GPIO bank has 16 pins */
+    bankNum = pinNum/16; /* Each GPIO bank has 16 pins */
 
     /* WKUP GPIO int router input interrupt is the GPIO bank interrupt */
     intCfg[pinNum].intNum = CSLR_MCU_R5FSS0_CORE0_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_0 + bankNum;
