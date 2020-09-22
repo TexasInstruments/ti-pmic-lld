@@ -339,36 +339,13 @@ int32_t Pmic_fsmDeviceOffRequestCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
+        pmicStatus = Pmic_fsmGetstandByCfgRegFields(
+                                            pPmicCoreHandle->pmicDeviceType,
+                                            &regAddr,
+                                            &bitPos,
+                                            &bitMask);
+
         Pmic_criticalSectionStart(pPmicCoreHandle);
-
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            PMIC_CONFIG_1_REGADDR,
-                                            &regData);
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            Pmic_setBitField(&regData,
-                             PMIC_CONFIG_1_NSLEEP1_MASK_SHIFT,
-                             PMIC_CONFIG_1_NSLEEP1_MASK_MASK,
-                             PMIC_NSLEEP1B_FSM_MASK);
-
-            Pmic_setBitField(&regData,
-                             PMIC_CONFIG_1_NSLEEP2_MASK_SHIFT,
-                             PMIC_CONFIG_1_NSLEEP2_MASK_MASK,
-                             PMIC_NSLEEP2B_FSM_MASK);
-
-            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                                PMIC_CONFIG_1_REGADDR,
-                                                regData);
-        }
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            pmicStatus = Pmic_fsmGetstandByCfgRegFields(
-                                                pPmicCoreHandle->pmicDeviceType,
-                                                &regAddr,
-                                                &bitPos,
-                                                &bitMask);
-        }
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
