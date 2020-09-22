@@ -97,8 +97,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_NSLEEP1_SIGNAL                 (0U)
-#define PMIC_NSLEEP2_SIGNAL                 (1U)
+#define PMIC_NSLEEP1_SIGNAL                 (bool)false
+#define PMIC_NSLEEP2_SIGNAL                 (bool)true
 /* @} */
 
 /**

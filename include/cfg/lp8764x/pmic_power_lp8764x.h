@@ -76,19 +76,19 @@ extern "C" {
  *  @{
  */
 #define PMIC_LP8764X_POWER_SOURCE_VCCA     \
-               ((uint16_t) ((PMIC_LP8764X_POWER_RESOURCE_TYPE_VCCA << 8) | 0x0))
+               ((((uint16_t)PMIC_LP8764X_POWER_RESOURCE_TYPE_VCCA << 8U) | 0x0U))
 #define PMIC_LP8764X_REGULATOR_BUCK1       \
-               ((uint16_t) ((PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK << 8) | 0x1))
+               ((((uint16_t)PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK << 8U) | 0x1U))
 #define PMIC_LP8764X_REGULATOR_BUCK2       \
-               ((uint16_t) ((PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK << 8) | 0x2))
+               ((((uint16_t)PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK << 8U) | 0x2U))
 #define PMIC_LP8764X_REGULATOR_BUCK3       \
-               ((uint16_t) ((PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK << 8) | 0x3))
+               ((((uint16_t)PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK << 8U) | 0x3U))
 #define PMIC_LP8764X_REGULATOR_BUCK4       \
-               ((uint16_t) ((PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK << 8) | 0x4))
+               ((((uint16_t)PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK << 8U) | 0x4U))
 #define PMIC_LP8764X_POWER_SOURCE_VMON1    \
-               ((uint16_t) ((PMIC_LP8764X_POWER_RESOURCE_TYPE_VMON << 8) | 0x5))
+               ((((uint16_t)PMIC_LP8764X_POWER_RESOURCE_TYPE_VMON << 8U) | 0x5U))
 #define PMIC_LP8764X_POWER_SOURCE_VMON2    \
-               ((uint16_t) ((PMIC_LP8764X_POWER_RESOURCE_TYPE_VMON << 8) | 0x6))
+               ((((uint16_t)PMIC_LP8764X_POWER_RESOURCE_TYPE_VMON << 8U) | 0x6U))
 /*  @} */
 
 /**
@@ -140,9 +140,9 @@ extern "C" {
  *  @{
  */
 /** \brief Used to select VOUT2 register for voltage selection */
-#define PMIC_LP8764X_REGULATOR_BUCK_VOUT_SEL_VOUT2        (0x1U)
+#define PMIC_LP8764X_REGULATOR_BUCK_VOUT_SEL_VOUT2        (bool)true
 /** \brief Used to select VOUT1 register for voltage selection */
-#define PMIC_LP8764X_REGULATOR_BUCK_VOUT_SEL_VOUT1        (0x0U)
+#define PMIC_LP8764X_REGULATOR_BUCK_VOUT_SEL_VOUT1        (bool)false
 /* @} */
 
 /**
@@ -218,9 +218,9 @@ extern "C" {
  *  @{
  */
 /** \brief Used to select range 0.3 -3.34V */
-#define PMIC_LP8764X_VMON_RANGE_0V3_3V34                 (0x0U)
+#define PMIC_LP8764X_VMON_RANGE_0V3_3V34                 (bool)false
 /** \brief Used to select range 3.5 -5V */
-#define PMIC_LP8764X_VMON_RANGE_3V35_5V                  (0x1U)
+#define PMIC_LP8764X_VMON_RANGE_3V35_5V                  (bool)true
 /* @} */
 
 /**
@@ -344,25 +344,25 @@ extern "C" {
  *  @{
  */
 #define PMIC_LP8764X_PGOOD_SOURCE_VCCA     \
-            ((uint16_t) ((PMIC_LP8764X_PGOOD_SOURCE_TYPE_VCCA  << 8) | 0U))
+            ((((uint16_t)PMIC_LP8764X_PGOOD_SOURCE_TYPE_VCCA  << 8U) | 0U))
 #define PMIC_LP8764X_PGOOD_SOURCE_BUCK1     \
-            ((uint16_t) ((PMIC_LP8764X_PGOOD_SOURCE_TYPE_BUCK  << 8) | 1U))
+            ((((uint16_t)PMIC_LP8764X_PGOOD_SOURCE_TYPE_BUCK  << 8U) | 1U))
 #define PMIC_LP8764X_PGOOD_SOURCE_BUCK2     \
-            ((uint16_t) ((PMIC_LP8764X_PGOOD_SOURCE_TYPE_BUCK  << 8) | 2U))
+            ((((uint16_t)PMIC_LP8764X_PGOOD_SOURCE_TYPE_BUCK  << 8U) | 2U))
 #define PMIC_LP8764X_PGOOD_SOURCE_BUCK3     \
-            ((uint16_t) ((PMIC_LP8764X_PGOOD_SOURCE_TYPE_BUCK  << 8) | 3U))
+            ((((uint16_t)PMIC_LP8764X_PGOOD_SOURCE_TYPE_BUCK  << 8U) | 3U))
 #define PMIC_LP8764X_PGOOD_SOURCE_BUCK4     \
-            ((uint16_t) ((PMIC_LP8764X_PGOOD_SOURCE_TYPE_BUCK  << 8) | 4U))
+            ((((uint16_t)PMIC_LP8764X_PGOOD_SOURCE_TYPE_BUCK  << 8U) | 4U))
 #define PMIC_LP8764X_PGOOD_SOURCE_NRSTOUT      \
-            ((uint16_t) ((PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT   << 8) | 5U))
+            ((((uint16_t)PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT   << 8U) | 5U))
 #define PMIC_LP8764X_PGOOD_SOURCE_NRSTOUT_SOC      \
-            ((uint16_t) ((PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC  << 8) | 6U))
+         ((((uint16_t)PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC  << 8U) | 6U))
 #define PMIC_LP8764X_PGOOD_SOURCE_TDIE      \
-            ((uint16_t) ((PMIC_LP8764X_PGOOD_SOURCE_TYPE_TDIE   << 8) | 7U))
+            ((((uint16_t)PMIC_LP8764X_PGOOD_SOURCE_TYPE_TDIE   << 8U) | 7U))
 #define PMIC_LP8764X_PGOOD_SOURCE_VMON1      \
-            ((uint16_t) ((PMIC_LP8764X_PGOOD_SOURCE_TYPE_VMON  << 8) | 8U))
+            ((((uint16_t)PMIC_LP8764X_PGOOD_SOURCE_TYPE_VMON  << 8U) | 8U))
 #define PMIC_LP8764X_PGOOD_SOURCE_VMON2      \
-            ((uint16_t) ((PMIC_LP8764X_PGOOD_SOURCE_TYPE_VMON  << 8) | 9U))
+            ((((uint16_t)PMIC_LP8764X_PGOOD_SOURCE_TYPE_VMON  << 8U) | 9U))
 /*  @} */
 
 /**

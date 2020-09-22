@@ -77,8 +77,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_WDG_DISABLE                     (0x0U)
-#define PMIC_WDG_ENABLE                      (0x1U)
+#define PMIC_WDG_DISABLE                     (bool)false
+#define PMIC_WDG_ENABLE                      (bool)true
 /* @} */
 
 /**
@@ -97,8 +97,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_WDG_RETLONGWIN_DISABLE          (0x0U)
-#define PMIC_WDG_RETLONGWIN_ENABLE           (0x1U)
+#define PMIC_WDG_RETLONGWIN_DISABLE          (bool)false
+#define PMIC_WDG_RETLONGWIN_ENABLE           (bool)true
 /* @} */
 
 /**
