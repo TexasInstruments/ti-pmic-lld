@@ -1956,8 +1956,12 @@ static void test_pmic_rtc_testWakeup_TimerIntr_lpStandbyState(void)
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
     pHandle                         = pPmicCoreHandle;
-
+#if defined(SOC_J721E)
     pmic_log("\r\n Probe TP134 and TP133 and it should be High");
+#endif
+#if defined(SOC_J7200)
+    pmic_log("\r\n Probe TP46 and TP29 and it should be High");
+#endif
     pmic_log("\r\n Enter 1 to continue");
     UART_scanFmt("%d", &num);
 
@@ -1980,10 +1984,16 @@ static void test_pmic_rtc_testWakeup_TimerIntr_lpStandbyState(void)
             pmic_log("\r\nINT STAT[%d]: 0x%08x", i, errStat.intStatus[i]);
         }
     }
-
+#if defined(SOC_J721E)
     pmic_log("\r\n Probe TP134 and TP133 and it should be low after 2 sec");
 
     pmic_log("\r\n Probe TP134 and TP133 and it should be High after 60 sec");
+#endif
+#if defined(SOC_J7200)
+    pmic_log("\r\n Probe TP46 and TP29 and it should be low after 2 sec");
+
+    pmic_log("\r\n Probe TP46 and TP29 and it should be High after 60 sec");
+#endif
 
     pmic_log("\r\n After 60sec Rerun the application in UART Boot mode");
 
@@ -2028,7 +2038,12 @@ static void test_pmic_rtc_testWakeup_TimerIntr_standbyState(void)
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
     pHandle                         = pPmicCoreHandle;
+#if defined(SOC_J721E)
     pmic_log("\r\n Probe TP134 and TP133 and it should be High");
+#endif
+#if defined(SOC_J7200)
+    pmic_log("\r\n Probe TP46 and TP29 and it should be High");
+#endif
     pmic_log("\r\n Enter 1 to continue");
     UART_scanFmt("%d", &num);
 
@@ -2048,10 +2063,16 @@ static void test_pmic_rtc_testWakeup_TimerIntr_standbyState(void)
             pmic_log("\r\nINT STAT[%d]: 0x%08x", i, errStat.intStatus[i]);
         }
     }
-
+#if defined(SOC_J721E)
     pmic_log("\r\n Probe TP134 and TP133 and it should be low after 2 sec");
 
     pmic_log("\r\n Probe TP134 and TP133 and it should be High after 60 sec");
+#endif
+#if defined(SOC_J7200)
+    pmic_log("\r\n Probe TP46 and TP29 and it should be low after 2 sec");
+
+    pmic_log("\r\n Probe TP46 and TP29 and it should be High after 60 sec");
+#endif
 
     pmic_log("\r\n After 60sec Rerun the application in UART Boot mode");
 
@@ -2103,7 +2124,12 @@ static void test_pmic_rtc_testWakeup_AlarmIntr_lpStandbyState(void)
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
+#if defined(SOC_J721E)
     pmic_log("\r\n Probe TP134 and TP133 and it should be High");
+#endif
+#if defined(SOC_J7200)
+    pmic_log("\r\n Probe TP46 and TP29 and it should be High");
+#endif
     pmic_log("\r\n Enter 1 to continue");
     UART_scanFmt("%d", &num);
 
@@ -2124,10 +2150,16 @@ static void test_pmic_rtc_testWakeup_AlarmIntr_lpStandbyState(void)
             pmic_log("\r\nINT STAT[%d]: 0x%08x", i, errStat.intStatus[i]);
         }
     }
-
+#if defined(SOC_J721E)
     pmic_log("\r\n Probe TP134 and TP133 and it should be low after 2 sec");
 
     pmic_log("\r\n Probe TP134 and TP133 and it should be High after 60 sec");
+#endif
+#if defined(SOC_J7200)
+    pmic_log("\r\n Probe TP46 and TP29 and it should be low after 2 sec");
+
+    pmic_log("\r\n Probe TP46 and TP29 and it should be High after 60 sec");
+#endif
 
     pmic_log("\r\n After 60sec Rerun the application in UART Boot mode");
 
@@ -2184,7 +2216,12 @@ static void test_pmic_rtc_testWakeup_AlarmIntr_standbyState(void)
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
+#if defined(SOC_J721E)
     pmic_log("\r\n Probe TP134 and TP133 and it should be High");
+#endif
+#if defined(SOC_J7200)
+    pmic_log("\r\n Probe TP46 and TP29 and it should be High");
+#endif
     pmic_log("\r\n Enter 1 to continue");
     UART_scanFmt("%d", &num);
 
@@ -2205,10 +2242,16 @@ static void test_pmic_rtc_testWakeup_AlarmIntr_standbyState(void)
             pmic_log("\r\nINT STAT[%d]: 0x%08x", i, errStat.intStatus[i]);
         }
     }
-
+#if defined(SOC_J721E)
     pmic_log("\r\n Probe TP134 and TP133 and it should be low after 2 sec");
 
     pmic_log("\r\n Probe TP134 and TP133 and it should be High after 60 sec");
+#endif
+#if defined(SOC_J7200)
+    pmic_log("\r\n Probe TP46 and TP29 and it should be low after 2 sec");
+
+    pmic_log("\r\n Probe TP46 and TP29 and it should be High after 60 sec");
+#endif
 
     pmic_log("\r\n After 60sec Rerun the application in UART Boot mode");
 
@@ -2257,12 +2300,6 @@ static void test_pmic_rtc_testTimerAsyncIntr(void)
     test_pmic_print_unity_testcase_info(7888,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
-
-    /* Need to chekc interrupt issue on J7VCL */
-    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
-    {
-        TEST_IGNORE();
-    }
 
     /* Enable GPIO interrupt on the specific gpio pin */
     GPIO_enableInt(0);
@@ -2340,12 +2377,6 @@ static void test_pmic_rtc_testAlarmAsyncIntr(void)
     test_pmic_print_unity_testcase_info(7889,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
-
-    /* Need to chekc interrupt issue on J7VCL */
-    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
-    {
-        TEST_IGNORE();
-    }
 
     /* Enable GPIO interrupt on the specific gpio pin */
     GPIO_enableInt(0);
@@ -2769,11 +2800,10 @@ static void test_pmic_run_testcases(void)
     UNITY_END();
 }
 
-
 /*!
  * \brief   Run RTC unity test cases for HERA PMIC
  */
-static void test_pmic_hera_run_testcases(void)
+void test_pmic_hera_run_testcases(void)
 {
     pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
     UNITY_BEGIN();
@@ -2842,6 +2872,7 @@ static int32_t test_pmic_leo_pmicA_rtc_testApp(void)
     return status;
 }
 
+#if defined(SOC_J721E)
 /*!
  * \brief   RTC Unity Test App wrapper Function for LEO PMIC-A
  */
@@ -2872,6 +2903,7 @@ static int32_t test_pmic_leo_pmicA_spiStub_rtc_testApp(void)
     status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
     return status;
 }
+#endif
 
 /*!
  * \brief   RTC Unity Test App wrapper Function for HERA PMIC
@@ -3070,16 +3102,16 @@ static void print_pmicTestAppManualTestMenu(uint32_t board)
         strcpy(board_name, "J7VCL");
     }
 
-pmic_log(" \r\n =================================================================");
-pmic_log(" \r\n Manual Testcase Menu:");
-pmic_log(" \r\n =================================================================");
-pmic_log(" \r\n 0: Pmic Leo device(PMIC A on %s EVM for RTC WKUP using Timer Interrupt from LP Standby State)", board_name);
-pmic_log(" \r\n 1: Pmic Leo device(PMIC A on %s EVM for RTC WKUP using Timer Interrupt from Standby State)", board_name);
-pmic_log(" \r\n 2: Pmic Leo device(PMIC A on %s EVM for RTC WKUP using Alarm Interrupt from LP Standby State)", board_name);
-pmic_log(" \r\n 3: Pmic Leo device(PMIC A on %s EVM for RTC WKUP using Alarm Interrupt from Standby State)", board_name);
-pmic_log(" \r\n 4: Back to Main Menu");
-pmic_log(" \r\n");
-pmic_log(" \r\n Enter option: ");
+    pmic_log(" \r\n =================================================================");
+    pmic_log(" \r\n Manual Testcase Menu:");
+    pmic_log(" \r\n =================================================================");
+    pmic_log(" \r\n 0: Pmic Leo device(PMIC A on %s EVM for RTC WKUP using Timer Interrupt from LP Standby State)", board_name);
+    pmic_log(" \r\n 1: Pmic Leo device(PMIC A on %s EVM for RTC WKUP using Timer Interrupt from Standby State)", board_name);
+    pmic_log(" \r\n 2: Pmic Leo device(PMIC A on %s EVM for RTC WKUP using Alarm Interrupt from LP Standby State)", board_name);
+    pmic_log(" \r\n 3: Pmic Leo device(PMIC A on %s EVM for RTC WKUP using Alarm Interrupt from Standby State)", board_name);
+    pmic_log(" \r\n 4: Back to Main Menu");
+    pmic_log(" \r\n");
+    pmic_log(" \r\n Enter option: ");
 }
 
 /*!
@@ -3150,6 +3182,7 @@ static void test_pmic_rtc_testapp_runner(void)
         switch(num)
         {
             case 0U:
+#if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
@@ -3165,8 +3198,12 @@ static void test_pmic_rtc_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                 break;
             case 1U:
+#if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
@@ -3184,12 +3221,20 @@ static void test_pmic_rtc_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else 
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                 break;
             case 2U:
+#if defined(SOC_J721E)
                /* RTC Unity Test App wrapper Function for LEO PMIC-B */
                 pmic_log("RTC on LEO PMIC-B is not supported due to HW limitation\n");
+#else 
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                 break;
             case 3U:
+#if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
@@ -3205,8 +3250,12 @@ static void test_pmic_rtc_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else 
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                 break;
             case 4U:
+#if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_HERA_PMICB_DEVICE;
@@ -3222,8 +3271,12 @@ static void test_pmic_rtc_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else 
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                 break;
            case 5U:
+#if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
@@ -3239,8 +3292,12 @@ static void test_pmic_rtc_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else 
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                 break;
            case 6U:
+#if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
@@ -3256,6 +3313,9 @@ static void test_pmic_rtc_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else 
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                 break;
             case 7U:
                 pmic_log(" \r\n Quit from application\n");

@@ -1190,6 +1190,7 @@ static void test_pmic_misc_testapp_runner(void)
         switch(num)
         {
             case 0U:
+#if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     /* Run MISC test cases for Leo PMIC-A */
@@ -1205,8 +1206,12 @@ static void test_pmic_misc_testapp_runner(void)
                        test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                 break;
             case 1U:
+#if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICB_DEVICE;
@@ -1222,8 +1227,12 @@ static void test_pmic_misc_testapp_runner(void)
                        test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                break;
            case 2U:
+#if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
@@ -1239,8 +1248,12 @@ static void test_pmic_misc_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                break;
            case 3U:
+#if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_HERA_PMICB_DEVICE;
@@ -1256,8 +1269,12 @@ static void test_pmic_misc_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                break;
            case 4U:
+#if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     /* Run MISC test cases for Leo PMIC-A */
@@ -1274,8 +1291,12 @@ static void test_pmic_misc_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                break;
            case 5U:
+#if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                    /* Run MISC test cases for Leo PMIC-A */
@@ -1294,8 +1315,12 @@ static void test_pmic_misc_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                break;
            case 6U:
+#if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     /* Run MISC test cases for Leo PMIC-A */
@@ -1312,8 +1337,12 @@ static void test_pmic_misc_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                break;
            case 7U:
+#if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                    /* Run MISC test cases for Leo PMIC-A */
@@ -1332,6 +1361,9 @@ static void test_pmic_misc_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                break;
            case 8U:
                pmic_log(" \r\n Quit from application\n");

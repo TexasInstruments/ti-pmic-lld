@@ -236,10 +236,14 @@ static void test_Pmic_fsmSetMissionState_mcu(void)
                                          PMIC_NSLEEP2_SIGNAL,
                                          PMIC_NSLEEPX_UNMASK);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
+#if defined(SOC_J721E)
     pmic_log("\r\n Probe TP134 and it should change from High to Low.");
     pmic_log("\r\n Probe TP133 and it should continue to be in HIGH");
-
+#endif
+#if defined(SOC_J7200)
+    pmic_log("\r\n Probe TP46 and it should change from High to Low.");
+    pmic_log("\r\n Probe TP29 and it should continue to be in HIGH");
+#endif
     status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
@@ -296,8 +300,13 @@ static void test_Pmic_fsmSetMissionState_s2r(void)
                                          PMIC_NSLEEPX_UNMASK);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-     pmic_log("\r\n Probe TP134 and TP133 and it should change from High to Low.");
 
+#if defined(SOC_J721E)
+     pmic_log("\r\n Probe TP134 and TP133 and it should change from High to Low.");
+#endif
+#if defined(SOC_J7200)
+     pmic_log("\r\n Probe TP46 and TP29 and it should change from High to Low.");
+#endif
     status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
@@ -326,7 +335,12 @@ static void test_Pmic_fsmSetMissionState_lpstandby(void)
                                          PMIC_NSLEEPX_MASK);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
+#if defined(SOC_J721E)
      pmic_log("\r\n Probe TP134 and TP133 and it should change from High to Low.");
+#endif
+#if defined(SOC_J7200)
+     pmic_log("\r\n Probe TP46 and TP29 and it should change from High to Low.");
+#endif
 
     status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -358,6 +372,12 @@ static void test_Pmic_fsmSetMissionState_standby(void)
 
     Osal_delay(5U);
 
+#if defined(SOC_J721E)
+     pmic_log("\r\n Probe TP134 and TP133 and it should change from High to Low.");
+#endif
+#if defined(SOC_J7200)
+     pmic_log("\r\n Probe TP46 and TP29 and it should change from High to Low.");
+#endif
     status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
@@ -822,6 +842,7 @@ static void test_pmic_fsm_testapp_runner(void)
         switch(num)
         {
            case 0U:
+#if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
@@ -836,8 +857,12 @@ static void test_pmic_fsm_testapp_runner(void)
                        test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                break;
            case 1U:
+#if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
@@ -852,8 +877,12 @@ static void test_pmic_fsm_testapp_runner(void)
                        test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                break;
            case 2U:
+#if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_HERA_PMICB_DEVICE;
@@ -869,8 +898,12 @@ static void test_pmic_fsm_testapp_runner(void)
                        test_pmic_appDeInit(pPmicCoreHandle);
                    }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                break;
            case 3U:
+#if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
@@ -886,8 +919,12 @@ static void test_pmic_fsm_testapp_runner(void)
                        test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                break;
            case 4U:
+#if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
@@ -903,6 +940,9 @@ static void test_pmic_fsm_testapp_runner(void)
                        test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                break;
            case 5U:
                pmic_log(" \r\n Quit from application\n");

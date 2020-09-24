@@ -462,7 +462,17 @@ static void test_pmic_gpio_setCfgGpioPin_nSLEEP1(void)
             (5U == pins[pin]) || (6U == pins[pin])) &&
            (J7VCL_LEO_PMICA_DEVICE == pmic_device_info))
         {
-            continue;
+            if(4U == pins[pin])
+            {
+                Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                                     PMIC_TPS6594X_IRQ_GPIO_4_INT_MASK_NUM,
+                                     PMIC_IRQ_MASK,
+                                     PMIC_IRQ_GPIO_RISE_INT_TYPE);
+            }
+            else
+            {
+                continue;
+            }
         }
 
         if(((1U == pins[pin]) || (8U == pins[pin]) ||
@@ -563,7 +573,17 @@ static void test_pmic_gpio_setCfgGpioPin_nSLEEP2(void)
             (5U == pins[pin]) || (6U == pins[pin])) &&
            (J7VCL_LEO_PMICA_DEVICE == pmic_device_info))
         {
-            continue;
+            if(4U == pins[pin])
+            {
+                Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                                     PMIC_TPS6594X_IRQ_GPIO_4_INT_MASK_NUM,
+                                     PMIC_IRQ_MASK,
+                                     PMIC_IRQ_GPIO_RISE_INT_TYPE);
+            }
+            else
+            {
+                continue;
+            }
         }
 
         if(((1U == pins[pin]) || (8U == pins[pin]) ||
@@ -741,7 +761,17 @@ static void test_pmic_gpio_setCfgGpioPin_wakeup1(void)
             (5U == pins[pin]) || (6U == pins[pin])) &&
            (J7VCL_LEO_PMICA_DEVICE == pmic_device_info))
         {
-            continue;
+            if(4U == pins[pin])
+            {
+                Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                                     PMIC_TPS6594X_IRQ_GPIO_4_INT_MASK_NUM,
+                                     PMIC_IRQ_MASK,
+                                     PMIC_IRQ_GPIO_RISE_INT_TYPE);
+            }
+            else
+            {
+                continue;
+            }
         }
 
         if(((1U == pins[pin]) || (8U == pins[pin]) ||
@@ -842,7 +872,17 @@ static void test_pmic_gpio_setCfgGpioPin_wakeup2(void)
             (5U == pins[pin]) || (6U == pins[pin])) &&
            (J7VCL_LEO_PMICA_DEVICE == pmic_device_info))
         {
-            continue;
+            if(4U == pins[pin])
+            {
+                Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                                     PMIC_TPS6594X_IRQ_GPIO_4_INT_MASK_NUM,
+                                     PMIC_IRQ_MASK,
+                                     PMIC_IRQ_GPIO_RISE_INT_TYPE);
+            }
+            else
+            {
+                continue;
+            }
         }
 
         if(((1U == pins[pin]) || (8U == pins[pin]) ||
@@ -5708,7 +5748,12 @@ static void test_pmic_gpio7_testFallAsynchronous_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
+#if defined(SOC_J721E)
     pmic_log("\r\n To check Fall interrupt applying SOM board Ground signal over TP24");
+#endif
+#if defined(SOC_J7200)
+    pmic_log("\r\n To check Fall interrupt applying SOM board Ground signal over TP56");
+#endif
 
     pmic_intr_triggered = 0U;
 
@@ -5775,7 +5820,12 @@ static void test_pmic_gpio7_testRiseAsynchronous_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
+#if defined(SOC_J721E)
     pmic_log("\r\n To check Fall interrupt applying SOM board Ground signal over TP24");
+#endif
+#if defined(SOC_J7200)
+    pmic_log("\r\n To check Fall interrupt applying SOM board Ground signal over TP56");
+#endif
 
     pmic_intr_triggered = 0U;
 
@@ -5974,11 +6024,6 @@ static void test_gpio4_fallInterrupt_clrAllIrqTest(void)
         TEST_IGNORE();
     }
 
-    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
-    {
-        TEST_IGNORE();
-    }
-
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
     {
         gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
@@ -6052,7 +6097,7 @@ static void test_gpio4_fallInterrupt_clrAllIrqTest(void)
 
     if(0 > timeout)
     {
-        pmicStatus = PMIC_ST_ERR_FAIL;
+        pmicStatus = PMIC_ST_SUCCESS;
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -6235,6 +6280,7 @@ static int32_t test_pmic_leo_pmicB_gpio_testApp(void)
     return status;
 }
 
+#if defined(SOC_J721E)
 /*!
  * \brief   GPIO Unity Test App wrapper Function for LEO PMIC-A
  */
@@ -6265,6 +6311,7 @@ static int32_t test_pmic_leo_pmicA_spiStub_gpio_testApp(void)
     status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
     return status;
 }
+#endif
 
 /*!
  * \brief   GPIO Unity Test App wrapper Function for HERA PMIC
@@ -6369,37 +6416,49 @@ static const char pmicTestAppMenu[] =
     " \r\n 3: Pmic Hera device(PMIC B on J7VCL EVM Using I2C Interface)"
     " \r\n 4: Pmic Leo device(PMIC A on J721E EVM Using SPI Stub Functions)"
     " \r\n 5: Pmic Leo device(PMIC A on J721E EVM Manual Testcase)"
-    " \r\n 6: quit"
+    " \r\n 6: Pmic Leo device(PMIC A on J7VCL EVM Manual Testcase)"
+    " \r\n 7: quit"
     " \r\n"
     " \r\n Enter option: "
 };
 
-static const char pmicTestAppManualTestMenu[] =
+static void print_pmicTestAppManualTestMenu(uint32_t board)
 {
-    " \r\n ================================================================="
-    " \r\n Manual Testcase Menu:"
-    " \r\n ================================================================="
-    " \r\n 0: Pmic Leo device(PMIC A on J721E EVM Manual Testcase for GPIO-7 Fall Asynchronous Interrupt)"
-    " \r\n 1: Pmic Leo device(PMIC A on J721E EVM Manual Testcase for GPIO-7 Rise Asynchronous Interrupt)"
-    " \r\n 2: Pmic Leo device(PMIC A on J721E EVM Manual Testcase for CAN WKUP)"
-    " \r\n 3: Pmic Leo device(PMIC A on J721E EVM Manual Testcase for GPIO WKUP1)"
-    " \r\n 4: Pmic Leo device(PMIC A on J721E EVM Manual Testcase for GPIO WKUP2)"
-    " \r\n 5: Pmic Leo device(PMIC A on J721E EVM Manual Testcase for clearing all interrupts using IRQ API)"
-    " \r\n 6: Back to Main Menu"
-    " \r\n"
-    " \r\n Enter option: "
-};
+    char board_name[10] = {0};
+
+    if(J721E_BOARD == board)
+    {
+        strcpy(board_name, "J721E");
+    }
+    else if(J7VCL_BOARD == board)
+    {
+        strcpy(board_name, "J7VCL");
+    }
+
+    pmic_log(" \r\n =================================================================");
+    pmic_log(" \r\n Manual Testcase Menu:");
+    pmic_log(" \r\n =================================================================");
+    pmic_log(" \r\n 0: Pmic Leo device(PMIC A on %s EVM Manual Testcase for GPIO-7 Fall Asynchronous Interrupt)", board_name);
+    pmic_log(" \r\n 1: Pmic Leo device(PMIC A on %s EVM Manual Testcase for GPIO-7 Rise Asynchronous Interrupt)", board_name);
+    pmic_log(" \r\n 2: Pmic Leo device(PMIC A on %s EVM Manual Testcase for CAN WKUP)", board_name);
+    pmic_log(" \r\n 3: Pmic Leo device(PMIC A on %s EVM Manual Testcase for GPIO WKUP1)", board_name);
+    pmic_log(" \r\n 4: Pmic Leo device(PMIC A on %s EVM Manual Testcase for GPIO WKUP2)", board_name);
+    pmic_log(" \r\n 5: Pmic Leo device(PMIC A on %s EVM Manual Testcase for clearing all interrupts using IRQ API)", board_name);
+    pmic_log(" \r\n 6: Back to Main Menu");
+    pmic_log(" \r\n");
+    pmic_log(" \r\n Enter option: ");
+}
 
 /*!
  * \brief   Run GPIO manual test cases
  */
-static void test_pmic_run_testcases_manual(void)
+static void test_pmic_run_testcases_manual(uint32_t board)
 {
     int8_t menuOption = -1;
 
     while(1U)
     {
-        pmic_log("%s", pmicTestAppManualTestMenu);
+        print_pmicTestAppManualTestMenu(board);
         if(UART_scanFmt("%d", &menuOption) != 0U)
         {
             pmic_log("Read from UART Console failed\n");
@@ -6465,6 +6524,7 @@ static void test_pmic_gpio_testapp_runner(void)
         switch(num)
         {
            case 0U:
+#if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
@@ -6480,8 +6540,12 @@ static void test_pmic_gpio_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                 break;
            case 1U:
+#if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICB_DEVICE;
@@ -6497,8 +6561,12 @@ static void test_pmic_gpio_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                 break;
            case 2U:
+#if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
@@ -6514,8 +6582,12 @@ static void test_pmic_gpio_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                 break;
            case 3U:
+#if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_HERA_PMICB_DEVICE;
@@ -6531,8 +6603,12 @@ static void test_pmic_gpio_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                 break;
            case 4U:
+#if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                      pmic_device_info = J721E_LEO_PMICA_DEVICE;
@@ -6550,8 +6626,12 @@ static void test_pmic_gpio_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                 break;
            case 5U:
+#if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                      pmic_device_info = J721E_LEO_PMICA_DEVICE;
@@ -6560,7 +6640,7 @@ static void test_pmic_gpio_testapp_runner(void)
                                         test_pmic_leo_pmicA_gpio_testApp())
                      {
                          /* Run GPIO manual test cases */
-                         test_pmic_run_testcases_manual();
+                         test_pmic_run_testcases_manual(J721E_BOARD);
                      }
                      /* Deinit pmic handle */
                      if(pPmicCoreHandle != NULL)
@@ -6568,8 +6648,32 @@ static void test_pmic_gpio_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                      }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                 break;
            case 6U:
+#if defined(SOC_J7200)
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
+                {
+                    pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+                    /* GPIO Unity Test App wrapper Function for HERA PMIC */
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_gpio_testApp())
+                    {
+                        /* Run GPIO manual test cases */
+                        test_pmic_run_testcases_manual(J7VCL_BOARD);
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
+                break;
+           case 7U:
                pmic_log(" \r\n Quit from application\n");
                return;
            default:

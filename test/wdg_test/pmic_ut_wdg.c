@@ -1315,6 +1315,7 @@ static void test_pmic_run_testcases(void)
     UNITY_END();
 }
 
+#if defined(SOC_J7200)
 /*!
  * \brief   Run wdg unity test cases for slave device
  */
@@ -1359,6 +1360,7 @@ static void test_pmic_run_slave_device_testcases(void)
 
     UNITY_END();
 }
+#endif
 
 /*!
  * \brief   WDG Unity Test App wrapper Function for LEO PMIC-A
@@ -1408,6 +1410,7 @@ static int32_t test_pmic_leo_pmicA_wdg_testApp(void)
     return status;
 }
 
+#if defined(SOC_J721E)
 /*!
  * \brief   WDG Unity Test App wrapper Function for LEO PMIC-A Single I2C
  */
@@ -1445,6 +1448,7 @@ static int32_t test_pmic_leo_pmicA_wdg_single_i2c_testApp(void)
     return status;
 
 }
+#endif
 
 /*!
  * \brief  WDG  Unity Test App wrapper Function for HERA PMIC
@@ -1615,6 +1619,7 @@ static void test_pmic_wdg_testapp_runner(void)
         switch(num)
         {
            case 0U:
+#if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
@@ -1630,8 +1635,12 @@ static void test_pmic_wdg_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                 break;
            case 1U:
+#if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
@@ -1647,8 +1656,12 @@ static void test_pmic_wdg_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                 break;
            case 2U:
+#if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
@@ -1664,8 +1677,12 @@ static void test_pmic_wdg_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                 break;
            case 3U:
+#if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_HERA_PMICB_DEVICE;
@@ -1681,6 +1698,9 @@ static void test_pmic_wdg_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                 break;
            case 4U:
                pmic_log(" \r\n Quit from application\n");

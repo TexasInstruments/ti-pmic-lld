@@ -93,9 +93,16 @@ static SemaphoreP_Handle pmic_Sem = NULL;
  */
 GPIO_PinConfig gpioPinConfigs[] =
 {
+#if defined(SOC_J721E)
     /* Input pin with interrupt enabled */
     GPIO_DEVICE_CONFIG(J7_WAKEUP_GPIO0_PORT_NUM, J7_WAKEUP_GPIO0_9_PIN_NUM) |
     GPIO_CFG_IN_INT_FALLING | GPIO_CFG_INPUT
+#endif
+# if defined(SOC_J7200)
+    /* Input pin with interrupt enabled */
+    GPIO_DEVICE_CONFIG(J7_WAKEUP_GPIO0_PORT_NUM, J7_WAKEUP_GPIO0_84_PIN_NUM) |
+    GPIO_CFG_IN_INT_FALLING | GPIO_CFG_INPUT
+#endif
 };
 
 /*!
@@ -1310,9 +1317,13 @@ void App_initGPIO(GPIO_CallbackFxn callback)
 
     /* change default GPIO port from MAIN GPIO0 to WAKEUP GPIO0 for Intrrupts */
     gpio_cfg.baseAddr = CSL_WKUP_GPIO0_BASE;
-    gpio_cfg.intCfg->intNum = CSLR_MCU_R5FSS0_CORE0_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_0;
 
+#if defined(SOC_J721E)
     GPIO_configIntRouter(J7_WAKEUP_GPIO0_PORT_NUM, J7_WAKEUP_GPIO0_9_PIN_NUM, 0, &gpio_cfg);
+#endif
+# if defined(SOC_J7200)
+    GPIO_configIntRouter(J7_WAKEUP_GPIO0_PORT_NUM, J7_WAKEUP_GPIO0_84_PIN_NUM, 0, &gpio_cfg);
+#endif
 
     /* Set as the default GPIO init configurations */
     GPIO_socSetInitCfg(J7_WAKEUP_GPIO0_PORT_NUM, &gpio_cfg);

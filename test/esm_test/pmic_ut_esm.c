@@ -4095,6 +4095,7 @@ static int32_t test_pmic_leo_pmicB_esm_testApp(void)
 
 }
 
+#if defined(SOC_J721E)
 /*!
  * \brief   ESM Unity Test App wrapper Function for LEO PMIC-A
  */
@@ -4125,6 +4126,7 @@ static int32_t test_pmic_leo_pmicA_spiStub_esm_testApp(void)
     status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
     return status;
 }
+#endif
 
 /*!
  * \brief   ESM Unity Test App wrapper Function for HERA PMIC
@@ -4430,6 +4432,7 @@ static void test_pmic_esm_testapp_runner(void)
         switch(num)
         {
             case 0U:
+#if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
@@ -4445,8 +4448,12 @@ static void test_pmic_esm_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                 break;
             case 1U:
+#if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICB_DEVICE;
@@ -4463,8 +4470,12 @@ static void test_pmic_esm_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                 break;
             case 2U:
+#if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
@@ -4480,8 +4491,12 @@ static void test_pmic_esm_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                 break;
             case 3U:
+#if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_HERA_PMICB_DEVICE;
@@ -4497,8 +4512,12 @@ static void test_pmic_esm_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                 break;
             case 4U:
+#if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
@@ -4515,8 +4534,12 @@ static void test_pmic_esm_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                 break;
            case 5U:
+#if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
@@ -4532,8 +4555,12 @@ static void test_pmic_esm_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                break;
            case 6U:
+#if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
@@ -4549,6 +4576,9 @@ static void test_pmic_esm_testapp_runner(void)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
                break;
            case 7U:
                pmic_log(" \r\n Quit from application\n");

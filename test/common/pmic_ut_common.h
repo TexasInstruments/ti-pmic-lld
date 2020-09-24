@@ -143,6 +143,7 @@ extern uint8_t startup_type;
  */
 #define J7_WAKEUP_GPIO0_PORT_NUM         0U  /* use WAKEUP GPIO0 */
 #define J7_WAKEUP_GPIO0_9_PIN_NUM        9U  /* Pin 9 for J721E PMIC Intr */
+#define J7_WAKEUP_GPIO0_84_PIN_NUM       84U /* Pin 84 for J7VCL PMIC Intr */
 
 /*!
  *  \brief    Define the Pmic UT test interface
