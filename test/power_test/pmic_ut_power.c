@@ -713,91 +713,91 @@ static Pmic_Ut_Tests_t pmic_power_tests[] =
         "Pmic_powerSetIntr : Parameter validation for handle"
     },
     {
-        7511,
+        0xAB00,
         "Pmic_powerSetPwrRsrcIntr : Test Set Enable OV interrupt"
     },
     {
-        7512,
+        0xAB01,
         "Pmic_powerSetPwrRsrcIntr : Test Set Disable OV interrupt"
     },
     {
-        7513,
+        0xAB02,
         "Pmic_powerSetPwrRsrcIntr : Test Set Enable UV interrupt"
     },
     {
-        7514,
+        0xAB03,
         "Pmic_powerSetPwrRsrcIntr : Test Set Disable UV interrupt"
     },
     {
-        7515,
+        0xAB04,
         "Pmic_powerSetPwrRsrcIntr : Test Set Enable ILIM interrupt"
     },
     {
-        7516,
+        0xAB05,
         "Pmic_powerSetPwrRsrcIntr : Test Set Disable ILIM interrupt"
     },
     {
-        7517,
+        0xAB06,
         "Pmic_powerSetIntr : Test Set Enable TWARN interrupt"
     },
     {
-        7518,
+        0xAB07,
         "Pmic_powerSetIntr : Test Set Disable TWARN interrupt"
     },
     {
-        7519,
+        0xAB08,
         "Pmic_powerSetIntr : Test Set Enable NRSTOUT_READBACK interrupt"
     },
     {
-        7520,
+        0xAB09,
         "Pmic_powerSetIntr : Test Set Disable NRSTOUT_READBACK interrupt"
     },
     {
-        7521,
+        0xAB0A,
         "Pmic_powerSetIntr : Test Set Enable SOC_PWR_ERR interrupt"
     },
     {
-        7522,
+        0xAB0B,
         "Pmic_powerSetIntr : Test Set Disable SOC_PWR_ERR interrupt"
     },
     {
-        7523,
+        0xAB0C,
         "Pmic_powerSetIntr : Test Set Enable MCU_PWR_ERR interrupt"
     },
     {
-        7524,
+        0xAB0D,
         "Pmic_powerSetIntr : Test Set Disable MCU_PWR_ERR interrupt"
     },
     {
-        7525,
+        0xAB0E,
         "Pmic_powerSetIntr : Test Set Enable ORD_SHUTDOWN interrupt"
     },
     {
-        7526,
+        0xAB0F,
         "Pmic_powerSetIntr : Test Set Disable ORD_SHUTDOWN interrupt"
     },
     {
-        7527,
+        0xAB11,
         "Pmic_powerSetIntr : Test Set Enable IMM_SHUTDOWN interrupt"
     },
     {
-        7528,
+        0xAB12,
         "Pmic_powerSetIntr : Test Set Disable IMM_SHUTDOWN interrupt"
     },
     {
-        7529,
+        0xAB13,
         "Pmic_powerSetIntr : Test Set Enable NRSTOUT_SOC_READBACK interrupt"
     },
     {
-        7530,
+        0xAB14,
         "Pmic_powerSetIntr : Test Set Disable NRSTOUT_SOC_READBACK interrupt"
     },
     {
-        7531,
+        0xAB15,
         "Pmic_powerSetIntr : Test Set Enable EN_DRV_READBACK interrupt"
     },
     {
-        7532,
+        0xAB16,
         "Pmic_powerSetIntr : Test Set Disable EN_DRV_READBACK interrupt"
     },
     {
@@ -9025,7 +9025,7 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_enabled(void)
     int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(7511,
+    test_pmic_print_unity_testcase_info(0xAB00,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -9262,7 +9262,7 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_disabled(void)
     int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(7512,
+    test_pmic_print_unity_testcase_info(0xAB01,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -9514,7 +9514,7 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_enabled(void)
     int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(7513,
+    test_pmic_print_unity_testcase_info(0xAB02,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -9753,7 +9753,7 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_disabled(void)
     int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(7514,
+    test_pmic_print_unity_testcase_info(0xAB03,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -9996,7 +9996,7 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_enabled(void)
     int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(7515,
+    test_pmic_print_unity_testcase_info(0xAB04,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -10145,7 +10145,7 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_disabled(void)
     int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(7516,
+    test_pmic_print_unity_testcase_info(0xAB05,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -10297,7 +10297,7 @@ static void test_pmic_powerSetPwrRsrcIntr_twarn_enabled(void)
     int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(7517,
+    test_pmic_print_unity_testcase_info(0xAB06,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -10376,7 +10376,7 @@ static void test_pmic_powerSetPwrRsrcIntr_twarn_disabled(void)
     int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(7518,
+    test_pmic_print_unity_testcase_info(0xAB07,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -10458,7 +10458,7 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_enabled(void)
     int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(7519,
+    test_pmic_print_unity_testcase_info(0xAB08,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -10536,7 +10536,7 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_disabled(void)
     int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(7520,
+    test_pmic_print_unity_testcase_info(0xAB09,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -10618,7 +10618,7 @@ static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_enabled(void)
     int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(7521,
+    test_pmic_print_unity_testcase_info(0xAB0A,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -10698,7 +10698,7 @@ static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_disabled(void)
     int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(7522,
+    test_pmic_print_unity_testcase_info(0xAB0B,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -10780,7 +10780,7 @@ static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_enabled(void)
     int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(7523,
+    test_pmic_print_unity_testcase_info(0xAB0C,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -10859,7 +10859,7 @@ static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_disabled(void)
     int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(7524,
+    test_pmic_print_unity_testcase_info(0xAB0D,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -10942,7 +10942,7 @@ static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_enabled(void)
     int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(7525,
+    test_pmic_print_unity_testcase_info(0xAB0E,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -11021,7 +11021,7 @@ static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_disabled(void)
     int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(7526,
+    test_pmic_print_unity_testcase_info(0xAB0F,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -11103,7 +11103,7 @@ static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_enabled(void)
     int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(7527,
+    test_pmic_print_unity_testcase_info(0xAB11,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -11182,7 +11182,7 @@ static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_disabled(void)
     int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(7528,
+    test_pmic_print_unity_testcase_info(0xAB12,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -11264,7 +11264,7 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_enabled(void)
     int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(7529,
+    test_pmic_print_unity_testcase_info(0xAB13,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -11343,7 +11343,7 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_disabled(void)
     int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(7530,
+    test_pmic_print_unity_testcase_info(0xAB14,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -11426,7 +11426,7 @@ static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_enabled(void)
     int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(7531,
+    test_pmic_print_unity_testcase_info(0xAB15,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -11505,7 +11505,7 @@ static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_disabled(void)
     int8_t timeout = 10U;
 
     intrEnable = PMIC_POWER_INTERRUPT_DISABLE;
-    test_pmic_print_unity_testcase_info(7532,
+    test_pmic_print_unity_testcase_info(0xAB16,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 

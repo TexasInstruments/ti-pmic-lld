@@ -125,7 +125,7 @@ extern "C" {
 * \brief   PMIC Interrupt status object structure.
 *
 * \param   intStatus    To store all available interrupts using bit fields.
-*                       Supported Interrupt Bit fields: \ref Pmic_IrqNum.
+*
 */
 typedef struct Pmic_IrqStatus_s
 {

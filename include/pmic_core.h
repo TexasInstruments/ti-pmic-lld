@@ -108,17 +108,6 @@ extern "C" {
 #define PMIC_SCRATCH_PAD_REG_4             (0x4U)
 /*  @} */
 
-/**
- *  \anchor Pmic_Nsleep_FSM_config
- *  \name   PMIC Nsleep FSM configuration
- *
- *  @{
- */
-#define PMIC_NSLEEP1B_FSM_UNMASK              (0U)
-#define PMIC_NSLEEP1B_FSM_MASK                (1U)
-#define PMIC_NSLEEP2B_FSM_UNMASK              (0U)
-#define PMIC_NSLEEP2B_FSM_MASK                (1U)
-/*  @} */
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/

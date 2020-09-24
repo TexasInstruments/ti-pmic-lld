@@ -121,6 +121,17 @@ extern "C" {
 #define PMIC_FSM_LPM_DISABLE                  (0U)
 /* @} */
 
+/**
+ *  \anchor Pmic_Nsleep_FSM_config
+ *  \name   PMIC Nsleep FSM configuration
+ *
+ *  @{
+ */
+#define PMIC_NSLEEP1B_FSM_UNMASK              (0U)
+#define PMIC_NSLEEP1B_FSM_MASK                (1U)
+#define PMIC_NSLEEP2B_FSM_UNMASK              (0U)
+#define PMIC_NSLEEP2B_FSM_MASK                (1U)
+/*  @} */
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
