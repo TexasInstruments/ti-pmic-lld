@@ -197,31 +197,31 @@ static Pmic_Ut_Tests_t pmic_esm_tests[] =
          "Pmic_esmSetInterrupt: Test to verify ESM MCU PWM Mode PIN Interrupt"
      },
      {
-         7842,
+         0xAB22,
          "Pmic_esmSetInterrupt: Test to verify ESM SOC Level Mode RST Interrupt"
      },
      {
-         7843,
+         0xAB23,
          "Pmic_esmSetInterrupt: Test to verify ESM SOC PWM Mode RST Interrupt"
      },
      {
-         7844,
+         0xAB24,
          "Pmic_esmSetInterrupt: Test to verify ESM SOC Level Mode FAIL Interrupt"
      },
      {
-         7845,
+         0xAB25,
          "Pmic_esmSetInterrupt: Test to verify ESM SOC PWM Mode FAIL Interrupt"
      },
      {
-         7846,
+         0xAB26,
          "Pmic_esmSetInterrupt: Test to verify ESM SOC Level Mode PIN Interrupt"
      },
      {
-         7847,
+         0xAB27,
          "Pmic_esmSetInterrupt: Test to verify ESM SOC PWM Mode PIN Interrupt"
      },
      {
-         7848,
+         0xAB28,
          "Pmic_esmSetInterrupt: Test to verify ESM SOC PWM Mode PIN, Fail and RST Interrupts"
      },
      {
@@ -233,7 +233,7 @@ static Pmic_Ut_Tests_t pmic_esm_tests[] =
          "Pmic_esmSetInterrupt: Test to verify ESM MCU Level Mode PIN, Fail and RST Interrupts disabled"
      },
      {
-         7851,
+         0xAB29,
          "Pmic_esmSetInterrupt: Test to verify ESM SOC PWM Mode PIN, Fail and RST Interrupts disabled"
      },
      {
@@ -269,7 +269,7 @@ static Pmic_Ut_Tests_t pmic_esm_tests[] =
          "Pmic_esmGetEnableState : Negative test to verify ESM get state for HERA"
      },
      {
-         8008,
+         0xAB2A,
          "Pmic_esmSetInterrupt: Test to verify ESM SOC Level Mode PIN, Fail and RST Interrupts"
      },
      {
@@ -277,7 +277,7 @@ static Pmic_Ut_Tests_t pmic_esm_tests[] =
          "Pmic_esmSetInterrupt: Test to verify ESM MCU PWM Mode PIN, Fail and RST Interrupts"
      },
      {
-         8010,
+         0xAB2B,
          "Pmic_esmSetInterrupt: Test to verify ESM SOC Level Mode PIN, Fail and RST Interrupts disabled"
      },
      {
@@ -1971,6 +1971,11 @@ static void test_esm_setInterrupt_esmMcuPinIntr_pwmMode(void)
 }
 
 /*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
+
+/*!
  *  \brief Test to verify PMIC ESM SOC Level Mode RST Interrupt
  */
 static void test_esm_setInterrupt_esmSocRstIntr_levelMode(void)
@@ -2015,7 +2020,7 @@ static void test_esm_setInterrupt_esmSocRstIntr_levelMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(7842,
+    test_pmic_print_unity_testcase_info(0xAB22,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -2079,6 +2084,11 @@ static void test_esm_setInterrupt_esmSocRstIntr_levelMode(void)
     pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_STOP);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
+
+/*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
 
 /*!
  *  \brief Test to verify PMIC ESM SOC PWM Mode RST Interrupt
@@ -2126,7 +2136,7 @@ static void test_esm_setInterrupt_esmSocRstIntr_pwmMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(7843,
+    test_pmic_print_unity_testcase_info(0xAB23,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -2195,6 +2205,11 @@ static void test_esm_setInterrupt_esmSocRstIntr_pwmMode(void)
 }
 
 /*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
+
+/*!
  *  \brief Test to verify PMIC ESM SOC Level Mode FAIL Interrupt
  */
 static void test_esm_setInterrupt_esmSocFailIntr_levelMode(void)
@@ -2239,7 +2254,7 @@ static void test_esm_setInterrupt_esmSocFailIntr_levelMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(7844,
+    test_pmic_print_unity_testcase_info(0xAB24,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -2303,6 +2318,11 @@ static void test_esm_setInterrupt_esmSocFailIntr_levelMode(void)
     pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_STOP);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
+
+/*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
 
 /*!
  *  \brief Test to verify PMIC ESM SOC PWM Mode FAIL Interrupt
@@ -2350,7 +2370,7 @@ static void test_esm_setInterrupt_esmSocFailIntr_pwmMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(7845,
+    test_pmic_print_unity_testcase_info(0xAB25,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -2419,6 +2439,11 @@ static void test_esm_setInterrupt_esmSocFailIntr_pwmMode(void)
 }
 
 /*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
+
+/*!
  *  \brief Test to verify PMIC ESM SOC Level Mode PIN Interrupt
  */
 static void test_esm_setInterrupt_esmSocPinIntr_levelMode(void)
@@ -2463,7 +2488,7 @@ static void test_esm_setInterrupt_esmSocPinIntr_levelMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(7846,
+    test_pmic_print_unity_testcase_info(0xAB26,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -2529,6 +2554,11 @@ static void test_esm_setInterrupt_esmSocPinIntr_levelMode(void)
 }
 
 /*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
+
+/*!
  *  \brief Test to verify PMIC ESM SOC PWM Mode PIN Interrupt
  */
 static void test_esm_setInterrupt_esmSocPinIntr_pwmMode(void)
@@ -2574,7 +2604,7 @@ static void test_esm_setInterrupt_esmSocPinIntr_pwmMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(7847,
+    test_pmic_print_unity_testcase_info(0xAB27,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -2643,6 +2673,11 @@ static void test_esm_setInterrupt_esmSocPinIntr_pwmMode(void)
 }
 
 /*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
+
+/*!
  *  \brief Test to verify PMIC ESM SOC PWM Mode PIN, FAIL and RST Interrupts
  */
 static void test_esm_setInterrupt_esmSocAllIntr_pwmMode(void)
@@ -2687,7 +2722,7 @@ static void test_esm_setInterrupt_esmSocAllIntr_pwmMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(7848,
+    test_pmic_print_unity_testcase_info(0xAB28,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -3061,6 +3096,11 @@ static void test_esm_setInterrupt_esmMcuAllIntrDisabled_levelMode(void)
 }
 
 /*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
+
+/*!
  *  \brief Test to verify PMIC ESM SOC PWM Mode PIN, FAIL and RST Interrupts
  *         disabled
  */
@@ -3105,7 +3145,7 @@ static void test_esm_setInterrupt_esmSocAllIntrDisable_pwmMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(7851,
+    test_pmic_print_unity_testcase_info(0xAB29,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -3172,6 +3212,11 @@ static void test_esm_setInterrupt_esmSocAllIntrDisable_pwmMode(void)
 }
 
 /*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
+
+/*!
  *  \brief Test to verify PMIC ESM SOC Level Mode PIN, FAIL and RST Interrupt
  */
 static void test_esm_setInterrupt_esmSocAllIntr_levelMode(void)
@@ -3216,7 +3261,7 @@ static void test_esm_setInterrupt_esmSocAllIntr_levelMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(8008,
+    test_pmic_print_unity_testcase_info(0xAB2A,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -3470,6 +3515,11 @@ static void test_esm_setInterrupt_esmMcuAllIntr_pwmMode(void)
 }
 
 /*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
+
+/*!
  *  \brief Test to verify PMIC ESM SOC Level Mode PIN, FAIL and RST Interrupts
  *         disabled
  */
@@ -3514,7 +3564,7 @@ static void test_esm_setInterrupt_esmSocAllIntrDisabled_levelMode(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(8010,
+    test_pmic_print_unity_testcase_info(0xAB2B,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 

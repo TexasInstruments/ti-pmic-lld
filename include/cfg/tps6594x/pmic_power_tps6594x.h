@@ -100,7 +100,7 @@ extern "C" {
  *  \anchor Pmic_TPS6594x_Regulator_RV_Check
  *  \name   PMIC Residual voltage check Enable/Disable
  *
- *          Valid only for BUCK and LDO regulators
+ *  Valid only for BUCK and LDO regulators
  *
  *  @{
  */

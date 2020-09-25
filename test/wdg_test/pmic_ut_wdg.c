@@ -169,7 +169,7 @@ static Pmic_Ut_Tests_t pmic_wdg_tests[] =
         "Pmic_wdgGetErrorStatus : Parameter validation for errStatus"
     },
     {
-        7356,
+        0xAB17,
         "Pmic_wdgStartTriggerSequence : Test wdg trigger sequence"
     },
     {
@@ -1122,6 +1122,13 @@ static void test_pmic_wdg_GetErrorStatus_prmValTest_invErrStatParam(void)
 }
 
 /*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ *
+ * PDK-7461 : PMIC: WDG Trigger mode can't be tested on J721E EVM
+ */
+
+/*!
  * \brief   Test wdg Trigger sequence
  */
 static void test_pmic_wdg_StartTriggerSequence(void)
@@ -1144,7 +1151,7 @@ static void test_pmic_wdg_StartTriggerSequence(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_10,
     };
 
-    test_pmic_print_unity_testcase_info(7356,
+    test_pmic_print_unity_testcase_info(0xAB17,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 

@@ -99,7 +99,7 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         "Pmic_gpioSetConfiguration : configure gpio pin as watchdog trigger function"
     },
     {
-        6198,
+        0xAB1E,
         "Pmic_gpioSetConfiguration : configure gpio pin 3 as ESM Error Pins for SOC"
     },
     {
@@ -239,11 +239,11 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         "Pmic_gpioSetIntr : GPIO2 Rise Interrupt Test"
     },
     {
-        6238,
+        0xAB19,
         "Pmic_gpioSetIntr : GPIO3 Fall Interrupt Test"
     },
     {
-        6239,
+        0xAB18,
         "Pmic_gpioSetIntr : GPIO3 Rise Interrupt Test"
     },
     {
@@ -287,11 +287,11 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         "Pmic_gpioSetIntr : GPIO8 Rise Interrupt Test"
     },
     {
-        6250,
+        0xAB1D,
         "Pmic_gpioSetIntr : GPIO9 Fall Interrupt Test"
     },
     {
-        6251,
+        0xAB1C,
         "Pmic_gpioSetIntr : GPIO9 Rise Interrupt Test"
     },
     {
@@ -303,11 +303,11 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         "Pmic_gpioSetIntr : GPIO10 Rise Interrupt Test"
     },
     {
-        6254,
+        0xAB1B,
         "Pmic_gpioSetIntr : GPIO11 Fall Interrupt Test"
     },
     {
-        6255,
+        0xAB1A,
         "Pmic_gpioSetIntr : GPIO11 Rise Interrupt Test"
     },
     {
@@ -367,7 +367,7 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         "Pmic_gpioSetIntr : Test to verify GPIO7 RISE Asynchronous interrupt"
     },
     {
-        8012,
+        0xAB21,
         "Pmic_fsmSetMissionState: Test to verify CAN WKUP"
     },
     {
@@ -1304,6 +1304,11 @@ static void test_pmic_gpio_setCfgGpioPin_wdt(void)
 }
 
 /*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
+
+/*!
  * \brief   configure gpio pin3 as ESM Error pin for SOC
  */
 static void test_pmic_gpio_setCfgGpioPin3_esm_soc(void)
@@ -1322,7 +1327,7 @@ static void test_pmic_gpio_setCfgGpioPin3_esm_soc(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6198,
+    test_pmic_print_unity_testcase_info(0xAB1E,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
@@ -3000,6 +3005,11 @@ static void test_pmic_gpio2_testRise_interrupt(void)
 }
 
 /*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
+
+/*!
  * \brief   Test to verify GPIO3 fall interrupt
  */
 static void test_pmic_gpio3_testFall_interrupt(void)
@@ -3026,7 +3036,7 @@ static void test_pmic_gpio3_testFall_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6238,
+    test_pmic_print_unity_testcase_info(0xAB19,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
@@ -3142,6 +3152,11 @@ static void test_pmic_gpio3_testFall_interrupt(void)
 }
 
 /*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
+
+/*!
  * \brief   Test to verify GPIO3 rise interrupt
  */
 static void test_pmic_gpio3_testRise_interrupt(void)
@@ -3168,7 +3183,7 @@ static void test_pmic_gpio3_testRise_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6239,
+    test_pmic_print_unity_testcase_info(0xAB18,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
@@ -4528,6 +4543,11 @@ static void test_pmic_gpio8_testRise_interrupt(void)
 }
 
 /*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
+
+/*!
  * \brief   Test to verify GPIO9 fall interrupt
  */
 static void test_pmic_gpio9_testFall_interrupt(void)
@@ -4554,7 +4574,7 @@ static void test_pmic_gpio9_testFall_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6250,
+    test_pmic_print_unity_testcase_info(0xAB1D,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
@@ -4664,6 +4684,11 @@ static void test_pmic_gpio9_testFall_interrupt(void)
 }
 
 /*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
+
+/*!
  * \brief   Test to verify GPIO9 rise interrupt
  */
 static void test_pmic_gpio9_testRise_interrupt(void)
@@ -4690,7 +4715,7 @@ static void test_pmic_gpio9_testRise_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6251,
+    test_pmic_print_unity_testcase_info(0xAB1C,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
@@ -5066,6 +5091,11 @@ static void test_pmic_gpio10_testRise_interrupt(void)
 }
 
 /*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
+
+/*!
  * \brief   Test to verify GPIO11 fall interrupt
  */
 static void test_pmic_gpio11_testFall_interrupt(void)
@@ -5092,7 +5122,7 @@ static void test_pmic_gpio11_testFall_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6254,
+    test_pmic_print_unity_testcase_info(0xAB1B,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
@@ -5185,6 +5215,11 @@ static void test_pmic_gpio11_testFall_interrupt(void)
 }
 
 /*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
+
+/*!
  * \brief   Test to verify GPIO11 rise interrupt
  */
 static void test_pmic_gpio11_testRise_interrupt(void)
@@ -5211,7 +5246,7 @@ static void test_pmic_gpio11_testRise_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(6255,
+    test_pmic_print_unity_testcase_info(0xAB1A,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
@@ -5868,6 +5903,11 @@ static void test_pmic_gpio7_testRiseAsynchronous_interrupt(void)
 }
 
 /*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
+
+/*!
  * \brief   Test to verify CAN WKUP
  */
 static void test_pmic_canWkup_test(void)
@@ -5884,7 +5924,7 @@ static void test_pmic_canWkup_test(void)
                                        gpioCfg);
     pmicState = PMIC_FSM_LP_STANBY_STATE;
 
-    test_pmic_print_unity_testcase_info(8012,
+    test_pmic_print_unity_testcase_info(0xAB21,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 

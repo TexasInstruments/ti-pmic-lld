@@ -97,7 +97,7 @@ static Pmic_Ut_Tests_t pmic_misc_tests[] =
         "Pmic_irqGetErrStatus : Test BIST_PASS_INT interrupt."
     },
     {
-        7716,
+        0xAB1F,
         "Pmic_irqGetErrStatus : Test FSD_INT interrupt."
     },
     {
@@ -565,7 +565,7 @@ static void test_Pmic_FSD_interrupt(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_10,
     };
 
-    test_pmic_print_unity_testcase_info(7716,
+    test_pmic_print_unity_testcase_info(0xAB1F,
                                         pmic_misc_tests,
                                         PMIC_MISC_NUM_OF_TESTCASES);
 
@@ -649,7 +649,7 @@ static void test_Pmic_NPWRON_interrupt(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_10,
     };
 
-    test_pmic_print_unity_testcase_info(7716,
+    test_pmic_print_unity_testcase_info(0xAB1F,
                                         pmic_misc_tests,
                                         PMIC_MISC_NUM_OF_TESTCASES);
 
@@ -718,7 +718,7 @@ static void test_Pmic_NPWRON_long_interrupt(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(4444,
+    test_pmic_print_unity_testcase_info(0xAB20,
                                         pmic_misc_tests,
                                         PMIC_MISC_NUM_OF_TESTCASES);
 
@@ -772,7 +772,7 @@ static void test_Pmic_commFrmErrorIntr(void)
     uint8_t instType = PMIC_MAIN_INST;
     int8_t  timeout      = 10U;
 
-    test_pmic_print_unity_testcase_info(5555,
+    test_pmic_print_unity_testcase_info(0xAB2C,
                                         pmic_misc_tests,
                                         PMIC_MISC_NUM_OF_TESTCASES);
 
