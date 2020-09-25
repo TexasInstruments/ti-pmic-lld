@@ -5928,7 +5928,24 @@ static void test_pmic_canWkup_test(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    TEST_IGNORE();
+    if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+         TEST_IGNORE();
+    }
+
+    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
+    {
+        TEST_IGNORE();
+    }
+
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_4_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_RISE_INT_TYPE);
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_4_INT_MASK_NUM,
+                         PMIC_IRQ_MASK,
+                         PMIC_IRQ_GPIO_FALL_INT_TYPE);
 
     status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
                                          PMIC_NSLEEP1_SIGNAL,
@@ -5941,6 +5958,8 @@ static void test_pmic_canWkup_test(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     Osal_delay(10U);
+
+    pmic_log("\r\n Input LOW to HIGH signal to GPIO4 to wakeup from low power mode\n");
 
     status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -5969,6 +5988,15 @@ static void test_pmic_gpioWkup1_test(void)
 
     TEST_IGNORE();
 
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_7_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_RISE_INT_TYPE);
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_7_INT_MASK_NUM,
+                         PMIC_IRQ_MASK,
+                         PMIC_IRQ_GPIO_FALL_INT_TYPE);
+
     status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
                                          PMIC_NSLEEP1_SIGNAL,
                                          PMIC_NSLEEPX_MASK);
@@ -5980,6 +6008,8 @@ static void test_pmic_gpioWkup1_test(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     Osal_delay(10U);
+
+    pmic_log("\r\n Input LOW to HIGH signal to GPIO7 to wakeup from low power mode\n");
 
     status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -6008,6 +6038,15 @@ static void test_pmic_gpioWkup2_test(void)
 
     TEST_IGNORE();
 
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_7_INT_MASK_NUM,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_RISE_INT_TYPE);
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         PMIC_TPS6594X_IRQ_GPIO_7_INT_MASK_NUM,
+                         PMIC_IRQ_MASK,
+                         PMIC_IRQ_GPIO_FALL_INT_TYPE);
+
     status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
                                          PMIC_NSLEEP1_SIGNAL,
                                          PMIC_NSLEEPX_MASK);
@@ -6019,6 +6058,8 @@ static void test_pmic_gpioWkup2_test(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     Osal_delay(10U);
+
+    pmic_log("\r\n Input LOW to HIGH signal to GPIO7 to wakeup from low power mode\n");
 
     status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);

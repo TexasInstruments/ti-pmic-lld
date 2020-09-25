@@ -431,26 +431,29 @@ static void test_Pmic_getBistPassInterrupt(void)
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     }
 
-    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
+    /*
+     * On J721E, Need to Mask NSLEEP1 and NSLEEP2 signal, becuase
+     * NSLEEPn signals are having high priority than RUNTIME BIST PASS.
+     */
+    if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+
+        nsleepType = PMIC_NSLEEP1_SIGNAL;
+        maskEnable = PMIC_NSLEEPX_MASK;
+
+        pmicStatus = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                                 nsleepType,
+                                                 maskEnable);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        nsleepType = PMIC_NSLEEP2_SIGNAL;
+        maskEnable = PMIC_NSLEEPX_MASK;
+
+        pmicStatus = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                                 nsleepType,
+                                                 maskEnable);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     }
-
-    nsleepType = PMIC_NSLEEP1_SIGNAL;
-    maskEnable = PMIC_NSLEEPX_MASK;
-
-    pmicStatus = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
-                                             nsleepType,
-                                             maskEnable);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    nsleepType = PMIC_NSLEEP2_SIGNAL;
-    maskEnable = PMIC_NSLEEPX_MASK;
-
-    pmicStatus = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
-                                             nsleepType,
-                                             maskEnable);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     /* To clear the interrupts*/
     pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
