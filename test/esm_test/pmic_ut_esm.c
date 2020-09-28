@@ -311,6 +311,10 @@ static void test_pmic_esm_startEsm_esmMcuStart(void)
 
     pmicStatus = Pmic_esmEnable(pPmicCoreHandle, esmType, PMIC_ESM_ENABLE);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(7769,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -328,7 +332,9 @@ static void test_pmic_esm_startEsm_esmSocStart(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7770,
+                                     pmic_esm_tests,
+                                     PMIC_ESM_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, esmState);
@@ -343,6 +349,10 @@ static void test_pmic_esm_startEsm_esmSocStart(void)
 
     pmicStatus = Pmic_esmEnable(pPmicCoreHandle, esmType, PMIC_ESM_ENABLE);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(7770,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -360,6 +370,10 @@ static void test_pmic_esm_startEsmPrmValTest_handle(void)
 
     pmicStatus = Pmic_esmStart(NULL, esmType, esmState);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7771,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -393,6 +407,10 @@ static void test_pmic_esm_enableEsm_esmMcuEnable(void)
     pmicStatus = Pmic_esmGetEnableState(pPmicCoreHandle, esmType, &esmState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     TEST_ASSERT_EQUAL(PMIC_ESM_DISABLE, esmState);
+
+    pmic_testResultUpdate_pass(7772,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -411,7 +429,9 @@ static void test_pmic_esm_enableEsm_esmSocEnable(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7773,
+                                     pmic_esm_tests,
+                                     PMIC_ESM_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_STOP);
@@ -431,6 +451,10 @@ static void test_pmic_esm_enableEsm_esmSocEnable(void)
     pmicStatus = Pmic_esmGetEnableState(pPmicCoreHandle, esmType, &esmState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     TEST_ASSERT_EQUAL(PMIC_ESM_DISABLE, esmState);
+
+    pmic_testResultUpdate_pass(7773,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -448,6 +472,10 @@ static void test_pmic_esm_enableEsmPrmValTest_handle(void)
 
     pmicStatus = Pmic_esmEnable(NULL, esmType, esmToggle);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7774,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -481,6 +509,10 @@ static void test_pmic_esm_getEnableState_esmMcu(void)
     pmicStatus = Pmic_esmGetEnableState(pPmicCoreHandle, esmType, &esmState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     TEST_ASSERT_EQUAL(false, esmState);
+
+    pmic_testResultUpdate_pass(7775,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -499,7 +531,9 @@ static void test_pmic_esm_getEnableState_esmSoc(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7776,
+                                     pmic_esm_tests,
+                                     PMIC_ESM_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_STOP);
@@ -519,6 +553,10 @@ static void test_pmic_esm_getEnableState_esmSoc(void)
     pmicStatus = Pmic_esmGetEnableState(pPmicCoreHandle, esmType, &esmState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     TEST_ASSERT_EQUAL(false, esmState);
+
+    pmic_testResultUpdate_pass(7776,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -536,6 +574,10 @@ static void test_pmic_esm_getEnableStatePrmValTest_handle(void)
 
     pmicStatus = Pmic_esmGetEnableState(NULL, esmType, &esmState);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7777,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -552,6 +594,10 @@ static void test_pmic_esm_getEnableStatePrmValTest_esmState(void)
 
     pmicStatus = Pmic_esmGetEnableState(pPmicCoreHandle, esmType, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(7778,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -597,6 +643,10 @@ static void test_pmic_esm_setConfiguration_esmMcuLevelMode(void)
     TEST_ASSERT_EQUAL(esmCfg.esmDelay1_us, esmCfg_rd.esmDelay1_us);
     TEST_ASSERT_EQUAL(esmCfg.esmDelay2_us, esmCfg_rd.esmDelay2_us);
     TEST_ASSERT_EQUAL(esmCfg.esmMode, esmCfg_rd.esmMode);
+
+    pmic_testResultUpdate_pass(7779,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -630,7 +680,9 @@ static void test_pmic_esm_setConfiguration_esmSocLevelMode(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7780,
+                                     pmic_esm_tests,
+                                     PMIC_ESM_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_STOP);
@@ -647,6 +699,10 @@ static void test_pmic_esm_setConfiguration_esmSocLevelMode(void)
     TEST_ASSERT_EQUAL(esmCfg.esmDelay1_us, esmCfg_rd.esmDelay1_us);
     TEST_ASSERT_EQUAL(esmCfg.esmDelay2_us, esmCfg_rd.esmDelay2_us);
     TEST_ASSERT_EQUAL(esmCfg.esmMode, esmCfg_rd.esmMode);
+
+    pmic_testResultUpdate_pass(7780,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -702,6 +758,10 @@ static void test_pmic_esm_setConfiguration_esmMcuPwmMode(void)
     TEST_ASSERT_EQUAL(esmCfg.esmLmin_us, esmCfg_rd.esmLmin_us);
     TEST_ASSERT_EQUAL(esmCfg.esmMode, esmCfg_rd.esmMode);
     TEST_ASSERT_EQUAL(esmCfg.esmErrCntThr, esmCfg_rd.esmErrCntThr);
+
+    pmic_testResultUpdate_pass(7781,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -740,7 +800,9 @@ static void test_pmic_esm_setConfiguration_esmSocPwmMode(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7782,
+                                     pmic_esm_tests,
+                                     PMIC_ESM_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_STOP);
@@ -762,6 +824,10 @@ static void test_pmic_esm_setConfiguration_esmSocPwmMode(void)
     TEST_ASSERT_EQUAL(esmCfg.esmLmin_us, esmCfg_rd.esmLmin_us);
     TEST_ASSERT_EQUAL(esmCfg.esmMode, esmCfg_rd.esmMode);
     TEST_ASSERT_EQUAL(esmCfg.esmErrCntThr, esmCfg_rd.esmErrCntThr);
+
+    pmic_testResultUpdate_pass(7782,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -794,6 +860,10 @@ static void test_pmic_esm_setConfigurationPrmValTest_handle(void)
 
     pmicStatus = Pmic_esmSetConfiguration(NULL, esmType, esmCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7783,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -826,6 +896,10 @@ static void test_pmic_esm_setConfigurationPrmValTest_esmDelay1(void)
 
     pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_ESM_VAL, pmicStatus);
+
+    pmic_testResultUpdate_pass(7784,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -858,6 +932,10 @@ static void test_pmic_esm_setConfigurationPrmValTest_esmDelay2(void)
 
     pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_ESM_VAL, pmicStatus);
+
+    pmic_testResultUpdate_pass(7785,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -890,6 +968,10 @@ static void test_pmic_esm_setConfigurationPrmValTest_esmHmax(void)
 
     pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_ESM_VAL, pmicStatus);
+
+    pmic_testResultUpdate_pass(7786,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -922,6 +1004,10 @@ static void test_pmic_esm_setConfigurationPrmValTest_esmHmin(void)
 
     pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_ESM_VAL, pmicStatus);
+
+    pmic_testResultUpdate_pass(7787,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -954,6 +1040,10 @@ static void test_pmic_esm_setConfigurationPrmValTest_esmLmax(void)
 
     pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_ESM_VAL, pmicStatus);
+
+    pmic_testResultUpdate_pass(7789,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -986,6 +1076,10 @@ static void test_pmic_esm_setConfigurationPrmValTest_esmLmin(void)
 
     pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_ESM_VAL, pmicStatus);
+
+    pmic_testResultUpdate_pass(7790,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1018,6 +1112,10 @@ static void test_pmic_esm_setConfigurationPrmValTest_esmErrCntThr(void)
 
     pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(7791,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1074,6 +1172,10 @@ static void test_pmic_esm_getConfiguration_esmMcuPwmMode(void)
     TEST_ASSERT_EQUAL(esmCfg.esmMode, esmCfg_rd.esmMode);
     TEST_ASSERT_EQUAL(esmCfg.esmEnDrv, esmCfg_rd.esmEnDrv);
     TEST_ASSERT_EQUAL(esmCfg.esmErrCntThr, esmCfg_rd.esmErrCntThr);
+
+    pmic_testResultUpdate_pass(7792,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1112,7 +1214,9 @@ static void test_pmic_esm_getConfiguration_esmSocPwmMode(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7793,
+                                     pmic_esm_tests,
+                                     PMIC_ESM_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_STOP);
@@ -1135,6 +1239,10 @@ static void test_pmic_esm_getConfiguration_esmSocPwmMode(void)
     TEST_ASSERT_EQUAL(esmCfg.esmMode, esmCfg_rd.esmMode);
     TEST_ASSERT_EQUAL(esmCfg.esmEnDrv, esmCfg_rd.esmEnDrv);
     TEST_ASSERT_EQUAL(esmCfg.esmErrCntThr, esmCfg_rd.esmErrCntThr);
+
+    pmic_testResultUpdate_pass(7793,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1160,6 +1268,10 @@ static void test_esm_getConfigurationPrmValTest_handle(void)
 
     pmicStatus = Pmic_esmGetConfiguration(NULL, esmType, &esmCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7794,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1176,6 +1288,10 @@ static void test_esm_getConfigurationPrmValTest_pEsmCfg(void)
 
     pmicStatus = Pmic_esmGetConfiguration(pPmicCoreHandle, esmType, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(7795,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1193,6 +1309,10 @@ static void test_esm_getErrCnt_esmMcu(void)
 
     pmicStatus = Pmic_esmGetErrCnt(pPmicCoreHandle, esmType, &esmErrCnt);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(7796,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1210,10 +1330,16 @@ static void test_esm_getErrCnt_esmSoc(void)
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7797,
+                                     pmic_esm_tests,
+                                     PMIC_ESM_NUM_OF_TESTCASES);
     }
     pmicStatus = Pmic_esmGetErrCnt(pPmicCoreHandle, esmType, &esmErrCnt);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(7797,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1231,6 +1357,10 @@ static void test_esm_getErrCntPrmValTest_handle(void)
 
     pmicStatus = Pmic_esmGetErrCnt(NULL, esmType, &esmErrCnt);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7798,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1247,11 +1377,17 @@ static void test_esm_getErrCntPrmValTest_pEsmErrCnt(void)
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7799,
+                                     pmic_esm_tests,
+                                     PMIC_ESM_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_esmGetErrCnt(pPmicCoreHandle, esmType, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(7799,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3761,6 +3897,10 @@ static void test_esm_setInterruptPrmValTest_handle(void)
 
     pmicStatus = Pmic_esmSetInterrupt(NULL, esmType, esmIntrCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7852,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 
@@ -3779,12 +3919,17 @@ static void test_pmic_esm_startEsm_esmSocStart_hera(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7853,
+                                     pmic_esm_tests,
+                                     PMIC_ESM_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, esmState);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
 
+    pmic_testResultUpdate_pass(7853,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3801,11 +3946,17 @@ static void test_pmic_esm_startEsm_esmSocEnable_hera(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7854,
+                                     pmic_esm_tests,
+                                     PMIC_ESM_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_esmEnable(pPmicCoreHandle, esmType, PMIC_ESM_ENABLE);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7854,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3837,11 +3988,17 @@ static void test_pmic_esm_setConfiguration_esmSocLevelMode_hera(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7855,
+                                     pmic_esm_tests,
+                                     PMIC_ESM_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7855,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3863,13 +4020,19 @@ static void test_pmic_esm_getConfiguration_esmSocLevelMode_hera(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7856,
+                                     pmic_esm_tests,
+                                     PMIC_ESM_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_esmGetConfiguration(pPmicCoreHandle,
                                           esmType,
                                           &esmCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7856,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 
@@ -3888,12 +4051,18 @@ static void test_Pmic_esmGetErrCnt_hera(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7857,
+                                     pmic_esm_tests,
+                                     PMIC_ESM_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_esmGetErrCnt(pPmicCoreHandle, esmType, &esmErrCnt);
 
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7857,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 
@@ -3917,12 +4086,18 @@ static void test_Pmic_esmSetInterrupt_hera(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7858,
+                                     pmic_esm_tests,
+                                     PMIC_ESM_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_esmSetInterrupt(pPmicCoreHandle, esmType, esmIntrCfg);
 
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7858,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3940,12 +4115,18 @@ static void test_Pmic_esmGetEnableState_hera(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7859,
+                                     pmic_esm_tests,
+                                     PMIC_ESM_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_esmGetEnableState(pPmicCoreHandle, esmType, &esmState);
 
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7859,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
 }
 
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
@@ -3958,6 +4139,8 @@ static void test_pmic_run_testcases(void)
 {
     pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
     UNITY_BEGIN();
+
+    pmic_testResult_init(pmic_esm_tests, PMIC_ESM_NUM_OF_TESTCASES);
 
     RUN_TEST(test_pmic_esm_startEsm_esmMcuStart);
     RUN_TEST(test_pmic_esm_startEsm_esmSocStart);
@@ -4008,6 +4191,8 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_esm_setInterrupt_esmSocAllIntr_levelMode);
     RUN_TEST(test_esm_setInterrupt_esmSocAllIntrDisabled_levelMode);
 
+    pmic_printTestResult(pmic_esm_tests, PMIC_ESM_NUM_OF_TESTCASES);
+
     UNITY_END();
 }
 
@@ -4018,6 +4203,8 @@ static void test_pmic_run_slave_testcases(void)
 {
     pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
     UNITY_BEGIN();
+
+    pmic_testResult_init(pmic_esm_tests, PMIC_ESM_NUM_OF_TESTCASES);
 
     RUN_TEST(test_pmic_esm_startEsmPrmValTest_handle);
     RUN_TEST(test_pmic_esm_enableEsm_esmMcuEnable);
@@ -4055,6 +4242,8 @@ static void test_pmic_run_slave_testcases(void)
     RUN_TEST(test_Pmic_esmGetErrCnt_hera);
     RUN_TEST(test_Pmic_esmSetInterrupt_hera);
     RUN_TEST(test_Pmic_esmGetEnableState_hera);
+
+    pmic_printTestResult(pmic_esm_tests, PMIC_ESM_NUM_OF_TESTCASES);
 
     UNITY_END();
 }
@@ -4651,7 +4840,7 @@ int main()
 {
     Board_initUART();
 
-    pmic_log("ESM Unity Test Application(%s %s)\n", __TIME__, __DATE__);
+    pmic_log("PMIC ESM Unity Test Application(%s %s)\n", __TIME__, __DATE__);
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E)             || \
      defined(SOC_J7200))

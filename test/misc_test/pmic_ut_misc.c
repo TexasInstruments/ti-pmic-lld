@@ -101,6 +101,18 @@ static Pmic_Ut_Tests_t pmic_misc_tests[] =
         "Pmic_irqGetErrStatus : Test FSD_INT interrupt."
     },
     {
+        0xAB2D,
+        "Pmic_irqGetErrStatus : Test NPWRON_INT interrupt."
+    },
+    {
+        0xAB20,
+        "Pmic_irqGetErrStatus : Test NPWRON_LONG_INT interrupt."
+    },
+    {
+        0xAB2C,
+        "Pmic_commFrmError : Test COMM_FRM_ERROR interrupt"
+    },
+    {
         7768,
         "Pmic_irqGetErrStatus : Test ENABLE_INT interrupt."
     },
@@ -138,7 +150,9 @@ static void test_Pmic_Enable_interrupt(void)
 
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7768,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
     }
 
     if(startup_type == PMIC_ENABLE_STARTUP_TYPE)
@@ -175,6 +189,10 @@ static void test_Pmic_Enable_interrupt(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(7768,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -202,6 +220,9 @@ static void test_pmic_SetRecoveryCntCfg_threshold(void)
 
     TEST_ASSERT_EQUAL(recovCntCfg.thrVal, recovCntCfg_rd.thrVal);
 
+    pmic_testResultUpdate_pass(7628,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -222,6 +243,9 @@ static void test_pmic_SetRecoveryCntCfgPrmValTest_thrVal(void)
     status = Pmic_SetRecoveryCntCfg(pPmicCoreHandle, recovCntCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 
+    pmic_testResultUpdate_pass(7629,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -242,6 +266,9 @@ static void test_pmic_SetRecoveryCntCfg_clrCnt(void)
     status = Pmic_SetRecoveryCntCfg(pPmicCoreHandle, recovCntCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
+    pmic_testResultUpdate_pass(7630,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -262,6 +289,9 @@ static void test_pmic_SetRecoveryCntCfgPrmValTest_clrCnt(void)
     status = Pmic_SetRecoveryCntCfg(pPmicCoreHandle, recovCntCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 
+    pmic_testResultUpdate_pass(7631,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -281,6 +311,9 @@ static void test_pmic_SetRecoveryCntCfgPrmValTest_handle(void)
     status = Pmic_SetRecoveryCntCfg(NULL, recovCntCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
 
+    pmic_testResultUpdate_pass(7632,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -298,6 +331,9 @@ static void test_pmic_getRecoveryCntCfgPrmValTest_handle(void)
     status = Pmic_getRecoveryCntCfg(NULL, &recovCntCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
 
+    pmic_testResultUpdate_pass(7633,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -314,6 +350,9 @@ static void test_pmic_getRecoveryCntCfgPrmValTest_recovCntCfg(void)
     status = Pmic_getRecoveryCntCfg(pPmicCoreHandle, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 
+    pmic_testResultUpdate_pass(7634,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -331,6 +370,9 @@ static void test_Pmic_getRecoveryCntPrmValTest_handle(void)
     status = Pmic_getRecoveryCnt(NULL, &recovCntVal);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
 
+    pmic_testResultUpdate_pass(7635,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -347,6 +389,9 @@ static void test_Pmic_getRecoveryCntPrmValTest_recovCntVal(void)
     status = Pmic_getRecoveryCnt(pPmicCoreHandle, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 
+    pmic_testResultUpdate_pass(7636,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -383,7 +428,9 @@ static void test_Pmic_getRecoveryCnt_read_recovCntVal(void)
 
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7637,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
     }
 
     status = Pmic_getRecoveryCnt(pPmicCoreHandle, &recovCntVal);
@@ -398,6 +445,9 @@ static void test_Pmic_getRecoveryCnt_read_recovCntVal(void)
     status = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
+    pmic_testResultUpdate_pass(7637,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -521,6 +571,10 @@ static void test_Pmic_getBistPassInterrupt(void)
 
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     }
+
+    pmic_testResultUpdate_pass(7715,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -573,11 +627,15 @@ static void test_Pmic_FSD_interrupt(void)
                                         PMIC_MISC_NUM_OF_TESTCASES);
 
     /* Ignored because, it needs NVM setup */
-    TEST_IGNORE();
+    pmic_testResultUpdate_ignore(0xAB1F,
+                                 pmic_misc_tests,
+                                 PMIC_MISC_NUM_OF_TESTCASES);
 
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB1F,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
     }
 
     if(startup_type == PMIC_FSD_STARTUP_TYPE)
@@ -612,6 +670,10 @@ static void test_Pmic_FSD_interrupt(void)
         /* Waiting for longwindow time interval expiring */
         Osal_delay(wdgCfg.longWinDuration_ms);
     }
+
+    pmic_testResultUpdate_pass(0xAB1F,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
 }
 /*!
  * \brief   Pmic_irqGetErrStatus : Test NPWRON_INT interrupt Manual TestCase.
@@ -652,18 +714,22 @@ static void test_Pmic_NPWRON_interrupt(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_10,
     };
 
-    test_pmic_print_unity_testcase_info(0xAB1F,
+    test_pmic_print_unity_testcase_info(0xAB2D,
                                         pmic_misc_tests,
                                         PMIC_MISC_NUM_OF_TESTCASES);
 
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB2D,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB2D,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
     }
 
     if(startup_type == PMIC_NPWRON_STARTUP_TYPE)
@@ -695,6 +761,10 @@ static void test_Pmic_NPWRON_interrupt(void)
         /* Waiting for longwindow time interval expiring */
         Osal_delay(wdgCfg.longWinDuration_ms);
     }
+
+    pmic_testResultUpdate_pass(0xAB2D,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -727,12 +797,16 @@ static void test_Pmic_NPWRON_long_interrupt(void)
 
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB20,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB20,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
     }
 
     if(startup_type == PMIC_NPWRON_STARTUP_TYPE)
@@ -754,6 +828,10 @@ static void test_Pmic_NPWRON_long_interrupt(void)
         }
 
     }
+
+    pmic_testResultUpdate_pass(0xAB20,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -781,7 +859,9 @@ static void test_Pmic_commFrmErrorIntr(void)
 
     if((NULL == pPmicCoreHandle) && (PMIC_INTF_SPI == pPmicCoreHandle->commMode))
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB2C,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
     }
 
     if(PMIC_INTF_SPI == pPmicCoreHandle->commMode)
@@ -898,13 +978,16 @@ static void test_Pmic_commFrmErrorIntr(void)
 
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     }
+
+    pmic_testResultUpdate_pass(0xAB2C,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
 }
 
 #endif
 
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E) || defined(SOC_J7200))
-
 /*!
  * \brief   Run misc unity test cases for Master PMIC
  */
@@ -912,6 +995,8 @@ static void test_pmic_run_testcases(void)
 {
     pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
     UNITY_BEGIN();
+
+    pmic_testResult_init(pmic_misc_tests, PMIC_MISC_NUM_OF_TESTCASES);
 
     RUN_TEST(test_pmic_SetRecoveryCntCfg_threshold);
     RUN_TEST(test_pmic_SetRecoveryCntCfgPrmValTest_thrVal);
@@ -924,6 +1009,8 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_Pmic_getRecoveryCntPrmValTest_recovCntVal);
     RUN_TEST(test_Pmic_getBistPassInterrupt);
 
+    pmic_printTestResult(pmic_misc_tests, PMIC_MISC_NUM_OF_TESTCASES);
+
     UNITY_END();
 }
 
@@ -935,6 +1022,8 @@ static void test_pmic_run_slave_testcases(void)
     pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
     UNITY_BEGIN();
 
+    pmic_testResult_init(pmic_misc_tests, PMIC_MISC_NUM_OF_TESTCASES);
+
     RUN_TEST(test_pmic_SetRecoveryCntCfg_threshold);
     RUN_TEST(test_pmic_SetRecoveryCntCfgPrmValTest_thrVal);
     RUN_TEST(test_pmic_SetRecoveryCntCfg_clrCnt);
@@ -945,6 +1034,7 @@ static void test_pmic_run_slave_testcases(void)
     RUN_TEST(test_Pmic_getRecoveryCntPrmValTest_handle);
     RUN_TEST(test_Pmic_getRecoveryCntPrmValTest_recovCntVal);
 
+    pmic_printTestResult(pmic_misc_tests, PMIC_MISC_NUM_OF_TESTCASES);
     UNITY_END();
 }
 

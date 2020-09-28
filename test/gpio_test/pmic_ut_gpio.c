@@ -494,6 +494,9 @@ static void test_pmic_gpio_setCfgGpioPin_nSLEEP1(void)
 
         TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
     }
+    pmic_testResultUpdate_pass(6185,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -605,6 +608,9 @@ static void test_pmic_gpio_setCfgGpioPin_nSLEEP2(void)
 
         TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
     }
+    pmic_testResultUpdate_pass(6186,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -682,6 +688,9 @@ static void test_pmic_gpio_setCfgGpioPin_nRstOut_soc(void)
 
         TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
     }
+    pmic_testResultUpdate_pass(6187,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -793,6 +802,9 @@ static void test_pmic_gpio_setCfgGpioPin_wakeup1(void)
 
         TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
     }
+    pmic_testResultUpdate_pass(6189,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -904,6 +916,9 @@ static void test_pmic_gpio_setCfgGpioPin_wakeup2(void)
 
         TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
     }
+    pmic_testResultUpdate_pass(6190,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1005,6 +1020,9 @@ static void test_pmic_gpio_setCfgGpioPin_gpio(void)
 
         TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
     }
+    pmic_testResultUpdate_pass(6191,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1046,7 +1064,9 @@ static void test_pmic_gpio_setCfgGpioPin_i2c2_sclk(void)
         if((PMIC_INTF_SPI == pPmicCoreHandle->commMode) &&
            ((1U == pin) || (2U == pin)))
         {
-            TEST_IGNORE();
+            pmic_testResultUpdate_ignore(6192,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
         }
     }
 
@@ -1056,7 +1076,9 @@ static void test_pmic_gpio_setCfgGpioPin_i2c2_sclk(void)
         if((PMIC_INTF_SPI == pPmicCoreHandle->commMode) &&
            ((2U == pin) || (3U == pin)))
         {
-            TEST_IGNORE();
+            pmic_testResultUpdate_ignore(6192,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
         }
     }
 
@@ -1067,6 +1089,10 @@ static void test_pmic_gpio_setCfgGpioPin_i2c2_sclk(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
+
+    pmic_testResultUpdate_pass(6192,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1109,7 +1135,9 @@ static void test_pmic_gpio_setCfgGpioPin_i2c2_sda(void)
         if((PMIC_INTF_SPI == pPmicCoreHandle->commMode) &&
            ((1U == pin) || (2U == pin)))
         {
-            TEST_IGNORE();
+            pmic_testResultUpdate_ignore(6193,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
         }
     }
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -1118,7 +1146,9 @@ static void test_pmic_gpio_setCfgGpioPin_i2c2_sda(void)
         if((PMIC_INTF_SPI == pPmicCoreHandle->commMode) &&
            ((2U == pin) || (3U == pin)))
         {
-            TEST_IGNORE();
+            pmic_testResultUpdate_ignore(6193,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
         }
     }
 
@@ -1129,6 +1159,10 @@ static void test_pmic_gpio_setCfgGpioPin_i2c2_sda(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
+
+    pmic_testResultUpdate_pass(6193,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1171,6 +1205,10 @@ static void test_pmic_gpio_setCfgGpioPin_spi_cs(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
+
+    pmic_testResultUpdate_pass(6195,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1214,6 +1252,10 @@ static void test_pmic_gpio_setCfgGpioPin_spi_sdo(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
+
+    pmic_testResultUpdate_pass(6196,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1301,6 +1343,10 @@ static void test_pmic_gpio_setCfgGpioPin_wdt(void)
 
         TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
     }
+
+    pmic_testResultUpdate_pass(6197,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1337,22 +1383,30 @@ static void test_pmic_gpio_setCfgGpioPin3_esm_soc(void)
          * GPIO3 pin of PMIC-A is connected to 'EN_MCU3V3_LDSW'
          * on J721EVM board causing hang, when programming NERR_SOC signal.
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB1E,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB1E,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB1E,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB1E,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
@@ -1362,6 +1416,10 @@ static void test_pmic_gpio_setCfgGpioPin3_esm_soc(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
+
+    pmic_testResultUpdate_pass(0xAB1E,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1389,7 +1447,9 @@ static void test_pmic_gpio_setCfgGpioPin_esm_mcu(void)
 
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6199,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -1419,6 +1479,9 @@ static void test_pmic_gpio_setCfgGpioPin_esm_mcu(void)
         TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
 
     }
+    pmic_testResultUpdate_pass(6199,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1446,7 +1509,9 @@ static void test_pmic_gpio_setCfgGpioPin_spmi_sclk(void)
 
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6200,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -1466,6 +1531,9 @@ static void test_pmic_gpio_setCfgGpioPin_spmi_sclk(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
+    pmic_testResultUpdate_pass(6200,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1493,7 +1561,9 @@ static void test_pmic_gpio_setCfgGpioPin_spmi_sdata(void)
 
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6201,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -1512,6 +1582,9 @@ static void test_pmic_gpio_setCfgGpioPin_spmi_sdata(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
+    pmic_testResultUpdate_pass(6201,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1587,6 +1660,9 @@ static void test_pmic_gpio_setCfgGpioPin_syncCLKOUT(void)
 
         TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
     }
+    pmic_testResultUpdate_pass(6202,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1629,6 +1705,9 @@ static void test_pmic_gpio_setCfgGpioPin_synCLKIN(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
+    pmic_testResultUpdate_pass(6204,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1657,12 +1736,16 @@ static void test_pmic_gpio_setCfgGpioPin_clk32KOUT(void)
 
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6205,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6205,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     for(pin = 0U; pin < sizeof(pins)/sizeof(pins[0U]); pin++)
@@ -1692,6 +1775,9 @@ static void test_pmic_gpio_setCfgGpioPin_clk32KOUT(void)
 
         TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
     }
+    pmic_testResultUpdate_pass(6205,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1719,12 +1805,16 @@ static void test_pmic_gpio_setCfgGpioPin10_clk32KOUT(void)
 
     if(pmic_device_info == J721E_LEO_PMICA_DEVICE)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6206,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6206,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     /* On J721 EVM, PMICA GPIO10 CLK32KOUT functionality is not supported */
@@ -1735,6 +1825,9 @@ static void test_pmic_gpio_setCfgGpioPin10_clk32KOUT(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
+    pmic_testResultUpdate_pass(6206,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1763,12 +1856,16 @@ static void test_pmic_gpio_setCfgGpioPin_wdg_disable(void)
 
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6207,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6207,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     for(pin = 0U; pin < (sizeof(pins)/sizeof(pins[0])); pin++)
@@ -1791,6 +1888,9 @@ static void test_pmic_gpio_setCfgGpioPin_wdg_disable(void)
 
         TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
     }
+    pmic_testResultUpdate_pass(6207,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1820,7 +1920,9 @@ static void test_pmic_gpio_setCfgGpioPin_good_power(void)
 
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6209,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -1857,6 +1959,9 @@ static void test_pmic_gpio_setCfgGpioPin_good_power(void)
 
         TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
     }
+    pmic_testResultUpdate_pass(6209,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1883,6 +1988,10 @@ static void test_pmic_gpio_setCfgPrmValTest_handle(void)
 
     pmicStatus = Pmic_gpioSetConfiguration(NULL, pin, gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_HANDLE);
+
+    pmic_testResultUpdate_pass(6210,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1909,6 +2018,10 @@ static void test_pmic_gpio_setCfgPrmValTest_pin(void)
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
+
+    pmic_testResultUpdate_pass(6211,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1935,6 +2048,10 @@ static void test_pmic_gpio_setCfgPrmValTest_pinDir(void)
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
+
+    pmic_testResultUpdate_pass(6213,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1961,6 +2078,10 @@ static void test_pmic_gpio_setCfgPrmValTest_outputSignalType(void)
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
+
+    pmic_testResultUpdate_pass(6214,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1987,6 +2108,10 @@ static void test_pmic_gpio_setCfgPrmValTest_deglitchEnable(void)
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
+
+    pmic_testResultUpdate_pass(6215,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2013,6 +2138,10 @@ static void test_pmic_gpio_setCfgPrmValTest_pinFunc_case1(void)
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_GPIO_FUNC);
+
+    pmic_testResultUpdate_pass(6216,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2038,12 +2167,18 @@ static void test_pmic_nPWRON_setCfgPrmValTest_pinFunc(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6217,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_gpioSetNPwronEnablePinConfiguration(pPmicCoreHandle,
                                                           gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_GPIO_FUNC);
+
+    pmic_testResultUpdate_pass(6217,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2070,6 +2205,10 @@ static void test_pmic_nPWRON_setCfgPrmValTest_pinPolarity(void)
     pmicStatus = Pmic_gpioSetNPwronEnablePinConfiguration(pPmicCoreHandle,
                                                           gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
+
+    pmic_testResultUpdate_pass(6218,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2100,7 +2239,9 @@ static void test_pmic_gpio_getCfgGpioPin(void)
         if((PMIC_INTF_SPI == pPmicCoreHandle->commMode) &&
            ((1U == pin) || (2U == pin)))
         {
-            TEST_IGNORE();
+            pmic_testResultUpdate_ignore(6219,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
         }
     }
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -2120,6 +2261,10 @@ static void test_pmic_gpio_getCfgGpioPin(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
+
+    pmic_testResultUpdate_pass(6219,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2146,6 +2291,10 @@ static void test_pmic_gpio_getCfgPrmValTest_handle(void)
 
     pmicStatus = Pmic_gpioGetConfiguration(NULL, pin, &gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_HANDLE);
+
+    pmic_testResultUpdate_pass(6220,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2172,6 +2321,10 @@ static void test_pmic_gpio_getCfgPrmValTest_pin(void)
 
     pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
+
+    pmic_testResultUpdate_pass(6221,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2188,6 +2341,10 @@ static void test_pmic_gpio_getCfgPrmValTest_gpioCfg(void)
 
     pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, NULL);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_NULL_PARAM);
+
+    pmic_testResultUpdate_pass(6222,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2223,7 +2380,9 @@ static void test_pmic_gpio_getValueGpioPin1_signalLevel(void)
         if((PMIC_INTF_SPI == pPmicCoreHandle->commMode) &&
            ((1U == pin) || (2U == pin)))
         {
-            TEST_IGNORE();
+            pmic_testResultUpdate_ignore(6223,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
         }
     }
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -2237,7 +2396,9 @@ static void test_pmic_gpio_getValueGpioPin1_signalLevel(void)
 
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6223,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
@@ -2250,6 +2411,10 @@ static void test_pmic_gpio_getValueGpioPin1_signalLevel(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     TEST_ASSERT_EQUAL(pinValue, pinValue_rd);
+
+    pmic_testResultUpdate_pass(6223,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2267,6 +2432,10 @@ static void test_pmic_gpio_getValuePrmValTest_handle(void)
 
     pmicStatus = Pmic_gpioGetValue(NULL, pin, &pinValue);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_HANDLE);
+
+    pmic_testResultUpdate_pass(6224,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2284,6 +2453,10 @@ static void test_pmic_gpio_getValuePrmValTest_pin(void)
 
     pmicStatus = Pmic_gpioGetValue(pPmicCoreHandle,pin,&pinValue);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
+
+    pmic_testResultUpdate_pass(6225,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2300,6 +2473,10 @@ static void test_pmic_gpio_getValuePrmValTest_pinValue(void)
 
     pmicStatus = Pmic_gpioGetValue(pPmicCoreHandle, pin, NULL);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_NULL_PARAM);
+
+    pmic_testResultUpdate_pass(6226,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2332,7 +2509,9 @@ static void test_pmic_gpio_setValueGpioPin1_signalLevel(void)
         if((PMIC_INTF_SPI == pPmicCoreHandle->commMode) &&
            ((1U == pin) || (2U == pin)))
         {
-            TEST_IGNORE();
+            pmic_testResultUpdate_ignore(6227,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
         }
     }
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -2345,7 +2524,9 @@ static void test_pmic_gpio_setValueGpioPin1_signalLevel(void)
     }
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6227,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -2357,6 +2538,10 @@ static void test_pmic_gpio_setValueGpioPin1_signalLevel(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     TEST_ASSERT_EQUAL(pinValue, pinValue_rd);
+
+    pmic_testResultUpdate_pass(6227,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2374,6 +2559,10 @@ static void test_pmic_gpio_setValuePrmValTest_handle(void)
 
     pmicStatus = Pmic_gpioSetValue(NULL, pin, pinValue);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_HANDLE);
+
+    pmic_testResultUpdate_pass(6228,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2391,6 +2580,10 @@ static void test_pmic_gpio_setValuePrmValTest_pin(void)
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
+
+    pmic_testResultUpdate_pass(6229,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2408,6 +2601,10 @@ static void test_pmic_gpio_setValuePrmValTest_pinValue(void)
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
+
+    pmic_testResultUpdate_pass(6230,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2453,6 +2650,10 @@ static void test_pmic_gpio_setValueGpioPin1_input(void)
 
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
+
+    pmic_testResultUpdate_pass(6231,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2536,16 +2737,22 @@ static void test_pmic_gpio1_testFall_interrupt(void)
         /* Should not break SPI Comm Lines */
         if(PMIC_INTF_SPI == pPmicCoreHandle->commMode)
         {
-            TEST_IGNORE();
+            pmic_testResultUpdate_ignore(6234,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
         }
     }
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6234,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6234,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -2611,6 +2818,10 @@ static void test_pmic_gpio1_testFall_interrupt(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(6234,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2659,16 +2870,22 @@ static void test_pmic_gpio1_testRise_interrupt(void)
         /* Should not break SPI Comm Lines */
         if(PMIC_INTF_SPI == pPmicCoreHandle->commMode)
         {
-            TEST_IGNORE();
+            pmic_testResultUpdate_ignore(6235,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
         }
     }
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6235,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6235,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -2734,6 +2951,10 @@ static void test_pmic_gpio1_testRise_interrupt(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(6235,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2793,7 +3014,9 @@ static void test_pmic_gpio2_testFall_interrupt(void)
         /* Should not break SPI Comm Lines */
         if(PMIC_INTF_SPI == pPmicCoreHandle->commMode)
         {
-            TEST_IGNORE();
+            pmic_testResultUpdate_ignore(6236,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
         }
     }
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -2801,7 +3024,9 @@ static void test_pmic_gpio2_testFall_interrupt(void)
         /* Should not break SPI Comm Lines */
         if(PMIC_INTF_SPI == pPmicCoreHandle->commMode)
         {
-            TEST_IGNORE();
+            pmic_testResultUpdate_ignore(6236,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
         }
     }
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -2868,6 +3093,10 @@ static void test_pmic_gpio2_testFall_interrupt(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(6236,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2927,7 +3156,9 @@ static void test_pmic_gpio2_testRise_interrupt(void)
         /* Should not break SPI Comm Lines */
         if(PMIC_INTF_SPI == pPmicCoreHandle->commMode)
         {
-            TEST_IGNORE();
+            pmic_testResultUpdate_ignore(6237,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
         }
     }
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -2935,7 +3166,9 @@ static void test_pmic_gpio2_testRise_interrupt(void)
         /* Should not break SPI Comm Lines */
         if(PMIC_INTF_SPI == pPmicCoreHandle->commMode)
         {
-            TEST_IGNORE();
+            pmic_testResultUpdate_ignore(6237,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
         }
     }
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -3002,6 +3235,10 @@ static void test_pmic_gpio2_testRise_interrupt(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(6237,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3045,7 +3282,9 @@ static void test_pmic_gpio3_testFall_interrupt(void)
         /* Should not break SPI Comm Lines */
         if(PMIC_INTF_SPI == pPmicCoreHandle->commMode)
         {
-            TEST_IGNORE();
+            pmic_testResultUpdate_ignore(0xAB19,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
         }
     }
     if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
@@ -3054,7 +3293,9 @@ static void test_pmic_gpio3_testFall_interrupt(void)
          * GPIO3 pin of PMIC-A is connected to 'EN_MCU3V3_LDSW'
          * on J721EVM board causing hang, when programming fall interrupt.
          */
-         TEST_IGNORE();
+         pmic_testResultUpdate_ignore(0xAB19,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
@@ -3062,12 +3303,16 @@ static void test_pmic_gpio3_testFall_interrupt(void)
          * GPIO3 pin of PMIC-B is connected to 'EN_DDR0V6_BUCK'
          * on J721EVM board causing hang, when programming fall interrupt.
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB19,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB19,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
     
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
@@ -3083,7 +3328,9 @@ static void test_pmic_gpio3_testFall_interrupt(void)
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB19,
+                                     pmic_gpio_tests,
+                                     PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -3149,6 +3396,10 @@ static void test_pmic_gpio3_testFall_interrupt(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB19,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3192,7 +3443,9 @@ static void test_pmic_gpio3_testRise_interrupt(void)
         /* Should not break SPI Comm Lines */
         if(PMIC_INTF_SPI == pPmicCoreHandle->commMode)
         {
-            TEST_IGNORE();
+            pmic_testResultUpdate_ignore(0xAB18,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
         }
     }
     if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
@@ -3201,7 +3454,9 @@ static void test_pmic_gpio3_testRise_interrupt(void)
          * GPIO3 pin of PMIC-A is connected to 'EN_MCU3V3_LDSW'
          * on J721EVM board causing hang, when programming rise interrupt.
          */
-         TEST_IGNORE();
+         pmic_testResultUpdate_ignore(0xAB18,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
     
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
@@ -3210,12 +3465,16 @@ static void test_pmic_gpio3_testRise_interrupt(void)
          * GPIO3 pin of PMIC-B is connected to 'EN_DDR0V6_BUCK'
          * on J721EVM board causing hang, when programming rise interrupt.
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB18,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB18,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
@@ -3231,7 +3490,9 @@ static void test_pmic_gpio3_testRise_interrupt(void)
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB18,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -3299,6 +3560,10 @@ static void test_pmic_gpio3_testRise_interrupt(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB18,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3338,12 +3603,16 @@ static void test_pmic_gpio4_testFall_interrupt(void)
          * GPIO4 pin of PMIC-B is connected to 'H_DDR_RET_1V1'
          * on J721EVM board causing hang, when programming fall interrupt.
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6240,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6240,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
@@ -3422,6 +3691,10 @@ static void test_pmic_gpio4_testFall_interrupt(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(6240,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3461,12 +3734,16 @@ static void test_pmic_gpio4_testRise_interrupt(void)
          * GPIO4 pin of PMIC-B is connected to 'H_DDR_RET_1V1'
          * on J721EVM board causing hang, when programming rise interrupt.
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6241,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6241,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
@@ -3544,6 +3821,10 @@ static void test_pmic_gpio4_testRise_interrupt(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(6241,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3583,12 +3864,16 @@ static void test_pmic_gpio5_testFall_interrupt(void)
          * GPIO5 pin of PMIC-B is connected to 'LEOA_SCLK'
          * on J721EVM causing block, when programming fall interrupt signal.
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6242,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6242,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
@@ -3667,6 +3952,10 @@ static void test_pmic_gpio5_testFall_interrupt(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(6242,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3706,12 +3995,16 @@ static void test_pmic_gpio5_testRise_interrupt(void)
          * GPIO5 pin of PMIC-B is connected to 'LEOA_SCLK'
          * on J721EVM causing block, when programming rise` interrupt signal.
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6243,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6243,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
@@ -3790,6 +4083,10 @@ static void test_pmic_gpio5_testRise_interrupt(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(6243,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3829,12 +4126,16 @@ static void test_pmic_gpio6_testFall_interrupt(void)
          * GPIO6 pin of PMIC-B is connected to 'LEOA_SDATA' and receives
          * on J721EVM causing hang, when programming fall interrupt signal.
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6244,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6244,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
@@ -3913,6 +4214,10 @@ static void test_pmic_gpio6_testFall_interrupt(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(6244,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3952,12 +4257,16 @@ static void test_pmic_gpio6_testRise_interrupt(void)
          * GPIO6 pin of PMIC-B is connected to 'LEOA_SDATA' and receives
          * on J721EVM causing hang, when programming rise interrupt signal.
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6245,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6245,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
@@ -4036,6 +4345,10 @@ static void test_pmic_gpio6_testRise_interrupt(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(6245,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -4075,7 +4388,9 @@ static void test_pmic_gpio7_testFall_interrupt(void)
          * GPIO7 pin of PMIC-A is connected to 'SOC_SAFETY_ERRZ'
          * on J721EVM board causing hang, when programming fall interrupt.
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6246,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
@@ -4083,12 +4398,16 @@ static void test_pmic_gpio7_testFall_interrupt(void)
          * GPIO7 pin of PMIC-B is connected to 'EN_RAM0V85_LDO'
          * on J721EVM board causing hang, when programming fall interrupt.
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6246,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6246,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
@@ -4167,6 +4486,10 @@ static void test_pmic_gpio7_testFall_interrupt(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(6246,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -4206,7 +4529,9 @@ static void test_pmic_gpio7_testRise_interrupt(void)
          * GPIO7 pin of PMIC-A is connected to 'SOC_SAFETY_ERRZ'
          * on J721EVM board causing hang, when programming rise interrupt.
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6247,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
@@ -4214,12 +4539,16 @@ static void test_pmic_gpio7_testRise_interrupt(void)
          * GPIO7 pin of PMIC-B is connected to 'EN_RAM0V85_LDO'
          * on J721EVM board causing hang, when programming rise interrupt.
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6247,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
     {
-         TEST_IGNORE();
+         pmic_testResultUpdate_ignore(6247,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
@@ -4297,6 +4626,10 @@ static void test_pmic_gpio7_testRise_interrupt(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(6247,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -4336,7 +4669,9 @@ static void test_pmic_gpio8_testFall_interrupt(void)
          * GPIO8 pin of PMIC-B is connected to 'EN_PHYCORE_LDO'
          * on J721EVM causing hang, when programming fall interrupt signal.
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6248,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
@@ -4352,7 +4687,9 @@ static void test_pmic_gpio8_testFall_interrupt(void)
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6248,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -4418,6 +4755,10 @@ static void test_pmic_gpio8_testFall_interrupt(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(6248,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -4457,7 +4798,9 @@ static void test_pmic_gpio8_testRise_interrupt(void)
          * GPIO8 pin of PMIC-B is connected to 'EN_PHYCORE_LDO'
          * on J721EVM causing hang, when programming fall interrupt signal.
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6249,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
@@ -4473,7 +4816,9 @@ static void test_pmic_gpio8_testRise_interrupt(void)
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6249,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -4540,6 +4885,10 @@ static void test_pmic_gpio8_testRise_interrupt(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(6249,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -4584,7 +4933,9 @@ static void test_pmic_gpio9_testFall_interrupt(void)
          * GPIO9 pin of PMIC-A is connected to 'GND'
          * on J721EVM board causing hang, when programming fall interrupt.
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB1D,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
@@ -4592,12 +4943,16 @@ static void test_pmic_gpio9_testFall_interrupt(void)
          * GPIO9 pin of PMIC-B is connected to 'EN_VPP1V8_LDO'
          * on J721EVM board causing hang, when programming fall interrupt.
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB1D,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB1D,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
@@ -4613,7 +4968,9 @@ static void test_pmic_gpio9_testFall_interrupt(void)
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB1D,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -4681,6 +5038,10 @@ static void test_pmic_gpio9_testFall_interrupt(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB1D,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -4725,7 +5086,9 @@ static void test_pmic_gpio9_testRise_interrupt(void)
          * GPIO9 pin of PMIC-A is connected to 'GND'
          * on J721EVM board causing hang, when programming rise interrupt.
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB1C,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
@@ -4733,12 +5096,16 @@ static void test_pmic_gpio9_testRise_interrupt(void)
          * GPIO9 pin of PMIC-B is connected to 'EN_VPP1V8_LDO'
          * on J721EVM board causing hang, when programming rise interrupt.
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB1C,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
     {
-         TEST_IGNORE();
+         pmic_testResultUpdate_ignore(0xAB1C,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
@@ -4754,7 +5121,9 @@ static void test_pmic_gpio9_testRise_interrupt(void)
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB1C,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -4822,6 +5191,10 @@ static void test_pmic_gpio9_testRise_interrupt(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB1C,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -4871,7 +5244,9 @@ static void test_pmic_gpio10_testFall_interrupt(void)
          * GPIO10 pin of PMIC-A is connected to 'PMIC_POWER_EN1'
          * on J721EVM board causing hang, when programming fall interrupt.
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6252,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
@@ -4887,7 +5262,9 @@ static void test_pmic_gpio10_testFall_interrupt(void)
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6252,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -4955,6 +5332,10 @@ static void test_pmic_gpio10_testFall_interrupt(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(6252,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5004,7 +5385,9 @@ static void test_pmic_gpio10_testRise_interrupt(void)
          * GPIO10 pin of PMIC-A is connected to 'PMIC_POWER_EN1'
          * on J721EVM board causing hang, when programming rise interrupt.
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6253,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
@@ -5020,7 +5403,9 @@ static void test_pmic_gpio10_testRise_interrupt(void)
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(6253,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -5088,6 +5473,10 @@ static void test_pmic_gpio10_testRise_interrupt(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(6253,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5132,7 +5521,9 @@ static void test_pmic_gpio11_testFall_interrupt(void)
          * GPIO11 pin of PMIC-A is connected to 'H_SOC_PORz'
          * on J721EVM board causing hang, when programming fall interrupt.
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB1B,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
@@ -5140,17 +5531,23 @@ static void test_pmic_gpio11_testFall_interrupt(void)
          * GPIO11 pin of PMIC-B is connected to 'EN_3V3IO_LDSW'
          * on J721EVM board causing hang, when programming fall interrupt.
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB1B,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
     {
-         TEST_IGNORE();
+         pmic_testResultUpdate_ignore(0xAB1B,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB1B,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -5212,6 +5609,10 @@ static void test_pmic_gpio11_testFall_interrupt(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB1B,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5256,7 +5657,9 @@ static void test_pmic_gpio11_testRise_interrupt(void)
          * GPIO11 pin of PMIC-A is connected to 'H_SOC_PORz'
          * on J721EVM board causing hang, when programming rise interrupt.
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB1A,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
     
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
@@ -5265,17 +5668,23 @@ static void test_pmic_gpio11_testRise_interrupt(void)
          * GPIO11 pin of PMIC-B is connected to 'EN_3V3IO_LDSW'
          * on J721EVM board causing hang, when programming rise interrupt.
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB1A,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
     {
-         TEST_IGNORE();
+         pmic_testResultUpdate_ignore(0xAB1A,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB1A,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -5337,6 +5746,10 @@ static void test_pmic_gpio11_testRise_interrupt(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB1A,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5355,6 +5768,10 @@ static void test_pmic_gpio_intr_prmValTest_handle(void)
 
     pmicStatus = Pmic_gpioSetIntr(NULL, pin , intrType, maskPol);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_HANDLE);
+
+    pmic_testResultUpdate_pass(6256,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5373,6 +5790,10 @@ static void test_pmic_gpio_intr_prmValTest_pin(void)
 
     pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin, intrType, maskPol);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
+
+    pmic_testResultUpdate_pass(6257,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5391,6 +5812,10 @@ static void test_pmic_gpio_intr_prmValTest_intrType(void)
 
     pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin, intrType, maskPol);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
+
+    pmic_testResultUpdate_pass(6258,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5409,6 +5834,10 @@ static void test_pmic_gpio_intr_prmValTest_maskPol(void)
 
     pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
+
+    pmic_testResultUpdate_pass(6259,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5502,6 +5931,10 @@ static void test_pmic_gpio_intr_irqMaskAll_interrupt(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(7374,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5536,7 +5969,9 @@ static void test_pmic_gpio_intr_irqUnMaskAll_interrupt(void)
 
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7375,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -5643,6 +6078,10 @@ static void test_pmic_gpio_intr_irqUnMaskAll_interrupt(void)
                                   PMIC_IRQ_ALL,
                                   PMIC_IRQ_MASK);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(7375,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5658,11 +6097,17 @@ static void test_pmic_gpio_testTps6594xNPwronPinGetValue(void)
                                         PMIC_GPIO_NUM_OF_TESTCASES);
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7904,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_gpioTps6594xNPwronPinGetValue(pPmicCoreHandle, &pinValue);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(7904,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5679,11 +6124,17 @@ static void test_pmic_gpio_tps6594xNPwronPinGetValuePrmValTest_handle(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7905,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_gpioTps6594xNPwronPinGetValue(NULL, &pinValue);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7905,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5699,11 +6150,17 @@ static void test_pmic_gpio_tps6594xNPwronPinGetValuePrmValTest_pinValue(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7906,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_gpioTps6594xNPwronPinGetValue(pPmicCoreHandle, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(7906,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5730,11 +6187,17 @@ static void test_pmic_gpio_getCfgPrmValTest_pin_hera(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7879,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
+
+    pmic_testResultUpdate_pass(7879,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5751,11 +6214,17 @@ static void test_pmic_gpio_testTps6594xNPwronPinGetValue_hera(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7880,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_gpioTps6594xNPwronPinGetValue(pPmicCoreHandle, &pinValue);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7880,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5903,11 +6372,6 @@ static void test_pmic_gpio7_testRiseAsynchronous_interrupt(void)
 }
 
 /*!
- * Below test cases are not tested because of HW limitation.
- * Added below test cases as sample for reference.
- */
-
-/*!
  * \brief   Test to verify CAN WKUP
  */
 static void test_pmic_canWkup_test(void)
@@ -5929,6 +6393,11 @@ static void test_pmic_canWkup_test(void)
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+         TEST_IGNORE();
+    }
+
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
          TEST_IGNORE();
     }
@@ -5964,6 +6433,11 @@ static void test_pmic_canWkup_test(void)
     status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
+
+/*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
 
 /*!
  * \brief   Test to verify GPIO WKUP 1
@@ -6014,6 +6488,11 @@ static void test_pmic_gpioWkup1_test(void)
     status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
+
+/*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
 
 /*!
  * \brief   Test to verify GPIO WKUP 2
@@ -6196,6 +6675,8 @@ static void test_pmic_run_testcases(void)
     pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
     UNITY_BEGIN();
 
+    pmic_testResult_init(pmic_gpio_tests, PMIC_GPIO_NUM_OF_TESTCASES);
+
     RUN_TEST(test_pmic_gpio_setCfgGpioPin_nSLEEP1);
     RUN_TEST(test_pmic_gpio_setCfgGpioPin_nSLEEP2);
     RUN_TEST(test_pmic_gpio_setCfgGpioPin_nRstOut_soc);
@@ -6271,6 +6752,8 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_gpio_tps6594xNPwronPinGetValuePrmValTest_pinValue);
     RUN_TEST(test_pmic_gpio_testTps6594xNPwronPinGetValue_hera);
     RUN_TEST(test_pmic_gpio_getCfgPrmValTest_pin_hera);
+
+    pmic_printTestResult(pmic_gpio_tests, PMIC_GPIO_NUM_OF_TESTCASES);
 
     UNITY_END();
 }
@@ -6807,7 +7290,7 @@ int main()
      */
     App_initGPIO(AppPmicCallbackFxn);
 
-    pmic_log("GPIO Unity Test Application(%s %s)\n", __TIME__, __DATE__);
+    pmic_log("PMIC GPIO Unity Test Application(%s %s)\n", __TIME__, __DATE__);
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E)             || \
      defined(SOC_J7200))

@@ -1355,6 +1355,7 @@ static uint32_t test_pmic_get_unity_testcase_index(
     {
         if(pTest->testId == testId)
         {
+            pTest->testValid = true;
             break;
         }
         else if(i >= num_testcases)
@@ -1390,5 +1391,74 @@ void test_pmic_print_unity_testcase_info(uint32_t         testId,
     pmic_log("\n |TEST NAME|:: %s ::\n", pTest[index].testDesc);
 
     /* Print test Result */
-    pmic_log("\n |TEST RESULT|:: %d ::", testId);
+    pmic_log("\n |TEST_RESULT|:: %d ::", testId);
+}
+
+static void pmic_testResultUpdate(uint32_t testId,
+                                  uint8_t  result,
+                                  Pmic_Ut_Tests_t *pTest,
+                                  uint32_t num_testcases)
+{
+    uint32_t idx = 0U;
+
+    while(idx < num_testcases)
+    {
+        if(pTest[idx].testId == testId)
+        {
+            pTest[idx].testValid = true;
+            pTest[idx].testResult = result;
+        }
+
+        idx++;
+    }
+}
+
+void pmic_testResultUpdate_ignore(uint32_t testId,
+                                  Pmic_Ut_Tests_t *pTest,
+                                  uint32_t num_testcases)
+{
+    uint8_t  result = PMIC_TEST_RESULT_IGNORE;
+
+    pmic_testResultUpdate(testId, result, pTest, num_testcases);
+    TEST_IGNORE();
+}
+
+void pmic_testResultUpdate_pass(uint32_t testId,
+                                Pmic_Ut_Tests_t *pTest,
+                                uint32_t num_testcases)
+{
+    uint8_t  result = PMIC_TEST_RESULT_PASS;
+
+    pmic_testResultUpdate(testId, result, pTest, num_testcases);
+}
+
+void pmic_testResult_init(Pmic_Ut_Tests_t *pTest, uint32_t num_testcases)
+{
+    uint32_t idx = 0;
+
+    for(idx = 0; idx < num_testcases; idx++)
+    {
+        pTest[idx].testValid = false;
+        pTest[idx].testResult = PMIC_TEST_RESULT_FAIL;
+    }
+}
+
+void pmic_printTestResult(Pmic_Ut_Tests_t *pTest, uint32_t num_testcases)
+{
+    uint32_t idx = 0;
+    uint8_t testResult = 0;
+    char *result_str[3] = {"FAIL", "PASS", "IGNORE"};
+
+    pmic_log("\n\r");
+
+    /* Print test Result */
+    for(idx = 0; idx < num_testcases; idx++)
+    {
+        if(true == pTest[idx].testValid)
+        {
+            testResult = pTest[idx].testResult;
+            pmic_log("|TEST RESULT|%s|%d|\n",
+                                  result_str[testResult], pTest[idx].testId);
+        }
+    }
 }

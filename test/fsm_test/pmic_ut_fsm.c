@@ -138,15 +138,12 @@ static void test_Pmic_fsmSetNsleepSignalMask_mask_nsleep1(void)
                                         pmic_fsm_tests,
                                         PMIC_FSM_NUM_OF_TESTCASES);
 
-#if 0
-    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
-    {
-        /* To avoid compile error */
-    }
-#endif
-
     status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle, nsleepType, maskEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    pmic_testResultUpdate_pass(7693,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
 
 }
 
@@ -169,6 +166,10 @@ static void test_Pmic_fsmSetNsleepSignalMask_unmask_nsleep1(void)
     status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle, nsleepType, maskEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
+    pmic_testResultUpdate_pass(7694,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+
 }
 
 /*!
@@ -190,6 +191,10 @@ static void test_Pmic_fsmSetNsleepSignalMask_mask_nsleep2(void)
     status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle, nsleepType, maskEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
+    pmic_testResultUpdate_pass(7695,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+
 }
 
 /*!
@@ -210,6 +215,10 @@ static void test_Pmic_fsmSetNsleepSignalMask_unmask_nsleep2(void)
 
     status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle, nsleepType, maskEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    pmic_testResultUpdate_pass(7696,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
 
 }
 
@@ -274,6 +283,10 @@ static void test_Pmic_fsmSetMissionState_active(void)
 
     status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    pmic_testResultUpdate_pass(7698,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -399,6 +412,10 @@ static void test_Pmic_fsmSetMissionStatePrmValTest_handle(void)
     status = Pmic_fsmSetMissionState(NULL, pmicState);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
 
+    pmic_testResultUpdate_pass(7702,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+
 }
 
 /*!
@@ -417,6 +434,10 @@ static void test_Pmic_fsmSetMissionStatePrmValTest_state(void)
 
     status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+
+    pmic_testResultUpdate_pass(7703,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
 
 }
 
@@ -439,6 +460,10 @@ static void test_Pmic_fsmSetNsleepSignalMaskStatePrmValTest_handle(void)
     status = Pmic_fsmSetNsleepSignalMask(NULL, nsleepType, maskEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
 
+    pmic_testResultUpdate_pass(7704,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+
 }
 
 /*!
@@ -457,6 +482,10 @@ static void test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_handle(void)
                                          PMIC_FSM_I2C_TRIGGER0_TYPE,
                                          standByState);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+
+    pmic_testResultUpdate_pass(7360,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -477,6 +506,10 @@ static void test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_eventType(void)
                                          evenType,
                                          fsmState);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+
+    pmic_testResultUpdate_pass(7361,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -497,6 +530,10 @@ static void test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_fsmState(void)
                                          evenType,
                                          fsmState);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+
+    pmic_testResultUpdate_pass(7705,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -512,6 +549,10 @@ static void test_Pmic_fsmRuntimeBistRequestPrmValTest_handle(void)
 
     status = Pmic_fsmRequestRuntimeBist(NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+
+    pmic_testResultUpdate_pass(7706,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -527,6 +568,10 @@ static void test_Pmic_Pmic_fsmDeviceOnRequestPrmValTest_handle(void)
 
     status = Pmic_fsmDeviceOnRequest(NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+
+    pmic_testResultUpdate_pass(7364,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
 }
 
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
@@ -539,6 +584,8 @@ static void test_pmic_run_testcases(void)
 {
     pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
     UNITY_BEGIN();
+
+    pmic_testResult_init(pmic_fsm_tests, PMIC_FSM_NUM_OF_TESTCASES);
 
     RUN_TEST(test_Pmic_fsmSetNsleepSignalMask_mask_nsleep1);
     RUN_TEST(test_Pmic_fsmSetNsleepSignalMask_unmask_nsleep1);
@@ -553,6 +600,8 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_fsmState);
     RUN_TEST(test_Pmic_fsmRuntimeBistRequestPrmValTest_handle);
     RUN_TEST(test_Pmic_Pmic_fsmDeviceOnRequestPrmValTest_handle);
+
+    pmic_printTestResult(pmic_fsm_tests, PMIC_FSM_NUM_OF_TESTCASES);
 
     UNITY_END();
 }

@@ -146,6 +146,13 @@ extern uint8_t startup_type;
 #define J7_WAKEUP_GPIO0_84_PIN_NUM       84U /* Pin 84 for J7VCL PMIC Intr */
 
 /*!
+ * \brief   J7ES: use WAKEUP GPIO0_9
+ */
+#define PMIC_TEST_RESULT_FAIL            0U /* For Failed tests */
+#define PMIC_TEST_RESULT_PASS            1U /* For Passed tests */
+#define PMIC_TEST_RESULT_IGNORE          2U /* For Ignored tests */
+
+/*!
  *  \brief    Define the Pmic UT test interface
  *
  *  \param   testId              Test ID
@@ -156,6 +163,8 @@ typedef struct Pmic_Ut_Tests_s
 {
     uint32_t  testId;
     char      testDesc[140U];
+    uint8_t   testResult;
+    bool      testValid;
 } Pmic_Ut_Tests_t;
 
 /*!
@@ -253,3 +262,27 @@ void GPIO_configIntRouter(uint32_t portNum,
                           uint32_t pinNum,
                           uint32_t gpioIntRtrOutIntNum,
                           GPIO_v0_HwAttrs *cfg);
+
+/*!
+ * \brief   Wrapper to update ignore infofrmation and Ignore the test
+ */
+void pmic_testResultUpdate_ignore(uint32_t testId,
+                                  Pmic_Ut_Tests_t *pTest,
+                                  uint32_t num_testcases);
+
+/*!
+ * \brief   Wrapper to update pass infofrmation
+ */
+void pmic_testResultUpdate_pass(uint32_t testId,
+                                Pmic_Ut_Tests_t *pTest,
+                                uint32_t num_testcases);
+
+/*!
+ * \brief   initialize test results with default values
+ */
+void pmic_testResult_init(Pmic_Ut_Tests_t *pTest, uint32_t num_testcases);
+
+/*!
+ * \brief   print all tests resuluts in required pattern
+ */
+void pmic_printTestResult(Pmic_Ut_Tests_t *pTest, uint32_t num_testcases);

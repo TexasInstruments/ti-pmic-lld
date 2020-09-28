@@ -235,6 +235,10 @@ static void test_pmic_wdg_setCfg_forallparams(void)
     /* Disable WDG Timer */
     pmicStatus = Pmic_wdgDisable(pPmicCoreHandle);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(7327,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -266,6 +270,10 @@ static void test_pmic_wdg_setCfg_prmValTest_handle(void)
 
     pmicStatus = Pmic_wdgSetCfg(NULL, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7328,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -297,6 +305,10 @@ static void test_pmic_wdg_setCfg_prmValTest_longwinMin(void)
 
     pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_WDG_WINDOW, pmicStatus);
+
+    pmic_testResultUpdate_pass(7329,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -328,6 +340,10 @@ static void test_pmic_wdg_setCfg_prmValTest_longwinMax(void)
 
     pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_WDG_WINDOW, pmicStatus);
+
+    pmic_testResultUpdate_pass(7330,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -359,6 +375,10 @@ static void test_pmic_wdg_setCfg_prmValTest_win1Min(void)
 
     pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_WDG_WINDOW, pmicStatus);
+
+    pmic_testResultUpdate_pass(7331,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -390,6 +410,10 @@ static void test_pmic_wdg_setCfg_prmValTest_win1Max(void)
 
     pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_WDG_WINDOW, pmicStatus);
+
+    pmic_testResultUpdate_pass(7332,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -421,6 +445,10 @@ static void test_pmic_wdg_setCfg_prmValTest_win2Min(void)
 
     pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_WDG_WINDOW, pmicStatus);
+
+    pmic_testResultUpdate_pass(7333,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -452,6 +480,10 @@ static void test_pmic_wdg_setCfg_prmValTest_win2Max(void)
 
     pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_WDG_WINDOW, pmicStatus);
+
+    pmic_testResultUpdate_pass(7334,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -483,6 +515,10 @@ static void test_pmic_wdg_setCfg_prmValTest_failThresholdMax(void)
 
     pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(7335,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -514,6 +550,10 @@ static void test_pmic_wdg_setCfg_prmValTest_rstThresholdMax(void)
 
     pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(7336,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -545,6 +585,10 @@ static void test_pmic_wdg_setCfg_prmValTest_qaFdbkMax(void)
 
     pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(7337,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -576,6 +620,10 @@ static void test_pmic_wdg_setCfg_prmValTest_qaLfsrMax(void)
 
     pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(7338,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -607,6 +655,10 @@ static void test_pmic_wdg_setCfg_prmValTest_qaQuesSeedMax(void)
 
     pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(7339,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -663,6 +715,10 @@ static void test_pmic_wdg_getCfg_forallparams(void)
     /* Disable WDG Timer */
     pmicStatus = Pmic_wdgDisable(pPmicCoreHandle);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(7340,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -679,6 +735,10 @@ static void test_pmic_wdg_getCfg_prmValTest_handle(void)
 
     pmicStatus = Pmic_wdgGetCfg(NULL, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7341,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -694,6 +754,10 @@ static void test_pmic_wdg_getCfg_prmValTest_wdgcfgParam(void)
 
     pmicStatus = Pmic_wdgGetCfg(pPmicCoreHandle, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(7342,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -709,6 +773,10 @@ static void test_pmic_wdg_enable_prmValTest_handle(void)
 
     pmicStatus = Pmic_wdgEnable(NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7343,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -724,6 +792,10 @@ static void test_pmic_wdg_disable_prmValTest_handle(void)
 
     pmicStatus = Pmic_wdgDisable(NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7344,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -769,6 +841,10 @@ static void test_pmic_wdg_startQaSequence_prmValTest_handle(void)
     /* Disable WDG Timer */
     pmicStatus = Pmic_wdgDisable(pPmicCoreHandle);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(7345,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -814,6 +890,10 @@ static void test_pmic_wdg_startQaSequence(void)
     /* Disable WDG Timer */
     pmicStatus = Pmic_wdgDisable(pPmicCoreHandle);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(7346,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -875,6 +955,10 @@ static void test_pmic_wdg_startQaSequence_testFdbkValues(void)
         /* Delay is needed to sattle down watchdog to longwindow */
         Osal_delay(20U);
     }
+
+    pmic_testResultUpdate_pass(7347,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -932,6 +1016,10 @@ static void test_pmic_wdg_startQaSequence_testLfsrValues(void)
         /* Delay is needed to sattle down watchdog to longwindow */
         Osal_delay(20U);
     }
+
+    pmic_testResultUpdate_pass(7348,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -993,6 +1081,10 @@ static void test_pmic_wdg_startQaSequence_testQuesSeedValues(void)
         /* Delay is needed to sattle down watchdog to longwindow */
         Osal_delay(20U);
     }
+
+    pmic_testResultUpdate_pass(7349,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1014,6 +1106,10 @@ static void test_pmic_wdg_GetFailCount(void)
     /* Get watchdog failcount */
     pmicStatus = Pmic_wdgGetFailCount(pPmicCoreHandle, &failCount);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(7350,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1035,6 +1131,10 @@ static void test_pmic_wdg_GetFailCount_prmValTest_handle(void)
     /* Get watchdog failcount */
     pmicStatus = Pmic_wdgGetFailCount(NULL, &failCount);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7351,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1055,6 +1155,10 @@ static void test_pmic_wdg_GetFailCount_prmValTest_invFailCountParam(void)
     /* Get watchdog failcount */
     pmicStatus = Pmic_wdgGetFailCount(pPmicCoreHandle, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(7352,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1077,6 +1181,10 @@ static void test_pmic_wdg_GetErrorStatus(void)
     /* Get watchdog error Status */
     pmicStatus = Pmic_wdgGetErrorStatus(pPmicCoreHandle, &errStatus);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(7353,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1099,6 +1207,10 @@ static void test_pmic_wdg_GetErrorStatus_prmValTest_handle(void)
     /* Get watchdog error Status */
     pmicStatus = Pmic_wdgGetErrorStatus(NULL, &errStatus);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7354,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1119,6 +1231,10 @@ static void test_pmic_wdg_GetErrorStatus_prmValTest_invErrStatParam(void)
     /* Get watchdog error Status */
     pmicStatus = Pmic_wdgGetErrorStatus(pPmicCoreHandle, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(7355,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1157,11 +1273,15 @@ static void test_pmic_wdg_StartTriggerSequence(void)
 
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB17,
+                                     pmic_wdg_tests,
+                                     PMIC_WDG_NUM_OF_TESTCASES);
     }
 
     /* Test ignored, due to unsupported HW */
-    TEST_IGNORE();
+    pmic_testResultUpdate_ignore(0xAB17,
+                                     pmic_wdg_tests,
+                                     PMIC_WDG_NUM_OF_TESTCASES);
 
     /* Enable WDG Timer */
     pmicStatus = Pmic_wdgEnable(pPmicCoreHandle);
@@ -1178,6 +1298,10 @@ static void test_pmic_wdg_StartTriggerSequence(void)
     /* Disable WDG Timer */
     pmicStatus = Pmic_wdgDisable(pPmicCoreHandle);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB17,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1222,6 +1346,10 @@ static void test_pmic_wdg_StartTriggerSequence_prmValTest_handle(void)
     /* Disable WDG Timer */
     pmicStatus = Pmic_wdgDisable(pPmicCoreHandle);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(7357,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1267,6 +1395,10 @@ static void test_pmic_wdg_startQaSequence_prmValTest_maxCnt(void)
     /* Disable WDG Timer */
     pmicStatus = Pmic_wdgDisable(pPmicCoreHandle);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(7958,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
 }
 
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
@@ -1279,6 +1411,8 @@ static void test_pmic_run_testcases(void)
 {
     pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
     UNITY_BEGIN();
+
+    pmic_testResult_init(pmic_wdg_tests, PMIC_WDG_NUM_OF_TESTCASES);
 
     RUN_TEST(test_pmic_wdg_setCfg_forallparams);
     RUN_TEST(test_pmic_wdg_setCfg_prmValTest_handle);
@@ -1319,6 +1453,8 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_wdg_StartTriggerSequence_prmValTest_handle);
     RUN_TEST(test_pmic_wdg_startQaSequence_prmValTest_maxCnt);
 
+    pmic_printTestResult(pmic_wdg_tests, PMIC_WDG_NUM_OF_TESTCASES);
+
     UNITY_END();
 }
 
@@ -1330,6 +1466,8 @@ static void test_pmic_run_slave_device_testcases(void)
 {
     pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
     UNITY_BEGIN();
+
+    pmic_testResult_init(pmic_wdg_tests, PMIC_WDG_NUM_OF_TESTCASES);
 
     RUN_TEST(test_pmic_wdg_setCfg_forallparams);
     RUN_TEST(test_pmic_wdg_setCfg_prmValTest_handle);
@@ -1364,6 +1502,8 @@ static void test_pmic_run_slave_device_testcases(void)
 
     RUN_TEST(test_pmic_wdg_StartTriggerSequence_prmValTest_handle);
     RUN_TEST(test_pmic_wdg_startQaSequence_prmValTest_maxCnt);
+
+    pmic_printTestResult(pmic_wdg_tests, PMIC_WDG_NUM_OF_TESTCASES);
 
     UNITY_END();
 }

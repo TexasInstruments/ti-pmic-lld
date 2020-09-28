@@ -873,6 +873,10 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_handle(void)
 
     pmicStatus = Pmic_powerSetPwrResourceCfg(NULL, pwrRsrc, pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7130,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -893,6 +897,10 @@ static void test_pmic_powerGetPowerResourceConfigPrmValTest_handle(void)
 
     pmicStatus = Pmic_powerGetPwrResourceCfg(NULL, pwrRsrc, &pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7299,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -971,6 +979,10 @@ static void test_pmic_powerSetPowerResourceConfig_rvCheckEn_enable(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.rvCheckEn, powerCfg_rd.rvCheckEn);
     }
+
+    pmic_testResultUpdate_pass(7131,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1050,6 +1062,10 @@ static void test_pmic_powerSetPowerResourceConfig_rvCheckEn_disable(void)
         TEST_ASSERT_EQUAL(pPowerCfg.rvCheckEn, powerCfg_rd.rvCheckEn);
     }
 
+    pmic_testResultUpdate_pass(7132,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
+
 }
 
 /*!
@@ -1082,6 +1098,10 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_rvCheckEn(vo
                                              pwrRsrc,
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(7133,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1134,6 +1154,9 @@ static void test_pmic_powerSetPowerResourceConfig_buckPullDownEn_enable(void)
         TEST_ASSERT_EQUAL(pPowerCfg.buckPullDownEn, powerCfg_rd.buckPullDownEn);
     }
 
+    pmic_testResultUpdate_pass(7134,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1186,6 +1209,9 @@ static void test_pmic_powerSetPowerResourceConfig_buckPullDownEn_disable(void)
         TEST_ASSERT_EQUAL(pPowerCfg.buckPullDownEn, powerCfg_rd.buckPullDownEn);
     }
 
+    pmic_testResultUpdate_pass(7135,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1219,6 +1245,9 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_buckPullDown
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
+    pmic_testResultUpdate_pass(7136,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1325,6 +1354,10 @@ static void test_pmic_powerSetPowerResourceConfig_vmonEn_enable(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.vmonEn, powerCfg_rd.vmonEn);
     }
+
+    pmic_testResultUpdate_pass(7137,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1431,6 +1464,9 @@ static void test_pmic_powerSetPowerResourceConfig_vmonEn_disable(void)
         TEST_ASSERT_EQUAL(pPowerCfg.vmonEn, powerCfg_rd.vmonEn);
     }
 
+    pmic_testResultUpdate_pass(7138,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1465,6 +1501,9 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_vmonEn(void)
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
+    pmic_testResultUpdate_pass(7139,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1517,6 +1556,9 @@ static void test_pmic_powerSetPowerResourceConfig_buckVoutSel_vout1(void)
         TEST_ASSERT_EQUAL(pPowerCfg.buckVoutSel, powerCfg_rd.buckVoutSel);
     }
 
+    pmic_testResultUpdate_pass(7143,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1601,6 +1643,10 @@ static void test_pmic_powerSetPowerResourceConfig_buckVoutSel_vout2(void)
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
         TEST_ASSERT_EQUAL(pPowerCfg.buckVoutSel, powerCfg_rd.buckVoutSel);
     }
+
+    pmic_testResultUpdate_pass(7144,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1634,6 +1680,9 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_buckVoutSel(
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
+    pmic_testResultUpdate_pass(7145,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1686,6 +1735,9 @@ static void test_pmic_powerSetPowerResourceConfig_buckFpwmMode_auto(void)
         TEST_ASSERT_EQUAL(pPowerCfg.buckFpwmMode, powerCfg_rd.buckFpwmMode);
     }
 
+    pmic_testResultUpdate_pass(7146,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1738,6 +1790,9 @@ static void test_pmic_powerSetPowerResourceConfig_buckFpwmMode_pwm(void)
         TEST_ASSERT_EQUAL(pPowerCfg.buckFpwmMode, powerCfg_rd.buckFpwmMode);
     }
 
+    pmic_testResultUpdate_pass(7147,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1771,6 +1826,9 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_buckFpwmMode
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
+    pmic_testResultUpdate_pass(7148,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1830,6 +1888,9 @@ static void test_pmic_powerSetPowerResourceConfig_buckFpwmMpMode_multiPhase(void
         TEST_ASSERT_EQUAL(pPowerCfg.buckFpwmMpMode, powerCfg_rd.buckFpwmMpMode);
     }
 
+    pmic_testResultUpdate_pass(7149,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1889,6 +1950,9 @@ static void test_pmic_powerSetPowerResourceConfig_buckFpwmMpMode_auto(void)
         TEST_ASSERT_EQUAL(pPowerCfg.buckFpwmMpMode, powerCfg_rd.buckFpwmMpMode);
     }
 
+    pmic_testResultUpdate_pass(7150,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1922,6 +1986,9 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_buckFpwmMpMo
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
+    pmic_testResultUpdate_pass(7151,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1948,7 +2015,9 @@ static void test_pmic_powerSetPowerResourceConfig_regulatorEn_disable(void)
     /* 7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7152,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if((PMIC_DEV_LEO_TPS6594X  == pPmicCoreHandle->pmicDeviceType) &&
@@ -1972,6 +2041,9 @@ static void test_pmic_powerSetPowerResourceConfig_regulatorEn_disable(void)
 
     }
 
+    pmic_testResultUpdate_pass(7152,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -1998,7 +2070,9 @@ static void test_pmic_powerSetPowerResourceConfig_regulatorEn_enable(void)
     /* 7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7153,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if((PMIC_DEV_LEO_TPS6594X  == pPmicCoreHandle->pmicDeviceType) &&
@@ -2020,6 +2094,9 @@ static void test_pmic_powerSetPowerResourceConfig_regulatorEn_enable(void)
         TEST_ASSERT_EQUAL(pPowerCfg.regulatorEn, powerCfg_rd.regulatorEn);
     }
 
+    pmic_testResultUpdate_pass(7153,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2053,6 +2130,9 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_regulatorEn(
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
+    pmic_testResultUpdate_pass(7154,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2079,7 +2159,9 @@ static void test_pmic_powerSetPowerResourceConfig_buckCurrentLimit_6A5(void)
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         /* Current limit 6.5 is not supported by LEO pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7155,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -2103,6 +2185,10 @@ static void test_pmic_powerSetPowerResourceConfig_buckCurrentLimit_6A5(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.buckCurrentLimit, powerCfg_rd.buckCurrentLimit);
     }
+
+    pmic_testResultUpdate_pass(7155,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2154,6 +2240,10 @@ static void test_pmic_powerSetPowerResourceConfig_buckCurrentLimit_5A5(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.buckCurrentLimit, powerCfg_rd.buckCurrentLimit);
     }
+
+    pmic_testResultUpdate_pass(7156,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2205,6 +2295,10 @@ static void test_pmic_powerSetPowerResourceConfig_buckCurrentLimit_4A5(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.buckCurrentLimit, powerCfg_rd.buckCurrentLimit);
     }
+
+    pmic_testResultUpdate_pass(7157,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2256,6 +2350,10 @@ static void test_pmic_powerSetPowerResourceConfig_buckCurrentLimit_3A5(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.buckCurrentLimit, powerCfg_rd.buckCurrentLimit);
     }
+
+    pmic_testResultUpdate_pass(7158,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2307,6 +2405,10 @@ static void test_pmic_powerSetPowerResourceConfig_buckCurrentLimit_2A5(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.buckCurrentLimit, powerCfg_rd.buckCurrentLimit);
     }
+
+    pmic_testResultUpdate_pass(7159,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2339,6 +2441,10 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_buckCurrentL
                                              pwrRsrc,
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(7160,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2384,6 +2490,10 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_buckCurrentLimit(v
                                                  pPowerCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
     }
+
+    pmic_testResultUpdate_pass(7161,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2459,6 +2569,9 @@ static void test_pmic_powerSetPowerResourceConfig_buckVmonSlewRate_33MV(void)
         }
     }
 
+    pmic_testResultUpdate_pass(7162,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2534,6 +2647,9 @@ static void test_pmic_powerSetPowerResourceConfig_buckVmonSlewRate_20MV(void)
         }
     }
 
+    pmic_testResultUpdate_pass(7163,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2609,6 +2725,9 @@ static void test_pmic_powerSetPowerResourceConfig_buckVmonSlewRate_10MV(void)
         }
     }
 
+    pmic_testResultUpdate_pass(7164,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2684,6 +2803,9 @@ static void test_pmic_powerSetPowerResourceConfig_buckVmonSlewRate_05MV(void)
         }
     }
 
+    pmic_testResultUpdate_pass(7165,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2759,6 +2881,9 @@ static void test_pmic_powerSetPowerResourceConfig_buckVmonSlewRate_2MV5(void)
         }
     }
 
+    pmic_testResultUpdate_pass(7166,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2834,6 +2959,9 @@ static void test_pmic_powerSetPowerResourceConfig_buckVmonSlewRate_1MV3(void)
         }
     }
 
+    pmic_testResultUpdate_pass(7167,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2909,6 +3037,9 @@ static void test_pmic_powerSetPowerResourceConfig_buckVmonSlewRate_0MV63(void)
         }
     }
 
+    pmic_testResultUpdate_pass(7168,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -2984,6 +3115,9 @@ static void test_pmic_powerSetPowerResourceConfig_buckVmonSlewRate_0MV31(void)
         }
     }
 
+    pmic_testResultUpdate_pass(7169,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3017,6 +3151,9 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_buckVmonSlew
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
+    pmic_testResultUpdate_pass(7170,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3071,6 +3208,10 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_buckVmonSlewRate(v
             TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
         }
     }
+
+    pmic_testResultUpdate_pass(7171,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3097,7 +3238,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoPullDownSel_50KOHM(void)
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7172,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -3122,6 +3265,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoPullDownSel_50KOHM(void)
         TEST_ASSERT_EQUAL(pPowerCfg.ldoPullDownSel, powerCfg_rd.ldoPullDownSel);
     }
 
+    pmic_testResultUpdate_pass(7172,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3148,7 +3294,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoPullDownSel_125OHM(void)
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7173,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -3173,6 +3321,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoPullDownSel_125OHM(void)
         TEST_ASSERT_EQUAL(pPowerCfg.ldoPullDownSel, powerCfg_rd.ldoPullDownSel);
     }
 
+    pmic_testResultUpdate_pass(7173,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3199,7 +3350,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoPullDownSel_250OHM(void)
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7174,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -3224,6 +3377,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoPullDownSel_250OHM(void)
         TEST_ASSERT_EQUAL(pPowerCfg.ldoPullDownSel, powerCfg_rd.ldoPullDownSel);
     }
 
+    pmic_testResultUpdate_pass(7174,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3250,7 +3406,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoPullDownSel_500OHM(void)
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7175,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -3275,6 +3433,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoPullDownSel_500OHM(void)
         TEST_ASSERT_EQUAL(pPowerCfg.ldoPullDownSel, powerCfg_rd.ldoPullDownSel);
     }
 
+    pmic_testResultUpdate_pass(7175,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3301,12 +3462,16 @@ static void test_pmic_powerSetPowerResourceConfig_ldoSlowRampEn_enable(void)
     /* 7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7176,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7176,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -3319,7 +3484,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoSlowRampEn_enable(void)
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7176,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
@@ -3336,6 +3503,10 @@ static void test_pmic_powerSetPowerResourceConfig_ldoSlowRampEn_enable(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.ldoSlowRampEn, powerCfg_rd.ldoSlowRampEn);
     }
+
+    pmic_testResultUpdate_pass(7176,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3369,7 +3540,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoSlowRampEn_disable(void)
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7177,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
@@ -3387,6 +3560,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoSlowRampEn_disable(void)
         TEST_ASSERT_EQUAL(pPowerCfg.ldoSlowRampEn, powerCfg_rd.ldoSlowRampEn);
     }
 
+    pmic_testResultUpdate_pass(7177,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3414,7 +3590,9 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_ldoPullDownS
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7178,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
@@ -3422,6 +3600,9 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_ldoPullDownS
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
+    pmic_testResultUpdate_pass(7178,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3452,7 +3633,9 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_ldoPullDownSel(voi
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7179,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
@@ -3463,6 +3646,10 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_ldoPullDownSel(voi
         TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
     }
+
+    pmic_testResultUpdate_pass(7179,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3489,7 +3676,9 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_ldoSlowRampE
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7180,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
@@ -3497,6 +3686,9 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_ldoSlowRampE
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
+    pmic_testResultUpdate_pass(7180,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3633,6 +3825,9 @@ static void test_pmic_powerSetPowerResourceConfig_voltage_mV(void)
         pmic_log("passed for %dmv \n", pPowerCfg.voltage_mV);
     }
 
+    pmic_testResultUpdate_pass(7181,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3667,6 +3862,9 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_voltage_mV(v
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
+    pmic_testResultUpdate_pass(7182,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3723,6 +3921,10 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_voltage_mV(void)
                                                  pPowerCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
     }
+
+    pmic_testResultUpdate_pass(7183,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3768,6 +3970,9 @@ static void test_pmic_powerSetPowerResourceConfig_vccaPwrGudLvl_5V(void)
 
     TEST_ASSERT_EQUAL(pPowerCfg.vccaPwrGudLvl, powerCfg_rd.vccaPwrGudLvl);
 
+    pmic_testResultUpdate_pass(7184,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3813,6 +4018,9 @@ static void test_pmic_powerSetPowerResourceConfig_vccaPwrGudLvl_3V3(void)
 
     TEST_ASSERT_EQUAL(pPowerCfg.vccaPwrGudLvl, powerCfg_rd.vccaPwrGudLvl);
 
+    pmic_testResultUpdate_pass(7185,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -3847,6 +4055,9 @@ static void test_pmic_powerSetPowerResourceConfig_vccaPwrGudLvl_3V3(void)
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
+    pmic_testResultUpdate_pass(7186,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -4008,6 +4219,10 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_none(void)
 
         }
     }
+
+    pmic_testResultUpdate_pass(7187,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -4037,7 +4252,9 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_mcu(void)
         * Once the PFSM is in operation, user should not change rail grp
         * setting as this may compromise the system’s functional safety design
         */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7188,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -4046,7 +4263,9 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_mcu(void)
         * Once the PFSM is in operation, user should not change rail grp
         * setting as this may compromise the system’s functional safety design
         */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7188,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -4173,6 +4392,10 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_mcu(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.railGrpSel, powerCfg_rd.railGrpSel);
     }
+
+    pmic_testResultUpdate_pass(7188,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -4202,7 +4425,9 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_soc(void)
          * Once the PFSM is in operation, user should not change rail grp
          * setting as this may compromise the system’s functional safety design
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7189,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -4211,7 +4436,9 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_soc(void)
          * Once the PFSM is in operation, user should not change rail grp
          * setting as this may compromise the system’s functional safety design
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7189,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -4338,6 +4565,10 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_soc(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.railGrpSel, powerCfg_rd.railGrpSel);
     }
+
+    pmic_testResultUpdate_pass(7189,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -4367,7 +4598,9 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_other(void)
          * Once the PFSM is in operation, user should not change rail grp
          * setting as this may compromise the system’s functional safety design
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7190,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -4376,7 +4609,9 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_other(void)
          * Once the PFSM is in operation, user should not change rail grp
          * setting as this may compromise the system’s functional safety design
          */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7190,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -4501,6 +4736,10 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_other(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.railGrpSel, powerCfg_rd.railGrpSel);
     }
+
+    pmic_testResultUpdate_pass(7190,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -4535,6 +4774,9 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_railGrpSel(v
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
+    pmic_testResultUpdate_pass(7191,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -4586,7 +4828,9 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_railGrpSel(void)
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7192,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
@@ -4596,6 +4840,10 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_railGrpSel(void)
                                                  pPowerCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
     }
+
+    pmic_testResultUpdate_pass(7192,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -4623,13 +4871,17 @@ static void test_pmic_powerSetPowerResourceConfig_ldoBypassModeEn_bypass(void)
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         /*  Setting LDOs in bypass mode - Resulted in DDR issue */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7198,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /*  Setting LDOs in bypass mode - Resulted in DDR issue */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7198,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -4641,7 +4893,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoBypassModeEn_bypass(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7198,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
@@ -4678,6 +4932,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoBypassModeEn_bypass(void)
         TEST_ASSERT_EQUAL(pPowerCfg.ldoBypassModeEn, powerCfg_rd.ldoBypassModeEn);
         }
 
+    pmic_testResultUpdate_pass(7198,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -4704,12 +4961,16 @@ static void test_pmic_powerSetPowerResourceConfig_ldoBypassModeEn_linear(void)
     /* 7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7199,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7199,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -4721,7 +4982,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoBypassModeEn_linear(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7199,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
@@ -4738,6 +5001,10 @@ static void test_pmic_powerSetPowerResourceConfig_ldoBypassModeEn_linear(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.ldoBypassModeEn, powerCfg_rd.ldoBypassModeEn);
     }
+
+    pmic_testResultUpdate_pass(7199,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -4772,6 +5039,9 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_ldoBypassMod
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
+    pmic_testResultUpdate_pass(7200,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -4805,7 +5075,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_0MS5(void)
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7201,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
@@ -4822,6 +5094,10 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_0MS5(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.ldoRvTimeoutSel, powerCfg_rd.ldoRvTimeoutSel);
     }
+
+    pmic_testResultUpdate_pass(7201,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -4855,7 +5131,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_1MS(void)
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7202,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
@@ -4872,6 +5150,10 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_1MS(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.ldoRvTimeoutSel, powerCfg_rd.ldoRvTimeoutSel);
     }
+
+    pmic_testResultUpdate_pass(7202,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -4905,7 +5187,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_1MS5(void)
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7203,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
@@ -4922,6 +5206,10 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_1MS5(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.ldoRvTimeoutSel, powerCfg_rd.ldoRvTimeoutSel);
     }
+
+    pmic_testResultUpdate_pass(7203,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -4955,7 +5243,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_2MS(void)
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7204,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
@@ -4972,6 +5262,10 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_2MS(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.ldoRvTimeoutSel, powerCfg_rd.ldoRvTimeoutSel);
     }
+
+    pmic_testResultUpdate_pass(7204,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5005,7 +5299,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_2MS5(void)
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7205,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
@@ -5022,6 +5318,10 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_2MS5(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.ldoRvTimeoutSel, powerCfg_rd.ldoRvTimeoutSel);
     }
+
+    pmic_testResultUpdate_pass(7205,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5055,7 +5355,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_3MS(void)
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7206,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
@@ -5072,6 +5374,10 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_3MS(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.ldoRvTimeoutSel, powerCfg_rd.ldoRvTimeoutSel);
     }
+
+    pmic_testResultUpdate_pass(7206,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5105,7 +5411,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_3MS5(void)
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7207,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
@@ -5122,6 +5430,10 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_3MS5(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.ldoRvTimeoutSel, powerCfg_rd.ldoRvTimeoutSel);
     }
+
+    pmic_testResultUpdate_pass(7207,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5155,7 +5467,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_4MS(void)
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7208,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
@@ -5172,6 +5486,10 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_4MS(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.ldoRvTimeoutSel, powerCfg_rd.ldoRvTimeoutSel);
     }
+
+    pmic_testResultUpdate_pass(7208,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5205,7 +5523,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_6MS(void)
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7209,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
@@ -5222,6 +5542,10 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_6MS(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.ldoRvTimeoutSel, powerCfg_rd.ldoRvTimeoutSel);
     }
+
+    pmic_testResultUpdate_pass(7209,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5255,7 +5579,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_8MS(void)
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7210,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
@@ -5272,6 +5598,10 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_8MS(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.ldoRvTimeoutSel, powerCfg_rd.ldoRvTimeoutSel);
     }
+
+    pmic_testResultUpdate_pass(7210,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5305,7 +5635,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_10MS(void)
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7211,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
@@ -5322,6 +5654,10 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_10MS(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.ldoRvTimeoutSel, powerCfg_rd.ldoRvTimeoutSel);
     }
+
+    pmic_testResultUpdate_pass(7211,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5355,7 +5691,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_12MS(void)
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7212,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
@@ -5372,6 +5710,10 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_12MS(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.ldoRvTimeoutSel, powerCfg_rd.ldoRvTimeoutSel);
     }
+
+    pmic_testResultUpdate_pass(7212,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5405,7 +5747,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_14MS(void)
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7213,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
@@ -5422,6 +5766,10 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_14MS(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.ldoRvTimeoutSel, powerCfg_rd.ldoRvTimeoutSel);
     }
+
+    pmic_testResultUpdate_pass(7213,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5455,7 +5803,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_16MS(void)
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7214,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
@@ -5472,6 +5822,10 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_16MS(void)
 
         TEST_ASSERT_EQUAL(pPowerCfg.ldoRvTimeoutSel, powerCfg_rd.ldoRvTimeoutSel);
     }
+
+    pmic_testResultUpdate_pass(7214,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5506,6 +5860,9 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_16MS(void)
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
+    pmic_testResultUpdate_pass(7215,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5537,7 +5894,9 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_ldoRvTimeoutSel(vo
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7216,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
@@ -5547,6 +5906,10 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_ldoRvTimeoutSel(vo
                                                  pPowerCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
     }
+
+    pmic_testResultUpdate_pass(7216,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5580,7 +5943,9 @@ static void test_pmic_powerSetPowerResourceConfig_vmonRange_range1(void)
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         /* VMON1 and VMON2 are not present in LEO pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7217,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
@@ -5598,6 +5963,9 @@ static void test_pmic_powerSetPowerResourceConfig_vmonRange_range1(void)
         TEST_ASSERT_EQUAL(pPowerCfg.ldoPullDownSel, powerCfg_rd.ldoPullDownSel);
     }
 
+    pmic_testResultUpdate_pass(7217,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5631,7 +5999,9 @@ static void test_pmic_powerSetPowerResourceConfig_vmonRange_range2(void)
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         /* VMON1 and VMON2 are not present in LEO pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7218,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
@@ -5649,6 +6019,9 @@ static void test_pmic_powerSetPowerResourceConfig_vmonRange_range2(void)
         TEST_ASSERT_EQUAL(pPowerCfg.ldoPullDownSel, powerCfg_rd.ldoPullDownSel);
     }
 
+    pmic_testResultUpdate_pass(7218,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 /*!
  * \brief   Pmic_powerSetPwrResourceCfg : Parameter validation for Power Resource for vmonRange.
@@ -5675,13 +6048,19 @@ static void test_pmic_powerSetPowerResourceConfig_vmonRange_range2(void)
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         /* VMON1 and VMON2 are not present in LEO pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7219,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
                                              pwrRsrc,
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(7219,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5698,6 +6077,10 @@ static void test_pmic_powerGetPowerResourceConfigPrmValTest_Pmic_PowerResourceCf
 
     pmicStatus = Pmic_powerGetPwrResourceCfg(pPmicCoreHandle, pwrRsrc, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(7300,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5717,6 +6100,10 @@ static void test_pmic_powerSetCommonConfigPrmValTest_handle(void)
 
     pmicStatus = Pmic_powerSetCommonConfig(NULL,  pwrCommonCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7220,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5749,6 +6136,9 @@ static void test_pmic_powerSetCommonConfig_pgoodWindow_uv(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.pgoodWindow, powerCfg_rd.pgoodWindow);
 
+    pmic_testResultUpdate_pass(7221,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5782,6 +6172,9 @@ static void test_pmic_powerSetCommonConfig_pgoodWindow_uv_ov(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.pgoodWindow, powerCfg_rd.pgoodWindow);
 
+    pmic_testResultUpdate_pass(7222,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5814,6 +6207,9 @@ static void test_pmic_powerSetCommonConfig_pgoodPolarity_high(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.pgoodPolarity, powerCfg_rd.pgoodPolarity);
 
+    pmic_testResultUpdate_pass(7223,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5847,6 +6243,9 @@ static void test_pmic_powerSetCommonConfig_pgoodPolarity_low(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.pgoodPolarity, powerCfg_rd.pgoodPolarity);
 
+    pmic_testResultUpdate_pass(7224,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5914,6 +6313,9 @@ static void test_pmic_powerSetConfigPowerGood_pgoodSelType_voltageCurrent(void)
         }
     }
 
+    pmic_testResultUpdate_pass(7252,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -5981,6 +6383,9 @@ static void test_pmic_powerSetConfigPowerGood_pgoodSelType_voltage(void)
         }
     }
 
+    pmic_testResultUpdate_pass(7253,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -6166,6 +6571,9 @@ static void test_pmic_powerSetConfigPowerGood_pgoodSelType_masked(void)
         }
     }
 
+    pmic_testResultUpdate_pass(7254,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -6205,6 +6613,10 @@ static void test_pmic_powerSetConfigPowerGood_pgoodSelType_nRSTOUT(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     TEST_ASSERT_EQUAL(pgoodSelType, pPgoodSelType_rd);
+
+    pmic_testResultUpdate_pass(7255,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -6244,6 +6656,9 @@ static void test_pmic_powerSetConfigPowerGood_pgoodSelType_nRSTOUTSoc(void)
 
     TEST_ASSERT_EQUAL(pgoodSelType, pPgoodSelType_rd);
 
+    pmic_testResultUpdate_pass(7256,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -6283,6 +6698,9 @@ static void test_pmic_powerSetConfigPowerGood_pgoodSelType_tdieWarn(void)
 
     TEST_ASSERT_EQUAL(pgoodSelType, pPgoodSelType_rd);
 
+    pmic_testResultUpdate_pass(7257,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -6322,6 +6740,9 @@ static void test_pmic_powerSetConfigPowerGood_pgoodSelType_vcca(void)
 
     TEST_ASSERT_EQUAL(pgoodSelType, pPgoodSelType_rd);
 
+    pmic_testResultUpdate_pass(7258,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -6341,7 +6762,9 @@ static void test_pmic_powerSetConfigPowerGood_pgoodSelType_vmon(void)
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         /* VMON1 and VMON2 are not present in LEO pmic */
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7259,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -6365,6 +6788,10 @@ static void test_pmic_powerSetConfigPowerGood_pgoodSelType_vmon(void)
             TEST_ASSERT_EQUAL(pgoodSelType, pPgoodSelType_rd);
         }
     }
+
+    pmic_testResultUpdate_pass(7259,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -6417,6 +6844,10 @@ static void test_pmic_powerGetPwrRsrcStat_currentLimitLvlStat(void)
             TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
         }
     }
+
+    pmic_testResultUpdate_pass(7261,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -6499,6 +6930,9 @@ static void test_pmic_powerGetPwrRsrcStat_underVoltageTholdStat(void)
         }
     }
 
+    pmic_testResultUpdate_pass(7262,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -6581,6 +7015,9 @@ static void test_pmic_powerGetPwrRsrcStat_overVoltageTholdStat(void)
         }
     }
 
+    pmic_testResultUpdate_pass(7263,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -6615,6 +7052,9 @@ static void test_pmic_powerGetPwrRsrcStat_overVoltageProtectionLvlStat(void)
                                          &pPwrRsrcStatCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
+    pmic_testResultUpdate_pass(7264,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -6655,6 +7095,9 @@ static void test_pmic_powerSetThermalConfig_thermalWarnThold_low(void)
 
     TEST_ASSERT_EQUAL(thermalThreshold.thermalWarnThold, thermalThreshold_rd.thermalWarnThold);
 
+    pmic_testResultUpdate_pass(7266,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -6695,6 +7138,9 @@ static void test_pmic_powerSetThermalConfig_thermalWarnThold_high(void)
 
     TEST_ASSERT_EQUAL(thermalThreshold.thermalWarnThold, thermalThreshold_rd.thermalWarnThold);
 
+    pmic_testResultUpdate_pass(7267,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -6719,15 +7165,17 @@ static void test_pmic_powerSetThermalConfig_thermalShutdownThold_low(void)
                                 PMIC_TPS6594X_THERMAL_TEMP_TSD_ORD_140C;
     }
 
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-    {
-        /* Thermal tempertaure 140C not supported by HERA pmic */
-        TEST_IGNORE();
-    }
-
     test_pmic_print_unity_testcase_info(7268,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        /* Thermal tempertaure 140C not supported by HERA pmic */
+        pmic_testResultUpdate_ignore(7268,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
+    }
 
     pmicStatus = Pmic_powerSetThermalConfig(pPmicCoreHandle, thermalThreshold);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -6738,6 +7186,9 @@ static void test_pmic_powerSetThermalConfig_thermalShutdownThold_low(void)
     TEST_ASSERT_EQUAL(thermalThreshold.thermalShutdownThold,
                       thermalThreshold_rd.thermalShutdownThold);
 
+    pmic_testResultUpdate_pass(7268,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -6763,7 +7214,9 @@ static void test_pmic_powerSetThermalConfig_thermalShutdownThold_high(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7269,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     test_pmic_print_unity_testcase_info(7269,
@@ -6773,12 +7226,16 @@ static void test_pmic_powerSetThermalConfig_thermalShutdownThold_high(void)
     /* 7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7269,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7269,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_powerSetThermalConfig(pPmicCoreHandle, thermalThreshold);
@@ -6790,6 +7247,9 @@ static void test_pmic_powerSetThermalConfig_thermalShutdownThold_high(void)
     TEST_ASSERT_EQUAL(thermalThreshold.thermalShutdownThold,
                       thermalThreshold_rd.thermalShutdownThold);
 
+    pmic_testResultUpdate_pass(7269,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -6884,6 +7344,9 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_enable(void)
         }
     }
 
+    pmic_testResultUpdate_pass(7271,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -6977,6 +7440,10 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_disable(void)
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
         }
     }
+
+    pmic_testResultUpdate_pass(7272,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -7071,6 +7538,9 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_enable(void)
         }
     }
 
+    pmic_testResultUpdate_pass(7273,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 /*!
  * \brief   Pmic_powerSetPwrRsrcIntr : Test Disable UV interrupt
@@ -7164,6 +7634,9 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_disable(void)
         }
     }
 
+    pmic_testResultUpdate_pass(7274,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -7228,6 +7701,9 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_enable(void)
         }
     }
 
+    pmic_testResultUpdate_pass(7275,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -7291,6 +7767,10 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_disable(void)
             TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
         }
     }
+
+    pmic_testResultUpdate_pass(7276,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -7320,6 +7800,9 @@ static void test_pmic_powerSetPwrRsrcIntr_twarn_enable(void)
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
+    pmic_testResultUpdate_pass(7280,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -7349,6 +7832,9 @@ static void test_pmic_powerSetPwrRsrcIntr_twarn_disable(void)
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
+    pmic_testResultUpdate_pass(7281,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -7378,6 +7864,9 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_enable(void)
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
+    pmic_testResultUpdate_pass(7282,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -7407,6 +7896,9 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_disable(void)
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
+    pmic_testResultUpdate_pass(7283,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -7436,6 +7928,9 @@ static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_enable(void)
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
+    pmic_testResultUpdate_pass(7284,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -7465,6 +7960,9 @@ static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_disable(void)
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
+    pmic_testResultUpdate_pass(7285,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -7494,6 +7992,9 @@ static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_enable(void)
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
+    pmic_testResultUpdate_pass(7286,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -7523,6 +8024,9 @@ static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_disable(void)
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
+    pmic_testResultUpdate_pass(7287,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -7552,6 +8056,9 @@ static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_enable(void)
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
+    pmic_testResultUpdate_pass(7288,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -7581,6 +8088,9 @@ static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_disable(void)
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
+    pmic_testResultUpdate_pass(7289,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -7610,6 +8120,9 @@ static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_enable(void)
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
+    pmic_testResultUpdate_pass(7290,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -7639,6 +8152,9 @@ static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_disable(void)
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
+    pmic_testResultUpdate_pass(7291,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -7668,6 +8184,9 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_enable(void)
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
+    pmic_testResultUpdate_pass(7292,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -7697,6 +8216,9 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_disable(void)
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
+    pmic_testResultUpdate_pass(7293,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -7726,6 +8248,9 @@ static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_enable(void)
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
+    pmic_testResultUpdate_pass(7294,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -7754,6 +8279,10 @@ static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_disable(void)
 
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(7295,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -7795,6 +8324,9 @@ static void test_pmic_powerSetCommonConfig_deglitchTimeSel_4(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.deglitchTimeSel, powerCfg_rd.deglitchTimeSel);
 
+    pmic_testResultUpdate_pass(7225,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -7820,12 +8352,16 @@ static void test_pmic_powerSetCommonConfig_deglitchTimeSel_20(void)
     /* 7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7226,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7226,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -7847,6 +8383,9 @@ static void test_pmic_powerSetCommonConfig_deglitchTimeSel_20(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.deglitchTimeSel, powerCfg_rd.deglitchTimeSel);
 
+    pmic_testResultUpdate_pass(7226,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -7879,6 +8418,9 @@ static void test_pmic_powerSetCommonConfig_severeErrorTrig_imm(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.severeErrorTrig, powerCfg_rd.severeErrorTrig);
 
+    pmic_testResultUpdate_pass(7227,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -7911,6 +8453,9 @@ static void test_pmic_powerSetCommonConfig_severeErrorTrig_odrShtDwn(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.severeErrorTrig, powerCfg_rd.severeErrorTrig);
 
+    pmic_testResultUpdate_pass(7228,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -7943,6 +8488,9 @@ static void test_pmic_powerSetCommonConfig_severeErrorTrig_McuPwrErr(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.severeErrorTrig, powerCfg_rd.severeErrorTrig);
 
+    pmic_testResultUpdate_pass(7229,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -7975,6 +8523,9 @@ static void test_pmic_powerSetCommonConfig_severeErrorTrig_SocPwrErr(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.severeErrorTrig, powerCfg_rd.severeErrorTrig);
 
+    pmic_testResultUpdate_pass(7230,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8007,6 +8558,9 @@ static void test_pmic_powerSetCommonConfig_otherRailTrig_imm(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.otherRailTrig, powerCfg_rd.otherRailTrig);
 
+    pmic_testResultUpdate_pass(7231,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8039,6 +8593,9 @@ static void test_pmic_powerSetCommonConfig_otherRailTrig_odrShtDwn(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.otherRailTrig, powerCfg_rd.otherRailTrig);
 
+    pmic_testResultUpdate_pass(7232,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8071,6 +8628,9 @@ static void test_pmic_powerSetCommonConfig_otherRailTrig_McuPwrErr(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.otherRailTrig, powerCfg_rd.otherRailTrig);
 
+    pmic_testResultUpdate_pass(7233,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8103,6 +8663,9 @@ static void test_pmic_powerSetCommonConfig_otherRailTrig_SocPwrErr(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.otherRailTrig, powerCfg_rd.otherRailTrig);
 
+    pmic_testResultUpdate_pass(7234,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8135,6 +8698,9 @@ static void test_pmic_powerSetCommonConfig_socRailTrig_imm(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.socRailTrig, powerCfg_rd.socRailTrig);
 
+    pmic_testResultUpdate_pass(7235,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8167,6 +8733,9 @@ static void test_pmic_powerSetCommonConfig_socRailTrig_odrShtDwn(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.socRailTrig, powerCfg_rd.socRailTrig);
 
+    pmic_testResultUpdate_pass(7236,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8199,6 +8768,9 @@ static void test_pmic_powerSetCommonConfig_socRailTrig_McuPwrErr(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.socRailTrig, powerCfg_rd.socRailTrig);
 
+    pmic_testResultUpdate_pass(7237,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8231,6 +8803,9 @@ static void test_pmic_powerSetCommonConfig_socRailTrig_SocPwrErr(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.socRailTrig, powerCfg_rd.socRailTrig);
 
+    pmic_testResultUpdate_pass(7238,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8263,6 +8838,9 @@ static void test_pmic_powerSetCommonConfig_mcuRailTrig_imm(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.mcuRailTrig, powerCfg_rd.mcuRailTrig);
 
+    pmic_testResultUpdate_pass(7239,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8295,6 +8873,9 @@ static void test_pmic_powerSetCommonConfig_mcuRailTrig_odrShtDwn(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.mcuRailTrig, powerCfg_rd.mcuRailTrig);
 
+    pmic_testResultUpdate_pass(7240,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8327,6 +8908,9 @@ static void test_pmic_powerSetCommonConfig_mcuRailTrig_McuPwrErr(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.mcuRailTrig, powerCfg_rd.mcuRailTrig);
 
+    pmic_testResultUpdate_pass(7241,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8359,6 +8943,9 @@ static void test_pmic_powerSetCommonConfig_mcuRailTrig_SocPwrErr(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.mcuRailTrig, powerCfg_rd.mcuRailTrig);
 
+    pmic_testResultUpdate_pass(7242,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8391,6 +8978,9 @@ static void test_pmic_powerSetCommonConfig_moderateRailTrig_imm(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.moderateRailTrig, powerCfg_rd.moderateRailTrig);
 
+    pmic_testResultUpdate_pass(7243,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8423,6 +9013,9 @@ static void test_pmic_powerSetCommonConfig_moderateRailTrig_odrShtDwn(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.moderateRailTrig, powerCfg_rd.moderateRailTrig);
 
+    pmic_testResultUpdate_pass(7244,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8455,6 +9048,9 @@ static void test_pmic_powerSetCommonConfig_moderateRailTrig_McuPwrErr(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.moderateRailTrig, powerCfg_rd.moderateRailTrig);
 
+    pmic_testResultUpdate_pass(7245,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8487,6 +9083,9 @@ static void test_pmic_powerSetCommonConfig_moderateRailTrig_SocPwrErr(void)
 
     TEST_ASSERT_EQUAL(pwrCommonCfg.moderateRailTrig, powerCfg_rd.moderateRailTrig);
 
+    pmic_testResultUpdate_pass(7246,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8509,7 +9108,9 @@ static void test_pmic_powerSetLdoRtc_ldortcEnable_enable(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7297,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_powerSetLdoRtc(pPmicCoreHandle, ldortcEnable);
@@ -8518,6 +9119,9 @@ static void test_pmic_powerSetLdoRtc_ldortcEnable_enable(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     TEST_ASSERT_EQUAL(ldortcEnable, ldortcEnable_rd);
 
+    pmic_testResultUpdate_pass(7297,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8540,7 +9144,9 @@ static void test_pmic_powerSetLdoRtc_ldortcEnable_disable(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7298,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_powerSetLdoRtc(pPmicCoreHandle, ldortcEnable);
@@ -8549,6 +9155,9 @@ static void test_pmic_powerSetLdoRtc_ldortcEnable_disable(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     TEST_ASSERT_EQUAL(ldortcEnable, ldortcEnable_rd);
 
+    pmic_testResultUpdate_pass(7298,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8583,6 +9192,10 @@ static void test_Pmic_powerSetPwrRsrcIntrPrmValTest_PwrRsrc_intrEnable(void)
                                           intrType,
                                           intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(7277,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8646,6 +9259,10 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_intrType(void)
             TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
         }
     }
+
+    pmic_testResultUpdate_pass(7278,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8668,6 +9285,10 @@ static void test_pmic_powerSetCommonConfigPrmValTest_severeErrorTrig_SocPwrErr(v
 
     pmicStatus = Pmic_powerSetCommonConfig(pPmicCoreHandle, pwrCommonCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(7247,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8690,6 +9311,10 @@ static void test_pmic_powerSetCommonConfigPrmValTest_otherRailTrig_SocPwrErr(voi
 
     pmicStatus = Pmic_powerSetCommonConfig(pPmicCoreHandle, pwrCommonCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(7248,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8712,6 +9337,10 @@ static void test_pmic_powerSetCommonConfigPrmValTest_socRailTrig_SocPwrErr(void)
 
     pmicStatus = Pmic_powerSetCommonConfig(pPmicCoreHandle, pwrCommonCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(7249,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8734,6 +9363,10 @@ static void test_pmic_powerSetCommonConfigPrmValTest_mcuRailTrig_SocPwrErr(void)
 
     pmicStatus = Pmic_powerSetCommonConfig(pPmicCoreHandle, pwrCommonCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(7250,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8757,6 +9390,9 @@ static void test_pmic_powerSetCommonConfigPrmValTest_moderateRailTrig_SocPwrErr(
     pmicStatus = Pmic_powerSetCommonConfig(pPmicCoreHandle, pwrCommonCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
+    pmic_testResultUpdate_pass(7251,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8776,6 +9412,10 @@ static void test_pmic_powerGetCommonConfigPrmValTest_handle(void)
 
     pmicStatus = Pmic_powerGetCommonConfig(NULL,  &pwrCommonCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7301,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8806,6 +9446,10 @@ static void test_pmic_powerSetConfigPowerGoodgPrmValTest_handle(void)
                                              pgoodSrcSel,
                                              pgoodSelType);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7260,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8836,6 +9480,10 @@ static void test_pmic_powerGetConfigPowerGoodPrmValTest_handle(void)
                                              pgoodSrcSel,
                                              &pgoodSelType);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7302,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8874,6 +9522,10 @@ static void test_pmic_powerGetPwrRsrcStatPrmValTest_handle(void)
                                               &pPwrRsrcStatCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
     }
+
+    pmic_testResultUpdate_pass(7265,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8905,6 +9557,10 @@ static void test_pmic_powerSetThermalConfigPrmValTest_handle(void)
 
     pmicStatus = Pmic_powerSetThermalConfig(NULL, thermalThreshold);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7270,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8936,6 +9592,10 @@ static void test_pmic_powerGetThermalConfigPrmValTest_handle(void)
 
     pmicStatus = Pmic_powerGetThermalConfig(NULL, &thermalThreshold);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7303,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -8972,6 +9632,10 @@ static void test_Pmic_powerSetPwrRsrcIntrConfigPrmValTest_handle(void)
                                           intrType,
                                           intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7279,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -9000,6 +9664,10 @@ static void test_pmic_powerSetPwrRsrcIntrPrmValTest_handle(void)
 
     pmicStatus = Pmic_powerSetIntr(NULL, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7296,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -9031,12 +9699,16 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_enabled(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB00,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB00,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -9237,6 +9909,10 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_enabled(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB00,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -9268,12 +9944,16 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_disabled(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB01,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB01,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -9489,6 +10169,10 @@ static void test_pmic_powerSetPwrRsrcIntr_ov_disabled(void)
             TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
         }
     }
+
+    pmic_testResultUpdate_pass(0xAB01,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -9520,12 +10204,16 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_enabled(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB02,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB02,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -9728,6 +10416,9 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_enabled(void)
     }
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
+    pmic_testResultUpdate_pass(0xAB02,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -9971,6 +10662,9 @@ static void test_pmic_powerSetPwrRsrcIntr_uv_disabled(void)
         }
     }
 
+    pmic_testResultUpdate_pass(0xAB03,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -10002,12 +10696,16 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_enabled(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB04,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB04,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -10120,6 +10818,9 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_enabled(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     }
 
+    pmic_testResultUpdate_pass(0xAB04,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -10151,12 +10852,16 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_disabled(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB05,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB05,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -10274,6 +10979,10 @@ static void test_pmic_powerSetPwrRsrcIntr_ilim_disabled(void)
             TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
         }
     }
+
+    pmic_testResultUpdate_pass(0xAB05,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -10303,12 +11012,16 @@ static void test_pmic_powerSetPwrRsrcIntr_twarn_enabled(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB06,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB06,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -10353,6 +11066,9 @@ static void test_pmic_powerSetPwrRsrcIntr_twarn_enabled(void)
     }
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
+    pmic_testResultUpdate_pass(0xAB06,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -10382,12 +11098,16 @@ static void test_pmic_powerSetPwrRsrcIntr_twarn_disabled(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB07,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB07,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -10435,6 +11155,10 @@ static void test_pmic_powerSetPwrRsrcIntr_twarn_disabled(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB07,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -10464,12 +11188,16 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_enabled(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB08,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB08,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -10513,6 +11241,10 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_enabled(void)
         }
     }
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB08,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -10542,12 +11274,16 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_disabled(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB09,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB09,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -10595,6 +11331,10 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_readback_disabled(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB09,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -10624,12 +11364,16 @@ static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_enabled(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB0A,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB0A,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -10675,6 +11419,9 @@ static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_enabled(void)
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
+    pmic_testResultUpdate_pass(0xAB0A,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -10704,12 +11451,16 @@ static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_disabled(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB0B,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB0B,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -10757,6 +11508,10 @@ static void test_pmic_powerSetPwrRsrcIntr_soc_pwr_err_disabled(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB0B,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -10786,12 +11541,16 @@ static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_enabled(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB0C,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB0C,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -10836,6 +11595,10 @@ static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_enabled(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB0C,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -10865,12 +11628,16 @@ static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_disabled(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB0D,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB0D,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -10919,6 +11686,9 @@ static void test_pmic_powerSetPwrRsrcIntr_mcu_pwr_err_disabled(void)
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
+    pmic_testResultUpdate_pass(0xAB0D,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -10948,12 +11718,16 @@ static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_enabled(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB0E,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB0E,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -10998,6 +11772,10 @@ static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_enabled(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB0E,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -11027,12 +11805,16 @@ static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_disabled(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB0F,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB0F,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -11080,6 +11862,10 @@ static void test_pmic_powerSetPwrRsrcIntr_ord_shutdown_disabled(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB0F,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -11109,12 +11895,16 @@ static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_enabled(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB11,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB11,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -11159,6 +11949,10 @@ static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_enabled(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB11,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -11188,12 +11982,16 @@ static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_disabled(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB12,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB12,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -11241,6 +12039,10 @@ static void test_pmic_powerSetPwrRsrcIntr_imm_shutdown_disabled(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB12,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -11270,12 +12072,16 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_enabled(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB13,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB13,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -11320,6 +12126,10 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_enabled(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB13,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -11349,12 +12159,16 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_disabled(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB14,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB14,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -11403,6 +12217,9 @@ static void test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_disabled(void)
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
+    pmic_testResultUpdate_pass(0xAB14,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -11432,12 +12249,16 @@ static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_enabled(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB15,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB15,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -11482,6 +12303,10 @@ static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_enabled(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB15,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -11511,12 +12336,16 @@ static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_disabled(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB16,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(0xAB16,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -11564,6 +12393,10 @@ static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_disabled(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB16,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -11583,6 +12416,10 @@ static void test_pmic_powerPmic_powerGetPwrThermalStatPrmValTest_handle(void)
 
     pmicStatus = Pmic_powerGetPwrThermalStat(NULL, &pPwrThermalStatCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7726,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -11598,6 +12435,10 @@ static void test_pmic_powerPmic_powerGetPwrThermalStatPrmValTest_pPwrThermalStat
 
     pmicStatus = Pmic_powerGetPwrThermalStat(pPmicCoreHandle, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(7727,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -11624,6 +12465,10 @@ static void test_pmic_powerPmic_powerGetPwrThermalStat_thermalStatus(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(7728,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -11651,6 +12496,10 @@ static void test_pmic_powerPmic_powerGetPwrThermalStat_OderlyShtDwnStatus(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(7729,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -11678,6 +12527,10 @@ static void test_pmic_powerPmic_powerGetPwrThermalStat_ImmShtDwnStatus(void)
     }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(7730,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -11705,13 +12558,19 @@ static void test_pmic_powerSetPowerResourceConfig_hera_ldo(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7872,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
                                              pwrRsrc,
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(7872,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 
 }
 
@@ -11734,7 +12593,9 @@ static void test_pmic_powerSetPowerResourceConfig_leo_vmon(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7873,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -11748,6 +12609,9 @@ static void test_pmic_powerSetPowerResourceConfig_leo_vmon(void)
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
+    pmic_testResultUpdate_pass(7873,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -11767,7 +12631,9 @@ static void test_pmic_powerSetThermalConfig_hera_thermalShutdownThold_low(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7874,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -11779,6 +12645,9 @@ static void test_pmic_powerSetThermalConfig_hera_thermalShutdownThold_low(void)
     pmicStatus = Pmic_powerSetThermalConfig(pPmicCoreHandle, thermalThreshold);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
+    pmic_testResultUpdate_pass(7874,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -11798,7 +12667,9 @@ static void test_pmic_powerSetThermalConfig_hera_thermalShutdownThold_high(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7875,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -11809,6 +12680,9 @@ static void test_pmic_powerSetThermalConfig_hera_thermalShutdownThold_high(void)
     pmicStatus = Pmic_powerSetThermalConfig(pPmicCoreHandle, thermalThreshold);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
+    pmic_testResultUpdate_pass(7875,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -11825,7 +12699,9 @@ static void test_pmic_powerSetLdoRtc_HERA_ldortcEnable_disable(void)
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        TEST_IGNORE();
+        pmic_testResultUpdate_ignore(7876,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -11836,6 +12712,9 @@ static void test_pmic_powerSetLdoRtc_HERA_ldortcEnable_disable(void)
     pmicStatus = Pmic_powerSetLdoRtc(pPmicCoreHandle, ldortcEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
+    pmic_testResultUpdate_pass(7876,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
@@ -11874,6 +12753,10 @@ static void test_pmic_powerGetPowerResourceConfig_buck5(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
     }
+
+    pmic_testResultUpdate_pass(7878,
+                               pmic_power_tests,
+                               PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
@@ -11886,6 +12769,8 @@ static void test_pmic_run_testcases(void)
 {
     pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
     UNITY_BEGIN();
+
+    pmic_testResult_init(pmic_power_tests, PMIC_POWER_NUM_OF_TESTCASES);
 
 RUN_TEST(test_pmic_powerSetPowerResourceConfigPrmValTest_handle);
 RUN_TEST(test_pmic_powerGetPowerResourceConfigPrmValTest_handle);
@@ -12103,6 +12988,8 @@ RUN_TEST(test_pmic_powerSetThermalConfig_hera_thermalShutdownThold_low);
 RUN_TEST(test_pmic_powerSetThermalConfig_hera_thermalShutdownThold_high);
 RUN_TEST(test_pmic_powerSetLdoRtc_HERA_ldortcEnable_disable);
 RUN_TEST(test_pmic_powerGetPowerResourceConfig_buck5);
+
+    pmic_printTestResult(pmic_power_tests, PMIC_POWER_NUM_OF_TESTCASES);
 
     UNITY_END();
 }
@@ -12427,9 +13314,7 @@ int main()
 {
     Board_initUART();
 
-    pmic_log("PMIC POWER Unit Test started...\n");
-
-    pmic_log("%s(): %d: %s(%s)\n", __func__, __LINE__, __TIME__, __DATE__);
+    pmic_log("PMIC Power Unity Test Application(%s %s)\n", __TIME__, __DATE__);
 
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E)             || \
