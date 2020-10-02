@@ -4458,6 +4458,18 @@ static int32_t setup_pmic_interrupt(uint32_t board)
     return status;
 }
 
+static const char pmicTestMenu[] =
+{
+    " \r\n ================================================================="
+    " \r\n Test Menu:"
+    " \r\n ================================================================="
+    " \r\n 0: Automatic run for all board specific ESM options"
+    " \r\n 1: Manual run for ESM options"
+    " \r\n 2: quit"
+    " \r\n"
+    " \r\n Enter option: "
+};
+
 static const char pmicTestAppMenu[] =
 {
     " \r\n ================================================================="
@@ -4470,7 +4482,7 @@ static const char pmicTestAppMenu[] =
     " \r\n 4: Pmic Leo device(PMIC A on J721E EVM Using SPI Stub Functions)"
     " \r\n 5: Pmic Leo device(PMIC A on J721E EVM Manual Testcase for ESM Interrupts)"
     " \r\n 6: Pmic Leo device(PMIC A on J7VCL EVM Manual Testcase for ESM Interrupts)"
-    " \r\n 7: quit"
+    " \r\n 7: Back to Test Menu"
     " \r\n"
     " \r\n Enter option: "
 };
@@ -4645,29 +4657,39 @@ static void test_pmic_run_testcases_manual(uint32_t board)
     }
 }
 
-/*!
- * \brief   Function to register ESM Unity Test App wrapper to Unity framework
- */
-static void test_pmic_esm_testapp_runner(void)
+static void test_pmic_esm_testapp_run_options(int8_t option)
 {
-    /* @description : Test runner for ESM Test App
-     *
-     * @requirements: 5833, 5846
-     *
-     * @cores       : mcu1_0, mcu1_1
-     */
-
     int8_t num = -1;
+    int8_t idx = 0;
+#if defined(SOC_J721E)
+    int8_t automatic_options[] = {0, 1, 4};
+#elif defined(SOC_J7200)
+    int8_t automatic_options[] = {2, 3};
+#endif
 
     while(1U)
     {
         pmic_log("%s", pmicTestAppMenu);
-        if(UART_scanFmt("%d", &num) != 0U)
+        if(option == PMIC_UT_AUTOMATE_OPTION)
         {
-            pmic_log("Read from UART Console failed\n");
-            return;
+            if(idx < (sizeof(automatic_options)/sizeof(automatic_options[0])))
+            {
+                num = automatic_options[idx++];
+            }
+            else
+            {
+                num = 7;
+            }
+            pmic_log("%d\n", num);
         }
-
+        else
+        {
+            if(UART_scanFmt("%d", &num) != 0U)
+            {
+                pmic_log("Read from UART Console failed\n");
+                return;
+            }
+        }
         switch(num)
         {
             case 0U:
@@ -4820,9 +4842,49 @@ static void test_pmic_esm_testapp_runner(void)
 #endif
                break;
            case 7U:
-               pmic_log(" \r\n Quit from application\n");
+               pmic_log(" \r\n Back to Test Menu options\n");
                return;
            default:
+               pmic_log(" \r\n Invalid option... Try Again!!!\n");
+               break;
+        }
+    }
+}
+
+/*!
+ * \brief   Function to register ESM Unity Test App wrapper to Unity framework
+ */
+static void test_pmic_esm_testapp_runner(void)
+{
+    /* @description : Test runner for ESM Test App
+     *
+     * @requirements: 5833, 5846
+     *
+     * @cores       : mcu1_0, mcu1_1
+     */
+    int8_t option = -1;
+
+    while(1U)
+    {
+        pmic_log("%s", pmicTestMenu);
+        if(UART_scanFmt("%d", &option) != 0U)
+        {
+            pmic_log("Read from UART Console failed\n");
+            return;
+        }
+
+        switch(option)
+        {
+            case PMIC_UT_AUTOMATE_OPTION:
+                test_pmic_esm_testapp_run_options(PMIC_UT_AUTOMATE_OPTION);
+               break;
+            case PMIC_UT_MANUAL_OPTION:
+                test_pmic_esm_testapp_run_options(PMIC_UT_MANUAL_OPTION);
+               break;
+            case 2U:
+                pmic_log(" \r\n Quit from application\n");
+                return;
+            default:
                pmic_log(" \r\n Invalid option... Try Again!!!\n");
                break;
         }

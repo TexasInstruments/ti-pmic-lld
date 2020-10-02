@@ -136,6 +136,12 @@ extern uint8_t startup_type;
 #define PMIC_UT_SUCCESS            (true)
 #define PMIC_UT_FAILURE            (false)
 
+/*!
+ * \brief   PMIC UT test Options
+ */
+#define PMIC_UT_AUTOMATE_OPTION          (0U)
+#define PMIC_UT_MANUAL_OPTION            (1U)
+
 #define pmic_log              (UART_printf)
 
 /*!
