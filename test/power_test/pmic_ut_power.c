@@ -1627,8 +1627,9 @@ static void test_pmic_powerSetPowerResourceConfig_buckVoutSel_vout2(void)
         }
 
         if((J7VCL_HERA_PMICB_DEVICE == pmic_device_info) &&
-            ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
-             (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK3)))
+            ((pwrRsrc == PMIC_LP8764X_REGULATOR_BUCK1) ||
+             (pwrRsrc == PMIC_LP8764X_REGULATOR_BUCK2) ||
+             (pwrRsrc == PMIC_LP8764X_REGULATOR_BUCK3)))
         {
             continue;
         }
@@ -3750,8 +3751,7 @@ static void test_pmic_powerSetPowerResourceConfig_voltage_mV(void)
     {
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
             (J721E_LEO_PMICA_DEVICE == pmic_device_info) &&
-            ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK1) ||
-             (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK3) ||
+            ((pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK3) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK4) ||
              (pwrRsrc == PMIC_TPS6594X_REGULATOR_LDO1)))
         {
@@ -3777,7 +3777,7 @@ static void test_pmic_powerSetPowerResourceConfig_voltage_mV(void)
                                                  pwrRsrc,
                                                  pPowerCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-        pmic_log("passed for %dmv \n", pPowerCfg.voltage_mV);
+        pmic_log("BUCK-%d: passed for %dmv \n", (pwrRsrc - pwrRsrcMin + 1), pPowerCfg.voltage_mV);
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -3822,7 +3822,14 @@ static void test_pmic_powerSetPowerResourceConfig_voltage_mV(void)
                                                  pwrRsrc,
                                                  pPowerCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-        pmic_log("passed for %dmv \n", pPowerCfg.voltage_mV);
+        if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+        {
+            pmic_log("LDO-%d: passed for %dmv \n", (pwrRsrc - pwrRsrcMin + 1), pPowerCfg.voltage_mV);
+        }
+        if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+        {
+            pmic_log("VMON-%d: passed for %dmv \n", (pwrRsrc - pwrRsrcMin + 1), pPowerCfg.voltage_mV);
+        }
     }
 
     pmic_testResultUpdate_pass(7181,

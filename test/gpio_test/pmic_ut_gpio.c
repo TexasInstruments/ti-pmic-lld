@@ -367,15 +367,15 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         "Pmic_gpioSetIntr : Test to verify GPIO7 RISE Asynchronous interrupt"
     },
     {
-        0xAB21,
+        8012,
         "Pmic_fsmSetMissionState: Test to verify CAN WKUP"
     },
     {
-        8013,
+        0xAB21,
         "Pmic_fsmSetMissionState: Test to verify GPIO WKUP1"
     },
     {
-        8014,
+        0xAB10,
         "Pmic_fsmSetMissionState: Test to verify GPIO WKUP2"
     },
     {
@@ -6388,7 +6388,7 @@ static void test_pmic_canWkup_test(void)
                                        gpioCfg);
     pmicState = PMIC_FSM_LP_STANBY_STATE;
 
-    test_pmic_print_unity_testcase_info(0xAB21,
+    test_pmic_print_unity_testcase_info(8012,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
@@ -6456,7 +6456,7 @@ static void test_pmic_gpioWkup1_test(void)
                                        gpioCfg);
     pmicState = PMIC_FSM_STANBY_STATE;
 
-    test_pmic_print_unity_testcase_info(8013,
+    test_pmic_print_unity_testcase_info(0xAB21,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
@@ -6511,7 +6511,7 @@ static void test_pmic_gpioWkup2_test(void)
                                        gpioCfg);
     pmicState = PMIC_FSM_STANBY_STATE;
 
-    test_pmic_print_unity_testcase_info(8014,
+    test_pmic_print_unity_testcase_info(0xAB10,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 

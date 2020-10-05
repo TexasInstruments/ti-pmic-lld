@@ -1759,7 +1759,7 @@ static void test_esm_setInterrupt_esmMcuFailIntr_pwmMode(void)
     {
         PMIC_ESM_CFG_DELAY1_VALID_SHIFT | PMIC_ESM_CFG_DELAY2_VALID_SHIFT | PMIC_ESM_CFG_HMAX_VALID_SHIFT | PMIC_ESM_CFG_HMIN_VALID_SHIFT | PMIC_ESM_CFG_LMAX_VALID_SHIFT | PMIC_ESM_CFG_LMIN_VALID_SHIFT | PMIC_ESM_CFG_MODE_VALID_SHIFT ,
         4096U,
-        0U,
+        2048U,
         30U,
         30U,
         30U,
