@@ -1237,6 +1237,7 @@ static void test_pmic_wdg_GetErrorStatus_prmValTest_invErrStatParam(void)
                                PMIC_WDG_NUM_OF_TESTCASES);
 }
 
+#if defined(ENABLE_SAMPLE_TESTCASES)
 /*!
  * Below test cases are not tested because of HW limitation.
  * Added below test cases as sample for reference.
@@ -1303,6 +1304,7 @@ static void test_pmic_wdg_StartTriggerSequence(void)
                                pmic_wdg_tests,
                                PMIC_WDG_NUM_OF_TESTCASES);
 }
+#endif
 
 /*!
  * \brief   Test Watchdog trigger mode Parameter validation for handle
@@ -1449,11 +1451,14 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_wdg_GetErrorStatus_prmValTest_handle);
     RUN_TEST(test_pmic_wdg_GetErrorStatus_prmValTest_invErrStatParam);
 
+#if defined(ENABLE_SAMPLE_TESTCASES)
     RUN_TEST(test_pmic_wdg_StartTriggerSequence);
+#endif
+
     RUN_TEST(test_pmic_wdg_StartTriggerSequence_prmValTest_handle);
     RUN_TEST(test_pmic_wdg_startQaSequence_prmValTest_maxCnt);
 
-    pmic_printTestResult(pmic_wdg_tests, PMIC_WDG_NUM_OF_TESTCASES);
+    pmic_updateTestResults(pmic_wdg_tests, PMIC_WDG_NUM_OF_TESTCASES);
 
     UNITY_END();
 }
@@ -1503,7 +1508,7 @@ static void test_pmic_run_slave_device_testcases(void)
     RUN_TEST(test_pmic_wdg_StartTriggerSequence_prmValTest_handle);
     RUN_TEST(test_pmic_wdg_startQaSequence_prmValTest_maxCnt);
 
-    pmic_printTestResult(pmic_wdg_tests, PMIC_WDG_NUM_OF_TESTCASES);
+    pmic_updateTestResults(pmic_wdg_tests, PMIC_WDG_NUM_OF_TESTCASES);
 
     UNITY_END();
 }
@@ -1764,6 +1769,10 @@ static void test_pmic_wdg_testapp_run_options(int8_t option)
 
     while(1U)
     {
+        if(idx >= (sizeof(automatic_options)/sizeof(automatic_options[0])))
+        {
+            pmic_printTestResult(pmic_wdg_tests, PMIC_WDG_NUM_OF_TESTCASES);
+        }
         pmic_log("%s", pmicTestAppMenu);
         if(option == PMIC_UT_AUTOMATE_OPTION)
         {
@@ -1926,7 +1935,7 @@ static void test_pmic_wdg_testapp_runner(void)
 #endif
 
 /*!
- * \brief   TI RTOS specific GPIO TEST APP main Function
+ * \brief   TI RTOS specific WDG TEST APP main Function
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values see \ref Pmic_ErrorCodes

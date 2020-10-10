@@ -38,14 +38,35 @@
  */
 
 #include <pmic_ut_common.h>
-#include <pmic_power.h>
-#include <pmic_power_tps6594x_priv.h>
-#include <pmic_power_lp8764x_priv.h>
 
 /* ========================================================================= */
 /*                             Macros & Typedefs                             */
 /* ========================================================================= */
 
+#define PMIC_TPS6594X_LDO_MAX  PMIC_TPS6594X_REGULATOR_LDO4
+#define PMIC_TPS6594X_BUCK1_4_CURRENT_LIMIT_MAX      \
+                               PMIC_TPS6594X_REGULATOR_BUCK_CURRENT_LIMIT_5A5
+#define PMIC_TPS6594X_BUCK5_CURRENT_LIMIT_MAX        \
+                               PMIC_TPS6594X_REGULATOR_BUCK_CURRENT_LIMIT_3A5
+#define PMIC_TPS6594X_BUCK_SLEW_RATE_MAX             \
+                               PMIC_TPS6594X_REGULATOR_BUCK_SLEW_RATE_0MV31
+#define PMIC_TPS6594X_REGULATOR_LDO_PLDN_VAL_MAX     \
+                               PMIC_TPS6594X_REGULATOR_LDO_PLDN_VAL_500OHM
+#define PMIC_TPS6594X_REGULATOR_LDO_MAX_VOLTAGE      (3300U)
+#define PMIC_TPS6594X_POWER_RAIL_SEL_MAX             \
+                               PMIC_TPS6594X_POWER_RAIL_SEL_OTHER
+#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_MAX   \
+                               PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_16MS
+
+#define PMIC_LP8764X_VMON_MAX  PMIC_LP8764X_POWER_SOURCE_VMON2
+#define PMIC_LP8764X_BUCK_CURRENT_LIMIT_MAX          \
+                               PMIC_LP8764X_REGULATOR_BUCK_CURRENT_LIMIT_6A5
+#define PMIC_LP8764X_BUCK_SLEW_RATE_MAX              \
+                               PMIC_LP8764X_REGULATOR_BUCK_VMON_SLEW_RATE_0MV31
+#define PMIC_LP8764X_RANGE1_VMON_MAX_VOLTAGE         (5000U)
+#define PMIC_LP8764X_BUCK_MAX  PMIC_LP8764X_REGULATOR_BUCK4
+#define PMIC_LP8764X_POWER_RAIL_SEL_MAX              \
+                               PMIC_LP8764X_POWER_RAIL_SEL_OTHER
 
 #define PMIC_POWER_NUM_OF_TESTCASES     \
         (sizeof(pmic_power_tests)/sizeof(pmic_power_tests[0]))

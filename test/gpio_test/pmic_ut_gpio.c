@@ -1350,79 +1350,6 @@ static void test_pmic_gpio_setCfgGpioPin_wdt(void)
 }
 
 /*!
- * Below test cases are not tested because of HW limitation.
- * Added below test cases as sample for reference.
- */
-
-/*!
- * \brief   configure gpio pin3 as ESM Error pin for SOC
- */
-static void test_pmic_gpio_setCfgGpioPin3_esm_soc(void)
-{
-    int32_t pmicStatus       = PMIC_ST_SUCCESS;
-    int pin                  = 3U;
-    Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
-    Pmic_GpioCfg_t gpioCfg   =
-    {
-        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_OUTPUT,
-        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
-        PMIC_GPIO_PULL_DOWN,
-        PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594X_GPIO_PINFUNC_GPIO3_NERR_SOC,
-        PMIC_GPIO_HIGH
-    };
-
-    test_pmic_print_unity_testcase_info(0xAB1E,
-                                        pmic_gpio_tests,
-                                        PMIC_GPIO_NUM_OF_TESTCASES);
-
-    if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
-    {
-        /*
-         * GPIO3 pin of PMIC-A is connected to 'EN_MCU3V3_LDSW'
-         * on J721EVM board causing hang, when programming NERR_SOC signal.
-         */
-        pmic_testResultUpdate_ignore(0xAB1E,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-
-    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
-    {
-        pmic_testResultUpdate_ignore(0xAB1E,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-
-    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
-    {
-        pmic_testResultUpdate_ignore(0xAB1E,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-    {
-        pmic_testResultUpdate_ignore(0xAB1E,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
-
-    pmic_testResultUpdate_pass(0xAB1E,
-                               pmic_gpio_tests,
-                               PMIC_GPIO_NUM_OF_TESTCASES);
-}
-
-/*!
  * \brief   configure gpio pin as ESM Error pin for MCU
  */
 static void test_pmic_gpio_setCfgGpioPin_esm_mcu(void)
@@ -3242,331 +3169,6 @@ static void test_pmic_gpio2_testRise_interrupt(void)
 }
 
 /*!
- * Below test cases are not tested because of HW limitation.
- * Added below test cases as sample for reference.
- */
-
-/*!
- * \brief   Test to verify GPIO3 fall interrupt
- */
-static void test_pmic_gpio3_testFall_interrupt(void)
-{
-    int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    int8_t timeout            = 10U;
-    uint8_t pin               = 3U;
-    uint8_t pinValue          = PMIC_GPIO_HIGH;
-    uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
-    uint8_t maskPol           = PMIC_GPIO_POL_LOW;
-    Pmic_IrqStatus_t errStat  = {0U};
-    bool clearIRQ             = false;
-    uint8_t  irqNum           = 0U;
-    uint8_t  nextedIrq        = 0U;
-    uint8_t  intMask          = 0U;
-    Pmic_GpioCfg_t gpioCfg    =
-    {
-        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_OUTPUT,
-        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
-        PMIC_GPIO_PULL_DOWN,
-        PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
-        PMIC_GPIO_HIGH
-    };
-
-    test_pmic_print_unity_testcase_info(0xAB19,
-                                        pmic_gpio_tests,
-                                        PMIC_GPIO_NUM_OF_TESTCASES);
-
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-    {
-        /* Should not break SPI Comm Lines */
-        if(PMIC_INTF_SPI == pPmicCoreHandle->commMode)
-        {
-            pmic_testResultUpdate_ignore(0xAB19,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-        }
-    }
-    if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
-    {
-        /*
-         * GPIO3 pin of PMIC-A is connected to 'EN_MCU3V3_LDSW'
-         * on J721EVM board causing hang, when programming fall interrupt.
-         */
-         pmic_testResultUpdate_ignore(0xAB19,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
-    {
-        /*
-         * GPIO3 pin of PMIC-B is connected to 'EN_DDR0V6_BUCK'
-         * on J721EVM board causing hang, when programming fall interrupt.
-         */
-        pmic_testResultUpdate_ignore(0xAB19,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-
-    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
-    {
-        pmic_testResultUpdate_ignore(0xAB19,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-    
-    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
-    {
-        gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
-                              PMIC_GPIO_CFG_DIR_VALID_SHIFT |
-                              PMIC_GPIO_CFG_OD_VALID_SHIFT |
-                              PMIC_GPIO_CFG_PULL_VALID_SHIFT;
-        gpioCfg.outputSignalType = PMIC_GPIO_PUSH_PULL_OUTPUT;
-        gpioCfg.pullCtrl = PMIC_GPIO_PULL_UP;
-        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO;
-    }
-
-    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
-    {
-        pmic_testResultUpdate_ignore(0xAB19,
-                                     pmic_gpio_tests,
-                                     PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-        intMask = PMIC_TPS6594X_IRQ_GPIO_3_INT_MASK_NUM;
-        irqNum = PMIC_TPS6594X_GPIO3_INT;
-    }
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-    {
-        intMask = PMIC_LP8764X_IRQ_GPIO_3_INT_MASK_NUM;
-        irqNum = PMIC_LP8764X_GPIO3_INT;
-    }
-    /* Un Masking GPIO 3 FALL Interrupt */
-    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
-                         intMask,
-                         PMIC_IRQ_UNMASK,
-                         PMIC_IRQ_GPIO_FALL_INT_TYPE);
-
-    /* To clear the interrupts*/
-    pmic_gpioTest_intClr();
-
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pinValue = PMIC_GPIO_LOW;
-    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    while(timeout--)
-    {
-        /* Delay added to avoid timeout */
-        Osal_delay(1000);
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
-        if((PMIC_ST_SUCCESS == pmicStatus) &&
-           ((errStat.intStatus[irqNum/32U] & (1U << (irqNum % 32U))) != 0U))
-        {
-            while(irqNum != nextedIrq)
-            {
-                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
-                                                     &errStat,
-                                                     &nextedIrq);
-            }
-
-            if(PMIC_ST_SUCCESS == pmicStatus)
-            {
-                /* clear the interrupt */
-                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
-                                                  irqNum);
-                break;
-            }
-        }
-    }
-
-    if(0 > timeout)
-    {
-        pmicStatus = PMIC_ST_ERR_FAIL;
-    }
-
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmic_testResultUpdate_pass(0xAB19,
-                               pmic_gpio_tests,
-                               PMIC_GPIO_NUM_OF_TESTCASES);
-}
-
-/*!
- * Below test cases are not tested because of HW limitation.
- * Added below test cases as sample for reference.
- */
-
-/*!
- * \brief   Test to verify GPIO3 rise interrupt
- */
-static void test_pmic_gpio3_testRise_interrupt(void)
-{
-    int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    int8_t timeout            = 10U;
-    uint8_t pin               = 3U;
-    uint8_t pinValue          = PMIC_GPIO_LOW;
-    uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
-    uint8_t maskPol           = PMIC_GPIO_POL_HIGH;
-    Pmic_IrqStatus_t errStat  = {0U};
-    bool clearIRQ             = false;
-    uint8_t  irqNum           = 0U;
-    uint8_t  nextedIrq        = 0U;
-    uint8_t  intMask          = 0U;
-    Pmic_GpioCfg_t gpioCfg    =
-    {
-        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_OUTPUT,
-        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
-        PMIC_GPIO_PULL_DOWN,
-        PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
-        PMIC_GPIO_HIGH
-    };
-
-    test_pmic_print_unity_testcase_info(0xAB18,
-                                        pmic_gpio_tests,
-                                        PMIC_GPIO_NUM_OF_TESTCASES);
-
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-    {
-        /* Should not break SPI Comm Lines */
-        if(PMIC_INTF_SPI == pPmicCoreHandle->commMode)
-        {
-            pmic_testResultUpdate_ignore(0xAB18,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-        }
-    }
-    if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
-    {
-        /*
-         * GPIO3 pin of PMIC-A is connected to 'EN_MCU3V3_LDSW'
-         * on J721EVM board causing hang, when programming rise interrupt.
-         */
-         pmic_testResultUpdate_ignore(0xAB18,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-    
-    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
-    {
-        /*
-         * GPIO3 pin of PMIC-B is connected to 'EN_DDR0V6_BUCK'
-         * on J721EVM board causing hang, when programming rise interrupt.
-         */
-        pmic_testResultUpdate_ignore(0xAB18,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-
-    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
-    {
-        pmic_testResultUpdate_ignore(0xAB18,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-
-    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
-    {
-        gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
-                              PMIC_GPIO_CFG_DIR_VALID_SHIFT |
-                              PMIC_GPIO_CFG_OD_VALID_SHIFT |
-                              PMIC_GPIO_CFG_PULL_VALID_SHIFT;
-        gpioCfg.outputSignalType = PMIC_GPIO_PUSH_PULL_OUTPUT;
-        gpioCfg.pullCtrl = PMIC_GPIO_PULL_UP;
-        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO;
-    }
-
-    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
-    {
-        pmic_testResultUpdate_ignore(0xAB18,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-        intMask = PMIC_TPS6594X_IRQ_GPIO_3_INT_MASK_NUM;
-        irqNum = PMIC_TPS6594X_GPIO3_INT;
-    }
-    
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-    {
-        intMask = PMIC_LP8764X_IRQ_GPIO_3_INT_MASK_NUM;
-        irqNum = PMIC_LP8764X_GPIO3_INT;
-    }
-    
-    /* Un Masking GPIO 3 RISE Interrupt */
-    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
-                         intMask,
-                         PMIC_IRQ_UNMASK,
-                         PMIC_IRQ_GPIO_RISE_INT_TYPE);
-
-    /* To clear the interrupts*/
-    pmic_gpioTest_intClr();
-
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pinValue = PMIC_GPIO_HIGH;
-    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    while(timeout--)
-    {
-        /* Delay added to avoid timeout */
-        Osal_delay(1000);
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
-        if((PMIC_ST_SUCCESS == pmicStatus) &&
-           ((errStat.intStatus[irqNum/32U] & (1U << (irqNum % 32U))) != 0U))
-        {
-            while(irqNum != nextedIrq)
-            {
-                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
-                                                     &errStat,
-                                                     &nextedIrq);
-            }
-
-            if(PMIC_ST_SUCCESS == pmicStatus)
-            {
-                /* clear the interrupt */
-                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
-                                                  irqNum);
-                break;
-            }
-        }
-    }
-
-    if(0 > timeout)
-    {
-        pmicStatus = PMIC_ST_ERR_FAIL;
-    }
-
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmic_testResultUpdate_pass(0xAB18,
-                               pmic_gpio_tests,
-                               PMIC_GPIO_NUM_OF_TESTCASES);
-}
-
-/*!
  * \brief   Test to verify GPIO4 fall interrupt
  */
 static void test_pmic_gpio4_testFall_interrupt(void)
@@ -3631,7 +3233,7 @@ static void test_pmic_gpio4_testFall_interrupt(void)
         intMask = PMIC_TPS6594X_IRQ_GPIO_4_INT_MASK_NUM;
         irqNum = PMIC_TPS6594X_GPIO4_INT;
     }
-    
+
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         intMask = PMIC_LP8764X_IRQ_GPIO_4_INT_MASK_NUM;
@@ -3892,7 +3494,7 @@ static void test_pmic_gpio5_testFall_interrupt(void)
         intMask = PMIC_TPS6594X_IRQ_GPIO_5_INT_MASK_NUM;
         irqNum = PMIC_TPS6594X_GPIO5_INT;
     }
-    
+
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         intMask = PMIC_LP8764X_IRQ_GPIO_5_INT_MASK_NUM;
@@ -4023,7 +3625,7 @@ static void test_pmic_gpio5_testRise_interrupt(void)
         intMask = PMIC_TPS6594X_IRQ_GPIO_5_INT_MASK_NUM;
         irqNum = PMIC_TPS6594X_GPIO5_INT;
     }
-    
+
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         intMask = PMIC_LP8764X_IRQ_GPIO_5_INT_MASK_NUM;
@@ -4826,7 +4428,7 @@ static void test_pmic_gpio8_testRise_interrupt(void)
         intMask = PMIC_TPS6594X_IRQ_GPIO_8_INT_MASK_NUM;
         irqNum = PMIC_TPS6594X_GPIO8_INT;
     }
-    
+
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         intMask = PMIC_LP8764X_IRQ_GPIO_8_INT_MASK_NUM;
@@ -4887,312 +4489,6 @@ static void test_pmic_gpio8_testRise_interrupt(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmic_testResultUpdate_pass(6249,
-                               pmic_gpio_tests,
-                               PMIC_GPIO_NUM_OF_TESTCASES);
-}
-
-/*!
- * Below test cases are not tested because of HW limitation.
- * Added below test cases as sample for reference.
- */
-
-/*!
- * \brief   Test to verify GPIO9 fall interrupt
- */
-static void test_pmic_gpio9_testFall_interrupt(void)
-{
-    int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    int8_t timeout            = 10U;
-    uint8_t pin               = 9U;
-    uint8_t pinValue          = PMIC_GPIO_HIGH;
-    uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
-    uint8_t maskPol           = PMIC_GPIO_POL_LOW;
-    Pmic_IrqStatus_t errStat  = {0U};
-    bool clearIRQ             = false;
-    uint8_t  irqNum           = 0U;
-    uint8_t  nextedIrq        = 0U;
-    uint8_t  intMask          = 0U;
-    Pmic_GpioCfg_t gpioCfg    =
-    {
-        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_OUTPUT,
-        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
-        PMIC_GPIO_PULL_DOWN,
-        PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
-        PMIC_GPIO_HIGH
-    };
-
-    test_pmic_print_unity_testcase_info(0xAB1D,
-                                        pmic_gpio_tests,
-                                        PMIC_GPIO_NUM_OF_TESTCASES);
-
-    if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
-    {
-        /*
-         * GPIO9 pin of PMIC-A is connected to 'GND'
-         * on J721EVM board causing hang, when programming fall interrupt.
-         */
-        pmic_testResultUpdate_ignore(0xAB1D,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
-    {
-        /*
-         * GPIO9 pin of PMIC-B is connected to 'EN_VPP1V8_LDO'
-         * on J721EVM board causing hang, when programming fall interrupt.
-         */
-        pmic_testResultUpdate_ignore(0xAB1D,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-
-    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
-    {
-        pmic_testResultUpdate_ignore(0xAB1D,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-
-    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
-    {
-        gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
-                              PMIC_GPIO_CFG_DIR_VALID_SHIFT |
-                              PMIC_GPIO_CFG_OD_VALID_SHIFT |
-                              PMIC_GPIO_CFG_PULL_VALID_SHIFT;
-        gpioCfg.outputSignalType = PMIC_GPIO_PUSH_PULL_OUTPUT;
-        gpioCfg.pullCtrl = PMIC_GPIO_PULL_UP;
-        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO;
-    }
-
-    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
-    {
-        pmic_testResultUpdate_ignore(0xAB1D,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-        intMask = PMIC_TPS6594X_IRQ_GPIO_9_INT_MASK_NUM;
-        irqNum = PMIC_TPS6594X_GPIO9_INT;
-    }
-    
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-    {
-        intMask = PMIC_LP8764X_IRQ_GPIO_9_INT_MASK_NUM;
-        irqNum = PMIC_LP8764X_GPIO9_INT;
-    }
-    
-    /* Un Masking GPIO 9 FALL Interrupt */
-    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
-                         intMask,
-                         PMIC_IRQ_UNMASK,
-                         PMIC_IRQ_GPIO_FALL_INT_TYPE);
-
-    /* To clear the interrupts*/
-    pmic_gpioTest_intClr();
-
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pinValue = PMIC_GPIO_LOW;
-    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    while(timeout--)
-    {
-        /* Delay added to avoid timeout */
-        Osal_delay(1000);
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
-        if((PMIC_ST_SUCCESS == pmicStatus) &&
-           ((errStat.intStatus[irqNum/32U] & (1U << (irqNum % 32U))) != 0U))
-        {
-            while(irqNum != nextedIrq)
-            {
-                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
-                                                     &errStat,
-                                                     &nextedIrq);
-            }
-
-            if(PMIC_ST_SUCCESS == pmicStatus)
-            {
-                /* clear the interrupt */
-                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
-                                                  irqNum);
-                break;
-            }
-        }
-    }
-
-    if(0 > timeout)
-    {
-        pmicStatus = PMIC_ST_ERR_FAIL;
-    }
-
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmic_testResultUpdate_pass(0xAB1D,
-                               pmic_gpio_tests,
-                               PMIC_GPIO_NUM_OF_TESTCASES);
-}
-
-/*!
- * Below test cases are not tested because of HW limitation.
- * Added below test cases as sample for reference.
- */
-
-/*!
- * \brief   Test to verify GPIO9 rise interrupt
- */
-static void test_pmic_gpio9_testRise_interrupt(void)
-{
-    int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    int8_t timeout            = 10U;
-    uint8_t pin               = 9U;
-    uint8_t pinValue          = PMIC_GPIO_LOW;
-    uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
-    uint8_t maskPol           = PMIC_GPIO_POL_HIGH;
-    Pmic_IrqStatus_t errStat  = {0U};
-    bool clearIRQ             = false;
-    uint8_t  irqNum           = 0U;
-    uint8_t  nextedIrq        = 0U;
-    uint8_t  intMask          = 0U;
-    Pmic_GpioCfg_t gpioCfg    =
-    {
-        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_OUTPUT,
-        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
-        PMIC_GPIO_PULL_DOWN,
-        PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
-        PMIC_GPIO_HIGH
-    };
-
-    test_pmic_print_unity_testcase_info(0xAB1C,
-                                        pmic_gpio_tests,
-                                        PMIC_GPIO_NUM_OF_TESTCASES);
-
-    if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
-    {
-        /*
-         * GPIO9 pin of PMIC-A is connected to 'GND'
-         * on J721EVM board causing hang, when programming rise interrupt.
-         */
-        pmic_testResultUpdate_ignore(0xAB1C,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
-    {
-        /*
-         * GPIO9 pin of PMIC-B is connected to 'EN_VPP1V8_LDO'
-         * on J721EVM board causing hang, when programming rise interrupt.
-         */
-        pmic_testResultUpdate_ignore(0xAB1C,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-
-    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
-    {
-         pmic_testResultUpdate_ignore(0xAB1C,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-
-    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
-    {
-        gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
-                              PMIC_GPIO_CFG_DIR_VALID_SHIFT |
-                              PMIC_GPIO_CFG_OD_VALID_SHIFT |
-                              PMIC_GPIO_CFG_PULL_VALID_SHIFT;
-        gpioCfg.outputSignalType = PMIC_GPIO_PUSH_PULL_OUTPUT;
-        gpioCfg.pullCtrl = PMIC_GPIO_PULL_UP;
-        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO;
-    }
-
-    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
-    {
-        pmic_testResultUpdate_ignore(0xAB1C,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-        intMask = PMIC_TPS6594X_IRQ_GPIO_9_INT_MASK_NUM;
-        irqNum = PMIC_TPS6594X_GPIO9_INT;
-    }
-    
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-    {
-        intMask = PMIC_LP8764X_IRQ_GPIO_9_INT_MASK_NUM;
-        irqNum = PMIC_LP8764X_GPIO9_INT;
-    }
-    
-    /* Un Masking GPIO 9 RISE Interrupt */
-    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
-                         intMask,
-                         PMIC_IRQ_UNMASK,
-                         PMIC_IRQ_GPIO_RISE_INT_TYPE);
-
-    /* To clear the interrupts*/
-    pmic_gpioTest_intClr();
-
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pinValue = PMIC_GPIO_HIGH;
-    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    while(timeout--)
-    {
-        /* Delay added to avoid timeout */
-        Osal_delay(1000);
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
-        if((PMIC_ST_SUCCESS == pmicStatus) &&
-           ((errStat.intStatus[irqNum/32U] & (1U << (irqNum % 32U))) != 0U))
-        {
-            while(irqNum != nextedIrq)
-            {
-                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
-                                                     &errStat,
-                                                     &nextedIrq);
-            }
-
-            if(PMIC_ST_SUCCESS == pmicStatus)
-            {
-                /* clear the interrupt */
-                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
-                                                  irqNum);
-                break;
-            }
-        }
-    }
-
-    if(0 > timeout)
-    {
-        pmicStatus = PMIC_ST_ERR_FAIL;
-    }
-
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmic_testResultUpdate_pass(0xAB1C,
                                pmic_gpio_tests,
                                PMIC_GPIO_NUM_OF_TESTCASES);
 }
@@ -5272,13 +4568,13 @@ static void test_pmic_gpio10_testFall_interrupt(void)
         intMask = PMIC_TPS6594X_IRQ_GPIO_10_INT_MASK_NUM;
         irqNum = PMIC_TPS6594X_GPIO10_INT;
     }
-    
+
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         intMask = PMIC_LP8764X_IRQ_GPIO_10_INT_MASK_NUM;
         irqNum = PMIC_LP8764X_GPIO10_INT;
     }
-    
+
     /* Un Masking GPIO 10 FALL Interrupt */
     Pmic_irqGpioMaskIntr(pPmicCoreHandle,
                          intMask,
@@ -5413,13 +4709,13 @@ static void test_pmic_gpio10_testRise_interrupt(void)
         intMask = PMIC_TPS6594X_IRQ_GPIO_10_INT_MASK_NUM;
         irqNum = PMIC_TPS6594X_GPIO10_INT;
     }
-    
+
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         intMask = PMIC_LP8764X_IRQ_GPIO_10_INT_MASK_NUM;
         irqNum = PMIC_LP8764X_GPIO10_INT;
     }
-    
+
     /* Un Masking GPIO 10 RISE Interrupt */
     Pmic_irqGpioMaskIntr(pPmicCoreHandle,
                          intMask,
@@ -5475,279 +4771,6 @@ static void test_pmic_gpio10_testRise_interrupt(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmic_testResultUpdate_pass(6253,
-                               pmic_gpio_tests,
-                               PMIC_GPIO_NUM_OF_TESTCASES);
-}
-
-/*!
- * Below test cases are not tested because of HW limitation.
- * Added below test cases as sample for reference.
- */
-
-/*!
- * \brief   Test to verify GPIO11 fall interrupt
- */
-static void test_pmic_gpio11_testFall_interrupt(void)
-{
-    int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    int8_t timeout            = 10U;
-    uint8_t pin               = 11U;
-    uint8_t pinValue          = PMIC_GPIO_HIGH;
-    uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
-    uint8_t maskPol           = PMIC_GPIO_POL_LOW;
-    Pmic_IrqStatus_t errStat  = {0U};
-    bool clearIRQ             = false;
-    uint8_t  irqNum           = 0U;
-    uint8_t  nextedIrq        = 0U;
-    uint8_t  intMask          = 0U;
-    Pmic_GpioCfg_t gpioCfg    =
-    {
-        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_OUTPUT,
-        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
-        PMIC_GPIO_PULL_DOWN,
-        PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
-        PMIC_GPIO_HIGH
-    };
-
-    test_pmic_print_unity_testcase_info(0xAB1B,
-                                        pmic_gpio_tests,
-                                        PMIC_GPIO_NUM_OF_TESTCASES);
-
-    if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
-    {
-        /*
-         * GPIO11 pin of PMIC-A is connected to 'H_SOC_PORz'
-         * on J721EVM board causing hang, when programming fall interrupt.
-         */
-        pmic_testResultUpdate_ignore(0xAB1B,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
-    {
-        /*
-         * GPIO11 pin of PMIC-B is connected to 'EN_3V3IO_LDSW'
-         * on J721EVM board causing hang, when programming fall interrupt.
-         */
-        pmic_testResultUpdate_ignore(0xAB1B,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-
-    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
-    {
-         pmic_testResultUpdate_ignore(0xAB1B,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-    {
-        pmic_testResultUpdate_ignore(0xAB1B,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-        intMask = PMIC_TPS6594X_IRQ_GPIO_11_INT_MASK_NUM;
-        irqNum = PMIC_TPS6594X_GPIO11_INT;
-    }
-
-    /* Un Masking GPIO 11 FALL Interrupt */
-    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
-                         intMask,
-                         PMIC_IRQ_UNMASK,
-                         PMIC_IRQ_GPIO_FALL_INT_TYPE);
-
-    /* To clear the interrupts*/
-    pmic_gpioTest_intClr();
-
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pinValue = PMIC_GPIO_LOW;
-    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    while(timeout--)
-    {
-        /* Delay added to avoid timeout */
-        Osal_delay(1000);
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
-        if((PMIC_ST_SUCCESS == pmicStatus) &&
-           ((errStat.intStatus[irqNum/32U] & (1U << (irqNum % 32U))) != 0U))
-        {
-            while(irqNum != nextedIrq)
-            {
-                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
-                                                     &errStat,
-                                                     &nextedIrq);
-            }
-
-            if(PMIC_ST_SUCCESS == pmicStatus)
-            {
-                /* clear the interrupt */
-                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
-                                                  irqNum);
-                break;
-            }
-        }
-    }
-
-    if(0 > timeout)
-    {
-        pmicStatus = PMIC_ST_ERR_FAIL;
-    }
-
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmic_testResultUpdate_pass(0xAB1B,
-                               pmic_gpio_tests,
-                               PMIC_GPIO_NUM_OF_TESTCASES);
-}
-
-/*!
- * Below test cases are not tested because of HW limitation.
- * Added below test cases as sample for reference.
- */
-
-/*!
- * \brief   Test to verify GPIO11 rise interrupt
- */
-static void test_pmic_gpio11_testRise_interrupt(void)
-{
-    int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    int8_t timeout            = 10U;
-    uint8_t pin               = 11U;
-    uint8_t pinValue          = PMIC_GPIO_LOW;
-    uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
-    uint8_t maskPol           = PMIC_GPIO_POL_HIGH;
-    Pmic_IrqStatus_t errStat  = {0U};
-    bool clearIRQ             = false;
-    uint8_t  irqNum           = 0U;
-    uint8_t  nextedIrq        = 0U;
-    uint8_t  intMask          = 0U;
-    Pmic_GpioCfg_t gpioCfg    =
-    {
-        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_OUTPUT,
-        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
-        PMIC_GPIO_PULL_DOWN,
-        PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
-        PMIC_GPIO_HIGH
-    };
-
-    test_pmic_print_unity_testcase_info(0xAB1A,
-                                        pmic_gpio_tests,
-                                        PMIC_GPIO_NUM_OF_TESTCASES);
-
-    if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
-    {
-        /*
-         * GPIO11 pin of PMIC-A is connected to 'H_SOC_PORz'
-         * on J721EVM board causing hang, when programming rise interrupt.
-         */
-        pmic_testResultUpdate_ignore(0xAB1A,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-    
-    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
-    {
-        /*
-         * GPIO11 pin of PMIC-B is connected to 'EN_3V3IO_LDSW'
-         * on J721EVM board causing hang, when programming rise interrupt.
-         */
-        pmic_testResultUpdate_ignore(0xAB1A,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-
-    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
-    {
-         pmic_testResultUpdate_ignore(0xAB1A,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-    {
-        pmic_testResultUpdate_ignore(0xAB1A,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
-    }
-
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-        intMask = PMIC_TPS6594X_IRQ_GPIO_11_INT_MASK_NUM;
-        irqNum = PMIC_TPS6594X_GPIO11_INT;
-    }
-
-    /* Un Masking GPIO 11 RISE Interrupt */
-    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
-                         intMask,
-                         PMIC_IRQ_UNMASK,
-                         PMIC_IRQ_GPIO_RISE_INT_TYPE);
-
-    /* To clear the interrupts*/
-    pmic_gpioTest_intClr();
-
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pinValue = PMIC_GPIO_HIGH;
-    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    while(timeout--)
-    {
-        /* Delay added to avoid timeout */
-        Osal_delay(1000);
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
-        if((PMIC_ST_SUCCESS == pmicStatus) &&
-           ((errStat.intStatus[irqNum/32U] & (1U << (irqNum % 32U))) != 0U))
-        {
-            while(irqNum != nextedIrq)
-            {
-                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
-                                                     &errStat,
-                                                     &nextedIrq);
-            }
-
-            if(PMIC_ST_SUCCESS == pmicStatus)
-            {
-                /* clear the interrupt */
-                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
-                                                  irqNum);
-                break;
-            }
-        }
-    }
-
-    if(0 > timeout)
-    {
-        pmicStatus = PMIC_ST_ERR_FAIL;
-    }
-
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmic_testResultUpdate_pass(0xAB1A,
                                pmic_gpio_tests,
                                PMIC_GPIO_NUM_OF_TESTCASES);
 }
@@ -6435,6 +5458,1103 @@ static void test_pmic_canWkup_test(void)
 }
 
 /*!
+ * \brief   Test to verify clearing all Interrupts using IRQ API
+ */
+static void test_gpio4_fallInterrupt_clrAllIrqTest(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    int8_t timeout            = 10U;
+    uint8_t pin               = 4U;
+    uint8_t pinValue          = PMIC_GPIO_HIGH;
+    uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
+    uint8_t maskPol           = PMIC_GPIO_POL_LOW;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
+    uint8_t  nextedIrq        = 0U;
+    uint8_t  intMask          = 0U;
+    Pmic_GpioCfg_t gpioCfg    =
+    {
+        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
+        PMIC_GPIO_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(8041,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    {
+        /*
+         * GPIO4 pin of PMIC-B is connected to 'H_DDR_RET_1V1'
+         * on J721EVM board causing hang, when programming fall interrupt.
+         */
+        TEST_IGNORE();
+    }
+
+    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
+    {
+        gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                              PMIC_GPIO_CFG_DIR_VALID_SHIFT |
+                              PMIC_GPIO_CFG_OD_VALID_SHIFT |
+                              PMIC_GPIO_CFG_PULL_VALID_SHIFT;
+        gpioCfg.outputSignalType = PMIC_GPIO_PUSH_PULL_OUTPUT;
+        gpioCfg.pullCtrl = PMIC_GPIO_PULL_UP;
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO;
+    }
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        intMask = PMIC_TPS6594X_IRQ_GPIO_4_INT_MASK_NUM;
+        irqNum = PMIC_TPS6594X_GPIO4_INT;
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        intMask = PMIC_LP8764X_IRQ_GPIO_4_INT_MASK_NUM;
+        irqNum = PMIC_LP8764X_GPIO4_INT;
+    }
+
+    /* Un Masking GPIO 4 FALL Interrupt */
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         intMask,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_FALL_INT_TYPE);
+
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pinValue = PMIC_GPIO_LOW;
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    while(timeout--)
+    {
+        /* Delay added to avoid timeout */
+        Osal_delay(1000);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[irqNum/32U] & (1U << (irqNum % 32U))) != 0U))
+        {
+            while(irqNum != nextedIrq)
+            {
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &nextedIrq);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  irqNum);
+                break;
+            }
+        }
+    }
+
+    if(0 > timeout)
+    {
+        pmicStatus = PMIC_ST_SUCCESS;
+    }
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+}
+
+#if defined(ENABLE_SAMPLE_TESTCASES)
+/*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
+
+/*!
+ * \brief   configure gpio pin3 as ESM Error pin for SOC
+ */
+static void test_pmic_gpio_setCfgGpioPin3_esm_soc(void)
+{
+    int32_t pmicStatus       = PMIC_ST_SUCCESS;
+    int pin                  = 3U;
+    Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
+    Pmic_GpioCfg_t gpioCfg   =
+    {
+        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO3_NERR_SOC,
+        PMIC_GPIO_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(0xAB1E,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+        /*
+         * GPIO3 pin of PMIC-A is connected to 'EN_MCU3V3_LDSW'
+         * on J721EVM board causing hang, when programming NERR_SOC signal.
+         */
+        pmic_testResultUpdate_ignore(0xAB1E,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    {
+        pmic_testResultUpdate_ignore(0xAB1E,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+        pmic_testResultUpdate_ignore(0xAB1E,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(0xAB1E,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, pin, &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
+
+    pmic_testResultUpdate_pass(0xAB1E,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
+
+/*!
+ * \brief   Test to verify GPIO3 fall interrupt
+ */
+static void test_pmic_gpio3_testFall_interrupt(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    int8_t timeout            = 10U;
+    uint8_t pin               = 3U;
+    uint8_t pinValue          = PMIC_GPIO_HIGH;
+    uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
+    uint8_t maskPol           = PMIC_GPIO_POL_LOW;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
+    uint8_t  nextedIrq        = 0U;
+    uint8_t  intMask          = 0U;
+    Pmic_GpioCfg_t gpioCfg    =
+    {
+        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
+        PMIC_GPIO_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(0xAB19,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        /* Should not break SPI Comm Lines */
+        if(PMIC_INTF_SPI == pPmicCoreHandle->commMode)
+        {
+            pmic_testResultUpdate_ignore(0xAB19,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+        }
+    }
+    if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+        /*
+         * GPIO3 pin of PMIC-A is connected to 'EN_MCU3V3_LDSW'
+         * on J721EVM board causing hang, when programming fall interrupt.
+         */
+         pmic_testResultUpdate_ignore(0xAB19,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    {
+        /*
+         * GPIO3 pin of PMIC-B is connected to 'EN_DDR0V6_BUCK'
+         * on J721EVM board causing hang, when programming fall interrupt.
+         */
+        pmic_testResultUpdate_ignore(0xAB19,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+        pmic_testResultUpdate_ignore(0xAB19,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
+    {
+        gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                              PMIC_GPIO_CFG_DIR_VALID_SHIFT |
+                              PMIC_GPIO_CFG_OD_VALID_SHIFT |
+                              PMIC_GPIO_CFG_PULL_VALID_SHIFT;
+        gpioCfg.outputSignalType = PMIC_GPIO_PUSH_PULL_OUTPUT;
+        gpioCfg.pullCtrl = PMIC_GPIO_PULL_UP;
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO;
+    }
+
+    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
+    {
+        pmic_testResultUpdate_ignore(0xAB19,
+                                     pmic_gpio_tests,
+                                     PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        intMask = PMIC_TPS6594X_IRQ_GPIO_3_INT_MASK_NUM;
+        irqNum = PMIC_TPS6594X_GPIO3_INT;
+    }
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        intMask = PMIC_LP8764X_IRQ_GPIO_3_INT_MASK_NUM;
+        irqNum = PMIC_LP8764X_GPIO3_INT;
+    }
+    /* Un Masking GPIO 3 FALL Interrupt */
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         intMask,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_FALL_INT_TYPE);
+
+    /* To clear the interrupts*/
+    pmic_gpioTest_intClr();
+
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pinValue = PMIC_GPIO_LOW;
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    while(timeout--)
+    {
+        /* Delay added to avoid timeout */
+        Osal_delay(1000);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[irqNum/32U] & (1U << (irqNum % 32U))) != 0U))
+        {
+            while(irqNum != nextedIrq)
+            {
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &nextedIrq);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  irqNum);
+                break;
+            }
+        }
+    }
+
+    if(0 > timeout)
+    {
+        pmicStatus = PMIC_ST_ERR_FAIL;
+    }
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB19,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
+
+/*!
+ * \brief   Test to verify GPIO3 rise interrupt
+ */
+static void test_pmic_gpio3_testRise_interrupt(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    int8_t timeout            = 10U;
+    uint8_t pin               = 3U;
+    uint8_t pinValue          = PMIC_GPIO_LOW;
+    uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
+    uint8_t maskPol           = PMIC_GPIO_POL_HIGH;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
+    uint8_t  nextedIrq        = 0U;
+    uint8_t  intMask          = 0U;
+    Pmic_GpioCfg_t gpioCfg    =
+    {
+        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
+        PMIC_GPIO_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(0xAB18,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        /* Should not break SPI Comm Lines */
+        if(PMIC_INTF_SPI == pPmicCoreHandle->commMode)
+        {
+            pmic_testResultUpdate_ignore(0xAB18,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+        }
+    }
+    if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+        /*
+         * GPIO3 pin of PMIC-A is connected to 'EN_MCU3V3_LDSW'
+         * on J721EVM board causing hang, when programming rise interrupt.
+         */
+         pmic_testResultUpdate_ignore(0xAB18,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    {
+        /*
+         * GPIO3 pin of PMIC-B is connected to 'EN_DDR0V6_BUCK'
+         * on J721EVM board causing hang, when programming rise interrupt.
+         */
+        pmic_testResultUpdate_ignore(0xAB18,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+        pmic_testResultUpdate_ignore(0xAB18,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
+    {
+        gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                              PMIC_GPIO_CFG_DIR_VALID_SHIFT |
+                              PMIC_GPIO_CFG_OD_VALID_SHIFT |
+                              PMIC_GPIO_CFG_PULL_VALID_SHIFT;
+        gpioCfg.outputSignalType = PMIC_GPIO_PUSH_PULL_OUTPUT;
+        gpioCfg.pullCtrl = PMIC_GPIO_PULL_UP;
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO;
+    }
+
+    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
+    {
+        pmic_testResultUpdate_ignore(0xAB18,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        intMask = PMIC_TPS6594X_IRQ_GPIO_3_INT_MASK_NUM;
+        irqNum = PMIC_TPS6594X_GPIO3_INT;
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        intMask = PMIC_LP8764X_IRQ_GPIO_3_INT_MASK_NUM;
+        irqNum = PMIC_LP8764X_GPIO3_INT;
+    }
+
+    /* Un Masking GPIO 3 RISE Interrupt */
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         intMask,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_RISE_INT_TYPE);
+
+    /* To clear the interrupts*/
+    pmic_gpioTest_intClr();
+
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pinValue = PMIC_GPIO_HIGH;
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    while(timeout--)
+    {
+        /* Delay added to avoid timeout */
+        Osal_delay(1000);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[irqNum/32U] & (1U << (irqNum % 32U))) != 0U))
+        {
+            while(irqNum != nextedIrq)
+            {
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &nextedIrq);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  irqNum);
+                break;
+            }
+        }
+    }
+
+    if(0 > timeout)
+    {
+        pmicStatus = PMIC_ST_ERR_FAIL;
+    }
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB18,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
+
+/*!
+ * \brief   Test to verify GPIO9 fall interrupt
+ */
+static void test_pmic_gpio9_testFall_interrupt(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    int8_t timeout            = 10U;
+    uint8_t pin               = 9U;
+    uint8_t pinValue          = PMIC_GPIO_HIGH;
+    uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
+    uint8_t maskPol           = PMIC_GPIO_POL_LOW;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
+    uint8_t  nextedIrq        = 0U;
+    uint8_t  intMask          = 0U;
+    Pmic_GpioCfg_t gpioCfg    =
+    {
+        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
+        PMIC_GPIO_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(0xAB1D,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+        /*
+         * GPIO9 pin of PMIC-A is connected to 'GND'
+         * on J721EVM board causing hang, when programming fall interrupt.
+         */
+        pmic_testResultUpdate_ignore(0xAB1D,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    {
+        /*
+         * GPIO9 pin of PMIC-B is connected to 'EN_VPP1V8_LDO'
+         * on J721EVM board causing hang, when programming fall interrupt.
+         */
+        pmic_testResultUpdate_ignore(0xAB1D,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+        pmic_testResultUpdate_ignore(0xAB1D,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
+    {
+        gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                              PMIC_GPIO_CFG_DIR_VALID_SHIFT |
+                              PMIC_GPIO_CFG_OD_VALID_SHIFT |
+                              PMIC_GPIO_CFG_PULL_VALID_SHIFT;
+        gpioCfg.outputSignalType = PMIC_GPIO_PUSH_PULL_OUTPUT;
+        gpioCfg.pullCtrl = PMIC_GPIO_PULL_UP;
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO;
+    }
+
+    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
+    {
+        pmic_testResultUpdate_ignore(0xAB1D,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        intMask = PMIC_TPS6594X_IRQ_GPIO_9_INT_MASK_NUM;
+        irqNum = PMIC_TPS6594X_GPIO9_INT;
+    }
+    
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        intMask = PMIC_LP8764X_IRQ_GPIO_9_INT_MASK_NUM;
+        irqNum = PMIC_LP8764X_GPIO9_INT;
+    }
+
+    /* Un Masking GPIO 9 FALL Interrupt */
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         intMask,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_FALL_INT_TYPE);
+
+    /* To clear the interrupts*/
+    pmic_gpioTest_intClr();
+
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pinValue = PMIC_GPIO_LOW;
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    while(timeout--)
+    {
+        /* Delay added to avoid timeout */
+        Osal_delay(1000);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[irqNum/32U] & (1U << (irqNum % 32U))) != 0U))
+        {
+            while(irqNum != nextedIrq)
+            {
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &nextedIrq);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  irqNum);
+                break;
+            }
+        }
+    }
+
+    if(0 > timeout)
+    {
+        pmicStatus = PMIC_ST_ERR_FAIL;
+    }
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB1D,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
+
+/*!
+ * \brief   Test to verify GPIO9 rise interrupt
+ */
+static void test_pmic_gpio9_testRise_interrupt(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    int8_t timeout            = 10U;
+    uint8_t pin               = 9U;
+    uint8_t pinValue          = PMIC_GPIO_LOW;
+    uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
+    uint8_t maskPol           = PMIC_GPIO_POL_HIGH;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
+    uint8_t  nextedIrq        = 0U;
+    uint8_t  intMask          = 0U;
+    Pmic_GpioCfg_t gpioCfg    =
+    {
+        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
+        PMIC_GPIO_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(0xAB1C,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+        /*
+         * GPIO9 pin of PMIC-A is connected to 'GND'
+         * on J721EVM board causing hang, when programming rise interrupt.
+         */
+        pmic_testResultUpdate_ignore(0xAB1C,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    {
+        /*
+         * GPIO9 pin of PMIC-B is connected to 'EN_VPP1V8_LDO'
+         * on J721EVM board causing hang, when programming rise interrupt.
+         */
+        pmic_testResultUpdate_ignore(0xAB1C,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+         pmic_testResultUpdate_ignore(0xAB1C,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
+    {
+        gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                              PMIC_GPIO_CFG_DIR_VALID_SHIFT |
+                              PMIC_GPIO_CFG_OD_VALID_SHIFT |
+                              PMIC_GPIO_CFG_PULL_VALID_SHIFT;
+        gpioCfg.outputSignalType = PMIC_GPIO_PUSH_PULL_OUTPUT;
+        gpioCfg.pullCtrl = PMIC_GPIO_PULL_UP;
+        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO;
+    }
+
+    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
+    {
+        pmic_testResultUpdate_ignore(0xAB1C,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        intMask = PMIC_TPS6594X_IRQ_GPIO_9_INT_MASK_NUM;
+        irqNum = PMIC_TPS6594X_GPIO9_INT;
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        intMask = PMIC_LP8764X_IRQ_GPIO_9_INT_MASK_NUM;
+        irqNum = PMIC_LP8764X_GPIO9_INT;
+    }
+
+    /* Un Masking GPIO 9 RISE Interrupt */
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         intMask,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_RISE_INT_TYPE);
+
+    /* To clear the interrupts*/
+    pmic_gpioTest_intClr();
+
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pinValue = PMIC_GPIO_HIGH;
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    while(timeout--)
+    {
+        /* Delay added to avoid timeout */
+        Osal_delay(1000);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[irqNum/32U] & (1U << (irqNum % 32U))) != 0U))
+        {
+            while(irqNum != nextedIrq)
+            {
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &nextedIrq);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  irqNum);
+                break;
+            }
+        }
+    }
+
+    if(0 > timeout)
+    {
+        pmicStatus = PMIC_ST_ERR_FAIL;
+    }
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB1C,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
+
+/*!
+ * \brief   Test to verify GPIO11 fall interrupt
+ */
+static void test_pmic_gpio11_testFall_interrupt(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    int8_t timeout            = 10U;
+    uint8_t pin               = 11U;
+    uint8_t pinValue          = PMIC_GPIO_HIGH;
+    uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
+    uint8_t maskPol           = PMIC_GPIO_POL_LOW;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
+    uint8_t  nextedIrq        = 0U;
+    uint8_t  intMask          = 0U;
+    Pmic_GpioCfg_t gpioCfg    =
+    {
+        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
+        PMIC_GPIO_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(0xAB1B,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+        /*
+         * GPIO11 pin of PMIC-A is connected to 'H_SOC_PORz'
+         * on J721EVM board causing hang, when programming fall interrupt.
+         */
+        pmic_testResultUpdate_ignore(0xAB1B,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    {
+        /*
+         * GPIO11 pin of PMIC-B is connected to 'EN_3V3IO_LDSW'
+         * on J721EVM board causing hang, when programming fall interrupt.
+         */
+        pmic_testResultUpdate_ignore(0xAB1B,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+         pmic_testResultUpdate_ignore(0xAB1B,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(0xAB1B,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        intMask = PMIC_TPS6594X_IRQ_GPIO_11_INT_MASK_NUM;
+        irqNum = PMIC_TPS6594X_GPIO11_INT;
+    }
+
+    /* Un Masking GPIO 11 FALL Interrupt */
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         intMask,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_FALL_INT_TYPE);
+
+    /* To clear the interrupts*/
+    pmic_gpioTest_intClr();
+
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pinValue = PMIC_GPIO_LOW;
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    while(timeout--)
+    {
+        /* Delay added to avoid timeout */
+        Osal_delay(1000);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[irqNum/32U] & (1U << (irqNum % 32U))) != 0U))
+        {
+            while(irqNum != nextedIrq)
+            {
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &nextedIrq);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  irqNum);
+                break;
+            }
+        }
+    }
+
+    if(0 > timeout)
+    {
+        pmicStatus = PMIC_ST_ERR_FAIL;
+    }
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB1B,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * Below test cases are not tested because of HW limitation.
+ * Added below test cases as sample for reference.
+ */
+
+/*!
+ * \brief   Test to verify GPIO11 rise interrupt
+ */
+static void test_pmic_gpio11_testRise_interrupt(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    int8_t timeout            = 10U;
+    uint8_t pin               = 11U;
+    uint8_t pinValue          = PMIC_GPIO_LOW;
+    uint8_t intrType          = PMIC_GPIO_RISE_INTERRUPT;
+    uint8_t maskPol           = PMIC_GPIO_POL_HIGH;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
+    uint8_t  nextedIrq        = 0U;
+    uint8_t  intMask          = 0U;
+    Pmic_GpioCfg_t gpioCfg    =
+    {
+        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
+        PMIC_GPIO_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(0xAB1A,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+        /*
+         * GPIO11 pin of PMIC-A is connected to 'H_SOC_PORz'
+         * on J721EVM board causing hang, when programming rise interrupt.
+         */
+        pmic_testResultUpdate_ignore(0xAB1A,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    {
+        /*
+         * GPIO11 pin of PMIC-B is connected to 'EN_3V3IO_LDSW'
+         * on J721EVM board causing hang, when programming rise interrupt.
+         */
+        pmic_testResultUpdate_ignore(0xAB1A,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+         pmic_testResultUpdate_ignore(0xAB1A,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(0xAB1A,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        intMask = PMIC_TPS6594X_IRQ_GPIO_11_INT_MASK_NUM;
+        irqNum = PMIC_TPS6594X_GPIO11_INT;
+    }
+
+    /* Un Masking GPIO 11 RISE Interrupt */
+    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                         intMask,
+                         PMIC_IRQ_UNMASK,
+                         PMIC_IRQ_GPIO_RISE_INT_TYPE);
+
+    /* To clear the interrupts*/
+    pmic_gpioTest_intClr();
+
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pinValue = PMIC_GPIO_HIGH;
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    while(timeout--)
+    {
+        /* Delay added to avoid timeout */
+        Osal_delay(1000);
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[irqNum/32U] & (1U << (irqNum % 32U))) != 0U))
+        {
+            while(irqNum != nextedIrq)
+            {
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &nextedIrq);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                                  irqNum);
+                break;
+            }
+        }
+    }
+
+    if(0 > timeout)
+    {
+        pmicStatus = PMIC_ST_ERR_FAIL;
+    }
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(0xAB1A,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
  * Below test cases are not tested because of HW limitation.
  * Added below test cases as sample for reference.
  */
@@ -6543,126 +6663,7 @@ static void test_pmic_gpioWkup2_test(void)
     status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
-
-/*!
- * \brief   Test to verify clearing all Interrupts using IRQ API
- */
-static void test_gpio4_fallInterrupt_clrAllIrqTest(void)
-{
-    int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    int8_t timeout            = 10U;
-    uint8_t pin               = 4U;
-    uint8_t pinValue          = PMIC_GPIO_HIGH;
-    uint8_t intrType          = PMIC_GPIO_FALL_INTERRUPT;
-    uint8_t maskPol           = PMIC_GPIO_POL_LOW;
-    Pmic_IrqStatus_t errStat  = {0U};
-    bool clearIRQ             = false;
-    uint8_t  irqNum           = 0U;
-    uint8_t  nextedIrq        = 0U;
-    uint8_t  intMask          = 0U;
-    Pmic_GpioCfg_t gpioCfg    =
-    {
-        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
-        PMIC_GPIO_OUTPUT,
-        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
-        PMIC_GPIO_PULL_DOWN,
-        PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594X_GPIO_PINFUNC_GPIO,
-        PMIC_GPIO_HIGH
-    };
-
-    test_pmic_print_unity_testcase_info(8041,
-                                        pmic_gpio_tests,
-                                        PMIC_GPIO_NUM_OF_TESTCASES);
-
-    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
-    {
-        /*
-         * GPIO4 pin of PMIC-B is connected to 'H_DDR_RET_1V1'
-         * on J721EVM board causing hang, when programming fall interrupt.
-         */
-        TEST_IGNORE();
-    }
-
-    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
-    {
-        gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
-                              PMIC_GPIO_CFG_DIR_VALID_SHIFT |
-                              PMIC_GPIO_CFG_OD_VALID_SHIFT |
-                              PMIC_GPIO_CFG_PULL_VALID_SHIFT;
-        gpioCfg.outputSignalType = PMIC_GPIO_PUSH_PULL_OUTPUT;
-        gpioCfg.pullCtrl = PMIC_GPIO_PULL_UP;
-        gpioCfg.pinFunc = PMIC_LP8764X_GPIO_PINFUNC_GPIO;
-    }
-
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-        intMask = PMIC_TPS6594X_IRQ_GPIO_4_INT_MASK_NUM;
-        irqNum = PMIC_TPS6594X_GPIO4_INT;
-    }
-    
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-    {
-        intMask = PMIC_LP8764X_IRQ_GPIO_4_INT_MASK_NUM;
-        irqNum = PMIC_LP8764X_GPIO4_INT;
-    }
-
-    /* Un Masking GPIO 4 FALL Interrupt */
-    Pmic_irqGpioMaskIntr(pPmicCoreHandle,
-                         intMask,
-                         PMIC_IRQ_UNMASK,
-                         PMIC_IRQ_GPIO_FALL_INT_TYPE);
-
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    /* To clear the interrupts*/
-    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, pin , intrType, maskPol);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pinValue = PMIC_GPIO_LOW;
-    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    while(timeout--)
-    {
-        /* Delay added to avoid timeout */
-        Osal_delay(1000);
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
-        if((PMIC_ST_SUCCESS == pmicStatus) &&
-           ((errStat.intStatus[irqNum/32U] & (1U << (irqNum % 32U))) != 0U))
-        {
-            while(irqNum != nextedIrq)
-            {
-                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
-                                                     &errStat,
-                                                     &nextedIrq);
-            }
-
-            if(PMIC_ST_SUCCESS == pmicStatus)
-            {
-                /* clear the interrupt */
-                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
-                                                  irqNum);
-                break;
-            }
-        }
-    }
-
-    if(0 > timeout)
-    {
-        pmicStatus = PMIC_ST_SUCCESS;
-    }
-
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-}
-
+#endif
 
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E) || defined(SOC_J7200))
@@ -6688,7 +6689,6 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_gpio_setCfgGpioPin_spi_cs);
     RUN_TEST(test_pmic_gpio_setCfgGpioPin_spi_sdo);
     RUN_TEST(test_pmic_gpio_setCfgGpioPin_wdt);
-    RUN_TEST(test_pmic_gpio_setCfgGpioPin3_esm_soc);
     RUN_TEST(test_pmic_gpio_setCfgGpioPin_esm_mcu);
     RUN_TEST(test_pmic_gpio_setCfgGpioPin_spmi_sclk);
     RUN_TEST(test_pmic_gpio_setCfgGpioPin_spmi_sdata);
@@ -6723,8 +6723,6 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_gpio1_testRise_interrupt);
     RUN_TEST(test_pmic_gpio2_testFall_interrupt);
     RUN_TEST(test_pmic_gpio2_testRise_interrupt);
-    RUN_TEST(test_pmic_gpio3_testFall_interrupt);
-    RUN_TEST(test_pmic_gpio3_testRise_interrupt);
     RUN_TEST(test_pmic_gpio4_testFall_interrupt);
     RUN_TEST(test_pmic_gpio4_testRise_interrupt);
     RUN_TEST(test_pmic_gpio5_testFall_interrupt);
@@ -6735,12 +6733,8 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_gpio7_testRise_interrupt);
     RUN_TEST(test_pmic_gpio8_testFall_interrupt);
     RUN_TEST(test_pmic_gpio8_testRise_interrupt);
-    RUN_TEST(test_pmic_gpio9_testFall_interrupt);
-    RUN_TEST(test_pmic_gpio9_testRise_interrupt);
     RUN_TEST(test_pmic_gpio10_testFall_interrupt);
     RUN_TEST(test_pmic_gpio10_testRise_interrupt);
-    RUN_TEST(test_pmic_gpio11_testFall_interrupt);
-    RUN_TEST(test_pmic_gpio11_testRise_interrupt);
     RUN_TEST(test_pmic_gpio_intr_prmValTest_handle);
     RUN_TEST(test_pmic_gpio_intr_prmValTest_pin);
     RUN_TEST(test_pmic_gpio_intr_prmValTest_intrType);
@@ -6753,7 +6747,7 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_gpio_testTps6594xNPwronPinGetValue_hera);
     RUN_TEST(test_pmic_gpio_getCfgPrmValTest_pin_hera);
 
-    pmic_printTestResult(pmic_gpio_tests, PMIC_GPIO_NUM_OF_TESTCASES);
+    pmic_updateTestResults(pmic_gpio_tests, PMIC_GPIO_NUM_OF_TESTCASES);
 
     UNITY_END();
 }
@@ -7017,10 +7011,8 @@ static void print_pmicTestAppManualTestMenu(uint32_t board)
     pmic_log(" \r\n 0: Pmic Leo device(PMIC A on %s EVM Manual Testcase for GPIO-7 Fall Asynchronous Interrupt)", board_name);
     pmic_log(" \r\n 1: Pmic Leo device(PMIC A on %s EVM Manual Testcase for GPIO-7 Rise Asynchronous Interrupt)", board_name);
     pmic_log(" \r\n 2: Pmic Leo device(PMIC A on %s EVM Manual Testcase for CAN WKUP)", board_name);
-    pmic_log(" \r\n 3: Pmic Leo device(PMIC A on %s EVM Manual Testcase for GPIO WKUP1)", board_name);
-    pmic_log(" \r\n 4: Pmic Leo device(PMIC A on %s EVM Manual Testcase for GPIO WKUP2)", board_name);
-    pmic_log(" \r\n 5: Pmic Leo device(PMIC A on %s EVM Manual Testcase for clearing all interrupts using IRQ API)", board_name);
-    pmic_log(" \r\n 6: Back to Main Menu");
+    pmic_log(" \r\n 3: Pmic Leo device(PMIC A on %s EVM Manual Testcase for clearing all interrupts using IRQ API)", board_name);
+    pmic_log(" \r\n 4: Back to Main Menu");
     pmic_log(" \r\n");
     pmic_log(" \r\n Enter option: ");
 }
@@ -7041,7 +7033,7 @@ static void test_pmic_run_testcases_manual(uint32_t board)
             return;
         }
 
-        if(menuOption == 6)
+        if(menuOption == 4)
         {
             break;
         }   
@@ -7057,13 +7049,7 @@ static void test_pmic_run_testcases_manual(uint32_t board)
             case 2U:
                 RUN_TEST(test_pmic_canWkup_test);
                break;
-            case 3U:
-                RUN_TEST(test_pmic_gpioWkup1_test);
-               break;
-            case 4U:
-                RUN_TEST(test_pmic_gpioWkup2_test);
-                break;
-            case 5U :
+            case 3U :
                 RUN_TEST(test_gpio4_fallInterrupt_clrAllIrqTest);
                 break;
             default:
@@ -7085,6 +7071,10 @@ static void test_pmic_gpio_testapp_run_options(int8_t option)
 
     while(1U)
     {
+        if(idx >= (sizeof(automatic_options)/sizeof(automatic_options[0])))
+        {
+            pmic_printTestResult(pmic_gpio_tests, PMIC_GPIO_NUM_OF_TESTCASES);
+        }
         pmic_log("%s", pmicTestAppMenu);
         if(option == PMIC_UT_AUTOMATE_OPTION)
         {

@@ -38,9 +38,11 @@
  */
 
 #include <pmic_ut_common.h>
-#include <pmic_core_priv.h>
-#include <pmic_fsm_priv.h>
 
+/*!
+ * \brief   FSM MAX state
+ */
+#define PMIC_FSM_STATE_MAX     PMIC_FSM_S2R_STATE 
 
 /*!
  * \brief   Numbers of miscellaneous testcases

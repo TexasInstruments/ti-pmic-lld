@@ -601,7 +601,7 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_Pmic_fsmRuntimeBistRequestPrmValTest_handle);
     RUN_TEST(test_Pmic_Pmic_fsmDeviceOnRequestPrmValTest_handle);
 
-    pmic_printTestResult(pmic_fsm_tests, PMIC_FSM_NUM_OF_TESTCASES);
+    pmic_updateTestResults(pmic_fsm_tests, PMIC_FSM_NUM_OF_TESTCASES);
 
     UNITY_END();
 }
@@ -888,6 +888,10 @@ static void test_pmic_fsm_testapp_run_options(int8_t option)
 
     while(1U)
     {
+        if(idx >= (sizeof(automatic_options)/sizeof(automatic_options[0])))
+        {
+            pmic_printTestResult(pmic_fsm_tests, PMIC_FSM_NUM_OF_TESTCASES);
+        }
         pmic_log("%s", pmicTestAppMenu);
         if(option == PMIC_UT_AUTOMATE_OPTION)
         {
@@ -1067,7 +1071,7 @@ static void test_pmic_fsm_testapp_runner(void)
 #endif
 
 /*!
- * \brief   TI RTOS specific GPIO TEST APP main Function
+ * \brief   TI RTOS specific FSM TEST APP main Function
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values see \ref Pmic_ErrorCodes

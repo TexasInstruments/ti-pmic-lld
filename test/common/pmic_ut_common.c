@@ -1443,22 +1443,73 @@ void pmic_testResult_init(Pmic_Ut_Tests_t *pTest, uint32_t num_testcases)
     }
 }
 
-void pmic_printTestResult(Pmic_Ut_Tests_t *pTest, uint32_t num_testcases)
+void pmic_updateTestResults(Pmic_Ut_Tests_t *pTest, uint32_t num_testcases)
 {
     uint32_t idx = 0;
-    uint8_t testResult = 0;
-    char *result_str[3] = {"FAIL", "PASS", "IGNORE"};
-
-    pmic_log("\n\r");
 
     /* Print test Result */
     for(idx = 0; idx < num_testcases; idx++)
     {
         if(true == pTest[idx].testValid)
         {
-            testResult = pTest[idx].testResult;
-            pmic_log("|TEST RESULT|%s|%d|\n",
-                                  result_str[testResult], pTest[idx].testId);
+            if(true == pTest[idx].finalTestValid)
+            {
+                if((PMIC_TEST_RESULT_FAIL == pTest[idx].testResult) ||
+                   (PMIC_TEST_RESULT_FAIL == pTest[idx].finalTestResult))
+                {
+                    pTest[idx].finalTestResult = PMIC_TEST_RESULT_FAIL;
+                }
+                else if(PMIC_TEST_RESULT_PASS == pTest[idx].testResult)
+                {
+                    pTest[idx].finalTestResult = pTest[idx].testResult;
+                }
+            }
+            else
+            {
+                pTest[idx].finalTestValid = pTest[idx].testValid;
+                pTest[idx].finalTestResult = pTest[idx].testResult;
+            }
         }
     }
+}
+
+void pmic_printTestResult(Pmic_Ut_Tests_t *pTest, uint32_t num_testcases)
+{
+    uint32_t idx = 0;
+    uint8_t testResult = 0;
+    char *result_str[3] = {"FAIL", "PASS", "IGNORE"};
+    uint32_t testCnt = 0;
+    uint32_t failCnt = 0;
+    uint32_t IgnoreCnt = 0;
+
+    pmic_log("\n\r");
+
+    pmic_log("Test Results\n");
+    pmic_log("-----------------------\n\n");
+
+    /* Print test Result */
+    for(idx = 0; idx < num_testcases; idx++)
+    {
+        if(true == pTest[idx].finalTestValid)
+        {
+            testResult = pTest[idx].finalTestResult;
+            pmic_log("|TEST RESULT|%s|%d|\n",
+                                  result_str[testResult], pTest[idx].testId);
+            testCnt++;
+            if(PMIC_TEST_RESULT_FAIL == pTest[idx].finalTestResult)
+            {
+                failCnt++;
+            }
+            else if(PMIC_TEST_RESULT_IGNORE == pTest[idx].finalTestResult)
+            {
+                IgnoreCnt++;
+            }
+        }
+    }
+
+    pmic_log("-----------------------\n");
+    pmic_log("%d Tests %d Failures %d Ignored\n",
+                         testCnt, failCnt, IgnoreCnt);
+    pmic_log("OK\n");
+
 }

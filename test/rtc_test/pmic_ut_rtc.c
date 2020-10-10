@@ -38,7 +38,6 @@
  */
 
 #include <pmic_ut_rtc.h>
-#include <pmic_fsm.h>
 
 /* Pointer to Pmic Core Handle */
 Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
@@ -3139,7 +3138,7 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_rtc_testTimerAsyncIntr);
     RUN_TEST(test_pmic_rtc_testAlarmAsyncIntr);
 
-    pmic_printTestResult(pmic_rtc_tests, PMIC_RTC_NUM_OF_TESTCASES);
+    pmic_updateTestResults(pmic_rtc_tests, PMIC_RTC_NUM_OF_TESTCASES);
 
     UNITY_END();
 }
@@ -3167,7 +3166,7 @@ void test_pmic_hera_run_testcases(void)
     RUN_TEST(test_pmic_rtc_testGetTime_hera);
     RUN_TEST(test_pmic_rtc_testGetFreqComp_hera);
 
-    pmic_printTestResult(pmic_rtc_tests, PMIC_RTC_NUM_OF_TESTCASES);
+    pmic_updateTestResults(pmic_rtc_tests, PMIC_RTC_NUM_OF_TESTCASES);
 
     UNITY_END();
 }
@@ -3528,6 +3527,10 @@ static void test_pmic_rtc_testapp_run_options(int8_t option)
 
     while(1U)
     {
+        if(idx >= (sizeof(automatic_options)/sizeof(automatic_options[0])))
+        {
+            pmic_printTestResult(pmic_rtc_tests, PMIC_RTC_NUM_OF_TESTCASES);
+        }
         pmic_log("%s", pmicTestAppMenu);
         if(option == PMIC_UT_AUTOMATE_OPTION)
         {

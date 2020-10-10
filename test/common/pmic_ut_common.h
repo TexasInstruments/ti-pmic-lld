@@ -171,6 +171,8 @@ typedef struct Pmic_Ut_Tests_s
     char      testDesc[140U];
     uint8_t   testResult;
     bool      testValid;
+    uint8_t   finalTestResult;
+    bool      finalTestValid;
 } Pmic_Ut_Tests_t;
 
 /*!
@@ -287,6 +289,11 @@ void pmic_testResultUpdate_pass(uint32_t testId,
  * \brief   initialize test results with default values
  */
 void pmic_testResult_init(Pmic_Ut_Tests_t *pTest, uint32_t num_testcases);
+
+/*!
+ * \brief   Update final test results
+ */
+void pmic_updateTestResults(Pmic_Ut_Tests_t *pTest, uint32_t num_testcases);
 
 /*!
  * \brief   print all tests resuluts in required pattern

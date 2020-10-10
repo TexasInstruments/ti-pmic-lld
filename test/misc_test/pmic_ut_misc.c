@@ -1009,7 +1009,7 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_Pmic_getRecoveryCntPrmValTest_recovCntVal);
     RUN_TEST(test_Pmic_getBistPassInterrupt);
 
-    pmic_printTestResult(pmic_misc_tests, PMIC_MISC_NUM_OF_TESTCASES);
+    pmic_updateTestResults(pmic_misc_tests, PMIC_MISC_NUM_OF_TESTCASES);
 
     UNITY_END();
 }
@@ -1034,7 +1034,7 @@ static void test_pmic_run_slave_testcases(void)
     RUN_TEST(test_Pmic_getRecoveryCntPrmValTest_handle);
     RUN_TEST(test_Pmic_getRecoveryCntPrmValTest_recovCntVal);
 
-    pmic_printTestResult(pmic_misc_tests, PMIC_MISC_NUM_OF_TESTCASES);
+    pmic_updateTestResults(pmic_misc_tests, PMIC_MISC_NUM_OF_TESTCASES);
     UNITY_END();
 }
 
@@ -1281,6 +1281,10 @@ static void test_pmic_misc_testapp_run_options(int8_t option)
 
     while(1U)
     {
+        if(idx >= (sizeof(automatic_options)/sizeof(automatic_options[0])))
+        {
+            pmic_printTestResult(pmic_misc_tests, PMIC_MISC_NUM_OF_TESTCASES);
+        }
         pmic_log("%s", pmicTestAppMenu);
         if(option == PMIC_UT_AUTOMATE_OPTION)
         {

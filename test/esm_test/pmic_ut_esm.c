@@ -2107,6 +2107,788 @@ static void test_esm_setInterrupt_esmMcuPinIntr_pwmMode(void)
 }
 
 /*!
+ *  \brief Test to verify PMIC ESM MCU Level Mode PIN, FAIL and RST Interrupts
+ */
+static void test_esm_setInterrupt_esmMcuAllIntr_levelMode(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    bool esmType               = PMIC_ESM_MODE_MCU;
+    bool esmToggle            = PMIC_ESM_ENABLE;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
+    uint8_t pin               = 7U;
+    int8_t timeout            = 10U;
+    Pmic_EsmCfg_t esmCfg =
+    {
+        PMIC_ESM_CFG_DELAY1_VALID_SHIFT | PMIC_ESM_CFG_DELAY2_VALID_SHIFT | PMIC_ESM_CFG_MODE_VALID_SHIFT,
+        4096U,
+        2048U,
+        30U,
+        30U,
+        30U,
+        30U,
+        4U,
+        PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE,
+        PMIC_ESM_LEVEL_MODE
+    };
+
+    Pmic_EsmIntrCfg_t esmIntrCfg =
+    {
+        true,
+        true,
+        true
+    };
+
+    Pmic_GpioCfg_t gpioCfg    =
+    {
+        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO7_NERR_MCU,
+        PMIC_GPIO_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(7849,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    {
+        TEST_IGNORE();
+    }
+
+    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
+    {
+        TEST_IGNORE();
+    }
+
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmSetInterrupt(pPmicCoreHandle, esmType, esmIntrCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_STOP);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmEnable(pPmicCoreHandle, esmType, esmToggle);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_START);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    while(timeout--)
+    {
+        /* Delay added to avoid timeout */
+        Osal_delay(1000);
+
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_ESM_MCU_PIN_INT/32U] &
+            (1U << (PMIC_TPS6594X_ESM_MCU_PIN_INT % 32U))) != 0U))
+        {
+            while(PMIC_TPS6594X_ESM_MCU_PIN_INT != irqNum)
+            {
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                              PMIC_TPS6594X_ESM_MCU_PIN_INT);
+                break;
+            }
+        }
+
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_ESM_MCU_FAIL_INT/32U] &
+            (1U << (PMIC_TPS6594X_ESM_MCU_FAIL_INT % 32U))) != 0U))
+        {
+            while(PMIC_TPS6594X_ESM_MCU_FAIL_INT != irqNum)
+            {
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                              PMIC_TPS6594X_ESM_MCU_FAIL_INT);
+                break;
+            }
+        }
+
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_ESM_MCU_RST_INT/32U] &
+            (1U << (PMIC_TPS6594X_ESM_MCU_RST_INT % 32U))) != 0U))
+        {
+            while(PMIC_TPS6594X_ESM_MCU_RST_INT != irqNum)
+            {
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                              PMIC_TPS6594X_ESM_MCU_RST_INT);
+                break;
+            }
+        }
+    }
+
+    if(0 > timeout)
+    {
+        pmicStatus = PMIC_ST_ERR_FAIL;
+    }
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_STOP);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+}
+
+/*!
+ *  \brief Test to verify PMIC ESM MCU Level Mode PIN, FAIL and RST Interrupts
+ *         disabled
+ */
+static void test_esm_setInterrupt_esmMcuAllIntrDisabled_levelMode(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    bool esmType              = PMIC_ESM_MODE_MCU;
+    bool esmToggle            = PMIC_ESM_ENABLE;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t pin               = 7U;
+    int8_t timeout            = 10U;
+    Pmic_EsmCfg_t esmCfg =
+    {
+        PMIC_ESM_CFG_DELAY1_VALID_SHIFT | PMIC_ESM_CFG_DELAY2_VALID_SHIFT | PMIC_ESM_CFG_MODE_VALID_SHIFT,
+        4096U,
+        2048U,
+        30U,
+        30U,
+        30U,
+        30U,
+        4U,
+        PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE,
+        PMIC_ESM_LEVEL_MODE
+    };
+
+    Pmic_EsmIntrCfg_t esmIntrCfg =
+    {
+        false,
+        false,
+        false
+    };
+
+    Pmic_GpioCfg_t gpioCfg    =
+    {
+        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO7_NERR_MCU,
+        PMIC_GPIO_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(7850,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmSetInterrupt(pPmicCoreHandle, esmType, esmIntrCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_STOP);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmEnable(pPmicCoreHandle, esmType, esmToggle);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_START);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    while(timeout--)
+    {
+        /* Delay added to avoid timeout */
+        Osal_delay(1000);
+
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_ESM_MCU_PIN_INT/32U] &
+            (1U << (PMIC_TPS6594X_ESM_MCU_PIN_INT % 32U))) == 0U))
+        {
+            pmicStatus = PMIC_ST_SUCCESS;
+        }
+
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_ESM_MCU_FAIL_INT/32U] &
+            (1U << (PMIC_TPS6594X_ESM_MCU_FAIL_INT % 32U))) == 0U))
+        {
+            pmicStatus = PMIC_ST_SUCCESS;
+        }
+
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_ESM_MCU_RST_INT/32U] &
+            (1U << (PMIC_TPS6594X_ESM_MCU_RST_INT % 32U))) == 0U))
+        {
+            pmicStatus = PMIC_ST_SUCCESS;
+        }
+    }
+
+    if(0 > timeout)
+    {
+        pmicStatus = PMIC_ST_SUCCESS;
+    }
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_STOP);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+}
+
+/*!
+ *  \brief Test to verify PMIC ESM MCU PWM Mode PIN, FAIL, RST Interrupt
+ */
+static void test_esm_setInterrupt_esmMcuAllIntr_pwmMode(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    bool esmType               = PMIC_ESM_MODE_MCU;
+    bool esmToggle            = PMIC_ESM_ENABLE;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t  irqNum           = 0U;
+    uint8_t pin               = 7U;
+    uint8_t esmErrCnt         = 0U;
+    int8_t timeout            = 10U;
+    Pmic_EsmCfg_t esmCfg =
+    {
+        PMIC_ESM_CFG_DELAY1_VALID_SHIFT | PMIC_ESM_CFG_DELAY2_VALID_SHIFT | PMIC_ESM_CFG_HMAX_VALID_SHIFT | PMIC_ESM_CFG_HMIN_VALID_SHIFT | PMIC_ESM_CFG_LMAX_VALID_SHIFT | PMIC_ESM_CFG_LMIN_VALID_SHIFT | PMIC_ESM_CFG_MODE_VALID_SHIFT ,
+        4096U,
+        0U,
+        30U,
+        30U,
+        30U,
+        30U,
+        4U,
+        PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE,
+        PMIC_ESM_PWM_MODE
+    };
+
+    Pmic_EsmIntrCfg_t esmIntrCfg =
+    {
+        true,
+        true,
+        true
+    };
+
+    Pmic_GpioCfg_t gpioCfg    =
+    {
+        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO7_NERR_MCU,
+        PMIC_GPIO_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(8009,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmSetInterrupt(pPmicCoreHandle, esmType, esmIntrCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_STOP);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmEnable(pPmicCoreHandle, esmType, esmToggle);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_START);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    while(timeout--)
+    {
+        /* Delay added to avoid timeout */
+        Osal_delay(1000);
+
+        pmicStatus = Pmic_esmGetErrCnt(pPmicCoreHandle, esmType, &esmErrCnt);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_ESM_MCU_PIN_INT/32U] &
+            (1U << (PMIC_TPS6594X_ESM_MCU_PIN_INT % 32U))) != 0U))
+        {
+            while(PMIC_TPS6594X_ESM_MCU_PIN_INT != irqNum)
+            {
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                              PMIC_TPS6594X_ESM_MCU_PIN_INT);
+                break;
+            }
+        }
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_ESM_MCU_FAIL_INT/32U] &
+            (1U << (PMIC_TPS6594X_ESM_MCU_FAIL_INT % 32U))) != 0U))
+        {
+            while(PMIC_TPS6594X_ESM_MCU_FAIL_INT != irqNum)
+            {
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                              PMIC_TPS6594X_ESM_MCU_FAIL_INT);
+                break;
+            }
+        }
+                if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_ESM_MCU_RST_INT/32U] &
+            (1U << (PMIC_TPS6594X_ESM_MCU_RST_INT % 32U))) != 0U))
+        {
+            while(PMIC_TPS6594X_ESM_MCU_RST_INT != irqNum)
+            {
+                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
+                                                     &errStat,
+                                                     &irqNum);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* clear the interrupt */
+                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                              PMIC_TPS6594X_ESM_MCU_RST_INT);
+                break;
+            }
+        }
+    }
+
+    if(0 > timeout)
+    {
+        pmicStatus = PMIC_ST_ERR_FAIL;
+    }
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_STOP);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+}
+
+/*!
+ *  \brief Test to verify PMIC ESM MCU PWM Mode PIN, FAIL, RST Interrupts
+ *         disabled
+ */
+static void test_esm_setInterrupt_esmMcuAllIntrDisabled_pwmMode(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    bool esmType               = PMIC_ESM_MODE_MCU;
+    bool esmToggle            = PMIC_ESM_ENABLE;
+    Pmic_IrqStatus_t errStat  = {0U};
+    bool clearIRQ             = false;
+    uint8_t pin               = 7U;
+    int8_t timeout            = 10U;
+    Pmic_EsmCfg_t esmCfg =
+    {
+        PMIC_ESM_CFG_DELAY1_VALID_SHIFT | PMIC_ESM_CFG_DELAY2_VALID_SHIFT | PMIC_ESM_CFG_HMAX_VALID_SHIFT | PMIC_ESM_CFG_HMIN_VALID_SHIFT | PMIC_ESM_CFG_LMAX_VALID_SHIFT | PMIC_ESM_CFG_LMIN_VALID_SHIFT | PMIC_ESM_CFG_MODE_VALID_SHIFT ,
+        4096U,
+        0U,
+        30U,
+        30U,
+        30U,
+        30U,
+        4U,
+        PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE,
+        PMIC_ESM_PWM_MODE
+    };
+
+    Pmic_EsmIntrCfg_t esmIntrCfg =
+    {
+        false,
+        false,
+        false
+    };
+
+    Pmic_GpioCfg_t gpioCfg    =
+    {
+        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_GPIO7_NERR_MCU,
+        PMIC_GPIO_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(8011,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmSetInterrupt(pPmicCoreHandle, esmType, esmIntrCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_STOP);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmEnable(pPmicCoreHandle, esmType, esmToggle);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_START);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+
+    while(timeout--)
+    {
+        /* Delay added to avoid timeout */
+        Osal_delay(1000);
+
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_ESM_MCU_PIN_INT/32U] &
+            (1U << (PMIC_TPS6594X_ESM_MCU_PIN_INT % 32U))) == 0U))
+        {
+            pmicStatus = PMIC_ST_SUCCESS;
+        }
+
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_ESM_MCU_FAIL_INT/32U] &
+            (1U << (PMIC_TPS6594X_ESM_MCU_FAIL_INT % 32U))) == 0U))
+        {
+            pmicStatus = PMIC_ST_SUCCESS;
+        }
+
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           ((errStat.intStatus[PMIC_TPS6594X_ESM_MCU_RST_INT/32U] &
+            (1U << (PMIC_TPS6594X_ESM_MCU_RST_INT % 32U))) == 0U))
+        {
+            pmicStatus = PMIC_ST_SUCCESS;
+        }
+    }
+
+    if(0 > timeout)
+    {
+        pmicStatus = PMIC_ST_SUCCESS;
+    }
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_STOP);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+}
+
+/*!
+ * \brief Parameter validation for handle
+ */
+static void test_esm_setInterruptPrmValTest_handle(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    bool esmType               = PMIC_ESM_MODE_SOC;
+
+    Pmic_EsmIntrCfg_t esmIntrCfg =
+    {
+        true,
+        false,
+        false
+    };
+
+    test_pmic_print_unity_testcase_info(7852,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_esmSetInterrupt(NULL, esmType, esmIntrCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7852,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
+}
+
+
+/*!
+ * \brief   Pmic_esmStart : Negative test to verify ESM SOC Start for HERA
+ */
+static void test_pmic_esm_startEsm_esmSocStart_hera(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    bool esmType       = PMIC_ESM_MODE_SOC;
+    bool esmState      = PMIC_ESM_STOP;
+
+    test_pmic_print_unity_testcase_info(7853,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(7853,
+                                     pmic_esm_tests,
+                                     PMIC_ESM_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, esmState);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7853,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_esmEnable : Negative test to verify ESM SOC Enable for HERA
+ */
+static void test_pmic_esm_startEsm_esmSocEnable_hera(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    bool esmType       = PMIC_ESM_MODE_SOC;
+
+    test_pmic_print_unity_testcase_info(7854,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(7854,
+                                     pmic_esm_tests,
+                                     PMIC_ESM_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_esmEnable(pPmicCoreHandle, esmType, PMIC_ESM_ENABLE);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7854,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_esmSetConfiguration : Negative test to verify PMIC ESM SOC Set configuration for ESM SOC
+ *          Level Mode for HERA
+ */
+static void test_pmic_esm_setConfiguration_esmSocLevelMode_hera(void)
+{
+    int32_t pmicStatus      = PMIC_ST_SUCCESS;
+    bool esmType            = PMIC_ESM_MODE_SOC;
+
+    Pmic_EsmCfg_t esmCfg =
+    {
+        PMIC_ESM_CFG_DELAY1_VALID_SHIFT | PMIC_ESM_CFG_DELAY2_VALID_SHIFT | PMIC_ESM_CFG_MODE_VALID_SHIFT,
+        4096U,
+        2048U,
+        30U,
+        30U,
+        30U,
+        30U,
+        4U,
+        PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE,
+        PMIC_ESM_LEVEL_MODE
+    };
+
+    test_pmic_print_unity_testcase_info(7855,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(7855,
+                                     pmic_esm_tests,
+                                     PMIC_ESM_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7855,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_esmGetConfiguration : Negative test to verify PMIC ESM SOC Get configuration for ESM SOC
+ *          Level Mode for HERA
+ */
+static void test_pmic_esm_getConfiguration_esmSocLevelMode_hera(void)
+{
+    int32_t pmicStatus      = PMIC_ST_SUCCESS;
+    bool esmType            = PMIC_ESM_MODE_SOC;
+    Pmic_EsmCfg_t esmCfg_rd = {PMIC_ESM_CFG_DELAY1_VALID_SHIFT |
+                               PMIC_ESM_CFG_DELAY2_VALID_SHIFT |
+                               PMIC_ESM_CFG_MODE_VALID_SHIFT,};
+
+
+    test_pmic_print_unity_testcase_info(7856,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(7856,
+                                     pmic_esm_tests,
+                                     PMIC_ESM_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_esmGetConfiguration(pPmicCoreHandle,
+                                          esmType,
+                                          &esmCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7856,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
+}
+
+
+/*!
+ * \brief   Pmic_esmGetErrCnt : Negative test to verify Error count value for HERA
+ */
+static void test_Pmic_esmGetErrCnt_hera(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;;
+    uint8_t esmErrCnt  = 0U;
+    bool esmType       = PMIC_ESM_MODE_SOC;
+
+    test_pmic_print_unity_testcase_info(7857,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(7857,
+                                     pmic_esm_tests,
+                                     PMIC_ESM_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_esmGetErrCnt(pPmicCoreHandle, esmType, &esmErrCnt);
+
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7857,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
+}
+
+
+/*!
+ * \brief   Pmic_esmSetInterrupt : Negative test to verify ESM interrupt enable for HERA
+ */
+static void test_Pmic_esmSetInterrupt_hera(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    bool esmType       = PMIC_ESM_MODE_SOC;
+    Pmic_EsmIntrCfg_t esmIntrCfg =
+    {
+        false,
+        true,
+        false
+    };
+
+    test_pmic_print_unity_testcase_info(7858,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(7858,
+                                     pmic_esm_tests,
+                                     PMIC_ESM_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_esmSetInterrupt(pPmicCoreHandle, esmType, esmIntrCfg);
+
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7858,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_esmGetEnableState : Negative test to verify ESM get state for HERA
+ */
+static void test_Pmic_esmGetEnableState_hera(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    bool esmType       = PMIC_ESM_MODE_SOC;
+    bool esmState      = PMIC_ESM_STOP;
+
+    test_pmic_print_unity_testcase_info(7859,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(7859,
+                                     pmic_esm_tests,
+                                     PMIC_ESM_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_esmGetEnableState(pPmicCoreHandle, esmType, &esmState);
+
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
+
+    pmic_testResultUpdate_pass(7859,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
+}
+
+#if defined(ENABLE_SAMPLE_TESTCASES)
+/*!
  * Below test cases are not tested because of HW limitation.
  * Added below test cases as sample for reference.
  */
@@ -2964,274 +3746,6 @@ static void test_esm_setInterrupt_esmSocAllIntr_pwmMode(void)
 }
 
 /*!
- *  \brief Test to verify PMIC ESM MCU Level Mode PIN, FAIL and RST Interrupts
- */
-static void test_esm_setInterrupt_esmMcuAllIntr_levelMode(void)
-{
-    int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    bool esmType               = PMIC_ESM_MODE_MCU;
-    bool esmToggle            = PMIC_ESM_ENABLE;
-    Pmic_IrqStatus_t errStat  = {0U};
-    bool clearIRQ             = false;
-    uint8_t  irqNum           = 0U;
-    uint8_t pin               = 7U;
-    int8_t timeout            = 10U;
-    Pmic_EsmCfg_t esmCfg =
-    {
-        PMIC_ESM_CFG_DELAY1_VALID_SHIFT | PMIC_ESM_CFG_DELAY2_VALID_SHIFT | PMIC_ESM_CFG_MODE_VALID_SHIFT,
-        4096U,
-        2048U,
-        30U,
-        30U,
-        30U,
-        30U,
-        4U,
-        PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE,
-        PMIC_ESM_LEVEL_MODE
-    };
-
-    Pmic_EsmIntrCfg_t esmIntrCfg =
-    {
-        true,
-        true,
-        true
-    };
-
-    Pmic_GpioCfg_t gpioCfg    =
-    {
-        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_OUTPUT,
-        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
-        PMIC_GPIO_PULL_DOWN,
-        PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594X_GPIO_PINFUNC_GPIO7_NERR_MCU,
-        PMIC_GPIO_HIGH
-    };
-
-    test_pmic_print_unity_testcase_info(7849,
-                                        pmic_esm_tests,
-                                        PMIC_ESM_NUM_OF_TESTCASES);
-
-    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
-    {
-        TEST_IGNORE();
-    }
-
-    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
-    {
-        TEST_IGNORE();
-    }
-
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_esmSetInterrupt(pPmicCoreHandle, esmType, esmIntrCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_STOP);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_esmEnable(pPmicCoreHandle, esmType, esmToggle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    /* To clear the interrupts*/
-    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_START);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    while(timeout--)
-    {
-        /* Delay added to avoid timeout */
-        Osal_delay(1000);
-
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
-        if((PMIC_ST_SUCCESS == pmicStatus) &&
-           ((errStat.intStatus[PMIC_TPS6594X_ESM_MCU_PIN_INT/32U] &
-            (1U << (PMIC_TPS6594X_ESM_MCU_PIN_INT % 32U))) != 0U))
-        {
-            while(PMIC_TPS6594X_ESM_MCU_PIN_INT != irqNum)
-            {
-                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
-                                                     &errStat,
-                                                     &irqNum);
-            }
-
-            if(PMIC_ST_SUCCESS == pmicStatus)
-            {
-                /* clear the interrupt */
-                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
-                                              PMIC_TPS6594X_ESM_MCU_PIN_INT);
-                break;
-            }
-        }
-
-        if((PMIC_ST_SUCCESS == pmicStatus) &&
-           ((errStat.intStatus[PMIC_TPS6594X_ESM_MCU_FAIL_INT/32U] &
-            (1U << (PMIC_TPS6594X_ESM_MCU_FAIL_INT % 32U))) != 0U))
-        {
-            while(PMIC_TPS6594X_ESM_MCU_FAIL_INT != irqNum)
-            {
-                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
-                                                     &errStat,
-                                                     &irqNum);
-            }
-
-            if(PMIC_ST_SUCCESS == pmicStatus)
-            {
-                /* clear the interrupt */
-                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
-                                              PMIC_TPS6594X_ESM_MCU_FAIL_INT);
-                break;
-            }
-        }
-
-        if((PMIC_ST_SUCCESS == pmicStatus) &&
-           ((errStat.intStatus[PMIC_TPS6594X_ESM_MCU_RST_INT/32U] &
-            (1U << (PMIC_TPS6594X_ESM_MCU_RST_INT % 32U))) != 0U))
-        {
-            while(PMIC_TPS6594X_ESM_MCU_RST_INT != irqNum)
-            {
-                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
-                                                     &errStat,
-                                                     &irqNum);
-            }
-
-            if(PMIC_ST_SUCCESS == pmicStatus)
-            {
-                /* clear the interrupt */
-                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
-                                              PMIC_TPS6594X_ESM_MCU_RST_INT);
-                break;
-            }
-        }
-    }
-
-    if(0 > timeout)
-    {
-        pmicStatus = PMIC_ST_ERR_FAIL;
-    }
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_STOP);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-}
-
-/*!
- *  \brief Test to verify PMIC ESM MCU Level Mode PIN, FAIL and RST Interrupts
- *         disabled
- */
-static void test_esm_setInterrupt_esmMcuAllIntrDisabled_levelMode(void)
-{
-    int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    bool esmType              = PMIC_ESM_MODE_MCU;
-    bool esmToggle            = PMIC_ESM_ENABLE;
-    Pmic_IrqStatus_t errStat  = {0U};
-    bool clearIRQ             = false;
-    uint8_t pin               = 7U;
-    int8_t timeout            = 10U;
-    Pmic_EsmCfg_t esmCfg =
-    {
-        PMIC_ESM_CFG_DELAY1_VALID_SHIFT | PMIC_ESM_CFG_DELAY2_VALID_SHIFT | PMIC_ESM_CFG_MODE_VALID_SHIFT,
-        4096U,
-        2048U,
-        30U,
-        30U,
-        30U,
-        30U,
-        4U,
-        PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE,
-        PMIC_ESM_LEVEL_MODE
-    };
-
-    Pmic_EsmIntrCfg_t esmIntrCfg =
-    {
-        false,
-        false,
-        false
-    };
-
-    Pmic_GpioCfg_t gpioCfg    =
-    {
-        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_OUTPUT,
-        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
-        PMIC_GPIO_PULL_DOWN,
-        PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594X_GPIO_PINFUNC_GPIO7_NERR_MCU,
-        PMIC_GPIO_HIGH
-    };
-
-    test_pmic_print_unity_testcase_info(7850,
-                                        pmic_esm_tests,
-                                        PMIC_ESM_NUM_OF_TESTCASES);
-
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_esmSetInterrupt(pPmicCoreHandle, esmType, esmIntrCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_STOP);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_esmEnable(pPmicCoreHandle, esmType, esmToggle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    /* To clear the interrupts*/
-    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_START);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    while(timeout--)
-    {
-        /* Delay added to avoid timeout */
-        Osal_delay(1000);
-
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
-        if((PMIC_ST_SUCCESS == pmicStatus) &&
-           ((errStat.intStatus[PMIC_TPS6594X_ESM_MCU_PIN_INT/32U] &
-            (1U << (PMIC_TPS6594X_ESM_MCU_PIN_INT % 32U))) == 0U))
-        {
-            pmicStatus = PMIC_ST_SUCCESS;
-        }
-
-        if((PMIC_ST_SUCCESS == pmicStatus) &&
-           ((errStat.intStatus[PMIC_TPS6594X_ESM_MCU_FAIL_INT/32U] &
-            (1U << (PMIC_TPS6594X_ESM_MCU_FAIL_INT % 32U))) == 0U))
-        {
-            pmicStatus = PMIC_ST_SUCCESS;
-        }
-
-        if((PMIC_ST_SUCCESS == pmicStatus) &&
-           ((errStat.intStatus[PMIC_TPS6594X_ESM_MCU_RST_INT/32U] &
-            (1U << (PMIC_TPS6594X_ESM_MCU_RST_INT % 32U))) == 0U))
-        {
-            pmicStatus = PMIC_ST_SUCCESS;
-        }
-    }
-
-    if(0 > timeout)
-    {
-        pmicStatus = PMIC_ST_SUCCESS;
-    }
-
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_STOP);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-}
-
-/*!
  * Below test cases are not tested because of HW limitation.
  * Added below test cases as sample for reference.
  */
@@ -3501,156 +4015,6 @@ static void test_esm_setInterrupt_esmSocAllIntr_levelMode(void)
 }
 
 /*!
- *  \brief Test to verify PMIC ESM MCU PWM Mode PIN, FAIL, RST Interrupt
- */
-static void test_esm_setInterrupt_esmMcuAllIntr_pwmMode(void)
-{
-    int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    bool esmType               = PMIC_ESM_MODE_MCU;
-    bool esmToggle            = PMIC_ESM_ENABLE;
-    Pmic_IrqStatus_t errStat  = {0U};
-    bool clearIRQ             = false;
-    uint8_t  irqNum           = 0U;
-    uint8_t pin               = 7U;
-    uint8_t esmErrCnt         = 0U;
-    int8_t timeout            = 10U;
-    Pmic_EsmCfg_t esmCfg =
-    {
-        PMIC_ESM_CFG_DELAY1_VALID_SHIFT | PMIC_ESM_CFG_DELAY2_VALID_SHIFT | PMIC_ESM_CFG_HMAX_VALID_SHIFT | PMIC_ESM_CFG_HMIN_VALID_SHIFT | PMIC_ESM_CFG_LMAX_VALID_SHIFT | PMIC_ESM_CFG_LMIN_VALID_SHIFT | PMIC_ESM_CFG_MODE_VALID_SHIFT ,
-        4096U,
-        0U,
-        30U,
-        30U,
-        30U,
-        30U,
-        4U,
-        PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE,
-        PMIC_ESM_PWM_MODE
-    };
-
-    Pmic_EsmIntrCfg_t esmIntrCfg =
-    {
-        true,
-        true,
-        true
-    };
-
-    Pmic_GpioCfg_t gpioCfg    =
-    {
-        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_OUTPUT,
-        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
-        PMIC_GPIO_PULL_DOWN,
-        PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594X_GPIO_PINFUNC_GPIO7_NERR_MCU,
-        PMIC_GPIO_HIGH
-    };
-
-    test_pmic_print_unity_testcase_info(8009,
-                                        pmic_esm_tests,
-                                        PMIC_ESM_NUM_OF_TESTCASES);
-
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_esmSetInterrupt(pPmicCoreHandle, esmType, esmIntrCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_STOP);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_esmEnable(pPmicCoreHandle, esmType, esmToggle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    /* To clear the interrupts*/
-    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_START);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    while(timeout--)
-    {
-        /* Delay added to avoid timeout */
-        Osal_delay(1000);
-
-        pmicStatus = Pmic_esmGetErrCnt(pPmicCoreHandle, esmType, &esmErrCnt);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
-        if((PMIC_ST_SUCCESS == pmicStatus) &&
-           ((errStat.intStatus[PMIC_TPS6594X_ESM_MCU_PIN_INT/32U] &
-            (1U << (PMIC_TPS6594X_ESM_MCU_PIN_INT % 32U))) != 0U))
-        {
-            while(PMIC_TPS6594X_ESM_MCU_PIN_INT != irqNum)
-            {
-                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
-                                                     &errStat,
-                                                     &irqNum);
-            }
-
-            if(PMIC_ST_SUCCESS == pmicStatus)
-            {
-                /* clear the interrupt */
-                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
-                                              PMIC_TPS6594X_ESM_MCU_PIN_INT);
-                break;
-            }
-        }
-        if((PMIC_ST_SUCCESS == pmicStatus) &&
-           ((errStat.intStatus[PMIC_TPS6594X_ESM_MCU_FAIL_INT/32U] &
-            (1U << (PMIC_TPS6594X_ESM_MCU_FAIL_INT % 32U))) != 0U))
-        {
-            while(PMIC_TPS6594X_ESM_MCU_FAIL_INT != irqNum)
-            {
-                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
-                                                     &errStat,
-                                                     &irqNum);
-            }
-
-            if(PMIC_ST_SUCCESS == pmicStatus)
-            {
-                /* clear the interrupt */
-                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
-                                              PMIC_TPS6594X_ESM_MCU_FAIL_INT);
-                break;
-            }
-        }
-                if((PMIC_ST_SUCCESS == pmicStatus) &&
-           ((errStat.intStatus[PMIC_TPS6594X_ESM_MCU_RST_INT/32U] &
-            (1U << (PMIC_TPS6594X_ESM_MCU_RST_INT % 32U))) != 0U))
-        {
-            while(PMIC_TPS6594X_ESM_MCU_RST_INT != irqNum)
-            {
-                pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle,
-                                                     &errStat,
-                                                     &irqNum);
-            }
-
-            if(PMIC_ST_SUCCESS == pmicStatus)
-            {
-                /* clear the interrupt */
-                pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
-                                              PMIC_TPS6594X_ESM_MCU_RST_INT);
-                break;
-            }
-        }
-    }
-
-    if(0 > timeout)
-    {
-        pmicStatus = PMIC_ST_ERR_FAIL;
-    }
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_STOP);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-}
-
-/*!
  * Below test cases are not tested because of HW limitation.
  * Added below test cases as sample for reference.
  */
@@ -3765,369 +4129,7 @@ static void test_esm_setInterrupt_esmSocAllIntrDisabled_levelMode(void)
     pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_STOP);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
-
-/*!
- *  \brief Test to verify PMIC ESM MCU PWM Mode PIN, FAIL, RST Interrupts 
- *         disabled
- */
-static void test_esm_setInterrupt_esmMcuAllIntrDisabled_pwmMode(void)
-{
-    int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    bool esmType               = PMIC_ESM_MODE_MCU;
-    bool esmToggle            = PMIC_ESM_ENABLE;
-    Pmic_IrqStatus_t errStat  = {0U};
-    bool clearIRQ             = false;
-    uint8_t pin               = 7U;
-    int8_t timeout            = 10U;
-    Pmic_EsmCfg_t esmCfg =
-    {
-        PMIC_ESM_CFG_DELAY1_VALID_SHIFT | PMIC_ESM_CFG_DELAY2_VALID_SHIFT | PMIC_ESM_CFG_HMAX_VALID_SHIFT | PMIC_ESM_CFG_HMIN_VALID_SHIFT | PMIC_ESM_CFG_LMAX_VALID_SHIFT | PMIC_ESM_CFG_LMIN_VALID_SHIFT | PMIC_ESM_CFG_MODE_VALID_SHIFT ,
-        4096U,
-        0U,
-        30U,
-        30U,
-        30U,
-        30U,
-        4U,
-        PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE,
-        PMIC_ESM_PWM_MODE
-    };
-
-    Pmic_EsmIntrCfg_t esmIntrCfg =
-    {
-        false,
-        false,
-        false
-    };
-
-    Pmic_GpioCfg_t gpioCfg    =
-    {
-        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        PMIC_GPIO_OUTPUT,
-        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
-        PMIC_GPIO_PULL_DOWN,
-        PMIC_GPIO_DEGLITCH_ENABLE,
-        PMIC_TPS6594X_GPIO_PINFUNC_GPIO7_NERR_MCU,
-        PMIC_GPIO_HIGH
-    };
-
-    test_pmic_print_unity_testcase_info(8011,
-                                        pmic_esm_tests,
-                                        PMIC_ESM_NUM_OF_TESTCASES);
-
-    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_esmSetInterrupt(pPmicCoreHandle, esmType, esmIntrCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_STOP);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_esmEnable(pPmicCoreHandle, esmType, esmToggle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    /* To clear the interrupts*/
-    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_START);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
-
-    while(timeout--)
-    {
-        /* Delay added to avoid timeout */
-        Osal_delay(1000);
-
-        if((PMIC_ST_SUCCESS == pmicStatus) &&
-           ((errStat.intStatus[PMIC_TPS6594X_ESM_MCU_PIN_INT/32U] &
-            (1U << (PMIC_TPS6594X_ESM_MCU_PIN_INT % 32U))) == 0U))
-        {
-            pmicStatus = PMIC_ST_SUCCESS;
-        }
-
-        if((PMIC_ST_SUCCESS == pmicStatus) &&
-           ((errStat.intStatus[PMIC_TPS6594X_ESM_MCU_FAIL_INT/32U] &
-            (1U << (PMIC_TPS6594X_ESM_MCU_FAIL_INT % 32U))) == 0U))
-        {
-            pmicStatus = PMIC_ST_SUCCESS;
-        }
-
-        if((PMIC_ST_SUCCESS == pmicStatus) &&
-           ((errStat.intStatus[PMIC_TPS6594X_ESM_MCU_RST_INT/32U] &
-            (1U << (PMIC_TPS6594X_ESM_MCU_RST_INT % 32U))) == 0U))
-        {
-            pmicStatus = PMIC_ST_SUCCESS;
-        }
-    }
-
-    if(0 > timeout)
-    {
-        pmicStatus = PMIC_ST_SUCCESS;
-    }
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, PMIC_ESM_STOP);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-}
-
-/*!
- * \brief Parameter validation for handle
- */
-static void test_esm_setInterruptPrmValTest_handle(void)
-{
-    int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    bool esmType               = PMIC_ESM_MODE_SOC;
-
-    Pmic_EsmIntrCfg_t esmIntrCfg =
-    {
-        true,
-        false,
-        false
-    };
-
-    test_pmic_print_unity_testcase_info(7852,
-                                        pmic_esm_tests,
-                                        PMIC_ESM_NUM_OF_TESTCASES);
-
-    pmicStatus = Pmic_esmSetInterrupt(NULL, esmType, esmIntrCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
-
-    pmic_testResultUpdate_pass(7852,
-                               pmic_esm_tests,
-                               PMIC_ESM_NUM_OF_TESTCASES);
-}
-
-
-/*!
- * \brief   Pmic_esmStart : Negative test to verify ESM SOC Start for HERA
- */
-static void test_pmic_esm_startEsm_esmSocStart_hera(void)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    bool esmType       = PMIC_ESM_MODE_SOC;
-    bool esmState      = PMIC_ESM_STOP;
-
-    test_pmic_print_unity_testcase_info(7853,
-                                        pmic_esm_tests,
-                                        PMIC_ESM_NUM_OF_TESTCASES);
-
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-        pmic_testResultUpdate_ignore(7853,
-                                     pmic_esm_tests,
-                                     PMIC_ESM_NUM_OF_TESTCASES);
-    }
-
-    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, esmState);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
-
-    pmic_testResultUpdate_pass(7853,
-                               pmic_esm_tests,
-                               PMIC_ESM_NUM_OF_TESTCASES);
-}
-
-/*!
- * \brief   Pmic_esmEnable : Negative test to verify ESM SOC Enable for HERA
- */
-static void test_pmic_esm_startEsm_esmSocEnable_hera(void)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    bool esmType       = PMIC_ESM_MODE_SOC;
-
-    test_pmic_print_unity_testcase_info(7854,
-                                        pmic_esm_tests,
-                                        PMIC_ESM_NUM_OF_TESTCASES);
-
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-        pmic_testResultUpdate_ignore(7854,
-                                     pmic_esm_tests,
-                                     PMIC_ESM_NUM_OF_TESTCASES);
-    }
-
-    pmicStatus = Pmic_esmEnable(pPmicCoreHandle, esmType, PMIC_ESM_ENABLE);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
-
-    pmic_testResultUpdate_pass(7854,
-                               pmic_esm_tests,
-                               PMIC_ESM_NUM_OF_TESTCASES);
-}
-
-/*!
- * \brief   Pmic_esmSetConfiguration : Negative test to verify PMIC ESM SOC Set configuration for ESM SOC
- *          Level Mode for HERA
- */
-static void test_pmic_esm_setConfiguration_esmSocLevelMode_hera(void)
-{
-    int32_t pmicStatus      = PMIC_ST_SUCCESS;
-    bool esmType            = PMIC_ESM_MODE_SOC;
-
-    Pmic_EsmCfg_t esmCfg =
-    {
-        PMIC_ESM_CFG_DELAY1_VALID_SHIFT | PMIC_ESM_CFG_DELAY2_VALID_SHIFT | PMIC_ESM_CFG_MODE_VALID_SHIFT,
-        4096U,
-        2048U,
-        30U,
-        30U,
-        30U,
-        30U,
-        4U,
-        PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE,
-        PMIC_ESM_LEVEL_MODE
-    };
-
-    test_pmic_print_unity_testcase_info(7855,
-                                        pmic_esm_tests,
-                                        PMIC_ESM_NUM_OF_TESTCASES);
-
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-        pmic_testResultUpdate_ignore(7855,
-                                     pmic_esm_tests,
-                                     PMIC_ESM_NUM_OF_TESTCASES);
-    }
-
-    pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
-
-    pmic_testResultUpdate_pass(7855,
-                               pmic_esm_tests,
-                               PMIC_ESM_NUM_OF_TESTCASES);
-}
-
-/*!
- * \brief   Pmic_esmGetConfiguration : Negative test to verify PMIC ESM SOC Get configuration for ESM SOC
- *          Level Mode for HERA
- */
-static void test_pmic_esm_getConfiguration_esmSocLevelMode_hera(void)
-{
-    int32_t pmicStatus      = PMIC_ST_SUCCESS;
-    bool esmType            = PMIC_ESM_MODE_SOC;
-    Pmic_EsmCfg_t esmCfg_rd = {PMIC_ESM_CFG_DELAY1_VALID_SHIFT |
-                               PMIC_ESM_CFG_DELAY2_VALID_SHIFT |
-                               PMIC_ESM_CFG_MODE_VALID_SHIFT,};
-
-
-    test_pmic_print_unity_testcase_info(7856,
-                                        pmic_esm_tests,
-                                        PMIC_ESM_NUM_OF_TESTCASES);
-
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-        pmic_testResultUpdate_ignore(7856,
-                                     pmic_esm_tests,
-                                     PMIC_ESM_NUM_OF_TESTCASES);
-    }
-
-    pmicStatus = Pmic_esmGetConfiguration(pPmicCoreHandle,
-                                          esmType,
-                                          &esmCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
-
-    pmic_testResultUpdate_pass(7856,
-                               pmic_esm_tests,
-                               PMIC_ESM_NUM_OF_TESTCASES);
-}
-
-
-/*!
- * \brief   Pmic_esmGetErrCnt : Negative test to verify Error count value for HERA
- */
-static void test_Pmic_esmGetErrCnt_hera(void)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;;
-    uint8_t esmErrCnt  = 0U;
-    bool esmType       = PMIC_ESM_MODE_SOC;
-
-    test_pmic_print_unity_testcase_info(7857,
-                                        pmic_esm_tests,
-                                        PMIC_ESM_NUM_OF_TESTCASES);
-
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-        pmic_testResultUpdate_ignore(7857,
-                                     pmic_esm_tests,
-                                     PMIC_ESM_NUM_OF_TESTCASES);
-    }
-
-    pmicStatus = Pmic_esmGetErrCnt(pPmicCoreHandle, esmType, &esmErrCnt);
-
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
-
-    pmic_testResultUpdate_pass(7857,
-                               pmic_esm_tests,
-                               PMIC_ESM_NUM_OF_TESTCASES);
-}
-
-
-/*!
- * \brief   Pmic_esmSetInterrupt : Negative test to verify ESM interrupt enable for HERA
- */
-static void test_Pmic_esmSetInterrupt_hera(void)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    bool esmType       = PMIC_ESM_MODE_SOC;
-    Pmic_EsmIntrCfg_t esmIntrCfg =
-    {
-        false,
-        true,
-        false
-    };
-
-    test_pmic_print_unity_testcase_info(7858,
-                                        pmic_esm_tests,
-                                        PMIC_ESM_NUM_OF_TESTCASES);
-
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-        pmic_testResultUpdate_ignore(7858,
-                                     pmic_esm_tests,
-                                     PMIC_ESM_NUM_OF_TESTCASES);
-    }
-
-    pmicStatus = Pmic_esmSetInterrupt(pPmicCoreHandle, esmType, esmIntrCfg);
-
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
-
-    pmic_testResultUpdate_pass(7858,
-                               pmic_esm_tests,
-                               PMIC_ESM_NUM_OF_TESTCASES);
-}
-
-/*!
- * \brief   Pmic_esmGetEnableState : Negative test to verify ESM get state for HERA
- */
-static void test_Pmic_esmGetEnableState_hera(void)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    bool esmType       = PMIC_ESM_MODE_SOC;
-    bool esmState      = PMIC_ESM_STOP;
-
-    test_pmic_print_unity_testcase_info(7859,
-                                        pmic_esm_tests,
-                                        PMIC_ESM_NUM_OF_TESTCASES);
-
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-    {
-        pmic_testResultUpdate_ignore(7859,
-                                     pmic_esm_tests,
-                                     PMIC_ESM_NUM_OF_TESTCASES);
-    }
-
-    pmicStatus = Pmic_esmGetEnableState(pPmicCoreHandle, esmType, &esmState);
-
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
-
-    pmic_testResultUpdate_pass(7859,
-                               pmic_esm_tests,
-                               PMIC_ESM_NUM_OF_TESTCASES);
-}
+#endif
 
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E) || defined(SOC_J7200))
@@ -4180,18 +4182,8 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_Pmic_esmGetErrCnt_hera);
     RUN_TEST(test_Pmic_esmSetInterrupt_hera);
     RUN_TEST(test_Pmic_esmGetEnableState_hera);
-    RUN_TEST(test_esm_setInterrupt_esmSocRstIntr_levelMode);
-    RUN_TEST(test_esm_setInterrupt_esmSocRstIntr_pwmMode);
-    RUN_TEST(test_esm_setInterrupt_esmSocFailIntr_levelMode);
-    RUN_TEST(test_esm_setInterrupt_esmSocFailIntr_pwmMode);
-    RUN_TEST(test_esm_setInterrupt_esmSocPinIntr_levelMode);
-    RUN_TEST(test_esm_setInterrupt_esmSocPinIntr_pwmMode);
-    RUN_TEST(test_esm_setInterrupt_esmSocAllIntr_pwmMode);
-    RUN_TEST(test_esm_setInterrupt_esmSocAllIntrDisable_pwmMode);
-    RUN_TEST(test_esm_setInterrupt_esmSocAllIntr_levelMode);
-    RUN_TEST(test_esm_setInterrupt_esmSocAllIntrDisabled_levelMode);
 
-    pmic_printTestResult(pmic_esm_tests, PMIC_ESM_NUM_OF_TESTCASES);
+    pmic_updateTestResults(pmic_esm_tests, PMIC_ESM_NUM_OF_TESTCASES);
 
     UNITY_END();
 }
@@ -4243,7 +4235,7 @@ static void test_pmic_run_slave_testcases(void)
     RUN_TEST(test_Pmic_esmSetInterrupt_hera);
     RUN_TEST(test_Pmic_esmGetEnableState_hera);
 
-    pmic_printTestResult(pmic_esm_tests, PMIC_ESM_NUM_OF_TESTCASES);
+    pmic_updateTestResults(pmic_esm_tests, PMIC_ESM_NUM_OF_TESTCASES);
 
     UNITY_END();
 }
@@ -4669,6 +4661,10 @@ static void test_pmic_esm_testapp_run_options(int8_t option)
 
     while(1U)
     {
+        if(idx >= (sizeof(automatic_options)/sizeof(automatic_options[0])))
+        {
+            pmic_printTestResult(pmic_esm_tests, PMIC_ESM_NUM_OF_TESTCASES);
+        }
         pmic_log("%s", pmicTestAppMenu);
         if(option == PMIC_UT_AUTOMATE_OPTION)
         {

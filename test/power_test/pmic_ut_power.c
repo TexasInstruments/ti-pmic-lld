@@ -9677,6 +9677,7 @@ static void test_pmic_powerSetPwrRsrcIntrPrmValTest_handle(void)
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
 
+#if defined(ENABLE_SAMPLE_TESTCASES)
 /*!
  * The below test case is dummy, as power related interrupts cannot be generated
  * to test masking APIs.
@@ -12405,6 +12406,7 @@ static void test_pmic_powerSetPwrRsrcIntr_en_drv_readback_disabled(void)
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
+#endif
 
 /*!
  * \brief   Pmic_powerGetPwrThermalStat : Parameter validation for handle.
@@ -12954,6 +12956,8 @@ RUN_TEST(test_pmic_powerSetThermalConfigPrmValTest_handle);
 RUN_TEST(test_pmic_powerGetThermalConfigPrmValTest_handle);
 RUN_TEST(test_Pmic_powerSetPwrRsrcIntrConfigPrmValTest_handle);
 RUN_TEST(test_pmic_powerSetPwrRsrcIntrPrmValTest_handle);
+
+#if defined(ENABLE_SAMPLE_TESTCASES)
 /*   The below taest cases aer dummy, as power/thermal related interrupts cannot
  *   be generated to test masking APIs
  *
@@ -12982,6 +12986,7 @@ RUN_TEST(test_pmic_powerSetPwrRsrcIntrPrmValTest_handle);
     RUN_TEST(test_pmic_powerSetPwrRsrcIntr_nrstout_soc_readback_disabled);
     RUN_TEST(test_pmic_powerSetPwrRsrcIntr_en_drv_readback_enabled);
     RUN_TEST(test_pmic_powerSetPwrRsrcIntr_en_drv_readback_disabled);
+#endif
 
 RUN_TEST(test_pmic_powerPmic_powerGetPwrThermalStatPrmValTest_handle);
 RUN_TEST(test_pmic_powerPmic_powerGetPwrThermalStatPrmValTest_pPwrThermalStatCfg);
@@ -12996,7 +13001,7 @@ RUN_TEST(test_pmic_powerSetThermalConfig_hera_thermalShutdownThold_high);
 RUN_TEST(test_pmic_powerSetLdoRtc_HERA_ldortcEnable_disable);
 RUN_TEST(test_pmic_powerGetPowerResourceConfig_buck5);
 
-    pmic_printTestResult(pmic_power_tests, PMIC_POWER_NUM_OF_TESTCASES);
+    pmic_updateTestResults(pmic_power_tests, PMIC_POWER_NUM_OF_TESTCASES);
 
     UNITY_END();
 }
@@ -13216,6 +13221,10 @@ static void test_pmic_power_testapp_run_options(int8_t option)
 
     while(1U)
     {
+        if(idx >= (sizeof(automatic_options)/sizeof(automatic_options[0])))
+        {
+            pmic_printTestResult(pmic_power_tests, PMIC_POWER_NUM_OF_TESTCASES);
+        }
         pmic_log("%s", pmicTestAppMenu);
         if(option == PMIC_UT_AUTOMATE_OPTION)
         {
