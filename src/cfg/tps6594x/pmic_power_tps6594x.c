@@ -528,6 +528,7 @@ static int32_t Pmic_powerLdoRtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
             break;
         default:
             status = PMIC_ST_ERR_INV_PARAM;
+            break;
     }
 
     return status;
@@ -559,6 +560,7 @@ static int32_t Pmic_powerGetLdoRtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
             break;
         default:
             status = PMIC_ST_ERR_INV_PARAM;
+            break;
     }
 
     return status;

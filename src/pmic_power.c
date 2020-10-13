@@ -2265,6 +2265,7 @@ static int32_t Pmic_validateThreshold(uint8_t pmicDeviceType,
                 break;
             default:
                 status = PMIC_ST_ERR_INV_PARAM;
+                break;
     }
 
     return status;
@@ -4264,6 +4265,7 @@ static int32_t Pmic_powerValidatePgoodSelType(uint8_t  pmicDeviceType,
             break;
         default:
             status = PMIC_ST_ERR_INV_PARAM;
+            break;
     }
 
     return status;
@@ -4358,6 +4360,7 @@ static int32_t Pmic_getPgoodSelTypeBitmask(uint8_t   pmicDeviceType,
             break;
         default:
             status= PMIC_ST_ERR_INV_PARAM;
+            break;
     }
 
     return status;
@@ -4832,6 +4835,7 @@ static int32_t Pmic_setThermalShutdownThold(
             break;
         default:
             status = PMIC_ST_ERR_INV_DEVICE;
+            break;
     }
 
     return status;
@@ -4888,6 +4892,7 @@ static int32_t Pmic_getThermalShutdownThold(
             break;
         default:
             status = PMIC_ST_ERR_INV_DEVICE;
+            break;
     }
 
     return status;
@@ -4961,6 +4966,7 @@ static int32_t Pmic_powerValidateIntrType(uint8_t  pmicDeviceType,
             break;
         default:
             status = PMIC_ST_ERR_INV_PARAM;
+            break;
     }
 
     return status;
@@ -5000,6 +5006,7 @@ static int32_t Pmic_validateIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
                 break;
             default:
                 status = PMIC_ST_ERR_INV_PARAM;
+                break;
         }
     }
 
