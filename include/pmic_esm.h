@@ -260,8 +260,8 @@ typedef struct Pmic_EsmIntrCfg_s
 /*!
  * \brief   API to start PMIC ESM.
  *
- * Requirement: REQ_TAG(PDK-5814)
- * Design: did_pmic_comm_intf_cfg
+ * Requirement: REQ_TAG(PDK-5833)
+ * Design: did_pmic_esm_cfg_readback
  *
  *          This function is used to Start/Stop the PMIC ESM_MCU/ESM_SOC
  *
@@ -282,6 +282,9 @@ int32_t Pmic_esmStart(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
 /*!
  * \brief   API to Enable/Disable PMIC ESM.
+ *
+ * Requirement: REQ_TAG(PDK-5833)
+ * Design: did_pmic_esm_cfg_readback
  *
  *          This function is used to Enable/Disable the PMIC ESM_MCU/ESM_SOC
  *          This API must be called only when ESM is in STOP state.
@@ -304,6 +307,9 @@ int32_t Pmic_esmEnable(Pmic_CoreHandle_t   *pPmicCoreHandle,
 /*!
  * \brief   API to Read PMIC ESM Enable/Disable state.
  *
+ * Requirement: REQ_TAG(PDK-5833)
+ * Design: did_pmic_esm_cfg_readback
+ *
  *          This function is used to read the Enable/Disable state of
  *          PMIC ESM_MCU/ESM_SOC.
  *
@@ -322,6 +328,9 @@ int32_t Pmic_esmGetEnableState(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
 /*!
  * \brief   API to Set PMIC ESM Configuration.
+ *
+ * Requirement: REQ_TAG(PDK-5833)
+ * Design: did_pmic_esm_cfg_readback
  *
  *          This function is used to set the ESM mode, delay-1 and delay-2 time
  *          time intervals, Error Count Threshold value, HMAX, HMIN, LMAX,
@@ -342,6 +351,9 @@ int32_t Pmic_esmSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
 /*!
  * \brief   API to Get the PMIC ESM Configuration.
+ *
+ * Requirement: REQ_TAG(PDK-5833)
+ * Design: did_pmic_esm_cfg_readback
  *
  *          This function is used to get the configured ESM mode, delay-1 and 
  *          delay-2 time time intervals, Error Count Threshold value, HMAX,
@@ -364,6 +376,9 @@ int32_t Pmic_esmGetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
 /*!
  * \brief   API to Set PMIC ESM Interrupts.
  *
+ * Requirement: REQ_TAG(PDK-5833)
+ * Design: did_pmic_esm_cfg_readback
+ *
  *          This function is used to mask/unmask the ESM RST, FAIL and 
  *          PIN Interrupts for both ESM MCU and ESM SOC.
  *
@@ -382,6 +397,9 @@ int32_t Pmic_esmSetInterrupt(Pmic_CoreHandle_t        *pPmicCoreHandle,
 
 /*!
  * \brief   API to Get the current ESM Error Count.
+ *
+ * Requirement: REQ_TAG(PDK-5833)
+ * Design: did_pmic_esm_cfg_readback
  *
  *          This function is used to get the current Error count for ESM MCU
  *          ESM SOC.

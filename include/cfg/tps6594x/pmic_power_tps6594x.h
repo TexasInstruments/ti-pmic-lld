@@ -696,8 +696,12 @@ level */
 /*==========================================================================*/
 
 /*!
- * \brief   API to enable/disable LODRTC regulator
- *          This function is used to enable/disble power Interrupts
+ * \brief   API to enable/disable LDORTC regulator
+ *
+ * Requirement: REQ_TAG(PDK-5841)
+ * Design: did_pmic_power_cfg_readback
+ *
+ *          This function is used to enable/disable LDORTC regulator.
  *
  * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
  * \param   ldortcEnable       [IN]    Enable/Disable the LDORTC.
@@ -711,8 +715,13 @@ int32_t Pmic_powerSetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
                             bool               ldortcEnable);
 
 /*!
- * \brief   API to get enable/disable status for LODRTC regulator
- *          This function is used to enable/disble power Interrupts
+ * \brief   API to get enable/disable status for LDORTC regulator
+ *
+ * Requirement: REQ_TAG(PDK-5841)
+ * Design: did_pmic_power_cfg_readback
+ *
+ *          This function is used to get enable/disable status for LDORTC 
+ *          regulator.
  *
  * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
  * \param   pLdortcEnable      [IN]    Pointer to hold Enable/Disable status.

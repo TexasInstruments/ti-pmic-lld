@@ -272,8 +272,8 @@ typedef struct Pmic_GpioCfg_s
 /*!
  * \brief   API to set PMIC GPIO configuration.
  *
- * Requirement: REQ_TAG(PDK-5808)
- * Design: did_pmic_gpio_cfg_readback
+ * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-5844)
+ * Design: did_pmic_gpio_cfg_readback, did_pmic_lpstandby_wkup_cfg
  *
  *          This function is used to set the required configuration for the
  *          specified GPIO pin when corresponding bit field is set.

@@ -422,6 +422,10 @@ typedef struct Pmic_WdgErrStatus_s
 /* ========================================================================== */
 /*!
  * \brief   API to Enable Watchdog timer.
+ *
+ * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854)
+ * Design: did_pmic_wdg_cfg_readback
+ *
  *          This function is used to Enable the PMIC watchdog. User ensure
  *          that, this function needs to be called to enable watchdog timer
  *          before configuring or starting watchdog trigger or QA mode.
@@ -435,6 +439,10 @@ int32_t Pmic_wdgEnable(Pmic_CoreHandle_t *pPmicCoreHandle);
 
 /*!
  * \brief   API to Disable Watchdog timer.
+ *
+ * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854)
+ * Design: did_pmic_wdg_cfg_readback
+ *
  *          This function is used to Disable the PMIC watchdog. User ensure
  *          that, after using this function, complete watchdog functionality
  *          and configuration will be deactivated.
@@ -448,6 +456,10 @@ int32_t Pmic_wdgDisable(Pmic_CoreHandle_t *pPmicCoreHandle);
 
 /*!
  * \brief   API to set PMIC watchdog configurations.
+ *
+ * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854)
+ * Design: did_pmic_wdg_cfg_readback
+ *
  *          This function is used to configure the watchdog parameters
  *          in the PMIC for trigger mode or Q&A(question and answer) mode,
  *          when corresponding validParam bit fields are set in
@@ -465,6 +477,10 @@ int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
 /*!
  * \brief   API to get PMIC watchdog configurations.
+ *
+ * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854)
+ * Design: did_pmic_wdg_cfg_readback
+ *
  *          This function is used to get configuration of the watchdog
  *          from the PMIC for trigger mode or Q&A(question and answer) mode,
  *          when corresponding validParam bit fields are set in
@@ -482,6 +498,10 @@ int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   API to Start watchdog QA mode.
+ *
+ * Requirement: REQ_TAG(PDK-5839)
+ * Design: did_pmic_wdg_cfg_readback
+ *
  *          This function is used to start watchdog sequence and continues
  *          till the given num_of_sequences. User has to ensure, configure
  *          all Watchdog QA parameters properly using Pmic_wdgSetCfg() API,
@@ -511,6 +531,10 @@ int32_t Pmic_wdgStartQaSequence(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   API to get PMIC watchdog error status.
+ *
+ * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854)
+ * Design: did_pmic_wdg_cfg_readback
+ *
  *          This function is used to get the watchdog error status from the
  *          PMIC for trigger mode or Q&A(question and answer) mode,
  *          when corresponding validParam bit fields are set in
@@ -528,6 +552,10 @@ int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   API to get PMIC watchdog fail count.
+ *
+ * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854)
+ * Design: did_pmic_wdg_cfg_readback
+ *
  *          This function is used to get the watchdog fail count from the PMIC
  *          for trigger mode or Q&A(question and answer) mode.
  *          User has to call Pmic_wdgEnable() before getting the fail count.
@@ -543,6 +571,10 @@ int32_t Pmic_wdgGetFailCount(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   API to Start watchdog Trigger mode.
+ *
+ * Requirement: REQ_TAG(PDK-5854)
+ * Design: did_pmic_wdg_cfg_readback
+ *
  *          This function is used to start watchdog trigger mode.
  *          User has to ensure, configure all Watchdog trigger parameters
  *          properly using Pmic_wdgSetCfg() API, before starting watchdog

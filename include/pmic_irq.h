@@ -141,7 +141,8 @@ typedef struct Pmic_IrqStatus_s
  * Requirement: REQ_TAG(PDK-5805), REQ_TAG(PDK-5842), REQ_TAG(PDK-5832),
  *              REQ_TAG(PDK-5838), REQ_TAG(PDK-5852), REQ_TAG(PDK-5834),
  *              REQ_TAG(PDK-5806), REQ_TAG(PDK-5828), REQ_TAG(PDK-5807),
- *              REQ_TAG(PDK-5846), REQ_TAG(PDK-5812)
+ *              REQ_TAG(PDK-5846), REQ_TAG(PDK-5812), REQ_TAG(PDK-5830),
+ *              REQ_TAG(PDK-5835), REQ_TAG(PDK-5836), REQ_TAG(PDK-5845)
  * Design: did_pmic_irq_cfg_readback
  *
  *          This function does the following:

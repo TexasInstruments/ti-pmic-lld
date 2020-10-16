@@ -2520,8 +2520,8 @@ int32_t  Pmic_rtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief   API to Enable/Disable the RTC Alarm Interrupt.
  *
- * Requirement: REQ_TAG(PDK-5855)
- * Design: did_pmic_rtc_cfg_readback
+ * Requirement: REQ_TAG(PDK-5855), REQ_TAG(PDK-5831)
+ * Design: did_pmic_rtc_cfg_readback, did_pmic_lpstandby_wkup_cfg
  *
  *          This function is used to enable/disable the RTC alarm interrupt.
  *
@@ -2563,8 +2563,8 @@ int32_t  Pmic_rtcEnableAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief   API to Enable/Disable the RTC Timer Interrupt.
  *
- * Requirement: REQ_TAG(PDK-5855)
- * Design: did_pmic_rtc_cfg_readback
+ * Requirement: REQ_TAG(PDK-5855), REQ_TAG(PDK-5831)
+ * Design: did_pmic_rtc_cfg_readback, did_pmic_lpstandby_wkup_cfg
  *
  *          This function is used to enable/disable the RTC timer interrupt.
  *

@@ -36,7 +36,8 @@
  *  \defgroup DRV_PMIC_FSM_MODULE PMIC FSM Driver API
  *      This Module explains about PMIC FSM driver parameters and APIs usage.
  *  PMIC FSM Driver module covers all FSM features APIs. Like, set/get FSM
- *  states, enable FSM I2C Triggers.
+ *  states, enable FSM I2C Triggers, Mask and Unmask NSLEEP Signals and 
+ *  trigger Runtime BIST
  *
  *  Supported PMIC devices for FSM Module:
  *  1. TPS6594x (Leo PMIC Device)
@@ -141,6 +142,10 @@ extern "C" {
 /*==========================================================================*/
 /*!
  * \brief  API to initiate OFF Request FSM transition.
+ *
+ * Requirement: REQ_TAG(PDK-5851)
+ * Design: did_pmic_lpstandby_cfg
+ *
  *         This function initiate OFF Request FSM transition from any other
  *         mission state to the STANDBY state or the LP_STANDBY state
  *
@@ -162,9 +167,13 @@ int32_t Pmic_fsmDeviceOffRequestCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
 /*!
  * \brief  API to initiate ON Request FSM transition.
+ *
+ * Requirement: REQ_TAG(PDK-5837)
+ * Design: did_pmic_fsm_cfg
+ *
  *         This function setup nSLEEP signal bits with STARTUP_DEST
- * Which is common for all supported PMICs. This API needs to be called
- * at PMIC init before clearing Enable and Start-Up interrupts.
+ *         Which is common for all supported PMICs. This API needs to be called
+ *         at PMIC init before clearing Enable and Start-Up interrupts.
  *
  *  \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
  */
@@ -172,6 +181,10 @@ int32_t Pmic_fsmDeviceOnRequest(Pmic_CoreHandle_t *pPmicCoreHandle);
 
 /*!
  * \brief  API to Set FSM mission States.
+ *
+ * Requirement: REQ_TAG(PDK-5837), REQ_TAG(PDK-5851)
+ * Design: did_pmic_fsm_cfg, did_pmic_lpstandby_cfg
+ *
  *         This function is used for set/change the FSM mission states for PMIC
  *
  * \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
@@ -186,6 +199,10 @@ int32_t Pmic_fsmSetMissionState(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
 /*!
  * \brief  API to MASK/UNMASK NSLEEP Signal.
+ *
+ * Requirement: REQ_TAG(PDK-5837)
+ * Design: did_pmic_fsm_cfg
+ *
  *         This function is used for Masking/Unmasking for NSLEEP2 or NSLEEP1
  *         signal.
  *
@@ -203,6 +220,10 @@ int32_t Pmic_fsmSetNsleepSignalMask(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
 /*!
  * \brief  API to initiate Runtime BIST.
+ *
+ * Requirement: REQ_TAG(PDK-5849)
+ * Design: did_pmic_runtime_bist_cfg
+ *
  *         This function initiates a request to exercise runtime BIST on the
  *         device
  *
