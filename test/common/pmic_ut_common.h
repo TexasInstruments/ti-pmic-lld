@@ -304,3 +304,8 @@ void pmic_printTestResult(Pmic_Ut_Tests_t *pTest, uint32_t num_testcases);
  * \brief    : Prints time taken for a given Valid string and returns delta.
  */
 uint64_t print_timeTakenInUsecs(uint64_t t1, const char *str);
+
+/*!
+ * \brief   print Banner Message
+ */
+void pmic_print_banner(const char *str);

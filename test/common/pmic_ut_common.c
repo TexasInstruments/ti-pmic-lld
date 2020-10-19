@@ -1544,7 +1544,6 @@ void pmic_printTestResult(Pmic_Ut_Tests_t *pTest, uint32_t num_testcases)
     char *result_str[3] = {"FAIL", "PASS", "IGNORE"};
     uint32_t testCnt = 0;
     uint32_t failCnt = 0;
-    uint32_t IgnoreCnt = 0;
 
     pmic_log("\n\r");
 
@@ -1557,24 +1556,31 @@ void pmic_printTestResult(Pmic_Ut_Tests_t *pTest, uint32_t num_testcases)
         if(true == pTest[idx].finalTestValid)
         {
             testResult = pTest[idx].finalTestResult;
-            pmic_log("|TEST RESULT|%s|%d|\n",
-                                  result_str[testResult], pTest[idx].testId);
-            testCnt++;
             if(PMIC_TEST_RESULT_FAIL == pTest[idx].finalTestResult)
             {
                 failCnt++;
             }
             else if(PMIC_TEST_RESULT_IGNORE == pTest[idx].finalTestResult)
             {
-                IgnoreCnt++;
+                continue;
             }
+            testCnt++;
+            pmic_log("|TEST RESULT|%s|%d|\n",
+                                  result_str[testResult], pTest[idx].testId);
         }
     }
 
     pmic_log("-----------------------\n");
-    pmic_log("%d Tests %d Failures %d Ignored\n",
-                         testCnt, failCnt, IgnoreCnt);
-    pmic_log("OK\n");
+    pmic_log("%d Tests %d Failures\n",
+                         testCnt, failCnt);
+    if(0U == failCnt)
+    {
+        pmic_log("All tests have passed\n");
+    }
+    else
+    {
+        pmic_log("Few tests are Failed\n");
+    }
 
 }
 
@@ -1595,4 +1601,33 @@ uint64_t print_timeTakenInUsecs(uint64_t t1, const char *str)
     }
 
     return delta;
+}
+
+/*!
+ * \brief   print Banner Message
+ */
+void pmic_print_banner(const char *str)
+{
+    pmic_log("\n\n%s running on %s of %s(%s %s)\n",
+             str,
+#if defined (BUILD_MCU1_0)
+             "MCU1_0",
+#elif defined (BUILD_MCU1_1)
+             "MCU1_1",
+#elif defined (BUILD_MCU2_0)
+             "MCU2_0",
+#elif defined (BUILD_MCU2_1)
+             "MCU2_1",
+#elif defined (BUILD_MCU3_0)
+             "MCU3_0",
+#elif defined (BUILD_MCU3_1)
+             "MCU3_1",
+#endif
+#if defined(SOC_J721E)
+             "J721E_EVM",
+#elif defined(SOC_J7200)
+             "J7VCL_EVM",
+#endif
+              __TIME__,
+              __DATE__);
 }

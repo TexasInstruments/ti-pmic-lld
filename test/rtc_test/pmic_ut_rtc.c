@@ -3768,7 +3768,8 @@ int main()
      */
     App_initGPIO(AppPmicCallbackFxn);
 
-    pmic_log("PMIC RTC Unity Test Application(%s %s)\n", __TIME__, __DATE__);
+    pmic_print_banner("PMIC RTC Unity Test Application");
+
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E)             || \
      defined(SOC_J7200))

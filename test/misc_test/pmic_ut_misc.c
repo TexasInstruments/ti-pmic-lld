@@ -1244,7 +1244,7 @@ static const char pmicTestMenu[] =
     " \r\n ================================================================="
     " \r\n Test Menu:"
     " \r\n ================================================================="
-    " \r\n 0: Automatic run for all board specific RTC options"
+    " \r\n 0: Automatic run for all board specific misc options"
     " \r\n 1: Manual run for RTC options"
     " \r\n 2: quit"
     " \r\n"
@@ -1545,8 +1545,7 @@ int main()
 {
     Board_initUART();
 
-    pmic_log("PMIC Misc Unity Test Application(%s %s)\n",
-                                         __TIME__, __DATE__);
+    pmic_print_banner("PMIC Misc Unity Test Application");
 
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E)             || \

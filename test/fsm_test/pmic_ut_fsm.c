@@ -1080,8 +1080,7 @@ int main()
 {
     Board_initUART();
 
-    pmic_log("PMIC FSM Unity Test Application(%s %s)\n",
-                                         __TIME__, __DATE__);
+    pmic_print_banner("PMIC FSM Unity Test Application");
 
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E)             || \
