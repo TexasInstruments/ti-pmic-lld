@@ -2566,6 +2566,11 @@ static void test_pmic_rtc_testTimerAsyncIntr(void)
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
+#if (defined(SOC_J7200) && (defined(BUILD_MCU2_0) || defined(BUILD_MCU2_1)))
+    pmic_testResultUpdate_ignore(7888,
+                                 pmic_rtc_tests,
+                                 PMIC_RTC_NUM_OF_TESTCASES);
+#endif
     /* Enable GPIO interrupt on the specific gpio pin */
     GPIO_enableInt(0);
 
@@ -2647,6 +2652,11 @@ static void test_pmic_rtc_testAlarmAsyncIntr(void)
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
+#if (defined(SOC_J7200) && (defined(BUILD_MCU2_0) || defined(BUILD_MCU2_1)))
+    pmic_testResultUpdate_ignore(7889,
+                                 pmic_rtc_tests,
+                                 PMIC_RTC_NUM_OF_TESTCASES);
+#endif
     /* Enable GPIO interrupt on the specific gpio pin */
     GPIO_enableInt(0);
 

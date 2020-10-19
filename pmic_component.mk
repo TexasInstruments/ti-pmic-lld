@@ -245,7 +245,7 @@ export pmic_EXAMPLE_LIST
 export drvpmic_LIB_LIST = $(pmic_LIB_LIST)
 export drvpmic_EXAMPLE_LIST = $(pmic_EXAMPLE_LIST)
 
-PMIC_CFLAGS =
+PMIC_CFLAGS = $(PDK_CFLAGS)
 export PMIC_CFLAGS
 pmic_component_make_include := 1
 endif

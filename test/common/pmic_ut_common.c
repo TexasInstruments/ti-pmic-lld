@@ -1284,7 +1284,41 @@ void GPIO_configIntRouter(uint32_t portNum, uint32_t pinNum, uint32_t gpioIntRtr
     bankNum = pinNum/16; /* Each GPIO bank has 16 pins */
 
     /* WKUP GPIO int router input interrupt is the GPIO bank interrupt */
+#if defined (SOC_J721E)
+#if defined (BUILD_MCU1_0)
     intCfg[pinNum].intNum = CSLR_MCU_R5FSS0_CORE0_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_0 + bankNum;
+#elif defined (BUILD_MCU1_1)
+    intCfg[pinNum].intNum = CSLR_MCU_R5FSS0_CORE1_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_0 + bankNum;
+#elif defined (BUILD_MCU2_0)
+    intCfg[pinNum].intNum = CSLR_R5FSS0_CORE0_INTR_R5FSS0_INTROUTER0_OUTL_0
+                            + bankNum;
+pmic_log("intCfg[pinNum].intNum: %d\n", intCfg[pinNum].intNum);
+#elif defined (BUILD_MCU2_1)
+    intCfg[pinNum].intNum = CSLR_R5FSS0_CORE1_INTR_R5FSS0_INTROUTER0_OUTL_1
+                            + bankNum;
+#elif defined (BUILD_MCU3_0)
+    intCfg[pinNum].intNum = CSLR_R5FSS1_CORE0_INTR_R5FSS1_INTROUTER0_OUTL_0
+                            + bankNum;
+#elif defined (BUILD_MCU3_1)
+    intCfg[pinNum].intNum = CSLR_R5FSS1_CORE1_INTR_R5FSS1_INTROUTER0_OUTL_1
+                            + bankNum;
+#endif
+#elif defined (SOC_J7200)
+#if defined (BUILD_MCU1_0)
+    intCfg[pinNum].intNum = CSLR_MCU_R5FSS0_CORE0_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_0 + bankNum;
+#elif defined (BUILD_MCU1_1)
+intCfg[pinNum].intNum = CSLR_MCU_R5FSS0_CORE1_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_3 + bankNum;
+#elif defined (BUILD_MCU2_0)
+    /* Added dummy intNum. Need to correct intNum to MCU2_0 */
+    intCfg[pinNum].intNum = CSLR_R5FSS0_CORE0_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_16
+                            + bankNum;
+#elif defined (BUILD_MCU2_1)
+    /* Added dummy intNum. Need to correct intNum to MCU2_1 */
+    intCfg[pinNum].intNum = CSLR_R5FSS0_CORE1_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_16
+                            + bankNum;
+#endif
+#endif
+
     intCfg[pinNum].intcMuxNum = INVALID_INTC_MUX_NUM;
     intCfg[pinNum].intcMuxInEvent = 0;
     intCfg[pinNum].intcMuxOutEvent = 0;

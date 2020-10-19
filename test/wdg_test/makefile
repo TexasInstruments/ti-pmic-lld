@@ -63,7 +63,7 @@ COMP_LIST_COMMON = $(PDK_COMMON_BAREMETAL_COMP)
 # Common source files and CFLAGS across all platforms and cores
 PACKAGE_SRCS_COMMON = . ../common
 
-CFLAGS_LOCAL_COMMON += -DUNITY_INCLUDE_CONFIG_V2_H
+CFLAGS_LOCAL_COMMON += -DUNITY_INCLUDE_CONFIG_V2_H $(PMIC_CFLAGS)
 
 # Core/SoC/platform specific source files and CFLAGS
 # Example:
