@@ -238,6 +238,24 @@ export pmic_fsm_testapp_SBL_APPIMAGEGEN
 pmic_EXAMPLE_LIST += pmic_fsm_testapp
 
 #
+# BenchMark  test
+#
+export pmic_benchmark_testapp_COMP_LIST = pmic_benchmark_testapp
+pmic_benchmark_testapp_RELPATH = ti/drv/pmic/test/benchmark_test
+pmic_benchmark_testapp_PATH = $(PDK_PMIC_COMP_PATH)/test/benchmark_test
+export pmic_benchmark_testapp_BOARD_DEPENDENCY = yes
+export pmic_benchmark_testapp_CORE_DEPENDENCY = no
+export pmic_benchmark_testapp_MAKEFILE = -f makefile IS_BAREMETAL=yes
+pmic_benchmark_testapp_PKG_LIST = pmic_benchmark_testapp
+pmic_benchmark_testapp_INCLUDE = $(pmic_benchmark_testapp_PATH)
+export pmic_benchmark_testapp_BOARDLIST = $(drvpmic_BOARDLIST)
+export pmic_benchmark_testapp_$(SOC)_CORELIST = $(drvpmic_app_$(SOC)_CORELIST)
+pmic_benchmark_testapp_SBL_APPIMAGEGEN = yes
+export pmic_benchmark_testapp_SBL_APPIMAGEGEN
+
+pmic_EXAMPLE_LIST += pmic_benchmark_testapp
+
+#
 # Export Libraries and Apps to Build Env
 #
 export pmic_LIB_LIST

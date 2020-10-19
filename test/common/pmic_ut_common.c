@@ -43,6 +43,7 @@
 Pmic_CoreHandle_t *pPmicCoreHandleI2C = NULL;
 
 uint8_t startup_type = 0U;
+uint8_t enableBenchMark = 0U;
 
 /* CRC8 Table with polynomial value:0x7 */
 uint8_t crc8_tlb[] =
@@ -1075,8 +1076,23 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
             pmicConfigData->validParams |= PMIC_CFG_COMM_HANDLE_VALID_SHIFT;
             /* Update instance type to pmicConfigData */
             pmicConfigData->instType = PMIC_MAIN_INST;
-            /* Get PMIC core Handle for Main Instance */
-            pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
+            if(true == enableBenchMark)
+            {
+	        uint64_t t1 = 0;
+                t1 = print_timeTakenInUsecs(0U, NULL);
+                /* Get PMIC core Handle for Main Instance */
+                pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
+                pmic_log("--------------------------------------\n");
+                t1 = print_timeTakenInUsecs(t1,
+                            "Pmic_init API for single instance");
+                pmic_log("--------------------------------------\n");
+            }
+            else
+            {
+                /* Get PMIC core Handle for Main Instance */
+                pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
+            }
+
             /*
              * Check for Warning message due to Invalid Device ID.
              * And continue the application with WARNING message.
@@ -1124,8 +1140,22 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
             pmicConfigData->validParams |= PMIC_CFG_COMM_HANDLE_VALID_SHIFT;
             /* Update instance type to pmicConfigData */
             pmicConfigData->instType = PMIC_MAIN_INST;
-            /* Get PMIC core Handle for Main Instance */
-            pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
+            if(true == enableBenchMark)
+            {
+	        uint64_t t1 = 0;
+                t1 = print_timeTakenInUsecs(0U, NULL);
+                /* Get PMIC core Handle for Main Instance */
+                pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
+                pmic_log("--------------------------------------\n");
+                t1 = print_timeTakenInUsecs(t1,
+                            "Pmic_init API for single instance");
+                pmic_log("--------------------------------------\n");
+            }
+            else
+            {
+                /* Get PMIC core Handle for Main Instance */
+                pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
+            }
             /*
              * Check for Warning message due to Invalid Device ID.
              * And continue the application with WARNING message.
@@ -1546,4 +1576,23 @@ void pmic_printTestResult(Pmic_Ut_Tests_t *pTest, uint32_t num_testcases)
                          testCnt, failCnt, IgnoreCnt);
     pmic_log("OK\n");
 
+}
+
+/*!
+ * \brief    : Prints time taken for a given Valid string and returns delta.
+ */
+uint64_t print_timeTakenInUsecs(uint64_t t1, const char *str)
+{
+    uint64_t t2 = 0; 
+    uint64_t delta = 0;
+
+    t2 = TimerP_getTimeInUsecs();
+    delta = t2 - t1;
+
+    if(NULL != str)
+    {
+        pmic_log("Time taken for %50s: %6d usec\n", str, (uint32_t)delta);
+    }
+
+    return delta;
 }

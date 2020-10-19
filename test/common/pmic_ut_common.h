@@ -299,3 +299,8 @@ void pmic_updateTestResults(Pmic_Ut_Tests_t *pTest, uint32_t num_testcases);
  * \brief   print all tests resuluts in required pattern
  */
 void pmic_printTestResult(Pmic_Ut_Tests_t *pTest, uint32_t num_testcases);
+
+/*!
+ * \brief    : Prints time taken for a given Valid string and returns delta.
+ */
+uint64_t print_timeTakenInUsecs(uint64_t t1, const char *str);
