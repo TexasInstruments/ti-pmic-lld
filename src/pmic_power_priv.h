@@ -960,7 +960,7 @@ typedef struct Pmic_powerIntCfg_s
 static inline uint8_t Pmic_powerGetPwrRsrcId(uint16_t pwrRsrc)
 {
     uint8_t pwrRsrcId;
-    pwrRsrcId = (pwrRsrc & 0xFFU);
+    pwrRsrcId = (uint8_t)(pwrRsrc & 0xFFU);
 
     return pwrRsrcId;
 }
@@ -972,7 +972,7 @@ static inline uint8_t Pmic_powerGetPwrRsrcId(uint16_t pwrRsrc)
 static inline uint8_t Pmic_powerGetPwrRsrcType(uint16_t pwrRsrc)
 {
     uint8_t pwrRsrcType;
-    pwrRsrcType = ((pwrRsrc >> 0x8U) & 0xFFU);
+    pwrRsrcType = (uint8_t)((pwrRsrc >> 0x8U) & 0xFFU);
 
     return pwrRsrcType;
 }

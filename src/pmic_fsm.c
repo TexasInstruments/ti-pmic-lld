@@ -94,7 +94,7 @@ static int32_t Pmic_powerGetNsleepMaskBitField(bool     nsleepType,
         *pBitPos  = PMIC_CONFIG_1_NSLEEP1_MASK_SHIFT;
         *pBitMask = PMIC_CONFIG_1_NSLEEP1_MASK_MASK;
     }
-    else if(nsleepType == PMIC_NSLEEP2_SIGNAL)
+    if(nsleepType == PMIC_NSLEEP2_SIGNAL)
     {
         *pBitPos  = PMIC_CONFIG_1_NSLEEP2_MASK_SHIFT;
         *pBitMask = PMIC_CONFIG_1_NSLEEP2_MASK_MASK;
@@ -111,27 +111,25 @@ static int32_t Pmic_setS2RState(Pmic_CoreHandle_t *pPmicCoreHandle)
     int32_t status  = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                    PMIC_FSM_NSLEEP_TRIGGERS_REGADDR,
+                                    &regData);
+
     if(PMIC_ST_SUCCESS == status)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle,
+        Pmic_setBitField(&regData,
+                         PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B_SHIFT,
+                         (PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B_MASK |
+                         PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B_MASK),
+                         PMIC_FSM_NSLEEPX_RESET);
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                         PMIC_FSM_NSLEEP_TRIGGERS_REGADDR,
-                                        &regData);
-
-        if(PMIC_ST_SUCCESS == status)
-        {
-            Pmic_setBitField(&regData,
-                             PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B_SHIFT,
-                             (PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B_MASK |
-                              PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B_MASK),
-                             PMIC_FSM_NSLEEPX_RESET);
-            status = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                            PMIC_FSM_NSLEEP_TRIGGERS_REGADDR,
-                                            regData);
-        }
-
-        Pmic_criticalSectionStop(pPmicCoreHandle);
+                                        regData);
     }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return status;
 }
@@ -140,7 +138,7 @@ static int32_t Pmic_setS2RState(Pmic_CoreHandle_t *pPmicCoreHandle)
  * \brief   This function is used to set the defined NSLEEP Signal.
  */
 static int32_t Pmic_setNsleepSignal(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                    bool               value,
+                                    uint8_t            value,
                                     bool               nsleepSignal)
 {
     int32_t status  = PMIC_ST_SUCCESS;
@@ -153,29 +151,26 @@ static int32_t Pmic_setNsleepSignal(Pmic_CoreHandle_t *pPmicCoreHandle,
         bitPos  = PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B_SHIFT;
         bitMask = PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B_MASK;
     }
-    else if(PMIC_NSLEEP2_SIGNAL == nsleepSignal)
+    if(PMIC_NSLEEP2_SIGNAL == nsleepSignal)
     {
         bitPos  = PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B_SHIFT;
         bitMask = PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B_MASK;
     }
 
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                    PMIC_FSM_NSLEEP_TRIGGERS_REGADDR,
+                                    &regData);
+
     if(PMIC_ST_SUCCESS == status)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle,
+        Pmic_setBitField(&regData, bitPos, bitMask, value);
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                         PMIC_FSM_NSLEEP_TRIGGERS_REGADDR,
-                                        &regData);
-
-        if(PMIC_ST_SUCCESS == status)
-        {
-            Pmic_setBitField(&regData, bitPos, bitMask, value);
-            status = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                            PMIC_FSM_NSLEEP_TRIGGERS_REGADDR,
-                                            regData);
-        }
-
-        Pmic_criticalSectionStop(pPmicCoreHandle);
+                                        regData);
     }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return status;
 }
@@ -194,12 +189,9 @@ static int32_t Pmic_fsmEnableI2cTrigger(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            PMIC_FSM_I2C_TRIGGERS_REGADDR,
-                                            &regData);
-    }
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_FSM_I2C_TRIGGERS_REGADDR,
+                                        &regData);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -208,7 +200,7 @@ static int32_t Pmic_fsmEnableI2cTrigger(Pmic_CoreHandle_t  *pPmicCoreHandle,
             bitShift = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_0_SHIFT;
             bitMask  = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_0_MASK;
         }
-        else if(i2cTriggerType == PMIC_FSM_I2C_TRIGGER1)
+        if(i2cTriggerType == PMIC_FSM_I2C_TRIGGER1)
         {
             bitShift = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_1_SHIFT;
             bitMask  = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_1_MASK;
@@ -237,55 +229,52 @@ static int32_t Pmic_setState(Pmic_CoreHandle_t  *pPmicCoreHandle,
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if(PMIC_ST_SUCCESS == status)
+    switch(pmicNextState)
     {
-         switch(pmicNextState)
-         {
-             case PMIC_FSM_LP_STANBY_STATE:
-                status = Pmic_fsmDeviceOffRequestCfg(pPmicCoreHandle,
-                                                     PMIC_FSM_I2C_TRIGGER0_TYPE,
-                                                     PMIC_FSM_LP_STANBY_STATE);
-                break;
-             case PMIC_FSM_STANBY_STATE:
-                status = Pmic_fsmDeviceOffRequestCfg(pPmicCoreHandle,
-                                                     PMIC_FSM_I2C_TRIGGER0_TYPE,
-                                                     PMIC_FSM_STANBY_STATE);
-                break;
-             case PMIC_FSM_ACTIVE_STATE:
-                status = Pmic_setNsleepSignal(pPmicCoreHandle,
-                                              PMIC_FSM_NSLEEPX_SET,
-                                              PMIC_NSLEEP2_SIGNAL);
+        case PMIC_FSM_LP_STANBY_STATE:
+           status = Pmic_fsmDeviceOffRequestCfg(pPmicCoreHandle,
+                                 PMIC_FSM_I2C_TRIGGER0_TYPE,
+                                 PMIC_FSM_LP_STANBY_STATE);
+           break;
+        case PMIC_FSM_STANBY_STATE:
+           status = Pmic_fsmDeviceOffRequestCfg(pPmicCoreHandle,
+                                 PMIC_FSM_I2C_TRIGGER0_TYPE,
+                                 PMIC_FSM_STANBY_STATE);
+           break;
+        case PMIC_FSM_ACTIVE_STATE:
+           status = Pmic_setNsleepSignal(pPmicCoreHandle,
+                               PMIC_FSM_NSLEEPX_SET,
+                               PMIC_NSLEEP2_SIGNAL);
 
-                if(PMIC_ST_SUCCESS == status)
-                {
-                    status = Pmic_setNsleepSignal(pPmicCoreHandle,
-                                                  PMIC_FSM_NSLEEPX_SET,
-                                                  PMIC_NSLEEP1_SIGNAL);
-                }
+           if(PMIC_ST_SUCCESS == status)
+           {
+               status = Pmic_setNsleepSignal(pPmicCoreHandle,
+                                   PMIC_FSM_NSLEEPX_SET,
+                                   PMIC_NSLEEP1_SIGNAL);
+           }
 
-                break;
-             case PMIC_FSM_MCU_ONLY_STATE:
-                status = Pmic_setNsleepSignal(pPmicCoreHandle,
-                                              PMIC_FSM_NSLEEPX_RESET,
-                                              PMIC_NSLEEP1_SIGNAL);
+           break;
+        case PMIC_FSM_MCU_ONLY_STATE:
+           status = Pmic_setNsleepSignal(pPmicCoreHandle,
+                               PMIC_FSM_NSLEEPX_RESET,
+                               PMIC_NSLEEP1_SIGNAL);
 
-                if(PMIC_ST_SUCCESS == status)
-                {
-                    status = Pmic_setNsleepSignal(pPmicCoreHandle,
-                                                  PMIC_FSM_NSLEEPX_SET,
-                                                  PMIC_NSLEEP2_SIGNAL);
-                }
+           if(PMIC_ST_SUCCESS == status)
+           {
+               status = Pmic_setNsleepSignal(pPmicCoreHandle,
+                                   PMIC_FSM_NSLEEPX_SET,
+                                   PMIC_NSLEEP2_SIGNAL);
+           }
 
-                break;
-             case PMIC_FSM_S2R_STATE:
-                status = Pmic_setS2RState(pPmicCoreHandle);
+           break;
+        case PMIC_FSM_S2R_STATE:
+           status = Pmic_setS2RState(pPmicCoreHandle);
 
-                break;
-            default:
-                status = PMIC_ST_ERR_INV_PARAM;
-                break;
+           break;
+       default:
+           status = PMIC_ST_ERR_INV_PARAM;
+            break;
         }
-    }
 
     return status;
 }
@@ -570,6 +559,7 @@ int32_t Pmic_fsmSetNsleepSignalMask(Pmic_CoreHandle_t  *pPmicCoreHandle,
     uint8_t  regData = 0U;
     uint8_t  bitPos  = 0U;
     uint8_t  bitMask = 0U;
+    uint8_t  maskEnableVal = 0U;
 
     if(NULL == pPmicCoreHandle)
     {
@@ -592,7 +582,11 @@ int32_t Pmic_fsmSetNsleepSignalMask(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            Pmic_setBitField(&regData, bitPos, bitMask, maskEnable);
+            if(((bool)true) == maskEnable)
+            {
+                maskEnableVal = 1U;
+            }
+            Pmic_setBitField(&regData, bitPos, bitMask, maskEnableVal);
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                                 PMIC_CONFIG_1_REGADDR,
                                                 regData);

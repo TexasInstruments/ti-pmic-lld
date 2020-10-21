@@ -329,7 +329,7 @@ int32_t Pmic_powerLP8764xConvertVSetVal2Voltage(
                                             uint8_t           *pBaseVoutCode)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    bool    vmonRange = 0U;
+    bool    vmonRange = (bool)false;
     uint8_t pwrRsrcType = 0U;
 
     pwrRsrcType = Pmic_powerGetPwrRsrcType(pwrRsrc);

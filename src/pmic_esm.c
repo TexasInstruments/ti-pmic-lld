@@ -141,6 +141,7 @@ static int32_t Pmic_esmDeviceCheck(const Pmic_CoreHandle_t  *pPmicCoreHandle,
 
         default:
             pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+            break;
     }
 
     return pmicStatus;
@@ -283,21 +284,27 @@ static int32_t Pmic_esmIntrEnable(Pmic_CoreHandle_t        *pPmicCoreHandle,
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
     /* Mask/Un-mask ESM MCU Interrupts */
-    if((PMIC_ST_SUCCESS == pmicStatus) && (PMIC_ESM_MODE_MCU == esmType))
+    if(PMIC_ESM_MODE_MCU == esmType)
     {
         if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
         {
             pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
                                           PMIC_TPS6594X_ESM_MCU_PIN_INT,
                                           !esmIntrCfg.esmPinIntr);
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                              PMIC_TPS6594X_ESM_MCU_FAIL_INT,
+                                              !esmIntrCfg.esmFailIntr);
+            }
 
-            pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
-                                          PMIC_TPS6594X_ESM_MCU_FAIL_INT,
-                                          !esmIntrCfg.esmFailIntr);
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                              PMIC_TPS6594X_ESM_MCU_RST_INT,
+                                              !esmIntrCfg.esmRstIntr);
+            }
 
-            pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
-                                          PMIC_TPS6594X_ESM_MCU_RST_INT,
-                                          !esmIntrCfg.esmRstIntr);
         }
 
         if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -306,13 +313,19 @@ static int32_t Pmic_esmIntrEnable(Pmic_CoreHandle_t        *pPmicCoreHandle,
                                           PMIC_LP8764X_ESM_MCU_PIN_INT,
                                           !esmIntrCfg.esmPinIntr);
 
-            pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
-                                          PMIC_LP8764X_ESM_MCU_FAIL_INT,
-                                          !esmIntrCfg.esmFailIntr);
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                              PMIC_LP8764X_ESM_MCU_FAIL_INT,
+                                              !esmIntrCfg.esmFailIntr);
+            }
 
-            pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
-                                          PMIC_LP8764X_ESM_MCU_RST_INT,
-                                          !esmIntrCfg.esmRstIntr);
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                              PMIC_LP8764X_ESM_MCU_RST_INT,
+                                              !esmIntrCfg.esmRstIntr);
+            }
         }
     }
 
@@ -323,13 +336,21 @@ static int32_t Pmic_esmIntrEnable(Pmic_CoreHandle_t        *pPmicCoreHandle,
                                       PMIC_TPS6594X_ESM_SOC_PIN_INT,
                                       !esmIntrCfg.esmPinIntr);
 
-        pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
-                                      PMIC_TPS6594X_ESM_SOC_FAIL_INT,
-                                      !esmIntrCfg.esmFailIntr);
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                          PMIC_TPS6594X_ESM_SOC_FAIL_INT,
+                                          !esmIntrCfg.esmFailIntr);
+        }
 
-        pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
-                                      PMIC_TPS6594X_ESM_SOC_RST_INT,
-                                      !esmIntrCfg.esmRstIntr);
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+
+            pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                          PMIC_TPS6594X_ESM_SOC_RST_INT,
+                                          !esmIntrCfg.esmRstIntr);
+        }
+
     }
 
     return pmicStatus;
@@ -355,7 +376,7 @@ static int32_t Pmic_esmSetDelay1Value(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        regData = (esmCfg.esmDelay1_us / PMIC_ESM_DELAY_MICROSEC_DIV);
+        regData = (uint8_t)(esmCfg.esmDelay1_us / PMIC_ESM_DELAY_MICROSEC_DIV);
 
         /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -391,7 +412,7 @@ static int32_t Pmic_esmSetDelay2Value(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        regData = (esmCfg.esmDelay2_us / PMIC_ESM_DELAY_MICROSEC_DIV);
+        regData = (uint8_t)(esmCfg.esmDelay2_us / PMIC_ESM_DELAY_MICROSEC_DIV);
 
         /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -423,12 +444,9 @@ static int32_t Pmic_esmSetErrCntThrValue(Pmic_CoreHandle_t   *pPmicCoreHandle,
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            regAddr,
-                                            &regData);
-    }
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -469,7 +487,7 @@ static int32_t Pmic_esmSetHmaxValue(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        regData = ((esmCfg.esmHmax_us - PMIC_ESM_PWM_PULSE_MICROSEC_MIN) /
+        regData = (uint8_t)((esmCfg.esmHmax_us - PMIC_ESM_PWM_PULSE_MICROSEC_MIN) /
                     PMIC_ESM_PWM_PULSE_MICROSEC_DIV);
 
         /* Start Critical Section */
@@ -507,7 +525,7 @@ static int32_t Pmic_esmSetHminValue(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        regData = ((esmCfg.esmHmin_us - PMIC_ESM_PWM_PULSE_MICROSEC_MIN) /
+        regData = (uint8_t)((esmCfg.esmHmin_us - PMIC_ESM_PWM_PULSE_MICROSEC_MIN) /
                     PMIC_ESM_PWM_PULSE_MICROSEC_DIV);
 
         /* Start Critical Section */
@@ -545,7 +563,7 @@ static int32_t Pmic_esmSetLmaxValue(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        regData = ((esmCfg.esmLmax_us - PMIC_ESM_PWM_PULSE_MICROSEC_MIN) /
+        regData = (uint8_t)((esmCfg.esmLmax_us - PMIC_ESM_PWM_PULSE_MICROSEC_MIN) /
                     PMIC_ESM_PWM_PULSE_MICROSEC_DIV);
 
         /* Start Critical Section */
@@ -583,7 +601,7 @@ static int32_t Pmic_esmSetLminValue(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        regData = ((esmCfg.esmLmin_us - PMIC_ESM_PWM_PULSE_MICROSEC_MIN) /
+        regData = (uint8_t)((esmCfg.esmLmin_us - PMIC_ESM_PWM_PULSE_MICROSEC_MIN) /
                     PMIC_ESM_PWM_PULSE_MICROSEC_DIV);
 
         /* Start Critical Section */
@@ -618,12 +636,9 @@ static int32_t Pmic_esmSetEnDrvValue(Pmic_CoreHandle_t   *pPmicCoreHandle,
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            regAddr,
-                                            &regData);
-    }
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -661,12 +676,11 @@ static int32_t Pmic_esmSetMode(Pmic_CoreHandle_t   *pPmicCoreHandle,
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            regAddr,
-                                            &regData);
-    }
+
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -699,22 +713,19 @@ static int32_t Pmic_esmGetDelay1Value(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     regAddr = (esmBaseRegAddr + PMIC_ESM_DELAY1_REG_OFFSET);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        /* Start Critical Section */
-        Pmic_criticalSectionStart(pPmicCoreHandle);
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            regAddr,
-                                            &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
 
-        /* Stop Critical Section */
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pEsmCfg->esmDelay1_us = (regData * PMIC_ESM_DELAY_MICROSEC_DIV);
+        pEsmCfg->esmDelay1_us = ((uint32_t)regData * PMIC_ESM_DELAY_MICROSEC_DIV);
     }
 
     return pmicStatus;
@@ -733,22 +744,19 @@ static int32_t Pmic_esmGetDelay2Value(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     regAddr = (esmBaseRegAddr + PMIC_ESM_DELAY2_REG_OFFSET);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        /* Start Critical Section */
-        Pmic_criticalSectionStart(pPmicCoreHandle);
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            regAddr,
-                                            &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
 
-        /* Stop Critical Section */
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pEsmCfg->esmDelay2_us = (regData * PMIC_ESM_DELAY_MICROSEC_DIV);
+        pEsmCfg->esmDelay2_us = ((uint32_t)regData * PMIC_ESM_DELAY_MICROSEC_DIV);
     }
 
     return pmicStatus;
@@ -768,18 +776,15 @@ static int32_t Pmic_esmGetErrCntThrValue(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     regAddr = (esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        /* Start Critical Section */
-        Pmic_criticalSectionStart(pPmicCoreHandle);
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            regAddr,
-                                            &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
 
-        /* Stop Critical Section */
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -804,18 +809,15 @@ static int32_t Pmic_esmGetHmaxValue(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     regAddr = (esmBaseRegAddr + PMIC_ESM_HMAX_REG_OFFSET);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        /* Start Critical Section */
-        Pmic_criticalSectionStart(pPmicCoreHandle);
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            regAddr,
-                                            &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
 
-        /* Stop Critical Section */
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -840,18 +842,15 @@ static int32_t Pmic_esmGetHminValue(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     regAddr = (esmBaseRegAddr + PMIC_ESM_HMIN_REG_OFFSET);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        /* Start Critical Section */
-        Pmic_criticalSectionStart(pPmicCoreHandle);
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            regAddr,
-                                            &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
 
-        /* Stop Critical Section */
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -876,18 +875,15 @@ static int32_t Pmic_esmGetLmaxValue(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     regAddr = (esmBaseRegAddr + PMIC_ESM_LMAX_REG_OFFSET);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        /* Start Critical Section */
-        Pmic_criticalSectionStart(pPmicCoreHandle);
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            regAddr,
-                                            &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
 
-        /* Stop Critical Section */
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -912,18 +908,15 @@ static int32_t Pmic_esmGetLminValue(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     regAddr = (esmBaseRegAddr + PMIC_ESM_LMIN_REG_OFFSET);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        /* Start Critical Section */
-        Pmic_criticalSectionStart(pPmicCoreHandle);
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            regAddr,
-                                            &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
 
-        /* Stop Critical Section */
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -945,27 +938,34 @@ static int32_t Pmic_esmGetEnDrvValue(Pmic_CoreHandle_t *pPmicCoreHandle,
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
     uint8_t regData     = 0U;
     uint8_t regAddr     = 0U;
+    uint8_t bitFieldVal = 0U;
 
     regAddr = (esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        /* Start Critical Section */
-        Pmic_criticalSectionStart(pPmicCoreHandle);
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            regAddr,
-                                            &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
 
-        /* Stop Critical Section */
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pEsmCfg->esmEnDrv = (bool)(Pmic_getBitField(regData,
+        bitFieldVal = Pmic_getBitField(regData,
                                          PMIC_ESM_X_MODE_CFG_ESM_X_ENDRV_SHIFT,
-                                         PMIC_ESM_X_MODE_CFG_ESM_X_ENDRV_MASK));
+                                         PMIC_ESM_X_MODE_CFG_ESM_X_ENDRV_MASK);
+        if(bitFieldVal != 0U)
+        {
+            pEsmCfg->esmEnDrv = (bool)true;
+        }
+        else
+        {
+            pEsmCfg->esmEnDrv = (bool)false;
+        }
+
     }
 
     return pmicStatus;
@@ -981,27 +981,34 @@ static int32_t Pmic_esmGetModeValue(Pmic_CoreHandle_t *pPmicCoreHandle,
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
     uint8_t regData     = 0U;
     uint8_t regAddr     = 0U;
+    uint8_t bitFieldVal = 0U;
 
     regAddr = (esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        /* Start Critical Section */
-        Pmic_criticalSectionStart(pPmicCoreHandle);
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            regAddr,
-                                            &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
 
-        /* Stop Critical Section */
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pEsmCfg->esmMode = (bool)(Pmic_getBitField(regData,
+        bitFieldVal = Pmic_getBitField(regData,
                                        PMIC_ESM_X_MODE_CFG_ESM_X_MODE_SHIFT,
-                                       PMIC_ESM_X_MODE_CFG_ESM_X_MODE_MASK));
+                                       PMIC_ESM_X_MODE_CFG_ESM_X_MODE_MASK);
+        if(bitFieldVal != 0U)
+        {
+            pEsmCfg->esmMode = (bool)true;
+        }
+        else
+        {
+            pEsmCfg->esmMode = (bool)false;
+        }
+
     }
 
     return pmicStatus;

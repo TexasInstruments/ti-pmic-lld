@@ -359,7 +359,7 @@ int32_t Pmic_powerTPS6594xConvertVSet2Voltage(const uint8_t  *pVSetVal,
     pwrRsrcType = Pmic_powerGetPwrRsrcType(pwrRsrc);
     if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType)
     {
-        Pmic_powerBuckVmonConvertVSetVal2Voltage(pVSetVal,
+        status = Pmic_powerBuckVmonConvertVSetVal2Voltage(pVSetVal,
                                                  pBaseMillivolt,
                                                  pMillivoltStep,
                                                  pBaseVoutCode);
@@ -503,6 +503,7 @@ static int32_t Pmic_powerLdoRtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData;
+    uint8_t ldortcEnableVal = 0U;
 
     switch (pPmicCoreHandle->pmicDeviceType)
     {
@@ -514,11 +515,16 @@ static int32_t Pmic_powerLdoRtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
 
             if(PMIC_ST_SUCCESS == status)
             {
+                if(((bool)true) == ldortcEnable)
+                {
+                    ldortcEnableVal = 1U;
+                }
+
                 /* Set ldortcEnable */
                 Pmic_setBitField(&regData,
                                  PMIC_LDORTC_CTRL_LDORTC_DIS_SHIFT,
                                  PMIC_LDORTC_CTRL_LDORTC_DIS_MASK,
-                                 ldortcEnable);
+                                 ldortcEnableVal);
                 status = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                                 PMIC_LDORTC_CTRL_REGADDR,
                                                 regData);
@@ -552,9 +558,17 @@ static int32_t Pmic_powerGetLdoRtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
             if(PMIC_ST_SUCCESS == status)
             {
                 /* Get ldortcEnable */
-                *pLdortcEnable = Pmic_getBitField(regData,
-                                                  PMIC_LDORTC_CTRL_LDORTC_DIS_SHIFT,
-                                                  PMIC_LDORTC_CTRL_LDORTC_DIS_MASK);
+                if(Pmic_getBitField(regData,
+                                    PMIC_LDORTC_CTRL_LDORTC_DIS_SHIFT,
+                                    PMIC_LDORTC_CTRL_LDORTC_DIS_MASK) != 0U)
+                {
+                    *pLdortcEnable = (bool)true;
+                }
+                else
+                {
+                    *pLdortcEnable = (bool)false;
+                }
+
             }
 
             break;
@@ -601,13 +615,8 @@ int32_t Pmic_powerSetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /*!
- * \brief   API to get enable/disable status for LDORTC regulator
- *
- * Requirement: REQ_TAG(PDK-5841)
- * Design: did_pmic_power_cfg_readback
- *
- *          This function is used to get enable/disable status for LDORTC 
- *          regulator.
+ * \brief   API to get enable/disable status for LODRTC regulator
+ *          This function is used to enable/disble power Interrupts
  *
  * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
  * \param   pLdortcEnable      [IN]    Pointer to hold Enable/Disable status.
@@ -635,7 +644,7 @@ int32_t Pmic_powerGetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_powerGetLdoRtcEnable(pPmicCoreHandle, pLdortcEnable);
+        pmicStatus = Pmic_powerGetLdoRtcEnable(pPmicCoreHandle, pLdortcEnable);
     }
 
     return pmicStatus;
