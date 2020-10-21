@@ -295,13 +295,16 @@ int32_t Pmic_powerLP8764xConvertVoltage2VSetVal(
                                                                  pMillivoltStep,
                                                                  pBaseVoutCode);
             }
-            else if((PMIC_ST_SUCCESS == status) &&
-                    (PMIC_LP8764X_VMON_RANGE_3V35_5V == vmonRange))
+            else
             {
-                status = Pmic_powerVmonRange1ConvertVoltage2VSetVal(
+                if((PMIC_ST_SUCCESS == status) &&
+                    (PMIC_LP8764X_VMON_RANGE_3V35_5V == vmonRange))
+                {
+                    status = Pmic_powerVmonRange1ConvertVoltage2VSetVal(
                                                                 pBaseMillivolt,
                                                                 pMillivoltStep,
                                                                 pBaseVoutCode);
+                }
             }
 
             break;
@@ -353,13 +356,16 @@ int32_t Pmic_powerLP8764xConvertVSetVal2Voltage(
                                                                  pMillivoltStep,
                                                                  pBaseVoutCode);
             }
-            else if((PMIC_ST_SUCCESS == status) &&
-                    (PMIC_LP8764X_VMON_RANGE_3V35_5V == vmonRange))
+            else
             {
-                status = Pmic_powerVmonRange1ConvertVSetVal2Voltage(
+                if((PMIC_ST_SUCCESS == status) &&
+                    (PMIC_LP8764X_VMON_RANGE_3V35_5V == vmonRange))
+                {
+                    status = Pmic_powerVmonRange1ConvertVSetVal2Voltage(
                                                                  pBaseMillivolt,
                                                                  pMillivoltStep,
                                                                  pBaseVoutCode);
+                }
             }
 
             break;

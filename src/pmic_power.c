@@ -865,7 +865,7 @@ static int32_t Pmic_powerConvertVoltage2VSetVal(
     }
 
     if((PMIC_ST_SUCCESS == status) &&
-       (true == (millivolt % millivoltStep)))
+       (((bool)true) == (millivolt % millivoltStep)))
        {
            status = PMIC_ST_ERR_INV_PARAM;
        }
@@ -1711,12 +1711,15 @@ static int32_t Pmic_powerValidateBuckCurrentLimit(uint8_t  pmicDeviceType,
                     status = PMIC_ST_ERR_INV_PARAM;
                 }
             }
-            else if(pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK5)
+            else
             {
-                if((currentLimit < PMIC_TPS6594X_BUCK5_CURRENT_LIMIT_MIN) ||
-                   (currentLimit > PMIC_TPS6594X_BUCK5_CURRENT_LIMIT_MAX))
+                if(pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK5)
                 {
-                    status = PMIC_ST_ERR_INV_PARAM;
+                    if((currentLimit < PMIC_TPS6594X_BUCK5_CURRENT_LIMIT_MIN) ||
+                       (currentLimit > PMIC_TPS6594X_BUCK5_CURRENT_LIMIT_MAX))
+                    {
+                        status = PMIC_ST_ERR_INV_PARAM;
+                    }
                 }
             }
             break;
@@ -2841,7 +2844,7 @@ static int32_t Pmic_powerSetPwrResourceCtrlCfg(
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    if(true == pmic_validParamCheck(pwrRsrcCfg.validParams,
+    if(((bool)true) == pmic_validParamCheck(pwrRsrcCfg.validParams,
                                     PMIC_CFG_REGULATOR_VMON_RV_SEL_VALID))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -2859,7 +2862,7 @@ static int32_t Pmic_powerSetPwrResourceCtrlCfg(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pwrRsrcCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(pwrRsrcCfg.validParams,
                                      PMIC_CFG_REGULATOR_BUCK_PLDN_EN_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -2878,7 +2881,7 @@ static int32_t Pmic_powerSetPwrResourceCtrlCfg(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pwrRsrcCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(pwrRsrcCfg.validParams,
                                      PMIC_CFG_REGULATOR_BUCK_VOUT_SEL_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -2896,7 +2899,7 @@ static int32_t Pmic_powerSetPwrResourceCtrlCfg(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pwrRsrcCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(pwrRsrcCfg.validParams,
                                      PMIC_CFG_REGULATOR_BUCK_FPWM_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -2915,7 +2918,7 @@ static int32_t Pmic_powerSetPwrResourceCtrlCfg(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pwrRsrcCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(pwrRsrcCfg.validParams,
                                      PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -2933,7 +2936,7 @@ static int32_t Pmic_powerSetPwrResourceCtrlCfg(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pwrRsrcCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(pwrRsrcCfg.validParams,
                                     PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -2951,7 +2954,7 @@ static int32_t Pmic_powerSetPwrResourceCtrlCfg(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pwrRsrcCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(pwrRsrcCfg.validParams,
                                      PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -2982,7 +2985,7 @@ static int32_t Pmic_powerSetBuckVmonConfig(
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    if(true == pmic_validParamCheck(pwrRsrcCfg.validParams,
+    if(((bool)true) == pmic_validParamCheck(pwrRsrcCfg.validParams,
                                     PMIC_CFG_REGULATOR_BUCK_ILIM_VALID))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -3000,7 +3003,7 @@ static int32_t Pmic_powerSetBuckVmonConfig(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pwrRsrcCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(pwrRsrcCfg.validParams,
                                  PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -3033,7 +3036,7 @@ static int32_t Pmic_powerSetPwrRsrcePgoodConfig(
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pwrRsrcCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(pwrRsrcCfg.validParams,
                                      PMIC_CFG_VCCA_PWR_GOOD_LVL_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -3049,7 +3052,7 @@ static int32_t Pmic_powerSetPwrRsrcePgoodConfig(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pwrRsrcCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(pwrRsrcCfg.validParams,
                                      PMIC_CFG_VMON_RANGE_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -3100,7 +3103,7 @@ static int32_t Pmic_powerGetPwrResourceCtrlCfg(
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    if(true == pmic_validParamCheck(pPwrRsrcCfg->validParams,
+    if(((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
                                     PMIC_CFG_REGULATOR_VMON_RV_SEL_VALID))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -3117,7 +3120,7 @@ static int32_t Pmic_powerGetPwrResourceCtrlCfg(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPwrRsrcCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
                                      PMIC_CFG_REGULATOR_BUCK_PLDN_EN_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -3136,7 +3139,7 @@ static int32_t Pmic_powerGetPwrResourceCtrlCfg(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPwrRsrcCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
                                      PMIC_CFG_VMON_EN_VALID)))
     {
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -3149,7 +3152,7 @@ static int32_t Pmic_powerGetPwrResourceCtrlCfg(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPwrRsrcCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
                                      PMIC_CFG_REGULATOR_BUCK_VOUT_SEL_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -3167,7 +3170,7 @@ static int32_t Pmic_powerGetPwrResourceCtrlCfg(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPwrRsrcCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
                                      PMIC_CFG_REGULATOR_BUCK_FPWM_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -3186,7 +3189,7 @@ static int32_t Pmic_powerGetPwrResourceCtrlCfg(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPwrRsrcCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
                                      PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -3205,7 +3208,7 @@ static int32_t Pmic_powerGetPwrResourceCtrlCfg(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPwrRsrcCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
                                      PMIC_CFG_REGULATOR_EN_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -3222,7 +3225,7 @@ static int32_t Pmic_powerGetPwrResourceCtrlCfg(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPwrRsrcCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
                                     PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -3240,7 +3243,7 @@ static int32_t Pmic_powerGetPwrResourceCtrlCfg(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPwrRsrcCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
                                      PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -3271,7 +3274,7 @@ static int32_t Pmic_powerGetBuckVmonConfig(
 {
     int32_t  pmicStatus = PMIC_ST_SUCCESS;
 
-    if(true == pmic_validParamCheck(pPwrRsrcCfg->validParams,
+    if(((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
                                     PMIC_CFG_REGULATOR_BUCK_ILIM_VALID))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -3289,7 +3292,7 @@ static int32_t Pmic_powerGetBuckVmonConfig(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPwrRsrcCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
                                  PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -3323,7 +3326,7 @@ static int32_t Pmic_powerGetPwrRsrcePgoodConfig(
     int32_t  pmicStatus = PMIC_ST_SUCCESS;
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPwrRsrcCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
                                      PMIC_CFG_VCCA_PWR_GOOD_LVL_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -3340,7 +3343,7 @@ static int32_t Pmic_powerGetPwrRsrcePgoodConfig(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPwrRsrcCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
                                      PMIC_CFG_VMON_RANGE_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -3448,7 +3451,7 @@ static int32_t Pmic_powerValidatePwrRsrcLimit(
                 }
            }
            else if((PMIC_LP8764X_POWER_RESOURCE_TYPE_LDO == pwrRsrcType) &&
-                   (false == pPmicCoreHandle->pPmic_SubSysInfo->ldoEnable))
+                   (((bool)false) == pPmicCoreHandle->pPmic_SubSysInfo->ldoEnable))
            {
                 status = PMIC_ST_ERR_INV_PARAM;
            }
@@ -4225,8 +4228,9 @@ static int32_t Pmic_validatepGoodSrcType(uint8_t pmicDeviceType,
  * \brief   This function is to validate the power good source limit for the
  *          specific PMIC device and the core handle.
  */
-static int32_t Pmic_validatePowerGoodParam(Pmic_CoreHandle_t   *pPmicCoreHandle,
-                                           uint16_t             pgoodSrcSel)
+static int32_t Pmic_validatePowerGoodParam(
+                                   const Pmic_CoreHandle_t *pPmicCoreHandle,
+                                   uint16_t                 pgoodSrcSel)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -4976,8 +4980,8 @@ static int32_t Pmic_powerValidateIntrType(uint8_t  pmicDeviceType,
  * \brief   This function is to validate the  Power interrupt
  *          range for the specific PMIC device.
  */
-static int32_t Pmic_validateIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                 const uint8_t      intrType)
+static int32_t Pmic_validateIntr(const Pmic_CoreHandle_t *pPmicCoreHandle,
+                                 const uint8_t            intrType)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -5180,7 +5184,7 @@ int32_t Pmic_powerSetPwrResourceCfg(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pwrResourceCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(pwrResourceCfg.validParams,
                                   PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -5198,7 +5202,7 @@ int32_t Pmic_powerSetPwrResourceCfg(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pwrResourceCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(pwrResourceCfg.validParams,
                                   PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -5216,7 +5220,7 @@ int32_t Pmic_powerSetPwrResourceCfg(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pwrResourceCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(pwrResourceCfg.validParams,
                                      PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID)))
     {
         /* Rail selection for power resources */
@@ -5226,7 +5230,7 @@ int32_t Pmic_powerSetPwrResourceCfg(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pwrResourceCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(pwrResourceCfg.validParams,
                                     PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -5244,7 +5248,7 @@ int32_t Pmic_powerSetPwrResourceCfg(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pwrResourceCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(pwrResourceCfg.validParams,
                                      PMIC_CFG_REGULATOR_EN_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -5261,7 +5265,7 @@ int32_t Pmic_powerSetPwrResourceCfg(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pwrResourceCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(pwrResourceCfg.validParams,
                                      PMIC_CFG_VMON_EN_VALID)))
     {
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -5363,7 +5367,7 @@ int32_t Pmic_powerGetPwrResourceCfg(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPwrResourceCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPwrResourceCfg->validParams,
                                   PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -5381,7 +5385,7 @@ int32_t Pmic_powerGetPwrResourceCfg(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPwrResourceCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPwrResourceCfg->validParams,
                                   PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -5399,7 +5403,7 @@ int32_t Pmic_powerGetPwrResourceCfg(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPwrResourceCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPwrResourceCfg->validParams,
                                      PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID)))
     {
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -5413,7 +5417,7 @@ int32_t Pmic_powerGetPwrResourceCfg(
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPwrResourceCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPwrResourceCfg->validParams,
                                     PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -5484,7 +5488,7 @@ int32_t Pmic_powerSetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(powerCommonCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(powerCommonCfg.validParams,
                                      PMIC_POWER_PGOOD_WINDOW_VALID)))
     {
         pmicStatus = Pmic_powerSetPgoodWindow(pPmicCoreHandle,
@@ -5492,7 +5496,7 @@ int32_t Pmic_powerSetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(powerCommonCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(powerCommonCfg.validParams,
                                      PMIC_POWER_PGOOD_POL_VALID)))
     {
         /* Set PGOOD signal polarity */
@@ -5501,7 +5505,7 @@ int32_t Pmic_powerSetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(powerCommonCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(powerCommonCfg.validParams,
                                      PMIC_CFG_DEGLITCH_TIME_SEL_VALID)))
     {
         /* Set Deglitch time select for BUCKx_VMON/LDOx_VMON/VCCA_VMON/VMONX */
@@ -5511,7 +5515,7 @@ int32_t Pmic_powerSetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(powerCommonCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(powerCommonCfg.validParams,
                                      PMIC_SEVERE_ERR_TRIG_VALID)))
     {
         /* Set the trigger selection for severe Error */
@@ -5521,7 +5525,7 @@ int32_t Pmic_powerSetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(powerCommonCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(powerCommonCfg.validParams,
                                      PMIC_OTHER_RAIL_TRIG_VALID)))
     {
         /* Set trigger selection fro other rail group */
@@ -5530,7 +5534,7 @@ int32_t Pmic_powerSetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(powerCommonCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(powerCommonCfg.validParams,
                                      PMIC_SOC_RAIL_TRIG_VALID)))
     {
         /* Set the trigger selection for soc rail group */
@@ -5539,7 +5543,7 @@ int32_t Pmic_powerSetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(powerCommonCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(powerCommonCfg.validParams,
                                      PMIC_MCU_RAIL_TRIG_VALID)))
     {
         /* Set the trigger selection for mcu rail group */
@@ -5548,7 +5552,7 @@ int32_t Pmic_powerSetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(powerCommonCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(powerCommonCfg.validParams,
                                      PMIC_MODERATE_ERR_TRIG_VALID)))
     {
         /* Set the trigger selection for Moderate Error */
@@ -5617,7 +5621,7 @@ int32_t Pmic_powerGetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPowerCommonCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPowerCommonCfg->validParams,
                                      PMIC_POWER_PGOOD_WINDOW_VALID)))
     {
         /* Type of voltage monitoring for PGOOD signal */
@@ -5627,7 +5631,7 @@ int32_t Pmic_powerGetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPowerCommonCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPowerCommonCfg->validParams,
                                      PMIC_POWER_PGOOD_POL_VALID)))
     {
         /* Get PGOOD signal polarity */
@@ -5637,7 +5641,7 @@ int32_t Pmic_powerGetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPowerCommonCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPowerCommonCfg->validParams,
                                      PMIC_CFG_DEGLITCH_TIME_SEL_VALID)))
     {
         /* get Deglitch time select for BUCKx_VMON, LDOx_VMON and VCCA_VMON */
@@ -5647,7 +5651,7 @@ int32_t Pmic_powerGetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPowerCommonCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPowerCommonCfg->validParams,
                                      PMIC_SEVERE_ERR_TRIG_VALID)))
     {
         /* get Trigger selection for Severe Error */
@@ -5657,7 +5661,7 @@ int32_t Pmic_powerGetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPowerCommonCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPowerCommonCfg->validParams,
                                      PMIC_OTHER_RAIL_TRIG_VALID)))
     {
         /* get Trigger selection for OTHER rail group */
@@ -5667,7 +5671,7 @@ int32_t Pmic_powerGetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPowerCommonCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPowerCommonCfg->validParams,
                                      PMIC_SOC_RAIL_TRIG_VALID)))
     {
         /* get Trigger selection for SOC rail group */
@@ -5676,7 +5680,7 @@ int32_t Pmic_powerGetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPowerCommonCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPowerCommonCfg->validParams,
                                      PMIC_MCU_RAIL_TRIG_VALID)))
     {
         /* get Trigger selection for MCU rail group */
@@ -5685,7 +5689,7 @@ int32_t Pmic_powerGetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPowerCommonCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPowerCommonCfg->validParams,
                                      PMIC_MODERATE_ERR_TRIG_VALID)))
     {
         /* get Trigger selection for Moderate Error */
@@ -5885,7 +5889,7 @@ int32_t Pmic_powerGetPwrRsrcStat(Pmic_CoreHandle_t        *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPwrRsrcStatCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPwrRsrcStatCfg->validParams,
                                      PMIC_POWER_REGULATOR_ILIM_STAT_VALID)))
     {
         pmicStatus = Pmic_powerValidateBuckLdoPwrRsrcType(
@@ -5902,7 +5906,7 @@ int32_t Pmic_powerGetPwrRsrcStat(Pmic_CoreHandle_t        *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPwrRsrcStatCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPwrRsrcStatCfg->validParams,
                                   PMIC_POWER_RESOURCE_UV_STAT_VALID)))
     {
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -5916,7 +5920,7 @@ int32_t Pmic_powerGetPwrRsrcStat(Pmic_CoreHandle_t        *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPwrRsrcStatCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPwrRsrcStatCfg->validParams,
                                   PMIC_POWER_RESOURCE_OV_STAT_VALID)))
     {
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -5930,7 +5934,7 @@ int32_t Pmic_powerGetPwrRsrcStat(Pmic_CoreHandle_t        *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPwrRsrcStatCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPwrRsrcStatCfg->validParams,
                                   PMIC_POWER_VCCA_OV_LVL_STAT_VALID)))
     {
         pmicStatus = Pmic_powerValidateVccaPwrRsrcType(
@@ -6000,7 +6004,7 @@ int32_t Pmic_powerGetPwrThermalStat(Pmic_CoreHandle_t       *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPwrThermalStatCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPwrThermalStatCfg->validParams,
                                      PMIC_THERMAL_STAT_WARN_VALID)))
     {
         /* Get the thermal warning status   */
@@ -6010,7 +6014,7 @@ int32_t Pmic_powerGetPwrThermalStat(Pmic_CoreHandle_t       *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPwrThermalStatCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPwrThermalStatCfg->validParams,
                                      PMIC_THERMAL_STAT_ORD_SHTDWN_VALID)))
     {
         /* Get the thermal oderly shutdown status   */
@@ -6020,7 +6024,7 @@ int32_t Pmic_powerGetPwrThermalStat(Pmic_CoreHandle_t       *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pPwrThermalStatCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pPwrThermalStatCfg->validParams,
                                      PMIC_THERMAL_STAT_IMM_SHTDWN_VALID)))
     {
         /* Get the thermal immediate shutdown status */
@@ -6065,7 +6069,7 @@ int32_t Pmic_powerSetThermalConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(thermalThreshold.validParams,
+       (((bool)true) == pmic_validParamCheck(thermalThreshold.validParams,
                                      PMIC_THERMAL_WARN_VALID)))
     {
         /* Set the thermal warning threshold temperature value */
@@ -6075,7 +6079,7 @@ int32_t Pmic_powerSetThermalConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(thermalThreshold.validParams,
+       (((bool)true) == pmic_validParamCheck(thermalThreshold.validParams,
                                      PMIC_THERMAL_SHTDWN_VALID)))
     {
         /* Set the thermal shutdown threshold temperature value */
@@ -6129,7 +6133,7 @@ int32_t Pmic_powerGetThermalConfig(Pmic_CoreHandle_t      *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pThermalThreshold->validParams,
+       (((bool)true) == pmic_validParamCheck(pThermalThreshold->validParams,
                                      PMIC_THERMAL_WARN_VALID)))
     {
         /* Get the thermal warning threshold temperature value */
@@ -6139,7 +6143,7 @@ int32_t Pmic_powerGetThermalConfig(Pmic_CoreHandle_t      *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (true == pmic_validParamCheck(pThermalThreshold->validParams,
+       (((bool)true) == pmic_validParamCheck(pThermalThreshold->validParams,
                                      PMIC_THERMAL_SHTDWN_VALID)))
     {
         /* Get the thermal shutdown threshold temperature value */

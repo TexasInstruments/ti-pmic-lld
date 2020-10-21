@@ -838,21 +838,21 @@ extern "C" {
 /*!
  * \brief  PMIC power VSET Range Values
  */
-#define PMIC_POWER_VSET_VAL_0xE                             (0xE)
-#define PMIC_POWER_VSET_VAL_0xF                             (0xF)
-#define PMIC_POWER_VSET_VAL_0x1D                            (0x1D)
-#define PMIC_POWER_VSET_VAL_0x72                            (0x72)
-#define PMIC_POWER_VSET_VAL_0x73                            (0x73)
-#define PMIC_POWER_VSET_VAL_0xAA                            (0xAA)
-#define PMIC_POWER_VSET_VAL_0xAB                            (0xAB)
-#define PMIC_POWER_VSET_VAL_0xFF                            (0xFF)
+#define PMIC_POWER_VSET_VAL_0xE                             (0xEU)
+#define PMIC_POWER_VSET_VAL_0xF                             (0xFU)
+#define PMIC_POWER_VSET_VAL_0x1D                            (0x1DU)
+#define PMIC_POWER_VSET_VAL_0x72                            (0x72U)
+#define PMIC_POWER_VSET_VAL_0x73                            (0x73U)
+#define PMIC_POWER_VSET_VAL_0xAA                            (0xAAU)
+#define PMIC_POWER_VSET_VAL_0xAB                            (0xABU)
+#define PMIC_POWER_VSET_VAL_0xFF                            (0xFFU)
 
 /*!
  * \brief  PMIC power VSET Values
  */
-#define PMIC_POWER_VSET_VAL_0x0                             (0x0)
-#define PMIC_POWER_VSET_VAL_0x4                             (0x4)
-#define PMIC_POWER_VSET_VAL_0x20                            (0x20)
+#define PMIC_POWER_VSET_VAL_0x0                             (0x0U)
+#define PMIC_POWER_VSET_VAL_0x4                             (0x4U)
+#define PMIC_POWER_VSET_VAL_0x20                            (0x20U)
 
 /*!
  * \brief   Bit field Value for buckFreq
@@ -960,7 +960,7 @@ typedef struct Pmic_powerIntCfg_s
 static inline uint8_t Pmic_powerGetPwrRsrcId(uint16_t pwrRsrc)
 {
     uint8_t pwrRsrcId;
-    pwrRsrcId = (pwrRsrc & 0xFF);
+    pwrRsrcId = (pwrRsrc & 0xFFU);
 
     return pwrRsrcId;
 }
@@ -972,7 +972,7 @@ static inline uint8_t Pmic_powerGetPwrRsrcId(uint16_t pwrRsrc)
 static inline uint8_t Pmic_powerGetPwrRsrcType(uint16_t pwrRsrc)
 {
     uint8_t pwrRsrcType;
-    pwrRsrcType = ((pwrRsrc >> 0x8U) & 0xFF);
+    pwrRsrcType = ((pwrRsrc >> 0x8U) & 0xFFU);
 
     return pwrRsrcType;
 }
