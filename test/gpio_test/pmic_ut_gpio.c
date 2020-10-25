@@ -5253,7 +5253,7 @@ static void test_pmic_gpio_testTps6594xNPwronPinGetValue_hera(void)
 /*!
  * \brief   Test to verify GPIO7 fall Asynchronous interrupt
  */
-static void test_pmic_gpio7_testFallAsynchronous_interrupt(void)
+void test_pmic_gpio7_testFallAsynchronous_interrupt(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     uint8_t pin               = 7U;
@@ -5274,6 +5274,12 @@ static void test_pmic_gpio7_testFallAsynchronous_interrupt(void)
     test_pmic_print_unity_testcase_info(7950,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
+
+#if (defined(SOC_J7200) && (defined(BUILD_MCU2_0) || defined(BUILD_MCU2_1)))
+    pmic_testResultUpdate_ignore(7950,
+                                 pmic_gpio_tests,
+                                 PMIC_GPIO_NUM_OF_TESTCASES);
+#endif
 
 #if defined(SOC_J721E)
     pmic_log("\r\n To check Fall interrupt applying SOM board Ground signal over TP24");
@@ -5325,7 +5331,7 @@ static void test_pmic_gpio7_testFallAsynchronous_interrupt(void)
 /*!
  * \brief   Test to verify GPIO7 rise Asynchronous interrupt
  */
-static void test_pmic_gpio7_testRiseAsynchronous_interrupt(void)
+void test_pmic_gpio7_testRiseAsynchronous_interrupt(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     uint8_t pin               = 7U;
@@ -5346,6 +5352,12 @@ static void test_pmic_gpio7_testRiseAsynchronous_interrupt(void)
     test_pmic_print_unity_testcase_info(7951,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
+
+#if (defined(SOC_J7200) && (defined(BUILD_MCU2_0) || defined(BUILD_MCU2_1)))
+    pmic_testResultUpdate_ignore(7951,
+                                 pmic_gpio_tests,
+                                 PMIC_GPIO_NUM_OF_TESTCASES);
+#endif
 
 #if defined(SOC_J721E)
     pmic_log("\r\n To check Fall interrupt applying SOM board Ground signal over TP24");
@@ -5397,7 +5409,7 @@ static void test_pmic_gpio7_testRiseAsynchronous_interrupt(void)
 /*!
  * \brief   Test to verify CAN WKUP
  */
-static void test_pmic_canWkup_test(void)
+void test_pmic_canWkup_test(void)
 {
     int32_t status         = PMIC_ST_SUCCESS;
     uint8_t  pmicState     = 0U;
@@ -5414,6 +5426,12 @@ static void test_pmic_canWkup_test(void)
     test_pmic_print_unity_testcase_info(8012,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
+
+#if defined(SOC_J721E)
+    pmic_testResultUpdate_ignore(8012,
+                                 pmic_gpio_tests,
+                                 PMIC_GPIO_NUM_OF_TESTCASES);
+#endif
 
     if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
     {
@@ -7008,9 +7026,13 @@ static void print_pmicTestAppManualTestMenu(uint32_t board)
     pmic_log(" \r\n =================================================================");
     pmic_log(" \r\n Manual Testcase Menu:");
     pmic_log(" \r\n =================================================================");
+#if !(defined(SOC_J7200) && (defined(BUILD_MCU2_0) || defined(BUILD_MCU2_1)))
     pmic_log(" \r\n 0: Pmic Leo device(PMIC A on %s EVM Manual Testcase for GPIO-7 Fall Asynchronous Interrupt)", board_name);
     pmic_log(" \r\n 1: Pmic Leo device(PMIC A on %s EVM Manual Testcase for GPIO-7 Rise Asynchronous Interrupt)", board_name);
+#endif
+#if defined(SOC_J7200)
     pmic_log(" \r\n 2: Pmic Leo device(PMIC A on %s EVM Manual Testcase for CAN WKUP)", board_name);
+#endif
     pmic_log(" \r\n 3: Pmic Leo device(PMIC A on %s EVM Manual Testcase for clearing all interrupts using IRQ API)", board_name);
     pmic_log(" \r\n 4: Back to Main Menu");
     pmic_log(" \r\n");
@@ -7040,15 +7062,19 @@ static void test_pmic_run_testcases_manual(uint32_t board)
 
         switch(menuOption)
         {
+#if !(defined(SOC_J7200) && (defined(BUILD_MCU2_0) || defined(BUILD_MCU2_1)))
             case 0U:
                 RUN_TEST(test_pmic_gpio7_testFallAsynchronous_interrupt);
                break;
             case 1U:
                 RUN_TEST(test_pmic_gpio7_testRiseAsynchronous_interrupt);
                break;
+#endif
+#if defined(SOC_J7200)
             case 2U:
                 RUN_TEST(test_pmic_canWkup_test);
                break;
+#endif
             case 3U :
                 RUN_TEST(test_gpio4_fallInterrupt_clrAllIrqTest);
                 break;
