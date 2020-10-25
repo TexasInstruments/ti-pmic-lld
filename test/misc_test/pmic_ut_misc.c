@@ -116,8 +116,31 @@ static Pmic_Ut_Tests_t pmic_misc_tests[] =
         7768,
         "Pmic_irqGetErrStatus : Test ENABLE_INT interrupt."
     },
+    {
+        8321,
+        "Pmic_setScratchPadValue : Parameter validation for handle."
+    },
+    {
+        8322,
+        "Pmic_setScratchPadValue : Parameter validation for scratchPadRegId."
+    },
+    {
+        8323,
+        "Pmic_setScratchPadValue : Test Set/Get Scratchpad value."
+    },
+    {
+        8324,
+        "Pmic_getScratchPadValue : Parameter validation for handle."
+    },
+    {
+        8325,
+        "Pmic_getScratchPadValue : Parameter validation for scratchPadRegId."
+    },
+    {
+        8326,
+        "Pmic_getScratchPadValue : Parameter validation for data."
+    },
 };
-
 
 /*!
  * \brief   Pmic_irqGetErrStatus : Test ENABLE_INT interrupt.
@@ -986,6 +1009,147 @@ static void test_Pmic_commFrmErrorIntr(void)
 
 #endif
 
+/*!
+ * \brief   Pmic_setScratchPadValue : Parameter validation for handle.
+ */
+static void test_pmic_setScratchPadValuePrmValTest_handle(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    uint8_t scratchPadRegId,data;
+
+    data = 0x10;
+    scratchPadRegId = PMIC_SCRATCH_PAD_REG_4;
+
+    test_pmic_print_unity_testcase_info(8321,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_setScratchPadValue(NULL, scratchPadRegId, data);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+
+    pmic_testResultUpdate_pass(8321,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setScratchPadValue : Parameter validation for scratchPadRegId.
+ */
+static void test_pmic_setScratchPadValuePrmValTest_scratchPadRegId(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    uint8_t scratchPadRegId,data;
+
+    data = 0x10;
+    scratchPadRegId = PMIC_SCRATCH_PAD_REG_4 + 1;
+
+    test_pmic_print_unity_testcase_info(8322,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_setScratchPadValue(pPmicCoreHandle, scratchPadRegId, data);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+
+    pmic_testResultUpdate_pass(8322,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setScratchPadValue : Test Set/Get Scratchpad value.
+ */
+static void test_pmic_setScratchPadValue_setget(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    uint8_t scratchPadRegId,data, data_rd;
+
+    data = 0x10;
+    scratchPadRegId = PMIC_SCRATCH_PAD_REG_4;
+
+    test_pmic_print_unity_testcase_info(8323,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_setScratchPadValue(pPmicCoreHandle, scratchPadRegId, data);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_getScratchPadValue(pPmicCoreHandle,
+                                     scratchPadRegId,
+                                     &data_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(data, data_rd);
+
+    pmic_testResultUpdate_pass(8323,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getScratchPadValue : Parameter validation for handle.
+ */
+static void test_pmic_getScratchPadValuePrmValTest_handle(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    uint8_t scratchPadRegId,data;
+
+    scratchPadRegId = PMIC_SCRATCH_PAD_REG_4;
+
+    test_pmic_print_unity_testcase_info(8324,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_getScratchPadValue(NULL, scratchPadRegId, &data);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+
+    pmic_testResultUpdate_pass(8324,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getScratchPadValue : Parameter validation for scratchPadRegId.
+ */
+static void test_pmic_getScratchPadValuePrmValTest_scratchPadRegId(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    uint8_t scratchPadRegId,data;
+
+    scratchPadRegId = PMIC_SCRATCH_PAD_REG_4 + 1;
+
+    test_pmic_print_unity_testcase_info(8325,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_getScratchPadValue(pPmicCoreHandle, scratchPadRegId, &data);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+
+    pmic_testResultUpdate_pass(8325,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getScratchPadValue : Parameter validation for data.
+ */
+static void test_pmic_getScratchPadValuePrmValTest_data(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    uint8_t scratchPadRegId;
+
+    scratchPadRegId = PMIC_SCRATCH_PAD_REG_4 ;
+
+    test_pmic_print_unity_testcase_info(8326,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_getScratchPadValue(pPmicCoreHandle, scratchPadRegId, NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+
+    pmic_testResultUpdate_pass(8326,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E) || defined(SOC_J7200))
 /*!
@@ -1008,6 +1172,12 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_Pmic_getRecoveryCntPrmValTest_handle);
     RUN_TEST(test_Pmic_getRecoveryCntPrmValTest_recovCntVal);
     RUN_TEST(test_Pmic_getBistPassInterrupt);
+    RUN_TEST(test_pmic_setScratchPadValuePrmValTest_handle);
+    RUN_TEST(test_pmic_setScratchPadValuePrmValTest_scratchPadRegId);
+    RUN_TEST(test_pmic_setScratchPadValue_setget);
+    RUN_TEST(test_pmic_getScratchPadValuePrmValTest_handle);
+    RUN_TEST(test_pmic_getScratchPadValuePrmValTest_scratchPadRegId);
+    RUN_TEST(test_pmic_getScratchPadValuePrmValTest_data);
 
     pmic_updateTestResults(pmic_misc_tests, PMIC_MISC_NUM_OF_TESTCASES);
 
@@ -1033,6 +1203,12 @@ static void test_pmic_run_slave_testcases(void)
     RUN_TEST(test_pmic_getRecoveryCntCfgPrmValTest_recovCntCfg);
     RUN_TEST(test_Pmic_getRecoveryCntPrmValTest_handle);
     RUN_TEST(test_Pmic_getRecoveryCntPrmValTest_recovCntVal);
+    RUN_TEST(test_pmic_setScratchPadValuePrmValTest_handle);
+    RUN_TEST(test_pmic_setScratchPadValuePrmValTest_scratchPadRegId);
+    RUN_TEST(test_pmic_setScratchPadValue_setget);
+    RUN_TEST(test_pmic_getScratchPadValuePrmValTest_handle);
+    RUN_TEST(test_pmic_getScratchPadValuePrmValTest_scratchPadRegId);
+    RUN_TEST(test_pmic_getScratchPadValuePrmValTest_data);
 
     pmic_updateTestResults(pmic_misc_tests, PMIC_MISC_NUM_OF_TESTCASES);
     UNITY_END();

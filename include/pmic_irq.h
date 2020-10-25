@@ -206,7 +206,7 @@ int32_t  Pmic_irqClrErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
  *             is to be masked/unmasked.
  *
  * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * \param   irqNum            [IN]    Interrupt status to be cleared.
+ * \param   irqNum            [IN]    Interrupt number to be masked.
  *                                    For Valid values:
  *                                    \ref Pmic_tps6594x_IrqNum
  *                                    for TPS6594x LEO PMIC,

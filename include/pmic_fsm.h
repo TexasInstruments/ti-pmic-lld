@@ -188,7 +188,7 @@ int32_t Pmic_fsmDeviceOnRequest(Pmic_CoreHandle_t *pPmicCoreHandle);
  *         This function is used for set/change the FSM mission states for PMIC
  *
  * \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
- * \param   pmicState        [IN]  PMIC FSM MISSION STATE
+ * \param   pmicState        [IN]  PMIC FSM mission state
  *                                 Valid values: \ref Pmic_Fsm_Mission_State
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
