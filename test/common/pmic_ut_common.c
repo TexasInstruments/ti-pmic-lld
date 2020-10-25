@@ -1279,6 +1279,8 @@ void test_pmic_appDeInit(Pmic_CoreHandle_t *pmicCoreHandle)
 
     Pmic_deinit(pmicCoreHandle);
 
+    free(pmicCoreHandle);
+
     /* PMIC Semaphore Clean-up */
     test_pmic_osalSemaphoreDeInit();
 }

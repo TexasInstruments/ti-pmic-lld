@@ -256,6 +256,24 @@ export pmic_benchmark_testapp_SBL_APPIMAGEGEN
 pmic_EXAMPLE_LIST += pmic_benchmark_testapp
 
 #
+# Stress  test
+#
+export pmic_stress_testapp_COMP_LIST = pmic_stress_testapp
+pmic_stress_testapp_RELPATH = ti/drv/pmic/test/stress_test
+pmic_stress_testapp_PATH = $(PDK_PMIC_COMP_PATH)/test/stress_test
+export pmic_stress_testapp_BOARD_DEPENDENCY = yes
+export pmic_stress_testapp_CORE_DEPENDENCY = no
+export pmic_stress_testapp_MAKEFILE = -f makefile IS_BAREMETAL=yes
+pmic_stress_testapp_PKG_LIST = pmic_stress_testapp
+pmic_stress_testapp_INCLUDE = $(pmic_stress_testapp_PATH)
+export pmic_stress_testapp_BOARDLIST = $(drvpmic_BOARDLIST)
+export pmic_stress_testapp_$(SOC)_CORELIST = $(drvpmic_app_$(SOC)_CORELIST)
+pmic_stress_testapp_SBL_APPIMAGEGEN = yes
+export pmic_stress_testapp_SBL_APPIMAGEGEN
+
+pmic_EXAMPLE_LIST += pmic_stress_testapp
+
+#
 # Export Libraries and Apps to Build Env
 #
 export pmic_LIB_LIST
