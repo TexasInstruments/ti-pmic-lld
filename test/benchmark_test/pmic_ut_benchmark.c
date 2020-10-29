@@ -184,7 +184,6 @@ static void test_pmic_run_testcases(void)
     pmic_testResult_init(pmic_benchmark_tests,
                          PMIC_BENCHMARK_NUM_OF_TESTCASES);
 
-//    RUN_TEST(test_Pmic_wdg_APIs_profiling);
     RUN_TEST(test_Pmic_wdg_QA_API_profiling);
     RUN_TEST(test_Pmic_init_Dual_i2c_profiling);
     RUN_TEST(test_Pmic_init_single_i2c_profiling);

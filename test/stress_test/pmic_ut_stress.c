@@ -446,6 +446,7 @@ void AppPmicCallbackFxn(void)
                         if(23U == timeCfg_rd.hour)
                         {
                             timeCfg_rd.hour = 0U;
+                            dateCfg_rd.day = dateCfg_rd.day + 1U;
                         }
                         else
                         {
@@ -885,11 +886,11 @@ static void test_pmic_run_testcases(void)
 
     pmic_testResult_init(pmic_stress_tests, PMIC_STRESS_NUM_OF_TESTCASES);
 
-    RUN_TEST(test_pmic_rtc_stressTestTimerAsyncIntr);
     RUN_TEST(test_pmic_singleI2C_init_deinit_testApp);
     RUN_TEST(test_pmic_dualI2C_init_deinit_testApp);
     RUN_TEST(test_pmic_singleI2C_init_gpio_deinit_testApp);
     RUN_TEST(test_pmic_dualI2C_init_gpio_deinit_testApp);
+    RUN_TEST(test_pmic_rtc_stressTestTimerAsyncIntr);
 
     pmic_updateTestResults(pmic_stress_tests, PMIC_STRESS_NUM_OF_TESTCASES);
 

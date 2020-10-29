@@ -377,7 +377,7 @@ static int32_t test_pmic_i2c_devices(Pmic_CoreHandle_t  *pPmicCorehandle,
 
     if(PMIC_INTF_SINGLE_I2C == pPmicCorehandle->commMode)
     {
-	i2cHandle = pPmicCorehandle->pCommHandle;
+        i2cHandle = pPmicCorehandle->pCommHandle;
         /* For Main PAGE SLAVE ID */
         slaveAddr = pPmicCorehandle->slaveAddr;
         if(I2C_STATUS_SUCCESS ==
@@ -409,13 +409,13 @@ static int32_t test_pmic_i2c_devices(Pmic_CoreHandle_t  *pPmicCorehandle,
         if(PMIC_MAIN_INST == instType)
         {
             slaveAddr = pPmicCorehandle->slaveAddr;
-	    i2cHandle = pPmicCorehandle->pCommHandle;
+            i2cHandle = pPmicCorehandle->pCommHandle;
         }
         /* For WDG QA I2C BUS */
         else if(PMIC_QA_INST == instType)
         {
             slaveAddr = pPmicCorehandle->qaSlaveAddr;
-	    i2cHandle = pPmicCorehandle->pQACommHandle;
+            i2cHandle = pPmicCorehandle->pQACommHandle;
         }
         if(I2C_STATUS_SUCCESS ==
                       I2C_control(i2cHandle, I2C_CMD_PROBE, &slaveAddr))
@@ -1068,6 +1068,7 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
     /* For single I2C Instance */
     if(PMIC_INTF_SINGLE_I2C == pmicConfigData->commMode)
     {
+        uint64_t delta = 0;
         /* Get PMIC valid Main I2C Instance */
         pmicStatus = test_pmic_i2c_lld_intf_setup(pmicConfigData,
                                                   PMIC_MAIN_INST);
@@ -1078,13 +1079,15 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
             pmicConfigData->instType = PMIC_MAIN_INST;
             if(true == enableBenchMark)
             {
-	        uint64_t t1 = 0;
+                uint64_t t1 = 0;
                 t1 = print_timeTakenInUsecs(0U, NULL);
                 /* Get PMIC core Handle for Main Instance */
                 pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
+                delta = print_timeTakenInUsecs(t1, NULL);
                 pmic_log("--------------------------------------\n");
-                t1 = print_timeTakenInUsecs(t1,
-                            "Pmic_init API for single instance");
+                pmic_log("Time taken for %50s: %6d usec\n",
+                            "Pmic_init API for single instance",
+                            (uint32_t)delta);
                 pmic_log("--------------------------------------\n");
             }
             else
@@ -1132,6 +1135,7 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
     /* For DUAL I2C Instance */
     else if(PMIC_INTF_DUAL_I2C == pmicConfigData->commMode)
     {
+        uint64_t delta = 0;
         /* Get PMIC valid Main I2C Instance */
         pmicStatus = test_pmic_i2c_lld_intf_setup(pmicConfigData,
                                                   PMIC_MAIN_INST);
@@ -1142,14 +1146,11 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
             pmicConfigData->instType = PMIC_MAIN_INST;
             if(true == enableBenchMark)
             {
-	        uint64_t t1 = 0;
+                uint64_t t1 = 0;
                 t1 = print_timeTakenInUsecs(0U, NULL);
                 /* Get PMIC core Handle for Main Instance */
                 pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
-                pmic_log("--------------------------------------\n");
-                t1 = print_timeTakenInUsecs(t1,
-                            "Pmic_init API for single instance");
-                pmic_log("--------------------------------------\n");
+                delta = print_timeTakenInUsecs(t1, NULL);
             }
             else
             {
@@ -1208,8 +1209,24 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
             pmicConfigData->validParams |= PMIC_CFG_QACOMM_HANDLE_VALID_SHIFT;
             /* Update instance type to pmicConfigData */
             pmicConfigData->instType = PMIC_QA_INST;
-            /* Get PMIC core Handle for QA Instances */
-            pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
+            if(true == enableBenchMark)
+            {
+                uint64_t t1 = 0;
+                t1 = print_timeTakenInUsecs(0U, NULL);
+                /* Get PMIC core Handle for QA Instances */
+                pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
+                delta += print_timeTakenInUsecs(t1, NULL);
+                pmic_log("--------------------------------------\n");
+                pmic_log("Time taken for %50s: %6d usec\n",
+                            "Pmic_init API for Dual instance",
+                            (uint32_t)delta);
+                pmic_log("--------------------------------------\n");
+            }
+            else
+            {
+                /* Get PMIC core Handle for QA Instances */
+                pmicStatus = Pmic_init(pmicConfigData, pmicHandle);
+            }
         }
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
@@ -1320,7 +1337,7 @@ void GPIO_configIntRouter(uint32_t portNum, uint32_t pinNum, uint32_t gpioIntRtr
 #if defined (BUILD_MCU1_0)
     intCfg[pinNum].intNum = CSLR_MCU_R5FSS0_CORE0_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_0 + bankNum;
 #elif defined (BUILD_MCU1_1)
-    intCfg[pinNum].intNum = CSLR_MCU_R5FSS0_CORE1_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_0 + bankNum;
+    intCfg[pinNum].intNum = CSLR_MCU_R5FSS0_CORE1_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_6 + bankNum;
 #elif defined (BUILD_MCU2_0)
     intCfg[pinNum].intNum = CSLR_R5FSS0_CORE0_INTR_R5FSS0_INTROUTER0_OUTL_0
                             + bankNum;
