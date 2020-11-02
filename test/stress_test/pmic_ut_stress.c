@@ -890,7 +890,6 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_dualI2C_init_deinit_testApp);
     RUN_TEST(test_pmic_singleI2C_init_gpio_deinit_testApp);
     RUN_TEST(test_pmic_dualI2C_init_gpio_deinit_testApp);
-    RUN_TEST(test_pmic_rtc_stressTestTimerAsyncIntr);
 
     pmic_updateTestResults(pmic_stress_tests, PMIC_STRESS_NUM_OF_TESTCASES);
 
@@ -969,8 +968,8 @@ static const char pmicTestAppMenu[] =
     " \r\n ================================================================="
     " \r\n 0: Pmic Leo device(PMIC A on J721E EVM Using I2C Interface)"
     " \r\n 1: Pmic Leo device(PMIC A on J7VCL EVM Using I2C Interface)"
-    " \r\n 2: Pmic Leo device(PMIC A on J721E EVM Manual Testcase for RTC WKUP)"
-    " \r\n 3: Pmic Leo device(PMIC A on J7VCL EVM Manual Testcase for RTC WKUP)"
+    " \r\n 2: Pmic Leo device(PMIC A on J721E EVM Manual Stress Testcases)"
+    " \r\n 3: Pmic Leo device(PMIC A on J7VCL EVM Manual Stress Testcases)"
     " \r\n 4: Back to Test Menu"
     " \r\n"
     " \r\n Enter option: "
@@ -993,7 +992,8 @@ static void print_pmicTestAppManualTestMenu(uint32_t board)
     pmic_log(" \r\n Manual Testcase Menu:");
     pmic_log(" \r\n =================================================================");
     pmic_log(" \r\n 0: Pmic Leo device(PMIC A on %s EVM for RTC WKUP using Timer Interrupt from LP Standby State)", board_name);
-    pmic_log(" \r\n 1: Back to Main Menu");
+    pmic_log(" \r\n 1: Pmic Leo device(PMIC A on %s EVM for RTC Alarm and Timer Asynchronous Interrupts for 24 hours)", board_name);
+    pmic_log(" \r\n 2: Back to Main Menu");
     pmic_log(" \r\n");
     pmic_log(" \r\n Enter option: ");
 }
@@ -1014,7 +1014,7 @@ static void test_pmic_run_testcases_manual(uint32_t board)
             return;
         }
 
-        if(menuOption == 1)
+        if(menuOption == 2)
         {
             break;
         }
@@ -1024,6 +1024,9 @@ static void test_pmic_run_testcases_manual(uint32_t board)
             case 0U:
                 RUN_TEST(test_pmic_rtc_testWakeup_TimerIntr_lpStandbyState);
                break;
+            case 1U:
+                RUN_TEST(test_pmic_rtc_stressTestTimerAsyncIntr);
+                break;
             default:
                pmic_log(" \r\n Invalid option... Try Again!!!\n");
                break;
@@ -1056,7 +1059,7 @@ static void test_pmic_stress_testapp_run_options(int8_t option)
             }
             else
             {
-                num = 3;
+                num = 4;
             }
             pmic_log("%d\n", num);
         }
