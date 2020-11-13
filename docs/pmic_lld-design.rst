@@ -2,102 +2,92 @@
 PMIC LLD Software Design Document
 ########################################################
 
-.. raw:: latex
-
-    \newpage
-
 **Revision History**
 
+.. table:: Revision History
+    :widths: 10 20 20 40 10
 
-======= ============ =============== ======================== ========
-Version Date         Author          Change History            Status
-======= ============ =============== ======================== ========
-1.0     23 Dec 2019   Amit Agarwal    Initial draft            Released
-------- ------------ --------------- ------------------------ --------
-2.0     07 Jan 2020  Amit Agarwal    Design and requirement   Released
-                                     handling updated as
-                                     per initial review and
-                                     feature support
-                                     clarifications
-------- ------------ --------------- ------------------------ --------
-2.1     11 Jan 2020  Amit Agarwal    -  Updated Watchdog QA   Released
-                                        API description
-                                     -  Updated Integration
-                                        Details in Figure 2
-                                     -  Added DAR section
-                                        ‘Watchdog QA Window
-                                        Timing’
-                                     -  Updated API
-                                        description for
-                                        Regulator Voltage
-                                        configuration API
-------- ------------ --------------- ------------------------ --------
-2.2     21-Jan-2020  Amit Agarwal    -  Updated as per        Released
-                                        review comments for
-                                        document template,
-                                        Design IDs and
-                                        content correction
-------- ------------ --------------- ------------------------ --------
-2.3     23-Jan-2020  Amit Agarwal    -  Updated DAR for       Released
-                                        Critical Section
-                                     -  Corrected few API
-                                        descriptions
-                                     -  Updated Design ID
-                                        maps for API Data
-                                        Types
-------- ------------ --------------- ------------------------ --------
-2.4     04-Feb-2020  Amit Agarwal    -  Updated Design        Released
-                                        document based on
-                                        review feedback.
-                                     -  Updated API details
-------- ------------ --------------- ------------------------ --------
-2.5     07-Feb-2020  Amit Agarwal    -  Fixed Review          Released
-                                        comments
-                                     -  Updated
-                                        Non-supported
-                                        requirement
-                                        section.
-                                     -  Details added
-                                        related to multiple
-                                        instance of PMIC
-                                        driver.
-------- ------------ --------------- ------------------------ --------
-2.6     18-Feb-2020  Amit Agarwal    -  Fixed Review          Released
-                                        comments
-                                     -  Updated Low power
-                                        standby mode
-                                     -  Updated error
-                                        recovery words.
-------- ------------ --------------- ------------------------ --------
-2.7     16-Mar-2020  Amit Agarwal    -  Added new design ID   Released
-                                        to accommodate
-                                        newly added
-                                        requirements.
-                                     -  API table updated
-------- ------------ --------------- ------------------------ --------
-2.8     20-Oct-2020  Rahul Rawat     Updated the following
-                                     sections:
-
-                                     -  Design
-                                        Requirements
-                                     -  Design Description
-                                     -  PMIC Core
-                                        Functionality
-                                        Components
-                                     -  PMIC Driver Setup and
-                                        Instance Management
-                                     -  PMIC CRC Validation
-                                        Feature
-                                     -  API Definitions
-                                     -  API Function
-                                        Descriptions
-======= ============ =============== ======================== ========
+    +--------+-------------+--------------+------------------------+-------------+
+    |Version | Date        |  Author      |    Change History      |   Status    |
+    +========+=============+==============+========================+=============+
+    |1.0     | 23 Dec 2019 | Amit Agarwal |  Initial draft         | Released    |
+    +--------+-------------+--------------+------------------------+-------------+
+    |2.0     | 07 Jan 2020 | Amit Agarwal | Design and requirement | Released    |
+    |        |             |              | handling updated as    |             |
+    |        |             |              | per initial review and |             |
+    |        |             |              | feature support        |             |
+    |        |             |              | clarifications         |             |
+    +--------+-------------+--------------+------------------------+-------------+
+    |2.1     | 11 Jan 2020 | Amit Agarwal | - Updated Watchdog QA  | Released    |
+    |        |             |              |   API description      |             |
+    |        |             |              | - Details in Figure 2  |             |
+    |        |             |              | - Added DAR section    |             |
+    |        |             |              |   'Watchdog QA Window  |             |
+    |        |             |              |   Timing’              |             |
+    |        |             |              | - Updated API          |             |
+    |        |             |              |   description for      |             |
+    |        |             |              |   Regulator Voltage    |             |
+    |        |             |              |   configuration API    |             |
+    +--------+-------------+--------------+------------------------+-------------+
+    |2.2     | 21-Jan-2020 | Amit Agarwal | -  Updated as per      | Released    |
+    |        |             |              |    review comments for |             |
+    |        |             |              |    document template,  |             |
+    |        |             |              |    Design IDs and      |             |
+    |        |             |              |    content correction  |             |
+    +--------+-------------+--------------+------------------------+-------------+
+    |2.3     | 23-Jan-2020 | Amit Agarwal | -  Updated DAR for     | Released    |
+    |        |             |              |    Critical Section    |             |
+    |        |             |              | -  Corrected few API   |             |
+    |        |             |              |    descriptions        |             |
+    |        |             |              | -  Updated Design ID   |             |
+    |        |             |              |    maps for API Data   |             |
+    |        |             |              |    Types               |             |
+    +--------+-------------+--------------+------------------------+-------------+
+    |2.4     | 04-Feb-2020 | Amit Agarwal | -  Updated Design      | Released    |
+    |        |             |              |    document based on   |             |
+    |        |             |              |    review feedback.    |             |
+    |        |             |              | -  Updated API details |             |
+    +--------+-------------+--------------+------------------------+-------------+
+    |2.5     | 07-Feb-2020 | Amit Agarwal | -  Fixed Review        | Released    |
+    |        |             |              |    comments            |             |
+    |        |             |              | -  Updated             |             |
+    |        |             |              |    Non-supported       |             |
+    |        |             |              |    requirement         |             |
+    |        |             |              |    section.            |             |
+    |        |             |              | -  Details added       |             |
+    |        |             |              |    related to multiple |             |
+    |        |             |              |    instance of PMIC    |             |
+    |        |             |              |    driver.             |             |
+    +--------+-------------+--------------+------------------------+-------------+
+    |2.6     | 18-Feb-2020 | Amit Agarwal | -  Fixed Review        | Released    |
+    |        |             |              |    comments            |             |
+    |        |             |              | -  Updated Low power   |             |
+    |        |             |              |    standby mode        |             |
+    |        |             |              | -  Updated error       |             |
+    |        |             |              |    recovery words.     |             |
+    +--------+-------------+--------------+------------------------+-------------+
+    |2.7     | 16-Mar-2020 | Amit Agarwal | -  Added new design ID | Released    |
+    |        |             |              |    to accommodate      |             |
+    |        |             |              |    newly added         |             |
+    |        |             |              |    requirements.       |             |
+    |        |             |              | -  API table updated   |             |
+    +--------+-------------+--------------+------------------------+-------------+
+    |2.8     | 20-Oct-2020 | Rahul Rawat  | Updated the following  |             |
+    |        |             |              | sections:              |             |
+    |        |             |              | Design Requirements,   |             |
+    |        |             |              | Design Description,    |             |
+    |        |             |              | PMIC Core Functionality|             |
+    |        |             |              | Components, PMIC Driver|             |
+    |        |             |              | Setup and Instance     |             |
+    |        |             |              | Management, PMIC CRC   |             |
+    |        |             |              | Validation Feature,    |             |
+    |        |             |              | API Definitions, API   |             |
+    |        |             |              | Function Descriptions  |             |
+    +--------+-------------+--------------+------------------------+-------------+
 
 .. raw:: latex
 
     \newpage
-
-
 
 Introduction
 ============
@@ -179,424 +169,426 @@ Redundant and moved to Unsupported Design Requirements Table
 Following table lists all the Design Requirements IDs supported by PMIC
 LLD.
 
-+------------------------------------+----------------+----------------+----------------+
-| Design ID                          | Requirements   | Requirement    | Description    |
-|                                    | ID             | Type           |                |
-+====================================+================+================+================+
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_tps6594x_j721e_support    | PDK-5811       | Safety         | LLD shall      |
-|                                    |                | Functional     | support        |
-|                                    |                |                | TPS6594x       |
-|                                    |                |                | (Leo). Testing |
-|                                    |                |                | will be on     |
-|                                    |                |                | J721E EVM with |
-|                                    |                |                | Leo PMIC       |
-|                                    |                |                |                |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_lp8764x_j7vcl_support     | PDK-5853       | Safety         | LLD design &   |
-|                                    |                | Functional     | implementation |
-|                                    |                |                | shall be       |
-|                                    |                |                | modular to     |
-|                                    |                |                | support        |
-|                                    |                |                | reduced        |
-|                                    |                |                | feature set of |
-|                                    |                |                | LP8764 (Hera). |
-|                                    |                |                | Testing will   |
-|                                    |                |                | be on J7VCL    |
-|                                    |                |                | EVM with Hera  |
-|                                    |                |                | PMIC           |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_power_cfg_readback        | PDK-5850       | Safety         | LLD API to     |
-|                                    |                | Functional     | take human     |
-|                                    |                |                | readable       |
-|                                    |                |                | value, convert |
-|                                    |                |                | and configure  |
-|                                    |                |                | the target     |
-|                                    |                |                | Buck/LDO       |
-|                                    |                |                | Voltage        |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_power_cfg_readback        | PDK-5841       | Safety         | Driver shall   |
-|                                    |                | Functional     | implement an   |
-|                                    |                |                | API to         |
-|                                    |                |                | configure buck |
-|                                    |                |                | and LDO        |
-|                                    |                |                | regulator      |
-|                                    |                |                | outputvoltages |
-|                                    |                |                |                |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_power_cfg_readback        | PDK-5829       | Safety         | Driver shall   |
-|                                    |                | Functional     | configure for  |
-|                                    |                |                | voltage monitor|
-|                                    |                |                | for over/under |
-|                                    |                |                | voltage        |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_power_cfg_readback        | PDK-5848       | Safety         | Driver shall   |
-|                                    |                | Functional     | configure for  |
-|                                    |                |                | current        |
-|                                    |                |                | monitor and    |
-|                                    |                |                | short circuit  |
-|                                    |                |                | protection     |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_power_thermal_cfg_readback| PDK-5840       | Safety         | Driver shall   |
-|                                    |                | Functional     | configure      |
-|                                    |                |                | thermal        |
-|                                    |                |                | monit          |
-|                                    |                |                | oring/shutdown |
-|                                    |                |                | of the PMIC    |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_power_pgood_cfg_readback  | PDK-5847       | Safety         | Driver shall   |
-|                                    |                | Functional     | read back      |
-|                                    |                |                | Power Good     |
-|                                    |                |                | Monitor        |
-|                                    |                |                | Configuration  |
-|                                    |                |                | of Buck/LDO    |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_comm_intf_cfg             | PDK-5814       | Safety         | Driver shall   |
-|                                    |                | Functional     | have a runtime |
-|                                    |                |                | configuration  |
-|                                    |                |                | option to      |
-|                                    |                |                | enable the     |
-|                                    |                |                | interface type |
-|                                    |                |                | supported,     |
-|                                    |                |                | either I2C or  |
-|                                    |                |                | SPI            |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_comm_single_i2c_cfg       | PDK-5810       | Safety         | Driver shall   |
-|                                    |                | Functional     | support single |
-|                                    |                |                | I2C interface  |
-|                                    |                |                | in which only  |
-|                                    |                |                | I2C1 will be   |
-|                                    |                |                | used to        |
-|                                    |                |                | configure and  |
-|                                    |                |                | monitor the    |
-|                                    |                |                | PMIC           |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_comm_dual_i2c_cfg         | PDK-5813       | Safety         | Driver shall   |
-|                                    |                | Functional     | support dual   |
-|                                    |                |                | I2C interface  |
-|                                    |                |                | in which       |
-|                                    |                |                | I2C1 will      |
-|                                    |                |                | help to do     |
-|                                    |                |                | PMIC           |
-|                                    |                |                | configuration  |
-|                                    |                |                | and monitor    |
-|                                    |                |                | except WDG     |
-|                                    |                |                | QA,I2C2 will   |
-|                                    |                |                | help to do     |
-|                                    |                |                | WDG QA         |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_comm_spi_cfg              | PDK-5843       | Safety         | Driver shall   |
-|                                    |                | Functional     | support SPI    |
-|                                    |                |                | interface      |
-|                                    |                |                | which will be  |
-|                                    |                |                | used to        |
-|                                    |                |                | configure and  |
-|                                    |                |                | monitor the    |
-|                                    |                |                | PMIC           |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_gpio_cfg_readback         | PDK-5808       | Safety         | Driver shall   |
-|                                    |                | Functional     | configure PMIC |
-|                                    |                |                | GPIO pins as:  |
-|                                    |                |                | NSLEEP         |
-|                                    |                |                | Triggers,      |
-|                                    |                |                | Reset pin      |
-|                                    |                |                | for SOC,       |
-|                                    |                |                | WKUP           |
-|                                    |                |                | sources,       |
-|                                    |                |                | General        |
-|                                    |                |                | Input/output   |
-|                                    |                |                | pins,          |
-|                                    |                |                | I2C2 SCLK      |
-|                                    |                |                | and SDA        |
-|                                    |                |                | lines,         |
-|                                    |                |                | SPI CS or      |
-|                                    |                |                | SDO lines,     |
-|                                    |                |                | Watchdog       |
-|                                    |                |                | Trigger        |
-|                                    |                |                | line,          |
-|                                    |                |                | ESM Error      |
-|                                    |                |                | Pins for       |
-|                                    |                |                | SOC/MCU,       |
-|                                    |                |                | SPMI,          |
-|                                    |                |                | SCLK/SDATA,    |
-|                                    |                |                | SYNCCLKOUT,    |
-|                                    |                |                | SYNCLKIN       |
-|                                    |                |                | and            |
-|                                    |                |                | CLK32KOUT,     |
-|                                    |                |                | Watchdog       |
-|                                    |                |                | Disable        |
-|                                    |                |                | Pin,           |
-|                                    |                |                | Power Good     |
-|                                    |                |                | Indication     |
-|                                    |                |                | Line           |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_gpio_cfg_readback         | PDK-5808       | Safety         | Driver shall   |
-|                                    |                | Functional     | configure PMIC |
-|                                    |                |                | GPIO pin       |
-|                                    |                |                | functionality  |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_irq_cfg_readback          | PDK-5805       | Safety         | PMIC: Driver   |
-|                                    |                | Functional     | shall decipher |
-|                                    |                |                | error events   |
-|                                    |                |                | and call out   |
-|                                    |                |                | to application |
-|                                    |                |                | with error code|
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_irq_cfg_readback          | PDK-5838       | Safety         | Driver shall   |
-|                                    |                | Functional     | read PMIC      |
-|                                    |                |                | registers to   |
-|                                    |                |                | decipher a     |
-|                                    |                |                | Severe Error   |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_irq_cfg_readback          | PDK-5842       | Safety         | Driver shall   |
-|                                    |                | Functional     | read PMIC      |
-|                                    |                |                | registers to   |
-|                                    |                |                | decipher a Buck|
-|                                    |                |                | Error          |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_irq_cfg_readback          | PDK-5832       | Safety         | Driver shall   |
-|                                    |                | Safety         | read PMIC      |
-|                                    |                |                | registers to   |
-|                                    |                |                | decipher a LDO |
-|                                    |                |                | Error          |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_irq_cfg_readback          | PDK-5852       | Safety         | Driver shall   |
-|                                    |                | Functional     | read PMIC      |
-|                                    |                |                | registers to   |
-|                                    |                |                | decipher a     |
-|                                    |                |                | Moderate Error |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_irq_cfg_readback          | PDK-5834       | Safety         | Driver shall   |
-|                                    |                | Functional     | read PMIC      |
-|                                    |                |                | registers to   |
-|                                    |                |                | decipher a     |
-|                                    |                |                | Warning        |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_irq_cfg_readback          | PDK-5806       | Safety         | Driver shall   |
-|                                    |                | Functional     | read PMIC      |
-|                                    |                |                | registers to   |
-|                                    |                |                | decipher a     |
-|                                    |                |                | startup source |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_irq_cfg_readback          | PDK-5828       | Safety         | Driver shall   |
-|                                    |                | Functional     | read PMIC      |
-|                                    |                |                | registers to   |
-|                                    |                |                | decipher a     |
-|                                    |                |                | FSM ERROR      |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_irq_cfg_readback          | PDK-5807       | Safety         | Driver shall   |
-|                                    |                | Functional     | read PMIC      |
-|                                    |                |                | registers to   |
-|                                    |                |                | decipher a     |
-|                                    |                |                | Watchdog error |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_irq_cfg_readback          | PDK-5846       | Safety         | Driver shall   |
-|                                    |                | Functional     | read PMIC      |
-|                                    |                |                | registers to   |
-|                                    |                |                | decipher a     |
-|                                    |                |                | ESM error      |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_esm_cfg_readback          | PDK-5833       | Safety         | Driver API to  |
-|                                    |                | Functional     | configure ESM  |
-|                                    |                |                | MCU by         |
-|                                    |                |                | resetting      |
-|                                    |                |                | ESM_MCU_START  |
-|                                    |                |                | to 0, update   |
-|                                    |                |                | ESM MCU        |
-|                                    |                |                | Configuration  |
-|                                    |                |                | registers and  |
-|                                    |                |                | setting        |
-|                                    |                |                | ESM_MCU_START  |
-|                                    |                |                | to 1           |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_esm_cfg_readback          | PDK-5833       | Safety         | Driver API to  |
-|                                    |                | Functional     | configure ESM  |
-|                                    |                |                | SOC by         |
-|                                    |                |                | resetting      |
-|                                    |                |                | ESM_SOC_START  |
-|                                    |                |                | to 0, update   |
-|                                    |                |                | ESM SOC        |
-|                                    |                |                | Configuration  |
-|                                    |                |                | registers and  |
-|                                    |                |                | setting        |
-|                                    |                |                | ESM_SOC_START  |
-|                                    |                |                | to 1           |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_esm_cfg_readback          | PDK-5833       | Safety         | Driver API to  |
-|                                    |                | Functional     | Stop ESM MCU   |
-|                                    |                |                | Monitor by     |
-|                                    |                |                | resetting      |
-|                                    |                |                | ESM_MCU_START  |
-|                                    |                |                | to 0           |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_esm_cfg_readback          | PDK-5833       | Safety         | Driver API to  |
-|                                    |                | Functional     | Stop ESM SOC   |
-|                                    |                |                | Monitor by     |
-|                                    |                |                | resetting      |
-|                                    |                |                | ESM_SOC_START  |
-|                                    |                |                | to 0           |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_esm_cfg_readback          | PDK-5833       | Safety         | Driver API to  |
-|                                    |                | Functional     | read ESM MCU   |
-|                                    |                |                | Configuration  |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_esm_cfg_readback          | PDK-5833       | Safety         | Driver API to  |
-|                                    |                | Functional     | read ESM SOC   |
-|                                    |                |                | Configuration  |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_wdg_cfg_readback          | PDK-5854       | Safety         | Driver API to  |
-|                                    |                | Functional     | configure      |
-|                                    |                |                | Watchdog in    |
-|                                    |                |                | Trigger mode   |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_wdg_cfg_readback          | PDK-5854       | Safety         | Driver API to  |
-|                                    |                | Functional     | read back      |
-|                                    | PDK-5839       |                | Watchdog       |
-|                                    |                |                | configuration  |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_wdg_cfg_readback          | PDK-5839       | Safety         | Driver API to  |
-|                                    |                | Functional     | configure      |
-|                                    |                |                | Watchdog in QA |
-|                                    |                |                | mode           |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_wdg_cfg_readback          | PDK-5839       | Safety         | Driver API to  |
-|                                    |                | Functional     | perform        |
-|                                    |                |                | Watchdog QA    |
-|                                    |                |                | with PMIC      |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_wdg_cfg_readback          | PDK-5854       | Safety         | Driver API to  |
-|                                    |                | Functional     | perform        |
-|                                    | PDK-5839       |                | Watchdog       |
-|                                    |                |                | Enable/Disable |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_fsm_cfg                   | PDK-5837       | Safety         | Driver shall   |
-|                                    |                | Functional     | support        |
-|                                    |                |                | configuring    |
-|                                    |                |                | NSLEEP         |
-|                                    |                |                | registers for  |
-|                                    |                |                | Processor low  |
-|                                    |                |                | power.         |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_fsm_cfg                   | PDK-5837       | Safety         | Driver shall   |
-|                                    |                | Functional     | readback       |
-|                                    |                |                | NSLEEP         |
-|                                    |                |                | registers to   |
-|                                    |                |                | get wake or    |
-|                                    |                |                | sleep status.  |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
-|                                    |                | Functional     | configure RTC  |
-|                                    |                |                | Alarm          |
-|                                    |                |                | Interrupts and |
-|                                    |                |                | enable RTC     |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
-|                                    |                | Functional     | readback RTC   |
-|                                    |                |                | Alarm          |
-|                                    |                |                | configuration  |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
-|                                    |                | Functional     | configure RTC  |
-|                                    |                |                | Timer          |
-|                                    |                |                | Interrupts and |
-|                                    |                |                | enable RTC     |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
-|                                    |                | Functional     | readback RTC   |
-|                                    |                |                | Timer          |
-|                                    |                |                | Configuration  |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
-|                                    |                | Functional     | disable RTC    |
-|                                    |                |                | module         |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
-|                                    |                | Functional     | enable RTC     |
-|                                    |                |                | module         |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
-|                                    |                | Functional     | configure RTC  |
-|                                    |                |                | time calendar  |
-|                                    |                |                | registers      |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
-|                                    |                | Functional     | readback RTC   |
-|                                    |                |                | time calendar  |
-|                                    |                |                | registers.     |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
-|                                    |                | Functional     | enable RTC     |
-|                                    |                |                | Frequency      |
-|                                    |                |                | compensation.  |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
-|                                    |                | Functional     | configure RTC  |
-|                                    |                |                | Frequency      |
-|                                    |                |                | compensation   |
-|                                    |                |                | readback.      |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver API     |
-|                                    |                | Functional     | shall read the |
-|                                    |                |                | current status |
-|                                    |                |                | of RTC         |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver API to  |
-|                                    |                | Functional     | support        |
-|                                    |                |                | Enable/Disable |
-|                                    |                |                | of RTC Alarm   |
-|                                    |                |                | Interrupt      |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver API to  |
-|                                    |                | Functional     | support        |
-|                                    |                |                | Enable/Disable |
-|                                    |                |                | of RTC Timer   |
-|                                    |                |                | Interrupt      |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_lpstandby_wkup_cfg        | PDK-5844       | Safety         | Driver shall   |
-|                                    |                | Functional     | support Ultra  |
-|                                    |                |                | Low Power      |
-|                                    |                |                | Standby with   |
-|                                    |                |                | CAN WakeUp for |
-|                                    |                |                | PMIC           |
-|                                    |                |                |                |
-|                                    |                |                | Note:          |
-|                                    |                |                | Ultra-Low      |
-|                                    |                |                | Power Mode is  |
-|                                    |                |                | synonymous to  |
-|                                    |                |                | LP_STANDBY     |
-|                                    |                |                | state in the   |
-|                                    |                |                | TRM.           |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_lpstandby_wkup_cfg        | PDK-5831       | Safety         | Driver shall   |
-|                                    |                | Functional     | support Ultra  |
-|                                    |                |                | Low Power      |
-|                                    |                |                | Standby with   |
-|                                    |                |                | RTC WakeUp for |
-|                                    |                |                | PMIC           |
-|                                    |                |                |                |
-|                                    |                |                | Note:          |
-|                                    |                |                | Ultra-Low      |
-|                                    |                |                | Power Mode is  |
-|                                    |                |                | synonymous to  |
-|                                    |                |                | LP_STANDBY     |
-|                                    |                |                | state in the   |
-|                                    |                |                | TRM.           |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_lpstandby_cfg             | PDK-5851       | Safety         | Driver must    |
-|                                    |                | Functional     | allow          |
-|                                    |                |                | configuration  |
-|                                    |                |                | of the PMIC    |
-|                                    |                |                | low power LP   |
-|                                    |                |                | STANDBY state  |
-|                                    |                |                | by writing to  |
-|                                    |                |                | I2C_TRIGGER_0. |
-+------------------------------------+----------------+----------------+----------------+
-| did_pmic_err_recov_cnt_cfg_readback| PDK-5809       | Safety         | Driver shall   |
-|                                    |                | Functional     | provide an API |
-|                                    |                |                | to query the   |
-|                                    |                |                | error recovery |
-|                                    |                |                | count.         |
-+------------------------------------+----------------+----------------+----------------+
+.. table:: PMIC Design Requirements
+    :widths: 40 20 20 20
+    
+    +------------------------------------+----------------+----------------+----------------+
+    | Design ID                          | Requirements   | Requirement    | Description    |
+    |                                    | ID             | Type           |                |
+    +====================================+================+================+================+
+    | did_pmic_tps6594x_j721e_support    | PDK-5811       | Safety         | LLD shall      |
+    |                                    |                | Functional     | support        |
+    |                                    |                |                | TPS6594x       |
+    |                                    |                |                | (Leo). Testing |
+    |                                    |                |                | will be on     |
+    |                                    |                |                | J721E EVM with |
+    |                                    |                |                | Leo PMIC       |
+    |                                    |                |                |                |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_lp8764x_j7vcl_support     | PDK-5853       | Safety         | LLD design &   |
+    |                                    |                | Functional     | implementation |
+    |                                    |                |                | shall be       |
+    |                                    |                |                | modular to     |
+    |                                    |                |                | support        |
+    |                                    |                |                | reduced        |
+    |                                    |                |                | feature set of |
+    |                                    |                |                | LP8764 (Hera). |
+    |                                    |                |                | Testing will   |
+    |                                    |                |                | be on J7VCL    |
+    |                                    |                |                | EVM with Hera  |
+    |                                    |                |                | PMIC           |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_power_cfg_readback        | PDK-5850       | Safety         | LLD API to     |
+    |                                    |                | Functional     | take human     |
+    |                                    |                |                | readable       |
+    |                                    |                |                | value, convert |
+    |                                    |                |                | and configure  |
+    |                                    |                |                | the target     |
+    |                                    |                |                | Buck/LDO       |
+    |                                    |                |                | Voltage        |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_power_cfg_readback        | PDK-5841       | Safety         | Driver shall   |
+    |                                    |                | Functional     | implement an   |
+    |                                    |                |                | API to         |
+    |                                    |                |                | configure buck |
+    |                                    |                |                | and LDO        |
+    |                                    |                |                | regulator      |
+    |                                    |                |                | outputvoltages |
+    |                                    |                |                |                |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_power_cfg_readback        | PDK-5829       | Safety         | Driver shall   |
+    |                                    |                | Functional     | configure for  |
+    |                                    |                |                | voltage monitor|
+    |                                    |                |                | for over/under |
+    |                                    |                |                | voltage        |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_power_cfg_readback        | PDK-5848       | Safety         | Driver shall   |
+    |                                    |                | Functional     | configure for  |
+    |                                    |                |                | current        |
+    |                                    |                |                | monitor and    |
+    |                                    |                |                | short circuit  |
+    |                                    |                |                | protection     |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_power_thermal_cfg_readback| PDK-5840       | Safety         | Driver shall   |
+    |                                    |                | Functional     | configure      |
+    |                                    |                |                | thermal        |
+    |                                    |                |                | monit          |
+    |                                    |                |                | oring/shutdown |
+    |                                    |                |                | of the PMIC    |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_power_pgood_cfg_readback  | PDK-5847       | Safety         | Driver shall   |
+    |                                    |                | Functional     | read back      |
+    |                                    |                |                | Power Good     |
+    |                                    |                |                | Monitor        |
+    |                                    |                |                | Configuration  |
+    |                                    |                |                | of Buck/LDO    |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_comm_intf_cfg             | PDK-5814       | Safety         | Driver shall   |
+    |                                    |                | Functional     | have a runtime |
+    |                                    |                |                | configuration  |
+    |                                    |                |                | option to      |
+    |                                    |                |                | enable the     |
+    |                                    |                |                | interface type |
+    |                                    |                |                | supported,     |
+    |                                    |                |                | either I2C or  |
+    |                                    |                |                | SPI            |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_comm_single_i2c_cfg       | PDK-5810       | Safety         | Driver shall   |
+    |                                    |                | Functional     | support single |
+    |                                    |                |                | I2C interface  |
+    |                                    |                |                | in which only  |
+    |                                    |                |                | I2C1 will be   |
+    |                                    |                |                | used to        |
+    |                                    |                |                | configure and  |
+    |                                    |                |                | monitor the    |
+    |                                    |                |                | PMIC           |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_comm_dual_i2c_cfg         | PDK-5813       | Safety         | Driver shall   |
+    |                                    |                | Functional     | support dual   |
+    |                                    |                |                | I2C interface  |
+    |                                    |                |                | in which       |
+    |                                    |                |                | I2C1 will      |
+    |                                    |                |                | help to do     |
+    |                                    |                |                | PMIC           |
+    |                                    |                |                | configuration  |
+    |                                    |                |                | and monitor    |
+    |                                    |                |                | except WDG     |
+    |                                    |                |                | QA,I2C2 will   |
+    |                                    |                |                | help to do     |
+    |                                    |                |                | WDG QA         |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_comm_spi_cfg              | PDK-5843       | Safety         | Driver shall   |
+    |                                    |                | Functional     | support SPI    |
+    |                                    |                |                | interface      |
+    |                                    |                |                | which will be  |
+    |                                    |                |                | used to        |
+    |                                    |                |                | configure and  |
+    |                                    |                |                | monitor the    |
+    |                                    |                |                | PMIC           |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_gpio_cfg_readback         | PDK-5808       | Safety         | Driver shall   |
+    |                                    |                | Functional     | configure PMIC |
+    |                                    |                |                | GPIO pins as:  |
+    |                                    |                |                | NSLEEP         |
+    |                                    |                |                | Triggers,      |
+    |                                    |                |                | Reset pin      |
+    |                                    |                |                | for SOC,       |
+    |                                    |                |                | WKUP           |
+    |                                    |                |                | sources,       |
+    |                                    |                |                | General        |
+    |                                    |                |                | Input/output   |
+    |                                    |                |                | pins,          |
+    |                                    |                |                | I2C2 SCLK      |
+    |                                    |                |                | and SDA        |
+    |                                    |                |                | lines,         |
+    |                                    |                |                | SPI CS or      |
+    |                                    |                |                | SDO lines,     |
+    |                                    |                |                | Watchdog       |
+    |                                    |                |                | Trigger        |
+    |                                    |                |                | line,          |
+    |                                    |                |                | ESM Error      |
+    |                                    |                |                | Pins for       |
+    |                                    |                |                | SOC/MCU,       |
+    |                                    |                |                | SPMI,          |
+    |                                    |                |                | SCLK/SDATA,    |
+    |                                    |                |                | SYNCCLKOUT,    |
+    |                                    |                |                | SYNCLKIN       |
+    |                                    |                |                | and            |
+    |                                    |                |                | CLK32KOUT,     |
+    |                                    |                |                | Watchdog       |
+    |                                    |                |                | Disable        |
+    |                                    |                |                | Pin,           |
+    |                                    |                |                | Power Good     |
+    |                                    |                |                | Indication     |
+    |                                    |                |                | Line           |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_gpio_cfg_readback         | PDK-5808       | Safety         | Driver shall   |
+    |                                    |                | Functional     | configure PMIC |
+    |                                    |                |                | GPIO pin       |
+    |                                    |                |                | functionality  |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_irq_cfg_readback          | PDK-5805       | Safety         | PMIC: Driver   |
+    |                                    |                | Functional     | shall decipher |
+    |                                    |                |                | error events   |
+    |                                    |                |                | and call out   |
+    |                                    |                |                | to application |
+    |                                    |                |                | with error code|
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_irq_cfg_readback          | PDK-5838       | Safety         | Driver shall   |
+    |                                    |                | Functional     | read PMIC      |
+    |                                    |                |                | registers to   |
+    |                                    |                |                | decipher a     |
+    |                                    |                |                | Severe Error   |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_irq_cfg_readback          | PDK-5842       | Safety         | Driver shall   |
+    |                                    |                | Functional     | read PMIC      |
+    |                                    |                |                | registers to   |
+    |                                    |                |                | decipher a Buck|
+    |                                    |                |                | Error          |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_irq_cfg_readback          | PDK-5832       | Safety         | Driver shall   |
+    |                                    |                | Safety         | read PMIC      |
+    |                                    |                |                | registers to   |
+    |                                    |                |                | decipher a LDO |
+    |                                    |                |                | Error          |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_irq_cfg_readback          | PDK-5852       | Safety         | Driver shall   |
+    |                                    |                | Functional     | read PMIC      |
+    |                                    |                |                | registers to   |
+    |                                    |                |                | decipher a     |
+    |                                    |                |                | Moderate Error |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_irq_cfg_readback          | PDK-5834       | Safety         | Driver shall   |
+    |                                    |                | Functional     | read PMIC      |
+    |                                    |                |                | registers to   |
+    |                                    |                |                | decipher a     |
+    |                                    |                |                | Warning        |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_irq_cfg_readback          | PDK-5806       | Safety         | Driver shall   |
+    |                                    |                | Functional     | read PMIC      |
+    |                                    |                |                | registers to   |
+    |                                    |                |                | decipher a     |
+    |                                    |                |                | startup source |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_irq_cfg_readback          | PDK-5828       | Safety         | Driver shall   |
+    |                                    |                | Functional     | read PMIC      |
+    |                                    |                |                | registers to   |
+    |                                    |                |                | decipher a     |
+    |                                    |                |                | FSM ERROR      |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_irq_cfg_readback          | PDK-5807       | Safety         | Driver shall   |
+    |                                    |                | Functional     | read PMIC      |
+    |                                    |                |                | registers to   |
+    |                                    |                |                | decipher a     |
+    |                                    |                |                | Watchdog error |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_irq_cfg_readback          | PDK-5846       | Safety         | Driver shall   |
+    |                                    |                | Functional     | read PMIC      |
+    |                                    |                |                | registers to   |
+    |                                    |                |                | decipher a     |
+    |                                    |                |                | ESM error      |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_esm_cfg_readback          | PDK-5833       | Safety         | Driver API to  |
+    |                                    |                | Functional     | configure ESM  |
+    |                                    |                |                | MCU by         |
+    |                                    |                |                | resetting      |
+    |                                    |                |                | ESM_MCU_START  |
+    |                                    |                |                | to 0, update   |
+    |                                    |                |                | ESM MCU        |
+    |                                    |                |                | Configuration  |
+    |                                    |                |                | registers and  |
+    |                                    |                |                | setting        |
+    |                                    |                |                | ESM_MCU_START  |
+    |                                    |                |                | to 1           |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_esm_cfg_readback          | PDK-5833       | Safety         | Driver API to  |
+    |                                    |                | Functional     | configure ESM  |
+    |                                    |                |                | SOC by         |
+    |                                    |                |                | resetting      |
+    |                                    |                |                | ESM_SOC_START  |
+    |                                    |                |                | to 0, update   |
+    |                                    |                |                | ESM SOC        |
+    |                                    |                |                | Configuration  |
+    |                                    |                |                | registers and  |
+    |                                    |                |                | setting        |
+    |                                    |                |                | ESM_SOC_START  |
+    |                                    |                |                | to 1           |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_esm_cfg_readback          | PDK-5833       | Safety         | Driver API to  |
+    |                                    |                | Functional     | Stop ESM MCU   |
+    |                                    |                |                | Monitor by     |
+    |                                    |                |                | resetting      |
+    |                                    |                |                | ESM_MCU_START  |
+    |                                    |                |                | to 0           |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_esm_cfg_readback          | PDK-5833       | Safety         | Driver API to  |
+    |                                    |                | Functional     | Stop ESM SOC   |
+    |                                    |                |                | Monitor by     |
+    |                                    |                |                | resetting      |
+    |                                    |                |                | ESM_SOC_START  |
+    |                                    |                |                | to 0           |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_esm_cfg_readback          | PDK-5833       | Safety         | Driver API to  |
+    |                                    |                | Functional     | read ESM MCU   |
+    |                                    |                |                | Configuration  |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_esm_cfg_readback          | PDK-5833       | Safety         | Driver API to  |
+    |                                    |                | Functional     | read ESM SOC   |
+    |                                    |                |                | Configuration  |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_wdg_cfg_readback          | PDK-5854       | Safety         | Driver API to  |
+    |                                    |                | Functional     | configure      |
+    |                                    |                |                | Watchdog in    |
+    |                                    |                |                | Trigger mode   |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_wdg_cfg_readback          | PDK-5854       | Safety         | Driver API to  |
+    |                                    |                | Functional     | read back      |
+    |                                    | PDK-5839       |                | Watchdog       |
+    |                                    |                |                | configuration  |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_wdg_cfg_readback          | PDK-5839       | Safety         | Driver API to  |
+    |                                    |                | Functional     | configure      |
+    |                                    |                |                | Watchdog in QA |
+    |                                    |                |                | mode           |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_wdg_cfg_readback          | PDK-5839       | Safety         | Driver API to  |
+    |                                    |                | Functional     | perform        |
+    |                                    |                |                | Watchdog QA    |
+    |                                    |                |                | with PMIC      |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_wdg_cfg_readback          | PDK-5854       | Safety         | Driver API to  |
+    |                                    |                | Functional     | perform        |
+    |                                    | PDK-5839       |                | Watchdog       |
+    |                                    |                |                | Enable/Disable |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_fsm_cfg                   | PDK-5837       | Safety         | Driver shall   |
+    |                                    |                | Functional     | support        |
+    |                                    |                |                | configuring    |
+    |                                    |                |                | NSLEEP         |
+    |                                    |                |                | registers for  |
+    |                                    |                |                | Processor low  |
+    |                                    |                |                | power.         |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_fsm_cfg                   | PDK-5837       | Safety         | Driver shall   |
+    |                                    |                | Functional     | readback       |
+    |                                    |                |                | NSLEEP         |
+    |                                    |                |                | registers to   |
+    |                                    |                |                | get wake or    |
+    |                                    |                |                | sleep status.  |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
+    |                                    |                | Functional     | configure RTC  |
+    |                                    |                |                | Alarm          |
+    |                                    |                |                | Interrupts and |
+    |                                    |                |                | enable RTC     |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
+    |                                    |                | Functional     | readback RTC   |
+    |                                    |                |                | Alarm          |
+    |                                    |                |                | configuration  |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
+    |                                    |                | Functional     | configure RTC  |
+    |                                    |                |                | Timer          |
+    |                                    |                |                | Interrupts and |
+    |                                    |                |                | enable RTC     |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
+    |                                    |                | Functional     | readback RTC   |
+    |                                    |                |                | Timer          |
+    |                                    |                |                | Configuration  |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
+    |                                    |                | Functional     | disable RTC    |
+    |                                    |                |                | module         |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
+    |                                    |                | Functional     | enable RTC     |
+    |                                    |                |                | module         |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
+    |                                    |                | Functional     | configure RTC  |
+    |                                    |                |                | time calendar  |
+    |                                    |                |                | registers      |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
+    |                                    |                | Functional     | readback RTC   |
+    |                                    |                |                | time calendar  |
+    |                                    |                |                | registers.     |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
+    |                                    |                | Functional     | enable RTC     |
+    |                                    |                |                | Frequency      |
+    |                                    |                |                | compensation.  |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
+    |                                    |                | Functional     | configure RTC  |
+    |                                    |                |                | Frequency      |
+    |                                    |                |                | compensation   |
+    |                                    |                |                | readback.      |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver API     |
+    |                                    |                | Functional     | shall read the |
+    |                                    |                |                | current status |
+    |                                    |                |                | of RTC         |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver API to  |
+    |                                    |                | Functional     | support        |
+    |                                    |                |                | Enable/Disable |
+    |                                    |                |                | of RTC Alarm   |
+    |                                    |                |                | Interrupt      |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver API to  |
+    |                                    |                | Functional     | support        |
+    |                                    |                |                | Enable/Disable |
+    |                                    |                |                | of RTC Timer   |
+    |                                    |                |                | Interrupt      |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_lpstandby_wkup_cfg        | PDK-5844       | Safety         | Driver shall   |
+    |                                    |                | Functional     | support Ultra  |
+    |                                    |                |                | Low Power      |
+    |                                    |                |                | Standby with   |
+    |                                    |                |                | CAN WakeUp for |
+    |                                    |                |                | PMIC           |
+    |                                    |                |                |                |
+    |                                    |                |                | Note:          |
+    |                                    |                |                | Ultra-Low      |
+    |                                    |                |                | Power Mode is  |
+    |                                    |                |                | synonymous to  |
+    |                                    |                |                | LP_STANDBY     |
+    |                                    |                |                | state in the   |
+    |                                    |                |                | TRM.           |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_lpstandby_wkup_cfg        | PDK-5831       | Safety         | Driver shall   |
+    |                                    |                | Functional     | support Ultra  |
+    |                                    |                |                | Low Power      |
+    |                                    |                |                | Standby with   |
+    |                                    |                |                | RTC WakeUp for |
+    |                                    |                |                | PMIC           |
+    |                                    |                |                |                |
+    |                                    |                |                | Note:          |
+    |                                    |                |                | Ultra-Low      |
+    |                                    |                |                | Power Mode is  |
+    |                                    |                |                | synonymous to  |
+    |                                    |                |                | LP_STANDBY     |
+    |                                    |                |                | state in the   |
+    |                                    |                |                | TRM.           |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_lpstandby_cfg             | PDK-5851       | Safety         | Driver must    |
+    |                                    |                | Functional     | allow          |
+    |                                    |                |                | configuration  |
+    |                                    |                |                | of the PMIC    |
+    |                                    |                |                | low power LP   |
+    |                                    |                |                | STANDBY state  |
+    |                                    |                |                | by writing to  |
+    |                                    |                |                | I2C_TRIGGER_0. |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_err_recov_cnt_cfg_readback| PDK-5809       | Safety         | Driver shall   |
+    |                                    |                | Functional     | provide an API |
+    |                                    |                |                | to query the   |
+    |                                    |                |                | error recovery |
+    |                                    |                |                | count.         |
+    +------------------------------------+----------------+----------------+----------------+
 
 
 Design Description
@@ -772,8 +764,12 @@ Communication Interface call- graph
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. figure:: pmic_lld_design_diagram/Communication_Interface_call_graph.png
-   :width: 80%
+   :width: 100%
    :align: center
+
+.. raw:: latex
+
+    \newpage
 
 PMIC Core Functionality Components
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2152,7 +2148,8 @@ Thermal Configuration
       *
       *  \param   currentLimitLvlStat Used to read the output current limit status
       *                               for LDO and buck regulators.
-      *                               This checks if output current is above current limit level.
+      *                               This checks if output current is above current
+      *                               limit level.
       *                               For valid values
       *                               Valid values for TPS6594x Leo Device
       *                               \ref Pmic_TPS6594x_Power_Current_Status
@@ -2398,2803 +2395,2991 @@ API Function Descriptions
 PMIC Core Handle Initialization
 -------------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmic_init(const Pmic_CoreCfg_t     |
-|                        | \*pPmicConfigData, Pmic_CoreHandle_t       |
-|                        | \*pPmicCoreHandle);                        |
-+========================+============================================+
-| Design Id:             | (did_pmic_comm_intf_cfg),                  |
-|                        | (did_pmic_comm_single_i2c_cfg),            |
-|                        | (did_pmic_comm_dual_i2c_cfg),              |
-|                        | (did_pmic_comm_spi_cfg),                   |
-|                        | (did_pmic_tps6594x_j721e_support),         |
-|                        | (did_pmic_lp8764x_j7vcl_support)           |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5814), (PDK-5810), (PDK-5813),        |
-|                        | (PDK-5843), (PDK-5853), (PDK-5811)         |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-6187, PDK-5990, PDK-6109               |
-|                        | PDK-6185, PDK-6186, PDK-6191               |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreCfg_t \*pPmicConfigData        |
-|                        |    –Handle to driver instance              |
-|                        | 2. Pmic_CoreHandle_t \*pPmicCoreHandle     |
-|                        |    –Pointer to hold pmic device subsystem  |
-|                        |    info                                    |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function gets device configuration    |
-|                        | from pCoreCfgData and initializes device   |
-|                        | specific information in pPmicCoreHandle    |
-|                        | after validation of given params depends   |
-|                        | on validParams bitfileds and does some     |
-|                        | basic validation on PMIC interface         |
-|                        | I2C/SPI, confirming that PMIC is           |
-|                        | accessible for PMIC configuration and      |
-|                        | monitor features.                          |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC Init
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmic_init(const Pmic_CoreCfg_t     |
+    |                        | \*pPmicConfigData, Pmic_CoreHandle_t       |
+    |                        | \*pPmicCoreHandle);                        |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_comm_intf_cfg),                  |
+    |                        | (did_pmic_comm_single_i2c_cfg),            |
+    |                        | (did_pmic_comm_dual_i2c_cfg),              |
+    |                        | (did_pmic_comm_spi_cfg),                   |
+    |                        | (did_pmic_tps6594x_j721e_support),         |
+    |                        | (did_pmic_lp8764x_j7vcl_support)           |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5814), (PDK-5810), (PDK-5813),        |
+    |                        | (PDK-5843), (PDK-5853), (PDK-5811)         |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-6187, PDK-5990, PDK-6109               |
+    |                        | PDK-6185, PDK-6186, PDK-6191               |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreCfg_t \*pPmicConfigData        |
+    |                        |    –Handle to driver instance              |
+    |                        | 2. Pmic_CoreHandle_t \*pPmicCoreHandle     |
+    |                        |    –Pointer to hold pmic device subsystem  |
+    |                        |    info                                    |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function gets device configuration    |
+    |                        | from pCoreCfgData and initializes device   |
+    |                        | specific information in pPmicCoreHandle    |
+    |                        | after validation of given params depends   |
+    |                        | on validParams bitfileds and does some     |
+    |                        | basic validation on PMIC interface         |
+    |                        | I2C/SPI, confirming that PMIC is           |
+    |                        | accessible for PMIC configuration and      |
+    |                        | monitor features.                          |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 De-Initialize PMIC Core Handle
 ------------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmic_deinit(Pmic_CoreHandle_t      |
-|                        | \*pPmicCoreHandle);                        |
-+========================+============================================+
-| Design Id:             | (did_pmic_comm_intf_cfg),                  |
-|                        |                                            |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5814)                                 |
-|                        |                                            |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-5990                                   |
-+------------------------+--------------------------------------------+
-| Parameter              |    Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle.                  |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function takes an existing Instance   |
-|                        | pPmicCoreHandle and closes the LLD being   |
-|                        | used for this Instance. It should be       |
-|                        | called only once per valid                 |
-|                        | pPmicCoreHandle. Should not be called if   |
-|                        | Pmic_init() is not called                  |
-+------------------------+--------------------------------------------+
-| Limitations            | It should be called only once per valid    |
-|                        | pPmicCoreHandle. Should not be called      |
-|                        |                                            |
-|                        | if Pmic_init() is not called               |
-+------------------------+--------------------------------------------+
+.. table:: PMIC Deinit
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmic_deinit(Pmic_CoreHandle_t      |
+    |                        | \*pPmicCoreHandle);                        |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_comm_intf_cfg),                  |
+    |                        |                                            |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5814)                                 |
+    |                        |                                            |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-5990                                   |
+    +------------------------+--------------------------------------------+
+    | Parameter              |    Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle.                  |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function takes an existing Instance   |
+    |                        | pPmicCoreHandle and closes the LLD being   |
+    |                        | used for this Instance. It should be       |
+    |                        | called only once per valid                 |
+    |                        | pPmicCoreHandle. Should not be called if   |
+    |                        | Pmic_init() is not called                  |
+    +------------------------+--------------------------------------------+
+    | Limitations            | It should be called only once per valid    |
+    |                        | pPmicCoreHandle. Should not be called      |
+    |                        |                                            |
+    |                        | if Pmic_init() is not called               |
+    +------------------------+--------------------------------------------+
 
 Start/Stop ESM Monitor
 ----------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmic_esmStart(Pmic_CoreHandle_t    |
-|                        | \*pPmicCoreHandle, const bool esmType,     |
-|                        | const bool esmState);                      |
-+========================+============================================+
-| Design IDs             | (did_pmic_esm_cfg_readback)                |
-+------------------------+--------------------------------------------+
-| Requirements ID        | (PDK-5833)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7769, PDK-7770, PDK-7771, PDK-7853     |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
-|                        |    Handle structure pointer                |
-|                        | 2. const bool esmType – PMIC ESM Type      |
-|                        | 3. const bool esmState – To start or stop  |
-|                        |    PMIC ESM                                |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description |    This function is used to Start/Stop the |
-|                        |    PMIC ESM_MCU/ESM_SOC                    |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC Esm Start
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmic_esmStart(Pmic_CoreHandle_t    |
+    |                        | \*pPmicCoreHandle, const bool esmType,     |
+    |                        | const bool esmState);                      |
+    +========================+============================================+
+    | Design IDs             | (did_pmic_esm_cfg_readback)                |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | (PDK-5833)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7769, PDK-7770, PDK-7771, PDK-7853     |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
+    |                        |    Handle structure pointer                |
+    |                        | 2. const bool esmType – PMIC ESM Type      |
+    |                        | 3. const bool esmState – To start or stop  |
+    |                        |    PMIC ESM                                |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description |    This function is used to Start/Stop the |
+    |                        |    PMIC ESM_MCU/ESM_SOC                    |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 ESM Monitor Enable/Disable
 --------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmic_esmEnable(Pmic_CoreHandle_t   |
-|                        | \*pPmicCoreHandle, const bool esmType,     |
-|                        | const bool esmToggle);                     |
-+========================+============================================+
-| Design IDs             | (did_pmic_esm_cfg_readback)                |
-+------------------------+--------------------------------------------+
-| Requirements ID        | (PDK-5833)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7772 PDK-7773 PDK-7774 PDK-7854        |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
-|                        |    Handle structure pointer                |
-|                        | 2. const bool esmType – PMIC ESM Type      |
-|                        | 3. const bool esmToggle – To               |
-|                        |    Enable/Disable PMIC ESM_MCU/ESM_SOC     |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to Enable/Disable    |
-|                        | the PMIC ESM_MCU/ESM_SOC                   |
-+------------------------+--------------------------------------------+
-| Limitations            | This API must be called only when ESM is   |
-|                        | in STOP state.                             |
-+------------------------+--------------------------------------------+
+.. table:: PMIC Esm Enable
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmic_esmEnable(Pmic_CoreHandle_t   |
+    |                        | \*pPmicCoreHandle, const bool esmType,     |
+    |                        | const bool esmToggle);                     |
+    +========================+============================================+
+    | Design IDs             | (did_pmic_esm_cfg_readback)                |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | (PDK-5833)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7772 PDK-7773 PDK-7774 PDK-7854        |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
+    |                        |    Handle structure pointer                |
+    |                        | 2. const bool esmType – PMIC ESM Type      |
+    |                        | 3. const bool esmToggle – To               |
+    |                        |    Enable/Disable PMIC ESM_MCU/ESM_SOC     |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to Enable/Disable    |
+    |                        | the PMIC ESM_MCU/ESM_SOC                   |
+    +------------------------+--------------------------------------------+
+    | Limitations            | This API must be called only when ESM is   |
+    |                        | in STOP state.                             |
+    +------------------------+--------------------------------------------+
 
 ESM Monitor Enable/Disable Readback
 -----------------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_esmGetEnableState(Pmic_CoreHandle_t   |
-|                        | \*pPmicCoreHandle, const bool esmType,     |
-|                        | bool*pEsmState);                           |
-+========================+============================================+
-| Design IDs             | (did_pmic_esm_cfg_readback)                |
-+------------------------+--------------------------------------------+
-| Requirements ID        | (PDK-5833)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7775, PDK-7776, PDK-7777, PDK-7778,    |
-|                        | PDK-7859                                   |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
-|                        |    Handle structure pointer                |
-|                        | 2. const bool esmType – PMIC ESM Type      |
-|                        | 3. bool \*pEsmState – Pointer to store ESM |
-|                        |    Enable State.                           |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to read the          |
-|                        | Enable/Disable state of PMIC               |
-|                        | ESM_MCU/ESM_SOC.                           |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC ESM State
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_esmGetEnableState(Pmic_CoreHandle_t   |
+    |                        | \*pPmicCoreHandle, const bool esmType,     |
+    |                        | bool*pEsmState);                           |
+    +========================+============================================+
+    | Design IDs             | (did_pmic_esm_cfg_readback)                |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | (PDK-5833)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7775, PDK-7776, PDK-7777, PDK-7778,    |
+    |                        | PDK-7859                                   |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
+    |                        |    Handle structure pointer                |
+    |                        | 2. const bool esmType – PMIC ESM Type      |
+    |                        | 3. bool \*pEsmState – Pointer to store ESM |
+    |                        |    Enable State.                           |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to read the          |
+    |                        | Enable/Disable state of PMIC               |
+    |                        | ESM_MCU/ESM_SOC.                           |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 .. _esm-configuration-1:
 
 ESM Configuration
 -----------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_esmSetConfiguration(Pmic_CoreHandle_t |
-|                        | \*pPmicCoreHandle,const bool esmType,      |
-|                        | const Pmic_EsmCfg_t esmCfg);               |
-+========================+============================================+
-| Design IDs             | (did_pmic_esm_cfg_readback)                |
-+------------------------+--------------------------------------------+
-| Requirements ID        | (PDK-5833)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7779, PDK-7780, PDK-7781, PDK-7782,    |
-|                        | PDK-7783, PDK-7784, PDK-7785, PDK-7786,    |
-|                        | PDK-7787, PDK-7789, PDK-7790, PDK-7791,    |
-|                        | PDK-7855                                   |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
-|                        |    Handle structure pointer                |
-|                        | 2. const bool esmType – PMIC ESM Type      |
-|                        | 3. const Pmic_EsmCfg_t esmCfg – PMIC ESM   |
-|                        |    Configuration                           |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to set the ESM mode, |
-|                        | delay-1 and delay-2 time time intervals,   |
-|                        | Error Count Threshold value, HMAX, HMIN,   |
-|                        | LMAX, LMIN and select EN DRV clear for     |
-|                        | ESM_MCU and ESM_SOC.                       |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC SET ESM CFG
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_esmSetConfiguration(Pmic_CoreHandle_t |
+    |                        | \*pPmicCoreHandle,const bool esmType,      |
+    |                        | const Pmic_EsmCfg_t esmCfg);               |
+    +========================+============================================+
+    | Design IDs             | (did_pmic_esm_cfg_readback)                |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | (PDK-5833)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7779, PDK-7780, PDK-7781, PDK-7782,    |
+    |                        | PDK-7783, PDK-7784, PDK-7785, PDK-7786,    |
+    |                        | PDK-7787, PDK-7789, PDK-7790, PDK-7791,    |
+    |                        | PDK-7855                                   |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
+    |                        |    Handle structure pointer                |
+    |                        | 2. const bool esmType – PMIC ESM Type      |
+    |                        | 3. const Pmic_EsmCfg_t esmCfg – PMIC ESM   |
+    |                        |    Configuration                           |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to set the ESM mode, |
+    |                        | delay-1 and delay-2 time time intervals,   |
+    |                        | Error Count Threshold value, HMAX, HMIN,   |
+    |                        | LMAX, LMIN and select EN DRV clear for     |
+    |                        | ESM_MCU and ESM_SOC.                       |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 ESM Configuration Readback
 --------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_esmGetConfiguration(Pmic_CoreHandle_t |
-|                        | \*pPmicCoreHandle, const bool esmType,     |
-|                        | Pmic_EsmCfg_t \*pEsmCfg);                  |
-+========================+============================================+
-| Design IDs             | (did_pmic_esm_cfg_readback)                |
-+------------------------+--------------------------------------------+
-| Requirements ID        | (PDK-5833)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7792, PDK-7793, PDK-7794, PDK-7795,    |
-|                        | PDK-7856                                   |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
-|                        |    Handle structure pointer                |
-|                        | 2. const bool esmType – PMIC ESM Type      |
-|                        | 3. Pmic_EsmCfg_t \*pEsmCfg – Pointer to    |
-|                        |    store the ESM configuration.            |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to get the           |
-|                        | configured ESM mode, delay-1 and delay-2   |
-|                        | time intervals, Error Count Threshold      |
-|                        | value, HMAX, HMIN, LMAX, LMIN and select   |
-|                        | EN DRV clear for ESM_MCU and ESM_SOC.      |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC ESM GET CFG
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_esmGetConfiguration(Pmic_CoreHandle_t |
+    |                        | \*pPmicCoreHandle, const bool esmType,     |
+    |                        | Pmic_EsmCfg_t \*pEsmCfg);                  |
+    +========================+============================================+
+    | Design IDs             | (did_pmic_esm_cfg_readback)                |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | (PDK-5833)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7792, PDK-7793, PDK-7794, PDK-7795,    |
+    |                        | PDK-7856                                   |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
+    |                        |    Handle structure pointer                |
+    |                        | 2. const bool esmType – PMIC ESM Type      |
+    |                        | 3. Pmic_EsmCfg_t \*pEsmCfg – Pointer to    |
+    |                        |    store the ESM configuration.            |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to get the           |
+    |                        | configured ESM mode, delay-1 and delay-2   |
+    |                        | time intervals, Error Count Threshold      |
+    |                        | value, HMAX, HMIN, LMAX, LMIN and select   |
+    |                        | EN DRV clear for ESM_MCU and ESM_SOC.      |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 ESM Interrupt Masking/Unmasking
 -------------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_esmSetInterrupt(Pmic_CoreHandle_t     |
-|                        | \*pPmicCoreHandle, const bool esmType,     |
-|                        | const Pmic_EsmIntrCfg_t esmIntrCfg);       |
-+========================+============================================+
-| Design IDs             | (did_pmic_esm_cfg_readback)                |
-+------------------------+--------------------------------------------+
-| Requirements ID        | (PDK-5833)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7836, PDK-7837, PDK-7838, PDK-7839,    |
-|                        | PDK-7840, PDK-7841, PDK-7850,              |
-|                        | PDK-7852, PDK-7858                         |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
-|                        |    Handle structure                        |
-|                        | 2. const bool esmType – PMIC ESM Type      |
-|                        | 3. const Pmic_EsmIntrCfg_t esmIntrCfg –    |
-|                        |    PMIC ESM interrupts mask/               |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to mask/unmask the   |
-|                        | ESM RST, FAIL and PIN Interrupts for both  |
-|                        | ESM MCU and ESM SOC.                       |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC ESM Interrupt
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_esmSetInterrupt(Pmic_CoreHandle_t     |
+    |                        | \*pPmicCoreHandle, const bool esmType,     |
+    |                        | const Pmic_EsmIntrCfg_t esmIntrCfg);       |
+    +========================+============================================+
+    | Design IDs             | (did_pmic_esm_cfg_readback)                |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | (PDK-5833)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7836, PDK-7837, PDK-7838, PDK-7839,    |
+    |                        | PDK-7840, PDK-7841, PDK-7850,PDK-7852,     |
+    |                        | PDK-7858                                   |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
+    |                        |    Handle structure                        |
+    |                        | 2. const bool esmType – PMIC ESM Type      |
+    |                        | 3. const Pmic_EsmIntrCfg_t esmIntrCfg –    |
+    |                        |    PMIC ESM interrupts mask/               |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to mask/unmask the   |
+    |                        | ESM RST, FAIL and PIN Interrupts for both  |
+    |                        | ESM MCU and ESM SOC.                       |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 ESM Error Count
 ---------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_esmGetErrCnt(Pmic_CoreHandle_t        |
-|                        | \*pPmicCoreHandle, const bool esmType,     |
-|                        | uint8_t \*pEsmErrCnt);                     |
-+========================+============================================+
-| Design IDs             | (did_pmic_esm_cfg_readback)                |
-+------------------------+--------------------------------------------+
-| Requirements ID        | (PDK-5833)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7796, PDK-7797, PDK-7798, PDK-7799     |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
-|                        |    Handle structure pointer                |
-|                        | 2. const bool esmType – PMIC ESM Type      |
-|                        | 3. uint8_t \*pEsmErrCnt – Pointer to store |
-|                        |    the Error Count.                        |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to get the current   |
-|                        | Error count for ESM MCU ESM SOC.           |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC ESM Error Count
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_esmGetErrCnt(Pmic_CoreHandle_t        |
+    |                        | \*pPmicCoreHandle, const bool esmType,     |
+    |                        | uint8_t \*pEsmErrCnt);                     |
+    +========================+============================================+
+    | Design IDs             | (did_pmic_esm_cfg_readback)                |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | (PDK-5833)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7796, PDK-7797, PDK-7798, PDK-7799     |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
+    |                        |    Handle structure pointer                |
+    |                        | 2. const bool esmType – PMIC ESM Type      |
+    |                        | 3. uint8_t \*pEsmErrCnt – Pointer to store |
+    |                        |    the Error Count.                        |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to get the current   |
+    |                        | Error count for ESM MCU ESM SOC.           |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Get PMIC Error Status
 ---------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_irqGetErrStatus(Pmic_CoreHandle_t     |
-|                        | \*pPmicCoreHandle, Pmic_IrqStatus_t        |
-|                        | \*pErrStat, const bool clearIRQ)           |
-+========================+============================================+
-| Design Id:             | (did_pmic_irq_cfg_readback)                |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5805), (PDK-5842), (PDK-5832),        |
-|                        | (PDK-5838), (PDK-5852), (PDK-5834),        |
-|                        | (PDK-5806), (PDK-5828), (PDK-5807),        |
-|                        | (PDK-5846)  (PDK-5812), (PDK-5830),        |
-|                        | (PDK-5835), (PDK-5836), (PDK-5845)         |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-6234, PDK-6235, PDK-6236, PDK-6237,    |
-|                        | PDK-6240,                                  |
-|                        | PDK-6241, PDK-6242, PDK-6243, PDK-6244,    |
-|                        | PDK-6245, PDK-6246, PDK-6247,              |
-|                        | PDK-6248, PDK-6249,                        |
-|                        | PDK-6252, PDK-6253,                        |
-|                        | PDK-6256, PDK-6257, PDK-6258,              |
-|                        | PDK-6259, PDK-6266, PDK-6267,              |
-|                        | PDK-7712, PDK-7713, PDK-7714, PDK-7715,    |
-|                        | PDK-7358, PDK-7359, PDK-7374,              |
-|                        | PDK-7375, PDK-7768, PDK-8014               |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*handle – PMIC       |
-|                        |    Interface Handle.                       |
-|                        | 2. Pmic_IrqStatus_t \*pErrStat – Pointer   |
-|                        |    to store Error Status                   |
-|                        | 3. const bool clearIRQ – Flag to clear     |
-|                        |    Interrupt status after                  |
-|                        |                                            |
-|                        | deciphering the interrupt status.          |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function does the following:          |
-|                        |                                            |
-|                        | 1. This function gets the interrupt status |
-|                        | by reading pmic IRQ register as per IRQ    |
-|                        | hierarchy defined in device TRM.           |
-|                        |                                            |
-|                        | 2. Decipher error from top register to     |
-|                        | actual error code.                         |
-|                        |                                            |
-|                        | 3. Store the status of all Interrupts.     |
-|                        |                                            |
-|                        | 4. Support clearing interrupts depends on  |
-|                        | clearIRQ flag.                             |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC Get IRQ Status
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_irqGetErrStatus(Pmic_CoreHandle_t     |
+    |                        | \*pPmicCoreHandle, Pmic_IrqStatus_t        |
+    |                        | \*pErrStat, const bool clearIRQ)           |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_irq_cfg_readback)                |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5805), (PDK-5842), (PDK-5832),        |
+    |                        | (PDK-5838), (PDK-5852), (PDK-5834),        |
+    |                        | (PDK-5806), (PDK-5828), (PDK-5807),        |
+    |                        | (PDK-5846), (PDK-5812), (PDK-5830),        |
+    |                        | (PDK-5835), (PDK-5836), (PDK-5845)         |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-6234, PDK-6235, PDK-6236, PDK-6237,    |
+    |                        | PDK-6240, PDK-6241, PDK-6242, PDK-6243,    |
+    |                        | PDK-6244, PDK-6245, PDK-6246, PDK-6247,    |
+    |                        | PDK-6248, PDK-6249, PDK-6252, PDK-6253,    |
+    |                        | PDK-6256, PDK-6257, PDK-6258, PDK-6259,    |
+    |                        | PDK-6266, PDK-6267, PDK-7712, PDK-7713,    |
+    |                        | PDK-7714, PDK-7715, PDK-7358, PDK-7359,    |
+    |                        | PDK-7374, PDK-7375, PDK-7768               |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*handle – PMIC       |
+    |                        |    Interface Handle.                       |
+    |                        | 2. Pmic_IrqStatus_t \*pErrStat – Pointer   |
+    |                        |    to store Error Status                   |
+    |                        | 3. const bool clearIRQ – Flag to clear     |
+    |                        |    Interrupt status after                  |
+    |                        |                                            |
+    |                        | deciphering the interrupt status.          |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function does the following:          |
+    |                        |                                            |
+    |                        | 1. This function gets the interrupt status |
+    |                        | by reading pmic IRQ register as per IRQ    |
+    |                        | hierarchy defined in device TRM.           |
+    |                        |                                            |
+    |                        | 2. Decipher error from top register to     |
+    |                        | actual error code.                         |
+    |                        |                                            |
+    |                        | 3. Store the status of all Interrupts.     |
+    |                        |                                            |
+    |                        | 4. Support clearing interrupts depends on  |
+    |                        | clearIRQ flag.                             |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Clear PMIC Interrupt Status
 ---------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_irqClrErrStatus(Pmic_CoreHandle_t     |
-|                        | \*pPmicCoreHandle, const uint8_t irqNum);  |
-+========================+============================================+
-| Design Id:             | (did_pmic_irq_cfg_readback)                |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5805)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-6234, PDK-6235, PDK-6236, PDK-6237,    |
-|                        | PDK-6240,                                  |
-|                        | PDK-6241, PDK-6242, PDK-6243, PDK-6244,    |
-|                        | PDK-6245, PDK-6246, PDK-6247,              |
-|                        | PDK-6248, PDK-6249,                        |
-|                        | PDK-6252, PDK-6253,                        |
-|                        | PDK-6256, PDK-6257, PDK-6258,              |
-|                        | PDK-6259, PDK-6266, PDK-6267,              |
-|                        | PDK-7358, PDK-7359, PDK-7374, PDK-7375     |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle.                  |
-|                        | 2. const uint8_t irqNum – Interrupt Number |
-|                        |    to clear                                |
-|                        |                                            |
-|                        | the status                                 |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function does the following:          |
-|                        |                                            |
-|                        | 1. This function clears the IRQ status in  |
-|                        | PMIC register for a given IRQ Number.      |
-|                        |                                            |
-|                        | 2. Validates given IRQ Number and find the |
-|                        | IRQ register that is to be cleared.        |
-|                        |                                            |
-|                        | 3. Expected to be called after an IRQ      |
-|                        | status is deciphered by                    |
-|                        | Pmic_irqGetErrStatus().                    |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC IRQ Clear Error Status
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_irqClrErrStatus(Pmic_CoreHandle_t     |
+    |                        | \*pPmicCoreHandle, const uint8_t irqNum);  |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_irq_cfg_readback)                |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5805)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-6234, PDK-6235, PDK-6236, PDK-6237,    |
+    |                        | PDK-6240, PDK-6241, PDK-6242, PDK-6243,    |
+    |                        | PDK-6244, PDK-6245, PDK-6246, PDK-6247,    |
+    |                        | PDK-6248, PDK-6249, PDK-6252, PDK-6253,    |
+    |                        | PDK-6256, PDK-6257, PDK-6258, PDK-6259,    |
+    |                        | PDK-6266, PDK-6267, PDK-7358, PDK-7359,    |
+    |                        | PDK-7374, PDK-7375                         |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle.                  |
+    |                        | 2. const uint8_t irqNum – Interrupt Number |
+    |                        |    to clear the status.                    |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function does the following:          |
+    |                        |                                            |
+    |                        | 1. This function clears the IRQ status in  |
+    |                        | PMIC register for a given IRQ Number.      |
+    |                        |                                            |
+    |                        | 2. Validates given IRQ Number and find the |
+    |                        | IRQ register that is to be cleared.        |
+    |                        |                                            |
+    |                        | 3. Expected to be called after an IRQ      |
+    |                        | status is deciphered by                    |
+    |                        | Pmic_irqGetErrStatus().                    |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Mask/Unmask PMIC Interrupts
 ---------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmic_irqMaskIntr(Pmic_CoreHandle_t |
-|                        | \*pPmicCoreHandle, const uint8_t irqNum,   |
-|                        | const bool mask)                           |
-+========================+============================================+
-| Design Id:             | (did_pmic_irq_cfg_readback)                |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5805)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7358, PDK-7359                         |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle.                  |
-|                        | 2. const uint8_t irqNum – Interrupt        |
-|                        |    Number to be masked                     |
-|                        | 3. const bool mask – Parameter to          |
-|                        |    Mask/Unmask Interrupts                  |
-|                        |                                            |
-|                        |                                            |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function does the following:          |
-|                        |                                            |
-|                        | 1. This function mask/unmask the given IRQ |
-|                        | Number.                                    |
-|                        |                                            |
-|                        | 2. Validates given IRQ Number and find the |
-|                        | IRQ register that is to be                 |
-|                        | masked/unmasked.                           |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC MASK Interrutps
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmic_irqMaskIntr(Pmic_CoreHandle_t |
+    |                        | \*pPmicCoreHandle, const uint8_t irqNum,   |
+    |                        | const bool mask)                           |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_irq_cfg_readback)                |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5805)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7358, PDK-7359                         |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle.                  |
+    |                        | 2. const uint8_t irqNum – Interrupt        |
+    |                        |    Number to be masked                     |
+    |                        | 3. const bool mask – Parameter to          |
+    |                        |    Mask/Unmask Interrupts                  |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function does the following:          |
+    |                        |                                            |
+    |                        | 1. This function mask/unmask the given IRQ |
+    |                        | Number.                                    |
+    |                        |                                            |
+    |                        | 2. Validates given IRQ Number and find the |
+    |                        | IRQ register that is to be                 |
+    |                        | masked/unmasked.                           |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Extract PMIC Interrupt
 ----------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmic_getNextErrorStatus(const      |
-|                        | Pmic_CoreHandle_t \*pPmicCoreHandle,       |
-|                        | Pmic_IrqStatus_t \*pErrStat, uint8_t       |
-|                        | \*pIrqNum)                                 |
-+========================+============================================+
-| Design Id:             | (did_pmic_irq_cfg_readback)                |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5805)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-6234, PDK-6235, PDK-6236, PDK-6237,    |
-|                        | PDK-6240,                                  |
-|                        | PDK-6241, PDK-6242, PDK-6243, PDK-6244,    |
-|                        | PDK-6245, PDK-6246, PDK-6247,              |
-|                        | PDK-6248, PDK-6249,                        |
-|                        | PDK-6252, PDK-6253,                        |
-|                        | PDK-6256, PDK-6257, PDK-6258,              |
-|                        | PDK-6259, PDK-6266, PDK-6267,              |
-|                        | PDK-7358, PDK-7359, PDK-7374, PDK-7375     |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*phandle – PMIC      |
-|                        |    Interface Handle.                       |
-|                        | 2. Pmic_irqStatus_t \*pErrStat – Pointer   |
-|                        |    containing Error status                 |
-|                        | 3. uint8_t \*pIrqNum – Pointer to store    |
-|                        |    IRQ Number extracted                    |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to extract each      |
-|                        | Error status from pErrStat as per the      |
-|                        | hierarchy given in the TRM. This function  |
-|                        | clears the Error status after the status   |
-|                        | is extracted.                              |
-+------------------------+--------------------------------------------+
-| Limitations            | This API is expected to be                 |
-|                        | called after Pmic_irqGetErrStatus.         |
-+------------------------+--------------------------------------------+
+.. table:: PMIC Extract Error
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmic_getNextErrorStatus(const      |
+    |                        | Pmic_CoreHandle_t \*pPmicCoreHandle,       |
+    |                        | Pmic_IrqStatus_t \*pErrStat, uint8_t       |
+    |                        | \*pIrqNum)                                 |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_irq_cfg_readback)                |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5805)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-6234, PDK-6235, PDK-6236, PDK-6237,    |
+    |                        | PDK-6240, PDK-6241, PDK-6242, PDK-6243,    |
+    |                        | PDK-6244, PDK-6245, PDK-6246, PDK-6247,    |
+    |                        | PDK-6248, PDK-6249, PDK-6252, PDK-6253,    |
+    |                        | PDK-6256, PDK-6257, PDK-6258, PDK-6259,    |
+    |                        | PDK-6266, PDK-6267, PDK-7358, PDK-7359,    |
+    |                        | PDK-7374, PDK-7375                         |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*phandle – PMIC      |
+    |                        |    Interface Handle.                       |
+    |                        | 2. Pmic_irqStatus_t \*pErrStat – Pointer   |
+    |                        |    containing Error status                 |
+    |                        | 3. uint8_t \*pIrqNum – Pointer to store    |
+    |                        |    IRQ Number extracted                    |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to extract each      |
+    |                        | Error status from pErrStat as per the      |
+    |                        | hierarchy given in the TRM. This function  |
+    |                        | clears the Error status after the status   |
+    |                        | is extracted.                              |
+    +------------------------+--------------------------------------------+
+    | Limitations            | This API is expected to be                 |
+    |                        | called after Pmic_irqGetErrStatus.         |
+    +------------------------+--------------------------------------------+
 
 Masking GPIO Interrupts
 -----------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_irqGpioMaskIntr(Pmic_CoreHandle_t     |
-|                        | \*pPmicCoreHandle, const uint8_t           |
-|                        | irqGpioNum, const bool mask, const uint8_t |
-|                        | gpioIntrType)                              |
-+========================+============================================+
-| Design Id:             | (did_pmic_irq_cfg_readback)                |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5812)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-6234, PDK-6235, PDK-6236, PDK-6237,    |
-|                        | PDK-6240,                                  |
-|                        | PDK-6241, PDK-6242, PDK-6243, PDK-6244,    |
-|                        | PDK-6245, PDK-6246, PDK-6247,              |
-|                        | PDK-6248, PDK-6249,                        |
-|                        | PDK-6252, PDK-6253,                        |
-|                        | PDK-6256, PDK-6257, PDK-6258,              |
-|                        | PDK-6259, PDK-6266, PDK-6267,              |
-|                        | PDK-7374, PDK-7375                         |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*phandle – PMIC      |
-|                        |    Interface Handle.                       |
-|                        | 2. const uint8_t irqGpioNum – GPIO         |
-|                        |    Interrupt to be masked/unmasked         |
-|                        | 3. const bool mask – Parameter to          |
-|                        |    mask/unmask interrupt                   |
-|                        | 4. const uint8_t gpioIntrType – Parameter  |
-|                        |    to mask GPIO RISE and FALL Interrupt    |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to Mask or Unmask    |
-|                        | GPIO Rise and Fall Interrupts based on the |
-|                        | GPIO IRQ Number.                           |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC GPIO MASK Interrupt
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_irqGpioMaskIntr(Pmic_CoreHandle_t     |
+    |                        | \*pPmicCoreHandle, const uint8_t           |
+    |                        | irqGpioNum, const bool mask, const uint8_t |
+    |                        | gpioIntrType)                              |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_irq_cfg_readback)                |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5812)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-6234, PDK-6235, PDK-6236, PDK-6237,    |
+    |                        | PDK-6240, PDK-6241, PDK-6242, PDK-6243,    |
+    |                        | PDK-6244, PDK-6245, PDK-6246, PDK-6247,    |
+    |                        | PDK-6248, PDK-6249, PDK-6252, PDK-6253,    |
+    |                        | PDK-6256, PDK-6257, PDK-6258, PDK-6259,    |
+    |                        | PDK-6266, PDK-6267, PDK-7374, PDK-7375     |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*phandle – PMIC      |
+    |                        |    Interface Handle.                       |
+    |                        | 2. const uint8_t irqGpioNum – GPIO         |
+    |                        |    Interrupt to be masked/unmasked         |
+    |                        | 3. const bool mask – Parameter to          |
+    |                        |    mask/unmask interrupt                   |
+    |                        | 4. const uint8_t gpioIntrType – Parameter  |
+    |                        |    to mask GPIO RISE and FALL Interrupt    |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to Mask or Unmask    |
+    |                        | GPIO Rise and Fall Interrupts based on the |
+    |                        | GPIO IRQ Number.                           |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 GPIO set configuration
 ----------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t P                                  |
-|                        | mic_gpioSetConfiguration(Pmic_CoreHandle_t |
-|                        | \*pPmicCoreHandle,                         |
-|                        |                                            |
-|                        | const uint8_t pin,                         |
-|                        |                                            |
-|                        | const Pmic_GpioCfg_t gpioCfg);             |
-+========================+============================================+
-| Design Id:             | (did_pmic_gpio_cfg_readback)               |
-|                        | (did_pmic_lpstandby_wkup_cfg)              |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5808) (PDK-5844)                      |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-6185, PDK-6186, PDK-6187, PDK-6188,    |
-|                        | PDK-6189, PDK-6190, PDK-6191,              |
-|                        | PDK-6192, PDK-6193, PDK-6195, PDK-6196,    |
-|                        | PDK-6197, PDK-6199,                        |
-|                        | PDK-6200, PDK-6201, PDK-6202, PDK-6203,    |
-|                        | PDK-6204, PDK-6205, PDK-6206,              |
-|                        | PDK-6207, PDK-6208, PDK-6209, PDK-6210,    |
-|                        | PDK-6211, PDK-6212, PDK-6213,              |
-|                        | PDK-6214, PDK-6215, PDK-6216, PDK-6217,    |
-|                        | PDK-6218                                   |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle                   |
-|                        | 2. const uint8_t pin – PMIC GPIO Pin       |
-|                        |    number                                  |
-|                        | 3. const Pmic_GpioCfg_t gpioCfg – Set      |
-|                        |    required configuration for the          |
-|                        |    specified GPIO pin                      |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2.  Appropriate error code                 |
-|                        |     (Pmic_ErrorCodes)                      |
-|                        |                                            |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to set the required  |
-|                        | configuration for the specified GPIO pin   |
-|                        | when corresponding bit field is set.       |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC GPIO Set Configuration
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t P                                  |
+    |                        | mic_gpioSetConfiguration(Pmic_CoreHandle_t |
+    |                        | \*pPmicCoreHandle,                         |
+    |                        |                                            |
+    |                        | const uint8_t pin,                         |
+    |                        |                                            |
+    |                        | const Pmic_GpioCfg_t gpioCfg);             |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_gpio_cfg_readback)               |
+    |                        | (did_pmic_lpstandby_wkup_cfg)              |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5808) (PDK-5844)                      |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-6185, PDK-6186, PDK-6187, PDK-6189,    |
+    |                        | PDK-6190, PDK-6191, PDK-6192, PDK-6193,    |
+    |                        | PDK-6195, PDK-6196, PDK-6197, PDK-6199,    |
+    |                        | PDK-6197, PDK-6199, PDK-6200, PDK-6201,    |
+    |                        | PDK-6202, PDK-6204, PDK-6205, PDK-6206,    |
+    |                        | PDK-6207, PDK-6209, PDK-6210, PDK-6211,    |
+    |                        | PDK-6213, PDK-6214, PDK-6215, PDK-6216,    |
+    |                        | PDK-6217, PDK-6218, PDK-8012               |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle                   |
+    |                        | 2. const uint8_t pin – PMIC GPIO Pin       |
+    |                        |    number                                  |
+    |                        | 3. const Pmic_GpioCfg_t gpioCfg – Set      |
+    |                        |    required configuration for the          |
+    |                        |    specified GPIO pin                      |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2.  Appropriate error code                 |
+    |                        |     (Pmic_ErrorCodes)                      |
+    |                        |                                            |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to set the required  |
+    |                        | configuration for the specified GPIO pin   |
+    |                        | when corresponding bit field is set.       |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Read GPIO configuration
 -----------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_gpioGetConfiguration(Pmic_CoreHandle_t|
-|                        | \*pPmicCoreHandle, const uint8_t pin,      |
-|                        | Pmic_GpioCfg_t \*pGpioCfg);                |
-+========================+============================================+
-| Design Id:             | (did_pmic_gpio_cfg_readback)               |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5808)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-6219, PDK-6220, PDK-6221, PDK-6222     |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle                   |
-|                        | 2. const uint8_t pin – PMIC GPIO Pin       |
-|                        |    number                                  |
-|                        | 3. Pmic_GpioCfg_t \*pGpioCfg – Pointer to  |
-|                        |    store specified GPIO pin configuration  |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2.  Appropriate error code                 |
-|                        |     (Pmic_ErrorCodes)                      |
-|                        |                                            |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to read the          |
-|                        | configuration for the specified GPIO pin   |
-|                        | when corresponding bit field is set        |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC GPIO Get Configuration
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_gpioGetConfiguration(Pmic_CoreHandle_t|
+    |                        | \*pPmicCoreHandle, const uint8_t pin,      |
+    |                        | Pmic_GpioCfg_t \*pGpioCfg);                |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_gpio_cfg_readback)               |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5808)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-6219, PDK-6220, PDK-6221, PDK-6222     |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle                   |
+    |                        | 2. const uint8_t pin – PMIC GPIO Pin       |
+    |                        |    number                                  |
+    |                        | 3. Pmic_GpioCfg_t \*pGpioCfg – Pointer to  |
+    |                        |    store specified GPIO pin configuration  |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2.  Appropriate error code                 |
+    |                        |     (Pmic_ErrorCodes)                      |
+    |                        |                                            |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to read the          |
+    |                        | configuration for the specified GPIO pin   |
+    |                        | when corresponding bit field is set        |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Set GPIO pin value
 ------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_gpioSetValue(Pmic_CoreHandle_t        |
-|                        | \*pPmicCoreHandle, const uint8_t pin,      |
-|                        | const uint8_t pinValue);                   |
-+========================+============================================+
-| Design Id:             | (did_pmic_gpio_cfg_readback)               |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5808)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-6227, PDK-6228, PDK-6229, PDK-6230,    |
-|                        | PDK-6231                                   |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle                   |
-|                        | 2. const uint8_t pin – PMIC GPIO pin       |
-|                        |    number                                  |
-|                        | 3. const uint8_t pinValue – PMIC GPIO      |
-|                        |    signal level                            |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2.  Appropriate error code                 |
-|                        |     (Pmic_ErrorCodes)                      |
-|                        |                                            |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to configure the     |
-|                        | signal level of the specified GPIO pin.    |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC GPIO Set Pin value
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_gpioSetValue(Pmic_CoreHandle_t        |
+    |                        | \*pPmicCoreHandle, const uint8_t pin,      |
+    |                        | const uint8_t pinValue);                   |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_gpio_cfg_readback)               |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5808)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-6227, PDK-6228, PDK-6229, PDK-6230,    |
+    |                        | PDK-6231                                   |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle                   |
+    |                        | 2. const uint8_t pin – PMIC GPIO pin       |
+    |                        |    number                                  |
+    |                        | 3. const uint8_t pinValue – PMIC GPIO      |
+    |                        |    signal level                            |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2.  Appropriate error code                 |
+    |                        |     (Pmic_ErrorCodes)                      |
+    |                        |                                            |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to configure the     |
+    |                        | signal level of the specified GPIO pin.    |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Read GPIO pin value
 -------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_gpioGetValue(Pmic_CoreHandle_t        |
-|                        | \*pPmicCoreHandle, const uint8_t pin,      |
-|                        | uint8_t \*pPinValue);                      |
-+========================+============================================+
-| Design Id:             | (did_pmic_gpio_cfg_readback)               |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5808)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-6223, PDK-6224, PDK-6225, PDK-6226     |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle                   |
-|                        | 2. const uint8_t pin – PMIC GPIO pin       |
-|                        |    number                                  |
-|                        | 3. uint8_t \*pPinValue – To store PMIC     |
-|                        |    GPIO pin signal level High/Low          |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2.  Appropriate error code                 |
-|                        |     (Pmic_ErrorCodes)                      |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to read the signal   |
-|                        | level of the gpio pin                      |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC GPIO Get Pin Value
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_gpioGetValue(Pmic_CoreHandle_t        |
+    |                        | \*pPmicCoreHandle, const uint8_t pin,      |
+    |                        | uint8_t \*pPinValue);                      |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_gpio_cfg_readback)               |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5808)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-6223, PDK-6224, PDK-6225, PDK-6226     |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle                   |
+    |                        | 2. const uint8_t pin – PMIC GPIO pin       |
+    |                        |    number                                  |
+    |                        | 3. uint8_t \*pPinValue – To store PMIC     |
+    |                        |    GPIO pin signal level High/Low          |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2.  Appropriate error code                 |
+    |                        |     (Pmic_ErrorCodes)                      |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to read the signal   |
+    |                        | level of the gpio pin                      |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 GPIO Interrupt Configuration
 ----------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmic_gpioSetIntr(Pmic_CoreHandle_t |
-|                        | \* phandle, const uint8_t pin, const       |
-|                        | uint8_t intrType, const uint8_t maskPol)   |
-+========================+============================================+
-| Design Id:             | (did_pmic_gpio_cfg_readback)               |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5808)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-6234, PDK-6235, PDK-6236, PDK-6237,    |
-|                        | PDK-6240,                                  |
-|                        | PDK-6241, PDK-6242, PDK-6243, PDK-6244,    |
-|                        | PDK-6245, PDK-6246, PDK-6247,              |
-|                        | PDK-6248, PDK-6249,                        |
-|                        | PDK-6252, PDK-6253,                        |
-|                        | PDK-6256, PDK-6257, PDK-6258,              |
-|                        | PDK-6259                                   |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*phandle - PMIC      |
-|                        |    Interface Handle                        |
-|                        | 2. uint8_t pin – PMIC GPIO Pin Number      |
-|                        | 3. uint8_t intrType – To configure GPIO    |
-|                        |    Rise Interrupt, Fall                    |
-|                        | 4. uint8_t maskPol – FSM Trigger masking   |
-|                        |    polarity select                         |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2.  Appropriate error code                 |
-|                        |     (Pmic_ErrorCodes)                      |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to enable/disable    |
-|                        | GPIO pin Interrupts                        |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC GPIO Interrupt
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmic_gpioSetIntr(Pmic_CoreHandle_t |
+    |                        | \* phandle, const uint8_t pin, const       |
+    |                        | uint8_t intrType, const uint8_t maskPol)   |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_gpio_cfg_readback)               |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5808)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-6234, PDK-6235, PDK-6236, PDK-6237,    |
+    |                        | PDK-6240, PDK-6241, PDK-6242, PDK-6243,    |
+    |                        | PDK-6244, PDK-6245, PDK-6246, PDK-6247,    |
+    |                        | PDK-6248, PDK-6249, PDK-6252, PDK-6253,    |
+    |                        | PDK-6256, PDK-6257, PDK-6258, PDK-6259     |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*phandle - PMIC      |
+    |                        |    Interface Handle                        |
+    |                        | 2. uint8_t pin – PMIC GPIO Pin Number      |
+    |                        | 3. uint8_t intrType – To configure GPIO    |
+    |                        |    Rise Interrupt, Fall                    |
+    |                        | 4. uint8_t maskPol – FSM Trigger masking   |
+    |                        |    polarity select                         |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2.  Appropriate error code                 |
+    |                        |     (Pmic_ErrorCodes)                      |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to enable/disable    |
+    |                        | GPIO pin Interrupts                        |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Set NPWRON/Enable Pin Configuration
 -----------------------------------
 
-+------------------------+--------------------------------------------------+
-| Prototype              | int32_t Pmic_gpioSetNPwronEnablePinConfiguration |
-|                        | (Pmic_CoreHandle_t                               |
-|                        | \*pPmicCoreHandle, const Pmic_GpioCfg_t          |
-|                        | gpioCfg)                                         |
-+========================+==================================================+
-| Design Id:             | (did_pmic_gpio_cfg_readback)                     |
-+------------------------+--------------------------------------------------+
-| Requirement:           | (PDK-5808)                                       |
-+------------------------+--------------------------------------------------+
-| Test IDs               | PDK-6217, PDK-6218                               |
-+------------------------+--------------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle           |
-|                        |    -PMIC Interface Handle                        |
-|                        | 2. const Pmic_GpioCfg_t gpioCfg – Set            |
-|                        |    NPWRON or ENABLE  GPIO pin configuration      |
-+------------------------+--------------------------------------------------+
-| Return Code            | On Success:                                      |
-|                        |                                                  |
-|                        | 1. PMIC_ST_SUCCESS                               |
-|                        |                                                  |
-|                        | On Failure:                                      |
-|                        |                                                  |
-|                        | 2.  Appropriate error code                       |
-|                        |     (Pmic_ErrorCodes)                            |
-+------------------------+--------------------------------------------------+
-| Functional Description | This function is used to set the required        |
-|                        | configuration for the NPWRON or ENABLE pin       |
-|                        | when the corresponding bit field is set.         |
-|                        | NPWRON is valid only for TPS6594x Leo            |
-|                        | Device                                           |
-+------------------------+--------------------------------------------------+
-| Limitations            | NPWRON is valid only for TPS6594x Leo Device     |
-+------------------------+--------------------------------------------------+
+.. table:: PMIC GPIO Set NPWRON Enable Pin Cfg
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------------+
+    | Prototype              | int32_t Pmic_gpioSetNPwronEnablePinConfiguration |
+    |                        | (Pmic_CoreHandle_t                               |
+    |                        | \*pPmicCoreHandle, const Pmic_GpioCfg_t          |
+    |                        | gpioCfg)                                         |
+    +========================+==================================================+
+    | Design Id:             | (did_pmic_gpio_cfg_readback)                     |
+    +------------------------+--------------------------------------------------+
+    | Requirement:           | (PDK-5808)                                       |
+    +------------------------+--------------------------------------------------+
+    | Test IDs               | PDK-6217, PDK-6218                               |
+    +------------------------+--------------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle           |
+    |                        |    -PMIC Interface Handle                        |
+    |                        | 2. const Pmic_GpioCfg_t gpioCfg – Set            |
+    |                        |    NPWRON or ENABLE  GPIO pin configuration      |
+    +------------------------+--------------------------------------------------+
+    | Return Code            | On Success:                                      |
+    |                        |                                                  |
+    |                        | 1. PMIC_ST_SUCCESS                               |
+    |                        |                                                  |
+    |                        | On Failure:                                      |
+    |                        |                                                  |
+    |                        | 2.  Appropriate error code                       |
+    |                        |     (Pmic_ErrorCodes)                            |
+    +------------------------+--------------------------------------------------+
+    | Functional Description | This function is used to set the required        |
+    |                        | configuration for the NPWRON or ENABLE pin       |
+    |                        | when the corresponding bit field is set.         |
+    |                        | NPWRON is valid only for TPS6594x Leo            |
+    |                        | Device                                           |
+    +------------------------+--------------------------------------------------+
+    | Limitations            | NPWRON is valid only for TPS6594x Leo Device     |
+    +------------------------+--------------------------------------------------+
 
 Read NPWRON/Enable Pin Configuration
 ------------------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_gpioGetNPwronEnablePinConfiguration(  |
-|                        |                                            |
-|                        | Pmic_CoreHandle_t \*pPmicCoreHandle,       |
-|                        | Pmic_GpioCfg_t \*pGpioCfg)                 |
-+========================+============================================+
-| Design Id:             | (did_pmic_gpio_cfg_readback)               |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5808)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7880, PDK-7904, PDK-7905, PDK-7906     |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle     |
-|                        |    -PMIC Interface Handle                  |
-|                        | 2. const Pmic_GpioCfg_t \*pGpioCfg –       |
-|                        |    Pointer to store NPWRON or ENABLE       |
-|                        |    GPIO pin configuration                  |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2.  Appropriate error code                 |
-|                        |     (Pmic_ErrorCodes)                      |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to read the          |
-|                        | configuration for the NPWRON or ENABLE pin |
-|                        | when the corresponding bit field is set.   |
-|                        | NPWRON is valid only for TPS6594x Leo      |
-|                        | Device.                                    |
-+------------------------+--------------------------------------------+
-| Limitations            | NPWRON is valid only for TPS6594x Leo      |
-+------------------------+--------------------------------------------+
+.. table:: PMIC GPIO Get NPWRON Enable Pin Cfg
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_gpioGetNPwronEnablePinConfiguration(  |
+    |                        |                                            |
+    |                        | Pmic_CoreHandle_t \*pPmicCoreHandle,       |
+    |                        | Pmic_GpioCfg_t \*pGpioCfg)                 |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_gpio_cfg_readback)               |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5808)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7880, PDK-7904, PDK-7905, PDK-7906     |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle     |
+    |                        |    -PMIC Interface Handle                  |
+    |                        | 2. const Pmic_GpioCfg_t \*pGpioCfg –       |
+    |                        |    Pointer to store NPWRON or ENABLE       |
+    |                        |    GPIO pin configuration                  |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2.  Appropriate error code                 |
+    |                        |     (Pmic_ErrorCodes)                      |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to read the          |
+    |                        | configuration for the NPWRON or ENABLE pin |
+    |                        | when the corresponding bit field is set.   |
+    |                        | NPWRON is valid only for TPS6594x Leo      |
+    |                        | Device.                                    |
+    +------------------------+--------------------------------------------+
+    | Limitations            | NPWRON is valid only for TPS6594x Leo      |
+    +------------------------+--------------------------------------------+
 
 Read GPIO NPWRON Pin Value for TPS6594x Leo Device
 --------------------------------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_gpioTps6594xNPwronPinGetValue(        |
-|                        | Pmic_CoreHandle_t \*pPmicCoreHandle,       |
-|                        | uint8_t \*pPinValue)                       |
-+========================+============================================+
-| Design Id:             | (did_pmic_gpio_cfg_readback)               |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5808)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7880, PDK-7904, PDK-7905, PDK-7906     |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle     |
-|                        |    -PMIC Interface Handle                  |
-|                        | 2. uint8_t \*pPinValue – Pointer to store  |
-|                        |    PMIC GPIO Signal Level                  |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to read signal level |
-|                        | of NPWRON pin.                             |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC GPIO TPS6594x Pin Get Value
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_gpioTps6594xNPwronPinGetValue(        |
+    |                        | Pmic_CoreHandle_t \*pPmicCoreHandle,       |
+    |                        | uint8_t \*pPinValue)                       |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_gpio_cfg_readback)               |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5808)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7880, PDK-7904, PDK-7905, PDK-7906     |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle     |
+    |                        |    -PMIC Interface Handle                  |
+    |                        | 2. uint8_t \*pPinValue – Pointer to store  |
+    |                        |    PMIC GPIO Signal Level                  |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to read signal level |
+    |                        | of NPWRON pin.                             |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Watchdog Enable
 ---------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmic_wdgEnable(Pmic_CoreHandle_t   |
-|                        | \*pPmicCoreHandle)                         |
-+========================+============================================+
-| Design IDs             | did_pmic_wdg_cfg_readback                  |
-+------------------------+--------------------------------------------+
-| Requirements ID        | PDK-5854, PDK-5839                         |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7343                                   |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle     |
-|                        |    -PMIC Interface Handle                  |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | API to Enable Watchdog timer.              |
-|                        |                                            |
-|                        | This function is used to Enable the PMIC   |
-|                        | watchdog.                                  |
-+------------------------+--------------------------------------------+
-| Limitations            | Application has to ensure relevant GPIO(s) |
-|                        | got configured for Watchdog Trigger or QA  |
-|                        | mode n case of dual I2C interface mode     |
-|                        | User ensure that, this function needs to   |
-|                        | be called to enable watchdog timer before  |
-|                        | configuring or starting watchdog trigger   |
-|                        | or QA mode                                 |
-+------------------------+--------------------------------------------+
+.. table:: PMIC WDG Enable
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmic_wdgEnable(Pmic_CoreHandle_t   |
+    |                        | \*pPmicCoreHandle)                         |
+    +========================+============================================+
+    | Design IDs             | did_pmic_wdg_cfg_readback                  |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | PDK-5854, PDK-5839                         |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7343                                   |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle     |
+    |                        |    -PMIC Interface Handle                  |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | API to Enable Watchdog timer.              |
+    |                        |                                            |
+    |                        | This function is used to Enable the PMIC   |
+    |                        | watchdog.                                  |
+    +------------------------+--------------------------------------------+
+    | Limitations            | Application has to ensure relevant GPIO(s) |
+    |                        | got configured for Watchdog Trigger or QA  |
+    |                        | mode n case of dual I2C interface mode     |
+    |                        | User ensure that, this function needs to   |
+    |                        | be called to enable watchdog timer before  |
+    |                        | configuring or starting watchdog trigger   |
+    |                        | or QA mode                                 |
+    +------------------------+--------------------------------------------+
 
 Watchdog Disable
 ----------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmic_wdgDisable(Pmic_CoreHandle_t  |
-|                        | \*pPmicCoreHandle);                        |
-+========================+============================================+
-| Design IDs             | did_pmic_wdg_cfg_readback                  |
-+------------------------+--------------------------------------------+
-| Requirements ID        | PDK-5854, PDK-5839                         |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7344                                   |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle     |
-|                        |    -PMIC Interface Handle                  |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 1. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | API to Disable Watchdog timer.             |
-|                        | This function is used to Disable the PMIC  |
-|                        | watchdog. User ensures that, after using   |
-|                        | this function, complete watchdog           |
-|                        | functionality and configuration will be    |
-|                        | deactivated.                               |
-+------------------------+--------------------------------------------+
-| Limitations            | Application has to ensure relevant GPIO(s) |
-|                        | got configured for Watchdog Trigger or QA  |
-|                        | mode n case of dual I2C interface mode     |
-+------------------------+--------------------------------------------+
+.. table:: PMIC WDG Disable
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmic_wdgDisable(Pmic_CoreHandle_t  |
+    |                        | \*pPmicCoreHandle);                        |
+    +========================+============================================+
+    | Design IDs             | did_pmic_wdg_cfg_readback                  |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | PDK-5854, PDK-5839                         |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7344                                   |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle     |
+    |                        |    -PMIC Interface Handle                  |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 1. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | API to Disable Watchdog timer.             |
+    |                        | This function is used to Disable the PMIC  |
+    |                        | watchdog. User ensures that, after using   |
+    |                        | this function, complete watchdog           |
+    |                        | functionality and configuration will be    |
+    |                        | deactivated.                               |
+    +------------------------+--------------------------------------------+
+    | Limitations            | Application has to ensure relevant GPIO(s) |
+    |                        | got configured for Watchdog Trigger or QA  |
+    |                        | mode n case of dual I2C interface mode     |
+    +------------------------+--------------------------------------------+
 
 .. _watchdog-configuration-1:
 
 Watchdog Configuration
 ----------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t   |
-|                        | \*pPmicCoreHandle,                         |
-|                        |                                            |
-|                        | const Pmic_WdgCfg_t wdgCfg);               |
-+========================+============================================+
-| Design IDs             | did_pmic_wdg_cfg_readback                  |
-+------------------------+--------------------------------------------+
-| Requirements ID        | PDK-5854, PDK-5839                         |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7327,PDK-7328                          |
-|                        | ,PDK-7329,PDK-7330,PDK-7331,PDK-7332,PDK-7 |
-|                        | 333,PDK-7334,PDK-7335,PDK-7336,PDK-7337,PD |
-|                        | K-7338,PDK-7339,PDK-7340,PDK-7341,PDK-7342 |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle                   |
-|                        | 2. Pmic_WdgCfg_t wdgCfg – Watchdog         |
-|                        |    configuration                           |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 1. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | API to set PMIC watchdog configurations.   |
-|                        |                                            |
-|                        | This function is used to configure the     |
-|                        | watchdog parameters in the PMIC for        |
-|                        | trigger mode or Q&A(question and answer)   |
-|                        | mode, when corresponding validParam bit    |
-|                        | fields are set in Pmic_WdgCfg_t structure. |
-+------------------------+--------------------------------------------+
-| Limitations            | Application has to ensure relevant GPIO(s) |
-|                        | got configured for Watchdog Trigger or QA  |
-|                        | mode n case of dual I2C interface mode.    |
-|                        | User has to call Pmic_wdgEnable() before   |
-|                        | set the configuration.                     |
-+------------------------+--------------------------------------------+
+.. table:: PMIC WDG Set Cfg
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t   |
+    |                        | \*pPmicCoreHandle,                         |
+    |                        |                                            |
+    |                        | const Pmic_WdgCfg_t wdgCfg);               |
+    +========================+============================================+
+    | Design IDs             | did_pmic_wdg_cfg_readback                  |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | PDK-5854, PDK-5839                         |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7327, PDK-7328, PDK-7329, PDK-7330,    |
+    |                        | PDK-7331, PDK-7332, PDK-7333 ,PDK-7334,    |
+    |                        | PDK-7335, PDK-7336, PDK-7337, PDK-7338,    |
+    |                        | PDK-7339, PDK-7340, PDK-7341, PDK-7342     |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle                   |
+    |                        | 2. Pmic_WdgCfg_t wdgCfg – Watchdog         |
+    |                        |    configuration                           |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 1. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | API to set PMIC watchdog configurations.   |
+    |                        |                                            |
+    |                        | This function is used to configure the     |
+    |                        | watchdog parameters in the PMIC for        |
+    |                        | trigger mode or Q&A(question and answer)   |
+    |                        | mode, when corresponding validParam bit    |
+    |                        | fields are set in Pmic_WdgCfg_t structure. |
+    +------------------------+--------------------------------------------+
+    | Limitations            | Application has to ensure relevant GPIO(s) |
+    |                        | got configured for Watchdog Trigger or QA  |
+    |                        | mode n case of dual I2C interface mode.    |
+    |                        | User has to call Pmic_wdgEnable() before   |
+    |                        | set the configuration.                     |
+    +------------------------+--------------------------------------------+
 
 Watchdog Configuration Readback
 -------------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t   |
-|                        | \*pPmicCoreHandle,                         |
-|                        |                                            |
-|                        | Pmic_WdgCfg_t \*pWdgCfg);                  |
-+========================+============================================+
-| Design IDs             | did_pmic_wdg_cfg_readback                  |
-+------------------------+--------------------------------------------+
-| Requirements ID        | PDK-5854, PDK-5839                         |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7327,PDK-7328                          |
-|                        | ,PDK-7329,PDK-7330,PDK-7331,PDK-7332,PDK-7 |
-|                        | 333,PDK-7334,PDK-7335,PDK-7336,PDK-7337,PD |
-|                        | K-7338,PDK-7339,PDK-7340,PDK-7341,PDK-7342 |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle                   |
-|                        | 2. Pmic_WdgCfg_t \*pWdgCfg – Watchdog      |
-|                        |    configuration pointer                   |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | API to get PMIC watchdog configurations.   |
-|                        |                                            |
-|                        | This function is used to get configuration |
-|                        | of the watchdog from the PMIC for trigger  |
-|                        | mode or Q&A(question and answer) mode,     |
-|                        | when corresponding validParam bit fields   |
-|                        | are set in Pmic_WdgCfg_t structure.        |
-+------------------------+--------------------------------------------+
-| Limitations            | User has to call Pmic_wdgEnable() before   |
-|                        | get the configuration.                     |
-+------------------------+--------------------------------------------+
+.. table:: PMIC WDG Get Cfg
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t   |
+    |                        | \*pPmicCoreHandle,                         |
+    |                        |                                            |
+    |                        | Pmic_WdgCfg_t \*pWdgCfg);                  |
+    +========================+============================================+
+    | Design IDs             | did_pmic_wdg_cfg_readback                  |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | PDK-5854, PDK-5839                         |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7327, PDK-7328, PDK-7329, PDK-7330,    |
+    |                        | PDK-7331, PDK-7332, PDK-7333 ,PDK-7334,    |
+    |                        | PDK-7335, PDK-7336, PDK-7337, PDK-7338,    |
+    |                        | PDK-7339, PDK-7340, PDK-7341, PDK-7342     |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle                   |
+    |                        | 2. Pmic_WdgCfg_t \*pWdgCfg – Watchdog      |
+    |                        |    configuration pointer                   |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | API to get PMIC watchdog configurations.   |
+    |                        |                                            |
+    |                        | This function is used to get configuration |
+    |                        | of the watchdog from the PMIC for trigger  |
+    |                        | mode or Q&A(question and answer) mode,     |
+    |                        | when corresponding validParam bit fields   |
+    |                        | are set in Pmic_WdgCfg_t structure.        |
+    +------------------------+--------------------------------------------+
+    | Limitations            | User has to call Pmic_wdgEnable() before   |
+    |                        | get the configuration.                     |
+    +------------------------+--------------------------------------------+
 
 Watchdog Error Status
 ---------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t   |
-|                        | \*pPmicCoreHandle, Pmic_WdgErrStatus_t     |
-|                        | \*pErrStatus);                             |
-+========================+============================================+
-| Design IDs             | did_pmic_wdg_cfg_readback                  |
-+------------------------+--------------------------------------------+
-| Requirements ID        | PDK-5854, PDK-5839                         |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7353,PDK-7354,PDK-7355                 |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle                   |
-|                        | 2. Pmic_WdgErrStatus_t \*pErrStatus –      |
-|                        |    Watchdog error status pointer           |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 1. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | API to get PMIC watchdog error status.     |
-|                        |                                            |
-|                        | This function is used to get the watchdog  |
-|                        | error status from the PMIC for trigger     |
-|                        | mode or Q&A(question and answer) mode.     |
-+------------------------+--------------------------------------------+
-| Limitations            | User has to call Pmic_wdgEnable() before   |
-|                        | get the configuration.                     |
-+------------------------+--------------------------------------------+
+.. table:: PMIC WDG Get Error Status
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t   |
+    |                        | \*pPmicCoreHandle, Pmic_WdgErrStatus_t     |
+    |                        | \*pErrStatus);                             |
+    +========================+============================================+
+    | Design IDs             | did_pmic_wdg_cfg_readback                  |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | PDK-5854, PDK-5839                         |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7353,PDK-7354,PDK-7355                 |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle                   |
+    |                        | 2. Pmic_WdgErrStatus_t \*pErrStatus –      |
+    |                        |    Watchdog error status pointer           |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 1. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | API to get PMIC watchdog error status.     |
+    |                        |                                            |
+    |                        | This function is used to get the watchdog  |
+    |                        | error status from the PMIC for trigger     |
+    |                        | mode or Q&A(question and answer) mode.     |
+    +------------------------+--------------------------------------------+
+    | Limitations            | User has to call Pmic_wdgEnable() before   |
+    |                        | get the configuration.                     |
+    +------------------------+--------------------------------------------+
 
 Watchdog Fail Count
 -------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_wdgGetFailCount(Pmic_CoreHandle_t     |
-|                        | \*pPmicCoreHandle, uint8_t \*pFailCount);  |
-+========================+============================================+
-| Design IDs             | did_pmic_wdg_cfg_readback                  |
-+------------------------+--------------------------------------------+
-| Requirements ID        | PDK-5854, PDK-5839                         |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7350,PDK-7351,PDK-7352                 |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
-|                        |    Handle structure pointer                |
-|                        | 2. uint8_t \*pFailCount – Watchdog fail    |
-|                        |    count pointer                           |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | API to get PMIC watchdog fail count.       |
-|                        |                                            |
-|                        | This function is used to get the watchdog  |
-|                        | fail count from the PMIC for trigger mode  |
-|                        | or Q&A (question and answer) mode.         |
-+------------------------+--------------------------------------------+
-| Limitations            | User has to call Pmic_wdgEnable() before   |
-|                        | get the configuration.                     |
-+------------------------+--------------------------------------------+
+.. table:: PMIC WDG Get Fail Count
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_wdgGetFailCount(Pmic_CoreHandle_t     |
+    |                        | \*pPmicCoreHandle, uint8_t \*pFailCount);  |
+    +========================+============================================+
+    | Design IDs             | did_pmic_wdg_cfg_readback                  |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | PDK-5854, PDK-5839                         |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7350,PDK-7351,PDK-7352                 |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
+    |                        |    Handle structure pointer                |
+    |                        | 2. uint8_t \*pFailCount – Watchdog fail    |
+    |                        |    count pointer                           |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | API to get PMIC watchdog fail count.       |
+    |                        |                                            |
+    |                        | This function is used to get the watchdog  |
+    |                        | fail count from the PMIC for trigger mode  |
+    |                        | or Q&A (question and answer) mode.         |
+    +------------------------+--------------------------------------------+
+    | Limitations            | User has to call Pmic_wdgEnable() before   |
+    |                        | get the configuration.                     |
+    +------------------------+--------------------------------------------+
 
 .. _watchdog-qa-mode-1:
 
 Watchdog QA Mode
 ----------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_wdgStartQaSequence(Pmic_CoreHandle_t  |
-|                        | \*pPmicCoreHandle, uint32_t                |
-|                        | num_of_sequences , uint32_t maxCnt);       |
-+========================+============================================+
-| Design IDs             | did_pmic_wdg_cfg_readback                  |
-+------------------------+--------------------------------------------+
-| Requirements ID        | PDK-5839                                   |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7345, PDK-7346, PDK-7347, PDK-7348,    |
-|                        | PDK-7349, PDK-7958                         |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
-|                        |    Handle structure pointer                |
-|                        | 2. uint32_t num_of_sequences – number of   |
-|                        |    QA sequences                            |
-|                        | 3. uint32_t maxCnt – Number of iterations  |
-|                        |    to wait for an Good/Bad event.          |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | API to Start watchdog QA mode.             |
-|                        |                                            |
-|                        | This function is used to start watchdog    |
-|                        | sequence and continues till the given      |
-|                        | num_of_sequences                           |
-+------------------------+--------------------------------------------+
-| Limitations            | Note: To perform QA sequences, user has to |
-|                        | adjust Long window time interval, Window1  |
-|                        | time interval and Window2 time intervals   |
-|                        | depends on errors given by API. If user    |
-|                        | gets PMIC_ST_ERR_INV_WDG_WINDOW, then user |
-|                        | has to increase the Long window or window1 |
-|                        | time interval. If user gets                |
-|                        | PMIC_ST_ERR_WDG_EARLY_ANSWER, then user    |
-|                        | has to reduce the Window1 time interval.   |
-|                        | User has to ensure,                        |
-|                        | configure all Watchdog QA parameters       |
-|                        | properly using Pmic_wdgSetCfg() API,       |
-|                        | before starting QA sequence using this     |
-|                        | API.                                       |
-+------------------------+--------------------------------------------+
+.. table:: PMIC WDG Start QA Sequence
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_wdgStartQaSequence(Pmic_CoreHandle_t  |
+    |                        | \*pPmicCoreHandle, uint32_t                |
+    |                        | num_of_sequences , uint32_t maxCnt);       |
+    +========================+============================================+
+    | Design IDs             | did_pmic_wdg_cfg_readback                  |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | PDK-5839                                   |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7345, PDK-7346, PDK-7347, PDK-7348,    |
+    |                        | PDK-7349, PDK-7958                         |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
+    |                        |    Handle structure pointer                |
+    |                        | 2. uint32_t num_of_sequences – number of   |
+    |                        |    QA sequences                            |
+    |                        | 3. uint32_t maxCnt – Number of iterations  |
+    |                        |    to wait for an Good/Bad event.          |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | API to Start watchdog QA mode.             |
+    |                        |                                            |
+    |                        | This function is used to start watchdog    |
+    |                        | sequence and continues till the given      |
+    |                        | num_of_sequences                           |
+    +------------------------+--------------------------------------------+
+    | Limitations            | Note: To perform QA sequences, user has to |
+    |                        | adjust Long window time interval, Window1  |
+    |                        | time interval and Window2 time intervals   |
+    |                        | depends on errors given by API. If user    |
+    |                        | gets PMIC_ST_ERR_INV_WDG_WINDOW, then user |
+    |                        | has to increase the Long window or window1 |
+    |                        | time interval. If user gets                |
+    |                        | PMIC_ST_ERR_WDG_EARLY_ANSWER, then user    |
+    |                        | has to reduce the Window1 time interval.   |
+    |                        | User has to ensure,                        |
+    |                        | configure all Watchdog QA parameters       |
+    |                        | properly using Pmic_wdgSetCfg() API,       |
+    |                        | before starting QA sequence using this     |
+    |                        | API.                                       |
+    +------------------------+--------------------------------------------+
 
 .. _watchdog-trigger-mode-1:
 
 Watchdog Trigger Mode
 ---------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmic                               |
-|                        | \                                          |
-|                        | _wdgStartTriggerSequence(Pmic_CoreHandle_t |
-|                        | \*pPmicCoreHandle);                        |
-+========================+============================================+
-| Design IDs             | did_pmic_wdg_cfg_readback                  |
-+------------------------+--------------------------------------------+
-| Requirements ID        | PDK-5854                                   |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7343                                   |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
-|                        |    Handle structure pointer                |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | API to Start watchdog Trigger mode.        |
-|                        |                                            |
-|                        | This function is used to start watchdog    |
-|                        | trigger mode.                              |
-|                        |                                            |
-+------------------------+--------------------------------------------+
-| Limitations            | Note: To perform watchdog trigger mode,    |
-|                        | user has to adjust Long window time        |
-|                        | interval, Window1 time interval and        |
-|                        | Window2 time intervals as below, depends   |
-|                        | on the time-period of the trigger pulse    |
-|                        | provided by other device.                  |
-|                        |                                            |
-|                        | 1. Longwindow time interval must be        |
-|                        |    greater than Trigger pulse time period. |
-|                        | 2. Window1 time interval must be less than |
-|                        |    T-off time of the Trigger pulse time    |
-|                        |    period.                                 |
-|                        | 3. Window2 time interval must be greater   |
-|                        |    than T-on time of the Trigger pulse     |
-|                        |    time period.                            |
-|                        | 4. (Window1 time interval + Window2 time   |
-|                        |    interval) approximately equal to the    |
-|                        |    Trigger pulse time period.              |
-|                        |                                            |
-|                        | User has to ensure, configure all Watchdog |
-|                        | trigger parameters properly using          |
-|                        | Pmic_wdgSetCfg() API, before starting      |
-|                        | watchdog trigger mode using this API. User |
-|                        | can use Pmic_wdgSetCfg() API to stop       |
-|                        | watchdog trigger mode.                     |
-+------------------------+--------------------------------------------+
+.. table:: PMIC WDG Start Trigger Sequence
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmic                               |
+    |                        | \                                          |
+    |                        | _wdgStartTriggerSequence(Pmic_CoreHandle_t |
+    |                        | \*pPmicCoreHandle);                        |
+    +========================+============================================+
+    | Design IDs             | did_pmic_wdg_cfg_readback                  |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | PDK-5854                                   |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7343                                   |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
+    |                        |    Handle structure pointer                |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | API to Start watchdog Trigger mode.        |
+    |                        |                                            |
+    |                        | This function is used to start watchdog    |
+    |                        | trigger mode.                              |
+    |                        |                                            |
+    +------------------------+--------------------------------------------+
+    | Limitations            | Note: To perform watchdog trigger mode,    |
+    |                        | user has to adjust Long window time        |
+    |                        | interval, Window1 time interval and        |
+    |                        | Window2 time intervals as below, depends   |
+    |                        | on the time-period of the trigger pulse    |
+    |                        | provided by other device.                  |
+    |                        |                                            |
+    |                        | 1. Longwindow time interval must be        |
+    |                        |    greater than Trigger pulse time period. |
+    |                        | 2. Window1 time interval must be less than |
+    |                        |    T-off time of the Trigger pulse time    |
+    |                        |    period.                                 |
+    |                        | 3. Window2 time interval must be greater   |
+    |                        |    than T-on time of the Trigger pulse     |
+    |                        |    time period.                            |
+    |                        | 4. (Window1 time interval + Window2 time   |
+    |                        |    interval) approximately equal to the    |
+    |                        |    Trigger pulse time period.              |
+    |                        |                                            |
+    |                        | User has to ensure, configure all Watchdog |
+    |                        | trigger parameters properly using          |
+    |                        | Pmic_wdgSetCfg() API, before starting      |
+    |                        | watchdog trigger mode using this API. User |
+    |                        | can use Pmic_wdgSetCfg() API to stop       |
+    |                        | watchdog trigger mode.                     |
+    +------------------------+--------------------------------------------+
 
 Runtime BIST Invocation
 -----------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pm                                 |
-|                        | ic_fsmRequestRuntimeBist(Pmic_CoreHandle_t |
-|                        | \*handle);                                 |
-+========================+============================================+
-| Design IDs             | (did_pmic_runtime_bist_cfg)                |
-+------------------------+--------------------------------------------+
-| Requirements ID        | (PDK-5849)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7766, PDK-7767, PDK-7706               |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
-|                        |    Handle structure pointer                |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function initiates a request to       |
-|                        | exercise runtime BIST                      |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC FSM Runtime Bist
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pm                                 |
+    |                        | ic_fsmRequestRuntimeBist(Pmic_CoreHandle_t |
+    |                        | \*handle);                                 |
+    +========================+============================================+
+    | Design IDs             | (did_pmic_runtime_bist_cfg)                |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | (PDK-5849)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7706                                   |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
+    |                        |    Handle structure pointer                |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function initiates a request to       |
+    |                        | exercise runtime BIST                      |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Power Resource Voltage Configuration
 ------------------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmic_powerSetPwrResourceCfg(       |
-|                        | Pmic_CoreHandle_t \*pPmicCoreHandle, const |
-|                        | uint16_t pwrResource, const                |
-|                        | Pmic_PowerResourceCfg_t pwrResourceCfg);   |
-+========================+============================================+
-| Design IDs             | did_pmic_power_cfg_readback                |
-+------------------------+--------------------------------------------+
-| Requirements ID        |  PDK-5848, PDK-5841,                       |
-|                        |  PDK-5829                                  |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7130, PDK-7131, PDK-7132, PDK-7133,    |
-|                        | PDK-7134, PDK-7135, PDK-7136, PDK-7137,    |
-|                        | PDK-7138, PDK-7139, PDK-7143, PDK-7144,    |
-|                        | PDK-7145, PDK-7146, PDK-7147, PDK-7148,    |
-|                        | PDK-7149, PDK-7150, PDK-7151, PDK-7152,    |
-|                        | PDK-7153, PDK-7154, PDK-7155, PDK-7156,    |
-|                        | PDK-7157, PDK-7158, PDK-7159, PDK-7160,    |
-|                        | PDK-7161, PDK-7162, PDK-7163, PDK-7164,    |
-|                        | PDK-7165, PDK-7166, PDK-7167, PDK-7168,    |
-|                        | PDK-7169, PDK-7170, PDK-7171, PDK-7172,    |
-|                        | PDK-7173, PDK-7174, PDK-7175, PDK-7176,    |
-|                        | PDK-7177, PDK-7178, PDK-7179, PDK-7180,    |
-|                        | PDK-7181, PDK-7182, PDK-7183, PDK-7184,    |
-|                        | PDK-7185, PDK-7186, PDK-7187, PDK-7188,    |
-|                        | PDK-7189, PDK-7190, PDK-7191, PDK-7192,    |
-|                        | PDK-7193, PDK-7194, PDK-7195, PDK-7196,    |
-|                        | PDK-7197, PDK-7198, PDK-7199, PDK-7200,    |
-|                        | PDK-7201, PDK-7202, PDK-7203, PDK-7204,    |
-|                        | PDK-7205, PDK-7206, PDK-7207, PDK-7208,    |
-|                        | PDK-7209, PDK-7210, PDK-7211, PDK-7212,    |
-|                        | PDK-7213, PDK-7214, PDK-7215, PDK-7216,    |
-|                        | PDK-7217, PDK-7218, PDK-7219               |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. pPmicCoreHandle \*pPmicCoreHandle –     |
-|                        |    PMIC Interface Handle.                  |
-|                        | 2. uint16_t pwrResource – PMIC Power       |
-|                        |    resource                                |
-|                        | 3. Pmic_PowerResourceCfg_t pwrResourceCfg  |
-|                        |    – Power Resource configuration for      |
-|                        |    BUCK/LDO/VMON/VCCA                      |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 1. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | API to set power resources configurations. |
-|                        |                                            |
-|                        | This function can be used to configure the |
-|                        | various control and configuration          |
-|                        | parameters for BUCK/LDO/VCCA/VMON power    |
-|                        | resources and also used to set the various |
-|                        | control and configuration of voltage       |
-|                        | monitor parameters for BUCK/LDO/VCCA/VMON  |
-|                        | power resources.                           |
-+------------------------+--------------------------------------------+
-| Limitations            | The actual VOUT on regulator Output lines  |
-|                        | may not be immediately updated since some  |
-|                        | delay is required to reach the new value.  |
-|                        | Application can call a delay routine with  |
-|                        | the value given by driver via              |
-|                        | \*microSeconds.                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC POWER Set Resource Cfg
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmic_powerSetPwrResourceCfg(       |
+    |                        | Pmic_CoreHandle_t \*pPmicCoreHandle, const |
+    |                        | uint16_t pwrResource, const                |
+    |                        | Pmic_PowerResourceCfg_t pwrResourceCfg);   |
+    +========================+============================================+
+    | Design IDs             | did_pmic_power_cfg_readback                |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        |  PDK-5848, PDK-5841,                       |
+    |                        |  PDK-5829                                  |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7130, PDK-7131, PDK-7132, PDK-7133,    |
+    |                        | PDK-7134, PDK-7135, PDK-7136, PDK-7137,    |
+    |                        | PDK-7138, PDK-7139, PDK-7143, PDK-7144,    |
+    |                        | PDK-7145, PDK-7146, PDK-7147, PDK-7148,    |
+    |                        | PDK-7149, PDK-7150, PDK-7151, PDK-7152,    |
+    |                        | PDK-7153, PDK-7154, PDK-7155, PDK-7156,    |
+    |                        | PDK-7157, PDK-7158, PDK-7159, PDK-7160,    |
+    |                        | PDK-7161, PDK-7162, PDK-7163, PDK-7164,    |
+    |                        | PDK-7165, PDK-7166, PDK-7167, PDK-7168,    |
+    |                        | PDK-7169, PDK-7170, PDK-7171, PDK-7172,    |
+    |                        | PDK-7173, PDK-7174, PDK-7175, PDK-7177,    |
+    |                        | PDK-7178, PDK-7179, PDK-7180, PDK-7181,    |
+    |                        | PDK-7182, PDK-7183, PDK-7184, PDK-7185,    |
+    |                        | PDK-7186, PDK-7187, PDK-7191, PDK-7192,    |
+    |                        | PDK-7200, PDK-7201, PDK-7202, PDK-7203,    |
+    |                        | PDK-7204, PDK-7205, PDK-7206, PDK-7207,    |
+    |                        | PDK-7208, PDK-7209, PDK-7210, PDK-7211,    |
+    |                        | PDK-7212, PDK-7213, PDK-7214, PDK-7215,    |
+    |                        | PDK-7216, PDK-7217, PDK-7218, PDK-7219     |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. pPmicCoreHandle \*pPmicCoreHandle –     |
+    |                        |    PMIC Interface Handle.                  |
+    |                        | 2. uint16_t pwrResource – PMIC Power       |
+    |                        |    resource                                |
+    |                        | 3. Pmic_PowerResourceCfg_t pwrResourceCfg  |
+    |                        |    – Power Resource configuration for      |
+    |                        |    BUCK/LDO/VMON/VCCA                      |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 1. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | API to set power resources configurations. |
+    |                        |                                            |
+    |                        | This function can be used to configure the |
+    |                        | various control and configuration          |
+    |                        | parameters for BUCK/LDO/VCCA/VMON power    |
+    |                        | resources and also used to set the various |
+    |                        | control and configuration of voltage       |
+    |                        | monitor parameters for BUCK/LDO/VCCA/VMON  |
+    |                        | power resources.                           |
+    +------------------------+--------------------------------------------+
+    | Limitations            | The actual VOUT on regulator Output lines  |
+    |                        | may not be immediately updated since some  |
+    |                        | delay is required to reach the new value.  |
+    |                        | Application can call a delay routine with  |
+    |                        | the value given by driver via              |
+    |                        | \*microSeconds.                            |
+    +------------------------+--------------------------------------------+
 
 LDORTC Config
 -------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_powerSetLdoRtc(Pmic_CoreHandle_t      |
-|                        | \*pPmicCoreHandle, bool ldortcEnable);     |
-+========================+============================================+
-| Design IDs             | did_pmic_power_cfg_readback                |
-+------------------------+--------------------------------------------+
-| Requirements ID        |     PDK-5841                               |
-|                        |                                            |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7297, PDK-7298, PDK-7876               |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. pPmicCoreHandle \*pPmicCoreHandle –     |
-|                        |    PMIC Interface Handle.                  |
-|                        | 2. bool ldortcEnable – Enable/Disable the  |
-|                        |    LDORTC                                  |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 1. Appropriate error code(Pmic_ErrorCodes) |
-+------------------------+--------------------------------------------+
-| Functional Description | API to enable/disable LODRTC regulator     |
-|                        | This function is used to enable/disable    |
-|                        | LDO RTC.                                   |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC POWER Set LDORTC
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_powerSetLdoRtc(Pmic_CoreHandle_t      |
+    |                        | \*pPmicCoreHandle, bool ldortcEnable);     |
+    +========================+============================================+
+    | Design IDs             | did_pmic_power_cfg_readback                |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        |     PDK-5841                               |
+    |                        |                                            |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7297, PDK-7298, PDK-7876               |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. pPmicCoreHandle \*pPmicCoreHandle –     |
+    |                        |    PMIC Interface Handle.                  |
+    |                        | 2. bool ldortcEnable – Enable/Disable the  |
+    |                        |    LDORTC                                  |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 1. Appropriate error code(Pmic_ErrorCodes) |
+    +------------------------+--------------------------------------------+
+    | Functional Description | API to enable/disable LODRTC regulator     |
+    |                        | This function is used to enable/disable    |
+    |                        | LDO RTC.                                   |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 LDORTC Config Readback
 ----------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmic\_ Pmic_powerGetLdoRtc         |
-|                        | (Pmic_CoreHandle_t \*pPmicCoreHandle,      |
-|                        |                                            |
-|                        | bool \*pLdortcEnable);                     |
-+========================+============================================+
-| Design IDs             | did_pmic_power_cfg_readback                |
-+------------------------+--------------------------------------------+
-| Requirements ID        |     PDK-5841                               |
-|                        |                                            |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7297, PDK-7298, PDK-7876               |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. pPmicCoreHandle \*pPmicCoreHandle –     |
-|                        |    PMIC Interface Handle.                  |
-|                        | 2. bool \*pLdortcEnable – Pointer to hold  |
-|                        |    Enable/Disable                          |
-|                        |                                            |
-|                        | status.                                    |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2.Appropriate error code                   |
-|                        |                                            |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | API to enable/disable LODRTC regulator     |
-|                        | This function is used to enable/disable    |
-|                        | LDO RTC.                                   |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC POWER Get LDORTC
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmic\_ Pmic_powerGetLdoRtc         |
+    |                        | (Pmic_CoreHandle_t \*pPmicCoreHandle,      |
+    |                        |                                            |
+    |                        | bool \*pLdortcEnable);                     |
+    +========================+============================================+
+    | Design IDs             | did_pmic_power_cfg_readback                |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        |     PDK-5841                               |
+    |                        |                                            |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7297, PDK-7298, PDK-7876               |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. pPmicCoreHandle \*pPmicCoreHandle –     |
+    |                        |    PMIC Interface Handle.                  |
+    |                        | 2. bool \*pLdortcEnable – Pointer to hold  |
+    |                        |    Enable/Disable                          |
+    |                        |                                            |
+    |                        | status.                                    |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2.Appropriate error code                   |
+    |                        |                                            |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | API to enable/disable LODRTC regulator     |
+    |                        | This function is used to enable/disable    |
+    |                        | LDO RTC.                                   |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Power Resource Voltage Readback
 -------------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmi                                |
-|                        | c_powerGetPwrResourceCfg(Pmic_CoreHandle_t |
-|                        | \*pPmicCoreHandle, const uint16_t          |
-|                        | pwrResource, Pmic_PowerResourceCfg_t       |
-|                        |                                            |
-|                        | \*pPwrResourceCfg);                        |
-+========================+============================================+
-| Design IDs             | did_pmic_power_cfg_readback                |
-+------------------------+--------------------------------------------+
-| Requirements ID        | PDK-5850, PDK-5848,                        |
-|                        | PDK-5829                                   |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7130, PDK-7131, PDK-7132, PDK-7133,    |
-|                        | PDK-7134, PDK-7135, PDK-7136, PDK-7137,    |
-|                        | PDK-7138, PDK-7139, PDK-7143, PDK-7144,    |
-|                        | PDK-7145, PDK-7146, PDK-7147, PDK-7148,    |
-|                        | PDK-7149, PDK-7150, PDK-7151, PDK-7152,    |
-|                        | PDK-7153, PDK-7154, PDK-7155, PDK-7156,    |
-|                        | PDK-7157, PDK-7158, PDK-7159, PDK-7160,    |
-|                        | PDK-7161, PDK-7162, PDK-7163, PDK-7164,    |
-|                        | PDK-7165, PDK-7166, PDK-7167, PDK-7168,    |
-|                        | PDK-7169, PDK-7170, PDK-7171, PDK-7172,    |
-|                        | PDK-7173, PDK-7174, PDK-7175, PDK-7176,    |
-|                        | PDK-7177, PDK-7178, PDK-7179, PDK-7180,    |
-|                        | PDK-7181, PDK-7182, PDK-7183, PDK-7184,    |
-|                        | PDK-7185, PDK-7186, PDK-7187, PDK-7188,    |
-|                        | PDK-7189, PDK-7190, PDK-7191, PDK-7192,    |
-|                        | PDK-7193, PDK-7194, PDK-7195, PDK-7196,    |
-|                        | PDK-7197, PDK-7198, PDK-7199, PDK-7200,    |
-|                        | PDK-7201, PDK-7202, PDK-7203, PDK-7204,    |
-|                        | PDK-7205, PDK-7206, PDK-7207, PDK-7208,    |
-|                        | PDK-7209, PDK-7210, PDK-7211, PDK-7212,    |
-|                        | PDK-7213, PDK-7214, PDK-7215, PDK-7216,    |
-|                        | PDK-7217, PDK-7218, PDK-7219               |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. pPmicCoreHandle \*pPmicCoreHandle –     |
-|                        |    PMIC Interface Handle.                  |
-|                        | 2. uint16_t pwrResource – PMIC Power       |
-|                        |    resource                                |
-|                        | 3. Pmic_PowerResourceCfg_t                 |
-|                        |    \*pPwrResourceCfg – Pointer to store    |
-|                        |    Power Resource configuration for        |
-|                        |    BUCK/LDO/VMON/VCCA                      |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2 .Appropriate error code(Pmic_ErrorCodes) |
-+------------------------+--------------------------------------------+
-| Functional Description | API to get power resources configurations. |
-|                        |                                            |
-|                        | This function can be used to get the       |
-|                        | various control and configuration          |
-|                        | parameters for BUCK/LDO/VCCA/VMON power    |
-|                        | resources and also used to get the various |
-|                        | control and configuration of voltage       |
-|                        | monitor parameters for BUCK/LDO/VCCA/VMON  |
-|                        | power resources.                           |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC POWER Get Resource Cfg
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmi                                |
+    |                        | c_powerGetPwrResourceCfg(Pmic_CoreHandle_t |
+    |                        | \*pPmicCoreHandle, const uint16_t          |
+    |                        | pwrResource, Pmic_PowerResourceCfg_t       |
+    |                        |                                            |
+    |                        | \*pPwrResourceCfg);                        |
+    +========================+============================================+
+    | Design IDs             | did_pmic_power_cfg_readback                |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | PDK-5850, PDK-5848,                        |
+    |                        | PDK-5829                                   |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7130, PDK-7131, PDK-7132, PDK-7133,    |
+    |                        | PDK-7134, PDK-7135, PDK-7136, PDK-7137,    |
+    |                        | PDK-7138, PDK-7139, PDK-7143, PDK-7144,    |
+    |                        | PDK-7145, PDK-7146, PDK-7147, PDK-7148,    |
+    |                        | PDK-7149, PDK-7150, PDK-7151, PDK-7152,    |
+    |                        | PDK-7153, PDK-7154, PDK-7155, PDK-7156,    |
+    |                        | PDK-7157, PDK-7158, PDK-7159, PDK-7160,    |
+    |                        | PDK-7161, PDK-7162, PDK-7163, PDK-7164,    |
+    |                        | PDK-7165, PDK-7166, PDK-7167, PDK-7168,    |
+    |                        | PDK-7169, PDK-7170, PDK-7171, PDK-7172,    |
+    |                        | PDK-7173, PDK-7174, PDK-7175, PDK-7177,    |
+    |                        | PDK-7178, PDK-7179, PDK-7180, PDK-7181,    |
+    |                        | PDK-7182, PDK-7183, PDK-7184, PDK-7185,    |
+    |                        | PDK-7186, PDK-7187, PDK-7191, PDK-7192,    |
+    |                        | PDK-7200, PDK-7201, PDK-7202, PDK-7203,    |
+    |                        | PDK-7204, PDK-7205, PDK-7206, PDK-7207,    |
+    |                        | PDK-7208, PDK-7209, PDK-7210, PDK-7211,    |
+    |                        | PDK-7212, PDK-7213, PDK-7214, PDK-7215,    |
+    |                        | PDK-7216, PDK-7217, PDK-7218, PDK-7219     |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. pPmicCoreHandle \*pPmicCoreHandle –     |
+    |                        |    PMIC Interface Handle.                  |
+    |                        | 2. uint16_t pwrResource – PMIC Power       |
+    |                        |    resource                                |
+    |                        | 3. Pmic_PowerResourceCfg_t                 |
+    |                        |    \*pPwrResourceCfg – Pointer to store    |
+    |                        |    Power Resource configuration for        |
+    |                        |    BUCK/LDO/VMON/VCCA                      |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2 .Appropriate error code(Pmic_ErrorCodes) |
+    +------------------------+--------------------------------------------+
+    | Functional Description | API to get power resources configurations. |
+    |                        |                                            |
+    |                        | This function can be used to get the       |
+    |                        | various control and configuration          |
+    |                        | parameters for BUCK/LDO/VCCA/VMON power    |
+    |                        | resources and also used to get the various |
+    |                        | control and configuration of voltage       |
+    |                        | monitor parameters for BUCK/LDO/VCCA/VMON  |
+    |                        | power resources.                           |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Power Resource Common Configuration
 -----------------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmic_powerSetCommonConfig(         |
-|                        | Pmic_CoreHandle_t \*pPmicCoreHandle,       |
-|                        | Pmic_PowerCommonCfg_t powerCommonCfg);     |
-+========================+============================================+
-| Design IDs             | did_pmic_power_cfg_readback                |
-|                        | did_pmic_power_pgood_cfg_readback          |
-+------------------------+--------------------------------------------+
-| Requirements ID        | PDK-5847, PDK-5848, PDK-5829               |
-|                        |                                            |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7220, PDK-7221, PDK-7222, PDK-7223,    |
-|                        | PDK-7224, PDK-7225, PDK-7226, PDK-7227,    |
-|                        | PDK-7228, PDK-7229, PDK-7230, PDK-7231,    |
-|                        | PDK-7232, PDK-7233, PDK-7234, PDK-7235,    |
-|                        | PDK-7236, PDK-7237, PDK-7238, PDK-7239,    |
-|                        | PDK-7240, PDK-7241, PDK-7242, PDK-7243,    |
-|                        | PDK-7244, PDK-7245, PDK-7246, PDK-7247,    |
-|                        | PDK-7248, PDK-7249, PDK-7250, PDK-7251     |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle.                  |
-|                        | 2. Pmic_PowerCommonCfg_t powerCommonCfg –  |
-|                        |    Power configuration                     |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 1. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | API to Set Power configuration             |
-|                        |                                            |
-|                        | This function is used to set the power     |
-|                        | configuration parameters such as selection |
-|                        | of type of voltage monitoring, and         |
-|                        | polarity of the power-good signal,         |
-|                        | deglitch time select for all power         |
-|                        | resources.                                 |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC POWER Set Common Cfg
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmic_powerSetCommonConfig(         |
+    |                        | Pmic_CoreHandle_t \*pPmicCoreHandle,       |
+    |                        | Pmic_PowerCommonCfg_t powerCommonCfg);     |
+    +========================+============================================+
+    | Design IDs             | did_pmic_power_cfg_readback                |
+    |                        | did_pmic_power_pgood_cfg_readback          |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | PDK-5847, PDK-5848, PDK-5829               |
+    |                        |                                            |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7220, PDK-7221, PDK-7222, PDK-7223,    |
+    |                        | PDK-7224, PDK-7225, PDK-7227, PDK-7228,    |
+    |                        | PDK-7229, PDK-7230, PDK-7231, PDK-7232,    |
+    |                        | PDK-7233, PDK-7234, PDK-7235, PDK-7236,    |
+    |                        | PDK-7237, PDK-7238, PDK-7239, PDK-7240,    |
+    |                        | PDK-7241, PDK-7242, PDK-7243, PDK-7244,    |
+    |                        | PDK-7245, PDK-7246, PDK-7247, PDK-7248,    |
+    |                        | PDK-7249, PDK-7250, PDK-7251               |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle.                  |
+    |                        | 2. Pmic_PowerCommonCfg_t powerCommonCfg –  |
+    |                        |    Power configuration                     |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 1. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | API to Set Power configuration             |
+    |                        |                                            |
+    |                        | This function is used to set the power     |
+    |                        | configuration parameters such as selection |
+    |                        | of type of voltage monitoring, and         |
+    |                        | polarity of the power-good signal,         |
+    |                        | deglitch time select for all power         |
+    |                        | resources.                                 |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Power Resource Common Configuration Readback
 --------------------------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmic_powerGetCommonConfig (        |
-|                        | Pmic_CoreHandle_t \*pPmicCoreHandle,       |
-|                        | Pmic_PowerCommonCfg_t \*pPowerCommonCfg);  |
-+========================+============================================+
-| Design IDs             | did_pmic_power_cfg_readback                |
-|                        | did_pmic_power_pgood_cfg_readback          |
-+------------------------+--------------------------------------------+
-| Requirements ID        | PDK-5847, PDK-5848, PDK-5829               |
-|                        |                                            |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7220, PDK-7221, PDK-7222, PDK-7223,    |
-|                        | PDK-7224, PDK-7225, PDK-7226, PDK-7227,    |
-|                        | PDK-7228, PDK-7229, PDK-7230, PDK-7231,    |
-|                        | PDK-7232, PDK-7233, PDK-7234, PDK-7235,    |
-|                        | PDK-7236, PDK-7237, PDK-7238, PDK-7239,    |
-|                        | PDK-7240, PDK-7241, PDK-7242, PDK-7243,    |
-|                        | PDK-7244, PDK-7245, PDK-7246, PDK-7247,    |
-|                        | PDK-7248, PDK-7249, PDK-7250, PDK-7251     |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle.                  |
-|                        | 2. Pmic_PowerCommonCfg_t \*pPowerCommonCfg |
-|                        |    – Power configuration                   |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 1. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | API to Get Power configuration             |
-|                        |                                            |
-|                        | This function is used to get the power     |
-|                        | configuration parameters such as selection |
-|                        | of type of voltage monitoring, and         |
-|                        | polarity of the power-good signal,         |
-|                        | deglitch time select for all power         |
-|                        | resources.                                 |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC POWER Get Common Cfg
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmic_powerGetCommonConfig (        |
+    |                        | Pmic_CoreHandle_t \*pPmicCoreHandle,       |
+    |                        | Pmic_PowerCommonCfg_t \*pPowerCommonCfg);  |
+    +========================+============================================+
+    | Design IDs             | did_pmic_power_cfg_readback                |
+    |                        | did_pmic_power_pgood_cfg_readback          |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | PDK-5847, PDK-5848, PDK-5829               |
+    |                        |                                            |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7220, PDK-7221, PDK-7222, PDK-7223,    |
+    |                        | PDK-7224, PDK-7225, PDK-7227, PDK-7228,    |
+    |                        | PDK-7229, PDK-7230, PDK-7231, PDK-7232,    |
+    |                        | PDK-7233, PDK-7234, PDK-7235, PDK-7236,    |
+    |                        | PDK-7237, PDK-7238, PDK-7239, PDK-7240,    |
+    |                        | PDK-7241, PDK-7242, PDK-7243, PDK-7244,    |
+    |                        | PDK-7245, PDK-7246, PDK-7247, PDK-7248,    |
+    |                        | PDK-7249, PDK-7250, PDK-7251               |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle.                  |
+    |                        | 2. Pmic_PowerCommonCfg_t \*pPowerCommonCfg |
+    |                        |    – Power configuration                   |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 1. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | API to Get Power configuration             |
+    |                        |                                            |
+    |                        | This function is used to get the power     |
+    |                        | configuration parameters such as selection |
+    |                        | of type of voltage monitoring, and         |
+    |                        | polarity of the power-good signal,         |
+    |                        | deglitch time select for all power         |
+    |                        | resources.                                 |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Power Good Configuration
 ------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmic_powerSetConfigPowerGood(      |
-|                        | Pmic_CoreHandle_t \*pPmicCoreHandle,       |
-|                        | uint16_t pgoodSrcSel,                      |
-|                        | uint8_t pgoodSelType);                     |
-+========================+============================================+
-| Design IDs             | did_pmic_power_pgood_cfg_readback          |
-+------------------------+--------------------------------------------+
-| Requirements ID        | PDK-5847                                   |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7252, PDK-7253, PDK-7254, PDK-7255,    |
-|                        | PDK-7256, PDK-7257, PDK-7258, PDK-7259,    |
-|                        | PDK-7260                                   |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle.                  |
-|                        | 2. uint16_t pgoodSrcSel – Power Good       |
-|                        |    Source.                                 |
-|                        | 3. uint8_t pgoodSelType – Power Good       |
-|                        |    configuration.                          |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 1. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | API to Set Power good configuration        |
-|                        |                                            |
-|                        | This function is used to control and       |
-|                        | configure the power good source control.   |
-|                        |                                            |
-|                        | For the following, power good signal       |
-|                        | control can be selected:                   |
-|                        |                                            |
-|                        | All supported Bucks and Ldo by the PMIC,   |
-|                        | VCCA , thermal warning, nRSTOUT pin and    |
-|                        | nRSTOUT_SOC pin.                           |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC POWER Set PGOOD Cfg
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmic_powerSetConfigPowerGood(      |
+    |                        | Pmic_CoreHandle_t \*pPmicCoreHandle,       |
+    |                        | uint16_t pgoodSrcSel,                      |
+    |                        | uint8_t pgoodSelType);                     |
+    +========================+============================================+
+    | Design IDs             | did_pmic_power_pgood_cfg_readback          |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | PDK-5847                                   |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7252, PDK-7253, PDK-7254, PDK-7255,    |
+    |                        | PDK-7256, PDK-7257, PDK-7258, PDK-7259,    |
+    |                        | PDK-7260                                   |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle.                  |
+    |                        | 2. uint16_t pgoodSrcSel – Power Good       |
+    |                        |    Source.                                 |
+    |                        | 3. uint8_t pgoodSelType – Power Good       |
+    |                        |    configuration.                          |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 1. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | API to Set Power good configuration        |
+    |                        |                                            |
+    |                        | This function is used to control and       |
+    |                        | configure the power good source control.   |
+    |                        |                                            |
+    |                        | For the following, power good signal       |
+    |                        | control can be selected:                   |
+    |                        |                                            |
+    |                        | All supported Bucks and Ldo by the PMIC,   |
+    |                        | VCCA , thermal warning, nRSTOUT pin and    |
+    |                        | nRSTOUT_SOC pin.                           |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Power Good Configuration Readback
 ---------------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmic_powerGetConfigPowerGood(      |
-|                        | Pmic_CoreHandle_t \*pPmicCoreHandle,       |
-|                        | uint16_t pgoodSrcSel, uint8_t              |
-|                        | \*pPgoodSelType);                          |
-+========================+============================================+
-| Design IDs             | did_pmic_power_pgood_cfg_readback          |
-+------------------------+--------------------------------------------+
-| Requirements ID        | PDK-5847                                   |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7252, PDK-7253, PDK-7254, PDK-7255,    |
-|                        | PDK-7256, PDK-7257, PDK-7258, PDK-7259,    |
-|                        | PDK-7260                                   |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle.                  |
-|                        | 2. uint16_t pgoodSrcSel – Power Good       |
-|                        |    Source.                                 |
-|                        | 3. uint8_t pgoodSelType – Power Good       |
-|                        |    configuration.                          |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 1. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | Get Power good configuration               |
-|                        |                                            |
-|                        | This function is used to get various power |
-|                        | good config. This function also provides   |
-|                        | the pgood source control for different     |
-|                        | power resources and pins.                  |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC POWER Get PGOOD Cfg
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmic_powerGetConfigPowerGood(      |
+    |                        | Pmic_CoreHandle_t \*pPmicCoreHandle,       |
+    |                        | uint16_t pgoodSrcSel, uint8_t              |
+    |                        | \*pPgoodSelType);                          |
+    +========================+============================================+
+    | Design IDs             | did_pmic_power_pgood_cfg_readback          |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | PDK-5847                                   |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7252, PDK-7253, PDK-7254, PDK-7255,    |
+    |                        | PDK-7256, PDK-7257, PDK-7258, PDK-7259,    |
+    |                        | PDK-7260                                   |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle.                  |
+    |                        | 2. uint16_t pgoodSrcSel – Power Good       |
+    |                        |    Source.                                 |
+    |                        | 3. uint8_t pgoodSelType – Power Good       |
+    |                        |    configuration.                          |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 1. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | Get Power good configuration               |
+    |                        |                                            |
+    |                        | This function is used to get various power |
+    |                        | good config. This function also provides   |
+    |                        | the pgood source control for different     |
+    |                        | power resources and pins.                  |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Power Resource Status
 ---------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmic_powerGetPwrRsrcStat(          |
-|                        | Pmic_CoreHandle_t \*pPmicCoreHandle, const |
-|                        | uint16_t pwrResource,                      |
-|                        | Pmic_PowerResourceStat_t                   |
-|                        | \*pPwrRsrcStatCfg);                        |
-+========================+============================================+
-| Design IDs             | did_pmic_power_cfg_readback                |
-+------------------------+--------------------------------------------+
-| Requirements ID        | PDK-5850, PDK-5848, PDK-5829               |
-|                        |                                            |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7261, PDK-7262, PDK-7263, PDK-7264,    |
-|                        | PDK-7265                                   |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle.                  |
-|                        | 2. const uint16_t pwrResource – PMIC Power |
-|                        |    resource                                |
-|                        | 3. Pmic_PowerResourceStat_t                |
-|                        |    \*pPwrRsrcStatCfg – Pointer to store    |
-|                        |    Power Resource configuration for        |
-|                        |    BUCK/LDO/VMON/VCCA                      |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function can be used to get the status|
-|                        | related to current limit voltage over and  |
-|                        | under limit for BUCK/LDO/VCCA/VMON power   |
-|                        | resources                                  |
-+------------------------+--------------------------------------------+
+.. table:: PMIC POWER Get Resource Status
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmic_powerGetPwrRsrcStat(          |
+    |                        | Pmic_CoreHandle_t \*pPmicCoreHandle, const |
+    |                        | uint16_t pwrResource,                      |
+    |                        | Pmic_PowerResourceStat_t                   |
+    |                        | \*pPwrRsrcStatCfg);                        |
+    +========================+============================================+
+    | Design IDs             | did_pmic_power_cfg_readback                |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | PDK-5850, PDK-5848, PDK-5829               |
+    |                        |                                            |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7261, PDK-7262, PDK-7263, PDK-7264,    |
+    |                        | PDK-7265                                   |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle.                  |
+    |                        | 2. const uint16_t pwrResource – PMIC Power |
+    |                        |    resource                                |
+    |                        | 3. Pmic_PowerResourceStat_t                |
+    |                        |    \*pPwrRsrcStatCfg – Pointer to store    |
+    |                        |    Power Resource configuration for        |
+    |                        |    BUCK/LDO/VMON/VCCA                      |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function can be used to get the status|
+    |                        | related to current limit voltage over and  |
+    |                        | under limit for BUCK/LDO/VCCA/VMON power   |
+    |                        | resources                                  |
+    +------------------------+--------------------------------------------+
 
 Die Thermal Status Readback
 ---------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmi                                |
-|                        | c_powerGetPwrThermalStat(Pmic_CoreHandle_t |
-|                        | \*pPmicCoreHandle, Pmic_PowerThermalStat_t |
-|                        | \*pPwrThermalStatCfg);                     |
-+========================+============================================+
-| Design IDs             | did_pmic_power_thermal_cfg_readback        |
-+------------------------+--------------------------------------------+
-| Requirements ID        | PDK-5840                                   |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7726, PDK-7727, PDK-7728, PDK-7729,    |
-|                        | PDK-7730                                   |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle     |
-|                        |    –PMIC Interface Handle.                 |
-|                        |                                            |
-|                        | 2. Pmic_PowerThermalStat_t                 |
-|                        |    \*pPwrThermalStatCfg – Pointer to store |
-|                        |    Thermal configuration for PMIC          |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | API to get PMIC die temperature thermal    |
-|                        | status.                                    |
-|                        |                                            |
-|                        | This function is used to get the thermal   |
-|                        | status of the PMIC (die temperature)       |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC POWER Get Thermal Stat
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmi                                |
+    |                        | c_powerGetPwrThermalStat(Pmic_CoreHandle_t |
+    |                        | \*pPmicCoreHandle, Pmic_PowerThermalStat_t |
+    |                        | \*pPwrThermalStatCfg);                     |
+    +========================+============================================+
+    | Design IDs             | did_pmic_power_thermal_cfg_readback        |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | PDK-5840                                   |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7726, PDK-7727, PDK-7728, PDK-7729,    |
+    |                        | PDK-7730                                   |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle     |
+    |                        |    –PMIC Interface Handle.                 |
+    |                        |                                            |
+    |                        | 2. Pmic_PowerThermalStat_t                 |
+    |                        |    \*pPwrThermalStatCfg – Pointer to store |
+    |                        |    Thermal configuration for PMIC          |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | API to get PMIC die temperature thermal    |
+    |                        | status.                                    |
+    |                        |                                            |
+    |                        | This function is used to get the thermal   |
+    |                        | status of the PMIC (die temperature)       |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Thermal Monitoring/Shutdown Configuration
 -----------------------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmic_powerSetThermalConfig(        |
-|                        | Pmic_CoreHandle_t \*pPmicCoreHandle,       |
-|                        | Pmic_PowerThermalCfg_t thermalThreshold);  |
-+========================+============================================+
-| Design IDs             | did_pmic_power_thermal_cfg_readback        |
-+------------------------+--------------------------------------------+
-| Requirements ID        | PDK-5840                                   |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7266, PDK-7267, PDK-7268, PDK-7269,    |
-|                        | PDK-7270                                   |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |       PMIC Interface Handle.               |
-|                        |                                            |
-|                        | 2. Pmic_PowerThermalCfg_t thermalThreshold |
-|                        |    – Thermal Configuration.                |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 1. Appropriate error code                  |
-|                        | (Pmic_ErrorCodes)                          |
-+------------------------+--------------------------------------------+
-| Functional Description | API to configure the thermal temperature   |
-|                        | threshold level for PMIC                   |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC POWER Set Thermal Cfg
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmic_powerSetThermalConfig(        |
+    |                        | Pmic_CoreHandle_t \*pPmicCoreHandle,       |
+    |                        | Pmic_PowerThermalCfg_t thermalThreshold);  |
+    +========================+============================================+
+    | Design IDs             | did_pmic_power_thermal_cfg_readback        |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | PDK-5840                                   |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7266, PDK-7267, PDK-7268, PDK-7270     |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |       PMIC Interface Handle.               |
+    |                        |                                            |
+    |                        | 2. Pmic_PowerThermalCfg_t thermalThreshold |
+    |                        |    – Thermal Configuration.                |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 1. Appropriate error code                  |
+    |                        | (Pmic_ErrorCodes)                          |
+    +------------------------+--------------------------------------------+
+    | Functional Description | API to configure the thermal temperature   |
+    |                        | threshold level for PMIC                   |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Thermal Monitoring/Shutdown Configuration Readback
 --------------------------------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmic_powerGetThermalConfig(        |
-|                        | Pmic_CoreHandle_t \*pPmicCoreHandle,       |
-|                        | Pmic_PowerThermalCfg_t                     |
-|                        | \*pThermalThreshold);                      |
-+========================+============================================+
-| Design IDs             | did_pmic_power_thermal_cfg_readback        |
-+------------------------+--------------------------------------------+
-| Requirements ID        | PDK-5840                                   |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7266, PDK-7267, PDK-7268, PDK-7269,    |
-|                        | PDK-7270                                   |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle.                  |
-|                        | 2. Pmic_PowerThermalCfg_t                  |
-|                        |    \*pThermalThreshold – Structure to hold |
-|                        |    Thermal Cfg                             |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 1. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | Get the PMIC thermal threshold value       |
-|                        | function.                                  |
-|                        |                                            |
-|                        | This function is used to get the thermal   |
-|                        | temperature threshold value for the PMIC.  |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC POWER Get Thermal Cfg
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmic_powerGetThermalConfig(        |
+    |                        | Pmic_CoreHandle_t \*pPmicCoreHandle,       |
+    |                        | Pmic_PowerThermalCfg_t                     |
+    |                        | \*pThermalThreshold);                      |
+    +========================+============================================+
+    | Design IDs             | did_pmic_power_thermal_cfg_readback        |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | PDK-5840                                   |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7266, PDK-7267, PDK-7268, PDK-7270     |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle.                  |
+    |                        | 2. Pmic_PowerThermalCfg_t                  |
+    |                        |    \*pThermalThreshold – Structure to hold |
+    |                        |    Thermal Cfg                             |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 1. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | Get the PMIC thermal threshold value       |
+    |                        | function.                                  |
+    |                        |                                            |
+    |                        | This function is used to get the thermal   |
+    |                        | temperature threshold value for the PMIC.  |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Power Resources Interrupt
 -------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_powerSetPwrRsrcIntr(Pmic_CoreHandle_t |
-|                        | \*pPmicCoreHandle, const uint16_t          |
-|                        | pwrResource, const uint8_t intrType, bool  |
-|                        | intrEnable);                               |
-+========================+============================================+
-| Design IDs             | did_pmic_power_cfg_readback                |
-+------------------------+--------------------------------------------+
-| Requirements ID        | PDK-5829, PDK-5848,                        |
-|                        |                                            |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7271, PDK-7272, PDK-7273, PDK-7274,    |
-|                        | PDK-7275, PDK-7276, PDK-7277, PDK-7278,    |
-|                        | PDK-7279                                   |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle.                  |
-|                        | 2. const uint16_t pwrResource – PMIC Power |
-|                        |    resource                                |
-|                        | 3. const uint8_t intrType – Interrupt type |
-|                        | 4. bool intrEnable – Enable/Disable the    |
-|                        |    interrupt                               |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 1. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | API to enable/disable Power Resources      |
-|                        | and thermal interrupts.                    |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC POWER Set Resource Interrupt
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_powerSetPwrRsrcIntr(Pmic_CoreHandle_t |
+    |                        | \*pPmicCoreHandle, const uint16_t          |
+    |                        | pwrResource, const uint8_t intrType, bool  |
+    |                        | intrEnable);                               |
+    +========================+============================================+
+    | Design IDs             | did_pmic_power_cfg_readback                |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | PDK-5829, PDK-5848,                        |
+    |                        |                                            |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7271, PDK-7272, PDK-7273, PDK-7274,    |
+    |                        | PDK-7275, PDK-7276, PDK-7277, PDK-7278,    |
+    |                        | PDK-7279                                   |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle.                  |
+    |                        | 2. const uint16_t pwrResource – PMIC Power |
+    |                        |    resource                                |
+    |                        | 3. const uint8_t intrType – Interrupt type |
+    |                        | 4. bool intrEnable – Enable/Disable the    |
+    |                        |    interrupt                               |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 1. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | API to enable/disable Power Resources      |
+    |                        | and thermal interrupts.                    |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Power Interrupt
 ---------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmic_powerSetIntr                  |
-|                        | (Pmic_CoreHandle_t \*pPmicCoreHandle,      |
-|                        | const uint8_t intrType, bool intrEnable);  |
-+========================+============================================+
-| Design IDs             | did_pmic_power_cfg_readback                |
-|                        | did_pmic_power_thermal_cfg_readback        |
-+------------------------+--------------------------------------------+
-| Requirements ID        | PDK-5841, PDK-5840                         |
-|                        |                                            |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7280, PDK-7281, PDK-7282, PDK-7283,    |
-|                        | PDK-7284, PDK-7285, PDK-7286, PDK-7287,    |
-|                        | PDK-7288, PDK-7289, PDK-7290, PDK-7291,    |
-|                        | PDK-7292, PDK-7293, PDK-7294, PDK-7295,    |
-|                        | PDK-7296,                                  |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle.                  |
-|                        | 2. const uint8_t intrType – Interrupt type |
-|                        | 3. bool intrEnable – Enable/Disable the    |
-|                        |    interrupt.                              |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 1. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | API to enable/disable Power interrupts.    |
-|                        |                                            |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC POWER Set Power Interrupts
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmic_powerSetIntr                  |
+    |                        | (Pmic_CoreHandle_t \*pPmicCoreHandle,      |
+    |                        | const uint8_t intrType, bool intrEnable);  |
+    +========================+============================================+
+    | Design IDs             | did_pmic_power_cfg_readback                |
+    |                        | did_pmic_power_thermal_cfg_readback        |
+    +------------------------+--------------------------------------------+
+    | Requirements ID        | PDK-5841, PDK-5840                         |
+    |                        |                                            |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7280, PDK-7281, PDK-7282, PDK-7283,    |
+    |                        | PDK-7284, PDK-7285, PDK-7286, PDK-7287,    |
+    |                        | PDK-7288, PDK-7289, PDK-7290, PDK-7291,    |
+    |                        | PDK-7292, PDK-7293, PDK-7294, PDK-7295,    |
+    |                        | PDK-7296,                                  |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle.                  |
+    |                        | 2. const uint8_t intrType – Interrupt type |
+    |                        | 3. bool intrEnable – Enable/Disable the    |
+    |                        |    interrupt.                              |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 1. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | API to enable/disable Power interrupts.    |
+    |                        |                                            |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 RTC Alarm Configuration
 -----------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_rtcSetAlarmInfo(Pmic_CoreHandle_t     |
-|                        | \*pPmicCoreHandle, const Pmic_RtcTime_t    |
-|                        | timeCfg, const Pmic_RtcDate_t dateCfg)     |
-+========================+============================================+
-| Design Id:             | (did_pmic_rtc_cfg_readback)                |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5855)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-5990, PDK-5991, PDK-6087, PDK-6088,    |
-|                        | PDK-6090, PDK-6091, PDK-6092,              |
-|                        | PDK-6093, PDK-6094, PDK-6095, PDK-6096,    |
-|                        | PDK-6099, PDK-6100, PDK-6101,              |
-|                        | PDK-6102, PDK-6103, PDK-6104, PDK-6107,    |
-|                        | PDK-6108                                   |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface handle                   |
-|                        | 2. const Pmic_RtcTime_t timeCfg – PMIC RTC |
-|                        |    Time configuration                      |
-|                        | 3. const Pmic_RtcDate_t dateCfg – PMIC RTC |
-|                        |    Date configuration                      |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 1. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to set the alarm     |
-|                        | Date and Time parameters depending upon    |
-|                        | the bit fields set in validParams of Time  |
-|                        | and Date structures in RTC of PMIC Device. |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC RTC Set Alarm Info
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_rtcSetAlarmInfo(Pmic_CoreHandle_t     |
+    |                        | \*pPmicCoreHandle, const Pmic_RtcTime_t    |
+    |                        | timeCfg, const Pmic_RtcDate_t dateCfg)     |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_rtc_cfg_readback)                |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5855)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-5990, PDK-5991, PDK-6090, PDK-6091,    |
+    |                        | PDK-6092, PDK-6093, PDK-6094, PDK-6095,    |
+    |                        | PDK-6096, PDK-6099, PDK-6100, PDK-6101,    |
+    |                        | PDK-6102, PDK-6103, PDK-6104, PDK-6107,    |
+    |                        | PDK-6108                                   |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface handle                   |
+    |                        | 2. const Pmic_RtcTime_t timeCfg – PMIC RTC |
+    |                        |    Time configuration                      |
+    |                        | 3. const Pmic_RtcDate_t dateCfg – PMIC RTC |
+    |                        |    Date configuration                      |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 1. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to set the alarm     |
+    |                        | Date and Time parameters depending upon    |
+    |                        | the bit fields set in validParams of Time  |
+    |                        | and Date structures in RTC of PMIC Device. |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 RTC Alarm Configuration Readback
 --------------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_rtcGetAlarmInfo(Pmic_CoreHandle_t     |
-|                        | \*pPmicCoreHandle, Pmic_RtcTime_t          |
-|                        | \*pTimeCfg, Pmic_RtcDate_t \*pDateCfg)     |
-+========================+============================================+
-| Design Id:             | (did_pmic_rtc_cfg_readback)                |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5855)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-6109, PDK-6110, PDK-6111, PDK-6112     |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle                   |
-|                        | 2. Pmic_RtcTime_t \*pTimeCfg – PMIC RTC    |
-|                        |    Time Configuration                      |
-|                        | 3. Pmic_RtcDate_t \*pDateCfg – PMIC RTC    |
-|                        |    Date Configuration                      |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 1. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to Get the alarm     |
-|                        | date and time parameters depending upon    |
-|                        | the bit fields set in validParams of Time  |
-|                        | and Date structures in RTC of the PMIC     |
-|                        | Device.                                    |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC RTC Get Alarm Info
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_rtcGetAlarmInfo(Pmic_CoreHandle_t     |
+    |                        | \*pPmicCoreHandle, Pmic_RtcTime_t          |
+    |                        | \*pTimeCfg, Pmic_RtcDate_t \*pDateCfg)     |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_rtc_cfg_readback)                |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5855)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-6109, PDK-6110, PDK-6111, PDK-6112     |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle                   |
+    |                        | 2. Pmic_RtcTime_t \*pTimeCfg – PMIC RTC    |
+    |                        |    Time Configuration                      |
+    |                        | 3. Pmic_RtcDate_t \*pDateCfg – PMIC RTC    |
+    |                        |    Date Configuration                      |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 1. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to Get the alarm     |
+    |                        | date and time parameters depending upon    |
+    |                        | the bit fields set in validParams of Time  |
+    |                        | and Date structures in RTC of the PMIC     |
+    |                        | Device.                                    |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 RTC Timer Configuration
 -----------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_rtcSetTimerPeriod(Pmic_CoreHandle_t   |
-|                        | \*pPmicCoreHandle, const uint8_t           |
-|                        | timerPeriod)                               |
-+========================+============================================+
-| Design Id:             | (did_pmic_rtc_cfg_readback)                |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5855)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-6113, PDK-6114, PDK-6115               |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle                   |
-|                        | 2. const uint8_t timerPeriod – timer       |
-|                        |    interrupt period                        |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 1. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to set the timer     |
-|                        | interrupt Period to the RTC present in the |
-|                        | PMIC.                                      |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC RTC Set Timer Period
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_rtcSetTimerPeriod(Pmic_CoreHandle_t   |
+    |                        | \*pPmicCoreHandle, const uint8_t           |
+    |                        | timerPeriod)                               |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_rtc_cfg_readback)                |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5855)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-6113, PDK-6114, PDK-6115               |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle                   |
+    |                        | 2. const uint8_t timerPeriod – timer       |
+    |                        |    interrupt period                        |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 1. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to set the timer     |
+    |                        | interrupt Period to the RTC present in the |
+    |                        | PMIC.                                      |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 RTC Timer Configuration Readback
 --------------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_rtcGetTimerPeriod(Pmic_CoreHandle_t   |
-|                        | \*pPmicCoreHandle, uint8_t \*pTimerPeriod) |
-+========================+============================================+
-| Design Id:             | (did_pmic_rtc_cfg_readback)                |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5855)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-6116, PDK-6117, PDK-6118               |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle                   |
-|                        | 2. uint8_t \*pTimerPeriod – Timer          |
-|                        |    Interrupt periods                       |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 1. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to get the timer     |
-|                        | interrupt period from RTC present in the   |
-|                        | PMIC.                                      |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC RTC Get Timer Period
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_rtcGetTimerPeriod(Pmic_CoreHandle_t   |
+    |                        | \*pPmicCoreHandle, uint8_t \*pTimerPeriod) |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_rtc_cfg_readback)                |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5855)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-6116, PDK-6117, PDK-6118               |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle                   |
+    |                        | 2. uint8_t \*pTimerPeriod – Timer          |
+    |                        |    Interrupt periods                       |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 1. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to get the timer     |
+    |                        | interrupt period from RTC present in the   |
+    |                        | PMIC.                                      |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Enable/Disable RTC
 ------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmic_rtcEnable(Pmic_CoreHandle_t   |
-|                        | \*pPmicCoreHandle, bool enableRtc);        |
-+========================+============================================+
-| Design Id:             | (did_pmic_rtc_cfg_readback)                |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5855)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-6119, PDK-6120, PDK-6121, PDK-6122     |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle.                  |
-|                        | 2. bool enableRtc – Parameter to           |
-|                        |    start/stop RTC                          |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 1. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to Start/Stop the    |
-|                        | RTC present in PMIC.                       |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC RTC Enable
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmic_rtcEnable(Pmic_CoreHandle_t   |
+    |                        | \*pPmicCoreHandle, bool enableRtc);        |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_rtc_cfg_readback)                |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5855)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-6119, PDK-6120, PDK-6121, PDK-6122     |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle.                  |
+    |                        | 2. bool enableRtc – Parameter to           |
+    |                        |    start/stop RTC                          |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 1. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to Start/Stop the    |
+    |                        | RTC present in PMIC.                       |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Set RTC time calendar
 ---------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_rtcSetTimeDateInfo(Pmic_CoreHandle_t  |
-|                        | \*pPmicCoreHandle, const Pmic_RtcTime_t    |
-|                        | timeCfg, const Pmic_RtcDate_t dateCfg)     |
-+========================+============================================+
-| Design Id:             | (did_pmic_rtc_cfg_readback)                |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5855)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-6158, PDK-6159, PDK-6160, PDK-6161,    |
-|                        | PDK-6162, PDK-6163, PDK-6164, PDK-6165,    |
-|                        | PDK-6166, PDK-6167, PDK-6168, PDK-6169,    |
-|                        | PDK-6290, PDK-6170, PDK-6171, PDK-6172,    |
-|                        | PDK-6173, PDK-6174, PDK-6175               |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMICInterface Handle                    |
-|                        | 2. const Pmic_RtcTime_t timeCfg – PMIC RTC |
-|                        |    Time Configuration                      |
-|                        | 3. const Pmic_RtcDate_t dateCfg – PMIC RTC |
-|                        |    Date Configuration                      |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 1. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to set the RTC Date  |
-|                        | and Time parameters depending upon the bit |
-|                        | fields set in validParams of Time and Date |
-|                        | structures in RTC of PMIC Device.          |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC RTC Set Time Date Info
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_rtcSetTimeDateInfo(Pmic_CoreHandle_t  |
+    |                        | \*pPmicCoreHandle, const Pmic_RtcTime_t    |
+    |                        | timeCfg, const Pmic_RtcDate_t dateCfg)     |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_rtc_cfg_readback)                |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5855)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-6158, PDK-6159, PDK-6162, PDK-6163,    |
+    |                        | PDK-6164, PDK-6165, PDK-6166, PDK-6167,    |
+    |                        | PDK-6168, PDK-6169, PDK-6290, PDK-6170,    |
+    |                        | PDK-6171, PDK-6172, PDK-6173, PDK-6174,    |
+    |                        | PDK-6175                                   |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMICInterface Handle                    |
+    |                        | 2. const Pmic_RtcTime_t timeCfg – PMIC RTC |
+    |                        |    Time Configuration                      |
+    |                        | 3. const Pmic_RtcDate_t dateCfg – PMIC RTC |
+    |                        |    Date Configuration                      |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 1. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to set the RTC Date  |
+    |                        | and Time parameters depending upon the bit |
+    |                        | fields set in validParams of Time and Date |
+    |                        | structures in RTC of PMIC Device.          |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Readback RTC time calendar
 --------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_rtcGetTimeDateInfo(Pmic_CoreHandle_t  |
-|                        | \*pPmicCoreHandle, Pmic_RtcTime_t          |
-|                        | \*pTimeCfg, Pmic_RtcDate_t \*pDateCfg)     |
-+========================+============================================+
-| Design Id:             | (did_pmic_rtc_cfg_readback)                |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5855)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-6176, PDK-6177, PDK-6178, PDK-6179     |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMICInterface Handle                    |
-|                        | 2. Pmic_RtcTime_t \*pTimeCfg – PMIC RTC    |
-|                        |    Time Configuration                      |
-|                        | 3. Pmic_RtcDate_t \*pDateCfg – PMIC RTC    |
-|                        |    Date Configuration                      |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 1. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to Get the RTC date  |
-|                        | and time parameters depending upon the bit |
-|                        | fields set in validParams of Time and Date |
-|                        | structures in RTC of the PMIC Device.      |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC RTC Get Time Date Info
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_rtcGetTimeDateInfo(Pmic_CoreHandle_t  |
+    |                        | \*pPmicCoreHandle, Pmic_RtcTime_t          |
+    |                        | \*pTimeCfg, Pmic_RtcDate_t \*pDateCfg)     |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_rtc_cfg_readback)                |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5855)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-6176, PDK-6177, PDK-6178, PDK-6179     |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMICInterface Handle                    |
+    |                        | 2. Pmic_RtcTime_t \*pTimeCfg – PMIC RTC    |
+    |                        |    Time Configuration                      |
+    |                        | 3. Pmic_RtcDate_t \*pDateCfg – PMIC RTC    |
+    |                        |    Date Configuration                      |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 1. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to Get the RTC date  |
+    |                        | and time parameters depending upon the bit |
+    |                        | fields set in validParams of Time and Date |
+    |                        | structures in RTC of the PMIC Device.      |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 RTC Frequency compensation
 --------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_rtcSetFreqComp(Pmic_CoreHandle_t      |
-|                        | \*pPmicCoreHandle, const uint16_t          |
-|                        | compensation)                              |
-+========================+============================================+
-| Design Id:             | (did_pmic_rtc_cfg_readback)                |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5855)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-6180, PDK-6181                         |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle                   |
-|                        | 2. const uint16_t compensation – PMIC RTC  |
-|                        |    frequency compensation                  |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 1. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to set the frequency |
-|                        | compensation value in the RTC of the PMIC  |
-|                        | Device.                                    |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC RTC Set Frequency Compensation
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_rtcSetFreqComp(Pmic_CoreHandle_t      |
+    |                        | \*pPmicCoreHandle, const uint16_t          |
+    |                        | compensation)                              |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_rtc_cfg_readback)                |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5855)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-6180, PDK-6181                         |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle                   |
+    |                        | 2. const uint16_t compensation – PMIC RTC  |
+    |                        |    frequency compensation                  |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 1. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to set the frequency |
+    |                        | compensation value in the RTC of the PMIC  |
+    |                        | Device.                                    |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 RTC Frequency compensation Readback
 -----------------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_rtcGetFreqComp(Pmic_CoreHandle_t      |
-|                        | \*pPmicCoreHandle, uint16_t                |
-|                        | \*pCompensation);                          |
-+========================+============================================+
-| Design Id:             | (did_pmic_rtc_cfg_readback)                |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5855)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-6182, PDK-6183, PDK-6287               |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle                   |
-|                        | 2. uint16_t \*pCompensation – PMIC RTC     |
-|                        |    Frequency compensation                  |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 1. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to get the frequency |
-|                        | compensation value from the RTC of the     |
-|                        | PMIC Device                                |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC RTC Get Frequency Compensation
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_rtcGetFreqComp(Pmic_CoreHandle_t      |
+    |                        | \*pPmicCoreHandle, uint16_t                |
+    |                        | \*pCompensation);                          |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_rtc_cfg_readback)                |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5855)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-6182, PDK-6183, PDK-6287               |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle                   |
+    |                        | 2. uint16_t \*pCompensation – PMIC RTC     |
+    |                        |    Frequency compensation                  |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 1. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to get the frequency |
+    |                        | compensation value from the RTC of the     |
+    |                        | PMIC Device                                |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 RTC Enable Timer Interrupt
 --------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_rtcEnableTimerIntr(Pmic_CoreHandle_t  |
-|                        | \*pPmicCoreHandle, bool enableIntr)        |
-+========================+============================================+
-| Design Id:             | (did_pmic_rtc_cfg_readback)                |
-|                        | (did_pmic_lpstandby_wkup_cfg)              |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5855) (PDK-5831)                      |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-6266, PDK-6268                         |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle                   |
-|                        | 2. bool enableIntr – Parameter to          |
-|                        |    enable/disable Timer Interrupt          |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 1. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to enable/disable    |
-|                        | the RTC timer interrupt.                   |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC RTC Enable Timer Interrupt
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_rtcEnableTimerIntr(Pmic_CoreHandle_t  |
+    |                        | \*pPmicCoreHandle, bool enableIntr)        |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_rtc_cfg_readback)                |
+    |                        | (did_pmic_lpstandby_wkup_cfg)              |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5855) (PDK-5831)                      |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-6266, PDK-6268                         |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle                   |
+    |                        | 2. bool enableIntr – Parameter to          |
+    |                        |    enable/disable Timer Interrupt          |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 1. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to enable/disable    |
+    |                        | the RTC timer interrupt.                   |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 RTC Enable Alarm Interrupt
 --------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_rtcEnableAlarmIntr(Pmic_CoreHandle_t  |
-|                        | \*pPmicCoreHandle, bool enableIntr)        |
-+========================+============================================+
-| Design Id:             | (did_pmic_rtc_cfg_readback)                |
-|                        | (did_pmic_lpstandby_wkup_cfg)              |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5855) (PDK-5831)                      |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-6267, PDK-6269, PDK-6270               |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle                   |
-|                        | 2. bool enableIntr – Parameter to          |
-|                        |    enable/disable Alarm Interrupt          |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 1. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to enable/disable    |
-|                        | the RTC alarm interrupt.                   |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC RTC Enable Alarm Interrupt
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_rtcEnableAlarmIntr(Pmic_CoreHandle_t  |
+    |                        | \*pPmicCoreHandle, bool enableIntr)        |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_rtc_cfg_readback)                |
+    |                        | (did_pmic_lpstandby_wkup_cfg)              |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5855) (PDK-5831)                      |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-6267, PDK-6269                         |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle                   |
+    |                        | 2. bool enableIntr – Parameter to          |
+    |                        |    enable/disable Alarm Interrupt          |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 1. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to enable/disable    |
+    |                        | the RTC alarm interrupt.                   |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 RTC current status readback
 ---------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_getRtcStatus(Pmic_CoreHandle_t        |
-|                        | \*pPmicCoreHandle, Pmic_RtcStatus_t        |
-|                        | \*pPmicRtcStatus)                          |
-+========================+============================================+
-| Design Id:             | (did_pmic_rtc_cfg_readback)                |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5855)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-6194, PDK-6089, PDK-7465, PDK-7466,    |
-|                        | PDK-7467                                   |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
-|                        |    PMIC Interface Handle                   |
-|                        | 2. Pmic_RtcStatus_t \*pPmicRtcStatus       |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 1. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used to get the Current   |
-|                        | state of the RTC depending on the bit      |
-|                        | fields set in validParams of struct        |
-|                        | Pmic_RtcStatus_t structures.               |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC RTC Current Status
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_getRtcStatus(Pmic_CoreHandle_t        |
+    |                        | \*pPmicCoreHandle, Pmic_RtcStatus_t        |
+    |                        | \*pPmicRtcStatus)                          |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_rtc_cfg_readback)                |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5855)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-6194, PDK-6089, PDK-7465, PDK-7466,    |
+    |                        | PDK-7467                                   |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
+    |                        |    PMIC Interface Handle                   |
+    |                        | 2. Pmic_RtcStatus_t \*pPmicRtcStatus       |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 1. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used to get the Current   |
+    |                        | state of the RTC depending on the bit      |
+    |                        | fields set in validParams of struct        |
+    |                        | Pmic_RtcStatus_t structures.               |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Configure FSM off Request
 -------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmi                                |
-|                        | c_fsmDeviceOffRequestCfg(Pmic_CoreHandle_t |
-|                        | \*pPmicCoreHandle, uint8_t eventType,      |
-|                        | uint8_t fsmState);                         |
-+========================+============================================+
-| Design IDs             | (did_pmic_lpstandby_cfg)                   |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5851)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7360, PDK-7361, PDK-7705, PDK-7358,    |
-|                        | PDK-7359                                   |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
-|                        |    Handle structure pointer                |
-|                        | 2. uint8_t eventType – Event Type used to  |
-|                        |    initiate OFF Request                    |
-|                        | 3. uint8_t fsmState – FSM state.           |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function initiate OFF Request FSM     |
-|                        | transition from any other mission state to |
-|                        | the STANDBY state or the LP_STANDBY state  |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC FSM Device Off Request Cfg
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmi                                |
+    |                        | c_fsmDeviceOffRequestCfg(Pmic_CoreHandle_t |
+    |                        | \*pPmicCoreHandle, uint8_t eventType,      |
+    |                        | uint8_t fsmState);                         |
+    +========================+============================================+
+    | Design IDs             | (did_pmic_lpstandby_cfg)                   |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5851)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7360, PDK-7361, PDK-7705, PDK-7358,    |
+    |                        | PDK-7359                                   |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
+    |                        |    Handle structure pointer                |
+    |                        | 2. uint8_t eventType – Event Type used to  |
+    |                        |    initiate OFF Request                    |
+    |                        | 3. uint8_t fsmState – FSM state.           |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function initiate OFF Request FSM     |
+    |                        | transition from any other mission state to |
+    |                        | the STANDBY state or the LP_STANDBY state  |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Configure FSM On Request
 ------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmic_fsmDeviceOnRequest            |
-|                        | (Pmic_CoreHandle_t \*pPmicCoreHandle)      |
-+========================+============================================+
-| Design Id:             | (did_pmic_fsm_cfg)                         |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5837)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7364                                   |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
-|                        |    Handle structure pointer                |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function setup nSLEEP signal bits     |
-|                        | with STARTUP_DEST, Which is common for all |
-|                        | supported PMICs.                           |
-+------------------------+--------------------------------------------+
-| Limitations            | This API needs to be called at PMIC init   |
-|                        | before clearing Enable and Start-Up        |
-|                        | interrupts. Enable and Start-Up interrupts |
-+------------------------+--------------------------------------------+
+.. table:: PMIC FSM Device On Request
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmic_fsmDeviceOnRequest            |
+    |                        | (Pmic_CoreHandle_t \*pPmicCoreHandle)      |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_fsm_cfg)                         |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5837)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7364                                   |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
+    |                        |    Handle structure pointer                |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function setup nSLEEP signal bits     |
+    |                        | with STARTUP_DEST, Which is common for all |
+    |                        | supported PMICs.                           |
+    +------------------------+--------------------------------------------+
+    | Limitations            | This API needs to be called at PMIC init   |
+    |                        | before clearing Enable and Start-Up        |
+    |                        | interrupts. Enable and Start-Up interrupts |
+    +------------------------+--------------------------------------------+
 
 FSM Mission State
 -----------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_fsmSetMissionState(Pmic_CoreHandle_t  |
-|                        | \*pPmicCoreHandle, uint8_t pmicState);     |
-+========================+============================================+
-| Design Id:             | (did_pmic_fsm_cfg)                         |
-|                        | (did_pmic_lpstandby_cfg)                   |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5837) (PDK-5851)                      |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7697, PDK-7698, PDK-7699, PDK-7700,    |
-|                        | PDK-7701, PDK-7702, PDK-7703               |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
-|                        |    Handle structure pointer.               |
-|                        | 2. uint8_t pmicState – PMIC FSM mission    |
-|                        |    state                                   |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure                                 |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used for set/change the   |
-|                        | FSM mission states for PMIC                |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC FSM Set Mission State
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_fsmSetMissionState(Pmic_CoreHandle_t  |
+    |                        | \*pPmicCoreHandle, uint8_t pmicState);     |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_fsm_cfg)                         |
+    |                        | (did_pmic_lpstandby_cfg)                   |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5837) (PDK-5851)                      |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7697, PDK-7698, PDK-7699, PDK-7700,    |
+    |                        | PDK-7701, PDK-7702, PDK-7703               |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
+    |                        |    Handle structure pointer.               |
+    |                        | 2. uint8_t pmicState – PMIC FSM mission    |
+    |                        |    state                                   |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure                                 |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used for set/change the   |
+    |                        | FSM mission states for PMIC                |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 NSLEEP Signal Masking Unmasking
 -------------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t Pmi                                |
-|                        | c_fsmSetNsleepSignalMask(Pmic_CoreHandle_t |
-|                        | \*pPmicCoreHandle, bool nsleepType, bool   |
-|                        | maskEnable);                               |
-+========================+============================================+
-| Design Id:             | (did_pmic_fsm_cfg)                         |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5837)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7693, PDK-7694, PDK-7695, PDK-7696,    |
-|                        | PDK-7704                                   |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*handle –Interface   |
-|                        |    Handle structure pointer.               |
-|                        | 2. bool nsleepType – NSLEEP signal         |
-|                        | 3. bool maskEnable – Parameter to select   |
-|                        |    masking/unmasking                       |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure                                 |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used for                  |
-|                        | Masking/Unmasking for NSLEEP2 or NSLEEP1   |
-|                        | signal.                                    |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC FSM Set NSLEEP Signal Mask
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t Pmi                                |
+    |                        | c_fsmSetNsleepSignalMask(Pmic_CoreHandle_t |
+    |                        | \*pPmicCoreHandle, bool nsleepType, bool   |
+    |                        | maskEnable);                               |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_fsm_cfg)                         |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5837)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7693, PDK-7694, PDK-7695, PDK-7696,    |
+    |                        | PDK-7704                                   |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*handle –Interface   |
+    |                        |    Handle structure pointer.               |
+    |                        | 2. bool nsleepType – NSLEEP signal         |
+    |                        | 3. bool maskEnable – Parameter to select   |
+    |                        |    masking/unmasking                       |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure                                 |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used for                  |
+    |                        | Masking/Unmasking for NSLEEP2 or NSLEEP1   |
+    |                        | signal.                                    |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 To set value to scratchpad register
 -----------------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_setScratchPadValue(Pmic_CoreHandle_t  |
-|                        | \*pPmicCoreHandle, uint8_t                 |
-|                        | scratchPadRegNum, uint8_t data);           |
-+========================+============================================+
-| Design Id:             | (did_pmic_comm_single_i2c_cfg),            |
-|                        | (did_pmic_comm_dual_i2c_cfg),              |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5810),(PDK-5843)                      |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-8321, PDK-8322, PDK-8323               |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
-|                        |    Handle structure pointer.               |
-|                        | 2. uint8_t scratchPadRegNum – Scratchpad   |
-|                        |    register Number.                        |
-|                        | 3. uint8_t data – Data/value to be written |
-|                        |    to scratchpad.                          |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure                                 |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used write data to        |
-|                        | scratchpad register of PMIC                |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC Set Scratchpad Value
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_setScratchPadValue(Pmic_CoreHandle_t  |
+    |                        | \*pPmicCoreHandle, uint8_t                 |
+    |                        | scratchPadRegNum, uint8_t data);           |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_comm_single_i2c_cfg),            |
+    |                        | (did_pmic_comm_dual_i2c_cfg),              |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5810),(PDK-5843)                      |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-8321, PDK-8322, PDK-8323               |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
+    |                        |    Handle structure pointer.               |
+    |                        | 2. uint8_t scratchPadRegNum – Scratchpad   |
+    |                        |    register Number.                        |
+    |                        | 3. uint8_t data – Data/value to be written |
+    |                        |    to scratchpad.                          |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure                                 |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used write data to        |
+    |                        | scratchpad register of PMIC                |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 To Read value from scratchpad register
 --------------------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_getScratchPadValue(Pmic_CoreHandle_t  |
-|                        | \*pPmicCoreHandle, uint8_t                 |
-|                        | scratchPadRegNum, uint8_t \*pData);        |
-+========================+============================================+
-| Design Id:             | (did_pmic_comm_single_i2c_cfg),            |
-|                        | (did_pmic_comm_dual_i2c_cfg),              |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5810),(PDK-5843)                      |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-8323, PDK-8324, PDK-8325               |
-|                        | PDK-8326                                   |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
-|                        |    Handle structure pointer.               |
-|                        | 2. uint8_t scratchPadRegNum – Scratchpad   |
-|                        |    register Number.                        |
-|                        | 3. uint8_t \*pData – Parameter to hold     |
-|                        |    Data/value read from scratchpad.        |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure                                 |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function is used read data to         |
-|                        | scratchpad register of PMIC                |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC Get Scratchpad Value
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_getScratchPadValue(Pmic_CoreHandle_t  |
+    |                        | \*pPmicCoreHandle, uint8_t                 |
+    |                        | scratchPadRegNum, uint8_t \*pData);        |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_comm_single_i2c_cfg),            |
+    |                        | (did_pmic_comm_dual_i2c_cfg)               |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5810),(PDK-5843)                      |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-8323, PDK-8324, PDK-8325, PDK-8326     |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
+    |                        |    Handle structure pointer.               |
+    |                        | 2. uint8_t scratchPadRegNum – Scratchpad   |
+    |                        |    register Number.                        |
+    |                        | 3. uint8_t \*pData – Parameter to hold     |
+    |                        |    Data/value read from scratchpad.        |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure                                 |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function is used read data to         |
+    |                        | scratchpad register of PMIC                |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Recovery Count Cfg
 ------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_SetRecoveryCntCfg(Pmic_CoreHandle_t   |
-|                        | \*pPmicCoreHandle, Pmic_RecovCntCfg_t      |
-|                        | recovCntCfg);                              |
-+========================+============================================+
-| Design Id:             | (did_pmic_err_recov_cnt_cfg_readback)      |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5809)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7628, PDK-7629, PDK-7630, PDK-7631,    |
-|                        | PDK-7632                                   |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
-|                        |    Handle structure pointer                |
-|                        | 2. Pmic_RecovCntCfg_t recovCntCfg– Set     |
-|                        |    configuration value for Recovery counter|
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function configures PMIC Recovery     |
-|                        | Counter register, controlling recovery     |
-|                        | count Threshold and Clear.                 |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC Set Recovery Count Cfg
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_SetRecoveryCntCfg(Pmic_CoreHandle_t   |
+    |                        | \*pPmicCoreHandle, Pmic_RecovCntCfg_t      |
+    |                        | recovCntCfg);                              |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_err_recov_cnt_cfg_readback)      |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5809)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7628, PDK-7629, PDK-7630, PDK-7631,    |
+    |                        | PDK-7632                                   |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
+    |                        |    Handle structure pointer                |
+    |                        | 2. Pmic_RecovCntCfg_t recovCntCfg– Set     |
+    |                        |    configuration value for Recovery counter|
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function configures PMIC Recovery     |
+    |                        | Counter register, controlling recovery     |
+    |                        | count Threshold and Clear.                 |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Recovery Count Cfg Readback
 ---------------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_getRecoveryCntCfg(Pmic_CoreHandle_t   |
-|                        | \*pPmicCoreHandle, Pmic_RecovCntCfg_t      |
-|                        | \*pRecovCntCfg);                           |
-+========================+============================================+
-| Design Id:             | (did_pmic_err_recov_cnt_cfg_readback)      |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5809)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7633, PDK-7634                         |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
-|                        |    Handle structure pointer                |
-|                        | 2. Pmic_RecovCntCfg_t \*pRecovCntCfg –     |
-|                        |    Pointer to store recovery counter       |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function gets PMIC Recovery Counter   |
-|                        | configuration values                       |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC Get Recovery Count Cfg
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_getRecoveryCntCfg(Pmic_CoreHandle_t   |
+    |                        | \*pPmicCoreHandle, Pmic_RecovCntCfg_t      |
+    |                        | \*pRecovCntCfg);                           |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_err_recov_cnt_cfg_readback)      |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5809)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7633, PDK-7634                         |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
+    |                        |    Handle structure pointer                |
+    |                        | 2. Pmic_RecovCntCfg_t \*pRecovCntCfg –     |
+    |                        |    Pointer to store recovery counter       |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function gets PMIC Recovery Counter   |
+    |                        | configuration values                       |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
 
 Recovery Count Readback
 -----------------------
 
-+------------------------+--------------------------------------------+
-| Prototype              | int32_t                                    |
-|                        | Pmic_getRecoveryCnt(Pmic_CoreHandle_t      |
-|                        | \*pPmicCoreHandle, uint8_t                 |
-|                        | \*pRecovCntVal);                           |
-+========================+============================================+
-| Design Id:             | (did_pmic_err_recov_cnt_cfg_readback)      |
-+------------------------+--------------------------------------------+
-| Requirement:           | (PDK-5809)                                 |
-+------------------------+--------------------------------------------+
-| Test IDs               | PDK-7635, PDK-7636, PDK-7637               |
-+------------------------+--------------------------------------------+
-| Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
-|                        |    Handle structure pointer                |
-|                        | 2. uint8_t \*pRecovCntVal – Pointer to     |
-|                        |    store recovery count value              |
-+------------------------+--------------------------------------------+
-| Return Code            | On Success:                                |
-|                        |                                            |
-|                        | 1. PMIC_ST_SUCCESS                         |
-|                        |                                            |
-|                        | On Failure:                                |
-|                        |                                            |
-|                        | 2. Appropriate error code                  |
-|                        |    (Pmic_ErrorCodes)                       |
-+------------------------+--------------------------------------------+
-| Functional Description | This function reads out the recovery count |
-|                        | value.                                     |
-+------------------------+--------------------------------------------+
-| Limitations            |                                            |
-+------------------------+--------------------------------------------+
+.. table:: PMIC Get Recovery Count
+    :widths: 30 70
+
+    +------------------------+--------------------------------------------+
+    | Prototype              | int32_t                                    |
+    |                        | Pmic_getRecoveryCnt(Pmic_CoreHandle_t      |
+    |                        | \*pPmicCoreHandle, uint8_t                 |
+    |                        | \*pRecovCntVal);                           |
+    +========================+============================================+
+    | Design Id:             | (did_pmic_err_recov_cnt_cfg_readback)      |
+    +------------------------+--------------------------------------------+
+    | Requirement:           | (PDK-5809)                                 |
+    +------------------------+--------------------------------------------+
+    | Test IDs               | PDK-7635, PDK-7636, PDK-7637               |
+    +------------------------+--------------------------------------------+
+    | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
+    |                        |    Handle structure pointer                |
+    |                        | 2. uint8_t \*pRecovCntVal – Pointer to     |
+    |                        |    store recovery count value              |
+    +------------------------+--------------------------------------------+
+    | Return Code            | On Success:                                |
+    |                        |                                            |
+    |                        | 1. PMIC_ST_SUCCESS                         |
+    |                        |                                            |
+    |                        | On Failure:                                |
+    |                        |                                            |
+    |                        | 2. Appropriate error code                  |
+    |                        |    (Pmic_ErrorCodes)                       |
+    +------------------------+--------------------------------------------+
+    | Functional Description | This function reads out the recovery count |
+    |                        | value.                                     |
+    +------------------------+--------------------------------------------+
+    | Limitations            |                                            |
+    +------------------------+--------------------------------------------+
+
+..
+
 
 
 Directory
 ============
 
 Index
-=======
+-------------
 None
 
 Glossary
-==========
+-------------
 None
 
 Acronym List
-============
+--------------
 
-=========== ============================
-**Acronym** **Definition**
-=========== ============================
-PMIC        Power Management IC
-SOC         System-On-Chip
-MCU         Micro Controller Unit
-I2C         Inter IC
-SPI         Serial Peripheral Interface
-GPIO        General Purpose Input/output
-RTC         Real Time Clock
-WDG         Watchdog
-LDO         Low dropout regulator
-ESM         Error Signal Monitor
-BIST        Built-In Self-Test
-ISR         Interrupt Service Routine
-LP Mode     Low Power Mode
-FSM         Finite State Machine
-WKUP        Wake Up
-LP-standby  Low Power Standby
-VMON        Voltage Monitor
-=========== ============================
++------------+-------------------------------+
+| Acronym    |    Definition                 |
++============+===============================+
+| PMIC       | Power Management IC           |
++------------+-------------------------------+
+| SOC        | System-On-Chip                |
++------------+-------------------------------+
+| MCU        | Micro Controller Unit         |
++------------+-------------------------------+
+| I2C        | Inter IC                      |
++------------+-------------------------------+
+| SPI        | Serial Peripheral Interface   |
++------------+-------------------------------+
+| GPIO       | General Purpose Input/output  |
++------------+-------------------------------+
+| RTC        | Real Time Clock               |
++------------+-------------------------------+
+| WDG        | Watchdog                      |
++------------+-------------------------------+
+| LDO        | Low dropout regulator         |
++------------+-------------------------------+
+| ESM        | Error Signal Monitor          |
++------------+-------------------------------+
+| BIST       | Built-In Self-Test            |
++------------+-------------------------------+
+| ISR        | Interrupt Service Routine     |
++------------+-------------------------------+
+| LP Mode    | Low Power Mode                |
++------------+-------------------------------+
+| FSM        | Finite State Machine          |
++------------+-------------------------------+
+| WKUP       | Wake Up                       |
++------------+-------------------------------+
+| LP-standby | Low Power Standby             |
++------------+-------------------------------+
+| VMON       | Voltage Monitor               |
++------------+-------------------------------+
 
 References
 ===========
