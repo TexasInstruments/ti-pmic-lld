@@ -5,6 +5,7 @@ PMIC LLD Software Design Document
 **Revision History**
 
 .. table:: Revision History
+    :class: longtable
     :widths: 10 20 20 40 10
 
     +--------+-------------+--------------+------------------------+-------------+
@@ -72,7 +73,7 @@ PMIC LLD Software Design Document
     |        |             |              |    requirements.       |             |
     |        |             |              | -  API table updated   |             |
     +--------+-------------+--------------+------------------------+-------------+
-    |2.8     | 20-Oct-2020 | Rahul Rawat  | Updated the following  |             |
+    |2.8     | 20-Oct-2020 | Rahul Rawat  | Updated the following  | Released    |
     |        |             |              | sections:              |             |
     |        |             |              | Design Requirements,   |             |
     |        |             |              | Design Description,    |             |
@@ -83,6 +84,18 @@ PMIC LLD Software Design Document
     |        |             |              | Validation Feature,    |             |
     |        |             |              | API Definitions, API   |             |
     |        |             |              | Function Descriptions  |             |
+    +--------+-------------+--------------+------------------------+-------------+
+    |2.9     | 25-Mar-2020 | Akshay       | Adressed SQA Review    | Released    |
+    |        |             | Manikantan   | comments:              |             |
+    |        |             |              | Updated the directory  |             |
+    |        |             |              | structure.             |             |
+    |        |             |              | Added references to    |             |
+    |        |             |              | error codes in         |             |
+    |        |             |              | Error handling and API |             |
+    |        |             |              | Functions Descriptions |             |
+    |        |             |              | sections.              |             |
+    |        |             |              | Updated Assumptions    |             |
+    |        |             |              | and Constraints section|             |
     +--------+-------------+--------------+------------------------+-------------+
 
 .. raw:: latex
@@ -114,8 +127,8 @@ Based on requirements, the following list is a brief of the Assumptions
 1. The design and development of PMIC shall be done to have no state
    management; LLD shall not expect any IO sequence for any PMIC
    functionality. Application shall take care of this
-2. TI Coding Guidelines “TI84_Plus_CE_ProgrammingGuide_EN.pdf” shall be used
-   while coding for APIs, Datatypes, etc.
+2. TI Coding Guidelines “https://confluence.itg.ti.com/display/SWRD/OneMCU+Coding+Standard”
+   shall be used while coding for APIs, Datatypes, etc.
 3. LLD software shall be stateless and shall not have any event/error
    handling functionality, it shall just provide API to read and
    decipher events/errors
@@ -655,6 +668,7 @@ be invoked by application layer depending on info taken from error ISR.
 
 PMIC driver API shall be able to decode various errors detected in PMIC
 hardware and provide the relevant error code to Application.
+See section `API Function Return Status`_.
 
 Components
 ----------
@@ -1268,25 +1282,24 @@ Requirements Traceability
 -  Each functional requirement ID shall have at least one Design ID and
    one Test ID mapped to it.
 
+.. raw:: latex
+
+    \newpage
+
 PMIC LLD Directory Structure
 ============================
 
-::
+The below diagram shows the file structure for PMIC LLD.
+The cfg/tps6594x contains LEO PMIC specific header and source files and
+cfg/lp8764x contains HERA PMIC specific header and source files.
 
-   PMIC_LLD
-        |__docs
-        |__src
-        |    |__cfg
-        |       |__lp8764x (device specific source)
-        |       |__tps6594x (device specific source)
-        |__include
-        |    |__cfg
-        |       |__lp8764x (device specific header)
-        |       |__tps6594x (device specific header)
-	|
-	|__test
+.. figure:: pmic_lld_design_diagram/PMIC_LLD_Directory_Structure.png
+   :width: 80%
+   :align: center
 
-..
+.. raw:: latex
+
+    \newpage
 
 API Definitions
 ===============
@@ -2429,7 +2442,7 @@ PMIC Core Handle Initialization
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function gets device configuration    |
     |                        | from pCoreCfgData and initializes device   |
@@ -2472,7 +2485,7 @@ De-Initialize PMIC Core Handle
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function takes an existing Instance   |
     |                        | pPmicCoreHandle and closes the LLD being   |
@@ -2517,7 +2530,7 @@ Start/Stop ESM Monitor
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description |    This function is used to Start/Stop the |
     |                        |    PMIC ESM_MCU/ESM_SOC                    |
@@ -2555,7 +2568,7 @@ ESM Monitor Enable/Disable
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to Enable/Disable    |
     |                        | the PMIC ESM_MCU/ESM_SOC                   |
@@ -2596,7 +2609,7 @@ ESM Monitor Enable/Disable Readback
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to read the          |
     |                        | Enable/Disable state of PMIC               |
@@ -2641,7 +2654,7 @@ ESM Configuration
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to set the ESM mode, |
     |                        | delay-1 and delay-2 time time intervals,   |
@@ -2684,7 +2697,7 @@ ESM Configuration Readback
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to get the           |
     |                        | configured ESM mode, delay-1 and delay-2   |
@@ -2728,7 +2741,7 @@ ESM Interrupt Masking/Unmasking
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to mask/unmask the   |
     |                        | ESM RST, FAIL and PIN Interrupts for both  |
@@ -2768,7 +2781,7 @@ ESM Error Count
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to get the current   |
     |                        | Error count for ESM MCU ESM SOC.           |
@@ -2821,7 +2834,7 @@ Get PMIC Error Status
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function does the following:          |
     |                        |                                            |
@@ -2875,7 +2888,7 @@ Clear PMIC Interrupt Status
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function does the following:          |
     |                        |                                            |
@@ -2924,7 +2937,7 @@ Mask/Unmask PMIC Interrupts
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function does the following:          |
     |                        |                                            |
@@ -2976,7 +2989,7 @@ Extract PMIC Interrupt
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to extract each      |
     |                        | Error status from pErrStat as per the      |
@@ -3028,7 +3041,7 @@ Masking GPIO Interrupts
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to Mask or Unmask    |
     |                        | GPIO Rise and Fall Interrupts based on the |
@@ -3081,7 +3094,7 @@ GPIO set configuration
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2.  Appropriate error code                 |
-    |                        |     (Pmic_ErrorCodes)                      |
+    |                        | See section `API Function Return Status`_. |
     |                        |                                            |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to set the required  |
@@ -3123,7 +3136,7 @@ Read GPIO configuration
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2.  Appropriate error code                 |
-    |                        |     (Pmic_ErrorCodes)                      |
+    |                        | See section `API Function Return Status`_. |
     |                        |                                            |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to read the          |
@@ -3166,7 +3179,7 @@ Set GPIO pin value
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2.  Appropriate error code                 |
-    |                        |     (Pmic_ErrorCodes)                      |
+    |                        | See section `API Function Return Status`_. |
     |                        |                                            |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to configure the     |
@@ -3207,7 +3220,7 @@ Read GPIO pin value
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2.  Appropriate error code                 |
-    |                        |     (Pmic_ErrorCodes)                      |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to read the signal   |
     |                        | level of the gpio pin                      |
@@ -3251,7 +3264,7 @@ GPIO Interrupt Configuration
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2.  Appropriate error code                 |
-    |                        |     (Pmic_ErrorCodes)                      |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to enable/disable    |
     |                        | GPIO pin Interrupts                        |
@@ -3289,7 +3302,7 @@ Set NPWRON/Enable Pin Configuration
     |                        | On Failure:                                      |
     |                        |                                                  |
     |                        | 2.  Appropriate error code                       |
-    |                        |     (Pmic_ErrorCodes)                            |
+    |                        | See section `API Function Return Status`_.       |
     +------------------------+--------------------------------------------------+
     | Functional Description | This function is used to set the required        |
     |                        | configuration for the NPWRON or ENABLE pin       |
@@ -3332,7 +3345,7 @@ Read NPWRON/Enable Pin Configuration
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2.  Appropriate error code                 |
-    |                        |     (Pmic_ErrorCodes)                      |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to read the          |
     |                        | configuration for the NPWRON or ENABLE pin |
@@ -3373,7 +3386,7 @@ Read GPIO NPWRON Pin Value for TPS6594x Leo Device
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to read signal level |
     |                        | of NPWRON pin.                             |
@@ -3407,7 +3420,7 @@ Watchdog Enable
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | API to Enable Watchdog timer.              |
     |                        |                                            |
@@ -3449,7 +3462,7 @@ Watchdog Disable
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 1. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | API to Disable Watchdog timer.             |
     |                        | This function is used to Disable the PMIC  |
@@ -3498,7 +3511,7 @@ Watchdog Configuration
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 1. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | API to set PMIC watchdog configurations.   |
     |                        |                                            |
@@ -3548,7 +3561,7 @@ Watchdog Configuration Readback
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | API to get PMIC watchdog configurations.   |
     |                        |                                            |
@@ -3592,7 +3605,7 @@ Watchdog Error Status
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 1. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | API to get PMIC watchdog error status.     |
     |                        |                                            |
@@ -3633,7 +3646,7 @@ Watchdog Fail Count
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | API to get PMIC watchdog fail count.       |
     |                        |                                            |
@@ -3680,7 +3693,7 @@ Watchdog QA Mode
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | API to Start watchdog QA mode.             |
     |                        |                                            |
@@ -3734,7 +3747,7 @@ Watchdog Trigger Mode
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | API to Start watchdog Trigger mode.        |
     |                        |                                            |
@@ -3796,7 +3809,7 @@ Runtime BIST Invocation
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function initiates a request to       |
     |                        | exercise runtime BIST                      |
@@ -3856,7 +3869,7 @@ Power Resource Voltage Configuration
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 1. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | API to set power resources configurations. |
     |                        |                                            |
@@ -3905,7 +3918,8 @@ LDORTC Config
     |                        |                                            |
     |                        | On Failure:                                |
     |                        |                                            |
-    |                        | 1. Appropriate error code(Pmic_ErrorCodes) |
+    |                        | 1. Appropriate error code                  |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | API to enable/disable LODRTC regulator     |
     |                        | This function is used to enable/disable    |
@@ -3947,8 +3961,7 @@ LDORTC Config Readback
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2.Appropriate error code                   |
-    |                        |                                            |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | API to enable/disable LODRTC regulator     |
     |                        | This function is used to enable/disable    |
@@ -4011,7 +4024,8 @@ Power Resource Voltage Readback
     |                        |                                            |
     |                        | On Failure:                                |
     |                        |                                            |
-    |                        | 2 .Appropriate error code(Pmic_ErrorCodes) |
+    |                        | 2 .Appropriate error code                  |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | API to get power resources configurations. |
     |                        |                                            |
@@ -4064,7 +4078,7 @@ Power Resource Common Configuration
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 1. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | API to Set Power configuration             |
     |                        |                                            |
@@ -4116,7 +4130,7 @@ Power Resource Common Configuration Readback
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 1. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | API to Get Power configuration             |
     |                        |                                            |
@@ -4164,7 +4178,7 @@ Power Good Configuration
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 1. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | API to Set Power good configuration        |
     |                        |                                            |
@@ -4215,7 +4229,7 @@ Power Good Configuration Readback
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 1. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | Get Power good configuration               |
     |                        |                                            |
@@ -4264,7 +4278,7 @@ Power Resource Status
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function can be used to get the status|
     |                        | related to current limit voltage over and  |
@@ -4305,7 +4319,7 @@ Die Thermal Status Readback
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | API to get PMIC die temperature thermal    |
     |                        | status.                                    |
@@ -4346,7 +4360,7 @@ Thermal Monitoring/Shutdown Configuration
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 1. Appropriate error code                  |
-    |                        | (Pmic_ErrorCodes)                          |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | API to configure the thermal temperature   |
     |                        | threshold level for PMIC                   |
@@ -4385,7 +4399,7 @@ Thermal Monitoring/Shutdown Configuration Readback
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 1. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | Get the PMIC thermal threshold value       |
     |                        | function.                                  |
@@ -4433,7 +4447,7 @@ Power Resources Interrupt
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 1. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | API to enable/disable Power Resources      |
     |                        | and thermal interrupts.                    |
@@ -4477,7 +4491,7 @@ Power Interrupt
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 1. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | API to enable/disable Power interrupts.    |
     |                        |                                            |
@@ -4521,7 +4535,7 @@ RTC Alarm Configuration
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 1. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to set the alarm     |
     |                        | Date and Time parameters depending upon    |
@@ -4563,7 +4577,7 @@ RTC Alarm Configuration Readback
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 1. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to Get the alarm     |
     |                        | date and time parameters depending upon    |
@@ -4604,7 +4618,7 @@ RTC Timer Configuration
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 1. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to set the timer     |
     |                        | interrupt Period to the RTC present in the |
@@ -4642,7 +4656,7 @@ RTC Timer Configuration Readback
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 1. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to get the timer     |
     |                        | interrupt period from RTC present in the   |
@@ -4679,7 +4693,7 @@ Enable/Disable RTC
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 1. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to Start/Stop the    |
     |                        | RTC present in PMIC.                       |
@@ -4723,7 +4737,7 @@ Set RTC time calendar
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 1. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to set the RTC Date  |
     |                        | and Time parameters depending upon the bit |
@@ -4765,7 +4779,7 @@ Readback RTC time calendar
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 1. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to Get the RTC date  |
     |                        | and time parameters depending upon the bit |
@@ -4805,7 +4819,7 @@ RTC Frequency compensation
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 1. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to set the frequency |
     |                        | compensation value in the RTC of the PMIC  |
@@ -4844,7 +4858,7 @@ RTC Frequency compensation Readback
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 1. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to get the frequency |
     |                        | compensation value from the RTC of the     |
@@ -4883,7 +4897,7 @@ RTC Enable Timer Interrupt
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 1. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to enable/disable    |
     |                        | the RTC timer interrupt.                   |
@@ -4921,7 +4935,7 @@ RTC Enable Alarm Interrupt
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 1. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to enable/disable    |
     |                        | the RTC alarm interrupt.                   |
@@ -4959,7 +4973,7 @@ RTC current status readback
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 1. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used to get the Current   |
     |                        | state of the RTC depending on the bit      |
@@ -5001,7 +5015,7 @@ Configure FSM off Request
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function initiate OFF Request FSM     |
     |                        | transition from any other mission state to |
@@ -5036,7 +5050,7 @@ Configure FSM On Request
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function setup nSLEEP signal bits     |
     |                        | with STARTUP_DEST, Which is common for all |
@@ -5078,7 +5092,7 @@ FSM Mission State
     |                        | On Failure                                 |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used for set/change the   |
     |                        | FSM mission states for PMIC                |
@@ -5118,7 +5132,7 @@ NSLEEP Signal Masking Unmasking
     |                        | On Failure                                 |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used for                  |
     |                        | Masking/Unmasking for NSLEEP2 or NSLEEP1   |
@@ -5160,7 +5174,7 @@ To set value to scratchpad register
     |                        | On Failure                                 |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used write data to        |
     |                        | scratchpad register of PMIC                |
@@ -5201,7 +5215,7 @@ To Read value from scratchpad register
     |                        | On Failure                                 |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function is used read data to         |
     |                        | scratchpad register of PMIC                |
@@ -5240,7 +5254,7 @@ Recovery Count Cfg
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function configures PMIC Recovery     |
     |                        | Counter register, controlling recovery     |
@@ -5279,7 +5293,7 @@ Recovery Count Cfg Readback
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function gets PMIC Recovery Counter   |
     |                        | configuration values                       |
@@ -5317,7 +5331,7 @@ Recovery Count Readback
     |                        | On Failure:                                |
     |                        |                                            |
     |                        | 2. Appropriate error code                  |
-    |                        |    (Pmic_ErrorCodes)                       |
+    |                        | See section `API Function Return Status`_. |
     +------------------------+--------------------------------------------+
     | Functional Description | This function reads out the recovery count |
     |                        | value.                                     |
