@@ -44,6 +44,12 @@ Pmic_CoreHandle_t *pPmicCoreHandleI2C = NULL;
 
 uint8_t startup_type = 0U;
 uint8_t enableBenchMark = 0U;
+uint8_t enableFaultInjectionRead = 0U;
+uint8_t enableFaultInjectionWrite = 0U;
+uint8_t readCount = 0U;
+uint8_t writeCount = 0U;
+uint8_t skipReadCount = 0U;
+uint8_t skipWriteCount = 0U;
 
 /* CRC8 Table with polynomial value:0x7 */
 uint8_t crc8_tlb[] =
@@ -726,8 +732,22 @@ int32_t test_pmic_regRead(Pmic_CoreHandle_t  *pmicCorehandle,
         if(PMIC_ST_SUCCESS !=
                  test_pmic_spi_stubRead(pmicCorehandle, pBuf, bufLen))
         {
+            /* For Fault Injection Tests */
+            if(1U == enableFaultInjectionRead)
+            {
+                return PMIC_ST_ERR_I2C_COMM_FAIL;
+            }
+
             return PMIC_ST_ERR_SPI_COMM_FAIL;
         }
+    }
+
+
+    /* Added for Branch Coverage */
+    readCount++;
+    if((1U == enableFaultInjectionRead) && (skipReadCount == readCount))
+    {
+        return PMIC_ST_ERR_I2C_COMM_FAIL;
     }
 
     return PMIC_ST_SUCCESS;
@@ -823,9 +843,23 @@ int32_t test_pmic_regWrite(Pmic_CoreHandle_t  *pmicCorehandle,
         if(PMIC_ST_SUCCESS !=
                    test_pmic_spi_write(pmicCorehandle, pBuf, bufLen))
         {
+            /* For Fault Injection Tests */
+            if(1U == enableFaultInjectionWrite)
+            {
+                return PMIC_ST_ERR_I2C_COMM_FAIL;
+            }
+
             return PMIC_ST_ERR_SPI_COMM_FAIL;
         }
     }
+
+    /* Added for Branch Coverage */
+    writeCount++;
+    if((1U == enableFaultInjectionWrite) && (skipWriteCount == writeCount))
+    {
+        return PMIC_ST_ERR_I2C_COMM_FAIL;
+    }
+
 
     return PMIC_ST_SUCCESS;
 }
