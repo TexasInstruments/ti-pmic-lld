@@ -1081,16 +1081,13 @@ static int32_t Pmic_rtcCheckHoursMode(Pmic_CoreHandle_t    *pPmicCoreHandle,
                 pmicStatus = PMIC_ST_ERR_INV_TIME;
             }
         }
-        else if (PMIC_RTC_24_HOUR_MODE == timeMode)
+
+        if(PMIC_RTC_24_HOUR_MODE == timeMode)
         {
             if(timeCfg.hour > PMIC_RTC_24HFMT_HR_MAX)
             {
                 pmicStatus = PMIC_ST_ERR_INV_TIME;
             }
-        }
-        else
-        {
-            pmicStatus = PMIC_ST_ERR_INV_TIME;
         }
     }
 
@@ -1207,7 +1204,7 @@ static int32_t Pmic_rtcCheckDate(Pmic_CoreHandle_t    *pPmicCoreHandle,
     if(pmic_validParamCheck(dateCfg.validParams,
                             PMIC_RTC_DATE_CFG_MONTH_VALID) &&
        ((dateCfg.month > PMIC_RTC_MONTH_DEC) ||
-        (dateCfg.month <= PMIC_RTC_MONTH_JAN)))
+        (dateCfg.month < PMIC_RTC_MONTH_JAN)))
     {
         pmicStatus = PMIC_ST_ERR_INV_DATE;
     }
@@ -1264,14 +1261,6 @@ static int32_t Pmic_rtcCheckDate(Pmic_CoreHandle_t    *pPmicCoreHandle,
         else
         {
             month = dateCfg.month;
-        }
-
-        /* Check the current month to check days */
-        if((PMIC_ST_SUCCESS == pmicStatus) &&
-           ((month > PMIC_RTC_MONTH_DEC) ||
-            (month <= PMIC_RTC_MONTH_JAN)))
-        {
-            pmicStatus = PMIC_ST_ERR_INV_DATE;
         }
     }
 
@@ -1344,7 +1333,7 @@ static int32_t Pmic_alarmSetTime(Pmic_CoreHandle_t    *pPmicCoreHandle,
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
        (pmic_validParamCheck(timeCfg.validParams,
-                                       PMIC_RTC_TIME_CFG_TIMEMODE_VALID)))
+                                       PMIC_RTC_TIME_CFG_MERIDIAN_VALID)))
     {
         /* Setting Meridian mode to PMIC */
         pmicStatus = Pmic_rtcSetMeridianMode(pPmicCoreHandle,
@@ -2684,11 +2673,11 @@ int32_t  Pmic_getRtcStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
                                 PMIC_RTC_STATUS_POWER_UP_SHIFT,
                                 PMIC_RTC_STATUS_POWER_UP_MASK) == 0U)
             {
-                pPmicRtcStatus->rtcStatus = (bool)false;
+                pPmicRtcStatus->powerupStatus = (bool)false;
             }
             else
             {
-                pPmicRtcStatus->rtcStatus = (bool)true;
+                pPmicRtcStatus->powerupStatus = (bool)true;
             }
         }
     }
