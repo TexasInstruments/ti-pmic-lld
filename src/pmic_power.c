@@ -5575,14 +5575,14 @@ int32_t Pmic_powerSetPwrResourceCfg(
  *          pgUvThresholdLvl, pgOvThresholdLvl, railGrpSel, voltage_mV
  *          Valid only for LP8764x HERA Device
  *
- * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
- * \param   pwrResource        [IN]    PMIC Power resource
- *                                     Valid values for TPS6594x Leo Device
- *                                     \ref Pmic_Tps6594xLeo_Power_Resource.
- *                                     Valid values for LP8764x HERA Device
- *                                     \ref Pmic_Lp8764xHera_Power_Resource.
- * \param   pPwrResourceCfg    [OUT]   Pointer to store Power Resource
- *                                     configuration for BUCK/LDO/VMON/VCCA
+ * \param   pPmicCoreHandle    [IN]      PMIC Interface Handle.
+ * \param   pwrResource        [IN]      PMIC Power resource
+ *                                       Valid values for TPS6594x Leo Device
+ *                                       \ref Pmic_Tps6594xLeo_Power_Resource.
+ *                                       Valid values for LP8764x HERA Device
+ *                                       \ref Pmic_Lp8764xHera_Power_Resource.
+ * \param   pPwrResourceCfg    [IN/OUT]  Pointer to store Power Resource
+ *                                       configuration for BUCK/LDO/VMON/VCCA
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
@@ -5730,8 +5730,8 @@ int32_t Pmic_powerGetPwrResourceCfg(
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_powerSetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
-                                  Pmic_PowerCommonCfg_t  powerCommonCfg)
+int32_t Pmic_powerSetCommonConfig(Pmic_CoreHandle_t           *pPmicCoreHandle,
+                                  const Pmic_PowerCommonCfg_t  powerCommonCfg)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
@@ -5851,8 +5851,8 @@ int32_t Pmic_powerSetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
  *          severeErrorTrig, otherRailTrig, socRailTrig, mcuRailTrig
  *          moderateRailTrig
  *
- * \param   pPmicCoreHandle  [IN]    PMIC Interface Handle.
- * \param   pPowerCommonCfg  [OUT]   Pointer to hold Power configuration.
+ * \param   pPmicCoreHandle  [IN]       PMIC Interface Handle.
+ * \param   pPowerCommonCfg  [IN/OUT]   Pointer to hold Power configuration.
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
@@ -6000,8 +6000,8 @@ int32_t Pmic_powerGetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_powerSetConfigPowerGood(Pmic_CoreHandle_t   *pPmicCoreHandle,
-                                     uint16_t             pgoodSrcSel,
-                                     uint8_t              pgoodSelType)
+                                     const uint16_t       pgoodSrcSel,
+                                     const uint8_t        pgoodSelType)
 {
     int32_t  pmicStatus = PMIC_ST_SUCCESS;
 
@@ -6047,7 +6047,7 @@ int32_t Pmic_powerSetConfigPowerGood(Pmic_CoreHandle_t   *pPmicCoreHandle,
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_powerGetConfigPowerGood(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                     uint16_t           pgoodSrcSel,
+                                     const uint16_t     pgoodSrcSel,
                                      uint8_t           *pPgoodSelType)
 {
     int32_t  pmicStatus = PMIC_ST_SUCCESS;
@@ -6109,14 +6109,14 @@ int32_t Pmic_powerGetConfigPowerGood(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          overVoltageProtectionLvlStat
  *
  *
- * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
- * \param   pwrResource        [IN]    PMIC Power resource
- *                                     Valid values for TPS6594x Leo Device
- *                                     \ref Pmic_Tps6594xLeo_Power_Resource.
- *                                     Valid values for LP8764x HERA Device
- *                                     \ref Pmic_Lp8764xHera_Power_Resource.
- * \param   pPwrRsrcStatCfg    [OUT]   Pointer to store Power Resource
- *                                     configuration for BUCK/LDO/VMON/VCCA
+ * \param   pPmicCoreHandle    [IN]       PMIC Interface Handle.
+ * \param   pwrResource        [IN]       PMIC Power resource
+ *                                        Valid values for TPS6594x Leo Device
+ *                                        \ref Pmic_Tps6594xLeo_Power_Resource.
+ *                                        Valid values for LP8764x HERA Device
+ *                                        \ref Pmic_Lp8764xHera_Power_Resource.
+ * \param   pPwrRsrcStatCfg    [IN/OUT]   Pointer to store Power Resource
+ *                                        Status for BUCK/LDO/VMON/VCCA
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
@@ -6227,9 +6227,9 @@ int32_t Pmic_powerGetPwrRsrcStat(Pmic_CoreHandle_t        *pPmicCoreHandle,
  *          Pmic_PowerThermalStat_t:
  *          thermalStateImmShtDwn
  *
- * \param   pPmicCoreHandle       [IN]    PMIC Interface Handle.
- * \param   pPwrThermalStatCfg    [OUT]   Pointer to store Thermal
- *                                        configuration for PMIC
+ * \param   pPmicCoreHandle       [IN]       PMIC Interface Handle.
+ * \param   pPwrThermalStatCfg    [IN/OUT]   Pointer to store Thermal
+ *                                           configuration for PMIC
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
@@ -6305,8 +6305,9 @@ int32_t Pmic_powerGetPwrThermalStat(Pmic_CoreHandle_t       *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_powerSetThermalConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
-                                   Pmic_PowerThermalCfg_t thermalThreshold)
+int32_t Pmic_powerSetThermalConfig(
+                                Pmic_CoreHandle_t     *pPmicCoreHandle,
+                                const Pmic_PowerThermalCfg_t thermalThreshold)
 {
     int32_t  pmicStatus = PMIC_ST_SUCCESS;
 
@@ -6357,8 +6358,8 @@ int32_t Pmic_powerSetThermalConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
  *          of the Pmic_PowerThermalCfg_t:
  *          thermalShutdownThold
  *
- * \param   pPmicCoreHandle       [IN]     PMIC Interface Handle.
- * \param   pThermalThreshold     [OUT]    Pointer to hold Thermal Cfg
+ * \param   pPmicCoreHandle       [IN]        PMIC Interface Handle.
+ * \param   pThermalThreshold     [IN/OUT]    Pointer to hold Thermal Cfg
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
@@ -6432,7 +6433,7 @@ int32_t Pmic_powerGetThermalConfig(Pmic_CoreHandle_t      *pPmicCoreHandle,
 int32_t Pmic_powerSetPwrRsrcIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
                                  const uint16_t     pwrResource,
                                  const uint8_t      intrType,
-                                 bool               intrEnable)
+                                 const bool         intrEnable)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
@@ -6479,7 +6480,7 @@ int32_t Pmic_powerSetPwrRsrcIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  */
 int32_t Pmic_powerSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
                           const uint8_t      intrType,
-                          bool               intrEnable)
+                          const bool         intrEnable)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 

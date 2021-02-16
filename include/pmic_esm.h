@@ -132,14 +132,28 @@ extern "C" {
  *
  *  @{
  */
+ /** \brief validParams value used to set/get ESM delay-1 time interval */
 #define PMIC_ESM_CFG_DELAY1_VALID           (0x00U)
+/** \brief validParams value used to set/get ESM delay-2 time interval  */
 #define PMIC_ESM_CFG_DELAY2_VALID           (0x01U)
+/** \brief validParams value used to set/get ESM Error count Threshold value */
 #define PMIC_ESM_CFG_ERR_CNT_THR_VALID      (0x02U)
+/** \brief validParams value used to set/get ESM Maximum high-pulse
+ *         time-threshold value  */
 #define PMIC_ESM_CFG_HMAX_VALID             (0x03U)
+/** \brief validParams value used to set/get ESM Minimum high-pulse
+ *         time-threshold value  */
 #define PMIC_ESM_CFG_HMIN_VALID             (0x04U)
+/** \brief validParams value used to set/get ESM Maximum low-pulse
+ *         time-threshold value */
 #define PMIC_ESM_CFG_LMAX_VALID             (0x05U)
+/** \brief validParams value used to set/get  ESM Minimum low-pulse
+ *         time-threshold value */
 #define PMIC_ESM_CFG_LMIN_VALID             (0x06U)
+/** \brief validParams value used to set/get ESM ENABLE_DRV clear configuration
+ */
 #define PMIC_ESM_CFG_EN_DRV_VALID           (0x07U)
+/** \brief validParams value used to set/get ESM mode */
 #define PMIC_ESM_CFG_MODE_VALID             (0x08U)
 /*  @} */
 
@@ -177,51 +191,72 @@ extern "C" {
 /*==========================================================================*/
 
 /*!
- * \brief   PMIC ESM Configuration structure
- * 
+ * \brief  PMIC ESM Configuration structure
+ *         Note: validParams is input param for all Set and Get APIs. other
+ *         params except validParams is input param for Set APIs and output
+ *         param for Get APIs
+ *
  * \param   validParams          Selection of structure parameters to be set,
  *                               from the combination of \ref Pmic_EsmCflag
- *                               and the corresponding member value must be 
+ *                               and the corresponding member value must be
  *                               updated.
  * \param   esmDelay1_us         ESM delay-1 time interval in micro seconds.
- *                               To get more effective results, user has to 
+ *                               To get more effective results, user has to
  *                               program esmDelay1 with multiples of 2048.
  *                               The valid range is (0, 2048, 4096, 6144,
  *                               8192, ......., 522240).
+ *                               Valid only when PMIC_ESM_CFG_DELAY1_VALID
+ *                               bit is set
  * \param   esmDelay2_us         ESM delay-2 time interval in micro seconds.
- *                               To get more effective results, user has to 
+ *                               To get more effective results, user has to
  *                               program esmDelay2 with multiples of 2048.
  *                               The valid range is (0, 2048, 4096, 6144,
  *                               8192, ......., 522240).
+ *                               Valid only when PMIC_ESM_CFG_DELAY2_VALID
+ *                               bit is set
  * \param   esmHmax_us           ESM Maximum high-pulse time-threshold value in
  *                               micro seconds.
- *                               To get more effective results, user has to 
+ *                               To get more effective results, user has to
  *                               program esmHmax with multiples of 15.
  *                               The valid range is (15, 30, 45, 60, 75
-  *                              ....., 3840).
+ *                              ....., 3840).
+ *                               Valid only when PMIC_ESM_CFG_HMAX_VALID
+ *                               bit is set
  * \param   esmHmin_us           ESM Minimum high-pulse time-threshold value in
  *                               micro seconds.
- *                               To get more effective results, user has to 
+ *                               To get more effective results, user has to
  *                               program esmHmin with multiples of 15.
  *                               The valid range is (15, 30, 45, 60, 75
  *                              ....., 3840).
+ *                               Valid only when PMIC_ESM_CFG_HMIN_VALID
+ *                               bit is set
  * \param   esmLmax_us           ESM Maximum low-pulse time-threshold value in
  *                               micro seconds.
- *                               To get more effective results, user has to 
+ *                               To get more effective results, user has to
  *                               program esmLmax with multiples of 15.
  *                               The valid range is (15, 30, 45, 60, 75
  *                              ....., 3840).
+ *                               Valid only when PMIC_ESM_CFG_LMAX_VALID
+ *                               bit is set
  * \param   esmLmin_us           ESM Minimum low-pulse time-threshold value in
  *                               micro seconds.
- *                               To get more effective results, user has to 
+ *                               To get more effective results, user has to
  *                               program esmLmin with multiples of 15.
  *                               The valid range is (15, 30, 45, 60, 75
  *                              ....., 3840).
+ *                               Valid only when PMIC_ESM_CFG_LMIN_VALID
+ *                               bit is set
  * \param   esmErrCntThr         ESM Error count Threshold value.
+ *                               Valid only when PMIC_ESM_CFG_ERR_CNT_THR_VALID
+ *                               bit is set
  * \param   esmEnDrv             ESM ENABLE_DRV clear configuration.
  *                               Valid values: \ref Pmic_EsmEnDrvSel.
+ *                               Valid only when PMIC_ESM_CFG_EN_DRV_VALID
+ *                               bit is set
  * \param   esmMode              ESM mode select.
  *                               Valid values: \ref Pmic_EsmMode.
+ *                               Valid only when PMIC_ESM_CFG_MODE_VALID
+ *                               bit is set
  */
 typedef struct Pmic_EsmCfg_s
 {
@@ -237,7 +272,7 @@ typedef struct Pmic_EsmCfg_s
     bool            esmMode;
 } Pmic_EsmCfg_t;
 
-/*! 
+/*!
  * \brief   PMIC ESM Interrupt Configuration Structure.
  *
  * \param   esmPinIntr             ESM Pin Interrupt configuration.
@@ -279,6 +314,31 @@ typedef struct Pmic_EsmIntrCfg_s
 int32_t Pmic_esmStart(Pmic_CoreHandle_t   *pPmicCoreHandle,
                       const bool           esmType,
                       const bool           esmState);
+
+/*!
+ * \brief   API to read status of PMIC ESM is started or not.
+ *
+ * Requirement: REQ_TAG(PDK-9150)
+ * Design: did_pmic_esm_cfg_readback
+ *
+ *          This function is used to read status of PMIC ESM_MCU/ESM_SOC is
+ *          started or not
+ *
+ * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
+ * \param   esmType         [IN]    PMIC ESM Type
+ *                                  For valid values:
+ *                                  \ref Pmic_EsmTypes
+ * \param   pEsmState        [IN]   Pointer to store the status of PMIC ESM is
+ *                                  started or not
+ *                                  For valid values:
+ *                                  \ref Pmic_EsmStates
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_esmGetStatus(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                          const bool           esmType,
+                          bool                *pEsmState);
 
 /*!
  * \brief   API to Enable/Disable PMIC ESM.
@@ -355,16 +415,18 @@ int32_t Pmic_esmSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
  * Requirement: REQ_TAG(PDK-5833)
  * Design: did_pmic_esm_cfg_readback
  *
- *          This function is used to get the configured ESM mode, delay-1 and 
+ *          This function is used to get the configured ESM mode, delay-1 and
  *          delay-2 time time intervals, Error Count Threshold value, HMAX,
- *          HMIN, LMAX, LMIN and select EN DRV clear for ESM_MCU and ESM_SOC.
+ *          HMIN, LMAX, LMIN and select EN DRV clear for ESM_MCU and ESM_SOC
+ *          when corresponding validParam bit fields are set in Pmic_EsmCfg_t
+ *          structure
  *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- * \param   esmType         [IN]    PMIC ESM Type.
- *                                  For valid values:
- *                                  \ref Pmic_EsmTypes.
- * \param   pEsmCfg         [OUT]   Pointer to store the specified ESM
- *                                  configuration.
+ * \param   pPmicCoreHandle [IN]       PMIC Interface Handle.
+ * \param   esmType         [IN]       PMIC ESM Type.
+ *                                     For valid values:
+ *                                     \ref Pmic_EsmTypes.
+ * \param   pEsmCfg         [IN/OUT]   Pointer to store the specified ESM
+ *                                     configuration.
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values: \ref Pmic_ErrorCodes
@@ -379,7 +441,7 @@ int32_t Pmic_esmGetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
  * Requirement: REQ_TAG(PDK-5833)
  * Design: did_pmic_esm_cfg_readback
  *
- *          This function is used to mask/unmask the ESM RST, FAIL and 
+ *          This function is used to mask/unmask the ESM RST, FAIL and
  *          PIN Interrupts for both ESM MCU and ESM SOC.
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.

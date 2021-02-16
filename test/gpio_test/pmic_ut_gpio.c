@@ -1398,7 +1398,7 @@ static void test_pmic_gpio_setCfgGpioPin_esm_mcu(void)
         pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-        pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, 
+        pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle,
                                                pin,
                                                &gpioCfg_rd);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -2920,7 +2920,7 @@ static void test_pmic_gpio2_testFall_interrupt(void)
         gpioCfg.outputSignalType = PMIC_GPIO_PUSH_PULL_OUTPUT;
         gpioCfg.pullCtrl = PMIC_GPIO_PULL_UP;
     }
-    
+
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
     {
         gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
@@ -3062,7 +3062,7 @@ static void test_pmic_gpio2_testRise_interrupt(void)
         gpioCfg.outputSignalType = PMIC_GPIO_PUSH_PULL_OUTPUT;
         gpioCfg.pullCtrl = PMIC_GPIO_PULL_UP;
     }
-    
+
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
     {
         gpioCfg.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
@@ -3756,7 +3756,7 @@ static void test_pmic_gpio6_testFall_interrupt(void)
         intMask = PMIC_TPS6594X_IRQ_GPIO_6_INT_MASK_NUM;
         irqNum = PMIC_TPS6594X_GPIO6_INT;
     }
-    
+
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         intMask = PMIC_LP8764X_IRQ_GPIO_6_INT_MASK_NUM;
@@ -3887,7 +3887,7 @@ static void test_pmic_gpio6_testRise_interrupt(void)
         intMask = PMIC_TPS6594X_IRQ_GPIO_6_INT_MASK_NUM;
         irqNum = PMIC_TPS6594X_GPIO6_INT;
     }
-    
+
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         intMask = PMIC_LP8764X_IRQ_GPIO_6_INT_MASK_NUM;
@@ -4028,7 +4028,7 @@ static void test_pmic_gpio7_testFall_interrupt(void)
         intMask = PMIC_TPS6594X_IRQ_GPIO_7_INT_MASK_NUM;
         irqNum = PMIC_TPS6594X_GPIO7_INT;
     }
-    
+
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         intMask = PMIC_LP8764X_IRQ_GPIO_7_INT_MASK_NUM;
@@ -5017,7 +5017,7 @@ static void test_pmic_gpio_intr_irqUnMaskAll_interrupt(void)
     {
         irqNum = PMIC_TPS6594X_GPIO1_INT;
     }
-    
+
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
@@ -5457,6 +5457,7 @@ void test_pmic_canWkup_test(void)
                          PMIC_IRQ_MASK,
                          PMIC_IRQ_GPIO_FALL_INT_TYPE);
 
+    /*Mask Nsleep1B and Nsleep2B signals for FSM state transitions*/
     status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
                                          PMIC_NSLEEP1_SIGNAL,
                                          PMIC_NSLEEPX_MASK);
@@ -6080,7 +6081,7 @@ static void test_pmic_gpio9_testFall_interrupt(void)
         intMask = PMIC_TPS6594X_IRQ_GPIO_9_INT_MASK_NUM;
         irqNum = PMIC_TPS6594X_GPIO9_INT;
     }
-    
+
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         intMask = PMIC_LP8764X_IRQ_GPIO_9_INT_MASK_NUM;
@@ -6609,6 +6610,7 @@ static void test_pmic_gpioWkup1_test(void)
                          PMIC_IRQ_MASK,
                          PMIC_IRQ_GPIO_FALL_INT_TYPE);
 
+    /*Mask Nsleep1B and Nsleep2B signals for FSM state transitions*/
     status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
                                          PMIC_NSLEEP1_SIGNAL,
                                          PMIC_NSLEEPX_MASK);
@@ -6664,6 +6666,7 @@ static void test_pmic_gpioWkup2_test(void)
                          PMIC_IRQ_MASK,
                          PMIC_IRQ_GPIO_FALL_INT_TYPE);
 
+    /*Mask Nsleep1B and Nsleep2B signals for FSM state transitions*/
     status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
                                          PMIC_NSLEEP1_SIGNAL,
                                          PMIC_NSLEEPX_MASK);
@@ -7058,7 +7061,7 @@ static void test_pmic_run_testcases_manual(uint32_t board)
         if(menuOption == 4)
         {
             break;
-        }   
+        }
 
         switch(menuOption)
         {

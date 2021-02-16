@@ -103,10 +103,18 @@ typedef struct Pmic_DevSubSysInfo_s
  *                                        For QA instance:
  *                                           DRV_INIT_STATUS | PMIC_QA_INST.
  *  \param   pmicDeviceType               PMIC device type
+ *  \param   pmicDevRev                   PMIC device silicon revision
  *  \param   commMode                     Interface mode - Single I2C, Dual
  *                                        I2C or SPI.
  *  \param   slaveAddr                    Main Interface Slave Address
  *  \param   qaSlaveAddr                  WDOG QA Interface Slave Address
+ *  \param   nvmSlaveAddr                 NVM Slave Address which provides only
+ *                                        read access to CRC status of Page-1
+ *                                        Application shall use this slave
+ *                                        address to read only CRC status.
+ *                                        Application shall not do
+ *                                        any write operations using this slave
+ *                                        address
  *  \param   crcEnable                    Parameter to enable/disable CRC
  *  \param   pFnPmicCommIoRead            Pointer to I2C/SPI Comm LLD Read
  *                                        Function
@@ -125,9 +133,11 @@ typedef struct Pmic_CoreHandle_s {
     const Pmic_DevSubSysInfo_t *pPmic_SubSysInfo;
     uint32_t                    drvInitStatus;
     uint8_t                     pmicDeviceType;
+    uint8_t                     pmicDevRev;
     uint8_t                     commMode;
     uint8_t                     slaveAddr;
     uint8_t                     qaSlaveAddr;
+    uint8_t                     nvmSlaveAddr;
     bool                        crcEnable;
     void                       *pCommHandle;
     void                       *pQACommHandle;

@@ -307,23 +307,23 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
     },
     {
         6194,
-        "Pmic_getRtcStatus : RTC Live Status Validation RTC Current state Running"
+        "Pmic_rtcGetRstStatus : RTC Live Status Validation RTC Current state Running"
     },
     {
         6089,
-        "Pmic_getRtcStatus : RTC Live Status Validation RTC Current state Frozen"
+        "Pmic_rtcGetRstStatus : RTC Live Status Validation RTC Current state Frozen"
     },
     {
         7465,
-        "Pmic_getRtcStatus : Parameter validation for handle"
+        "Pmic_rtcGetRstStatus : Parameter validation for handle"
     },
     {
         7466,
-        "Pmic_getRtcStatus : Parameter validation for RtcStatus"
+        "Pmic_rtcGetRstStatus : Parameter validation for rtcRstStatus"
     },
     {
         7467,
-        "Pmic_getRtcStatus : Parameter validation for ValidParams"
+        "Pmic_rtcGetRstStatus : Parameter validation for ValidParams"
     },
     {
         7358,
@@ -2104,10 +2104,10 @@ static void test_pmic_rtc_enableTimerInterrupt_PrmValTest_handle(void)
 /*!
  * \brief   RTC Status Validation RTC Current state Running
  */
-static void test_pmic_rtc_testGetRtcStatus_running(void)
+static void test_pmic_rtc_testGetRstStatus_running(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_RtcStatus_t pmicRtcStatus = {0};
+    Pmic_RtcRstStatus_t pRtcRstStatus = {0};
 
     test_pmic_print_unity_testcase_info(6194,
                                         pmic_rtc_tests,
@@ -2116,11 +2116,11 @@ static void test_pmic_rtc_testGetRtcStatus_running(void)
     status = Pmic_rtcEnable(pPmicCoreHandle, PMIC_RTC_START);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    pmicRtcStatus.validParams |= PMIC_RTC_CFG_RTC_STATUS_VALID_SHIFT;
-    status = Pmic_getRtcStatus(pPmicCoreHandle, &pmicRtcStatus);
+    pRtcRstStatus.validParams |= PMIC_RTC_RESET_STATUS_VALID_SHIFT;
+    status = Pmic_rtcGetRstStatus(pPmicCoreHandle, &pRtcRstStatus);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    TEST_ASSERT_EQUAL(PMIC_RTC_STATUS_RUNNING, pmicRtcStatus.rtcStatus);
+    TEST_ASSERT_EQUAL(PMIC_RTC_STATUS_RUNNING, pRtcRstStatus.rtcRstStatus);
 
     pmic_testResultUpdate_pass(6194,
                                pmic_rtc_tests,
@@ -2130,10 +2130,10 @@ static void test_pmic_rtc_testGetRtcStatus_running(void)
 /*!
  * \brief   RTC Status Validation RTC Current state Frozen
  */
-static void test_pmic_rtc_testGetRtcStatus_frozen(void)
+static void test_pmic_rtc_testGetRstStatus_frozen(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_RtcStatus_t pmicRtcStatus = {0};
+    Pmic_RtcRstStatus_t pRtcRstStatus = {0};
 
     test_pmic_print_unity_testcase_info(6089,
                                         pmic_rtc_tests,
@@ -2142,11 +2142,11 @@ static void test_pmic_rtc_testGetRtcStatus_frozen(void)
     status = Pmic_rtcEnable(pPmicCoreHandle, PMIC_RTC_STOP);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    pmicRtcStatus.validParams |= PMIC_RTC_CFG_RTC_STATUS_VALID_SHIFT;
-    status = Pmic_getRtcStatus(pPmicCoreHandle, &pmicRtcStatus);
+    pRtcRstStatus.validParams |= PMIC_RTC_RESET_STATUS_VALID_SHIFT;
+    status = Pmic_rtcGetRstStatus(pPmicCoreHandle, &pRtcRstStatus);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    TEST_ASSERT_EQUAL(PMIC_RTC_STATUS_FROZEN, pmicRtcStatus.rtcStatus);
+    TEST_ASSERT_EQUAL(PMIC_RTC_STATUS_FROZEN, pRtcRstStatus.rtcRstStatus);
 
     pmic_testResultUpdate_pass(6089,
                                pmic_rtc_tests,
@@ -2156,10 +2156,10 @@ static void test_pmic_rtc_testGetRtcStatus_frozen(void)
 /*!
  * \brief   Parameter validation for handle
  */
-static void test_pmic_rtc_getRtcStatus_PrmValTest_handle(void)
+static void test_pmic_rtc_getRstStatus_PrmValTest_handle(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_RtcStatus_t pmicRtcStatus = {0};
+    Pmic_RtcRstStatus_t pRtcRstStatus = {0};
 
     test_pmic_print_unity_testcase_info(7465,
                                         pmic_rtc_tests,
@@ -2168,7 +2168,7 @@ static void test_pmic_rtc_getRtcStatus_PrmValTest_handle(void)
     status = Pmic_rtcEnable(pPmicCoreHandle, PMIC_RTC_STOP);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    status = Pmic_getRtcStatus(NULL, &pmicRtcStatus);
+    status = Pmic_rtcGetRstStatus(NULL, &pRtcRstStatus);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
 
     pmic_testResultUpdate_pass(7465,
@@ -2179,7 +2179,7 @@ static void test_pmic_rtc_getRtcStatus_PrmValTest_handle(void)
 /*!
  * \brief   Parameter validation for rtcStatus
  */
-static void test_pmic_rtc_getRtcStatus_PrmValTest_rtcStatus(void)
+static void test_pmic_rtc_getRstStatus_PrmValTest_rtcStatus(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -2187,7 +2187,7 @@ static void test_pmic_rtc_getRtcStatus_PrmValTest_rtcStatus(void)
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
-    status = Pmic_getRtcStatus(pPmicCoreHandle, NULL);
+    status = Pmic_rtcGetRstStatus(pPmicCoreHandle, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 
     pmic_testResultUpdate_pass(7466,
@@ -2198,16 +2198,16 @@ static void test_pmic_rtc_getRtcStatus_PrmValTest_rtcStatus(void)
 /*!
  * \brief   Parameter validation for ValidParams
  */
-static void test_pmic_rtc_getRtcStatus_PrmValTest_validParams(void)
+static void test_pmic_rtc_getRstStatus_PrmValTest_validParams(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_RtcStatus_t pmicRtcStatus = {0};
+    Pmic_RtcRstStatus_t pRtcRstStatus = {0};
 
     test_pmic_print_unity_testcase_info(7467,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
-    status = Pmic_getRtcStatus(pPmicCoreHandle, &pmicRtcStatus);
+    status = Pmic_rtcGetRstStatus(pPmicCoreHandle, &pRtcRstStatus);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INSUFFICIENT_CFG, status);
 
     pmic_testResultUpdate_pass(7467,
@@ -2289,7 +2289,7 @@ static void test_pmic_rtc_testWakeup_TimerIntr_lpStandbyState(void)
                                          PMIC_NSLEEPX_MASK);
      TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    /* Needs Delay to unmask nSleep signals for LP Stand-By State */
+    /* Needs Delay to mask Nsleep1B and Nsleep2B signals for LP Stand-By State */
     Osal_delay(10U);
 
     status =  Pmic_fsmSetMissionState(pPmicCoreHandle, PMIC_FSM_LP_STANBY_STATE);
@@ -2372,7 +2372,7 @@ static void test_pmic_rtc_testWakeup_TimerIntr_standbyState(void)
                                          PMIC_NSLEEPX_MASK);
      TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    /* Needs Delay to unmask nSleep signals for Stand-By State */
+    /* Needs Delay to mask Nsleep1B and Nsleep2B signals for Stand-By State */
     Osal_delay(10U);
 
     status =  Pmic_fsmSetMissionState(pPmicCoreHandle, PMIC_FSM_STANBY_STATE);
@@ -2462,7 +2462,7 @@ static void test_pmic_rtc_testWakeup_AlarmIntr_lpStandbyState(void)
                                          PMIC_NSLEEPX_MASK);
      TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    /* Needs Delay to unmask nSleep signals for LP Stand-By State */
+    /* Needs Delay to mask Nsleep1B and Nsleep2B signals LP Stand-By State */
     Osal_delay(10U);
 
     status =  Pmic_fsmSetMissionState(pPmicCoreHandle, PMIC_FSM_STANBY_STATE);
@@ -2552,7 +2552,7 @@ static void test_pmic_rtc_testWakeup_AlarmIntr_standbyState(void)
                                          PMIC_NSLEEPX_MASK);
      TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    /* Needs Delay to unmask nSleep signals for Stand-By State */
+    /* Needs Delay to mask Nsleep1B and Nsleep2B signals for Stand-By State */
     Osal_delay(10U);
 
     status =  Pmic_fsmSetMissionState(pPmicCoreHandle, standByState);
@@ -2989,12 +2989,12 @@ static void test_pmic_rtc_testGetTimer_hera(void)
 
 
 /*!
- * \brief   Pmic_getRtcStatus : Negative test for RTC Get Status for hera
+ * \brief   Pmic_rtcGetRstStatus : Negative test for RTC Get Status for hera
  */
-static void test_pmic_rtc_testGetRtcStatus_running_hera(void)
+static void test_pmic_rtc_testGetRstStatus_running_hera(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_RtcStatus_t pmicRtcStatus = {0};
+    Pmic_RtcRstStatus_t pRtcRstStatus = {0};
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -3007,8 +3007,8 @@ static void test_pmic_rtc_testGetRtcStatus_running_hera(void)
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
-    pmicRtcStatus.validParams |= PMIC_RTC_CFG_RTC_STATUS_VALID_SHIFT;
-    status = Pmic_getRtcStatus(pPmicCoreHandle, &pmicRtcStatus);
+    pRtcRstStatus.validParams |= PMIC_RTC_RESET_STATUS_VALID_SHIFT;
+    status = Pmic_rtcGetRstStatus(pPmicCoreHandle, &pRtcRstStatus);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
 
     pmic_testResultUpdate_pass(7869,
@@ -3089,7 +3089,7 @@ static void test_pmic_rtc_coverageGaps(void)
     Pmic_RtcTime_t timeCfg_rd;
     Pmic_RtcDate_t dateCfg_rd;
 
-    Pmic_RtcStatus_t pmicRtcStatus = {0};
+    Pmic_RtcRstStatus_t pRtcRstStatus = {0};
 
     test_pmic_print_unity_testcase_info(8814,
                                         pmic_rtc_tests,
@@ -3628,8 +3628,8 @@ static void test_pmic_rtc_coverageGaps(void)
     status = Pmic_rtcGetTimeDateInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    pmicRtcStatus.validParams |= PMIC_RTC_CFG_POWERUP_STATUS_VALID_SHIFT;
-    status = Pmic_getRtcStatus(pPmicCoreHandle, &pmicRtcStatus);
+    pRtcRstStatus.validParams |= PMIC_RTC_POWERUP_STATUS_VALID_SHIFT;
+    status = Pmic_rtcGetRstStatus(pPmicCoreHandle, &pRtcRstStatus);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     Pmic_RtcTime_t timeCfg_test = {PMIC_RTC_VALID_PARAM_TIME_CFG_VAL, 30U, 30U, 6U,
@@ -3730,11 +3730,11 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_rtc_testAlarmIntr);
     RUN_TEST(test_pmic_rtc_enableTimerInterrupt_PrmValTest_handle);
     RUN_TEST(test_pmic_rtc_enableAlarmInterrupt_PrmValTest_handle);
-    RUN_TEST(test_pmic_rtc_testGetRtcStatus_running);
-    RUN_TEST(test_pmic_rtc_testGetRtcStatus_frozen);
-    RUN_TEST(test_pmic_rtc_getRtcStatus_PrmValTest_handle);
-    RUN_TEST(test_pmic_rtc_getRtcStatus_PrmValTest_rtcStatus);
-    RUN_TEST(test_pmic_rtc_getRtcStatus_PrmValTest_validParams);
+    RUN_TEST(test_pmic_rtc_testGetRstStatus_running);
+    RUN_TEST(test_pmic_rtc_testGetRstStatus_frozen);
+    RUN_TEST(test_pmic_rtc_getRstStatus_PrmValTest_handle);
+    RUN_TEST(test_pmic_rtc_getRstStatus_PrmValTest_rtcStatus);
+    RUN_TEST(test_pmic_rtc_getRstStatus_PrmValTest_validParams);
     RUN_TEST(test_pmic_rtc_testTimerAsyncIntr);
     RUN_TEST(test_pmic_rtc_testAlarmAsyncIntr);
     RUN_TEST(test_pmic_rtc_coverageGaps);
@@ -3763,7 +3763,7 @@ void test_pmic_hera_run_testcases(void)
     RUN_TEST(test_pmic_rtc_testSetAlarm_hera);
     RUN_TEST(test_pmic_rtc_testSetTimer_hera);
     RUN_TEST(test_pmic_rtc_testGetTimer_hera);
-    RUN_TEST(test_pmic_rtc_testGetRtcStatus_running_hera);
+    RUN_TEST(test_pmic_rtc_testGetRstStatus_running_hera);
     RUN_TEST(test_pmic_rtc_testGetTime_hera);
     RUN_TEST(test_pmic_rtc_testGetFreqComp_hera);
 
@@ -4089,11 +4089,11 @@ static void test_pmic_run_testcases_manual(uint32_t board)
             pmic_log("Read from UART Console failed\n");
             return;
         }
-        
+
         if(menuOption == 4)
         {
             break;
-        }   
+        }
 
         switch(menuOption)
         {
@@ -4196,7 +4196,7 @@ static void test_pmic_rtc_testapp_run_options(int8_t option)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
-#else 
+#else
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                 break;
@@ -4204,7 +4204,7 @@ static void test_pmic_rtc_testapp_run_options(int8_t option)
 #if defined(SOC_J721E)
                /* RTC Unity Test App wrapper Function for LEO PMIC-B */
                 pmic_log("RTC on LEO PMIC-B is not supported due to HW limitation\n");
-#else 
+#else
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                 break;
@@ -4225,7 +4225,7 @@ static void test_pmic_rtc_testapp_run_options(int8_t option)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
-#else 
+#else
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                 break;
@@ -4246,7 +4246,7 @@ static void test_pmic_rtc_testapp_run_options(int8_t option)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
-#else 
+#else
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                 break;
@@ -4267,7 +4267,7 @@ static void test_pmic_rtc_testapp_run_options(int8_t option)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
-#else 
+#else
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                 break;
@@ -4288,7 +4288,7 @@ static void test_pmic_rtc_testapp_run_options(int8_t option)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
-#else 
+#else
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                 break;

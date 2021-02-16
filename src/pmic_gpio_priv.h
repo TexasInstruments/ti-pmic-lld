@@ -322,6 +322,16 @@ extern "C" {
 /** \brief Max value for GPIO Pin Function */
 #define PMIC_GPIO_PINFUNC_MAX              (7U)
 
+/**
+ *  \anchor Pmic_GpioInterruptMask
+ *  \name   PMIC GPIO Interrupt Mask selection
+ *
+ *  @{
+ */
+#define PMIC_GPIO_INT_ENABLE               (0U)
+#define PMIC_GPIO_INT_MASK                 (1U)
+/*  @} */
+
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/

@@ -178,12 +178,12 @@ extern "C" {
 /*==========================================================================*/
 
 /*!
- * \brief   API to get PMIC GPIO NPWRON pin value.
+ * \brief   API to get PMIC GPIO NPWRON/Enable pin value.
  *
- * Requirement: REQ_TAG(PDK-5808)
+ * Requirement: REQ_TAG(PDK-9124)
  * Design: did_pmic_gpio_cfg_readback
  *
- *          This function is used to read the signal level of the NPWRON
+ *          This function is used to read the signal level of the NPWRON/Enable
  *          pin.
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle

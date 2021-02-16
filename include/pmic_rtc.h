@@ -141,13 +141,27 @@ extern "C" {
 /* @} */
 
 /**
+ *  \anchor Pmic_RtcResetStatus
+ *  \name PMIC RTC Reset Status
+ *
+ *  @{
+ */
+/** \brief RTC is restarted */
+#define PMIC_RTC_RST_STATUS_RESTARTED                  (0x0U)
+/** \brief RTC is not restarted */
+#define PMIC_RTC_RST_STATUS_NOT_RESTARTED              (0x1U)
+/* @} */
+
+/**
  *  \anchor Pmic_RtcPowerUpStatus
  *  \name PMIC RTC power-up Status
  *
  *  @{
  */
-#define PMIC_RTC_STATUS_POWERUP_UNSET                  (0x0U)
-#define PMIC_RTC_STATUS_POWERUP_SET                    (0x1U)
+ /** \brief RTC is restarted */
+#define PMIC_RTC_POWERUP_STATUS_NOT_RESTARTED                (0x0U)
+/** \brief RTC is not restarted */
+#define PMIC_RTC_POWERUP_STATUS_RESTARTED                    (0x1U)
 /* @} */
 
 /**
@@ -188,15 +202,58 @@ extern "C" {
 /* @} */
 
 /**
+ *  \anchor Pmic_RtcTimeDateRegSel
+ *  \name PMIC RTC Time Date Register Selection
+ *
+ *  @{
+ */
+/** \brief RTC register read from Dynamic registers */
+#define PMIC_RTC_Dynamic_REG_SEL                  (0x0U)
+/** \brief RTC register read from Static Shadowed registers */
+#define PMIC_RTC_STATIC_SHADOWED_REG_SEL          (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_RtcCrystalOscType
+ *  \name Selects PMIC RTC Crystal Oscillator Type
+ *
+ *  @{
+ */
+/** \brief Selects Crystal Oscillator type as 6PF */
+#define PMIC_RTC_CRYSTAL_OSC_TYPE_6PF                  (0x0U)
+/** \brief Selects Crystal Oscillator type as 9PF */
+#define PMIC_RTC_CRYSTAL_OSC_TYPE_9PF                  (0x1U)
+/** \brief Selects Crystal Oscillator type as 12.5PF */
+#define PMIC_RTC_CRYSTAL_OSC_TYPE_12_5PF               (0x2U)
+/* @} */
+
+/**
+ *  \anchor Pmic_RtcRstStatusType
+ *  \name Selects PMIC RTC Reset Status Type
+ *
+ *  @{
+ */
+/** \brief Selects RTC Reset Status */
+#define PMIC_RTC_RST_STATUS                  (0x0U)
+/** \brief Selects RTC Powerup Status */
+#define PMIC_RTC_POWERUP_STATUS              (0x1U)
+/* @} */
+
+/**
  *  \anchor Pmic_RtcTimeValidParamCfg
  *  \name PMIC RTC Time strcture Param Bit Positions
  *
  *  @{
  */
+ /** \brief validParams value used to set/get Value to represent the Seconds */
 #define PMIC_RTC_TIME_CFG_SEC_VALID       (0U)
+/** \brief validParams value used to set/get Value to represent the Minutes */
 #define PMIC_RTC_TIME_CFG_MIN_VALID       (1U)
+/** \brief validParams value used to set/get Value to represent the Hours */
 #define PMIC_RTC_TIME_CFG_HRS_VALID       (2U)
+/** \brief validParams value used to set/get  Time Mode */
 #define PMIC_RTC_TIME_CFG_TIMEMODE_VALID  (3U)
+/** \brief validParams value used to set/get Maridian Mode */
 #define PMIC_RTC_TIME_CFG_MERIDIAN_VALID  (4U)
 /* @} */
 
@@ -227,9 +284,14 @@ extern "C" {
  *
  *  @{
  */
+ /** \brief validParams value used to set/get Value to represent the day */
 #define PMIC_RTC_DATE_CFG_DAY_VALID       (0U)
+/** \brief validParams value used to set/get Value to represent the Month */
 #define PMIC_RTC_DATE_CFG_MONTH_VALID     (1U)
+/** \brief validParams value used to set/get Value to represent the Year*/
 #define PMIC_RTC_DATE_CFG_YEAR_VALID      (2U)
+/** \brief validParams value used to set/get Value to represent the weekday of
+ *         the week */
 #define PMIC_RTC_DATE_CFG_WEEKDAY_VALID   (3U)
 /* @} */
 
@@ -253,28 +315,75 @@ extern "C" {
 /* @} */
 
 /**
- *  \anchor Pmic_RtcStatusValidParamCfg
+ *  \anchor Pmic_RtcRstStatusValidParam
  *  \name PMIC RTC Status strcture Param Bit Positions
  *
  *  @{
  */
-#define PMIC_RTC_CFG_RTC_STATUS_VALID     (0U)
-#define PMIC_RTC_CFG_POWERUP_STATUS_VALID (1U)
+ /** \brief validParams value used to get reset status of RTC */
+#define PMIC_RTC_RESET_STATUS_VALID     (0U)
+/** \brief validParams value used to get power-up status of RTC */
+#define PMIC_RTC_POWERUP_STATUS_VALID   (1U)
 /* @} */
 
 /**
- *  \anchor Pmic_RtcStatusValidParamBits
+ *  \anchor Pmic_RtcRstStatusValidParamBits
  *  \name   PMIC RTC Status Structure Param Bit shift values
  *
  *  Application can use below shifted values to set the validParam
- *  member defined in Pmic_RtcStatus_t structure
+ *  member defined in Pmic_RtcRstStatus_t structure
  *
  *  @{
  */
-#define PMIC_RTC_CFG_RTC_STATUS_VALID_SHIFT     \
-                     (1U << PMIC_RTC_CFG_RTC_STATUS_VALID)
-#define PMIC_RTC_CFG_POWERUP_STATUS_VALID_SHIFT \
-                     (1U << PMIC_RTC_CFG_POWERUP_STATUS_VALID)
+#define PMIC_RTC_RESET_STATUS_VALID_SHIFT     \
+                     (1U << PMIC_RTC_RESET_STATUS_VALID)
+#define PMIC_RTC_POWERUP_STATUS_VALID_SHIFT \
+                     (1U << PMIC_RTC_POWERUP_STATUS_VALID)
+/* @} */
+
+/**
+ *  \anchor Pmic_RtcConfigValidParamCfg
+ *  \name PMIC RTC configuration strcture Param Bit Positions
+ *
+ *  @{
+ */
+/** \brief validParams value used to set/get to Enable/Disable to load 32K
+ *         counter with compensation values */
+#define PMIC_RTC_CFG_32K_COUNTER_VALID                    (0U)
+/** \brief validParams value used to set/get to Enable/Disable to round the time
+ *         to closest minute */
+#define PMIC_RTC_CFG_ROUND_30S_VALID                      (1U)
+/** \brief validParams value used to set/get to Enable/Disable Crystal
+ *         Oscillator  */
+#define PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID                 (2U)
+/** \brief validParams value used to set/get to Select RTC Time and Date
+ *         Register read from Dynamic or Static Shadowed Registers */
+#define PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID              (3U)
+/** \brief validParams value used to set/get to Select Crystal Oscillator Type
+ */
+#define PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID               (4U)
+/* @} */
+
+/**
+ *  \anchor Pmic_RtcConfigValidParamBits
+ *  \name   PMIC RTC Configuration Structure Param Bit shift values
+ *
+ *  Application can use below shifted values to set the validParam
+ *  member defined in Pmic_RtcCfg_t structure
+ *
+ *  @{
+ */
+
+#define PMIC_RTC_CFG_32K_COUNTER_VALID_SHIFT \
+                     (1U << PMIC_RTC_CFG_32K_COUNTER_VALID)
+#define PMIC_RTC_CFG_ROUND_30S_VALID_SHIFT     \
+                     (1U << PMIC_RTC_CFG_ROUND_30S_VALID)
+#define PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID_SHIFT     \
+                     (1U << PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID)
+#define PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID_SHIFT     \
+                     (1U << PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID)
+#define PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID_SHIFT     \
+                     (1U << PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID)
 /* @} */
 
 /*==========================================================================*/
@@ -356,31 +465,86 @@ typedef struct Pmic_RtcDate_s
 }Pmic_RtcDate_t;
 
 /*!
- *  \brief   RTC Live Status
- *           The Pmic_RtcStatus_s structure contains status of RTC and
+ *  \brief   RTC Reset Status
+ *           The Pmic_RtcRstStatus_s structure contains status of RTC Reset and
  *           power-up status.
+ *           Note: validParams is input param for all Get APIs. other params
+ *           except validParams is output param for Get APIs
  *
  *  \param   validParams        Validate params Bits.
  *                              Depending on the parameters want to get,
  *                              corresponding bits should be set in validParam.
- *  \param   rtcStatus          Value of current status of RTC.
- *                                Valid only when PMIC_RTC_CFG_RTC_STATUS_VALID
+ *                                  For Valid values
+ *                                         \ref Pmic_RtcRstStatusValidParam
+ *  \param   rtcRstStatus       Value of reset status of RTC.
+ *                                Valid only when PMIC_RTC_RESET_STATUS_VALID
  *                                bit of validParams is set.
  *                                  For valid values
- *                                      \ref Pmic_RtcStatus
+ *                                      \ref Pmic_RtcResetStatus
  *  \param   powerupStatus      Value of power-up status of RTC.
- *                                Valid only when
- *                                PMIC_RTC_CFG_POWERUP_STATUS_VALID
+ *                                Valid only when PMIC_RTC_POWERUP_STATUS_VALID
  *                                bit of validParams is set.
  *                                  For valid values
  *                                      \ref Pmic_RtcPowerUpStatus
  */
-typedef struct Pmic_RtcStatus_s
+typedef struct Pmic_RtcRstStatus_s
 {
     uint32_t validParams;
-    bool     rtcStatus;
+    bool     rtcRstStatus;
     bool     powerupStatus;
-}Pmic_RtcStatus_t;
+}Pmic_RtcRstStatus_t;
+
+/*!
+ *  \brief   RTC configuration
+ *           The Pmic_RtcRstStatus_s structure contains status of RTC Reset and
+ *           power-up status.
+ *           Note: validParams is input param for all Set and Get APIs. other
+ *           params except validParams is input param for Set APIs and output
+ *           param for Get APIs
+ *
+ *  \param   validParams         Validate params Bits.
+ *                               Depending on the parameters want to get,
+ *                               corresponding bits should be set in validParam.
+ *                                  For Valid values
+ *                                         \ref Pmic_RtcConfigValidParamCfg
+ *  \param   config32KcounterEn   Enable/Disable to load 32K counter with
+ *                                compensation values. Application can configure
+ *                                this only when RTC is frozen
+ *                                Valid only when
+ *                                PMIC_RTC_CFG_32K_COUNTER_VALID
+ *                                bit of validParams is set.
+ *  \param   round30sEn           Enable/Disable to round the time to closest
+ *                                minute
+ *                                Valid only when
+ *                                PMIC_RTC_CFG_ROUND_30S_VALID
+ *                                bit of validParams is set.
+ *  \param   crystalOScEn         Enable/Disable Crystal Oscillator
+ *                                Valid only when
+ *                                PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID
+ *                                bit of validParams is set.
+ *  \param   timeDateRegSel       Select RTC Time and Date Register read from
+ *                                Dynamic or Static Shadowed Registers.
+ *                                Valid only when
+ *                                PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID
+ *                                bit of validParams is set.
+ *                                  For valid values
+ *                                      \ref Pmic_RtcTimeDateRegSel
+ *  \param   crystalOScType       Select Crystal Oscillator Type
+ *                                Valid only when
+ *                                PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID
+ *                                bit of validParams is set.
+ *                                  For valid values
+ *                                      \ref Pmic_RtcCrystalOscType
+ */
+typedef struct Pmic_RtcCfg_s
+{
+    uint32_t    validParams;
+    bool        config32KcounterEn;
+    bool        round30sEn;
+    bool        crystalOScEn;
+    uint8_t     timeDateRegSel;
+    uint8_t     crystalOScType;
+}Pmic_RtcCfg_t;
 
 /*==========================================================================*/
 /*                         Function Declarations                            */
@@ -561,7 +725,26 @@ int32_t  Pmic_rtcGetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t  Pmic_rtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
-                        bool               enableRtc);
+                        const bool         enableRtc);
+
+/*!
+ * \brief   API to read RTC status which defines RTC is started or not
+ *
+ * Requirement: REQ_TAG(PDK-9155)
+ * Design: did_pmic_rtc_status
+ *
+ *          This function is read RTC status which defines RTC is started or not
+ *
+ * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
+ * \param   pRtcstatus         [IN]   Pointer to store the RTC status which
+ *                                    defines  RTC is started or not
+ *                                        Valid values: \ref Pmic_RtcState
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t  Pmic_rtcGetStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
+                           bool              *pRtcstatus);
 
 /*!
  * \brief   API to Enable/Disable the RTC Timer Interrupt.
@@ -581,7 +764,7 @@ int32_t  Pmic_rtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t  Pmic_rtcEnableTimerIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                 bool               enableIntr);
+                                 const bool         enableIntr);
 
 /*!
  * \brief   API to Enable/Disable the RTC Alarm Interrupt.
@@ -601,26 +784,84 @@ int32_t  Pmic_rtcEnableTimerIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t  Pmic_rtcEnableAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                 bool               enableIntr);
+                                 const bool         enableIntr);
 
 /*!
- * \brief   API to Get the current status of RTC.
+ * \brief   API to Get the Reset status of RTC.
  *
- * Requirement: REQ_TAG(PDK-5855)
- * Design: did_pmic_rtc_cfg_readback
+ * Requirement: REQ_TAG(PDK-9145)
+ * Design: did_pmic_rtc_rst_status
  *
- *          This function is used to get the Current state of the RTC
+ *          This function is used to get the Reset status of the RTC
  *          depending on the bit fields set in validParams of
- *          struct Pmic_RtcStatus_t structures.
+ *          struct Pmic_RtcRstStatus_t structures.
  *
- * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * \param   pPmicRtcStatus    [OUT]   Parameter to hold RTC status.
+ * \param   pPmicCoreHandle   [IN]       PMIC Interface Handle.
+ * \param   pRtcRstStatus     [IN/OUT]   Pointer to hold RTC Reset status.
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t  Pmic_getRtcStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
-                           Pmic_RtcStatus_t  *pPmicRtcStatus);
+int32_t  Pmic_rtcGetRstStatus(Pmic_CoreHandle_t    *pPmicCoreHandle,
+                              Pmic_RtcRstStatus_t  *pRtcRstStatus);
+
+/*!
+ * \brief   API to clear the Reset status of RTC.
+ *
+ * Requirement: REQ_TAG(PDK-9141)
+ * Design: did_pmic_rtc_clr_rst_status
+ *
+ *          This function is used to clear the Reset status of the RTC
+ *          depending on the Pmic_RtcRstStatusType
+ *
+ * \param   pPmicCoreHandle   [IN]   PMIC Interface Handle.
+ * \param   rtcRstStatType    [IN]   RTC Reset Status Type
+ *                                   For Valid values:
+ *                                        \ref Pmic_RtcRstStatusType
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t  Pmic_rtcClrRstStatus(Pmic_CoreHandle_t    *pPmicCoreHandle,
+                              const uint8_t         rtcRstStatType);
+
+/*!
+ * \brief   API to Set PMIC RTC Configuration
+ *
+ * Requirement: REQ_TAG(PDK-9141), REQ_TAG(PDK-9135)
+ * Design: did_pmic_rtc_cfg_readback
+ *
+ *          This function is used to set RTC configuration depending upon the
+ *          bit fields set in validParams of Pmic_RtcCfg_t structure.
+ *
+ * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
+ * \param   rtcCfg            [IN]    Set required RTC configuration
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
+ *          For valid values \ref Pmic_ErrorCodes.
+ */
+int32_t  Pmic_rtcSetConfiguration(Pmic_CoreHandle_t    *pPmicCoreHandle,
+                                  const Pmic_RtcCfg_t   rtcCfg);
+
+/*!
+ * \brief   API to Get PMIC RTC Configuration
+ *
+ * Requirement: REQ_TAG(PDK-9141), REQ_TAG(PDK-9135)
+ * Design: did_pmic_rtc_cfg_readback
+ *
+ *          This function is used to Get RTC configuration depending upon the
+ *          bit fields set in validParams of Pmic_RtcCfg_t structure.
+ *
+ * \param   pPmicCoreHandle   [IN]       PMIC Interface Handle.
+ * \param   pRtcCfg           [IN/OUT]   Pointer to store required RTC
+ *                                       configuration
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
+ *          For valid values \ref Pmic_ErrorCodes.
+ */
+int32_t  Pmic_rtcGetConfiguration(Pmic_CoreHandle_t    *pPmicCoreHandle,
+                                  Pmic_RtcCfg_t        *pRtcCfg);
+
 
 #ifdef __cplusplus
 }

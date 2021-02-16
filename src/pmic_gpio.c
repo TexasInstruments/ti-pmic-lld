@@ -1009,7 +1009,7 @@ static int32_t Pmic_gpioIntrEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
     if(PMIC_ST_SUCCESS == status)
     {
         /* Configuring GPIO MASK Registers */
-        status = Pmic_irqGpioMaskIntr(pPmicCoreHandle, 
+        status = Pmic_irqGpioMaskIntr(pPmicCoreHandle,
                                       pin,
                                       PMIC_IRQ_UNMASK,
                                       intrType);
@@ -1058,7 +1058,7 @@ static int32_t Pmic_gpioIntrDisable(Pmic_CoreHandle_t *pPmicCoreHandle,
     if(PMIC_ST_SUCCESS == status)
     {
         /* Masking the GPIO MASK Register */
-        status = Pmic_irqGpioMaskIntr(pPmicCoreHandle, 
+        status = Pmic_irqGpioMaskIntr(pPmicCoreHandle,
                                       pin,
                                       PMIC_IRQ_MASK,
                                       PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
@@ -1196,14 +1196,14 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
  *          This function is used to read the configuration for the specified
  *          GPIO pin when corresponding bit field is set.
  *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
- * \param   pin             [IN]    PMIC GPIO pin number.
- *                                   Valid values for TPS6594x Leo Device
- *                                   \ref Pmic_Tps6594xLeo_GpioPin.
- *                                   Valid values for LP8764x HERA Device
- *                                   \ref Pmic_Lp8764xHera_GpioPin.
- * \param   pGpioCfg        [OUT]   Pointer to store specified GPIO pin
- *                                  configuration
+ * \param   pPmicCoreHandle [IN]     PMIC Interface Handle
+ * \param   pin             [IN]     PMIC GPIO pin number.
+ *                                    Valid values for TPS6594x Leo Device
+ *                                    \ref Pmic_Tps6594xLeo_GpioPin.
+ *                                    Valid values for LP8764x HERA Device
+ *                                    \ref Pmic_Lp8764xHera_GpioPin.
+ * \param   pGpioCfg        [IN/OUT] Pointer to store specified GPIO pin
+ *                                   configuration
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
@@ -1635,9 +1635,9 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
  *          NPWRON OR ENABLE pin when corresponding bit field is set.
  *          NPWRON is valid only for TPS6594x Leo Device
  *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
- * \param   pGpioCfg        [OUT]   Pointer to store NPWRON OR ENABLE GPIO pin
- *                                  configuration
+ * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
+ * \param   pGpioCfg        [IN/OUT]   Pointer to store NPWRON OR ENABLE GPIO
+ *                                     pin configuration
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes

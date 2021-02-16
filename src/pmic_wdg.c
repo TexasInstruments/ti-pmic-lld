@@ -1188,8 +1188,8 @@ int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t   *pPmicCoreHandle,
  *          Pmic_WdgCfg_t structure.
  *          User has to call Pmic_wdgEnable() before get the configuration.
  *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
- * \param   pWdgCf          [OUT]   Watchdog configuration pointer
+ * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
+ * \param   pWdgCfg         [IN/OUT]   Watchdog configuration pointer
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
@@ -1467,8 +1467,8 @@ int32_t Pmic_wdgStartQaSequence(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          Pmic_WdgErrStatus_t structure.
  *          User has to call Pmic_wdgEnable() before getting the error status.
  *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
- * \param   pErrStatus      [OUT]   Watchdog error status pointer
+ * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
+ * \param   pErrStatus      [IN/OUT]   Watchdog error status pointer
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes

@@ -133,8 +133,8 @@ void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *pPmicCoreHandle)
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_SetRecoveryCntCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                               Pmic_RecovCntCfg_t  recovCntCfg)
+int32_t Pmic_setRecoveryCntCfg(Pmic_CoreHandle_t        *pPmicCoreHandle,
+                               const Pmic_RecovCntCfg_t  recovCntCfg)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t  regVal;
@@ -217,9 +217,9 @@ int32_t Pmic_SetRecoveryCntCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
  *         bit field is set in the Pmic_RecovCntCfg_t structure.
  *         For more information \ref Pmic_RecovCntCfg_t
  *
- * \param   pPmicCoreHandle       [IN]    PMIC Interface Handle.
- * \param   pRecovCntCfg          [OUT]   Pointer to store recovery counter
- *                                        configuration value
+ * \param   pPmicCoreHandle       [IN]       PMIC Interface Handle.
+ * \param   pRecovCntCfg          [IN/OUT]   Pointer to store recovery counter
+ *                                           configuration value
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
@@ -426,14 +426,6 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
         {
             pPmicCoreHandle->qaSlaveAddr = pPmicConfigData->qaSlaveAddr;
         }
-    }
-
-    /* Check and update PMIC Handle CRC Enable */
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams,
-                                     PMIC_CFG_CRC_ENABLE_VALID)))
-    {
-        pPmicCoreHandle->crcEnable = pPmicConfigData->crcEnable;
     }
 
     /* Check and update PMIC Handle Main Comm Handle */
@@ -701,8 +693,8 @@ static int32_t Pmic_getScratchPadRegAddr(uint8_t  scratchPadRegId,
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_setScratchPadValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                uint8_t            scratchPadRegId,
-                                uint8_t            data)
+                                const uint8_t      scratchPadRegId,
+                                const uint8_t      data)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regAddr;
@@ -751,8 +743,8 @@ int32_t Pmic_setScratchPadValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_getScratchPadValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                uint8_t            scratchPadRegId,
-                                uint8_t            *pData)
+                                const uint8_t      scratchPadRegId,
+                                uint8_t           *pData)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regAddr;

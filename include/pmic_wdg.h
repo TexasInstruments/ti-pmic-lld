@@ -207,17 +207,32 @@ extern "C" {
  *
  *  @{
  */
+  /** \brief validParams value used to set/get Long Window duration */
 #define PMIC_CFG_WDG_LONGWINDURATION_VALID   (0U)
+/** \brief validParams value used to set/get Window-1 duration */
 #define PMIC_CFG_WDG_WIN1DURATION_VALID      (1U)
+/** \brief validParams value used to set/get Window-2 duration */
 #define PMIC_CFG_WDG_WIN2DURATION_VALID      (2U)
+/** \brief validParams value used to set/get Fail threshold value */
 #define PMIC_CFG_WDG_FAILTHRESHOLD_VALID     (3U)
+/** \brief validParams value used to set/get Reset threshold Value */
 #define PMIC_CFG_WDG_RSTTHRESHOLD_VALID      (4U)
+/** \brief validParams value used to set/get to enable or diable warm reset on
+ *         fail */
 #define PMIC_CFG_WDG_RSTENABLE_VALID         (5U)
+/** \brief validParams value used to set/get watchdog mode */
 #define PMIC_CFG_WDG_WDGMODE_VALID           (6U)
+/** \brief validParams value used to set/get to Enable or disable  watchdog
+ *         pwrHold */
 #define PMIC_CFG_WDG_PWRHOLD_VALID           (7U)
+/** \brief validParams value used to set/get to enable or disable return to long
+ *         window */
 #define PMIC_CFG_WDG_RETLONGWIN_VALID        (8U)
+/** \brief validParams value used to set/get QA feed back value */
 #define PMIC_CFG_WDG_QA_FDBK_VALID           (9U)
+/** \brief validParams value used to set/get QA LFSR value */
 #define PMIC_CFG_WDG_QA_LFSR_VALID           (10U)
+/** \brief validParams value used to set/get QA question seed value */
 #define PMIC_CFG_WDG_QA_QUES_SEED_VALID      (11U)
 /* @} */
 
@@ -267,13 +282,23 @@ extern "C" {
  *
  *  @{
  */
+ /** \brief validParams value used to get Long Window timeout error status */
 #define PMIC_CFG_WD_LONGWIN_TIMEOUT_ERRSTAT_VALID     (0U)
+/** \brief validParams value used to get Window1 and window2 timeout error
+ *         status */
 #define PMIC_CFG_WD_TIMEOUT_ERRSTAT_VALID             (1U)
+/** \brief validParams value used to get Watchdog trigger mode error status */
 #define PMIC_CFG_WD_TRIG_EARLY_ERRSTAT_VALID          (2U)
+/** \brief validParams value used to get Watchdog early answer error status */
 #define PMIC_CFG_WD_ANSW_EARLY_ERRSTAT_VALID          (3U)
+/** \brief validParams value used to get Watchdog QA sequence error status */
 #define PMIC_CFG_WD_SEQ_ERR_ERRSTAT_VALID             (4U)
+/** \brief validParams value used to get Watchdog QA wrong Answer error status
+ */
 #define PMIC_CFG_WD_ANSW_ERR_ERRSTAT_VALID            (5U)
+/** \brief validParams value used to get Watchdog fail error status */
 #define PMIC_CFG_WD_FAIL_INT_ERRSTAT_VALID            (6U)
+/** \brief validParams value used to get Watchdog reset error status */
 #define PMIC_CFG_WD_RST_INT_ERRSTAT_VALID             (7U)
 /* @} */
 
@@ -314,7 +339,10 @@ extern "C" {
 /* ========================================================================== */
 
 /*!
- * \brief   PMIC Watchdog configuration structure
+ * \brief    PMIC Watchdog configuration structure
+ *           Note: validParams is input param for all Set and Get APIs. other
+ *           params except validParams is input param for Set APIs and output
+ *           param for Get APIs
  *
  * \param   validParams         Selection of structure parameters to be
  *                              set from the combination of the
@@ -388,7 +416,9 @@ typedef struct Pmic_WdgCfg_s
 }Pmic_WdgCfg_t;
 
 /*!
- * \brief   PMIC Watchdog error status structure
+ * \brief    PMIC Watchdog error status structure
+ *           Note: validParams is input param for all Get APIs. other params
+ *           except validParams is output param for Get APIs
  *
  * \param   validParams         Selection of structure parameters to be
  *                              set from the combination of the
@@ -487,8 +517,8 @@ int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t   *pPmicCoreHandle,
  *          Pmic_WdgCfg_t structure.
  *          User has to call Pmic_wdgEnable() before get the configuration.
  *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
- * \param   pWdgCfg         [OUT]   Watchdog configuration pointer
+ * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
+ * \param   pWdgCfg         [IN/OUT]   Watchdog configuration pointer
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
@@ -541,13 +571,13 @@ int32_t Pmic_wdgStartQaSequence(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          Pmic_WdgErrStatus_t structure.
  *          User has to call Pmic_wdgEnable() before getting the error status.
  *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
- * \param   pErrStatus      [OUT]   Watchdog error status pointer
+ * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
+ * \param   pErrStatus      [IN/OUT]   Watchdog error status pointer
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
+int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t   *pPmicCoreHandle,
                                Pmic_WdgErrStatus_t *pErrStatus);
 
 /*!
@@ -567,7 +597,7 @@ int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_wdgGetFailCount(Pmic_CoreHandle_t *pPmicCoreHandle,
-                             uint8_t    *pFailCount);
+                             uint8_t           *pFailCount);
 
 /*!
  * \brief   API to Start watchdog Trigger mode.

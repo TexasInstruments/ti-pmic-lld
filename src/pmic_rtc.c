@@ -2483,7 +2483,7 @@ int32_t  Pmic_rtcGetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t  Pmic_rtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
-                        bool               enableRtc)
+                        const bool         enableRtc)
 {
     int32_t  pmicStatus  = PMIC_ST_SUCCESS;
 
@@ -2524,7 +2524,7 @@ int32_t  Pmic_rtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t  Pmic_rtcEnableAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                 bool               enableIntr)
+                                 const bool         enableIntr)
 {
     int32_t  pmicStatus  = PMIC_ST_SUCCESS;
     /* Flag to define Critical section started or not */
@@ -2567,7 +2567,7 @@ int32_t  Pmic_rtcEnableAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t  Pmic_rtcEnableTimerIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                 bool               enableIntr)
+                                 const bool         enableIntr)
 {
     int32_t  pmicStatus  = PMIC_ST_SUCCESS;
 
@@ -2592,23 +2592,23 @@ int32_t  Pmic_rtcEnableTimerIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /*!
- * \brief   API to Get the current status of RTC.
+ * \brief   API to Get the Reset status of RTC.
  *
- * Requirement: REQ_TAG(PDK-5855)
- * Design: did_pmic_rtc_cfg_readback
+ * Requirement: REQ_TAG(PDK-9145)
+ * Design: did_pmic_rtc_rst_status
  *
- *          This function is used to get the Current state of the RTC
+ *          This function is used to get the Reset status of the RTC
  *          depending on the bit fields set in validParams of
- *          struct Pmic_RtcStatus_t structures.
+ *          struct Pmic_RtcRstStatus_t structures.
  *
- * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * \param   pPmicRtcStatus    [OUT]   Parameter to hold RTC status.
+ * \param   pPmicCoreHandle   [IN]       PMIC Interface Handle.
+ * \param   pRtcRstStatus     [IN/OUT]   Pointer to hold RTC Reset status.
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t  Pmic_getRtcStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
-                           Pmic_RtcStatus_t  *pPmicRtcStatus)
+int32_t  Pmic_rtcGetRstStatus(Pmic_CoreHandle_t    *pPmicCoreHandle,
+                              Pmic_RtcRstStatus_t  *pRtcRstStatus)
 {
     int32_t  pmicStatus  = PMIC_ST_SUCCESS;
     uint8_t  regData     = 0U;
@@ -2624,12 +2624,12 @@ int32_t  Pmic_getRtcStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
         pmicStatus = PMIC_ST_ERR_INV_DEVICE;
     }
 
-    if((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pPmicRtcStatus))
+    if((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pRtcRstStatus))
     {
          pmicStatus = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if((PMIC_ST_SUCCESS == pmicStatus) && (0U == pPmicRtcStatus->validParams))
+    if((PMIC_ST_SUCCESS == pmicStatus) && (0U == pRtcRstStatus->validParams))
     {
          pmicStatus = PMIC_ST_ERR_INSUFFICIENT_CFG;
     }
@@ -2650,34 +2650,34 @@ int32_t  Pmic_getRtcStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         /* Get RTC Status */
-        if((bool)false != (pmic_validParamCheck(pPmicRtcStatus->validParams,
-                                                PMIC_RTC_CFG_RTC_STATUS_VALID)))
+        if((bool)false != (pmic_validParamCheck(pRtcRstStatus->validParams,
+                                                PMIC_RTC_RESET_STATUS_VALID)))
         {
             if(Pmic_getBitField(regData,
                                 PMIC_RTC_STATUS_RUN_SHIFT,
                                 PMIC_RTC_STATUS_RUN_MASK) == 0U)
             {
-                pPmicRtcStatus->rtcStatus = (bool)false;
+                pRtcRstStatus->rtcRstStatus = (bool)false;
             }
             else
             {
-                pPmicRtcStatus->rtcStatus = (bool)true;
+                pRtcRstStatus->rtcRstStatus = (bool)true;
             }
         }
 
         /* Get RTC POWER-UP status */
-        if((bool)false != (pmic_validParamCheck(pPmicRtcStatus->validParams,
-                                            PMIC_RTC_CFG_POWERUP_STATUS_VALID)))
+        if((bool)false != (pmic_validParamCheck(pRtcRstStatus->validParams,
+                                            PMIC_RTC_POWERUP_STATUS_VALID)))
         {
             if(Pmic_getBitField(regData,
                                 PMIC_RTC_STATUS_POWER_UP_SHIFT,
                                 PMIC_RTC_STATUS_POWER_UP_MASK) == 0U)
             {
-                pPmicRtcStatus->powerupStatus = (bool)false;
+                pRtcRstStatus->powerupStatus = (bool)false;
             }
             else
             {
-                pPmicRtcStatus->powerupStatus = (bool)true;
+                pRtcRstStatus->powerupStatus = (bool)true;
             }
         }
     }

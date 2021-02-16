@@ -763,7 +763,7 @@ static int32_t Pmic_esmGetDelay2Value(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /*!
- * \brief   This function is used to Get the configured ESM Error count 
+ * \brief   This function is used to Get the configured ESM Error count
  *          threshold value
  */
 static int32_t Pmic_esmGetErrCntThrValue(Pmic_CoreHandle_t *pPmicCoreHandle,
@@ -1170,7 +1170,7 @@ int32_t Pmic_esmGetEnableState(Pmic_CoreHandle_t   *pPmicCoreHandle,
         /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
 
-        if((PMIC_ST_SUCCESS == pmicStatus) && 
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
            (Pmic_getBitField(regData,
                              PMIC_ESM_X_MODE_CFG_ESM_X_EN_SHIFT,
                              PMIC_ESM_X_MODE_CFG_ESM_X_EN_MASK)
@@ -1332,16 +1332,16 @@ int32_t Pmic_esmSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
  * Requirement: REQ_TAG(PDK-5833)
  * Design: did_pmic_esm_cfg_readback
  *
- *          This function is used to get the configured ESM mode, delay-1 and 
+ *          This function is used to get the configured ESM mode, delay-1 and
  *          delay-2 time time intervals, Error Count Threshold value, HMAX,
  *          HMIN, LMAX, LMIN and select EN DRV clear for ESM_MCU and ESM_SOC.
  *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- * \param   esmType         [IN]    PMIC ESM Type.
- *                                  For valid values:
- *                                  \ref Pmic_EsmTypes.
- * \param   pEsmCfg         [OUT]   Pointer to store the specified ESM
- *                                  configuration.
+ * \param   pPmicCoreHandle [IN]       PMIC Interface Handle.
+ * \param   esmType         [IN]       PMIC ESM Type.
+ *                                     For valid values:
+ *                                     \ref Pmic_EsmTypes.
+ * \param   pEsmCfg         [IN/OUT]   Pointer to store the specified ESM
+ *                                     configuration.
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values: \ref Pmic_ErrorCodes
@@ -1467,7 +1467,7 @@ int32_t Pmic_esmGetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
  * Requirement: REQ_TAG(PDK-5833)
  * Design: did_pmic_esm_cfg_readback
  *
- *          This function is used to mask/unmask the ESM RST, FAIL and 
+ *          This function is used to mask/unmask the ESM RST, FAIL and
  *          PIN Interrupts for both ESM MCU and ESM SOC.
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.

@@ -865,7 +865,7 @@ static void test_pmic_rtc_testWakeup_TimerIntr_lpStandbyState(void)
                                          PMIC_NSLEEPX_MASK);
      TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    /* Needs Delay to unmask nSleep signals for LP Stand-By State */
+    /* Needs Delay to mask Nsleep1B and Nsleep2B signals for LP Stand-By State */
     Osal_delay(10U);
 
     status =  Pmic_fsmSetMissionState(pPmicCoreHandle, PMIC_FSM_LP_STANBY_STATE);
@@ -1112,7 +1112,7 @@ static void test_pmic_stress_testapp_run_options(int8_t option)
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
                 }
-#else 
+#else
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                 break;

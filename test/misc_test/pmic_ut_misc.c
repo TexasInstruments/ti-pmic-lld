@@ -54,23 +54,23 @@ static Pmic_Ut_Tests_t pmic_misc_tests[] =
      */
     {
         7628,
-        "Pmic_SetRecoveryCntCfg : Test Set Recovery Counter Threshold."
+        "Pmic_setRecoveryCntCfg : Test Set Recovery Counter Threshold."
     },
     {
         7629,
-        "Pmic_SetRecoveryCntCfg : Parameter validation for thrVal."
+        "Pmic_setRecoveryCntCfg : Parameter validation for thrVal."
     },
     {
         7630,
-        "Pmic_SetRecoveryCntCfg : Test Set Clear Recovery Counter."
+        "Pmic_setRecoveryCntCfg : Test Set Clear Recovery Counter."
     },
     {
         7631,
-        "Pmic_SetRecoveryCntCfg : Parameter validation for clrCnt."
+        "Pmic_setRecoveryCntCfg : Parameter validation for clrCnt."
     },
     {
         7632,
-        "Pmic_SetRecoveryCntCfg : Parameter validation for handle."
+        "Pmic_setRecoveryCntCfg : Parameter validation for handle."
     },
     {
         7633,
@@ -219,7 +219,7 @@ static void test_Pmic_Enable_interrupt(void)
 }
 
 /*!
- * \brief   Pmic_SetRecoveryCntCfg : Test Set Recovery Counter Threshold.
+ * \brief   Pmic_setRecoveryCntCfg : Test Set Recovery Counter Threshold.
  */
 static void test_pmic_SetRecoveryCntCfg_threshold(void)
 {
@@ -235,7 +235,7 @@ static void test_pmic_SetRecoveryCntCfg_threshold(void)
                                         pmic_misc_tests,
                                         PMIC_MISC_NUM_OF_TESTCASES);
 
-    status = Pmic_SetRecoveryCntCfg(pPmicCoreHandle, recovCntCfg);
+    status = Pmic_setRecoveryCntCfg(pPmicCoreHandle, recovCntCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     status = Pmic_getRecoveryCntCfg(pPmicCoreHandle, &recovCntCfg_rd);
@@ -249,7 +249,7 @@ static void test_pmic_SetRecoveryCntCfg_threshold(void)
 }
 
 /*!
- * \brief   Pmic_SetRecoveryCntCfg : Parameter validation for thrVal.
+ * \brief   Pmic_setRecoveryCntCfg : Parameter validation for thrVal.
  */
 static void test_pmic_SetRecoveryCntCfgPrmValTest_thrVal(void)
 {
@@ -263,7 +263,7 @@ static void test_pmic_SetRecoveryCntCfgPrmValTest_thrVal(void)
                                         pmic_misc_tests,
                                         PMIC_MISC_NUM_OF_TESTCASES);
 
-    status = Pmic_SetRecoveryCntCfg(pPmicCoreHandle, recovCntCfg);
+    status = Pmic_setRecoveryCntCfg(pPmicCoreHandle, recovCntCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 
     pmic_testResultUpdate_pass(7629,
@@ -272,7 +272,7 @@ static void test_pmic_SetRecoveryCntCfgPrmValTest_thrVal(void)
 }
 
 /*!
- * \brief   Pmic_SetRecoveryCntCfg : Test Set Clear Recovery Counter.
+ * \brief   Pmic_setRecoveryCntCfg : Test Set Clear Recovery Counter.
  */
 static void test_pmic_SetRecoveryCntCfg_clrCnt(void)
 {
@@ -286,7 +286,7 @@ static void test_pmic_SetRecoveryCntCfg_clrCnt(void)
                                         pmic_misc_tests,
                                         PMIC_MISC_NUM_OF_TESTCASES);
 
-    status = Pmic_SetRecoveryCntCfg(pPmicCoreHandle, recovCntCfg);
+    status = Pmic_setRecoveryCntCfg(pPmicCoreHandle, recovCntCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     pmic_testResultUpdate_pass(7630,
@@ -295,7 +295,7 @@ static void test_pmic_SetRecoveryCntCfg_clrCnt(void)
 }
 
 /*!
- * \brief   Pmic_SetRecoveryCntCfg : Parameter validation for clrCnt.
+ * \brief   Pmic_setRecoveryCntCfg : Parameter validation for clrCnt.
  */
 static void test_pmic_SetRecoveryCntCfgPrmValTest_clrCnt(void)
 {
@@ -309,7 +309,7 @@ static void test_pmic_SetRecoveryCntCfgPrmValTest_clrCnt(void)
                                         pmic_misc_tests,
                                         PMIC_MISC_NUM_OF_TESTCASES);
 
-    status = Pmic_SetRecoveryCntCfg(pPmicCoreHandle, recovCntCfg);
+    status = Pmic_setRecoveryCntCfg(pPmicCoreHandle, recovCntCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 
     pmic_testResultUpdate_pass(7631,
@@ -318,7 +318,7 @@ static void test_pmic_SetRecoveryCntCfgPrmValTest_clrCnt(void)
 }
 
 /*!
- * \brief   Pmic_SetRecoveryCntCfg : Parameter validation for handle.
+ * \brief   Pmic_setRecoveryCntCfg : Parameter validation for handle.
  */
 static void test_pmic_SetRecoveryCntCfgPrmValTest_handle(void)
 {
@@ -331,7 +331,7 @@ static void test_pmic_SetRecoveryCntCfgPrmValTest_handle(void)
                                         pmic_misc_tests,
                                         PMIC_MISC_NUM_OF_TESTCASES);
 
-    status = Pmic_SetRecoveryCntCfg(NULL, recovCntCfg);
+    status = Pmic_setRecoveryCntCfg(NULL, recovCntCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
 
     pmic_testResultUpdate_pass(7632,

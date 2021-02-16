@@ -77,6 +77,12 @@ extern "C" {
  */
 #define PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_0_SHIFT    (0x0U)
 #define PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_1_SHIFT    (0x1U)
+#define PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_2_SHIFT    (0x2U)
+#define PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_3_SHIFT    (0x3U)
+#define PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_4_SHIFT    (0x4U)
+#define PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_5_SHIFT    (0x5U)
+#define PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_6_SHIFT    (0x6U)
+#define PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_7_SHIFT    (0x7U)
 
 /*!
  * \brief   PMIC FSM NSLEEP1/2 Register Bit Fields
@@ -100,17 +106,6 @@ extern "C" {
 #define PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B_SHIFT    (0x1U)
 
 /*!
- * \brief  Used to create PFSM trigger pulse for I2C0/I2C1
- */
-#define PMIC_FSM_I2C_TRIGGER_VAL            (1U)
-
-/*!
- * \brief   PMIC FSM I2C Triggers
- */
-#define PMIC_FSM_I2C_TRIGGER0                     (0x0U)
-#define PMIC_FSM_I2C_TRIGGER1                     (0x1U)
-
-/*!
  * \brief   PMIC MISC Control Register Bit Mask
  */
 #define PMIC_FSM_MISC_CTRL_LPM_EN_MASK              ((uint8_t)  \
@@ -123,7 +118,18 @@ extern "C" {
                            (0x01U << PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_0_SHIFT))
 #define PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_1_MASK    ((uint8_t)  \
                            (0x01U << PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_1_SHIFT))
-
+#define PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_2_MASK    ((uint8_t)  \
+                           (0x01U << PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_2_SHIFT))
+#define PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_3_MASK    ((uint8_t)  \
+                           (0x01U << PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_3_SHIFT))
+#define PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_4_MASK    ((uint8_t)  \
+                           (0x01U << PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_4_SHIFT))
+#define PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_5_MASK    ((uint8_t)  \
+                           (0x01U << PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_5_SHIFT))
+#define PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_6_MASK    ((uint8_t)  \
+                           (0x01U << PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_6_SHIFT))
+#define PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_7_MASK    ((uint8_t)  \
+                           (0x01U << PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_7_SHIFT))
 /*!
  * \brief   PMIC FSM NSLEEP TRIGGER Register Bit Mask
  */
@@ -131,6 +137,24 @@ extern "C" {
                             (0x01U << PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B_SHIFT))
 #define PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B_MASK  ((uint8_t)  \
                             (0x01U << PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B_SHIFT))
+
+/**
+ *  \anchor Pmic_Fsm_Pfsm_Delay_Step_Max
+ *  \name   Maximum limit of PFSM Delay Step
+ *
+ *  @{
+ */
+#define PMIC_FSM_PFSM_DELAY_STEP_MAX       (31U)
+/* @} */
+
+/**
+ *  \anchor Pmic_Fsm_Pfsm_Delay_Max
+ *  \name   Maximum limit of PFSM Delay
+ *
+ *  @{
+ */
+#define PMIC_FSM_PFSM_DELAY_MAX            (255U)
+/* @} */
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */

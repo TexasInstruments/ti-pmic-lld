@@ -83,7 +83,7 @@ extern "C" {
 #define PMIC_LP8764X_EN_DRV_READBACK_INT            (7U)
 
 /*! PMIC I2C2 ADDRESS ERROR Interrupt */
-#define PMIC_LP8764X_I2C2_ADR_ERR_INT              (8U)
+#define PMIC_LP8764X_I2C2_ADR_ERR_INT               (8U)
 /*! PMIC I2C2 CRC ERROR Interrupt */
 #define PMIC_LP8764X_I2C2_CRC_ERR_INT               (9U)
 /*! PMIC I2C1/SPI COMM ADDRESS ERROR Interrupt */

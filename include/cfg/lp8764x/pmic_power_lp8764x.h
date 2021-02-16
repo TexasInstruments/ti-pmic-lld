@@ -76,19 +76,19 @@ extern "C" {
  *  @{
  */
 #define PMIC_LP8764X_POWER_SOURCE_VCCA     \
-               ((((uint16_t)PMIC_LP8764X_POWER_RESOURCE_TYPE_VCCA << 8U) | 0x0U))
+              ((((uint16_t)PMIC_LP8764X_POWER_RESOURCE_TYPE_VCCA << 8U) | 0x0U))
 #define PMIC_LP8764X_REGULATOR_BUCK1       \
-               ((((uint16_t)PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK << 8U) | 0x1U))
+              ((((uint16_t)PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK << 8U) | 0x1U))
 #define PMIC_LP8764X_REGULATOR_BUCK2       \
-               ((((uint16_t)PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK << 8U) | 0x2U))
+              ((((uint16_t)PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK << 8U) | 0x2U))
 #define PMIC_LP8764X_REGULATOR_BUCK3       \
-               ((((uint16_t)PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK << 8U) | 0x3U))
+              ((((uint16_t)PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK << 8U) | 0x3U))
 #define PMIC_LP8764X_REGULATOR_BUCK4       \
-               ((((uint16_t)PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK << 8U) | 0x4U))
+              ((((uint16_t)PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK << 8U) | 0x4U))
 #define PMIC_LP8764X_POWER_SOURCE_VMON1    \
-               ((((uint16_t)PMIC_LP8764X_POWER_RESOURCE_TYPE_VMON << 8U) | 0x5U))
+              ((((uint16_t)PMIC_LP8764X_POWER_RESOURCE_TYPE_VMON << 8U) | 0x5U))
 #define PMIC_LP8764X_POWER_SOURCE_VMON2    \
-               ((((uint16_t)PMIC_LP8764X_POWER_RESOURCE_TYPE_VMON << 8U) | 0x6U))
+              ((((uint16_t)PMIC_LP8764X_POWER_RESOURCE_TYPE_VMON << 8U) | 0x6U))
 /*  @} */
 
 /**
@@ -147,8 +147,8 @@ extern "C" {
 
 /**
  *  \anchor Pmic_LP8764x_Regulator_Pwm_Pfm_Mode
- *  \name   PMIC Select between Automatic transitions between PFM and PWM modes \
- *          OR Forced to PWM operation
+ *  \name   PMIC Select between Automatic transitions between PFM and PWM  \
+ *          modes OR Forced to PWM operation
  *
  *  Valid only for BUCK regulators.
  *
@@ -312,7 +312,11 @@ extern "C" {
  *
  *  @{
  */
-/** \brief Used to select rail group as no group */
+/** \brief Used to select rail group as no group
+ *         Note: Software can prevent the SoC/MCU Power Error Handling, which
+ *         normally shuts down the SOC/MCU power rails, by setting the relevent
+ *         regulators to PMIC_LP8764X_POWER_RAIL_SEL_NONE
+ */
 #define PMIC_LP8764X_POWER_RAIL_SEL_NONE                  (0x0U)
 /** \brief Used to select rail group as MCU rail group */
 #define PMIC_LP8764X_POWER_RAIL_SEL_MCU                   (0x1U)
@@ -459,7 +463,7 @@ extern "C" {
  */
 /** \brief Status indicating that output current is above current limit
            level. */
-#define PMIC_LP8764X_POWER_CURRENT_LIMIT_STATUS_ABOVE_LIMIT         (0x0U)
+#define PMIC_LP8764X_POWER_CURRENT_LIMIT_STATUS_ABOVE_LIMIT          (0x0U)
 /** \brief Status indicating that output current is below current limit
            level. */
 #define PMIC_LP8764X_POWER_CURRENT_LIMIT_STATUS_BELOW_LIMIT          (0x1U)
@@ -581,6 +585,16 @@ level */
 #define PMIC_LP8764X_POWER_INTERRUPT_IMM_SHUTDOWN               (5U)
 #define PMIC_LP8764X_POWER_INTERRUPT_NRSTOUT_SOC_READBACK       (6U)
 #define PMIC_LP8764X_POWER_INTERRUPT_EN_DRV_READBACK            (7U)
+/*  @} */
+
+/**
+ *  \anchor Pmic_LP8764x_Buck_Reset_Status
+ *  \name   Status of Buck Reset Signal
+ *
+ *  @{
+ */
+#define PMIC_LP8764X_BUCK_NO_RESET                (0U)
+#define PMIC_LP8764X_BUCK_RESET                   (1U)
 /*  @} */
 
 /*==========================================================================*/

@@ -88,10 +88,8 @@ extern "C" {
                           (0x01U << PMIC_GPIO_CFG_DEGLITCH_VALID)
 #define PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT    \
                           (0x01U << PMIC_GPIO_CFG_PINFUNC_VALID)
-/** \brief Valid only for TPS6594x Leo device and NPWRON/Enable pin */
 #define PMIC_NPWRON_CFG_POLARITY_VALID_SHIFT \
                           (0x01U << PMIC_NPWRON_CFG_POLARITY_VALID)
-/** \brief Valid only for LP8764x Hera device and Enable pin */
 #define PMIC_ENABLE_CFG_POLARITY_VALID_SHIFT \
                           (1U << PMIC_ENABLE_CFG_POLARITY_VALID)
 /* @} */
@@ -128,7 +126,7 @@ extern "C" {
 
 /**
  *  \anchor Pmic_Gpio_SignalLvl
- *  \name   PMIC GPIO signal level
+ *  \name   PMIC GPIO/NPWRON/ENABLE signal level
  *
  *  @{
  */
@@ -162,14 +160,25 @@ extern "C" {
  *
  *  @{
  */
+ /** \brief validParams value used to set/get gpio pin Direction
+  *         Valid only for GPIO pins only. Invalid for NPWRON/Enable */
 #define PMIC_GPIO_CFG_DIR_VALID            (0x00U)
+ /** \brief validParams value used to set/get output signal type
+  *         Valid only for GPIO pins only. Invalid for NPWRON/Enable */
 #define PMIC_GPIO_CFG_OD_VALID             (0x01U)
+/** \brief validParams value used to set/get pullup/pull down control
+ */
 #define PMIC_GPIO_CFG_PULL_VALID           (0x02U)
+/** \brief validParams value used to set/get signal deglitch time
+ *         enable/disable */
 #define PMIC_GPIO_CFG_DEGLITCH_VALID       (0x03U)
+/** \brief validParams value used to set/get pin mux function */
 #define PMIC_GPIO_CFG_PINFUNC_VALID        (0x04U)
-/** \brief Valid only for TPS6594x Leo device and NPWRON pin */
+/** \brief validParams value used to set/get pin polarity
+ *         Valid only for TPS6594x Leo device and NPWRON/Enable pin */
 #define PMIC_NPWRON_CFG_POLARITY_VALID     (0x05U)
-/** \brief Valid only for LP8764x Hera device and Enable pin */
+/** \brief validParams value used to set/get pin polarity
+ *         Valid only for LP8764x Hera device and Enable pin */
 #define PMIC_ENABLE_CFG_POLARITY_VALID     (0x05U)
 /*  @} */
 
@@ -206,21 +215,15 @@ extern "C" {
 #define PMIC_GPIO_POL_HIGH             (1U)
 /*  @} */
 
-/**
- *  \anchor Pmic_GpioInterruptMask
- *  \name   PMIC GPIO Interrupt Mask selection
- *
- *  @{
- */
-#define PMIC_GPIO_INT_ENABLE               (0U)
-#define PMIC_GPIO_INT_MASK                 (1U)
-/*  @} */
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
 
 /*!
- * \brief   PMIC GPIO pin configuration structure.
+ * \brief  PMIC GPIO/NPWRON/ENABLE pin configuration structure.
+ *         Note: validParams is input param for all Set and Get APIs. other
+ *         params except validParams is input param for Set APIs and output
+ *         param for Get APIs
  *
  * \param   validParams         Selection of structure parameters to be set,
  *                              from the combination of \ref Pmic_GpioCflag
@@ -276,7 +279,9 @@ typedef struct Pmic_GpioCfg_s
  * Design: did_pmic_gpio_cfg_readback, did_pmic_lpstandby_wkup_cfg
  *
  *          This function is used to set the required configuration for the
- *          specified GPIO pin when corresponding bit field is set.
+ *          specified GPIO pin when corresponding validParam bit field is set in
+ *          the Pmic_GpioCfg_t
+ *          For more information \ref Pmic_GpioCfg_t
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
  * \param   pin             [IN]    PMIC GPIO pin number.
@@ -301,16 +306,18 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
  * Design: did_pmic_gpio_cfg_readback
  *
  *          This function is used to read the configuration for the specified
- *          GPIO pin when corresponding bit field is set.
+ *          GPIO pin when corresponding validParam bit field is set in
+ *          the Pmic_GpioCfg_t
+ *          For more information \ref Pmic_GpioCfg_t
  *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
- * \param   pin             [IN]    PMIC GPIO pin number.
- *                                   Valid values for TPS6594x Leo Device
- *                                   \ref Pmic_Tps6594xLeo_GpioPin.
- *                                   Valid values for LP8764x HERA Device
- *                                   \ref Pmic_Lp8764xHera_GpioPin.
- * \param   pGpioCfg        [OUT]   Pointer to store specified GPIO pin
- *                                  configuration
+ * \param   pPmicCoreHandle [IN]     PMIC Interface Handle
+ * \param   pin             [IN]     PMIC GPIO pin number.
+ *                                    Valid values for TPS6594x Leo Device
+ *                                    \ref Pmic_Tps6594xLeo_GpioPin.
+ *                                    Valid values for LP8764x HERA Device
+ *                                    \ref Pmic_Lp8764xHera_GpioPin.
+ * \param   pGpioCfg        [IN/OUT] Pointer to store specified GPIO pin
+ *                                   configuration
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
@@ -375,7 +382,7 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  * Requirement: REQ_TAG(PDK-5808)
  * Design: did_pmic_gpio_cfg_readback
  *
- *          This function is used to enable GPIO pin Interrupts
+ *          This function is used to enable/disable GPIO pin Interrupts
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
  * \param   pin             [IN]    PMIC GPIO number.
@@ -384,7 +391,7 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *                                   Valid values for LP8764x HERA Device
  *                                   \ref Pmic_Lp8764xHera_GpioPin.
  * \param   intrType        [IN]    Interrupt type \ref Pmic_GpioInterruptCfg
- * \param   maskPol         [IN]    FSM trigger masking polarity select for GPIO.
+ * \param   maskPol         [IN]    FSM trigger masking polarity select for GPIO
  *                                  Valid values refer
  *                                  \ref Pmic_GpioInterruptPolCfg.
  *
@@ -403,7 +410,9 @@ int32_t Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  * Design: did_pmic_gpio_cfg_readback
  *
  *          This function is used to set the required configuration for the
- *          NPWRON OR ENABLE pin when corresponding bit field is set.
+ *          NPWRON OR ENABLE pin when corresponding validParam bit field is set
+ *          in the Pmic_GpioCfg_t
+ *          For more information \ref Pmic_GpioCfg_t
  *          NPWRON is valid only for TPS6594x Leo Device
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
@@ -424,12 +433,14 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
  * Design: did_pmic_gpio_cfg_readback
  *
  *          This function is used to read the configuration for the
- *          NPWRON OR ENABLE pin when corresponding bit field is set.
+ *          NPWRON OR ENABLE pin when corresponding validParam bit field is set
+ *          in the Pmic_GpioCfg_t
+ *          For more information \ref Pmic_GpioCfg_t
  *          NPWRON is valid only for TPS6594x Leo Device
  *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
- * \param   pGpioCfg        [OUT]   Pointer to store NPWRON OR ENABLE GPIO pin
- *                                  configuration
+ * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
+ * \param   pGpioCfg        [IN/OUT]   Pointer to store NPWRON OR ENABLE GPIO
+ *                                     pin configuration
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes

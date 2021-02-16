@@ -184,7 +184,7 @@ extern "C" {
 #define PMIC_ST_ERR_FAIL                                (-((int32_t)32))
 /** \brief Error Code for ESM in Start State */
 #define PMIC_ST_ERR_ESM_STARTED                         (-((int32_t)33))
-/** \brief Error Code for Invalid ESM delay1, delay2, HMAX, HMIN, LMAX and 
+/** \brief Error Code for Invalid ESM delay1, delay2, HMAX, HMIN, LMAX and
  *         LMIN values */
 #define PMIC_ST_ERR_INV_ESM_VAL                         (-((int32_t)34))
 /** \brief warning Code for Device ID mismatch warning */
@@ -213,6 +213,21 @@ extern "C" {
 /* @} */
 
 /**
+ *  \anchor Pmic_I2CSpeedSel
+ *  \name PMIC Select I2C Speed
+ *          Note: I2C Master before switching the I2C speed to HS/Standard Mode,
+ *          I2C Master has to set/reset I2C1_HS/I2C2_HS bit field accordingly
+ *          then only I2C Master can communicate with PMIC in HS/Standard Mode
+ *
+ *  @{
+ */
+ /** \brief  Standard or Fast or Fast+ Mode  */
+#define PMIC_I2C_STANDARD_MODE   (0U)
+/** \brief  High-Speed Mode */
+#define PMIC_I2C_FORCED_HS_MODE  (1U)
+/* @} */
+
+/**
  *  \anchor Pmic_InstType
  *  \name PMIC Instance Type
  *
@@ -220,6 +235,10 @@ extern "C" {
  */
 #define PMIC_MAIN_INST   (1U << 0U)
 #define PMIC_QA_INST     (1U << 1U)
+/** \brief  Valid only to read CRC status from Page-1 using NVM Slave Address
+ *          Valid only while calling the pFnPmicCommIoRead API
+ */
+#define PMIC_NVM_INST    (1U << 2U)
 /* @} */
 
 /**
@@ -228,17 +247,45 @@ extern "C" {
  *
  *  @{
  */
+  /** \brief validParams value used to set PMIC device type of PMIC Driver
+   *         Handle */
 #define PMIC_CFG_DEVICE_TYPE_VALID      (0U)
+  /** \brief validParams value used to set Interface mode of PMIC Driver
+   *         Handle */
 #define PMIC_CFG_COMM_MODE_VALID        (1U)
+  /** \brief validParams value used to set Main Interface Slave Address of PMIC
+   *         Driver Handle */
 #define PMIC_CFG_SLAVEADDR_VALID        (2U)
+  /** \brief validParams value used to set WDOG QA Interface Slave Address of
+   *         PMIC Driver Handle */
 #define PMIC_CFG_QASLAVEADDR_VALID      (3U)
-#define PMIC_CFG_CRC_ENABLE_VALID       (4U)
+  /** \brief validParams value used to set NVM Slave Address of PMIC Driver
+   *         Handle */
+#define PMIC_CFG_NVMSLAVEADDR_VALID     (4U)
+  /** \brief validParams value used to set Pointer to Handle for I2C1/SPI
+   *         Main Interface of PMIC Driver Handle */
 #define PMIC_CFG_COMM_HANDLE_VALID      (5U)
+  /** \brief validParams value used to set Pointer to Handle for I2C2-QA
+   *         Interface of PMIC Driver Handle */
 #define PMIC_CFG_QACOMM_HANDLE_VALID    (6U)
+  /** \brief validParams value used to set Pointer to I2C/SPI Comm LLD Read
+   *         Function of PMIC Driver Handle */
 #define PMIC_CFG_COMM_IO_RD_VALID       (7U)
+  /** \brief validParams value used to set Pointer to I2C/SPI Comm LLD Write
+   *         Function of PMIC Driver Handle */
 #define PMIC_CFG_COMM_IO_WR_VALID       (8U)
+  /** \brief validParams value used to set Pointer to Pmic Critical-Section
+   *         Start Function of PMIC Driver Handle */
 #define PMIC_CFG_CRITSEC_START_VALID    (9U)
+  /** \brief validParams value used to set Pointer to Pmic Critical-Section
+   *         Stop Function of PMIC Driver Handle */
 #define PMIC_CFG_CRITSEC_STOP_VALID     (10U)
+  /** \brief validParams value used to set I2C1 Speed of PMIC Driver
+   *         Handle */
+#define PMIC_CFG_I2C1_SPEED_VALID       (11U)
+  /** \brief validParams value used to set I2C2 Speed of PMIC Driver
+   *         Handle */
+#define PMIC_CFG_I2C2_SPEED_VALID       (12U)
 /* @} */
 
 /**
@@ -254,13 +301,15 @@ extern "C" {
 #define PMIC_CFG_COMM_MODE_VALID_SHIFT     (1U << PMIC_CFG_COMM_MODE_VALID)
 #define PMIC_CFG_SLAVEADDR_VALID_SHIFT     (1U << PMIC_CFG_SLAVEADDR_VALID)
 #define PMIC_CFG_QASLAVEADDR_VALID_SHIFT   (1U << PMIC_CFG_QASLAVEADDR_VALID)
-#define PMIC_CFG_CRC_ENABLE_VALID_SHIFT    (1U << PMIC_CFG_CRC_ENABLE_VALID)
+#define PMIC_CFG_NVMSLAVEADDR_VALID_SHIFT  (1U << PMIC_CFG_NVMSLAVEADDR_VALID)
 #define PMIC_CFG_COMM_HANDLE_VALID_SHIFT   (1U << PMIC_CFG_COMM_HANDLE_VALID)
 #define PMIC_CFG_QACOMM_HANDLE_VALID_SHIFT (1U << PMIC_CFG_QACOMM_HANDLE_VALID)
 #define PMIC_CFG_COMM_IO_RD_VALID_SHIFT    (1U << PMIC_CFG_COMM_IO_RD_VALID)
 #define PMIC_CFG_COMM_IO_WR_VALID_SHIFT    (1U << PMIC_CFG_COMM_IO_WR_VALID)
 #define PMIC_CFG_CRITSEC_START_VALID_SHIFT (1U << PMIC_CFG_CRITSEC_START_VALID)
 #define PMIC_CFG_CRITSEC_STOP_VALID_SHIFT  (1U << PMIC_CFG_CRITSEC_STOP_VALID)
+#define PMIC_CFG_I2C1_SPEED_VALID_SHIFT    (1U << PMIC_CFG_I2C1_SPEED_VALID)
+#define PMIC_CFG_I2C2_SPEED_VALID_SHIFT    (1U << PMIC_CFG_I2C2_SPEED_VALID)
 /* @} */
 
 /*==========================================================================*/
@@ -290,7 +339,7 @@ extern "C" {
  *  \param   instType                     Instance type.
  *                                        For Valid Values: \ref Pmic_InstType.
  *  \param   pmicDeviceType               PMIC device type.
- *                                        For Valid Values: \ref Pmic_DeviceType.
+ *                                        For Valid Values: \ref Pmic_DeviceType
  *                                        Valid only when
  *                                        PMIC_CFG_DEVICE_TYPE_VALID bit of
  *                                        validParams is set.
@@ -308,10 +357,28 @@ extern "C" {
  *                                        Valid only when
  *                                        PMIC_CFG_QASLAVEADDR_VALID bit
  *                                        of validParams is set.
- *  \param   crcEnable                    Parameter to enable/disable CRC.
+ *  \param   nvmSlaveAddr                 NVM Slave Address which provides only
+ *                                        read access to CRC status of Page-1
+ *                                        Application shall use this slave
+ *                                        address to read only CRC status.
+ *                                        Application shall not do
+ *                                        any write operations using this slave
+ *                                        address
  *                                        Valid only when
- *                                        PMIC_CFG_CRC_ENABLE_VALID bit
+ *                                        PMIC_CFG_NVMSLAVEADDR_VALID bit
  *                                        of validParams is set.
+ *  \param   i2c1Speed                    Configures I2C1 Speed when commMode is
+ *                                        Single or Dual I2C
+ *                                        For Valid Values:
+ *                                                  \ref Pmic_I2CSpeedSel
+ *                                        Valid only when
+ *                                        PMIC_CFG_I2C1_SPEED_VALID bit is set
+ *  \param   i2c2Speed                    Configures I2C2 Speed when commMode is
+ *                                        Dual I2C
+ *                                        For Valid Values:
+ *                                                  \ref Pmic_I2CSpeedSel
+ *                                        Valid only when
+ *                                        PMIC_CFG_I2C2_SPEED_VALID bit is set
  *  \param   pFnPmicCommIoRead            Pointer to I2C/SPI Comm LLD Read
  *                                        Function. Valid only when
  *                                        PMIC_CFG_COMM_IO_RD_VALID bit
@@ -344,7 +411,9 @@ typedef struct Pmic_CoreCfg_s {
     uint8_t      commMode;
     uint8_t      slaveAddr;
     uint8_t      qaSlaveAddr;
-    bool         crcEnable;
+    uint8_t      nvmSlaveAddr;
+    uint8_t      i2c1Speed;
+    uint8_t      i2c2Speed;
     void        *pCommHandle;
     void        *pQACommHandle;
     int32_t (*pFnPmicCommIoRead)(struct Pmic_CoreHandle_s  *pmicCorehandle,
@@ -368,7 +437,8 @@ typedef struct Pmic_CoreCfg_s {
  * \brief  API to Initialize pmic core handle for PMIC LLD.
  *
  * Requirement: REQ_TAG(PDK-5814), REQ_TAG(PDK-5810), REQ_TAG(PDK-5813),
- *              REQ_TAG(PDK-5843), REQ_TAG(PDK-5811), REQ_TAG(PDK-5853)
+ *              REQ_TAG(PDK-5843), REQ_TAG(PDK-5811), REQ_TAG(PDK-5853),
+ *              REQ_TAG(PDK-9129), REQ_TAG(PDK-9329)
  * Design: did_pmic_comm_intf_cfg, did_pmic_comm_single_i2c_cfg,
  *         did_pmic_comm_dual_i2c_cfg, did_pmic_comm_spi_cfg,
  *         did_pmic_tps6594x_j721e_support, did_pmic_lp8764x_j7vcl_support

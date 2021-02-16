@@ -176,11 +176,26 @@ static int32_t Pmic_setNsleepSignal(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /*!
- *  \brief This function is used to initiate I2C trigger for given I2C trigger
- *         type.
+ * \brief   API to initiate FSM I2C trigger for given FSM I2C trigger type
+ *
+ * Requirement: REQ_TAG(PDK-9330)
+ * Design: did_pmic_fsm_i2c_trigger
+ *
+ *          This function is used to to initiate FSM I2C trigger for given FSM
+ *          I2C trigger type
+ *
+ * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
+ * \param   i2cTriggerType  [IN]    FSM I2C Trigger Type
+ *                                  Valid values: \ref Pmic_Fsm_I2c_Trigger_Type
+ * \param   i2cTriggerVal   [IN]    FSM I2C Trigger Value
+ *                                  Valid values: \ref Pmic_Fsm_I2c_Trigger_Val
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
  */
-static int32_t Pmic_fsmEnableI2cTrigger(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                                        uint8_t             i2cTriggerType)
+int32_t Pmic_fsmEnableI2cTrigger(Pmic_CoreHandle_t  *pPmicCoreHandle,
+                                 const uint8_t       i2cTriggerType,
+                                 const uint8_t       i2cTriggerVal)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData  = 0U;
@@ -209,7 +224,7 @@ static int32_t Pmic_fsmEnableI2cTrigger(Pmic_CoreHandle_t  *pPmicCoreHandle,
         Pmic_setBitField(&regData,
                          bitShift,
                          bitMask,
-                         PMIC_FSM_I2C_TRIGGER_VAL);
+                         PMIC_FSM_I2C_TRIGGER_VAL_0);
 
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_FSM_I2C_TRIGGERS_REGADDR,
@@ -362,7 +377,8 @@ int32_t Pmic_fsmDeviceOffRequestCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
        (PMIC_FSM_I2C_TRIGGER0_TYPE == eventType))
     {
         pmicStatus = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle,
-                                              PMIC_FSM_I2C_TRIGGER0);
+                                              PMIC_FSM_I2C_TRIGGER0,
+                                              PMIC_FSM_I2C_TRIGGER_VAL_0);
     }
 
     return pmicStatus;
@@ -394,7 +410,8 @@ int32_t Pmic_fsmRequestRuntimeBist(Pmic_CoreHandle_t  *pPmicCoreHandle)
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         pmicStatus = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle,
-                                              PMIC_FSM_I2C_TRIGGER1);
+                                              PMIC_FSM_I2C_TRIGGER1,
+                                              PMIC_FSM_I2C_TRIGGER_VAL_0);
     }
 
     return pmicStatus;
@@ -512,7 +529,7 @@ int32_t Pmic_fsmDeviceOnRequest(Pmic_CoreHandle_t *pPmicCoreHandle)
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_fsmSetMissionState(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                                uint8_t             pmicState)
+                                const uint8_t       pmicState)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
@@ -535,12 +552,12 @@ int32_t Pmic_fsmSetMissionState(Pmic_CoreHandle_t  *pPmicCoreHandle,
 }
 
 /*!
- * \brief  API to MASK/UNMASK NSLEEP Signal.
+ * \brief  API to MASK/UNMASK NSLEEP1B or 2B Signal.
  *
- * Requirement: REQ_TAG(PDK-5837), REQ_TAG(PDK-5844), REQ_TAG(PDK-5831)
- * Design: did_pmic_fsm_cfg, did_pmic_lpstandby_wkup_cfg
+ * Requirement: REQ_TAG(PDK-5837)
+ * Design: did_pmic_fsm_cfg_readback
  *
- *         This function is used for Masking/Unmasking for NSLEEP2 or NSLEEP1
+ *         This function is used for Masking/Unmasking for NSLEEP2B or NSLEEP1B
  *         signal.
  *
  * \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
@@ -552,8 +569,8 @@ int32_t Pmic_fsmSetMissionState(Pmic_CoreHandle_t  *pPmicCoreHandle,
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_fsmSetNsleepSignalMask(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                                    bool                nsleepType,
-                                    bool                maskEnable)
+                                    const bool          nsleepType,
+                                    const bool          maskEnable)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t  regData = 0U;

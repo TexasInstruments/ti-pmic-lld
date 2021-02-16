@@ -197,9 +197,6 @@ static int32_t test_pmic_spi_stubInit(Pmic_CoreCfg_t  *pPmicConfigData)
     pmicConfigDataI2c.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
     pmicConfigDataI2c.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
 
-    pmicConfigDataI2c.crcEnable           = pPmicConfigData->crcEnable;
-    pmicConfigDataI2c.validParams        |= PMIC_CFG_CRC_ENABLE_VALID_SHIFT;
-
     pmicConfigDataI2c.pFnPmicCommIoRead   = test_pmic_regRead;
     pmicConfigDataI2c.validParams        |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
 
@@ -1642,7 +1639,7 @@ void pmic_printTestResult(Pmic_Ut_Tests_t *pTest, uint32_t num_testcases)
  */
 uint64_t print_timeTakenInUsecs(uint64_t t1, const char *str)
 {
-    uint64_t t2 = 0; 
+    uint64_t t2 = 0;
     uint64_t delta = 0;
 
     t2 = TimerP_getTimeInUsecs();

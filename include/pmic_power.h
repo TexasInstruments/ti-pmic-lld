@@ -85,46 +85,81 @@ extern "C" {
  *
  *  @{
  */
-/** \brief Valid only for VMON1/VMON2/BUCK/LDO */
+  /** \brief validParams value used to set/get to Enable/Disable residual
+   *         voltage checking for regulator/VMON pin
+   *         Valid only for VMON1/VMON2/BUCK/LDO */
 #define PMIC_CFG_REGULATOR_VMON_RV_SEL_VALID              (0U)
-/** \brief Valid only for BUCK regulator */
+ /** \brief validParams value used to set/get to Enable/Disable output pull-down
+  *         resistor when BUCK is disabled.
+  *         Valid only for BUCK regulator */
 #define PMIC_CFG_REGULATOR_BUCK_PLDN_EN_VALID             (1U)
-/** \brief Valid only for VMON1/VMON2/VMON of BUCK/VMON of LDO/VMON of VCCA
- *         Power Resources
- */
+ /** \brief validParams value used to set/get to Enable /Disable the Voltage
+  *         monitor feature
+  *         Valid only for VMON1/VMON2/VMON of BUCK/VMON of LDO/VMON of VCCA
+  *         Power Resources */
 #define PMIC_CFG_VMON_EN_VALID                            (2U)
-/** \brief Valid only for BUCK regulator */
+ /** \brief validParams value used to set/get to Select output voltage register
+  *         for BUCK
+  *         Valid only for BUCK regulator */
 #define PMIC_CFG_REGULATOR_BUCK_VOUT_SEL_VALID            (3U)
-/** \brief Valid only for BUCK regulator */
+ /** \brief validParams value used to set/get to Select PWM or Auto Mode for
+  *         BUCK
+  *         Valid only for BUCK regulator */
 #define PMIC_CFG_REGULATOR_BUCK_FPWM_VALID                (4U)
-/** \brief Valid only for BUCK regulator */
+ /** \brief validParams value used to set/get to Select between Multi phase with
+  *         PWM OR AUTO mode with Automatic phase adding and shedding for BUCK
+  *         Valid only for BUCK regulator */
 #define PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID              (5U)
-/** \brief Valid only for BUCK/LDO regulator */
+ /** \brief validParams value used to set/get to Enable/Disable the power
+  *         regulators
+  *         Valid only for BUCK/LDO regulator */
 #define PMIC_CFG_REGULATOR_EN_VALID                       (6U)
-/** \brief Valid only for LDO regulator */
+ /** \brief validParams value used to set/get to Enable/Disable Slow Ramp for
+  *         LDO
+  *         Valid only for LDO regulator */
 #define PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID         (7U)
-/** \brief Valid only for LDO regulator */
+ /** \brief validParams value used to set/get to Select Bypass/Linear Regulator
+  *         LDO mode
+  *         Valid only for LDO regulator */
 #define PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID       (8U)
-
-/** \brief Valid only for VCCA */
+ /** \brief validParams value used to set/get Powergood level for VCCA pin
+  *         Valid only for VCCA */
 #define PMIC_CFG_VCCA_PWR_GOOD_LVL_VALID                  (9U)
-/** \brief Valid only for VMON1/VMON2 */
+ /** \brief validParams value used to set/get to Select OV/UV voltage monitoring
+  *         range for VMON
+  *         Valid only for VMON1/VMON2 */
 #define PMIC_CFG_VMON_RANGE_VALID                         (10U)
-/** \brief Valid only for BUCK regulator */
+ /** \brief validParams value used to set/get Switch peak current limit for BUCK
+  *         regulator
+  *         Valid only for BUCK regulator */
 #define PMIC_CFG_REGULATOR_BUCK_ILIM_VALID                (12U)
-/** \brief Valid only for VMON1/VMON2/BUCK */
+ /** \brief validParams value used to set/get Output voltage slew rate for
+  *         BUCK/VMON
+  *         Valid only for VMON1/VMON2/BUCK */
 #define PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID      (13U)
-/** \brief Valid only for LDO regulator */
+ /** \brief validParams value used to set/get to Selects the resistor value for
+  *         output pull-down resistor for LDO regulator
+  *         Valid only for LDO regulator */
 #define PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID             (14U)
-/** \brief Valid only for LDO regulator */
+ /** \brief validParams value used to set/get LDO residual voltage check timeout
+  *         select
+  *         Valid only for LDO regulator */
 #define PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID       (15U)
-/** \brief Valid for all power resources */
+ /** \brief validParams value used to set/get Power good low threshold level for
+  *         the power resources
+  *         Valid for all power resources */
 #define PMIC_CFG_PWR_RESOURCE_PG_UV_THRESHOLD_LVL_VALID   (16U)
-/** \brief Valid for all power resources */
+ /** \brief validParams value used to set/get Power good high threshold level
+  *         for the power resources
+  *         Valid for all power resources */
 #define PMIC_CFG_PWR_RESOURCE_PG_OV_THRESHOLD_LVL_VALID   (17U)
-/** \brief Valid for all power resources */
+ /** \brief validParams value used to set/get  Rail group selection for the
+  *         power resources
+  *         Valid for all power resources */
 #define PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID          (18U)
-/** \brief Valid only for VMON1/VMMON2/BUCK/LDO */
+ /** \brief validParams value used to set/get Voltage level (For LDO/BUCK)/
+  *         Powergood voltage level(For VMON1/VMON2) in mv
+  *         Valid only for VMON1/VMMON2/BUCK/LDO */
 #define PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID         (19U)
 /* @} */
 
@@ -182,16 +217,31 @@ extern "C" {
  *
  *  @{
  */
+  /** \brief validParams value used to set/get to Select the type of voltage
+   *         monitoring for PGOOD signal  */
 #define PMIC_POWER_PGOOD_WINDOW_VALID             (0U)
+ /** \brief validParams value used to set/get to Select the PGOOD signal
+  *         polarity */
 #define PMIC_POWER_PGOOD_POL_VALID                (1U)
-/** \brief Valid only for VMON1/VMON2/VCCA/VMON of LDO/VMON of BUCK power
- *         resources
- */
+ /** \brief validParams value used to set/get Deglitch time select for all power
+  *         resources
+  *         Valid only for VMON1/VMON2/VCCA/VMON of LDO/VMON of BUCK power
+  *         resources */
 #define PMIC_CFG_DEGLITCH_TIME_SEL_VALID          (2U)
+ /** \brief validParams value used to set/get to Select the trigger selection
+  *         for severe Error  */
 #define PMIC_SEVERE_ERR_TRIG_VALID                (3U)
+ /** \brief validParams value used to set/get to Select the trigger selection
+  *         for other rail group  */
 #define PMIC_OTHER_RAIL_TRIG_VALID                (4U)
+ /** \brief validParams value used to set/get to Select the trigger selection
+  *         for soc rail group  */
 #define PMIC_SOC_RAIL_TRIG_VALID                  (5U)
+ /** \brief validParams value used to set/get to Select the trigger selection
+  *         for mcu rail group  */
 #define PMIC_MCU_RAIL_TRIG_VALID                  (6U)
+ /** \brief validParams value used to set/get Select the trigger selection for
+  *         Moderate Error  */
 #define PMIC_MODERATE_ERR_TRIG_VALID              (7U)
 /* @} */
 
@@ -224,20 +274,30 @@ extern "C" {
 /**
  *  \anchor Pmic_PowerStatusValidParamCfg
  *  \name   PMIC Power Status Config Structure Param Bits
- * 
+ *
  *  PMIC Power Status valid params configuration type for
  *  the structure member validParams of Pmic_PowerResourceStat_t
  *  structure.
  *
  *  @{
  */
+  /** \brief validParams value used to get output current limit status for LDO
+   *         and buck regulators  */
 #define PMIC_POWER_REGULATOR_ILIM_STAT_VALID              (0U)
-/** \brief Valid only for Power regulators (LDO,BUCK) */
+/** \brief validParams value used to get output under voltage status for LDO/
+ *         BUCK and input under voltage status for VCCA/VMON
+ *         Valid for all power resources */
 #define PMIC_POWER_RESOURCE_UV_STAT_VALID                 (1U)
-/** \brief Valid for all power resources */
+/** \brief validParams value used to get output over voltage status for LDO/BUCK
+ *         and input over voltage status for VCCA/VMON
+ *         Valid for all power resources */
 #define PMIC_POWER_RESOURCE_OV_STAT_VALID                 (2U)
-/** \brief Valid only for VCCA */
+/** \brief validParams value used to get voltage level status for VCCA
+ *         Valid only for VCCA */
 #define PMIC_POWER_VCCA_OV_LVL_STAT_VALID                 (3U)
+/** \brief validParams value used to get status of buck reset signal
+ *         Valid only for BUCK Regulator */
+#define PMIC_REGULATOR_BUCK_RESET_STAT_VALID              (4U)
 /* @} */
 
 /**
@@ -257,6 +317,8 @@ extern "C" {
                                     (1U << PMIC_POWER_RESOURCE_OV_STAT_VALID)
 #define PMIC_POWER_VCCA_OV_LVL_STAT_VALID_SHIFT         \
                                     (1U << PMIC_POWER_VCCA_OV_LVL_STAT_VALID)
+#define PMIC_REGULATOR_BUCK_RESET_STAT_VALID_SHIFT         \
+                                    (1U << PMIC_REGULATOR_BUCK_RESET_STAT_VALID)
 
 /**
  *  \anchor Pmic_PowerThermalThresholdValidParamCfg
@@ -264,7 +326,11 @@ extern "C" {
  *
  *  @{
  */
+ /** \brief validParams value used to set/get thermal Warning Threshold
+  *         temperature value  */
 #define PMIC_THERMAL_WARN_VALID                   (1U)
+/** \brief validParams value used to set/get Thermal Shutdown Threshold
+ *         temperature value */
 #define PMIC_THERMAL_SHTDWN_VALID                 (2U)
 /* @} */
 
@@ -289,8 +355,11 @@ extern "C" {
  *
  *  @{
  */
+ /** \brief validParams value used to get Thermal warning status */
 #define PMIC_THERMAL_STAT_WARN_VALID                       (1U)
+/** \brief validParams value used to get Orderly Shutdown status  */
 #define PMIC_THERMAL_STAT_ORD_SHTDWN_VALID                 (2U)
+/** \brief validParams value used to get Immediate Shutdown status */
 #define PMIC_THERMAL_STAT_IMM_SHTDWN_VALID                 (3U)
 /* @} */
 
@@ -363,6 +432,9 @@ extern "C" {
 /*!
  *  \anchor  Pmic_PowerResourceCfg_s
  *  \brief   Pmic Power resources control and configuration structure.
+ *           Note: validParams is input param for all Set and Get APIs. other
+ *           params except validParams is input param for Set APIs and output
+ *           param for Get APIs
  *
  *  \param   validParams         Selection of structure parameters to be set,
  *                               from the combination of
@@ -546,6 +618,9 @@ typedef struct Pmic_PowerResourceCfg_s
  *  \anchor  Pmic_PowerCommonCfg_s
  *  \brief   Power configuration
  *           The power control and config structure
+ *           Note: validParams is input param for all Set and Get APIs. other
+ *           params except validParams is input param for Set APIs and output
+ *           param for Get APIs
  *
  *  \param   validParams         Selection of structure parameters to be set,
  *                               from the combination of
@@ -624,78 +699,91 @@ typedef struct Pmic_PowerCommonCfg_s
  *  \anchor  Pmic_PowerResourceStat_s
  *  \brief   PMIC power status.
  *           The PMIC power and thermal status structure.
+ *           Note: validParams is input param for all Get APIs. other params
+ *           except validParams is output param for Get APIs
  *
- *  \param   validParams         Selection of structure parameters to be set,
- *                               from the combination of
- *                               \ref Pmic_PowerStatusValidParamCfg
- *                               and the corresponding member value must be
- *                               updated
+ *  \param   validParams       Selection of structure parameters to be set,
+ *                             from the combination of
+ *                             \ref Pmic_PowerStatusValidParamCfg
+ *                             and the corresponding member value must be
+ *                             updated
  *
- *  \param   currentLimitLvlStat Used to read the output current limit status
- *                               for LDO and buck regulators.
- *                               This checks if output current is above current limit level.
- *                               For valid values
- *                               Valid values for TPS6594x Leo Device
- *                               \ref Pmic_TPS6594x_Power_Current_Status
- *                               Valid values for LP8764x HERA Device
- *                               \ref Pmic_LP8764x_Power_Current_Status
- *                               Valid only when
- *                               PMIC_POWER_REGULATOR_ILIM_STAT_VALID bit set.
+ *  \param   currentLimitLvlStat
+ *                             Used to read the output current limit status
+ *                             for LDO and buck regulators.
+ *                             This checks if output current is above current
+ *                             limit level.
+ *                             For valid values
+ *                             Valid values for TPS6594x Leo Device
+ *                             \ref Pmic_TPS6594x_Power_Current_Status
+ *                             Valid values for LP8764x HERA Device
+ *                             \ref Pmic_LP8764x_Power_Current_Status
+ *                             Valid only when
+ *                             PMIC_POWER_REGULATOR_ILIM_STAT_VALID bit set.
  *
  *  \param   underVoltageTholdStat
- *                               Used to read the output under voltage status
- *                               for LDO/BUCK and input under voltage status for
- *                               VCCA/VMON.
- *                               This is used to read if output/input voltage
- *                               is below under-voltage threshold/level
- *                               VCCA/VMON.
- *                               For valid values
- *                               Valid values for TPS6594x Leo Device
- *                               For Power Regulator(BUCK/LDO)
- *                               \ref Pmic_TPS6594x_Regulator_Under_Voltage_Status
- *                               For VCCA
- *                               \ref Pmic_TPS6594x_Vcca_Under_Voltage_Status
- *                               Valid values for LP8764x HERA Device
- *                               For Power Regulator(BUCK/LDO)
- *                               \ref Pmic_LP8764x_Regulator_Under_Voltage_Status
- *                               For VCCA/VMON
- *                               \ref Pmic_LP8764x_Vcca_Vmon_Under_Voltage_Status
- *                               Valid only when
- *                               PMIC_POWER_RESOURCE_UV_STAT_VALID bit set.
+ *                             Used to read the output under voltage status
+ *                             for LDO/BUCK and input under voltage status for
+ *                             VCCA/VMON.
+ *                             This is used to read if output/input voltage
+ *                             is below under-voltage threshold/level
+ *                             VCCA/VMON.
+ *                             For valid values
+ *                             Valid values for TPS6594x Leo Device
+ *                             For Power Regulator(BUCK/LDO)
+ *                             \ref Pmic_TPS6594x_Regulator_Under_Voltage_Status
+ *                             For VCCA
+ *                             \ref Pmic_TPS6594x_Vcca_Under_Voltage_Status
+ *                             Valid values for LP8764x HERA Device
+ *                             For Power Regulator(BUCK/LDO)
+ *                             \ref Pmic_LP8764x_Regulator_Under_Voltage_Status
+ *                             For VCCA/VMON
+ *                             \ref Pmic_LP8764x_Vcca_Vmon_Under_Voltage_Status
+ *                             Valid only when
+ *                             PMIC_POWER_RESOURCE_UV_STAT_VALID bit set.
  *
  *  \param   overVoltageTholdStat
- *                               Used to read the output over voltage status
- *                               LDO/BUCK and input over voltage status for
- *                               VCCA/VMON.
- *                               This is used to read if output/input voltage
- *                               is above over-voltage threshold/level
+ *                             Used to read the output over voltage status
+ *                             LDO/BUCK and input over voltage status for
+ *                             VCCA/VMON.
+ *                             This is used to read if output/input voltage
+ *                             is above over-voltage threshold/level
  *
- *                               For valid values
- *                               Valid values for TPS6594x Leo Device
- *                               For Power Regulator(BUCK/LDO)
- *                               \ref Pmic_TPS6594x_Regulator_Over_Voltage_Status
- *                               For VCCA/VMON
- *                               \ref Pmic_TPS6594x_Vcca_Over_Voltage_Status
- *                               Valid values for LP8764x HERA Device
- *                               For Power Regulator(BUCK/LDO)
- *                               \ref Pmic_LP8764x_Regulator_Over_Voltage_Status
- *                               For VCCA/VMON
- *                               \ref Pmic_LP8764x_Vcca_Vmon_Over_Voltage_Status
- *                               Valid only when
- *                               PMIC_POWER_RESOURCE_OV_STAT_VALID bit set.
+ *                             For valid values
+ *                             Valid values for TPS6594x Leo Device
+ *                             For Power Regulator(BUCK/LDO)
+ *                             \ref Pmic_TPS6594x_Regulator_Over_Voltage_Status
+ *                             For VCCA/VMON
+ *                             \ref Pmic_TPS6594x_Vcca_Over_Voltage_Status
+ *                             Valid values for LP8764x HERA Device
+ *                             For Power Regulator(BUCK/LDO)
+ *                             \ref Pmic_LP8764x_Regulator_Over_Voltage_Status
+ *                             For VCCA/VMON
+ *                             \ref Pmic_LP8764x_Vcca_Vmon_Over_Voltage_Status
+ *                             Valid only when
+ *                             PMIC_POWER_RESOURCE_OV_STAT_VALID bit set.
  *
  *  \param   overVoltageProtectionLvlStat
- *                               Used to read the voltage level status for
- *                               VCCA.
- *                               This is used to read if voltage is above
- *                               overvoltage protection level.
- *                               For valid values
- *                               Valid values for TPS6594x Leo Device
- *                               \ref Pmic_TPS6594x_Vcca_Voltage_Status
- *                               Valid values for LP8764x HERA Device
- *                               \ref Pmic_LP8764x_Vcca_Voltage_Status
- *                               Valid only when
- *                               PMIC_POWER_VCCA_OV_LVL_STAT_VALID bit set.
+ *                             Used to read the voltage level status for
+ *                             VCCA.
+ *                             This is used to read if voltage is above
+ *                             overvoltage protection level.
+ *                             For valid values
+ *                             Valid values for TPS6594x Leo Device
+ *                             \ref Pmic_TPS6594x_Vcca_Voltage_Status
+ *                             Valid values for LP8764x HERA Device
+ *                             \ref Pmic_LP8764x_Vcca_Voltage_Status
+ *                             Valid only when
+ *                             PMIC_POWER_VCCA_OV_LVL_STAT_VALID bit set
+ *  \param   buckResetSignalStat
+ *                             Used to read the status of buck reset signal
+ *                             For valid values
+ *                             Valid values for TPS6594x Leo Device
+ *                             \ref Pmic_Tps6594x_Buck_Reset_Status
+ *                             Valid values for LP8764x HERA Device
+ *                             \ref Pmic_LP8764x_Buck_Reset_Status
+ *                             Valid only when
+ *                             PMIC_REGULATOR_BUCK_RESET_STAT_VALID bit set.
  */
 typedef struct Pmic_PowerResourceStat_s
 {
@@ -704,11 +792,15 @@ typedef struct Pmic_PowerResourceStat_s
     bool     underVoltageTholdStat;
     bool     overVoltageTholdStat;
     bool     overVoltageProtectionLvlStat;
+    bool     buckResetSignalStat;
 }Pmic_PowerResourceStat_t;
 
 /*!
  *  \anchor  Pmic_PowerThermalCfg_s
  *  \brief   PMIC Power Thermal configuration structure
+ *           Note: validParams is input param for all Set and Get APIs. other
+ *           params except validParams is input param for Set APIs and output
+ *           param for Get APIs
  *
  *  \param   validParams         Selection of structure parameters to be set,
  *                               from the combination of
@@ -748,6 +840,8 @@ typedef struct Pmic_PowerThermalCfg_s
 /*!
  *  \anchor  Pmic_PowerThermalStat_t
  *  \brief   PMIC Power Thermal status structure
+ *           Note: validParams is input param for all Get APIs. other params
+ *           except validParams is output param for Get APIs
  *
  *  \param   validParams         Selection of structure parameters to be set,
  *                               from the combination of
@@ -762,7 +856,7 @@ typedef struct Pmic_PowerThermalCfg_s
  *                               PMIC_THERMAL_STAT_WARN_VALID bit is set
  *
  *  \param   thermalStateOderlyShtDwn
- *                               Set/Get the Oderly Shutdown status
+ *                               Set/Get the Orderly Shutdown status
  *                               Status bit indicating that the die junction
  *                               temperature is above the thermal level causing
  *                               a sequenced shutdown.
@@ -800,6 +894,9 @@ typedef struct Pmic_PowerThermalStat_s
  *          configuration parameters for BUCK/LDO/VCCA/VMON power resources and
  *          also used to set the various control and configuration of
  *          voltage monitor parameters for BUCK/LDO/VCCA/VMON power resources
+ *          when corresponding validParam bit field is set in the
+ *          Pmic_PowerResourceCfg_t structure.
+ *          For more information \ref Pmic_PowerResourceCfg_t
  *
  *          To set control and configuration params for BUCK, the application
  *          has to configure the below defined structure members of
@@ -856,6 +953,9 @@ int32_t Pmic_powerSetPwrResourceCfg(
  *          configuration parameters for BUCK/LDO/VCCA/VMON power resources and
  *          also used to get the various control and configuration of
  *          voltage monitor parameters for BUCK/LDO/VCCA/VMON power resources
+ *          when corresponding validParam bit field is set in the
+ *          Pmic_PowerResourceCfg_t structure.
+ *          For more information \ref Pmic_PowerResourceCfg_t
  *
  *          Application can get these control and configuration params for BUCK,
  *          which is stored in the below defined structure members of
@@ -885,14 +985,14 @@ int32_t Pmic_powerSetPwrResourceCfg(
  *          pgUvThresholdLvl, pgOvThresholdLvl, railGrpSel, voltage_mV
  *          Valid only for LP8764x HERA Device
  *
- * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
- * \param   pwrResource        [IN]    PMIC Power resource
- *                                     Valid values for TPS6594x Leo Device
- *                                     \ref Pmic_Tps6594xLeo_Power_Resource.
- *                                     Valid values for LP8764x HERA Device
- *                                     \ref Pmic_Lp8764xHera_Power_Resource.
- * \param   pPwrResourceCfg    [OUT]   Pointer to store Power Resource
- *                                     configuration for BUCK/LDO/VMON/VCCA
+ * \param   pPmicCoreHandle    [IN]      PMIC Interface Handle.
+ * \param   pwrResource        [IN]      PMIC Power resource
+ *                                       Valid values for TPS6594x Leo Device
+ *                                       \ref Pmic_Tps6594xLeo_Power_Resource.
+ *                                       Valid values for LP8764x HERA Device
+ *                                       \ref Pmic_Lp8764xHera_Power_Resource.
+ * \param   pPwrResourceCfg    [IN/OUT]  Pointer to store Power Resource
+ *                                       configuration for BUCK/LDO/VMON/VCCA
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
@@ -911,7 +1011,9 @@ int32_t Pmic_powerGetPwrResourceCfg(
  *          This function is used to set the power configuration
  *          parameters such as selection of type of voltage monitoring, and
  *          polarity of the power-good signal, deglitch time select for all
- *          power resources.
+ *          power resources when corresponding validParam bit field is set in
+ *          the Pmic_PowerCommonCfg_t structure.
+ *          For more information \ref Pmic_PowerCommonCfg_t
  *
  *          Application can set the voltage monitoring for PGOOD
  *          by configuring the following structure members of
@@ -943,8 +1045,8 @@ int32_t Pmic_powerGetPwrResourceCfg(
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_powerSetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
-                                  Pmic_PowerCommonCfg_t  powerCommonCfg);
+int32_t Pmic_powerSetCommonConfig(Pmic_CoreHandle_t           *pPmicCoreHandle,
+                                  const Pmic_PowerCommonCfg_t  powerCommonCfg);
 
 /**
  * \brief   API to Get Power configuration
@@ -955,33 +1057,35 @@ int32_t Pmic_powerSetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
  *          This function is used to get the power configuration
  *          parameters such as selection of type of voltage monitoring, and
  *          polarity of the power-good signal, deglitch time select for all
- *          power resources.
+ *          power resources when corresponding validParam bit field is set in
+ *          the Pmic_PowerCommonCfg_t structure.
+ *          For more information \ref Pmic_PowerCommonCfg_t
  *
  *          Application can get the voltage monitoring for PGOOD
- *          by configuring the following structure members of
+ *          which is stored in the below defined structure members of
  *          Pmic_PowerCommonCfg_t:
  *          pgoodWindow
  *
  *          Application can get the PGOOD signal polarity
- *          by configuring the following structure members of
+ *          which is stored in the below defined structure members of
  *          Pmic_PowerCommonCfg_t:
  *          pgoodPolarity
  *
  *          Application can get the Deglitch time select for all power resources
- *          by configuring the following structure members of
+ *          which is stored in the below defined structure members of
  *          Pmic_PowerCommonCfg_t:
  *          deglitchTimeSel
  *
  *          Application can get trigger selection for :
  *          severe Error, other rail group, soc rail group, mcu rail group and
  *          Moderate Error
- *          by configuring the following structure members of
+ *          which is stored in the below defined structure members of
  *          Pmic_PowerCommonCfg_t:
  *          severeErrorTrig, otherRailTrig, socRailTrig, mcuRailTrig
  *          moderateRailTrig
  *
- * \param   pPmicCoreHandle  [IN]    PMIC Interface Handle.
- * \param   pPowerCommonCfg  [OUT]   Pointer to hold Power configuration.
+ * \param   pPmicCoreHandle  [IN]       PMIC Interface Handle.
+ * \param   pPowerCommonCfg  [IN/OUT]   Pointer to hold Power configuration.
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
@@ -1035,8 +1139,8 @@ int32_t Pmic_powerGetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_powerSetConfigPowerGood(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                     uint16_t             pgoodSrcSel,
-                                     uint8_t              pgoodSelType);
+                                     const uint16_t     pgoodSrcSel,
+                                     const uint8_t      pgoodSelType);
 
 /**
  * \brief   Get Power good configuration
@@ -1045,71 +1149,79 @@ int32_t Pmic_powerSetConfigPowerGood(Pmic_CoreHandle_t *pPmicCoreHandle,
  * Design: did_pmic_power_pgood_cfg_readback
  *
  *          This function is used to get various power good conifg.
- *          This funci=tion also provides the pgood source control for
+ *          This function also provides the pgood source control for
  *          different power resources and pins.
  *
- * \param   pPmicCoreHandle  [IN]     PMIC Interface Handle.
- * \param   pgoodSrcSel      [IN]     Power Good Source.
- *                                    Valid values for TPS6594x Leo Device
- *                                    \ref Pmic_Tps6594xLeo_Pgood_SourceType.
- *                                    Valid values for LP8764x HERA Device
- *                                    \ref Pmic_Lp8764xHera_Pgood_SourceType.
- * \param   pPgoodSelType    [OUT]    Power Good configuration.
+ * \param   pPmicCoreHandle  [IN]        PMIC Interface Handle.
+ * \param   pgoodSrcSel      [IN]        Power Good Source.
+ *                                       Valid values for TPS6594x Leo Device
+ *                                       \ref Pmic_Tps6594xLeo_Pgood_SourceType.
+ *                                       Valid values for LP8764x HERA Device
+ *                                       \ref Pmic_Lp8764xHera_Pgood_SourceType.
+ * \param   pPgoodSelType    [OUT]       Power Good configuration.
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_powerGetConfigPowerGood(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                                     uint16_t            pgoodSrcSel,
+                                     const uint16_t      pgoodSrcSel,
                                      uint8_t            *pPgoodSelType);
 
 /**
  * \brief   API to get power resources status.
  *
- * Requirement: REQ_TAG(PDK-5829), REQ_TAG(PDK-5848), REQ_TAG(PDK-5850)
+ * Requirement: REQ_TAG(PDK-5829), REQ_TAG(PDK-5848), REQ_TAG(PDK-9140),
+ *              REQ_TAG(PDK-5850)
  * Design: did_pmic_power_cfg_readback
  *
  *          This function can be used to get the status related to current limit
  *          , voltage over and under limit for BUCK/LDO/VCCA/VMON power
- *          resources
+ *          resources when corresponding validParam bit field is set in
+ *          the Pmic_PowerResourceStat_t
+ *          For more information \ref Pmic_PowerResourceStat_t
  *
  *          Application can get the current limit status that if the output
- *          current is above current limit level for BUCK by configuring the
- *          following structure members of
+ *          current is above current limit level for BUCK which is stored in the
+ *          below defined structure members of
  *          Pmic_PowerResourceStat_t:
  *          currentLimitLvlStat
  *
  *          Application can get the output voltage status that if the
- *          output voltage is below undervoltage threshold for BUCK/LDO by
- *          configuring the following structure members of
+ *          output voltage is below undervoltage threshold for BUCK/LDO which is
+ *          stored in the below defined structure members of
  *          Pmic_PowerResourceStat_t :
  *          underVoltageTholdStat
  *          For VMON/VCCA the same member is used to get the input voltage
  *          status that if input voltage is below undervoltage level.
  *
  *          Application can get the output voltage status that if the
- *          output voltage is above overvoltage threshold for BUCK/LDO by
- *          configuring the following structure members of
+ *          output voltage is above overvoltage threshold for BUCK/LDO which is
+ *          stored in the below defined structure members of
  *          Pmic_PowerResourceStat_t :
  *          overVoltageTholdStat
  *          For VMON/VCCA the same member is used to get the input voltage
  *          status that if input voltage is above overvoltage level.
  *
  *          Application can get the VCCA voltage status that if the VCCA
- *          voltage is above overvoltage protection level  by configuring the
- *          following structure members of
+ *          voltage is above overvoltage protection level which is stored in
+ *          the below defined structure members of
  *          Pmic_PowerResourceStat_t :
  *          overVoltageProtectionLvlStat
  *
+ *          Application can get the BUCK Reset Signal status which is stored in
+ *          the below defined structure members of
+ *          Pmic_PowerResourceStat_t :
+ *          buckResetSignalStat
  *
- * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
- * \param   pwrResource        [IN]    PMIC Power resource
- *                                     Valid values for TPS6594x Leo Device
- *                                     \ref Pmic_Tps6594xLeo_Power_Resource.
- *                                     Valid values for LP8764x HERA Device
- *                                     \ref Pmic_Lp8764xHera_Power_Resource.
- * \param   pPwrRsrcStatCfg    [OUT]   Pointer to store Power Resource
- *                                     configuration for BUCK/LDO/VMON/VCCA
+ *
+ * \param   pPmicCoreHandle    [IN]       PMIC Interface Handle.
+ * \param   pwrResource        [IN]       PMIC Power resource
+ *                                        Valid values for TPS6594x Leo Device
+ *                                        \ref Pmic_Tps6594xLeo_Power_Resource.
+ *                                        Valid values for LP8764x HERA Device
+ *                                        \ref Pmic_Lp8764xHera_Power_Resource.
+ * \param   pPwrRsrcStatCfg    [IN/OUT]   Pointer to store Power Resource
+ *                                        Status for BUCK/LDO/VMON/VCCA
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
@@ -1124,29 +1236,31 @@ int32_t Pmic_powerGetPwrRsrcStat(Pmic_CoreHandle_t        *pPmicCoreHandle,
  * Design: did_pmic_power_thermal_cfg_readback
  *
  *          This function is used to get the thermal status of the PMIC
- *          (die temperature)
+ *          (die temperature) when corresponding validParam bit field is set in
+ *          the Pmic_PowerThermalStat_t
+ *          For more information \ref Pmic_PowerThermalStat_t
  *
  *          Application can get the thermal status that if the  die junction
- *          above the thermal warning level  by
- *          configuring the following structure members of
+ *          above the thermal warning level  which is stored in
+ *          the below defined structure members of
  *          Pmic_PowerThermalStat_t:
  *          thermalStateWarning
  *
  *          Application can get the thermal status that if the  die junction
- *          above the thermal level causing a sequenced shutdown by
- *          configuring the following structure members of
+ *          above the thermal level causing a sequenced shutdown which is
+ *          stored in the below defined structure members of
  *          Pmic_PowerThermalStat_t:
  *          thermalStateOderlyShtDwn
  *
  *          Application can get the thermal status that if the  die junction
- *          above the thermal level causing an immediate shutdown by
- *          configuring the following structure members of
+ *          above the thermal level causing an immediate shutdown which is
+ *          stored in the below defined structure members of
  *          Pmic_PowerThermalStat_t:
  *          thermalStateImmShtDwn
  *
- * \param   pPmicCoreHandle       [IN]    PMIC Interface Handle.
- * \param   pPwrThermalStatCfg    [OUT]   Pointer to store Thermal
- *                                        configuration for PMIC
+ * \param   pPmicCoreHandle       [IN]       PMIC Interface Handle.
+ * \param   pPwrThermalStatCfg    [IN/OUT]   Pointer to store Thermal
+ *                                           configuration for PMIC
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
@@ -1161,7 +1275,12 @@ int32_t Pmic_powerGetPwrThermalStat(
  * Requirement: REQ_TAG(PDK-5840)
  * Design: did_pmic_power_thermal_cfg_readback
  *
- *          To configure the the thermal wrarning threshold temperature level,
+ *           This function is used to set the thermal threshold level for PMIC
+ *          (die temperature) when corresponding validParam bit field is set in
+ *          the Pmic_PowerThermalCfg_t
+ *          For more information \ref Pmic_PowerThermalCfg_t
+ *
+ *          To configure the the thermal warning threshold temperature level,
  *          the application has to configure the below defined structure
  *          member of the Pmic_PowerThermalCfg_t:
  *          thermalWarnThold
@@ -1177,8 +1296,9 @@ int32_t Pmic_powerGetPwrThermalStat(
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_powerSetThermalConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
-                                   Pmic_PowerThermalCfg_t thermalThreshold);
+int32_t Pmic_powerSetThermalConfig(
+                                Pmic_CoreHandle_t           *pPmicCoreHandle,
+                                const Pmic_PowerThermalCfg_t thermalThreshold);
 
 /**
  * \brief   Get the PMIC thermal threshold value function.
@@ -1187,20 +1307,22 @@ int32_t Pmic_powerSetThermalConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
  * Design: did_pmic_power_thermal_cfg_readback
  *
  *          This function is used to get the thermal temperature threshold
- *          value for the PMIC.
- * 
- *          To get the the thermal wrarning threshold temperature level,
- *          the application has to configure the below defined structure
+ *          value for the PMIC when corresponding validParam bit field is set in
+ *          the Pmic_PowerThermalCfg_t
+ *          For more information \ref Pmic_PowerThermalCfg_t
+ *
+ *          Application can get the the thermal wrarning threshold temperature
+ *          level which is stored in the below defined structure member of
  *          member of the Pmic_PowerThermalCfg_t:
  *          thermalWarnThold
  *
- *          To get the the thermal shutdown threshold temperature level,
- *          the application has to configure the below defined structure member
+ *          Application can get the the thermal shutdown threshold temperature
+ *          level which is stored in the below defined structure member
  *          of the Pmic_PowerThermalCfg_t:
  *          thermalShutdownThold
  *
- * \param   pPmicCoreHandle       [IN]     PMIC Interface Handle.
- * \param   pThermalThreshold     [OUT]    Pointer to hold Thermal Cfg
+ * \param   pPmicCoreHandle       [IN]        PMIC Interface Handle.
+ * \param   pThermalThreshold     [IN/OUT]    Pointer to hold Thermal Cfg
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
@@ -1238,7 +1360,7 @@ int32_t Pmic_powerGetThermalConfig(Pmic_CoreHandle_t      *pPmicCoreHandle,
 int32_t Pmic_powerSetPwrRsrcIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
                                  const uint16_t     pwrResource,
                                  const uint8_t      intrType,
-                                 bool               intrEnable);
+                                 const bool         intrEnable);
 
 /*!
  * \brief   API to enable/disable Power interrupt.
@@ -1263,7 +1385,7 @@ int32_t Pmic_powerSetPwrRsrcIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  */
 int32_t Pmic_powerSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
                           const uint8_t      intrType,
-                          bool               intrEnable);
+                          const bool         intrEnable);
 
 #ifdef __cplusplus
 }

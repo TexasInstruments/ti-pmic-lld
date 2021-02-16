@@ -35,9 +35,9 @@
  *  \ingroup DRV_PMIC_MODULE
  *  \defgroup DRV_PMIC_FSM_MODULE PMIC FSM Driver API
  *      This Module explains about PMIC FSM driver parameters and APIs usage.
- *  PMIC FSM Driver module covers all FSM features APIs. Like, set/get FSM
- *  states, enable FSM I2C Triggers, Mask and Unmask NSLEEP Signals and 
- *  trigger Runtime BIST
+ *      PMIC FSM Driver module covers all FSM features APIs. Like, set/get FSM
+ *      states, enable FSM I2C Triggers, Mask and Unmask NSLEEP Signals and
+ *      trigger Runtime BIST
  *
  *  Supported PMIC devices for FSM Module:
  *  1. TPS6594x (Leo PMIC Device)
@@ -113,13 +113,20 @@ extern "C" {
 /* @} */
 
 /**
- *  \anchor Pmic_Fsm_Lpm_Cntrl
- *  \name   PMIC LPM Control
+ *  \anchor Pmic_Fsm_FastBist_Enable
+ *  \name   PMIC Fast BIST Enable/Disable
+ *
+ *         This affects whether or not LBIST can be skipped to save boot up time
+ *         from LP_STANDBY state.
+ *         Application need to configure this before the device is turned off
+ *         (using ENABLE pin or TRIGGER_I2C_0 bit) and enters LP_STANDBY state
  *
  *  @{
  */
-#define PMIC_FSM_LPM_ENABLE                   (1U)
-#define PMIC_FSM_LPM_DISABLE                  (0U)
+/** \brief Only analog BIST is run at BOOT BIST  */
+#define PMIC_FSM_FAST_BIST_ENABLE                   (1U)
+/** \brief Logic and analog BIST is run at BOOT BIST. */
+#define PMIC_FSM_FAST_BIST_DISABLE                  (0U)
 /* @} */
 
 /**
@@ -133,9 +140,177 @@ extern "C" {
 #define PMIC_NSLEEP2B_FSM_UNMASK              (0U)
 #define PMIC_NSLEEP2B_FSM_MASK                (1U)
 /*  @} */
+
+/**
+ *  \anchor Pmic_FSM_StartupDest_Select
+ *  \name   Select PMIC FSM Startup Destination
+ *
+ *  @{
+ */
+ /** \brief Selects PMIC FSM Startup Destination as STANDBY state or
+   *        LPSTANDBY state based on  LP_STANDBY_SEL */
+#define PMIC_FSM_STARTUPDEST_STANDBY_LPSTANDBY     (0U)
+/** \brief Selects PMIC FSM Startup Destination as MCU only state*/
+#define PMIC_FSM_STARTUPDEST_MCUONLY               (2U)
+/** \brief Selects PMIC FSM Startup Destination as Active state */
+#define PMIC_FSM_STARTUPDEST_ACTIVE                (3U)
+/*  @} */
+
+/**
+ *  \anchor Pmic_Fsm_LpStandby_Sel
+ *  \name   PMIC LPSTANDBY State Selection
+ *
+ *  @{
+ */
+#define PMIC_FSM_SELECT_LPSTANDBY_STATE            (1U)
+#define PMIC_FSM_SELECT_STANDBY_STATE              (0U)
+/* @} */
+
+/**
+ *  \anchor Pmic_Fsm_IlimInt_FsmCtrl_En
+ *  \name   To Enable/Disable PMIC Buck/LDO regulators ILIM interrupts affect
+ *          FSM triggers
+ *
+ *  @{
+ */
+#define PMIC_FSM_ILIM_INT_FSMCTRL_ENABLE          (1U)
+#define PMIC_FSM_ILIM_INT_FSMCTRL_DISABLE         (0U)
+/* @} */
+
+/**
+ *  \anchor Pmic_Pfsm_Delay_Type
+ *  \name   PMIC PFSM Delay Type
+ *
+ *  @{
+ */
+#define PMIC_PFSM_DELAY1                    (0U)
+#define PMIC_PFSM_DELAY2                    (1U)
+#define PMIC_PFSM_DELAY3                    (2U)
+#define PMIC_PFSM_DELAY4                    (3U)
+/* @} */
+
+/**
+ *  \anchor Pmic_FsmValidParamCfg
+ *  \name   PMIC FSM Configuration Structure Param Bits
+ *
+ *  PMIC FSM valid params configuration type for
+ *  the structure member validParams of Pmic_FsmCfg_t
+ *  structure
+ *
+ *  @{
+ */
+ /** \brief validParams value used to set/get to Enable/Disable Fast BIST  */
+#define PMIC_FSM_CFG_FAST_BIST_EN_VALID           (0U)
+/** \brief validParams value used to set/get Low Power Standby State Selection
+ */
+#define PMIC_FSM_CFG_LP_STANDBYSEL_VALID          (1U)
+/** \brief validParams value used to set/get to Enable/Disable Buck/LDO
+ *         regulators ILIM interrupts affect FSM triggers */
+#define PMIC_FSM_CFG_ILIM_INT_FSMCTRL_EN_VALID    (2U)
+/** \brief validParams value used to set/get to Select FSM Startup Destination
+ */
+#define PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID   (3U)
+/*  @} */
+
+/**
+ *  \anchor Pmic_FsmValidParamBitShiftValues
+ *  \name   PMIC FSM Configuration valid param bit shift values
+ *
+ *  Application can use below shifted values to set the validParam
+ *  member defined in Pmic_FsmCfg_t structure
+ *
+ *  @{
+ */
+#define PMIC_FSM_CFG_FAST_BIST_EN_VALID_SHIFT       \
+                         (1U << PMIC_FSM_CFG_FAST_BIST_EN_VALID)
+#define PMIC_FSM_CFG_LP_STANDBYSEL_VALID_SHIFT       \
+                         (1U << PMIC_FSM_CFG_LP_STANDBYSEL_VALID)
+#define PMIC_FSM_CFG_ILIM_INT_FSMCTRL_EN_VALID_SHIFT       \
+                         (1U << PMIC_FSM_CFG_ILIM_INT_FSMCTRL_EN_VALID)
+#define PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID_SHIFT       \
+                         (1U << PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID)
+/*  @} */
+
+/**
+ *  \anchor Pmic_Nsleep_SignalLvl
+ *  \name   PMIC Nsleep 1B/2B signal level
+ *
+ *  @{
+ */
+#define PMIC_NSLEEP_LOW                  (0U)
+#define PMIC_NSLEEP_HIGH                 (1U)
+/*  @} */
+
+/**
+ *  \anchor Pmic_Fsm_I2c_Trigger_Type
+ *  \name   PMIC FSM I2C Trigger Type
+ *
+ *  @{
+ */
+#define PMIC_FSM_I2C_TRIGGER0                     (0x0U)
+#define PMIC_FSM_I2C_TRIGGER1                     (0x1U)
+#define PMIC_FSM_I2C_TRIGGER2                     (0x2U)
+#define PMIC_FSM_I2C_TRIGGER3                     (0x3U)
+#define PMIC_FSM_I2C_TRIGGER4                     (0x4U)
+#define PMIC_FSM_I2C_TRIGGER5                     (0x5U)
+#define PMIC_FSM_I2C_TRIGGER6                     (0x6U)
+#define PMIC_FSM_I2C_TRIGGER7                     (0x7U)
+/*  @} */
+
+/**
+ *  \anchor Pmic_Fsm_I2c_Trigger_Val
+ *  \name   PMIC FSM I2C Trigger Value
+ *
+ *  @{
+ */
+ /** \brief Valid only for I2C4/ I2C5/ I2C6/ I2C7 */
+#define PMIC_FSM_I2C_TRIGGER_VAL_0                (0x0U)
+#define PMIC_FSM_I2C_TRIGGER_VAL_1                (0x1U)
+/*  @} */
+
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
+
+/*!
+ * \brief  PMIC FSM configuration structure.
+ *         Note: validParams is input param for all Set and Get APIs. other
+ *         params except validParams is input param for Set APIs and output
+ *         param for Get APIs
+ *
+ * \param   validParams         Selection of structure parameters to be set,
+ *                              from the combination of
+ *                              \ref Pmic_FsmValidParamCfg and the corresponding
+ *                              member value must be updated
+ *                              Valid values \ref Pmic_FsmValidParamCfg
+ * \param   fastBistEn          Enable/Disable Fast BIST
+ *                              Valid values \ref Pmic_Fsm_FastBist_Enable
+ *                              Valid only when PMIC_FSM_CFG_FAST_BIST_EN_VALID
+ *                              bit is set
+ * \param   lpStandbySel        Low Power Standby State Selection
+ *                              Valid values \ref Pmic_Fsm_LpStandby_Sel
+ *                              Valid only when PMIC_FSM_CFG_LP_STANDBYSEL_VALID
+ *                              bit is set
+ * \param   ilimIntfsmCtrlEn    Enable/Disable Buck/LDO regulators ILIM
+ *                              interrupts affect FSM triggers
+ *                              Valid values \ref Pmic_Fsm_IlimInt_FsmCtrl_En
+ *                              Valid only when
+ *                              PMIC_FSM_CFG_ILIM_INT_FSMCTRL_EN_VALID
+ *                              bit is set
+ * \param   fsmStarupDestSel    Select FSM Startup Destination
+ *                              Valid values \ref Pmic_FSM_StartupDest_Select
+ *                              Valid only when
+ *                              PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID
+ *                              bit is set
+ */
+typedef struct Pmic_FsmCfg_s
+{
+    uint8_t                   validParams;
+    bool                      fastBistEn;
+    bool                      lpStandbySel;
+    bool                      ilimIntfsmCtrlEn;
+    uint8_t                   fsmStarupDestSel;
+} Pmic_FsmCfg_t;
 
 /*==========================================================================*/
 /*                         Function Declarations                            */
@@ -169,7 +344,7 @@ int32_t Pmic_fsmDeviceOffRequestCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
  * \brief  API to initiate ON Request FSM transition.
  *
  * Requirement: REQ_TAG(PDK-5837)
- * Design: did_pmic_fsm_cfg
+ * Design: did_pmic_fsm_cfg_readback
  *
  *         This function setup nSLEEP signal bits with STARTUP_DEST
  *         Which is common for all supported PMICs. This API needs to be called
@@ -183,9 +358,14 @@ int32_t Pmic_fsmDeviceOnRequest(Pmic_CoreHandle_t *pPmicCoreHandle);
  * \brief  API to Set FSM mission States.
  *
  * Requirement: REQ_TAG(PDK-5837), REQ_TAG(PDK-5851)
- * Design: did_pmic_fsm_cfg, did_pmic_lpstandby_cfg
+ * Design: did_pmic_fsm_cfg_readback, did_pmic_lpstandby_cfg
  *
  *         This function is used for set/change the FSM mission states for PMIC
+ *         using Nsleep1B and Nsleep2B signals in absence of GPIO pins
+ *         Note: Application need to unmask Nsleep1B and Nsleep2B signals for
+ *               FSM state transitions except for Standby/LpStandby State
+ *               Application need to mask Nsleep1B and Nsleep2B signals for
+ *               Standby/LpStandby State transition
  *
  * \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
  * \param   pmicState        [IN]  PMIC FSM mission state
@@ -195,15 +375,15 @@ int32_t Pmic_fsmDeviceOnRequest(Pmic_CoreHandle_t *pPmicCoreHandle);
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_fsmSetMissionState(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                                uint8_t             pmicState);
+                                const uint8_t       pmicState);
 
 /*!
- * \brief  API to MASK/UNMASK NSLEEP Signal.
+ * \brief  API to MASK/UNMASK NSLEEP1B or 2B Signal.
  *
  * Requirement: REQ_TAG(PDK-5837)
- * Design: did_pmic_fsm_cfg
+ * Design: did_pmic_fsm_cfg_readback
  *
- *         This function is used for Masking/Unmasking for NSLEEP2 or NSLEEP1
+ *         This function is used for Masking/Unmasking for NSLEEP2B or NSLEEP1B
  *         signal.
  *
  * \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
@@ -215,8 +395,30 @@ int32_t Pmic_fsmSetMissionState(Pmic_CoreHandle_t  *pPmicCoreHandle,
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_fsmSetNsleepSignalMask(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                                    bool                nsleepType,
-                                    bool                maskEnable);
+                                    const bool          nsleepType,
+                                    const bool          maskEnable);
+
+/*!
+ * \brief  API to read the status of the NSLEEP1B/2B Signal is masked or not
+ *
+ * Requirement: REQ_TAG(PDK-9151)
+ * Design: did_pmic_fsm_cfg_readback
+ *
+ *         This function is used to read the status of the NSLEEP1B/2B Signal is
+ *         masked or not
+ *
+ * \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
+ * \param   nsleepType       [IN]  NSLEEP signal
+ *                                 Valid values: \ref Pmic_Nsleep_Signals
+ * \param   pNsleepStat      [OUT] Pointer to store Nsleep Signal is masked or
+ *                                 not
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmGetNsleepSignalMaskStat(Pmic_CoreHandle_t  *pPmicCoreHandle,
+                                        const bool          nsleepType,
+                                        bool               *pNsleepStat);
 
 /*!
  * \brief  API to initiate Runtime BIST.
@@ -233,6 +435,227 @@ int32_t Pmic_fsmSetNsleepSignalMask(Pmic_CoreHandle_t  *pPmicCoreHandle,
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_fsmRequestRuntimeBist(Pmic_CoreHandle_t  *pPmicCoreHandle);
+
+/*!
+ * \brief   API to set PMIC FSM configuration.
+ *
+ * Requirement: REQ_TAG(PDK-9144), REQ_TAG(PDK-9134), REQ_TAG(PDK-9128)
+ * Design: did_pmic_fsm_cfg_readback
+ *
+ *          This function is used to set the required FSM configuration when
+ *          corresponding bit field is set.
+ *
+ * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
+ * \param   fsmCfg          [IN]    Set required FSM configuration
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                 const Pmic_FsmCfg_t  fsmCfg);
+
+/*!
+ * \brief   API to get PMIC FSM configuration.
+ *
+ * Requirement: REQ_TAG(PDK-9144), REQ_TAG(PDK-9134), REQ_TAG(PDK-9128)
+ * Design: did_pmic_fsm_cfg_readback
+ *
+ *          This function is used to get the FSM configuration when
+ *          corresponding validParam bit fields are set in Pmic_FsmCfg_t
+ *          structure
+ *
+ * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
+ * \param   pFsmCfg         [IN/OUT]   Pointer to store FSM configuration
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                 Pmic_FsmCfg_t    *pFsmCfg);
+
+/*!
+ * \brief  API to configure PFSM Delay
+ *
+ * Requirement: REQ_TAG(PDK-9136)
+ * Design: did_pmic_pfsm_cfg_readback
+ *
+ *         This function is used to configure PFSM Delay. PFSM Delay will affect
+ *         the total power up sequence time before the system is released from
+ *         reset
+ *         Consider If the PFSM_Delay value is 'x' then Delay will calculated as
+ *          Delay = x *(50ns * 2^PFSM_DELAY_STEP)
+ *
+ * \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
+ * \param   pFsmDelayType    [IN]  PFSM Delay Type
+ *                                 Valid values: \ref Pmic_Pfsm_Delay_Type
+ * \param   pfsmDelay        [IN]  Delay for PFSM
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmSetPfsmDelay(Pmic_CoreHandle_t  *pPmicCoreHandle,
+                             const uint8_t       pFsmDelayType,
+                             const uint8_t       pfsmDelay);
+
+/*!
+ * \brief  API to read PFSM Delay
+ *
+ * Requirement: REQ_TAG(PDK-9136)
+ * Design: did_pmic_pfsm_cfg_readback
+ *
+ *         This function is used to read PFSM Delay
+ *
+ * \param   pPmicCoreHandle  [IN]   PMIC Interface Handle
+ * \param   pFsmDelayType    [IN]   PFSM Delay Type
+ *                                  Valid values: \ref Pmic_Pfsm_Delay_Type
+ * \param   pPfsmDelay       [OUT]  Pointer to store the Delay for PFSM
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmGetPfsmDelay(Pmic_CoreHandle_t  *pPmicCoreHandle,
+                             uint8_t             pFsmDelayType,
+                             uint8_t            *pPfsmDelay);
+
+/*!
+ * \brief   API to set PMIC Nsleep1B/2B Signal value.
+ *
+ * Requirement: REQ_TAG(PDK-9146)
+ * Design: did_pmic_fsm_cfg_readback
+ *
+ *          This function is used to configure the Nsleep1B/2B signal level
+ *
+ * \param   pPmicCoreHandle  [IN]   PMIC Interface Handle.
+ * \param   nsleepType       [IN]   NSLEEP signal
+ *                                  Valid values: \ref Pmic_Nsleep_Signals
+ * \param   nsleepVal        [IN]   PMIC Nsleep signal level High/Low to be
+ *                                  configured.
+ *                                  Valid values \ref Pmic_Nsleep_SignalLvl.
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmSetNsleepValue(Pmic_CoreHandle_t *pPmicCoreHandle,
+                               const bool         nsleepType,
+                               const uint8_t      nsleepVal);
+
+/*!
+ * \brief   API to get PMIC Nsleep1B/2B Signal value.
+ *
+ * Requirement: REQ_TAG(PDK-9146)
+ * Design: did_pmic_fsm_cfg_readback
+ *
+ *          This function is used to read the signal level of the Nsleep1B/2B
+ *          signal
+ *
+ * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
+ * \param   nsleepType      [IN]    NSLEEP signal
+ *                                  Valid values: \ref Pmic_Nsleep_Signals
+ * \param   pNsleepVal      [OUT]   Pointer to store PMIC Nsleep signal level
+ *                                  High/Low.
+ *                                  Valid values \ref Pmic_Nsleep_SignalLvl
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmGetNsleepValue(Pmic_CoreHandle_t *pPmicCoreHandle,
+                               const bool         nsleepType,
+                               uint8_t           *pNsleepVal);
+
+/*!
+ * \brief   API to recover from SOC Power Error using Nsleep1B signal.
+ *
+ * Requirement: REQ_TAG(PDK-9123)
+ * Design: did_pmic_fsm_recover_soc_pwr_err
+ *
+ *          This function is used to recover from SOC Power Error without
+ *          rebooting the system
+ *          Note: Application need to call this API from MCU domain when SOC
+ *          Power Error on Primary PMIC
+ *          Application need to unmask Nsleep1B
+ *
+ * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmRecoverSocPwrErr(Pmic_CoreHandle_t *pPmicCoreHandle);
+
+/*!
+ * \brief   API to reconfigure NVM Default using OTA Method
+ *
+ * Requirement: REQ_TAG(PDK-9121)
+ * Design: did_pmic_fsm_ota_update_cfg
+ *
+ *          This function is used to reconfigure NVM Default of the PMIC Devices
+ *          using OTA Method
+ *          Note: Steps for OTA Update to reconfigure NVM Default values
+ *          1. Application has to call this API to configure the PMIC Registers
+ *             for OTA update of NVM default values
+ *          2. Application can run either customized java or python script over
+ *             the I2C1 or the SPI Interface
+ *          3. Application has to call the API - Pmic_fsmOtaInitiateSoftReboot
+ *             to do soft reboot on each PMIC for the updated NVM reload
+ *          4. Application can use this API only to reconfigure NVM Default of
+ *             the PMIC Devices using OTA Method
+ *
+ * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmOtaUpdateCfg(Pmic_CoreHandle_t *pPmicCoreHandle);
+
+/*!
+ * \brief   API to do soft reboot on each PMIC for the updated NVM reload
+ *
+ * Requirement: REQ_TAG(PDK-9121)
+ * Design: did_pmic_fsm_ota_update_cfg
+ *
+ *          This function is used to do soft reboot on each PMIC for the updated
+ *          NVM reload
+ *          Note:
+ *          Application has to call this API after completion of below defined
+ *          Steps for OTA Update to reconfigure NVM Default values
+ *          1. Application has to call this API to configure the PMIC Registers
+ *             for OTA update of NVM default values
+ *          2. Application can run either customized java or python script over
+ *             the I2C1 or the SPI Interface
+ *          Application can use this API only to reconfigure NVM Default of
+ *          the PMIC Devices using OTA Method
+ *
+ * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmOtaInitiateSoftReboot(Pmic_CoreHandle_t *pPmicCoreHandle);
+
+/*!
+ * \brief   API to initiate FSM I2C trigger for given FSM I2C trigger type
+ *
+ * Requirement: REQ_TAG(PDK-9330)
+ * Design: did_pmic_fsm_i2c_trigger
+ *
+ *          This function is used to to initiate FSM I2C trigger for given FSM
+ *          I2C trigger type
+ *          Note: In this API, the default i2cTriggerType is assumed as
+ *                PMIC_FSM_I2C_TRIGGER0. While adding support for New PMIC
+ *                device, developer need to update the API functionality for
+ *                New PMIC device accordingly.
+ *
+ * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
+ * \param   i2cTriggerType  [IN]    FSM I2C Trigger Type
+ *                                  Valid values: \ref Pmic_Fsm_I2c_Trigger_Type
+ * \param   i2cTriggerVal   [IN]    FSM I2C Trigger Value
+ *                                  Valid values: \ref Pmic_Fsm_I2c_Trigger_Val
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmEnableI2cTrigger(Pmic_CoreHandle_t  *pPmicCoreHandle,
+                                 const uint8_t       i2cTriggerType,
+                                 const uint8_t       i2cTriggerVal);
 
 #ifdef __cplusplus
 }

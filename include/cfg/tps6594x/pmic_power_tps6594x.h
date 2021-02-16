@@ -152,8 +152,8 @@ extern "C" {
 
 /**
  *  \anchor Pmic_TPS6594x_Regulator_Pwm_Pfm_Mode
- *  \name   PMIC Select between Automatic transitions between PFM and PWM modes \
- *          OR Forced to PWM operation.
+ *  \name   PMIC Select between Automatic transitions between PFM and PWM  \
+ *          modes OR Forced to PWM operation.
  *
  *  Valid only for BUCK regulators.
  *
@@ -388,7 +388,11 @@ extern "C" {
  *
  *  @{
  */
-/** \brief Used to select rail group as no group */
+/** \brief Used to select rail group as no group
+ *         Note: Software can prevent the SoC/MCU Power Error Handling, which
+ *         normally shuts down the SOC/MCU power rails, by setting the relevent
+ *         regulators to PMIC_TPS6594X_POWER_RAIL_SEL_NONE
+ */
 #define PMIC_TPS6594X_POWER_RAIL_SEL_NONE                  (0x0U)
 /** \brief Used to select rail group as MCU rail group */
 #define PMIC_TPS6594X_POWER_RAIL_SEL_MCU                   (0x1U)
@@ -544,7 +548,7 @@ extern "C" {
 #define PMIC_TPS6594X_POWER_CURRENT_LIMIT_STATUS_ABOVE_LIMIT         (0x0U)
 /** \brief Status indicating that output current is below current limit
            level. */
-#define PMIC_TPS6594X_POWER_CURRENT_LIMIT_STATUS_BELOW_LIMIT          (0x1U)
+#define PMIC_TPS6594X_POWER_CURRENT_LIMIT_STATUS_BELOW_LIMIT         (0x1U)
 /* @} */
 
 /**
@@ -576,7 +580,7 @@ level */
 #define PMIC_TPS6594X_VCCA_INPUT_UNDER_VOLTAGE_STATUS_ABOVE_UV         (0x0U)
 /** \brief Status indicating that input voltage is below under-voltage
 level */
-#define PMIC_TPS6594X_VCCA_INPUT_UNDER_VOLTAGE_STATUS_BELOW_UV       (0x1U)
+#define PMIC_TPS6594X_VCCA_INPUT_UNDER_VOLTAGE_STATUS_BELOW_UV         (0x1U)
 /* @} */
 
 /**
@@ -687,6 +691,16 @@ level */
 #define PMIC_TPS6594X_REGULATOR_LDORTC_DISABLE          (1U)
 /*  @} */
 
+/**
+ *  \anchor Pmic_Tps6594x_Buck_Reset_Status
+ *  \name   Status of Buck Reset Signal
+ *
+ *  @{
+ */
+#define PMIC_TPS6594X_BUCK_NO_RESET           (0U)
+#define PMIC_TPS6594X_BUCK_RESET              (1U)
+/*  @} */
+
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
@@ -720,7 +734,7 @@ int32_t Pmic_powerSetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
  * Requirement: REQ_TAG(PDK-5841)
  * Design: did_pmic_power_cfg_readback
  *
- *          This function is used to get enable/disable status for LDORTC 
+ *          This function is used to get enable/disable status for LDORTC
  *          regulator.
  *
  * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.

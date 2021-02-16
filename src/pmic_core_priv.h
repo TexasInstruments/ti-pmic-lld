@@ -59,15 +59,30 @@ extern "C" {
  */
 #define PMIC_DEV_REV_REGADDR                (0x01U)
 #define PMIC_WDG_LONGWIN_CFG_REGADDR        (0x405U)
-/* On J7 1.0 EVM, PMIC_LEO_DEV_REV_ID is 0x08 */
-#define PMIC_LEO_DEV_REV_ID                 (0x08U)
-/* On J7 2.0 EVM, PMIC_LEO_DEV_REV_ID will be 0x03 */
-/* #define PMIC_LEO_DEV_REV_ID              (0x03U) */
 
-/*
- * Need to be verfied on J7VCL
- */
+/* On J721E 1.0 EVM, PMIC_LEO_DEV_REV_ID is 0x08 */
+#define PMIC_LEO_DEV_REV_ID                 (0x08U)
+
+/* On J7VCL 1.0 EVM, PMIC_HERA_DEV_REV_ID is 0x07 */
 #define PMIC_HERA_DEV_REV_ID                (0x07U)
+
+/* On J721E 1.0 EVM, PMIC_LEO_DEV_REV_ID is 0x08 */
+#define PMIC_LEO_DEV_REV_ID_PG_1_0          (0x08U)
+
+/* On J721E 2.0 EVM, PMIC_LEO_DEV_REV_ID is 0x82 */
+#define PMIC_LEO_DEV_REV_ID_PG_2_0          (0x82U)
+
+/* On J7VCL 1.0 EVM, PMIC_HERA_DEV_REV_ID is 0x07 */
+#define PMIC_HERA_DEV_REV_ID_PG_1_0          (0x07U)
+
+/* On J7VCL 2.0 EVM, PMIC_HERA_DEV_REV_ID is 0x86U */
+#define PMIC_HERA_DEV_REV_ID_PG_2_0          (0x86U)
+
+/* Silicon Revision Id - PG 1.0 for Leo and Hera */
+#define PMIC_SILICON_REV_ID_PG_1_0           (0x08U)
+
+/* Silicon Revision Id - PG 2.0 for Leo and Hera */
+#define PMIC_SILICON_REV_ID_PG_2_0           (0x10U)
 
 /*!
  * \brief  PMIC power Configuration Register Address
@@ -129,6 +144,7 @@ extern "C" {
  * \brief: HERA PMIC StartUP Shift Values
  */
 #define PMIC_STARTUP_CTRL_LP_STANDBY_SEL_SHIFT        (0x03U)
+#define PMIC_STARTUP_CTRL_FAST_BIST_SHIFT             (0x04U)
 #define PMIC_STARTUP_CTRL_STARTUP_DEST_SHIFT          (0x05U)
 
 /*!
@@ -155,9 +171,11 @@ extern "C" {
  * \brief: HERA PMIC StartUP Mask Values
  */
 #define PMIC_STARTUP_CTRL_LP_STANDBY_SEL_MASK                   \
-                     ((uint8_t)(0x01U << PMIC_STARTUP_CTRL_LP_STANDBY_SEL_SHIFT))
+                    ((uint8_t)(0x01U << PMIC_STARTUP_CTRL_LP_STANDBY_SEL_SHIFT))
+#define PMIC_STARTUP_CTRL_FAST_BIST_MASK                   \
+                    ((uint8_t)(0x01U << PMIC_STARTUP_CTRL_FAST_BIST_SHIFT))
 #define PMIC_STARTUP_CTRL_STARTUP_DEST_MASK                     \
-                     ((uint8_t)(0x03U << PMIC_STARTUP_CTRL_STARTUP_DEST_SHIFT))
+                    ((uint8_t)(0x03U << PMIC_STARTUP_CTRL_STARTUP_DEST_SHIFT))
 
 /*!
  * \brief  PMIC CONFIG_1 register bit masks
