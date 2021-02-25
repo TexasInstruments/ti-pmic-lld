@@ -109,7 +109,7 @@ void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *pPmicCoreHandle)
  */
 void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *pPmicCoreHandle)
 {
-    if(NULL != pPmicCoreHandle->pFnPmicCritSecStart)
+    if(NULL != pPmicCoreHandle->pFnPmicCritSecStop)
     {
         pPmicCoreHandle->pFnPmicCritSecStop();
     }
@@ -514,7 +514,7 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
        (((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams,
                                      PMIC_CFG_CRITSEC_STOP_VALID)))
     {
-        if(NULL == pPmicConfigData->pFnPmicCritSecStart)
+        if(NULL == pPmicConfigData->pFnPmicCritSecStop)
         {
             pmicStatus = PMIC_ST_ERR_NULL_FPTR;
         }
