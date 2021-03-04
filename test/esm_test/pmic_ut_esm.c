@@ -284,6 +284,26 @@ static Pmic_Ut_Tests_t pmic_esm_tests[] =
          8011,
          "Pmic_esmSetInterrupt: Test to verify ESM MCU PWM Mode PIN, Fail and RST Interrupts disabled"
      },
+     {
+         1,
+         "Pmic_esmGetStatus: Test to verify PMIC ESM MCU Get Status for Start and Stop functionality"
+     },
+     {
+         2,
+         "Pmic_esmGetStatus: Test to verify PMIC ESM SOC Get Status for Start and Stop functionality"
+     },
+     {
+         3,
+         "Pmic_esmGetStatus: Parameter validation for handle"
+     },
+     {
+         4,
+         "Pmic_esmGetStatus: Parameter validation for pEsmState"
+     },
+     {
+         5,
+         "Pmic_esmGetStatus: Negative test to verify ESM SOC Get Status for HERA"
+     },
 };
 
 /*!
@@ -1624,7 +1644,7 @@ static void test_esm_setInterrupt_esmMcuRstIntr_pwmMode(void)
     if(0 > timeout)
     {
         pmicStatus = PMIC_ST_ERR_FAIL;
-    } 
+    }
 
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
@@ -2883,6 +2903,164 @@ static void test_Pmic_esmGetEnableState_hera(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
 
     pmic_testResultUpdate_pass(7859,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Test to verify PMIC ESM MCU Get Status for Start and Stop
+ *          functionality
+ */
+static void test_pmic_esm_getStatusEsmMcu(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    bool esmType       = PMIC_ESM_MODE_MCU;
+    bool esmState      = PMIC_ESM_START;
+    bool esmState_rd;
+
+    test_pmic_print_unity_testcase_info(1,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, esmState);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmEnable(pPmicCoreHandle, esmType, PMIC_ESM_ENABLE);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_ESM_STARTED, pmicStatus);
+
+    pmicStatus = Pmic_esmGetStatus(pPmicCoreHandle, esmType, &esmState_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    TEST_ASSERT_EQUAL(PMIC_ESM_START, esmState_rd);
+
+    esmState = PMIC_ESM_STOP;
+    pmicStatus = Pmic_esmStart(pPmicCoreHandle,esmType, esmState);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmEnable(pPmicCoreHandle, esmType, PMIC_ESM_ENABLE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmGetStatus(pPmicCoreHandle, esmType, &esmState_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    TEST_ASSERT_EQUAL(PMIC_ESM_STOP, esmState_rd);
+
+    pmic_testResultUpdate_pass(1,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Test to verify ESM SOC Get Status for Start and Stop
+ *          functionality
+ */
+static void test_pmic_esm_getStatusEsmSoc(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    bool esmType       = PMIC_ESM_MODE_SOC;
+    bool esmState      = PMIC_ESM_START;
+    bool esmState_rd;
+
+    test_pmic_print_unity_testcase_info(2,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(2,
+                                     pmic_esm_tests,
+                                     PMIC_ESM_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, esmState);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmEnable(pPmicCoreHandle, esmType, PMIC_ESM_ENABLE);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_ESM_STARTED, pmicStatus);
+
+    pmicStatus = Pmic_esmGetStatus(pPmicCoreHandle, esmType, &esmState_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    TEST_ASSERT_EQUAL(PMIC_ESM_START, esmState_rd);
+
+    esmState = PMIC_ESM_STOP;
+    pmicStatus = Pmic_esmStart(pPmicCoreHandle, esmType, esmState);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmEnable(pPmicCoreHandle, esmType, PMIC_ESM_ENABLE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmGetStatus(pPmicCoreHandle, esmType, &esmState_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    TEST_ASSERT_EQUAL(PMIC_ESM_STOP, esmState_rd);
+
+    pmic_testResultUpdate_pass(2,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Parameter validation for handle
+ */
+static void test_pmic_esm_getStatusPrmValTest_handle(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    bool esmType        = PMIC_ESM_MODE_SOC;
+    bool esmState;
+
+    test_pmic_print_unity_testcase_info(3,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_esmGetStatus(NULL, esmType, &esmState);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(3,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Parameter validation for pEsmState
+ */
+static void test_pmic_esm_getStatusPrmValTest_pEsmState(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    bool esmType        = PMIC_ESM_MODE_SOC;
+
+    test_pmic_print_unity_testcase_info(4,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_esmGetStatus(pPmicCoreHandle, esmType, NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(4,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Negative Test to verify ESM SOC Get Status for HERA
+ */
+static void test_pmic_esm_getStatusEsmSoc_hera(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    bool esmType       = PMIC_ESM_MODE_SOC;
+    bool esmState;
+
+    test_pmic_print_unity_testcase_info(5,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(5,
+                                     pmic_esm_tests,
+                                     PMIC_ESM_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_esmGetStatus(pPmicCoreHandle, esmType, &esmState);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
+
+    pmic_testResultUpdate_pass(5,
                                pmic_esm_tests,
                                PMIC_ESM_NUM_OF_TESTCASES);
 }
@@ -4182,6 +4360,11 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_Pmic_esmGetErrCnt_hera);
     RUN_TEST(test_Pmic_esmSetInterrupt_hera);
     RUN_TEST(test_Pmic_esmGetEnableState_hera);
+    RUN_TEST(test_pmic_esm_getStatusEsmMcu);
+    RUN_TEST(test_pmic_esm_getStatusEsmSoc);
+    RUN_TEST(test_pmic_esm_getStatusPrmValTest_handle);
+    RUN_TEST(test_pmic_esm_getStatusPrmValTest_pEsmState);
+    RUN_TEST(test_pmic_esm_getStatusEsmSoc_hera);
 
     pmic_updateTestResults(pmic_esm_tests, PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -4234,6 +4417,9 @@ static void test_pmic_run_slave_testcases(void)
     RUN_TEST(test_Pmic_esmGetErrCnt_hera);
     RUN_TEST(test_Pmic_esmSetInterrupt_hera);
     RUN_TEST(test_Pmic_esmGetEnableState_hera);
+    RUN_TEST(test_pmic_esm_getStatusPrmValTest_handle);
+    RUN_TEST(test_pmic_esm_getStatusPrmValTest_pEsmState);
+    RUN_TEST(test_pmic_esm_getStatusEsmSoc_hera);
 
     pmic_updateTestResults(pmic_esm_tests, PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -4487,8 +4673,8 @@ static const char pmicTestAppManualTestSubMenu[] =
     " \r\n 0: ESM PIN Interrupt Test"
     " \r\n 1: ESM FAIL Interrupt Test"
     " \r\n 2: ESM RST Interrupt Test"
-    " \r\n 3: ESM ALL Interrupt Test" 
-    " \r\n 4: ESM Disable Interrupt Test" 
+    " \r\n 3: ESM ALL Interrupt Test"
+    " \r\n 4: ESM Disable Interrupt Test"
     " \r\n 5: Back to Manual tests Menu"
     " \r\n"
     " \r\n Enter option: "
@@ -4539,7 +4725,7 @@ static void test_pmic_run_testcases_mcuLevelMode(void)
         }
         pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
         UNITY_BEGIN();
-        
+
         switch(subMenuOption)
         {
             case 0U:
@@ -4587,7 +4773,7 @@ static void test_pmic_run_testcases_mcuPwmMode(void)
         }
         pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
         UNITY_BEGIN();
-        
+
         switch(subMenuOption)
         {
             case 0U:
@@ -4628,11 +4814,11 @@ static void test_pmic_run_testcases_manual(uint32_t board)
             pmic_log("Read from UART Console failed\n");
             return;
         }
-        
+
         if(menuOption == 2)
         {
             break;
-        }   
+        }
 
         switch(menuOption)
         {
