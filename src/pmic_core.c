@@ -38,7 +38,11 @@
  */
 
 #include <pmic_core_priv.h>
+#include <pmic_core_tps6594x_priv.h>
+#include <pmic_core_lp8764x_priv.h>
+
 #include <pmic_rtc_tps6594x_priv.h>
+
 #include <pmic_fsm_priv.h>
 
 static const Pmic_DevSubSysInfo_t pmicSubSysInfo[] =
@@ -562,13 +566,13 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
             switch (pPmicCoreHandle->pmicDeviceType)
             {
                 case PMIC_DEV_HERA_LP8764X:
-                    if(PMIC_HERA_DEV_REV_ID != regVal)
+                    if(PMIC_HERA_DEV_REV_ID_PG_2_0 != regVal)
                     {
                         pmicStatus = PMIC_ST_WARN_INV_DEVICE_ID;
                     }
                     break;
                 case PMIC_DEV_LEO_TPS6594X:
-                    if(PMIC_LEO_DEV_REV_ID != regVal)
+                    if(PMIC_LEO_DEV_REV_ID_PG_2_0 != regVal)
                     {
                         pmicStatus = PMIC_ST_WARN_INV_DEVICE_ID;
                     }

@@ -1570,3 +1570,79 @@ int32_t Pmic_esmGetErrCnt(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     return pmicStatus;
 }
+
+/*!
+ * \brief   API to read status of PMIC ESM is started or not.
+ *
+ * Requirement: REQ_TAG(PDK-9150)
+ * Design: did_pmic_esm_cfg_readback
+ *
+ *          This function is used to read status of PMIC ESM_MCU/ESM_SOC is
+ *          started or not
+ *
+ * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
+ * \param   esmType         [IN]    PMIC ESM Type
+ *                                  For valid values:
+ *                                  \ref Pmic_EsmTypes
+ * \param   pEsmState        [IN]   Pointer to store the status of PMIC ESM is
+ *                                  started or not
+ *                                  For valid values:
+ *                                  \ref Pmic_EsmStates
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_esmGetStatus(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                          const bool           esmType,
+                          bool                *pEsmState)
+{
+
+    int32_t pmicStatus      = PMIC_ST_SUCCESS;
+    uint8_t esmBaseRegAddr  = 0U;
+    uint8_t regAddr        = 0U;
+    uint8_t regData        = 0U;
+
+    pmicStatus = Pmic_esmValidateParams(pPmicCoreHandle);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pmicStatus = Pmic_esmDeviceCheck(pPmicCoreHandle, esmType);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pEsmState))
+    {
+        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pmicStatus = Pmic_esmGetBaseRegAddr(esmType, &esmBaseRegAddr);
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        regAddr = (esmBaseRegAddr + PMIC_ESM_START_REG_OFFSET);
+        *pEsmState = PMIC_ESM_STOP;
+
+        /* Start Critical Section */
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                            regAddr,
+                                            &regData);
+
+        /* Stop Critical Section */
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           (Pmic_getBitField(regData,
+                             PMIC_ESM_X_START_REG_ESM_X_START_SHIFT,
+                             PMIC_ESM_X_START_REG_ESM_X_START_MASK)
+            == PMIC_ESM_VAL_1))
+        {
+            *pEsmState = PMIC_ESM_START;
+        }
+    }
+
+    return pmicStatus;
+}
