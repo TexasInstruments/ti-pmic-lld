@@ -381,7 +381,35 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
     {
         8041,
         "Pmic_irqGetErrStatus: Test to Clear all interrupts"
-    }
+    },
+    {
+        1,
+        "Pmic_irqGetGpioMaskIntr/Pmic_irqMaskIntr: Test to Get Mask status of Gpio and Irq Interrupts"
+    },
+    {
+        2,
+        "Pmic_irqGetGpioMaskIntr/Pmic_irqMaskIntr: Test to Get UnMask status of Gpio and Irq Interrupts"
+    },
+    {
+        3,
+        "Pmic_irqGetGpioMaskIntr: Parameter validation for handle"
+    },
+    {
+        4,
+        "Pmic_irqGetGpioMaskIntr: Parameter validation for pFallIntrMaskStat"
+    },
+    {
+        5,
+        "Pmic_irqGetGpioMaskIntr: Parameter validation for pRiseIntrMaskStat"
+    },
+    {
+        6,
+        "Pmic_irqGetMaskIntrStatus: Parameter validation for handle"
+    },
+    {
+        7,
+        "Pmic_irqGetMaskIntrStatus: Parameter validation for pMaskStatus"
+    },
 };
 
 /*!
@@ -5595,6 +5623,340 @@ static void test_gpio4_fallInterrupt_clrAllIrqTest(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 }
 
+/*!
+ * \brief   Test to Get Mask status of Gpio and Irq Interrupts
+ */
+static void test_pmic_gpio_irq_getMaskIntrStat(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    uint8_t  irqGpioNumMaxCnt, irqNumMaxCnt, irqCnt;
+    bool     riseIntrMaskStat, fallIntrMaskStat, irqMaskStatus;
+
+    test_pmic_print_unity_testcase_info(1,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        irqGpioNumMaxCnt = PMIC_TPS6594X_IRQ_GPIO_11_INT_MASK_NUM;
+        irqNumMaxCnt = PMIC_TPS6594X_IRQ_MAX_NUM;
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        irqGpioNumMaxCnt = PMIC_LP8764X_IRQ_GPIO_10_INT_MASK_NUM;
+        irqNumMaxCnt = PMIC_LP8764X_IRQ_MAX_NUM;
+    }
+
+    /* Masking All GPIO Interrupts */
+    pmicStatus = Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                                      PMIC_IRQ_GPIO_ALL_INT_MASK_NUM,
+                                      PMIC_IRQ_MASK,
+                                      PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+
+     for(irqCnt = 0; irqCnt <= irqGpioNumMaxCnt; irqCnt++)
+     {
+        /* Get Mask status of Gpio Interrupt */
+        pmicStatus = Pmic_irqGetGpioMaskIntr(pPmicCoreHandle,
+                                             irqCnt,
+                                             PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE,
+                                             &riseIntrMaskStat,
+                                             &fallIntrMaskStat);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        TEST_ASSERT_EQUAL(PMIC_IRQ_MASK, riseIntrMaskStat);
+        TEST_ASSERT_EQUAL(PMIC_IRQ_MASK, fallIntrMaskStat);
+     }
+
+    /* Masking All Interrupts */
+    pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                  PMIC_IRQ_ALL,
+                                  PMIC_IRQ_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+     for(irqCnt = 3; irqCnt < irqNumMaxCnt; irqCnt++)
+     {
+         if((irqCnt == 20) || (irqCnt == 21) || (irqCnt == 22) ||
+            (irqCnt == 27) || (irqCnt == 30) || (irqCnt == 53) ||
+            (irqCnt == 57) || (irqCnt == 61) || (irqCnt == 65) ||
+            (irqCnt == 69) || (irqCnt == 73) || (irqCnt == 77) ||
+            (irqCnt == 81) || (irqCnt == 85) )
+         {
+             continue;
+
+         }
+
+         if((irqCnt >= 39 ) && (irqCnt <= 49))
+         {
+             continue;
+
+         }
+
+        /* Get Mask status of Gpio Interrupt */
+        pmicStatus = Pmic_irqGetMaskIntrStatus(pPmicCoreHandle,
+                                             irqCnt,
+                                             &irqMaskStatus);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        TEST_ASSERT_EQUAL(PMIC_IRQ_MASK, irqMaskStatus);
+     }
+
+    pmic_testResultUpdate_pass(1,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Test to Get UnMask status of Gpio and Irq Interrupts
+ */
+static void test_pmic_gpio_irq_getUnMaskIntrStat(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    uint8_t  irqGpioNumMaxCnt, irqNumMaxCnt, irqCnt;
+    bool     riseIntrMaskStat, fallIntrMaskStat, irqMaskStatus;
+
+    test_pmic_print_unity_testcase_info(2,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        irqGpioNumMaxCnt = PMIC_TPS6594X_IRQ_GPIO_11_INT_MASK_NUM;
+        irqNumMaxCnt = PMIC_TPS6594X_IRQ_MAX_NUM;
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        irqGpioNumMaxCnt = PMIC_LP8764X_IRQ_GPIO_10_INT_MASK_NUM;
+        irqNumMaxCnt = PMIC_LP8764X_IRQ_MAX_NUM;
+    }
+
+    /* Unmasking All GPIO Interrupts */
+    pmicStatus = Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                                      PMIC_IRQ_GPIO_ALL_INT_MASK_NUM,
+                                      PMIC_IRQ_UNMASK,
+                                      PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+     for(irqCnt = 0; irqCnt <= irqGpioNumMaxCnt; irqCnt++)
+     {
+        /* Get Mask status of Gpio Interrupt */
+        pmicStatus = Pmic_irqGetGpioMaskIntr(pPmicCoreHandle,
+                                             irqCnt,
+                                             PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE,
+                                             &riseIntrMaskStat,
+                                             &fallIntrMaskStat);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        TEST_ASSERT_EQUAL(PMIC_IRQ_UNMASK, riseIntrMaskStat);
+        TEST_ASSERT_EQUAL(PMIC_IRQ_UNMASK, fallIntrMaskStat);
+     }
+
+    /* Unmasking All Interrupts */
+    pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                  PMIC_IRQ_ALL,
+                                  PMIC_IRQ_UNMASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+     for(irqCnt = 3; irqCnt < irqNumMaxCnt; irqCnt++)
+     {
+         if((irqCnt == 20) || (irqCnt == 21) || (irqCnt == 22) ||
+            (irqCnt == 27) || (irqCnt == 30) || (irqCnt == 53) ||
+            (irqCnt == 57) || (irqCnt == 61) || (irqCnt == 65) ||
+            (irqCnt == 69) || (irqCnt == 73) || (irqCnt == 77) ||
+            (irqCnt == 81) || (irqCnt == 85) )
+         {
+             continue;
+
+         }
+
+         if((irqCnt >= 39 ) && (irqCnt <= 49))
+         {
+             continue;
+
+         }
+
+        /* Get Mask status of Gpio Interrupt */
+        pmicStatus = Pmic_irqGetMaskIntrStatus(pPmicCoreHandle,
+                                               irqCnt,
+                                               &irqMaskStatus);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        TEST_ASSERT_EQUAL(PMIC_IRQ_UNMASK, irqMaskStatus);
+     }
+
+    /* Masking All GPIO Interrupts */
+    pmicStatus = Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                                      PMIC_IRQ_GPIO_ALL_INT_MASK_NUM,
+                                      PMIC_IRQ_MASK,
+                                      PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* Masking All Interrupts */
+    pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                  PMIC_IRQ_ALL,
+                                  PMIC_IRQ_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(2,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_irqGetGpioMaskIntr: Parameter validation for handle
+ */
+static void test_pmic_gpio_getMaskIntrStatPrmValTst_handle(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    bool     riseIntrMaskStat, fallIntrMaskStat;
+
+    test_pmic_print_unity_testcase_info(3,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    /* Masking All GPIO Interrupts */
+    pmicStatus = Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                                      PMIC_IRQ_GPIO_ALL_INT_MASK_NUM,
+                                      PMIC_IRQ_MASK,
+                                      PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+
+    /* Get Mask status of Gpio Interrupt */
+    pmicStatus = Pmic_irqGetGpioMaskIntr(NULL,
+                                         0U,
+                                         PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE,
+                                         &riseIntrMaskStat,
+                                         &fallIntrMaskStat);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(3,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_irqGetGpioMaskIntr: Parameter validation for pFallIntrMaskStat
+ */
+static void test_pmic_gpio_getMaskIntrStatPrmValTst_pFallIntrMaskStat(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    bool     riseIntrMaskStat;
+
+    test_pmic_print_unity_testcase_info(4,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    /* Masking All GPIO Interrupts */
+    pmicStatus = Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                                      PMIC_IRQ_GPIO_ALL_INT_MASK_NUM,
+                                      PMIC_IRQ_MASK,
+                                      PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+
+    /* Get Mask status of Gpio Interrupt */
+    pmicStatus = Pmic_irqGetGpioMaskIntr(pPmicCoreHandle,
+                                         0U,
+                                         PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE,
+                                         &riseIntrMaskStat,
+                                         NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(4,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_irqGetGpioMaskIntr: Parameter validation for pRiseIntrMaskStat
+ */
+static void test_pmic_gpio_getMaskIntrStatPrmValTst_pRiseIntrMaskStat(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    bool  fallIntrMaskStat;
+
+    test_pmic_print_unity_testcase_info(5,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    /* Masking All GPIO Interrupts */
+    pmicStatus = Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                                      PMIC_IRQ_GPIO_ALL_INT_MASK_NUM,
+                                      PMIC_IRQ_MASK,
+                                      PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+
+    /* Get Mask status of Gpio Interrupt */
+    pmicStatus = Pmic_irqGetGpioMaskIntr(pPmicCoreHandle,
+                                         0U,
+                                         PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE,
+                                         NULL,
+                                         &fallIntrMaskStat);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(5,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_irqGetMaskIntrStatus: Parameter validation for handle
+ */
+static void test_pmic_gpio_irq_getMaskIntrStatPrmValTst_handle(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    bool  irqMaskStatus;
+
+    test_pmic_print_unity_testcase_info(6,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    /* Masking All Interrupts */
+    pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                  PMIC_IRQ_ALL,
+                                  PMIC_IRQ_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* Get Mask status of IRQ Interrupt */
+    pmicStatus = Pmic_irqGetMaskIntrStatus(NULL,
+                                           0U,
+                                           &irqMaskStatus);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(6,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_irqGetMaskIntrStatus: Parameter validation for pMaskStatus
+ */
+static void test_pmic_gpio_irq_getMaskIntrStatPrmValTst_pMaskStatus(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(7,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    /* Masking All Interrupts */
+    pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                  PMIC_IRQ_ALL,
+                                  PMIC_IRQ_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* Get Mask status of IRQ Interrupt */
+    pmicStatus = Pmic_irqGetMaskIntrStatus(pPmicCoreHandle,
+                                           0U,
+                                           NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(7,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
 #if defined(ENABLE_SAMPLE_TESTCASES)
 /*!
  * Below test cases are not tested because of HW limitation.
@@ -6767,6 +7129,13 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_gpio_tps6594xNPwronPinGetValuePrmValTest_pinValue);
     RUN_TEST(test_pmic_gpio_testTps6594xNPwronPinGetValue_hera);
     RUN_TEST(test_pmic_gpio_getCfgPrmValTest_pin_hera);
+    RUN_TEST(test_pmic_gpio_irq_getMaskIntrStat);
+    RUN_TEST(test_pmic_gpio_irq_getUnMaskIntrStat);
+    RUN_TEST(test_pmic_gpio_getMaskIntrStatPrmValTst_handle);
+    RUN_TEST(test_pmic_gpio_getMaskIntrStatPrmValTst_pFallIntrMaskStat);
+    RUN_TEST(test_pmic_gpio_getMaskIntrStatPrmValTst_pRiseIntrMaskStat);
+    RUN_TEST(test_pmic_gpio_irq_getMaskIntrStatPrmValTst_handle);
+    RUN_TEST(test_pmic_gpio_irq_getMaskIntrStatPrmValTst_pMaskStatus);
 
     pmic_updateTestResults(pmic_gpio_tests, PMIC_GPIO_NUM_OF_TESTCASES);
 
