@@ -43,7 +43,7 @@
 #include <pmic_gpio_lp8764x_priv.h>
 
 /* PMIC GPIO Pins with Input Ouput Configuration */
-static Pmic_GpioInOutCfg_t lp8764x_gpioInOutCfg[] =
+static Pmic_GpioInOutCfg_t gLp8764x_gpioInOutCfg[] =
 {
     {
         PMIC_GPIO1_CONF_REGADDR,
@@ -180,7 +180,7 @@ static Pmic_GpioIntRegCfg_t lp8764x_gpioIntRegCfg[] =
  */
 void pmic_get_lp8764x_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg)
 {
-    *pGpioInOutCfg = lp8764x_gpioInOutCfg;
+    *pGpioInOutCfg = gLp8764x_gpioInOutCfg;
 }
 
 /*

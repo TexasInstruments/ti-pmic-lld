@@ -46,7 +46,7 @@
 #include <pmic_gpio_tps6594x_priv.h>
 
 /* PMIC GPIO Pins with Input Ouput Configuration */
-static Pmic_GpioInOutCfg_t tps6594x_gpioInOutCfg[] =
+static Pmic_GpioInOutCfg_t gTps6594x_gpioInOutCfg[] =
 {
     {
         PMIC_GPIO1_CONF_REGADDR,
@@ -197,7 +197,7 @@ static Pmic_GpioIntRegCfg_t tps6594x_gpioIntRegCfg[] =
  */
 void pmic_get_tps6594x_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg)
 {
-    *pGpioInOutCfg = tps6594x_gpioInOutCfg;
+    *pGpioInOutCfg = gTps6594x_gpioInOutCfg;
 }
 
 /*!

@@ -47,7 +47,7 @@
 #include <pmic_rtc_tps6594x_priv.h>
 
 /* PMIC TPS6594x Interrupt Configuration as per Pmic_tps6594x_IrqNum. */
-static Pmic_IntrCfg_t tps6594x_intCfg[] =
+static Pmic_IntrCfg_t gTps6594x_intCfg[] =
 {
     {
         PMIC_WD_ERR_STATUS_REGADDR,
@@ -660,7 +660,7 @@ static Pmic_GpioIntrTypeCfg_t tps6594x_gpioIntrCfg[] =
  */
 void pmic_get_tps6594x_intrCfg(Pmic_IntrCfg_t **pIntrCfg)
 {
-    *pIntrCfg = tps6594x_intCfg;
+    *pIntrCfg = gTps6594x_intCfg;
 }
 
 /*
@@ -1489,7 +1489,7 @@ int32_t Pmic_tps6594x_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle,
  */
 void Pmic_tps6594x_reInitInterruptConfig(Pmic_CoreHandle_t *pPmicCoreHandle)
 {
-    Pmic_IntrCfg_t *pIntrCfg = tps6594x_intCfg;
+    Pmic_IntrCfg_t *pIntrCfg = gTps6594x_intCfg;
 
     uint8_t irqNum = PMIC_TPS6594X_NRSTOUT_READBACK_INT;
 

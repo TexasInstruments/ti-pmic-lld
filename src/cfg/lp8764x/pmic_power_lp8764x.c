@@ -45,7 +45,7 @@
 #include <pmic_io_priv.h>
 #include <pmic_power_lp8764x_priv.h>
 
-static Pmic_powerRsrcRegCfg_t lp8764x_pwrRsrcRegCfg[] =
+static Pmic_powerRsrcRegCfg_t gLp8764x_pwrRsrcRegCfg[] =
 {
     {
         PMIC_VCCA_VMON_CTRL_REGADDR,
@@ -236,7 +236,7 @@ void pmic_get_lp8764x_pwrCommonIntCfg(Pmic_powerIntCfg_t **pPwrCommonIntCfg)
  */
 void pmic_get_lp8764x_pwrRsrceRegCfg(Pmic_powerRsrcRegCfg_t **pPwrRsrcRegCfg)
 {
-    *pPwrRsrcRegCfg = lp8764x_pwrRsrcRegCfg;
+    *pPwrRsrcRegCfg = gLp8764x_pwrRsrcRegCfg;
 }
 
 /*!

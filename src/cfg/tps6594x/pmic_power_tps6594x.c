@@ -45,7 +45,7 @@
 #include <pmic_io_priv.h>
 #include <pmic_power_tps6594x_priv.h>
 
-static Pmic_powerRsrcRegCfg_t tps6594x_pwrRsrcRegCfg[] =
+static Pmic_powerRsrcRegCfg_t gTps6594x_pwrRsrcRegCfg[] =
 {
     {
         PMIC_VCCA_VMON_CTRL_REGADDR,
@@ -288,7 +288,7 @@ void pmic_get_tps6594x_pwrCommonIntCfg(Pmic_powerIntCfg_t **pPwrCommonIntCfg)
  */
 void pmic_get_tps6594x_pwrRsrceRegCfg(Pmic_powerRsrcRegCfg_t **pPwrRsrcRegCfg)
 {
-    *pPwrRsrcRegCfg = tps6594x_pwrRsrcRegCfg;
+    *pPwrRsrcRegCfg = gTps6594x_pwrRsrcRegCfg;
 }
 
 /*!

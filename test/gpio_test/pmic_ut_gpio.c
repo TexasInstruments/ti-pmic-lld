@@ -451,8 +451,8 @@ static void test_pmic_gpio_setCfgGpioPin_nSLEEP1(void)
 
     for(pin = 0U; pin < pinMax; pin++)
     {
-        /* PMIC-A GPIO3 pin Causing Reset on J721 EVM */
-        if((3U == pins[pin]) &&
+        /* PMIC-A GPIO3/ GPIO5/ GPIO6 pin Causing Reset on J721 EVM */
+        if(((3U == pins[pin]) || (5U == pins[pin]) || (6U == pins[pin])) &&
            (J721E_LEO_PMICA_DEVICE == pmic_device_info))
         {
             continue;
@@ -565,9 +565,9 @@ static void test_pmic_gpio_setCfgGpioPin_nSLEEP2(void)
 
     for(pin = 0U; pin < pinMax; pin++)
     {
-        /* PMICA GPIO3 pin Causing Reset on J721 EVM */
-        if((3U == pins[pin]) &&
-           (pmic_device_info == J721E_LEO_PMICA_DEVICE))
+        /* PMICA GPIO3/ GPIO5/ GPIO6 pin Causing Reset on J721 EVM */
+        if(((3U == pins[pin]) || (5U == pins[pin]) || (6U == pins[pin])) &&
+            (pmic_device_info == J721E_LEO_PMICA_DEVICE))
         {
             continue;
         }
@@ -678,6 +678,16 @@ static void test_pmic_gpio_setCfgGpioPin_nRstOut_soc(void)
 
     for(pin = 0U; pin < (sizeof(pins)/sizeof(pins[0U])); pin++)
     {
+        if((J721E_LEO_PMICA_DEVICE == pmic_device_info) &&
+           ((5U == pins[pin]) || (6U == pins[pin])))
+        {
+            /*
+             * GPIO5/ GPIO6 pin of PMIC-A is connected to LEOA_SCLK and LEOA_SDATA
+             * on J721EVM board causing hang, when programming NRSTOUT signal.
+             */
+            continue;
+        }
+
         if((J721E_LEO_PMICB_DEVICE == pmic_device_info) && (11U == pins[pin]))
         {
             /*
@@ -759,8 +769,8 @@ static void test_pmic_gpio_setCfgGpioPin_wakeup1(void)
 
     for(pin = 0U; pin < pinMax; pin++)
     {
-        /* PMICA GPIO3 pin Causing Reset on J721 EVM */
-        if((3U == pins[pin]) &&
+        /* PMICA GPIO3/ GPIO5/ GPIO6 pin Causing Reset on J721 EVM */
+        if(((3U == pins[pin]) || (5U == pins[pin]) || (6U == pins[pin])) &&
            (pmic_device_info == J721E_LEO_PMICA_DEVICE))
         {
             continue;
@@ -873,8 +883,8 @@ static void test_pmic_gpio_setCfgGpioPin_wakeup2(void)
 
     for(pin = 0U; pin < pinMax; pin++)
     {
-        /* PMICA GPIO3 pin Causing Reset on J721 EVM */
-        if((3U == pins[pin]) &&
+        /* PMICA GPIO3/ GPIO5/ GPIO6 pin Causing Reset on J721 EVM */
+        if(((3U == pins[pin]) || (5U == pins[pin]) || (6U == pins[pin])) &&
            (pmic_device_info == J721E_LEO_PMICA_DEVICE))
         {
             continue;
@@ -988,9 +998,10 @@ static void test_pmic_gpio_setCfgGpioPin_gpio(void)
     for(pin = 0U; pin < pinMax; pin++)
     {
         /* On J721E, PMIC-A GPIO11 is connected to H_SOC_PORz,
+         * GPIO5/ GPIO6 pin of PMIC-A is connected to LEOA_SCLK and LEOA_SDATA
          * which resets entire SOC.
          */
-        if((11U == pins[pin]) &&
+        if(((11U == pins[pin]) || (5U == pins[pin]) || (6U == pins[pin])) &&
            (pmic_device_info == J721E_LEO_PMICA_DEVICE))
         {
             continue;
@@ -1343,6 +1354,16 @@ static void test_pmic_gpio_setCfgGpioPin_wdt(void)
             }
         }
 
+        if((J721E_LEO_PMICA_DEVICE == pmic_device_info) &&
+           ((5U == pins[pin]) || (6U == pins[pin])))
+        {
+            /*
+             * GPIO5/ GPIO6 pin of PMIC-A is connected to LEOA_SCLK and LEOA_SDATA
+             * on J721EVM board causing hang, when programming NRSTOUT signal.
+             */
+            continue;
+        }
+
         if((J721E_LEO_PMICB_DEVICE == pmic_device_info) && (11U == pins[pin]))
         {
             /*
@@ -1585,8 +1606,11 @@ static void test_pmic_gpio_setCfgGpioPin_syncCLKOUT(void)
         /*!
          * On J721 EVM, PMICA GPIO10 SYNCCLKOUT functionality
          * is not supported
+         * GPIO5/ GPIO6 pin of PMIC-A is connected to LEOA_SCLK and LEOA_SDATA
+         * which resets SOC
          */
-        if((J721E_LEO_PMICA_DEVICE == pmic_device_info) && (10U == pins[pin]))
+        if((J721E_LEO_PMICA_DEVICE == pmic_device_info) &&
+           ((10U == pins[pin]) || (5U == pins[pin]) || (6U == pins[pin])))
         {
             continue;
         }
@@ -1713,7 +1737,7 @@ static void test_pmic_gpio_setCfgGpioPin_clk32KOUT(void)
         }
 
         if((J7VCL_LEO_PMICA_DEVICE == pmic_device_info) &&
-           (3U == pins[pin]))
+           ((3U == pins[pin]) || (5U == pins[pin]) || (6U == pins[pin])))
         {
             continue;
         }
@@ -3488,10 +3512,11 @@ static void test_pmic_gpio5_testFall_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    if((J721E_LEO_PMICA_DEVICE == pmic_device_info) ||
+       (J721E_LEO_PMICB_DEVICE == pmic_device_info))
     {
         /*
-         * GPIO5 pin of PMIC-B is connected to 'LEOA_SCLK'
+         * GPIO5 pin of PMIC-A and PMIC-B is connected to 'LEOA_SCLK'
          * on J721EVM causing block, when programming fall interrupt signal.
          */
         pmic_testResultUpdate_ignore(6242,
@@ -3619,10 +3644,11 @@ static void test_pmic_gpio5_testRise_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    if((J721E_LEO_PMICA_DEVICE == pmic_device_info) ||
+       (J721E_LEO_PMICB_DEVICE == pmic_device_info))
     {
         /*
-         * GPIO5 pin of PMIC-B is connected to 'LEOA_SCLK'
+         * GPIO5 pin of PMIC-A and PMIC-B is connected to 'LEOA_SCLK'
          * on J721EVM causing block, when programming rise` interrupt signal.
          */
         pmic_testResultUpdate_ignore(6243,
@@ -3750,10 +3776,11 @@ static void test_pmic_gpio6_testFall_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    if((J721E_LEO_PMICA_DEVICE == pmic_device_info) ||
+       (J721E_LEO_PMICB_DEVICE == pmic_device_info))
     {
         /*
-         * GPIO6 pin of PMIC-B is connected to 'LEOA_SDATA' and receives
+         * GPIO6 pin of PMIC-A and PMIC-B is connected to 'LEOA_SDATA' and receives
          * on J721EVM causing hang, when programming fall interrupt signal.
          */
         pmic_testResultUpdate_ignore(6244,
@@ -3881,10 +3908,11 @@ static void test_pmic_gpio6_testRise_interrupt(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    if((J721E_LEO_PMICA_DEVICE == pmic_device_info) ||
+       (J721E_LEO_PMICB_DEVICE == pmic_device_info))
     {
         /*
-         * GPIO6 pin of PMIC-B is connected to 'LEOA_SDATA' and receives
+         * GPIO6 pin of PMIC-A and PMIC-B is connected to 'LEOA_SDATA' and receives
          * on J721EVM causing hang, when programming rise interrupt signal.
          */
         pmic_testResultUpdate_ignore(6245,
@@ -5774,7 +5802,6 @@ static void test_pmic_gpio_irq_getUnMaskIntrStat(void)
              continue;
 
          }
-
         /* Get Mask status of Gpio Interrupt */
         pmicStatus = Pmic_irqGetMaskIntrStatus(pPmicCoreHandle,
                                                irqCnt,

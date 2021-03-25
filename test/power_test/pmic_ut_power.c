@@ -1321,6 +1321,11 @@ static void test_pmic_powerSetPowerResourceConfig_vmonEn_enable(void)
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
     {
+        if((PMIC_TPS6594X_REGULATOR_BUCK3 == pwrRsrc) ||
+           (PMIC_TPS6594X_REGULATOR_BUCK4 == pwrRsrc))
+        {
+             continue;
+        }
         pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
                                                  pwrRsrc,
                                                  pPowerCfg);

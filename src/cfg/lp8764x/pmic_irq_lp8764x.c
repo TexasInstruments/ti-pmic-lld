@@ -34,7 +34,7 @@
 /**
  * \file   pmic_irq_lp8764x.c
  *
- * \brief  This file contains the LP8764x Hera PMIC Interrupt APIs definitions 
+ * \brief  This file contains the LP8764x Hera PMIC Interrupt APIs definitions
  *         and structures.
  *
  */
@@ -46,7 +46,7 @@
 #include <pmic_irq_lp8764x_priv.h>
 
 /* PMIC LP8764x Interrupt Configuration as per Pmic_lp8764x_IrqNum. */
-static Pmic_IntrCfg_t lp8764x_intCfg[] =
+static Pmic_IntrCfg_t gLp8764x_intCfg[] =
 {
     {
         PMIC_WD_ERR_STATUS_REGADDR,
@@ -519,7 +519,7 @@ static Pmic_GpioIntrTypeCfg_t lp8764x_gpioIntrCfg[] =
  */
 void pmic_get_lp8764x_intrCfg(Pmic_IntrCfg_t **pIntrCfg)
 {
-    *pIntrCfg = lp8764x_intCfg;
+    *pIntrCfg = gLp8764x_intCfg;
 }
 
 /*
@@ -719,7 +719,7 @@ static int32_t Pmic_lp8764x_getGpioErr(Pmic_CoreHandle_t *pPmicCoreHandle,
                                             PMIC_INT_GPIO1_8_REGADDR,
                                             &regData);
 
-       if((PMIC_ST_SUCCESS == pmicStatus) && 
+       if((PMIC_ST_SUCCESS == pmicStatus) &&
           (0U != regData))
        {
            if((regData & PMIC_INT_GPIO1_8_GPIO1_INT_MASK) != 0U)

@@ -1035,14 +1035,16 @@ static int32_t Pmic_intrClr(Pmic_CoreHandle_t *pmicHandle)
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t handle  = *(Pmic_CoreHandle_t *)pmicHandle;
     Pmic_IrqStatus_t errStat  = {0U};
+    uint8_t irqNum;
 
     if(startup_type != 0U)
     {
         pmicStatus = get_startup_type(pmicHandle);
     }
+
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = Pmic_irqGetErrStatus(&handle, &errStat, true);
+        pmicStatus = Pmic_irqGetErrStatus(&handle, &errStat, false);
         {
             int i = 0;
             for(i=0;i<4; i++)
@@ -1051,6 +1053,37 @@ static int32_t Pmic_intrClr(Pmic_CoreHandle_t *pmicHandle)
             }
         }
     }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        while(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            pmicStatus = Pmic_getNextErrorStatus(&handle, &errStat, &irqNum);
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                pmicStatus = Pmic_irqClrErrStatus(&handle, irqNum);
+            }
+
+        }
+    }
+
+    if(PMIC_ST_ERR_INV_INT == pmicStatus)
+    {
+        pmicStatus = PMIC_ST_SUCCESS;
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pmicStatus = Pmic_irqGetErrStatus(&handle, &errStat, false);
+        {
+            int i = 0;
+            for(i=0;i<4; i++)
+            {
+                pmic_log("INT STAT[%d]: 0x%08x\n", i, errStat.intStatus[i]);
+            }
+        }
+    }
+
 
     pmic_log("\r\n");
     return pmicStatus;
