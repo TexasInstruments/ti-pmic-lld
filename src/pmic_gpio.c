@@ -1029,14 +1029,17 @@ static int32_t Pmic_gpioIntrDisable(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t bitMask                      = 0U;
     Pmic_GpioIntRegCfg_t *pGpioIntRegCfg = NULL;
 
-    Pmic_get_gpioIntRegCfg(pPmicCoreHandle, &pGpioIntRegCfg);
+    status = Pmic_get_gpioIntRegCfg(pPmicCoreHandle, &pGpioIntRegCfg);
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    status = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                    pGpioIntRegCfg[pin].intRegAddr,
-                                    &regData);
+    if (PMIC_ST_SUCCESS == status)
+    {
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        pGpioIntRegCfg[pin].intRegAddr,
+                                        &regData);
+    }
 
     if(PMIC_ST_SUCCESS == status)
     {
