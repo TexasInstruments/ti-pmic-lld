@@ -89,7 +89,7 @@ static uint8_t Pmic_intrBitExtract(const Pmic_IrqStatus_t *pErrStat,
     intStatSize = sizeof(pErrStat->intStatus[0U]) << 3U;
     for(irqNum = 0U; irqNum < maxVal; irqNum++)
     {
-        if(((pErrStat->intStatus[irqNum / intStatSize]) & 
+        if(((pErrStat->intStatus[irqNum / intStatSize]) &
             (((uint32_t)1U) << (irqNum % intStatSize))) != 0U)
         {
             break;
@@ -99,7 +99,7 @@ static uint8_t Pmic_intrBitExtract(const Pmic_IrqStatus_t *pErrStat,
     return irqNum;
 }
 
-/*! 
+/*!
  * \brief  Function to Check the device specific Max IrqNum.
  */
 static int32_t Pmic_irqValidateIrqNum(const Pmic_CoreHandle_t  *pPmicCoreHandle,
@@ -130,8 +130,39 @@ static int32_t Pmic_irqValidateIrqNum(const Pmic_CoreHandle_t  *pPmicCoreHandle,
     return pmicStatus;
 }
 
+/*!
+ * \brief  Function to Check the device specific Max IrqNum
+ */
+static int32_t Pmic_irqValidateIrqNumGetMaskIntrStatus(
+                                      const Pmic_CoreHandle_t  *pPmicCoreHandle,
+                                      const uint8_t             irqNum)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-/*! 
+    switch(pPmicCoreHandle->pmicDeviceType)
+    {
+        case PMIC_DEV_LEO_TPS6594X:
+            if(irqNum > PMIC_TPS6594X_IRQ_MAX_NUM)
+            {
+                pmicStatus = PMIC_ST_ERR_INV_PARAM;
+            }
+            break;
+        case PMIC_DEV_HERA_LP8764X:
+            if(irqNum > PMIC_LP8764X_IRQ_MAX_NUM)
+            {
+                pmicStatus = PMIC_ST_ERR_INV_PARAM;
+            }
+            break;
+        default:
+            pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+            break;
+    }
+
+    return pmicStatus;
+}
+
+
+/*!
  * \brief  Function to get the device specific Max IrqNum.
  */
 static int32_t Pmic_getMaxVal(const Pmic_CoreHandle_t  *pPmicCoreHandle,
@@ -157,7 +188,7 @@ static int32_t Pmic_getMaxVal(const Pmic_CoreHandle_t  *pPmicCoreHandle,
     return pmicStatus;
 }
 
-/*! 
+/*!
  * \brief  Function to get the Device specific Interrupt Configuration
  *         registers.
  */
@@ -193,7 +224,7 @@ static int32_t Pmic_get_intrCfg(const Pmic_CoreHandle_t  *pPmicCoreHandle,
 }
 
 /*!
- * \brief  Function to get the Device specific GPIO Interrupt configuration 
+ * \brief  Function to get the Device specific GPIO Interrupt configuration
  *         registers.
  */
 static int32_t Pmic_get_gpioIntrCfg(const Pmic_CoreHandle_t *pPmicCoreHandle,
@@ -271,7 +302,7 @@ static int32_t Pmic_irqGpioMask(Pmic_CoreHandle_t *pPmicCoreHandle,
         }
     }
 
-    if((PMIC_IRQ_GPIO_FALL_INT_TYPE == gpioIntrType) || 
+    if((PMIC_IRQ_GPIO_FALL_INT_TYPE == gpioIntrType) ||
        (PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE == gpioIntrType))
     {
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
@@ -324,7 +355,9 @@ static int32_t Pmic_maskGpioIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
     if((PMIC_ST_SUCCESS == pmicStatus) &&
        (PMIC_IRQ_GPIO_ALL_INT_MASK_NUM == irqGpioNum))
     {
-        for(irqGpioId = 0U; irqGpioId < (PMIC_IRQ_GPIO_ALL_INT_MASK_NUM - 1U); irqGpioId++)
+        for(irqGpioId = 0U;
+            irqGpioId < (PMIC_IRQ_GPIO_ALL_INT_MASK_NUM - 1U);
+            irqGpioId++)
         {
             pmicStatus = Pmic_irqGpioMask(pPmicCoreHandle,
                                           irqGpioId,
@@ -336,7 +369,7 @@ static int32_t Pmic_maskGpioIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
     return pmicStatus;
 }
 
-/*! 
+/*!
  * \brief  Function to clear IRQ status.
  */
 static int32_t Pmic_irqClear(Pmic_CoreHandle_t *pPmicCoreHandle,
@@ -378,7 +411,7 @@ static int32_t Pmic_irqClear(Pmic_CoreHandle_t *pPmicCoreHandle,
     return pmicStatus;
 }
 
-/*! 
+/*!
  * \brief  Function to Clear Interrupt Status register.
  */
 static int32_t Pmic_irqClearStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
@@ -744,7 +777,7 @@ int32_t  Pmic_irqGetErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          This function does the following:
  *          1. This function clears the IRQ status in PMIC register for a given
  *             IRQ Number.
- *          2. Validates given IRQ Number and find the IRQ register that is 
+ *          2. Validates given IRQ Number and find the IRQ register that is
  *             to be cleared.
  *          3. Expected to be called after an IRQ status is deciphered by
  *             Pmic_irqGetErrStatus().
@@ -837,8 +870,8 @@ int32_t Pmic_irqMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  * Requirement: REQ_TAG(PDK-5805)
  * Design: did_pmic_irq_cfg_readback
  *
- *          This function is used to extract each Error status from pErrStat 
- *          as per the hierarchy given in the TRM. This function clears the 
+ *          This function is used to extract each Error status from pErrStat
+ *          as per the hierarchy given in the TRM. This function clears the
  *          Error status after the status is extracted. This API is expected to
  *          be called after Pmic_irqGetErrStatus.
  *
@@ -873,7 +906,7 @@ int32_t Pmic_getNextErrorStatus(const Pmic_CoreHandle_t *pPmicCoreHandle,
         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if((PMIC_ST_SUCCESS == pmicStatus) && 
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((pErrStat->intStatus[0U] == 0U) && (pErrStat->intStatus[1U] == 0U) &&
         (pErrStat->intStatus[2U] == 0U) && (pErrStat->intStatus[3U] == 0U)))
     {
@@ -950,6 +983,309 @@ int32_t Pmic_irqGpioMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
                                        irqGpioNum,
                                        mask,
                                        gpioIntrType);
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  Function to get status of the Interrupts is masked or not.
+ */
+static int32_t Pmic_getIrqMaskStatus(Pmic_CoreHandle_t    *pPmicCoreHandle,
+                                     const uint8_t         irqNum,
+                                     bool                 *pMaskStatus,
+                                     const Pmic_IntrCfg_t *pIntrCfg)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData    = 0U;
+    uint8_t bitMask    = 0U;
+
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        pIntrCfg[irqNum].intrMaskRegAddr,
+                                        &regData);
+
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        bitMask = (PMIC_IRQ_MASK_CLR_BITFIELD <<
+                   pIntrCfg[irqNum].intrMaskBitPos);
+        *pMaskStatus = PMIC_IRQ_UNMASK;
+
+        if((Pmic_getBitField(regData, pIntrCfg[irqNum].intrMaskBitPos, bitMask))
+            == PMIC_IRQ_MASK_VAL_1)
+        {
+            *pMaskStatus = PMIC_IRQ_MASK;
+        }
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  Function to get status of the Interrupts is masked or not except
+ *         GPIO Interrupts.
+ */
+static int32_t Pmic_getMaskIntrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                      const uint8_t      irqNum,
+                                      bool              *pMaskStatus)
+{
+    int32_t pmicStatus       = PMIC_ST_SUCCESS;
+    Pmic_IntrCfg_t *pIntrCfg = NULL;
+
+    pmicStatus = Pmic_get_intrCfg(pPmicCoreHandle, &pIntrCfg);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        if(PMIC_IRQ_INVALID_REGADDR == pIntrCfg[irqNum].intrMaskRegAddr)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            pmicStatus = Pmic_getIrqMaskStatus(pPmicCoreHandle,
+                                               irqNum,
+                                               pMaskStatus,
+                                               pIntrCfg);
+        }
+    }
+
+    return pmicStatus;
+}
+
+ /*!
+ * \brief   API to read the status of PMIC interrupts is masked or not
+ *
+ * Requirement: REQ_TAG(PDK-9153)
+ * Design: did_pmic_irq_mask_status
+ *
+ *          This function does the following:
+ *          1. This function reads the status of interrupt is masked or not for
+ *             the given IRQ Number.
+ *          2. Validates given IRQ Number and find the IRQ register to check
+ *             the status of interrupt is masked or not
+ *
+ * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
+ * \param   irqNum            [IN]    Interrupt number to be masked.
+ *                                    For Valid values:
+ *                                    \ref Pmic_tps6594x_IrqNum
+ *                                    for TPS6594x LEO PMIC,
+ *                                    \ref Pmic_lp8764x_IrqNum
+ *                                    for LP8764x HERA PMIC,
+ * \param   pMaskStatus       [OUT]   Pointer to hold the status of interrupt is
+ *                                    masked or not
+ *                                    For Valid values:
+ *                                    \ref Pmic_IrqMaskFlag
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
+ *          For valid values: \ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_irqGetMaskIntrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                  const uint8_t      irqNum,
+                                  bool              *pMaskStatus)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+
+    if(NULL == pPmicCoreHandle)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pMaskStatus))
+    {
+        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pmicStatus = Pmic_irqValidateIrqNumGetMaskIntrStatus(pPmicCoreHandle,
+                                                             irqNum);
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pmicStatus = Pmic_getMaskIntrStatus(pPmicCoreHandle,
+                                            irqNum,
+                                            pMaskStatus);
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  Function to read the status of GPIO Interrupts is masked or not
+ */
+static int32_t Pmic_getIrqGpioMaskStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                         const uint8_t      irqGpioNum,
+                                         const uint8_t      gpioIntrType,
+                                          bool             *pRiseIntrMaskStat,
+                                          bool             *pFallIntrMaskStat)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData    = 0U;
+    Pmic_GpioIntrTypeCfg_t *pGpioIntrCfg = NULL;
+    uint8_t bitMask    = 0U;
+
+    pmicStatus = Pmic_get_gpioIntrCfg(pPmicCoreHandle, &pGpioIntrCfg);
+
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    if((PMIC_IRQ_GPIO_RISE_INT_TYPE == gpioIntrType) ||
+       (PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE == gpioIntrType))
+    {
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                          pGpioIntrCfg[irqGpioNum].gpioRiseIntrMaskRegAddr,
+                          &regData);
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            bitMask = (PMIC_IRQ_MASK_CLR_BITFIELD <<
+                       pGpioIntrCfg[irqGpioNum].gpioRiseMaskBitPos);
+            *pRiseIntrMaskStat = PMIC_IRQ_UNMASK;
+
+            if((Pmic_getBitField(regData,
+                                 pGpioIntrCfg[irqGpioNum].gpioRiseMaskBitPos,
+                                 bitMask)) == PMIC_IRQ_MASK_VAL_1)
+            {
+                *pRiseIntrMaskStat = PMIC_IRQ_MASK;
+            }
+        }
+    }
+
+    if((PMIC_IRQ_GPIO_FALL_INT_TYPE == gpioIntrType) ||
+       (PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE == gpioIntrType))
+    {
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                          pGpioIntrCfg[irqGpioNum].gpioFallIntrMaskRegAddr,
+                          &regData);
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            bitMask = (PMIC_IRQ_MASK_CLR_BITFIELD <<
+                       pGpioIntrCfg[irqGpioNum].gpioFallMaskBitPos);
+            *pFallIntrMaskStat = PMIC_IRQ_UNMASK;
+
+            if((Pmic_getBitField(regData,
+                                pGpioIntrCfg[irqGpioNum].gpioFallMaskBitPos,
+                                bitMask)) == PMIC_IRQ_MASK_VAL_1)
+            {
+                *pFallIntrMaskStat = PMIC_IRQ_MASK;
+            }
+        }
+    }
+
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  Function to read the status of GPIO Interrupts is masked or not
+ */
+static int32_t Pmic_getMaskGpioIntrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                          const uint8_t      irqGpioNum,
+                                          const uint8_t      gpioIntrType,
+                                          bool              *pRiseIntrMaskStat,
+                                          bool              *pFallIntrMaskStat)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+
+    pmicStatus = Pmic_getIrqGpioMaskStatus(pPmicCoreHandle,
+                                           irqGpioNum,
+                                           gpioIntrType,
+                                           pRiseIntrMaskStat,
+                                           pFallIntrMaskStat);
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief   API to read the status of PMIC GPIO interrupts is masked or not
+ *
+ * Requirement: REQ_TAG(PDK-9152)
+ * Design: did_pmic_irq_mask_status
+ *
+ *          This function reads the status of GPIO Rise and Fall interrupt is
+ *          masked or not for the given GPIO IRQ Number
+ *
+ * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
+ * \param   irqGpioNum        [IN]    GPIO Interrupt to be masked/unmasked.
+ *                                    For Valid values:
+ *                                    \ref Pmic_tps6594x_IrqGpioNum
+ *                                    for TPS6594x LEO PMIC,
+ *                                    \ref Pmic_lp8764x_IrqGpioNum
+ *                                    for LP8764x HERA PMIC,
+ * \param   gpioIntrType      [IN]    Parameter to mask GPIO RISE and FALL
+ *                                    Interrupt.
+ *                                    Valid values: \ref Pmic_IrqGpioIntrType.
+ * \param   pRiseIntrMaskStat [OUT]   Pointer to hold status of GPIO Rise
+ *                                    Interrupt is masked or not
+ *                                    Valid only when gpioIntrType is
+ *                                    PMIC_IRQ_GPIO_RISE_INT_TYPE or
+ *                                    PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE
+ *                                    For Valid values:
+ *                                    \ref Pmic_IrqMaskFlag
+ * \param   pFallIntrMaskStat [OUT]   Pointer to hold status of GPIO Fall
+ *                                    Interrupt is masked or not
+ *                                    Valid only when gpioIntrType is
+ *                                    PMIC_IRQ_GPIO_FALL_INT_TYPE or
+ *                                    PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE
+ *                                    For Valid values:
+ *                                    \ref Pmic_IrqMaskFlag
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
+ *          For valid values \ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_irqGetGpioMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                const uint8_t      irqGpioNum,
+                                const uint8_t      gpioIntrType,
+                                bool              *pRiseIntrMaskStat,
+                                bool              *pFallIntrMaskStat)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+
+    if(NULL == pPmicCoreHandle)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((NULL == pRiseIntrMaskStat) || (NULL == pFallIntrMaskStat)))
+    {
+        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (gpioIntrType > PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (irqGpioNum >= PMIC_IRQ_GPIO_ALL_INT_MASK_NUM))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((irqGpioNum == PMIC_TPS6594X_IRQ_GPIO_11_INT_MASK_NUM) &&
+        (PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pmicStatus = Pmic_getMaskGpioIntrStatus(pPmicCoreHandle,
+                                                irqGpioNum,
+                                                gpioIntrType,
+                                                pRiseIntrMaskStat,
+                                                pFallIntrMaskStat);
     }
 
     return pmicStatus;

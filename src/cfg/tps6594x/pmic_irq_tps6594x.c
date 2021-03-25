@@ -34,7 +34,7 @@
 /**
  * \file   pmic_irq_tps6594x.c
  *
- * \brief  This file contains the TPS6594x Leo PMIC Interrupt APIs definitions 
+ * \brief  This file contains the TPS6594x Leo PMIC Interrupt APIs definitions
  *         and structures.
  *
  */
@@ -44,6 +44,7 @@
 #include <pmic_irq_priv.h>
 #include <pmic_irq_tps6594x.h>
 #include <pmic_irq_tps6594x_priv.h>
+#include <pmic_rtc_tps6594x_priv.h>
 
 /* PMIC TPS6594x Interrupt Configuration as per Pmic_tps6594x_IrqNum. */
 static Pmic_IntrCfg_t tps6594x_intCfg[] =
@@ -578,7 +579,7 @@ static Pmic_IntrCfg_t tps6594x_intCfg[] =
     }
 };
 
-/*  PMIC TPS6594x GPIO Interrupt Mask Configuration as per 
+/*  PMIC TPS6594x GPIO Interrupt Mask Configuration as per
  *  Pmic_tps6594x_IrqGpioNum.
  */
 static Pmic_GpioIntrTypeCfg_t tps6594x_gpioIntrCfg[] =
@@ -687,7 +688,7 @@ static int32_t Pmic_tps6594x_getBuckErr(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     /* PMIC BUCK 5 Interrupt Status Check */
-    if(((regValue & PMIC_INT_BUCK_BUCK5_INT_MASK) != 0U) && 
+    if(((regValue & PMIC_INT_BUCK_BUCK5_INT_MASK) != 0U) &&
        (PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType))
     {
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
@@ -982,7 +983,7 @@ static int32_t Pmic_tps6594x_getGpioErr(Pmic_CoreHandle_t *pPmicCoreHandle,
                                             PMIC_INT_GPIO1_8_REGADDR,
                                             &regData);
 
-       if((PMIC_ST_SUCCESS == pmicStatus) && 
+       if((PMIC_ST_SUCCESS == pmicStatus) &&
           (0U != regData))
        {
            if((regData & PMIC_INT_GPIO1_8_GPIO1_INT_MASK) != 0U)
@@ -1127,8 +1128,13 @@ static void Pmic_tps6594x_getMiscErr(uint8_t            regValue,
 
 /*!
  * \brief  Function to decipher MODERATE Error.
+ *          Note: In this API, the default PMIC Revision is assumed as PG2.0
+ *                for LEO and HERA PMIC. While adding support for New PMIC
+ *                Revision, developer need to update the API functionality for
+ *                New PMIC Revision accordingly.
  */
-static void Pmic_tps6594x_getModerateErr(uint8_t            regValue,
+static void Pmic_tps6594x_getModerateErr(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                         uint8_t            regValue,
                                          Pmic_IrqStatus_t  *pErrStat)
 {
     if((regValue & PMIC_INT_MODERATE_ERR_TSD_ORD_INT_MASK) != 0U)
@@ -1146,11 +1152,6 @@ static void Pmic_tps6594x_getModerateErr(uint8_t            regValue,
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_REG_CRC_ERR_INT);
     }
 
-    if((regValue & PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_MASK) != 0U)
-    {
-        Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_RECOV_CNT_INT);
-    }
-
     if((regValue & PMIC_INT_MODERATE_ERR_SPMI_ERR_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_SPMI_ERR_INT);
@@ -1161,21 +1162,43 @@ static void Pmic_tps6594x_getModerateErr(uint8_t            regValue,
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_NPWRON_LONG_INT);
     }
 
-    if((regValue & PMIC_INT_MODERATE_ERR_NINT_READBACK_INT_MASK) != 0U)
+    if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevRev)
     {
-        Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_NINT_READBACK_INT);
+        if((regValue & PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_MASK_PG_1_0) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_RECOV_CNT_INT);
+        }
+
+        if((regValue & PMIC_INT_MODERATE_ERR_PFSM_ERR_INT_MASK_PG_1_0) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_PFSM_ERR_INT);
+        }
+    }
+    else
+    {
+        if((regValue & PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_RECOV_CNT_INT);
+        }
+
+        if((regValue & PMIC_INT_MODERATE_ERR_NINT_READBACK_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_NINT_READBACK_INT);
+        }
+
+        if((regValue & PMIC_INT_MODERATE_ERR_NRSTOUT_READBACK_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_NRSTOUT_READBACK_INT);
+        }
     }
 
-    if((regValue & PMIC_INT_MODERATE_ERR_NRSTOUT_READBACK_INT_MASK) != 0U)
-    {
-        Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_NRSTOUT_READBACK_INT);
-    }
 }
 
 /*!
  * \brief  Function to decipher SEVERE Error.
  */
-static void Pmic_tps6594x_getSevereErr(uint8_t            regValue,
+static void Pmic_tps6594x_getSevereErr(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                       uint8_t            regValue,
                                        Pmic_IrqStatus_t  *pErrStat)
 {
     if((regValue & PMIC_INT_SEVERE_ERR_TSD_IMM_INT_MASK) != 0U)
@@ -1188,9 +1211,12 @@ static void Pmic_tps6594x_getSevereErr(uint8_t            regValue,
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_VCCA_OVP_INT);
     }
 
-    if((regValue & PMIC_INT_SEVERE_ERR_PFSM_ERR_INT_MASK) != 0U)
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevRev)
     {
-        Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_PFSM_ERR_INT);
+        if((regValue & PMIC_INT_SEVERE_ERR_PFSM_ERR_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_PFSM_ERR_INT);
+        }
     }
 }
 
@@ -1273,7 +1299,7 @@ static int32_t Pmic_tps6594x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle,
             if((regData & PMIC_INT_READBACK_ERR_EN_DRV_READBACK_INT_MASK)
                 != 0U)
             {
-                Pmic_intrBitSet(pErrStat, 
+                Pmic_intrBitSet(pErrStat,
                                 PMIC_TPS6594X_EN_DRV_READBACK_INT);
             }
 
@@ -1282,6 +1308,23 @@ static int32_t Pmic_tps6594x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle,
             {
                     Pmic_intrBitSet(pErrStat,
                                     PMIC_TPS6594X_NRSTOUT_SOC_READBACK_INT);
+            }
+
+            if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevRev)
+            {
+                if((regValue & PMIC_INT_READBACK_ERR_NINT_READBACK_INT_MASK)
+                    != 0U)
+                {
+                    Pmic_intrBitSet(pErrStat,
+                                    PMIC_TPS6594X_NINT_READBACK_INT);
+                }
+
+                if((regValue & PMIC_INT_READBACK_ERR_NRSTOUT_READBACK_INT_MASK)
+                    != 0U)
+                {
+                    Pmic_intrBitSet(pErrStat,
+                                    PMIC_TPS6594X_NRSTOUT_READBACK_INT);
+                }
             }
         }
     }
@@ -1414,12 +1457,14 @@ int32_t Pmic_tps6594x_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle,
                 break;
 
             case PMIC_INT_MODERATE_ERR_REGADDR:
-                Pmic_tps6594x_getModerateErr(regValue,
+                Pmic_tps6594x_getModerateErr(pPmicCoreHandle,
+                                             regValue,
                                              pErrStat);
                 break;
 
             case PMIC_INT_SEVERE_ERR_REGADDR:
-                Pmic_tps6594x_getSevereErr(regValue,
+                Pmic_tps6594x_getSevereErr(pPmicCoreHandle,
+                                           regValue,
                                            pErrStat);
                 break;
 
@@ -1436,4 +1481,44 @@ int32_t Pmic_tps6594x_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle,
     }
 
     return pmicStatus;
+}
+
+/*!
+ * \brief  Function to reinitialise Interrupt configuration based on PMIC
+ *         Silicon Revision
+ */
+void Pmic_tps6594x_reInitInterruptConfig(Pmic_CoreHandle_t *pPmicCoreHandle)
+{
+    Pmic_IntrCfg_t *pIntrCfg = tps6594x_intCfg;
+
+    uint8_t irqNum = PMIC_TPS6594X_NRSTOUT_READBACK_INT;
+
+    pIntrCfg[irqNum].intrClrRegAddr = PMIC_INT_READBACK_ERR_REGADDR;
+    pIntrCfg[irqNum].intrClrBitPos =    \
+                          PMIC_INT_READBACK_ERR_NRSTOUT_READBACK_INT_SHIFT;
+    pIntrCfg[irqNum].intrMaskRegAddr = PMIC_MASK_READBACK_ERR_REGADDR;
+    pIntrCfg[irqNum].intrMaskBitPos =   \
+                        PMIC_MASK_READBACK_ERR_NRSTOUT_READBACK_MASK_SHIFT;
+
+    irqNum = PMIC_TPS6594X_NINT_READBACK_INT;
+
+    pIntrCfg[irqNum].intrClrRegAddr = PMIC_INT_READBACK_ERR_REGADDR;
+    pIntrCfg[irqNum].intrClrBitPos =    \
+                          PMIC_INT_READBACK_ERR_NINT_READBACK_INT_SHIFT;
+    pIntrCfg[irqNum].intrMaskRegAddr = PMIC_MASK_READBACK_ERR_REGADDR;
+    pIntrCfg[irqNum].intrMaskBitPos =   \
+                        PMIC_MASK_READBACK_ERR_NINT_READBACK_MASK_SHIFT;
+
+    irqNum = PMIC_TPS6594X_RECOV_CNT_INT;
+
+    pIntrCfg[irqNum].intrClrRegAddr = PMIC_INT_MODERATE_ERR_REGADDR;
+    pIntrCfg[irqNum].intrClrBitPos =    \
+                          PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_SHIFT_PG_1_0;
+
+    irqNum = PMIC_TPS6594X_PFSM_ERR_INT;
+
+    pIntrCfg[irqNum].intrClrRegAddr = PMIC_INT_MODERATE_ERR_REGADDR;
+    pIntrCfg[irqNum].intrClrBitPos =    \
+                           PMIC_INT_MODERATE_ERR_PFSM_ERR_INT_SHIFT_PG_1_0;
+
 }

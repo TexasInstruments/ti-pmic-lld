@@ -99,15 +99,7 @@ extern "C" {
 
 #define PMIC_INT_GPIO_GPIO11_INT_MASK                   (0x04U)
 #define PMIC_INT_STARTUP_NPWRON_START_INT_MASK          (0x01U)
-#define PMIC_RTC_STATUS_TIMER_MASK                      (0x20U)
-#define PMIC_RTC_STATUS_ALARM_MASK                      (0x40U)
 #define PMIC_INT_MODERATE_ERR_NPWRON_LONG_INT_MASK      (0x20U)
-
-/*!
- * \brief  PMIC_RTC_INTERRUPTS Register Bit Positions
- */
-#define PMIC_RTC_INTERRUPTS_IT_ALARM_SHIFT              (0x3U)
-#define PMIC_RTC_INTERRUPTS_IT_TIMER_SHIFT              (0x2U)
 
 /*!
  * \brief  PMIC_INT_BUCK Register Bit Mask
@@ -245,7 +237,7 @@ extern "C" {
 void pmic_get_tps6594x_intrCfg(Pmic_IntrCfg_t **pIntrCfg);
 
 /*!
- * \brief  Function to get the PMIC GPIO Interrupt Mask Registers for 
+ * \brief  Function to get the PMIC GPIO Interrupt Mask Registers for
  *         TPS6594x Leo PMIC.
  */
 void pmic_get_tps6594x_intrGpioCfg(Pmic_GpioIntrTypeCfg_t **pIntGpioCfg);
@@ -256,6 +248,12 @@ void pmic_get_tps6594x_intrGpioCfg(Pmic_GpioIntrTypeCfg_t **pIntGpioCfg);
 int32_t Pmic_tps6594x_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle,
                                     uint16_t           l1RegAddr,
                                     Pmic_IrqStatus_t  *pErrStat);
+
+/*!
+ * \brief  Function to reinitialise Interrupt configuration based on PMIC
+ *         Silicon Revision
+ */
+void Pmic_tps6594x_reInitInterruptConfig(Pmic_CoreHandle_t *pPmicCoreHandle);
 
 #ifdef __cplusplus
 }

@@ -58,13 +58,15 @@ extern "C" {
  * \brief: PMIC Module Device Revision Infos
  */
 #define PMIC_DEV_REV_REGADDR                (0x01U)
+#define PMIC_MANUFACTURING_VER_REGADDR      (0xA6U)
+
 #define PMIC_WDG_LONGWIN_CFG_REGADDR        (0x405U)
 
-/* Silicon Revision Id - PG 1.0 for Leo and Hera */
-#define PMIC_SILICON_REV_ID_PG_1_0           (0x08U)
-
 /* Silicon Revision Id - PG 2.0 for Leo and Hera */
-#define PMIC_SILICON_REV_ID_PG_2_0           (0x10U)
+#define PMIC_SILICON_REV_ID_PG_2_0           (0x08U)
+
+/* Silicon Revision Id - PG 1.0 for Leo and Hera */
+#define PMIC_SILICON_REV_ID_PG_1_0           (0x0U)
 
 /*!
  * \brief  PMIC power Configuration Register Address
@@ -136,6 +138,11 @@ extern "C" {
 #define PMIC_STARTUP_DEST_NSLEEP1B_SHIFT              (0x0U)
 
 /*!
+ * \brief   PMIC MANUFACTURING_VER Register Shift Values
+ */
+#define PMIC_MANUFACTURING_VER_SILICON_REV_SHIFT      (0x0U)
+
+/*!
  * \brief: PMIC Recovery Counter Register 1 Mask Values
  */
 #define PMIC_RECOV_CNT_REG_1_RECOV_CNT_MASK                   \
@@ -184,6 +191,12 @@ extern "C" {
                          ((uint8_t)(0x01U << PMIC_STARTUP_DEST_NSLEEP2B_SHIFT))
 #define PMIC_STARTUP_DEST_NSLEEP1B_MASK                            \
                          ((uint8_t)(0x01U << PMIC_STARTUP_DEST_NSLEEP1B_SHIFT))
+
+/*!
+ * \brief   PMIC MANUFACTURING_VER Register Mask Values
+ */
+#define PMIC_MANUFACTURING_VER_SILICON_REV_MASK                            \
+                  ((uint8_t)(0x3FU << PMIC_MANUFACTURING_VER_SILICON_REV_SHIFT))
 
 /*!
  * \brief: PMIC Recovery Counter Threshold Max Value

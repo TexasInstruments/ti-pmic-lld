@@ -142,7 +142,8 @@ typedef struct Pmic_IrqStatus_s
  *              REQ_TAG(PDK-5838), REQ_TAG(PDK-5852), REQ_TAG(PDK-5834),
  *              REQ_TAG(PDK-5806), REQ_TAG(PDK-5828), REQ_TAG(PDK-5807),
  *              REQ_TAG(PDK-5846), REQ_TAG(PDK-5812), REQ_TAG(PDK-5830),
- *              REQ_TAG(PDK-5835), REQ_TAG(PDK-5836), REQ_TAG(PDK-5845)
+ *              REQ_TAG(PDK-5835), REQ_TAG(PDK-5836), REQ_TAG(PDK-5845),
+ *              REQ_TAG(PDK-9147), REQ_TAG(PDK-9148), REQ_TAG(PDK-9149)
  * Design: did_pmic_irq_cfg_readback
  *
  *          This function does the following:
@@ -298,10 +299,10 @@ int32_t Pmic_irqGpioMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  *                                    for TPS6594x LEO PMIC,
  *                                    \ref Pmic_lp8764x_IrqNum
  *                                    for LP8764x HERA PMIC,
- *                                    \ref Pmic_IrqNum
- *                                    for all interrupts except gpio.
  * \param   pMaskStatus       [OUT]   Pointer to hold the status of interrupt is
  *                                    masked or not
+ *                                    For Valid values:
+ *                                    \ref Pmic_IrqMaskFlag
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values: \ref Pmic_ErrorCodes.
  */
@@ -325,15 +326,23 @@ int32_t Pmic_irqGetMaskIntrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
  *                                    for TPS6594x LEO PMIC,
  *                                    \ref Pmic_lp8764x_IrqGpioNum
  *                                    for LP8764x HERA PMIC,
- *                                    \ref Pmic_IrqGpioNum
- *                                    for all gpio interrupts.
  * \param   gpioIntrType      [IN]    Parameter to mask GPIO RISE and FALL
  *                                    Interrupt.
  *                                    Valid values: \ref Pmic_IrqGpioIntrType.
  * \param   pRiseIntrMaskStat [OUT]   Pointer to hold status of GPIO Rise
  *                                    Interrupt is masked or not
+ *                                    Valid only when gpioIntrType is
+ *                                    PMIC_IRQ_GPIO_RISE_INT_TYPE or
+ *                                    PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE
+ *                                    For Valid values:
+ *                                    \ref Pmic_IrqMaskFlag
  * \param   pFallIntrMaskStat [OUT]   Pointer to hold status of GPIO Fall
  *                                    Interrupt is masked or not
+ *                                    Valid only when gpioIntrType is
+ *                                    PMIC_IRQ_GPIO_FALL_INT_TYPE or
+ *                                    PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE
+ *                                    For Valid values:
+ *                                    \ref Pmic_IrqMaskFlag
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes.
  */

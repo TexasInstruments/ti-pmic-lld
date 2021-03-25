@@ -210,9 +210,27 @@ extern "C" {
 #define PMIC_INT_MODERATE_ERR_TSD_ORD_INT_MASK                   (0x01U)
 #define PMIC_INT_MODERATE_ERR_BIST_FAIL_INT_MASK                 (0x02U)
 #define PMIC_INT_MODERATE_ERR_REG_CRC_ERR_INT_MASK               (0x04U)
+
+/** \brief PMIC_INT_MODERATE_ERR_NRSTOUT_READBACK_INT_MASK Bit Positions
+ *         valid only for PG2.0 */
 #define PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_MASK                 (0x08U)
+
+/** \brief PMIC_INT_MODERATE_ERR_PFSM_ERR_INT_MASK_PG_1_0 Bit Positions
+ *         valid only for PG1.0 */
+#define PMIC_INT_MODERATE_ERR_PFSM_ERR_INT_MASK_PG_1_0           (0x08U)
+
 #define PMIC_INT_MODERATE_ERR_SPMI_ERR_INT_MASK                  (0x10U)
+
+/** \brief PMIC_INT_MODERATE_ERR_NINT_READBACK_INT_MASK Bit Positions
+ *         valid only for PG2.0 */
 #define PMIC_INT_MODERATE_ERR_NINT_READBACK_INT_MASK             (0x40U)
+
+/** \brief PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_MASK_PG_1_0 Bit Positions
+ *         valid only for PG1.0 */
+#define PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_MASK_PG_1_0          (0x40U)
+
+/** \brief PMIC_INT_MODERATE_ERR_NRSTOUT_READBACK_INT_MASK Bit Positions
+ *         valid only for PG2.0 */
 #define PMIC_INT_MODERATE_ERR_NRSTOUT_READBACK_INT_MASK          (0x80U)
 
 /*!
@@ -235,6 +253,15 @@ extern "C" {
  * \brief  PMIC_INT_READBACK_ERR Register Bit Masks
  */
 #define PMIC_INT_READBACK_ERR_EN_DRV_READBACK_INT_MASK           (0x01U)
+
+/** \brief PMIC_INT_READBACK_ERR_NINT_READBACK_INT_MASK Bit Positions
+ *         valid only for PG1.0 */
+#define PMIC_INT_READBACK_ERR_NINT_READBACK_INT_MASK             (0x02U)
+
+/** \brief PMIC_INT_READBACK_ERR_NRSTOUT_READBACK_INT_MASK Bit Positions
+ *         valid only for PG1.0 */
+#define PMIC_INT_READBACK_ERR_NRSTOUT_READBACK_INT_MASK          (0x04U)
+
 #define PMIC_INT_READBACK_ERR_NRSTOUT_SOC_READBACK_INT_MASK      (0x08U)
 
 /*!
@@ -277,6 +304,15 @@ extern "C" {
 
 /*! PMIC_INT_READBACK_ERR Register Bit Positions */
 #define PMIC_INT_READBACK_ERR_NRSTOUT_SOC_READBACK_INT_SHIFT    (0x3U)
+
+/** \brief PMIC_INT_READBACK_ERR_NRSTOUT_READBACK_INT_SHIFT Bit Positions
+ *         valid only for PG1.0 */
+#define PMIC_INT_READBACK_ERR_NRSTOUT_READBACK_INT_SHIFT        (0x2U)
+
+/** \brief PMIC_INT_READBACK_ERR_NINT_READBACK_INT_SHIFT Bit Positions
+ *         valid only for PG1.0 */
+#define PMIC_INT_READBACK_ERR_NINT_READBACK_INT_SHIFT           (0x1U)
+
 #define PMIC_INT_READBACK_ERR_EN_DRV_READBACK_INT_SHIFT         (0x0U)
 
 /*! PMIC_INT_COMM_ERR Register Bit Positions */
@@ -298,10 +334,28 @@ extern "C" {
 #define PMIC_INT_SEVERE_ERR_TSD_IMM_INT_SHIFT                   (0x0U)
 
 /*! PMIC_INT_MODERATE_ERR Register Bit Positions */
+
+/** \brief PMIC_INT_MODERATE_ERR_NRSTOUT_READBACK_INT_SHIFT Bit Positions
+ *         valid only for PG2.0 */
 #define PMIC_INT_MODERATE_ERR_NRSTOUT_READBACK_INT_SHIFT        (0x7U)
+/** \brief PMIC_INT_MODERATE_ERR_NINT_READBACK_INT_SHIFT Bit Positions
+ *         valid only for PG2.0 */
 #define PMIC_INT_MODERATE_ERR_NINT_READBACK_INT_SHIFT           (0x6U)
+
+/** \brief PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_SHIFT Bit Positions
+ *         valid only for PG1.0 */
+#define PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_SHIFT_PG_1_0        (0x6U)
+
 #define PMIC_INT_MODERATE_ERR_SPMI_ERR_INT_SHIFT                (0x4U)
+
+/** \brief PMIC_INT_MODERATE_ERR_PFSM_ERR_INT_SHIFT Bit Positions
+ *         valid only for PG1.0 */
+#define PMIC_INT_MODERATE_ERR_PFSM_ERR_INT_SHIFT_PG_1_0         (0x3U)
+
+/** \brief PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_SHIFT Bit Positions
+ *         valid only for PG2.0 */
 #define PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_SHIFT               (0x3U)
+
 #define PMIC_INT_MODERATE_ERR_REG_CRC_ERR_INT_SHIFT             (0x2U)
 #define PMIC_INT_MODERATE_ERR_BIST_FAIL_INT_SHIFT               (0x1U)
 #define PMIC_INT_MODERATE_ERR_TSD_ORD_INT_SHIFT                 (0x0U)
@@ -367,6 +421,15 @@ extern "C" {
 
 /*! PMIC_MASK_READBACK_ERR Register Bit Positions */
 #define PMIC_MASK_READBACK_ERR_NRSTOUT_SOC_READBACK_MASK_SHIFT      (0x3U)
+
+/** \brief PMIC_MASK_READBACK_ERR_NRSTOUT_READBACK_MASK_SHIFT Bit Positions
+ *         valid only for PG1.0 */
+#define PMIC_MASK_READBACK_ERR_NRSTOUT_READBACK_MASK_SHIFT          (0x2U)
+
+/** \brief PMIC_MASK_READBACK_ERR_NINT_READBACK_MASK_SHIFT Bit Positions
+ *         valid only for PG1.0 */
+#define PMIC_MASK_READBACK_ERR_NINT_READBACK_MASK_SHIFT             (0x1U)
+
 #define PMIC_MASK_READBACK_ERR_EN_DRV_READBACK_MASK_SHIFT           (0x0U)
 
 /*! PMIC_MASK_COMM_ERR Register Bit Positions */
@@ -383,8 +446,14 @@ extern "C" {
 #define PMIC_MASK_FSM_ERR_IMM_SHUTDOWN_MASK_SHIFT                   (0x0U)
 
 /*! PMIC_MASK_MODERATE_ERR Register Bit Positions */
+
+/** \brief PMIC_MASK_MODERATE_ERR_NRSTOUT_READBACK_MASK_SHIFT Bit Positions
+ *         valid only for PG2.0 */
 #define PMIC_MASK_MODERATE_ERR_NRSTOUT_READBACK_MASK_SHIFT          (0x7U)
+/** \brief PMIC_MASK_MODERATE_ERR_NINT_READBACK_MASK_SHIFT Bit Positions
+ *         valid only for PG2.0 */
 #define PMIC_MASK_MODERATE_ERR_NINT_READBACK_MASK_SHIFT             (0x6U)
+
 #define PMIC_MASK_MODERATE_ERR_SPMI_ERR_MASK_SHIFT                  (0x4U)
 #define PMIC_MASK_MODERATE_ERR_REG_CRC_ERR_MASK_SHIFT               (0x2U)
 #define PMIC_MASK_MODERATE_ERR_BIST_FAIL_MASK_SHIFT                 (0x1U)
@@ -449,6 +518,11 @@ extern "C" {
  */
 #define PMIC_IRQ_MASK_CLR_BITFIELD                                  (1U)
 
+/*!
+ * \brief Mask Value of the PMIC IRQ
+ */
+#define PMIC_IRQ_MASK_VAL_1                                         (1U)
+
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
@@ -489,7 +563,7 @@ typedef struct Pmic_GpioIntrTypeCfg_s
 /*==========================================================================*/
 /*                         Function Declarations                            */
 /*==========================================================================*/
-/*! 
+/*!
  * \brief  Function to Set the intStatus bit position.
  */
 void Pmic_intrBitSet(Pmic_IrqStatus_t  *pErrStat, uint32_t pos);

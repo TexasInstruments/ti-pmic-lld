@@ -42,8 +42,8 @@
 #include <pmic_core_lp8764x_priv.h>
 
 #include <pmic_rtc_tps6594x_priv.h>
-
 #include <pmic_fsm_priv.h>
+#include <pmic_irq_tps6594x_priv.h>
 
 static const Pmic_DevSubSysInfo_t pmicSubSysInfo[] =
 {
@@ -588,6 +588,30 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
         {
             pPmicCoreHandle->drvInitStatus = DRV_INIT_SUCCESS |
                                              pPmicConfigData->instType;
+
+            /* Start Critical Section */
+            Pmic_criticalSectionStart(pPmicCoreHandle);
+
+            pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                                PMIC_MANUFACTURING_VER_REGADDR,
+                                                &regVal);
+            Pmic_criticalSectionStop(pPmicCoreHandle);
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                pPmicCoreHandle->pmicDevRev = Pmic_getBitField(
+                                regVal,
+                                PMIC_MANUFACTURING_VER_SILICON_REV_SHIFT,
+                                PMIC_MANUFACTURING_VER_SILICON_REV_MASK);
+
+                if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
+                   (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevRev))
+                {
+                    Pmic_tps6594x_reInitInterruptConfig(pPmicCoreHandle);
+                }
+
+                pmicStatus = PMIC_ST_WARN_INV_DEVICE_ID;
+            }
         }
     }
 
