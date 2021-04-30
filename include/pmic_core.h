@@ -56,6 +56,8 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 #include <pmic_types.h>
+#include <cfg/tps6594x/pmic_core_tps6594x.h>
+#include <cfg/lp8764x/pmic_core_lp8764x.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -70,6 +72,12 @@ extern "C" {
  *         on Success: (DRV_INIT_SUCCESS | Pmic_InstType_t)
  */
 #define DRV_INIT_SUCCESS                      (0xABCD0000U)
+
+/** \brief Silicon Revision Id - PG 2.0 for Leo and Hera */
+#define PMIC_SILICON_REV_ID_PG_2_0           (0x08U)
+
+/** \brief Silicon Revision Id - PG 1.0 for Leo and Hera */
+#define PMIC_SILICON_REV_ID_PG_1_0           (0x0U)
 
 /**
  *  \anchor Pmic_RecoveryCntCfgType

@@ -2332,7 +2332,8 @@ int32_t Pmic_rtcGetTimeDateInfo(Pmic_CoreHandle_t *pPmicCoreHandle,
                                 Pmic_RtcTime_t    *pTimeCfg,
                                 Pmic_RtcDate_t    *pDateCfg)
 {
-    int32_t  pmicStatus = PMIC_ST_SUCCESS;
+    int32_t         pmicStatus = PMIC_ST_SUCCESS;
+    Pmic_RtcCfg_t   rtcCfg;
 
     if(NULL == pPmicCoreHandle)
     {
@@ -2361,7 +2362,13 @@ int32_t Pmic_rtcGetTimeDateInfo(Pmic_CoreHandle_t *pPmicCoreHandle,
     /* Set RTC dynamic registers to static shadowed registers */
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = Pmic_rtcTriggerShadowRegisters(pPmicCoreHandle);
+        rtcCfg.validParams = PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID;
+        pmicStatus = Pmic_rtcGetConfiguration(pPmicCoreHandle, &rtcCfg);
+
+        if(PMIC_RTC_STATIC_SHADOWED_REG_SEL == rtcCfg.timeDateRegSel)
+        {
+            pmicStatus = Pmic_rtcTriggerShadowRegisters(pPmicCoreHandle);
+        }
     }
 
     /* Get RTC time */
@@ -2611,7 +2618,7 @@ int32_t  Pmic_rtcGetRstStatus(Pmic_CoreHandle_t    *pPmicCoreHandle,
                               Pmic_RtcRstStatus_t  *pRtcRstStatus)
 {
     int32_t  pmicStatus  = PMIC_ST_SUCCESS;
-    uint8_t  regData     = 0U;
+    uint8_t  regData, regVal     = 0U;
 
     if(NULL == pPmicCoreHandle)
     {
@@ -2643,6 +2650,10 @@ int32_t  Pmic_rtcGetRstStatus(Pmic_CoreHandle_t    *pPmicCoreHandle,
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
                                             PMIC_RTC_STATUS_REGADDR,
                                             &regData);
+        /* Checking RTC Reset status */
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                            PMIC_RTC_RESET_STATUS_REGADDR,
+                                            &regVal);
 
         Pmic_criticalSectionStop(pPmicCoreHandle);
     }
@@ -2653,9 +2664,10 @@ int32_t  Pmic_rtcGetRstStatus(Pmic_CoreHandle_t    *pPmicCoreHandle,
         if((bool)false != (pmic_validParamCheck(pRtcRstStatus->validParams,
                                                 PMIC_RTC_RESET_STATUS_VALID)))
         {
-            if(Pmic_getBitField(regData,
-                                PMIC_RTC_STATUS_RUN_SHIFT,
-                                PMIC_RTC_STATUS_RUN_MASK) == 0U)
+            if(Pmic_getBitField(
+                             regVal,
+                             PMIC_RTC_RESET_STATUS_RESET_STATUS_RTC_SHIFT,
+                             PMIC_RTC_RESET_STATUS_RESET_STATUS_RTC_MASK) == 0U)
             {
                 pRtcRstStatus->rtcRstStatus = (bool)false;
             }
@@ -2667,7 +2679,7 @@ int32_t  Pmic_rtcGetRstStatus(Pmic_CoreHandle_t    *pPmicCoreHandle,
 
         /* Get RTC POWER-UP status */
         if((bool)false != (pmic_validParamCheck(pRtcRstStatus->validParams,
-                                            PMIC_RTC_POWERUP_STATUS_VALID)))
+                                                PMIC_RTC_POWERUP_STATUS_VALID)))
         {
             if(Pmic_getBitField(regData,
                                 PMIC_RTC_STATUS_POWER_UP_SHIFT,
@@ -2684,3 +2696,683 @@ int32_t  Pmic_rtcGetRstStatus(Pmic_CoreHandle_t    *pPmicCoreHandle,
 
     return pmicStatus;
 }
+
+/*!
+ * \brief   API to read RTC status which defines RTC is started or not
+ *
+ * Requirement: REQ_TAG(PDK-9155)
+ * Design: did_pmic_rtc_status
+ *
+ *          This function is read RTC status which defines RTC is started or not
+ *
+ * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
+ * \param   pRtcstatus         [IN]   Pointer to store the RTC status which
+ *                                    defines  RTC is started or not
+ *                                        Valid values: \ref Pmic_RtcStatus
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t  Pmic_rtcGetStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
+                           bool              *pRtcstatus)
+{
+    int32_t  pmicStatus  = PMIC_ST_SUCCESS;
+    uint8_t  regData     = 0U;
+
+    if(NULL == pPmicCoreHandle)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pRtcstatus))
+    {
+         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+
+        /* Checking RTC status */
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                            PMIC_RTC_STATUS_REGADDR,
+                                            &regData);
+
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        /* Get RTC Status */
+        if(Pmic_getBitField(regData,
+                            PMIC_RTC_STATUS_RUN_SHIFT,
+                            PMIC_RTC_STATUS_RUN_MASK) == 0U)
+        {
+            *pRtcstatus = (bool)PMIC_RTC_STATUS_FROZEN;
+        }
+        else
+        {
+            *pRtcstatus = (bool)PMIC_RTC_STATUS_RUNNING;
+        }
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief   API to clear the Reset status of RTC.
+ *
+ * Requirement: REQ_TAG(PDK-9142)
+ * Design: did_pmic_rtc_clr_rst_status
+ *
+ *          This function is used to clear the Reset status of the RTC
+ *          depending on the Pmic_RtcRstStatusType
+ *
+ * \param   pPmicCoreHandle   [IN]   PMIC Interface Handle.
+ * \param   rtcRstStatType    [IN]   RTC Reset Status Type
+ *                                   For Valid values:
+ *                                        \ref Pmic_RtcRstStatusType
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t  Pmic_rtcClrRstStatus(Pmic_CoreHandle_t    *pPmicCoreHandle,
+                              const uint8_t         rtcRstStatType)
+{
+    int32_t  pmicStatus  = PMIC_ST_SUCCESS;
+    uint8_t  regData = 0U;
+
+    if(NULL == pPmicCoreHandle)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (rtcRstStatType > PMIC_RTC_POWERUP_STATUS))
+    {
+         pmicStatus = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+
+        /* Clear RTC Reset Status */
+        if(PMIC_RTC_RST_STATUS == rtcRstStatType)
+        {
+            /* Checking RTC Reset status */
+            pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                                PMIC_RTC_RESET_STATUS_REGADDR,
+                                                &regData);
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                Pmic_setBitField(
+                                 &regData,
+                                 PMIC_RTC_RESET_STATUS_RESET_STATUS_RTC_SHIFT,
+                                 PMIC_RTC_RESET_STATUS_RESET_STATUS_RTC_MASK,
+                                 1U);
+                pmicStatus = Pmic_commIntf_sendByte(
+                                                  pPmicCoreHandle,
+                                                  PMIC_RTC_RESET_STATUS_REGADDR,
+                                                  regData);
+            }
+        }
+        else /* clear RTC POWER-UP status */
+        {
+            /* Checking RTC status */
+            pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                                PMIC_RTC_STATUS_REGADDR,
+                                                &regData);
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                Pmic_setBitField(&regData,
+                                 PMIC_RTC_STATUS_POWER_UP_SHIFT,
+                                 PMIC_RTC_STATUS_POWER_UP_MASK,
+                                 1U);
+                pmicStatus = Pmic_commIntf_sendByte(
+                                                  pPmicCoreHandle,
+                                                  PMIC_RTC_STATUS_REGADDR,
+                                                  regData);
+            }
+
+        }
+
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  API to Set 32K counter with compensation values
+ */
+static int32_t Pmic_rtcSet32KCounterCompVal(
+                                           Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                           const Pmic_RtcCfg_t  rtcCfg)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+    uint8_t regData     = 0U;
+    bool    rtcStatus;
+
+
+    pmicStatus = Pmic_rtcGetStatus(pPmicCoreHandle, &rtcStatus);
+
+    if((PMIC_ST_SUCCESS == pmicStatus) && (PMIC_RTC_STOP != rtcStatus))
+       {
+           pmicStatus = PMIC_ST_ERR_FAIL;
+       }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                            PMIC_RTC_CTRL_1_REGADDR,
+                                            &regData);
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            Pmic_setBitField(&regData,
+                             PMIC_RTC_CTRL_1_SET_32_COUNTER_SHIFT,
+                             PMIC_RTC_CTRL_1_SET_32_COUNTER_MASK,
+                             rtcCfg.set32KCounterCompVal);
+
+            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                                PMIC_RTC_CTRL_1_REGADDR,
+                                                regData);
+        }
+
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  API to Get RTC configuration of 32K counter with compensation value
+ *         is set or not
+ */
+static int32_t Pmic_rtcGet32KCounterCompValCfg(
+                                           Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                           Pmic_RtcCfg_t       *pRtcCfg)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+    uint8_t regData     = 0U;
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_RTC_CTRL_1_REGADDR,
+                                        &regData);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pRtcCfg->set32KCounterCompVal = Pmic_getBitField(
+                                        regData,
+                                        PMIC_RTC_CTRL_1_SET_32_COUNTER_SHIFT,
+                                        PMIC_RTC_CTRL_1_SET_32_COUNTER_MASK);
+
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  API to Enable/Disable Crystal Oscillator
+ */
+static int32_t Pmic_rtcEnableCrystalOsc(
+                                           Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                           const Pmic_RtcCfg_t  rtcCfg)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+    uint8_t regData     = 0U;
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_RTC_CTRL_2_REGADDR,
+                                        &regData);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        Pmic_setBitField(&regData,
+                         PMIC_RTC_CTRL_2_XTAL_EN_SHIFT,
+                         PMIC_RTC_CTRL_2_XTAL_EN_MASK,
+                         rtcCfg.crystalOScEn);
+
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                            PMIC_RTC_CTRL_2_REGADDR,
+                                            regData);
+    }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  API to Get Crystal Oscillator is enabled or not
+ */
+static int32_t Pmic_rtcGetCrystalOscEnCfg(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                          Pmic_RtcCfg_t       *pRtcCfg)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+    uint8_t regData     = 0U;
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_RTC_CTRL_2_REGADDR,
+                                        &regData);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pRtcCfg->crystalOScEn = Pmic_getBitField(
+                                        regData,
+                                        PMIC_RTC_CTRL_2_XTAL_EN_SHIFT,
+                                        PMIC_RTC_CTRL_2_XTAL_EN_MASK);
+
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  API to Set RTC time config to Round the time to closest minute
+ */
+static int32_t Pmic_rctSetRtcTimeRound30s(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                          const Pmic_RtcCfg_t  rtcCfg)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+    uint8_t regData     = 0U;
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_RTC_CTRL_1_REGADDR,
+                                        &regData);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        Pmic_setBitField(&regData,
+                         PMIC_RTC_CTRL_1_ROUND_30S_SHIFT,
+                         PMIC_RTC_CTRL_1_ROUND_30S_MASK,
+                         rtcCfg.setRtcTimeRound30s);
+
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                            PMIC_RTC_CTRL_1_REGADDR,
+                                            regData);
+    }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  API to Get the status of RTC time config to Round the time to closest
+ *         minute is set or not
+ */
+static int32_t Pmic_rctGetRtcTimeRound30s(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                          Pmic_RtcCfg_t       *pRtcCfg)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+    uint8_t regData     = 0U;
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_RTC_CTRL_1_REGADDR,
+                                        &regData);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pRtcCfg->setRtcTimeRound30s = Pmic_getBitField(
+                                            regData,
+                                            PMIC_RTC_CTRL_1_ROUND_30S_SHIFT,
+                                            PMIC_RTC_CTRL_1_ROUND_30S_MASK);
+
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  API to Select RTC Time and Date Register read from Dynamic or
+ *         Static Shadowed Registers
+ */
+static int32_t Pmic_rtcSelectTimeDateReg(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                         const Pmic_RtcCfg_t  rtcCfg)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+    uint8_t regData     = 0U;
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_RTC_CTRL_1_REGADDR,
+                                        &regData);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        Pmic_setBitField(&regData,
+                         PMIC_RTC_CTRL_1_RTC_V_OPT_SHIFT,
+                         PMIC_RTC_CTRL_1_RTC_V_OPT_MASK,
+                         rtcCfg.timeDateRegSel);
+
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                            PMIC_RTC_CTRL_1_REGADDR,
+                                            regData);
+    }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  API to Get config of RTC Time and Date Register read from Dynamic or
+           Static Shadowed Registers
+ */
+static int32_t Pmic_rtcGetTimeDateRegCfg(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                         Pmic_RtcCfg_t       *pRtcCfg)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+    uint8_t regData     = 0U;
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_RTC_CTRL_1_REGADDR,
+                                        &regData);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pRtcCfg->timeDateRegSel = Pmic_getBitField(
+                                        regData,
+                                        PMIC_RTC_CTRL_1_RTC_V_OPT_SHIFT,
+                                        PMIC_RTC_CTRL_1_RTC_V_OPT_MASK);
+
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  API to Select Crystal Oscillator type
+ */
+static int32_t Pmic_rtcSelectCrystalOscType(
+                                           Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                           const Pmic_RtcCfg_t  rtcCfg)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+    uint8_t regData     = 0U;
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_RTC_CTRL_2_REGADDR,
+                                        &regData);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        Pmic_setBitField(&regData,
+                         PMIC_RTC_CTRL_2_XTAL_SEL_SHIFT,
+                         PMIC_RTC_CTRL_2_XTAL_SEL_MASK,
+                         rtcCfg.crystalOScType);
+
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                            PMIC_RTC_CTRL_2_REGADDR,
+                                            regData);
+    }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  API to Get Crystal Oscillator type configuration
+ */
+static int32_t Pmic_rtcGetCrystalOscTypeCfg(
+                                           Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                           Pmic_RtcCfg_t       *pRtcCfg)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+    uint8_t regData     = 0U;
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_RTC_CTRL_2_REGADDR,
+                                        &regData);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pRtcCfg->crystalOScType = Pmic_getBitField(
+                                        regData,
+                                        PMIC_RTC_CTRL_2_XTAL_SEL_SHIFT,
+                                        PMIC_RTC_CTRL_2_XTAL_SEL_MASK);
+
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief   API to Set PMIC RTC Configuration
+ *
+ * Requirement: REQ_TAG(PDK-9141), REQ_TAG(PDK-9135)
+ * Design: did_pmic_rtc_cfg_readback
+ *
+ *          This function is used to set RTC configuration depending upon the
+ *          bit fields set in validParams of Pmic_RtcCfg_t structure.
+ *
+ * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
+ * \param   rtcCfg            [IN]    Set required RTC configuration
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
+ *          For valid values \ref Pmic_ErrorCodes.
+ */
+int32_t  Pmic_rtcSetConfiguration(Pmic_CoreHandle_t    *pPmicCoreHandle,
+                                  const Pmic_RtcCfg_t   rtcCfg)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+
+    if(NULL == pPmicCoreHandle)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(
+                                  rtcCfg.validParams,
+                                  PMIC_RTC_CFG_32K_COUNTER_COMP_VAL_SET_VALID)))
+    {
+        if(rtcCfg.set32KCounterCompVal != PMIC_RTC_32K_COUNTER_COMP_VAL_SET)
+        {
+            pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Set 32K counter with compensation values */
+            pmicStatus = Pmic_rtcSet32KCounterCompVal(pPmicCoreHandle, rtcCfg);
+        }
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(
+                                       rtcCfg.validParams,
+                                       PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID)))
+    {
+        /* Enable/Disable Crystal Oscillator */
+        pmicStatus = Pmic_rtcEnableCrystalOsc(pPmicCoreHandle, rtcCfg);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(
+                                    rtcCfg.validParams,
+                                    PMIC_RTC_CFG_RTC_TIME_ROUND_30S_SET_VALID)))
+    {
+        if(rtcCfg.setRtcTimeRound30s != PMIC_RTC_ROUND_TIME_SET)
+        {
+            pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Set RTC time config to Round the time to closest minute */
+            pmicStatus = Pmic_rctSetRtcTimeRound30s(pPmicCoreHandle, rtcCfg);
+        }
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(
+                                      rtcCfg.validParams,
+                                      PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID)))
+    {
+        if(rtcCfg.timeDateRegSel > PMIC_RTC_STATIC_SHADOWED_REG_SEL)
+        {
+            pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Select RTC Time and Date Register read from Dynamic or
+               Static Shadowed Registers */
+            pmicStatus = Pmic_rtcSelectTimeDateReg(pPmicCoreHandle, rtcCfg);
+        }
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(
+                                   rtcCfg.validParams,
+                                   PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID)))
+    {
+        if(rtcCfg.crystalOScType > PMIC_RTC_CRYSTAL_OSC_TYPE_12_5PF)
+        {
+            pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Select Crystal Oscillator type */
+            pmicStatus = Pmic_rtcSelectCrystalOscType(pPmicCoreHandle, rtcCfg);
+        }
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief   API to Get PMIC RTC Configuration
+ *
+ * Requirement: REQ_TAG(PDK-9141), REQ_TAG(PDK-9135)
+ * Design: did_pmic_rtc_cfg_readback
+ *
+ *          This function is used to Get RTC configuration depending upon the
+ *          bit fields set in validParams of Pmic_RtcCfg_t structure.
+ *
+ * \param   pPmicCoreHandle   [IN]       PMIC Interface Handle.
+ * \param   pRtcCfg           [IN/OUT]   Pointer to store required RTC
+ *                                       configuration
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
+ *          For valid values \ref Pmic_ErrorCodes.
+ */
+int32_t  Pmic_rtcGetConfiguration(Pmic_CoreHandle_t    *pPmicCoreHandle,
+                                  Pmic_RtcCfg_t        *pRtcCfg)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+
+    if(NULL == pPmicCoreHandle)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)false == pPmicCoreHandle->pPmic_SubSysInfo->rtcEnable))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pRtcCfg))
+    {
+        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(
+                                  pRtcCfg->validParams,
+                                  PMIC_RTC_CFG_32K_COUNTER_COMP_VAL_SET_VALID)))
+    {
+        /* Get RTC configuration of 32K counter with compensation value is set
+         * or not */
+        pmicStatus = Pmic_rtcGet32KCounterCompValCfg(pPmicCoreHandle, pRtcCfg);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(pRtcCfg->validParams,
+                                           PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID)))
+    {
+        /* Get Crystal Oscillator is enabled or not*/
+        pmicStatus = Pmic_rtcGetCrystalOscEnCfg(pPmicCoreHandle, pRtcCfg);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(
+                                    pRtcCfg->validParams,
+                                    PMIC_RTC_CFG_RTC_TIME_ROUND_30S_SET_VALID)))
+    {
+        /* Get the status of RTC time config to Round the time to closest
+         * minute is set or not */
+        pmicStatus = Pmic_rctGetRtcTimeRound30s(pPmicCoreHandle, pRtcCfg);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(
+                                      pRtcCfg->validParams,
+                                      PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID)))
+    {
+            /* Get config of RTC Time and Date Register read from Dynamic or
+               Static Shadowed Registers */
+            pmicStatus = Pmic_rtcGetTimeDateRegCfg(pPmicCoreHandle, pRtcCfg);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(
+                                        pRtcCfg->validParams,
+                                        PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID)))
+    {
+        /* Get Crystal Oscillator type configuration */
+        pmicStatus = Pmic_rtcGetCrystalOscTypeCfg(pPmicCoreHandle, pRtcCfg);
+    }
+
+    return pmicStatus;
+}
+

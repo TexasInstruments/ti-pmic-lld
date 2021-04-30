@@ -32,14 +32,14 @@
  *****************************************************************************/
 
 /**
- *  \file pmic_core_tps6594x_priv.h
+ *  \file pmic_core_tps6594x.h
  *
  *  \brief  The macro definitions for TPS6594x Leo PMIC driver specific
  *          PMIC common configuration
  */
 
-#ifndef PMIC_CORE_TPS6594X_PRIV_H_
-#define PMIC_CORE_TPS6594X_PRIV_H_
+#ifndef PMIC_CORE_TPS6594X_H_
+#define PMIC_CORE_TPS6594X_H_
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -72,4 +72,4 @@ extern "C" {
 }
 #endif /* __cplusplus */
 
-#endif /* PMIC_CORE_TPS6594X_PRIV_H_ */
+#endif /* PMIC_CORE_TPS6594X_H_ */

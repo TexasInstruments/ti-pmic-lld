@@ -146,10 +146,10 @@ extern "C" {
  *
  *  @{
  */
-/** \brief RTC is restarted */
-#define PMIC_RTC_RST_STATUS_RESTARTED                  (0x0U)
-/** \brief RTC is not restarted */
-#define PMIC_RTC_RST_STATUS_NOT_RESTARTED              (0x1U)
+/** \brief RESET_STATUS_RTC reset value when RTC domain is powered down */
+#define PMIC_RTC_RST_STATUS_RESET_VAL                  (0x0U)
+ /** \brief Used to set RESET_STATUS_RTC register bit field */
+#define PMIC_RTC_RST_STATUS_SET_VAL                    (0x1U)
 /* @} */
 
 /**
@@ -158,10 +158,10 @@ extern "C" {
  *
  *  @{
  */
- /** \brief RTC is restarted */
-#define PMIC_RTC_POWERUP_STATUS_NOT_RESTARTED                (0x0U)
-/** \brief RTC is not restarted */
-#define PMIC_RTC_POWERUP_STATUS_RESTARTED                    (0x1U)
+ /** \brief Used to clear POWERUP_STATUS register bit field */
+#define PMIC_RTC_POWERUP_STATUS_CLR_VAL                      (0x0U)
+/** \brief POWERUP_STATUS reset value when RTC domain is powered down */
+#define PMIC_RTC_POWERUP_STATUS_RESET_VAL                    (0x1U)
 /* @} */
 
 /**
@@ -202,13 +202,44 @@ extern "C" {
 /* @} */
 
 /**
+ *  \anchor Pmic_Rtc32KCounterCfg
+ *  \name PMIC RTC 32k Counter Configuration
+ *
+ *  @{
+ */
+/** \brief Set 32K counter with RTC compensation values */
+#define PMIC_RTC_32K_COUNTER_COMP_VAL_SET        (0x1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_RtcCrystalOscCfg
+ *  \name Selects PMIC RTC Crystal Oscillator Configuration
+ *
+ *  @{
+ */
+#define PMIC_RTC_CRYSTAL_OSC_DISABLE             (0x0U)
+#define PMIC_RTC_CRYSTAL_OSC_ENABLE              (0x1U)
+/* @} */
+
+
+/**
+ *  \anchor Pmic_RtcRoundTime
+ *  \name PMIC RTC round the time to closest minute
+ *
+ *  @{
+ */
+/** \brief Round the time to closest minute */
+#define PMIC_RTC_ROUND_TIME_SET                  (0x1U)
+/* @} */
+
+/**
  *  \anchor Pmic_RtcTimeDateRegSel
  *  \name PMIC RTC Time Date Register Selection
  *
  *  @{
  */
 /** \brief RTC register read from Dynamic registers */
-#define PMIC_RTC_Dynamic_REG_SEL                  (0x0U)
+#define PMIC_RTC_DYNAMIC_REG_SEL                  (0x0U)
 /** \brief RTC register read from Static Shadowed registers */
 #define PMIC_RTC_STATIC_SHADOWED_REG_SEL          (0x1U)
 /* @} */
@@ -347,21 +378,21 @@ extern "C" {
  *
  *  @{
  */
-/** \brief validParams value used to set/get to Enable/Disable to load 32K
- *         counter with compensation values */
-#define PMIC_RTC_CFG_32K_COUNTER_VALID                    (0U)
-/** \brief validParams value used to set/get to Enable/Disable to round the time
- *         to closest minute */
-#define PMIC_RTC_CFG_ROUND_30S_VALID                      (1U)
+/** \brief validParams value used to set/get configuration of 32K counter with
+ *         compensation values */
+#define PMIC_RTC_CFG_32K_COUNTER_COMP_VAL_SET_VALID      (0U)
+/** \brief validParams value used to set/get configuration of RTC time config to
+ *         Round the time to closest minute */
+#define PMIC_RTC_CFG_RTC_TIME_ROUND_30S_SET_VALID        (1U)
 /** \brief validParams value used to set/get to Enable/Disable Crystal
  *         Oscillator  */
-#define PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID                 (2U)
+#define PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID                (2U)
 /** \brief validParams value used to set/get to Select RTC Time and Date
  *         Register read from Dynamic or Static Shadowed Registers */
-#define PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID              (3U)
+#define PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID             (3U)
 /** \brief validParams value used to set/get to Select Crystal Oscillator Type
  */
-#define PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID               (4U)
+#define PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID              (4U)
 /* @} */
 
 /**
@@ -374,10 +405,10 @@ extern "C" {
  *  @{
  */
 
-#define PMIC_RTC_CFG_32K_COUNTER_VALID_SHIFT \
-                     (1U << PMIC_RTC_CFG_32K_COUNTER_VALID)
-#define PMIC_RTC_CFG_ROUND_30S_VALID_SHIFT     \
-                     (1U << PMIC_RTC_CFG_ROUND_30S_VALID)
+#define PMIC_RTC_CFG_32K_COUNTER_COMP_VAL_SET_VALID_SHIFT \
+                     (1U << PMIC_RTC_CFG_32K_COUNTER_COMP_VAL_SET_VALID)
+#define PMIC_RTC_CFG_RTC_TIME_ROUND_30S_SET_VALID_SHIFT     \
+                     (1U << PMIC_RTC_CFG_RTC_TIME_ROUND_30S_SET_VALID)
 #define PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID_SHIFT     \
                      (1U << PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID)
 #define PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID_SHIFT     \
@@ -502,26 +533,32 @@ typedef struct Pmic_RtcRstStatus_s
  *           params except validParams is input param for Set APIs and output
  *           param for Get APIs
  *
- *  \param   validParams         Validate params Bits.
- *                               Depending on the parameters want to get,
- *                               corresponding bits should be set in validParam.
+ *  \param   validParams          Validate params Bits.
+ *                                Depending on the parameters want to get,
+ *                                corresponding bits should be set in validParam
  *                                  For Valid values
  *                                         \ref Pmic_RtcConfigValidParamCfg
- *  \param   config32KcounterEn   Enable/Disable to load 32K counter with
- *                                compensation values. Application can configure
- *                                this only when RTC is frozen
- *                                Valid only when
- *                                PMIC_RTC_CFG_32K_COUNTER_VALID
- *                                bit of validParams is set.
- *  \param   round30sEn           Enable/Disable to round the time to closest
- *                                minute
- *                                Valid only when
- *                                PMIC_RTC_CFG_ROUND_30S_VALID
- *                                bit of validParams is set.
  *  \param   crystalOScEn         Enable/Disable Crystal Oscillator
  *                                Valid only when
  *                                PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID
  *                                bit of validParams is set.
+ *                                  For valid values
+ *                                      \ref Pmic_RtcCrystalOscCfg
+ *  \param   set32KCounterCompVal Set 32K counter with compensation values.
+ *                                Application can configure this only when
+ *                                RTC is frozen
+ *                                Valid only when
+ *                                PMIC_RTC_CFG_32K_COUNTER_COMP_VAL_SET_VALID
+ *                                bit of validParams is set.
+ *                                  For valid values
+ *                                      \ref Pmic_Rtc32KCounterCfg
+ *  \param   setRtcTimeRound30s   Set RTC time config to Round the time to
+ *                                closest minute
+ *                                Valid only when
+ *                                PMIC_RTC_CFG_RTC_TIME_ROUND_30S_SET_VALID
+ *                                bit of validParams is set.
+ *                                  For valid values
+ *                                      \ref Pmic_RtcRoundTime
  *  \param   timeDateRegSel       Select RTC Time and Date Register read from
  *                                Dynamic or Static Shadowed Registers.
  *                                Valid only when
@@ -539,9 +576,9 @@ typedef struct Pmic_RtcRstStatus_s
 typedef struct Pmic_RtcCfg_s
 {
     uint32_t    validParams;
-    bool        config32KcounterEn;
-    bool        round30sEn;
     bool        crystalOScEn;
+    uint8_t     set32KCounterCompVal;
+    uint8_t     setRtcTimeRound30s;
     uint8_t     timeDateRegSel;
     uint8_t     crystalOScType;
 }Pmic_RtcCfg_t;
@@ -736,9 +773,9 @@ int32_t  Pmic_rtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          This function is read RTC status which defines RTC is started or not
  *
  * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * \param   pRtcstatus         [IN]   Pointer to store the RTC status which
+ * \param   pRtcstatus        [IN]    Pointer to store the RTC status which
  *                                    defines  RTC is started or not
- *                                        Valid values: \ref Pmic_RtcState
+ *                                        Valid values: \ref Pmic_RtcStatus
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
@@ -808,7 +845,7 @@ int32_t  Pmic_rtcGetRstStatus(Pmic_CoreHandle_t    *pPmicCoreHandle,
 /*!
  * \brief   API to clear the Reset status of RTC.
  *
- * Requirement: REQ_TAG(PDK-9141)
+ * Requirement: REQ_TAG(PDK-9142)
  * Design: did_pmic_rtc_clr_rst_status
  *
  *          This function is used to clear the Reset status of the RTC

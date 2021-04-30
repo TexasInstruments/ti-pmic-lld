@@ -32,14 +32,14 @@
  *****************************************************************************/
 
 /**
- *  \file pmic_core_lp8764x_priv.h
+ *  \file pmic_core_lp8764x.h
  *
  *  \brief  The macro definitions for LP8764x HERA PMIC driver specific
  *          PMIC common configuration
  */
 
-#ifndef PMIC_CORE_LP8764X_PRIV_H_
-#define PMIC_CORE_LP8764X_PRIV_H_
+#ifndef PMIC_CORE_LP8764X_H_
+#define PMIC_CORE_LP8764X_H_
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -71,4 +71,4 @@ extern "C" {
 }
 #endif /* __cplusplus */
 
-#endif /* PMIC_CORE_LP8764X_PRIV_H_ */
+#endif /* PMIC_CORE_LP8764X_H_ */

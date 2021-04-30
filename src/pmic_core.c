@@ -38,8 +38,8 @@
  */
 
 #include <pmic_core_priv.h>
-#include <pmic_core_tps6594x_priv.h>
-#include <pmic_core_lp8764x_priv.h>
+#include <pmic_core_tps6594x.h>
+#include <pmic_core_lp8764x.h>
 
 #include <pmic_rtc_tps6594x_priv.h>
 #include <pmic_fsm_priv.h>

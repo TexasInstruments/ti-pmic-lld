@@ -62,12 +62,6 @@ extern "C" {
 
 #define PMIC_WDG_LONGWIN_CFG_REGADDR        (0x405U)
 
-/* Silicon Revision Id - PG 2.0 for Leo and Hera */
-#define PMIC_SILICON_REV_ID_PG_2_0           (0x08U)
-
-/* Silicon Revision Id - PG 1.0 for Leo and Hera */
-#define PMIC_SILICON_REV_ID_PG_1_0           (0x0U)
-
 /*!
  * \brief  PMIC power Configuration Register Address
  */
