@@ -307,11 +307,11 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
     },
     {
         6194,
-        "Pmic_rtcGetRstStatus : RTC Live Status Validation RTC Current state Running"
+        "Pmic_rtcGetStatus : RTC Live Status Validation RTC Current state Running"
     },
     {
         6089,
-        "Pmic_rtcGetRstStatus : RTC Live Status Validation RTC Current state Frozen"
+        "Pmic_rtcGetStatus : RTC Live Status Validation RTC Current state Frozen"
     },
     {
         7465,
@@ -396,6 +396,82 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
     {
         8016,
         "Pmic_fsmSetMissionState :  RTC Wakeup using Alarm Interrupt using Standby State"
+    },
+    {
+        1,
+        "Pmic_rtcGetStatus : Parameter validation for handle"
+    },
+    {
+        2,
+        "Pmic_rtcGetStatus : Parameter validation for pRtcstatus"
+    },
+    {
+        3,
+        "Pmic_rtcGetConfiguration : Parameter validation for handle"
+    },
+    {
+        4,
+        "Pmic_rtcGetConfiguration : Parameter validation for pRtcCfg"
+    },
+    {
+        5,
+        "Pmic_rtcClrRstStatus : Clear RTC Reset status using powerupStatus"
+    },
+    {
+        6,
+        "Pmic_rtcClrRstStatus : Clear RTC Reset status using rtcRstStatus"
+    },
+    {
+        7,
+        "Pmic_rtcClrRstStatus : Parameter validation for handle"
+    },
+    {
+        8,
+        "Pmic_rtcClrRstStatus : Parameter validation for rtcRstStatType"
+    },
+    {
+        9,
+        "Pmic_rtcSetConfiguration : Set 32K counter with compensation values"
+    },
+    {
+        10,
+        "Pmic_rtcSetConfiguration : Configure Enable/Disable Crystal Oscillator"
+    },
+    {
+        11,
+        "Pmic_rtcSetConfiguration: Configure RTC time to round the time to closest minute"
+    },
+    {
+        12,
+        "Pmic_rtcSetConfiguration : Select RTC Time and Date Register read from Dynamic Registers"
+    },
+    {
+        13,
+        "Pmic_rtcSetConfiguration : Select RTC Time and Date Register read from Static Shadowed Registers"
+    },
+    {
+        14,
+        "Pmic_rtcSetConfiguration : Select Crystal Oscillator type as 9PF/ 6PF/ 12.5PF"
+    },
+    {
+        15,
+        "Pmic_rtcSetConfiguration : Parameter validation for handle"
+    },
+    {
+        16,
+        "Pmic_rtcSetConfiguration : Parameter validation for RTC Config Param - setRtcTimeRound30s"
+    },
+    {
+        17,
+        "Pmic_rtcSetConfiguration : Parameter validation for RTC Config Param - timeDateRegSel"
+    },
+    {
+        18,
+        "Pmic_rtcSetConfiguration : Parameter validation for RTC Config Param - crystalOScType"
+    },
+    {
+        19,
+        "Pmic_rtcSetConfiguration : Parameter validation for RTC Config Param - set32KCounterCompVal"
     },
     {
         8814,
@@ -2104,10 +2180,10 @@ static void test_pmic_rtc_enableTimerInterrupt_PrmValTest_handle(void)
 /*!
  * \brief   RTC Status Validation RTC Current state Running
  */
-static void test_pmic_rtc_testGetRstStatus_running(void)
+static void test_pmic_rtc_testGetStatus_running(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_RtcRstStatus_t pRtcRstStatus = {0};
+    bool    rtcStatus;
 
     test_pmic_print_unity_testcase_info(6194,
                                         pmic_rtc_tests,
@@ -2116,11 +2192,10 @@ static void test_pmic_rtc_testGetRstStatus_running(void)
     status = Pmic_rtcEnable(pPmicCoreHandle, PMIC_RTC_START);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    pRtcRstStatus.validParams |= PMIC_RTC_RESET_STATUS_VALID_SHIFT;
-    status = Pmic_rtcGetRstStatus(pPmicCoreHandle, &pRtcRstStatus);
+    status = Pmic_rtcGetStatus(pPmicCoreHandle, &rtcStatus);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    TEST_ASSERT_EQUAL(PMIC_RTC_STATUS_RUNNING, pRtcRstStatus.rtcRstStatus);
+    TEST_ASSERT_EQUAL(PMIC_RTC_STATUS_RUNNING, rtcStatus);
 
     pmic_testResultUpdate_pass(6194,
                                pmic_rtc_tests,
@@ -2130,10 +2205,10 @@ static void test_pmic_rtc_testGetRstStatus_running(void)
 /*!
  * \brief   RTC Status Validation RTC Current state Frozen
  */
-static void test_pmic_rtc_testGetRstStatus_frozen(void)
+static void test_pmic_rtc_testGetStatus_frozen(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    Pmic_RtcRstStatus_t pRtcRstStatus = {0};
+    bool    rtcStatus;
 
     test_pmic_print_unity_testcase_info(6089,
                                         pmic_rtc_tests,
@@ -2142,11 +2217,10 @@ static void test_pmic_rtc_testGetRstStatus_frozen(void)
     status = Pmic_rtcEnable(pPmicCoreHandle, PMIC_RTC_STOP);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    pRtcRstStatus.validParams |= PMIC_RTC_RESET_STATUS_VALID_SHIFT;
-    status = Pmic_rtcGetRstStatus(pPmicCoreHandle, &pRtcRstStatus);
+    status = Pmic_rtcGetStatus(pPmicCoreHandle, &rtcStatus);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    TEST_ASSERT_EQUAL(PMIC_RTC_STATUS_FROZEN, pRtcRstStatus.rtcRstStatus);
+    TEST_ASSERT_EQUAL(PMIC_RTC_STATUS_FROZEN, rtcStatus);
 
     pmic_testResultUpdate_pass(6089,
                                pmic_rtc_tests,
@@ -3655,6 +3729,666 @@ static void test_pmic_rtc_coverageGaps(void)
                                PMIC_RTC_NUM_OF_TESTCASES);
 }
 
+/*!
+ * \brief   Pmic_rtcGetStatus : Parameter validation for handle
+ */
+static void test_pmic_rtc_getStatus_PrmValTest_handle(void)
+{
+    int32_t            status       = PMIC_ST_SUCCESS;
+    bool               rtcStatus;
+
+    test_pmic_print_unity_testcase_info(1,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    status = Pmic_rtcGetStatus(NULL, &rtcStatus);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+
+    pmic_testResultUpdate_pass(1,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcGetStatus : Parameter validation for pRtcstatus
+ */
+static void test_pmic_rtc_getStatus_PrmValTest_pRtcstatus(void)
+{
+    int32_t            status       = PMIC_ST_SUCCESS;
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    pHandle                         = pPmicCoreHandle;
+
+    test_pmic_print_unity_testcase_info(2,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    status = Pmic_rtcGetStatus(pHandle, NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+
+    pmic_testResultUpdate_pass(2,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcGetConfiguration : Parameter validation for handle
+ */
+static void test_pmic_rtc_getCfgPrmValTest_handle(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    Pmic_RtcCfg_t rtcCfg;
+
+    test_pmic_print_unity_testcase_info(3,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_rtcGetConfiguration(pHandle, &rtcCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(3,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcGetConfiguration : Parameter validation for pRtcCfg
+ */
+static void test_pmic_rtc_getCfgPrmValTest_pRtcCfg(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    pHandle                         = pPmicCoreHandle;
+
+    test_pmic_print_unity_testcase_info(4,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_rtcGetConfiguration(pHandle, NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(4,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcClrRstStatus : Clear RTC Reset status using powerupStatus
+ */
+static void test_pmic_rtc_clrRstStatus_powerupStatus(void)
+{
+    int32_t            status       = PMIC_ST_SUCCESS;
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    pHandle                         = pPmicCoreHandle;
+    Pmic_RtcRstStatus_t rtcRstStatus = {PMIC_RTC_POWERUP_STATUS_VALID_SHIFT, 0U, 0U};
+    uint8_t rstStatType = PMIC_RTC_POWERUP_STATUS;
+    int8_t  num         = 0;
+
+    pmic_log("\r\n Run this test alone after POR");
+    pmic_log("\r\n Enter 1 to continue");
+    UART_scanFmt("%d", &num);
+
+    test_pmic_print_unity_testcase_info(5,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    status = Pmic_rtcGetRstStatus(pHandle, &rtcRstStatus);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    TEST_ASSERT_EQUAL(PMIC_RTC_POWERUP_STATUS_RESET_VAL,
+                      rtcRstStatus.powerupStatus);
+
+    status = Pmic_rtcClrRstStatus(pHandle, rstStatType);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcGetRstStatus(pHandle, &rtcRstStatus);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    TEST_ASSERT_EQUAL(PMIC_RTC_POWERUP_STATUS_CLR_VAL,
+                      rtcRstStatus.powerupStatus);
+
+    pmic_testResultUpdate_pass(5,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcClrRstStatus : Clear RTC Reset status using rtcRstStatus
+ */
+static void test_pmic_rtc_clrRstStatus_rtcRstStatus(void)
+{
+    int32_t            status       = PMIC_ST_SUCCESS;
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    pHandle                         = pPmicCoreHandle;
+    Pmic_RtcRstStatus_t rtcRstStatus = {PMIC_RTC_RESET_STATUS_VALID_SHIFT, 0U, 0U};
+    uint8_t rstStatType = PMIC_RTC_RST_STATUS;
+    int8_t  num         = 0;
+
+    pmic_log("\r\n Run this test alone after POR");
+    pmic_log("\r\n Enter 1 to continue");
+    UART_scanFmt("%d", &num);
+
+    test_pmic_print_unity_testcase_info(6,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    status = Pmic_rtcGetRstStatus(pHandle, &rtcRstStatus);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    TEST_ASSERT_EQUAL(PMIC_RTC_RST_STATUS_RESET_VAL,
+                      rtcRstStatus.rtcRstStatus);
+
+    status = Pmic_rtcClrRstStatus(pHandle, rstStatType);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcGetRstStatus(pHandle, &rtcRstStatus);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    TEST_ASSERT_EQUAL(PMIC_RTC_RST_STATUS_SET_VAL,
+                      rtcRstStatus.rtcRstStatus);
+
+    pmic_testResultUpdate_pass(6,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcClrRstStatus : Parameter validation for handle
+ */
+static void test_pmic_rtc_clrRstStatus_PrmValTest_handle(void)
+{
+    int32_t status       = PMIC_ST_SUCCESS;
+    uint8_t rstStatType = PMIC_RTC_RST_STATUS;
+
+    test_pmic_print_unity_testcase_info(7,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    status = Pmic_rtcClrRstStatus(NULL, rstStatType);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+
+    pmic_testResultUpdate_pass(7,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcClrRstStatus : Parameter validation for rtcRstStatType
+ */
+static void test_pmic_rtc_clrRstStatus_PrmValTest_rtcRstStatType(void)
+{
+    int32_t            status       = PMIC_ST_SUCCESS;
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    pHandle                         = pPmicCoreHandle;
+    uint8_t             rstStatType = 2U;
+
+    test_pmic_print_unity_testcase_info(8,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    status = Pmic_rtcClrRstStatus(pHandle, rstStatType);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+
+    pmic_testResultUpdate_pass(8,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcSetConfiguration : Set 32K counter with compensation values
+ */
+static void test_pmic_rtc_setCfg_set32KCounterCompVal(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_RtcCfg_t rtcCfg_rd = {PMIC_RTC_CFG_32K_COUNTER_COMP_VAL_SET_VALID_SHIFT,};
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    pHandle                         = pPmicCoreHandle;
+    Pmic_RtcCfg_t rtcCfg =
+    {
+        PMIC_RTC_CFG_32K_COUNTER_COMP_VAL_SET_VALID_SHIFT,
+        PMIC_RTC_CRYSTAL_OSC_ENABLE,
+        PMIC_RTC_32K_COUNTER_COMP_VAL_SET,
+        PMIC_RTC_ROUND_TIME_SET,
+        PMIC_RTC_STATIC_SHADOWED_REG_SEL,
+        PMIC_RTC_CRYSTAL_OSC_TYPE_9PF
+    };
+
+    test_pmic_print_unity_testcase_info(9,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_rtcEnable(pPmicCoreHandle, PMIC_RTC_STOP);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_rtcSetConfiguration(pHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_rtcGetConfiguration(pHandle, &rtcCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(rtcCfg.set32KCounterCompVal,
+                      rtcCfg_rd.set32KCounterCompVal);
+
+    pmicStatus = Pmic_rtcEnable(pPmicCoreHandle, PMIC_RTC_START);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(9,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcSetConfiguration : Configure Enable/Disable Crystal Oscillator
+ */
+static void test_pmic_rtc_setCfg_crystalOScEn(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_RtcCfg_t rtcCfg_rd = {PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID_SHIFT,};
+    Pmic_RtcCfg_t rtcCfg_default = {PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID_SHIFT,};
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    pHandle                         = pPmicCoreHandle;
+    Pmic_RtcCfg_t rtcCfg =
+    {
+        PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID_SHIFT,
+        PMIC_RTC_CRYSTAL_OSC_DISABLE,
+        PMIC_RTC_32K_COUNTER_COMP_VAL_SET,
+        PMIC_RTC_ROUND_TIME_SET,
+        PMIC_RTC_STATIC_SHADOWED_REG_SEL,
+        PMIC_RTC_CRYSTAL_OSC_TYPE_9PF
+    };
+
+    test_pmic_print_unity_testcase_info(10,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_rtcGetConfiguration(pHandle, &rtcCfg_default);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_rtcSetConfiguration(pHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_rtcGetConfiguration(pHandle, &rtcCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(rtcCfg.crystalOScEn, rtcCfg_rd.crystalOScEn);
+
+    rtcCfg.crystalOScEn = PMIC_RTC_CRYSTAL_OSC_ENABLE;
+    pmicStatus = Pmic_rtcSetConfiguration(pHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_rtcGetConfiguration(pHandle, &rtcCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(rtcCfg.crystalOScEn, rtcCfg_rd.crystalOScEn);
+
+    pmicStatus = Pmic_rtcSetConfiguration(pHandle, rtcCfg_default);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_rtcGetConfiguration(pHandle, &rtcCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(rtcCfg_default.crystalOScEn, rtcCfg_rd.crystalOScEn);
+
+    pmic_testResultUpdate_pass(10,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcSetConfiguration : Configure RTC time to round the time to closest minute
+ */
+static void test_pmic_rtc_setCfg_rtcTimeRound30s(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_RtcCfg_t rtcCfg_rd = {PMIC_RTC_CFG_RTC_TIME_ROUND_30S_SET_VALID_SHIFT,};
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    pHandle                         = pPmicCoreHandle;
+    Pmic_RtcCfg_t rtcCfg =
+    {
+        PMIC_RTC_CFG_RTC_TIME_ROUND_30S_SET_VALID_SHIFT,
+        PMIC_RTC_CRYSTAL_OSC_ENABLE,
+        PMIC_RTC_32K_COUNTER_COMP_VAL_SET,
+        PMIC_RTC_ROUND_TIME_SET,
+        PMIC_RTC_STATIC_SHADOWED_REG_SEL,
+        PMIC_RTC_CRYSTAL_OSC_TYPE_9PF
+    };
+
+    test_pmic_print_unity_testcase_info(11,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_rtcSetConfiguration(pHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_rtcGetConfiguration(pHandle, &rtcCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(rtcCfg.setRtcTimeRound30s, rtcCfg_rd.setRtcTimeRound30s);
+
+    pmic_testResultUpdate_pass(11,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcSetConfiguration : Select RTC Time and Date Register read from Dynamic Registers
+ */
+static void test_pmic_rtc_setCfg_timeDateRegSel_dynamic(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_RtcCfg_t rtcCfg_rd = {PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID_SHIFT,};
+    Pmic_RtcCfg_t rtcCfg_default = {PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID_SHIFT,};
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    pHandle                         = pPmicCoreHandle;
+    Pmic_RtcCfg_t rtcCfg =
+    {
+        PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID_SHIFT,
+        PMIC_RTC_CRYSTAL_OSC_ENABLE,
+        PMIC_RTC_32K_COUNTER_COMP_VAL_SET,
+        PMIC_RTC_ROUND_TIME_SET,
+        PMIC_RTC_DYNAMIC_REG_SEL,
+        PMIC_RTC_CRYSTAL_OSC_TYPE_9PF
+    };
+
+    test_pmic_print_unity_testcase_info(12,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_rtcGetConfiguration(pHandle, &rtcCfg_default);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_rtcSetConfiguration(pHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_rtcGetConfiguration(pHandle, &rtcCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(rtcCfg.timeDateRegSel, rtcCfg_rd.timeDateRegSel);
+
+    pmicStatus = Pmic_rtcSetConfiguration(pHandle, rtcCfg_default);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_rtcGetConfiguration(pHandle, &rtcCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(rtcCfg_default.timeDateRegSel,
+                      rtcCfg_rd.timeDateRegSel);
+
+    pmic_testResultUpdate_pass(12,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcSetConfiguration : Select RTC Time and Date Register read from Static Shadowed Registers
+ */
+static void test_pmic_rtc_setCfg_timeDateRegSel_staticShadow(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_RtcCfg_t rtcCfg_rd = {PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID_SHIFT,};
+    Pmic_RtcCfg_t rtcCfg_default = {PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID_SHIFT,};
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    pHandle                         = pPmicCoreHandle;
+    Pmic_RtcCfg_t rtcCfg =
+    {
+        PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID_SHIFT,
+        PMIC_RTC_CRYSTAL_OSC_ENABLE,
+        PMIC_RTC_32K_COUNTER_COMP_VAL_SET,
+        PMIC_RTC_ROUND_TIME_SET,
+        PMIC_RTC_STATIC_SHADOWED_REG_SEL,
+        PMIC_RTC_CRYSTAL_OSC_TYPE_9PF
+    };
+
+    test_pmic_print_unity_testcase_info(13,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_rtcGetConfiguration(pHandle, &rtcCfg_default);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_rtcSetConfiguration(pHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_rtcGetConfiguration(pHandle, &rtcCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(rtcCfg.timeDateRegSel, rtcCfg_rd.timeDateRegSel);
+
+    pmicStatus = Pmic_rtcSetConfiguration(pHandle, rtcCfg_default);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_rtcGetConfiguration(pHandle, &rtcCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(rtcCfg_default.timeDateRegSel,
+                      rtcCfg_rd.timeDateRegSel);
+
+    pmic_testResultUpdate_pass(13,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcSetConfiguration : Select Crystal Oscillator type as 9PF/ 6PF/ 12.5PF
+ */
+static void test_pmic_rtc_setCfg_crystalOScType(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_RtcCfg_t rtcCfg_rd = {PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID_SHIFT,};
+    Pmic_RtcCfg_t rtcCfg_default = {PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID_SHIFT,};
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    pHandle                         = pPmicCoreHandle;
+    Pmic_RtcCfg_t rtcCfg =
+    {
+        PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID_SHIFT,
+        PMIC_RTC_CRYSTAL_OSC_DISABLE,
+        PMIC_RTC_32K_COUNTER_COMP_VAL_SET,
+        PMIC_RTC_ROUND_TIME_SET,
+        PMIC_RTC_STATIC_SHADOWED_REG_SEL,
+        PMIC_RTC_CRYSTAL_OSC_TYPE_6PF
+    };
+
+    rtcCfg.validParams = rtcCfg.validParams |
+                         PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID_SHIFT;
+    rtcCfg_default.validParams = rtcCfg.validParams ;
+    rtcCfg_rd.validParams = rtcCfg.validParams ;
+
+    test_pmic_print_unity_testcase_info(14,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_rtcGetConfiguration(pHandle, &rtcCfg_default);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_rtcSetConfiguration(pHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_rtcGetConfiguration(pHandle, &rtcCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(rtcCfg.crystalOScType, rtcCfg_rd.crystalOScType);
+
+    rtcCfg.crystalOScType = PMIC_RTC_CRYSTAL_OSC_TYPE_12_5PF;
+    pmicStatus = Pmic_rtcSetConfiguration(pHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_rtcGetConfiguration(pHandle, &rtcCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(rtcCfg.crystalOScType, rtcCfg_rd.crystalOScType);
+
+    rtcCfg.crystalOScType = PMIC_RTC_CRYSTAL_OSC_TYPE_9PF;
+    pmicStatus = Pmic_rtcSetConfiguration(pHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_rtcGetConfiguration(pHandle, &rtcCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(rtcCfg.crystalOScType, rtcCfg_rd.crystalOScType);
+
+    pmicStatus = Pmic_rtcSetConfiguration(pHandle, rtcCfg_default);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_rtcGetConfiguration(pHandle, &rtcCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(rtcCfg_default.timeDateRegSel,
+                      rtcCfg_rd.timeDateRegSel);
+
+    pmic_testResultUpdate_pass(14,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcSetConfiguration : Parameter validation for handle
+ */
+static void test_pmic_rtc_setCfgPrmValTest_handle(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    Pmic_RtcCfg_t rtcCfg =
+    {
+        PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID_SHIFT,
+        PMIC_RTC_CRYSTAL_OSC_ENABLE,
+        PMIC_RTC_32K_COUNTER_COMP_VAL_SET,
+        PMIC_RTC_ROUND_TIME_SET,
+        PMIC_RTC_STATIC_SHADOWED_REG_SEL,
+        PMIC_RTC_CRYSTAL_OSC_TYPE_6PF
+    };
+
+    test_pmic_print_unity_testcase_info(15,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_rtcSetConfiguration(pHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(15,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcSetConfiguration : Parameter validation for RTC Config Param - setRtcTimeRound30s
+ */
+static void test_pmic_rtc_setCfgPrmValTest_setRtcTimeRound30s(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    pHandle                         = pPmicCoreHandle;
+    Pmic_RtcCfg_t rtcCfg =
+    {
+        PMIC_RTC_CFG_RTC_TIME_ROUND_30S_SET_VALID_SHIFT,
+        PMIC_RTC_CRYSTAL_OSC_ENABLE,
+        PMIC_RTC_32K_COUNTER_COMP_VAL_SET,
+        0U,
+        PMIC_RTC_STATIC_SHADOWED_REG_SEL,
+        PMIC_RTC_CRYSTAL_OSC_TYPE_6PF
+    };
+
+    test_pmic_print_unity_testcase_info(16,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_rtcSetConfiguration(pHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(16,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcSetConfiguration : Parameter validation for RTC Config Param - timeDateRegSel
+ */
+static void test_pmic_rtc_setCfgPrmValTest_timeDateRegSel(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    pHandle                         = pPmicCoreHandle;
+    Pmic_RtcCfg_t rtcCfg =
+    {
+        PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID_SHIFT,
+        PMIC_RTC_CRYSTAL_OSC_ENABLE,
+        PMIC_RTC_32K_COUNTER_COMP_VAL_SET,
+        PMIC_RTC_ROUND_TIME_SET,
+        2U,
+        PMIC_RTC_CRYSTAL_OSC_TYPE_6PF
+    };
+
+    test_pmic_print_unity_testcase_info(17,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_rtcSetConfiguration(pHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(17,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcSetConfiguration : Parameter validation for RTC Config Param - crystalOScType
+ */
+static void test_pmic_rtc_setCfgPrmValTest_crystalOScType(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    pHandle                         = pPmicCoreHandle;
+    Pmic_RtcCfg_t rtcCfg =
+    {
+        PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID_SHIFT,
+        PMIC_RTC_CRYSTAL_OSC_ENABLE,
+        PMIC_RTC_32K_COUNTER_COMP_VAL_SET,
+        PMIC_RTC_ROUND_TIME_SET,
+        PMIC_RTC_STATIC_SHADOWED_REG_SEL,
+        3U
+    };
+
+    test_pmic_print_unity_testcase_info(18,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_rtcSetConfiguration(pHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(19,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcSetConfiguration : Parameter validation for RTC Config Param - set32KCounterCompVal
+ */
+static void test_pmic_rtc_setCfgPrmValTest_set32KCounterCompVal(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    pHandle                         = pPmicCoreHandle;
+    Pmic_RtcCfg_t rtcCfg =
+    {
+        PMIC_RTC_CFG_32K_COUNTER_COMP_VAL_SET_VALID_SHIFT,
+        PMIC_RTC_CRYSTAL_OSC_ENABLE,
+        0U,
+        PMIC_RTC_ROUND_TIME_SET,
+        PMIC_RTC_STATIC_SHADOWED_REG_SEL,
+        PMIC_RTC_CRYSTAL_OSC_TYPE_6PF
+    };
+
+    test_pmic_print_unity_testcase_info(19,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_rtcSetConfiguration(pHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(19,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E) || defined(SOC_J7200))
 
@@ -3730,13 +4464,30 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_rtc_testAlarmIntr);
     RUN_TEST(test_pmic_rtc_enableTimerInterrupt_PrmValTest_handle);
     RUN_TEST(test_pmic_rtc_enableAlarmInterrupt_PrmValTest_handle);
-    RUN_TEST(test_pmic_rtc_testGetRstStatus_running);
-    RUN_TEST(test_pmic_rtc_testGetRstStatus_frozen);
+    RUN_TEST(test_pmic_rtc_testGetStatus_running);
+    RUN_TEST(test_pmic_rtc_testGetStatus_frozen);
     RUN_TEST(test_pmic_rtc_getRstStatus_PrmValTest_handle);
     RUN_TEST(test_pmic_rtc_getRstStatus_PrmValTest_rtcStatus);
     RUN_TEST(test_pmic_rtc_getRstStatus_PrmValTest_validParams);
     RUN_TEST(test_pmic_rtc_testTimerAsyncIntr);
     RUN_TEST(test_pmic_rtc_testAlarmAsyncIntr);
+    RUN_TEST(test_pmic_rtc_getStatus_PrmValTest_handle);
+    RUN_TEST(test_pmic_rtc_getStatus_PrmValTest_pRtcstatus);
+    RUN_TEST(test_pmic_rtc_getCfgPrmValTest_handle);
+    RUN_TEST(test_pmic_rtc_getCfgPrmValTest_pRtcCfg);
+    RUN_TEST(test_pmic_rtc_clrRstStatus_PrmValTest_handle);
+    RUN_TEST(test_pmic_rtc_clrRstStatus_PrmValTest_rtcRstStatType);
+    RUN_TEST(test_pmic_rtc_setCfg_set32KCounterCompVal);
+    RUN_TEST(test_pmic_rtc_setCfg_crystalOScEn);
+    RUN_TEST(test_pmic_rtc_setCfg_rtcTimeRound30s);
+    RUN_TEST(test_pmic_rtc_setCfg_timeDateRegSel_dynamic);
+    RUN_TEST(test_pmic_rtc_setCfg_timeDateRegSel_staticShadow);
+    RUN_TEST(test_pmic_rtc_setCfg_crystalOScType);
+    RUN_TEST(test_pmic_rtc_setCfgPrmValTest_handle);
+    RUN_TEST(test_pmic_rtc_setCfgPrmValTest_setRtcTimeRound30s);
+    RUN_TEST(test_pmic_rtc_setCfgPrmValTest_timeDateRegSel);
+    RUN_TEST(test_pmic_rtc_setCfgPrmValTest_crystalOScType);
+    RUN_TEST(test_pmic_rtc_setCfgPrmValTest_set32KCounterCompVal);
     RUN_TEST(test_pmic_rtc_coverageGaps);
 
     pmic_updateTestResults(pmic_rtc_tests, PMIC_RTC_NUM_OF_TESTCASES);
@@ -4020,6 +4771,36 @@ void AppPmicCallbackFxn(void)
     }
 }
 
+#if defined(SOC_J721E)
+static void test_pmic_rtc_setCfg_xtalOScEnType(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    pHandle                         = pPmicCoreHandle;
+    Pmic_RtcCfg_t rtcCfg_rd = {PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID_SHIFT |
+                               PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID_SHIFT,};
+    Pmic_RtcCfg_t rtcCfg =
+    {
+        PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID_SHIFT |
+        PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID_SHIFT,
+        PMIC_RTC_CRYSTAL_OSC_ENABLE,
+        PMIC_RTC_32K_COUNTER_COMP_VAL_SET,
+        PMIC_RTC_ROUND_TIME_SET,
+        PMIC_RTC_STATIC_SHADOWED_REG_SEL,
+        PMIC_RTC_CRYSTAL_OSC_TYPE_9PF
+    };
+
+    pmicStatus = Pmic_rtcSetConfiguration(pHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_rtcGetConfiguration(pHandle, &rtcCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(rtcCfg.crystalOScEn, rtcCfg_rd.crystalOScEn);
+    TEST_ASSERT_EQUAL(rtcCfg.crystalOScType, rtcCfg_rd.crystalOScType);
+}
+#endif
+
 static const char pmicTestMenu[] =
 {
     " \r\n ================================================================="
@@ -4069,7 +4850,9 @@ static void print_pmicTestAppManualTestMenu(uint32_t board)
     pmic_log(" \r\n 1: Pmic Leo device(PMIC A on %s EVM for RTC WKUP using Timer Interrupt from Standby State)", board_name);
     pmic_log(" \r\n 2: Pmic Leo device(PMIC A on %s EVM for RTC WKUP using Alarm Interrupt from LP Standby State)", board_name);
     pmic_log(" \r\n 3: Pmic Leo device(PMIC A on %s EVM for RTC WKUP using Alarm Interrupt from Standby State)", board_name);
-    pmic_log(" \r\n 4: Back to Main Menu");
+    pmic_log(" \r\n 4: Pmic Leo device(PMIC A on %s EVM for Get RTC Reset status and then Clear RTC Reset status using powerupStatus)", board_name);
+    pmic_log(" \r\n 5: Pmic Leo device(PMIC A on %s EVM for Get RTC Reset status and then Clear RTC Reset status using rtcRstStatus)", board_name);
+    pmic_log(" \r\n 6: Back to Main Menu");
     pmic_log(" \r\n");
     pmic_log(" \r\n Enter option: ");
 }
@@ -4090,7 +4873,7 @@ static void test_pmic_run_testcases_manual(uint32_t board)
             return;
         }
 
-        if(menuOption == 4)
+        if(menuOption == 6)
         {
             break;
         }
@@ -4108,6 +4891,12 @@ static void test_pmic_run_testcases_manual(uint32_t board)
                break;
             case 3U:
                 RUN_TEST(test_pmic_rtc_testWakeup_AlarmIntr_standbyState);
+               break;
+            case 4U:
+                RUN_TEST(test_pmic_rtc_clrRstStatus_powerupStatus);
+               break;
+            case 5U:
+                RUN_TEST(test_pmic_rtc_clrRstStatus_rtcRstStatus);
                break;
             default:
                pmic_log(" \r\n Invalid option... Try Again!!!\n");
@@ -4164,6 +4953,10 @@ static void test_pmic_rtc_testapp_run_options(int8_t option)
                     /* RTC Unity Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_rtc_testApp())
                     {
+                       if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevRev)
+                       {
+                            test_pmic_rtc_setCfg_xtalOScEnType();
+                       }
                         /* Run rtc test cases for Leo PMIC-A */
                         test_pmic_run_testcases();
                     }
