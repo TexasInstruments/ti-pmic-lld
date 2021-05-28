@@ -865,7 +865,7 @@ int32_t  Pmic_rtcClrRstStatus(Pmic_CoreHandle_t    *pPmicCoreHandle,
 /*!
  * \brief   API to Set PMIC RTC Configuration
  *
- * Requirement: REQ_TAG(PDK-9141), REQ_TAG(PDK-9135)
+ * Requirement: REQ_TAG(PDK-9141), REQ_TAG(PDK-9135), REQ_TAG(PDK-9111)
  * Design: did_pmic_rtc_cfg_readback
  *
  *          This function is used to set RTC configuration depending upon the

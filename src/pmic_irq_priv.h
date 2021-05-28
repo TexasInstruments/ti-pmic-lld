@@ -275,13 +275,6 @@ extern "C" {
 #define PMIC_INT_ESM_ESM_MCU_RST_INT_MASK                        (0x20U)
 
 /*!
- * \brief  PMIC_WD_ERR_STATUS Register Bit Masks
- */
-#define PMIC_WD_ERR_STATUS_WD_LONGWIN_TIMEOUT_INT_MASK           (0x01U)
-#define PMIC_WD_ERR_STATUS_WD_FAIL_INT_MASK                      (0x40U)
-#define PMIC_WD_ERR_STATUS_WD_RST_INT_MASK                       (0x80U)
-
-/*!
  * \brief  IRQ Mask Bits to validate error bits
  */
 #define PMIC_INT_WD_ERR_MASK                   (0xC1U)
@@ -289,11 +282,6 @@ extern "C" {
 /*!
  * \brief  PMIC Interrupt register Bit Positions
  */
-/*! PMIC_WD_ERR_STATUS Register Bit Positions */
-#define PMIC_WD_ERR_STATUS_WD_RST_INT_SHIFT                     (0x7U)
-#define PMIC_WD_ERR_STATUS_WD_FAIL_INT_SHIFT                    (0x6U)
-#define PMIC_WD_ERR_STATUS_WD_LONGWIN_TIMEOUT_INT_SHIFT         (0x0U)
-
 /*! PMIC_INT_ESM Register Bit Positions */
 #define PMIC_INT_ESM_ESM_MCU_RST_INT_SHIFT                      (0x5U)
 #define PMIC_INT_ESM_ESM_MCU_FAIL_INT_SHIFT                     (0x4U)
@@ -459,7 +447,6 @@ extern "C" {
 #define PMIC_MASK_MODERATE_ERR_BIST_FAIL_MASK_SHIFT                 (0x1U)
 
 /*! PMIC_MASK_MISC Register Bit Positions */
-#define PMIC_MASK_MISC_TWARN_MASK_SHIFT                             (0x3U)
 #define PMIC_MASK_MISC_EXT_CLK_MASK_SHIFT                           (0x1U)
 #define PMIC_MASK_MISC_BIST_PASS_MASK_SHIFT                         (0x0U)
 
@@ -486,10 +473,6 @@ extern "C" {
 #define PMIC_MASK_GPIO1_8_FALL_GPIO3_FALL_MASK_SHIFT                (0x2U)
 #define PMIC_MASK_GPIO1_8_FALL_GPIO2_FALL_MASK_SHIFT                (0x1U)
 #define PMIC_MASK_GPIO1_8_FALL_GPIO1_FALL_MASK_SHIFT                (0x0U)
-
-/*! PMIC_MASK_VMON Register Bit Positions */
-#define PMIC_MASK_VMON_VCCA_UV_MASK_SHIFT                           (0x1U)
-#define PMIC_MASK_VMON_VCCA_OV_MASK_SHIFT                           (0x0U)
 
 /*! PMIC_MASK_BUCK3_4 Register Bit Positions */
 #define PMIC_MASK_BUCK3_4_BUCK4_ILIM_MASK_SHIFT                     (0x7U)

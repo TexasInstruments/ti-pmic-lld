@@ -77,21 +77,6 @@ extern "C" {
 #define PMIC_INT_VMON_VMON1_OV_INT_SHIFT      (0x2U)
 
 /*!
- * \brief  PMIC Interrupt Mask Registers Mask values and bit positions
- */
-/*! PMIC_MASK_VMON Register Mask values */
-#define PMIC_MASK_VMON_VMON2_UV_MASK_MASK     (0x40U)
-#define PMIC_MASK_VMON_VMON2_OV_MASK_MASK     (0x20U)
-#define PMIC_MASK_VMON_VMON1_UV_MASK_MASK     (0x08U)
-#define PMIC_MASK_VMON_VMON1_OV_MASK_MASK     (0x04U)
-
-/*! PMIC_MASK_VMON Register Bit positions */
-#define PMIC_MASK_VMON_VMON2_UV_MASK_SHIFT    (0x6U)
-#define PMIC_MASK_VMON_VMON2_OV_MASK_SHIFT    (0x5U)
-#define PMIC_MASK_VMON_VMON1_UV_MASK_SHIFT    (0x3U)
-#define PMIC_MASK_VMON_VMON1_OV_MASK_SHIFT    (0x2U)
-
-/*!
  * \brief  Individual interrupt bitmasks for GPIO9_10 RISE/FALL
  */
 #define PMIC_MASK_GPIO9_10_GPIO10_RISE_MASK_MASK       (0x10U)
@@ -119,7 +104,7 @@ extern "C" {
 void pmic_get_lp8764x_intrCfg(Pmic_IntrCfg_t **pIntCfg);
 
 /*!
- * \brief  Function to get the PMIC GPIO Interrupt Mask Registers for 
+ * \brief  Function to get the PMIC GPIO Interrupt Mask Registers for
  *         LP8764x Hera PMIC.
  */
 void pmic_get_lp8764x_intrGpioCfg(Pmic_GpioIntrTypeCfg_t **pIntGpioCfg);

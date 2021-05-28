@@ -275,7 +275,7 @@ typedef struct Pmic_GpioCfg_s
 /*!
  * \brief   API to set PMIC GPIO configuration.
  *
- * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-5844)
+ * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-5844), REQ_TAG(PDK-9111)
  * Design: did_pmic_gpio_cfg_readback, did_pmic_lpstandby_wkup_cfg
  *
  *          This function is used to set the required configuration for the
@@ -329,7 +329,7 @@ int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief   API to set PMIC GPIO value.
  *
- * Requirement: REQ_TAG(PDK-5808)
+ * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-9111)
  * Design: did_pmic_gpio_cfg_readback
  *
  *          This function is used to configure the signal level of the
@@ -406,7 +406,7 @@ int32_t Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief   API to set configuration for NPWRON/Enable pin.
  *
- * Requirement: REQ_TAG(PDK-5808)
+ * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-9111)
  * Design: did_pmic_gpio_cfg_readback
  *
  *          This function is used to set the required configuration for the

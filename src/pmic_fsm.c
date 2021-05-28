@@ -104,6 +104,55 @@ static int32_t Pmic_powerGetNsleepMaskBitField(bool     nsleepType,
 }
 
 /*!
+ * \brief   This function is used to get the required BitPos and Mask of
+ *          FSM I2C Trigger Type .
+ */
+static int32_t Pmic_fsmGetI2cTriggerMaskBitField(uint8_t  i2cTriggerType,
+                                                 uint8_t *pBitPos,
+                                                 uint8_t *pBitMask)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    switch(i2cTriggerType)
+    {
+        case PMIC_FSM_I2C_TRIGGER1:
+            *pBitPos = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_1_SHIFT;
+            *pBitMask  = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_1_MASK;
+            break;
+        case PMIC_FSM_I2C_TRIGGER2:
+            *pBitPos = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_2_SHIFT;
+            *pBitMask  = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_2_MASK;
+            break;
+        case PMIC_FSM_I2C_TRIGGER3:
+            *pBitPos = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_3_SHIFT;
+            *pBitMask  = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_3_MASK;
+            break;
+        case PMIC_FSM_I2C_TRIGGER4:
+            *pBitPos = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_4_SHIFT;
+            *pBitMask  = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_4_MASK;
+            break;
+        case PMIC_FSM_I2C_TRIGGER5:
+            *pBitPos = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_5_SHIFT;
+            *pBitMask  = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_5_MASK;
+            break;
+        case PMIC_FSM_I2C_TRIGGER6:
+            *pBitPos = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_6_SHIFT;
+            *pBitMask  = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_6_MASK;
+            break;
+        case PMIC_FSM_I2C_TRIGGER7:
+            *pBitPos = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_7_SHIFT;
+            *pBitMask  = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_7_MASK;
+            break;
+        default:
+            *pBitPos = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_0_SHIFT;
+            *pBitMask  = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_0_MASK;
+            break;
+    }
+
+    return status;
+}
+
+/*!
  * \brief   This function is used to set S2R/Deep sleep FSM Misson state.
  */
 static int32_t Pmic_setS2RState(Pmic_CoreHandle_t *pPmicCoreHandle)
@@ -199,39 +248,57 @@ int32_t Pmic_fsmEnableI2cTrigger(Pmic_CoreHandle_t  *pPmicCoreHandle,
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData  = 0U;
-    uint8_t bitShift = 0;
-    uint8_t bitMask  = 0;;
+    uint8_t bitPos = 0;
+    uint8_t bitMask  = 0;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
+    if(NULL == pPmicCoreHandle)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
 
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_FSM_I2C_TRIGGERS_REGADDR,
-                                        &regData);
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((i2cTriggerType > PMIC_FSM_I2C_TRIGGER7) &&
+        (i2cTriggerVal > PMIC_FSM_I2C_TRIGGER_VAL_1)))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((i2cTriggerType < PMIC_FSM_I2C_TRIGGER4) &&
+        (i2cTriggerVal != PMIC_FSM_I2C_TRIGGER_VAL_1)))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+    }
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        if(i2cTriggerType == PMIC_FSM_I2C_TRIGGER0)
-        {
-            bitShift = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_0_SHIFT;
-            bitMask  = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_0_MASK;
-        }
-        if(i2cTriggerType == PMIC_FSM_I2C_TRIGGER1)
-        {
-            bitShift = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_1_SHIFT;
-            bitMask  = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_1_MASK;
-        }
+        Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        Pmic_setBitField(&regData,
-                         bitShift,
-                         bitMask,
-                         PMIC_FSM_I2C_TRIGGER_VAL_0);
-
-        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
                                             PMIC_FSM_I2C_TRIGGERS_REGADDR,
-                                            regData);
-    }
+                                            &regData);
 
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            pmicStatus = Pmic_fsmGetI2cTriggerMaskBitField(i2cTriggerType,
+                                                           &bitPos,
+                                                           &bitMask);
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            Pmic_setBitField(&regData,
+                             bitPos,
+                             bitMask,
+                             i2cTriggerVal);
+
+            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                                PMIC_FSM_I2C_TRIGGERS_REGADDR,
+                                                regData);
+        }
+
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
 
     return pmicStatus;
 }
@@ -378,7 +445,7 @@ int32_t Pmic_fsmDeviceOffRequestCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
     {
         pmicStatus = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle,
                                               PMIC_FSM_I2C_TRIGGER0,
-                                              PMIC_FSM_I2C_TRIGGER_VAL_0);
+                                              PMIC_FSM_I2C_TRIGGER_VAL_1);
     }
 
     return pmicStatus;
@@ -411,7 +478,7 @@ int32_t Pmic_fsmRequestRuntimeBist(Pmic_CoreHandle_t  *pPmicCoreHandle)
     {
         pmicStatus = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle,
                                               PMIC_FSM_I2C_TRIGGER1,
-                                              PMIC_FSM_I2C_TRIGGER_VAL_0);
+                                              PMIC_FSM_I2C_TRIGGER_VAL_1);
     }
 
     return pmicStatus;
@@ -614,3 +681,146 @@ int32_t Pmic_fsmSetNsleepSignalMask(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
     return pmicStatus;
 }
+
+/*!
+ * \brief  API to configure PFSM Delay
+ *
+ * Requirement: REQ_TAG(PDK-9136)
+ * Design: did_pmic_pfsm_cfg_readback
+ *
+ *         This function is used to configure PFSM Delay. PFSM Delay will affect
+ *         the total power up sequence time before the system is released from
+ *         reset
+ *         Consider If the PFSM_Delay value is 'x' then Delay will calculated as
+ *          Delay = x *(50ns * 2^PFSM_DELAY_STEP)
+ *         Note: In this API, the default delay Type is assumed as
+ *         PMIC_PFSM_DELAY1
+ *         While adding support for New PMIC, developer need to update the API
+ *         functionality for New PMIC device accordingly.
+ *
+ * \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
+ * \param   pFsmDelayType    [IN]  PFSM Delay Type
+ *                                 Valid values: \ref Pmic_Pfsm_Delay_Type
+ * \param   pfsmDelay        [IN]  Delay for PFSM
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmSetPfsmDelay(Pmic_CoreHandle_t  *pPmicCoreHandle,
+                             const uint8_t       pFsmDelayType,
+                             const uint8_t       pfsmDelay)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regAddr = 0U;
+
+    if(NULL == pPmicCoreHandle)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((pFsmDelayType > PMIC_PFSM_DELAY4) ||
+        (pfsmDelay > PMIC_FSM_PFSM_DELAY_MAX)))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        switch(pFsmDelayType)
+        {
+            case PMIC_PFSM_DELAY2:
+                regAddr = PMIC_FSM_PFSM_DELAY_REG_2_REGADDR;
+                break;
+            case PMIC_PFSM_DELAY3:
+                regAddr = PMIC_FSM_PFSM_DELAY_REG_3_REGADDR;
+                break;
+            case PMIC_PFSM_DELAY4:
+                regAddr = PMIC_FSM_PFSM_DELAY_REG_4_REGADDR;
+                break;
+            default:
+                regAddr = PMIC_FSM_PFSM_DELAY_REG_1_REGADDR;
+                break;
+        }
+
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                            regAddr,
+                                            pfsmDelay);
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  API to read PFSM Delay
+ *
+ * Requirement: REQ_TAG(PDK-9136)
+ * Design: did_pmic_pfsm_cfg_readback
+ *
+ *         This function is used to read PFSM Delay
+ *         Note: In this API, the default delay Type is assumed as
+ *         PMIC_PFSM_DELAY1
+ *         While adding support for New PMIC, developer need to update the API
+ *         functionality for New PMIC device accordingly.
+ *
+ * \param   pPmicCoreHandle  [IN]   PMIC Interface Handle
+ * \param   pFsmDelayType    [IN]   PFSM Delay Type
+ *                                  Valid values: \ref Pmic_Pfsm_Delay_Type
+ * \param   pPfsmDelay       [OUT]  Pointer to store the Delay for PFSM
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmGetPfsmDelay(Pmic_CoreHandle_t  *pPmicCoreHandle,
+                             uint8_t             pFsmDelayType,
+                             uint8_t            *pPfsmDelay)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regAddr = 0U;
+
+    if(NULL == pPmicCoreHandle)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pPfsmDelay))
+    {
+        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) && (pFsmDelayType > PMIC_PFSM_DELAY4))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        switch(pFsmDelayType)
+        {
+            case PMIC_PFSM_DELAY2:
+                regAddr = PMIC_FSM_PFSM_DELAY_REG_2_REGADDR;
+                break;
+            case PMIC_PFSM_DELAY3:
+                regAddr = PMIC_FSM_PFSM_DELAY_REG_3_REGADDR;
+                break;
+            case PMIC_PFSM_DELAY4:
+                regAddr = PMIC_FSM_PFSM_DELAY_REG_4_REGADDR;
+                break;
+            default:
+                regAddr = PMIC_FSM_PFSM_DELAY_REG_1_REGADDR;
+                break;
+        }
+
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                            regAddr,
+                                            pPfsmDelay);
+
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
+
+    return pmicStatus;
+}
+

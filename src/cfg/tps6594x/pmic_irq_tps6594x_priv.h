@@ -219,11 +219,6 @@ extern "C" {
 #define PMIC_MASK_LDO1_2_LDO1_UV_MASK_SHIFT                     (0x1U)
 #define PMIC_MASK_LDO1_2_LDO1_OV_MASK_SHIFT                     (0x0U)
 
-/*! PMIC_MASK_BUCK5 Register Bit Position */
-#define PMIC_MASK_BUCK5_BUCK5_ILIM_MASK_SHIFT                   (0x3U)
-#define PMIC_MASK_BUCK5_BUCK5_UV_MASK_SHIFT                     (0x1U)
-#define PMIC_MASK_BUCK5_BUCK5_OV_MASK_SHIFT                     (0x0U)
-
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/

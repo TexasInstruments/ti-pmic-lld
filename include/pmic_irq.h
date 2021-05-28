@@ -169,7 +169,7 @@ int32_t  Pmic_irqGetErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief   API to clear Error status.
  *
- * Requirement: REQ_TAG(PDK-5805)
+ * Requirement: REQ_TAG(PDK-5805), REQ_TAG(PDK-9113), REQ_TAG(PDK-9120)
  * Design: did_pmic_irq_cfg_readback
  *
  *          This function does the following:

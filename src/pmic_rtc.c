@@ -2870,9 +2870,9 @@ static int32_t Pmic_rtcSet32KCounterCompVal(
     pmicStatus = Pmic_rtcGetStatus(pPmicCoreHandle, &rtcStatus);
 
     if((PMIC_ST_SUCCESS == pmicStatus) && (PMIC_RTC_STOP != rtcStatus))
-       {
-           pmicStatus = PMIC_ST_ERR_FAIL;
-       }
+    {
+       pmicStatus = PMIC_ST_ERR_FAIL;
+    }
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {

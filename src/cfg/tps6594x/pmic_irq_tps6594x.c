@@ -45,6 +45,8 @@
 #include <pmic_irq_tps6594x.h>
 #include <pmic_irq_tps6594x_priv.h>
 #include <pmic_rtc_tps6594x_priv.h>
+#include <pmic_power_priv.h>
+#include <pmic_wdg_priv.h>
 
 /* PMIC TPS6594x Interrupt Configuration as per Pmic_tps6594x_IrqNum. */
 static Pmic_IntrCfg_t gTps6594x_intCfg[] =
@@ -1162,7 +1164,7 @@ static void Pmic_tps6594x_getModerateErr(Pmic_CoreHandle_t *pPmicCoreHandle,
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_NPWRON_LONG_INT);
     }
 
-    if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevRev)
+    if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
     {
         if((regValue & PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_MASK_PG_1_0) != 0U)
         {
@@ -1211,7 +1213,7 @@ static void Pmic_tps6594x_getSevereErr(Pmic_CoreHandle_t *pPmicCoreHandle,
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_VCCA_OVP_INT);
     }
 
-    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevRev)
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
     {
         if((regValue & PMIC_INT_SEVERE_ERR_PFSM_ERR_INT_MASK) != 0U)
         {
@@ -1310,7 +1312,7 @@ static int32_t Pmic_tps6594x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle,
                                     PMIC_TPS6594X_NRSTOUT_SOC_READBACK_INT);
             }
 
-            if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevRev)
+            if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
             {
                 if((regValue & PMIC_INT_READBACK_ERR_NINT_READBACK_INT_MASK)
                     != 0U)

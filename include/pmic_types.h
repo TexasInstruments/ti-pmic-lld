@@ -60,6 +60,16 @@ extern "C" {
 /*                             Macros & Typedefs                             */
 /* ========================================================================= */
 
+/**
+ *  \anchor Pmic_CrcEnableCfg
+ *  \name PMIC CRC Enable/Disable Configuration
+ *
+ *  @{
+ */
+#define PMIC_CRC_DISABLE    (0U)
+#define PMIC_CRC_ENABLE     (1U)
+/* @} */
+
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
@@ -103,7 +113,8 @@ typedef struct Pmic_DevSubSysInfo_s
  *                                        For QA instance:
  *                                           DRV_INIT_STATUS | PMIC_QA_INST.
  *  \param   pmicDeviceType               PMIC device type
- *  \param   pmicDevRev                   PMIC device silicon revision
+ *  \param   pmicDevRev                   PMIC device revision ID
+ *  \param   pmicDevSiliconRev            PMIC device silicon revision ID
  *  \param   commMode                     Interface mode - Single I2C, Dual
  *                                        I2C or SPI.
  *  \param   slaveAddr                    Main Interface Slave Address
@@ -115,7 +126,12 @@ typedef struct Pmic_DevSubSysInfo_s
  *                                        Application shall not do
  *                                        any write operations using this slave
  *                                        address
+ *  \param   i2c1Speed                    I2C1 Speed when commMode is Single or
+ *                                        Dual I2C
+ *  \param   i2c2Speed                    I2C2 Speed when commMode is Dual I2C
  *  \param   crcEnable                    Parameter to enable/disable CRC
+ *                                        For Valid Values:
+ *                                                       \ref Pmic_CrcEnableCfg
  *  \param   pFnPmicCommIoRead            Pointer to I2C/SPI Comm LLD Read
  *                                        Function
  *  \param   pFnPmicCommIoWrite           Pointer to I2C/SPI Comm LLD Write
@@ -134,10 +150,13 @@ typedef struct Pmic_CoreHandle_s {
     uint32_t                    drvInitStatus;
     uint8_t                     pmicDeviceType;
     uint8_t                     pmicDevRev;
+    uint8_t                     pmicDevSiliconRev;
     uint8_t                     commMode;
     uint8_t                     slaveAddr;
     uint8_t                     qaSlaveAddr;
     uint8_t                     nvmSlaveAddr;
+    uint8_t                     i2c1Speed;
+    uint8_t                     i2c2Speed;
     bool                        crcEnable;
     void                       *pCommHandle;
     void                       *pQACommHandle;

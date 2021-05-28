@@ -55,22 +55,20 @@ extern "C" {
 /*!
  * \brief   PMIC FSM I2C TRIGGER Register Address
  */
-#define PMIC_FSM_I2C_TRIGGERS_REGADDR       (0x85U)
+#define PMIC_FSM_I2C_TRIGGERS_REGADDR          (0x85U)
 
 /*!
  * \brief   PMIC FSM NSLEEP TRIGGER Register Address
  */
-#define PMIC_FSM_NSLEEP_TRIGGERS_REGADDR    (0x86U)
+#define PMIC_FSM_NSLEEP_TRIGGERS_REGADDR       (0x86U)
 
 /*!
- * \brief   PMIC MISC Control Register Address
+ * \brief   PMIC PFSM Delay Register Address
  */
-#define PMIC_FSM_MISC_CTRL_REGADDR         (0x81U)
-
-/*!
- * \brief   PMIC MISC Control Register Bit Fields
- */
-#define PMIC_FSM_MISC_CTRL_LPM_EN_SHIFT    (0x2U)
+#define PMIC_FSM_PFSM_DELAY_REG_1_REGADDR      (0xCDU)
+#define PMIC_FSM_PFSM_DELAY_REG_2_REGADDR      (0xCEU)
+#define PMIC_FSM_PFSM_DELAY_REG_3_REGADDR      (0xCFU)
+#define PMIC_FSM_PFSM_DELAY_REG_4_REGADDR      (0xD0U)
 
 /*!
  * \brief   PMIC FSM I2C TRIGGER Register Bit Fields

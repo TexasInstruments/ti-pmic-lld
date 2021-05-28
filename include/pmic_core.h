@@ -113,22 +113,32 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_SCRATCH_PAD_REG_1             (0x1U)
-#define PMIC_SCRATCH_PAD_REG_2             (0x2U)
-#define PMIC_SCRATCH_PAD_REG_3             (0x3U)
-#define PMIC_SCRATCH_PAD_REG_4             (0x4U)
+#define PMIC_SCRATCH_PAD_REG_1             (0x0U)
+#define PMIC_SCRATCH_PAD_REG_2             (0x1U)
+#define PMIC_SCRATCH_PAD_REG_3             (0x2U)
+#define PMIC_SCRATCH_PAD_REG_4             (0x3U)
 /*  @} */
 
 /**
- *  \anchor Pmic_UserSpare_Sel
+ *  \anchor Pmic_UserSpareReg_Sel
  *  \name   PMIC User Spare register selection
  *
  *  @{
  */
-#define PMIC_USER_SPARE_REG_1             (0x1U)
-#define PMIC_USER_SPARE_REG_2             (0x2U)
-#define PMIC_USER_SPARE_REG_3             (0x3U)
-#define PMIC_USER_SPARE_REG_4             (0x4U)
+#define PMIC_USER_SPARE_REG_1             (0x0U)
+#define PMIC_USER_SPARE_REG_2             (0x1U)
+#define PMIC_USER_SPARE_REG_3             (0x2U)
+#define PMIC_USER_SPARE_REG_4             (0x3U)
+/*  @} */
+
+/**
+ *  \anchor Pmic_UserSpareReg_Val
+ *  \name   PMIC User Spare register Value
+ *
+ *  @{
+ */
+#define PMIC_USER_SPARE_REG_VAL_0         (0x0U)
+#define PMIC_USER_SPARE_REG_VAL_1         (0x1U)
 /*  @} */
 
 /**
@@ -158,6 +168,11 @@ extern "C" {
 #define PMIC_CFG_NRSTOUT_PIN_STAT_VALID                     (6U)
 /** \brief validParams value used to get nINT Pin status */
 #define PMIC_CFG_NINT_PIN_STAT_VALID                        (7U)
+ /** \brief validParams value used to get SPMI Low Power Mode status */
+#define PMIC_CFG_SPMI_LPM_STAT_VALID                        (8U)
+ /** \brief validParams value used to get status of ENABLE_DRV Configuration by
+  *         I2C/SPI */
+#define PMIC_CFG_FORCE_ENABLE_DRV_LOW_STAT_VALID            (9U)
 /*  @} */
 
 /**
@@ -185,6 +200,10 @@ extern "C" {
                          (1U << PMIC_CFG_NRSTOUT_PIN_STAT_VALID)
 #define PMIC_CFG_NINT_PIN_STAT_VALID_SHIFT       \
                          (1U << PMIC_CFG_NINT_PIN_STAT_VALID)
+#define PMIC_CFG_SPMI_LPM_STAT_VALID_SHIFT       \
+                         (1U << PMIC_CFG_SPMI_LPM_STAT_VALID)
+#define PMIC_CFG_FORCE_ENABLE_DRV_LOW_STAT_VALID_SHIFT       \
+                         (1U << PMIC_CFG_FORCE_ENABLE_DRV_LOW_STAT_VALID)
 /*  @} */
 
 /**
@@ -210,13 +229,13 @@ extern "C" {
 /*  @} */
 
 /**
- *  \anchor Pmic_EnableDrv_CfgEnable
- *  \name   PMIC Enable/Disable ENABLE_DRV config by I2C/SPI
+ *  \anchor Pmic_EnableDrvI2CSPICfg_Stat
+ *  \name   PMIC ENABLE_DRV I2C/SPI configuration status
  *
  *  @{
  */
 #define PMIC_ENABLE_DRV_I2C_SPI_CONFIG_ENABLE            (0U)
-#define PMIC_ENABLE_DRV_I2C_SPI_CONFIG_DISBALE           (1U)
+#define PMIC_ENABLE_DRV_I2C_SPI_CONFIG_DISABLE           (1U)
 /*  @} */
 
 /**
@@ -233,13 +252,26 @@ extern "C" {
 /*  @} */
 
 /**
- *  \anchor Pmic_RegisterLock_Status
+ *  \anchor Pmic_RegisterLock_Stat
  *  \name   PMIC Register Lock Status
  *
  *  @{
  */
 #define PMIC_REGISTER_STATUS_UNLOCK             (0x0U)
 #define PMIC_REGISTER_STATUS_LOCK               (0x1U)
+/*  @} */
+
+/**
+ *  \anchor Pmic_SpreadSpectrum_Cfg
+ *  \name   PMIC Spread Spectrum Configuration
+ *
+ *  @{
+ */
+ /** \brief Disable Spread Spectrum Configuration */
+#define PMIC_SPREAD_SPECTRUM_CFG_DISABLE             (0U)
+/** \brief Enable Spread Spectrum Configuration */
+#define PMIC_SPREAD_SPECTRUM_CFG_ENABLE              (1U)
+
 /*  @} */
 
 /**
@@ -254,6 +286,30 @@ extern "C" {
 #define PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_6_3_PERCENT      (1U)
 /** \brief  Modulation Depth as +/- 8.4% */
 #define PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_8_4_PERCENT      (2U)
+/*  @} */
+
+/**
+ *  \anchor Pmic_SpmiLpmModeCtrl_Stat
+ *  \name   PMIC SPMI LPM Mode Control Status
+ *
+ *  @{
+ */
+ /** \brief SPMI LPM Mode Control Configuration is Disabled */
+#define PMIC_SPMI_LPM_MODE_CTRL_CFG_DISABLED     (0U)
+/** \brief SPMI LPM Mode Control Configuration is Enabled */
+#define PMIC_SPMI_LPM_MODE_CTRL_CFG_ENABLED      (1U)
+/*  @} */
+
+/**
+ *  \anchor Pmic_InternalClkMonitor_Cfg
+ *  \name   PMIC Internal Clock Monitoring Configuration
+ *
+ *  @{
+ */
+ /** \brief Disable Internal Clock Monitoring */
+#define PMIC_INTERNAL_CLK_MONITORING_CFG_DISABLE     (0U)
+/** \brief Enable Internal Clock Monitoring */
+#define PMIC_INTERNAL_CLK_MONITORING_CFG_ENABLE      (1U)
 /*  @} */
 
 /**
@@ -284,49 +340,6 @@ extern "C" {
 #define PMIC_AUTOMATIC_EXT_CLK           (1U)
 /*  @} */
 
-
-/**
- *  \anchor Pmic_ExtClk_Freq_Sel
- *  \name   PMIC External Clock (SYNCCLKIN) Frequency selection
- *
- *  @{
- */
-/** \brief  SYNCCLKIN Frequency as 1.1 MHz */
-#define PMIC_SYNCCLKIN_1_1_MHZ      (0U)
-/** \brief  SYNCCLKIN Frequency as 2.2 MHz */
-#define PMIC_SYNCCLKIN_2_2_MHZ      (1U)
-/** \brief  SYNCCLKIN Frequency as 4.4 MHz */
-#define PMIC_SYNCCLKIN_4_4_MHZ      (2U)
-/*  @} */
-
-/**
- *  \anchor Pmic_EndOfChargeVoltage_Sel
- *  \name   PMIC Back Battery charger End of Charge Volatge selection
- *
- *  @{
- */
-/** \brief  Back Battery charger End of Charge Volatge as 2.5V  */
-#define PMIC_BB_ENDOF_CHARGE_VOLATGE_2_5_V      (0U)
-/** \brief  Back Battery charger End of Charge Volatge as 2.8V  */
-#define PMIC_BB_ENDOF_CHARGE_VOLATGE_2_8_V      (1U)
-/** \brief  Back Battery charger End of Charge Volatge as 3.0V  */
-#define PMIC_BB_ENDOF_CHARGE_VOLATGE_3_0_V      (2U)
-/** \brief  Back Battery charger End of Charge Volatge as 3.3V  */
-#define PMIC_BB_ENDOF_CHARGE_VOLATGE_3_3_V      (3U)
-/*  @} */
-
-/**
- *  \anchor Pmic_Charging_Current_Sel
- *  \name   PMIC Selects Back Battery charging current
- *
- *  @{
- */
-/** \brief  Back Battery charging current as 100 Micro Ampere */
-#define PMIC_BB_CHARGING_CURRENT_100      (0U)
-/** \brief  Back Battery charging current as 500 Micro Ampere */
-#define PMIC_BB_CHARGING_CURRENT_500      (1U)
-/*  @} */
-
 /**
  *  \anchor Pmic_ExtClkValidStat
  *  \name   PMIC External Clock Validity Status
@@ -335,18 +348,6 @@ extern "C" {
  */
 #define PMIC_EXT_CLK_STATUS_VALID       (0U)
 #define PMIC_EXT_CLK_STATUS_INVALID     (1U)
-/*  @} */
-
-/**
- *  \anchor Pmic_BBEoCIndicationStat
- *  \name   PMIC Backup Battery End of Charge Indication Status
- *
- *  @{
- */
- /** \brief  Back Battery Charging active or not enabled  */
-#define PMIC_BB_EOC_STATUS_NOT_ENABLED   (0U)
- /** \brief  Back Battery Charger reached termination voltage set by BB_VEOC */
-#define PMIC_BB_EOC_STATUS_READY         (1U)
 /*  @} */
 
 /**
@@ -371,32 +372,26 @@ extern "C" {
  *
  *  @{
  */
- /** \brief validParams value used to set/get SPMI Low Power Mode
-  *         Control Value */
-#define PMIC_CFG_SPMI_LPM_EN_VALID                (0U)
- /** \brief validParams value used to set/get SPMI Low Power Mode
+ /** \brief validParams value used to set/get Spread Spectrum
   *         Enable/Disable */
-#define PMIC_CFG_SPREAD_SPECTRUM_EN_VALID         (1U)
+#define PMIC_CFG_SPREAD_SPECTRUM_EN_VALID         (0U)
 /** \brief validParams value used to set/get ENABLE_DRV pin
   *         configuration */
-#define PMIC_CFG_ENABLE_DRV_VALID                 (2U)
- /** \brief validParams value used to set/get to Enable or Disable
-  *         ENABLE_DRV Configuration by I2C/SPI */
-#define PMIC_CFG_FORCE_ENABLE_DRV_LOW_VALID       (3U)
+#define PMIC_CFG_ENABLE_DRV_VALID                 (1U)
  /** \brief validParams value used to set/get Register Lock
   *         configuration */
-#define PMIC_CFG_REG_LOCK_VALID                   (4U)
+#define PMIC_CFG_REG_LOCK_VALID                   (2U)
 /** \brief validParams value used to set/get Spread Spectrum
   *         modulation Depth Value */
-#define PMIC_CFG_SPREAD_SPECTRUM_DEPTH_VALID      (5U)
+#define PMIC_CFG_SPREAD_SPECTRUM_DEPTH_VALID      (3U)
  /** \brief validParams value used to set/get to Enable/Disable load
   *         from EEPROM defaults on RTC Domain(TPS6594X Leo)/ conf(LP876x Hera)
   *         registers */
-#define PMIC_CFG_EEPROM_DEFAULT_VALID             (6U)
+#define PMIC_CFG_EEPROM_DEFAULT_VALID             (4U)
  /** \brief validParams value used to set/get to Enable/Disable to
-  *         skip EEPROM defaults load on conf registers
+  *         skip EEPROM defaults load on conf and Other registers
   *         Valid only for LP876x Hera*/
-#define PMIC_CFG_SKIP_EEPROM_LOAD_VALID           (7U)
+#define PMIC_CFG_SKIP_EEPROM_LOAD_VALID           (5U)
 /*  @} */
 
 /**
@@ -408,14 +403,10 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_CFG_SPMI_LPM_EN_VALID_SHIFT       \
-                         (1U << PMIC_CFG_SPMI_LPM_EN_VALID)
 #define PMIC_CFG_SPREAD_SPECTRUM_EN_VALID_SHIFT       \
                          (1U << PMIC_CFG_SPREAD_SPECTRUM_EN_VALID)
 #define PMIC_CFG_ENABLE_DRV_VALID_SHIFT       \
                          (1U << PMIC_CFG_ENABLE_DRV_VALID)
-#define PMIC_CFG_FORCE_ENABLE_DRV_LOW_VALID_SHIFT       \
-                         (1U << PMIC_CFG_FORCE_ENABLE_DRV_LOW_VALID)
 #define PMIC_CFG_REG_LOCK_VALID_SHIFT       \
                          (1U << PMIC_CFG_REG_LOCK_VALID)
 #define PMIC_CFG_SPREAD_SPECTRUM_DEPTH_VALID_SHIFT       \
@@ -437,8 +428,8 @@ extern "C" {
  *  @{
  */
   /** \brief validParams value used to set/get to Enable/Disable Band gap
-   *          Voltage to AMUX OUT Pin */
-#define PMIC_CFG_AMUX_OUT_EN_VALID                (0U)
+   *          Voltage to AMUX OUT/REF OUT Pin */
+#define PMIC_CFG_AMUX_OUT_REF_OUT_EN_VALID        (0U)
  /** \brief validParams value used to set/get to Enable or Disable internal
   *         Clock Monitoring */
 #define PMIC_CFG_CLK_MON_EN_VALID                 (1U)
@@ -449,6 +440,12 @@ extern "C" {
  /** \brief validParams value used to set/get to Select External clock Frequency
   */
 #define PMIC_CFG_SYNC_CLK_IN_FREQ_VALID           (4U)
+ /** \brief validParams value used to set/get to NRSTOUT_SOC Signal
+  */
+#define PMIC_CFG_NRSTOUT_SOC_VALID                (5U)
+ /** \brief validParams value used to set/get NRSTOUT Signal
+  */
+#define PMIC_CFG_NRSTOUT_VALID                    (6U)
 /*  @} */
 
 /**
@@ -461,8 +458,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_CFG_AMUX_OUT_EN_VALID_SHIFT       \
-                         (1U << PMIC_CFG_AMUX_OUT_EN_VALID)
+#define PMIC_CFG_AMUX_OUT_REF_OUT_EN_VALID_SHIFT       \
+                         (1U << PMIC_CFG_AMUX_OUT_REF_OUT_EN_VALID)
 #define PMIC_CFG_CLK_MON_EN_VALID_SHIFT       \
                          (1U << PMIC_CFG_CLK_MON_EN_VALID)
 #define PMIC_CFG_SYNC_CLK_OUT_FREQ_SEL_VALID_SHIFT       \
@@ -471,6 +468,10 @@ extern "C" {
                          (1U << PMIC_CFG_EXT_CLK_SEL_VALID)
 #define PMIC_CFG_SYNC_CLK_IN_FREQ_VALID_SHIFT       \
                          (1U << PMIC_CFG_SYNC_CLK_IN_FREQ_VALID)
+#define PMIC_CFG_NRSTOUT_SOC_VALID_SHIFT       \
+                         (1U << PMIC_CFG_NRSTOUT_SOC_VALID)
+#define PMIC_CFG_NRSTOUT_VALID_SHIFT       \
+                         (1U << PMIC_CFG_NRSTOUT_VALID)
 /*  @} */
 
 /**
@@ -552,27 +553,10 @@ typedef struct Pmic_RecovCntCfg_s
  *                                  updated
  *                                    Valid values
  *                                        \ref Pmic_CommonCtrlValidParamCfg
- *  \param  spmiLpmEn               SPMI Low Power Mode Control Value.
- *                                  Valid only when PMIC_CFG_SPMI_LPM_EN_VALID
- *                                  bit is set.
  *  \param  sreadSpectrumEn         Spread Spectrum Enable Value
  *                                  Valid only when
  *                                  PMIC_CFG_SPREAD_SPECTRUM_EN_VALID bit is set
- *  \param  eepromDefaultEn         Enable/Disable load from EEPROM defaults on
- *                                  RTC domain Registers (for TPS6594x Leo
- *                                  Device) when device transition from
- *                                  Lpstandby/SafeRecovery to INIT state
- *                                  Enable/Disable load from EEPROM defaults on
- *                                  conf registers when skipEepromLoadEn = 0
- *                                  when device transition from Lpstandby to
- *                                  INIT state
- *                                  Enable/Disable load from EEPROM defaults on
- *                                  conf registers when device transition from
- *                                  SafeRecovery to INIT state.Doesn't depends
- *                                  on  skipEepromLoadEn Value
- *                                  (for LP8764x Hera Device)
- *                                  Valid only when
- *                                  PMIC_CFG_EEPROM_DEFAULT_VALID bit is set.
+ *                                    Valid values \ref Pmic_SpreadSpectrum_Cfg
  *  \param  skipEepromLoadEn        Enable/Disable to skip EEPROM defaults load
  *                                  on conf registers when device transition
  *                                  from  Lpstandby to INIT state
@@ -580,6 +564,28 @@ typedef struct Pmic_RecovCntCfg_s
  *                                  Valid only when
  *                                  PMIC_CFG_SKIP_EEPROM_LOAD_VALID
  *                                  bit is set.
+ *                                    Valid values
+ *                                    \ref Pmic_Lp8764xHera_Skip_EepromDef_LdCfg
+ *  \param  eepromDefaultLoad       Load/Not Loaded from EEPROM defaults on
+ *                                  RTC domain Registers (for TPS6594x Leo
+ *                                  Device) when device transition from
+ *                                  Lpstandby/SafeRecovery to INIT state
+ *                                  Enable/Disable load from EEPROM defaults on
+ *                                  conf registers when skipEepromLoadEn = 0
+ *                                  when device transition from Lpstandby to
+ *                                  INIT state
+ *                                  Load/Not Loaded load from EEPROM defaults on
+ *                                  conf registers when device transition from
+ *                                  SafeRecovery to INIT state.Doesn't depends
+ *                                  on  skipEepromLoadEn Value
+ *                                  (for LP8764x Hera Device)
+ *                                  Valid only when
+ *                                  PMIC_CFG_EEPROM_DEFAULT_VALID bit is set.
+ *                                      Valid values
+ *                                         \ref Pmic_Tps6594xLeo_EepromDef_LdCfg
+ *                                           (for TPS6594x Leo Device)
+ *                                         \ref Pmic_Lp8764xHera_EepromDef_LdCfg
+ *                                           (for LP8764x Hera Device)
  *  \param  enDrv                   Control of ENABLE_DRV pin. Can be configured
  *                                  only When forceEnDrvLow set to 0 else
  *                                  ENABLE_DRV pin is set to
@@ -587,16 +593,11 @@ typedef struct Pmic_RecovCntCfg_s
  *                                     Valid values \ref Pmic_SignalLvl
  *                                  Valid only when PMIC_CFG_ENABLE_DRV_VALID
  *                                  bit is set.
- *  \param  forceEnDrvLow           Enable or Disable ENABLE_DRV Configuration
- *                                  by I2C/SPI
- *                                    Valid values \ref Pmic_EnableDrv_CfgEnable
- *                                  Valid only when
- *                                  PMIC_CFG_FORCE_ENABLE_DRV_LOW_VALID
- *                                  bit is set.
  *  \param  regLock                 Register Lock configuration
- *                                    Valid values \ref Pmic_RegisterLock_Config
+ *                                  Valid values \ref Pmic_RegisterLock_Config
  *                                  Valid only when PMIC_CFG_REG_LOCK_VALID
- *                                  bit is set.
+ *                                  bit is set
+ *                                  Valid only for Pmic_setCommonCtrlConfig API
  *  \param  spreadSpectrumDepth     Spread Spectrum modulation Depth Value
  *                                     Valid values
  *                                        \ref Pmic_SpreadSpectrum_Mod_Depth_Sel
@@ -607,14 +608,12 @@ typedef struct Pmic_RecovCntCfg_s
 typedef struct Pmic_CommonCtrlCfg_s
 {
     uint8_t    validParams;
-    bool       spmiLpmEn;
     bool       sreadSpectrumEn;
-    bool       eepromDefaultEn;
-    bool       skipLpStandbyEepromRd;
+    bool       skipEepromDefaultLoadEn;
+    uint8_t    eepromDefaultLoad;
     uint8_t    enDrv;
-    uint8_t    forceEnDrvLow;
     uint8_t    regLock;
-    uint8_t    sreadSpectrumDepth;
+    uint8_t    spreadSpectrumDepth;
 } Pmic_CommonCtrlCfg_t;
 
 /*!
@@ -628,12 +627,20 @@ typedef struct Pmic_CommonCtrlCfg_s
  *                              \ref Pmic_MiscCtrlValidParamCfg and the
  *                              corresponding member value must be updated.
  *                                 Valid values \ref Pmic_MiscCtrlValidParamCfg
- *  \param  amuxOutEn           Enable/Disable Band gap Voltage to AMUX OUT Pin
- *                              Valid only when PMIC_CFG_AMUX_OUT_EN_VALID
- *                              bit is set.
+ *  \param  amuxOutRefOutEn     Enable/Disable Band gap Voltage to AMUX OUT Pin
+ *                              (for TPS6594x Leo Device) or RFF OUT Pin
+ *                              (for LP8764x Leo Device)
+ *                              Valid only when
+ *                              PMIC_CFG_AMUX_OUT_REF_OUT_EN_VALID bit is set
+ *                                 Valid values
+ *                                     \ref Pmic_Tps6594xLeo_AMuxOutPinCtrl_Cfg
+ *                                      (for TPS6594x Leo Device)
+ *                                     \ref Pmic_Lp8764xHera_RefOutPinCtrl_Cfg
+ *                                      (for LP8764x Hera Device)
  *  \param  clkMonEn            Enable or Disable internal Clock Monitoring
  *                              Valid only when PMIC_CFG_CLK_MON_EN_VALID
  *                              bit is set.
+ *                                 Valid values \ref Pmic_InternalClkMonitor_Cfg
  *  \param  syncClkOutFreqSel   Selects SYNCCLKOUT Frequency
  *                                 Valid values \ref Pmic_SyncClkOut_Freq_Sel
  *                              Valid only when
@@ -643,18 +650,38 @@ typedef struct Pmic_CommonCtrlCfg_s
  *                              Valid only when PMIC_CFG_EXT_CLK_SEL_VALID
  *                              bit is set.
  *  \param  syncClkInFreq       Selects External clock Frequency
- *                                 Valid values \ref Pmic_ExtClk_Freq_Sel
  *                              Valid only when PMIC_CFG_SYNC_CLK_IN_FREQ_VALID
  *                              bit is set.
+ *                                 Valid values
+ *                                     \ref Pmic_Tps6594xLeo_ExtClk_Freq_Sel
+ *                                      (for TPS6594x Leo Device)
+ *                                     \ref Pmic_Lp8764xHera_ExtClk_Freq_Sel
+ *                                      (for LP8764x Hera Device)
+ *  \param  nRstOutSocSignal    Configure NRSTOUT_SOC Signal
+ *                              Note: When Application configures
+ *                              nRstOutSocSignal as PMIC_PIN_SIGNAL_LEVEL_LOW
+ *                              then SOC will be in reset
+ *                              Valid only when PMIC_CFG_NRSTOUT_SOC_VALID
+ *                              bit is set.
+ *                                 Valid values \ref Pmic_SignalLvl
+ *  \param  nRstOutSignal       Configure NRSTOUT Signal
+ *                              Note: When Application configures
+ *                              nRstOutSignal as PMIC_PIN_SIGNAL_LEVEL_LOW
+ *                              then MCU will be in reset
+ *                              Valid only when PMIC_CFG_NRSTOUT_VALID
+ *                              bit is set.
+ *                                 Valid values \ref Pmic_SignalLvl
  */
 typedef struct Pmic_MiscCtrlCfg_s
 {
     uint8_t    validParams;
-    bool       amuxOutEn;
+    bool       amuxOutRefOutEn;
     bool       clkMonEn;
     uint8_t    syncClkOutFreqSel;
     uint8_t    extClkSel;
     uint8_t    syncClkInFreq;
+    uint8_t    nRstOutSocSignal;
+    uint8_t    nRstOutSignal;
 } Pmic_MiscCtrlCfg_t;
 
 /*!
@@ -667,19 +694,25 @@ typedef struct Pmic_MiscCtrlCfg_s
  *                              from the combination of
  *                              \ref Pmic_BatteryCtrlValidParamCfg and the
  *                              corresponding member value must be updated.
- *                              Valid values \ref Pmic_BatteryCtrlValidParamCfg
  *  \param  chargingEn          Enable/Disable Back Battery Charging
  *                              Valid only when PMIC_CFG_CHARGING_EN_VALID
  *                              bit is set.
+ *                              Valid only for TPS6594x Leo Device
+ *                                 Valid values
+ *                                    \ref Pmic_Tps6594xLeo_BatteryCharging_Cfg
  *  \param  endOfChargeVoltage  Back Battery configuration for End of charge
  *                              Voltage
- *                                 Valid values \ref Pmic_EndOfChargeVoltage_Sel
  *                              Valid only when
  *                              PMIC_CFG_END_OF_CHARGE_VOLTAGE_VALID bit is set.
+ *                              Valid only for TPS6594x Leo Device
+ *                                 Valid values
+ *                                  \ref Pmic_Tps6594xLeo_EndOfChargeVoltage_Sel
  *  \param  chargeCurrent       Back Battery charging current value
- *                                 Valid values \ref Pmic_Charging_Current_Sel
  *                              Valid only when PMIC_CFG_CHARGE_CURRENT_VALID
  *                              bit is set.
+ *                              Valid only for TPS6594x Leo Device
+ *                                 Valid values
+ *                                    \ref Pmic_Tps6594xLeo_Charging_Current_Sel
  */
 typedef struct Pmic_BatteryCtrlCfg_s
 {
@@ -701,43 +734,59 @@ typedef struct Pmic_BatteryCtrlCfg_s
  *                             updated
  *                                Valid values
  *                                         \ref Pmic_CommonCtrlStatValidParamCfg
+ *  \param  spmiLpmStat        SPMI Low Power Mode Control Status.
+ *                             Valid only when PMIC_CFG_SPMI_LPM_STAT_VALID
+ *                             bit is set.
+ *                                Valid values \ref Pmic_SpmiLpmModeCtrl_Stat
+ *  \param  forceEnDrvLowStat  Status of ENABLE_DRV Configuration by I2C/SPI
+ *                             Valid only when
+ *                             PMIC_CFG_FORCE_ENABLE_DRV_LOW_STAT_VALID
+ *                             bit is set.
+ *                                Valid values \ref Pmic_EnableDrvI2CSPICfg_Stat
  *  \param  bbEocIndication    Back Battery End of charge Indication Status
- *                               Valid values \ref Pmic_BBEoCIndicationStat
  *                             Valid only when
  *                             PMIC_CFG_BB_EOC_INDICATION_STAT_VALID
  *                             bit is set
+ *                              Valid only for TPS6594x Leo Device
+ *                                 Valid values
+ *                                     \ref Pmic_Tps6594xLeo_BBEoCIndicationStat
  *  \param  regLockStat        Register lock status
-  *                               Valid values \ref Pmic_RegisterLock_Status
  *                             Valid only when PMIC_CFG_REGISTER_LOCK_STAT_VALID
  *                             bit is set
- *  \param  extClkValidity     External clock validity status
- *                                Valid values \ref Pmic_ExtClkValidStat
+ *                                 Valid values \ref Pmic_RegisterLock_Stat
+ *  \param  extClkValidity     External clock validity status. The status value
+ *                             is valid only when External clock is connected
+ *                             Ignore the status value when External clock is not
+ *                             connected
  *                             Valid only when
  *                             PMIC_CFG_EXT_CLK_VALIDITY_STAT_VALID bit is set
+ *                                Valid values \ref Pmic_ExtClkValidStat
  *  \param  startupPin         Startup(nPWRON/Enable) pin status
- *                                Valid values \ref Pmic_SignalLvl
  *                             Valid only when PMIC_CFG_STARTUP_PIN_STAT_VALID
  *                             bit is set
- *  \param  enDrvPin           EN_DRV Pin status
  *                                Valid values \ref Pmic_SignalLvl
+ *  \param  enDrvPin           EN_DRV Pin status
  *                             Valid only when PMIC_CFG_EN_DRV_PIN_STAT_VALID
  *                             bit is set.
-  *  \param  nRstOutSocPin     nRSTOUT_SOC Pin status
  *                                Valid values \ref Pmic_SignalLvl
+ *  \param  nRstOutSocPin      nRSTOUT_SOC Pin status
  *                             Valid only when
  *                             PMIC_CFG_NRSTOUTSOC_PIN_STAT_VALID bit is set.
-  *  \param  nRstOutPin        nRSTOUT Pin status
  *                                Valid values \ref Pmic_SignalLvl
+ *  \param  nRstOutPin        nRSTOUT Pin status
  *                             Valid only when PMIC_CFG_NRSTOUT_PIN_STAT_VALID
  *                             bit is set.
-  *  \param  nIntPin           nINT Pin status
  *                                Valid values \ref Pmic_SignalLvl
+ *  \param  nIntPin           nINT Pin status
  *                             Valid only when PMIC_CFG_NINT_PIN_STAT_VALID
  *                             bit is set.
+ *                                Valid values \ref Pmic_SignalLvl
  */
 typedef struct Pmic_CommonCtrlStat_s
 {
-    uint8_t    validParams;
+    uint32_t   validParams;
+    bool       spmiLpmStat;
+    uint8_t    forceEnDrvLowStat;
     uint8_t    bbEndOfChargeIndication;
     uint8_t    regLockStat;
     uint8_t    extClkValidity;
@@ -839,7 +888,7 @@ int32_t Pmic_getRecoveryCnt(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
  * \param   scratchPadRegNum   [IN]    ScratchPad register number
- *                                     \ref Pmic_ScratchPad_Sel
+ *                                         Valid values \ref Pmic_ScratchPad_Sel
  * \param   data               [IN]    Data/Value to be written to scratchpad.
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
@@ -859,8 +908,8 @@ int32_t Pmic_setScratchPadValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
  * \param   scratchPadRegNum   [IN]    ScratchPad register number
- *                                     \ref Pmic_ScratchPad_Sel
- * \param   pData               [OUT]   Parameter to hold the Data/Value read
+ *                                          Valid values\ref Pmic_ScratchPad_Sel
+ * \param   pData               [OUT]  Parameter to hold the Data/Value read
  *                                     from scratchpad.
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
@@ -880,9 +929,10 @@ int32_t Pmic_getScratchPadValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
  * \param   userSpareRegNum    [IN]    UserSpare register number
- *                                     \ref Pmic_UserSpare_Sel
+ *                                       Valid values \ref Pmic_UserSpareReg_Sel
  * \param   data               [IN]    Data/Value to be written to UserSpare
- *                                     register.
+ *                                     register
+ *                                       Valid values \ref Pmic_UserSpareReg_Val
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
@@ -901,7 +951,7 @@ int32_t Pmic_setUserSpareValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
  * \param   userSpareRegNum    [IN]    User Spare register number
- *                                     \ref Pmic_UserSpare_Sel
+ *                                       Valid values \ref Pmic_UserSpareReg_Sel
  * \param   pData              [OUT]   Parameter to hold the Data/Value read
  *                                     from User Spare register.
  *
@@ -915,8 +965,8 @@ int32_t Pmic_getUserSpareValue(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief   API to set PMIC common control parameter configuration.
  *
- * Requirement: REQ_TAG(PDK-9139), REQ_TAG(PDK-9138), REQ_TAG(PDK-9131),
- *              REQ_TAG(PDK-9114), REQ_TAG(PDK-9112), REQ_TAG(PDK-9143)
+ * Requirement: REQ_TAG(PDK-9112), REQ_TAG(PDK-9114), REQ_TAG(PDK-9131),
+ *              REQ_TAG(PDK-9143), REQ_TAG(PDK-9111)
  * Design: did_pmic_common_ctrl_cfg_readback
  *
  *          This function is used to set the required common control parameter
@@ -937,8 +987,8 @@ int32_t Pmic_setCommonCtrlConfig(Pmic_CoreHandle_t          *pPmicCoreHandle,
 /*!
  * \brief   API to get PMIC common control parameter configuration.
  *
- * Requirement: REQ_TAG(PDK-9139), REQ_TAG(PDK-9138), REQ_TAG(PDK-9131),
- *              REQ_TAG(PDK-9114), REQ_TAG(PDK-9112), REQ_TAG(PDK-9143)
+ * Requirement: REQ_TAG(PDK-9112), REQ_TAG(PDK-9114), REQ_TAG(PDK-9131),
+ *              REQ_TAG(PDK-9143)
  * Design: did_pmic_common_ctrl_cfg_readback
  *
  *          This function is used to get the required common control parameter
@@ -959,7 +1009,7 @@ int32_t Pmic_getCommonCtrlConfig(Pmic_CoreHandle_t          *pPmicCoreHandle,
 /*!
  * \brief   API to set PMIC Miscellaneous control parameter configuration.
  *
- * Requirement: REQ_TAG(PDK-9132), REQ_TAG(PDK-9127)
+ * Requirement: REQ_TAG(PDK-9132), REQ_TAG(PDK-9127), REQ_TAG(PDK-9111)
  * Design: did_pmic_misc_ctrl_cfg_readback
  *
  *          This function is used to set the required miscellaneous control
@@ -1002,7 +1052,7 @@ int32_t Pmic_getMiscCtrlConfig(Pmic_CoreHandle_t          *pPmicCoreHandle,
 /*!
  * \brief   API to set PMIC Battery Backup control parameter configuration.
  *
- * Requirement: REQ_TAG(PDK-9130)
+ * Requirement: REQ_TAG(PDK-9130), REQ_TAG(PDK-9111)
  * Design: did_pmic_battery_ctrl_cfg_readback
  *
  *          This function is used to set the required Battery Backup control
@@ -1070,7 +1120,8 @@ int32_t Pmic_getPinValue(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief   API to get PMIC common control parameter status.
  *
- * Requirement: REQ_TAG(9126), REQ_TAG(9124), REQ_TAG(9130), REQ_TAG(9125)
+ * Requirement: REQ_TAG(PDK-9126), REQ_TAG(PDK-9124), REQ_TAG(PDK-9130),
+ *              REQ_TAG(PDK-9125), REQ_TAG(PDK-9139), REQ_TAG(PDK-9138)
  * Design: did_pmic_common_ctrl_status_readback
  *
  *          This function is used to get the required common control parameter
@@ -1091,16 +1142,19 @@ int32_t Pmic_getCommonCtrlStat(Pmic_CoreHandle_t           *pPmicCoreHandle,
 /*!
  * \brief   API to get configured value for I2C1 or I2C2 Speed based on commMode
  *
- * Requirement: REQ_TAG(9129)
+ * Requirement: REQ_TAG(PDK-9129)
  * Design: did_pmic_i2c_speed_readback
  *
  *          This function is used to get the configured value for I2C1 or
  *          I2C2 Speed based on commMode
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- * \param   pI2C1Speed      [OUT]   Pointer to store I2C1 Speed
+ * \param   pI2C1Speed      [OUT]   Pointer to store I2C1 Speed for both
+ *                                  PMIC_INTF_SINGLE_I2C and PMIC_INTF_DUAL_I2C
+ *                                  interface
  *                                     Valid Vaues \ref Pmic_I2CSpeedSel
- * \param   pI2C2Speed      [OUT]   Pointer to store I2C2 Speed
+ * \param   pI2C2Speed      [OUT]   Pointer to store I2C2 Speed for both
+ *                                  PMIC_INTF_DUAL_I2C interface only
  *                                     Valid Vaues \ref Pmic_I2CSpeedSel
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
@@ -1113,7 +1167,7 @@ int32_t Pmic_getI2CSpeed(Pmic_CoreHandle_t     *pPmicCoreHandle,
 /*!
  * \brief   API to Enable CRC
  *
- * Requirement: REQ_TAG(9119)
+ * Requirement: REQ_TAG(PDK-9119)
  * Design: did_pmic_crc_enable
  *
  *          This function is used to enable CRC on Primary PMIC which enables
@@ -1153,29 +1207,14 @@ int32_t Pmic_getCrcStatus(Pmic_CoreHandle_t     *pPmicCoreHandle,
                           uint8_t               *pI2c2CrcStatus);
 
 /*!
- * \brief   API to set custom NVM ID
- *
- * Requirement: REQ_TAG(9110)
- * Design: did_pmic_dev_info_cfg_readback
- *
- *          This function is used to set custom NVM ID
- *
- * \param   pPmicCoreHandle      [IN]    PMIC Interface Handle.
- * \param   customNvmId          [IN]    Custom NVM ID value
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
-int32_t Pmic_setCustomNvmId(Pmic_CoreHandle_t     *pPmicCoreHandle,
-                            const uint8_t          customNvmId);
-
-/*!
  * \brief   API to get PMIC Device Information
  *
- * Requirement: REQ_TAG(9109)
+ * Requirement: REQ_TAG(PDK-9109)
  * Design: did_pmic_dev_info_cfg_readback
  *
- *          This function is used to get PMIC Device Information
+ *          This function is used to get PMIC Device Information such as
+ *          TI DeviceID, TI NVM ID, TI NVM Revision, TI Silicon Revision,
+ *          Custom NVM ID
  *
  * \param   pPmicCoreHandle      [IN]    PMIC Interface Handle.
  * \param   pDeviceInfo          [OUT]   PMIC Device Information value
@@ -1185,6 +1224,26 @@ int32_t Pmic_setCustomNvmId(Pmic_CoreHandle_t     *pPmicCoreHandle,
  */
 int32_t Pmic_getDeviceInfo(Pmic_CoreHandle_t     *pPmicCoreHandle,
                            Pmic_DeviceInfo_t     *pDeviceInfo);
+
+/*!
+ * \brief   API to set I2C1 or I2C2 Speed based on commMode
+ *
+ * Requirement: REQ_TAG(PDK-9129)
+ * Design: did_pmic_i2c_speed_readback
+ *
+ *          This function is used to configure I2C1 speed for Single or Dual I2C
+ *          Interface and I2C2 Speed for Dual I2C Interface based on commMode.
+ *
+ *          Note: I2C Master before switching the I2C speed to HS/Standard Mode,
+ *          I2C Master has to configure I2C1/I2C2 speed accordingly then only
+ *          I2C Master can communicate with PMIC in HS/Standard Mode
+ *
+ * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_setI2CSpeedCfg(Pmic_CoreHandle_t     *pPmicCoreHandle);
 
 #ifdef __cplusplus
 }

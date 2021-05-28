@@ -189,6 +189,16 @@ extern "C" {
 #define PMIC_ST_ERR_INV_ESM_VAL                         (-((int32_t)34))
 /** \brief warning Code for Device ID mismatch warning */
 #define PMIC_ST_WARN_INV_DEVICE_ID                      (-((int32_t)35))
+/** \brief Error Code for EN_DRV Pin configuration when FORCE_EN_DRV_LOW is set
+ *         to '1'  */
+#define PMIC_ST_ERR_INV_EN_DRV_PIN_CFG                  (-((int32_t)36))
+/** \brief Error Code for I2C Speed configuration when commMode is set
+ *         to PMIC_INTF_SPI  */
+#define PMIC_ST_ERR_INV_COMM_MODE                       (-((int32_t)37))
+/** \brief Error Code for CRC Status Failure */
+#define PMIC_ST_ERR_CRC_STATUS_FAIL                     (-((int32_t)38))
+/** \brief Error Code for Register Write Failure when register is locked */
+#define PMIC_ST_ERR_REG_LOCKED_WR_FAIL                  (-((int32_t)39))
 /* @} */
 
 /**

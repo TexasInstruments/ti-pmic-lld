@@ -263,7 +263,7 @@ extern "C" {
  *
  *  @{
  */
- /** \brief Valid only for I2C4/ I2C5/ I2C6/ I2C7 */
+/** \brief Valid only for I2C4/ I2C5/ I2C6/ I2C7 */
 #define PMIC_FSM_I2C_TRIGGER_VAL_0                (0x0U)
 #define PMIC_FSM_I2C_TRIGGER_VAL_1                (0x1U)
 /*  @} */

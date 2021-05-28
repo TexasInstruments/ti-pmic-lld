@@ -44,6 +44,8 @@
 #include <pmic_irq_priv.h>
 #include <pmic_irq_lp8764x.h>
 #include <pmic_irq_lp8764x_priv.h>
+#include <pmic_power_priv.h>
+#include <pmic_wdg_priv.h>
 
 /* PMIC LP8764x Interrupt Configuration as per Pmic_lp8764x_IrqNum. */
 static Pmic_IntrCfg_t gLp8764x_intCfg[] =

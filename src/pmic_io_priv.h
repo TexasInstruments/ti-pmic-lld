@@ -61,6 +61,14 @@ extern "C" {
 #define PMIC_WDG_PAGEADDR_MASK                 (0x3FFU)
 
 /*!
+ * \brief: PMIC SERIAL_IF_CONFIG register address (Bank/Page 1 Register address)
+ *         Application can only read this register to check I2C1SPI/I2C2 CRC
+ *         is enabled or not
+ */
+#define PMIC_SERIAL_IF_CONFIG_PAGEADDR          (0x100U)
+#define PMIC_SERIAL_IF_CONFIG_PAGEADDR_MASK     (0xFFU)
+
+/*!
  * \brief: SPI R/W bit Position
  */
 #define PMIC_IO_REQ_RW                         (((uint32_t)1U) << 4U)
