@@ -140,12 +140,316 @@ static Pmic_Ut_Tests_t pmic_misc_tests[] =
         8326,
         "Pmic_getScratchPadValue : Parameter validation for data."
     },
+    {
+        1,
+        "Pmic_setUserSpareValue : Parameter validation for handle."
+    },
+    {
+        2,
+        "Pmic_setUserSpareValue : Parameter validation for userSpareRegNum."
+    },
+    {
+        3,
+        "Pmic_setUserSpareValue : Parameter validation for data."
+    },
+    {
+        4,
+        "Pmic_setUserSpareValue : Test Set/Get userSpare Reg value."
+    },
+    {
+        5,
+        "Pmic_getUserSpareValue : Parameter validation for handle."
+    },
+    {
+        6,
+        "Pmic_getUserSpareValue : Parameter validation for userSpareRegNum."
+    },
+    {
+        7,
+        "Pmic_getUserSpareValue : Parameter validation for data."
+    },
+    {
+        8,
+        "Pmic_setCommonCtrlConfig : Enable/Disable Spread Spectrum"
+    },
+    {
+        9,
+        "Pmic_setCommonCtrlConfig : Lock and UnLock Registers"
+    },
+    {
+        10,
+        "Pmic_setCommonCtrlConfig : Configure Spread Spectrum Depth"
+    },
+    {
+        11,
+        "Pmic_getCommonCtrlConfig : Parameter validation for handle."
+    },
+    {
+        12,
+        "Pmic_getCommonCtrlConfig : Parameter validation for pCommonCtrlCfg."
+    },
+    {
+        13,
+        "Pmic_setCommonCtrlConfig : Parameter validation for eepromDefaultLoad."
+    },
+    {
+        14,
+        "Pmic_setCommonCtrlConfig : Parameter validation for regLock."
+    },
+    {
+        15,
+        "Pmic_setCommonCtrlConfig : Parameter validation for spreadSpectrumDepth."
+    },
+    {
+        16,
+        "Pmic_setCommonCtrlConfig : Parameter validation for handle."
+    },
+    {
+        17,
+        "Pmic_setMiscCtrlConfig : Enable/Disable Band gap Voltage to AMUX OUT/RFF OUT Pin"
+    },
+    {
+        18,
+        "Pmic_setMiscCtrlConfig : Enable or Disable internal Clock Monitoring"
+    },
+    {
+        19,
+        "Pmic_setMiscCtrlConfig : Selects SYNCCLKOUT Frequency"
+    },
+    {
+        20,
+        "Pmic_setMiscCtrlConfig : External clock Selection"
+    },
+    {
+        21,
+        "Pmic_setMiscCtrlConfig : Selects External clock Frequency"
+    },
+    {
+        22,
+        "Pmic_setMiscCtrlConfig : Parameter validation for syncClkOutFreqSel"
+    },
+    {
+        23,
+        "Pmic_setMiscCtrlConfig : Parameter validation for extClkSel"
+    },
+    {
+        24,
+        "Pmic_setMiscCtrlConfig : Parameter validation for syncClkInFreq"
+    },
+    {
+        25,
+        "Pmic_setMiscCtrlConfig : Parameter validation for handle"
+    },
+    {
+        26,
+        "Pmic_getMiscCtrlConfig : Parameter validation for handle"
+    },
+    {
+        27,
+        "Pmic_getMiscCtrlConfig : Parameter validation for pMiscCtrlCfg"
+    },
+    {
+        28,
+        "Pmic_setBatteryCtrlConfig : Enable/Disable Back Battery Charging"
+    },
+    {
+        29,
+        "Pmic_setBatteryCtrlConfig : Configure Back Battery configuration for End of charge Voltage"
+    },
+    {
+        30,
+        "Pmic_setBatteryCtrlConfig : Configure Back Battery charging current value"
+    },
+    {
+        31,
+        "Pmic_setBatteryCtrlConfig : Parameter validation for endOfChargeVoltage"
+    },
+    {
+        32,
+        "Pmic_setBatteryCtrlConfig : Parameter validation for chargeCurrent"
+    },
+    {
+        33,
+        "Pmic_setBatteryCtrlConfig : Parameter validation for handle"
+    },
+    {
+        34,
+        "Pmic_getBatteryCtrlConfig : Parameter validation for handle"
+    },
+    {
+        35,
+        "Pmic_getBatteryCtrlConfig : Parameter validation for pBatteryCtrlCfg"
+    },
+    {
+        36,
+        "Pmic_getCommonCtrlStat : Get the status of nIntPin"
+    },
+    {
+        37,
+        "Pmic_getCommonCtrlStat : Get the status of spmiLpmStat"
+    },
+    {
+        38,
+        "Pmic_getCommonCtrlStat : Get the status of forceEnDrvLowStat"
+    },
+    {
+        39,
+        "Pmic_getCommonCtrlStat : Get the status of bbEndOfChargeIndication"
+    },
+    {
+        40,
+        "Pmic_getCommonCtrlStat : Get the status of regLockStat"
+    },
+    {
+        41,
+        "Pmic_getCommonCtrlStat : Get the status of extClkValidity"
+    },
+    {
+        42,
+        "Pmic_getCommonCtrlStat : Get the status of startupPin"
+    },
+    {
+        43,
+        "Pmic_getCommonCtrlStat : Get the status of enDrvPin"
+    },
+    {
+        44,
+        "Pmic_getCommonCtrlStat : Get the status of nRstOutSocPin"
+    },
+    {
+        45,
+        "Pmic_getCommonCtrlStat : Get the status of nRstOutPin"
+    },
+    {
+        46,
+        "Pmic_getCommonCtrlStat : Parameter validation for handle"
+    },
+    {
+        47,
+        "Pmic_getCommonCtrlStat : Parameter validation for pCommonCtrlStat"
+    },
+    {
+        50,
+        "Pmic_getI2CSpeed :  Parameter validation for handle"
+    },
+    {
+        51,
+        "Pmic_getI2CSpeed :  Parameter validation for pI2C1Speed"
+    },
+    {
+        52,
+        "Pmic_getI2CSpeed :  Parameter validation for pI2C2Speed"
+    },
+    {
+        53,
+        "Pmic_getI2CSpeed :  Get I2C1 or I2C2 Speed value"
+    },
+    {
+        54,
+        "Pmic_getDeviceInfo :  Get the Device Information"
+    },
+    {
+        55,
+        "Pmic_getDeviceInfo :  Parameter validation for handle"
+    },
+    {
+        56,
+        "Pmic_getDeviceInfo :  Parameter validation for pDeviceInfo"
+    },
+    {
+        57,
+        "Pmic_getPinValue : Get the status of EN_DRV Pin Value "
+    },
+    {
+        58,
+        "Pmic_getPinValue : Get the status of NRSTOUT_SOC Pin Value "
+    },
+    {
+        59,
+        "Pmic_getPinValue : Get the status of NRSTOUT Pin Value "
+    },
+    {
+        60,
+        "Pmic_getPinValue : Parameter validation for pinType "
+    },
+    {
+        61,
+        "Pmic_getPinValue : Parameter validation for handle "
+    },
+    {
+        62,
+        "Pmic_getPinValue : Parameter validation for pPinValue "
+    },
+    {
+        63,
+        "Pmic_setMiscCtrlConfig : Configure NRSTOUT_SOC Signal"
+    },
+    {
+        64,
+        "Pmic_setMiscCtrlConfig : Configure NRSTOUT Signal"
+    },
+    {
+        65,
+        "Pmic_setMiscCtrlConfig : Parameter validation for NRSTOUT_SOC Signal"
+    },
+    {
+        66,
+        "Pmic_setMiscCtrlConfig : Parameter validation for NRSTOUT Signal"
+    },
+    {
+        67,
+        "Pmic_getMiscCtrlConfig : Get the status of NRSTOUT_SOC Signal"
+    },
+    {
+        68,
+        "Pmic_getMiscCtrlConfig : Get the status of NRSTOUT Signal"
+    },
+    {
+        69,
+        "Pmic_setCommonCtrlConfig : Configure EN_DRV Signal"
+    },
+    {
+        70,
+        "Pmic_setCommonCtrlConfig : Parameter validation for EN_DRV Signal"
+    },
+    {
+        71,
+        "Pmic_setCommonCtrlConfig : Load from EEPROM defaults on RTC domain/conf Registers"
+    },
+    {
+        72,
+        "Pmic_setCommonCtrlConfig : Not Loaded from EEPROM defaults on RTC domain/conf Registers"
+    },
+    {
+        73,
+        "Pmic_setCommonCtrlConfig : Enable to skip EEPROM defaults load on conf registers with FIRST_STARTUP_DONE as '0'"
+    },
+    {
+        74,
+        "Pmic_setCommonCtrlConfig : Disable to skip EEPROM defaults load on conf registers with FIRST_STARTUP_DONE as '0'"
+    },
+ {
+        75,
+        "Pmic_setCommonCtrlConfig : Enable to skip EEPROM defaults load on conf registers with FIRST_STARTUP_DONE as '1'"
+    },
+    {
+        76,
+        "Pmic_setCommonCtrlConfig : Disable to skip EEPROM defaults load on conf registers with FIRST_STARTUP_DONE as '1'"
+    },
+    {
+        77,
+        "Test Pmic Write Protection when Register is Lock"
+    },
+    {
+        78,
+        "Test Pmic Write Protection when Register is UnLock"
+    },
 };
 
 /*!
  * \brief   Pmic_irqGetErrStatus : Test ENABLE_INT interrupt.
  */
-static void test_Pmic_Enable_interrupt(void)
+static void test_pmic_interruptEnableInt(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     bool intrEnable           = PMIC_IRQ_UNMASK;
@@ -424,7 +728,7 @@ static void test_Pmic_getRecoveryCntPrmValTest_recovCntVal(void)
 /*!
  * \brief   Pmic_getRecoveryCnt : Read Recovery Count Value.
  */
-static void test_Pmic_getRecoveryCnt_read_recovCntVal(void)
+static void test_pmic_getRecoveryCnt_read_recovCntVal(void)
 {
     int32_t status          = PMIC_ST_SUCCESS;
     uint8_t recovCntVal     = 0U;
@@ -1061,24 +1365,46 @@ static void test_pmic_setScratchPadValuePrmValTest_scratchPadRegId(void)
 static void test_pmic_setScratchPadValue_setget(void)
 {
     int32_t status  = PMIC_ST_SUCCESS;
-    uint8_t scratchPadRegId,data, data_rd;
+    uint8_t scratchPadRegId,data, data_rd, data_def;
 
     data = 0x10;
     scratchPadRegId = PMIC_SCRATCH_PAD_REG_4;
+
 
     test_pmic_print_unity_testcase_info(8323,
                                         pmic_misc_tests,
                                         PMIC_MISC_NUM_OF_TESTCASES);
 
-    status = Pmic_setScratchPadValue(pPmicCoreHandle, scratchPadRegId, data);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    for(scratchPadRegId = PMIC_SCRATCH_PAD_REG_1;
+        scratchPadRegId <= PMIC_SCRATCH_PAD_REG_4; scratchPadRegId++)
+    {
+        status = Pmic_getScratchPadValue(pPmicCoreHandle,
+                                         scratchPadRegId,
+                                         &data_def);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    status = Pmic_getScratchPadValue(pPmicCoreHandle,
-                                     scratchPadRegId,
-                                     &data_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-    TEST_ASSERT_EQUAL(data, data_rd);
+        status = Pmic_setScratchPadValue(pPmicCoreHandle,
+                                         scratchPadRegId,
+                                         data);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
+        status = Pmic_getScratchPadValue(pPmicCoreHandle,
+                                         scratchPadRegId,
+                                         &data_rd);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+        TEST_ASSERT_EQUAL(data, data_rd);
+
+        status = Pmic_setScratchPadValue(pPmicCoreHandle,
+                                         scratchPadRegId,
+                                         data_def);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        status = Pmic_getScratchPadValue(pPmicCoreHandle,
+                                         scratchPadRegId,
+                                         &data_rd);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+        TEST_ASSERT_EQUAL(data_def, data_rd);
+    }
     pmic_testResultUpdate_pass(8323,
                                pmic_misc_tests,
                                PMIC_MISC_NUM_OF_TESTCASES);
@@ -1150,6 +1476,2921 @@ static void test_pmic_getScratchPadValuePrmValTest_data(void)
                                PMIC_MISC_NUM_OF_TESTCASES);
 }
 
+/*!
+ * \brief   Pmic_setUserSpareValue : Parameter validation for handle.
+ */
+static void test_pmic_setUserSpareValuePrmValTest_handle(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    uint8_t userSpareRegNum, data;
+
+    data = PMIC_USER_SPARE_REG_VAL_1;
+    userSpareRegNum = PMIC_USER_SPARE_REG_4;
+
+    test_pmic_print_unity_testcase_info(1,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_setUserSpareValue(NULL, userSpareRegNum, data);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+
+    pmic_testResultUpdate_pass(1,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setUserSpareValue : Parameter validation for userSpareRegNum.
+ */
+static void test_pmic_setUserSpareValuePrmValTest_userSpareRegNum(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    uint8_t userSpareRegNum, data;
+
+    data = PMIC_USER_SPARE_REG_VAL_1;
+    userSpareRegNum = PMIC_USER_SPARE_REG_4 + 1;
+
+    test_pmic_print_unity_testcase_info(2,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_setUserSpareValue(pPmicCoreHandle, userSpareRegNum, data);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+
+    pmic_testResultUpdate_pass(2,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setUserSpareValue : Parameter validation for userSpareRegNum.
+ */
+static void test_pmic_setUserSpareValuePrmValTest_data(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    uint8_t userSpareRegNum, data;
+
+    data = 0x2;
+    userSpareRegNum = PMIC_USER_SPARE_REG_4;
+
+    test_pmic_print_unity_testcase_info(3,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_setUserSpareValue(pPmicCoreHandle, userSpareRegNum, data);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+
+    pmic_testResultUpdate_pass(3,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setUserSpareValue : Test Set/Get userSpare Reg value.
+ */
+static void test_pmic_setUserSpareValue(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    uint8_t userSpareRegNum, data, data_rd;
+
+    data = PMIC_USER_SPARE_REG_VAL_1;
+    userSpareRegNum = PMIC_USER_SPARE_REG_4;
+
+    test_pmic_print_unity_testcase_info(4,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    for(userSpareRegNum = PMIC_USER_SPARE_REG_1;
+        userSpareRegNum <= PMIC_USER_SPARE_REG_4; userSpareRegNum++)
+    {
+        status = Pmic_setUserSpareValue(pPmicCoreHandle,
+                                        userSpareRegNum,
+                                        data);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        status = Pmic_getUserSpareValue(pPmicCoreHandle,
+                                         userSpareRegNum,
+                                         &data_rd);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+        TEST_ASSERT_EQUAL(data, data_rd);
+    }
+    pmic_testResultUpdate_pass(4,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getUserSpareValue : Parameter validation for handle.
+ */
+static void test_pmic_getUserSpareValuePrmValTest_handle(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    uint8_t userSpareRegNum, data;
+
+    userSpareRegNum = PMIC_USER_SPARE_REG_4;
+
+    test_pmic_print_unity_testcase_info(5,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_getUserSpareValue(NULL, userSpareRegNum, &data);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+
+    pmic_testResultUpdate_pass(5,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getUserSpareValue : Parameter validation for userSpareRegNum.
+ */
+static void test_pmic_getUserSpareValuePrmValTest_userSpareRegNum(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    uint8_t userSpareRegNum, data;
+
+    userSpareRegNum = PMIC_USER_SPARE_REG_4 + 1;
+
+    test_pmic_print_unity_testcase_info(6,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_getUserSpareValue(pPmicCoreHandle, userSpareRegNum, &data);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+
+    pmic_testResultUpdate_pass(6,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getUserSpareValue : Parameter validation for data.
+ */
+static void test_pmic_getUserSpareValuePrmValTest_data(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    uint8_t userSpareRegNum;
+
+    userSpareRegNum = PMIC_USER_SPARE_REG_4 ;
+
+    test_pmic_print_unity_testcase_info(7,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_getUserSpareValue(pPmicCoreHandle, userSpareRegNum, NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+
+    pmic_testResultUpdate_pass(7,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setCommonCtrlConfig : Enable/Disable Spread Spectrum
+ */
+static void test_pmic_setCommonCtrlCfg_sreadSpectrumEnable(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlCfg_t commonCtrlCfg_rd = {PMIC_CFG_SPREAD_SPECTRUM_EN_VALID_SHIFT,};
+    Pmic_CommonCtrlCfg_t commonCtrlCfg_def = {PMIC_CFG_SPREAD_SPECTRUM_EN_VALID_SHIFT,};
+    Pmic_CommonCtrlCfg_t commonCtrlCfg =
+    {
+        PMIC_CFG_SPREAD_SPECTRUM_EN_VALID_SHIFT,
+        PMIC_SPREAD_SPECTRUM_CFG_ENABLE,
+        PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_DISABLED,
+        PMIC_TPS6594X_EEPROM_DEFAULTS_LOAD_TO_RTC_DOMAIN_BITS,
+        PMIC_PIN_SIGNAL_LEVEL_LOW,
+        PMIC_REGISTER_UNLOCK,
+        PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_NONE
+    };
+
+    test_pmic_print_unity_testcase_info(8,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(commonCtrlCfg.sreadSpectrumEn,
+                      commonCtrlCfg_rd.sreadSpectrumEn);
+
+    commonCtrlCfg.sreadSpectrumEn = PMIC_SPREAD_SPECTRUM_CFG_DISABLE;
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(commonCtrlCfg.sreadSpectrumEn,
+                      commonCtrlCfg_rd.sreadSpectrumEn);
+
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(commonCtrlCfg_def.sreadSpectrumEn,
+                      commonCtrlCfg_rd.sreadSpectrumEn);
+
+    pmic_testResultUpdate_pass(8,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setCommonCtrlConfig : Lock and UnLock Registers
+ */
+static void test_pmic_setCommonCtrlCfg_RegisterLock(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlCfg_t commonCtrlCfg =
+    {
+        PMIC_CFG_REG_LOCK_VALID_SHIFT,
+        PMIC_SPREAD_SPECTRUM_CFG_ENABLE,
+        PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_DISABLED,
+        PMIC_TPS6594X_EEPROM_DEFAULTS_LOAD_TO_RTC_DOMAIN_BITS,
+        PMIC_PIN_SIGNAL_LEVEL_LOW,
+        PMIC_REGISTER_LOCK,
+        PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_NONE
+    };
+    Pmic_CommonCtrlStat_t commonCtrlStat_rd = {PMIC_CFG_REGISTER_LOCK_STAT_VALID_SHIFT};
+
+    test_pmic_print_unity_testcase_info(9,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(PMIC_REGISTER_STATUS_LOCK,
+                      commonCtrlStat_rd.regLockStat);
+
+    commonCtrlCfg.regLock = PMIC_REGISTER_UNLOCK;
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(PMIC_REGISTER_STATUS_UNLOCK,
+                      commonCtrlStat_rd.regLockStat);
+
+    pmic_testResultUpdate_pass(9,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setCommonCtrlConfig : Configure Spread Spectrum Depth
+ */
+static void test_pmic_setCommonCtrlCfg_sreadSpectrumDepth(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlCfg_t commonCtrlCfg_rd = {PMIC_CFG_SPREAD_SPECTRUM_DEPTH_VALID_SHIFT,};
+    Pmic_CommonCtrlCfg_t commonCtrlCfg_def = {PMIC_CFG_SPREAD_SPECTRUM_DEPTH_VALID_SHIFT,};
+    Pmic_CommonCtrlCfg_t commonCtrlCfg =
+    {
+        PMIC_CFG_SPREAD_SPECTRUM_DEPTH_VALID_SHIFT,
+        PMIC_SPREAD_SPECTRUM_CFG_ENABLE,
+        PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_DISABLED,
+        PMIC_TPS6594X_EEPROM_DEFAULTS_LOAD_TO_RTC_DOMAIN_BITS,
+        PMIC_PIN_SIGNAL_LEVEL_LOW,
+        PMIC_REGISTER_UNLOCK,
+        PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_NONE
+    };
+    uint8_t ssDepthVal;
+
+    test_pmic_print_unity_testcase_info(10,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    for(ssDepthVal = PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_NONE;
+        ssDepthVal <= PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_8_4_PERCENT;
+        ssDepthVal++)
+    {
+        commonCtrlCfg.spreadSpectrumDepth = ssDepthVal;
+
+        pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        TEST_ASSERT_EQUAL(commonCtrlCfg.spreadSpectrumDepth,
+                          commonCtrlCfg_rd.spreadSpectrumDepth);
+    }
+
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(commonCtrlCfg_def.spreadSpectrumDepth,
+                      commonCtrlCfg_rd.spreadSpectrumDepth);
+
+    pmic_testResultUpdate_pass(10,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getCommonCtrlConfig : Parameter validation for handle
+ */
+static void test_pmic_getCommonCtrlCfgPrmValTest_handle(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlCfg_t commonCtrlCfg_rd = {PMIC_CFG_SPREAD_SPECTRUM_EN_VALID_SHIFT,};
+
+    test_pmic_print_unity_testcase_info(11,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getCommonCtrlConfig(NULL, &commonCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(11,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getCommonCtrlConfig : Parameter validation for pCommonCtrlCfg
+ */
+static void test_pmic_getCommonCtrlCfgPrmValTest_pCommonCtrlCfg(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(12,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(12,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setCommonCtrlConfig : Parameter validation for eepromDefaultLoad
+ */
+static void test_pmic_setCommonCtrlCfgPrmValTest_eepromDefaultLoad(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlCfg_t commonCtrlCfg =
+    {
+        PMIC_CFG_EEPROM_DEFAULT_VALID_SHIFT,
+        PMIC_SPREAD_SPECTRUM_CFG_ENABLE,
+        PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_DISABLED,
+        2U,
+        PMIC_PIN_SIGNAL_LEVEL_LOW,
+        PMIC_REGISTER_UNLOCK,
+        PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_NONE
+    };
+
+    test_pmic_print_unity_testcase_info(13,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(13,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setCommonCtrlConfig : Parameter validation for regLock
+ */
+static void test_pmic_setCommonCtrlCfgPrmValTest_regLock(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlCfg_t commonCtrlCfg =
+    {
+        PMIC_CFG_REG_LOCK_VALID_SHIFT,
+        PMIC_SPREAD_SPECTRUM_CFG_ENABLE,
+        PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_DISABLED,
+        PMIC_TPS6594X_EEPROM_DEFAULTS_LOAD_TO_RTC_DOMAIN_BITS,
+        PMIC_PIN_SIGNAL_LEVEL_LOW,
+        0x20U,
+        PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_NONE
+    };
+
+    test_pmic_print_unity_testcase_info(14,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(14,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setCommonCtrlConfig : Parameter validation for spreadSpectrumDepth
+ */
+static void test_pmic_setCommonCtrlCfgPrmValTest_spreadSpectrumDepth(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlCfg_t commonCtrlCfg =
+    {
+        PMIC_CFG_SPREAD_SPECTRUM_DEPTH_VALID_SHIFT,
+        PMIC_SPREAD_SPECTRUM_CFG_ENABLE,
+        PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_DISABLED,
+        PMIC_TPS6594X_EEPROM_DEFAULTS_LOAD_TO_RTC_DOMAIN_BITS,
+        PMIC_PIN_SIGNAL_LEVEL_LOW,
+        PMIC_REGISTER_UNLOCK,
+        3U
+    };
+
+    test_pmic_print_unity_testcase_info(15,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(15,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setCommonCtrlConfig : Parameter validation for handle
+ */
+static void test_pmic_setCommonCtrlCfgPrmValTest_handle(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlCfg_t commonCtrlCfg =
+    {
+        PMIC_CFG_SPREAD_SPECTRUM_DEPTH_VALID_SHIFT,
+        PMIC_SPREAD_SPECTRUM_CFG_ENABLE,
+        PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_DISABLED,
+        PMIC_TPS6594X_EEPROM_DEFAULTS_LOAD_TO_RTC_DOMAIN_BITS,
+        PMIC_PIN_SIGNAL_LEVEL_LOW,
+        PMIC_REGISTER_UNLOCK,
+        PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_NONE
+    };
+
+    test_pmic_print_unity_testcase_info(16,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_setCommonCtrlConfig(NULL, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(16,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setMiscCtrlConfig : Enable/Disable Band gap Voltage to AMUX OUT/RFF OUT Pin
+ */
+static void test_pmic_setMiscCtrlCfg_amuxOutRefOutEn(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_MiscCtrlCfg_t miscCtrlCfg_rd = {PMIC_CFG_AMUX_OUT_REF_OUT_EN_VALID_SHIFT,};
+    Pmic_MiscCtrlCfg_t miscCtrlCfg_def = {PMIC_CFG_AMUX_OUT_REF_OUT_EN_VALID_SHIFT,};
+    Pmic_MiscCtrlCfg_t miscCtrlCfg =
+    {
+        PMIC_CFG_AMUX_OUT_REF_OUT_EN_VALID_SHIFT,
+        PMIC_TPS6594X_AMUX_OUT_PIN_CFG_DISABLE,
+        PMIC_INTERNAL_CLK_MONITORING_CFG_DISABLE,
+        PMIC_SYNCCLKOUT_DISABLE,
+        PMIC_INTERNAL_RC_OSC,
+        PMIC_TPS6594X_SYNCCLKIN_1_1_MHZ,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(17,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        miscCtrlCfg.amuxOutRefOutEn = PMIC_LP8764X_REF_OUT_PIN_CFG_DISABLE;
+    }
+
+    pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(miscCtrlCfg.amuxOutRefOutEn,
+                      miscCtrlCfg_rd.amuxOutRefOutEn);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        miscCtrlCfg.amuxOutRefOutEn = PMIC_TPS6594X_AMUX_OUT_PIN_CFG_ENABLE;
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        miscCtrlCfg.amuxOutRefOutEn = PMIC_LP8764X_REF_OUT_PIN_CFG_ENABLE;
+    }
+
+    pmicStatus = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(miscCtrlCfg.amuxOutRefOutEn,
+                      miscCtrlCfg_rd.amuxOutRefOutEn);
+
+    pmicStatus = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(miscCtrlCfg_def.amuxOutRefOutEn,
+                      miscCtrlCfg_rd.amuxOutRefOutEn);
+
+    pmic_testResultUpdate_pass(17,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setMiscCtrlConfig : Enable/Disable internal Clock Monitoring
+ */
+static void test_pmic_setMiscCtrlCfg_clkMonEn(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_MiscCtrlCfg_t miscCtrlCfg_rd = {PMIC_CFG_CLK_MON_EN_VALID_SHIFT,};
+    Pmic_MiscCtrlCfg_t miscCtrlCfg_def = {PMIC_CFG_CLK_MON_EN_VALID_SHIFT,};
+    Pmic_MiscCtrlCfg_t miscCtrlCfg =
+    {
+        PMIC_CFG_CLK_MON_EN_VALID_SHIFT,
+        PMIC_TPS6594X_AMUX_OUT_PIN_CFG_DISABLE,
+        PMIC_INTERNAL_CLK_MONITORING_CFG_DISABLE,
+        PMIC_SYNCCLKOUT_DISABLE,
+        PMIC_INTERNAL_RC_OSC,
+        PMIC_TPS6594X_SYNCCLKIN_1_1_MHZ,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(18,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(miscCtrlCfg.clkMonEn,
+                      miscCtrlCfg_rd.clkMonEn);
+
+    miscCtrlCfg.clkMonEn = PMIC_INTERNAL_CLK_MONITORING_CFG_ENABLE;
+
+    pmicStatus = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(miscCtrlCfg.clkMonEn,
+                      miscCtrlCfg_rd.clkMonEn);
+
+    pmicStatus = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(miscCtrlCfg_def.clkMonEn,
+                      miscCtrlCfg_rd.clkMonEn);
+
+    pmic_testResultUpdate_pass(18,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setMiscCtrlConfig : Selects SYNCCLKOUT Frequency
+ */
+static void test_pmic_setMiscCtrlCfg_syncClkOutFreqSel(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_MiscCtrlCfg_t miscCtrlCfg_rd = {PMIC_CFG_SYNC_CLK_OUT_FREQ_SEL_VALID_SHIFT,};
+    Pmic_MiscCtrlCfg_t miscCtrlCfg_def = {PMIC_CFG_SYNC_CLK_OUT_FREQ_SEL_VALID_SHIFT,};
+    Pmic_MiscCtrlCfg_t miscCtrlCfg =
+    {
+        PMIC_CFG_SYNC_CLK_OUT_FREQ_SEL_VALID_SHIFT,
+        PMIC_TPS6594X_AMUX_OUT_PIN_CFG_DISABLE,
+        PMIC_INTERNAL_CLK_MONITORING_CFG_DISABLE,
+        PMIC_SYNCCLKOUT_DISABLE,
+        PMIC_INTERNAL_RC_OSC,
+        PMIC_TPS6594X_SYNCCLKIN_1_1_MHZ,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH
+    };
+    uint8_t    freqSel;
+
+    test_pmic_print_unity_testcase_info(19,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    for(freqSel = PMIC_SYNCCLKOUT_DISABLE;
+        freqSel <= PMIC_SYNCCLKOUT_4_4_MHZ;
+        freqSel++)
+    {
+        miscCtrlCfg.syncClkOutFreqSel = freqSel;
+
+        pmicStatus = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        TEST_ASSERT_EQUAL(miscCtrlCfg.syncClkOutFreqSel,
+                          miscCtrlCfg_rd.syncClkOutFreqSel);
+    }
+
+    pmicStatus = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(miscCtrlCfg_def.syncClkOutFreqSel,
+                      miscCtrlCfg_rd.syncClkOutFreqSel);
+
+    pmic_testResultUpdate_pass(19,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setMiscCtrlConfig : External clock Selection
+ */
+static void test_pmic_setMiscCtrlCfg_extClkSel(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_MiscCtrlCfg_t miscCtrlCfg_rd = {PMIC_CFG_EXT_CLK_SEL_VALID_SHIFT,};
+    Pmic_MiscCtrlCfg_t miscCtrlCfg_def = {PMIC_CFG_EXT_CLK_SEL_VALID_SHIFT,};
+    Pmic_MiscCtrlCfg_t miscCtrlCfg =
+    {
+        PMIC_CFG_EXT_CLK_SEL_VALID_SHIFT,
+        PMIC_TPS6594X_AMUX_OUT_PIN_CFG_DISABLE,
+        PMIC_INTERNAL_CLK_MONITORING_CFG_DISABLE,
+        PMIC_SYNCCLKOUT_DISABLE,
+        PMIC_INTERNAL_RC_OSC,
+        PMIC_TPS6594X_SYNCCLKIN_1_1_MHZ,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(20,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(miscCtrlCfg.extClkSel,
+                      miscCtrlCfg_rd.extClkSel);
+
+    miscCtrlCfg.extClkSel = PMIC_AUTOMATIC_EXT_CLK;
+
+    pmicStatus = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(miscCtrlCfg.extClkSel,
+                      miscCtrlCfg_rd.extClkSel);
+
+    pmicStatus = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(miscCtrlCfg_def.extClkSel,
+                      miscCtrlCfg_rd.extClkSel);
+
+    pmic_testResultUpdate_pass(20,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setMiscCtrlConfig : Selects External clock Frequency
+ */
+static void test_pmic_setMiscCtrlCfg_syncClkInFreq(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_MiscCtrlCfg_t miscCtrlCfg_rd = {PMIC_CFG_SYNC_CLK_IN_FREQ_VALID_SHIFT,};
+    Pmic_MiscCtrlCfg_t miscCtrlCfg_def = {PMIC_CFG_SYNC_CLK_IN_FREQ_VALID_SHIFT,};
+    Pmic_MiscCtrlCfg_t miscCtrlCfg =
+    {
+        PMIC_CFG_SYNC_CLK_IN_FREQ_VALID_SHIFT,
+        PMIC_TPS6594X_AMUX_OUT_PIN_CFG_DISABLE,
+        PMIC_INTERNAL_CLK_MONITORING_CFG_DISABLE,
+        PMIC_SYNCCLKOUT_DISABLE,
+        PMIC_INTERNAL_RC_OSC,
+        PMIC_TPS6594X_SYNCCLKIN_1_1_MHZ,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH
+    };
+    uint8_t syncClkInFreq, maxVal;
+
+    test_pmic_print_unity_testcase_info(21,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        syncClkInFreq = PMIC_TPS6594X_SYNCCLKIN_1_1_MHZ;
+        maxVal = PMIC_TPS6594X_SYNCCLKIN_4_4_MHZ;
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        syncClkInFreq = PMIC_LP8764X_SYNCCLKIN_1_1_MHZ;
+        maxVal = PMIC_LP8764X_SYNCCLKIN_8_8_MHZ;
+    }
+
+    for(;syncClkInFreq <= maxVal;syncClkInFreq++)
+    {
+        pmicStatus = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        TEST_ASSERT_EQUAL(miscCtrlCfg.syncClkInFreq,
+                          miscCtrlCfg_rd.syncClkInFreq);
+    }
+
+    pmicStatus = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(miscCtrlCfg_def.syncClkInFreq,
+                      miscCtrlCfg_rd.syncClkInFreq);
+
+    pmic_testResultUpdate_pass(21,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setMiscCtrlConfig : Parameter validation for syncClkOutFreqSel
+ */
+static void test_pmic_setMiscCtrlCfgPrmValTest_syncClkOutFreqSel(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_MiscCtrlCfg_t miscCtrlCfg =
+    {
+        PMIC_CFG_SYNC_CLK_OUT_FREQ_SEL_VALID_SHIFT,
+        PMIC_TPS6594X_AMUX_OUT_PIN_CFG_DISABLE,
+        PMIC_INTERNAL_CLK_MONITORING_CFG_DISABLE,
+        4U,
+        PMIC_INTERNAL_RC_OSC,
+        PMIC_TPS6594X_SYNCCLKIN_1_1_MHZ,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(22,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(22,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setMiscCtrlConfig : Parameter validation for extClkSel
+ */
+static void test_pmic_setMiscCtrlCfgPrmValTest_extClkSel(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_MiscCtrlCfg_t miscCtrlCfg =
+    {
+        PMIC_CFG_EXT_CLK_SEL_VALID_SHIFT,
+        PMIC_TPS6594X_AMUX_OUT_PIN_CFG_DISABLE,
+        PMIC_INTERNAL_CLK_MONITORING_CFG_DISABLE,
+        PMIC_SYNCCLKOUT_DISABLE,
+        2U,
+        PMIC_TPS6594X_SYNCCLKIN_1_1_MHZ,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(23,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(23,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setMiscCtrlConfig : Parameter validation for syncClkInFreq
+ */
+static void test_pmic_setMiscCtrlCfgPrmValTest_syncClkInFreq(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_MiscCtrlCfg_t miscCtrlCfg =
+    {
+        PMIC_CFG_SYNC_CLK_IN_FREQ_VALID_SHIFT,
+        PMIC_TPS6594X_AMUX_OUT_PIN_CFG_DISABLE,
+        PMIC_INTERNAL_CLK_MONITORING_CFG_DISABLE,
+        PMIC_SYNCCLKOUT_DISABLE,
+        PMIC_INTERNAL_RC_OSC,
+        3U,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH
+    };
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        miscCtrlCfg.syncClkInFreq = 4U;
+    }
+    test_pmic_print_unity_testcase_info(24,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(24,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setMiscCtrlConfig : Parameter validation for handle
+ */
+static void test_pmic_setMiscCtrlCfgPrmValTest_handle(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_MiscCtrlCfg_t miscCtrlCfg =
+    {
+        PMIC_CFG_SYNC_CLK_OUT_FREQ_SEL_VALID_SHIFT,
+        PMIC_TPS6594X_AMUX_OUT_PIN_CFG_DISABLE,
+        PMIC_INTERNAL_CLK_MONITORING_CFG_DISABLE,
+        PMIC_SYNCCLKOUT_DISABLE,
+        PMIC_INTERNAL_RC_OSC,
+        PMIC_TPS6594X_SYNCCLKIN_1_1_MHZ,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(25,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_setMiscCtrlConfig(NULL, miscCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(25,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getMiscCtrlConfig : Parameter validation for handle
+ */
+static void test_pmic_getMiscCtrlCfgPrmValTest_handle(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_MiscCtrlCfg_t miscCtrlCfg_rd = {PMIC_CFG_AMUX_OUT_REF_OUT_EN_VALID_SHIFT,};
+
+    test_pmic_print_unity_testcase_info(26,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getMiscCtrlConfig(NULL, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(26,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getMiscCtrlConfig : Parameter validation for pMiscCtrlCfg
+ */
+static void test_pmic_getMiscCtrlCfgPrmValTest_pMiscCtrlCfg(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(27,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(27,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setBatteryCtrlConfig : Enable/Disable Back Battery Charging
+ */
+static void test_pmic_setBatteryCtrlCfg_chargingEn(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_BatteryCtrlCfg_t batteryCtrlCfg_rd = {PMIC_CFG_CHARGING_EN_VALID_SHIFT,};
+    Pmic_BatteryCtrlCfg_t batteryCtrlCfg_def = {PMIC_CFG_CHARGING_EN_VALID_SHIFT,};
+    Pmic_BatteryCtrlCfg_t batteryCtrlCfg =
+    {
+        PMIC_CFG_CHARGING_EN_VALID_SHIFT,
+        PMIC_TPS6594X_BB_CHARGINGING_CFG_DISABLE,
+        PMIC_TPS6594X_BB_ENDOF_CHARGE_VOLATGE_2_5_V,
+        PMIC_TPS6594X_BB_CHARGING_CURRENT_100
+    };
+
+    test_pmic_print_unity_testcase_info(28,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(28,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_getBatteryCtrlConfig(pPmicCoreHandle, &batteryCtrlCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_setBatteryCtrlConfig(pPmicCoreHandle, batteryCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getBatteryCtrlConfig(pPmicCoreHandle, &batteryCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(batteryCtrlCfg.chargingEn,
+                      batteryCtrlCfg_rd.chargingEn);
+
+
+    batteryCtrlCfg.chargingEn = PMIC_TPS6594X_BB_CHARGINGING_CFG_ENABLE;
+
+    pmicStatus = Pmic_setBatteryCtrlConfig(pPmicCoreHandle, batteryCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getBatteryCtrlConfig(pPmicCoreHandle, &batteryCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(batteryCtrlCfg.chargingEn,
+                      batteryCtrlCfg_rd.chargingEn);
+
+    pmicStatus = Pmic_setBatteryCtrlConfig(pPmicCoreHandle, batteryCtrlCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getBatteryCtrlConfig(pPmicCoreHandle, &batteryCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(batteryCtrlCfg_def.chargingEn,
+                      batteryCtrlCfg_rd.chargingEn);
+
+    pmic_testResultUpdate_pass(28,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setBatteryCtrlConfig : Configure Back Battery configuration for End of charge Voltage
+ */
+static void test_pmic_setBatteryCtrlCfg_endOfChargeVoltage(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_BatteryCtrlCfg_t batteryCtrlCfg_rd = {PMIC_CFG_END_OF_CHARGE_VOLTAGE_VALID_SHIFT,};
+    Pmic_BatteryCtrlCfg_t batteryCtrlCfg_def = {PMIC_CFG_END_OF_CHARGE_VOLTAGE_VALID_SHIFT,};
+    Pmic_BatteryCtrlCfg_t batteryCtrlCfg =
+    {
+        PMIC_CFG_END_OF_CHARGE_VOLTAGE_VALID_SHIFT,
+        PMIC_TPS6594X_BB_CHARGINGING_CFG_DISABLE,
+        PMIC_TPS6594X_BB_ENDOF_CHARGE_VOLATGE_2_5_V,
+        PMIC_TPS6594X_BB_CHARGING_CURRENT_100
+    };
+    uint8_t endOfChargeVoltVal;
+
+    test_pmic_print_unity_testcase_info(29,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(29,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_getBatteryCtrlConfig(pPmicCoreHandle, &batteryCtrlCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    for(endOfChargeVoltVal = PMIC_TPS6594X_BB_ENDOF_CHARGE_VOLATGE_2_5_V;
+        endOfChargeVoltVal <= PMIC_TPS6594X_BB_ENDOF_CHARGE_VOLATGE_3_3_V;
+        endOfChargeVoltVal++)
+    {
+        batteryCtrlCfg.endOfChargeVoltage = endOfChargeVoltVal;
+
+        pmicStatus = Pmic_setBatteryCtrlConfig(pPmicCoreHandle, batteryCtrlCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        pmicStatus = Pmic_getBatteryCtrlConfig(pPmicCoreHandle,
+                                               &batteryCtrlCfg_rd);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        TEST_ASSERT_EQUAL(batteryCtrlCfg.endOfChargeVoltage,
+                          batteryCtrlCfg_rd.endOfChargeVoltage);
+    }
+
+    pmicStatus = Pmic_setBatteryCtrlConfig(pPmicCoreHandle, batteryCtrlCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getBatteryCtrlConfig(pPmicCoreHandle, &batteryCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(batteryCtrlCfg_def.endOfChargeVoltage,
+                      batteryCtrlCfg_rd.endOfChargeVoltage);
+
+    pmic_testResultUpdate_pass(29,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setBatteryCtrlConfig : Configure Back Battery charging current value
+ */
+static void test_pmic_setBatteryCtrlCfg_chargeCurrent(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_BatteryCtrlCfg_t batteryCtrlCfg_rd = {PMIC_CFG_CHARGE_CURRENT_VALID_SHIFT,};
+    Pmic_BatteryCtrlCfg_t batteryCtrlCfg_def = {PMIC_CFG_CHARGE_CURRENT_VALID_SHIFT,};
+    Pmic_BatteryCtrlCfg_t batteryCtrlCfg =
+    {
+        PMIC_CFG_CHARGE_CURRENT_VALID_SHIFT,
+        PMIC_TPS6594X_BB_CHARGINGING_CFG_DISABLE,
+        PMIC_TPS6594X_BB_ENDOF_CHARGE_VOLATGE_2_5_V,
+        PMIC_TPS6594X_BB_CHARGING_CURRENT_100
+    };
+    uint8_t  chargeCurrentVal;
+
+    test_pmic_print_unity_testcase_info(30,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(30,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_getBatteryCtrlConfig(pPmicCoreHandle, &batteryCtrlCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    for(chargeCurrentVal = PMIC_TPS6594X_BB_CHARGING_CURRENT_100;
+        chargeCurrentVal <= PMIC_TPS6594X_BB_CHARGING_CURRENT_500;
+        chargeCurrentVal++);
+    {
+        pmicStatus = Pmic_setBatteryCtrlConfig(pPmicCoreHandle, batteryCtrlCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        pmicStatus = Pmic_getBatteryCtrlConfig(pPmicCoreHandle,
+                                               &batteryCtrlCfg_rd);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        TEST_ASSERT_EQUAL(batteryCtrlCfg.chargeCurrent,
+                          batteryCtrlCfg_rd.chargeCurrent);
+    }
+
+    pmicStatus = Pmic_setBatteryCtrlConfig(pPmicCoreHandle, batteryCtrlCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getBatteryCtrlConfig(pPmicCoreHandle, &batteryCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(batteryCtrlCfg_def.chargeCurrent,
+                      batteryCtrlCfg_rd.chargeCurrent);
+
+    pmic_testResultUpdate_pass(30,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setBatteryCtrlConfig : Parameter validation for endOfChargeVoltage
+ */
+static void test_pmic_setBatteryCtrlCfgPrmValTest_endOfChargeVoltage(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_BatteryCtrlCfg_t batteryCtrlCfg =
+    {
+        PMIC_CFG_END_OF_CHARGE_VOLTAGE_VALID_SHIFT,
+        PMIC_TPS6594X_BB_CHARGINGING_CFG_DISABLE,
+        4U,
+        PMIC_TPS6594X_BB_CHARGING_CURRENT_100
+    };
+
+    test_pmic_print_unity_testcase_info(31,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(31,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_setBatteryCtrlConfig(pPmicCoreHandle, batteryCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(31,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setBatteryCtrlConfig : Parameter validation for chargeCurrent
+ */
+static void test_pmic_setBatteryCtrlCfgPrmValTest_chargeCurrent(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_BatteryCtrlCfg_t batteryCtrlCfg =
+    {
+        PMIC_CFG_CHARGE_CURRENT_VALID_SHIFT,
+        PMIC_TPS6594X_BB_CHARGINGING_CFG_DISABLE,
+        PMIC_TPS6594X_BB_ENDOF_CHARGE_VOLATGE_2_5_V,
+        2U
+    };
+
+    test_pmic_print_unity_testcase_info(32,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(32,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_setBatteryCtrlConfig(pPmicCoreHandle, batteryCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(32,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setBatteryCtrlConfig : Parameter validation for handle
+ */
+static void test_pmic_setBatteryCtrlCfgPrmValTest_handle(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_BatteryCtrlCfg_t batteryCtrlCfg =
+    {
+        PMIC_CFG_END_OF_CHARGE_VOLTAGE_VALID_SHIFT,
+        PMIC_TPS6594X_BB_CHARGINGING_CFG_DISABLE,
+        PMIC_TPS6594X_BB_ENDOF_CHARGE_VOLATGE_2_5_V,
+        PMIC_TPS6594X_BB_CHARGING_CURRENT_100
+    };
+
+    test_pmic_print_unity_testcase_info(33,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(33,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_setBatteryCtrlConfig(NULL, batteryCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(33,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getBatteryCtrlConfig : Parameter validation for handle
+ */
+static void test_pmic_getBatteryCtrlCfgPrmValTest_handle(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_BatteryCtrlCfg_t batteryCtrlCfg_rd = {PMIC_CFG_CHARGING_EN_VALID_SHIFT,};
+
+    test_pmic_print_unity_testcase_info(34,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(34,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_getBatteryCtrlConfig(NULL, &batteryCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(34,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getBatteryCtrlConfig : Parameter validation for pBatteryCtrlCfg
+ */
+static void test_pmic_getBatteryCtrlCfgPrmValTest_pBatteryCtrlCfg(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(35,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(35,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_getBatteryCtrlConfig(pPmicCoreHandle, NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(35,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getCommonCtrlStat : Get the status of nIntPin
+ */
+static void test_pmic_getCommonCtrlStat_nIntPin(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlStat_t commonCtrlStat_rd = {PMIC_CFG_NINT_PIN_STAT_VALID_SHIFT,};
+
+    test_pmic_print_unity_testcase_info(36,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_log("\r\n nIntPin status %d", commonCtrlStat_rd.nIntPin); // TBD Probe nIntPin signal
+
+    pmic_testResultUpdate_pass(36,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getCommonCtrlStat : Get the status of spmiLpmStat
+ */
+static void test_pmic_getCommonCtrlStat_spmiLpmStat(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlStat_t commonCtrlStat_rd = {PMIC_CFG_SPMI_LPM_STAT_VALID_SHIFT,};
+
+    test_pmic_print_unity_testcase_info(37,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(PMIC_SPMI_LPM_MODE_CTRL_CFG_DISABLED,
+                      commonCtrlStat_rd.spmiLpmStat);
+
+    pmic_testResultUpdate_pass(37,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getCommonCtrlStat : Get the status of forceEnDrvLowStat
+ */
+static void test_pmic_getCommonCtrlStat_forceEnDrvLowStat(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlStat_t commonCtrlStat_rd = {PMIC_CFG_FORCE_ENABLE_DRV_LOW_STAT_VALID_SHIFT,};
+
+    test_pmic_print_unity_testcase_info(38,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(PMIC_ENABLE_DRV_I2C_SPI_CONFIG_ENABLE,
+                      commonCtrlStat_rd.forceEnDrvLowStat);
+
+    pmic_testResultUpdate_pass(38,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getCommonCtrlStat : Get the status of bbEndOfChargeIndication
+ */
+static void test_pmic_getCommonCtrlStat_bbEndOfChargeIndication(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlStat_t commonCtrlStat_rd = {PMIC_CFG_BB_EOC_INDICATION_STAT_VALID_SHIFT,};
+
+    test_pmic_print_unity_testcase_info(39,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(39,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
+    }
+    pmicStatus = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(PMIC_TPS6594X_BB_EOC_STATUS_NOT_ENABLED,
+                      commonCtrlStat_rd.bbEndOfChargeIndication);
+
+    pmic_testResultUpdate_pass(39,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getCommonCtrlStat : Get the status of regLockStat
+ */
+static void test_pmic_getCommonCtrlStat_regLockStat(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlStat_t commonCtrlStat_rd = {PMIC_CFG_REGISTER_LOCK_STAT_VALID_SHIFT,};
+
+    test_pmic_print_unity_testcase_info(40,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(PMIC_REGISTER_STATUS_UNLOCK,
+                      commonCtrlStat_rd.regLockStat);
+
+    pmic_testResultUpdate_pass(40,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getCommonCtrlStat : Get the status of extClkValidity
+ */
+static void test_pmic_getCommonCtrlStat_extClkValidity(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlStat_t commonCtrlStat_rd = {PMIC_CFG_EXT_CLK_VALIDITY_STAT_VALID_SHIFT,};
+
+    test_pmic_print_unity_testcase_info(41,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_log("\r\n extClkValidity status %d", commonCtrlStat_rd.extClkValidity);
+
+    pmic_testResultUpdate_pass(41,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getCommonCtrlStat : Get the status of startupPin
+ */
+static void test_pmic_getCommonCtrlStat_startupPin(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlStat_t commonCtrlStat_rd = {PMIC_CFG_STARTUP_PIN_STAT_VALID_SHIFT,};
+
+    test_pmic_print_unity_testcase_info(42,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(PMIC_PIN_SIGNAL_LEVEL_HIGH,
+                      commonCtrlStat_rd.startupPin);
+
+    pmic_testResultUpdate_pass(42,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getCommonCtrlStat : Get the status of enDrvPin
+ */
+static void test_pmic_getCommonCtrlStat_enDrvPin(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlStat_t commonCtrlStat_rd = {PMIC_CFG_EN_DRV_PIN_STAT_VALID_SHIFT,};
+
+    test_pmic_print_unity_testcase_info(43,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(PMIC_PIN_SIGNAL_LEVEL_LOW,
+                      commonCtrlStat_rd.enDrvPin);
+
+    pmic_testResultUpdate_pass(43,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getCommonCtrlStat : Get the status of nRstOutSocPin
+ */
+static void test_pmic_getCommonCtrlStat_nRstOutSocPin(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlStat_t commonCtrlStat_rd = {PMIC_CFG_NRSTOUTSOC_PIN_STAT_VALID,};
+
+    test_pmic_print_unity_testcase_info(44,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(PMIC_PIN_SIGNAL_LEVEL_LOW,
+                      commonCtrlStat_rd.nRstOutSocPin);
+
+    pmic_testResultUpdate_pass(44,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getCommonCtrlStat : Get the status of nRstOutPin
+ */
+static void test_pmic_getCommonCtrlStat_nRstOutPin(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlStat_t commonCtrlStat_rd = {PMIC_CFG_NRSTOUT_PIN_STAT_VALID_SHIFT,};
+
+    test_pmic_print_unity_testcase_info(45,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(PMIC_PIN_SIGNAL_LEVEL_LOW,
+                      commonCtrlStat_rd.nRstOutPin);
+
+    pmic_testResultUpdate_pass(45,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getCommonCtrlStat : Parameter validation for handle
+ */
+static void test_pmic_getCommonCtrlStatPrmValTest_handle(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlStat_t commonCtrlStat_rd = {PMIC_CFG_NRSTOUT_PIN_STAT_VALID_SHIFT,};
+
+    test_pmic_print_unity_testcase_info(46,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getCommonCtrlStat(NULL, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(46,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getCommonCtrlStat : Parameter validation for pCommonCtrlStat
+ */
+static void test_pmic_getCommonCtrlStatPrmValTest_pCommonCtrlStat(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(47,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getCommonCtrlStat(pPmicCoreHandle, NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(47,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getI2CSpeed :  Parameter validation for handle
+ */
+static void test_pmic_getI2CSpeedPrmValTest_handle(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    uint8_t i2c1Speed, i2c2Speed;
+
+    test_pmic_print_unity_testcase_info(50,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getI2CSpeed(NULL, &i2c1Speed, &i2c2Speed);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(50,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+
+/*!
+ * \brief   Pmic_getI2CSpeed :  Parameter validation for pI2C1Speed
+ */
+static void test_pmic_getI2CSpeedPrmValTest_pI2C1Speed(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    uint8_t i2c2Speed;
+
+    test_pmic_print_unity_testcase_info(51,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getI2CSpeed(pPmicCoreHandle, NULL, &i2c2Speed);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(51,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getI2CSpeed :  Parameter validation for pI2C2Speed
+ */
+static void test_pmic_getI2CSpeedPrmValTest_pI2C2Speed(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    uint8_t i2c1Speed;
+
+    test_pmic_print_unity_testcase_info(52,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getI2CSpeed(pPmicCoreHandle, &i2c1Speed, NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(52,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getI2CSpeed :  Get I2C1 or I2C2 Speed value
+ */
+static void test_pmic_getI2CSpeed(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    uint8_t i2c1Speed, i2c2Speed;
+
+    test_pmic_print_unity_testcase_info(53,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getI2CSpeed(pPmicCoreHandle, &i2c1Speed, &i2c2Speed);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(PMIC_I2C_STANDARD_MODE, i2c1Speed);
+    TEST_ASSERT_EQUAL(PMIC_I2C_STANDARD_MODE, i2c2Speed);
+
+    pmic_testResultUpdate_pass(53,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getDeviceInfo :  Get the Device Information
+ */
+static void test_pmic_getDeviceInfo(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_DeviceInfo_t deviceInfo;
+
+    test_pmic_print_unity_testcase_info(54,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getDeviceInfo(pPmicCoreHandle, &deviceInfo);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_log("\r\n deviceID 0x%x nvmID 0x%x nvmRev 0x%x siliconRev 0x%x customNvmID 0x%x\r\n", \
+             deviceInfo.deviceID, deviceInfo.nvmID, deviceInfo.nvmRev, deviceInfo.siliconRev, deviceInfo.customNvmID);
+
+    pmic_testResultUpdate_pass(54,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getDeviceInfo :  Parameter validation for handle
+ */
+static void test_pmic_getDeviceInfoPrmValTest_handle(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_DeviceInfo_t deviceInfo;
+
+    test_pmic_print_unity_testcase_info(55,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getDeviceInfo(NULL, &deviceInfo);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(55,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getDeviceInfo :  Parameter validation for pDeviceInfo
+ */
+static void test_pmic_getDeviceInfoPrmValTest_pDeviceInfo(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(56,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getDeviceInfo(pPmicCoreHandle, NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(56,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getPinValue : Get the status of EN_DRV Pin Value
+ */
+static void test_pmic_getPinValue_enableDrv(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    uint8_t pinValue;
+
+    test_pmic_print_unity_testcase_info(57,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getPinValue(pPmicCoreHandle,
+                                  PMIC_PIN_TYPE_EN_DRV,
+                                  &pinValue);
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(PMIC_PIN_SIGNAL_LEVEL_LOW, pinValue);
+
+    pmic_testResultUpdate_pass(57,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getPinValue : Get the status of NRSTOUT_SOC Pin Value
+ */
+static void test_pmic_getPinValue_nRstOutSoc(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    uint8_t pinValue;
+
+    test_pmic_print_unity_testcase_info(58,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getPinValue(pPmicCoreHandle,
+                                  PMIC_PIN_TYPE_NRSTOUT_SOC,
+                                  &pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(PMIC_PIN_SIGNAL_LEVEL_HIGH,
+                      pinValue);
+
+    pmic_testResultUpdate_pass(58,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getPinValue : Get the status of NRSTOUT Pin Value
+ */
+static void test_pmic_getPinValue_nRstOut(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    uint8_t pinValue;
+
+    test_pmic_print_unity_testcase_info(59,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getPinValue(pPmicCoreHandle,
+                                  PMIC_PIN_TYPE_NRSTOUT,
+                                  &pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(PMIC_PIN_SIGNAL_LEVEL_HIGH,
+                      pinValue);
+
+    pmic_testResultUpdate_pass(59,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getPinValue : Parameter validation for pinType
+ */
+static void test_pmic_getPinValuePrmValTest_pinType(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    uint8_t pinValue;
+    uint8_t pinType = 3U;
+
+    test_pmic_print_unity_testcase_info(60,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getPinValue(pPmicCoreHandle,
+                                  pinType,
+                                  &pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+
+    pmic_testResultUpdate_pass(60,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getPinValue : Parameter validation for handle
+ */
+static void test_pmic_getPinValuePrmValTest_handle(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    uint8_t pinValue;
+
+    test_pmic_print_unity_testcase_info(61,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getPinValue(NULL,
+                                  PMIC_PIN_TYPE_NRSTOUT,
+                                  &pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+
+    pmic_testResultUpdate_pass(61,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getPinValue : Parameter validation for pPinValue
+ */
+static void test_pmic_getPinValuePrmValTest_pPinValue(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(62,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getPinValue(pPmicCoreHandle,
+                                  PMIC_PIN_TYPE_NRSTOUT,
+                                  NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+
+    pmic_testResultUpdate_pass(62,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setMiscCtrlConfig : Configure NRSTOUT_SOC Signal
+ */
+static void test_pmic_setMiscCtrlCfg_nRstOutSocSignal(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_MiscCtrlCfg_t miscCtrlCfg_rd = {PMIC_CFG_NRSTOUT_SOC_VALID_SHIFT,};
+    Pmic_MiscCtrlCfg_t miscCtrlCfg =
+    {
+        PMIC_CFG_NRSTOUT_SOC_VALID_SHIFT,
+        PMIC_TPS6594X_AMUX_OUT_PIN_CFG_DISABLE,
+        PMIC_INTERNAL_CLK_MONITORING_CFG_DISABLE,
+        PMIC_SYNCCLKOUT_DISABLE,
+        PMIC_INTERNAL_RC_OSC,
+        PMIC_TPS6594X_SYNCCLKIN_1_1_MHZ,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH
+    };
+    int8_t num = 0;
+
+    test_pmic_print_unity_testcase_info(63,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(miscCtrlCfg.nRstOutSocSignal,
+                      miscCtrlCfg_rd.nRstOutSocSignal);
+
+#if defined(SOC_J721E)
+    pmic_log("\r\n Probe TP134 and it should be High");
+#endif
+#if defined(SOC_J7200)
+    pmic_log("\r\n Probe TP46 and it should be High");
+#endif
+
+    pmic_log("\r\n Enter 1 to continue");
+    UART_scanFmt("%d", &num);
+
+    pmic_log("\r\n SOC will go to reset\n");
+#if defined(SOC_J721E)
+    pmic_log("\r\n Probe TP134 and it should be Low");
+#endif
+#if defined(SOC_J7200)
+    pmic_log("\r\n Probe TP46 and it should be Low");
+#endif
+
+    miscCtrlCfg.nRstOutSocSignal = PMIC_PIN_SIGNAL_LEVEL_LOW;
+    pmicStatus = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(miscCtrlCfg.nRstOutSocSignal,
+                      miscCtrlCfg_rd.nRstOutSocSignal);
+
+    pmic_testResultUpdate_pass(63,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setMiscCtrlConfig : Configure NRSTOUT Signal
+ */
+static void test_pmic_setMiscCtrlCfg_nRstOutSignal(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_MiscCtrlCfg_t miscCtrlCfg_rd = {PMIC_CFG_NRSTOUT_VALID_SHIFT,};
+    Pmic_MiscCtrlCfg_t miscCtrlCfg =
+    {
+        PMIC_CFG_NRSTOUT_VALID_SHIFT,
+        PMIC_TPS6594X_AMUX_OUT_PIN_CFG_DISABLE,
+        PMIC_INTERNAL_CLK_MONITORING_CFG_DISABLE,
+        PMIC_SYNCCLKOUT_DISABLE,
+        PMIC_INTERNAL_RC_OSC,
+        PMIC_TPS6594X_SYNCCLKIN_1_1_MHZ,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH
+    };
+    int8_t num = 0;
+
+    test_pmic_print_unity_testcase_info(64,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(miscCtrlCfg.nRstOutSignal,
+                      miscCtrlCfg_rd.nRstOutSignal);
+
+#if defined(SOC_J721E)
+    pmic_log("\r\n Probe TP133 and it should be High");
+#endif
+#if defined(SOC_J7200)
+    pmic_log("\r\n Probe TP29 and it should be High");
+#endif
+
+    pmic_log("\r\n Enter 1 to continue");
+    UART_scanFmt("%d", &num);
+
+    pmic_log("\r\n MCU will go to reset\n");
+#if defined(SOC_J721E)
+    pmic_log("\r\n Probe TP133 and it should be Low");
+#endif
+#if defined(SOC_J7200)
+    pmic_log("\r\n Probe TP29 and it should be Low");
+#endif
+
+    miscCtrlCfg.nRstOutSignal = PMIC_PIN_SIGNAL_LEVEL_LOW;
+    pmicStatus = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(miscCtrlCfg.nRstOutSignal,
+                      miscCtrlCfg_rd.nRstOutSignal);
+
+    pmic_testResultUpdate_pass(64,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setMiscCtrlConfig : Parameter validation for NRSTOUT_SOC Signal
+ */
+static void test_pmic_setMiscCtrlCfgPrmValTest_nRstOutSocSignal(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_MiscCtrlCfg_t miscCtrlCfg =
+    {
+        PMIC_CFG_NRSTOUT_SOC_VALID_SHIFT,
+        PMIC_TPS6594X_AMUX_OUT_PIN_CFG_DISABLE,
+        PMIC_INTERNAL_CLK_MONITORING_CFG_DISABLE,
+        PMIC_SYNCCLKOUT_DISABLE,
+        PMIC_INTERNAL_RC_OSC,
+        PMIC_TPS6594X_SYNCCLKIN_1_1_MHZ,
+        2U,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(65,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(65,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setMiscCtrlConfig : Parameter validation for NRSTOUT Signal
+ */
+static void test_pmic_setMiscCtrlCfgPrmValTest_nRstOutSignal(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_MiscCtrlCfg_t miscCtrlCfg =
+    {
+        PMIC_CFG_NRSTOUT_VALID_SHIFT,
+        PMIC_TPS6594X_AMUX_OUT_PIN_CFG_DISABLE,
+        PMIC_INTERNAL_CLK_MONITORING_CFG_DISABLE,
+        PMIC_SYNCCLKOUT_DISABLE,
+        PMIC_INTERNAL_RC_OSC,
+        PMIC_TPS6594X_SYNCCLKIN_1_1_MHZ,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH,
+        2U
+    };
+
+    test_pmic_print_unity_testcase_info(66,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(66,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getMiscCtrlConfig : Get the status of NRSTOUT_SOC Signal
+ */
+static void test_pmic_getMiscCtrlCfg_nRstOutSocSignal(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_MiscCtrlCfg_t miscCtrlCfg_rd = {PMIC_CFG_NRSTOUT_SOC_VALID_SHIFT,};
+
+    test_pmic_print_unity_testcase_info(67,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(PMIC_PIN_SIGNAL_LEVEL_HIGH,
+                      miscCtrlCfg_rd.nRstOutSocSignal);
+
+    pmic_testResultUpdate_pass(67,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getMiscCtrlConfig : Get the status of NRSTOUT Signal
+ */
+static void test_pmic_getMiscCtrlCfg_nRstOutSignal(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_MiscCtrlCfg_t miscCtrlCfg_rd = {PMIC_CFG_NRSTOUT_VALID_SHIFT,};
+
+    test_pmic_print_unity_testcase_info(68,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(PMIC_PIN_SIGNAL_LEVEL_HIGH,
+                      miscCtrlCfg_rd.nRstOutSignal);
+
+    pmic_testResultUpdate_pass(68,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setCommonCtrlConfig : Configure EN_DRV Signal // TBD Yet to debug
+ */
+static void test_pmic_setCommonCtrlCfg_enDrv(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlCfg_t commonCtrlCfg_def = {PMIC_CFG_ENABLE_DRV_VALID_SHIFT,};
+    Pmic_CommonCtrlCfg_t commonCtrlCfg =
+    {
+        PMIC_CFG_ENABLE_DRV_VALID_SHIFT,
+        PMIC_SPREAD_SPECTRUM_CFG_ENABLE,
+        PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_DISABLED,
+        PMIC_TPS6594X_EEPROM_DEFAULTS_LOAD_TO_RTC_DOMAIN_BITS,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH,
+        PMIC_REGISTER_UNLOCK,
+        PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_NONE
+    };
+    uint8_t   pinValue;
+
+    test_pmic_print_unity_testcase_info(69,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    pmic_log("\r\n  NVM EN_DRV %d", commonCtrlCfg_def.enDrv);
+
+    pmic_log("\r\n  Set EN_DRV %d", commonCtrlCfg.enDrv);
+
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getPinValue(pPmicCoreHandle,
+                                  PMIC_PIN_TYPE_EN_DRV,
+                                  &pinValue);
+    pmic_log("\r\n pmicStatus %d  pinValue %d", pmicStatus, pinValue);
+
+#if 0
+    pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(commonCtrlCfg.enDrv,
+                      commonCtrlCfg_rd.enDrv);
+
+    commonCtrlCfg.enDrv = PMIC_PIN_SIGNAL_LEVEL_LOW;
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(commonCtrlCfg.enDrv,
+                      commonCtrlCfg_rd.enDrv);
+
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(commonCtrlCfg_def.enDrv,
+                      commonCtrlCfg_rd.enDrv);
+#endif
+
+    pmic_testResultUpdate_pass(69,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setCommonCtrlConfig : Parameter validation for EN_DRV Signal
+ */
+static void test_pmic_setCommonCtrlCfgPrmValTest_enDrv(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlCfg_t commonCtrlCfg =
+    {
+        PMIC_CFG_ENABLE_DRV_VALID_SHIFT,
+        PMIC_SPREAD_SPECTRUM_CFG_ENABLE,
+        PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_DISABLED,
+        PMIC_TPS6594X_EEPROM_DEFAULTS_LOAD_TO_RTC_DOMAIN_BITS,
+        2U,
+        PMIC_REGISTER_UNLOCK,
+        PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_NONE
+    };
+
+    test_pmic_print_unity_testcase_info(70,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(70,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setCommonCtrlConfig : Load from EEPROM defaults on RTC domain/conf Registers
+ */
+static void test_pmic_setCommonCtrlCfg_eepromDefaultLoadEnable(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlCfg_t commonCtrlCfg_rd = {PMIC_CFG_EEPROM_DEFAULT_VALID_SHIFT,};
+    Pmic_CommonCtrlCfg_t commonCtrlCfg =
+    {
+        PMIC_CFG_EEPROM_DEFAULT_VALID_SHIFT,
+        PMIC_SPREAD_SPECTRUM_CFG_ENABLE,
+        PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_DISABLED,
+        PMIC_TPS6594X_EEPROM_DEFAULTS_LOAD_TO_RTC_DOMAIN_BITS,
+        PMIC_PIN_SIGNAL_LEVEL_LOW,
+        PMIC_REGISTER_UNLOCK,
+        PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_NONE
+    };
+    Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
+    Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 1U, 30U, 6U, 0U, 1U};
+    uint8_t  data = 0x67, testData;
+    int8_t num = 0;
+
+    test_pmic_print_unity_testcase_info(71,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+#if defined(SOC_J721E)
+    pmic_log("\r\n Probe TP134 and TP133 and it should be High");
+#endif
+#if defined(SOC_J7200)
+    pmic_log("\r\n Probe TP46 and TP29 and it should be High");
+#endif
+    pmic_log("\r\n Enter 1 to continue");
+    UART_scanFmt("%d", &num);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        commonCtrlCfg.eepromDefaultLoad = PMIC_LP8764X_EEPROM_DEFAULTS_LOAD_TO_CONF_OTHER_REGS;
+    }
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(commonCtrlCfg.eepromDefaultLoad,
+                      commonCtrlCfg_rd.eepromDefaultLoad);
+
+    pmicStatus = Pmic_fsmSetPfsmDelay(pPmicCoreHandle,
+                                      PMIC_PFSM_DELAY3,
+                                      data);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_fsmGetPfsmDelay(pPmicCoreHandle,
+                                      PMIC_PFSM_DELAY3,
+                                      &testData);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(data, testData);
+
+    pmicStatus = Pmic_rtcSetTimerPeriod(pPmicCoreHandle, PMIC_RTC_MINUTE_INTR_PERIOD);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, validTimeCfg, validDateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+#if defined(SOC_J721E)
+    pmic_log("\r\n Probe TP134 and TP133 and it should be low after 2 sec");
+
+    pmic_log("\r\n Probe TP134 and TP133 and it should be High after 60 sec");
+#endif
+#if defined(SOC_J7200)
+    pmic_log("\r\n Probe TP46 and TP29 and it should be low after 2 sec");
+
+    pmic_log("\r\n Probe TP46 and TP29 and it should be High after 60 sec");
+#endif
+
+    pmic_log("\r\n After 60sec Rerun the application in UART Boot mode");
+
+    pmic_log("\r\n Also check for PFSM delay 3 Value register same as EEPROM registers - 0");
+
+    pmicStatus = Pmic_rtcEnableTimerIntr(pPmicCoreHandle, PMIC_RTC_TIMER_INTR_ENABLE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                         PMIC_NSLEEP1_SIGNAL,
+                                         PMIC_NSLEEPX_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                         PMIC_NSLEEP2_SIGNAL,
+                                         PMIC_NSLEEPX_MASK);
+     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* Needs Delay to mask Nsleep1B and Nsleep2B signals for LP Stand-By State */
+    Osal_delay(10U);
+
+    pmicStatus =  Pmic_fsmSetMissionState(pPmicCoreHandle, PMIC_FSM_LP_STANBY_STATE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(71,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setCommonCtrlConfig : Disable Load from EEPROM defaults on RTC domain/conf Registers
+ */
+static void test_pmic_setCommonCtrlCfg_eepromDefaultLoadDisable(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlCfg_t commonCtrlCfg_rd = {PMIC_CFG_EEPROM_DEFAULT_VALID_SHIFT,};
+    Pmic_CommonCtrlCfg_t commonCtrlCfg =
+    {
+        PMIC_CFG_EEPROM_DEFAULT_VALID_SHIFT,
+        PMIC_SPREAD_SPECTRUM_CFG_ENABLE,
+        PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_DISABLED,
+        PMIC_TPS6594X_EEPROM_DEFAULTS_NOT_LOADED_TO_RTC_DOMAIN_BITS,
+        PMIC_PIN_SIGNAL_LEVEL_LOW,
+        PMIC_REGISTER_UNLOCK,
+        PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_NONE
+    };
+    Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
+    Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 1U, 30U, 6U, 0U, 1U};
+    uint8_t  data = 0x67, testData;
+    int8_t num = 0;
+
+    test_pmic_print_unity_testcase_info(72,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+#if defined(SOC_J721E)
+    pmic_log("\r\n Probe TP134 and TP133 and it should be High");
+#endif
+#if defined(SOC_J7200)
+    pmic_log("\r\n Probe TP46 and TP29 and it should be High");
+#endif
+    pmic_log("\r\n Enter 1 to continue");
+    UART_scanFmt("%d", &num);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        commonCtrlCfg.eepromDefaultLoad = PMIC_LP8764X_EEPROM_DEFAULTS_NOT_LOADED_TO_CONF_OTHER_REGS;
+    }
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(commonCtrlCfg.eepromDefaultLoad,
+                      commonCtrlCfg_rd.eepromDefaultLoad);
+
+    pmicStatus = Pmic_fsmSetPfsmDelay(pPmicCoreHandle,
+                                      PMIC_PFSM_DELAY3,
+                                      data);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_fsmGetPfsmDelay(pPmicCoreHandle,
+                                      PMIC_PFSM_DELAY3,
+                                      &testData);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(data, testData);
+
+    pmicStatus = Pmic_rtcSetTimerPeriod(pPmicCoreHandle, PMIC_RTC_MINUTE_INTR_PERIOD);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, validTimeCfg, validDateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+#if defined(SOC_J721E)
+    pmic_log("\r\n Probe TP134 and TP133 and it should be low after 2 sec");
+
+    pmic_log("\r\n Probe TP134 and TP133 and it should be High after 60 sec");
+#endif
+#if defined(SOC_J7200)
+    pmic_log("\r\n Probe TP46 and TP29 and it should be low after 2 sec");
+
+    pmic_log("\r\n Probe TP46 and TP29 and it should be High after 60 sec");
+#endif
+
+    pmic_log("\r\n After 60sec Rerun the application in UART Boot mode");
+
+    pmic_log("\r\n Also check for Configured PFSM delay 3 Value register as 0x67");
+
+    pmicStatus = Pmic_rtcEnableTimerIntr(pPmicCoreHandle, PMIC_RTC_TIMER_INTR_ENABLE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                         PMIC_NSLEEP1_SIGNAL,
+                                         PMIC_NSLEEPX_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                         PMIC_NSLEEP2_SIGNAL,
+                                         PMIC_NSLEEPX_MASK);
+     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* Needs Delay to mask Nsleep1B and Nsleep2B signals for LP Stand-By State */
+    Osal_delay(10U);
+
+    pmicStatus =  Pmic_fsmSetMissionState(pPmicCoreHandle, PMIC_FSM_LP_STANBY_STATE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(72,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+#if defined(SOC_J7200)
+/*!
+ * \brief   Pmic_setCommonCtrlConfig : Enable to skip EEPROM defaults load on
+ *          conf registers with FIRST_STARTUP_DONE as '0'
+ */
+static void test_pmic_setCommonCtrlCfg_skipEepromDefaultLoadEnable_eePromDefLdDisable(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlCfg_t commonCtrlCfg_rd = {PMIC_CFG_SKIP_EEPROM_LOAD_VALID_SHIFT |
+                                             PMIC_CFG_EEPROM_DEFAULT_VALID_SHIFT,};
+    Pmic_CommonCtrlCfg_t commonCtrlCfg =
+    {
+        PMIC_CFG_SKIP_EEPROM_LOAD_VALID_SHIFT |
+        PMIC_CFG_EEPROM_DEFAULT_VALID_SHIFT,
+        PMIC_SPREAD_SPECTRUM_CFG_ENABLE,
+        PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_ENABLED,
+        PMIC_LP8764X_EEPROM_DEFAULTS_LOAD_TO_CONF_OTHER_REGS,
+        PMIC_PIN_SIGNAL_LEVEL_LOW,
+        PMIC_REGISTER_UNLOCK,
+        PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_NONE
+    };
+    int8_t num = 0;
+    uint8_t  data = 0x67, testData;
+
+    test_pmic_print_unity_testcase_info(73,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(73,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
+    }
+
+    pmic_log("\r\n Probe TP46 and TP29 and it should be High");
+    pmic_log("\r\n Enter 1 to continue");
+    UART_scanFmt("%d", &num);
+
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(commonCtrlCfg.eepromDefaultLoad,
+                      commonCtrlCfg_rd.eepromDefaultLoad);
+
+    TEST_ASSERT_EQUAL(commonCtrlCfg.skipEepromDefaultLoadEn,
+                      commonCtrlCfg_rd.skipEepromDefaultLoadEn);
+
+    pmicStatus = Pmic_fsmSetPfsmDelay(pPmicCoreHandle,
+                                      PMIC_PFSM_DELAY3,
+                                      data);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_fsmGetPfsmDelay(pPmicCoreHandle,
+                                      PMIC_PFSM_DELAY3,
+                                      &testData);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(data, testData);
+
+    pmic_testResultUpdate_pass(73,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setCommonCtrlConfig : Disable to skip EEPROM defaults load on
+ *          conf registers with FIRST_STARTUP_DONE as '0'
+ */
+static void test_pmic_setCommonCtrlCfg_skipEepromDefaultLoadDisable_eePromDefLdDisable(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlCfg_t commonCtrlCfg_rd = {PMIC_CFG_SKIP_EEPROM_LOAD_VALID_SHIFT |
+                                             PMIC_CFG_EEPROM_DEFAULT_VALID_SHIFT,};
+    Pmic_CommonCtrlCfg_t commonCtrlCfg =
+    {
+        PMIC_CFG_SKIP_EEPROM_LOAD_VALID_SHIFT |
+        PMIC_CFG_EEPROM_DEFAULT_VALID_SHIFT,
+        PMIC_SPREAD_SPECTRUM_CFG_DISABLE,
+        PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_DISABLED,
+        PMIC_LP8764X_EEPROM_DEFAULTS_LOAD_TO_CONF_OTHER_REGS,
+        PMIC_PIN_SIGNAL_LEVEL_LOW,
+        PMIC_REGISTER_UNLOCK,
+        PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_NONE
+    };
+    int8_t num = 0;
+    uint8_t  data = 0x67, testData;
+
+    test_pmic_print_unity_testcase_info(74,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(74,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
+    }
+
+    pmic_log("\r\n Probe TP46 and TP29 and it should be High");
+    pmic_log("\r\n Enter 1 to continue");
+    UART_scanFmt("%d", &num);
+
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(commonCtrlCfg.eepromDefaultLoad,
+                      commonCtrlCfg_rd.eepromDefaultLoad);
+
+    TEST_ASSERT_EQUAL(commonCtrlCfg.skipEepromDefaultLoadEn,
+                      commonCtrlCfg_rd.skipEepromDefaultLoadEn);
+
+    pmicStatus = Pmic_fsmSetPfsmDelay(pPmicCoreHandle,
+                                      PMIC_PFSM_DELAY3,
+                                      data);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_fsmGetPfsmDelay(pPmicCoreHandle,
+                                      PMIC_PFSM_DELAY3,
+                                      &testData);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(data, testData);
+
+    pmic_testResultUpdate_pass(74,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setCommonCtrlConfig : Enable to skip EEPROM defaults load on
+ *          conf registers with FIRST_STARTUP_DONE as '1'
+ */
+static void test_pmic_setCommonCtrlCfg_skipEepromDefaultLoadEnable_eePromDefLdEn(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlCfg_t commonCtrlCfg_rd = {PMIC_CFG_SKIP_EEPROM_LOAD_VALID_SHIFT |
+                                             PMIC_CFG_EEPROM_DEFAULT_VALID_SHIFT,};
+    Pmic_CommonCtrlCfg_t commonCtrlCfg =
+    {
+        PMIC_CFG_SKIP_EEPROM_LOAD_VALID_SHIFT |
+        PMIC_CFG_EEPROM_DEFAULT_VALID_SHIFT,
+        PMIC_SPREAD_SPECTRUM_CFG_ENABLE,
+        PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_ENABLED,
+        PMIC_LP8764X_EEPROM_DEFAULTS_NOT_LOADED_TO_CONF_OTHER_REGS,
+        PMIC_PIN_SIGNAL_LEVEL_LOW,
+        PMIC_REGISTER_UNLOCK,
+        PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_NONE
+    };
+    int8_t num = 0;
+    uint8_t  data = 0x67, testData;
+
+    test_pmic_print_unity_testcase_info(75,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(75,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
+    }
+
+    pmic_log("\r\n Probe TP46 and TP29 and it should be High");
+    pmic_log("\r\n Enter 1 to continue");
+    UART_scanFmt("%d", &num);
+
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(commonCtrlCfg.eepromDefaultLoad,
+                      commonCtrlCfg_rd.eepromDefaultLoad);
+
+    TEST_ASSERT_EQUAL(commonCtrlCfg.skipEepromDefaultLoadEn,
+                      commonCtrlCfg_rd.skipEepromDefaultLoadEn);
+
+    pmicStatus = Pmic_fsmSetPfsmDelay(pPmicCoreHandle,
+                                      PMIC_PFSM_DELAY3,
+                                      data);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_fsmGetPfsmDelay(pPmicCoreHandle,
+                                      PMIC_PFSM_DELAY3,
+                                      &testData);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(data, testData);
+
+    pmic_testResultUpdate_pass(75,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setCommonCtrlConfig : Disable to skip EEPROM defaults load on
+ *          conf registers with FIRST_STARTUP_DONE as '1'
+ */
+static void test_pmic_setCommonCtrlCfg_skipEepromDefaultLoadDisable_eePromDefLdEn(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlCfg_t commonCtrlCfg_rd = {PMIC_CFG_SKIP_EEPROM_LOAD_VALID_SHIFT |
+                                             PMIC_CFG_EEPROM_DEFAULT_VALID_SHIFT,};
+    Pmic_CommonCtrlCfg_t commonCtrlCfg =
+    {
+        PMIC_CFG_SKIP_EEPROM_LOAD_VALID_SHIFT |
+        PMIC_CFG_EEPROM_DEFAULT_VALID_SHIFT,
+        PMIC_SPREAD_SPECTRUM_CFG_DISABLE,
+        PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_DISABLED,
+        PMIC_LP8764X_EEPROM_DEFAULTS_NOT_LOADED_TO_CONF_OTHER_REGS,
+        PMIC_PIN_SIGNAL_LEVEL_LOW,
+        PMIC_REGISTER_UNLOCK,
+        PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_NONE
+    };
+    int8_t num = 0;
+    uint8_t  data = 0x67, testData;
+
+    test_pmic_print_unity_testcase_info(76,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(76,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
+    }
+
+    pmic_log("\r\n Probe TP46 and TP29 and it should be High");
+    pmic_log("\r\n Enter 1 to continue");
+    UART_scanFmt("%d", &num);
+
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(commonCtrlCfg.eepromDefaultLoad,
+                      commonCtrlCfg_rd.eepromDefaultLoad);
+
+    TEST_ASSERT_EQUAL(commonCtrlCfg.skipEepromDefaultLoadEn,
+                      commonCtrlCfg_rd.skipEepromDefaultLoadEn);
+
+    pmicStatus = Pmic_fsmSetPfsmDelay(pPmicCoreHandle,
+                                      PMIC_PFSM_DELAY3,
+                                      data);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_fsmGetPfsmDelay(pPmicCoreHandle,
+                                      PMIC_PFSM_DELAY3,
+                                      &testData);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(data, testData);
+
+    pmic_testResultUpdate_pass(76,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   RTC Wakeup from LP Standby state using Timer Interrupt
+ */
+static void test_pmic_rtcWakeup_lpStandby(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
+    Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 1U, 30U, 6U, 0U, 1U};
+    int8_t num = 0;
+
+#if defined(SOC_J721E)
+    pmic_log("\r\n Probe TP134 and TP133 and it should be High");
+#endif
+#if defined(SOC_J7200)
+    pmic_log("\r\n Probe TP46 and TP29 and it should be High");
+#endif
+    pmic_log("\r\n Enter 1 to continue");
+    UART_scanFmt("%d", &num);
+
+    pmicStatus = Pmic_rtcSetTimerPeriod(pPmicCoreHandle, PMIC_RTC_MINUTE_INTR_PERIOD);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, validTimeCfg, validDateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_log("\r\n Probe TP46 and TP29 and it should be low after 2 sec");
+
+    pmic_log("\r\n Probe TP46 and TP29 and it should be High after 60 sec");
+
+    pmic_log("\r\n After 60sec Rerun the application in UART Boot mode");
+
+    pmic_log("\r\n Also check for PFSM delay 3 Value register same as EEPROM registers '0' /Configured value based on FIRST_STARTUP_DONE and SKIP_LP_STANDBY_EE_READ configuration");
+
+    pmicStatus = Pmic_rtcEnableTimerIntr(pPmicCoreHandle, PMIC_RTC_TIMER_INTR_ENABLE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                         PMIC_NSLEEP1_SIGNAL,
+                                         PMIC_NSLEEPX_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                         PMIC_NSLEEP2_SIGNAL,
+                                         PMIC_NSLEEPX_MASK);
+     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* Needs Delay to mask Nsleep1B and Nsleep2B signals for LP Stand-By State */
+    Osal_delay(10U);
+
+    pmicStatus =  Pmic_fsmSetMissionState(pPmicCoreHandle, PMIC_FSM_LP_STANBY_STATE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+}
+#endif
+
+/*!
+ * \brief   Test Pmic Write Protection when Register is Lock
+ */
+static void test_pmic_WriteProtection_RegisterLock(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS, status;
+    Pmic_CommonCtrlCfg_t commonCtrlCfg =
+    {
+        PMIC_CFG_REG_LOCK_VALID_SHIFT,
+        PMIC_SPREAD_SPECTRUM_CFG_ENABLE,
+        PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_DISABLED,
+        PMIC_TPS6594X_EEPROM_DEFAULTS_LOAD_TO_RTC_DOMAIN_BITS,
+        PMIC_PIN_SIGNAL_LEVEL_LOW,
+        PMIC_REGISTER_LOCK,
+        PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_NONE
+    };
+    Pmic_CommonCtrlStat_t commonCtrlStat_rd = {PMIC_CFG_REGISTER_LOCK_STAT_VALID_SHIFT};
+    Pmic_PowerResourceCfg_t pPowerCfg =
+    {
+        PMIC_CFG_REGULATOR_VMON_RV_SEL_VALID_SHIFT,
+    };
+    uint16_t pwrRsrc;
+    uint8_t  irqNum1, irqNum2;
+
+    test_pmic_print_unity_testcase_info(77,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(PMIC_REGISTER_STATUS_LOCK,
+                      commonCtrlStat_rd.regLockStat);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pPowerCfg.rvCheckEn = PMIC_TPS6594X_REGULATOR_RV_SEL_ENABLE;
+        pwrRsrc = PMIC_TPS6594X_REGULATOR_BUCK1;
+        irqNum1 = PMIC_TPS6594X_ESM_MCU_RST_INT;
+        irqNum2 = PMIC_TPS6594X_BUCK1_OV_INT;
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pPowerCfg.rvCheckEn = PMIC_LP8764X_REGULATOR_VMON_RV_SEL_ENABLE;
+        pwrRsrc = PMIC_LP8764X_REGULATOR_BUCK1;
+        irqNum1 = PMIC_LP8764X_ESM_MCU_RST_INT;
+        irqNum2 = PMIC_LP8764X_BUCK1_OV_INT;
+    }
+
+    pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
+                                             pwrRsrc,
+                                             pPowerCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_REG_LOCKED_WR_FAIL, pmicStatus);
+
+    pmicStatus = Pmic_fsmSetPfsmDelay(pPmicCoreHandle,
+                                      PMIC_PFSM_DELAY4,
+                                      0x67);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_REG_LOCKED_WR_FAIL, pmicStatus);
+
+    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                      irqNum1);
+
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        status = PMIC_ST_SUCCESS;
+    }
+    else
+    {
+        status = PMIC_ST_ERR_REG_LOCKED_WR_FAIL;
+    }
+
+    TEST_ASSERT_EQUAL(status, pmicStatus);
+
+    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                      irqNum2);
+    TEST_ASSERT_EQUAL(status, pmicStatus);
+
+    commonCtrlCfg.regLock = PMIC_REGISTER_UNLOCK;
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(PMIC_REGISTER_STATUS_UNLOCK,
+                      commonCtrlStat_rd.regLockStat);
+
+    pmic_testResultUpdate_pass(77,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Test Pmic Write Protection when Register is UnLock
+ */
+static void test_pmic_WriteProtection_RegisterUnLock(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlCfg_t commonCtrlCfg =
+    {
+        PMIC_CFG_REG_LOCK_VALID_SHIFT,
+        PMIC_SPREAD_SPECTRUM_CFG_ENABLE,
+        PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_DISABLED,
+        PMIC_TPS6594X_EEPROM_DEFAULTS_LOAD_TO_RTC_DOMAIN_BITS,
+        PMIC_PIN_SIGNAL_LEVEL_LOW,
+        PMIC_REGISTER_UNLOCK,
+        PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_NONE
+    };
+    Pmic_CommonCtrlStat_t commonCtrlStat_rd = {PMIC_CFG_REGISTER_LOCK_STAT_VALID_SHIFT};
+    Pmic_PowerResourceCfg_t pPowerCfg =
+    {
+        PMIC_CFG_REGULATOR_VMON_RV_SEL_VALID_SHIFT,
+    };
+    uint16_t pwrRsrc;
+    uint8_t  irqNum1, irqNum2;
+
+    test_pmic_print_unity_testcase_info(78,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(PMIC_REGISTER_STATUS_UNLOCK,
+                      commonCtrlStat_rd.regLockStat);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pPowerCfg.rvCheckEn = PMIC_TPS6594X_REGULATOR_RV_SEL_ENABLE;
+        pwrRsrc = PMIC_TPS6594X_REGULATOR_BUCK1;
+        irqNum1 = PMIC_TPS6594X_ESM_MCU_RST_INT;
+        irqNum2 = PMIC_TPS6594X_BUCK1_OV_INT;
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pPowerCfg.rvCheckEn = PMIC_LP8764X_REGULATOR_VMON_RV_SEL_ENABLE;
+        pwrRsrc = PMIC_LP8764X_REGULATOR_BUCK1;
+        irqNum1 = PMIC_LP8764X_ESM_MCU_RST_INT;
+        irqNum2 = PMIC_LP8764X_BUCK1_OV_INT;
+    }
+
+    pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
+                                             pwrRsrc,
+                                             pPowerCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_fsmSetPfsmDelay(pPmicCoreHandle,
+                                      PMIC_PFSM_DELAY4,
+                                      0x67);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                      irqNum1);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle,
+                                      irqNum2);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(78,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E) || defined(SOC_J7200))
 /*!
@@ -1171,13 +4412,83 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_getRecoveryCntCfgPrmValTest_recovCntCfg);
     RUN_TEST(test_Pmic_getRecoveryCntPrmValTest_handle);
     RUN_TEST(test_Pmic_getRecoveryCntPrmValTest_recovCntVal);
-    RUN_TEST(test_Pmic_getBistPassInterrupt);
     RUN_TEST(test_pmic_setScratchPadValuePrmValTest_handle);
     RUN_TEST(test_pmic_setScratchPadValuePrmValTest_scratchPadRegId);
     RUN_TEST(test_pmic_setScratchPadValue_setget);
     RUN_TEST(test_pmic_getScratchPadValuePrmValTest_handle);
     RUN_TEST(test_pmic_getScratchPadValuePrmValTest_scratchPadRegId);
     RUN_TEST(test_pmic_getScratchPadValuePrmValTest_data);
+    RUN_TEST(test_pmic_setUserSpareValuePrmValTest_handle);
+    RUN_TEST(test_pmic_setUserSpareValuePrmValTest_userSpareRegNum);
+    RUN_TEST(test_pmic_setUserSpareValuePrmValTest_data);
+    RUN_TEST(test_pmic_setUserSpareValue);
+    RUN_TEST(test_pmic_getUserSpareValuePrmValTest_handle);
+    RUN_TEST(test_pmic_getUserSpareValuePrmValTest_userSpareRegNum);
+    RUN_TEST(test_pmic_getUserSpareValuePrmValTest_data);
+    RUN_TEST(test_pmic_setCommonCtrlCfg_sreadSpectrumEnable);
+    RUN_TEST(test_pmic_setCommonCtrlCfg_RegisterLock);
+    RUN_TEST(test_pmic_setCommonCtrlCfg_sreadSpectrumDepth);
+    RUN_TEST(test_pmic_getCommonCtrlCfgPrmValTest_handle);
+    RUN_TEST(test_pmic_getCommonCtrlCfgPrmValTest_pCommonCtrlCfg);
+    RUN_TEST(test_pmic_setCommonCtrlCfgPrmValTest_eepromDefaultLoad);
+    RUN_TEST(test_pmic_setCommonCtrlCfgPrmValTest_regLock);
+    RUN_TEST(test_pmic_setCommonCtrlCfgPrmValTest_spreadSpectrumDepth);
+    RUN_TEST(test_pmic_setCommonCtrlCfgPrmValTest_handle);
+    RUN_TEST(test_pmic_setMiscCtrlCfg_amuxOutRefOutEn);
+    RUN_TEST(test_pmic_setMiscCtrlCfg_clkMonEn);
+    RUN_TEST(test_pmic_setMiscCtrlCfg_syncClkOutFreqSel);
+    RUN_TEST(test_pmic_setMiscCtrlCfg_extClkSel);
+    RUN_TEST(test_pmic_setMiscCtrlCfg_syncClkInFreq);
+    RUN_TEST(test_pmic_setMiscCtrlCfgPrmValTest_syncClkOutFreqSel);
+    RUN_TEST(test_pmic_setMiscCtrlCfgPrmValTest_extClkSel);
+    RUN_TEST(test_pmic_setMiscCtrlCfgPrmValTest_syncClkInFreq);
+    RUN_TEST(test_pmic_setMiscCtrlCfgPrmValTest_handle);
+    RUN_TEST(test_pmic_getMiscCtrlCfgPrmValTest_handle);
+    RUN_TEST(test_pmic_getMiscCtrlCfgPrmValTest_pMiscCtrlCfg);
+    RUN_TEST(test_pmic_setBatteryCtrlCfg_chargingEn);
+    RUN_TEST(test_pmic_setBatteryCtrlCfg_endOfChargeVoltage);
+    RUN_TEST(test_pmic_setBatteryCtrlCfg_chargeCurrent);
+    RUN_TEST(test_pmic_setBatteryCtrlCfgPrmValTest_endOfChargeVoltage);
+    RUN_TEST(test_pmic_setBatteryCtrlCfgPrmValTest_chargeCurrent);
+    RUN_TEST(test_pmic_setBatteryCtrlCfgPrmValTest_handle);
+    RUN_TEST(test_pmic_getBatteryCtrlCfgPrmValTest_handle);
+    RUN_TEST(test_pmic_getBatteryCtrlCfgPrmValTest_pBatteryCtrlCfg);
+    RUN_TEST(test_pmic_getCommonCtrlStat_nIntPin);
+    RUN_TEST(test_pmic_getCommonCtrlStat_spmiLpmStat);
+    RUN_TEST(test_pmic_getCommonCtrlStat_forceEnDrvLowStat);
+    RUN_TEST(test_pmic_getCommonCtrlStat_bbEndOfChargeIndication);
+    RUN_TEST(test_pmic_getCommonCtrlStat_regLockStat);
+    RUN_TEST(test_pmic_getCommonCtrlStat_extClkValidity);
+    RUN_TEST(test_pmic_getCommonCtrlStat_startupPin);
+    RUN_TEST(test_pmic_getCommonCtrlStat_enDrvPin);
+    RUN_TEST(test_pmic_getCommonCtrlStat_nRstOutSocPin);
+    RUN_TEST(test_pmic_getCommonCtrlStat_nRstOutPin);
+    RUN_TEST(test_pmic_getCommonCtrlStatPrmValTest_handle);
+    RUN_TEST(test_pmic_getCommonCtrlStatPrmValTest_pCommonCtrlStat);
+    RUN_TEST(test_pmic_getI2CSpeedPrmValTest_handle);
+    RUN_TEST(test_pmic_getI2CSpeedPrmValTest_pI2C1Speed);
+    RUN_TEST(test_pmic_getI2CSpeedPrmValTest_pI2C2Speed);
+    RUN_TEST(test_pmic_getI2CSpeed);
+    RUN_TEST(test_pmic_getDeviceInfo);
+    RUN_TEST(test_pmic_getDeviceInfoPrmValTest_handle);
+    RUN_TEST(test_pmic_getDeviceInfoPrmValTest_pDeviceInfo);
+    RUN_TEST(test_pmic_getPinValue_enableDrv);
+    RUN_TEST(test_pmic_getPinValue_nRstOutSoc);
+    RUN_TEST(test_pmic_getPinValue_nRstOut);
+    RUN_TEST(test_pmic_getPinValuePrmValTest_pinType);
+    RUN_TEST(test_pmic_getPinValuePrmValTest_handle);
+    RUN_TEST(test_pmic_getPinValuePrmValTest_pPinValue);
+    RUN_TEST(test_pmic_setMiscCtrlCfgPrmValTest_nRstOutSocSignal);
+    RUN_TEST(test_pmic_setMiscCtrlCfgPrmValTest_nRstOutSignal);
+    RUN_TEST(test_pmic_getMiscCtrlCfg_nRstOutSocSignal);
+    RUN_TEST(test_pmic_getMiscCtrlCfg_nRstOutSignal);
+    RUN_TEST(test_pmic_setCommonCtrlCfgPrmValTest_enDrv);
+    RUN_TEST(test_pmic_WriteProtection_RegisterLock);
+    RUN_TEST(test_pmic_WriteProtection_RegisterUnLock);
+
+    /* Always keep this test at last as it generated BIST Interrupt both on
+       PMIC-A and PMIC_B but application clears interrupts only for PMIC-A */
+    RUN_TEST(test_Pmic_getBistPassInterrupt);
 
     pmic_updateTestResults(pmic_misc_tests, PMIC_MISC_NUM_OF_TESTCASES);
 
@@ -1210,31 +4521,15 @@ static void test_pmic_run_slave_testcases(void)
     RUN_TEST(test_pmic_getScratchPadValuePrmValTest_scratchPadRegId);
     RUN_TEST(test_pmic_getScratchPadValuePrmValTest_data);
 
+    RUN_TEST(test_pmic_setUserSpareValuePrmValTest_handle);
+    RUN_TEST(test_pmic_setUserSpareValuePrmValTest_userSpareRegNum);
+    RUN_TEST(test_pmic_setUserSpareValuePrmValTest_data);
+    RUN_TEST(test_pmic_setUserSpareValue);
+    RUN_TEST(test_pmic_getUserSpareValuePrmValTest_handle);
+    RUN_TEST(test_pmic_getUserSpareValuePrmValTest_userSpareRegNum);
+    RUN_TEST(test_pmic_getUserSpareValuePrmValTest_data);
+
     pmic_updateTestResults(pmic_misc_tests, PMIC_MISC_NUM_OF_TESTCASES);
-    UNITY_END();
-}
-
-/*!
- * \brief   Run misc manual test cases
- */
-static void test_pmic_run_testcases_recoverycnt(void)
-{
-    pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
-    UNITY_BEGIN();
-    RUN_TEST(test_Pmic_getRecoveryCnt_read_recovCntVal);
-
-    UNITY_END();
-}
-
-/*!
- * \brief   Run misc manual test cases
- */
-static void test_pmic_run_testcases_EnableInterrupt(void)
-{
-    pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
-    UNITY_BEGIN();
-    RUN_TEST(test_Pmic_Enable_interrupt);
-
     UNITY_END();
 }
 
@@ -1253,6 +4548,12 @@ static int32_t test_pmic_leo_pmicA_misc_testApp(void)
     pmicConfigData.commMode            = PMIC_INTF_DUAL_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
+    pmicConfigData.i2c1Speed            = PMIC_I2C_STANDARD_MODE;
+    pmicConfigData.validParams         |= PMIC_CFG_I2C1_SPEED_VALID_SHIFT;
+
+    pmicConfigData.i2c2Speed            = PMIC_I2C_STANDARD_MODE;
+    pmicConfigData.validParams         |= PMIC_CFG_I2C2_SPEED_VALID_SHIFT;
+
     if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
     {
         pmicConfigData.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
@@ -1260,6 +4561,9 @@ static int32_t test_pmic_leo_pmicA_misc_testApp(void)
 
         pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
         pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+
+        pmicConfigData.nvmSlaveAddr        = J721E_LEO_PMICA_PAGE1_SLAVE_ADDR;
+        pmicConfigData.validParams        |= PMIC_CFG_NVMSLAVEADDR_VALID_SHIFT;
     }
     if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
     {
@@ -1268,6 +4572,9 @@ static int32_t test_pmic_leo_pmicA_misc_testApp(void)
 
         pmicConfigData.qaSlaveAddr         = J7VCL_LEO_PMICA_WDG_SLAVE_ADDR;
         pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+
+        pmicConfigData.nvmSlaveAddr        = J7VCL_LEO_PMICA_PAGE1_SLAVE_ADDR;
+        pmicConfigData.validParams        |= PMIC_CFG_NVMSLAVEADDR_VALID_SHIFT;
     }
 
     pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
@@ -1301,11 +4608,17 @@ static int32_t test_pmic_leo_pmicB_misc_testApp(void)
     pmicConfigData.commMode            = PMIC_INTF_SINGLE_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
+    pmicConfigData.i2c1Speed            = PMIC_I2C_STANDARD_MODE;
+    pmicConfigData.validParams         |= PMIC_CFG_I2C1_SPEED_VALID_SHIFT;
+
     pmicConfigData.slaveAddr           = J721E_LEO_PMICB_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICB_WDG_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+
+    pmicConfigData.nvmSlaveAddr        = J721E_LEO_PMICB_PAGE1_SLAVE_ADDR;
+    pmicConfigData.validParams        |= PMIC_CFG_NVMSLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
     pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
@@ -1339,11 +4652,17 @@ static int32_t test_pmic_hera_misc_testApp(void)
     pmicConfigData.commMode            = PMIC_INTF_SINGLE_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
+    pmicConfigData.i2c1Speed            = PMIC_I2C_STANDARD_MODE;
+    pmicConfigData.validParams         |= PMIC_CFG_I2C1_SPEED_VALID_SHIFT;
+
     pmicConfigData.slaveAddr           = J7VCL_HERA_PMIC_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.qaSlaveAddr         = J7VCL_HERA_PMIC_WDG_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+
+    pmicConfigData.nvmSlaveAddr        = J7VCL_HERA_PMIC_PAGE1_SLAVE_ADDR;
+    pmicConfigData.validParams        |= PMIC_CFG_NVMSLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
     pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
@@ -1421,7 +4740,7 @@ static const char pmicTestMenu[] =
     " \r\n Test Menu:"
     " \r\n ================================================================="
     " \r\n 0: Automatic run for all board specific misc options"
-    " \r\n 1: Manual run for RTC options"
+    " \r\n 1: Manual run for Miscellaneous Test options"
     " \r\n 2: quit"
     " \r\n"
     " \r\n Enter option: "
@@ -1436,14 +4755,175 @@ static const char pmicTestAppMenu[] =
     " \r\n 1: Pmic Leo device(PMIC B on J721E EVM)"
     " \r\n 2: Pmic Leo device(PMIC A on J7VCL EVM)"
     " \r\n 3: Pmic Hera device(PMIC B on J7VCL EVM)"
-    " \r\n 4: Manual test: Check recovery count on J721E EVM"
-    " \r\n 5: Manual test: Check Enable Interrupt on J721E EVM"
-    " \r\n 6: Manual test: Check recovery count on J7VCL EVM"
-    " \r\n 7: Manual test: Check Enable Interrupt on J7VCL EVM"
-    " \r\n 8: Back to Test Menu"
+    " \r\n 4: Pmic Leo device(PMIC A on J721E EVM Manual Testcase)"
+    " \r\n 5: Pmic Leo device(PMIC A on J7VCL EVM Manual Testcase)"
+    " \r\n 6: Pmic Hera device(PMIC B on J7VCL EVM Manual Testcase)"
+    " \r\n 7: Back to Test Menu"
     " \r\n"
     " \r\n Enter option: "
 };
+
+
+
+static void print_pmicTestAppManualTestMenu(uint32_t deviceType)
+{
+    char board_name[10] = {0};
+    char device_name[10] = {0};
+    char deviceSubType[10] = {0};
+
+    if(J721E_LEO_PMICA_DEVICE == deviceType)
+    {
+        strcpy(board_name, "J721E");
+        strcpy(device_name, "Leo");
+        strcpy(deviceSubType, "A");
+    }
+    else if(J7VCL_LEO_PMICA_DEVICE == deviceType)
+    {
+        strcpy(board_name, "J7VCL");
+        strcpy(device_name, "Leo");
+        strcpy(deviceSubType, "A");
+    }
+    else if(J7VCL_HERA_PMICB_DEVICE == deviceType)
+    {
+        strcpy(board_name, "J7VCL");
+        strcpy(device_name, "Hera");
+        strcpy(deviceSubType, "B");
+    }
+
+    pmic_log(" \r\n =================================================================");
+    pmic_log(" \r\n Manual Testcase Menu:");
+    pmic_log(" \r\n =================================================================");
+
+    if((pmic_device_info == J721E_LEO_PMICA_DEVICE) ||
+       (pmic_device_info == J7VCL_LEO_PMICA_DEVICE))
+    {
+        pmic_log(" \r\n 0: Pmic %s device(PMIC %s on %s EVM for Check recovery count)", device_name, deviceSubType, board_name);
+        pmic_log(" \r\n 1: Pmic %s device(PMIC %s on %s EVM for Check Enable Interrupt)", device_name, deviceSubType, board_name);
+        pmic_log(" \r\n 2: Pmic %s device(PMIC %s on %s EVM for Configure NRSTOUT_SOC Signal)", device_name, deviceSubType, board_name);
+        pmic_log(" \r\n 3: Pmic %s device(PMIC %s on %s EVM for Configure NRSTOUT Signal)", device_name, deviceSubType, board_name);
+        pmic_log(" \r\n 4: Pmic %s device(PMIC %s on %s EVM for Configure EN_DRV Signal)", device_name, deviceSubType, board_name);
+        pmic_log(" \r\n 5: Pmic %s device(PMIC %s on %s EVM for Check Load from EEPROM defaults on RTC domain/conf Registers)", device_name, deviceSubType, board_name);
+        pmic_log(" \r\n 6: Pmic %s device(PMIC %s on %s EVM for Disable Load from EEPROM defaults on RTC domain/conf Registers)", device_name, deviceSubType, board_name);
+    }
+#if defined(SOC_J7200)
+    if(pmic_device_info == J7VCL_HERA_PMICB_DEVICE)
+    {
+        pmic_log(" \r\n 7: Pmic %s device(PMIC %s on %s EVM for Enable to skip EEPROM defaults load on conf registers with eePromDefLdDisable)", device_name, deviceSubType, board_name);
+        pmic_log(" \r\n 8: Pmic %s device(PMIC %s on %s EVM for Disable to skip EEPROM defaults load on conf registers with eePromDefLdDisable)", device_name, deviceSubType, board_name);
+        pmic_log(" \r\n 9: Pmic %s device(PMIC %s on %s EVM for Enable to skip EEPROM defaults load on conf registers with eePromDefLdEn)", device_name, deviceSubType, board_name);
+        pmic_log(" \r\n 10: Pmic %s device(PMIC %s on %s EVM for Disable to skip EEPROM defaults load on conf registers with eePromDefLdEn)", device_name, deviceSubType, board_name);
+    }
+
+#endif
+    pmic_log(" \r\n 11: Back to Main Menu");
+    pmic_log(" \r\n");
+    pmic_log(" \r\n Enter option: ");
+}
+
+/*!
+ * \brief   Run MISC manual test cases
+ */
+static void test_pmic_run_testcases_manual(uint32_t deviceType)
+{
+    int8_t menuOption = -1;
+
+    pmic_log("\r\n Start of Manual test %d");
+    while(1U)
+    {
+        pmic_log("\r\n menuOption %d", menuOption);
+        print_pmicTestAppManualTestMenu(deviceType);
+        if(UART_scanFmt("%d", &menuOption) != 0U)
+        {
+            pmic_log("Read from UART Console failed\n");
+            return;
+        }
+        pmic_log("\r\n menuOption %d", menuOption);
+
+        if(menuOption == 11)
+        {
+           pmic_log("\r\n break");
+            break;
+        }
+
+        switch(menuOption)
+        {
+            case 0U:
+                RUN_TEST(test_pmic_getRecoveryCnt_read_recovCntVal);
+               break;
+            case 1U:
+                 /* Display Enable interrupt */
+                startup_type = PMIC_ENABLE_STARTUP_TYPE;
+                RUN_TEST(test_pmic_interruptEnableInt);
+               break;
+            case 2U:
+                RUN_TEST(test_pmic_setMiscCtrlCfg_nRstOutSocSignal);
+               break;
+            case 3U :
+                RUN_TEST(test_pmic_setMiscCtrlCfg_nRstOutSignal);
+                break;
+            case 4U:
+                RUN_TEST(test_pmic_setCommonCtrlCfg_enDrv); // TBD not working - Probe EN_DRV signal
+               break;
+            case 5U:
+#if defined(SOC_J721E)
+               if(PMIC_SILICON_REV_ID_PG_2_0 ==
+                  pPmicCoreHandle->pmicDevSiliconRev)
+               {
+                    test_pmic_rtc_setCfg_xtalOScEnType(pPmicCoreHandle);
+               }
+#endif
+                RUN_TEST(test_pmic_setCommonCtrlCfg_eepromDefaultLoadEnable);
+               break;
+            case 6U:
+#if defined(SOC_J721E)
+               if(PMIC_SILICON_REV_ID_PG_2_0 ==
+                  pPmicCoreHandle->pmicDevSiliconRev)
+               {
+                    test_pmic_rtc_setCfg_xtalOScEnType(pPmicCoreHandle);
+               }
+#endif
+                RUN_TEST(test_pmic_setCommonCtrlCfg_eepromDefaultLoadDisable);
+               break;
+#if defined(SOC_J7200)
+            case 7U :
+                RUN_TEST(test_pmic_setCommonCtrlCfg_skipEepromDefaultLoadEnable_eePromDefLdDisable); // TBD not working
+                break;
+            case 8U :
+                RUN_TEST(test_pmic_setCommonCtrlCfg_skipEepromDefaultLoadDisable_eePromDefLdDisable); // TBD not working
+                break;
+            case 9U :
+                RUN_TEST(test_pmic_setCommonCtrlCfg_skipEepromDefaultLoadEnable_eePromDefLdEn); // TBD not working
+                break;
+            case 10U :
+                RUN_TEST(test_pmic_setCommonCtrlCfg_skipEepromDefaultLoadDisable_eePromDefLdEn); // TBD not working
+                break;
+#endif
+            default:
+               pmic_log(" \r\n Invalid option... Try Again!!!\n");
+               break;
+        }
+    }
+    pmic_log("\r\n Start of Manual test %d");
+}
+
+static int32_t test_pmic_printPfsmDelayValue(void)
+{
+    uint8_t data;
+    int32_t pmicStatus;
+
+    pmicStatus = Pmic_fsmGetPfsmDelay(pPmicCoreHandle,
+                                         PMIC_PFSM_DELAY3,
+                                         &data);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pmic_log("\r\n PFSM Delay 3 Val 0x%x", data);
+    }
+
+    return pmicStatus;
+}
+
+extern int32_t gCrcTestFlag;
 
 static void test_pmic_misc_testapp_run_options(int8_t option)
 {
@@ -1490,6 +4970,12 @@ static void test_pmic_misc_testapp_run_options(int8_t option)
                 {
                     /* Run MISC test cases for Leo PMIC-A */
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
+
+                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
+                    {
+                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
+                    }
+
                     /* MISC Unity Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_misc_testApp())
                     {
@@ -1510,6 +4996,12 @@ static void test_pmic_misc_testapp_run_options(int8_t option)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICB_DEVICE;
+
+                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
+                    {
+                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
+                    }
+
                     /* MISC Unity Test App wrapper Function for LEO PMIC-B */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicB_misc_testApp())
                     {
@@ -1531,6 +5023,12 @@ static void test_pmic_misc_testapp_run_options(int8_t option)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+
+                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
+                    {
+                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
+                    }
+
                     /* MISC Unity Test App wrapper Function for LEO PMIC */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_misc_testApp())
                     {
@@ -1552,6 +5050,12 @@ static void test_pmic_misc_testapp_run_options(int8_t option)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_HERA_PMICB_DEVICE;
+
+                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
+                    {
+                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
+                    }
+
                     /* MISC Unity Test App wrapper Function for HERA PMIC */
                     if(PMIC_ST_SUCCESS == test_pmic_hera_misc_testApp())
                     {
@@ -1574,11 +5078,20 @@ static void test_pmic_misc_testapp_run_options(int8_t option)
                 {
                     /* Run MISC test cases for Leo PMIC-A */
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
+
+                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
+                    {
+                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
+                    }
+
                     /* MISC Unity Test App wrapper Function */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_misc_testApp())
                     {
-                        /* Run misc manual test cases */
-                        test_pmic_run_testcases_recoverycnt();
+                        if(PMIC_ST_SUCCESS == test_pmic_printPfsmDelayValue())
+                        {
+                            /* Run misc manual test cases */
+                            test_pmic_run_testcases_manual(J721E_LEO_PMICA_DEVICE);
+                        }
                     }
                     /* Deinit pmic handle */
                     if(pPmicCoreHandle != NULL)
@@ -1591,18 +5104,25 @@ static void test_pmic_misc_testapp_run_options(int8_t option)
 #endif
                break;
            case 5U:
-#if defined(SOC_J721E)
-                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
+#if defined(SOC_J7200)
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                    /* Run MISC test cases for Leo PMIC-A */
-                    pmic_device_info = J721E_LEO_PMICA_DEVICE;
+                    pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+
+                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
+                    {
+                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
+                    }
+
                     /* MISC Unity Test App wrapper Function */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_misc_testApp())
                     {
-                        /* Display Enable interrupt */
-                        startup_type = PMIC_ENABLE_STARTUP_TYPE;
-                        /* Run misc manual test cases */
-                        test_pmic_run_testcases_EnableInterrupt();
+                        if(PMIC_ST_SUCCESS == test_pmic_printPfsmDelayValue())
+                        {
+                            /* Run misc manual test cases */
+                            test_pmic_run_testcases_manual(J7VCL_LEO_PMICA_DEVICE);
+                        }
                     }
                     /* Deinit pmic handle */
                     if(pPmicCoreHandle != NULL)
@@ -1618,13 +5138,37 @@ static void test_pmic_misc_testapp_run_options(int8_t option)
 #if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
-                    /* Run MISC test cases for Leo PMIC-A */
+                   /* Run MISC test cases for Hera PMIC-B */
+                    pmic_device_info = J7VCL_HERA_PMICB_DEVICE;
+
+                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
+                    {
+                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
+                    }
+
+                    /* MISC Unity Test App wrapper Function */
+                    if(PMIC_ST_SUCCESS == test_pmic_hera_misc_testApp())
+                    {
+                        if(PMIC_ST_SUCCESS == test_pmic_printPfsmDelayValue())
+                        {
+                            /* Run misc manual test cases */
+                            test_pmic_run_testcases_manual(J7VCL_HERA_PMICB_DEVICE);
+                        }
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+
+                   /* Run MISC test cases for Leo PMIC-A */
                     pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+
                     /* MISC Unity Test App wrapper Function */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_misc_testApp())
                     {
                         /* Run misc manual test cases */
-                        test_pmic_run_testcases_recoverycnt();
+                        test_pmic_rtcWakeup_lpStandby();
                     }
                     /* Deinit pmic handle */
                     if(pPmicCoreHandle != NULL)
@@ -1637,30 +5181,6 @@ static void test_pmic_misc_testapp_run_options(int8_t option)
 #endif
                break;
            case 7U:
-#if defined(SOC_J7200)
-                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
-                {
-                   /* Run MISC test cases for Leo PMIC-A */
-                    pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
-                    /* MISC Unity Test App wrapper Function */
-                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_misc_testApp())
-                    {
-                        /* Display Enable interrupt */
-                        startup_type = PMIC_ENABLE_STARTUP_TYPE;
-                        /* Run misc manual test cases */
-                        test_pmic_run_testcases_EnableInterrupt();
-                    }
-                    /* Deinit pmic handle */
-                    if(pPmicCoreHandle != NULL)
-                    {
-                        test_pmic_appDeInit(pPmicCoreHandle);
-                    }
-                }
-#else
-                pmic_log("\nInvalid Board!!!\n");
-#endif
-               break;
-           case 8U:
                pmic_log(" \r\n Back to Test Menu options\n");
                return;
            default:

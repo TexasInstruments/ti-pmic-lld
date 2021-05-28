@@ -197,6 +197,9 @@ static int32_t test_pmic_spi_stubInit(Pmic_CoreCfg_t  *pPmicConfigData)
     pmicConfigDataI2c.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
     pmicConfigDataI2c.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
 
+    pmicConfigDataI2c.nvmSlaveAddr        = J721E_LEO_PMICA_PAGE1_SLAVE_ADDR;
+    pmicConfigDataI2c.validParams        |= PMIC_CFG_NVMSLAVEADDR_VALID_SHIFT;
+
     pmicConfigDataI2c.pFnPmicCommIoRead   = test_pmic_regRead;
     pmicConfigDataI2c.validParams        |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
 
@@ -255,7 +258,7 @@ int32_t test_pmic_spi_stubRead(Pmic_CoreHandle_t  *pPmicCorehandle,
     int32_t pmicStatus = 0;
     uint8_t instType = 0U;
     uint16_t regAddr = 0U;
-    bool wdgopn = 0;
+    bool wdgopn = 0, crcopn = 0;
     uint8_t rxBuf[4U] = {0U};
 
     /* Check for WatchDog Operation */
@@ -264,14 +267,24 @@ int32_t test_pmic_spi_stubRead(Pmic_CoreHandle_t  *pPmicCorehandle,
         wdgopn = true;
     }
 
+    /* Check for CRC Operation */
+    if(0U != (pBuf[1U] & (0x01 << 5U)))
+    {
+        crcopn = true;
+    }
+
     /* Update register Address from spi buffer */
     regAddr = (uint16_t)pBuf[0U];
     bufLen = 1U;
 
-    /* Find Instance type from wdg operation */
+    /* Find Instance type from wdg or crc operation */
     if(true == wdgopn)
     {
         instType = PMIC_QA_INST;
+    }
+    else if(true == crcopn)
+    {
+        instType = PMIC_NVM_INST;
     }
     else
     {
@@ -722,6 +735,18 @@ int32_t test_pmic_regRead(Pmic_CoreHandle_t  *pmicCorehandle,
                 return PMIC_ST_ERR_I2C_COMM_FAIL;
             }
         }
+
+        /* NVM Instance */
+        if(PMIC_NVM_INST == instType)
+        {
+            transaction.slaveAddress = pmicCorehandle->nvmSlaveAddr;
+            ret = I2C_transfer((I2C_Handle)pmicCorehandle->pCommHandle,
+                                &transaction);
+            if(ret != I2C_STS_SUCCESS)
+            {
+                return PMIC_ST_ERR_I2C_COMM_FAIL;
+            }
+        }
     }
 
     if(PMIC_INTF_SPI == pmicCorehandle->commMode)
@@ -1089,6 +1114,8 @@ static int32_t Pmic_intrClr(Pmic_CoreHandle_t *pmicHandle)
     return pmicStatus;
 }
 
+int32_t gCrcTestFlag = PMIC_STATUS_CRC_INIT_VAL;
+
 /*!
  * \brief   Initialize PMIC Instance and corresponding Interface.
  *
@@ -1102,6 +1129,7 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t *pmicHandle = NULL;
+    uint8_t   i2c1SpiCrcStatus = 0xFF, i2c2CrcStatus = 0xFF;
 
     /* Initialize Pmic Semaphore */
     test_pmic_osalSemaphoreInit();
@@ -1170,6 +1198,31 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
                 pmicStatus = PMIC_ST_SUCCESS;
             }
         }
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           (PMIC_CFG_TO_ENABLE_CRC == gCrcTestFlag))
+        {
+            if(PMIC_SILICON_REV_ID_PG_2_0 == pmicHandle->pmicDevSiliconRev)
+            {
+                pmicStatus = Pmic_enableCRC(pmicHandle);
+                if(PMIC_ST_SUCCESS == pmicStatus)
+                {
+                    pmic_log("\r\n enableCRC - pmicStatus %d crcEnable %d \r\n",pmicStatus, pmicHandle->crcEnable);
+                    Osal_delay(10);
+                    gCrcTestFlag = PMIC_STATUS_CRC_ENABLED;
+                }
+            }
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            pmicStatus = Pmic_getCrcStatus(pmicHandle,
+                                           &i2c1SpiCrcStatus,
+                                           &i2c2CrcStatus);
+            pmic_log("\r\n pmicStatus %d i2c1SpiCrcStatus %d i2c2CrcStatus %d \r\n",pmicStatus, i2c1SpiCrcStatus, i2c2CrcStatus);
+
+
+        }
+
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             /* Probe connected PMIC device on given i2c Instance */
@@ -1231,6 +1284,31 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
                 pmicStatus = PMIC_ST_SUCCESS;
             }
         }
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           (PMIC_CFG_TO_ENABLE_CRC == gCrcTestFlag))
+        {
+            if(PMIC_SILICON_REV_ID_PG_2_0 == pmicHandle->pmicDevSiliconRev)
+            {
+                pmicStatus = Pmic_enableCRC(pmicHandle);
+                if(PMIC_ST_SUCCESS == pmicStatus)
+                {
+                    pmic_log("\r\n enableCRC - pmicStatus %d crcEnable %d \r\n",pmicStatus, pmicHandle->crcEnable);
+                    Osal_delay(10);
+                    gCrcTestFlag = PMIC_STATUS_CRC_ENABLED;
+                }
+            }
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            pmicStatus = Pmic_getCrcStatus(pmicHandle,
+                                           &i2c1SpiCrcStatus,
+                                           &i2c2CrcStatus);
+            pmic_log("\r\n pmicStatus %d i2c1SpiCrcStatus %d i2c2CrcStatus %d \r\n",pmicStatus, i2c1SpiCrcStatus, i2c2CrcStatus);
+
+
+        }
+
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             /* Probe connected PMIC device on given i2c Instance */
@@ -1317,6 +1395,30 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
                 pmic_log("\n*** WARNING: Found Invalid DEVICE ID ***\n\n");
                 pmicStatus = PMIC_ST_SUCCESS;
             }
+        }
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           (PMIC_CFG_TO_ENABLE_CRC == gCrcTestFlag))
+        {
+            if(PMIC_SILICON_REV_ID_PG_2_0 == pmicHandle->pmicDevSiliconRev)
+            {
+                pmicStatus = Pmic_enableCRC(pmicHandle);
+                if(PMIC_ST_SUCCESS == pmicStatus)
+                {
+                    pmic_log("\r\n enableCRC - pmicStatus %d crcEnable %d \r\n",pmicStatus, pmicHandle->crcEnable);
+                    Osal_delay(10);
+                    gCrcTestFlag = PMIC_STATUS_CRC_ENABLED;
+                }
+            }
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            pmicStatus = Pmic_getCrcStatus(pmicHandle,
+                                           &i2c1SpiCrcStatus,
+                                           &i2c2CrcStatus);
+            pmic_log("\r\n pmicStatus %d i2c1SpiCrcStatus %d i2c2CrcStatus %d \r\n",pmicStatus, i2c1SpiCrcStatus, i2c2CrcStatus);
+
+
         }
 
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -1714,3 +1816,33 @@ void pmic_print_banner(const char *str)
               __TIME__,
               __DATE__);
 }
+
+#if defined(SOC_J721E)
+void test_pmic_rtc_setCfg_xtalOScEnType(Pmic_CoreHandle_t  *pPmicCorehandle)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    pHandle                         = pPmicCorehandle;
+    Pmic_RtcCfg_t rtcCfg_rd = {PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID_SHIFT |
+                               PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID_SHIFT,};
+    Pmic_RtcCfg_t rtcCfg =
+    {
+        PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID_SHIFT |
+        PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID_SHIFT,
+        PMIC_RTC_CRYSTAL_OSC_ENABLE,
+        PMIC_RTC_32K_COUNTER_COMP_VAL_SET,
+        PMIC_RTC_ROUND_TIME_SET,
+        PMIC_RTC_STATIC_SHADOWED_REG_SEL,
+        PMIC_RTC_CRYSTAL_OSC_TYPE_9PF
+    };
+
+    pmicStatus = Pmic_rtcSetConfiguration(pHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_rtcGetConfiguration(pHandle, &rtcCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(rtcCfg.crystalOScEn, rtcCfg_rd.crystalOScEn);
+    TEST_ASSERT_EQUAL(rtcCfg.crystalOScType, rtcCfg_rd.crystalOScType);
+}
+#endif

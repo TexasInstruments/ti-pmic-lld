@@ -43,6 +43,7 @@
 Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
 
 static uint16_t pmic_device_info = 0U;
+extern int32_t gCrcTestFlag;
 
 /*!
  * \brief   PMIC WDG Test Cases
@@ -858,7 +859,7 @@ static void test_pmic_wdg_startQaSequence(void)
     {
         PMIC_WDG_CFG_SETPARAMS_FORALL,
         750000U,
-        6150U,
+        6700U,
         4950U,
         PMIC_WDG_FAIL_THRESHOLD_COUNT_7,
         PMIC_WDG_RESET_THRESHOLD_COUNT_7,
@@ -870,6 +871,11 @@ static void test_pmic_wdg_startQaSequence(void)
         PMIC_WDG_QA_LFSR_VALUE_0,
         PMIC_WDG_QA_QUES_SEED_VALUE_10,
     };
+
+    if(gCrcTestFlag == PMIC_STATUS_CRC_ENABLED)
+    {
+        wdgCfg.win1Duration_us = 8350U;
+    }
 
     test_pmic_print_unity_testcase_info(7346,
                                         pmic_wdg_tests,
@@ -909,7 +915,7 @@ static void test_pmic_wdg_startQaSequence_testFdbkValues(void)
     {
         PMIC_WDG_CFG_SETPARAMS_FORALL,
         750000U,
-        6150U,
+        6700U,
         4950U,
         PMIC_WDG_FAIL_THRESHOLD_COUNT_7,
         PMIC_WDG_RESET_THRESHOLD_COUNT_7,
@@ -921,6 +927,11 @@ static void test_pmic_wdg_startQaSequence_testFdbkValues(void)
         PMIC_WDG_QA_LFSR_VALUE_0,
         PMIC_WDG_QA_QUES_SEED_VALUE_10,
     };
+
+    if(gCrcTestFlag == PMIC_STATUS_CRC_ENABLED)
+    {
+        wdgCfg.win1Duration_us = 8350U;
+    }
 
     test_pmic_print_unity_testcase_info(7347,
                                         pmic_wdg_tests,
@@ -974,7 +985,7 @@ static void test_pmic_wdg_startQaSequence_testLfsrValues(void)
     {
         PMIC_WDG_CFG_SETPARAMS_FORALL,
         750000U,
-        6150U,
+        6700U,
         4950U,
         PMIC_WDG_FAIL_THRESHOLD_COUNT_7,
         PMIC_WDG_RESET_THRESHOLD_COUNT_7,
@@ -986,6 +997,11 @@ static void test_pmic_wdg_startQaSequence_testLfsrValues(void)
         PMIC_WDG_QA_LFSR_VALUE_0,
         PMIC_WDG_QA_QUES_SEED_VALUE_10,
     };
+
+    if(gCrcTestFlag == PMIC_STATUS_CRC_ENABLED)
+    {
+        wdgCfg.win1Duration_us = 8350U;
+    }
 
     test_pmic_print_unity_testcase_info(7348,
                                         pmic_wdg_tests,
@@ -1035,7 +1051,7 @@ static void test_pmic_wdg_startQaSequence_testQuesSeedValues(void)
     {
         PMIC_WDG_CFG_SETPARAMS_FORALL,
         750000U,
-        5500U,
+        6700U,
         4950U,
         PMIC_WDG_FAIL_THRESHOLD_COUNT_7,
         PMIC_WDG_RESET_THRESHOLD_COUNT_7,
@@ -1047,6 +1063,11 @@ static void test_pmic_wdg_startQaSequence_testQuesSeedValues(void)
         PMIC_WDG_QA_LFSR_VALUE_0,
         PMIC_WDG_QA_QUES_SEED_VALUE_10,
     };
+
+    if(gCrcTestFlag == PMIC_STATUS_CRC_ENABLED)
+    {
+        wdgCfg.win1Duration_us = 8350U;
+    }
 
     test_pmic_print_unity_testcase_info(7349,
                                         pmic_wdg_tests,
@@ -1529,6 +1550,12 @@ static int32_t test_pmic_leo_pmicA_wdg_testApp(void)
     pmicConfigData.commMode            = PMIC_INTF_DUAL_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
+    pmicConfigData.i2c1Speed            = PMIC_I2C_STANDARD_MODE;
+    pmicConfigData.validParams         |= PMIC_CFG_I2C1_SPEED_VALID_SHIFT;
+
+    pmicConfigData.i2c2Speed            = PMIC_I2C_STANDARD_MODE;
+    pmicConfigData.validParams         |= PMIC_CFG_I2C2_SPEED_VALID_SHIFT;
+
     if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
     {
         pmicConfigData.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
@@ -1536,6 +1563,10 @@ static int32_t test_pmic_leo_pmicA_wdg_testApp(void)
 
         pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
         pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+
+        pmicConfigData.nvmSlaveAddr        = J721E_LEO_PMICA_PAGE1_SLAVE_ADDR;
+        pmicConfigData.validParams        |= PMIC_CFG_NVMSLAVEADDR_VALID_SHIFT;
+
     }
     if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
     {
@@ -1544,6 +1575,10 @@ static int32_t test_pmic_leo_pmicA_wdg_testApp(void)
 
         pmicConfigData.qaSlaveAddr         = J7VCL_LEO_PMICA_WDG_SLAVE_ADDR;
         pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+
+        pmicConfigData.nvmSlaveAddr        = J7VCL_LEO_PMICA_PAGE1_SLAVE_ADDR;
+        pmicConfigData.validParams        |= PMIC_CFG_NVMSLAVEADDR_VALID_SHIFT;
+
     }
 
     pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
@@ -1578,11 +1613,17 @@ static int32_t test_pmic_leo_pmicA_wdg_single_i2c_testApp(void)
     pmicConfigData.commMode            = PMIC_INTF_SINGLE_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
+    pmicConfigData.i2c1Speed            = PMIC_I2C_STANDARD_MODE;
+    pmicConfigData.validParams         |= PMIC_CFG_I2C1_SPEED_VALID_SHIFT;
+
     pmicConfigData.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+
+    pmicConfigData.nvmSlaveAddr        = J721E_LEO_PMICA_PAGE1_SLAVE_ADDR;
+    pmicConfigData.validParams        |= PMIC_CFG_NVMSLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
     pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
@@ -1617,11 +1658,17 @@ static int32_t test_pmic_hera_wdg_testApp(void)
     pmicConfigData.commMode            = PMIC_INTF_SINGLE_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
+    pmicConfigData.i2c1Speed            = PMIC_I2C_STANDARD_MODE;
+    pmicConfigData.validParams         |= PMIC_CFG_I2C1_SPEED_VALID_SHIFT;
+
     pmicConfigData.slaveAddr           = J7VCL_HERA_PMIC_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.qaSlaveAddr         = J7VCL_HERA_PMIC_WDG_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+
+    pmicConfigData.nvmSlaveAddr        = J7VCL_HERA_PMIC_PAGE1_SLAVE_ADDR;
+    pmicConfigData.validParams        |= PMIC_CFG_NVMSLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
     pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
@@ -1655,11 +1702,17 @@ static int32_t test_pmic_leo_pmicB_wdg_testApp(void)
     pmicConfigData.commMode           = PMIC_INTF_SINGLE_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
+    pmicConfigData.i2c1Speed            = PMIC_I2C_STANDARD_MODE;
+    pmicConfigData.validParams         |= PMIC_CFG_I2C1_SPEED_VALID_SHIFT;
+
     pmicConfigData.slaveAddr          = J721E_LEO_PMICB_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.qaSlaveAddr        = J721E_LEO_PMICB_WDG_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+
+    pmicConfigData.nvmSlaveAddr        = J721E_LEO_PMICB_PAGE1_SLAVE_ADDR;
+    pmicConfigData.validParams        |= PMIC_CFG_NVMSLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.pFnPmicCommIoRead   = test_pmic_regRead;
     pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
@@ -1802,6 +1855,12 @@ static void test_pmic_wdg_testapp_run_options(int8_t option)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
+
+                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
+                    {
+                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
+                    }
+
                     /* WDG Unity Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_wdg_testApp())
                     {
@@ -1823,6 +1882,12 @@ static void test_pmic_wdg_testapp_run_options(int8_t option)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
+
+                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
+                    {
+                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
+                    }
+
                     /* WDG Unity Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_wdg_single_i2c_testApp())
                     {
@@ -1844,6 +1909,12 @@ static void test_pmic_wdg_testapp_run_options(int8_t option)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+
+                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
+                    {
+                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
+                    }
+
                     /* WDG Unity Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_wdg_testApp())
                     {
@@ -1865,6 +1936,12 @@ static void test_pmic_wdg_testapp_run_options(int8_t option)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_HERA_PMICB_DEVICE;
+
+                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
+                    {
+                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
+                    }
+
                     /* WDG Unity Test App wrapper Function for HERA PMIC */
                     if(PMIC_ST_SUCCESS == test_pmic_hera_wdg_testApp())
                     {

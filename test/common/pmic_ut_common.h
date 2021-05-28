@@ -82,18 +82,22 @@
  * \brief   Slave addresses of J721E LEO PMIC-A and PMIC-B devices
  */
 #define J721E_LEO_PMICA_SLAVE_ADDR            (0x48U)
+#define J721E_LEO_PMICA_PAGE1_SLAVE_ADDR      (0x49U)
 #define J721E_LEO_PMICA_WDG_SLAVE_ADDR        (0x12U)
 
 #define J721E_LEO_PMICB_SLAVE_ADDR            (0x4CU)
+#define J721E_LEO_PMICB_PAGE1_SLAVE_ADDR      (0x4DU)
 #define J721E_LEO_PMICB_WDG_SLAVE_ADDR        (0x13U)
 
 /*!
  * \brief   Slave addresses of J7VCL HERA PMIC devices
  */
 #define J7VCL_LEO_PMICA_SLAVE_ADDR            (0x48U)
+#define J7VCL_LEO_PMICA_PAGE1_SLAVE_ADDR      (0x49U)
 #define J7VCL_LEO_PMICA_WDG_SLAVE_ADDR        (0x12U)
 
 #define J7VCL_HERA_PMIC_SLAVE_ADDR            (0x4CU)
+#define J7VCL_HERA_PMIC_PAGE1_SLAVE_ADDR      (0x4DU)
 #define J7VCL_HERA_PMIC_WDG_SLAVE_ADDR        (0x13U)
 
 /*!
@@ -127,6 +131,13 @@
 #define PMIC_ENABLE_STARTUP_TYPE        (0x01U)
 #define PMIC_NPWRON_STARTUP_TYPE        (0x02U)
 #define PMIC_FSD_STARTUP_TYPE           (0x03U)
+
+/*!
+ * \brief   CRC Status
+ */
+#define PMIC_STATUS_CRC_INIT_VAL            (0x0U)
+#define PMIC_CFG_TO_ENABLE_CRC              (0x1U)
+#define PMIC_STATUS_CRC_ENABLED             (0x2U)
 
 extern uint8_t startup_type;
 
@@ -309,3 +320,10 @@ uint64_t print_timeTakenInUsecs(uint64_t t1, const char *str);
  * \brief   print Banner Message
  */
 void pmic_print_banner(const char *str);
+
+#if defined(SOC_J721E)
+/*!
+ * \brief  To Enable Crystal Oscillator for RTC on J721E PG2.0
+ */
+void test_pmic_rtc_setCfg_xtalOScEnType(Pmic_CoreHandle_t  *pPmicCorehandle);
+#endif

@@ -4538,6 +4538,12 @@ static int32_t test_pmic_leo_pmicA_rtc_testApp(void)
     pmicConfigData.commMode            = PMIC_INTF_DUAL_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
+    pmicConfigData.i2c1Speed            = PMIC_I2C_STANDARD_MODE;
+    pmicConfigData.validParams         |= PMIC_CFG_I2C1_SPEED_VALID_SHIFT;
+
+    pmicConfigData.i2c2Speed            = PMIC_I2C_STANDARD_MODE;
+    pmicConfigData.validParams         |= PMIC_CFG_I2C2_SPEED_VALID_SHIFT;
+
     if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
     {
         pmicConfigData.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
@@ -4545,6 +4551,9 @@ static int32_t test_pmic_leo_pmicA_rtc_testApp(void)
 
         pmicConfigData.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
         pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+
+        pmicConfigData.nvmSlaveAddr        = J721E_LEO_PMICA_PAGE1_SLAVE_ADDR;
+        pmicConfigData.validParams        |= PMIC_CFG_NVMSLAVEADDR_VALID_SHIFT;
     }
     if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
     {
@@ -4553,6 +4562,9 @@ static int32_t test_pmic_leo_pmicA_rtc_testApp(void)
 
         pmicConfigData.qaSlaveAddr         = J7VCL_LEO_PMICA_WDG_SLAVE_ADDR;
         pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+
+        pmicConfigData.nvmSlaveAddr        = J7VCL_LEO_PMICA_PAGE1_SLAVE_ADDR;
+        pmicConfigData.validParams        |= PMIC_CFG_NVMSLAVEADDR_VALID_SHIFT;
     }
 
     pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
@@ -4619,11 +4631,17 @@ static int32_t test_pmic_hera_rtc_testApp(void)
     pmicConfigData.commMode           = PMIC_INTF_SINGLE_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
+    pmicConfigData.i2c1Speed            = PMIC_I2C_STANDARD_MODE;
+    pmicConfigData.validParams         |= PMIC_CFG_I2C1_SPEED_VALID_SHIFT;
+
     pmicConfigData.slaveAddr          = J7VCL_HERA_PMIC_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.qaSlaveAddr        = J7VCL_HERA_PMIC_WDG_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+
+    pmicConfigData.nvmSlaveAddr        = J7VCL_HERA_PMIC_PAGE1_SLAVE_ADDR;
+    pmicConfigData.validParams        |= PMIC_CFG_NVMSLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.pFnPmicCommIoRead   = test_pmic_regRead;
     pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
@@ -4657,11 +4675,17 @@ static int32_t test_pmic_leo_pmicB_rtc_testApp(void)
     pmicConfigData.commMode           = PMIC_INTF_SINGLE_I2C;
     pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
+    pmicConfigData.i2c1Speed            = PMIC_I2C_STANDARD_MODE;
+    pmicConfigData.validParams         |= PMIC_CFG_I2C1_SPEED_VALID_SHIFT;
+
     pmicConfigData.slaveAddr          = J721E_LEO_PMICB_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.qaSlaveAddr        = J721E_LEO_PMICB_WDG_SLAVE_ADDR;
     pmicConfigData.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+
+    pmicConfigData.nvmSlaveAddr        = J721E_LEO_PMICB_PAGE1_SLAVE_ADDR;
+    pmicConfigData.validParams        |= PMIC_CFG_NVMSLAVEADDR_VALID_SHIFT;
 
     pmicConfigData.pFnPmicCommIoRead   = test_pmic_regRead;
     pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
@@ -4771,36 +4795,6 @@ void AppPmicCallbackFxn(void)
     }
 }
 
-#if defined(SOC_J721E)
-static void test_pmic_rtc_setCfg_xtalOScEnType(void)
-{
-    int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CoreHandle_t  *pHandle     = NULL;
-    pHandle                         = pPmicCoreHandle;
-    Pmic_RtcCfg_t rtcCfg_rd = {PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID_SHIFT |
-                               PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID_SHIFT,};
-    Pmic_RtcCfg_t rtcCfg =
-    {
-        PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID_SHIFT |
-        PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID_SHIFT,
-        PMIC_RTC_CRYSTAL_OSC_ENABLE,
-        PMIC_RTC_32K_COUNTER_COMP_VAL_SET,
-        PMIC_RTC_ROUND_TIME_SET,
-        PMIC_RTC_STATIC_SHADOWED_REG_SEL,
-        PMIC_RTC_CRYSTAL_OSC_TYPE_9PF
-    };
-
-    pmicStatus = Pmic_rtcSetConfiguration(pHandle, rtcCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    pmicStatus = Pmic_rtcGetConfiguration(pHandle, &rtcCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    TEST_ASSERT_EQUAL(rtcCfg.crystalOScEn, rtcCfg_rd.crystalOScEn);
-    TEST_ASSERT_EQUAL(rtcCfg.crystalOScType, rtcCfg_rd.crystalOScType);
-}
-#endif
-
 static const char pmicTestMenu[] =
 {
     " \r\n ================================================================="
@@ -4823,8 +4817,8 @@ static const char pmicTestAppMenu[] =
     " \r\n 2: Pmic Leo device(PMIC B on J721E EVM)"
     " \r\n 3: Pmic Leo device(PMIC A on J7VCL EVM Using I2C Interface)"
     " \r\n 4: Pmic HERA device(PMIC B on J7VCL EVM)"
-    " \r\n 5: Pmic Leo device(PMIC A on J721E EVM Manual Testcase for RTC WKUP)"
-    " \r\n 6: Pmic Leo device(PMIC A on J7VCL EVM Manual Testcase for RTC WKUP)"
+    " \r\n 5: Pmic Leo device(PMIC A on J721E EVM RTC Manual Testcase)"
+    " \r\n 6: Pmic Leo device(PMIC A on J7VCL EVM RTC Manual Testcase)"
     " \r\n 7: Back to Test Menu"
     " \r\n"
     " \r\n Enter option: "
@@ -4905,6 +4899,8 @@ static void test_pmic_run_testcases_manual(uint32_t board)
     }
 }
 
+extern int32_t gCrcTestFlag;
+
 static void test_pmic_rtc_testapp_run_options(int8_t option)
 {
     int8_t num = -1;
@@ -4950,12 +4946,19 @@ static void test_pmic_rtc_testapp_run_options(int8_t option)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
+
+                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
+                    {
+                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
+                    }
+
                     /* RTC Unity Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_rtc_testApp())
                     {
-                       if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevRev)
+                       if(PMIC_SILICON_REV_ID_PG_2_0 ==
+                          pPmicCoreHandle->pmicDevSiliconRev)
                        {
-                            test_pmic_rtc_setCfg_xtalOScEnType();
+                            test_pmic_rtc_setCfg_xtalOScEnType(pPmicCoreHandle);
                        }
                         /* Run rtc test cases for Leo PMIC-A */
                         test_pmic_run_testcases();
@@ -4975,11 +4978,22 @@ static void test_pmic_rtc_testapp_run_options(int8_t option)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
+
+                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
+                    {
+                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
+                    }
+
                     /* RTC Unity Test App wrapper Function for LEO PMIC-A using
                      * SPI stub functions */
                     if(PMIC_ST_SUCCESS ==
                               test_pmic_leo_pmicA_spiStub_rtc_testApp())
                     {
+                       if(PMIC_SILICON_REV_ID_PG_2_0 ==
+                          pPmicCoreHandle->pmicDevSiliconRev)
+                       {
+                            test_pmic_rtc_setCfg_xtalOScEnType(pPmicCoreHandle);
+                       }
                         /* Run rtc test cases for Leo PMIC-A */
                         test_pmic_run_testcases();
                     }
@@ -5006,6 +5020,12 @@ static void test_pmic_rtc_testapp_run_options(int8_t option)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+
+                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
+                    {
+                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
+                    }
+
                     /* RTC Unity Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_rtc_testApp())
                     {
@@ -5027,6 +5047,12 @@ static void test_pmic_rtc_testapp_run_options(int8_t option)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_HERA_PMICB_DEVICE;
+
+                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
+                    {
+                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
+                    }
+
                     /* RTC Unity Test App wrapper Function for HERA */
                     if(PMIC_ST_SUCCESS == test_pmic_hera_rtc_testApp())
                     {
@@ -5048,9 +5074,21 @@ static void test_pmic_rtc_testapp_run_options(int8_t option)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
+
+                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
+                    {
+                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
+                    }
+
                     /* RTC Manual Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_rtc_testApp())
                     {
+                       if(PMIC_SILICON_REV_ID_PG_2_0 ==
+                          pPmicCoreHandle->pmicDevSiliconRev)
+                       {
+                            test_pmic_rtc_setCfg_xtalOScEnType(pPmicCoreHandle);
+                       }
+
                         /* Run Rtc manual test cases */
                         test_pmic_run_testcases_manual(J721E_BOARD);
                     }
@@ -5069,6 +5107,12 @@ static void test_pmic_rtc_testapp_run_options(int8_t option)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+
+                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
+                    {
+                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
+                    }
+
                     /* RTC Manual Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_rtc_testApp())
                     {
