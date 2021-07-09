@@ -119,17 +119,194 @@ static Pmic_Ut_Tests_t pmic_fsm_tests[] =
     {
         7364,
         "Pmic_fsmDeviceOnRequest : Parameter validation for handle."
-    }
+    },
+    {
+        10078,
+        "Pmic_fsmGetNsleepSignalMaskStat : Parameter validation for handle."
+    },
+    {
+        10079,
+        "Pmic_fsmGetNsleepSignalMaskStat : Parameter validation for nsleepStat."
+    },
+    {
+        10080,
+        "Pmic_fsmSetConfiguration/Pmic_fsmGetConfiguration : Enable Fast BIST"
+    },
+    {
+        10081,
+        "Pmic_fsmSetConfiguration/Pmic_fsmGetConfiguration : Select LpStandby State"
+    },
+    {
+        10082,
+        "Pmic_fsmSetConfiguration/Pmic_fsmGetConfiguration : Select Standby State"
+    },
+    {
+        10083,
+        "Pmic_fsmSetConfiguration/Pmic_fsmGetConfiguration : Enable Buck/LDO regulators ILIM"
+    },
+    {
+        10084,
+        "Pmic_fsmSetConfiguration/Pmic_fsmGetConfiguration : Disable Buck/LDO regulators ILIM"
+    },
+    {
+        10085,
+        "Pmic_fsmSetConfiguration/Pmic_fsmGetConfiguration : Select FSM Startup Destination as ACTIVE"
+    },
+    {
+        10086,
+        "Pmic_fsmSetConfiguration/Pmic_fsmGetConfiguration : Select FSM Startup Destination as MCUONLY"
+    },
+    {
+        10087,
+        "Pmic_fsmSetConfiguration/Pmic_fsmGetConfiguration : Select FSM Startup Destination as STANDBY/LPSTANDBY"
+    },
+    {
+        10088,
+        "Pmic_fsmSetConfiguration : Parameter validation for handle."
+    },
+    {
+        10089,
+        "Pmic_fsmSetConfiguration : Parameter Range validation for fsmStarupDestSel Param."
+    },
+    {
+        10090,
+        "Pmic_fsmGetConfiguration : Parameter validation for handle."
+    },
+    {
+        10091,
+        "Pmic_fsmGetConfiguration : Parameter validation for fsmCfg ."
+    },
+    {
+        10092,
+        "Pmic_fsmSetPfsmDelay/Pmic_fsmGetPfsmDelay : Configure Delay for PFSM Delay1"
+    },
+    {
+        10093,
+        "Pmic_fsmSetPfsmDelay : Parameter validation for handle."
+    },
+    {
+        10094,
+        "Pmic_fsmSetPfsmDelay : Parameter Range validation for pFsmDelayType Param."
+    },
+    {
+        10095,
+        "Pmic_fsmGetPfsmDelay : Parameter validation for handle."
+    },
+    {
+        10096,
+        "Pmic_fsmGetPfsmDelay : Parameter Range validation for pFsmDelayType Param."
+    },
+    {
+        10097,
+        "Pmic_fsmGetPfsmDelay : Parameter validation for PfsmDelay Param."
+    },
+    {
+        10098,
+        "Pmic_fsmSetNsleepSignalVal/Pmic_fsmGetNsleepSignalVal : Configure NSleep1 Signal as Low"
+    },
+    {
+        10099,
+        "Pmic_fsmSetNsleepSignalVal/Pmic_fsmGetNsleepSignalVal : Configure NSleep1 Signal as High"
+    },
+    {
+        10101,
+        "Pmic_fsmSetNsleepSignalVal/Pmic_fsmGetNsleepSignalVal : Configure NSleep2 Signal as Low"
+    },
+    {
+        10102,
+        "Pmic_fsmSetNsleepSignalVal/Pmic_fsmGetNsleepSignalVal : Configure NSleep2 Signal as High"
+    },
+    {
+        10103,
+        "Pmic_fsmSetNsleepSignalVal : Parameter validation for handle."
+    },
+    {
+        10104,
+        "Pmic_fsmSetNsleepSignalVal : Parameter Range validation for nsleepVal Param."
+    },
+    {
+        10105,
+        "Pmic_fsmGetNsleepSignalVal : Parameter validation for handle."
+    },
+    {
+        10106,
+        "Pmic_fsmGetNsleepSignalVal : Parameter validation for NsleepVal."
+    },
+    {
+        10109,
+        "Pmic_fsmRecoverSocPwrErr: Configure NSleep1 Signal as Low"
+    },
+    {
+        10110,
+        "Pmic_fsmRecoverSocPwrErr: Configure NSleep1 Signal as High"
+    },
+    {
+        10111,
+        "Pmic_fsmRecoverSocPwrErr : Parameter validation for handle."
+    },
+    {
+        10112,
+        "Pmic_fsmRecoverSocPwrErr : Parameter Range validation for nsleepVal Param."
+    },
+    {
+        10113,
+        "Pmic_fsmEnableI2cTrigger: Trigger i2C4 with trigger value as '1' and '0'"
+    },
+    {
+        10114,
+        "Pmic_fsmEnableI2cTrigger: Trigger i2C5 with trigger value as '1' and '0'"
+    },
+    {
+        10118,
+        "Pmic_fsmEnableI2cTrigger: Trigger i2C6 with trigger value as '1' and '0' "
+    },
+    {
+        10120,
+        "Pmic_fsmGetI2cTriggerVal: Get FSM i2C0/i2C1/i2C2/i2c3 trigger value"
+    },
+    {
+        10119,
+        "Pmic_fsmEnableI2cTrigger: Trigger i2C7 with trigger value as '1' and '0'"
+    },
+    {
+        10115,
+        "Pmic_fsmEnableI2cTrigger : Parameter validation for handle."
+    },
+    {
+        10116,
+        "Pmic_fsmEnableI2cTrigger : Parameter Range validation for i2cTriggerVal param for i2C0/i2C1/i2C2/i2C3/i2C4/i2C5/i2C6/i2C7 Trigger type"
+    },
+    {
+        10117,
+        "Pmic_fsmEnableI2cTrigger : Parameter Range validation for i2c Trigger type"
+    },
+    {
+        10122,
+        "Pmic_fsmRequestDdrGpioRetentionMode : Parameter validation for handle."
+    },
+    {
+        10123,
+        "Pmic_fsmRequestDdrGpioRetentionMode : Parameter Range validation for retentionMode"
+    },
+    {
+        10124,
+        "Pmic_fsmRequestDdrGpioRetentionMode : Parameter Range validation for i2cTriggerVal"
+    },
+    {
+        10125,
+        "Pmic_fsmSetConfiguration/Pmic_fsmGetConfiguration : Disable Fast BIST"
+    },
 };
 
 /*!
  * \brief   Pmic_fsmSetNsleepSignalMask : Test Mask Nsleep1.
  */
-static void test_Pmic_fsmSetNsleepSignalMask_mask_nsleep1(void)
+static void test_pmic_fsmSetNsleepSignalMask_mask_nsleep1(void)
 {
     int32_t status     = PMIC_ST_SUCCESS;
     bool    nsleepType = 0U;
     bool    maskEnable = 0U;
+    bool    nsleepMaskStat = 0U;
 
     nsleepType = PMIC_NSLEEP1_SIGNAL;
     maskEnable = PMIC_NSLEEPX_MASK;
@@ -141,6 +318,12 @@ static void test_Pmic_fsmSetNsleepSignalMask_mask_nsleep1(void)
     status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle, nsleepType, maskEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
+    status = Pmic_fsmGetNsleepSignalMaskStat(pPmicCoreHandle,
+                                             nsleepType,
+                                             &nsleepMaskStat);
+    TEST_ASSERT_EQUAL(PMIC_NSLEEPX_MASK, nsleepMaskStat);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
     pmic_testResultUpdate_pass(7693,
                                pmic_fsm_tests,
                                PMIC_FSM_NUM_OF_TESTCASES);
@@ -150,11 +333,12 @@ static void test_Pmic_fsmSetNsleepSignalMask_mask_nsleep1(void)
 /*!
  * \brief   Pmic_fsmSetNsleepSignalMask : Test Unmask Nsleep1.
  */
-static void test_Pmic_fsmSetNsleepSignalMask_unmask_nsleep1(void)
+static void test_pmic_fsmSetNsleepSignalMask_unmask_nsleep1(void)
 {
     int32_t status     = PMIC_ST_SUCCESS;
     bool    nsleepType = 0U;
-    bool    maskEnable = 0U;;
+    bool    maskEnable = 0U;
+    bool    nsleepMaskStat = 0U;
 
     nsleepType = PMIC_NSLEEP1_SIGNAL;
     maskEnable = PMIC_NSLEEPX_UNMASK;
@@ -166,6 +350,12 @@ static void test_Pmic_fsmSetNsleepSignalMask_unmask_nsleep1(void)
     status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle, nsleepType, maskEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
+    status = Pmic_fsmGetNsleepSignalMaskStat(pPmicCoreHandle,
+                                             nsleepType,
+                                             &nsleepMaskStat);
+    TEST_ASSERT_EQUAL(PMIC_NSLEEPX_UNMASK, nsleepMaskStat);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
     pmic_testResultUpdate_pass(7694,
                                pmic_fsm_tests,
                                PMIC_FSM_NUM_OF_TESTCASES);
@@ -175,11 +365,12 @@ static void test_Pmic_fsmSetNsleepSignalMask_unmask_nsleep1(void)
 /*!
  * \brief   Pmic_fsmSetNsleepSignalMask : Test Mask Nsleep2.
  */
-static void test_Pmic_fsmSetNsleepSignalMask_mask_nsleep2(void)
+static void test_pmic_fsmSetNsleepSignalMask_mask_nsleep2(void)
 {
     int32_t status     = PMIC_ST_SUCCESS;
     bool    nsleepType = 0U;
     bool    maskEnable = 0U;
+    bool    nsleepMaskStat = 0U;
 
     nsleepType = PMIC_NSLEEP2_SIGNAL;
     maskEnable = PMIC_NSLEEPX_MASK;
@@ -191,6 +382,12 @@ static void test_Pmic_fsmSetNsleepSignalMask_mask_nsleep2(void)
     status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle, nsleepType, maskEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
+    status = Pmic_fsmGetNsleepSignalMaskStat(pPmicCoreHandle,
+                                             nsleepType,
+                                             &nsleepMaskStat);
+    TEST_ASSERT_EQUAL(PMIC_NSLEEPX_MASK, nsleepMaskStat);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
     pmic_testResultUpdate_pass(7695,
                                pmic_fsm_tests,
                                PMIC_FSM_NUM_OF_TESTCASES);
@@ -200,11 +397,12 @@ static void test_Pmic_fsmSetNsleepSignalMask_mask_nsleep2(void)
 /*!
  * \brief   Pmic_fsmSetNsleepSignalMask : Test Unmask Nsleep2.
  */
-static void test_Pmic_fsmSetNsleepSignalMask_unmask_nsleep2(void)
+static void test_pmic_fsmSetNsleepSignalMask_unmask_nsleep2(void)
 {
     int32_t status     = PMIC_ST_SUCCESS;
     bool    nsleepType = 0U;
     bool    maskEnable = 0U;
+    bool    nsleepMaskStat = 0U;
 
     nsleepType = PMIC_NSLEEP2_SIGNAL;
     maskEnable = PMIC_NSLEEPX_UNMASK;
@@ -216,6 +414,12 @@ static void test_Pmic_fsmSetNsleepSignalMask_unmask_nsleep2(void)
     status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle, nsleepType, maskEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
+    status = Pmic_fsmGetNsleepSignalMaskStat(pPmicCoreHandle,
+                                             nsleepType,
+                                             &nsleepMaskStat);
+    TEST_ASSERT_EQUAL(PMIC_NSLEEPX_UNMASK, nsleepMaskStat);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
     pmic_testResultUpdate_pass(7696,
                                pmic_fsm_tests,
                                PMIC_FSM_NUM_OF_TESTCASES);
@@ -225,7 +429,7 @@ static void test_Pmic_fsmSetNsleepSignalMask_unmask_nsleep2(void)
 /*!
  * \brief   Pmic_fsmSetMissionState : Test Set State to MCU.
  */
-static void test_Pmic_fsmSetMissionState_mcu(void)
+static void test_pmic_fsmSetMissionState_mcu(void)
 {
     int32_t status     = PMIC_ST_SUCCESS;
     uint8_t  pmicState = 0U;
@@ -260,7 +464,7 @@ static void test_Pmic_fsmSetMissionState_mcu(void)
 /*!
  * \brief   Pmic_fsmSetMissionState : Test Set State to Active.
  */
-static void test_Pmic_fsmSetMissionState_active(void)
+static void test_pmic_fsmSetMissionState_active(void)
 {
     int32_t status     = PMIC_ST_SUCCESS;
     uint8_t pmicState = 0U;
@@ -281,6 +485,14 @@ static void test_Pmic_fsmSetMissionState_active(void)
                                          PMIC_NSLEEPX_UNMASK);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
+#if defined(SOC_J721E)
+    pmic_log("\r\n Probe TP134 and it should change from High");
+    pmic_log("\r\n Probe TP133 and it should continue to be in HIGH");
+#endif
+#if defined(SOC_J7200)
+    pmic_log("\r\n Probe TP46 and it should change from High");
+    pmic_log("\r\n Probe TP29 and it should continue to be in HIGH");
+#endif
     status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -292,7 +504,7 @@ static void test_Pmic_fsmSetMissionState_active(void)
 /*!
  * \brief   Pmic_fsmSetMissionState : Test Set State to S2R/Deep Sleep.
  */
-static void test_Pmic_fsmSetMissionState_s2r(void)
+static void test_pmic_fsmSetMissionState_s2r(void)
 {
     int32_t status     = PMIC_ST_SUCCESS;
     uint8_t  pmicState = 0U;
@@ -327,7 +539,7 @@ static void test_Pmic_fsmSetMissionState_s2r(void)
 /*!
  * \brief   Pmic_fsmSetMissionState : Manual Test Set State to LP-Standby.
  */
-static void test_Pmic_fsmSetMissionState_lpstandby(void)
+static void test_pmic_fsmSetMissionState_lpstandby(void)
 {
     int32_t status         = PMIC_ST_SUCCESS;
     uint8_t  pmicState     = 0U;
@@ -362,7 +574,7 @@ static void test_Pmic_fsmSetMissionState_lpstandby(void)
 /*!
  * \brief   Pmic_fsmSetMissionState : Manual Test Set State to Standby.
  */
-static void test_Pmic_fsmSetMissionState_standby(void)
+static void test_pmic_fsmSetMissionState_standby(void)
 {
     int32_t status         = PMIC_ST_SUCCESS;
     uint8_t  pmicState     = 0U;
@@ -398,7 +610,7 @@ static void test_Pmic_fsmSetMissionState_standby(void)
 /*!
  * \brief   Pmic_fsmSetMissionState : Parameter range validation for handle.
  */
-static void test_Pmic_fsmSetMissionStatePrmValTest_handle(void)
+static void test_pmic_fsmSetMissionStatePrmValTest_handle(void)
 {
     int32_t status     = PMIC_ST_SUCCESS;
     uint8_t  pmicState = 0U;
@@ -421,7 +633,7 @@ static void test_Pmic_fsmSetMissionStatePrmValTest_handle(void)
 /*!
  * \brief   Pmic_fsmSetMissionState : Parameter range validation for state.
  */
-static void test_Pmic_fsmSetMissionStatePrmValTest_state(void)
+static void test_pmic_fsmSetMissionStatePrmValTest_state(void)
 {
     int32_t status     = PMIC_ST_SUCCESS;
     uint8_t  pmicState = 0U;
@@ -444,7 +656,7 @@ static void test_Pmic_fsmSetMissionStatePrmValTest_state(void)
 /*!
  * \brief   Pmic_fsmSetNsleepSignalMask : Parameter range validation for handle.
  */
-static void test_Pmic_fsmSetNsleepSignalMaskStatePrmValTest_handle(void)
+static void test_pmic_fsmSetNsleepSignalMaskStatePrmValTest_handle(void)
 {
     int32_t status     = PMIC_ST_SUCCESS;
     bool    nsleepType = 0U;
@@ -467,9 +679,56 @@ static void test_Pmic_fsmSetNsleepSignalMaskStatePrmValTest_handle(void)
 }
 
 /*!
+ * \brief   Pmic_fsmGetNsleepSignalMaskStat : Parameter validation for handle.
+ */
+static void test_pmic_fsmGetNsleepSignalMaskStatePrmValTest_handle(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+    bool    nsleepType = 0U;
+    bool    maskEnable = 0U;
+
+    nsleepType = PMIC_NSLEEP1_SIGNAL;
+
+    test_pmic_print_unity_testcase_info(10078,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmGetNsleepSignalMaskStat(NULL, nsleepType, &maskEnable);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+
+    pmic_testResultUpdate_pass(10078,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+
+}
+
+/*!
+ * \brief   Pmic_fsmGetNsleepSignalMaskStat : Parameter validation for nsleepStat.
+ */
+static void test_pmic_fsmGetNsleepSignalMaskStatePrmValTest_nsleepStat(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+    bool    nsleepType = 0U;
+
+    nsleepType = PMIC_NSLEEP1_SIGNAL;
+
+    test_pmic_print_unity_testcase_info(10079,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmGetNsleepSignalMaskStat(pPmicCoreHandle, nsleepType, NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+
+    pmic_testResultUpdate_pass(10079,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+
+}
+
+/*!
  * \brief   Parameter validation for handle
  */
-static void test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_handle(void)
+static void test_pmic_fsmDevOffReqCfg_PrmValTest_handle(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     bool standByState = PMIC_FSM_STANBY_STATE;
@@ -491,7 +750,7 @@ static void test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_handle(void)
 /*!
  * \brief   Pmic_fsmDeviceOffRequestCfg : Parameter validation for eventType
  */
-static void test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_eventType(void)
+static void test_pmic_fsmDevOffReqCfg_PrmValTest_eventType(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t fsmState ;
@@ -515,7 +774,7 @@ static void test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_eventType(void)
 /*!
  * \brief   Pmic_fsmDeviceOffRequestCfg :  Parameter validation for fsmState
  */
-static void test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_fsmState(void)
+static void test_pmic_fsmDevOffReqCfg_PrmValTest_fsmState(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t fsmState = 0U;
@@ -539,7 +798,7 @@ static void test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_fsmState(void)
 /*!
  * \brief   Pmic_fsmRuntimeBistRequest : Parameter validation for handle.
  */
-static void test_Pmic_fsmRuntimeBistRequestPrmValTest_handle(void)
+static void test_pmic_fsmRuntimeBistRequestPrmValTest_handle(void)
 {
     int32_t status     = PMIC_ST_SUCCESS;
 
@@ -558,7 +817,7 @@ static void test_Pmic_fsmRuntimeBistRequestPrmValTest_handle(void)
 /*!
  * \brief   Pmic_fsmDeviceOnRequest : Parameter validation for handle.
  */
-static void test_Pmic_Pmic_fsmDeviceOnRequestPrmValTest_handle(void)
+static void test_pmic_fsmDeviceOnRequestPrmValTest_handle(void)
 {
     int32_t status     = PMIC_ST_SUCCESS;
 
@@ -574,6 +833,1370 @@ static void test_Pmic_Pmic_fsmDeviceOnRequestPrmValTest_handle(void)
                                PMIC_FSM_NUM_OF_TESTCASES);
 }
 
+/*!
+ * \brief   Pmic_fsmSetConfiguration/Pmic_fsmGetConfiguration : Enable Fast BIST
+ */
+static void test_pmic_fsmSetConfiguration_fastBistEnable(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    Pmic_FsmCfg_t fsmCfg_rd = {PMIC_FSM_CFG_FAST_BIST_EN_VALID_SHIFT,};
+    Pmic_FsmCfg_t fsmCfg =
+    {
+        PMIC_FSM_CFG_FAST_BIST_EN_VALID_SHIFT,
+        PMIC_FSM_FAST_BIST_ENABLE,
+        PMIC_FSM_SELECT_STANDBY_STATE,
+        PMIC_FSM_ILIM_INT_FSMCTRL_DISABLE,
+        PMIC_FSM_STARTUPDEST_ACTIVE
+    };
+
+    test_pmic_print_unity_testcase_info(10080,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmSetConfiguration(pPmicCoreHandle, fsmCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmGetConfiguration(pPmicCoreHandle, &fsmCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    TEST_ASSERT_EQUAL(fsmCfg.fastBistEn, fsmCfg_rd.fastBistEn);
+
+    pmic_testResultUpdate_pass(10080,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmSetConfiguration/Pmic_fsmGetConfiguration : Select LpStandby State
+ */
+static void test_pmic_fsmSetConfiguration_selectLpStandbyState(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    Pmic_FsmCfg_t fsmCfg_rd = {PMIC_FSM_CFG_LP_STANDBYSEL_VALID_SHIFT,};
+    Pmic_FsmCfg_t fsmCfg =
+    {
+        PMIC_FSM_CFG_LP_STANDBYSEL_VALID_SHIFT,
+        PMIC_FSM_FAST_BIST_DISABLE,
+        PMIC_FSM_SELECT_LPSTANDBY_STATE,
+        PMIC_FSM_ILIM_INT_FSMCTRL_DISABLE,
+        PMIC_FSM_STARTUPDEST_ACTIVE
+    };
+
+    test_pmic_print_unity_testcase_info(10081,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmSetConfiguration(pPmicCoreHandle, fsmCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmGetConfiguration(pPmicCoreHandle, &fsmCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    TEST_ASSERT_EQUAL(fsmCfg.lpStandbySel, fsmCfg_rd.lpStandbySel);
+
+    pmic_testResultUpdate_pass(10081,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmSetConfiguration/Pmic_fsmGetConfiguration : Select Standby State
+ */
+static void test_pmic_fsmSetConfiguration_selectStandbyState(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    Pmic_FsmCfg_t fsmCfg_rd = {PMIC_FSM_CFG_LP_STANDBYSEL_VALID_SHIFT,};
+    Pmic_FsmCfg_t fsmCfg =
+    {
+        PMIC_FSM_CFG_LP_STANDBYSEL_VALID_SHIFT,
+        PMIC_FSM_FAST_BIST_DISABLE,
+        PMIC_FSM_SELECT_STANDBY_STATE,
+        PMIC_FSM_ILIM_INT_FSMCTRL_DISABLE,
+        PMIC_FSM_STARTUPDEST_ACTIVE
+    };
+
+    test_pmic_print_unity_testcase_info(10082,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmSetConfiguration(pPmicCoreHandle, fsmCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmGetConfiguration(pPmicCoreHandle, &fsmCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    TEST_ASSERT_EQUAL(fsmCfg.lpStandbySel, fsmCfg_rd.lpStandbySel);
+
+    pmic_testResultUpdate_pass(10082,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmSetConfiguration/Pmic_fsmGetConfiguration : Enable Buck/LDO regulators ILIM
+ */
+static void test_pmic_fsmSetConfiguration_ilimIntfsmCtrlEnable(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    Pmic_FsmCfg_t fsmCfg_rd = {PMIC_FSM_CFG_ILIM_INT_FSMCTRL_EN_VALID_SHIFT,};
+    Pmic_FsmCfg_t fsmCfg =
+    {
+        PMIC_FSM_CFG_ILIM_INT_FSMCTRL_EN_VALID_SHIFT,
+        PMIC_FSM_FAST_BIST_ENABLE,
+        PMIC_FSM_SELECT_STANDBY_STATE,
+        PMIC_FSM_ILIM_INT_FSMCTRL_ENABLE,
+        PMIC_FSM_STARTUPDEST_ACTIVE
+    };
+
+    test_pmic_print_unity_testcase_info(10083,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmSetConfiguration(pPmicCoreHandle, fsmCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmGetConfiguration(pPmicCoreHandle, &fsmCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    TEST_ASSERT_EQUAL(fsmCfg.ilimIntfsmCtrlEn, fsmCfg_rd.ilimIntfsmCtrlEn);
+
+    pmic_testResultUpdate_pass(10083,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmSetConfiguration/Pmic_fsmGetConfiguration : Disable Buck/LDO regulators ILIM
+ */
+static void test_pmic_fsmSetConfiguration_ilimIntfsmCtrlDisable(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    Pmic_FsmCfg_t fsmCfg_rd = {PMIC_FSM_CFG_ILIM_INT_FSMCTRL_EN_VALID_SHIFT,};
+    Pmic_FsmCfg_t fsmCfg =
+    {
+        PMIC_FSM_CFG_ILIM_INT_FSMCTRL_EN_VALID_SHIFT,
+        PMIC_FSM_FAST_BIST_DISABLE,
+        PMIC_FSM_SELECT_STANDBY_STATE,
+        PMIC_FSM_ILIM_INT_FSMCTRL_DISABLE,
+        PMIC_FSM_STARTUPDEST_ACTIVE
+    };
+
+    test_pmic_print_unity_testcase_info(10084,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmSetConfiguration(pPmicCoreHandle, fsmCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmGetConfiguration(pPmicCoreHandle, &fsmCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    TEST_ASSERT_EQUAL(fsmCfg.ilimIntfsmCtrlEn, fsmCfg_rd.ilimIntfsmCtrlEn);
+
+    pmic_testResultUpdate_pass(10084,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmSetConfiguration/Pmic_fsmGetConfiguration : Select FSM Startup Destination as ACTIVE
+ */
+static void test_pmic_fsmSetConfiguration_selectfsmStarupDestActiveState(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    Pmic_FsmCfg_t fsmCfg_rd = {PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID_SHIFT,};
+    Pmic_FsmCfg_t fsmCfg =
+    {
+        PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID_SHIFT,
+        PMIC_FSM_FAST_BIST_DISABLE,
+        PMIC_FSM_SELECT_STANDBY_STATE,
+        PMIC_FSM_ILIM_INT_FSMCTRL_DISABLE,
+        PMIC_FSM_STARTUPDEST_ACTIVE
+    };
+
+    test_pmic_print_unity_testcase_info(10085,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmSetConfiguration(pPmicCoreHandle, fsmCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmGetConfiguration(pPmicCoreHandle, &fsmCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    TEST_ASSERT_EQUAL(fsmCfg.fsmStarupDestSel, fsmCfg_rd.fsmStarupDestSel);
+
+    pmic_testResultUpdate_pass(10085,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmSetConfiguration/Pmic_fsmGetConfiguration : Select FSM Startup Destination as MCUONLY
+ */
+static void test_pmic_fsmSetConfiguration_selectfsmStarupDestMcuonlyState(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    Pmic_FsmCfg_t fsmCfg_rd = {PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID_SHIFT,};
+    Pmic_FsmCfg_t fsmCfg =
+    {
+        PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID_SHIFT,
+        PMIC_FSM_FAST_BIST_DISABLE,
+        PMIC_FSM_SELECT_STANDBY_STATE,
+        PMIC_FSM_ILIM_INT_FSMCTRL_DISABLE,
+        PMIC_FSM_STARTUPDEST_MCUONLY
+    };
+
+    test_pmic_print_unity_testcase_info(10086,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmSetConfiguration(pPmicCoreHandle, fsmCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmGetConfiguration(pPmicCoreHandle, &fsmCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    TEST_ASSERT_EQUAL(fsmCfg.fsmStarupDestSel, fsmCfg_rd.fsmStarupDestSel);
+
+    pmic_testResultUpdate_pass(10086,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmSetConfiguration/Pmic_fsmGetConfiguration : Select FSM Startup Destination as STANDBY/LPSTANDBY
+ */
+static void test_pmic_fsmSetConfiguration_selectfsmStarupDestStandbyOrLpStandbyState(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    Pmic_FsmCfg_t fsmCfg_rd = {PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID_SHIFT,};
+    Pmic_FsmCfg_t fsmCfg =
+    {
+        PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID_SHIFT,
+        PMIC_FSM_FAST_BIST_DISABLE,
+        PMIC_FSM_SELECT_STANDBY_STATE,
+        PMIC_FSM_ILIM_INT_FSMCTRL_DISABLE,
+        PMIC_FSM_STARTUPDEST_STANDBY_LPSTANDBY
+    };
+
+    test_pmic_print_unity_testcase_info(10087,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmSetConfiguration(pPmicCoreHandle, fsmCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmGetConfiguration(pPmicCoreHandle, &fsmCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    TEST_ASSERT_EQUAL(fsmCfg.fsmStarupDestSel, fsmCfg_rd.fsmStarupDestSel);
+
+    pmic_testResultUpdate_pass(10087,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmSetConfiguration : Parameter validation for handle
+ */
+static void test_pmic_fsmSetConfiguration_prmValTest_handle(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    Pmic_FsmCfg_t fsmCfg =
+    {
+        PMIC_FSM_CFG_FAST_BIST_EN_VALID_SHIFT,
+        PMIC_FSM_FAST_BIST_DISABLE,
+        PMIC_FSM_SELECT_STANDBY_STATE,
+        PMIC_FSM_ILIM_INT_FSMCTRL_DISABLE,
+        PMIC_FSM_STARTUPDEST_ACTIVE
+    };
+
+    test_pmic_print_unity_testcase_info(10088,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmSetConfiguration(NULL, fsmCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+
+    pmic_testResultUpdate_pass(10088,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmSetConfiguration : Parameter Range validation for fsmStarupDestSel Param
+ */
+static void test_pmic_fsmSetConfiguration_prmValTest_fsmStarupDestSel(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    Pmic_FsmCfg_t fsmCfg =
+    {
+        PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID_SHIFT,
+        PMIC_FSM_FAST_BIST_DISABLE,
+        PMIC_FSM_SELECT_STANDBY_STATE,
+        PMIC_FSM_ILIM_INT_FSMCTRL_DISABLE,
+        4U
+    };
+
+    test_pmic_print_unity_testcase_info(10089,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmSetConfiguration(pPmicCoreHandle, fsmCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+
+    pmic_testResultUpdate_pass(10089,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmGetConfiguration : Parameter validation for handle
+ */
+static void test_pmic_fsmGetConfiguration_prmValTest_handle(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    Pmic_FsmCfg_t fsmCfg_rd;
+
+    test_pmic_print_unity_testcase_info(10090,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmGetConfiguration(NULL, &fsmCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+
+
+    pmic_testResultUpdate_pass(10090,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmGetConfiguration : Parameter validation for fsmCfg
+ */
+static void test_pmic_fsmGetConfiguration_prmValTest_fsmCfg(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(10091,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmGetConfiguration(pPmicCoreHandle, NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+
+    pmic_testResultUpdate_pass(10091,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmSetPfsmDelay/Pmic_fsmGetPfsmDelay : Configure PFSM Delay
+ */
+static void test_pmic_fsmSetPfsmDelay(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+    uint8_t delayType, delayVal[4], tstDelayVal[4], tstDelayVal_rd;
+
+    test_pmic_print_unity_testcase_info(10092,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    for(delayType = PMIC_PFSM_DELAY1; delayType <= PMIC_PFSM_DELAY4; delayType++)
+    {
+        status = Pmic_fsmGetPfsmDelay(pPmicCoreHandle,
+                                      delayType,
+                                      &delayVal[delayType]);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        tstDelayVal[delayType] = delayVal[delayType] + 10 + delayType;
+
+    }
+
+    for(delayType = PMIC_PFSM_DELAY1; delayType <= PMIC_PFSM_DELAY4; delayType++)
+    {
+        status = Pmic_fsmSetPfsmDelay(pPmicCoreHandle,
+                                      delayType,
+                                      tstDelayVal[delayType]);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        status = Pmic_fsmGetPfsmDelay(pPmicCoreHandle,
+                                      delayType,
+                                      &tstDelayVal_rd);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        TEST_ASSERT_EQUAL(tstDelayVal_rd, tstDelayVal[delayType]);
+    }
+
+    for(delayType = PMIC_PFSM_DELAY1; delayType <= PMIC_PFSM_DELAY4; delayType++)
+    {
+        status = Pmic_fsmSetPfsmDelay(pPmicCoreHandle,
+                                      delayType,
+                                      delayVal[delayType]);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    }
+
+    pmic_testResultUpdate_pass(10092,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmSetPfsmDelay : Parameter validation for handle
+ */
+static void test_pmic_fsmSetPfsmDelay_prmValTest_handle(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(10093,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmSetPfsmDelay(NULL, PMIC_PFSM_DELAY1, 10U);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+
+    pmic_testResultUpdate_pass(10093,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmSetPfsmDelay : Parameter Range validation for pFsmDelayType Param
+ */
+static void test_pmic_fsmSetPfsmDelay_prmValTest_fsmStarupDestSel(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(10094,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmSetPfsmDelay(pPmicCoreHandle, 4U, 10U);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+
+    pmic_testResultUpdate_pass(10094,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmGetPfsmDelay : Parameter validation for handle
+ */
+static void test_pmic_fsmGetPfsmDelay_prmValTest_handle(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+    uint8_t delayVal;
+
+    test_pmic_print_unity_testcase_info(10095,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmGetPfsmDelay(NULL, PMIC_PFSM_DELAY1, &delayVal);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+
+    pmic_testResultUpdate_pass(10095,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmGetPfsmDelay : Parameter Range validation for pFsmDelayType Param
+ */
+static void test_pmic_fsmGetPfsmDelay_prmValTest_fsmStarupDestSel(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+    uint8_t delayVal;
+
+    test_pmic_print_unity_testcase_info(10096,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmGetPfsmDelay(pPmicCoreHandle, 4U, &delayVal);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+
+    pmic_testResultUpdate_pass(10096,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmGetPfsmDelay : Parameter validation for PfsmDelay Param
+ */
+static void test_pmic_fsmGetPfsmDelay_prmValTest_PfsmDelay(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(10097,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmGetPfsmDelay(pPmicCoreHandle, PMIC_PFSM_DELAY4, NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+
+    pmic_testResultUpdate_pass(10097,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmSetNsleepSignalVal/Pmic_fsmGetNsleepSignalVal : Configure NSleep1 Signal as Low
+ */
+static void test_pmic_fsmSetNsleepSignalVal_nsleep1Low(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+    uint8_t nsleepVal;
+
+    test_pmic_print_unity_testcase_info(10098,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+#if defined(SOC_J721E)
+    pmic_log("\r\n Probe TP134 and it should change from High to Low.");
+    pmic_log("\r\n Probe TP133 and it should continue to be in HIGH");
+#endif
+#if defined(SOC_J7200)
+    pmic_log("\r\n Probe TP46 and it should change from High to Low.");
+    pmic_log("\r\n Probe TP29 and it should continue to be in HIGH");
+#endif
+
+    status = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
+                                        PMIC_NSLEEP1_SIGNAL,
+                                        PMIC_NSLEEP_LOW);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmGetNsleepSignalVal(pPmicCoreHandle,
+                                        PMIC_NSLEEP1_SIGNAL,
+                                        &nsleepVal);
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    TEST_ASSERT_EQUAL(nsleepVal, PMIC_NSLEEP_LOW);
+
+    pmic_testResultUpdate_pass(10098,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmSetNsleepSignalVal/Pmic_fsmGetNsleepSignalVal : Configure NSleep1 Signal as High
+ */
+static void test_pmic_fsmSetNsleepSignalVal_nsleep1High(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+    uint8_t nsleepVal;
+
+    test_pmic_print_unity_testcase_info(10099,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
+                                        PMIC_NSLEEP1_SIGNAL,
+                                        PMIC_NSLEEP_HIGH);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmGetNsleepSignalVal(pPmicCoreHandle,
+                                        PMIC_NSLEEP1_SIGNAL,
+                                        &nsleepVal);
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    TEST_ASSERT_EQUAL(nsleepVal, PMIC_NSLEEP_HIGH);
+
+    pmic_testResultUpdate_pass(10099,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmSetNsleepSignalVal/Pmic_fsmGetNsleepSignalVal : Configure NSleep2 Signal as Low
+ */
+static void test_pmic_fsmSetNsleepSignalVal_nsleep2Low(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+    uint8_t nsleepVal;
+
+    test_pmic_print_unity_testcase_info(10101,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+#if defined(SOC_J721E)
+     pmic_log("\r\n Probe TP134 and TP133 and it should change from High to Low.");
+#endif
+#if defined(SOC_J7200)
+     pmic_log("\r\n Probe TP46 and TP29 and it should change from High to Low.");
+#endif
+
+    status = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
+                                        PMIC_NSLEEP2_SIGNAL,
+                                        PMIC_NSLEEP_LOW);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmGetNsleepSignalVal(pPmicCoreHandle,
+                                        PMIC_NSLEEP2_SIGNAL,
+                                        &nsleepVal);
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    TEST_ASSERT_EQUAL(nsleepVal, PMIC_NSLEEP_LOW);
+
+    pmic_testResultUpdate_pass(10101,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmSetNsleepSignalVal/Pmic_fsmGetNsleepSignalVal : Configure NSleep2 Signal as High
+ */
+static void test_pmic_fsmSetNsleepSignalVal_nsleep2High(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+    uint8_t nsleepVal;
+
+    test_pmic_print_unity_testcase_info(10102,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
+                                        PMIC_NSLEEP2_SIGNAL,
+                                        PMIC_NSLEEP_HIGH);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmGetNsleepSignalVal(pPmicCoreHandle,
+                                        PMIC_NSLEEP2_SIGNAL,
+                                        &nsleepVal);
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    TEST_ASSERT_EQUAL(nsleepVal, PMIC_NSLEEP_HIGH);
+
+    pmic_testResultUpdate_pass(10102,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmSetNsleepSignalVal : Parameter validation for handle
+ */
+static void test_pmic_fsmSetNsleepSignalVal_prmValTest_handle(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(10103,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmSetNsleepSignalVal(NULL,
+                                        PMIC_NSLEEP2_SIGNAL,
+                                        PMIC_NSLEEP_HIGH);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+
+    pmic_testResultUpdate_pass(10103,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmSetNsleepSignalVal : Parameter Range validation for nsleepVal Param
+ */
+static void test_pmic_fsmSetNsleepSignalVal_prmValTest_nsleepVal(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(10104,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
+                                        PMIC_NSLEEP2_SIGNAL,
+                                        2U);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+
+    pmic_testResultUpdate_pass(10104,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmGetNsleepSignalVal : Parameter validation for handle
+ */
+static void test_pmic_fsmGetNsleepSignalVal_prmValTest_handle(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+    uint8_t nsleepVal;
+
+    test_pmic_print_unity_testcase_info(10105,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmGetNsleepSignalVal(NULL,
+                                        PMIC_NSLEEP2_SIGNAL,
+                                        &nsleepVal);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+
+    pmic_testResultUpdate_pass(10105,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmGetNsleepSignalVal : Parameter validation for nsleepVal Param
+ */
+static void test_pmic_fsmGetNsleepSignalVal_prmValTest_nsleepVal(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(10106,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmGetNsleepSignalVal(pPmicCoreHandle,
+                                        PMIC_NSLEEP2_SIGNAL,
+                                        NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+
+    pmic_testResultUpdate_pass(10106,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+#if 0
+/*!
+ * \brief   Pmic_fsmRecoverSocPwrErr: Configure NSleep1 Signal as Low
+ */
+static void test_pmic_fsmRecoverSocPwrErr_nsleepLow(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(10109,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmRecoverSocPwrErr(pPmicCoreHandle,
+                                      PMIC_NSLEEP_LOW);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    pmic_testResultUpdate_pass(10109,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmRecoverSocPwrErr: Configure NSleep1 Signal as High
+ */
+static void test_pmic_fsmRecoverSocPwrErr_nsleepHigh(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(10110,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmRecoverSocPwrErr(pPmicCoreHandle,
+                                      PMIC_NSLEEP_HIGH);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    pmic_testResultUpdate_pass(10110,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+#endif
+
+/*!
+ * \brief   Pmic_fsmRecoverSocPwrErr: Parameter validation for handle
+ */
+static void test_pmic_fsmRecoverSocPwrErr_prmValTest_handle(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(10111,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmRecoverSocPwrErr(NULL,
+                                      PMIC_NSLEEP_LOW);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+
+    pmic_testResultUpdate_pass(10111,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmRecoverSocPwrErr: Parameter Range validation for nsleepVal Param
+ */
+static void test_pmic_fsmRecoverSocPwrErr_prmValTest_nsleepVal(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(10112,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmRecoverSocPwrErr(pPmicCoreHandle, 2U);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+
+    pmic_testResultUpdate_pass(10112,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmEnableI2cTrigger: Trigger i2C4 with trigger value as '1' and '0'
+ */
+static void test_pmic_fsmEnableI2cTrigger_i2C4(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+    uint8_t i2cTriggerVal;
+
+    test_pmic_print_unity_testcase_info(10113,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle,
+                                      PMIC_FSM_I2C_TRIGGER4,
+                                      PMIC_FSM_I2C_TRIGGER_VAL_1);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmGetI2cTriggerVal(pPmicCoreHandle,
+                                      PMIC_FSM_I2C_TRIGGER4,
+                                      &i2cTriggerVal);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(i2cTriggerVal, PMIC_FSM_I2C_TRIGGER_VAL_1);
+
+    status = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle,
+                                      PMIC_FSM_I2C_TRIGGER4,
+                                      PMIC_FSM_I2C_TRIGGER_VAL_0);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmGetI2cTriggerVal(pPmicCoreHandle,
+                                      PMIC_FSM_I2C_TRIGGER4,
+                                      &i2cTriggerVal);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(i2cTriggerVal, PMIC_FSM_I2C_TRIGGER_VAL_0);
+
+    pmic_testResultUpdate_pass(10113,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmEnableI2cTrigger: Trigger i2C5 with trigger value as '1' and '0'
+ */
+static void test_pmic_fsmEnableI2cTrigger_i2C5(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+    uint8_t i2cTriggerVal;
+
+    test_pmic_print_unity_testcase_info(10114,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle,
+                                      PMIC_FSM_I2C_TRIGGER5,
+                                      PMIC_FSM_I2C_TRIGGER_VAL_1);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmGetI2cTriggerVal(pPmicCoreHandle,
+                                      PMIC_FSM_I2C_TRIGGER5,
+                                      &i2cTriggerVal);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(i2cTriggerVal, PMIC_FSM_I2C_TRIGGER_VAL_1);
+
+    status = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle,
+                                      PMIC_FSM_I2C_TRIGGER5,
+                                      PMIC_FSM_I2C_TRIGGER_VAL_0);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmGetI2cTriggerVal(pPmicCoreHandle,
+                                      PMIC_FSM_I2C_TRIGGER5,
+                                      &i2cTriggerVal);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(i2cTriggerVal, PMIC_FSM_I2C_TRIGGER_VAL_0);
+
+    pmic_testResultUpdate_pass(10114,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmEnableI2cTrigger: Trigger i2C6 with trigger value as '1' and '0'
+ */
+static void test_pmic_fsmEnableI2cTrigger_i2C6(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+    uint8_t i2cTriggerVal;
+
+    test_pmic_print_unity_testcase_info(10118,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle,
+                                      PMIC_FSM_I2C_TRIGGER6,
+                                      PMIC_FSM_I2C_TRIGGER_VAL_1);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmGetI2cTriggerVal(pPmicCoreHandle,
+                                      PMIC_FSM_I2C_TRIGGER6,
+                                      &i2cTriggerVal);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(i2cTriggerVal, PMIC_FSM_I2C_TRIGGER_VAL_1);
+
+    status = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle,
+                                      PMIC_FSM_I2C_TRIGGER6,
+                                      PMIC_FSM_I2C_TRIGGER_VAL_0);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmGetI2cTriggerVal(pPmicCoreHandle,
+                                      PMIC_FSM_I2C_TRIGGER6,
+                                      &i2cTriggerVal);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(i2cTriggerVal, PMIC_FSM_I2C_TRIGGER_VAL_0);
+
+    pmic_testResultUpdate_pass(10118,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmEnableI2cTrigger: Trigger i2C7 with trigger value as '1' and '0'
+ */
+static void test_pmic_fsmEnableI2cTrigger_i2C7(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+    uint8_t i2cTriggerVal;
+
+    test_pmic_print_unity_testcase_info(10119,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle,
+                                      PMIC_FSM_I2C_TRIGGER7,
+                                      PMIC_FSM_I2C_TRIGGER_VAL_1);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmGetI2cTriggerVal(pPmicCoreHandle,
+                                      PMIC_FSM_I2C_TRIGGER7,
+                                      &i2cTriggerVal);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(i2cTriggerVal, PMIC_FSM_I2C_TRIGGER_VAL_1);
+
+    status = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle,
+                                      PMIC_FSM_I2C_TRIGGER7,
+                                      PMIC_FSM_I2C_TRIGGER_VAL_0);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmGetI2cTriggerVal(pPmicCoreHandle,
+                                      PMIC_FSM_I2C_TRIGGER7,
+                                      &i2cTriggerVal);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(i2cTriggerVal, PMIC_FSM_I2C_TRIGGER_VAL_0);
+
+    pmic_testResultUpdate_pass(10119,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmGetI2cTriggerVal: Get FSM i2C0/i2C1/i2C2/i2c3 trigger value
+ */
+static void test_pmic_fsmGetI2cTriggerVal_i2C0_i2c1_i2c2_i2c3(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+    uint8_t i2cTriggerVal;
+
+    test_pmic_print_unity_testcase_info(10120,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmGetI2cTriggerVal(pPmicCoreHandle,
+                                      PMIC_FSM_I2C_TRIGGER0,
+                                      &i2cTriggerVal);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(i2cTriggerVal, PMIC_FSM_I2C_TRIGGER_VAL_0);
+
+    status = Pmic_fsmGetI2cTriggerVal(pPmicCoreHandle,
+                                      PMIC_FSM_I2C_TRIGGER1,
+                                      &i2cTriggerVal);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(i2cTriggerVal, PMIC_FSM_I2C_TRIGGER_VAL_0);
+
+    status = Pmic_fsmGetI2cTriggerVal(pPmicCoreHandle,
+                                      PMIC_FSM_I2C_TRIGGER2,
+                                      &i2cTriggerVal);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(i2cTriggerVal, PMIC_FSM_I2C_TRIGGER_VAL_0);
+
+    status = Pmic_fsmGetI2cTriggerVal(pPmicCoreHandle,
+                                      PMIC_FSM_I2C_TRIGGER3,
+                                      &i2cTriggerVal);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(i2cTriggerVal, PMIC_FSM_I2C_TRIGGER_VAL_0);
+
+    pmic_testResultUpdate_pass(10120,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmEnableI2cTrigger: Parameter validation for handle
+ */
+static void test_pmic_fsmEnableI2cTrigger_prmValTest_handle(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(10115,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmEnableI2cTrigger(NULL,
+                                      PMIC_FSM_I2C_TRIGGER0,
+                                      PMIC_FSM_I2C_TRIGGER_VAL_1);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+
+    pmic_testResultUpdate_pass(10115,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmEnableI2cTrigger: Parameter Range validation for i2cTriggerVal
+ *          param for i2C0/i2C1/i2C2/i2C3/i2C4/i2C5/i2C6/i2C7 Trigger type
+ */
+static void test_pmic_fsmEnableI2cTrigger_prmValTest_i2cTriggerVal(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+    uint8_t i2cTriggerType;
+
+    test_pmic_print_unity_testcase_info(10116,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    for(i2cTriggerType = PMIC_FSM_I2C_TRIGGER0; i2cTriggerType <= PMIC_FSM_I2C_TRIGGER7; i2cTriggerType++)
+    {
+        if(i2cTriggerType < PMIC_FSM_I2C_TRIGGER4)
+        {
+            status = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle,
+                                              i2cTriggerType,
+                                              0U);
+            TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+        }
+
+        status = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle,
+                                          i2cTriggerType,
+                                          2U);
+        TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+    }
+
+    pmic_testResultUpdate_pass(10116,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmEnableI2cTrigger: Parameter Range validation for i2c Trigger type
+ */
+static void test_pmic_fsmEnableI2cTrigger_prmValTest_i2cTriggerType(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(10117,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle,
+                                      8U,
+                                      PMIC_FSM_I2C_TRIGGER_VAL_1);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+
+    pmic_testResultUpdate_pass(10117,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+#if defined(ENABLE_SAMPLE_TESTCASES)
+/*!
+ * Below test cases are not tested as the PMIC Team team has verified the
+ * Voltage rails
+ * Added below test cases as sample for reference.
+ */
+
+/*!
+ * \brief   Pmic_fsmRequestDdrGpioRetentionMode : DDR Retention mode with trigger value as '1'
+ *          Configured to MCU State using NSleep Signal
+ */
+static void test_pmic_fsmRequestDdrGpioRetentionMode_ddrRmi2CTriggerVal1(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(0xAB2E,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmRequestDdrGpioRetentionMode(pPmicCoreHandle,
+                                                 PMIC_FSM_DDR_RETENTION_MODE,
+                                                 PMIC_FSM_I2C_TRIGGER_VAL_1);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
+                                        PMIC_NSLEEP1_SIGNAL,
+                                        PMIC_NSLEEP_LOW);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    pmic_testResultUpdate_pass(0xAB2E,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmRequestDdrGpioRetentionMode : DDR Retention mode with trigger value as '0'
+ *          Configured to MCU State using NSleep Signal
+ */
+static void test_pmic_fsmRequestDdrGpioRetentionMode_ddrRmi2CTriggerVal0(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(0xAB2F,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmRequestDdrGpioRetentionMode(pPmicCoreHandle,
+                                                 PMIC_FSM_DDR_RETENTION_MODE,
+                                                 PMIC_FSM_I2C_TRIGGER_VAL_0);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
+                                        PMIC_NSLEEP1_SIGNAL,
+                                        PMIC_NSLEEP_LOW);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+
+    pmic_testResultUpdate_pass(0xAB2F,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+#if defined(SOC_J7200)
+/*!
+ * \brief   Pmic_fsmRequestDdrGpioRetentionMode : GPIO Retention mode with trigger value as '1'
+ *          Configured to MCU State using NSleep Signal
+ */
+static void test_pmic_fsmRequestDdrGpioRetentionMode_gpioRmi2CTriggerVal1(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(0xAB30,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmRequestDdrGpioRetentionMode(pPmicCoreHandle,
+                                                 PMIC_FSM_GPIO_RETENTION_MODE,
+                                                 PMIC_FSM_I2C_TRIGGER_VAL_1);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
+                                        PMIC_NSLEEP1_SIGNAL,
+                                        PMIC_NSLEEP_LOW);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    pmic_testResultUpdate_pass(0xAB30,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmRequestDdrGpioRetentionMode : GPIO Retention mode with trigger value as '0'
+ *          Configured to MCU State using NSleep Signal
+ */
+static void test_pmic_fsmRequestDdrGpioRetentionMode_gpioRmi2CTriggerVal0(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(0xAB31,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmRequestDdrGpioRetentionMode(pPmicCoreHandle,
+                                                 PMIC_FSM_GPIO_RETENTION_MODE,
+                                                 PMIC_FSM_I2C_TRIGGER_VAL_0);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
+                                        PMIC_NSLEEP1_SIGNAL,
+                                        PMIC_NSLEEP_LOW);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    pmic_testResultUpdate_pass(0xAB31,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmRequestDdrGpioRetentionMode : GPIO Retention mode with trigger value as '1'
+ *          Configured to S2R State using NSleep Signal
+ */
+static void test_pmic_fsmRequestDdrGpioRetentionMode_gpioRmi2CTriggerVal1_s2R(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(0xAB32,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmRequestDdrGpioRetentionMode(pPmicCoreHandle,
+                                                 PMIC_FSM_GPIO_RETENTION_MODE,
+                                                 PMIC_FSM_I2C_TRIGGER_VAL_1);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
+                                        PMIC_NSLEEP2_SIGNAL,
+                                        PMIC_NSLEEP_LOW);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    pmic_testResultUpdate_pass(0xAB32,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+#endif
+
+/*!
+ * \brief   Pmic_fsmRequestDdrGpioRetentionMode : DDR Retention mode with trigger value as '1'
+ *          Configured to S2R State using NSleep Signal
+ */
+static void test_pmic_fsmRequestDdrGpioRetentionMode_ddrRmi2CTriggerVal1_s2R(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(0xAB33,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmRequestDdrGpioRetentionMode(pPmicCoreHandle,
+                                                 PMIC_FSM_DDR_RETENTION_MODE,
+                                                 PMIC_FSM_I2C_TRIGGER_VAL_1);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
+                                        PMIC_NSLEEP2_SIGNAL,
+                                        PMIC_NSLEEP_LOW);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    pmic_testResultUpdate_pass(0xAB33,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+#endif
+
+/*!
+ * \brief   Pmic_fsmRequestDdrGpioRetentionMode : Parameter validation for handle
+ */
+static void test_pmic_fsmRequestDdrGpioRetentionMode_prmValTest_handle(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(10122,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmRequestDdrGpioRetentionMode(NULL,
+                                                 PMIC_FSM_GPIO_RETENTION_MODE,
+                                                 PMIC_FSM_I2C_TRIGGER_VAL_0);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+
+    pmic_testResultUpdate_pass(10122,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmRequestDdrGpioRetentionMode : Parameter Range validation for retentionMode
+ */
+static void test_pmic_fsmRequestDdrGpioRetentionMode_prmValTest_retentionMode(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(10123,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmRequestDdrGpioRetentionMode(pPmicCoreHandle,
+                                                 2U,
+                                                 PMIC_FSM_I2C_TRIGGER_VAL_0);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+
+    pmic_testResultUpdate_pass(10123,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmRequestDdrGpioRetentionMode : Parameter Range validation for i2cTriggerVal
+ */
+static void test_pmic_fsmRequestDdrGpioRetentionMode_prmValTest_i2cTriggerVal(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(10124,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmRequestDdrGpioRetentionMode(pPmicCoreHandle,
+                                                 PMIC_FSM_GPIO_RETENTION_MODE,
+                                                 2U);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+
+    pmic_testResultUpdate_pass(10124,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_fsmSetConfiguration/Pmic_fsmGetConfiguration : Disable Fast BIST
+ */
+static void test_pmic_fsmSetConfiguration_fastBistDisable(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+
+    Pmic_FsmCfg_t fsmCfg_rd = {PMIC_FSM_CFG_FAST_BIST_EN_VALID_SHIFT,};
+    Pmic_FsmCfg_t fsmCfg =
+    {
+        PMIC_FSM_CFG_FAST_BIST_EN_VALID_SHIFT,
+        PMIC_FSM_FAST_BIST_DISABLE,
+        PMIC_FSM_SELECT_STANDBY_STATE,
+        PMIC_FSM_ILIM_INT_FSMCTRL_DISABLE,
+        PMIC_FSM_STARTUPDEST_ACTIVE
+    };
+
+    test_pmic_print_unity_testcase_info(10125,
+                                        pmic_fsm_tests,
+                                        PMIC_FSM_NUM_OF_TESTCASES);
+
+    status = Pmic_fsmSetConfiguration(pPmicCoreHandle, fsmCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmGetConfiguration(pPmicCoreHandle, &fsmCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    TEST_ASSERT_EQUAL(fsmCfg.fastBistEn, fsmCfg_rd.fastBistEn);
+
+    pmic_testResultUpdate_pass(10125,
+                               pmic_fsm_tests,
+                               PMIC_FSM_NUM_OF_TESTCASES);
+}
+
+
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E) || defined(SOC_J7200))
 
@@ -587,19 +2210,67 @@ static void test_pmic_run_testcases(void)
 
     pmic_testResult_init(pmic_fsm_tests, PMIC_FSM_NUM_OF_TESTCASES);
 
-    RUN_TEST(test_Pmic_fsmSetNsleepSignalMask_mask_nsleep1);
-    RUN_TEST(test_Pmic_fsmSetNsleepSignalMask_unmask_nsleep1);
-    RUN_TEST(test_Pmic_fsmSetNsleepSignalMask_mask_nsleep2);
-    RUN_TEST(test_Pmic_fsmSetNsleepSignalMask_unmask_nsleep2);
-    RUN_TEST(test_Pmic_fsmSetMissionState_active);
-    RUN_TEST(test_Pmic_fsmSetMissionStatePrmValTest_handle);
-    RUN_TEST(test_Pmic_fsmSetMissionStatePrmValTest_state);
-    RUN_TEST(test_Pmic_fsmSetNsleepSignalMaskStatePrmValTest_handle);
-    RUN_TEST(test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_handle);
-    RUN_TEST(test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_eventType);
-    RUN_TEST(test_pmic_rtc_fsmDevOffReqCfg_PrmValTest_fsmState);
-    RUN_TEST(test_Pmic_fsmRuntimeBistRequestPrmValTest_handle);
-    RUN_TEST(test_Pmic_Pmic_fsmDeviceOnRequestPrmValTest_handle);
+    RUN_TEST(test_pmic_fsmSetNsleepSignalMask_mask_nsleep1);
+    RUN_TEST(test_pmic_fsmSetNsleepSignalMask_unmask_nsleep1);
+    RUN_TEST(test_pmic_fsmSetNsleepSignalMask_mask_nsleep2);
+    RUN_TEST(test_pmic_fsmSetNsleepSignalMask_unmask_nsleep2);
+    RUN_TEST(test_pmic_fsmSetMissionState_active);
+    RUN_TEST(test_pmic_fsmSetMissionStatePrmValTest_handle);
+    RUN_TEST(test_pmic_fsmSetMissionStatePrmValTest_state);
+    RUN_TEST(test_pmic_fsmSetNsleepSignalMaskStatePrmValTest_handle);
+    RUN_TEST(test_pmic_fsmDevOffReqCfg_PrmValTest_handle);
+    RUN_TEST(test_pmic_fsmDevOffReqCfg_PrmValTest_eventType);
+    RUN_TEST(test_pmic_fsmDevOffReqCfg_PrmValTest_fsmState);
+    RUN_TEST(test_pmic_fsmRuntimeBistRequestPrmValTest_handle);
+    RUN_TEST(test_pmic_fsmDeviceOnRequestPrmValTest_handle);
+    RUN_TEST(test_pmic_fsmGetNsleepSignalMaskStatePrmValTest_handle);
+    RUN_TEST(test_pmic_fsmGetNsleepSignalMaskStatePrmValTest_nsleepStat);
+    RUN_TEST(test_pmic_fsmSetConfiguration_fastBistEnable);
+    RUN_TEST(test_pmic_fsmSetConfiguration_selectLpStandbyState);
+    RUN_TEST(test_pmic_fsmSetConfiguration_selectStandbyState);
+    RUN_TEST(test_pmic_fsmSetConfiguration_ilimIntfsmCtrlEnable);
+    RUN_TEST(test_pmic_fsmSetConfiguration_ilimIntfsmCtrlDisable);
+    RUN_TEST(test_pmic_fsmSetConfiguration_selectfsmStarupDestActiveState);
+    RUN_TEST(test_pmic_fsmSetConfiguration_selectfsmStarupDestMcuonlyState);
+    RUN_TEST(test_pmic_fsmSetConfiguration_selectfsmStarupDestStandbyOrLpStandbyState);
+    RUN_TEST(test_pmic_fsmSetConfiguration_prmValTest_handle);
+    RUN_TEST(test_pmic_fsmSetConfiguration_prmValTest_fsmStarupDestSel);
+    RUN_TEST(test_pmic_fsmGetConfiguration_prmValTest_handle);
+    RUN_TEST(test_pmic_fsmGetConfiguration_prmValTest_fsmCfg);
+    RUN_TEST(test_pmic_fsmSetPfsmDelay);
+    RUN_TEST(test_pmic_fsmSetPfsmDelay_prmValTest_handle);
+    RUN_TEST(test_pmic_fsmSetPfsmDelay_prmValTest_fsmStarupDestSel);
+    RUN_TEST(test_pmic_fsmGetPfsmDelay_prmValTest_handle);
+    RUN_TEST(test_pmic_fsmGetPfsmDelay_prmValTest_fsmStarupDestSel);
+    RUN_TEST(test_pmic_fsmGetPfsmDelay_prmValTest_PfsmDelay);
+    RUN_TEST(test_pmic_fsmSetNsleepSignalVal_nsleep1High);
+    RUN_TEST(test_pmic_fsmSetNsleepSignalVal_nsleep2High);
+    RUN_TEST(test_pmic_fsmSetNsleepSignalVal_prmValTest_handle);
+    RUN_TEST(test_pmic_fsmSetNsleepSignalVal_prmValTest_nsleepVal);
+    RUN_TEST(test_pmic_fsmGetNsleepSignalVal_prmValTest_handle);
+    RUN_TEST(test_pmic_fsmGetNsleepSignalVal_prmValTest_nsleepVal);
+
+#if 0 // TBD
+    RUN_TEST(test_pmic_fsmRecoverSocPwrErr_nsleepLow);
+    RUN_TEST(test_pmic_fsmRecoverSocPwrErr_nsleepHigh);
+#endif
+
+    RUN_TEST(test_pmic_fsmRecoverSocPwrErr_prmValTest_handle);
+    RUN_TEST(test_pmic_fsmRecoverSocPwrErr_prmValTest_nsleepVal);
+
+    RUN_TEST(test_pmic_fsmEnableI2cTrigger_i2C4);
+    RUN_TEST(test_pmic_fsmEnableI2cTrigger_i2C5);
+    RUN_TEST(test_pmic_fsmEnableI2cTrigger_i2C6);
+    RUN_TEST(test_pmic_fsmEnableI2cTrigger_i2C7);
+    RUN_TEST(test_pmic_fsmGetI2cTriggerVal_i2C0_i2c1_i2c2_i2c3);
+
+    RUN_TEST(test_pmic_fsmEnableI2cTrigger_prmValTest_handle);
+    RUN_TEST(test_pmic_fsmEnableI2cTrigger_prmValTest_i2cTriggerVal);
+    RUN_TEST(test_pmic_fsmEnableI2cTrigger_prmValTest_i2cTriggerType);
+    RUN_TEST(test_pmic_fsmRequestDdrGpioRetentionMode_prmValTest_handle);
+    RUN_TEST(test_pmic_fsmRequestDdrGpioRetentionMode_prmValTest_retentionMode);
+    RUN_TEST(test_pmic_fsmRequestDdrGpioRetentionMode_prmValTest_i2cTriggerVal);
+    RUN_TEST(test_pmic_fsmSetConfiguration_fastBistDisable);
 
     pmic_updateTestResults(pmic_fsm_tests, PMIC_FSM_NUM_OF_TESTCASES);
 
@@ -853,7 +2524,9 @@ static void print_pmicTestAppManualTestMenu(uint32_t board)
     pmic_log(" \r\n 1: Pmic Leo device(PMIC A on %s EVM Set FSM Mission States - S2R", board_name);
     pmic_log(" \r\n 2: Pmic Leo device(PMIC A on %s EVM Set FSM Mission States - lpStandby", board_name);
     pmic_log(" \r\n 3: Pmic Leo device(PMIC A on %s EVM Set FSM Mission States - Standby", board_name);
-    pmic_log(" \r\n 4: Back to Main Menu");
+    pmic_log(" \r\n 4: Pmic Leo device(PMIC A on %s EVM Set nSleep1 Signal - Active Low", board_name);
+    pmic_log(" \r\n 5: Pmic Leo device(PMIC A on %s EVM Set nSleep2 Signal - Active Low", board_name);
+    pmic_log(" \r\n 6: Back to Main Menu");
     pmic_log(" \r\n");
     pmic_log(" \r\n Enter option: ");
 };
@@ -874,7 +2547,7 @@ static void test_pmic_run_testcases_manual(uint32_t board)
             return;
         }
 
-        if(menuOption == 4)
+        if(menuOption == 6)
         {
             break;
         }
@@ -882,16 +2555,22 @@ static void test_pmic_run_testcases_manual(uint32_t board)
         switch(menuOption)
         {
             case 0U:
-                RUN_TEST(test_Pmic_fsmSetMissionState_mcu);
+                RUN_TEST(test_pmic_fsmSetMissionState_mcu);
                break;
             case 1U:
-                RUN_TEST(test_Pmic_fsmSetMissionState_s2r);
+                RUN_TEST(test_pmic_fsmSetMissionState_s2r);
                break;
             case 2U:
-                RUN_TEST(test_Pmic_fsmSetMissionState_lpstandby);
+                RUN_TEST(test_pmic_fsmSetMissionState_lpstandby);
                break;
             case 3U:
-                RUN_TEST(test_Pmic_fsmSetMissionState_standby);
+                RUN_TEST(test_pmic_fsmSetMissionState_standby);
+               break;
+            case 4U:
+                RUN_TEST(test_pmic_fsmSetNsleepSignalVal_nsleep1Low);
+               break;
+            case 5U:
+                RUN_TEST(test_pmic_fsmSetNsleepSignalVal_nsleep2Low);
                break;
             default:
                pmic_log(" \r\n Invalid option... Try Again!!!\n");
