@@ -81,38 +81,33 @@ static int32_t Pmic_fsmGetstandByCfgRegFields(uint8_t  pmicDeviceType,
 
 /*!
  * \brief   This function is used to get the required BitPos and Mask of
- *          NSLEEP Signals.
+ *          NSLEEP Mask Signals.
  */
-static int32_t Pmic_powerGetNsleepMaskBitField(bool     nsleepType,
-                                               uint8_t *pBitPos,
-                                               uint8_t *pBitMask)
+static void Pmic_fsmGetNsleepMaskBitField(bool     nsleepType,
+                                          uint8_t *pBitPos,
+                                          uint8_t *pBitMask)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-
     if(nsleepType == PMIC_NSLEEP1_SIGNAL)
     {
         *pBitPos  = PMIC_CONFIG_1_NSLEEP1_MASK_SHIFT;
         *pBitMask = PMIC_CONFIG_1_NSLEEP1_MASK_MASK;
     }
+
     if(nsleepType == PMIC_NSLEEP2_SIGNAL)
     {
         *pBitPos  = PMIC_CONFIG_1_NSLEEP2_MASK_SHIFT;
         *pBitMask = PMIC_CONFIG_1_NSLEEP2_MASK_MASK;
     }
-
-    return status;
 }
 
 /*!
  * \brief   This function is used to get the required BitPos and Mask of
  *          FSM I2C Trigger Type .
  */
-static int32_t Pmic_fsmGetI2cTriggerMaskBitField(uint8_t  i2cTriggerType,
-                                                 uint8_t *pBitPos,
-                                                 uint8_t *pBitMask)
+static void Pmic_fsmGetI2cTriggerMaskBitField(uint8_t  i2cTriggerType,
+                                              uint8_t *pBitPos,
+                                              uint8_t *pBitMask)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-
     switch(i2cTriggerType)
     {
         case PMIC_FSM_I2C_TRIGGER1:
@@ -148,8 +143,6 @@ static int32_t Pmic_fsmGetI2cTriggerMaskBitField(uint8_t  i2cTriggerType,
             *pBitMask  = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_0_MASK;
             break;
     }
-
-    return status;
 }
 
 /*!
@@ -184,44 +177,144 @@ static int32_t Pmic_setS2RState(Pmic_CoreHandle_t *pPmicCoreHandle)
 }
 
 /*!
- * \brief   This function is used to set the defined NSLEEP Signal.
+ * \brief   API to set PMIC Nsleep1B/2B Signal value.
+ *
+ * Requirement: REQ_TAG(PDK-9146)
+ * Design: did_pmic_fsm_cfg_readback
+ *
+ *          This function is used to configure the Nsleep1B/2B signal level
+ *
+ * \param   pPmicCoreHandle  [IN]   PMIC Interface Handle.
+ * \param   nsleepType       [IN]   NSLEEP signal
+ *                                  Valid values: \ref Pmic_Nsleep_Signals
+ * \param   nsleepVal        [IN]   PMIC Nsleep signal level High/Low to be
+ *                                  configured.
+ *                                  Valid values \ref Pmic_Nsleep_SignalLvl.
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
  */
-static int32_t Pmic_setNsleepSignal(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                    uint8_t            value,
-                                    bool               nsleepSignal)
+int32_t Pmic_fsmSetNsleepSignalVal(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                   const bool         nsleepType,
+                                   const uint8_t      nsleepVal)
 {
-    int32_t status  = PMIC_ST_SUCCESS;
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     uint8_t bitPos  = 0U;
     uint8_t bitMask = 0U;
 
-    if(PMIC_NSLEEP1_SIGNAL == nsleepSignal)
+    if(NULL == pPmicCoreHandle)
     {
-        bitPos  = PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B_SHIFT;
-        bitMask = PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B_MASK;
-    }
-    if(PMIC_NSLEEP2_SIGNAL == nsleepSignal)
-    {
-        bitPos  = PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B_SHIFT;
-        bitMask = PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B_MASK;
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-    status = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                    PMIC_FSM_NSLEEP_TRIGGERS_REGADDR,
-                                    &regData);
-
-    if(PMIC_ST_SUCCESS == status)
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (nsleepVal > PMIC_NSLEEP_HIGH))
     {
-        Pmic_setBitField(&regData, bitPos, bitMask, value);
-        status = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                        PMIC_FSM_NSLEEP_TRIGGERS_REGADDR,
-                                        regData);
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
     }
 
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        if(PMIC_NSLEEP1_SIGNAL == nsleepType)
+        {
+            bitPos  = PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B_SHIFT;
+            bitMask = PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B_MASK;
+        }
+        if(PMIC_NSLEEP2_SIGNAL == nsleepType)
+        {
+            bitPos  = PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B_SHIFT;
+            bitMask = PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B_MASK;
+        }
 
-    return status;
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                            PMIC_FSM_NSLEEP_TRIGGERS_REGADDR,
+                                            &regData);
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            Pmic_setBitField(&regData, bitPos, bitMask, nsleepVal);
+            pmicStatus = Pmic_commIntf_sendByte(
+                                            pPmicCoreHandle,
+                                            PMIC_FSM_NSLEEP_TRIGGERS_REGADDR,
+                                            regData);
+        }
+
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief   API to get PMIC Nsleep1B/2B Signal value.
+ *
+ * Requirement: REQ_TAG(PDK-9146)
+ * Design: did_pmic_fsm_cfg_readback
+ *
+ *          This function is used to read the signal level of the Nsleep1B/2B
+ *          signal
+ *
+ * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
+ * \param   nsleepType      [IN]    NSLEEP signal
+ *                                  Valid values: \ref Pmic_Nsleep_Signals
+ * \param   pNsleepVal      [OUT]   Pointer to store PMIC Nsleep signal level
+ *                                  High/Low.
+ *                                  Valid values \ref Pmic_Nsleep_SignalLvl
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmGetNsleepSignalVal(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                   const bool         nsleepType,
+                                   uint8_t           *pNsleepVal)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+    uint8_t bitPos  = 0U;
+    uint8_t bitMask = 0U;
+
+    if(NULL == pPmicCoreHandle)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pNsleepVal))
+    {
+        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        if(PMIC_NSLEEP1_SIGNAL == nsleepType)
+        {
+            bitPos  = PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B_SHIFT;
+            bitMask = PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B_MASK;
+        }
+        if(PMIC_NSLEEP2_SIGNAL == nsleepType)
+        {
+            bitPos  = PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B_SHIFT;
+            bitMask = PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B_MASK;
+        }
+
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                            PMIC_FSM_NSLEEP_TRIGGERS_REGADDR,
+                                            &regData);
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            *pNsleepVal = Pmic_getBitField(regData, bitPos, bitMask);
+
+        }
+
+    }
+
+    return pmicStatus;
+
 }
 
 /*!
@@ -232,6 +325,10 @@ static int32_t Pmic_setNsleepSignal(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  *          This function is used to to initiate FSM I2C trigger for given FSM
  *          I2C trigger type
+ *          Note: In this API, the default i2cTriggerType is assumed as
+ *                PMIC_FSM_I2C_TRIGGER0. While adding support for New PMIC
+ *                device, developer need to update the API functionality for
+ *                New PMIC device accordingly.
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
  * \param   i2cTriggerType  [IN]    FSM I2C Trigger Type
@@ -257,7 +354,7 @@ int32_t Pmic_fsmEnableI2cTrigger(Pmic_CoreHandle_t  *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       ((i2cTriggerType > PMIC_FSM_I2C_TRIGGER7) &&
+       ((i2cTriggerType > PMIC_FSM_I2C_TRIGGER7) ||
         (i2cTriggerVal > PMIC_FSM_I2C_TRIGGER_VAL_1)))
     {
         pmicStatus = PMIC_ST_ERR_INV_PARAM;
@@ -280,13 +377,9 @@ int32_t Pmic_fsmEnableI2cTrigger(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            pmicStatus = Pmic_fsmGetI2cTriggerMaskBitField(i2cTriggerType,
-                                                           &bitPos,
-                                                           &bitMask);
-        }
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
+            Pmic_fsmGetI2cTriggerMaskBitField(i2cTriggerType,
+                                              &bitPos,
+                                              &bitMask);
             Pmic_setBitField(&regData,
                              bitPos,
                              bitMask,
@@ -298,6 +391,69 @@ int32_t Pmic_fsmEnableI2cTrigger(Pmic_CoreHandle_t  *pPmicCoreHandle,
         }
 
         Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief   API to get FSM I2C trigger Value for given FSM I2C trigger type
+ *
+ * Requirement: REQ_TAG(PDK-9330)
+ * Design: did_pmic_fsm_i2c_trigger
+ *
+ *          This function is used to read the FSM I2C trigger Value of the
+ *          FSM Trigger Type
+ *
+ * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
+ * \param   i2cTriggerType  [IN]    FSM I2C Trigger Type
+ *                                  Valid values: \ref Pmic_Fsm_I2c_Trigger_Type
+ * \param   pI2cTriggerVal  [OUT]   Pointer to store FSM I2C Trigger Value
+ *                                  Valid values \ref Pmic_Fsm_I2c_Trigger_Val
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmGetI2cTriggerVal(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                 const uint8_t      i2cTriggerType,
+                                 uint8_t           *pI2cTriggerVal)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+    uint8_t bitPos  = 0U;
+    uint8_t bitMask = 0U;
+
+    if(NULL == pPmicCoreHandle)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pI2cTriggerVal))
+    {
+        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (i2cTriggerType > PMIC_FSM_I2C_TRIGGER7))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                            PMIC_FSM_I2C_TRIGGERS_REGADDR,
+                                            &regData);
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        Pmic_fsmGetI2cTriggerMaskBitField(i2cTriggerType,
+                                          &bitPos,
+                                          &bitMask);
+        *pI2cTriggerVal = Pmic_getBitField(regData, bitPos, bitMask);
     }
 
     return pmicStatus;
@@ -324,28 +480,28 @@ static int32_t Pmic_setState(Pmic_CoreHandle_t  *pPmicCoreHandle,
                                  PMIC_FSM_STANBY_STATE);
            break;
         case PMIC_FSM_ACTIVE_STATE:
-           status = Pmic_setNsleepSignal(pPmicCoreHandle,
-                               PMIC_FSM_NSLEEPX_SET,
-                               PMIC_NSLEEP2_SIGNAL);
+           status = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
+                                               PMIC_NSLEEP2_SIGNAL,
+                                               PMIC_NSLEEP_HIGH);
 
            if(PMIC_ST_SUCCESS == status)
            {
-               status = Pmic_setNsleepSignal(pPmicCoreHandle,
-                                   PMIC_FSM_NSLEEPX_SET,
-                                   PMIC_NSLEEP1_SIGNAL);
+               status = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
+                                                   PMIC_NSLEEP1_SIGNAL,
+                                                   PMIC_NSLEEP_HIGH);
            }
 
            break;
         case PMIC_FSM_MCU_ONLY_STATE:
-           status = Pmic_setNsleepSignal(pPmicCoreHandle,
-                               PMIC_FSM_NSLEEPX_RESET,
-                               PMIC_NSLEEP1_SIGNAL);
+           status = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
+                                               PMIC_NSLEEP1_SIGNAL,
+                                               PMIC_NSLEEP_LOW);
 
            if(PMIC_ST_SUCCESS == status)
            {
-               status = Pmic_setNsleepSignal(pPmicCoreHandle,
-                                   PMIC_FSM_NSLEEPX_SET,
-                                   PMIC_NSLEEP2_SIGNAL);
+               status = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
+                                                   PMIC_NSLEEP2_SIGNAL,
+                                                   PMIC_NSLEEP_HIGH);
            }
 
            break;
@@ -659,17 +815,15 @@ int32_t Pmic_fsmSetNsleepSignalMask(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            pmicStatus = Pmic_powerGetNsleepMaskBitField(nsleepType,
-                                                         &bitPos,
-                                                         &bitMask);
-        }
+            Pmic_fsmGetNsleepMaskBitField(nsleepType,
+                                          &bitPos,
+                                          &bitMask);
 
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
             if(((bool)true) == maskEnable)
             {
                 maskEnableVal = 1U;
             }
+
             Pmic_setBitField(&regData, bitPos, bitMask, maskEnableVal);
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                                 PMIC_CONFIG_1_REGADDR,
@@ -677,6 +831,581 @@ int32_t Pmic_fsmSetNsleepSignalMask(Pmic_CoreHandle_t  *pPmicCoreHandle,
         }
 
         Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  API to read the status of the NSLEEP1B/2B Signal is masked or not
+ *
+ * Requirement: REQ_TAG(PDK-9151)
+ * Design: did_pmic_fsm_cfg_readback
+ *
+ *         This function is used to read the status of the NSLEEP1B/2B Signal is
+ *         masked or not
+ *
+ * \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
+ * \param   nsleepType       [IN]  NSLEEP signal
+ *                                 Valid values: \ref Pmic_Nsleep_Signals
+ * \param   pNsleepStat      [OUT] Pointer to store Nsleep Signal is masked or
+ *                                 not
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmGetNsleepSignalMaskStat(Pmic_CoreHandle_t  *pPmicCoreHandle,
+                                        const bool          nsleepType,
+                                        bool               *pNsleepStat)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t  regData = 0U;
+    uint8_t  bitPos  = 0U;
+    uint8_t  bitMask = 0U;
+    uint8_t  maskEnableStat = 0U;
+
+    if(NULL == pPmicCoreHandle)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pNsleepStat))
+    {
+         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                            PMIC_CONFIG_1_REGADDR,
+                                            &regData);
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        *pNsleepStat = (bool)false;
+
+        Pmic_fsmGetNsleepMaskBitField(nsleepType,
+                                      &bitPos,
+                                      &bitMask);
+        maskEnableStat = Pmic_getBitField(regData, bitPos, bitMask);
+
+        if(maskEnableStat == 1U)
+        {
+            *pNsleepStat = (bool)true;
+        }
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  API to Enable/Disable Fast BIST
+ *          Note: In this API, the default pmicDeviceType is assumed as
+ *                TPS6594X Leo Device. While adding support for New PMIC
+ *                device, developer need to update the API functionality for
+ *                New PMIC device accordingly.
+ */
+static int32_t Pmic_fsmEnableFastBIST(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                      const Pmic_FsmCfg_t  fsmCfg)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+    uint8_t regAddr     = 0U;
+    uint8_t regData     = 0U;
+    uint8_t bitShift    = 0U;
+    uint8_t bitMask     = 0U;
+
+    switch(pPmicCoreHandle->pmicDeviceType)
+    {
+         case PMIC_DEV_HERA_LP8764X:
+            regAddr = PMIC_STARTUP_CTRL_REGADDR;
+            bitMask = PMIC_STARTUP_CTRL_FAST_BIST_MASK;
+            bitShift = PMIC_STARTUP_CTRL_FAST_BIST_SHIFT;
+            break;
+         default:
+            regAddr = PMIC_RTC_CTRL_2_REGADDR;
+            bitMask = PMIC_RTC_CTRL_2_FAST_BIST_MASK;
+            bitShift = PMIC_RTC_CTRL_2_FAST_BIST_SHIFT;
+            break;
+    }
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        Pmic_setBitField(&regData,
+                         bitShift,
+                         bitMask,
+                         fsmCfg.fastBistEn);
+
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                            regAddr,
+                                            regData);
+    }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  API to Get Fast BIST is enabled or not
+ *          Note: In this API, the default pmicDeviceType is assumed as
+ *                TPS6594X Leo Device. While adding support for New PMIC
+ *                device, developer need to update the API functionality for
+ *                New PMIC device accordingly.
+ */
+static int32_t Pmic_fsmGetFastBISTCfg(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                      Pmic_FsmCfg_t       *pFsmCfg)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+    uint8_t regAddr     = 0U;
+    uint8_t regData     = 0U;
+    uint8_t bitShift    = 0U;
+    uint8_t bitMask     = 0U;
+
+    switch(pPmicCoreHandle->pmicDeviceType)
+    {
+         case PMIC_DEV_HERA_LP8764X:
+            regAddr = PMIC_STARTUP_CTRL_REGADDR;
+            bitMask = PMIC_STARTUP_CTRL_FAST_BIST_MASK;
+            bitShift = PMIC_STARTUP_CTRL_FAST_BIST_SHIFT;
+            break;
+         default:
+            regAddr = PMIC_RTC_CTRL_2_REGADDR;
+            bitMask = PMIC_RTC_CTRL_2_FAST_BIST_MASK;
+            bitShift = PMIC_RTC_CTRL_2_FAST_BIST_SHIFT;
+            break;
+    }
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pFsmCfg->fastBistEn = Pmic_getBitField(regData,
+                                               bitShift,
+                                               bitMask);
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  API to Set LPStandby/Standby State
+ *          Note: In this API, the default pmicDeviceType is assumed as
+ *                TPS6594X Leo Device. While adding support for New PMIC
+ *                device, developer need to update the API functionality for
+ *                New PMIC device accordingly.
+ */
+static int32_t Pmic_fsmSetLpStandbyState(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                         const Pmic_FsmCfg_t  fsmCfg)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+    uint8_t regAddr     = 0U;
+    uint8_t regData     = 0U;
+    uint8_t bitShift    = 0U;
+    uint8_t bitMask     = 0U;
+
+    switch(pPmicCoreHandle->pmicDeviceType)
+    {
+         case PMIC_DEV_HERA_LP8764X:
+            regAddr = PMIC_STARTUP_CTRL_REGADDR;
+            bitMask = PMIC_STARTUP_CTRL_LP_STANDBY_SEL_MASK;
+            bitShift = PMIC_STARTUP_CTRL_LP_STANDBY_SEL_SHIFT;
+            break;
+         default:
+            regAddr = PMIC_RTC_CTRL_2_REGADDR;
+            bitMask = PMIC_RTC_CTRL_2_LP_STANDBY_SEL_MASK;
+            bitShift = PMIC_RTC_CTRL_2_LP_STANDBY_SEL_SHIFT;
+            break;
+    }
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        Pmic_setBitField(&regData,
+                         bitShift,
+                         bitMask,
+                         fsmCfg.lpStandbySel);
+
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                            regAddr,
+                                            regData);
+    }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  API to Get LPStandby/Standby State
+ *          Note: In this API, the default pmicDeviceType is assumed as
+ *                TPS6594X Leo Device. While adding support for New PMIC
+ *                device, developer need to update the API functionality for
+ *                New PMIC device accordingly.
+ */
+static int32_t Pmic_fsmGetLpStandbyStateCfg(
+                                           Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                           Pmic_FsmCfg_t       *pFsmCfg)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+    uint8_t regAddr     = 0U;
+    uint8_t regData     = 0U;
+    uint8_t bitShift    = 0U;
+    uint8_t bitMask     = 0U;
+
+    switch(pPmicCoreHandle->pmicDeviceType)
+    {
+         case PMIC_DEV_HERA_LP8764X:
+            regAddr = PMIC_STARTUP_CTRL_REGADDR;
+            bitMask = PMIC_STARTUP_CTRL_LP_STANDBY_SEL_MASK;
+            bitShift = PMIC_STARTUP_CTRL_LP_STANDBY_SEL_SHIFT;
+            break;
+         default:
+            regAddr = PMIC_RTC_CTRL_2_REGADDR;
+            bitMask = PMIC_RTC_CTRL_2_LP_STANDBY_SEL_MASK;
+            bitShift = PMIC_RTC_CTRL_2_LP_STANDBY_SEL_SHIFT;
+            break;
+    }
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pFsmCfg->lpStandbySel = Pmic_getBitField(regData,
+                                                 bitShift,
+                                                 bitMask);
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  API to Enable/Disable Buck/LDO regulators ILIM interrupts affect FSM
+           triggers */
+static int32_t Pmic_fsmEnableBuckLdoIlimIntAffectFsm(
+                                          Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                          const Pmic_FsmCfg_t  fsmCfg)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+    uint8_t regData     = 0U;
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_CONFIG_1_REGADDR,
+                                        &regData);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        Pmic_setBitField(&regData,
+                         PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_SHIFT,
+                         PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_MASK,
+                         fsmCfg.ilimIntfsmCtrlEn);
+
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                            PMIC_CONFIG_1_REGADDR,
+                                            regData);
+    }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  API to Get Buck/LDO regulators ILIM interrupts affect FSM triggers is
+ *         enabled or not
+ */
+static int32_t Pmic_fsmGetBuckLdoIlimIntAffectFsmCfg(
+                                         Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                         Pmic_FsmCfg_t       *pFsmCfg)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+    uint8_t regData     = 0U;
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_CONFIG_1_REGADDR,
+                                        &regData);
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pFsmCfg->ilimIntfsmCtrlEn = Pmic_getBitField(
+                                           regData,
+                                           PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_SHIFT,
+                                           PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_MASK);
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  API to Set FSM Startup Destination State
+ *          Note: In this API, the default pmicDeviceType is assumed as
+ *                TPS6594X Leo Device. While adding support for New PMIC
+ *                device, developer need to update the API functionality for
+ *                New PMIC device accordingly.
+ */
+static int32_t Pmic_fsmSetStartupDestState(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                           const Pmic_FsmCfg_t  fsmCfg)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+    uint8_t regAddr     = 0U;
+    uint8_t regData     = 0U;
+    uint8_t bitShift    = 0U;
+    uint8_t bitMask     = 0U;
+
+    switch(pPmicCoreHandle->pmicDeviceType)
+    {
+         case PMIC_DEV_HERA_LP8764X:
+            regAddr = PMIC_STARTUP_CTRL_REGADDR;
+            bitMask = PMIC_STARTUP_CTRL_STARTUP_DEST_MASK;
+            bitShift = PMIC_STARTUP_CTRL_STARTUP_DEST_SHIFT;
+            break;
+         default:
+            regAddr = PMIC_RTC_CTRL_2_REGADDR;
+            bitMask = PMIC_RTC_CTRL_2_STARTUP_DEST_MASK;
+            bitShift = PMIC_RTC_CTRL_2_STARTUP_DEST_SHIFT;
+            break;
+    }
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        Pmic_setBitField(&regData,
+                         bitShift,
+                         bitMask,
+                         fsmCfg.fsmStarupDestSel);
+
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                            regAddr,
+                                            regData);
+    }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  API to Get Get FSM Startup Destination State
+ *          Note: In this API, the default pmicDeviceType is assumed as
+ *                TPS6594X Leo Device. While adding support for New PMIC
+ *                device, developer need to update the API functionality for
+ *                New PMIC device accordingly.
+ */
+static int32_t Pmic_fsmGetStartupDestStateCfg(
+                                          Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                          Pmic_FsmCfg_t       *pFsmCfg)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+    uint8_t regAddr     = 0U;
+    uint8_t regData     = 0U;
+    uint8_t bitShift    = 0U;
+    uint8_t bitMask     = 0U;
+
+    switch(pPmicCoreHandle->pmicDeviceType)
+    {
+         case PMIC_DEV_HERA_LP8764X:
+            regAddr = PMIC_STARTUP_CTRL_REGADDR;
+            bitMask = PMIC_STARTUP_CTRL_STARTUP_DEST_MASK;
+            bitShift = PMIC_STARTUP_CTRL_STARTUP_DEST_SHIFT;
+            break;
+         default:
+            regAddr = PMIC_RTC_CTRL_2_REGADDR;
+            bitMask = PMIC_RTC_CTRL_2_STARTUP_DEST_MASK;
+            bitShift = PMIC_RTC_CTRL_2_STARTUP_DEST_SHIFT;
+            break;
+    }
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pFsmCfg->fsmStarupDestSel = Pmic_getBitField(regData,
+                                                     bitShift,
+                                                     bitMask);
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief   API to set PMIC FSM configuration.
+ *
+ * Requirement: REQ_TAG(PDK-9144), REQ_TAG(PDK-9134), REQ_TAG(PDK-9128)
+ * Design: did_pmic_fsm_cfg_readback
+ *
+ *          This function is used to set the required FSM configuration when
+ *          corresponding bit field is set.
+ *
+ * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
+ * \param   fsmCfg          [IN]    Set required FSM configuration
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                 const Pmic_FsmCfg_t  fsmCfg)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+
+    if(NULL == pPmicCoreHandle)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(fsmCfg.validParams,
+                                           PMIC_FSM_CFG_FAST_BIST_EN_VALID)))
+    {
+        /* Enable/Disable Fast BIST */
+        pmicStatus = Pmic_fsmEnableFastBIST(pPmicCoreHandle, fsmCfg);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(fsmCfg.validParams,
+                                           PMIC_FSM_CFG_LP_STANDBYSEL_VALID)))
+    {
+        /* Set LPStandby/Standby State */
+        pmicStatus = Pmic_fsmSetLpStandbyState(pPmicCoreHandle, fsmCfg);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(
+                                       fsmCfg.validParams,
+                                       PMIC_FSM_CFG_ILIM_INT_FSMCTRL_EN_VALID)))
+    {
+        /* Enable/Disable Buck/LDO regulators ILIM interrupts affect FSM
+         * triggers */
+        pmicStatus = Pmic_fsmEnableBuckLdoIlimIntAffectFsm(pPmicCoreHandle,
+                                                           fsmCfg);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(
+                                      fsmCfg.validParams,
+                                      PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID)))
+    {
+        if(fsmCfg.fsmStarupDestSel > PMIC_FSM_STARTUPDEST_ACTIVE)
+        {
+            pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Set FSM Startup Destination State */
+            pmicStatus = Pmic_fsmSetStartupDestState(pPmicCoreHandle, fsmCfg);
+        }
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief   API to get PMIC FSM configuration.
+ *
+ * Requirement: REQ_TAG(PDK-9144), REQ_TAG(PDK-9134), REQ_TAG(PDK-9128)
+ * Design: did_pmic_fsm_cfg_readback
+ *
+ *          This function is used to get the FSM configuration when
+ *          corresponding validParam bit fields are set in Pmic_FsmCfg_t
+ *          structure
+ *
+ * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
+ * \param   pFsmCfg         [IN/OUT]   Pointer to store FSM configuration
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                 Pmic_FsmCfg_t     *pFsmCfg)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+
+    if(NULL == pPmicCoreHandle)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pFsmCfg))
+    {
+        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(pFsmCfg->validParams,
+                                           PMIC_FSM_CFG_FAST_BIST_EN_VALID)))
+    {
+        /* Get Fast BIST is enabled or not*/
+        pmicStatus = Pmic_fsmGetFastBISTCfg(pPmicCoreHandle, pFsmCfg);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(pFsmCfg->validParams,
+                                           PMIC_FSM_CFG_LP_STANDBYSEL_VALID)))
+    {
+        /* Get LPStandby/Standby State */
+        pmicStatus = Pmic_fsmGetLpStandbyStateCfg(pPmicCoreHandle, pFsmCfg);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(
+                                       pFsmCfg->validParams,
+                                       PMIC_FSM_CFG_ILIM_INT_FSMCTRL_EN_VALID)))
+    {
+        /* Get Buck/LDO regulators ILIM interrupts affect FSM
+         * triggers is enabled or not */
+        pmicStatus = Pmic_fsmGetBuckLdoIlimIntAffectFsmCfg(pPmicCoreHandle,
+                                                           pFsmCfg);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(
+                                      pFsmCfg->validParams,
+                                      PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID)))
+    {
+        /* Get FSM Startup Destination State */
+        pmicStatus = Pmic_fsmGetStartupDestStateCfg(pPmicCoreHandle, pFsmCfg);
     }
 
     return pmicStatus;
@@ -824,3 +1553,118 @@ int32_t Pmic_fsmGetPfsmDelay(Pmic_CoreHandle_t  *pPmicCoreHandle,
     return pmicStatus;
 }
 
+/*!
+ * \brief   API to recover from SOC Power Error using Nsleep1B and Nsleep2B
+ *          signal
+ *
+ * Requirement: REQ_TAG(PDK-9123)
+ * Design: did_pmic_fsm_recover_soc_pwr_err
+ *
+ *          This function is used to recover from SOC Power Error without
+ *          rebooting the system
+ *          Note: Application need to call this API from MCU domain when SOC
+ *          Power Error on Primary PMIC
+ *          Step-1 - PMIC LLD has to configure NSLEEP2 & NSLEEP1 signals to ‘10’
+ *          Step-2 - Application has to wait for 9us
+ *          Step-3 - PMIC LLD has to configure NSLEEP2 & NSLEEP1 signals to ‘11’
+ *
+ * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
+ * \param   nsleepVal       [IN]    PMIC Nsleep signal level High/Low to be
+ *                                  configured.
+ *                                  Valid values \ref Pmic_Nsleep_SignalLvl
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmRecoverSocPwrErr(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                 const uint8_t      nsleepVal)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+
+    pmicStatus = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                             PMIC_NSLEEP2_SIGNAL,
+                                             PMIC_NSLEEPX_UNMASK);
+
+    pmicStatus = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                             PMIC_NSLEEP1_SIGNAL,
+                                             PMIC_NSLEEPX_UNMASK);
+
+    pmicStatus = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
+                                            PMIC_NSLEEP2_SIGNAL,
+                                            PMIC_NSLEEP_HIGH);
+
+    pmicStatus = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
+                                            PMIC_NSLEEP1_SIGNAL,
+                                            nsleepVal);
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  API to initiate DDR/GPIO Retention Mode
+ *
+ * Requirement: REQ_TAG(PDK-9563), REQ_TAG(PDK-9564)
+ * Design: did_pmic_ddr_gpio_retention_cfg
+ *
+ *         This function initiates a request to exercise DDR/GPIO Retention Mode
+ *         on the device based on the Retention Mode
+ *         Note: PMIC_FSM_GPIO_RETENTION_MODE is valid only for J7VCL SOC
+ *         In this API, the default SOC Type is assumed as J721E SOC
+ *         While adding support for New SOC, developer need to update the API
+ *         functionality for New SOC device accordingly.
+ *
+ * \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
+ * \param   retentionMode    [IN]  Retention Mode
+ *                                   Valid values: \ref Pmic_Fsm_Retention_Mode
+ *                                     PMIC_FSM_GPIO_RETENTION_MODE is valid
+ *                                     only for J7VCL SOC
+ * \param   i2cTriggerVal    [IN]   FSM I2C Trigger Value
+ *                                   Valid values: \ref Pmic_Fsm_I2c_Trigger_Val
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmRequestDdrGpioRetentionMode(
+                                        Pmic_CoreHandle_t  *pPmicCoreHandle,
+                                        const uint8_t       retentionMode,
+                                        const uint8_t       i2cTriggerVal)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+
+    if(NULL == pPmicCoreHandle)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+#if defined(SOC_J7200)
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (retentionMode > PMIC_FSM_GPIO_RETENTION_MODE))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+    }
+#else
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (retentionMode != PMIC_FSM_DDR_RETENTION_MODE))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+    }
+#endif
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        if(PMIC_FSM_DDR_RETENTION_MODE == retentionMode)
+        {
+            pmicStatus = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle,
+                                                  PMIC_FSM_I2C_TRIGGER7,
+                                                  i2cTriggerVal);
+        }
+        else
+        {
+            pmicStatus = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle,
+                                                  PMIC_FSM_I2C_TRIGGER6,
+                                                  i2cTriggerVal);
+        }
+    }
+
+    return pmicStatus;
+}

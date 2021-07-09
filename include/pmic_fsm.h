@@ -268,6 +268,17 @@ extern "C" {
 #define PMIC_FSM_I2C_TRIGGER_VAL_1                (0x1U)
 /*  @} */
 
+/**
+ *  \anchor Pmic_Fsm_Retention_Mode
+ *  \name   PMIC FSM Retention Mode
+ *
+ *  @{
+ */
+#define PMIC_FSM_DDR_RETENTION_MODE                 (0x0U)
+/** \brief Valid only for J7VCL SOC*/
+#define PMIC_FSM_GPIO_RETENTION_MODE                (0x1U)
+/*  @} */
+
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
@@ -471,7 +482,7 @@ int32_t Pmic_fsmSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_fsmGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                 Pmic_FsmCfg_t    *pFsmCfg);
+                                 Pmic_FsmCfg_t     *pFsmCfg);
 
 /*!
  * \brief  API to configure PFSM Delay
@@ -484,6 +495,10 @@ int32_t Pmic_fsmGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
  *         reset
  *         Consider If the PFSM_Delay value is 'x' then Delay will calculated as
  *          Delay = x *(50ns * 2^PFSM_DELAY_STEP)
+ *         Note: In this API, the default delay Type is assumed as
+ *         PMIC_PFSM_DELAY1
+ *         While adding support for New PMIC, developer need to update the API
+ *         functionality for New PMIC device accordingly.
  *
  * \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
  * \param   pFsmDelayType    [IN]  PFSM Delay Type
@@ -504,6 +519,10 @@ int32_t Pmic_fsmSetPfsmDelay(Pmic_CoreHandle_t  *pPmicCoreHandle,
  * Design: did_pmic_pfsm_cfg_readback
  *
  *         This function is used to read PFSM Delay
+ *         Note: In this API, the default delay Type is assumed as
+ *         PMIC_PFSM_DELAY1
+ *         While adding support for New PMIC, developer need to update the API
+ *         functionality for New PMIC device accordingly.
  *
  * \param   pPmicCoreHandle  [IN]   PMIC Interface Handle
  * \param   pFsmDelayType    [IN]   PFSM Delay Type
@@ -530,14 +549,14 @@ int32_t Pmic_fsmGetPfsmDelay(Pmic_CoreHandle_t  *pPmicCoreHandle,
  *                                  Valid values: \ref Pmic_Nsleep_Signals
  * \param   nsleepVal        [IN]   PMIC Nsleep signal level High/Low to be
  *                                  configured.
- *                                  Valid values \ref Pmic_Nsleep_SignalLvl.
+ *                                  Valid values \ref Pmic_Nsleep_SignalLvl
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmSetNsleepValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               const bool         nsleepType,
-                               const uint8_t      nsleepVal);
+int32_t Pmic_fsmSetNsleepSignalVal(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                   const bool         nsleepType,
+                                   const uint8_t      nsleepVal);
 
 /*!
  * \brief   API to get PMIC Nsleep1B/2B Signal value.
@@ -558,12 +577,13 @@ int32_t Pmic_fsmSetNsleepValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmGetNsleepValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               const bool         nsleepType,
-                               uint8_t           *pNsleepVal);
+int32_t Pmic_fsmGetNsleepSignalVal(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                   const bool         nsleepType,
+                                   uint8_t           *pNsleepVal);
 
 /*!
- * \brief   API to recover from SOC Power Error using Nsleep1B signal.
+ * \brief   API to recover from SOC Power Error using Nsleep1B and Nsleep2B
+ *          signal
  *
  * Requirement: REQ_TAG(PDK-9123)
  * Design: did_pmic_fsm_recover_soc_pwr_err
@@ -572,14 +592,20 @@ int32_t Pmic_fsmGetNsleepValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          rebooting the system
  *          Note: Application need to call this API from MCU domain when SOC
  *          Power Error on Primary PMIC
- *          Application need to unmask Nsleep1B
+ *          Step-1 - PMIC LLD has to configure NSLEEP2 & NSLEEP1 signals to ‘10’
+ *          Step-2 - Application has to wait for 9us
+ *          Step-3 - PMIC LLD has to configure NSLEEP2 & NSLEEP1 signals to ‘11’
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
+ * \param   nsleepVal       [IN]    PMIC Nsleep signal level High/Low to be
+ *                                  configured.
+ *                                  Valid values \ref Pmic_Nsleep_SignalLvl
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmRecoverSocPwrErr(Pmic_CoreHandle_t *pPmicCoreHandle);
+int32_t Pmic_fsmRecoverSocPwrErr(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                 const uint8_t      nsleepVal);
 
 /*!
  * \brief   API to reconfigure NVM Default using OTA Method
@@ -656,6 +682,57 @@ int32_t Pmic_fsmOtaInitiateSoftReboot(Pmic_CoreHandle_t *pPmicCoreHandle);
 int32_t Pmic_fsmEnableI2cTrigger(Pmic_CoreHandle_t  *pPmicCoreHandle,
                                  const uint8_t       i2cTriggerType,
                                  const uint8_t       i2cTriggerVal);
+
+/*!
+ * \brief   API to get FSM I2C trigger Value for given FSM I2C trigger type
+ *
+ * Requirement: REQ_TAG(PDK-9330)
+ * Design: did_pmic_fsm_i2c_trigger
+ *
+ *          This function is used to read the FSM I2C trigger Value of the
+ *          FSM Trigger Type
+ *
+ * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
+ * \param   i2cTriggerType  [IN]    FSM I2C Trigger Type
+ *                                  Valid values: \ref Pmic_Fsm_I2c_Trigger_Type
+ * \param   pI2cTriggerVal  [OUT]   Pointer to store FSM I2C Trigger Value
+ *                                  Valid values \ref Pmic_Fsm_I2c_Trigger_Val
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmGetI2cTriggerVal(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                 const uint8_t      i2cTriggerType,
+                                 uint8_t           *pI2cTriggerVal);
+
+/*!
+ * \brief  API to initiate DDR/GPIO Retention Mode
+ *
+ * Requirement: REQ_TAG(PDK-9563), REQ_TAG(PDK-9564)
+ * Design: did_pmic_ddr_gpio_retention_cfg
+ *
+ *         This function initiates a request to exercise DDR/GPIO Retention Mode
+ *         on the device based on the Retention Mode
+ *         Note: PMIC_FSM_GPIO_RETENTION_MODE is valid only for J7VCL SOC
+ *         In this API, the default SOC Type is assumed as J721E SOC
+ *         While adding support for other SOCs, developer need to update the API
+ *         functionality for New SOC device accordingly.
+ *
+ * \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
+ * \param   retentionMode    [IN]  Retention Mode
+ *                                   Valid values: \ref Pmic_Fsm_Retention_Mode
+ *                                     PMIC_FSM_GPIO_RETENTION_MODE is valid
+ *                                     only for J7VCL SOC
+ * \param   i2cTriggerVal    [IN]   FSM I2C Trigger Value
+ *                                   Valid values: \ref Pmic_Fsm_I2c_Trigger_Val
+ *
+ * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmRequestDdrGpioRetentionMode(
+                                        Pmic_CoreHandle_t  *pPmicCoreHandle,
+                                        const uint8_t       retentionMode,
+                                        const uint8_t       i2cTriggerVal);
 
 #ifdef __cplusplus
 }

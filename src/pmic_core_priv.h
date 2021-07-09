@@ -333,8 +333,8 @@ extern "C" {
                          ((uint8_t)(0x01U << PMIC_CONFIG_1_I2C1_HS_SHIFT))
 #define PMIC_CONFIG_1_I2C2_HS_MASK                                  \
                          ((uint8_t)(0x01U << PMIC_CONFIG_1_I2C2_HS_SHIFT))
-#define PMIC_CONFIG_1_EN_ILIM_CTRL_MASK                         \
-                         ((uint8_t)(0x01U << PMIC_CONFIG_1_EN_ILIM_CTRL_SHIFT))
+#define PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_MASK                         \
+                         ((uint8_t)(0x01U << PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_SHIFT))
 #define PMIC_CONFIG_1_NSLEEP1_MASK_MASK                             \
                          ((uint8_t)(0x01U << PMIC_CONFIG_1_NSLEEP1_MASK_SHIFT))
 #define PMIC_CONFIG_1_NSLEEP2_MASK_MASK                             \
