@@ -181,6 +181,18 @@ static Pmic_Ut_Tests_t pmic_wdg_tests[] =
         7958,
         "Pmic_wdgStartQaSequence : Parameter validation for maxCnt"
     },
+    {
+        10075,
+        "Pmic_wdgClrErrStatus: Clear all watchdog error status"
+    },
+    {
+        10076,
+        "Pmic_wdgClrErrStatus : Parameter validation for handle"
+    },
+    {
+        10077,
+        "Pmic_wdgClrErrStatus : Parameter validation for wdgErrType"
+    },
 };
 
 /*!
@@ -210,6 +222,11 @@ static void test_pmic_wdg_setCfg_forallparams(void)
     test_pmic_print_unity_testcase_info(7327,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
+
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        wdgCfg.longWinDuration_ms = 752000U;
+    }
 
     /* Enable WDG Timer */
     pmicStatus = Pmic_wdgEnable(pPmicCoreHandle);
@@ -269,6 +286,11 @@ static void test_pmic_wdg_setCfg_prmValTest_handle(void)
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        wdgCfg.longWinDuration_ms = 752000U;
+    }
+
     pmicStatus = Pmic_wdgSetCfg(NULL, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
 
@@ -303,6 +325,11 @@ static void test_pmic_wdg_setCfg_prmValTest_longwinMin(void)
     test_pmic_print_unity_testcase_info(7329,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
+
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        wdgCfg.longWinDuration_ms = 78U;
+    }
 
     pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_WDG_WINDOW, pmicStatus);
@@ -339,6 +366,11 @@ static void test_pmic_wdg_setCfg_prmValTest_longwinMax(void)
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        wdgCfg.longWinDuration_ms = 775000U;
+    }
+
     pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_WDG_WINDOW, pmicStatus);
 
@@ -373,6 +405,11 @@ static void test_pmic_wdg_setCfg_prmValTest_win1Min(void)
     test_pmic_print_unity_testcase_info(7331,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
+
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        wdgCfg.longWinDuration_ms = 752000U;
+    }
 
     pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_WDG_WINDOW, pmicStatus);
@@ -409,6 +446,11 @@ static void test_pmic_wdg_setCfg_prmValTest_win1Max(void)
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        wdgCfg.longWinDuration_ms = 752000U;
+    }
+
     pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_WDG_WINDOW, pmicStatus);
 
@@ -443,6 +485,11 @@ static void test_pmic_wdg_setCfg_prmValTest_win2Min(void)
     test_pmic_print_unity_testcase_info(7333,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
+
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        wdgCfg.longWinDuration_ms = 752000U;
+    }
 
     pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_WDG_WINDOW, pmicStatus);
@@ -479,6 +526,11 @@ static void test_pmic_wdg_setCfg_prmValTest_win2Max(void)
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        wdgCfg.longWinDuration_ms = 752000U;
+    }
+
     pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_WDG_WINDOW, pmicStatus);
 
@@ -513,6 +565,11 @@ static void test_pmic_wdg_setCfg_prmValTest_failThresholdMax(void)
     test_pmic_print_unity_testcase_info(7335,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
+
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        wdgCfg.longWinDuration_ms = 752000U;
+    }
 
     pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
@@ -549,6 +606,11 @@ static void test_pmic_wdg_setCfg_prmValTest_rstThresholdMax(void)
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        wdgCfg.longWinDuration_ms = 752000U;
+    }
+
     pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
@@ -583,6 +645,11 @@ static void test_pmic_wdg_setCfg_prmValTest_qaFdbkMax(void)
     test_pmic_print_unity_testcase_info(7337,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
+
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        wdgCfg.longWinDuration_ms = 752000U;
+    }
 
     pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
@@ -619,6 +686,11 @@ static void test_pmic_wdg_setCfg_prmValTest_qaLfsrMax(void)
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        wdgCfg.longWinDuration_ms = 752000U;
+    }
+
     pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
@@ -653,6 +725,11 @@ static void test_pmic_wdg_setCfg_prmValTest_qaQuesSeedMax(void)
     test_pmic_print_unity_testcase_info(7339,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
+
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        wdgCfg.longWinDuration_ms = 752000U;
+    }
 
     pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
@@ -689,6 +766,11 @@ static void test_pmic_wdg_getCfg_forallparams(void)
     test_pmic_print_unity_testcase_info(7340,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
+
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        wdgCfg.longWinDuration_ms = 752000U;
+    }
 
     /* Enable WDG Timer */
     pmicStatus = Pmic_wdgEnable(pPmicCoreHandle);
@@ -874,12 +956,17 @@ static void test_pmic_wdg_startQaSequence(void)
 
     if(gCrcTestFlag == PMIC_STATUS_CRC_ENABLED)
     {
-        wdgCfg.win1Duration_us = 8350U;
+        wdgCfg.win1Duration_us = 8250U;
     }
 
     test_pmic_print_unity_testcase_info(7346,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
+
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        wdgCfg.longWinDuration_ms = 752000U;
+    }
 
     /* Enable WDG Timer */
     pmicStatus = Pmic_wdgEnable(pPmicCoreHandle);
@@ -936,6 +1023,11 @@ static void test_pmic_wdg_startQaSequence_testFdbkValues(void)
     test_pmic_print_unity_testcase_info(7347,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
+
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        wdgCfg.longWinDuration_ms = 752000U;
+    }
 
     for(fdbk = PMIC_WDG_QA_FEEDBACK_VALUE_0;
         fdbk <= PMIC_WDG_QA_FEEDBACK_VALUE_3;
@@ -1007,10 +1099,19 @@ static void test_pmic_wdg_startQaSequence_testLfsrValues(void)
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        wdgCfg.longWinDuration_ms = 752000U;
+    }
+
     for(lfsr = PMIC_WDG_QA_LFSR_VALUE_0;
         lfsr <= PMIC_WDG_QA_LFSR_VALUE_3;
         lfsr++)
     {
+        /* Enable WDG Timer */
+        pmicStatus = Pmic_wdgEnable(pPmicCoreHandle);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
         wdgCfg.qaLfsr = lfsr;
         /* Set QA parameters */
         pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
@@ -1072,6 +1173,11 @@ static void test_pmic_wdg_startQaSequence_testQuesSeedValues(void)
     test_pmic_print_unity_testcase_info(7349,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
+
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        wdgCfg.longWinDuration_ms = 752000U;
+    }
 
     for(quesSeed = PMIC_WDG_QA_QUES_SEED_VALUE_0;
         quesSeed <= PMIC_WDG_QA_QUES_SEED_VALUE_15;
@@ -1305,6 +1411,11 @@ static void test_pmic_wdg_StartTriggerSequence(void)
                                      pmic_wdg_tests,
                                      PMIC_WDG_NUM_OF_TESTCASES);
 
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        wdgCfg.longWinDuration_ms = 752000U;
+    }
+
     /* Enable WDG Timer */
     pmicStatus = Pmic_wdgEnable(pPmicCoreHandle);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -1353,6 +1464,11 @@ static void test_pmic_wdg_StartTriggerSequence_prmValTest_handle(void)
     test_pmic_print_unity_testcase_info(7357,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
+
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        wdgCfg.longWinDuration_ms = 752000U;
+    }
 
     /* Enable WDG Timer */
     pmicStatus = Pmic_wdgEnable(pPmicCoreHandle);
@@ -1424,6 +1540,107 @@ static void test_pmic_wdg_startQaSequence_prmValTest_maxCnt(void)
                                PMIC_WDG_NUM_OF_TESTCASES);
 }
 
+/*!
+ * \brief   Test get wdg Clr status
+ */
+static void test_pmic_wdg_ClrErrorStatus(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    Pmic_WdgErrStatus_t errStatus = {0U};
+
+    test_pmic_print_unity_testcase_info(10075,
+                                        pmic_wdg_tests,
+                                        PMIC_WDG_NUM_OF_TESTCASES);
+
+    /* Enable WDG Timer */
+    pmicStatus = Pmic_wdgEnable(pPmicCoreHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    errStatus.validParams = PMIC_CFG_WD_ALL_ERRSTAT_VALID_PARAMS;
+    /* Get watchdog error Status */
+    pmicStatus = Pmic_wdgGetErrorStatus(pPmicCoreHandle, &errStatus);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* Clear watchdog error Status */
+    pmicStatus = Pmic_wdgClrErrStatus(pPmicCoreHandle, PMIC_WDG_ERR_ALL);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* Disable WDG Timer */
+    pmicStatus = Pmic_wdgDisable(pPmicCoreHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(10075,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Test get wdg clear status Parameter validation for handle
+ */
+static void test_pmic_wdg_ClrErrorStatus_prmValTest_handle(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    Pmic_WdgErrStatus_t errStatus = {0U};
+
+    test_pmic_print_unity_testcase_info(10076,
+                                        pmic_wdg_tests,
+                                        PMIC_WDG_NUM_OF_TESTCASES);
+
+    /* Enable WDG Timer */
+    pmicStatus = Pmic_wdgEnable(pPmicCoreHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    errStatus.validParams = PMIC_CFG_WD_ALL_ERRSTAT_VALID_PARAMS;
+    /* Get watchdog error Status */
+    pmicStatus = Pmic_wdgGetErrorStatus(pPmicCoreHandle, &errStatus);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* Clear watchdog error Status */
+    pmicStatus = Pmic_wdgClrErrStatus(NULL, PMIC_WDG_ERR_ALL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    /* Disable WDG Timer */
+    pmicStatus = Pmic_wdgDisable(pPmicCoreHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(10076,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Test get wdg clear Parameter validation for wdgErrType
+ */
+static void test_pmic_wdg_ClrErrorStatus_prmValTest_wdgErrType(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    Pmic_WdgErrStatus_t errStatus = {0U};
+
+    test_pmic_print_unity_testcase_info(10077,
+                                        pmic_wdg_tests,
+                                        PMIC_WDG_NUM_OF_TESTCASES);
+
+    /* Enable WDG Timer */
+    pmicStatus = Pmic_wdgEnable(pPmicCoreHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* Get watchdog error Status */
+    pmicStatus = Pmic_wdgGetErrorStatus(pPmicCoreHandle, &errStatus);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* Clear watchdog error Status */
+    pmicStatus = Pmic_wdgClrErrStatus(pPmicCoreHandle, 0x9U);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    /* Disable WDG Timer */
+    pmicStatus = Pmic_wdgDisable(pPmicCoreHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(10077,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
+}
+
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E) || defined(SOC_J7200))
 
@@ -1478,6 +1695,9 @@ static void test_pmic_run_testcases(void)
 
     RUN_TEST(test_pmic_wdg_StartTriggerSequence_prmValTest_handle);
     RUN_TEST(test_pmic_wdg_startQaSequence_prmValTest_maxCnt);
+    RUN_TEST(test_pmic_wdg_ClrErrorStatus);
+    RUN_TEST(test_pmic_wdg_ClrErrorStatus_prmValTest_handle);
+    RUN_TEST(test_pmic_wdg_ClrErrorStatus_prmValTest_wdgErrType);
 
     pmic_updateTestResults(pmic_wdg_tests, PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -1528,6 +1748,9 @@ static void test_pmic_run_slave_device_testcases(void)
 
     RUN_TEST(test_pmic_wdg_StartTriggerSequence_prmValTest_handle);
     RUN_TEST(test_pmic_wdg_startQaSequence_prmValTest_maxCnt);
+    RUN_TEST(test_pmic_wdg_ClrErrorStatus);
+    RUN_TEST(test_pmic_wdg_ClrErrorStatus_prmValTest_handle);
+    RUN_TEST(test_pmic_wdg_ClrErrorStatus_prmValTest_wdgErrType);
 
     pmic_updateTestResults(pmic_wdg_tests, PMIC_WDG_NUM_OF_TESTCASES);
 
