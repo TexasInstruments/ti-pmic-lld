@@ -334,6 +334,23 @@ extern "C" {
  */
 #define PMIC_WD_QA_INFINITE_SEQ (0xFFFFFFFFU)
 
+/**
+ *  \anchor Pmic_WdgErrType
+ *  \name PMIC WDG Error TYPE
+ *
+ *  @{
+ */
+#define PMIC_WDG_ERR_LONG_WIN_TIMEOUT        (0x0U)
+#define PMIC_WDG_ERR_TIMEOUT                 (0x1U)
+#define PMIC_WDG_ERR_TRIGGER_EARLY           (0x2U)
+#define PMIC_WDG_ERR_ANSWER_EARLY            (0x3U)
+#define PMIC_WDG_ERR_SEQ_ERR                 (0x4U)
+#define PMIC_WDG_ERR_ANS_ERR                 (0x5U)
+#define PMIC_WDG_ERR_FAIL_INT                (0x6U)
+#define PMIC_WDG_ERR_RST_INT                 (0x7U)
+#define PMIC_WDG_ERR_ALL                     (0x8U)
+/* @} */
+
 /* ========================================================================== */
 /*                            Structures and Enums                            */
 /* ========================================================================== */
@@ -352,8 +369,10 @@ extern "C" {
  * \param   longWinDuration_ms  Long Window duration in milli seconds.
  *                              To get more effective results user has to
  *                              program long window with multiples of 3000.
- *                              The valid range is (100, 3000, 6000, 9000,
- *                                      12000, ..., 765000).
+ *                              For PG1.0, the valid range is (100, 3000, 6000,
+ *                              9000,....12000, ..., 765000).
+ *                              For PG2.0, the valid range is (80, 125, 250,
+ *                              375,....8000, 12000, 16000, 20000 ..., 772000).
  * \param   win1Duration_us     Window-1 duration in Micro Seconds.
  *                              To get more effective results user has to
  *                              program window1 with multiples of 550.
@@ -487,7 +506,8 @@ int32_t Pmic_wdgDisable(Pmic_CoreHandle_t *pPmicCoreHandle);
 /*!
  * \brief   API to set PMIC watchdog configurations.
  *
- * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854)
+ * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854), REQ_TAG(PDK-9115),
+ *              REQ_TAG(PDK-9116)
  * Design: did_pmic_wdg_cfg_readback
  *
  *          This function is used to configure the watchdog parameters
@@ -508,7 +528,8 @@ int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t   *pPmicCoreHandle,
 /*!
  * \brief   API to get PMIC watchdog configurations.
  *
- * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854)
+ * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854), REQ_TAG(PDK-9115),
+ *              REQ_TAG(PDK-9116)
  * Design: did_pmic_wdg_cfg_readback
  *
  *          This function is used to get configuration of the watchdog
@@ -632,6 +653,27 @@ int32_t Pmic_wdgGetFailCount(Pmic_CoreHandle_t *pPmicCoreHandle,
  */
 int32_t Pmic_wdgStartTriggerSequence(Pmic_CoreHandle_t *pPmicCoreHandle);
 
+/*!
+ * \brief   API to clear PMIC watchdog error status.
+ *
+ * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854)
+ * Design: did_pmic_wdg_cfg_readback
+ *
+ *          This function is used to clear the watchdog error status from the
+ *          PMIC for trigger mode or Q&A(question and answer) mode,
+ *          Note: User has to clear the WDG Error status only when Error status
+ *          bit is set for the corresponding wdgErrType
+ *
+ * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
+ * \param   wdgErrType      [IN]       Watchdog error type to clear the status
+ *                                     For Valid values:
+ *                                     \ref Pmic_WdgErrType
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_wdgClrErrStatus(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                             const uint8_t        wdgErrType);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

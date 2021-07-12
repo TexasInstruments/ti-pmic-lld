@@ -210,10 +210,28 @@ extern "C" {
 /*!
  * \brief  Watchdog Long Window Max, Min and Divisor macros
  */
-#define PMIG_WD_LONGWIN_100_MILLISEC (100U)
-#define PMIG_WD_LONGWIN_MILLISEC_MIN (3000U)
-#define PMIG_WD_LONGWIN_MILLISEC_MAX (765000U)
-#define PMIG_WD_LONGWIN_MILLISEC_DIV (3000U)
+/*! \brief  Valid only for PG2.0 */
+#define PMIG_WD_LONGWIN_80_MILLISEC                 (80U)
+#define PMIG_WD_LONGWIN_125_MILLISEC                (125U)
+#define PMIG_WD_LONGWIN_8000_MILLISEC               (8000U)
+
+#define PMIG_WD_LONGWIN_MILLISEC_DIV_125            (125U)
+#define PMIG_WD_LONGWIN_MILLISEC_DIV_4000           (4000U)
+
+
+#define PMIG_WD_LONGWIN_MILLISEC_MIN_PG_2_0         (125U)
+#define PMIG_WD_LONGWIN_MILLISEC_MAX_PG_2_0         (772000U)
+
+
+#define PMIG_WD_LONGWIN_REG_VAL_0                   (0x0U)
+#define PMIG_WD_LONGWIN_REG_VAL_1                   (0x1U)
+#define PMIG_WD_LONGWIN_REG_VAL_64                  (0x40U)
+
+/*! \brief  Valid only for PG1.0 */
+#define PMIG_WD_LONGWIN_100_MILLISEC                (100U)
+#define PMIG_WD_LONGWIN_MILLISEC_MIN                (3000U)
+#define PMIG_WD_LONGWIN_MILLISEC_MAX                (765000U)
+#define PMIG_WD_LONGWIN_MILLISEC_DIV                (3000U)
 
 /*!
  * \brief  Watchdog Window1 Max, Min and Divisor macros
