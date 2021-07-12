@@ -383,31 +383,31 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         "Pmic_irqGetErrStatus: Test to Clear all interrupts"
     },
     {
-        1,
+        9887,
         "Pmic_irqGetGpioMaskIntr/Pmic_irqMaskIntr: Test to Get Mask status of Gpio and Irq Interrupts"
     },
     {
-        2,
+        9888,
         "Pmic_irqGetGpioMaskIntr/Pmic_irqMaskIntr: Test to Get UnMask status of Gpio and Irq Interrupts"
     },
     {
-        3,
+        9889,
         "Pmic_irqGetGpioMaskIntr: Parameter validation for handle"
     },
     {
-        4,
+        9890,
         "Pmic_irqGetGpioMaskIntr: Parameter validation for pFallIntrMaskStat"
     },
     {
-        5,
+        9891,
         "Pmic_irqGetGpioMaskIntr: Parameter validation for pRiseIntrMaskStat"
     },
     {
-        6,
+        9892,
         "Pmic_irqGetMaskIntrStatus: Parameter validation for handle"
     },
     {
-        7,
+        9893,
         "Pmic_irqGetMaskIntrStatus: Parameter validation for pMaskStatus"
     },
 };
@@ -5660,7 +5660,7 @@ static void test_pmic_gpio_irq_getMaskIntrStat(void)
     uint8_t  irqGpioNumMaxCnt, irqNumMaxCnt, irqCnt;
     bool     riseIntrMaskStat, fallIntrMaskStat, irqMaskStatus;
 
-    test_pmic_print_unity_testcase_info(1,
+    test_pmic_print_unity_testcase_info(9887,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
@@ -5703,23 +5703,30 @@ static void test_pmic_gpio_irq_getMaskIntrStat(void)
                                   PMIC_IRQ_MASK);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-     for(irqCnt = 3; irqCnt < irqNumMaxCnt; irqCnt++)
-     {
-         if((irqCnt == 20) || (irqCnt == 21) || (irqCnt == 22) ||
-            (irqCnt == 27) || (irqCnt == 30) || (irqCnt == 53) ||
-            (irqCnt == 57) || (irqCnt == 61) || (irqCnt == 65) ||
-            (irqCnt == 69) || (irqCnt == 73) || (irqCnt == 77) ||
-            (irqCnt == 81) || (irqCnt == 85) )
-         {
+    /* Leo device Mask status */
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        for(irqCnt = 0; irqCnt < irqNumMaxCnt; irqCnt++)
+        {
+            /* PMIC Mask registers are not available for these interrupts*/
+            if((irqCnt == 0) ||  (irqCnt == 1) ||  (irqCnt == 2)  ||
+               (irqCnt == 20) || (irqCnt == 21) || (irqCnt == 22) ||
+               (irqCnt == 27) || (irqCnt == 30) || (irqCnt == 53) ||
+               (irqCnt == 57) || (irqCnt == 61) || (irqCnt == 65) ||
+               (irqCnt == 69) || (irqCnt == 73) || (irqCnt == 77) ||
+               (irqCnt == 81) || (irqCnt == 85) )
+            {
+                continue;
+
+            }
+
+            /* PMIC GPIO Mask registers are tested as part of Pmic_irqGpioMaskIntr().
+             * So NA for the Pmic_irqMaskIntr()  */
+            if((irqCnt >= 39 ) && (irqCnt <= 49))
+            {
              continue;
 
-         }
-
-         if((irqCnt >= 39 ) && (irqCnt <= 49))
-         {
-             continue;
-
-         }
+            }
 
         /* Get Mask status of Gpio Interrupt */
         pmicStatus = Pmic_irqGetMaskIntrStatus(pPmicCoreHandle,
@@ -5727,9 +5734,43 @@ static void test_pmic_gpio_irq_getMaskIntrStat(void)
                                              &irqMaskStatus);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
         TEST_ASSERT_EQUAL(PMIC_IRQ_MASK, irqMaskStatus);
-     }
+        }
+    }
 
-    pmic_testResultUpdate_pass(1,
+    /* Hera device Mask status */
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        for(irqCnt = 0; irqCnt < irqNumMaxCnt; irqCnt++)
+        {
+            /* PMIC Mask registers are not available for these interrupts*/
+            if((irqCnt == 0)  || (irqCnt == 1)  || (irqCnt == 2)  ||
+               (irqCnt == 17) || (irqCnt == 18) || (irqCnt == 19) ||
+               (irqCnt == 23) || (irqCnt == 26) || (irqCnt == 42) ||
+               (irqCnt == 45) || (irqCnt == 51) || (irqCnt == 55) ||
+               (irqCnt == 59) || (irqCnt == 63))
+            {
+                continue;
+
+            }
+
+            /* PMIC GPIO Mask registers are tested as part of Pmic_irqGpioMaskIntr().
+             * So NA for the Pmic_irqMaskIntr()  */
+            if((irqCnt >= 32 ) && (irqCnt <= 41))
+            {
+             continue;
+
+            }
+        /* Get Mask status of Gpio Interrupt */
+        pmicStatus = Pmic_irqGetMaskIntrStatus(pPmicCoreHandle,
+                                             irqCnt,
+                                             &irqMaskStatus);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        TEST_ASSERT_EQUAL(PMIC_IRQ_MASK, irqMaskStatus);
+        }
+    }
+
+
+    pmic_testResultUpdate_pass(9887,
                                pmic_gpio_tests,
                                PMIC_GPIO_NUM_OF_TESTCASES);
 }
@@ -5743,9 +5784,19 @@ static void test_pmic_gpio_irq_getUnMaskIntrStat(void)
     uint8_t  irqGpioNumMaxCnt, irqNumMaxCnt, irqCnt;
     bool     riseIntrMaskStat, fallIntrMaskStat, irqMaskStatus;
 
-    test_pmic_print_unity_testcase_info(2,
+    test_pmic_print_unity_testcase_info(9888,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
+
+    /* TBD - Unmasking of Reg CRC Interrupt in PG1.0 Leo PMIC B results in hang
+     * Need to debug the issue
+     */
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    {
+        pmic_testResultUpdate_ignore(9888,
+                                     pmic_gpio_tests,
+                                     PMIC_GPIO_NUM_OF_TESTCASES);
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -5785,30 +5836,71 @@ static void test_pmic_gpio_irq_getUnMaskIntrStat(void)
                                   PMIC_IRQ_UNMASK);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-     for(irqCnt = 3; irqCnt < irqNumMaxCnt; irqCnt++)
-     {
-         if((irqCnt == 20) || (irqCnt == 21) || (irqCnt == 22) ||
-            (irqCnt == 27) || (irqCnt == 30) || (irqCnt == 53) ||
-            (irqCnt == 57) || (irqCnt == 61) || (irqCnt == 65) ||
-            (irqCnt == 69) || (irqCnt == 73) || (irqCnt == 77) ||
-            (irqCnt == 81) || (irqCnt == 85) )
-         {
+    /* Leo device Mask status */
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        for(irqCnt = 0; irqCnt < irqNumMaxCnt; irqCnt++)
+        {
+            /* PMIC Mask registers are not available for these interrupts*/
+            if((irqCnt == 0)  || (irqCnt == 1)  || (irqCnt == 2)  ||
+               (irqCnt == 20) || (irqCnt == 21) || (irqCnt == 22) ||
+               (irqCnt == 27) || (irqCnt == 30) || (irqCnt == 53) ||
+               (irqCnt == 57) || (irqCnt == 61) || (irqCnt == 65) ||
+               (irqCnt == 69) || (irqCnt == 73) || (irqCnt == 77) ||
+               (irqCnt == 81) || (irqCnt == 85) )
+            {
+                continue;
+
+            }
+
+            /* PMIC GPIO Mask registers are tested as part of Pmic_irqGpioMaskIntr().
+             * So NA for the Pmic_irqMaskIntr()  */
+            if((irqCnt >= 39 ) && (irqCnt <= 49))
+            {
              continue;
 
-         }
+            }
 
-         if((irqCnt >= 39 ) && (irqCnt <= 49))
-         {
-             continue;
-
-         }
         /* Get Mask status of Gpio Interrupt */
         pmicStatus = Pmic_irqGetMaskIntrStatus(pPmicCoreHandle,
-                                               irqCnt,
-                                               &irqMaskStatus);
+                                             irqCnt,
+                                             &irqMaskStatus);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
         TEST_ASSERT_EQUAL(PMIC_IRQ_UNMASK, irqMaskStatus);
-     }
+        }
+    }
+
+    /* Hera device Mask status */
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        for(irqCnt = 0; irqCnt < irqNumMaxCnt; irqCnt++)
+        {
+            /* PMIC UnMask registers are not available for these interrupts*/
+            if((irqCnt == 0)  || (irqCnt == 1)  || (irqCnt == 2)  ||
+               (irqCnt == 17) || (irqCnt == 18) || (irqCnt == 19) ||
+               (irqCnt == 23) || (irqCnt == 26) || (irqCnt == 42) ||
+               (irqCnt == 45) || (irqCnt == 51) || (irqCnt == 55) ||
+               (irqCnt == 59) || (irqCnt == 63))
+            {
+                continue;
+
+            }
+            /* PMIC GPIO UnMask registers are tested as part of Pmic_irqGpioMaskIntr().
+             * So NA for the Pmic_irqMaskIntr()  */
+            if((irqCnt >= 32 ) && (irqCnt <= 41))
+            {
+             continue;
+
+            }
+        /* Get Mask status of Gpio Interrupt */
+        pmicStatus = Pmic_irqGetMaskIntrStatus(pPmicCoreHandle,
+                                             irqCnt,
+                                             &irqMaskStatus);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        TEST_ASSERT_EQUAL(PMIC_IRQ_UNMASK, irqMaskStatus);
+        }
+    }
+
 
     /* Masking All GPIO Interrupts */
     pmicStatus = Pmic_irqGpioMaskIntr(pPmicCoreHandle,
@@ -5823,7 +5915,7 @@ static void test_pmic_gpio_irq_getUnMaskIntrStat(void)
                                   PMIC_IRQ_MASK);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmic_testResultUpdate_pass(2,
+    pmic_testResultUpdate_pass(9888,
                                pmic_gpio_tests,
                                PMIC_GPIO_NUM_OF_TESTCASES);
 }
@@ -5836,7 +5928,7 @@ static void test_pmic_gpio_getMaskIntrStatPrmValTst_handle(void)
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     bool     riseIntrMaskStat, fallIntrMaskStat;
 
-    test_pmic_print_unity_testcase_info(3,
+    test_pmic_print_unity_testcase_info(9889,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
@@ -5856,7 +5948,7 @@ static void test_pmic_gpio_getMaskIntrStatPrmValTst_handle(void)
                                          &fallIntrMaskStat);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
 
-    pmic_testResultUpdate_pass(3,
+    pmic_testResultUpdate_pass(9889,
                                pmic_gpio_tests,
                                PMIC_GPIO_NUM_OF_TESTCASES);
 }
@@ -5869,7 +5961,7 @@ static void test_pmic_gpio_getMaskIntrStatPrmValTst_pFallIntrMaskStat(void)
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     bool     riseIntrMaskStat;
 
-    test_pmic_print_unity_testcase_info(4,
+    test_pmic_print_unity_testcase_info(9890,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
@@ -5889,7 +5981,7 @@ static void test_pmic_gpio_getMaskIntrStatPrmValTst_pFallIntrMaskStat(void)
                                          NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(4,
+    pmic_testResultUpdate_pass(9890,
                                pmic_gpio_tests,
                                PMIC_GPIO_NUM_OF_TESTCASES);
 }
@@ -5902,7 +5994,7 @@ static void test_pmic_gpio_getMaskIntrStatPrmValTst_pRiseIntrMaskStat(void)
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     bool  fallIntrMaskStat;
 
-    test_pmic_print_unity_testcase_info(5,
+    test_pmic_print_unity_testcase_info(9891,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
@@ -5922,7 +6014,7 @@ static void test_pmic_gpio_getMaskIntrStatPrmValTst_pRiseIntrMaskStat(void)
                                          &fallIntrMaskStat);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(5,
+    pmic_testResultUpdate_pass(9891,
                                pmic_gpio_tests,
                                PMIC_GPIO_NUM_OF_TESTCASES);
 }
@@ -5935,7 +6027,7 @@ static void test_pmic_gpio_irq_getMaskIntrStatPrmValTst_handle(void)
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     bool  irqMaskStatus;
 
-    test_pmic_print_unity_testcase_info(6,
+    test_pmic_print_unity_testcase_info(9892,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
@@ -5951,7 +6043,7 @@ static void test_pmic_gpio_irq_getMaskIntrStatPrmValTst_handle(void)
                                            &irqMaskStatus);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
 
-    pmic_testResultUpdate_pass(6,
+    pmic_testResultUpdate_pass(9892,
                                pmic_gpio_tests,
                                PMIC_GPIO_NUM_OF_TESTCASES);
 }
@@ -5963,7 +6055,7 @@ static void test_pmic_gpio_irq_getMaskIntrStatPrmValTst_pMaskStatus(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(7,
+    test_pmic_print_unity_testcase_info(9893,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
@@ -5979,7 +6071,7 @@ static void test_pmic_gpio_irq_getMaskIntrStatPrmValTst_pMaskStatus(void)
                                            NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(7,
+    pmic_testResultUpdate_pass(9893,
                                pmic_gpio_tests,
                                PMIC_GPIO_NUM_OF_TESTCASES);
 }

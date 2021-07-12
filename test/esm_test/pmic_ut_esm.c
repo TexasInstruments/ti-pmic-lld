@@ -285,23 +285,23 @@ static Pmic_Ut_Tests_t pmic_esm_tests[] =
          "Pmic_esmSetInterrupt: Test to verify ESM MCU PWM Mode PIN, Fail and RST Interrupts disabled"
      },
      {
-         1,
+         9876,
          "Pmic_esmGetStatus: Test to verify PMIC ESM MCU Get Status for Start and Stop functionality"
      },
      {
-         2,
+         9877,
          "Pmic_esmGetStatus: Test to verify PMIC ESM SOC Get Status for Start and Stop functionality"
      },
      {
-         3,
+         9878,
          "Pmic_esmGetStatus: Parameter validation for handle"
      },
      {
-         4,
+         9879,
          "Pmic_esmGetStatus: Parameter validation for pEsmState"
      },
      {
-         5,
+         9880,
          "Pmic_esmGetStatus: Negative test to verify ESM SOC Get Status for HERA"
      },
 };
@@ -2918,7 +2918,7 @@ static void test_pmic_esm_getStatusEsmMcu(void)
     bool esmState      = PMIC_ESM_START;
     bool esmState_rd;
 
-    test_pmic_print_unity_testcase_info(1,
+    test_pmic_print_unity_testcase_info(9876,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -2943,7 +2943,7 @@ static void test_pmic_esm_getStatusEsmMcu(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     TEST_ASSERT_EQUAL(PMIC_ESM_STOP, esmState_rd);
 
-    pmic_testResultUpdate_pass(1,
+    pmic_testResultUpdate_pass(9876,
                                pmic_esm_tests,
                                PMIC_ESM_NUM_OF_TESTCASES);
 }
@@ -2959,13 +2959,13 @@ static void test_pmic_esm_getStatusEsmSoc(void)
     bool esmState      = PMIC_ESM_START;
     bool esmState_rd;
 
-    test_pmic_print_unity_testcase_info(2,
+    test_pmic_print_unity_testcase_info(9877,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        pmic_testResultUpdate_ignore(2,
+        pmic_testResultUpdate_ignore(9877,
                                      pmic_esm_tests,
                                      PMIC_ESM_NUM_OF_TESTCASES);
     }
@@ -2991,7 +2991,7 @@ static void test_pmic_esm_getStatusEsmSoc(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     TEST_ASSERT_EQUAL(PMIC_ESM_STOP, esmState_rd);
 
-    pmic_testResultUpdate_pass(2,
+    pmic_testResultUpdate_pass(9877,
                                pmic_esm_tests,
                                PMIC_ESM_NUM_OF_TESTCASES);
 }
@@ -3005,14 +3005,14 @@ static void test_pmic_esm_getStatusPrmValTest_handle(void)
     bool esmType        = PMIC_ESM_MODE_SOC;
     bool esmState;
 
-    test_pmic_print_unity_testcase_info(3,
+    test_pmic_print_unity_testcase_info(9878,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_esmGetStatus(NULL, esmType, &esmState);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
 
-    pmic_testResultUpdate_pass(3,
+    pmic_testResultUpdate_pass(9878,
                                pmic_esm_tests,
                                PMIC_ESM_NUM_OF_TESTCASES);
 }
@@ -3023,16 +3023,26 @@ static void test_pmic_esm_getStatusPrmValTest_handle(void)
 static void test_pmic_esm_getStatusPrmValTest_pEsmState(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    bool esmType        = PMIC_ESM_MODE_SOC;
+    bool esmType;
 
-    test_pmic_print_unity_testcase_info(4,
+    test_pmic_print_unity_testcase_info(9879,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        esmType        = PMIC_ESM_MODE_SOC;
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        esmType        = PMIC_ESM_MODE_MCU;
+    }
 
     pmicStatus = Pmic_esmGetStatus(pPmicCoreHandle, esmType, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(4,
+    pmic_testResultUpdate_pass(9879,
                                pmic_esm_tests,
                                PMIC_ESM_NUM_OF_TESTCASES);
 }
@@ -3046,13 +3056,13 @@ static void test_pmic_esm_getStatusEsmSoc_hera(void)
     bool esmType       = PMIC_ESM_MODE_SOC;
     bool esmState;
 
-    test_pmic_print_unity_testcase_info(5,
+    test_pmic_print_unity_testcase_info(9880,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        pmic_testResultUpdate_ignore(5,
+        pmic_testResultUpdate_ignore(9880,
                                      pmic_esm_tests,
                                      PMIC_ESM_NUM_OF_TESTCASES);
     }
@@ -3060,7 +3070,7 @@ static void test_pmic_esm_getStatusEsmSoc_hera(void)
     pmicStatus = Pmic_esmGetStatus(pPmicCoreHandle, esmType, &esmState);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
 
-    pmic_testResultUpdate_pass(5,
+    pmic_testResultUpdate_pass(9880,
                                pmic_esm_tests,
                                PMIC_ESM_NUM_OF_TESTCASES);
 }
