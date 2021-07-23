@@ -354,6 +354,14 @@ int32_t Pmic_fsmEnableI2cTrigger(Pmic_CoreHandle_t  *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((PMIC_SILICON_REV_ID_PG_2_0 != pPmicCoreHandle->pmicDevSiliconRev) &&
+        ((i2cTriggerType > PMIC_FSM_I2C_TRIGGER0) &&
+         (i2cTriggerType < PMIC_FSM_I2C_TRIGGER4))))
+    {
+        pmicStatus = PMIC_ST_ERR_NOT_SUPPORTED;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((i2cTriggerType > PMIC_FSM_I2C_TRIGGER7) ||
         (i2cTriggerVal > PMIC_FSM_I2C_TRIGGER_VAL_1)))
     {
@@ -615,6 +623,7 @@ int32_t Pmic_fsmDeviceOffRequestCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
  *
  *         This function initiates a request to exercise runtime BIST on the
  *         device
+ *         Valid only for TPS6594x Leo PMIC PG2.0 and LP8764x Hera PMIC PG2.0
  *
  * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
  *
@@ -628,6 +637,12 @@ int32_t Pmic_fsmRequestRuntimeBist(Pmic_CoreHandle_t  *pPmicCoreHandle)
     if(NULL == pPmicCoreHandle)
     {
         pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (PMIC_SILICON_REV_ID_PG_2_0 != pPmicCoreHandle->pmicDevSiliconRev))
+    {
+        pmicStatus = PMIC_ST_ERR_NOT_SUPPORTED;
     }
 
     if(PMIC_ST_SUCCESS == pmicStatus)

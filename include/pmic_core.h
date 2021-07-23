@@ -805,6 +805,8 @@ typedef struct Pmic_CommonCtrlStat_s
  *  \param  nvmRev          TI NVM Revision
  *  \param  siliconRev      TI Silicon Revision
  *  \param  customNvmID     Customer configured NVM ID Value
+ *                          customNvmID value is valid only for TPS6594x Leo
+ *                          PMIC PG2.0 and LP8764x Hera PMIC PG2.0
  */
 typedef struct Pmic_DeviceInfo_s
 {
@@ -1175,6 +1177,7 @@ int32_t Pmic_getI2CSpeed(Pmic_CoreHandle_t     *pPmicCoreHandle,
  *          Note: Application shall not do reads and writes of the any
  *          PMIC registers for at least 2ms to allow the recalculation of the
  *          register CRC value due to the change
+ *          Valid only for TPS6594x Leo PMIC PG2.0 and LP8764x Hera PMIC PG2.0
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
  *
@@ -1215,6 +1218,8 @@ int32_t Pmic_getCrcStatus(Pmic_CoreHandle_t     *pPmicCoreHandle,
  *          This function is used to get PMIC Device Information such as
  *          TI DeviceID, TI NVM ID, TI NVM Revision, TI Silicon Revision,
  *          Custom NVM ID
+ *          Note: customNvmID is valid only for TPS6594x Leo PMIC PG2.0 and
+ *          LP8764x Hera PMIC PG2.0
  *
  * \param   pPmicCoreHandle      [IN]    PMIC Interface Handle.
  * \param   pDeviceInfo          [OUT]   PMIC Device Information value

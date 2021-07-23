@@ -248,8 +248,11 @@ extern "C" {
  *  @{
  */
 #define PMIC_FSM_I2C_TRIGGER0                     (0x0U)
+/** \brief Valid only for TPS6594x Leo PMIC PG2.0 and LP8764x Hera PMIC PG2.0 */
 #define PMIC_FSM_I2C_TRIGGER1                     (0x1U)
+/** \brief Valid only for TPS6594x Leo PMIC PG2.0 and LP8764x Hera PMIC PG2.0 */
 #define PMIC_FSM_I2C_TRIGGER2                     (0x2U)
+/** \brief Valid only for TPS6594x Leo PMIC PG2.0 and LP8764x Hera PMIC PG2.0 */
 #define PMIC_FSM_I2C_TRIGGER3                     (0x3U)
 #define PMIC_FSM_I2C_TRIGGER4                     (0x4U)
 #define PMIC_FSM_I2C_TRIGGER5                     (0x5U)
@@ -439,6 +442,7 @@ int32_t Pmic_fsmGetNsleepSignalMaskStat(Pmic_CoreHandle_t  *pPmicCoreHandle,
  *
  *         This function initiates a request to exercise runtime BIST on the
  *         device
+ *         Valid only for TPS6594x Leo PMIC PG2.0 and LP8764x Hera PMIC PG2.0
  *
  * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
  *

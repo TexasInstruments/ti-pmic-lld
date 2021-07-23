@@ -549,7 +549,19 @@ level */
 /* @} */
 
 /**
- *  \anchor Pmic_LP8764x_Power_Thermal_Warn_Level
+ *  \anchor Pmic_LP8764x_Power_Thermal_Shutdown_Level
+ *  \name   PMIC Thermal shutdown threshold level.
+ *
+ *  @{
+ */
+/** \brief Used to set the Thermal shutdown threshold level to 140 Celsius */
+#define PMIC_LP8764X_THERMAL_TEMP_TSD_ORD_140C    (0U)
+/** \brief Used to set the Thermal shutdown threshold level to 145 Celsius */
+#define PMIC_LP8764X_THERMAL_TEMP_TSD_ORD_145C    (1U)
+/* @} */
+
+/**
+ *  \anchor Pmic_LP8764x_Pwr_Thermal_Warn_Lvl
  *  \name   PMIC Thermal warning threshold level.
  *
  *  @{

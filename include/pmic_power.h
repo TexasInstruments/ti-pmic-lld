@@ -116,7 +116,8 @@ extern "C" {
 #define PMIC_CFG_REGULATOR_EN_VALID                       (6U)
  /** \brief validParams value used to set/get to Enable/Disable Slow Ramp for
   *         LDO
-  *         Valid only for LDO regulator */
+  *         Valid only for LDO regulator
+  *         Valid only for TPS6594x Leo PMIC PG2.0 */
 #define PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID         (7U)
  /** \brief validParams value used to set/get to Select Bypass/Linear Regulator
   *         LDO mode
@@ -188,8 +189,6 @@ extern "C" {
                          (1U << PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID)
 #define PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID_SHIFT       \
                          (1U << PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID)
-#define PMIC_CFG_DEGLITCH_TIME_SEL_VALID_SHIFT \
-                         (1U << PMIC_CFG_DEGLITCH_TIME_SEL_VALID)
 #define PMIC_CFG_VCCA_PWR_GOOD_LVL_VALID_SHIFT             \
                          (1U << PMIC_CFG_VCCA_PWR_GOOD_LVL_VALID)
 #define PMIC_CFG_VMON_RANGE_VALID_SHIFT      (1U << PMIC_CFG_VMON_RANGE_VALID)
@@ -226,7 +225,10 @@ extern "C" {
  /** \brief validParams value used to set/get Deglitch time select for all power
   *         resources
   *         Valid only for VMON1/VMON2/VCCA/VMON of LDO/VMON of BUCK power
-  *         resources */
+  *         resources
+  *         Valid only for TPS6594x Leo PMIC PG2.0 and LP8764x Hera PMIC PG1.0
+  *         and PG2.0
+  */
 #define PMIC_CFG_DEGLITCH_TIME_SEL_VALID          (2U)
  /** \brief validParams value used to set/get to Select the trigger selection
   *         for severe Error  */
@@ -330,7 +332,10 @@ extern "C" {
   *         temperature value  */
 #define PMIC_THERMAL_WARN_VALID                   (1U)
 /** \brief validParams value used to set/get Thermal Shutdown Threshold
- *         temperature value */
+ *         temperature value
+ *         valid only for TPS6594x Leo PMIC PG2.0 and LP8764x Hera PMIC PG1.0
+ *         and PG2.0
+ */
 #define PMIC_THERMAL_SHTDWN_VALID                 (2U)
 /* @} */
 
@@ -512,6 +517,7 @@ extern "C" {
  *                               Valid only when
  *                               PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID
  *                               bit is set.
+ *                               Valid only for TPS6594x Leo PMIC PG2.0
  *  \param   ldoBypassModeEn     Selects Bypass/Linear Regulator LDO mode.
  *                               Valid only for TPS6594X Leo. For Valid Values
  *                               \ref Pmic_TPS6594x_Regulator_Ldo_Mode.
@@ -644,8 +650,11 @@ typedef struct Pmic_PowerResourceCfg_s
  *
  *  \param   deglitchTimeSel     Deglitch time select for all power resources
  *                               Valid values for TPS6594x Leo Device
+ *                               Valid only for TPS6594x Leo PMIC PG2.0
  *                               \ref Pmic_TPS6594x_Vmon_DeglitchTime_Sel.
  *                               Valid values for LP8764x HERA Device
+ *                               Valid for both LP8764x Hera PMIC PG1.0 and
+ *                               PG2.0
  *                               \ref Pmic_LP8764x_Vmon_DeglitchTime_Sel.
  *                               Valid only when
  *                               PMIC_CFG_DEGLITCH_TIME_SEL_VALID bit is set.
@@ -811,20 +820,26 @@ typedef struct Pmic_PowerResourceStat_s
  *                               Set/Get the thermal Warning Threshold
  *                               temperature value for PMIC.
  *                               For valid values
- *                               Valid values for TPS6594x Leo Device
- *                               \ref Pmic_TPS6594x_Power_Thermal_Warn_Level
+ *                               Valid values for TPS6594x Leo Device PG 1.0
+ *                               \ref Pmic_TPS6594x_Pwr_Thermal_Warn_Lvl_PG_1_0
+ *                               Valid values for TPS6594x Leo Device PG 2.0
+ *                               \ref Pmic_TPS6594x_Pwr_Thermal_Warn_Lvl_PG_2_0
  *                               Valid values for LP8764x HERA Device
- *                               \ref Pmic_LP8764x_Power_Thermal_Warn_Level
+ *                               \ref Pmic_LP8764x_Pwr_Thermal_Warn_Lvl
  *                               Valid only when
  *                               PMIC_THERMAL_WARN_VALID bit is set
  *
  *  \param   thermalShutdownThold
  *                               Set/Get the Thermal Shutdown Threshold
  *                               temperature value for PMIC.
- *                               Only supported by  TPS6594x Leo PMIC
+ *                               Only supported by TPS6594x Leo PMIC PG2.0
+ *                               and LP8764x Hera PMIC PG1.0 and PG2.0
  *                               For valid values
- *                               Valid values for TPS6594x Leo Device
+ *                               Valid values for TPS6594x Leo Device PG2.0
  *                               \ref Pmic_TPS6594x_Power_Thermal_Shutdown_Level
+ *                               Valid values for LP8764x Leo Device PG2.0 and
+ *                               PG1.0
+ *                               \ref Pmic_LP8764x_Power_Thermal_Shutdown_Level
  *                               Valid only when
  *                               PMIC_THERMAL_SHTDWN_VALID bit of
  *                               validParams is set.

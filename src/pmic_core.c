@@ -648,8 +648,8 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
         {
             pPmicCoreHandle->pmicDevRev = Pmic_getBitField(
                             regVal,
-                            PMIC_DEV_REV_TI_DEVICE_ID_SILICON_REV_SHIFT,
-                            PMIC_DEV_REV_TI_DEVICE_ID_SILICON_REV_MASK);
+                            PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_SHIFT,
+                            PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_MASK);
 
             /* Validate if the device requested is the one on the bus */
             switch (pPmicCoreHandle->pmicDeviceType)
@@ -3241,6 +3241,7 @@ int32_t Pmic_getI2CSpeed(Pmic_CoreHandle_t     *pPmicCoreHandle,
  *          Note: Application shall not do reads and writes of the any
  *          PMIC registers for at least 2ms to allow the recalculation of the
  *          register CRC value due to the change
+ *          Valid only for TPS6594x Leo PMIC PG2.0 and LP8764x Hera PMIC PG2.0
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
  *
@@ -3388,10 +3389,22 @@ int32_t Pmic_getDeviceInfo(Pmic_CoreHandle_t     *pPmicCoreHandle,
                                             &regVal);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            pDeviceInfo->deviceID = Pmic_getBitField(
-                                    regVal,
-                                    PMIC_DEV_REV_TI_DEVICE_ID_SILICON_REV_SHIFT,
-                                    PMIC_DEV_REV_TI_DEVICE_ID_SILICON_REV_MASK);
+            if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+            {
+                pDeviceInfo->deviceID =
+                          Pmic_getBitField(
+                             regVal,
+                             PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_SHIFT,
+                             PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_MASK);
+            }
+            else
+            {
+                pDeviceInfo->deviceID =
+                          Pmic_getBitField(
+                             regVal,
+                             PMIC_DEV_REV_TI_DEVICE_ID_SILICON_REV_SHIFT,
+                             PMIC_DEV_REV_TI_DEVICE_ID_SILICON_REV_MASK);
+            }
 
             pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
                                                 PMIC_NVM_CODE_1_REGADDR,
@@ -3417,11 +3430,14 @@ int32_t Pmic_getDeviceInfo(Pmic_CoreHandle_t     *pPmicCoreHandle,
                                        PMIC_MANUFACTURING_VER_SILICON_REV_MASK);
         }
 
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
         {
-            pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                                PMIC_CUSTOMER_NVM_ID_REG_REGADDR,
-                                                &(pDeviceInfo->customNvmID));
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                                    PMIC_CUSTOMER_NVM_ID_REG_REGADDR,
+                                                    &(pDeviceInfo->customNvmID));
+            }
         }
 
         Pmic_criticalSectionStop(pPmicCoreHandle);

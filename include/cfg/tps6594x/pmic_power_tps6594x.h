@@ -643,15 +643,27 @@ level */
 /* @} */
 
 /**
- *  \anchor Pmic_TPS6594x_Power_Thermal_Warn_Level
- *  \name   PMIC Thermal warning threshold level.
+ *  \anchor Pmic_TPS6594x_Pwr_Thermal_Warn_Lvl_PG_2_0
+ *  \name   PMIC Thermal warning threshold level for TPS6594x Leo PMIC PG2.0
  *
  *  @{
  */
 /** \brief Used to set the Thermal warning threshold level to 140 Celsius */
-#define PMIC_TPS6594X_THERMAL_TEMP_WARN_140C       (1U)
+#define PMIC_TPS6594X_PG_2_0_THERMAL_TEMP_WARN_140C       (1U)
 /** \brief Used to set the Thermal warning threshold level to 130 Celsius */
-#define PMIC_TPS6594X_THERMAL_TEMP_WARN_130C       (0U)
+#define PMIC_TPS6594X_PG_2_0_THERMAL_TEMP_WARN_130C       (0U)
+/*  @} */
+
+/**
+ *  \anchor Pmic_TPS6594x_Pwr_Thermal_Warn_Lvl_PG_1_0
+ *  \name   PMIC Thermal warning threshold level for TPS6594x Leo PMIC PG1.0
+ *
+ *  @{
+ */
+/** \brief Used to set the Thermal warning threshold level to 140 Celsius */
+#define PMIC_TPS6594X_THERMAL_TEMP_WARN_130C       (1U)
+/** \brief Used to set the Thermal warning threshold level to 130 Celsius */
+#define PMIC_TPS6594X_THERMAL_TEMP_WARN_120C       (0U)
 /*  @} */
 
 /**

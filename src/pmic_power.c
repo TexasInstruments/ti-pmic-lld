@@ -3072,10 +3072,22 @@ static int32_t Pmic_powerSetPwrResourceCtrlCfg(
        (((bool)true) == pmic_validParamCheck(pwrRsrcCfg.validParams,
                                     PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID)))
     {
-        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
+        if(((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
+            (PMIC_SILICON_REV_ID_PG_1_0 ==
+                                  pPmicCoreHandle->pmicDevSiliconRev)) ||
+           (PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType))
+        {
+            pmicStatus = PMIC_ST_ERR_NOT_SUPPORTED;
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
                                       PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID,
                                       pwrRsrc,
                                       pPmicCoreHandle->pmicDeviceType);
+        }
+
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             /* Enable/Disable Slow Ramp for LDO */
@@ -3357,10 +3369,22 @@ static int32_t Pmic_powerGetPwrResourceCtrlCfg(
        (((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
                                     PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID)))
     {
-        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
+        if(((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
+            (PMIC_SILICON_REV_ID_PG_1_0 ==
+                                  pPmicCoreHandle->pmicDevSiliconRev)) ||
+           (PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType))
+        {
+            pmicStatus = PMIC_ST_ERR_NOT_SUPPORTED;
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
                                       PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID,
                                       pwrRsrc,
                                       pPmicCoreHandle->pmicDeviceType);
+        }
+
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             /* Get Enable/Disable status of Slow Ramp for LDO */
@@ -5052,37 +5076,25 @@ static int32_t Pmic_setThermalShutdownThold(
     uint8_t  thresholdRegvalue;
     uint8_t thermalShutdownTholdVal = 0U;
 
-    switch(pPmicCoreHandle->pmicDeviceType)
+    status = Pmic_readThermalThreshold(pPmicCoreHandle,
+                                       &thresholdRegvalue);
+    if(((bool)true) == thermalShutdownThold)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            status = Pmic_readThermalThreshold(pPmicCoreHandle,
-                                               &thresholdRegvalue);
-            if(((bool)true) == thermalShutdownThold)
-            {
-                thermalShutdownTholdVal = 1U;
-            }
+        thermalShutdownTholdVal = 1U;
+    }
 
-            if(PMIC_ST_SUCCESS == status)
-            {
-                 Pmic_setBitField(&thresholdRegvalue,
-                                  PMIC_CONFIG_1_TSD_ORD_LEVEL_SHIFT,
-                                  PMIC_CONFIG_1_TSD_ORD_LEVEL_MASK,
-                                  thermalShutdownTholdVal);
-            }
+    if(PMIC_ST_SUCCESS == status)
+    {
+         Pmic_setBitField(&thresholdRegvalue,
+                          PMIC_CONFIG_1_TSD_ORD_LEVEL_SHIFT,
+                          PMIC_CONFIG_1_TSD_ORD_LEVEL_MASK,
+                          thermalShutdownTholdVal);
+    }
 
-            if(PMIC_ST_SUCCESS == status)
-            {
-                status = Pmic_writeThermalThreshold(pPmicCoreHandle,
-                                                    thresholdRegvalue);
-            }
-
-            break;
-        case PMIC_DEV_HERA_LP8764X:
-            status = PMIC_ST_ERR_INV_PARAM;
-            break;
-        default:
-            status = PMIC_ST_ERR_INV_DEVICE;
-            break;
+    if(PMIC_ST_SUCCESS == status)
+    {
+        status = Pmic_writeThermalThreshold(pPmicCoreHandle,
+                                            thresholdRegvalue);
     }
 
     return status;
@@ -5128,34 +5140,22 @@ static int32_t Pmic_getThermalShutdownThold(
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t thresholdRegvalue;
 
-    switch(pPmicCoreHandle->pmicDeviceType)
+    status = Pmic_readThermalThreshold(pPmicCoreHandle,
+                                       &thresholdRegvalue);
+    if(PMIC_ST_SUCCESS == status)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            status = Pmic_readThermalThreshold(pPmicCoreHandle,
-                                               &thresholdRegvalue);
-            if(PMIC_ST_SUCCESS == status)
-            {
-                if(Pmic_getBitField(
-                                    thresholdRegvalue,
-                                    PMIC_CONFIG_1_TSD_ORD_LEVEL_SHIFT,
-                                    PMIC_CONFIG_1_TSD_ORD_LEVEL_MASK) != 0U)
-               {
-                   *pThermalShutdownThold = (bool)true;
-               }
-               else
-               {
-                   *pThermalShutdownThold = (bool)false;
-               }
+        if(Pmic_getBitField(
+                            thresholdRegvalue,
+                            PMIC_CONFIG_1_TSD_ORD_LEVEL_SHIFT,
+                            PMIC_CONFIG_1_TSD_ORD_LEVEL_MASK) != 0U)
+       {
+           *pThermalShutdownThold = (bool)true;
+       }
+       else
+       {
+           *pThermalShutdownThold = (bool)false;
+       }
 
-            }
-
-            break;
-        case PMIC_DEV_HERA_LP8764X:
-            status = PMIC_ST_ERR_INV_PARAM;
-            break;
-        default:
-            status = PMIC_ST_ERR_INV_DEVICE;
-            break;
     }
 
     return status;
@@ -5761,10 +5761,19 @@ int32_t Pmic_powerSetCommonConfig(Pmic_CoreHandle_t           *pPmicCoreHandle,
        (((bool)true) == pmic_validParamCheck(powerCommonCfg.validParams,
                                      PMIC_CFG_DEGLITCH_TIME_SEL_VALID)))
     {
-        /* Set Deglitch time select for BUCKx_VMON/LDOx_VMON/VCCA_VMON/VMONX */
-        pmicStatus = Pmic_powerSetDeglitchTimeSel(
-                                                pPmicCoreHandle,
-                                                powerCommonCfg.deglitchTimeSel);
+        if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
+           (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev))
+        {
+            pmicStatus = PMIC_ST_ERR_NOT_SUPPORTED;
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Set Deglitch time select for BUCKx_VMON/LDOx_VMON/VCCA_VMON/VMONX */
+            pmicStatus = Pmic_powerSetDeglitchTimeSel(
+                                               pPmicCoreHandle,
+                                               powerCommonCfg.deglitchTimeSel);
+        }
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
@@ -5897,10 +5906,19 @@ int32_t Pmic_powerGetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
        (((bool)true) == pmic_validParamCheck(pPowerCommonCfg->validParams,
                                      PMIC_CFG_DEGLITCH_TIME_SEL_VALID)))
     {
-        /* get Deglitch time select for BUCKx_VMON, LDOx_VMON and VCCA_VMON */
-        pmicStatus = Pmic_powerGetDeglitchTimeSel(
+        if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
+           (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev))
+        {
+            pmicStatus = PMIC_ST_ERR_NOT_SUPPORTED;
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* get Deglitch time select for BUCKx_VMON, LDOx_VMON and VCCA_VMON */
+            pmicStatus = Pmic_powerGetDeglitchTimeSel(
                                            pPmicCoreHandle,
                                            &(pPowerCommonCfg->deglitchTimeSel));
+        }
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
@@ -6330,10 +6348,19 @@ int32_t Pmic_powerSetThermalConfig(
        (((bool)true) == pmic_validParamCheck(thermalThreshold.validParams,
                                      PMIC_THERMAL_SHTDWN_VALID)))
     {
-        /* Set the thermal shutdown threshold temperature value */
-        pmicStatus = Pmic_setThermalShutdownThold(
+
+        if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
+           (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev))
+        {
+            pmicStatus = PMIC_ST_ERR_NOT_SUPPORTED;
+        }
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Set the thermal shutdown threshold temperature value */
+            pmicStatus = Pmic_setThermalShutdownThold(
                                          pPmicCoreHandle,
                                          thermalThreshold.thermalShutdownThold);
+        }
     }
 
     return pmicStatus;
@@ -6386,18 +6413,26 @@ int32_t Pmic_powerGetThermalConfig(Pmic_CoreHandle_t      *pPmicCoreHandle,
     {
         /* Get the thermal warning threshold temperature value */
         pmicStatus = Pmic_getThermalWarnThold(
-                                        pPmicCoreHandle,
-                                        &(pThermalThreshold->thermalWarnThold));
+                                    pPmicCoreHandle,
+                                    &(pThermalThreshold->thermalWarnThold));
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
        (((bool)true) == pmic_validParamCheck(pThermalThreshold->validParams,
                                      PMIC_THERMAL_SHTDWN_VALID)))
     {
-        /* Get the thermal shutdown threshold temperature value */
-        pmicStatus = Pmic_getThermalShutdownThold(
+        if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
+           (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev))
+        {
+            pmicStatus = PMIC_ST_ERR_NOT_SUPPORTED;
+        }
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Get the thermal shutdown threshold temperature value */
+            pmicStatus = Pmic_getThermalShutdownThold(
                                     pPmicCoreHandle,
                                     &(pThermalThreshold->thermalShutdownThold));
+        }
     }
 
     return pmicStatus;

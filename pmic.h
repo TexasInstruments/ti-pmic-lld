@@ -199,6 +199,9 @@ extern "C" {
 #define PMIC_ST_ERR_CRC_STATUS_FAIL                     (-((int32_t)38))
 /** \brief Error Code for Register Write Failure when register is locked */
 #define PMIC_ST_ERR_REG_LOCKED_WR_FAIL                  (-((int32_t)39))
+/** \brief Error Code for when a feature is not supported on PMIC device type
+ *         or PMIC silicon revision*/
+#define PMIC_ST_ERR_NOT_SUPPORTED                       (-((int32_t)40))
 /* @} */
 
 /**

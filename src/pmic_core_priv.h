@@ -292,7 +292,10 @@ extern "C" {
 /*!
  * \brief   PMIC DEV_REV Register Shift Values
  */
-#define PMIC_DEV_REV_TI_DEVICE_ID_SILICON_REV_SHIFT               (0x1U)
+/* Valid only PG 2.0 */
+#define PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_SHIFT        (0x1U)
+/* Valid only PG 1.0 */
+#define PMIC_DEV_REV_TI_DEVICE_ID_SILICON_REV_SHIFT               (0x0U)
 
 /*!
  * \brief: PMIC Recovery Counter Register 1 Mask Values
@@ -480,8 +483,12 @@ extern "C" {
 /*!
  * \brief   PMIC DEV_REV Register Mask Values
  */
+/* Valid only PG 2.0 */
+#define PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_MASK              \
+    ((uint8_t)(0x7FU << PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_SHIFT))
+/* Valid only PG 1.0 */
 #define PMIC_DEV_REV_TI_DEVICE_ID_SILICON_REV_MASK              \
-    ((uint8_t)(0x7FU << PMIC_DEV_REV_TI_DEVICE_ID_SILICON_REV_SHIFT))
+    ((uint8_t)(0xFFU << PMIC_DEV_REV_TI_DEVICE_ID_SILICON_REV_SHIFT))
 
 /*!
  * \brief: PMIC Recovery Counter Threshold Max Value
