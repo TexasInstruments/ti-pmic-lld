@@ -43,6 +43,8 @@
 Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
 
 static uint16_t pmic_device_info = 0U;
+extern int32_t gCrcTestFlag_J721E;
+extern int32_t gCrcTestFlag_J7VCL;
 
 volatile uint32_t pmic_intr_triggered;
 
@@ -451,11 +453,21 @@ static void test_pmic_gpio_setCfgGpioPin_nSLEEP1(void)
 
     for(pin = 0U; pin < pinMax; pin++)
     {
-        /* PMIC-A GPIO3/ GPIO5/ GPIO6 pin Causing Reset on J721 EVM */
-        if(((3U == pins[pin]) || (5U == pins[pin]) || (6U == pins[pin])) &&
+        /* PMIC-A GPIO3 pin Causing Reset on J721 EVM */
+        if((3U == pins[pin]) &&
            (J721E_LEO_PMICA_DEVICE == pmic_device_info))
         {
             continue;
+        }
+
+        if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+        {
+            /* PMIC-A GPIO5/ GPIO6 pin Causing Reset on J721 EVM */
+            if(((5U == pins[pin]) || (6U == pins[pin])) &&
+               (J721E_LEO_PMICA_DEVICE == pmic_device_info))
+            {
+                continue;
+            }
         }
 
         if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -565,11 +577,21 @@ static void test_pmic_gpio_setCfgGpioPin_nSLEEP2(void)
 
     for(pin = 0U; pin < pinMax; pin++)
     {
-        /* PMICA GPIO3/ GPIO5/ GPIO6 pin Causing Reset on J721 EVM */
-        if(((3U == pins[pin]) || (5U == pins[pin]) || (6U == pins[pin])) &&
-            (pmic_device_info == J721E_LEO_PMICA_DEVICE))
+        /* PMIC-A GPIO3 pin Causing Reset on J721 EVM */
+        if((3U == pins[pin]) &&
+           (J721E_LEO_PMICA_DEVICE == pmic_device_info))
         {
             continue;
+        }
+
+        if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+        {
+            /* PMIC-A GPIO5/ GPIO6 pin Causing Reset on J721 EVM */
+            if(((5U == pins[pin]) || (6U == pins[pin])) &&
+               (J721E_LEO_PMICA_DEVICE == pmic_device_info))
+            {
+                continue;
+            }
         }
 
         if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -769,11 +791,21 @@ static void test_pmic_gpio_setCfgGpioPin_wakeup1(void)
 
     for(pin = 0U; pin < pinMax; pin++)
     {
-        /* PMICA GPIO3/ GPIO5/ GPIO6 pin Causing Reset on J721 EVM */
-        if(((3U == pins[pin]) || (5U == pins[pin]) || (6U == pins[pin])) &&
-           (pmic_device_info == J721E_LEO_PMICA_DEVICE))
+        /* PMIC-A GPIO3 pin Causing Reset on J721 EVM */
+        if((3U == pins[pin]) &&
+           (J721E_LEO_PMICA_DEVICE == pmic_device_info))
         {
             continue;
+        }
+
+        if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+        {
+            /* PMIC-A GPIO5/ GPIO6 pin Causing Reset on J721 EVM */
+            if(((5U == pins[pin]) || (6U == pins[pin])) &&
+               (J721E_LEO_PMICA_DEVICE == pmic_device_info))
+            {
+                continue;
+            }
         }
 
         if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -883,11 +915,21 @@ static void test_pmic_gpio_setCfgGpioPin_wakeup2(void)
 
     for(pin = 0U; pin < pinMax; pin++)
     {
-        /* PMICA GPIO3/ GPIO5/ GPIO6 pin Causing Reset on J721 EVM */
-        if(((3U == pins[pin]) || (5U == pins[pin]) || (6U == pins[pin])) &&
-           (pmic_device_info == J721E_LEO_PMICA_DEVICE))
+        /* PMIC-A GPIO3 pin Causing Reset on J721 EVM */
+        if((3U == pins[pin]) &&
+           (J721E_LEO_PMICA_DEVICE == pmic_device_info))
         {
             continue;
+        }
+
+        if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+        {
+            /* PMIC-A GPIO5/ GPIO6 pin Causing Reset on J721 EVM */
+            if(((5U == pins[pin]) || (6U == pins[pin])) &&
+               (J721E_LEO_PMICA_DEVICE == pmic_device_info))
+            {
+                continue;
+            }
         }
 
         if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -1604,15 +1646,29 @@ static void test_pmic_gpio_setCfgGpioPin_syncCLKOUT(void)
     for(pin = 0U; pin < pinMax; pin++)
     {
         /*!
-         * On J721 EVM, PMICA GPIO10 SYNCCLKOUT functionality
-         * is not supported
          * GPIO5/ GPIO6 pin of PMIC-A is connected to LEOA_SCLK and LEOA_SDATA
          * which resets SOC
          */
-        if((J721E_LEO_PMICA_DEVICE == pmic_device_info) &&
-           ((10U == pins[pin]) || (5U == pins[pin]) || (6U == pins[pin])))
+         if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
         {
-            continue;
+            if((J721E_LEO_PMICA_DEVICE == pmic_device_info) &&
+               ((5U == pins[pin]) || (6U == pins[pin])))
+            {
+                continue;
+            }
+        }
+
+        /*!
+        * On PG1.0 J721 EVM, PMICA GPIO10 SYNCCLKOUT functionality
+        * is not supported
+        */
+        if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
+        {
+            if((J721E_LEO_PMICA_DEVICE == pmic_device_info) &&
+               (10U == pins[pin]))
+            {
+                continue;
+            }
         }
 
         if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
@@ -1782,11 +1838,18 @@ static void test_pmic_gpio_setCfgGpioPin10_clk32KOUT(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    if(pmic_device_info == J721E_LEO_PMICA_DEVICE)
+    /*!
+    * On PG1.0 J721 EVM, PMICA GPIO10 CLK32KOUT functionality
+    * is not supported
+    */
+    if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
     {
-        pmic_testResultUpdate_ignore(6206,
+        if(pmic_device_info == J721E_LEO_PMICA_DEVICE)
+        {
+            pmic_testResultUpdate_ignore(6206,
                                          pmic_gpio_tests,
                                          PMIC_GPIO_NUM_OF_TESTCASES);
+        }
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -1796,7 +1859,7 @@ static void test_pmic_gpio_setCfgGpioPin10_clk32KOUT(void)
                                          PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
-    /* On J721 EVM, PMICA GPIO10 CLK32KOUT functionality is not supported */
+
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
@@ -2147,8 +2210,8 @@ static void test_pmic_nPWRON_setCfgPrmValTest_pinFunc(void)
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         pmic_testResultUpdate_ignore(6217,
-                                         pmic_gpio_tests,
-                                         PMIC_GPIO_NUM_OF_TESTCASES);
+                                     pmic_gpio_tests,
+                                     PMIC_GPIO_NUM_OF_TESTCASES);
     }
 
     pmicStatus = Pmic_gpioSetNPwronEnablePinConfiguration(pPmicCoreHandle,
@@ -5788,14 +5851,22 @@ static void test_pmic_gpio_irq_getUnMaskIntrStat(void)
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
-    /* TBD - Unmasking of Reg CRC Interrupt in PG1.0 Leo PMIC B results in hang
-     * Need to debug the issue
-     */
-    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    /*!
+    * On J721E PG1.0, Application hangs only when the test software sets
+    * ORD_SHUTDOWN_MASK and REG_CRC_ERR_MASK to '0' and other mask bits
+    * is set to '1'.
+    * As suggested by PMIC Team, Ignore the test for J721E PG1.0.
+    * Not planning to debug this issue as the same test is working fine
+    * for J721E PG2.0.
+    */
+    if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
     {
-        pmic_testResultUpdate_ignore(9888,
-                                     pmic_gpio_tests,
-                                     PMIC_GPIO_NUM_OF_TESTCASES);
+        if(pmic_device_info == J721E_LEO_PMICB_DEVICE)
+        {
+            pmic_testResultUpdate_ignore(9888,
+                                         pmic_gpio_tests,
+                                         PMIC_GPIO_NUM_OF_TESTCASES);
+        }
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -7449,6 +7520,11 @@ static int32_t setup_pmic_interrupt(uint32_t board)
 
     if(J721E_BOARD == board)
     {
+        if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag_J721E)
+        {
+            gCrcTestFlag_J721E = PMIC_CFG_TO_ENABLE_CRC;
+        }
+
         pmic_device_info = J721E_LEO_PMICA_DEVICE;
         status = test_pmic_leo_pmicA_gpio_testApp();
         /* Deinit pmic handle */
@@ -7470,6 +7546,11 @@ static int32_t setup_pmic_interrupt(uint32_t board)
     }
     else if(J7VCL_BOARD == board)
     {
+        if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag_J7VCL)
+        {
+            gCrcTestFlag_J7VCL = PMIC_CFG_TO_ENABLE_CRC;
+        }
+
         pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
         status = test_pmic_leo_pmicA_gpio_testApp();
         /* Deinit pmic handle */
@@ -7600,8 +7681,6 @@ static void test_pmic_run_testcases_manual(uint32_t board)
     }
 }
 
-extern int32_t gCrcTestFlag;
-
 static void test_pmic_gpio_testapp_run_options(int8_t option)
 {
     int8_t num = -1;
@@ -7648,11 +7727,6 @@ static void test_pmic_gpio_testapp_run_options(int8_t option)
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
 
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
-
                     /* GPIO Unity Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_gpio_testApp())
                     {
@@ -7674,11 +7748,6 @@ static void test_pmic_gpio_testapp_run_options(int8_t option)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICB_DEVICE;
-
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
 
                     /* GPIO Unity Test App wrapper Function for LEO PMIC-B */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicB_gpio_testApp())
@@ -7702,11 +7771,6 @@ static void test_pmic_gpio_testapp_run_options(int8_t option)
                 {
                     pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
 
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
-
                     /* GPIO Unity Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_gpio_testApp())
                     {
@@ -7729,11 +7793,6 @@ static void test_pmic_gpio_testapp_run_options(int8_t option)
                 {
                     pmic_device_info = J7VCL_HERA_PMICB_DEVICE;
 
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
-
                     /* GPIO Unity Test App wrapper Function for HERA PMIC */
                     if(PMIC_ST_SUCCESS == test_pmic_hera_gpio_testApp())
                     {
@@ -7755,11 +7814,6 @@ static void test_pmic_gpio_testapp_run_options(int8_t option)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                      pmic_device_info = J721E_LEO_PMICA_DEVICE;
-
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
 
                     /* GPIO Unity Test App wrapper Function for LEO PMIC-A
                      * using SPI stub functions */
@@ -7785,11 +7839,6 @@ static void test_pmic_gpio_testapp_run_options(int8_t option)
                 {
                      pmic_device_info = J721E_LEO_PMICA_DEVICE;
 
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
-
                      /* GPIO Manual Tests App wrapper Func for LEO PMIC-A */
                      if(PMIC_ST_SUCCESS ==
                                         test_pmic_leo_pmicA_gpio_testApp())
@@ -7812,11 +7861,6 @@ static void test_pmic_gpio_testapp_run_options(int8_t option)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
-
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
 
                     /* GPIO Unity Test App wrapper Function for HERA PMIC */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_gpio_testApp())

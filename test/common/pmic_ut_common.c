@@ -1114,7 +1114,8 @@ static int32_t Pmic_intrClr(Pmic_CoreHandle_t *pmicHandle)
     return pmicStatus;
 }
 
-int32_t gCrcTestFlag = PMIC_STATUS_CRC_INIT_VAL;
+int32_t gCrcTestFlag_J721E = PMIC_STATUS_CRC_INIT_VAL;
+int32_t gCrcTestFlag_J7VCL = PMIC_STATUS_CRC_INIT_VAL;
 
 /*!
  * \brief   Initialize PMIC Instance and corresponding Interface.
@@ -1198,8 +1199,9 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
                 pmicStatus = PMIC_ST_SUCCESS;
             }
         }
+#if defined(SOC_J721E)
         if((PMIC_ST_SUCCESS == pmicStatus) &&
-           (PMIC_CFG_TO_ENABLE_CRC == gCrcTestFlag))
+           (PMIC_CFG_TO_ENABLE_CRC == gCrcTestFlag_J721E))
         {
             if(PMIC_SILICON_REV_ID_PG_2_0 == pmicHandle->pmicDevSiliconRev)
             {
@@ -1208,10 +1210,28 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
                 {
                     pmic_log("\r\n enableCRC - pmicStatus %d crcEnable %d \r\n",pmicStatus, pmicHandle->crcEnable);
                     Osal_delay(10);
-                    gCrcTestFlag = PMIC_STATUS_CRC_ENABLED;
+                    gCrcTestFlag_J721E = PMIC_STATUS_CRC_ENABLED;
                 }
             }
         }
+#endif
+
+#if defined(SOC_J7200)
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           (PMIC_CFG_TO_ENABLE_CRC == gCrcTestFlag_J7VCL))
+        {
+            if(PMIC_SILICON_REV_ID_PG_2_0 == pmicHandle->pmicDevSiliconRev)
+            {
+                pmicStatus = Pmic_enableCRC(pmicHandle);
+                if(PMIC_ST_SUCCESS == pmicStatus)
+                {
+                    pmic_log("\r\n enableCRC - pmicStatus %d crcEnable %d \r\n",pmicStatus, pmicHandle->crcEnable);
+                    Osal_delay(10);
+                    gCrcTestFlag_J7VCL = PMIC_STATUS_CRC_ENABLED;
+                }
+            }
+        }
+#endif
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
@@ -1284,8 +1304,9 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
                 pmicStatus = PMIC_ST_SUCCESS;
             }
         }
+#if defined(SOC_J721E)
         if((PMIC_ST_SUCCESS == pmicStatus) &&
-           (PMIC_CFG_TO_ENABLE_CRC == gCrcTestFlag))
+           (PMIC_CFG_TO_ENABLE_CRC == gCrcTestFlag_J721E))
         {
             if(PMIC_SILICON_REV_ID_PG_2_0 == pmicHandle->pmicDevSiliconRev)
             {
@@ -1294,10 +1315,28 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
                 {
                     pmic_log("\r\n enableCRC - pmicStatus %d crcEnable %d \r\n",pmicStatus, pmicHandle->crcEnable);
                     Osal_delay(10);
-                    gCrcTestFlag = PMIC_STATUS_CRC_ENABLED;
+                    gCrcTestFlag_J721E = PMIC_STATUS_CRC_ENABLED;
                 }
             }
         }
+#endif
+
+#if defined(SOC_J7200)
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           (PMIC_CFG_TO_ENABLE_CRC == gCrcTestFlag_J7VCL))
+        {
+            if(PMIC_SILICON_REV_ID_PG_2_0 == pmicHandle->pmicDevSiliconRev)
+            {
+                pmicStatus = Pmic_enableCRC(pmicHandle);
+                if(PMIC_ST_SUCCESS == pmicStatus)
+                {
+                    pmic_log("\r\n enableCRC - pmicStatus %d crcEnable %d \r\n",pmicStatus, pmicHandle->crcEnable);
+                    Osal_delay(10);
+                    gCrcTestFlag_J7VCL = PMIC_STATUS_CRC_ENABLED;
+                }
+            }
+        }
+#endif
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
@@ -1396,8 +1435,9 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
                 pmicStatus = PMIC_ST_SUCCESS;
             }
         }
+#if defined(SOC_J721E)
         if((PMIC_ST_SUCCESS == pmicStatus) &&
-           (PMIC_CFG_TO_ENABLE_CRC == gCrcTestFlag))
+           (PMIC_CFG_TO_ENABLE_CRC == gCrcTestFlag_J721E))
         {
             if(PMIC_SILICON_REV_ID_PG_2_0 == pmicHandle->pmicDevSiliconRev)
             {
@@ -1406,10 +1446,28 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
                 {
                     pmic_log("\r\n enableCRC - pmicStatus %d crcEnable %d \r\n",pmicStatus, pmicHandle->crcEnable);
                     Osal_delay(10);
-                    gCrcTestFlag = PMIC_STATUS_CRC_ENABLED;
+                    gCrcTestFlag_J721E = PMIC_STATUS_CRC_ENABLED;
                 }
             }
         }
+#endif
+
+#if defined(SOC_J7200)
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           (PMIC_CFG_TO_ENABLE_CRC == gCrcTestFlag_J7VCL))
+        {
+            if(PMIC_SILICON_REV_ID_PG_2_0 == pmicHandle->pmicDevSiliconRev)
+            {
+                pmicStatus = Pmic_enableCRC(pmicHandle);
+                if(PMIC_ST_SUCCESS == pmicStatus)
+                {
+                    pmic_log("\r\n enableCRC - pmicStatus %d crcEnable %d \r\n",pmicStatus, pmicHandle->crcEnable);
+                    Osal_delay(10);
+                    gCrcTestFlag_J7VCL = PMIC_STATUS_CRC_ENABLED;
+                }
+            }
+        }
+#endif
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
@@ -1503,19 +1561,18 @@ void GPIO_configIntRouter(uint32_t portNum, uint32_t pinNum, uint32_t gpioIntRtr
 #if defined (BUILD_MCU1_0)
     intCfg[pinNum].intNum = CSLR_MCU_R5FSS0_CORE0_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_0 + bankNum;
 #elif defined (BUILD_MCU1_1)
-    intCfg[pinNum].intNum = CSLR_MCU_R5FSS0_CORE1_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_6 + bankNum;
+    intCfg[pinNum].intNum = CSLR_MCU_R5FSS0_CORE1_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_8 + bankNum;
 #elif defined (BUILD_MCU2_0)
-    intCfg[pinNum].intNum = CSLR_R5FSS0_CORE0_INTR_R5FSS0_INTROUTER0_OUTL_0
+    intCfg[pinNum].intNum = CSLR_R5FSS0_CORE0_INTR_R5FSS0_INTROUTER0_OUTL_4
                             + bankNum;
-pmic_log("intCfg[pinNum].intNum: %d\n", intCfg[pinNum].intNum);
 #elif defined (BUILD_MCU2_1)
-    intCfg[pinNum].intNum = CSLR_R5FSS0_CORE1_INTR_R5FSS0_INTROUTER0_OUTL_1
+    intCfg[pinNum].intNum = CSLR_R5FSS0_CORE1_INTR_R5FSS0_INTROUTER0_OUTL_128
                             + bankNum;
 #elif defined (BUILD_MCU3_0)
-    intCfg[pinNum].intNum = CSLR_R5FSS1_CORE0_INTR_R5FSS1_INTROUTER0_OUTL_0
+    intCfg[pinNum].intNum = CSLR_R5FSS1_CORE0_INTR_R5FSS1_INTROUTER0_OUTL_4
                             + bankNum;
 #elif defined (BUILD_MCU3_1)
-    intCfg[pinNum].intNum = CSLR_R5FSS1_CORE1_INTR_R5FSS1_INTROUTER0_OUTL_1
+    intCfg[pinNum].intNum = CSLR_R5FSS1_CORE1_INTR_R5FSS1_INTROUTER0_OUTL_128
                             + bankNum;
 #endif
 #elif defined (SOC_J7200)

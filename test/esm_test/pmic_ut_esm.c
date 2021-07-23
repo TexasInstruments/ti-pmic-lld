@@ -43,6 +43,8 @@
 Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
 
 static uint16_t pmic_device_info = 0U;
+extern int32_t gCrcTestFlag_J721E;
+extern int32_t gCrcTestFlag_J7VCL;
 
 /*!
  * \brief   PMIC ESM Test Cases
@@ -4623,6 +4625,11 @@ static int32_t setup_pmic_interrupt(uint32_t board)
 
     if(J721E_BOARD == board)
     {
+        if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag_J721E)
+        {
+            gCrcTestFlag_J721E = PMIC_CFG_TO_ENABLE_CRC;
+        }
+
         pmic_device_info = J721E_LEO_PMICA_DEVICE;
         status = test_pmic_leo_pmicA_esm_testApp();
         /* Deinit pmic handle */
@@ -4644,6 +4651,11 @@ static int32_t setup_pmic_interrupt(uint32_t board)
     }
     else if(J7VCL_BOARD == board)
     {
+        if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag_J7VCL)
+        {
+            gCrcTestFlag_J7VCL = PMIC_CFG_TO_ENABLE_CRC;
+        }
+
         pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
         status = test_pmic_leo_pmicA_esm_testApp();
         /* Deinit pmic handle */
@@ -4869,8 +4881,6 @@ static void test_pmic_run_testcases_manual(uint32_t board)
     }
 }
 
-extern int32_t gCrcTestFlag;
-
 static void test_pmic_esm_testapp_run_options(int8_t option)
 {
     int8_t num = -1;
@@ -4916,11 +4926,6 @@ static void test_pmic_esm_testapp_run_options(int8_t option)
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
 
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
-
                     /* ESM Unity Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_esm_testApp())
                     {
@@ -4942,11 +4947,6 @@ static void test_pmic_esm_testapp_run_options(int8_t option)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICB_DEVICE;
-
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
 
                     /* ESM Unity Test App wrapper Function for LEO PMIC-B */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicB_esm_testApp())
@@ -4971,11 +4971,6 @@ static void test_pmic_esm_testapp_run_options(int8_t option)
                 {
                     pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
 
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
-
                     /* ESM Unity Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_esm_testApp())
                     {
@@ -4998,11 +4993,6 @@ static void test_pmic_esm_testapp_run_options(int8_t option)
                 {
                     pmic_device_info = J7VCL_HERA_PMICB_DEVICE;
 
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
-
                     /* ESM Unity Test App wrapper Function for HERA PMIC */
                     if(PMIC_ST_SUCCESS == test_pmic_hera_esm_testApp())
                     {
@@ -5024,11 +5014,6 @@ static void test_pmic_esm_testapp_run_options(int8_t option)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
-
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
 
                     /* ESM Unity Test App wrapper Function for LEO PMIC-A using
                      * SPI stub functions */
@@ -5053,11 +5038,6 @@ static void test_pmic_esm_testapp_run_options(int8_t option)
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
 
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
-
                     /* ESM Manual Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_esm_testApp())
                     {
@@ -5079,11 +5059,6 @@ static void test_pmic_esm_testapp_run_options(int8_t option)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
-
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
 
                     /* ESM Manual Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_esm_testApp())

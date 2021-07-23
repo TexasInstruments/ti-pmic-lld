@@ -43,6 +43,8 @@
 Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
 
 static uint16_t pmic_device_info = 0U;
+extern int32_t gCrcTestFlag_J721E;
+extern int32_t gCrcTestFlag_J7VCL;
 
 /*!
  * \brief   PMIC POWER Test Cases
@@ -832,6 +834,7 @@ static Pmic_Ut_Tests_t pmic_power_tests[] =
         7873,
         "Pmic_powerSetPwrResourceCfg : Negative test VMON for LEO PMIC."
     },
+#if 0 // TBD Modify the 7874 and 7875 test for Leo PMIC PG1.0*/
     {
         7874,
         "Pmic_powerSetThermalConfig : Negative test thermalShutdownThold as 140C for HERA pmic"
@@ -840,6 +843,7 @@ static Pmic_Ut_Tests_t pmic_power_tests[] =
         7875,
         "Pmic_powerSetThermalConfig : Negative test for thermalShutdownThold as 145C for HERA pmic"
     },
+#endif
     {
         7876,
         "Pmic_powerSetLdoRtc : Negative test Disable ldortcRegulator for HERA"
@@ -3472,16 +3476,11 @@ static void test_pmic_powerSetPowerResourceConfig_ldoSlowRampEn_enable(void)
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
-    /* 7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    if((PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType) ||
+       ((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
+        (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)))
     {
-        pmic_testResultUpdate_ignore(7176,
-                                     pmic_power_tests,
-                                     PMIC_POWER_NUM_OF_TESTCASES);
-    }
-
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-    {
+        /* ldoSlowRamp feature is not supported in HERA PMIC and Leo PMIC PG1.0 */
         pmic_testResultUpdate_ignore(7176,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
@@ -3492,14 +3491,6 @@ static void test_pmic_powerSetPowerResourceConfig_ldoSlowRampEn_enable(void)
         pPowerCfg.ldoSlowRampEn = PMIC_TPS6594X_REGULATOR_LDO_SLOW_RAMP_ENABLE;
         pwrRsrcMin = PMIC_TPS6594X_REGULATOR_LDO1;
         pwrRsrcMax = PMIC_TPS6594X_REGULATOR_LDO4;
-    }
-
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-    {
-        /* LDOs are not present in HERA pmic */
-        pmic_testResultUpdate_ignore(7176,
-                                     pmic_power_tests,
-                                     PMIC_POWER_NUM_OF_TESTCASES);
     }
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
@@ -3543,16 +3534,19 @@ static void test_pmic_powerSetPowerResourceConfig_ldoSlowRampEn_disable(void)
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
+       (PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev))
     {
         pPowerCfg.ldoSlowRampEn = PMIC_TPS6594X_REGULATOR_LDO_SLOW_RAMP_DISABLE;
         pwrRsrcMin = PMIC_TPS6594X_REGULATOR_LDO1;
         pwrRsrcMax = PMIC_TPS6594X_REGULATOR_LDO4;
     }
 
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    if((PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType) ||
+       ((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
+        (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)))
     {
-        /* LDOs are not present in HERA pmic */
+        /* ldoSlowRamp feature is not supported in HERA PMIC and Leo PMIC PG1.0 */
         pmic_testResultUpdate_ignore(7177,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
@@ -3681,14 +3675,17 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_ldoSlowRampE
     test_pmic_print_unity_testcase_info(7180,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
+       (PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev))
     {
         pwrRsrc = PMIC_TPS6594X_REGULATOR_BUCK1;
     }
 
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    if((PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType) ||
+       ((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
+        (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)))
     {
-        /* LDOs are not present in HERA pmic */
+        /* ldoSlowRampEn feature is not supported in HERA PMIC and Leo PMIC PG1.0 */
         pmic_testResultUpdate_ignore(7180,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
@@ -7092,9 +7089,16 @@ static void test_pmic_powerSetThermalConfig_thermalWarnThold_low(void)
         PMIC_THERMAL_WARN_VALID_SHIFT,
     };
 
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)&&
+       (PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev))
     {
-        thermalThreshold.thermalWarnThold = PMIC_TPS6594X_THERMAL_TEMP_WARN_130C;
+        thermalThreshold.thermalWarnThold = PMIC_TPS6594X_PG_2_0_THERMAL_TEMP_WARN_130C;
+    }
+
+    if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)&&
+       (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev))
+    {
+        thermalThreshold.thermalWarnThold = PMIC_TPS6594X_THERMAL_TEMP_WARN_120C;
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -7135,9 +7139,16 @@ static void test_pmic_powerSetThermalConfig_thermalWarnThold_high(void)
         PMIC_THERMAL_WARN_VALID_SHIFT,
     };
 
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)&&
+       (PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev))
     {
-        thermalThreshold.thermalWarnThold = PMIC_TPS6594X_THERMAL_TEMP_WARN_140C;
+        thermalThreshold.thermalWarnThold = PMIC_TPS6594X_PG_2_0_THERMAL_TEMP_WARN_140C;
+    }
+
+    if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)&&
+       (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev))
+    {
+        thermalThreshold.thermalWarnThold = PMIC_TPS6594X_THERMAL_TEMP_WARN_130C;
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -7184,13 +7195,20 @@ static void test_pmic_powerSetThermalConfig_thermalShutdownThold_low(void)
                                 PMIC_TPS6594X_THERMAL_TEMP_TSD_ORD_140C;
     }
 
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        thermalThreshold.thermalShutdownThold =
+                                PMIC_LP8764X_THERMAL_TEMP_TSD_ORD_140C;
+    }
+
     test_pmic_print_unity_testcase_info(7268,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
+       (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev))
     {
-        /* Thermal tempertaure 140C not supported by HERA pmic */
+        /* thermalShutdownThold feature is not supported in Leo PMIC PG1.0 */
         pmic_testResultUpdate_ignore(7268,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
@@ -7233,25 +7251,17 @@ static void test_pmic_powerSetThermalConfig_thermalShutdownThold_high(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        pmic_testResultUpdate_ignore(7269,
-                                     pmic_power_tests,
-                                     PMIC_POWER_NUM_OF_TESTCASES);
+        thermalThreshold.thermalShutdownThold = PMIC_LP8764X_THERMAL_TEMP_TSD_ORD_145C;
     }
 
     test_pmic_print_unity_testcase_info(7269,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
-    /* 7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
+       (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev))
     {
-        pmic_testResultUpdate_ignore(7269,
-                                     pmic_power_tests,
-                                     PMIC_POWER_NUM_OF_TESTCASES);
-    }
-
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-    {
+        /* thermalShutdownThold feature is not supported in Leo PMIC PG1.0 */
         pmic_testResultUpdate_ignore(7269,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
@@ -8324,6 +8334,15 @@ static void test_pmic_powerSetCommonConfig_deglitchTimeSel_4(void)
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
+    if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
+       (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev))
+    {
+        /* deglitchTimeSel feature is not supported in Leo PMIC PG1.0 */
+        pmic_testResultUpdate_ignore(7225,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
+    }
+
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         pwrCommonCfg.deglitchTimeSel =
@@ -8368,16 +8387,10 @@ static void test_pmic_powerSetCommonConfig_deglitchTimeSel_20(void)
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
-    /* 7468 PMIC: Few PMIC Power related features can't be tested on J721E EVM */
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
+       (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev))
     {
-        pmic_testResultUpdate_ignore(7226,
-                                     pmic_power_tests,
-                                     PMIC_POWER_NUM_OF_TESTCASES);
-    }
-
-    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-    {
+        /* deglitchTimeSel feature is not supported in Leo PMIC PG1.0 */
         pmic_testResultUpdate_ignore(7226,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
@@ -9558,16 +9571,21 @@ static void test_pmic_powerSetThermalConfigPrmValTest_handle(void)
         PMIC_THERMAL_WARN_VALID_SHIFT,
     };
 
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
+       (PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev))
     {
-        thermalThreshold.thermalWarnThold =
-                                       PMIC_TPS6594X_THERMAL_TEMP_WARN_140C + 1;
+        thermalThreshold.thermalWarnThold = PMIC_TPS6594X_PG_2_0_THERMAL_TEMP_WARN_140C;
+    }
+
+    if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
+       (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev))
+    {
+        thermalThreshold.thermalWarnThold = PMIC_TPS6594X_THERMAL_TEMP_WARN_130C;
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        thermalThreshold.thermalWarnThold =
-                                        PMIC_LP8764X_THERMAL_TEMP_WARN_130C + 1;
+        thermalThreshold.thermalWarnThold = PMIC_LP8764X_THERMAL_TEMP_WARN_130C;
     }
 
     test_pmic_print_unity_testcase_info(7270,
@@ -9593,16 +9611,21 @@ static void test_pmic_powerGetThermalConfigPrmValTest_handle(void)
         PMIC_THERMAL_WARN_VALID_SHIFT,
     };
 
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
+       (PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev))
     {
-        thermalThreshold.thermalWarnThold =
-                                       PMIC_TPS6594X_THERMAL_TEMP_WARN_140C + 1;
+        thermalThreshold.thermalWarnThold = PMIC_TPS6594X_PG_2_0_THERMAL_TEMP_WARN_140C;
+    }
+
+    if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
+       (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev))
+    {
+        thermalThreshold.thermalWarnThold = PMIC_TPS6594X_THERMAL_TEMP_WARN_130C;
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        thermalThreshold.thermalWarnThold =
-                                        PMIC_LP8764X_THERMAL_TEMP_WARN_130C + 1;
+        thermalThreshold.thermalWarnThold = PMIC_LP8764X_THERMAL_TEMP_WARN_130C;
     }
 
     test_pmic_print_unity_testcase_info(7303,
@@ -12635,6 +12658,7 @@ static void test_pmic_powerSetPowerResourceConfig_leo_vmon(void)
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
 
+#if 0 // TBD Modify the 7874 and 7875 test for Leo PMIC PG1.0*/
 /*!
  * \brief   Pmic_powerSetThermalConfig : Negative test thermalShutdownThold as 140C for HERA pmic
  */
@@ -12705,6 +12729,7 @@ static void test_pmic_powerSetThermalConfig_hera_thermalShutdownThold_high(void)
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
+#endif
 
 /*!
  * \brief   Pmic_powerSetLdoRtc : Negative test Disable ldortcRegulator for HERA
@@ -13008,8 +13033,12 @@ RUN_TEST(test_pmic_powerPmic_powerGetPwrThermalStat_ImmShtDwnStatus);
 
 RUN_TEST(test_pmic_powerSetPowerResourceConfig_hera_ldo);
 RUN_TEST(test_pmic_powerSetPowerResourceConfig_leo_vmon);
+
+#if 0 // TBD Modify the 7874 and 7875 test for Leo PMIC PG1.0*/
 RUN_TEST(test_pmic_powerSetThermalConfig_hera_thermalShutdownThold_low);
 RUN_TEST(test_pmic_powerSetThermalConfig_hera_thermalShutdownThold_high);
+#endif
+
 RUN_TEST(test_pmic_powerSetLdoRtc_HERA_ldortcEnable_disable);
 RUN_TEST(test_pmic_powerGetPowerResourceConfig_buck5);
 
@@ -13173,6 +13202,11 @@ static int32_t setup_pmic_interrupt(uint32_t board)
 
     if(J721E_BOARD == board)
     {
+        if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag_J721E)
+        {
+            gCrcTestFlag_J721E = PMIC_CFG_TO_ENABLE_CRC;
+        }
+
         pmic_device_info = J721E_LEO_PMICA_DEVICE;
         status = test_pmic_leo_pmicA_power_testApp();
         /* Deinit pmic handle */
@@ -13193,6 +13227,11 @@ static int32_t setup_pmic_interrupt(uint32_t board)
     }
     else if(J7VCL_BOARD == board)
     {
+        if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag_J7VCL)
+        {
+            gCrcTestFlag_J7VCL = PMIC_CFG_TO_ENABLE_CRC;
+        }
+
         pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
         status = test_pmic_leo_pmicA_power_testApp();
         /* Deinit pmic handle */
@@ -13246,8 +13285,6 @@ static const char pmicTestAppMenu[] =
     " \r\n Enter option: "
 };
 
-extern int32_t gCrcTestFlag;
-
 static void test_pmic_power_testapp_run_options(int8_t option)
 {
     int8_t num = -1;
@@ -13293,11 +13330,6 @@ static void test_pmic_power_testapp_run_options(int8_t option)
                 {
                    pmic_device_info = J721E_LEO_PMICA_DEVICE;
 
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
-
                    /* POWER Unity Test App wrapper Function for LEO PMIC-A */
                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_power_testApp())
                    {
@@ -13319,11 +13351,6 @@ static void test_pmic_power_testapp_run_options(int8_t option)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                    pmic_device_info = J721E_LEO_PMICB_DEVICE;
-
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
 
                    /* POWER Unity Test App wrapper Function for LEO PMIC-B */
                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicB_power_testApp())
@@ -13347,11 +13374,6 @@ static void test_pmic_power_testapp_run_options(int8_t option)
                 {
                    pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
 
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
-
                    /* POWER Unity Test App wrapper Function for LEO PMIC-A */
                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_power_testApp())
                    {
@@ -13373,11 +13395,6 @@ static void test_pmic_power_testapp_run_options(int8_t option)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                    pmic_device_info = J7VCL_HERA_PMICB_DEVICE;
-
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
 
                    /* POWER Unity Test App wrapper Function for HERA PMIC */
                    if(PMIC_ST_SUCCESS == test_pmic_hera_power_testApp())

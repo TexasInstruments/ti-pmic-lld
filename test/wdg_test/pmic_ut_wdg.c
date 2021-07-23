@@ -43,7 +43,8 @@
 Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
 
 static uint16_t pmic_device_info = 0U;
-extern int32_t gCrcTestFlag;
+extern int32_t gCrcTestFlag_J721E;
+extern int32_t gCrcTestFlag_J7VCL;
 
 /*!
  * \brief   PMIC WDG Test Cases
@@ -954,7 +955,8 @@ static void test_pmic_wdg_startQaSequence(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_10,
     };
 
-    if(gCrcTestFlag == PMIC_STATUS_CRC_ENABLED)
+    if((gCrcTestFlag_J721E == PMIC_STATUS_CRC_ENABLED)||
+       (gCrcTestFlag_J7VCL == PMIC_STATUS_CRC_ENABLED))
     {
         wdgCfg.win1Duration_us = 8250U;
     }
@@ -1015,7 +1017,8 @@ static void test_pmic_wdg_startQaSequence_testFdbkValues(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_10,
     };
 
-    if(gCrcTestFlag == PMIC_STATUS_CRC_ENABLED)
+    if((gCrcTestFlag_J721E == PMIC_STATUS_CRC_ENABLED)||
+       (gCrcTestFlag_J7VCL == PMIC_STATUS_CRC_ENABLED))
     {
         wdgCfg.win1Duration_us = 8350U;
     }
@@ -1090,7 +1093,8 @@ static void test_pmic_wdg_startQaSequence_testLfsrValues(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_10,
     };
 
-    if(gCrcTestFlag == PMIC_STATUS_CRC_ENABLED)
+    if((gCrcTestFlag_J721E == PMIC_STATUS_CRC_ENABLED)||
+       (gCrcTestFlag_J7VCL == PMIC_STATUS_CRC_ENABLED))
     {
         wdgCfg.win1Duration_us = 8350U;
     }
@@ -1165,7 +1169,8 @@ static void test_pmic_wdg_startQaSequence_testQuesSeedValues(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_10,
     };
 
-    if(gCrcTestFlag == PMIC_STATUS_CRC_ENABLED)
+    if((gCrcTestFlag_J721E == PMIC_STATUS_CRC_ENABLED)||
+       (gCrcTestFlag_J7VCL == PMIC_STATUS_CRC_ENABLED))
     {
         wdgCfg.win1Duration_us = 8350U;
     }
@@ -1960,6 +1965,11 @@ static int32_t setup_pmic_interrupt(uint32_t board)
 
     if(J721E_BOARD == board)
     {
+        if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag_J721E)
+        {
+            gCrcTestFlag_J721E = PMIC_CFG_TO_ENABLE_CRC;
+        }
+
         pmic_device_info = J721E_LEO_PMICA_DEVICE;
         status = test_pmic_leo_pmicA_wdg_testApp();
         /* Deinit pmic handle */
@@ -1981,6 +1991,11 @@ static int32_t setup_pmic_interrupt(uint32_t board)
     }
     else if(J7VCL_BOARD == board)
     {
+        if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag_J7VCL)
+        {
+            gCrcTestFlag_J7VCL = PMIC_CFG_TO_ENABLE_CRC;
+        }
+
         pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
         status = test_pmic_leo_pmicA_wdg_testApp();
         /* Deinit pmic handle */
@@ -2079,11 +2094,6 @@ static void test_pmic_wdg_testapp_run_options(int8_t option)
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
 
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
-
                     /* WDG Unity Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_wdg_testApp())
                     {
@@ -2105,11 +2115,6 @@ static void test_pmic_wdg_testapp_run_options(int8_t option)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
-
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
 
                     /* WDG Unity Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_wdg_single_i2c_testApp())
@@ -2133,11 +2138,6 @@ static void test_pmic_wdg_testapp_run_options(int8_t option)
                 {
                     pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
 
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
-
                     /* WDG Unity Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_wdg_testApp())
                     {
@@ -2159,11 +2159,6 @@ static void test_pmic_wdg_testapp_run_options(int8_t option)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_HERA_PMICB_DEVICE;
-
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
 
                     /* WDG Unity Test App wrapper Function for HERA PMIC */
                     if(PMIC_ST_SUCCESS == test_pmic_hera_wdg_testApp())

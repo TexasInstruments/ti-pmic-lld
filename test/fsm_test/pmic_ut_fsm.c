@@ -43,6 +43,8 @@
 Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
 
 static uint16_t pmic_device_info = 0U;
+extern int32_t gCrcTestFlag_J721E;
+extern int32_t gCrcTestFlag_J7VCL;
 
 /*!
  * \brief   PMIC FSM Test Cases
@@ -805,6 +807,13 @@ static void test_pmic_fsmRuntimeBistRequestPrmValTest_handle(void)
     test_pmic_print_unity_testcase_info(7706,
                                         pmic_fsm_tests,
                                         PMIC_FSM_NUM_OF_TESTCASES);
+
+    if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        pmic_testResultUpdate_ignore(7706,
+                                     pmic_fsm_tests,
+                                     PMIC_FSM_NUM_OF_TESTCASES);
+    }
 
     status = Pmic_fsmRequestRuntimeBist(NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
@@ -1885,6 +1894,13 @@ static void test_pmic_fsmEnableI2cTrigger_prmValTest_i2cTriggerVal(void)
 
     for(i2cTriggerType = PMIC_FSM_I2C_TRIGGER0; i2cTriggerType <= PMIC_FSM_I2C_TRIGGER7; i2cTriggerType++)
     {
+        if((PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev) &&
+           ((i2cTriggerType > PMIC_FSM_I2C_TRIGGER0) &&
+            (i2cTriggerType < PMIC_FSM_I2C_TRIGGER4)))
+        {
+            continue;
+        }
+
         if(i2cTriggerType < PMIC_FSM_I2C_TRIGGER4)
         {
             status = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle,
@@ -2430,6 +2446,11 @@ static int32_t setup_pmic_interrupt(uint32_t board)
 
     if(J721E_BOARD == board)
     {
+        if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag_J721E)
+        {
+            gCrcTestFlag_J721E = PMIC_CFG_TO_ENABLE_CRC;
+        }
+
         pmic_device_info = J721E_LEO_PMICA_DEVICE;
         status = test_pmic_leo_pmicA_fsm_testApp();
         /* Deinit pmic handle */
@@ -2451,6 +2472,11 @@ static int32_t setup_pmic_interrupt(uint32_t board)
     }
     else if(J7VCL_BOARD == board)
     {
+        if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag_J7VCL)
+        {
+            gCrcTestFlag_J7VCL = PMIC_CFG_TO_ENABLE_CRC;
+        }
+
         pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
         status = test_pmic_leo_pmicA_fsm_testApp();
         /* Deinit pmic handle */
@@ -2496,7 +2522,7 @@ static const char pmicTestAppMenu[] =
     " \r\n ================================================================="
     " \r\n 0: Pmic Leo device(PMIC A on J721E EVM)"
     " \r\n 1: Pmic Leo device(PMIC A on J7VCL EVM)"
-    " \r\n 2: Pmic Hera device(PMIC A on J7VCL EVM)"
+    " \r\n 2: Pmic Hera device(PMIC B on J7VCL EVM)"
     " \r\n 3: Pmic Leo device(PMIC A on J721E EVM Manual Testcase for FSM states)"
     " \r\n 4: Pmic Leo device(PMIC A on J7VCL EVM Manual Testcase for FSM states)"
     " \r\n 5: Back to Test Menu"
@@ -2579,8 +2605,6 @@ static void test_pmic_run_testcases_manual(uint32_t board)
     }
 }
 
-extern int32_t gCrcTestFlag;
-
 static void test_pmic_fsm_testapp_run_options(int8_t option)
 {
     int8_t num = -1;
@@ -2626,11 +2650,6 @@ static void test_pmic_fsm_testapp_run_options(int8_t option)
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
 
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
-
                     /* FSM Unity Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_fsm_testApp())
                     {
@@ -2652,11 +2671,6 @@ static void test_pmic_fsm_testapp_run_options(int8_t option)
                 {
                     pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
 
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
-
                     /* FSM Unity Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_fsm_testApp())
                     {
@@ -2677,11 +2691,6 @@ static void test_pmic_fsm_testapp_run_options(int8_t option)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_HERA_PMICB_DEVICE;
-
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
 
                     /* FSM Unity Test App wrapper Function for HERA PMIC */
                    if(PMIC_ST_SUCCESS == test_pmic_hera_fsm_testApp())
@@ -2705,11 +2714,6 @@ static void test_pmic_fsm_testapp_run_options(int8_t option)
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
 
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
-
                     /* FSM Manual Test App wrapper Function for LEO PMIC-A*/
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_fsm_testApp())
                     {
@@ -2731,11 +2735,6 @@ static void test_pmic_fsm_testapp_run_options(int8_t option)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
-
-                    if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag)
-                    {
-                        gCrcTestFlag = PMIC_CFG_TO_ENABLE_CRC;
-                    }
 
                     /* FSM Manual Test App wrapper Function for LEO PMIC-A*/
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_fsm_testApp())
