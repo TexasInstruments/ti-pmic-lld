@@ -1014,7 +1014,8 @@ static void test_pmic_fsmSetConfiguration_selectfsmStarupDestMcuonlyState(void)
 {
     int32_t status     = PMIC_ST_SUCCESS;
 
-    Pmic_FsmCfg_t fsmCfg_rd = {PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID_SHIFT,};
+    Pmic_FsmCfg_t fsmCfg_rd  = {PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID_SHIFT,};
+    Pmic_FsmCfg_t fsmCfg_def = {PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID_SHIFT,};
     Pmic_FsmCfg_t fsmCfg =
     {
         PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID_SHIFT,
@@ -1028,6 +1029,9 @@ static void test_pmic_fsmSetConfiguration_selectfsmStarupDestMcuonlyState(void)
                                         pmic_fsm_tests,
                                         PMIC_FSM_NUM_OF_TESTCASES);
 
+    status = Pmic_fsmGetConfiguration(pPmicCoreHandle, &fsmCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
     status = Pmic_fsmSetConfiguration(pPmicCoreHandle, fsmCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -1035,6 +1039,15 @@ static void test_pmic_fsmSetConfiguration_selectfsmStarupDestMcuonlyState(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     TEST_ASSERT_EQUAL(fsmCfg.fsmStarupDestSel, fsmCfg_rd.fsmStarupDestSel);
+
+    status = Pmic_fsmSetConfiguration(pPmicCoreHandle, fsmCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmGetConfiguration(pPmicCoreHandle, &fsmCfg_rd);
+
+    TEST_ASSERT_EQUAL(fsmCfg_def.fsmStarupDestSel, fsmCfg_rd.fsmStarupDestSel);
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     pmic_testResultUpdate_pass(10086,
                                pmic_fsm_tests,
@@ -1048,7 +1061,8 @@ static void test_pmic_fsmSetConfiguration_selectfsmStarupDestStandbyOrLpStandbyS
 {
     int32_t status     = PMIC_ST_SUCCESS;
 
-    Pmic_FsmCfg_t fsmCfg_rd = {PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID_SHIFT,};
+    Pmic_FsmCfg_t fsmCfg_rd  = {PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID_SHIFT,};
+    Pmic_FsmCfg_t fsmCfg_def = {PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID_SHIFT,};
     Pmic_FsmCfg_t fsmCfg =
     {
         PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID_SHIFT,
@@ -1062,6 +1076,9 @@ static void test_pmic_fsmSetConfiguration_selectfsmStarupDestStandbyOrLpStandbyS
                                         pmic_fsm_tests,
                                         PMIC_FSM_NUM_OF_TESTCASES);
 
+    status = Pmic_fsmGetConfiguration(pPmicCoreHandle, &fsmCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
     status = Pmic_fsmSetConfiguration(pPmicCoreHandle, fsmCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -1069,6 +1086,13 @@ static void test_pmic_fsmSetConfiguration_selectfsmStarupDestStandbyOrLpStandbyS
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     TEST_ASSERT_EQUAL(fsmCfg.fsmStarupDestSel, fsmCfg_rd.fsmStarupDestSel);
+
+    status = Pmic_fsmSetConfiguration(pPmicCoreHandle, fsmCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmGetConfiguration(pPmicCoreHandle, &fsmCfg_rd);
+
+    TEST_ASSERT_EQUAL(fsmCfg_def.fsmStarupDestSel, fsmCfg_rd.fsmStarupDestSel);
 
     pmic_testResultUpdate_pass(10087,
                                pmic_fsm_tests,

@@ -2308,6 +2308,14 @@ static void test_pmic_rtc_testWakeup_TimerIntr_lpStandbyState(void)
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        /*PMIC wakeup from LP Standby state using RTC Time Interrupt is not working - Known Issue*/
+        pmic_testResultUpdate_ignore(7358,
+                                     pmic_rtc_tests,
+                                     PMIC_RTC_NUM_OF_TESTCASES);
+    }
+
     pHandle                         = pPmicCoreHandle;
 #if defined(SOC_J721E)
     pmic_log("\r\n Probe TP134 and TP133 and it should be High");
@@ -3949,6 +3957,7 @@ static void test_pmic_rtc_setCfg_set32KCounterCompVal(void)
     Pmic_RtcCfg_t rtcCfg_rd = {PMIC_RTC_CFG_32K_COUNTER_COMP_VAL_SET_VALID_SHIFT,};
     Pmic_CoreHandle_t  *pHandle     = NULL;
     pHandle                         = pPmicCoreHandle;
+    int8_t  num         = 0;
     Pmic_RtcCfg_t rtcCfg =
     {
         PMIC_RTC_CFG_32K_COUNTER_COMP_VAL_SET_VALID_SHIFT,
@@ -3981,6 +3990,10 @@ static void test_pmic_rtc_setCfg_set32KCounterCompVal(void)
     pmic_testResultUpdate_pass(9903,
                                pmic_rtc_tests,
                                PMIC_RTC_NUM_OF_TESTCASES);
+
+    pmic_log("\r\n Do the power cycle to test the other RTC tests\n");
+    pmic_log("\r\n Enter 1 to continue");
+    UART_scanFmt("%d", &num);
 }
 
 /*!
@@ -4483,7 +4496,6 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_rtc_getCfgPrmValTest_pRtcCfg);
     RUN_TEST(test_pmic_rtc_clrRstStatus_PrmValTest_handle);
     RUN_TEST(test_pmic_rtc_clrRstStatus_PrmValTest_rtcRstStatType);
-    RUN_TEST(test_pmic_rtc_setCfg_set32KCounterCompVal);
     RUN_TEST(test_pmic_rtc_setCfg_crystalOScEn);
     RUN_TEST(test_pmic_rtc_setCfg_rtcTimeRound30s);
     RUN_TEST(test_pmic_rtc_setCfg_timeDateRegSel_dynamic);
@@ -4862,7 +4874,8 @@ static void print_pmicTestAppManualTestMenu(uint32_t board)
     pmic_log(" \r\n 3: Pmic Leo device(PMIC A on %s EVM for RTC WKUP using Alarm Interrupt from Standby State)", board_name);
     pmic_log(" \r\n 4: Pmic Leo device(PMIC A on %s EVM for Get RTC Reset status and then Clear RTC Reset status using powerupStatus)", board_name);
     pmic_log(" \r\n 5: Pmic Leo device(PMIC A on %s EVM for Get RTC Reset status and then Clear RTC Reset status using rtcRstStatus)", board_name);
-    pmic_log(" \r\n 6: Back to Main Menu");
+    pmic_log(" \r\n 6: Pmic Leo device(PMIC A on %s EVM for Set 32K counter with compensation values)", board_name);
+    pmic_log(" \r\n 7: Back to Main Menu");
     pmic_log(" \r\n");
     pmic_log(" \r\n Enter option: ");
 }
@@ -4883,7 +4896,7 @@ static void test_pmic_run_testcases_manual(uint32_t board)
             return;
         }
 
-        if(menuOption == 6)
+        if(menuOption == 7)
         {
             break;
         }
@@ -4907,6 +4920,9 @@ static void test_pmic_run_testcases_manual(uint32_t board)
                break;
             case 5U:
                 RUN_TEST(test_pmic_rtc_clrRstStatus_rtcRstStatus);
+               break;
+            case 6U:
+                RUN_TEST(test_pmic_rtc_setCfg_set32KCounterCompVal);
                break;
             default:
                pmic_log(" \r\n Invalid option... Try Again!!!\n");

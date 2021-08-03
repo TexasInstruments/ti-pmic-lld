@@ -1325,11 +1325,24 @@ static void test_pmic_powerSetPowerResourceConfig_vmonEn_enable(void)
 
     for(pwrRsrc = pwrRsrcMin; pwrRsrc <= pwrRsrcMax ; pwrRsrc++)
     {
-        if((PMIC_TPS6594X_REGULATOR_BUCK3 == pwrRsrc) ||
-           (PMIC_TPS6594X_REGULATOR_BUCK4 == pwrRsrc))
+        if(((J721E_LEO_PMICB_DEVICE == pmic_device_info) &&
+            (PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)) &&
+            (PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev))
         {
-             continue;
+            if((PMIC_TPS6594X_REGULATOR_BUCK3 == pwrRsrc) ||
+               (PMIC_TPS6594X_REGULATOR_BUCK4 == pwrRsrc))
+            {
+                /* VMON Enable for BUCK 3 and 4 for Leo PMIC-B on PG2.0 Leo PMIC results in warm reset.
+                 * The issue is due to the FB_B3 and FB_B4 pins are currently not connected to any input,
+                 * so when the VMON is enabled for these bucks they are expected to fail.
+                 * Warm reset is because of the BIST_FAIL_INT which occurred on LeoB. If the regulator
+                 * output is floating in the VMON tests, then this will cause the VMON_ABIST to fail and
+                 * cause the warm reset
+                 */
+                 continue;
+            }
         }
+
         pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
                                                  pwrRsrc,
                                                  pPowerCfg);

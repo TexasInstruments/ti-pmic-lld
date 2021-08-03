@@ -45,7 +45,7 @@
 #define PMIC_BENCHMARK_NUM_OF_TESTCASES    \
         (sizeof(pmic_benchmark_tests)/sizeof(pmic_benchmark_tests[0]))
 
-/*! 
+/*!
  * \brief  PMIC WDG Valid Params configuration for all
  */
 #define PMIC_WDG_CFG_SETPARAMS_FORALL \

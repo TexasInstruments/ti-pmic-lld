@@ -5734,13 +5734,31 @@ static void test_pmic_gpio_irq_getMaskIntrStat(void)
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         irqGpioNumMaxCnt = PMIC_TPS6594X_IRQ_GPIO_11_INT_MASK_NUM;
-        irqNumMaxCnt = PMIC_TPS6594X_IRQ_MAX_NUM;
+
+        if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
+        {
+            /* SOFT REBOOT is not valid for PG 1.0*/
+            irqNumMaxCnt = PMIC_TPS6594X_IRQ_MAX_NUM - 1;
+        }
+        else
+        {
+            irqNumMaxCnt = PMIC_TPS6594X_IRQ_MAX_NUM;
+        }
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         irqGpioNumMaxCnt = PMIC_LP8764X_IRQ_GPIO_10_INT_MASK_NUM;
-        irqNumMaxCnt = PMIC_LP8764X_IRQ_MAX_NUM;
+
+        if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
+        {
+            /* SOFT REBOOT is not valid for PG 1.0*/
+            irqNumMaxCnt = PMIC_LP8764X_IRQ_MAX_NUM - 1;
+        }
+        else
+        {
+            irqNumMaxCnt = PMIC_LP8764X_IRQ_MAX_NUM;
+        }
     }
 
     /* Masking All GPIO Interrupts */
@@ -5876,13 +5894,31 @@ static void test_pmic_gpio_irq_getUnMaskIntrStat(void)
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         irqGpioNumMaxCnt = PMIC_TPS6594X_IRQ_GPIO_11_INT_MASK_NUM;
-        irqNumMaxCnt = PMIC_TPS6594X_IRQ_MAX_NUM;
+
+        if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
+        {
+            /* SOFT REBOOT is not valid for PG 1.0*/
+            irqNumMaxCnt = PMIC_TPS6594X_IRQ_MAX_NUM - 1;
+        }
+        else
+        {
+            irqNumMaxCnt = PMIC_TPS6594X_IRQ_MAX_NUM;
+        }
     }
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         irqGpioNumMaxCnt = PMIC_LP8764X_IRQ_GPIO_10_INT_MASK_NUM;
-        irqNumMaxCnt = PMIC_LP8764X_IRQ_MAX_NUM;
+
+        if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
+        {
+            /* SOFT REBOOT is not valid for PG 1.0*/
+            irqNumMaxCnt = PMIC_LP8764X_IRQ_MAX_NUM - 1;
+        }
+        else
+        {
+            irqNumMaxCnt = PMIC_LP8764X_IRQ_MAX_NUM;
+        }
     }
 
     /* Unmasking All GPIO Interrupts */
@@ -5960,6 +5996,7 @@ static void test_pmic_gpio_irq_getUnMaskIntrStat(void)
                 continue;
 
             }
+
             /* PMIC GPIO UnMask registers are tested as part of Pmic_irqGpioMaskIntr().
              * So NA for the Pmic_irqMaskIntr()  */
             if((irqCnt >= 32 ) && (irqCnt <= 41))

@@ -72,6 +72,7 @@ drvpmic_j721e_CORELIST      = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1 mpu1_0 c
 drvpmic_j7200_CORELIST      = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mpu1_0
 drvpmic_app_j721e_CORELIST  = mcu1_0 mcu1_1 mcu2_0 mcu2_1 mcu3_0 mcu3_1
 drvpmic_app_j7200_CORELIST  = mcu1_0 mcu1_1 mcu2_0 mcu2_1
+drvpmic_fsm_mcu_app_CORELIST  = mcu1_0 mcu1_1
 
 ############################
 # pmic package
@@ -285,7 +286,7 @@ export pmic_fsm_mcu_testapp_MAKEFILE = -f makefile IS_BAREMETAL=yes
 pmic_fsm_mcu_testapp_PKG_LIST = pmic_fsm_mcu_testapp
 pmic_fsm_mcu_testapp_INCLUDE = $(pmic_fsm_mcu_testapp_PATH)
 export pmic_fsm_mcu_testapp_BOARDLIST = $(drvpmic_BOARDLIST)
-export pmic_fsm_mcu_testapp_$(SOC)_CORELIST = $(drvpmic_app_$(SOC)_CORELIST)
+export pmic_fsm_mcu_testapp_$(SOC)_CORELIST = $(drvpmic_fsm_mcu_app_CORELIST)
 pmic_fsm_mcu_testapp_SBL_APPIMAGEGEN = yes
 export pmic_fsm_mcu_testapp_SBL_APPIMAGEGEN
 

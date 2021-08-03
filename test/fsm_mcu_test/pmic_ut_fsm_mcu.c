@@ -58,6 +58,10 @@ static Pmic_Ut_Tests_t pmic_fsm_mcu_tests[] =
         7697,
         "Pmic_fsmSetMissionState : Test Set State to MCU."
     },
+    {
+        10384,
+        "Pmic_fsmSetMissionState : Switch PMIC state from Active to MCU and then back to Active state using NSLEEP signals."
+    },
 };
 
 
@@ -103,6 +107,99 @@ static void test_pmic_fsmSetMissionState_mcu(void)
                                pmic_fsm_mcu_tests,
                                PMIC_FSM_MCU_NUM_OF_TESTCASES);
 }
+
+/*!
+ * \brief   Pmic_fsmSetMissionState : Switch PMIC state from Active to MCU and
+ *          then back to Active state using NSLEEP signals
+ */
+static void test_pmic_fsmSetMissionState_mcu_active_nsleep(void)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+    uint8_t  pmicState = 0U;
+    int8_t num = 0;
+
+    pmicState = PMIC_FSM_MCU_ONLY_STATE;
+
+    test_pmic_print_unity_testcase_info(10384,
+                                        pmic_fsm_mcu_tests,
+                                        PMIC_FSM_MCU_NUM_OF_TESTCASES);
+
+    /* Switch PMIC state from MCU to Active state using NSLEEP signals is not
+     * supported for PG1.0 */
+    if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        pmic_testResultUpdate_ignore(10384,
+                                     pmic_fsm_mcu_tests,
+                                     PMIC_FSM_MCU_NUM_OF_TESTCASES);
+    }
+
+    status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                         PMIC_NSLEEP1_SIGNAL,
+                                         PMIC_NSLEEPX_UNMASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                         PMIC_NSLEEP2_SIGNAL,
+                                         PMIC_NSLEEPX_UNMASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    pmic_log("\r\n FSM state to switched to MCU State\n");
+
+#if defined(SOC_J721E)
+    pmic_log("\r\n Probe TP134 and it should change from High to Low.");
+    pmic_log("\r\n Probe TP133 and it should continue to be in HIGH");
+#endif
+#if defined(SOC_J7200)
+    pmic_log("\r\n Probe TP46 and it should change from High to Low.");
+    pmic_log("\r\n Probe TP29 and it should continue to be in HIGH");
+#endif
+
+    pmic_log("\r\n Enter 1 to continue");
+    UART_scanFmt("%d", &num);
+
+    /* Set the NSlEEP2 & NSlEEP1 Signal change to 10*/
+    status = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
+                                        PMIC_NSLEEP2_SIGNAL,
+                                        PMIC_NSLEEP_HIGH);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
+                                        PMIC_NSLEEP1_SIGNAL,
+                                        PMIC_NSLEEP_LOW);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    Osal_delay(1);
+
+    /* Set the NSlEEP2 & NSlEEP1 Signal change to 11*/
+    status = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
+                                        PMIC_NSLEEP2_SIGNAL,
+                                        PMIC_NSLEEP_HIGH);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
+                                        PMIC_NSLEEP1_SIGNAL,
+                                        PMIC_NSLEEP_HIGH);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+#if defined(SOC_J721E)
+    pmic_log("\r\n Probe TP134 and it should change from Low to High.");
+    pmic_log("\r\n Probe TP133 and it should continue to be in HIGH");
+#endif
+#if defined(SOC_J7200)
+    pmic_log("\r\n Probe TP46 and it should change from Low to High.");
+    pmic_log("\r\n Probe TP29 and it should continue to be in HIGH");
+#endif
+    pmic_log("\r\n Enter 1 to continue");
+    UART_scanFmt("%d", &num);
+
+    pmic_testResultUpdate_pass(10384,
+                               pmic_fsm_mcu_tests,
+                               PMIC_FSM_MCU_NUM_OF_TESTCASES);
+}
+
 
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E) || defined(SOC_J7200))
@@ -322,8 +419,10 @@ static const char pmicTestAppMenu[] =
     " \r\n Manual Testcase Menu:"
     " \r\n ================================================================="
     " \r\n 0: Pmic Leo device(PMIC A on J721E EVM - Set FSM Mission States - MCU)"
-    " \r\n 1: Pmic Leo device(PMIC A on J7VCL EVM - Set FSM Mission States - MCU)"
-    " \r\n 2: Quit"
+    " \r\n 1: Pmic Leo device(PMIC A on J721E EVM - Set FSM Mission States - Active to MCU and then MCU to Active state using NSLEEP signals)"
+    " \r\n 2: Pmic Leo device(PMIC A on J7VCL EVM - Set FSM Mission States - MCU)"
+    " \r\n 3: Pmic Leo device(PMIC A on J7VCL EVM - Set FSM Mission States - Active to MCU and then MCU to Active state using NSLEEP signals)"
+    " \r\n 4: Quit"
     " \r\n"
     " \r\n Enter option: "
 };
@@ -378,6 +477,28 @@ static void test_pmic_fsm_mcu_testapp_runner(void)
 #endif
                break;
             case 1U:
+#if defined(SOC_J721E)
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
+                {
+                    pmic_device_info = J721E_LEO_PMICA_DEVICE;
+
+                    /* FSM MCU State Manual Test App wrapper Function for LEO PMIC-A*/
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_fsm_mcu_testApp())
+                    {
+                       /* Run fsm mcu state manual test cases for switch the mcu to active state*/
+                       test_pmic_fsmSetMissionState_mcu_active_nsleep();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                       test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
+               break;
+            case 2U:
 #if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
@@ -399,7 +520,29 @@ static void test_pmic_fsm_mcu_testapp_runner(void)
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                break;
-            case 2U:
+            case 3U:
+#if defined(SOC_J7200)
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
+                {
+                    pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+
+                    /* FSM MCU State Manual Test App wrapper Function for LEO PMIC-A*/
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_fsm_mcu_testApp())
+                    {
+                       /* Run fsm_mcu state manual test cases for switch the mcu to active state*/
+                       test_pmic_fsmSetMissionState_mcu_active_nsleep();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                       test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
+               break;
+            case 4U:
                 pmic_log(" \r\n Quit from application\n");
                 return;
             default:

@@ -74,3 +74,11 @@
          PMIC_CFG_WD_ANSW_ERR_ERRSTAT_VALID_SHIFT        | \
          PMIC_CFG_WD_FAIL_INT_ERRSTAT_VALID_SHIFT        | \
          PMIC_CFG_WD_RST_INT_ERRSTAT_VALID_SHIFT)
+
+/*!
+ * \brief  PMIC WDG Valid Params configuration for all Fail Count status
+ */
+#define PMIC_CFG_WD_ALL_FAILCNTSTAT_VALID_PARAMS \
+        (PMIC_CFG_WD_BAD_EVENT_STAT_VALID_SHIFT     | \
+         PMIC_CFG_WD_GOOD_EVENT_STAT_VALID_SHIFT    | \
+         PMIC_CFG_WD_FAIL_CNT_VAL_VALID_SHIFT)

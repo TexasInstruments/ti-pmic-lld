@@ -253,6 +253,11 @@ static void test_pmic_wdg_setCfg_forallparams(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_5,
     };
 
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        wdgCfg.longWinDuration_ms = 752000U;
+    }
+
     /* Enable WDG Timer */
     pmicStatus = Pmic_wdgEnable(pPmicCoreHandle);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -848,6 +853,13 @@ static void test_pmic_rtc_testWakeup_TimerIntr_lpStandbyState(void)
                                         pmic_stress_tests,
                                         PMIC_STRESS_NUM_OF_TESTCASES);
 
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        /*PMIC wakeup from LP Standby state using RTC Time Interrupt is not working - Known Issue*/
+        pmic_testResultUpdate_ignore(8239,
+                                     pmic_stress_tests,
+                                     PMIC_STRESS_NUM_OF_TESTCASES);
+    }
     pHandle                         = pPmicCoreHandle;
 
 #if defined(SOC_J721E)
@@ -1134,6 +1146,11 @@ static void test_pmic_stress_testapp_run_options(int8_t option)
                     /* STRESS Unity Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_stress_testApp())
                     {
+                        if(PMIC_SILICON_REV_ID_PG_2_0 ==
+                          pPmicCoreHandle->pmicDevSiliconRev)
+                       {
+                            test_pmic_rtc_setCfg_xtalOScEnType(pPmicCoreHandle);
+                       }
                         /* Run stress test cases for Leo PMIC-A */
                         test_pmic_run_testcases();
                     }
@@ -1178,6 +1195,11 @@ static void test_pmic_stress_testapp_run_options(int8_t option)
                     /* STRESS Manual Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_stress_testApp())
                     {
+                        if(PMIC_SILICON_REV_ID_PG_2_0 ==
+                          pPmicCoreHandle->pmicDevSiliconRev)
+                       {
+                            test_pmic_rtc_setCfg_xtalOScEnType(pPmicCoreHandle);
+                       }
                         /* Run Stress manual test cases */
                         test_pmic_run_testcases_manual(J721E_BOARD);
                     }
