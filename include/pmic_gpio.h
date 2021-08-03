@@ -88,8 +88,6 @@ extern "C" {
                           (0x01U << PMIC_GPIO_CFG_DEGLITCH_VALID)
 #define PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT    \
                           (0x01U << PMIC_GPIO_CFG_PINFUNC_VALID)
-#define PMIC_NPWRON_CFG_POLARITY_VALID_SHIFT \
-                          (0x01U << PMIC_NPWRON_CFG_POLARITY_VALID)
 #define PMIC_ENABLE_CFG_POLARITY_VALID_SHIFT \
                           (1U << PMIC_ENABLE_CFG_POLARITY_VALID)
 /* @} */
@@ -175,10 +173,8 @@ extern "C" {
 /** \brief validParams value used to set/get pin mux function */
 #define PMIC_GPIO_CFG_PINFUNC_VALID        (0x04U)
 /** \brief validParams value used to set/get pin polarity
- *         Valid only for TPS6594x Leo device and NPWRON/Enable pin */
-#define PMIC_NPWRON_CFG_POLARITY_VALID     (0x05U)
-/** \brief validParams value used to set/get pin polarity
- *         Valid only for LP8764x Hera device and Enable pin */
+ *         Valid only for Enable pin for TPS6594x Leo and LP8764x Hera device
+ *         Invalid for NPWRON pin for TPS6594x Leo device*/
 #define PMIC_ENABLE_CFG_POLARITY_VALID     (0x05U)
 /*  @} */
 
@@ -238,6 +234,7 @@ extern "C" {
  *                              Valid values \ref Pmic_Gpio_SignalType.
  *                                Valid only when PMIC_GPIO_CFG_OD_VALID
  *                                bit is set.
+ *                                Valid only for GPIO Pins.
  * \param   pullCtrl            pullup/pull down control.
  *                              Valid values \ref Pmic_GpioPinPullCtrl.
  *                                Valid only when PMIC_GPIO_CFG_PULL_VALID
@@ -254,9 +251,9 @@ extern "C" {
  *                                Valid only when PMIC_GPIO_CFG_PINFUNC_VALID
  *                                bit is set.
  * \param   pinPolarity         Configure pin polarity.
- *                              Valid only for NPWRON or Enable pin.
- *                                Valid only when PMIC_NPWRON_CFG_POLARITY_VALID
- *                                or PMIC_ENABLE_CFG_POLARITY_VALID bit is set.
+ *                              Valid only for Enable pin.
+ *                                Valid only when PMIC_ENABLE_CFG_POLARITY_VALID
+ *                                bit is set.
  */
 typedef struct Pmic_GpioCfg_s
 {

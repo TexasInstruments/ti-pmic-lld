@@ -392,8 +392,8 @@ static int32_t Pmic_gpioSetPinPolarity(Pmic_CoreHandle_t    *pPmicCoreHandle,
     {
         case PMIC_DEV_LEO_TPS6594X:
             regAddr = PMIC_NPWRON_CONF_REGADDR;
-            bitPos = PMIC_NPWRON_CONF_NPWRON_POL_SHIFT;
-            bitMask = PMIC_NPWRON_CONF_NPWRON_POL_MASK;
+            bitPos = PMIC_NPWRON_CONF_ENABLE_POL_SHIFT;
+            bitMask = PMIC_NPWRON_CONF_ENABLE_POL_MASK;
             break;
         case PMIC_DEV_HERA_LP8764X:
             regAddr = PMIC_ENABLE_CONF_REGADDR;
@@ -416,7 +416,7 @@ static int32_t Pmic_gpioSetPinPolarity(Pmic_CoreHandle_t    *pPmicCoreHandle,
 
     if (PMIC_ST_SUCCESS == status)
     {
-        /* Setting NPWRON/ENABLE pin polarity */
+        /* Setting ENABLE pin polarity */
         Pmic_setBitField(&regData,
                          bitPos,
                          bitMask,
@@ -447,8 +447,8 @@ static int32_t Pmic_gpioGetPinPolarity(Pmic_CoreHandle_t *pPmicCoreHandle,
     {
         case PMIC_DEV_LEO_TPS6594X:
             regAddr = PMIC_NPWRON_CONF_REGADDR;
-            bitPos = PMIC_NPWRON_CONF_NPWRON_POL_SHIFT;
-            bitMask = PMIC_NPWRON_CONF_NPWRON_POL_MASK;
+            bitPos = PMIC_NPWRON_CONF_ENABLE_POL_SHIFT;
+            bitMask = PMIC_NPWRON_CONF_ENABLE_POL_MASK;
             break;
         case PMIC_DEV_HERA_LP8764X:
             regAddr = PMIC_ENABLE_CONF_REGADDR;
@@ -465,7 +465,7 @@ static int32_t Pmic_gpioGetPinPolarity(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == status)
     {
-        /* Reading the GPIO configuration */
+        /* Reading the NPWRON/ENABLE configuration */
         status = Pmic_commIntf_recvByte(pPmicCoreHandle,
                                         regAddr,
                                         &regData);
@@ -476,7 +476,7 @@ static int32_t Pmic_gpioGetPinPolarity(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == status)
     {
-        /* Reading NPWRON or Enable pin polarity */
+        /* Reading Enable pin polarity */
         pGpioCfg->pinPolarity = Pmic_getBitField(regData, bitPos, bitMask);
     }
 
@@ -867,22 +867,11 @@ static int32_t Pmic_gpioSetOutputSignalType(
 
     if(PMIC_ST_SUCCESS == status)
     {
-        if(PMIC_NPWRON_ENABLE_PIN != pin)
-        {
-            /* selecting output type */
-            Pmic_setBitField(&regData,
-                             PMIC_GPIOX_CONF_GPIO_OD_SHIFT,
-                             PMIC_GPIOX_CONF_GPIO_OD_MASK,
-                             gpioCfg.outputSignalType);
-        }
-        else
-        {
-            /* selecting output type */
-            Pmic_setBitField(&regData,
-                             PMIC_NPWRON_CONF_NPWRON_OD_SHIFT,
-                             PMIC_NPWRON_CONF_NPWRON_OD_MASK,
-                             gpioCfg.outputSignalType);
-        }
+        /* selecting output type */
+        Pmic_setBitField(&regData,
+                         PMIC_GPIOX_CONF_GPIO_OD_SHIFT,
+                         PMIC_GPIOX_CONF_GPIO_OD_MASK,
+                         gpioCfg.outputSignalType);
 
         status = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                         regAddr,
@@ -936,22 +925,12 @@ static int32_t Pmic_gpioGetOutputSignalType(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == status)
     {
-        if(PMIC_NPWRON_ENABLE_PIN != pin)
-        {
-            /* Reading output signal type */
-            pGpioCfg->outputSignalType = Pmic_getBitField(
-                                                regData,
-                                                PMIC_GPIOX_CONF_GPIO_OD_SHIFT,
-                                                PMIC_GPIOX_CONF_GPIO_OD_MASK);
-        }
-        else
-        {
-            /* Reading output signal type for NPWRON pin */
-            pGpioCfg->outputSignalType = Pmic_getBitField(
-                                               regData,
-                                               PMIC_NPWRON_CONF_NPWRON_OD_SHIFT,
-                                               PMIC_NPWRON_CONF_NPWRON_OD_MASK);
-        }
+        /* Reading output signal type */
+        pGpioCfg->outputSignalType = Pmic_getBitField(
+                                            regData,
+                                            PMIC_GPIOX_CONF_GPIO_OD_SHIFT,
+                                            PMIC_GPIOX_CONF_GPIO_OD_MASK);
+
     }
 
     return status;
@@ -1541,7 +1520,7 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
 
             if(PMIC_ST_SUCCESS == status)
             {
-                /* Setting NPWRON pin function */
+                /* Setting NPWRON/Enable pin function */
                 status = Pmic_gpioSetPinFunc(pPmicCoreHandle,
                                              PMIC_NPWRON_ENABLE_PIN,
                                              gpioCfg);
@@ -1559,7 +1538,7 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
 
             if(PMIC_ST_SUCCESS == status)
             {
-                /* setting NPWRON deglitch time */
+                /* setting NPWRON/Enable deglitch time */
                 status = Pmic_gpioSetDeglitchTime(pPmicCoreHandle,
                                                   PMIC_NPWRON_ENABLE_PIN,
                                                   gpioCfg);
@@ -1578,36 +1557,18 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
 
                 if(PMIC_ST_SUCCESS == status)
                 {
-                    /* setting NPWRON Pull UP/Down */
+                    /* setting NPWRON/Enable Pull UP/Down */
                     status = Pmic_gpioSetPullCtrl(pPmicCoreHandle,
                                                   PMIC_NPWRON_ENABLE_PIN,
                                                   gpioCfg);
                 }
             }
         }
-
-        if((PMIC_ST_SUCCESS == status) &&
-           ((bool)true == pmic_validParamCheck(gpioCfg.validParams,
-                                               PMIC_GPIO_CFG_OD_VALID)))
-        {
-            if(gpioCfg.outputSignalType > PMIC_GPIO_OPEN_DRAIN_OUTPUT)
-            {
-                status = PMIC_ST_ERR_INV_PARAM;
-            }
-
-            if(PMIC_ST_SUCCESS == status)
-            {
-                /* Setting NPWRON open drain */
-                status = Pmic_gpioSetOutputSignalType(pPmicCoreHandle,
-                                                      PMIC_NPWRON_ENABLE_PIN,
-                                                      gpioCfg);
-            }
-        }
     }
 
     if((PMIC_ST_SUCCESS == status) &&
        ((bool)true == pmic_validParamCheck(gpioCfg.validParams,
-                                           PMIC_NPWRON_CFG_POLARITY_VALID)))
+                                           PMIC_ENABLE_CFG_POLARITY_VALID)))
     {
         if(gpioCfg.pinPolarity > PMIC_GPIO_POL_HIGH)
         {
@@ -1616,7 +1577,7 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
 
         if(PMIC_ST_SUCCESS == status)
         {
-            /* Setting NPWRON/ENABLE pin polarity */
+            /* Setting ENABLE pin polarity */
             status = Pmic_gpioSetPinPolarity(pPmicCoreHandle,
                                              gpioCfg);
         }
@@ -1655,16 +1616,6 @@ int32_t Pmic_gpioGetNPwronEnablePinConfiguration(
     {
         if((PMIC_ST_SUCCESS == status) &&
            ((bool)true == pmic_validParamCheck(pGpioCfg->validParams,
-                                               PMIC_GPIO_CFG_OD_VALID)))
-        {
-            /* Get nPWRON/Enable output signal type */
-            status = Pmic_gpioGetOutputSignalType(pPmicCoreHandle,
-                                                  PMIC_NPWRON_ENABLE_PIN,
-                                                  pGpioCfg);
-        }
-
-        if((PMIC_ST_SUCCESS == status) &&
-           ((bool)true == pmic_validParamCheck(pGpioCfg->validParams,
                                                PMIC_GPIO_CFG_DEGLITCH_VALID)))
         {
             /* Get nPWRON/Enable pin signal deglitch time */
@@ -1697,7 +1648,7 @@ int32_t Pmic_gpioGetNPwronEnablePinConfiguration(
 
     if((PMIC_ST_SUCCESS == status) &&
        ((bool)true == pmic_validParamCheck(pGpioCfg->validParams,
-                                           PMIC_NPWRON_CFG_POLARITY_VALID)))
+                                           PMIC_ENABLE_CFG_POLARITY_VALID)))
     {
         /* Get nPWRON/Enable pin polarity control */
         status = Pmic_gpioGetPinPolarity(pPmicCoreHandle, pGpioCfg);

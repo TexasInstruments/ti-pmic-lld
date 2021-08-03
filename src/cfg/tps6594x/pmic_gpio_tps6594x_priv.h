@@ -65,8 +65,7 @@ extern "C" {
  * \brief  NPWRON Register bit fields
  */
 #define PMIC_NPWRON_CONF_NPWRON_SEL_SHIFT        (0x06U)
-#define PMIC_NPWRON_CONF_NPWRON_POL_SHIFT        (0x05U)
-#define PMIC_NPWRON_CONF_NPWRON_OD_SHIFT         (0x00U)
+#define PMIC_NPWRON_CONF_ENABLE_POL_SHIFT        (0x05U)
 
 /*!
  * \brief  GPIO IN Register bit fields
@@ -85,12 +84,9 @@ extern "C" {
 #define PMIC_NPWRON_CONF_NPWRON_SEL_MASK    (uint8_t)  \
                                             (0x03U <<  \
                                              PMIC_NPWRON_CONF_NPWRON_SEL_SHIFT)
-#define PMIC_NPWRON_CONF_NPWRON_POL_MASK    (uint8_t)  \
+#define PMIC_NPWRON_CONF_ENABLE_POL_MASK    (uint8_t)  \
                                             (0x01U <<  \
-                                             PMIC_NPWRON_CONF_NPWRON_POL_SHIFT)
-#define PMIC_NPWRON_CONF_NPWRON_OD_MASK     (uint8_t)  \
-                                            (0x01U <<  \
-                                             PMIC_NPWRON_CONF_NPWRON_OD_SHIFT)
+                                             PMIC_NPWRON_CONF_ENABLE_POL_SHIFT)
 
 /*!
  * \brief  GPIO IN Register bit mask values
