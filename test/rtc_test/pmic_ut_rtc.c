@@ -2652,7 +2652,9 @@ static void test_pmic_rtc_testTimerAsyncIntr(void)
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
-#if (defined(SOC_J7200) && (defined(BUILD_MCU2_0) || defined(BUILD_MCU2_1)))
+#if ((defined(SOC_J7200) && (defined(BUILD_MCU2_0) || defined(BUILD_MCU2_1))) || \
+     (defined(SOC_J721E) && (defined(BUILD_MCU3_0) || defined(BUILD_MCU3_1))))
+    /*Refer the Bug-PDK-10394 for more details*/
     pmic_testResultUpdate_ignore(7888,
                                  pmic_rtc_tests,
                                  PMIC_RTC_NUM_OF_TESTCASES);
@@ -2738,7 +2740,9 @@ static void test_pmic_rtc_testAlarmAsyncIntr(void)
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
-#if (defined(SOC_J7200) && (defined(BUILD_MCU2_0) || defined(BUILD_MCU2_1)))
+#if ((defined(SOC_J7200) && (defined(BUILD_MCU2_0) || defined(BUILD_MCU2_1))) || \
+     (defined(SOC_J721E) && (defined(BUILD_MCU3_0) || defined(BUILD_MCU3_1))))
+    /*Refer the Bug-PDK-10394 for more details*/
     pmic_testResultUpdate_ignore(7889,
                                  pmic_rtc_tests,
                                  PMIC_RTC_NUM_OF_TESTCASES);

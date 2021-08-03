@@ -302,7 +302,9 @@ static void test_pmic_rtc_stressTestTimerAsyncIntr(void)
                                         pmic_stress_tests,
                                         PMIC_STRESS_NUM_OF_TESTCASES);
 
-#if (defined(SOC_J7200) && (defined(BUILD_MCU2_0) || defined(BUILD_MCU2_1)))
+#if ((defined(SOC_J7200) && (defined(BUILD_MCU2_0) || defined(BUILD_MCU2_1))) || \
+     (defined(SOC_J721E) && (defined(BUILD_MCU3_0) || defined(BUILD_MCU3_1))))
+    /*Refer the Bug-PDK-10394 for more details*/
     pmic_testResultUpdate_ignore(8230,
                                  pmic_stress_tests,
                                  PMIC_STRESS_NUM_OF_TESTCASES);

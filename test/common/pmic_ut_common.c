@@ -1559,35 +1559,31 @@ void GPIO_configIntRouter(uint32_t portNum, uint32_t pinNum, uint32_t gpioIntRtr
     /* WKUP GPIO int router input interrupt is the GPIO bank interrupt */
 #if defined (SOC_J721E)
 #if defined (BUILD_MCU1_0)
-    intCfg[pinNum].intNum = CSLR_MCU_R5FSS0_CORE0_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_0 + bankNum;
+    intCfg[pinNum].intNum = 124 + bankNum;
 #elif defined (BUILD_MCU1_1)
-    intCfg[pinNum].intNum = CSLR_MCU_R5FSS0_CORE1_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_8 + bankNum;
+    intCfg[pinNum].intNum = 132 + bankNum;
 #elif defined (BUILD_MCU2_0)
-    intCfg[pinNum].intNum = CSLR_R5FSS0_CORE0_INTR_R5FSS0_INTROUTER0_OUTL_4
-                            + bankNum;
+    intCfg[pinNum].intNum = 260 + bankNum;
 #elif defined (BUILD_MCU2_1)
-    intCfg[pinNum].intNum = CSLR_R5FSS0_CORE1_INTR_R5FSS0_INTROUTER0_OUTL_128
-                            + bankNum;
+    intCfg[pinNum].intNum = 384 + bankNum;
 #elif defined (BUILD_MCU3_0)
-    intCfg[pinNum].intNum = CSLR_R5FSS1_CORE0_INTR_R5FSS1_INTROUTER0_OUTL_4
-                            + bankNum;
+    /* Need to check 256 intNum(256 + 0(bankNum)) is working or not after the BugFix - PDK-10394 */
+    intCfg[pinNum].intNum = 256 + bankNum;
 #elif defined (BUILD_MCU3_1)
-    intCfg[pinNum].intNum = CSLR_R5FSS1_CORE1_INTR_R5FSS1_INTROUTER0_OUTL_128
-                            + bankNum;
+    /* Need to check 384 intNum(384 + 0(bankNum)) is working or not after the BugFix - PDK-10394 */
+    intCfg[pinNum].intNum = 384 + bankNum;
 #endif
 #elif defined (SOC_J7200)
 #if defined (BUILD_MCU1_0)
-    intCfg[pinNum].intNum = CSLR_MCU_R5FSS0_CORE0_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_0 + bankNum;
+    intCfg[pinNum].intNum = 124 + bankNum;
 #elif defined (BUILD_MCU1_1)
-intCfg[pinNum].intNum = CSLR_MCU_R5FSS0_CORE1_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_3 + bankNum;
+intCfg[pinNum].intNum = 127 + bankNum;
 #elif defined (BUILD_MCU2_0)
-    /* Added dummy intNum. Need to correct intNum to MCU2_0 */
-    intCfg[pinNum].intNum = CSLR_R5FSS0_CORE0_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_16
-                            + bankNum;
+    /* Need to check 488 intNum(483 + 5(bankNum)) is working or not after the BugFix - PDK-10394 */
+    intCfg[pinNum].intNum = 488 + bankNum;
 #elif defined (BUILD_MCU2_1)
-    /* Added dummy intNum. Need to correct intNum to MCU2_1 */
-    intCfg[pinNum].intNum = CSLR_R5FSS0_CORE1_INTR_WKUP_GPIOMUX_INTRTR0_OUTP_16
-                            + bankNum;
+    /* Need to check 496 intNum(491 + 5(bankNum)) is working or not after the BugFix - PDK-10394 */
+    intCfg[pinNum].intNum = 491 + bankNum;
 #endif
 #endif
 
