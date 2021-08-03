@@ -71,10 +71,6 @@ static Pmic_Ut_Tests_t pmic_fsm_tests[] =
         "Pmic_fsmSetNsleepSignalMask : Test Unmask Nsleep2."
     },
     {
-        7697,
-        "Pmic_fsmSetMissionState : Test Set State to MCU."
-    },
-    {
         7698,
         "Pmic_fsmSetMissionState : Test Set State to Active."
     },
@@ -426,41 +422,6 @@ static void test_pmic_fsmSetNsleepSignalMask_unmask_nsleep2(void)
                                pmic_fsm_tests,
                                PMIC_FSM_NUM_OF_TESTCASES);
 
-}
-
-/*!
- * \brief   Pmic_fsmSetMissionState : Test Set State to MCU.
- */
-static void test_pmic_fsmSetMissionState_mcu(void)
-{
-    int32_t status     = PMIC_ST_SUCCESS;
-    uint8_t  pmicState = 0U;
-
-    pmicState = PMIC_FSM_MCU_ONLY_STATE;
-
-    test_pmic_print_unity_testcase_info(7697,
-                                        pmic_fsm_tests,
-                                        PMIC_FSM_NUM_OF_TESTCASES);
-
-    status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
-                                         PMIC_NSLEEP1_SIGNAL,
-                                         PMIC_NSLEEPX_UNMASK);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    status = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
-                                         PMIC_NSLEEP2_SIGNAL,
-                                         PMIC_NSLEEPX_UNMASK);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-#if defined(SOC_J721E)
-    pmic_log("\r\n Probe TP134 and it should change from High to Low.");
-    pmic_log("\r\n Probe TP133 and it should continue to be in HIGH");
-#endif
-#if defined(SOC_J7200)
-    pmic_log("\r\n Probe TP46 and it should change from High to Low.");
-    pmic_log("\r\n Probe TP29 and it should continue to be in HIGH");
-#endif
-    status = Pmic_fsmSetMissionState(pPmicCoreHandle, pmicState);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
 /*!
@@ -2546,13 +2507,12 @@ static void print_pmicTestAppManualTestMenu(uint32_t board)
     pmic_log(" \r\n =================================================================");
     pmic_log(" \r\n Manual Testcase Menu:");
     pmic_log(" \r\n =================================================================");
-    pmic_log(" \r\n 0: Pmic Leo device(PMIC A on %s EVM Set FSM Mission States - MCU", board_name);
-    pmic_log(" \r\n 1: Pmic Leo device(PMIC A on %s EVM Set FSM Mission States - S2R", board_name);
-    pmic_log(" \r\n 2: Pmic Leo device(PMIC A on %s EVM Set FSM Mission States - lpStandby", board_name);
-    pmic_log(" \r\n 3: Pmic Leo device(PMIC A on %s EVM Set FSM Mission States - Standby", board_name);
-    pmic_log(" \r\n 4: Pmic Leo device(PMIC A on %s EVM Set nSleep1 Signal - Active Low", board_name);
-    pmic_log(" \r\n 5: Pmic Leo device(PMIC A on %s EVM Set nSleep2 Signal - Active Low", board_name);
-    pmic_log(" \r\n 6: Back to Main Menu");
+    pmic_log(" \r\n 0: Pmic Leo device(PMIC A on %s EVM Set FSM Mission States - S2R", board_name);
+    pmic_log(" \r\n 1: Pmic Leo device(PMIC A on %s EVM Set FSM Mission States - lpStandby", board_name);
+    pmic_log(" \r\n 2: Pmic Leo device(PMIC A on %s EVM Set FSM Mission States - Standby", board_name);
+    pmic_log(" \r\n 3: Pmic Leo device(PMIC A on %s EVM Set nSleep1 Signal - Active Low", board_name);
+    pmic_log(" \r\n 4: Pmic Leo device(PMIC A on %s EVM Set nSleep2 Signal - Active Low", board_name);
+    pmic_log(" \r\n 5: Back to Main Menu");
     pmic_log(" \r\n");
     pmic_log(" \r\n Enter option: ");
 };
@@ -2573,7 +2533,7 @@ static void test_pmic_run_testcases_manual(uint32_t board)
             return;
         }
 
-        if(menuOption == 6)
+        if(menuOption == 5)
         {
             break;
         }
@@ -2581,21 +2541,18 @@ static void test_pmic_run_testcases_manual(uint32_t board)
         switch(menuOption)
         {
             case 0U:
-                RUN_TEST(test_pmic_fsmSetMissionState_mcu);
-               break;
-            case 1U:
                 RUN_TEST(test_pmic_fsmSetMissionState_s2r);
                break;
-            case 2U:
+            case 1U:
                 RUN_TEST(test_pmic_fsmSetMissionState_lpstandby);
                break;
-            case 3U:
+            case 2U:
                 RUN_TEST(test_pmic_fsmSetMissionState_standby);
                break;
-            case 4U:
+            case 3U:
                 RUN_TEST(test_pmic_fsmSetNsleepSignalVal_nsleep1Low);
                break;
-            case 5U:
+            case 4U:
                 RUN_TEST(test_pmic_fsmSetNsleepSignalVal_nsleep2Low);
                break;
             default:

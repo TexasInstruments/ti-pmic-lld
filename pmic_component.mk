@@ -274,6 +274,25 @@ export pmic_stress_testapp_SBL_APPIMAGEGEN
 pmic_EXAMPLE_LIST += pmic_stress_testapp
 
 #
+# FSM MCU State  test
+#
+export pmic_fsm_mcu_testapp_COMP_LIST = pmic_fsm_mcu_testapp
+pmic_fsm_mcu_testapp_RELPATH = ti/drv/pmic/test/fsm_mcu_test
+pmic_fsm_mcu_testapp_PATH = $(PDK_PMIC_COMP_PATH)/test/fsm_mcu_test
+export pmic_fsm_mcu_testapp_BOARD_DEPENDENCY = yes
+export pmic_fsm_mcu_testapp_CORE_DEPENDENCY = no
+export pmic_fsm_mcu_testapp_MAKEFILE = -f makefile IS_BAREMETAL=yes
+pmic_fsm_mcu_testapp_PKG_LIST = pmic_fsm_mcu_testapp
+pmic_fsm_mcu_testapp_INCLUDE = $(pmic_fsm_mcu_testapp_PATH)
+export pmic_fsm_mcu_testapp_BOARDLIST = $(drvpmic_BOARDLIST)
+export pmic_fsm_mcu_testapp_$(SOC)_CORELIST = $(drvpmic_app_$(SOC)_CORELIST)
+pmic_fsm_mcu_testapp_SBL_APPIMAGEGEN = yes
+export pmic_fsm_mcu_testapp_SBL_APPIMAGEGEN
+
+pmic_EXAMPLE_LIST += pmic_fsm_mcu_testapp
+
+
+#
 # Export Libraries and Apps to Build Env
 #
 export pmic_LIB_LIST
