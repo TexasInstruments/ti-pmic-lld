@@ -303,6 +303,22 @@ extern "C" {
 /* @} */
 
 /**
+ *  \anchor Pmic_WdgFailCntStatCfgValidParamBitPos
+ *  \name PMIC watchdog Fail count status Structure Param Bit positions.
+ *
+ *  @{
+ */
+ /** \brief validParams value used to get status of Bad Event is detected or not
+  */
+#define PMIC_CFG_WD_BAD_EVENT_STAT_VALID     (0U)
+/** \brief validParams value used to get status of Good Event is detected or not
+ */
+#define PMIC_CFG_WD_GOOD_EVENT_STAT_VALID    (1U)
+/** \brief validParams value used to get To get Watchdog Fail Count value */
+#define PMIC_CFG_WD_FAIL_CNT_VAL_VALID       (2U)
+/* @} */
+
+/**
  *  \anchor Pmic_WdgErrStatValidParamBitShiftVal
  *  \name PMIC WatchDog Error status Structure Params Bit shift values
  *
@@ -327,6 +343,24 @@ extern "C" {
                             (1U << PMIC_CFG_WD_FAIL_INT_ERRSTAT_VALID)
 #define PMIC_CFG_WD_RST_INT_ERRSTAT_VALID_SHIFT            \
                             (1U << PMIC_CFG_WD_RST_INT_ERRSTAT_VALID)
+/* @} */
+
+/**
+ *  \anchor Pmic_WdgFailCntStatValidParamBitShiftVal
+ *  \name PMIC WatchDog Fail count status Structure Params Bit shift values
+ *
+ *  Application can use below shifted values to set the validParams
+ *  structure member defined in Pmic_WdgErrStatus_t structure
+ *
+ *  @{
+ */
+#define PMIC_CFG_WD_BAD_EVENT_STAT_VALID_SHIFT    \
+                            (1U << PMIC_CFG_WD_BAD_EVENT_STAT_VALID)
+#define PMIC_CFG_WD_GOOD_EVENT_STAT_VALID_SHIFT   \
+                            (1U << PMIC_CFG_WD_GOOD_EVENT_STAT_VALID)
+#define PMIC_CFG_WD_FAIL_CNT_VAL_VALID_SHIFT      \
+                            (1U << PMIC_CFG_WD_FAIL_CNT_VAL_VALID)
+
 /* @} */
 
 /*!
@@ -466,6 +500,28 @@ typedef struct Pmic_WdgErrStatus_s
     bool wdRstInt;
 }Pmic_WdgErrStatus_t;
 
+/*!
+ * \brief    PMIC Watchdog Fail Count status structure
+ *           Note: validParams is input param for all Get APIs. other params
+ *           except validParams is output param for Get APIs
+ *
+ * \param   validParams         Selection of structure parameters to be
+ *                              set from the combination of the
+ *                              \ref Pmic_WdgFailCntStatCfgValidParamBitPos
+ *                              and the corresponding member value will be
+ *                              updated.
+ * \param   wdBadEvent          To get status of Bad Event is detected or not
+ * \param   wdGudEvent          To get status of Good Event is detected or not
+ * \param   wdFailCnt           To get Watchdog Fail Count value.
+ */
+typedef struct Pmic_WdgFailCntStat_s
+{
+    uint32_t validParams;
+    bool     wdBadEvent;
+    bool     wdGudEvent;
+    uint32_t wdFailCnt;
+}Pmic_WdgFailCntStat_t;
+
 /* ========================================================================== */
 /*                            Function Declarations                           */
 /* ========================================================================== */
@@ -602,23 +658,23 @@ int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t   *pPmicCoreHandle,
                                Pmic_WdgErrStatus_t *pErrStatus);
 
 /*!
- * \brief   API to get PMIC watchdog fail count.
+ * \brief   API to get PMIC watchdog fail count status.
  *
  * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854)
  * Design: did_pmic_wdg_cfg_readback
  *
- *          This function is used to get the watchdog fail count from the PMIC
- *          for trigger mode or Q&A(question and answer) mode.
+ *          This function is used to get the watchdog fail count status from the
+ *          PMIC for trigger mode or Q&A(question and answer) mode.
  *          User has to call Pmic_wdgEnable() before getting the fail count.
  *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
- * \param   pFailCount      [OUT]   Watchdog fail count pointer
+ * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
+ * \param   pFailCount      [IN/OUT]   Watchdog fail count pointer
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_wdgGetFailCount(Pmic_CoreHandle_t *pPmicCoreHandle,
-                             uint8_t           *pFailCount);
+int32_t Pmic_wdgGetFailCntStat(Pmic_CoreHandle_t      *pPmicCoreHandle,
+                               Pmic_WdgFailCntStat_t  *pFailCount);
 
 /*!
  * \brief   API to Start watchdog Trigger mode.
@@ -674,6 +730,41 @@ int32_t Pmic_wdgStartTriggerSequence(Pmic_CoreHandle_t *pPmicCoreHandle);
  */
 int32_t Pmic_wdgClrErrStatus(Pmic_CoreHandle_t   *pPmicCoreHandle,
                              const uint8_t        wdgErrType);
+
+/*!
+ * \brief   API to Write Answers in Long Window/ Window1/ Window2 Interval for
+ *          watchdog QA Sequence.
+ *
+ * Requirement: REQ_TAG(PDK-5839)
+ * Design: did_pmic_wdg_cfg_readback
+ *
+ *          This function is used to write Answers in Long Window/ Window1/
+ *          Window2 Interval for the WDG QA Sequence
+ *          User has to ensure, configure all Watchdog QA parameters properly
+ *          using Pmic_wdgSetCfg() API, before writing Answers using this API
+ *          for the QA Sequence
+ *
+ *          Note: To perform QA sequences, user has to adjust Long window
+ *                time interval, Window1 time interval and Window2 time
+ *                intervals If the Pmic_wdgQaWriteAnswer API returns
+ *                PMIC_ST_ERR_INV_WDG_ANSWER error
+ *                If the Pmic_wdgQaWriteAnswer API returns
+ *                PMIC_ST_ERR_INV_WDG_ANSWER error user has
+ *                to call Pmic_wdgGetErrorStatus API to read the WDG error.
+ *                If the WDG error is Long Window Timeout or Timeout, user has
+ *                to increase the Long window or window1 time interval
+ *                accordingly
+ *                If the WDG error is Answer early, user has to reduce the
+ *                Window1 time interval
+ *                For other WDG errors, user has to take action accordingly
+ *
+ * \param   pPmicCoreHandle  [IN]    PMIC Interface Handle
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_wdgQaSequenceWriteAnswer(Pmic_CoreHandle_t *pPmicCoreHandle);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

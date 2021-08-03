@@ -1727,23 +1727,23 @@ int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t   *pPmicCoreHandle,
 }
 
 /*!
- * \brief   API to get PMIC watchdog fail count.
+ * \brief   API to get PMIC watchdog fail count status.
  *
  * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854)
  * Design: did_pmic_wdg_cfg_readback
  *
- *          This function is used to get the watchdog fail count from the PMIC
- *          for trigger mode or Q&A(question and answer) mode.
+ *          This function is used to get the watchdog fail count status from the
+ *          PMIC for trigger mode or Q&A(question and answer) mode.
  *          User has to call Pmic_wdgEnable() before getting the fail count.
  *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
- * \param   pFailCount      [OUT]   Watchdog fail count pointer
+ * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
+ * \param   pFailCount      [IN/OUT]   Watchdog fail count pointer
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_wdgGetFailCount(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                    uint8_t    *pFailCount)
+int32_t Pmic_wdgGetFailCntStat(Pmic_CoreHandle_t      *pPmicCoreHandle,
+                               Pmic_WdgFailCntStat_t  *pFailCount)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0x00U;
@@ -1770,9 +1770,48 @@ int32_t Pmic_wdgGetFailCount(Pmic_CoreHandle_t *pPmicCoreHandle,
         Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
-    if(PMIC_ST_SUCCESS == status)
+    /* Get watchdog Bad Event status */
+    if((PMIC_ST_SUCCESS == status) &&
+       (((bool)true) == pmic_validParamCheck(pFailCount->validParams,
+                               PMIC_CFG_WD_BAD_EVENT_STAT_VALID)))
     {
-        *pFailCount = Pmic_getBitField(regVal,
+        if(Pmic_getBitField(regVal,
+                            PMIC_WD_FAIL_CNT_REG_WD_BAD_EVENT_SHIFT,
+                            PMIC_WD_FAIL_CNT_REG_WD_BAD_EVENT_MASK) != 0U)
+        {
+            pFailCount->wdBadEvent = (bool)true;
+        }
+        else
+        {
+            pFailCount->wdBadEvent = (bool)false;
+        }
+
+    }
+
+    /* Get watchdog Good Event status */
+    if((PMIC_ST_SUCCESS == status) &&
+       (((bool)true) == pmic_validParamCheck(pFailCount->validParams,
+                               PMIC_CFG_WD_GOOD_EVENT_STAT_VALID)))
+    {
+        if(Pmic_getBitField(regVal,
+                            PMIC_WD_FAIL_CNT_REG_WD_FIRST_OK_SHIFT,
+                            PMIC_WD_FAIL_CNT_REG_WD_FIRST_OK_MASK) != 0U)
+        {
+            pFailCount->wdGudEvent = (bool)true;
+        }
+        else
+        {
+            pFailCount->wdGudEvent = (bool)false;
+        }
+
+    }
+
+    /* Get watchdog Fail count Value */
+    if((PMIC_ST_SUCCESS == status) &&
+       (((bool)true) == pmic_validParamCheck(pFailCount->validParams,
+                               PMIC_CFG_WD_FAIL_CNT_VAL_VALID)))
+    {
+        pFailCount->wdFailCnt = Pmic_getBitField(regVal,
                                        PMIC_WD_FAIL_CNT_REG_WD_FAIL_CNT_SHIFT,
                                        PMIC_WD_FAIL_CNT_REG_WD_FAIL_CNT_MASK);
     }
@@ -2008,3 +2047,94 @@ int32_t Pmic_wdgClrErrStatus(Pmic_CoreHandle_t   *pPmicCoreHandle,
     return status;
 }
 
+/*!
+ * \brief   API to Write Answers in Long Window/ Window1/ Window2 Interval for
+ *          watchdog QA Sequence.
+ *
+ * Requirement: REQ_TAG(PDK-5839)
+ * Design: did_pmic_wdg_cfg_readback
+ *
+ *          This function is used to write Answers in Long Window/ Window1/
+ *          Window2 Interval for the WDG QA Sequence
+ *          User has to ensure, configure all Watchdog QA parameters properly
+ *          using Pmic_wdgSetCfg() API, before writing Answers using this API
+ *          for the QA Sequence
+ *
+ *          Note: To perform QA sequences, user has to adjust Long window
+ *                time interval, Window1 time interval and Window2 time
+ *                intervals If the Pmic_wdgQaWriteAnswer API returns
+ *                PMIC_ST_ERR_INV_WDG_ANSWER error
+ *                If the Pmic_wdgQaWriteAnswer API returns
+ *                PMIC_ST_ERR_INV_WDG_ANSWER error user has
+ *                to call Pmic_wdgGetErrorStatus API to read the WDG error.
+ *                If the WDG error is Long Window Timeout or Timeout, user has
+ *                to increase the Long window or window1 time interval
+ *                accordingly
+ *                If the WDG error is Answer early, user has to reduce the
+ *                Window1 time interval
+ *                For other WDG errors, user has to take action accordingly
+ *
+ * \param   pPmicCoreHandle  [IN]    PMIC Interface Handle
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_wdgQaSequenceWriteAnswer(Pmic_CoreHandle_t *pPmicCoreHandle)
+{
+    int32_t status     = PMIC_ST_SUCCESS;
+    uint8_t qaAnsCnt   = 0U;
+    uint8_t qaQuesCnt  = 0U;
+    uint8_t qaFdbk     = 0U;
+    uint8_t answer     = 0U;
+
+    /* Validate pPmicCoreHandle and WDG subsystem */
+    status = Pmic_WdgValidatePmicCoreHandle(pPmicCoreHandle);
+
+    /* Write Answers for Long Window */
+    if(PMIC_ST_SUCCESS == status)
+    {
+         /* Start Critical Section */
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_WD_QA_CFG_REGADDR,
+                                        &qaFdbk);
+
+        /* Stop Critical Section */
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
+
+    /* Get wdg QA Feedback value */
+    if(PMIC_ST_SUCCESS == status)
+    {
+        qaFdbk = Pmic_getBitField(qaFdbk,
+                                  PMIC_WD_QA_CFG_WD_QA_FDBK_SHIFT,
+                                  PMIC_WD_QA_CFG_WD_QA_FDBK_MASK);
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        status = Pmic_wdgReadQuesandAnswerCount(pPmicCoreHandle,
+                                                &qaAnsCnt,
+                                                &qaQuesCnt);
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        answer = Pmic_getAnswerByte(qaQuesCnt, qaAnsCnt, qaFdbk);
+
+        /* Start Critical Section */
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+
+        /*! Writing watch dog Answer */
+        status = Pmic_commIntf_sendByte(
+                               pPmicCoreHandle,
+                               PMIC_WD_ANSWER_REG_REGADDR,
+                               answer);
+
+        /* Stop Critical Section */
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
+
+    return status;
+}

@@ -196,6 +196,8 @@ extern "C" {
  */
 #define PMIC_INT_STARTUP_ENABLE_INT_MASK                         (0x02U)
 #define PMIC_INT_STARTUP_FSD_INT_MASK                            (0x10U)
+/*! Valid only PG 2.0 */
+#define PMIC_INT_STARTUP_SOFT_REBOOT_INT_MASK                    (0x20U)
 
 /*!
  * \brief  PMIC_INT_MISC Register Bit Masks
@@ -354,6 +356,8 @@ extern "C" {
 #define PMIC_INT_MISC_BIST_PASS_INT_SHIFT                       (0x0U)
 
 /*! PMIC_INT_STARTUP Register Bit Positions */
+/*! Valid only for PG2.0 */
+#define PMIC_INT_STARTUP_SOFT_REBOOT_INT_SHIFT                  (0x5U)
 #define PMIC_INT_STARTUP_FSD_INT_SHIFT                          (0x4U)
 #define PMIC_INT_STARTUP_ENABLE_INT_SHIFT                       (0x1U)
 
@@ -451,6 +455,8 @@ extern "C" {
 #define PMIC_MASK_MISC_BIST_PASS_MASK_SHIFT                         (0x0U)
 
 /*! PMIC_MASK_STARTUP Register Bit Positions */
+/*! Valid only for PG 2.0 */
+#define PMIC_MASK_STARTUP_SOFT_REBOOT_MASK_SHIFT                    (0x5U)
 #define PMIC_MASK_STARTUP_FSD_MASK_SHIFT                            (0x4U)
 #define PMIC_MASK_STARTUP_ENABLE_MASK_SHIFT                         (0x1U)
 

@@ -210,8 +210,11 @@ extern "C" {
 /*! PMIC BUCK1 Over-Voltage Interrupt */
 #define PMIC_LP8764X_BUCK1_OV_INT                   (65U)
 
+/*! PMIC SOFT REBOOT Startup Interrupt */
+#define PMIC_LP8764X_SOFT_REBOOT_INT                (66U)
+
 /*! PMIC Max Interrupt Number */
-#define PMIC_LP8764X_IRQ_MAX_NUM                    (66U)
+#define PMIC_LP8764X_IRQ_MAX_NUM                    (67U)
 
 /* @} */
 

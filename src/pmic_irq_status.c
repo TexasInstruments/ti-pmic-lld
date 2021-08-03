@@ -106,21 +106,43 @@ static int32_t Pmic_irqValidateIrqNum(const Pmic_CoreHandle_t  *pPmicCoreHandle,
                                       const uint8_t             irqNum)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t maxVal;
 
     switch(pPmicCoreHandle->pmicDeviceType)
     {
         case PMIC_DEV_LEO_TPS6594X:
-            if((irqNum > PMIC_TPS6594X_IRQ_MAX_NUM) &&
-               (irqNum != PMIC_IRQ_ALL))
+            if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
+            {
+                /* SOFT REBOOT is not valid for PG 1.0*/
+                maxVal = PMIC_TPS6594X_IRQ_MAX_NUM - 1;
+            }
+            else
+            {
+                maxVal = PMIC_TPS6594X_IRQ_MAX_NUM;
+            }
+
+            if((irqNum > maxVal) && (irqNum != PMIC_IRQ_ALL))
             {
                 pmicStatus = PMIC_ST_ERR_INV_PARAM;
             }
+
             break;
         case PMIC_DEV_HERA_LP8764X:
-            if((irqNum > PMIC_LP8764X_IRQ_MAX_NUM) && (irqNum != PMIC_IRQ_ALL))
+            if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
+            {
+                /* SOFT REBOOT is not valid for PG 1.0*/
+                maxVal = PMIC_LP8764X_IRQ_MAX_NUM - 1;
+            }
+            else
+            {
+                maxVal = PMIC_LP8764X_IRQ_MAX_NUM;
+            }
+
+            if((irqNum > maxVal) && (irqNum != PMIC_IRQ_ALL))
             {
                 pmicStatus = PMIC_ST_ERR_INV_PARAM;
             }
+
             break;
         default:
             pmicStatus = PMIC_ST_ERR_INV_DEVICE;
@@ -138,20 +160,43 @@ static int32_t Pmic_irqValidateIrqNumGetMaskIntrStatus(
                                       const uint8_t             irqNum)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t maxVal;
 
     switch(pPmicCoreHandle->pmicDeviceType)
     {
         case PMIC_DEV_LEO_TPS6594X:
-            if(irqNum > PMIC_TPS6594X_IRQ_MAX_NUM)
+            if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
+            {
+                /* SOFT REBOOT is not valid for PG 1.0*/
+                maxVal = PMIC_TPS6594X_IRQ_MAX_NUM - 1;
+            }
+            else
+            {
+                maxVal = PMIC_TPS6594X_IRQ_MAX_NUM;
+            }
+
+            if(irqNum > maxVal)
             {
                 pmicStatus = PMIC_ST_ERR_INV_PARAM;
             }
+
             break;
         case PMIC_DEV_HERA_LP8764X:
-            if(irqNum > PMIC_LP8764X_IRQ_MAX_NUM)
+            if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
+            {
+                /* SOFT REBOOT is not valid for PG 1.0*/
+                maxVal = PMIC_LP8764X_IRQ_MAX_NUM - 1;
+            }
+            else
+            {
+                maxVal = PMIC_LP8764X_IRQ_MAX_NUM;
+            }
+
+            if(irqNum > maxVal)
             {
                 pmicStatus = PMIC_ST_ERR_INV_PARAM;
             }
+
             break;
         default:
             pmicStatus = PMIC_ST_ERR_INV_DEVICE;
@@ -173,11 +218,27 @@ static int32_t Pmic_getMaxVal(const Pmic_CoreHandle_t  *pPmicCoreHandle,
     switch(pPmicCoreHandle->pmicDeviceType)
     {
         case PMIC_DEV_LEO_TPS6594X:
-            (*maxVal) = PMIC_TPS6594X_IRQ_MAX_NUM;
+            if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
+            {
+                /* SOFT REBOOT is not valid for PG 1.0*/
+                (*maxVal) = PMIC_TPS6594X_IRQ_MAX_NUM - 1;
+            }
+            else
+            {
+                (*maxVal) = PMIC_TPS6594X_IRQ_MAX_NUM;
+            }
             break;
 
         case PMIC_DEV_HERA_LP8764X:
-            (*maxVal) = PMIC_LP8764X_IRQ_MAX_NUM;
+            if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
+            {
+                /* SOFT REBOOT is not valid for PG 1.0*/
+                (*maxVal) = PMIC_LP8764X_IRQ_MAX_NUM - 1;
+            }
+            else
+            {
+                (*maxVal) = PMIC_LP8764X_IRQ_MAX_NUM;
+            }
             break;
 
         default:

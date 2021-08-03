@@ -578,7 +578,13 @@ static Pmic_IntrCfg_t gTps6594x_intCfg[] =
         PMIC_INT_BUCK1_2_BUCK1_OV_INT_SHIFT,
         PMIC_MASK_BUCK1_2_REGADDR,
         PMIC_MASK_BUCK1_2_BUCK1_OV_MASK_SHIFT
-    }
+    },
+    {
+        PMIC_INT_STARTUP_REGADDR,
+        PMIC_INT_STARTUP_SOFT_REBOOT_INT_SHIFT,
+        PMIC_MASK_STARTUP_REGADDR,
+        PMIC_MASK_STARTUP_SOFT_REBOOT_MASK_SHIFT
+    },
 };
 
 /*  PMIC TPS6594x GPIO Interrupt Mask Configuration as per
@@ -651,7 +657,7 @@ static Pmic_GpioIntrTypeCfg_t tps6594x_gpioIntrCfg[] =
         PMIC_MASK_GPIO9_11_GPIO11_RISE_MASK_SHIFT,
         PMIC_MASK_GPIO9_11_REGADDR,
         PMIC_MASK_GPIO9_11_GPIO11_FALL_MASK_SHIFT
-    }
+    },
 };
 
 /*
@@ -1101,6 +1107,14 @@ static int32_t Pmic_tps6594x_getStartupErr(Pmic_CoreHandle_t *pPmicCoreHandle,
         /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
 
+    }
+
+    if(PMIC_SILICON_REV_ID_PG_2_0 ==  pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        if((regValue & PMIC_INT_STARTUP_SOFT_REBOOT_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_SOFT_REBOOT_INT);
+        }
     }
 
     return pmicStatus;

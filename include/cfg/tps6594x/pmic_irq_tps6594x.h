@@ -259,8 +259,11 @@ extern "C" {
 /*! PMIC BUCK1 Over-Voltage Interrupt */
 #define PMIC_TPS6594X_BUCK1_OV_INT                   (87U)
 
+/*! PMIC SOFT REBOOT Startup Interrupt */
+#define PMIC_TPS6594X_SOFT_REBOOT_INT                (88U)
+
 /*! PMIC Max Interrupt Number */
-#define PMIC_TPS6594X_IRQ_MAX_NUM                    (88U)
+#define PMIC_TPS6594X_IRQ_MAX_NUM                    (89U)
 
 /* @} */
 
