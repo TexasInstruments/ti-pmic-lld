@@ -2224,14 +2224,14 @@ static void test_pmic_nPWRON_setCfgPrmValTest_pinFunc(void)
 }
 
 /*!
- * \brief   Parameter validation for nPWRON pinPolarity
+ * \brief   Parameter validation for Enable-pin Polarity
  */
-static void test_pmic_nPWRON_setCfgPrmValTest_pinPolarity(void)
+static void test_pmic_enable_setCfgPrmValTest_pinPolarity(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_GpioCfg_t gpioCfg    =
     {
-        PMIC_NPWRON_CFG_POLARITY_VALID_SHIFT,
+        PMIC_ENABLE_CFG_POLARITY_VALID_SHIFT,
         PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
@@ -7277,7 +7277,7 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_gpio_setCfgPrmValTest_outputSignalType);
     RUN_TEST(test_pmic_gpio_setCfgPrmValTest_deglitchEnable);
     RUN_TEST(test_pmic_gpio_setCfgPrmValTest_pinFunc_case1);
-    RUN_TEST(test_pmic_nPWRON_setCfgPrmValTest_pinPolarity);
+    RUN_TEST(test_pmic_enable_setCfgPrmValTest_pinPolarity);
     RUN_TEST(test_pmic_gpio_getCfgGpioPin);
     RUN_TEST(test_pmic_gpio_getCfgPrmValTest_handle);
     RUN_TEST(test_pmic_gpio_getCfgPrmValTest_pin);
