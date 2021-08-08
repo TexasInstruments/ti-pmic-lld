@@ -413,7 +413,7 @@ static int32_t setup_pmic_interrupt(uint32_t board)
     return status;
 }
 
-static const char pmicTestAppMenu[] =
+volatile static const char pmicTestAppMenu[] =
 {
     " \r\n ================================================================="
     " \r\n Manual Testcase Menu:"
@@ -427,7 +427,7 @@ static const char pmicTestAppMenu[] =
     " \r\n Enter option: "
 };
 
-
+volatile int8_t g_option = 0;
 /*!
  * \brief   Function to register FSM MCU State Unity Test App wrapper to Unity
  *          framework
@@ -441,18 +441,16 @@ static void test_pmic_fsm_mcu_testapp_runner(void)
      * @cores       : mcu1_0, mcu1_1
      */
 
-    int8_t option = -1;
-
     while(1U)
     {
         pmic_log("%s", pmicTestAppMenu);
-        if(UART_scanFmt("%d", &option) != 0U)
+        if(UART_scanFmt("%d", &g_option) != 0U)
         {
             pmic_log("Read from UART Console failed\n");
             return;
         }
 
-        switch(option)
+        switch(g_option)
         {
             case 0U:
 #if defined(SOC_J721E)

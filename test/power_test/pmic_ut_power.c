@@ -13284,7 +13284,7 @@ static const char pmicTestMenu[] =
     " \r\n Enter option: "
 };
 
-static const char pmicTestAppMenu[] =
+volatile static const char pmicTestAppMenu[] =
 {
     " \r\n ================================================================="
     " \r\n Menu:"
@@ -13298,7 +13298,8 @@ static const char pmicTestAppMenu[] =
     " \r\n Enter option: "
 };
 
-static void test_pmic_power_testapp_run_options(int8_t option)
+volatile int8_t g_option = 0;
+static void test_pmic_power_testapp_run_options()
 {
     int8_t num = -1;
     int8_t idx = 0;
@@ -13315,7 +13316,7 @@ static void test_pmic_power_testapp_run_options(int8_t option)
             pmic_printTestResult(pmic_power_tests, PMIC_POWER_NUM_OF_TESTCASES);
         }
         pmic_log("%s", pmicTestAppMenu);
-        if(option == PMIC_UT_AUTOMATE_OPTION)
+        if(g_option == PMIC_UT_AUTOMATE_OPTION)
         {
             if(idx < (sizeof(automatic_options)/sizeof(automatic_options[0])))
             {
@@ -13446,24 +13447,21 @@ static void test_pmic_power_testapp_runner(void)
      *
      * @cores       : mcu1_0, mcu1_1
      */
-    int8_t option = -1;
 
     while(1U)
     {
         pmic_log("%s", pmicTestMenu);
-        if(UART_scanFmt("%d", &option) != 0U)
+        if(UART_scanFmt("%d", &g_option) != 0U)
         {
             pmic_log("Read from UART Console failed\n");
             return;
         }
 
-        switch(option)
+        switch(g_option)
         {
             case PMIC_UT_AUTOMATE_OPTION:
-                test_pmic_power_testapp_run_options(PMIC_UT_AUTOMATE_OPTION);
-               break;
             case PMIC_UT_MANUAL_OPTION:
-                test_pmic_power_testapp_run_options(PMIC_UT_MANUAL_OPTION);
+                test_pmic_power_testapp_run_options();
                break;
             case 2U:
                 pmic_log(" \r\n Quit from application\n");
