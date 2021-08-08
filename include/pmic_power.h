@@ -297,9 +297,6 @@ extern "C" {
 /** \brief validParams value used to get voltage level status for VCCA
  *         Valid only for VCCA */
 #define PMIC_POWER_VCCA_OV_LVL_STAT_VALID                 (3U)
-/** \brief validParams value used to get status of buck reset signal
- *         Valid only for BUCK Regulator */
-#define PMIC_REGULATOR_BUCK_RESET_STAT_VALID              (4U)
 /* @} */
 
 /**
@@ -319,8 +316,6 @@ extern "C" {
                                     (1U << PMIC_POWER_RESOURCE_OV_STAT_VALID)
 #define PMIC_POWER_VCCA_OV_LVL_STAT_VALID_SHIFT         \
                                     (1U << PMIC_POWER_VCCA_OV_LVL_STAT_VALID)
-#define PMIC_REGULATOR_BUCK_RESET_STAT_VALID_SHIFT         \
-                                    (1U << PMIC_REGULATOR_BUCK_RESET_STAT_VALID)
 
 /**
  *  \anchor Pmic_PowerThermalThresholdValidParamCfg
@@ -784,15 +779,6 @@ typedef struct Pmic_PowerCommonCfg_s
  *                             \ref Pmic_LP8764x_Vcca_Voltage_Status
  *                             Valid only when
  *                             PMIC_POWER_VCCA_OV_LVL_STAT_VALID bit set
- *  \param   buckResetSignalStat
- *                             Used to read the status of buck reset signal
- *                             For valid values
- *                             Valid values for TPS6594x Leo Device
- *                             \ref Pmic_Tps6594x_Buck_Reset_Status
- *                             Valid values for LP8764x HERA Device
- *                             \ref Pmic_LP8764x_Buck_Reset_Status
- *                             Valid only when
- *                             PMIC_REGULATOR_BUCK_RESET_STAT_VALID bit set.
  */
 typedef struct Pmic_PowerResourceStat_s
 {
@@ -801,7 +787,6 @@ typedef struct Pmic_PowerResourceStat_s
     bool     underVoltageTholdStat;
     bool     overVoltageTholdStat;
     bool     overVoltageProtectionLvlStat;
-    bool     buckResetSignalStat;
 }Pmic_PowerResourceStat_t;
 
 /*!
@@ -1224,12 +1209,6 @@ int32_t Pmic_powerGetConfigPowerGood(Pmic_CoreHandle_t  *pPmicCoreHandle,
  *          the below defined structure members of
  *          Pmic_PowerResourceStat_t :
  *          overVoltageProtectionLvlStat
- *
- *          Application can get the BUCK Reset Signal status which is stored in
- *          the below defined structure members of
- *          Pmic_PowerResourceStat_t :
- *          buckResetSignalStat
- *
  *
  * \param   pPmicCoreHandle    [IN]       PMIC Interface Handle.
  * \param   pwrResource        [IN]       PMIC Power resource

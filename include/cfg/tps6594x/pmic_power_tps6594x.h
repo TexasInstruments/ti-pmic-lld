@@ -703,16 +703,6 @@ level */
 #define PMIC_TPS6594X_REGULATOR_LDORTC_DISABLE          (1U)
 /*  @} */
 
-/**
- *  \anchor Pmic_Tps6594x_Buck_Reset_Status
- *  \name   Status of Buck Reset Signal
- *
- *  @{
- */
-#define PMIC_TPS6594X_BUCK_NO_RESET           (0U)
-#define PMIC_TPS6594X_BUCK_RESET              (1U)
-/*  @} */
-
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/

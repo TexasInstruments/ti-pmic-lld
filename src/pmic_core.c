@@ -2545,6 +2545,12 @@ int32_t Pmic_setBatteryCtrlConfig(Pmic_CoreHandle_t            *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType))
+    {
+        pmicStatus = PMIC_ST_ERR_NOT_SUPPORTED;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((bool)true == pmic_validParamCheck(batteryCtrlCfg.validParams,
                                            PMIC_CFG_CHARGING_EN_VALID)))
     {
@@ -2631,6 +2637,12 @@ int32_t Pmic_getBatteryCtrlConfig(Pmic_CoreHandle_t          *pPmicCoreHandle,
     if((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pBatteryCtrlCfg))
     {
         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType))
+    {
+        pmicStatus = PMIC_ST_ERR_NOT_SUPPORTED;
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
@@ -3351,7 +3363,7 @@ int32_t Pmic_getCrcStatus(Pmic_CoreHandle_t     *pPmicCoreHandle,
 /*!
  * \brief   API to get PMIC Device Information
  *
- * Requirement: REQ_TAG(PDK-9109)
+ * Requirement: REQ_TAG(PDK-9109), REQ_TAG(PDK-9110)
  * Design: did_pmic_dev_info_cfg_readback
  *
  *          This function is used to get PMIC Device Information such as

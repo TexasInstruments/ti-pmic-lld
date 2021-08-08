@@ -1212,7 +1212,7 @@ int32_t Pmic_getCrcStatus(Pmic_CoreHandle_t     *pPmicCoreHandle,
 /*!
  * \brief   API to get PMIC Device Information
  *
- * Requirement: REQ_TAG(PDK-9109)
+ * Requirement: REQ_TAG(PDK-9109), REQ_TAG(PDK-9110)
  * Design: did_pmic_dev_info_cfg_readback
  *
  *          This function is used to get PMIC Device Information such as

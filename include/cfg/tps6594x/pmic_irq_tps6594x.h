@@ -262,7 +262,9 @@ extern "C" {
 /*! PMIC SOFT REBOOT Startup Interrupt */
 #define PMIC_TPS6594X_SOFT_REBOOT_INT                (88U)
 
-/*! PMIC Max Interrupt Number */
+/*! PMIC Max Interrupt Number on PG1.0 */
+#define PMIC_TPS6594X_IRQ_MAX_NUM_PG_1_0             (88U)
+/*! PMIC Max Interrupt Number on PG2.0 */
 #define PMIC_TPS6594X_IRQ_MAX_NUM                    (89U)
 
 /* @} */

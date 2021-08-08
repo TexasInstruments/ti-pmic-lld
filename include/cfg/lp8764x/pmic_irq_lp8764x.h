@@ -213,7 +213,9 @@ extern "C" {
 /*! PMIC SOFT REBOOT Startup Interrupt */
 #define PMIC_LP8764X_SOFT_REBOOT_INT                (66U)
 
-/*! PMIC Max Interrupt Number */
+/*! PMIC Max Interrupt Number on PG1.0 */
+#define PMIC_LP8764X_IRQ_MAX_NUM_PG_1_0             (66U)
+/*! PMIC Max Interrupt Number on PG2.0*/
 #define PMIC_LP8764X_IRQ_MAX_NUM                    (67U)
 
 /* @} */

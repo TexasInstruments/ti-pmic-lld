@@ -354,6 +354,12 @@ int32_t Pmic_fsmEnableI2cTrigger(Pmic_CoreHandle_t  *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (PMIC_FSM_I2C_TRIGGER3 == i2cTriggerType))
+    {
+        pmicStatus = PMIC_ST_ERR_NOT_SUPPORTED;
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((PMIC_SILICON_REV_ID_PG_2_0 != pPmicCoreHandle->pmicDevSiliconRev) &&
         ((i2cTriggerType > PMIC_FSM_I2C_TRIGGER0) &&
          (i2cTriggerType < PMIC_FSM_I2C_TRIGGER4))))

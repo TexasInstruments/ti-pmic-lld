@@ -169,11 +169,6 @@ extern "C" {
 #define PMIC_RAIL_SEL_3_REGADDR                   (0x43U)
 
 /*!
- * \brief  PMIC BUCK RESET Register Address
- */
-#define PMIC_BUCK_RESET_REG_REGADDR               (0x87U)
-
-/*!
  * \brief  PMIC LDO residual voltage timeout Register Address
  */
 #define PMIC_LDO_RV_TIMEOUT_REG_1_REGADDR         (0x8CU)
@@ -412,15 +407,6 @@ extern "C" {
  */
 #define PMIC_PGOOD_SEL_PGOOD_SRC_BITFIELD                   (0x1U)
 #define PMIC_PGOOD_SEL_PGOOD_SRC_REGULATOR_BITFIELD         (0x3U)
-
-/*!
- * \brief  PMIC BUCK reset bit fields
- */
-#define PMIC_BUCK_RESET_BUCK5_RESET_SHIFT                   (4U)
-#define PMIC_BUCK_RESET_BUCK4_RESET_SHIFT                   (3U)
-#define PMIC_BUCK_RESET_BUCK3_RESET_SHIFT                   (2U)
-#define PMIC_BUCK_RESET_BUCK2_RESET_SHIFT                   (1U)
-#define PMIC_BUCK_RESET_BUCK1_RESET_SHIFT                   (0U)
 
 /*!
  * \brief  PMIC LDO residual voltage bit fields
@@ -791,20 +777,6 @@ extern "C" {
 #define PMIC_PGOOD_SEL_4_PGOOD_SEL_VCCA_MASK                        \
                                   (uint8_t)(0x01U <<                \
                                   PMIC_PGOOD_SEL_4_PGOOD_SEL_VCCA_SHIFT)
-
-/*!
- * \brief  PMIC BUCK reset bit masks
- */
-#define PMIC_BUCK_RESET_BUCK5_RESET_MASK         (uint8_t)(0x01U << \
-                                           PMIC_BUCK_RESET_BUCK5_RESET_SHIFT)
-#define PMIC_BUCK_RESET_BUCK4_RESET_MASK         (uint8_t)(0x01U << \
-                                           PMIC_BUCK_RESET_BUCK4_RESET_SHIFT)
-#define PMIC_BUCK_RESET_BUCK3_RESET_MASK         (uint8_t)(0x01U << \
-                                           PMIC_BUCK_RESET_BUCK3_RESET_SHIFT)
-#define PMIC_BUCK_RESET_BUCK2_RESET_MASK         (uint8_t)(0x01U << \
-                                           PMIC_BUCK_RESET_BUCK2_RESET_SHIFT)
-#define PMIC_BUCK_RESET_BUCK1_RESET_MASK         (uint8_t)(0x01U << \
-                                           PMIC_BUCK_RESET_BUCK1_RESET_SHIFT)
 
 /*!
  * \brief  PMIC LDO residual voltage bit masks

@@ -114,7 +114,7 @@ static int32_t Pmic_irqValidateIrqNum(const Pmic_CoreHandle_t  *pPmicCoreHandle,
             if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
             {
                 /* SOFT REBOOT is not valid for PG 1.0*/
-                maxVal = PMIC_TPS6594X_IRQ_MAX_NUM - 1;
+                maxVal = PMIC_TPS6594X_IRQ_MAX_NUM_PG_1_0;
             }
             else
             {
@@ -131,7 +131,7 @@ static int32_t Pmic_irqValidateIrqNum(const Pmic_CoreHandle_t  *pPmicCoreHandle,
             if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
             {
                 /* SOFT REBOOT is not valid for PG 1.0*/
-                maxVal = PMIC_LP8764X_IRQ_MAX_NUM - 1;
+                maxVal = PMIC_LP8764X_IRQ_MAX_NUM_PG_1_0;
             }
             else
             {
@@ -168,7 +168,7 @@ static int32_t Pmic_irqValidateIrqNumGetMaskIntrStatus(
             if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
             {
                 /* SOFT REBOOT is not valid for PG 1.0*/
-                maxVal = PMIC_TPS6594X_IRQ_MAX_NUM - 1;
+                maxVal = PMIC_TPS6594X_IRQ_MAX_NUM_PG_1_0;
             }
             else
             {
@@ -185,7 +185,7 @@ static int32_t Pmic_irqValidateIrqNumGetMaskIntrStatus(
             if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
             {
                 /* SOFT REBOOT is not valid for PG 1.0*/
-                maxVal = PMIC_LP8764X_IRQ_MAX_NUM - 1;
+                maxVal = PMIC_LP8764X_IRQ_MAX_NUM_PG_1_0;
             }
             else
             {
@@ -221,7 +221,7 @@ static int32_t Pmic_getMaxVal(const Pmic_CoreHandle_t  *pPmicCoreHandle,
             if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
             {
                 /* SOFT REBOOT is not valid for PG 1.0*/
-                (*maxVal) = PMIC_TPS6594X_IRQ_MAX_NUM - 1;
+                (*maxVal) = PMIC_TPS6594X_IRQ_MAX_NUM_PG_1_0;
             }
             else
             {
@@ -233,7 +233,7 @@ static int32_t Pmic_getMaxVal(const Pmic_CoreHandle_t  *pPmicCoreHandle,
             if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
             {
                 /* SOFT REBOOT is not valid for PG 1.0*/
-                (*maxVal) = PMIC_LP8764X_IRQ_MAX_NUM - 1;
+                (*maxVal) = PMIC_LP8764X_IRQ_MAX_NUM_PG_1_0;
             }
             else
             {

@@ -252,7 +252,8 @@ extern "C" {
 #define PMIC_FSM_I2C_TRIGGER1                     (0x1U)
 /** \brief Valid only for TPS6594x Leo PMIC PG2.0 and LP8764x Hera PMIC PG2.0 */
 #define PMIC_FSM_I2C_TRIGGER2                     (0x2U)
-/** \brief Valid only for TPS6594x Leo PMIC PG2.0 and LP8764x Hera PMIC PG2.0 */
+/** \brief Configuration of PMIC_FSM_I2C_TRIGGER3 is not supported for Leo and
+ *         Hera PMIC. */
 #define PMIC_FSM_I2C_TRIGGER3                     (0x3U)
 #define PMIC_FSM_I2C_TRIGGER4                     (0x4U)
 #define PMIC_FSM_I2C_TRIGGER5                     (0x5U)
@@ -610,56 +611,6 @@ int32_t Pmic_fsmGetNsleepSignalVal(Pmic_CoreHandle_t *pPmicCoreHandle,
  */
 int32_t Pmic_fsmRecoverSocPwrErr(Pmic_CoreHandle_t *pPmicCoreHandle,
                                  const uint8_t      nsleepVal);
-
-/*!
- * \brief   API to reconfigure NVM Default using OTA Method
- *
- * Requirement: REQ_TAG(PDK-9121)
- * Design: did_pmic_fsm_ota_update_cfg
- *
- *          This function is used to reconfigure NVM Default of the PMIC Devices
- *          using OTA Method
- *          Note: Steps for OTA Update to reconfigure NVM Default values
- *          1. Application has to call this API to configure the PMIC Registers
- *             for OTA update of NVM default values
- *          2. Application can run either customized java or python script over
- *             the I2C1 or the SPI Interface
- *          3. Application has to call the API - Pmic_fsmOtaInitiateSoftReboot
- *             to do soft reboot on each PMIC for the updated NVM reload
- *          4. Application can use this API only to reconfigure NVM Default of
- *             the PMIC Devices using OTA Method
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
-int32_t Pmic_fsmOtaUpdateCfg(Pmic_CoreHandle_t *pPmicCoreHandle);
-
-/*!
- * \brief   API to do soft reboot on each PMIC for the updated NVM reload
- *
- * Requirement: REQ_TAG(PDK-9121)
- * Design: did_pmic_fsm_ota_update_cfg
- *
- *          This function is used to do soft reboot on each PMIC for the updated
- *          NVM reload
- *          Note:
- *          Application has to call this API after completion of below defined
- *          Steps for OTA Update to reconfigure NVM Default values
- *          1. Application has to call this API to configure the PMIC Registers
- *             for OTA update of NVM default values
- *          2. Application can run either customized java or python script over
- *             the I2C1 or the SPI Interface
- *          Application can use this API only to reconfigure NVM Default of
- *          the PMIC Devices using OTA Method
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
-int32_t Pmic_fsmOtaInitiateSoftReboot(Pmic_CoreHandle_t *pPmicCoreHandle);
 
 /*!
  * \brief   API to initiate FSM I2C trigger for given FSM I2C trigger type

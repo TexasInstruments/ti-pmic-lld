@@ -599,16 +599,6 @@ level */
 #define PMIC_LP8764X_POWER_INTERRUPT_EN_DRV_READBACK            (7U)
 /*  @} */
 
-/**
- *  \anchor Pmic_LP8764x_Buck_Reset_Status
- *  \name   Status of Buck Reset Signal
- *
- *  @{
- */
-#define PMIC_LP8764X_BUCK_NO_RESET                (0U)
-#define PMIC_LP8764X_BUCK_RESET                   (1U)
-/*  @} */
-
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
