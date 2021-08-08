@@ -62,5 +62,26 @@
          PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT         | \
          PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT)
 
+/*!
+ * \brief  PMIC WDG Valid Params configuration for all error status
+ */
+#define PMIC_CFG_WD_ALL_ERRSTAT_VALID_PARAMS \
+        (PMIC_CFG_WD_LONGWIN_TIMEOUT_ERRSTAT_VALID_SHIFT | \
+         PMIC_CFG_WD_TIMEOUT_ERRSTAT_VALID_SHIFT         | \
+         PMIC_CFG_WD_TRIG_EARLY_ERRSTAT_VALID_SHIFT      | \
+         PMIC_CFG_WD_ANSW_EARLY_ERRSTAT_VALID_SHIFT      | \
+         PMIC_CFG_WD_SEQ_ERR_ERRSTAT_VALID_SHIFT         | \
+         PMIC_CFG_WD_ANSW_ERR_ERRSTAT_VALID_SHIFT        | \
+         PMIC_CFG_WD_FAIL_INT_ERRSTAT_VALID_SHIFT        | \
+         PMIC_CFG_WD_RST_INT_ERRSTAT_VALID_SHIFT)
+
+/*!
+ * \brief  PMIC WDG Valid Params configuration for all Fail Count status
+ */
+#define PMIC_CFG_WD_ALL_FAILCNTSTAT_VALID_PARAMS \
+        (PMIC_CFG_WD_BAD_EVENT_STAT_VALID_SHIFT     | \
+         PMIC_CFG_WD_GOOD_EVENT_STAT_VALID_SHIFT    | \
+         PMIC_CFG_WD_FAIL_CNT_VAL_VALID_SHIFT)
+
 static int32_t test_pmic_leo_pmicA_benchmark_testApp(void);
 static int32_t test_pmic_leo_pmicA_benchmark_single_i2c_testApp(void);

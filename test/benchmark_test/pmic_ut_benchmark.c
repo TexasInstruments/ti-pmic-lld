@@ -57,20 +57,24 @@ static Pmic_Ut_Tests_t pmic_benchmark_tests[] =
      */
     {
         8234,
-        "Pmic_wdgStartQaSequence : Profifling PMIC WDG QA API"
+        "Pmic_wdgStartQaSequence : Profiling PMIC WDG QA API"
     },
     {
         8240,
-        "Pmic_init : Profifling PMIC Dual I2C Init API"
+        "Pmic_init : Profiling PMIC Dual I2C Init API"
     },
     {
         8233,
-        "Pmic_init : Profifling PMIC Single I2C Init API"
+        "Pmic_init : Profiling PMIC Single I2C Init API"
+    },
+    {
+        10415,
+        "Pmic_wdgQaSequenceWriteAnswer : Profiling PMIC WDG Answer Computation"
     },
 };
 
 /*!
- * \brief    : Profifling PMIC WDG QA API
+ * \brief    : Profiling PMIC WDG QA API
  */
 static void test_Pmic_wdg_QA_API_profiling(void)
 {
@@ -86,7 +90,7 @@ static void test_Pmic_wdg_QA_API_profiling(void)
         PMIC_WDG_RESET_THRESHOLD_COUNT_7,
         PMIC_WDG_QA_MODE,
         PMIC_WDG_PWRHOLD_DISABLE,
-        PMIC_WDG_RESET_ENABLE,
+        PMIC_WDG_RESET_DISABLE,
         PMIC_WDG_RETLONGWIN_DISABLE,
         PMIC_WDG_QA_FEEDBACK_VALUE_0,
         PMIC_WDG_QA_LFSR_VALUE_0,
@@ -104,11 +108,11 @@ static void test_Pmic_wdg_QA_API_profiling(void)
                                         pmic_benchmark_tests,
                                         PMIC_BENCHMARK_NUM_OF_TESTCASES);
     pmic_log("\n");
-    /* Profiling Enable WDG Timer */
+    /* Enable WDG Timer */
     pmicStatus = Pmic_wdgEnable(pPmicCoreHandle);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    /* Profiling WDG Set parameters */
+    /* WDG Set parameters */
     pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
@@ -118,7 +122,7 @@ static void test_Pmic_wdg_QA_API_profiling(void)
     t1 = print_timeTakenInUsecs(t1, "Pmic_wdgStartQaSequence API");
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    /* Profiling Disable WDG Timer */
+    /*  Disable WDG Timer */
     pmicStatus = Pmic_wdgDisable(pPmicCoreHandle);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
@@ -128,7 +132,7 @@ static void test_Pmic_wdg_QA_API_profiling(void)
 }
 
 /*!
- * \brief    : Profifling PMIC Dual I2C Init API
+ * \brief    : Profiling PMIC Dual I2C Init API
  */
 static void test_Pmic_init_Dual_i2c_profiling(void)
 {
@@ -154,7 +158,7 @@ static void test_Pmic_init_Dual_i2c_profiling(void)
 }
 
 /*!
- * \brief    : Profifling PMIC Single I2C Init API
+ * \brief    : Profiling PMIC Single I2C Init API
  */
 static void test_Pmic_init_single_i2c_profiling(void)
 {
@@ -179,6 +183,175 @@ static void test_Pmic_init_single_i2c_profiling(void)
                                PMIC_BENCHMARK_NUM_OF_TESTCASES);
 }
 
+/*!
+ * \brief Pmic_wdgQaSequenceWriteAnswer : Profiling PMIC WDG Answer Computation
+ */
+static void test_Pmic_wdg_answer_computation(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint64_t delta = 0;
+    int8_t  ansIndex   = 0;
+    int32_t test_failure = PMIC_ST_SUCCESS;
+    uint32_t numSequences = 1U, sequenceId;
+    Pmic_WdgErrStatus_t errStatus = {0U};
+    Pmic_WdgFailCntStat_t failCntStat = {0U};
+    bool wdgBadEventStat = false;
+    bool wdgGudEventStat = true;
+    uint32_t failCntVal = 0;
+    Pmic_WdgCfg_t wdgCfg  =
+    {
+        PMIC_WDG_CFG_SETPARAMS_FORALL,
+        750000U,
+        6050U,
+        8250U,
+        PMIC_WDG_FAIL_THRESHOLD_COUNT_7,
+        PMIC_WDG_RESET_THRESHOLD_COUNT_7,
+        PMIC_WDG_QA_MODE,
+        PMIC_WDG_PWRHOLD_DISABLE,
+        PMIC_WDG_RESET_DISABLE,
+        PMIC_WDG_RETLONGWIN_DISABLE,
+        PMIC_WDG_QA_FEEDBACK_VALUE_0,
+        PMIC_WDG_QA_LFSR_VALUE_0,
+        PMIC_WDG_QA_QUES_SEED_VALUE_10,
+    };
+    uint64_t t1 = 0U;
+
+    if((gCrcTestFlag_J721E == PMIC_STATUS_CRC_ENABLED)||
+       (gCrcTestFlag_J7VCL == PMIC_STATUS_CRC_ENABLED))
+    {
+        wdgCfg.win1Duration_us = 8350U;
+    }
+
+    test_pmic_print_unity_testcase_info(10415,
+                                        pmic_benchmark_tests,
+                                        PMIC_BENCHMARK_NUM_OF_TESTCASES);
+
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        wdgCfg.longWinDuration_ms = 752000U;
+        wdgCfg.win1Duration_us    = 7150U;
+    }
+
+     pmic_log("\n");
+    /* Enable WDG Timer */
+    pmicStatus = Pmic_wdgEnable(pPmicCoreHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* WDG Set parameters */
+    pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    errStatus.validParams = PMIC_CFG_WD_ALL_ERRSTAT_VALID_PARAMS;
+    /* Get watchdog error Status */
+    pmicStatus = Pmic_wdgGetErrorStatus(pPmicCoreHandle, &errStatus);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* Clear WDG Error bits */
+    if((errStatus.wdLongWinTimeout != 0U) ||
+       (errStatus.wdTimeout != 0U) ||
+       (errStatus.wdTrigEarly != 0U) ||
+       (errStatus.wdAnswearly != 0U) ||
+       (errStatus.wdSeqErr != 0U) ||
+       (errStatus.wdAnswErr != 0U) ||
+       (errStatus.wdFailInt != 0U) ||
+       (errStatus.wdRstInt != 0U))
+    {
+        pmicStatus = Pmic_wdgClrErrStatus(pPmicCoreHandle, PMIC_WDG_ERR_ALL);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    }
+
+    /* Write Answers for Long Window */
+    for(ansIndex = 3; ansIndex >= 0; ansIndex--)
+    {
+        pmicStatus = Pmic_wdgQaSequenceWriteAnswer(pPmicCoreHandle);
+        if(PMIC_ST_SUCCESS != pmicStatus)
+        {
+            errStatus.validParams = PMIC_CFG_WD_ALL_ERRSTAT_VALID_PARAMS;
+            /* Get watchdog error Status */
+            pmicStatus = Pmic_wdgGetErrorStatus(pPmicCoreHandle, &errStatus);
+            TEST_ASSERT_EQUAL(0U, errStatus.wdLongWinTimeout);
+            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        }
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    }
+
+    /* Start Watchdog QA sequence */
+    for(sequenceId = 0; sequenceId < numSequences; sequenceId++)
+    {
+        for(ansIndex = 3; ansIndex >= 0; ansIndex--)
+        {
+            if(ansIndex == 3)
+            {
+                /* Profiling WDG Answer Computation */
+                t1 = print_timeTakenInUsecs(0U, NULL);
+                pmicStatus = Pmic_wdgQaSequenceWriteAnswer(pPmicCoreHandle);
+                delta = print_timeTakenInUsecs(t1, NULL);
+                TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+            }
+            else
+            {
+                pmicStatus = Pmic_wdgQaSequenceWriteAnswer(pPmicCoreHandle);
+                TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+            }
+        }
+
+        errStatus.validParams = PMIC_CFG_WD_ALL_ERRSTAT_VALID_PARAMS;
+        /* Get watchdog error Status */
+        pmicStatus = Pmic_wdgGetErrorStatus(pPmicCoreHandle, &errStatus);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        failCntStat.validParams = PMIC_CFG_WD_ALL_FAILCNTSTAT_VALID_PARAMS;
+        /* Get watchdog Fail Count Status */
+        pmicStatus = Pmic_wdgGetFailCntStat(pPmicCoreHandle, &failCntStat);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        if((errStatus.wdTimeout != 0U) || (errStatus.wdAnswearly != 0U) ||
+           (errStatus.wdSeqErr != 0U) || (errStatus.wdAnswErr != 0U) ||
+           (errStatus.wdFailInt != 0U))
+        {
+            test_failure = PMIC_ST_ERR_FAIL;
+            break;
+        }
+
+        if((failCntStat.wdBadEvent != false) || (failCntStat.wdFailCnt != 0U))
+        {
+            test_failure = PMIC_ST_ERR_FAIL;
+            break;
+        }
+    }
+
+    if(failCntStat.wdGudEvent != true)
+    {
+        test_failure = PMIC_ST_ERR_FAIL;
+    }
+
+    /* Set QA parameters */
+    wdgCfg.retLongWin = PMIC_WDG_RETLONGWIN_ENABLE;
+    pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* Disable WDG Timer */
+    pmicStatus = Pmic_wdgDisable(pPmicCoreHandle);
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, test_failure);
+    TEST_ASSERT_EQUAL(wdgGudEventStat, failCntStat.wdGudEvent);
+    TEST_ASSERT_EQUAL(wdgBadEventStat, failCntStat.wdBadEvent);
+    TEST_ASSERT_EQUAL(failCntVal, failCntStat.wdFailCnt);
+
+    pmic_log("--------------------------------------\n");
+    pmic_log("Time taken for %50s: %6d usec\n",
+                "Pmic_wdgQaSequenceWriteAnswer API for single instance",
+                (uint32_t)delta);
+    pmic_log("--------------------------------------\n");
+
+
+    pmic_testResultUpdate_pass(10415,
+                               pmic_benchmark_tests,
+                               PMIC_BENCHMARK_NUM_OF_TESTCASES);
+}
+
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E) || defined(SOC_J7200))
 /*!
@@ -195,6 +368,7 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_Pmic_wdg_QA_API_profiling);
     RUN_TEST(test_Pmic_init_Dual_i2c_profiling);
     RUN_TEST(test_Pmic_init_single_i2c_profiling);
+    RUN_TEST(test_Pmic_wdg_answer_computation);
 
     pmic_updateTestResults(pmic_benchmark_tests,
                            PMIC_BENCHMARK_NUM_OF_TESTCASES);
