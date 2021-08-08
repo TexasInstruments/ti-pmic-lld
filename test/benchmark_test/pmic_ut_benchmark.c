@@ -84,7 +84,7 @@ static void test_Pmic_wdg_QA_API_profiling(void)
     {
         PMIC_WDG_CFG_SETPARAMS_FORALL,
         750000U,
-        6700U,
+        6600U,
         4950U,
         PMIC_WDG_FAIL_THRESHOLD_COUNT_7,
         PMIC_WDG_RESET_THRESHOLD_COUNT_7,

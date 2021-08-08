@@ -424,16 +424,8 @@ static Pmic_Ut_Tests_t pmic_misc_tests[] =
         "Pmic_setCommonCtrlConfig : Not Loaded from EEPROM defaults on RTC domain/conf Registers"
     },
     {
-        9990,
-        "Pmic_setCommonCtrlConfig : Enable to skip EEPROM defaults load on conf registers with FIRST_STARTUP_DONE as '0'"
-    },
-    {
         9991,
         "Pmic_setCommonCtrlConfig : Disable to skip EEPROM defaults load on conf registers with FIRST_STARTUP_DONE as '0'"
-    },
- {
-        9992,
-        "Pmic_setCommonCtrlConfig : Enable to skip EEPROM defaults load on conf registers with FIRST_STARTUP_DONE as '1'"
     },
     {
         9993,
@@ -3773,9 +3765,12 @@ static void test_pmic_setCommonCtrlCfg_eepromDefaultLoadEnable(void)
     uint8_t  data = 0x67, testData;
     int8_t num = 0;
 
-    test_pmic_print_unity_testcase_info(9988,
-                                        pmic_misc_tests,
-                                        PMIC_MISC_NUM_OF_TESTCASES);
+    if(g_skip_eeprom_test_flag == 0)
+    {
+        test_pmic_print_unity_testcase_info(9988,
+                                            pmic_misc_tests,
+                                            PMIC_MISC_NUM_OF_TESTCASES);
+    }
 
 #if defined(SOC_J721E)
     pmic_log("\r\n Probe TP134 and TP133 and it should be High");
@@ -3854,9 +3849,12 @@ static void test_pmic_setCommonCtrlCfg_eepromDefaultLoadEnable(void)
     pmicStatus =  Pmic_fsmSetMissionState(pPmicCoreHandle, PMIC_FSM_LP_STANBY_STATE);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmic_testResultUpdate_pass(9988,
-                               pmic_misc_tests,
-                               PMIC_MISC_NUM_OF_TESTCASES);
+    if(g_skip_eeprom_test_flag == 0)
+    {
+        pmic_testResultUpdate_pass(9988,
+                                   pmic_misc_tests,
+                                   PMIC_MISC_NUM_OF_TESTCASES);
+    }
 }
 
 /*!
@@ -3881,9 +3879,12 @@ static void test_pmic_setCommonCtrlCfg_eepromDefaultLoadDisable(void)
     uint8_t  data = 0x67, testData;
     int8_t num = 0;
 
-    test_pmic_print_unity_testcase_info(9989,
-                                        pmic_misc_tests,
-                                        PMIC_MISC_NUM_OF_TESTCASES);
+    if(g_skip_eeprom_test_flag == 0)
+    {
+        test_pmic_print_unity_testcase_info(9989,
+                                            pmic_misc_tests,
+                                            PMIC_MISC_NUM_OF_TESTCASES);
+    }
 
 #if defined(SOC_J721E)
     pmic_log("\r\n Probe TP134 and TP133 and it should be High");
@@ -3962,9 +3963,12 @@ static void test_pmic_setCommonCtrlCfg_eepromDefaultLoadDisable(void)
     pmicStatus =  Pmic_fsmSetMissionState(pPmicCoreHandle, PMIC_FSM_LP_STANBY_STATE);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmic_testResultUpdate_pass(9989,
-                               pmic_misc_tests,
-                               PMIC_MISC_NUM_OF_TESTCASES);
+    if(g_skip_eeprom_test_flag == 0)
+    {
+        pmic_testResultUpdate_pass(9989,
+                                   pmic_misc_tests,
+                                   PMIC_MISC_NUM_OF_TESTCASES);
+    }
 }
 
 #if defined(SOC_J7200)
@@ -5138,6 +5142,10 @@ static void test_pmic_misc_testapp_run_options()
 
                     pmic_log("\nHera PMIC Initialization!!!\n");
 
+                    test_pmic_print_unity_testcase_info(9993,
+                                                        pmic_misc_tests,
+                                                        PMIC_MISC_NUM_OF_TESTCASES);
+
                      pmicStatus = test_pmic_hera_misc_testApp();
 
                     if(PMIC_ST_SUCCESS == pmicStatus)
@@ -5177,6 +5185,12 @@ static void test_pmic_misc_testapp_run_options()
                     {
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
+
+
+                    pmic_testResultUpdate_pass(9993,
+                                               pmic_misc_tests,
+                                               PMIC_MISC_NUM_OF_TESTCASES);
+
                 }
 #else
                 pmic_log("\nInvalid Board!!!\n");
@@ -5188,7 +5202,11 @@ static void test_pmic_misc_testapp_run_options()
                 {
                     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-                    pmic_log("\nHera PMIC Initialization!!!\n");
+                     pmic_log("\nHera PMIC Initialization!!!\n");
+
+                    test_pmic_print_unity_testcase_info(9991,
+                                                        pmic_misc_tests,
+                                                        PMIC_MISC_NUM_OF_TESTCASES);
 
                      pmicStatus = test_pmic_hera_misc_testApp();
 
@@ -5229,6 +5247,11 @@ static void test_pmic_misc_testapp_run_options()
                     {
                         test_pmic_appDeInit(pPmicCoreHandle);
                     }
+
+                    pmic_testResultUpdate_pass(9991,
+                                               pmic_misc_tests,
+                                               PMIC_MISC_NUM_OF_TESTCASES);
+
                 }
 #else
                 pmic_log("\nInvalid Board!!!\n");

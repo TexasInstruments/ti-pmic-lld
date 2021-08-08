@@ -5738,7 +5738,7 @@ static void test_pmic_gpio_irq_getMaskIntrStat(void)
         if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
         {
             /* SOFT REBOOT is not valid for PG 1.0*/
-            irqNumMaxCnt = PMIC_TPS6594X_IRQ_MAX_NUM - 1;
+            irqNumMaxCnt = PMIC_TPS6594X_IRQ_MAX_NUM_PG_1_0;
         }
         else
         {
@@ -5753,7 +5753,7 @@ static void test_pmic_gpio_irq_getMaskIntrStat(void)
         if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
         {
             /* SOFT REBOOT is not valid for PG 1.0*/
-            irqNumMaxCnt = PMIC_LP8764X_IRQ_MAX_NUM - 1;
+            irqNumMaxCnt = PMIC_LP8764X_IRQ_MAX_NUM_PG_1_0;
         }
         else
         {
@@ -5898,7 +5898,7 @@ static void test_pmic_gpio_irq_getUnMaskIntrStat(void)
         if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
         {
             /* SOFT REBOOT is not valid for PG 1.0*/
-            irqNumMaxCnt = PMIC_TPS6594X_IRQ_MAX_NUM - 1;
+            irqNumMaxCnt = PMIC_TPS6594X_IRQ_MAX_NUM_PG_1_0;
         }
         else
         {
@@ -5913,7 +5913,7 @@ static void test_pmic_gpio_irq_getUnMaskIntrStat(void)
         if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
         {
             /* SOFT REBOOT is not valid for PG 1.0*/
-            irqNumMaxCnt = PMIC_LP8764X_IRQ_MAX_NUM - 1;
+            irqNumMaxCnt = PMIC_LP8764X_IRQ_MAX_NUM_PG_1_0;
         }
         else
         {

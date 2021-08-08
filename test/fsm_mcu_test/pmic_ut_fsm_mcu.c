@@ -161,27 +161,15 @@ static void test_pmic_fsmSetMissionState_mcu_active_nsleep(void)
     UART_scanFmt("%d", &num);
 
     /* Set the NSlEEP2 & NSlEEP1 Signal change to 10*/
-    status = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
-                                        PMIC_NSLEEP2_SIGNAL,
-                                        PMIC_NSLEEP_HIGH);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    status = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
-                                        PMIC_NSLEEP1_SIGNAL,
-                                        PMIC_NSLEEP_LOW);
+    status = Pmic_fsmRecoverSocPwrErr(pPmicCoreHandle,
+                                      PMIC_NSLEEP_LOW);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     Osal_delay(1);
 
     /* Set the NSlEEP2 & NSlEEP1 Signal change to 11*/
-    status = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
-                                        PMIC_NSLEEP2_SIGNAL,
-                                        PMIC_NSLEEP_HIGH);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    status = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
-                                        PMIC_NSLEEP1_SIGNAL,
-                                        PMIC_NSLEEP_HIGH);
+    status = Pmic_fsmRecoverSocPwrErr(pPmicCoreHandle,
+                                      PMIC_NSLEEP_HIGH);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
 #if defined(SOC_J721E)
