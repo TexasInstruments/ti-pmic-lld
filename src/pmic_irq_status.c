@@ -118,7 +118,7 @@ static int32_t Pmic_irqValidateIrqNum(const Pmic_CoreHandle_t  *pPmicCoreHandle,
             }
             else
             {
-                maxVal = PMIC_TPS6594X_IRQ_MAX_NUM;
+                maxVal = PMIC_TPS6594X_IRQ_MAX_NUM_PG_2_0;
             }
 
             if((irqNum > maxVal) && (irqNum != PMIC_IRQ_ALL))
@@ -135,7 +135,7 @@ static int32_t Pmic_irqValidateIrqNum(const Pmic_CoreHandle_t  *pPmicCoreHandle,
             }
             else
             {
-                maxVal = PMIC_LP8764X_IRQ_MAX_NUM;
+                maxVal = PMIC_LP8764X_IRQ_MAX_NUM_PG_2_0;
             }
 
             if((irqNum > maxVal) && (irqNum != PMIC_IRQ_ALL))
@@ -172,7 +172,7 @@ static int32_t Pmic_irqValidateIrqNumGetMaskIntrStatus(
             }
             else
             {
-                maxVal = PMIC_TPS6594X_IRQ_MAX_NUM;
+                maxVal = PMIC_TPS6594X_IRQ_MAX_NUM_PG_2_0;
             }
 
             if(irqNum > maxVal)
@@ -189,7 +189,7 @@ static int32_t Pmic_irqValidateIrqNumGetMaskIntrStatus(
             }
             else
             {
-                maxVal = PMIC_LP8764X_IRQ_MAX_NUM;
+                maxVal = PMIC_LP8764X_IRQ_MAX_NUM_PG_2_0;
             }
 
             if(irqNum > maxVal)
@@ -225,7 +225,7 @@ static int32_t Pmic_getMaxVal(const Pmic_CoreHandle_t  *pPmicCoreHandle,
             }
             else
             {
-                (*maxVal) = PMIC_TPS6594X_IRQ_MAX_NUM;
+                (*maxVal) = PMIC_TPS6594X_IRQ_MAX_NUM_PG_2_0;
             }
             break;
 
@@ -237,7 +237,7 @@ static int32_t Pmic_getMaxVal(const Pmic_CoreHandle_t  *pPmicCoreHandle,
             }
             else
             {
-                (*maxVal) = PMIC_LP8764X_IRQ_MAX_NUM;
+                (*maxVal) = PMIC_LP8764X_IRQ_MAX_NUM_PG_2_0;
             }
             break;
 
