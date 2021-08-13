@@ -1886,7 +1886,7 @@ static void test_pmic_fsmEnableI2cTrigger_prmValTest_i2cTriggerVal(void)
             continue;
         }
 
-        if(i2cTriggerType < PMIC_FSM_I2C_TRIGGER4)
+        if(i2cTriggerType < PMIC_FSM_I2C_TRIGGER3)
         {
             status = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle,
                                               i2cTriggerType,
@@ -1894,10 +1894,20 @@ static void test_pmic_fsmEnableI2cTrigger_prmValTest_i2cTriggerVal(void)
             TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
         }
 
-        status = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle,
-                                          i2cTriggerType,
-                                          2U);
-        TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+        if(i2cTriggerType != PMIC_FSM_I2C_TRIGGER3)
+        {
+            status = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle,
+                                              i2cTriggerType,
+                                              2U);
+            TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+        }
+        else
+        {
+            status = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle,
+                                              i2cTriggerType,
+                                              2U);
+            TEST_ASSERT_EQUAL(PMIC_ST_ERR_NOT_SUPPORTED, status);
+        }
     }
 
     pmic_testResultUpdate_pass(10116,

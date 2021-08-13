@@ -1275,13 +1275,6 @@ static void test_pmic_powerSetPowerResourceConfig_vmonEn_enable(void)
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
-#if defined(SOC_J7200)
-    /*Ignored due to hang in Automation test setup*/
-    pmic_testResultUpdate_ignore(7137,
-                                 pmic_power_tests,
-                                 PMIC_POWER_NUM_OF_TESTCASES);
-#endif
-
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         pPowerCfg.vmonEn = PMIC_TPS6594X_VMON_ENABLE;

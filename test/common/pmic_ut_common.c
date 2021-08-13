@@ -1131,6 +1131,7 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t *pmicHandle = NULL;
     uint8_t   i2c1SpiCrcStatus = 0xFF, i2c2CrcStatus = 0xFF;
+    uint8_t i2c1Speed, i2c2Speed;
 
     /* Initialize Pmic Semaphore */
     test_pmic_osalSemaphoreInit();
@@ -1239,8 +1240,6 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
                                            &i2c1SpiCrcStatus,
                                            &i2c2CrcStatus);
             pmic_log("\r\n pmicStatus %d i2c1SpiCrcStatus %d i2c2CrcStatus %d \r\n",pmicStatus, i2c1SpiCrcStatus, i2c2CrcStatus);
-
-
         }
 
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -1268,6 +1267,31 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
         {
             pmicStatus = Pmic_intrClr(pmicHandle);
         }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Setup I2C1 Speed based on commMode */
+            pmicStatus = Pmic_setI2CSpeedCfg(pmicHandle);
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* Get configured value for I2C1 Speed based on commMode */
+                pmicStatus = Pmic_getI2CSpeed(pmicHandle, &i2c1Speed, 
+                                              &i2c2Speed);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                if(PMIC_I2C_STANDARD_MODE == i2c1Speed)
+                {
+                    pmicStatus = PMIC_ST_SUCCESS;
+                }
+                else
+                {
+                    pmicStatus = PMIC_ST_ERR_FAIL;
+                }
+            }
+        }
+
     }
     /* For DUAL I2C Instance */
     else if(PMIC_INTF_DUAL_I2C == pmicConfigData->commMode)
@@ -1414,6 +1438,32 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
             /* Probe connected PMIC device on given i2c Instance */
             test_pmic_i2c_devices(pmicHandle, PMIC_QA_INST);
         }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Setup I2C1 Speed based on commMode */
+            pmicStatus = Pmic_setI2CSpeedCfg(pmicHandle);
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                /* Get configured value for I2C1 Speed based on commMode */
+                pmicStatus = Pmic_getI2CSpeed(pmicHandle, &i2c1Speed, 
+                                              &i2c2Speed);
+            }
+
+            if(PMIC_ST_SUCCESS == pmicStatus)
+            {
+                if((PMIC_I2C_STANDARD_MODE == i2c1Speed) &&
+                   (PMIC_I2C_STANDARD_MODE == i2c2Speed))
+                {
+                    pmicStatus = PMIC_ST_SUCCESS;
+                }
+                else
+                {
+                    pmicStatus = PMIC_ST_ERR_FAIL;
+                }
+            }
+        }
+
     }
     /* For SPI Instance */
     else if(PMIC_INTF_SPI  == pmicConfigData->commMode)
