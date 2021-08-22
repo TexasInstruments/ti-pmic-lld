@@ -1052,7 +1052,8 @@ static int32_t Pmic_gpioIntrDisable(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief   API to set PMIC GPIO configuration.
  *
- * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-5844)
+ * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-5844), REQ_TAG(PDK-9111),
+ *              REQ_TAG(PDK-9157)
  * Design: did_pmic_gpio_cfg_readback, did_pmic_lpstandby_wkup_cfg
  *
  *          This function is used to set the required configuration for the
@@ -1420,7 +1421,7 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief   API to enable/disable GPIO interrupt.
  *
- * Requirement: REQ_TAG(PDK-5808)
+ * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
  * Design: did_pmic_gpio_cfg_readback
  *
  *          This function is used to enable GPIO pin Interrupts
@@ -1484,7 +1485,7 @@ int32_t Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief   API to set configuration for NPWRON/Enable pin.
  *
- * Requirement: REQ_TAG(PDK-5808)
+ * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-9111), REQ_TAG(PDK-9162)
  * Design: did_pmic_gpio_cfg_readback
  *
  *          This function is used to set the required configuration for the

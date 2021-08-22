@@ -451,10 +451,10 @@ typedef struct Pmic_CoreCfg_s {
  *
  * Requirement: REQ_TAG(PDK-5814), REQ_TAG(PDK-5810), REQ_TAG(PDK-5813),
  *              REQ_TAG(PDK-5843), REQ_TAG(PDK-5811), REQ_TAG(PDK-5853),
- *              REQ_TAG(PDK-9129), REQ_TAG(PDK-9329)
+ *              REQ_TAG(PDK-9129), REQ_TAG(PDK-9329), REQ_TAG(PDK-9159)
  * Design: did_pmic_comm_intf_cfg, did_pmic_comm_single_i2c_cfg,
  *         did_pmic_comm_dual_i2c_cfg, did_pmic_comm_spi_cfg,
- *         did_pmic_tps6594x_j721e_support, did_pmic_lp8764x_j7vcl_support
+ *         did_pmic_tps6594x_j721e_support, did_pmic_lp8764x_j7200_support
  *
  *         This function gets device configuration from pCoreCfgData and
  *         initializes device specific information in pPmicCoreHandle after

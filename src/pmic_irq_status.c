@@ -744,7 +744,10 @@ static int32_t Pmic_extractErrStatus(const Pmic_CoreHandle_t *pPmicCoreHandle,
  *              REQ_TAG(PDK-5838), REQ_TAG(PDK-5852), REQ_TAG(PDK-5834),
  *              REQ_TAG(PDK-5806), REQ_TAG(PDK-5828), REQ_TAG(PDK-5807),
  *              REQ_TAG(PDK-5846), REQ_TAG(PDK-5812), REQ_TAG(PDK-5830),
- *              REQ_TAG(PDK-5835), REQ_TAG(PDK-5836), REQ_TAG(PDK-5845)
+ *              REQ_TAG(PDK-5835), REQ_TAG(PDK-5836), REQ_TAG(PDK-5845),
+ *              REQ_TAG(PDK-9147), REQ_TAG(PDK-9148), REQ_TAG(PDK-9149),
+ *              REQ_TAG(PDK-9113), REQ_TAG(PDK-9120), REQ_TAG(PDK-9122),
+ *              REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
  * Design: did_pmic_irq_cfg_readback
  *
  *          This function does the following:

@@ -73,10 +73,10 @@ extern "C" {
  */
 #define DRV_INIT_SUCCESS                      (0xABCD0000U)
 
-/** \brief Silicon Revision Id - PG 2.0 for Leo and Hera */
+/** \brief Silicon Revision Id - PG 2.0 for TPS6594x Leo and LP8764x Hera */
 #define PMIC_SILICON_REV_ID_PG_2_0           (0x08U)
 
-/** \brief Silicon Revision Id - PG 1.0 for Leo and Hera */
+/** \brief Silicon Revision Id - PG 1.0 for TPS6594x Leo and LP8764x Hera */
 #define PMIC_SILICON_REV_ID_PG_1_0           (0x0U)
 
 /**
@@ -151,7 +151,7 @@ extern "C" {
  *
  *  @{
  */
- /** \brief validParams value used to get Back Battery End of charge Indication
+ /** \brief validParams value used to get Backup Battery End of charge Indication
   *         Status */
 #define PMIC_CFG_BB_EOC_INDICATION_STAT_VALID               (0U)
 /** \brief validParams value used to get Register lock status */
@@ -385,12 +385,12 @@ extern "C" {
   *         modulation Depth Value */
 #define PMIC_CFG_SPREAD_SPECTRUM_DEPTH_VALID      (3U)
  /** \brief validParams value used to set/get to Enable/Disable load
-  *         from EEPROM defaults on RTC Domain(TPS6594X Leo)/ conf(LP876x Hera)
+  *         from EEPROM defaults on RTC Domain(TPS6594X Leo)/ conf(LP8764x Hera)
   *         registers */
 #define PMIC_CFG_EEPROM_DEFAULT_VALID             (4U)
  /** \brief validParams value used to set/get to Enable/Disable to
   *         skip EEPROM defaults load on conf and Other registers
-  *         Valid only for LP876x Hera*/
+  *         Valid only for LP8764x Hera*/
 #define PMIC_CFG_SKIP_EEPROM_LOAD_VALID           (5U)
 /*  @} */
 
@@ -484,13 +484,13 @@ extern "C" {
  *
  *  @{
  */
-  /** \brief validParams value used to set/get to Enable/Disable Back Battery
+  /** \brief validParams value used to set/get to Enable/Disable Backup Battery
    *         Charging */
 #define PMIC_CFG_CHARGING_EN_VALID                 (0U)
-  /** \brief validParams value used to set/get to Back Battery configuration for
+  /** \brief validParams value used to set/get to Backup Battery configuration for
    *         End of charge Voltage */
 #define PMIC_CFG_END_OF_CHARGE_VOLTAGE_VALID       (1U)
-  /** \brief validParams value used to set/get to Back Battery charging current
+  /** \brief validParams value used to set/get to Backup Battery charging current
    *         value */
 #define PMIC_CFG_CHARGE_CURRENT_VALID              (2U)
 /*  @} */
@@ -694,20 +694,20 @@ typedef struct Pmic_MiscCtrlCfg_s
  *                              from the combination of
  *                              \ref Pmic_BatteryCtrlValidParamCfg and the
  *                              corresponding member value must be updated.
- *  \param  chargingEn          Enable/Disable Back Battery Charging
+ *  \param  chargingEn          Enable/Disable Backup Battery Charging
  *                              Valid only when PMIC_CFG_CHARGING_EN_VALID
  *                              bit is set.
  *                              Valid only for TPS6594x Leo Device
  *                                 Valid values
  *                                    \ref Pmic_Tps6594xLeo_BatteryCharging_Cfg
- *  \param  endOfChargeVoltage  Back Battery configuration for End of charge
+ *  \param  endOfChargeVoltage  Backup Battery configuration for End of charge
  *                              Voltage
  *                              Valid only when
  *                              PMIC_CFG_END_OF_CHARGE_VOLTAGE_VALID bit is set.
  *                              Valid only for TPS6594x Leo Device
  *                                 Valid values
  *                                  \ref Pmic_Tps6594xLeo_EndOfChargeVoltage_Sel
- *  \param  chargeCurrent       Back Battery charging current value
+ *  \param  chargeCurrent       Backup Battery charging current value
  *                              Valid only when PMIC_CFG_CHARGE_CURRENT_VALID
  *                              bit is set.
  *                              Valid only for TPS6594x Leo Device
@@ -743,7 +743,7 @@ typedef struct Pmic_BatteryCtrlCfg_s
  *                             PMIC_CFG_FORCE_ENABLE_DRV_LOW_STAT_VALID
  *                             bit is set.
  *                                Valid values \ref Pmic_EnableDrvI2CSPICfg_Stat
- *  \param  bbEocIndication    Back Battery End of charge Indication Status
+ *  \param  bbEocIndication    Backup Battery End of charge Indication Status
  *                             Valid only when
  *                             PMIC_CFG_BB_EOC_INDICATION_STAT_VALID
  *                             bit is set
@@ -1123,7 +1123,8 @@ int32_t Pmic_getPinValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief   API to get PMIC common control parameter status.
  *
  * Requirement: REQ_TAG(PDK-9126), REQ_TAG(PDK-9124), REQ_TAG(PDK-9130),
- *              REQ_TAG(PDK-9125), REQ_TAG(PDK-9139), REQ_TAG(PDK-9138)
+ *              REQ_TAG(PDK-9125), REQ_TAG(PDK-9139), REQ_TAG(PDK-9138),
+ *              REQ_TAG(PDK-9112)
  * Design: did_pmic_common_ctrl_status_readback
  *
  *          This function is used to get the required common control parameter
@@ -1190,7 +1191,7 @@ int32_t Pmic_enableCRC(Pmic_CoreHandle_t     *pPmicCoreHandle);
  * \brief   API to get CRC Status
  *
  * Requirement: REQ_TAG(PDK-9329)
- * Design: did_pmic_CRC_status
+ * Design: did_pmic_crc_status
  *
  *          This function is used to get the CRC Status based on commMode
  *
@@ -1212,8 +1213,9 @@ int32_t Pmic_getCrcStatus(Pmic_CoreHandle_t     *pPmicCoreHandle,
 /*!
  * \brief   API to get PMIC Device Information
  *
- * Requirement: REQ_TAG(PDK-9109), REQ_TAG(PDK-9110)
- * Design: did_pmic_dev_info_cfg_readback
+ * Requirement: REQ_TAG(PDK-9109), REQ_TAG(PDK-9110), REQ_TAG(PDK-9149),
+ *              REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
+ * Design: did_pmic_dev_info_readback
  *
  *          This function is used to get PMIC Device Information such as
  *          TI DeviceID, TI NVM ID, TI NVM Revision, TI Silicon Revision,

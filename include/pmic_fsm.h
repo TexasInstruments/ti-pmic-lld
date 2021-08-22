@@ -252,8 +252,8 @@ extern "C" {
 #define PMIC_FSM_I2C_TRIGGER1                     (0x1U)
 /** \brief Valid only for TPS6594x Leo PMIC PG2.0 and LP8764x Hera PMIC PG2.0 */
 #define PMIC_FSM_I2C_TRIGGER2                     (0x2U)
-/** \brief Configuration of PMIC_FSM_I2C_TRIGGER3 is not supported for Leo and
- *         Hera PMIC. */
+/** \brief Configuration of PMIC_FSM_I2C_TRIGGER3 is not supported for TPS6594x
+ *         Leo and LP8764x Hera PMIC. */
 #define PMIC_FSM_I2C_TRIGGER3                     (0x3U)
 #define PMIC_FSM_I2C_TRIGGER4                     (0x4U)
 #define PMIC_FSM_I2C_TRIGGER5                     (0x5U)
@@ -279,7 +279,7 @@ extern "C" {
  *  @{
  */
 #define PMIC_FSM_DDR_RETENTION_MODE                 (0x0U)
-/** \brief Valid only for J7VCL SOC*/
+/** \brief Valid only for J7200 SOC*/
 #define PMIC_FSM_GPIO_RETENTION_MODE                (0x1U)
 /*  @} */
 
@@ -333,7 +333,7 @@ typedef struct Pmic_FsmCfg_s
 /*!
  * \brief  API to initiate OFF Request FSM transition.
  *
- * Requirement: REQ_TAG(PDK-5851)
+ * Requirement: REQ_TAG(PDK-5851), REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
  * Design: did_pmic_lpstandby_cfg
  *
  *         This function initiate OFF Request FSM transition from any other
@@ -590,7 +590,7 @@ int32_t Pmic_fsmGetNsleepSignalVal(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief   API to recover from SOC Power Error using Nsleep1B and Nsleep2B
  *          signal
  *
- * Requirement: REQ_TAG(PDK-9123)
+ * Requirement: REQ_TAG(PDK-9123), REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
  * Design: did_pmic_fsm_recover_soc_pwr_err
  *
  *          This function is used to recover from SOC Power Error without
@@ -668,7 +668,7 @@ int32_t Pmic_fsmGetI2cTriggerVal(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  *         This function initiates a request to exercise DDR/GPIO Retention Mode
  *         on the device based on the Retention Mode
- *         Note: PMIC_FSM_GPIO_RETENTION_MODE is valid only for J7VCL SOC
+ *         Note: PMIC_FSM_GPIO_RETENTION_MODE is valid only for J7200 SOC
  *         In this API, the default SOC Type is assumed as J721E SOC
  *         While adding support for other SOCs, developer need to update the API
  *         functionality for New SOC device accordingly.
@@ -677,7 +677,7 @@ int32_t Pmic_fsmGetI2cTriggerVal(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \param   retentionMode    [IN]  Retention Mode
  *                                   Valid values: \ref Pmic_Fsm_Retention_Mode
  *                                     PMIC_FSM_GPIO_RETENTION_MODE is valid
- *                                     only for J7VCL SOC
+ *                                     only for J7200 SOC
  * \param   i2cTriggerVal    [IN]   FSM I2C Trigger Value
  *                                   Valid values: \ref Pmic_Fsm_I2c_Trigger_Val
  *

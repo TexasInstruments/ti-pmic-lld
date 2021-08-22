@@ -99,29 +99,29 @@ extern "C" {
 
 /**
  *  \anchor Pmic_Tps6594xLeo_Charging_Current_Sel
- *  \name   PMIC Selects Back Battery charging current
+ *  \name   PMIC Selects Backup Battery charging current
  *
  *  @{
  */
-/** \brief  Back Battery charging current as 100 Micro Ampere */
+/** \brief  Backup Battery charging current as 100 Micro Ampere */
 #define PMIC_TPS6594X_BB_CHARGING_CURRENT_100      (0U)
-/** \brief  Back Battery charging current as 500 Micro Ampere */
+/** \brief  Backup Battery charging current as 500 Micro Ampere */
 #define PMIC_TPS6594X_BB_CHARGING_CURRENT_500      (1U)
 /*  @} */
 
 /**
  *  \anchor Pmic_Tps6594xLeo_EndOfChargeVoltage_Sel
- *  \name   PMIC Back Battery charger End of Charge Volatge selection
+ *  \name   PMIC Backup Battery charger End of Charge Volatge selection
  *
  *  @{
  */
-/** \brief  Back Battery charger End of Charge Volatge as 2.5V  */
+/** \brief  Backup Battery charger End of Charge Volatge as 2.5V  */
 #define PMIC_TPS6594X_BB_ENDOF_CHARGE_VOLATGE_2_5_V      (0U)
-/** \brief  Back Battery charger End of Charge Volatge as 2.8V  */
+/** \brief  Backup Battery charger End of Charge Volatge as 2.8V  */
 #define PMIC_TPS6594X_BB_ENDOF_CHARGE_VOLATGE_2_8_V      (1U)
-/** \brief  Back Battery charger End of Charge Volatge as 3.0V  */
+/** \brief  Backup Battery charger End of Charge Volatge as 3.0V  */
 #define PMIC_TPS6594X_BB_ENDOF_CHARGE_VOLATGE_3_0_V      (2U)
-/** \brief  Back Battery charger End of Charge Volatge as 3.3V  */
+/** \brief  Backup Battery charger End of Charge Volatge as 3.3V  */
 #define PMIC_TPS6594X_BB_ENDOF_CHARGE_VOLATGE_3_3_V      (3U)
 /*  @} */
 
@@ -143,9 +143,9 @@ extern "C" {
  *
  *  @{
  */
- /** \brief  Back Battery Charging active or not enabled  */
+ /** \brief  Backup Battery Charging active or not enabled  */
 #define PMIC_TPS6594X_BB_EOC_STATUS_NOT_ENABLED   (0U)
- /** \brief  Back Battery Charger reached termination voltage set by BB_VEOC */
+ /** \brief  Backup Battery Charger reached termination voltage set by BB_VEOC */
 #define PMIC_TPS6594X_BB_EOC_STATUS_READY         (1U)
 /*  @} */
 

@@ -534,7 +534,7 @@ static int32_t Pmic_setState(Pmic_CoreHandle_t  *pPmicCoreHandle,
 /*!
  * \brief  API to initiate OFF Request FSM transition.
  *
- * Requirement: REQ_TAG(PDK-5851)
+ * Requirement: REQ_TAG(PDK-5851), REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
  * Design: did_pmic_lpstandby_cfg
  *
  *         This function initiate OFF Request FSM transition from any other
@@ -1578,7 +1578,7 @@ int32_t Pmic_fsmGetPfsmDelay(Pmic_CoreHandle_t  *pPmicCoreHandle,
  * \brief   API to recover from SOC Power Error using Nsleep1B and Nsleep2B
  *          signal
  *
- * Requirement: REQ_TAG(PDK-9123)
+ * Requirement: REQ_TAG(PDK-9123), REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
  * Design: did_pmic_fsm_recover_soc_pwr_err
  *
  *          This function is used to recover from SOC Power Error without

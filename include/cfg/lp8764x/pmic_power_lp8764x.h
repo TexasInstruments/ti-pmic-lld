@@ -337,7 +337,7 @@ extern "C" {
 #define PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT           (2U)
 #define PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC       (3U)
 #define PMIC_LP8764X_PGOOD_SOURCE_TYPE_TDIE              (4U)
-/* LDO type is not supported by HERA PMIC */
+/* LDO type is not supported by HERA LP8764X PMIC */
 #define PMIC_LP8764X_PGOOD_SOURCE_TYPE_VMON              (6U)
 /*  @} */
 

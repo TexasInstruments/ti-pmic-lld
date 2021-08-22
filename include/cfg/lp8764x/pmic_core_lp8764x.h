@@ -53,10 +53,10 @@ extern "C" {
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* On J7VCL 1.0 EVM, PMIC_HERA_DEV_REV_ID is 0x03 */
+/* On J7200 1.0 EVM, PMIC_HERA_DEV_REV_ID is 0x03 */
 #define PMIC_HERA_DEV_REV_ID_PG_1_0          (0x03U)
 
-/* On J7VCL 2.0 EVM, PMIC_HERA_DEV_REV_ID is 0x43U */
+/* On J7200 2.0 EVM, PMIC_HERA_DEV_REV_ID is 0x43U */
 #define PMIC_HERA_DEV_REV_ID_PG_2_0          (0x43U)
 
 /**

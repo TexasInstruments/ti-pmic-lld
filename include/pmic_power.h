@@ -888,7 +888,8 @@ typedef struct Pmic_PowerThermalStat_s
  * \brief   API to set power resources configurations.
  *
  * Requirement: REQ_TAG(PDK-5829), REQ_TAG(PDK-5841), REQ_TAG(PDK-5848),
- *              REQ_TAG(PDK-9111)
+ *              REQ_TAG(PDK-9111), REQ_TAG(PDK-9163), REQ_TAG(PDK-9149),
+ *              REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
  * Design: did_pmic_power_cfg_readback
  *
  *          This function can be used to configure the various control and
@@ -947,7 +948,8 @@ int32_t Pmic_powerSetPwrResourceCfg(
 /**
  * \brief   API to get power resources configurations.
  *
- * Requirement: REQ_TAG(PDK-5829), REQ_TAG(PDK-5848), REQ_TAG(PDK-5850)
+ * Requirement: REQ_TAG(PDK-5829), REQ_TAG(PDK-5848), REQ_TAG(PDK-5850),
+ *              REQ_TAG(PDK-9163)
  * Design: did_pmic_power_cfg_readback
  *
  *          This function can be used to get the various control and
@@ -1006,8 +1008,9 @@ int32_t Pmic_powerGetPwrResourceCfg(
 /**
  * \brief   API to Set Power configuration
  *
- * Requirement: REQ_TAG(PDK-5829), REQ_TAG(PDK-5848), REQ_TAG(PDK_5847),
- *              REQ_TAG(PDK-9111)
+ * Requirement: REQ_TAG(PDK-5829), REQ_TAG(PDK-5848), REQ_TAG(PDK-5847),
+ *              REQ_TAG(PDK-9111), REQ_TAG(PDK-9149), REQ_TAG(PDK-9159),
+ *              REQ_TAG(PDK-9329)
  * Design: did_pmic_power_cfg_readback, did_pmic_power_pgood_cfg_readback
  *
  *          This function is used to set the power configuration
@@ -1172,8 +1175,7 @@ int32_t Pmic_powerGetConfigPowerGood(Pmic_CoreHandle_t  *pPmicCoreHandle,
 /**
  * \brief   API to get power resources status.
  *
- * Requirement: REQ_TAG(PDK-5829), REQ_TAG(PDK-5848), REQ_TAG(PDK-9140),
- *              REQ_TAG(PDK-5850)
+ * Requirement: REQ_TAG(PDK-5829), REQ_TAG(PDK-5848), REQ_TAG(PDK-5850)
  * Design: did_pmic_power_cfg_readback
  *
  *          This function can be used to get the status related to current limit
@@ -1268,7 +1270,7 @@ int32_t Pmic_powerGetPwrThermalStat(
 /**
  * \brief    API to configure the thermal temperature threshold level for PMIC.
  *
- * Requirement: REQ_TAG(PDK-5840), REQ_TAG(PDK-9111)
+ * Requirement: REQ_TAG(PDK-5840), REQ_TAG(PDK-9111), REQ_TAG(PDK-9117)
  * Design: did_pmic_power_thermal_cfg_readback
  *
  *           This function is used to set the thermal threshold level for PMIC
@@ -1299,7 +1301,7 @@ int32_t Pmic_powerSetThermalConfig(
 /**
  * \brief   Get the PMIC thermal threshold value function.
  *
- * Requirement: REQ_TAG(PDK-5840)
+ * Requirement: REQ_TAG(PDK-5840), REQ_TAG(PDK-9117)
  * Design: did_pmic_power_thermal_cfg_readback
  *
  *          This function is used to get the thermal temperature threshold

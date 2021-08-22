@@ -31,7 +31,7 @@
 #
 #
 ifdef OS
-	RM = del
+	RM = rm
 	RMDIR = rmdir
 	MKDIR = mkdir
 	FixPath = $(subst /,\,$1)

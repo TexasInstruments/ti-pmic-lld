@@ -347,10 +347,11 @@ int32_t Pmic_getRecoveryCnt(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief  API to Initialize pmic core handle for PMIC LLD.
  *
  * Requirement: REQ_TAG(PDK-5814), REQ_TAG(PDK-5810), REQ_TAG(PDK-5813),
- *              REQ_TAG(PDK-5843), REQ_TAG(PDK-5811), REQ_TAG(PDK-5853)
+ *              REQ_TAG(PDK-5843), REQ_TAG(PDK-5811), REQ_TAG(PDK-5853),
+ *              REQ_TAG(PDK-9159)
  * Design: did_pmic_comm_intf_cfg, did_pmic_comm_single_i2c_cfg,
  *         did_pmic_comm_dual_i2c_cfg, did_pmic_comm_spi_cfg,
- *         did_pmic_tps6594x_j721e_support, did_pmic_lp8764x_j7vcl_support
+ *         did_pmic_tps6594x_j721e_support, did_pmic_lp8764x_j7200_support
  *
  *         This function gets device configuration from pCoreCfgData and
  *         initializes device specific information in pPmicCoreHandle after
@@ -2337,7 +2338,7 @@ int32_t Pmic_getMiscCtrlConfig(Pmic_CoreHandle_t          *pPmicCoreHandle,
 }
 
 /*!
- * \brief  API to Enable/Disable Back Battery Charging
+ * \brief  API to Enable/Disable Backup Battery Charging
  */
 static int32_t Pmic_backupBatteryChargingEnable(
                                   Pmic_CoreHandle_t            *pPmicCoreHandle,
@@ -2370,7 +2371,7 @@ static int32_t Pmic_backupBatteryChargingEnable(
 }
 
 /*!
- * \brief  API to get the status of Back Battery Charging is Enabled/Disabled
+ * \brief  API to get the status of Backup Battery Charging is Enabled/Disabled
  */
 static int32_t Pmic_getBackupBatteryChargingCfg(
                                     Pmic_CoreHandle_t          *pPmicCoreHandle,
@@ -2397,7 +2398,7 @@ static int32_t Pmic_getBackupBatteryChargingCfg(
 }
 
 /*!
- * \brief  API to Set Back Battery configuration for End of charge Voltage
+ * \brief  API to Set Backup Battery configuration for End of charge Voltage
  */
 static int32_t Pmic_setBackupBatteryEndOfChargeVoltage(
                                   Pmic_CoreHandle_t            *pPmicCoreHandle,
@@ -2430,7 +2431,7 @@ static int32_t Pmic_setBackupBatteryEndOfChargeVoltage(
 }
 
 /*!
- * \brief  API to get Back Battery configuration for End of charge Voltage
+ * \brief  API to get Backup Battery configuration for End of charge Voltage
  */
 static int32_t Pmic_getBackupBatteryEndOfChargeVoltage(
                                     Pmic_CoreHandle_t          *pPmicCoreHandle,
@@ -2457,7 +2458,7 @@ static int32_t Pmic_getBackupBatteryEndOfChargeVoltage(
 }
 
 /*!
- * \brief  API to get Back Battery charging current value
+ * \brief  API to get Backup Battery charging current value
  */
 static int32_t Pmic_setBackupBatteryChargingCurrentVal(
                                   Pmic_CoreHandle_t            *pPmicCoreHandle,
@@ -2490,7 +2491,7 @@ static int32_t Pmic_setBackupBatteryChargingCurrentVal(
 }
 
 /*!
- * \brief  API to get Back Battery charging current value
+ * \brief  API to get Backup Battery charging current value
  */
 static int32_t Pmic_getBackupBatteryChargingCurrentVal(
                                     Pmic_CoreHandle_t          *pPmicCoreHandle,
@@ -2554,7 +2555,7 @@ int32_t Pmic_setBatteryCtrlConfig(Pmic_CoreHandle_t            *pPmicCoreHandle,
        ((bool)true == pmic_validParamCheck(batteryCtrlCfg.validParams,
                                            PMIC_CFG_CHARGING_EN_VALID)))
     {
-        /* Enable/Disable Back Battery Charging */
+        /* Enable/Disable Backup Battery Charging */
         pmicStatus = Pmic_backupBatteryChargingEnable(pPmicCoreHandle,
                                                       batteryCtrlCfg);
     }
@@ -2572,7 +2573,7 @@ int32_t Pmic_setBatteryCtrlConfig(Pmic_CoreHandle_t            *pPmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            /* Set Back Battery configuration for End of charge Voltage*/
+            /* Set Backup Battery configuration for End of charge Voltage*/
             pmicStatus = Pmic_setBackupBatteryEndOfChargeVoltage(
                                                               pPmicCoreHandle,
                                                               batteryCtrlCfg);
@@ -2593,7 +2594,7 @@ int32_t Pmic_setBatteryCtrlConfig(Pmic_CoreHandle_t            *pPmicCoreHandle,
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            /* Set Back Battery charging current value*/
+            /* Set Backup Battery charging current value*/
             pmicStatus = Pmic_setBackupBatteryChargingCurrentVal(
                                                                 pPmicCoreHandle,
                                                                 batteryCtrlCfg);
@@ -2649,7 +2650,7 @@ int32_t Pmic_getBatteryCtrlConfig(Pmic_CoreHandle_t          *pPmicCoreHandle,
        ((bool)true == pmic_validParamCheck(pBatteryCtrlCfg->validParams,
                                            PMIC_CFG_CHARGING_EN_VALID)))
     {
-        /* Get the status of Back Battery Charging is Enabled/Disabled  */
+        /* Get the status of Backup Battery Charging is Enabled/Disabled  */
         pmicStatus = Pmic_getBackupBatteryChargingCfg(pPmicCoreHandle,
                                                       pBatteryCtrlCfg);
     }
@@ -2659,7 +2660,7 @@ int32_t Pmic_getBatteryCtrlConfig(Pmic_CoreHandle_t          *pPmicCoreHandle,
                                          pBatteryCtrlCfg->validParams,
                                          PMIC_CFG_END_OF_CHARGE_VOLTAGE_VALID)))
     {
-        /* Get Back Battery configuration for End of charge Voltage*/
+        /* Get Backup Battery configuration for End of charge Voltage*/
         pmicStatus = Pmic_getBackupBatteryEndOfChargeVoltage(pPmicCoreHandle,
                                                    pBatteryCtrlCfg);
     }
@@ -2668,7 +2669,7 @@ int32_t Pmic_getBatteryCtrlConfig(Pmic_CoreHandle_t          *pPmicCoreHandle,
        ((bool)true == pmic_validParamCheck(pBatteryCtrlCfg->validParams,
                                            PMIC_CFG_CHARGE_CURRENT_VALID)))
     {
-        /* Get Back Battery charging current value*/
+        /* Get Backup Battery charging current value*/
         pmicStatus = Pmic_getBackupBatteryChargingCurrentVal(pPmicCoreHandle,
                                                              pBatteryCtrlCfg);
     }
@@ -2822,7 +2823,7 @@ static int32_t Pmic_getEnableDrvI2CSPICfg(
 }
 
 /*!
- * \brief  API to get Back Battery charging End of charge Indication Status
+ * \brief  API to get Backup Battery charging End of charge Indication Status
  */
 static int32_t Pmic_getBackupBatteryEocIndicationStat(
                                     Pmic_CoreHandle_t          *pPmicCoreHandle,
@@ -3046,7 +3047,8 @@ static int32_t Pmic_getNIntPinStat(Pmic_CoreHandle_t          *pPmicCoreHandle,
  * \brief   API to get PMIC common control parameter status.
  *
  * Requirement: REQ_TAG(PDK-9126), REQ_TAG(PDK-9124), REQ_TAG(PDK-9130),
- *              REQ_TAG(PDK-9125), REQ_TAG(PDK-9139), REQ_TAG(PDK-9138)
+ *              REQ_TAG(PDK-9125), REQ_TAG(PDK-9139), REQ_TAG(PDK-9138),
+ *              REQ_TAG(PDK-9112)
  * Design: did_pmic_common_ctrl_status_readback
  *
  *          This function is used to get the required common control parameter
@@ -3100,7 +3102,7 @@ int32_t Pmic_getCommonCtrlStat(Pmic_CoreHandle_t           *pPmicCoreHandle,
                                         pCommonCtrlStat->validParams,
                                         PMIC_CFG_BB_EOC_INDICATION_STAT_VALID)))
     {
-        /* Get Back Battery charging End of charge Indication Status*/
+        /* Get Backup Battery charging End of charge Indication Status*/
         pmicStatus = Pmic_getBackupBatteryEocIndicationStat(pPmicCoreHandle,
                                                             pCommonCtrlStat);
     }
@@ -3288,7 +3290,7 @@ int32_t Pmic_enableCRC(Pmic_CoreHandle_t     *pPmicCoreHandle)
  * \brief   API to get CRC Status
  *
  * Requirement: REQ_TAG(PDK-9329)
- * Design: did_pmic_CRC_status
+ * Design: did_pmic_crc_status
  *
  *          This function is used to get the CRC Status based on commMode
  *
@@ -3363,8 +3365,9 @@ int32_t Pmic_getCrcStatus(Pmic_CoreHandle_t     *pPmicCoreHandle,
 /*!
  * \brief   API to get PMIC Device Information
  *
- * Requirement: REQ_TAG(PDK-9109), REQ_TAG(PDK-9110)
- * Design: did_pmic_dev_info_cfg_readback
+ * Requirement: REQ_TAG(PDK-9109), REQ_TAG(PDK-9110), REQ_TAG(PDK-9149),
+ *              REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
+ * Design: did_pmic_dev_info_readback
  *
  *          This function is used to get PMIC Device Information such as
  *          TI DeviceID, TI NVM ID, TI NVM Revision, TI Silicon Revision,

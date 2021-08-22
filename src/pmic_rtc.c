@@ -2601,7 +2601,7 @@ int32_t  Pmic_rtcEnableTimerIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief   API to Get the Reset status of RTC.
  *
- * Requirement: REQ_TAG(PDK-9145)
+ * Requirement: REQ_TAG(PDK-9145), REQ_TAG(PDK-9142)
  * Design: did_pmic_rtc_rst_status
  *
  *          This function is used to get the Reset status of the RTC
