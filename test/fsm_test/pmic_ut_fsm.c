@@ -232,11 +232,11 @@ static Pmic_Ut_Tests_t pmic_fsm_tests[] =
     },
     {
         10109,
-        "Pmic_fsmRecoverSocPwrErr: Configure NSleep1 Signal as Low"
+        "Pmic_fsmRecoverSocPwrErr: Configure NSleep1 Signal as Low and NSleep2 Signal to High"
     },
     {
         10110,
-        "Pmic_fsmRecoverSocPwrErr: Configure NSleep1 Signal as High"
+        "Pmic_fsmRecoverSocPwrErr: Configure NSleep1 Signal as High and NSleep2 Signal to High"
     },
     {
         10111,
@@ -1567,7 +1567,8 @@ static void test_pmic_fsmGetNsleepSignalVal_prmValTest_nsleepVal(void)
 
 #if 0
 /*!
- * \brief   Pmic_fsmRecoverSocPwrErr: Configure NSleep1 Signal as Low
+ * \brief   Pmic_fsmRecoverSocPwrErr: Configure NSleep1 Signal as Low and
+ *          NSleep2 Signal to High
  */
 static void test_pmic_fsmRecoverSocPwrErr_nsleepLow(void)
 {
@@ -1587,7 +1588,8 @@ static void test_pmic_fsmRecoverSocPwrErr_nsleepLow(void)
 }
 
 /*!
- * \brief   Pmic_fsmRecoverSocPwrErr: Configure NSleep1 Signal as High
+ * \brief   Pmic_fsmRecoverSocPwrErr: Configure NSleep1 Signal as High and
+ *          NSleep2 Signal to High
  */
 static void test_pmic_fsmRecoverSocPwrErr_nsleepHigh(void)
 {

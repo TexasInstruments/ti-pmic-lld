@@ -855,7 +855,7 @@ static void test_pmic_rtc_testWakeup_TimerIntr_lpStandbyState(void)
 
     if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
     {
-        /*PMIC wakeup from LP Standby state using RTC Time Interrupt is not working - Known Issue*/
+        /*Refer the Bug PDK-10450 for more details*/
         pmic_testResultUpdate_ignore(8239,
                                      pmic_stress_tests,
                                      PMIC_STRESS_NUM_OF_TESTCASES);

@@ -849,10 +849,6 @@ static Pmic_Ut_Tests_t pmic_power_tests[] =
         "Pmic_powerSetLdoRtc : Negative test Disable ldortcRegulator for HERA"
     },
     {
-        7877,
-        "Pmic_powerSetPwrResourceCfg : Negative test BUCK switching frequency for 8.8M for LEO"
-    },
-    {
         7878,
         "Pmic_powerGetPwrResourceCfg : Negative test Get Switch peak current limit for BUCK 5"
     },

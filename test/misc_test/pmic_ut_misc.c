@@ -253,15 +253,15 @@ static Pmic_Ut_Tests_t pmic_misc_tests[] =
     },
     {
         9942,
-        "Pmic_setBatteryCtrlConfig : Enable/Disable Back Battery Charging"
+        "Pmic_setBatteryCtrlConfig : Enable/Disable Backup Battery Charging"
     },
     {
         9943,
-        "Pmic_setBatteryCtrlConfig : Configure Back Battery configuration for End of charge Voltage"
+        "Pmic_setBatteryCtrlConfig : Configure Backup Battery configuration for End of charge Voltage"
     },
     {
         9944,
-        "Pmic_setBatteryCtrlConfig : Configure Back Battery charging current value"
+        "Pmic_setBatteryCtrlConfig : Configure Backup Battery charging current value"
     },
     {
         9945,
@@ -422,6 +422,10 @@ static Pmic_Ut_Tests_t pmic_misc_tests[] =
     {
         9989,
         "Pmic_setCommonCtrlConfig : Not Loaded from EEPROM defaults on RTC domain/conf Registers"
+    },
+    {
+        9990,
+        "Pmic_setCommonCtrlConfig : Enable to skip EEPROM defaults load on conf registers with FIRST_STARTUP_DONE as '0'"
     },
     {
         9991,
@@ -2449,7 +2453,7 @@ static void test_pmic_getMiscCtrlCfgPrmValTest_pMiscCtrlCfg(void)
 }
 
 /*!
- * \brief   Pmic_setBatteryCtrlConfig : Enable/Disable Back Battery Charging
+ * \brief   Pmic_setBatteryCtrlConfig : Enable/Disable Backup Battery Charging
  */
 static void test_pmic_setBatteryCtrlCfg_chargingEn(void)
 {
@@ -2514,7 +2518,8 @@ static void test_pmic_setBatteryCtrlCfg_chargingEn(void)
 }
 
 /*!
- * \brief   Pmic_setBatteryCtrlConfig : Configure Back Battery configuration for End of charge Voltage
+ * \brief   Pmic_setBatteryCtrlConfig : Configure Backup Battery configuration
+ *          for End of charge Voltage
  */
 static void test_pmic_setBatteryCtrlCfg_endOfChargeVoltage(void)
 {
@@ -2576,7 +2581,8 @@ static void test_pmic_setBatteryCtrlCfg_endOfChargeVoltage(void)
 }
 
 /*!
- * \brief   Pmic_setBatteryCtrlConfig : Configure Back Battery charging current value
+ * \brief   Pmic_setBatteryCtrlConfig : Configure Backup Battery charging
+ *          current value
  */
 static void test_pmic_setBatteryCtrlCfg_chargeCurrent(void)
 {
@@ -3387,6 +3393,7 @@ static void test_pmic_setMiscCtrlCfg_nRstOutSocSignal(void)
                                         pmic_misc_tests,
                                         PMIC_MISC_NUM_OF_TESTCASES);
 
+#if defined(SOC_J721E)
     if((PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev) &&
        (PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType))
     {
@@ -3396,6 +3403,7 @@ static void test_pmic_setMiscCtrlCfg_nRstOutSocSignal(void)
                                      pmic_misc_tests,
                                      PMIC_MISC_NUM_OF_TESTCASES);
     }
+#endif
 
     pmicStatus = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -3772,6 +3780,14 @@ static void test_pmic_setCommonCtrlCfg_eepromDefaultLoadEnable(void)
                                             PMIC_MISC_NUM_OF_TESTCASES);
     }
 
+    /*Refer the Bug PDK-10450 for more details*/
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        pmic_testResultUpdate_ignore(9988,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
+    }
+
 #if defined(SOC_J721E)
     pmic_log("\r\n Probe TP134 and TP133 and it should be High");
 #endif
@@ -3827,8 +3843,11 @@ static void test_pmic_setCommonCtrlCfg_eepromDefaultLoadEnable(void)
 
     if(g_skip_eeprom_test_flag == 0)
         pmic_log("\r\n Also check for PFSM delay 3 Value register same as EEPROM registers - 0");
+    else if(g_skip_eeprom_test_flag == 2)
+        pmic_log("\r\n Also check for Configured PFSM delay 3 Value register as 0x67 both in Leo and Hera PMIC");
     else
         pmic_log("\r\n Also check for PFSM delay 3 Value register same as EEPROM registers - 0 both in Leo and Hera PMIC");
+
 
     pmicStatus = Pmic_rtcEnableTimerIntr(pPmicCoreHandle, PMIC_RTC_TIMER_INTR_ENABLE);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -3884,6 +3903,14 @@ static void test_pmic_setCommonCtrlCfg_eepromDefaultLoadDisable(void)
         test_pmic_print_unity_testcase_info(9989,
                                             pmic_misc_tests,
                                             PMIC_MISC_NUM_OF_TESTCASES);
+    }
+
+    /*Refer the Bug PDK-10450 for more details*/
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        pmic_testResultUpdate_ignore(9989,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
     }
 
 #if defined(SOC_J721E)
@@ -4095,6 +4122,72 @@ static void test_pmic_setCommonCtrlCfg_hera_skipEepromDefLdDisable_eePromDefLdEn
 
      pmic_log("\r\n Configured Val - PMIC_PFSM_DELAY3  0x%x", testData);
 }
+
+#if 0 // Refer the Bug PDK-10451 for more details
+static void test_pmic_setCommonCtrlCfg_hera_skipEepromDefLdEnable_eePromDefLdEnable(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlCfg_t commonCtrlCfg_rd = {PMIC_CFG_EEPROM_DEFAULT_VALID_SHIFT};
+    Pmic_CommonCtrlCfg_t commonCtrlCfg =
+    {
+        PMIC_CFG_EEPROM_DEFAULT_VALID_SHIFT,
+        PMIC_SPREAD_SPECTRUM_CFG_ENABLE,
+        PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_ENABLED,
+        PMIC_LP8764X_EEPROM_DEFAULTS_LOAD_TO_CONF_OTHER_REGS,
+        PMIC_PIN_SIGNAL_LEVEL_LOW,
+        PMIC_REGISTER_UNLOCK,
+        PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_NONE
+    };
+
+    uint8_t data = 0x67, testData;
+    Pmic_FsmCfg_t fsmCfg_rd = {PMIC_FSM_CFG_LP_STANDBYSEL_VALID_SHIFT,};
+    Pmic_FsmCfg_t fsmCfg =
+    {
+        PMIC_FSM_CFG_LP_STANDBYSEL_VALID_SHIFT,
+        PMIC_FSM_FAST_BIST_DISABLE,
+        PMIC_FSM_SELECT_LPSTANDBY_STATE,
+        PMIC_FSM_ILIM_INT_FSMCTRL_DISABLE,
+        PMIC_FSM_STARTUPDEST_ACTIVE
+    };
+
+    pmicStatus = Pmic_fsmSetConfiguration(pPmicCoreHandle, fsmCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_fsmGetConfiguration(pPmicCoreHandle, &fsmCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    TEST_ASSERT_EQUAL(fsmCfg.lpStandbySel, fsmCfg_rd.lpStandbySel);
+
+
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(commonCtrlCfg.eepromDefaultLoad,
+                      commonCtrlCfg_rd.eepromDefaultLoad);
+
+    pmicStatus = Pmic_fsmGetPfsmDelay(pPmicCoreHandle,
+                                      PMIC_PFSM_DELAY3,
+                                      &testData);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_log("\r\n Default Val - PMIC_PFSM_DELAY3  0x%x", testData);
+
+    pmicStatus = Pmic_fsmSetPfsmDelay(pPmicCoreHandle,
+                                      PMIC_PFSM_DELAY3,
+                                      data);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_fsmGetPfsmDelay(pPmicCoreHandle,
+                                      PMIC_PFSM_DELAY3,
+                                      &testData);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+     pmic_log("\r\n Configured Val - PMIC_PFSM_DELAY3  0x%x", testData);
+}
+#endif
+
 #endif
 
 /*!
@@ -4708,7 +4801,8 @@ volatile static const char pmicTestAppMenu[] =
     " \r\n 7: Pmic Leo and Hera device(PMIC A and B on J7VCL EVM) - Runtime BIST test"
     " \r\n 8: Pmic Leo/Hera device on J7VCL EVM - Disabled skip EEPROM defaults load on conf registers and Disabled EEPROM defaults load on conf registers "
     " \r\n 9: Pmic Leo/Hera device on J7VCL EVM - Disabled skip EEPROM defaults load on conf registers and Enabled EEPROM defaults load on conf registers "
-    " \r\n 10: Back to Test Menu"
+    " \r\n 10: Pmic Leo/Hera device on J7VCL EVM - Enabled skip EEPROM defaults load on conf registers and Enabled EEPROM defaults load on conf registers "
+    " \r\n 11: Back to Test Menu"
     " \r\n"
     " \r\n Enter option: "
 };
@@ -4871,7 +4965,7 @@ static void test_pmic_misc_testapp_run_options()
             }
             else
             {
-                num = 10;
+                num = 11;
             }
             pmic_log("%d\n", num);
         }
@@ -5257,7 +5351,69 @@ static void test_pmic_misc_testapp_run_options()
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                break;
-           case 10U:
+               case 10U:
+#if 0//defined(SOC_J7200)
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
+                {
+                    int32_t pmicStatus = PMIC_ST_SUCCESS;
+
+                     pmic_log("\nHera PMIC Initialization!!!\n");
+
+                    test_pmic_print_unity_testcase_info(9990,
+                                                        pmic_misc_tests,
+                                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+                     pmicStatus = test_pmic_hera_misc_testApp();
+
+                    if(PMIC_ST_SUCCESS == pmicStatus)
+                    {
+                        pmic_log("\nHera PMIC skip_eeprom config - skipEepromDefLdEnable, eePromDefLdEnable!!!\n");
+                        test_pmic_setCommonCtrlCfg_hera_skipEepromDefLdEnable_eePromDefLdEnable();
+                    }
+
+                    pmic_log("\nHera PMIC DeInitialization !!!\n");
+
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+
+                   /* Run MISC test cases for Leo PMIC-A */
+                    pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+
+                    pmic_log("\nLeo PMIC Initialization!!!\n");
+
+                    /* MISC Unity Test App wrapper Function */
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_misc_testApp())
+                    {
+                        if(PMIC_ST_SUCCESS == test_pmic_printPfsmDelayValue())
+                        {
+                            g_skip_eeprom_test_flag = 2;
+                            /* Run misc manual test cases */
+                            test_pmic_setCommonCtrlCfg_eepromDefaultLoadEnable();
+                            g_skip_eeprom_test_flag = 0;
+                        }
+                    }
+
+                    pmic_log("\nLeo PMIC DeInitialization!!!\n");
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+
+                    pmic_testResultUpdate_pass(9990,
+                                               pmic_misc_tests,
+                                               PMIC_MISC_NUM_OF_TESTCASES);
+
+                }
+#else
+                /*Refer the Bug PDK-10451 for more details*/
+                pmic_log("\n Test case is disabled!!!\n");
+#endif
+               break;
+           case 11U:
                pmic_log(" \r\n Back to Test Menu options\n");
                return;
            default:

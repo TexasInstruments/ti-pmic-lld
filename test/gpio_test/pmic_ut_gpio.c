@@ -354,7 +354,7 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
     },
     {
         7879,
-        "Pmic_gpioGetConfiguration : NEgative test for Pin 11 for HERA."
+        "Pmic_gpioGetConfiguration : Negative test for Pin 11 for HERA."
     },
     {
         7880,
