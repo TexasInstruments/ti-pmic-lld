@@ -683,7 +683,137 @@ void pmic_get_tps6594x_intrGpioCfg(Pmic_GpioIntrTypeCfg_t **pGpioIntrCfg)
 }
 
 /*!
- * \brief  Function to decipher BUCK Error.
+ * \brief  Function to Check PMIC BUCK1_2 Error
+ */
+static int32_t Pmic_tps6594x_getBuck1Buck2Err(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                              Pmic_IrqStatus_t  *pErrStat)
+{
+
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData    = 0U;
+
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_INT_BUCK1_2_REGADDR,
+                                        &regData);
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    if((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
+    {
+        if((regData & PMIC_INT_BUCK1_2_BUCK2_OV_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK2_OV_INT);
+        }
+
+        if((regData & PMIC_INT_BUCK1_2_BUCK2_UV_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK2_UV_INT);
+        }
+
+        if((regData & PMIC_INT_BUCK1_2_BUCK2_SC_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK2_SC_INT);
+        }
+
+        if((regData & PMIC_INT_BUCK1_2_BUCK2_ILIM_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK2_ILIM_INT);
+        }
+
+        if((regData & PMIC_INT_BUCK1_2_BUCK1_OV_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK1_OV_INT);
+        }
+
+        if((regData & PMIC_INT_BUCK1_2_BUCK1_UV_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK1_UV_INT);
+        }
+
+        if((regData & PMIC_INT_BUCK1_2_BUCK1_SC_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK1_SC_INT);
+        }
+
+        if((regData & PMIC_INT_BUCK1_2_BUCK1_ILIM_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK1_ILIM_INT);
+        }
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  Function to Check PMIC BUCK3_4 Error
+ */
+static int32_t Pmic_tps6594x_getBuck3Buck4Err(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                              Pmic_IrqStatus_t  *pErrStat)
+{
+
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData    = 0U;
+
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_INT_BUCK3_4_REGADDR,
+                                        &regData);
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    if((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
+    {
+        if((regData & PMIC_INT_BUCK3_4_BUCK4_OV_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK4_OV_INT);
+        }
+
+        if((regData & PMIC_INT_BUCK3_4_BUCK4_UV_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK4_UV_INT);
+        }
+
+        if((regData & PMIC_INT_BUCK3_4_BUCK4_SC_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK4_SC_INT);
+        }
+
+        if((regData & PMIC_INT_BUCK3_4_BUCK4_ILIM_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK4_ILIM_INT);
+        }
+
+        if((regData & PMIC_INT_BUCK3_4_BUCK3_OV_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK3_OV_INT);
+        }
+
+        if((regData & PMIC_INT_BUCK3_4_BUCK3_UV_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK3_UV_INT);
+        }
+
+        if((regData & PMIC_INT_BUCK3_4_BUCK3_SC_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK3_SC_INT);
+        }
+
+        if((regData & PMIC_INT_BUCK3_4_BUCK3_ILIM_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK3_ILIM_INT);
+        }
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  Function to decipher BUCK Error
  */
 static int32_t Pmic_tps6594x_getBuckErr(Pmic_CoreHandle_t *pPmicCoreHandle,
                                         uint8_t            regValue,
@@ -692,16 +822,19 @@ static int32_t Pmic_tps6594x_getBuckErr(Pmic_CoreHandle_t *pPmicCoreHandle,
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData    = 0U;
 
-    /* Start Critical Section */
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
     /* PMIC BUCK 5 Interrupt Status Check */
     if(((regValue & PMIC_INT_BUCK_BUCK5_INT_MASK) != 0U) &&
        (PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType))
     {
+        /* Start Critical Section */
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
                                             PMIC_INT_BUCK5_REGADDR,
                                             &regData);
+        /* Stop Critical Section */
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+
         if((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
         {
             if((regData & PMIC_INT_BUCK5_BUCK5_OV_INT_MASK) != 0U)
@@ -729,111 +862,150 @@ static int32_t Pmic_tps6594x_getBuckErr(Pmic_CoreHandle_t *pPmicCoreHandle,
     /* PMIC BUCK3_4 Interrupt Status Check */
     if((regValue & PMIC_INT_BUCK_BUCK3_4_INT_MASK) != 0U)
     {
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            PMIC_INT_BUCK3_4_REGADDR,
-                                            &regData);
-        if((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
-        {
-            if((regData & PMIC_INT_BUCK3_4_BUCK4_OV_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK4_OV_INT);
-            }
-
-            if((regData & PMIC_INT_BUCK3_4_BUCK4_UV_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK4_UV_INT);
-            }
-
-            if((regData & PMIC_INT_BUCK3_4_BUCK4_SC_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK4_SC_INT);
-            }
-
-            if((regData & PMIC_INT_BUCK3_4_BUCK4_ILIM_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK4_ILIM_INT);
-            }
-
-            if((regData & PMIC_INT_BUCK3_4_BUCK3_OV_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK3_OV_INT);
-            }
-
-            if((regData & PMIC_INT_BUCK3_4_BUCK3_UV_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK3_UV_INT);
-            }
-
-            if((regData & PMIC_INT_BUCK3_4_BUCK3_SC_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK3_SC_INT);
-            }
-
-            if((regData & PMIC_INT_BUCK3_4_BUCK3_ILIM_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK3_ILIM_INT);
-            }
-        }
+        pmicStatus = Pmic_tps6594x_getBuck3Buck4Err(pPmicCoreHandle, pErrStat);
     }
 
     /* PMIC BUCK1_2 Interrupt Status Check */
     if((regValue & PMIC_INT_BUCK_BUCK1_2_INT_MASK) != 0U)
     {
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            PMIC_INT_BUCK1_2_REGADDR,
-                                            &regData);
-        if((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
-        {
-            if((regData & PMIC_INT_BUCK1_2_BUCK2_OV_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK2_OV_INT);
-            }
-
-            if((regData & PMIC_INT_BUCK1_2_BUCK2_UV_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK2_UV_INT);
-            }
-
-            if((regData & PMIC_INT_BUCK1_2_BUCK2_SC_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK2_SC_INT);
-            }
-
-            if((regData & PMIC_INT_BUCK1_2_BUCK2_ILIM_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK2_ILIM_INT);
-            }
-
-            if((regData & PMIC_INT_BUCK1_2_BUCK1_OV_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK1_OV_INT);
-            }
-
-            if((regData & PMIC_INT_BUCK1_2_BUCK1_UV_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK1_UV_INT);
-            }
-
-            if((regData & PMIC_INT_BUCK1_2_BUCK1_SC_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK1_SC_INT);
-            }
-
-            if((regData & PMIC_INT_BUCK1_2_BUCK1_ILIM_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK1_ILIM_INT);
-            }
-        }
+        pmicStatus = Pmic_tps6594x_getBuck1Buck2Err(pPmicCoreHandle, pErrStat);
     }
-
-    /* Stop Critical Section */
-    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
 }
 
 /*!
- * \brief  Function to decipher LDO_VMON Error.
+ * \brief  Function to Check PMIC LDO3_4 Error
+ */
+static int32_t Pmic_tps6594x_getLdo3Ldo4Err(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                              Pmic_IrqStatus_t  *pErrStat)
+{
+
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData    = 0U;
+
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_MASK_LDO3_4_REGADDR,
+                                        &regData);
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    if((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
+    {
+        if((regData & PMIC_INT_LDO3_4_LDO3_OV_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO3_OV_INT);
+        }
+
+        if((regData & PMIC_INT_LDO3_4_LDO3_UV_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO3_UV_INT);
+        }
+
+        if((regData & PMIC_INT_LDO3_4_LDO3_SC_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO3_SC_INT);
+        }
+
+        if((regData & PMIC_INT_LDO3_4_LDO3_ILIM_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO3_ILIM_INT);
+        }
+
+        if((regData & PMIC_INT_LDO3_4_LDO4_OV_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO4_OV_INT);
+        }
+
+        if((regData & PMIC_INT_LDO3_4_LDO4_UV_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO4_UV_INT);
+        }
+
+        if((regData & PMIC_INT_LDO3_4_LDO4_SC_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO4_SC_INT);
+        }
+
+        if((regData & PMIC_INT_LDO3_4_LDO4_ILIM_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO4_ILIM_INT);
+        }
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  Function to Check PMIC LDO1_2 Error
+ */
+static int32_t Pmic_tps6594x_getLdo1Ldo2Err(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                              Pmic_IrqStatus_t  *pErrStat)
+{
+
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData    = 0U;
+
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_MASK_LDO1_2_REGADDR,
+                                        &regData);
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    if((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
+    {
+        if((regData & PMIC_INT_LDO1_2_LDO1_OV_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO1_OV_INT);
+        }
+
+        if((regData & PMIC_INT_LDO1_2_LDO1_UV_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO1_UV_INT);
+        }
+
+        if((regData & PMIC_INT_LDO1_2_LDO1_SC_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO1_SC_INT);
+        }
+
+        if((regData & PMIC_INT_LDO1_2_LDO1_ILIM_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO1_ILIM_INT);
+        }
+
+        if((regData & PMIC_INT_LDO1_2_LDO2_OV_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO2_OV_INT);
+        }
+
+        if((regData & PMIC_INT_LDO1_2_LDO2_UV_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO2_UV_INT);
+        }
+
+        if((regData & PMIC_INT_LDO1_2_LDO2_SC_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO2_SC_INT);
+        }
+
+        if((regData & PMIC_INT_LDO1_2_LDO2_ILIM_INT_MASK) != 0U)
+        {
+            Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO2_ILIM_INT);
+        }
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  Function to decipher LDO_VMON Error
  */
 static int32_t Pmic_tps6594x_getLdoVmonErr(Pmic_CoreHandle_t *pPmicCoreHandle,
                                            uint8_t            regValue,
@@ -842,114 +1014,25 @@ static int32_t Pmic_tps6594x_getLdoVmonErr(Pmic_CoreHandle_t *pPmicCoreHandle,
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData    = 0U;
 
-    /* Start Critical Section */
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
     if((regValue & PMIC_INT_LDO_VMON_LDO1_2_INT_MASK) != 0U)
     {
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            PMIC_MASK_LDO1_2_REGADDR,
-                                            &regData);
-
-        if((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
-        {
-            if((regData & PMIC_INT_LDO1_2_LDO1_OV_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO1_OV_INT);
-            }
-
-            if((regData & PMIC_INT_LDO1_2_LDO1_UV_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO1_UV_INT);
-            }
-
-            if((regData & PMIC_INT_LDO1_2_LDO1_SC_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO1_SC_INT);
-            }
-
-            if((regData & PMIC_INT_LDO1_2_LDO1_ILIM_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO1_ILIM_INT);
-            }
-
-            if((regData & PMIC_INT_LDO1_2_LDO2_OV_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO2_OV_INT);
-            }
-
-            if((regData & PMIC_INT_LDO1_2_LDO2_UV_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO2_UV_INT);
-            }
-
-            if((regData & PMIC_INT_LDO1_2_LDO2_SC_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO2_SC_INT);
-            }
-
-            if((regData & PMIC_INT_LDO1_2_LDO2_ILIM_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO2_ILIM_INT);
-            }
-        }
+        pmicStatus = Pmic_tps6594x_getLdo1Ldo2Err(pPmicCoreHandle, pErrStat);
     }
 
     if((regValue & PMIC_INT_LDO_VMON_LDO3_4_INT_MASK) != 0U)
     {
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            PMIC_MASK_LDO3_4_REGADDR,
-                                            &regData);
-
-        if((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
-        {
-            if((regData & PMIC_INT_LDO3_4_LDO3_OV_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO3_OV_INT);
-            }
-
-            if((regData & PMIC_INT_LDO3_4_LDO3_UV_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO3_UV_INT);
-            }
-
-            if((regData & PMIC_INT_LDO3_4_LDO3_SC_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO3_SC_INT);
-            }
-
-            if((regData & PMIC_INT_LDO3_4_LDO3_ILIM_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO3_ILIM_INT);
-            }
-
-            if((regData & PMIC_INT_LDO3_4_LDO4_OV_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO4_OV_INT);
-            }
-
-            if((regData & PMIC_INT_LDO3_4_LDO4_UV_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO4_UV_INT);
-            }
-
-            if((regData & PMIC_INT_LDO3_4_LDO4_SC_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO4_SC_INT);
-            }
-
-            if((regData & PMIC_INT_LDO3_4_LDO4_ILIM_INT_MASK) != 0U)
-            {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO4_ILIM_INT);
-            }
-        }
+        pmicStatus = Pmic_tps6594x_getLdo3Ldo4Err(pPmicCoreHandle, pErrStat);
     }
 
     if((regValue & PMIC_INT_LDO_VMON_VCCA_INT_MASK) != 0U)
     {
+        /* Start Critical Section */
+        Pmic_criticalSectionStart(pPmicCoreHandle);
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
                                             PMIC_INT_VMON_REGADDR,
                                             &regData);
+        /* Stop Critical Section */
+        Pmic_criticalSectionStop(pPmicCoreHandle);
 
         if((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
         {
@@ -965,10 +1048,55 @@ static int32_t Pmic_tps6594x_getLdoVmonErr(Pmic_CoreHandle_t *pPmicCoreHandle,
         }
     }
 
-    /* Stop Critical Section */
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
     return pmicStatus;
+}
+
+/*!
+ * \brief  Function to Check GPIO1_8 Error
+ */
+static void Pmic_tps6594x_getGpio1ToGpio8Err(Pmic_IrqStatus_t  *pErrStat,
+                                             uint8_t            regData)
+{
+
+   if((regData & PMIC_INT_GPIO1_8_GPIO1_INT_MASK) != 0U)
+   {
+       Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO1_INT);
+   }
+
+   if((regData & PMIC_INT_GPIO1_8_GPIO2_INT_MASK) != 0U)
+   {
+       Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO2_INT);
+   }
+
+   if((regData & PMIC_INT_GPIO1_8_GPIO3_INT_MASK) != 0U)
+   {
+       Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO3_INT);
+   }
+
+   if((regData & PMIC_INT_GPIO1_8_GPIO4_INT_MASK) != 0U)
+   {
+       Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO4_INT);
+   }
+
+   if((regData & PMIC_INT_GPIO1_8_GPIO5_INT_MASK) != 0U)
+   {
+       Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO5_INT);
+   }
+
+   if((regData & PMIC_INT_GPIO1_8_GPIO6_INT_MASK) != 0U)
+   {
+       Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO6_INT);
+   }
+
+   if((regData & PMIC_INT_GPIO1_8_GPIO7_INT_MASK) != 0U)
+   {
+       Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO7_INT);
+   }
+
+   if((regData & PMIC_INT_GPIO1_8_GPIO8_INT_MASK) != 0U)
+   {
+        Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO8_INT);
+   }
 }
 
 /*!
@@ -981,59 +1109,23 @@ static int32_t Pmic_tps6594x_getGpioErr(Pmic_CoreHandle_t *pPmicCoreHandle,
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData    = 0U;
 
-    /* Start Critical Section */
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
     /* Checking GPIO1_8 Bit field for INT_GPIO Register */
     if((regValue & PMIC_INT_GPIO_GPIO1_8_INT_MASK) != 0U)
     {
+        /* Start Critical Section */
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
                                             PMIC_INT_GPIO1_8_REGADDR,
                                             &regData);
+        /* Stop Critical Section */
+        Pmic_criticalSectionStop(pPmicCoreHandle);
 
        if((PMIC_ST_SUCCESS == pmicStatus) &&
           (0U != regData))
        {
-           if((regData & PMIC_INT_GPIO1_8_GPIO1_INT_MASK) != 0U)
-           {
-               Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO1_INT);
-           }
-
-           if((regData & PMIC_INT_GPIO1_8_GPIO2_INT_MASK) != 0U)
-           {
-               Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO2_INT);
-           }
-
-           if((regData & PMIC_INT_GPIO1_8_GPIO3_INT_MASK) != 0U)
-           {
-               Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO3_INT);
-           }
-
-           if((regData & PMIC_INT_GPIO1_8_GPIO4_INT_MASK) != 0U)
-           {
-               Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO4_INT);
-           }
-
-           if((regData & PMIC_INT_GPIO1_8_GPIO5_INT_MASK) != 0U)
-           {
-               Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO5_INT);
-           }
-
-           if((regData & PMIC_INT_GPIO1_8_GPIO6_INT_MASK) != 0U)
-           {
-               Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO6_INT);
-           }
-
-           if((regData & PMIC_INT_GPIO1_8_GPIO7_INT_MASK) != 0U)
-           {
-               Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO7_INT);
-           }
-
-           if((regData & PMIC_INT_GPIO1_8_GPIO8_INT_MASK) != 0U)
-           {
-                Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO8_INT);
-           }
-        }
+           Pmic_tps6594x_getGpio1ToGpio8Err(pErrStat, regData);
+       }
     }
 
     if((regValue & PMIC_INT_GPIO_GPIO9_INT_MASK) != 0U)
@@ -1050,9 +1142,6 @@ static int32_t Pmic_tps6594x_getGpioErr(Pmic_CoreHandle_t *pPmicCoreHandle,
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO11_INT);
     }
-
-    /* Stop Critical Section */
-    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
 }
@@ -1143,15 +1232,12 @@ static void Pmic_tps6594x_getMiscErr(uint8_t            regValue,
 }
 
 /*!
- * \brief  Function to decipher MODERATE Error.
- *          Note: In this API, the default PMIC Revision is assumed as PG2.0
- *                for LEO and HERA PMIC. While adding support for New PMIC
- *                Revision, developer need to update the API functionality for
- *                New PMIC Revision accordingly.
+ * \brief  Function to check MODERATE Error - TSD_ORD_INT, BIST_FAIL_INT,
+ *         REG_CRC_ERR_INT, SPMI_ERR_INT,  NPWRON_LONG_INT
  */
-static void Pmic_tps6594x_getModerateErr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                         uint8_t            regValue,
-                                         Pmic_IrqStatus_t  *pErrStat)
+static void Pmic_tps6594x_getErrTsdordBistFailRegcrcSpmiNpwronlong(
+                                            uint8_t            regValue,
+                                            Pmic_IrqStatus_t  *pErrStat)
 {
     if((regValue & PMIC_INT_MODERATE_ERR_TSD_ORD_INT_MASK) != 0U)
     {
@@ -1177,6 +1263,23 @@ static void Pmic_tps6594x_getModerateErr(Pmic_CoreHandle_t *pPmicCoreHandle,
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_NPWRON_LONG_INT);
     }
+
+}
+
+/*!
+ * \brief  Function to decipher MODERATE Error.
+ *          Note: In this API, the default PMIC Revision is assumed as PG2.0
+ *                for LEO and HERA PMIC. While adding support for New PMIC
+ *                Revision, developer need to update the API functionality for
+ *                New PMIC Revision accordingly.
+ */
+static void Pmic_tps6594x_getModerateErr(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                         uint8_t            regValue,
+                                         Pmic_IrqStatus_t  *pErrStat)
+{
+
+    Pmic_tps6594x_getErrTsdordBistFailRegcrcSpmiNpwronlong(regValue,
+                                                           pErrStat);
 
     if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
     {
@@ -1237,43 +1340,26 @@ static void Pmic_tps6594x_getSevereErr(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /*!
- * \brief  Function to decipher FSM Error.
+ * \brief  Function to check FSM - Communication Error
  */
-static int32_t Pmic_tps6594x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                       uint8_t            regValue,
-                                       Pmic_IrqStatus_t  *pErrStat)
+static int32_t Pmic_tps6594x_getFsmCommErr(
+                                           Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                           uint8_t              regValue,
+                                           Pmic_IrqStatus_t    *pErrStat)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData    = 0U;
 
-    /* Start Critical Section */
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    if((regValue & PMIC_INT_FSM_ERR_IMM_SHUTDOWN_INT_MASK) != 0U)
-    {
-        Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_IMM_SHUTOWN_INT);
-    }
-
-    if((regValue & PMIC_INT_FSM_ERR_ORD_SHUTDOWN_INT_MASK) != 0U)
-    {
-        Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_ORD_SHUTDOWN_INT);
-    }
-
-    if((regValue & PMIC_INT_FSM_ERR_MCU_PWR_ERR_INT_MASK) != 0U)
-    {
-        Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_MCU_PWR_ERR_INT);
-    }
-
-    if((regValue & PMIC_INT_FSM_ERR_SOC_PWR_ERR_INT_MASK) != 0U)
-    {
-        Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_SOC_PWR_ERR_INT);
-    }
-
     if((regValue & PMIC_INT_FSM_ERR_COMM_ERR_INT_MASK) != 0U)
     {
+        /* Start Critical Section */
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
                                             PMIC_INT_COMM_ERR_REGADDR,
                                             &regData);
+        /* Stop Critical Section */
+        Pmic_criticalSectionStop(pPmicCoreHandle);
 
         if((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
         {
@@ -1304,11 +1390,31 @@ static int32_t Pmic_tps6594x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle,
         }
     }
 
+    return pmicStatus;
+}
+
+/*!
+ * \brief  Function to check FSM - Readback Error
+ */
+static int32_t Pmic_tps6594x_getFsmReadbackErr(
+                                          Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                          uint8_t              regValue,
+                                          Pmic_IrqStatus_t    *pErrStat)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData    = 0U;
+
     if((regValue & PMIC_INT_FSM_ERR_READBACK_ERR_INT_MASK) != 0U)
     {
+
+        /* Start Critical Section */
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
                                             PMIC_INT_READBACK_ERR_REGADDR,
                                             &regData);
+        /* Stop Critical Section */
+        Pmic_criticalSectionStop(pPmicCoreHandle);
 
         if((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
         {
@@ -1345,11 +1451,31 @@ static int32_t Pmic_tps6594x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle,
         }
     }
 
+    return pmicStatus;
+}
+
+/*!
+ * \brief  Function to check FSM - ESM Error
+ */
+static int32_t Pmic_tps6594x_getFsmEsmErr(
+                                          Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                          uint8_t              regValue,
+                                          Pmic_IrqStatus_t    *pErrStat)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData    = 0U;
+
     if((regValue & PMIC_INT_FSM_ERR_ESM_INT_MASK) != 0U)
     {
+
+        /* Start Critical Section */
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
                                             PMIC_INT_ESM_REGADDR,
                                             &regData);
+        /* Stop Critical Section */
+        Pmic_criticalSectionStop(pPmicCoreHandle);
 
         if((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
         {
@@ -1385,11 +1511,65 @@ static int32_t Pmic_tps6594x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle,
         }
     }
 
+    return pmicStatus;
+}
+
+/*!
+ * \brief  Function to decipher FSM Error.
+ */
+static int32_t Pmic_tps6594x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                       uint8_t            regValue,
+                                       Pmic_IrqStatus_t  *pErrStat)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData    = 0U;
+
+    if((regValue & PMIC_INT_FSM_ERR_IMM_SHUTDOWN_INT_MASK) != 0U)
+    {
+        Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_IMM_SHUTOWN_INT);
+    }
+
+    if((regValue & PMIC_INT_FSM_ERR_ORD_SHUTDOWN_INT_MASK) != 0U)
+    {
+        Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_ORD_SHUTDOWN_INT);
+    }
+
+    if((regValue & PMIC_INT_FSM_ERR_MCU_PWR_ERR_INT_MASK) != 0U)
+    {
+        Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_MCU_PWR_ERR_INT);
+    }
+
+    if((regValue & PMIC_INT_FSM_ERR_SOC_PWR_ERR_INT_MASK) != 0U)
+    {
+        Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_SOC_PWR_ERR_INT);
+    }
+
+    /* Check decipher FSM Error for PMIC_INT_COMM_ERR Register Bit */
+    pmicStatus = Pmic_tps6594x_getFsmCommErr(pPmicCoreHandle,
+                                             regValue,
+                                             pErrStat);
+
+    /* Check decipher FSM Error for PMIC_INT_READBACK_ERR Register Bit */
+    pmicStatus = Pmic_tps6594x_getFsmReadbackErr(pPmicCoreHandle,
+                                                 regValue,
+                                                 pErrStat);
+
+    /* Check decipher FSM Error for PMIC_INT_ESM Register Bit */
+    pmicStatus = Pmic_tps6594x_getFsmEsmErr(pPmicCoreHandle,
+                                            regValue,
+                                            pErrStat);
+
+    /* Check decipher FSM Error for IRQ Mask Bit */
     if((regValue & PMIC_INT_FSM_ERR_WD_INT_MASK) != 0U)
     {
+        /* Start Critical Section */
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
                                             PMIC_WD_ERR_STATUS_REGADDR,
                                             &regData);
+        /* Stop Critical Section */
+        Pmic_criticalSectionStop(pPmicCoreHandle);
 
         if((PMIC_ST_SUCCESS == pmicStatus) &&
            ((regData & PMIC_INT_WD_ERR_MASK) != 0U))
@@ -1413,8 +1593,51 @@ static int32_t Pmic_tps6594x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle,
         }
     }
 
-    /* Stop Critical Section */
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+    return pmicStatus;
+}
+
+/*!
+ * \brief  Call Function to decipher the Startup, Miscellaneous, Moderate,
+ *         Severe, FSM Error
+ */
+static int32_t Pmic_tps6594x_getStartupMiscModerateSevereFsmErr(
+                                           Pmic_CoreHandle_t *pPmicCoreHandle,
+                                           Pmic_IrqStatus_t  *pErrStat,
+                                           uint16_t           l1RegAddr,
+                                           uint8_t            regValue)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+
+    switch(l1RegAddr)
+    {
+        case PMIC_INT_STARTUP_REGADDR:
+            pmicStatus = Pmic_tps6594x_getStartupErr(pPmicCoreHandle,
+                                                     regValue,
+                                                     pErrStat);
+            break;
+
+        case PMIC_INT_MISC_REGADDR:
+            Pmic_tps6594x_getMiscErr(regValue, pErrStat);
+            break;
+
+        case PMIC_INT_MODERATE_ERR_REGADDR:
+            Pmic_tps6594x_getModerateErr(pPmicCoreHandle,
+                                         regValue,
+                                         pErrStat);
+            break;
+
+        case PMIC_INT_SEVERE_ERR_REGADDR:
+            Pmic_tps6594x_getSevereErr(pPmicCoreHandle,
+                                       regValue,
+                                       pErrStat);
+            break;
+
+        default:
+            pmicStatus = Pmic_tps6594x_getFSMErr(pPmicCoreHandle,
+                                                 regValue,
+                                                 pErrStat);
+            break;
+    }
 
     return pmicStatus;
 }
@@ -1463,31 +1686,15 @@ int32_t Pmic_tps6594x_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle,
                 break;
 
             case PMIC_INT_STARTUP_REGADDR:
-                pmicStatus = Pmic_tps6594x_getStartupErr(pPmicCoreHandle,
-                                                         regValue,
-                                                         pErrStat);
-                break;
-
             case PMIC_INT_MISC_REGADDR:
-                Pmic_tps6594x_getMiscErr(regValue, pErrStat);
-                break;
-
             case PMIC_INT_MODERATE_ERR_REGADDR:
-                Pmic_tps6594x_getModerateErr(pPmicCoreHandle,
-                                             regValue,
-                                             pErrStat);
-                break;
-
             case PMIC_INT_SEVERE_ERR_REGADDR:
-                Pmic_tps6594x_getSevereErr(pPmicCoreHandle,
-                                           regValue,
-                                           pErrStat);
-                break;
-
             case PMIC_INT_FSM_ERR_REGADDR:
-                pmicStatus = Pmic_tps6594x_getFSMErr(pPmicCoreHandle,
-                                                     regValue,
-                                                     pErrStat);
+                pmicStatus = Pmic_tps6594x_getStartupMiscModerateSevereFsmErr(
+                                                         pPmicCoreHandle,
+                                                         pErrStat,
+                                                         l1RegAddr,
+                                                         regValue);
                 break;
 
             default:

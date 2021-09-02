@@ -1629,7 +1629,7 @@ int32_t Pmic_fsmRecoverSocPwrErr(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  *         This function initiates a request to exercise DDR/GPIO Retention Mode
  *         on the device based on the Retention Mode
- *         Note: PMIC_FSM_GPIO_RETENTION_MODE is valid only for J7VCL SOC
+ *         Note: PMIC_FSM_GPIO_RETENTION_MODE is valid only for J7200 SOC
  *         In this API, the default SOC Type is assumed as J721E SOC
  *         While adding support for New SOC, developer need to update the API
  *         functionality for New SOC device accordingly.
@@ -1638,7 +1638,7 @@ int32_t Pmic_fsmRecoverSocPwrErr(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \param   retentionMode    [IN]  Retention Mode
  *                                   Valid values: \ref Pmic_Fsm_Retention_Mode
  *                                     PMIC_FSM_GPIO_RETENTION_MODE is valid
- *                                     only for J7VCL SOC
+ *                                     only for J7200 SOC
  * \param   i2cTriggerVal    [IN]   FSM I2C Trigger Value
  *                                   Valid values: \ref Pmic_Fsm_I2c_Trigger_Val
  *

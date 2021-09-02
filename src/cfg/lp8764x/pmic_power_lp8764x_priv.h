@@ -225,9 +225,7 @@ int32_t Pmic_powerLP8764xConvertVoltage2VSetVal(
                                             Pmic_CoreHandle_t *pPmicCoreHandle,
                                             uint16_t           millivolt,
                                             uint16_t           pwrRsrc,
-                                            uint16_t          *pBaseMillivolt,
-                                            uint8_t           *pMillivoltStep,
-                                            uint8_t           *pBaseVoutCode);
+                                            uint8_t           *pVSetVal);
 
 /*!
  * \brief   This function is used to convert the vsetvalue to voltage in mv
@@ -237,9 +235,7 @@ int32_t Pmic_powerLP8764xConvertVSetVal2Voltage(
                                             Pmic_CoreHandle_t *pPmicCoreHandle,
                                             const uint8_t     *pVSetVal,
                                             uint16_t           pwrRsrc,
-                                            uint16_t          *pBaseMillivolt,
-                                            uint8_t           *pMillivoltStep,
-                                            uint8_t           *pBaseVoutCode);
+                                            uint16_t          *millivolt);
 
 /*!
  * \brief   This function is to validate the power good source limit for the
@@ -253,6 +249,34 @@ int32_t Pmic_validate_lp8764x_pGoodSrcType(uint16_t pgoodSrc);
  */
 int32_t Pmic_validate_lp8764x_pGoodSelType(uint16_t pgoodSrc,
                                            uint8_t pgoodSelType);
+
+/**
+ * \brief   This function is used to validate the voltage levels for
+ *          Regulators/VMON for LP8764x PMIC
+ */
+int32_t Pmic_powerLP8764xValidateVoltageLevel(
+                                             Pmic_CoreHandle_t *pPmicCoreHandle,
+                                             uint8_t            pwrRsrcType,
+                                             uint16_t           pwrRsrc,
+                                             uint16_t           voltage_mV);
+
+/*!
+ * \brief   This function is to validate the power resource limit for the
+ *          LP8764x PMIC device.
+ */
+int32_t Pmic_powerLP8764xValidatePwrRsrcLimit(
+                                    const Pmic_CoreHandle_t *pPmicCoreHandle,
+                                    uint8_t                  pwrRsrcType,
+                                    uint16_t                 pwrRsrc);
+
+/*!
+ * \brief   This function is to validate the power resource interrupt type
+ *          for the LP8764x PMIC device.
+ */
+int32_t Pmic_powerLP8764xValidateIntrType(uint8_t  pmicDeviceType,
+                                          uint16_t pwrResource,
+                                          uint8_t  pwrResourceType,
+                                          uint8_t  intrType);
 
 #ifdef __cplusplus
 }

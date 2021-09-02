@@ -735,7 +735,7 @@ int32_t Pmic_wdgClrErrStatus(Pmic_CoreHandle_t   *pPmicCoreHandle,
  * \brief   API to Write Answers in Long Window/ Window1/ Window2 Interval for
  *          watchdog QA Sequence.
  *
- * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-9115), REQ_TAG(PDK-9115)
+ * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-9115), REQ_TAG(PDK-9116)
  * Design: did_pmic_wdg_cfg_readback
  *
  *          This function is used to write Answers in Long Window/ Window1/
