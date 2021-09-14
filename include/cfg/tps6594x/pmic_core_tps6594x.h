@@ -54,11 +54,11 @@ extern "C" {
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* On J721E 1.0 EVM, PMIC_TPS6594X_DEV_REV_ID is 0x04 */
-#define PMIC_TPS6594X_DEV_REV_ID_PG_1_0          (0x04U)
+/* On J721E 1.0 EVM, PMIC_LEO_DEV_REV_ID is 0x04 */
+#define PMIC_LEO_DEV_REV_ID_PG_1_0          (0x04U)
 
-/* On J721E 2.0 EVM, PMIC_TPS6594X_DEV_REV_ID is 0x41 */
-#define PMIC_TPS6594X_DEV_REV_ID_PG_2_0          (0x41U)
+/* On J721E 2.0 EVM, PMIC_LEO_DEV_REV_ID is 0x41 */
+#define PMIC_LEO_DEV_REV_ID_PG_2_0          (0x41U)
 
 /**
  *  \anchor Pmic_Tps6594xLeo_EepromDef_LdCfg

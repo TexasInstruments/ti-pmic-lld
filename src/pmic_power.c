@@ -306,40 +306,6 @@ static int32_t Pmic_powerValidateBuckLdoPwrRsrcType(uint8_t pmicDeviceType,
 }
 
 /*!
- * \brief   This function is used to get validate the power resources BUCK, LDO
- *          VCCA and VMON based on the valid params set.
- */
-static int32_t Pmic_powerValidateBuckLdoVccaVmonPwrRsrcType(
-                                                       uint32_t validPrm,
-                                                       uint8_t  pmicDeviceType,
-                                                       uint8_t  pwrRsrcType)
-{
-    int32_t status = PMIC_ST_SUCCESS;
-
-    switch(validPrm)
-    {
-        case PMIC_CFG_REGULATOR_EN_VALID:
-            status = Pmic_powerValidateBuckLdoPwrRsrcType(pmicDeviceType,
-                                                          pwrRsrcType);
-            break;
-        case PMIC_CFG_VCCA_PWR_GOOD_LVL_VALID:
-            status = Pmic_powerValidateVccaPwrRsrcType(pmicDeviceType,
-                                                       pwrRsrcType);
-            break;
-        case PMIC_CFG_VMON_RANGE_VALID:
-            status = Pmic_powerValidateVmonPwrRsrcType(pmicDeviceType,
-                                                       pwrRsrcType);
-            break;
-        default :
-            status = Pmic_powerValidateBuckVmonPwrRsrcType(pmicDeviceType,
-                                                           pwrRsrcType);
-            break;
-    }
-
-    return status;
-}
-
-/*!
  * \brief   This function is used to get validate the power resources and vmon
  *           based on the valid params set.
  */
@@ -374,6 +340,10 @@ static int32_t Pmic_powerValidatecfgDataPwrRsrctype(uint32_t validPrm,
                                                                 pwrRsrc);
             }
             break;
+        case PMIC_CFG_REGULATOR_EN_VALID:
+            status = Pmic_powerValidateBuckLdoPwrRsrcType(pmicDeviceType,
+                                                          pwrRsrcType);
+            break;
         case PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID:
         case PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID:
         case PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID:
@@ -388,14 +358,17 @@ static int32_t Pmic_powerValidatecfgDataPwrRsrctype(uint32_t validPrm,
                                                                 pwrRsrc);
             }
             break;
-        case PMIC_CFG_REGULATOR_EN_VALID:
         case PMIC_CFG_VCCA_PWR_GOOD_LVL_VALID:
+            status = Pmic_powerValidateVccaPwrRsrcType(pmicDeviceType,
+                                                       pwrRsrcType);
+            break;
         case PMIC_CFG_VMON_RANGE_VALID:
+            status = Pmic_powerValidateVmonPwrRsrcType(pmicDeviceType,
+                                                       pwrRsrcType);
+            break;
         case PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID:
-            status = Pmic_powerValidateBuckLdoVccaVmonPwrRsrcType(
-                                                                validPrm,
-                                                                pmicDeviceType,
-                                                                pwrRsrcType);
+            status = Pmic_powerValidateBuckVmonPwrRsrcType(pmicDeviceType,
+                                                           pwrRsrcType);
             break;
         default :
             status = PMIC_ST_ERR_INV_PARAM;
@@ -437,55 +410,6 @@ static int32_t Pmic_powerGetRsrcRegCfg(uint8_t                  pmicDeviceType,
 
     return status;
 }
-
-/*!
- * \brief   This function is used to get pwrRsrcIndex and the PMIC power
-            resources register configuration for the specific PMIC device.
- */
-static int32_t Pmic_powerGetPwrRsrcIdxRegCfg(
-                                       uint8_t                  pmicDeviceType,
-                                       uint16_t                 pwrRsrc,
-                                       uint8_t                 *pPwrRsrcIndex,
-                                       Pmic_powerRsrcRegCfg_t **pPwrRsrcRegCfg)
-{
-    int32_t status = PMIC_ST_SUCCESS;
-
-    *pPwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
-
-    /* Get PMIC power resources register configuration */
-    status = Pmic_powerGetRsrcRegCfg(pmicDeviceType, pPwrRsrcRegCfg);
-
-    return status;
-}
-
-/*!
- * \brief   This function is to set PMIC PwrRsrc,Pgood Register Bit field based
- *          on defined regAddr, regVal, bitPos and bitMask values
- */
-static int32_t Pmic_setPwrRsrcPgoodRegBitfieldCfg(
-                                            Pmic_CoreHandle_t *pPmicCoreHandle,
-                                            uint8_t            regAddr,
-                                            uint8_t            regVal,
-                                            uint8_t            bitPos,
-                                            uint8_t            bitMask)
-{
-    uint8_t regData = 0U;
-    int32_t status = PMIC_ST_SUCCESS;
-
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-    status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
-
-    if(PMIC_ST_SUCCESS == status)
-    {
-        Pmic_setBitField(&regData, bitPos, bitMask, regVal);
-        status = Pmic_commIntf_sendByte(pPmicCoreHandle, regAddr, regData);
-    }
-
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    return status;
-}
-
 
 /*!
  * \brief   This function is used to get the required BitPos and BitMask
@@ -548,11 +472,11 @@ static int32_t Pmic_powerSetRvCheckEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t bitMask = 0U;
     uint8_t residualVoltCheckVal = 0U;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
+
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -609,12 +533,11 @@ static int32_t Pmic_powerGetRvCheckEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
     uint8_t bitMask = 0U;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
 
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -741,24 +664,37 @@ static int32_t Pmic_powerConvertVolt(Pmic_CoreHandle_t *pPmicCoreHandle,
                                      uint16_t           pwrRsrc,
                                      uint16_t          *millivolt)
 {
-    int32_t  status = PMIC_ST_SUCCESS;
+    int32_t  status        = PMIC_ST_SUCCESS;
+    uint16_t baseMillivolt = 0U;
+    uint8_t  millivoltStep = 0U;
+    uint8_t  baseVoutCode  = 0U;
 
     switch(pPmicCoreHandle->pmicDeviceType)
     {
         case PMIC_DEV_LEO_TPS6594X:
             status = Pmic_powerTPS6594xConvertVSet2Voltage(&vSetVal,
                                                            pwrRsrc,
-                                                           millivolt);
+                                                           &baseMillivolt,
+                                                           &millivoltStep,
+                                                           &baseVoutCode);
         break;
         case PMIC_DEV_HERA_LP8764X:
             status = Pmic_powerLP8764xConvertVSetVal2Voltage(pPmicCoreHandle,
                                                              &vSetVal,
                                                              pwrRsrc,
-                                                             millivolt);
+                                                             &baseMillivolt,
+                                                             &millivoltStep,
+                                                             &baseVoutCode);
         break;
         default:
             status = PMIC_ST_ERR_INV_PARAM;
             break;
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        *millivolt = (baseMillivolt +
+                     (((uint16_t)vSetVal - baseVoutCode) * millivoltStep));
     }
 
     return status;
@@ -872,12 +808,11 @@ int32_t Pmic_powerGetVmonRange(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
 
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -915,24 +850,43 @@ static int32_t Pmic_powerConvertVoltage2VSetVal(
                                              uint16_t           pwrRsrc,
                                              uint8_t           *pVSetVal)
 {
-    int32_t  status = PMIC_ST_SUCCESS;
+    int32_t  status        = PMIC_ST_SUCCESS;
+    uint16_t baseMillivolt = 0U;
+    uint8_t  millivoltStep = 0U;
+    uint8_t  baseVoutCode  = 0U;
 
     switch(pPmicCoreHandle->pmicDeviceType)
     {
         case PMIC_DEV_LEO_TPS6594X:
             status = Pmic_powerTPS6594xConvertVoltage2VSetVal(millivolt,
                                                               pwrRsrc,
-                                                              pVSetVal);
+                                                              &baseMillivolt,
+                                                              &millivoltStep,
+                                                              &baseVoutCode);
             break;
         case PMIC_DEV_HERA_LP8764X:
             status = Pmic_powerLP8764xConvertVoltage2VSetVal(pPmicCoreHandle,
                                                              millivolt,
                                                              pwrRsrc,
-                                                             pVSetVal);
+                                                             &baseMillivolt,
+                                                             &millivoltStep,
+                                                             &baseVoutCode);
         break;
         default:
             status = PMIC_ST_ERR_INV_PARAM;
             break;
+    }
+
+    if((PMIC_ST_SUCCESS == status) &&
+       ((millivolt % millivoltStep) == 1U))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        *pVSetVal = (uint8_t)(baseVoutCode +
+                    ((millivolt - baseMillivolt) / millivoltStep));
     }
 
     return status;
@@ -951,11 +905,10 @@ static int32_t Pmic_powerSetBuckVoutSel(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
     uint8_t buckVoutSelVal = 0U;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -1000,11 +953,10 @@ static int32_t Pmic_powerGetBuckVoutSel(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -1048,11 +1000,10 @@ static int32_t Pmic_powerSetBuckFpwmMode(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
     uint8_t buckFpwmModeVal = 0U;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -1097,12 +1048,11 @@ static int32_t Pmic_powerGetBuckFpwmMode(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
 
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -1146,11 +1096,10 @@ static int32_t Pmic_powerSetBuckFpwmMpMode(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
     uint8_t buckFpwmMpModeVal = 0U;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -1196,11 +1145,11 @@ static int32_t Pmic_powerGetBuckPwmMpMode(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
+
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -1244,11 +1193,11 @@ static int32_t Pmic_powerSetLdoSlowRampEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
     uint8_t ldoSlowRampEnVal = 0U;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
+
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -1293,11 +1242,11 @@ static int32_t Pmic_powerGetLdoSlowRampEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
+
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -1341,11 +1290,11 @@ static int32_t Pmic_powerSetRegulatorEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
     uint8_t regulatorEnVal = 0U;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
+
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -1391,12 +1340,11 @@ static int32_t Pmic_powerGetRegulatorEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
 
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -1438,13 +1386,14 @@ static int32_t Pmic_powerGetBuckVoutRegAddr(Pmic_CoreHandle_t *pPmicCoreHandle,
     int32_t status = PMIC_ST_SUCCESS;
     bool buckVoutSel;
     uint8_t pwrRsrcIndex;
+
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
+
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    status = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                           pwrRsrc,
-                                           &pwrRsrcIndex,
-                                           &pPwrRsrcRegCfg);
+    /* Get PMIC power resources register configuration */
+    status = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                     &pPwrRsrcRegCfg);
 
     if(PMIC_ST_SUCCESS == status)
     {
@@ -1495,13 +1444,12 @@ static int32_t Pmic_GetVoltageRegAddr(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcType;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
     pwrRsrcType  = Pmic_powerGetPwrRsrcType(pwrRsrc);
-     /* Get PMIC power resources Index and register configuration */
-    status = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                           pwrRsrc,
-                                           &pwrRsrcIndex,
-                                           &pPwrRsrcRegCfg);
 
+    /* Get PMIC power resources register configuration */
+    status = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                     &pPwrRsrcRegCfg);
     if(PMIC_ST_SUCCESS == status)
     {
         if(PMIC_ST_SUCCESS == Pmic_powerValidateLdoVmonPwrRsrcType(
@@ -1539,22 +1487,89 @@ static int32_t Pmic_powerValidateVoltageLevel(
 {
     int32_t  status = PMIC_ST_SUCCESS;
     uint8_t  pwrRsrcType = 0U;
+    uint16_t ldoMinVoltageValue = 0U;
+    bool     vmonRange = (bool)false;
 
     pwrRsrcType = Pmic_powerGetPwrRsrcType(pwrRsrc);
 
     switch(pPmicCoreHandle->pmicDeviceType)
     {
         case PMIC_DEV_LEO_TPS6594X:
-            status = Pmic_powerTPS6594xValidateVoltageLevel(pPmicCoreHandle,
-                                                            pwrRsrcType,
-                                                            pwrRsrc,
-                                                            voltage_mV);
+            if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType)
+            {
+                if((voltage_mV < PMIC_TPS6594X_REGULATOR_BUCK_MIN_VOLTAGE) ||
+                   (voltage_mV > PMIC_TPS6594X_REGULATOR_BUCK_MAX_VOLTAGE))
+                {
+                    status = PMIC_ST_ERR_INV_PARAM;
+                }
+            }
+            else if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO == pwrRsrcType)
+            {
+                if(PMIC_TPS6594X_REGULATOR_LDO4 == pwrRsrc)
+                {
+                    ldoMinVoltageValue = PMIC_TPS6594X_POWER_LDO4_MIN_VOLTAGE;
+                }
+                else
+                {
+                    ldoMinVoltageValue = \
+                                       PMIC_TPS6594X_POWER_LDO1_2_3_MIN_VOLTAGE;
+                }
+
+                if((voltage_mV < ldoMinVoltageValue) ||
+                   (voltage_mV > PMIC_TPS6594X_POWER_LDO_MAX_VOLTAGE))
+                {
+                    status = PMIC_ST_ERR_INV_PARAM;
+                }
+            }
+            else
+            {
+                status = PMIC_ST_ERR_INV_PARAM;
+            }
+
             break;
         case PMIC_DEV_HERA_LP8764X:
-            status = Pmic_powerLP8764xValidateVoltageLevel(pPmicCoreHandle,
-                                                           pwrRsrcType,
-                                                           pwrRsrc,
-                                                           voltage_mV);
+            if(PMIC_LP8764X_POWER_RESOURCE_TYPE_VMON == pwrRsrcType)
+            {
+                status = Pmic_powerGetVmonRange(pPmicCoreHandle,
+                                                pwrRsrc,
+                                                &(vmonRange));
+
+                if((PMIC_ST_SUCCESS == status) &&
+                   (PMIC_LP8764X_VMON_RANGE_0V3_3V34 == vmonRange))
+                {
+                    if((voltage_mV < PMIC_LP8764X_RANGE0_VMON_MIN_VOLTAGE)  ||
+                       (voltage_mV > PMIC_LP8764X_RANGE0_VMON_MAX_VOLTAGE))
+                    {
+                        status = PMIC_ST_ERR_INV_PARAM;
+                    }
+                }
+                else if((PMIC_ST_SUCCESS == status) &&
+                        (PMIC_LP8764X_VMON_RANGE_3V35_5V == vmonRange))
+                {
+                    if((voltage_mV < PMIC_LP8764X_RANGE1_VMON_MIN_VOLTAGE)   ||
+                       (voltage_mV > PMIC_LP8764X_RANGE1_VMON_MAX_VOLTAGE))
+                    {
+                        status = PMIC_ST_ERR_INV_PARAM;
+                    }
+                }
+                else
+                {
+                    status = PMIC_ST_ERR_INV_PARAM;
+                }
+            }
+            else if(PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType)
+            {
+                if((voltage_mV < PMIC_LP8764X_REGULATOR_BUCK_MIN_VOLTAGE) ||
+                   (voltage_mV > PMIC_LP8764X_REGULATOR_BUCK_MAX_VOLTAGE))
+                {
+                    status = PMIC_ST_ERR_INV_PARAM;
+                }
+            }
+            else
+            {
+                status = PMIC_ST_ERR_INV_PARAM;
+            }
+
             break;
         default:
             status = PMIC_ST_ERR_INV_PARAM;
@@ -1646,6 +1661,7 @@ static int32_t Pmic_powerSetVoltage(Pmic_CoreHandle_t *pPmicCoreHandle,
     int32_t  status  = PMIC_ST_SUCCESS;
     uint8_t  vSetVal = 0U;
     uint8_t  regAddr = 0U;
+    uint8_t  regData = 0U;
     uint8_t  bitPos  = 0U;
     uint8_t  bitMask = 0U;
 
@@ -1669,20 +1685,27 @@ static int32_t Pmic_powerSetVoltage(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == status)
     {
-        status = Pmic_powerGetVoltageBitField(
-                                            pPmicCoreHandle->pmicDeviceType,
-                                            pwrRsrc,
-                                            &bitPos,
-                                            &bitMask);
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
+
         if(PMIC_ST_SUCCESS == status)
         {
-            status = Pmic_setPwrRsrcPgoodRegBitfieldCfg(pPmicCoreHandle,
-                                                        regAddr,
-                                                        vSetVal,
-                                                        bitPos,
-                                                        bitMask);
-
+            status = Pmic_powerGetVoltageBitField(
+                                                pPmicCoreHandle->pmicDeviceType,
+                                                pwrRsrc,
+                                                &bitPos,
+                                                &bitMask);
         }
+
+        if(PMIC_ST_SUCCESS == status)
+        {
+            Pmic_setBitField(&regData, bitPos, bitMask, vSetVal);
+            status = Pmic_commIntf_sendByte(pPmicCoreHandle, regAddr, regData);
+        }
+
+        Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
     return status;
@@ -1809,11 +1832,11 @@ static int32_t Pmic_powerSetBuckCurrentLimit(
     uint8_t pwrRsrcIndex;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
+
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         pmicStatus = Pmic_powerValidateBuckCurrentLimit(
@@ -1861,12 +1884,11 @@ static int32_t Pmic_powerGetBuckCurrentLimit(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
 
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -1971,16 +1993,16 @@ static int32_t Pmic_powerSetBuckVmonSlewRate(
                                             uint8_t            buckVmonSlewRate)
 {
     int32_t  status = PMIC_ST_SUCCESS;
+    uint8_t  regData    = 0U;
     uint8_t  bitPos     = 0U;
     uint8_t  bitMask    = 0U;
     uint8_t pwrRsrcIndex;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    status = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                           pwrRsrc,
-                                           &pwrRsrcIndex,
-                                           &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
+    /* Get PMIC power resources register configuration */
+    status = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                     &pPwrRsrcRegCfg);
 
     if(PMIC_ST_SUCCESS == status)
     {
@@ -1991,21 +2013,31 @@ static int32_t Pmic_powerSetBuckVmonSlewRate(
 
     if(PMIC_ST_SUCCESS == status)
     {
-        status = Pmic_powerGetBuckVmonSlewRateBitPos(
-                                            pPmicCoreHandle->pmicDeviceType,
-                                            pwrRsrc,
-                                            &bitPos,
-                                            &bitMask);
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        status = Pmic_commIntf_recvByte(
+                                     pPmicCoreHandle,
+                                     pPwrRsrcRegCfg[pwrRsrcIndex].configRegAddr,
+                                     &regData);
 
         if(PMIC_ST_SUCCESS == status)
         {
-            status = Pmic_setPwrRsrcPgoodRegBitfieldCfg(
+            status = Pmic_powerGetBuckVmonSlewRateBitPos(
+                                                pPmicCoreHandle->pmicDeviceType,
+                                                pwrRsrc,
+                                                &bitPos,
+                                                &bitMask);
+        }
+
+        if(PMIC_ST_SUCCESS == status)
+        {
+            Pmic_setBitField(&regData, bitPos, bitMask, buckVmonSlewRate);
+            status = Pmic_commIntf_sendByte(
                                      pPmicCoreHandle,
                                      pPwrRsrcRegCfg[pwrRsrcIndex].configRegAddr,
-                                     buckVmonSlewRate,
-                                     bitPos,
-                                     bitMask);
+                                     regData);
         }
+
+        Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
     return status;
@@ -2026,12 +2058,11 @@ static int32_t Pmic_powerGetBuckVmonSlewRate(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    status = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                           pwrRsrc,
-                                           &pwrRsrcIndex,
-                                           &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
 
+    /* Get PMIC power resources register configuration */
+    status = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
     if(PMIC_ST_SUCCESS == status)
     {
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -2073,11 +2104,11 @@ static int32_t Pmic_powerSetBuckPullDownEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
     uint8_t buckPullDownEnVal = 0U;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
+
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -2123,12 +2154,11 @@ static int32_t Pmic_powerGetBuckPullDownEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
 
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -2196,12 +2226,11 @@ static int32_t Pmic_powerSetLdoPullDownSel(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
 
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         pmicStatus = Pmic_powerValidateLdoPullDownSel(
@@ -2250,12 +2279,11 @@ static int32_t Pmic_powerGetLdoPullDownSel(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
 
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -2657,11 +2685,11 @@ static int32_t Pmic_powerSetVmonEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t bitMask = 0U;
     uint8_t vmonEnVal = 0U;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
+
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -2716,11 +2744,11 @@ static int32_t Pmic_powerGetvmonEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
     uint8_t bitMask = 0U;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
+
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -2802,12 +2830,11 @@ static int32_t Pmic_powerSetRailGrpSel(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t bitMask = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
 
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         regAddr = pPwrRsrcRegCfg[pwrRsrcIndex].railGrpRegAddr;
@@ -2857,12 +2884,11 @@ static int32_t Pmic_powerGetRailGrpSel(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t bitMask = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
 
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -2902,11 +2928,11 @@ static int32_t Pmic_powerSetVmonRange(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
     uint8_t vmonRangeVal = 0U;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
+
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -2935,86 +2961,6 @@ static int32_t Pmic_powerSetVmonRange(Pmic_CoreHandle_t *pPmicCoreHandle,
         }
 
         Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
-
-    return pmicStatus;
-}
-
-/*!
- * \brief   This function is to configure the various control parameters -
- *          buckFpwmMpMode, ldoSlowRampEn, ldoPullDownSel
- */
-static int32_t Pmic_pwrSetBuckfpwmmpLdoslowrampLdopdselCfg(
-                                       Pmic_CoreHandle_t       *pPmicCoreHandle,
-                                       uint16_t                 pwrRsrc,
-                                       Pmic_PowerResourceCfg_t  pwrRsrcCfg)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pwrRsrcCfg.validParams,
-                                     PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID)))
-    {
-        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
-                                          PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID,
-                                          pwrRsrc,
-                                          pPmicCoreHandle->pmicDeviceType);
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            /* Select Multi phase with PWM or Auto Mode */
-            pmicStatus = Pmic_powerSetBuckFpwmMpMode(
-                                               pPmicCoreHandle,
-                                               pwrRsrc,
-                                               pwrRsrcCfg.buckFpwmMpMode);
-        }
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pwrRsrcCfg.validParams,
-                                    PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID)))
-    {
-        if(((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-            (PMIC_SILICON_REV_ID_PG_1_0 ==
-                                  pPmicCoreHandle->pmicDevSiliconRev)) ||
-           (PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType))
-        {
-            pmicStatus = PMIC_ST_ERR_NOT_SUPPORTED;
-        }
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
-                                      PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID,
-                                      pwrRsrc,
-                                      pPmicCoreHandle->pmicDeviceType);
-        }
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            /* Enable/Disable Slow Ramp for LDO */
-            pmicStatus = Pmic_powerSetLdoSlowRampEn(
-                                               pPmicCoreHandle,
-                                               pwrRsrc,
-                                               pwrRsrcCfg.ldoSlowRampEn);
-        }
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pwrRsrcCfg.validParams,
-                                     PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID)))
-    {
-        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
-                                          PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID,
-                                          pwrRsrc,
-                                          pPmicCoreHandle->pmicDeviceType);
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            /* Set resistor value for output pull-down for LDO */
-            pmicStatus = Pmic_powerSetLdoPullDownSel(
-                                              pPmicCoreHandle,
-                                              pwrRsrc,
-                                              pwrRsrcCfg.ldoPullDownSel);
-        }
     }
 
     return pmicStatus;
@@ -3104,15 +3050,70 @@ static int32_t Pmic_powerSetPwrResourceCtrlCfg(
         }
     }
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pwrRsrcCfg.validParams,
+                                     PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID)))
     {
-        /* Set the configiration - Select Multi phase with PWM or Auto Mode ,
-         * Enable/Disable Slow Ramp for LDO, Set resistor value for output
-         * pull-down for LDO */
-        pmicStatus = Pmic_pwrSetBuckfpwmmpLdoslowrampLdopdselCfg(
-                                                            pPmicCoreHandle,
-                                                            pwrRsrc,
-                                                            pwrRsrcCfg);
+        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
+                                          PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID,
+                                          pwrRsrc,
+                                          pPmicCoreHandle->pmicDeviceType);
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Select Multi phase with PWM or Auto Mode */
+            pmicStatus = Pmic_powerSetBuckFpwmMpMode(
+                                               pPmicCoreHandle,
+                                               pwrRsrc,
+                                               pwrRsrcCfg.buckFpwmMpMode);
+        }
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pwrRsrcCfg.validParams,
+                                    PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID)))
+    {
+        if(((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
+            (PMIC_SILICON_REV_ID_PG_1_0 ==
+                                  pPmicCoreHandle->pmicDevSiliconRev)) ||
+           (PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType))
+        {
+            pmicStatus = PMIC_ST_ERR_NOT_SUPPORTED;
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
+                                      PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID,
+                                      pwrRsrc,
+                                      pPmicCoreHandle->pmicDeviceType);
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Enable/Disable Slow Ramp for LDO */
+            pmicStatus = Pmic_powerSetLdoSlowRampEn(
+                                               pPmicCoreHandle,
+                                               pwrRsrc,
+                                               pwrRsrcCfg.ldoSlowRampEn);
+        }
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pwrRsrcCfg.validParams,
+                                     PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID)))
+    {
+        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
+                                          PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID,
+                                          pwrRsrc,
+                                          pPmicCoreHandle->pmicDeviceType);
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Set resistor value for output pull-down for LDO */
+            pmicStatus = Pmic_powerSetLdoPullDownSel(
+                                              pPmicCoreHandle,
+                                              pwrRsrc,
+                                              pwrRsrcCfg.ldoPullDownSel);
+        }
     }
 
     return pmicStatus;
@@ -3236,15 +3237,116 @@ static int32_t Pmic_powerSetPwrRsrcePgoodConfig(
 }
 
 /*!
- * \brief   This function is to get the various control parameters -
- *          regulatorEn, ldoSlowRampEn, ldoPullDownSel
+ * \brief   This function is to get the various control parameters for
+ *          regulators and VMON
  */
-static int32_t Pmic_pwrGetRegulatorEnLdoslowrampLdopdselCfg(
+static int32_t Pmic_powerGetPwrResourceCtrlCfg(
                                        Pmic_CoreHandle_t       *pPmicCoreHandle,
                                        uint16_t                 pwrRsrc,
                                        Pmic_PowerResourceCfg_t *pPwrRsrcCfg)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
+
+    if(((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
+                                    PMIC_CFG_REGULATOR_VMON_RV_SEL_VALID))
+    {
+        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
+                                          PMIC_CFG_REGULATOR_VMON_RV_SEL_VALID,
+                                          pwrRsrc,
+                                          pPmicCoreHandle->pmicDeviceType);
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Get Enable/Disable status for residual voltage checking */
+            pmicStatus = Pmic_powerGetRvCheckEn(pPmicCoreHandle,
+                                                pwrRsrc,
+                                                &(pPwrRsrcCfg->rvCheckEn));
+        }
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
+                                     PMIC_CFG_REGULATOR_BUCK_PLDN_EN_VALID)))
+    {
+        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
+                                          PMIC_CFG_REGULATOR_BUCK_PLDN_EN_VALID,
+                                          pwrRsrc,
+                                          pPmicCoreHandle->pmicDeviceType);
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Get Enable/Disable status of pull down resistor for Buck */
+            pmicStatus = Pmic_powerGetBuckPullDownEn(
+                                           pPmicCoreHandle,
+                                           pwrRsrc,
+                                           &(pPwrRsrcCfg->buckPullDownEn));
+        }
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
+                                     PMIC_CFG_VMON_EN_VALID)))
+    {
+        /* Get Enable/Disable status for Voltage monitor */
+        pmicStatus = Pmic_powerGetvmonEn(pPmicCoreHandle,
+                                         pwrRsrc,
+                                         &(pPwrRsrcCfg->vmonEn));
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
+                                     PMIC_CFG_REGULATOR_BUCK_VOUT_SEL_VALID)))
+    {
+        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
+                                         PMIC_CFG_REGULATOR_BUCK_VOUT_SEL_VALID,
+                                         pwrRsrc,
+                                         pPmicCoreHandle->pmicDeviceType);
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+             /* Get output voltage register for buck*/
+            pmicStatus = Pmic_powerGetBuckVoutSel(pPmicCoreHandle,
+                                                  pwrRsrc,
+                                                  &(pPwrRsrcCfg->buckVoutSel));
+        }
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
+                                     PMIC_CFG_REGULATOR_BUCK_FPWM_VALID)))
+    {
+        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
+                                             PMIC_CFG_REGULATOR_BUCK_FPWM_VALID,
+                                             pwrRsrc,
+                                             pPmicCoreHandle->pmicDeviceType);
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Get PWM or Auto Mode */
+            pmicStatus = Pmic_powerGetBuckFpwmMode(
+                                                  pPmicCoreHandle,
+                                                  pwrRsrc,
+                                                  &(pPwrRsrcCfg->buckFpwmMode));
+        }
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
+                                     PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID)))
+    {
+        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
+                                           PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID,
+                                           pwrRsrc,
+                                           pPmicCoreHandle->pmicDeviceType);
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Get Multi phase with PWM or Auto Mode status */
+            pmicStatus = Pmic_powerGetBuckPwmMpMode(
+                                                pPmicCoreHandle,
+                                                pwrRsrc,
+                                                &(pPwrRsrcCfg->buckFpwmMpMode));
+        }
+    }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
        (((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
@@ -3309,156 +3411,6 @@ static int32_t Pmic_pwrGetRegulatorEnLdoslowrampLdopdselCfg(
                                                 pwrRsrc,
                                                 &(pPwrRsrcCfg->ldoPullDownSel));
         }
-    }
-
-    return pmicStatus;
-}
-
-/*!
- * \brief   This function is to get the various control parameters -
- *          buckVoutSel, buckFpwmMode, buckFpwmMpMode
- */
-static int32_t Pmic_pwrGetBuckVoutselFpwmmodeFpwmmpmodeCfg(
-                                       Pmic_CoreHandle_t       *pPmicCoreHandle,
-                                       uint16_t                 pwrRsrc,
-                                       Pmic_PowerResourceCfg_t *pPwrRsrcCfg)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
-                                     PMIC_CFG_REGULATOR_BUCK_VOUT_SEL_VALID)))
-    {
-        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
-                                         PMIC_CFG_REGULATOR_BUCK_VOUT_SEL_VALID,
-                                         pwrRsrc,
-                                         pPmicCoreHandle->pmicDeviceType);
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-             /* Get output voltage register for buck*/
-            pmicStatus = Pmic_powerGetBuckVoutSel(pPmicCoreHandle,
-                                                  pwrRsrc,
-                                                  &(pPwrRsrcCfg->buckVoutSel));
-        }
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
-                                     PMIC_CFG_REGULATOR_BUCK_FPWM_VALID)))
-    {
-        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
-                                             PMIC_CFG_REGULATOR_BUCK_FPWM_VALID,
-                                             pwrRsrc,
-                                             pPmicCoreHandle->pmicDeviceType);
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            /* Get PWM or Auto Mode */
-            pmicStatus = Pmic_powerGetBuckFpwmMode(
-                                                  pPmicCoreHandle,
-                                                  pwrRsrc,
-                                                  &(pPwrRsrcCfg->buckFpwmMode));
-        }
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
-                                     PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID)))
-    {
-        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
-                                           PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID,
-                                           pwrRsrc,
-                                           pPmicCoreHandle->pmicDeviceType);
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            /* Get Multi phase with PWM or Auto Mode status */
-            pmicStatus = Pmic_powerGetBuckPwmMpMode(
-                                                pPmicCoreHandle,
-                                                pwrRsrc,
-                                                &(pPwrRsrcCfg->buckFpwmMpMode));
-        }
-    }
-
-    return pmicStatus;
-}
-
-/*!
- * \brief   This function is to get the various control parameters for
- *          regulators and VMON
- */
-static int32_t Pmic_powerGetPwrResourceCtrlCfg(
-                                       Pmic_CoreHandle_t       *pPmicCoreHandle,
-                                       uint16_t                 pwrRsrc,
-                                       Pmic_PowerResourceCfg_t *pPwrRsrcCfg)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-
-    if(((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
-                                    PMIC_CFG_REGULATOR_VMON_RV_SEL_VALID))
-    {
-        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
-                                          PMIC_CFG_REGULATOR_VMON_RV_SEL_VALID,
-                                          pwrRsrc,
-                                          pPmicCoreHandle->pmicDeviceType);
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            /* Get Enable/Disable status for residual voltage checking */
-            pmicStatus = Pmic_powerGetRvCheckEn(pPmicCoreHandle,
-                                                pwrRsrc,
-                                                &(pPwrRsrcCfg->rvCheckEn));
-        }
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
-                                     PMIC_CFG_REGULATOR_BUCK_PLDN_EN_VALID)))
-    {
-        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
-                                          PMIC_CFG_REGULATOR_BUCK_PLDN_EN_VALID,
-                                          pwrRsrc,
-                                          pPmicCoreHandle->pmicDeviceType);
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            /* Get Enable/Disable status of pull down resistor for Buck */
-            pmicStatus = Pmic_powerGetBuckPullDownEn(
-                                           pPmicCoreHandle,
-                                           pwrRsrc,
-                                           &(pPwrRsrcCfg->buckPullDownEn));
-        }
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
-                                     PMIC_CFG_VMON_EN_VALID)))
-    {
-        /* Get Enable/Disable status for Voltage monitor */
-        pmicStatus = Pmic_powerGetvmonEn(pPmicCoreHandle,
-                                         pwrRsrc,
-                                         &(pPwrRsrcCfg->vmonEn));
-    }
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        /* Get the configuration - output voltage register for buck ,
-         * PWM or Auto Mode,Multi phase with PWM or Auto Mode status */
-        pmicStatus = Pmic_pwrGetBuckVoutselFpwmmodeFpwmmpmodeCfg(
-                                                               pPmicCoreHandle,
-                                                               pwrRsrc,
-                                                               pPwrRsrcCfg);
-    }
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        /* Get the configuration - Enable/Disable status for Regulator ,
-         * Enable/Disable Slow Ramp for LDO, Set resistor value for output
-         * pull-down for LDO */
-        pmicStatus = Pmic_pwrGetRegulatorEnLdoslowrampLdopdselCfg(
-                                                               pPmicCoreHandle,
-                                                               pwrRsrc,
-                                                               pPwrRsrcCfg);
     }
 
     return pmicStatus;
@@ -3597,15 +3549,69 @@ static int32_t Pmic_powerValidatePwrRsrcLimit(
     switch(pPmicCoreHandle->pmicDeviceType)
     {
         case PMIC_DEV_LEO_TPS6594X:
-            status = Pmic_powerTPS6594xValidatePwrRsrcLimit(pPmicCoreHandle,
-                                                            pwrRsrcType,
-                                                            pwrRsrc);
+            if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_VCCA == pwrRsrcType)
+            {
+                if(pwrRsrc != PMIC_TPS6594X_POWER_SOURCE_VCCA)
+                {
+                    status = PMIC_ST_ERR_INV_PARAM;
+                }
+            }
+            else if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType)
+            {
+                if((pwrRsrc > PMIC_TPS6594X_BUCK_MAX) ||
+                   (pwrRsrc < PMIC_TPS6594X_BUCK_MIN))
+                {
+                    status = PMIC_ST_ERR_INV_PARAM;
+                }
+            }
+            else if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO == pwrRsrcType)
+            {
+                if((pwrRsrc > PMIC_TPS6594X_LDO_MAX) ||
+                   (pwrRsrc < PMIC_TPS6594X_LDO_MIN))
+                {
+                    status = PMIC_ST_ERR_INV_PARAM;
+                }
+            }
+            else
+            {
+                status = PMIC_ST_ERR_INV_PARAM;
+            }
 
             break;
         case PMIC_DEV_HERA_LP8764X:
-            status = Pmic_powerLP8764xValidatePwrRsrcLimit(pPmicCoreHandle,
-                                                           pwrRsrcType,
-                                                           pwrRsrc);
+            if(PMIC_LP8764X_POWER_RESOURCE_TYPE_VCCA == pwrRsrcType)
+           {
+                if(pwrRsrc != PMIC_LP8764X_POWER_SOURCE_VCCA)
+                {
+                    status = PMIC_ST_ERR_INV_PARAM;
+                }
+           }
+           else if(PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType)
+           {
+                if((pwrRsrc > PMIC_LP8764X_BUCK_MAX) ||
+                   (pwrRsrc < PMIC_LP8764X_BUCK_MIN))
+                {
+                    status = PMIC_ST_ERR_INV_PARAM;
+                }
+           }
+           else if(PMIC_LP8764X_POWER_RESOURCE_TYPE_VMON == pwrRsrcType)
+           {
+                if((pwrRsrc > PMIC_LP8764X_VMON_MAX) ||
+                   (pwrRsrc < PMIC_LP8764X_VMON_MIN))
+                {
+                    status = PMIC_ST_ERR_INV_PARAM;
+                }
+           }
+           else if((PMIC_LP8764X_POWER_RESOURCE_TYPE_LDO == pwrRsrcType) &&
+                   (((bool)false) == pPmicCoreHandle->pPmic_SubSysInfo->ldoEnable))
+           {
+                status = PMIC_ST_ERR_INV_PARAM;
+           }
+           else
+           {
+                status = PMIC_ST_ERR_INV_PARAM;
+           }
+
             break;
         default:
             status = PMIC_ST_ERR_INV_PARAM;
@@ -3656,11 +3662,11 @@ static int32_t Pmic_powerSetLdoBypassModeEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
     uint8_t ldoBypassModeEnVal = 0U;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
+
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -3705,11 +3711,11 @@ static int32_t Pmic_powerGetLdoBypassModeEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
+
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -3781,12 +3787,11 @@ static int32_t Pmic_powerSetLdoRvTimeoutSel(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t bitMask = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
 
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         regAddr = pPwrRsrcRegCfg[pwrRsrcIndex].ldoRvTimeOutRegAddr;
@@ -3838,12 +3843,11 @@ static int32_t Pmic_powerGetLdoRvTimeoutSel(
     uint8_t bitMask = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
 
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         regAddr = pPwrRsrcRegCfg[pwrRsrcIndex].ldoRvTimeOutRegAddr;
@@ -4586,7 +4590,7 @@ static int32_t Pmic_setPgoodSelType(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t regAddr    = 0U;
     uint8_t bitMask    = 0U;
     uint8_t shiftVal   = 0U;
-
+    uint8_t regData    = 0U;
     Pmic_powerPgoodSrcRegCfg_t *pPGoodSrcRegCfg = NULL;
 
     /* Get PMIC power-good sources register configuration */
@@ -4603,19 +4607,24 @@ static int32_t Pmic_setPgoodSelType(Pmic_CoreHandle_t *pPmicCoreHandle,
         status = Pmic_getPgoodSelTypeBitmask(pPmicCoreHandle->pmicDeviceType,
                                              pgoodSrcSel,
                                              &bitMask);
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        regAddr  = pPGoodSrcRegCfg[pgoodSrcId].regAddr;
+        shiftVal = pPGoodSrcRegCfg[pgoodSrcId].shiftValue;
+        bitMask  = bitMask << shiftVal;
+
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
 
         if(PMIC_ST_SUCCESS == status)
         {
-            regAddr  = pPGoodSrcRegCfg[pgoodSrcId].regAddr;
-            shiftVal = pPGoodSrcRegCfg[pgoodSrcId].shiftValue;
-            bitMask  = bitMask << shiftVal;
-
-            status = Pmic_setPwrRsrcPgoodRegBitfieldCfg(pPmicCoreHandle,
-                                                        regAddr,
-                                                        pgoodSelType,
-                                                        shiftVal,
-                                                        bitMask);
+            Pmic_setBitField(&regData, shiftVal, bitMask, pgoodSelType);
+            status = Pmic_commIntf_sendByte(pPmicCoreHandle, regAddr, regData);
         }
+
+        Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
     return status;
@@ -4794,12 +4803,11 @@ static int32_t Pmic_powerGetCurrentLimitLvlStat(
     uint8_t bitMask = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
 
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -4846,12 +4854,11 @@ static int32_t Pmic_powerGetUnderVoltageTholdStat(
     uint8_t bitMask = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
 
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -4898,12 +4905,11 @@ static int32_t Pmic_powerGetOverVoltageTholdStat(
     uint8_t bitMask = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
 
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -4951,12 +4957,11 @@ static int32_t Pmic_powerGetOverVoltageProtectionLvlStat(
     uint8_t bitMask = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
 
+    /* Get PMIC power resources register configuration */
+    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                         &pPwrRsrcRegCfg);
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -5172,16 +5177,55 @@ static int32_t Pmic_powerValidateIntrType(uint8_t  pmicDeviceType,
     switch(pmicDeviceType)
     {
         case PMIC_DEV_LEO_TPS6594X:
-            status = Pmic_powerTPS6594xValidateIntrType(pmicDeviceType,
-                                                        pwrResource,
-                                                        pwrResourceType,
-                                                        intrType);
+            if((PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK == pwrResourceType) ||
+               (PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO == pwrResourceType))
+            {
+                if((intrType != PMIC_TPS6594X_POWER_OV_INT) &&
+                   (intrType != PMIC_TPS6594X_POWER_UV_INT) &&
+                   (intrType != PMIC_TPS6594X_POWER_ILIM_INT))
+                {
+                    status = PMIC_ST_ERR_INV_PARAM;
+                }
+            }
+            else if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_VCCA == pwrResourceType)
+            {
+                if((intrType != PMIC_TPS6594X_POWER_OV_INT) &&
+                   (intrType != PMIC_TPS6594X_POWER_UV_INT))
+                {
+                    status = PMIC_ST_ERR_INV_PARAM;
+                }
+            }
+            else
+            {
+                status = PMIC_ST_ERR_INV_PARAM;
+            }
+
             break;
         case PMIC_DEV_HERA_LP8764X:
-            status = Pmic_powerLP8764xValidateIntrType(pmicDeviceType,
-                                                       pwrResource,
-                                                       pwrResourceType,
-                                                       intrType);
+            if((PMIC_LP8764X_POWER_RESOURCE_TYPE_VCCA == pwrResourceType) ||
+               (PMIC_LP8764X_POWER_RESOURCE_TYPE_VMON == pwrResourceType))
+            {
+                if((intrType != PMIC_LP8764X_POWER_OV_INT) &&
+                   (intrType != PMIC_LP8764X_POWER_UV_INT))
+                {
+                    status = PMIC_ST_ERR_INV_PARAM;
+                }
+            }
+
+            else if(PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK == pwrResourceType)
+            {
+                if((intrType != PMIC_LP8764X_POWER_OV_INT) &&
+                   (intrType != PMIC_LP8764X_POWER_UV_INT) &&
+                   (intrType != PMIC_LP8764X_POWER_ILIM_INT))
+                {
+                    status = PMIC_ST_ERR_INV_PARAM;
+                }
+            }
+            else
+            {
+                status = PMIC_ST_ERR_INV_PARAM;
+            }
+
             break;
         default:
             status = PMIC_ST_ERR_INV_PARAM;
@@ -5245,12 +5289,11 @@ static int32_t Pmic_powerRsrcIntrEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-      /* Get PMIC power resources Index and register configuration */
-    status = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                           pwrResource,
-                                           &pwrRsrcIndex,
-                                           &pPwrRsrcRegCfg);
+    pwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrResource);
 
+    /* Get PMIC power resources register configuration */
+    status = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                     &pPwrRsrcRegCfg);
     if(PMIC_ST_SUCCESS == status)
     {
         irqNum = pPwrRsrcRegCfg[pwrRsrcIndex].irqNumber;
@@ -5316,125 +5359,6 @@ static int32_t Pmic_powerIntrEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
     }
 
     return status;
-}
-
-/*!
- * \brief   This function is to configure the various control parameters -
- *          ldoBypassModeEn, ldoRvTimeoutSel, railGrpSel
- */
-static int32_t Pmic_powerSetLdobypassenLdorvtoselRailgrpselCfg(
-                                       Pmic_CoreHandle_t       *pPmicCoreHandle,
-                                       uint16_t                 pwrResource,
-                                       Pmic_PowerResourceCfg_t  pwrResourceCfg)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pwrResourceCfg.validParams,
-                                  PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID)))
-    {
-        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
-                                    PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID,
-                                    pwrResource,
-                                    pPmicCoreHandle->pmicDeviceType);
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            /* Set the mode for LDO regulator */
-            pmicStatus = Pmic_powerSetLdoBypassModeEn(
-                                                pPmicCoreHandle,
-                                                pwrResource,
-                                                pwrResourceCfg.ldoBypassModeEn);
-        }
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pwrResourceCfg.validParams,
-                                  PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID)))
-    {
-        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
-                                    PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID,
-                                    pwrResource,
-                                    pPmicCoreHandle->pmicDeviceType);
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            /* Set the residual voltage check timeout for LDO regulator */
-            pmicStatus = Pmic_powerSetLdoRvTimeoutSel(
-                                                pPmicCoreHandle,
-                                                pwrResource,
-                                                pwrResourceCfg.ldoRvTimeoutSel);
-        }
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pwrResourceCfg.validParams,
-                                     PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID)))
-    {
-        /* Rail selection for power resources */
-        pmicStatus = Pmic_powerSetRailGrpSel(pPmicCoreHandle,
-                                             pwrResource,
-                                             pwrResourceCfg.railGrpSel);
-    }
-
-    return pmicStatus;
-}
-
-/*!
- * \brief   This function is to configure the various control parameters -
- *          regulatorEn, vmonEn, voltage_mV
- */
-static int32_t Pmic_powerSetRegulatorenVmonenVoltagemvCfg(
-                                       Pmic_CoreHandle_t       *pPmicCoreHandle,
-                                       uint16_t                 pwrResource,
-                                       Pmic_PowerResourceCfg_t  pwrResourceCfg)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pwrResourceCfg.validParams,
-                                     PMIC_CFG_REGULATOR_EN_VALID)))
-    {
-        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
-                                               PMIC_CFG_REGULATOR_EN_VALID,
-                                               pwrResource,
-                                               pPmicCoreHandle->pmicDeviceType);
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            /* Enable/Disable Regulator */
-            pmicStatus = Pmic_powerSetRegulatorEn(pPmicCoreHandle,
-                                                  pwrResource,
-                                                  pwrResourceCfg.regulatorEn);
-        }
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pwrResourceCfg.validParams,
-                                     PMIC_CFG_VMON_EN_VALID)))
-    {
-        /* Enable/Disable Voltage monitor for all power resources */
-        pmicStatus = Pmic_powerSetVmonEn(pPmicCoreHandle,
-                                         pwrResource,
-                                         pwrResourceCfg.vmonEn);
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pwrResourceCfg.validParams,
-                                    PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID)))
-    {
-        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
-                                     PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID,
-                                     pwrResource,
-                                     pPmicCoreHandle->pmicDeviceType);
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            /* Set the voltage level for regulator/ powergood voltage level
-               for VMON */
-            pmicStatus = Pmic_powerSetVoltage(pPmicCoreHandle,
-                                              pwrResource,
-                                              pwrResourceCfg.voltage_mV);
-        }
-    }
-
-    return pmicStatus;
 }
 
 /**
@@ -5520,39 +5444,8 @@ int32_t Pmic_powerSetPwrResourceCfg(
                                                       pwrResourceCfg);
     }
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_powerSetLdobypassenLdorvtoselRailgrpselCfg(
-                                                      pPmicCoreHandle,
-                                                      pwrResource,
-                                                      pwrResourceCfg);
-    }
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_powerSetRegulatorenVmonenVoltagemvCfg(
-                                                      pPmicCoreHandle,
-                                                      pwrResource,
-                                                      pwrResourceCfg);
-    }
-
-
-    return pmicStatus;
-}
-
-/**
- * \brief   API to get power resources configurations - ldoBypassModeEn,
- *          ldoRvTimeoutSel, railGrpSel, voltage_mV
- */
-static int32_t Pmic_powerGetLdobypassLdorvtoselRailgrpselVoltagemvCfg(
-                                   Pmic_CoreHandle_t           *pPmicCoreHandle,
-                                   const uint16_t               pwrResource,
-                                   Pmic_PowerResourceCfg_t     *pPwrResourceCfg)
-{
-    int32_t  pmicStatus = PMIC_ST_SUCCESS;
-
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pPwrResourceCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pwrResourceCfg.validParams,
                                   PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -5561,16 +5454,16 @@ static int32_t Pmic_powerGetLdobypassLdorvtoselRailgrpselVoltagemvCfg(
                                     pPmicCoreHandle->pmicDeviceType);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-             /* Get the mode for LDO regulator */
-            pmicStatus = Pmic_powerGetLdoBypassModeEn(
-                                           pPmicCoreHandle,
-                                           pwrResource,
-                                           &(pPwrResourceCfg->ldoBypassModeEn));
+            /* Set the mode for LDO regulator */
+            pmicStatus = Pmic_powerSetLdoBypassModeEn(
+                                                pPmicCoreHandle,
+                                                pwrResource,
+                                                pwrResourceCfg.ldoBypassModeEn);
         }
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pPwrResourceCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pwrResourceCfg.validParams,
                                   PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
@@ -5579,40 +5472,67 @@ static int32_t Pmic_powerGetLdobypassLdorvtoselRailgrpselVoltagemvCfg(
                                     pPmicCoreHandle->pmicDeviceType);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            /* Get the residual voltage check timeout for LDO regulator */
-            pmicStatus = Pmic_powerGetLdoRvTimeoutSel(
-                                           pPmicCoreHandle,
-                                           pwrResource,
-                                           &(pPwrResourceCfg->ldoRvTimeoutSel));
+            /* Set the residual voltage check timeout for LDO regulator */
+            pmicStatus = Pmic_powerSetLdoRvTimeoutSel(
+                                                pPmicCoreHandle,
+                                                pwrResource,
+                                                pwrResourceCfg.ldoRvTimeoutSel);
         }
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pPwrResourceCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pwrResourceCfg.validParams,
                                      PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID)))
     {
-        /* Get Rail selection for power resources */
-        pmicStatus = Pmic_powerGetRailGrpSel(
-                                           pPmicCoreHandle,
-                                           pwrResource,
-                                           &(pPwrResourceCfg->railGrpSel));
+        /* Rail selection for power resources */
+        pmicStatus = Pmic_powerSetRailGrpSel(pPmicCoreHandle,
+                                             pwrResource,
+                                             pwrResourceCfg.railGrpSel);
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pPwrResourceCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(pwrResourceCfg.validParams,
                                     PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID)))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
-                                      PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID,
-                                      pwrResource,
-                                      pPmicCoreHandle->pmicDeviceType);
+                                     PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID,
+                                     pwrResource,
+                                     pPmicCoreHandle->pmicDeviceType);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            /* Get the voltage level of the regulator */
-            pmicStatus = Pmic_powerGetVoltage(pPmicCoreHandle,
+            /* Set the voltage level for regulator/ powergood voltage level
+               for VMON */
+            pmicStatus = Pmic_powerSetVoltage(pPmicCoreHandle,
                                               pwrResource,
-                                              &(pPwrResourceCfg->voltage_mV));
+                                              pwrResourceCfg.voltage_mV);
         }
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pwrResourceCfg.validParams,
+                                     PMIC_CFG_REGULATOR_EN_VALID)))
+    {
+        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
+                                               PMIC_CFG_REGULATOR_EN_VALID,
+                                               pwrResource,
+                                               pPmicCoreHandle->pmicDeviceType);
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Enable/Disable Regulator */
+            pmicStatus = Pmic_powerSetRegulatorEn(pPmicCoreHandle,
+                                                  pwrResource,
+                                                  pwrResourceCfg.regulatorEn);
+        }
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pwrResourceCfg.validParams,
+                                     PMIC_CFG_VMON_EN_VALID)))
+    {
+        /* Enable/Disable Voltage monitor for all power resources */
+        pmicStatus = Pmic_powerSetVmonEn(pPmicCoreHandle,
+                                         pwrResource,
+                                         pwrResourceCfg.vmonEn);
     }
 
     return pmicStatus;
@@ -5701,85 +5621,81 @@ int32_t Pmic_powerGetPwrResourceCfg(
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         pmicStatus = Pmic_powerGetPwrRsrcePgoodConfig(pPmicCoreHandle,
-                                                      pwrResource,
-                                                      pPwrResourceCfg);
+                                         pwrResource,
+                                         pPwrResourceCfg);
     }
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pPwrResourceCfg->validParams,
+                                  PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID)))
     {
-        pmicStatus = Pmic_powerGetLdobypassLdorvtoselRailgrpselVoltagemvCfg(
-                                                            pPmicCoreHandle,
-                                                            pwrResource,
-                                                            pPwrResourceCfg);
+        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
+                                    PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID,
+                                    pwrResource,
+                                    pPmicCoreHandle->pmicDeviceType);
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+             /* Get the mode for LDO regulator */
+            pmicStatus = Pmic_powerGetLdoBypassModeEn(
+                                           pPmicCoreHandle,
+                                           pwrResource,
+                                           &(pPwrResourceCfg->ldoBypassModeEn));
+        }
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pPwrResourceCfg->validParams,
+                                  PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID)))
+    {
+        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
+                                    PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID,
+                                    pwrResource,
+                                    pPmicCoreHandle->pmicDeviceType);
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Get the residual voltage check timeout for LDO regulator */
+            pmicStatus = Pmic_powerGetLdoRvTimeoutSel(
+                                           pPmicCoreHandle,
+                                           pwrResource,
+                                           &(pPwrResourceCfg->ldoRvTimeoutSel));
+        }
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pPwrResourceCfg->validParams,
+                                     PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID)))
+    {
+        /* Get Rail selection for power resources */
+        pmicStatus = Pmic_powerGetRailGrpSel(
+                                           pPmicCoreHandle,
+                                           pwrResource,
+                                           &(pPwrResourceCfg->railGrpSel));
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pPwrResourceCfg->validParams,
+                                    PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID)))
+    {
+        pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
+                                      PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID,
+                                      pwrResource,
+                                      pPmicCoreHandle->pmicDeviceType);
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Get the voltage level of the regulator */
+            pmicStatus = Pmic_powerGetVoltage(pPmicCoreHandle,
+                                              pwrResource,
+                                              &(pPwrResourceCfg->voltage_mV));
+        }
     }
 
     return pmicStatus;
 }
-
-/*!
- * \brief   This function is used to trigger selection for severe error, moderate
- *          error, soc rail group, mcu rail group and other rail group
- */
-static int32_t Pmic_powerSetTriggerSelCfg(
-                                  Pmic_CoreHandle_t           *pPmicCoreHandle,
-                                  const Pmic_PowerCommonCfg_t  powerCommonCfg)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-
-    if(((bool)true) == pmic_validParamCheck(powerCommonCfg.validParams,
-                                     PMIC_SEVERE_ERR_TRIG_VALID))
-    {
-        /* Set the trigger selection for severe Error */
-        pmicStatus = Pmic_powerSetSevereErrorTrig(
-                                                pPmicCoreHandle,
-                                                powerCommonCfg.severeErrorTrig);
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(powerCommonCfg.validParams,
-                                     PMIC_OTHER_RAIL_TRIG_VALID)))
-    {
-        /* Set trigger selection for other rail group */
-        pmicStatus = Pmic_powerSetOtherRailTrig(pPmicCoreHandle,
-                                                powerCommonCfg.otherRailTrig);
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(powerCommonCfg.validParams,
-                                     PMIC_SOC_RAIL_TRIG_VALID)))
-    {
-        /* Set the trigger selection for soc rail group */
-        pmicStatus = Pmic_powerSetSocRailTrig(pPmicCoreHandle,
-                                              powerCommonCfg.socRailTrig);
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(powerCommonCfg.validParams,
-                                     PMIC_MCU_RAIL_TRIG_VALID)))
-    {
-        /* Set the trigger selection for mcu rail group */
-        pmicStatus = Pmic_powerSetMcuRailTrig(pPmicCoreHandle,
-                                              powerCommonCfg.mcuRailTrig);
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(powerCommonCfg.validParams,
-                                     PMIC_MODERATE_ERR_TRIG_VALID)))
-    {
-        /* Set the trigger selection for Moderate Error */
-        pmicStatus = Pmic_powerSetModerateRailTrig(
-                                               pPmicCoreHandle,
-                                               powerCommonCfg.moderateRailTrig);
-    }
-
-    return pmicStatus;
-}
-
 
 /**
  * \brief   API to Set Power configuration
  *
- * Requirement: REQ_TAG(PDK-5829), REQ_TAG(PDK-5848), REQ_TAG(PDK_5847),
+ * Requirement: REQ_TAG(PDK-5829), REQ_TAG(PDK-5848), REQ_TAG(PDK-5847),
  *              REQ_TAG(PDK-9111), REQ_TAG(PDK-9149), REQ_TAG(PDK-9159),
  *              REQ_TAG(PDK-9329)
  * Design: did_pmic_power_cfg_readback, did_pmic_power_pgood_cfg_readback
@@ -5865,72 +5781,51 @@ int32_t Pmic_powerSetCommonConfig(Pmic_CoreHandle_t           *pPmicCoreHandle,
         }
     }
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(powerCommonCfg.validParams,
+                                     PMIC_SEVERE_ERR_TRIG_VALID)))
     {
-        /* Set Trigger selection for severe error, moderate error, soc rail
-         * group, mcu rail group and other rail group */
-        pmicStatus = Pmic_powerSetTriggerSelCfg(pPmicCoreHandle,
-                                                powerCommonCfg);
-    }
-
-    return pmicStatus;
-}
-
-/*!
- * \brief   This function is used to get trigger selection for severe error,
- *          moderate error, soc rail group, mcu rail group and other rail group
- */
-static int32_t Pmic_powerGetTriggerSelCfg(
-                                       Pmic_CoreHandle_t     *pPmicCoreHandle,
-                                       Pmic_PowerCommonCfg_t *pPowerCommonCfg)
-{
-    int32_t  pmicStatus = PMIC_ST_SUCCESS;
-
-    if(((bool)true) == pmic_validParamCheck(pPowerCommonCfg->validParams,
-                                     PMIC_SEVERE_ERR_TRIG_VALID))
-    {
-        /* get Trigger selection for Severe Error */
-        pmicStatus = Pmic_powerGetSevereErrorTrig(
-                                           pPmicCoreHandle,
-                                           &(pPowerCommonCfg->severeErrorTrig));
+        /* Set the trigger selection for severe Error */
+        pmicStatus = Pmic_powerSetSevereErrorTrig(
+                                                pPmicCoreHandle,
+                                                powerCommonCfg.severeErrorTrig);
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pPowerCommonCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(powerCommonCfg.validParams,
                                      PMIC_OTHER_RAIL_TRIG_VALID)))
     {
-        /* get Trigger selection for OTHER rail group */
-        pmicStatus = Pmic_powerGetOtherRailTrig(
-                                             pPmicCoreHandle,
-                                             &(pPowerCommonCfg->otherRailTrig));
+        /* Set trigger selection fro other rail group */
+        pmicStatus = Pmic_powerSetOtherRailTrig(pPmicCoreHandle,
+                                                powerCommonCfg.otherRailTrig);
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pPowerCommonCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(powerCommonCfg.validParams,
                                      PMIC_SOC_RAIL_TRIG_VALID)))
     {
-        /* get Trigger selection for SOC rail group */
-        pmicStatus = Pmic_powerGetSocRailTrig(pPmicCoreHandle,
-                                              &(pPowerCommonCfg->socRailTrig));
+        /* Set the trigger selection for soc rail group */
+        pmicStatus = Pmic_powerSetSocRailTrig(pPmicCoreHandle,
+                                              powerCommonCfg.socRailTrig);
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pPowerCommonCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(powerCommonCfg.validParams,
                                      PMIC_MCU_RAIL_TRIG_VALID)))
     {
-        /* get Trigger selection for MCU rail group */
-        pmicStatus = Pmic_powerGetMcuRailTrig(pPmicCoreHandle,
-                                              &(pPowerCommonCfg->mcuRailTrig));
+        /* Set the trigger selection for mcu rail group */
+        pmicStatus = Pmic_powerSetMcuRailTrig(pPmicCoreHandle,
+                                              powerCommonCfg.mcuRailTrig);
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pPowerCommonCfg->validParams,
+       (((bool)true) == pmic_validParamCheck(powerCommonCfg.validParams,
                                      PMIC_MODERATE_ERR_TRIG_VALID)))
     {
-        /* get Trigger selection for Moderate Error */
-        pmicStatus = Pmic_powerGetModerateRailTrig(
-                                          pPmicCoreHandle,
-                                          &(pPowerCommonCfg->moderateRailTrig));
+        /* Set the trigger selection for Moderate Error */
+        pmicStatus = Pmic_powerSetModerateRailTrig(
+                                               pPmicCoreHandle,
+                                               powerCommonCfg.moderateRailTrig);
     }
 
     return pmicStatus;
@@ -6031,12 +5926,52 @@ int32_t Pmic_powerGetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
         }
     }
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pPowerCommonCfg->validParams,
+                                     PMIC_SEVERE_ERR_TRIG_VALID)))
     {
-        /* Get Trigger selection for severe error, moderate error,
-         * soc rail group, mcu rail group and other rail group */
-        pmicStatus = Pmic_powerGetTriggerSelCfg(pPmicCoreHandle,
-                                                pPowerCommonCfg);
+        /* get Trigger selection for Severe Error */
+        pmicStatus = Pmic_powerGetSevereErrorTrig(
+                                           pPmicCoreHandle,
+                                           &(pPowerCommonCfg->severeErrorTrig));
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pPowerCommonCfg->validParams,
+                                     PMIC_OTHER_RAIL_TRIG_VALID)))
+    {
+        /* get Trigger selection for OTHER rail group */
+        pmicStatus = Pmic_powerGetOtherRailTrig(
+                                             pPmicCoreHandle,
+                                             &(pPowerCommonCfg->otherRailTrig));
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pPowerCommonCfg->validParams,
+                                     PMIC_SOC_RAIL_TRIG_VALID)))
+    {
+        /* get Trigger selection for SOC rail group */
+        pmicStatus = Pmic_powerGetSocRailTrig(pPmicCoreHandle,
+                                              &(pPowerCommonCfg->socRailTrig));
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pPowerCommonCfg->validParams,
+                                     PMIC_MCU_RAIL_TRIG_VALID)))
+    {
+        /* get Trigger selection for MCU rail group */
+        pmicStatus = Pmic_powerGetMcuRailTrig(pPmicCoreHandle,
+                                              &(pPowerCommonCfg->mcuRailTrig));
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pPowerCommonCfg->validParams,
+                                     PMIC_MODERATE_ERR_TRIG_VALID)))
+    {
+        /* get Trigger selection for Moderate Error */
+        pmicStatus = Pmic_powerGetModerateRailTrig(
+                                          pPmicCoreHandle,
+                                          &(pPowerCommonCfg->moderateRailTrig));
     }
 
     return pmicStatus;
@@ -6159,60 +6094,6 @@ int32_t Pmic_powerGetConfigPowerGood(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * \brief   API to get output under voltage, over voltage and VCCA Voltage level
- *          status
- */
-static int32_t Pmic_powerGetUvOvVccaVoltageStat(
-                                     Pmic_CoreHandle_t        *pPmicCoreHandle,
-                                     const uint16_t            pwrResource,
-                                     uint8_t                   pwrRsrcType,
-                                     Pmic_PowerResourceStat_t *pPwrRsrcStatCfg)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pPwrRsrcStatCfg->validParams,
-                                  PMIC_POWER_RESOURCE_UV_STAT_VALID)))
-    {
-         /* Get the output under voltage status */
-         pmicStatus = Pmic_powerGetUnderVoltageTholdStat(
-                                     pPmicCoreHandle,
-                                     pwrResource,
-                                     &(pPwrRsrcStatCfg->underVoltageTholdStat));
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pPwrRsrcStatCfg->validParams,
-                                  PMIC_POWER_RESOURCE_OV_STAT_VALID)))
-    {
-         /* Get the output over voltage status */
-         pmicStatus = Pmic_powerGetOverVoltageTholdStat(
-                                      pPmicCoreHandle,
-                                      pwrResource,
-                                      &(pPwrRsrcStatCfg->overVoltageTholdStat));
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pPwrRsrcStatCfg->validParams,
-                                  PMIC_POWER_VCCA_OV_LVL_STAT_VALID)))
-    {
-        pmicStatus = Pmic_powerValidateVccaPwrRsrcType(
-                                                pPmicCoreHandle->pmicDeviceType,
-                                                pwrRsrcType);
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            /* Get the voltage level status for VCCA */
-            pmicStatus = Pmic_powerGetOverVoltageProtectionLvlStat(
-                              pPmicCoreHandle,
-                              pwrResource,
-                              &(pPwrRsrcStatCfg->overVoltageProtectionLvlStat));
-        }
-    }
-
-    return pmicStatus;
-}
-
-/**
  * \brief   API to get power resources status.
  *
  * Requirement: REQ_TAG(PDK-5829), REQ_TAG(PDK-5848), REQ_TAG(PDK-5850)
@@ -6300,13 +6181,43 @@ int32_t Pmic_powerGetPwrRsrcStat(Pmic_CoreHandle_t        *pPmicCoreHandle,
         }
     }
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pPwrRsrcStatCfg->validParams,
+                                  PMIC_POWER_RESOURCE_UV_STAT_VALID)))
     {
-         /* Get the output under voltage and over voltage status */
-         pmicStatus = Pmic_powerGetUvOvVccaVoltageStat(pPmicCoreHandle,
-                                                       pwrResource,
-                                                       pwrRsrcType,
-                                                       pPwrRsrcStatCfg);
+         /* Get the output under voltage status */
+         pmicStatus = Pmic_powerGetUnderVoltageTholdStat(
+                                     pPmicCoreHandle,
+                                     pwrResource,
+                                     &(pPwrRsrcStatCfg->underVoltageTholdStat));
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pPwrRsrcStatCfg->validParams,
+                                  PMIC_POWER_RESOURCE_OV_STAT_VALID)))
+    {
+         /* Get the output over voltage status */
+         pmicStatus = Pmic_powerGetOverVoltageTholdStat(
+                                      pPmicCoreHandle,
+                                      pwrResource,
+                                      &(pPwrRsrcStatCfg->overVoltageTholdStat));
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pPwrRsrcStatCfg->validParams,
+                                  PMIC_POWER_VCCA_OV_LVL_STAT_VALID)))
+    {
+        pmicStatus = Pmic_powerValidateVccaPwrRsrcType(
+                                                pPmicCoreHandle->pmicDeviceType,
+                                                pwrRsrcType);
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Get the voltage level status for VCCA */
+            pmicStatus = Pmic_powerGetOverVoltageProtectionLvlStat(
+                              pPmicCoreHandle,
+                              pwrResource,
+                              &(pPwrRsrcStatCfg->overVoltageProtectionLvlStat));
+        }
     }
 
     return pmicStatus;

@@ -414,7 +414,7 @@ extern "C" {
 #define PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC       (3U)
 #define PMIC_TPS6594X_PGOOD_SOURCE_TYPE_TDIE              (4U)
 #define PMIC_TPS6594X_PGOOD_SOURCE_TYPE_LDO               (5U)
-/* VMON type is not supported by TPS6594x Leo PMIC */
+/* VMON type is not supported by LP8764x HERA PMIC */
 /*  @} */
 
 /**

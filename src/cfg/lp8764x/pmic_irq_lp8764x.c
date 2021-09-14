@@ -542,137 +542,6 @@ void pmic_get_lp8764x_intrGpioCfg(Pmic_GpioIntrTypeCfg_t **pGpioIntrCfg)
 }
 
 /*!
- * \brief  Function to decipher BUCK1 and BUCK 1 Error
- */
-static int32_t Pmic_lp8764x_getBuck1Buck2Err(
-                                       Pmic_CoreHandle_t *pPmicCoreHandle,
-                                       Pmic_IrqStatus_t  *pErrStat)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint8_t regData    = 0U;
-
-    /* Start Critical Section */
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_INT_BUCK1_2_REGADDR,
-                                        &regData);
-
-    /* Stop Critical Section */
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    if((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
-    {
-        if((regData & PMIC_INT_BUCK1_2_BUCK2_OV_INT_MASK) != 0U)
-        {
-            Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK2_OV_INT);
-        }
-
-        if((regData & PMIC_INT_BUCK1_2_BUCK2_UV_INT_MASK) != 0U)
-        {
-            Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK2_UV_INT);
-        }
-
-        if((regData & PMIC_INT_BUCK1_2_BUCK2_SC_INT_MASK) != 0U)
-        {
-            Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK2_SC_INT);
-        }
-
-        if((regData & PMIC_INT_BUCK1_2_BUCK2_ILIM_INT_MASK) != 0U)
-        {
-            Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK2_ILIM_INT);
-        }
-
-        if((regData & PMIC_INT_BUCK1_2_BUCK1_OV_INT_MASK) != 0U)
-        {
-            Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK1_OV_INT);
-        }
-
-        if((regData & PMIC_INT_BUCK1_2_BUCK1_UV_INT_MASK) != 0U)
-        {
-            Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK1_UV_INT);
-        }
-
-        if((regData & PMIC_INT_BUCK1_2_BUCK1_SC_INT_MASK) != 0U)
-        {
-            Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK1_SC_INT);
-        }
-
-        if((regData & PMIC_INT_BUCK1_2_BUCK1_ILIM_INT_MASK) != 0U)
-        {
-            Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK1_ILIM_INT);
-        }
-    }
-
-    return pmicStatus;
-}
-
-/*!
- * \brief  Function to decipher BUCK3 and BUCK 4 Error
- */
-static int32_t Pmic_lp8764x_getBuck3Buck4Err(
-                                       Pmic_CoreHandle_t *pPmicCoreHandle,
-                                       Pmic_IrqStatus_t  *pErrStat)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint8_t regData    = 0U;
-
-    /* Start Critical Section */
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_INT_BUCK3_4_REGADDR,
-                                        &regData);
-    /* Stop Critical Section */
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    if((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
-    {
-        if((regData & PMIC_INT_BUCK3_4_BUCK4_OV_INT_MASK) != 0U)
-        {
-            Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK4_OV_INT);
-        }
-
-        if((regData & PMIC_INT_BUCK3_4_BUCK4_UV_INT_MASK) != 0U)
-        {
-            Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK4_UV_INT);
-        }
-
-        if((regData & PMIC_INT_BUCK3_4_BUCK4_SC_INT_MASK) != 0U)
-        {
-            Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK4_SC_INT);
-        }
-
-        if((regData & PMIC_INT_BUCK3_4_BUCK4_ILIM_INT_MASK) != 0U)
-        {
-            Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK4_ILIM_INT);
-        }
-
-        if((regData & PMIC_INT_BUCK3_4_BUCK3_OV_INT_MASK) != 0U)
-        {
-            Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK3_OV_INT);
-        }
-
-        if((regData & PMIC_INT_BUCK3_4_BUCK3_UV_INT_MASK) != 0U)
-        {
-            Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK3_UV_INT);
-        }
-
-        if((regData & PMIC_INT_BUCK3_4_BUCK3_SC_INT_MASK) != 0U)
-        {
-            Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK3_SC_INT);
-        }
-
-        if((regData & PMIC_INT_BUCK3_4_BUCK3_ILIM_INT_MASK) != 0U)
-        {
-            Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK3_ILIM_INT);
-        }
-    }
-
-    return pmicStatus;
-}
-
-/*!
  * \brief  Function to decipher BUCK Error
  */
 static int32_t Pmic_lp8764x_getBuckErr(Pmic_CoreHandle_t *pPmicCoreHandle,
@@ -680,18 +549,113 @@ static int32_t Pmic_lp8764x_getBuckErr(Pmic_CoreHandle_t *pPmicCoreHandle,
                                        Pmic_IrqStatus_t  *pErrStat)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData    = 0U;
+
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
     /* PMIC BUCK3_4 Interrupt Status Check */
     if((regValue & PMIC_INT_BUCK_BUCK3_4_INT_MASK) != 0U)
     {
-        pmicStatus = Pmic_lp8764x_getBuck3Buck4Err(pPmicCoreHandle, pErrStat);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                            PMIC_INT_BUCK3_4_REGADDR,
+                                            &regData);
+        if((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
+        {
+            if((regData & PMIC_INT_BUCK3_4_BUCK4_OV_INT_MASK) != 0U)
+            {
+                Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK4_OV_INT);
+            }
+
+            if((regData & PMIC_INT_BUCK3_4_BUCK4_UV_INT_MASK) != 0U)
+            {
+                Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK4_UV_INT);
+            }
+
+            if((regData & PMIC_INT_BUCK3_4_BUCK4_SC_INT_MASK) != 0U)
+            {
+                Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK4_SC_INT);
+            }
+
+            if((regData & PMIC_INT_BUCK3_4_BUCK4_ILIM_INT_MASK) != 0U)
+            {
+                Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK4_ILIM_INT);
+            }
+
+            if((regData & PMIC_INT_BUCK3_4_BUCK3_OV_INT_MASK) != 0U)
+            {
+                Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK3_OV_INT);
+            }
+
+            if((regData & PMIC_INT_BUCK3_4_BUCK3_UV_INT_MASK) != 0U)
+            {
+                Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK3_UV_INT);
+            }
+
+            if((regData & PMIC_INT_BUCK3_4_BUCK3_SC_INT_MASK) != 0U)
+            {
+                Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK3_SC_INT);
+            }
+
+            if((regData & PMIC_INT_BUCK3_4_BUCK3_ILIM_INT_MASK) != 0U)
+            {
+                Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK3_ILIM_INT);
+            }
+        }
     }
 
     /* PMIC BUCK1_2 Interrupt Status Check */
     if((regValue & PMIC_INT_BUCK_BUCK1_2_INT_MASK) != 0U)
     {
-        pmicStatus = Pmic_lp8764x_getBuck1Buck2Err(pPmicCoreHandle, pErrStat);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                            PMIC_INT_BUCK1_2_REGADDR,
+                                            &regData);
+        if((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
+        {
+            if((regData & PMIC_INT_BUCK1_2_BUCK2_OV_INT_MASK) != 0U)
+            {
+                Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK2_OV_INT);
+            }
+
+            if((regData & PMIC_INT_BUCK1_2_BUCK2_UV_INT_MASK) != 0U)
+            {
+                Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK2_UV_INT);
+            }
+
+            if((regData & PMIC_INT_BUCK1_2_BUCK2_SC_INT_MASK) != 0U)
+            {
+                Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK2_SC_INT);
+            }
+
+            if((regData & PMIC_INT_BUCK1_2_BUCK2_ILIM_INT_MASK) != 0U)
+            {
+                Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK2_ILIM_INT);
+            }
+
+            if((regData & PMIC_INT_BUCK1_2_BUCK1_OV_INT_MASK) != 0U)
+            {
+                Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK1_OV_INT);
+            }
+
+            if((regData & PMIC_INT_BUCK1_2_BUCK1_UV_INT_MASK) != 0U)
+            {
+                Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK1_UV_INT);
+            }
+
+            if((regData & PMIC_INT_BUCK1_2_BUCK1_SC_INT_MASK) != 0U)
+            {
+                Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK1_SC_INT);
+            }
+
+            if((regData & PMIC_INT_BUCK1_2_BUCK1_ILIM_INT_MASK) != 0U)
+            {
+                Pmic_intrBitSet(pErrStat, PMIC_LP8764X_BUCK1_ILIM_INT);
+            }
+        }
     }
+
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
 }
@@ -744,54 +708,6 @@ static void Pmic_lp8764x_getVmonErr(uint8_t            regValue,
 }
 
 /*!
- * \brief  Function to get GPIO1 to GPIO8 Error
- */
-static void Pmic_lp8764x_getGpio1ToGpio8Err(uint8_t            regData,
-                                            Pmic_IrqStatus_t  *pErrStat)
-{
-    if((regData & PMIC_INT_GPIO1_8_GPIO1_INT_MASK) != 0U)
-    {
-       Pmic_intrBitSet(pErrStat, PMIC_LP8764X_GPIO1_INT);
-    }
-
-    if((regData & PMIC_INT_GPIO1_8_GPIO2_INT_MASK) != 0U)
-    {
-       Pmic_intrBitSet(pErrStat, PMIC_LP8764X_GPIO2_INT);
-    }
-
-    if((regData & PMIC_INT_GPIO1_8_GPIO3_INT_MASK) != 0U)
-    {
-       Pmic_intrBitSet(pErrStat, PMIC_LP8764X_GPIO3_INT);
-    }
-
-    if((regData & PMIC_INT_GPIO1_8_GPIO4_INT_MASK) != 0U)
-    {
-       Pmic_intrBitSet(pErrStat, PMIC_LP8764X_GPIO4_INT);
-    }
-
-    if((regData & PMIC_INT_GPIO1_8_GPIO5_INT_MASK) != 0U)
-    {
-       Pmic_intrBitSet(pErrStat, PMIC_LP8764X_GPIO5_INT);
-    }
-
-    if((regData & PMIC_INT_GPIO1_8_GPIO6_INT_MASK) != 0U)
-    {
-       Pmic_intrBitSet(pErrStat, PMIC_LP8764X_GPIO6_INT);
-    }
-
-    if((regData & PMIC_INT_GPIO1_8_GPIO7_INT_MASK) != 0U)
-    {
-       Pmic_intrBitSet(pErrStat, PMIC_LP8764X_GPIO7_INT);
-    }
-
-    if((regData & PMIC_INT_GPIO1_8_GPIO8_INT_MASK) != 0U)
-    {
-       Pmic_intrBitSet(pErrStat, PMIC_LP8764X_GPIO8_INT);
-    }
-
-}
-
-/*!
  * \brief  Function to decipher GPIO Error
  */
 static int32_t Pmic_lp8764x_getGpioErr(Pmic_CoreHandle_t *pPmicCoreHandle,
@@ -801,23 +717,59 @@ static int32_t Pmic_lp8764x_getGpioErr(Pmic_CoreHandle_t *pPmicCoreHandle,
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData    = 0U;
 
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
     /* Checking GPIO1_8 Bit field for INT_GPIO Register */
     if((regValue & PMIC_INT_GPIO_GPIO1_8_INT_MASK) != 0U)
     {
-        /* Start Critical Section */
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
                                             PMIC_INT_GPIO1_8_REGADDR,
                                             &regData);
-        /* Stop Critical Section */
-        Pmic_criticalSectionStop(pPmicCoreHandle);
 
        if((PMIC_ST_SUCCESS == pmicStatus) &&
           (0U != regData))
        {
-           Pmic_lp8764x_getGpio1ToGpio8Err(regData, pErrStat);
-       }
+           if((regData & PMIC_INT_GPIO1_8_GPIO1_INT_MASK) != 0U)
+           {
+               Pmic_intrBitSet(pErrStat, PMIC_LP8764X_GPIO1_INT);
+           }
+
+           if((regData & PMIC_INT_GPIO1_8_GPIO2_INT_MASK) != 0U)
+           {
+               Pmic_intrBitSet(pErrStat, PMIC_LP8764X_GPIO2_INT);
+           }
+
+           if((regData & PMIC_INT_GPIO1_8_GPIO3_INT_MASK) != 0U)
+           {
+               Pmic_intrBitSet(pErrStat, PMIC_LP8764X_GPIO3_INT);
+           }
+
+           if((regData & PMIC_INT_GPIO1_8_GPIO4_INT_MASK) != 0U)
+           {
+               Pmic_intrBitSet(pErrStat, PMIC_LP8764X_GPIO4_INT);
+           }
+
+           if((regData & PMIC_INT_GPIO1_8_GPIO5_INT_MASK) != 0U)
+           {
+               Pmic_intrBitSet(pErrStat, PMIC_LP8764X_GPIO5_INT);
+           }
+
+           if((regData & PMIC_INT_GPIO1_8_GPIO6_INT_MASK) != 0U)
+           {
+               Pmic_intrBitSet(pErrStat, PMIC_LP8764X_GPIO6_INT);
+           }
+
+           if((regData & PMIC_INT_GPIO1_8_GPIO7_INT_MASK) != 0U)
+           {
+               Pmic_intrBitSet(pErrStat, PMIC_LP8764X_GPIO7_INT);
+           }
+
+           if((regData & PMIC_INT_GPIO1_8_GPIO8_INT_MASK) != 0U)
+           {
+               Pmic_intrBitSet(pErrStat, PMIC_LP8764X_GPIO8_INT);
+           }
+        }
     }
 
     if((regValue & PMIC_INT_GPIO_GPIO9_INT_MASK) != 0U)
@@ -829,6 +781,9 @@ static int32_t Pmic_lp8764x_getGpioErr(Pmic_CoreHandle_t *pPmicCoreHandle,
     {
         Pmic_intrBitSet(pErrStat, PMIC_LP8764X_GPIO10_INT);
     }
+
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
 }
@@ -950,26 +905,43 @@ static void Pmic_lp8764x_getSevereErr(uint8_t            regValue,
 }
 
 /*!
- * \brief  Function to decipher FSM - Communication Error
+ * \brief  Function to decipher FSM Error
  */
-static int32_t Pmic_lp8764x_getFsmCommErr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                          uint8_t            regValue,
-                                          Pmic_IrqStatus_t  *pErrStat)
+static int32_t Pmic_lp8764x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                      uint8_t            regValue,
+                                      Pmic_IrqStatus_t  *pErrStat)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData    = 0U;
 
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    if((regValue & PMIC_INT_FSM_ERR_IMM_SHUTDOWN_INT_MASK) != 0U)
+    {
+        Pmic_intrBitSet(pErrStat, PMIC_LP8764X_IMM_SHUTOWN_INT);
+    }
+
+    if((regValue & PMIC_INT_FSM_ERR_ORD_SHUTDOWN_INT_MASK) != 0U)
+    {
+        Pmic_intrBitSet(pErrStat, PMIC_LP8764X_ORD_SHUTDOWN_INT);
+    }
+
+    if((regValue & PMIC_INT_FSM_ERR_MCU_PWR_ERR_INT_MASK) != 0U)
+    {
+        Pmic_intrBitSet(pErrStat, PMIC_LP8764X_MCU_PWR_ERR_INT);
+    }
+
+    if((regValue & PMIC_INT_FSM_ERR_SOC_PWR_ERR_INT_MASK) != 0U)
+    {
+        Pmic_intrBitSet(pErrStat, PMIC_LP8764X_SOC_PWR_ERR_INT);
+    }
+
     if((regValue & PMIC_INT_FSM_ERR_COMM_ERR_INT_MASK) != 0U)
     {
-        /* Start Critical Section */
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
                                             PMIC_INT_COMM_ERR_REGADDR,
                                             &regData);
-
-        /* Stop Critical Section */
-        Pmic_criticalSectionStop(pPmicCoreHandle);
 
         if((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
         {
@@ -999,23 +971,6 @@ static int32_t Pmic_lp8764x_getFsmCommErr(Pmic_CoreHandle_t *pPmicCoreHandle,
             }
         }
     }
-
-    return pmicStatus;
-}
-
-/*!
- * \brief  Function to decipher FSM - Readback, ESM Error
- */
-static int32_t Pmic_lp8764x_getFsmReadbackEsmErr(
-                                      Pmic_CoreHandle_t *pPmicCoreHandle,
-                                      uint8_t            regValue,
-                                      Pmic_IrqStatus_t  *pErrStat)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint8_t regData    = 0U;
-
-    /* Start Critical Section */
-    Pmic_criticalSectionStart(pPmicCoreHandle);
 
     if((regValue & PMIC_INT_FSM_ERR_READBACK_ERR_INT_MASK) != 0U)
     {
@@ -1065,63 +1020,11 @@ static int32_t Pmic_lp8764x_getFsmReadbackEsmErr(
         }
     }
 
-    /* Stop Critical Section */
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    return pmicStatus;
-}
-
-/*!
- * \brief  Function to decipher FSM Error
- */
-static int32_t Pmic_lp8764x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                      uint8_t            regValue,
-                                      Pmic_IrqStatus_t  *pErrStat)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint8_t regData    = 0U;
-
-    /* Start Critical Section */
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    if((regValue & PMIC_INT_FSM_ERR_IMM_SHUTDOWN_INT_MASK) != 0U)
-    {
-        Pmic_intrBitSet(pErrStat, PMIC_LP8764X_IMM_SHUTOWN_INT);
-    }
-
-    if((regValue & PMIC_INT_FSM_ERR_ORD_SHUTDOWN_INT_MASK) != 0U)
-    {
-        Pmic_intrBitSet(pErrStat, PMIC_LP8764X_ORD_SHUTDOWN_INT);
-    }
-
-    if((regValue & PMIC_INT_FSM_ERR_MCU_PWR_ERR_INT_MASK) != 0U)
-    {
-        Pmic_intrBitSet(pErrStat, PMIC_LP8764X_MCU_PWR_ERR_INT);
-    }
-
-    if((regValue & PMIC_INT_FSM_ERR_SOC_PWR_ERR_INT_MASK) != 0U)
-    {
-        Pmic_intrBitSet(pErrStat, PMIC_LP8764X_SOC_PWR_ERR_INT);
-    }
-
-    pmicStatus = Pmic_lp8764x_getFsmCommErr(pPmicCoreHandle,
-                                            regValue,
-                                            pErrStat);
-
-    pmicStatus = Pmic_lp8764x_getFsmReadbackEsmErr(pPmicCoreHandle,
-                                                   regValue,
-                                                   pErrStat);
-
     if((regValue & PMIC_INT_FSM_ERR_WD_INT_MASK) != 0U)
     {
-        /* Start Critical Section */
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
                                             PMIC_WD_ERR_STATUS_REGADDR,
                                             &regData);
-        /* Stop Critical Section */
-        Pmic_criticalSectionStop(pPmicCoreHandle);
 
         if((PMIC_ST_SUCCESS == pmicStatus) &&
            ((regData & PMIC_INT_WD_ERR_MASK) != 0U))
@@ -1143,49 +1046,8 @@ static int32_t Pmic_lp8764x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle,
         }
     }
 
-    return pmicStatus;
-}
-
-/*!
- * \brief  Function to decipher the the Startup, Miscellaneous, Moderate,
- *         Severe, FSM Error
- */
-int32_t Pmic_lp8764x_irqGetStartupMiscModerateSevereFsmErr(
-                                            Pmic_CoreHandle_t *pPmicCoreHandle,
-                                            Pmic_IrqStatus_t  *pErrStat,
-                                            uint16_t           l1RegAddr,
-                                            uint8_t            regValue)
-{
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
-
-    switch(l1RegAddr)
-    {
-        case PMIC_INT_STARTUP_REGADDR:
-            pmicStatus = Pmic_lp8764x_getStartupErr(pPmicCoreHandle,
-                                                    regValue,
-                                                    pErrStat);
-            break;
-
-        case PMIC_INT_MISC_REGADDR:
-            Pmic_lp8764x_getMiscErr(regValue, pErrStat);
-            break;
-
-        case PMIC_INT_MODERATE_ERR_REGADDR:
-            Pmic_lp8764x_getModerateErr(regValue,
-                                        pErrStat);
-            break;
-
-        case PMIC_INT_SEVERE_ERR_REGADDR:
-            Pmic_lp8764x_getSevereErr(regValue,
-                                      pErrStat);
-            break;
-
-        default:
-            pmicStatus = Pmic_lp8764x_getFSMErr(pPmicCoreHandle,
-                                                regValue,
-                                                pErrStat);
-            break;
-    }
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
 }
@@ -1233,15 +1095,29 @@ int32_t Pmic_lp8764x_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle,
                 break;
 
             case PMIC_INT_STARTUP_REGADDR:
+                pmicStatus = Pmic_lp8764x_getStartupErr(pPmicCoreHandle,
+                                                        regValue,
+                                                        pErrStat);
+                break;
+
             case PMIC_INT_MISC_REGADDR:
+                Pmic_lp8764x_getMiscErr(regValue, pErrStat);
+                break;
+
             case PMIC_INT_MODERATE_ERR_REGADDR:
+                Pmic_lp8764x_getModerateErr(regValue,
+                                            pErrStat);
+                break;
+
             case PMIC_INT_SEVERE_ERR_REGADDR:
+                Pmic_lp8764x_getSevereErr(regValue,
+                                          pErrStat);
+                break;
+
             case PMIC_INT_FSM_ERR_REGADDR:
-                pmicStatus = Pmic_lp8764x_irqGetStartupMiscModerateSevereFsmErr(
-                                                              pPmicCoreHandle,
-                                                              pErrStat,
-                                                              l1RegAddr,
-                                                              regValue);
+                pmicStatus = Pmic_lp8764x_getFSMErr(pPmicCoreHandle,
+                                                    regValue,
+                                                    pErrStat);
                 break;
 
             default:

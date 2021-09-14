@@ -344,22 +344,44 @@ int32_t Pmic_getRecoveryCnt(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /*!
- * \brief  API to Initialize pPmicCoreHandle for pmicDeviceType, Comm Mode,
- *         Main Slave Address, and NVM Slave Address
+ * \brief  API to Initialize pmic core handle for PMIC LLD.
  *
- *         This function gets device configuration from pPmicConfigData and
- *         initializes pPmicCoreHandle after validation of given params depends
- *         on validParams bit fields
+ * Requirement: REQ_TAG(PDK-5814), REQ_TAG(PDK-5810), REQ_TAG(PDK-5813),
+ *              REQ_TAG(PDK-5843), REQ_TAG(PDK-5811), REQ_TAG(PDK-5853),
+ *              REQ_TAG(PDK-9159)
+ * Design: did_pmic_comm_intf_cfg, did_pmic_comm_single_i2c_cfg,
+ *         did_pmic_comm_dual_i2c_cfg, did_pmic_comm_spi_cfg,
+ *         did_pmic_tps6594x_j721e_support, did_pmic_lp8764x_j7200_support
+ *
+ *         This function gets device configuration from pCoreCfgData and
+ *         initializes device specific information in pPmicCoreHandle after
+ *         validation of given params depends on validParams bitfileds
+ *         and does some basic validation on PMIC interface I2C/SPI,
+ *         confirming that PMIC is accessible for PMIC configuration and
+ *         monitor features.
+ *
+ *  \param   pPmicConfigData [IN]   PMIC Configuration data
+ *  \param   pPmicCoreHandle [OUT]  PMIC Interface Handle.
+ *
+ *  \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *           For valid values \ref Pmic_ErrorCodes
  */
-static int32_t Pmic_initCoreHandleBasicDevCfgParams(
-                                          const Pmic_CoreCfg_t *pPmicConfigData,
-                                          Pmic_CoreHandle_t    *pPmicCoreHandle)
+int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
+                  Pmic_CoreHandle_t    *pPmicCoreHandle)
 {
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    int32_t pmicStatus = PMIC_ST_SUCCESS, status = PMIC_ST_SUCCESS;
+    uint8_t regVal = 0U;
+    uint8_t i2c1SpiCrcStat = 0xFF, i2c2CrcStat = 0xFF;
+
+    if((NULL == pPmicCoreHandle) || (NULL == pPmicConfigData))
+    {
+        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+    }
 
     /* Check and update PMIC Handle device type */
-    if(((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams,
-                                            PMIC_CFG_DEVICE_TYPE_VALID))
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams,
+                                           PMIC_CFG_DEVICE_TYPE_VALID)))
     {
        if((PMIC_DEV_HERA_LP8764X != pPmicConfigData->pmicDeviceType) &&
           (PMIC_DEV_LEO_TPS6594X != pPmicConfigData->pmicDeviceType))
@@ -402,6 +424,18 @@ static int32_t Pmic_initCoreHandleBasicDevCfgParams(
         }
     }
 
+    /* Check and update PMIC Handle QA Slave Address */
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams,
+                                     PMIC_CFG_QASLAVEADDR_VALID)))
+    {
+        if((PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode) ||
+           (PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode))
+        {
+            pPmicCoreHandle->qaSlaveAddr = pPmicConfigData->qaSlaveAddr;
+        }
+    }
+
     /* Check and update PMIC Handle NVM Slave Address */
     if((PMIC_ST_SUCCESS == pmicStatus) &&
        (((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams,
@@ -414,26 +448,10 @@ static int32_t Pmic_initCoreHandleBasicDevCfgParams(
         }
     }
 
-    return pmicStatus;
-}
-
-/*!
- * \brief  API to Initialize pPmicCoreHandle for I2C1 Speed, I2C2 Speed and
- *         Main Comm Handle
- *
- *         This function gets device configuration from pPmicConfigData and
- *         initializes pPmicCoreHandle after validation of given params depends
- *         on validParams bit fields
- */
-static int32_t Pmic_initCoreHandleI2CSpeedCommHandle(
-                                          const Pmic_CoreCfg_t *pPmicConfigData,
-                                          Pmic_CoreHandle_t    *pPmicCoreHandle)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-
     /* Check and update PMIC Handle I2C1 Speed */
-    if(((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams,
-                                            PMIC_CFG_I2C1_SPEED_VALID))
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams,
+                                     PMIC_CFG_I2C1_SPEED_VALID)))
     {
 
         if(pPmicConfigData->i2c1Speed > PMIC_I2C_FORCED_HS_MODE)
@@ -468,6 +486,7 @@ static int32_t Pmic_initCoreHandleI2CSpeedCommHandle(
         }
     }
 
+
     /* Check and update PMIC Handle Main Comm Handle */
     if((PMIC_ST_SUCCESS == pmicStatus) &&
        (((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams,
@@ -480,34 +499,6 @@ static int32_t Pmic_initCoreHandleI2CSpeedCommHandle(
         else
         {
             pPmicCoreHandle->pCommHandle = pPmicConfigData->pCommHandle;
-        }
-    }
-
-    return pmicStatus;
-}
-
-/*!
- * \brief  API to Initialize pPmicCoreHandle for QA Slave Address and
- *         QA Comm Handle
- *
- *         This function gets device configuration from pPmicConfigData and
- *         initializes pPmicCoreHandle after validation of given params depends
- *         on validParams bit fields
- */
-static int32_t Pmic_initCoreHandleQADevCfgParams(
-                                          const Pmic_CoreCfg_t *pPmicConfigData,
-                                          Pmic_CoreHandle_t    *pPmicCoreHandle)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-
-    /* Check and update PMIC Handle QA Slave Address */
-    if(((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams,
-                                            PMIC_CFG_QASLAVEADDR_VALID))
-    {
-        if((PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode) ||
-           (PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode))
-        {
-            pPmicCoreHandle->qaSlaveAddr = pPmicConfigData->qaSlaveAddr;
         }
     }
 
@@ -529,26 +520,10 @@ static int32_t Pmic_initCoreHandleQADevCfgParams(
         }
     }
 
-    return pmicStatus;
-}
-
-/*!
- * \brief  API to Initialize pPmicCoreHandle for Comm IO RD Fn, Comm IO Wr Fn,
- *         Critical Section Start Fn and Critical Section Stop Fn
- *
- *         This function gets device configuration from pPmicConfigData and
- *         initializes pPmicCoreHandle after validation of given params depends
- *         on validParams bit fields
- */
-static int32_t Pmic_initCoreHandleCommIOCriticalSectionFns(
-                                          const Pmic_CoreCfg_t *pPmicConfigData,
-                                          Pmic_CoreHandle_t    *pPmicCoreHandle)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-
     /* Check and update PMIC Handle Comm IO RD Fn */
-    if(((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams,
-                                            PMIC_CFG_COMM_IO_RD_VALID))
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams,
+                                     PMIC_CFG_COMM_IO_RD_VALID)))
     {
         if(NULL == pPmicConfigData->pFnPmicCommIoRead)
         {
@@ -609,119 +584,96 @@ static int32_t Pmic_initCoreHandleCommIOCriticalSectionFns(
         }
     }
 
-    return pmicStatus;
-}
+    /* Check for required members for I2C/SPI Main handle comm */
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((NULL == pPmicCoreHandle->pCommHandle)          ||
+        (NULL == pPmicCoreHandle->pFnPmicCritSecStart)  ||
+        (NULL == pPmicCoreHandle->pFnPmicCritSecStop)   ||
+        (NULL == pPmicCoreHandle->pFnPmicCommIoRead)    ||
+        (NULL == pPmicCoreHandle->pFnPmicCommIoWrite)))
+    {
+        pmicStatus = PMIC_ST_ERR_INSUFFICIENT_CFG;
+    }
 
-/*!
- * \brief  API to update CRC Enable status info to PMIC handle and Check if the
- *        device requested is the one on the bus
- */
-static int32_t Pmic_updateCrcEnableStatValidateDevOnBus(
-                                          const Pmic_CoreCfg_t *pPmicConfigData,
-                                          Pmic_CoreHandle_t    *pPmicCoreHandle,
-                                          int32_t              *pStatus)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint8_t regVal = 0U;
-    uint8_t i2c1SpiCrcStat = 0xFF, i2c2CrcStat = 0xFF;
-
-    pPmicCoreHandle->crcEnable = PMIC_CRC_DISABLE;
-
-    pmicStatus = Pmic_getCrcStatus(pPmicCoreHandle,
-                                   &i2c1SpiCrcStat,
-                                   &i2c2CrcStat);
-
+    /* Update PMIC subsystem info to PMIC handle */
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        if((PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode) ||
-           (PMIC_INTF_SPI == pPmicCoreHandle->commMode))
+        pPmicCoreHandle->pPmic_SubSysInfo =
+                         (&pmicSubSysInfo[pPmicCoreHandle->pmicDeviceType]);
+    }
+
+    /* Check the Main communication interface if PMIC handle is ready for rw */
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (0x0U == pPmicCoreHandle->drvInitStatus))
+    {
+        pPmicCoreHandle->crcEnable = PMIC_CRC_DISABLE;
+
+        pmicStatus = Pmic_getCrcStatus(pPmicCoreHandle,
+                                       &i2c1SpiCrcStat,
+                                       &i2c2CrcStat);
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            pPmicCoreHandle->crcEnable = i2c1SpiCrcStat;
-        }
-        else
-        {
-            if(i2c1SpiCrcStat == i2c2CrcStat)
+            if((PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode) ||
+               (PMIC_INTF_SPI == pPmicCoreHandle->commMode))
             {
                 pPmicCoreHandle->crcEnable = i2c1SpiCrcStat;
             }
             else
             {
-                pmicStatus = PMIC_ST_ERR_CRC_STATUS_FAIL;
+                if(i2c1SpiCrcStat == i2c2CrcStat)
+                {
+                    pPmicCoreHandle->crcEnable = i2c1SpiCrcStat;
+                }
+                else
+                {
+                    pmicStatus = PMIC_ST_ERR_CRC_STATUS_FAIL;
+                }
             }
         }
-    }
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-
-        /* Start Critical Section */
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            PMIC_DEV_REV_REGADDR,
-                                            &regVal);
-
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pPmicCoreHandle->pmicDevRev = Pmic_getBitField(
-                        regVal,
-                        PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_SHIFT,
-                        PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_MASK);
-
-        /* Validate if the device requested is the one on the bus */
-        switch (pPmicCoreHandle->pmicDeviceType)
+        if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            case PMIC_DEV_HERA_LP8764X:
-                if(PMIC_LP8764X_DEV_REV_ID_PG_2_0 !=
-                   pPmicCoreHandle->pmicDevRev)
-                {
-                    *pStatus = PMIC_ST_WARN_INV_DEVICE_ID;
-                }
-                break;
-            case PMIC_DEV_LEO_TPS6594X:
-                if(PMIC_TPS6594X_DEV_REV_ID_PG_2_0 !=
-                   pPmicCoreHandle->pmicDevRev)
-                {
-                    *pStatus = PMIC_ST_WARN_INV_DEVICE_ID;
-                }
-                break;
-            default:
-                pmicStatus = PMIC_ST_ERR_INV_DEVICE;
-                break;
+
+            /* Start Critical Section */
+            Pmic_criticalSectionStart(pPmicCoreHandle);
+
+            pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                                PMIC_DEV_REV_REGADDR,
+                                                &regVal);
+
+            Pmic_criticalSectionStop(pPmicCoreHandle);
         }
-    }
 
-    return pmicStatus;
-}
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            pPmicCoreHandle->pmicDevRev = Pmic_getBitField(
+                            regVal,
+                            PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_SHIFT,
+                            PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_MASK);
 
-/*!
- * \brief  API to update PMIC subsystem info to PMIC handle and Check the Main
- *         and QA communication interface if PMIC handle is ready for rw
- */
-static int32_t Pmic_updateSubSysInfoValidateMainQaCommIFRdWr(
-                                          const Pmic_CoreCfg_t *pPmicConfigData,
-                                          Pmic_CoreHandle_t    *pPmicCoreHandle)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    int32_t status = PMIC_ST_SUCCESS;
-    uint8_t regVal = 0U;
-
-    /* Update PMIC subsystem info to PMIC handle */
-    pPmicCoreHandle->pPmic_SubSysInfo =
-                     (&pmicSubSysInfo[pPmicCoreHandle->pmicDeviceType]);
-
-    /* Check the Main communication interface if PMIC handle is ready for rw */
-    if(0x0U == pPmicCoreHandle->drvInitStatus)
-    {
-        /* Update CRC Enable status info to PMIC handle and Check if the
-         * device requested is the one on the bus */
-        pmicStatus = Pmic_updateCrcEnableStatValidateDevOnBus(
-                                                           pPmicConfigData,
-                                                           pPmicCoreHandle,
-                                                           &status);
+            /* Validate if the device requested is the one on the bus */
+            switch (pPmicCoreHandle->pmicDeviceType)
+            {
+                case PMIC_DEV_HERA_LP8764X:
+                    if(PMIC_HERA_DEV_REV_ID_PG_2_0 !=
+                       pPmicCoreHandle->pmicDevRev)
+                    {
+                        status = PMIC_ST_WARN_INV_DEVICE_ID;
+                    }
+                    break;
+                case PMIC_DEV_LEO_TPS6594X:
+                    if(PMIC_LEO_DEV_REV_ID_PG_2_0 !=
+                       pPmicCoreHandle->pmicDevRev)
+                    {
+                        status = PMIC_ST_WARN_INV_DEVICE_ID;
+                    }
+                    break;
+                default:
+                    pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+                    break;
+            }
+        }
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
@@ -772,94 +724,6 @@ static int32_t Pmic_updateSubSysInfoValidateMainQaCommIFRdWr(
         {
             pPmicCoreHandle->drvInitStatus |= pPmicConfigData->instType;
         }
-    }
-
-    return pmicStatus;
-}
-
-/*!
- * \brief  API to Initialize pmic core handle for PMIC LLD.
- *
- * Requirement: REQ_TAG(PDK-5814), REQ_TAG(PDK-5810), REQ_TAG(PDK-5813),
- *              REQ_TAG(PDK-5843), REQ_TAG(PDK-5811), REQ_TAG(PDK-5853),
- *              REQ_TAG(PDK-9129), REQ_TAG(PDK-9329), REQ_TAG(PDK-9159)
- * Design: did_pmic_comm_intf_cfg, did_pmic_comm_single_i2c_cfg,
- *         did_pmic_comm_dual_i2c_cfg, did_pmic_comm_spi_cfg,
- *         did_pmic_tps6594x_j721e_support, did_pmic_lp8764x_j7200_support
- *
- *         This function gets device configuration from pPmicConfigData and
- *         initializes device specific information in pPmicCoreHandle after
- *         validation of given params depends on validParams bit fields
- *         and does some basic validation on PMIC interface I2C/SPI,
- *         confirming that PMIC is accessible for PMIC configuration and
- *         monitor features.
- *
- *  \param   pPmicConfigData [IN]   PMIC Configuration data
- *  \param   pPmicCoreHandle [OUT]  PMIC Interface Handle.
- *
- *  \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
- *           For valid values \ref Pmic_ErrorCodes
- */
-int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
-                  Pmic_CoreHandle_t    *pPmicCoreHandle)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-
-    if((NULL == pPmicCoreHandle) || (NULL == pPmicConfigData))
-    {
-        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    /* Check and update PMIC Handle for device type, Comm Mode,
-     * Main Slave Address and NVM Slave Address */
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_initCoreHandleBasicDevCfgParams(pPmicConfigData,
-                                                          pPmicCoreHandle);
-    }
-
-   /* Check and update PMIC Handle for I2C1 Speed, I2C2 Speed and
-    * Main Comm Handle */
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_initCoreHandleI2CSpeedCommHandle(pPmicConfigData,
-                                                           pPmicCoreHandle);
-    }
-
-    /* Check and update PMIC Handle for QA Slave Address and QA Comm Handle */
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_initCoreHandleQADevCfgParams(pPmicConfigData,
-                                                       pPmicCoreHandle);
-    }
-
-    /* Check and update PMIC Handle for Comm IO RD Fn, Comm IO Wr Fn,
-     * Critical Section Start Fn and Critical Section Stop Fn */
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_initCoreHandleCommIOCriticalSectionFns(
-                                                               pPmicConfigData,
-                                                               pPmicCoreHandle);
-    }
-
-    /* Check for required members for I2C/SPI Main handle comm */
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       ((NULL == pPmicCoreHandle->pCommHandle)          ||
-        (NULL == pPmicCoreHandle->pFnPmicCritSecStart)  ||
-        (NULL == pPmicCoreHandle->pFnPmicCritSecStop)   ||
-        (NULL == pPmicCoreHandle->pFnPmicCommIoRead)    ||
-        (NULL == pPmicCoreHandle->pFnPmicCommIoWrite)))
-    {
-        pmicStatus = PMIC_ST_ERR_INSUFFICIENT_CFG;
-    }
-
-    /* Update PMIC subsystem info to PMIC handle and Check the Main and QA
-     * communication interface if PMIC handle is ready for rw  */
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_updateSubSysInfoValidateMainQaCommIFRdWr(
-                                                               pPmicConfigData,
-                                                               pPmicCoreHandle);
     }
 
     return pmicStatus;
@@ -1260,33 +1124,25 @@ static int32_t Pmic_skipEepromDefaultLoadEnable(
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
     uint8_t regData     = 0U;
 
-    if(PMIC_DEV_HERA_LP8764X != pPmicCoreHandle->pmicDeviceType)
-    {
-        pmicStatus = PMIC_ST_ERR_INV_PARAM;
-    }
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_STARTUP_CTRL_REGADDR,
+                                        &regData);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
+        Pmic_setBitField(&regData,
+                         PMIC_STARTUP_CTRL_SKIP_LP_STANDBY_EE_READ_SHIFT,
+                         PMIC_STARTUP_CTRL_SKIP_LP_STANDBY_EE_READ_MASK,
+                         commonCtrlCfg.skipEepromDefaultLoadEn);
 
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_STARTUP_CTRL_REGADDR,
-                                            &regData);
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            Pmic_setBitField(&regData,
-                             PMIC_STARTUP_CTRL_SKIP_LP_STANDBY_EE_READ_SHIFT,
-                             PMIC_STARTUP_CTRL_SKIP_LP_STANDBY_EE_READ_MASK,
-                             commonCtrlCfg.skipEepromDefaultLoadEn);
-
-            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                                PMIC_STARTUP_CTRL_REGADDR,
-                                                regData);
-        }
-
-        Pmic_criticalSectionStop(pPmicCoreHandle);
+                                            regData);
     }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
 }
@@ -1359,48 +1215,27 @@ static int32_t Pmic_eepromDefaultLoadEnable(
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
     uint8_t regData     = 0U;
     uint8_t regAddr = 0U, bitShift = 0U, bitMask = 0U;
-    uint8_t maxVal;
 
-    switch(pPmicCoreHandle->pmicDeviceType)
-    {
-        case PMIC_DEV_HERA_LP8764X:
-            maxVal = \
-                PMIC_LP8764X_EEPROM_DEFAULTS_NOT_LOADED_TO_CONF_OTHER_REGS;
-            break;
-        default:
-            maxVal = \
-                PMIC_TPS6594X_EEPROM_DEFAULTS_NOT_LOADED_TO_RTC_DOMAIN_BITS;
-            break;
-    }
+    Pmic_getEepromDefaultLoadRegAddrBitFields(pPmicCoreHandle,
+                                              &regAddr,
+                                              &bitShift,
+                                              &bitMask);
 
-    if(commonCtrlCfg.eepromDefaultLoad > maxVal)
-    {
-        pmicStatus = PMIC_ST_ERR_INV_PARAM;
-    }
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_getEepromDefaultLoadRegAddrBitFields(pPmicCoreHandle,
-                                                  &regAddr,
-                                                  &bitShift,
-                                                  &bitMask);
+        Pmic_setBitField(&regData,
+                         bitShift,
+                         bitMask,
+                         commonCtrlCfg.eepromDefaultLoad);
 
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            Pmic_setBitField(&regData,
-                             bitShift,
-                             bitMask,
-                             commonCtrlCfg.eepromDefaultLoad);
-
-            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, regAddr, regData);
-        }
-
-        Pmic_criticalSectionStop(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, regAddr, regData);
     }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
 }
@@ -1446,52 +1281,44 @@ static int32_t Pmic_setEnableDrvPinCfg(
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
     uint8_t forceEnDrvLowVal, regData     = 0U;
 
-    if(commonCtrlCfg.enDrv > PMIC_PIN_SIGNAL_LEVEL_HIGH)
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_ENABLE_DRV_STAT_REGADDR,
+                                        &regData);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        forceEnDrvLowVal = Pmic_getBitField(
+                                    regData,
+                                    PMIC_ENABLE_DRV_STAT_FORCE_EN_DRV_LOW_SHIFT,
+                                    PMIC_ENABLE_DRV_STAT_FORCE_EN_DRV_LOW_MASK);
+
+        if(PMIC_ENABLE_DRV_I2C_SPI_CONFIG_DISABLE == forceEnDrvLowVal)
+        {
+            pmicStatus = PMIC_ST_ERR_INV_EN_DRV_PIN_CFG;
+        }
     }
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            PMIC_ENABLE_DRV_STAT_REGADDR,
+                                            PMIC_ENABLE_DRV_REG_REGADDR,
                                             &regData);
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            forceEnDrvLowVal = Pmic_getBitField(
-                                  regData,
-                                  PMIC_ENABLE_DRV_STAT_FORCE_EN_DRV_LOW_SHIFT,
-                                  PMIC_ENABLE_DRV_STAT_FORCE_EN_DRV_LOW_MASK);
-
-            if(PMIC_ENABLE_DRV_I2C_SPI_CONFIG_DISABLE == forceEnDrvLowVal)
-            {
-                pmicStatus = PMIC_ST_ERR_INV_EN_DRV_PIN_CFG;
-            }
-        }
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                                PMIC_ENABLE_DRV_REG_REGADDR,
-                                                &regData);
-        }
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            Pmic_setBitField(&regData,
-                             PMIC_ENABLE_DRV_REG_ENABLE_DRV_SHIFT,
-                             PMIC_ENABLE_DRV_REG_ENABLE_DRV_MASK,
-                             commonCtrlCfg.enDrv);
-
-            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                                PMIC_ENABLE_DRV_REG_REGADDR,
-                                                regData);
-        }
-
-        Pmic_criticalSectionStop(pPmicCoreHandle);
     }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        Pmic_setBitField(&regData,
+                         PMIC_ENABLE_DRV_REG_ENABLE_DRV_SHIFT,
+                         PMIC_ENABLE_DRV_REG_ENABLE_DRV_MASK,
+                         commonCtrlCfg.enDrv);
+
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                            PMIC_ENABLE_DRV_REG_REGADDR,
+                                            regData);
+    }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
 }
@@ -1533,34 +1360,25 @@ static int32_t Pmic_setRegisterLockUnLockCfg(
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
     uint8_t regData     = 0U;
 
-    if((PMIC_REGISTER_UNLOCK != commonCtrlCfg.regLock) &&
-       (PMIC_REGISTER_LOCK != commonCtrlCfg.regLock))
-    {
-        pmicStatus = PMIC_ST_ERR_INV_PARAM;
-    }
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_REGISTER_LOCK_REGADDR,
+                                        &regData);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
+        Pmic_setBitField(&regData,
+                         PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_SHIFT,
+                         PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_WRITE_MASK,
+                         commonCtrlCfg.regLock);
 
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_REGISTER_LOCK_REGADDR,
-                                            &regData);
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            Pmic_setBitField(&regData,
-                             PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_SHIFT,
-                             PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_WRITE_MASK,
-                             commonCtrlCfg.regLock);
-
-            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                                PMIC_REGISTER_LOCK_REGADDR,
-                                                regData);
-        }
-
-        Pmic_criticalSectionStop(pPmicCoreHandle);
+                                            regData);
     }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
 }
@@ -1575,34 +1393,25 @@ static int32_t Pmic_setSpreadSpectrumModDepthCfg(
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
     uint8_t regData     = 0U;
 
-    if(commonCtrlCfg.spreadSpectrumDepth >
-       PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_8_4_PERCENT)
-    {
-        pmicStatus = PMIC_ST_ERR_INV_PARAM;
-    }
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_SPREAD_SPECTRUM_1_REGADDR,
+                                        &regData);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
+        Pmic_setBitField(&regData,
+                         PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_SHIFT,
+                         PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_MASK,
+                         commonCtrlCfg.spreadSpectrumDepth);
 
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_SPREAD_SPECTRUM_1_REGADDR,
-                                            &regData);
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            Pmic_setBitField(&regData,
-                             PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_SHIFT,
-                             PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_MASK,
-                             commonCtrlCfg.spreadSpectrumDepth);
-
-            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                                PMIC_SPREAD_SPECTRUM_1_REGADDR,
-                                                regData);
-        }
-
-        Pmic_criticalSectionStop(pPmicCoreHandle);
+                                            regData);
     }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
 }
@@ -1657,6 +1466,7 @@ int32_t Pmic_setCommonCtrlConfig(Pmic_CoreHandle_t          *pPmicCoreHandle,
                                  const Pmic_CommonCtrlCfg_t  commonCtrlCfg)
 {
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
+    uint8_t maxVal;
 
     if(NULL == pPmicCoreHandle)
     {
@@ -1675,36 +1485,80 @@ int32_t Pmic_setCommonCtrlConfig(Pmic_CoreHandle_t          *pPmicCoreHandle,
        ((bool)true == pmic_validParamCheck(commonCtrlCfg.validParams,
                                            PMIC_CFG_SKIP_EEPROM_LOAD_VALID)))
     {
+        if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+        {
         /* Enable/Disable Skip EEPROM Default Load to CONF and Other registers*/
-        pmicStatus = Pmic_skipEepromDefaultLoadEnable(pPmicCoreHandle,
-                                                      commonCtrlCfg);
+            pmicStatus = Pmic_skipEepromDefaultLoadEnable(pPmicCoreHandle,
+                                                          commonCtrlCfg);
+        }
+        else
+        {
+            pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        }
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((bool)true == pmic_validParamCheck(commonCtrlCfg.validParams,
                                            PMIC_CFG_EEPROM_DEFAULT_VALID)))
     {
-        /* Enable/Disable EEPROM Default Load to CONF registers*/
-        pmicStatus = Pmic_eepromDefaultLoadEnable(pPmicCoreHandle,
-                                                  commonCtrlCfg);
+        switch(pPmicCoreHandle->pmicDeviceType)
+        {
+            case PMIC_DEV_HERA_LP8764X:
+                maxVal = \
+                    PMIC_LP8764X_EEPROM_DEFAULTS_NOT_LOADED_TO_CONF_OTHER_REGS;
+                break;
+            default:
+                maxVal = \
+                    PMIC_TPS6594X_EEPROM_DEFAULTS_NOT_LOADED_TO_RTC_DOMAIN_BITS;
+                break;
+        }
+
+        if(commonCtrlCfg.eepromDefaultLoad > maxVal)
+        {
+            pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Enable/Disable EEPROM Default Load to CONF registers*/
+            pmicStatus = Pmic_eepromDefaultLoadEnable(pPmicCoreHandle,
+                                                      commonCtrlCfg);
+        }
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((bool)true == pmic_validParamCheck(commonCtrlCfg.validParams,
                                            PMIC_CFG_ENABLE_DRV_VALID)))
     {
-        /* Set ENABLE_DRV Pin Configuration */
-        pmicStatus = Pmic_setEnableDrvPinCfg(pPmicCoreHandle,
-                                             commonCtrlCfg);
+        if(commonCtrlCfg.enDrv > PMIC_PIN_SIGNAL_LEVEL_HIGH)
+        {
+            pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Set ENABLE_DRV Pin Configuration */
+            pmicStatus = Pmic_setEnableDrvPinCfg(pPmicCoreHandle,
+                                                 commonCtrlCfg);
+        }
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((bool)true == pmic_validParamCheck(commonCtrlCfg.validParams,
                                            PMIC_CFG_REG_LOCK_VALID)))
     {
-        /* Set Register Lock/UnLock Configuration */
-        pmicStatus = Pmic_setRegisterLockUnLockCfg(pPmicCoreHandle,
-                                                   commonCtrlCfg);
+        if((PMIC_REGISTER_UNLOCK != commonCtrlCfg.regLock) &&
+           (PMIC_REGISTER_LOCK != commonCtrlCfg.regLock))
+        {
+            pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Set Register Lock/UnLock Configuration */
+            pmicStatus = Pmic_setRegisterLockUnLockCfg(pPmicCoreHandle,
+                                                       commonCtrlCfg);
+        }
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
@@ -1712,9 +1566,18 @@ int32_t Pmic_setCommonCtrlConfig(Pmic_CoreHandle_t          *pPmicCoreHandle,
                                          commonCtrlCfg.validParams,
                                          PMIC_CFG_SPREAD_SPECTRUM_DEPTH_VALID)))
     {
-        /* Spread Spectrum modulation Depth Value Configuration */
-        pmicStatus = Pmic_setSpreadSpectrumModDepthCfg(pPmicCoreHandle,
-                                                       commonCtrlCfg);
+        if(commonCtrlCfg.spreadSpectrumDepth >
+           PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_8_4_PERCENT)
+        {
+            pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Spread Spectrum modulation Depth Value Configuration */
+            pmicStatus = Pmic_setSpreadSpectrumModDepthCfg(pPmicCoreHandle,
+                                                           commonCtrlCfg);
+        }
     }
 
     return pmicStatus;
@@ -1941,33 +1804,25 @@ static int32_t Pmic_selectSyncClkOutFreq(
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
     uint8_t regData     = 0U;
 
-    if(miscCtrlCfg.syncClkOutFreqSel > PMIC_SYNCCLKOUT_4_4_MHZ)
-    {
-        pmicStatus = PMIC_ST_ERR_INV_PARAM;
-    }
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_MISC_CTRL_REGADDR,
+                                        &regData);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
+        Pmic_setBitField(&regData,
+                         PMIC_MISC_CTRL_SYNCCLKOUT_FREQ_SEL_SHIFT,
+                         PMIC_MISC_CTRL_SYNCCLKOUT_FREQ_SEL_MASK,
+                         miscCtrlCfg.syncClkOutFreqSel);
 
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_MISC_CTRL_REGADDR,
-                                            &regData);
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            Pmic_setBitField(&regData,
-                             PMIC_MISC_CTRL_SYNCCLKOUT_FREQ_SEL_SHIFT,
-                             PMIC_MISC_CTRL_SYNCCLKOUT_FREQ_SEL_MASK,
-                             miscCtrlCfg.syncClkOutFreqSel);
-
-            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                                PMIC_MISC_CTRL_REGADDR,
-                                                regData);
-        }
-
-        Pmic_criticalSectionStop(pPmicCoreHandle);
+                                            regData);
     }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
 }
@@ -2009,33 +1864,25 @@ static int32_t Pmic_selectExternalClk(
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
     uint8_t regData     = 0U;
 
-    if(miscCtrlCfg.extClkSel > PMIC_AUTOMATIC_EXT_CLK)
-    {
-        pmicStatus = PMIC_ST_ERR_INV_PARAM;
-    }
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_MISC_CTRL_REGADDR,
+                                        &regData);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
+        Pmic_setBitField(&regData,
+                         PMIC_MISC_CTRL_SEL_EXT_CLK_SHIFT,
+                         PMIC_MISC_CTRL_SEL_EXT_CLK_MASK,
+                         miscCtrlCfg.extClkSel);
 
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_MISC_CTRL_REGADDR,
-                                            &regData);
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            Pmic_setBitField(&regData,
-                             PMIC_MISC_CTRL_SEL_EXT_CLK_SHIFT,
-                             PMIC_MISC_CTRL_SEL_EXT_CLK_MASK,
-                             miscCtrlCfg.extClkSel);
-
-            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                                PMIC_MISC_CTRL_REGADDR,
-                                                regData);
-        }
-
-        Pmic_criticalSectionStop(pPmicCoreHandle);
+                                            regData);
     }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
 }
@@ -2076,45 +1923,26 @@ static int32_t Pmic_selectExternalClkFreq(
 {
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
     uint8_t regData     = 0U;
-    uint8_t maxVal;
 
-    switch(pPmicCoreHandle->pmicDeviceType)
-    {
-        case PMIC_DEV_HERA_LP8764X:
-            maxVal = PMIC_LP8764X_SYNCCLKIN_8_8_MHZ;
-            break;
-        default:
-            maxVal = PMIC_TPS6594X_SYNCCLKIN_4_4_MHZ;
-            break;
-    }
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    if(miscCtrlCfg.syncClkInFreq > maxVal)
-    {
-        pmicStatus = PMIC_ST_ERR_INV_PARAM;
-    }
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_PLL_CTRL_REGADDR,
+                                        &regData);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
+        Pmic_setBitField(&regData,
+                         PMIC_PLL_CTRL_EXT_CLK_FREQ_SHIFT,
+                         PMIC_PLL_CTRL_EXT_CLK_FREQ_MASK,
+                         miscCtrlCfg.syncClkInFreq);
 
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_PLL_CTRL_REGADDR,
-                                            &regData);
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            Pmic_setBitField(&regData,
-                             PMIC_PLL_CTRL_EXT_CLK_FREQ_SHIFT,
-                             PMIC_PLL_CTRL_EXT_CLK_FREQ_MASK,
-                             miscCtrlCfg.syncClkInFreq);
-
-            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                                PMIC_PLL_CTRL_REGADDR,
-                                                regData);
-        }
-
-        Pmic_criticalSectionStop(pPmicCoreHandle);
+                                            regData);
     }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
 }
@@ -2129,33 +1957,25 @@ static int32_t Pmic_setNRstOutSocSignalCfg(
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
     uint8_t regData     = 0U;
 
-    if(miscCtrlCfg.nRstOutSocSignal > PMIC_PIN_SIGNAL_LEVEL_HIGH)
-    {
-        pmicStatus = PMIC_ST_ERR_INV_PARAM;
-    }
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_MISC_CTRL_REGADDR,
+                                        &regData);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
+        Pmic_setBitField(&regData,
+                         PMIC_MISC_CTRL_NRSTOUT_SOC_SHIFT,
+                         PMIC_MISC_CTRL_NRSTOUT_SOC_MASK,
+                         miscCtrlCfg.nRstOutSocSignal);
 
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_MISC_CTRL_REGADDR,
-                                            &regData);
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            Pmic_setBitField(&regData,
-                             PMIC_MISC_CTRL_NRSTOUT_SOC_SHIFT,
-                             PMIC_MISC_CTRL_NRSTOUT_SOC_MASK,
-                             miscCtrlCfg.nRstOutSocSignal);
-
-            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                                PMIC_MISC_CTRL_REGADDR,
-                                                regData);
-        }
-
-        Pmic_criticalSectionStop(pPmicCoreHandle);
+                                            regData);
     }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
 }
@@ -2170,33 +1990,25 @@ static int32_t Pmic_setNRstOutSignalCfg(
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
     uint8_t regData     = 0U;
 
-    if(miscCtrlCfg.nRstOutSignal > PMIC_PIN_SIGNAL_LEVEL_HIGH)
-    {
-        pmicStatus = PMIC_ST_ERR_INV_PARAM;
-    }
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_MISC_CTRL_REGADDR,
+                                        &regData);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
+        Pmic_setBitField(&regData,
+                         PMIC_MISC_CTRL_NRSTOUT_SHIFT,
+                         PMIC_MISC_CTRL_NRSTOUT_MASK,
+                         miscCtrlCfg.nRstOutSignal);
 
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_MISC_CTRL_REGADDR,
-                                            &regData);
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            Pmic_setBitField(&regData,
-                             PMIC_MISC_CTRL_NRSTOUT_SHIFT,
-                             PMIC_MISC_CTRL_NRSTOUT_MASK,
-                             miscCtrlCfg.nRstOutSignal);
-
-            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                                PMIC_MISC_CTRL_REGADDR,
-                                                regData);
-        }
-
-        Pmic_criticalSectionStop(pPmicCoreHandle);
+                                            regData);
     }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
 }
@@ -2283,44 +2095,6 @@ static int32_t Pmic_getNRstOutSignalCfg(
 }
 
 /*!
- * \brief   API to set ExternalClk Frequency Selection, NRSTOUT_SOC and
- *          NRSTOUT Signal Configuration
- */
-int32_t Pmic_setExtclkfreqSelNRstOutSocNRstOutCfg(
-                                   Pmic_CoreHandle_t          *pPmicCoreHandle,
-                                   const Pmic_MiscCtrlCfg_t    miscCtrlCfg)
-{
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
-
-    if((bool)true == pmic_validParamCheck(miscCtrlCfg.validParams,
-                                           PMIC_CFG_SYNC_CLK_IN_FREQ_VALID))
-    {
-        /* Selects External Clock Frequency */
-        pmicStatus = Pmic_selectExternalClkFreq(pPmicCoreHandle,
-                                                miscCtrlCfg);
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       ((bool)true == pmic_validParamCheck(miscCtrlCfg.validParams,
-                                           PMIC_CFG_NRSTOUT_SOC_VALID)))
-    {
-        /* Configure NRSTOUT_SOC Signal */
-        pmicStatus = Pmic_setNRstOutSocSignalCfg(pPmicCoreHandle,
-                                                 miscCtrlCfg);
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       ((bool)true == pmic_validParamCheck(miscCtrlCfg.validParams,
-                                           PMIC_CFG_NRSTOUT_VALID)))
-    {
-        /* Configure NRSTOUT Signal */
-        pmicStatus = Pmic_setNRstOutSignalCfg(pPmicCoreHandle, miscCtrlCfg);
-    }
-
-    return pmicStatus;
-}
-
-/*!
  * \brief   API to set PMIC Miscellaneous control parameter configuration.
  *
  * Requirement: REQ_TAG(PDK-9132), REQ_TAG(PDK-9127)
@@ -2342,6 +2116,7 @@ int32_t Pmic_setMiscCtrlConfig(Pmic_CoreHandle_t          *pPmicCoreHandle,
                                const Pmic_MiscCtrlCfg_t    miscCtrlCfg)
 {
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
+    uint8_t maxVal;
 
     if(NULL == pPmicCoreHandle)
     {
@@ -2370,73 +2145,100 @@ int32_t Pmic_setMiscCtrlConfig(Pmic_CoreHandle_t          *pPmicCoreHandle,
                                          miscCtrlCfg.validParams,
                                          PMIC_CFG_SYNC_CLK_OUT_FREQ_SEL_VALID)))
     {
-        /* Selects SYNCCLKOUT Frequency*/
-        pmicStatus = Pmic_selectSyncClkOutFreq(pPmicCoreHandle,
-                                               miscCtrlCfg);
+        if(miscCtrlCfg.syncClkOutFreqSel > PMIC_SYNCCLKOUT_4_4_MHZ)
+        {
+            pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Selects SYNCCLKOUT Frequency*/
+            pmicStatus = Pmic_selectSyncClkOutFreq(pPmicCoreHandle,
+                                                   miscCtrlCfg);
+        }
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
        ((bool)true == pmic_validParamCheck(miscCtrlCfg.validParams,
                                            PMIC_CFG_EXT_CLK_SEL_VALID)))
     {
-        /* Select External Clock */
-        pmicStatus = Pmic_selectExternalClk(pPmicCoreHandle, miscCtrlCfg);
-    }
+        if(miscCtrlCfg.extClkSel > PMIC_AUTOMATIC_EXT_CLK)
+        {
+            pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        }
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        /* Selects External Clock Frequency, Configure NRSTOUT_SOC and NRSTOUT
-         * Signal */
-        pmicStatus = Pmic_setExtclkfreqSelNRstOutSocNRstOutCfg(
-                                                               pPmicCoreHandle,
-                                                               miscCtrlCfg);
-    }
-
-    return pmicStatus;
-}
-
-/*!
- * \brief   API to get PMIC ExternalClk Frequency Selection, NRSTOUT_SOC and
- *          NRSTOUT Signal Configuration
- */
-int32_t Pmic_getExtclkfreqSelNRstOutSocNRstOutCfg(
-                                   Pmic_CoreHandle_t          *pPmicCoreHandle,
-                                   Pmic_MiscCtrlCfg_t         *pMiscCtrlCfg)
-{
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
-
-    if((bool)true == pmic_validParamCheck(pMiscCtrlCfg->validParams,
-                                           PMIC_CFG_SYNC_CLK_IN_FREQ_VALID))
-    {
-        /* Get ExternalClk Frequency Selection Configuration */
-        pmicStatus = Pmic_getExternalClkFreqSelectCfg(pPmicCoreHandle,
-                                                      pMiscCtrlCfg);
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Select External Clock */
+            pmicStatus = Pmic_selectExternalClk(pPmicCoreHandle, miscCtrlCfg);
+        }
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       ((bool)true == pmic_validParamCheck(pMiscCtrlCfg->validParams,
+       ((bool)true == pmic_validParamCheck(miscCtrlCfg.validParams,
+                                           PMIC_CFG_SYNC_CLK_IN_FREQ_VALID)))
+    {
+        switch(pPmicCoreHandle->pmicDeviceType)
+        {
+            case PMIC_DEV_HERA_LP8764X:
+                maxVal = PMIC_LP8764X_SYNCCLKIN_8_8_MHZ;
+                break;
+            default:
+                maxVal = PMIC_TPS6594X_SYNCCLKIN_4_4_MHZ;
+                break;
+        }
+
+        if(miscCtrlCfg.syncClkInFreq > maxVal)
+        {
+            pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Selects External Clock Frequency */
+            pmicStatus = Pmic_selectExternalClkFreq(pPmicCoreHandle,
+                                                    miscCtrlCfg);
+        }
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(miscCtrlCfg.validParams,
                                            PMIC_CFG_NRSTOUT_SOC_VALID)))
     {
-        /* Get NRSTOUT_SOC Signal Configuration */
-        pmicStatus = Pmic_getNRstOutSocSignalCfg(pPmicCoreHandle,
-                                                 pMiscCtrlCfg);
+        if(miscCtrlCfg.nRstOutSocSignal > PMIC_PIN_SIGNAL_LEVEL_HIGH)
+        {
+            pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Configure NRSTOUT_SOC Signal */
+            pmicStatus = Pmic_setNRstOutSocSignalCfg(pPmicCoreHandle,
+                                                     miscCtrlCfg);
+        }
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       ((bool)true == pmic_validParamCheck(pMiscCtrlCfg->validParams,
+       ((bool)true == pmic_validParamCheck(miscCtrlCfg.validParams,
                                            PMIC_CFG_NRSTOUT_VALID)))
     {
-        /* Get NRSTOUT Signal Configuration */
-        pmicStatus = Pmic_getNRstOutSignalCfg(pPmicCoreHandle,
-                                              pMiscCtrlCfg);
+        if(miscCtrlCfg.nRstOutSignal > PMIC_PIN_SIGNAL_LEVEL_HIGH)
+        {
+            pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            /* Configure NRSTOUT Signal */
+            pmicStatus = Pmic_setNRstOutSignalCfg(pPmicCoreHandle, miscCtrlCfg);
+        }
     }
 
     return pmicStatus;
 }
 
-
 /*!
- * \brief   API to get PMIC Miscellaneous control parameter configuration
+ * \brief   API to get PMIC Miscellaneous control parameter configuration.
  *
  * Requirement: REQ_TAG(PDK-9132), REQ_TAG(PDK-9127)
  * Design: did_pmic_misc_ctrl_cfg_readback
@@ -2506,15 +2308,32 @@ int32_t Pmic_getMiscCtrlConfig(Pmic_CoreHandle_t          *pPmicCoreHandle,
                                                   pMiscCtrlCfg);
     }
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(pMiscCtrlCfg->validParams,
+                                           PMIC_CFG_SYNC_CLK_IN_FREQ_VALID)))
     {
-        /* Get ExternalClk Frequency Selection, NRSTOUT_SOC and NRSTOUT Signal
-         * Configuration */
-        pmicStatus = Pmic_getExtclkfreqSelNRstOutSocNRstOutCfg(
-                                                      pPmicCoreHandle,
+        /* Get ExternalClk Frequency Selection Configuration */
+        pmicStatus = Pmic_getExternalClkFreqSelectCfg(pPmicCoreHandle,
                                                       pMiscCtrlCfg);
     }
 
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(pMiscCtrlCfg->validParams,
+                                           PMIC_CFG_NRSTOUT_SOC_VALID)))
+    {
+        /* Get NRSTOUT_SOC Signal Configuration */
+        pmicStatus = Pmic_getNRstOutSocSignalCfg(pPmicCoreHandle,
+                                                 pMiscCtrlCfg);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(pMiscCtrlCfg->validParams,
+                                           PMIC_CFG_NRSTOUT_VALID)))
+    {
+        /* Get NRSTOUT Signal Configuration */
+        pmicStatus = Pmic_getNRstOutSignalCfg(pPmicCoreHandle,
+                                              pMiscCtrlCfg);
+    }
     return pmicStatus;
 }
 
@@ -3225,59 +3044,6 @@ static int32_t Pmic_getNIntPinStat(Pmic_CoreHandle_t          *pPmicCoreHandle,
 }
 
 /*!
- * \brief   API to get Startup Pin, EN_DRV Pin, NRSTOUT_SOC Pin, NRSTOUT Pin,
- *          and NINT Pin Status
- */
-static int32_t Pmic_getStartupEndrvNrstoutsocNrstoutNintPinStat(
-                                 Pmic_CoreHandle_t          *pPmicCoreHandle,
-                                 Pmic_CommonCtrlStat_t      *pCommonCtrlStat)
-{
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
-
-    if((bool)true == pmic_validParamCheck(pCommonCtrlStat->validParams,
-                                           PMIC_CFG_STARTUP_PIN_STAT_VALID))
-    {
-        /* Get Startup Pin Status*/
-        pmicStatus = Pmic_getStartupPinStat(pPmicCoreHandle, pCommonCtrlStat);
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       ((bool)true == pmic_validParamCheck(pCommonCtrlStat->validParams,
-                                           PMIC_CFG_EN_DRV_PIN_STAT_VALID)))
-    {
-        /* Get EN_DRV Pin Status*/
-        pmicStatus = Pmic_getEnDrvPinStat(pPmicCoreHandle, pCommonCtrlStat);
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       ((bool)true == pmic_validParamCheck(pCommonCtrlStat->validParams,
-                                           PMIC_CFG_NRSTOUTSOC_PIN_STAT_VALID)))
-    {
-        /* Get NRSTOUT_SOC Pin Status*/
-        pmicStatus = Pmic_getNRstOutSocPinStat(pPmicCoreHandle,
-                                               pCommonCtrlStat);
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       ((bool)true == pmic_validParamCheck(pCommonCtrlStat->validParams,
-                                           PMIC_CFG_NRSTOUT_PIN_STAT_VALID)))
-    {
-        /* Get NRSTOUT Pin Status*/
-        pmicStatus = Pmic_getNRstOutPinStat(pPmicCoreHandle, pCommonCtrlStat);
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       ((bool)true == pmic_validParamCheck(pCommonCtrlStat->validParams,
-                                           PMIC_CFG_NINT_PIN_STAT_VALID)))
-    {
-        /* Get NINT Pin Status*/
-        pmicStatus = Pmic_getNIntPinStat(pPmicCoreHandle, pCommonCtrlStat);
-    }
-
-    return pmicStatus;
-}
-
-/*!
  * \brief   API to get PMIC common control parameter status.
  *
  * Requirement: REQ_TAG(PDK-9126), REQ_TAG(PDK-9124), REQ_TAG(PDK-9130),
@@ -3359,12 +3125,45 @@ int32_t Pmic_getCommonCtrlStat(Pmic_CoreHandle_t           *pPmicCoreHandle,
                                                 pCommonCtrlStat);
     }
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(pCommonCtrlStat->validParams,
+                                           PMIC_CFG_STARTUP_PIN_STAT_VALID)))
     {
-        /* Get Startup, EN_DRV, NRSTOUT_SOC, NRSTOUT and NINT Pin Status */
-        pmicStatus = Pmic_getStartupEndrvNrstoutsocNrstoutNintPinStat(
-                                                            pPmicCoreHandle,
-                                                            pCommonCtrlStat);
+        /* Get Startup Pin Status*/
+        pmicStatus = Pmic_getStartupPinStat(pPmicCoreHandle, pCommonCtrlStat);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(pCommonCtrlStat->validParams,
+                                           PMIC_CFG_EN_DRV_PIN_STAT_VALID)))
+    {
+        /* Get EN_DRV Pin Status*/
+        pmicStatus = Pmic_getEnDrvPinStat(pPmicCoreHandle, pCommonCtrlStat);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(pCommonCtrlStat->validParams,
+                                           PMIC_CFG_NRSTOUTSOC_PIN_STAT_VALID)))
+    {
+        /* Get NRSTOUT_SOC Pin Status*/
+        pmicStatus = Pmic_getNRstOutSocPinStat(pPmicCoreHandle,
+                                               pCommonCtrlStat);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(pCommonCtrlStat->validParams,
+                                           PMIC_CFG_NRSTOUT_PIN_STAT_VALID)))
+    {
+        /* Get NRSTOUT Pin Status*/
+        pmicStatus = Pmic_getNRstOutPinStat(pPmicCoreHandle, pCommonCtrlStat);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)true == pmic_validParamCheck(pCommonCtrlStat->validParams,
+                                           PMIC_CFG_NINT_PIN_STAT_VALID)))
+    {
+        /* Get NINT Pin Status*/
+        pmicStatus = Pmic_getNIntPinStat(pPmicCoreHandle, pCommonCtrlStat);
     }
 
     return pmicStatus;

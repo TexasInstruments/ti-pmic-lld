@@ -617,35 +617,6 @@ static int32_t Pmic_getIntrTopRegVal(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /*!
- * \brief  Function to get the L1 error registers for INT_MISC,
- *         INT_MODERATE_ERR, INT_SEVERE_ERR, INT_FSM_ERR
- *
- */
-static void Pmic_irqGetMiscModerateSevereFsmErr(uint8_t    regValue,
-                                                uint16_t  *l1RegAddr,
-                                                uint8_t    count)
-{
-    switch(regValue & (1U << count))
-    {
-        case PMIC_INT_TOP_MISC_INT_MASK:
-             (*l1RegAddr) = PMIC_INT_MISC_REGADDR;
-             break;
-
-        case PMIC_INT_TOP_MODERATE_ERR_INT_MASK:
-             (*l1RegAddr) = PMIC_INT_MODERATE_ERR_REGADDR;
-             break;
-
-        case PMIC_INT_TOP_SEVERE_ERR_INT_MASK:
-             (*l1RegAddr) = PMIC_INT_SEVERE_ERR_REGADDR;
-             break;
-
-        default:
-             (*l1RegAddr) = PMIC_INT_FSM_ERR_REGADDR;
-             break;
-    }
-}
-
-/*!
  * \brief  Function to get the L1 error registers.
  */
 static void Pmic_irqGetL1Reg(const Pmic_CoreHandle_t *pPmicCoreHandle,
@@ -683,10 +654,19 @@ static void Pmic_irqGetL1Reg(const Pmic_CoreHandle_t *pPmicCoreHandle,
              break;
 
         case PMIC_INT_TOP_MISC_INT_MASK:
+             (*l1RegAddr) = PMIC_INT_MISC_REGADDR;
+             break;
+
         case PMIC_INT_TOP_MODERATE_ERR_INT_MASK:
+             (*l1RegAddr) = PMIC_INT_MODERATE_ERR_REGADDR;
+             break;
+
         case PMIC_INT_TOP_SEVERE_ERR_INT_MASK:
+             (*l1RegAddr) = PMIC_INT_SEVERE_ERR_REGADDR;
+             break;
+
         case PMIC_INT_TOP_FSM_ERR_INT_MASK:
-            Pmic_irqGetMiscModerateSevereFsmErr(regValue, l1RegAddr, count);
+             (*l1RegAddr) = PMIC_INT_FSM_ERR_REGADDR;
              break;
 
         default:

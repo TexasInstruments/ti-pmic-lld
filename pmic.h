@@ -456,9 +456,9 @@ typedef struct Pmic_CoreCfg_s {
  *         did_pmic_comm_dual_i2c_cfg, did_pmic_comm_spi_cfg,
  *         did_pmic_tps6594x_j721e_support, did_pmic_lp8764x_j7200_support
  *
- *         This function gets device configuration from pPmicConfigData and
+ *         This function gets device configuration from pCoreCfgData and
  *         initializes device specific information in pPmicCoreHandle after
- *         validation of given params depends on validParams bit fields
+ *         validation of given params depends on validParams bitfileds
  *         and does some basic validation on PMIC interface I2C/SPI,
  *         confirming that PMIC is accessible for PMIC configuration and
  *         monitor features.
