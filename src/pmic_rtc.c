@@ -2768,7 +2768,7 @@ int32_t  Pmic_rtcGetStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief   API to clear the Reset status of RTC.
  *
- * Requirement: REQ_TAG(PDK-9142)
+ * Requirement: REQ_TAG(PDK-9142), REQ_TAG(PDK-9145)
  * Design: did_pmic_rtc_clr_rst_status
  *
  *          This function is used to clear the Reset status of the RTC

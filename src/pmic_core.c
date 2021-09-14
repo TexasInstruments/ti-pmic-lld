@@ -348,10 +348,18 @@ int32_t Pmic_getRecoveryCnt(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5814), REQ_TAG(PDK-5810), REQ_TAG(PDK-5813),
  *              REQ_TAG(PDK-5843), REQ_TAG(PDK-5811), REQ_TAG(PDK-5853),
- *              REQ_TAG(PDK-9159)
+ *              REQ_TAG(PDK-9129), REQ_TAG(PDK-9329), REQ_TAG(PDK-9159),
+ *              REQ_TAG(PDK-5816), REQ_TAG(PDK-5817), REQ_TAG(PDK-5818),
+ *              REQ_TAG(PDK-5819), REQ_TAG(PDK-5820), REQ_TAG(PDK-5821),
+ *              REQ_TAG(PDK-5822), REQ_TAG(PDK-5823), REQ_TAG(PDK-5824),
+ *              REQ_TAG(PDK-5825), REQ_TAG(PDK-5826), REQ_TAG(PDK-5827),
+ *              REQ_TAG(PDK-5856), REQ_TAG(PDK-5857), REQ_TAG(PDK-5858),
+ *              REQ_TAG(PDK-5859), REQ_TAG(PDK-5860)
  * Design: did_pmic_comm_intf_cfg, did_pmic_comm_single_i2c_cfg,
  *         did_pmic_comm_dual_i2c_cfg, did_pmic_comm_spi_cfg,
- *         did_pmic_tps6594x_j721e_support, did_pmic_lp8764x_j7200_support
+ *         did_pmic_tps6594x_j721e_support, did_pmic_lp8764x_j7200_support,
+ *         did_pmic_validation_feature_support,
+ *         did_pmic_generic_feature_support, did_pmic_safety_feature_support
  *
  *         This function gets device configuration from pCoreCfgData and
  *         initializes device specific information in pPmicCoreHandle after

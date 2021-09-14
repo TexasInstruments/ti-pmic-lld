@@ -109,6 +109,12 @@ PMIC LLD Software Design Document
     |        |             |              | Definitions, API       |             |
     |        |             |              | Function Descriptions  |             |
     +--------+-------------+--------------+------------------------+-------------+
+    |2.11    | 20-Sep-2021 | Deepa        | Updated the following  | Released    |
+    |        |             | Gopinath     | sections:              |             |
+    |        |             |              | Design Requirements,   |             |
+    |        |             |              | Design Description, API|             |
+    |        |             |              | Function Descriptions  |             |
+    +--------+-------------+--------------+------------------------+-------------+
 
 .. raw:: latex
 
@@ -288,12 +294,22 @@ LLD.
     | did_pmic_comm_intf_cfg             | PDK-5814       | Safety         | Driver shall   |
     |                                    |                | Functional     | have a runtime |
     |                                    |                |                | configuration  |
-    |                                    |                |                | option to      |
-    |                                    |                |                | enable the     |
+    |                                    | PDK-5858       | Other          | option to      |
+    |                                    | PDK-5824       |                | enable the     |
     |                                    |                |                | interface type |
     |                                    |                |                | supported,     |
     |                                    |                |                | either I2C or  |
     |                                    |                |                | SPI            |
+    |                                    |                |                | Driver shall   |
+    |                                    |                |                | support an     |
+    |                                    |                |                | application    |
+    |                                    |                |                | registered     |
+    |                                    |                |                | call table     |
+    |                                    |                |                | for the PMIC   |
+    |                                    |                |                | I2C/SPI        |
+    |                                    |                |                | interface      |
+    |                                    |                |                | using TI       |
+    |                                    |                |                | I2C/SPI LLD API|
     +------------------------------------+----------------+----------------+----------------+
     | did_pmic_comm_single_i2c_cfg       | PDK-5810       | Safety         | Driver shall   |
     |                                    | PDK-9129       | Functional     | support single |
@@ -931,6 +947,105 @@ LLD.
     |                                    |                |                | decipher a Soft|
     |                                    |                |                | Reboot Error   |
     +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_generic_feature_support   | PDK-5816       | Other          | Driver shall be|
+    |                                    | PDK-5817       |                | independent of |
+    |                                    | PDK-5818       |                | TI Processor   |
+    |                                    | PDK-5819       |                | SDK for        |
+    |                                    | PDK-5820       |                | standalone use |
+    |                                    | PDK-5821       |                | case, shall be |
+    |                                    | PDK-5822       |                | stateless and  |
+    |                                    | PDK-5823       |                | reentrant,     |
+    |                                    | PDK-5825       |                | support        |
+    |                                    | PDK-5826       |                | multiple       |
+    |                                    |                |                | applications   |
+    |                                    |                |                | and protect for|
+    |                                    |                |                | pre-emption,   |
+    |                                    |                |                | Driver source  |
+    |                                    |                |                | code           |
+    |                                    |                |                | architecture   |
+    |                                    |                |                | shall support  |
+    |                                    |                |                | multiple PMICs,|
+    |                                    |                |                | shall compile  |
+    |                                    |                |                | via make(Linux)|
+    |                                    |                |                | and XDC gmake  |
+    |                                    |                |                | (Windows) and  |
+    |                                    |                |                | Driver         |
+    |                                    |                |                | validation on  |
+    |                                    |                |                | TI EVM shall   |
+    |                                    |                |                | use TI         |
+    |                                    |                |                | Processor SDK, |
+    |                                    |                |                | Coding style   |
+    |                                    |                |                | shall follow   |
+    |                                    |                |                | TI Processor   |
+    |                                    |                |                | SDK coding     |
+    |                                    |                |                | guidelines,    |
+    |                                    |                |                | Documentation  |
+    |                                    |                |                | template shall |
+    |                                    |                |                | follow TI      |
+    |                                    |                |                | Processor SDK  |
+    |                                    |                |                | style, Customer|
+    |                                    |                |                | deliverables   |
+    |                                    |                |                | independent of |
+    |                                    |                |                | Processor SDK  |
+    |                                    |                |                | and integrated |
+    |                                    |                |                | in Processor   |
+    |                                    |                |                | SDK RTOS       |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_validation_feature_support| PDK-5827       | Testing        | Processor SDK  |
+    |                                    | PDK-5860       |                | shall contain  |
+    |                                    |                |                | automated PMIC |
+    |                                    |                |                | driver unit    |
+    |                                    |                |                | test,          |
+    |                                    |                |                | implemented    |
+    |                                    |                |                | using Unity    |
+    |                                    |                |                | test framework,|
+    |                                    |                |                | Stub functional|
+    |                                    |                |                | shall be       |
+    |                                    |                |                | implemented for|
+    |                                    |                |                | any            |
+    |                                    |                |                | functionality  |
+    |                                    |                |                | not testable   |
+    |                                    |                |                | on EVM         |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_validation_feature_support| PDK-5859       | Performance and| Processor SDK  |
+    |                                    |                | Resources      | shall contain a|
+    |                                    |                |                | PMIC driver    |
+    |                                    |                |                | benchmark      |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_safety_feature_support    | PDK-5856       | Other          | Driver shall   |
+    |                                    | PDK-5857       |                | follow the     |
+    |                                    |                |                | Functional     |
+    |                                    |                |                | Safety process,|
+    |                                    |                |                | shall support  |
+    |                                    |                |                | Customer       |
+    |                                    |                |                | deliverables   |
+    |                                    |                |                | for functional |
+    |                                    |                |                | safety         |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_irq_cfg_readback          | PDK-9122       | Safety         | Driver shall   |
+    |                                    |                | Functional     | read PMIC      |
+    |                                    |                |                | registers to   |
+    |                                    |                |                | decipher a Soft|
+    |                                    |                |                | Reboot Error   |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_irq_cfg_readback          | PDK-9122       | Safety         | Driver shall   |
+    |                                    |                | Functional     | read PMIC      |
+    |                                    |                |                | registers to   |
+    |                                    |                |                | decipher a Soft|
+    |                                    |                |                | Reboot Error   |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_irq_cfg_readback          | PDK-9122       | Safety         | Driver shall   |
+    |                                    |                | Functional     | read PMIC      |
+    |                                    |                |                | registers to   |
+    |                                    |                |                | decipher a Soft|
+    |                                    |                |                | Reboot Error   |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_irq_cfg_readback          | PDK-9122       | Safety         | Driver shall   |
+    |                                    |                | Functional     | read PMIC      |
+    |                                    |                |                | registers to   |
+    |                                    |                |                | decipher a Soft|
+    |                                    |                |                | Reboot Error   |
+    +------------------------------------+----------------+----------------+----------------+
 
 Design Description
 ==================
@@ -952,6 +1067,42 @@ with application and hardware layers.
    :align: center
 
 Figure PMIC Driver Software Architecture
+
+| Design Id: (did_pmic_generic_feature_support)
+| Requirement: REQ_TAG(PDK-5816) REQ_TAG(PDK-5817) REQ_TAG(PDK-5818)
+               REQ_TAG(PDK-5819) REQ_TAG(PDK-5820) REQ_TAG(PDK-5821)
+               REQ_TAG(PDK-5822) REQ_TAG(PDK-5823) REQ_TAG(PDK-5825)
+               REQ_TAG(PDK-5826)
+
+Driver shall be stateless and reentrant and shall support multiple applications
+and protect for pre-emption. Driver source code architecture shall support
+multiple PMICs. Driver shall be independent of TI Processor SDK for standalone
+use case
+
+Driver shall compile via make (Linux) and XDC gmake (Windows) and Driver
+validation on TI EVM shall use TI Processor SDK
+
+Coding style shall follow TI Processor SDK coding guidelines and 
+Documentation template shall follow TI Processor SDK style
+
+Customer deliverables independent of Processor SDK and integrated in Processor
+SDK RTOS
+
+| Design Id: (did_pmic_validation_feature_support)
+| Requirement: REQ_TAG(PDK-5827) REQ_TAG(PDK-5860) REQ_TAG(PDK-5859)
+
+Processor SDK shall contain automated PMIC driver unit test, implemented using
+Unity test framework, Stub functional shall be implemented for any functionality
+not testable on EVM
+
+Processor SDK shall contain a PMIC driver benchmark for Pmic Initialization and
+PMIC WDG QA Answer computation
+
+| Design Id: (did_pmic_safety_feature_support)
+| Requirement: REQ_TAG(PDK-5856) REQ_TAG(PDK-5857)
+
+Driver shall follow the Functional Safety process and shall support customer
+deliverables for functional safety
 
 Platform Integration
 --------------------
@@ -1011,7 +1162,7 @@ PMIC Communication Interface Components
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 | Design Id: (did_pmic_comm_intf_cfg)
-| Requirement: REQ_TAG(PDK-5814)
+| Requirement: REQ_TAG(PDK-5814) REQ_TAG(PDK-5824) REQ_TAG(PDK-5858)
 
 
 PMIC contains I2C1,I2C2 and SPI interfaces to configure, monitor and
@@ -1024,6 +1175,9 @@ operations as it is designed to be platform independent.Application has
 to provide all necessary LLD API for I2C and SPI API prototypes as given
 in PSDK and Those API will be used by PMIC driver to drive I2C or SPI
 interface.
+
+Driver shall support an application registered call table for the PMIC I2C/SPI
+interface using TI I2C/SPI LLD API
 
 I2C Interface
 ^^^^^^^^^^^^^^
@@ -3712,13 +3866,24 @@ PMIC Core Handle Initialization
     |                        | (did_pmic_comm_spi_cfg),                   |
     |                        | (did_pmic_tps6594x_j721e_support),         |
     |                        | (did_pmic_lp8764x_j7200_support)           |
+    |                        | (did_pmic_generic_feature_support)         |
+    |                        | (did_pmic_validation_feature_support)      |
+    |                        | (did_pmic_safety_feature_support)          |
     +------------------------+--------------------------------------------+
     | Requirements ID        | (PDK-5814), (PDK-5810), (PDK-5813),        |
     |                        | (PDK-5843), (PDK-5853), (PDK-5811),        |
-    |                        | (PDK-9129), (PDK-9329), (PDK-9159)         |
+    |                        | (PDK-9129), (PDK-9329), (PDK-9159),        |
+    |                        | (PDK-5824), (PDK-5858), (PDK-5816),        |
+    |                        | (PDK-5817), (PDK-5818), (PDK-5819),        |
+    |                        | (PDK-5820), (PDK-5821), (PDK-5822),        |
+    |                        | (PDK-5823), (PDK-5825), (PDK-5826),        |
+    |                        | (PDK-5827), (PDK-5859), (PDK-5860),        |
+    |                        | (PDK-5856), (PDK-5857)                     |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-6187, PDK-5990, PDK-6109               |
-    |                        | PDK-6185, PDK-6186, PDK-6191               |
+    | Test IDs               | PDK-6187, PDK-5990, PDK-6109, PDK-6185,    |
+    |                        | PDK-6186, PDK-6191, PDK-6774, PDK-6189,    |
+    |                        | PDK-6190, PDK-6773, PDK-6772, PDK-8233     |
+    |                        | PDK-8234, PDK-8240                         |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreCfg_t \*pPmicConfigData        |
     |                        |    –Handle to driver instance              |

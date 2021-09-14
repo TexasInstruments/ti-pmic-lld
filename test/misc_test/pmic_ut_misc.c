@@ -3848,7 +3848,6 @@ static void test_pmic_setCommonCtrlCfg_eepromDefaultLoadEnable(void)
     else
         pmic_log("\r\n Also check for PFSM delay 3 Value register same as EEPROM registers - 0 both in Leo and Hera PMIC");
 
-
     pmicStatus = Pmic_rtcEnableTimerIntr(pPmicCoreHandle, PMIC_RTC_TIMER_INTR_ENABLE);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
