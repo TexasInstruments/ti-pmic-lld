@@ -457,16 +457,16 @@ typedef struct Pmic_CoreCfg_s {
  *              REQ_TAG(PDK-5822), REQ_TAG(PDK-5823), REQ_TAG(PDK-5824),
  *              REQ_TAG(PDK-5825), REQ_TAG(PDK-5826), REQ_TAG(PDK-5827),
  *              REQ_TAG(PDK-5856), REQ_TAG(PDK-5857), REQ_TAG(PDK-5858),
- *              REQ_TAG(PDK-5859), REQ_TAG(PDK-5860) 
+ *              REQ_TAG(PDK-5859), REQ_TAG(PDK-5860)
  * Design: did_pmic_comm_intf_cfg, did_pmic_comm_single_i2c_cfg,
  *         did_pmic_comm_dual_i2c_cfg, did_pmic_comm_spi_cfg,
  *         did_pmic_tps6594x_j721e_support, did_pmic_lp8764x_j7200_support,
  *         did_pmic_validation_feature_support,
  *         did_pmic_generic_feature_support, did_pmic_safety_feature_support
  *
- *         This function gets device configuration from pCoreCfgData and
+ *         This function gets device configuration from pPmicConfigData and
  *         initializes device specific information in pPmicCoreHandle after
- *         validation of given params depends on validParams bitfileds
+ *         validation of given params depends on validParams bit fields
  *         and does some basic validation on PMIC interface I2C/SPI,
  *         confirming that PMIC is accessible for PMIC configuration and
  *         monitor features.

@@ -275,6 +275,38 @@ static int32_t Pmic_esmXEnable(Pmic_CoreHandle_t   *pPmicCoreHandle,
 }
 
 /*!
+ * \brief   This function is used to Enable/Disable PMIC ESM SOC Interrupts
+ */
+static int32_t Pmic_esmSocIntrEnable(Pmic_CoreHandle_t        *pPmicCoreHandle,
+                                     const Pmic_EsmIntrCfg_t   esmIntrCfg)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+
+    /* Mask/Un-mask ESM SOC Interrupts */
+
+    pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                  PMIC_TPS6594X_ESM_SOC_PIN_INT,
+                                  !esmIntrCfg.esmPinIntr);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                      PMIC_TPS6594X_ESM_SOC_FAIL_INT,
+                                      !esmIntrCfg.esmFailIntr);
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+
+        pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                      PMIC_TPS6594X_ESM_SOC_RST_INT,
+                                      !esmIntrCfg.esmRstIntr);
+    }
+
+    return pmicStatus;
+}
+
+/*!
  * \brief   This function is used to Enable/Disable PMIC ESM Interrupts
  */
 static int32_t Pmic_esmIntrEnable(Pmic_CoreHandle_t        *pPmicCoreHandle,
@@ -304,7 +336,6 @@ static int32_t Pmic_esmIntrEnable(Pmic_CoreHandle_t        *pPmicCoreHandle,
                                               PMIC_TPS6594X_ESM_MCU_RST_INT,
                                               !esmIntrCfg.esmRstIntr);
             }
-
         }
 
         if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -329,28 +360,11 @@ static int32_t Pmic_esmIntrEnable(Pmic_CoreHandle_t        *pPmicCoreHandle,
         }
     }
 
-    /* Mask/Un-mask ESM SOC Interrupts */
     if((PMIC_ST_SUCCESS == pmicStatus) && (PMIC_ESM_MODE_SOC == esmType))
     {
-        pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
-                                      PMIC_TPS6594X_ESM_SOC_PIN_INT,
-                                      !esmIntrCfg.esmPinIntr);
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
-                                          PMIC_TPS6594X_ESM_SOC_FAIL_INT,
-                                          !esmIntrCfg.esmFailIntr);
-        }
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-
-            pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
-                                          PMIC_TPS6594X_ESM_SOC_RST_INT,
-                                          !esmIntrCfg.esmRstIntr);
-        }
-
+        /* Mask/Un-mask ESM SOC Interrupts */
+        pmicStatus = Pmic_esmSocIntrEnable(pPmicCoreHandle,
+                                           esmIntrCfg);
     }
 
     return pmicStatus;
@@ -675,8 +689,6 @@ static int32_t Pmic_esmSetMode(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
-
-
 
     pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
                                         regAddr,
@@ -1184,6 +1196,150 @@ int32_t Pmic_esmGetEnableState(Pmic_CoreHandle_t   *pPmicCoreHandle,
 }
 
 /*!
+ * \brief   This function is used to Set the ESM Error Count Threshold value,
+ *          ESM EN DRV clear and ESM Mode configuration
+ */
+static int32_t Pmic_esmSetErrcntthresholdEndrvClrModeCfg(
+                                          Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                          const Pmic_EsmCfg_t  esmCfg,
+                                          const uint8_t        esmBaseRegAddr)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+
+    if(((bool)true) == pmic_validParamCheck(esmCfg.validParams,
+                                            PMIC_ESM_CFG_ERR_CNT_THR_VALID))
+    {
+        if(PMIC_ESM_ERR_CNT_THR_MAX < esmCfg.esmErrCntThr)
+        {
+            pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        }
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            pmicStatus = Pmic_esmSetErrCntThrValue(pPmicCoreHandle,
+                                                   esmCfg,
+                                                   esmBaseRegAddr);
+        }
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(esmCfg.validParams,
+                                           PMIC_ESM_CFG_EN_DRV_VALID)))
+    {
+        /* Set ESM EN DRV */
+        pmicStatus = Pmic_esmSetEnDrvValue(pPmicCoreHandle,
+                                           esmCfg,
+                                           esmBaseRegAddr);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(esmCfg.validParams,
+                                           PMIC_ESM_CFG_MODE_VALID)))
+    {
+        /* Set ESM Mode */
+        pmicStatus = Pmic_esmSetMode(pPmicCoreHandle,
+                                     esmCfg,
+                                     esmBaseRegAddr);
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief   This function is used to Set the ESM HMAX, HMIN, LMAX, & LMIN value
+ *          configuration
+ */
+static int32_t Pmic_esmSetHmaxHminLmaxLminCfg(
+                                           Pmic_CoreHandle_t  *pPmicCoreHandle,
+                                           const Pmic_EsmCfg_t esmCfg,
+                                           const uint8_t       esmBaseRegAddr)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+
+    if(((bool)true) == pmic_validParamCheck(esmCfg.validParams,
+                                           PMIC_ESM_CFG_HMAX_VALID))
+    {
+        pmicStatus = Pmic_esmSetHmaxValue(pPmicCoreHandle,
+                                          esmCfg,
+                                          esmBaseRegAddr);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(esmCfg.validParams,
+                                           PMIC_ESM_CFG_HMIN_VALID)))
+    {
+        pmicStatus = Pmic_esmSetHminValue(pPmicCoreHandle,
+                                          esmCfg,
+                                          esmBaseRegAddr);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(esmCfg.validParams,
+                                           PMIC_ESM_CFG_LMAX_VALID)))
+    {
+        pmicStatus = Pmic_esmSetLmaxValue(pPmicCoreHandle,
+                                          esmCfg,
+                                          esmBaseRegAddr);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(esmCfg.validParams,
+                                           PMIC_ESM_CFG_LMIN_VALID)))
+    {
+        pmicStatus = Pmic_esmSetLminValue(pPmicCoreHandle,
+                                          esmCfg,
+                                          esmBaseRegAddr);
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief   This function is used to set the ESM mode, delay-1 and delay-2 time
+ *          time intervals, Error Count Threshold value, HMAX, HMIN, LMAX,
+ *          LMIN and select EN DRV clear for ESM_MCU and ESM_SOC.
+ */
+static int32_t Pmic_esmSetConfig(Pmic_CoreHandle_t  *pPmicCoreHandle,
+                                 const Pmic_EsmCfg_t esmCfg,
+                                 const uint8_t       esmBaseRegAddr)
+{
+    int32_t pmicStatus     = PMIC_ST_SUCCESS;
+
+    if(((bool)true) == pmic_validParamCheck(esmCfg.validParams,
+                                           PMIC_ESM_CFG_DELAY1_VALID))
+    {
+        pmicStatus = Pmic_esmSetDelay1Value(pPmicCoreHandle,
+                                            esmCfg,
+                                            esmBaseRegAddr);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(esmCfg.validParams,
+                                           PMIC_ESM_CFG_DELAY2_VALID)))
+    {
+        pmicStatus = Pmic_esmSetDelay2Value(pPmicCoreHandle,
+                                            esmCfg,
+                                            esmBaseRegAddr);
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pmicStatus = Pmic_esmSetErrcntthresholdEndrvClrModeCfg(pPmicCoreHandle,
+                                                               esmCfg,
+                                                               esmBaseRegAddr);
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pmicStatus = Pmic_esmSetHmaxHminLmaxLminCfg(pPmicCoreHandle,
+                                                    esmCfg,
+                                                    esmBaseRegAddr);
+    }
+
+    return pmicStatus;
+}
+
+/*!
  * \brief   API to Set PMIC ESM Configuration.
  *
  * Requirement: REQ_TAG(PDK-5833)
@@ -1232,95 +1388,124 @@ int32_t Pmic_esmSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
         pmicStatus = Pmic_esmCheckState(pPmicCoreHandle, esmBaseRegAddr);
     }
 
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(esmCfg.validParams,
-                                           PMIC_ESM_CFG_DELAY1_VALID)))
+    if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = Pmic_esmSetDelay1Value(pPmicCoreHandle,
-                                            esmCfg,
-                                            esmBaseRegAddr);
+        pmicStatus = Pmic_esmSetConfig(pPmicCoreHandle, esmCfg, esmBaseRegAddr);
     }
 
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(esmCfg.validParams,
-                                           PMIC_ESM_CFG_DELAY2_VALID)))
-    {
-        pmicStatus = Pmic_esmSetDelay2Value(pPmicCoreHandle,
-                                            esmCfg,
-                                            esmBaseRegAddr);
-    }
+    return pmicStatus;
+}
 
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(esmCfg.validParams,
-                                           PMIC_ESM_CFG_ERR_CNT_THR_VALID)))
-    {
-        if(PMIC_ESM_ERR_CNT_THR_MAX < esmCfg.esmErrCntThr)
-        {
-            pmicStatus = PMIC_ST_ERR_INV_PARAM;
-        }
+/*!
+ * \brief   This function is used to Get the ESM HMAX, HMIN, LMAX, & LMIN value
+ */
+static int32_t Pmic_esmGetHmaxHminLmaxLminCfg(
+                                            Pmic_CoreHandle_t  *pPmicCoreHandle,
+                                            Pmic_EsmCfg_t      *pEsmCfg,
+                                            const uint8_t       esmBaseRegAddr)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            pmicStatus = Pmic_esmSetErrCntThrValue(pPmicCoreHandle,
-                                                   esmCfg,
-                                                   esmBaseRegAddr);
-        }
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(esmCfg.validParams,
-                                           PMIC_ESM_CFG_HMAX_VALID)))
+    if(((bool)true) == pmic_validParamCheck(pEsmCfg->validParams,
+                                           PMIC_ESM_CFG_HMAX_VALID))
     {
-        pmicStatus = Pmic_esmSetHmaxValue(pPmicCoreHandle,
-                                          esmCfg,
+        pmicStatus = Pmic_esmGetHmaxValue(pPmicCoreHandle,
+                                          pEsmCfg,
                                           esmBaseRegAddr);
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(esmCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(pEsmCfg->validParams,
                                            PMIC_ESM_CFG_HMIN_VALID)))
     {
-        pmicStatus = Pmic_esmSetHminValue(pPmicCoreHandle,
-                                          esmCfg,
+        pmicStatus = Pmic_esmGetHminValue(pPmicCoreHandle,
+                                          pEsmCfg,
                                           esmBaseRegAddr);
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(esmCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(pEsmCfg->validParams,
                                            PMIC_ESM_CFG_LMAX_VALID)))
     {
-        pmicStatus = Pmic_esmSetLmaxValue(pPmicCoreHandle,
-                                          esmCfg,
+        pmicStatus = Pmic_esmGetLmaxValue(pPmicCoreHandle,
+                                          pEsmCfg,
                                           esmBaseRegAddr);
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(esmCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(pEsmCfg->validParams,
                                            PMIC_ESM_CFG_LMIN_VALID)))
     {
-        pmicStatus = Pmic_esmSetLminValue(pPmicCoreHandle,
-                                          esmCfg,
+        pmicStatus = Pmic_esmGetLminValue(pPmicCoreHandle,
+                                          pEsmCfg,
                                           esmBaseRegAddr);
     }
 
+    return pmicStatus;
+}
+
+/*!
+ * \brief   This function is used to to get the configured ESM mode, delay-1 and
+ *          delay-2 time time intervals, Error Count Threshold value, HMAX,
+ *          HMIN, LMAX, LMIN and select EN DRV clear for ESM_MCU and ESM_SOC
+ */
+static int32_t Pmic_esmGetConfig(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                 Pmic_EsmCfg_t       *pEsmCfg,
+                                 const uint8_t        esmBaseRegAddr)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+
+    if(((bool)true) == pmic_validParamCheck(pEsmCfg->validParams,
+                                           PMIC_ESM_CFG_DELAY1_VALID))
+    {
+        pmicStatus = Pmic_esmGetDelay1Value(pPmicCoreHandle,
+                                            pEsmCfg,
+                                            esmBaseRegAddr);
+    }
+
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(esmCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(pEsmCfg->validParams,
+                                           PMIC_ESM_CFG_DELAY2_VALID)))
+    {
+        pmicStatus = Pmic_esmGetDelay2Value(pPmicCoreHandle,
+                                            pEsmCfg,
+                                            esmBaseRegAddr);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pEsmCfg->validParams,
+                                           PMIC_ESM_CFG_ERR_CNT_THR_VALID)))
+    {
+        pmicStatus = Pmic_esmGetErrCntThrValue(pPmicCoreHandle,
+                                               pEsmCfg,
+                                               esmBaseRegAddr);
+    }
+
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (((bool)true) == pmic_validParamCheck(pEsmCfg->validParams,
                                            PMIC_ESM_CFG_EN_DRV_VALID)))
     {
-        /* Set ESM EN DRV */
-        pmicStatus = Pmic_esmSetEnDrvValue(pPmicCoreHandle,
-                                           esmCfg,
+        /* Get ESM EN DRV */
+        pmicStatus = Pmic_esmGetEnDrvValue(pPmicCoreHandle,
+                                           pEsmCfg,
                                            esmBaseRegAddr);
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(esmCfg.validParams,
+       (((bool)true) == pmic_validParamCheck(pEsmCfg->validParams,
                                            PMIC_ESM_CFG_MODE_VALID)))
     {
-        /* Set ESM Mode */
-        pmicStatus = Pmic_esmSetMode(pPmicCoreHandle,
-                                     esmCfg,
-                                     esmBaseRegAddr);
+        /* Get ESM Mode */
+        pmicStatus = Pmic_esmGetModeValue(pPmicCoreHandle,
+                                          pEsmCfg,
+                                          esmBaseRegAddr);
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pmicStatus = Pmic_esmGetHmaxHminLmaxLminCfg(pPmicCoreHandle,
+                                                    pEsmCfg,
+                                                    esmBaseRegAddr);
     }
 
     return pmicStatus;
@@ -1375,87 +1560,11 @@ int32_t Pmic_esmGetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
         pmicStatus = Pmic_esmGetBaseRegAddr(esmType, &esmBaseRegAddr);
     }
 
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pEsmCfg->validParams,
-                                           PMIC_ESM_CFG_DELAY1_VALID)))
+    if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = Pmic_esmGetDelay1Value(pPmicCoreHandle,
-                                            pEsmCfg,
-                                            esmBaseRegAddr);
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pEsmCfg->validParams,
-                                           PMIC_ESM_CFG_DELAY2_VALID)))
-    {
-        pmicStatus = Pmic_esmGetDelay2Value(pPmicCoreHandle,
-                                            pEsmCfg,
-                                            esmBaseRegAddr);
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pEsmCfg->validParams,
-                                           PMIC_ESM_CFG_ERR_CNT_THR_VALID)))
-    {
-        pmicStatus = Pmic_esmGetErrCntThrValue(pPmicCoreHandle,
-                                               pEsmCfg,
-                                               esmBaseRegAddr);
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pEsmCfg->validParams,
-                                           PMIC_ESM_CFG_HMAX_VALID)))
-    {
-        pmicStatus = Pmic_esmGetHmaxValue(pPmicCoreHandle,
-                                          pEsmCfg,
-                                          esmBaseRegAddr);
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pEsmCfg->validParams,
-                                           PMIC_ESM_CFG_HMIN_VALID)))
-    {
-        pmicStatus = Pmic_esmGetHminValue(pPmicCoreHandle,
-                                          pEsmCfg,
-                                          esmBaseRegAddr);
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pEsmCfg->validParams,
-                                           PMIC_ESM_CFG_LMAX_VALID)))
-    {
-        pmicStatus = Pmic_esmGetLmaxValue(pPmicCoreHandle,
-                                          pEsmCfg,
-                                          esmBaseRegAddr);
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pEsmCfg->validParams,
-                                           PMIC_ESM_CFG_LMIN_VALID)))
-    {
-        pmicStatus = Pmic_esmGetLminValue(pPmicCoreHandle,
-                                          pEsmCfg,
-                                          esmBaseRegAddr);
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pEsmCfg->validParams,
-                                           PMIC_ESM_CFG_EN_DRV_VALID)))
-    {
-        /* Get ESM EN DRV */
-        pmicStatus = Pmic_esmGetEnDrvValue(pPmicCoreHandle,
-                                           pEsmCfg,
-                                           esmBaseRegAddr);
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pEsmCfg->validParams,
-                                           PMIC_ESM_CFG_MODE_VALID)))
-    {
-        /* Get ESM Mode */
-        pmicStatus = Pmic_esmGetModeValue(pPmicCoreHandle,
-                                          pEsmCfg,
-                                          esmBaseRegAddr);
+        pmicStatus = Pmic_esmGetConfig(pPmicCoreHandle,
+                                       pEsmCfg,
+                                       esmBaseRegAddr);
     }
 
     return pmicStatus;

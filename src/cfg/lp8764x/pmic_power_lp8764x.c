@@ -261,13 +261,15 @@ int32_t Pmic_powerLP8764xConvertVoltage2VSetVal(
                                              Pmic_CoreHandle_t *pPmicCoreHandle,
                                              uint16_t           millivolt,
                                              uint16_t           pwrRsrc,
-                                             uint16_t          *pBaseMillivolt,
-                                             uint8_t           *pMillivoltStep,
-                                             uint8_t           *pBaseVoutCode)
+                                             uint8_t           *pVSetVal)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-    bool    vmonRange;
-    uint8_t pwrRsrcType;
+    int32_t  status = PMIC_ST_SUCCESS;
+    uint16_t baseMillivolt = 0U;
+    uint8_t  millivoltStep = 0U;
+    uint8_t  baseVoutCode  = 0U;
+    uint8_t  pwrRsrcType;
+    bool     vmonRange;
+
 
     pwrRsrcType = Pmic_powerGetPwrRsrcType(pwrRsrc);
 
@@ -276,9 +278,9 @@ int32_t Pmic_powerLP8764xConvertVoltage2VSetVal(
         case PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK:
 
             status = Pmic_powerBuckVmonConvertVoltage2VSetVal(millivolt,
-                                                              pBaseMillivolt,
-                                                              pMillivoltStep,
-                                                              pBaseVoutCode);
+                                                              &baseMillivolt,
+                                                              &millivoltStep,
+                                                              &baseVoutCode);
 
         break;
         case PMIC_LP8764X_POWER_RESOURCE_TYPE_VMON:
@@ -286,24 +288,22 @@ int32_t Pmic_powerLP8764xConvertVoltage2VSetVal(
                                             pwrRsrc,
                                             &(vmonRange));
 
-            if((PMIC_ST_SUCCESS == status) &&
-               (PMIC_LP8764X_VMON_RANGE_0V3_3V34 == vmonRange))
+            if(PMIC_ST_SUCCESS == status)
             {
-                status = Pmic_powerBuckVmonConvertVoltage2VSetVal(
-                                                                 millivolt,
-                                                                 pBaseMillivolt,
-                                                                 pMillivoltStep,
-                                                                 pBaseVoutCode);
-            }
-            else
-            {
-                if((PMIC_ST_SUCCESS == status) &&
-                    (PMIC_LP8764X_VMON_RANGE_3V35_5V == vmonRange))
+                if(PMIC_LP8764X_VMON_RANGE_0V3_3V34 == vmonRange)
+                {
+                    status = Pmic_powerBuckVmonConvertVoltage2VSetVal(
+                                                                millivolt,
+                                                                &baseMillivolt,
+                                                                &millivoltStep,
+                                                                &baseVoutCode);
+                }
+                else
                 {
                     status = Pmic_powerVmonRange1ConvertVoltage2VSetVal(
-                                                                pBaseMillivolt,
-                                                                pMillivoltStep,
-                                                                pBaseVoutCode);
+                                                                &baseMillivolt,
+                                                                &millivoltStep,
+                                                                &baseVoutCode);
                 }
             }
 
@@ -311,6 +311,18 @@ int32_t Pmic_powerLP8764xConvertVoltage2VSetVal(
         default:
             status = PMIC_ST_ERR_INV_PARAM;
             break;
+    }
+
+    if((PMIC_ST_SUCCESS == status) &&
+       ((millivolt % millivoltStep) == 1U))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        *pVSetVal = (uint8_t)(baseVoutCode +
+                    ((millivolt - baseMillivolt) / millivoltStep));
     }
 
     return status;
@@ -324,13 +336,14 @@ int32_t Pmic_powerLP8764xConvertVSetVal2Voltage(
                                             Pmic_CoreHandle_t *pPmicCoreHandle,
                                             const uint8_t     *pVSetVal,
                                             uint16_t           pwrRsrc,
-                                            uint16_t          *pBaseMillivolt,
-                                            uint8_t           *pMillivoltStep,
-                                            uint8_t           *pBaseVoutCode)
+                                            uint16_t          *millivolt)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-    bool    vmonRange = (bool)false;
-    uint8_t pwrRsrcType = 0U;
+    int32_t  status        = PMIC_ST_SUCCESS;
+    bool     vmonRange     = (bool)false;
+    uint8_t  pwrRsrcType   = 0U;
+    uint16_t baseMillivolt = 0U;
+    uint8_t  millivoltStep = 0U;
+    uint8_t  baseVoutCode  = 0U;
 
     pwrRsrcType = Pmic_powerGetPwrRsrcType(pwrRsrc);
 
@@ -338,9 +351,9 @@ int32_t Pmic_powerLP8764xConvertVSetVal2Voltage(
     {
         case PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK:
             status = Pmic_powerBuckVmonConvertVSetVal2Voltage(pVSetVal,
-                                                              pBaseMillivolt,
-                                                              pMillivoltStep,
-                                                              pBaseVoutCode);
+                                                              &baseMillivolt,
+                                                              &millivoltStep,
+                                                              &baseVoutCode);
             break;
         case PMIC_LP8764X_POWER_RESOURCE_TYPE_VMON:
             status = Pmic_powerGetVmonRange(pPmicCoreHandle,
@@ -352,9 +365,9 @@ int32_t Pmic_powerLP8764xConvertVSetVal2Voltage(
             {
                 status = Pmic_powerBuckVmonConvertVSetVal2Voltage(
                                                                  pVSetVal,
-                                                                 pBaseMillivolt,
-                                                                 pMillivoltStep,
-                                                                 pBaseVoutCode);
+                                                                 &baseMillivolt,
+                                                                 &millivoltStep,
+                                                                 &baseVoutCode);
             }
             else
             {
@@ -362,9 +375,9 @@ int32_t Pmic_powerLP8764xConvertVSetVal2Voltage(
                     (PMIC_LP8764X_VMON_RANGE_3V35_5V == vmonRange))
                 {
                     status = Pmic_powerVmonRange1ConvertVSetVal2Voltage(
-                                                                 pBaseMillivolt,
-                                                                 pMillivoltStep,
-                                                                 pBaseVoutCode);
+                                                                 &baseMillivolt,
+                                                                 &millivoltStep,
+                                                                 &baseVoutCode);
                 }
             }
 
@@ -372,6 +385,47 @@ int32_t Pmic_powerLP8764xConvertVSetVal2Voltage(
         default:
             status = PMIC_ST_ERR_INV_PARAM;
             break;
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        *millivolt = (baseMillivolt +
+                     (((uint16_t)*pVSetVal - baseVoutCode) * millivoltStep));
+    }
+
+    return status;
+}
+
+/*!
+ * \brief   This function is to validate the power good source limit for VCCA
+ *          BUCK, LDO
+ */
+static int32_t Pmic_validate_lp8764x_pGoodVccaBuckLDOSrcType(
+                                                          uint16_t pgoodSrc,
+                                                          uint8_t  pGoodSrcType)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    if(PMIC_LP8764X_PGOOD_SOURCE_TYPE_VCCA == pGoodSrcType)
+    {
+        if(pgoodSrc != PMIC_LP8764X_PGOOD_SOURCE_VCCA)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+    else if(PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT == pGoodSrcType)
+    {
+        if(pgoodSrc != PMIC_LP8764X_PGOOD_SOURCE_NRSTOUT)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+    else
+    {
+        if(pgoodSrc != PMIC_LP8764X_PGOOD_SOURCE_NRSTOUT_SOC)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
     }
 
     return status;
@@ -388,27 +442,14 @@ int32_t Pmic_validate_lp8764x_pGoodSrcType(uint16_t pgoodSrc)
 
     pGoodSrcType = Pmic_powerGetPwrRsrcType(pgoodSrc);
 
-    if(PMIC_LP8764X_PGOOD_SOURCE_TYPE_VCCA == pGoodSrcType)
-    {
-        if(pgoodSrc != PMIC_LP8764X_PGOOD_SOURCE_VCCA)
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-    }
-    else if(PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT == pGoodSrcType)
-    {
-        if(pgoodSrc != PMIC_LP8764X_PGOOD_SOURCE_NRSTOUT)
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-    }
-    else if(PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC == pGoodSrcType)
-    {
-        if(pgoodSrc != PMIC_LP8764X_PGOOD_SOURCE_NRSTOUT_SOC)
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-    }
+    if((PMIC_LP8764X_PGOOD_SOURCE_TYPE_VCCA == pGoodSrcType)    ||
+       (PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT == pGoodSrcType) ||
+       (PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC == pGoodSrcType))
+       {
+           status = Pmic_validate_lp8764x_pGoodVccaBuckLDOSrcType(
+                                                                 pgoodSrc,
+                                                                 pGoodSrcType);
+       }
     else if(PMIC_LP8764X_PGOOD_SOURCE_TYPE_TDIE == pGoodSrcType)
     {
         if(pgoodSrc != PMIC_LP8764X_PGOOD_SOURCE_TDIE)
@@ -442,15 +483,14 @@ int32_t Pmic_validate_lp8764x_pGoodSrcType(uint16_t pgoodSrc)
 
 /*!
  * \brief   This function is to validate the power good signal source selection
- *          limit for the specific PMIC device.
+ *          limit for BUCK, LDO, NRSTOUT, NRSTOUT_SOC
  */
-int32_t Pmic_validate_lp8764x_pGoodSelType(uint16_t pgoodSrc,
-                                           uint8_t pgoodSelType)
+static int32_t Pmic_validate_lp8764x_pGoodSelBuckLdoNrstoutNrstoutsoc(
+                                                         uint8_t  pgoodSelType,
+                                                         uint8_t  pGoodSrcType)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    uint8_t  pGoodSrcType = 0U;
 
-    pGoodSrcType = Pmic_powerGetPwrRsrcType(pgoodSrc);
     if((PMIC_LP8764X_PGOOD_SOURCE_TYPE_VCCA == pGoodSrcType) ||
        (PMIC_LP8764X_PGOOD_SOURCE_TYPE_VMON == pGoodSrcType))
     {
@@ -466,13 +506,38 @@ int32_t Pmic_validate_lp8764x_pGoodSelType(uint16_t pgoodSrc,
             status = PMIC_ST_ERR_INV_PARAM;
         }
     }
-    else if(PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC == pGoodSrcType)
+    else
     {
         if(pgoodSelType > PMIC_LP8764X_POWER_PGOOD_SEL_NRSTOUT_SOC)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
     }
+
+    return status;
+}
+
+/*!
+ * \brief   This function is to validate the power good signal source selection
+ *          limit for the specific PMIC device.
+ */
+int32_t Pmic_validate_lp8764x_pGoodSelType(uint16_t pgoodSrc,
+                                           uint8_t  pgoodSelType)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t  pGoodSrcType = 0U;
+
+    pGoodSrcType = Pmic_powerGetPwrRsrcType(pgoodSrc);
+
+    if((PMIC_LP8764X_PGOOD_SOURCE_TYPE_VCCA == pGoodSrcType)    ||
+       (PMIC_LP8764X_PGOOD_SOURCE_TYPE_VMON == pGoodSrcType)    ||
+       (PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT == pGoodSrcType) ||
+       (PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC == pGoodSrcType))
+       {
+           status = Pmic_validate_lp8764x_pGoodSelBuckLdoNrstoutNrstoutsoc(
+                                                                  pgoodSelType,
+                                                                  pGoodSrcType);
+       }
     else if(PMIC_LP8764X_PGOOD_SOURCE_TYPE_TDIE == pGoodSrcType)
     {
         if(pgoodSelType > PMIC_LP8764X_POWER_PGOOD_SEL_TDIE_WARN)
@@ -483,6 +548,149 @@ int32_t Pmic_validate_lp8764x_pGoodSelType(uint16_t pgoodSrc,
     else if(PMIC_LP8764X_PGOOD_SOURCE_TYPE_BUCK == pGoodSrcType)
     {
         if(pgoodSelType > PMIC_LP8764X_POWER_PGOOD_SEL_SRC_VOLTAGE_CURRENT)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+    else
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    return status;
+}
+
+/**
+ * \brief   This function is used to validate the voltage levels for
+ *          Regulators/VMON for LP8764x PMIC
+ */
+int32_t Pmic_powerLP8764xValidateVoltageLevel(
+                                             Pmic_CoreHandle_t *pPmicCoreHandle,
+                                             uint8_t            pwrRsrcType,
+                                             uint16_t           pwrRsrc,
+                                             uint16_t           voltage_mV)
+{
+    int32_t  status = PMIC_ST_SUCCESS;
+    bool     vmonRange = (bool)false;
+
+    if(PMIC_LP8764X_POWER_RESOURCE_TYPE_VMON == pwrRsrcType)
+    {
+        status = Pmic_powerGetVmonRange(pPmicCoreHandle,
+                                        pwrRsrc,
+                                        &(vmonRange));
+
+        if((PMIC_ST_SUCCESS == status) &&
+           (PMIC_LP8764X_VMON_RANGE_0V3_3V34 == vmonRange))
+        {
+            if((voltage_mV < PMIC_LP8764X_RANGE0_VMON_MIN_VOLTAGE)  ||
+               (voltage_mV > PMIC_LP8764X_RANGE0_VMON_MAX_VOLTAGE))
+            {
+                status = PMIC_ST_ERR_INV_PARAM;
+            }
+        }
+        else if((PMIC_ST_SUCCESS == status) &&
+                (PMIC_LP8764X_VMON_RANGE_3V35_5V == vmonRange))
+        {
+            if((voltage_mV < PMIC_LP8764X_RANGE1_VMON_MIN_VOLTAGE)   ||
+               (voltage_mV > PMIC_LP8764X_RANGE1_VMON_MAX_VOLTAGE))
+            {
+                status = PMIC_ST_ERR_INV_PARAM;
+            }
+        }
+        else
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+    else if(PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType)
+    {
+        if((voltage_mV < PMIC_LP8764X_REGULATOR_BUCK_MIN_VOLTAGE) ||
+           (voltage_mV > PMIC_LP8764X_REGULATOR_BUCK_MAX_VOLTAGE))
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+    else
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    return status;
+}
+
+/*!
+ * \brief   This function is to validate the power resource limit for the
+ *          LP8764x PMIC device.
+ */
+int32_t Pmic_powerLP8764xValidatePwrRsrcLimit(
+                                    const Pmic_CoreHandle_t *pPmicCoreHandle,
+                                    uint8_t                  pwrRsrcType,
+                                    uint16_t                 pwrRsrc)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    if(PMIC_LP8764X_POWER_RESOURCE_TYPE_VCCA == pwrRsrcType)
+    {
+        if(pwrRsrc != PMIC_LP8764X_POWER_SOURCE_VCCA)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+    else if(PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType)
+    {
+        if((pwrRsrc > PMIC_LP8764X_BUCK_MAX) ||
+           (pwrRsrc < PMIC_LP8764X_BUCK_MIN))
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+    else if(PMIC_LP8764X_POWER_RESOURCE_TYPE_VMON == pwrRsrcType)
+    {
+        if((pwrRsrc > PMIC_LP8764X_VMON_MAX) ||
+           (pwrRsrc < PMIC_LP8764X_VMON_MIN))
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+    else if((PMIC_LP8764X_POWER_RESOURCE_TYPE_LDO == pwrRsrcType) &&
+           (((bool)false) == pPmicCoreHandle->pPmic_SubSysInfo->ldoEnable))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+    else
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    return status;
+}
+
+/*!
+ * \brief   This function is to validate the power resource interrupt type
+ *          for the LP8764x PMIC device.
+ */
+int32_t Pmic_powerLP8764xValidateIntrType(uint8_t  pmicDeviceType,
+                                          uint16_t pwrResource,
+                                          uint8_t  pwrResourceType,
+                                          uint8_t  intrType)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    if((PMIC_LP8764X_POWER_RESOURCE_TYPE_VCCA == pwrResourceType) ||
+       (PMIC_LP8764X_POWER_RESOURCE_TYPE_VMON == pwrResourceType))
+    {
+        if((intrType != PMIC_LP8764X_POWER_OV_INT) &&
+           (intrType != PMIC_LP8764X_POWER_UV_INT))
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+    }
+
+    else if(PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK == pwrResourceType)
+    {
+        if((intrType != PMIC_LP8764X_POWER_OV_INT) &&
+           (intrType != PMIC_LP8764X_POWER_UV_INT) &&
+           (intrType != PMIC_LP8764X_POWER_ILIM_INT))
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
