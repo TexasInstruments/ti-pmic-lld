@@ -1578,6 +1578,13 @@ static void test_pmic_fsmRecoverSocPwrErr_nsleepLow(void)
                                         pmic_fsm_tests,
                                         PMIC_FSM_NUM_OF_TESTCASES);
 
+    if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        pmic_testResultUpdate_ignore(10109,
+                                     pmic_fsm_tests,
+                                     PMIC_FSM_NUM_OF_TESTCASES);
+    }
+
     status = Pmic_fsmRecoverSocPwrErr(pPmicCoreHandle,
                                       PMIC_NSLEEP_LOW);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -1598,6 +1605,13 @@ static void test_pmic_fsmRecoverSocPwrErr_nsleepHigh(void)
     test_pmic_print_unity_testcase_info(10110,
                                         pmic_fsm_tests,
                                         PMIC_FSM_NUM_OF_TESTCASES);
+
+    if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        pmic_testResultUpdate_ignore(10110,
+                                     pmic_fsm_tests,
+                                     PMIC_FSM_NUM_OF_TESTCASES);
+    }
 
     status = Pmic_fsmRecoverSocPwrErr(pPmicCoreHandle,
                                       PMIC_NSLEEP_HIGH);
@@ -1620,6 +1634,13 @@ static void test_pmic_fsmRecoverSocPwrErr_prmValTest_handle(void)
                                         pmic_fsm_tests,
                                         PMIC_FSM_NUM_OF_TESTCASES);
 
+    if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        pmic_testResultUpdate_ignore(10111,
+                                     pmic_fsm_tests,
+                                     PMIC_FSM_NUM_OF_TESTCASES);
+    }
+
     status = Pmic_fsmRecoverSocPwrErr(NULL,
                                       PMIC_NSLEEP_LOW);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
@@ -1639,6 +1660,13 @@ static void test_pmic_fsmRecoverSocPwrErr_prmValTest_nsleepVal(void)
     test_pmic_print_unity_testcase_info(10112,
                                         pmic_fsm_tests,
                                         PMIC_FSM_NUM_OF_TESTCASES);
+
+    if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        pmic_testResultUpdate_ignore(10112,
+                                     pmic_fsm_tests,
+                                     PMIC_FSM_NUM_OF_TESTCASES);
+    }
 
     status = Pmic_fsmRecoverSocPwrErr(pPmicCoreHandle, 2U);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
