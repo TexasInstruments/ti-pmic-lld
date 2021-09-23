@@ -590,7 +590,7 @@ int32_t Pmic_fsmGetNsleepSignalVal(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief   API to recover from SOC Power Error using Nsleep1B and Nsleep2B
  *          signal
  *
- * Requirement: REQ_TAG(PDK-9123), REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
+ * Requirement: REQ_TAG(PDK-9123)
  * Design: did_pmic_fsm_recover_soc_pwr_err
  *
  *          This function is used to recover from SOC Power Error without
@@ -600,6 +600,9 @@ int32_t Pmic_fsmGetNsleepSignalVal(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          Step-1 - PMIC LLD has to configure NSLEEP2 & NSLEEP1 signals to ‘10’
  *          Step-2 - Application has to wait for 9us
  *          Step-3 - PMIC LLD has to configure NSLEEP2 & NSLEEP1 signals to ‘11’
+ *
+ *          Note: Valid only for TPS6594x Leo PMIC PG2.0 and LP8764x Hera PMIC
+ *          PG2.0
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
  * \param   nsleepVal       [IN]    PMIC Nsleep signal level High/Low to be

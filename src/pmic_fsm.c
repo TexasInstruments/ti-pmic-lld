@@ -1578,7 +1578,7 @@ int32_t Pmic_fsmGetPfsmDelay(Pmic_CoreHandle_t  *pPmicCoreHandle,
  * \brief   API to recover from SOC Power Error using Nsleep1B and Nsleep2B
  *          signal
  *
- * Requirement: REQ_TAG(PDK-9123), REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
+ * Requirement: REQ_TAG(PDK-9123)
  * Design: did_pmic_fsm_recover_soc_pwr_err
  *
  *          This function is used to recover from SOC Power Error without
@@ -1588,6 +1588,9 @@ int32_t Pmic_fsmGetPfsmDelay(Pmic_CoreHandle_t  *pPmicCoreHandle,
  *          Step-1 - PMIC LLD has to configure NSLEEP2 & NSLEEP1 signals to ‘10’
  *          Step-2 - Application has to wait for 9us
  *          Step-3 - PMIC LLD has to configure NSLEEP2 & NSLEEP1 signals to ‘11’
+ *
+ *          Note: Valid only for TPS6594x Leo PMIC PG2.0 and LP8764x Hera PMIC
+ *          PG2.0
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
  * \param   nsleepVal       [IN]    PMIC Nsleep signal level High/Low to be
@@ -1602,21 +1605,44 @@ int32_t Pmic_fsmRecoverSocPwrErr(Pmic_CoreHandle_t *pPmicCoreHandle,
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    pmicStatus = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
-                                             PMIC_NSLEEP2_SIGNAL,
-                                             PMIC_NSLEEPX_UNMASK);
+    if(NULL == pPmicCoreHandle)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
 
-    pmicStatus = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
-                                             PMIC_NSLEEP1_SIGNAL,
-                                             PMIC_NSLEEPX_UNMASK);
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (PMIC_SILICON_REV_ID_PG_2_0 != pPmicCoreHandle->pmicDevSiliconRev))
+    {
+        pmicStatus = PMIC_ST_ERR_NOT_SUPPORTED;
+    }
 
-    pmicStatus = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
-                                            PMIC_NSLEEP2_SIGNAL,
-                                            PMIC_NSLEEP_HIGH);
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pmicStatus = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                                 PMIC_NSLEEP2_SIGNAL,
+                                                 PMIC_NSLEEPX_UNMASK);
+    }
 
-    pmicStatus = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
-                                            PMIC_NSLEEP1_SIGNAL,
-                                            nsleepVal);
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pmicStatus = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
+                                                 PMIC_NSLEEP1_SIGNAL,
+                                                 PMIC_NSLEEPX_UNMASK);
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pmicStatus = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
+                                                PMIC_NSLEEP2_SIGNAL,
+                                                PMIC_NSLEEP_HIGH);
+    }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pmicStatus = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
+                                                PMIC_NSLEEP1_SIGNAL,
+                                                nsleepVal);
+    }
 
     return pmicStatus;
 }
