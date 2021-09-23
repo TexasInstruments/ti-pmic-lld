@@ -2362,7 +2362,7 @@ int32_t Pmic_rtcGetTimeDateInfo(Pmic_CoreHandle_t *pPmicCoreHandle,
     /* Set RTC dynamic registers to static shadowed registers */
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        rtcCfg.validParams = PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID;
+        rtcCfg.validParams =  PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID_SHIFT ;
         pmicStatus = Pmic_rtcGetConfiguration(pPmicCoreHandle, &rtcCfg);
 
         if(PMIC_RTC_STATIC_SHADOWED_REG_SEL == rtcCfg.timeDateRegSel)
