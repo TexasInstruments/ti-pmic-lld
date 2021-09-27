@@ -90,6 +90,17 @@
 #define J721E_LEO_PMICB_WDG_SLAVE_ADDR        (0x13U)
 
 /*!
+ * \brief   Slave addresses of J7VCL LEO PMIC-A and PMIC-B devices(Wakeup SoMs)
+ */
+#define J7VCL_WAKEUP_SOM_LEO_PMICA_SLAVE_ADDR            (0x48U)
+#define J7VCL_WAKEUP_SOM_LEO_PMICA_PAGE1_SLAVE_ADDR      (0x49U)
+#define J7VCL_WAKEUP_SOM_LEO_PMICA_WDG_SLAVE_ADDR        (0x12U)
+
+#define J7VCL_WAKEUP_SOM_LEO_PMICB_SLAVE_ADDR            (0x4CU)
+#define J7VCL_WAKEUP_SOM_LEO_PMICB_PAGE1_SLAVE_ADDR      (0x4DU)
+#define J7VCL_WAKEUP_SOM_LEO_PMICB_WDG_SLAVE_ADDR        (0x13U)
+
+/*!
  * \brief   Slave addresses of J7VCL HERA PMIC devices
  */
 #define J7VCL_LEO_PMICA_SLAVE_ADDR            (0x48U)
