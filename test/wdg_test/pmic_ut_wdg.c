@@ -42,9 +42,11 @@
 /* Pointer holds the pPmicCoreHandle */
 Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
 
-static uint16_t pmic_device_info = 0U;
+extern uint16_t pmic_device_info;
 extern int32_t gCrcTestFlag_J721E;
 extern int32_t gCrcTestFlag_J7VCL;
+
+extern Pmic_Ut_FaultInject_t gPmic_faultInjectCfg;
 
 /*!
  * \brief   PMIC WDG Test Cases
@@ -210,6 +212,18 @@ static Pmic_Ut_Tests_t pmic_wdg_tests[] =
         10074,
         "Pmic_wdgQaSequenceWriteAnswer : Test wdg QA sequences with different QA seed values"
     },
+    {
+        1,
+        "Pmic_wdgSetCfg : Test to set longWinDuration as 100ms"
+    },
+    {
+        2,
+        "Pmic_wdgSetCfg : Parameter validation for longWinDuration min Value as 2999 ms"
+    },
+    {
+        8917,
+        "Pmic_wdgTests : Added for Coverage"
+    },
 };
 
 /*!
@@ -317,7 +331,8 @@ static void test_pmic_wdg_setCfg_prmValTest_handle(void)
 }
 
 /*!
- * \brief   Parameter validation for longWinDuration_ms min Value
+ * \brief   Parameter validation for longWinDuration_ms min Value as 98ms for
+ *          Leo PMIC PG1.0 and 78ms for Leo PMIC PG2.0
  */
 static void test_pmic_wdg_setCfg_prmValTest_longwinMin(void)
 {
@@ -357,7 +372,8 @@ static void test_pmic_wdg_setCfg_prmValTest_longwinMin(void)
 }
 
 /*!
- * \brief   Parameter validation for longWinDuration_ms max Value
+ * \brief   Parameter validation for longWinDuration_ms max Value as 768000 ms
+ *          for Leo PMIC PG1.0 and 775000 ms for Leo PMIC PG2.0
  */
 static void test_pmic_wdg_setCfg_prmValTest_longwinMax(void)
 {
@@ -2293,6 +2309,335 @@ static void test_pmic_wdgQaSeqWriteAns_testSeedValues(void)
                                PMIC_WDG_NUM_OF_TESTCASES);
 }
 
+/*!
+ * \brief   Pmic_wdgSetCfg : Test to set longWinDuration as 100ms
+ */
+static void test_pmic_wdgsetCfg_longwin(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    Pmic_WdgCfg_t wdgCfg_rd = {PMIC_WDG_CFG_SETPARAMS_FORALL, };
+     Pmic_WdgCfg_t wdgCfg    =
+    {
+        PMIC_WDG_CFG_SETPARAMS_FORALL,
+        100U,
+        4950U,
+        4950U,
+        PMIC_WDG_FAIL_THRESHOLD_COUNT_5,
+        PMIC_WDG_RESET_THRESHOLD_COUNT_6,
+        PMIC_WDG_TRIGGER_MODE,
+        PMIC_WDG_PWRHOLD_ENABLE,
+        PMIC_WDG_RESET_DISABLE,
+        PMIC_WDG_RETLONGWIN_DISABLE,
+        PMIC_WDG_QA_FEEDBACK_VALUE_2,
+        PMIC_WDG_QA_LFSR_VALUE_1,
+        PMIC_WDG_QA_QUES_SEED_VALUE_5,
+    };
+
+    test_pmic_print_unity_testcase_info(1,
+                                        pmic_wdg_tests,
+                                        PMIC_WDG_NUM_OF_TESTCASES);
+
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        pmic_testResultUpdate_ignore(1,
+                                     pmic_wdg_tests,
+                                     PMIC_WDG_NUM_OF_TESTCASES);
+    }
+
+    status = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_wdgGetCfg(pPmicCoreHandle, &wdgCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(wdgCfg.longWinDuration_ms, wdgCfg_rd.longWinDuration_ms);
+
+    pmic_testResultUpdate_pass(1,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Parameter validation for longWinDuration_ min Value as 2999 ms for
+ *          Leo PMIC PG1.0
+ */
+static void test_pmic_wdg_setCfg_prmValTest_longwinMin_2999ms(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    Pmic_WdgCfg_t wdgCfg    =
+    {
+        PMIC_WDG_CFG_SETPARAMS_FORALL,
+        2999U,
+        4950U,
+        4950U,
+        PMIC_WDG_FAIL_THRESHOLD_COUNT_5,
+        PMIC_WDG_RESET_THRESHOLD_COUNT_6,
+        PMIC_WDG_TRIGGER_MODE,
+        PMIC_WDG_PWRHOLD_ENABLE,
+        PMIC_WDG_RESET_DISABLE,
+        PMIC_WDG_RETLONGWIN_DISABLE,
+        PMIC_WDG_QA_FEEDBACK_VALUE_2,
+        PMIC_WDG_QA_LFSR_VALUE_1,
+        PMIC_WDG_QA_QUES_SEED_VALUE_5,
+    };
+
+    test_pmic_print_unity_testcase_info(2,
+                                        pmic_wdg_tests,
+                                        PMIC_WDG_NUM_OF_TESTCASES);
+
+    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        pmic_testResultUpdate_ignore(2,
+                                     pmic_wdg_tests,
+                                     PMIC_WDG_NUM_OF_TESTCASES);
+    }
+
+    status = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_WDG_WINDOW, status);
+
+    pmic_testResultUpdate_pass(2,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Added for Coverage
+ */
+static void test_pmic_wdg_coverageGaps(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t testCommMode;
+    Pmic_WdgCfg_t wdgCfg_rd = {PMIC_WDG_CFG_SETPARAMS_FORALL, };
+    Pmic_WdgCfg_t wdgCfg    =
+    {
+        PMIC_WDG_CFG_SETPARAMS_FORALL,
+        750000U,
+        4950U,
+        4950U,
+        PMIC_WDG_FAIL_THRESHOLD_COUNT_5,
+        PMIC_WDG_RESET_THRESHOLD_COUNT_6,
+        PMIC_WDG_TRIGGER_MODE,
+        PMIC_WDG_PWRHOLD_ENABLE,
+        PMIC_WDG_RESET_DISABLE,
+        PMIC_WDG_RETLONGWIN_DISABLE,
+        PMIC_WDG_QA_FEEDBACK_VALUE_2,
+        PMIC_WDG_QA_LFSR_VALUE_1,
+        PMIC_WDG_QA_QUES_SEED_VALUE_5,
+    };
+
+    test_pmic_print_unity_testcase_info(8917,
+                                        pmic_wdg_tests,
+                                        PMIC_WDG_NUM_OF_TESTCASES);
+
+    status = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    //Fault Injection Tests
+    gPmic_faultInjectCfg.enableFaultInjectionRead = 1U;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    wdgCfg_rd.validParams = PMIC_WDG_CFG_SETPARAMS_FORALL;
+    status = Pmic_wdgGetCfg(pPmicCoreHandle, &wdgCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 2;
+    status = Pmic_wdgGetCfg(pPmicCoreHandle, &wdgCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 3;
+    status = Pmic_wdgGetCfg(pPmicCoreHandle, &wdgCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 4;
+    status = Pmic_wdgGetCfg(pPmicCoreHandle, &wdgCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 5;
+    status = Pmic_wdgGetCfg(pPmicCoreHandle, &wdgCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    wdgCfg.validParams = PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT;
+    status = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    wdgCfg.validParams = PMIC_CFG_WDG_WDGMODE_VALID_SHIFT |
+                         PMIC_CFG_WDG_RSTENABLE_VALID_SHIFT |
+                         PMIC_CFG_WDG_PWRHOLD_VALID_SHIFT |
+                         PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT;
+    status = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    wdgCfg.validParams = PMIC_CFG_WDG_RSTENABLE_VALID_SHIFT;
+    status = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    wdgCfg.validParams = PMIC_CFG_WDG_RSTENABLE_VALID_SHIFT |
+                         PMIC_CFG_WDG_PWRHOLD_VALID_SHIFT |
+                         PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT;
+    status = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    wdgCfg.validParams = PMIC_CFG_WDG_PWRHOLD_VALID_SHIFT |
+                         PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT;
+    status = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    wdgCfg.validParams = PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT;
+    status = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    wdgCfg.validParams = PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT |
+                         PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT;
+    status = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    wdgCfg.validParams = PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT |
+                         PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT;
+    status = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    wdgCfg.validParams = PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT |
+                         PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT;
+    status = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 3;
+    wdgCfg_rd.validParams = PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT |
+                            PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT |
+                            PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT;
+    status = Pmic_wdgGetCfg(pPmicCoreHandle, &wdgCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    status = Pmic_wdgEnable(pPmicCoreHandle);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.enableFaultInjectionRead = 0U;
+    //WdgQACOunt
+    uint32_t maxCnt = PMIC_WDG_WAIT_CNT_MIN_VAL;
+    Pmic_WdgCfg_t wdgCfg_QA  =
+    {
+        PMIC_WDG_CFG_SETPARAMS_FORALL,
+        750000U,
+        6150U,
+        4950U,
+        PMIC_WDG_FAIL_THRESHOLD_COUNT_7,
+        PMIC_WDG_RESET_THRESHOLD_COUNT_7,
+        PMIC_WDG_QA_MODE,
+        PMIC_WDG_PWRHOLD_DISABLE,
+        PMIC_WDG_RESET_ENABLE,
+        PMIC_WDG_RETLONGWIN_DISABLE,
+        PMIC_WDG_QA_FEEDBACK_VALUE_0,
+        PMIC_WDG_QA_LFSR_VALUE_0,
+        PMIC_WDG_QA_QUES_SEED_VALUE_10,
+    };
+
+    /* Enable WDG Timer */
+    status = Pmic_wdgEnable(pPmicCoreHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    /* Set QA parameters */
+    status = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg_QA);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    /* Start Watchdog QA sequence */
+    gPmic_faultInjectCfg.enableFaultInjectionRead = 1U;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 5;
+    status = Pmic_wdgStartQaSequence(pPmicCoreHandle, 5U, maxCnt);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 7;
+    status = Pmic_wdgStartQaSequence(pPmicCoreHandle, 5U, maxCnt);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 8;
+    status = Pmic_wdgStartQaSequence(pPmicCoreHandle, 5U, maxCnt);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 4;
+    status = Pmic_wdgStartQaSequence(pPmicCoreHandle, 5U, maxCnt);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    status = Pmic_wdgStartQaSequence(pPmicCoreHandle, 5U, maxCnt);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    status = Pmic_wdgStartTriggerSequence(pPmicCoreHandle);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.enableFaultInjectionRead = 0U;
+
+    Pmic_DevSubSysInfo_t pmicDevSubSysInfo =
+    {
+        .gpioEnable = (bool)true,
+        .rtcEnable  = (bool)true,
+        .wdgEnable  = (bool)false,
+        .buckEnable = (bool)true,
+        .ldoEnable  = (bool)true,
+        .esmEnable  = (bool)true
+    };
+
+    pPmicCoreHandle->pPmic_SubSysInfo = (&pmicDevSubSysInfo);
+    status = Pmic_wdgEnable(pPmicCoreHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+
+    Pmic_DevSubSysInfo_t testpmicDevSubSysInfo =
+    {
+        .gpioEnable = (bool)true,
+        .rtcEnable  = (bool)true,
+        .wdgEnable  = (bool)true,
+        .buckEnable = (bool)true,
+        .ldoEnable  = (bool)true,
+        .esmEnable  = (bool)true
+    };
+
+    pPmicCoreHandle->pPmic_SubSysInfo = (&testpmicDevSubSysInfo);
+
+    testCommMode = pPmicCoreHandle->commMode;
+    pPmicCoreHandle->commMode = 3U;
+    status = Pmic_wdgEnable(pPmicCoreHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+    pPmicCoreHandle->commMode = testCommMode;
+
+    /* Disable WDG Timer */
+    status = Pmic_wdgDisable(pPmicCoreHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    pmic_testResultUpdate_pass(8917,
+                               pmic_wdg_tests,
+                               PMIC_WDG_NUM_OF_TESTCASES);
+}
+
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E) || defined(SOC_J7200))
 
@@ -2355,6 +2700,10 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_wdgQaSeqWriteAns_testFdbkValues);
     RUN_TEST(test_pmic_wdgQaSeqWriteAns_testLfsrValues);
     RUN_TEST(test_pmic_wdgQaSeqWriteAns_testSeedValues);
+
+    RUN_TEST(test_pmic_wdgsetCfg_longwin);
+    RUN_TEST(test_pmic_wdg_setCfg_prmValTest_longwinMin_2999ms);
+    RUN_TEST(test_pmic_wdg_coverageGaps);
 
     pmic_updateTestResults(pmic_wdg_tests, PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -2610,6 +2959,37 @@ static int32_t test_pmic_leo_pmicB_wdg_testApp(void)
 
 }
 
+/*!
+ * \brief   WDG Unity Test App wrapper Function for LEO PMIC-A
+ */
+static int32_t test_pmic_leo_pmicA_spiStub_wdg_testApp(void)
+{
+    int32_t status                = PMIC_ST_SUCCESS;
+    Pmic_CoreCfg_t pmicConfigData = {0U};
+
+    /* Fill parameters to pmicConfigData */
+    pmicConfigData.pmicDeviceType      = PMIC_DEV_LEO_TPS6594X;
+    pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
+
+    pmicConfigData.commMode            = PMIC_INTF_SPI;
+    pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoWrite   = test_pmic_regWrite;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStart  = test_pmic_criticalSectionStartFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStop   = test_pmic_criticalSectionStopFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
+
+    status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
+    return status;
+}
+
 static int32_t setup_pmic_interrupt(uint32_t board)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -2694,7 +3074,9 @@ volatile static const char pmicTestAppMenu[] =
     " \r\n 1: Pmic Leo device with Single I2C(PMIC-A on J721E EVM)"
     " \r\n 2: Pmic Leo device with Dual I2C(PMIC-A on J7VCL EVM)"
     " \r\n 3: Pmic Hera device with Single I2C(PMIC-B on J7VCL EVM)"
-    " \r\n 4: Back to Test Menu"
+    " \r\n 4: Pmic Leo device with SPI Stub Functions(PMIC-A on J721E EVM)"
+    " \r\n 5: Pmic Leo device with SPI Stub Functions(PMIC-A on J7VCL EVM)"
+    " \r\n 6: Back to Test Menu"
     " \r\n"
     " \r\n Enter option: "
 };
@@ -2705,9 +3087,9 @@ static void test_pmic_wdg_testapp_run_options()
     int8_t num = -1;
     int8_t idx = 0;
 #if defined(SOC_J721E)
-    int8_t automatic_options[] = {0, 1};
+    int8_t automatic_options[] = {0, 1, 4};
 #elif defined(SOC_J7200)
-    int8_t automatic_options[] = {2, 3};
+    int8_t automatic_options[] = {2, 3, 5};
 #endif
 
     while(1U)
@@ -2725,7 +3107,7 @@ static void test_pmic_wdg_testapp_run_options()
             }
             else
             {
-                num = 4;
+                num = 6;
             }
             pmic_log("%d\n", num);
         }
@@ -2740,7 +3122,7 @@ static void test_pmic_wdg_testapp_run_options()
 
         switch(num)
         {
-           case 0U:
+            case 0U:
 #if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
@@ -2762,7 +3144,7 @@ static void test_pmic_wdg_testapp_run_options()
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                 break;
-           case 1U:
+            case 1U:
 #if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
@@ -2784,7 +3166,7 @@ static void test_pmic_wdg_testapp_run_options()
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                 break;
-           case 2U:
+            case 2U:
 #if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
@@ -2806,7 +3188,7 @@ static void test_pmic_wdg_testapp_run_options()
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                 break;
-           case 3U:
+            case 3U:
 #if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
@@ -2828,10 +3210,57 @@ static void test_pmic_wdg_testapp_run_options()
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                 break;
-           case 4U:
+            case 4U:
+#if defined(SOC_J721E)
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
+                {
+                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
+
+                    /* WDG Unity Test App wrapper Function for LEO PMIC-A
+                     * using SPI stub functions */
+                    if(PMIC_ST_SUCCESS ==
+                          test_pmic_leo_pmicA_spiStub_wdg_testApp())
+                    {
+                        /* Run wdg test cases for Leo PMIC-A */
+                        test_pmic_run_testcases();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
+                break;
+            case 5U:
+#if defined(SOC_J7200)
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
+                {
+                    pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+                    /* WDG Unity Test App wrapper Function for LEO PMIC-A
+                     * using SPI stub functions */
+                     if(PMIC_ST_SUCCESS ==
+                            test_pmic_leo_pmicA_spiStub_wdg_testApp())
+                    {
+                        /* Run wdg test cases for Leo PMIC-A */
+                        test_pmic_run_testcases();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
+                break;
+            case 6U:
                pmic_log(" \r\n Back to Test Menu options\n");
                return;
-           default:
+            default:
                pmic_log(" \r\n Invalid option... Try Again!!!\n");
                break;
         }

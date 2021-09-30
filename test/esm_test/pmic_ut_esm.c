@@ -42,9 +42,10 @@
 /* Pointer holds the pPmicCoreHandle */
 Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
 
-static uint16_t pmic_device_info = 0U;
+extern uint16_t pmic_device_info;
 extern int32_t gCrcTestFlag_J721E;
 extern int32_t gCrcTestFlag_J7VCL;
+extern Pmic_Ut_FaultInject_t gPmic_faultInjectCfg;
 
 /*!
  * \brief   PMIC ESM Test Cases
@@ -305,6 +306,42 @@ static Pmic_Ut_Tests_t pmic_esm_tests[] =
      {
          9880,
          "Pmic_esmGetStatus: Negative test to verify ESM SOC Get Status for HERA"
+     },
+     {
+         0,
+          "Pmic_esmSetInterrupt : Test to disable PMIC ESM SOC Mode PIN, FAIL, RST Interrupts"
+     },
+     {
+         1,
+          "Pmic_esmSetConfiguration : Parameter validation for ESM HMAX Value"
+     },
+     {
+         2,
+          "Pmic_esmSetConfiguration : Parameter validation for ESM HMIN Value"
+     },
+     {
+         3,
+          "Pmic_esmSetConfiguration : Parameter validation for ESM LMIN Value"
+     },
+     {
+         4,
+          "Pmic_esmSetConfiguration : Parameter validation for ESM LMAX Value"
+     },
+     {
+         5,
+          "Pmic_esmSetConfiguration : Test to Disable DRV clear configuration"
+     },
+     {
+         6,
+          "Pmic_esmSetConfiguration : Parameter validation for ValidParams"
+     },
+     {
+         7,
+          "Pmic_esmGetConfiguration : Parameter validation for ValidParams"
+     },
+     {
+         9004,
+          "Pmic_esmTests: Dynamic Coverage Gaps and Fault Injection Tests"
      },
 };
 
@@ -3077,6 +3114,290 @@ static void test_pmic_esm_getStatusEsmSoc_hera(void)
                                PMIC_ESM_NUM_OF_TESTCASES);
 }
 
+/*!
+ * \brief   Pmic_esmSetInterrupt : Test to disable PMIC ESM SOC Mode PIN, FAIL
+ *          RST Interrupts
+ *          Functionality is not tested due to Known issue - PDK-8333
+ */
+static void test_pmic_esm_setInterrupt_esmSocAllIntrDisabled(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    bool esmType       = PMIC_ESM_MODE_SOC;
+    Pmic_EsmIntrCfg_t esmIntrCfg =
+    {
+        false,
+        false,
+        false
+    };
+    bool maskStatus;
+
+    test_pmic_print_unity_testcase_info(0,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmicStatus = Pmic_esmSetInterrupt(pPmicCoreHandle, esmType, esmIntrCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        pmicStatus =Pmic_irqGetMaskIntrStatus(pPmicCoreHandle,
+                                              PMIC_TPS6594X_ESM_SOC_RST_INT,
+                                              &maskStatus);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        TEST_ASSERT_EQUAL(maskStatus, PMIC_IRQ_MASK);
+
+        pmicStatus =Pmic_irqGetMaskIntrStatus(pPmicCoreHandle,
+                                              PMIC_TPS6594X_ESM_SOC_FAIL_INT,
+                                              &maskStatus);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        TEST_ASSERT_EQUAL(maskStatus, PMIC_IRQ_MASK);
+
+        pmicStatus =Pmic_irqGetMaskIntrStatus(pPmicCoreHandle,
+                                              PMIC_TPS6594X_ESM_SOC_PIN_INT,
+                                              &maskStatus);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        TEST_ASSERT_EQUAL(maskStatus, PMIC_IRQ_MASK);
+
+    }
+
+    pmic_testResultUpdate_pass(0,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Parameter validation for ESM HMAX Value
+ */
+static void test_pmic_esm_setConfigurationPrmValTest_hmaxValue(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    bool esmType       = PMIC_ESM_MODE_MCU;
+    Pmic_EsmCfg_t esmCfg =
+    {
+        PMIC_ESM_CFG_DELAY1_VALID_SHIFT,
+        4096U,
+        2048U,
+        30U,
+        30U,
+        30U,
+        30U,
+        4U,
+        PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE,
+        PMIC_ESM_LEVEL_MODE
+    };
+
+    test_pmic_print_unity_testcase_info(1,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    esmCfg.validParams = PMIC_ESM_CFG_HMAX_VALID_SHIFT;
+    esmCfg.esmHmax_us = 3850U;
+    pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_ESM_VAL, pmicStatus);
+
+    pmic_testResultUpdate_pass(1,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Parameter validation for ESM HMIN Value
+ */
+static void test_pmic_esm_setConfigurationPrmValTest_hminValue(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    bool esmType       = PMIC_ESM_MODE_MCU;
+    Pmic_EsmCfg_t esmCfg =
+    {
+        PMIC_ESM_CFG_DELAY1_VALID_SHIFT,
+        4096U,
+        2048U,
+        30U,
+        30U,
+        30U,
+        30U,
+        4U,
+        PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE,
+        PMIC_ESM_LEVEL_MODE
+    };
+
+    test_pmic_print_unity_testcase_info(2,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    esmCfg.validParams = PMIC_ESM_CFG_HMIN_VALID_SHIFT;
+    esmCfg.esmHmin_us = 3850U;
+    pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_ESM_VAL, pmicStatus);
+
+    pmic_testResultUpdate_pass(2,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Parameter validation for ESM LMAX Value
+ */
+static void test_pmic_esm_setConfigurationPrmValTest_lmaxValue(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    bool esmType       = PMIC_ESM_MODE_MCU;
+    Pmic_EsmCfg_t esmCfg =
+    {
+        PMIC_ESM_CFG_DELAY1_VALID_SHIFT,
+        4096U,
+        2048U,
+        30U,
+        30U,
+        30U,
+        30U,
+        4U,
+        PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE,
+        PMIC_ESM_LEVEL_MODE
+    };
+
+    test_pmic_print_unity_testcase_info(3,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    esmCfg.validParams = PMIC_ESM_CFG_LMAX_VALID_SHIFT;
+    esmCfg.esmLmax_us = 3850U;
+    pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_ESM_VAL, pmicStatus);
+
+    pmic_testResultUpdate_pass(3,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Parameter validation for ESM LMIN Value
+ */
+static void test_pmic_esm_setConfigurationPrmValTest_lminValue(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    bool esmType       = PMIC_ESM_MODE_MCU;
+    Pmic_EsmCfg_t esmCfg =
+    {
+        PMIC_ESM_CFG_DELAY1_VALID_SHIFT,
+        4096U,
+        2048U,
+        30U,
+        30U,
+        30U,
+        30U,
+        4U,
+        PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE,
+        PMIC_ESM_LEVEL_MODE
+    };
+
+    test_pmic_print_unity_testcase_info(4,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    esmCfg.validParams = PMIC_ESM_CFG_LMIN_VALID_SHIFT;
+    esmCfg.esmLmin_us = 3850U;
+    pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_ESM_VAL, pmicStatus);
+
+    pmic_testResultUpdate_pass(4,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_esmSetConfiguration : Test to Disable DRV clear configuration
+ */
+static void test_pmic_esm_setConfiguration_disableDrvClear(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    bool esmType       = PMIC_ESM_MODE_MCU;
+    Pmic_EsmCfg_t esmCfg_rd = {PMIC_ESM_CFG_EN_DRV_VALID_SHIFT};
+    Pmic_EsmCfg_t esmCfg =
+    {
+        PMIC_ESM_CFG_EN_DRV_VALID_SHIFT,
+        4096U,
+        2048U,
+        30U,
+        30U,
+        30U,
+        30U,
+        4U,
+        PMIC_ESM_ERR_EN_DRV_CLEAR_DISABLE,
+        PMIC_ESM_LEVEL_MODE
+    };
+
+    test_pmic_print_unity_testcase_info(5,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmGetConfiguration(pPmicCoreHandle, esmType, &esmCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(esmCfg.esmEnDrv, esmCfg_rd.esmEnDrv);
+
+    pmic_testResultUpdate_pass(5,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_esmSetConfiguration : Parameter validation for ValidParams
+ */
+static void test_pmic_esm_setconfiguration_PrmValTest_validParams(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    bool esmType       = PMIC_ESM_MODE_MCU;
+    Pmic_EsmCfg_t esmCfg =
+    {
+        0U,
+        4096U,
+        2048U,
+        30U,
+        30U,
+        30U,
+        30U,
+        4U,
+        PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE,
+        PMIC_ESM_LEVEL_MODE
+    };
+
+    test_pmic_print_unity_testcase_info(6,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INSUFFICIENT_CFG, pmicStatus);
+
+    pmic_testResultUpdate_pass(6,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_esmGetConfiguration : Parameter validation for ValidParams
+ */
+static void test_pmic_esm_getconfiguration_PrmValTest_validParams(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    bool esmType       = PMIC_ESM_MODE_MCU;
+    Pmic_EsmCfg_t esmCfg_rd = {0U};
+
+    test_pmic_print_unity_testcase_info(7,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_esmGetConfiguration(pPmicCoreHandle, esmType, &esmCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INSUFFICIENT_CFG, pmicStatus);
+
+    pmic_testResultUpdate_pass(7,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
+}
+
 #if defined(ENABLE_SAMPLE_TESTCASES)
 /*!
  * Below test cases are not tested because of HW limitation.
@@ -3955,7 +4276,10 @@ static void test_esm_setInterrupt_esmSocAllIntrDisable_pwmMode(void)
     int8_t timeout            = 10U;
     Pmic_EsmCfg_t esmCfg =
     {
-        PMIC_ESM_CFG_DELAY1_VALID_SHIFT | PMIC_ESM_CFG_DELAY2_VALID_SHIFT | PMIC_ESM_CFG_HMAX_VALID_SHIFT | PMIC_ESM_CFG_HMIN_VALID_SHIFT | PMIC_ESM_CFG_LMAX_VALID_SHIFT | PMIC_ESM_CFG_LMIN_VALID_SHIFT | PMIC_ESM_CFG_MODE_VALID_SHIFT ,
+        PMIC_ESM_CFG_DELAY1_VALID_SHIFT | PMIC_ESM_CFG_DELAY2_VALID_SHIFT |
+        PMIC_ESM_CFG_HMAX_VALID_SHIFT | PMIC_ESM_CFG_HMIN_VALID_SHIFT |
+        PMIC_ESM_CFG_LMAX_VALID_SHIFT | PMIC_ESM_CFG_LMIN_VALID_SHIFT |
+        PMIC_ESM_CFG_MODE_VALID_SHIFT ,
         4096U,
         0U,
         30U,
@@ -4071,7 +4395,8 @@ static void test_esm_setInterrupt_esmSocAllIntr_levelMode(void)
     int8_t timeout            = 10U;
     Pmic_EsmCfg_t esmCfg =
     {
-        PMIC_ESM_CFG_DELAY1_VALID_SHIFT | PMIC_ESM_CFG_DELAY2_VALID_SHIFT | PMIC_ESM_CFG_MODE_VALID_SHIFT,
+        PMIC_ESM_CFG_DELAY1_VALID_SHIFT | PMIC_ESM_CFG_DELAY2_VALID_SHIFT |
+        PMIC_ESM_CFG_MODE_VALID_SHIFT,
         4096U,
         2048U,
         30U,
@@ -4224,7 +4549,8 @@ static void test_esm_setInterrupt_esmSocAllIntrDisabled_levelMode(void)
     int8_t timeout            = 10U;
     Pmic_EsmCfg_t esmCfg =
     {
-        PMIC_ESM_CFG_DELAY1_VALID_SHIFT | PMIC_ESM_CFG_DELAY2_VALID_SHIFT | PMIC_ESM_CFG_MODE_VALID_SHIFT,
+        PMIC_ESM_CFG_DELAY1_VALID_SHIFT | PMIC_ESM_CFG_DELAY2_VALID_SHIFT |
+        PMIC_ESM_CFG_MODE_VALID_SHIFT,
         4096U,
         2048U,
         30U,
@@ -4321,6 +4647,171 @@ static void test_esm_setInterrupt_esmSocAllIntrDisabled_levelMode(void)
 }
 #endif
 
+/*!
+ * \brief   Added for Coverage
+ */
+static void test_pmic_esm_coverageGaps(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    bool esmType   = PMIC_ESM_MODE_MCU;
+    bool esmState  = PMIC_ESM_START;
+    bool esmSt_rd;
+    Pmic_EsmIntrCfg_t esmIntrCfg =
+    {
+        false,
+        false,
+        false
+    };
+
+    Pmic_EsmCfg_t esmCfg_rd = {0U};
+    Pmic_EsmCfg_t esmCfg =
+    {
+        PMIC_ESM_CFG_DELAY1_VALID_SHIFT,
+        4096U,
+        2048U,
+        30U,
+        30U,
+        30U,
+        30U,
+        4U,
+        PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE,
+        PMIC_ESM_LEVEL_MODE
+    };
+
+    test_pmic_print_unity_testcase_info(9004,
+                                        pmic_esm_tests,
+                                        PMIC_ESM_NUM_OF_TESTCASES);
+
+    // Fault Injection Tests
+    gPmic_faultInjectCfg.enableFaultInjectionRead = 1U;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    status = Pmic_esmEnable(pPmicCoreHandle, esmType, PMIC_ESM_ENABLE);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    status = Pmic_esmStart(pPmicCoreHandle, esmType, esmState);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 2;
+    status = Pmic_esmEnable(pPmicCoreHandle, esmType, PMIC_ESM_ENABLE);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    status = Pmic_esmSetInterrupt(pPmicCoreHandle, esmType, esmIntrCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 1;
+        esmType = PMIC_ESM_MODE_SOC;
+        status = Pmic_esmSetInterrupt(pPmicCoreHandle, esmType, esmIntrCfg);
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+        esmType = PMIC_ESM_MODE_MCU;
+    }
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 2;
+    esmCfg.validParams = PMIC_ESM_CFG_ERR_CNT_THR_VALID_SHIFT;
+    status = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 2;
+    esmCfg.validParams = PMIC_ESM_CFG_EN_DRV_VALID_SHIFT;
+    status = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 2;
+    esmCfg.validParams = PMIC_ESM_CFG_MODE_VALID_SHIFT;
+    status = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    esmCfg_rd.validParams = PMIC_ESM_CFG_DELAY1_VALID_SHIFT;
+    status = Pmic_esmGetConfiguration(pPmicCoreHandle, esmType, &esmCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    esmCfg_rd.validParams = PMIC_ESM_CFG_DELAY2_VALID_SHIFT;
+    status = Pmic_esmGetConfiguration(pPmicCoreHandle, esmType, &esmCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    esmCfg_rd.validParams = PMIC_ESM_CFG_ERR_CNT_THR_VALID_SHIFT;
+    status = Pmic_esmGetConfiguration(pPmicCoreHandle, esmType, &esmCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    esmCfg_rd.validParams = PMIC_ESM_CFG_HMAX_VALID_SHIFT;
+    status = Pmic_esmGetConfiguration(pPmicCoreHandle, esmType, &esmCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    esmCfg_rd.validParams = PMIC_ESM_CFG_HMIN_VALID_SHIFT;
+    status = Pmic_esmGetConfiguration(pPmicCoreHandle, esmType, &esmCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    esmCfg_rd.validParams = PMIC_ESM_CFG_LMAX_VALID_SHIFT;
+    status = Pmic_esmGetConfiguration(pPmicCoreHandle, esmType, &esmCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    esmCfg_rd.validParams = PMIC_ESM_CFG_LMIN_VALID_SHIFT;
+    status = Pmic_esmGetConfiguration(pPmicCoreHandle, esmType, &esmCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    esmCfg_rd.validParams = PMIC_ESM_CFG_EN_DRV_VALID_SHIFT;
+    status = Pmic_esmGetConfiguration(pPmicCoreHandle, esmType, &esmCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    esmCfg_rd.validParams = PMIC_ESM_CFG_MODE_VALID_SHIFT;
+    status = Pmic_esmGetConfiguration(pPmicCoreHandle, esmType, &esmCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    status = Pmic_esmGetEnableState(pPmicCoreHandle, esmType, &esmSt_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.enableFaultInjectionRead = 0U;
+
+    Pmic_DevSubSysInfo_t pmicDevSubSysInfo =
+    {
+        .gpioEnable = (bool)true,
+        .rtcEnable  = (bool)true,
+        .wdgEnable  = (bool)true,
+        .buckEnable = (bool)true,
+        .ldoEnable  = (bool)true,
+        .esmEnable  = (bool)false
+    };
+
+    pPmicCoreHandle->pPmic_SubSysInfo = (&pmicDevSubSysInfo);
+    status = Pmic_esmStart(pPmicCoreHandle, esmType, esmState);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+
+    pmic_testResultUpdate_pass(9004,
+                               pmic_esm_tests,
+                               PMIC_ESM_NUM_OF_TESTCASES);
+}
+
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E) || defined(SOC_J7200))
 
@@ -4378,6 +4869,16 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_esm_getStatusPrmValTest_pEsmState);
     RUN_TEST(test_pmic_esm_getStatusEsmSoc_hera);
 
+    RUN_TEST(test_pmic_esm_setInterrupt_esmSocAllIntrDisabled);
+    RUN_TEST(test_pmic_esm_setConfigurationPrmValTest_hmaxValue);
+    RUN_TEST(test_pmic_esm_setConfigurationPrmValTest_hminValue);
+    RUN_TEST(test_pmic_esm_setConfigurationPrmValTest_lmaxValue);
+    RUN_TEST(test_pmic_esm_setConfigurationPrmValTest_lminValue);
+    RUN_TEST(test_pmic_esm_setConfiguration_disableDrvClear);
+    RUN_TEST(test_pmic_esm_setconfiguration_PrmValTest_validParams);
+    RUN_TEST(test_pmic_esm_getconfiguration_PrmValTest_validParams);
+    RUN_TEST(test_pmic_esm_coverageGaps);
+
     pmic_updateTestResults(pmic_esm_tests, PMIC_ESM_NUM_OF_TESTCASES);
 
     UNITY_END();
@@ -4432,6 +4933,16 @@ static void test_pmic_run_slave_testcases(void)
     RUN_TEST(test_pmic_esm_getStatusPrmValTest_handle);
     RUN_TEST(test_pmic_esm_getStatusPrmValTest_pEsmState);
     RUN_TEST(test_pmic_esm_getStatusEsmSoc_hera);
+
+    RUN_TEST(test_pmic_esm_setInterrupt_esmSocAllIntrDisabled);
+    RUN_TEST(test_pmic_esm_setConfigurationPrmValTest_hmaxValue);
+    RUN_TEST(test_pmic_esm_setConfigurationPrmValTest_hminValue);
+    RUN_TEST(test_pmic_esm_setConfigurationPrmValTest_lmaxValue);
+    RUN_TEST(test_pmic_esm_setConfigurationPrmValTest_lminValue);
+    RUN_TEST(test_pmic_esm_setConfiguration_disableDrvClear);
+    RUN_TEST(test_pmic_esm_setconfiguration_PrmValTest_validParams);
+    RUN_TEST(test_pmic_esm_getconfiguration_PrmValTest_validParams);
+    RUN_TEST(test_pmic_esm_coverageGaps);
 
     pmic_updateTestResults(pmic_esm_tests, PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -4542,7 +5053,6 @@ static int32_t test_pmic_leo_pmicB_esm_testApp(void)
 
 }
 
-#if defined(SOC_J721E)
 /*!
  * \brief   ESM Unity Test App wrapper Function for LEO PMIC-A
  */
@@ -4573,7 +5083,6 @@ static int32_t test_pmic_leo_pmicA_spiStub_esm_testApp(void)
     status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
     return status;
 }
-#endif
 
 /*!
  * \brief   ESM Unity Test App wrapper Function for HERA PMIC
@@ -4704,9 +5213,11 @@ volatile static const char pmicTestAppMenu[] =
     " \r\n 2: Pmic Leo device(PMIC A on J7VCL EVM Using I2C Interface)"
     " \r\n 3: Pmic Hera device(PMIC B on J7VCL EVM Using I2C Interface)"
     " \r\n 4: Pmic Leo device(PMIC A on J721E EVM Using SPI Stub Functions)"
-    " \r\n 5: Pmic Leo device(PMIC A on J721E EVM Manual Testcase for ESM Interrupts)"
-    " \r\n 6: Pmic Leo device(PMIC A on J7VCL EVM Manual Testcase for ESM Interrupts)"
-    " \r\n 7: Back to Test Menu"
+    " \r\n 5: Pmic Leo device(PMIC A on J7VCL EVM Using SPI Stub Functions)"
+    " \r\n 6: Pmic Leo device(PMIC A on J721E EVM Manual Testcase for ESM Interrupts)"
+    " \r\n 7: Pmic Leo device(PMIC A on J7VCL EVM Manual Testcase for ESM Interrupts)"
+    " \r\n 8: Pmic Hera device(PMIC B on J7VCL EVM Manual Testcase for ESM Interrupts)"
+    " \r\n 9: Back to Test Menu"
     " \r\n"
     " \r\n Enter option: "
 };
@@ -4765,10 +5276,6 @@ static void test_pmic_run_testcases_mcuLevelMode(void)
             return;
         }
 
-        if(subMenuOption == 5)
-        {
-            break;
-        }
         pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
         UNITY_BEGIN();
 
@@ -4789,6 +5296,9 @@ static void test_pmic_run_testcases_mcuLevelMode(void)
             case 4U:
                 RUN_TEST(test_esm_setInterrupt_esmMcuAllIntrDisabled_levelMode);
                break;
+            case 5U:
+               pmic_log(" \r\n Back to Manual tests Menu\n");
+               return;
             default:
                pmic_log(" \r\n Invalid option... Try Again!!!\n");
                break;
@@ -4813,10 +5323,6 @@ static void test_pmic_run_testcases_mcuPwmMode(void)
             return;
         }
 
-        if(subMenuOption == 5)
-        {
-            break;
-        }
         pmic_log("\n\n%s(): %d: Begin Unity Test Cases...\n", __func__, __LINE__);
         UNITY_BEGIN();
 
@@ -4837,6 +5343,9 @@ static void test_pmic_run_testcases_mcuPwmMode(void)
             case 4U:
                 RUN_TEST(test_esm_setInterrupt_esmMcuAllIntrDisabled_pwmMode);
                break;
+            case 5U:
+               pmic_log(" \r\n Back to Manual tests Menu\n");
+               return;
             default:
                pmic_log(" \r\n Invalid option... Try Again!!!\n");
                break;
@@ -4861,11 +5370,6 @@ static void test_pmic_run_testcases_manual(uint32_t board)
             return;
         }
 
-        if(menuOption == 2)
-        {
-            break;
-        }
-
         switch(menuOption)
         {
             case 0U:
@@ -4874,22 +5378,24 @@ static void test_pmic_run_testcases_manual(uint32_t board)
             case 1U:
                 RUN_TEST(test_pmic_run_testcases_mcuPwmMode);
                break;
+            case 2U:
+                pmic_log(" \r\n Back to Test Menu\n");
+               return;
             default:
-               pmic_log(" \r\n Invalid option... Try Again!!!\n");
+                pmic_log(" \r\n Invalid option... Try Again!!!\n");
                break;
         }
     }
 }
 
-volatile int8_t g_option = 0;
-static void test_pmic_esm_testapp_run_options()
+static void test_pmic_esm_testapp_run_options(int8_t option)
 {
     int8_t num = -1;
     int8_t idx = 0;
 #if defined(SOC_J721E)
     int8_t automatic_options[] = {0, 1, 4};
 #elif defined(SOC_J7200)
-    int8_t automatic_options[] = {2, 3};
+    int8_t automatic_options[] = {2, 3, 5};
 #endif
 
     while(1U)
@@ -4899,7 +5405,7 @@ static void test_pmic_esm_testapp_run_options()
             pmic_printTestResult(pmic_esm_tests, PMIC_ESM_NUM_OF_TESTCASES);
         }
         pmic_log("%s", pmicTestAppMenu);
-        if(g_option == PMIC_UT_AUTOMATE_OPTION)
+        if(option == PMIC_UT_AUTOMATE_OPTION)
         {
             if(idx < (sizeof(automatic_options)/sizeof(automatic_options[0])))
             {
@@ -4907,7 +5413,7 @@ static void test_pmic_esm_testapp_run_options()
             }
             else
             {
-                num = 7;
+                num = 9;
             }
             pmic_log("%d\n", num);
         }
@@ -5018,7 +5524,8 @@ static void test_pmic_esm_testapp_run_options()
 
                     /* ESM Unity Test App wrapper Function for LEO PMIC-A using
                      * SPI stub functions */
-                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_spiStub_esm_testApp())
+                    if(PMIC_ST_SUCCESS ==
+                           test_pmic_leo_pmicA_spiStub_esm_testApp())
                     {
                         /* Run esm test cases for Leo PMIC-A */
                         test_pmic_run_testcases();
@@ -5033,13 +5540,36 @@ static void test_pmic_esm_testapp_run_options()
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                 break;
-           case 5U:
+            case 5U:
+#if defined(SOC_J7200)
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
+                {
+                    pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+                    /* ESM Unity Test App wrapper Function for LEO PMIC-A
+                     * using SPI stub functions */
+                     if(PMIC_ST_SUCCESS ==
+                            test_pmic_leo_pmicA_spiStub_esm_testApp())
+                    {
+                        /* Run esm test cases for Leo PMIC-A */
+                        test_pmic_run_testcases();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
+                break;
+            case 6U:
 #if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
 
-                    /* ESM Manual Test App wrapper Function for LEO PMIC-A */
+                    /* ESM Unity Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_esm_testApp())
                     {
                         /* Run ESM manual test cases */
@@ -5054,14 +5584,14 @@ static void test_pmic_esm_testapp_run_options()
 #else
                 pmic_log("\nInvalid Board!!!\n");
 #endif
-               break;
-           case 6U:
+               return;
+            case 7U:
 #if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
                     pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
 
-                    /* ESM Manual Test App wrapper Function for LEO PMIC-A */
+                    /* ESM Unity Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_esm_testApp())
                     {
                         /* Run ESM manual test cases */
@@ -5076,11 +5606,33 @@ static void test_pmic_esm_testapp_run_options()
 #else
                 pmic_log("\nInvalid Board!!!\n");
 #endif
-               break;
-           case 7U:
+               return;
+            case 8U:
+#if defined(SOC_J7200)
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
+                {
+                    pmic_device_info = J7VCL_HERA_PMICB_DEVICE;
+
+                    /* ESM Unity Test App wrapper Function for HERA PMIC */
+                    if(PMIC_ST_SUCCESS == test_pmic_hera_esm_testApp())
+                    {
+                        /* Run ESM manual test cases */
+                        test_pmic_run_testcases_manual(J7VCL_BOARD);
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
+                return;
+            case 9U:
                pmic_log(" \r\n Back to Test Menu options\n");
                return;
-           default:
+            default:
                pmic_log(" \r\n Invalid option... Try Again!!!\n");
                break;
         }
@@ -5099,20 +5651,24 @@ static void test_pmic_esm_testapp_runner(void)
      * @cores       : mcu1_0, mcu1_1
      */
 
+    int8_t option = -1;
+
     while(1U)
     {
         pmic_log("%s", pmicTestMenu);
-        if(UART_scanFmt("%d", &g_option) != 0U)
+        if(UART_scanFmt("%d", &option) != 0U)
         {
             pmic_log("Read from UART Console failed\n");
             return;
         }
 
-        switch(g_option)
+        switch(option)
         {
             case PMIC_UT_AUTOMATE_OPTION:
+                test_pmic_esm_testapp_run_options(PMIC_UT_AUTOMATE_OPTION);
+               break;
             case PMIC_UT_MANUAL_OPTION:
-                test_pmic_esm_testapp_run_options();
+                test_pmic_esm_testapp_run_options(PMIC_UT_MANUAL_OPTION);
                break;
             case 2U:
                 pmic_log(" \r\n Quit from application\n");

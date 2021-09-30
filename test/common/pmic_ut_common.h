@@ -198,6 +198,35 @@ typedef struct Pmic_Ut_Tests_s
 } Pmic_Ut_Tests_t;
 
 /*!
+ *  \brief    PMIC Fault Injection Test flags structure
+ *
+ *  \param   enableFaultInjectionRead       Flag to enable/disable Fault
+ *                                          Injection in PMIC Register Read.
+ *  \param   enableFaultInjectionWrite      Flag to enable/disable Fault
+ *                                          Injection in PMIC Register Write.
+ *  \param   readCount                      Flag to store current the Read
+ *                                          Count value.
+ *  \param   writeCount                     Flag to store current the Write
+ *                                          Count value.
+ *  \param   skipReadCount                  Count to skip fault injection for
+ *                                          read.
+ *  \param   skipWriteCount                 Count to skip fault injection for
+ *                                          write.
+ *  \param   commError                      Flag to return SPI/I2C
+ *                                          communication error.
+ */
+typedef struct Pmic_Ut_FaultInject_s
+{
+    uint8_t enableFaultInjectionRead;
+    uint8_t enableFaultInjectionWrite;
+    uint8_t readCount;
+    uint8_t writeCount;
+    uint8_t skipReadCount;
+    uint8_t skipWriteCount;
+    int32_t commError;
+} Pmic_Ut_FaultInject_t;
+
+/*!
  * \brief   PMIC I2C read function.
  *
  * \param   pmicCorehandle [IN]     PMIC Interface Handle.

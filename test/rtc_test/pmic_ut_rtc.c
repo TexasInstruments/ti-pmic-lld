@@ -42,17 +42,11 @@
 /* Pointer to Pmic Core Handle */
 Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
 
-static uint16_t pmic_device_info = 0U;
+extern uint16_t pmic_device_info;
 extern int32_t gCrcTestFlag_J721E;
 extern int32_t gCrcTestFlag_J7VCL;
-
 volatile uint32_t pmic_intr_triggered;
-extern uint8_t enableFaultInjectionRead;
-extern uint8_t enableFaultInjectionWrite;
-extern uint8_t readCount;
-extern uint8_t writeCount;
-extern uint8_t skipReadCount;
-extern uint8_t skipWriteCount;
+extern Pmic_Ut_FaultInject_t gPmic_faultInjectCfg;
 
 /*!
  * \brief   PMIC RTC Test Cases
@@ -240,7 +234,7 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
         "Pmic_rtcSetTimeDateInfo : Parameter range validation for day"
     },
     {
-       6172,
+        6172,
        "Pmic_rtcSetTimeDateInfo : Parameter range validation for day for months with 30 days"
     },
     {
@@ -476,6 +470,74 @@ static Pmic_Ut_Tests_t pmic_rtc_tests[] =
         "Pmic_rtcSetConfiguration : Parameter validation for RTC Config Param - set32KCounterCompVal"
     },
     {
+        2,
+        "Pmic_rtcSetAlarmInfo : Parameter Validation for RTC day min value in Feb Month"
+    },
+    {
+        4,
+        "Pmic_rtcSetAlarmInfo : Parameter Validation for RTC day min value"
+    },
+    {
+        5,
+        "Pmic_rtcSetAlarmInfo : Parameter Validation for RTC day max value"
+    },
+    {
+        6,
+        "Pmic_rtcSetAlarmInfo : Parameter Validation for RTC month min value"
+    },
+    {
+        7,
+        "Pmic_rtcSetAlarmInfo : Parameter Validation for RTC month max value"
+    },
+    {
+        8,
+        "Pmic_rtcSetAlarmInfo : Parameter Validation for RTC year min value"
+    },
+    {
+        9,
+        "Pmic_rtcSetAlarmInfo : Parameter Validation for RTC weekday min value"
+    },
+    {
+        11,
+        "Pmic_rtcSetAlarmInfo : Parameter Validation for RTC Meridian Mode"
+    },
+    {
+        12,
+        "Pmic_rtcSetAlarmInfo : Parameter Validation for RTC weekday"
+    },
+    {
+        13,
+        "Pmic_rtcSetAlarmInfo : Parameter Validation for dateCfg and timeCfg"
+    },
+    {
+        14,
+        "Pmic_rtcSetTimeDateInfo : Parameter Validation for dateCfg and timeCfg"
+    },
+    {
+        15,
+        "Pmic_rtcGetAlarmInfo : Parameter Validation for pDateCfg and pTimeCfg"
+    },
+    {
+        16,
+        "Pmic_rtcGetTimeDateInfo : Parameter Validation for pDateCfg and pTimeCfg"
+    },
+    {
+        21,
+        "Pmic_rtcGetRstStatus : Test to get RTC Power Up status"
+    },
+    {
+        23,
+        "Pmic_rtcSetTimeDateInfo : Parameter validation to RTC day min value in leap year"
+    },
+    {
+        25,
+        "Pmic_rtcGetTimeDateInfo : Test to set RTC timeDateRegSel as static shadowed registers"
+    },
+    {
+        26,
+        "Pmic_rtcSetConfiguration : Test to set rtc configuration when RTC is started"
+    },
+    {
         8814,
         "Pmic_rtcSetAlarmInfo: Added for Coverage"
     },
@@ -504,8 +566,8 @@ static void test_pmic_rtc_testSetAlarm(void)
     status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    timeCfg_rd.validParams = 0x1FU;
-    dateCfg_rd.validParams = 0x1FU;
+    timeCfg_rd.validParams = PMIC_RTC_VALID_PARAM_TIME_CFG_VAL;
+    dateCfg_rd.validParams = PMIC_RTC_VALID_PARAM_DATE_CFG_VAL;
     status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -518,6 +580,71 @@ static void test_pmic_rtc_testSetAlarm(void)
     TEST_ASSERT_EQUAL(dateCfg.day, dateCfg_rd.day);
     TEST_ASSERT_EQUAL(dateCfg.month, dateCfg_rd.month);
     TEST_ASSERT_EQUAL(dateCfg.year, dateCfg_rd.year);
+
+    timeCfg.validParams = PMIC_RTC_VALID_PARAM_TIME_CFG_VAL;
+    dateCfg.validParams = PMIC_RTC_VALID_PARAM_DATE_CFG_VAL;
+    dateCfg.day = 1U;
+    dateCfg.month = 2U;
+    dateCfg.year = 2040U;
+
+    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    timeCfg_rd.validParams = PMIC_RTC_VALID_PARAM_TIME_CFG_VAL;
+    dateCfg_rd.validParams = PMIC_RTC_VALID_PARAM_DATE_CFG_VAL;
+    status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(dateCfg.day, dateCfg_rd.day);
+    TEST_ASSERT_EQUAL(dateCfg.month, dateCfg_rd.month);
+    TEST_ASSERT_EQUAL(dateCfg.year, dateCfg_rd.year);
+
+    dateCfg.month = 4U;
+    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(dateCfg.month, dateCfg_rd.month);
+
+    dateCfg.month = 9U;
+    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(dateCfg.month, dateCfg_rd.month);
+
+    dateCfg.month = 11U;
+    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(dateCfg.month, dateCfg_rd.month);
+
+    dateCfg.day = 15U;
+    dateCfg.month = 1U;
+    dateCfg.year = 2055U;
+    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(dateCfg.day, dateCfg_rd.day);
+    TEST_ASSERT_EQUAL(dateCfg.month, dateCfg_rd.month);
+    TEST_ASSERT_EQUAL(dateCfg.year, dateCfg_rd.year);
+
+    /* Checking for Valid Params PMIC_RTC_DATE_CFG_DAY_VALID and Valid
+       Params not equal to PMIC_RTC_DATE_CFG_MONTH_VALID */
+    dateCfg.day = 1U;
+    dateCfg.validParams = PMIC_RTC_DATE_CFG_DAY_VALID_SHIFT;
+    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    dateCfg_rd.validParams = PMIC_RTC_DATE_CFG_DAY_VALID_SHIFT;
+    status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(dateCfg.day, dateCfg_rd.day);
 
     pmic_testResultUpdate_pass(5990,
                                pmic_rtc_tests,
@@ -1287,6 +1414,34 @@ static void test_pmic_rtc_testSetTime(void)
     TEST_ASSERT_EQUAL(dateCfg.year, dateCfg_rd.year);
     TEST_ASSERT_EQUAL(dateCfg.weekday, dateCfg_rd.weekday);
 
+    dateCfg.month = 2U;
+    dateCfg.day   = 2U;
+    status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcGetTimeDateInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(dateCfg.day, dateCfg_rd.day);
+    TEST_ASSERT_EQUAL(dateCfg.month, dateCfg_rd.month);
+
+    /* Checking for Valid Params not equal to PMIC_RTC_DATE_CFG_MONTH_VALID */
+    dateCfg.validParams = PMIC_RTC_DATE_CFG_MONTH_VALID_SHIFT;
+    status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcGetTimeDateInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(dateCfg.month, dateCfg_rd.month);
+
+    /* Checking for Valid Params not equal to PMIC_RTC_DATE_CFG_YEAR_VALID */
+    dateCfg.validParams = PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT;
+    status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcGetTimeDateInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(dateCfg.year, dateCfg_rd.year);
+
     pmic_testResultUpdate_pass(6158,
                                pmic_rtc_tests,
                                PMIC_RTC_NUM_OF_TESTCASES);
@@ -1964,6 +2119,15 @@ static void test_pmic_rtc_testTimerIntr(void)
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
 
+#if defined(SOC_J7200)
+    if(PMIC_INTF_SPI == pPmicCoreHandle->commMode)
+    {
+        pmic_testResultUpdate_ignore(6266,
+                                     pmic_rtc_tests,
+                                     PMIC_RTC_NUM_OF_TESTCASES);
+    }
+#endif
+
     pHandle                         = pPmicCoreHandle;
 
     status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
@@ -2061,6 +2225,15 @@ static void test_pmic_rtc_testAlarmIntr(void)
     test_pmic_print_unity_testcase_info(6267,
                                         pmic_rtc_tests,
                                         PMIC_RTC_NUM_OF_TESTCASES);
+
+#if defined(SOC_J7200)
+    if(PMIC_INTF_SPI == pPmicCoreHandle->commMode)
+    {
+        pmic_testResultUpdate_ignore(6267,
+                                     pmic_rtc_tests,
+                                     PMIC_RTC_NUM_OF_TESTCASES);
+    }
+#endif
 
     status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -3163,21 +3336,500 @@ static void test_pmic_rtc_testGetFreqComp_hera(void)
                                PMIC_RTC_NUM_OF_TESTCASES);
 }
 
+
+/*!
+ * \brief   Pmic_rtcSetAlarmInfo : Parameter Validation for RTC day min value in Feb Month
+ */
+static void test_pmic_rtc_setAlarmInfoPrmValTest_febMonth_day(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    Pmic_RtcDate_t dateCfg     = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
+                                  2055U, 1U};
+    Pmic_RtcTime_t timeCfg     = {PMIC_RTC_VALID_PARAM_TIME_CFG_VAL, 30U, 30U,
+                                  6U, 1U, 1U};
+
+    test_pmic_print_unity_testcase_info(2,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    dateCfg.month = 2U;
+    dateCfg.day = 0U;
+    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DATE, status);
+
+    pmic_testResultUpdate_pass(2,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcSetAlarmInfo : Parameter Validation for RTC day min value
+ */
+static void test_pmic_rtc_setAlarmInfoPrmValTest_day_min(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    Pmic_RtcDate_t dateCfg     = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
+                                  2055U, 1U};
+    Pmic_RtcTime_t timeCfg     = {PMIC_RTC_VALID_PARAM_TIME_CFG_VAL, 30U, 30U,
+                                  6U, 1U, 1U};
+
+    test_pmic_print_unity_testcase_info(4,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    dateCfg.month = 1U;
+    dateCfg.day = 0U;
+    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DATE, status);
+
+    pmic_testResultUpdate_pass(4,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcSetAlarmInfo : Parameter Validation for RTC day max value
+ */
+static void test_pmic_rtc_setAlarmInfoPrmValTest_day_max(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    Pmic_RtcDate_t dateCfg     = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
+                                  2055U, 1U};
+    Pmic_RtcTime_t timeCfg     = {PMIC_RTC_VALID_PARAM_TIME_CFG_VAL, 30U, 30U,
+                                  6U, 1U, 1U};
+
+    test_pmic_print_unity_testcase_info(5,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    dateCfg.month = 1U;
+    dateCfg.day = 32U;
+    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DATE, status);
+
+    pmic_testResultUpdate_pass(5,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcSetAlarmInfo : Parameter Validation for RTC month min value
+ */
+static void test_pmic_rtc_setAlarmInfoPrmValTest_month_min(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    Pmic_RtcDate_t dateCfg     = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
+                                  2055U, 1U};
+    Pmic_RtcTime_t timeCfg     = {PMIC_RTC_VALID_PARAM_TIME_CFG_VAL, 30U, 30U,
+                                  6U, 1U, 1U};
+
+    test_pmic_print_unity_testcase_info(6,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    dateCfg.month = 0U;
+    dateCfg.day = 1U;
+    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DATE, status);
+
+    pmic_testResultUpdate_pass(6,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcSetAlarmInfo : Parameter Validation for RTC month max value
+ */
+static void test_pmic_rtc_setAlarmInfoPrmValTest_month_max(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    Pmic_RtcDate_t dateCfg     = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
+                                  2055U, 1U};
+    Pmic_RtcTime_t timeCfg     = {PMIC_RTC_VALID_PARAM_TIME_CFG_VAL, 30U, 30U,
+                                  6U, 1U, 1U};
+
+    test_pmic_print_unity_testcase_info(7,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    dateCfg.month = 13U;
+    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DATE, status);
+
+    pmic_testResultUpdate_pass(7,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcSetAlarmInfo : Parameter Validation for RTC year min value
+ */
+static void test_pmic_rtc_setAlarmInfoPrmValTest_year_min(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    Pmic_RtcDate_t dateCfg     = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
+                                  2055U, 1U};
+    Pmic_RtcTime_t timeCfg     = {PMIC_RTC_VALID_PARAM_TIME_CFG_VAL, 30U, 30U,
+                                  6U, 1U, 1U};
+
+    test_pmic_print_unity_testcase_info(8,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    dateCfg.month = 12U;
+    dateCfg.year = 1996U;
+    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DATE, status);
+
+    pmic_testResultUpdate_pass(8,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcSetAlarmInfo : Parameter Validation for RTC weekday min value
+ */
+static void test_pmic_rtc_setAlarmInfoPrmValTest_weekday_min(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    Pmic_RtcDate_t dateCfg     = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
+                                  2055U, 1U};
+    Pmic_RtcTime_t timeCfg     = {PMIC_RTC_VALID_PARAM_TIME_CFG_VAL, 30U, 30U,
+                                  6U, 1U, 1U};
+
+    test_pmic_print_unity_testcase_info(9,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    dateCfg.year = 2055U;
+    dateCfg.weekday =0U;
+    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DATE, status);
+
+    pmic_testResultUpdate_pass(9,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcSetAlarmInfo : Parameter Validation for RTC Meridian Mode
+ */
+static void test_pmic_rtc_setAlarmInfoPrmValTest_meridianMode_12HrMode(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    Pmic_RtcDate_t dateCfg     = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
+                                  2055U, 1U};
+    Pmic_RtcTime_t timeCfg     = {PMIC_RTC_VALID_PARAM_TIME_CFG_VAL, 30U, 30U,
+                                  6U, 1U, 1U};
+
+    test_pmic_print_unity_testcase_info(11,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    /* Checking for valid params Hrs and Timemode for invalid meridianMode */
+    timeCfg.validParams = PMIC_RTC_TIME_CFG_HRS_VALID_SHIFT |
+                          PMIC_RTC_TIME_CFG_TIMEMODE_VALID_SHIFT;
+    timeCfg.meridianMode = 0x2U;
+    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_TIME, status);
+
+    pmic_testResultUpdate_pass(11,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcSetAlarmInfo : Parameter Validation for RTC weekday
+ */
+static void test_pmic_rtc_setAlarmInfoPrmValTest_weekday(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    Pmic_RtcDate_t dateCfg     = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
+                                  2055U, 1U};
+    Pmic_RtcTime_t timeCfg     = {PMIC_RTC_VALID_PARAM_TIME_CFG_VAL, 30U, 30U,
+                                  6U, 1U, 1U};
+
+    test_pmic_print_unity_testcase_info(12,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    timeCfg.meridianMode = 1U;
+    dateCfg.weekday = 8U;
+    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DATE, status);
+
+    pmic_testResultUpdate_pass(12,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcSetAlarmInfo : Parameter Validation for dateCfg and timeCfg
+ */
+static void test_pmic_rtc_setAlarmInfoPrmValTest_dateTimeCfg(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    Pmic_RtcDate_t dateCfg     = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
+                                  2055U, 1U};
+    Pmic_RtcTime_t timeCfg     = {PMIC_RTC_VALID_PARAM_TIME_CFG_VAL, 30U, 30U,
+                                  6U, 1U, 1U};
+
+    test_pmic_print_unity_testcase_info(13,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    dateCfg.weekday = 1U;
+    dateCfg.validParams = 0U;
+    timeCfg.validParams = 0U;
+    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INSUFFICIENT_CFG, status);
+
+    pmic_testResultUpdate_pass(13,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcSetTimeDateInfo : Parameter Validation for dateCfg and timeCfg
+ */
+static void test_pmic_rtc_setTimeDateInfoPrmValTest_dateTimeCfg(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    Pmic_RtcDate_t dateCfg     = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
+                                  2055U, 1U};
+    Pmic_RtcTime_t timeCfg     = {PMIC_RTC_VALID_PARAM_TIME_CFG_VAL, 30U, 30U,
+                                  6U, 1U, 1U};
+
+    test_pmic_print_unity_testcase_info(14,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    dateCfg.weekday = 1U;
+    dateCfg.validParams = 0U;
+    timeCfg.validParams = 0U;
+    status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INSUFFICIENT_CFG, status);
+
+    pmic_testResultUpdate_pass(14,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcGetAlarmInfo : Parameter Validation for pDateCfg and pTimeCfg
+ */
+static void test_pmic_rtc_getAlarmInfoPrmValTest_pDatePtimeCfg(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    Pmic_RtcTime_t timeCfg_rd;
+    Pmic_RtcDate_t dateCfg_rd;
+
+    test_pmic_print_unity_testcase_info(15,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    timeCfg_rd.validParams = 0x0U;
+    dateCfg_rd.validParams = 0x0U;
+    status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INSUFFICIENT_CFG, status);
+
+    pmic_testResultUpdate_pass(15,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcGetTimeDateInfo : Parameter Validation for pDateCfg and pTimeCfg
+ */
+static void test_pmic_rtc_getTimeDateInfoPrmValTest_pDatePtimeCfg(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    Pmic_RtcTime_t timeCfg_rd;
+    Pmic_RtcDate_t dateCfg_rd;
+
+    test_pmic_print_unity_testcase_info(16,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    timeCfg_rd.validParams = 0x0U;
+    dateCfg_rd.validParams = 0x0U;
+    status = Pmic_rtcGetTimeDateInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INSUFFICIENT_CFG, status);
+
+    pmic_testResultUpdate_pass(16,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcGetRstStatus : Test to get RTC Power Up status
+ */
+static void test_pmic_rtc_getRstStatus_powerUpStatus(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    Pmic_RtcRstStatus_t pRtcRstStatus = {0};
+
+    test_pmic_print_unity_testcase_info(21,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    pRtcRstStatus.validParams |= PMIC_RTC_POWERUP_STATUS_VALID_SHIFT;
+    status = Pmic_rtcGetRstStatus(pPmicCoreHandle, &pRtcRstStatus);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    pmic_testResultUpdate_pass(21,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcSetTimeDateInfo : Parameter validation to day min value in leap year
+ */
+static void test_pmic_rtc_setTimeDateInfoPrmValTest_day_min_leapyear(void)
+{
+    int32_t status         = PMIC_ST_SUCCESS;
+
+    Pmic_RtcTime_t timeCfg = {PMIC_RTC_VALID_PARAM_TIME_CFG_VAL, 30U, 30U, 6U,
+                              0U, 1U};
+    Pmic_RtcDate_t dateCfg = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
+                              2055U, 1U};
+
+    test_pmic_print_unity_testcase_info(23,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    dateCfg.validParams = PMIC_RTC_DATE_CFG_DAY_VALID_SHIFT |
+                          PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT |
+                          PMIC_RTC_DATE_CFG_MONTH_VALID_SHIFT;
+    dateCfg.month = 2U;
+    dateCfg.year  = 2056U;
+    dateCfg.day   = 0U;
+    status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DATE, status);
+
+    pmic_testResultUpdate_pass(23,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcGetTimeDateInfo : Test to set RTC timeDateRegSel as static shadowed registers
+ */
+static void test_pmic_rtc_getTimeDateInfo_timeDateRegSel_staticShadow(void)
+{
+    int32_t status        = PMIC_ST_SUCCESS;
+    Pmic_CoreHandle_t  *pHandle     = NULL;
+    pHandle                         = pPmicCoreHandle;
+    Pmic_RtcCfg_t rtcCfg_rd = {PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID_SHIFT,};
+    Pmic_RtcCfg_t rtcCfg_default = {PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID_SHIFT,};
+    Pmic_RtcCfg_t rtcCfg =
+    {
+        PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID_SHIFT,
+        PMIC_RTC_CRYSTAL_OSC_ENABLE,
+        PMIC_RTC_32K_COUNTER_COMP_VAL_SET,
+        PMIC_RTC_ROUND_TIME_SET,
+        PMIC_RTC_STATIC_SHADOWED_REG_SEL,
+        PMIC_RTC_CRYSTAL_OSC_TYPE_9PF
+    };
+
+    Pmic_RtcTime_t timeCfg_rd;
+    Pmic_RtcDate_t dateCfg_rd;
+
+    test_pmic_print_unity_testcase_info(25,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    status = Pmic_rtcEnable(pHandle, PMIC_RTC_STOP);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcGetConfiguration(pHandle, &rtcCfg_default);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcSetConfiguration(pHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcGetConfiguration(pHandle, &rtcCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    TEST_ASSERT_EQUAL(rtcCfg.timeDateRegSel,
+                      rtcCfg_rd.timeDateRegSel);
+
+    status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_rd, &dateCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcSetConfiguration(pHandle, rtcCfg_default);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcGetConfiguration(pHandle, &rtcCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    TEST_ASSERT_EQUAL(rtcCfg_default.timeDateRegSel,
+                      rtcCfg_rd.timeDateRegSel);
+
+    status = Pmic_rtcEnable(pHandle, PMIC_RTC_START);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    pmic_testResultUpdate_pass(25,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_rtcSetConfiguration : Test to set rtc configuration when RTC is started
+ */
+static void test_pmic_rtc_setConfiguration_rtcIsStarted(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    Pmic_RtcCfg_t rtcCfg =
+    {
+        PMIC_RTC_CFG_32K_COUNTER_COMP_VAL_SET_VALID_SHIFT,
+        PMIC_RTC_CRYSTAL_OSC_ENABLE,
+        PMIC_RTC_32K_COUNTER_COMP_VAL_SET,
+        PMIC_RTC_ROUND_TIME_SET,
+        PMIC_RTC_STATIC_SHADOWED_REG_SEL,
+        PMIC_RTC_CRYSTAL_OSC_TYPE_9PF
+    };
+
+    test_pmic_print_unity_testcase_info(26,
+                                        pmic_rtc_tests,
+                                        PMIC_RTC_NUM_OF_TESTCASES);
+
+    status = Pmic_rtcEnable(pPmicCoreHandle, PMIC_RTC_START);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    status = Pmic_rtcSetConfiguration(pPmicCoreHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_FAIL, status);
+
+    pmic_testResultUpdate_pass(26,
+                               pmic_rtc_tests,
+                               PMIC_RTC_NUM_OF_TESTCASES);
+}
+
 /*!
  * \brief   Added for Coverage
  */
 static void test_pmic_rtc_coverageGaps(void)
 {
     int32_t status             = PMIC_ST_SUCCESS;
+    Pmic_RtcRstStatus_t pRtcRstStatus = {0};
     Pmic_RtcTime_t timeCfg     = {PMIC_RTC_VALID_PARAM_TIME_CFG_VAL, 30U, 30U,
                                   6U, 1U, 1U};
     Pmic_RtcDate_t dateCfg     = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
                                   2055U, 1U};
+    Pmic_RtcCfg_t rtcCfg_rd;
+    Pmic_RtcCfg_t rtcCfg_default = {PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID_SHIFT,};
+    Pmic_RtcCfg_t rtcCfg =
+    {
+        PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID_SHIFT,
+        PMIC_RTC_CRYSTAL_OSC_DISABLE,
+        PMIC_RTC_32K_COUNTER_COMP_VAL_SET,
+        PMIC_RTC_ROUND_TIME_SET,
+        PMIC_RTC_STATIC_SHADOWED_REG_SEL,
+        PMIC_RTC_CRYSTAL_OSC_TYPE_6PF
+    };
 
     Pmic_RtcTime_t timeCfg_rd;
     Pmic_RtcDate_t dateCfg_rd;
-
-    Pmic_RtcRstStatus_t pRtcRstStatus = {0};
 
     test_pmic_print_unity_testcase_info(8814,
                                         pmic_rtc_tests,
@@ -3190,553 +3842,625 @@ static void test_pmic_rtc_coverageGaps(void)
 
     /* Fault Injection Tests for Branch Coverage */
     //Pmic_rtcGetSeconds
-    enableFaultInjectionRead = 1U;
-    readCount = 0;
-    skipReadCount = 1;
+    gPmic_faultInjectCfg.enableFaultInjectionRead = 1U;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
     status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcGetMinutes
-    readCount = 0;
-    skipReadCount = 1;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
     timeCfg_rd.validParams = PMIC_RTC_TIME_CFG_MIN_VALID_SHIFT;
     status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcGetTimeMode
-    readCount = 0;
-    skipReadCount = 1;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
     timeCfg_rd.validParams = PMIC_RTC_TIME_CFG_TIMEMODE_VALID_SHIFT;
     status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcSetTimeMode
-    readCount = 0;
-    skipReadCount = 1;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
     timeCfg.validParams = PMIC_RTC_TIME_CFG_TIMEMODE_VALID_SHIFT;
     status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcSetMeridianMode Alarm
-    readCount = 0;
-    skipReadCount = 2;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 2;
     timeCfg.validParams = PMIC_RTC_TIME_CFG_MERIDIAN_VALID_SHIFT;
     status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    readCount = 0;
-    skipReadCount = 3;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 3;
     timeCfg.validParams = PMIC_RTC_TIME_CFG_MERIDIAN_VALID_SHIFT;
     status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcGetMeridianMode alarm
-    readCount = 0;
-    skipReadCount = 1;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
     timeCfg_rd.validParams = PMIC_RTC_TIME_CFG_MERIDIAN_VALID_SHIFT;
     status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    readCount = 0;
-    skipReadCount = 2;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 2;
     timeCfg_rd.validParams = PMIC_RTC_TIME_CFG_MERIDIAN_VALID_SHIFT;
     status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcSetMeridianMode Timer
-    readCount = 0;
-    skipReadCount = 5;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 5;
     timeCfg.validParams = PMIC_RTC_TIME_CFG_MERIDIAN_VALID_SHIFT;
     status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcGetMeridianMode Timer
-    readCount = 0;
-    skipReadCount = 3;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 3;
     timeCfg_rd.validParams = PMIC_RTC_TIME_CFG_MERIDIAN_VALID_SHIFT;
     status = Pmic_rtcGetTimeDateInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcSetHours alarm
-    readCount = 0;
-    skipReadCount = 2;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 2;
     timeCfg.validParams = PMIC_RTC_TIME_CFG_HRS_VALID_SHIFT;
     status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcGetHours alarm
-    readCount = 0;
-    skipReadCount = 1;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
     timeCfg_rd.validParams = PMIC_RTC_TIME_CFG_HRS_VALID_SHIFT;
     status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcSetHours Timer
-    readCount = 0;
-    skipReadCount = 4;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 4;
     timeCfg.validParams = PMIC_RTC_TIME_CFG_HRS_VALID_SHIFT;
     status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcGetHours Timer
-    readCount = 0;
-    skipReadCount = 2;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 2;
     timeCfg_rd.validParams = PMIC_RTC_TIME_CFG_HRS_VALID_SHIFT;
     status = Pmic_rtcGetTimeDateInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcGetDay
-    readCount = 0;
-    skipReadCount = 1;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
     timeCfg_rd.validParams = 0U;
     dateCfg_rd.validParams = PMIC_RTC_DATE_CFG_DAY_VALID_SHIFT;
     status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcGetMonth
-    readCount = 0;
-    skipReadCount = 1;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
     dateCfg_rd.validParams = PMIC_RTC_DATE_CFG_MONTH_VALID_SHIFT;
     status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcGetYear
-    readCount = 0;
-    skipReadCount = 1;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
     dateCfg_rd.validParams = PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT;
     status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcGetWeekday
-    readCount = 0;
-    skipReadCount = 2;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 2;
     dateCfg_rd.validParams = PMIC_RTC_DATE_CFG_WEEKDAY_VALID_SHIFT;
     status = Pmic_rtcGetTimeDateInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcCheckHoursMode
-    readCount = 0;
-    skipReadCount = 1;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
     dateCfg.validParams = PMIC_RTC_VALID_PARAM_DATE_CFG_VAL;
     timeCfg.validParams = PMIC_RTC_TIME_CFG_HRS_VALID_SHIFT;
     status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcCheckDate 1
-    readCount = 0;
-    skipReadCount = 1;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
     dateCfg.validParams = PMIC_RTC_DATE_CFG_WEEKDAY_VALID_SHIFT;
     timeCfg.validParams = PMIC_RTC_TIME_CFG_TIMEMODE_VALID_SHIFT;
     status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcCheckDate 2
-    readCount = 0;
-    skipReadCount = 1;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
     dateCfg.validParams = PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT;
     status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    readCount = 0;
-    skipReadCount = 1;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
     dateCfg.validParams = 0U;
     status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_alarmSetTime
-    enableFaultInjectionRead = 0U;
-    enableFaultInjectionWrite = 1U;
-    writeCount = 0;
-    skipWriteCount = 1;
+    gPmic_faultInjectCfg.enableFaultInjectionRead = 0U;
+    gPmic_faultInjectCfg.enableFaultInjectionWrite = 1U;
+    gPmic_faultInjectCfg.writeCount = 0;
+    gPmic_faultInjectCfg.skipWriteCount = 1;
     timeCfg.validParams = PMIC_RTC_TIME_CFG_MIN_VALID_SHIFT | PMIC_RTC_TIME_CFG_HRS_VALID_SHIFT | PMIC_RTC_TIME_CFG_TIMEMODE_VALID_SHIFT | PMIC_RTC_TIME_CFG_MERIDIAN_VALID_SHIFT;
     status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    writeCount = 0;
-    skipWriteCount = 1;
+    gPmic_faultInjectCfg.writeCount = 0;
+    gPmic_faultInjectCfg.skipWriteCount = 1;
     timeCfg.validParams = PMIC_RTC_VALID_PARAM_TIME_CFG_VAL;
     status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
-    enableFaultInjectionRead = 1U;
-    enableFaultInjectionWrite = 0U;
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+    gPmic_faultInjectCfg.enableFaultInjectionRead = 1U;
+    gPmic_faultInjectCfg.enableFaultInjectionWrite = 0U;
 
     //Pmic_alarmSetDate
-    enableFaultInjectionRead = 0U;
-    enableFaultInjectionWrite = 1U;
-    writeCount = 0;
-    skipWriteCount = 1;
+    gPmic_faultInjectCfg.enableFaultInjectionRead = 0U;
+    gPmic_faultInjectCfg.enableFaultInjectionWrite = 1U;
+    gPmic_faultInjectCfg.writeCount = 0;
+    gPmic_faultInjectCfg.skipWriteCount = 1;
     timeCfg.validParams = 0U;
     dateCfg.validParams = PMIC_RTC_DATE_CFG_MONTH_VALID_SHIFT | PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT;
     status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    writeCount = 0;
-    skipWriteCount = 1;
+    gPmic_faultInjectCfg.writeCount = 0;
+    gPmic_faultInjectCfg.skipWriteCount = 1;
     dateCfg.validParams = PMIC_RTC_VALID_PARAM_DATE_CFG_VAL;
     status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
-    enableFaultInjectionWrite = 0U;
-    enableFaultInjectionRead = 1U;
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+    gPmic_faultInjectCfg.enableFaultInjectionWrite = 0U;
+    gPmic_faultInjectCfg.enableFaultInjectionRead = 1U;
 
     //Pmic_setAlarmIntr
-    readCount = 0;
-    skipReadCount = 1;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
     status = Pmic_rtcEnableAlarmIntr(pPmicCoreHandle, PMIC_RTC_ALARM_INTR_ENABLE);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_alarmGetTime
-    readCount = 0;
-    skipReadCount = 1;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
     timeCfg_rd.validParams = PMIC_RTC_VALID_PARAM_TIME_CFG_VAL;
     dateCfg_rd.validParams = 0U;
     status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_alarmGetDate
-    readCount = 0;
-    skipReadCount = 1;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
     timeCfg_rd.validParams = 0U;
     dateCfg_rd.validParams = PMIC_RTC_VALID_PARAM_DATE_CFG_DAY_MNTH_YR_VAL;
     status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcSetTime
-    enableFaultInjectionRead = 0U;
-    enableFaultInjectionWrite = 1U;
-    writeCount = 0;
-    skipWriteCount = 2;
+    gPmic_faultInjectCfg.enableFaultInjectionRead = 0U;
+    gPmic_faultInjectCfg.enableFaultInjectionWrite = 1U;
+    gPmic_faultInjectCfg.writeCount = 0;
+    gPmic_faultInjectCfg.skipWriteCount = 2;
     timeCfg.validParams = PMIC_RTC_TIME_CFG_MIN_VALID_SHIFT | PMIC_RTC_TIME_CFG_HRS_VALID_SHIFT | PMIC_RTC_TIME_CFG_TIMEMODE_VALID_SHIFT | PMIC_RTC_TIME_CFG_MERIDIAN_VALID_SHIFT;
     status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    writeCount = 0;
-    skipWriteCount = 2;
+    gPmic_faultInjectCfg.writeCount = 0;
+    gPmic_faultInjectCfg.skipWriteCount = 2;
     timeCfg.validParams = PMIC_RTC_VALID_PARAM_TIME_CFG_VAL;
     status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
-    enableFaultInjectionRead = 1U;
-    enableFaultInjectionWrite = 0U;
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+    gPmic_faultInjectCfg.enableFaultInjectionRead = 1U;
+    gPmic_faultInjectCfg.enableFaultInjectionWrite = 0U;
 
     //Pmic_rtcSetDate
-    readCount = 0;
-    skipReadCount = 4;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 4;
     timeCfg.validParams = 0U;
     dateCfg.validParams = PMIC_RTC_DATE_CFG_MONTH_VALID_SHIFT | PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT | PMIC_RTC_DATE_CFG_WEEKDAY_VALID_SHIFT;
     status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    enableFaultInjectionRead = 0U;
-    enableFaultInjectionWrite = 1U;
-    writeCount = 0;
-    skipWriteCount = 2;
+    gPmic_faultInjectCfg.enableFaultInjectionRead = 0U;
+    gPmic_faultInjectCfg.enableFaultInjectionWrite = 1U;
+    gPmic_faultInjectCfg.writeCount = 0;
+    gPmic_faultInjectCfg.skipWriteCount = 2;
     timeCfg.validParams = 0U;
     dateCfg.validParams = PMIC_RTC_DATE_CFG_DAY_VALID_SHIFT | PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT | PMIC_RTC_DATE_CFG_WEEKDAY_VALID_SHIFT;
     status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
-    enableFaultInjectionRead = 1U;
-    enableFaultInjectionWrite = 0U;
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+    gPmic_faultInjectCfg.enableFaultInjectionRead = 1U;
+    gPmic_faultInjectCfg.enableFaultInjectionWrite = 0U;
 
-    readCount = 0;
-    skipReadCount = 4;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 4;
     timeCfg.validParams = 0U;
     dateCfg.validParams = PMIC_RTC_DATE_CFG_DAY_VALID_SHIFT | PMIC_RTC_DATE_CFG_MONTH_VALID_SHIFT | PMIC_RTC_DATE_CFG_WEEKDAY_VALID_SHIFT;
     status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    readCount = 0;
-    skipReadCount = 4;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 4;
     timeCfg.validParams = 0U;
     dateCfg.validParams = PMIC_RTC_DATE_CFG_DAY_VALID_SHIFT | PMIC_RTC_DATE_CFG_MONTH_VALID_SHIFT | PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT;
     status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-
-    enableFaultInjectionRead = 0U;
-    enableFaultInjectionWrite = 1U;
-    writeCount = 0;
-    skipWriteCount = 2;
+    gPmic_faultInjectCfg.enableFaultInjectionRead = 0U;
+    gPmic_faultInjectCfg.enableFaultInjectionWrite = 1U;
+    gPmic_faultInjectCfg.writeCount = 0;
+    gPmic_faultInjectCfg.skipWriteCount = 2;
     dateCfg.validParams = PMIC_RTC_VALID_PARAM_DATE_CFG_VAL;
     status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
-    enableFaultInjectionRead = 1U;
-    enableFaultInjectionWrite = 0U;
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+    gPmic_faultInjectCfg.enableFaultInjectionRead = 1U;
+    gPmic_faultInjectCfg.enableFaultInjectionWrite = 0U;
 
     //Pmic_rtcTriggerShadowRegisters
-    readCount = 0;
-    skipReadCount = 1;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
     timeCfg_rd.validParams = PMIC_RTC_TIME_CFG_HRS_VALID_SHIFT;
     status = Pmic_rtcGetTimeDateInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcGetTime
-    readCount = 0;
-    skipReadCount = 2;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 2;
     timeCfg_rd.validParams = PMIC_RTC_TIME_CFG_MIN_VALID_SHIFT | PMIC_RTC_TIME_CFG_HRS_VALID_SHIFT | PMIC_RTC_TIME_CFG_TIMEMODE_VALID_SHIFT | PMIC_RTC_TIME_CFG_MERIDIAN_VALID_SHIFT;
     status = Pmic_rtcGetTimeDateInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    readCount = 0;
-    skipReadCount = 2;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 2;
     timeCfg_rd.validParams = PMIC_RTC_TIME_CFG_SEC_VALID_SHIFT | PMIC_RTC_TIME_CFG_HRS_VALID_SHIFT | PMIC_RTC_TIME_CFG_TIMEMODE_VALID_SHIFT | PMIC_RTC_TIME_CFG_MERIDIAN_VALID_SHIFT;
     status = Pmic_rtcGetTimeDateInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-
-    readCount = 0;
-    skipReadCount = 2;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 2;
     timeCfg_rd.validParams = PMIC_RTC_TIME_CFG_MIN_VALID_SHIFT | PMIC_RTC_TIME_CFG_SEC_VALID_SHIFT | PMIC_RTC_TIME_CFG_TIMEMODE_VALID_SHIFT | PMIC_RTC_TIME_CFG_MERIDIAN_VALID_SHIFT;
     status = Pmic_rtcGetTimeDateInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    readCount = 0;
-    skipReadCount = 2;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 2;
     timeCfg_rd.validParams = PMIC_RTC_TIME_CFG_MIN_VALID_SHIFT | PMIC_RTC_TIME_CFG_HRS_VALID_SHIFT | PMIC_RTC_TIME_CFG_SEC_VALID_SHIFT | PMIC_RTC_TIME_CFG_MERIDIAN_VALID_SHIFT;
     status = Pmic_rtcGetTimeDateInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    readCount = 0;
-    skipReadCount = 2;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 2;
     timeCfg_rd.validParams = PMIC_RTC_TIME_CFG_MIN_VALID_SHIFT | PMIC_RTC_TIME_CFG_HRS_VALID_SHIFT | PMIC_RTC_TIME_CFG_TIMEMODE_VALID_SHIFT | PMIC_RTC_TIME_CFG_SEC_VALID_SHIFT;
     status = Pmic_rtcGetTimeDateInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcGetDate
-    readCount = 0;
-    skipReadCount = 2;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 2;
     timeCfg_rd.validParams = 0U;
     dateCfg_rd.validParams = PMIC_RTC_DATE_CFG_MONTH_VALID_SHIFT | PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT | PMIC_RTC_DATE_CFG_WEEKDAY_VALID_SHIFT;
     status = Pmic_rtcGetTimeDateInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    readCount = 0;
-    skipReadCount = 2;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 2;
     timeCfg_rd.validParams = 0U;
     dateCfg_rd.validParams = PMIC_RTC_DATE_CFG_DAY_VALID_SHIFT | PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT | PMIC_RTC_DATE_CFG_WEEKDAY_VALID_SHIFT;
     status = Pmic_rtcGetTimeDateInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    readCount = 0;
-    skipReadCount = 2;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 2;
     timeCfg_rd.validParams = 0U;
     dateCfg_rd.validParams = PMIC_RTC_DATE_CFG_MONTH_VALID_SHIFT | PMIC_RTC_DATE_CFG_DAY_VALID_SHIFT | PMIC_RTC_DATE_CFG_WEEKDAY_VALID_SHIFT;
     status = Pmic_rtcGetTimeDateInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    readCount = 0;
-    skipReadCount = 2;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 2;
     timeCfg_rd.validParams = 0U;
     dateCfg_rd.validParams = PMIC_RTC_DATE_CFG_MONTH_VALID_SHIFT | PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT | PMIC_RTC_DATE_CFG_DAY_VALID_SHIFT;
     status = Pmic_rtcGetTimeDateInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcSetFreqCompensateVal
-    enableFaultInjectionRead = 0U;
-    enableFaultInjectionWrite = 1U;
-    writeCount = 0;
-    skipWriteCount = 1;
+    gPmic_faultInjectCfg.enableFaultInjectionRead = 0U;
+    gPmic_faultInjectCfg.enableFaultInjectionWrite = 1U;
+    gPmic_faultInjectCfg.writeCount = 0;
+    gPmic_faultInjectCfg.skipWriteCount = 1;
     status = Pmic_rtcSetFreqComp(pPmicCoreHandle, 34952U);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
-    enableFaultInjectionRead = 1U;
-    enableFaultInjectionWrite = 0U;
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+    gPmic_faultInjectCfg.enableFaultInjectionRead = 1U;
+    gPmic_faultInjectCfg.enableFaultInjectionWrite = 0U;
 
     //Pmic_rtcGetFreqCompensateVal
-    readCount = 0;
-    skipReadCount = 1;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
     uint16_t compensation = 0U;
     status = Pmic_rtcGetFreqComp(pPmicCoreHandle, &compensation);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcSetTimerIntr
-    readCount = 0;
-    skipReadCount = 1;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
     status = Pmic_rtcEnableTimerIntr(pPmicCoreHandle, PMIC_RTC_TIMER_INTR_DISABLE);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcEnableRtc
-    readCount = 0;
-    skipReadCount = 1;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
     status = Pmic_rtcEnable(pPmicCoreHandle, PMIC_RTC_STOP);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    readCount = 0;
-    skipReadCount = 2;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 2;
     status = Pmic_rtcEnable(pPmicCoreHandle, PMIC_RTC_START);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    readCount = 0;
-    skipReadCount = 2;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 2;
     status = Pmic_rtcEnable(pPmicCoreHandle, PMIC_RTC_STOP);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcSetTimerPeriod
-    readCount = 0;
-    skipReadCount = 1;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
     status = Pmic_rtcSetTimerPeriod(pPmicCoreHandle, PMIC_RTC_HOUR_INTR_PERIOD);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
     //Pmic_rtcGetTimerPeriod
-    readCount = 0;
-    skipReadCount = 1;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
     uint8_t timePeriod = 0U;
     status = Pmic_rtcGetTimerPeriod(pPmicCoreHandle, &timePeriod);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    enableFaultInjectionRead = 0U;
-    enableFaultInjectionWrite = 0U;
-    skipReadCount = 0U;
-    skipWriteCount = 0U;
-    readCount = 0xFFU;
-    writeCount = 0xFFU;
+    //Pmic_rtcSetCrystalOscCfg
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    rtcCfg.validParams = PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID_SHIFT;
+    status = Pmic_rtcSetConfiguration(pPmicCoreHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    //Pmic_rtcCheckMonthDays
-    dateCfg.validParams = PMIC_RTC_VALID_PARAM_DATE_CFG_VAL;
-    dateCfg.day = 1U;
-    dateCfg.month = 2U;
-    dateCfg.year = 2040U;
-    timeCfg.validParams = PMIC_RTC_VALID_PARAM_TIME_CFG_VAL;
-    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    //Pmic_rtcSelectCrystalOscType
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    rtcCfg.validParams = PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID_SHIFT;
+    status = Pmic_rtcSetConfiguration(pPmicCoreHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    dateCfg.month = 4U;
-    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    //Pmic_rtcGetCrystalOscTypeCfg
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    rtcCfg_rd.validParams = PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID_SHIFT;
+    status = Pmic_rtcGetConfiguration(pPmicCoreHandle, &rtcCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    dateCfg.month = 9U;
-    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    //Pmic_rtcSelectTimeDateReg
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    rtcCfg.validParams = PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID_SHIFT;
+    status = Pmic_rtcSetConfiguration(pPmicCoreHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    dateCfg.month = 11U;
-    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    //Pmic_rtcGetTimeDateRegCfg
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    rtcCfg_rd.validParams = PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID_SHIFT;
+    status = Pmic_rtcGetConfiguration(pPmicCoreHandle, &rtcCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    dateCfg.month = 2U;
-    dateCfg.day = 0U;
-    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DATE, status);
+    //Pmic_rtcSetRtcTimeRound30s
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    rtcCfg.validParams = PMIC_RTC_CFG_RTC_TIME_ROUND_30S_SET_VALID_SHIFT;
+    status = Pmic_rtcSetConfiguration(pPmicCoreHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    dateCfg.year = 2055U;
-    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DATE, status);
+    //Pmic_rtcGetRtcTimeRound30s
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    rtcCfg_rd.validParams = PMIC_RTC_CFG_RTC_TIME_ROUND_30S_SET_VALID_SHIFT;
+    status = Pmic_rtcGetConfiguration(pPmicCoreHandle, &rtcCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    dateCfg.day = 1U;
-    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    //Pmic_rtcEnableCrystalOsc
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    rtcCfg.validParams = PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID_SHIFT;
+    status = Pmic_rtcSetConfiguration(pPmicCoreHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    dateCfg.month = 1U;
-    dateCfg.day = 0U;
-    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DATE, status);
+    //Pmic_rtcGetCrystalOscEnCfg
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    rtcCfg_rd.validParams = PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID_SHIFT;
+    status = Pmic_rtcGetConfiguration(pPmicCoreHandle, &rtcCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    dateCfg.day = 32U;
-    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DATE, status);
-    dateCfg.day = 1U;
-
-    // Pmic_rtcCheckDate
-    dateCfg.month = 0U;
-    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DATE, status);
-
-    dateCfg.month = 13U;
-    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DATE, status);
-
-    dateCfg.month = 12U;
-    dateCfg.year = 1996U;
-    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DATE, status);
-
-    dateCfg.year = 2055U;
-    dateCfg.weekday =0U;
-    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DATE, status);
-
-    // Pmic_alarmSetDate
-    dateCfg.month = 1U;
-    dateCfg.validParams = PMIC_RTC_VALID_PARAM_DATE_CFG_DAY_MNTH_VAL;
-    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    dateCfg.validParams = PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT;
-    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    dateCfg.validParams = PMIC_RTC_DATE_CFG_MONTH_VALID_SHIFT;
-    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    //Pmic_alarmGetTime and Pmic_alarmGetDate
-    timeCfg_rd.validParams = PMIC_RTC_TIME_CFG_MIN_VALID;
-    dateCfg_rd.validParams = PMIC_RTC_DATE_CFG_MONTH_VALID_SHIFT;
-    status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    //Statement Coverage Issues
-    timeCfg.validParams = PMIC_RTC_TIME_CFG_HRS_VALID_SHIFT;
-    timeCfg.meridianMode = 0x2U;
-    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_TIME, status);
-
-    timeCfg.meridianMode = 1U;
-    dateCfg.validParams = PMIC_RTC_VALID_PARAM_DATE_CFG_VAL;
-    dateCfg.weekday = 8U;
-    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DATE, status);
-
-    dateCfg.weekday = 1U;
-    dateCfg.validParams = 0U;
-    timeCfg.validParams = 0U;
-    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INSUFFICIENT_CFG, status);
-
+    //Pmic_rtcSetHours
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 6;
+    timeCfg.validParams = PMIC_RTC_TIME_CFG_HRS_VALID_SHIFT | PMIC_RTC_TIME_CFG_TIMEMODE_VALID_SHIFT;
     status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, timeCfg, dateCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INSUFFICIENT_CFG, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    timeCfg_rd.validParams = 0x0U;
-    dateCfg_rd.validParams = 0x0U;
-    status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INSUFFICIENT_CFG, status);
+    //Pmic_rtcSetMeridianMode
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 6;
+    timeCfg.validParams = PMIC_RTC_TIME_CFG_MERIDIAN_VALID_SHIFT;
+    status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
+    rtcCfg_rd.validParams= PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID_SHIFT;
+    rtcCfg.validParams = PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID_SHIFT;
+    status = Pmic_rtcSetConfiguration(pPmicCoreHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    //Pmic_rtcTriggerShadowRegisters
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 2;
     status = Pmic_rtcGetTimeDateInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INSUFFICIENT_CFG, status);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
 
-    dateCfg_rd.validParams = PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT;
-    status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
+    status = Pmic_rtcSetConfiguration(pPmicCoreHandle, rtcCfg_default);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    dateCfg_rd.validParams = PMIC_RTC_DATE_CFG_WEEKDAY_VALID_SHIFT;
-    status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
+    status = Pmic_rtcGetConfiguration(pPmicCoreHandle, &rtcCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    dateCfg_rd.validParams = PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT;
+    TEST_ASSERT_EQUAL(rtcCfg_default.timeDateRegSel, rtcCfg_rd.timeDateRegSel);
+
+    //Pmic_rtcClrRstStatus
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    status = Pmic_rtcClrRstStatus(pPmicCoreHandle, PMIC_RTC_RST_STATUS);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_rtcClrRstStatus
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    status = Pmic_rtcClrRstStatus(pPmicCoreHandle, PMIC_RTC_POWERUP_STATUS);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_rtcSet32KCounterCompVal
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    rtcCfg.validParams = PMIC_RTC_CFG_32K_COUNTER_COMP_VAL_SET_VALID_SHIFT;
+    status = Pmic_rtcSetConfiguration(pPmicCoreHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    status = Pmic_rtcEnable(pPmicCoreHandle, PMIC_RTC_STOP);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    //Pmic_rtcSet32KCounterCompVal
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 2;
+    rtcCfg.validParams = PMIC_RTC_CFG_32K_COUNTER_COMP_VAL_SET_VALID_SHIFT;
+    status = Pmic_rtcSetConfiguration(pPmicCoreHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    status = Pmic_rtcEnable(pPmicCoreHandle, PMIC_RTC_START);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    //Pmic_rtcGet32KCounterCompValCfg
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    rtcCfg_rd.validParams = PMIC_RTC_CFG_32K_COUNTER_COMP_VAL_SET_VALID_SHIFT;
+    status = Pmic_rtcGetConfiguration(pPmicCoreHandle, &rtcCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.enableFaultInjectionRead = 0U;
+    gPmic_faultInjectCfg.enableFaultInjectionWrite = 0U;
+    gPmic_faultInjectCfg.skipReadCount = 0U;
+    gPmic_faultInjectCfg.skipWriteCount = 0U;
+    gPmic_faultInjectCfg.readCount = 0xFFU;
+    gPmic_faultInjectCfg.writeCount = 0xFFU;
+
+    Pmic_DevSubSysInfo_t pmicDevSubSysInfo =
+    {
+        .gpioEnable = (bool)true,
+        .rtcEnable  = (bool)false,
+        .wdgEnable  = (bool)true,
+        .buckEnable = (bool)true,
+        .ldoEnable  = (bool)true,
+        .esmEnable  = (bool)true
+    };
+
+    //Pmic_rtcSetConfiguration
+    pPmicCoreHandle->pPmic_SubSysInfo = (&pmicDevSubSysInfo);
+    status = Pmic_rtcSetConfiguration(pPmicCoreHandle, rtcCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+
+    //Pmic_rtcGetConfiguration
+    status = Pmic_rtcGetConfiguration(pPmicCoreHandle, &rtcCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+
+    //Pmic_rtcClrRstStatus
+    uint8_t rstStatType = PMIC_RTC_POWERUP_STATUS;
+    status = Pmic_rtcClrRstStatus(pPmicCoreHandle, rstStatType);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+
+    //Pmic_rtcClrRstStatus
+    bool rtcStatus;
+    status = Pmic_rtcGetStatus(pPmicCoreHandle, &rtcStatus);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+
+    //Pmic_rtcEnableTimerIntr
+    status = Pmic_rtcEnableTimerIntr(pPmicCoreHandle, PMIC_RTC_TIMER_INTR_DISABLE);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+
+    //Pmic_rtcEnableAlarmIntr
+    status = Pmic_rtcEnableAlarmIntr(pPmicCoreHandle, PMIC_RTC_ALARM_INTR_DISABLE);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+
+    //Pmic_rtcEnable
+    status = Pmic_rtcEnable(pPmicCoreHandle, PMIC_RTC_START);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+
+    //Pmic_rtcSetFreqComp
+    status = Pmic_rtcSetFreqComp(pPmicCoreHandle, 34952U);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+
+    //Pmic_rtcGetFreqComp
+    status = Pmic_rtcGetFreqComp(pPmicCoreHandle, &compensation);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+
+    //Pmic_rtcSetTimeDateInfo
+    status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+
+    //Pmic_rtcGetTimeDateInfo
     status = Pmic_rtcGetTimeDateInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
 
-    dateCfg_rd.validParams = PMIC_RTC_DATE_CFG_WEEKDAY_VALID_SHIFT;
-    status = Pmic_rtcGetTimeDateInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    //Pmic_rtcSetTimerPeriod
+    status = Pmic_rtcSetTimerPeriod(pPmicCoreHandle, PMIC_RTC_HOUR_INTR_PERIOD);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
 
-    pRtcRstStatus.validParams |= PMIC_RTC_POWERUP_STATUS_VALID_SHIFT;
+    //Pmic_rtcGetTimerPeriod
+    status = Pmic_rtcGetTimerPeriod(pPmicCoreHandle, &timePeriod);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+
+    //Pmic_rtcSetAlarmInfo
+    status = Pmic_rtcSetAlarmInfo(pPmicCoreHandle, timeCfg, dateCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+
+    //Pmic_rtcGetAlarmInfo
+    status = Pmic_rtcGetAlarmInfo(pPmicCoreHandle, &timeCfg_rd, &dateCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
+
+    //Pmic_rtcGetRstStatus
     status = Pmic_rtcGetRstStatus(pPmicCoreHandle, &pRtcRstStatus);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, status);
 
-    Pmic_RtcTime_t timeCfg_test = {PMIC_RTC_VALID_PARAM_TIME_CFG_VAL, 30U, 30U, 6U,
-                              0U, 1U};
-    Pmic_RtcDate_t dateCfg_test = {PMIC_RTC_VALID_PARAM_DATE_CFG_VAL, 15U, 6U,
-                              2055U, 1U};
-    timeCfg_test.timeMode       = PMIC_RTC_12_HOUR_MODE;
+    Pmic_DevSubSysInfo_t testpmicDevSubSysInfo =
+    {
+        .gpioEnable = (bool)true,
+        .rtcEnable  = (bool)true,
+        .wdgEnable  = (bool)true,
+        .buckEnable = (bool)true,
+        .ldoEnable  = (bool)true,
+        .esmEnable  = (bool)true
+    };
 
-    dateCfg_test.validParams = PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT;
-    status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, timeCfg_test, dateCfg_test);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    dateCfg_test.validParams = PMIC_RTC_DATE_CFG_MONTH_VALID_SHIFT;
-    status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, timeCfg_test, dateCfg_test);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    dateCfg_test.validParams = PMIC_RTC_VALID_PARAM_DATE_CFG_VAL;
-    status = Pmic_rtcSetTimeDateInfo(pPmicCoreHandle, timeCfg_test, dateCfg_test);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    pPmicCoreHandle->pPmic_SubSysInfo = (&testpmicDevSubSysInfo);
 
     pmic_testResultUpdate_pass(8814,
                                pmic_rtc_tests,
@@ -4506,6 +5230,24 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_rtc_setCfgPrmValTest_timeDateRegSel);
     RUN_TEST(test_pmic_rtc_setCfgPrmValTest_crystalOScType);
     RUN_TEST(test_pmic_rtc_setCfgPrmValTest_set32KCounterCompVal);
+
+    RUN_TEST(test_pmic_rtc_setAlarmInfoPrmValTest_febMonth_day);
+    RUN_TEST(test_pmic_rtc_setAlarmInfoPrmValTest_day_min);
+    RUN_TEST(test_pmic_rtc_setAlarmInfoPrmValTest_day_max);
+    RUN_TEST(test_pmic_rtc_setAlarmInfoPrmValTest_month_min);
+    RUN_TEST(test_pmic_rtc_setAlarmInfoPrmValTest_month_max);
+    RUN_TEST(test_pmic_rtc_setAlarmInfoPrmValTest_year_min);
+    RUN_TEST(test_pmic_rtc_setAlarmInfoPrmValTest_weekday_min);
+    RUN_TEST(test_pmic_rtc_setAlarmInfoPrmValTest_meridianMode_12HrMode);
+    RUN_TEST(test_pmic_rtc_setAlarmInfoPrmValTest_weekday);
+    RUN_TEST(test_pmic_rtc_setAlarmInfoPrmValTest_dateTimeCfg);
+    RUN_TEST(test_pmic_rtc_setTimeDateInfoPrmValTest_dateTimeCfg);
+    RUN_TEST(test_pmic_rtc_getAlarmInfoPrmValTest_pDatePtimeCfg);
+    RUN_TEST(test_pmic_rtc_getTimeDateInfoPrmValTest_pDatePtimeCfg);
+    RUN_TEST(test_pmic_rtc_getRstStatus_powerUpStatus);
+    RUN_TEST(test_pmic_rtc_setTimeDateInfoPrmValTest_day_min_leapyear);
+    RUN_TEST(test_pmic_rtc_getTimeDateInfo_timeDateRegSel_staticShadow);
+    RUN_TEST(test_pmic_rtc_setConfiguration_rtcIsStarted);
     RUN_TEST(test_pmic_rtc_coverageGaps);
 
     pmic_updateTestResults(pmic_rtc_tests, PMIC_RTC_NUM_OF_TESTCASES);
@@ -4601,7 +5343,6 @@ static int32_t test_pmic_leo_pmicA_rtc_testApp(void)
     return status;
 }
 
-#if defined(SOC_J721E)
 /*!
  * \brief   RTC Unity Test App wrapper Function for LEO PMIC-A
  */
@@ -4632,7 +5373,6 @@ static int32_t test_pmic_leo_pmicA_spiStub_rtc_testApp(void)
     status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
     return status;
 }
-#endif
 
 /*!
  * \brief   RTC Unity Test App wrapper Function for HERA PMIC
@@ -4844,10 +5584,11 @@ volatile static const char pmicTestAppMenu[] =
     " \r\n 1: Pmic Leo device(PMIC A on J721E EVM Using SPI Stub Functions)"
     " \r\n 2: Pmic Leo device(PMIC B on J721E EVM)"
     " \r\n 3: Pmic Leo device(PMIC A on J7VCL EVM Using I2C Interface)"
-    " \r\n 4: Pmic HERA device(PMIC B on J7VCL EVM)"
-    " \r\n 5: Pmic Leo device(PMIC A on J721E EVM RTC Manual Testcase)"
-    " \r\n 6: Pmic Leo device(PMIC A on J7VCL EVM RTC Manual Testcase)"
-    " \r\n 7: Back to Test Menu"
+    " \r\n 4: Pmic Leo device(PMIC A on J7VCL EVM Using SPI Stub Functions)"
+    " \r\n 5: Pmic HERA device(PMIC B on J7VCL EVM)"
+    " \r\n 6: Pmic Leo device(PMIC A on J721E EVM RTC Manual Testcase)"
+    " \r\n 7: Pmic Leo device(PMIC A on J7VCL EVM RTC Manual Testcase)"
+    " \r\n 8: Back to Test Menu"
     " \r\n"
     " \r\n Enter option: "
 };
@@ -4896,11 +5637,6 @@ static void test_pmic_run_testcases_manual(uint32_t board)
             return;
         }
 
-        if(menuOption == 7)
-        {
-            break;
-        }
-
         switch(menuOption)
         {
             case 0U:
@@ -4924,6 +5660,9 @@ static void test_pmic_run_testcases_manual(uint32_t board)
             case 6U:
                 RUN_TEST(test_pmic_rtc_setCfg_set32KCounterCompVal);
                break;
+            case 7U:
+                pmic_log(" \r\n Back to Test Menu options\n");
+                return;
             default:
                pmic_log(" \r\n Invalid option... Try Again!!!\n");
                break;
@@ -4938,7 +5677,7 @@ static void test_pmic_rtc_testapp_run_options(int8_t option)
 #if defined(SOC_J721E)
     int8_t automatic_options[] = {0, 1};
 #elif defined(SOC_J7200)
-    int8_t automatic_options[] = {3, 4};
+    int8_t automatic_options[] = {3, 4, 5};
 #endif
 
     while(1U)
@@ -4956,7 +5695,7 @@ static void test_pmic_rtc_testapp_run_options(int8_t option)
             }
             else
             {
-                num = 7;
+                num = 8;
             }
             pmic_log("%d\n", num);
         }
@@ -5007,7 +5746,7 @@ static void test_pmic_rtc_testapp_run_options(int8_t option)
                     /* RTC Unity Test App wrapper Function for LEO PMIC-A using
                      * SPI stub functions */
                     if(PMIC_ST_SUCCESS ==
-                              test_pmic_leo_pmicA_spiStub_rtc_testApp())
+                           test_pmic_leo_pmicA_spiStub_rtc_testApp())
                     {
                        if(PMIC_SILICON_REV_ID_PG_2_0 ==
                           pPmicCoreHandle->pmicDevSiliconRev)
@@ -5057,7 +5796,30 @@ static void test_pmic_rtc_testapp_run_options(int8_t option)
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                 break;
-            case 4U:
+           case 4U:
+#if defined(SOC_J7200)
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
+                {
+                    pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+                    /* RTC Unity Test App wrapper Function for LEO PMIC-A
+                     * using SPI stub functions */
+                     if(PMIC_ST_SUCCESS ==
+                            test_pmic_leo_pmicA_spiStub_rtc_testApp())
+                    {
+                        /* Run rtc test cases for Leo PMIC-A */
+                        test_pmic_run_testcases();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
+                break;
+            case 5U:
 #if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
@@ -5079,7 +5841,7 @@ static void test_pmic_rtc_testapp_run_options(int8_t option)
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                 break;
-           case 5U:
+           case 6U:
 #if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
@@ -5106,8 +5868,8 @@ static void test_pmic_rtc_testapp_run_options(int8_t option)
 #else
                 pmic_log("\nInvalid Board!!!\n");
 #endif
-                break;
-           case 6U:
+                return;
+           case 7U:
 #if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
@@ -5128,8 +5890,8 @@ static void test_pmic_rtc_testapp_run_options(int8_t option)
 #else
                 pmic_log("\nInvalid Board!!!\n");
 #endif
-                break;
-            case 7U:
+                return;
+            case 8U:
                 pmic_log(" \r\n Back to Test Menu options\n");
                 return;
             default:

@@ -42,7 +42,7 @@
 /* Pointer to Pmic Core Handle */
 Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
 
-static uint16_t pmic_device_info = 0U;
+extern uint16_t pmic_device_info;
 extern int32_t gCrcTestFlag_J721E;
 extern int32_t gCrcTestFlag_J7VCL;
 
@@ -682,6 +682,37 @@ static int32_t test_pmic_leo_pmicB_stress_testApp(void)
     return status;
 }
 
+/*!
+ * \brief   STRESS Unity Test App wrapper Function for LEO PMIC-A
+ */
+static int32_t test_pmic_leo_pmicA_spiStub_stress_testApp(void)
+{
+    int32_t status                = PMIC_ST_SUCCESS;
+    Pmic_CoreCfg_t pmicConfigData = {0U};
+
+    /* Fill parameters to pmicConfigData */
+    pmicConfigData.pmicDeviceType      = PMIC_DEV_LEO_TPS6594X;
+    pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
+
+    pmicConfigData.commMode            = PMIC_INTF_SPI;
+    pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoWrite   = test_pmic_regWrite;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStart  = test_pmic_criticalSectionStartFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStop   = test_pmic_criticalSectionStopFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
+
+    status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
+    return status;
+}
+
 static void test_pmic_singleI2C_init_deinit_testApp(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -1031,9 +1062,11 @@ volatile static const char pmicTestAppMenu[] =
     " \r\n ================================================================="
     " \r\n 0: Pmic Leo device(PMIC A on J721E EVM Using I2C Interface)"
     " \r\n 1: Pmic Leo device(PMIC A on J7VCL EVM Using I2C Interface)"
-    " \r\n 2: Pmic Leo device(PMIC A on J721E EVM Manual Stress Testcases)"
-    " \r\n 3: Pmic Leo device(PMIC A on J7VCL EVM Manual Stress Testcases)"
-    " \r\n 4: Back to Test Menu"
+    " \r\n 2: Pmic Leo device with SPI Stub Functions(PMIC-A on J721E EVM)"
+    " \r\n 3: Pmic Leo device with SPI Stub Functions(PMIC-A on J7VCL EVM)"
+    " \r\n 4: Pmic Leo device(PMIC A on J721E EVM Manual Stress Testcases)"
+    " \r\n 5: Pmic Leo device(PMIC A on J7VCL EVM Manual Stress Testcases)"
+    " \r\n 6: Back to Test Menu"
     " \r\n"
     " \r\n Enter option: "
 };
@@ -1102,9 +1135,9 @@ static void test_pmic_stress_testapp_run_options(int8_t option)
     int8_t num = -1;
     int8_t idx = 0;
 #if defined(SOC_J721E)
-    int8_t automatic_options[] = {0};
+    int8_t automatic_options[] = {0, 2};
 #elif defined(SOC_J7200)
-    int8_t automatic_options[] = {1};
+    int8_t automatic_options[] = {1, 3};
 #endif
 
     while(1U)
@@ -1122,7 +1155,7 @@ static void test_pmic_stress_testapp_run_options(int8_t option)
             }
             else
             {
-                num = 4;
+                num = 6;
             }
             pmic_log("%d\n", num);
         }
@@ -1192,6 +1225,58 @@ static void test_pmic_stress_testapp_run_options(int8_t option)
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
 
+                    /* STRESS Unity Test App wrapper Function for LEO PMIC-A
+                     * using SPI stub functions */
+                    if(PMIC_ST_SUCCESS ==
+                           test_pmic_leo_pmicA_spiStub_stress_testApp())
+                    {
+                       if(PMIC_SILICON_REV_ID_PG_2_0 ==
+                          pPmicCoreHandle->pmicDevSiliconRev)
+                       {
+                            test_pmic_rtc_setCfg_xtalOScEnType(pPmicCoreHandle);
+                       }
+                        /* Run stress test cases for Leo PMIC-A */
+                        test_pmic_run_testcases();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
+                break;
+            case 3U:
+#if defined(SOC_J7200)
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
+                {
+                    pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+                    /* STRESS Unity Test App wrapper Function for LEO PMIC-A
+                     * using SPI stub functions */
+                     if(PMIC_ST_SUCCESS ==
+                            test_pmic_leo_pmicA_spiStub_stress_testApp())
+                    {
+                        /* Run stress test cases for Leo PMIC-A */
+                        test_pmic_run_testcases();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
+                break;
+            case 4U:
+#if defined(SOC_J721E)
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
+                {
+                    pmic_device_info = J721E_LEO_PMICA_DEVICE;
+
                     /* STRESS Manual Test App wrapper Function for LEO PMIC-A */
                     if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_stress_testApp())
                     {
@@ -1213,7 +1298,7 @@ static void test_pmic_stress_testapp_run_options(int8_t option)
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                 break;
-           case 3U:
+           case 5U:
 #if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
@@ -1235,7 +1320,7 @@ static void test_pmic_stress_testapp_run_options(int8_t option)
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                 break;
-            case 4U:
+            case 6U:
                 pmic_log(" \r\n Back to Test Menu options\n");
                 return;
             default:

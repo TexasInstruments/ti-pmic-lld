@@ -42,11 +42,12 @@
 /* Pointer holds the pPmicCoreHandle */
 Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
 
-static uint16_t pmic_device_info = 0U;
+extern uint16_t pmic_device_info;
 extern int32_t gCrcTestFlag_J721E;
 extern int32_t gCrcTestFlag_J7VCL;
 
 volatile uint32_t pmic_intr_triggered;
+extern Pmic_Ut_FaultInject_t gPmic_faultInjectCfg;
 
 /*!
  * \brief   PMIC GPIO Test Cases
@@ -146,7 +147,7 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
     },
     {
         6211,
-        "Pmic_gpioSetConfiguration : Parameter validation for pin "
+        "Pmic_gpioSetConfiguration : Parameter validation for pin for Max Value"
     },
     {
         6213,
@@ -411,6 +412,70 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
     {
         9893,
         "Pmic_irqGetMaskIntrStatus: Parameter validation for pMaskStatus"
+    },
+    {
+        1,
+        "Pmic_gpioGetNPwronEnablePinConfiguration : Parameter validation for pGpioCfg"
+    },
+    {
+        2,
+        "Pmic_gpioSetNPwronEnablePinConfiguration : Test to set/get Pin function as PMIC_TPS6594X_NPWRON_PINFUNC_NONE"
+    },
+    {
+        4,
+        "Pmic_gpioSetNPwronEnablePinConfiguration : Test to set/get Pin polarity for Enable Pin"
+    },
+    {
+        5,
+        "Pmic_gpioSetConfiguration : Test to set/get GPIO pullup/pull down control configuration"
+    },
+    {
+        7,
+        "Pmic_gpioSetConfiguration : Test to set/get signal deglitch time enable configuration"
+    },
+    {
+        8,
+        "Pmic_gpioSetIntr : Test to verify GPIO1 disable Interrupt"
+    },
+    {
+        10,
+        "Pmic_gpioSetConfiguration : Parameter validation for pullCtrl"
+    },
+    {
+        11,
+        "Pmic_gpioSetNPwronEnablePinConfiguration : Test to set/get nPWRON/Enable pull up control configuration"
+    },
+    {
+        13,
+        "Pmic_gpioSetNPwronEnablePinConfiguration : Parameter validation for pPmicCoreHandle"
+    },
+    {
+        16,
+        "Pmic_gpioGetNPwronEnablePinConfiguration : Parameter validation for pPmicCoreHandle"
+    },
+    {
+        18,
+        "Pmic_gpioSetNPwronEnablePinConfiguration : Test to set/get signal deglitch time enable configuration"
+    },
+    {
+        19,
+        "Pmic_gpioSetNPwronEnablePinConfiguration : Parameter Validation for deglitchEnable for NPwronEnablePin"
+    },
+    {
+        20,
+        "Pmic_gpioSetNPwronEnablePinConfiguration : Parameter Validation for pullCtrlfor NPwronEnablePin"
+    },
+    {
+        21,
+        "Pmic_gpioSetConfiguration : Parameter validation for pin for Min Value"
+    },
+    {
+        22,
+        "Pmic_gpioSetNPwronEnablePinConfiguration : Test to set/get Invalid validParams"
+    },
+    {
+        8852,
+        "Pmic_gpioTests: Dynamic Coverage Gaps and Fault Injection Tests"
     },
 };
 
@@ -2037,7 +2102,7 @@ static void test_pmic_gpio_setCfgPrmValTest_handle(void)
 }
 
 /*!
- * \brief   Parameter validation for pin
+ * \brief   Parameter validation for pin for Max Value
  */
 static void test_pmic_gpio_setCfgPrmValTest_pin(void)
 {
@@ -2260,10 +2325,11 @@ static void test_pmic_gpio_getCfgGpioPin(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     int pin                   = 1U;
-    Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,};
+    Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                                 PMIC_GPIO_CFG_DIR_VALID_SHIFT,};
     Pmic_GpioCfg_t gpioCfg    =
     {
-        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
+        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT | PMIC_GPIO_CFG_DIR_VALID_SHIFT,
         PMIC_GPIO_OUTPUT,
         PMIC_GPIO_OPEN_DRAIN_OUTPUT,
         PMIC_GPIO_PULL_DOWN,
@@ -2303,6 +2369,7 @@ static void test_pmic_gpio_getCfgGpioPin(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
+    TEST_ASSERT_EQUAL(gpioCfg.pinDir, gpioCfg_rd.pinDir);
 
     pmic_testResultUpdate_pass(6219,
                                pmic_gpio_tests,
@@ -2528,7 +2595,7 @@ static void test_pmic_gpio_setValueGpioPin1_signalLevel(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     uint8_t pin               = 1U;
-    uint8_t pinValue          = PMIC_GPIO_HIGH;
+    uint8_t pinValue          = PMIC_GPIO_LOW;
     uint8_t pinValue_rd;
     Pmic_GpioCfg_t gpioCfg    =
     {
@@ -2573,6 +2640,18 @@ static void test_pmic_gpio_setValueGpioPin1_signalLevel(void)
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
+    if(J7VCL_HERA_PMICB_DEVICE != pmic_device_info)
+    {
+        pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        pmicStatus = Pmic_gpioGetValue(pPmicCoreHandle, pin, &pinValue_rd);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        TEST_ASSERT_EQUAL(pinValue, pinValue_rd);
+    }
+
+    pinValue   = PMIC_GPIO_HIGH;
     pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, pin, pinValue);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
@@ -6188,6 +6267,740 @@ static void test_pmic_gpio_irq_getMaskIntrStatPrmValTst_pMaskStatus(void)
                                PMIC_GPIO_NUM_OF_TESTCASES);
 }
 
+/*!
+ * \brief   Parameter validation for pGpioCfg
+ */
+static void test_pmic_gpio_nPWRON_getCfgPrmValTest_pGpioCfg(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(1,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_gpioGetNPwronEnablePinConfiguration(pPmicCoreHandle,
+                                                          NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(1,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Test to set/get Pin function as PMIC_TPS6594X_NPWRON_PINFUNC_NONE
+ */
+static void test_pmic_gpio_nPWRON_setCfg_pinFunc(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t gpioCfg    =
+    {
+        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_NPWRON_PINFUNC_NONE,
+        PMIC_GPIO_HIGH
+    };
+    Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT};
+
+    test_pmic_print_unity_testcase_info(2,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
+    {
+        pmic_testResultUpdate_ignore(2,
+                                     pmic_gpio_tests,
+                                     PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_gpioSetNPwronEnablePinConfiguration(pPmicCoreHandle,
+                                                          gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioGetNPwronEnablePinConfiguration(pPmicCoreHandle,
+                                                          &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
+
+    pmic_testResultUpdate_pass(2,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Test to set/get Pin polarity for Enable Pin
+ */
+static void test_pmic_gpio_enable_setCfg_pinPolarity(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t gpioCfg_rd = {PMIC_ENABLE_CFG_POLARITY_VALID_SHIFT};
+    Pmic_GpioCfg_t gpioCfg    =
+    {
+        PMIC_ENABLE_CFG_POLARITY_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1,
+        PMIC_GPIO_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(4,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_gpioSetNPwronEnablePinConfiguration(pPmicCoreHandle,
+                                                          gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioGetNPwronEnablePinConfiguration(pPmicCoreHandle,
+                                                          &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    TEST_ASSERT_EQUAL(gpioCfg.pinPolarity, gpioCfg_rd.pinPolarity);
+
+    pmic_testResultUpdate_pass(4,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Test to set/get GPIO pullup/pull down control configuration
+ */
+static void test_pmic_gpio_setCfg_pullCtrl(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PULL_VALID_SHIFT};
+    Pmic_GpioCfg_t gpioCfg    =
+    {
+        PMIC_GPIO_CFG_PULL_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1,
+        PMIC_GPIO_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(5,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    gpioCfg.pullCtrl = PMIC_GPIO_PULL_DISABLED;
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, 1U, gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, 1U, &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    TEST_ASSERT_EQUAL(gpioCfg.pullCtrl, gpioCfg_rd.pullCtrl);
+
+    gpioCfg.pullCtrl = PMIC_GPIO_PULL_DOWN;
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, 1U, gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, 1U, &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    TEST_ASSERT_EQUAL(gpioCfg.pullCtrl, gpioCfg_rd.pullCtrl);
+
+    gpioCfg.pullCtrl = PMIC_GPIO_PULL_UP;
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, 1U, gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, 1U, &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    TEST_ASSERT_EQUAL(gpioCfg.pullCtrl, gpioCfg_rd.pullCtrl);
+
+    pmic_testResultUpdate_pass(5,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Test to set/get signal deglitch time enable configuration
+ */
+static void test_pmic_gpio_setCfg_deglitchTime(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT};
+    Pmic_GpioCfg_t gpioCfg    =
+    {
+        PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1,
+        PMIC_GPIO_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(7,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, 1U, gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, 1U, &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    TEST_ASSERT_EQUAL(gpioCfg.deglitchEnable, gpioCfg_rd.deglitchEnable);
+
+    pmic_testResultUpdate_pass(7,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Test to verify GPIO1 disable Interrupt
+ */
+static void test_pmic_gpio1_testDisable_interrupt(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    bool riseIntrMaskStat, fallIntrMaskStat;
+    uint8_t      irqGpioNum;
+
+    test_pmic_print_unity_testcase_info(8,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle,
+                                  1U,
+                                  PMIC_GPIO_DISABLE_INTERRUPT,
+                                  PMIC_GPIO_POL_HIGH);
+
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        irqGpioNum = PMIC_TPS6594X_IRQ_GPIO_1_INT_MASK_NUM;
+
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        irqGpioNum = PMIC_LP8764X_IRQ_GPIO_1_INT_MASK_NUM;
+
+    }
+
+    pmicStatus = Pmic_irqGetGpioMaskIntr(pPmicCoreHandle,
+                                         irqGpioNum,
+                                         PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE,
+                                         &riseIntrMaskStat,
+                                         &fallIntrMaskStat);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    TEST_ASSERT_EQUAL(riseIntrMaskStat, PMIC_IRQ_MASK);
+    TEST_ASSERT_EQUAL(fallIntrMaskStat, PMIC_IRQ_MASK);
+
+    pmic_testResultUpdate_pass(8,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Parameter validation for pullCtrl
+ */
+static void test_pmic_gpio_setCfgPrmValTest_pullCtrl(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t gpioCfg    =
+    {
+        PMIC_GPIO_CFG_PULL_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        3U,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1,
+        PMIC_GPIO_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(10,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, 1U, gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(10,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Test to set/get nPWRON/Enable pull up control configuration
+ */
+static void test_pmic_gpio_nPWRON_setCfg_pullCtrl(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t gpioCfg    =
+    {
+        PMIC_GPIO_CFG_PULL_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_UP,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1,
+        PMIC_GPIO_HIGH
+    };
+    Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PULL_VALID_SHIFT};
+
+    test_pmic_print_unity_testcase_info(11,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
+    {
+        pmic_testResultUpdate_ignore(11,
+                                     pmic_gpio_tests,
+                                     PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_gpioSetNPwronEnablePinConfiguration(pPmicCoreHandle,
+                                                          gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioGetNPwronEnablePinConfiguration(pPmicCoreHandle,
+                                                          &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    TEST_ASSERT_EQUAL(gpioCfg.pullCtrl, gpioCfg_rd.pullCtrl);
+
+    pmic_testResultUpdate_pass(11,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Parameter validation for pPmicCoreHandle
+ */
+static void test_pmic_gpio_nPWRON_setCfgPrmValTest_handle(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t gpioCfg    =
+    {
+        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1,
+        PMIC_GPIO_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(13,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_gpioSetNPwronEnablePinConfiguration(NULL, gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(13,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Parameter validation for pPmicCoreHandle
+ */
+static void test_pmic_gpio_nPWRON_getCfgPrmValTest_handle(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t gpioCfg_rd = {0U};
+
+    test_pmic_print_unity_testcase_info(16,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_gpioGetNPwronEnablePinConfiguration(NULL, &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(16,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_gpioSetNPwronEnablePinConfiguration : Test to set/get
+ *          signal deglitch time enable configuration
+ */
+static void test_pmic_gpio_nPWRON_setCfg_deglitchTime(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT};
+    Pmic_GpioCfg_t gpioCfg =
+    {
+        PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1,
+        PMIC_GPIO_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(18,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
+    {
+        pmic_testResultUpdate_ignore(18,
+                                     pmic_gpio_tests,
+                                     PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_gpioSetNPwronEnablePinConfiguration(pPmicCoreHandle,
+                                                          gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioGetNPwronEnablePinConfiguration(pPmicCoreHandle,
+                                                          &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    TEST_ASSERT_EQUAL(gpioCfg.deglitchEnable, gpioCfg_rd.deglitchEnable);
+
+    pmic_testResultUpdate_pass(18,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Parameter Validation for deglitchEnable for NPwronEnablePin
+ */
+static void test_pmic_gpio_nPWRON_setCfgPrmValTest_deglitchEnable(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t gpioCfg =
+    {
+        PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        2U,
+        PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1,
+        PMIC_GPIO_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(19,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
+    {
+        pmic_testResultUpdate_ignore(19,
+                                     pmic_gpio_tests,
+                                     PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_gpioSetNPwronEnablePinConfiguration(pPmicCoreHandle,
+                                                          gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(19,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Parameter Validation for pullCtrl for NPwronEnablePin
+ */
+static void test_pmic_gpio_nPWRON_setCfgPrmValTest_pullCtrl(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t gpioCfg =
+    {
+        PMIC_GPIO_CFG_PULL_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        3U,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1,
+        PMIC_GPIO_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(20,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
+    {
+        pmic_testResultUpdate_ignore(20,
+                                     pmic_gpio_tests,
+                                     PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_gpioSetNPwronEnablePinConfiguration(pPmicCoreHandle, gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(20,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Parameter validation for pin for Min Value
+ */
+static void test_pmic_gpio_setCfgPrmValTest_pin_minVal(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    uint8_t pin               = 0U;
+    Pmic_GpioCfg_t gpioCfg    =
+    {
+        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1,
+        PMIC_GPIO_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(21,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
+    TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
+
+    pmic_testResultUpdate_pass(21,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_gpioSetNPwronEnablePinConfiguration : Test to set/get
+ *          Invalid validParams
+ */
+static void test_pmic_gpio_nPWRON_setCfg_validParams(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t gpioCfg    =
+    {
+        0x40,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_UP,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1,
+        PMIC_GPIO_HIGH
+    };
+    Pmic_GpioCfg_t gpioCfg_rd = {0x40};
+
+    test_pmic_print_unity_testcase_info(22,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_gpioSetNPwronEnablePinConfiguration(pPmicCoreHandle,
+                                                          gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_gpioGetNPwronEnablePinConfiguration(pPmicCoreHandle,
+                                                          &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(22,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Added for Coverage
+ */
+static void test_pmic_gpio_coverageGaps(void)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t pinValue = 0U;
+    uint8_t pmicDeviceType;
+    Pmic_GpioCfg_t gpioCfg_rd = {0U};
+    Pmic_GpioCfg_t gpioCfg =
+    {
+        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1,
+        PMIC_GPIO_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(8852,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    //Fault Injection Tests:
+    Pmic_GpioCfg_t gpioCfg_ft =
+    {
+        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
+        PMIC_GPIO_OUTPUT,
+        PMIC_GPIO_OPEN_DRAIN_OUTPUT,
+        PMIC_GPIO_PULL_DOWN,
+        PMIC_GPIO_DEGLITCH_ENABLE,
+        PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1,
+        PMIC_GPIO_HIGH
+    };
+
+    if(J7VCL_HERA_PMICB_DEVICE != pmic_device_info)
+    {
+        gPmic_faultInjectCfg.enableFaultInjectionRead = 1U;
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 1;
+        pmicStatus = Pmic_gpioTps6594xNPwronPinGetValue(pPmicCoreHandle, &pinValue);
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+        //Pmic_gpioGetPinFunc
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 1;
+        gpioCfg_rd.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT;
+        pmicStatus =Pmic_gpioGetNPwronEnablePinConfiguration(pPmicCoreHandle, &gpioCfg_rd);
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+        //Pmic_gpioTps6594xGetNPwronPinConfiguration
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 1;
+        gpioCfg_rd.validParams = PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT;
+        pmicStatus = Pmic_gpioGetNPwronEnablePinConfiguration(pPmicCoreHandle, &gpioCfg_rd);
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+        gPmic_faultInjectCfg.enableFaultInjectionRead = 0U;
+    }
+
+    //Pmic_gpioSetPinFunc
+    gpioCfg_ft.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT;
+    gPmic_faultInjectCfg.enableFaultInjectionRead = 1U;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, 1U, gpioCfg_ft);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+    //Pmic_gpioSetPinPolarity
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+
+    gpioCfg_ft.validParams = PMIC_ENABLE_CFG_POLARITY_VALID_SHIFT;
+    pmicStatus = Pmic_gpioSetNPwronEnablePinConfiguration(pPmicCoreHandle, gpioCfg_ft);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+    //Pmic_gpioGetPinPolarity
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+
+    gpioCfg_rd.validParams = PMIC_ENABLE_CFG_POLARITY_VALID_SHIFT;
+    pmicStatus = Pmic_gpioGetNPwronEnablePinConfiguration(pPmicCoreHandle, &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+    //Pmic_gpioSetPullCtrl
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    gpioCfg_ft.validParams = PMIC_GPIO_CFG_PULL_VALID_SHIFT;
+    gpioCfg_ft.pullCtrl = PMIC_GPIO_PULL_DISABLED;
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, 1U, gpioCfg_ft);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+    //Pmic_gpioGetPullCtrl
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    gpioCfg_rd.validParams = PMIC_GPIO_CFG_PULL_VALID_SHIFT;
+    pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, 1U, &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+    //Pmic_gpioSetPinDir
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    gpioCfg_ft.validParams = PMIC_GPIO_CFG_DIR_VALID_SHIFT;
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, 1U, gpioCfg_ft);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+    //Pmic_gpioGetPinDir
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    gpioCfg_rd.validParams = PMIC_GPIO_CFG_DIR_VALID_SHIFT;
+    pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, 1U, &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+    //Pmic_gpioSetDeglitchTime and Pmic_gpioGetDeglitchTime
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    gpioCfg_ft.validParams = PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT;
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, 1U, gpioCfg_ft);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    gpioCfg_rd.validParams = PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT;
+    pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, 1U, &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+    //Pmic_gpioIntrEnable
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, 1U, PMIC_GPIO_FALL_INTERRUPT, PMIC_GPIO_POL_HIGH);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+    //Pmic_gpioIntrDisable
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    pmicStatus = Pmic_gpioSetIntr(pPmicCoreHandle, 1U, PMIC_GPIO_DISABLE_INTERRUPT, PMIC_GPIO_POL_HIGH);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+    //Pmic_gpioSetValue
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, 1U, PMIC_GPIO_HIGH);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 2;
+    pmicStatus = Pmic_gpioSetValue(pPmicCoreHandle, 1U, PMIC_GPIO_HIGH);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+    //Pmic_gpioGetValue
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    pmicStatus = Pmic_gpioGetValue(pPmicCoreHandle, 1U, &pinValue);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+    //Pmic_gpioSetOutputSignalType
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    gpioCfg_ft.validParams = PMIC_GPIO_CFG_OD_VALID_SHIFT;
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, 1U, gpioCfg_ft);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+    //Pmic_gpioGetOutputSignalType
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    gpioCfg_rd.validParams = PMIC_GPIO_CFG_OD_VALID_SHIFT;
+    pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, 1U, &gpioCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+    gPmic_faultInjectCfg.enableFaultInjectionRead = 0U;
+
+    Pmic_DevSubSysInfo_t pmicDevSubSysInfo =
+    {
+        .gpioEnable = (bool)false,
+        .rtcEnable  = (bool)true,
+        .wdgEnable  = (bool)true,
+        .buckEnable = (bool)true,
+        .ldoEnable  = (bool)true,
+        .esmEnable  = (bool)true
+    };
+
+    pPmicCoreHandle->pPmic_SubSysInfo = (&pmicDevSubSysInfo);
+    pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, 1U, gpioCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
+
+    pmicStatus = Pmic_gpioTps6594xNPwronPinGetValue(pPmicCoreHandle, &pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
+
+    pmicDeviceType = pPmicCoreHandle->pmicDeviceType;
+    pPmicCoreHandle->pmicDeviceType = 3U;
+    pmicStatus = Pmic_gpioTps6594xNPwronPinGetValue(pPmicCoreHandle, &pinValue);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_DEVICE, pmicStatus);
+    pPmicCoreHandle->pmicDeviceType = pmicDeviceType;
+
+    pmic_testResultUpdate_pass(8852,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
 #if defined(ENABLE_SAMPLE_TESTCASES)
 /*!
  * Below test cases are not tested because of HW limitation.
@@ -7368,6 +8181,23 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_gpio_irq_getMaskIntrStatPrmValTst_handle);
     RUN_TEST(test_pmic_gpio_irq_getMaskIntrStatPrmValTst_pMaskStatus);
 
+    RUN_TEST(test_pmic_gpio_nPWRON_getCfgPrmValTest_pGpioCfg);
+    RUN_TEST(test_pmic_gpio_nPWRON_setCfg_pinFunc);
+    RUN_TEST(test_pmic_gpio_enable_setCfg_pinPolarity);
+    RUN_TEST(test_pmic_gpio_setCfg_pullCtrl);
+    RUN_TEST(test_pmic_gpio_setCfg_deglitchTime);
+    RUN_TEST(test_pmic_gpio1_testDisable_interrupt);
+    RUN_TEST(test_pmic_gpio_setCfgPrmValTest_pullCtrl);
+    RUN_TEST(test_pmic_gpio_nPWRON_setCfg_pullCtrl);
+    RUN_TEST(test_pmic_gpio_nPWRON_setCfgPrmValTest_handle);
+    RUN_TEST(test_pmic_gpio_nPWRON_getCfgPrmValTest_handle);
+    RUN_TEST(test_pmic_gpio_nPWRON_setCfg_deglitchTime);
+    RUN_TEST(test_pmic_gpio_nPWRON_setCfgPrmValTest_deglitchEnable);
+    RUN_TEST(test_pmic_gpio_nPWRON_setCfgPrmValTest_pullCtrl);
+    RUN_TEST(test_pmic_gpio_setCfgPrmValTest_pin_minVal);
+    RUN_TEST(test_pmic_gpio_nPWRON_setCfg_validParams);
+    RUN_TEST(test_pmic_gpio_coverageGaps);
+
     pmic_updateTestResults(pmic_gpio_tests, PMIC_GPIO_NUM_OF_TESTCASES);
 
     UNITY_END();
@@ -7477,7 +8307,6 @@ static int32_t test_pmic_leo_pmicB_gpio_testApp(void)
     return status;
 }
 
-#if defined(SOC_J721E)
 /*!
  * \brief   GPIO Unity Test App wrapper Function for LEO PMIC-A
  */
@@ -7508,7 +8337,6 @@ static int32_t test_pmic_leo_pmicA_spiStub_gpio_testApp(void)
     status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
     return status;
 }
-#endif
 
 /*!
  * \brief   GPIO Unity Test App wrapper Function for HERA PMIC
@@ -7553,7 +8381,6 @@ static int32_t test_pmic_hera_gpio_testApp(void)
     return status;
 
 }
-
 
 static int32_t setup_pmic_interrupt(uint32_t board)
 {
@@ -7640,9 +8467,10 @@ volatile static const char pmicTestAppMenu[] =
     " \r\n 2: Pmic Leo device(PMIC A on J7VCL EVM Using I2C Interface)"
     " \r\n 3: Pmic Hera device(PMIC B on J7VCL EVM Using I2C Interface)"
     " \r\n 4: Pmic Leo device(PMIC A on J721E EVM Using SPI Stub Functions)"
-    " \r\n 5: Pmic Leo device(PMIC A on J721E EVM Manual Testcase)"
-    " \r\n 6: Pmic Leo device(PMIC A on J7VCL EVM Manual Testcase)"
-    " \r\n 7: Back to Test Menu"
+    " \r\n 5: Pmic Leo device(PMIC A on J7VCL EVM Using SPI Stub Functions)"
+    " \r\n 6: Pmic Leo device(PMIC A on J721E EVM Manual Testcase)"
+    " \r\n 7: Pmic Leo device(PMIC A on J7VCL EVM Manual Testcase)"
+    " \r\n 8: Back to Test Menu"
     " \r\n"
     " \r\n Enter option: "
 };
@@ -7729,7 +8557,7 @@ static void test_pmic_gpio_testapp_run_options(int8_t option)
 #if defined(SOC_J721E)
     int8_t automatic_options[] = {0, 1, 4};
 #elif defined(SOC_J7200)
-    int8_t automatic_options[] = {2, 3};
+    int8_t automatic_options[] = {2, 3, 5};
 #endif
 
     while(1U)
@@ -7747,7 +8575,7 @@ static void test_pmic_gpio_testapp_run_options(int8_t option)
             }
             else
             {
-                num = 7;
+                num = 8;
             }
             pmic_log("%d\n", num);
         }
@@ -7762,7 +8590,7 @@ static void test_pmic_gpio_testapp_run_options(int8_t option)
 
         switch(num)
         {
-           case 0U:
+            case 0U:
 #if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
@@ -7784,7 +8612,7 @@ static void test_pmic_gpio_testapp_run_options(int8_t option)
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                 break;
-           case 1U:
+            case 1U:
 #if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
@@ -7806,7 +8634,7 @@ static void test_pmic_gpio_testapp_run_options(int8_t option)
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                 break;
-           case 2U:
+            case 2U:
 #if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
@@ -7828,7 +8656,7 @@ static void test_pmic_gpio_testapp_run_options(int8_t option)
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                 break;
-           case 3U:
+            case 3U:
 #if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
@@ -7850,7 +8678,7 @@ static void test_pmic_gpio_testapp_run_options(int8_t option)
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                 break;
-           case 4U:
+            case 4U:
 #if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
@@ -7874,7 +8702,30 @@ static void test_pmic_gpio_testapp_run_options(int8_t option)
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                 break;
-           case 5U:
+            case 5U:
+#if defined(SOC_J7200)
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
+                {
+                    pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+                    /* GPIO Unity Test App wrapper Function for LEO PMIC-A
+                     * using SPI stub functions */
+                     if(PMIC_ST_SUCCESS ==
+                           test_pmic_leo_pmicA_spiStub_gpio_testApp())
+                    {
+                        /* Run gpio test cases for Leo PMIC-A */
+                        test_pmic_run_testcases();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
+                break;
+            case 6U:
 #if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
@@ -7897,7 +8748,7 @@ static void test_pmic_gpio_testapp_run_options(int8_t option)
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                 break;
-           case 6U:
+            case 7U:
 #if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
@@ -7919,10 +8770,10 @@ static void test_pmic_gpio_testapp_run_options(int8_t option)
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                 break;
-           case 7U:
+            case 8U:
                 pmic_log(" \r\n Back to Test Menu options\n");
                 return;
-           default:
+            default:
                pmic_log(" \r\n Invalid option... Try Again!!!\n");
                break;
         }

@@ -42,10 +42,13 @@
 /* Pointer holds the pPmicCoreHandle */
 Pmic_CoreHandle_t *pPmicCoreHandle = NULL;
 
-static uint16_t pmic_device_info = 0U;
+extern uint16_t pmic_device_info;
 extern int32_t gCrcTestFlag_J721E;
 extern int32_t gCrcTestFlag_J7VCL;
 uint32_t g_skip_eeprom_test_flag = 0;
+
+extern Pmic_Ut_FaultInject_t gPmic_faultInjectCfg;
+static int32_t test_pmic_leo_pmicA_misc_testApp(void);
 
 /*!
  * \brief   PMIC MISC Test Cases
@@ -65,7 +68,7 @@ static Pmic_Ut_Tests_t pmic_misc_tests[] =
     },
     {
         7630,
-        "Pmic_setRecoveryCntCfg : Test Set Clear Recovery Counter."
+        "Pmic_setRecoveryCntCfg : Test Set/Get Clear Recovery Counter."
     },
     {
         7631,
@@ -443,6 +446,134 @@ static Pmic_Ut_Tests_t pmic_misc_tests[] =
         9995,
         "Test Pmic Write Protection when Register is UnLock"
     },
+    {
+        1,
+        "Pmic_getRecoveryCnt : Test to read recovery counter value"
+    },
+    {
+        2,
+        "Pmic_getRecoveryCnt : Parameter validation for pRecovCntVal"
+    },
+    {
+        4,
+        "Pmic_init : Parameter validation for pPmicCoreHandle"
+    },
+    {
+        5,
+        "Pmic_init : Parameter validation for pPmicConfigData"
+    },
+    {
+        6,
+        "Pmic_init : Parameter validation for pmicDeviceType"
+    },
+    {
+        7,
+        "Pmic_init : Parameter validation for Interface mode"
+    },
+    {
+        8,
+        "Pmic_init : Parameter validation for I2C1/SPI Main Interface handle"
+    },
+    {
+        9,
+        "Pmic_init : Parameter validation for I2C2-QA Interface handle"
+    },
+    {
+        10,
+        "Pmic_init : Parameter validation for I2C/SPI Comm LLD Read Function"
+    },
+    {
+        11,
+        "Pmic_init : Parameter validation for I2C/SPI Comm LLD Write Function"
+    },
+    {
+        12,
+        "Pmic_init : Parameter validation for Critical Section Start Function"
+    },
+    {
+        13,
+        "Pmic_init : Parameter validation for Critical Section Stop Function"
+    },
+    {
+        14,
+        "Pmic_deinit : Parameter validation for pPmicCoreHandle"
+    },
+    {
+        15,
+        "Pmic_setScratchPadValue : Test to write data to scratchpad reg1, reg2 and reg3"
+    },
+    {
+        16,
+        "Pmic_init : Parameter validation for I2C1 Speed"
+    },
+    {
+        17,
+        "Pmic_init : Parameter validation for I2C2 Speed"
+    },
+    {
+        19,
+        "Pmic_setCommonCtrlConfig : Enable Skip EEPROM Default Load to CONF and Other registers"
+    },
+    {
+        20,
+        "Pmic_setI2CSpeedCfg : Parameter validation for handle"
+    },
+    {
+        22,
+        "Pmic_getCrcStatus : Parameter validation for handle"
+    },
+    {
+        23,
+        "Pmic_getCrcStatus : Parameter validation for pI2c2CrcStatus"
+    },
+    {
+        24,
+        "Pmic_getCrcStatus : Parameter validation for pI2c1CrcStatus"
+    },
+    {
+        25,
+        "Pmic_getCrcStatus : Parameter validation for both pI2c1CrcStatus and pI2c2CrcStatus"
+    },
+    {
+        26,
+        "Pmic_enableCRC : Parameter validation for handle"
+    },
+    {
+        29,
+        "Pmic_setBatteryCtrlConfig : Negative test for LP8764x Hera PMIC device"
+    },
+    {
+        30,
+        "Pmic_getBatteryCtrlConfig : Negative test for LP8764x Hera PMIC device"
+    },
+    {
+        31,
+        "Pmic_setCommonCtrlConfig : Disable Load from EEPROM defaults on RTC domain/conf Registers"
+    },
+    {
+        32,
+        "Pmic_setCommonCtrlConfig : Negative test for TPS6594x Leo PMIC device"
+    },
+    {
+        33,
+        "Pmic_getCommonCtrlConfig : Negative test for TPS6594x Leo PMIC device"
+    },
+    {
+        34,
+        "Pmic_setMiscCtrlConfig : Configure NRSTOUT Signal for high signal"
+    },
+    {
+        35,
+        "Pmic_setMiscCtrlConfig : Configure NRSTOUT_SOC Signal for high signal"
+    },
+    {
+        36,
+        "Pmic_init : Config Device Type as PMIC_DEV_HERA_LP8764X"
+    },
+    {
+        8933,
+        "Pmic_miscTests : Fault Injection and Coverage Gaps."
+    },
 };
 
 /*!
@@ -524,7 +655,7 @@ static void test_pmic_interruptEnableInt(void)
 /*!
  * \brief   Pmic_setRecoveryCntCfg : Test Set Recovery Counter Threshold.
  */
-static void test_pmic_SetRecoveryCntCfg_threshold(void)
+static void test_pmic_setRecoveryCntCfg_threshold(void)
 {
     int32_t status             = PMIC_ST_SUCCESS;
     Pmic_RecovCntCfg_t recovCntCfg;
@@ -554,7 +685,7 @@ static void test_pmic_SetRecoveryCntCfg_threshold(void)
 /*!
  * \brief   Pmic_setRecoveryCntCfg : Parameter validation for thrVal.
  */
-static void test_pmic_SetRecoveryCntCfgPrmValTest_thrVal(void)
+static void test_pmic_setRecoveryCntCfgPrmValTest_thrVal(void)
 {
     int32_t status             = PMIC_ST_SUCCESS;
     Pmic_RecovCntCfg_t recovCntCfg;
@@ -575,12 +706,13 @@ static void test_pmic_SetRecoveryCntCfgPrmValTest_thrVal(void)
 }
 
 /*!
- * \brief   Pmic_setRecoveryCntCfg : Test Set Clear Recovery Counter.
+ * \brief   Pmic_setRecoveryCntCfg : Test Set/Get Clear Recovery Counter.
  */
-static void test_pmic_SetRecoveryCntCfg_clrCnt(void)
+static void test_pmic_setRecoveryCntCfg_clrCnt(void)
 {
     int32_t status             = PMIC_ST_SUCCESS;
     Pmic_RecovCntCfg_t recovCntCfg;
+    Pmic_RecovCntCfg_t recovCntCfg_rd;
 
     recovCntCfg.validParams = PMIC_CFG_RECOV_CNT_CLR_CNT_VALID_SHIFT;
     recovCntCfg.clrCnt      = 1U;
@@ -592,6 +724,11 @@ static void test_pmic_SetRecoveryCntCfg_clrCnt(void)
     status = Pmic_setRecoveryCntCfg(pPmicCoreHandle, recovCntCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
+    recovCntCfg_rd.validParams = PMIC_CFG_RECOV_CNT_CLR_CNT_VALID_SHIFT;
+    status = Pmic_getRecoveryCntCfg(pPmicCoreHandle, &recovCntCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(0U, recovCntCfg_rd.clrCnt);
+
     pmic_testResultUpdate_pass(7630,
                                pmic_misc_tests,
                                PMIC_MISC_NUM_OF_TESTCASES);
@@ -600,7 +737,7 @@ static void test_pmic_SetRecoveryCntCfg_clrCnt(void)
 /*!
  * \brief   Pmic_setRecoveryCntCfg : Parameter validation for clrCnt.
  */
-static void test_pmic_SetRecoveryCntCfgPrmValTest_clrCnt(void)
+static void test_pmic_setRecoveryCntCfgPrmValTest_clrCnt(void)
 {
     int32_t status             = PMIC_ST_SUCCESS;
     Pmic_RecovCntCfg_t recovCntCfg;
@@ -623,7 +760,7 @@ static void test_pmic_SetRecoveryCntCfgPrmValTest_clrCnt(void)
 /*!
  * \brief   Pmic_setRecoveryCntCfg : Parameter validation for handle.
  */
-static void test_pmic_SetRecoveryCntCfgPrmValTest_handle(void)
+static void test_pmic_setRecoveryCntCfgPrmValTest_handle(void)
 {
     int32_t status  = PMIC_ST_SUCCESS;
     Pmic_RecovCntCfg_t recovCntCfg;
@@ -2614,7 +2751,7 @@ static void test_pmic_setBatteryCtrlCfg_chargeCurrent(void)
 
     for(chargeCurrentVal = PMIC_TPS6594X_BB_CHARGING_CURRENT_100;
         chargeCurrentVal <= PMIC_TPS6594X_BB_CHARGING_CURRENT_500;
-        chargeCurrentVal++);
+        chargeCurrentVal++)
     {
         pmicStatus = Pmic_setBatteryCtrlConfig(pPmicCoreHandle, batteryCtrlCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -2988,7 +3125,7 @@ static void test_pmic_getCommonCtrlStat_enDrvPin(void)
 static void test_pmic_getCommonCtrlStat_nRstOutSocPin(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CommonCtrlStat_t commonCtrlStat_rd = {PMIC_CFG_NRSTOUTSOC_PIN_STAT_VALID,};
+    Pmic_CommonCtrlStat_t commonCtrlStat_rd = {PMIC_CFG_NRSTOUTSOC_PIN_STAT_VALID_SHIFT,};
 
     test_pmic_print_unity_testcase_info(9959,
                                         pmic_misc_tests,
@@ -3139,6 +3276,13 @@ static void test_pmic_getI2CSpeed(void)
     test_pmic_print_unity_testcase_info(9966,
                                         pmic_misc_tests,
                                         PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(PMIC_INTF_SPI == pPmicCoreHandle->commMode)
+    {
+        pmic_testResultUpdate_ignore(9966,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
+    }
 
     pmicStatus = Pmic_getI2CSpeed(pPmicCoreHandle, &i2c1Speed, &i2c2Speed);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
@@ -4363,6 +4507,1422 @@ static void test_pmic_WriteProtection_RegisterUnLock(void)
                                PMIC_MISC_NUM_OF_TESTCASES);
 }
 
+/*!
+ * \brief   Pmic_getRecoveryCnt : Test to read recovery counter value
+ */
+static void test_pmic_getRecoveryCntVal(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    uint8_t recovCntVal = 0U;
+    uint8_t recovCntVal_rd;
+
+    test_pmic_print_unity_testcase_info(1,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_getRecoveryCnt(pPmicCoreHandle, &recovCntVal_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(recovCntVal_rd, recovCntVal);
+
+    pmic_testResultUpdate_pass(1,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getRecoveryCnt : Parameter validation for pRecovCntVal
+ */
+static void test_pmic_getRecoveryCntPrmValTest_pRecovCntVal(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(2,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_getRecoveryCnt(pPmicCoreHandle, NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+
+    pmic_testResultUpdate_pass(2,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_init : Parameter validation for pPmicCoreHandle
+ */
+static void test_pmic_initPrmValTest_handle(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    Pmic_CoreCfg_t pmicCfgData = {0};
+
+    test_pmic_print_unity_testcase_info(4,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_init(&pmicCfgData, NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+
+    pmic_testResultUpdate_pass(4,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_init : Parameter validation for pPmicConfigData
+ */
+static void test_pmic_initPrmValTest_pmicCfgData(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    Pmic_CoreHandle_t pHandle = {0U};
+
+    test_pmic_print_unity_testcase_info(5,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_init(NULL, &pHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+
+    pmic_testResultUpdate_pass(5,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_init : Parameter validation for pmicDeviceType
+ */
+static void test_pmic_initPrmValTest_pmicDevType(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    Pmic_CoreCfg_t pmicCfgData = {0U};
+    Pmic_CoreHandle_t pHandle = {0U};
+
+    test_pmic_print_unity_testcase_info(6,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicCfgData.validParams = PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
+    pmicCfgData.pmicDeviceType = 2U;
+    status = Pmic_init(&pmicCfgData, &pHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+
+    pmic_testResultUpdate_pass(6,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_init : Parameter validation for Interface mode
+ */
+static void test_pmic_initPrmValTest_commMode(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    Pmic_CoreCfg_t pmicCfgData = {0U};
+    Pmic_CoreHandle_t pHandle = {0U};
+
+    test_pmic_print_unity_testcase_info(7,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicCfgData.validParams = PMIC_CFG_COMM_MODE_VALID_SHIFT;
+    pmicCfgData.commMode = 3U;
+    status = Pmic_init(&pmicCfgData, &pHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+
+    pmic_testResultUpdate_pass(7,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_init : Parameter validation for I2C1/SPI Main Interface handle
+ */
+static void test_pmic_initPrmValTest_pCommHandle(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    Pmic_CoreCfg_t pmicCfgData = {0U};
+    Pmic_CoreHandle_t pHandle = {0U};
+
+    test_pmic_print_unity_testcase_info(8,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicCfgData.validParams = PMIC_CFG_COMM_HANDLE_VALID_SHIFT;
+    pmicCfgData.pCommHandle = NULL;
+    status = Pmic_init(&pmicCfgData, &pHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_FPTR, status);
+
+    pmic_testResultUpdate_pass(8,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_init : Parameter validation for I2C2-QA Interface handle
+ */
+static void test_pmic_initPrmValTest_pQACommHandle(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    Pmic_CoreCfg_t pmicCfgData = {0U};
+    Pmic_CoreHandle_t pHandle = {0U};
+
+    test_pmic_print_unity_testcase_info(9,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicCfgData.validParams = PMIC_CFG_QACOMM_HANDLE_VALID_SHIFT;
+    pmicCfgData.pQACommHandle = NULL;
+    status = Pmic_init(&pmicCfgData, &pHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_FPTR, status);
+
+    pmic_testResultUpdate_pass(9,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_init : Parameter validation for I2C/SPI Comm LLD Read Function
+ */
+static void test_pmic_initPrmValTest_pFnCommIoRead(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    Pmic_CoreCfg_t pmicCfgData = {0U};
+    Pmic_CoreHandle_t pHandle = {0U};
+
+    test_pmic_print_unity_testcase_info(10,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicCfgData.validParams = PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
+    pmicCfgData.pFnPmicCommIoRead = NULL;
+    status = Pmic_init(&pmicCfgData, &pHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_FPTR, status);
+
+    pmic_testResultUpdate_pass(10,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_init : Parameter validation for I2C/SPI Comm LLD Write Function
+ */
+static void test_pmic_initPrmValTest_pFnCommIoWrite(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    Pmic_CoreCfg_t pmicCfgData = {0U};
+    Pmic_CoreHandle_t pHandle = {0U};
+
+    test_pmic_print_unity_testcase_info(11,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicCfgData.validParams = PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
+    pmicCfgData.pFnPmicCommIoWrite = NULL;
+    status = Pmic_init(&pmicCfgData, &pHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_FPTR, status);
+
+    pmic_testResultUpdate_pass(11,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_init : Parameter validation for Critical Section Start Function
+ */
+static void test_pmic_initPrmValTest_pFnCritSecStart(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    Pmic_CoreCfg_t pmicCfgData = {0U};
+    Pmic_CoreHandle_t pHandle = {0U};
+
+    test_pmic_print_unity_testcase_info(12,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicCfgData.validParams = PMIC_CFG_CRITSEC_START_VALID_SHIFT;
+    pmicCfgData.pFnPmicCritSecStart = NULL;
+    status = Pmic_init(&pmicCfgData, &pHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_FPTR, status);
+
+    pmic_testResultUpdate_pass(12,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_init : Parameter validation for Critical Section Stop Function
+ */
+static void test_pmic_initPrmValTest_pFnCritSecStop(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    Pmic_CoreCfg_t pmicCfgData = {0U};
+    Pmic_CoreHandle_t pHandle = {0U};
+
+    test_pmic_print_unity_testcase_info(13,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicCfgData.validParams = PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
+    pmicCfgData.pFnPmicCritSecStop = NULL;
+    status = Pmic_init(&pmicCfgData, &pHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_FPTR, status);
+
+    pmic_testResultUpdate_pass(13,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_deinit : Parameter validation for pPmicCoreHandle
+ */
+static void test_pmic_deinitPrmValTest_handle(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(14,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_deinit(NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+
+    pmic_testResultUpdate_pass(14,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setScratchPadValue : Test to write data to scratchpad reg1, reg2 and reg3
+ */
+static void test_pmic_setScratchPadValue_reg1Reg2Reg3(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    uint8_t scratchPadRegId, data;
+
+    test_pmic_print_unity_testcase_info(15,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    data = 0x10;
+    scratchPadRegId = PMIC_SCRATCH_PAD_REG_1;
+    status = Pmic_setScratchPadValue(pPmicCoreHandle, scratchPadRegId, data);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    scratchPadRegId = PMIC_SCRATCH_PAD_REG_2;
+    status = Pmic_setScratchPadValue(pPmicCoreHandle, scratchPadRegId, data);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    scratchPadRegId = PMIC_SCRATCH_PAD_REG_3;
+    status = Pmic_setScratchPadValue(pPmicCoreHandle, scratchPadRegId, data);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    pmic_testResultUpdate_pass(15,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_init : Parameter validation for I2C1 Speed
+ */
+static void test_pmic_initPrmValTest_i2c1Speed(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    Pmic_CoreCfg_t pmicCfgData = {0U};
+    Pmic_CoreHandle_t pHandle = {0U};
+
+    test_pmic_print_unity_testcase_info(16,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicCfgData.validParams = PMIC_CFG_I2C1_SPEED_VALID_SHIFT;
+    pmicCfgData.i2c1Speed = 2U;
+    status = Pmic_init(&pmicCfgData, &pHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+
+    pmic_testResultUpdate_pass(16,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_init : Parameter validation for I2C2 Speed
+ */
+static void test_pmic_initPrmValTest_i2c2Speed(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    Pmic_CoreCfg_t pmicCfgData = {0U};
+    Pmic_CoreHandle_t pHandle = {0U};
+
+    test_pmic_print_unity_testcase_info(17,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicCfgData.validParams = PMIC_CFG_I2C2_SPEED_VALID_SHIFT;
+    pmicCfgData.i2c2Speed = 2U;
+    status = Pmic_init(&pmicCfgData, &pHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+
+    pmic_testResultUpdate_pass(17,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+#if defined(SOC_J7200)
+/*!
+ * \brief   Pmic_setCommonCtrlConfig : Disable Skip EEPROM Default Load to CONF and Other registers
+ */
+static void test_pmic_setCommonCtrlCfg_hera_skipEepromDefaultLoadDisable(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlCfg_t commonCtrlCfg_rd = {PMIC_CFG_SKIP_EEPROM_LOAD_VALID_SHIFT};
+    Pmic_CommonCtrlCfg_t commonCtrlCfg =
+    {
+        PMIC_CFG_SKIP_EEPROM_LOAD_VALID_SHIFT,
+        PMIC_SPREAD_SPECTRUM_CFG_ENABLE,
+        PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_DISABLED,
+        PMIC_LP8764X_EEPROM_DEFAULTS_NOT_LOADED_TO_CONF_OTHER_REGS,
+        PMIC_PIN_SIGNAL_LEVEL_LOW,
+        PMIC_REGISTER_UNLOCK,
+        PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_NONE
+    };
+
+    test_pmic_print_unity_testcase_info(19,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+        pmic_testResultUpdate_ignore(19,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(commonCtrlCfg.skipEepromDefaultLoadEn,
+                      commonCtrlCfg_rd.skipEepromDefaultLoadEn);
+
+    pmic_testResultUpdate_pass(19,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+#endif
+
+/*!
+ * \brief   Pmic_setI2CSpeedCfg : Parameter validation for handle
+ */
+static void test_pmic_setI2CSpeedCfgPrmValTest_handle(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(20,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_setI2CSpeedCfg(NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+
+    pmic_testResultUpdate_pass(20,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getCrcStatus : Parameter validation for handle
+ */
+static void test_pmic_getCrcStatusPrmValTest_handle(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    uint8_t i2c1SpiCrcStat = 0xFF, i2c2CrcStat = 0xFF;
+
+    test_pmic_print_unity_testcase_info(22,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_getCrcStatus(NULL, &i2c1SpiCrcStat, &i2c2CrcStat);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+
+    pmic_testResultUpdate_pass(22,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getCrcStatus : Parameter validation for pI2c2CrcStatus
+ */
+static void test_pmic_getCrcStatusPrmValTest_pI2c2CrcStatus(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    uint8_t i2c1SpiCrcStat = 0xFF;
+
+    test_pmic_print_unity_testcase_info(23,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_getCrcStatus(pPmicCoreHandle, &i2c1SpiCrcStat, NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+
+    pmic_testResultUpdate_pass(23,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getCrcStatus : Parameter validation for pI2c1CrcStatus
+ */
+static void test_pmic_getCrcStatusPrmValTest_pI2c1CrcStatus(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    uint8_t i2c2SpiCrcStat = 0xFF;
+
+    test_pmic_print_unity_testcase_info(24,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_getCrcStatus(pPmicCoreHandle, NULL, &i2c2SpiCrcStat);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+
+    pmic_testResultUpdate_pass(24,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getCrcStatus : Parameter validation for both pI2c1CrcStatus and pI2c2CrcStatus
+ */
+static void test_pmic_getCrcStatusPrmValTest_pI2c1I2C2CrcStatus(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(25,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_getCrcStatus(pPmicCoreHandle, NULL, NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+
+    pmic_testResultUpdate_pass(25,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_enableCRC : Parameter validation for handle
+ */
+static void test_pmic_enableCRCPrmValTest_handle(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(26,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    status = Pmic_enableCRC(NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, status);
+
+    pmic_testResultUpdate_pass(26,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setBatteryCtrlConfig : Negative test for LP8764x Hera PMIC device
+ */
+static void test_pmic_setBatteryCtrlCfg_hera(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_BatteryCtrlCfg_t batteryCtrlCfg =
+    {
+        PMIC_CFG_END_OF_CHARGE_VOLTAGE_VALID_SHIFT,
+        PMIC_TPS6594X_BB_CHARGINGING_CFG_DISABLE,
+        PMIC_TPS6594X_BB_ENDOF_CHARGE_VOLATGE_2_5_V,
+        PMIC_TPS6594X_BB_CHARGING_CURRENT_100
+    };
+
+    test_pmic_print_unity_testcase_info(29,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(29,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_setBatteryCtrlConfig(pPmicCoreHandle, batteryCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NOT_SUPPORTED, pmicStatus);
+
+    pmic_testResultUpdate_pass(29,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getBatteryCtrlConfig : Negative test for LP8764x Hera PMIC device
+ */
+static void test_pmic_getBatteryCtrlCfg_hera(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_BatteryCtrlCfg_t batteryCtrlCfg_rd = {PMIC_CFG_CHARGING_EN_VALID_SHIFT,};
+
+    test_pmic_print_unity_testcase_info(30,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(30,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_getBatteryCtrlConfig(pPmicCoreHandle, &batteryCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NOT_SUPPORTED, pmicStatus);
+
+    pmic_testResultUpdate_pass(30,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setCommonCtrlConfig : Disable Load from EEPROM defaults on RTC domain/conf Registers
+ */
+static void test_pmic_setCommonCtrlCfg_hera_EepromDefaultLoadDisable(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlCfg_t commonCtrlCfg_rd = {PMIC_CFG_EEPROM_DEFAULT_VALID_SHIFT};
+    Pmic_CommonCtrlCfg_t commonCtrlCfg =
+    {
+        PMIC_CFG_EEPROM_DEFAULT_VALID_SHIFT,
+        PMIC_SPREAD_SPECTRUM_CFG_ENABLE,
+        PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_DISABLED,
+        PMIC_LP8764X_EEPROM_DEFAULTS_NOT_LOADED_TO_CONF_OTHER_REGS,
+        PMIC_PIN_SIGNAL_LEVEL_LOW,
+        PMIC_REGISTER_UNLOCK,
+        PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_NONE
+    };
+
+    test_pmic_print_unity_testcase_info(31,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        commonCtrlCfg.eepromDefaultLoad = PMIC_TPS6594X_EEPROM_DEFAULTS_NOT_LOADED_TO_RTC_DOMAIN_BITS;
+    }
+
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(commonCtrlCfg.eepromDefaultLoad,
+                      commonCtrlCfg_rd.eepromDefaultLoad);
+
+    pmic_testResultUpdate_pass(31,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setCommonCtrlConfig : Negative test for TPS6594x Leo PMIC device
+ */
+static void test_pmic_setCommonCtrlCfg_leo_skipEepromDefaultLoadDisable(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlCfg_t commonCtrlCfg = {PMIC_CFG_SKIP_EEPROM_LOAD_VALID_SHIFT};
+
+    test_pmic_print_unity_testcase_info(32,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(32,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(32,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getCommonCtrlConfig : Negative test for TPS6594x Leo PMIC device
+ */
+static void test_pmic_getCommonCtrlCfg_leo_skipEepromDefaultLoadDisable(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlCfg_t commonCtrlCfg_rd = {PMIC_CFG_SKIP_EEPROM_LOAD_VALID_SHIFT};
+
+    test_pmic_print_unity_testcase_info(33,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(33,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(33,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setMiscCtrlConfig : Configure NRSTOUT Signal for high signal
+ */
+static void test_pmic_setMiscCtrlCfg_nRstOutSignal_high(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_MiscCtrlCfg_t miscCtrlCfg_rd = {PMIC_CFG_NRSTOUT_VALID_SHIFT,};
+    Pmic_MiscCtrlCfg_t miscCtrlCfg =
+    {
+        PMIC_CFG_NRSTOUT_VALID_SHIFT,
+        PMIC_TPS6594X_AMUX_OUT_PIN_CFG_DISABLE,
+        PMIC_INTERNAL_CLK_MONITORING_CFG_DISABLE,
+        PMIC_SYNCCLKOUT_DISABLE,
+        PMIC_INTERNAL_RC_OSC,
+        PMIC_TPS6594X_SYNCCLKIN_1_1_MHZ,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(34,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
+    {
+        pmic_testResultUpdate_ignore(34,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
+    }
+
+    pmicStatus = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(miscCtrlCfg.nRstOutSignal,
+                      miscCtrlCfg_rd.nRstOutSignal);
+
+    pmic_testResultUpdate_pass(34,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_setMiscCtrlConfig : Configure NRSTOUT_SOC Signal for high signal
+ */
+static void test_pmic_setMiscCtrlCfg_nRstOutSocSignal_high(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_MiscCtrlCfg_t miscCtrlCfg_rd = {PMIC_CFG_NRSTOUT_SOC_VALID_SHIFT,};
+    Pmic_MiscCtrlCfg_t miscCtrlCfg =
+    {
+        PMIC_CFG_NRSTOUT_SOC_VALID_SHIFT,
+        PMIC_TPS6594X_AMUX_OUT_PIN_CFG_DISABLE,
+        PMIC_INTERNAL_CLK_MONITORING_CFG_DISABLE,
+        PMIC_SYNCCLKOUT_DISABLE,
+        PMIC_INTERNAL_RC_OSC,
+        PMIC_TPS6594X_SYNCCLKIN_1_1_MHZ,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH
+    };
+
+    test_pmic_print_unity_testcase_info(35,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+#if defined(SOC_J721E)
+    if((PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev) &&
+       (PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType))
+    {
+        /* Ignore the test on J721E PG1.0 Not planning to debug this issue as
+           the same test is working fine for J721E PG2.0 */
+        pmic_testResultUpdate_ignore(35,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
+    }
+#endif
+
+    pmicStatus = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    TEST_ASSERT_EQUAL(miscCtrlCfg.nRstOutSocSignal,
+                      miscCtrlCfg_rd.nRstOutSocSignal);
+
+    pmic_testResultUpdate_pass(35,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_init : Config Device Type as PMIC_DEV_HERA_LP8764X
+  */
+static void test_pmic_init_cfg_deviceType(void)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    Pmic_CoreCfg_t pmicCfgData = {0U};
+    Pmic_CoreHandle_t pHandle = {0U};
+
+    test_pmic_print_unity_testcase_info(36,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    /** For MC/DC Coverage */
+    pmicCfgData.validParams = PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
+    pmicCfgData.pmicDeviceType = PMIC_DEV_HERA_LP8764X;
+    status = Pmic_init(&pmicCfgData, &pHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INSUFFICIENT_CFG, status);
+
+    pmic_testResultUpdate_pass(36,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+
+/*!
+ * \brief   Fault Injection and Coverage Gaps
+ */
+static void test_pmic_coverageGaps(void)
+{
+    int32_t status        = PMIC_ST_SUCCESS;
+    Pmic_RecovCntCfg_t recovCntCfg;
+    Pmic_CoreCfg_t pmicCoreCfg = {0U};
+    Pmic_CoreHandle_t pHandle = {0U};
+    Pmic_CoreHandle_t *pmicCoreHandle;
+    uint8_t scratchPadRegId, data, userSpareRegNum;
+    uint8_t i2c1SpiCrcStat = 0xFF, i2c2CrcStat = 0xFF;
+    uint8_t i2c1Speed, i2c2Speed;
+    uint32_t testDrvInitStatus;
+    bool  testCrcEnable;
+    Pmic_DeviceInfo_t deviceInfo;
+    Pmic_CommonCtrlCfg_t commonCtrlCfg_rd = {0U};
+    Pmic_CommonCtrlCfg_t commonCtrlCfg =
+    {
+        PMIC_CFG_SPREAD_SPECTRUM_EN_VALID_SHIFT,
+        PMIC_SPREAD_SPECTRUM_CFG_ENABLE,
+        PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_DISABLED,
+        PMIC_TPS6594X_EEPROM_DEFAULTS_LOAD_TO_RTC_DOMAIN_BITS,
+        PMIC_PIN_SIGNAL_LEVEL_LOW,
+        PMIC_REGISTER_UNLOCK,
+        PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_NONE
+    };
+    Pmic_CommonCtrlStat_t commonCtrlStat_rd = {0U};
+    Pmic_BatteryCtrlCfg_t batteryCtrlCfg_rd = {0U};
+    Pmic_BatteryCtrlCfg_t batteryCtrlCfg =
+    {
+        PMIC_CFG_END_OF_CHARGE_VOLTAGE_VALID_SHIFT,
+        PMIC_TPS6594X_BB_CHARGINGING_CFG_DISABLE,
+        PMIC_TPS6594X_BB_ENDOF_CHARGE_VOLATGE_2_5_V,
+        PMIC_TPS6594X_BB_CHARGING_CURRENT_100
+    };
+    Pmic_MiscCtrlCfg_t miscCtrlCfg_rd = {0U};
+    Pmic_MiscCtrlCfg_t miscCtrlCfg =
+    {
+        PMIC_CFG_SYNC_CLK_IN_FREQ_VALID_SHIFT,
+        PMIC_TPS6594X_AMUX_OUT_PIN_CFG_DISABLE,
+        PMIC_INTERNAL_CLK_MONITORING_CFG_DISABLE,
+        PMIC_SYNCCLKOUT_DISABLE,
+        PMIC_INTERNAL_RC_OSC,
+        PMIC_TPS6594X_SYNCCLKIN_1_1_MHZ,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH
+    };
+
+    uint8_t testpmicDevSiliconRev;
+    uint8_t testCommMode;
+    void *testCommHandle;
+    void *testQACommHandle;
+    void (*testFnPmicCritSecStart)(void);
+    void (*testFnPmicCritSecStop)(void);
+    int32_t (*testFnPmicCommIoRead)(struct Pmic_CoreHandle_s *,
+                                    uint8_t,
+                                    uint16_t,
+                                    uint8_t *,
+                                    uint8_t);
+    int32_t (*testFnPmicCommIoWrite)(struct Pmic_CoreHandle_s *,
+                                     uint8_t,
+                                     uint16_t,
+                                     uint8_t *,
+                                     uint8_t);
+
+    test_pmic_print_unity_testcase_info(8933,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    if(PMIC_INTF_SPI == pPmicCoreHandle->commMode)
+    {
+        pmic_testResultUpdate_ignore(8933,
+                                     pmic_misc_tests,
+                                     PMIC_MISC_NUM_OF_TESTCASES);
+    }
+
+    //Fault Injection Tests
+    gPmic_faultInjectCfg.enableFaultInjectionRead = 1U;
+
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    gPmic_faultInjectCfg.commError = PMIC_ST_SUCCESS;
+
+    recovCntCfg.validParams    = PMIC_CFG_RECOV_CNT_THR_VAL_VALID_SHIFT;
+    recovCntCfg.thrVal         = PMIC_RECOV_CNT_THR_MAX;
+    status = Pmic_setRecoveryCntCfg(pPmicCoreHandle, recovCntCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_setUserSpareValue
+    data = PMIC_USER_SPARE_REG_VAL_1;
+    userSpareRegNum = PMIC_USER_SPARE_REG_3;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    status = Pmic_setUserSpareValue(pPmicCoreHandle, userSpareRegNum, data);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_spreadSpectrumEnable
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    commonCtrlCfg.validParams = PMIC_CFG_SPREAD_SPECTRUM_EN_VALID_SHIFT;
+    status = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_getSpreadSpectrumEnable
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    commonCtrlCfg_rd.validParams = PMIC_CFG_SPREAD_SPECTRUM_EN_VALID_SHIFT;
+    status = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_setI2CSpeedCfg
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    status = Pmic_setI2CSpeedCfg(pPmicCoreHandle);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_getStartupEndrvNrstoutsocNrstoutNintPinStat
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    commonCtrlStat_rd.validParams = PMIC_CFG_STARTUP_PIN_STAT_VALID_SHIFT;
+    status = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_getNIntPinStat
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    commonCtrlStat_rd.validParams = PMIC_CFG_NINT_PIN_STAT_VALID_SHIFT;
+    status = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_getNRstOutPinStat
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    commonCtrlStat_rd.validParams = PMIC_CFG_NRSTOUT_PIN_STAT_VALID_SHIFT;
+    status = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_getNRstOutSocPinStat
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    commonCtrlStat_rd.validParams = PMIC_CFG_NRSTOUTSOC_PIN_STAT_VALID_SHIFT;
+    status = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_getEnDrvPinStat
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    commonCtrlStat_rd.validParams = PMIC_CFG_EN_DRV_PIN_STAT_VALID_SHIFT;
+    status = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_getStartupPinStat
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    commonCtrlStat_rd.validParams = PMIC_CFG_STARTUP_PIN_STAT_VALID_SHIFT;
+    status = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_getExtClkValidityStat
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    commonCtrlStat_rd.validParams = PMIC_CFG_EXT_CLK_VALIDITY_STAT_VALID_SHIFT;
+    status = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_getRegLockStat
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    commonCtrlStat_rd.validParams = PMIC_CFG_REGISTER_LOCK_STAT_VALID_SHIFT;
+    status = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_getBackupBatteryEocIndicationStat
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    commonCtrlStat_rd.validParams = PMIC_CFG_BB_EOC_INDICATION_STAT_VALID_SHIFT;
+    status = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_getEnableDrvI2CSPICfg
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    commonCtrlStat_rd.validParams = PMIC_CFG_FORCE_ENABLE_DRV_LOW_STAT_VALID_SHIFT;
+    status = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_getSpmiLpmCtrlCfg
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    commonCtrlStat_rd.validParams = PMIC_CFG_SPMI_LPM_STAT_VALID_SHIFT;
+    status = Pmic_getCommonCtrlStat(pPmicCoreHandle, &commonCtrlStat_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        //Pmic_setBackupBatteryChargingCurrentVal
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 1;
+        batteryCtrlCfg.validParams = PMIC_CFG_CHARGE_CURRENT_VALID_SHIFT;
+        status = Pmic_setBatteryCtrlConfig(pPmicCoreHandle, batteryCtrlCfg);
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+        //Pmic_getBackupBatteryChargingCurrentVal
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 1;
+        batteryCtrlCfg_rd.validParams = PMIC_CFG_CHARGE_CURRENT_VALID_SHIFT;
+        status = Pmic_getBatteryCtrlConfig(pPmicCoreHandle, &batteryCtrlCfg_rd);
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+        //Pmic_setBackupBatteryEndOfChargeVoltage
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 1;
+        batteryCtrlCfg.validParams = PMIC_CFG_END_OF_CHARGE_VOLTAGE_VALID_SHIFT;
+        status = Pmic_setBatteryCtrlConfig(pPmicCoreHandle, batteryCtrlCfg);
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+        //Pmic_getBackupBatteryChargingCurrentVal
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 1;
+        batteryCtrlCfg_rd.validParams = PMIC_CFG_END_OF_CHARGE_VOLTAGE_VALID_SHIFT;
+        status = Pmic_getBatteryCtrlConfig(pPmicCoreHandle, &batteryCtrlCfg_rd);
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+        //Pmic_backupBatteryChargingEnable
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 1;
+        batteryCtrlCfg.validParams = PMIC_CFG_CHARGING_EN_VALID_SHIFT;
+        status = Pmic_setBatteryCtrlConfig(pPmicCoreHandle, batteryCtrlCfg);
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+        //Pmic_getBackupBatteryChargingCfg
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 1;
+        batteryCtrlCfg_rd.validParams = PMIC_CFG_CHARGING_EN_VALID_SHIFT;
+        status = Pmic_getBatteryCtrlConfig(pPmicCoreHandle, &batteryCtrlCfg_rd);
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    }
+
+    //Pmic_getExtclkfreqSelNRstOutSocNRstOutCfg
+    //Pmic_getExternalClkFreqSelectCfg
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    miscCtrlCfg_rd.validParams = PMIC_CFG_SYNC_CLK_IN_FREQ_VALID_SHIFT;
+    status = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_getNRstOutSignalCfg
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    miscCtrlCfg_rd.validParams = PMIC_CFG_NRSTOUT_VALID_SHIFT;
+    status = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_getNRstOutSocSignalCfg
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    miscCtrlCfg_rd.validParams = PMIC_CFG_NRSTOUT_SOC_VALID_SHIFT;
+    status = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_selectExternalClkFreq
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    miscCtrlCfg.validParams = PMIC_CFG_SYNC_CLK_IN_FREQ_VALID_SHIFT;
+    status = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_selectExternalClk
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    miscCtrlCfg.validParams = PMIC_CFG_EXT_CLK_SEL_VALID_SHIFT;
+    status = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_getExternalClkSelectCfg
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    miscCtrlCfg_rd.validParams = PMIC_CFG_EXT_CLK_SEL_VALID_SHIFT;
+    status = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_selectSyncClkOutFreq
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    miscCtrlCfg.validParams = PMIC_CFG_SYNC_CLK_OUT_FREQ_SEL_VALID_SHIFT;
+    status = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_getSyncClkOutFreqSelectCfg
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    miscCtrlCfg_rd.validParams = PMIC_CFG_SYNC_CLK_OUT_FREQ_SEL_VALID_SHIFT;
+    status = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_setInternalClkMonitorCfg
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    miscCtrlCfg.validParams = PMIC_CFG_CLK_MON_EN_VALID_SHIFT;
+    status = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_getInternalClkMonitorCfg
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    miscCtrlCfg_rd.validParams = PMIC_CFG_CLK_MON_EN_VALID_SHIFT;
+    status = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_setAmuxOutRefOutPinCfg
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    miscCtrlCfg.validParams = PMIC_CFG_AMUX_OUT_REF_OUT_EN_VALID_SHIFT;
+    status = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_getAmuxOutRefOutPinCfg
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    miscCtrlCfg_rd.validParams = PMIC_CFG_AMUX_OUT_REF_OUT_EN_VALID_SHIFT;
+    status = Pmic_getMiscCtrlConfig(pPmicCoreHandle, &miscCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+
+    //Pmic_setSpreadSpectrumModDepthCfg
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    commonCtrlCfg.validParams = PMIC_CFG_SPREAD_SPECTRUM_DEPTH_VALID_SHIFT;
+    status = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_getSpreadSpectrumModDepthCfg
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    commonCtrlCfg_rd.validParams = PMIC_CFG_SPREAD_SPECTRUM_DEPTH_VALID_SHIFT;
+    status = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_setRegisterLockUnLockCfg
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    commonCtrlCfg.validParams = PMIC_CFG_REG_LOCK_VALID_SHIFT;
+    status = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_eepromDefaultLoadEnable
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    commonCtrlCfg.validParams = PMIC_CFG_EEPROM_DEFAULT_VALID_SHIFT;
+    status = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_getEepromDefaultLoadEnable
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    commonCtrlCfg_rd.validParams = PMIC_CFG_EEPROM_DEFAULT_VALID_SHIFT;
+    status = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_skipEepromDefaultLoadEnable
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        commonCtrlCfg.validParams = PMIC_CFG_SKIP_EEPROM_LOAD_VALID_SHIFT;
+        status = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+    }
+
+    //Pmic_getSkipEepromDefaultLoadEnable
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        commonCtrlCfg_rd.validParams = PMIC_CFG_SKIP_EEPROM_LOAD_VALID_SHIFT;
+        status = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+    }
+
+    //Pmic_setEnableDrvPinCfg
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    commonCtrlCfg.validParams = PMIC_CFG_ENABLE_DRV_VALID_SHIFT;
+    status = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_getEnableDrvPinCfg
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    commonCtrlCfg_rd.validParams = PMIC_CFG_ENABLE_DRV_VALID_SHIFT;
+    status = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_setNRstOutSignalCfg
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    miscCtrlCfg.validParams = PMIC_CFG_NRSTOUT_VALID_SHIFT;
+    miscCtrlCfg.nRstOutSignal = PMIC_PIN_SIGNAL_LEVEL_LOW;
+    status = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    //Pmic_setNRstOutSocSignalCfg
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    miscCtrlCfg.validParams = PMIC_CFG_NRSTOUT_SOC_VALID_SHIFT;
+    miscCtrlCfg.nRstOutSocSignal = PMIC_PIN_SIGNAL_LEVEL_LOW;
+    status = Pmic_setMiscCtrlConfig(pPmicCoreHandle, miscCtrlCfg);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    pmicCoreHandle = &pHandle;
+    *pmicCoreHandle = *pPmicCoreHandle;
+
+   //Pmic_updateSubSysInfoValidateMainQaCommIFRdWr
+    testDrvInitStatus = pHandle.drvInitStatus;
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 3;
+    pHandle.drvInitStatus = 0;
+    status = Pmic_init(&pmicCoreCfg, &pHandle);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+    pHandle.drvInitStatus = testDrvInitStatus;
+
+    //Pmic_getDeviceInfo
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    status = Pmic_getDeviceInfo(pPmicCoreHandle, &deviceInfo);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+    gPmic_faultInjectCfg.enableFaultInjectionRead = 0U;
+
+    testCommMode = pHandle.commMode;
+    testCrcEnable = pHandle.crcEnable;
+
+    //Pmic_initCoreHandleBasicDevCfgParams
+    pmicCoreCfg.validParams = PMIC_CFG_SLAVEADDR_VALID_SHIFT;
+    pHandle.commMode = 3U;
+    pHandle.crcEnable = 0U;
+    status = Pmic_init(&pmicCoreCfg, &pHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    //Pmic_initCoreHandleBasicDevCfgParams
+    pmicCoreCfg.validParams = PMIC_CFG_NVMSLAVEADDR_VALID_SHIFT;
+    pHandle.commMode = 3U;
+    status = Pmic_init(&pmicCoreCfg, &pHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    //Pmic_initCoreHandleI2CSpeedCommHandle
+    pmicCoreCfg.validParams = PMIC_CFG_I2C1_SPEED_VALID_SHIFT;
+    pHandle.commMode = 3U;
+    status = Pmic_init(&pmicCoreCfg, &pHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    //Pmic_initCoreHandleQADevCfgParams
+    pmicCoreCfg.validParams = PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+    pHandle.commMode = 3U;
+    status = Pmic_init(&pmicCoreCfg, &pHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    pHandle.crcEnable = 1U;
+
+    if((J721E_LEO_PMICA_DEVICE == pmic_device_info) ||
+       (J7VCL_LEO_PMICA_DEVICE == pmic_device_info))
+    {
+        //Pmic_initCoreHandleI2CSpeedCommHandle
+        pmicCoreCfg.validParams = PMIC_CFG_I2C2_SPEED_VALID_SHIFT;
+        pmicCoreCfg.i2c2Speed = PMIC_I2C_STANDARD_MODE;
+        pHandle.commMode = PMIC_INTF_SINGLE_I2C;
+        status = Pmic_init(&pmicCoreCfg, &pHandle);
+        TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+
+        //Pmic_initCoreHandleQADevCfgParams
+        testQACommHandle = pHandle.pQACommHandle;
+        pmicCoreCfg.validParams = PMIC_CFG_QACOMM_HANDLE_VALID_SHIFT;
+        pmicCoreCfg.pQACommHandle = test_pmic_coverageGaps;
+        pHandle.commMode = PMIC_INTF_SINGLE_I2C;
+        status = Pmic_init(&pmicCoreCfg, &pHandle);
+        TEST_ASSERT_EQUAL(PMIC_ST_ERR_I2C_COMM_FAIL, status);
+        pHandle.pQACommHandle = testQACommHandle;
+    }
+    pHandle.commMode = testCommMode;
+    pHandle.crcEnable = testCrcEnable;
+
+    //Pmic_setI2CSpeedCfg
+    testCommMode = pPmicCoreHandle->commMode;
+    pPmicCoreHandle->commMode = PMIC_INTF_SPI;
+    status = Pmic_setI2CSpeedCfg(pPmicCoreHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    //Pmic_getCrcStatus
+    pPmicCoreHandle->commMode = 3U;
+    status = Pmic_getCrcStatus(pPmicCoreHandle, &i2c1SpiCrcStat, &i2c2CrcStat);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_COMM_MODE, status);
+
+    //Pmic_getCrcStatus
+    pPmicCoreHandle->commMode = PMIC_INTF_SPI;
+    status = Pmic_getCrcStatus(pPmicCoreHandle, &i2c1SpiCrcStat, &i2c2CrcStat);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    //Pmic_getCrcStatus
+    pPmicCoreHandle->commMode = NULL;
+    status = Pmic_getCrcStatus(pPmicCoreHandle, &i2c1SpiCrcStat, &i2c2CrcStat);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    //Pmic_getI2CSpeed
+    pPmicCoreHandle->commMode = PMIC_INTF_SPI;
+    status = Pmic_getI2CSpeed(pPmicCoreHandle, &i2c1Speed, &i2c2Speed);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_COMM_MODE, status);
+
+    pPmicCoreHandle->commMode = testCommMode;
+
+    pmicCoreCfg.validParams = 0U;
+
+    testCommHandle = pHandle.pCommHandle;
+    pHandle.pCommHandle = NULL;
+    status = Pmic_init(&pmicCoreCfg, &pHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INSUFFICIENT_CFG, status);
+    pHandle.pCommHandle = testCommHandle;
+
+    testFnPmicCritSecStart = pHandle.pFnPmicCritSecStart;
+
+    pHandle.pFnPmicCritSecStart = NULL;
+    status = Pmic_init(&pmicCoreCfg, &pHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INSUFFICIENT_CFG, status);
+    pHandle.pFnPmicCritSecStart = testFnPmicCritSecStart;
+
+    testFnPmicCritSecStop = pHandle.pFnPmicCritSecStop;
+    pHandle.pFnPmicCritSecStop = NULL;
+    status = Pmic_init(&pmicCoreCfg, &pHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INSUFFICIENT_CFG, status);
+    pHandle.pFnPmicCritSecStop = testFnPmicCritSecStop;
+
+    testFnPmicCommIoRead = pHandle.pFnPmicCommIoRead;
+    pHandle.pFnPmicCommIoRead = NULL;
+    status = Pmic_init(&pmicCoreCfg, &pHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INSUFFICIENT_CFG, status);
+    pHandle.pFnPmicCommIoRead = testFnPmicCommIoRead;
+
+    testFnPmicCommIoWrite = pHandle.pFnPmicCommIoWrite;
+    pHandle.pFnPmicCommIoWrite = NULL;
+    status = Pmic_init(&pmicCoreCfg, &pHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INSUFFICIENT_CFG, status);
+    pHandle.pFnPmicCommIoWrite = testFnPmicCommIoWrite;
+
+    data = 0x10;
+    scratchPadRegId = PMIC_SCRATCH_PAD_REG_3;
+    testFnPmicCritSecStop = pPmicCoreHandle->pFnPmicCritSecStop;
+    testFnPmicCritSecStart = pPmicCoreHandle->pFnPmicCritSecStart;
+    testFnPmicCommIoRead = pPmicCoreHandle->pFnPmicCommIoRead;
+    testFnPmicCommIoWrite = pPmicCoreHandle->pFnPmicCommIoWrite;
+
+    pPmicCoreHandle->pFnPmicCritSecStop = NULL;
+    status = Pmic_setScratchPadValue(pPmicCoreHandle, scratchPadRegId, data);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    pPmicCoreHandle->pFnPmicCritSecStop = testFnPmicCritSecStop;
+
+    pPmicCoreHandle->pFnPmicCritSecStart = NULL;
+    status = Pmic_setScratchPadValue(pPmicCoreHandle, scratchPadRegId, data);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    pPmicCoreHandle->pFnPmicCritSecStart = testFnPmicCritSecStart;
+
+    // Coverage Gaps In IO
+    uint8_t data_rd = 0U;
+    pPmicCoreHandle->pFnPmicCommIoRead = NULL;
+    status = Pmic_getScratchPadValue(pPmicCoreHandle, scratchPadRegId, &data_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_FPTR, status);
+    pPmicCoreHandle->pFnPmicCommIoRead = testFnPmicCommIoRead;
+
+    pPmicCoreHandle->pFnPmicCommIoWrite = NULL;
+    status = Pmic_setScratchPadValue(pPmicCoreHandle, scratchPadRegId, data);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_FPTR, status);
+    pPmicCoreHandle->pFnPmicCommIoWrite = testFnPmicCommIoWrite;
+
+    testCommHandle = pPmicCoreHandle->pCommHandle;
+    pPmicCoreHandle->pCommHandle = NULL;
+    status = Pmic_setScratchPadValue(pPmicCoreHandle, scratchPadRegId, data);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+
+    status = Pmic_getScratchPadValue(pPmicCoreHandle, scratchPadRegId, &data_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+
+    pPmicCoreHandle->pCommHandle = testCommHandle;
+
+    //Pmic_getDeviceInfo
+    testpmicDevSiliconRev = pPmicCoreHandle->pmicDevSiliconRev;
+    pPmicCoreHandle->pmicDevSiliconRev = 0x01U;
+    status = Pmic_getDeviceInfo(pPmicCoreHandle, &deviceInfo);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_SILICON_REVISION, status);
+    pPmicCoreHandle->pmicDevSiliconRev = testpmicDevSiliconRev;
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        gPmic_faultInjectCfg.enableFaultInjectionRead = 1U;
+
+        test_pmic_appDeInit(pPmicCoreHandle);
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 1;
+        pmicCoreCfg.validParams = 0U;
+        status = test_pmic_leo_pmicA_misc_testApp();
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+        test_pmic_appDeInit(pPmicCoreHandle);
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 2;
+        pmicCoreCfg.validParams = 0U;
+        status = test_pmic_leo_pmicA_misc_testApp();
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, status);
+
+        gPmic_faultInjectCfg.commError = PMIC_ST_SUCCESS;
+        test_pmic_appDeInit(pPmicCoreHandle);
+        status = test_pmic_leo_pmicA_misc_testApp();
+
+        gPmic_faultInjectCfg.enableFaultInjectionRead = 0U;
+    }
+
+    pmic_testResultUpdate_pass(8933,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
 #if defined(UNITY_INCLUDE_CONFIG_V2_H) && \
     (defined(SOC_J721E) || defined(SOC_J7200))
 /*!
@@ -4375,11 +5935,11 @@ static void test_pmic_run_testcases(void)
 
     pmic_testResult_init(pmic_misc_tests, PMIC_MISC_NUM_OF_TESTCASES);
 
-    RUN_TEST(test_pmic_SetRecoveryCntCfg_threshold);
-    RUN_TEST(test_pmic_SetRecoveryCntCfgPrmValTest_thrVal);
-    RUN_TEST(test_pmic_SetRecoveryCntCfg_clrCnt);
-    RUN_TEST(test_pmic_SetRecoveryCntCfgPrmValTest_clrCnt);
-    RUN_TEST(test_pmic_SetRecoveryCntCfgPrmValTest_handle);
+    RUN_TEST(test_pmic_setRecoveryCntCfg_threshold);
+    RUN_TEST(test_pmic_setRecoveryCntCfgPrmValTest_thrVal);
+    RUN_TEST(test_pmic_setRecoveryCntCfg_clrCnt);
+    RUN_TEST(test_pmic_setRecoveryCntCfgPrmValTest_clrCnt);
+    RUN_TEST(test_pmic_setRecoveryCntCfgPrmValTest_handle);
     RUN_TEST(test_pmic_getRecoveryCntCfgPrmValTest_handle);
     RUN_TEST(test_pmic_getRecoveryCntCfgPrmValTest_recovCntCfg);
     RUN_TEST(test_Pmic_getRecoveryCntPrmValTest_handle);
@@ -4458,6 +6018,42 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_WriteProtection_RegisterLock);
     RUN_TEST(test_pmic_WriteProtection_RegisterUnLock);
 
+    RUN_TEST(test_pmic_getRecoveryCntVal);
+    RUN_TEST(test_pmic_getRecoveryCntPrmValTest_pRecovCntVal);
+    RUN_TEST(test_pmic_initPrmValTest_handle);
+    RUN_TEST(test_pmic_initPrmValTest_pmicCfgData);
+    RUN_TEST(test_pmic_initPrmValTest_pmicDevType);
+    RUN_TEST(test_pmic_initPrmValTest_commMode);
+    RUN_TEST(test_pmic_initPrmValTest_pCommHandle);
+    RUN_TEST(test_pmic_initPrmValTest_pQACommHandle);
+    RUN_TEST(test_pmic_initPrmValTest_pFnCommIoRead);
+    RUN_TEST(test_pmic_initPrmValTest_pFnCommIoWrite);
+    RUN_TEST(test_pmic_initPrmValTest_pFnCritSecStart);
+    RUN_TEST(test_pmic_initPrmValTest_pFnCritSecStop);
+    RUN_TEST(test_pmic_deinitPrmValTest_handle);
+    RUN_TEST(test_pmic_setScratchPadValue_reg1Reg2Reg3);
+
+    RUN_TEST(test_pmic_initPrmValTest_i2c1Speed);
+    RUN_TEST(test_pmic_initPrmValTest_i2c2Speed);
+#if defined(SOC_J7200)
+    RUN_TEST(test_pmic_setCommonCtrlCfg_hera_skipEepromDefaultLoadDisable);
+#endif
+    RUN_TEST(test_pmic_setI2CSpeedCfgPrmValTest_handle);
+    RUN_TEST(test_pmic_getCrcStatusPrmValTest_handle);
+    RUN_TEST(test_pmic_getCrcStatusPrmValTest_pI2c2CrcStatus);
+    RUN_TEST(test_pmic_getCrcStatusPrmValTest_pI2c1CrcStatus);
+    RUN_TEST(test_pmic_getCrcStatusPrmValTest_pI2c1I2C2CrcStatus);
+    RUN_TEST(test_pmic_enableCRCPrmValTest_handle);
+    RUN_TEST(test_pmic_setBatteryCtrlCfg_hera);
+    RUN_TEST(test_pmic_getBatteryCtrlCfg_hera);
+    RUN_TEST(test_pmic_setCommonCtrlCfg_hera_EepromDefaultLoadDisable);
+    RUN_TEST(test_pmic_setCommonCtrlCfg_leo_skipEepromDefaultLoadDisable);
+    RUN_TEST(test_pmic_getCommonCtrlCfg_leo_skipEepromDefaultLoadDisable);
+    RUN_TEST(test_pmic_setMiscCtrlCfg_nRstOutSignal_high);
+    RUN_TEST(test_pmic_setMiscCtrlCfg_nRstOutSocSignal_high);
+    RUN_TEST(test_pmic_init_cfg_deviceType);
+    RUN_TEST(test_pmic_coverageGaps);
+
     pmic_updateTestResults(pmic_misc_tests, PMIC_MISC_NUM_OF_TESTCASES);
 
     UNITY_END();
@@ -4473,11 +6069,11 @@ static void test_pmic_run_slave_testcases(void)
 
     pmic_testResult_init(pmic_misc_tests, PMIC_MISC_NUM_OF_TESTCASES);
 
-    RUN_TEST(test_pmic_SetRecoveryCntCfg_threshold);
-    RUN_TEST(test_pmic_SetRecoveryCntCfgPrmValTest_thrVal);
-    RUN_TEST(test_pmic_SetRecoveryCntCfg_clrCnt);
-    RUN_TEST(test_pmic_SetRecoveryCntCfgPrmValTest_clrCnt);
-    RUN_TEST(test_pmic_SetRecoveryCntCfgPrmValTest_handle);
+    RUN_TEST(test_pmic_setRecoveryCntCfg_threshold);
+    RUN_TEST(test_pmic_setRecoveryCntCfgPrmValTest_thrVal);
+    RUN_TEST(test_pmic_setRecoveryCntCfg_clrCnt);
+    RUN_TEST(test_pmic_setRecoveryCntCfgPrmValTest_clrCnt);
+    RUN_TEST(test_pmic_setRecoveryCntCfgPrmValTest_handle);
     RUN_TEST(test_pmic_getRecoveryCntCfgPrmValTest_handle);
     RUN_TEST(test_pmic_getRecoveryCntCfgPrmValTest_recovCntCfg);
     RUN_TEST(test_Pmic_getRecoveryCntPrmValTest_handle);
@@ -4557,6 +6153,42 @@ static void test_pmic_run_slave_testcases(void)
     RUN_TEST(test_pmic_WriteProtection_RegisterLock);
     RUN_TEST(test_pmic_WriteProtection_RegisterUnLock);
 
+    RUN_TEST(test_pmic_getRecoveryCntVal);
+    RUN_TEST(test_pmic_getRecoveryCntPrmValTest_pRecovCntVal);
+    RUN_TEST(test_pmic_initPrmValTest_handle);
+    RUN_TEST(test_pmic_initPrmValTest_pmicCfgData);
+    RUN_TEST(test_pmic_initPrmValTest_pmicDevType);
+    RUN_TEST(test_pmic_initPrmValTest_commMode);
+    RUN_TEST(test_pmic_initPrmValTest_pCommHandle);
+    RUN_TEST(test_pmic_initPrmValTest_pQACommHandle);
+    RUN_TEST(test_pmic_initPrmValTest_pFnCommIoRead);
+    RUN_TEST(test_pmic_initPrmValTest_pFnCommIoWrite);
+    RUN_TEST(test_pmic_initPrmValTest_pFnCritSecStart);
+    RUN_TEST(test_pmic_initPrmValTest_pFnCritSecStop);
+    RUN_TEST(test_pmic_deinitPrmValTest_handle);
+    RUN_TEST(test_pmic_setScratchPadValue_reg1Reg2Reg3);
+
+    RUN_TEST(test_pmic_initPrmValTest_i2c1Speed);
+    RUN_TEST(test_pmic_initPrmValTest_i2c2Speed);
+#if defined(SOC_J7200)
+    RUN_TEST(test_pmic_setCommonCtrlCfg_hera_skipEepromDefaultLoadDisable);
+#endif
+    RUN_TEST(test_pmic_setI2CSpeedCfgPrmValTest_handle);
+    RUN_TEST(test_pmic_getCrcStatusPrmValTest_handle);
+    RUN_TEST(test_pmic_getCrcStatusPrmValTest_pI2c2CrcStatus);
+    RUN_TEST(test_pmic_getCrcStatusPrmValTest_pI2c1CrcStatus);
+    RUN_TEST(test_pmic_getCrcStatusPrmValTest_pI2c1I2C2CrcStatus);
+    RUN_TEST(test_pmic_enableCRCPrmValTest_handle);
+    RUN_TEST(test_pmic_setBatteryCtrlCfg_hera);
+    RUN_TEST(test_pmic_getBatteryCtrlCfg_hera);
+    RUN_TEST(test_pmic_setCommonCtrlCfg_hera_EepromDefaultLoadDisable);
+    RUN_TEST(test_pmic_setCommonCtrlCfg_leo_skipEepromDefaultLoadDisable);
+    RUN_TEST(test_pmic_getCommonCtrlCfg_leo_skipEepromDefaultLoadDisable);
+    RUN_TEST(test_pmic_setMiscCtrlCfg_nRstOutSignal_high);
+    RUN_TEST(test_pmic_setMiscCtrlCfg_nRstOutSocSignal_high);
+
+    RUN_TEST(test_pmic_init_cfg_deviceType);
+    RUN_TEST(test_pmic_coverageGaps);
 
     pmic_updateTestResults(pmic_misc_tests, PMIC_MISC_NUM_OF_TESTCASES);
     UNITY_END();
@@ -4710,6 +6342,37 @@ static int32_t test_pmic_hera_misc_testApp(void)
 
 }
 
+/*!
+ * \brief   MISC Unity Test App wrapper Function for LEO PMIC-A
+ */
+static int32_t test_pmic_leo_pmicA_spiStub_misc_testApp(void)
+{
+    int32_t status                = PMIC_ST_SUCCESS;
+    Pmic_CoreCfg_t pmicConfigData = {0U};
+
+    /* Fill parameters to pmicConfigData */
+    pmicConfigData.pmicDeviceType      = PMIC_DEV_LEO_TPS6594X;
+    pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
+
+    pmicConfigData.commMode            = PMIC_INTF_SPI;
+    pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCommIoWrite   = test_pmic_regWrite;
+    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStart  = test_pmic_criticalSectionStartFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
+
+    pmicConfigData.pFnPmicCritSecStop   = test_pmic_criticalSectionStopFn;
+    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
+
+    status = test_pmic_appInit(&pPmicCoreHandle, &pmicConfigData);
+    return status;
+}
+
 static int32_t setup_pmic_interrupt(uint32_t board)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -4794,14 +6457,16 @@ volatile static const char pmicTestAppMenu[] =
     " \r\n 1: Pmic Leo device(PMIC B on J721E EVM)"
     " \r\n 2: Pmic Leo device(PMIC A on J7VCL EVM)"
     " \r\n 3: Pmic Hera device(PMIC B on J7VCL EVM)"
-    " \r\n 4: Pmic Leo device(PMIC A on J721E EVM Manual Testcase)"
-    " \r\n 5: Pmic Leo device(PMIC A on J7VCL EVM Manual Testcase)"
-    " \r\n 6: Pmic Leo device(PMIC A and B on J721E EVM) - Runtime BIST test"
-    " \r\n 7: Pmic Leo and Hera device(PMIC A and B on J7VCL EVM) - Runtime BIST test"
-    " \r\n 8: Pmic Leo/Hera device on J7VCL EVM - Disabled skip EEPROM defaults load on conf registers and Disabled EEPROM defaults load on conf registers "
-    " \r\n 9: Pmic Leo/Hera device on J7VCL EVM - Disabled skip EEPROM defaults load on conf registers and Enabled EEPROM defaults load on conf registers "
-    " \r\n 10: Pmic Leo/Hera device on J7VCL EVM - Enabled skip EEPROM defaults load on conf registers and Enabled EEPROM defaults load on conf registers "
-    " \r\n 11: Back to Test Menu"
+    " \r\n 4: Pmic Leo device(PMIC A on J721E EVM Using SPI Stub Functions)"
+    " \r\n 5: Pmic Leo device(PMIC A on J7VCL EVM Using SPI Stub Functions)"
+    " \r\n 6: Pmic Leo device(PMIC A on J721E EVM Manual Testcase)"
+    " \r\n 7: Pmic Leo device(PMIC A on J7VCL EVM Manual Testcase)"
+    " \r\n 8: Pmic Leo device(PMIC A and B on J721E EVM) - Runtime BIST test"
+    " \r\n 9: Pmic Leo and Hera device(PMIC A and B on J7VCL EVM) - Runtime BIST test"
+    " \r\n 10: Pmic Leo/Hera device on J7VCL EVM - Disabled skip EEPROM defaults load on conf registers and Disabled EEPROM defaults load on conf registers "
+    " \r\n 11: Pmic Leo/Hera device on J7VCL EVM - Disabled skip EEPROM defaults load on conf registers and Enabled EEPROM defaults load on conf registers "
+    " \r\n 12: Pmic Leo/Hera device on J7VCL EVM - Enabled skip EEPROM defaults load on conf registers and Enabled EEPROM defaults load on conf registers "
+    " \r\n 13: Back to Test Menu"
     " \r\n"
     " \r\n Enter option: "
 };
@@ -4944,9 +6609,9 @@ static void test_pmic_misc_testapp_run_options()
     int8_t num = -1;
     int8_t idx = 0;
 #if defined(SOC_J721E)
-    int8_t automatic_options[] = {0, 1};
+    int8_t automatic_options[] = {0, 1, 4};
 #elif defined(SOC_J7200)
-    int8_t automatic_options[] = {2, 3};
+    int8_t automatic_options[] = {2, 3, 5};
 #endif
 
     while(1U)
@@ -4964,7 +6629,7 @@ static void test_pmic_misc_testapp_run_options()
             }
             else
             {
-                num = 11;
+                num = 13;
             }
             pmic_log("%d\n", num);
         }
@@ -5022,7 +6687,7 @@ static void test_pmic_misc_testapp_run_options()
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                break;
-           case 2U:
+            case 2U:
 #if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
@@ -5044,7 +6709,7 @@ static void test_pmic_misc_testapp_run_options()
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                break;
-           case 3U:
+            case 3U:
 #if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
@@ -5066,7 +6731,54 @@ static void test_pmic_misc_testapp_run_options()
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                break;
-           case 4U:
+            case 4U:
+#if defined(SOC_J721E)
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
+                {
+                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
+
+                    /* MISC Unity Test App wrapper Function for LEO PMIC-A
+                     * using SPI stub functions */
+                    if(PMIC_ST_SUCCESS ==
+                          test_pmic_leo_pmicA_spiStub_misc_testApp())
+                    {
+                        /* Run misc test cases for Leo PMIC-A */
+                        test_pmic_run_testcases();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
+                break;
+            case 5U:
+#if defined(SOC_J7200)
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
+                {
+                    pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+                    /* MISC Unity Test App wrapper Function for LEO PMIC-A
+                     * using SPI stub functions */
+                     if(PMIC_ST_SUCCESS ==
+                            test_pmic_leo_pmicA_spiStub_misc_testApp())
+                    {
+                        /* Run misc test cases for Leo PMIC-A */
+                        test_pmic_run_testcases();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
+                break;
+            case 6U:
 #if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
@@ -5092,7 +6804,7 @@ static void test_pmic_misc_testapp_run_options()
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                break;
-           case 5U:
+            case 7U:
 #if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
@@ -5118,7 +6830,7 @@ static void test_pmic_misc_testapp_run_options()
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                break;
-           case 6U:
+            case 8U:
 #if defined(SOC_J721E)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
                 {
@@ -5154,7 +6866,7 @@ static void test_pmic_misc_testapp_run_options()
                         pmic_log("\n\n Leo PMIC-B Initialization \n\n");
                         pmic_log("\n\n Check BIST Pass Interrupt is set on Interrupt status and then it will be cleared \n");
 
-                        pmicStatus == test_pmic_leo_pmicB_misc_testApp();
+                        pmicStatus = test_pmic_leo_pmicB_misc_testApp();
 
                         if(PMIC_ST_SUCCESS != pmicStatus)
                         {
@@ -5173,7 +6885,7 @@ static void test_pmic_misc_testapp_run_options()
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                break;
-           case 7U:
+            case 9U:
 #if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
@@ -5209,7 +6921,7 @@ static void test_pmic_misc_testapp_run_options()
                         pmic_log("\n\n Hera PMIC-B Initialization \n\n");
                         pmic_log("\n\n Check BIST Pass Interrupt is set on Interrupt status and then it will be cleared \n");
 
-                        pmicStatus == test_pmic_hera_misc_testApp();
+                        pmicStatus = test_pmic_hera_misc_testApp();
 
                         if(PMIC_ST_SUCCESS != pmicStatus)
                         {
@@ -5227,7 +6939,7 @@ static void test_pmic_misc_testapp_run_options()
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                break;
-               case 8U:
+            case 10U:
 #if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
@@ -5289,7 +7001,7 @@ static void test_pmic_misc_testapp_run_options()
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                break;
-               case 9U:
+            case 11U:
 #if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
@@ -5350,7 +7062,7 @@ static void test_pmic_misc_testapp_run_options()
                 pmic_log("\nInvalid Board!!!\n");
 #endif
                break;
-               case 10U:
+            case 12U:
 #if 0//defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
                 {
@@ -5412,7 +7124,7 @@ static void test_pmic_misc_testapp_run_options()
                 pmic_log("\n Test case is disabled!!!\n");
 #endif
                break;
-           case 11U:
+           case 13U:
                pmic_log(" \r\n Back to Test Menu options\n");
                return;
            default:

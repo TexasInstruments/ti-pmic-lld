@@ -44,12 +44,10 @@ Pmic_CoreHandle_t *pPmicCoreHandleI2C = NULL;
 
 uint8_t startup_type = 0U;
 uint8_t enableBenchMark = 0U;
-uint8_t enableFaultInjectionRead = 0U;
-uint8_t enableFaultInjectionWrite = 0U;
-uint8_t readCount = 0U;
-uint8_t writeCount = 0U;
-uint8_t skipReadCount = 0U;
-uint8_t skipWriteCount = 0U;
+
+uint16_t pmic_device_info = 0U;
+
+Pmic_Ut_FaultInject_t gPmic_faultInjectCfg = {0U, 0U, 0U, 0U, 0U, 0U};
 
 /* CRC8 Table with polynomial value:0x7 */
 uint8_t crc8_tlb[] =
@@ -191,14 +189,29 @@ static int32_t test_pmic_spi_stubInit(Pmic_CoreCfg_t  *pPmicConfigData)
     pmicConfigDataI2c.commMode            = PMIC_INTF_DUAL_I2C;
     pmicConfigDataI2c.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigDataI2c.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
-    pmicConfigDataI2c.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
+    if(J721E_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+        pmicConfigDataI2c.slaveAddr           = J721E_LEO_PMICA_SLAVE_ADDR;
+        pmicConfigDataI2c.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
 
-    pmicConfigDataI2c.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
-    pmicConfigDataI2c.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+        pmicConfigDataI2c.qaSlaveAddr         = J721E_LEO_PMICA_WDG_SLAVE_ADDR;
+        pmicConfigDataI2c.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
 
-    pmicConfigDataI2c.nvmSlaveAddr        = J721E_LEO_PMICA_PAGE1_SLAVE_ADDR;
-    pmicConfigDataI2c.validParams        |= PMIC_CFG_NVMSLAVEADDR_VALID_SHIFT;
+        pmicConfigDataI2c.nvmSlaveAddr        = J721E_LEO_PMICA_PAGE1_SLAVE_ADDR;
+        pmicConfigDataI2c.validParams        |= PMIC_CFG_NVMSLAVEADDR_VALID_SHIFT;
+    }
+
+    if(J7VCL_LEO_PMICA_DEVICE == pmic_device_info)
+    {
+        pmicConfigDataI2c.slaveAddr           = J7VCL_LEO_PMICA_SLAVE_ADDR;
+        pmicConfigDataI2c.validParams        |= PMIC_CFG_SLAVEADDR_VALID_SHIFT;
+
+        pmicConfigDataI2c.qaSlaveAddr         = J7VCL_LEO_PMICA_WDG_SLAVE_ADDR;
+        pmicConfigDataI2c.validParams        |= PMIC_CFG_QASLAVEADDR_VALID_SHIFT;
+
+        pmicConfigDataI2c.nvmSlaveAddr        = J7VCL_LEO_PMICA_PAGE1_SLAVE_ADDR;
+        pmicConfigDataI2c.validParams        |= PMIC_CFG_NVMSLAVEADDR_VALID_SHIFT;
+    }
 
     pmicConfigDataI2c.pFnPmicCommIoRead   = test_pmic_regRead;
     pmicConfigDataI2c.validParams        |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
@@ -755,20 +768,21 @@ int32_t test_pmic_regRead(Pmic_CoreHandle_t  *pmicCorehandle,
                  test_pmic_spi_stubRead(pmicCorehandle, pBuf, bufLen))
         {
             /* For Fault Injection Tests */
-            if(1U == enableFaultInjectionRead)
+            if(1U == gPmic_faultInjectCfg.enableFaultInjectionRead)
             {
-                return PMIC_ST_ERR_I2C_COMM_FAIL;
+                gPmic_faultInjectCfg.commError = PMIC_ST_ERR_SPI_COMM_FAIL;
             }
 
             return PMIC_ST_ERR_SPI_COMM_FAIL;
         }
     }
 
-
     /* Added for Branch Coverage */
-    readCount++;
-    if((1U == enableFaultInjectionRead) && (skipReadCount == readCount))
+    gPmic_faultInjectCfg.readCount++;
+    if((1U == gPmic_faultInjectCfg.enableFaultInjectionRead) &&
+       (gPmic_faultInjectCfg.skipReadCount == gPmic_faultInjectCfg.readCount))
     {
+        gPmic_faultInjectCfg.commError = PMIC_ST_ERR_I2C_COMM_FAIL;
         return PMIC_ST_ERR_I2C_COMM_FAIL;
     }
 
@@ -866,9 +880,9 @@ int32_t test_pmic_regWrite(Pmic_CoreHandle_t  *pmicCorehandle,
                    test_pmic_spi_write(pmicCorehandle, pBuf, bufLen))
         {
             /* For Fault Injection Tests */
-            if(1U == enableFaultInjectionWrite)
+            if(1U == gPmic_faultInjectCfg.enableFaultInjectionWrite)
             {
-                return PMIC_ST_ERR_I2C_COMM_FAIL;
+                gPmic_faultInjectCfg.commError = PMIC_ST_ERR_SPI_COMM_FAIL;
             }
 
             return PMIC_ST_ERR_SPI_COMM_FAIL;
@@ -876,9 +890,11 @@ int32_t test_pmic_regWrite(Pmic_CoreHandle_t  *pmicCorehandle,
     }
 
     /* Added for Branch Coverage */
-    writeCount++;
-    if((1U == enableFaultInjectionWrite) && (skipWriteCount == writeCount))
+    gPmic_faultInjectCfg.writeCount++;
+    if((1U == gPmic_faultInjectCfg.enableFaultInjectionWrite) &&
+       (gPmic_faultInjectCfg.skipWriteCount == gPmic_faultInjectCfg.writeCount))
     {
+        gPmic_faultInjectCfg.commError = PMIC_ST_ERR_I2C_COMM_FAIL;
         return PMIC_ST_ERR_I2C_COMM_FAIL;
     }
 
@@ -1275,7 +1291,7 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
             if(PMIC_ST_SUCCESS == pmicStatus)
             {
                 /* Get configured value for I2C1 Speed based on commMode */
-                pmicStatus = Pmic_getI2CSpeed(pmicHandle, &i2c1Speed, 
+                pmicStatus = Pmic_getI2CSpeed(pmicHandle, &i2c1Speed,
                                               &i2c2Speed);
             }
 
@@ -1446,7 +1462,7 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
             if(PMIC_ST_SUCCESS == pmicStatus)
             {
                 /* Get configured value for I2C1 Speed based on commMode */
-                pmicStatus = Pmic_getI2CSpeed(pmicHandle, &i2c1Speed, 
+                pmicStatus = Pmic_getI2CSpeed(pmicHandle, &i2c1Speed,
                                               &i2c2Speed);
             }
 
