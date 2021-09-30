@@ -50,6 +50,11 @@
 /*!
  * \brief   This function is used to validate BUCK power resource subtype for
  *          PwmMp mode.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
 static int32_t Pmic_powerValidateBuckPwrRsrcPwmMpMode(uint8_t  pmicDeviceType,
                                                       uint16_t pwrRsrc)
@@ -58,14 +63,6 @@ static int32_t Pmic_powerValidateBuckPwrRsrcPwmMpMode(uint8_t  pmicDeviceType,
 
     switch (pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            if((pwrRsrc != PMIC_TPS6594X_REGULATOR_BUCK1) &&
-                (pwrRsrc != PMIC_TPS6594X_REGULATOR_BUCK3))
-            {
-                status = PMIC_ST_ERR_INV_PARAM;
-            }
-
-            break;
         case PMIC_DEV_HERA_LP8764X:
             if((pwrRsrc != PMIC_LP8764X_REGULATOR_BUCK1) &&
                 (pwrRsrc != PMIC_LP8764X_REGULATOR_BUCK3))
@@ -75,7 +72,13 @@ static int32_t Pmic_powerValidateBuckPwrRsrcPwmMpMode(uint8_t  pmicDeviceType,
 
             break;
         default:
-            status = PMIC_ST_ERR_INV_PARAM;
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            if((pwrRsrc != PMIC_TPS6594X_REGULATOR_BUCK1) &&
+                (pwrRsrc != PMIC_TPS6594X_REGULATOR_BUCK3))
+            {
+                status = PMIC_ST_ERR_INV_PARAM;
+            }
+
             break;
     }
 
@@ -85,33 +88,34 @@ static int32_t Pmic_powerValidateBuckPwrRsrcPwmMpMode(uint8_t  pmicDeviceType,
 /*!
  * \brief   This function is used to validate LDO power resource subtype for
  *          bypass mode.
+ *
+ *          Note: In this API, assummed that LDO power resource subtype is
+ *                supported for TPS6594x LEO PMIC. While adding support for New
+ *                PMIC device, developer need to update the API functionality
+ *                for New PMIC device accordingly.
  */
-static int32_t Pmic_powerValidateLdoPwrRsrcBypassMode(uint8_t  pmicDeviceType,
-                                                      uint16_t pwrRsrc)
+static int32_t Pmic_powerValidateLdoPwrRsrcBypassMode(uint16_t pwrRsrc)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    switch (pmicDeviceType)
+    if((pwrRsrc != PMIC_TPS6594X_REGULATOR_LDO1) &&
+       (pwrRsrc != PMIC_TPS6594X_REGULATOR_LDO2) &&
+       (pwrRsrc != PMIC_TPS6594X_REGULATOR_LDO3))
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            if((pwrRsrc != PMIC_TPS6594X_REGULATOR_LDO1) &&
-               (pwrRsrc != PMIC_TPS6594X_REGULATOR_LDO2) &&
-               (pwrRsrc != PMIC_TPS6594X_REGULATOR_LDO3))
-            {
-                status = PMIC_ST_ERR_INV_PARAM;
-            }
-
-            break;
-        default:
-            status = PMIC_ST_ERR_INV_PARAM;
-            break;
+        status = PMIC_ST_ERR_INV_PARAM;
     }
 
     return status;
 }
+
 /*!
  * \brief   This function is used to validate the VCCA power resorce type for
  *          the specific PMIC device.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
 static int32_t Pmic_powerValidateVccaPwrRsrcType(uint8_t pmicDeviceType,
                                                  uint8_t pwrRsrcType)
@@ -120,13 +124,6 @@ static int32_t Pmic_powerValidateVccaPwrRsrcType(uint8_t pmicDeviceType,
 
     switch (pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_VCCA != pwrRsrcType)
-            {
-                status = PMIC_ST_ERR_INV_PARAM;
-            }
-
-            break;
         case PMIC_DEV_HERA_LP8764X:
             if(PMIC_LP8764X_POWER_RESOURCE_TYPE_VCCA != pwrRsrcType)
             {
@@ -135,7 +132,12 @@ static int32_t Pmic_powerValidateVccaPwrRsrcType(uint8_t pmicDeviceType,
 
             break;
         default:
-            status = PMIC_ST_ERR_INV_PARAM;
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_VCCA != pwrRsrcType)
+            {
+                status = PMIC_ST_ERR_INV_PARAM;
+            }
+
             break;
     }
 
@@ -196,6 +198,11 @@ static int32_t Pmic_powerValidateLdoPwrRsrcType(uint8_t pmicDeviceType,
 /*!
  * \brief   This function is used to validate the BUCK power resorce type for
  *          the specific PMIC device
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
 static int32_t Pmic_powerValidateBuckPwrRsrcType(uint8_t pmicDeviceType,
                                                  uint8_t pwrRsrcType)
@@ -204,13 +211,6 @@ static int32_t Pmic_powerValidateBuckPwrRsrcType(uint8_t pmicDeviceType,
 
     switch (pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK != pwrRsrcType)
-            {
-                status = PMIC_ST_ERR_INV_PARAM;
-            }
-
-            break;
         case PMIC_DEV_HERA_LP8764X:
             if(PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK != pwrRsrcType)
             {
@@ -219,7 +219,12 @@ static int32_t Pmic_powerValidateBuckPwrRsrcType(uint8_t pmicDeviceType,
 
             break;
         default:
-            status = PMIC_ST_ERR_INV_PARAM;
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK != pwrRsrcType)
+            {
+                status = PMIC_ST_ERR_INV_PARAM;
+            }
+
             break;
     }
 
@@ -342,6 +347,12 @@ static int32_t Pmic_powerValidateBuckLdoVccaVmonPwrRsrcType(
 /*!
  * \brief   This function is used to get validate the power resources and vmon
  *           based on the valid params set.
+ *
+ *          Note: In this API, the default validPrm is assumed as
+ *                PMIC_CFG_REGULATOR_VMON_RV_SEL_VALID and
+ *                PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID
+ *                While adding support for New validPrm , developer need to
+ *                update the API functionality for New validPrm accordingly.
  */
 static int32_t Pmic_powerValidatecfgDataPwrRsrctype(uint32_t validPrm,
                                                     uint16_t pwrRsrc,
@@ -354,11 +365,6 @@ static int32_t Pmic_powerValidatecfgDataPwrRsrctype(uint32_t validPrm,
 
     switch(validPrm)
     {
-        case PMIC_CFG_REGULATOR_VMON_RV_SEL_VALID:
-        case PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID:
-            status = Pmic_powerValidateBuckLdoVmonPwrRsrcType(pmicDeviceType,
-                                                              pwrRsrcType);
-            break;
         case PMIC_CFG_REGULATOR_BUCK_PLDN_EN_VALID:
         case PMIC_CFG_REGULATOR_BUCK_VOUT_SEL_VALID:
         case PMIC_CFG_REGULATOR_BUCK_FPWM_VALID:
@@ -384,8 +390,7 @@ static int32_t Pmic_powerValidatecfgDataPwrRsrctype(uint32_t validPrm,
             if((PMIC_ST_SUCCESS == status) &&
                (PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID == validPrm))
             {
-                status = Pmic_powerValidateLdoPwrRsrcBypassMode(pmicDeviceType,
-                                                                pwrRsrc);
+                status = Pmic_powerValidateLdoPwrRsrcBypassMode(pwrRsrc);
             }
             break;
         case PMIC_CFG_REGULATOR_EN_VALID:
@@ -398,7 +403,10 @@ static int32_t Pmic_powerValidatecfgDataPwrRsrctype(uint32_t validPrm,
                                                                 pwrRsrcType);
             break;
         default :
-            status = PMIC_ST_ERR_INV_PARAM;
+            /* Default case is valid for PMIC_CFG_REGULATOR_VMON_RV_SEL_VALID
+            and PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID */
+            status = Pmic_powerValidateBuckLdoVmonPwrRsrcType(pmicDeviceType,
+                                                              pwrRsrcType);
             break;
     }
 
@@ -407,55 +415,42 @@ static int32_t Pmic_powerValidatecfgDataPwrRsrctype(uint32_t validPrm,
 
 /*!
  * \brief   This function is used to get the PMIC power resources
-            register configuration for the specific PMIC device.
+ *          register configuration for the specific PMIC device.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
-static int32_t Pmic_powerGetRsrcRegCfg(uint8_t                  pmicDeviceType,
-                                       Pmic_powerRsrcRegCfg_t **pPwrRsrcRegCfg)
+static void Pmic_powerGetRsrcRegCfg(uint8_t                  pmicDeviceType,
+                                    Pmic_powerRsrcRegCfg_t **pPwrRsrcRegCfg)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-
-    if(NULL == pPwrRsrcRegCfg)
+    switch(pmicDeviceType)
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        case PMIC_DEV_HERA_LP8764X:
+            pmic_get_lp8764x_pwrRsrceRegCfg(pPwrRsrcRegCfg);
+            break;
+        default:
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            pmic_get_tps6594x_pwrRsrceRegCfg(pPwrRsrcRegCfg);
+            break;
     }
-
-    if(PMIC_ST_SUCCESS == status)
-    {
-        switch(pmicDeviceType)
-        {
-            case PMIC_DEV_LEO_TPS6594X:
-                pmic_get_tps6594x_pwrRsrceRegCfg(pPwrRsrcRegCfg);
-                break;
-            case PMIC_DEV_HERA_LP8764X:
-                pmic_get_lp8764x_pwrRsrceRegCfg(pPwrRsrcRegCfg);
-                break;
-            default:
-                status = PMIC_ST_ERR_INV_DEVICE;
-                break;
-        }
-    }
-
-    return status;
 }
 
 /*!
  * \brief   This function is used to get pwrRsrcIndex and the PMIC power
             resources register configuration for the specific PMIC device.
  */
-static int32_t Pmic_powerGetPwrRsrcIdxRegCfg(
+static void Pmic_powerGetPwrRsrcIdxRegCfg(
                                        uint8_t                  pmicDeviceType,
                                        uint16_t                 pwrRsrc,
                                        uint8_t                 *pPwrRsrcIndex,
                                        Pmic_powerRsrcRegCfg_t **pPwrRsrcRegCfg)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-
     *pPwrRsrcIndex = Pmic_powerGetPwrRsrcId(pwrRsrc);
 
     /* Get PMIC power resources register configuration */
-    status = Pmic_powerGetRsrcRegCfg(pmicDeviceType, pPwrRsrcRegCfg);
-
-    return status;
+    Pmic_powerGetRsrcRegCfg(pmicDeviceType, pPwrRsrcRegCfg);
 }
 
 /*!
@@ -490,20 +485,19 @@ static int32_t Pmic_setPwrRsrcPgoodRegBitfieldCfg(
 /*!
  * \brief   This function is used to get the required BitPos and BitMask
  *           of residual voltage checking for BUCK/LDO/VMON pin.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
-static int32_t Pmic_powerGetRvCheckEnBitPos(uint8_t   pmicDeviceType,
-                                            uint16_t  pwrRsrc,
-                                            uint8_t  *pBitPos,
-                                            uint8_t  *pBitMask)
+static void Pmic_powerGetRvCheckEnBitPos(uint8_t   pmicDeviceType,
+                                         uint16_t  pwrRsrc,
+                                         uint8_t  *pBitPos,
+                                         uint8_t  *pBitMask)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-
     switch (pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            *pBitPos = PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_RV_SEL_SHIFT;
-            *pBitMask = PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_RV_SEL_MASK;
-            break;
         case PMIC_DEV_HERA_LP8764X:
             if(PMIC_LP8764X_POWER_SOURCE_VMON1 == pwrRsrc)
             {
@@ -525,11 +519,12 @@ static int32_t Pmic_powerGetRvCheckEnBitPos(uint8_t   pmicDeviceType,
             }
             break;
         default:
-            status = PMIC_ST_ERR_INV_PARAM;
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            *pBitPos = PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_RV_SEL_SHIFT;
+            *pBitMask = PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_RV_SEL_MASK;
             break;
     }
 
-    return status;
 }
 
 /*!
@@ -548,48 +543,44 @@ static int32_t Pmic_powerSetRvCheckEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t bitMask = 0U;
     uint8_t residualVoltCheckVal = 0U;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    pmicStatus = Pmic_commIntf_recvByte(
+                                  pPmicCoreHandle,
+                                  pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
+                                  &regData);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        pmicStatus = Pmic_commIntf_recvByte(
-                                      pPmicCoreHandle,
-                                      pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
-                                      &regData);
+        Pmic_powerGetRvCheckEnBitPos(pPmicCoreHandle->pmicDeviceType,
+                                     pwrRsrc,
+                                     &bitPos,
+                                     &bitMask);
 
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        if(((bool)true) == residualVoltCheck)
         {
-            pmicStatus = Pmic_powerGetRvCheckEnBitPos(
-                                                pPmicCoreHandle->pmicDeviceType,
-                                                pwrRsrc,
-                                                &bitPos,
-                                                &bitMask);
-
-            if(((bool)true) == residualVoltCheck)
-            {
-                residualVoltCheckVal = 1U;
-            }
-            Pmic_setBitField(&regData,
-                             bitPos,
-                             bitMask,
-                             residualVoltCheckVal);
+            residualVoltCheckVal = 1U;
         }
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            pmicStatus = Pmic_commIntf_sendByte(
-                                       pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
-                                       regData);
-        }
-
-        Pmic_criticalSectionStop(pPmicCoreHandle);
+        Pmic_setBitField(&regData,
+                         bitPos,
+                         bitMask,
+                         residualVoltCheckVal);
     }
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pmicStatus = Pmic_commIntf_sendByte(
+                                   pPmicCoreHandle,
+                                   pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
+                                   regData);
+    }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
 }
@@ -609,29 +600,25 @@ static int32_t Pmic_powerGetRvCheckEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
     uint8_t bitMask = 0U;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    pmicStatus = Pmic_commIntf_recvByte(
+                                   pPmicCoreHandle,
+                                   pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
+                                   &regData);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        pmicStatus = Pmic_commIntf_recvByte(
-                                       pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
-                                       &regData);
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_powerGetRvCheckEnBitPos(
-                                                pPmicCoreHandle->pmicDeviceType,
-                                                pwrRsrc,
-                                                &bitPos,
-                                                &bitMask);
+        Pmic_powerGetRvCheckEnBitPos(pPmicCoreHandle->pmicDeviceType,
+                                     pwrRsrc,
+                                     &bitPos,
+                                     &bitMask);
 
         if(Pmic_getBitField(regData, bitPos, bitMask) != 0U)
         {
@@ -651,13 +638,11 @@ static int32_t Pmic_powerGetRvCheckEn(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief   This function is used to convert the vset value to voltage in mv
             for BUCK/VMON
  */
-int32_t Pmic_powerBuckVmonConvertVSetVal2Voltage(const uint8_t *pVSetVal,
-                                                 uint16_t      *pBaseMillivolt,
-                                                 uint8_t       *pMillivoltStep,
-                                                 uint8_t       *pBaseVoutCode)
+void Pmic_powerBuckVmonConvertVSetVal2Voltage(const uint8_t *pVSetVal,
+                                              uint16_t      *pBaseMillivolt,
+                                              uint8_t       *pMillivoltStep,
+                                              uint8_t       *pBaseVoutCode)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-
     if(*pVSetVal <= PMIC_POWER_VSET_VAL_0xE)
     {
         *pBaseMillivolt = PMIC_POWER_VOLTAGE_300MV;
@@ -683,7 +668,6 @@ int32_t Pmic_powerBuckVmonConvertVSetVal2Voltage(const uint8_t *pVSetVal,
         *pBaseVoutCode  = PMIC_POWER_VSET_VAL_0xAB;
     }
 
-    return status;
 }
 
 /*!
@@ -691,30 +675,25 @@ int32_t Pmic_powerBuckVmonConvertVSetVal2Voltage(const uint8_t *pVSetVal,
  *          when the selected voltage monitoring range for VMON is
  *          PMIC_LP8764X_VMON_RANGE_3V35_5V
  */
-int32_t Pmic_powerVmonRange1ConvertVSetVal2Voltage(uint16_t *pBaseMillivolt,
-                                                   uint8_t  *pMillivoltStep,
-                                                   uint8_t  *pBaseVoutCode)
+void Pmic_powerVmonRange1ConvertVSetVal2Voltage(uint16_t *pBaseMillivolt,
+                                                uint8_t  *pMillivoltStep,
+                                                uint8_t  *pBaseVoutCode)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-
     *pBaseMillivolt = PMIC_POWER_VOLTAGE_3350MV;
     *pMillivoltStep = PMIC_POWER_VOLTAGE_STEP_25V;
     *pBaseVoutCode  = PMIC_POWER_VSET_VAL_0x1D;
 
-    return status;
 }
 
 /*!
  * \brief   This function is used to convert the vset value to voltage in mv
  *          for LDO
  */
-int32_t Pmic_powerLdoConvertVSetVal2Voltage(uint16_t  pwrRsrc,
-                                            uint16_t *pBaseMillivolt,
-                                            uint8_t  *pMillivoltStep,
-                                            uint8_t  *pBaseVoutCode)
+void Pmic_powerLdoConvertVSetVal2Voltage(uint16_t  pwrRsrc,
+                                         uint16_t *pBaseMillivolt,
+                                         uint8_t  *pMillivoltStep,
+                                         uint8_t  *pBaseVoutCode)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-
     if(PMIC_TPS6594X_REGULATOR_LDO4 == pwrRsrc)
     {
         *pBaseMillivolt = PMIC_POWER_VOLTAGE_1200MV;
@@ -730,11 +709,15 @@ int32_t Pmic_powerLdoConvertVSetVal2Voltage(uint16_t  pwrRsrc,
         *pBaseVoutCode  = PMIC_POWER_VSET_VAL_0x4;
     }
 
-    return status;
 }
 
 /*!
  * \brief   This function is used to convert the vset value to voltage in mv.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
 static int32_t Pmic_powerConvertVolt(Pmic_CoreHandle_t *pPmicCoreHandle,
                                      uint8_t            vSetVal,
@@ -745,11 +728,6 @@ static int32_t Pmic_powerConvertVolt(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     switch(pPmicCoreHandle->pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            status = Pmic_powerTPS6594xConvertVSet2Voltage(&vSetVal,
-                                                           pwrRsrc,
-                                                           millivolt);
-        break;
         case PMIC_DEV_HERA_LP8764X:
             status = Pmic_powerLP8764xConvertVSetVal2Voltage(pPmicCoreHandle,
                                                              &vSetVal,
@@ -757,8 +735,11 @@ static int32_t Pmic_powerConvertVolt(Pmic_CoreHandle_t *pPmicCoreHandle,
                                                              millivolt);
         break;
         default:
-            status = PMIC_ST_ERR_INV_PARAM;
-            break;
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            Pmic_powerTPS6594xConvertVSet2Voltage(&vSetVal,
+                                                  pwrRsrc,
+                                                  millivolt);
+        break;
     }
 
     return status;
@@ -775,8 +756,10 @@ int32_t Pmic_powerBuckVmonConvertVoltage2VSetVal(uint16_t millivolt,
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if((millivolt >= PMIC_POWER_VOLTAGE_300MV) &&
-       (millivolt <= PMIC_POWER_VOLTAGE_580MV))
+    /* Check for millivolt >= PMIC_POWER_VOLTAGE_300MV is done as part of
+     * Pmic_powerValidateVoltageLevel() Function
+     */
+    if(millivolt <= PMIC_POWER_VOLTAGE_580MV)
     {
         *pBaseMillivolt = PMIC_POWER_VOLTAGE_300MV;
         *pMillivoltStep = PMIC_POWER_VOLTAGE_STEP_20V;
@@ -796,8 +779,10 @@ int32_t Pmic_powerBuckVmonConvertVoltage2VSetVal(uint16_t millivolt,
         *pMillivoltStep = PMIC_POWER_VOLTAGE_STEP_10V;
         *pBaseVoutCode  = PMIC_POWER_VSET_VAL_0x73;
     }
-    else if((millivolt >= PMIC_POWER_VOLTAGE_1660MV) &&
-            (millivolt <= PMIC_POWER_VOLTAGE_3340MV))
+    /* Check for millivolt <= PMIC_POWER_VOLTAGE_3340MV is done as part of
+     * Pmic_powerValidateVoltageLevel() Function
+     */
+    else if(millivolt >= PMIC_POWER_VOLTAGE_1660MV)
     {
         *pBaseMillivolt = PMIC_POWER_VOLTAGE_1660MV;
         *pMillivoltStep = PMIC_POWER_VOLTAGE_STEP_20V;
@@ -816,33 +801,27 @@ int32_t Pmic_powerBuckVmonConvertVoltage2VSetVal(uint16_t millivolt,
  *          when the selected voltage monitoring range for VMON is
  *          PMIC_LP8764X_VMON_RANGE_3V35_5V
  */
-int32_t Pmic_powerVmonRange1ConvertVoltage2VSetVal(uint16_t *pBaseMillivolt,
-                                                   uint8_t  *pMillivoltStep,
-                                                   uint8_t  *pBaseVoutCode)
+void Pmic_powerVmonRange1ConvertVoltage2VSetVal(uint16_t *pBaseMillivolt,
+                                                uint8_t  *pMillivoltStep,
+                                                uint8_t  *pBaseVoutCode)
 {
-    int32_t  status = PMIC_ST_SUCCESS;
-
     *pBaseMillivolt = PMIC_POWER_VOLTAGE_3350MV;
     *pMillivoltStep = PMIC_POWER_VOLTAGE_STEP_25V;
     *pBaseVoutCode  = PMIC_POWER_VSET_VAL_0x1D;
 
-    return status;
 }
 
 /*!
  * \brief   This function is used to convert the millivolt value to vset value
  *          for LDO Regulators
  */
-int32_t Pmic_powerLdoConvertVoltage2VSetVal(uint16_t  pwrRsrc,
-                                            uint16_t *pBaseMillivolt,
-                                            uint8_t  *pMillivoltStep,
-                                            uint8_t  *pBaseVoutCode)
+void Pmic_powerLdoConvertVoltage2VSetVal(uint16_t  pwrRsrc,
+                                         uint16_t *pBaseMillivolt,
+                                         uint8_t  *pMillivoltStep,
+                                         uint8_t  *pBaseVoutCode)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-
     if(PMIC_TPS6594X_REGULATOR_LDO4 == pwrRsrc)
     {
-
         *pBaseMillivolt = PMIC_POWER_VOLTAGE_1200MV;
         *pMillivoltStep = PMIC_POWER_VOLTAGE_STEP_25V;
         *pBaseVoutCode  = PMIC_POWER_VSET_VAL_0x20;
@@ -856,7 +835,6 @@ int32_t Pmic_powerLdoConvertVoltage2VSetVal(uint16_t  pwrRsrc,
         *pBaseVoutCode  = PMIC_POWER_VSET_VAL_0x4;
     }
 
-    return status;
 }
 
 /*!
@@ -872,22 +850,19 @@ int32_t Pmic_powerGetVmonRange(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        pmicStatus = Pmic_commIntf_recvByte(
-                                   pPmicCoreHandle,
-                                   pPwrRsrcRegCfg[pwrRsrcIndex].pgWindowRegAddr,
-                                   &regData);
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    pmicStatus = Pmic_commIntf_recvByte(
+                               pPmicCoreHandle,
+                               pPwrRsrcRegCfg[pwrRsrcIndex].pgWindowRegAddr,
+                               &regData);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -908,6 +883,11 @@ int32_t Pmic_powerGetVmonRange(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   This function is used to convert the millivolt value to vset value.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
 static int32_t Pmic_powerConvertVoltage2VSetVal(
                                              Pmic_CoreHandle_t *pPmicCoreHandle,
@@ -919,11 +899,6 @@ static int32_t Pmic_powerConvertVoltage2VSetVal(
 
     switch(pPmicCoreHandle->pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            status = Pmic_powerTPS6594xConvertVoltage2VSetVal(millivolt,
-                                                              pwrRsrc,
-                                                              pVSetVal);
-            break;
         case PMIC_DEV_HERA_LP8764X:
             status = Pmic_powerLP8764xConvertVoltage2VSetVal(pPmicCoreHandle,
                                                              millivolt,
@@ -931,7 +906,10 @@ static int32_t Pmic_powerConvertVoltage2VSetVal(
                                                              pVSetVal);
         break;
         default:
-            status = PMIC_ST_ERR_INV_PARAM;
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            status = Pmic_powerTPS6594xConvertVoltage2VSetVal(millivolt,
+                                                              pwrRsrc,
+                                                              pVSetVal);
             break;
     }
 
@@ -951,39 +929,36 @@ static int32_t Pmic_powerSetBuckVoutSel(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
     uint8_t buckVoutSelVal = 0U;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    pmicStatus = Pmic_commIntf_recvByte(
+                                   pPmicCoreHandle,
+                                   pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
+                                   &regData);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        pmicStatus = Pmic_commIntf_recvByte(
-                                       pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
-                                       &regData);
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        if(((bool)true) == buckVoutSel)
         {
-            if(((bool)true) == buckVoutSel)
-            {
-                buckVoutSelVal = 1U;
-            }
-            Pmic_setBitField(&regData,
-                             PMIC_BUCKX_CTRL_BUCKX_VSEL_SHIFT,
-                             PMIC_BUCKX_CTRL_BUCKX_VSEL_MASK,
-                             buckVoutSelVal);
-
-            pmicStatus = Pmic_commIntf_sendByte(
-                                       pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
-                                       regData);
+            buckVoutSelVal = 1U;
         }
+        Pmic_setBitField(&regData,
+                         PMIC_BUCKX_CTRL_BUCKX_VSEL_SHIFT,
+                         PMIC_BUCKX_CTRL_BUCKX_VSEL_MASK,
+                         buckVoutSelVal);
 
-        Pmic_criticalSectionStop(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_sendByte(
+                                   pPmicCoreHandle,
+                                   pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
+                                   regData);
     }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
 }
@@ -1000,22 +975,19 @@ static int32_t Pmic_powerGetBuckVoutSel(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        pmicStatus = Pmic_commIntf_recvByte(
-                                       pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
-                                       &regData);
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    pmicStatus = Pmic_commIntf_recvByte(
+                                   pPmicCoreHandle,
+                                   pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
+                                   &regData);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -1048,39 +1020,36 @@ static int32_t Pmic_powerSetBuckFpwmMode(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
     uint8_t buckFpwmModeVal = 0U;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    pmicStatus = Pmic_commIntf_recvByte(
+                                   pPmicCoreHandle,
+                                   pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
+                                   &regData);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        pmicStatus = Pmic_commIntf_recvByte(
-                                       pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
-                                       &regData);
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        if(((bool)true) == buckFpwmMode)
         {
-            if(((bool)true) == buckFpwmMode)
-            {
-                buckFpwmModeVal = 1U;
-            }
-            Pmic_setBitField(&regData,
-                             PMIC_BUCKX_CTRL_BUCKX_FPWM_SHIFT,
-                             PMIC_BUCKX_CTRL_BUCKX_FPWM_MASK,
-                             buckFpwmModeVal);
-
-            pmicStatus = Pmic_commIntf_sendByte(
-                                       pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
-                                       regData);
+            buckFpwmModeVal = 1U;
         }
+        Pmic_setBitField(&regData,
+                         PMIC_BUCKX_CTRL_BUCKX_FPWM_SHIFT,
+                         PMIC_BUCKX_CTRL_BUCKX_FPWM_MASK,
+                         buckFpwmModeVal);
 
-        Pmic_criticalSectionStop(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_sendByte(
+                                   pPmicCoreHandle,
+                                   pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
+                                   regData);
     }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
 }
@@ -1097,22 +1066,19 @@ static int32_t Pmic_powerGetBuckFpwmMode(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        pmicStatus = Pmic_commIntf_recvByte(
-                                       pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
-                                       &regData);
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    pmicStatus = Pmic_commIntf_recvByte(
+                                   pPmicCoreHandle,
+                                   pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
+                                   &regData);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -1146,39 +1112,36 @@ static int32_t Pmic_powerSetBuckFpwmMpMode(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
     uint8_t buckFpwmMpModeVal = 0U;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(
+                                   pPmicCoreHandle,
+                                   pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
+                                   &regData);
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-
-        pmicStatus = Pmic_commIntf_recvByte(
-                                       pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
-                                       &regData);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        if(((bool)true) == buckFpwmMpMode)
         {
-            if(((bool)true) == buckFpwmMpMode)
-            {
-                buckFpwmMpModeVal = 1U;
-            }
-            Pmic_setBitField(&regData,
-                             PMIC_BUCKX_CTRL_BUCKX_FPWM_MP_SHIFT,
-                             PMIC_BUCKX_CTRL_BUCKX_FPWM_MP_MASK,
-                             buckFpwmMpModeVal);
-
-            pmicStatus = Pmic_commIntf_sendByte(
-                                       pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
-                                       regData);
+            buckFpwmMpModeVal = 1U;
         }
+        Pmic_setBitField(&regData,
+                         PMIC_BUCKX_CTRL_BUCKX_FPWM_MP_SHIFT,
+                         PMIC_BUCKX_CTRL_BUCKX_FPWM_MP_MASK,
+                         buckFpwmMpModeVal);
 
-        Pmic_criticalSectionStop(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_sendByte(
+                                   pPmicCoreHandle,
+                                   pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
+                                   regData);
     }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
 }
@@ -1196,22 +1159,19 @@ static int32_t Pmic_powerGetBuckPwmMpMode(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        pmicStatus = Pmic_commIntf_recvByte(
-                                       pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
-                                       &regData);
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    pmicStatus = Pmic_commIntf_recvByte(
+                                   pPmicCoreHandle,
+                                   pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
+                                   &regData);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -1244,39 +1204,36 @@ static int32_t Pmic_powerSetLdoSlowRampEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
     uint8_t ldoSlowRampEnVal = 0U;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(
+                                   pPmicCoreHandle,
+                                   pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
+                                   &regData);
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-
-        pmicStatus = Pmic_commIntf_recvByte(
-                                       pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
-                                       &regData);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        if(((bool)true) == ldoSlowRampEn)
         {
-            if(((bool)true) == ldoSlowRampEn)
-            {
-                ldoSlowRampEnVal = 1U;
-            }
-            Pmic_setBitField(&regData,
-                             PMIC_LDOX_CTRL_LDOX_SLOW_RAMP_EN_SHIFT,
-                             PMIC_LDOX_CTRL_LDOX_SLOW_RAMP_EN_MASK,
-                             ldoSlowRampEnVal);
-
-            pmicStatus = Pmic_commIntf_sendByte(
-                                       pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
-                                       regData);
+            ldoSlowRampEnVal = 1U;
         }
+        Pmic_setBitField(&regData,
+                         PMIC_LDOX_CTRL_LDOX_SLOW_RAMP_EN_SHIFT,
+                         PMIC_LDOX_CTRL_LDOX_SLOW_RAMP_EN_MASK,
+                         ldoSlowRampEnVal);
 
-        Pmic_criticalSectionStop(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_sendByte(
+                                   pPmicCoreHandle,
+                                   pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
+                                   regData);
     }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
 }
@@ -1293,22 +1250,19 @@ static int32_t Pmic_powerGetLdoSlowRampEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        pmicStatus = Pmic_commIntf_recvByte(
-                                       pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
-                                       &regData);
-       Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    pmicStatus = Pmic_commIntf_recvByte(
+                                   pPmicCoreHandle,
+                                   pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
+                                   &regData);
+   Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -1341,40 +1295,37 @@ static int32_t Pmic_powerSetRegulatorEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
     uint8_t regulatorEnVal = 0U;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(
+                                   pPmicCoreHandle,
+                                   pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
+                                   &regData);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-
-        pmicStatus = Pmic_commIntf_recvByte(
-                                       pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
-                                       &regData);
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        if(((bool)true) == regulatorEn)
         {
-            if(((bool)true) == regulatorEn)
-            {
-                regulatorEnVal = 1U;
-            }
-            Pmic_setBitField(&regData,
-                             PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_EN_SHIFT,
-                             PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_EN_MASK,
-                             regulatorEnVal);
-
-            pmicStatus = Pmic_commIntf_sendByte(
-                                       pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
-                                       regData);
+            regulatorEnVal = 1U;
         }
+        Pmic_setBitField(&regData,
+                         PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_EN_SHIFT,
+                         PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_EN_MASK,
+                         regulatorEnVal);
 
-        Pmic_criticalSectionStop(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_sendByte(
+                                   pPmicCoreHandle,
+                                   pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
+                                   regData);
     }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
 }
@@ -1391,29 +1342,26 @@ static int32_t Pmic_powerGetRegulatorEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        pmicStatus = Pmic_commIntf_recvByte(
-                                       pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
-                                       &regData);
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    pmicStatus = Pmic_commIntf_recvByte(
+                                   pPmicCoreHandle,
+                                   pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
+                                   &regData);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         if(Pmic_getBitField(
-                            regData,
-                            PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_EN_SHIFT,
-                            PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_EN_MASK) != 0U)
+                       regData,
+                       PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_EN_SHIFT,
+                       PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_EN_MASK) != 0U)
         {
             *pRegulatorEn = (bool)true;
         }
@@ -1429,6 +1377,11 @@ static int32_t Pmic_powerGetRegulatorEn(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /**
  * \brief   This function is used to get the voltage register of the BUCK
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
 static int32_t Pmic_powerGetBuckVoutRegAddr(Pmic_CoreHandle_t *pPmicCoreHandle,
                                             uint16_t           pwrRsrc,
@@ -1440,32 +1393,22 @@ static int32_t Pmic_powerGetBuckVoutRegAddr(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    status = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                           pwrRsrc,
-                                           &pwrRsrcIndex,
-                                           &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == status)
-    {
-        *pRegAddr = pPwrRsrcRegCfg[pwrRsrcIndex].vout1RegAddr;
-        /* Get the voltage register adress in case of BUCK regulator */
-        status = Pmic_powerGetBuckVoutSel(pPmicCoreHandle,
-                                          pwrRsrc,
-                                          &(buckVoutSel));
-    }
+    *pRegAddr = pPwrRsrcRegCfg[pwrRsrcIndex].vout1RegAddr;
+    /* Get the voltage register adress in case of BUCK regulator */
+    status = Pmic_powerGetBuckVoutSel(pPmicCoreHandle,
+                                      pwrRsrc,
+                                      &(buckVoutSel));
 
     if(PMIC_ST_SUCCESS == status)
     {
         switch (pPmicCoreHandle->pmicDeviceType)
         {
-            case PMIC_DEV_LEO_TPS6594X:
-                if(PMIC_TPS6594X_REGULATOR_BUCK_VOUT_SEL_VOUT2 == buckVoutSel)
-                {
-                    *pRegAddr = pPwrRsrcRegCfg[pwrRsrcIndex].vout2RegAddr;
-                }
-
-                break;
             case PMIC_DEV_HERA_LP8764X:
                 if(PMIC_LP8764X_REGULATOR_BUCK_VOUT_SEL_VOUT2 == buckVoutSel)
                 {
@@ -1474,7 +1417,12 @@ static int32_t Pmic_powerGetBuckVoutRegAddr(Pmic_CoreHandle_t *pPmicCoreHandle,
 
                 break;
              default:
-                status = PMIC_ST_ERR_INV_PARAM;
+                /* Default case is valid only for TPS6594x LEO PMIC */
+                if(PMIC_TPS6594X_REGULATOR_BUCK_VOUT_SEL_VOUT2 == buckVoutSel)
+                {
+                    *pRegAddr = pPwrRsrcRegCfg[pwrRsrcIndex].vout2RegAddr;
+                }
+
                 break;
         }
     }
@@ -1485,6 +1433,10 @@ static int32_t Pmic_powerGetBuckVoutRegAddr(Pmic_CoreHandle_t *pPmicCoreHandle,
 /**
  * \brief   This function is used to get the voltage register of the power
  *          resource.
+ *
+ *          Note: In this API, While adding support for New pwr resources,
+ *                developer need to update the API functionality for New
+ *                validate pwr resources accordingly.
  */
 static int32_t Pmic_GetVoltageRegAddr(Pmic_CoreHandle_t *pPmicCoreHandle,
                                       uint16_t           pwrRsrc,
@@ -1496,33 +1448,23 @@ static int32_t Pmic_GetVoltageRegAddr(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
     pwrRsrcType  = Pmic_powerGetPwrRsrcType(pwrRsrc);
-     /* Get PMIC power resources Index and register configuration */
-    status = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                           pwrRsrc,
-                                           &pwrRsrcIndex,
-                                           &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == status)
+    if(PMIC_ST_SUCCESS == Pmic_powerValidateLdoVmonPwrRsrcType(
+                                            pPmicCoreHandle->pmicDeviceType,
+                                            pwrRsrcType))
     {
-        if(PMIC_ST_SUCCESS == Pmic_powerValidateLdoVmonPwrRsrcType(
-                                                pPmicCoreHandle->pmicDeviceType,
-                                                pwrRsrcType))
-        {
-            *pRegAddr = pPwrRsrcRegCfg[pwrRsrcIndex].vout1RegAddr;
-        }
-        else if(PMIC_ST_SUCCESS == Pmic_powerValidateBuckPwrRsrcType(
-                                                pPmicCoreHandle->pmicDeviceType,
-                                                pwrRsrcType))
-        {
-            status = Pmic_powerGetBuckVoutRegAddr(pPmicCoreHandle,
-                                                  pwrRsrc,
-                                                  pRegAddr);
-        }
-        else
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-
+        *pRegAddr = pPwrRsrcRegCfg[pwrRsrcIndex].vout1RegAddr;
+    }
+    else
+    {
+        status = Pmic_powerGetBuckVoutRegAddr(pPmicCoreHandle,
+                                              pwrRsrc,
+                                              pRegAddr);
     }
 
     return status;
@@ -1531,6 +1473,11 @@ static int32_t Pmic_GetVoltageRegAddr(Pmic_CoreHandle_t *pPmicCoreHandle,
 /**
  * \brief   This function is used to validate the voltage levels for
  *          Regulators/VMON
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
 static int32_t Pmic_powerValidateVoltageLevel(
                                              Pmic_CoreHandle_t *pPmicCoreHandle,
@@ -1544,12 +1491,6 @@ static int32_t Pmic_powerValidateVoltageLevel(
 
     switch(pPmicCoreHandle->pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            status = Pmic_powerTPS6594xValidateVoltageLevel(pPmicCoreHandle,
-                                                            pwrRsrcType,
-                                                            pwrRsrc,
-                                                            voltage_mV);
-            break;
         case PMIC_DEV_HERA_LP8764X:
             status = Pmic_powerLP8764xValidateVoltageLevel(pPmicCoreHandle,
                                                            pwrRsrcType,
@@ -1557,7 +1498,11 @@ static int32_t Pmic_powerValidateVoltageLevel(
                                                            voltage_mV);
             break;
         default:
-            status = PMIC_ST_ERR_INV_PARAM;
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            status = Pmic_powerTPS6594xValidateVoltageLevel(pPmicCoreHandle,
+                                                            pwrRsrcType,
+                                                            pwrRsrc,
+                                                            voltage_mV);
             break;
     }
 
@@ -1567,72 +1512,63 @@ static int32_t Pmic_powerValidateVoltageLevel(
 /**
  * \brief   This function is used to get the required bit position of the
  *          voltage levels for Regulators/VMON
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly
+ *                While adding support for New pwrRsrcType, developer need to
+ *                update the API functionality for New pwrRsrcType accordingly.
  */
-static int32_t Pmic_powerGetVoltageBitField(uint8_t   pmicDeviceType,
-                                            uint16_t  pwrRsrc,
-                                            uint8_t  *pBitPos,
-                                            uint8_t  *pBitMask)
+static void Pmic_powerGetVoltageBitField(uint8_t   pmicDeviceType,
+                                         uint16_t  pwrRsrc,
+                                         uint8_t  *pBitPos,
+                                         uint8_t  *pBitMask)
 {
-    int32_t status = PMIC_ST_SUCCESS;
     uint8_t pwrRsrcType;
 
     pwrRsrcType = Pmic_powerGetPwrRsrcType(pwrRsrc);
     switch(pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType)
-            {
-                *pBitPos = PMIC_BUCKX_VOUT_X_BUCKX_VSETX_SHIFT;
-                *pBitMask = PMIC_BUCKX_VOUT_X_BUCKX_VSETX_MASK;
-            }
-            else if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO == pwrRsrcType)
-            {
-                if(PMIC_TPS6594X_REGULATOR_LDO4 == pwrRsrc)
-                {
-                    *pBitPos = PMIC_LDO4_VOUT_LDO4_VSET_SHIFT;
-                    *pBitMask = PMIC_LDO4_VOUT_LDO4_VSET_MASK;
-                }
-                else if((PMIC_TPS6594X_REGULATOR_LDO1 == pwrRsrc)    ||
-                        (PMIC_TPS6594X_REGULATOR_LDO2 == pwrRsrc)    ||
-                        (PMIC_TPS6594X_REGULATOR_LDO3 == pwrRsrc))
-                {
-                    *pBitPos = PMIC_LDO1_2_3_VOUT_LDO1_2_3_VSET_SHIFT;
-                    *pBitMask = PMIC_LDO1_2_3_VOUT_LDO1_2_3_VSET_MASK;
-                }
-                else
-                {
-                    status = PMIC_ST_ERR_INV_PARAM;
-                }
-            }
-            else
-            {
-                status = PMIC_ST_ERR_INV_PARAM;
-            }
-
-            break;
         case PMIC_DEV_HERA_LP8764X:
             if(PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType)
             {
                 *pBitPos = PMIC_BUCKX_VOUT_X_BUCKX_VSETX_SHIFT;
                 *pBitMask = PMIC_BUCKX_VOUT_X_BUCKX_VSETX_MASK;
             }
-            else if(PMIC_LP8764X_POWER_RESOURCE_TYPE_VMON == pwrRsrcType)
-            {
-                *pBitPos = PMIC_VMONX_PG_LEVEL_VMONX_PG_SET_SHIFT;
-                *pBitMask = PMIC_VMONX_PG_LEVEL_VMONX_PG_SET_MASK;
-            }
             else
             {
-                status = PMIC_ST_ERR_INV_PARAM;
+                /* Else case for VMON pwrRsrcType */
+                *pBitPos = PMIC_VMONX_PG_LEVEL_VMONX_PG_SET_SHIFT;
+                *pBitMask = PMIC_VMONX_PG_LEVEL_VMONX_PG_SET_MASK;
             }
 
             break;
         default :
-            status = PMIC_ST_ERR_INV_PARAM;
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO == pwrRsrcType)
+            {
+                if(PMIC_TPS6594X_REGULATOR_LDO4 == pwrRsrc)
+                {
+                    *pBitPos = PMIC_LDO4_VOUT_LDO4_VSET_SHIFT;
+                    *pBitMask = PMIC_LDO4_VOUT_LDO4_VSET_MASK;
+                }
+                else
+                {
+                    /* Else case for LDO pwrRsrcType */
+                    *pBitPos = PMIC_LDO1_2_3_VOUT_LDO1_2_3_VSET_SHIFT;
+                    *pBitMask = PMIC_LDO1_2_3_VOUT_LDO1_2_3_VSET_MASK;
+                }
+            }
+            else
+            {
+                *pBitPos = PMIC_BUCKX_VOUT_X_BUCKX_VSETX_SHIFT;
+                *pBitMask = PMIC_BUCKX_VOUT_X_BUCKX_VSETX_MASK;
+            }
+
             break;
     }
 
-    return status;
 }
 
 /*!
@@ -1669,20 +1605,17 @@ static int32_t Pmic_powerSetVoltage(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == status)
     {
-        status = Pmic_powerGetVoltageBitField(
-                                            pPmicCoreHandle->pmicDeviceType,
-                                            pwrRsrc,
-                                            &bitPos,
-                                            &bitMask);
-        if(PMIC_ST_SUCCESS == status)
-        {
-            status = Pmic_setPwrRsrcPgoodRegBitfieldCfg(pPmicCoreHandle,
-                                                        regAddr,
-                                                        vSetVal,
-                                                        bitPos,
-                                                        bitMask);
+        Pmic_powerGetVoltageBitField(pPmicCoreHandle->pmicDeviceType,
+                                     pwrRsrc,
+                                     &bitPos,
+                                     &bitMask);
 
-        }
+        status = Pmic_setPwrRsrcPgoodRegBitfieldCfg(pPmicCoreHandle,
+                                                    regAddr,
+                                                    vSetVal,
+                                                    bitPos,
+                                                    bitMask);
+
     }
 
     return status;
@@ -1702,16 +1635,8 @@ static int32_t Pmic_powerGetVoltage(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t  bitPos  = 0U;
     uint8_t  bitMask = 0U;
 
-    if(NULL == pMillivolt)
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    if(PMIC_ST_SUCCESS == status)
-    {
-        /* Get the regulator voltage register address */
-        status = Pmic_GetVoltageRegAddr(pPmicCoreHandle, pwrRsrc, &regAddr);
-    }
+    /* Get the regulator voltage register address */
+    status = Pmic_GetVoltageRegAddr(pPmicCoreHandle, pwrRsrc, &regAddr);
 
     if(PMIC_ST_SUCCESS == status)
     {
@@ -1724,14 +1649,12 @@ static int32_t Pmic_powerGetVoltage(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == status)
     {
-        status = Pmic_powerGetVoltageBitField(pPmicCoreHandle->pmicDeviceType,
-                                              pwrRsrc,
-                                              &bitPos,
-                                              &bitMask);
-        if(PMIC_ST_SUCCESS == status)
-        {
-            vSetVal = Pmic_getBitField(regData, bitPos, bitMask);
-        }
+        Pmic_powerGetVoltageBitField(pPmicCoreHandle->pmicDeviceType,
+                                     pwrRsrc,
+                                     &bitPos,
+                                     &bitMask);
+
+        vSetVal = Pmic_getBitField(regData, bitPos, bitMask);
     }
 
     if(PMIC_ST_SUCCESS == status)
@@ -1747,6 +1670,11 @@ static int32_t Pmic_powerGetVoltage(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   This function is used to validate the current limit of BUCK.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
 static int32_t Pmic_powerValidateBuckCurrentLimit(uint8_t  pmicDeviceType,
                                                   uint8_t  currentLimit,
@@ -1756,30 +1684,6 @@ static int32_t Pmic_powerValidateBuckCurrentLimit(uint8_t  pmicDeviceType,
 
     switch(pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            if((pwrRsrc >= PMIC_TPS6594X_REGULATOR_BUCK1) &&
-               (pwrRsrc <= PMIC_TPS6594X_REGULATOR_BUCK4))
-            {
-                if((currentLimit < PMIC_TPS6594X_BUCK1_4_CURRENT_LIMIT_MIN) ||
-                   (currentLimit > PMIC_TPS6594X_BUCK1_4_CURRENT_LIMIT_MAX))
-                {
-                    status = PMIC_ST_ERR_INV_PARAM;
-                }
-            }
-
-            else
-            {
-                if(pwrRsrc == PMIC_TPS6594X_REGULATOR_BUCK5)
-                {
-                    if((currentLimit < PMIC_TPS6594X_BUCK5_CURRENT_LIMIT_MIN) ||
-                       (currentLimit > PMIC_TPS6594X_BUCK5_CURRENT_LIMIT_MAX))
-                    {
-                        status = PMIC_ST_ERR_INV_PARAM;
-                    }
-                }
-            }
-
-            break;
         case PMIC_DEV_HERA_LP8764X:
             if((currentLimit < PMIC_LP8764X_BUCK_CURRENT_LIMIT_MIN) ||
                (currentLimit > PMIC_LP8764X_BUCK_CURRENT_LIMIT_MAX))
@@ -1789,7 +1693,28 @@ static int32_t Pmic_powerValidateBuckCurrentLimit(uint8_t  pmicDeviceType,
 
             break;
         default:
-            status = PMIC_ST_ERR_INV_PARAM;
+            /* Default case is valid only for TPS6594x LEO PMIC
+             * Check for pwrRsrc >= PMIC_TPS6594X_REGULATOR_BUCK4 is done as
+             * part of Pmic_powerParamCheck() function
+             */
+            if(pwrRsrc <= PMIC_TPS6594X_REGULATOR_BUCK4)
+            {
+                if((currentLimit < PMIC_TPS6594X_BUCK1_4_CURRENT_LIMIT_MIN) ||
+                   (currentLimit > PMIC_TPS6594X_BUCK1_4_CURRENT_LIMIT_MAX))
+                {
+                    status = PMIC_ST_ERR_INV_PARAM;
+                }
+            }
+            /* else case for PMIC_TPS6594X_REGULATOR_BUCK5 */
+            else
+            {
+                if((currentLimit < PMIC_TPS6594X_BUCK5_CURRENT_LIMIT_MIN) ||
+                   (currentLimit > PMIC_TPS6594X_BUCK5_CURRENT_LIMIT_MAX))
+                {
+                    status = PMIC_ST_ERR_INV_PARAM;
+                }
+            }
+
             break;
     }
 
@@ -1809,18 +1734,16 @@ static int32_t Pmic_powerSetBuckCurrentLimit(
     uint8_t pwrRsrcIndex;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_powerValidateBuckCurrentLimit(
-                                                pPmicCoreHandle->pmicDeviceType,
-                                                currentLimit,
-                                                pwrRsrc);
-    }
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
+
+    pmicStatus = Pmic_powerValidateBuckCurrentLimit(
+                                            pPmicCoreHandle->pmicDeviceType,
+                                            currentLimit,
+                                            pwrRsrc);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -1861,21 +1784,18 @@ static int32_t Pmic_powerGetBuckCurrentLimit(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        pmicStatus = Pmic_commIntf_recvByte(
-                                     pPmicCoreHandle,
-                                     pPwrRsrcRegCfg[pwrRsrcIndex].configRegAddr,
-                                     &regData);
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    pmicStatus = Pmic_commIntf_recvByte(
+                                 pPmicCoreHandle,
+                                 pPwrRsrcRegCfg[pwrRsrcIndex].configRegAddr,
+                                 &regData);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -1889,6 +1809,11 @@ static int32_t Pmic_powerGetBuckCurrentLimit(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   This function is used to validate the slew rate for BUCK/VMON
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
 static int32_t Pmic_powerValidateSlewRateLimit(uint8_t pmicDeviceType,
                                                uint8_t slewRate)
@@ -1897,13 +1822,6 @@ static int32_t Pmic_powerValidateSlewRateLimit(uint8_t pmicDeviceType,
 
     switch(pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            if(slewRate > PMIC_TPS6594X_BUCK_SLEW_RATE_MAX)
-            {
-                status = PMIC_ST_ERR_INV_PARAM;
-            }
-
-            break;
         case PMIC_DEV_HERA_LP8764X:
             if(slewRate > PMIC_LP8764X_BUCK_SLEW_RATE_MAX)
             {
@@ -1912,7 +1830,12 @@ static int32_t Pmic_powerValidateSlewRateLimit(uint8_t pmicDeviceType,
 
             break;
         default:
-            status = PMIC_ST_ERR_INV_PARAM;
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            if(slewRate > PMIC_TPS6594X_BUCK_SLEW_RATE_MAX)
+            {
+                status = PMIC_ST_ERR_INV_PARAM;
+            }
+
             break;
     }
     return status;
@@ -1921,20 +1844,19 @@ static int32_t Pmic_powerValidateSlewRateLimit(uint8_t pmicDeviceType,
 /*!
  * \brief   This function is used to get the required bit position
  *          of BUCK/VMON Slew rate.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
-static int32_t Pmic_powerGetBuckVmonSlewRateBitPos(uint8_t   pmicDeviceType,
-                                                   uint16_t  pwrRsrc,
-                                                   uint8_t  *pBitPos,
-                                                   uint8_t  *pBitMask)
+static void Pmic_powerGetBuckVmonSlewRateBitPos(uint8_t   pmicDeviceType,
+                                                uint16_t  pwrRsrc,
+                                                uint8_t  *pBitPos,
+                                                uint8_t  *pBitMask)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-
     switch (pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            *pBitPos  = PMIC_BUCKX_CONF_BUCKX_SLEW_RATE_SHIFT;
-            *pBitMask = PMIC_BUCKX_CONF_BUCKX_SLEW_RATE_MASK;
-            break;
         case PMIC_DEV_HERA_LP8764X:
             if(PMIC_LP8764X_POWER_SOURCE_VMON1 == pwrRsrc)
             {
@@ -1954,11 +1876,12 @@ static int32_t Pmic_powerGetBuckVmonSlewRateBitPos(uint8_t   pmicDeviceType,
 
             break;
         default:
-            status = PMIC_ST_ERR_INV_PARAM;
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            *pBitPos  = PMIC_BUCKX_CONF_BUCKX_SLEW_RATE_SHIFT;
+            *pBitMask = PMIC_BUCKX_CONF_BUCKX_SLEW_RATE_MASK;
             break;
     }
 
-    return status;
 }
 
 /*!
@@ -1976,36 +1899,29 @@ static int32_t Pmic_powerSetBuckVmonSlewRate(
     uint8_t pwrRsrcIndex;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    status = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                           pwrRsrc,
-                                           &pwrRsrcIndex,
-                                           &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_powerValidateSlewRateLimit(
-                                                pPmicCoreHandle->pmicDeviceType,
-                                                buckVmonSlewRate);
-    }
-
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_powerGetBuckVmonSlewRateBitPos(
+    status = Pmic_powerValidateSlewRateLimit(
                                             pPmicCoreHandle->pmicDeviceType,
+                                            buckVmonSlewRate);
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        Pmic_powerGetBuckVmonSlewRateBitPos(pPmicCoreHandle->pmicDeviceType,
                                             pwrRsrc,
                                             &bitPos,
                                             &bitMask);
 
-        if(PMIC_ST_SUCCESS == status)
-        {
-            status = Pmic_setPwrRsrcPgoodRegBitfieldCfg(
-                                     pPmicCoreHandle,
-                                     pPwrRsrcRegCfg[pwrRsrcIndex].configRegAddr,
-                                     buckVmonSlewRate,
-                                     bitPos,
-                                     bitMask);
-        }
+        status = Pmic_setPwrRsrcPgoodRegBitfieldCfg(
+                                 pPmicCoreHandle,
+                                 pPwrRsrcRegCfg[pwrRsrcIndex].configRegAddr,
+                                 buckVmonSlewRate,
+                                 bitPos,
+                                 bitMask);
     }
 
     return status;
@@ -2026,33 +1942,27 @@ static int32_t Pmic_powerGetBuckVmonSlewRate(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    status = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                           pwrRsrc,
-                                           &pwrRsrcIndex,
-                                           &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    status = Pmic_commIntf_recvByte(
+                                 pPmicCoreHandle,
+                                 pPwrRsrcRegCfg[pwrRsrcIndex].configRegAddr,
+                                 &regData);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == status)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        status = Pmic_commIntf_recvByte(
-                                     pPmicCoreHandle,
-                                     pPwrRsrcRegCfg[pwrRsrcIndex].configRegAddr,
-                                     &regData);
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+        Pmic_powerGetBuckVmonSlewRateBitPos(pPmicCoreHandle->pmicDeviceType,
+                                            pwrRsrc,
+                                            &bitPos,
+                                            &bitMask);
 
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_powerGetBuckVmonSlewRateBitPos(
-                                                pPmicCoreHandle->pmicDeviceType,
-                                                pwrRsrc,
-                                                &bitPos,
-                                                &bitMask);
-        if(PMIC_ST_SUCCESS == status)
-        {
-            *pSlewRate = Pmic_getBitField(regData, bitPos, bitMask);
-        }
+        *pSlewRate = Pmic_getBitField(regData, bitPos, bitMask);
 
     }
 
@@ -2073,39 +1983,36 @@ static int32_t Pmic_powerSetBuckPullDownEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
     uint8_t buckPullDownEnVal = 0U;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    pmicStatus = Pmic_commIntf_recvByte(
+                                  pPmicCoreHandle,
+                                  pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
+                                  &regData);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        pmicStatus = Pmic_commIntf_recvByte(
-                                      pPmicCoreHandle,
-                                      pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
-                                      &regData);
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        if(((bool)true) == buckPullDownEn)
         {
-            if(((bool)true) == buckPullDownEn)
-            {
-                buckPullDownEnVal = 1U;
-            }
-            /* Enable/Disable output pull-down resistor for BUCK regulator */
-            Pmic_setBitField(&regData,
-                             PMIC_BUCKX_CTRL_BUCKX_PLDN_SHIFT,
-                             PMIC_BUCKX_CTRL_BUCKX_PLDN_MASK,
-                             buckPullDownEnVal);
-            pmicStatus = Pmic_commIntf_sendByte(
-                                       pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
-                                       regData);
+            buckPullDownEnVal = 1U;
         }
-
-        Pmic_criticalSectionStop(pPmicCoreHandle);
+        /* Enable/Disable output pull-down resistor for BUCK regulator */
+        Pmic_setBitField(&regData,
+                         PMIC_BUCKX_CTRL_BUCKX_PLDN_SHIFT,
+                         PMIC_BUCKX_CTRL_BUCKX_PLDN_MASK,
+                         buckPullDownEnVal);
+        pmicStatus = Pmic_commIntf_sendByte(
+                                   pPmicCoreHandle,
+                                   pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
+                                   regData);
     }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
 }
@@ -2123,22 +2030,19 @@ static int32_t Pmic_powerGetBuckPullDownEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        pmicStatus = Pmic_commIntf_recvByte(
-                                       pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
-                                       &regData);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    pmicStatus = Pmic_commIntf_recvByte(
+                                   pPmicCoreHandle,
+                                   pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
+                                   &regData);
 
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -2160,24 +2064,19 @@ static int32_t Pmic_powerGetBuckPullDownEn(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   This function is used to validate the LDO pull down resistor value.
+ *
+ *          Note: In this API, assumed that ldoPullDownSel configuration is
+ *                supported only for the TPS6594x Leo PMIC device. While adding
+ *                support for New PMIC device, developer need to update the API
+ *                functionality for New PMIC device accordingly.
  */
-static int32_t Pmic_powerValidateLdoPullDownSel(uint8_t pmicDeviceType,
-                                                uint8_t ldoPullDownSel)
+static int32_t Pmic_powerValidateLdoPullDownSel(uint8_t ldoPullDownSel)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    switch(pmicDeviceType)
+    if(ldoPullDownSel > PMIC_TPS6594X_REGULATOR_LDO_PLDN_VAL_500OHM)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            if(ldoPullDownSel > PMIC_TPS6594X_REGULATOR_LDO_PLDN_VAL_500OHM)
-            {
-                status = PMIC_ST_ERR_INV_PARAM;
-            }
-
-            break;
-        default:
-            status = PMIC_ST_ERR_INV_PARAM;
-            break;
+        status = PMIC_ST_ERR_INV_PARAM;
     }
 
     return status;
@@ -2196,18 +2095,13 @@ static int32_t Pmic_powerSetLdoPullDownSel(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_powerValidateLdoPullDownSel(
-                                                pPmicCoreHandle->pmicDeviceType,
-                                                ldoPullDownSel);
-    }
+    pmicStatus = Pmic_powerValidateLdoPullDownSel(ldoPullDownSel);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -2250,21 +2144,18 @@ static int32_t Pmic_powerGetLdoPullDownSel(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        pmicStatus = Pmic_commIntf_recvByte(
-                                       pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
-                                       &regData);
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    pmicStatus = Pmic_commIntf_recvByte(
+                                   pPmicCoreHandle,
+                                   pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
+                                   &regData);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -2318,6 +2209,11 @@ static int32_t Pmic_powerSetVccaPwrGudLvl(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /**
  * \brief   This function is used to validate Power Good threshold level
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
 static int32_t Pmic_validateThreshold(uint8_t pmicDeviceType,
                                       uint8_t pwrGudThresholdLvl)
@@ -2326,25 +2222,23 @@ static int32_t Pmic_validateThreshold(uint8_t pmicDeviceType,
 
     switch(pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-                if(pwrGudThresholdLvl >
-                                 PMIC_TPS6594X_PG_OV_UV_THRESHOLD_LVL_100_OR_10)
-                {
-                    status = PMIC_ST_ERR_INV_PARAM;
-                }
-
-                break;
-            case PMIC_DEV_HERA_LP8764X:
-                if(pwrGudThresholdLvl >
-                                 PMIC_LP8764X_PG_OV_UV_THRESHOLD_LVL_100_OR_10)
-                {
-                    status = PMIC_ST_ERR_INV_PARAM;
-                }
-
-                break;
-            default:
+        case PMIC_DEV_HERA_LP8764X:
+            if(pwrGudThresholdLvl >
+                             PMIC_LP8764X_PG_OV_UV_THRESHOLD_LVL_100_OR_10)
+            {
                 status = PMIC_ST_ERR_INV_PARAM;
-                break;
+            }
+
+            break;
+        default:
+        /* Default case is valid only for TPS6594x LEO PMIC */
+            if(pwrGudThresholdLvl >
+                             PMIC_TPS6594X_PG_OV_UV_THRESHOLD_LVL_100_OR_10)
+            {
+                status = PMIC_ST_ERR_INV_PARAM;
+            }
+
+            break;
     }
 
     return status;
@@ -2362,14 +2256,11 @@ static int32_t Pmic_powerSetLowThreshold(
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
     /* Get PMIC power resources register configuration */
-    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                         &pPwrRsrcRegCfg);
+    Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                            &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_validateThreshold(pPmicCoreHandle->pmicDeviceType,
-                               pwrGudUvThresholdLvl);
-    }
+    pmicStatus = Pmic_validateThreshold(pPmicCoreHandle->pmicDeviceType,
+                           pwrGudUvThresholdLvl);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -2412,20 +2303,17 @@ static int32_t Pmic_powerGetLowThreshold(
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
     /* Get PMIC power resources register configuration */
-    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                         &pPwrRsrcRegCfg);
+    Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                            &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        /* Getting the PGOOD LOW threshold value */
-        pmicStatus = Pmic_commIntf_recvByte(
-                                        pPmicCoreHandle,
-                                        pPwrRsrcRegCfg[pwrRsrc].pgWindowRegAddr,
-                                        &regData);
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    /* Getting the PGOOD LOW threshold value */
+    pmicStatus = Pmic_commIntf_recvByte(
+                                    pPmicCoreHandle,
+                                    pPwrRsrcRegCfg[pwrRsrc].pgWindowRegAddr,
+                                    &regData);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -2451,14 +2339,11 @@ static int32_t Pmic_powerSetHighThreshold(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
     /* Get PMIC power resources register configuration */
-    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+    Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
                                          &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_validateThreshold(pPmicCoreHandle->pmicDeviceType,
-                               powerGoodOvThr);
-    }
+    pmicStatus = Pmic_validateThreshold(pPmicCoreHandle->pmicDeviceType,
+                                        powerGoodOvThr);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -2502,20 +2387,16 @@ static int32_t Pmic_powerGetHighThreshold(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
     /* Get PMIC power resources register configuration */
-    pmicStatus = Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                         &pPwrRsrcRegCfg);
+    Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                            &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        /* Setting the PGOOD HIGH threshold value */
-        pmicStatus = Pmic_commIntf_recvByte(
-                                        pPmicCoreHandle,
-                                        pPwrRsrcRegCfg[pwrRsrc].pgWindowRegAddr,
-                                        &regData);
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    }
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    /* Setting the PGOOD HIGH threshold value */
+    pmicStatus = Pmic_commIntf_recvByte(
+                                    pPmicCoreHandle,
+                                    pPwrRsrcRegCfg[pwrRsrc].pgWindowRegAddr,
+                                    &regData);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -2569,36 +2450,24 @@ static int32_t Pmic_powerGetVccaPwrGudLvl(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief   This function is used to get the required Bit Position and Bit Mask
  *           of VMON enable/disable status for all power resources
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
+ *                While adding support for New Power Resource, developer need to
+ *               update the API functionality for New Power Resource accordingly
  */
-static int32_t Pmic_powerGetVmonEnBitPos(uint8_t   pmicDeviceType,
-                                         uint16_t  pwrRsrc,
-                                         uint8_t   *pBitPos,
-                                         uint8_t   *pBitMask)
+static void Pmic_powerGetVmonEnBitPos(uint8_t   pmicDeviceType,
+                                      uint16_t  pwrRsrc,
+                                      uint8_t   *pBitPos,
+                                      uint8_t   *pBitMask)
 {
-    int32_t status = PMIC_ST_SUCCESS;
     uint8_t pwrRsrcType;
 
     pwrRsrcType = Pmic_powerGetPwrRsrcType(pwrRsrc);
     switch(pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            if((PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType) ||
-               (PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO  == pwrRsrcType))
-            {
-               *pBitPos = PMIC_REGULATOR_CTRL_REGULATOR_VMON_EN_SHIFT;
-               *pBitMask = PMIC_REGULATOR_CTRL_REGULATOR_VMON_EN_MASK;
-            }
-            else if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_VCCA == pwrRsrcType)
-            {
-               *pBitPos = PMIC_VCCA_VMON_CTRL_VCCA_VMON_EN_SHIFT;
-               *pBitMask = PMIC_VCCA_VMON_CTRL_VCCA_VMON_EN_MASK;
-            }
-            else
-            {
-                status = PMIC_ST_ERR_INV_PARAM;
-            }
-
-            break;
         case PMIC_DEV_HERA_LP8764X:
             if(PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType)
             {
@@ -2612,33 +2481,39 @@ static int32_t Pmic_powerGetVmonEnBitPos(uint8_t   pmicDeviceType,
                     *pBitPos = PMIC_VCCA_VMON_CTRL_VMON1_EN_SHIFT;
                     *pBitMask = PMIC_VCCA_VMON_CTRL_VMON1_EN_MASK;
                 }
-                else if(PMIC_LP8764X_POWER_SOURCE_VMON2 == pwrRsrc)
+                else
                 {
+                    /* Else case for VMON2 pwrRsrcType */
                     *pBitPos = PMIC_VCCA_VMON_CTRL_VMON2_EN_SHIFT;
                     *pBitMask = PMIC_VCCA_VMON_CTRL_VMON2_EN_MASK;
                 }
-                else
-                {
-                    status = PMIC_ST_ERR_INV_PARAM;
-                }
-            }
-            else if(PMIC_LP8764X_POWER_RESOURCE_TYPE_VCCA == pwrRsrcType)
-            {
-               *pBitPos = PMIC_VCCA_VMON_CTRL_VCCA_VMON_EN_SHIFT;
-               *pBitMask = PMIC_VCCA_VMON_CTRL_VCCA_VMON_EN_MASK;
             }
             else
             {
-                status = PMIC_ST_ERR_INV_PARAM;
+                /* Else case for VCCA pwrRsrcType */
+                *pBitPos = PMIC_VCCA_VMON_CTRL_VCCA_VMON_EN_SHIFT;
+                *pBitMask = PMIC_VCCA_VMON_CTRL_VCCA_VMON_EN_MASK;
             }
 
             break;
         default:
-            status = PMIC_ST_ERR_INV_PARAM;
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            if((PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType) ||
+               (PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO  == pwrRsrcType))
+            {
+               *pBitPos = PMIC_REGULATOR_CTRL_REGULATOR_VMON_EN_SHIFT;
+               *pBitMask = PMIC_REGULATOR_CTRL_REGULATOR_VMON_EN_MASK;
+            }
+            else
+            {
+                /* Else case for VCCA pwrRsrcType */
+                *pBitPos = PMIC_VCCA_VMON_CTRL_VCCA_VMON_EN_SHIFT;
+                *pBitMask = PMIC_VCCA_VMON_CTRL_VCCA_VMON_EN_MASK;
+            }
+
             break;
     }
 
-    return status;
 }
 
 /*!
@@ -2657,46 +2532,39 @@ static int32_t Pmic_powerSetVmonEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t bitMask = 0U;
     uint8_t vmonEnVal = 0U;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    pmicStatus = Pmic_commIntf_recvByte(
+                                   pPmicCoreHandle,
+                                   pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
+                                   &regData);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        pmicStatus = Pmic_commIntf_recvByte(
-                                       pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
-                                       &regData);
+        Pmic_powerGetVmonEnBitPos(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &bitPos,
+                                  &bitMask);
 
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        if(((bool)true) == vmonEn)
         {
-            pmicStatus = Pmic_powerGetVmonEnBitPos(
-                                                pPmicCoreHandle->pmicDeviceType,
-                                                pwrRsrc,
-                                                &bitPos,
-                                                &bitMask);
-
-            if(((bool)true) == vmonEn)
-            {
-                vmonEnVal = 1U;
-            }
-
-            Pmic_setBitField(&regData, bitPos, bitMask, vmonEnVal);
-       }
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            pmicStatus = Pmic_commIntf_sendByte(
-                                       pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
-                                       regData);
+            vmonEnVal = 1U;
         }
 
-        Pmic_criticalSectionStop(pPmicCoreHandle);
+        Pmic_setBitField(&regData, bitPos, bitMask, vmonEnVal);
+
+        pmicStatus = Pmic_commIntf_sendByte(
+                                   pPmicCoreHandle,
+                                   pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
+                                   regData);
     }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
 }
@@ -2716,29 +2584,26 @@ static int32_t Pmic_powerGetvmonEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
     uint8_t bitMask = 0U;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    pmicStatus = Pmic_commIntf_recvByte(
+                                   pPmicCoreHandle,
+                                   pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
+                                   &regData);
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        pmicStatus = Pmic_commIntf_recvByte(
-                                       pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrcIndex].ctrlRegAddr,
-                                       &regData);
-
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_powerGetVmonEnBitPos(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &bitPos,
-                                               &bitMask);
+        Pmic_powerGetVmonEnBitPos(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &bitPos,
+                                  &bitMask);
 
         if(Pmic_getBitField(regData, bitPos, bitMask) != 0U)
         {
@@ -2757,6 +2622,11 @@ static int32_t Pmic_powerGetvmonEn(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief   This function is used to validate the Rail group limit for all
  *          power resources
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
 static int32_t Pmic_powerValidateRailGrpLimit(uint8_t pmicDeviceType,
                                               uint8_t railGrpSel)
@@ -2765,13 +2635,6 @@ static int32_t Pmic_powerValidateRailGrpLimit(uint8_t pmicDeviceType,
 
     switch(pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            if(railGrpSel > PMIC_TPS6594X_POWER_RAIL_SEL_OTHER)
-            {
-                status = PMIC_ST_ERR_INV_PARAM;
-            }
-
-            break;
         case PMIC_DEV_HERA_LP8764X:
             if(railGrpSel > PMIC_LP8764X_POWER_RAIL_SEL_OTHER)
             {
@@ -2780,7 +2643,12 @@ static int32_t Pmic_powerValidateRailGrpLimit(uint8_t pmicDeviceType,
 
             break;
         default:
-            status = PMIC_ST_ERR_INV_PARAM;
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            if(railGrpSel > PMIC_TPS6594X_POWER_RAIL_SEL_OTHER)
+            {
+                status = PMIC_ST_ERR_INV_PARAM;
+            }
+
             break;
     }
 
@@ -2802,19 +2670,16 @@ static int32_t Pmic_powerSetRailGrpSel(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t bitMask = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        regAddr = pPwrRsrcRegCfg[pwrRsrcIndex].railGrpRegAddr;
-        pmicStatus = Pmic_powerValidateRailGrpLimit(
-                                                pPmicCoreHandle->pmicDeviceType,
-                                                railGrpSel);
-    }
+    regAddr = pPwrRsrcRegCfg[pwrRsrcIndex].railGrpRegAddr;
+    pmicStatus = Pmic_powerValidateRailGrpLimit(
+                                            pPmicCoreHandle->pmicDeviceType,
+                                            railGrpSel);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -2857,21 +2722,18 @@ static int32_t Pmic_powerGetRailGrpSel(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t bitMask = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        pmicStatus = Pmic_commIntf_recvByte(
-                                    pPmicCoreHandle,
-                                    pPwrRsrcRegCfg[pwrRsrcIndex].railGrpRegAddr,
-                                    &regData);
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    pmicStatus = Pmic_commIntf_recvByte(
+                                pPmicCoreHandle,
+                                pPwrRsrcRegCfg[pwrRsrcIndex].railGrpRegAddr,
+                                &regData);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -2902,40 +2764,38 @@ static int32_t Pmic_powerSetVmonRange(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
     uint8_t vmonRangeVal = 0U;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    pmicStatus = Pmic_commIntf_recvByte(
+                               pPmicCoreHandle,
+                               pPwrRsrcRegCfg[pwrRsrcIndex].pgWindowRegAddr,
+                               &regData);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        pmicStatus = Pmic_commIntf_recvByte(
-                                   pPmicCoreHandle,
-                                   pPwrRsrcRegCfg[pwrRsrcIndex].pgWindowRegAddr,
-                                   &regData);
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        if(((bool)true) == vmonRange)
         {
-            if(((bool)true) == vmonRange)
-            {
-                vmonRangeVal = 1U;
-            }
-
-            Pmic_setBitField(&regData,
-                             PMIC_VMON_PG_WINDOW_VMON_RANGE_SHIFT,
-                             PMIC_VMON_PG_WINDOW_VMON_RANGE_MASK,
-                             vmonRangeVal);
-
-            pmicStatus = Pmic_commIntf_sendByte(
-                                   pPmicCoreHandle,
-                                   pPwrRsrcRegCfg[pwrRsrcIndex].pgWindowRegAddr,
-                                   regData);
+            vmonRangeVal = 1U;
         }
 
-        Pmic_criticalSectionStop(pPmicCoreHandle);
+        Pmic_setBitField(&regData,
+                         PMIC_VMON_PG_WINDOW_VMON_RANGE_SHIFT,
+                         PMIC_VMON_PG_WINDOW_VMON_RANGE_MASK,
+                         vmonRangeVal);
+
+        pmicStatus = Pmic_commIntf_sendByte(
+                               pPmicCoreHandle,
+                               pPwrRsrcRegCfg[pwrRsrcIndex].pgWindowRegAddr,
+                               regData);
     }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
 
     return pmicStatus;
 }
@@ -2951,9 +2811,8 @@ static int32_t Pmic_pwrSetBuckfpwmmpLdoslowrampLdopdselCfg(
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pwrRsrcCfg.validParams,
-                                     PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID)))
+    if(((bool)true) == pmic_validParamCheck(pwrRsrcCfg.validParams,
+                                     PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
                                           PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID,
@@ -3246,9 +3105,8 @@ static int32_t Pmic_pwrGetRegulatorEnLdoslowrampLdopdselCfg(
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
-                                     PMIC_CFG_REGULATOR_EN_VALID)))
+    if(((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
+                                     PMIC_CFG_REGULATOR_EN_VALID))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
                                                PMIC_CFG_REGULATOR_EN_VALID,
@@ -3325,9 +3183,8 @@ static int32_t Pmic_pwrGetBuckVoutselFpwmmodeFpwmmpmodeCfg(
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
-                                     PMIC_CFG_REGULATOR_BUCK_VOUT_SEL_VALID)))
+    if(((bool)true) == pmic_validParamCheck(pPwrRsrcCfg->validParams,
+                                     PMIC_CFG_REGULATOR_BUCK_VOUT_SEL_VALID))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
                                          PMIC_CFG_REGULATOR_BUCK_VOUT_SEL_VALID,
@@ -3586,6 +3443,11 @@ static int32_t Pmic_powerGetPwrRsrcePgoodConfig(
 /*!
  * \brief   This function is to validate the power resource limit for the
  *          specific PMIC device.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
 static int32_t Pmic_powerValidatePwrRsrcLimit(
                                     const Pmic_CoreHandle_t *pPmicCoreHandle,
@@ -3596,19 +3458,17 @@ static int32_t Pmic_powerValidatePwrRsrcLimit(
 
     switch(pPmicCoreHandle->pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            status = Pmic_powerTPS6594xValidatePwrRsrcLimit(pPmicCoreHandle,
-                                                            pwrRsrcType,
-                                                            pwrRsrc);
-
-            break;
         case PMIC_DEV_HERA_LP8764X:
             status = Pmic_powerLP8764xValidatePwrRsrcLimit(pPmicCoreHandle,
                                                            pwrRsrcType,
                                                            pwrRsrc);
             break;
         default:
-            status = PMIC_ST_ERR_INV_PARAM;
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            status = Pmic_powerTPS6594xValidatePwrRsrcLimit(pPmicCoreHandle,
+                                                            pwrRsrcType,
+                                                            pwrRsrc);
+
             break;
     }
 
@@ -3656,39 +3516,37 @@ static int32_t Pmic_powerSetLdoBypassModeEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
     uint8_t ldoBypassModeEnVal = 0U;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    pmicStatus = Pmic_commIntf_recvByte(
+                                  pPmicCoreHandle,
+                                  pPwrRsrcRegCfg[pwrRsrcIndex].vout1RegAddr,
+                                  &regData);
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        pmicStatus = Pmic_commIntf_recvByte(
-                                      pPmicCoreHandle,
-                                      pPwrRsrcRegCfg[pwrRsrcIndex].vout1RegAddr,
-                                      &regData);
-        if(PMIC_ST_SUCCESS == pmicStatus)
+        if(((bool)true) == ldoBypassModeEn)
         {
-            if(((bool)true) == ldoBypassModeEn)
-            {
-                ldoBypassModeEnVal = 1U;
-            }
-
-            Pmic_setBitField(&regData,
-                             PMIC_LDO1_2_3_VOUT_LDO1_2_3_BYPASS_SHIFT,
-                             PMIC_LDO1_2_3_VOUT_LDO1_2_3_BYPASS_MASK,
-                             ldoBypassModeEnVal);
-
-            pmicStatus = Pmic_commIntf_sendByte(
-                                      pPmicCoreHandle,
-                                      pPwrRsrcRegCfg[pwrRsrcIndex].vout1RegAddr,
-                                      regData);
+            ldoBypassModeEnVal = 1U;
         }
 
-        Pmic_criticalSectionStop(pPmicCoreHandle);
+        Pmic_setBitField(&regData,
+                         PMIC_LDO1_2_3_VOUT_LDO1_2_3_BYPASS_SHIFT,
+                         PMIC_LDO1_2_3_VOUT_LDO1_2_3_BYPASS_MASK,
+                         ldoBypassModeEnVal);
+
+        pmicStatus = Pmic_commIntf_sendByte(
+                                  pPmicCoreHandle,
+                                  pPwrRsrcRegCfg[pwrRsrcIndex].vout1RegAddr,
+                                  regData);
     }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
 
     return pmicStatus;
 }
@@ -3705,21 +3563,18 @@ static int32_t Pmic_powerGetLdoBypassModeEn(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        pmicStatus = Pmic_commIntf_recvByte(
-                                      pPmicCoreHandle,
-                                      pPwrRsrcRegCfg[pwrRsrcIndex].vout1RegAddr,
-                                      &regData);
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    pmicStatus = Pmic_commIntf_recvByte(
+                                  pPmicCoreHandle,
+                                  pPwrRsrcRegCfg[pwrRsrcIndex].vout1RegAddr,
+                                  &regData);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -3743,24 +3598,19 @@ static int32_t Pmic_powerGetLdoBypassModeEn(Pmic_CoreHandle_t *pPmicCoreHandle,
  /*!
  * \brief   This function is used to validate the ldo residual voltage timeout
  *          limit.
+ *
+ *          Note: In this API, assumed that ldoRvTimeoutSel configuration is
+ *                supported only for the TPS6594x Leo PMIC device. While adding
+ *                support for New PMIC device, developer need to update the API
+ *                functionality for New PMIC device accordingly.
  */
-static int32_t Pmic_powerValidateLdoRvTimeoutLimit(uint8_t pmicDeviceType,
-                                                   uint8_t ldoRvTimeoutSel)
+static int32_t Pmic_powerValidateLdoRvTimeoutLimit(uint8_t ldoRvTimeoutSel)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    switch (pmicDeviceType)
+    if(ldoRvTimeoutSel > PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_16MS)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            if(ldoRvTimeoutSel > PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_16MS)
-            {
-                status = PMIC_ST_ERR_INV_PARAM;
-            }
-
-            break;
-        default:
-            status = PMIC_ST_ERR_INV_PARAM;
-            break;
+        status = PMIC_ST_ERR_INV_PARAM;
     }
 
     return status;
@@ -3781,20 +3631,15 @@ static int32_t Pmic_powerSetLdoRvTimeoutSel(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t bitMask = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        regAddr = pPwrRsrcRegCfg[pwrRsrcIndex].ldoRvTimeOutRegAddr;
+    regAddr = pPwrRsrcRegCfg[pwrRsrcIndex].ldoRvTimeOutRegAddr;
 
-        pmicStatus = Pmic_powerValidateLdoRvTimeoutLimit(
-                                                pPmicCoreHandle->pmicDeviceType,
-                                                ldoRvTimeoutSel);
-    }
+    pmicStatus = Pmic_powerValidateLdoRvTimeoutLimit(ldoRvTimeoutSel);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -3838,25 +3683,19 @@ static int32_t Pmic_powerGetLdoRvTimeoutSel(
     uint8_t bitMask = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        regAddr = pPwrRsrcRegCfg[pwrRsrcIndex].ldoRvTimeOutRegAddr;
-    }
+    regAddr = pPwrRsrcRegCfg[pwrRsrcIndex].ldoRvTimeOutRegAddr;
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            regAddr,
-                                            &regData);
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -4406,6 +4245,11 @@ static int32_t Pmic_powerSetModerateRailTrig(
 /*!
  * \brief   This function is to validate the power good source limit for the
  *          specific PMIC device.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
 static int32_t Pmic_validatepGoodSrcType(uint8_t pmicDeviceType,
                                          uint16_t pgoodSrc)
@@ -4414,14 +4258,12 @@ static int32_t Pmic_validatepGoodSrcType(uint8_t pmicDeviceType,
 
     switch(pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            status = Pmic_validate_tps6594x_pGoodSrcType(pgoodSrc);
-            break;
         case PMIC_DEV_HERA_LP8764X:
             status = Pmic_validate_lp8764x_pGoodSrcType(pgoodSrc);
             break;
         default:
-            status = PMIC_ST_ERR_INV_PARAM;
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            status = Pmic_validate_tps6594x_pGoodSrcType(pgoodSrc);
             break;
     }
 
@@ -4454,6 +4296,11 @@ static int32_t Pmic_validatePowerGoodParam(
 /*!
  * \brief   This function is to validate the power good signal source selection
  *          limit for the specific PMIC device.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
 static int32_t Pmic_powerValidatePgoodSelType(uint8_t  pmicDeviceType,
                                               uint16_t pgoodSrcSel,
@@ -4463,16 +4310,14 @@ static int32_t Pmic_powerValidatePgoodSelType(uint8_t  pmicDeviceType,
 
     switch(pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            status = Pmic_validate_tps6594x_pGoodSelType(pgoodSrcSel,
-                                                         pgoodSelType);
-            break;
         case PMIC_DEV_HERA_LP8764X:
             status = Pmic_validate_lp8764x_pGoodSelType(pgoodSrcSel,
                                                         pgoodSelType);
             break;
         default:
-            status = PMIC_ST_ERR_INV_PARAM;
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            status = Pmic_validate_tps6594x_pGoodSelType(pgoodSrcSel,
+                                                         pgoodSelType);
             break;
     }
 
@@ -4481,97 +4326,85 @@ static int32_t Pmic_powerValidatePgoodSelType(uint8_t  pmicDeviceType,
 
 /*!
  * \brief   This function is used to get the PMIC power-good sources
-            register configuration for the specific PMIC device.
+ *          register configuration for the specific PMIC device.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
-static int32_t Pmic_powerGetPgoodSrcRegCfg(
+static void Pmic_powerGetPgoodSrcRegCfg(
                                  uint8_t                      pmicDeviceType,
                                  Pmic_powerPgoodSrcRegCfg_t **pPwrGoodSrcRegCfg)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-
-    if(NULL == pPwrGoodSrcRegCfg)
+    switch(pmicDeviceType)
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        case PMIC_DEV_HERA_LP8764X:
+            pmic_get_lp8764x_pwrPgoodSrcRegCfg(pPwrGoodSrcRegCfg);
+            break;
+        default:
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            pmic_get_tps6594x_pwrPgoodSrcRegCfg(pPwrGoodSrcRegCfg);
+            break;
     }
-
-    if(PMIC_ST_SUCCESS == status)
-    {
-        switch(pmicDeviceType)
-        {
-            case PMIC_DEV_LEO_TPS6594X:
-                pmic_get_tps6594x_pwrPgoodSrcRegCfg(pPwrGoodSrcRegCfg);
-                break;
-            case PMIC_DEV_HERA_LP8764X:
-                pmic_get_lp8764x_pwrPgoodSrcRegCfg(pPwrGoodSrcRegCfg);
-                break;
-            default:
-                status = PMIC_ST_ERR_INV_DEVICE;
-                break;
-        }
-    }
-
-    return status;
 }
 
 /*!
  * \brief   This function is used to get the Bitmask value for source signal
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
+ *                While adding support for New Power Good Src Type, developer
+ *                need to update the API functionality for New Power Good Src
+ *                Type accordingly.
  */
-static int32_t Pmic_getPgoodSelTypeBitmask(uint8_t   pmicDeviceType,
-                                           uint16_t  pgoodSrcSel,
-                                           uint8_t  *pBitMask)
+static void Pmic_getPgoodSelTypeBitmask(uint8_t   pmicDeviceType,
+                                        uint16_t  pgoodSrcSel,
+                                        uint8_t  *pBitMask)
 {
-    int32_t status = PMIC_ST_SUCCESS;
     uint8_t  pGoodSrcType;
 
     pGoodSrcType = Pmic_powerGetPwrRsrcType(pgoodSrcSel);
     switch(pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            if((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK == pGoodSrcType) ||
-               (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_LDO  == pGoodSrcType))
-            {
-                *pBitMask = PMIC_PGOOD_SEL_PGOOD_SRC_REGULATOR_BITFIELD;
-            }
-            else if((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT == pGoodSrcType) ||
-                    (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC ==
-                                                                pGoodSrcType) ||
-                    (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_TDIE == pGoodSrcType)    ||
-                    (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_VCCA == pGoodSrcType))
-            {
-                *pBitMask = PMIC_PGOOD_SEL_PGOOD_SRC_BITFIELD;
-            }
-            else
-            {
-                status = PMIC_ST_ERR_INV_PARAM;
-            }
-
-            break;
         case PMIC_DEV_HERA_LP8764X:
-            if(PMIC_LP8764X_PGOOD_SOURCE_TYPE_BUCK == pGoodSrcType)
-            {
-                *pBitMask = PMIC_PGOOD_SEL_PGOOD_SRC_REGULATOR_BITFIELD;
-            }
-            else if((PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT == pGoodSrcType)  ||
-                    (PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC ==
-                                                                pGoodSrcType) ||
-                    (PMIC_LP8764X_PGOOD_SOURCE_TYPE_TDIE == pGoodSrcType)     ||
-                    (PMIC_LP8764X_PGOOD_SOURCE_TYPE_VMON == pGoodSrcType)     ||
-                    (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_VCCA == pGoodSrcType))
+            if((PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT == pGoodSrcType)  ||
+                (PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC ==
+                                                            pGoodSrcType) ||
+                (PMIC_LP8764X_PGOOD_SOURCE_TYPE_TDIE == pGoodSrcType)     ||
+                (PMIC_LP8764X_PGOOD_SOURCE_TYPE_VMON == pGoodSrcType)     ||
+                (PMIC_LP8764X_PGOOD_SOURCE_TYPE_VCCA == pGoodSrcType))
             {
                 *pBitMask = PMIC_PGOOD_SEL_PGOOD_SRC_BITFIELD;
             }
             else
             {
-                status = PMIC_ST_ERR_INV_PARAM;
+                /* Else case for Buck pGoodSrcType */
+                *pBitMask = PMIC_PGOOD_SEL_PGOOD_SRC_REGULATOR_BITFIELD;
             }
 
             break;
         default:
-            status= PMIC_ST_ERR_INV_PARAM;
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            if((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT == pGoodSrcType) ||
+                (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC ==
+                                                            pGoodSrcType) ||
+                (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_TDIE == pGoodSrcType)    ||
+                (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_VCCA == pGoodSrcType))
+            {
+                *pBitMask = PMIC_PGOOD_SEL_PGOOD_SRC_BITFIELD;
+            }
+            else
+            {
+                /* Else case for Buck and LDO pGoodSrcType */
+                *pBitMask = PMIC_PGOOD_SEL_PGOOD_SRC_REGULATOR_BITFIELD;
+            }
+
             break;
     }
 
-    return status;
 }
 
 /*!
@@ -4590,33 +4423,24 @@ static int32_t Pmic_setPgoodSelType(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerPgoodSrcRegCfg_t *pPGoodSrcRegCfg = NULL;
 
     /* Get PMIC power-good sources register configuration */
-    status = Pmic_powerGetPgoodSrcRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                         &pPGoodSrcRegCfg);
+    Pmic_powerGetPgoodSrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                &pPGoodSrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == status)
-    {
-        pgoodSrcId = Pmic_powerGetPwrRsrcId(pgoodSrcSel);
-    }
+    pgoodSrcId = Pmic_powerGetPwrRsrcId(pgoodSrcSel);
 
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_getPgoodSelTypeBitmask(pPmicCoreHandle->pmicDeviceType,
-                                             pgoodSrcSel,
-                                             &bitMask);
+    Pmic_getPgoodSelTypeBitmask(pPmicCoreHandle->pmicDeviceType,
+                                pgoodSrcSel,
+                                &bitMask);
 
-        if(PMIC_ST_SUCCESS == status)
-        {
-            regAddr  = pPGoodSrcRegCfg[pgoodSrcId].regAddr;
-            shiftVal = pPGoodSrcRegCfg[pgoodSrcId].shiftValue;
-            bitMask  = bitMask << shiftVal;
+    regAddr  = pPGoodSrcRegCfg[pgoodSrcId].regAddr;
+    shiftVal = pPGoodSrcRegCfg[pgoodSrcId].shiftValue;
+    bitMask  = bitMask << shiftVal;
 
-            status = Pmic_setPwrRsrcPgoodRegBitfieldCfg(pPmicCoreHandle,
-                                                        regAddr,
-                                                        pgoodSelType,
-                                                        shiftVal,
-                                                        bitMask);
-        }
-    }
+    status = Pmic_setPwrRsrcPgoodRegBitfieldCfg(pPmicCoreHandle,
+                                                regAddr,
+                                                pgoodSelType,
+                                                shiftVal,
+                                                bitMask);
 
     return status;
 }
@@ -4638,31 +4462,22 @@ static int32_t Pmic_getPgoodSelType(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerPgoodSrcRegCfg_t *pPGoodSrcRegCfg = NULL;
 
     /* Get PMIC power-good sources register configuration */
-    status = Pmic_powerGetPgoodSrcRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                         &pPGoodSrcRegCfg);
+    Pmic_powerGetPgoodSrcRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                &pPGoodSrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == status)
-    {
-        pgoodSrcId = Pmic_powerGetPwrRsrcId(pgoodSrcSel);
-    }
+    pgoodSrcId = Pmic_powerGetPwrRsrcId(pgoodSrcSel);
 
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_getPgoodSelTypeBitmask(pPmicCoreHandle->pmicDeviceType,
-                                             pgoodSrcSel,
-                                             &bitMask);
-    }
+    Pmic_getPgoodSelTypeBitmask(pPmicCoreHandle->pmicDeviceType,
+                                pgoodSrcSel,
+                                &bitMask);
 
-    if(PMIC_ST_SUCCESS == status)
-    {
-        regAddr  = pPGoodSrcRegCfg[pgoodSrcId].regAddr;
-        shiftVal = pPGoodSrcRegCfg[pgoodSrcId].shiftValue;
-        bitMask  = bitMask << shiftVal;
+    regAddr  = pPGoodSrcRegCfg[pgoodSrcId].regAddr;
+    shiftVal = pPGoodSrcRegCfg[pgoodSrcId].shiftValue;
+    bitMask  = bitMask << shiftVal;
 
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == status)
     {
@@ -4691,13 +4506,11 @@ static int32_t Pmic_getThermalWarnStat(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == status)
     {
+        *pStateWarning = (bool)true;
+
         if(Pmic_getBitField(regData,
                             PMIC_STAT_MISC_TWARN_STAT_SHIFT,
-                            PMIC_STAT_MISC_TWARN_STAT_MASK) != 0U)
-        {
-            *pStateWarning = (bool)true;
-        }
-        else
+                            PMIC_STAT_MISC_TWARN_STAT_MASK) == 0U)
         {
             *pStateWarning = (bool)false;
         }
@@ -4726,14 +4539,12 @@ static int32_t Pmic_getOderlyShutdownStat(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == status)
     {
+        *pStatOderlyShtDwn = (bool)true;
+
         if(Pmic_getBitField(
                             regData,
                             PMIC_STAT_MODERATE_ERR_TSD_ORD_STAT_SHIFT,
-                            PMIC_STAT_MODERATE_ERR_TSD_ORD_STAT_MASK) != 0U)
-        {
-            *pStatOderlyShtDwn = (bool)true;
-        }
-        else
+                            PMIC_STAT_MODERATE_ERR_TSD_ORD_STAT_MASK) == 0U)
         {
             *pStatOderlyShtDwn = (bool)false;
         }
@@ -4763,13 +4574,11 @@ static int32_t Pmic_getImmediateShutdownStat(
 
     if(PMIC_ST_SUCCESS == status)
     {
+        *pStatImmShtDwn = (bool)true;
+
          if(Pmic_getBitField(regData,
                              PMIC_STAT_SEVERE_ERR_TSD_IMM_STAT_SHIFT,
-                             PMIC_STAT_SEVERE_ERR_TSD_IMM_STAT_MASK) != 0U)
-        {
-            *pStatImmShtDwn = (bool)true;
-        }
-        else
+                             PMIC_STAT_SEVERE_ERR_TSD_IMM_STAT_MASK) == 0U)
         {
             *pStatImmShtDwn = (bool)false;
         }
@@ -4794,35 +4603,30 @@ static int32_t Pmic_powerGetCurrentLimitLvlStat(
     uint8_t bitMask = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        pmicStatus = Pmic_commIntf_recvByte(
-                                     pPmicCoreHandle,
-                                     pPwrRsrcRegCfg[pwrRsrcIndex].statusRegAddr,
-                                     &regData);
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    pmicStatus = Pmic_commIntf_recvByte(
+                                 pPmicCoreHandle,
+                                 pPwrRsrcRegCfg[pwrRsrcIndex].statusRegAddr,
+                                 &regData);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         bitMask = (uint8_t)(PMIC_POWER_RESOURCE_STATUS_BITFIELD \
                   << pPwrRsrcRegCfg[pwrRsrcIndex].iLimStatBitShift);
 
+        *pCurrentLimitLvlStat = (bool)true;
+
         if(Pmic_getBitField(
                             regData,
                             pPwrRsrcRegCfg[pwrRsrcIndex].iLimStatBitShift,
-                            bitMask) != 0U)
-        {
-            *pCurrentLimitLvlStat = (bool)true;
-        }
-        else
+                            bitMask) == 0U)
         {
             *pCurrentLimitLvlStat = (bool)false;
         }
@@ -4846,35 +4650,30 @@ static int32_t Pmic_powerGetUnderVoltageTholdStat(
     uint8_t bitMask = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        pmicStatus = Pmic_commIntf_recvByte(
-                                     pPmicCoreHandle,
-                                     pPwrRsrcRegCfg[pwrRsrcIndex].statusRegAddr,
-                                     &regData);
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    pmicStatus = Pmic_commIntf_recvByte(
+                                 pPmicCoreHandle,
+                                 pPwrRsrcRegCfg[pwrRsrcIndex].statusRegAddr,
+                                 &regData);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         bitMask = (uint8_t)(PMIC_POWER_RESOURCE_STATUS_BITFIELD \
                   << pPwrRsrcRegCfg[pwrRsrcIndex].uvStatBitShift);
 
+        *pUvTholdStat = (bool)true;
+
         if(Pmic_getBitField(
                             regData,
                             pPwrRsrcRegCfg[pwrRsrcIndex].uvStatBitShift,
-                            bitMask) != 0U)
-        {
-            *pUvTholdStat = (bool)true;
-        }
-        else
+                            bitMask) == 0U)
         {
             *pUvTholdStat = (bool)false;
         }
@@ -4898,35 +4697,30 @@ static int32_t Pmic_powerGetOverVoltageTholdStat(
     uint8_t bitMask = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        pmicStatus = Pmic_commIntf_recvByte(
-                                     pPmicCoreHandle,
-                                     pPwrRsrcRegCfg[pwrRsrcIndex].statusRegAddr,
-                                     &regData);
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    pmicStatus = Pmic_commIntf_recvByte(
+                                 pPmicCoreHandle,
+                                 pPwrRsrcRegCfg[pwrRsrcIndex].statusRegAddr,
+                                 &regData);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         bitMask = (uint8_t)(PMIC_POWER_RESOURCE_STATUS_BITFIELD \
                   << pPwrRsrcRegCfg[pwrRsrcIndex].ovStatBitShift);
 
+        *pOvTholdStat = (bool)true;
+
         if(Pmic_getBitField(
                             regData,
                             pPwrRsrcRegCfg[pwrRsrcIndex].ovStatBitShift,
-                            bitMask) != 0U)
-        {
-            *pOvTholdStat = (bool)true;
-        }
-        else
+                            bitMask) == 0U)
         {
             *pOvTholdStat = (bool)false;
         }
@@ -4951,35 +4745,30 @@ static int32_t Pmic_powerGetOverVoltageProtectionLvlStat(
     uint8_t bitMask = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-     /* Get PMIC power resources Index and register configuration */
-    pmicStatus = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                               pwrRsrc,
-                                               &pwrRsrcIndex,
-                                               &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrRsrc,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-        pmicStatus = Pmic_commIntf_recvByte(
-                                     pPmicCoreHandle,
-                                     pPwrRsrcRegCfg[pwrRsrcIndex].statusRegAddr,
-                                     &regData);
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    pmicStatus = Pmic_commIntf_recvByte(
+                                 pPmicCoreHandle,
+                                 PMIC_STAT_SEVERE_ERR_REGADDR,
+                                 &regData);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         bitMask = (uint8_t)(PMIC_POWER_RESOURCE_STATUS_BITFIELD \
                   << PMIC_STAT_SEVERE_ERR_VCCA_OVP_STAT_SHIFT);
 
+        *pOvProtectionLvlStat = (bool)true;
+
         if(Pmic_getBitField(
                             regData,
                             PMIC_STAT_SEVERE_ERR_VCCA_OVP_STAT_SHIFT,
-                            bitMask) != 0U)
-        {
-            *pOvProtectionLvlStat = (bool)true;
-        }
-        else
+                            bitMask) == 0U)
         {
             *pOvProtectionLvlStat = (bool)false;
         }
@@ -5159,6 +4948,11 @@ static int32_t Pmic_getThermalShutdownThold(
 /*!
  * \brief   This function is to validate the power resource interrupt type
  *          for the specific PMIC device.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
 static int32_t Pmic_powerValidateIntrType(uint8_t  pmicDeviceType,
                                           uint16_t pwrResource,
@@ -5171,12 +4965,6 @@ static int32_t Pmic_powerValidateIntrType(uint8_t  pmicDeviceType,
 
     switch(pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            status = Pmic_powerTPS6594xValidateIntrType(pmicDeviceType,
-                                                        pwrResource,
-                                                        pwrResourceType,
-                                                        intrType);
-            break;
         case PMIC_DEV_HERA_LP8764X:
             status = Pmic_powerLP8764xValidateIntrType(pmicDeviceType,
                                                        pwrResource,
@@ -5184,7 +4972,11 @@ static int32_t Pmic_powerValidateIntrType(uint8_t  pmicDeviceType,
                                                        intrType);
             break;
         default:
-            status = PMIC_ST_ERR_INV_PARAM;
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            status = Pmic_powerTPS6594xValidateIntrType(pmicDeviceType,
+                                                        pwrResource,
+                                                        pwrResourceType,
+                                                        intrType);
             break;
     }
 
@@ -5194,6 +4986,11 @@ static int32_t Pmic_powerValidateIntrType(uint8_t  pmicDeviceType,
 /*!
  * \brief   This function is to validate the  Power interrupt
  *          range for the specific PMIC device.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
 static int32_t Pmic_validateIntr(const Pmic_CoreHandle_t *pPmicCoreHandle,
                                  const uint8_t            intrType)
@@ -5216,15 +5013,13 @@ static int32_t Pmic_validateIntr(const Pmic_CoreHandle_t *pPmicCoreHandle,
                 }
 
                 break;
-            case PMIC_DEV_LEO_TPS6594X:
+            default:
+            /* Default case is valid only for TPS6594x LEO PMIC */
                 if(intrType > PMIC_TPS6594X_POWER_COMMON_INTERRUPT_MAX)
                 {
                     status = PMIC_ST_ERR_INV_PARAM;
                 }
 
-                break;
-            default:
-                status = PMIC_ST_ERR_INV_PARAM;
                 break;
         }
     }
@@ -5245,53 +5040,41 @@ static int32_t Pmic_powerRsrcIntrEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t pwrRsrcIndex;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
-      /* Get PMIC power resources Index and register configuration */
-    status = Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                           pwrResource,
-                                           &pwrRsrcIndex,
-                                           &pPwrRsrcRegCfg);
+    /* Get PMIC power resources Index and register configuration */
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                  pwrResource,
+                                  &pwrRsrcIndex,
+                                  &pPwrRsrcRegCfg);
 
-    if(PMIC_ST_SUCCESS == status)
-    {
-        irqNum = pPwrRsrcRegCfg[pwrRsrcIndex].irqNumber;
-        irqNum = irqNum - intrType;
-        status = Pmic_irqMaskIntr(pPmicCoreHandle, irqNum, intrEnable);
-    }
+    irqNum = pPwrRsrcRegCfg[pwrRsrcIndex].irqNumber;
+    irqNum = irqNum - intrType;
+    status = Pmic_irqMaskIntr(pPmicCoreHandle, irqNum, intrEnable);
 
     return status;
 }
 
 /*!
  * \brief   This function is used to get the PMIC interrupt
-            configuration for the specific PMIC device.
+ *          configuration for the specific PMIC device
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
-static int32_t Pmic_powerIntCfg(uint8_t              pmicDeviceType,
-                                Pmic_powerIntCfg_t **pPwrCommonIntCfg)
+static void Pmic_powerIntCfg(uint8_t              pmicDeviceType,
+                             Pmic_powerIntCfg_t **pPwrCommonIntCfg)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-
-    if(NULL == pPwrCommonIntCfg)
+    switch(pmicDeviceType)
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        case PMIC_DEV_HERA_LP8764X:
+            pmic_get_lp8764x_pwrCommonIntCfg(pPwrCommonIntCfg);
+            break;
+        default:
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            pmic_get_tps6594x_pwrCommonIntCfg(pPwrCommonIntCfg);
+            break;
     }
-
-    if(PMIC_ST_SUCCESS == status)
-    {
-        switch(pmicDeviceType)
-        {
-            case PMIC_DEV_LEO_TPS6594X:
-                pmic_get_tps6594x_pwrCommonIntCfg(pPwrCommonIntCfg);
-                break;
-            case PMIC_DEV_HERA_LP8764X:
-                pmic_get_lp8764x_pwrCommonIntCfg(pPwrCommonIntCfg);
-                break;
-            default:
-                status = PMIC_ST_ERR_INV_DEVICE;
-                break;
-        }
-    }
-
-    return status;
 }
 
 /*!
@@ -5305,15 +5088,12 @@ static int32_t Pmic_powerIntrEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerIntCfg_t *pPwrIntCfg = NULL;
 
     /* Get PMIC power interrupt configuration */
-    status = Pmic_powerIntCfg(pPmicCoreHandle->pmicDeviceType,
-                              &pPwrIntCfg);
+    Pmic_powerIntCfg(pPmicCoreHandle->pmicDeviceType,
+                     &pPwrIntCfg);
 
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_irqMaskIntr(pPmicCoreHandle,
-                                  pPwrIntCfg[intrType].irqNum,
-                                  intrEnable);
-    }
+    status = Pmic_irqMaskIntr(pPmicCoreHandle,
+                              pPwrIntCfg[intrType].irqNum,
+                              intrEnable);
 
     return status;
 }
@@ -5329,9 +5109,8 @@ static int32_t Pmic_powerSetLdobypassenLdorvtoselRailgrpselCfg(
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pwrResourceCfg.validParams,
-                                  PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID)))
+    if(((bool)true) == pmic_validParamCheck(pwrResourceCfg.validParams,
+                                  PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
                                     PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID,
@@ -5389,9 +5168,8 @@ static int32_t Pmic_powerSetRegulatorenVmonenVoltagemvCfg(
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pwrResourceCfg.validParams,
-                                     PMIC_CFG_REGULATOR_EN_VALID)))
+    if(((bool)true) == pmic_validParamCheck(pwrResourceCfg.validParams,
+                                     PMIC_CFG_REGULATOR_EN_VALID))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
                                                PMIC_CFG_REGULATOR_EN_VALID,
@@ -5551,9 +5329,8 @@ static int32_t Pmic_powerGetLdobypassLdorvtoselRailgrpselVoltagemvCfg(
 {
     int32_t  pmicStatus = PMIC_ST_SUCCESS;
 
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pPwrResourceCfg->validParams,
-                                  PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID)))
+    if(((bool)true) == pmic_validParamCheck(pPwrResourceCfg->validParams,
+                                  PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID))
     {
         pmicStatus = Pmic_powerValidatecfgDataPwrRsrctype(
                                     PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID,
@@ -6057,9 +5834,9 @@ int32_t Pmic_powerGetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
  * \param   pPmicCoreHandle  [IN]     PMIC Interface Handle.
  * \param   pgoodSrcSel      [IN]     Power Good Source.
  *                                    Valid values for TPS6594x Leo Device
- *                                    \ref Pmic_Tps6594xLeo_Pgood_SourceType.
+ *                                    \ref Pmic_Tps6594xLeo_Pgood_Source.
  *                                    Valid values for LP8764x HERA Device
- *                                    \ref Pmic_Lp8764xHera_Pgood_SourceType.
+ *                                    \ref Pmic_Lp8764xHera_Pgood_Source.
  * \param   pgoodSelType     [IN]     Power Good configuration.
  *                                    Valid values for TPS6594x Leo Device
  *                                For  LDO/BUCK
@@ -6126,9 +5903,9 @@ int32_t Pmic_powerSetConfigPowerGood(Pmic_CoreHandle_t   *pPmicCoreHandle,
  * \param   pPmicCoreHandle  [IN]     PMIC Interface Handle.
  * \param   pgoodSrcSel      [IN]     Power Good Source.
  *                                    Valid values for TPS6594x Leo Device
- *                                    \ref Pmic_Tps6594xLeo_Pgood_SourceType.
+ *                                    \ref Pmic_Tps6594xLeo_Pgood_Source.
  *                                    Valid values for LP8764x HERA Device
- *                                    \ref Pmic_Lp8764xHera_Pgood_SourceType.
+ *                                    \ref Pmic_Lp8764xHera_Pgood_Source.
  * \param   pPgoodSelType    [OUT]    Power Good configuration.
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
@@ -6170,9 +5947,8 @@ static int32_t Pmic_powerGetUvOvVccaVoltageStat(
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pPwrRsrcStatCfg->validParams,
-                                  PMIC_POWER_RESOURCE_UV_STAT_VALID)))
+    if(((bool)true) == pmic_validParamCheck(pPwrRsrcStatCfg->validParams,
+                                  PMIC_POWER_RESOURCE_UV_STAT_VALID))
     {
          /* Get the output under voltage status */
          pmicStatus = Pmic_powerGetUnderVoltageTholdStat(

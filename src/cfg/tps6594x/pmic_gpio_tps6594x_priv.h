@@ -141,6 +141,21 @@ void pmic_get_tps6594x_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg);
 */
 void pmic_get_tps6594x_gpioIntRegCfg(Pmic_GpioIntRegCfg_t **pGpioIntRegCfg);
 
+/*!
+ * \brief   This function is used to configure NPWRON pin for TPS6594x
+ *          PMIC LEO Device.
+ */
+int32_t Pmic_gpioTps6594xSetNPwronPinConfiguration(
+                                          Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                          const Pmic_GpioCfg_t gpioCfg);
+
+/*!
+ * \brief   This function is used to read NPWRON pin configuration for TPS6594x
+ *          PMIC LEO Device.
+ */
+int32_t Pmic_gpioTps6594xGetNPwronPinConfiguration(
+                                        Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                        Pmic_GpioCfg_t      *pGpioCfg);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

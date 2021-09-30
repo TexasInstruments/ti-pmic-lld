@@ -277,6 +277,10 @@ void pmic_get_lp8764x_pwrPgoodSrcRegCfg(
 /*!
  * \brief   This function is used to convert the millivolt value to vset value
  *          for HERA LP8764x PMIC
+ *
+ *          Note: In this API, While adding support for New pwrRsrcType/ New
+ *                vmonRange, developer need to update the API functionality for
+ *                New pwrRsrcType/New vmonRange accordingly.
  */
 int32_t Pmic_powerLP8764xConvertVoltage2VSetVal(
                                              Pmic_CoreHandle_t *pPmicCoreHandle,
@@ -296,14 +300,6 @@ int32_t Pmic_powerLP8764xConvertVoltage2VSetVal(
 
     switch(pwrRsrcType)
     {
-        case PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK:
-
-            status = Pmic_powerBuckVmonConvertVoltage2VSetVal(millivolt,
-                                                              &baseMillivolt,
-                                                              &millivoltStep,
-                                                              &baseVoutCode);
-
-        break;
         case PMIC_LP8764X_POWER_RESOURCE_TYPE_VMON:
             status = Pmic_powerGetVmonRange(pPmicCoreHandle,
                                             pwrRsrc,
@@ -321,16 +317,22 @@ int32_t Pmic_powerLP8764xConvertVoltage2VSetVal(
                 }
                 else
                 {
-                    status = Pmic_powerVmonRange1ConvertVoltage2VSetVal(
-                                                                &baseMillivolt,
-                                                                &millivoltStep,
-                                                                &baseVoutCode);
+                    /* Else part checking for (PMIC_LP8764X_VMON_RANGE_3V35_5V
+                       == vmonRange) */
+                    Pmic_powerVmonRange1ConvertVoltage2VSetVal(&baseMillivolt,
+                                                               &millivoltStep,
+                                                               &baseVoutCode);
                 }
             }
 
             break;
         default:
-            status = PMIC_ST_ERR_INV_PARAM;
+            /* Default case for BUCK Resource Type */
+            status = Pmic_powerBuckVmonConvertVoltage2VSetVal(millivolt,
+                                                              &baseMillivolt,
+                                                              &millivoltStep,
+                                                              &baseVoutCode);
+
             break;
     }
 
@@ -352,6 +354,10 @@ int32_t Pmic_powerLP8764xConvertVoltage2VSetVal(
 /*!
  * \brief   This function is used to convert the vsetvalue to voltage in mv
  *          for PMIC HERA LP8764x
+ *
+ *          Note: In this API, While adding support for New pwrRsrcType/ New
+ *                vmonRange, developer need to update the API functionality for
+ *                New pwrRsrcType/New vmonRange accordingly.
  */
 int32_t Pmic_powerLP8764xConvertVSetVal2Voltage(
                                             Pmic_CoreHandle_t *pPmicCoreHandle,
@@ -370,41 +376,37 @@ int32_t Pmic_powerLP8764xConvertVSetVal2Voltage(
 
     switch(pwrRsrcType)
     {
-        case PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK:
-            status = Pmic_powerBuckVmonConvertVSetVal2Voltage(pVSetVal,
-                                                              &baseMillivolt,
-                                                              &millivoltStep,
-                                                              &baseVoutCode);
-            break;
         case PMIC_LP8764X_POWER_RESOURCE_TYPE_VMON:
             status = Pmic_powerGetVmonRange(pPmicCoreHandle,
                                             pwrRsrc,
                                             &(vmonRange));
 
-            if((PMIC_ST_SUCCESS == status) &&
-               (PMIC_LP8764X_VMON_RANGE_0V3_3V34 == vmonRange))
+            if(PMIC_ST_SUCCESS == status)
             {
-                status = Pmic_powerBuckVmonConvertVSetVal2Voltage(
-                                                                 pVSetVal,
-                                                                 &baseMillivolt,
-                                                                 &millivoltStep,
-                                                                 &baseVoutCode);
-            }
-            else
-            {
-                if((PMIC_ST_SUCCESS == status) &&
-                    (PMIC_LP8764X_VMON_RANGE_3V35_5V == vmonRange))
+               if(PMIC_LP8764X_VMON_RANGE_0V3_3V34 == vmonRange)
                 {
-                    status = Pmic_powerVmonRange1ConvertVSetVal2Voltage(
-                                                                 &baseMillivolt,
-                                                                 &millivoltStep,
-                                                                 &baseVoutCode);
+                    Pmic_powerBuckVmonConvertVSetVal2Voltage(pVSetVal,
+                                                            &baseMillivolt,
+                                                            &millivoltStep,
+                                                            &baseVoutCode);
+                }
+                else
+                {
+                    /* Else part checking for (PMIC_LP8764X_VMON_RANGE_3V35_5V
+                       == vmonRange) */
+                    Pmic_powerVmonRange1ConvertVSetVal2Voltage(&baseMillivolt,
+                                                               &millivoltStep,
+                                                               &baseVoutCode);
                 }
             }
 
             break;
         default:
-            status = PMIC_ST_ERR_INV_PARAM;
+            /* Default case for BUCK Resource Type */
+            Pmic_powerBuckVmonConvertVSetVal2Voltage(pVSetVal,
+                                                     &baseMillivolt,
+                                                     &millivoltStep,
+                                                     &baseVoutCode);
             break;
     }
 
@@ -419,9 +421,9 @@ int32_t Pmic_powerLP8764xConvertVSetVal2Voltage(
 
 /*!
  * \brief   This function is to validate the power good source limit for VCCA
- *          BUCK, LDO
+ *          NRSTOUT and NRSTOUT_SOC
  */
-static int32_t Pmic_validate_lp8764x_pGoodVccaBuckLDOSrcType(
+static int32_t Pmic_validate_lp8764x_pGoodVccaNrstOutNrstOutsocSrcType(
                                                           uint16_t pgoodSrc,
                                                           uint8_t  pGoodSrcType)
 {
@@ -467,7 +469,7 @@ int32_t Pmic_validate_lp8764x_pGoodSrcType(uint16_t pgoodSrc)
        (PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT == pGoodSrcType) ||
        (PMIC_LP8764X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC == pGoodSrcType))
        {
-           status = Pmic_validate_lp8764x_pGoodVccaBuckLDOSrcType(
+           status = Pmic_validate_lp8764x_pGoodVccaNrstOutNrstOutsocSrcType(
                                                                  pgoodSrc,
                                                                  pGoodSrcType);
        }
@@ -541,6 +543,10 @@ static int32_t Pmic_validate_lp8764x_pGoodSelBuckLdoNrstoutNrstoutsoc(
 /*!
  * \brief   This function is to validate the power good signal source selection
  *          limit for the specific PMIC device.
+ *
+ *          Note: In this API, While adding support for New pGoodSrcType,
+ *                developer need to update the API functionality for New
+ *                pGoodSrcType accordingly.
  */
 int32_t Pmic_validate_lp8764x_pGoodSelType(uint16_t pgoodSrc,
                                            uint8_t  pgoodSelType)
@@ -566,16 +572,13 @@ int32_t Pmic_validate_lp8764x_pGoodSelType(uint16_t pgoodSrc,
             status = PMIC_ST_ERR_INV_PARAM;
         }
     }
-    else if(PMIC_LP8764X_PGOOD_SOURCE_TYPE_BUCK == pGoodSrcType)
+    else
     {
+        /* Else case for Buck pGoodSrcType */
         if(pgoodSelType > PMIC_LP8764X_POWER_PGOOD_SEL_SRC_VOLTAGE_CURRENT)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-    }
-    else
-    {
-        status = PMIC_ST_ERR_INV_PARAM;
     }
 
     return status;
@@ -584,6 +587,10 @@ int32_t Pmic_validate_lp8764x_pGoodSelType(uint16_t pgoodSrc,
 /**
  * \brief   This function is used to validate the voltage levels for
  *          Regulators/VMON for LP8764x PMIC
+ *
+*          Note: In this API, While adding support for New pwrRsrcType/ New
+ *                vmonRange, developer need to update the API functionality for
+ *                New pwrRsrcType/New vmonRange accordingly.
  */
 int32_t Pmic_powerLP8764xValidateVoltageLevel(
                                              Pmic_CoreHandle_t *pPmicCoreHandle,
@@ -609,31 +616,24 @@ int32_t Pmic_powerLP8764xValidateVoltageLevel(
                 status = PMIC_ST_ERR_INV_PARAM;
             }
         }
-        else if((PMIC_ST_SUCCESS == status) &&
-                (PMIC_LP8764X_VMON_RANGE_3V35_5V == vmonRange))
+        else
         {
+            /* Else case for PMIC_LP8764X_VMON_RANGE_3V35_5V */
             if((voltage_mV < PMIC_LP8764X_RANGE1_VMON_MIN_VOLTAGE)   ||
                (voltage_mV > PMIC_LP8764X_RANGE1_VMON_MAX_VOLTAGE))
             {
                 status = PMIC_ST_ERR_INV_PARAM;
             }
         }
-        else
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
     }
-    else if(PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType)
+    else
     {
+        /* Else case for BUCK pwrRsrcType */
         if((voltage_mV < PMIC_LP8764X_REGULATOR_BUCK_MIN_VOLTAGE) ||
            (voltage_mV > PMIC_LP8764X_REGULATOR_BUCK_MAX_VOLTAGE))
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-    }
-    else
-    {
-        status = PMIC_ST_ERR_INV_PARAM;
     }
 
     return status;
@@ -689,6 +689,10 @@ int32_t Pmic_powerLP8764xValidatePwrRsrcLimit(
 /*!
  * \brief   This function is to validate the power resource interrupt type
  *          for the LP8764x PMIC device.
+ *
+ *          Note: In this API, While adding support for New pwrResourceType,
+ *                developer need to update the API functionality for New
+ *                pwrResourceType accordingly.
  */
 int32_t Pmic_powerLP8764xValidateIntrType(uint8_t  pmicDeviceType,
                                           uint16_t pwrResource,
@@ -706,19 +710,15 @@ int32_t Pmic_powerLP8764xValidateIntrType(uint8_t  pmicDeviceType,
             status = PMIC_ST_ERR_INV_PARAM;
         }
     }
-
-    else if(PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK == pwrResourceType)
+    else
     {
+        /* Else case for BUCK pwrResourceType */
         if((intrType != PMIC_LP8764X_POWER_OV_INT) &&
            (intrType != PMIC_LP8764X_POWER_UV_INT) &&
            (intrType != PMIC_LP8764X_POWER_ILIM_INT))
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-    }
-    else
-    {
-        status = PMIC_ST_ERR_INV_PARAM;
     }
 
     return status;

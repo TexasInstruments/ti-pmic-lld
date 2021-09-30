@@ -40,6 +40,7 @@
 */
 
 #include <pmic_types.h>
+#include <pmic_core_priv.h>
 #include <pmic_gpio_lp8764x_priv.h>
 
 /* PMIC GPIO Pins with Input Ouput Configuration */
@@ -193,4 +194,54 @@ void pmic_get_lp8764x_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg)
 void pmic_get_lp8764x_gpioIntRegCfg(Pmic_GpioIntRegCfg_t **pGpioIntRegCfg)
 {
     *pGpioIntRegCfg = lp8764x_gpioIntRegCfg;
+}
+
+/*!
+ * \brief   This function is used to configure Enable pin for LP8764X
+ *          PMIC HERA Device.
+ */
+int32_t Pmic_gpioLp8764xSetEnablePinConfiguration(
+                                          Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                          const Pmic_GpioCfg_t gpioCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    if((bool)true == pmic_validParamCheck(gpioCfg.validParams,
+                                          PMIC_ENABLE_CFG_POLARITY_VALID))
+    {
+        if(gpioCfg.pinPolarity > PMIC_GPIO_POL_HIGH)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+
+        if(PMIC_ST_SUCCESS == status)
+        {
+            /* Setting ENABLE pin polarity */
+            status = Pmic_gpioSetPinPolarity(pPmicCoreHandle,
+                                             gpioCfg);
+        }
+    }
+
+    return status;
+}
+
+/*!
+ * \brief   This function is used to read Enable pin configuration for LP8764X
+ *          PMIC HERA Device.
+ */
+int32_t Pmic_gpioLp8764xGetEnablePinConfiguration(
+                                          Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                          Pmic_GpioCfg_t      *pGpioCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    if((bool)true == pmic_validParamCheck(pGpioCfg->validParams,
+                                          PMIC_ENABLE_CFG_POLARITY_VALID))
+    {
+        /* Get Enable pin polarity control */
+        status = Pmic_gpioGetPinPolarity(pPmicCoreHandle,
+                                         pGpioCfg);
+    }
+
+    return status;
 }

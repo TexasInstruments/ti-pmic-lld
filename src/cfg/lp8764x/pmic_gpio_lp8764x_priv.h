@@ -132,6 +132,21 @@ void pmic_get_lp8764x_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg);
  */
 void pmic_get_lp8764x_gpioIntRegCfg(Pmic_GpioIntRegCfg_t **pGpioIntRegCfg);
 
+/*!
+ * \brief   This function is used to configure Enable pin for LP8764X
+ *          PMIC HERA Device.
+ */
+int32_t Pmic_gpioLp8764xSetEnablePinConfiguration(
+                                          Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                          const Pmic_GpioCfg_t gpioCfg);
+
+/*!
+ * \brief   This function is used to read Enable pin configuration for LP8764X
+ *          PMIC HERA Device.
+ */
+int32_t Pmic_gpioLp8764xGetEnablePinConfiguration(
+                                          Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                          Pmic_GpioCfg_t      *pGpioCfg);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

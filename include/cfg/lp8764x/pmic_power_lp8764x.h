@@ -275,6 +275,9 @@ extern "C" {
  *  respectively.
  *  @{
  */
+/** \brief Used to select over/under voltage threshold level as +/-30mv or
+ *         +/-3%
+ */
 #define PMIC_LP8764X_PG_OV_UV_THRESHOLD_LVL_30_OR_3       (0U)
 /** \brief Used to select over/under voltage threshold level as +/-35mv or
  *         +/-3.5%

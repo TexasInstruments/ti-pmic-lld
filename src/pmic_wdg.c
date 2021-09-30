@@ -353,7 +353,7 @@ static int32_t Pmic_WdgGetWindowsTimeIntervals(
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
-    /* Set wdg long window time interval */
+    /* Get wdg long window time interval */
     if(((bool)true) == pmic_validParamCheck(pWdgCfg->validParams,
                               PMIC_CFG_WDG_LONGWINDURATION_VALID))
     {
@@ -785,7 +785,7 @@ static int32_t Pmic_WdgGetCtrlParams(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
     }
 
-    /* Get wdg power hold vale */
+    /* Get wdg power hold value */
     if((PMIC_ST_SUCCESS == status) &&
        (((bool)true) == pmic_validParamCheck(pWdgCfg->validParams,
                                      PMIC_CFG_WDG_PWRHOLD_VALID)))
@@ -1115,7 +1115,9 @@ static bool is_wdgBadEventDetected(Pmic_CoreHandle_t *pPmicCoreHandle)
 }
 
 /*
- * \brief  Function to get 4X1 mux output
+ * \brief  Function to get 4X1 mux output.
+ *
+ *         Note: In this API, the default case is for qaFdbk value is 3U.
  */
 static uint8_t mux_4x1(uint8_t x0,
                        uint8_t x1,
@@ -1136,10 +1138,8 @@ static uint8_t mux_4x1(uint8_t x0,
         case 2U:
             y = x2;
             break;
-        case 3U:
-            y = x3;
-            break;
         default:
+            y = x3;
             break;
     }
 

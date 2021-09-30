@@ -90,31 +90,26 @@ static int32_t Pmic_esmValidateParams(const Pmic_CoreHandle_t *pPmicCoreHandle)
  * \brief   This function is used to get the ESM_MCU/ESM_SOC Base Register
  *          address
  */
-static int32_t Pmic_esmGetBaseRegAddr(const bool  esmType,
-                                      uint8_t    *pEsmBaseAddr)
+static void Pmic_esmGetBaseRegAddr(const bool  esmType,
+                                   uint8_t    *pEsmBaseAddr)
 {
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-
-    switch(Pmic_esmGetU8Val(esmType))
+    if(0U != Pmic_esmGetU8Val(esmType))
     {
-        case 0U:
-            (*pEsmBaseAddr) = PMIC_ESM_MCU_BASE_REGADDR;
-            break;
-
-        case 1U:
-            (*pEsmBaseAddr) = PMIC_ESM_SOC_BASE_REGADDR;
-            break;
-
-        default:
-            pmicStatus = PMIC_ST_ERR_INV_PARAM;
-            break;
+        (*pEsmBaseAddr) = PMIC_ESM_SOC_BASE_REGADDR;
     }
-
-    return pmicStatus;
+    else
+    {
+        (*pEsmBaseAddr) = PMIC_ESM_MCU_BASE_REGADDR;
+    }
 }
 
 /*!
  * \brief   This function is used to check the Device used.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
 static int32_t Pmic_esmDeviceCheck(const Pmic_CoreHandle_t  *pPmicCoreHandle,
                                    const bool                esmType)
@@ -123,10 +118,6 @@ static int32_t Pmic_esmDeviceCheck(const Pmic_CoreHandle_t  *pPmicCoreHandle,
 
     switch(pPmicCoreHandle->pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            pmicStatus = PMIC_ST_SUCCESS;
-            break;
-
         case PMIC_DEV_HERA_LP8764X:
             if(((bool)true) == esmType)
             {
@@ -138,9 +129,9 @@ static int32_t Pmic_esmDeviceCheck(const Pmic_CoreHandle_t  *pPmicCoreHandle,
             }
 
             break;
-
         default:
-            pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            pmicStatus = PMIC_ST_SUCCESS;
             break;
     }
 
@@ -307,7 +298,12 @@ static int32_t Pmic_esmSocIntrEnable(Pmic_CoreHandle_t        *pPmicCoreHandle,
 }
 
 /*!
- * \brief   This function is used to Enable/Disable PMIC ESM Interrupts
+ * \brief   This function is used to Enable/Disable PMIC ESM Interrupts.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
 static int32_t Pmic_esmIntrEnable(Pmic_CoreHandle_t        *pPmicCoreHandle,
                                   const bool                esmType,
@@ -315,34 +311,12 @@ static int32_t Pmic_esmIntrEnable(Pmic_CoreHandle_t        *pPmicCoreHandle,
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    /* Mask/Un-mask ESM MCU Interrupts */
-    if(PMIC_ESM_MODE_MCU == esmType)
+    switch(pPmicCoreHandle->pmicDeviceType)
     {
-        if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-        {
+        case PMIC_DEV_HERA_LP8764X:
             pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
-                                          PMIC_TPS6594X_ESM_MCU_PIN_INT,
-                                          !esmIntrCfg.esmPinIntr);
-            if(PMIC_ST_SUCCESS == pmicStatus)
-            {
-                pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
-                                              PMIC_TPS6594X_ESM_MCU_FAIL_INT,
-                                              !esmIntrCfg.esmFailIntr);
-            }
-
-            if(PMIC_ST_SUCCESS == pmicStatus)
-            {
-                pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
-                                              PMIC_TPS6594X_ESM_MCU_RST_INT,
-                                              !esmIntrCfg.esmRstIntr);
-            }
-        }
-
-        if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-        {
-            pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
-                                          PMIC_LP8764X_ESM_MCU_PIN_INT,
-                                          !esmIntrCfg.esmPinIntr);
+                                      PMIC_LP8764X_ESM_MCU_PIN_INT,
+                                      !esmIntrCfg.esmPinIntr);
 
             if(PMIC_ST_SUCCESS == pmicStatus)
             {
@@ -357,14 +331,37 @@ static int32_t Pmic_esmIntrEnable(Pmic_CoreHandle_t        *pPmicCoreHandle,
                                               PMIC_LP8764X_ESM_MCU_RST_INT,
                                               !esmIntrCfg.esmRstIntr);
             }
-        }
-    }
 
-    if((PMIC_ST_SUCCESS == pmicStatus) && (PMIC_ESM_MODE_SOC == esmType))
-    {
-        /* Mask/Un-mask ESM SOC Interrupts */
-        pmicStatus = Pmic_esmSocIntrEnable(pPmicCoreHandle,
-                                           esmIntrCfg);
+            break;
+        default:
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            if(PMIC_ESM_MODE_MCU == esmType)
+            {
+                pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                          PMIC_TPS6594X_ESM_MCU_PIN_INT,
+                                          !esmIntrCfg.esmPinIntr);
+                if(PMIC_ST_SUCCESS == pmicStatus)
+                {
+                    pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                                PMIC_TPS6594X_ESM_MCU_FAIL_INT,
+                                                !esmIntrCfg.esmFailIntr);
+                }
+
+                if(PMIC_ST_SUCCESS == pmicStatus)
+                {
+                    pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                                 PMIC_TPS6594X_ESM_MCU_RST_INT,
+                                                 !esmIntrCfg.esmRstIntr);
+                }
+            }
+            else
+            {
+                 /* Mask/Un-mask ESM SOC Interrupts */
+                pmicStatus = Pmic_esmSocIntrEnable(pPmicCoreHandle,
+                                                   esmIntrCfg);
+            }
+
+            break;
     }
 
     return pmicStatus;
@@ -768,7 +765,8 @@ static int32_t Pmic_esmGetDelay2Value(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pEsmCfg->esmDelay2_us = ((uint32_t)regData * PMIC_ESM_DELAY_MICROSEC_DIV);
+        pEsmCfg->esmDelay2_us = ((uint32_t)regData *
+                                 PMIC_ESM_DELAY_MICROSEC_DIV);
     }
 
     return pmicStatus;
@@ -1061,11 +1059,7 @@ int32_t Pmic_esmStart(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = Pmic_esmGetBaseRegAddr(esmType, &esmBaseRegAddr);
-    }
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
+        Pmic_esmGetBaseRegAddr(esmType, &esmBaseRegAddr);
         pmicStatus = Pmic_esmXStart(pPmicCoreHandle,
                                     esmBaseRegAddr,
                                     esmState);
@@ -1110,11 +1104,7 @@ int32_t Pmic_esmEnable(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = Pmic_esmGetBaseRegAddr(esmType, &esmBaseRegAddr);
-    }
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
+        Pmic_esmGetBaseRegAddr(esmType, &esmBaseRegAddr);
         pmicStatus = Pmic_esmXEnable(pPmicCoreHandle,
                                      esmBaseRegAddr,
                                      esmToggle);
@@ -1164,11 +1154,7 @@ int32_t Pmic_esmGetEnableState(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = Pmic_esmGetBaseRegAddr(esmType, &esmBaseRegAddr);
-    }
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
+        Pmic_esmGetBaseRegAddr(esmType, &esmBaseRegAddr);
         regAddr = (esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
         *pEsmState = (bool)false;
 
@@ -1380,11 +1366,7 @@ int32_t Pmic_esmSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = Pmic_esmGetBaseRegAddr(esmType, &esmBaseRegAddr);
-    }
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
+        Pmic_esmGetBaseRegAddr(esmType, &esmBaseRegAddr);
         pmicStatus = Pmic_esmCheckState(pPmicCoreHandle, esmBaseRegAddr);
     }
 
@@ -1557,11 +1539,8 @@ int32_t Pmic_esmGetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = Pmic_esmGetBaseRegAddr(esmType, &esmBaseRegAddr);
-    }
+        Pmic_esmGetBaseRegAddr(esmType, &esmBaseRegAddr);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
         pmicStatus = Pmic_esmGetConfig(pPmicCoreHandle,
                                        pEsmCfg,
                                        esmBaseRegAddr);
@@ -1652,11 +1631,7 @@ int32_t Pmic_esmGetErrCnt(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = Pmic_esmGetBaseRegAddr(esmType, &esmBaseRegAddr);
-    }
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
+        Pmic_esmGetBaseRegAddr(esmType, &esmBaseRegAddr);
         regAddr = (esmBaseRegAddr + PMIC_ESM_ERR_CNT_REG_OFFSET);
 
         /* Start Critical Section */
@@ -1725,11 +1700,8 @@ int32_t Pmic_esmGetStatus(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = Pmic_esmGetBaseRegAddr(esmType, &esmBaseRegAddr);
-    }
+        Pmic_esmGetBaseRegAddr(esmType, &esmBaseRegAddr);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
         regAddr = (esmBaseRegAddr + PMIC_ESM_START_REG_OFFSET);
         *pEsmState = PMIC_ESM_STOP;
 
@@ -1742,15 +1714,15 @@ int32_t Pmic_esmGetStatus(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
         /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
 
-        if((PMIC_ST_SUCCESS == pmicStatus) &&
-           (Pmic_getBitField(regData,
-                             PMIC_ESM_X_START_REG_ESM_X_START_SHIFT,
-                             PMIC_ESM_X_START_REG_ESM_X_START_MASK)
-            == PMIC_ESM_VAL_1))
-        {
-            *pEsmState = PMIC_ESM_START;
-        }
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       (Pmic_getBitField(regData,
+                         PMIC_ESM_X_START_REG_ESM_X_START_SHIFT,
+                         PMIC_ESM_X_START_REG_ESM_X_START_MASK)
+        == PMIC_ESM_VAL_1))
+    {
+        *pEsmState = PMIC_ESM_START;
     }
 
     return pmicStatus;

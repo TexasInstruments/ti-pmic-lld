@@ -214,7 +214,7 @@ extern "C" {
  *  @{
  */
 /** \brief Used to set to bypass mode */
-#define PMIC_TPS6594X_REGULATOR_LDO_BYPASS_MODDE           (0x1U)
+#define PMIC_TPS6594X_REGULATOR_LDO_BYPASS_MODE            (0x1U)
 /** \brief Used to  set to linear regulator mode */
 #define PMIC_TPS6594X_REGULATOR_LDO_LINEAR_REGULATOR_MODE  (0x0U)
 /* @} */
@@ -350,6 +350,9 @@ extern "C" {
  *  For VCCA - Over/Under Volatge thershold level are +x2 % or -x2 %
  *  respectively.
  *  @{
+ */
+/** \brief Used to select over/under voltage threshold level as +/-30mv or
+ *         +/-3%
  */
 #define PMIC_TPS6594X_PG_OV_UV_THRESHOLD_LVL_30_OR_3       (0U)
 /** \brief Used to select over/under voltage threshold level as +/-35mv or

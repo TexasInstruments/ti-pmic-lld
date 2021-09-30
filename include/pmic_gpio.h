@@ -70,29 +70,6 @@ extern "C" {
 /* ========================================================================== */
 
 /**
- *  \anchor Pmic_GpioPinCfgStructPrmBitShiftVal
- *  \name   PMIC GPIO Pin Configuration Structure Param Bit shift values
- *
- *  Application can use below shifted values to set the validParams
- *  struct member defined in Pmic_GpioCfg_t structure
- *
- *  @{
- */
-#define PMIC_GPIO_CFG_DIR_VALID_SHIFT        \
-                          (0x01U << PMIC_GPIO_CFG_DIR_VALID)
-#define PMIC_GPIO_CFG_OD_VALID_SHIFT         \
-                          (0x01U << PMIC_GPIO_CFG_OD_VALID)
-#define PMIC_GPIO_CFG_PULL_VALID_SHIFT       \
-                          (0x01U << PMIC_GPIO_CFG_PULL_VALID)
-#define PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT   \
-                          (0x01U << PMIC_GPIO_CFG_DEGLITCH_VALID)
-#define PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT    \
-                          (0x01U << PMIC_GPIO_CFG_PINFUNC_VALID)
-#define PMIC_ENABLE_CFG_POLARITY_VALID_SHIFT \
-                          (1U << PMIC_ENABLE_CFG_POLARITY_VALID)
-/* @} */
-
-/**
  *  \anchor Pmic_Gpio_DeglitchTimeCfg
  *  \name   PMIC GPIO Deglitch Time Enable or Disable Configuration
  *
@@ -177,6 +154,29 @@ extern "C" {
  *         Invalid for NPWRON pin for TPS6594x Leo device*/
 #define PMIC_ENABLE_CFG_POLARITY_VALID     (0x05U)
 /*  @} */
+
+/**
+ *  \anchor Pmic_GpioPinCfgStructPrmBitShiftVal
+ *  \name   PMIC GPIO Pin Configuration Structure Param Bit shift values
+ *
+ *  Application can use below shifted values to set the validParams
+ *  struct member defined in Pmic_GpioCfg_t structure
+ *
+ *  @{
+ */
+#define PMIC_GPIO_CFG_DIR_VALID_SHIFT        \
+                          (0x01U << PMIC_GPIO_CFG_DIR_VALID)
+#define PMIC_GPIO_CFG_OD_VALID_SHIFT         \
+                          (0x01U << PMIC_GPIO_CFG_OD_VALID)
+#define PMIC_GPIO_CFG_PULL_VALID_SHIFT       \
+                          (0x01U << PMIC_GPIO_CFG_PULL_VALID)
+#define PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT   \
+                          (0x01U << PMIC_GPIO_CFG_DEGLITCH_VALID)
+#define PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT    \
+                          (0x01U << PMIC_GPIO_CFG_PINFUNC_VALID)
+#define PMIC_ENABLE_CFG_POLARITY_VALID_SHIFT \
+                          (0x01U << PMIC_ENABLE_CFG_POLARITY_VALID)
+/* @} */
 
 /**
  *  \anchor Pmic_GpioPinPullCtrl
@@ -411,7 +411,12 @@ int32_t Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          NPWRON OR ENABLE pin when corresponding validParam bit field is set
  *          in the Pmic_GpioCfg_t
  *          For more information \ref Pmic_GpioCfg_t
- *          NPWRON is valid only for TPS6594x Leo Device
+ *          NPWRON is valid only for TPS6594x Leo Device.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
  * \param   gpioCfg         [IN]    Set NPWRON or ENABLE GPIO pin
@@ -434,7 +439,12 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
  *          NPWRON OR ENABLE pin when corresponding validParam bit field is set
  *          in the Pmic_GpioCfg_t
  *          For more information \ref Pmic_GpioCfg_t
- *          NPWRON is valid only for TPS6594x Leo Device
+ *          NPWRON is valid only for TPS6594x Leo Device.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  *
  * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
  * \param   pGpioCfg        [IN/OUT]   Pointer to store NPWRON OR ENABLE GPIO

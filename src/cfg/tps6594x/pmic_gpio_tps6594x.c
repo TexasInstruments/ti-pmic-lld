@@ -281,3 +281,101 @@ int32_t Pmic_gpioTps6594xNPwronPinGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     return status;
 }
+
+/*!
+ * \brief   This function is used to configure NPWRON pin for TPS6594x
+ *          PMIC LEO Device.
+ */
+int32_t Pmic_gpioTps6594xSetNPwronPinConfiguration(
+                                          Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                          const Pmic_GpioCfg_t gpioCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    if((bool)true == pmic_validParamCheck(gpioCfg.validParams,
+                                          PMIC_GPIO_CFG_PINFUNC_VALID))
+    {
+        /* Setting NPWRON/Enable pin function */
+        status = Pmic_gpioSetPinFunc(pPmicCoreHandle,
+                                     PMIC_NPWRON_ENABLE_PIN,
+                                     gpioCfg);
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        /* Setting NPWRON/Enable deglitch time and Pull UP/Down Configuration*/
+        status = Pmic_gpioSetNPwronEnableDeglitchPullCtrlCfg(
+                                                           pPmicCoreHandle,
+                                                           gpioCfg);
+    }
+
+    if((PMIC_ST_SUCCESS == status) &&
+       ((bool)true == pmic_validParamCheck(gpioCfg.validParams,
+                                   PMIC_ENABLE_CFG_POLARITY_VALID)))
+    {
+        if(gpioCfg.pinPolarity > PMIC_GPIO_POL_HIGH)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+
+        if(PMIC_ST_SUCCESS == status)
+        {
+             /* Setting ENABLE pin polarity */
+            status = Pmic_gpioSetPinPolarity(pPmicCoreHandle,
+                                             gpioCfg);
+        }
+    }
+
+    return status;
+}
+
+/*!
+ * \brief   This function is used to read NPWRON pin configuration for TPS6594x
+ *          PMIC LEO Device.
+ */
+int32_t Pmic_gpioTps6594xGetNPwronPinConfiguration(
+                                        Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                        Pmic_GpioCfg_t      *pGpioCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    if((bool)true == pmic_validParamCheck(pGpioCfg->validParams,
+                                          PMIC_GPIO_CFG_DEGLITCH_VALID))
+    {
+        /* Get nPWRON/Enable pin signal deglitch time */
+        status = Pmic_gpioGetDeglitchTime(pPmicCoreHandle,
+                                          PMIC_NPWRON_ENABLE_PIN,
+                                          pGpioCfg);
+    }
+
+    if((PMIC_ST_SUCCESS == status) &&
+       ((bool)true == pmic_validParamCheck(pGpioCfg->validParams,
+                                           PMIC_GPIO_CFG_PINFUNC_VALID)))
+    {
+        /* Get nPWRON/Enable pin signal function */
+        status = Pmic_gpioGetPinFunc(pPmicCoreHandle,
+                                     PMIC_NPWRON_ENABLE_PIN,
+                                     pGpioCfg);
+    }
+
+    if((PMIC_ST_SUCCESS == status) &&
+       ((bool)true == pmic_validParamCheck(pGpioCfg->validParams,
+                                           PMIC_GPIO_CFG_PULL_VALID)))
+    {
+        /* Get nPWRON/Enable pin pull-up/down control */
+        status = Pmic_gpioGetPullCtrl(pPmicCoreHandle,
+                                      PMIC_NPWRON_ENABLE_PIN,
+                                      pGpioCfg);
+    }
+
+    if((PMIC_ST_SUCCESS == status) &&
+       ((bool)true == pmic_validParamCheck(pGpioCfg->validParams,
+                                           PMIC_ENABLE_CFG_POLARITY_VALID)))
+    {
+        /* Get nPWRON pin polarity control */
+        status = Pmic_gpioGetPinPolarity(pPmicCoreHandle,
+                                         pGpioCfg);
+    }
+
+    return status;
+}

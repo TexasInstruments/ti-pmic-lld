@@ -1081,8 +1081,7 @@ static int32_t Pmic_rtcCheckHoursMode(Pmic_CoreHandle_t    *pPmicCoreHandle,
                 pmicStatus = PMIC_ST_ERR_INV_TIME;
             }
         }
-
-        if(PMIC_RTC_24_HOUR_MODE == timeMode)
+        else
         {
             if(timeCfg.hour > PMIC_RTC_24HFMT_HR_MAX)
             {
@@ -1176,16 +1175,16 @@ static int32_t Pmic_rtcCheckMonthDays(const Pmic_RtcDate_t dateCfg,
                 pmicStatus = PMIC_ST_ERR_INV_DATE;
             }
         }
-     }
-     /* Check months having 31 days */
-     else
-     {
+    }
+    /* Check months having 31 days */
+    else
+    {
         if((dateCfg.day < PMIC_RTC_DAY_MIN) ||
            (dateCfg.day > PMIC_RTC_MNTH_DAY_MAX_31))
         {
             pmicStatus = PMIC_ST_ERR_INV_DATE;
         }
-     }
+    }
 
     return pmicStatus;
 }
@@ -1974,13 +1973,18 @@ static int32_t  Pmic_rtcEnableRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
             regVal = 1U;
         }
 
-        if((PMIC_ST_SUCCESS == pmicStatus)  &&
-           (regVal != Pmic_getBitField(regData,
-                                          PMIC_RTC_STATUS_RUN_SHIFT,
-                                          PMIC_RTC_STATUS_RUN_MASK)))
+        if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            /* Improper RTC status */
+            /* Enable/Disable RTC is failed */
             pmicStatus = PMIC_ST_ERR_RTC_STOP_FAIL;
+
+            if(regVal == Pmic_getBitField(regData,
+                                          PMIC_RTC_STATUS_RUN_SHIFT,
+                                          PMIC_RTC_STATUS_RUN_MASK))
+            {
+                /* RTC is Enabled/Disabled */
+                pmicStatus = PMIC_ST_SUCCESS;
+            }
         }
     }
 
@@ -2280,7 +2284,7 @@ int32_t Pmic_rtcSetTimeDateInfo(Pmic_CoreHandle_t    *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        /* Caliing the function to validate the time and date for errors */
+        /* Calling the function to validate the time and date for errors */
         pmicStatus = Pmic_rtcCheckDateTime(pPmicCoreHandle, timeCfg, dateCfg);
     }
 
@@ -2999,7 +3003,7 @@ static int32_t Pmic_rtcGetCrystalOscEnCfg(Pmic_CoreHandle_t   *pPmicCoreHandle,
 /*!
  * \brief  API to Set RTC time config to Round the time to closest minute
  */
-static int32_t Pmic_rctSetRtcTimeRound30s(Pmic_CoreHandle_t   *pPmicCoreHandle,
+static int32_t Pmic_rtcSetRtcTimeRound30s(Pmic_CoreHandle_t   *pPmicCoreHandle,
                                           const Pmic_RtcCfg_t  rtcCfg)
 {
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
@@ -3040,7 +3044,7 @@ static int32_t Pmic_rctSetRtcTimeRound30s(Pmic_CoreHandle_t   *pPmicCoreHandle,
  * \brief  API to Get the status of RTC time config to Round the time to closest
  *         minute is set or not
  */
-static int32_t Pmic_rctGetRtcTimeRound30s(Pmic_CoreHandle_t   *pPmicCoreHandle,
+static int32_t Pmic_rtcGetRtcTimeRound30s(Pmic_CoreHandle_t   *pPmicCoreHandle,
                                           Pmic_RtcCfg_t       *pRtcCfg)
 {
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
@@ -3286,7 +3290,7 @@ int32_t  Pmic_rtcSetConfiguration(Pmic_CoreHandle_t    *pPmicCoreHandle,
                                     PMIC_RTC_CFG_RTC_TIME_ROUND_30S_SET_VALID)))
     {
         /* Set RTC time config to Round the time to closest minute */
-        pmicStatus = Pmic_rctSetRtcTimeRound30s(pPmicCoreHandle, rtcCfg);
+        pmicStatus = Pmic_rtcSetRtcTimeRound30s(pPmicCoreHandle, rtcCfg);
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
@@ -3364,7 +3368,7 @@ int32_t  Pmic_rtcGetConfiguration(Pmic_CoreHandle_t    *pPmicCoreHandle,
     {
         /* Get the status of RTC time config to Round the time to closest
          * minute is set or not */
-        pmicStatus = Pmic_rctGetRtcTimeRound30s(pPmicCoreHandle, pRtcCfg);
+        pmicStatus = Pmic_rtcGetRtcTimeRound30s(pPmicCoreHandle, pRtcCfg);
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&

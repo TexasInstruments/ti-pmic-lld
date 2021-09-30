@@ -338,6 +338,10 @@ void pmic_get_tps6594x_pwrPgoodSrcRegCfg(
 /*!
  * \brief   This function is used to convert the millivolt value to vset value
  *          for LEO TPS6594x PMIC
+ *
+ *          Note: In this API, While adding support for New pwrRsrcType,
+ *                developer need to update the API functionality for New
+ *                pwrRsrcType accordingly.
  */
 int32_t Pmic_powerTPS6594xConvertVoltage2VSetVal(uint16_t  millivolt,
                                                  uint16_t  pwrRsrc,
@@ -359,16 +363,13 @@ int32_t Pmic_powerTPS6594xConvertVoltage2VSetVal(uint16_t  millivolt,
                                                           &baseVoutCode);
 
     }
-    else if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO == pwrRsrcType)
-    {
-        status = Pmic_powerLdoConvertVoltage2VSetVal(pwrRsrc,
-                                                     &baseMillivolt,
-                                                     &millivoltStep,
-                                                     &baseVoutCode);
-    }
     else
     {
-        status = PMIC_ST_ERR_INV_PARAM;
+        /* Else case for LDO pwrRsrcType */
+        Pmic_powerLdoConvertVoltage2VSetVal(pwrRsrc,
+                                            &baseMillivolt,
+                                            &millivoltStep,
+                                            &baseVoutCode);
     }
 
     if((PMIC_ST_SUCCESS == status) &&
@@ -389,12 +390,15 @@ int32_t Pmic_powerTPS6594xConvertVoltage2VSetVal(uint16_t  millivolt,
 /*!
  * \brief   This function is used to convert the vset value to voltage in mv
  *          for PMIC LEO TPS6594x
+ *
+ *          Note: In this API, While adding support for New pwrRsrcType,
+ *                developer need to update the API functionality for New
+ *                pwrRsrcType accordingly.
  */
-int32_t Pmic_powerTPS6594xConvertVSet2Voltage(const uint8_t  *pVSetVal,
-                                              uint16_t        pwrRsrc,
-                                              uint16_t       *millivolt)
+void Pmic_powerTPS6594xConvertVSet2Voltage(const uint8_t  *pVSetVal,
+                                           uint16_t        pwrRsrc,
+                                           uint16_t       *millivolt)
 {
-    int32_t  status        = PMIC_ST_SUCCESS;
     uint16_t baseMillivolt = 0U;
     uint8_t  millivoltStep = 0U;
     uint8_t  baseVoutCode  = 0U;
@@ -403,30 +407,23 @@ int32_t Pmic_powerTPS6594xConvertVSet2Voltage(const uint8_t  *pVSetVal,
     pwrRsrcType = Pmic_powerGetPwrRsrcType(pwrRsrc);
     if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType)
     {
-        status = Pmic_powerBuckVmonConvertVSetVal2Voltage(pVSetVal,
-                                                          &baseMillivolt,
-                                                          &millivoltStep,
-                                                          &baseVoutCode);
-    }
-    else if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO == pwrRsrcType)
-    {
-        status = Pmic_powerLdoConvertVSetVal2Voltage(pwrRsrc,
-                                                     &baseMillivolt,
-                                                     &millivoltStep,
-                                                     &baseVoutCode);
+        Pmic_powerBuckVmonConvertVSetVal2Voltage(pVSetVal,
+                                                 &baseMillivolt,
+                                                 &millivoltStep,
+                                                 &baseVoutCode);
     }
     else
     {
-        status = PMIC_ST_ERR_INV_PARAM;
+        /* Else case for LDO pwrRsrcType */
+        Pmic_powerLdoConvertVSetVal2Voltage(pwrRsrc,
+                                            &baseMillivolt,
+                                            &millivoltStep,
+                                            &baseVoutCode);
     }
 
-    if(PMIC_ST_SUCCESS == status)
-    {
-        *millivolt = (baseMillivolt +
-                     (((uint16_t)*pVSetVal - baseVoutCode) * millivoltStep));
-    }
+    *millivolt = (baseMillivolt +
+                 (((uint16_t)*pVSetVal - baseVoutCode) * millivoltStep));
 
-    return status;
 }
 
 /*!
@@ -553,6 +550,10 @@ return status;
 /*!
  * \brief   This function is to validate the power good signal source selection
  *          limit for the specific PMIC device.
+ *
+ *          Note: In this API, While adding support for New pGoodSrcType,
+ *                developer need to update the API functionality for New
+ *                pGoodSrcType accordingly.
  */
 int32_t Pmic_validate_tps6594x_pGoodSelType(uint16_t pgoodSrc,
                                             uint8_t pgoodSelType)
@@ -578,16 +579,13 @@ int32_t Pmic_validate_tps6594x_pGoodSelType(uint16_t pgoodSrc,
             status = PMIC_ST_ERR_INV_PARAM;
         }
     }
-    else if(PMIC_TPS6594X_PGOOD_SOURCE_TYPE_VCCA == pGoodSrcType)
+    else
     {
+        /* Else case for VCCA pGoodSrcType */
         if(pgoodSelType >  PMIC_TPS6594X_POWER_PGOOD_SEL_VCCA_ENABLE)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-    }
-    else
-    {
-        status = PMIC_ST_ERR_INV_PARAM;
     }
 
     return status;
@@ -749,6 +747,10 @@ int32_t Pmic_powerGetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
 /**
  * \brief   This function is used to validate the voltage levels for
  *          Regulators/VMON for TPS6594x PMIC
+ *
+ *          Note: In this API, While adding support for New pwrRsrcType,
+ *                developer need to update the API functionality for New
+ *                pwrRsrcType accordingly.
  */
 int32_t Pmic_powerTPS6594xValidateVoltageLevel(
                                              Pmic_CoreHandle_t *pPmicCoreHandle,
@@ -767,8 +769,9 @@ int32_t Pmic_powerTPS6594xValidateVoltageLevel(
             status = PMIC_ST_ERR_INV_PARAM;
         }
     }
-    else if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO == pwrRsrcType)
+    else
     {
+        /* Else case for LDO pwrRsrcType */
         if(PMIC_TPS6594X_REGULATOR_LDO4 == pwrRsrc)
         {
             ldoMinVoltageValue = PMIC_TPS6594X_POWER_LDO4_MIN_VOLTAGE;
@@ -784,10 +787,6 @@ int32_t Pmic_powerTPS6594xValidateVoltageLevel(
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-    }
-    else
-    {
-        status = PMIC_ST_ERR_INV_PARAM;
     }
 
     return status;
@@ -838,6 +837,10 @@ int32_t Pmic_powerTPS6594xValidatePwrRsrcLimit(
 /*!
  * \brief   This function is to validate the power resource interrupt type
  *          for the TPS6594x PMIC device.
+ *
+ *          Note: In this API, While adding support for New pwrResourceType,
+ *                developer need to update the API functionality for New
+ *                pwrResourceType accordingly.
  */
 int32_t Pmic_powerTPS6594xValidateIntrType(uint8_t  pmicDeviceType,
                                            uint16_t pwrResource,
@@ -856,17 +859,14 @@ int32_t Pmic_powerTPS6594xValidateIntrType(uint8_t  pmicDeviceType,
             status = PMIC_ST_ERR_INV_PARAM;
         }
     }
-    else if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_VCCA == pwrResourceType)
+    else
     {
+        /* Else case for VCCA pwrResourceType */
         if((intrType != PMIC_TPS6594X_POWER_OV_INT) &&
            (intrType != PMIC_TPS6594X_POWER_UV_INT))
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
-    }
-    else
-    {
-        status = PMIC_ST_ERR_INV_PARAM;
     }
 
     return status;

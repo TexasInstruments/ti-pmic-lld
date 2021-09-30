@@ -201,13 +201,7 @@ static int32_t Pmic_validatePmicHandleGetRegWrProtectStat(
 {
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
 
-    if(NULL == pPmicCoreHandle)
-    {
-        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (NULL == pPmicCoreHandle->pCommHandle))
+    if(NULL == pPmicCoreHandle->pCommHandle)
     {
         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
     }
@@ -360,13 +354,7 @@ static int32_t Pmic_validateCorehandle(Pmic_CoreHandle_t *pPmicCoreHandle)
 {
     int32_t  pmicStatus  = PMIC_ST_SUCCESS;
 
-    if(NULL == pPmicCoreHandle)
-    {
-        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (NULL == pPmicCoreHandle->pCommHandle))
+    if(NULL == pPmicCoreHandle->pCommHandle)
     {
         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
     }

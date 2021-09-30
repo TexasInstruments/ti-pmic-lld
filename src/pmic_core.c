@@ -144,7 +144,7 @@ int32_t Pmic_setRecoveryCntCfg(Pmic_CoreHandle_t        *pPmicCoreHandle,
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t  regVal;
-    uint8_t  clrCntVal = 0U;
+    uint8_t  clrCntVal = 1U;
 
     if(NULL == pPmicCoreHandle)
     {
@@ -181,10 +181,6 @@ int32_t Pmic_setRecoveryCntCfg(Pmic_CoreHandle_t        *pPmicCoreHandle,
             if(((bool)true) == pmic_validParamCheck(recovCntCfg.validParams,
                                             PMIC_CFG_RECOV_CNT_CLR_CNT_VALID))
             {
-                if((bool)true == recovCntCfg.clrCnt)
-                {
-                    clrCntVal = 1U;
-                }
                 Pmic_setBitField(&regVal,
                                  PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_SHIFT,
                                  PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_MASK,
@@ -272,14 +268,12 @@ int32_t Pmic_getRecoveryCntCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
             if(((bool)true) == pmic_validParamCheck(pRecovCntCfg->validParams,
                                             PMIC_CFG_RECOV_CNT_CLR_CNT_VALID))
             {
+                pRecovCntCfg->clrCnt = ((bool)true);
+
                 if((Pmic_getBitField(
                                regVal,
                                PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_SHIFT,
-                               PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_MASK)) != 0U)
-                {
-                    pRecovCntCfg->clrCnt = ((bool)true);
-                }
-                else
+                               PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_MASK)) == 0U)
                 {
                     pRecovCntCfg->clrCnt = ((bool)false);
                 }
@@ -512,9 +506,8 @@ static int32_t Pmic_initCoreHandleQADevCfgParams(
     }
 
     /* Check and update PMIC Handle QA Comm Handle */
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams,
-                                     PMIC_CFG_QACOMM_HANDLE_VALID)))
+    if(((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams,
+                                     PMIC_CFG_QACOMM_HANDLE_VALID))
     {
         if(NULL == pPmicConfigData->pQACommHandle)
         {
@@ -615,6 +608,12 @@ static int32_t Pmic_initCoreHandleCommIOCriticalSectionFns(
 /*!
  * \brief  API to update CRC Enable status info to PMIC handle and Check if the
  *        device requested is the one on the bus
+ *
+ *         Note: In this API, the default PMIC device is assumed as TPS6594x
+ *               LEO PMIC. While adding support for New PMIC device, developer
+ *               need to update the API functionality for New PMIC device
+ *               accordingly.
+ *
  */
 static int32_t Pmic_updateCrcEnableStatValidateDevOnBus(
                                           const Pmic_CoreCfg_t *pPmicConfigData,
@@ -640,11 +639,9 @@ static int32_t Pmic_updateCrcEnableStatValidateDevOnBus(
         }
         else
         {
-            if(i2c1SpiCrcStat == i2c2CrcStat)
-            {
-                pPmicCoreHandle->crcEnable = i2c1SpiCrcStat;
-            }
-            else
+            pPmicCoreHandle->crcEnable = i2c2CrcStat;
+
+            if(i2c1SpiCrcStat != i2c2CrcStat)
             {
                 pmicStatus = PMIC_ST_ERR_CRC_STATUS_FAIL;
             }
@@ -681,15 +678,13 @@ static int32_t Pmic_updateCrcEnableStatValidateDevOnBus(
                     *pStatus = PMIC_ST_WARN_INV_DEVICE_ID;
                 }
                 break;
-            case PMIC_DEV_LEO_TPS6594X:
+            default:
+                /* Default case is valid only for TPS6594x LEO PMIC */
                 if(PMIC_TPS6594X_DEV_REV_ID_PG_2_0 !=
                    pPmicCoreHandle->pmicDevRev)
                 {
                     *pStatus = PMIC_ST_WARN_INV_DEVICE_ID;
                 }
-                break;
-            default:
-                pmicStatus = PMIC_ST_ERR_INV_DEVICE;
                 break;
         }
     }
@@ -2294,7 +2289,7 @@ static int32_t Pmic_getNRstOutSignalCfg(
  * \brief   API to set ExternalClk Frequency Selection, NRSTOUT_SOC and
  *          NRSTOUT Signal Configuration
  */
-int32_t Pmic_setExtclkfreqSelNRstOutSocNRstOutCfg(
+static int32_t Pmic_setExtclkfreqSelNRstOutSocNRstOutCfg(
                                    Pmic_CoreHandle_t          *pPmicCoreHandle,
                                    const Pmic_MiscCtrlCfg_t    miscCtrlCfg)
 {
@@ -2407,7 +2402,7 @@ int32_t Pmic_setMiscCtrlConfig(Pmic_CoreHandle_t          *pPmicCoreHandle,
  * \brief   API to get PMIC ExternalClk Frequency Selection, NRSTOUT_SOC and
  *          NRSTOUT Signal Configuration
  */
-int32_t Pmic_getExtclkfreqSelNRstOutSocNRstOutCfg(
+static int32_t Pmic_getExtclkfreqSelNRstOutSocNRstOutCfg(
                                    Pmic_CoreHandle_t          *pPmicCoreHandle,
                                    Pmic_MiscCtrlCfg_t         *pMiscCtrlCfg)
 {
@@ -3434,13 +3429,9 @@ int32_t Pmic_getI2CSpeed(Pmic_CoreHandle_t     *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        if((PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode) ||
-           (PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode))
-        {
-            *pI2C1Speed = Pmic_getBitField(regVal,
-                                           PMIC_CONFIG_1_I2C1_HS_SHIFT,
-                                           PMIC_CONFIG_1_I2C1_HS_MASK);
-        }
+        *pI2C1Speed = Pmic_getBitField(regVal,
+                                       PMIC_CONFIG_1_I2C1_HS_SHIFT,
+                                       PMIC_CONFIG_1_I2C1_HS_MASK);
 
         if(PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode)
         {
@@ -3549,15 +3540,10 @@ int32_t Pmic_getCrcStatus(Pmic_CoreHandle_t     *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        if(((PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode) ||
-           (PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode)) ||
-           (PMIC_INTF_SPI == pPmicCoreHandle->commMode))
-        {
-            *pI2c1SpiCrcStatus = Pmic_getBitField(
-                                    regVal,
-                                    PMIC_SERIAL_IF_CONFIG_I2C1_SPI_CRC_EN_SHIFT,
-                                    PMIC_SERIAL_IF_CONFIG_I2C1_SPI_CRC_EN_MASK);
-        }
+        *pI2c1SpiCrcStatus = Pmic_getBitField(
+                                regVal,
+                                PMIC_SERIAL_IF_CONFIG_I2C1_SPI_CRC_EN_SHIFT,
+                                PMIC_SERIAL_IF_CONFIG_I2C1_SPI_CRC_EN_MASK);
 
         if(PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode)
         {
@@ -3604,6 +3590,13 @@ int32_t Pmic_getDeviceInfo(Pmic_CoreHandle_t     *pPmicCoreHandle,
         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
     }
 
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((PMIC_SILICON_REV_ID_PG_2_0 != pPmicCoreHandle->pmicDevSiliconRev) &&
+        (PMIC_SILICON_REV_ID_PG_1_0 != pPmicCoreHandle->pmicDevSiliconRev)))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_SILICON_REVISION;
+    }
+
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -3613,6 +3606,12 @@ int32_t Pmic_getDeviceInfo(Pmic_CoreHandle_t     *pPmicCoreHandle,
                                             &regVal);
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
+            pDeviceInfo->deviceID =
+                          Pmic_getBitField(
+                             regVal,
+                             PMIC_DEV_REV_TI_DEVICE_ID_SILICON_REV_SHIFT,
+                             PMIC_DEV_REV_TI_DEVICE_ID_SILICON_REV_MASK);
+
             if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
             {
                 pDeviceInfo->deviceID =
@@ -3620,14 +3619,6 @@ int32_t Pmic_getDeviceInfo(Pmic_CoreHandle_t     *pPmicCoreHandle,
                              regVal,
                              PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_SHIFT,
                              PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_MASK);
-            }
-            else
-            {
-                pDeviceInfo->deviceID =
-                          Pmic_getBitField(
-                             regVal,
-                             PMIC_DEV_REV_TI_DEVICE_ID_SILICON_REV_SHIFT,
-                             PMIC_DEV_REV_TI_DEVICE_ID_SILICON_REV_MASK);
             }
 
             pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
@@ -3654,14 +3645,12 @@ int32_t Pmic_getDeviceInfo(Pmic_CoreHandle_t     *pPmicCoreHandle,
                                        PMIC_MANUFACTURING_VER_SILICON_REV_MASK);
         }
 
-        if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           (PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev))
         {
-            if(PMIC_ST_SUCCESS == pmicStatus)
-            {
-                pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                                    PMIC_CUSTOMER_NVM_ID_REG_REGADDR,
-                                                    &(pDeviceInfo->customNvmID));
-            }
+            pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                                PMIC_CUSTOMER_NVM_ID_REG_REGADDR,
+                                                &(pDeviceInfo->customNvmID));
         }
 
         Pmic_criticalSectionStop(pPmicCoreHandle);

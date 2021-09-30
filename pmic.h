@@ -202,6 +202,8 @@ extern "C" {
 /** \brief Error Code for when a feature is not supported on PMIC device type
  *         or PMIC silicon revision*/
 #define PMIC_ST_ERR_NOT_SUPPORTED                       (-((int32_t)40))
+/** \brief Error Code for Invalid PMIC Device Silicon Revision*/
+#define PMIC_ST_ERR_INV_SILICON_REVISION                (-((int32_t)41))
 /* @} */
 
 /**

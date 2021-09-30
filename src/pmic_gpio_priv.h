@@ -44,6 +44,7 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
+#include <pmic_gpio.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -370,6 +371,54 @@ typedef struct Pmic_GpioIntRegCfg_s
 /*==========================================================================*/
 /*                         Function Declarations                            */
 /*==========================================================================*/
+/*!
+ * \brief   This function is used to set the GPIO and NPWRON Pin Functionality
+ */
+int32_t Pmic_gpioSetPinFunc(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                            const uint8_t        pin,
+                            const Pmic_GpioCfg_t gpioCfg);
+
+/*!
+ * \brief   This function is used to set the NPWRON/Enable deglitch time and
+ *          NPWRON/Enable Pull UP/Down configuration
+ *          Valid only for TPS6594x PMIC
+ */
+int32_t Pmic_gpioSetNPwronEnableDeglitchPullCtrlCfg(
+                                          Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                          const Pmic_GpioCfg_t gpioCfg);
+
+/*!
+ * \brief   This function is used to set the NPWRON Pin Polarity
+ */
+int32_t Pmic_gpioSetPinPolarity(Pmic_CoreHandle_t    *pPmicCoreHandle,
+                                const Pmic_GpioCfg_t  gpioCfg);
+
+/*!
+ * \brief   This function is used to get the GPIO and NPWRON Deglitch time
+ */
+int32_t Pmic_gpioGetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                 const uint8_t      pin,
+                                 Pmic_GpioCfg_t    *pGpioCfg);
+
+/*!
+ * \brief   This function is used to get the GPIO and NPWRON Pin Functionality
+ */
+int32_t Pmic_gpioGetPinFunc(Pmic_CoreHandle_t *pPmicCoreHandle,
+                            const uint8_t      pin,
+                            Pmic_GpioCfg_t    *pGpioCfg);
+
+/*!
+ * \brief   This function is used to get the GPIO and NPWRON Pin Pull Control
+ */
+int32_t Pmic_gpioGetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
+                             const uint8_t      pin,
+                             Pmic_GpioCfg_t    *pGpioCfg);
+
+/*!
+ * \brief   This function is used to get the NPWRON Pin Polarity
+ */
+int32_t Pmic_gpioGetPinPolarity(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                Pmic_GpioCfg_t    *pGpioCfg);
 
 #ifdef __cplusplus
 }

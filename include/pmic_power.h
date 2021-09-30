@@ -1113,9 +1113,9 @@ int32_t Pmic_powerGetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
  * \param   pPmicCoreHandle  [IN]     PMIC Interface Handle.
  * \param   pgoodSrcSel      [IN]     Power Good Source.
  *                                    Valid values for TPS6594x Leo Device
- *                                    \ref Pmic_Tps6594xLeo_Pgood_SourceType.
+ *                                    \ref Pmic_Tps6594xLeo_Pgood_Source.
  *                                    Valid values for LP8764x HERA Device
- *                                    \ref Pmic_Lp8764xHera_Pgood_SourceType.
+ *                                    \ref Pmic_Lp8764xHera_Pgood_Source.
  * \param   pgoodSelType     [IN]     Power Good configuration.
  *                                    Valid values for TPS6594x Leo Device:
  *                                For LDO/BUCK:
@@ -1160,9 +1160,9 @@ int32_t Pmic_powerSetConfigPowerGood(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \param   pPmicCoreHandle  [IN]        PMIC Interface Handle.
  * \param   pgoodSrcSel      [IN]        Power Good Source.
  *                                       Valid values for TPS6594x Leo Device
- *                                       \ref Pmic_Tps6594xLeo_Pgood_SourceType.
+ *                                       \ref Pmic_Tps6594xLeo_Pgood_Source.
  *                                       Valid values for LP8764x HERA Device
- *                                       \ref Pmic_Lp8764xHera_Pgood_SourceType.
+ *                                       \ref Pmic_Lp8764xHera_Pgood_Source.
  * \param   pPgoodSelType    [OUT]       Power Good configuration.
  *
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.

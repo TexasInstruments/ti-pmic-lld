@@ -49,72 +49,59 @@
 #include <pmic_gpio_lp8764x_priv.h>
 
 /*!
- * \brief   This function is used to get the PMIC GPIO configuration
+ * \brief   This function is used to get the PMIC GPIO configuration.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
-static int32_t Pmic_get_gpioInOutCfg(const Pmic_CoreHandle_t *pPmicCoreHandle,
-                                     Pmic_GpioInOutCfg_t    **pGpioInOutCfg)
+static void Pmic_get_gpioInOutCfg(const Pmic_CoreHandle_t *pPmicCoreHandle,
+                                  Pmic_GpioInOutCfg_t    **pGpioInOutCfg)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-
-    if(NULL == pGpioInOutCfg)
+    switch(pPmicCoreHandle->pmicDeviceType)
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        case PMIC_DEV_HERA_LP8764X:
+            pmic_get_lp8764x_gpioInOutCfg(pGpioInOutCfg);
+            break;
+        default:
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            pmic_get_tps6594x_gpioInOutCfg(pGpioInOutCfg);
+            break;
     }
-
-    if(PMIC_ST_SUCCESS == status)
-    {
-        switch(pPmicCoreHandle->pmicDeviceType)
-        {
-            case PMIC_DEV_LEO_TPS6594X:
-                pmic_get_tps6594x_gpioInOutCfg(pGpioInOutCfg);
-                break;
-            case PMIC_DEV_HERA_LP8764X:
-                pmic_get_lp8764x_gpioInOutCfg(pGpioInOutCfg);
-                break;
-            default:
-                status = PMIC_ST_ERR_INV_DEVICE;
-                break;
-        }
-    }
-
-    return status;
 }
 
 /*!
- * \brief   This function is used to get the PMIC GPIO configuration
+ * \brief   This function is used to get the PMIC GPIO configuration.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
-static int32_t Pmic_get_gpioIntRegCfg(const Pmic_CoreHandle_t *pPmicCoreHandle,
-                                      Pmic_GpioIntRegCfg_t   **pGpioIntRegCfg)
+static void Pmic_get_gpioIntRegCfg(const Pmic_CoreHandle_t *pPmicCoreHandle,
+                                   Pmic_GpioIntRegCfg_t   **pGpioIntRegCfg)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-
-    if(NULL == pGpioIntRegCfg)
+    switch(pPmicCoreHandle->pmicDeviceType)
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
+        case PMIC_DEV_HERA_LP8764X:
+            pmic_get_lp8764x_gpioIntRegCfg(pGpioIntRegCfg);
+            break;
+        default:
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            pmic_get_tps6594x_gpioIntRegCfg(pGpioIntRegCfg);
+            break;
     }
-
-    if(PMIC_ST_SUCCESS == status)
-    {
-        switch(pPmicCoreHandle->pmicDeviceType)
-        {
-            case PMIC_DEV_LEO_TPS6594X:
-                pmic_get_tps6594x_gpioIntRegCfg(pGpioIntRegCfg);
-                break;
-            case PMIC_DEV_HERA_LP8764X:
-                pmic_get_lp8764x_gpioIntRegCfg(pGpioIntRegCfg);
-                break;
-            default:
-                status = PMIC_ST_ERR_INV_DEVICE;
-                break;
-        }
-    }
-
-    return status;
 }
 
 /*!
  * \brief   This function is used to validate the PMIC specific pin is valid or
- *          not
+ *          not.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
 static int32_t Pmic_gpioValidatePin(const uint8_t pmicDeviceType,
                                     const uint8_t pin)
@@ -123,13 +110,6 @@ static int32_t Pmic_gpioValidatePin(const uint8_t pmicDeviceType,
 
     switch(pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            if((pin < PMIC_TPS6594X_GPIO_PIN_MIN) ||
-               (pin > PMIC_TPS6594X_GPIO_PIN_MAX))
-            {
-                status = PMIC_ST_ERR_INV_PARAM;
-            }
-            break;
         case PMIC_DEV_HERA_LP8764X:
             if((pin < PMIC_LP8764X_GPIO_PIN_MIN) ||
                (pin > PMIC_LP8764X_GPIO_PIN_MAX))
@@ -138,7 +118,12 @@ static int32_t Pmic_gpioValidatePin(const uint8_t pmicDeviceType,
             }
             break;
         default:
-            status = PMIC_ST_ERR_INV_DEVICE;
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            if((pin < PMIC_TPS6594X_GPIO_PIN_MIN) ||
+               (pin > PMIC_TPS6594X_GPIO_PIN_MAX))
+            {
+                status = PMIC_ST_ERR_INV_PARAM;
+            }
             break;
     }
 
@@ -153,17 +138,18 @@ static int32_t Pmic_gpioValidatePin(const uint8_t pmicDeviceType,
 
 static int32_t Pmic_gpioValidateParams(const Pmic_CoreHandle_t *pPmicCoreHandle)
 {
-    int32_t status = PMIC_ST_SUCCESS;
+    int32_t status = PMIC_ST_ERR_INV_HANDLE;
 
-    if(NULL == pPmicCoreHandle)
+    if(NULL != pPmicCoreHandle)
     {
-        status = PMIC_ST_ERR_INV_HANDLE;
-    }
-
-    if((PMIC_ST_SUCCESS == status) &&
-       ((bool)false == pPmicCoreHandle->pPmic_SubSysInfo->gpioEnable))
-    {
-        status = PMIC_ST_ERR_INV_DEVICE;
+        if ((bool)true == pPmicCoreHandle->pPmic_SubSysInfo->gpioEnable)
+        {
+            status = PMIC_ST_SUCCESS;
+        }
+        else
+        {
+            status = PMIC_ST_ERR_INV_DEVICE;
+        }
     }
 
     return status;
@@ -208,18 +194,25 @@ static int32_t Pmic_gpioNpoweronEnableParamCheck(
 
 /*!
  * \brief   This function is used to select the device specific register for
-            GPIO pins.
+ *          GPIO pins.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
-static int32_t Pmic_gpioSelectRegister(uint8_t        pmicDeviceType,
-                                       const uint8_t  pin,
-                                       const uint8_t  inOutCfgRegAddr,
-                                       uint8_t       *pRegAddr)
+static void Pmic_gpioSelectRegister(uint8_t        pmicDeviceType,
+                                    const uint8_t  pin,
+                                    const uint8_t  inOutCfgRegAddr,
+                                    uint8_t       *pRegAddr)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-
     switch(pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594X:
+        case PMIC_DEV_HERA_LP8764X:
+            *pRegAddr = inOutCfgRegAddr;
+            break;
+        default:
+            /* Default case is valid only for TPS6594x LEO PMIC */
             if(PMIC_NPWRON_ENABLE_PIN == pin)
             {
                 *pRegAddr = PMIC_NPWRON_CONF_REGADDR;
@@ -229,30 +222,15 @@ static int32_t Pmic_gpioSelectRegister(uint8_t        pmicDeviceType,
                 *pRegAddr = inOutCfgRegAddr;
             }
             break;
-        case PMIC_DEV_HERA_LP8764X:
-            if(PMIC_NPWRON_ENABLE_PIN == pin)
-            {
-                *pRegAddr = PMIC_ENABLE_CONF_REGADDR;
-            }
-            else
-            {
-                *pRegAddr = inOutCfgRegAddr;
-            }
-            break;
-        default:
-            status = PMIC_ST_ERR_INV_DEVICE;
-            break;
     }
-
-    return status;
 }
 
 /*!
  * \brief   This function is used to set the GPIO and NPWRON Pin Functionality
  */
-static int32_t Pmic_gpioSetPinFunc(Pmic_CoreHandle_t   *pPmicCoreHandle,
-                                   const uint8_t        pin,
-                                   const Pmic_GpioCfg_t gpioCfg)
+int32_t Pmic_gpioSetPinFunc(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                            const uint8_t        pin,
+                            const Pmic_GpioCfg_t gpioCfg)
 {
     int32_t status  = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -281,25 +259,20 @@ static int32_t Pmic_gpioSetPinFunc(Pmic_CoreHandle_t   *pPmicCoreHandle,
         index = pin - 1U;
 
         /* Get PMIC gpio configuration */
-        status = Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
-        if(PMIC_ST_SUCCESS == status)
-        {
-            status = Pmic_gpioSelectRegister(pPmicCoreHandle->pmicDeviceType,
-                                             pin,
-                                             (uint8_t)pGpioInOutCfg[index].regAddr,
-                                             &regAddr);
-        }
+        Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
+
+        Pmic_gpioSelectRegister(pPmicCoreHandle->pmicDeviceType,
+                                pin,
+                                (uint8_t)pGpioInOutCfg[index].regAddr,
+                                &regAddr);
 
         /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        if(PMIC_ST_SUCCESS == status)
-        {
-            /* Reading GPIO conf register */
-            status = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            regAddr,
-                                            &regData);
-        }
+        /* Reading GPIO conf register */
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
 
         if (PMIC_ST_SUCCESS == status)
         {
@@ -335,9 +308,9 @@ static int32_t Pmic_gpioSetPinFunc(Pmic_CoreHandle_t   *pPmicCoreHandle,
 /*!
  * \brief   This function is used to get the GPIO and NPWRON Pin Functionality
  */
-static int32_t Pmic_gpioGetPinFunc(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                   const uint8_t      pin,
-                                   Pmic_GpioCfg_t    *pGpioCfg)
+int32_t Pmic_gpioGetPinFunc(Pmic_CoreHandle_t *pPmicCoreHandle,
+                            const uint8_t      pin,
+                            Pmic_GpioCfg_t    *pGpioCfg)
 {
     int32_t status  = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -349,24 +322,18 @@ static int32_t Pmic_gpioGetPinFunc(Pmic_CoreHandle_t *pPmicCoreHandle,
     index = pin - 1U;
 
     /* Get PMIC gpio configuration */
-    status = Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
+    Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
 
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_gpioSelectRegister(pPmicCoreHandle->pmicDeviceType,
-                                         pin,
-                                         (uint8_t)pGpioInOutCfg[index].regAddr,
-                                         &regAddr);
-    }
+    Pmic_gpioSelectRegister(pPmicCoreHandle->pmicDeviceType,
+                            pin,
+                            (uint8_t)pGpioInOutCfg[index].regAddr,
+                            &regAddr);
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS == status)
-    {
-        /* Reading the GPIO configuration */
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
-    }
+    /* Reading the GPIO configuration */
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
 
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -395,10 +362,15 @@ static int32_t Pmic_gpioGetPinFunc(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /*!
- * \brief   This function is used to set the NPWRON Pin Polarity
+ * \brief   This function is used to set the NPWRON Pin Polarity.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
-static int32_t Pmic_gpioSetPinPolarity(Pmic_CoreHandle_t    *pPmicCoreHandle,
-                                       const Pmic_GpioCfg_t  gpioCfg)
+int32_t Pmic_gpioSetPinPolarity(Pmic_CoreHandle_t    *pPmicCoreHandle,
+                                const Pmic_GpioCfg_t  gpioCfg)
 {
     int32_t status  = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -408,29 +380,24 @@ static int32_t Pmic_gpioSetPinPolarity(Pmic_CoreHandle_t    *pPmicCoreHandle,
 
     switch(pPmicCoreHandle->pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            regAddr = PMIC_NPWRON_CONF_REGADDR;
-            bitPos = PMIC_NPWRON_CONF_ENABLE_POL_SHIFT;
-            bitMask = PMIC_NPWRON_CONF_ENABLE_POL_MASK;
-            break;
         case PMIC_DEV_HERA_LP8764X:
             regAddr = PMIC_ENABLE_CONF_REGADDR;
             bitPos = PMIC_ENABLE_CONF_ENABLE_POL_SHIFT;
             bitMask = PMIC_ENABLE_CONF_ENABLE_POL_MASK;
             break;
         default:
-            status = PMIC_ST_ERR_INV_DEVICE;
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            regAddr = PMIC_NPWRON_CONF_REGADDR;
+            bitPos = PMIC_NPWRON_CONF_ENABLE_POL_SHIFT;
+            bitMask = PMIC_NPWRON_CONF_ENABLE_POL_MASK;
             break;
     }
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS == status)
-    {
-        /* Reading NPWRON/ENABLE conf register */
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
-    }
+    /* Reading NPWRON/ENABLE conf register */
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
 
     if (PMIC_ST_SUCCESS == status)
     {
@@ -450,10 +417,15 @@ static int32_t Pmic_gpioSetPinPolarity(Pmic_CoreHandle_t    *pPmicCoreHandle,
 }
 
 /*!
- * \brief   This function is used to get the NPWRON Pin Polarity
+ * \brief   This function is used to get the NPWRON Pin Polarity.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
-static int32_t Pmic_gpioGetPinPolarity(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                       Pmic_GpioCfg_t    *pGpioCfg)
+int32_t Pmic_gpioGetPinPolarity(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                Pmic_GpioCfg_t    *pGpioCfg)
 {
     int32_t status  = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -463,31 +435,26 @@ static int32_t Pmic_gpioGetPinPolarity(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     switch(pPmicCoreHandle->pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            regAddr = PMIC_NPWRON_CONF_REGADDR;
-            bitPos = PMIC_NPWRON_CONF_ENABLE_POL_SHIFT;
-            bitMask = PMIC_NPWRON_CONF_ENABLE_POL_MASK;
-            break;
         case PMIC_DEV_HERA_LP8764X:
             regAddr = PMIC_ENABLE_CONF_REGADDR;
             bitPos = PMIC_ENABLE_CONF_ENABLE_POL_SHIFT;
             bitMask = PMIC_ENABLE_CONF_ENABLE_POL_MASK;
             break;
         default:
-            status = PMIC_ST_ERR_INV_DEVICE;
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            regAddr = PMIC_NPWRON_CONF_REGADDR;
+            bitPos = PMIC_NPWRON_CONF_ENABLE_POL_SHIFT;
+            bitMask = PMIC_NPWRON_CONF_ENABLE_POL_MASK;
             break;
     }
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS == status)
-    {
-        /* Reading the NPWRON/ENABLE configuration */
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        regAddr,
-                                        &regData);
-    }
+    /* Reading the NPWRON/ENABLE configuration */
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                    regAddr,
+                                    &regData);
 
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -525,25 +492,20 @@ static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t    *pPmicCoreHandle,
         index = pin - 1U;
 
         /* Get PMIC gpio configuration */
-        status = Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
-        if(PMIC_ST_SUCCESS == status)
-        {
-            status = Pmic_gpioSelectRegister(pPmicCoreHandle->pmicDeviceType,
-                                             pin,
-                                             (uint8_t)pGpioInOutCfg[index].regAddr,
-                                             &regAddr);
-        }
+        Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
+
+        Pmic_gpioSelectRegister(pPmicCoreHandle->pmicDeviceType,
+                                pin,
+                                (uint8_t)pGpioInOutCfg[index].regAddr,
+                                &regAddr);
 
         /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        if(PMIC_ST_SUCCESS == status)
-        {
-            /* Reading GPIO/NPWRON conf register */
-            status = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            regAddr,
-                                            &regData);
-        }
+        /* Reading GPIO/NPWRON conf register */
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
 
         if (PMIC_ST_SUCCESS == status)
         {
@@ -597,9 +559,9 @@ static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t    *pPmicCoreHandle,
 /*!
  * \brief   This function is used to get the GPIO and NPWRON Pin Pull Control
  */
-static int32_t Pmic_gpioGetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                    const uint8_t      pin,
-                                    Pmic_GpioCfg_t    *pGpioCfg)
+int32_t Pmic_gpioGetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
+                             const uint8_t      pin,
+                             Pmic_GpioCfg_t    *pGpioCfg)
 {
     int32_t status  = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -611,23 +573,18 @@ static int32_t Pmic_gpioGetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
     index = pin - 1U;
 
     /* Get PMIC gpio configuration */
-    status = Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_gpioSelectRegister(pPmicCoreHandle->pmicDeviceType,
-                                         pin,
-                                         (uint8_t)pGpioInOutCfg[index].regAddr,
-                                         &regAddr);
-    }
+    Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
+
+    Pmic_gpioSelectRegister(pPmicCoreHandle->pmicDeviceType,
+                            pin,
+                            (uint8_t)pGpioInOutCfg[index].regAddr,
+                            &regAddr);
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS == status)
-    {
-        /* Reading the GPIO configuration */
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
-    }
+    /* Reading the GPIO configuration */
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
 
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -679,18 +636,15 @@ static int32_t Pmic_gpioSetPinDir(Pmic_CoreHandle_t   *pPmicCoreHandle,
         index = pin - 1U;
 
         /* Get PMIC gpio configuration */
-        status = Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
+        Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
 
         /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        if(PMIC_ST_SUCCESS == status)
-        {
-            /* Reading GPIO/NPWRON conf register */
-            status = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            pGpioInOutCfg[index].regAddr,
-                                            &regData);
-        }
+        /* Reading GPIO/NPWRON conf register */
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        pGpioInOutCfg[index].regAddr,
+                                        &regData);
 
         if (PMIC_ST_SUCCESS == status)
         {
@@ -728,18 +682,15 @@ static int32_t Pmic_gpioGetPinDir(Pmic_CoreHandle_t *pPmicCoreHandle,
     index = pin - 1U;
 
     /* Get PMIC gpio configuration */
-    status = Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
+    Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS == status)
-    {
-        /* Reading the GPIO configuration */
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        pGpioInOutCfg[index].regAddr,
-                                        &regData);
-    }
+    /* Reading the GPIO configuration */
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                    pGpioInOutCfg[index].regAddr,
+                                    &regData);
 
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -779,25 +730,20 @@ static int32_t Pmic_gpioSetDeglitchTime(Pmic_CoreHandle_t   *pPmicCoreHandle,
         index = pin - 1U;
 
         /* Get PMIC gpio configuration */
-        status = Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
-        if(PMIC_ST_SUCCESS == status)
-        {
-            status = Pmic_gpioSelectRegister(pPmicCoreHandle->pmicDeviceType,
-                                             pin,
-                                             (uint8_t)pGpioInOutCfg[index].regAddr,
-                                             &regAddr);
-        }
+        Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
+
+        Pmic_gpioSelectRegister(pPmicCoreHandle->pmicDeviceType,
+                                pin,
+                                (uint8_t)pGpioInOutCfg[index].regAddr,
+                                &regAddr);
 
         /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        if(PMIC_ST_SUCCESS == status)
-        {
-            /* Reading GPIO/NPWRON conf register */
-            status = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            regAddr,
-                                            &regData);
-        }
+        /* Reading GPIO/NPWRON conf register */
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
 
         if (PMIC_ST_SUCCESS == status)
         {
@@ -822,9 +768,9 @@ static int32_t Pmic_gpioSetDeglitchTime(Pmic_CoreHandle_t   *pPmicCoreHandle,
 /*!
  * \brief   This function is used to get the GPIO and NPWRON Deglitch time
  */
-static int32_t Pmic_gpioGetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                        const uint8_t      pin,
-                                        Pmic_GpioCfg_t    *pGpioCfg)
+int32_t Pmic_gpioGetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                 const uint8_t      pin,
+                                 Pmic_GpioCfg_t    *pGpioCfg)
 {
     int32_t status  = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -836,23 +782,18 @@ static int32_t Pmic_gpioGetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
     index = pin - 1U;
 
     /* Get PMIC gpio configuration */
-    status = Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_gpioSelectRegister(pPmicCoreHandle->pmicDeviceType,
-                                         pin,
-                                         (uint8_t)pGpioInOutCfg[index].regAddr,
-                                         &regAddr);
-    }
+    Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
+
+    Pmic_gpioSelectRegister(pPmicCoreHandle->pmicDeviceType,
+                            pin,
+                            (uint8_t)pGpioInOutCfg[index].regAddr,
+                            &regAddr);
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS == status)
-    {
-        /* Reading the GPIO configuration */
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
-    }
+    /* Reading the GPIO configuration */
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
 
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -873,9 +814,9 @@ static int32_t Pmic_gpioGetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief   This function is used to set the GPIO Output Signal Type
  */
 static int32_t Pmic_gpioSetOutputSignalType(
-                                   Pmic_CoreHandle_t    *pPmicCoreHandle,
-                                   const uint8_t         pin,
-                                   const Pmic_GpioCfg_t  gpioCfg)
+                                       Pmic_CoreHandle_t    *pPmicCoreHandle,
+                                       const uint8_t         pin,
+                                       const Pmic_GpioCfg_t  gpioCfg)
 {
     int32_t status  = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -894,25 +835,20 @@ static int32_t Pmic_gpioSetOutputSignalType(
         index = pin - 1U;
 
         /* Get PMIC gpio configuration */
-        status = Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
-        if(PMIC_ST_SUCCESS == status)
-        {
-            status = Pmic_gpioSelectRegister(pPmicCoreHandle->pmicDeviceType,
-                                             pin,
-                                             (uint8_t)pGpioInOutCfg[index].regAddr,
-                                             &regAddr);
-        }
+        Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
+
+        Pmic_gpioSelectRegister(pPmicCoreHandle->pmicDeviceType,
+                                pin,
+                                (uint8_t)pGpioInOutCfg[index].regAddr,
+                                &regAddr);
 
         /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        if(PMIC_ST_SUCCESS == status)
-        {
-            /* Reading GPIO/NPWRON conf register */
-            status = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            regAddr,
-                                            &regData);
-        }
+        /* Reading GPIO/NPWRON conf register */
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
 
         if(PMIC_ST_SUCCESS == status)
         {
@@ -951,24 +887,18 @@ static int32_t Pmic_gpioGetOutputSignalType(Pmic_CoreHandle_t *pPmicCoreHandle,
     index = pin - 1U;
 
     /* Get PMIC gpio configuration */
-    status = Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
+    Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
 
-    if(PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_gpioSelectRegister(pPmicCoreHandle->pmicDeviceType,
-                                         pin,
-                                         (uint8_t)pGpioInOutCfg[index].regAddr,
-                                         &regAddr);
-    }
+    Pmic_gpioSelectRegister(pPmicCoreHandle->pmicDeviceType,
+                            pin,
+                            (uint8_t)pGpioInOutCfg[index].regAddr,
+                            &regAddr);
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS == status)
-    {
-        /* Reading the GPIO configuration */
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
-    }
+    /* Reading the GPIO configuration */
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
 
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -999,17 +929,14 @@ static int32_t Pmic_gpioIntrEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_GpioIntRegCfg_t *pGpioIntRegCfg = NULL;
     uint8_t bitMask                      = 0U;
 
-    status = Pmic_get_gpioIntRegCfg(pPmicCoreHandle, &pGpioIntRegCfg);
+    Pmic_get_gpioIntRegCfg(pPmicCoreHandle, &pGpioIntRegCfg);
 
     /* Start Critical section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    if (PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        pGpioIntRegCfg[pin].intRegAddr,
-                                        &regData);
-    }
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                    pGpioIntRegCfg[pin].intRegAddr,
+                                    &regData);
 
     if(PMIC_ST_SUCCESS == status)
     {
@@ -1058,17 +985,14 @@ static int32_t Pmic_gpioIntrDisable(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t bitMask                      = 0U;
     Pmic_GpioIntRegCfg_t *pGpioIntRegCfg = NULL;
 
-    status = Pmic_get_gpioIntRegCfg(pPmicCoreHandle, &pGpioIntRegCfg);
+    Pmic_get_gpioIntRegCfg(pPmicCoreHandle, &pGpioIntRegCfg);
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    if (PMIC_ST_SUCCESS == status)
-    {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        pGpioIntRegCfg[pin].intRegAddr,
-                                        &regData);
-    }
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                    pGpioIntRegCfg[pin].intRegAddr,
+                                    &regData);
 
     if(PMIC_ST_SUCCESS == status)
     {
@@ -1371,11 +1295,8 @@ int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
     if(PMIC_ST_SUCCESS == status)
     {
         /* Get PMIC gpio configuration */
-        status = Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
-    }
+        Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
 
-    if(PMIC_ST_SUCCESS == status)
-    {
         /* Set PMIC gpio pin value */
         status = Pmic_gpioSetPinValue(pPmicCoreHandle,
                                       pGpioInOutCfg,
@@ -1430,11 +1351,8 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
     if(PMIC_ST_SUCCESS == status)
     {
         /* Get PMIC gpio configuration */
-        status = Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
-    }
+        Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
 
-    if(PMIC_ST_SUCCESS == status)
-    {
         /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
@@ -1444,21 +1362,22 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
                                         &regData);
         /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
 
-        if(PMIC_ST_SUCCESS == status)
+    if(PMIC_ST_SUCCESS == status)
+    {
+        bitMask = (PMIC_GPIO_IN_OUT_X_GPIOX_IN_OUT_BITFIELD <<
+                   pGpioInOutCfg[index].inRegBitPos);
+
+        if(Pmic_getBitField(regData,
+                            pGpioInOutCfg[index].inRegBitPos,
+                            bitMask) != 0U)
         {
-            bitMask = (PMIC_GPIO_IN_OUT_X_GPIOX_IN_OUT_BITFIELD <<
-                       pGpioInOutCfg[index].inRegBitPos);
-            if(Pmic_getBitField(regData,
-                                pGpioInOutCfg[index].inRegBitPos,
-                                bitMask) != 0U)
-            {
-                *pPinValue = PMIC_GPIO_HIGH;
-            }
-            else
-            {
-                *pPinValue = PMIC_GPIO_LOW;
-            }
+            *pPinValue = PMIC_GPIO_HIGH;
+        }
+        else
+        {
+            *pPinValue = PMIC_GPIO_LOW;
         }
     }
 
@@ -1534,7 +1453,7 @@ int32_t Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          NPWRON/Enable Pull UP/Down configuration
  *          Valid only for TPS6594x PMIC
  */
-static int32_t Pmic_gpioSetNPwronEnableDeglitchPullCtrlCfg(
+int32_t Pmic_gpioSetNPwronEnableDeglitchPullCtrlCfg(
                                           Pmic_CoreHandle_t   *pPmicCoreHandle,
                                           const Pmic_GpioCfg_t gpioCfg)
 {
@@ -1586,7 +1505,12 @@ static int32_t Pmic_gpioSetNPwronEnableDeglitchPullCtrlCfg(
  *
  *          This function is used to set the required configuration for the
  *          NPWRON OR ENABLE pin when corresponding bit field is set.
- *          NPWRON is valid only for TPS6594x Leo Device
+ *          NPWRON is valid only for TPS6594x Leo Device.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
  * \param   gpioCfg         [IN]    Set NPWRON or ENABLE GPIO pin
@@ -1604,41 +1528,21 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
     /* Validation of input Parameters */
     status = Pmic_gpioValidateParams(pPmicCoreHandle);
 
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    if(PMIC_ST_SUCCESS == status)
     {
-        if((PMIC_ST_SUCCESS == status) &&
-           ((bool)true == pmic_validParamCheck(gpioCfg.validParams,
-                                               PMIC_GPIO_CFG_PINFUNC_VALID)))
+        switch(pPmicCoreHandle->pmicDeviceType)
         {
-            /* Setting NPWRON/Enable pin function */
-            status = Pmic_gpioSetPinFunc(pPmicCoreHandle,
-                                         PMIC_NPWRON_ENABLE_PIN,
-                                         gpioCfg);
-        }
-
-        if(PMIC_ST_SUCCESS == status)
-        {
-            /* Setting NPWRON/Enable deglitch time and Pull UP/Down Configuration*/
-            status = Pmic_gpioSetNPwronEnableDeglitchPullCtrlCfg(
+            case PMIC_DEV_HERA_LP8764X:
+                status = Pmic_gpioLp8764xSetEnablePinConfiguration(
                                                                pPmicCoreHandle,
                                                                gpioCfg);
-        }
-    }
-
-    if((PMIC_ST_SUCCESS == status) &&
-       ((bool)true == pmic_validParamCheck(gpioCfg.validParams,
-                                           PMIC_ENABLE_CFG_POLARITY_VALID)))
-    {
-        if(gpioCfg.pinPolarity > PMIC_GPIO_POL_HIGH)
-        {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-
-        if(PMIC_ST_SUCCESS == status)
-        {
-            /* Setting ENABLE pin polarity */
-            status = Pmic_gpioSetPinPolarity(pPmicCoreHandle,
-                                             gpioCfg);
+                break;
+            default:
+                /* Default case is valid only for TPS6594x LEO PMIC */
+                status = Pmic_gpioTps6594xSetNPwronPinConfiguration(
+                                                               pPmicCoreHandle,
+                                                               gpioCfg);
+                break;
         }
     }
 
@@ -1653,7 +1557,12 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
  *
  *          This function is used to read the configuration for the
  *          NPWRON OR ENABLE pin when corresponding bit field is set.
- *          NPWRON is valid only for TPS6594x Leo Device
+ *          NPWRON is valid only for TPS6594x Leo Device.
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  *
  * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
  * \param   pGpioCfg        [IN/OUT]   Pointer to store NPWRON OR ENABLE GPIO
@@ -1671,46 +1580,22 @@ int32_t Pmic_gpioGetNPwronEnablePinConfiguration(
     /* Parameter Validation */
     status = Pmic_gpioNpoweronEnableParamCheck(pPmicCoreHandle, pGpioCfg);
 
-    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    if(PMIC_ST_SUCCESS == status)
     {
-        if((PMIC_ST_SUCCESS == status) &&
-           ((bool)true == pmic_validParamCheck(pGpioCfg->validParams,
-                                               PMIC_GPIO_CFG_DEGLITCH_VALID)))
+        switch(pPmicCoreHandle->pmicDeviceType)
         {
-            /* Get nPWRON/Enable pin signal deglitch time */
-            status = Pmic_gpioGetDeglitchTime(pPmicCoreHandle,
-                                              PMIC_NPWRON_ENABLE_PIN,
-                                              pGpioCfg);
+            case PMIC_DEV_HERA_LP8764X:
+                status = Pmic_gpioLp8764xGetEnablePinConfiguration(
+                                                               pPmicCoreHandle,
+                                                               pGpioCfg);
+                break;
+            default:
+                /* Default case is valid only for TPS6594x LEO PMIC */
+                status = Pmic_gpioTps6594xGetNPwronPinConfiguration(
+                                                               pPmicCoreHandle,
+                                                               pGpioCfg);
+                break;
         }
-
-        if((PMIC_ST_SUCCESS == status) &&
-           ((bool)true == pmic_validParamCheck(pGpioCfg->validParams,
-                                               PMIC_GPIO_CFG_PINFUNC_VALID)))
-        {
-            /* Get nPWRON/Enable pin signal function */
-            status = Pmic_gpioGetPinFunc(pPmicCoreHandle,
-                                         PMIC_NPWRON_ENABLE_PIN,
-                                         pGpioCfg);
-        }
-
-        if((PMIC_ST_SUCCESS == status) &&
-           ((bool)true == pmic_validParamCheck(pGpioCfg->validParams,
-                                               PMIC_GPIO_CFG_PULL_VALID)))
-        {
-            /* Get nPWRON/Enable pin pull-up/down control */
-            status = Pmic_gpioGetPullCtrl(pPmicCoreHandle,
-                                          PMIC_NPWRON_ENABLE_PIN,
-                                          pGpioCfg);
-
-        }
-    }
-
-    if((PMIC_ST_SUCCESS == status) &&
-       ((bool)true == pmic_validParamCheck(pGpioCfg->validParams,
-                                           PMIC_ENABLE_CFG_POLARITY_VALID)))
-    {
-        /* Get nPWRON/Enable pin polarity control */
-        status = Pmic_gpioGetPinPolarity(pPmicCoreHandle, pGpioCfg);
     }
 
     return status;
