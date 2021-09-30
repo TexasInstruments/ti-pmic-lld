@@ -2645,37 +2645,33 @@ int32_t  Pmic_rtcGetRstStatus(Pmic_CoreHandle_t    *pPmicCoreHandle,
          pmicStatus = PMIC_ST_ERR_INSUFFICIENT_CFG;
     }
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
+    /* Get RTC Status */
+    if((PMIC_ST_SUCCESS == pmicStatus) &&
+       ((bool)false != (pmic_validParamCheck(pRtcRstStatus->validParams,
+                                                PMIC_RTC_RESET_STATUS_VALID))))
     {
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        /* Checking RTC status */
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            PMIC_RTC_STATUS_REGADDR,
-                                            &regData);
         /* Checking RTC Reset status */
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
                                             PMIC_RTC_RESET_STATUS_REGADDR,
                                             &regVal);
 
         Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
 
-    /* Get RTC Status */
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       ((bool)false != (pmic_validParamCheck(pRtcRstStatus->validParams,
-                                                PMIC_RTC_RESET_STATUS_VALID))))
-    {
-        if(Pmic_getBitField(
-                         regVal,
-                         PMIC_RTC_RESET_STATUS_RESET_STATUS_RTC_SHIFT,
-                         PMIC_RTC_RESET_STATUS_RESET_STATUS_RTC_MASK) == 0U)
+        if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            pRtcRstStatus->rtcRstStatus = (bool)false;
-        }
-        else
-        {
-            pRtcRstStatus->rtcRstStatus = (bool)true;
+            if(Pmic_getBitField(
+                             regVal,
+                             PMIC_RTC_RESET_STATUS_RESET_STATUS_RTC_SHIFT,
+                             PMIC_RTC_RESET_STATUS_RESET_STATUS_RTC_MASK) == 0U)
+            {
+                pRtcRstStatus->rtcRstStatus = (bool)false;
+            }
+            else
+            {
+                pRtcRstStatus->rtcRstStatus = (bool)true;
+            }
         }
     }
 
@@ -2684,15 +2680,27 @@ int32_t  Pmic_rtcGetRstStatus(Pmic_CoreHandle_t    *pPmicCoreHandle,
        ((bool)false != (pmic_validParamCheck(pRtcRstStatus->validParams,
                                               PMIC_RTC_POWERUP_STATUS_VALID))))
     {
-        if(Pmic_getBitField(regData,
-                            PMIC_RTC_STATUS_POWER_UP_SHIFT,
-                            PMIC_RTC_STATUS_POWER_UP_MASK) == 0U)
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+
+        /* Checking RTC status */
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                            PMIC_RTC_STATUS_REGADDR,
+                                            &regData);
+
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            pRtcRstStatus->powerupStatus = (bool)false;
-        }
-        else
-        {
-            pRtcRstStatus->powerupStatus = (bool)true;
+            if(Pmic_getBitField(regData,
+                                PMIC_RTC_STATUS_POWER_UP_SHIFT,
+                                PMIC_RTC_STATUS_POWER_UP_MASK) == 0U)
+            {
+                pRtcRstStatus->powerupStatus = (bool)false;
+            }
+            else
+            {
+                pRtcRstStatus->powerupStatus = (bool)true;
+            }
         }
     }
 
@@ -2756,11 +2764,11 @@ int32_t  Pmic_rtcGetStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
                             PMIC_RTC_STATUS_RUN_SHIFT,
                             PMIC_RTC_STATUS_RUN_MASK) == 0U)
         {
-            *pRtcstatus = (bool)PMIC_RTC_STATUS_FROZEN;
+            *pRtcstatus = (bool)false;
         }
         else
         {
-            *pRtcstatus = (bool)PMIC_RTC_STATUS_RUNNING;
+            *pRtcstatus = (bool)true;
         }
     }
 
@@ -2877,7 +2885,8 @@ static int32_t Pmic_rtcSet32KCounterCompVal(
     {
         pmicStatus = Pmic_rtcGetStatus(pPmicCoreHandle, &rtcStatus);
 
-        if((PMIC_ST_SUCCESS == pmicStatus) && (PMIC_RTC_STOP != rtcStatus))
+        if((PMIC_ST_SUCCESS == pmicStatus) &&
+           (((bool)PMIC_RTC_STOP) != rtcStatus))
         {
            pmicStatus = PMIC_ST_ERR_FAIL;
         }
@@ -2957,10 +2966,20 @@ static int32_t Pmic_rtcEnableCrystalOsc(
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_setBitField(&regData,
-                         PMIC_RTC_CTRL_2_XTAL_EN_SHIFT,
-                         PMIC_RTC_CTRL_2_XTAL_EN_MASK,
-                         rtcCfg.crystalOScEn);
+        if(((bool)PMIC_RTC_CRYSTAL_OSC_ENABLE) == rtcCfg.crystalOScEn)
+        {
+            Pmic_setBitField(&regData,
+                             PMIC_RTC_CTRL_2_XTAL_EN_SHIFT,
+                             PMIC_RTC_CTRL_2_XTAL_EN_MASK,
+                             PMIC_RTC_CRYSTAL_OSC_ENABLE);
+        }
+        else
+        {
+            Pmic_setBitField(&regData,
+                             PMIC_RTC_CTRL_2_XTAL_EN_SHIFT,
+                             PMIC_RTC_CTRL_2_XTAL_EN_MASK,
+                             PMIC_RTC_CRYSTAL_OSC_DISABLE);
+        }
 
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_RTC_CTRL_2_REGADDR,
@@ -2990,11 +3009,14 @@ static int32_t Pmic_rtcGetCrystalOscEnCfg(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pRtcCfg->crystalOScEn = Pmic_getBitField(
-                                        regData,
-                                        PMIC_RTC_CTRL_2_XTAL_EN_SHIFT,
-                                        PMIC_RTC_CTRL_2_XTAL_EN_MASK);
+        pRtcCfg->crystalOScEn = (bool)false;
 
+        if(Pmic_getBitField(regData,
+                            PMIC_RTC_CTRL_2_XTAL_EN_SHIFT,
+                            PMIC_RTC_CTRL_2_XTAL_EN_MASK) == 1U)
+        {
+            pRtcCfg->crystalOScEn = (bool)true;
+        }
     }
 
     return pmicStatus;

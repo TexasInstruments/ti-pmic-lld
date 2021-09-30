@@ -235,7 +235,6 @@ int32_t Pmic_validate_tps6594x_pGoodSelType(uint16_t pgoodSrc,
  *          Regulators/VMON for TPS6594x PMIC
  */
 int32_t Pmic_powerTPS6594xValidateVoltageLevel(
-                                             Pmic_CoreHandle_t *pPmicCoreHandle,
                                              uint8_t            pwrRsrcType,
                                              uint16_t           pwrRsrc,
                                              uint16_t           voltage_mV);
@@ -245,7 +244,6 @@ int32_t Pmic_powerTPS6594xValidateVoltageLevel(
  *          TPS6594x PMIC device.
  */
 int32_t Pmic_powerTPS6594xValidatePwrRsrcLimit(
-                                    const Pmic_CoreHandle_t *pPmicCoreHandle,
                                     uint8_t                  pwrRsrcType,
                                     uint16_t                 pwrRsrc);
 
@@ -253,9 +251,7 @@ int32_t Pmic_powerTPS6594xValidatePwrRsrcLimit(
  * \brief   This function is to validate the power resource interrupt type
  *          for the TPS6594x PMIC device.
  */
-int32_t Pmic_powerTPS6594xValidateIntrType(uint8_t  pmicDeviceType,
-                                           uint16_t pwrResource,
-                                           uint8_t  pwrResourceType,
+int32_t Pmic_powerTPS6594xValidateIntrType(uint8_t  pwrResourceType,
                                            uint8_t  intrType);
 
 #ifdef __cplusplus

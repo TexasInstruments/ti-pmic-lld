@@ -753,7 +753,6 @@ int32_t Pmic_powerGetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
  *                pwrRsrcType accordingly.
  */
 int32_t Pmic_powerTPS6594xValidateVoltageLevel(
-                                             Pmic_CoreHandle_t *pPmicCoreHandle,
                                              uint8_t            pwrRsrcType,
                                              uint16_t           pwrRsrc,
                                              uint16_t           voltage_mV)
@@ -797,7 +796,6 @@ int32_t Pmic_powerTPS6594xValidateVoltageLevel(
  *          TPS6594x PMIC device.
  */
 int32_t Pmic_powerTPS6594xValidatePwrRsrcLimit(
-                                    const Pmic_CoreHandle_t *pPmicCoreHandle,
                                     uint8_t                  pwrRsrcType,
                                     uint16_t                 pwrRsrc)
 {
@@ -842,9 +840,7 @@ int32_t Pmic_powerTPS6594xValidatePwrRsrcLimit(
  *                developer need to update the API functionality for New
  *                pwrResourceType accordingly.
  */
-int32_t Pmic_powerTPS6594xValidateIntrType(uint8_t  pmicDeviceType,
-                                           uint16_t pwrResource,
-                                           uint8_t  pwrResourceType,
+int32_t Pmic_powerTPS6594xValidateIntrType(uint8_t  pwrResourceType,
                                            uint8_t  intrType)
 {
     int32_t status = PMIC_ST_SUCCESS;

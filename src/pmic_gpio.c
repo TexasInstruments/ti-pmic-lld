@@ -1196,10 +1196,10 @@ int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief   This function is used to set the PMIC GPIO Pin Value
  */
-static int32_t Pmic_gpioSetPinValue(Pmic_CoreHandle_t       *pPmicCoreHandle,
-                                    Pmic_GpioInOutCfg_t     *pGpioInOutCfg,
-                                    const uint8_t            pinValue,
-                                    uint8_t                  index)
+static int32_t Pmic_gpioSetPinValue(Pmic_CoreHandle_t          *pPmicCoreHandle,
+                                    const Pmic_GpioInOutCfg_t  *pGpioInOutCfg,
+                                    const uint8_t               pinValue,
+                                    uint8_t                     index)
 {
     uint8_t regData = 0U;
     int32_t status  = PMIC_ST_SUCCESS;

@@ -1273,9 +1273,10 @@ static void Pmic_tps6594x_getErrTsdordBistFailRegcrcSpmiNpwronlong(
  *                Revision, developer need to update the API functionality for
  *                New PMIC Revision accordingly.
  */
-static void Pmic_tps6594x_getModerateErr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                         uint8_t            regValue,
-                                         Pmic_IrqStatus_t  *pErrStat)
+static void Pmic_tps6594x_getModerateErr(
+                                       const Pmic_CoreHandle_t *pPmicCoreHandle,
+                                       uint8_t                  regValue,
+                                       Pmic_IrqStatus_t        *pErrStat)
 {
 
     Pmic_tps6594x_getErrTsdordBistFailRegcrcSpmiNpwronlong(regValue,
@@ -1316,9 +1317,9 @@ static void Pmic_tps6594x_getModerateErr(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief  Function to decipher SEVERE Error.
  */
-static void Pmic_tps6594x_getSevereErr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                       uint8_t            regValue,
-                                       Pmic_IrqStatus_t  *pErrStat)
+static void Pmic_tps6594x_getSevereErr(const Pmic_CoreHandle_t *pPmicCoreHandle,
+                                       uint8_t                  regValue,
+                                       Pmic_IrqStatus_t        *pErrStat)
 {
     if((regValue & PMIC_INT_SEVERE_ERR_TSD_IMM_INT_MASK) != 0U)
     {
@@ -1342,10 +1343,9 @@ static void Pmic_tps6594x_getSevereErr(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief  Function to check FSM - Communication Error
  */
-static int32_t Pmic_tps6594x_getFsmCommErr(
-                                           Pmic_CoreHandle_t   *pPmicCoreHandle,
-                                           uint8_t              regValue,
-                                           Pmic_IrqStatus_t    *pErrStat)
+static void Pmic_tps6594x_getFsmCommErr(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                        uint8_t              regValue,
+                                        Pmic_IrqStatus_t    *pErrStat)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData    = 0U;
@@ -1389,14 +1389,12 @@ static int32_t Pmic_tps6594x_getFsmCommErr(
             }
         }
     }
-
-    return pmicStatus;
 }
 
 /*!
  * \brief  Function to check FSM - Readback Error
  */
-static int32_t Pmic_tps6594x_getFsmReadbackErr(
+static void Pmic_tps6594x_getFsmReadbackErr(
                                           Pmic_CoreHandle_t   *pPmicCoreHandle,
                                           uint8_t              regValue,
                                           Pmic_IrqStatus_t    *pErrStat)
@@ -1450,17 +1448,14 @@ static int32_t Pmic_tps6594x_getFsmReadbackErr(
             }
         }
     }
-
-    return pmicStatus;
 }
 
 /*!
  * \brief  Function to check FSM - ESM Error
  */
-static int32_t Pmic_tps6594x_getFsmEsmErr(
-                                          Pmic_CoreHandle_t   *pPmicCoreHandle,
-                                          uint8_t              regValue,
-                                          Pmic_IrqStatus_t    *pErrStat)
+static void Pmic_tps6594x_getFsmEsmErr(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                       uint8_t              regValue,
+                                       Pmic_IrqStatus_t    *pErrStat)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData    = 0U;
@@ -1510,8 +1505,6 @@ static int32_t Pmic_tps6594x_getFsmEsmErr(
             }
         }
     }
-
-    return pmicStatus;
 }
 
 /*!
@@ -1545,19 +1538,13 @@ static int32_t Pmic_tps6594x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle,
     }
 
     /* Check decipher FSM Error for PMIC_INT_COMM_ERR Register Bit */
-    pmicStatus = Pmic_tps6594x_getFsmCommErr(pPmicCoreHandle,
-                                             regValue,
-                                             pErrStat);
+    Pmic_tps6594x_getFsmCommErr(pPmicCoreHandle, regValue, pErrStat);
 
     /* Check decipher FSM Error for PMIC_INT_READBACK_ERR Register Bit */
-    pmicStatus = Pmic_tps6594x_getFsmReadbackErr(pPmicCoreHandle,
-                                                 regValue,
-                                                 pErrStat);
+    Pmic_tps6594x_getFsmReadbackErr(pPmicCoreHandle, regValue, pErrStat);
 
     /* Check decipher FSM Error for PMIC_INT_ESM Register Bit */
-    pmicStatus = Pmic_tps6594x_getFsmEsmErr(pPmicCoreHandle,
-                                            regValue,
-                                            pErrStat);
+    Pmic_tps6594x_getFsmEsmErr(pPmicCoreHandle, regValue, pErrStat);
 
     /* Check decipher FSM Error for IRQ Mask Bit */
     if((regValue & PMIC_INT_FSM_ERR_WD_INT_MASK) != 0U)
@@ -1710,7 +1697,7 @@ int32_t Pmic_tps6594x_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief  Function to reinitialise Interrupt configuration based on PMIC
  *         Silicon Revision
  */
-void Pmic_tps6594x_reInitInterruptConfig(Pmic_CoreHandle_t *pPmicCoreHandle)
+void Pmic_tps6594x_reInitInterruptConfig(void)
 {
     Pmic_IntrCfg_t *pIntrCfg = gTps6594x_intCfg;
 

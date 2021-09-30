@@ -111,7 +111,7 @@ static int32_t Pmic_WdgValidatePmicCoreHandle(
  * \brief  Function to covert wdg Long window time interval to WD_LONGWIN[7:0]
  *         bits for TPS6594x PMIC PG2.0 or LP8764x PMIC PG2.0
  */
-static int32_t Pmic_WdgCovertLongWinTimeIntervaltoRegBits(
+static uint8_t Pmic_WdgCovertLongWinTimeIntervaltoRegBits(
                                                    const Pmic_WdgCfg_t  wdgCfg)
 {
     uint8_t regVal = 0U, baseVal = 0U;
@@ -385,8 +385,7 @@ static int32_t Pmic_WdgGetWindowsTimeIntervals(
                 {
                     pWdgCfg->longWinDuration_ms = PMIG_WD_LONGWIN_80_MILLISEC;
                 }
-                else if((regVal >= PMIG_WD_LONGWIN_REG_VAL_1) &&
-                        (regVal <= PMIG_WD_LONGWIN_REG_VAL_64))
+                else if(regVal <= PMIG_WD_LONGWIN_REG_VAL_64)
                 {
                     pWdgCfg->longWinDuration_ms = ((uint32_t)regVal *
                                               PMIG_WD_LONGWIN_MILLISEC_DIV_125);
@@ -394,8 +393,9 @@ static int32_t Pmic_WdgGetWindowsTimeIntervals(
                 else
                 {
                     pWdgCfg->longWinDuration_ms =
-                             ((uint32_t)((regVal - PMIG_WD_LONGWIN_REG_VAL_64) *
-                                          PMIG_WD_LONGWIN_MILLISEC_DIV_4000)) +
+                            ((uint32_t)((((uint32_t)regVal) -
+                                      ((uint32_t)PMIG_WD_LONGWIN_REG_VAL_64)) *
+                             ((uint32_t)PMIG_WD_LONGWIN_MILLISEC_DIV_4000))) +
                                           PMIG_WD_LONGWIN_8000_MILLISEC;
                 }
             }
@@ -1235,7 +1235,7 @@ static int32_t Pmic_wdgQaEvaluateAndWriteAnswers(
                                         uint8_t              qaFdbk)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    int8_t  ansIndex   = 0U;
+    int8_t  ansIndex   = 0;
     uint8_t qaAnsCnt   = 0U;
     uint8_t qaQuesCnt  = 0U;
 
@@ -1567,12 +1567,13 @@ static int32_t Pmic_wdgQaWriteAnswersNumSequence(
     uint32_t loopCount = 0U;
     uint8_t  failCnt   = 0U;
     int8_t   flag      = 0;
-    uint8_t regVal     = 0x0U;
+    uint8_t  regVal     = 0x0U;
+    uint32_t qaSequences = sequences;
 
     /* Write QA Answers for given numbers of sequences */
     while((PMIC_ST_SUCCESS == status) &&
-          ((PMIC_WD_QA_INFINITE_SEQ == sequences) ||
-           (sequences > 0U)))
+          ((PMIC_WD_QA_INFINITE_SEQ == qaSequences) ||
+           (qaSequences > 0U)))
     {
         /*! Write Answer to WDOG for the sequence */
         status = Pmic_wdgQaWriteAnswers(pPmicCoreHandle);
@@ -1618,14 +1619,14 @@ static int32_t Pmic_wdgQaWriteAnswersNumSequence(
                     status = PMIC_ST_ERR_WDG_EARLY_ANSWER;
                 }
 
-                sequences = 0U;
+                qaSequences = 0U;
                 flag = 1;
             }
             else
             {
                 if((PMIC_ST_SUCCESS == status) && (0U != (failCnt & 0x20U)))
                 {
-                    sequences--;
+                    qaSequences--;
                     flag = 1;
                 }
             }
@@ -2120,9 +2121,10 @@ int32_t Pmic_wdgStartTriggerSequence(Pmic_CoreHandle_t *pPmicCoreHandle)
 /*!
  * \brief   API to clear PMIC watchdog error status based on wdgErrType
  */
-int32_t Pmic_wdgClrErrStatusWdgErrType(Pmic_CoreHandle_t   *pPmicCoreHandle,
-                                       const uint8_t        wdgErrType,
-                                       uint8_t              regVal)
+static int32_t Pmic_wdgClrErrStatusWdgErrType(
+                                           Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                           const uint8_t        wdgErrType,
+                                           uint8_t              regVal)
 {
     int32_t status     = PMIC_ST_SUCCESS;
     uint8_t errStatus = 1U, regData = 0U;

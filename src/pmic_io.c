@@ -350,7 +350,7 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
     return pmicStatus;
 }
 
-static int32_t Pmic_validateCorehandle(Pmic_CoreHandle_t *pPmicCoreHandle)
+static int32_t Pmic_validateCorehandle(const Pmic_CoreHandle_t *pPmicCoreHandle)
 {
     int32_t  pmicStatus  = PMIC_ST_SUCCESS;
 
@@ -472,11 +472,12 @@ static int32_t Pmic_commIoReadData(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*
  * \brief  Function to Copy I2C  data to crcData for I2C Interface
  */
-static int32_t Pmic_commIoStoreI2cCrcData(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                          uint16_t           pmicRegAddr,
-                                          uint8_t            buffLength,
-                                          uint8_t            instType,
-                                          uint8_t           *pRxBuf)
+static int32_t Pmic_commIoStoreI2cCrcData(
+                                       const Pmic_CoreHandle_t *pPmicCoreHandle,
+                                       uint16_t                 pmicRegAddr,
+                                       uint8_t                  buffLength,
+                                       uint8_t                  instType,
+                                       const uint8_t           *pRxBuf)
 {
     int32_t  pmicStatus = PMIC_ST_SUCCESS;
     uint8_t  crcDataLen = 0U;
@@ -530,8 +531,7 @@ static int32_t Pmic_commIoStoreI2cCrcData(Pmic_CoreHandle_t *pPmicCoreHandle,
     crcData[crcDataLen] = pRxBuf[buffLength - 2U];
     crcDataLen++;
 
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       ((pRxBuf[buffLength - 1U]) != (Pmic_getCRC8Val(crcData, crcDataLen))))
+    if((pRxBuf[buffLength - 1U]) != (Pmic_getCRC8Val(crcData, crcDataLen)))
     {
         pmicStatus = PMIC_ST_ERR_DATA_IO_CRC;
     }
@@ -592,8 +592,8 @@ int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
                 crcData[crcDataLen] = rxBuf[crcDataLen];
             }
 
-            if((PMIC_ST_SUCCESS == pmicStatus) &&
-               ((rxBuf[buffLength - 1U]) != (Pmic_getCRC8Val(crcData, crcDataLen))))
+            if((rxBuf[buffLength - 1U]) !=
+                                         (Pmic_getCRC8Val(crcData, crcDataLen)))
             {
                 pmicStatus = PMIC_ST_ERR_DATA_IO_CRC;
             }

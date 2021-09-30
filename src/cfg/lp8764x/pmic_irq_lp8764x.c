@@ -836,9 +836,10 @@ static int32_t Pmic_lp8764x_getGpioErr(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*!
  * \brief  Function to decipher STARTUP Error
  */
-static int32_t Pmic_lp8764x_getStartupErr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                          uint8_t            regValue,
-                                          Pmic_IrqStatus_t  *pErrStat)
+static int32_t Pmic_lp8764x_getStartupErr(
+                                       const Pmic_CoreHandle_t *pPmicCoreHandle,
+                                       uint8_t                  regValue,
+                                       Pmic_IrqStatus_t        *pErrStat)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
@@ -952,9 +953,9 @@ static void Pmic_lp8764x_getSevereErr(uint8_t            regValue,
 /*!
  * \brief  Function to decipher FSM - Communication Error
  */
-static int32_t Pmic_lp8764x_getFsmCommErr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                          uint8_t            regValue,
-                                          Pmic_IrqStatus_t  *pErrStat)
+static void Pmic_lp8764x_getFsmCommErr(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                       uint8_t            regValue,
+                                       Pmic_IrqStatus_t  *pErrStat)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData    = 0U;
@@ -999,14 +1000,12 @@ static int32_t Pmic_lp8764x_getFsmCommErr(Pmic_CoreHandle_t *pPmicCoreHandle,
             }
         }
     }
-
-    return pmicStatus;
 }
 
 /*!
  * \brief  Function to decipher FSM - Readback, ESM Error
  */
-static int32_t Pmic_lp8764x_getFsmReadbackEsmErr(
+static void Pmic_lp8764x_getFsmReadbackEsmErr(
                                       Pmic_CoreHandle_t *pPmicCoreHandle,
                                       uint8_t            regValue,
                                       Pmic_IrqStatus_t  *pErrStat)
@@ -1067,8 +1066,6 @@ static int32_t Pmic_lp8764x_getFsmReadbackEsmErr(
 
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    return pmicStatus;
 }
 
 /*!
@@ -1104,13 +1101,9 @@ static int32_t Pmic_lp8764x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle,
         Pmic_intrBitSet(pErrStat, PMIC_LP8764X_SOC_PWR_ERR_INT);
     }
 
-    pmicStatus = Pmic_lp8764x_getFsmCommErr(pPmicCoreHandle,
-                                            regValue,
-                                            pErrStat);
+    Pmic_lp8764x_getFsmCommErr(pPmicCoreHandle, regValue, pErrStat);
 
-    pmicStatus = Pmic_lp8764x_getFsmReadbackEsmErr(pPmicCoreHandle,
-                                                   regValue,
-                                                   pErrStat);
+    Pmic_lp8764x_getFsmReadbackEsmErr(pPmicCoreHandle, regValue, pErrStat);
 
     if((regValue & PMIC_INT_FSM_ERR_WD_INT_MASK) != 0U)
     {
@@ -1150,7 +1143,7 @@ static int32_t Pmic_lp8764x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief  Function to decipher the the Startup, Miscellaneous, Moderate,
  *         Severe, FSM Error
  */
-int32_t Pmic_lp8764x_irqGetStartupMiscModerateSevereFsmErr(
+static int32_t Pmic_lp8764x_irqGetStartupMiscModerateSevereFsmErr(
                                             Pmic_CoreHandle_t *pPmicCoreHandle,
                                             Pmic_IrqStatus_t  *pErrStat,
                                             uint16_t           l1RegAddr,

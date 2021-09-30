@@ -70,7 +70,7 @@ extern "C" {
 /*!
  * \brief  VMON powergood Level Register Address
  */
-#define PMIC_VMON_CONF_REGADDR                                  (0xA8)
+#define PMIC_VMON_CONF_REGADDR                                  (0xA8U)
 
 /*!
  * \brief  PMIC Power voltage range bit fields
@@ -273,9 +273,7 @@ int32_t Pmic_powerLP8764xValidatePwrRsrcLimit(
  * \brief   This function is to validate the power resource interrupt type
  *          for the LP8764x PMIC device.
  */
-int32_t Pmic_powerLP8764xValidateIntrType(uint8_t  pmicDeviceType,
-                                          uint16_t pwrResource,
-                                          uint8_t  pwrResourceType,
+int32_t Pmic_powerLP8764xValidateIntrType(uint8_t  pwrResourceType,
                                           uint8_t  intrType);
 
 #ifdef __cplusplus

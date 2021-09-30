@@ -694,9 +694,7 @@ int32_t Pmic_powerLP8764xValidatePwrRsrcLimit(
  *                developer need to update the API functionality for New
  *                pwrResourceType accordingly.
  */
-int32_t Pmic_powerLP8764xValidateIntrType(uint8_t  pmicDeviceType,
-                                          uint16_t pwrResource,
-                                          uint8_t  pwrResourceType,
+int32_t Pmic_powerLP8764xValidateIntrType(uint8_t  pwrResourceType,
                                           uint8_t  intrType)
 {
     int32_t status = PMIC_ST_SUCCESS;

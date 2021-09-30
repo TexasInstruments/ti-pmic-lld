@@ -268,9 +268,9 @@ extern "C" {
  *  @{
  */
  /** \brief Disable Spread Spectrum Configuration */
-#define PMIC_SPREAD_SPECTRUM_CFG_DISABLE             (0U)
+#define PMIC_SPREAD_SPECTRUM_CFG_DISABLE              0U
 /** \brief Enable Spread Spectrum Configuration */
-#define PMIC_SPREAD_SPECTRUM_CFG_ENABLE              (1U)
+#define PMIC_SPREAD_SPECTRUM_CFG_ENABLE               1U
 
 /*  @} */
 
@@ -557,7 +557,7 @@ typedef struct Pmic_RecovCntCfg_s
  *                                  Valid only when
  *                                  PMIC_CFG_SPREAD_SPECTRUM_EN_VALID bit is set
  *                                    Valid values \ref Pmic_SpreadSpectrum_Cfg
- *  \param  skipEepromLoadEn        Enable/Disable to skip EEPROM defaults load
+ *  \param  skipEepromDefaultLoadEn Enable/Disable to skip EEPROM defaults load
  *                                  on conf registers when device transition
  *                                  from  Lpstandby to INIT state
  *                                  Valid only for LP8764x Hera Device
@@ -571,13 +571,14 @@ typedef struct Pmic_RecovCntCfg_s
  *                                  Device) when device transition from
  *                                  Lpstandby/SafeRecovery to INIT state
  *                                  Enable/Disable load from EEPROM defaults on
- *                                  conf registers when skipEepromLoadEn = 0
+ *                                  conf registers when
+ *                                  skipEepromDefaultLoadEn = 0
  *                                  when device transition from Lpstandby to
  *                                  INIT state
  *                                  Load/Not Loaded load from EEPROM defaults on
  *                                  conf registers when device transition from
  *                                  SafeRecovery to INIT state.Doesn't depends
- *                                  on  skipEepromLoadEn Value
+ *                                  on  skipEepromDefaultLoadEn Value
  *                                  (for LP8764x Hera Device)
  *                                  Valid only when
  *                                  PMIC_CFG_EEPROM_DEFAULT_VALID bit is set.

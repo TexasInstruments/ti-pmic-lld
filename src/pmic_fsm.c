@@ -960,10 +960,20 @@ static int32_t Pmic_fsmEnableFastBIST(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_setBitField(&regData,
-                         bitShift,
-                         bitMask,
-                         fsmCfg.fastBistEn);
+        if(((bool)PMIC_FSM_FAST_BIST_ENABLE) == fsmCfg.fastBistEn)
+        {
+            Pmic_setBitField(&regData,
+                             bitShift,
+                             bitMask,
+                             PMIC_FSM_FAST_BIST_ENABLE);
+        }
+        else
+        {
+            Pmic_setBitField(&regData,
+                             bitShift,
+                             bitMask,
+                             PMIC_FSM_FAST_BIST_DISABLE);
+        }
 
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             regAddr,
@@ -1015,9 +1025,12 @@ static int32_t Pmic_fsmGetFastBISTCfg(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pFsmCfg->fastBistEn = Pmic_getBitField(regData,
-                                               bitShift,
-                                               bitMask);
+        pFsmCfg->fastBistEn = (bool)false;
+
+        if(Pmic_getBitField(regData, bitShift, bitMask) == 1U)
+        {
+            pFsmCfg->fastBistEn = (bool)true;
+        }
     }
 
     return pmicStatus;
@@ -1061,10 +1074,20 @@ static int32_t Pmic_fsmSetLpStandbyState(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_setBitField(&regData,
-                         bitShift,
-                         bitMask,
-                         fsmCfg.lpStandbySel);
+        if(((bool)PMIC_FSM_SELECT_LPSTANDBY_STATE) == fsmCfg.lpStandbySel)
+        {
+            Pmic_setBitField(&regData,
+                             bitShift,
+                             bitMask,
+                             PMIC_FSM_SELECT_LPSTANDBY_STATE);
+        }
+        else
+        {
+            Pmic_setBitField(&regData,
+                             bitShift,
+                             bitMask,
+                             PMIC_FSM_SELECT_STANDBY_STATE);
+        }
 
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             regAddr,
@@ -1117,9 +1140,12 @@ static int32_t Pmic_fsmGetLpStandbyStateCfg(
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pFsmCfg->lpStandbySel = Pmic_getBitField(regData,
-                                                 bitShift,
-                                                 bitMask);
+        pFsmCfg->lpStandbySel = (bool)false;
+
+        if(Pmic_getBitField(regData, bitShift, bitMask) == 1U)
+        {
+            pFsmCfg->lpStandbySel = (bool)true;
+        }
     }
 
     return pmicStatus;
@@ -1143,10 +1169,20 @@ static int32_t Pmic_fsmEnableBuckLdoIlimIntAffectFsm(
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_setBitField(&regData,
-                         PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_SHIFT,
-                         PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_MASK,
-                         fsmCfg.ilimIntfsmCtrlEn);
+        if(((bool)PMIC_FSM_ILIM_INT_FSMCTRL_ENABLE) == fsmCfg.ilimIntfsmCtrlEn)
+        {
+            Pmic_setBitField(&regData,
+                             PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_SHIFT,
+                             PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_MASK,
+                             PMIC_FSM_ILIM_INT_FSMCTRL_ENABLE);
+        }
+        else
+        {
+            Pmic_setBitField(&regData,
+                             PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_SHIFT,
+                             PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_MASK,
+                             PMIC_FSM_ILIM_INT_FSMCTRL_DISABLE);
+        }
 
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_CONFIG_1_REGADDR,
@@ -1179,10 +1215,14 @@ static int32_t Pmic_fsmGetBuckLdoIlimIntAffectFsmCfg(
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pFsmCfg->ilimIntfsmCtrlEn = Pmic_getBitField(
-                                           regData,
-                                           PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_SHIFT,
-                                           PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_MASK);
+        pFsmCfg->ilimIntfsmCtrlEn = (bool)false;
+
+        if(Pmic_getBitField(regData,
+                            PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_SHIFT,
+                            PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_MASK) == 1U)
+        {
+            pFsmCfg->ilimIntfsmCtrlEn = (bool)true;
+        }
     }
 
     return pmicStatus;
@@ -1469,8 +1509,7 @@ int32_t Pmic_fsmSetPfsmDelay(Pmic_CoreHandle_t  *pPmicCoreHandle,
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
-       ((pFsmDelayType > PMIC_PFSM_DELAY4) ||
-        (pfsmDelay > PMIC_FSM_PFSM_DELAY_MAX)))
+       (pFsmDelayType > PMIC_PFSM_DELAY4))
     {
         pmicStatus = PMIC_ST_ERR_INV_PARAM;
     }
@@ -1620,14 +1659,14 @@ int32_t Pmic_fsmRecoverSocPwrErr(Pmic_CoreHandle_t *pPmicCoreHandle,
     {
         pmicStatus = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
                                                  PMIC_NSLEEP2_SIGNAL,
-                                                 PMIC_NSLEEPX_UNMASK);
+                                                 ((bool)PMIC_NSLEEPX_UNMASK));
     }
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         pmicStatus = Pmic_fsmSetNsleepSignalMask(pPmicCoreHandle,
                                                  PMIC_NSLEEP1_SIGNAL,
-                                                 PMIC_NSLEEPX_UNMASK);
+                                                 ((bool)PMIC_NSLEEPX_UNMASK));
     }
 
     if(PMIC_ST_SUCCESS == pmicStatus)

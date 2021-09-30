@@ -616,7 +616,6 @@ static int32_t Pmic_initCoreHandleCommIOCriticalSectionFns(
  *
  */
 static int32_t Pmic_updateCrcEnableStatValidateDevOnBus(
-                                          const Pmic_CoreCfg_t *pPmicConfigData,
                                           Pmic_CoreHandle_t    *pPmicCoreHandle,
                                           int32_t              *pStatus)
 {
@@ -624,7 +623,7 @@ static int32_t Pmic_updateCrcEnableStatValidateDevOnBus(
     uint8_t regVal = 0U;
     uint8_t i2c1SpiCrcStat = 0xFF, i2c2CrcStat = 0xFF;
 
-    pPmicCoreHandle->crcEnable = PMIC_CRC_DISABLE;
+    pPmicCoreHandle->crcEnable = (bool)false;
 
     pmicStatus = Pmic_getCrcStatus(pPmicCoreHandle,
                                    &i2c1SpiCrcStat,
@@ -635,11 +634,17 @@ static int32_t Pmic_updateCrcEnableStatValidateDevOnBus(
         if((PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode) ||
            (PMIC_INTF_SPI == pPmicCoreHandle->commMode))
         {
-            pPmicCoreHandle->crcEnable = i2c1SpiCrcStat;
+            if(i2c1SpiCrcStat == 1U)
+            {
+                pPmicCoreHandle->crcEnable = (bool)true;
+            }
         }
         else
         {
-            pPmicCoreHandle->crcEnable = i2c2CrcStat;
+            if(i2c2CrcStat == 1U)
+            {
+                pPmicCoreHandle->crcEnable = (bool)true;
+            }
 
             if(i2c1SpiCrcStat != i2c2CrcStat)
             {
@@ -714,7 +719,6 @@ static int32_t Pmic_updateSubSysInfoValidateMainQaCommIFRdWr(
         /* Update CRC Enable status info to PMIC handle and Check if the
          * device requested is the one on the bus */
         pmicStatus = Pmic_updateCrcEnableStatValidateDevOnBus(
-                                                           pPmicConfigData,
                                                            pPmicCoreHandle,
                                                            &status);
 
@@ -742,7 +746,7 @@ static int32_t Pmic_updateSubSysInfoValidateMainQaCommIFRdWr(
                    (PMIC_SILICON_REV_ID_PG_1_0 ==
                     pPmicCoreHandle->pmicDevSiliconRev))
                 {
-                    Pmic_tps6594x_reInitInterruptConfig(pPmicCoreHandle);
+                    Pmic_tps6594x_reInitInterruptConfig();
                 }
 
                 pmicStatus = status;
@@ -1210,10 +1214,21 @@ static int32_t Pmic_spreadSpectrumEnable(
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_setBitField(&regData,
-                         PMIC_SPREAD_SPECTRUM_1_SS_EN_SHIFT,
-                         PMIC_SPREAD_SPECTRUM_1_SS_EN_MASK,
-                         commonCtrlCfg.sreadSpectrumEn);
+        if(((bool)PMIC_SPREAD_SPECTRUM_CFG_ENABLE) ==
+                                                 commonCtrlCfg.sreadSpectrumEn)
+        {
+            Pmic_setBitField(&regData,
+                             PMIC_SPREAD_SPECTRUM_1_SS_EN_SHIFT,
+                             PMIC_SPREAD_SPECTRUM_1_SS_EN_MASK,
+                             PMIC_SPREAD_SPECTRUM_CFG_ENABLE);
+        }
+        else
+        {
+            Pmic_setBitField(&regData,
+                             PMIC_SPREAD_SPECTRUM_1_SS_EN_SHIFT,
+                             PMIC_SPREAD_SPECTRUM_1_SS_EN_MASK,
+                             PMIC_SPREAD_SPECTRUM_CFG_DISABLE);
+        }
 
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_SPREAD_SPECTRUM_1_REGADDR,
@@ -1243,10 +1258,14 @@ static int32_t Pmic_getSpreadSpectrumEnable(
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pCommonCtrlCfg->sreadSpectrumEn = Pmic_getBitField(
-                                            regData,
-                                            PMIC_SPREAD_SPECTRUM_1_SS_EN_SHIFT,
-                                            PMIC_SPREAD_SPECTRUM_1_SS_EN_MASK);
+        pCommonCtrlCfg->sreadSpectrumEn  = (bool)false;
+
+        if(Pmic_getBitField(regData,
+                            PMIC_SPREAD_SPECTRUM_1_SS_EN_SHIFT,
+                            PMIC_SPREAD_SPECTRUM_1_SS_EN_MASK) == 1U)
+        {
+            pCommonCtrlCfg->sreadSpectrumEn  = (bool)true;
+        }
     }
 
     return pmicStatus;
@@ -1278,10 +1297,24 @@ static int32_t Pmic_skipEepromDefaultLoadEnable(
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
-            Pmic_setBitField(&regData,
-                             PMIC_STARTUP_CTRL_SKIP_LP_STANDBY_EE_READ_SHIFT,
-                             PMIC_STARTUP_CTRL_SKIP_LP_STANDBY_EE_READ_MASK,
-                             commonCtrlCfg.skipEepromDefaultLoadEn);
+            if((
+               (bool)PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_ENABLED)
+                                      == commonCtrlCfg.skipEepromDefaultLoadEn)
+            {
+                Pmic_setBitField(
+                   &regData,
+                   PMIC_STARTUP_CTRL_SKIP_LP_STANDBY_EE_READ_SHIFT,
+                   PMIC_STARTUP_CTRL_SKIP_LP_STANDBY_EE_READ_MASK,
+                   PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_ENABLED);
+            }
+            else
+            {
+                Pmic_setBitField(
+                  &regData,
+                  PMIC_STARTUP_CTRL_SKIP_LP_STANDBY_EE_READ_SHIFT,
+                  PMIC_STARTUP_CTRL_SKIP_LP_STANDBY_EE_READ_MASK,
+                  PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_DISABLED);
+            }
 
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                                 PMIC_STARTUP_CTRL_REGADDR,
@@ -1313,10 +1346,15 @@ static int32_t Pmic_getSkipEepromDefaultLoadEnable(
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pCommonCtrlCfg->skipEepromDefaultLoadEn =
-               Pmic_getBitField(regData,
-                                PMIC_STARTUP_CTRL_SKIP_LP_STANDBY_EE_READ_SHIFT,
-                                PMIC_STARTUP_CTRL_SKIP_LP_STANDBY_EE_READ_MASK);
+        pCommonCtrlCfg->skipEepromDefaultLoadEn = (bool)false;
+
+        if(Pmic_getBitField(
+                        regData,
+                        PMIC_STARTUP_CTRL_SKIP_LP_STANDBY_EE_READ_SHIFT,
+                        PMIC_STARTUP_CTRL_SKIP_LP_STANDBY_EE_READ_MASK) == 1U)
+        {
+            pCommonCtrlCfg->skipEepromDefaultLoadEn = (bool)true;
+        }
     }
 
     return pmicStatus;
@@ -1331,10 +1369,10 @@ static int32_t Pmic_getSkipEepromDefaultLoadEnable(
  *                New PMIC device accordingly.
  */
 static void Pmic_getEepromDefaultLoadRegAddrBitFields(
-                                           Pmic_CoreHandle_t   *pPmicCoreHandle,
-                                           uint8_t             *pRegAddr,
-                                           uint8_t             *pBitShift,
-                                           uint8_t             *pBitMask)
+                                     const Pmic_CoreHandle_t   *pPmicCoreHandle,
+                                     uint8_t                   *pRegAddr,
+                                     uint8_t                   *pBitShift,
+                                     uint8_t                   *pBitMask)
 {
     switch(pPmicCoreHandle->pmicDeviceType)
     {
@@ -1824,6 +1862,7 @@ static int32_t Pmic_setAmuxOutRefOutPinCfg(
 {
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
     uint8_t regData     = 0U;
+    bool amuxRefEn = miscCtrlCfg.amuxOutRefOutEn;
 
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
@@ -1833,10 +1872,42 @@ static int32_t Pmic_setAmuxOutRefOutPinCfg(
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_setBitField(&regData,
-                         PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_SHIFT,
-                         PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_MASK,
-                         miscCtrlCfg.amuxOutRefOutEn);
+        switch(pPmicCoreHandle->pmicDeviceType)
+        {
+            case PMIC_DEV_HERA_LP8764X:
+                if(((bool)PMIC_LP8764X_REF_OUT_PIN_CFG_ENABLE) == amuxRefEn)
+                {
+                    Pmic_setBitField(&regData,
+                                     PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_SHIFT,
+                                     PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_MASK,
+                                     PMIC_LP8764X_REF_OUT_PIN_CFG_ENABLE);
+                }
+                else
+                {
+                    Pmic_setBitField(&regData,
+                                     PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_SHIFT,
+                                     PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_MASK,
+                                     PMIC_LP8764X_REF_OUT_PIN_CFG_DISABLE);
+                }
+                break;
+            default:
+                /* Default case is valid only for TPS6594x LEO PMIC */
+                if(((bool)PMIC_TPS6594X_AMUX_OUT_PIN_CFG_ENABLE) == amuxRefEn)
+                {
+                    Pmic_setBitField(&regData,
+                                     PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_SHIFT,
+                                     PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_MASK,
+                                     PMIC_TPS6594X_AMUX_OUT_PIN_CFG_ENABLE);
+                }
+                else
+                {
+                    Pmic_setBitField(&regData,
+                                     PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_SHIFT,
+                                     PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_MASK,
+                                     PMIC_TPS6594X_AMUX_OUT_PIN_CFG_DISABLE);
+                }
+                break;
+        }
 
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_MISC_CTRL_REGADDR,
@@ -1865,10 +1936,14 @@ static int32_t Pmic_getAmuxOutRefOutPinCfg(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pMiscCtrlCfg->amuxOutRefOutEn =
-                        Pmic_getBitField(regData,
-                                         PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_SHIFT,
-                                         PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_MASK);
+        pMiscCtrlCfg->amuxOutRefOutEn = (bool)false;
+
+        if(Pmic_getBitField(regData,
+                            PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_SHIFT,
+                            PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_MASK) == 1U)
+        {
+            pMiscCtrlCfg->amuxOutRefOutEn = (bool)true;
+        }
     }
 
     return pmicStatus;
@@ -1892,10 +1967,44 @@ static int32_t Pmic_setInternalClkMonitorCfg(
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_setBitField(&regData,
-                         PMIC_MISC_CTRL_CLKMON_EN_SHIFT,
-                         PMIC_MISC_CTRL_CLKMON_EN_MASK,
-                         miscCtrlCfg.clkMonEn);
+        switch(pPmicCoreHandle->pmicDeviceType)
+        {
+            case PMIC_DEV_HERA_LP8764X:
+                if(((bool)PMIC_LP8764X_REF_OUT_PIN_CFG_ENABLE) ==
+                                                          miscCtrlCfg.clkMonEn)
+                {
+                    Pmic_setBitField(&regData,
+                                     PMIC_MISC_CTRL_CLKMON_EN_SHIFT,
+                                     PMIC_MISC_CTRL_CLKMON_EN_MASK,
+                                     PMIC_LP8764X_REF_OUT_PIN_CFG_ENABLE);
+                }
+                else
+                {
+                    Pmic_setBitField(&regData,
+                                     PMIC_MISC_CTRL_CLKMON_EN_SHIFT,
+                                     PMIC_MISC_CTRL_CLKMON_EN_MASK,
+                                     PMIC_LP8764X_REF_OUT_PIN_CFG_DISABLE);
+                }
+                break;
+            default:
+                /* Default case is valid only for TPS6594x LEO PMIC */
+                if(((bool)PMIC_TPS6594X_AMUX_OUT_PIN_CFG_ENABLE) ==
+                                                          miscCtrlCfg.clkMonEn)
+                {
+                    Pmic_setBitField(&regData,
+                                     PMIC_MISC_CTRL_CLKMON_EN_SHIFT,
+                                     PMIC_MISC_CTRL_CLKMON_EN_MASK,
+                                     PMIC_TPS6594X_AMUX_OUT_PIN_CFG_ENABLE);
+                }
+                else
+                {
+                    Pmic_setBitField(&regData,
+                                     PMIC_MISC_CTRL_CLKMON_EN_SHIFT,
+                                     PMIC_MISC_CTRL_CLKMON_EN_MASK,
+                                     PMIC_TPS6594X_AMUX_OUT_PIN_CFG_DISABLE);
+                }
+                break;
+        }
 
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_MISC_CTRL_REGADDR,
@@ -1925,10 +2034,14 @@ static int32_t Pmic_getInternalClkMonitorCfg(
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pMiscCtrlCfg->clkMonEn =
-                        Pmic_getBitField(regData,
-                                         PMIC_MISC_CTRL_CLKMON_EN_SHIFT,
-                                         PMIC_MISC_CTRL_CLKMON_EN_MASK);
+        pMiscCtrlCfg->clkMonEn = (bool)false;
+
+        if(Pmic_getBitField(regData,
+                            PMIC_MISC_CTRL_CLKMON_EN_SHIFT,
+                            PMIC_MISC_CTRL_CLKMON_EN_MASK) == 1U)
+        {
+            pMiscCtrlCfg->clkMonEn= (bool)true;
+        }
     }
 
     return pmicStatus;
@@ -2539,10 +2652,21 @@ static int32_t Pmic_backupBatteryChargingEnable(
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_setBitField(&regData,
-                         PMIC_CONFIG_2_BB_CHARGER_EN_SHIFT,
-                         PMIC_CONFIG_2_BB_CHARGER_EN_MASK,
-                         batteryCtrlCfg.chargingEn);
+        if(((bool)PMIC_TPS6594X_BB_CHARGINGING_CFG_ENABLE) ==
+                                                     batteryCtrlCfg.chargingEn)
+        {
+            Pmic_setBitField(&regData,
+                             PMIC_CONFIG_2_BB_CHARGER_EN_SHIFT,
+                             PMIC_CONFIG_2_BB_CHARGER_EN_MASK,
+                             PMIC_TPS6594X_BB_CHARGINGING_CFG_ENABLE);
+        }
+        else
+        {
+            Pmic_setBitField(&regData,
+                             PMIC_CONFIG_2_BB_CHARGER_EN_SHIFT,
+                             PMIC_CONFIG_2_BB_CHARGER_EN_MASK,
+                             PMIC_TPS6594X_BB_CHARGINGING_CFG_DISABLE);
+        }
 
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                             PMIC_CONFIG_2_REGADDR,
@@ -2572,10 +2696,14 @@ static int32_t Pmic_getBackupBatteryChargingCfg(
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pBatteryCtrlCfg->chargingEn =
-                        Pmic_getBitField(regData,
-                                         PMIC_CONFIG_2_BB_CHARGER_EN_SHIFT,
-                                         PMIC_CONFIG_2_BB_CHARGER_EN_MASK);
+        pBatteryCtrlCfg->chargingEn = (bool)false;
+
+        if(Pmic_getBitField(regData,
+                            PMIC_CONFIG_2_BB_CHARGER_EN_SHIFT,
+                            PMIC_CONFIG_2_BB_CHARGER_EN_MASK) == 1U)
+        {
+            pBatteryCtrlCfg->chargingEn = (bool)true;
+        }
     }
 
     return pmicStatus;
@@ -2968,10 +3096,14 @@ static int32_t Pmic_getSpmiLpmCtrlCfg(
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pCommonCtrlStat->spmiLpmStat =
-                        Pmic_getBitField(regData,
-                                         PMIC_ENABLE_DRV_STAT_SPMI_LPM_EN_SHIFT,
-                                         PMIC_ENABLE_DRV_STAT_SPMI_LPM_EN_MASK);
+        pCommonCtrlStat->spmiLpmStat = (bool)false;
+
+        if(Pmic_getBitField(regData,
+                            PMIC_ENABLE_DRV_STAT_SPMI_LPM_EN_SHIFT,
+                            PMIC_ENABLE_DRV_STAT_SPMI_LPM_EN_MASK) == 1U)
+        {
+            pCommonCtrlStat->spmiLpmStat = (bool)true;
+        }
     }
 
     return pmicStatus;
@@ -3480,7 +3612,7 @@ int32_t Pmic_enableCRC(Pmic_CoreHandle_t     *pPmicCoreHandle)
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pPmicCoreHandle->crcEnable = PMIC_CRC_ENABLE;
+        pPmicCoreHandle->crcEnable = (bool)true;
     }
 
     return pmicStatus;

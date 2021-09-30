@@ -126,8 +126,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_RTC_STOP                                   0U
-#define PMIC_RTC_START                                  1U
+#define PMIC_RTC_STOP                                  0U
+#define PMIC_RTC_START                                 1U
 /* @} */
 
 /**
@@ -136,8 +136,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_RTC_STATUS_FROZEN                         (0x0U)
-#define PMIC_RTC_STATUS_RUNNING                        (0x1U)
+#define PMIC_RTC_STATUS_FROZEN                         0U
+#define PMIC_RTC_STATUS_RUNNING                        1U
 /* @} */
 
 /**
@@ -217,8 +217,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_RTC_CRYSTAL_OSC_DISABLE             (0x0U)
-#define PMIC_RTC_CRYSTAL_OSC_ENABLE              (0x1U)
+#define PMIC_RTC_CRYSTAL_OSC_DISABLE             0U
+#define PMIC_RTC_CRYSTAL_OSC_ENABLE              1U
 /* @} */
 
 

@@ -78,10 +78,10 @@ extern "C" {
  */
  /** \brief Skip EEPROM defaults are loaded to Conf and Other registers is
    *        disabled */
-#define PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_DISABLED      (0U)
+#define PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_DISABLED       0U
  /** \brief Skip EEPROM defaults are loaded to Conf and Other registers is
   *         enabled */
-#define PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_ENABLED       (1U)
+#define PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_ENABLED        1U
 
 /**
  *  \anchor Pmic_Lp8764xHera_RefOutPinCtrl_Cfg
@@ -90,9 +90,9 @@ extern "C" {
  *  @{
  */
  /** \brief Disable Bandgap voltage to REFOUT pin */
-#define PMIC_LP8764X_REF_OUT_PIN_CFG_DISABLE     (0U)
+#define PMIC_LP8764X_REF_OUT_PIN_CFG_DISABLE      0U
 /** \brief Enable Bandgap voltage to REFOUT pin  */
-#define PMIC_LP8764X_REF_OUT_PIN_CFG_ENABLE      (1U)
+#define PMIC_LP8764X_REF_OUT_PIN_CFG_ENABLE       1U
 /*  @} */
 
 /**

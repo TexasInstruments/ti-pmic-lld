@@ -78,9 +78,9 @@ extern "C" {
  *  @{
  */
  /** \brief Enable Bandgap voltage to AMUXOUT pin */
-#define PMIC_TPS6594X_AMUX_OUT_PIN_CFG_DISABLE     (0U)
+#define PMIC_TPS6594X_AMUX_OUT_PIN_CFG_DISABLE      0U
 /** \brief Disable Bandgap voltage to AMUXOUT pin */
-#define PMIC_TPS6594X_AMUX_OUT_PIN_CFG_ENABLE      (1U)
+#define PMIC_TPS6594X_AMUX_OUT_PIN_CFG_ENABLE       1U
 /*  @} */
 
 /**
@@ -132,9 +132,9 @@ extern "C" {
  *  @{
  */
  /** \brief Disable Backup Battery Charging */
-#define PMIC_TPS6594X_BB_CHARGINGING_CFG_DISABLE     (0U)
+#define PMIC_TPS6594X_BB_CHARGINGING_CFG_DISABLE      0U
 /** \brief Enable Backup Battery Charging */
-#define PMIC_TPS6594X_BB_CHARGINGING_CFG_ENABLE      (1U)
+#define PMIC_TPS6594X_BB_CHARGINGING_CFG_ENABLE       1U
 /*  @} */
 
 /**

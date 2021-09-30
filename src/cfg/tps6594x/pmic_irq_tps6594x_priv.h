@@ -248,7 +248,7 @@ int32_t Pmic_tps6594x_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \brief  Function to reinitialise Interrupt configuration based on PMIC
  *         Silicon Revision
  */
-void Pmic_tps6594x_reInitInterruptConfig(Pmic_CoreHandle_t *pPmicCoreHandle);
+void Pmic_tps6594x_reInitInterruptConfig(void);
 
 #ifdef __cplusplus
 }

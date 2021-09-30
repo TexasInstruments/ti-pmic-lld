@@ -1499,8 +1499,7 @@ static int32_t Pmic_powerValidateVoltageLevel(
             break;
         default:
             /* Default case is valid only for TPS6594x LEO PMIC */
-            status = Pmic_powerTPS6594xValidateVoltageLevel(pPmicCoreHandle,
-                                                            pwrRsrcType,
+            status = Pmic_powerTPS6594xValidateVoltageLevel(pwrRsrcType,
                                                             pwrRsrc,
                                                             voltage_mV);
             break;
@@ -3465,8 +3464,7 @@ static int32_t Pmic_powerValidatePwrRsrcLimit(
             break;
         default:
             /* Default case is valid only for TPS6594x LEO PMIC */
-            status = Pmic_powerTPS6594xValidatePwrRsrcLimit(pPmicCoreHandle,
-                                                            pwrRsrcType,
+            status = Pmic_powerTPS6594xValidatePwrRsrcLimit(pwrRsrcType,
                                                             pwrRsrc);
 
             break;
@@ -4966,16 +4964,12 @@ static int32_t Pmic_powerValidateIntrType(uint8_t  pmicDeviceType,
     switch(pmicDeviceType)
     {
         case PMIC_DEV_HERA_LP8764X:
-            status = Pmic_powerLP8764xValidateIntrType(pmicDeviceType,
-                                                       pwrResource,
-                                                       pwrResourceType,
+            status = Pmic_powerLP8764xValidateIntrType(pwrResourceType,
                                                        intrType);
             break;
         default:
             /* Default case is valid only for TPS6594x LEO PMIC */
-            status = Pmic_powerTPS6594xValidateIntrType(pmicDeviceType,
-                                                        pwrResource,
-                                                        pwrResourceType,
+            status = Pmic_powerTPS6594xValidateIntrType(pwrResourceType,
                                                         intrType);
             break;
     }

@@ -108,8 +108,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_NSLEEPX_MASK                   (1U)
-#define PMIC_NSLEEPX_UNMASK                 (0U)
+#define PMIC_NSLEEPX_MASK                    1U
+#define PMIC_NSLEEPX_UNMASK                  0U
 /* @} */
 
 /**
@@ -124,9 +124,9 @@ extern "C" {
  *  @{
  */
 /** \brief Only analog BIST is run at BOOT BIST  */
-#define PMIC_FSM_FAST_BIST_ENABLE                   (1U)
+#define PMIC_FSM_FAST_BIST_ENABLE                    1U
 /** \brief Logic and analog BIST is run at BOOT BIST. */
-#define PMIC_FSM_FAST_BIST_DISABLE                  (0U)
+#define PMIC_FSM_FAST_BIST_DISABLE                   0U
 /* @} */
 
 /**
@@ -162,8 +162,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_FSM_SELECT_LPSTANDBY_STATE            (1U)
-#define PMIC_FSM_SELECT_STANDBY_STATE              (0U)
+#define PMIC_FSM_SELECT_LPSTANDBY_STATE             1U
+#define PMIC_FSM_SELECT_STANDBY_STATE               0U
 /* @} */
 
 /**
@@ -173,8 +173,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_FSM_ILIM_INT_FSMCTRL_ENABLE          (1U)
-#define PMIC_FSM_ILIM_INT_FSMCTRL_DISABLE         (0U)
+#define PMIC_FSM_ILIM_INT_FSMCTRL_ENABLE           1U
+#define PMIC_FSM_ILIM_INT_FSMCTRL_DISABLE          0U
 /* @} */
 
 /**
