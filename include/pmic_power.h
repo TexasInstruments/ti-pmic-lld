@@ -927,6 +927,14 @@ typedef struct Pmic_PowerThermalStat_s
  *          rvCheckEn, vmonEn, vccaPwrGudLvl, vmonRange,
  *          pgUvThresholdLvl, pgOvThresholdLvl, railGrpSel, voltage_mV
  *          Valid only for LP8764x HERA Device
+ *          Note: Application has to ensure configured regulator voltage is
+ *                within the operating voltages of the connected component.If
+ *                not configured properly then it may break the system or
+ *                component
+ *                Application has to ensure that external component connected to
+ *                PMIC device will generates volatge/current/power is within the
+ *                configured limits of PMIC device.If not configured properly
+ *                then it may damage the PMIC device
  *
  * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
  * \param   pwrResource        [IN]    PMIC Power resource

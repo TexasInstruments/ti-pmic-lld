@@ -1031,6 +1031,11 @@ static int32_t Pmic_esmGetModeValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  * Design: did_pmic_esm_cfg_readback
  *
  *          This function is used to Start/Stop the PMIC ESM_MCU/ESM_SOC
+ *          Note: Application has to ensure to do proper configuration of ESM
+ *                time intervals of Level or PWM  mode.If not configured
+ *                properly then ESM will trigger the warm reset to the PMIC
+ *                device. This may cause system reset if PMIC is connected to
+ *                SOC/MCU
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
  * \param   esmType         [IN]    PMIC ESM Type

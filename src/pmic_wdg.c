@@ -1660,11 +1660,21 @@ static int32_t Pmic_wdgQaWriteAnswersNumSequence(
  *
  *          Note: To perform QA sequences, user has to adjust Long window
  *                time interval, Window1 time interval and Window2 time
- *                inervals depends on errors given by API. If user gets
+ *                intervals depends on errors given by API. If user gets
  *                PMIC_ST_ERR_INV_WDG_WINDOW, then user has to increase the
  *                Long window or window1 time interval. If user gets
  *                PMIC_ST_ERR_WDG_EARLY_ANSWER, then user has to reduce
- *                the Window1 time inerval.
+ *                the Window1 time interval.
+ *                Application has to ensure to do proper configuration of WDG
+ *                window time intervals. If not configured properly then WDG
+ *                will trigger the warm reset to the PMIC device. This may cause
+ *                system reset if PMIC is connected to SOC/MCU
+ *                Application has to ensure to do proper configuration of WDG
+ *                parameters. If not configured properly then API doesn't
+ *                receive good or bad event from the PMIC FSM. Due to this API
+ *                returns timeout error
+ *                API receive bad event due to wrong answer then API detects and
+ *                returns an error
  *
  * \param   pPmicCoreHandle  [IN]    PMIC Interface Handle
  * \param   num_of_sequences [IN]    number of QA sequences.
@@ -2075,6 +2085,10 @@ int32_t Pmic_wdgGetFailCntStat(Pmic_CoreHandle_t      *pPmicCoreHandle,
  *                   of the Trigger pulse time period.
  *                4. (Window1 time interval + Window2 time interval)
  *                   approximately equal to the Trigger pulse time period.
+ *                Application has to ensure to do proper configuration of WDG
+ *                window time intervals. If not configured properly in Trigger
+ *                mode then WDG will trigger the warm reset to the PMIC device.
+ *                This may cause system reset if PMIC is connected to SOC/MCU
  *
  * \param   pPmicCoreHandle  [IN]    PMIC Interface Handle
  *
@@ -2323,6 +2337,10 @@ int32_t Pmic_wdgClrErrStatus(Pmic_CoreHandle_t   *pPmicCoreHandle,
  *                If the WDG error is Answer early, user has to reduce the
  *                Window1 time interval
  *                For other WDG errors, user has to take action accordingly
+ *                Application has to ensure to do proper configuration of WDG
+ *                window time intervals. If not configured properly in QA mode
+ *                then WDG will trigger the warm reset to the PMIC device. This
+ *                may cause system reset if PMIC is connected to SOC/MCU
  *
  * \param   pPmicCoreHandle  [IN]    PMIC Interface Handle
  *

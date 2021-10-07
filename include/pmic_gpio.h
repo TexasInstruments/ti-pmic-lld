@@ -280,6 +280,10 @@ typedef struct Pmic_GpioCfg_s
  *          specified GPIO pin when corresponding validParam bit field is set in
  *          the Pmic_GpioCfg_t
  *          For more information \ref Pmic_GpioCfg_t
+ *          Note: Application has to ensure to do proper configuration of GPIO
+ *                pin when connected to Enable pin of other peripherals on the
+ *                board. If not configured properly then it may down the
+ *                peripheral or system
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
  * \param   pin             [IN]    PMIC GPIO pin number.

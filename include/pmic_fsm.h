@@ -381,6 +381,15 @@ int32_t Pmic_fsmDeviceOnRequest(Pmic_CoreHandle_t *pPmicCoreHandle);
  *               FSM state transitions except for Standby/LpStandby State
  *               Application need to mask Nsleep1B and Nsleep2B signals for
  *               Standby/LpStandby State transition
+ *               Application has to ensure the wakeup pins or RTC Timer/Alarm
+ *               Interrupts are configured properly before triggering the PMIC
+ *               device to Standby/LP Standby state.If not configured properly
+ *               then PMIC device can't resume from sleep state
+ *               Application has to ensure to connect/access the peripherals
+ *               connected to only MCU Power lines when PMIC switch from Active
+ *               to MCU state. If Application connects/access the peripherals
+ *               connected to SOC Power lines when PMIC switch from Active to
+ *               MCU state, then Application behaviour is unexpected.
  *
  * \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
  * \param   pmicState        [IN]  PMIC FSM mission state
@@ -673,8 +682,25 @@ int32_t Pmic_fsmGetI2cTriggerVal(Pmic_CoreHandle_t *pPmicCoreHandle,
  *         on the device based on the Retention Mode
  *         Note: PMIC_FSM_GPIO_RETENTION_MODE is valid only for J7200 SOC
  *         In this API, the default SOC Type is assumed as J721E SOC
- *         While adding support for other SOCs, developer need to update the API
+ *         While adding support for New SOC, developer need to update the API
  *         functionality for New SOC device accordingly.
+ *         Note: Application has to ensure to connect/access the peripherals
+ *               connected to only MCU Power lines except EN_GPIORET_LDSW,
+ *               VDD_WK_0V8 Power lines when PMIC switch from Active to MCU
+ *               state in GPIO Rentention mode with FSM i2c6 trigger value as
+ *               '0'. If Application connects/access the peripherals connected
+ *               to EN_GPIORET_LDSW, VDD_WK_0V8 Power lines when PMIC switch
+ *               from Active to MCU state in GPIO Rentention mode with FSM i2c6
+ *               trigger value as '0', then Application behaviour is unexpected.
+ *               Application has to ensure to connect/access the peripherals
+ *               connected to only MCU Power lines except VDD1_LPDDR4_1V8,
+ *               VDD_DDR_1V1, GPIO_EN_VDDR_IO Power lines when PMIC switch from
+ *               Active to MCU state in DDR Rentention mode with FSM i2c7
+ *               trigger value as '0'. If Application connects/access the
+ *               peripherals connected to VDD1_LPDDR4_1V8, VDD_DDR_1V1,
+ *               GPIO_EN_VDDR_IO Power lines when PMIC switch from Active to MCU
+ *               state in DDR Rentention mode with FSM i2c7 trigger value as
+ *               '0', then Application behaviour is unexpected.
  *
  * \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
  * \param   retentionMode    [IN]  Retention Mode

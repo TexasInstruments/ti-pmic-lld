@@ -2603,6 +2603,46 @@ int32_t  Pmic_rtcEnableTimerIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /*!
+ * \brief   API to Get the RTC Powerup status
+ */
+static int32_t  Pmic_rtcGetPowerupStatus(Pmic_CoreHandle_t    *pPmicCoreHandle,
+                                         Pmic_RtcRstStatus_t  *pRtcRstStatus)
+{
+    int32_t  pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t  regData = 0U;
+
+        /* Get RTC POWER-UP status */
+    if((bool)false != (pmic_validParamCheck(pRtcRstStatus->validParams,
+                                            PMIC_RTC_POWERUP_STATUS_VALID)))
+    {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+
+        /* Checking RTC status */
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                            PMIC_RTC_STATUS_REGADDR,
+                                            &regData);
+
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            if(Pmic_getBitField(regData,
+                                PMIC_RTC_STATUS_POWER_UP_SHIFT,
+                                PMIC_RTC_STATUS_POWER_UP_MASK) == 0U)
+            {
+                pRtcRstStatus->powerupStatus = (bool)false;
+            }
+            else
+            {
+                pRtcRstStatus->powerupStatus = (bool)true;
+            }
+        }
+    }
+
+    return pmicStatus;
+}
+
+/*!
  * \brief   API to Get the Reset status of RTC.
  *
  * Requirement: REQ_TAG(PDK-9145), REQ_TAG(PDK-9142)
@@ -2676,32 +2716,9 @@ int32_t  Pmic_rtcGetRstStatus(Pmic_CoreHandle_t    *pPmicCoreHandle,
     }
 
         /* Get RTC POWER-UP status */
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       ((bool)false != (pmic_validParamCheck(pRtcRstStatus->validParams,
-                                              PMIC_RTC_POWERUP_STATUS_VALID))))
+    if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        Pmic_criticalSectionStart(pPmicCoreHandle);
-
-        /* Checking RTC status */
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            PMIC_RTC_STATUS_REGADDR,
-                                            &regData);
-
-        Pmic_criticalSectionStop(pPmicCoreHandle);
-
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            if(Pmic_getBitField(regData,
-                                PMIC_RTC_STATUS_POWER_UP_SHIFT,
-                                PMIC_RTC_STATUS_POWER_UP_MASK) == 0U)
-            {
-                pRtcRstStatus->powerupStatus = (bool)false;
-            }
-            else
-            {
-                pRtcRstStatus->powerupStatus = (bool)true;
-            }
-        }
+        pmicStatus = Pmic_rtcGetPowerupStatus(pPmicCoreHandle, pRtcRstStatus);
     }
 
     return pmicStatus;

@@ -5249,6 +5249,10 @@ static int32_t Pmic_powerSetRegulatorenVmonenVoltagemvCfg(
  *          rvCheckEn, vmonEn, vccaPwrGudLvl, vmonRange,
  *          pgUvThresholdLvl, pgOvThresholdLvl, railGrpSel, voltage_mV
  *          Valid only for LP8764x HERA Device
+ *          Note: Application has to ensure configured regulator voltage is
+ *                within the operating voltages of the connected component.If
+ *                not configured properly then it may break the system or
+ *                component
  *
  * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
  * \param   pwrResource        [IN]    PMIC Power resource

@@ -776,6 +776,10 @@ static int32_t Pmic_extractErrStatus(const Pmic_CoreHandle_t *pPmicCoreHandle,
  *             2. Decipher error from top register to actual error code.
  *             3. Store the status of all Interrupts.
  *             4. Support clearing interrupts depends on clearIRQ flag.
+ *          Note: Application has to ensure to clear the interrupts after the
+ *                interrupt has been serviced. If the interrupts are not cleared
+ *                after the interrupt had been serviced then Application will
+ *                not get any further interrupts which results in event miss
  *
  * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
  * \param   pErrStat          [OUT]   Pointer to store Error status.
