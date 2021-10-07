@@ -2143,7 +2143,7 @@ static int32_t Pmic_wdgClrErrStatusWdgErrType(
     int32_t status     = PMIC_ST_SUCCESS;
     uint8_t errStatus = 1U, regData = 0U;
 
-    if((PMIC_WDG_ERR_LONG_WIN_TIMEOUT != wdgErrType) &&
+    if((PMIC_WDG_ERR_LONG_WIN_TIMEOUT == wdgErrType) &&
        (Pmic_getBitField(
                      regVal,
                      PMIC_WD_ERR_STATUS_WD_LONGWIN_TIMEOUT_INT_SHIFT,
@@ -2154,7 +2154,7 @@ static int32_t Pmic_wdgClrErrStatusWdgErrType(
                          PMIC_WD_ERR_STATUS_WD_LONGWIN_TIMEOUT_INT_MASK,
                          errStatus);
     }
-    else if((PMIC_WDG_ERR_TIMEOUT != wdgErrType) &&
+    else if((PMIC_WDG_ERR_TIMEOUT == wdgErrType) &&
             (Pmic_getBitField(regVal,
                               PMIC_WD_ERR_STATUS_WD_TIMEOUT_SHIFT,
                               PMIC_WD_ERR_STATUS_WD_TIMEOUT_MASK) != 0U))
@@ -2164,7 +2164,7 @@ static int32_t Pmic_wdgClrErrStatusWdgErrType(
                          PMIC_WD_ERR_STATUS_WD_TIMEOUT_MASK,
                          errStatus);
     }
-    else if((PMIC_WDG_ERR_TRIGGER_EARLY != wdgErrType) &&
+    else if((PMIC_WDG_ERR_TRIGGER_EARLY == wdgErrType) &&
             (Pmic_getBitField(regVal,
                               PMIC_WD_ERR_STATUS_WD_TRIG_EARLY_SHIFT,
                               PMIC_WD_ERR_STATUS_WD_TRIG_EARLY_MASK) != 0U))
@@ -2174,7 +2174,7 @@ static int32_t Pmic_wdgClrErrStatusWdgErrType(
                          PMIC_WD_ERR_STATUS_WD_TRIG_EARLY_MASK,
                          errStatus);
     }
-    else if((PMIC_WDG_ERR_ANSWER_EARLY != wdgErrType) &&
+    else if((PMIC_WDG_ERR_ANSWER_EARLY == wdgErrType) &&
             (Pmic_getBitField(regVal,
                               PMIC_WD_ERR_STATUS_WD_ANSW_EARLY_SHIFT,
                               PMIC_WD_ERR_STATUS_WD_ANSW_EARLY_MASK) != 0U))
@@ -2184,7 +2184,7 @@ static int32_t Pmic_wdgClrErrStatusWdgErrType(
                          PMIC_WD_ERR_STATUS_WD_ANSW_EARLY_MASK,
                          errStatus);
     }
-    else if((PMIC_WDG_ERR_SEQ_ERR != wdgErrType) &&
+    else if((PMIC_WDG_ERR_SEQ_ERR == wdgErrType) &&
             (Pmic_getBitField(regVal,
                               PMIC_WD_ERR_STATUS_WD_SEQ_ERR_SHIFT,
                               PMIC_WD_ERR_STATUS_WD_SEQ_ERR_MASK) != 0U))
@@ -2194,7 +2194,7 @@ static int32_t Pmic_wdgClrErrStatusWdgErrType(
                          PMIC_WD_ERR_STATUS_WD_SEQ_ERR_MASK,
                          errStatus);
     }
-    else if((PMIC_WDG_ERR_ANS_ERR != wdgErrType) &&
+    else if((PMIC_WDG_ERR_ANS_ERR == wdgErrType) &&
             (Pmic_getBitField(regVal,
                               PMIC_WD_ERR_STATUS_WD_ANSW_ERR_SHIFT,
                               PMIC_WD_ERR_STATUS_WD_ANSW_ERR_MASK) != 0U))
@@ -2204,7 +2204,7 @@ static int32_t Pmic_wdgClrErrStatusWdgErrType(
                          PMIC_WD_ERR_STATUS_WD_ANSW_ERR_MASK,
                          errStatus);
     }
-    else if((PMIC_WDG_ERR_FAIL_INT != wdgErrType) &&
+    else if((PMIC_WDG_ERR_FAIL_INT == wdgErrType) &&
             (Pmic_getBitField(regVal,
                               PMIC_WD_ERR_STATUS_WD_FAIL_INT_SHIFT,
                               PMIC_WD_ERR_STATUS_WD_FAIL_INT_MASK) != 0U))
