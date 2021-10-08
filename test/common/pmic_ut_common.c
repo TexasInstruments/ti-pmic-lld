@@ -159,7 +159,7 @@ GPIO_v0_Config GPIO_v0_config =
 #if  ((__ARM_ARCH == 7) && (__ARM_ARCH_PROFILE == 'R'))
     0x8U
 #else
-#if defined(__C7100__)
+#if defined(BUILD_C7X)
     0x01U
 #else
     0x20U
@@ -2454,7 +2454,7 @@ void App_initGPIO(GPIO_CallbackFxn callback)
     GPIO_setCallback(0, callback);
 }
 
-#if defined(BUILD_MPU) || defined (__C7100__)
+#if defined(BUILD_MPU) || defined (BUILD_C7X)
 extern void Osal_initMmuDefault(void);
 void InitMmu(void)
 {
