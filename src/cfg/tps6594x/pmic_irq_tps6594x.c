@@ -888,7 +888,7 @@ static int32_t Pmic_tps6594x_getLdo3Ldo4Err(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_MASK_LDO3_4_REGADDR,
+                                        PMIC_INT_LDO3_4_REGADDR,
                                         &regData);
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -953,7 +953,7 @@ static int32_t Pmic_tps6594x_getLdo1Ldo2Err(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_MASK_LDO1_2_REGADDR,
+                                        PMIC_INT_LDO1_2_REGADDR,
                                         &regData);
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -1432,14 +1432,14 @@ static void Pmic_tps6594x_getFsmReadbackErr(
 
             if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
             {
-                if((regValue & PMIC_INT_READBACK_ERR_NINT_READBACK_INT_MASK)
+                if((regData & PMIC_INT_READBACK_ERR_NINT_READBACK_INT_MASK)
                     != 0U)
                 {
                     Pmic_intrBitSet(pErrStat,
                                     PMIC_TPS6594X_NINT_READBACK_INT);
                 }
 
-                if((regValue & PMIC_INT_READBACK_ERR_NRSTOUT_READBACK_INT_MASK)
+                if((regData & PMIC_INT_READBACK_ERR_NRSTOUT_READBACK_INT_MASK)
                     != 0U)
                 {
                     Pmic_intrBitSet(pErrStat,
