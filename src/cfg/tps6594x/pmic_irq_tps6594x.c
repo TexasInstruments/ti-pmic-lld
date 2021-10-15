@@ -823,8 +823,7 @@ static int32_t Pmic_tps6594x_getBuckErr(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t regData    = 0U;
 
     /* PMIC BUCK 5 Interrupt Status Check */
-    if(((regValue & PMIC_INT_BUCK_BUCK5_INT_MASK) != 0U) &&
-       (PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType))
+    if((regValue & PMIC_INT_BUCK_BUCK5_INT_MASK) != 0U)
     {
         /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);

@@ -2662,7 +2662,7 @@ int32_t  Pmic_rtcGetRstStatus(Pmic_CoreHandle_t    *pPmicCoreHandle,
                               Pmic_RtcRstStatus_t  *pRtcRstStatus)
 {
     int32_t  pmicStatus      = PMIC_ST_SUCCESS;
-    uint8_t  regData, regVal = 0U;
+    uint8_t  regVal = 0U;
 
     if(NULL == pPmicCoreHandle)
     {

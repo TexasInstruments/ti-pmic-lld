@@ -659,10 +659,17 @@ int32_t Pmic_powerLP8764xValidatePwrRsrcLimit(
     }
     else if(PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType)
     {
-        if((pwrRsrc > PMIC_LP8764X_BUCK_MAX) ||
-           (pwrRsrc < PMIC_LP8764X_BUCK_MIN))
+        if(((bool)false) == pPmicCoreHandle->pPmic_SubSysInfo->buckEnable)
         {
             status = PMIC_ST_ERR_INV_PARAM;
+        }
+        else
+        {
+            if((pwrRsrc > PMIC_LP8764X_BUCK_MAX) ||
+               (pwrRsrc < PMIC_LP8764X_BUCK_MIN))
+            {
+                status = PMIC_ST_ERR_INV_PARAM;
+            }
         }
     }
     else if(PMIC_LP8764X_POWER_RESOURCE_TYPE_VMON == pwrRsrcType)

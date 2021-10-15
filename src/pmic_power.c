@@ -3464,7 +3464,8 @@ static int32_t Pmic_powerValidatePwrRsrcLimit(
             break;
         default:
             /* Default case is valid only for TPS6594x LEO PMIC */
-            status = Pmic_powerTPS6594xValidatePwrRsrcLimit(pwrRsrcType,
+            status = Pmic_powerTPS6594xValidatePwrRsrcLimit(pPmicCoreHandle,
+                                                            pwrRsrcType,
                                                             pwrRsrc);
 
             break;
@@ -3502,7 +3503,7 @@ static int32_t Pmic_powerParamCheck(const Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   This function is used to select the bypass or linear regulator
- *           mode for LDO.
+ *          mode for LDO.
  */
 static int32_t Pmic_powerSetLdoBypassModeEn(Pmic_CoreHandle_t *pPmicCoreHandle,
                                             uint16_t           pwrRsrc,

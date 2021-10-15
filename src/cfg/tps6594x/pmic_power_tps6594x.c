@@ -796,6 +796,7 @@ int32_t Pmic_powerTPS6594xValidateVoltageLevel(
  *          TPS6594x PMIC device.
  */
 int32_t Pmic_powerTPS6594xValidatePwrRsrcLimit(
+                                    const Pmic_CoreHandle_t *pPmicCoreHandle,
                                     uint8_t                  pwrRsrcType,
                                     uint16_t                 pwrRsrc)
 {
@@ -810,18 +811,32 @@ int32_t Pmic_powerTPS6594xValidatePwrRsrcLimit(
     }
     else if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType)
     {
-        if((pwrRsrc > PMIC_TPS6594X_BUCK_MAX) ||
-           (pwrRsrc < PMIC_TPS6594X_BUCK_MIN))
+        if(((bool)false) == pPmicCoreHandle->pPmic_SubSysInfo->buckEnable)
         {
             status = PMIC_ST_ERR_INV_PARAM;
+        }
+        else
+        {
+            if((pwrRsrc > PMIC_TPS6594X_BUCK_MAX) ||
+               (pwrRsrc < PMIC_TPS6594X_BUCK_MIN))
+            {
+                status = PMIC_ST_ERR_INV_PARAM;
+            }
         }
     }
     else if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO == pwrRsrcType)
     {
-        if((pwrRsrc > PMIC_TPS6594X_LDO_MAX) ||
-           (pwrRsrc < PMIC_TPS6594X_LDO_MIN))
+        if(((bool)false) == pPmicCoreHandle->pPmic_SubSysInfo->ldoEnable)
         {
             status = PMIC_ST_ERR_INV_PARAM;
+        }
+        else
+        {
+            if((pwrRsrc > PMIC_TPS6594X_LDO_MAX) ||
+               (pwrRsrc < PMIC_TPS6594X_LDO_MIN))
+            {
+                status = PMIC_ST_ERR_INV_PARAM;
+            }
         }
     }
     else

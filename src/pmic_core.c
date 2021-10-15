@@ -670,7 +670,6 @@ static int32_t Pmic_updateCrcEnableStatValidateDevOnBus(
                                           int32_t              *pStatus)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint8_t regVal = 0U;
     uint8_t i2c1SpiCrcStat = 0xFF, i2c2CrcStat = 0xFF;
 
     pPmicCoreHandle->crcEnable = (bool)false;

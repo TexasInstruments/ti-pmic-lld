@@ -244,6 +244,7 @@ int32_t Pmic_powerTPS6594xValidateVoltageLevel(
  *          TPS6594x PMIC device.
  */
 int32_t Pmic_powerTPS6594xValidatePwrRsrcLimit(
+                                    const Pmic_CoreHandle_t *pPmicCoreHandle,
                                     uint8_t                  pwrRsrcType,
                                     uint16_t                 pwrRsrc);
 

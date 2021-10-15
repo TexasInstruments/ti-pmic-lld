@@ -1078,9 +1078,6 @@ static int32_t Pmic_lp8764x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle,
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData    = 0U;
 
-    /* Start Critical Section */
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
     if((regValue & PMIC_INT_FSM_ERR_IMM_SHUTDOWN_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_LP8764X_IMM_SHUTOWN_INT);

@@ -51,32 +51,32 @@
 /*!
  * \brief   This function is used to get the regAddr, mask and shift values to
  *          configure standBy/LPStandby State
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
-static int32_t Pmic_fsmGetstandByCfgRegFields(uint8_t  pmicDeviceType,
-                                              uint8_t  *pRegAddr,
-                                              uint8_t  *pBitPos,
-                                              uint8_t  *pBitMask)
+static void Pmic_fsmGetstandByCfgRegFields(uint8_t  pmicDeviceType,
+                                           uint8_t  *pRegAddr,
+                                           uint8_t  *pBitPos,
+                                           uint8_t  *pBitMask)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-
     switch(pmicDeviceType)
     {
-        case PMIC_DEV_LEO_TPS6594X:
-            *pRegAddr = PMIC_RTC_CTRL_2_REGADDR;
-            *pBitPos = PMIC_RTC_CTRL_2_LP_STANDBY_SEL_SHIFT;
-            *pBitMask = PMIC_RTC_CTRL_2_LP_STANDBY_SEL_MASK;
-            break;
         case PMIC_DEV_HERA_LP8764X:
             *pRegAddr = PMIC_STARTUP_CTRL_REGADDR;
             *pBitPos = PMIC_STARTUP_CTRL_LP_STANDBY_SEL_SHIFT;
             *pBitMask = PMIC_STARTUP_CTRL_LP_STANDBY_SEL_MASK;
             break;
         default:
-            status = PMIC_ST_ERR_INV_DEVICE;
+            /* Default case is valid only for TPS6594x LEO PMIC */
+            *pRegAddr = PMIC_RTC_CTRL_2_REGADDR;
+            *pBitPos = PMIC_RTC_CTRL_2_LP_STANDBY_SEL_SHIFT;
+            *pBitMask = PMIC_RTC_CTRL_2_LP_STANDBY_SEL_MASK;
             break;
     }
 
-    return status;
 }
 
 /*!
@@ -475,6 +475,11 @@ int32_t Pmic_fsmGetI2cTriggerVal(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /*!
  * \brief   This function is used to set the defined FSM mission state.
+ *
+ *          Note: In this API, the default PMIC FSM State is assumed as
+ *                LP_STANBY_STATE. While adding support for New PMIC FSM State,
+ *                developer need to update the API functionality for New PMIC
+ *                FSM State State accordingly.
  */
 static int32_t Pmic_setState(Pmic_CoreHandle_t  *pPmicCoreHandle,
                              uint8_t             pmicNextState)
@@ -483,15 +488,10 @@ static int32_t Pmic_setState(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
     switch(pmicNextState)
     {
-        case PMIC_FSM_LP_STANBY_STATE:
-           status = Pmic_fsmDeviceOffRequestCfg(pPmicCoreHandle,
-                                 PMIC_FSM_I2C_TRIGGER0_TYPE,
-                                 PMIC_FSM_LP_STANBY_STATE);
-           break;
         case PMIC_FSM_STANBY_STATE:
            status = Pmic_fsmDeviceOffRequestCfg(pPmicCoreHandle,
-                                 PMIC_FSM_I2C_TRIGGER0_TYPE,
-                                 PMIC_FSM_STANBY_STATE);
+                                                PMIC_FSM_I2C_TRIGGER0_TYPE,
+                                                PMIC_FSM_STANBY_STATE);
            break;
         case PMIC_FSM_ACTIVE_STATE:
            status = Pmic_fsmSetNsleepSignalVal(pPmicCoreHandle,
@@ -524,8 +524,11 @@ static int32_t Pmic_setState(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
            break;
        default:
-           status = PMIC_ST_ERR_INV_PARAM;
-            break;
+           /* Default case is valid only for LP_STANBY_STATE */
+           status = Pmic_fsmDeviceOffRequestCfg(pPmicCoreHandle,
+                                                PMIC_FSM_I2C_TRIGGER0_TYPE,
+                                                PMIC_FSM_LP_STANBY_STATE);
+           break;
         }
 
     return status;
@@ -584,20 +587,17 @@ int32_t Pmic_fsmDeviceOffRequestCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = Pmic_fsmGetstandByCfgRegFields(
-                                            pPmicCoreHandle->pmicDeviceType,
-                                            &regAddr,
-                                            &bitPos,
-                                            &bitMask);
+        Pmic_fsmGetstandByCfgRegFields(pPmicCoreHandle->pmicDeviceType,
+                                       &regAddr,
+                                       &bitPos,
+                                       &bitMask);
 
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        if(PMIC_ST_SUCCESS == pmicStatus)
-        {
-            pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                                regAddr,
-                                                &regData);
-        }
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                            regAddr,
+                                            &regData);
+
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             Pmic_setBitField(&regData, bitPos, bitMask, fsmState);
@@ -672,6 +672,11 @@ int32_t Pmic_fsmRequestRuntimeBist(Pmic_CoreHandle_t  *pPmicCoreHandle)
  *         at PMIC init before clearing Enable and Start-Up interrupts.
  *
  *  \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
 int32_t Pmic_fsmDeviceOnRequest(Pmic_CoreHandle_t *pPmicCoreHandle)
 {
@@ -694,12 +699,6 @@ int32_t Pmic_fsmDeviceOnRequest(Pmic_CoreHandle_t *pPmicCoreHandle)
     {
         switch(pPmicCoreHandle->pmicDeviceType)
         {
-            case PMIC_DEV_LEO_TPS6594X:
-                srcRegAddr = PMIC_RTC_CTRL_2_REGADDR;
-                dstRegAddr = PMIC_FSM_NSLEEP_TRIGGERS_REGADDR;
-                srcBitMask = PMIC_RTC_CTRL_2_STARTUP_DEST_MASK;
-                srcBitShift = PMIC_RTC_CTRL_2_STARTUP_DEST_SHIFT;
-                break;
              case PMIC_DEV_HERA_LP8764X:
                 srcRegAddr = PMIC_STARTUP_CTRL_REGADDR;
                 dstRegAddr = PMIC_FSM_NSLEEP_TRIGGERS_REGADDR;
@@ -707,13 +706,14 @@ int32_t Pmic_fsmDeviceOnRequest(Pmic_CoreHandle_t *pPmicCoreHandle)
                 srcBitShift = PMIC_STARTUP_CTRL_STARTUP_DEST_SHIFT;
                 break;
              default:
-                pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+                /* Default case is valid only for TPS6594x LEO PMIC */
+                srcRegAddr = PMIC_RTC_CTRL_2_REGADDR;
+                dstRegAddr = PMIC_FSM_NSLEEP_TRIGGERS_REGADDR;
+                srcBitMask = PMIC_RTC_CTRL_2_STARTUP_DEST_MASK;
+                srcBitShift = PMIC_RTC_CTRL_2_STARTUP_DEST_SHIFT;
                 break;
         }
-    }
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
@@ -1706,13 +1706,10 @@ int32_t Pmic_fsmRecoverSocPwrErr(Pmic_CoreHandle_t *pPmicCoreHandle,
  * Requirement: REQ_TAG(PDK-9563), REQ_TAG(PDK-9564)
  * Design: did_pmic_ddr_gpio_retention_cfg
  *
-*         This function initiates a request to exercise DDR/GPIO Retention Mode
+ *         This function initiates a request to exercise DDR/GPIO Retention Mode
  *         on the device based on the Retention Mode
  *         Note: PMIC_FSM_GPIO_RETENTION_MODE is valid only for J7200 SOC
- *         In this API, the default SOC Type is assumed as J721E SOC
- *         While adding support for New SOC, developer need to update the API
- *         functionality for New SOC device accordingly.
- *         Note: Application has to ensure to connect/access the peripherals
+ *               Application has to ensure to connect/access the peripherals
  *               connected to only MCU Power lines except EN_GPIORET_LDSW,
  *               VDD_WK_0V8 Power lines when PMIC switch from Active to MCU
  *               state in GPIO Rentention mode with FSM i2c6 trigger value as
@@ -1753,19 +1750,11 @@ int32_t Pmic_fsmRequestDdrGpioRetentionMode(
         pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
-#if defined(SOC_J7200)
     if((PMIC_ST_SUCCESS == pmicStatus) &&
        (retentionMode > PMIC_FSM_GPIO_RETENTION_MODE))
     {
         pmicStatus = PMIC_ST_ERR_INV_PARAM;
     }
-#else
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (retentionMode != PMIC_FSM_DDR_RETENTION_MODE))
-    {
-        pmicStatus = PMIC_ST_ERR_INV_PARAM;
-    }
-#endif
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {

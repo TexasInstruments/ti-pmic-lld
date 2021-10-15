@@ -155,15 +155,6 @@ extern "C" {
 #define PMIC_FSM_PFSM_DELAY_STEP_MAX       (31U)
 /* @} */
 
-/**
- *  \anchor Pmic_Fsm_Pfsm_Delay_Max
- *  \name   Maximum limit of PFSM Delay
- *
- *  @{
- */
-#define PMIC_FSM_PFSM_DELAY_MAX            (255U)
-/* @} */
-
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/

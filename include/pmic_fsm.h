@@ -681,10 +681,7 @@ int32_t Pmic_fsmGetI2cTriggerVal(Pmic_CoreHandle_t *pPmicCoreHandle,
  *         This function initiates a request to exercise DDR/GPIO Retention Mode
  *         on the device based on the Retention Mode
  *         Note: PMIC_FSM_GPIO_RETENTION_MODE is valid only for J7200 SOC
- *         In this API, the default SOC Type is assumed as J721E SOC
- *         While adding support for New SOC, developer need to update the API
- *         functionality for New SOC device accordingly.
- *         Note: Application has to ensure to connect/access the peripherals
+ *               Application has to ensure to connect/access the peripherals
  *               connected to only MCU Power lines except EN_GPIORET_LDSW,
  *               VDD_WK_0V8 Power lines when PMIC switch from Active to MCU
  *               state in GPIO Rentention mode with FSM i2c6 trigger value as

@@ -120,10 +120,8 @@ static uint8_t Pmic_WdgCovertLongWinTimeIntervaltoRegBits(
     {
         regVal = PMIG_WD_LONGWIN_REG_VAL_0;
     }
-    else if((wdgCfg.longWinDuration_ms >=
-                            PMIG_WD_LONGWIN_125_MILLISEC) &&
-            (wdgCfg.longWinDuration_ms <=
-                              PMIG_WD_LONGWIN_8000_MILLISEC))
+    else if(wdgCfg.longWinDuration_ms <=
+                              PMIG_WD_LONGWIN_8000_MILLISEC)
     {
         regVal = (uint8_t)(wdgCfg.longWinDuration_ms /
                         PMIG_WD_LONGWIN_MILLISEC_DIV_125);
@@ -1529,8 +1527,7 @@ static int32_t Pmic_wdgQaSetModeRetlongwinCfgWriteAnswersLongwindow(
     if(PMIC_ST_SUCCESS == status)
     {
         status = Pmic_wdgQaWriteAnswers(pPmicCoreHandle);
-        if((PMIC_ST_SUCCESS != status) &&
-           (PMIC_ST_ERR_INV_WDG_ANSWER == status))
+        if(PMIC_ST_ERR_INV_WDG_ANSWER == status)
         {
             /* Start Critical Section */
             Pmic_criticalSectionStart(pPmicCoreHandle);
