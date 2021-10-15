@@ -47,7 +47,36 @@ uint8_t enableBenchMark = 0U;
 
 uint16_t pmic_device_info = 0U;
 
+int8_t gMissionStateTestFlag     = 0U;
+int8_t gLdoBypassModeEnTestFlag  = 0U;
+int8_t gThermalStatusTestFlag    = 0U;
+int8_t gPwrRsrcStatusTestFlag    = 0U;
+int8_t gFailCntStatTestFlag      = 0U;
+int8_t gErrorStatusTestFlag      = 0U;
+int8_t gEnableRtcTestFlag        = 0U;
+int8_t gRecoveryCntCfgTestFlag   = 0U;
+int8_t gEnableDrvPinCfgTestFlag  = 0U;
+int8_t gI2c1CrcEnableTestFlag    = 0U;
+int8_t gI2c2CrcEnableTestFlag    = 0U;
+int8_t gSpmiLpmStatTestFlag      = 0U;
+int8_t gIntrTopRegTestFlag       = 0U;
+int8_t girqGetL1RegTestFlag_Leo  = 0U;
+int8_t girqGetL2RegTestFlag_Leo  = 0U;
+int8_t girqGetL1RegTestFlag_Leo_PMICB  = 0U;
+int8_t girq1L1RegTestFlag        = 0U;
+int8_t girq2L1RegTestFlag        = 0U;
+int8_t girq1L2RegTestFlag        = 0U;
+int8_t girq2L2RegTestFlag        = 0U;
+int8_t girqGetL1RegTestFlag_Hera = 0U;
+int8_t girqGetL2RegTestFlag_Hera = 0U;
+
+int8_t gErrStatusCount      = 0U;
+int8_t gSkipErrStatusCount  = 0U;
+int8_t gFailCount           = 0U;
+int8_t gSkipFailStatusCount = 0U;
+
 Pmic_Ut_FaultInject_t gPmic_faultInjectCfg = {0U, 0U, 0U, 0U, 0U, 0U};
+int8_t gWdgErrStatusTestFlag    = 0U;
 
 /* CRC8 Table with polynomial value:0x7 */
 uint8_t crc8_tlb[] =
@@ -749,6 +778,659 @@ int32_t test_pmic_regRead(Pmic_CoreHandle_t  *pmicCorehandle,
             }
         }
 
+        if(1U == gWdgErrStatusTestFlag)
+        {
+            /* Stub test for code coverage- Set WD_ERR_STATUS bitfields */
+            if(PMIC_UT_WD_ERR_STATUS_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xA5U;
+            }
+        }
+
+        if(1U == gLdoBypassModeEnTestFlag)
+        {
+            /* Stub test for code coverage- Set 7th bit to enable Ldo bypass
+             * mode (read operation) */
+            if(PMIC_UT_LDO3_VOUT_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x80U;
+            }
+        }
+
+        if(1U == gThermalStatusTestFlag)
+        {
+            /* Stub test for code coverage- Set 3rd bit to enable Thermal warn
+             * status (read operation) */
+            if(PMIC_UT_STAT_MISC_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x8U;
+            }
+
+            /* Stub test for code coverage- Set 1st bit to enable Orderly
+             * shutdown status (read operation) */
+            if(PMIC_UT_STAT_MODERATE_ERR_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x1U;
+            }
+
+            /* Stub test for code coverage- Set 1st bit to enable Immediate
+             * shutdown status (read operation) */
+            if(PMIC_UT_STAT_SEVERE_ERR_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x1U;
+            }
+        }
+
+        if(1U == gPwrRsrcStatusTestFlag)
+        {
+            /* Stub test for code coverage- Set 1st and 3rd bit to get the
+             * status for current limit and under voltage threshold */
+            if(PMIC_UT_STAT_BUCK1_2_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xAU;
+            }
+
+            /* Stub test for code coverage- Set 2nd bit to get the status for
+             * Over voltage Level for VCCA */
+            if(PMIC_UT_STAT_SEVERE_ERR_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x2U;
+            }
+        }
+
+        if((PMIC_UT_WD_FAIL_CNT_REG_REGADDR == regAddr) && (1U == gFailCntStatTestFlag))
+        {
+            gFailCount++;
+            if(gSkipFailStatusCount == gFailCount)
+            {
+                /* Stub test for code coverage- Set 0th to 3rd bit and 6th bit
+                 *  to get the watchdog fail count status */
+                pBuf[0U] = 0x4FU;
+            }
+        }
+
+        if((PMIC_UT_WD_ERR_STATUS_REGADDR == regAddr) && (1U == gErrorStatusTestFlag))
+        {
+            gErrStatusCount++;
+            if(gSkipErrStatusCount == gErrStatusCount)
+            {
+                /* Stub test for code coverage- Set 0th to 7th bit and to get
+                 * the watchdog error status */
+                pBuf[0U] = 0xFFU;
+            }
+        }
+
+        if(1U == gEnableRtcTestFlag)
+        {
+            /* Stub test for code coverage- Set 2nd bit to start the RTC present
+             * in the PMIC */
+            if(PMIC_UT_RTC_STATUS_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x2U;
+            }
+        }
+
+        if(1U == gRecoveryCntCfgTestFlag)
+        {
+            /* Stub test for code coverage- Set 4th bit get clear Recovery
+             * Counter value */
+            if(PMIC_UT_RECOV_CNT_REG_2_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x10U;
+            }
+        }
+
+        if(1U == gEnableDrvPinCfgTestFlag)
+        {
+            /* Stub test for code coverage- Set 3rd bit to ENABLE_DRV bit is
+             *  forced low */
+            if(PMIC_UT_ENABLE_DRV_STAT_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x8U;
+            }
+        }
+
+        if(1U == gSpmiLpmStatTestFlag)
+        {
+            /* Stub test for code coverage- Set 4th bit to ENABLE SPMI LPM
+             * Control */
+            if(PMIC_UT_ENABLE_DRV_STAT_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x10U;
+            }
+        }
+
+        /* Enable Top Register */
+        if(1U == gIntrTopRegTestFlag)
+        {
+            /* Stub test for code coverage- Set All bit to get the PMIC_INT_TOP
+             * Register value */
+            if(PMIC_UT_INT_TOP_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xFFU;
+            }
+        }
+
+        /* Enable L1 Register */
+        if(1U == girqGetL1RegTestFlag_Leo)
+        {
+            /* Stub test for code coverage- Set All valid bit to get buck L1 error
+             * registers value */
+            if(PMIC_UT_INT_BUCK_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x7U;
+            }
+
+            /* Stub test for code coverage- Set All valid bit to get Ldo L1 error
+             * registers value */
+            if(PMIC_UT_INT_LDO_VMON_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x13U;
+            }
+
+            /* Stub test for code coverage- Set All valid bit to get Gpio L1 error
+             * registers value */
+            if(PMIC_UT_INT_GPIO_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xFU;
+            }
+
+            /* Stub test for code coverage- Set All valid bit to get STARTUP L1 error
+             * registers value */
+            if(PMIC_UT_INT_STARTUP_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x37U;
+            }
+
+            /* Stub test for code coverage- Set All valid bit to get MISC L1 error
+             * registers value */
+            if(PMIC_UT_INT_MISC_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xBU;
+            }
+
+            /* Stub test for code coverage- Set All bit to get MODERATE L1 error
+             * registers value */
+            if(PMIC_UT_INT_MODERATE_ERR_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xFFU;
+            }
+
+            /* Stub test for code coverage- Set All bit to get SEVERE L1 error
+             * registers value */
+            if(PMIC_UT_INT_SEVERE_ERR_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x7U;
+            }
+
+            /* Stub test for code coverage- Set All bit to get FSM L1 error
+             * registers value */
+            if(PMIC_UT_INT_FSM_ERR_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x7FU;
+            }
+        }
+
+        /* Enable L1 Register */
+        if(1U == girqGetL1RegTestFlag_Leo_PMICB)
+        {
+            /* Stub test for code coverage- Set All bit to get FSM L1 error
+             * registers value */
+            if(PMIC_UT_INT_FSM_ERR_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xFFU;
+            }
+        }
+
+        /* Enable L2 Register */
+        if(1U == girqGetL2RegTestFlag_Leo)
+        {
+            /* Stub test for code coverage- Set All valid bit to get buck5 L2 error
+             * registers value */
+            if(PMIC_UT_INT_BUCK5_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xFU;
+            }
+
+            /* Stub test for code coverage- Set All bit to get buck1_2 L2 error
+             * registers value */
+            if(PMIC_UT_INT_BUCK1_2_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xFFU;
+            }
+
+            /* Stub test for code coverage- Set All bit to get buck3_4 L2 error
+             * registers value */
+            if(PMIC_UT_INT_BUCK3_4_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xFFU;
+            }
+
+            /* Stub test for code coverage- Set All valid bit to get Vmon L1 error
+             * registers value */
+            if(PMIC_UT_INT_VMON_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x3U; // Bit ebnabled for Leo. For Hera 0xFFU
+            }
+
+            /* Stub test for code coverage- Set All valid bit to get Gpio1_8 L2 error
+             * registers value */
+            if(PMIC_UT_INT_GPIO1_8_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xFFU;
+            }
+
+            /* Stub test for code coverage- Set All valid bit to get LDO1_2 L2 error
+             * registers value */
+            if(PMIC_UT_INT_LDO1_2_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xFFU;
+            }
+
+            /* Stub test for code coverage- Set All valid bit to get LDO1_2 L2 error
+             * registers value */
+            if(PMIC_UT_INT_LDO3_4_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xFFU;
+            }
+
+            /* Stub test for code coverage- Set All valid bit to get COMM L2 error
+             * registers value */
+            if(PMIC_UT_INT_COMM_ERR_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xABU;
+            }
+
+            /* Stub test for code coverage- Set All valid bit to get READBACK L2 error
+             * registers value */
+            if(PMIC_UT_INT_READBACK_ERR_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xFU;
+            }
+
+            /* Stub test for code coverage- Set All valid bit to get READBACK L2 error
+             * registers value */
+            if(PMIC_UT_INT_ESM_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x3FU;
+            }
+
+            /* Stub test for code coverage- Set All bit to get FSM L1 error
+             * registers value */
+            if(PMIC_UT_WD_ERR_STATUS_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xC1U;
+            }
+        }
+
+        /* Enable L1 Register 1st bit */
+        if(1U == girq1L1RegTestFlag)
+        {
+            /* Stub test for code coverage- Set 1st valid bit to get buck L1 error
+             * registers value */
+            if(PMIC_UT_INT_BUCK_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x1U;
+            }
+
+            /* Stub test for code coverage- Set 1st valid bit to get Ldo L1 error
+             * registers value */
+            if(PMIC_UT_INT_LDO_VMON_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x1U;
+            }
+
+            /* Stub test for code coverage- Set 2nd bit to get Gpio L1 error
+             * registers value */
+            if(PMIC_UT_INT_GPIO_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x1U;
+            }
+
+            /* Stub test for code coverage- Set 1st bit to get MODERATE L1 error
+             * registers value */
+            if(PMIC_UT_INT_MODERATE_ERR_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x1U;
+            }
+
+            /* Stub test for code coverage- Set 1st bit to get SEVERE L1 error
+             * registers value */
+            if(PMIC_UT_INT_SEVERE_ERR_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x1U;
+            }
+
+            /* Stub test for code coverage- Set All bit to get FSM L1 error
+             * registers value */
+            if(PMIC_UT_INT_FSM_ERR_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x1U;
+            }
+        }
+
+        /* Enable L1 Register 2nd bit */
+        if(1U == girq2L1RegTestFlag)
+        {
+            /* Stub test for code coverage- Set 2nd bit to get buck L1 error
+             * registers value */
+            if(PMIC_UT_INT_BUCK_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x2U;
+            }
+
+            /* Stub test for code coverage- Set 2nd bit to get Ldo L1 error
+             * registers value */
+            if(PMIC_UT_INT_LDO_VMON_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x2U;
+            }
+
+            /* Stub test for code coverage- Set 2nd bit to get Gpio L1 error
+             * registers value */
+            if(PMIC_UT_INT_GPIO_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x2U;
+            }
+
+            /* Stub test for code coverage- Set 2nd bit to get STARTUP L1 error
+             * registers value */
+            if(PMIC_UT_INT_STARTUP_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x2U;
+            }
+
+            /* Stub test for code coverage- Set 2nd bit to get MISC L1 error
+             * registers value */
+            if(PMIC_UT_INT_MISC_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x2U;
+            }
+
+            /* Stub test for code coverage- Set 2nd bit to get MODERATE L1 error
+             * registers value */
+            if(PMIC_UT_INT_MODERATE_ERR_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x2U;
+            }
+
+            /* Stub test for code coverage- Set 2nd bit to get SEVERE L1 error
+             * registers value */
+            if(PMIC_UT_INT_SEVERE_ERR_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x2U;
+            }
+
+            /* Stub test for code coverage- Set All bit to get FSM L1 error
+             * registers value */
+            if(PMIC_UT_INT_FSM_ERR_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x2U;
+            }
+
+        }
+
+        /* Enable L2 Register 1st bit */
+        if(1U == girq1L2RegTestFlag)
+        {
+            /* Stub test for code coverage- Set 1st bit to get buck1_2 L2 error
+             * registers value */
+            if(PMIC_UT_INT_BUCK1_2_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x1U;
+            }
+
+            /* Stub test for code coverage- Set 1st bit to get buck3_4 L2 error
+             * registers value */
+            if(PMIC_UT_INT_BUCK3_4_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x1U;
+            }
+
+            /* Stub test for code coverage- Set 1st bit to get buck5 L2 error
+             * registers value */
+            if(PMIC_UT_INT_BUCK5_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x1U;
+            }
+
+            /* Stub test for code coverage- Set 1st bit to get Vmon L2 error
+             * registers value */
+            if(PMIC_UT_INT_VMON_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x1U; // Bit ebnabled for Leo. For Hera 0xFFU
+            }
+
+            /* Stub test for code coverage- Set 1st bit to get LDO1_2 L2 error
+             * registers value */
+            if(PMIC_UT_INT_LDO1_2_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x1U;
+            }
+
+            /* Stub test for code coverage- Set 1st bit to get LDO1_2 L2 error
+             * registers value */
+            if(PMIC_UT_INT_LDO3_4_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x1U;
+            }
+
+            /* Stub test for code coverage- Set 1st bit to get COMM L2 error
+             * registers value */
+            if(PMIC_UT_INT_COMM_ERR_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x1U;
+            }
+
+            /* Stub test for code coverage- Set 1st bit to get READBACK L2 error
+             * registers value */
+            if(PMIC_UT_INT_READBACK_ERR_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x1U;
+            }
+
+            /* Stub test for code coverage- Set 1st bit to get READBACK L2 error
+             * registers value */
+            if(PMIC_UT_INT_ESM_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x1U;
+            }
+
+            /* Stub test for code coverage- Set 1st bit to get FSM L2 error
+             * registers value */
+            if(PMIC_UT_WD_ERR_STATUS_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x1U;
+            }
+        }
+
+        /* Enable L2 Register 2nd bit */
+        if(1U == girq2L2RegTestFlag)
+        {
+            /* Stub test for code coverage- Set 2nd bit to get buck1_2 L2 error
+             * registers value */
+            if(PMIC_UT_INT_BUCK1_2_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x2U;
+            }
+
+            /* Stub test for code coverage- Set 2nd bit to get buck3_4 L2 error
+             * registers value */
+            if(PMIC_UT_INT_BUCK3_4_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x2U;
+            }
+
+            /* Stub test for code coverage- Set 2nd bit to get buck5 L2 error
+             * registers value */
+            if(PMIC_UT_INT_BUCK5_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x2U;
+            }
+
+            /* Stub test for code coverage- Set 2nd bit to get Vmon L2 error
+             * registers value */
+            if(PMIC_UT_INT_VMON_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x2U; // Bit ebnabled for Leo. For Hera 0xFFU
+            }
+
+            /* Stub test for code coverage- Set 2nd bit to get LDO1_2 L2 error
+             * registers value */
+            if(PMIC_UT_INT_LDO1_2_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x2U;
+            }
+
+            /* Stub test for code coverage- Set 2nd bit to get LDO1_2 L2 error
+             * registers value */
+            if(PMIC_UT_INT_LDO3_4_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x2U;
+            }
+
+            /* Stub test for code coverage- Set 2nd bit to get COMM L2 error
+             * registers value */
+            if(PMIC_UT_INT_COMM_ERR_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x2U;
+            }
+
+            /* Stub test for code coverage- Set 3rd bit to get READBACK L2 error
+             * registers value */
+            if(PMIC_UT_INT_READBACK_ERR_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x8U;
+            }
+
+            /* Stub test for code coverage- Set 2nd bit to get READBACK L2 error
+             * registers value */
+            if(PMIC_UT_INT_ESM_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x2U;
+            }
+
+            /* Stub test for code coverage- Set 6th bit to get FSM L2 error
+             * registers value */
+            if(PMIC_UT_WD_ERR_STATUS_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x40U;
+            }
+        }
+
+/* Hera Part */
+
+        if(1U == girqGetL1RegTestFlag_Hera)
+        {
+            /* Stub test for code coverage- Set All valid bit to get buck L1 error
+             * registers value */
+            if(PMIC_UT_INT_BUCK_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x3U;
+            }
+
+            /* Stub test for code coverage- Set All valid bit to get Vmon L1 error
+             * registers value */
+            if(PMIC_UT_INT_VMON_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xFFU;
+            }
+
+            /* Stub test for code coverage- Set All valid bit to get Gpio L1 error
+             * registers value */
+            if(PMIC_UT_INT_GPIO_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xBU;
+            }
+
+            /* Stub test for code coverage- Set All valid bit to get STARTUP L1 error
+             * registers value */
+            if(PMIC_UT_INT_STARTUP_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x12U;
+            }
+
+            /* Stub test for code coverage- Set All valid bit to get MISC L1 error
+             * registers value */
+            if(PMIC_UT_INT_MISC_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xBU;
+            }
+
+            /* Stub test for code coverage- Set All bit to get MODERATE L1 error
+             * registers value */
+            if(PMIC_UT_INT_MODERATE_ERR_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xDFU;
+            }
+
+            /* Stub test for code coverage- Set All bit to get SEVERE L1 error
+             * registers value */
+            if(PMIC_UT_INT_SEVERE_ERR_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x7U;
+            }
+
+            /* Stub test for code coverage- Set All bit to get FSM L1 error
+             * registers value */
+            if(PMIC_UT_INT_FSM_ERR_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xFFU;
+            }
+        }
+
+        if(1U == girqGetL2RegTestFlag_Hera)
+        {
+            /* Stub test for code coverage- Set All bit to get buck1_2 L2 error
+             * registers value */
+            if(PMIC_UT_INT_BUCK1_2_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xFFU;
+            }
+
+            /* Stub test for code coverage- Set All bit to get buck3_4 L2 error
+             * registers value */
+            if(PMIC_UT_INT_BUCK3_4_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xFFU;
+            }
+
+            /* Stub test for code coverage- Set All valid bit to get Gpio1_8 L2 error
+             * registers value */
+            if(PMIC_UT_INT_GPIO1_8_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xFFU;
+            }
+
+            /* Stub test for code coverage- Set All valid bit to get COMM L2 error
+             * registers value */
+            if(PMIC_UT_INT_COMM_ERR_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xABU;
+            }
+
+            /* Stub test for code coverage- Set All valid bit to get READBACK L2 error
+             * registers value */
+            if(PMIC_UT_INT_READBACK_ERR_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x9U;
+            }
+
+            /* Stub test for code coverage- Set All valid bit to get READBACK L2 error
+             * registers value */
+            if(PMIC_UT_INT_ESM_REGADDR == regAddr)
+            {
+                pBuf[0] = 0x38U;
+            }
+
+            /* Stub test for code coverage- Set All bit to get FSM L1 error
+             * registers value */
+            if(PMIC_UT_WD_ERR_STATUS_REGADDR == regAddr)
+            {
+                pBuf[0] = 0xC1U;
+            }
+        }
+
         /* NVM Instance */
         if(PMIC_NVM_INST == instType)
         {
@@ -758,6 +1440,24 @@ int32_t test_pmic_regRead(Pmic_CoreHandle_t  *pmicCorehandle,
             if(ret != I2C_STS_SUCCESS)
             {
                 return PMIC_ST_ERR_I2C_COMM_FAIL;
+            }
+
+            if(1U == gI2c1CrcEnableTestFlag)
+            {
+                /* Stub test for code coverage */
+                if(0x1AU == regAddr)
+                {
+                    pBuf[0] = 0x2U;
+                }
+            }
+
+            if(1U == gI2c2CrcEnableTestFlag)
+            {
+                /* Stub test for code coverage */
+                if(0x1AU == regAddr)
+                {
+                    pBuf[0] = 0x4U;
+                }
             }
         }
     }
@@ -834,6 +1534,33 @@ int32_t test_pmic_regWrite(Pmic_CoreHandle_t  *pmicCorehandle,
 
         dataBuff[0U] = regAddr;
         memcpy(&dataBuff[1U], pBuf, bufLen);
+
+        if(1U == gMissionStateTestFlag)
+        {
+            /* Stub test for code coverage- configure dataBuff[1U] value as 0x3
+             * while configuring the PMIC statue as S2R/MCU state
+             */
+            if(PMIC_UT_FSM_NSLEEP_TRIGGERS_REGADDR == regAddr)
+            {
+                dataBuff[1U] = 3U;
+            }
+            /* Stub test for code coverage- avoid i2c1 trigger (write operation)
+             * while configuring the PMIC state as Standby and LPstandby state */
+            if(PMIC_UT_FSM_I2C_TRIGGERS_REGADDR == regAddr)
+            {
+                return PMIC_ST_SUCCESS;
+            }
+        }
+
+        if(1U == gLdoBypassModeEnTestFlag)
+        {
+            /* Stub test for code coverage- avoid Ldo bypass mode enable
+             * (write operation) */
+            if(PMIC_UT_LDO3_VOUT_REGADDR == regAddr)
+            {
+                return PMIC_ST_SUCCESS;
+            }
+        }
 
         /* Control Byte followed by write bit */
         transaction.writeBuf     = dataBuff;

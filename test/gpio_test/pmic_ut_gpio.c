@@ -49,6 +49,17 @@ extern int32_t gCrcTestFlag_J7VCL;
 volatile uint32_t pmic_intr_triggered;
 extern Pmic_Ut_FaultInject_t gPmic_faultInjectCfg;
 
+extern int8_t gIntrTopRegTestFlag;
+extern int8_t girqGetL1RegTestFlag_Leo;
+extern int8_t girqGetL2RegTestFlag_Leo;
+extern int8_t girqGetL1RegTestFlag_Leo_PMICB;
+extern int8_t girq1L1RegTestFlag;
+extern int8_t girq2L1RegTestFlag;
+extern int8_t girq1L2RegTestFlag;
+extern int8_t girq2L2RegTestFlag;
+extern int8_t girqGetL1RegTestFlag_Hera;
+extern int8_t girqGetL2RegTestFlag_Hera;
+
 /*!
  * \brief   PMIC GPIO Test Cases
  */
@@ -414,64 +425,136 @@ static Pmic_Ut_Tests_t pmic_gpio_tests[] =
         "Pmic_irqGetMaskIntrStatus: Parameter validation for pMaskStatus"
     },
     {
-        1,
+        10558,
         "Pmic_gpioGetNPwronEnablePinConfiguration : Parameter validation for pGpioCfg"
     },
     {
-        2,
+        10559,
         "Pmic_gpioSetNPwronEnablePinConfiguration : Test to set/get Pin function as PMIC_TPS6594X_NPWRON_PINFUNC_NONE"
     },
     {
-        4,
+        10560,
         "Pmic_gpioSetNPwronEnablePinConfiguration : Test to set/get Pin polarity for Enable Pin"
     },
     {
-        5,
+        10561,
         "Pmic_gpioSetConfiguration : Test to set/get GPIO pullup/pull down control configuration"
     },
     {
-        7,
+        10562,
         "Pmic_gpioSetConfiguration : Test to set/get signal deglitch time enable configuration"
     },
     {
-        8,
+        10563,
         "Pmic_gpioSetIntr : Test to verify GPIO1 disable Interrupt"
     },
     {
-        10,
+        10564,
         "Pmic_gpioSetConfiguration : Parameter validation for pullCtrl"
     },
     {
-        11,
+        10565,
         "Pmic_gpioSetNPwronEnablePinConfiguration : Test to set/get nPWRON/Enable pull up control configuration"
     },
     {
-        13,
+        10566,
         "Pmic_gpioSetNPwronEnablePinConfiguration : Parameter validation for pPmicCoreHandle"
     },
     {
-        16,
+        10567,
         "Pmic_gpioGetNPwronEnablePinConfiguration : Parameter validation for pPmicCoreHandle"
     },
     {
-        18,
+        10568,
         "Pmic_gpioSetNPwronEnablePinConfiguration : Test to set/get signal deglitch time enable configuration"
     },
     {
-        19,
+        10569,
         "Pmic_gpioSetNPwronEnablePinConfiguration : Parameter Validation for deglitchEnable for NPwronEnablePin"
     },
     {
-        20,
+        10570,
         "Pmic_gpioSetNPwronEnablePinConfiguration : Parameter Validation for pullCtrlfor NPwronEnablePin"
     },
     {
-        21,
+        10571,
         "Pmic_gpioSetConfiguration : Parameter validation for pin for Min Value"
     },
     {
-        22,
+        10572,
         "Pmic_gpioSetNPwronEnablePinConfiguration : Test to set/get Invalid validParams"
+    },
+    {
+        10753,
+        "Pmic_irqGetMaskIntrStatus: Parameter validation for irqNum"
+    },
+    {
+        10754,
+        "Pmic_irqClrErrStatus: Parameter validation for handle"
+    },
+    {
+        10755,
+        "Pmic_irqClrErrStatus: Parameter validation for irqNum"
+    },
+    {
+        10756,
+        "Pmic_irqGetErrStatus: Parameter validation for handle"
+    },
+    {
+        10757,
+        "Pmic_irqGetErrStatus: Parameter validation for pErrStat"
+    },
+    {
+        10758,
+        "Pmic_irqMaskIntr: Parameter validation for handle"
+    },
+    {
+        10759,
+        "Pmic_getNextErrorStatus: Parameter validation for handle"
+    },
+    {
+        10760,
+        "Pmic_getNextErrorStatus: Parameter validation for pErrStat"
+    },
+    {
+        10761,
+        "Pmic_getNextErrorStatus: Parameter validation for pIrqNum"
+    },
+    {
+        10762,
+        "Pmic_getNextErrorStatus: Test to check for error Status intStatus[0], intStatus[2]and intStatus[3] not equal to zero"
+    },
+    {
+        10763,
+        "Pmic_irqGpioMaskIntr: Parameter validation for handle"
+    },
+    {
+        10764,
+        "Pmic_irqGpioMaskIntr: Parameter validation for irqGpioNum"
+    },
+    {
+        10765,
+        "Pmic_irqGpioMaskIntr: Parameter validation for gpioIntrType"
+    },
+    {
+        10766,
+        "Pmic_irqGpioMaskIntr: Parameter validation for irqGpioNum on Hera device type"
+    },
+    {
+        10767,
+        "Pmic_irqGetGpioMaskIntr: Parameter validation for irqGpioNum"
+    },
+    {
+        10768,
+        "Pmic_irqGetGpioMaskIntr: Parameter validation for gpioIntrType"
+    },
+    {
+        10769,
+        "Pmic_irqGetGpioMaskIntr: Parameter validation for irqGpioNum on Hera device type"
+    },
+    {
+        10770,
+        "Pmic_irqGpioMaskIntr: Test for Masking All GPIO Interrupts for Leo device type check - Code covrage"
     },
     {
         8852,
@@ -6274,7 +6357,7 @@ static void test_pmic_gpio_nPWRON_getCfgPrmValTest_pGpioCfg(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(1,
+    test_pmic_print_unity_testcase_info(10558,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
@@ -6282,7 +6365,7 @@ static void test_pmic_gpio_nPWRON_getCfgPrmValTest_pGpioCfg(void)
                                                           NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(1,
+    pmic_testResultUpdate_pass(10558,
                                pmic_gpio_tests,
                                PMIC_GPIO_NUM_OF_TESTCASES);
 }
@@ -6305,13 +6388,13 @@ static void test_pmic_gpio_nPWRON_setCfg_pinFunc(void)
     };
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT};
 
-    test_pmic_print_unity_testcase_info(2,
+    test_pmic_print_unity_testcase_info(10559,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
     {
-        pmic_testResultUpdate_ignore(2,
+        pmic_testResultUpdate_ignore(10559,
                                      pmic_gpio_tests,
                                      PMIC_GPIO_NUM_OF_TESTCASES);
     }
@@ -6325,7 +6408,7 @@ static void test_pmic_gpio_nPWRON_setCfg_pinFunc(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     TEST_ASSERT_EQUAL(gpioCfg.pinFunc, gpioCfg_rd.pinFunc);
 
-    pmic_testResultUpdate_pass(2,
+    pmic_testResultUpdate_pass(10559,
                                pmic_gpio_tests,
                                PMIC_GPIO_NUM_OF_TESTCASES);
 }
@@ -6348,7 +6431,7 @@ static void test_pmic_gpio_enable_setCfg_pinPolarity(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(4,
+    test_pmic_print_unity_testcase_info(10560,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
@@ -6361,7 +6444,7 @@ static void test_pmic_gpio_enable_setCfg_pinPolarity(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     TEST_ASSERT_EQUAL(gpioCfg.pinPolarity, gpioCfg_rd.pinPolarity);
 
-    pmic_testResultUpdate_pass(4,
+    pmic_testResultUpdate_pass(10560,
                                pmic_gpio_tests,
                                PMIC_GPIO_NUM_OF_TESTCASES);
 }
@@ -6384,7 +6467,7 @@ static void test_pmic_gpio_setCfg_pullCtrl(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(5,
+    test_pmic_print_unity_testcase_info(10561,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
@@ -6412,7 +6495,7 @@ static void test_pmic_gpio_setCfg_pullCtrl(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     TEST_ASSERT_EQUAL(gpioCfg.pullCtrl, gpioCfg_rd.pullCtrl);
 
-    pmic_testResultUpdate_pass(5,
+    pmic_testResultUpdate_pass(10561,
                                pmic_gpio_tests,
                                PMIC_GPIO_NUM_OF_TESTCASES);
 }
@@ -6435,7 +6518,7 @@ static void test_pmic_gpio_setCfg_deglitchTime(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(7,
+    test_pmic_print_unity_testcase_info(10562,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
@@ -6446,7 +6529,7 @@ static void test_pmic_gpio_setCfg_deglitchTime(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     TEST_ASSERT_EQUAL(gpioCfg.deglitchEnable, gpioCfg_rd.deglitchEnable);
 
-    pmic_testResultUpdate_pass(7,
+    pmic_testResultUpdate_pass(10562,
                                pmic_gpio_tests,
                                PMIC_GPIO_NUM_OF_TESTCASES);
 }
@@ -6460,7 +6543,7 @@ static void test_pmic_gpio1_testDisable_interrupt(void)
     bool riseIntrMaskStat, fallIntrMaskStat;
     uint8_t      irqGpioNum;
 
-    test_pmic_print_unity_testcase_info(8,
+    test_pmic_print_unity_testcase_info(10563,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
@@ -6492,7 +6575,7 @@ static void test_pmic_gpio1_testDisable_interrupt(void)
     TEST_ASSERT_EQUAL(riseIntrMaskStat, PMIC_IRQ_MASK);
     TEST_ASSERT_EQUAL(fallIntrMaskStat, PMIC_IRQ_MASK);
 
-    pmic_testResultUpdate_pass(8,
+    pmic_testResultUpdate_pass(10563,
                                pmic_gpio_tests,
                                PMIC_GPIO_NUM_OF_TESTCASES);
 }
@@ -6514,14 +6597,14 @@ static void test_pmic_gpio_setCfgPrmValTest_pullCtrl(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(10,
+    test_pmic_print_unity_testcase_info(10564,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, 1U, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(10,
+    pmic_testResultUpdate_pass(10564,
                                pmic_gpio_tests,
                                PMIC_GPIO_NUM_OF_TESTCASES);
 }
@@ -6544,13 +6627,13 @@ static void test_pmic_gpio_nPWRON_setCfg_pullCtrl(void)
     };
     Pmic_GpioCfg_t gpioCfg_rd = {PMIC_GPIO_CFG_PULL_VALID_SHIFT};
 
-    test_pmic_print_unity_testcase_info(11,
+    test_pmic_print_unity_testcase_info(10565,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
     {
-        pmic_testResultUpdate_ignore(11,
+        pmic_testResultUpdate_ignore(10565,
                                      pmic_gpio_tests,
                                      PMIC_GPIO_NUM_OF_TESTCASES);
     }
@@ -6564,7 +6647,7 @@ static void test_pmic_gpio_nPWRON_setCfg_pullCtrl(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     TEST_ASSERT_EQUAL(gpioCfg.pullCtrl, gpioCfg_rd.pullCtrl);
 
-    pmic_testResultUpdate_pass(11,
+    pmic_testResultUpdate_pass(10565,
                                pmic_gpio_tests,
                                PMIC_GPIO_NUM_OF_TESTCASES);
 }
@@ -6586,14 +6669,14 @@ static void test_pmic_gpio_nPWRON_setCfgPrmValTest_handle(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(13,
+    test_pmic_print_unity_testcase_info(10566,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_gpioSetNPwronEnablePinConfiguration(NULL, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
 
-    pmic_testResultUpdate_pass(13,
+    pmic_testResultUpdate_pass(10566,
                                pmic_gpio_tests,
                                PMIC_GPIO_NUM_OF_TESTCASES);
 }
@@ -6606,14 +6689,14 @@ static void test_pmic_gpio_nPWRON_getCfgPrmValTest_handle(void)
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
     Pmic_GpioCfg_t gpioCfg_rd = {0U};
 
-    test_pmic_print_unity_testcase_info(16,
+    test_pmic_print_unity_testcase_info(10567,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_gpioGetNPwronEnablePinConfiguration(NULL, &gpioCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
 
-    pmic_testResultUpdate_pass(16,
+    pmic_testResultUpdate_pass(10567,
                                pmic_gpio_tests,
                                PMIC_GPIO_NUM_OF_TESTCASES);
 }
@@ -6637,13 +6720,13 @@ static void test_pmic_gpio_nPWRON_setCfg_deglitchTime(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(18,
+    test_pmic_print_unity_testcase_info(10568,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
     {
-        pmic_testResultUpdate_ignore(18,
+        pmic_testResultUpdate_ignore(10568,
                                      pmic_gpio_tests,
                                      PMIC_GPIO_NUM_OF_TESTCASES);
     }
@@ -6657,7 +6740,7 @@ static void test_pmic_gpio_nPWRON_setCfg_deglitchTime(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     TEST_ASSERT_EQUAL(gpioCfg.deglitchEnable, gpioCfg_rd.deglitchEnable);
 
-    pmic_testResultUpdate_pass(18,
+    pmic_testResultUpdate_pass(10568,
                                pmic_gpio_tests,
                                PMIC_GPIO_NUM_OF_TESTCASES);
 }
@@ -6679,13 +6762,13 @@ static void test_pmic_gpio_nPWRON_setCfgPrmValTest_deglitchEnable(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(19,
+    test_pmic_print_unity_testcase_info(10569,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
     {
-        pmic_testResultUpdate_ignore(19,
+        pmic_testResultUpdate_ignore(10569,
                                      pmic_gpio_tests,
                                      PMIC_GPIO_NUM_OF_TESTCASES);
     }
@@ -6694,7 +6777,7 @@ static void test_pmic_gpio_nPWRON_setCfgPrmValTest_deglitchEnable(void)
                                                           gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(19,
+    pmic_testResultUpdate_pass(10569,
                                pmic_gpio_tests,
                                PMIC_GPIO_NUM_OF_TESTCASES);
 }
@@ -6716,13 +6799,13 @@ static void test_pmic_gpio_nPWRON_setCfgPrmValTest_pullCtrl(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(20,
+    test_pmic_print_unity_testcase_info(10570,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
     if(J7VCL_HERA_PMICB_DEVICE == pmic_device_info)
     {
-        pmic_testResultUpdate_ignore(20,
+        pmic_testResultUpdate_ignore(10570,
                                      pmic_gpio_tests,
                                      PMIC_GPIO_NUM_OF_TESTCASES);
     }
@@ -6730,7 +6813,7 @@ static void test_pmic_gpio_nPWRON_setCfgPrmValTest_pullCtrl(void)
     pmicStatus = Pmic_gpioSetNPwronEnablePinConfiguration(pPmicCoreHandle, gpioCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(20,
+    pmic_testResultUpdate_pass(10570,
                                pmic_gpio_tests,
                                PMIC_GPIO_NUM_OF_TESTCASES);
 }
@@ -6753,14 +6836,14 @@ static void test_pmic_gpio_setCfgPrmValTest_pin_minVal(void)
         PMIC_GPIO_HIGH
     };
 
-    test_pmic_print_unity_testcase_info(21,
+    test_pmic_print_unity_testcase_info(10571,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_gpioSetConfiguration(pPmicCoreHandle, pin, gpioCfg);
     TEST_ASSERT_EQUAL(pmicStatus, PMIC_ST_ERR_INV_PARAM);
 
-    pmic_testResultUpdate_pass(21,
+    pmic_testResultUpdate_pass(10571,
                                pmic_gpio_tests,
                                PMIC_GPIO_NUM_OF_TESTCASES);
 }
@@ -6784,7 +6867,7 @@ static void test_pmic_gpio_nPWRON_setCfg_validParams(void)
     };
     Pmic_GpioCfg_t gpioCfg_rd = {0x40};
 
-    test_pmic_print_unity_testcase_info(22,
+    test_pmic_print_unity_testcase_info(10572,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
 
@@ -6796,7 +6879,465 @@ static void test_pmic_gpio_nPWRON_setCfg_validParams(void)
                                                           &gpioCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmic_testResultUpdate_pass(22,
+    pmic_testResultUpdate_pass(10572,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_irqGetMaskIntrStatus: Parameter validation for irqNum
+ */
+static void test_pmic_irqGetMaskIntrStatusPrmValTst_irqNum(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    bool  irqMaskStatus;
+
+    test_pmic_print_unity_testcase_info(10753,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    /* Masking All Interrupts */
+    pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                  PMIC_IRQ_ALL,
+                                  PMIC_IRQ_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* Get Mask status of IRQ Interrupt */
+    pmicStatus = Pmic_irqGetMaskIntrStatus(pPmicCoreHandle,
+                                           90U,
+                                           &irqMaskStatus);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(10753,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_irqClrErrStatus: Parameter validation for handle
+ */
+static void test_pmic_irqClrErrStatusPrmValTst_handle(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    uint8_t  irqNum           = 0U;
+
+    test_pmic_print_unity_testcase_info(10754,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    /* Clear the interrupt */
+    pmicStatus = Pmic_irqClrErrStatus(NULL, irqNum);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(10754,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_irqClrErrStatus: Parameter validation for irqNum
+ */
+static void test_pmic_irqClrErrStatusPrmValTst_irqNum(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(10755,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    /* Clear the interrupt */
+    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, 90U);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(10755,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_irqGetErrStatus: Parameter validation for handle
+ */
+static void test_pmic_irqGetErrStatusPrmValTst_handle(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    bool clearIRQ             = false;
+    Pmic_IrqStatus_t errStat  = {0U};
+
+    test_pmic_print_unity_testcase_info(10756,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(NULL, &errStat, clearIRQ);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(10756,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_irqGetErrStatus: Parameter validation for pErrStat
+ */
+static void test_pmic_irqGetErrStatusPrmValTst_pErrStat(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    bool clearIRQ             = false;
+
+    test_pmic_print_unity_testcase_info(10757,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, NULL, clearIRQ);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(10757,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_irqMaskIntr: Parameter validation for handle
+ */
+static void test_pmic_irqMaskIntrPrmValTst_handle(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(10758,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    /* Masking All Interrupts */
+    pmicStatus = Pmic_irqMaskIntr(NULL, PMIC_IRQ_ALL, PMIC_IRQ_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(10758,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getNextErrorStatus: Parameter validation for handle
+ */
+static void test_pmic_getNextErrorStatusPrmValTst_handle(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_IrqStatus_t errStat  = {0U};
+    uint8_t  irqNum           = 0U;
+
+    test_pmic_print_unity_testcase_info(10759,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getNextErrorStatus(NULL, &errStat, &irqNum);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(10759,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getNextErrorStatus: Parameter validation for pErrStat
+ */
+static void test_pmic_getNextErrorStatusPrmValTst_pErrStat(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    uint8_t  irqNum           = 0U;
+
+    test_pmic_print_unity_testcase_info(10760,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle, NULL, &irqNum);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(10760,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getNextErrorStatus: Parameter validation for pIrqNum
+ */
+static void test_pmic_getNextErrorStatusPrmValTst_pIrqNum(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_IrqStatus_t errStat  = {0U};
+
+    test_pmic_print_unity_testcase_info(10761,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle, &errStat, NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(10761,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_getNextErrorStatus: Test to check for error Status
+ *          intStatus[0], intStatus[2] and intStatus[3] not equal to zero
+ */
+static void test_pmic_getNextErrorStatus_intStat0_intStat3(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_IrqStatus_t errStat  = {0U};
+    uint8_t  irqNum           = 0U;
+
+    test_pmic_print_unity_testcase_info(10762,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    errStat.intStatus[0] = 1U;
+    pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle, &errStat, &irqNum);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    errStat.intStatus[2] = 1U;
+    pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle, &errStat, &irqNum);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    errStat.intStatus[3] = 1U;
+    pmicStatus = Pmic_getNextErrorStatus(pPmicCoreHandle, &errStat, &irqNum);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(10762,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_irqGpioMaskIntr: Parameter validation for handle
+ */
+static void test_pmic_irqGpioMaskIntrPrmValTst_handle(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(10763,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    /* Masking All GPIO Interrupts */
+    pmicStatus = Pmic_irqGpioMaskIntr(NULL,
+                                      PMIC_IRQ_GPIO_ALL_INT_MASK_NUM,
+                                      PMIC_IRQ_MASK,
+                                      PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
+
+    pmic_testResultUpdate_pass(10763,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_irqGpioMaskIntr: Parameter validation for irqGpioNum
+ */
+static void test_pmic_irqGpioMaskIntrPrmValTst_irqGpioNum(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(10764,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    /* Masking All GPIO Interrupts */
+    pmicStatus = Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                                      13U,
+                                      PMIC_IRQ_MASK,
+                                      PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(10764,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_irqGpioMaskIntr: Parameter validation for gpioIntrType
+ */
+static void test_pmic_irqGpioMaskIntrPrmValTst_gpioIntrType(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(10765,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    /* Masking All GPIO Interrupts */
+    pmicStatus = Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                                      PMIC_IRQ_GPIO_ALL_INT_MASK_NUM,
+                                      PMIC_IRQ_MASK,
+                                      0x3U);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(10765,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_irqGpioMaskIntr: Parameter validation for irqGpioNum on Hera device type
+ */
+static void test_pmic_irqGpioMaskIntrPrmValTst_irqGpioNum_hera(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(10766,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(10766,
+                                     pmic_gpio_tests,
+                                     PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    /* Masking All GPIO Interrupts */
+    pmicStatus = Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                                      PMIC_TPS6594X_IRQ_GPIO_11_INT_MASK_NUM,
+                                      PMIC_IRQ_MASK,
+                                      PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(10766,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_irqGetGpioMaskIntr: Parameter validation for irqGpioNum
+ */
+static void test_pmic_irqGetGpioMaskIntrPrmValTst_irqGpioNum(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    bool     riseIntrMaskStat, fallIntrMaskStat;
+
+    test_pmic_print_unity_testcase_info(10767,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    /* Masking All GPIO Interrupts */
+    pmicStatus = Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                                      PMIC_IRQ_GPIO_ALL_INT_MASK_NUM,
+                                      PMIC_IRQ_MASK,
+                                      PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* Get Mask status of Gpio Interrupt */
+    pmicStatus = Pmic_irqGetGpioMaskIntr(pPmicCoreHandle,
+                                         13U,
+                                         PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE,
+                                         &riseIntrMaskStat,
+                                         &fallIntrMaskStat);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(10767,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_irqGetGpioMaskIntr: Parameter validation for gpioIntrType
+ */
+static void test_pmic_irqGetGpioMaskIntrPrmValTst_gpioIntrType(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    bool     riseIntrMaskStat, fallIntrMaskStat;
+
+    test_pmic_print_unity_testcase_info(10768,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    /* Masking All GPIO Interrupts */
+    pmicStatus = Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                                      PMIC_IRQ_GPIO_ALL_INT_MASK_NUM,
+                                      PMIC_IRQ_MASK,
+                                      PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* Get Mask status of Gpio Interrupt */
+    pmicStatus = Pmic_irqGetGpioMaskIntr(pPmicCoreHandle,
+                                         PMIC_IRQ_GPIO_ALL_INT_MASK_NUM,
+                                         0x3U,
+                                         &riseIntrMaskStat,
+                                         &fallIntrMaskStat);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(10768,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_irqGetGpioMaskIntr: Parameter validation for irqGpioNum on Hera device type
+ */
+static void test_pmic_irqGetGpioMaskIntrPrmValTst_irqGpioNum_hera(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    bool     riseIntrMaskStat, fallIntrMaskStat;
+
+    test_pmic_print_unity_testcase_info(10769,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(10769,
+                                     pmic_gpio_tests,
+                                     PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    /* Masking All GPIO Interrupts */
+    pmicStatus = Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                                      PMIC_IRQ_GPIO_ALL_INT_MASK_NUM,
+                                      PMIC_IRQ_MASK,
+                                      PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* Get Mask status of Gpio Interrupt */
+    pmicStatus = Pmic_irqGetGpioMaskIntr(pPmicCoreHandle,
+                                         PMIC_TPS6594X_IRQ_GPIO_11_INT_MASK_NUM,
+                                         PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE,
+                                         &riseIntrMaskStat,
+                                         &fallIntrMaskStat);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    pmic_testResultUpdate_pass(10769,
+                               pmic_gpio_tests,
+                               PMIC_GPIO_NUM_OF_TESTCASES);
+}
+
+/*!
+ * \brief   Pmic_irqGpioMaskIntr: Test for Masking All GPIO Interrupts for
+ *          Leo device type check - Code covrage
+ */
+static void test_pmic_irqGpioMaskIntr_deviceType_leo(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+
+    test_pmic_print_unity_testcase_info(10770,
+                                        pmic_gpio_tests,
+                                        PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pmic_testResultUpdate_ignore(10770,
+                                     pmic_gpio_tests,
+                                     PMIC_GPIO_NUM_OF_TESTCASES);
+    }
+
+    /* Masking All GPIO Interrupts */
+    pmicStatus = Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                                      PMIC_TPS6594X_IRQ_GPIO_11_INT_MASK_NUM,
+                                      PMIC_IRQ_MASK,
+                                      PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmic_testResultUpdate_pass(10770,
                                pmic_gpio_tests,
                                PMIC_GPIO_NUM_OF_TESTCASES);
 }
@@ -6809,6 +7350,11 @@ static void test_pmic_gpio_coverageGaps(void)
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t pinValue = 0U;
     uint8_t pmicDeviceType;
+    uint8_t  irqNum           = 0U;
+    bool clearIRQ             = false;
+    bool  irqMaskStatus;
+    bool  riseIntrMaskStat, fallIntrMaskStat;
+    Pmic_IrqStatus_t errStat  = {0U};
     Pmic_GpioCfg_t gpioCfg_rd = {0U};
     Pmic_GpioCfg_t gpioCfg =
     {
@@ -6824,6 +7370,13 @@ static void test_pmic_gpio_coverageGaps(void)
     test_pmic_print_unity_testcase_info(8852,
                                         pmic_gpio_tests,
                                         PMIC_GPIO_NUM_OF_TESTCASES);
+
+    if(PMIC_INTF_SPI == pPmicCoreHandle->commMode)
+    {
+        pmic_testResultUpdate_ignore(8852,
+                                     pmic_gpio_tests,
+                                     PMIC_GPIO_NUM_OF_TESTCASES);
+    }
 
     //Fault Injection Tests:
     Pmic_GpioCfg_t gpioCfg_ft =
@@ -6971,7 +7524,446 @@ static void test_pmic_gpio_coverageGaps(void)
     pmicStatus = Pmic_gpioGetConfiguration(pPmicCoreHandle, 1U, &gpioCfg_rd);
     TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
 
-    gPmic_faultInjectCfg.enableFaultInjectionRead = 0U;
+    //Pmic_irqGpioMask
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    pmicStatus = Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                                      11U,
+                                      PMIC_IRQ_MASK,
+                                      PMIC_IRQ_GPIO_RISE_INT_TYPE);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+    //Pmic_irqGpioMask
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    pmicStatus = Pmic_irqGpioMaskIntr(pPmicCoreHandle,
+                                      11U,
+                                      PMIC_IRQ_MASK,
+                                      PMIC_IRQ_GPIO_FALL_INT_TYPE);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+    //Pmic_irqClear
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        irqNum = PMIC_TPS6594X_GPIO1_INT;
+    }
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        irqNum = PMIC_LP8764X_GPIO1_INT;
+    }
+    pmicStatus = Pmic_irqClrErrStatus(pPmicCoreHandle, irqNum);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+    //Pmic_irqGetErrStatus
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+    if((PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev) &&
+       (J721E_LEO_PMICB_DEVICE != pmic_device_info))
+    {
+        gIntrTopRegTestFlag  = 1U;
+        girqGetL1RegTestFlag_Leo = 1U;
+        girqGetL2RegTestFlag_Leo = 1U;
+        //Pmic_irqGetErrStatus
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 2;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+        gIntrTopRegTestFlag  = 0U;
+        girqGetL1RegTestFlag_Leo = 0U;
+        girqGetL2RegTestFlag_Leo = 0U;
+    }
+
+    //Pmic_getIrqGpioMaskStatus
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    pmicStatus = Pmic_irqGetGpioMaskIntr(pPmicCoreHandle,
+                                         8U,
+                                         PMIC_IRQ_GPIO_RISE_INT_TYPE,
+                                         &riseIntrMaskStat,
+                                         &fallIntrMaskStat);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+    //Pmic_getIrqGpioMaskStatus
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    pmicStatus = Pmic_irqGetGpioMaskIntr(pPmicCoreHandle,
+                                         8U,
+                                         PMIC_IRQ_GPIO_FALL_INT_TYPE,
+                                         &riseIntrMaskStat,
+                                         &fallIntrMaskStat);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+    //Pmic_getIrqMaskStatus
+    pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                  24U,
+                                  PMIC_IRQ_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    pmicStatus = Pmic_irqGetMaskIntrStatus(pPmicCoreHandle, 24U, &irqMaskStatus);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+    //Pmic_irqMask
+    gPmic_faultInjectCfg.readCount = 0;
+    gPmic_faultInjectCfg.skipReadCount = 1;
+    pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
+                                  24U,
+                                  PMIC_IRQ_MASK);
+    TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+    if((PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev) &&
+       (PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType))
+    {
+        //Pmic_tps6594x_getBuck1Buck2Err
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 20;
+        gIntrTopRegTestFlag  = 1U;
+        girqGetL1RegTestFlag_Leo = 1U;
+        girqGetL2RegTestFlag_Leo = 1U;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+        //Pmic_tps6594x_getBuck3Buck4Err
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 19;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        //Pmic_tps6594x_getBuck5Err
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 18;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        //Pmic_tps6594x_getLdoVmonErr
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 16;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+        //Pmic_tps6594x_getLdo3Ldo4Err
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 15;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        //Pmic_tps6594x_getLdo1Ldo2Err
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 14;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        //Pmic_tps6594x_getGpioErr
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 12;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+        //Pmic_tps6594x_getStartupErr
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 10;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+        //Pmic_tps6594x_getFsmEsmErr
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 5;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        //Pmic_tps6594x_getFsmReadbackErr
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 4;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        //Pmic_tps6594x_getFsmCommErr
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 3;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        gIntrTopRegTestFlag  = 0U;
+        girqGetL1RegTestFlag_Leo = 0U;
+        girqGetL2RegTestFlag_Leo = 0U;
+    }
+
+    if((PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev) &&
+       (J721E_LEO_PMICB_DEVICE == pmic_device_info))
+    {
+        //Pmic_lp8764x_getFSMErr
+        gIntrTopRegTestFlag      = 1U;
+        girqGetL1RegTestFlag_Leo_PMICB = 1U;
+        girqGetL2RegTestFlag_Leo = 1U;
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 6;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+        gIntrTopRegTestFlag      = 0U;
+        girqGetL1RegTestFlag_Leo_PMICB = 0U;
+        girqGetL2RegTestFlag_Leo = 0U;
+    }
+
+    if((PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev) &&
+       (PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType))
+    {
+        gIntrTopRegTestFlag  = 1U;
+        girqGetL1RegTestFlag_Hera = 1U;
+        girqGetL2RegTestFlag_Hera = 1U;
+        //Pmic_lp8764x_getFSMErr
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 6;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+        //Pmic_lp8764x_getFsmReadbackEsmErr
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 5;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        //Pmic_lp8764x_getFsmReadbackEsmErr
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 4;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        //Pmic_lp8764x_getFsmCommErr
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 3;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        //Pmic_lp8764x_getGpioErr
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 12;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+        //Pmic_lp8764x_getBuck3Buck4Err
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 15;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        //Pmic_lp8764x_getBuck1Buck2Err
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 16;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+        gIntrTopRegTestFlag  = 0U;
+        girqGetL1RegTestFlag_Hera = 0U;
+        girqGetL2RegTestFlag_Hera = 0U;
+    }
+
+        gPmic_faultInjectCfg.enableFaultInjectionRead = 0U;
+
+    //Pmic_maskIntr
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        irqNum = PMIC_TPS6594X_GPIO8_INT;
+    }
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        irqNum = PMIC_LP8764X_GPIO8_INT;
+    }
+    pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle, irqNum, PMIC_IRQ_MASK);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_FAIL, pmicStatus);
+
+    //Pmic_getMaskIntrStatus
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        irqNum = PMIC_TPS6594X_GPIO8_INT;
+    }
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        irqNum = PMIC_LP8764X_GPIO8_INT;
+    }
+    pmicStatus = Pmic_irqGetMaskIntrStatus(pPmicCoreHandle, irqNum, &irqMaskStatus);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_FAIL, pmicStatus);
+
+    if((PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev) &&
+       (PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType))
+    {
+        /* Enable top register, L1 Register and L2 Register */
+        gIntrTopRegTestFlag      = 1U;
+        girqGetL1RegTestFlag_Leo = 1U;
+        girqGetL2RegTestFlag_Leo = 1U;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        gIntrTopRegTestFlag      = 0U;
+        girqGetL1RegTestFlag_Leo = 0U;
+        girqGetL2RegTestFlag_Leo = 0U;
+
+        /* Enable top register and L1 Register */
+        gIntrTopRegTestFlag      = 1U;
+        girqGetL1RegTestFlag_Leo = 1U;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        gIntrTopRegTestFlag      = 0U;
+        girqGetL1RegTestFlag_Leo = 0U;
+
+        /* Enable top register, L1 Register and 1st bit of L2 register */
+        gIntrTopRegTestFlag      = 1U;
+        girqGetL1RegTestFlag_Leo = 1U;
+        girq1L2RegTestFlag         = 1U;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        gIntrTopRegTestFlag      = 0U;
+        girqGetL1RegTestFlag_Leo = 0U;
+        girq1L2RegTestFlag         = 0U;
+
+        /* Enable top register, L1 Register and 2nd bit of L2 register */
+        gIntrTopRegTestFlag      = 1U;
+        girqGetL1RegTestFlag_Leo = 1U;
+        girq2L2RegTestFlag         = 1U;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        gIntrTopRegTestFlag      = 0U;
+        girqGetL1RegTestFlag_Leo = 0U;
+        girq2L2RegTestFlag         = 0U;
+
+        /* Enable top register and 1st bit of L1 register */
+        gIntrTopRegTestFlag      = 1U;
+        girq1L1RegTestFlag         = 1U;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        gIntrTopRegTestFlag      = 0U;
+        girq1L1RegTestFlag         = 0U;
+
+        /* Enable top register and 2nd bit of L1 register */
+        gIntrTopRegTestFlag      = 1U;
+        girq2L1RegTestFlag         = 1U;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        gIntrTopRegTestFlag      = 0U;
+        girq2L1RegTestFlag         = 0U;
+
+        /* Enable top register, L1 register and 2nd bit of L2 register */
+        gIntrTopRegTestFlag      = 1U;
+        girqGetL1RegTestFlag_Leo = 1U;
+        girq1L2RegTestFlag         = 1U;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        gIntrTopRegTestFlag      = 0U;
+        girqGetL1RegTestFlag_Leo = 0U;
+        girq1L2RegTestFlag         = 0U;
+
+        /* Enable top register, L1 register and 2nd bit of L2 register */
+        gIntrTopRegTestFlag      = 1U;
+        girqGetL1RegTestFlag_Leo = 1U;
+        girq2L2RegTestFlag         = 1U;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        gIntrTopRegTestFlag      = 0U;
+        girqGetL1RegTestFlag_Leo = 0U;
+        girq2L2RegTestFlag         = 0U;
+    }
+
+    if((PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev) &&
+       (J721E_LEO_PMICB_DEVICE == pmic_device_info))
+    {
+        /* Enable top register L1 Register and all bit of wdg status Register */
+        gIntrTopRegTestFlag      = 1U;
+        girqGetL1RegTestFlag_Leo_PMICB = 1U;
+        girqGetL2RegTestFlag_Leo = 1U;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        gIntrTopRegTestFlag      = 0U;
+        girqGetL1RegTestFlag_Leo_PMICB = 0U;
+        girqGetL2RegTestFlag_Leo = 0U;
+
+        /* Enable top register, L1 Register and 1st bit of wdg status Register */
+        gIntrTopRegTestFlag      = 1U;
+        girqGetL1RegTestFlag_Leo_PMICB = 1U;
+        girq1L2RegTestFlag = 1U;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        gIntrTopRegTestFlag      = 0U;
+        girqGetL1RegTestFlag_Leo_PMICB = 0U;
+        girq1L2RegTestFlag = 0U;
+
+        /* Enable top register, L1 Register and 6th bit of wdg status Register */
+        gIntrTopRegTestFlag      = 1U;
+        girqGetL1RegTestFlag_Leo_PMICB = 1U;
+        girq2L2RegTestFlag = 1U;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        gIntrTopRegTestFlag      = 0U;
+        girqGetL1RegTestFlag_Leo_PMICB = 0U;
+        girq2L2RegTestFlag = 0U;
+
+        /* Enable top register and L1 Register */
+        gIntrTopRegTestFlag      = 1U;
+        girqGetL1RegTestFlag_Leo_PMICB = 1U;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        gIntrTopRegTestFlag      = 0U;
+        girqGetL1RegTestFlag_Leo_PMICB = 0U;
+    }
+
+    if((PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev) &&
+       (PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType))
+    {
+        /* Enable top register, L1 Register and L2 Register */
+        gIntrTopRegTestFlag       = 1U;
+        girqGetL1RegTestFlag_Hera = 1U;
+        girqGetL2RegTestFlag_Hera = 1U;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        gIntrTopRegTestFlag       = 0U;
+        girqGetL1RegTestFlag_Hera = 0U;
+        girqGetL2RegTestFlag_Hera = 0U;
+
+        /* Enable top register and L1 Register */
+        gIntrTopRegTestFlag       = 1U;
+        girqGetL1RegTestFlag_Hera = 1U;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        gIntrTopRegTestFlag       = 0U;
+        girqGetL1RegTestFlag_Hera = 0U;
+
+        /* Enable top register, L1 Register and 1st bit of L2 register */
+        gIntrTopRegTestFlag       = 1U;
+        girqGetL1RegTestFlag_Hera = 1U;
+        girq1L2RegTestFlag = 1U;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        gIntrTopRegTestFlag       = 0U;
+        girqGetL1RegTestFlag_Hera = 0U;
+        girq1L2RegTestFlag = 0U;
+
+        /* Enable top register, L1 Register and 2nd bit of L2 register */
+        gIntrTopRegTestFlag      = 1U;
+        girqGetL1RegTestFlag_Hera = 1U;
+        girq2L2RegTestFlag         = 1U;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        gIntrTopRegTestFlag      = 0U;
+        girqGetL1RegTestFlag_Hera = 0U;
+        girq2L2RegTestFlag         = 0U;
+
+        /* Enable top register and 1st bit of L1 register */
+        gIntrTopRegTestFlag      = 1U;
+        girq1L1RegTestFlag         = 1U;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        gIntrTopRegTestFlag      = 0U;
+        girq1L1RegTestFlag         = 0U;
+
+        /* Enable top register,and 2nd bit of L1 register */
+        gIntrTopRegTestFlag      = 1U;
+        girq2L1RegTestFlag         = 1U;
+        pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, clearIRQ);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        gIntrTopRegTestFlag      = 0U;
+        girq2L1RegTestFlag         = 0U;
+    }
 
     Pmic_DevSubSysInfo_t pmicDevSubSysInfo =
     {
@@ -8196,6 +9188,24 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_gpio_nPWRON_setCfgPrmValTest_pullCtrl);
     RUN_TEST(test_pmic_gpio_setCfgPrmValTest_pin_minVal);
     RUN_TEST(test_pmic_gpio_nPWRON_setCfg_validParams);
+    RUN_TEST(test_pmic_irqGetMaskIntrStatusPrmValTst_irqNum);
+    RUN_TEST(test_pmic_irqClrErrStatusPrmValTst_handle);
+    RUN_TEST(test_pmic_irqClrErrStatusPrmValTst_irqNum);
+    RUN_TEST(test_pmic_irqGetErrStatusPrmValTst_handle);
+    RUN_TEST(test_pmic_irqGetErrStatusPrmValTst_pErrStat);
+    RUN_TEST(test_pmic_irqMaskIntrPrmValTst_handle);
+    RUN_TEST(test_pmic_getNextErrorStatusPrmValTst_handle);
+    RUN_TEST(test_pmic_getNextErrorStatusPrmValTst_pErrStat);
+    RUN_TEST(test_pmic_getNextErrorStatusPrmValTst_pIrqNum);
+    RUN_TEST(test_pmic_getNextErrorStatus_intStat0_intStat3);
+    RUN_TEST(test_pmic_irqGpioMaskIntrPrmValTst_handle);
+    RUN_TEST(test_pmic_irqGpioMaskIntrPrmValTst_irqGpioNum);
+    RUN_TEST(test_pmic_irqGpioMaskIntrPrmValTst_gpioIntrType);
+    RUN_TEST(test_pmic_irqGpioMaskIntrPrmValTst_irqGpioNum_hera);
+    RUN_TEST(test_pmic_irqGetGpioMaskIntrPrmValTst_irqGpioNum);
+    RUN_TEST(test_pmic_irqGetGpioMaskIntrPrmValTst_gpioIntrType);
+    RUN_TEST(test_pmic_irqGetGpioMaskIntrPrmValTst_irqGpioNum_hera);
+    RUN_TEST(test_pmic_irqGpioMaskIntr_deviceType_leo);
     RUN_TEST(test_pmic_gpio_coverageGaps);
 
     pmic_updateTestResults(pmic_gpio_tests, PMIC_GPIO_NUM_OF_TESTCASES);
@@ -8520,11 +9530,6 @@ static void test_pmic_run_testcases_manual(uint32_t board)
             return;
         }
 
-        if(menuOption == 4)
-        {
-            break;
-        }
-
         switch(menuOption)
         {
 #if !(defined(SOC_J7200) && (defined(BUILD_MCU2_0) || defined(BUILD_MCU2_1)))
@@ -8543,6 +9548,9 @@ static void test_pmic_run_testcases_manual(uint32_t board)
             case 3U :
                 RUN_TEST(test_gpio4_fallInterrupt_clrAllIrqTest);
                 break;
+            case 4U:
+                pmic_log(" \r\n Back to Test Menu options\n");
+                return;
             default:
                pmic_log(" \r\n Invalid option... Try Again!!!\n");
                break;
@@ -8747,7 +9755,7 @@ static void test_pmic_gpio_testapp_run_options(int8_t option)
 #else
                 pmic_log("\nInvalid Board!!!\n");
 #endif
-                break;
+                return;
             case 7U:
 #if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
@@ -8769,7 +9777,7 @@ static void test_pmic_gpio_testapp_run_options(int8_t option)
 #else
                 pmic_log("\nInvalid Board!!!\n");
 #endif
-                break;
+                return;
             case 8U:
                 pmic_log(" \r\n Back to Test Menu options\n");
                 return;

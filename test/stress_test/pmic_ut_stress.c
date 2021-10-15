@@ -1110,11 +1110,6 @@ static void test_pmic_run_testcases_manual(uint32_t board)
             return;
         }
 
-        if(menuOption == 2)
-        {
-            break;
-        }
-
         switch(menuOption)
         {
             case 0U:
@@ -1123,6 +1118,9 @@ static void test_pmic_run_testcases_manual(uint32_t board)
             case 1U:
                 RUN_TEST(test_pmic_rtc_stressTestTimerAsyncIntr);
                 break;
+            case 2U:
+                pmic_log(" \r\n Back to Test Menu options\n");
+                return;
             default:
                pmic_log(" \r\n Invalid option... Try Again!!!\n");
                break;
@@ -1297,7 +1295,7 @@ static void test_pmic_stress_testapp_run_options(int8_t option)
 #else
                 pmic_log("\nInvalid Board!!!\n");
 #endif
-                break;
+                return;
            case 5U:
 #if defined(SOC_J7200)
                 if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
@@ -1319,7 +1317,7 @@ static void test_pmic_stress_testapp_run_options(int8_t option)
 #else
                 pmic_log("\nInvalid Board!!!\n");
 #endif
-                break;
+                return;
             case 6U:
                 pmic_log(" \r\n Back to Test Menu options\n");
                 return;

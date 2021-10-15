@@ -308,35 +308,35 @@ static Pmic_Ut_Tests_t pmic_esm_tests[] =
          "Pmic_esmGetStatus: Negative test to verify ESM SOC Get Status for HERA"
      },
      {
-         0,
+         10550,
           "Pmic_esmSetInterrupt : Test to disable PMIC ESM SOC Mode PIN, FAIL, RST Interrupts"
      },
      {
-         1,
+         10551,
           "Pmic_esmSetConfiguration : Parameter validation for ESM HMAX Value"
      },
      {
-         2,
+         10552,
           "Pmic_esmSetConfiguration : Parameter validation for ESM HMIN Value"
      },
      {
-         3,
-          "Pmic_esmSetConfiguration : Parameter validation for ESM LMIN Value"
-     },
-     {
-         4,
+         10553,
           "Pmic_esmSetConfiguration : Parameter validation for ESM LMAX Value"
      },
      {
-         5,
+         10554,
+          "Pmic_esmSetConfiguration : Parameter validation for ESM LMIN Value"
+     },
+     {
+         10555,
           "Pmic_esmSetConfiguration : Test to Disable DRV clear configuration"
      },
      {
-         6,
+         10556,
           "Pmic_esmSetConfiguration : Parameter validation for ValidParams"
      },
      {
-         7,
+         10557,
           "Pmic_esmGetConfiguration : Parameter validation for ValidParams"
      },
      {
@@ -3131,7 +3131,7 @@ static void test_pmic_esm_setInterrupt_esmSocAllIntrDisabled(void)
     };
     bool maskStatus;
 
-    test_pmic_print_unity_testcase_info(0,
+    test_pmic_print_unity_testcase_info(10550,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -3160,7 +3160,7 @@ static void test_pmic_esm_setInterrupt_esmSocAllIntrDisabled(void)
 
     }
 
-    pmic_testResultUpdate_pass(0,
+    pmic_testResultUpdate_pass(10550,
                                pmic_esm_tests,
                                PMIC_ESM_NUM_OF_TESTCASES);
 }
@@ -3186,7 +3186,7 @@ static void test_pmic_esm_setConfigurationPrmValTest_hmaxValue(void)
         PMIC_ESM_LEVEL_MODE
     };
 
-    test_pmic_print_unity_testcase_info(1,
+    test_pmic_print_unity_testcase_info(10551,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -3195,7 +3195,7 @@ static void test_pmic_esm_setConfigurationPrmValTest_hmaxValue(void)
     pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_ESM_VAL, pmicStatus);
 
-    pmic_testResultUpdate_pass(1,
+    pmic_testResultUpdate_pass(10551,
                                pmic_esm_tests,
                                PMIC_ESM_NUM_OF_TESTCASES);
 }
@@ -3221,7 +3221,7 @@ static void test_pmic_esm_setConfigurationPrmValTest_hminValue(void)
         PMIC_ESM_LEVEL_MODE
     };
 
-    test_pmic_print_unity_testcase_info(2,
+    test_pmic_print_unity_testcase_info(10552,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -3230,7 +3230,7 @@ static void test_pmic_esm_setConfigurationPrmValTest_hminValue(void)
     pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_ESM_VAL, pmicStatus);
 
-    pmic_testResultUpdate_pass(2,
+    pmic_testResultUpdate_pass(10552,
                                pmic_esm_tests,
                                PMIC_ESM_NUM_OF_TESTCASES);
 }
@@ -3256,7 +3256,7 @@ static void test_pmic_esm_setConfigurationPrmValTest_lmaxValue(void)
         PMIC_ESM_LEVEL_MODE
     };
 
-    test_pmic_print_unity_testcase_info(3,
+    test_pmic_print_unity_testcase_info(10553,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -3265,7 +3265,7 @@ static void test_pmic_esm_setConfigurationPrmValTest_lmaxValue(void)
     pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_ESM_VAL, pmicStatus);
 
-    pmic_testResultUpdate_pass(3,
+    pmic_testResultUpdate_pass(10553,
                                pmic_esm_tests,
                                PMIC_ESM_NUM_OF_TESTCASES);
 }
@@ -3291,7 +3291,7 @@ static void test_pmic_esm_setConfigurationPrmValTest_lminValue(void)
         PMIC_ESM_LEVEL_MODE
     };
 
-    test_pmic_print_unity_testcase_info(4,
+    test_pmic_print_unity_testcase_info(10554,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -3300,7 +3300,7 @@ static void test_pmic_esm_setConfigurationPrmValTest_lminValue(void)
     pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_ESM_VAL, pmicStatus);
 
-    pmic_testResultUpdate_pass(4,
+    pmic_testResultUpdate_pass(10554,
                                pmic_esm_tests,
                                PMIC_ESM_NUM_OF_TESTCASES);
 }
@@ -3327,7 +3327,7 @@ static void test_pmic_esm_setConfiguration_disableDrvClear(void)
         PMIC_ESM_LEVEL_MODE
     };
 
-    test_pmic_print_unity_testcase_info(5,
+    test_pmic_print_unity_testcase_info(10555,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
@@ -3339,7 +3339,7 @@ static void test_pmic_esm_setConfiguration_disableDrvClear(void)
 
     TEST_ASSERT_EQUAL(esmCfg.esmEnDrv, esmCfg_rd.esmEnDrv);
 
-    pmic_testResultUpdate_pass(5,
+    pmic_testResultUpdate_pass(10555,
                                pmic_esm_tests,
                                PMIC_ESM_NUM_OF_TESTCASES);
 }
@@ -3365,14 +3365,14 @@ static void test_pmic_esm_setconfiguration_PrmValTest_validParams(void)
         PMIC_ESM_LEVEL_MODE
     };
 
-    test_pmic_print_unity_testcase_info(6,
+    test_pmic_print_unity_testcase_info(10556,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle, esmType, esmCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INSUFFICIENT_CFG, pmicStatus);
 
-    pmic_testResultUpdate_pass(6,
+    pmic_testResultUpdate_pass(10556,
                                pmic_esm_tests,
                                PMIC_ESM_NUM_OF_TESTCASES);
 }
@@ -3386,14 +3386,14 @@ static void test_pmic_esm_getconfiguration_PrmValTest_validParams(void)
     bool esmType       = PMIC_ESM_MODE_MCU;
     Pmic_EsmCfg_t esmCfg_rd = {0U};
 
-    test_pmic_print_unity_testcase_info(7,
+    test_pmic_print_unity_testcase_info(10557,
                                         pmic_esm_tests,
                                         PMIC_ESM_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_esmGetConfiguration(pPmicCoreHandle, esmType, &esmCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INSUFFICIENT_CFG, pmicStatus);
 
-    pmic_testResultUpdate_pass(7,
+    pmic_testResultUpdate_pass(10557,
                                pmic_esm_tests,
                                PMIC_ESM_NUM_OF_TESTCASES);
 }

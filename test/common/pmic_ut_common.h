@@ -181,6 +181,107 @@ extern uint8_t startup_type;
 #define PMIC_TEST_RESULT_IGNORE          2U /* For Ignored tests */
 
 /*!
+ * \brief   PMIC FSM NSLEEP TRIGGER Register Address
+ */
+#define PMIC_UT_FSM_NSLEEP_TRIGGERS_REGADDR  (0x86U)
+
+/*!
+ * \brief   PMIC FSM I2C TRIGGER Register Address
+ */
+#define PMIC_UT_FSM_I2C_TRIGGERS_REGADDR     (0x85U)
+
+/*!
+ * \brief  PMIC Watch Dog Register Offsets
+ */
+#define PMIC_UT_WD_ERR_STATUS_REGADDR        (0x8U)
+#define PMIC_UT_WD_FAIL_CNT_REG_REGADDR      (0xAU)
+
+/*!
+ * \brief  LDO voltage selection Register Address
+ */
+#define PMIC_UT_LDO3_VOUT_REGADDR            (0x25U)
+
+/*!
+ * \brief  PMIC Power status Register Address
+ */
+#define PMIC_UT_STAT_MISC_REGADDR            (0x74U)
+#define PMIC_UT_STAT_MODERATE_ERR_REGADDR    (0x75U)
+#define PMIC_UT_STAT_SEVERE_ERR_REGADDR      (0x76U)
+
+/*!
+ * \brief  PMIC Power status Register Address
+ */
+#define PMIC_UT_STAT_BUCK1_2_REGADDR         (0x6DU)
+
+/*!
+ * \brief  INT_STARTUP Sources
+ */
+#define PMIC_UT_RTC_STATUS_REGADDR           (0xC4U)
+
+/*!
+ * \brief: PMIC Recovery Counter Control and Status Registers
+ */
+#define PMIC_UT_RECOV_CNT_REG_2_REGADDR      (0x84U)
+
+/*!
+ * \brief  PMIC ENABLE_DRV_STAT register Addresses
+ */
+#define PMIC_UT_ENABLE_DRV_STAT_REGADDR      (0x82U)
+
+
+/*!
+ * \brief  Interrupt Hierarchy Level 0 Register offsets
+ */
+#define PMIC_UT_INT_TOP_REGADDR              (0x5AU)
+
+/*!
+ *  \brief  PMIC Interrupt Hierarchy Level 1 Register offsets
+ */
+#define PMIC_UT_INT_BUCK_REGADDR             (0x5BU)
+#define PMIC_UT_INT_GPIO_REGADDR             (0x63U)
+#define PMIC_UT_INT_STARTUP_REGADDR          (0x65U)
+#define PMIC_UT_INT_MISC_REGADDR             (0x66U)
+#define PMIC_UT_INT_MODERATE_ERR_REGADDR     (0x67U)
+#define PMIC_UT_INT_SEVERE_ERR_REGADDR       (0x68U)
+#define PMIC_UT_INT_FSM_ERR_REGADDR          (0x69U)
+
+/*!
+ *  \brief  PMIC Interrupt Hierarchy Level 1 Register offsets.
+ */
+#define PMIC_UT_INT_LDO_VMON_REGADDR         (0x5FU)
+
+/** Interrupt Hierarchy Level 2 Register offsets */
+/*!
+ * \brief  INT_BUCK Sources
+ */
+#define PMIC_UT_INT_BUCK5_REGADDR            (0x5EU)
+#define PMIC_UT_INT_BUCK1_2_REGADDR          (0x5CU)
+#define PMIC_UT_INT_BUCK3_4_REGADDR          (0x5DU)
+
+/*!
+ * \brief  INT_GPIO Sources
+ */
+#define PMIC_UT_INT_GPIO1_8_REGADDR          (0x64U)
+
+/*!
+ * \brief  INT_LDO_VMON Sources
+ */
+#define PMIC_UT_INT_VMON_REGADDR             (0x62U)
+
+/*!
+ * \brief  Interrupt MASK registers address
+ */
+#define PMIC_UT_INT_LDO1_2_REGADDR           (0x60U)
+#define PMIC_UT_INT_LDO3_4_REGADDR           (0x61U)
+
+/*!
+ * \brief  INT_FSM sources
+ */
+#define PMIC_UT_INT_COMM_ERR_REGADDR         (0x6AU)
+#define PMIC_UT_INT_READBACK_ERR_REGADDR     (0x6BU)
+#define PMIC_UT_INT_ESM_REGADDR              (0x6CU)
+
+/*!
  *  \brief    Define the Pmic UT test interface
  *
  *  \param   testId              Test ID

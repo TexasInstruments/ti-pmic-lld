@@ -46,6 +46,10 @@ extern uint16_t pmic_device_info;
 extern int32_t gCrcTestFlag_J721E;
 extern int32_t gCrcTestFlag_J7VCL;
 
+extern int8_t gLdoBypassModeEnTestFlag;
+extern int8_t gThermalStatusTestFlag;
+extern int8_t gPwrRsrcStatusTestFlag;
+
 extern Pmic_Ut_FaultInject_t gPmic_faultInjectCfg;
 
 /*!
@@ -853,299 +857,299 @@ static Pmic_Ut_Tests_t pmic_power_tests[] =
         "Pmic_powerGetPwrResourceCfg : Negative test Get Switch peak current limit for BUCK 5"
     },
     {
-        0,
+        10622,
         "Pmic_powerGetThermalConfig : Parameter validation for pThermalThreshold"
     },
     {
-        1,
+        10623,
         "Pmic_powerGetPwrRsrcStat : Parameter validation for pPwrRsrcStatCfg"
     },
     {
-        2,
+        10624,
         "Pmic_powerGetConfigPowerGood : Parameter validation for pPgoodSelType"
     },
     {
-        3,
+        10625,
         "Pmic_powerGetCommonConfig : Parameter validation for pPowerCommonCfg"
     },
     {
-        4,
+        10626,
         "Pmic_powerSetPwrResourceCfg : Negative test for ldoRvTimeoutSel configuration on Hera"
     },
     {
-        5,
+        10627,
         "Pmic_powerSetPwrResourceCfg : Negative test for Buck2 pwmMpMode configuration"
     },
     {
-        6,
+        10628,
         "Pmic_powerSetPwrResourceCfg : Negative test for Ldo4 bypass mode configuration"
     },
     {
-        7,
+        10629,
         "Pmic_powerSetIntr : Parameter Validation of intrType"
     },
     {
-        8,
+        10630,
         "Pmic_powerSetPwrResourceCfg : Test to set Power good high threshold level for Buck1"
     },
     {
-        9,
+        10631,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for powerGoodOvThr"
     },
     {
-        10,
+        10632,
         "Pmic_powerSetPwrResourceCfg : Test to set Power good low threshold level for Buck1"
     },
     {
-        11,
+        10633,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for powerGoodUvThr"
     },
     {
-        12,
+        10635,
         "Pmic_powerGetPwrRsrcStat : Parameter validation for ILIM status pwrResource"
     },
     {
-        13,
+        10636,
         "Pmic_powerGetPwrRsrcStat : Parameter validation for for VCCA OV LVL status pwrResource"
     },
     {
-        17,
+        10637,
         "Pmic_powerGetCommonConfig : Negative test for deglitchTimeSel on Leo"
     },
     {
-        18,
+        10638,
         "Pmic_powerSetCommonConfig : Negative test for deglitchTimeSel on Leo"
     },
     {
-        19,
+        10639,
         "Pmic_powerGetPwrResourceCfg : Parameter validation for vccaPwrGudLvl pwrResource"
     },
     {
-        20,
+        10640,
         "Pmic_powerGetPwrResourceCfg : Parameter validation for vmonRange pwrResource"
     },
     {
-        21,
+        10641,
         "Pmic_powerGetPwrResourceCfg : Parameter validation for buckCurrentLimit pwrResource"
     },
     {
-        22,
+        10642,
         "Pmic_powerGetPwrResourceCfg : Parameter validation for buckVmonSlewRate pwrResource"
     },
     {
-        23,
+        10643,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for residual voltage checking pwrResource"
     },
     {
-        24,
+        10644,
         "Pmic_powerGetPwrResourceCfg : Parameter validation for residual voltage checking pwrResource"
     },
     {
-        25,
+        10646,
         "Pmic_powerGetPwrResourceCfg : Parameter validation for buckPullDownEn pwrResource"
     },
     {
-        26,
+        10647,
         "Pmic_powerGetPwrResourceCfg : Parameter validation for buckVoutSel pwrResource"
     },
     {
-        27,
+        10648,
         "Pmic_powerGetPwrResourceCfg : Parameter validation for buckFpwmMode pwrResource"
     },
     {
-        28,
+        10649,
         "Pmic_powerGetPwrResourceCfg : Parameter validation for buckFpwmMpMode pwrResource"
     },
     {
-        29,
+        10650,
         "Pmic_powerGetPwrResourceCfg : Parameter validation for regulatorEn pwrResource"
     },
     {
-        30,
+        10651,
         "Pmic_powerGetPwrResourceCfg : Parameter validation for ldoPullDownSel pwrResource"
     },
     {
-        31,
+        10652,
         "Pmic_powerSetPwrResourceCfg : Parameter range validation for buckCurrentLimit min value"
     },
     {
-        32,
+        10653,
         "Pmic_powerGetPwrResourceCfg : Parameter validation for ldoBypassModeEn pwrResource"
     },
     {
-        33,
+        10654,
         "Pmic_powerGetPwrResourceCfg : Parameter validation for ldoRvTimeoutSel pwrResource"
     },
     {
-        34,
+        10655,
         "Pmic_powerGetPwrResourceCfg : Parameter validation for voltage_mV pwrResource"
     },
     {
-        35,
+        10656,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for voltage_mV as 599mv min Value"
     },
     {
-        36,
+        10657,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for voltage_mV as 1099mv"
     },
     {
-        37,
+        10658,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for voltage_mV as 1659mV max Value"
     },
     {
-        38,
+        10659,
         "Pmic_powerSetPwrResourceCfg : Negative test for ldoSlowRampEn configuration on PG1.0 Silicon Revision"
     },
     {
-        39,
+        10660,
         "Pmic_powerSetLdoRtc : Parameter validation for handle"
     },
     {
-        40,
+        10661,
         "Pmic_powerGetLdoRtc : Parameter validation for handle"
     },
     {
-        41,
+        10662,
         "Pmic_powerGetLdoRtc : Parameter validation for pLdortcEnable"
     },
     {
-        42,
+        10663,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for min voltage level for buck"
     },
     {
-        43,
+        10664,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for max voltage level for buck"
     },
     {
-        44,
+        10665,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for min voltage level for ldo"
     },
     {
-        45,
+        10666,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for power resource type"
     },
     {
-        46,
+        10667,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for Buck Max Value Power Resource limit"
     },
     {
-        47,
+        10668,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for Buck Min Value Power Resource limit"
     },
     {
-        48,
+        10669,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for LDO and VMON Min Value Power Resource limit"
     },
     {
-        49,
+        10670,
         "Pmic_powerSetPwrRsrcIntr :  Parameter validation for interrupt type pwrResource"
     },
     {
-        50,
+        10671,
         "Pmic_powerSetConfigPowerGood : Parameter validation for TDIE WARN pgoodSelType"
     },
     {
-        51,
+        10672,
         "Pmic_powerSetConfigPowerGood : Parameter validation for threshold voltage and current limit pgoodSelType"
     },
     {
-        52,
+        10673,
         "Pmic_powerSetConfigPowerGood : Parameter validation for NRSTOUT pgoodSelType"
     },
     {
-        53,
+        10674,
         "Pmic_powerSetConfigPowerGood : Parameter validation for NRSTOUT_SOC pgoodSelType"
     },
     {
-        54,
+        10675,
         "Pmic_powerSetConfigPowerGood : Parameter validation for VCCA/VMON Enable pgoodSelType"
     },
     {
-        55,
+        10676,
         "Pmic_powerGetLdoRtc : Negative test to get pLdortcEnable configuration on HERA"
     },
     {
-        56,
+        10677,
         "Pmic_powerSetConfigPowerGood : Parameter validation for Buck power good source max value"
     },
     {
-        57,
+        10678,
         "Pmic_powerSetConfigPowerGood : Parameter validation for Buck power good source min value"
     },
     {
-        58,
+        10679,
         "Pmic_powerSetConfigPowerGood : Parameter validation for VMON power good source max value"
     },
     {
-        59,
+        10680,
         "Pmic_powerSetConfigPowerGood : Parameter validation for VMON power good source min value"
     },
     {
-        60,
+        10681,
         "Pmic_powerSetConfigPowerGood : Parameter validation for LDO power good source max value"
     },
     {
-        61,
+        10682,
         "Pmic_powerSetConfigPowerGood : Parameter validation for LDO power good source min value"
     },
     {
-        62,
+        10683,
         "Pmic_powerSetConfigPowerGood : Parameter validation for NRSTOUT power good source"
     },
     {
-        63,
+        10684,
         "Pmic_powerSetConfigPowerGood : Parameter validation for NRSTOUT_SOC power good source"
     },
     {
-        64,
+        10685,
         "Pmic_powerSetConfigPowerGood : Parameter validation for TDIE_WARN power good source"
     },
     {
-        65,
+        10686,
         "Pmic_powerSetConfigPowerGood : Parameter validation for VCCA power good source"
     },
     {
-        66,
+        10687,
         "Pmic_powerSetConfigPowerGood : Parameter validation for power good source"
     },
     {
-        67,
+        10688,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for power Resource for rvCheckEn"
     },
     {
-        68,
+        10689,
         "Pmic_powerSetPwrResourceCfg : Test to set vmonRange as PMIC_LP8764X_VMON_RANGE_3V35_5V and voltage_mV as 3350mV "
     },
     {
-        69,
+        10690,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for voltage_mV when vmonRange as 0V3_3V34 and voltage_mV as 299 mV min Val"
     },
     {
-        70,
+        10691,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for voltage_mV when vmonRange as 0V3_3V34 and voltage_mV as 3341U mV max Val"
     },
     {
-        71,
+        10692,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for voltage_mV when vmonRange as 3V35_5V and voltage_mV as 3349 mV min Val"
     },
     {
-        72,
+        10693,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for voltage_mV when vmonRange as 3V35_5V and voltage_mV as 5001 mV max Val"
     },
     {
-        73,
+        10694,
         "Pmic_powerSetPwrResourceCfg : Parameter validation for vccaPwrGudLvl power resource"
     },
     {
-        74,
+        10695,
         "Pmic_powerGetPwrResourceCfg : Negative for ldoSlowRampEn configuration on PG1.0 Silicon Revision"
     },
     {
-        75,
-        "Pmic_powerSetPwrResourceCfg : Parameter range validation for voltage_mV as (min value+1) "
+        10696,
+        "Pmic_powerSetPwrResourceCfg : Parameter range validation for voltage_mV min value"
     },
     {
-        76,
+        10697,
         "Pmic_powerTests : Fault Injection and Coverage Gaps"
     },
 };
@@ -4031,6 +4035,14 @@ static void test_pmic_powerSetPowerResourceConfig_voltage_mV(void)
     test_pmic_print_unity_testcase_info(7181,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
+
+    if((J721E_LEO_PMICB_DEVICE == pmic_device_info) &&
+       (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev))
+    {
+        pmic_testResultUpdate_ignore(7181,
+                                     pmic_power_tests,
+                                     PMIC_POWER_NUM_OF_TESTCASES);
+    }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
@@ -13002,7 +13014,7 @@ static void test_pmic_powerGetThermalConfig_thermalShutdownThold(void)
                                      PMIC_POWER_NUM_OF_TESTCASES);
     }
 
-    thermalThreshold.thermalShutdownThold = 
+    thermalThreshold.thermalShutdownThold =
                                         PMIC_TPS6594X_THERMAL_TEMP_TSD_ORD_145C;
 
     pmicStatus = Pmic_powerGetThermalConfig(pPmicCoreHandle, &thermalThreshold);
@@ -13093,14 +13105,14 @@ static void test_pmic_powerGetThermalConfigPrmValTest_pThermalThreshold(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(0,
+    test_pmic_print_unity_testcase_info(10622,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_powerGetThermalConfig(pPmicCoreHandle, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(0,
+    pmic_testResultUpdate_pass(10622,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -13115,7 +13127,7 @@ static void test_pmic_powerGetPwrRsrcStatPrmValTest_pPwrRsrcStatCfg(void)
     uint16_t pwrResource;
     uint16_t pwrRsrcMin, pwrRsrcMax;
 
-    test_pmic_print_unity_testcase_info(1,
+    test_pmic_print_unity_testcase_info(10623,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -13138,7 +13150,7 @@ static void test_pmic_powerGetPwrRsrcStatPrmValTest_pPwrRsrcStatCfg(void)
         TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
     }
 
-    pmic_testResultUpdate_pass(1,
+    pmic_testResultUpdate_pass(10623,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -13151,7 +13163,7 @@ static void test_pmic_powerGetConfigPowerGoodPrmValTest_pPgoodSelType(void)
     int32_t  pmicStatus = PMIC_ST_SUCCESS;
     uint16_t pgoodSrcSel;
 
-    test_pmic_print_unity_testcase_info(2,
+    test_pmic_print_unity_testcase_info(10624,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -13169,7 +13181,7 @@ static void test_pmic_powerGetConfigPowerGoodPrmValTest_pPgoodSelType(void)
                                               NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(2,
+    pmic_testResultUpdate_pass(10624,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -13181,14 +13193,14 @@ static void test_pmic_powerGetCommonConfigPrmValTest_pPowerCommonCfg(void)
 {
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(3,
+    test_pmic_print_unity_testcase_info(10625,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
     pmicStatus = Pmic_powerGetCommonConfig(pPmicCoreHandle, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(3,
+    pmic_testResultUpdate_pass(10625,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -13206,13 +13218,13 @@ static void test_pmic_powerGetCommonConfigPrmValTest_pPowerCommonCfg(void)
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(4,
+    test_pmic_print_unity_testcase_info(10626,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-         pmic_testResultUpdate_ignore(4,
+         pmic_testResultUpdate_ignore(10626,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
     }
@@ -13227,7 +13239,7 @@ static void test_pmic_powerGetCommonConfigPrmValTest_pPowerCommonCfg(void)
         TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
     }
 
-    pmic_testResultUpdate_pass(4,
+    pmic_testResultUpdate_pass(10626,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -13245,7 +13257,7 @@ static void test_pmic_powerSetPwrResourceCfg_buck2PwmMpMode(void)
         PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(5,
+    test_pmic_print_unity_testcase_info(10627,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -13266,7 +13278,7 @@ static void test_pmic_powerSetPwrResourceCfg_buck2PwmMpMode(void)
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(5,
+    pmic_testResultUpdate_pass(10627,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -13284,7 +13296,7 @@ static void test_pmic_powerSetPwrResourceCfg_ldo4ByPassMode(void)
         PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(6,
+    test_pmic_print_unity_testcase_info(10628,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -13295,7 +13307,7 @@ static void test_pmic_powerSetPwrResourceCfg_ldo4ByPassMode(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        pmic_testResultUpdate_ignore(6,
+        pmic_testResultUpdate_ignore(10628,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
     }
@@ -13305,7 +13317,7 @@ static void test_pmic_powerSetPwrResourceCfg_ldo4ByPassMode(void)
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(6,
+    pmic_testResultUpdate_pass(10628,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -13320,7 +13332,7 @@ static void test_pmic_powerSetIntrPrmValTest_intrType(void)
     bool intrEnable;
 
     intrEnable = PMIC_POWER_INTERRUPT_ENABLE;
-    test_pmic_print_unity_testcase_info(7,
+    test_pmic_print_unity_testcase_info(10629,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -13328,7 +13340,7 @@ static void test_pmic_powerSetIntrPrmValTest_intrType(void)
     pmicStatus = Pmic_powerSetIntr(pPmicCoreHandle, intrType, intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(7,
+    pmic_testResultUpdate_pass(10629,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -13344,32 +13356,34 @@ static void test_pmic_powerSetPwrResourceCfg_pgOvThresholdLvl(void)
     {
         PMIC_CFG_PWR_RESOURCE_PG_OV_THRESHOLD_LVL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc;
-
-    Pmic_PowerResourceCfg_t pPowerCfg   =
+    Pmic_PowerResourceCfg_t powerCfg_default =
     {
         PMIC_CFG_PWR_RESOURCE_PG_OV_THRESHOLD_LVL_VALID_SHIFT,
     };
+    uint16_t pwrRsrc;
 
-    test_pmic_print_unity_testcase_info(8,
+    test_pmic_print_unity_testcase_info(10630,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        pPowerCfg.pgOvThresholdLvl = PMIC_LP8764X_PG_OV_UV_THRESHOLD_LVL_100_OR_10;
         pwrRsrc = PMIC_LP8764X_REGULATOR_BUCK1;
     }
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        pPowerCfg.pgOvThresholdLvl = PMIC_TPS6594X_PG_OV_UV_THRESHOLD_LVL_50_OR_5;
         pwrRsrc = PMIC_TPS6594X_REGULATOR_BUCK1;
     }
 
+    pmicStatus = Pmic_powerGetPwrResourceCfg(pPmicCoreHandle,
+                                             pwrRsrc,
+                                             &powerCfg_default);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
     pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
                                              pwrRsrc,
-                                             pPowerCfg);
+                                             powerCfg_default);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmicStatus = Pmic_powerGetPwrResourceCfg(pPmicCoreHandle,
@@ -13377,9 +13391,9 @@ static void test_pmic_powerSetPwrResourceCfg_pgOvThresholdLvl(void)
                                              &powerCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    TEST_ASSERT_EQUAL(pPowerCfg.pgOvThresholdLvl, powerCfg_rd.pgOvThresholdLvl);
+    TEST_ASSERT_EQUAL(powerCfg_default.pgOvThresholdLvl, powerCfg_rd.pgOvThresholdLvl);
 
-    pmic_testResultUpdate_pass(8,
+    pmic_testResultUpdate_pass(10630,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -13398,7 +13412,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_pgOvThresholdLvl(void)
         PMIC_CFG_PWR_RESOURCE_PG_OV_THRESHOLD_LVL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(9,
+    test_pmic_print_unity_testcase_info(10631,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -13419,7 +13433,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_pgOvThresholdLvl(void)
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(9,
+    pmic_testResultUpdate_pass(10631,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -13441,7 +13455,7 @@ static void test_pmic_powerSetPwrResourceCfg_pgUvThresholdLvl(void)
         PMIC_CFG_PWR_RESOURCE_PG_UV_THRESHOLD_LVL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(10,
+    test_pmic_print_unity_testcase_info(10632,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -13469,7 +13483,7 @@ static void test_pmic_powerSetPwrResourceCfg_pgUvThresholdLvl(void)
 
     TEST_ASSERT_EQUAL(pPowerCfg.pgUvThresholdLvl, powerCfg_rd.pgUvThresholdLvl);
 
-    pmic_testResultUpdate_pass(10,
+    pmic_testResultUpdate_pass(10632,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -13487,7 +13501,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_pgUvThresholdLvl(void)
         PMIC_CFG_PWR_RESOURCE_PG_UV_THRESHOLD_LVL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(11,
+    test_pmic_print_unity_testcase_info(10633,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -13508,13 +13522,13 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_pgUvThresholdLvl(void)
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(11,
+    pmic_testResultUpdate_pass(10633,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
- * \brief   Pmic_powerGetPwrRsrcStat : Parameter validation for ILIM status pwrResource 
+ * \brief   Pmic_powerGetPwrRsrcStat : Parameter validation for ILIM status pwrResource
  */
 static void test_pmic_powerGetPwrRsrcStatPrmValTest_ilimStatPwrRsrc(void)
 {
@@ -13526,7 +13540,7 @@ static void test_pmic_powerGetPwrRsrcStatPrmValTest_ilimStatPwrRsrc(void)
 
     uint16_t pwrResource;
 
-    test_pmic_print_unity_testcase_info(12,
+    test_pmic_print_unity_testcase_info(10635,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -13544,7 +13558,7 @@ static void test_pmic_powerGetPwrRsrcStatPrmValTest_ilimStatPwrRsrc(void)
                                           &pPwrRsrcStatCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(12,
+    pmic_testResultUpdate_pass(10635,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -13562,7 +13576,7 @@ static void test_pmic_powerGetPwrRsrcStatPrmValTest_vccaOvLvlStatPwrRsrc(void)
 
     uint16_t pwrResource;
 
-    test_pmic_print_unity_testcase_info(13,
+    test_pmic_print_unity_testcase_info(10636,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -13581,7 +13595,7 @@ static void test_pmic_powerGetPwrRsrcStatPrmValTest_vccaOvLvlStatPwrRsrc(void)
                                           &pPwrRsrcStatCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(13,
+    pmic_testResultUpdate_pass(10636,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -13597,7 +13611,7 @@ static void test_pmic_powerGetCommonConfig_deglitchTimeSel(void)
         PMIC_CFG_DEGLITCH_TIME_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(17,
+    test_pmic_print_unity_testcase_info(10637,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -13605,7 +13619,7 @@ static void test_pmic_powerGetCommonConfig_deglitchTimeSel(void)
         (PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)) ||
         (PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType))
     {
-        pmic_testResultUpdate_ignore(17,
+        pmic_testResultUpdate_ignore(10637,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
     }
@@ -13613,7 +13627,7 @@ static void test_pmic_powerGetCommonConfig_deglitchTimeSel(void)
     pmicStatus = Pmic_powerGetCommonConfig(pPmicCoreHandle, &powerCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NOT_SUPPORTED, pmicStatus);
 
-    pmic_testResultUpdate_pass(17,
+    pmic_testResultUpdate_pass(10637,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -13630,7 +13644,7 @@ static void test_pmic_powerSetCommonConfig_deglitchTimeSel(void)
         PMIC_CFG_DEGLITCH_TIME_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(18,
+    test_pmic_print_unity_testcase_info(10638,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -13638,15 +13652,15 @@ static void test_pmic_powerSetCommonConfig_deglitchTimeSel(void)
         (PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)) ||
         (PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType))
     {
-        pmic_testResultUpdate_ignore(18,
+        pmic_testResultUpdate_ignore(10638,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
     }
-    
+
     pmicStatus = Pmic_powerSetCommonConfig(pPmicCoreHandle, pwrCommonCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NOT_SUPPORTED, pmicStatus);
 
-    pmic_testResultUpdate_pass(18,
+    pmic_testResultUpdate_pass(10638,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -13674,7 +13688,7 @@ static void test_pmic_powerSetCommonConfig_deglitchTimeSel(void)
         pwrRsrc = PMIC_LP8764X_REGULATOR_BUCK1;
     }
 
-    test_pmic_print_unity_testcase_info(19,
+    test_pmic_print_unity_testcase_info(10639,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -13683,7 +13697,7 @@ static void test_pmic_powerSetCommonConfig_deglitchTimeSel(void)
                                              &powerCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(19,
+    pmic_testResultUpdate_pass(10639,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -13701,7 +13715,7 @@ static void test_pmic_powerSetCommonConfig_deglitchTimeSel(void)
         PMIC_CFG_VMON_RANGE_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(20,
+    test_pmic_print_unity_testcase_info(10640,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -13713,7 +13727,7 @@ static void test_pmic_powerSetCommonConfig_deglitchTimeSel(void)
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         /* VMON1 and VMON2 are not present in LEO pmic */
-        pmic_testResultUpdate_ignore(20,
+        pmic_testResultUpdate_ignore(10640,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
     }
@@ -13723,7 +13737,7 @@ static void test_pmic_powerSetCommonConfig_deglitchTimeSel(void)
                                              &powerCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(20,
+    pmic_testResultUpdate_pass(10640,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -13741,7 +13755,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_buckIlimPwrRsrc(void)
         PMIC_CFG_REGULATOR_BUCK_ILIM_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(21,
+    test_pmic_print_unity_testcase_info(10641,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -13759,7 +13773,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_buckIlimPwrRsrc(void)
                                              &powerCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(21,
+    pmic_testResultUpdate_pass(10641,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -13777,7 +13791,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_buckVmonSlewRatePwrRsrc(v
         PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(22,
+    test_pmic_print_unity_testcase_info(10642,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -13795,7 +13809,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_buckVmonSlewRatePwrRsrc(v
                                              &powerCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(22,
+    pmic_testResultUpdate_pass(10642,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -13823,7 +13837,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_rvCheckPwrRsrc(void)
         pwrRsrc = PMIC_LP8764X_POWER_SOURCE_VCCA;
     }
 
-    test_pmic_print_unity_testcase_info(23,
+    test_pmic_print_unity_testcase_info(10643,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
@@ -13831,7 +13845,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_rvCheckPwrRsrc(void)
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(23,
+    pmic_testResultUpdate_pass(10643,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -13849,7 +13863,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_rvCheckPwrRsrc(void)
         PMIC_CFG_REGULATOR_VMON_RV_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(24,
+    test_pmic_print_unity_testcase_info(10644,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -13867,7 +13881,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_rvCheckPwrRsrc(void)
                                              &powerCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(24,
+    pmic_testResultUpdate_pass(10644,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -13885,7 +13899,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_buckPullDownEnPwrRsrc(voi
         PMIC_CFG_REGULATOR_BUCK_PLDN_EN_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(25,
+    test_pmic_print_unity_testcase_info(10646,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -13903,7 +13917,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_buckPullDownEnPwrRsrc(voi
                                              &powerCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(25,
+    pmic_testResultUpdate_pass(10646,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -13921,7 +13935,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_buckVoutSelPwrRsrc(void)
         PMIC_CFG_REGULATOR_BUCK_VOUT_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(26,
+    test_pmic_print_unity_testcase_info(10647,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -13939,7 +13953,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_buckVoutSelPwrRsrc(void)
                                              &powerCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(26,
+    pmic_testResultUpdate_pass(10647,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -13957,7 +13971,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_buckFpwmModePwrRsrc(void)
         PMIC_CFG_REGULATOR_BUCK_FPWM_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(27,
+    test_pmic_print_unity_testcase_info(10648,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -13975,7 +13989,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_buckFpwmModePwrRsrc(void)
                                              &powerCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(27,
+    pmic_testResultUpdate_pass(10648,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -13993,7 +14007,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_buckFpwmMpModePwrRsrc(voi
         PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(28,
+    test_pmic_print_unity_testcase_info(10649,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -14011,7 +14025,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_buckFpwmMpModePwrRsrc(voi
                                              &powerCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(28,
+    pmic_testResultUpdate_pass(10649,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14029,7 +14043,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_regulatorEnPwrRsrc(void)
         PMIC_CFG_REGULATOR_EN_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(29,
+    test_pmic_print_unity_testcase_info(10650,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -14047,7 +14061,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_regulatorEnPwrRsrc(void)
                                              &powerCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(29,
+    pmic_testResultUpdate_pass(10650,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14066,7 +14080,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_ldoPullDownSelPwrRsrc(voi
         PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(30,
+    test_pmic_print_unity_testcase_info(10651,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -14077,7 +14091,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_ldoPullDownSelPwrRsrc(voi
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
         /* LDOs are not present in HERA pmic */
-        pmic_testResultUpdate_ignore(30,
+        pmic_testResultUpdate_ignore(10651,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
     }
@@ -14087,7 +14101,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_ldoPullDownSelPwrRsrc(voi
                                              &powerCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(30,
+    pmic_testResultUpdate_pass(10651,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14106,7 +14120,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_buckIlimMinVal(void)
         PMIC_CFG_REGULATOR_BUCK_ILIM_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(31,
+    test_pmic_print_unity_testcase_info(10652,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -14132,7 +14146,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_buckIlimMinVal(void)
         TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
     }
 
-    pmic_testResultUpdate_pass(31,
+    pmic_testResultUpdate_pass(10652,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14150,7 +14164,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_ldoBypassModeEnPwrRsrc(vo
         PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(32,
+    test_pmic_print_unity_testcase_info(10653,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -14169,7 +14183,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_ldoBypassModeEnPwrRsrc(vo
                                              &powerCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(32,
+    pmic_testResultUpdate_pass(10653,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14187,7 +14201,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_ldoBypassModeEnPwrRsrc(vo
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(33,
+    test_pmic_print_unity_testcase_info(10654,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -14206,7 +14220,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_ldoBypassModeEnPwrRsrc(vo
                                              &powerCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(33,
+    pmic_testResultUpdate_pass(10654,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14225,7 +14239,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_voltage_mV_pwrRsrc(void)
         PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(34,
+    test_pmic_print_unity_testcase_info(10655,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -14243,7 +14257,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_voltage_mV_pwrRsrc(void)
                                              &powerCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(34,
+    pmic_testResultUpdate_pass(10655,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14261,7 +14275,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_voltage_mV_599mV(void)
         PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(35,
+    test_pmic_print_unity_testcase_info(10656,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -14281,7 +14295,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_voltage_mV_599mV(void)
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(35,
+    pmic_testResultUpdate_pass(10656,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14299,7 +14313,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_voltage_mV_1099mV(void)
         PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(36,
+    test_pmic_print_unity_testcase_info(10657,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -14319,7 +14333,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_voltage_mV_1099mV(void)
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(36,
+    pmic_testResultUpdate_pass(10657,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14337,7 +14351,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_voltage_mV_1659mV(void)
         PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(37,
+    test_pmic_print_unity_testcase_info(10658,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -14357,7 +14371,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_voltage_mV_1659mV(void)
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(37,
+    pmic_testResultUpdate_pass(10658,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14375,14 +14389,14 @@ static void test_pmic_powerSetPwrResourceCfg_ldoSlowRampEn(void)
         PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(38,
+    test_pmic_print_unity_testcase_info(10659,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
     if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
        (PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev))
     {
-        pmic_testResultUpdate_ignore(38,
+        pmic_testResultUpdate_ignore(10659,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
     }
@@ -14402,7 +14416,7 @@ static void test_pmic_powerSetPwrResourceCfg_ldoSlowRampEn(void)
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NOT_SUPPORTED, pmicStatus);
 
-    pmic_testResultUpdate_pass(38,
+    pmic_testResultUpdate_pass(10659,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14415,7 +14429,7 @@ static void test_pmic_powerSetLdoRtcPrmValTest_handle(void)
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     bool ldortcEnable;
 
-    test_pmic_print_unity_testcase_info(39,
+    test_pmic_print_unity_testcase_info(10660,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -14426,7 +14440,7 @@ static void test_pmic_powerSetLdoRtcPrmValTest_handle(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        pmic_testResultUpdate_ignore(39,
+        pmic_testResultUpdate_ignore(10660,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
     }
@@ -14434,7 +14448,7 @@ static void test_pmic_powerSetLdoRtcPrmValTest_handle(void)
     pmicStatus = Pmic_powerSetLdoRtc(NULL, ldortcEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
 
-    pmic_testResultUpdate_pass(39,
+    pmic_testResultUpdate_pass(10660,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14447,13 +14461,13 @@ static void test_pmic_powerGetLdoRtcPrmValTest_handle(void)
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     bool ldortcEnable_rd;
 
-    test_pmic_print_unity_testcase_info(40,
+    test_pmic_print_unity_testcase_info(10661,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        pmic_testResultUpdate_ignore(40,
+        pmic_testResultUpdate_ignore(10661,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
     }
@@ -14461,7 +14475,7 @@ static void test_pmic_powerGetLdoRtcPrmValTest_handle(void)
     pmicStatus = Pmic_powerGetLdoRtc(NULL, &ldortcEnable_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_HANDLE, pmicStatus);
 
-    pmic_testResultUpdate_pass(40,
+    pmic_testResultUpdate_pass(10661,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14473,13 +14487,13 @@ static void test_pmic_powerGetLdoRtcPrmValTest_pLdortcEnable(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    test_pmic_print_unity_testcase_info(41,
+    test_pmic_print_unity_testcase_info(10662,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        pmic_testResultUpdate_ignore(41,
+        pmic_testResultUpdate_ignore(10662,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
     }
@@ -14487,7 +14501,7 @@ static void test_pmic_powerGetLdoRtcPrmValTest_pLdortcEnable(void)
     pmicStatus = Pmic_powerGetLdoRtc(pPmicCoreHandle, NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(41,
+    pmic_testResultUpdate_pass(10662,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14505,7 +14519,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_buckMinVoltage(void)
         PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(42,
+    test_pmic_print_unity_testcase_info(10663,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -14525,7 +14539,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_buckMinVoltage(void)
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(42,
+    pmic_testResultUpdate_pass(10663,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14544,7 +14558,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_buckMaxVoltage(void)
         PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(43,
+    test_pmic_print_unity_testcase_info(10664,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -14564,7 +14578,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_buckMaxVoltage(void)
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(43,
+    pmic_testResultUpdate_pass(10664,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14582,7 +14596,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_ldoMinVoltage(void)
         PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(44,
+    test_pmic_print_unity_testcase_info(10665,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -14593,7 +14607,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_ldoMinVoltage(void)
 
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        pmic_testResultUpdate_ignore(44,
+        pmic_testResultUpdate_ignore(10665,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
     }
@@ -14604,7 +14618,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_ldoMinVoltage(void)
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(44,
+    pmic_testResultUpdate_pass(10665,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14622,7 +14636,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_vccaMinVoltage(void)
         PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(45,
+    test_pmic_print_unity_testcase_info(10666,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -14642,7 +14656,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_vccaMinVoltage(void)
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(45,
+    pmic_testResultUpdate_pass(10666,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14670,7 +14684,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_buckPwrRsrcLimitMaxVal(vo
         pwrRsrc = PMIC_LP8764X_REGULATOR_BUCK4 + 1;
     }
 
-    test_pmic_print_unity_testcase_info(46,
+    test_pmic_print_unity_testcase_info(10667,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
@@ -14678,7 +14692,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_buckPwrRsrcLimitMaxVal(vo
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(46,
+    pmic_testResultUpdate_pass(10667,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14706,7 +14720,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_buckPwrRsrcLimitMinVal(vo
         pwrRsrc = PMIC_LP8764X_REGULATOR_BUCK1 - 1;
     }
 
-    test_pmic_print_unity_testcase_info(47,
+    test_pmic_print_unity_testcase_info(10668,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
@@ -14714,7 +14728,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_buckPwrRsrcLimitMinVal(vo
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(47,
+    pmic_testResultUpdate_pass(10668,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14742,7 +14756,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_ldoVmonPwrRsrcLimitMinVal
         pwrRsrc = PMIC_LP8764X_POWER_SOURCE_VMON1 - 1;
     }
 
-    test_pmic_print_unity_testcase_info(48,
+    test_pmic_print_unity_testcase_info(10669,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
@@ -14750,7 +14764,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_ldoVmonPwrRsrcLimitMinVal
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(48,
+    pmic_testResultUpdate_pass(10669,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14778,7 +14792,7 @@ static void test_Pmic_powerSetPwrRsrcIntrPrmValTest_intrTypePwrRsrc(void)
         pwrResource = PMIC_TPS6594X_POWER_SOURCE_VCCA;
     }
 
-    test_pmic_print_unity_testcase_info(49,
+    test_pmic_print_unity_testcase_info(10670,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -14788,7 +14802,7 @@ static void test_Pmic_powerSetPwrRsrcIntrPrmValTest_intrTypePwrRsrc(void)
                                           intrEnable);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(49,
+    pmic_testResultUpdate_pass(10670,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14802,7 +14816,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_tdieWarnPgoodSelType(voi
     uint16_t pgoodSrcSel;
     uint8_t  pgoodSelType;
 
-    test_pmic_print_unity_testcase_info(50,
+    test_pmic_print_unity_testcase_info(10671,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -14822,7 +14836,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_tdieWarnPgoodSelType(voi
                                              pgoodSelType);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(50,
+    pmic_testResultUpdate_pass(10671,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14836,7 +14850,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_voltCurrentPgoodSelType(
     uint16_t pgoodSrcSel;
     uint8_t  pgoodSelType;
 
-    test_pmic_print_unity_testcase_info(51,
+    test_pmic_print_unity_testcase_info(10672,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -14856,7 +14870,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_voltCurrentPgoodSelType(
                                              pgoodSelType);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(51,
+    pmic_testResultUpdate_pass(10672,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14870,7 +14884,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_nRstOutPgoodSelType(void
     uint16_t pgoodSrcSel;
     uint8_t  pgoodSelType;
 
-    test_pmic_print_unity_testcase_info(52,
+    test_pmic_print_unity_testcase_info(10673,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -14890,7 +14904,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_nRstOutPgoodSelType(void
                                              pgoodSelType);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(52,
+    pmic_testResultUpdate_pass(10673,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14904,7 +14918,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_nRstOutSocPgoodSelType(v
     uint16_t pgoodSrcSel;
     uint8_t  pgoodSelType;
 
-    test_pmic_print_unity_testcase_info(53,
+    test_pmic_print_unity_testcase_info(10674,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -14924,7 +14938,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_nRstOutSocPgoodSelType(v
                                              pgoodSelType);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(53,
+    pmic_testResultUpdate_pass(10674,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14938,7 +14952,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_vccaVmonPgoodSelType(voi
     uint16_t pgoodSrcSel;
     uint8_t  pgoodSelType;
 
-    test_pmic_print_unity_testcase_info(54,
+    test_pmic_print_unity_testcase_info(10675,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -14958,7 +14972,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_vccaVmonPgoodSelType(voi
                                              pgoodSelType);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(54,
+    pmic_testResultUpdate_pass(10675,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14971,13 +14985,13 @@ static void test_pmic_powerGetLdoRtc_pLdortcEnable(void)
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     bool ldortcEnable_rd;
 
-    test_pmic_print_unity_testcase_info(55,
+    test_pmic_print_unity_testcase_info(10676,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
-        pmic_testResultUpdate_ignore(55,
+        pmic_testResultUpdate_ignore(10676,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
     }
@@ -14985,7 +14999,7 @@ static void test_pmic_powerGetLdoRtc_pLdortcEnable(void)
     pmicStatus = Pmic_powerGetLdoRtc(pPmicCoreHandle, &ldortcEnable_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(55,
+    pmic_testResultUpdate_pass(10676,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -14999,7 +15013,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_buckPgoodSrcMaxVal(void)
     uint16_t pgoodSrcSel;
     uint8_t  pgoodSelType;
 
-    test_pmic_print_unity_testcase_info(56,
+    test_pmic_print_unity_testcase_info(10677,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -15019,7 +15033,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_buckPgoodSrcMaxVal(void)
                                              pgoodSelType);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(56,
+    pmic_testResultUpdate_pass(10677,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -15033,7 +15047,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_buckPgoodSrcMinVal(void)
     uint16_t pgoodSrcSel;
     uint8_t  pgoodSelType;
 
-    test_pmic_print_unity_testcase_info(57,
+    test_pmic_print_unity_testcase_info(10678,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -15053,7 +15067,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_buckPgoodSrcMinVal(void)
                                              pgoodSelType);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(57,
+    pmic_testResultUpdate_pass(10678,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -15067,13 +15081,13 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_vmonPgoodSrcMaxVal(void)
     uint16_t pgoodSrcSel;
     uint8_t  pgoodSelType;
 
-    test_pmic_print_unity_testcase_info(58,
+    test_pmic_print_unity_testcase_info(10679,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         /* VMON1 and VMON2 are not present in LEO pmic */
-        pmic_testResultUpdate_ignore(58,
+        pmic_testResultUpdate_ignore(10679,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
     }
@@ -15086,7 +15100,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_vmonPgoodSrcMaxVal(void)
                                                  pgoodSelType);
         TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(58,
+    pmic_testResultUpdate_pass(10679,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -15100,13 +15114,13 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_vmonPgoodSrcMinVal(void)
     uint16_t pgoodSrcSel;
     uint8_t  pgoodSelType;
 
-    test_pmic_print_unity_testcase_info(59,
+    test_pmic_print_unity_testcase_info(10680,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         /* VMON1 and VMON2 are not present in LEO pmic */
-        pmic_testResultUpdate_ignore(59,
+        pmic_testResultUpdate_ignore(10680,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
     }
@@ -15119,7 +15133,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_vmonPgoodSrcMinVal(void)
                                                  pgoodSelType);
         TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(59,
+    pmic_testResultUpdate_pass(10680,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -15133,12 +15147,12 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_ldoPgoodSrcMaxVal(void)
     uint16_t pgoodSrcSel;
     uint8_t  pgoodSelType;
 
-    test_pmic_print_unity_testcase_info(60,
+    test_pmic_print_unity_testcase_info(10681,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        pmic_testResultUpdate_ignore(60,
+        pmic_testResultUpdate_ignore(10681,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
     }
@@ -15151,7 +15165,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_ldoPgoodSrcMaxVal(void)
                                                  pgoodSelType);
         TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(60,
+    pmic_testResultUpdate_pass(10681,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -15165,12 +15179,12 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_ldoPgoodSrcMinVal(void)
     uint16_t pgoodSrcSel;
     uint8_t  pgoodSelType;
 
-    test_pmic_print_unity_testcase_info(61,
+    test_pmic_print_unity_testcase_info(10682,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        pmic_testResultUpdate_ignore(61,
+        pmic_testResultUpdate_ignore(10682,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
     }
@@ -15183,7 +15197,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_ldoPgoodSrcMinVal(void)
                                                  pgoodSelType);
         TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(61,
+    pmic_testResultUpdate_pass(10682,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -15197,7 +15211,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_nRstOutPgoodSrc(void)
     uint16_t pgoodSrcSel;
     uint8_t  pgoodSelType;
 
-    test_pmic_print_unity_testcase_info(62,
+    test_pmic_print_unity_testcase_info(10683,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -15217,7 +15231,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_nRstOutPgoodSrc(void)
                                              pgoodSelType);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(62,
+    pmic_testResultUpdate_pass(10683,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -15231,7 +15245,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_nRstOutSocPgoodSrc(void)
     uint16_t pgoodSrcSel;
     uint8_t  pgoodSelType;
 
-    test_pmic_print_unity_testcase_info(63,
+    test_pmic_print_unity_testcase_info(10684,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -15251,7 +15265,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_nRstOutSocPgoodSrc(void)
                                              pgoodSelType);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(63,
+    pmic_testResultUpdate_pass(10684,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -15265,7 +15279,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_tdieWarnPgoodSrc(void)
     uint16_t pgoodSrcSel;
     uint8_t  pgoodSelType;
 
-    test_pmic_print_unity_testcase_info(64,
+    test_pmic_print_unity_testcase_info(10685,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -15285,7 +15299,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_tdieWarnPgoodSrc(void)
                                              pgoodSelType);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(64,
+    pmic_testResultUpdate_pass(10685,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -15299,7 +15313,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_vccaPgoodSrc(void)
     uint16_t pgoodSrcSel;
     uint8_t  pgoodSelType;
 
-    test_pmic_print_unity_testcase_info(65,
+    test_pmic_print_unity_testcase_info(10686,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -15319,7 +15333,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_vccaPgoodSrc(void)
                                              pgoodSelType);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(65,
+    pmic_testResultUpdate_pass(10686,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -15333,7 +15347,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_pgoodSrcType(void)
     uint16_t pgoodSrcSel;
     uint8_t  pgoodSelType;
 
-    test_pmic_print_unity_testcase_info(66,
+    test_pmic_print_unity_testcase_info(10687,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
@@ -15353,7 +15367,7 @@ static void test_pmic_powerSetConfigPowerGoodPrmValTest_pgoodSrcType(void)
                                              pgoodSelType);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(66,
+    pmic_testResultUpdate_pass(10687,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -15381,7 +15395,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_rvCheckEnPwrRsrc(void)
         pwrRsrc = 0x406U;
     }
 
-    test_pmic_print_unity_testcase_info(67,
+    test_pmic_print_unity_testcase_info(10688,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
@@ -15389,14 +15403,14 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_rvCheckEnPwrRsrc(void)
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(67,
+    pmic_testResultUpdate_pass(10688,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 
 /*!
- * \brief   Pmic_powerSetPwrResourceCfg : Test to set vmonRange as 
+ * \brief   Pmic_powerSetPwrResourceCfg : Test to set vmonRange as
  *          PMIC_LP8764X_VMON_RANGE_3V35_5V and voltage_mV as 3350mV
  */
 static void test_pmic_powerSetPwrResourceCfg_vmonRange(void)
@@ -15413,7 +15427,7 @@ static void test_pmic_powerSetPwrResourceCfg_vmonRange(void)
         PMIC_CFG_VMON_RANGE_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(68,
+    test_pmic_print_unity_testcase_info(10689,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -15426,7 +15440,7 @@ static void test_pmic_powerSetPwrResourceCfg_vmonRange(void)
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         /* VMON1 and VMON2 are not present in LEO pmic */
-        pmic_testResultUpdate_ignore(68,
+        pmic_testResultUpdate_ignore(10689,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
     }
@@ -15463,13 +15477,13 @@ static void test_pmic_powerSetPwrResourceCfg_vmonRange(void)
                                              &powerCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmic_testResultUpdate_pass(68,
+    pmic_testResultUpdate_pass(10689,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
- * \brief   Pmic_powerSetPwrResourceCfg : Parameter validation for vmonRange as 
+ * \brief   Pmic_powerSetPwrResourceCfg : Parameter validation for vmonRange as
  *          PMIC_LP8764X_VMON_RANGE_0V3_3V34 and voltage_mV as 299mV minVal
  */
 static void test_pmic_powerSetPwrResourceCfgPrmValTest_vmonRangeVoltage_mV_299mV(void)
@@ -15486,7 +15500,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_vmonRangeVoltage_mV_299mV
         PMIC_CFG_VMON_RANGE_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(69,
+    test_pmic_print_unity_testcase_info(10690,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -15499,7 +15513,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_vmonRangeVoltage_mV_299mV
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         /* VMON1 and VMON2 are not present in LEO pmic */
-        pmic_testResultUpdate_ignore(69,
+        pmic_testResultUpdate_ignore(10690,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
     }
@@ -15532,7 +15546,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_vmonRangeVoltage_mV_299mV
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
 
-    pmic_testResultUpdate_pass(69,
+    pmic_testResultUpdate_pass(10690,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -15556,7 +15570,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_vmonRangeVoltage_mV_3341m
         PMIC_CFG_VMON_RANGE_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(70,
+    test_pmic_print_unity_testcase_info(10691,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -15569,7 +15583,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_vmonRangeVoltage_mV_3341m
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         /* VMON1 and VMON2 are not present in LEO pmic */
-        pmic_testResultUpdate_ignore(70,
+        pmic_testResultUpdate_ignore(10691,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
     }
@@ -15602,7 +15616,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_vmonRangeVoltage_mV_3341m
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
 
-    pmic_testResultUpdate_pass(70,
+    pmic_testResultUpdate_pass(10691,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -15626,7 +15640,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_vmonRangeVoltage_mV_3349m
         PMIC_CFG_VMON_RANGE_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(71,
+    test_pmic_print_unity_testcase_info(10692,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -15639,7 +15653,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_vmonRangeVoltage_mV_3349m
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         /* VMON1 and VMON2 are not present in LEO pmic */
-        pmic_testResultUpdate_ignore(71,
+        pmic_testResultUpdate_ignore(10692,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
     }
@@ -15672,14 +15686,14 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_vmonRangeVoltage_mV_3349m
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
 
-    pmic_testResultUpdate_pass(71,
+    pmic_testResultUpdate_pass(10692,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
- * \brief   Pmic_powerSetPwrResourceCfg : Parameter validation for voltage_mV 
- *          when vmonRange as PMIC_LP8764X_VMON_RANGE_3V35_5V and voltage_mV 
+ * \brief   Pmic_powerSetPwrResourceCfg : Parameter validation for voltage_mV
+ *          when vmonRange as PMIC_LP8764X_VMON_RANGE_3V35_5V and voltage_mV
  *          as 5001 mV max Val
  */
 static void test_pmic_powerSetPwrResourceCfgPrmValTest_vmonRangeVoltage_mV_5001mV(void)
@@ -15696,7 +15710,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_vmonRangeVoltage_mV_5001m
         PMIC_CFG_VMON_RANGE_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(72,
+    test_pmic_print_unity_testcase_info(10693,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -15709,7 +15723,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_vmonRangeVoltage_mV_5001m
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
     {
         /* VMON1 and VMON2 are not present in LEO pmic */
-        pmic_testResultUpdate_ignore(72,
+        pmic_testResultUpdate_ignore(10693,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
     }
@@ -15742,7 +15756,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_vmonRangeVoltage_mV_5001m
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
 
-    pmic_testResultUpdate_pass(72,
+    pmic_testResultUpdate_pass(10693,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -15770,7 +15784,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_vccaPwrGudLvlPwrRsrc(void
         pwrRsrc = 0x1U;
     }
 
-    test_pmic_print_unity_testcase_info(73,
+    test_pmic_print_unity_testcase_info(10694,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
     pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
@@ -15778,13 +15792,13 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_vccaPwrGudLvlPwrRsrc(void
                                              pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    pmic_testResultUpdate_pass(73,
+    pmic_testResultUpdate_pass(10694,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
 
 /*!
- * \brief   Pmic_powerGetPwrResourceCfg : Negative for ldoSlowRampEn configuration  on PG1.0 Silicon Revision
+ * \brief   Pmic_powerGetPwrResourceCfg : Negative for ldoSlowRampEn configuration on PG1.0 Silicon Revision
  */
 static void test_pmic_powerGetPwrResourceCfg_ldoSlowRampEn(void)
 {
@@ -15796,14 +15810,14 @@ static void test_pmic_powerGetPwrResourceCfg_ldoSlowRampEn(void)
         PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(74,
+    test_pmic_print_unity_testcase_info(10695,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
     if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
        (PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev))
     {
-        pmic_testResultUpdate_ignore(74,
+        pmic_testResultUpdate_ignore(10695,
                                      pmic_power_tests,
                                      PMIC_POWER_NUM_OF_TESTCASES);
     }
@@ -15823,7 +15837,7 @@ static void test_pmic_powerGetPwrResourceCfg_ldoSlowRampEn(void)
                                              &powerCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NOT_SUPPORTED, pmicStatus);
 
-    pmic_testResultUpdate_pass(74,
+    pmic_testResultUpdate_pass(10695,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -15842,7 +15856,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_voltage_mV(void)
         PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(75,
+    test_pmic_print_unity_testcase_info(10696,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -15887,7 +15901,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_voltage_mV(void)
         TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
     }
 
-    pmic_testResultUpdate_pass(75,
+    pmic_testResultUpdate_pass(10696,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
@@ -15935,7 +15949,7 @@ static void test_pmic_power_coverageGaps(void)
        PMIC_THERMAL_STAT_IMM_SHTDWN_VALID_SHIFT,
     };
 
-    test_pmic_print_unity_testcase_info(76,
+    test_pmic_print_unity_testcase_info(10697,
                                         pmic_power_tests,
                                         PMIC_POWER_NUM_OF_TESTCASES);
 
@@ -16066,7 +16080,6 @@ static void test_pmic_power_coverageGaps(void)
         pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle, pwrResource, pPowerCfg);
         TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
 
-
         //Pmic_powerGetRegulatorEn
         gPmic_faultInjectCfg.readCount = 0;
         gPmic_faultInjectCfg.skipReadCount = 1;
@@ -16133,62 +16146,8 @@ static void test_pmic_power_coverageGaps(void)
         TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
     }
 
-
     if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
     {
-        //Pmic_setThermalShutdownThold
-        gPmic_faultInjectCfg.readCount = 0;
-        gPmic_faultInjectCfg.skipReadCount = 1;
-        thermalThreshold.validParams = PMIC_THERMAL_SHTDWN_VALID_SHIFT;
-
-        if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-        {
-            thermalThreshold.thermalShutdownThold =
-                                    PMIC_TPS6594X_THERMAL_TEMP_TSD_ORD_140C;
-        }
-
-        if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-        {
-            thermalThreshold.thermalShutdownThold =
-                                PMIC_LP8764X_THERMAL_TEMP_TSD_ORD_140C;
-        }
-        pmicStatus = Pmic_powerSetThermalConfig(pPmicCoreHandle, thermalThreshold);
-        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
-
-        //Pmic_getThermalShutdownThold
-        gPmic_faultInjectCfg.readCount = 0;
-        gPmic_faultInjectCfg.skipReadCount = 1;
-        thermalThreshold_rd.validParams = PMIC_THERMAL_SHTDWN_VALID_SHIFT;
-        pmicStatus = Pmic_powerGetThermalConfig(pPmicCoreHandle, &thermalThreshold_rd);
-        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
-
-        //Pmic_powerSetDeglitchTimeSel
-        gPmic_faultInjectCfg.readCount = 0;
-        gPmic_faultInjectCfg.skipReadCount = 1;
-        pwrCommonCfg.validParams = PMIC_CFG_DEGLITCH_TIME_SEL_VALID_SHIFT;
-
-        if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
-        {
-            pwrCommonCfg.deglitchTimeSel =
-                                      PMIC_TPS6594X_POWER_RESOURCE_DEGLITCH_SEL_20US;
-        }
-
-        if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-        {
-            pwrCommonCfg.deglitchTimeSel =
-                                       PMIC_LP8764X_POWER_RESOURCE_DEGLITCH_SEL_20US;
-        }
-
-        pmicStatus = Pmic_powerSetCommonConfig(pPmicCoreHandle, pwrCommonCfg);
-        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
-
-        //Pmic_powerGetDeglitchTimeSel
-        gPmic_faultInjectCfg.readCount = 0;
-        gPmic_faultInjectCfg.skipReadCount = 1;
-        pwrCommonCfg_rd.validParams = PMIC_CFG_DEGLITCH_TIME_SEL_VALID_SHIFT;
-        pmicStatus = Pmic_powerGetCommonConfig(pPmicCoreHandle, &pwrCommonCfg_rd);
-        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
-
         //Pmic_powerSetVmonRange
         gPmic_faultInjectCfg.readCount = 0;
         gPmic_faultInjectCfg.skipReadCount = 1;
@@ -16555,7 +16514,6 @@ static void test_pmic_power_coverageGaps(void)
                                              &powerRsrcCfg_rd);
     TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
 
-
     //Pmic_powerSetLowThreshold
     gPmic_faultInjectCfg.readCount = 0;
     gPmic_faultInjectCfg.skipReadCount = 1;
@@ -16650,7 +16608,6 @@ static void test_pmic_power_coverageGaps(void)
                                              &powerRsrcCfg_rd);
     TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
 
-
     //Pmic_powerSetVmonEn
     gPmic_faultInjectCfg.readCount = 0;
     gPmic_faultInjectCfg.skipReadCount = 1;
@@ -16678,7 +16635,6 @@ static void test_pmic_power_coverageGaps(void)
                                              pwrResource,
                                              &powerRsrcCfg_rd);
     TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
-
 
     //Pmic_powerSetVoltage
     if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
@@ -16717,7 +16673,6 @@ static void test_pmic_power_coverageGaps(void)
     pwrCommonCfg_rd.validParams = PMIC_CFG_REGULATOR_BUCK_PLDN_EN_VALID_SHIFT;
     pmicStatus = Pmic_powerGetCommonConfig(pPmicCoreHandle, &pwrCommonCfg_rd);
     TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
-
 
     //Pmic_getPgoodSelType
     gPmic_faultInjectCfg.readCount = 0;
@@ -16808,24 +16763,171 @@ static void test_pmic_power_coverageGaps(void)
                                              &powerRsrcCfg_rd);
     TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
 
+    if(((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)&&
+       (PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)) ||
+       ((PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)&&
+       (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)))
+    {
+        //Pmic_setThermalShutdownThold
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 1;
+        thermalThreshold.validParams = PMIC_THERMAL_SHTDWN_VALID_SHIFT;
+
+        if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+        {
+            thermalThreshold.thermalShutdownThold =
+                                    PMIC_TPS6594X_THERMAL_TEMP_TSD_ORD_140C;
+        }
+
+        if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+        {
+            thermalThreshold.thermalShutdownThold =
+                                PMIC_LP8764X_THERMAL_TEMP_TSD_ORD_140C;
+        }
+        pmicStatus = Pmic_powerSetThermalConfig(pPmicCoreHandle, thermalThreshold);
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+        //Pmic_getThermalShutdownThold
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 1;
+        thermalThreshold_rd.validParams = PMIC_THERMAL_SHTDWN_VALID_SHIFT;
+        pmicStatus = Pmic_powerGetThermalConfig(pPmicCoreHandle, &thermalThreshold_rd);
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+        //Pmic_powerSetDeglitchTimeSel
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 1;
+        pwrCommonCfg.validParams = PMIC_CFG_DEGLITCH_TIME_SEL_VALID_SHIFT;
+
+        if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+        {
+            pwrCommonCfg.deglitchTimeSel =
+                                      PMIC_TPS6594X_POWER_RESOURCE_DEGLITCH_SEL_20US;
+        }
+
+        if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+        {
+            pwrCommonCfg.deglitchTimeSel =
+                                       PMIC_LP8764X_POWER_RESOURCE_DEGLITCH_SEL_20US;
+        }
+
+        pmicStatus = Pmic_powerSetCommonConfig(pPmicCoreHandle, pwrCommonCfg);
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+
+        //Pmic_powerGetDeglitchTimeSel
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 1;
+        pwrCommonCfg_rd.validParams = PMIC_CFG_DEGLITCH_TIME_SEL_VALID_SHIFT;
+        pmicStatus = Pmic_powerGetCommonConfig(pPmicCoreHandle, &pwrCommonCfg_rd);
+        TEST_ASSERT_EQUAL(gPmic_faultInjectCfg.commError, pmicStatus);
+    }
+
     gPmic_faultInjectCfg.enableFaultInjectionRead = 0U;
 
-    Pmic_DevSubSysInfo_t pmicDevSubSysInfo = 
+    if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
+       (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev))
+    {
+        //Pmic_powerSetLdoBypassModeEn
+        gLdoBypassModeEnTestFlag = 1U;
+        pPowerCfg.validParams = PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID_SHIFT;
+        pwrResource = PMIC_TPS6594X_REGULATOR_LDO3;
+        pPowerCfg.ldoBypassModeEn = PMIC_TPS6594X_REGULATOR_LDO_BYPASS_MODE;
+        pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle,
+                                                 pwrResource,
+                                                 pPowerCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        //Pmic_powerGetLdoBypassModeEn
+        powerRsrcCfg_rd.validParams = PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID_SHIFT;
+        pmicStatus = Pmic_powerGetPwrResourceCfg(pPmicCoreHandle,
+                                                 pwrResource,
+                                                 &powerRsrcCfg_rd);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        gLdoBypassModeEnTestFlag = 0U;
+    }
+
+    if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    {
+        //Pmic_getThermalWarnStat
+        //Pmic_getOderlyShutdownStat
+        //Pmic_getImmediateShutdownStat
+        gThermalStatusTestFlag = 1U;
+        pPwrThermalStatCfg.validParams = PMIC_THERMAL_STAT_WARN_VALID_SHIFT |
+                                         PMIC_THERMAL_STAT_ORD_SHTDWN_VALID_SHIFT |
+                                         PMIC_THERMAL_STAT_IMM_SHTDWN_VALID_SHIFT;
+        pmicStatus = Pmic_powerGetPwrThermalStat(pPmicCoreHandle, &pPwrThermalStatCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        gThermalStatusTestFlag = 0U;
+
+        //Pmic_powerGetUnderVoltageTholdStat
+        //Pmic_powerGetCurrentLimitLvlStat
+        gPwrRsrcStatusTestFlag = 1U;
+        if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+        {
+            pwrResource = PMIC_TPS6594X_REGULATOR_BUCK1;
+        }
+
+        if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+        {
+            pwrResource = PMIC_LP8764X_REGULATOR_BUCK1;
+        }
+        pPwrRsrcStatCfg.validParams = PMIC_POWER_RESOURCE_UV_STAT_VALID_SHIFT |
+                                      PMIC_POWER_REGULATOR_ILIM_STAT_VALID_SHIFT;
+        pmicStatus = Pmic_powerGetPwrRsrcStat(pPmicCoreHandle,
+                                              pwrResource,
+                                              &pPwrRsrcStatCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+        //Pmic_powerGetOverVoltageProtectionLvlStat
+        pPwrRsrcStatCfg.validParams = PMIC_POWER_VCCA_OV_LVL_STAT_VALID_SHIFT;
+
+        if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+        {
+            pwrResource = PMIC_TPS6594X_POWER_SOURCE_VCCA;
+        }
+
+        if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+        {
+            pwrResource = PMIC_LP8764X_POWER_SOURCE_VCCA;
+        }
+
+        pmicStatus = Pmic_powerGetPwrRsrcStat(pPmicCoreHandle,
+                                             pwrResource,
+                                             &pPwrRsrcStatCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+        gPwrRsrcStatusTestFlag = 0U;
+    }
+
+    Pmic_DevSubSysInfo_t pmicDevSubSysInfo =
     {
         .gpioEnable = (bool)true,
         .rtcEnable  = (bool)true,
         .wdgEnable  = (bool)true,
-        .buckEnable = (bool)true,
+        .buckEnable = (bool)false,
         .ldoEnable  = (bool)false,
         .esmEnable  = (bool)true
     };
 
-    pwrResource = PMIC_TPS6594X_REGULATOR_LDO1;
+    //Pmic_powerLP8764xValidatePwrRsrcLimit
+    //Pmic_powerTPS6594xValidatePwrRsrcLimit
     pPmicCoreHandle->pPmic_SubSysInfo = (&pmicDevSubSysInfo);
+    pwrResource = PMIC_TPS6594X_REGULATOR_LDO1;
     pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle, pwrResource, pPowerCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
 
-    Pmic_DevSubSysInfo_t testpmicDevSubSysInfo = 
+    if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pwrResource = PMIC_TPS6594X_REGULATOR_BUCK1;
+    }
+
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pwrResource = PMIC_LP8764X_REGULATOR_BUCK1;
+    }
+    pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle, pwrResource, pPowerCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+
+    Pmic_DevSubSysInfo_t testpmicDevSubSysInfo =
     {
         .gpioEnable = (bool)true,
         .rtcEnable  = (bool)true,
@@ -16836,11 +16938,14 @@ static void test_pmic_power_coverageGaps(void)
     };
 
     pPmicCoreHandle->pPmic_SubSysInfo = (&testpmicDevSubSysInfo);
-    pwrResource = PMIC_TPS6594X_REGULATOR_LDO1;
-    pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle, pwrResource, pPowerCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+    if(PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
+    {
+        pwrResource = PMIC_TPS6594X_REGULATOR_LDO1;
+        pmicStatus = Pmic_powerSetPwrResourceCfg(pPmicCoreHandle, pwrResource, pPowerCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, pmicStatus);
+    }
 
-    pmic_testResultUpdate_pass(76,
+    pmic_testResultUpdate_pass(10697,
                                pmic_power_tests,
                                PMIC_POWER_NUM_OF_TESTCASES);
 }
