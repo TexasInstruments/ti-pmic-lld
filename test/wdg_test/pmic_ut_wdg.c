@@ -222,31 +222,31 @@ static Pmic_Ut_Tests_t pmic_wdg_tests[] =
         "Pmic_wdgQaSequenceWriteAnswer : Test wdg QA sequences with different QA seed values"
     },
     {
-        1,
+        10780,
         "Pmic_wdgSetCfg : Test to set longWinDuration as 100ms"
     },
     {
-        2,
+        10781,
         "Pmic_wdgSetCfg : Parameter validation for longWinDuration min Value as 2999 ms"
     },
     {
-        7,
+        10782,
         "Pmic_wdgStartTriggerSequence - Code coverage test for wdg Trigger sequence"
     },
     {
-        8,
+        10783,
         "Pmic_wdgClrErrStatus : Test to clear wdg error based on WDG Error type - TimeOut, SeqErr, AnsEarly, FailInt"
     },
     {
-        9,
+        10784,
         "Pmic_wdgQaSequenceWriteAnswer : Manual Test case to test WDG RST INT and WDG LONGWIN TIMEOUT INT"
     },
     {
-        10,
+        10785,
         "Pmic_wdgStartQaSequence : Test wdg QA sequences for Early Answer Error"
     },
     {
-        11,
+        10786,
         "Pmic_wdgStartQaSequence : Test wdg QA sequences - code coverage"
     },
     {
@@ -1211,7 +1211,7 @@ static void test_pmic_wdg_startQaSequence_answerEarlyErr(void)
         wdgCfg.win1Duration_us = 10350U;
     }
 
-    test_pmic_print_unity_testcase_info(10,
+    test_pmic_print_unity_testcase_info(10785,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -1236,7 +1236,7 @@ static void test_pmic_wdg_startQaSequence_answerEarlyErr(void)
     pmicStatus = Pmic_wdgDisable(pPmicCoreHandle);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmic_testResultUpdate_pass(10,
+    pmic_testResultUpdate_pass(10785,
                                pmic_wdg_tests,
                                PMIC_WDG_NUM_OF_TESTCASES);
 }
@@ -1271,14 +1271,16 @@ static void test_pmic_wdg_startQaSequence_codeCoverage(void)
         wdgCfg.win1Duration_us = 10350U;
     }
 
-    test_pmic_print_unity_testcase_info(11,
+    test_pmic_print_unity_testcase_info(10786,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
     if((PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode) ||
-       (PMIC_INTF_SPI == pPmicCoreHandle->commMode))
+       (PMIC_INTF_SPI == pPmicCoreHandle->commMode)||
+       (PMIC_SILICON_REV_ID_PG_1_0 != pPmicCoreHandle->pmicDevSiliconRev)||
+       (J721E_LEO_PMICA_DEVICE != pmic_device_info))
     {
-        pmic_testResultUpdate_ignore(11,
+        pmic_testResultUpdate_ignore(10786,
                                      pmic_wdg_tests,
                                      PMIC_WDG_NUM_OF_TESTCASES);
     }
@@ -1310,7 +1312,7 @@ static void test_pmic_wdg_startQaSequence_codeCoverage(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
 
-    pmic_testResultUpdate_pass(11,
+    pmic_testResultUpdate_pass(10786,
                                pmic_wdg_tests,
                                PMIC_WDG_NUM_OF_TESTCASES);
 }
@@ -2580,13 +2582,13 @@ static void test_pmic_wdgsetCfg_longwin(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_5,
     };
 
-    test_pmic_print_unity_testcase_info(1,
+    test_pmic_print_unity_testcase_info(10780,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
     if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
     {
-        pmic_testResultUpdate_ignore(1,
+        pmic_testResultUpdate_ignore(10780,
                                      pmic_wdg_tests,
                                      PMIC_WDG_NUM_OF_TESTCASES);
     }
@@ -2598,7 +2600,7 @@ static void test_pmic_wdgsetCfg_longwin(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
     TEST_ASSERT_EQUAL(wdgCfg.longWinDuration_ms, wdgCfg_rd.longWinDuration_ms);
 
-    pmic_testResultUpdate_pass(1,
+    pmic_testResultUpdate_pass(10780,
                                pmic_wdg_tests,
                                PMIC_WDG_NUM_OF_TESTCASES);
 }
@@ -2627,13 +2629,13 @@ static void test_pmic_wdgsetCfg_prmValTest_longwinMin_2999ms(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_5,
     };
 
-    test_pmic_print_unity_testcase_info(2,
+    test_pmic_print_unity_testcase_info(10781,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
     if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
     {
-        pmic_testResultUpdate_ignore(2,
+        pmic_testResultUpdate_ignore(10781,
                                      pmic_wdg_tests,
                                      PMIC_WDG_NUM_OF_TESTCASES);
     }
@@ -2641,7 +2643,7 @@ static void test_pmic_wdgsetCfg_prmValTest_longwinMin_2999ms(void)
     status = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_WDG_WINDOW, status);
 
-    pmic_testResultUpdate_pass(2,
+    pmic_testResultUpdate_pass(10781,
                                pmic_wdg_tests,
                                PMIC_WDG_NUM_OF_TESTCASES);
 }
@@ -2671,13 +2673,13 @@ static void test_pmic_wdg_StartTriggerSequence(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_10,
     };
 
-    test_pmic_print_unity_testcase_info(7,
+    test_pmic_print_unity_testcase_info(10782,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
     if(J721E_LEO_PMICB_DEVICE == pmic_device_info)
     {
-        pmic_testResultUpdate_ignore(7,
+        pmic_testResultUpdate_ignore(10782,
                                      pmic_wdg_tests,
                                      PMIC_WDG_NUM_OF_TESTCASES);
     }
@@ -2703,7 +2705,7 @@ static void test_pmic_wdg_StartTriggerSequence(void)
     pmicStatus = Pmic_wdgDisable(pPmicCoreHandle);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmic_testResultUpdate_pass(7,
+    pmic_testResultUpdate_pass(10782,
                                pmic_wdg_tests,
                                PMIC_WDG_NUM_OF_TESTCASES);
 }
@@ -2738,7 +2740,7 @@ static void test_pmic_wdgClrErrStatus_wdgErrType(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_10,
     };
 
-    test_pmic_print_unity_testcase_info(8,
+    test_pmic_print_unity_testcase_info(10783,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -2866,7 +2868,7 @@ static void test_pmic_wdgClrErrStatus_wdgErrType(void)
     pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
-    pmic_testResultUpdate_pass(8,
+    pmic_testResultUpdate_pass(10783,
                                pmic_wdg_tests,
                                PMIC_WDG_NUM_OF_TESTCASES);
 }
@@ -2900,7 +2902,7 @@ static void test_pmic_wdgQaSequenceWriteAnswer_RstIntLongWinTimeoutInt(void)
         PMIC_WDG_QA_QUES_SEED_VALUE_10,
     };
 
-    test_pmic_print_unity_testcase_info(9,
+    test_pmic_print_unity_testcase_info(10784,
                                         pmic_wdg_tests,
                                         PMIC_WDG_NUM_OF_TESTCASES);
 
@@ -2937,7 +2939,7 @@ static void test_pmic_wdgQaSequenceWriteAnswer_RstIntLongWinTimeoutInt(void)
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
     }
 
-    pmic_testResultUpdate_pass(9,
+    pmic_testResultUpdate_pass(10784,
                                pmic_wdg_tests,
                                PMIC_WDG_NUM_OF_TESTCASES);
 }
@@ -3174,7 +3176,8 @@ static void test_pmic_wdg_coverageGaps(void)
 /* TBD - Due to these code coverage tests in this below if case  - if(PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode)
  * 7327, 7340 tests is failed for Single I2C So ignored for time being
  */
-    if(PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode)
+    if((PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev) &&
+       (PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode))
     {
         /* Enable WDG Timer */
         status = Pmic_wdgEnable(pPmicCoreHandle);
@@ -3192,24 +3195,21 @@ static void test_pmic_wdg_coverageGaps(void)
 
         Osal_delay(20U);
 
-        if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
-        {
-            /* Enable WDG Timer */
-            status = Pmic_wdgEnable(pPmicCoreHandle);
-            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+        /* Enable WDG Timer */
+        status = Pmic_wdgEnable(pPmicCoreHandle);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-            //is_wdgBadEventDetected
-            gPmic_faultInjectCfg.readCount = 0;
-            gPmic_faultInjectCfg.skipReadCount = 10;
-            status = Pmic_wdgStartQaSequence(pPmicCoreHandle, 1U, maxCnt);
-            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+        //is_wdgBadEventDetected
+        gPmic_faultInjectCfg.readCount = 0;
+        gPmic_faultInjectCfg.skipReadCount = 10;
+        status = Pmic_wdgStartQaSequence(pPmicCoreHandle, 1U, maxCnt);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-            /* Disable WDG Timer */
-            status = Pmic_wdgDisable(pPmicCoreHandle);
-            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+        /* Disable WDG Timer */
+        status = Pmic_wdgDisable(pPmicCoreHandle);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-            Osal_delay(20U);
-        }
+        Osal_delay(20U);
 
         /* Enable WDG Timer */
         status = Pmic_wdgEnable(pPmicCoreHandle);

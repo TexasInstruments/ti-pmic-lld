@@ -15948,6 +15948,15 @@ static void test_pmic_power_coverageGaps(void)
     {
        PMIC_THERMAL_STAT_IMM_SHTDWN_VALID_SHIFT,
     };
+    int32_t crcTestFlag = PMIC_STATUS_CRC_INIT_VAL;
+
+#if defined(SOC_J721E)
+    crcTestFlag = gCrcTestFlag_J721E;
+#endif
+
+#if defined(SOC_J7200)
+    crcTestFlag = gCrcTestFlag_J7VCL;
+#endif
 
     test_pmic_print_unity_testcase_info(10697,
                                         pmic_power_tests,
@@ -16825,7 +16834,7 @@ static void test_pmic_power_coverageGaps(void)
     gPmic_faultInjectCfg.enableFaultInjectionRead = 0U;
 
     if((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
-       (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev))
+       (PMIC_STATUS_CRC_INIT_VAL == crcTestFlag))
     {
         //Pmic_powerSetLdoBypassModeEn
         gLdoBypassModeEnTestFlag = 1U;
@@ -16846,7 +16855,7 @@ static void test_pmic_power_coverageGaps(void)
         gLdoBypassModeEnTestFlag = 0U;
     }
 
-    if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
+    if(PMIC_STATUS_CRC_INIT_VAL == crcTestFlag)
     {
         //Pmic_getThermalWarnStat
         //Pmic_getOderlyShutdownStat
@@ -17453,15 +17462,22 @@ static int32_t test_pmic_leo_pmicA_spiStub_power_testApp(void)
     return status;
 }
 
-static int32_t setup_pmic_interrupt(uint32_t board)
+static int32_t setup_pmic_interrupt(uint32_t board, bool enableCRC)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
     if(J721E_BOARD == board)
     {
-        if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag_J721E)
+        if(enableCRC == true)
         {
-            gCrcTestFlag_J721E = PMIC_CFG_TO_ENABLE_CRC;
+            if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag_J721E)
+            {
+                gCrcTestFlag_J721E = PMIC_CFG_TO_ENABLE_CRC;
+            }
+        }
+        else
+        {
+            gCrcTestFlag_J721E = PMIC_STATUS_CRC_INIT_VAL;
         }
 
         pmic_device_info = J721E_LEO_PMICA_DEVICE;
@@ -17484,9 +17500,16 @@ static int32_t setup_pmic_interrupt(uint32_t board)
     }
     else if(J7VCL_BOARD == board)
     {
-        if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag_J7VCL)
+        if(enableCRC == true)
         {
-            gCrcTestFlag_J7VCL = PMIC_CFG_TO_ENABLE_CRC;
+            if(PMIC_STATUS_CRC_INIT_VAL == gCrcTestFlag_J7VCL)
+            {
+                gCrcTestFlag_J7VCL = PMIC_CFG_TO_ENABLE_CRC;
+            }
+        }
+        else
+        {
+            gCrcTestFlag_J7VCL = PMIC_STATUS_CRC_INIT_VAL;
         }
 
         pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
@@ -17539,7 +17562,8 @@ volatile static const char pmicTestAppMenu[] =
     " \r\n 3: Pmic Hera device(PMIC B on J7VCL EVM)"
     " \r\n 4: Pmic Leo device(PMIC A on J721E EVM Using SPI Stub Functions)"
     " \r\n 5: Pmic Leo device(PMIC A on J7VCL EVM Using SPI Stub Functions)"
-    " \r\n 6: Back to Test Menu"
+    " \r\n 6: Pmic Leo device(PMIC A on J721E EVM Manual Testcase with CRC Disable on PG2.0 Silicon revision)"
+    " \r\n 7: Back to Test Menu"
     " \r\n"
     " \r\n Enter option: "
 };
@@ -17551,6 +17575,7 @@ static void test_pmic_power_testapp_run_options()
     int8_t idx = 0;
 #if defined(SOC_J721E)
     int8_t automatic_options[] = {0, 1, 4};
+    int8_t  userInput = 0;
 #elif defined(SOC_J7200)
     int8_t automatic_options[] = {2, 3, 5};
 #endif
@@ -17570,7 +17595,7 @@ static void test_pmic_power_testapp_run_options()
             }
             else
             {
-                num = 6;
+                num = 7;
             }
             pmic_log("%d\n", num);
         }
@@ -17586,7 +17611,7 @@ static void test_pmic_power_testapp_run_options()
         {
             case 0U:
 #if defined(SOC_J721E)
-                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD, true))
                 {
                    pmic_device_info = J721E_LEO_PMICA_DEVICE;
 
@@ -17608,7 +17633,7 @@ static void test_pmic_power_testapp_run_options()
                break;
             case 1U:
 #if defined(SOC_J721E)
-                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD, true))
                 {
                    pmic_device_info = J721E_LEO_PMICB_DEVICE;
 
@@ -17630,7 +17655,7 @@ static void test_pmic_power_testapp_run_options()
                break;
             case 2U:
 #if defined(SOC_J7200)
-                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD, true))
                 {
                    pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
 
@@ -17652,7 +17677,7 @@ static void test_pmic_power_testapp_run_options()
                break;
             case 3U:
 #if defined(SOC_J7200)
-                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD, true))
                 {
                    pmic_device_info = J7VCL_HERA_PMICB_DEVICE;
 
@@ -17674,7 +17699,7 @@ static void test_pmic_power_testapp_run_options()
                break;
             case 4U:
 #if defined(SOC_J721E)
-                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD, true))
                 {
                     pmic_device_info = J721E_LEO_PMICA_DEVICE;
 
@@ -17698,7 +17723,7 @@ static void test_pmic_power_testapp_run_options()
                 break;
             case 5U:
 #if defined(SOC_J7200)
-                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD, true))
                 {
                     pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
                     /* POWER Unity Test App wrapper Function for LEO PMIC-A
@@ -17720,6 +17745,32 @@ static void test_pmic_power_testapp_run_options()
 #endif
                 break;
             case 6U:
+#if defined(SOC_J721E)
+                pmic_log("\r\n Run the test only on Leo PMIC-A PG2.0 after Board Power cycle !!!\n");
+                pmic_log("\r\n Enter 1 to continue");
+                UART_scanFmt("%d", &userInput);
+
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD, false))
+                {
+                   pmic_device_info = J721E_LEO_PMICA_DEVICE;
+
+                   /* POWER Unity Test App wrapper Function for LEO PMIC-A */
+                   if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_power_testApp())
+                   {
+                       /* Run power test cases for Leo PMIC-A */
+                       test_pmic_run_testcases();
+                   }
+                   /* Deinit pmic handle */
+                   if(pPmicCoreHandle != NULL)
+                   {
+                       test_pmic_appDeInit(pPmicCoreHandle);
+                   }
+                }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
+               break;
+            case 7U:
                pmic_log(" \r\n Back to Test Menu options\n");
                return;
             default:
