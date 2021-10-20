@@ -2982,6 +2982,13 @@ static void test_pmic_wdg_coverageGaps(void)
                                      PMIC_WDG_NUM_OF_TESTCASES);
     }
 
+#if defined(SOC_J7200) && \
+    (defined(BUILD_MCU2_0) || defined(BUILD_MCU2_1))
+    pmic_testResultUpdate_ignore(8917,
+                                 pmic_wdg_tests,
+                                 PMIC_WDG_NUM_OF_TESTCASES);
+#endif
+
     if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
     {
         wdgCfg.longWinDuration_ms = 752000U;
