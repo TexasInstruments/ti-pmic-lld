@@ -585,6 +585,10 @@ static Pmic_Ut_Tests_t pmic_misc_tests[] =
         "Test Pmic Write Protection when Register is Lock - code coverage"
     },
     {
+        10786,
+        "Pmic_setCommonCtrlConfig : Configure EN_DRV Signal - code coverage"
+    },
+    {
         8933,
         "Pmic_miscTests : Fault Injection and Coverage Gaps."
     },
@@ -3881,6 +3885,88 @@ static void test_pmic_setCommonCtrlCfg_enDrv(void)
 }
 
 /*!
+ * \brief   Pmic_setCommonCtrlConfig : Configure EN_DRV Signal - code coverage */
+static void test_pmic_setCommonCtrlCfg_enDrv_codecoverage(void)
+{
+    int32_t pmicStatus        = PMIC_ST_SUCCESS;
+    Pmic_CommonCtrlCfg_t commonCtrlCfg_rd = {PMIC_CFG_ENABLE_DRV_VALID_SHIFT,};
+    Pmic_CommonCtrlCfg_t commonCtrlCfg_def = {PMIC_CFG_ENABLE_DRV_VALID_SHIFT,};
+    Pmic_CommonCtrlCfg_t commonCtrlCfg =
+    {
+        PMIC_CFG_ENABLE_DRV_VALID_SHIFT,
+        PMIC_SPREAD_SPECTRUM_CFG_ENABLE,
+        PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_DISABLED,
+        PMIC_TPS6594X_EEPROM_DEFAULTS_LOAD_TO_RTC_DOMAIN_BITS,
+        PMIC_PIN_SIGNAL_LEVEL_HIGH,
+        PMIC_REGISTER_UNLOCK,
+        PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_NONE
+    };
+    uint8_t   pinValue;
+    Pmic_IrqStatus_t errStat  = {0U};
+
+    test_pmic_print_unity_testcase_info(1,
+                                        pmic_misc_tests,
+                                        PMIC_MISC_NUM_OF_TESTCASES);
+
+    pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmEnable(pPmicCoreHandle, PMIC_ESM_MODE_MCU, PMIC_ESM_DISABLE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_esmEnable(pPmicCoreHandle, PMIC_ESM_MODE_SOC, PMIC_ESM_DISABLE);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_wdgDisable(pPmicCoreHandle);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    /* To clear the interrupts*/
+    pmicStatus = Pmic_irqGetErrStatus(pPmicCoreHandle, &errStat, true);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    TEST_ASSERT_EQUAL(commonCtrlCfg.enDrv, commonCtrlCfg_rd.enDrv);
+
+    pmicStatus = Pmic_getPinValue(pPmicCoreHandle,
+                                  PMIC_PIN_TYPE_EN_DRV,
+                                  &pinValue);
+    TEST_ASSERT_EQUAL(commonCtrlCfg.enDrv, pinValue);
+
+    commonCtrlCfg.enDrv = PMIC_PIN_SIGNAL_LEVEL_LOW;
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    TEST_ASSERT_EQUAL(commonCtrlCfg.enDrv, commonCtrlCfg_rd.enDrv);
+
+    pmicStatus = Pmic_getPinValue(pPmicCoreHandle,
+                                  PMIC_PIN_TYPE_EN_DRV,
+                                  &pinValue);
+    TEST_ASSERT_EQUAL(commonCtrlCfg.enDrv, pinValue);
+
+    pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg_def);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+    TEST_ASSERT_EQUAL(commonCtrlCfg_def.enDrv, commonCtrlCfg_rd.enDrv);
+
+    pmicStatus = Pmic_getPinValue(pPmicCoreHandle,
+                                  PMIC_PIN_TYPE_EN_DRV,
+                                  &pinValue);
+    TEST_ASSERT_EQUAL(commonCtrlCfg_def.enDrv, pinValue);
+
+    pmic_testResultUpdate_pass(1,
+                               pmic_misc_tests,
+                               PMIC_MISC_NUM_OF_TESTCASES);
+}
+
+/*!
  * \brief   Pmic_setCommonCtrlConfig : Parameter validation for EN_DRV Signal
  */
 static void test_pmic_setCommonCtrlCfgPrmValTest_enDrv(void)
@@ -5932,7 +6018,7 @@ static void test_pmic_coverageGaps(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_COMM_MODE, status);
 
     if((PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev) &&
-       (PMIC_CFG_TO_ENABLE_CRC == crcTestFlag))
+       (PMIC_STATUS_CRC_ENABLED == crcTestFlag))
     {
         recovCntCfg_rd.validParams = PMIC_CFG_RECOV_CNT_CLR_CNT_VALID_SHIFT;
         status = Pmic_getRecoveryCntCfg(pPmicCoreHandle, &recovCntCfg_rd);
@@ -6085,7 +6171,7 @@ static void test_pmic_coverageGaps(void)
     }
 
     if((PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev) &&
-       (PMIC_CFG_TO_ENABLE_CRC == crcTestFlag))
+       (PMIC_STATUS_CRC_ENABLED == crcTestFlag))
     {
         //Pmic_getRecoveryCntCfg
         gRecoveryCntCfgTestFlag = 1U;
@@ -6258,6 +6344,7 @@ static void test_pmic_run_testcases(void)
     RUN_TEST(test_pmic_setMiscCtrlCfg_nRstOutSocSignal_high);
     RUN_TEST(test_pmic_init_cfg_deviceType);
     RUN_TEST(test_pmic_WriteProtection_RegisterLock_codecoverage);
+    RUN_TEST(test_pmic_setCommonCtrlCfg_enDrv_codecoverage);
 
     RUN_TEST(test_pmic_coverageGaps);
 
@@ -6822,8 +6909,7 @@ static int32_t test_pmic_printPfsmDelayValue(void)
     return pmicStatus;
 }
 
-volatile int8_t g_option = 0;
-static void test_pmic_misc_testapp_run_options()
+static void test_pmic_misc_testapp_run_options(int8_t option)
 {
     int8_t num = -1;
     int8_t idx = 0;
@@ -6834,7 +6920,6 @@ static void test_pmic_misc_testapp_run_options()
     int8_t automatic_options[] = {2, 3, 5};
 #endif
 
-
     while(1U)
     {
         if(idx >= (sizeof(automatic_options)/sizeof(automatic_options[0])))
@@ -6842,7 +6927,7 @@ static void test_pmic_misc_testapp_run_options()
             pmic_printTestResult(pmic_misc_tests, PMIC_MISC_NUM_OF_TESTCASES);
         }
         pmic_log("%s", pmicTestAppMenu);
-        if(g_option == PMIC_UT_AUTOMATE_OPTION)
+        if(option == PMIC_UT_AUTOMATE_OPTION)
         {
             if(idx < (sizeof(automatic_options)/sizeof(automatic_options[0])))
             {
@@ -7393,20 +7478,24 @@ static void test_pmic_misc_testapp_runner(void)
      * @cores       : mcu1_0, mcu1_1
      */
 
+    int8_t option = -1;
+
     while(1U)
     {
         pmic_log("%s", pmicTestMenu);
-        if(UART_scanFmt("%d", &g_option) != 0U)
+        if(UART_scanFmt("%d", &option) != 0U)
         {
             pmic_log("Read from UART Console failed\n");
             return;
         }
 
-        switch(g_option)
+        switch(option)
         {
             case PMIC_UT_AUTOMATE_OPTION:
+                test_pmic_misc_testapp_run_options(PMIC_UT_AUTOMATE_OPTION);
+               break;
             case PMIC_UT_MANUAL_OPTION:
-                test_pmic_misc_testapp_run_options();
+                test_pmic_misc_testapp_run_options(PMIC_UT_MANUAL_OPTION);
                break;
             case 2U:
                 pmic_log(" \r\n Quit from application\n");

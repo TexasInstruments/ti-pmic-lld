@@ -1957,6 +1957,10 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
                     gCrcTestFlag_J721E = PMIC_STATUS_CRC_ENABLED;
                 }
             }
+            else
+            {
+                gCrcTestFlag_J721E = PMIC_STATUS_CRC_INIT_VAL;
+            }
         }
 #endif
 
@@ -1973,6 +1977,10 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
                     Osal_delay(10);
                     gCrcTestFlag_J7VCL = PMIC_STATUS_CRC_ENABLED;
                 }
+            }
+            else
+            {
+                gCrcTestFlag_J7VCL = PMIC_STATUS_CRC_INIT_VAL;
             }
         }
 #endif
@@ -2085,6 +2093,10 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
                     gCrcTestFlag_J721E = PMIC_STATUS_CRC_ENABLED;
                 }
             }
+            else
+            {
+                gCrcTestFlag_J721E = PMIC_STATUS_CRC_INIT_VAL;
+            }
         }
 #endif
 
@@ -2101,6 +2113,10 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
                     Osal_delay(10);
                     gCrcTestFlag_J7VCL = PMIC_STATUS_CRC_ENABLED;
                 }
+            }
+            else
+            {
+                gCrcTestFlag_J7VCL = PMIC_STATUS_CRC_INIT_VAL;
             }
         }
 #endif
@@ -2242,6 +2258,10 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
                     gCrcTestFlag_J721E = PMIC_STATUS_CRC_ENABLED;
                 }
             }
+            else
+            {
+                gCrcTestFlag_J721E = PMIC_STATUS_CRC_INIT_VAL;
+            }
         }
 #endif
 
@@ -2258,6 +2278,10 @@ int32_t test_pmic_appInit(Pmic_CoreHandle_t **pmicCoreHandle,
                     Osal_delay(10);
                     gCrcTestFlag_J7VCL = PMIC_STATUS_CRC_ENABLED;
                 }
+            }
+            else
+            {
+                gCrcTestFlag_J7VCL = PMIC_STATUS_CRC_INIT_VAL;
             }
         }
 #endif

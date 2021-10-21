@@ -246,10 +246,6 @@ static Pmic_Ut_Tests_t pmic_wdg_tests[] =
         "Pmic_wdgStartQaSequence : Test wdg QA sequences for Early Answer Error"
     },
     {
-        10786,
-        "Pmic_wdgStartQaSequence : Test wdg QA sequences - code coverage"
-    },
-    {
         8917,
         "Pmic_wdgTests : Added for Coverage"
     },
@@ -1237,82 +1233,6 @@ static void test_pmic_wdg_startQaSequence_answerEarlyErr(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
 
     pmic_testResultUpdate_pass(10785,
-                               pmic_wdg_tests,
-                               PMIC_WDG_NUM_OF_TESTCASES);
-}
-
-/*!
- * \brief   Test wdg QA sequence - code coverage
- */
-static void test_pmic_wdg_startQaSequence_codeCoverage(void)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint32_t maxCnt = PMIC_WDG_WAIT_CNT_MIN_VAL;
-    Pmic_WdgCfg_t wdgCfg  =
-    {
-        PMIC_WDG_CFG_SETPARAMS_FORALL,
-        750000U,
-        8800U,
-        4950U,
-        PMIC_WDG_FAIL_THRESHOLD_COUNT_7,
-        PMIC_WDG_RESET_THRESHOLD_COUNT_7,
-        PMIC_WDG_QA_MODE,
-        PMIC_WDG_PWRHOLD_DISABLE,
-        PMIC_WDG_RESET_DISABLE,
-        PMIC_WDG_RETLONGWIN_DISABLE,
-        PMIC_WDG_QA_FEEDBACK_VALUE_0,
-        PMIC_WDG_QA_LFSR_VALUE_0,
-        PMIC_WDG_QA_QUES_SEED_VALUE_10,
-    };
-
-    if((gCrcTestFlag_J721E == PMIC_STATUS_CRC_ENABLED)||
-       (gCrcTestFlag_J7VCL == PMIC_STATUS_CRC_ENABLED))
-    {
-        wdgCfg.win1Duration_us = 10350U;
-    }
-
-    test_pmic_print_unity_testcase_info(10786,
-                                        pmic_wdg_tests,
-                                        PMIC_WDG_NUM_OF_TESTCASES);
-
-    if((PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode) ||
-       (PMIC_INTF_SPI == pPmicCoreHandle->commMode)||
-       (PMIC_SILICON_REV_ID_PG_1_0 != pPmicCoreHandle->pmicDevSiliconRev)||
-       (J721E_LEO_PMICA_DEVICE != pmic_device_info))
-    {
-        pmic_testResultUpdate_ignore(10786,
-                                     pmic_wdg_tests,
-                                     PMIC_WDG_NUM_OF_TESTCASES);
-    }
-
-    if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
-    {
-        wdgCfg.longWinDuration_ms = 752000U;
-    }
-
-    /* Enable WDG Timer */
-    pmicStatus = Pmic_wdgEnable(pPmicCoreHandle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-    /* Set QA parameters */
-    pmicStatus = Pmic_wdgSetCfg(pPmicCoreHandle, wdgCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-
-    gPmic_faultInjectCfg.enableFaultInjectionRead = 1U;
-    gPmic_faultInjectCfg.readCount = 0;
-    gPmic_faultInjectCfg.skipReadCount = 57;
-    /* Start Watchdog QA sequence */
-    pmicStatus = Pmic_wdgStartQaSequence(pPmicCoreHandle, 1U, maxCnt);
-    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_WDG_WINDOW, pmicStatus);
-    gPmic_faultInjectCfg.enableFaultInjectionRead = 0U;
-
-    /* Disable WDG Timer */
-    pmicStatus = Pmic_wdgDisable(pPmicCoreHandle);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
-
-
-    pmic_testResultUpdate_pass(10786,
                                pmic_wdg_tests,
                                PMIC_WDG_NUM_OF_TESTCASES);
 }
@@ -2982,13 +2902,6 @@ static void test_pmic_wdg_coverageGaps(void)
                                      PMIC_WDG_NUM_OF_TESTCASES);
     }
 
-#if defined(SOC_J7200) && \
-    (defined(BUILD_MCU2_0) || defined(BUILD_MCU2_1))
-    pmic_testResultUpdate_ignore(8917,
-                                 pmic_wdg_tests,
-                                 PMIC_WDG_NUM_OF_TESTCASES);
-#endif
-
     if(PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
     {
         wdgCfg.longWinDuration_ms = 752000U;
@@ -3183,8 +3096,7 @@ static void test_pmic_wdg_coverageGaps(void)
 /* TBD - Due to these code coverage tests in this below if case  - if(PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode)
  * 7327, 7340 tests is failed for Single I2C So ignored for time being
  */
-    if((PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev) &&
-       (PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode))
+    if(PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode)
     {
         /* Enable WDG Timer */
         status = Pmic_wdgEnable(pPmicCoreHandle);
@@ -3202,21 +3114,24 @@ static void test_pmic_wdg_coverageGaps(void)
 
         Osal_delay(20U);
 
-        /* Enable WDG Timer */
-        status = Pmic_wdgEnable(pPmicCoreHandle);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+        if(PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
+        {
+            /* Enable WDG Timer */
+            status = Pmic_wdgEnable(pPmicCoreHandle);
+            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-        //is_wdgBadEventDetected
-        gPmic_faultInjectCfg.readCount = 0;
-        gPmic_faultInjectCfg.skipReadCount = 10;
-        status = Pmic_wdgStartQaSequence(pPmicCoreHandle, 1U, maxCnt);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+            //is_wdgBadEventDetected
+            gPmic_faultInjectCfg.readCount = 0;
+            gPmic_faultInjectCfg.skipReadCount = 10;
+            status = Pmic_wdgStartQaSequence(pPmicCoreHandle, 1U, maxCnt);
+            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-        /* Disable WDG Timer */
-        status = Pmic_wdgDisable(pPmicCoreHandle);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+            /* Disable WDG Timer */
+            status = Pmic_wdgDisable(pPmicCoreHandle);
+            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-        Osal_delay(20U);
+            Osal_delay(20U);
+        }
 
         /* Enable WDG Timer */
         status = Pmic_wdgEnable(pPmicCoreHandle);
@@ -3531,6 +3446,8 @@ static void test_pmic_wdg_coverageGaps(void)
 
     Osal_delay(1000U);
 
+    pmic_log("\r\n WDG coverage test completed\n");
+
     pmic_testResultUpdate_pass(8917,
                                pmic_wdg_tests,
                                PMIC_WDG_NUM_OF_TESTCASES);
@@ -3605,10 +3522,6 @@ static void test_pmic_run_testcases(void)
 
     RUN_TEST(test_pmic_wdgClrErrStatus_wdgErrType);
     RUN_TEST(test_pmic_wdg_startQaSequence_answerEarlyErr);
-    RUN_TEST(test_pmic_wdg_startQaSequence_codeCoverage);
-
-    RUN_TEST(test_pmic_wdg_coverageGaps);
-
     pmic_updateTestResults(pmic_wdg_tests, PMIC_WDG_NUM_OF_TESTCASES);
 
     UNITY_END();
@@ -3982,13 +3895,15 @@ volatile static const char pmicTestAppMenu[] =
     " \r\n 5: Pmic Leo device with SPI Stub Functions(PMIC-A on J7VCL EVM)"
     " \r\n 6: Pmic Leo Manual test for WDG RST INT and WDG LONGWIN TIMEOUT INT(PMIC-A on J721E EVM)"
     " \r\n 7: Pmic Leo Manual test for WDG RST INT and WDG LONGWIN TIMEOUT INT(PMIC-A on J7VCL EVM)"
-    " \r\n 8: Back to Test Menu"
+    " \r\n 8: Pmic Leo Manual test for WDG Dynamic code coverage(PMIC-A on J721E EVM)"
+    " \r\n 9: Pmic Leo Manual test for WDG Dynamic code coverage(PMIC-A on J7VCL EVM)"
+    " \r\n 10: Back to Test Menu"
     " \r\n"
     " \r\n Enter option: "
 };
 
-volatile int8_t g_option = 0;
-static void test_pmic_wdg_testapp_run_options()
+
+static void test_pmic_wdg_testapp_run_options(int8_t option)
 {
     int8_t num = -1;
     int8_t idx = 0;
@@ -4005,7 +3920,7 @@ static void test_pmic_wdg_testapp_run_options()
             pmic_printTestResult(pmic_wdg_tests, PMIC_WDG_NUM_OF_TESTCASES);
         }
         pmic_log("%s", pmicTestAppMenu);
-        if(g_option == PMIC_UT_AUTOMATE_OPTION)
+        if(option == PMIC_UT_AUTOMATE_OPTION)
         {
             if(idx < (sizeof(automatic_options)/sizeof(automatic_options[0])))
             {
@@ -4013,7 +3928,7 @@ static void test_pmic_wdg_testapp_run_options()
             }
             else
             {
-                num = 8;
+                num = 10;
             }
             pmic_log("%d\n", num);
         }
@@ -4208,6 +4123,50 @@ static void test_pmic_wdg_testapp_run_options()
 #endif
                 break;
             case 8U:
+#if defined(SOC_J721E)
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J721E_BOARD))
+                {
+                    pmic_device_info = J721E_LEO_PMICA_DEVICE;
+
+                    /* WDG Unity Test App wrapper Function for LEO PMIC-A */
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_wdg_testApp())
+                    {
+                        /* Run WDG test cases for Leo PMIC-A using Single I2C */
+                        test_pmic_wdg_coverageGaps();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
+                return;
+            case 9U:
+#if defined(SOC_J7200)
+                if(PMIC_ST_SUCCESS == setup_pmic_interrupt(J7VCL_BOARD))
+                {
+                    pmic_device_info = J7VCL_LEO_PMICA_DEVICE;
+
+                    /* WDG Unity Test App wrapper Function for LEO PMIC-A */
+                    if(PMIC_ST_SUCCESS == test_pmic_leo_pmicA_wdg_testApp())
+                    {
+                        /* Run WDG test cases for Leo PMIC-A */
+                        test_pmic_wdg_coverageGaps();
+                    }
+                    /* Deinit pmic handle */
+                    if(pPmicCoreHandle != NULL)
+                    {
+                        test_pmic_appDeInit(pPmicCoreHandle);
+                    }
+                }
+#else
+                pmic_log("\nInvalid Board!!!\n");
+#endif
+                return;
+            case 10U:
                pmic_log(" \r\n Back to Test Menu options\n");
                return;
             default:
@@ -4230,20 +4189,24 @@ static void test_pmic_wdg_testapp_runner(void)
      * @cores       : mcu1_0, mcu1_1
      */
 
+    int8_t option = -1;
+
     while(1U)
     {
         pmic_log("%s", pmicTestMenu);
-        if(UART_scanFmt("%d", &g_option) != 0U)
+        if(UART_scanFmt("%d", &option) != 0U)
         {
             pmic_log("Read from UART Console failed\n");
             return;
         }
 
-        switch(g_option)
+        switch(option)
         {
             case PMIC_UT_AUTOMATE_OPTION:
+                test_pmic_wdg_testapp_run_options(PMIC_UT_AUTOMATE_OPTION);
+               break;
             case PMIC_UT_MANUAL_OPTION:
-                test_pmic_wdg_testapp_run_options();
+                test_pmic_wdg_testapp_run_options(PMIC_UT_MANUAL_OPTION);
                break;
             case 2U:
                 pmic_log(" \r\n Quit from application\n");
