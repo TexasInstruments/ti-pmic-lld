@@ -3904,7 +3904,7 @@ static void test_pmic_setCommonCtrlCfg_enDrv_codecoverage(void)
     uint8_t   pinValue;
     Pmic_IrqStatus_t errStat  = {0U};
 
-    test_pmic_print_unity_testcase_info(1,
+    test_pmic_print_unity_testcase_info(10786,
                                         pmic_misc_tests,
                                         PMIC_MISC_NUM_OF_TESTCASES);
 
@@ -3961,7 +3961,7 @@ static void test_pmic_setCommonCtrlCfg_enDrv_codecoverage(void)
                                   &pinValue);
     TEST_ASSERT_EQUAL(commonCtrlCfg_def.enDrv, pinValue);
 
-    pmic_testResultUpdate_pass(1,
+    pmic_testResultUpdate_pass(10786,
                                pmic_misc_tests,
                                PMIC_MISC_NUM_OF_TESTCASES);
 }
