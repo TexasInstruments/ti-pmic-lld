@@ -147,6 +147,7 @@ typedef struct Pmic_IrqStatus_s
  *              REQ_TAG(PDK-9113), REQ_TAG(PDK-9120), REQ_TAG(PDK-9122),
  *              REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
  * Design: did_pmic_irq_cfg_readback
+ * Architecture: aid_pmic_irq_cfg
  *
  *          This function does the following:
  *             1. This function gets the interrupt status by reading pmic
@@ -177,6 +178,7 @@ int32_t  Pmic_irqGetErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5805), REQ_TAG(PDK-9113), REQ_TAG(PDK-9120)
  * Design: did_pmic_irq_cfg_readback
+ * Architecture: aid_pmic_irq_cfg
  *
  *          This function does the following:
  *          1. This function clears the IRQ status in PMIC register for a given
@@ -206,6 +208,7 @@ int32_t  Pmic_irqClrErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5805)
  * Design: did_pmic_irq_cfg_readback
+ * Architecture: aid_pmic_irq_cfg
  *
  *          This function does the following:
  *          1. This function mask/unmask the given IRQ Number.
@@ -235,6 +238,7 @@ int32_t Pmic_irqMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5805)
  * Design: did_pmic_irq_cfg_readback
+ * Architecture: aid_pmic_irq_cfg
  *
  *          This function is used to extract each Error status from pErrStat
  *          as per the hierarchy given in the TRM. This function clears the
@@ -260,6 +264,7 @@ int32_t Pmic_getNextErrorStatus(const Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5812)
  * Design: did_pmic_irq_cfg_readback
+ * Architecture: aid_pmic_irq_cfg
  *
  *          This function is used to Mask or Unmask GPIO Rise and Fall
  *          Interrupts based on the GPIO IRQ Number.
@@ -291,6 +296,7 @@ int32_t Pmic_irqGpioMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-9153)
  * Design: did_pmic_irq_mask_status
+ * Architecture: aid_pmic_irq_cfg
  *
  *          This function does the following:
  *          1. This function reads the status of interrupt is masked or not for
@@ -321,6 +327,7 @@ int32_t Pmic_irqGetMaskIntrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-9152)
  * Design: did_pmic_irq_mask_status
+ * Architecture: aid_pmic_irq_cfg
  *
  *          This function reads the status of GPIO Rise and Fall interrupt is
  *          masked or not for the given GPIO IRQ Number

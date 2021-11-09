@@ -126,6 +126,7 @@ void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *pPmicCoreHandle)
  *
  * Requirement: REQ_TAG(PDK-5809)
  * Design: did_pmic_err_recov_cnt_cfg_readback
+ * Architecture: aid_pmic_core_misc_cfg
  *
  *         This function configures PMIC Recovery Counter register, controlling
  *         recovery count Threshold and Clear, when corresponding validParam
@@ -213,6 +214,7 @@ int32_t Pmic_setRecoveryCntCfg(Pmic_CoreHandle_t        *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5809)
  * Design: did_pmic_err_recov_cnt_cfg_readback
+ * Architecture: aid_pmic_core_misc_cfg
  *
  *         This function gets PMIC Recovery Counter configuration values. Like,
  *         recovery count Threshold and Clear, when corresponding validParam
@@ -288,6 +290,7 @@ int32_t Pmic_getRecoveryCntCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5809)
  * Design: did_pmic_err_recov_cnt_cfg_readback
+ * Architecture: aid_pmic_core_misc_cfg
  *
  *         This function reads out the recovery count value.
  *
@@ -804,8 +807,20 @@ static int32_t Pmic_updateSubSysInfoValidateMainQaCommIFRdWr(
  * Design: did_pmic_comm_intf_cfg, did_pmic_comm_single_i2c_cfg,
  *         did_pmic_comm_dual_i2c_cfg, did_pmic_comm_spi_cfg,
  *         did_pmic_tps6594x_j721e_support, did_pmic_lp8764x_j7200_support,
- *         did_pmic_validation_feature_support,
- *         did_pmic_generic_feature_support, did_pmic_safety_feature_support
+ *         did_pmic_validation_feature_support, did_pmic_performance_support,
+ *         did_pmic_generic_feature_support, did_pmic_safety_feature_support,
+ *         did_pmic_pre_emption_support, did_pmic_stateless_reentrant_support,
+ *         did_pmic_dynamic_alloc_mem_not_supported, did_pmic_build_infra_cfg,
+ *         did_pmic_debug_release_profile_support, did_pmic_standalone_support,
+ *         did_pmic_multiple_pmic_support, did_pmic_baremetal_support
+ * Architecture: aid_pmic_tps6594x_lp8764x_support, aid_pmic_standalone_support,
+ *               aid_pmic_multiple_pmic_support, aid_pmic_pre_emption_support,
+ *               aid_pmic_stateless_reentrant_support, aid_pmic_generic_support,
+ *               aid_pmic_baremetal_support, aid_pmic_comm_intf_i2c_spi_cfg,
+ *               aid_pmic_dynamic_alloc_mem_not_supported,
+ *               aid_pmic_build_infra_cfg,
+ *               aid_pmic_debug_release_profile_support,
+ *               aid_pmic_performance_support, aid_pmic_test_support
  *
  *         This function gets device configuration from pPmicConfigData and
  *         initializes device specific information in pPmicCoreHandle after
@@ -895,6 +910,7 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
  *
  * Requirement: REQ_TAG(PDK-5814)
  * Design: did_pmic_comm_intf_cfg
+ * Architecture: aid_pmic_tps6594x_lp8764x_support
  *
  *         This function takes an existing Instance pPmicCoreHandle and
  *         closes the LLD being used for this Instance. It should be called
@@ -962,6 +978,7 @@ static void Pmic_getScratchPadRegAddr(uint8_t  scratchPadRegId,
  *
  * Requirement: REQ_TAG(PDK-5810), REQ_TAG(PDK-5843)
  * Design: did_pmic_comm_single_i2c_cfg, did_pmic_comm_spi_cfg
+ * Architecture: aid_pmic_core_misc_cfg
  *
  *          This function is used write data to scratchpad register of PMIC
  *
@@ -1008,6 +1025,7 @@ int32_t Pmic_setScratchPadValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5810), REQ_TAG(PDK-5843)
  * Design: did_pmic_comm_single_i2c_cfg, did_pmic_comm_spi_cfg
+ * Architecture: aid_pmic_core_misc_cfg
  *
  *          This function is used read data from scratchpad register of PMIC
  *
@@ -1092,6 +1110,7 @@ static void Pmic_getUserSpareRegBitFields(uint8_t   userSpareRegNum,
  *
  * Requirement: REQ_TAG(PDK-9133)
  * Design: did_pmic_user_spare_cfg_readback
+ * Architecture: aid_pmic_core_misc_cfg
  *
  *          This function is used write data to User Spare register of PMIC
  *
@@ -1158,6 +1177,7 @@ int32_t Pmic_setUserSpareValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-9133)
  * Design: did_pmic_user_spare_cfg_readback
+ * Architecture: aid_pmic_core_misc_cfg
  *
  *          This function is used read data from User Spare register of PMIC
  *
@@ -1699,6 +1719,7 @@ static int32_t Pmic_getSpreadSpectrumModDepthCfg(
  * Requirement: REQ_TAG(PDK-9112), REQ_TAG(PDK-9114), REQ_TAG(PDK-9131),
  *              REQ_TAG(PDK-9143)
  * Design: did_pmic_common_ctrl_cfg_readback
+ * Architecture: aid_pmic_core_misc_cfg
  *
  *          This function is used to set the required common control parameter
  *          configuration when corresponding validParam bit field is set in
@@ -1786,6 +1807,7 @@ int32_t Pmic_setCommonCtrlConfig(Pmic_CoreHandle_t          *pPmicCoreHandle,
  * Requirement: REQ_TAG(PDK-9112), REQ_TAG(PDK-9114), REQ_TAG(PDK-9131),
  *              REQ_TAG(PDK-9143)
  * Design: did_pmic_common_ctrl_cfg_readback
+ * Architecture: aid_pmic_core_misc_cfg
  *
  *          This function is used to get the required common control parameter
  *          configuration when corresponding validParam bit field is set in
@@ -2457,8 +2479,9 @@ static int32_t Pmic_setExtclkfreqSelNRstOutSocNRstOutCfg(
 /*!
  * \brief   API to set PMIC Miscellaneous control parameter configuration.
  *
- * Requirement: REQ_TAG(PDK-9132), REQ_TAG(PDK-9127)
+ * Requirement: REQ_TAG(PDK-9132), REQ_TAG(PDK-9127), REQ_TAG(PDK-9111)
  * Design: did_pmic_misc_ctrl_cfg_readback
+ * Architecture: aid_pmic_core_misc_cfg
  *
  *          This function is used to set the required miscellaneous control
  *          parameter configuration when corresponding validParam bit field is
@@ -2574,6 +2597,7 @@ static int32_t Pmic_getExtclkfreqSelNRstOutSocNRstOutCfg(
  *
  * Requirement: REQ_TAG(PDK-9132), REQ_TAG(PDK-9127)
  * Design: did_pmic_misc_ctrl_cfg_readback
+ * Architecture: aid_pmic_core_misc_cfg
  *
  *          This function is used to get the required miscellaneous control
  *          parameter configuration when corresponding validParam bit field is
@@ -2850,8 +2874,9 @@ static int32_t Pmic_getBackupBatteryChargingCurrentVal(
 /*!
  * \brief   API to set PMIC Battery Backup control parameter configuration.
  *
- * Requirement: REQ_TAG(PDK-9130)
+ * Requirement: REQ_TAG(PDK-9130), REQ_TAG(PDK-9111)
  * Design: did_pmic_battery_ctrl_cfg_readback
+ * Architecture: aid_pmic_core_misc_cfg
  *
  *          This function is used to set the required Battery Backup control
  *          parameter configuration when corresponding validParam bit field is
@@ -2942,6 +2967,7 @@ int32_t Pmic_setBatteryCtrlConfig(Pmic_CoreHandle_t            *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-9130)
  * Design: did_pmic_battery_ctrl_cfg_readback
+ * Architecture: aid_pmic_core_misc_cfg
  *
  *          This function is used to get the required Battery Backup control
  *          parameter configuration when corresponding validParam bit field is
@@ -3039,6 +3065,7 @@ static void Pmic_getPinTypeRegBitFields(const uint8_t      pinType,
  *
  * Requirement: REQ_TAG(PDK-9137), REQ_TAG(PDK-9131)
  * Design: did_pmic_pin_readback
+ * Architecture: aid_pmic_core_misc_cfg
  *
  *          This function is used to read the signal level of the NRSTOUT_SOC/
  *          NRSTOUT/ EN_DRV Pin
@@ -3437,6 +3464,7 @@ static int32_t Pmic_getStartupEndrvNrstoutsocNrstoutNintPinStat(
  *              REQ_TAG(PDK-9125), REQ_TAG(PDK-9139), REQ_TAG(PDK-9138),
  *              REQ_TAG(PDK-9112)
  * Design: did_pmic_common_ctrl_status_readback
+ * Architecture: aid_pmic_core_misc_cfg
  *
  *          This function is used to get the required common control parameter
  *          status when corresponding validParam bit field is set in
@@ -3528,6 +3556,7 @@ int32_t Pmic_getCommonCtrlStat(Pmic_CoreHandle_t           *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-9129)
  * Design: did_pmic_i2c_speed_readback
+ * Architecture: aid_pmic_core_misc_cfg
  *
  *          This function is used to get the configured value for I2C1 or
  *          I2C2 Speed based on commMode
@@ -3599,6 +3628,7 @@ int32_t Pmic_getI2CSpeed(Pmic_CoreHandle_t     *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-9119)
  * Design: did_pmic_crc_enable
+ * Architecture: aid_pmic_core_misc_cfg
  *
  *          This function is used to enable CRC on Primary PMIC which enables
  *          CRC for I2C1, I2C2, SPI interface of both Primary and Secondary PMIC
@@ -3641,6 +3671,7 @@ int32_t Pmic_enableCRC(Pmic_CoreHandle_t     *pPmicCoreHandle)
  *
  * Requirement: REQ_TAG(PDK-9329)
  * Design: did_pmic_crc_status
+ * Architecture: aid_pmic_core_misc_cfg
  *
  *          This function is used to get the CRC Status based on commMode
  *
@@ -3713,6 +3744,7 @@ int32_t Pmic_getCrcStatus(Pmic_CoreHandle_t     *pPmicCoreHandle,
  * Requirement: REQ_TAG(PDK-9109), REQ_TAG(PDK-9110), REQ_TAG(PDK-9149),
  *              REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
  * Design: did_pmic_dev_info_readback
+ * Architecture: aid_pmic_core_misc_cfg
  *
  *          This function is used to get PMIC Device Information such as
  *          TI DeviceID, TI NVM ID, TI NVM Revision, TI Silicon Revision,
@@ -3814,6 +3846,7 @@ int32_t Pmic_getDeviceInfo(Pmic_CoreHandle_t     *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-9129)
  * Design: did_pmic_i2c_speed_readback
+ * Architecture: aid_pmic_core_misc_cfg
  *
  *          This function is used to configure I2C1 speed for Single or Dual I2C
  *          Interface and I2C2 Speed for Dual I2C Interface based on commMode.

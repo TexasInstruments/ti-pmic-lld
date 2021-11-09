@@ -275,6 +275,7 @@ typedef struct Pmic_GpioCfg_s
  * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-5844), REQ_TAG(PDK-9111),
  *              REQ_TAG(PDK-9157)
  * Design: did_pmic_gpio_cfg_readback, did_pmic_lpstandby_wkup_cfg
+ * Architecture: aid_pmic_gpio_cfg
  *
  *          This function is used to set the required configuration for the
  *          specified GPIO pin when corresponding validParam bit field is set in
@@ -306,6 +307,7 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5808)
  * Design: did_pmic_gpio_cfg_readback
+ * Architecture: aid_pmic_gpio_cfg
  *
  *          This function is used to read the configuration for the specified
  *          GPIO pin when corresponding validParam bit field is set in
@@ -333,6 +335,7 @@ int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-9111)
  * Design: did_pmic_gpio_cfg_readback
+ * Architecture: aid_pmic_gpio_cfg
  *
  *          This function is used to configure the signal level of the
  *          specified GPIO pin.
@@ -359,6 +362,7 @@ int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5808)
  * Design: did_pmic_gpio_cfg_readback
+ * Architecture: aid_pmic_gpio_cfg
  *
  *          This function is used to read the signal level of the gpio pin
  *
@@ -383,6 +387,7 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
  * Design: did_pmic_gpio_cfg_readback
+ * Architecture: aid_pmic_gpio_cfg
  *
  *          This function is used to enable/disable GPIO pin Interrupts
  *
@@ -410,6 +415,7 @@ int32_t Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-9111), REQ_TAG(PDK-9162)
  * Design: did_pmic_gpio_cfg_readback
+ * Architecture: aid_pmic_gpio_cfg
  *
  *          This function is used to set the required configuration for the
  *          NPWRON OR ENABLE pin when corresponding validParam bit field is set
@@ -438,6 +444,7 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
  *
  * Requirement: REQ_TAG(PDK-5808)
  * Design: did_pmic_gpio_cfg_readback
+ * Architecture: aid_pmic_gpio_cfg
  *
  *          This function is used to read the configuration for the
  *          NPWRON OR ENABLE pin when corresponding validParam bit field is set

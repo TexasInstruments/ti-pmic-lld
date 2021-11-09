@@ -463,8 +463,20 @@ typedef struct Pmic_CoreCfg_s {
  * Design: did_pmic_comm_intf_cfg, did_pmic_comm_single_i2c_cfg,
  *         did_pmic_comm_dual_i2c_cfg, did_pmic_comm_spi_cfg,
  *         did_pmic_tps6594x_j721e_support, did_pmic_lp8764x_j7200_support,
- *         did_pmic_validation_feature_support,
- *         did_pmic_generic_feature_support, did_pmic_safety_feature_support
+ *         did_pmic_validation_feature_support, did_pmic_performance_support,
+ *         did_pmic_generic_feature_support, did_pmic_safety_feature_support,
+ *         did_pmic_pre_emption_support, did_pmic_stateless_reentrant_support,
+ *         did_pmic_dynamic_alloc_mem_not_supported, did_pmic_build_infra_cfg,
+ *         did_pmic_debug_release_profile_support, did_pmic_standalone_support,
+ *         did_pmic_multiple_pmic_support, did_pmic_baremetal_support
+ * Architecture: aid_pmic_tps6594x_lp8764x_support, aid_pmic_standalone_support,
+ *               aid_pmic_multiple_pmic_support, aid_pmic_pre_emption_support,
+ *               aid_pmic_stateless_reentrant_support, aid_pmic_generic_support,
+ *               aid_pmic_baremetal_support, aid_pmic_comm_intf_i2c_spi_cfg,
+ *               aid_pmic_dynamic_alloc_mem_not_supported,
+ *               aid_pmic_build_infra_cfg,
+ *               aid_pmic_debug_release_profile_support,
+ *               aid_pmic_performance_support, aid_pmic_test_support
  *
  *         This function gets device configuration from pPmicConfigData and
  *         initializes device specific information in pPmicCoreHandle after
@@ -487,6 +499,7 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
  *
  * Requirement: REQ_TAG(PDK-5814)
  * Design: did_pmic_comm_intf_cfg
+ * Architecture: aid_pmic_tps6594x_lp8764x_support
  *
  *         This function takes an existing Instance pPmicCoreHandle and
  *         closes the LLD being used for this Instance. It should be called

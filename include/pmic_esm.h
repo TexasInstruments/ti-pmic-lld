@@ -297,6 +297,7 @@ typedef struct Pmic_EsmIntrCfg_s
  *
  * Requirement: REQ_TAG(PDK-5833)
  * Design: did_pmic_esm_cfg_readback
+ * Architecture: aid_pmic_esm_cfg
  *
  *          This function is used to Start/Stop the PMIC ESM_MCU/ESM_SOC
  *          Note: Application has to ensure to do proper configuration of ESM
@@ -325,6 +326,7 @@ int32_t Pmic_esmStart(Pmic_CoreHandle_t   *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-9150)
  * Design: did_pmic_esm_cfg_readback
+ * Architecture: aid_pmic_esm_cfg
  *
  *          This function is used to read status of PMIC ESM_MCU/ESM_SOC is
  *          started or not
@@ -350,6 +352,7 @@ int32_t Pmic_esmGetStatus(Pmic_CoreHandle_t   *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5833)
  * Design: did_pmic_esm_cfg_readback
+ * Architecture: aid_pmic_esm_cfg
  *
  *          This function is used to Enable/Disable the PMIC ESM_MCU/ESM_SOC
  *          This API must be called only when ESM is in STOP state.
@@ -374,6 +377,7 @@ int32_t Pmic_esmEnable(Pmic_CoreHandle_t   *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5833)
  * Design: did_pmic_esm_cfg_readback
+ * Architecture: aid_pmic_esm_cfg
  *
  *          This function is used to read the Enable/Disable state of
  *          PMIC ESM_MCU/ESM_SOC.
@@ -396,6 +400,7 @@ int32_t Pmic_esmGetEnableState(Pmic_CoreHandle_t   *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5833)
  * Design: did_pmic_esm_cfg_readback
+ * Architecture: aid_pmic_esm_cfg
  *
  *          This function is used to set the ESM mode, delay-1 and delay-2 time
  *          time intervals, Error Count Threshold value, HMAX, HMIN, LMAX,
@@ -419,6 +424,7 @@ int32_t Pmic_esmSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5833)
  * Design: did_pmic_esm_cfg_readback
+ * Architecture: aid_pmic_esm_cfg
  *
  *          This function is used to get the configured ESM mode, delay-1 and
  *          delay-2 time time intervals, Error Count Threshold value, HMAX,
@@ -445,6 +451,7 @@ int32_t Pmic_esmGetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5833)
  * Design: did_pmic_esm_cfg_readback
+ * Architecture: aid_pmic_esm_cfg
  *
  *          This function is used to mask/unmask the ESM RST, FAIL and
  *          PIN Interrupts for both ESM MCU and ESM SOC.
@@ -467,6 +474,7 @@ int32_t Pmic_esmSetInterrupt(Pmic_CoreHandle_t        *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5833)
  * Design: did_pmic_esm_cfg_readback
+ * Architecture: aid_pmic_esm_cfg
  *
  *          This function is used to get the current Error count for ESM MCU
  *          ESM SOC.

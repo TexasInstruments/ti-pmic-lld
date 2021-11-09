@@ -182,6 +182,7 @@ extern "C" {
  *
  * Requirement: REQ_TAG(PDK-9124)
  * Design: did_pmic_gpio_cfg_readback
+ * Architecture: aid_pmic_gpio_cfg
  *
  *          This function is used to read the signal level of the NPWRON/Enable
  *          pin.

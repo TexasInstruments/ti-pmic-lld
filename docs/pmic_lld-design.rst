@@ -115,6 +115,17 @@ PMIC LLD Software Design Document
     |        |             |              | Design Description, API|             |
     |        |             |              | Function Descriptions  |             |
     +--------+-------------+--------------+------------------------+-------------+
+    |2.12    | 08-Nov-2021 | Abhishek     | Updated the following  | Released    |
+    |        |             | Kumar        | sections:              |             |
+    |        |             |              | Design Requirements,   |             |
+    |        |             |              | API Function           |             |
+    |        |             |              | Descriptions and Added |             |
+    |        |             |              | New Test Ids           |             |
+    +--------+-------------+--------------+------------------------+-------------+
+    |2.13    | 08-Nov-2021 | Abhishek     | Fixed formatting issues| Released    |
+    |        |             | Kumar        | at sections:           |             |
+    |        |             |              | Design Requirements    |             |
+    +--------+-------------+--------------+------------------------+-------------+
 
 .. raw:: latex
 
@@ -947,35 +958,11 @@ LLD.
     |                                    |                |                | decipher a Soft|
     |                                    |                |                | Reboot Error   |
     +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_generic_feature_support   | PDK-5816       | Other          | Driver shall be|
-    |                                    | PDK-5817       |                | independent of |
-    |                                    | PDK-5818       |                | TI Processor   |
-    |                                    | PDK-5819       |                | SDK for        |
-    |                                    | PDK-5820       |                | standalone use |
-    |                                    | PDK-5821       |                | case, shall be |
-    |                                    | PDK-5822       |                | stateless and  |
-    |                                    | PDK-5823       |                | reentrant,     |
-    |                                    | PDK-5825       |                | support        |
-    |                                    | PDK-5826       |                | multiple       |
-    |                                    |                |                | applications   |
-    |                                    |                |                | and protect for|
-    |                                    |                |                | pre-emption,   |
-    |                                    |                |                | Driver source  |
-    |                                    |                |                | code           |
-    |                                    |                |                | architecture   |
-    |                                    |                |                | shall support  |
-    |                                    |                |                | multiple PMICs,|
-    |                                    |                |                | shall compile  |
-    |                                    |                |                | via make(Linux)|
-    |                                    |                |                | and XDC gmake  |
-    |                                    |                |                | (Windows) and  |
-    |                                    |                |                | Driver         |
-    |                                    |                |                | validation on  |
-    |                                    |                |                | TI EVM shall   |
-    |                                    |                |                | use TI         |
-    |                                    |                |                | Processor SDK, |
-    |                                    |                |                | Coding style   |
-    |                                    |                |                | shall follow   |
+    | did_pmic_generic_feature_support   | PDK-5817       | Other          | Driver shall   |
+    |                                    | PDK-5818       |                | use TI         |
+    |                                    | PDK-5819       |                | Processor SDK, |
+    |                                    | PDK-5826       |                | Coding style   |
+    |                                    | PDK-5823       |                | shall follow   |
     |                                    |                |                | TI Processor   |
     |                                    |                |                | SDK coding     |
     |                                    |                |                | guidelines,    |
@@ -1022,29 +1009,68 @@ LLD.
     |                                    |                |                | for functional |
     |                                    |                |                | safety         |
     +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_irq_cfg_readback          | PDK-9122       | Safety         | Driver shall   |
-    |                                    |                | Functional     | read PMIC      |
-    |                                    |                |                | registers to   |
-    |                                    |                |                | decipher a Soft|
-    |                                    |                |                | Reboot Error   |
+    |did_pmic_stateless_reentrant_support| PDK-5820       | Other          | Driver shall   |
+    |                                    |                |                | stateless and  |
+    |                                    |                |                | reentrant      |
     +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_irq_cfg_readback          | PDK-9122       | Safety         | Driver shall   |
-    |                                    |                | Functional     | read PMIC      |
-    |                                    |                |                | registers to   |
-    |                                    |                |                | decipher a Soft|
-    |                                    |                |                | Reboot Error   |
+    | did_pmic_multiple_pmic_support     | PDK-5825       | Other          | Driver source  |
+    |                                    |                |                | code           |
+    |                                    |                |                | architecture   |
+    |                                    |                |                | shall support  |
+    |                                    |                |                | multiple PMICs |
     +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_irq_cfg_readback          | PDK-9122       | Safety         | Driver shall   |
-    |                                    |                | Functional     | read PMIC      |
-    |                                    |                |                | registers to   |
-    |                                    |                |                | decipher a Soft|
-    |                                    |                |                | Reboot Error   |
+    | did_pmic_standalone_support        | PDK-5816       | Other          | Driver shall be|
+    |                                    |                |                | independent    |
+    |                                    |                |                | architecture   |
+    |                                    |                |                | of TI Processor|
+    |                                    |                |                | SDK for        |
+    |                                    |                |                | standalone use |
+    |                                    |                |                | case           |
     +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_irq_cfg_readback          | PDK-9122       | Safety         | Driver shall   |
-    |                                    |                | Functional     | read PMIC      |
-    |                                    |                |                | registers to   |
-    |                                    |                |                | decipher a Soft|
-    |                                    |                |                | Reboot Error   |
+    | did_pmic_pre_emption_support       | PDK-5822       | Other          | Driver shall   |
+    |                                    |                |                | support        |
+    |                                    |                |                | multiple       |
+    |                                    |                |                | applications   |
+    |                                    |                |                | and protect for|
+    |                                    |                |                | pre-emption    |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_baremetal_support         | PDK-5811       | Safety         | Driver is      |
+    |                                    | PDK-5853       | Functional     | OS-agnostic,   |
+    |                                    |                |                | and can be run |
+    |                                    |                |                | on bare-metal  |
+    |                                    |                |                | environments   |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_performance_support       | PDK-5859       | Performance    | Processor      |
+    |                                    |                | and Resources  | SDK shall      |
+    |                                    |                |                | contain a PMIC |
+    |                                    |                |                | driver         |
+    |                                    |                |                | benchmark for  |
+    |                                    |                |                | Pmic           |
+    |                                    |                |                | Initialization |
+    |                                    |                |                | and WDG QA     |
+    |                                    |                |                | Answer         |
+    |                                    |                |                | computation    |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_dynamic_alloc_mem_not     | PDK-5811       | Safety         | Driver shall   |
+    | _supported                         | PDK-5853       | Functional     | not do any     |
+    |                                    |                |                | dynamic        |
+    |                                    |                |                | allocation of  |
+    |                                    |                |                | memory         |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_build_infra_cfg           | PDK-5821       | Other          | Driver shall   |
+    |                                    |                |                | shall compile  |
+    |                                    |                |                | via make(Linux)|
+    |                                    |                |                | and XDC gmake  |
+    |                                    |                |                | (Windows)      |
+    +------------------------------------+----------------+----------------+----------------+
+    | did_pmic_debug_release_profile     | PDK-5811       | Safety         | Driver code    |
+    | _support                           | PDK-5853       | Functional     | shall be       |
+    |                                    |                |                | buildable in   |
+    |                                    |                |                | debug mode so  |
+    |                                    |                |                | that it stepped|
+    |                                    |                |                | using debugger |
+    |                                    |                |                | and program    |
+    |                                    |                |                | as CCS         |
     +------------------------------------+----------------+----------------+----------------+
 
 Design Description
@@ -1069,18 +1095,44 @@ with application and hardware layers.
 Figure PMIC Driver Software Architecture
 
 | Design Id: (did_pmic_generic_feature_support)
-| Requirement: REQ_TAG(PDK-5816) REQ_TAG(PDK-5817) REQ_TAG(PDK-5818)
-               REQ_TAG(PDK-5819) REQ_TAG(PDK-5820) REQ_TAG(PDK-5821)
-               REQ_TAG(PDK-5822) REQ_TAG(PDK-5823) REQ_TAG(PDK-5825)
-               REQ_TAG(PDK-5826)
+| Architecture: aid_pmic_generic_support
+| Requirement: REQ_TAG(PDK-5817) REQ_TAG(PDK-5818) REQ_TAG(PDK-5819)
+               REQ_TAG(PDK-5823) REQ_TAG(PDK-5826)
 
-Driver shall be stateless and reentrant and shall support multiple applications
-and protect for pre-emption. Driver source code architecture shall support
-multiple PMICs. Driver shall be independent of TI Processor SDK for standalone
-use case
+| Design Id: (did_pmic_stateless_reentrant_support)
+| Architecture: aid_pmic_stateless_reentrant_support
+| Requirement: REQ_TAG(PDK-5820)
 
-Driver shall compile via make (Linux) and XDC gmake (Windows) and Driver
-validation on TI EVM shall use TI Processor SDK
+Driver shall be stateless and reentrant 
+
+| Design Id: (did_pmic_multiple_pmic_support)
+| Architecture: aid_pmic_multiple_pmic_support
+| Requirement: REQ_TAG(PDK-5825)
+
+Driver source code architecture shall support multiple PMICs. 
+
+| Design Id: (did_pmic_standalone_support)
+| Architecture: aid_pmic_standalone_support
+| Requirement: REQ_TAG(PDK-5816)
+
+Driver shall be independent of TI Processor SDK for standalone use case
+
+| Design Id: (did_pmic_pre_emption_support)
+| Architecture: aid_pmic_pre_emption_support
+| Requirement: REQ_TAG(PDK-5822)
+
+Driver shall support multiple applications and protect for pre-emption
+
+| Design Id: (did_pmic_baremetal_support)
+| Architecture: aid_pmic_baremetal_support
+| Requirement: REQ_TAG(PDK-5811), REQ_TAG(PDK-5853)
+
+Driver is OS-agnostic, and can be run on bare-metal environments as well as OS
+(freeRTOS, safeRTOS, etc.) This is accomplished by defining an OSAL interface 
+which must be provided by the application. 
+
+The PMIC Driver does not depend on any operating system and supports execution
+with baremetal application
 
 Coding style shall follow TI Processor SDK coding guidelines and 
 Documentation template shall follow TI Processor SDK style
@@ -1089,20 +1141,53 @@ Customer deliverables independent of Processor SDK and integrated in Processor
 SDK RTOS
 
 | Design Id: (did_pmic_validation_feature_support)
-| Requirement: REQ_TAG(PDK-5827) REQ_TAG(PDK-5860) REQ_TAG(PDK-5859)
+| Architecture: aid_pmic_test_support
+| Requirement: REQ_TAG(PDK-5827) REQ_TAG(PDK-5860)
 
 Processor SDK shall contain automated PMIC driver unit test, implemented using
 Unity test framework, Stub functional shall be implemented for any functionality
-not testable on EVM
+not testable on EVM. Driver validation on TI EVM shall use TI Processor SDK
+
+| Design Id: (did_pmic_performance_support)
+| Architecture: aid_pmic_performance_support
+| Requirement: REQ_TAG(PDK-5859)
 
 Processor SDK shall contain a PMIC driver benchmark for Pmic Initialization and
 PMIC WDG QA Answer computation
 
 | Design Id: (did_pmic_safety_feature_support)
+| Architecture: aid_pmic_generic_support
 | Requirement: REQ_TAG(PDK-5856) REQ_TAG(PDK-5857)
 
 Driver shall follow the Functional Safety process and shall support customer
 deliverables for functional safety
+
+| Design Id: (did_pmic_dynamic_alloc_mem_not_supported)
+| Architecture: aid_pmic_dynamic_alloc_mem_not_supported
+| Requirement: REQ_TAG(PDK-5811), REQ_TAG(PDK-5853)
+
+PMIC LLD is a library and memory placement of code and data is done by
+application. It is expected that the application places PMIC LLD in RAM. PMIC
+LLD shall not do any dynamic allocation of memory 
+
+| Design Id: (did_pmic_build_infra_cfg)
+| Architecture: aid_pmic_build_infra_cfg
+| Requirement: REQ_TAG(PDK-5821)
+
+PMIC LLD shall compile and link via make on Linux and XDC-provided gmake on
+Window. The build infrastructure shall be standalone to integrate with non TI
+SDKs
+
+| Design Id: (did_pmic_debug_release_profile_support)
+| Architecture: aid_pmic_debug_release_profile_support
+| Requirement: REQ_TAG(PDK-5811), REQ_TAG(PDK-5853)
+
+The code shall be buildable in debug mode so that it may be stepped
+through using a debugger and a program such as Code Composer Studio
+(CCS).
+
+For testing, display of results of the test code will need access to
+UART port
 
 Platform Integration
 --------------------
@@ -1162,6 +1247,7 @@ PMIC Communication Interface Components
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 | Design Id: (did_pmic_comm_intf_cfg)
+| Architecture: aid_pmic_comm_intf_i2c_spi_cfg
 | Requirement: REQ_TAG(PDK-5814) REQ_TAG(PDK-5824) REQ_TAG(PDK-5858)
 
 
@@ -1201,6 +1287,7 @@ communication.
 '''''''''''''''''''''''''''''
 
 | Design Id: (did_pmic_comm_single_i2c_cfg)
+| Architecture: aid_pmic_comm_intf_i2c_spi_cfg
 | Requirement: REQ_TAG(PDK-5810) REQ_TAG(PDK-9129)
 
 This mode is used when only one I2C interface is enough to communicate
@@ -1218,6 +1305,7 @@ read the I2C1 and i2C2 interface mode.
 '''''''''''''''''''''''''''
 
 | Design Id: (did_pmic_comm_dual_i2c_cfg)
+| Architecture: aid_pmic_comm_intf_i2c_spi_cfg
 | Requirement: REQ_TAG(PDK-5813)
 
 This mode is used when both I2C interfaces are required to communicate
@@ -1244,6 +1332,7 @@ Interface mode:
    Q/A communication with PMIC
 
 | Design Id: (did_pmic_i2c_speed_readback)
+| Architecture: aid_pmic_core_misc_cfg
 | Requirement: REQ_TAG(PDK-9129)
 
 This mode is used to configure I2C1 and I2C2 interface as Standard or HS mode.
@@ -1256,6 +1345,7 @@ SPI Interface
 ^^^^^^^^^^^^^
 
 | Design Id: (did_pmic_comm_spi_cfg)
+| Architecture: aid_pmic_comm_intf_i2c_spi_cfg
 | Requirement: REQ_TAG(PDK-5843)
 
 The device supports SPI serial-bus interface and it operates as a slave.
@@ -1286,6 +1376,7 @@ GPIO
 ^^^^
 
 | Design Id: (did_pmic_gpio_cfg_readback)
+| Architecture: aid_pmic_gpio_cfg
 | Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-9111), REQ_TAG(PDK-9157),
 |              REQ_TAG(PDK-9159), REQ_TAG(PDK-9329), REQ_TAG(PDK-9162)
 
@@ -1307,6 +1398,7 @@ RTC
 ^^^
 
 | Design Id: (did_pmic_rtc_cfg_readback)
+| Architecture: aid_pmic_rtc_cfg
 | Requirement: REQ_TAG(PDK-5855), REQ_TAG(PDK-9141), REQ_TAG(PDK-9135),
 |              REQ_TAG(PDK-9111)
 
@@ -1328,17 +1420,20 @@ oscillator type. Also provide an API to read the status of Crystal oscillator
 is enable or disabled and to read the Crystal oscillator type 
 
 | Design Id: (did_pmic_rtc_clr_rst_status)
+| Architecture: aid_pmic_rtc_cfg
 | Requirement: REQ_TAG(PDK-9142), REQ_TAG(PDK-9145)
 
 PMIC RTC Driver shall read and clear RTC POWER_UP status. RTC POWER_UP status
 indicates that a reset occurred and that RTC data are not valid anymore
 
 | Design Id: (did_pmic_rtc_status)
+| Architecture: aid_pmic_rtc_cfg
 | Requirement: REQ_TAG(PDK-9155)
 
 PMIC RTC Driver  shall read status of whether RTC is started or not
 
 | Design Id: (did_pmic_rtc_rst_status)
+| Architecture: aid_pmic_rtc_cfg
 | Requirement: REQ_TAG(PDK-9145), REQ_TAG(PDK-9142)
 
 PMIC RTC Driver shall read RTC Reset status. RTC Reset status bit can only be
@@ -1352,6 +1447,7 @@ Watchdog
 ^^^^^^^^
 
 | Design Id: (did_pmic_wdg_cfg_readback)
+| Architecture: aid_pmic_wdg_cfg
 | Requirement: REQ_TAG(PDK-5854), REQ_TAG(PDK-5839), REQ_TAG(PDK-9115),
 |              REQ_TAG(PDK-9116)
 
@@ -1399,6 +1495,7 @@ Runtime BIST
 ^^^^^^^^^^^^
 
 | Design Id: (did_pmic_runtime_bist_cfg)
+| Architecture: aid_pmic_fsm_cfg
 | Requirement: REQ_TAG(PDK-5849)
 
 PMIC Driver has API that initiates a request to exrecise runtime BIST.
@@ -1409,6 +1506,7 @@ Power Management
 ^^^^^^^^^^^^^^^^
 
 | Design Id: (did_pmic_power_cfg_readback)
+| Architecture: aid_pmic_power_cfg
 | Requirement: REQ_TAG(PDK-5850), REQ_TAG(PDK-5848), REQ_TAG(PDK-5841),
 |              REQ_TAG(PDK-5829), REQ_TAG(PDK-9111), REQ_TAG(PDK-9163),
 |              REQ_TAG(PDK-9149), REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
@@ -1431,6 +1529,7 @@ Power-Good
 ^^^^^^^^^^
 
 | Design Id: (did_pmic_power_pgood_cfg_readback)
+| Architecture: aid_pmic_power_cfg
 | Requirement: REQ_TAG(PDK-5847), REQ_TAG(PDK-9111)
 
 PMIC Power supports power resources feature APIs,
@@ -1443,6 +1542,7 @@ Thermal Monitoring
 ^^^^^^^^^^^^^^^^^^
 
 | Design Id: (did_pmic_power_thermal_cfg_readback)
+| Architecture: aid_pmic_power_cfg
 | Requirement: REQ_TAG(PDK-5840), REQ_TAG(PDK-9111), REQ_TAG(PDK-9117)
 
 PMIC Power supports all power resources feature APIs,
@@ -1458,6 +1558,7 @@ Interrupts
 ^^^^^^^^^^
 
 | Design Id: (did_pmic_irq_cfg_readback)
+| Architecture: aid_pmic_irq_cfg
 | Requirement: REQ_TAG(PDK-5805), REQ_TAG(PDK-5842), REQ_TAG(PDK-5832),
 |              REQ_TAG(PDK-5838), REQ_TAG(PDK-5852), REQ_TAG(PDK-5834),
 |              REQ_TAG(PDK-5806), REQ_TAG(PDK-5828), REQ_TAG(PDK-5807),
@@ -1495,6 +1596,7 @@ In PG1.0, The API shall support write protection for clearing the interrupt
 registers
 
 | Design Id: (did_pmic_irq_mask_status)
+| Architecture: aid_pmic_irq_cfg
 | Requirement: REQ_TAG(PDK-9153), REQ_TAG(PDK-9152)
 
 PMIC Interrupt Driver module supports all Interrupt feature APIs, which
@@ -1513,6 +1615,7 @@ Error Signal Monitor (ESM)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 | Design Id: (did_pmic_esm_cfg_readback)
+| Architecture: aid_pmic_esm_cfg
 | Requirement: REQ_TAG(PDK-5833), REQ_TAG(PDK-9150)
 
 PMIC ESM Driver module supports all ESM feature APIs which includes
@@ -1528,6 +1631,7 @@ Finite State Machine (FSM)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 | Design Id: (did_pmic_fsm_cfg_readback)
+| Architecture: aid_pmic_fsm_cfg
 | Requirement: REQ_TAG(PDK-5837), REQ_TAG(PDK-9151), REQ_TAG(PDK-9144),
 |              REQ_TAG(PDK-9134), REQ_TAG(PDK-9128), REQ_TAG(PDK-9136),
 |              REQ_TAG(PDK-9146)
@@ -1559,6 +1663,7 @@ PMIC FSM Driver module shall support set/get Nsleep signal value
 It shall support FSM transitions using Nsleep1/NSleep2 and NSleep1B/NSleep2B Signals.
 
 | Design Id: (did_pmic_fsm_recover_soc_pwr_err)
+| Architecture: aid_pmic_fsm_cfg
 | Requirement: REQ_TAG(PDK-9123), REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
 
 The API shall configure switching the PMIC state from Active to MCU and MCU to
@@ -1582,6 +1687,7 @@ greater than 8us due to the input deglitch time if customer uses a redefined
 GPIO pins for the NSLEEP1 signal, but there is no maximum time limit.
 
 | Design Id: (did_pmic_fsm_i2c_trigger)
+| Architecture: aid_pmic_fsm_cfg
 | Requirement: REQ_TAG(PDK-9330)
 
 The PMIC FSM Driver shall configure enable i2c trigger and get i2c trigger value
@@ -1602,6 +1708,7 @@ b) TRIGER_I2C_1 to exercise Runtime BIST and supported only for PG2.0
 c) TRIGER_I2C_2 to enable CRC and supported only for PG2.0
 
 | Design Id: (did_pmic_ddr_gpio_retention_cfg)
+| Architecture: aid_pmic_fsm_cfg
 | Requirement: REQ_TAG(PDK-9563) REQ_TAG(PDK-9564)
 
 PMIC FSM Driver shall initiates a request to exercise DDR/GPIO Retention Mode.
@@ -1614,6 +1721,7 @@ LP Standby State
 ^^^^^^^^^^^^^^^^
 
 | Design Id: (did_pmic_lpstandby_cfg)
+| Architecture: aid_pmic_fsm_cfg
 | Requirement: REQ_TAG(PDK-5851), REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
 
 PMIC FSM Driver module supports  FSM features APIs. Like, set/get FSM
@@ -1626,6 +1734,7 @@ LP Standby WAKE UP
 ^^^^^^^^^^^^^^^^^^^
 
 | Design Id: (did_pmic_lpstandby_wkup_cfg)
+| Architecture: aid_pmic_fsm_cfg
 | Requirement: REQ_TAG(PDK-5831), REQ_TAG(PDK-5844)
 
 PMIC FSM Driver module supports LP standby APIs.using set FSM
@@ -1639,6 +1748,7 @@ Core
 ^^^^
 
 | Design Id: (did_pmic_common_ctrl_status_readback)
+| Architecture: aid_pmic_core_misc_cfg
 | Requirement: REQ_TAG(PDK-9126), REQ_TAG(PDK-9124), REQ_TAG(PDK-9125),
 |              REQ_TAG(PDK-9130), REQ_TAG(PDK-9138), REQ_TAG(PDK-9139),
 |              REQ_TAG(PDK-9112)
@@ -1669,6 +1779,7 @@ end of charge indication
 It shall read enable status of SPMI low power mode and status of force EN_DRV bit
 
 | Design Id: (did_pmic_battery_ctrl_cfg_readback)
+| Architecture: aid_pmic_core_misc_cfg
 | Requirement: REQ_TAG(PDK-9130)
 
 PMIC Driver has APIs that supports set/get battery control configuration
@@ -1678,6 +1789,7 @@ disable backup battery charging and to configure end of charge voltage
 for backup battery charger.
 
 | Design Id: (did_pmic_misc_ctrl_cfg_readback)
+| Architecture: aid_pmic_core_misc_cfg
 | Requirement: REQ_TAG(PDK-9132), REQ_TAG(PDK-9127)
 
 PMIC Driver has APIs that supports set/get miscellaneous control configuration
@@ -1693,6 +1805,7 @@ e) To enable or disable internal clock monitoring
 Also Provide API to read the Miscellaneous control Parameters configuration
 
 | Design Id: (did_pmic_common_ctrl_cfg_readback)
+| Architecture: aid_pmic_core_misc_cfg
 | Requirement: REQ_TAG(PDK-9112), REQ_TAG(PDK-9131), REQ_TAG(PDK-9114),
 |              REQ_TAG(PDK-9143), REQ_TAG(PDK-9111)
 
@@ -1714,12 +1827,14 @@ For LP8764x Hera device it is used to load EEPROM defaults on conf registers
 when the device transitions from LPStandby/SafeRecovery state to INIT state.
 
 | Design Id: (did_pmic_user_spare_cfg_readback)
+| Architecture: aid_pmic_core_misc_cfg
 | Requirement: REQ_TAG(PDK-9133)
 
 PMIC Driver has APIs that supports set/get user spare value. It is used to
 configure and read user space register
 
 | Design Id: (did_pmic_pin_readback)
+| Architecture: aid_pmic_core_misc_cfg
 | Requirement: REQ_TAG(PDK-9137), REQ_TAG(PDK-9131)
 
 PMIC driver shall configure EN_DRV Pin and read the status of NRSTOUT_SOC/
@@ -1753,6 +1868,7 @@ LP8764x Hera Support
 --------------------
 
 | Design Id: (did_pmic_lp8764x_j7200_support)
+| Architecture: aid_pmic_tps6594x_lp8764x_support
 | Requirement: REQ_TAG(PDK-5853), REQ_TAG(PDK-9329), REQ_TAG(PDK-9159)
 
 This section explains design w.r.t the multiple Driver instance support
@@ -1778,6 +1894,7 @@ TPS6594x LEO Support
 --------------------
 
 | Design Id: (did_pmic_tps6594x_j721e_support)
+| Architecture: aid_pmic_tps6594x_lp8764x_support
 | Requirement: REQ_TAG(PDK-5811), REQ_TAG(PDK-9329)
 
 This section explains design w.r.t the multiple Driver instance support
@@ -1799,12 +1916,14 @@ It is user responsibility to enable or disable the CRC as per NVM
 configuration at the application during PMIC Handle creation.
 
 | Design Id: (did_pmic_crc_status)
+| Architecture: aid_pmic_tps6594x_lp8764x_support
 | Requirement: REQ_TAG(PDK-9329)
 
 PMIC driver API shall read CRC status of the primary or secondary PMIC on
 I2C1 and I2C2 or SPI interface for TPS6594x Leo or LP8764x Hera devices
 
 | Design Id: (did_pmic_crc_enable)
+| Architecture: aid_pmic_core_misc_cfg
 | Requirement: REQ_TAG(PDK-9119)
 
 It is used to configure TRIGER_I2C_2 to '1' from the primary PMIC to enable
@@ -1822,6 +1941,7 @@ PMIC Recovery Count
 -------------------
 
 | Design Id: (did_pmic_err_recov_cnt_cfg_readback)
+| Architecture: aid_pmic_core_misc_cfg
 | Requirement: REQ_TAG(PDK-5809)
 
 PMIC common Driver API contains miscellaneous APIs like pmic recovery count API.
@@ -1831,6 +1951,7 @@ PMIC Device Information
 -----------------------
 
 | Design Id: (did_pmic_dev_info_readback)
+| Architecture: aid_pmic_core_misc_cfg
 | Requirement: REQ_TAG(PDK-9109), REQ_TAG(PDK-9110), REQ_TAG(PDK-9149),
 |              REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
 
@@ -3865,10 +3986,19 @@ PMIC Core Handle Initialization
     |                        | (did_pmic_comm_dual_i2c_cfg),              |
     |                        | (did_pmic_comm_spi_cfg),                   |
     |                        | (did_pmic_tps6594x_j721e_support),         |
-    |                        | (did_pmic_lp8764x_j7200_support)           |
-    |                        | (did_pmic_generic_feature_support)         |
-    |                        | (did_pmic_validation_feature_support)      |
-    |                        | (did_pmic_safety_feature_support)          |
+    |                        | (did_pmic_lp8764x_j7200_support),          |
+    |                        | (did_pmic_generic_feature_support),        |
+    |                        | (did_pmic_validation_feature_support),     |
+    |                        | (did_pmic_safety_feature_support),         |
+    |                        | (did_pmic_stateless_reentrant_support),    |
+    |                        | (did_pmic_multiple_pmic_support),          |
+    |                        | (did_pmic_standalone_support),             |
+    |                        | (did_pmic_pre_emption_support),            |
+    |                        | (did_pmic_baremetal_support),              |
+    |                        | (did_pmic_performance_support),            |
+    |                        | (did_pmic_dynamic_alloc_mem_not_supported),|
+    |                        | (did_pmic_build_infra_cfg),                |
+    |                        | (did_pmic_debug_release_profile_support)   |
     +------------------------+--------------------------------------------+
     | Requirements ID        | (PDK-5814), (PDK-5810), (PDK-5813),        |
     |                        | (PDK-5843), (PDK-5853), (PDK-5811),        |
@@ -3883,7 +4013,14 @@ PMIC Core Handle Initialization
     | Test IDs               | PDK-6187, PDK-5990, PDK-6109, PDK-6185,    |
     |                        | PDK-6186, PDK-6191, PDK-6774, PDK-6189,    |
     |                        | PDK-6190, PDK-6773, PDK-6772, PDK-8233     |
-    |                        | PDK-8234, PDK-8240                         |
+    |                        | PDK-8234, PDK-8240, PDK-10575, PDK-10577,  |
+    |                        | PDK-10578, PDK-10579, PDK-10580, PDK-10581,|
+    |                        | PDK-10582, PDK-10583, PDK-10584, PDK-10585,|
+    |                        | PDK-10588, PDK-10589, PDK-10604, PDK-8933, |
+    |                        | PDK-10586, PDK-10597, PDK-10598, PDK-9004, |
+    |                        | PDK-10600, PDK-10601, PDK-10637, PDK-10697,|
+    |                        | PDK-10750, PDK-10766, PDK-10769, PDK-8933, |
+    |                        | PDK-10791                                  |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreCfg_t \*pPmicConfigData        |
     |                        |    –Handle to driver instance              |
@@ -3929,7 +4066,7 @@ De-Initialize PMIC Core Handle
     | Requirements ID        | (PDK-5814)                                 |
     |                        |                                            |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-5990                                   |
+    | Test IDs               | PDK-5990, PDK-10586                        |
     +------------------------+--------------------------------------------+
     | Parameter              |    Pmic_CoreHandle_t \*pPmicCoreHandle –   |
     |                        |    PMIC Interface Handle.                  |
@@ -4095,7 +4232,8 @@ ESM Configuration
     | Test IDs               | PDK-7779, PDK-7780, PDK-7781, PDK-7782,    |
     |                        | PDK-7783, PDK-7784, PDK-7785, PDK-7786,    |
     |                        | PDK-7787, PDK-7789, PDK-7790, PDK-7791,    |
-    |                        | PDK-7855                                   |
+    |                        | PDK-7855, PDK-10551, PDK-10552, PDK-10553, |
+    |                        | PDK-10554, PDK-10555, PDK-10556, PDK-9004  |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
     |                        |    Handle structure pointer                |
@@ -4138,7 +4276,7 @@ ESM Configuration Readback
     | Requirements ID        | (PDK-5833)                                 |
     +------------------------+--------------------------------------------+
     | Test IDs               | PDK-7792, PDK-7793, PDK-7794, PDK-7795,    |
-    |                        | PDK-7856                                   |
+    |                        | PDK-7856, PDK-10557                        |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
     |                        |    Handle structure pointer                |
@@ -4182,7 +4320,7 @@ ESM Interrupt Masking/Unmasking
     +------------------------+--------------------------------------------+
     | Test IDs               | PDK-7836, PDK-7837, PDK-7838, PDK-7839,    |
     |                        | PDK-7840, PDK-7841, PDK-7850, PDK-7852,    |
-    |                        | PDK-7858                                   |
+    |                        | PDK-7858, PDK-10550                        |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
     |                        |    Handle structure                        |
@@ -4275,8 +4413,9 @@ Get PMIC Error Status
     |                        | PDK-6256, PDK-6257, PDK-6258, PDK-6259,    |
     |                        | PDK-6266, PDK-6267, PDK-7712, PDK-7713,    |
     |                        | PDK-7714, PDK-7715, PDK-7358, PDK-7359,    |
-    |                        | PDK-7374, PDK-7375, PDK-7768, PDK-9887     |
-    |                        | PDK-9888, PDK-8041                         |
+    |                        | PDK-7374, PDK-7375, PDK-7768, PDK-9887,    |
+    |                        | PDK-9888, PDK-8041, PDK-10756, PDK- 10757, |
+    |                        | PDK-10477, PDK-10478                       |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle – PMIC       |
     |                        |    Interface Handle.                       |
@@ -4334,7 +4473,8 @@ Clear PMIC Interrupt Status
     |                        | PDK-6248, PDK-6249, PDK-6252, PDK-6253,    |
     |                        | PDK-6256, PDK-6257, PDK-6258, PDK-6259,    |
     |                        | PDK-6266, PDK-6267, PDK-7358, PDK-7359,    |
-    |                        | PDK-7374, PDK-7375, PDK-9994, PDK-9995     |
+    |                        | PDK-7374, PDK-7375, PDK-9994, PDK-9995,    |
+    |                        | PDK-10754, PDK-10755                       |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
     |                        |    PMIC Interface Handle.                  |
@@ -4380,7 +4520,8 @@ Mask/Unmask PMIC Interrupts
     +------------------------+--------------------------------------------+
     | Requirement:           | (PDK-5805)                                 |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-7358, PDK-7359                         |
+    | Test IDs               | PDK-7358, PDK-7359, PDK-10758, PDK-10763,  |
+    |                        | PDK-10764, PDK-10765, PDK-10770            |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
     |                        |    PMIC Interface Handle.                  |
@@ -4433,7 +4574,8 @@ Extract PMIC Interrupt
     |                        | PDK-6248, PDK-6249, PDK-6252, PDK-6253,    |
     |                        | PDK-6256, PDK-6257, PDK-6258, PDK-6259,    |
     |                        | PDK-6266, PDK-6267, PDK-7358, PDK-7359,    |
-    |                        | PDK-7374, PDK-7375                         |
+    |                        | PDK-7374, PDK-7375, PDK-10759, PDK-10760,  |
+    |                        | PDK-10761, PDK-10762                       |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*phandle – PMIC      |
     |                        |    Interface Handle.                       |
@@ -4484,6 +4626,8 @@ Masking GPIO Interrupts
     |                        | PDK-6248, PDK-6249, PDK-6252, PDK-6253,    |
     |                        | PDK-6256, PDK-6257, PDK-6258, PDK-6259,    |
     |                        | PDK-6266, PDK-6267, PDK-7374, PDK-7375     |
+    |                        | PDK-10763, PDK-10764, PDK-10765, PDK-10766,|
+    |                        | PDK-10770                                  |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*phandle – PMIC      |
     |                        |    Interface Handle.                       |
@@ -4535,8 +4679,9 @@ GPIO Set Configuration
     |                        | PDK-6202, PDK-6204, PDK-6205, PDK-6206,    |
     |                        | PDK-6207, PDK-6209, PDK-6210, PDK-6211,    |
     |                        | PDK-6213, PDK-6214, PDK-6215, PDK-6216,    |
-    |                        | PDK-6217, PDK-6218, PDK-8012, PDK-9994     |
-    |                        | PDK-9995                                   |
+    |                        | PDK-6217, PDK-6218, PDK-8012, PDK-9994,    |
+    |                        | PDK-9995, PDK-10561, PDK-10562, PDK-10564, |
+    |                        | PDK-10571, PDK-8852, PDK-10788, PDK-10789  |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
     |                        |    PMIC Interface Handle                   |
@@ -4708,8 +4853,8 @@ GPIO Interrupt Configuration
     |                        | PDK-6240, PDK-6241, PDK-6242, PDK-6243,    |
     |                        | PDK-6244, PDK-6245, PDK-6246, PDK-6247,    |
     |                        | PDK-6248, PDK-6249, PDK-6252, PDK-6253,    |
-    |                        | PDK-6256, PDK-6257, PDK-6258, PDK-6259     |
-    |                        | PDK-7950, PDK-7951                         |
+    |                        | PDK-6256, PDK-6257, PDK-6258, PDK-6259,    |
+    |                        | PDK-7950, PDK-7951, PDK-10563              |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*phandle - PMIC      |
     |                        |    Interface Handle                        |
@@ -4750,7 +4895,9 @@ Set NPWRON/Enable Pin Configuration
     +------------------------+--------------------------------------------+
     | Requirement:           | (PDK-5808), (PDK-9162), (PDK-9111)         |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-6217, PDK-6218, PDK-10340              |
+    | Test IDs               | PDK-6217, PDK-6218, PDK-10340, PDK-10559   |
+    |                        | PDK-10560, PDK-10565, PDK-10566, PDK-10568 |
+    |                        | PDK-10569, PDK-10570, PDK-10572            |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle     |
     |                        |    -PMIC Interface Handle                  |
@@ -4792,7 +4939,8 @@ Read NPWRON/Enable Pin Configuration
     +------------------------+--------------------------------------------+
     | Requirement:           | (PDK-5808)                                 |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-7880, PDK-7904, PDK-7905, PDK-7906     |
+    | Test IDs               | PDK-7880, PDK-7904, PDK-7905, PDK-7906,    |
+    |                        | PDK-10558, PDK-10567                       |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle     |
     |                        |    -PMIC Interface Handle                  |
@@ -4961,7 +5109,8 @@ Watchdog Configuration
     | Test IDs               | PDK-7327, PDK-7328, PDK-7329, PDK-7330,    |
     |                        | PDK-7331, PDK-7332, PDK-7333 ,PDK-7334,    |
     |                        | PDK-7335, PDK-7336, PDK-7337, PDK-7338,    |
-    |                        | PDK-7339, PDK-7340, PDK-7341, PDK-7342     |
+    |                        | PDK-7339, PDK-7340, PDK-7341, PDK-7342,    |
+    |                        | PDK-10780, PDK-10781, PDK-8917, PDK-10479  |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
     |                        |    PMIC Interface Handle                   |
@@ -5056,7 +5205,7 @@ Watchdog Error Status
     +------------------------+--------------------------------------------+
     | Requirements ID        | (PDK-5854), (PDK-5839)                     |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-7353,PDK-7354,PDK-7355                 |
+    | Test IDs               | PDK-7353, PDK-7354, PDK-7355               |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
     |                        |    PMIC Interface Handle                   |
@@ -5143,7 +5292,7 @@ Watchdog QA Mode
     | Requirements ID        | (PDK-5839)                                 |
     +------------------------+--------------------------------------------+
     | Test IDs               | PDK-7345, PDK-7346, PDK-7347, PDK-7348,    |
-    |                        | PDK-7349, PDK-7958                         |
+    |                        | PDK-7349, PDK-7958, PDK-10785              |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
     |                        |    Handle structure pointer                |
@@ -5201,7 +5350,7 @@ Watchdog Trigger Mode
     +------------------------+--------------------------------------------+
     | Requirements ID        | (PDK-5854)                                 |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-7343                                   |
+    | Test IDs               | PDK-7343, PDK-10782                        |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
     |                        |    Handle structure pointer                |
@@ -5262,7 +5411,7 @@ Runtime BIST Invocation
     +------------------------+--------------------------------------------+
     | Requirements ID        | (PDK-5849)                                 |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-7706                                   |
+    | Test IDs               | PDK-7706, PDK-10740                        |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
     |                        |    Handle structure pointer                |
@@ -5296,9 +5445,9 @@ Power Resource Voltage Configuration
     +========================+============================================+
     | Design IDs             | did_pmic_power_cfg_readback                |
     +------------------------+--------------------------------------------+
-    | Requirements ID        |  (PDK-5848), (PDK-5841), (PDK-5829),       |
-    |                        |  (PDK-9111), (PDK-9163), (PDK-9149),       |
-    |                        |  (PDK-9159), (PDK-9329)                    |
+    | Requirements ID        | (PDK-5848), (PDK-5841), (PDK-5829),        |
+    |                        | (PDK-9111), (PDK-9163), (PDK-9149),        |
+    |                        | (PDK-9159), (PDK-9329)                     |
     +------------------------+--------------------------------------------+
     | Test IDs               | PDK-7130, PDK-7131, PDK-7132, PDK-7133,    |
     |                        | PDK-7134, PDK-7135, PDK-7136, PDK-7137,    |
@@ -5319,7 +5468,14 @@ Power Resource Voltage Configuration
     |                        | PDK-7208, PDK-7209, PDK-7210, PDK-7211,    |
     |                        | PDK-7212, PDK-7213, PDK-7214, PDK-7215,    |
     |                        | PDK-7216, PDK-7217, PDK-7218, PDK-7219,    |
-    |                        | PDK-7176                                   |
+    |                        | PDK-7176, PDK-10626, PDK-10627, PDK-10628, |
+    |                        | PDK-10630, PDK-10631, PDK-10632, PDK-10633,|
+    |                        | PDK-10643, PDK-10652, PDK-10656, PDK-10657,|
+    |                        | PDK-10658, PDK-10659, PDK-10663, PDK-10664,|
+    |                        | PDK-10665, PDK-10666, PDK-10667, PDK-10668,|
+    |                        | PDK-10669, PDK-10688, PDK-10689, PDK-10690,|
+    |                        | PDK-10691, PDK-10692, PDK-10693, PDK-10694,|
+    |                        | PDK-10696, PDK-10697, PDK-10792            |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. pPmicCoreHandle \*pPmicCoreHandle –     |
     |                        |    PMIC Interface Handle.                  |
@@ -5372,7 +5528,7 @@ LDORTC Config
     | Requirements ID        | (PDK-5841)                                 |
     |                        |                                            |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-7297, PDK-7298, PDK-7876               |
+    | Test IDs               | PDK-7297, PDK-7298, PDK-7876, PDK-10660    |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. pPmicCoreHandle \*pPmicCoreHandle –     |
     |                        |    PMIC Interface Handle.                  |
@@ -5410,7 +5566,8 @@ LDORTC Config Readback
     +------------------------+--------------------------------------------+
     | Requirements ID        | (PDK-5841)                                 |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-7297, PDK-7298, PDK-7876               |
+    | Test IDs               | PDK-7297, PDK-7298, PDK-7876, PDK-10661,   |
+    |                        | PDK-10662, PDK-10676                       |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. pPmicCoreHandle \*pPmicCoreHandle –     |
     |                        |    PMIC Interface Handle.                  |
@@ -5442,16 +5599,16 @@ Power Resource Voltage Readback
     :widths: 30 70
 
     +------------------------+--------------------------------------------+
-    | Prototype              | int32_t Pmi                                |
-    |                        | c_powerGetPwrResourceCfg(Pmic_CoreHandle_t |
+    | Prototype              | int32_t Pmic_powerGetPwrResourceCfg        |
+    |                        | (Pmic_CoreHandle_t                         |
     |                        | \*pPmicCoreHandle, const uint16_t          |
     |                        | pwrResource, Pmic_PowerResourceCfg_t       |
     |                        | \*pPwrResourceCfg);                        |
     +========================+============================================+
     | Design IDs             | did_pmic_power_cfg_readback                |
     +------------------------+--------------------------------------------+
-    | Requirements ID        |  (PDK-5850), (PDK-5848), (PDK-5829),       |
-    |                        |  (PDK-9163)                                |
+    | Requirements ID        | (PDK-5850), (PDK-5848), (PDK-5829),        |
+    |                        | (PDK-9163)                                 |
     +------------------------+--------------------------------------------+
     | Test IDs               | PDK-7130, PDK-7131, PDK-7132, PDK-7133,    |
     |                        | PDK-7134, PDK-7135, PDK-7136, PDK-7137,    |
@@ -5472,7 +5629,11 @@ Power Resource Voltage Readback
     |                        | PDK-7208, PDK-7209, PDK-7210, PDK-7211,    |
     |                        | PDK-7212, PDK-7213, PDK-7214, PDK-7215,    |
     |                        | PDK-7216, PDK-7217, PDK-7218, PDK-7219,    |
-    |                        | PDK-7176                                   |
+    |                        | PDK-7176, PDK-10639, PDK-10640, PDk-10641, |
+    |                        | PDK-10642, PDK-10644, PDK-10646, PDK-10647,|
+    |                        | PDK-10648, PDK-10649, PDK-10650, PDK-10651,|
+    |                        | PDK-10653, PDK-10654, PDK-10655, PDK-10695,|
+    |                        | PDK-10643                                  |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. pPmicCoreHandle \*pPmicCoreHandle –     |
     |                        |    PMIC Interface Handle.                  |
@@ -5530,8 +5691,8 @@ Power Resource Common Configuration
     |                        | PDK-7237, PDK-7238, PDK-7239, PDK-7240,    |
     |                        | PDK-7241, PDK-7242, PDK-7243, PDK-7244,    |
     |                        | PDK-7245, PDK-7246, PDK-7247, PDK-7248,    |
-    |                        | PDK-7249, PDK-7250, PDK-7251, PDK-9994     |
-    |                        | PDK-9995                                   |
+    |                        | PDK-7249, PDK-7250, PDK-7251, PDK-9994,    |
+    |                        | PDK-9995, PDK-10638                        |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
     |                        |    PMIC Interface Handle.                  |
@@ -5582,7 +5743,8 @@ Power Resource Common Configuration Readback
     |                        | PDK-7237, PDK-7238, PDK-7239, PDK-7240,    |
     |                        | PDK-7241, PDK-7242, PDK-7243, PDK-7244,    |
     |                        | PDK-7245, PDK-7246, PDK-7247, PDK-7248,    |
-    |                        | PDK-7249, PDK-7250, PDK-7251               |
+    |                        | PDK-7249, PDK-7250, PDK-7251, PDK-10625,   |
+    |                        | PDK-10637                                  |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
     |                        |    PMIC Interface Handle.                  |
@@ -5628,7 +5790,11 @@ Power Good Configuration
     +------------------------+--------------------------------------------+
     | Test IDs               | PDK-7252, PDK-7253, PDK-7254, PDK-7255,    |
     |                        | PDK-7256, PDK-7257, PDK-7258, PDK-7259,    |
-    |                        | PDK-7260                                   |
+    |                        | PDK-7260, PDK-10671, PDK-10672, PDK-10673, |
+    |                        | PDK-10674, PDK-10675, PDK-10677, PDK-10678,|
+    |                        | PDK-10679, PDK-10680, PDK-10681, PDK-10682,|
+    |                        | PDK-10683, PDK-10684, PDK-10685, PDK-10686,|
+    |                        | PDK-10687                                  |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
     |                        |    PMIC Interface Handle.                  |
@@ -5679,7 +5845,7 @@ Power Good Configuration Readback
     +------------------------+--------------------------------------------+
     | Test IDs               | PDK-7252, PDK-7253, PDK-7254, PDK-7255,    |
     |                        | PDK-7256, PDK-7257, PDK-7258, PDK-7259,    |
-    |                        | PDK-7260                                   |
+    |                        | PDK-7260, PDK-10624                        |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
     |                        |    PMIC Interface Handle.                  |
@@ -5725,7 +5891,7 @@ Power Resource Status
     | Requirements ID        | (PDK-5850), (PDK-5848), (PDK-5829)         |
     +------------------------+--------------------------------------------+
     | Test IDs               | PDK-7261, PDK-7262, PDK-7263, PDK-7264,    |
-    |                        | PDK-7265                                   |
+    |                        | PDK-7265, PDK-10623, PDK-10635, PDK-10636  |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
     |                        |    PMIC Interface Handle.                  |
@@ -5768,7 +5934,7 @@ Die Thermal Status Readback
     | Requirements ID        | (PDK-5840)                                 |
     +------------------------+--------------------------------------------+
     | Test IDs               | PDK-7726, PDK-7727, PDK-7728, PDK-7729,    |
-    |                        | PDK-7730                                   |
+    |                        | PDK-7730, PDK-10622                        |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle     |
     |                        |    –PMIC Interface Handle.                 |
@@ -5811,7 +5977,7 @@ Thermal Monitoring/Shutdown Configuration
     +------------------------+--------------------------------------------+
     | Requirements ID        | (PDK-5840), (PDK-9111), (PDK-9117)         |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-7266, PDK-7267, PDK-7268, PDK-7269     |
+    | Test IDs               | PDK-7266, PDK-7267, PDK-7268, PDK-7269,    |
     |                        | PDK-7270, PDK-9994, PDK-9995               |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
@@ -5852,7 +6018,8 @@ Thermal Monitoring/Shutdown Configuration Readback
     +------------------------+--------------------------------------------+
     | Requirements ID        | (PDK-5840), (PDK-9117)                     |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-7266, PDK-7267, PDK-7268, PDK-7270     |
+    | Test IDs               | PDK-7266, PDK-7267, PDK-7268, PDK-7270,    |
+    |                        | PDK-10622                                  |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
     |                        |    PMIC Interface Handle.                  |
@@ -5897,7 +6064,7 @@ Power Resources Interrupt
     +------------------------+--------------------------------------------+
     | Test IDs               | PDK-7271, PDK-7272, PDK-7273, PDK-7274,    |
     |                        | PDK-7275, PDK-7276, PDK-7277, PDK-7278,    |
-    |                        | PDK-7279                                   |
+    |                        | PDK-7279, PDK-10670                        |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
     |                        |    PMIC Interface Handle.                  |
@@ -5943,7 +6110,7 @@ Power Interrupt
     |                        | PDK-7284, PDK-7285, PDK-7286, PDK-7287,    |
     |                        | PDK-7288, PDK-7289, PDK-7290, PDK-7291,    |
     |                        | PDK-7292, PDK-7293, PDK-7294, PDK-7295,    |
-    |                        | PDK-7296,                                  |
+    |                        | PDK-7296, PDK-10629                        |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
     |                        |    PMIC Interface Handle.                  |
@@ -5986,7 +6153,9 @@ RTC Alarm Configuration
     |                        | PDK-6092, PDK-6093, PDK-6094, PDK-6095,    |
     |                        | PDK-6096, PDK-6099, PDK-6100, PDK-6101,    |
     |                        | PDK-6102, PDK-6103, PDK-6104, PDK-6107,    |
-    |                        | PDK-6108, PDK-8814                         |
+    |                        | PDK-6108, PDK-8814, PDK-10605, PDK-10606,  |
+    |                        | PDK-10607, PDK-10608, PDK-10609, PDK-10610,|
+    |                        | PDK-10611, PDK-10612, PDK-10613, PDK-10614 |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
     |                        |    PMIC Interface handle                   |
@@ -6028,8 +6197,8 @@ RTC Alarm Configuration Readback
     +------------------------+--------------------------------------------+
     | Requirement:           | (PDK-5855)                                 |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-6109, PDK-6110, PDK-6111, PDK-6112     |
-    |                        | PDK-8814                                   |
+    | Test IDs               | PDK-6109, PDK-6110, PDK-6111, PDK-6112,    |
+    |                        | PDK-8814, PDK-10616                        |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
     |                        |    PMIC Interface Handle                   |
@@ -6189,7 +6358,7 @@ Set RTC time calendar
     |                        | PDK-6164, PDK-6165, PDK-6166, PDK-6167,    |
     |                        | PDK-6168, PDK-6169, PDK-6290, PDK-6170,    |
     |                        | PDK-6171, PDK-6172, PDK-6173, PDK-6174,    |
-    |                        | PDK-6175                                   |
+    |                        | PDK-6175, PDK-10615, PDK-10619, PDK-10793  |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
     |                        |    PMICInterface Handle                    |
@@ -6231,7 +6400,8 @@ Readback RTC time calendar
     +------------------------+--------------------------------------------+
     | Requirement:           | (PDK-5855)                                 |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-6176, PDK-6177, PDK-6178, PDK-6179     |
+    | Test IDs               | PDK-6176, PDK-6177, PDK-6178, PDK-6179,    |
+    |                        | PDK-10617, PDK-10620                       |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
     |                        |    PMICInterface Handle                    |
@@ -6428,7 +6598,7 @@ RTC reset status readback
     | Requirement:           | (PDK-9145), (PDK-9142)                     |
     +------------------------+--------------------------------------------+
     | Test IDs               | PDK-7869, PDK-7465, PDK-7466, PDK-7467,    |
-    |                        | PDK-9900                                   |
+    |                        | PDK-9900, PDK-10618                        |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
     |                        |    PMIC Interface Handle                   |
@@ -6469,7 +6639,7 @@ Configure FSM off Request
     | Requirement:           | (PDK-5851), (PDK-9159), (PDK-9329)         |
     +------------------------+--------------------------------------------+
     | Test IDs               | PDK-7360, PDK-7361, PDK-7705, PDK-7358,    |
-    |                        | PDK-7359                                   |
+    |                        | PDK-7359, PDK-10741                        |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
     |                        |    Handle structure pointer                |
@@ -6629,7 +6799,7 @@ To set value to scratchpad register
     +------------------------+--------------------------------------------+
     | Requirement:           | (PDK-5810), (PDK-5843)                     |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-8321, PDK-8322, PDK-8323               |
+    | Test IDs               | PDK-8321, PDK-8322, PDK-8323, PDK-10587    |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
     |                        |    Handle structure pointer.               |
@@ -6789,7 +6959,8 @@ Recovery Count Readback
     +------------------------+--------------------------------------------+
     | Requirement:           | (PDK-5809)                                 |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-7635, PDK-7636, PDK-7637               |
+    | Test IDs               | PDK-7635, PDK-7636, PDK-7637, PDK-10573,   |
+    |                        | PDK-10574                                  |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
     |                        |    Handle structure pointer                |
@@ -6826,8 +6997,8 @@ I2C Speed
     +------------------------+--------------------------------------------+
     | Requirement:           | (PDK-9129)                                 |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-6187, PDK-5990, PDK-6109               |
-    |                        | PDK-6185, PDK-6186, PDK-6191               |
+    | Test IDs               | PDK-6187, PDK-5990, PDK-6109, PDK-6185,    |
+    |                        | PDK-6186, PDK-6191, PDK-10591              |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
     |                        |    Handle structure pointer                |
@@ -6950,8 +7121,9 @@ CRC Status
     +------------------------+--------------------------------------------+
     | Requirement:           | (PDK-9329)                                 |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-6187, PDK-5990, PDK-6109               |
-    |                        | PDK-6185, PDK-6186, PDK-6191               |
+    | Test IDs               | PDK-6187, PDK-5990, PDK-6109, PDK-6185,    |
+    |                        | PDK-6186, PDK-6191, PDK-10592, PDK-10593,  |
+    |                        | PDK-10594, PDK-10595                       |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
     |                        |    Handle structure pointer                |
@@ -6989,7 +7161,8 @@ Enable CRC
     +------------------------+--------------------------------------------+
     | Requirement:           | (PDK-9119)                                 |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-9876, PDK-9887, PDK-9984, PDK-9914     |
+    | Test IDs               | PDK-9876, PDK-9887, PDK-9984, PDK-9914,    |
+    |                        | PDK-10596                                  |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
     |                        |    Handle structure pointer                |
@@ -7112,8 +7285,9 @@ Battery Backup Control Parameters
     +------------------------+--------------------------------------------+
     | Requirement:           | (PDK-9130), (PDK-9111)                     |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-9942, PDK-9943, PDK-9944, PDK-9945     |
-    |                        | PDK-9946, PDK-9948, PDK-9994, PDK-9995     |
+    | Test IDs               | PDK-9942, PDK-9943, PDK-9944, PDK-9945,    |
+    |                        | PDK-9946, PDK-9948, PDK-9994, PDK-9995,    |
+    |                        | PDK-10597                                  |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
     |                        |    Handle structure pointer                |
@@ -7154,7 +7328,7 @@ Battery Control Config Readback
     +------------------------+--------------------------------------------+
     | Requirement:           | (PDK-9130)                                 |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-9949, PDK-9950                         |
+    | Test IDs               | PDK-9949, PDK-9950, PDK-10598              |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
     |                        |    Handle structure pointer                |
@@ -7198,7 +7372,8 @@ Miscellaneous control parameters
     | Test IDs               | PDK-9931, PDK-9932, PDK-9933, PDK-9934,    |
     |                        | PDK-9935, PDK-9936, PDK-9937, PDK-9938,    |
     |                        | PDK-9939, PDK-9978, PDK-9979, PDK-9980,    |
-    |                        | PDK-9981, PDK-9994, PDK-9995               |
+    |                        | PDK-9981, PDK-9994, PDK-9995, PDK-10602,   |
+    |                        | PDK-10603, PDK-8933                        |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
     |                        |    Handle structure pointer                |
@@ -7284,7 +7459,9 @@ Common control configuration
     | Test IDs               | PDK-9922, PDK-9923, PDK-9924, PDK-9927,    |
     |                        | PDK-9928, PDK-9929, PDK-9930, PDK-9984,    |
     |                        | PDK-9985, PDK-9988, PDK-9989, PDK-9991,    |
-    |                        | PDK-9993, PDK-9990, PDK-9994, PDK-9995     |
+    |                        | PDK-9993, PDK-9990, PDK-9994, PDK-9995,    |
+    |                        | PDK-10590, PDK-10599, PDK-10600, PDK-10751,|
+    |                        | PDK-10786, PDK-10752, PDK-8933             |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
     |                        |    Handle structure pointer                |
@@ -7324,7 +7501,7 @@ Common control configuration Readback
     | Requirement:           | (PDK-9112), (PDK-9114), (PDK-9131),        |
     |                        | (PDK-9143)                                 |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-9925, PDK-9926                         |
+    | Test IDs               | PDK-9925, PDK-9926, PDK-10601, PDK-8933    |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
     |                        |    Handle structure pointer                |
@@ -7444,10 +7621,10 @@ To Set RTC Configuration
     +------------------------+--------------------------------------------+
     | Requirement:           | (PDK-9141), (PDK-9135), (PDK-9111)         |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-9903, PDK-9904, PDK-9905, PDK-9907     |
-    |                        | PDK-9908, PDK-9909, PDK-9910, PDK-9911     |
-    |                        | PDK-9912, PDK-9913, PDK-9914, PDK-9994     |
-    |                        | PDK-9995                                   |
+    | Test IDs               | PDK-9903, PDK-9904, PDK-9905, PDK-9907,    |
+    |                        | PDK-9908, PDK-9909, PDK-9910, PDK-9911,    |
+    |                        | PDK-9912, PDK-9913, PDK-9914, PDK-9994,    |
+    |                        | PDK-9995, PDK-10621                        |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
     |                        |    Handle structure pointer                |
@@ -7487,7 +7664,7 @@ To Get RTC Configuration
     +------------------------+--------------------------------------------+
     | Requirement:           | (PDK-9141), (PDK-9135)                     |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-9897, PDK-9898                         |
+    | Test IDs               | PDK-9897, PDK-9898, PDK-10620              |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
     |                        |    Handle structure pointer                |
@@ -7604,8 +7781,7 @@ To Read Status of Interrupt Request
     +------------------------+--------------------------------------------+
     | Requirement:           | (PDK-9153)                                 |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-9892, PDK-9893                         |
-    |                        |                                            |
+    | Test IDs               | PDK-9892, PDK-9893, PDK-10753              |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
     |                        |    Handle structure pointer                |
@@ -7653,7 +7829,8 @@ To Read Status of GPIO Interrupt
     | Requirement:           | (PDK-9152)                                 |
     +------------------------+--------------------------------------------+
     | Test IDs               | PDK-9887, PDK-9888, PDK-9889, PDK-9890,    |
-    |                        | PDK-9891                                   |
+    |                        | PDK-9891, PDK-10767, PDK-10768, PDK-10769, |
+    |                        | PDK-8852                                   |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle – Interface  |
     |                        |    Handle structure pointer                |
@@ -7740,9 +7917,9 @@ To Set FSM Configuartion
     +------------------------+--------------------------------------------+
     | Requirement:           | (PDK-9144), (PDK-9134), (PDK-9128)         |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-10080, PDK-10081, PDK-10082, PDK-10083 |
-    |                        | PDK-10084, PDK-10085, PDK-10086, PDK-10087 |
-    |                        | PDK-10088, PDK-10089, PDK-10125            |
+    | Test IDs               | PDK-10080, PDK-10081, PDK-10082, PDK-10083,|
+    |                        | PDK-10084, PDK-10085, PDK-10086, PDK-10087,|
+    |                        | PDK-10088, PDK-10089, PDK-10125, PDK-10750 |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle –Interface   |
     |                        |    Handle structure pointer.               |
@@ -7899,7 +8076,7 @@ To Configure NSLEEP1B/2B Signal
     +------------------------+--------------------------------------------+
     | Requirement:           | (PDK-9146)                                 |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-10098, PDK-10101, PDK-10102            |
+    | Test IDs               | PDK-10098, PDK-10101, PDK-10102,           |
     |                        | PDK-10103, PDK-10104, PDK-10099            |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle –Interface   |
@@ -7977,8 +8154,8 @@ To Recover from SOC Power Error
     +------------------------+--------------------------------------------+
     | Requirement:           | (PDK-9123)                                 |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-10109, PDK-10110, PDK-10111, PDK-10112 |
-    |                        | PDK-10384                                  |
+    | Test IDs               | PDK-10109, PDK-10110, PDK-10111, PDK-10112,|
+    |                        | PDK-10384, PDK-10749                       |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle –Interface   |
     |                        |    Handle structure pointer.               |
@@ -8018,7 +8195,8 @@ To Initiate FSM I2C Trigger
     | Requirement:           | (PDK-9330)                                 |
     +------------------------+--------------------------------------------+
     | Test IDs               | PDK-10113, PDK-10114, PDK-10115, PDK-10116,|
-    |                        | PDK-10117, PDK-10118, PDK-10119            |
+    |                        | PDK-10117, PDK-10118, PDK-10119, PDK-10742,|
+    |                        | PDK-10743, PDK-10744                       |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle –Interface   |
     |                        |    Handle structure pointer.               |
@@ -8057,7 +8235,7 @@ To Read FSM I2C Trigger
     +------------------------+--------------------------------------------+
     | Requirement:           | (PDK-9330)                                 |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-10120                                  |
+    | Test IDs               | PDK-10120, PDK-10745, PDK-10746, PDK-10747 |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle –Interface   |
     |                        |    Handle structure pointer.               |
@@ -8098,7 +8276,7 @@ To Initiate DDR/GPIO Retention Mode
     +------------------------+--------------------------------------------+
     | Requirement:           | (PDK-9563), (PDK-9564)                     |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-10122, PDK-10123, PDK-10124            |
+    | Test IDs               | PDK-10122, PDK-10123, PDK-10124, PDK-10748 |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle –Interface   |
     |                        |    Handle structure pointer.               |
@@ -8138,7 +8316,7 @@ To Read Status of PMIC ESM
     +------------------------+--------------------------------------------+
     | Requirement:           | (PDK-9150)                                 |
     +------------------------+--------------------------------------------+
-    | Test IDs               |  PDK-9876, PDK-9877, PDK-9878, PDK-9879    |
+    | Test IDs               |  PDK-9876, PDK-9877, PDK-9878, PDK-9879,   |
     |                        |  PDK-9880                                  |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle –Interface   |
@@ -8176,8 +8354,8 @@ Write Answer in Long Window/Window1/Window2 Interval
     +------------------------+--------------------------------------------+
     | Requirement:           | (PDK-5839), (PDK-9115), (PDK-9116)         |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-10071, PDK-10072, PDK-10073, PDK-10074 |
-    |                        | PDK-10415                                  |
+    | Test IDs               | PDK-10071, PDK-10072, PDK-10073, PDK-10074,|
+    |                        | PDK-10415, PDK-10784                       |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle –Interface   |
     |                        |    Handle structure pointer.               |
@@ -8213,7 +8391,7 @@ To Clear PMIC Watchdog Error Status
     +------------------------+--------------------------------------------+
     | Requirement:           | (PDK-5839), (PDK-5854)                     |
     +------------------------+--------------------------------------------+
-    | Test IDs               | PDK-10075, PDK-10076, PDK-10077            |
+    | Test IDs               | PDK-10075, PDK-10076, PDK-10077, PDK-10783 |
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*handle –Interface   |
     |                        |    Handle structure pointer.               |

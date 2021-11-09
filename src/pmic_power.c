@@ -5217,6 +5217,7 @@ static int32_t Pmic_powerSetRegulatorenVmonenVoltagemvCfg(
  *              REQ_TAG(PDK-9111), REQ_TAG(PDK-9163), REQ_TAG(PDK-9149),
  *              REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
  * Design: did_pmic_power_cfg_readback
+ * Architecture: aid_pmic_power_cfg
  *
  *          This function can be used to configure the various control and
  *          configuration parameters for BUCK/LDO/VCCA/VMON power resources  and
@@ -5400,6 +5401,7 @@ static int32_t Pmic_powerGetLdobypassLdorvtoselRailgrpselVoltagemvCfg(
  * Requirement: REQ_TAG(PDK-5829), REQ_TAG(PDK-5848), REQ_TAG(PDK-5850),
  *              REQ_TAG(PDK-9163)
  * Design: did_pmic_power_cfg_readback
+ * Architecture: aid_pmic_power_cfg
  *
  *          This function can be used to get the various control and
  *          configuration parameters for BUCK/LDO/VCCA/VMON power resources and
@@ -5559,6 +5561,7 @@ static int32_t Pmic_powerSetTriggerSelCfg(
  *              REQ_TAG(PDK-9111), REQ_TAG(PDK-9149), REQ_TAG(PDK-9159),
  *              REQ_TAG(PDK-9329)
  * Design: did_pmic_power_cfg_readback, did_pmic_power_pgood_cfg_readback
+ * Architecture: aid_pmic_power_cfg
  *
  *          This function is used to set the power configuration
  *          parameters such as selection of type of voltage monitoring, and
@@ -5717,6 +5720,7 @@ static int32_t Pmic_powerGetTriggerSelCfg(
  *
  * Requirement: REQ_TAG(PDK-5829), REQ_TAG(PDK-5848), REQ_TAG(PDK_5847)
  * Design: did_pmic_power_cfg_readback, did_pmic_power_pgood_cfg_readback
+ * Architecture: aid_pmic_power_cfg
  *
  *          This function is used to get the power configuration
  *          parameters such as selection of type of voltage monitoring, and
@@ -5821,8 +5825,9 @@ int32_t Pmic_powerGetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
 /**
  * \brief   API to Set Power good configuration
  *
- * Requirement: REQ_TAG(PDK-5847)
+ * Requirement: REQ_TAG(PDK-5847), REQ_TAG(PDK-9111)
  * Design: did_pmic_power_pgood_cfg_readback
+ * Architecture: aid_pmic_power_cfg
  *
  *          This function is used to control and configure the power good
  *          source control. For the
@@ -5894,6 +5899,7 @@ int32_t Pmic_powerSetConfigPowerGood(Pmic_CoreHandle_t   *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5847)
  * Design: did_pmic_power_pgood_cfg_readback
+ * Architecture: aid_pmic_power_cfg
  *
  *          This function is used to get various power good conifg.
  *          This funci=tion also provides the pgood source control for
@@ -5992,6 +5998,7 @@ static int32_t Pmic_powerGetUvOvVccaVoltageStat(
  *
  * Requirement: REQ_TAG(PDK-5829), REQ_TAG(PDK-5848), REQ_TAG(PDK-5850)
  * Design: did_pmic_power_cfg_readback
+ * Architecture: aid_pmic_power_cfg
  *
  *          This function can be used to get the status related to current limit
  *          , voltage over and under limit for BUCK/LDO/VCCA/VMON power
@@ -6092,6 +6099,7 @@ int32_t Pmic_powerGetPwrRsrcStat(Pmic_CoreHandle_t        *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5840)
  * Design: did_pmic_power_thermal_cfg_readback
+ * Architecture: aid_pmic_power_cfg
  *
  *          This function is used to get the thermal status of the PMIC
  *          (die temperature)
@@ -6175,6 +6183,7 @@ int32_t Pmic_powerGetPwrThermalStat(Pmic_CoreHandle_t       *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5840), REQ_TAG(PDK-9111), REQ_TAG(PDK-9117)
  * Design: did_pmic_power_thermal_cfg_readback
+ * Architecture: aid_pmic_power_cfg
  *
  *          To configure the the thermal wrarning threshold temperature level,
  *          the application has to configure the below defined structure
@@ -6240,6 +6249,7 @@ int32_t Pmic_powerSetThermalConfig(
  *
  * Requirement: REQ_TAG(PDK-5840), REQ_TAG(PDK-9117)
  * Design: did_pmic_power_thermal_cfg_readback
+ * Architecture: aid_pmic_power_cfg
  *
  *          This function is used to get the thermal temperature threshold
  *          value for the PMIC.
@@ -6312,6 +6322,7 @@ int32_t Pmic_powerGetThermalConfig(Pmic_CoreHandle_t      *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5829), REQ_TAG(PDK-5848)
  * Design: did_pmic_power_cfg_readback
+ * Architecture: aid_pmic_power_cfg
  *
  *          This function is used to enable/disable thermal Interrupts
  *
@@ -6366,6 +6377,7 @@ int32_t Pmic_powerSetPwrRsrcIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5841), REQ_TAG(PDK-5840)
  * Design: did_pmic_power_cfg_readback, did_pmic_power_thermal_cfg_readback
+ * Architecture: aid_pmic_power_cfg
  *
  *          This function is used to enable/disable power Interrupts
  *

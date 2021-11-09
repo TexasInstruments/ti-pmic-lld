@@ -719,6 +719,7 @@ level */
  *
  * Requirement: REQ_TAG(PDK-5841)
  * Design: did_pmic_power_cfg_readback
+ * Architecture: aid_pmic_power_cfg
  *
  *          This function is used to enable/disable LDORTC regulator.
  *

@@ -335,6 +335,7 @@ typedef struct Pmic_FsmCfg_s
  *
  * Requirement: REQ_TAG(PDK-5851), REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
  * Design: did_pmic_lpstandby_cfg
+ * Architecture: aid_pmic_fsm_cfg
  *
  *         This function initiate OFF Request FSM transition from any other
  *         mission state to the STANDBY state or the LP_STANDBY state
@@ -360,12 +361,18 @@ int32_t Pmic_fsmDeviceOffRequestCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5837)
  * Design: did_pmic_fsm_cfg_readback
+ * Architecture: aid_pmic_fsm_cfg
  *
  *         This function setup nSLEEP signal bits with STARTUP_DEST
  *         Which is common for all supported PMICs. This API needs to be called
  *         at PMIC init before clearing Enable and Start-Up interrupts.
  *
  *  \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6594x
+ *                LEO PMIC. While adding support for New PMIC device, developer
+ *                need to update the API functionality for New PMIC device
+ *                accordingly.
  */
 int32_t Pmic_fsmDeviceOnRequest(Pmic_CoreHandle_t *pPmicCoreHandle);
 
@@ -374,6 +381,7 @@ int32_t Pmic_fsmDeviceOnRequest(Pmic_CoreHandle_t *pPmicCoreHandle);
  *
  * Requirement: REQ_TAG(PDK-5837), REQ_TAG(PDK-5851)
  * Design: did_pmic_fsm_cfg_readback, did_pmic_lpstandby_cfg
+ * Architecture: aid_pmic_fsm_cfg
  *
  *         This function is used for set/change the FSM mission states for PMIC
  *         using Nsleep1B and Nsleep2B signals in absence of GPIO pins
@@ -406,6 +414,7 @@ int32_t Pmic_fsmSetMissionState(Pmic_CoreHandle_t  *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5837)
  * Design: did_pmic_fsm_cfg_readback
+ * Architecture: aid_pmic_fsm_cfg
  *
  *         This function is used for Masking/Unmasking for NSLEEP2B or NSLEEP1B
  *         signal.
@@ -427,6 +436,7 @@ int32_t Pmic_fsmSetNsleepSignalMask(Pmic_CoreHandle_t  *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-9151)
  * Design: did_pmic_fsm_cfg_readback
+ * Architecture: aid_pmic_fsm_cfg
  *
  *         This function is used to read the status of the NSLEEP1B/2B Signal is
  *         masked or not
@@ -449,6 +459,7 @@ int32_t Pmic_fsmGetNsleepSignalMaskStat(Pmic_CoreHandle_t  *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5849)
  * Design: did_pmic_runtime_bist_cfg
+ * Architecture: aid_pmic_fsm_cfg
  *
  *         This function initiates a request to exercise runtime BIST on the
  *         device
@@ -466,6 +477,7 @@ int32_t Pmic_fsmRequestRuntimeBist(Pmic_CoreHandle_t  *pPmicCoreHandle);
  *
  * Requirement: REQ_TAG(PDK-9144), REQ_TAG(PDK-9134), REQ_TAG(PDK-9128)
  * Design: did_pmic_fsm_cfg_readback
+ * Architecture: aid_pmic_fsm_cfg
  *
  *          This function is used to set the required FSM configuration when
  *          corresponding bit field is set.
@@ -484,6 +496,7 @@ int32_t Pmic_fsmSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-9144), REQ_TAG(PDK-9134), REQ_TAG(PDK-9128)
  * Design: did_pmic_fsm_cfg_readback
+ * Architecture: aid_pmic_fsm_cfg
  *
  *          This function is used to get the FSM configuration when
  *          corresponding validParam bit fields are set in Pmic_FsmCfg_t
@@ -503,6 +516,7 @@ int32_t Pmic_fsmGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-9136)
  * Design: did_pmic_pfsm_cfg_readback
+ * Architecture: aid_pmic_fsm_cfg
  *
  *         This function is used to configure PFSM Delay. PFSM Delay will affect
  *         the total power up sequence time before the system is released from
@@ -531,6 +545,7 @@ int32_t Pmic_fsmSetPfsmDelay(Pmic_CoreHandle_t  *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-9136)
  * Design: did_pmic_pfsm_cfg_readback
+ * Architecture: aid_pmic_fsm_cfg
  *
  *         This function is used to read PFSM Delay
  *         Note: In this API, the default delay Type is assumed as
@@ -555,6 +570,7 @@ int32_t Pmic_fsmGetPfsmDelay(Pmic_CoreHandle_t  *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-9146)
  * Design: did_pmic_fsm_cfg_readback
+ * Architecture: aid_pmic_fsm_cfg
  *
  *          This function is used to configure the Nsleep1B/2B signal level
  *
@@ -577,6 +593,7 @@ int32_t Pmic_fsmSetNsleepSignalVal(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-9146)
  * Design: did_pmic_fsm_cfg_readback
+ * Architecture: aid_pmic_fsm_cfg
  *
  *          This function is used to read the signal level of the Nsleep1B/2B
  *          signal
@@ -601,6 +618,7 @@ int32_t Pmic_fsmGetNsleepSignalVal(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-9123)
  * Design: did_pmic_fsm_recover_soc_pwr_err
+ * Architecture: aid_pmic_fsm_cfg
  *
  *          This function is used to recover from SOC Power Error without
  *          rebooting the system
@@ -629,6 +647,7 @@ int32_t Pmic_fsmRecoverSocPwrErr(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-9330)
  * Design: did_pmic_fsm_i2c_trigger
+ * Architecture: aid_pmic_fsm_cfg
  *
  *          This function is used to to initiate FSM I2C trigger for given FSM
  *          I2C trigger type
@@ -655,6 +674,7 @@ int32_t Pmic_fsmEnableI2cTrigger(Pmic_CoreHandle_t  *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-9330)
  * Design: did_pmic_fsm_i2c_trigger
+ * Architecture: aid_pmic_fsm_cfg
  *
  *          This function is used to read the FSM I2C trigger Value of the
  *          FSM Trigger Type
@@ -677,6 +697,7 @@ int32_t Pmic_fsmGetI2cTriggerVal(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-9563), REQ_TAG(PDK-9564)
  * Design: did_pmic_ddr_gpio_retention_cfg
+ * Architecture: aid_pmic_fsm_cfg
  *
  *         This function initiates a request to exercise DDR/GPIO Retention Mode
  *         on the device based on the Retention Mode

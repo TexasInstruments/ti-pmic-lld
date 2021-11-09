@@ -1068,6 +1068,7 @@ static int32_t Pmic_gpioSetDeglitchOutsigtypePulCtrlCfg(
  * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-5844), REQ_TAG(PDK-9111),
  *              REQ_TAG(PDK-9157)
  * Design: did_pmic_gpio_cfg_readback, did_pmic_lpstandby_wkup_cfg
+ * Architecture: aid_pmic_gpio_cfg
  *
  *          This function is used to set the required configuration for the
  *          specified GPIO pin when corresponding validParam bit field is set in
@@ -1131,9 +1132,12 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5808)
  * Design: did_pmic_gpio_cfg_readback
+ * Architecture: aid_pmic_gpio_cfg
  *
  *          This function is used to read the configuration for the specified
- *          GPIO pin when corresponding bit field is set.
+ *          GPIO pin when corresponding validParam bit field is set in
+ *          the Pmic_GpioCfg_t
+ *          For more information \ref Pmic_GpioCfg_t
  *
  * \param   pPmicCoreHandle [IN]     PMIC Interface Handle
  * \param   pin             [IN]     PMIC GPIO pin number.
@@ -1262,6 +1266,7 @@ static int32_t Pmic_gpioSetPinValue(Pmic_CoreHandle_t          *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5808)
  * Design: did_pmic_gpio_cfg_readback
+ * Architecture: aid_pmic_gpio_cfg
  *
  *          This function is used to configure the signal level of the
  *          specified GPIO pin.
@@ -1318,6 +1323,7 @@ int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5808)
  * Design: did_pmic_gpio_cfg_readback
+ * Architecture: aid_pmic_gpio_cfg
  *
  *          This function is used to read the signal level of the gpio pin
  *
@@ -1395,6 +1401,7 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
  * Design: did_pmic_gpio_cfg_readback
+ * Architecture: aid_pmic_gpio_cfg
  *
  *          This function is used to enable GPIO pin Interrupts
  *
@@ -1508,9 +1515,12 @@ int32_t Pmic_gpioSetNPwronEnableDeglitchPullCtrlCfg(
  *
  * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-9111), REQ_TAG(PDK-9162)
  * Design: did_pmic_gpio_cfg_readback
+ * Architecture: aid_pmic_gpio_cfg
  *
  *          This function is used to set the required configuration for the
- *          NPWRON OR ENABLE pin when corresponding bit field is set.
+ *          NPWRON OR ENABLE pin when corresponding validParam bit field is set
+ *          in the Pmic_GpioCfg_t
+ *          For more information \ref Pmic_GpioCfg_t
  *          NPWRON is valid only for TPS6594x Leo Device.
  *
  *          Note: In this API, the default PMIC device is assumed as TPS6594x
@@ -1560,9 +1570,12 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
  *
  * Requirement: REQ_TAG(PDK-5808)
  * Design: did_pmic_gpio_cfg_readback
+ * Architecture: aid_pmic_gpio_cfg
  *
  *          This function is used to read the configuration for the
- *          NPWRON OR ENABLE pin when corresponding bit field is set.
+ *          NPWRON OR ENABLE pin when corresponding validParam bit field is set
+ *          in the Pmic_GpioCfg_t
+ *          For more information \ref Pmic_GpioCfg_t
  *          NPWRON is valid only for TPS6594x Leo Device.
  *
  *          Note: In this API, the default PMIC device is assumed as TPS6594x

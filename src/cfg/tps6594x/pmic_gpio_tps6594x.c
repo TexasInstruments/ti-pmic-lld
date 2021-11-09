@@ -218,8 +218,9 @@ void pmic_get_tps6594x_gpioIntRegCfg(Pmic_GpioIntRegCfg_t **pGpioIntRegCfg)
  *
  * Requirement: REQ_TAG(PDK-5808)
  * Design: did_pmic_gpio_cfg_readback
+ * Architecture: aid_pmic_gpio_cfg
  *
- *          This function is used to read the signal level of the NPWRON
+ *          This function is used to read the signal level of the NPWRON/Enable
  *          pin.
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle

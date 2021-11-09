@@ -530,6 +530,7 @@ typedef struct Pmic_WdgFailCntStat_s
  *
  * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854)
  * Design: did_pmic_wdg_cfg_readback
+ * Architecture: aid_pmic_wdg_cfg
  *
  *          This function is used to Enable the PMIC watchdog. User ensure
  *          that, this function needs to be called to enable watchdog timer
@@ -547,6 +548,7 @@ int32_t Pmic_wdgEnable(Pmic_CoreHandle_t *pPmicCoreHandle);
  *
  * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854)
  * Design: did_pmic_wdg_cfg_readback
+ * Architecture: aid_pmic_wdg_cfg
  *
  *          This function is used to Disable the PMIC watchdog. User ensure
  *          that, after using this function, complete watchdog functionality
@@ -565,6 +567,7 @@ int32_t Pmic_wdgDisable(Pmic_CoreHandle_t *pPmicCoreHandle);
  * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854), REQ_TAG(PDK-9115),
  *              REQ_TAG(PDK-9116)
  * Design: did_pmic_wdg_cfg_readback
+ * Architecture: aid_pmic_wdg_cfg
  *
  *          This function is used to configure the watchdog parameters
  *          in the PMIC for trigger mode or Q&A(question and answer) mode,
@@ -587,6 +590,7 @@ int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t   *pPmicCoreHandle,
  * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854), REQ_TAG(PDK-9115),
  *              REQ_TAG(PDK-9116)
  * Design: did_pmic_wdg_cfg_readback
+ * Architecture: aid_pmic_wdg_cfg
  *
  *          This function is used to get configuration of the watchdog
  *          from the PMIC for trigger mode or Q&A(question and answer) mode,
@@ -608,6 +612,7 @@ int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5839)
  * Design: did_pmic_wdg_cfg_readback
+ * Architecture: aid_pmic_wdg_cfg
  *
  *          This function is used to start watchdog sequence and continues
  *          till the given num_of_sequences. User has to ensure, configure
@@ -651,6 +656,7 @@ int32_t Pmic_wdgStartQaSequence(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854)
  * Design: did_pmic_wdg_cfg_readback
+ * Architecture: aid_pmic_wdg_cfg
  *
  *          This function is used to get the watchdog error status from the
  *          PMIC for trigger mode or Q&A(question and answer) mode,
@@ -672,6 +678,7 @@ int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t   *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854)
  * Design: did_pmic_wdg_cfg_readback
+ * Architecture: aid_pmic_wdg_cfg
  *
  *          This function is used to get the watchdog fail count status from the
  *          PMIC for trigger mode or Q&A(question and answer) mode.
@@ -691,6 +698,7 @@ int32_t Pmic_wdgGetFailCntStat(Pmic_CoreHandle_t      *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5854)
  * Design: did_pmic_wdg_cfg_readback
+ * Architecture: aid_pmic_wdg_cfg
  *
  *          This function is used to start watchdog trigger mode.
  *          User has to ensure, configure all Watchdog trigger parameters
@@ -728,6 +736,7 @@ int32_t Pmic_wdgStartTriggerSequence(Pmic_CoreHandle_t *pPmicCoreHandle);
  *
  * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854)
  * Design: did_pmic_wdg_cfg_readback
+ * Architecture: aid_pmic_wdg_cfg
  *
  *          This function is used to clear the watchdog error status from the
  *          PMIC for trigger mode or Q&A(question and answer) mode,
@@ -751,6 +760,7 @@ int32_t Pmic_wdgClrErrStatus(Pmic_CoreHandle_t   *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-9115), REQ_TAG(PDK-9116)
  * Design: did_pmic_wdg_cfg_readback
+ * Architecture: aid_pmic_wdg_cfg
  *
  *          This function is used to write Answers in Long Window/ Window1/
  *          Window2 Interval for the WDG QA Sequence

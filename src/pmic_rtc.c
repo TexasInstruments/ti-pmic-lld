@@ -1998,6 +1998,7 @@ static int32_t  Pmic_rtcEnableRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5855)
  * Design: did_pmic_rtc_cfg_readback
+ * Architecture: aid_pmic_rtc_cfg
  *
  *          This function is used to set the alarm Date and Time parameters
  *          depending upon the bit fields set in validParams of Time and Date
@@ -2062,6 +2063,7 @@ int32_t  Pmic_rtcSetAlarmInfo(Pmic_CoreHandle_t    *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5855)
  * Design: did_pmic_rtc_cfg_readback
+ * Architecture: aid_pmic_rtc_cfg
  *
  *          This function is used to Get the alarm date and time parameters
  *          depending upon the bit fields set in validParams of Time and Date
@@ -2122,6 +2124,7 @@ int32_t  Pmic_rtcGetAlarmInfo(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5855)
  * Design: did_pmic_rtc_cfg_readback
+ * Architecture: aid_pmic_rtc_cfg
  *
  *          This function is used to set the timer interrupt Period to
  *          the RTC present in the PMIC.
@@ -2188,6 +2191,7 @@ int32_t  Pmic_rtcSetTimerPeriod(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5855)
  * Design: did_pmic_rtc_cfg_readback
+ * Architecture: aid_pmic_rtc_cfg
  *
  *          This function is used to get the timer interrupt period from RTC
  *          present in the PMIC.
@@ -2246,6 +2250,7 @@ int32_t  Pmic_rtcGetTimerPeriod(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5855)
  * Design: did_pmic_rtc_cfg_readback
+ * Architecture: aid_pmic_rtc_cfg
  *
  *          This function is used to set the RTC Date and Time parameters
  *          depending upon the bit fields set in validParams of Time and Date
@@ -2320,6 +2325,7 @@ int32_t Pmic_rtcSetTimeDateInfo(Pmic_CoreHandle_t    *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5855)
  * Design: did_pmic_rtc_cfg_readback
+ * Architecture: aid_pmic_rtc_cfg
  *
  *          This function is used to Get the RTC date and time parameters
  *          depending upon the bit fields set in validParams of Time and Date
@@ -2395,6 +2401,7 @@ int32_t Pmic_rtcGetTimeDateInfo(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5855)
  * Design: did_pmic_rtc_cfg_readback
+ * Architecture: aid_pmic_rtc_cfg
  *
  *          This function is used to set the frequency compensation
  *          value in the RTC of the PMIC Device.
@@ -2436,6 +2443,7 @@ int32_t  Pmic_rtcSetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5855)
  * Design: did_pmic_rtc_cfg_readback
+ * Architecture: aid_pmic_rtc_cfg
  *
  *          This function is used to get the frequency compensation
  *          value from the RTC of the PMIC Device.
@@ -2483,6 +2491,7 @@ int32_t  Pmic_rtcGetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5855)
  * Design: did_pmic_rtc_cfg_readback
+ * Architecture: aid_pmic_rtc_cfg
  *
  *          This function is used to Start/Stop the RTC present in PMIC.
  *
@@ -2522,6 +2531,7 @@ int32_t  Pmic_rtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5855), REQ_TAG(PDK-5831)
  * Design: did_pmic_rtc_cfg_readback, did_pmic_lpstandby_wkup_cfg
+ * Architecture: aid_pmic_rtc_cfg
  *
  *          This function is used to enable/disable the RTC alarm interrupt.
  *
@@ -2565,6 +2575,7 @@ int32_t  Pmic_rtcEnableAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-5855), REQ_TAG(PDK-5831)
  * Design: did_pmic_rtc_cfg_readback, did_pmic_lpstandby_wkup_cfg
+ * Architecture: aid_pmic_rtc_cfg
  *
  *          This function is used to enable/disable the RTC timer interrupt.
  *
@@ -2647,6 +2658,7 @@ static int32_t  Pmic_rtcGetPowerupStatus(Pmic_CoreHandle_t    *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-9145), REQ_TAG(PDK-9142)
  * Design: did_pmic_rtc_rst_status
+ * Architecture: aid_pmic_rtc_cfg
  *
  *          This function is used to get the Reset status of the RTC
  *          depending on the bit fields set in validParams of
@@ -2729,6 +2741,7 @@ int32_t  Pmic_rtcGetRstStatus(Pmic_CoreHandle_t    *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-9155)
  * Design: did_pmic_rtc_status
+ * Architecture: aid_pmic_rtc_cfg
  *
  *          This function is read RTC status which defines RTC is started or not
  *
@@ -2797,6 +2810,7 @@ int32_t  Pmic_rtcGetStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-9142), REQ_TAG(PDK-9145)
  * Design: did_pmic_rtc_clr_rst_status
+ * Architecture: aid_pmic_rtc_cfg
  *
  *          This function is used to clear the Reset status of the RTC
  *          depending on the Pmic_RtcRstStatusType
@@ -3277,11 +3291,12 @@ static int32_t Pmic_rtcSetCrystalOscCfg(Pmic_CoreHandle_t   *pPmicCoreHandle,
     return pmicStatus;
 }
 
-/*
+/*!
  * \brief   API to Set PMIC RTC Configuration
  *
- * Requirement: REQ_TAG(PDK-9141), REQ_TAG(PDK-9135)
+ * Requirement: REQ_TAG(PDK-9141), REQ_TAG(PDK-9135), REQ_TAG(PDK-9111)
  * Design: did_pmic_rtc_cfg_readback
+ * Architecture: aid_pmic_rtc_cfg
  *
  *          This function is used to set RTC configuration depending upon the
  *          bit fields set in validParams of Pmic_RtcCfg_t structure.
@@ -3350,6 +3365,7 @@ int32_t  Pmic_rtcSetConfiguration(Pmic_CoreHandle_t    *pPmicCoreHandle,
  *
  * Requirement: REQ_TAG(PDK-9141), REQ_TAG(PDK-9135)
  * Design: did_pmic_rtc_cfg_readback
+ * Architecture: aid_pmic_rtc_cfg
  *
  *          This function is used to Get RTC configuration depending upon the
  *          bit fields set in validParams of Pmic_RtcCfg_t structure.
