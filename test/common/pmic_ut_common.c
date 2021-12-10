@@ -156,7 +156,7 @@ GPIO_v0_Config GPIO_v0_config =
     gpioCallbackFunctions,
     sizeof(gpioPinConfigs) / sizeof(GPIO_PinConfig),
     sizeof(gpioCallbackFunctions) / sizeof(GPIO_CallbackFxn),
-#ifdef __TI_ARM_V7R4__
+#if  ((__ARM_ARCH == 7) && (__ARM_ARCH_PROFILE == 'R'))
     0x8U
 #else
 #if defined(__C7100__)

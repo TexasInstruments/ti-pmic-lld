@@ -290,8 +290,9 @@ export pmic_fsm_mcu_testapp_$(SOC)_CORELIST = $(drvpmic_fsm_mcu_app_CORELIST)
 pmic_fsm_mcu_testapp_SBL_APPIMAGEGEN = yes
 export pmic_fsm_mcu_testapp_SBL_APPIMAGEGEN
 
+ifeq ($(BUILD_PROFILE),release)
 pmic_EXAMPLE_LIST += pmic_fsm_mcu_testapp
-
+endif
 
 #
 # Export Libraries and Apps to Build Env

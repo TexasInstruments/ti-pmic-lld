@@ -68,34 +68,35 @@ SECTIONS
     .startupData   : {} palign(8)      > OCMC_RAM, type = NOINIT
     .text          : {} palign(8)      > OCMC_RAM
     .const         : {} palign(8)      > OCMC_RAM
-    .cinit         : {} palign(8)      > OCMC_RAM
+    .rodata        : {} palign(8)      > OCMC_RAM_SCISERVER
+    .cinit         : {} palign(8)      > MCU0_R5F_TCMB0
     .pinit         : {} palign(8)      > OCMC_RAM
-    .bss           : {} align(4)       > OCMC_RAM
+    .bss           : {} align(4)       > MCU0_R5F_TCMB0
     .far           : {} align(4)       > OCMC_RAM
     .data          : {} palign(128)    > OCMC_RAM
     .sysmem        : {}                > OCMC_RAM
     .data_buffer   : {} palign(128)    > OCMC_RAM
-    .bss.devgroup* : {} align(4)       > OCMC_RAM
-    .const.devgroup*: {} align(4)      > OCMC_RAM
+    .bss.devgroup* : {} align(4)       > MCU0_R5F_TCMB0
+    .const.devgroup*: {} align(4)      > MCU0_R5F_TCMA
     .boardcfg_data : {} align(4)       > OCMC_RAM
 
     /* USB or any other LLD buffer for benchmarking */
     .benchmark_buffer (NOLOAD) {} ALIGN (8) > OCMC_RAM
 
-    .stack      : {} align(4)       > OCMC_RAM  (HIGH)
-    .irqStack   : {. = . + __IRQ_STACK_SIZE;} align(4)      > OCMC_RAM  (HIGH)
+    .stack      : {} align(4)       > MCU0_R5F_TCMA  (HIGH)
+    .irqStack   : {. = . + __IRQ_STACK_SIZE;} align(4)      > MCU0_R5F_TCMA  (HIGH)
     RUN_START(__IRQ_STACK_START)
     RUN_END(__IRQ_STACK_END)
-    .fiqStack   : {. = . + __FIQ_STACK_SIZE;} align(4)      > OCMC_RAM  (HIGH)
+    .fiqStack   : {. = . + __FIQ_STACK_SIZE;} align(4)      > MCU0_R5F_TCMA  (HIGH)
     RUN_START(__FIQ_STACK_START)
     RUN_END(__FIQ_STACK_END)
-    .abortStack : {. = . + __ABORT_STACK_SIZE;} align(4)    > OCMC_RAM  (HIGH)
+    .abortStack : {. = . + __ABORT_STACK_SIZE;} align(4)    > MCU0_R5F_TCMA  (HIGH)
     RUN_START(__ABORT_STACK_START)
     RUN_END(__ABORT_STACK_END)
-    .undStack   : {. = . + __UND_STACK_SIZE;} align(4)      > OCMC_RAM  (HIGH)
+    .undStack   : {. = . + __UND_STACK_SIZE;} align(4)      > MCU0_R5F_TCMA  (HIGH)
     RUN_START(__UND_STACK_START)
     RUN_END(__UND_STACK_END)
-    .svcStack   : {. = . + __SVC_STACK_SIZE;} align(4)      > OCMC_RAM  (HIGH)
+    .svcStack   : {. = . + __SVC_STACK_SIZE;} align(4)      > MCU0_R5F_TCMA  (HIGH)
     RUN_START(__SVC_STACK_START)
     RUN_END(__SVC_STACK_END)
 }

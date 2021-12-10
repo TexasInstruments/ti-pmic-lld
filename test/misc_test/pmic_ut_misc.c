@@ -6031,7 +6031,7 @@ static void test_pmic_coverageGaps(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     //Pmic_getCrcStatus
-    pPmicCoreHandle->commMode = NULL;
+    pPmicCoreHandle->commMode = 0;
     status = Pmic_getCrcStatus(pPmicCoreHandle, &i2c1SpiCrcStat, &i2c2CrcStat);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
