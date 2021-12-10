@@ -2649,8 +2649,8 @@ static void test_pmic_rtc_testWakeup_AlarmIntr_lpStandbyState(void)
     pHandle                         = pPmicCoreHandle;
     Pmic_RtcTime_t     timeCfg_cr   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
     Pmic_RtcDate_t     dateCfg_cr   = { 0x0F, 0U, 0U, 0U, 0U};
-    Pmic_RtcTime_t     timeCfg_rd   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
-    Pmic_RtcDate_t     dateCfg_rd   = { 0x0F, 0U, 0U, 0U, 0U};
+    Pmic_RtcTime_t     timeCfg_rd   = { 0U};
+    Pmic_RtcDate_t     dateCfg_rd   = { 0U};
     Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
     Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 0U, 30U, 6U, 0U, 1U};
     int8_t num = 0;
@@ -2671,6 +2671,9 @@ static void test_pmic_rtc_testWakeup_AlarmIntr_lpStandbyState(void)
 
     status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    dateCfg_rd.validParams = 0xF;
+    timeCfg_rd.validParams = 0x1F;
 
     /* Get the current time value */
     status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_rd, &dateCfg_rd);
@@ -2708,6 +2711,7 @@ static void test_pmic_rtc_testWakeup_AlarmIntr_lpStandbyState(void)
 
     /* Set Alarm Interupt */
     status = Pmic_rtcEnableAlarmIntr(pHandle, PMIC_RTC_ALARM_INTR_ENABLE);
+
     /* Get the current time for timeout */
     status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -2739,8 +2743,8 @@ static void test_pmic_rtc_testWakeup_AlarmIntr_standbyState(void)
     pHandle                         = pPmicCoreHandle;
     Pmic_RtcTime_t     timeCfg_cr   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
     Pmic_RtcDate_t     dateCfg_cr   = { 0x0F, 0U, 0U, 0U, 0U};
-    Pmic_RtcTime_t     timeCfg_rd   = { 0x1F, 0U, 0U, 0U, 0U, 0U};
-    Pmic_RtcDate_t     dateCfg_rd   = { 0x0F, 0U, 0U, 0U, 0U};
+    Pmic_RtcTime_t     timeCfg_rd   = { 0U};
+    Pmic_RtcDate_t     dateCfg_rd   = { 0U};
     Pmic_RtcDate_t    validDateCfg =  { 0x0F, 15U, 6U, 2055U, 1U};
     Pmic_RtcTime_t    validTimeCfg  = { 0x1F, 0U, 30U, 6U, 0U, 1U};
     bool standByState = 0U;
@@ -2762,6 +2766,9 @@ static void test_pmic_rtc_testWakeup_AlarmIntr_standbyState(void)
 
     status = Pmic_rtcSetTimeDateInfo(pHandle, validTimeCfg, validDateCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    dateCfg_rd.validParams = 0xF;
+    timeCfg_rd.validParams = 0x1F;
 
     /* Get the current time value */
     status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_rd, &dateCfg_rd);
@@ -2798,6 +2805,7 @@ static void test_pmic_rtc_testWakeup_AlarmIntr_standbyState(void)
 
     /* Set Alarm Interupt */
     status = Pmic_rtcEnableAlarmIntr(pHandle, PMIC_RTC_ALARM_INTR_ENABLE);
+
     /* Get the current time for timeout */
     status = Pmic_rtcGetTimeDateInfo(pHandle, &timeCfg_cr, &dateCfg_cr);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
