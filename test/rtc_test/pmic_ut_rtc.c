@@ -4597,13 +4597,15 @@ static void test_pmic_rtc_clrRstStatus_powerupStatus(void)
     int32_t            status       = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t  *pHandle     = NULL;
     pHandle                         = pPmicCoreHandle;
-    Pmic_RtcRstStatus_t rtcRstStatus = {PMIC_RTC_POWERUP_STATUS_VALID_SHIFT, 0U, 0U};
+    Pmic_RtcRstStatus_t rtcRstStatus = {0U};
     uint8_t rstStatType = PMIC_RTC_POWERUP_STATUS;
     int8_t  num         = 0;
 
     pmic_log("\r\n Run this test alone after POR");
     pmic_log("\r\n Enter 1 to continue");
     UART_scanFmt("%d", &num);
+
+    rtcRstStatus.validParams = PMIC_RTC_POWERUP_STATUS_VALID_SHIFT;
 
     test_pmic_print_unity_testcase_info(9899,
                                         pmic_rtc_tests,
@@ -4637,13 +4639,15 @@ static void test_pmic_rtc_clrRstStatus_rtcRstStatus(void)
     int32_t            status       = PMIC_ST_SUCCESS;
     Pmic_CoreHandle_t  *pHandle     = NULL;
     pHandle                         = pPmicCoreHandle;
-    Pmic_RtcRstStatus_t rtcRstStatus = {PMIC_RTC_RESET_STATUS_VALID_SHIFT, 0U, 0U};
+    Pmic_RtcRstStatus_t rtcRstStatus = {0U};
     uint8_t rstStatType = PMIC_RTC_RST_STATUS;
     int8_t  num         = 0;
 
     pmic_log("\r\n Run this test alone after POR");
     pmic_log("\r\n Enter 1 to continue");
     UART_scanFmt("%d", &num);
+
+    rtcRstStatus.validParams = PMIC_RTC_RESET_STATUS_VALID_SHIFT;
 
     test_pmic_print_unity_testcase_info(9900,
                                         pmic_rtc_tests,
