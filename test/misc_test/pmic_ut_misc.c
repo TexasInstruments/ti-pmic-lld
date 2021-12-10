@@ -4125,7 +4125,7 @@ static void test_pmic_setCommonCtrlCfg_eepromDefaultLoadEnable(void)
 static void test_pmic_setCommonCtrlCfg_eepromDefaultLoadDisable(void)
 {
     int32_t pmicStatus        = PMIC_ST_SUCCESS;
-    Pmic_CommonCtrlCfg_t commonCtrlCfg_rd = {PMIC_CFG_EEPROM_DEFAULT_VALID_SHIFT,};
+    Pmic_CommonCtrlCfg_t commonCtrlCfg_rd = {0U};
     Pmic_CommonCtrlCfg_t commonCtrlCfg =
     {
         PMIC_CFG_EEPROM_DEFAULT_VALID_SHIFT,
@@ -4171,6 +4171,8 @@ static void test_pmic_setCommonCtrlCfg_eepromDefaultLoadDisable(void)
     }
     pmicStatus = Pmic_setCommonCtrlConfig(pPmicCoreHandle, commonCtrlCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
+
+    commonCtrlCfg_rd.validParams = PMIC_CFG_EEPROM_DEFAULT_VALID_SHIFT;
 
     pmicStatus = Pmic_getCommonCtrlConfig(pPmicCoreHandle, &commonCtrlCfg_rd);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, pmicStatus);
