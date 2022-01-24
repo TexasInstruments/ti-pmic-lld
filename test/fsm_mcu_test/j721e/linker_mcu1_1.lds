@@ -68,20 +68,20 @@ SECTIONS
     .startupData   : {} palign(8)      > OCMC_RAM, type = NOINIT
     .text          : {} palign(8)      > OCMC_RAM
     .const         : {} palign(8)      > OCMC_RAM
-    .rodata        : {} palign(8)      > OCMC_RAM_SCISERVER
-    .cinit         : {} palign(8)      > MCU0_R5F_TCMB0
+    .rodata        : {} palign(8)      > MCU0_R5F_TCMB0	
+    .cinit         : {} palign(8)      > MCU0_R5F_TCMA
     .pinit         : {} palign(8)      > OCMC_RAM
     .bss           : {} align(4)       > MCU0_R5F_TCMB0
     .far           : {} align(4)       > OCMC_RAM
     .data          : {} palign(128)    > OCMC_RAM
     .sysmem        : {}                > OCMC_RAM
     .data_buffer   : {} palign(128)    > OCMC_RAM
-    .bss.devgroup* : {} align(4)       > MCU0_R5F_TCMB0
+    .bss.devgroup* : {} align(4)       > MCU0_R5F_TCMA
     .const.devgroup*: {} align(4)      > MCU0_R5F_TCMA
-    .boardcfg_data : {} align(4)       > OCMC_RAM
+    .boardcfg_data : {} align(4)       > MCU0_R5F_TCMA
 
     /* USB or any other LLD buffer for benchmarking */
-    .benchmark_buffer (NOLOAD) {} ALIGN (8) > OCMC_RAM
+    .benchmark_buffer (NOLOAD) {} ALIGN (8) > OCMC_RAM_SCISERVER
 
     .stack      : {} align(4)       > MCU0_R5F_TCMA  (HIGH)
     .irqStack   : {. = . + __IRQ_STACK_SIZE;} align(4)      > MCU0_R5F_TCMA  (HIGH)
