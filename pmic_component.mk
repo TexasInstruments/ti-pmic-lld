@@ -291,7 +291,7 @@ pmic_fsm_mcu_testapp_SBL_APPIMAGEGEN = yes
 export pmic_fsm_mcu_testapp_SBL_APPIMAGEGEN
 
 ifeq ($(BUILD_PROFILE),release)
-pmic_EXAMPLE_LIST += pmic_fsm_mcu_testapp
+#pmic_EXAMPLE_LIST += pmic_fsm_mcu_testapp
 endif
 
 #
