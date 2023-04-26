@@ -1212,7 +1212,7 @@ static void test_pmic_powerSetPowerResourceConfig_rvCheckEn_enable(void)
     {
         PMIC_CFG_REGULATOR_VMON_RV_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -1294,7 +1294,7 @@ static void test_pmic_powerSetPowerResourceConfig_rvCheckEn_disable(void)
     {
         PMIC_CFG_REGULATOR_VMON_RV_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -1413,7 +1413,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckPullDownEn_enable(void)
     {
         PMIC_CFG_REGULATOR_BUCK_PLDN_EN_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -1468,7 +1468,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckPullDownEn_disable(void)
     {
         PMIC_CFG_REGULATOR_BUCK_PLDN_EN_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -1559,7 +1559,7 @@ static void test_pmic_powerSetPowerResourceConfig_vmonEn_enable(void)
     {
         PMIC_CFG_VMON_EN_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -1687,7 +1687,7 @@ static void test_pmic_powerSetPowerResourceConfig_vmonEn_disable(void)
     {
         PMIC_CFG_VMON_EN_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -1833,7 +1833,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckVoutSel_vout1(void)
     {
         PMIC_CFG_REGULATOR_BUCK_VOUT_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -1888,7 +1888,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckVoutSel_vout2(void)
     {
         PMIC_CFG_REGULATOR_BUCK_VOUT_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -2013,7 +2013,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckFpwmMode_auto(void)
     {
         PMIC_CFG_REGULATOR_BUCK_FPWM_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -2068,7 +2068,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckFpwmMode_pwm(void)
     {
         PMIC_CFG_REGULATOR_BUCK_FPWM_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -2159,7 +2159,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckFpwmMpMode_multiPhase(void
     {
         PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -2221,7 +2221,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckFpwmMpMode_auto(void)
     {
         PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -2454,7 +2454,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckCurrentLimit_6A5(void)
     {
         PMIC_CFG_REGULATOR_BUCK_ILIM_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -2510,7 +2510,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckCurrentLimit_5A5(void)
     {
         PMIC_CFG_REGULATOR_BUCK_ILIM_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -2565,7 +2565,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckCurrentLimit_4A5(void)
     {
         PMIC_CFG_REGULATOR_BUCK_ILIM_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -2620,7 +2620,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckCurrentLimit_3A5(void)
     {
         PMIC_CFG_REGULATOR_BUCK_ILIM_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -2675,7 +2675,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckCurrentLimit_2A5(void)
     {
         PMIC_CFG_REGULATOR_BUCK_ILIM_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -2763,7 +2763,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_buckCurrentLimit(v
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -2815,7 +2815,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckVmonSlewRate_33MV(void)
     {
         PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -2893,7 +2893,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckVmonSlewRate_20MV(void)
     {
         PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -2971,7 +2971,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckVmonSlewRate_10MV(void)
     {
         PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -3049,7 +3049,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckVmonSlewRate_05MV(void)
     {
         PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -3127,7 +3127,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckVmonSlewRate_2MV5(void)
     {
         PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -3205,7 +3205,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckVmonSlewRate_1MV3(void)
     {
         PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -3283,7 +3283,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckVmonSlewRate_0MV63(void)
     {
         PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -3361,7 +3361,7 @@ static void test_pmic_powerSetPowerResourceConfig_buckVmonSlewRate_0MV31(void)
     {
         PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -3472,7 +3472,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_buckVmonSlewRate(v
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -3533,7 +3533,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoPullDownSel_50KOHM(void)
     {
         PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -3589,7 +3589,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoPullDownSel_125OHM(void)
     {
         PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -3645,7 +3645,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoPullDownSel_250OHM(void)
     {
         PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -3701,7 +3701,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoPullDownSel_500OHM(void)
     {
         PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -3757,7 +3757,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoSlowRampEn_enable(void)
     {
         PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -3815,7 +3815,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoSlowRampEn_disable(void)
     {
         PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -3871,7 +3871,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_ldoPullDownS
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    uint16_t pwrRsrc;
+    uint16_t pwrRsrc = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -3911,7 +3911,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_ldoPullDownSel(voi
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -3957,7 +3957,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_ldoPullDownSel(voi
 static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_ldoSlowRampEn(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint16_t pwrRsrc;
+    uint16_t pwrRsrc = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -4020,7 +4020,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_ldoSlowRampE
 static void test_pmic_powerSetPowerResourceConfig_voltage_mV(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t powerCfg_rd =
     {
@@ -4190,7 +4190,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_voltage_mV_maxVal(
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -4386,7 +4386,7 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_none(void)
     {
         PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -4551,7 +4551,7 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_mcu(void)
     {
         PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -4724,7 +4724,7 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_soc(void)
     {
         PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -4897,7 +4897,7 @@ static void test_pmic_powerSetPowerResourceConfig_railGrpSel_other(void)
     {
         PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -5102,7 +5102,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_railGrpSel(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -5172,7 +5172,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoBypassModeEn_bypass(void)
     {
         PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -5263,7 +5263,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoBypassModeEn_linear(void)
     {
         PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -5365,7 +5365,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_0MS5(void)
     {
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -5421,7 +5421,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_1MS(void)
     {
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -5477,7 +5477,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_1MS5(void)
     {
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -5533,7 +5533,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_2MS(void)
     {
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -5589,7 +5589,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_2MS5(void)
     {
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -5645,7 +5645,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_3MS(void)
     {
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -5701,7 +5701,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_3MS5(void)
     {
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -5757,7 +5757,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_4MS(void)
     {
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -5813,7 +5813,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_6MS(void)
     {
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -5869,7 +5869,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_8MS(void)
     {
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -5925,7 +5925,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_10MS(void)
     {
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -5981,7 +5981,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_12MS(void)
     {
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -6037,7 +6037,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_14MS(void)
     {
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -6093,7 +6093,7 @@ static void test_pmic_powerSetPowerResourceConfig_ldoRvTimeoutSel_16MS(void)
     {
         PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -6183,7 +6183,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_ldoRvTimeoutSel(vo
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -6233,7 +6233,7 @@ static void test_pmic_powerSetPowerResourceConfig_vmonRange_range1(void)
     {
         PMIC_CFG_VMON_RANGE_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -6289,7 +6289,7 @@ static void test_pmic_powerSetPowerResourceConfig_vmonRange_range2(void)
     {
         PMIC_CFG_VMON_RANGE_VALID_SHIFT,
     };
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -6341,7 +6341,7 @@ static void test_pmic_powerSetPowerResourceConfig_vmonRange_range2(void)
  static void test_pmic_powerSetPowerResourceConfigPrmValTest_PwrRsrc_vmonRange(void)
  {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint16_t pwrRsrc;
+    uint16_t pwrRsrc = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg  =
     {
@@ -9422,8 +9422,8 @@ static void test_pmic_powerSetCommonConfig_moderateRailTrig_SocPwrErr(void)
 static void test_pmic_powerSetLdoRtc_ldortcEnable_enable(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    bool ldortcEnable;
-    bool ldortcEnable_rd;
+    bool ldortcEnable = false;
+    bool ldortcEnable_rd = false;
 
     test_pmic_print_unity_testcase_info(7297,
                                         pmic_power_tests,
@@ -9458,8 +9458,8 @@ static void test_pmic_powerSetLdoRtc_ldortcEnable_enable(void)
 static void test_pmic_powerSetLdoRtc_ldortcEnable_disable(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    bool ldortcEnable;
-    bool ldortcEnable_rd;
+    bool ldortcEnable = false;
+    bool ldortcEnable_rd = false;
 
     test_pmic_print_unity_testcase_info(7298,
                                         pmic_power_tests,
@@ -12879,7 +12879,7 @@ static void test_pmic_powerGetPwrThermalStat_ImmShtDwnStatus(void)
 static void test_pmic_powerSetPowerResourceConfig_hera_ldo(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint16_t pwrRsrc;
+    uint16_t pwrRsrc = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -12920,7 +12920,7 @@ static void test_pmic_powerSetPowerResourceConfig_hera_ldo(void)
 static void test_pmic_powerSetPowerResourceConfig_leo_vmon(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint16_t pwrRsrc;
+    uint16_t pwrRsrc = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -13031,7 +13031,7 @@ static void test_pmic_powerGetThermalConfig_thermalShutdownThold(void)
 static void test_pmic_powerSetLdoRtc_HERA_ldortcEnable_disable(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    bool ldortcEnable;
+    bool ldortcEnable = false;
 
     test_pmic_print_unity_testcase_info(7876,
                                         pmic_power_tests,
@@ -13289,7 +13289,7 @@ static void test_pmic_powerSetPwrResourceCfg_buck2PwmMpMode(void)
 static void test_pmic_powerSetPwrResourceCfg_ldo4ByPassMode(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint16_t pwrRsrc;
+    uint16_t pwrRsrc = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -13708,7 +13708,7 @@ static void test_pmic_powerSetCommonConfig_deglitchTimeSel(void)
  static void test_pmic_powerGetPwrResourceCfgPrmValTest_vmonRangePwrRsrc(void)
  {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint16_t pwrRsrc;
+    uint16_t pwrRsrc = 0U;
 
     Pmic_PowerResourceCfg_t powerCfg_rd =
     {
@@ -14073,7 +14073,7 @@ static void test_pmic_powerGetPwrResourceCfgPrmValTest_ldoPullDownSelPwrRsrc(voi
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    uint16_t pwrRsrc;
+    uint16_t pwrRsrc = 0U;
 
     Pmic_PowerResourceCfg_t powerCfg_rd =
     {
@@ -14113,7 +14113,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_buckIlimMinVal(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -14427,7 +14427,7 @@ static void test_pmic_powerSetPwrResourceCfg_ldoSlowRampEn(void)
 static void test_pmic_powerSetLdoRtcPrmValTest_handle(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    bool ldortcEnable;
+    bool ldortcEnable = false;
 
     test_pmic_print_unity_testcase_info(10660,
                                         pmic_power_tests,
@@ -14589,7 +14589,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_buckMaxVoltage(void)
 static void test_pmic_powerSetPwrResourceCfgPrmValTest_ldoMinVoltage(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint16_t pwrRsrc;
+    uint16_t pwrRsrc = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg  =
     {
@@ -15420,7 +15420,7 @@ static void test_pmic_powerSetPwrResourceCfg_vmonRange(void)
     {
         PMIC_CFG_VMON_RANGE_VALID_SHIFT,
     };
-    uint16_t pwrRsrc;
+    uint16_t pwrRsrc = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -15493,7 +15493,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_vmonRangeVoltage_mV_299mV
     {
         PMIC_CFG_VMON_RANGE_VALID_SHIFT,
     };
-    uint16_t pwrRsrc;
+    uint16_t pwrRsrc = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -15563,7 +15563,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_vmonRangeVoltage_mV_3341m
     {
         PMIC_CFG_VMON_RANGE_VALID_SHIFT,
     };
-    uint16_t pwrRsrc;
+    uint16_t pwrRsrc = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -15633,7 +15633,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_vmonRangeVoltage_mV_3349m
     {
         PMIC_CFG_VMON_RANGE_VALID_SHIFT,
     };
-    uint16_t pwrRsrc;
+    uint16_t pwrRsrc = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -15703,7 +15703,7 @@ static void test_pmic_powerSetPwrResourceCfgPrmValTest_vmonRangeVoltage_mV_5001m
     {
         PMIC_CFG_VMON_RANGE_VALID_SHIFT,
     };
-    uint16_t pwrRsrc;
+    uint16_t pwrRsrc = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -15849,7 +15849,7 @@ static void test_pmic_powerSetPowerResourceConfigPrmRangeTest_voltage_mV(void)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    uint16_t pwrRsrc, pwrRsrcMin, pwrRsrcMax;
+    uint16_t pwrRsrc = 0U, pwrRsrcMin = 0U, pwrRsrcMax = 0U;
 
     Pmic_PowerResourceCfg_t pPowerCfg   =
     {
@@ -15915,7 +15915,7 @@ static void test_pmic_power_coverageGaps(void)
     uint16_t pwrResource;
     uint8_t  pPgoodSelType_rd;
     uint16_t pgoodSrcSel;
-    bool ldortcEnable, ldortcEnable_rd;
+    bool ldortcEnable = false, ldortcEnable_rd = false;
     Pmic_PowerResourceStat_t pPwrRsrcStatCfg =
     {
         PMIC_POWER_RESOURCE_UV_STAT_VALID_SHIFT,
