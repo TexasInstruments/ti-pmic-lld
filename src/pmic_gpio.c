@@ -1397,6 +1397,53 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /*!
+ * \brief   API to set PMIC GPIO direction.
+ *
+ * Requirement: REQ_TAG(PDK-5808)
+ * Design: did_pmic_gpio_cfg_readback
+ * Architecture: aid_pmic_gpio_cfg
+ *
+ *          This function is used to configure the direction of the
+ *          specified GPIO pin.
+ *
+ * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
+ * \param   pin             [IN]    PMIC GPIO pin number.
+ *                                   Valid values for TPS6594x Leo Device
+ *                                   \ref Pmic_Tps6594xLeo_GpioPin.
+ *                                   Valid values for LP8764x HERA Device
+ *                                   \ref Pmic_Lp8764xHera_GpioPin.
+ * \param   pinDir          [IN]    PMIC GPIO signal direction In/Out to be
+ *                                  configured.
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_gpioSetDir(Pmic_CoreHandle_t *pPmicCoreHandle,
+                          const uint8_t      pin,
+                          const uint8_t      pinDir)
+{
+    int32_t status  = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t gpioCfg;
+
+    status = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
+
+    if((PMIC_ST_SUCCESS == status) &&
+       (pinDir > PMIC_GPIO_OUTPUT))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if(PMIC_ST_SUCCESS == status)
+    {
+        gpioCfg.pinDir = pinDir;
+        /* Set PMIC gpio pin value */
+        status = Pmic_gpioSetPinDir(pPmicCoreHandle, pin, gpioCfg);
+    }
+
+    return status;
+}
+
+/*!
  * \brief   API to enable/disable GPIO interrupt.
  *
  * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)

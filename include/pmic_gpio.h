@@ -357,6 +357,10 @@ int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
                           const uint8_t      pin,
                           const uint8_t      pinValue);
 
+int32_t Pmic_gpioSetDir(Pmic_CoreHandle_t *pPmicCoreHandle,
+                          const uint8_t      pin,
+                          const uint8_t      pinDir);
+
 /*!
  * \brief   API to get PMIC GPIO value.
  *
