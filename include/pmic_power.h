@@ -62,13 +62,13 @@
 /* ========================================================================= */
 /*                             Include Files                                 */
 /* ========================================================================= */
-
-#include <pmic_core.h>
-#include <cfg/tps6594x/pmic_power_tps6594x.h>
-#include <cfg/lp8764x/pmic_power_lp8764x.h>
+#include "pmic_core.h"
+#include "cfg/tps6594x/pmic_power_tps6594x.h"
+#include "cfg/lp8764x/pmic_power_lp8764x.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /* ========================================================================= */
@@ -85,83 +85,83 @@ extern "C" {
  *
  *  @{
  */
-  /** \brief validParams value used to set/get to Enable/Disable residual
-   *         voltage checking for regulator/VMON pin
-   *         Valid only for VMON1/VMON2/BUCK/LDO */
-#define PMIC_CFG_REGULATOR_VMON_RV_SEL_VALID              (0U)
- /** \brief validParams value used to set/get to Enable/Disable output pull-down
-  *         resistor when BUCK is disabled.
-  *         Valid only for BUCK regulator */
-#define PMIC_CFG_REGULATOR_BUCK_PLDN_EN_VALID             (1U)
- /** \brief validParams value used to set/get to Enable /Disable the Voltage
-  *         monitor feature
-  *         Valid only for VMON1/VMON2/VMON of BUCK/VMON of LDO/VMON of VCCA
-  *         Power Resources */
-#define PMIC_CFG_VMON_EN_VALID                            (2U)
- /** \brief validParams value used to set/get to Select output voltage register
-  *         for BUCK
-  *         Valid only for BUCK regulator */
-#define PMIC_CFG_REGULATOR_BUCK_VOUT_SEL_VALID            (3U)
- /** \brief validParams value used to set/get to Select PWM or Auto Mode for
-  *         BUCK
-  *         Valid only for BUCK regulator */
-#define PMIC_CFG_REGULATOR_BUCK_FPWM_VALID                (4U)
- /** \brief validParams value used to set/get to Select between Multi phase with
-  *         PWM OR AUTO mode with Automatic phase adding and shedding for BUCK
-  *         Valid only for BUCK regulator */
-#define PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID              (5U)
- /** \brief validParams value used to set/get to Enable/Disable the power
-  *         regulators
-  *         Valid only for BUCK/LDO regulator */
-#define PMIC_CFG_REGULATOR_EN_VALID                       (6U)
- /** \brief validParams value used to set/get to Enable/Disable Slow Ramp for
-  *         LDO
-  *         Valid only for LDO regulator
-  *         Valid only for TPS6594x Leo PMIC PG2.0 */
-#define PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID         (7U)
- /** \brief validParams value used to set/get to Select Bypass/Linear Regulator
-  *         LDO mode
-  *         Valid only for LDO regulator */
-#define PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID       (8U)
- /** \brief validParams value used to set/get Powergood level for VCCA pin
-  *         Valid only for VCCA */
-#define PMIC_CFG_VCCA_PWR_GOOD_LVL_VALID                  (9U)
- /** \brief validParams value used to set/get to Select OV/UV voltage monitoring
-  *         range for VMON
-  *         Valid only for VMON1/VMON2 */
-#define PMIC_CFG_VMON_RANGE_VALID                         (10U)
- /** \brief validParams value used to set/get Switch peak current limit for BUCK
-  *         regulator
-  *         Valid only for BUCK regulator */
-#define PMIC_CFG_REGULATOR_BUCK_ILIM_VALID                (12U)
- /** \brief validParams value used to set/get Output voltage slew rate for
-  *         BUCK/VMON
-  *         Valid only for VMON1/VMON2/BUCK */
-#define PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID      (13U)
- /** \brief validParams value used to set/get to Selects the resistor value for
-  *         output pull-down resistor for LDO regulator
-  *         Valid only for LDO regulator */
-#define PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID             (14U)
- /** \brief validParams value used to set/get LDO residual voltage check timeout
-  *         select
-  *         Valid only for LDO regulator */
-#define PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID       (15U)
- /** \brief validParams value used to set/get Power good low threshold level for
-  *         the power resources
-  *         Valid for all power resources */
-#define PMIC_CFG_PWR_RESOURCE_PG_UV_THRESHOLD_LVL_VALID   (16U)
- /** \brief validParams value used to set/get Power good high threshold level
-  *         for the power resources
-  *         Valid for all power resources */
-#define PMIC_CFG_PWR_RESOURCE_PG_OV_THRESHOLD_LVL_VALID   (17U)
- /** \brief validParams value used to set/get  Rail group selection for the
-  *         power resources
-  *         Valid for all power resources */
-#define PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID          (18U)
- /** \brief validParams value used to set/get Voltage level (For LDO/BUCK)/
-  *         Powergood voltage level(For VMON1/VMON2) in mv
-  *         Valid only for VMON1/VMMON2/BUCK/LDO */
-#define PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID         (19U)
+/** \brief validParams value used to set/get to Enable/Disable residual
+ *         voltage checking for regulator/VMON pin
+ *         Valid only for VMON1/VMON2/BUCK/LDO */
+#define PMIC_CFG_REGULATOR_VMON_RV_SEL_VALID                  (0U)
+/** \brief validParams value used to set/get to Enable/Disable output pull-down
+ *         resistor when BUCK is disabled.
+ *         Valid only for BUCK regulator */
+#define PMIC_CFG_REGULATOR_BUCK_PLDN_EN_VALID                 (1U)
+/** \brief validParams value used to set/get to Enable /Disable the Voltage
+ *         monitor feature
+ *         Valid only for VMON1/VMON2/VMON of BUCK/VMON of LDO/VMON of VCCA
+ *         Power Resources */
+#define PMIC_CFG_VMON_EN_VALID                                (2U)
+/** \brief validParams value used to set/get to Select output voltage register
+ *         for BUCK
+ *         Valid only for BUCK regulator */
+#define PMIC_CFG_REGULATOR_BUCK_VOUT_SEL_VALID                (3U)
+/** \brief validParams value used to set/get to Select PWM or Auto Mode for
+ *         BUCK
+ *         Valid only for BUCK regulator */
+#define PMIC_CFG_REGULATOR_BUCK_FPWM_VALID                    (4U)
+/** \brief validParams value used to set/get to Select between Multi phase with
+ *         PWM OR AUTO mode with Automatic phase adding and shedding for BUCK
+ *         Valid only for BUCK regulator */
+#define PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID                  (5U)
+/** \brief validParams value used to set/get to Enable/Disable the power
+ *         regulators
+ *         Valid only for BUCK/LDO regulator */
+#define PMIC_CFG_REGULATOR_EN_VALID                           (6U)
+/** \brief validParams value used to set/get to Enable/Disable Slow Ramp for
+ *         LDO
+ *         Valid only for LDO regulator
+ *         Valid only for TPS6594x Leo PMIC PG2.0 */
+#define PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID             (7U)
+/** \brief validParams value used to set/get to Select Bypass/Linear Regulator
+ *         LDO mode
+ *         Valid only for LDO regulator */
+#define PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID           (8U)
+/** \brief validParams value used to set/get Powergood level for VCCA pin
+ *         Valid only for VCCA */
+#define PMIC_CFG_VCCA_PWR_GOOD_LVL_VALID                      (9U)
+/** \brief validParams value used to set/get to Select OV/UV voltage monitoring
+ *         range for VMON
+ *         Valid only for VMON1/VMON2 */
+#define PMIC_CFG_VMON_RANGE_VALID                             (10U)
+/** \brief validParams value used to set/get Switch peak current limit for BUCK
+ *         regulator
+ *         Valid only for BUCK regulator */
+#define PMIC_CFG_REGULATOR_BUCK_ILIM_VALID                    (12U)
+/** \brief validParams value used to set/get Output voltage slew rate for
+ *         BUCK/VMON
+ *         Valid only for VMON1/VMON2/BUCK */
+#define PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID          (13U)
+/** \brief validParams value used to set/get to Selects the resistor value for
+ *         output pull-down resistor for LDO regulator
+ *         Valid only for LDO regulator */
+#define PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID                 (14U)
+/** \brief validParams value used to set/get LDO residual voltage check timeout
+ *         select
+ *         Valid only for LDO regulator */
+#define PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID           (15U)
+/** \brief validParams value used to set/get Power good low threshold level for
+ *         the power resources
+ *         Valid for all power resources */
+#define PMIC_CFG_PWR_RESOURCE_PG_UV_THRESHOLD_LVL_VALID       (16U)
+/** \brief validParams value used to set/get Power good high threshold level
+ *         for the power resources
+ *         Valid for all power resources */
+#define PMIC_CFG_PWR_RESOURCE_PG_OV_THRESHOLD_LVL_VALID       (17U)
+/** \brief validParams value used to set/get  Rail group selection for the
+ *         power resources
+ *         Valid for all power resources */
+#define PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID              (18U)
+/** \brief validParams value used to set/get Voltage level (For LDO/BUCK)/
+ *         Powergood voltage level(For VMON1/VMON2) in mv
+ *         Valid only for VMON1/VMMON2/BUCK/LDO */
+#define PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID             (19U)
 /* @} */
 
 /**
@@ -173,41 +173,25 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_CFG_REGULATOR_VMON_RV_SEL_VALID_SHIFT       \
-                         (1U << PMIC_CFG_REGULATOR_VMON_RV_SEL_VALID)
-#define PMIC_CFG_REGULATOR_BUCK_PLDN_EN_VALID_SHIFT      \
-                         (1U << PMIC_CFG_REGULATOR_BUCK_PLDN_EN_VALID)
-#define PMIC_CFG_VMON_EN_VALID_SHIFT         (1U << PMIC_CFG_VMON_EN_VALID)
-#define PMIC_CFG_REGULATOR_BUCK_VOUT_SEL_VALID_SHIFT     \
-                         (1U << PMIC_CFG_REGULATOR_BUCK_VOUT_SEL_VALID)
-#define PMIC_CFG_REGULATOR_BUCK_FPWM_VALID_SHIFT         \
-                         (1U << PMIC_CFG_REGULATOR_BUCK_FPWM_VALID)
-#define PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID_SHIFT       \
-                         (1U << PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID)
-#define PMIC_CFG_REGULATOR_EN_VALID_SHIFT    (1U << PMIC_CFG_REGULATOR_EN_VALID)
-#define PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID_SHIFT  \
-                         (1U << PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID)
-#define PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID_SHIFT       \
-                         (1U << PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID)
-#define PMIC_CFG_VCCA_PWR_GOOD_LVL_VALID_SHIFT             \
-                         (1U << PMIC_CFG_VCCA_PWR_GOOD_LVL_VALID)
-#define PMIC_CFG_VMON_RANGE_VALID_SHIFT      (1U << PMIC_CFG_VMON_RANGE_VALID)
-#define PMIC_CFG_REGULATOR_BUCK_ILIM_VALID_SHIFT         \
-                         (1U << PMIC_CFG_REGULATOR_BUCK_ILIM_VALID)
-#define PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID_SHIFT    \
-                         (1U << PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID)
-#define PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID_SHIFT      \
-                         (1U << PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID)
-#define PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT \
-                         (1U << PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID)
-#define PMIC_CFG_PWR_RESOURCE_PG_UV_THRESHOLD_LVL_VALID_SHIFT     \
-                         (1U << PMIC_CFG_PWR_RESOURCE_PG_UV_THRESHOLD_LVL_VALID)
-#define PMIC_CFG_PWR_RESOURCE_PG_OV_THRESHOLD_LVL_VALID_SHIFT     \
-                         (1U << PMIC_CFG_PWR_RESOURCE_PG_OV_THRESHOLD_LVL_VALID)
-#define PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID_SHIFT         \
-                         (1U << PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID)
-#define PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID_SHIFT  \
-                         (1U << PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID)
+#define PMIC_CFG_REGULATOR_VMON_RV_SEL_VALID_SHIFT            (1U << PMIC_CFG_REGULATOR_VMON_RV_SEL_VALID)
+#define PMIC_CFG_REGULATOR_BUCK_PLDN_EN_VALID_SHIFT           (1U << PMIC_CFG_REGULATOR_BUCK_PLDN_EN_VALID)
+#define PMIC_CFG_VMON_EN_VALID_SHIFT                          (1U << PMIC_CFG_VMON_EN_VALID)
+#define PMIC_CFG_REGULATOR_BUCK_VOUT_SEL_VALID_SHIFT          (1U << PMIC_CFG_REGULATOR_BUCK_VOUT_SEL_VALID)
+#define PMIC_CFG_REGULATOR_BUCK_FPWM_VALID_SHIFT              (1U << PMIC_CFG_REGULATOR_BUCK_FPWM_VALID)
+#define PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID_SHIFT            (1U << PMIC_CFG_REGULATOR_BUCK_PWM_MP_VALID)
+#define PMIC_CFG_REGULATOR_EN_VALID_SHIFT                     (1U << PMIC_CFG_REGULATOR_EN_VALID)
+#define PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID_SHIFT       (1U << PMIC_CFG_REGULATOR_LDO_SLOW_RAMP_EN_VALID)
+#define PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID_SHIFT     (1U << PMIC_CFG_REGULATOR_LDO_BYPASS_MODE_EN_VALID)
+#define PMIC_CFG_VCCA_PWR_GOOD_LVL_VALID_SHIFT                (1U << PMIC_CFG_VCCA_PWR_GOOD_LVL_VALID)
+#define PMIC_CFG_VMON_RANGE_VALID_SHIFT                       (1U << PMIC_CFG_VMON_RANGE_VALID)
+#define PMIC_CFG_REGULATOR_BUCK_ILIM_VALID_SHIFT              (1U << PMIC_CFG_REGULATOR_BUCK_ILIM_VALID)
+#define PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID_SHIFT    (1U << PMIC_CFG_REGULATOR_BUCK_VMON_SLEW_RATE_VALID)
+#define PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID_SHIFT           (1U << PMIC_CFG_REGULATOR_LDO_PLDN_SEL_VALID)
+#define PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID_SHIFT     (1U << PMIC_CFG_REGULATOR_LDO_RV_TIMEOUT_SEL_VALID)
+#define PMIC_CFG_PWR_RESOURCE_PG_UV_THRESHOLD_LVL_VALID_SHIFT (1U << PMIC_CFG_PWR_RESOURCE_PG_UV_THRESHOLD_LVL_VALID)
+#define PMIC_CFG_PWR_RESOURCE_PG_OV_THRESHOLD_LVL_VALID_SHIFT (1U << PMIC_CFG_PWR_RESOURCE_PG_OV_THRESHOLD_LVL_VALID)
+#define PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID_SHIFT        (1U << PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID)
+#define PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID_SHIFT       (1U << PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID)
 /* @} */
 
 /**
@@ -216,35 +200,35 @@ extern "C" {
  *
  *  @{
  */
-  /** \brief validParams value used to set/get to Select the type of voltage
-   *         monitoring for PGOOD signal  */
-#define PMIC_POWER_PGOOD_WINDOW_VALID             (0U)
- /** \brief validParams value used to set/get to Select the PGOOD signal
-  *         polarity */
-#define PMIC_POWER_PGOOD_POL_VALID                (1U)
- /** \brief validParams value used to set/get Deglitch time select for all power
-  *         resources
-  *         Valid only for VMON1/VMON2/VCCA/VMON of LDO/VMON of BUCK power
-  *         resources
-  *         Valid only for TPS6594x Leo PMIC PG2.0 and LP8764x Hera PMIC PG1.0
-  *         and PG2.0
-  */
-#define PMIC_CFG_DEGLITCH_TIME_SEL_VALID          (2U)
- /** \brief validParams value used to set/get to Select the trigger selection
-  *         for severe Error  */
-#define PMIC_SEVERE_ERR_TRIG_VALID                (3U)
- /** \brief validParams value used to set/get to Select the trigger selection
-  *         for other rail group  */
-#define PMIC_OTHER_RAIL_TRIG_VALID                (4U)
- /** \brief validParams value used to set/get to Select the trigger selection
-  *         for soc rail group  */
-#define PMIC_SOC_RAIL_TRIG_VALID                  (5U)
- /** \brief validParams value used to set/get to Select the trigger selection
-  *         for mcu rail group  */
-#define PMIC_MCU_RAIL_TRIG_VALID                  (6U)
- /** \brief validParams value used to set/get Select the trigger selection for
-  *         Moderate Error  */
-#define PMIC_MODERATE_ERR_TRIG_VALID              (7U)
+/** \brief validParams value used to set/get to Select the type of voltage
+ *         monitoring for PGOOD signal  */
+#define PMIC_POWER_PGOOD_WINDOW_VALID                         (0U)
+/** \brief validParams value used to set/get to Select the PGOOD signal
+ *         polarity */
+#define PMIC_POWER_PGOOD_POL_VALID                            (1U)
+/** \brief validParams value used to set/get Deglitch time select for all power
+ *         resources
+ *         Valid only for VMON1/VMON2/VCCA/VMON of LDO/VMON of BUCK power
+ *         resources
+ *         Valid only for TPS6594x Leo PMIC PG2.0 and LP8764x Hera PMIC PG1.0
+ *         and PG2.0
+ */
+#define PMIC_CFG_DEGLITCH_TIME_SEL_VALID                      (2U)
+/** \brief validParams value used to set/get to Select the trigger selection
+ *         for severe Error  */
+#define PMIC_SEVERE_ERR_TRIG_VALID                            (3U)
+/** \brief validParams value used to set/get to Select the trigger selection
+ *         for other rail group  */
+#define PMIC_OTHER_RAIL_TRIG_VALID                            (4U)
+/** \brief validParams value used to set/get to Select the trigger selection
+ *         for soc rail group  */
+#define PMIC_SOC_RAIL_TRIG_VALID                              (5U)
+/** \brief validParams value used to set/get to Select the trigger selection
+ *         for mcu rail group  */
+#define PMIC_MCU_RAIL_TRIG_VALID                              (6U)
+/** \brief validParams value used to set/get Select the trigger selection for
+ *         Moderate Error  */
+#define PMIC_MODERATE_ERR_TRIG_VALID                          (7U)
 /* @} */
 
 /**
@@ -256,22 +240,14 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_POWER_PGOOD_WINDOW_VALID_SHIFT               \
-                                        (1U <<  PMIC_POWER_PGOOD_WINDOW_VALID)
-#define PMIC_POWER_PGOOD_POL_VALID_SHIFT                  \
-                                        (1U <<  PMIC_POWER_PGOOD_POL_VALID)
-#define PMIC_CFG_DEGLITCH_TIME_SEL_VALID_SHIFT            \
-                                        (1U << PMIC_CFG_DEGLITCH_TIME_SEL_VALID)
-#define PMIC_SEVERE_ERR_TRIG_VALID_SHIFT                  \
-                                        (1U <<  PMIC_SEVERE_ERR_TRIG_VALID)
-#define PMIC_OTHER_RAIL_TRIG_VALID_SHIFT                  \
-                                        (1U <<  PMIC_OTHER_RAIL_TRIG_VALID)
-#define PMIC_SOC_RAIL_TRIG_VALID_SHIFT                    \
-                                        (1U <<  PMIC_SOC_RAIL_TRIG_VALID)
-#define PMIC_MCU_RAIL_TRIG_VALID_SHIFT                    \
-                                        (1U <<  PMIC_MCU_RAIL_TRIG_VALID)
-#define PMIC_MODERATE_ERR_TRIG_VALID_SHIFT                \
-                                        (1U <<  PMIC_MODERATE_ERR_TRIG_VALID)
+#define PMIC_POWER_PGOOD_WINDOW_VALID_SHIFT                   (1U << PMIC_POWER_PGOOD_WINDOW_VALID)
+#define PMIC_POWER_PGOOD_POL_VALID_SHIFT                      (1U << PMIC_POWER_PGOOD_POL_VALID)
+#define PMIC_CFG_DEGLITCH_TIME_SEL_VALID_SHIFT                (1U << PMIC_CFG_DEGLITCH_TIME_SEL_VALID)
+#define PMIC_SEVERE_ERR_TRIG_VALID_SHIFT                      (1U << PMIC_SEVERE_ERR_TRIG_VALID)
+#define PMIC_OTHER_RAIL_TRIG_VALID_SHIFT                      (1U << PMIC_OTHER_RAIL_TRIG_VALID)
+#define PMIC_SOC_RAIL_TRIG_VALID_SHIFT                        (1U << PMIC_SOC_RAIL_TRIG_VALID)
+#define PMIC_MCU_RAIL_TRIG_VALID_SHIFT                        (1U << PMIC_MCU_RAIL_TRIG_VALID)
+#define PMIC_MODERATE_ERR_TRIG_VALID_SHIFT                    (1U << PMIC_MODERATE_ERR_TRIG_VALID)
 
 /**
  *  \anchor Pmic_PowerStatusValidParamCfg
@@ -283,20 +259,20 @@ extern "C" {
  *
  *  @{
  */
-  /** \brief validParams value used to get output current limit status for LDO
-   *         and buck regulators  */
-#define PMIC_POWER_REGULATOR_ILIM_STAT_VALID              (0U)
+/** \brief validParams value used to get output current limit status for LDO
+ *         and buck regulators  */
+#define PMIC_POWER_REGULATOR_ILIM_STAT_VALID                  (0U)
 /** \brief validParams value used to get output under voltage status for LDO/
  *         BUCK and input under voltage status for VCCA/VMON
  *         Valid for all power resources */
-#define PMIC_POWER_RESOURCE_UV_STAT_VALID                 (1U)
+#define PMIC_POWER_RESOURCE_UV_STAT_VALID                     (1U)
 /** \brief validParams value used to get output over voltage status for LDO/BUCK
  *         and input over voltage status for VCCA/VMON
  *         Valid for all power resources */
-#define PMIC_POWER_RESOURCE_OV_STAT_VALID                 (2U)
+#define PMIC_POWER_RESOURCE_OV_STAT_VALID                     (2U)
 /** \brief validParams value used to get voltage level status for VCCA
  *         Valid only for VCCA */
-#define PMIC_POWER_VCCA_OV_LVL_STAT_VALID                 (3U)
+#define PMIC_POWER_VCCA_OV_LVL_STAT_VALID                     (3U)
 /* @} */
 
 /**
@@ -308,14 +284,10 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_POWER_REGULATOR_ILIM_STAT_VALID_SHIFT      \
-                                    (1U << PMIC_POWER_REGULATOR_ILIM_STAT_VALID)
-#define PMIC_POWER_RESOURCE_UV_STAT_VALID_SHIFT         \
-                                    (1U << PMIC_POWER_RESOURCE_UV_STAT_VALID)
-#define PMIC_POWER_RESOURCE_OV_STAT_VALID_SHIFT         \
-                                    (1U << PMIC_POWER_RESOURCE_OV_STAT_VALID)
-#define PMIC_POWER_VCCA_OV_LVL_STAT_VALID_SHIFT         \
-                                    (1U << PMIC_POWER_VCCA_OV_LVL_STAT_VALID)
+#define PMIC_POWER_REGULATOR_ILIM_STAT_VALID_SHIFT            (1U << PMIC_POWER_REGULATOR_ILIM_STAT_VALID)
+#define PMIC_POWER_RESOURCE_UV_STAT_VALID_SHIFT               (1U << PMIC_POWER_RESOURCE_UV_STAT_VALID)
+#define PMIC_POWER_RESOURCE_OV_STAT_VALID_SHIFT               (1U << PMIC_POWER_RESOURCE_OV_STAT_VALID)
+#define PMIC_POWER_VCCA_OV_LVL_STAT_VALID_SHIFT               (1U << PMIC_POWER_VCCA_OV_LVL_STAT_VALID)
 
 /**
  *  \anchor Pmic_PowerThermalThresholdValidParamCfg
@@ -323,15 +295,15 @@ extern "C" {
  *
  *  @{
  */
- /** \brief validParams value used to set/get thermal Warning Threshold
-  *         temperature value  */
-#define PMIC_THERMAL_WARN_VALID                   (1U)
+/** \brief validParams value used to set/get thermal Warning Threshold
+ *         temperature value  */
+#define PMIC_THERMAL_WARN_VALID                               (1U)
 /** \brief validParams value used to set/get Thermal Shutdown Threshold
  *         temperature value
  *         valid only for TPS6594x Leo PMIC PG2.0 and LP8764x Hera PMIC PG1.0
  *         and PG2.0
  */
-#define PMIC_THERMAL_SHTDWN_VALID                 (2U)
+#define PMIC_THERMAL_SHTDWN_VALID                             (2U)
 /* @} */
 
 /**
@@ -343,10 +315,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_THERMAL_WARN_VALID_SHIFT                       \
-                                       (1U << PMIC_THERMAL_WARN_VALID)
-#define PMIC_THERMAL_SHTDWN_VALID_SHIFT                     \
-                                       (1U << PMIC_THERMAL_SHTDWN_VALID)
+#define PMIC_THERMAL_WARN_VALID_SHIFT                         (1U << PMIC_THERMAL_WARN_VALID)
+#define PMIC_THERMAL_SHTDWN_VALID_SHIFT                       (1U << PMIC_THERMAL_SHTDWN_VALID)
 /* @} */
 
 /**
@@ -355,12 +325,12 @@ extern "C" {
  *
  *  @{
  */
- /** \brief validParams value used to get Thermal warning status */
-#define PMIC_THERMAL_STAT_WARN_VALID                       (1U)
+/** \brief validParams value used to get Thermal warning status */
+#define PMIC_THERMAL_STAT_WARN_VALID                          (1U)
 /** \brief validParams value used to get Orderly Shutdown status  */
-#define PMIC_THERMAL_STAT_ORD_SHTDWN_VALID                 (2U)
+#define PMIC_THERMAL_STAT_ORD_SHTDWN_VALID                    (2U)
 /** \brief validParams value used to get Immediate Shutdown status */
-#define PMIC_THERMAL_STAT_IMM_SHTDWN_VALID                 (3U)
+#define PMIC_THERMAL_STAT_IMM_SHTDWN_VALID                    (3U)
 /* @} */
 
 /**
@@ -372,12 +342,9 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_THERMAL_STAT_WARN_VALID_SHIFT                       \
-                                      (1U << PMIC_THERMAL_STAT_WARN_VALID)
-#define PMIC_THERMAL_STAT_ORD_SHTDWN_VALID_SHIFT                 \
-                                      (1U << PMIC_THERMAL_STAT_ORD_SHTDWN_VALID)
-#define PMIC_THERMAL_STAT_IMM_SHTDWN_VALID_SHIFT                 \
-                                      (1U << PMIC_THERMAL_STAT_IMM_SHTDWN_VALID)
+#define PMIC_THERMAL_STAT_WARN_VALID_SHIFT                    (1U << PMIC_THERMAL_STAT_WARN_VALID)
+#define PMIC_THERMAL_STAT_ORD_SHTDWN_VALID_SHIFT              (1U << PMIC_THERMAL_STAT_ORD_SHTDWN_VALID)
+#define PMIC_THERMAL_STAT_IMM_SHTDWN_VALID_SHIFT              (1U << PMIC_THERMAL_STAT_IMM_SHTDWN_VALID)
 /* @} */
 
 /**
@@ -386,8 +353,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_POWER_INTERRUPT_ENABLE           (0U)
-#define PMIC_POWER_INTERRUPT_DISABLE          (1U)
+#define PMIC_POWER_INTERRUPT_ENABLE                           (0U)
+#define PMIC_POWER_INTERRUPT_DISABLE                          (1U)
 /*  @} */
 
 /**
@@ -397,9 +364,9 @@ extern "C" {
  *  @{
  */
 /** \brief Only undervoltage is monitored */
-#define PMIC_POWER_GOOD_UV_MONITOR_ENABLE         (0x0U)
+#define PMIC_POWER_GOOD_UV_MONITOR_ENABLE                     (0x0U)
 /** \brief Both undervoltage and overvoltage are monitored */
-#define PMIC_POWER_GOOD_UV_OV_MONITOR_ENABLE      (0x1U)
+#define PMIC_POWER_GOOD_UV_OV_MONITOR_ENABLE                  (0x1U)
 /* @} */
 
 /**
@@ -409,9 +376,9 @@ extern "C" {
  *  @{
  */
 /** \brief PGOOD signal is high when monitored inputs are valid */
-#define PMIC_POWER_PGOOD_POL_HIGH                 (0x0U)
+#define PMIC_POWER_PGOOD_POL_HIGH                             (0x0U)
 /** \brief PGOOD signal is low when monitored inputs are valid */
-#define PMIC_POWER_PGOOD_POL_LOW                  (0x1U)
+#define PMIC_POWER_PGOOD_POL_LOW                              (0x1U)
 /* @} */
 
 /**
@@ -420,10 +387,10 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_POWER_TRIG_IMM_SHUTDOWN             (0U)
-#define PMIC_POWER_TRIG_ODERLY_SHUTDOWN          (1U)
-#define PMIC_POWER_TRIG_MCU_PWR_ERR              (2U)
-#define PMIC_POWER_TRIG_SOC_PWR_ERR              (3U)
+#define PMIC_POWER_TRIG_IMM_SHUTDOWN                          (0U)
+#define PMIC_POWER_TRIG_ODERLY_SHUTDOWN                       (1U)
+#define PMIC_POWER_TRIG_MCU_PWR_ERR                           (2U)
+#define PMIC_POWER_TRIG_SOC_PWR_ERR                           (3U)
 /*  @} */
 /*==========================================================================*/
 /*                         Structures and Enums                             */
@@ -613,7 +580,7 @@ typedef struct Pmic_PowerResourceCfg_s
     uint8_t  pgOvThresholdLvl;
     uint8_t  railGrpSel;
     uint16_t voltage_mV;
-}Pmic_PowerResourceCfg_t;
+} Pmic_PowerResourceCfg_t;
 
 /*!
  *  \anchor  Pmic_PowerCommonCfg_s
@@ -697,7 +664,7 @@ typedef struct Pmic_PowerCommonCfg_s
     uint8_t  socRailTrig;
     uint8_t  mcuRailTrig;
     uint8_t  moderateRailTrig;
-}Pmic_PowerCommonCfg_t;
+} Pmic_PowerCommonCfg_t;
 
 /*!
  *  \anchor  Pmic_PowerResourceStat_s
@@ -787,7 +754,7 @@ typedef struct Pmic_PowerResourceStat_s
     bool     underVoltageTholdStat;
     bool     overVoltageTholdStat;
     bool     overVoltageProtectionLvlStat;
-}Pmic_PowerResourceStat_t;
+} Pmic_PowerResourceStat_t;
 
 /*!
  *  \anchor  Pmic_PowerThermalCfg_s
@@ -835,7 +802,7 @@ typedef struct Pmic_PowerThermalCfg_s
     uint32_t validParams;
     bool     thermalWarnThold;
     bool     thermalShutdownThold;
-}Pmic_PowerThermalCfg_t;
+} Pmic_PowerThermalCfg_t;
 
 /*!
  *  \anchor  Pmic_PowerThermalStat_t
@@ -878,7 +845,7 @@ typedef struct Pmic_PowerThermalStat_s
     bool     thermalStateWarning;
     bool     thermalStateOderlyShtDwn;
     bool     thermalStateImmShtDwn;
-}Pmic_PowerThermalStat_t;
+} Pmic_PowerThermalStat_t;
 
 /*==========================================================================*/
 /*                         Function Declarations                            */
@@ -949,10 +916,9 @@ typedef struct Pmic_PowerThermalStat_s
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_powerSetPwrResourceCfg(
-                             Pmic_CoreHandle_t                 *pPmicCoreHandle,
-                             const uint16_t                     pwrResource,
-                             const Pmic_PowerResourceCfg_t      pwrResourceCfg);
+int32_t Pmic_powerSetPwrResourceCfg(Pmic_CoreHandle_t            *pPmicCoreHandle,
+                                    const uint16_t                pwrResource,
+                                    const Pmic_PowerResourceCfg_t pwrResourceCfg);
 
 /**
  * \brief   API to get power resources configurations.
@@ -1010,10 +976,9 @@ int32_t Pmic_powerSetPwrResourceCfg(
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_powerGetPwrResourceCfg(
-                                 Pmic_CoreHandle_t           *pPmicCoreHandle,
-                                 const uint16_t               pwrResource,
-                                 Pmic_PowerResourceCfg_t     *pPwrResourceCfg);
+int32_t Pmic_powerGetPwrResourceCfg(Pmic_CoreHandle_t       *pPmicCoreHandle,
+                                    const uint16_t           pwrResource,
+                                    Pmic_PowerResourceCfg_t *pPwrResourceCfg);
 
 /**
  * \brief   API to Set Power configuration
@@ -1061,8 +1026,7 @@ int32_t Pmic_powerGetPwrResourceCfg(
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_powerSetCommonConfig(Pmic_CoreHandle_t           *pPmicCoreHandle,
-                                  const Pmic_PowerCommonCfg_t  powerCommonCfg);
+int32_t Pmic_powerSetCommonConfig(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_PowerCommonCfg_t powerCommonCfg);
 
 /**
  * \brief   API to Get Power configuration
@@ -1107,8 +1071,7 @@ int32_t Pmic_powerSetCommonConfig(Pmic_CoreHandle_t           *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_powerGetCommonConfig(Pmic_CoreHandle_t     *pPmicCoreHandle,
-                                  Pmic_PowerCommonCfg_t *pPowerCommonCfg);
+int32_t Pmic_powerGetCommonConfig(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_PowerCommonCfg_t *pPowerCommonCfg);
 
 /**
  * \brief   API to Set Power good configuration
@@ -1182,9 +1145,8 @@ int32_t Pmic_powerSetConfigPowerGood(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_powerGetConfigPowerGood(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                                     const uint16_t      pgoodSrcSel,
-                                     uint8_t            *pPgoodSelType);
+int32_t
+Pmic_powerGetConfigPowerGood(Pmic_CoreHandle_t *pPmicCoreHandle, const uint16_t pgoodSrcSel, uint8_t *pPgoodSelType);
 
 /**
  * \brief   API to get power resources status.
@@ -1279,9 +1241,7 @@ int32_t Pmic_powerGetPwrRsrcStat(Pmic_CoreHandle_t        *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_powerGetPwrThermalStat(
-                                   Pmic_CoreHandle_t       *pPmicCoreHandle,
-                                   Pmic_PowerThermalStat_t *pPwrThermalStatCfg);
+int32_t Pmic_powerGetPwrThermalStat(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_PowerThermalStat_t *pPwrThermalStatCfg);
 
 /**
  * \brief    API to configure the thermal temperature threshold level for PMIC.
@@ -1311,9 +1271,7 @@ int32_t Pmic_powerGetPwrThermalStat(
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_powerSetThermalConfig(
-                                Pmic_CoreHandle_t           *pPmicCoreHandle,
-                                const Pmic_PowerThermalCfg_t thermalThreshold);
+int32_t Pmic_powerSetThermalConfig(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_PowerThermalCfg_t thermalThreshold);
 
 /**
  * \brief   Get the PMIC thermal threshold value function.
@@ -1343,8 +1301,7 @@ int32_t Pmic_powerSetThermalConfig(
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_powerGetThermalConfig(Pmic_CoreHandle_t      *pPmicCoreHandle,
-                                   Pmic_PowerThermalCfg_t *pThermalThreshold);
+int32_t Pmic_powerGetThermalConfig(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_PowerThermalCfg_t *pThermalThreshold);
 
 /*!
  * \brief   API to enable/disable Power interrupt.
@@ -1401,15 +1358,12 @@ int32_t Pmic_powerSetPwrRsrcIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_powerSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                          const uint8_t      intrType,
-                          const bool         intrEnable);
+int32_t Pmic_powerSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t intrType, const bool intrEnable);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif/* PMIC_POWER_H_ */
+#endif /* PMIC_POWER_H_ */
 
 /* @} */
-

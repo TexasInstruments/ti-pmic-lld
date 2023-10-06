@@ -49,10 +49,11 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
-#include <pmic_core.h>
+#include "../../pmic_core.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /* ========================================================================== */
@@ -65,17 +66,17 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_TPS6594X_GPIO1_PIN                             (1U)
-#define PMIC_TPS6594X_GPIO2_PIN                             (2U)
-#define PMIC_TPS6594X_GPIO3_PIN                             (3U)
-#define PMIC_TPS6594X_GPIO4_PIN                             (4U)
-#define PMIC_TPS6594X_GPIO5_PIN                             (5U)
-#define PMIC_TPS6594X_GPIO6_PIN                             (6U)
-#define PMIC_TPS6594X_GPIO7_PIN                             (7U)
-#define PMIC_TPS6594X_GPIO8_PIN                             (8U)
-#define PMIC_TPS6594X_GPIO9_PIN                             (9U)
-#define PMIC_TPS6594X_GPIO10_PIN                            (10U)
-#define PMIC_TPS6594X_GPIO11_PIN                            (11U)
+#define PMIC_TPS6594X_GPIO1_PIN                                (1U)
+#define PMIC_TPS6594X_GPIO2_PIN                                (2U)
+#define PMIC_TPS6594X_GPIO3_PIN                                (3U)
+#define PMIC_TPS6594X_GPIO4_PIN                                (4U)
+#define PMIC_TPS6594X_GPIO5_PIN                                (5U)
+#define PMIC_TPS6594X_GPIO6_PIN                                (6U)
+#define PMIC_TPS6594X_GPIO7_PIN                                (7U)
+#define PMIC_TPS6594X_GPIO8_PIN                                (8U)
+#define PMIC_TPS6594X_GPIO9_PIN                                (9U)
+#define PMIC_TPS6594X_GPIO10_PIN                               (10U)
+#define PMIC_TPS6594X_GPIO11_PIN                               (11U)
 /*  @} */
 
 /**
@@ -86,73 +87,73 @@ extern "C" {
  */
 /** \brief Used to configure GPIO Pin Function.
  *         Valid for all GPIO Pins */
-#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO                          (0U)
+#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO                        (0U)
 /** \brief Used to configure SCL_I2C2/CS_SPI Pin Function.
  *         Valid only for GPIO1 pin */
-#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO1_SCL_I2C2_CS_SPI         (1U)
+#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO1_SCL_I2C2_CS_SPI       (1U)
 /** \brief Used to configure TRIG_WDOG Pin Function.
  *         Valid only for GPIO2 and GPIO11 pins */
-#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO2_GPIO11_TRIG_WDOG        (1U)
+#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO2_GPIO11_TRIG_WDOG      (1U)
 /** \brief Used to configure CLK32KOUT Pin Function.
  *         Valid only for GPIO3, GPIO4 and GPIO8 pins */
-#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO3_GPIO4_GPIO8_CLK32KOUT   (1U)
+#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO3_GPIO4_GPIO8_CLK32KOUT (1U)
 /** \brief Used to configure SCLK_SPMI Pin Function.
  *         Valid only for GPIO5 pin */
-#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO5_SCLK_SPMI               (1U)
+#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO5_SCLK_SPMI             (1U)
 /** \brief Used to configure SDATA_SPMI Pin Function.
  *         Valid only for GPIO6 pin */
-#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO6_SDATA_SPMI              (1U)
+#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO6_SDATA_SPMI            (1U)
 /** \brief Used to configure NERR_MCU Pin Function.
  *         Valid only for GPIO7 pin */
-#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO7_NERR_MCU                (1U)
+#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO7_NERR_MCU              (1U)
 /** \brief Used to configure PGOOD Pin Function.
  *         Valid only for GPIO9 pin */
-#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO9_PGOOD                   (1U)
+#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO9_PGOOD                 (1U)
 /** \brief Used to configure SYNCCLKIN Pin Function.
  *         Valid only for GPIO10 pin */
-#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO10_SYNCCLKIN              (1U)
+#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO10_SYNCCLKIN            (1U)
 /** \brief Used to configure NRSTOUT_SOC Pin Function.
  *         Valid only for GPIO1 and GPIO11 pin */
-#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO1_GPIO11_NRSTOUT_SOC      (2U)
+#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO1_GPIO11_NRSTOUT_SOC    (2U)
 /** \brief Used to configure SDA_I2C2/SDO_SPI Pin Function.
  *         Valid only for GPIO2 pin */
-#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO2_SDA_I2C2_SDO_SPI        (2U)
+#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO2_SDA_I2C2_SDO_SPI      (2U)
 /** \brief Used to configure NERR_SOC Pin Function.
  *         Valid only for GPIO3 pin */
-#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO3_NERR_SOC                (2U)
+#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO3_NERR_SOC              (2U)
 /** \brief Used to configure SYNCCLKOUT Pin Function.
  *         Valid only for GPIO8 and GPIO10 pin */
-#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO8_GPIO10_SYNCCLKOUT       (2U)
+#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO8_GPIO10_SYNCCLKOUT     (2U)
 /** \brief Used to configure DISABLE_WDOG Pin Function.
  *         Valid only for GPIO9 pin */
-#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO9_DISABLE_WDOG            (2U)
+#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO9_DISABLE_WDOG          (2U)
 /** \brief Used to configure DISABLE_WDOG Pin Function.
  *         Valid only for GPIO8 pin */
-#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO8_DISABLE_WDOG            (3U)
+#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO8_DISABLE_WDOG          (3U)
 /** \brief Used to configure SYNCCLKOUT Pin Function.
  *         Valid only for GPIO9 pin */
-#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO9_SYNCCLKOUT              (3U)
+#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO9_SYNCCLKOUT            (3U)
 /** \brief Used to configure CLK32KOUT Pin Function.
  *         Valid only for GPIO10 pin */
-#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO10_CLK32KOUT              (3U)
+#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO10_CLK32KOUT            (3U)
 /** \brief Used to configure NSLEEP1 Pin Function.
  *         Valid for all GPIO Pins */
-#define PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1                       (4U)
+#define PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP1                     (4U)
 /** \brief Used to configure NSLEEP2 Pin Function.
  *         Valid for all GPIO Pins */
-#define PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP2                       (5U)
+#define PMIC_TPS6594X_GPIO_PINFUNC_NSLEEP2                     (5U)
 /** \brief Used to configure WKUP1 Pin Function.
  *         Valid for all GPIO Pins except GPIO3 and GPIO4 pins */
-#define PMIC_TPS6594X_GPIO_PINFUNC_WKUP1                         (6U)
+#define PMIC_TPS6594X_GPIO_PINFUNC_WKUP1                       (6U)
 /** \brief Used to configure LP_WKUP1 Pin Function.
  *         Valid only for GPIO3 and GPIO4 pins */
-#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO3_GPIO4_LP_WKUP1          (6U)
+#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO3_GPIO4_LP_WKUP1        (6U)
 /** \brief Used to configure WKUP2 Pin Function.
  *         Valid for all GPIO Pins except GPIO3 and GPIO4 pins */
-#define PMIC_TPS6594X_GPIO_PINFUNC_WKUP2                         (7U)
+#define PMIC_TPS6594X_GPIO_PINFUNC_WKUP2                       (7U)
 /** \brief Used to configure LP_WKUP2 Pin Function.
  *         Valid only for GPIO3 and GPIO4 pins */
-#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO3_GPIO4_LP_WKUP2          (7U)
+#define PMIC_TPS6594X_GPIO_PINFUNC_GPIO3_GPIO4_LP_WKUP2        (7U)
 /*  @} */
 
 /**
@@ -162,11 +163,11 @@ extern "C" {
  *  @{
  */
 /** \brief Enable Signal Function for NPWRON/ENABLE pin */
-#define PMIC_TPS6594X_NPWRON_PINFUNC_ENABLE                 (0U)
+#define PMIC_TPS6594X_NPWRON_PINFUNC_ENABLE                    (0U)
 /** \brief NPWRON Signal Function for NPWRON/ENABLE pin */
-#define PMIC_TPS6594X_NPWRON_PINFUNC_NPWRON                 (1U)
+#define PMIC_TPS6594X_NPWRON_PINFUNC_NPWRON                    (1U)
 /** \brief None Function for NPWRON/ENABLE pin */
-#define PMIC_TPS6594X_NPWRON_PINFUNC_NONE                   (2U)
+#define PMIC_TPS6594X_NPWRON_PINFUNC_NONE                      (2U)
 /*  @} */
 
 /*==========================================================================*/
@@ -195,8 +196,7 @@ extern "C" {
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_gpioTps6594xNPwronPinGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                           uint8_t           *pPinValue);
+int32_t Pmic_gpioTps6594xNPwronPinGetValue(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t *pPinValue);
 
 #ifdef __cplusplus
 }

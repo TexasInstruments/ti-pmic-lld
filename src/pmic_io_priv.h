@@ -44,10 +44,11 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
-#include <pmic.h>
+#include "../pmic.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /* ========================================================================== */
@@ -57,36 +58,36 @@ extern "C" {
 /*!
  * \brief: WatchDog register I2C access
  */
-#define PMIC_WDG_PAGEADDR                      (0x400U)
-#define PMIC_WDG_PAGEADDR_MASK                 (0x3FFU)
+#define PMIC_WDG_PAGEADDR                   (0x400U)
+#define PMIC_WDG_PAGEADDR_MASK              (0x3FFU)
 
 /*!
  * \brief: PMIC SERIAL_IF_CONFIG register address (Bank/Page 1 Register address)
  *         Application can only read this register to check I2C1SPI/I2C2 CRC
  *         is enabled or not
  */
-#define PMIC_SERIAL_IF_CONFIG_PAGEADDR          (0x100U)
-#define PMIC_SERIAL_IF_CONFIG_PAGEADDR_MASK     (0xFFU)
+#define PMIC_SERIAL_IF_CONFIG_PAGEADDR      (0x100U)
+#define PMIC_SERIAL_IF_CONFIG_PAGEADDR_MASK (0xFFU)
 
 /*!
  * \brief: SPI R/W bit Position
  */
-#define PMIC_IO_REQ_RW                         (((uint32_t)1U) << 4U)
+#define PMIC_IO_REQ_RW                      (((uint32_t)1U) << 4U)
 
 /*!
  * \brief: IO Buffer Size
  */
-#define PMIC_IO_BUF_SIZE                       (4U)
+#define PMIC_IO_BUF_SIZE                    (4U)
 
 /*!
  * \brief: Initial value for CRC
  */
-#define PMIC_COMM_CRC_INITIAL_VALUE            (0xFF)
+#define PMIC_COMM_CRC_INITIAL_VALUE         (0xFF)
 
 /*!
  * \brief: IO READ bits
  */
-#define PMIC_IO_READ                           (0x01U)
+#define PMIC_IO_READ                        (0x01U)
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
@@ -112,9 +113,7 @@ extern "C" {
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               uint16_t           regAddr,
-                               uint8_t            txData);
+int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t regAddr, uint8_t txData);
 
 /*!
  * \brief: PMIC I2C/SPI IO Wrapper function pointers used internally by driver
@@ -132,9 +131,7 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               uint16_t           regAddr,
-                               uint8_t           *pRxBuffer);
+int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t regAddr, uint8_t *pRxBuffer);
 
 #ifdef __cplusplus
 }

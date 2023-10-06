@@ -88,18 +88,20 @@
 /* ========================================================================= */
 /*                             Include Files                                 */
 /* ========================================================================= */
-#include <pmic_types.h>
-#include <pmic_core.h>
-#include <pmic_gpio.h>
-#include <pmic_rtc.h>
-#include <pmic_irq.h>
-#include <pmic_power.h>
-#include <pmic_wdg.h>
-#include <pmic_esm.h>
-#include <pmic_fsm.h>
+#include "include/pmic_types.h"
+#include "include/pmic_core.h"
+#include "include/pmic_gpio.h"
+#include "include/pmic_rtc.h"
+#include "include/pmic_irq.h"
+#include "include/pmic_power.h"
+#include "include/pmic_wdg.h"
+#include "include/pmic_esm.h"
+#include "include/pmic_fsm.h"
+#include "src/pmic_io_priv.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 /* ========================================================================= */
 /*                             Macros & Typedefs                             */
@@ -114,96 +116,96 @@ extern "C" {
  *  @{
  */
 /** \brief Error Code for SUCCESS */
-#define PMIC_ST_SUCCESS                                 (0)
+#define PMIC_ST_SUCCESS                    (0)
 /** \brief Error Code for Invalid input Handle */
-#define PMIC_ST_ERR_INV_HANDLE                          (-((int32_t)1))
+#define PMIC_ST_ERR_INV_HANDLE             (-((int32_t)1))
 /** \brief Error Code when input Param is NULL */
-#define PMIC_ST_ERR_NULL_PARAM                          (-((int32_t)2))
+#define PMIC_ST_ERR_NULL_PARAM             (-((int32_t)2))
 /** \brief Error Code for Invalid input Param */
-#define PMIC_ST_ERR_INV_PARAM                           (-((int32_t)3))
+#define PMIC_ST_ERR_INV_PARAM              (-((int32_t)3))
 /** \brief Error Code for Invalid PMIC Device */
-#define PMIC_ST_ERR_INV_DEVICE                          (-((int32_t)4))
+#define PMIC_ST_ERR_INV_DEVICE             (-((int32_t)4))
 /** \brief Error Code when input Function pointer is NULL */
-#define PMIC_ST_ERR_NULL_FPTR                           (-((int32_t)5))
+#define PMIC_ST_ERR_NULL_FPTR              (-((int32_t)5))
 /** \brief Error Code for Invalid PMIC Subsystem */
-#define PMIC_ST_ERR_INV_SUBSYSTEM                       (-((int32_t)6))
+#define PMIC_ST_ERR_INV_SUBSYSTEM          (-((int32_t)6))
 /** \brief Error Code for Insufficient input configuration params for PMIC
  *         Device Initialization */
-#define PMIC_ST_ERR_INSUFFICIENT_CFG                    (-((int32_t)7))
+#define PMIC_ST_ERR_INSUFFICIENT_CFG       (-((int32_t)7))
 /** \brief Error Code for I2C Communication Fail */
-#define PMIC_ST_ERR_I2C_COMM_FAIL                       (-((int32_t)8))
+#define PMIC_ST_ERR_I2C_COMM_FAIL          (-((int32_t)8))
 /** \brief Error Code for SPI Communication Fail */
-#define PMIC_ST_ERR_SPI_COMM_FAIL                       (-((int32_t)9))
+#define PMIC_ST_ERR_SPI_COMM_FAIL          (-((int32_t)9))
 /** \brief Error Code for IO data failure when CRC is enabled */
-#define PMIC_ST_ERR_DATA_IO_CRC                         (-((int32_t)10))
+#define PMIC_ST_ERR_DATA_IO_CRC            (-((int32_t)10))
 /** \brief Error Code for Interface Selected is not working properly */
-#define PMIC_ST_ERR_INTF_SETUP_FAILED                   (-((int32_t)11))
+#define PMIC_ST_ERR_INTF_SETUP_FAILED      (-((int32_t)11))
 /** \brief Error Code for Interface Init Fail */
-#define PMIC_ST_ERR_COMM_INTF_INIT_FAIL                 (-((int32_t)12))
+#define PMIC_ST_ERR_COMM_INTF_INIT_FAIL    (-((int32_t)12))
 /** \brief Error Code if Pmic_init() function called before PMIC driver is
  *         initialized */
-#define PMIC_ST_ERR_UNINIT                              (-((int32_t)13))
+#define PMIC_ST_ERR_UNINIT                 (-((int32_t)13))
 /** \brief Error Code for Invalid Voltage Value */
-#define PMIC_ST_ERR_INV_VOLTAGE                         (-((int32_t)14))
+#define PMIC_ST_ERR_INV_VOLTAGE            (-((int32_t)14))
 /** \brief Error Code for Invalid Power resource Value */
-#define PMIC_ST_ERR_INV_REGULATOR                       (-((int32_t)15))
+#define PMIC_ST_ERR_INV_REGULATOR          (-((int32_t)15))
 /** \brief Error Code for Invalid Power Good Threshold Value */
-#define PMIC_ST_ERR_INV_PGOOD_LEVEL                     (-((int32_t)16))
+#define PMIC_ST_ERR_INV_PGOOD_LEVEL        (-((int32_t)16))
 /** \brief Error Code for Invalid Temperature Threshold value */
-#define PMIC_ST_ERR_INV_TEMP_THRESHOLD                  (-((int32_t)17))
+#define PMIC_ST_ERR_INV_TEMP_THRESHOLD     (-((int32_t)17))
 /** \brief Error Code for Invalid input GPIO PIN */
-#define PMIC_ST_ERR_INV_GPIO                            (-((int32_t)18))
+#define PMIC_ST_ERR_INV_GPIO               (-((int32_t)18))
 /** \brief Error Code for Invalid GPIO Functionality */
-#define PMIC_ST_ERR_INV_GPIO_FUNC                       (-((int32_t)19))
+#define PMIC_ST_ERR_INV_GPIO_FUNC          (-((int32_t)19))
 /** \brief Error Code for input GPIO handle is invalid */
-#define PMIC_ST_ERR_INV_GPIO_LINE_PARAMS                (-((int32_t)20))
+#define PMIC_ST_ERR_INV_GPIO_LINE_PARAMS   (-((int32_t)20))
 /** \brief Error Code for Invalid Pin for GPIO Configuration */
-#define PMIC_ST_ERR_PIN_NOT_GPIO                        (-((int32_t)21))
+#define PMIC_ST_ERR_PIN_NOT_GPIO           (-((int32_t)21))
 /** \brief Error Code for Invalid Watchdog longwindow or Window-1
  *         or Window-2 duration */
-#define PMIC_ST_ERR_INV_WDG_WINDOW                      (-((int32_t)22))
+#define PMIC_ST_ERR_INV_WDG_WINDOW         (-((int32_t)22))
 /** \brief Error Code for Invalid Watchdog Answer */
-#define PMIC_ST_ERR_INV_WDG_ANSWER                      (-((int32_t)23))
+#define PMIC_ST_ERR_INV_WDG_ANSWER         (-((int32_t)23))
 /** \brief Error Code for Watchdog early Answer */
-#define PMIC_ST_ERR_WDG_EARLY_ANSWER                    (-((int32_t)24))
+#define PMIC_ST_ERR_WDG_EARLY_ANSWER       (-((int32_t)24))
 /** \brief Error Code for input ESM TargetID is invalid */
-#define PMIC_ST_ERR_INV_ESM_TARGET                      (-((int32_t)25))
+#define PMIC_ST_ERR_INV_ESM_TARGET         (-((int32_t)25))
 /** \brief Error Code for ESM Operation Mode is invalid */
-#define PMIC_ST_ERR_INV_ESM_MODE                        (-((int32_t)26))
+#define PMIC_ST_ERR_INV_ESM_MODE           (-((int32_t)26))
 /** \brief Error Code for Invalid Interrupt */
-#define PMIC_ST_ERR_INV_INT                             (-((int32_t)27))
+#define PMIC_ST_ERR_INV_INT                (-((int32_t)27))
 /** \brief Error Code when Interrupts Clear is failed */
-#define PMIC_ST_ERR_CLEAR_INT_FAILED                    (-((int32_t)28))
+#define PMIC_ST_ERR_CLEAR_INT_FAILED       (-((int32_t)28))
 /** \brief Error Code for Invalid Time */
-#define PMIC_ST_ERR_INV_TIME                            (-((int32_t)29))
+#define PMIC_ST_ERR_INV_TIME               (-((int32_t)29))
 /** \brief Error Code for Invalid Date */
-#define PMIC_ST_ERR_INV_DATE                            (-((int32_t)30))
+#define PMIC_ST_ERR_INV_DATE               (-((int32_t)30))
 /** \brief Error Code for RTC Stop command failure */
-#define PMIC_ST_ERR_RTC_STOP_FAIL                       (-((int32_t)31))
+#define PMIC_ST_ERR_RTC_STOP_FAIL          (-((int32_t)31))
 /** \brief Error Code for any other failures */
-#define PMIC_ST_ERR_FAIL                                (-((int32_t)32))
+#define PMIC_ST_ERR_FAIL                   (-((int32_t)32))
 /** \brief Error Code for ESM in Start State */
-#define PMIC_ST_ERR_ESM_STARTED                         (-((int32_t)33))
+#define PMIC_ST_ERR_ESM_STARTED            (-((int32_t)33))
 /** \brief Error Code for Invalid ESM delay1, delay2, HMAX, HMIN, LMAX and
  *         LMIN values */
-#define PMIC_ST_ERR_INV_ESM_VAL                         (-((int32_t)34))
+#define PMIC_ST_ERR_INV_ESM_VAL            (-((int32_t)34))
 /** \brief warning Code for Device ID mismatch warning */
-#define PMIC_ST_WARN_INV_DEVICE_ID                      (-((int32_t)35))
+#define PMIC_ST_WARN_INV_DEVICE_ID         (-((int32_t)35))
 /** \brief Error Code for EN_DRV Pin configuration when FORCE_EN_DRV_LOW is set
  *         to '1'  */
-#define PMIC_ST_ERR_INV_EN_DRV_PIN_CFG                  (-((int32_t)36))
+#define PMIC_ST_ERR_INV_EN_DRV_PIN_CFG     (-((int32_t)36))
 /** \brief Error Code for I2C Speed configuration when commMode is set
  *         to PMIC_INTF_SPI  */
-#define PMIC_ST_ERR_INV_COMM_MODE                       (-((int32_t)37))
+#define PMIC_ST_ERR_INV_COMM_MODE          (-((int32_t)37))
 /** \brief Error Code for CRC Status Failure */
-#define PMIC_ST_ERR_CRC_STATUS_FAIL                     (-((int32_t)38))
+#define PMIC_ST_ERR_CRC_STATUS_FAIL        (-((int32_t)38))
 /** \brief Error Code for Register Write Failure when register is locked */
-#define PMIC_ST_ERR_REG_LOCKED_WR_FAIL                  (-((int32_t)39))
+#define PMIC_ST_ERR_REG_LOCKED_WR_FAIL     (-((int32_t)39))
 /** \brief Error Code for when a feature is not supported on PMIC device type
  *         or PMIC silicon revision*/
-#define PMIC_ST_ERR_NOT_SUPPORTED                       (-((int32_t)40))
+#define PMIC_ST_ERR_NOT_SUPPORTED          (-((int32_t)40))
 /** \brief Error Code for Invalid PMIC Device Silicon Revision*/
-#define PMIC_ST_ERR_INV_SILICON_REVISION                (-((int32_t)41))
+#define PMIC_ST_ERR_INV_SILICON_REVISION   (-((int32_t)41))
 /* @} */
 
 /**
@@ -212,8 +214,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_DEV_LEO_TPS6594X  (0U)
-#define PMIC_DEV_HERA_LP8764X  (1U)
+#define PMIC_DEV_LEO_TPS6594X              (0U)
+#define PMIC_DEV_HERA_LP8764X              (1U)
 /* @} */
 
 /**
@@ -222,9 +224,9 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_INTF_SINGLE_I2C   (0U)
-#define PMIC_INTF_DUAL_I2C     (1U)
-#define PMIC_INTF_SPI          (2U)
+#define PMIC_INTF_SINGLE_I2C               (0U)
+#define PMIC_INTF_DUAL_I2C                 (1U)
+#define PMIC_INTF_SPI                      (2U)
 /* @} */
 
 /**
@@ -236,10 +238,10 @@ extern "C" {
  *
  *  @{
  */
- /** \brief  Standard or Fast or Fast+ Mode  */
-#define PMIC_I2C_STANDARD_MODE   (0U)
+/** \brief  Standard or Fast or Fast+ Mode  */
+#define PMIC_I2C_STANDARD_MODE             (0U)
 /** \brief  High-Speed Mode */
-#define PMIC_I2C_FORCED_HS_MODE  (1U)
+#define PMIC_I2C_FORCED_HS_MODE            (1U)
 /* @} */
 
 /**
@@ -248,12 +250,12 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_MAIN_INST   (1U << 0U)
-#define PMIC_QA_INST     (1U << 1U)
+#define PMIC_MAIN_INST                     (1U << 0U)
+#define PMIC_QA_INST                       (1U << 1U)
 /** \brief  Valid only to read CRC status from Page-1 using NVM Slave Address
  *          Valid only while calling the pFnPmicCommIoRead API
  */
-#define PMIC_NVM_INST    (1U << 2U)
+#define PMIC_NVM_INST                      (1U << 2U)
 /* @} */
 
 /**
@@ -262,45 +264,45 @@ extern "C" {
  *
  *  @{
  */
-  /** \brief validParams value used to set PMIC device type of PMIC Driver
-   *         Handle */
-#define PMIC_CFG_DEVICE_TYPE_VALID      (0U)
-  /** \brief validParams value used to set Interface mode of PMIC Driver
-   *         Handle */
-#define PMIC_CFG_COMM_MODE_VALID        (1U)
-  /** \brief validParams value used to set Main Interface Slave Address of PMIC
-   *         Driver Handle */
-#define PMIC_CFG_SLAVEADDR_VALID        (2U)
-  /** \brief validParams value used to set WDOG QA Interface Slave Address of
-   *         PMIC Driver Handle */
-#define PMIC_CFG_QASLAVEADDR_VALID      (3U)
-  /** \brief validParams value used to set NVM Slave Address of PMIC Driver
-   *         Handle */
-#define PMIC_CFG_NVMSLAVEADDR_VALID     (4U)
-  /** \brief validParams value used to set Pointer to Handle for I2C1/SPI
-   *         Main Interface of PMIC Driver Handle */
-#define PMIC_CFG_COMM_HANDLE_VALID      (5U)
-  /** \brief validParams value used to set Pointer to Handle for I2C2-QA
-   *         Interface of PMIC Driver Handle */
-#define PMIC_CFG_QACOMM_HANDLE_VALID    (6U)
-  /** \brief validParams value used to set Pointer to I2C/SPI Comm LLD Read
-   *         Function of PMIC Driver Handle */
-#define PMIC_CFG_COMM_IO_RD_VALID       (7U)
-  /** \brief validParams value used to set Pointer to I2C/SPI Comm LLD Write
-   *         Function of PMIC Driver Handle */
-#define PMIC_CFG_COMM_IO_WR_VALID       (8U)
-  /** \brief validParams value used to set Pointer to Pmic Critical-Section
-   *         Start Function of PMIC Driver Handle */
-#define PMIC_CFG_CRITSEC_START_VALID    (9U)
-  /** \brief validParams value used to set Pointer to Pmic Critical-Section
-   *         Stop Function of PMIC Driver Handle */
-#define PMIC_CFG_CRITSEC_STOP_VALID     (10U)
-  /** \brief validParams value used to set I2C1 Speed of PMIC Driver
-   *         Handle */
-#define PMIC_CFG_I2C1_SPEED_VALID       (11U)
-  /** \brief validParams value used to set I2C2 Speed of PMIC Driver
-   *         Handle */
-#define PMIC_CFG_I2C2_SPEED_VALID       (12U)
+/** \brief validParams value used to set PMIC device type of PMIC Driver
+ *         Handle */
+#define PMIC_CFG_DEVICE_TYPE_VALID         (0U)
+/** \brief validParams value used to set Interface mode of PMIC Driver
+ *         Handle */
+#define PMIC_CFG_COMM_MODE_VALID           (1U)
+/** \brief validParams value used to set Main Interface Slave Address of PMIC
+ *         Driver Handle */
+#define PMIC_CFG_SLAVEADDR_VALID           (2U)
+/** \brief validParams value used to set WDOG QA Interface Slave Address of
+ *         PMIC Driver Handle */
+#define PMIC_CFG_QASLAVEADDR_VALID         (3U)
+/** \brief validParams value used to set NVM Slave Address of PMIC Driver
+ *         Handle */
+#define PMIC_CFG_NVMSLAVEADDR_VALID        (4U)
+/** \brief validParams value used to set Pointer to Handle for I2C1/SPI
+ *         Main Interface of PMIC Driver Handle */
+#define PMIC_CFG_COMM_HANDLE_VALID         (5U)
+/** \brief validParams value used to set Pointer to Handle for I2C2-QA
+ *         Interface of PMIC Driver Handle */
+#define PMIC_CFG_QACOMM_HANDLE_VALID       (6U)
+/** \brief validParams value used to set Pointer to I2C/SPI Comm LLD Read
+ *         Function of PMIC Driver Handle */
+#define PMIC_CFG_COMM_IO_RD_VALID          (7U)
+/** \brief validParams value used to set Pointer to I2C/SPI Comm LLD Write
+ *         Function of PMIC Driver Handle */
+#define PMIC_CFG_COMM_IO_WR_VALID          (8U)
+/** \brief validParams value used to set Pointer to Pmic Critical-Section
+ *         Start Function of PMIC Driver Handle */
+#define PMIC_CFG_CRITSEC_START_VALID       (9U)
+/** \brief validParams value used to set Pointer to Pmic Critical-Section
+ *         Stop Function of PMIC Driver Handle */
+#define PMIC_CFG_CRITSEC_STOP_VALID        (10U)
+/** \brief validParams value used to set I2C1 Speed of PMIC Driver
+ *         Handle */
+#define PMIC_CFG_I2C1_SPEED_VALID          (11U)
+/** \brief validParams value used to set I2C2 Speed of PMIC Driver
+ *         Handle */
+#define PMIC_CFG_I2C2_SPEED_VALID          (12U)
 /* @} */
 
 /**
@@ -330,6 +332,7 @@ extern "C" {
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
+// clang-format off
 /*!
  * \brief  PMIC configuration structure.
  *         Contains various parameters which are needed to prepare
@@ -444,6 +447,7 @@ typedef struct Pmic_CoreCfg_s {
     void (*pFnPmicCritSecStart)(void);
     void (*pFnPmicCritSecStop)(void);
 } Pmic_CoreCfg_t;
+// clang-format on
 
 /*==========================================================================*/
 /*                         Function Declarations                            */
@@ -491,8 +495,7 @@ typedef struct Pmic_CoreCfg_s {
  *  \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *           For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
-                  Pmic_CoreHandle_t    *pPmicCoreHandle);
+int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData, Pmic_CoreHandle_t *pPmicCoreHandle);
 
 /*!
  * \brief  API to DeInitilizes an existing PMIC Instance.
@@ -511,7 +514,7 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
  *  \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *           For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_deinit(Pmic_CoreHandle_t  *pPmicCoreHandle);
+int32_t Pmic_deinit(Pmic_CoreHandle_t *pPmicCoreHandle);
 
 #ifdef __cplusplus
 }

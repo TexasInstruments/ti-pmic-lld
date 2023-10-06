@@ -45,10 +45,11 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
-#include <pmic_gpio_priv.h>
+#include "../../pmic_gpio_priv.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /* ========================================================================== */
@@ -58,61 +59,51 @@ extern "C" {
 /*!
  * \brief  GPIO Register Offsets
  */
-#define PMIC_GPIO11_CONF_REGADDR                 (0x3BU)
-#define PMIC_NPWRON_CONF_REGADDR                 (0x3CU)
+#define PMIC_GPIO11_CONF_REGADDR          (0x3BU)
+#define PMIC_NPWRON_CONF_REGADDR          (0x3CU)
 
 /*!
  * \brief  NPWRON Register bit fields
  */
-#define PMIC_NPWRON_CONF_NPWRON_SEL_SHIFT        (0x06U)
-#define PMIC_NPWRON_CONF_ENABLE_POL_SHIFT        (0x05U)
+#define PMIC_NPWRON_CONF_NPWRON_SEL_SHIFT (0x06U)
+#define PMIC_NPWRON_CONF_ENABLE_POL_SHIFT (0x05U)
 
 /*!
  * \brief  GPIO IN Register bit fields
  */
-#define PMIC_GPIO_IN_2_GPIO11_IN_SHIFT           (0x02U)
-#define PMIC_GPIO_IN_2_NPWRON_IN_SHIFT           (0x03U)
+#define PMIC_GPIO_IN_2_GPIO11_IN_SHIFT    (0x02U)
+#define PMIC_GPIO_IN_2_NPWRON_IN_SHIFT    (0x03U)
 
 /*!
  * \brief  GPIO OUT Register bit fields
  */
-#define PMIC_GPIO_OUT_2_GPIO11_OUT_SHIFT         (0x02U)
+#define PMIC_GPIO_OUT_2_GPIO11_OUT_SHIFT  (0x02U)
 
 /*!
  * \brief  NPWRON Register bit mask values
  */
-#define PMIC_NPWRON_CONF_NPWRON_SEL_MASK    (uint8_t)  \
-                                            (0x03U <<  \
-                                             PMIC_NPWRON_CONF_NPWRON_SEL_SHIFT)
-#define PMIC_NPWRON_CONF_ENABLE_POL_MASK    (uint8_t)  \
-                                            (0x01U <<  \
-                                             PMIC_NPWRON_CONF_ENABLE_POL_SHIFT)
+#define PMIC_NPWRON_CONF_NPWRON_SEL_MASK  (uint8_t)(0x03U << PMIC_NPWRON_CONF_NPWRON_SEL_SHIFT)
+#define PMIC_NPWRON_CONF_ENABLE_POL_MASK  (uint8_t)(0x01U << PMIC_NPWRON_CONF_ENABLE_POL_SHIFT)
 
 /*!
  * \brief  GPIO IN Register bit mask values
  */
-#define PMIC_GPIO_IN_2_GPIO11_IN_MASK       (uint8_t)  \
-                                            (0x01U <<  \
-                                             PMIC_GPIO_IN_2_GPIO11_IN_SHIFT)
-#define PMIC_GPIO_IN_2_NPWRON_IN_MASK       (uint8_t)  \
-                                            (0x01U <<  \
-                                             PMIC_GPIO_IN_2_NPWRON_IN_SHIFT)
+#define PMIC_GPIO_IN_2_GPIO11_IN_MASK     (uint8_t)(0x01U << PMIC_GPIO_IN_2_GPIO11_IN_SHIFT)
+#define PMIC_GPIO_IN_2_NPWRON_IN_MASK     (uint8_t)(0x01U << PMIC_GPIO_IN_2_NPWRON_IN_SHIFT)
 
 /*!
  * \brief  GPIO OUT Register bit mask values
  */
-#define PMIC_GPIO_OUT_2_GPIO11_OUT_MASK      (uint8_t)  \
-                                             (0x01U <<  \
-                                              PMIC_GPIO_OUT_2_GPIO11_OUT_SHIFT)
+#define PMIC_GPIO_OUT_2_GPIO11_OUT_MASK   (uint8_t)(0x01U << PMIC_GPIO_OUT_2_GPIO11_OUT_SHIFT)
 
 /*!
  * \brief  Max and Min PMIC GPIO pin supported
  */
-#define PMIC_TPS6594X_GPIO_PIN_MIN              (1U)
-#define PMIC_TPS6594X_GPIO_PIN_MAX              (11U)
+#define PMIC_TPS6594X_GPIO_PIN_MIN        (1U)
+#define PMIC_TPS6594X_GPIO_PIN_MAX        (11U)
 
 /** \brief Max value for NPWRON/ENABLE pin Function */
-#define PMIC_TPS6594X_NPWRON_PINFUNC_MAX        (1U)
+#define PMIC_TPS6594X_NPWRON_PINFUNC_MAX  (1U)
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
@@ -138,26 +129,22 @@ void pmic_get_tps6594x_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg);
  *
  * \param   pGpioIntRegCfg   [OUT]  Pointer to store gpio Interrupt Register
  *                                  configuration
-*/
+ */
 void pmic_get_tps6594x_gpioIntRegCfg(Pmic_GpioIntRegCfg_t **pGpioIntRegCfg);
 
 /*!
  * \brief   This function is used to configure NPWRON pin for TPS6594x
  *          PMIC LEO Device.
  */
-int32_t Pmic_gpioTps6594xSetNPwronPinConfiguration(
-                                          Pmic_CoreHandle_t   *pPmicCoreHandle,
-                                          const Pmic_GpioCfg_t gpioCfg);
+int32_t Pmic_gpioTps6594xSetNPwronPinConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_GpioCfg_t gpioCfg);
 
 /*!
  * \brief   This function is used to read NPWRON pin configuration for TPS6594x
  *          PMIC LEO Device.
  */
-int32_t Pmic_gpioTps6594xGetNPwronPinConfiguration(
-                                        Pmic_CoreHandle_t   *pPmicCoreHandle,
-                                        Pmic_GpioCfg_t      *pGpioCfg);
+int32_t Pmic_gpioTps6594xGetNPwronPinConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_GpioCfg_t *pGpioCfg);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif/* PMIC_GPIO_TPS6594X_PRIV_H_ */
+#endif /* PMIC_GPIO_TPS6594X_PRIV_H_ */

@@ -32,19 +32,20 @@
  *****************************************************************************/
 
 /**
-*   \file    pmic_power_tps6594x.c
-*
-*   \brief   This file contains the TPS6594x Leo PMIC power Specific
-*            configuration API's and structures
-*
-*/
+ *   \file    pmic_power_tps6594x.c
+ *
+ *   \brief   This file contains the TPS6594x Leo PMIC power Specific
+ *            configuration API's and structures
+ *
+ */
 
-#include <pmic_types.h>
-#include <pmic_power.h>
-#include <pmic_core_priv.h>
-#include <pmic_io_priv.h>
-#include <pmic_power_tps6594x_priv.h>
+#include "../../../include/pmic_types.h"
+#include "../../../include/pmic_power.h"
+#include "../../pmic_core_priv.h"
+#include "../../pmic_io_priv.h"
+#include "pmic_power_tps6594x_priv.h"
 
+// clang-format off
 static Pmic_powerRsrcRegCfg_t gTps6594x_pwrRsrcRegCfg[] =
 {
     {
@@ -294,6 +295,7 @@ static Pmic_powerIntCfg_t tps6594x_pwrIntCfg[] =
     },
 
 };
+// clang-format on
 
 /*!
  * \brief  PMIC power common interrupt get Configuration function
@@ -329,8 +331,7 @@ void pmic_get_tps6594x_pwrRsrceRegCfg(Pmic_powerRsrcRegCfg_t **pPwrRsrcRegCfg)
  * \param  pPgoodSrcRegCfg   [OUT]  Pointer to store power-good source register
  *                                  configuration
  */
-void pmic_get_tps6594x_pwrPgoodSrcRegCfg(
-                                   Pmic_powerPgoodSrcRegCfg_t **pPgoodSrcRegCfg)
+void pmic_get_tps6594x_pwrPgoodSrcRegCfg(Pmic_powerPgoodSrcRegCfg_t **pPgoodSrcRegCfg)
 {
     *pPgoodSrcRegCfg = tps6594x_pgoodSrcRegCfg;
 }
@@ -343,45 +344,34 @@ void pmic_get_tps6594x_pwrPgoodSrcRegCfg(
  *                developer need to update the API functionality for New
  *                pwrRsrcType accordingly.
  */
-int32_t Pmic_powerTPS6594xConvertVoltage2VSetVal(uint16_t  millivolt,
-                                                 uint16_t  pwrRsrc,
-                                                 uint8_t   *pVSetVal)
+int32_t Pmic_powerTPS6594xConvertVoltage2VSetVal(uint16_t millivolt, uint16_t pwrRsrc, uint8_t *pVSetVal)
 {
     int32_t  status = PMIC_ST_SUCCESS;
     uint8_t  pwrRsrcType = 0U;
     uint16_t baseMillivolt = 0U;
     uint8_t  millivoltStep = 0U;
-    uint8_t  baseVoutCode  = 0U;
+    uint8_t  baseVoutCode = 0U;
 
     pwrRsrcType = Pmic_powerGetPwrRsrcType(pwrRsrc);
 
-    if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType)
+    if (PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType)
     {
-        status = Pmic_powerBuckVmonConvertVoltage2VSetVal(millivolt,
-                                                          &baseMillivolt,
-                                                          &millivoltStep,
-                                                          &baseVoutCode);
-
+        status = Pmic_powerBuckVmonConvertVoltage2VSetVal(millivolt, &baseMillivolt, &millivoltStep, &baseVoutCode);
     }
     else
     {
         /* Else case for LDO pwrRsrcType */
-        Pmic_powerLdoConvertVoltage2VSetVal(pwrRsrc,
-                                            &baseMillivolt,
-                                            &millivoltStep,
-                                            &baseVoutCode);
+        Pmic_powerLdoConvertVoltage2VSetVal(pwrRsrc, &baseMillivolt, &millivoltStep, &baseVoutCode);
     }
 
-    if((PMIC_ST_SUCCESS == status) &&
-       ((millivolt % millivoltStep) == 1U))
+    if ((PMIC_ST_SUCCESS == status) && ((millivolt % millivoltStep) == 1U))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    if(PMIC_ST_SUCCESS == status)
+    if (PMIC_ST_SUCCESS == status)
     {
-        *pVSetVal = (uint8_t)(baseVoutCode +
-                    ((millivolt - baseMillivolt) / millivoltStep));
+        *pVSetVal = (uint8_t)(baseVoutCode + ((millivolt - baseMillivolt) / millivoltStep));
     }
 
     return status;
@@ -395,66 +385,52 @@ int32_t Pmic_powerTPS6594xConvertVoltage2VSetVal(uint16_t  millivolt,
  *                developer need to update the API functionality for New
  *                pwrRsrcType accordingly.
  */
-void Pmic_powerTPS6594xConvertVSet2Voltage(const uint8_t  *pVSetVal,
-                                           uint16_t        pwrRsrc,
-                                           uint16_t       *millivolt)
+void Pmic_powerTPS6594xConvertVSet2Voltage(const uint8_t *pVSetVal, uint16_t pwrRsrc, uint16_t *millivolt)
 {
     uint16_t baseMillivolt = 0U;
     uint8_t  millivoltStep = 0U;
-    uint8_t  baseVoutCode  = 0U;
-    uint8_t pwrRsrcType;
+    uint8_t  baseVoutCode = 0U;
+    uint8_t  pwrRsrcType;
 
     pwrRsrcType = Pmic_powerGetPwrRsrcType(pwrRsrc);
-    if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType)
+    if (PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType)
     {
-        Pmic_powerBuckVmonConvertVSetVal2Voltage(pVSetVal,
-                                                 &baseMillivolt,
-                                                 &millivoltStep,
-                                                 &baseVoutCode);
+        Pmic_powerBuckVmonConvertVSetVal2Voltage(pVSetVal, &baseMillivolt, &millivoltStep, &baseVoutCode);
     }
     else
     {
         /* Else case for LDO pwrRsrcType */
-        Pmic_powerLdoConvertVSetVal2Voltage(pwrRsrc,
-                                            &baseMillivolt,
-                                            &millivoltStep,
-                                            &baseVoutCode);
+        Pmic_powerLdoConvertVSetVal2Voltage(pwrRsrc, &baseMillivolt, &millivoltStep, &baseVoutCode);
     }
 
-    *millivolt = (baseMillivolt +
-                 (((uint16_t)*pVSetVal - baseVoutCode) * millivoltStep));
-
+    *millivolt = (baseMillivolt + (((uint16_t)*pVSetVal - baseVoutCode) * millivoltStep));
 }
 
 /*!
  * \brief   This function is to validate the power good source limit for VCCA
  *          BUCK, LDO
  */
-static int32_t Pmic_validate_tps6594x_pGoodVccaBuckLDOSrcType(
-                                                          uint16_t pgoodSrc,
-                                                          uint8_t  pGoodSrcType)
+static int32_t Pmic_validate_tps6594x_pGoodVccaBuckLDOSrcType(uint16_t pgoodSrc, uint8_t pGoodSrcType)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if(PMIC_TPS6594X_PGOOD_SOURCE_TYPE_VCCA == pGoodSrcType)
+    if (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_VCCA == pGoodSrcType)
     {
-        if(pgoodSrc != PMIC_TPS6594X_PGOOD_SOURCE_VCCA)
+        if (pgoodSrc != PMIC_TPS6594X_PGOOD_SOURCE_VCCA)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
     }
-    else if(PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK == pGoodSrcType)
+    else if (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK == pGoodSrcType)
     {
-        if((pgoodSrc > PMIC_TPS6594X_PGOOD_BUCK_MAX) ||
-           (pgoodSrc < PMIC_TPS6594X_PGOOD_BUCK_MIN))
+        if ((pgoodSrc > PMIC_TPS6594X_PGOOD_BUCK_MAX) || (pgoodSrc < PMIC_TPS6594X_PGOOD_BUCK_MIN))
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
     }
     else
     {
-        if((pgoodSrc > PMIC_TPS6594X_PGOOD_LDO_MAX) ||
-           (pgoodSrc < PMIC_TPS6594X_PGOOD_LDO_MIN))
+        if ((pgoodSrc > PMIC_TPS6594X_PGOOD_LDO_MAX) || (pgoodSrc < PMIC_TPS6594X_PGOOD_LDO_MIN))
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -470,35 +446,32 @@ static int32_t Pmic_validate_tps6594x_pGoodVccaBuckLDOSrcType(
 int32_t Pmic_validate_tps6594x_pGoodSrcType(uint16_t pgoodSrc)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    uint8_t  pGoodSrcType;
+    uint8_t pGoodSrcType;
 
     pGoodSrcType = Pmic_powerGetPwrRsrcType(pgoodSrc);
 
-    if((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_VCCA == pGoodSrcType) ||
-       (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK == pGoodSrcType) ||
-       (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_LDO == pGoodSrcType))
-       {
-           status = Pmic_validate_tps6594x_pGoodVccaBuckLDOSrcType(
-                                                                  pgoodSrc,
-                                                                  pGoodSrcType);
-       }
-    else if(PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT == pGoodSrcType)
+    if ((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_VCCA == pGoodSrcType) ||
+        (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK == pGoodSrcType) || (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_LDO == pGoodSrcType))
     {
-        if(pgoodSrc != PMIC_TPS6594X_PGOOD_SOURCE_NRSTOUT)
+        status = Pmic_validate_tps6594x_pGoodVccaBuckLDOSrcType(pgoodSrc, pGoodSrcType);
+    }
+    else if (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT == pGoodSrcType)
+    {
+        if (pgoodSrc != PMIC_TPS6594X_PGOOD_SOURCE_NRSTOUT)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
     }
-    else if(PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC == pGoodSrcType)
+    else if (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC == pGoodSrcType)
     {
-        if(pgoodSrc != PMIC_TPS6594X_PGOOD_SOURCE_NRSTOUT_SOC)
+        if (pgoodSrc != PMIC_TPS6594X_PGOOD_SOURCE_NRSTOUT_SOC)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
     }
-    else if(PMIC_TPS6594X_PGOOD_SOURCE_TYPE_TDIE == pGoodSrcType)
+    else if (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_TDIE == pGoodSrcType)
     {
-        if(pgoodSrc != PMIC_TPS6594X_PGOOD_SOURCE_TDIE)
+        if (pgoodSrc != PMIC_TPS6594X_PGOOD_SOURCE_TDIE)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -515,36 +488,33 @@ int32_t Pmic_validate_tps6594x_pGoodSrcType(uint16_t pgoodSrc)
  * \brief   This function is to validate the power good signal source selection
  *          limit for BUCK, LDO, NRSTOUT, NRSTOUT_SOC
  */
-static int32_t Pmic_validate_tps6594x_pGoodSelBuckLdoNrstoutNrstoutsoc(
-                                                        uint8_t  pGoodSrcType,
-                                                        uint8_t  pgoodSelType)
+static int32_t Pmic_validate_tps6594x_pGoodSelBuckLdoNrstoutNrstoutsoc(uint8_t pGoodSrcType, uint8_t pgoodSelType)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK == pGoodSrcType) ||
-       (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_LDO == pGoodSrcType))
+    if ((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK == pGoodSrcType) || (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_LDO == pGoodSrcType))
     {
-        if(pgoodSelType > PMIC_TPS6594X_POWER_PGOOD_SEL_SRC_VOLTAGE_CURRENT)
+        if (pgoodSelType > PMIC_TPS6594X_POWER_PGOOD_SEL_SRC_VOLTAGE_CURRENT)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
     }
-    else if(PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT == pGoodSrcType)
+    else if (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT == pGoodSrcType)
     {
-        if(pgoodSelType > PMIC_TPS6594X_POWER_PGOOD_SEL_NRSTOUT)
+        if (pgoodSelType > PMIC_TPS6594X_POWER_PGOOD_SEL_NRSTOUT)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
     }
     else
     {
-        if(pgoodSelType > PMIC_TPS6594X_POWER_PGOOD_SEL_NRSTOUT_SOC)
+        if (pgoodSelType > PMIC_TPS6594X_POWER_PGOOD_SEL_NRSTOUT_SOC)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
     }
 
-return status;
+    return status;
 }
 
 /*!
@@ -555,26 +525,23 @@ return status;
  *                developer need to update the API functionality for New
  *                pGoodSrcType accordingly.
  */
-int32_t Pmic_validate_tps6594x_pGoodSelType(uint16_t pgoodSrc,
-                                            uint8_t pgoodSelType)
+int32_t Pmic_validate_tps6594x_pGoodSelType(uint16_t pgoodSrc, uint8_t pgoodSelType)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    uint8_t  pGoodSrcType;
+    uint8_t pGoodSrcType;
 
     pGoodSrcType = Pmic_powerGetPwrRsrcType(pgoodSrc);
 
-    if((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK == pGoodSrcType)    ||
-       (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_LDO == pGoodSrcType)     ||
-       (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT == pGoodSrcType) ||
-       (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC == pGoodSrcType))
-       {
-           status = Pmic_validate_tps6594x_pGoodSelBuckLdoNrstoutNrstoutsoc(
-                                                                   pGoodSrcType,
-                                                                   pgoodSelType);
-       }
-    else if(PMIC_TPS6594X_PGOOD_SOURCE_TYPE_TDIE == pGoodSrcType)
+    if ((PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK == pGoodSrcType) ||
+        (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_LDO == pGoodSrcType) ||
+        (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT == pGoodSrcType) ||
+        (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC == pGoodSrcType))
     {
-        if(pgoodSelType > PMIC_TPS6594X_POWER_PGOOD_SEL_TDIE_WARN)
+        status = Pmic_validate_tps6594x_pGoodSelBuckLdoNrstoutNrstoutsoc(pGoodSrcType, pgoodSelType);
+    }
+    else if (PMIC_TPS6594X_PGOOD_SOURCE_TYPE_TDIE == pGoodSrcType)
+    {
+        if (pgoodSelType > PMIC_TPS6594X_POWER_PGOOD_SEL_TDIE_WARN)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -582,7 +549,7 @@ int32_t Pmic_validate_tps6594x_pGoodSelType(uint16_t pgoodSrc,
     else
     {
         /* Else case for VCCA pGoodSrcType */
-        if(pgoodSelType >  PMIC_TPS6594X_POWER_PGOOD_SEL_VCCA_ENABLE)
+        if (pgoodSelType > PMIC_TPS6594X_POWER_PGOOD_SEL_VCCA_ENABLE)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -592,8 +559,7 @@ int32_t Pmic_validate_tps6594x_pGoodSelType(uint16_t pgoodSrc,
 }
 
 /* Enable/Disable LDORTC regulator */
-static int32_t Pmic_powerLdoRtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                      bool               ldortcEnable)
+static int32_t Pmic_powerLdoRtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle, bool ldortcEnable)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData;
@@ -603,25 +569,19 @@ static int32_t Pmic_powerLdoRtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
     {
         case PMIC_DEV_LEO_TPS6594X:
             Pmic_criticalSectionStart(pPmicCoreHandle);
-            status = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            PMIC_LDORTC_CTRL_REGADDR,
-                                            &regData);
+            status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_LDORTC_CTRL_REGADDR, &regData);
 
-            if(PMIC_ST_SUCCESS == status)
+            if (PMIC_ST_SUCCESS == status)
             {
-                if(((bool)true) == ldortcEnable)
+                if (((bool)true) == ldortcEnable)
                 {
                     ldortcEnableVal = 1U;
                 }
 
                 /* Set ldortcEnable */
-                Pmic_setBitField(&regData,
-                                 PMIC_LDORTC_CTRL_LDORTC_DIS_SHIFT,
-                                 PMIC_LDORTC_CTRL_LDORTC_DIS_MASK,
-                                 ldortcEnableVal);
-                status = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                                PMIC_LDORTC_CTRL_REGADDR,
-                                                regData);
+                Pmic_setBitField(
+                    &regData, PMIC_LDORTC_CTRL_LDORTC_DIS_SHIFT, PMIC_LDORTC_CTRL_LDORTC_DIS_MASK, ldortcEnableVal);
+                status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_LDORTC_CTRL_REGADDR, regData);
             }
 
             Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -635,8 +595,7 @@ static int32_t Pmic_powerLdoRtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /* Get Enable/Disable LDORTC regulator status */
-static int32_t Pmic_powerGetLdoRtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                         bool              *pLdortcEnable)
+static int32_t Pmic_powerGetLdoRtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle, bool *pLdortcEnable)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData;
@@ -645,16 +604,13 @@ static int32_t Pmic_powerGetLdoRtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
     {
         case PMIC_DEV_LEO_TPS6594X:
             Pmic_criticalSectionStart(pPmicCoreHandle);
-            status = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                            PMIC_LDORTC_CTRL_REGADDR,
-                                            &regData);
+            status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_LDORTC_CTRL_REGADDR, &regData);
             Pmic_criticalSectionStop(pPmicCoreHandle);
-            if(PMIC_ST_SUCCESS == status)
+            if (PMIC_ST_SUCCESS == status)
             {
                 /* Get ldortcEnable */
-                if(Pmic_getBitField(regData,
-                                    PMIC_LDORTC_CTRL_LDORTC_DIS_SHIFT,
-                                    PMIC_LDORTC_CTRL_LDORTC_DIS_MASK) != 0U)
+                if (Pmic_getBitField(regData, PMIC_LDORTC_CTRL_LDORTC_DIS_SHIFT, PMIC_LDORTC_CTRL_LDORTC_DIS_MASK) !=
+                    0U)
                 {
                     *pLdortcEnable = (bool)true;
                 }
@@ -662,7 +618,6 @@ static int32_t Pmic_powerGetLdoRtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
                 {
                     *pLdortcEnable = (bool)false;
                 }
-
             }
 
             break;
@@ -691,17 +646,16 @@ static int32_t Pmic_powerGetLdoRtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_powerSetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
-                            bool               ldortcEnable)
+int32_t Pmic_powerSetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle, bool ldortcEnable)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    if(NULL == pPmicCoreHandle)
+    if (NULL == pPmicCoreHandle)
     {
         pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
+    if (PMIC_ST_SUCCESS == pmicStatus)
     {
         pmicStatus = Pmic_powerLdoRtcEnable(pPmicCoreHandle, ldortcEnable);
     }
@@ -727,23 +681,21 @@ int32_t Pmic_powerSetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_powerGetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
-                            bool              *pLdortcEnable)
+int32_t Pmic_powerGetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle, bool *pLdortcEnable)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    if(NULL == pPmicCoreHandle)
+    if (NULL == pPmicCoreHandle)
     {
         pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (NULL == pLdortcEnable))
+    if ((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pLdortcEnable))
     {
         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
+    if (PMIC_ST_SUCCESS == pmicStatus)
     {
         pmicStatus = Pmic_powerGetLdoRtcEnable(pPmicCoreHandle, pLdortcEnable);
     }
@@ -759,18 +711,15 @@ int32_t Pmic_powerGetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
  *                developer need to update the API functionality for New
  *                pwrRsrcType accordingly.
  */
-int32_t Pmic_powerTPS6594xValidateVoltageLevel(
-                                             uint8_t            pwrRsrcType,
-                                             uint16_t           pwrRsrc,
-                                             uint16_t           voltage_mV)
+int32_t Pmic_powerTPS6594xValidateVoltageLevel(uint8_t pwrRsrcType, uint16_t pwrRsrc, uint16_t voltage_mV)
 {
     int32_t  status = PMIC_ST_SUCCESS;
     uint16_t ldoMinVoltageValue = 0U;
 
-    if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType)
+    if (PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType)
     {
-        if((voltage_mV < PMIC_TPS6594X_REGULATOR_BUCK_MIN_VOLTAGE) ||
-           (voltage_mV > PMIC_TPS6594X_REGULATOR_BUCK_MAX_VOLTAGE))
+        if ((voltage_mV < PMIC_TPS6594X_REGULATOR_BUCK_MIN_VOLTAGE) ||
+            (voltage_mV > PMIC_TPS6594X_REGULATOR_BUCK_MAX_VOLTAGE))
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -778,18 +727,16 @@ int32_t Pmic_powerTPS6594xValidateVoltageLevel(
     else
     {
         /* Else case for LDO pwrRsrcType */
-        if(PMIC_TPS6594X_REGULATOR_LDO4 == pwrRsrc)
+        if (PMIC_TPS6594X_REGULATOR_LDO4 == pwrRsrc)
         {
             ldoMinVoltageValue = PMIC_TPS6594X_POWER_LDO4_MIN_VOLTAGE;
         }
         else
         {
-            ldoMinVoltageValue = \
-                               PMIC_TPS6594X_POWER_LDO1_2_3_MIN_VOLTAGE;
+            ldoMinVoltageValue = PMIC_TPS6594X_POWER_LDO1_2_3_MIN_VOLTAGE;
         }
 
-        if((voltage_mV < ldoMinVoltageValue) ||
-           (voltage_mV > PMIC_TPS6594X_POWER_LDO_MAX_VOLTAGE))
+        if ((voltage_mV < ldoMinVoltageValue) || (voltage_mV > PMIC_TPS6594X_POWER_LDO_MAX_VOLTAGE))
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -802,45 +749,41 @@ int32_t Pmic_powerTPS6594xValidateVoltageLevel(
  * \brief   This function is to validate the power resource limit for the
  *          TPS6594x PMIC device.
  */
-int32_t Pmic_powerTPS6594xValidatePwrRsrcLimit(
-                                    const Pmic_CoreHandle_t *pPmicCoreHandle,
-                                    uint8_t                  pwrRsrcType,
-                                    uint16_t                 pwrRsrc)
+int32_t
+Pmic_powerTPS6594xValidatePwrRsrcLimit(const Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t pwrRsrcType, uint16_t pwrRsrc)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_VCCA == pwrRsrcType)
+    if (PMIC_TPS6594X_POWER_RESOURCE_TYPE_VCCA == pwrRsrcType)
     {
-        if(pwrRsrc != PMIC_TPS6594X_POWER_SOURCE_VCCA)
+        if (pwrRsrc != PMIC_TPS6594X_POWER_SOURCE_VCCA)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
     }
-    else if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType)
+    else if (PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType)
     {
-        if(((bool)false) == pPmicCoreHandle->pPmic_SubSysInfo->buckEnable)
+        if (((bool)false) == pPmicCoreHandle->pPmic_SubSysInfo->buckEnable)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
         else
         {
-            if((pwrRsrc > PMIC_TPS6594X_BUCK_MAX) ||
-               (pwrRsrc < PMIC_TPS6594X_BUCK_MIN))
+            if ((pwrRsrc > PMIC_TPS6594X_BUCK_MAX) || (pwrRsrc < PMIC_TPS6594X_BUCK_MIN))
             {
                 status = PMIC_ST_ERR_INV_PARAM;
             }
         }
     }
-    else if(PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO == pwrRsrcType)
+    else if (PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO == pwrRsrcType)
     {
-        if(((bool)false) == pPmicCoreHandle->pPmic_SubSysInfo->ldoEnable)
+        if (((bool)false) == pPmicCoreHandle->pPmic_SubSysInfo->ldoEnable)
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
         else
         {
-            if((pwrRsrc > PMIC_TPS6594X_LDO_MAX) ||
-               (pwrRsrc < PMIC_TPS6594X_LDO_MIN))
+            if ((pwrRsrc > PMIC_TPS6594X_LDO_MAX) || (pwrRsrc < PMIC_TPS6594X_LDO_MIN))
             {
                 status = PMIC_ST_ERR_INV_PARAM;
             }
@@ -862,17 +805,15 @@ int32_t Pmic_powerTPS6594xValidatePwrRsrcLimit(
  *                developer need to update the API functionality for New
  *                pwrResourceType accordingly.
  */
-int32_t Pmic_powerTPS6594xValidateIntrType(uint8_t  pwrResourceType,
-                                           uint8_t  intrType)
+int32_t Pmic_powerTPS6594xValidateIntrType(uint8_t pwrResourceType, uint8_t intrType)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if((PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK == pwrResourceType) ||
-       (PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO == pwrResourceType))
+    if ((PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK == pwrResourceType) ||
+        (PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO == pwrResourceType))
     {
-        if((intrType != PMIC_TPS6594X_POWER_OV_INT) &&
-           (intrType != PMIC_TPS6594X_POWER_UV_INT) &&
-           (intrType != PMIC_TPS6594X_POWER_ILIM_INT))
+        if ((intrType != PMIC_TPS6594X_POWER_OV_INT) && (intrType != PMIC_TPS6594X_POWER_UV_INT) &&
+            (intrType != PMIC_TPS6594X_POWER_ILIM_INT))
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -880,8 +821,7 @@ int32_t Pmic_powerTPS6594xValidateIntrType(uint8_t  pwrResourceType,
     else
     {
         /* Else case for VCCA pwrResourceType */
-        if((intrType != PMIC_TPS6594X_POWER_OV_INT) &&
-           (intrType != PMIC_TPS6594X_POWER_UV_INT))
+        if ((intrType != PMIC_TPS6594X_POWER_OV_INT) && (intrType != PMIC_TPS6594X_POWER_UV_INT))
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }

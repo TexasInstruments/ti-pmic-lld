@@ -46,7 +46,8 @@
 /* ========================================================================= */
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /* ========================================================================= */
@@ -55,41 +56,40 @@ extern "C" {
 /*!
  * \brief  Interrupt MASK registers address
  */
-#define PMIC_MASK_GPIO9_10_REGADDR        (0x51U)
+#define PMIC_MASK_GPIO9_10_REGADDR                (0x51U)
 
 /*!
  * \brief  PMIC Interrupt Registers Mask values and bit positions
  */
 /*! PMIC_INT_VMON Register Mask values */
-#define PMIC_INT_VMON_VMON2_RV_INT_MASK       (0x80U)
-#define PMIC_INT_VMON_VMON2_UV_INT_MASK       (0x40U)
-#define PMIC_INT_VMON_VMON2_OV_INT_MASK       (0x20U)
-#define PMIC_INT_VMON_VMON1_RV_INT_MASK       (0x10U)
-#define PMIC_INT_VMON_VMON1_UV_INT_MASK       (0x08U)
-#define PMIC_INT_VMON_VMON1_OV_INT_MASK       (0x04U)
+#define PMIC_INT_VMON_VMON2_RV_INT_MASK           (0x80U)
+#define PMIC_INT_VMON_VMON2_UV_INT_MASK           (0x40U)
+#define PMIC_INT_VMON_VMON2_OV_INT_MASK           (0x20U)
+#define PMIC_INT_VMON_VMON1_RV_INT_MASK           (0x10U)
+#define PMIC_INT_VMON_VMON1_UV_INT_MASK           (0x08U)
+#define PMIC_INT_VMON_VMON1_OV_INT_MASK           (0x04U)
 
 /*! PMIC_INT_VMON Register Bit positions */
-#define PMIC_INT_VMON_VMON2_RV_INT_SHIFT      (0x7U)
-#define PMIC_INT_VMON_VMON2_UV_INT_SHIFT      (0x6U)
-#define PMIC_INT_VMON_VMON2_OV_INT_SHIFT      (0x5U)
-#define PMIC_INT_VMON_VMON1_RV_INT_SHIFT      (0x4U)
-#define PMIC_INT_VMON_VMON1_UV_INT_SHIFT      (0x3U)
-#define PMIC_INT_VMON_VMON1_OV_INT_SHIFT      (0x2U)
+#define PMIC_INT_VMON_VMON2_RV_INT_SHIFT          (0x7U)
+#define PMIC_INT_VMON_VMON2_UV_INT_SHIFT          (0x6U)
+#define PMIC_INT_VMON_VMON2_OV_INT_SHIFT          (0x5U)
+#define PMIC_INT_VMON_VMON1_RV_INT_SHIFT          (0x4U)
+#define PMIC_INT_VMON_VMON1_UV_INT_SHIFT          (0x3U)
+#define PMIC_INT_VMON_VMON1_OV_INT_SHIFT          (0x2U)
 
 /*!
  * \brief  Individual interrupt bitmasks for GPIO9_10 RISE/FALL
  */
-#define PMIC_MASK_GPIO9_10_GPIO10_RISE_MASK_MASK       (0x10U)
-#define PMIC_MASK_GPIO9_10_GPIO9_RISE_MASK_MASK        (0x08U)
-#define PMIC_MASK_GPIO9_10_GPIO10_FALL_MASK_MASK       (0x02U)
-#define PMIC_MASK_GPIO9_10_GPIO9_FALL_MASK_MASK        (0x01U)
+#define PMIC_MASK_GPIO9_10_GPIO10_RISE_MASK_MASK  (0x10U)
+#define PMIC_MASK_GPIO9_10_GPIO9_RISE_MASK_MASK   (0x08U)
+#define PMIC_MASK_GPIO9_10_GPIO10_FALL_MASK_MASK  (0x02U)
+#define PMIC_MASK_GPIO9_10_GPIO9_FALL_MASK_MASK   (0x01U)
 
 /*! PMIC GPIO9_10 MASK Register bit shift values */
-#define PMIC_MASK_GPIO9_10_GPIO10_RISE_MASK_SHIFT       (0x4U)
-#define PMIC_MASK_GPIO9_10_GPIO9_RISE_MASK_SHIFT        (0x3U)
-#define PMIC_MASK_GPIO9_10_GPIO10_FALL_MASK_SHIFT       (0x1U)
-#define PMIC_MASK_GPIO9_10_GPIO9_FALL_MASK_SHIFT        (0x0U)
-
+#define PMIC_MASK_GPIO9_10_GPIO10_RISE_MASK_SHIFT (0x4U)
+#define PMIC_MASK_GPIO9_10_GPIO9_RISE_MASK_SHIFT  (0x3U)
+#define PMIC_MASK_GPIO9_10_GPIO10_FALL_MASK_SHIFT (0x1U)
+#define PMIC_MASK_GPIO9_10_GPIO9_FALL_MASK_SHIFT  (0x0U)
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
@@ -112,9 +112,7 @@ void pmic_get_lp8764x_intrGpioCfg(Pmic_GpioIntrTypeCfg_t **pIntGpioCfg);
 /*!
  * \brief  Function to decipher the L2 Error for LP8764x Hera PMIC.
  */
-int32_t Pmic_lp8764x_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                   uint16_t           l1RegAddr,
-                                   Pmic_IrqStatus_t  *pErrStat);
+int32_t Pmic_lp8764x_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t l1RegAddr, Pmic_IrqStatus_t *pErrStat);
 
 #ifdef __cplusplus
 }

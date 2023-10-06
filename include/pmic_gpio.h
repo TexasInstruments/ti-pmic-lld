@@ -57,12 +57,13 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
-#include <pmic_core.h>
-#include <cfg/tps6594x/pmic_gpio_tps6594x.h>
-#include <cfg/lp8764x/pmic_gpio_lp8764x.h>
+#include "pmic_core.h"
+#include "cfg/tps6594x/pmic_gpio_tps6594x.h"
+#include "cfg/lp8764x/pmic_gpio_lp8764x.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /* ========================================================================== */
@@ -75,8 +76,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_GPIO_DEGLITCH_DISABLE     (0U)
-#define PMIC_GPIO_DEGLITCH_ENABLE      (1U)
+#define PMIC_GPIO_DEGLITCH_DISABLE           (0U)
+#define PMIC_GPIO_DEGLITCH_ENABLE            (1U)
 /*  @} */
 
 /**
@@ -85,8 +86,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_GPIO_INPUT                (0U)
-#define PMIC_GPIO_OUTPUT               (1U)
+#define PMIC_GPIO_INPUT                      (0U)
+#define PMIC_GPIO_OUTPUT                     (1U)
 /*  @} */
 
 /**
@@ -95,8 +96,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_GPIO_PUSH_PULL_OUTPUT     (0U)
-#define PMIC_GPIO_OPEN_DRAIN_OUTPUT    (1U)
+#define PMIC_GPIO_PUSH_PULL_OUTPUT           (0U)
+#define PMIC_GPIO_OPEN_DRAIN_OUTPUT          (1U)
 /*  @} */
 
 /**
@@ -105,8 +106,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_GPIO_LOW                  (0U)
-#define PMIC_GPIO_HIGH                 (1U)
+#define PMIC_GPIO_LOW                        (0U)
+#define PMIC_GPIO_HIGH                       (1U)
 /*  @} */
 
 /**
@@ -115,8 +116,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_GPIO_PD_SELECT            (0U)
-#define PMIC_GPIO_PU_SELECT            (1U)
+#define PMIC_GPIO_PD_SELECT                  (0U)
+#define PMIC_GPIO_PU_SELECT                  (1U)
 /*  @} */
 
 /**
@@ -125,8 +126,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_GPIO_PU_PD_DISABLE        (0U)
-#define PMIC_GPIO_PU_PD_ENABLE         (1U)
+#define PMIC_GPIO_PU_PD_DISABLE              (0U)
+#define PMIC_GPIO_PU_PD_ENABLE               (1U)
 /*  @} */
 
 /**
@@ -135,24 +136,24 @@ extern "C" {
  *
  *  @{
  */
- /** \brief validParams value used to set/get gpio pin Direction
-  *         Valid only for GPIO pins only. Invalid for NPWRON/Enable */
-#define PMIC_GPIO_CFG_DIR_VALID            (0x00U)
- /** \brief validParams value used to set/get output signal type
-  *         Valid only for GPIO pins only. Invalid for NPWRON/Enable */
-#define PMIC_GPIO_CFG_OD_VALID             (0x01U)
+/** \brief validParams value used to set/get gpio pin Direction
+ *         Valid only for GPIO pins only. Invalid for NPWRON/Enable */
+#define PMIC_GPIO_CFG_DIR_VALID              (0x00U)
+/** \brief validParams value used to set/get output signal type
+ *         Valid only for GPIO pins only. Invalid for NPWRON/Enable */
+#define PMIC_GPIO_CFG_OD_VALID               (0x01U)
 /** \brief validParams value used to set/get pullup/pull down control
  */
-#define PMIC_GPIO_CFG_PULL_VALID           (0x02U)
+#define PMIC_GPIO_CFG_PULL_VALID             (0x02U)
 /** \brief validParams value used to set/get signal deglitch time
  *         enable/disable */
-#define PMIC_GPIO_CFG_DEGLITCH_VALID       (0x03U)
+#define PMIC_GPIO_CFG_DEGLITCH_VALID         (0x03U)
 /** \brief validParams value used to set/get pin mux function */
-#define PMIC_GPIO_CFG_PINFUNC_VALID        (0x04U)
+#define PMIC_GPIO_CFG_PINFUNC_VALID          (0x04U)
 /** \brief validParams value used to set/get pin polarity
  *         Valid only for Enable pin for TPS6594x Leo and LP8764x Hera device
  *         Invalid for NPWRON pin for TPS6594x Leo device*/
-#define PMIC_ENABLE_CFG_POLARITY_VALID     (0x05U)
+#define PMIC_ENABLE_CFG_POLARITY_VALID       (0x05U)
 /*  @} */
 
 /**
@@ -164,18 +165,12 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_GPIO_CFG_DIR_VALID_SHIFT        \
-                          (0x01U << PMIC_GPIO_CFG_DIR_VALID)
-#define PMIC_GPIO_CFG_OD_VALID_SHIFT         \
-                          (0x01U << PMIC_GPIO_CFG_OD_VALID)
-#define PMIC_GPIO_CFG_PULL_VALID_SHIFT       \
-                          (0x01U << PMIC_GPIO_CFG_PULL_VALID)
-#define PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT   \
-                          (0x01U << PMIC_GPIO_CFG_DEGLITCH_VALID)
-#define PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT    \
-                          (0x01U << PMIC_GPIO_CFG_PINFUNC_VALID)
-#define PMIC_ENABLE_CFG_POLARITY_VALID_SHIFT \
-                          (0x01U << PMIC_ENABLE_CFG_POLARITY_VALID)
+#define PMIC_GPIO_CFG_DIR_VALID_SHIFT        (0x01U << PMIC_GPIO_CFG_DIR_VALID)
+#define PMIC_GPIO_CFG_OD_VALID_SHIFT         (0x01U << PMIC_GPIO_CFG_OD_VALID)
+#define PMIC_GPIO_CFG_PULL_VALID_SHIFT       (0x01U << PMIC_GPIO_CFG_PULL_VALID)
+#define PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT   (0x01U << PMIC_GPIO_CFG_DEGLITCH_VALID)
+#define PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT    (0x01U << PMIC_GPIO_CFG_PINFUNC_VALID)
+#define PMIC_ENABLE_CFG_POLARITY_VALID_SHIFT (0x01U << PMIC_ENABLE_CFG_POLARITY_VALID)
 /* @} */
 
 /**
@@ -184,9 +179,9 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_GPIO_PULL_DISABLED        (0x0U)
-#define PMIC_GPIO_PULL_DOWN            (0x1U)
-#define PMIC_GPIO_PULL_UP              (0x2U)
+#define PMIC_GPIO_PULL_DISABLED              (0x0U)
+#define PMIC_GPIO_PULL_DOWN                  (0x1U)
+#define PMIC_GPIO_PULL_UP                    (0x2U)
 /*  @} */
 
 /**
@@ -195,10 +190,10 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_GPIO_FALL_INTERRUPT        (0U)
-#define PMIC_GPIO_RISE_INTERRUPT        (1U)
-#define PMIC_GPIO_FALL_RISE_INTERRUPT   (2U)
-#define PMIC_GPIO_DISABLE_INTERRUPT     (3U)
+#define PMIC_GPIO_FALL_INTERRUPT             (0U)
+#define PMIC_GPIO_RISE_INTERRUPT             (1U)
+#define PMIC_GPIO_FALL_RISE_INTERRUPT        (2U)
+#define PMIC_GPIO_DISABLE_INTERRUPT          (3U)
 /*  @} */
 
 /**
@@ -207,8 +202,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_GPIO_POL_LOW              (0U)
-#define PMIC_GPIO_POL_HIGH             (1U)
+#define PMIC_GPIO_POL_LOW                    (0U)
+#define PMIC_GPIO_POL_HIGH                   (1U)
 /*  @} */
 
 /*==========================================================================*/
@@ -257,13 +252,13 @@ extern "C" {
  */
 typedef struct Pmic_GpioCfg_s
 {
-    uint8_t                   validParams;
-    uint8_t                   pinDir;
-    uint8_t                   outputSignalType;
-    uint8_t                   pullCtrl;
-    uint8_t                   deglitchEnable;
-    uint8_t                   pinFunc;
-    uint8_t                   pinPolarity;
+    uint8_t validParams;
+    uint8_t pinDir;
+    uint8_t outputSignalType;
+    uint8_t pullCtrl;
+    uint8_t deglitchEnable;
+    uint8_t pinFunc;
+    uint8_t pinPolarity;
 } Pmic_GpioCfg_t;
 
 /*==========================================================================*/
@@ -298,9 +293,7 @@ typedef struct Pmic_GpioCfg_s
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
-                                  const uint8_t        pin,
-                                  const Pmic_GpioCfg_t gpioCfg);
+int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, const Pmic_GpioCfg_t gpioCfg);
 
 /*!
  * \brief   API to get PMIC GPIO configuration.
@@ -326,9 +319,7 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                  const uint8_t      pin,
-                                  Pmic_GpioCfg_t    *pGpioCfg);
+int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, Pmic_GpioCfg_t *pGpioCfg);
 
 /*!
  * \brief   API to set PMIC GPIO value.
@@ -353,13 +344,9 @@ int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                          const uint8_t      pin,
-                          const uint8_t      pinValue);
+int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, const uint8_t pinValue);
 
-int32_t Pmic_gpioSetDir(Pmic_CoreHandle_t *pPmicCoreHandle,
-                          const uint8_t      pin,
-                          const uint8_t      pinDir);
+int32_t Pmic_gpioSetDir(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, const uint8_t pinDir);
 
 /*!
  * \brief   API to get PMIC GPIO value.
@@ -382,9 +369,7 @@ int32_t Pmic_gpioSetDir(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                          const uint8_t      pin,
-                          uint8_t           *pPinValue);
+int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, uint8_t *pPinValue);
 
 /*!
  * \brief   API to enable/disable GPIO interrupt.
@@ -409,10 +394,8 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                         const uint8_t      pin,
-                         const uint8_t      intrType,
-                         const uint8_t      maskPol);
+int32_t
+Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, const uint8_t intrType, const uint8_t maskPol);
 
 /*!
  * \brief   API to set configuration for NPWRON/Enable pin.
@@ -439,9 +422,7 @@ int32_t Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
-                                        Pmic_CoreHandle_t   *pPmicCoreHandle,
-                                        const Pmic_GpioCfg_t gpioCfg);
+int32_t Pmic_gpioSetNPwronEnablePinConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_GpioCfg_t gpioCfg);
 
 /*!
  * \brief   API to get configuration for NPWRON/Enable pin.
@@ -468,9 +449,7 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_gpioGetNPwronEnablePinConfiguration(
-                                            Pmic_CoreHandle_t *pPmicCoreHandle,
-                                            Pmic_GpioCfg_t    *pGpioCfg);
+int32_t Pmic_gpioGetNPwronEnablePinConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_GpioCfg_t *pGpioCfg);
 
 #ifdef __cplusplus
 }

@@ -38,18 +38,18 @@
  *          I2C/SPI
  */
 
-#include <pmic_io_priv.h>
+#include "pmic_io_priv.h"
 
-#include <pmic_core_priv.h>
-#include <pmic_wdg_priv.h>
-#include <pmic_fsm_priv.h>
-#include <pmic_power_priv.h>
-#include <pmic_power_lp8764x_priv.h>
-#include <pmic_irq_priv.h>
-#include <pmic_esm_priv.h>
-#include <pmic_rtc_priv.h>
+#include "pmic_core_priv.h"
+#include "pmic_wdg_priv.h"
+#include "pmic_fsm_priv.h"
+#include "pmic_power_priv.h"
+#include "cfg/lp8764x/pmic_power_lp8764x_priv.h"
+#include "pmic_irq_priv.h"
+#include "pmic_esm_priv.h"
+#include "pmic_rtc_priv.h"
 
-
+// clang-format off
 /**
  *  Used CRC Polynomial:  x^8 + x^2 + x + 1
  *   Evalution of CRC Polynomial value from equation:
@@ -97,7 +97,7 @@ const uint8_t CRC_8_TABLE[] =
     0xde, 0xd9, 0xd0, 0xd7, 0xc2, 0xc5, 0xcc, 0xcb,
     0xe6, 0xe1, 0xe8, 0xef, 0xfa, 0xfd, 0xf4, 0xf3
 };
-
+// clang-format on
 
 /*!
  * \brief: API to Get CRC8 data
@@ -110,7 +110,7 @@ static uint8_t Pmic_getCRC8Val(const uint8_t *data, uint8_t length)
 {
     uint8_t crc = PMIC_COMM_CRC_INITIAL_VALUE;
     uint8_t i;
-    for(i = 0; i < length; i++)
+    for (i = 0; i < length; i++)
     {
         crc = CRC_8_TABLE[data[i] ^ crc];
     }
@@ -122,66 +122,51 @@ static uint8_t Pmic_getCRC8Val(const uint8_t *data, uint8_t length)
  * \brief: API to get the status of whether user register is write protected or
  *         not
  */
-static int32_t Pmic_getRegWriteProtectionStatus(
-                                             Pmic_CoreHandle_t *pPmicCoreHandle,
-                                             uint16_t           regAddr)
+static int32_t Pmic_getRegWriteProtectionStatus(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t regAddr)
 {
-    uint8_t regData     = 0U;
+    uint8_t regData = 0U;
     uint8_t regLockStat = 0U;
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_REGISTER_LOCK_REGADDR,
-                                        &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_REGISTER_LOCK_REGADDR, &regData);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
+    if (PMIC_ST_SUCCESS == pmicStatus)
     {
         regLockStat = Pmic_getBitField(
-                             regData,
-                             PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_SHIFT,
-                             PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_READ_MASK);
+            regData, PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_SHIFT, PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_READ_MASK);
     }
 
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (PMIC_REGISTER_STATUS_LOCK == regLockStat))
+    if ((PMIC_ST_SUCCESS == pmicStatus) && (PMIC_REGISTER_STATUS_LOCK == regLockStat))
     {
-        if((PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev) &&
-           ((regAddr >= PMIC_INT_TOP_REGADDR) &&
-            (regAddr <= PMIC_INT_ESM_REGADDR)))
+        if ((PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev) &&
+            ((regAddr >= PMIC_INT_TOP_REGADDR) && (regAddr <= PMIC_INT_ESM_REGADDR)))
         {
             pmicStatus = PMIC_ST_SUCCESS;
         }
         else
         {
-            if(PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+            if (PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
             {
-                if(((regAddr >= PMIC_BUCK1_CTRL_REGADDR) &&
-                    (regAddr <= PMIC_MISC_CTRL_REGADDR)) ||
-                   (regAddr == PMIC_RTC_CTRL_1_REGADDR)  ||
-                   (regAddr == PMIC_RTC_CTRL_2_REGADDR)  ||
-                   (regAddr == PMIC_SOFT_REBOOT_REG_REGADDR))
+                if (((regAddr >= PMIC_BUCK1_CTRL_REGADDR) && (regAddr <= PMIC_MISC_CTRL_REGADDR)) ||
+                    (regAddr == PMIC_RTC_CTRL_1_REGADDR) || (regAddr == PMIC_RTC_CTRL_2_REGADDR) ||
+                    (regAddr == PMIC_SOFT_REBOOT_REG_REGADDR))
                 {
                     pmicStatus = PMIC_ST_ERR_REG_LOCKED_WR_FAIL;
                 }
             }
             else
             {
-                if(((regAddr >= PMIC_BUCK1_CTRL_REGADDR) &&
-                    (regAddr <= PMIC_BUCK4_PG_WIN_REGADDR)) ||
-                   ((regAddr >= PMIC_VCCA_VMON_CTRL_REGADDR) &&
-                    (regAddr <= PMIC_MISC_CTRL_REGADDR)) ||
-                   (regAddr == PMIC_VMON_CONF_REGADDR) ||
-                   (regAddr == PMIC_STARTUP_CTRL_REGADDR))
+                if (((regAddr >= PMIC_BUCK1_CTRL_REGADDR) && (regAddr <= PMIC_BUCK4_PG_WIN_REGADDR)) ||
+                    ((regAddr >= PMIC_VCCA_VMON_CTRL_REGADDR) && (regAddr <= PMIC_MISC_CTRL_REGADDR)) ||
+                    (regAddr == PMIC_VMON_CONF_REGADDR) || (regAddr == PMIC_STARTUP_CTRL_REGADDR))
                 {
                     pmicStatus = PMIC_ST_ERR_REG_LOCKED_WR_FAIL;
                 }
             }
 
-            if((PMIC_ST_SUCCESS == pmicStatus) &&
-               (((regAddr >= PMIC_RECOV_CNT_REG_2_REGADDR) &&
-                 (regAddr <= PMIC_USER_SPARE_REGS_REGADDR)) ||
-                ((regAddr >= PMIC_SCRATCH_PAD_REG_1_REGADDR) &&
-                (regAddr <= PMIC_FSM_PFSM_DELAY_REG_4_REGADDR))))
+            if ((PMIC_ST_SUCCESS == pmicStatus) &&
+                (((regAddr >= PMIC_RECOV_CNT_REG_2_REGADDR) && (regAddr <= PMIC_USER_SPARE_REGS_REGADDR)) ||
+                 ((regAddr >= PMIC_SCRATCH_PAD_REG_1_REGADDR) && (regAddr <= PMIC_FSM_PFSM_DELAY_REG_4_REGADDR))))
             {
                 pmicStatus = PMIC_ST_ERR_REG_LOCKED_WR_FAIL;
             }
@@ -195,27 +180,23 @@ static int32_t Pmic_getRegWriteProtectionStatus(
  * \brief  Function to validate pPmicCoreHandle, pCommHandle, pFnPmicCommIoWrite
  *         and pFnPmicCommIoRead and get Register Write Protection status
  */
-static int32_t Pmic_validatePmicHandleGetRegWrProtectStat(
-                                             Pmic_CoreHandle_t *pPmicCoreHandle,
-                                             uint16_t          regAddr)
+static int32_t Pmic_validatePmicHandleGetRegWrProtectStat(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t regAddr)
 {
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    if(NULL == pPmicCoreHandle->pCommHandle)
+    if (NULL == pPmicCoreHandle->pCommHandle)
     {
         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (NULL == pPmicCoreHandle->pFnPmicCommIoWrite))
+    if ((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pPmicCoreHandle->pFnPmicCommIoWrite))
     {
         pmicStatus = PMIC_ST_ERR_NULL_FPTR;
     }
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
+    if (PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = Pmic_getRegWriteProtectionStatus(pPmicCoreHandle,
-                                                      regAddr);
+        pmicStatus = Pmic_getRegWriteProtectionStatus(pPmicCoreHandle, regAddr);
     }
 
     return pmicStatus;
@@ -242,45 +223,40 @@ static int32_t Pmic_validatePmicHandleGetRegWrProtectStat(
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               uint16_t           regAddr,
-                               uint8_t            txData)
+int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t regAddr, uint8_t txData)
 {
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+    int32_t  pmicStatus = PMIC_ST_SUCCESS;
     uint8_t  buffLength = 1U;
-    uint8_t  instType   = PMIC_MAIN_INST;
-    uint8_t  txBuf[PMIC_IO_BUF_SIZE]   = {0};
+    uint8_t  instType = PMIC_MAIN_INST;
+    uint8_t  txBuf[PMIC_IO_BUF_SIZE] = {0};
     uint8_t  crcData[PMIC_IO_BUF_SIZE] = {0};
     uint8_t  crcDataLen = 0;
     uint16_t pmicRegAddr = regAddr;
 
-    pmicStatus = Pmic_validatePmicHandleGetRegWrProtectStat(pPmicCoreHandle,
-                                                            regAddr);
+    pmicStatus = Pmic_validatePmicHandleGetRegWrProtectStat(pPmicCoreHandle, regAddr);
 
-    if((PMIC_ST_SUCCESS       == pmicStatus) &&
-       ((PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode) ||
-        (PMIC_INTF_DUAL_I2C   == pPmicCoreHandle->commMode)))
+    if ((PMIC_ST_SUCCESS == pmicStatus) &&
+        ((PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode) || (PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode)))
     {
         /* Setup Tx buffer as required for I2C IO with PMIC */
-        txBuf[buffLength - 1U]  = txData;
+        txBuf[buffLength - 1U] = txData;
 
-        if(0U != (regAddr & PMIC_WDG_PAGEADDR))
+        if (0U != (regAddr & PMIC_WDG_PAGEADDR))
         {
             /* Update slave and register address for Watchdog write access */
             pmicRegAddr = (regAddr & PMIC_WDG_PAGEADDR_MASK);
 
-            if(((PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode) &&
-               (NULL != pPmicCoreHandle->pQACommHandle)) ||
-               (PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode))
+            if (((PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode) && (NULL != pPmicCoreHandle->pQACommHandle)) ||
+                (PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode))
             {
                 /* QA instance shall be used for WDOG in DUAL-I2C mode */
                 instType = (uint8_t)PMIC_QA_INST;
             }
         }
 
-        if(((bool)true) == pPmicCoreHandle->crcEnable)
+        if (((bool)true) == pPmicCoreHandle->crcEnable)
         {
-            if(PMIC_MAIN_INST == instType)
+            if (PMIC_MAIN_INST == instType)
             {
                 /* Store the slave address and I2C write request bit */
                 crcData[crcDataLen] = (pPmicCoreHandle->slaveAddr << 1U);
@@ -300,13 +276,12 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
             crcData[crcDataLen] = txData;
             crcDataLen++;
             /* Increase 1 more byte to store CRC8 */
-            txBuf[buffLength]   = Pmic_getCRC8Val(crcData, crcDataLen);
+            txBuf[buffLength] = Pmic_getCRC8Val(crcData, crcDataLen);
             buffLength++;
         }
     }
 
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (PMIC_INTF_SPI == pPmicCoreHandle->commMode))
+    if ((PMIC_ST_SUCCESS == pmicStatus) && (PMIC_INTF_SPI == pPmicCoreHandle->commMode))
     {
         /*
          * Frame 3 Bytes with IO header+data as per PMIC SPI IO algorithm
@@ -329,7 +304,7 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
         txBuf[buffLength] = txData;
         buffLength++;
 
-        if(((bool)true) == pPmicCoreHandle->crcEnable)
+        if (((bool)true) == pPmicCoreHandle->crcEnable)
         {
             /* Set CRC data to txBuf[3], Bits 25-32 CRC */
             txBuf[buffLength] = Pmic_getCRC8Val(txBuf, buffLength);
@@ -338,13 +313,9 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
         }
     }
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
+    if (PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = pPmicCoreHandle->pFnPmicCommIoWrite(pPmicCoreHandle,
-                                                         instType,
-                                                         pmicRegAddr,
-                                                         txBuf,
-                                                         buffLength);
+        pmicStatus = pPmicCoreHandle->pFnPmicCommIoWrite(pPmicCoreHandle, instType, pmicRegAddr, txBuf, buffLength);
     }
 
     return pmicStatus;
@@ -352,15 +323,14 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 static int32_t Pmic_validateCorehandle(const Pmic_CoreHandle_t *pPmicCoreHandle)
 {
-    int32_t  pmicStatus  = PMIC_ST_SUCCESS;
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    if(NULL == pPmicCoreHandle->pCommHandle)
+    if (NULL == pPmicCoreHandle->pCommHandle)
     {
         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (NULL == pPmicCoreHandle->pFnPmicCommIoRead))
+    if ((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pPmicCoreHandle->pFnPmicCommIoRead))
     {
         pmicStatus = PMIC_ST_ERR_NULL_FPTR;
     }
@@ -372,47 +342,42 @@ static int32_t Pmic_validateCorehandle(const Pmic_CoreHandle_t *pPmicCoreHandle)
  * \brief  Function to read data from PMIC registers based on Comm IO interface
  *         I2C or SPI Interface
  */
-static int32_t Pmic_commIoReadData(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                   uint16_t          *pRegAddr,
-                                   uint8_t           *pBuffLength,
-                                   uint8_t           *pRxBuf,
-                                   uint8_t           *pInstType)
+static int32_t Pmic_commIoReadData(
+    Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t *pRegAddr, uint8_t *pBuffLength, uint8_t *pRxBuf, uint8_t *pInstType)
 {
-    int32_t  pmicStatus  = PMIC_ST_SUCCESS;
-    uint8_t  buffLength  = *pBuffLength;
+    int32_t  pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t  buffLength = *pBuffLength;
     uint16_t pmicRegAddr = *pRegAddr;
-    uint16_t regAddr     = pmicRegAddr;
-    uint8_t  instType    = *pInstType;
+    uint16_t regAddr = pmicRegAddr;
+    uint8_t  instType = *pInstType;
 
     pmicStatus = Pmic_validateCorehandle(pPmicCoreHandle);
 
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       ((PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode) ||
-        (PMIC_INTF_DUAL_I2C   == pPmicCoreHandle->commMode)))
+    if ((PMIC_ST_SUCCESS == pmicStatus) &&
+        ((PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode) || (PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode)))
     {
-        if(((bool)true) == pPmicCoreHandle->crcEnable)
+        if (((bool)true) == pPmicCoreHandle->crcEnable)
         {
             /* increment 1 more byte to read CRC8 */
             buffLength++;
         }
 
-        if(0U != (regAddr & PMIC_WDG_PAGEADDR))
+        if (0U != (regAddr & PMIC_WDG_PAGEADDR))
         {
             /* If register is of Watchdog, update slave and register address */
-            pmicRegAddr   = (regAddr & PMIC_WDG_PAGEADDR_MASK);
+            pmicRegAddr = (regAddr & PMIC_WDG_PAGEADDR_MASK);
 
-            if(((PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode) &&
-               (NULL != pPmicCoreHandle->pQACommHandle)) ||
-               (PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode))
+            if (((PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode) && (NULL != pPmicCoreHandle->pQACommHandle)) ||
+                (PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode))
             {
                 /* QACommHandle shall be used for WDOG in DUAL-I2C mode */
                 instType = (uint8_t)PMIC_QA_INST;
             }
         }
 
-        if(0U != (regAddr & PMIC_SERIAL_IF_CONFIG_PAGEADDR))
+        if (0U != (regAddr & PMIC_SERIAL_IF_CONFIG_PAGEADDR))
         {
-        /* Update slave and register address for SERIAL_IF_CONFIG read access */
+            /* Update slave and register address for SERIAL_IF_CONFIG read access */
             pmicRegAddr = (regAddr & PMIC_SERIAL_IF_CONFIG_PAGEADDR_MASK);
 
             /* NVM instance shall be used */
@@ -422,11 +387,9 @@ static int32_t Pmic_commIoReadData(Pmic_CoreHandle_t *pPmicCoreHandle,
         *pBuffLength = buffLength;
         *pRegAddr = pmicRegAddr;
         *pInstType = instType;
-
     }
 
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (PMIC_INTF_SPI == pPmicCoreHandle->commMode))
+    if ((PMIC_ST_SUCCESS == pmicStatus) && (PMIC_INTF_SPI == pPmicCoreHandle->commMode))
     {
         /*
          * Frame 3 Bytes with IO header+data as per PMIC SPI IO algorithm
@@ -447,7 +410,7 @@ static int32_t Pmic_commIoReadData(Pmic_CoreHandle_t *pPmicCoreHandle,
         /* Increment 1 more byte for 8-bit data read from PMIC register */
         buffLength++;
 
-        if(((bool)true) == pPmicCoreHandle->crcEnable)
+        if (((bool)true) == pPmicCoreHandle->crcEnable)
         {
             /* Increment 1 more byte to read CRC8 */
             buffLength++;
@@ -457,13 +420,9 @@ static int32_t Pmic_commIoReadData(Pmic_CoreHandle_t *pPmicCoreHandle,
         *pRegAddr = pmicRegAddr;
     }
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
+    if (PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = pPmicCoreHandle->pFnPmicCommIoRead(pPmicCoreHandle,
-                                                        instType,
-                                                        pmicRegAddr,
-                                                        pRxBuf,
-                                                        buffLength);
+        pmicStatus = pPmicCoreHandle->pFnPmicCommIoRead(pPmicCoreHandle, instType, pmicRegAddr, pRxBuf, buffLength);
     }
 
     return pmicStatus;
@@ -472,24 +431,23 @@ static int32_t Pmic_commIoReadData(Pmic_CoreHandle_t *pPmicCoreHandle,
 /*
  * \brief  Function to Copy I2C  data to crcData for I2C Interface
  */
-static int32_t Pmic_commIoStoreI2cCrcData(
-                                       const Pmic_CoreHandle_t *pPmicCoreHandle,
-                                       uint16_t                 pmicRegAddr,
-                                       uint8_t                  buffLength,
-                                       uint8_t                  instType,
-                                       const uint8_t           *pRxBuf)
+static int32_t Pmic_commIoStoreI2cCrcData(const Pmic_CoreHandle_t *pPmicCoreHandle,
+                                          uint16_t                 pmicRegAddr,
+                                          uint8_t                  buffLength,
+                                          uint8_t                  instType,
+                                          const uint8_t           *pRxBuf)
 {
-    int32_t  pmicStatus = PMIC_ST_SUCCESS;
-    uint8_t  crcDataLen = 0U;
-    uint8_t  crcData[PMIC_IO_BUF_SIZE] = {0};
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t crcDataLen = 0U;
+    uint8_t crcData[PMIC_IO_BUF_SIZE] = {0};
 
-    if(PMIC_NVM_INST == instType)
+    if (PMIC_NVM_INST == instType)
     {
         /* Store the slave address and I2C write request bit */
         crcData[crcDataLen] = (pPmicCoreHandle->nvmSlaveAddr << 1U);
         crcDataLen++;
     }
-    else if(PMIC_QA_INST == instType)
+    else if (PMIC_QA_INST == instType)
     {
         /* Store the slave address and I2C write request bit */
         crcData[crcDataLen] = (pPmicCoreHandle->qaSlaveAddr << 1U);
@@ -506,32 +464,29 @@ static int32_t Pmic_commIoStoreI2cCrcData(
     crcData[crcDataLen] = (uint8_t)pmicRegAddr;
     crcDataLen++;
 
-    if(PMIC_NVM_INST == instType)
+    if (PMIC_NVM_INST == instType)
     {
         /* Store the slave address and I2C Read request bit */
-        crcData[crcDataLen] = (pPmicCoreHandle->nvmSlaveAddr << 1U) |
-                              (PMIC_IO_READ);
+        crcData[crcDataLen] = (pPmicCoreHandle->nvmSlaveAddr << 1U) | (PMIC_IO_READ);
         crcDataLen++;
     }
-    else if(PMIC_QA_INST == instType)
+    else if (PMIC_QA_INST == instType)
     {
         /* Store the slave address and I2C Read request bit */
-        crcData[crcDataLen] = (pPmicCoreHandle->qaSlaveAddr << 1U) |
-                              (PMIC_IO_READ);
+        crcData[crcDataLen] = (pPmicCoreHandle->qaSlaveAddr << 1U) | (PMIC_IO_READ);
         crcDataLen++;
     }
     else
     {
         /* Store the slave address and I2C Read request bit */
-        crcData[crcDataLen] = (pPmicCoreHandle->slaveAddr << 1U) |
-                              (PMIC_IO_READ);
+        crcData[crcDataLen] = (pPmicCoreHandle->slaveAddr << 1U) | (PMIC_IO_READ);
         crcDataLen++;
     }
     /* Store the data read */
     crcData[crcDataLen] = pRxBuf[buffLength - 2U];
     crcDataLen++;
 
-    if((pRxBuf[buffLength - 1U]) != (Pmic_getCRC8Val(crcData, crcDataLen)))
+    if ((pRxBuf[buffLength - 1U]) != (Pmic_getCRC8Val(crcData, crcDataLen)))
     {
         pmicStatus = PMIC_ST_ERR_DATA_IO_CRC;
     }
@@ -561,51 +516,37 @@ static int32_t Pmic_commIoStoreI2cCrcData(
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               uint16_t           regAddr,
-                               uint8_t           *pRxBuffer)
+int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t regAddr, uint8_t *pRxBuffer)
 {
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    int32_t  pmicStatus = PMIC_ST_SUCCESS;
     uint8_t  buffLength = 1U;
-    uint8_t  rxBuf[PMIC_IO_BUF_SIZE]   = {0};
+    uint8_t  rxBuf[PMIC_IO_BUF_SIZE] = {0};
     uint8_t  crcData[PMIC_IO_BUF_SIZE] = {0};
-    uint8_t  instType   = PMIC_MAIN_INST;
+    uint8_t  instType = PMIC_MAIN_INST;
     uint8_t  crcDataLen = 0U;
     uint16_t pmicRegAddr = regAddr;
 
-    pmicStatus = Pmic_commIoReadData(pPmicCoreHandle,
-                                     &pmicRegAddr,
-                                     &buffLength,
-                                     rxBuf,
-                                     &instType);
+    pmicStatus = Pmic_commIoReadData(pPmicCoreHandle, &pmicRegAddr, &buffLength, rxBuf, &instType);
 
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pPmicCoreHandle->crcEnable))
+    if ((PMIC_ST_SUCCESS == pmicStatus) && (((bool)true) == pPmicCoreHandle->crcEnable))
     {
-        if(PMIC_INTF_SPI == pPmicCoreHandle->commMode)
+        if (PMIC_INTF_SPI == pPmicCoreHandle->commMode)
         {
             /* Copy SPI frame data to crcData */
-            for(crcDataLen = 0U;
-                crcDataLen < (PMIC_IO_BUF_SIZE - 1U);
-                crcDataLen++)
+            for (crcDataLen = 0U; crcDataLen < (PMIC_IO_BUF_SIZE - 1U); crcDataLen++)
             {
                 crcData[crcDataLen] = rxBuf[crcDataLen];
             }
 
-            if((rxBuf[buffLength - 1U]) !=
-                                         (Pmic_getCRC8Val(crcData, crcDataLen)))
+            if ((rxBuf[buffLength - 1U]) != (Pmic_getCRC8Val(crcData, crcDataLen)))
             {
                 pmicStatus = PMIC_ST_ERR_DATA_IO_CRC;
             }
         }
-        else if((PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode) ||
-                (PMIC_INTF_DUAL_I2C   == pPmicCoreHandle->commMode))
+        else if ((PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode) ||
+                 (PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode))
         {
-            pmicStatus = Pmic_commIoStoreI2cCrcData(pPmicCoreHandle,
-                                                    pmicRegAddr,
-                                                    buffLength,
-                                                    instType,
-                                                    rxBuf);
+            pmicStatus = Pmic_commIoStoreI2cCrcData(pPmicCoreHandle, pmicRegAddr, buffLength, instType, rxBuf);
         }
         else
         {
@@ -615,7 +556,7 @@ int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
         buffLength--;
     }
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
+    if (PMIC_ST_SUCCESS == pmicStatus)
     {
         /* Copy data which shall be in rxBuf[2]/rxBuf[0] to pRxBuffer */
         *pRxBuffer = rxBuf[buffLength - 1U];

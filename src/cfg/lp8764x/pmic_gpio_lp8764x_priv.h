@@ -45,10 +45,11 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
-#include <pmic_gpio_priv.h>
+#include "../../pmic_gpio_priv.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /* ========================================================================== */
@@ -58,55 +59,45 @@ extern "C" {
 /*!
  * \brief  GPIO Register Offsets
  */
-#define PMIC_ENABLE_CONF_REGADDR                           (0x3CU)
+#define PMIC_ENABLE_CONF_REGADDR                  (0x3CU)
 
 /*!
  * \brief Bit fields for PMIC_MASK_GPIO9_10_REG
  */
-#define PMIC_MASK_GPIO9_10_GPIO9_FALL_MASK_SHIFT           (0x0U)
-#define PMIC_MASK_GPIO9_10_GPIO9_RISE_MASK_SHIFT           (0x3U)
-#define PMIC_MASK_GPIO9_10_GPIO10_FALL_MASK_SHIFT          (0x1U)
-#define PMIC_MASK_GPIO9_10_GPIO10_RISE_MASK_SHIFT          (0x4U)
+#define PMIC_MASK_GPIO9_10_GPIO9_FALL_MASK_SHIFT  (0x0U)
+#define PMIC_MASK_GPIO9_10_GPIO9_RISE_MASK_SHIFT  (0x3U)
+#define PMIC_MASK_GPIO9_10_GPIO10_FALL_MASK_SHIFT (0x1U)
+#define PMIC_MASK_GPIO9_10_GPIO10_RISE_MASK_SHIFT (0x4U)
 
 /*!
  * \brief  GPIO Register Offsets
  */
-#define PMIC_MASK_GPIO9_10_REGADDR                         (0x51U)
+#define PMIC_MASK_GPIO9_10_REGADDR                (0x51U)
 
 /*!
  * \brief  ENABLE Register bit fields
  */
-#define PMIC_ENABLE_CONF_ENABLE_POL_SHIFT                  (0x05U)
+#define PMIC_ENABLE_CONF_ENABLE_POL_SHIFT         (0x05U)
 
 /*!
  * \brief  ENABLE Register bit mask values
  */
 
-#define PMIC_ENABLE_CONF_ENABLE_POL_MASK \
-                    ((uint8_t)(0x01U << PMIC_ENABLE_CONF_ENABLE_POL_SHIFT))
+#define PMIC_ENABLE_CONF_ENABLE_POL_MASK          ((uint8_t)(0x01U << PMIC_ENABLE_CONF_ENABLE_POL_SHIFT))
 
 /*!
  * \brief  Bit Mask for PMIC_MASK_GPIO9_10_REG
  */
-#define PMIC_MASK_GPIO9_10_GPIO9_FALL_MASK_MASK                             \
-                                ((uint8_t)(0x01 <<                          \
-                                 PMIC_MASK_GPIO9_10_GPIO9_FALL_MASK_SHIFT))
-#define PMIC_MASK_GPIO9_10_GPIO10_FALL_MASK_MASK                            \
-                                ((uint8_t)(0x01 <<                          \
-                                 PMIC_MASK_GPIO9_10_GPIO10_FALL_MASK_SHIFT))
-#define PMIC_MASK_GPIO9_10_GPIO9_RISE_MASK_MASK                             \
-                                ((uint8_t)(0x01 <<                          \
-                                 PMIC_MASK_GPIO9_10_GPIO9_RISE_MASK_SHIFT))
-#define PMIC_MASK_GPIO9_10_GPIO10_RISE_MASK_MASK                            \
-                                ((uint8_t)(0x01 <<                          \
-                                 PMIC_MASK_GPIO9_10_GPIO10_RISE_MASK_SHIFT))
+#define PMIC_MASK_GPIO9_10_GPIO9_FALL_MASK_MASK   ((uint8_t)(0x01 << PMIC_MASK_GPIO9_10_GPIO9_FALL_MASK_SHIFT))
+#define PMIC_MASK_GPIO9_10_GPIO10_FALL_MASK_MASK  ((uint8_t)(0x01 << PMIC_MASK_GPIO9_10_GPIO10_FALL_MASK_SHIFT))
+#define PMIC_MASK_GPIO9_10_GPIO9_RISE_MASK_MASK   ((uint8_t)(0x01 << PMIC_MASK_GPIO9_10_GPIO9_RISE_MASK_SHIFT))
+#define PMIC_MASK_GPIO9_10_GPIO10_RISE_MASK_MASK  ((uint8_t)(0x01 << PMIC_MASK_GPIO9_10_GPIO10_RISE_MASK_SHIFT))
 
 /*
  * \brief  Min and Max PMIC GPIO pin supported
  */
-#define PMIC_LP8764X_GPIO_PIN_MIN               (1U)
-#define PMIC_LP8764X_GPIO_PIN_MAX               (10U)
-
+#define PMIC_LP8764X_GPIO_PIN_MIN                 (1U)
+#define PMIC_LP8764X_GPIO_PIN_MAX                 (10U)
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
@@ -136,19 +127,15 @@ void pmic_get_lp8764x_gpioIntRegCfg(Pmic_GpioIntRegCfg_t **pGpioIntRegCfg);
  * \brief   This function is used to configure Enable pin for LP8764X
  *          PMIC HERA Device.
  */
-int32_t Pmic_gpioLp8764xSetEnablePinConfiguration(
-                                          Pmic_CoreHandle_t   *pPmicCoreHandle,
-                                          const Pmic_GpioCfg_t gpioCfg);
+int32_t Pmic_gpioLp8764xSetEnablePinConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_GpioCfg_t gpioCfg);
 
 /*!
  * \brief   This function is used to read Enable pin configuration for LP8764X
  *          PMIC HERA Device.
  */
-int32_t Pmic_gpioLp8764xGetEnablePinConfiguration(
-                                          Pmic_CoreHandle_t   *pPmicCoreHandle,
-                                          Pmic_GpioCfg_t      *pGpioCfg);
+int32_t Pmic_gpioLp8764xGetEnablePinConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_GpioCfg_t *pGpioCfg);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif/* PMIC_GPIO_LP8764X_PRIV_H_ */
+#endif /* PMIC_GPIO_LP8764X_PRIV_H_ */

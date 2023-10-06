@@ -58,10 +58,11 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
-#include <pmic_core.h>
+#include "pmic_core.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /* ========================================================================== */
@@ -74,9 +75,9 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_FSM_I2C_TRIGGER0_TYPE          (0U)
-#define PMIC_FSM_ENABLE_PIN_TYPE            (1U)
-#define PMIC_FSM_NPWRON_PIN_TYPE            (2U)
+#define PMIC_FSM_I2C_TRIGGER0_TYPE                    (0U)
+#define PMIC_FSM_ENABLE_PIN_TYPE                      (1U)
+#define PMIC_FSM_NPWRON_PIN_TYPE                      (2U)
 /*  @} */
 
 /**
@@ -85,11 +86,11 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_FSM_STANBY_STATE               (0U)
-#define PMIC_FSM_LP_STANBY_STATE            (1U)
-#define PMIC_FSM_ACTIVE_STATE               (2U)
-#define PMIC_FSM_MCU_ONLY_STATE             (3U)
-#define PMIC_FSM_S2R_STATE                  (4U)
+#define PMIC_FSM_STANBY_STATE                         (0U)
+#define PMIC_FSM_LP_STANBY_STATE                      (1U)
+#define PMIC_FSM_ACTIVE_STATE                         (2U)
+#define PMIC_FSM_MCU_ONLY_STATE                       (3U)
+#define PMIC_FSM_S2R_STATE                            (4U)
 /* @} */
 
 /**
@@ -98,8 +99,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_NSLEEP1_SIGNAL                 (bool)false
-#define PMIC_NSLEEP2_SIGNAL                 (bool)true
+#define PMIC_NSLEEP1_SIGNAL                           (bool)false
+#define PMIC_NSLEEP2_SIGNAL                           (bool)true
 /* @} */
 
 /**
@@ -108,8 +109,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_NSLEEPX_MASK                    1U
-#define PMIC_NSLEEPX_UNMASK                  0U
+#define PMIC_NSLEEPX_MASK                             1U
+#define PMIC_NSLEEPX_UNMASK                           0U
 /* @} */
 
 /**
@@ -124,9 +125,9 @@ extern "C" {
  *  @{
  */
 /** \brief Only analog BIST is run at BOOT BIST  */
-#define PMIC_FSM_FAST_BIST_ENABLE                    1U
+#define PMIC_FSM_FAST_BIST_ENABLE                     1U
 /** \brief Logic and analog BIST is run at BOOT BIST. */
-#define PMIC_FSM_FAST_BIST_DISABLE                   0U
+#define PMIC_FSM_FAST_BIST_DISABLE                    0U
 /* @} */
 
 /**
@@ -135,10 +136,10 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_NSLEEP1B_FSM_UNMASK              (0U)
-#define PMIC_NSLEEP1B_FSM_MASK                (1U)
-#define PMIC_NSLEEP2B_FSM_UNMASK              (0U)
-#define PMIC_NSLEEP2B_FSM_MASK                (1U)
+#define PMIC_NSLEEP1B_FSM_UNMASK                      (0U)
+#define PMIC_NSLEEP1B_FSM_MASK                        (1U)
+#define PMIC_NSLEEP2B_FSM_UNMASK                      (0U)
+#define PMIC_NSLEEP2B_FSM_MASK                        (1U)
 /*  @} */
 
 /**
@@ -147,13 +148,13 @@ extern "C" {
  *
  *  @{
  */
- /** \brief Selects PMIC FSM Startup Destination as STANDBY state or
-   *        LPSTANDBY state based on  LP_STANDBY_SEL */
-#define PMIC_FSM_STARTUPDEST_STANDBY_LPSTANDBY     (0U)
+/** \brief Selects PMIC FSM Startup Destination as STANDBY state or
+ *        LPSTANDBY state based on  LP_STANDBY_SEL */
+#define PMIC_FSM_STARTUPDEST_STANDBY_LPSTANDBY        (0U)
 /** \brief Selects PMIC FSM Startup Destination as MCU only state*/
-#define PMIC_FSM_STARTUPDEST_MCUONLY               (2U)
+#define PMIC_FSM_STARTUPDEST_MCUONLY                  (2U)
 /** \brief Selects PMIC FSM Startup Destination as Active state */
-#define PMIC_FSM_STARTUPDEST_ACTIVE                (3U)
+#define PMIC_FSM_STARTUPDEST_ACTIVE                   (3U)
 /*  @} */
 
 /**
@@ -162,8 +163,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_FSM_SELECT_LPSTANDBY_STATE             1U
-#define PMIC_FSM_SELECT_STANDBY_STATE               0U
+#define PMIC_FSM_SELECT_LPSTANDBY_STATE               1U
+#define PMIC_FSM_SELECT_STANDBY_STATE                 0U
 /* @} */
 
 /**
@@ -173,8 +174,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_FSM_ILIM_INT_FSMCTRL_ENABLE           1U
-#define PMIC_FSM_ILIM_INT_FSMCTRL_DISABLE          0U
+#define PMIC_FSM_ILIM_INT_FSMCTRL_ENABLE              1U
+#define PMIC_FSM_ILIM_INT_FSMCTRL_DISABLE             0U
 /* @} */
 
 /**
@@ -183,10 +184,10 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_PFSM_DELAY1                    (0U)
-#define PMIC_PFSM_DELAY2                    (1U)
-#define PMIC_PFSM_DELAY3                    (2U)
-#define PMIC_PFSM_DELAY4                    (3U)
+#define PMIC_PFSM_DELAY1                              (0U)
+#define PMIC_PFSM_DELAY2                              (1U)
+#define PMIC_PFSM_DELAY3                              (2U)
+#define PMIC_PFSM_DELAY4                              (3U)
 /* @} */
 
 /**
@@ -199,17 +200,17 @@ extern "C" {
  *
  *  @{
  */
- /** \brief validParams value used to set/get to Enable/Disable Fast BIST  */
-#define PMIC_FSM_CFG_FAST_BIST_EN_VALID           (0U)
+/** \brief validParams value used to set/get to Enable/Disable Fast BIST  */
+#define PMIC_FSM_CFG_FAST_BIST_EN_VALID               (0U)
 /** \brief validParams value used to set/get Low Power Standby State Selection
  */
-#define PMIC_FSM_CFG_LP_STANDBYSEL_VALID          (1U)
+#define PMIC_FSM_CFG_LP_STANDBYSEL_VALID              (1U)
 /** \brief validParams value used to set/get to Enable/Disable Buck/LDO
  *         regulators ILIM interrupts affect FSM triggers */
-#define PMIC_FSM_CFG_ILIM_INT_FSMCTRL_EN_VALID    (2U)
+#define PMIC_FSM_CFG_ILIM_INT_FSMCTRL_EN_VALID        (2U)
 /** \brief validParams value used to set/get to Select FSM Startup Destination
  */
-#define PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID   (3U)
+#define PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID       (3U)
 /*  @} */
 
 /**
@@ -221,14 +222,10 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_FSM_CFG_FAST_BIST_EN_VALID_SHIFT       \
-                         (1U << PMIC_FSM_CFG_FAST_BIST_EN_VALID)
-#define PMIC_FSM_CFG_LP_STANDBYSEL_VALID_SHIFT       \
-                         (1U << PMIC_FSM_CFG_LP_STANDBYSEL_VALID)
-#define PMIC_FSM_CFG_ILIM_INT_FSMCTRL_EN_VALID_SHIFT       \
-                         (1U << PMIC_FSM_CFG_ILIM_INT_FSMCTRL_EN_VALID)
-#define PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID_SHIFT       \
-                         (1U << PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID)
+#define PMIC_FSM_CFG_FAST_BIST_EN_VALID_SHIFT         (1U << PMIC_FSM_CFG_FAST_BIST_EN_VALID)
+#define PMIC_FSM_CFG_LP_STANDBYSEL_VALID_SHIFT        (1U << PMIC_FSM_CFG_LP_STANDBYSEL_VALID)
+#define PMIC_FSM_CFG_ILIM_INT_FSMCTRL_EN_VALID_SHIFT  (1U << PMIC_FSM_CFG_ILIM_INT_FSMCTRL_EN_VALID)
+#define PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID_SHIFT (1U << PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID)
 /*  @} */
 
 /**
@@ -237,8 +234,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_NSLEEP_LOW                  (0U)
-#define PMIC_NSLEEP_HIGH                 (1U)
+#define PMIC_NSLEEP_LOW                               (0U)
+#define PMIC_NSLEEP_HIGH                              (1U)
 /*  @} */
 
 /**
@@ -247,18 +244,18 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_FSM_I2C_TRIGGER0                     (0x0U)
+#define PMIC_FSM_I2C_TRIGGER0                         (0x0U)
 /** \brief Valid only for TPS6594x Leo PMIC PG2.0 and LP8764x Hera PMIC PG2.0 */
-#define PMIC_FSM_I2C_TRIGGER1                     (0x1U)
+#define PMIC_FSM_I2C_TRIGGER1                         (0x1U)
 /** \brief Valid only for TPS6594x Leo PMIC PG2.0 and LP8764x Hera PMIC PG2.0 */
-#define PMIC_FSM_I2C_TRIGGER2                     (0x2U)
+#define PMIC_FSM_I2C_TRIGGER2                         (0x2U)
 /** \brief Configuration of PMIC_FSM_I2C_TRIGGER3 is not supported for TPS6594x
  *         Leo and LP8764x Hera PMIC. */
-#define PMIC_FSM_I2C_TRIGGER3                     (0x3U)
-#define PMIC_FSM_I2C_TRIGGER4                     (0x4U)
-#define PMIC_FSM_I2C_TRIGGER5                     (0x5U)
-#define PMIC_FSM_I2C_TRIGGER6                     (0x6U)
-#define PMIC_FSM_I2C_TRIGGER7                     (0x7U)
+#define PMIC_FSM_I2C_TRIGGER3                         (0x3U)
+#define PMIC_FSM_I2C_TRIGGER4                         (0x4U)
+#define PMIC_FSM_I2C_TRIGGER5                         (0x5U)
+#define PMIC_FSM_I2C_TRIGGER6                         (0x6U)
+#define PMIC_FSM_I2C_TRIGGER7                         (0x7U)
 /*  @} */
 
 /**
@@ -268,8 +265,8 @@ extern "C" {
  *  @{
  */
 /** \brief Valid only for I2C4/ I2C5/ I2C6/ I2C7 */
-#define PMIC_FSM_I2C_TRIGGER_VAL_0                (0x0U)
-#define PMIC_FSM_I2C_TRIGGER_VAL_1                (0x1U)
+#define PMIC_FSM_I2C_TRIGGER_VAL_0                    (0x0U)
+#define PMIC_FSM_I2C_TRIGGER_VAL_1                    (0x1U)
 /*  @} */
 
 /**
@@ -278,9 +275,9 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_FSM_DDR_RETENTION_MODE                 (0x0U)
+#define PMIC_FSM_DDR_RETENTION_MODE                   (0x0U)
 /** \brief Valid only for J7200 SOC*/
-#define PMIC_FSM_GPIO_RETENTION_MODE                (0x1U)
+#define PMIC_FSM_GPIO_RETENTION_MODE                  (0x1U)
 /*  @} */
 
 /*==========================================================================*/
@@ -320,11 +317,11 @@ extern "C" {
  */
 typedef struct Pmic_FsmCfg_s
 {
-    uint8_t                   validParams;
-    bool                      fastBistEn;
-    bool                      lpStandbySel;
-    bool                      ilimIntfsmCtrlEn;
-    uint8_t                   fsmStarupDestSel;
+    uint8_t validParams;
+    bool    fastBistEn;
+    bool    lpStandbySel;
+    bool    ilimIntfsmCtrlEn;
+    uint8_t fsmStarupDestSel;
 } Pmic_FsmCfg_t;
 
 /*==========================================================================*/
@@ -352,9 +349,7 @@ typedef struct Pmic_FsmCfg_s
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmDeviceOffRequestCfg(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                                    uint8_t             eventType,
-                                    uint8_t             fsmState);
+int32_t Pmic_fsmDeviceOffRequestCfg(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t eventType, uint8_t fsmState);
 
 /*!
  * \brief  API to initiate ON Request FSM transition.
@@ -406,8 +401,7 @@ int32_t Pmic_fsmDeviceOnRequest(Pmic_CoreHandle_t *pPmicCoreHandle);
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmSetMissionState(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                                const uint8_t       pmicState);
+int32_t Pmic_fsmSetMissionState(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pmicState);
 
 /*!
  * \brief  API to MASK/UNMASK NSLEEP1B or 2B Signal.
@@ -427,9 +421,7 @@ int32_t Pmic_fsmSetMissionState(Pmic_CoreHandle_t  *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmSetNsleepSignalMask(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                                    const bool          nsleepType,
-                                    const bool          maskEnable);
+int32_t Pmic_fsmSetNsleepSignalMask(Pmic_CoreHandle_t *pPmicCoreHandle, const bool nsleepType, const bool maskEnable);
 
 /*!
  * \brief  API to read the status of the NSLEEP1B/2B Signal is masked or not
@@ -450,9 +442,7 @@ int32_t Pmic_fsmSetNsleepSignalMask(Pmic_CoreHandle_t  *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmGetNsleepSignalMaskStat(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                                        const bool          nsleepType,
-                                        bool               *pNsleepStat);
+int32_t Pmic_fsmGetNsleepSignalMaskStat(Pmic_CoreHandle_t *pPmicCoreHandle, const bool nsleepType, bool *pNsleepStat);
 
 /*!
  * \brief  API to initiate Runtime BIST.
@@ -470,7 +460,7 @@ int32_t Pmic_fsmGetNsleepSignalMaskStat(Pmic_CoreHandle_t  *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmRequestRuntimeBist(Pmic_CoreHandle_t  *pPmicCoreHandle);
+int32_t Pmic_fsmRequestRuntimeBist(Pmic_CoreHandle_t *pPmicCoreHandle);
 
 /*!
  * \brief   API to set PMIC FSM configuration.
@@ -488,8 +478,7 @@ int32_t Pmic_fsmRequestRuntimeBist(Pmic_CoreHandle_t  *pPmicCoreHandle);
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
-                                 const Pmic_FsmCfg_t  fsmCfg);
+int32_t Pmic_fsmSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_FsmCfg_t fsmCfg);
 
 /*!
  * \brief   API to get PMIC FSM configuration.
@@ -508,8 +497,7 @@ int32_t Pmic_fsmSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                 Pmic_FsmCfg_t     *pFsmCfg);
+int32_t Pmic_fsmGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_FsmCfg_t *pFsmCfg);
 
 /*!
  * \brief  API to configure PFSM Delay
@@ -536,9 +524,7 @@ int32_t Pmic_fsmGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmSetPfsmDelay(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                             const uint8_t       pFsmDelayType,
-                             const uint8_t       pfsmDelay);
+int32_t Pmic_fsmSetPfsmDelay(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pFsmDelayType, const uint8_t pfsmDelay);
 
 /*!
  * \brief  API to read PFSM Delay
@@ -561,9 +547,7 @@ int32_t Pmic_fsmSetPfsmDelay(Pmic_CoreHandle_t  *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmGetPfsmDelay(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                             uint8_t             pFsmDelayType,
-                             uint8_t            *pPfsmDelay);
+int32_t Pmic_fsmGetPfsmDelay(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t pFsmDelayType, uint8_t *pPfsmDelay);
 
 /*!
  * \brief   API to set PMIC Nsleep1B/2B Signal value.
@@ -584,9 +568,7 @@ int32_t Pmic_fsmGetPfsmDelay(Pmic_CoreHandle_t  *pPmicCoreHandle,
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmSetNsleepSignalVal(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                   const bool         nsleepType,
-                                   const uint8_t      nsleepVal);
+int32_t Pmic_fsmSetNsleepSignalVal(Pmic_CoreHandle_t *pPmicCoreHandle, const bool nsleepType, const uint8_t nsleepVal);
 
 /*!
  * \brief   API to get PMIC Nsleep1B/2B Signal value.
@@ -608,9 +590,7 @@ int32_t Pmic_fsmSetNsleepSignalVal(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmGetNsleepSignalVal(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                   const bool         nsleepType,
-                                   uint8_t           *pNsleepVal);
+int32_t Pmic_fsmGetNsleepSignalVal(Pmic_CoreHandle_t *pPmicCoreHandle, const bool nsleepType, uint8_t *pNsleepVal);
 
 /*!
  * \brief   API to recover from SOC Power Error using Nsleep1B and Nsleep2B
@@ -624,9 +604,9 @@ int32_t Pmic_fsmGetNsleepSignalVal(Pmic_CoreHandle_t *pPmicCoreHandle,
  *          rebooting the system
  *          Note: Application need to call this API from MCU domain when SOC
  *          Power Error on Primary PMIC
- *          Step-1 - PMIC LLD has to configure NSLEEP2 & NSLEEP1 signals to ‘10’
+ *          Step-1 - PMIC LLD has to configure NSLEEP2 & NSLEEP1 signals to ï¿½10ï¿½
  *          Step-2 - Application has to wait for 9us
- *          Step-3 - PMIC LLD has to configure NSLEEP2 & NSLEEP1 signals to ‘11’
+ *          Step-3 - PMIC LLD has to configure NSLEEP2 & NSLEEP1 signals to ï¿½11ï¿½
  *
  *          Note: Valid only for TPS6594x Leo PMIC PG2.0 and LP8764x Hera PMIC
  *          PG2.0
@@ -639,8 +619,7 @@ int32_t Pmic_fsmGetNsleepSignalVal(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmRecoverSocPwrErr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                 const uint8_t      nsleepVal);
+int32_t Pmic_fsmRecoverSocPwrErr(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t nsleepVal);
 
 /*!
  * \brief   API to initiate FSM I2C trigger for given FSM I2C trigger type
@@ -665,9 +644,8 @@ int32_t Pmic_fsmRecoverSocPwrErr(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmEnableI2cTrigger(Pmic_CoreHandle_t  *pPmicCoreHandle,
-                                 const uint8_t       i2cTriggerType,
-                                 const uint8_t       i2cTriggerVal);
+int32_t
+Pmic_fsmEnableI2cTrigger(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t i2cTriggerType, const uint8_t i2cTriggerVal);
 
 /*!
  * \brief   API to get FSM I2C trigger Value for given FSM I2C trigger type
@@ -688,9 +666,8 @@ int32_t Pmic_fsmEnableI2cTrigger(Pmic_CoreHandle_t  *pPmicCoreHandle,
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmGetI2cTriggerVal(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                 const uint8_t      i2cTriggerType,
-                                 uint8_t           *pI2cTriggerVal);
+int32_t
+Pmic_fsmGetI2cTriggerVal(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t i2cTriggerType, uint8_t *pI2cTriggerVal);
 
 /*!
  * \brief  API to initiate DDR/GPIO Retention Mode
@@ -731,10 +708,9 @@ int32_t Pmic_fsmGetI2cTriggerVal(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmRequestDdrGpioRetentionMode(
-                                        Pmic_CoreHandle_t  *pPmicCoreHandle,
-                                        const uint8_t       retentionMode,
-                                        const uint8_t       i2cTriggerVal);
+int32_t Pmic_fsmRequestDdrGpioRetentionMode(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                            const uint8_t      retentionMode,
+                                            const uint8_t      i2cTriggerVal);
 
 #ifdef __cplusplus
 }

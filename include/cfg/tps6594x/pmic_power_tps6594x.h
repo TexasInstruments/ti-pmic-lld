@@ -50,7 +50,8 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /* ========================================================================== */
@@ -63,9 +64,9 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_TPS6594X_POWER_RESOURCE_TYPE_VCCA              (0U)
-#define PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK              (1U)
-#define PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO               (2U)
+#define PMIC_TPS6594X_POWER_RESOURCE_TYPE_VCCA                       (0U)
+#define PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK                       (1U)
+#define PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO                        (2U)
 /*  @} */
 
 /**
@@ -74,26 +75,16 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_TPS6594X_POWER_SOURCE_VCCA   \
-            ((((uint16_t)PMIC_TPS6594X_POWER_RESOURCE_TYPE_VCCA  << 8U) | 0x0U))
-#define PMIC_TPS6594X_REGULATOR_BUCK1     \
-            ((((uint16_t)PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK  << 8U) | 0x1U))
-#define PMIC_TPS6594X_REGULATOR_BUCK2     \
-            ((((uint16_t)PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK  << 8U) | 0x2U))
-#define PMIC_TPS6594X_REGULATOR_BUCK3     \
-            ((((uint16_t)PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK  << 8U) | 0x3U))
-#define PMIC_TPS6594X_REGULATOR_BUCK4     \
-            ((((uint16_t)PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK  << 8U) | 0x4U))
-#define PMIC_TPS6594X_REGULATOR_BUCK5     \
-            ((((uint16_t)PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK  << 8U) | 0x5U))
-#define PMIC_TPS6594X_REGULATOR_LDO1      \
-            ((((uint16_t)PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO  << 8U)  | 0x6U))
-#define PMIC_TPS6594X_REGULATOR_LDO2      \
-            ((((uint16_t)PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO  << 8U)  | 0x7U))
-#define PMIC_TPS6594X_REGULATOR_LDO3      \
-            ((((uint16_t)PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO  << 8U)  | 0x8U))
-#define PMIC_TPS6594X_REGULATOR_LDO4      \
-            ((((uint16_t)PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO  << 8U)  | 0x9U))
+#define PMIC_TPS6594X_POWER_SOURCE_VCCA                              ((((uint16_t)PMIC_TPS6594X_POWER_RESOURCE_TYPE_VCCA << 8U) | 0x0U))
+#define PMIC_TPS6594X_REGULATOR_BUCK1                                ((((uint16_t)PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK << 8U) | 0x1U))
+#define PMIC_TPS6594X_REGULATOR_BUCK2                                ((((uint16_t)PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK << 8U) | 0x2U))
+#define PMIC_TPS6594X_REGULATOR_BUCK3                                ((((uint16_t)PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK << 8U) | 0x3U))
+#define PMIC_TPS6594X_REGULATOR_BUCK4                                ((((uint16_t)PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK << 8U) | 0x4U))
+#define PMIC_TPS6594X_REGULATOR_BUCK5                                ((((uint16_t)PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK << 8U) | 0x5U))
+#define PMIC_TPS6594X_REGULATOR_LDO1                                 ((((uint16_t)PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO << 8U) | 0x6U))
+#define PMIC_TPS6594X_REGULATOR_LDO2                                 ((((uint16_t)PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO << 8U) | 0x7U))
+#define PMIC_TPS6594X_REGULATOR_LDO3                                 ((((uint16_t)PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO << 8U) | 0x8U))
+#define PMIC_TPS6594X_REGULATOR_LDO4                                 ((((uint16_t)PMIC_TPS6594X_POWER_RESOURCE_TYPE_LDO << 8U) | 0x9U))
 /*  @} */
 
 /**
@@ -105,9 +96,9 @@ extern "C" {
  *  @{
  */
 /** \brief Used to enable the residual voltage check */
-#define PMIC_TPS6594X_REGULATOR_RV_SEL_ENABLE              (0x1U)
+#define PMIC_TPS6594X_REGULATOR_RV_SEL_ENABLE                        (0x1U)
 /** \brief Used to disable the residual voltage check */
-#define PMIC_TPS6594X_REGULATOR_RV_SEL_DISABLE             (0x0U)
+#define PMIC_TPS6594X_REGULATOR_RV_SEL_DISABLE                       (0x0U)
 /* @} */
 
 /**
@@ -117,9 +108,9 @@ extern "C" {
  *  @{
  */
 /** \brief Used to enable the pull down resistor for BUCK regulator */
-#define PMIC_TPS6594X_REGULATOR_BUCK_PLDN_ENABLE           (0x1U)
+#define PMIC_TPS6594X_REGULATOR_BUCK_PLDN_ENABLE                     (0x1U)
 /** \brief Used to disable the pull down resistor for BUCK regulator */
-#define PMIC_TPS6594X_REGULATOR_BUCK_PLDN_DISABLE          (0x0U)
+#define PMIC_TPS6594X_REGULATOR_BUCK_PLDN_DISABLE                    (0x0U)
 /* @} */
 
 /**
@@ -131,9 +122,9 @@ extern "C" {
  *  @{
  */
 /** \brief Used to disable the voltage monitor */
-#define PMIC_TPS6594X_VMON_DISABLE          (0x0U)
+#define PMIC_TPS6594X_VMON_DISABLE                                   (0x0U)
 /** \brief Used to enable the voltage monitor */
-#define PMIC_TPS6594X_VMON_ENABLE           (0x1U)
+#define PMIC_TPS6594X_VMON_ENABLE                                    (0x1U)
 /* @} */
 
 /**
@@ -145,9 +136,9 @@ extern "C" {
  *  @{
  */
 /** \brief Used to select VOUT2 register for voltage selection */
-#define PMIC_TPS6594X_REGULATOR_BUCK_VOUT_SEL_VOUT2        (bool)true
+#define PMIC_TPS6594X_REGULATOR_BUCK_VOUT_SEL_VOUT2                  (bool)true
 /** \brief Used to select VOUT1 register for voltage selection */
-#define PMIC_TPS6594X_REGULATOR_BUCK_VOUT_SEL_VOUT1        (bool)false
+#define PMIC_TPS6594X_REGULATOR_BUCK_VOUT_SEL_VOUT1                  (bool)false
 /* @} */
 
 /**
@@ -160,9 +151,9 @@ extern "C" {
  *  @{
  */
 /** \brief Used to select PWM mode */
-#define PMIC_TPS6594X_REGULATOR_PWM_MODE                   (0x1U)
+#define PMIC_TPS6594X_REGULATOR_PWM_MODE                             (0x1U)
 /** \brief Used to select Automatic transition between PFM and PWM modes */
-#define PMIC_TPS6594X_REGULATOR_AUTO_PWM_PFM_MODE          (0x0U)
+#define PMIC_TPS6594X_REGULATOR_AUTO_PWM_PFM_MODE                    (0x0U)
 /* @} */
 
 /**
@@ -175,9 +166,9 @@ extern "C" {
  *  @{
  */
 /** \brief Used to select multi-phase operation */
-#define PMIC_TPS6594X_REGULATOR_PWM_MP_MODE                (0x1U)
+#define PMIC_TPS6594X_REGULATOR_PWM_MP_MODE                          (0x1U)
 /** \brief Used to select Automatic phase adding and shedding mode */
-#define PMIC_TPS6594X_REGULATOR_AUTO_PHASE_MODE            (0x0U)
+#define PMIC_TPS6594X_REGULATOR_AUTO_PHASE_MODE                      (0x0U)
 /* @} */
 
 /**
@@ -187,9 +178,9 @@ extern "C" {
  *  @{
  */
 /** \brief Used to enable the BUCK or LDO regulator */
-#define PMIC_TPS6594X_REGULATOR_ENABLE                     (0x1U)
+#define PMIC_TPS6594X_REGULATOR_ENABLE                               (0x1U)
 /** \brief Used to disable the BUCK or LDO regulator */
-#define PMIC_TPS6594X_REGULATOR_DISABLE                    (0x0U)
+#define PMIC_TPS6594X_REGULATOR_DISABLE                              (0x0U)
 /* @} */
 
 /**
@@ -201,9 +192,9 @@ extern "C" {
  *  @{
  */
 /** \brief Used to enable slow ramp for LDO */
-#define PMIC_TPS6594X_REGULATOR_LDO_SLOW_RAMP_ENABLE       (0x1U)
+#define PMIC_TPS6594X_REGULATOR_LDO_SLOW_RAMP_ENABLE                 (0x1U)
 /** \brief Used to disable slow ramp for LDO */
-#define PMIC_TPS6594X_REGULATOR_LDO_SLOW_RAMP_DISABLE      (0x0U)
+#define PMIC_TPS6594X_REGULATOR_LDO_SLOW_RAMP_DISABLE                (0x0U)
 /* @} */
 
 /**
@@ -214,9 +205,9 @@ extern "C" {
  *  @{
  */
 /** \brief Used to set to bypass mode */
-#define PMIC_TPS6594X_REGULATOR_LDO_BYPASS_MODE            (0x1U)
+#define PMIC_TPS6594X_REGULATOR_LDO_BYPASS_MODE                      (0x1U)
 /** \brief Used to  set to linear regulator mode */
-#define PMIC_TPS6594X_REGULATOR_LDO_LINEAR_REGULATOR_MODE  (0x0U)
+#define PMIC_TPS6594X_REGULATOR_LDO_LINEAR_REGULATOR_MODE            (0x0U)
 /* @} */
 
 /**
@@ -226,9 +217,9 @@ extern "C" {
  *  @{
  */
 /** \brief Used to select the degitch time as 4 usec */
-#define PMIC_TPS6594X_POWER_RESOURCE_DEGLITCH_SEL_4US      (0x0U)
+#define PMIC_TPS6594X_POWER_RESOURCE_DEGLITCH_SEL_4US                (0x0U)
 /** \brief Used to select the degitch time as 20 usec */
-#define PMIC_TPS6594X_POWER_RESOURCE_DEGLITCH_SEL_20US     (0x1U)
+#define PMIC_TPS6594X_POWER_RESOURCE_DEGLITCH_SEL_20US               (0x1U)
 /*  @} */
 
 /**
@@ -238,9 +229,9 @@ extern "C" {
  *  @{
  */
 /** \brief Used to select the powergood level for VCCA to be 3.3v */
-#define PMIC_TPS6594X_VCCA_PG_3V3_LEVEL                    (0x0U)
+#define PMIC_TPS6594X_VCCA_PG_3V3_LEVEL                              (0x0U)
 /** \brief Used to select the powergood level for VCCA to be 5v */
-#define PMIC_TPS6594X_VCCA_PG_5V_LEVEL                     (0x1U)
+#define PMIC_TPS6594X_VCCA_PG_5V_LEVEL                               (0x1U)
 /* @} */
 
 /**
@@ -250,13 +241,13 @@ extern "C" {
  *  @{
  */
 /** \brief Used to configure BUCK current limit as 2.5 Ampere */
-#define PMIC_TPS6594X_REGULATOR_BUCK_CURRENT_LIMIT_2A5     (0x2U)
+#define PMIC_TPS6594X_REGULATOR_BUCK_CURRENT_LIMIT_2A5               (0x2U)
 /** \brief Used to configure BUCK current limit as 3.5 Ampere */
-#define PMIC_TPS6594X_REGULATOR_BUCK_CURRENT_LIMIT_3A5     (0x3U)
+#define PMIC_TPS6594X_REGULATOR_BUCK_CURRENT_LIMIT_3A5               (0x3U)
 /** \brief Used to configure BUCK current limit as 4.5 Ampere */
-#define PMIC_TPS6594X_REGULATOR_BUCK_CURRENT_LIMIT_4A5     (0x4U)
+#define PMIC_TPS6594X_REGULATOR_BUCK_CURRENT_LIMIT_4A5               (0x4U)
 /** \brief Used to configure BUCK current limit as 5.5 Ampere */
-#define PMIC_TPS6594X_REGULATOR_BUCK_CURRENT_LIMIT_5A5     (0x5U)
+#define PMIC_TPS6594X_REGULATOR_BUCK_CURRENT_LIMIT_5A5               (0x5U)
 /*  @} */
 
 /**
@@ -266,21 +257,21 @@ extern "C" {
  *  @{
  */
 /** \brief Used to configure BUCK current limit as 30mv */
-#define PMIC_TPS6594X_REGULATOR_BUCK_SLEW_RATE_33MV     (0x0U)
+#define PMIC_TPS6594X_REGULATOR_BUCK_SLEW_RATE_33MV                  (0x0U)
 /** \brief Used to configure BUCK current limit as 20mv */
-#define PMIC_TPS6594X_REGULATOR_BUCK_SLEW_RATE_20MV     (0x1U)
+#define PMIC_TPS6594X_REGULATOR_BUCK_SLEW_RATE_20MV                  (0x1U)
 /** \brief Used to configure BUCK current limit as 10mv */
-#define PMIC_TPS6594X_REGULATOR_BUCK_SLEW_RATE_10MV     (0x2U)
+#define PMIC_TPS6594X_REGULATOR_BUCK_SLEW_RATE_10MV                  (0x2U)
 /** \brief Used to configure BUCK current limit as 5mv */
-#define PMIC_TPS6594X_REGULATOR_BUCK_SLEW_RATE_05MV     (0x3U)
+#define PMIC_TPS6594X_REGULATOR_BUCK_SLEW_RATE_05MV                  (0x3U)
 /** \brief Used to configure BUCK current limit as 2.5mv */
-#define PMIC_TPS6594X_REGULATOR_BUCK_SLEW_RATE_2MV5     (0x4U)
+#define PMIC_TPS6594X_REGULATOR_BUCK_SLEW_RATE_2MV5                  (0x4U)
 /** \brief Used to configure BUCK current limit as 1.3mv */
-#define PMIC_TPS6594X_REGULATOR_BUCK_SLEW_RATE_1MV3     (0x5U)
+#define PMIC_TPS6594X_REGULATOR_BUCK_SLEW_RATE_1MV3                  (0x5U)
 /** \brief Used to configure BUCK current limit as 0.63mv */
-#define PMIC_TPS6594X_REGULATOR_BUCK_SLEW_RATE_0MV63    (0x6U)
+#define PMIC_TPS6594X_REGULATOR_BUCK_SLEW_RATE_0MV63                 (0x6U)
 /** \brief Used to configure BUCK current limit as 0.31mv */
-#define PMIC_TPS6594X_REGULATOR_BUCK_SLEW_RATE_0MV31    (0x7U)
+#define PMIC_TPS6594X_REGULATOR_BUCK_SLEW_RATE_0MV31                 (0x7U)
 /*  @} */
 
 /**
@@ -290,13 +281,13 @@ extern "C" {
  *  @{
  */
 /** \brief Used to select the pull down resistor value as 50KOhm */
-#define PMIC_TPS6594X_REGULATOR_LDO_PLDN_VAL_50KOHM        (0x0U)
+#define PMIC_TPS6594X_REGULATOR_LDO_PLDN_VAL_50KOHM                  (0x0U)
 /** \brief Used to select the pull down resistor value as 125Ohm */
-#define PMIC_TPS6594X_REGULATOR_LDO_PLDN_VAL_125OHM        (0x1U)
+#define PMIC_TPS6594X_REGULATOR_LDO_PLDN_VAL_125OHM                  (0x1U)
 /** \brief Used to select the pull down resistor value as 250Ohm */
-#define PMIC_TPS6594X_REGULATOR_LDO_PLDN_VAL_250OHM        (0x2U)
+#define PMIC_TPS6594X_REGULATOR_LDO_PLDN_VAL_250OHM                  (0x2U)
 /** \brief Used to select the pull down resistor value as 500Ohm */
-#define PMIC_TPS6594X_REGULATOR_LDO_PLDN_VAL_500OHM        (0x3U)
+#define PMIC_TPS6594X_REGULATOR_LDO_PLDN_VAL_500OHM                  (0x3U)
 /*  @} */
 
 /**
@@ -308,37 +299,37 @@ extern "C" {
  *  @{
  */
 /** \brief Used to set timeout to 0.5ms */
-#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_0MS5              (0U)
+#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_0MS5                  (0U)
 /** \brief Used to set timeout to 1ms */
-#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_1MS               (1U)
+#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_1MS                   (1U)
 /** \brief Used to set timeout to 1.5ms */
-#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_1MS5              (2U)
+#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_1MS5                  (2U)
 /** \brief Used to set timeout to 2ms */
-#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_2MS               (3U)
+#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_2MS                   (3U)
 /** \brief Used to set timeout to 2.5ms */
-#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_2MS5              (4U)
+#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_2MS5                  (4U)
 /** \brief Used to set timeout to 3ms */
-#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_3MS               (5U)
+#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_3MS                   (5U)
 /** \brief Used to set timeout to 3.5ms */
-#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_3MS5              (6U)
+#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_3MS5                  (6U)
 /** \brief Used to set timeout to 4ms */
-#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_4MS               (7U)
+#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_4MS                   (7U)
 /** \brief Used to set timeout to 2ms */
-#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_2MS0              (8U)
+#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_2MS0                  (8U)
 /** \brief Used to set timeout to 4ms */
-#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_4MS0              (9U)
+#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_4MS0                  (9U)
 /** \brief Used to set timeout to 6ms */
-#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_6MS               (10U)
+#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_6MS                   (10U)
 /** \brief Used to set timeout to 8ms */
-#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_8MS               (11U)
+#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_8MS                   (11U)
 /** \brief Used to set timeout to 10ms */
-#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_10MS              (12U)
+#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_10MS                  (12U)
 /** \brief Used to set timeout to 12ms */
-#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_12MS              (13U)
+#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_12MS                  (13U)
 /** \brief Used to set timeout to 14ms */
-#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_14MS              (14U)
+#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_14MS                  (14U)
 /** \brief Used to set timeout to 16ms */
-#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_16MS              (15U)
+#define PMIC_TPS6594X_REGULATOR_LDO_RV_TIMEOUT_16MS                  (15U)
 /* @} */
 
 /**
@@ -354,35 +345,35 @@ extern "C" {
 /** \brief Used to select over/under voltage threshold level as +/-30mv or
  *         +/-3%
  */
-#define PMIC_TPS6594X_PG_OV_UV_THRESHOLD_LVL_30_OR_3       (0U)
+#define PMIC_TPS6594X_PG_OV_UV_THRESHOLD_LVL_30_OR_3                 (0U)
 /** \brief Used to select over/under voltage threshold level as +/-35mv or
  *         +/-3.5%
  */
-#define PMIC_TPS6594X_PG_OV_UV_THRESHOLD_LVL_35_OR_3P5     (1U)
+#define PMIC_TPS6594X_PG_OV_UV_THRESHOLD_LVL_35_OR_3P5               (1U)
 /** \brief Used to select over/under voltage threshold level as +/-40mv or
  *         +/-4%
  */
-#define PMIC_TPS6594X_PG_OV_UV_THRESHOLD_LVL_40_OR_4       (2U)
+#define PMIC_TPS6594X_PG_OV_UV_THRESHOLD_LVL_40_OR_4                 (2U)
 /** \brief Used to select over/under voltage threshold level as +/-50mv or
  *         +/-5%
  */
-#define PMIC_TPS6594X_PG_OV_UV_THRESHOLD_LVL_50_OR_5       (3U)
+#define PMIC_TPS6594X_PG_OV_UV_THRESHOLD_LVL_50_OR_5                 (3U)
 /** \brief Used to select over/under voltage threshold level as +/-60mv or
  *         +/-6%
  */
-#define PMIC_TPS6594X_PG_OV_UV_THRESHOLD_LVL_60_OR_6       (4U)
+#define PMIC_TPS6594X_PG_OV_UV_THRESHOLD_LVL_60_OR_6                 (4U)
 /** \brief Used to select over/under voltage threshold level as +/-70mv or
  *         +/-7%
  */
-#define PMIC_TPS6594X_PG_OV_UV_THRESHOLD_LVL_70_OR_7       (5U)
+#define PMIC_TPS6594X_PG_OV_UV_THRESHOLD_LVL_70_OR_7                 (5U)
 /** \brief Used to select over/under voltage threshold level as +/-80mv or
  *         +/-8%
  */
-#define PMIC_TPS6594X_PG_OV_UV_THRESHOLD_LVL_80_OR_8       (6U)
+#define PMIC_TPS6594X_PG_OV_UV_THRESHOLD_LVL_80_OR_8                 (6U)
 /** \brief Used to select over/under voltage threshold level as +/-100mv or
  *         +/-10%
  */
-#define PMIC_TPS6594X_PG_OV_UV_THRESHOLD_LVL_100_OR_10     (7U)
+#define PMIC_TPS6594X_PG_OV_UV_THRESHOLD_LVL_100_OR_10               (7U)
 /*  @} */
 
 /**
@@ -396,13 +387,13 @@ extern "C" {
  *         normally shuts down the SOC/MCU power rails, by setting the relevent
  *         regulators to PMIC_TPS6594X_POWER_RAIL_SEL_NONE
  */
-#define PMIC_TPS6594X_POWER_RAIL_SEL_NONE                  (0x0U)
+#define PMIC_TPS6594X_POWER_RAIL_SEL_NONE                            (0x0U)
 /** \brief Used to select rail group as MCU rail group */
-#define PMIC_TPS6594X_POWER_RAIL_SEL_MCU                   (0x1U)
+#define PMIC_TPS6594X_POWER_RAIL_SEL_MCU                             (0x1U)
 /** \brief Used to select rail group as SOC rail group */
-#define PMIC_TPS6594X_POWER_RAIL_SEL_SOC                   (0x2U)
+#define PMIC_TPS6594X_POWER_RAIL_SEL_SOC                             (0x2U)
 /** \brief Used to select rail group as other rail group */
-#define PMIC_TPS6594X_POWER_RAIL_SEL_OTHER                 (0x3U)
+#define PMIC_TPS6594X_POWER_RAIL_SEL_OTHER                           (0x3U)
 /* @} */
 
 /**
@@ -411,12 +402,12 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_TPS6594X_PGOOD_SOURCE_TYPE_VCCA              (0U)
-#define PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK              (1U)
-#define PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT           (2U)
-#define PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC       (3U)
-#define PMIC_TPS6594X_PGOOD_SOURCE_TYPE_TDIE              (4U)
-#define PMIC_TPS6594X_PGOOD_SOURCE_TYPE_LDO               (5U)
+#define PMIC_TPS6594X_PGOOD_SOURCE_TYPE_VCCA                         (0U)
+#define PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK                         (1U)
+#define PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT                      (2U)
+#define PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC                  (3U)
+#define PMIC_TPS6594X_PGOOD_SOURCE_TYPE_TDIE                         (4U)
+#define PMIC_TPS6594X_PGOOD_SOURCE_TYPE_LDO                          (5U)
 /* VMON type is not supported by TPS6594x Leo PMIC */
 /*  @} */
 
@@ -426,32 +417,19 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_TPS6594X_PGOOD_SOURCE_VCCA        \
-            ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_VCCA  << 8U) | 0U))
-#define PMIC_TPS6594X_PGOOD_SOURCE_BUCK1       \
-            ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK  << 8U) | 1U))
-#define PMIC_TPS6594X_PGOOD_SOURCE_BUCK2       \
-            ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK  << 8U) | 2U))
-#define PMIC_TPS6594X_PGOOD_SOURCE_BUCK3       \
-            ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK  << 8U) | 3U))
-#define PMIC_TPS6594X_PGOOD_SOURCE_BUCK4       \
-            ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK  << 8U) | 4U))
-#define PMIC_TPS6594X_PGOOD_SOURCE_BUCK5       \
-            ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK  << 8U) | 5U))
-#define PMIC_TPS6594X_PGOOD_SOURCE_NRSTOUT     \
-            ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT << 8U) | 6U))
-#define PMIC_TPS6594X_PGOOD_SOURCE_NRSTOUT_SOC \
-        ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC  << 8U) | 7U))
-#define PMIC_TPS6594X_PGOOD_SOURCE_TDIE        \
-            ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_TDIE   << 8U) | 8U))
-#define PMIC_TPS6594X_PGOOD_SOURCE_LDO1        \
-            ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_LDO   << 8U) | 9U))
-#define PMIC_TPS6594X_PGOOD_SOURCE_LDO2        \
-            ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_LDO   << 8U) | 10U))
-#define PMIC_TPS6594X_PGOOD_SOURCE_LDO3        \
-            ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_LDO   << 8U) | 11U))
-#define PMIC_TPS6594X_PGOOD_SOURCE_LDO4        \
-            ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_LDO   << 8U) | 12U))
+#define PMIC_TPS6594X_PGOOD_SOURCE_VCCA                              ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_VCCA << 8U) | 0U))
+#define PMIC_TPS6594X_PGOOD_SOURCE_BUCK1                             ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK << 8U) | 1U))
+#define PMIC_TPS6594X_PGOOD_SOURCE_BUCK2                             ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK << 8U) | 2U))
+#define PMIC_TPS6594X_PGOOD_SOURCE_BUCK3                             ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK << 8U) | 3U))
+#define PMIC_TPS6594X_PGOOD_SOURCE_BUCK4                             ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK << 8U) | 4U))
+#define PMIC_TPS6594X_PGOOD_SOURCE_BUCK5                             ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_BUCK << 8U) | 5U))
+#define PMIC_TPS6594X_PGOOD_SOURCE_NRSTOUT                           ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT << 8U) | 6U))
+#define PMIC_TPS6594X_PGOOD_SOURCE_NRSTOUT_SOC                       ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_NRSTOUT_SOC << 8U) | 7U))
+#define PMIC_TPS6594X_PGOOD_SOURCE_TDIE                              ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_TDIE << 8U) | 8U))
+#define PMIC_TPS6594X_PGOOD_SOURCE_LDO1                              ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_LDO << 8U) | 9U))
+#define PMIC_TPS6594X_PGOOD_SOURCE_LDO2                              ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_LDO << 8U) | 10U))
+#define PMIC_TPS6594X_PGOOD_SOURCE_LDO3                              ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_LDO << 8U) | 11U))
+#define PMIC_TPS6594X_PGOOD_SOURCE_LDO4                              ((((uint16_t)PMIC_TPS6594X_PGOOD_SOURCE_TYPE_LDO << 8U) | 12U))
 /*  @} */
 
 /**
@@ -461,9 +439,9 @@ extern "C" {
  *  @{
  */
 /** \brief Only undervoltage is monitored */
-#define PMIC_TPS6594X_POWER_GOOD_UV_MONITOR_ENABLE         (0x0U)
+#define PMIC_TPS6594X_POWER_GOOD_UV_MONITOR_ENABLE                   (0x0U)
 /** \brief Both undervoltage and overvoltage are monitored */
-#define PMIC_TPS6594X_POWER_GOOD_UV_OV_MONITOR_ENABLE      (0x1U)
+#define PMIC_TPS6594X_POWER_GOOD_UV_OV_MONITOR_ENABLE                (0x1U)
 /* @} */
 
 /**
@@ -473,9 +451,9 @@ extern "C" {
  *  @{
  */
 /** \brief PGOOD signal is high when monitored inputs are valid */
-#define PMIC_TPS6594X_POWER_PGOOD_POL_HIGH                 (0x0U)
+#define PMIC_TPS6594X_POWER_PGOOD_POL_HIGH                           (0x0U)
 /** \brief PGOOD signal is low when monitored inputs are valid */
-#define PMIC_TPS6594X_POWER_PGOOD_POL_LOW                  (0x1U)
+#define PMIC_TPS6594X_POWER_PGOOD_POL_LOW                            (0x1U)
 /* @} */
 
 /**
@@ -485,9 +463,9 @@ extern "C" {
  *  @{
  */
 /** \brief Signal is Masked */
-#define PMIC_TPS6594X_POWER_PGOOD_SEL_NRSTOUT_SOC_MASKED   (0x0U)
+#define PMIC_TPS6594X_POWER_PGOOD_SEL_NRSTOUT_SOC_MASKED             (0x0U)
 /** \brief nRSTOUT_SOC pin low state forces PGOOD signal to low */
-#define PMIC_TPS6594X_POWER_PGOOD_SEL_NRSTOUT_SOC          (0x1U)
+#define PMIC_TPS6594X_POWER_PGOOD_SEL_NRSTOUT_SOC                    (0x1U)
 /* @} */
 
 /**
@@ -497,9 +475,9 @@ extern "C" {
  *  @{
  */
 /** \brief Signal is Masked */
-#define PMIC_TPS6594X_POWER_PGOOD_SEL_NRSTOUT_MASKED       (0x0U)
+#define PMIC_TPS6594X_POWER_PGOOD_SEL_NRSTOUT_MASKED                 (0x0U)
 /** \brief nRSTOUT pin low state forces PGOOD signal to low */
-#define PMIC_TPS6594X_POWER_PGOOD_SEL_NRSTOUT              (0x1U)
+#define PMIC_TPS6594X_POWER_PGOOD_SEL_NRSTOUT                        (0x1U)
 /* @} */
 
 /**
@@ -509,9 +487,9 @@ extern "C" {
  *  @{
  */
 /** \brief Signal is Masked */
-#define PMIC_TPS6594X_POWER_PGOOD_SEL_TDIE_WARN_MASKED     (0x0U)
+#define PMIC_TPS6594X_POWER_PGOOD_SEL_TDIE_WARN_MASKED               (0x0U)
 /** \brief Thermal warning affecting to PGOOD signal */
-#define PMIC_TPS6594X_POWER_PGOOD_SEL_TDIE_WARN            (0x1U)
+#define PMIC_TPS6594X_POWER_PGOOD_SEL_TDIE_WARN                      (0x1U)
 /* @} */
 
 /**
@@ -521,9 +499,9 @@ extern "C" {
  *  @{
  */
 /** \brief Signal is Masked */
-#define PMIC_TPS6594X_POWER_PGOOD_SEL_VCCA_DISABLE         (0x0U)
+#define PMIC_TPS6594X_POWER_PGOOD_SEL_VCCA_DISABLE                   (0x0U)
 /** \brief VCCA OV/UV threshold affecting PGOOD signal */
-#define PMIC_TPS6594X_POWER_PGOOD_SEL_VCCA_ENABLE          (0x1U)
+#define PMIC_TPS6594X_POWER_PGOOD_SEL_VCCA_ENABLE                    (0x1U)
 /* @} */
 
 /**
@@ -533,11 +511,11 @@ extern "C" {
  *  @{
  */
 /** \brief Signal is Masked */
-#define PMIC_TPS6594X_POWER_PGOOD_SEL_SRC_MASKED           (0x0U)
+#define PMIC_TPS6594X_POWER_PGOOD_SEL_SRC_MASKED                     (0x0U)
 /** \brief Powergood threshold voltage */
-#define PMIC_TPS6594X_POWER_PGOOD_SEL_SRC_VOLTAGE          (0x1U)
+#define PMIC_TPS6594X_POWER_PGOOD_SEL_SRC_VOLTAGE                    (0x1U)
 /** \brief Powergood threshold voltage AND current limit */
-#define PMIC_TPS6594X_POWER_PGOOD_SEL_SRC_VOLTAGE_CURRENT  (0x2U)
+#define PMIC_TPS6594X_POWER_PGOOD_SEL_SRC_VOLTAGE_CURRENT            (0x2U)
 /* @} */
 
 /**
@@ -564,11 +542,11 @@ extern "C" {
 /** \brief Status indicating that output voltage is above under-voltage
            threshold
 */
-#define PMIC_TPS6594X_REGULATOR_OUTPUT_UNDER_VOLTAGE_STATUS_ABOVE_UV      (0x0U)
+#define PMIC_TPS6594X_REGULATOR_OUTPUT_UNDER_VOLTAGE_STATUS_ABOVE_UV (0x0U)
 /** \brief Status indicating that output voltage is below under-voltage
            threshold
 */
-#define PMIC_TPS6594X_REGULATOR_OUTPUT_UNDER_VOLTAGE_STATUS_BELOW_UV      (0x1U)
+#define PMIC_TPS6594X_REGULATOR_OUTPUT_UNDER_VOLTAGE_STATUS_BELOW_UV (0x1U)
 /* @} */
 
 /**
@@ -580,10 +558,10 @@ extern "C" {
  */
 /** \brief Status indicating that input voltage is above under-voltage
 level */
-#define PMIC_TPS6594X_VCCA_INPUT_UNDER_VOLTAGE_STATUS_ABOVE_UV         (0x0U)
+#define PMIC_TPS6594X_VCCA_INPUT_UNDER_VOLTAGE_STATUS_ABOVE_UV       (0x0U)
 /** \brief Status indicating that input voltage is below under-voltage
 level */
-#define PMIC_TPS6594X_VCCA_INPUT_UNDER_VOLTAGE_STATUS_BELOW_UV         (0x1U)
+#define PMIC_TPS6594X_VCCA_INPUT_UNDER_VOLTAGE_STATUS_BELOW_UV       (0x1U)
 /* @} */
 
 /**
@@ -596,11 +574,11 @@ level */
 /** \brief Status indicating that output voltage is above over-voltage
            threshold
 */
-#define PMIC_TPS6594X_REGULATOR_OUTPUT_OVER_VOLTAGE_STATUS_ABOVE_OV       (0x0U)
+#define PMIC_TPS6594X_REGULATOR_OUTPUT_OVER_VOLTAGE_STATUS_ABOVE_OV  (0x0U)
 /** \brief Status indicating that output voltage is below over-voltage
            threshold
 */
-#define PMIC_TPS6594X_REGULATOR_OUTPUT_OVER_VOLTAGE_STATUS_BELOW_OV       (0x1U)
+#define PMIC_TPS6594X_REGULATOR_OUTPUT_OVER_VOLTAGE_STATUS_BELOW_OV  (0x1U)
 /* @} */
 
 /**
@@ -612,10 +590,10 @@ level */
  */
 /** \brief Status indicating that input voltage is above over-voltage
 level */
-#define PMIC_TPS6594X_VCCA_INPUT_OVER_VOLTAGE_STATUS_ABOVE_OV       (0x0U)
+#define PMIC_TPS6594X_VCCA_INPUT_OVER_VOLTAGE_STATUS_ABOVE_OV        (0x0U)
 /** \brief Status indicating that input voltage is below over-voltage
 level */
-#define PMIC_TPS6594X_VCCA_INPUT_OVER_VOLTAGE_STATUS_BELOW_OV       (0x1U)
+#define PMIC_TPS6594X_VCCA_INPUT_OVER_VOLTAGE_STATUS_BELOW_OV        (0x1U)
 /* @} */
 
 /**
@@ -627,10 +605,10 @@ level */
  */
 /** \brief Status indicating that voltage is above over-voltage protection
 level */
-#define PMIC_TPS6594X_VCCA_OVER_VOLTAGE_LVL_STATUS_ABOVE_OV       (0x0U)
+#define PMIC_TPS6594X_VCCA_OVER_VOLTAGE_LVL_STATUS_ABOVE_OV          (0x0U)
 /** \brief Status indicating that voltage is below over-voltage protection
 level */
-#define PMIC_TPS6594X_VCCA_OVER_VOLTAGE_LVL_STATUS_BELOW_OV       (0x1U)
+#define PMIC_TPS6594X_VCCA_OVER_VOLTAGE_LVL_STATUS_BELOW_OV          (0x1U)
 /* @} */
 
 /**
@@ -640,9 +618,9 @@ level */
  *  @{
  */
 /** \brief Used to set the Thermal shutdown threshold level to 140 Celsius */
-#define PMIC_TPS6594X_THERMAL_TEMP_TSD_ORD_140C    (0U)
+#define PMIC_TPS6594X_THERMAL_TEMP_TSD_ORD_140C                      (0U)
 /** \brief Used to set the Thermal shutdown threshold level to 145 Celsius */
-#define PMIC_TPS6594X_THERMAL_TEMP_TSD_ORD_145C    (1U)
+#define PMIC_TPS6594X_THERMAL_TEMP_TSD_ORD_145C                      (1U)
 /* @} */
 
 /**
@@ -652,9 +630,9 @@ level */
  *  @{
  */
 /** \brief Used to set the Thermal warning threshold level to 140 Celsius */
-#define PMIC_TPS6594X_PG_2_0_THERMAL_TEMP_WARN_140C       (1U)
+#define PMIC_TPS6594X_PG_2_0_THERMAL_TEMP_WARN_140C                  (1U)
 /** \brief Used to set the Thermal warning threshold level to 130 Celsius */
-#define PMIC_TPS6594X_PG_2_0_THERMAL_TEMP_WARN_130C       (0U)
+#define PMIC_TPS6594X_PG_2_0_THERMAL_TEMP_WARN_130C                  (0U)
 /*  @} */
 
 /**
@@ -664,9 +642,9 @@ level */
  *  @{
  */
 /** \brief Used to set the Thermal warning threshold level to 140 Celsius */
-#define PMIC_TPS6594X_THERMAL_TEMP_WARN_130C       (1U)
+#define PMIC_TPS6594X_THERMAL_TEMP_WARN_130C                         (1U)
 /** \brief Used to set the Thermal warning threshold level to 130 Celsius */
-#define PMIC_TPS6594X_THERMAL_TEMP_WARN_120C       (0U)
+#define PMIC_TPS6594X_THERMAL_TEMP_WARN_120C                         (0U)
 /*  @} */
 
 /**
@@ -675,9 +653,9 @@ level */
  *
  *  @{
  */
-#define PMIC_TPS6594X_POWER_OV_INT            (0U)
-#define PMIC_TPS6594X_POWER_UV_INT            (1U)
-#define PMIC_TPS6594X_POWER_ILIM_INT          (3U)
+#define PMIC_TPS6594X_POWER_OV_INT                                   (0U)
+#define PMIC_TPS6594X_POWER_UV_INT                                   (1U)
+#define PMIC_TPS6594X_POWER_ILIM_INT                                 (3U)
 /*  @} */
 
 /**
@@ -686,14 +664,14 @@ level */
  *
  *  @{
  */
-#define PMIC_TPS6594X_POWER_INTERRUPT_TWARN                 (0U)
-#define PMIC_TPS6594X_POWER_INTERRUPT_NRSTOUT_READBACK      (1U)
-#define PMIC_TPS6594X_POWER_INTERRUPT_SOC_PWR_ERR           (2U)
-#define PMIC_TPS6594X_POWER_INTERRUPT_MCU_PWR_ERR           (3U)
-#define PMIC_TPS6594X_POWER_INTERRUPT_ORD_SHUTDOWN          (4U)
-#define PMIC_TPS6594X_POWER_INTERRUPT_IMM_SHUTDOWN          (5U)
-#define PMIC_TPS6594X_POWER_INTERRUPT_NRSTOUT_SOC_READBACK  (6U)
-#define PMIC_TPS6594X_POWER_INTERRUPT_EN_DRV_READBACK       (7U)
+#define PMIC_TPS6594X_POWER_INTERRUPT_TWARN                          (0U)
+#define PMIC_TPS6594X_POWER_INTERRUPT_NRSTOUT_READBACK               (1U)
+#define PMIC_TPS6594X_POWER_INTERRUPT_SOC_PWR_ERR                    (2U)
+#define PMIC_TPS6594X_POWER_INTERRUPT_MCU_PWR_ERR                    (3U)
+#define PMIC_TPS6594X_POWER_INTERRUPT_ORD_SHUTDOWN                   (4U)
+#define PMIC_TPS6594X_POWER_INTERRUPT_IMM_SHUTDOWN                   (5U)
+#define PMIC_TPS6594X_POWER_INTERRUPT_NRSTOUT_SOC_READBACK           (6U)
+#define PMIC_TPS6594X_POWER_INTERRUPT_EN_DRV_READBACK                (7U)
 /*  @} */
 
 /**
@@ -702,8 +680,8 @@ level */
  *
  *  @{
  */
-#define PMIC_TPS6594X_REGULATOR_LDORTC_ENABLE           (0U)
-#define PMIC_TPS6594X_REGULATOR_LDORTC_DISABLE          (1U)
+#define PMIC_TPS6594X_REGULATOR_LDORTC_ENABLE                        (0U)
+#define PMIC_TPS6594X_REGULATOR_LDORTC_DISABLE                       (1U)
 /*  @} */
 
 /*==========================================================================*/
@@ -731,8 +709,7 @@ level */
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_powerSetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
-                            bool               ldortcEnable);
+int32_t Pmic_powerSetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle, bool ldortcEnable);
 
 /*!
  * \brief   API to get enable/disable status for LDORTC regulator
@@ -751,13 +728,12 @@ int32_t Pmic_powerSetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_powerGetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle,
-                            bool              *pLdortcEnable);
+int32_t Pmic_powerGetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle, bool *pLdortcEnable);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif/* PMIC_POWER_TPS6594X_H_ */
+#endif /* PMIC_POWER_TPS6594X_H_ */
 
 /* @} */

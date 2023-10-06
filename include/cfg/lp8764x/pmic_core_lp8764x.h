@@ -46,7 +46,8 @@
 /* ========================================================================== */
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /* ========================================================================== */
@@ -54,10 +55,10 @@ extern "C" {
 /* ========================================================================== */
 
 /* On J7200 1.0 EVM, PMIC_LP8764X_DEV_REV_ID is 0x03 */
-#define PMIC_LP8764X_DEV_REV_ID_PG_1_0          (0x03U)
+#define PMIC_LP8764X_DEV_REV_ID_PG_1_0                              (0x03U)
 
 /* On J7200 2.0 EVM, PMIC_LP8764X_DEV_REV_ID is 0x43U */
-#define PMIC_LP8764X_DEV_REV_ID_PG_2_0          (0x43U)
+#define PMIC_LP8764X_DEV_REV_ID_PG_2_0                              (0x43U)
 
 /**
  *  \anchor Pmic_Lp8764xHera_EepromDef_LdCfg
@@ -65,10 +66,10 @@ extern "C" {
  *
  *  @{
  */
- /** \brief EEPROM defaults are loaded to Conf registers */
-#define PMIC_LP8764X_EEPROM_DEFAULTS_LOAD_TO_CONF_OTHER_REGS            (0U)
+/** \brief EEPROM defaults are loaded to Conf registers */
+#define PMIC_LP8764X_EEPROM_DEFAULTS_LOAD_TO_CONF_OTHER_REGS        (0U)
 /** \brief EEPROM defaults are not loaded to Conf registers */
-#define PMIC_LP8764X_EEPROM_DEFAULTS_NOT_LOADED_TO_CONF_OTHER_REGS      (1U)
+#define PMIC_LP8764X_EEPROM_DEFAULTS_NOT_LOADED_TO_CONF_OTHER_REGS  (1U)
 
 /**
  *  \anchor Pmic_Lp8764xHera_Skip_EepromDef_LdCfg
@@ -76,12 +77,12 @@ extern "C" {
  *
  *  @{
  */
- /** \brief Skip EEPROM defaults are loaded to Conf and Other registers is
-   *        disabled */
-#define PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_DISABLED       0U
- /** \brief Skip EEPROM defaults are loaded to Conf and Other registers is
-  *         enabled */
-#define PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_ENABLED        1U
+/** \brief Skip EEPROM defaults are loaded to Conf and Other registers is
+ *        disabled */
+#define PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_DISABLED 0U
+/** \brief Skip EEPROM defaults are loaded to Conf and Other registers is
+ *         enabled */
+#define PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_ENABLED  1U
 
 /**
  *  \anchor Pmic_Lp8764xHera_RefOutPinCtrl_Cfg
@@ -89,10 +90,10 @@ extern "C" {
  *
  *  @{
  */
- /** \brief Disable Bandgap voltage to REFOUT pin */
-#define PMIC_LP8764X_REF_OUT_PIN_CFG_DISABLE      0U
+/** \brief Disable Bandgap voltage to REFOUT pin */
+#define PMIC_LP8764X_REF_OUT_PIN_CFG_DISABLE                        0U
 /** \brief Enable Bandgap voltage to REFOUT pin  */
-#define PMIC_LP8764X_REF_OUT_PIN_CFG_ENABLE       1U
+#define PMIC_LP8764X_REF_OUT_PIN_CFG_ENABLE                         1U
 /*  @} */
 
 /**
@@ -102,15 +103,14 @@ extern "C" {
  *  @{
  */
 /** \brief  SYNCCLKIN Frequency as 1.1 MHz */
-#define PMIC_LP8764X_SYNCCLKIN_1_1_MHZ      (0U)
+#define PMIC_LP8764X_SYNCCLKIN_1_1_MHZ                              (0U)
 /** \brief  SYNCCLKIN Frequency as 2.2 MHz */
-#define PMIC_LP8764X_SYNCCLKIN_2_2_MHZ      (1U)
+#define PMIC_LP8764X_SYNCCLKIN_2_2_MHZ                              (1U)
 /** \brief  SYNCCLKIN Frequency as 4.4 MHz */
-#define PMIC_LP8764X_SYNCCLKIN_4_4_MHZ      (2U)
+#define PMIC_LP8764X_SYNCCLKIN_4_4_MHZ                              (2U)
 /** \brief  SYNCCLKIN Frequency as 8.8 MHz */
-#define PMIC_LP8764X_SYNCCLKIN_8_8_MHZ      (3U)
+#define PMIC_LP8764X_SYNCCLKIN_8_8_MHZ                              (3U)
 /*  @} */
-
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */

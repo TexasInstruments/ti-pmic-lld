@@ -50,7 +50,8 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /* ========================================================================== */
@@ -167,11 +168,10 @@ extern "C" {
 #define PMIC_LP8764X_GPIO_PINFUNC_WKUP2                    (7U)
 /*  @} */
 
-
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif/* PMIC_GPIO_LP8764X_H_ */
+#endif /* PMIC_GPIO_LP8764X_H_ */
 
 /* @} */

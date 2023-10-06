@@ -57,10 +57,11 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
-#include <pmic_core.h>
+#include "pmic_core.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /* ========================================================================== */
@@ -72,8 +73,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_ESM_MODE_MCU           (bool)false
-#define PMIC_ESM_MODE_SOC           (bool)true
+#define PMIC_ESM_MODE_MCU                    (bool)false
+#define PMIC_ESM_MODE_SOC                    (bool)true
 /*  @} */
 
 /**
@@ -82,8 +83,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_ESM_STOP               (bool)false
-#define PMIC_ESM_START              (bool)true
+#define PMIC_ESM_STOP                        (bool)false
+#define PMIC_ESM_START                       (bool)true
 /*  @} */
 
 /**
@@ -92,8 +93,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_ESM_DISABLE            (bool)false
-#define PMIC_ESM_ENABLE             (bool)true
+#define PMIC_ESM_DISABLE                     (bool)false
+#define PMIC_ESM_ENABLE                      (bool)true
 /*  @} */
 
 /**
@@ -102,8 +103,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_ESM_LEVEL_MODE         (bool)false
-#define PMIC_ESM_PWM_MODE           (bool)true
+#define PMIC_ESM_LEVEL_MODE                  (bool)false
+#define PMIC_ESM_PWM_MODE                    (bool)true
 /*  @} */
 
 /**
@@ -112,8 +113,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_ESM_ERR_EN_DRV_CLEAR_DISABLE       (bool)false
-#define PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE        (bool)true
+#define PMIC_ESM_ERR_EN_DRV_CLEAR_DISABLE    (bool)false
+#define PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE     (bool)true
 /*  @} */
 
 /**
@@ -122,8 +123,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_ESM_INTERRUPT_DISABLE               (bool)false
-#define PMIC_ESM_INTERRUPT_ENABLE                (bool)true
+#define PMIC_ESM_INTERRUPT_DISABLE           (bool)false
+#define PMIC_ESM_INTERRUPT_ENABLE            (bool)true
 /*  @} */
 
 /**
@@ -132,29 +133,29 @@ extern "C" {
  *
  *  @{
  */
- /** \brief validParams value used to set/get ESM delay-1 time interval */
-#define PMIC_ESM_CFG_DELAY1_VALID           (0x00U)
+/** \brief validParams value used to set/get ESM delay-1 time interval */
+#define PMIC_ESM_CFG_DELAY1_VALID            (0x00U)
 /** \brief validParams value used to set/get ESM delay-2 time interval  */
-#define PMIC_ESM_CFG_DELAY2_VALID           (0x01U)
+#define PMIC_ESM_CFG_DELAY2_VALID            (0x01U)
 /** \brief validParams value used to set/get ESM Error count Threshold value */
-#define PMIC_ESM_CFG_ERR_CNT_THR_VALID      (0x02U)
+#define PMIC_ESM_CFG_ERR_CNT_THR_VALID       (0x02U)
 /** \brief validParams value used to set/get ESM Maximum high-pulse
  *         time-threshold value  */
-#define PMIC_ESM_CFG_HMAX_VALID             (0x03U)
+#define PMIC_ESM_CFG_HMAX_VALID              (0x03U)
 /** \brief validParams value used to set/get ESM Minimum high-pulse
  *         time-threshold value  */
-#define PMIC_ESM_CFG_HMIN_VALID             (0x04U)
+#define PMIC_ESM_CFG_HMIN_VALID              (0x04U)
 /** \brief validParams value used to set/get ESM Maximum low-pulse
  *         time-threshold value */
-#define PMIC_ESM_CFG_LMAX_VALID             (0x05U)
+#define PMIC_ESM_CFG_LMAX_VALID              (0x05U)
 /** \brief validParams value used to set/get  ESM Minimum low-pulse
  *         time-threshold value */
-#define PMIC_ESM_CFG_LMIN_VALID             (0x06U)
+#define PMIC_ESM_CFG_LMIN_VALID              (0x06U)
 /** \brief validParams value used to set/get ESM ENABLE_DRV clear configuration
  */
-#define PMIC_ESM_CFG_EN_DRV_VALID           (0x07U)
+#define PMIC_ESM_CFG_EN_DRV_VALID            (0x07U)
 /** \brief validParams value used to set/get ESM mode */
-#define PMIC_ESM_CFG_MODE_VALID             (0x08U)
+#define PMIC_ESM_CFG_MODE_VALID              (0x08U)
 /*  @} */
 
 /**
@@ -166,24 +167,15 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_ESM_CFG_DELAY1_VALID_SHIFT           \
-                                        (0x01U << PMIC_ESM_CFG_DELAY1_VALID)
-#define PMIC_ESM_CFG_DELAY2_VALID_SHIFT           \
-                                        (0x01U << PMIC_ESM_CFG_DELAY2_VALID)
-#define PMIC_ESM_CFG_ERR_CNT_THR_VALID_SHIFT          \
-                                      (0x01U << PMIC_ESM_CFG_ERR_CNT_THR_VALID)
-#define PMIC_ESM_CFG_HMAX_VALID_SHIFT             \
-                                        (0x01U << PMIC_ESM_CFG_HMAX_VALID)
-#define PMIC_ESM_CFG_HMIN_VALID_SHIFT             \
-                                        (0x01U << PMIC_ESM_CFG_HMIN_VALID)
-#define PMIC_ESM_CFG_LMAX_VALID_SHIFT             \
-                                        (0x01U << PMIC_ESM_CFG_LMAX_VALID)
-#define PMIC_ESM_CFG_LMIN_VALID_SHIFT             \
-                                        (0x01U << PMIC_ESM_CFG_LMIN_VALID)
-#define PMIC_ESM_CFG_EN_DRV_VALID_SHIFT           \
-                                        (0x01U << PMIC_ESM_CFG_EN_DRV_VALID)
-#define PMIC_ESM_CFG_MODE_VALID_SHIFT             \
-                                        (0x01U << PMIC_ESM_CFG_MODE_VALID)
+#define PMIC_ESM_CFG_DELAY1_VALID_SHIFT      (0x01U << PMIC_ESM_CFG_DELAY1_VALID)
+#define PMIC_ESM_CFG_DELAY2_VALID_SHIFT      (0x01U << PMIC_ESM_CFG_DELAY2_VALID)
+#define PMIC_ESM_CFG_ERR_CNT_THR_VALID_SHIFT (0x01U << PMIC_ESM_CFG_ERR_CNT_THR_VALID)
+#define PMIC_ESM_CFG_HMAX_VALID_SHIFT        (0x01U << PMIC_ESM_CFG_HMAX_VALID)
+#define PMIC_ESM_CFG_HMIN_VALID_SHIFT        (0x01U << PMIC_ESM_CFG_HMIN_VALID)
+#define PMIC_ESM_CFG_LMAX_VALID_SHIFT        (0x01U << PMIC_ESM_CFG_LMAX_VALID)
+#define PMIC_ESM_CFG_LMIN_VALID_SHIFT        (0x01U << PMIC_ESM_CFG_LMIN_VALID)
+#define PMIC_ESM_CFG_EN_DRV_VALID_SHIFT      (0x01U << PMIC_ESM_CFG_EN_DRV_VALID)
+#define PMIC_ESM_CFG_MODE_VALID_SHIFT        (0x01U << PMIC_ESM_CFG_MODE_VALID)
 /*  @} */
 
 /*==========================================================================*/
@@ -260,16 +252,16 @@ extern "C" {
  */
 typedef struct Pmic_EsmCfg_s
 {
-    uint32_t        validParams;
-    uint32_t        esmDelay1_us;
-    uint32_t        esmDelay2_us;
-    uint16_t        esmHmax_us;
-    uint16_t        esmHmin_us;
-    uint16_t        esmLmax_us;
-    uint16_t        esmLmin_us;
-    uint8_t         esmErrCntThr;
-    bool            esmEnDrv;
-    bool            esmMode;
+    uint32_t validParams;
+    uint32_t esmDelay1_us;
+    uint32_t esmDelay2_us;
+    uint16_t esmHmax_us;
+    uint16_t esmHmin_us;
+    uint16_t esmLmax_us;
+    uint16_t esmLmin_us;
+    uint8_t  esmErrCntThr;
+    bool     esmEnDrv;
+    bool     esmMode;
 } Pmic_EsmCfg_t;
 
 /*!
@@ -284,9 +276,9 @@ typedef struct Pmic_EsmCfg_s
  */
 typedef struct Pmic_EsmIntrCfg_s
 {
-    bool        esmPinIntr;
-    bool        esmFailIntr;
-    bool        esmRstIntr;
+    bool esmPinIntr;
+    bool esmFailIntr;
+    bool esmRstIntr;
 } Pmic_EsmIntrCfg_t;
 
 /*==========================================================================*/
@@ -317,9 +309,7 @@ typedef struct Pmic_EsmIntrCfg_s
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_esmStart(Pmic_CoreHandle_t   *pPmicCoreHandle,
-                      const bool           esmType,
-                      const bool           esmState);
+int32_t Pmic_esmStart(Pmic_CoreHandle_t *pPmicCoreHandle, const bool esmType, const bool esmState);
 
 /*!
  * \brief   API to read status of PMIC ESM is started or not.
@@ -343,9 +333,7 @@ int32_t Pmic_esmStart(Pmic_CoreHandle_t   *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_esmGetStatus(Pmic_CoreHandle_t   *pPmicCoreHandle,
-                          const bool           esmType,
-                          bool                *pEsmState);
+int32_t Pmic_esmGetStatus(Pmic_CoreHandle_t *pPmicCoreHandle, const bool esmType, bool *pEsmState);
 
 /*!
  * \brief   API to Enable/Disable PMIC ESM.
@@ -368,9 +356,7 @@ int32_t Pmic_esmGetStatus(Pmic_CoreHandle_t   *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_esmEnable(Pmic_CoreHandle_t   *pPmicCoreHandle,
-                       const bool           esmType,
-                       const bool           esmToggle);
+int32_t Pmic_esmEnable(Pmic_CoreHandle_t *pPmicCoreHandle, const bool esmType, const bool esmToggle);
 
 /*!
  * \brief   API to Read PMIC ESM Enable/Disable state.
@@ -391,9 +377,7 @@ int32_t Pmic_esmEnable(Pmic_CoreHandle_t   *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_esmGetEnableState(Pmic_CoreHandle_t   *pPmicCoreHandle,
-                               const bool           esmType,
-                               bool                *pEsmState);
+int32_t Pmic_esmGetEnableState(Pmic_CoreHandle_t *pPmicCoreHandle, const bool esmType, bool *pEsmState);
 
 /*!
  * \brief   API to Set PMIC ESM Configuration.
@@ -415,9 +399,7 @@ int32_t Pmic_esmGetEnableState(Pmic_CoreHandle_t   *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_esmSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
-                                 const bool           esmType,
-                                 const Pmic_EsmCfg_t  esmCfg);
+int32_t Pmic_esmSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const bool esmType, const Pmic_EsmCfg_t esmCfg);
 
 /*!
  * \brief   API to Get the PMIC ESM Configuration.
@@ -442,9 +424,7 @@ int32_t Pmic_esmSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values: \ref Pmic_ErrorCodes
  */
-int32_t Pmic_esmGetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
-                                 const bool           esmType,
-                                 Pmic_EsmCfg_t       *pEsmCfg);
+int32_t Pmic_esmGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const bool esmType, Pmic_EsmCfg_t *pEsmCfg);
 
 /*!
  * \brief   API to Set PMIC ESM Interrupts.
@@ -465,9 +445,8 @@ int32_t Pmic_esmGetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_esmSetInterrupt(Pmic_CoreHandle_t        *pPmicCoreHandle,
-                             const bool                esmType,
-                             const Pmic_EsmIntrCfg_t   esmIntrCfg);
+int32_t
+Pmic_esmSetInterrupt(Pmic_CoreHandle_t *pPmicCoreHandle, const bool esmType, const Pmic_EsmIntrCfg_t esmIntrCfg);
 
 /*!
  * \brief   API to Get the current ESM Error Count.
@@ -488,9 +467,7 @@ int32_t Pmic_esmSetInterrupt(Pmic_CoreHandle_t        *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values: \ref Pmic_ErrorCodes
  */
-int32_t Pmic_esmGetErrCnt(Pmic_CoreHandle_t   *pPmicCoreHandle,
-                          const bool           esmType,
-                          uint8_t             *pEsmErrCnt);
+int32_t Pmic_esmGetErrCnt(Pmic_CoreHandle_t *pPmicCoreHandle, const bool esmType, uint8_t *pEsmErrCnt);
 
 #ifdef __cplusplus
 }

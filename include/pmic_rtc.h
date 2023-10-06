@@ -57,11 +57,11 @@
 /* ========================================================================= */
 /*                             Include Files                                 */
 /* ========================================================================= */
-
-#include <pmic_core.h>
+#include "pmic_core.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /* ========================================================================= */
@@ -74,10 +74,10 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_RTC_SECOND_INTR_PERIOD                    (0x0U)
-#define PMIC_RTC_MINUTE_INTR_PERIOD                    (0x1U)
-#define PMIC_RTC_HOUR_INTR_PERIOD                      (0x2U)
-#define PMIC_RTC_DAY_INTR_PERIOD                       (0x3U)
+#define PMIC_RTC_SECOND_INTR_PERIOD                       (0x0U)
+#define PMIC_RTC_MINUTE_INTR_PERIOD                       (0x1U)
+#define PMIC_RTC_HOUR_INTR_PERIOD                         (0x2U)
+#define PMIC_RTC_DAY_INTR_PERIOD                          (0x3U)
 /* @} */
 
 /**
@@ -86,8 +86,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_RTC_ALARM_INTR_ENABLE                      1U
-#define PMIC_RTC_ALARM_INTR_DISABLE                     0U
+#define PMIC_RTC_ALARM_INTR_ENABLE                        1U
+#define PMIC_RTC_ALARM_INTR_DISABLE                       0U
 /* @} */
 
 /**
@@ -96,8 +96,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_RTC_TIMER_INTR_ENABLE                      1U
-#define PMIC_RTC_TIMER_INTR_DISABLE                     0U
+#define PMIC_RTC_TIMER_INTR_ENABLE                        1U
+#define PMIC_RTC_TIMER_INTR_DISABLE                       0U
 /* @} */
 
 /**
@@ -106,8 +106,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_RTC_24_HOUR_MODE                          (0x0U)
-#define PMIC_RTC_12_HOUR_MODE                          (0x1U)
+#define PMIC_RTC_24_HOUR_MODE                             (0x0U)
+#define PMIC_RTC_12_HOUR_MODE                             (0x1U)
 /* @} */
 
 /**
@@ -116,8 +116,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_RTC_AM_MODE                               (0x0U)
-#define PMIC_RTC_PM_MODE                               (0x1U)
+#define PMIC_RTC_AM_MODE                                  (0x0U)
+#define PMIC_RTC_PM_MODE                                  (0x1U)
 /* @} */
 
 /**
@@ -126,8 +126,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_RTC_STOP                                  0U
-#define PMIC_RTC_START                                 1U
+#define PMIC_RTC_STOP                                     0U
+#define PMIC_RTC_START                                    1U
 /* @} */
 
 /**
@@ -136,8 +136,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_RTC_STATUS_FROZEN                         0U
-#define PMIC_RTC_STATUS_RUNNING                        1U
+#define PMIC_RTC_STATUS_FROZEN                            0U
+#define PMIC_RTC_STATUS_RUNNING                           1U
 /* @} */
 
 /**
@@ -147,9 +147,9 @@ extern "C" {
  *  @{
  */
 /** \brief RESET_STATUS_RTC reset value when RTC domain is powered down */
-#define PMIC_RTC_RST_STATUS_RESET_VAL                  (0x0U)
- /** \brief Used to set RESET_STATUS_RTC register bit field */
-#define PMIC_RTC_RST_STATUS_SET_VAL                    (0x1U)
+#define PMIC_RTC_RST_STATUS_RESET_VAL                     (0x0U)
+/** \brief Used to set RESET_STATUS_RTC register bit field */
+#define PMIC_RTC_RST_STATUS_SET_VAL                       (0x1U)
 /* @} */
 
 /**
@@ -158,10 +158,10 @@ extern "C" {
  *
  *  @{
  */
- /** \brief Used to clear POWERUP_STATUS register bit field */
-#define PMIC_RTC_POWERUP_STATUS_CLR_VAL                      (0x0U)
+/** \brief Used to clear POWERUP_STATUS register bit field */
+#define PMIC_RTC_POWERUP_STATUS_CLR_VAL                   (0x0U)
 /** \brief POWERUP_STATUS reset value when RTC domain is powered down */
-#define PMIC_RTC_POWERUP_STATUS_RESET_VAL                    (0x1U)
+#define PMIC_RTC_POWERUP_STATUS_RESET_VAL                 (0x1U)
 /* @} */
 
 /**
@@ -170,13 +170,13 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_RTC_WEEKDAY_SUNDAY      (1U)
-#define PMIC_RTC_WEEKDAY_MONDAY      (2U)
-#define PMIC_RTC_WEEKDAY_TUESDAY     (3U)
-#define PMIC_RTC_WEEKDAY_WEDNESDAY   (4U)
-#define PMIC_RTC_WEEKDAY_THURSDAY    (5U)
-#define PMIC_RTC_WEEKDAY_FRIDAY      (6U)
-#define PMIC_RTC_WEEKDAY_SATURDAY    (7U)
+#define PMIC_RTC_WEEKDAY_SUNDAY                           (1U)
+#define PMIC_RTC_WEEKDAY_MONDAY                           (2U)
+#define PMIC_RTC_WEEKDAY_TUESDAY                          (3U)
+#define PMIC_RTC_WEEKDAY_WEDNESDAY                        (4U)
+#define PMIC_RTC_WEEKDAY_THURSDAY                         (5U)
+#define PMIC_RTC_WEEKDAY_FRIDAY                           (6U)
+#define PMIC_RTC_WEEKDAY_SATURDAY                         (7U)
 /* @} */
 
 /**
@@ -187,18 +187,18 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_RTC_MONTH_JAN           (1U)
-#define PMIC_RTC_MONTH_FEB           (2U)
-#define PMIC_RTC_MONTH_MAR           (3U)
-#define PMIC_RTC_MONTH_APR           (4U)
-#define PMIC_RTC_MONTH_MAY           (5U)
-#define PMIC_RTC_MONTH_JUN           (6U)
-#define PMIC_RTC_MONTH_JUL           (7U)
-#define PMIC_RTC_MONTH_AUG           (8U)
-#define PMIC_RTC_MONTH_SEP           (9U)
-#define PMIC_RTC_MONTH_OCT           (10U)
-#define PMIC_RTC_MONTH_NOV           (11U)
-#define PMIC_RTC_MONTH_DEC           (12U)
+#define PMIC_RTC_MONTH_JAN                                (1U)
+#define PMIC_RTC_MONTH_FEB                                (2U)
+#define PMIC_RTC_MONTH_MAR                                (3U)
+#define PMIC_RTC_MONTH_APR                                (4U)
+#define PMIC_RTC_MONTH_MAY                                (5U)
+#define PMIC_RTC_MONTH_JUN                                (6U)
+#define PMIC_RTC_MONTH_JUL                                (7U)
+#define PMIC_RTC_MONTH_AUG                                (8U)
+#define PMIC_RTC_MONTH_SEP                                (9U)
+#define PMIC_RTC_MONTH_OCT                                (10U)
+#define PMIC_RTC_MONTH_NOV                                (11U)
+#define PMIC_RTC_MONTH_DEC                                (12U)
 /* @} */
 
 /**
@@ -208,7 +208,7 @@ extern "C" {
  *  @{
  */
 /** \brief Set 32K counter with RTC compensation values */
-#define PMIC_RTC_32K_COUNTER_COMP_VAL_SET        (0x1U)
+#define PMIC_RTC_32K_COUNTER_COMP_VAL_SET                 (0x1U)
 /* @} */
 
 /**
@@ -217,10 +217,9 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_RTC_CRYSTAL_OSC_DISABLE             0U
-#define PMIC_RTC_CRYSTAL_OSC_ENABLE              1U
+#define PMIC_RTC_CRYSTAL_OSC_DISABLE                      0U
+#define PMIC_RTC_CRYSTAL_OSC_ENABLE                       1U
 /* @} */
-
 
 /**
  *  \anchor Pmic_RtcRoundTime
@@ -229,7 +228,7 @@ extern "C" {
  *  @{
  */
 /** \brief Round the time to closest minute */
-#define PMIC_RTC_ROUND_TIME_SET                  (0x1U)
+#define PMIC_RTC_ROUND_TIME_SET                           (0x1U)
 /* @} */
 
 /**
@@ -239,9 +238,9 @@ extern "C" {
  *  @{
  */
 /** \brief RTC register read from Dynamic registers */
-#define PMIC_RTC_DYNAMIC_REG_SEL                  (0x0U)
+#define PMIC_RTC_DYNAMIC_REG_SEL                          (0x0U)
 /** \brief RTC register read from Static Shadowed registers */
-#define PMIC_RTC_STATIC_SHADOWED_REG_SEL          (0x1U)
+#define PMIC_RTC_STATIC_SHADOWED_REG_SEL                  (0x1U)
 /* @} */
 
 /**
@@ -251,11 +250,11 @@ extern "C" {
  *  @{
  */
 /** \brief Selects Crystal Oscillator type as 6PF */
-#define PMIC_RTC_CRYSTAL_OSC_TYPE_6PF                  (0x0U)
+#define PMIC_RTC_CRYSTAL_OSC_TYPE_6PF                     (0x0U)
 /** \brief Selects Crystal Oscillator type as 9PF */
-#define PMIC_RTC_CRYSTAL_OSC_TYPE_9PF                  (0x1U)
+#define PMIC_RTC_CRYSTAL_OSC_TYPE_9PF                     (0x1U)
 /** \brief Selects Crystal Oscillator type as 12.5PF */
-#define PMIC_RTC_CRYSTAL_OSC_TYPE_12_5PF               (0x2U)
+#define PMIC_RTC_CRYSTAL_OSC_TYPE_12_5PF                  (0x2U)
 /* @} */
 
 /**
@@ -265,9 +264,9 @@ extern "C" {
  *  @{
  */
 /** \brief Selects RTC Reset Status */
-#define PMIC_RTC_RST_STATUS                  (0x0U)
+#define PMIC_RTC_RST_STATUS                               (0x0U)
 /** \brief Selects RTC Powerup Status */
-#define PMIC_RTC_POWERUP_STATUS              (0x1U)
+#define PMIC_RTC_POWERUP_STATUS                           (0x1U)
 /* @} */
 
 /**
@@ -276,16 +275,16 @@ extern "C" {
  *
  *  @{
  */
- /** \brief validParams value used to set/get Value to represent the Seconds */
-#define PMIC_RTC_TIME_CFG_SEC_VALID       (0U)
+/** \brief validParams value used to set/get Value to represent the Seconds */
+#define PMIC_RTC_TIME_CFG_SEC_VALID                       (0U)
 /** \brief validParams value used to set/get Value to represent the Minutes */
-#define PMIC_RTC_TIME_CFG_MIN_VALID       (1U)
+#define PMIC_RTC_TIME_CFG_MIN_VALID                       (1U)
 /** \brief validParams value used to set/get Value to represent the Hours */
-#define PMIC_RTC_TIME_CFG_HRS_VALID       (2U)
+#define PMIC_RTC_TIME_CFG_HRS_VALID                       (2U)
 /** \brief validParams value used to set/get  Time Mode */
-#define PMIC_RTC_TIME_CFG_TIMEMODE_VALID  (3U)
+#define PMIC_RTC_TIME_CFG_TIMEMODE_VALID                  (3U)
 /** \brief validParams value used to set/get Maridian Mode */
-#define PMIC_RTC_TIME_CFG_MERIDIAN_VALID  (4U)
+#define PMIC_RTC_TIME_CFG_MERIDIAN_VALID                  (4U)
 /* @} */
 
 /**
@@ -297,16 +296,11 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_RTC_TIME_CFG_SEC_VALID_SHIFT       \
-                                      (1U << PMIC_RTC_TIME_CFG_SEC_VALID)
-#define PMIC_RTC_TIME_CFG_MIN_VALID_SHIFT       \
-                                      (1U << PMIC_RTC_TIME_CFG_MIN_VALID)
-#define PMIC_RTC_TIME_CFG_HRS_VALID_SHIFT       \
-                                      (1U << PMIC_RTC_TIME_CFG_HRS_VALID)
-#define PMIC_RTC_TIME_CFG_TIMEMODE_VALID_SHIFT  \
-                                      (1U << PMIC_RTC_TIME_CFG_TIMEMODE_VALID)
-#define PMIC_RTC_TIME_CFG_MERIDIAN_VALID_SHIFT  \
-                                      (1U << PMIC_RTC_TIME_CFG_MERIDIAN_VALID)
+#define PMIC_RTC_TIME_CFG_SEC_VALID_SHIFT                 (1U << PMIC_RTC_TIME_CFG_SEC_VALID)
+#define PMIC_RTC_TIME_CFG_MIN_VALID_SHIFT                 (1U << PMIC_RTC_TIME_CFG_MIN_VALID)
+#define PMIC_RTC_TIME_CFG_HRS_VALID_SHIFT                 (1U << PMIC_RTC_TIME_CFG_HRS_VALID)
+#define PMIC_RTC_TIME_CFG_TIMEMODE_VALID_SHIFT            (1U << PMIC_RTC_TIME_CFG_TIMEMODE_VALID)
+#define PMIC_RTC_TIME_CFG_MERIDIAN_VALID_SHIFT            (1U << PMIC_RTC_TIME_CFG_MERIDIAN_VALID)
 /* @} */
 
 /**
@@ -315,15 +309,15 @@ extern "C" {
  *
  *  @{
  */
- /** \brief validParams value used to set/get Value to represent the day */
-#define PMIC_RTC_DATE_CFG_DAY_VALID       (0U)
+/** \brief validParams value used to set/get Value to represent the day */
+#define PMIC_RTC_DATE_CFG_DAY_VALID                       (0U)
 /** \brief validParams value used to set/get Value to represent the Month */
-#define PMIC_RTC_DATE_CFG_MONTH_VALID     (1U)
+#define PMIC_RTC_DATE_CFG_MONTH_VALID                     (1U)
 /** \brief validParams value used to set/get Value to represent the Year*/
-#define PMIC_RTC_DATE_CFG_YEAR_VALID      (2U)
+#define PMIC_RTC_DATE_CFG_YEAR_VALID                      (2U)
 /** \brief validParams value used to set/get Value to represent the weekday of
  *         the week */
-#define PMIC_RTC_DATE_CFG_WEEKDAY_VALID   (3U)
+#define PMIC_RTC_DATE_CFG_WEEKDAY_VALID                   (3U)
 /* @} */
 
 /**
@@ -335,14 +329,10 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_RTC_DATE_CFG_DAY_VALID_SHIFT     \
-                                    (1U << PMIC_RTC_DATE_CFG_DAY_VALID)
-#define PMIC_RTC_DATE_CFG_MONTH_VALID_SHIFT   \
-                                    (1U << PMIC_RTC_DATE_CFG_MONTH_VALID)
-#define PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT    \
-                                    (1U << PMIC_RTC_DATE_CFG_YEAR_VALID)
-#define PMIC_RTC_DATE_CFG_WEEKDAY_VALID_SHIFT \
-                                    (1U << PMIC_RTC_DATE_CFG_WEEKDAY_VALID)
+#define PMIC_RTC_DATE_CFG_DAY_VALID_SHIFT                 (1U << PMIC_RTC_DATE_CFG_DAY_VALID)
+#define PMIC_RTC_DATE_CFG_MONTH_VALID_SHIFT               (1U << PMIC_RTC_DATE_CFG_MONTH_VALID)
+#define PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT                (1U << PMIC_RTC_DATE_CFG_YEAR_VALID)
+#define PMIC_RTC_DATE_CFG_WEEKDAY_VALID_SHIFT             (1U << PMIC_RTC_DATE_CFG_WEEKDAY_VALID)
 /* @} */
 
 /**
@@ -351,10 +341,10 @@ extern "C" {
  *
  *  @{
  */
- /** \brief validParams value used to get reset status of RTC */
-#define PMIC_RTC_RESET_STATUS_VALID     (0U)
+/** \brief validParams value used to get reset status of RTC */
+#define PMIC_RTC_RESET_STATUS_VALID                       (0U)
 /** \brief validParams value used to get power-up status of RTC */
-#define PMIC_RTC_POWERUP_STATUS_VALID   (1U)
+#define PMIC_RTC_POWERUP_STATUS_VALID                     (1U)
 /* @} */
 
 /**
@@ -366,10 +356,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_RTC_RESET_STATUS_VALID_SHIFT     \
-                     (1U << PMIC_RTC_RESET_STATUS_VALID)
-#define PMIC_RTC_POWERUP_STATUS_VALID_SHIFT \
-                     (1U << PMIC_RTC_POWERUP_STATUS_VALID)
+#define PMIC_RTC_RESET_STATUS_VALID_SHIFT                 (1U << PMIC_RTC_RESET_STATUS_VALID)
+#define PMIC_RTC_POWERUP_STATUS_VALID_SHIFT               (1U << PMIC_RTC_POWERUP_STATUS_VALID)
 /* @} */
 
 /**
@@ -380,19 +368,19 @@ extern "C" {
  */
 /** \brief validParams value used to set/get configuration of 32K counter with
  *         compensation values */
-#define PMIC_RTC_CFG_32K_COUNTER_COMP_VAL_SET_VALID      (0U)
+#define PMIC_RTC_CFG_32K_COUNTER_COMP_VAL_SET_VALID       (0U)
 /** \brief validParams value used to set/get configuration of RTC time config to
  *         Round the time to closest minute */
-#define PMIC_RTC_CFG_RTC_TIME_ROUND_30S_SET_VALID        (1U)
+#define PMIC_RTC_CFG_RTC_TIME_ROUND_30S_SET_VALID         (1U)
 /** \brief validParams value used to set/get to Enable/Disable Crystal
  *         Oscillator  */
-#define PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID                (2U)
+#define PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID                 (2U)
 /** \brief validParams value used to set/get to Select RTC Time and Date
  *         Register read from Dynamic or Static Shadowed Registers */
-#define PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID             (3U)
+#define PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID              (3U)
 /** \brief validParams value used to set/get to Select Crystal Oscillator Type
  */
-#define PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID              (4U)
+#define PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID               (4U)
 /* @} */
 
 /**
@@ -405,23 +393,18 @@ extern "C" {
  *  @{
  */
 
-#define PMIC_RTC_CFG_32K_COUNTER_COMP_VAL_SET_VALID_SHIFT \
-                     (1U << PMIC_RTC_CFG_32K_COUNTER_COMP_VAL_SET_VALID)
-#define PMIC_RTC_CFG_RTC_TIME_ROUND_30S_SET_VALID_SHIFT     \
-                     (1U << PMIC_RTC_CFG_RTC_TIME_ROUND_30S_SET_VALID)
-#define PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID_SHIFT     \
-                     (1U << PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID)
-#define PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID_SHIFT     \
-                     (1U << PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID)
-#define PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID_SHIFT     \
-                     (1U << PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID)
+#define PMIC_RTC_CFG_32K_COUNTER_COMP_VAL_SET_VALID_SHIFT (1U << PMIC_RTC_CFG_32K_COUNTER_COMP_VAL_SET_VALID)
+#define PMIC_RTC_CFG_RTC_TIME_ROUND_30S_SET_VALID_SHIFT   (1U << PMIC_RTC_CFG_RTC_TIME_ROUND_30S_SET_VALID)
+#define PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID_SHIFT           (1U << PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID)
+#define PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID_SHIFT        (1U << PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID)
+#define PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID_SHIFT         (1U << PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID)
 /* @} */
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
 
- /*!
+/*!
  *  \brief  RTC time configuration.
  *          The Pmic_RtcTime_s structure contains set of time parameters to
  *          set/get the RTC time.
@@ -454,12 +437,12 @@ extern "C" {
 typedef struct Pmic_RtcTime_s
 {
     uint32_t validParams;
-    uint8_t seconds;
-    uint8_t minutes;
-    uint8_t hour;
-    uint8_t timeMode;
-    uint8_t meridianMode;
-}Pmic_RtcTime_t;
+    uint8_t  seconds;
+    uint8_t  minutes;
+    uint8_t  hour;
+    uint8_t  timeMode;
+    uint8_t  meridianMode;
+} Pmic_RtcTime_t;
 
 /*!
  *  \brief   RTC Date configuration.
@@ -493,7 +476,7 @@ typedef struct Pmic_RtcDate_s
     uint8_t  month;
     uint16_t year;
     uint8_t  weekday;
-}Pmic_RtcDate_t;
+} Pmic_RtcDate_t;
 
 /*!
  *  \brief   RTC Reset Status
@@ -523,7 +506,7 @@ typedef struct Pmic_RtcRstStatus_s
     uint32_t validParams;
     bool     rtcRstStatus;
     bool     powerupStatus;
-}Pmic_RtcRstStatus_t;
+} Pmic_RtcRstStatus_t;
 
 /*!
  *  \brief   RTC configuration
@@ -575,13 +558,13 @@ typedef struct Pmic_RtcRstStatus_s
  */
 typedef struct Pmic_RtcCfg_s
 {
-    uint32_t    validParams;
-    bool        crystalOScEn;
-    uint8_t     set32KCounterCompVal;
-    uint8_t     setRtcTimeRound30s;
-    uint8_t     timeDateRegSel;
-    uint8_t     crystalOScType;
-}Pmic_RtcCfg_t;
+    uint32_t validParams;
+    bool     crystalOScEn;
+    uint8_t  set32KCounterCompVal;
+    uint8_t  setRtcTimeRound30s;
+    uint8_t  timeDateRegSel;
+    uint8_t  crystalOScType;
+} Pmic_RtcCfg_t;
 
 /*==========================================================================*/
 /*                         Function Declarations                            */
@@ -605,9 +588,8 @@ typedef struct Pmic_RtcCfg_s
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes.
  */
-int32_t  Pmic_rtcSetAlarmInfo(Pmic_CoreHandle_t    *pPmicCoreHandle,
-                              const Pmic_RtcTime_t  timeCfg,
-                              const Pmic_RtcDate_t  dateCfg);
+int32_t
+Pmic_rtcSetAlarmInfo(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_RtcTime_t timeCfg, const Pmic_RtcDate_t dateCfg);
 
 /*!
  * \brief   API to Get the alarm Time and Date from PMIC RTC function.
@@ -627,9 +609,7 @@ int32_t  Pmic_rtcSetAlarmInfo(Pmic_CoreHandle_t    *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t  Pmic_rtcGetAlarmInfo(Pmic_CoreHandle_t *pPmicCoreHandle,
-                              Pmic_RtcTime_t    *pTimeCfg,
-                              Pmic_RtcDate_t    *pDateCfg);
+int32_t Pmic_rtcGetAlarmInfo(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_RtcTime_t *pTimeCfg, Pmic_RtcDate_t *pDateCfg);
 
 /*!
  * \brief   API to Set the timer interrupt Period to PMIC RTC.
@@ -649,8 +629,7 @@ int32_t  Pmic_rtcGetAlarmInfo(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t  Pmic_rtcSetTimerPeriod(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                const uint8_t      timerPeriod);
+int32_t Pmic_rtcSetTimerPeriod(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t timerPeriod);
 
 /*!
  * \brief   API to Get the timer interrupt period from PMIC RTC.
@@ -668,8 +647,7 @@ int32_t  Pmic_rtcSetTimerPeriod(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t  Pmic_rtcGetTimerPeriod(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                uint8_t           *pTimerPeriod);
+int32_t Pmic_rtcGetTimerPeriod(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t *pTimerPeriod);
 
 /*!
  * \brief   API to Set the RTC Time and Date to PMIC RTC.
@@ -689,9 +667,8 @@ int32_t  Pmic_rtcGetTimerPeriod(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes.
  */
-int32_t  Pmic_rtcSetTimeDateInfo(Pmic_CoreHandle_t    *pPmicCoreHandle,
-                                 const Pmic_RtcTime_t  timeCfg,
-                                 const Pmic_RtcDate_t  dateCfg);
+int32_t
+Pmic_rtcSetTimeDateInfo(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_RtcTime_t timeCfg, const Pmic_RtcDate_t dateCfg);
 
 /*!
  * \brief   API to Get the RTC Time and Date from PMIC RTC function.
@@ -711,9 +688,7 @@ int32_t  Pmic_rtcSetTimeDateInfo(Pmic_CoreHandle_t    *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t  Pmic_rtcGetTimeDateInfo(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                 Pmic_RtcTime_t    *pTimeCfg,
-                                 Pmic_RtcDate_t    *pDateCfg);
+int32_t Pmic_rtcGetTimeDateInfo(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_RtcTime_t *pTimeCfg, Pmic_RtcDate_t *pDateCfg);
 
 /*!
  * \brief   API to Set the RTC frequency compensation value.
@@ -731,8 +706,7 @@ int32_t  Pmic_rtcGetTimeDateInfo(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t  Pmic_rtcSetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle,
-                             const uint16_t     compensation);
+int32_t Pmic_rtcSetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle, const uint16_t compensation);
 
 /*!
  * \brief   API to Get the RTC frequency compensation value.
@@ -751,8 +725,7 @@ int32_t  Pmic_rtcSetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t  Pmic_rtcGetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle,
-                             uint16_t          *pCompensation);
+int32_t Pmic_rtcGetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t *pCompensation);
 
 /*!
  * \brief   API to Enable/Disable the RTC.
@@ -770,8 +743,7 @@ int32_t  Pmic_rtcGetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t  Pmic_rtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
-                        const bool         enableRtc);
+int32_t Pmic_rtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle, const bool enableRtc);
 
 /*!
  * \brief   API to read RTC status which defines RTC is started or not
@@ -790,8 +762,7 @@ int32_t  Pmic_rtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t  Pmic_rtcGetStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
-                           bool              *pRtcstatus);
+int32_t Pmic_rtcGetStatus(Pmic_CoreHandle_t *pPmicCoreHandle, bool *pRtcstatus);
 
 /*!
  * \brief   API to Enable/Disable the RTC Timer Interrupt.
@@ -811,8 +782,7 @@ int32_t  Pmic_rtcGetStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t  Pmic_rtcEnableTimerIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                 const bool         enableIntr);
+int32_t Pmic_rtcEnableTimerIntr(Pmic_CoreHandle_t *pPmicCoreHandle, const bool enableIntr);
 
 /*!
  * \brief   API to Enable/Disable the RTC Alarm Interrupt.
@@ -832,8 +802,7 @@ int32_t  Pmic_rtcEnableTimerIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t  Pmic_rtcEnableAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                 const bool         enableIntr);
+int32_t Pmic_rtcEnableAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle, const bool enableIntr);
 
 /*!
  * \brief   API to Get the Reset status of RTC.
@@ -852,8 +821,7 @@ int32_t  Pmic_rtcEnableAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t  Pmic_rtcGetRstStatus(Pmic_CoreHandle_t    *pPmicCoreHandle,
-                              Pmic_RtcRstStatus_t  *pRtcRstStatus);
+int32_t Pmic_rtcGetRstStatus(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_RtcRstStatus_t *pRtcRstStatus);
 
 /*!
  * \brief   API to clear the Reset status of RTC.
@@ -873,8 +841,7 @@ int32_t  Pmic_rtcGetRstStatus(Pmic_CoreHandle_t    *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t  Pmic_rtcClrRstStatus(Pmic_CoreHandle_t    *pPmicCoreHandle,
-                              const uint8_t         rtcRstStatType);
+int32_t Pmic_rtcClrRstStatus(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t rtcRstStatType);
 
 /*!
  * \brief   API to Set PMIC RTC Configuration
@@ -892,8 +859,7 @@ int32_t  Pmic_rtcClrRstStatus(Pmic_CoreHandle_t    *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes.
  */
-int32_t  Pmic_rtcSetConfiguration(Pmic_CoreHandle_t    *pPmicCoreHandle,
-                                  const Pmic_RtcCfg_t   rtcCfg);
+int32_t Pmic_rtcSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_RtcCfg_t rtcCfg);
 
 /*!
  * \brief   API to Get PMIC RTC Configuration
@@ -912,9 +878,7 @@ int32_t  Pmic_rtcSetConfiguration(Pmic_CoreHandle_t    *pPmicCoreHandle,
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes.
  */
-int32_t  Pmic_rtcGetConfiguration(Pmic_CoreHandle_t    *pPmicCoreHandle,
-                                  Pmic_RtcCfg_t        *pRtcCfg);
-
+int32_t Pmic_rtcGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_RtcCfg_t *pRtcCfg);
 
 #ifdef __cplusplus
 }

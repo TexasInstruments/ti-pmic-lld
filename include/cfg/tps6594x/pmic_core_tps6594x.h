@@ -45,9 +45,9 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 /* ========================================================================== */
@@ -55,10 +55,10 @@ extern "C" {
 /* ========================================================================== */
 
 /* On J721E 1.0 EVM, PMIC_TPS6594X_DEV_REV_ID is 0x04 */
-#define PMIC_TPS6594X_DEV_REV_ID_PG_1_0          (0x04U)
+#define PMIC_TPS6594X_DEV_REV_ID_PG_1_0                             (0x04U)
 
 /* On J721E 2.0 EVM, PMIC_TPS6594X_DEV_REV_ID is 0x41 */
-#define PMIC_TPS6594X_DEV_REV_ID_PG_2_0          (0x41U)
+#define PMIC_TPS6594X_DEV_REV_ID_PG_2_0                             (0x41U)
 
 /**
  *  \anchor Pmic_Tps6594xLeo_EepromDef_LdCfg
@@ -66,10 +66,10 @@ extern "C" {
  *
  *  @{
  */
- /** \brief EEPROM defaults are loaded to RTC domain bits */
-#define PMIC_TPS6594X_EEPROM_DEFAULTS_LOAD_TO_RTC_DOMAIN_BITS             (0U)
+/** \brief EEPROM defaults are loaded to RTC domain bits */
+#define PMIC_TPS6594X_EEPROM_DEFAULTS_LOAD_TO_RTC_DOMAIN_BITS       (0U)
 /** \brief EEPROM defaults are not loaded to RTC domain bits */
-#define PMIC_TPS6594X_EEPROM_DEFAULTS_NOT_LOADED_TO_RTC_DOMAIN_BITS       (1U)
+#define PMIC_TPS6594X_EEPROM_DEFAULTS_NOT_LOADED_TO_RTC_DOMAIN_BITS (1U)
 
 /**
  *  \anchor Pmic_Tps6594xLeo_AMuxOutPinCtrl_Cfg
@@ -77,10 +77,10 @@ extern "C" {
  *
  *  @{
  */
- /** \brief Enable Bandgap voltage to AMUXOUT pin */
-#define PMIC_TPS6594X_AMUX_OUT_PIN_CFG_DISABLE      0U
+/** \brief Enable Bandgap voltage to AMUXOUT pin */
+#define PMIC_TPS6594X_AMUX_OUT_PIN_CFG_DISABLE                      0U
 /** \brief Disable Bandgap voltage to AMUXOUT pin */
-#define PMIC_TPS6594X_AMUX_OUT_PIN_CFG_ENABLE       1U
+#define PMIC_TPS6594X_AMUX_OUT_PIN_CFG_ENABLE                       1U
 /*  @} */
 
 /**
@@ -90,11 +90,11 @@ extern "C" {
  *  @{
  */
 /** \brief  SYNCCLKIN Frequency as 1.1 MHz */
-#define PMIC_TPS6594X_SYNCCLKIN_1_1_MHZ      (0U)
+#define PMIC_TPS6594X_SYNCCLKIN_1_1_MHZ                             (0U)
 /** \brief  SYNCCLKIN Frequency as 2.2 MHz */
-#define PMIC_TPS6594X_SYNCCLKIN_2_2_MHZ      (1U)
+#define PMIC_TPS6594X_SYNCCLKIN_2_2_MHZ                             (1U)
 /** \brief  SYNCCLKIN Frequency as 4.4 MHz */
-#define PMIC_TPS6594X_SYNCCLKIN_4_4_MHZ      (2U)
+#define PMIC_TPS6594X_SYNCCLKIN_4_4_MHZ                             (2U)
 /*  @} */
 
 /**
@@ -104,9 +104,9 @@ extern "C" {
  *  @{
  */
 /** \brief  Backup Battery charging current as 100 Micro Ampere */
-#define PMIC_TPS6594X_BB_CHARGING_CURRENT_100      (0U)
+#define PMIC_TPS6594X_BB_CHARGING_CURRENT_100                       (0U)
 /** \brief  Backup Battery charging current as 500 Micro Ampere */
-#define PMIC_TPS6594X_BB_CHARGING_CURRENT_500      (1U)
+#define PMIC_TPS6594X_BB_CHARGING_CURRENT_500                       (1U)
 /*  @} */
 
 /**
@@ -116,13 +116,13 @@ extern "C" {
  *  @{
  */
 /** \brief  Backup Battery charger End of Charge Volatge as 2.5V  */
-#define PMIC_TPS6594X_BB_ENDOF_CHARGE_VOLATGE_2_5_V      (0U)
+#define PMIC_TPS6594X_BB_ENDOF_CHARGE_VOLATGE_2_5_V                 (0U)
 /** \brief  Backup Battery charger End of Charge Volatge as 2.8V  */
-#define PMIC_TPS6594X_BB_ENDOF_CHARGE_VOLATGE_2_8_V      (1U)
+#define PMIC_TPS6594X_BB_ENDOF_CHARGE_VOLATGE_2_8_V                 (1U)
 /** \brief  Backup Battery charger End of Charge Volatge as 3.0V  */
-#define PMIC_TPS6594X_BB_ENDOF_CHARGE_VOLATGE_3_0_V      (2U)
+#define PMIC_TPS6594X_BB_ENDOF_CHARGE_VOLATGE_3_0_V                 (2U)
 /** \brief  Backup Battery charger End of Charge Volatge as 3.3V  */
-#define PMIC_TPS6594X_BB_ENDOF_CHARGE_VOLATGE_3_3_V      (3U)
+#define PMIC_TPS6594X_BB_ENDOF_CHARGE_VOLATGE_3_3_V                 (3U)
 /*  @} */
 
 /**
@@ -131,10 +131,10 @@ extern "C" {
  *
  *  @{
  */
- /** \brief Disable Backup Battery Charging */
-#define PMIC_TPS6594X_BB_CHARGINGING_CFG_DISABLE      0U
+/** \brief Disable Backup Battery Charging */
+#define PMIC_TPS6594X_BB_CHARGINGING_CFG_DISABLE                    0U
 /** \brief Enable Backup Battery Charging */
-#define PMIC_TPS6594X_BB_CHARGINGING_CFG_ENABLE       1U
+#define PMIC_TPS6594X_BB_CHARGINGING_CFG_ENABLE                     1U
 /*  @} */
 
 /**
@@ -143,10 +143,10 @@ extern "C" {
  *
  *  @{
  */
- /** \brief  Backup Battery Charging active or not enabled  */
-#define PMIC_TPS6594X_BB_EOC_STATUS_NOT_ENABLED   (0U)
- /** \brief  Backup Battery Charger reached termination voltage set by BB_VEOC */
-#define PMIC_TPS6594X_BB_EOC_STATUS_READY         (1U)
+/** \brief  Backup Battery Charging active or not enabled  */
+#define PMIC_TPS6594X_BB_EOC_STATUS_NOT_ENABLED                     (0U)
+/** \brief  Backup Battery Charger reached termination voltage set by BB_VEOC */
+#define PMIC_TPS6594X_BB_EOC_STATUS_READY                           (1U)
 /*  @} */
 
 /*==========================================================================*/

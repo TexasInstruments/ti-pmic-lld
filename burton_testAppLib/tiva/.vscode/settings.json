@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "tiva_misc.h": "c",
+        "tiva_priv.h": "c",
+        "tiva_vcp.h": "c",
+        "pmic.h": "c",
+        "tiva_test_suite.h": "c",
+        "tiva_rw_tests.h": "c",
+        "timer.h": "c",
+        "uart.h": "c",
+        "tiva_i2c.h": "c"
+    }
+}

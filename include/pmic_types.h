@@ -54,7 +54,8 @@
 #include <stdbool.h>
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 /* ========================================================================= */
 /*                             Macros & Typedefs                             */
@@ -66,10 +67,9 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_CRC_DISABLE    (0U)
-#define PMIC_CRC_ENABLE     (1U)
+#define PMIC_CRC_DISABLE (0U)
+#define PMIC_CRC_ENABLE  (1U)
 /* @} */
-
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
@@ -86,14 +86,15 @@ extern "C" {
  */
 typedef struct Pmic_DevSubSysInfo_s
 {
-   bool    gpioEnable;
-   bool    rtcEnable;
-   bool    wdgEnable;
-   bool    buckEnable;
-   bool    ldoEnable;
-   bool    esmEnable;
+    bool gpioEnable;
+    bool rtcEnable;
+    bool wdgEnable;
+    bool buckEnable;
+    bool ldoEnable;
+    bool esmEnable;
 } Pmic_DevSubSysInfo_t;
 
+// clang-format off
 /*!
  * \brief  PMIC Interface Handle.
  *         Contains various PMIC driver instance specific information. like,
@@ -173,6 +174,7 @@ typedef struct Pmic_CoreHandle_s {
     void (*pFnPmicCritSecStart)(void);
     void (*pFnPmicCritSecStop)(void);
 } Pmic_CoreHandle_t;
+// clang-format on
 
 /*==========================================================================*/
 /*                         Function Declarations                            */
