@@ -1,7 +1,7 @@
 /**
  * \file serial_comm_test.c
  * \author John Bui (j-bui1@ti.com)
- * \brief Test application that tests PMIC driver R/W APIs and the PMIC handle R/W APIs
+ * \brief Unity testing application that tests the PMIC driver R/W APIs and the PMIC handle R/W APIs
  * \version 1.0
  * \date 2023-10-11
  *
@@ -16,10 +16,10 @@
 #include <stdlib.h>
 
 /* Tiva test app library */
-#include "burton_testAppLib/tiva/tiva_testLib.h"
+#include "pmic_drv/burton_testAppLib/tiva/tiva_testLib.h"
 
 /* Test specific include */
-#include "burton_testAppLib/tiva/burton_tests/serial_comm_test.h"
+#include "pmic_drv/burton_testAppLib/tiva/burton_tests/serial_comm_test.h"
 
 /* Unity testing library */
 #include "unity/unity.h"
@@ -58,7 +58,7 @@ int main(void)
             PMIC_CFG_QASLAVEADDR_VALID_SHIFT | PMIC_CFG_NVMSLAVEADDR_VALID_SHIFT | PMIC_CFG_COMM_HANDLE_VALID_SHIFT |
             PMIC_CFG_COMM_IO_RD_VALID_SHIFT | PMIC_CFG_COMM_IO_WR_VALID_SHIFT | PMIC_CFG_I2C1_SPEED_VALID_SHIFT,
         .instType = PMIC_MAIN_INST,
-        .pmicDeviceType = PMIC_DEV_LEO_TPS6594X, // Must change later
+        .pmicDeviceType = PMIC_DEV_BURTON_TPS6522X,
         .commMode = PMIC_INTF_SINGLE_I2C,
         .slaveAddr = BURTON_I2C_USER_PAGE_ADDRESS,
         .qaSlaveAddr = BURTON_I2C_WDG_PAGE_ADDRESS,
@@ -96,12 +96,12 @@ int main(void)
     UNITY_BEGIN();
 
     /*** Testing PMIC handle's R/W APIs ***/
-    RUN_TEST(test_pmicCoreHandle_PmicCommIoRead_forProperOperation);
-    RUN_TEST(test_pmicCoreHandle_PmicCommIoWrite_forProperOperation);
+    RUN_TEST(test_pmicCoreHandle_PmicCommIoRead_forCorrectReads);
+    RUN_TEST(test_pmicCoreHandle_PmicCommIoWrite_forCorrectWrites);
 
     /*** Testing PMIC driver's R/W APIs ***/
-    RUN_TEST(test_Pmic_commIntf_recvByte_forProperOperation);
-    RUN_TEST(test_Pmic_commIntf_sendByte_forProperOperation);
+    RUN_TEST(test_Pmic_commIntf_recvByte_forCorrectReads);
+    RUN_TEST(test_Pmic_commIntf_sendByte_forCorrectWrites);
 
     /*** Finish unity testing ***/
     return UNITY_END();
@@ -109,10 +109,10 @@ int main(void)
 
 /**
  * \brief Unity test to check if the driver's Receive Byte API is
- *        able to read correct values from Burton OTP-programmed user registers.
+ * able to read correct values from Burton OTP-programmed user registers.
  *
  */
-void test_Pmic_commIntf_recvByte_forProperOperation(void)
+void test_Pmic_commIntf_recvByte_forCorrectReads(void)
 {
     uint8_t i = 0;
     uint8_t rxBuf = 0;
@@ -121,7 +121,7 @@ void test_Pmic_commIntf_recvByte_forProperOperation(void)
     for (i = 0; i < BURTON_NUM_USER_OTP_REGS; i++)
     {
         status = Pmic_commIntf_recvByte(pmicCoreHandle, burtonUserOTPRegAddr[i], &rxBuf);
-        TEST_ASSERT_EQUAL_UINT32(PMIC_ST_SUCCESS, status);
+        TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
 
         TEST_ASSERT_EQUAL_UINT8(burtonUserOTPRegVal[i], rxBuf);
     }
@@ -129,26 +129,26 @@ void test_Pmic_commIntf_recvByte_forProperOperation(void)
 
 /**
  * \brief Unity test to check if the PMIC handle's read function is
- *        able to read correct values from Burton OTP-programmed user registers
+ * able to read correct values from Burton OTP-programmed user registers
  *
  */
-void test_pmicCoreHandle_PmicCommIoRead_forProperOperation(void)
+void test_pmicCoreHandle_PmicCommIoRead_forCorrectReads(void)
 {
     uint8_t rxBuf[11] = {0};
     int32_t status = PMIC_ST_SUCCESS;
 
     status = pmicCoreHandle->pFnPmicCommIoRead(pmicCoreHandle, PMIC_MAIN_INST, 0x1, rxBuf, 11);
-    TEST_ASSERT_EQUAL_UINT32(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
 
     TEST_ASSERT_EQUAL_UINT8_ARRAY(burtonUserOTPRegVal, rxBuf, 11);
 }
 
 /**
  * \brief Unity test to check if the driver's send byte API is
- *        able to write the correct values to Burton OTP-programmed user registers.
+ * able to write the correct values to Burton OTP-programmed user registers.
  *
  */
-void test_Pmic_commIntf_sendByte_forProperOperation(void)
+void test_Pmic_commIntf_sendByte_forCorrectWrites(void)
 {
     uint8_t  i = 0;
     uint8_t  actualVal[4] = {0x0};
@@ -158,10 +158,10 @@ void test_Pmic_commIntf_sendByte_forProperOperation(void)
     for (i = 0; i < 4; i++)
     {
         status = Pmic_commIntf_sendByte(pmicCoreHandle, 0xC9 + i, expectedVal[i]);
-        TEST_ASSERT_EQUAL_UINT32(PMIC_ST_SUCCESS, status);
+        TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
 
-        status = Pmic_commIntf_recvByte(pmicCoreHandle, 0xC9 + i, actualVal[i]);
-        TEST_ASSERT_EQUAL_UINT32(PMIC_ST_SUCCESS, status);
+        status = Pmic_commIntf_recvByte(pmicCoreHandle, 0xC9 + i, actualVal + i);
+        TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
 
         TEST_ASSERT_EQUAL_UINT8(expectedVal[i], actualVal[i]);
     }
@@ -169,20 +169,20 @@ void test_Pmic_commIntf_sendByte_forProperOperation(void)
 
 /**
  * \brief Unity test to check if the PMIC handle's write function is
- *        able to write the correct values to Burton OTP-programmed user registers.
+ * able to write the correct values to Burton OTP-programmed user registers.
  *
  */
-void test_pmicCoreHandle_PmicCommIoWrite_forProperOperation(void)
+void test_pmicCoreHandle_PmicCommIoWrite_forCorrectWrites(void)
 {
     uint8_t  actualVal[4] = {0x0};
     uint32_t status = PMIC_ST_SUCCESS;
     uint8_t  expectedVal[4] = {0xFF, 0xEE, 0xDD, 0xCC}; // Arbitrary values
 
     status = pmicCoreHandle->pFnPmicCommIoWrite(pmicCoreHandle, PMIC_MAIN_INST, 0xC9, expectedVal, 4);
-    TEST_ASSERT_EQUAL_UINT32(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
 
     status = pmicCoreHandle->pFnPmicCommIoRead(pmicCoreHandle, PMIC_MAIN_INST, 0xC9, actualVal, 4);
-    TEST_ASSERT_EQUAL_UINT32(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
 
     TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedVal, actualVal, 4);
 }

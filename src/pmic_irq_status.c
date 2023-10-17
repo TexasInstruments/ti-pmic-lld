@@ -42,8 +42,10 @@
 #include "../include/pmic_irq.h"
 #include "pmic_core_priv.h"
 #include "cfg/tps6594x/pmic_irq_tps6594x_priv.h"
+#include "cfg/tps6522x/pmic_irq_tps6522x_priv.h"
 #include "cfg/lp8764x/pmic_irq_lp8764x_priv.h"
 #include "../include/cfg/tps6594x/pmic_irq_tps6594x.h"
+#include "../include/cfg/tps6522x/pmic_irq_tps6522x.h"
 #include "../include/cfg/lp8764x/pmic_irq_lp8764x.h"
 #include "pmic_irq_priv.h"
 
@@ -283,7 +285,9 @@ static void Pmic_get_gpioIntrCfg(const Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_
         case PMIC_DEV_HERA_LP8764X:
             pmic_get_lp8764x_intrGpioCfg(pGpioIntrCfg);
             break;
-
+        case PMIC_DEV_BURTON_TPS6522X:
+            pmic_get_tps6522x_intrGpioCfg(pGpioIntrCfg);
+            break;
         default:
             pmic_get_tps6594x_intrGpioCfg(pGpioIntrCfg);
             break;
@@ -946,6 +950,12 @@ int32_t Pmic_irqGpioMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if ((PMIC_ST_SUCCESS == pmicStatus) && ((irqGpioNum == PMIC_TPS6594X_IRQ_GPIO_11_INT_MASK_NUM) &&
                                             (PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if ((PMIC_ST_SUCCESS == pmicStatus) && ((irqGpioNum > PMIC_TPS6522X_IRQ_GPIO_6_INT_MASK_NUM) &&
+                                            (PMIC_DEV_BURTON_TPS6522X == pPmicCoreHandle->pmicDeviceType)))
     {
         pmicStatus = PMIC_ST_ERR_INV_PARAM;
     }

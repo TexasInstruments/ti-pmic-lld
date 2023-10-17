@@ -45,6 +45,7 @@
 
 #include "pmic_core_priv.h"
 #include "pmic_io_priv.h"
+#include "cfg/tps6522x/pmic_gpio_tps6522x_priv.h"
 #include "cfg/tps6594x/pmic_gpio_tps6594x_priv.h"
 #include "cfg/lp8764x/pmic_gpio_lp8764x_priv.h"
 
@@ -63,6 +64,8 @@ static void Pmic_get_gpioInOutCfg(const Pmic_CoreHandle_t *pPmicCoreHandle, Pmic
         case PMIC_DEV_HERA_LP8764X:
             pmic_get_lp8764x_gpioInOutCfg(pGpioInOutCfg);
             break;
+        case PMIC_DEV_BURTON_TPS6522X:
+            pmic_get_tps6522x_gpioInOutCfg(pGpioInOutCfg);
         default:
             /* Default case is valid only for TPS6594x LEO PMIC */
             pmic_get_tps6594x_gpioInOutCfg(pGpioInOutCfg);
@@ -85,6 +88,8 @@ static void Pmic_get_gpioIntRegCfg(const Pmic_CoreHandle_t *pPmicCoreHandle, Pmi
         case PMIC_DEV_HERA_LP8764X:
             pmic_get_lp8764x_gpioIntRegCfg(pGpioIntRegCfg);
             break;
+        case PMIC_DEV_BURTON_TPS6522X:
+            pmic_get_tps6522x_gpioIntRegCfg(pGpioIntRegCfg);
         default:
             /* Default case is valid only for TPS6594x LEO PMIC */
             pmic_get_tps6594x_gpioIntRegCfg(pGpioIntRegCfg);
@@ -113,6 +118,11 @@ static int32_t Pmic_gpioValidatePin(const uint8_t pmicDeviceType, const uint8_t 
                 status = PMIC_ST_ERR_INV_PARAM;
             }
             break;
+        case PMIC_DEV_BURTON_TPS6522X:
+            if ((pin < PMIC_TPS6522X_GPIO_PIN_MIN) || (pin > PMIC_TPS6522X_GPIO_PIN_MAX))
+            {
+                status = PMIC_ST_ERR_INV_PARAM;
+            }
         default:
             /* Default case is valid only for TPS6594x LEO PMIC */
             if ((pin < PMIC_TPS6594X_GPIO_PIN_MIN) || (pin > PMIC_TPS6594X_GPIO_PIN_MAX))
@@ -200,6 +210,7 @@ Pmic_gpioSelectRegister(uint8_t pmicDeviceType, const uint8_t pin, const uint8_t
     switch (pmicDeviceType)
     {
         case PMIC_DEV_HERA_LP8764X:
+        case PMIC_DEV_BURTON_TPS6522X:
             *pRegAddr = inOutCfgRegAddr;
             break;
         default:

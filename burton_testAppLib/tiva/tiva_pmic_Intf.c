@@ -139,6 +139,14 @@ int32_t pmicI2CRead(Pmic_CoreHandle_t *pmicCorehandle, uint8_t instType, uint16_
     return status;
 }
 
+void pmicCritSecStart(void)
+{
+}
+
+void pmicCritSecStop(void)
+{
+}
+
 int32_t initializePmicCoreHandle(Pmic_CoreHandle_t *pmicCoreHandle)
 {
     if (pmicCoreHandle == NULL)
@@ -160,8 +168,8 @@ int32_t initializePmicCoreHandle(Pmic_CoreHandle_t *pmicCoreHandle)
     pmicCoreHandle->pQACommHandle       = NULL;
     pmicCoreHandle->pFnPmicCommIoRead   = NULL;
     pmicCoreHandle->pFnPmicCommIoWrite  = NULL;
-    pmicCoreHandle->pFnPmicCritSecStart = NULL;
-    pmicCoreHandle->pFnPmicCritSecStop  = NULL;
+    pmicCoreHandle->pFnPmicCritSecStart = &pmicCritSecStart;
+    pmicCoreHandle->pFnPmicCritSecStop  = &pmicCritSecStop;
 
     return SUCCESS;
 }

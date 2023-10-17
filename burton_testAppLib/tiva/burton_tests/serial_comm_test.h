@@ -26,28 +26,28 @@ extern "C"
  *        able to read correct values from Burton OTP-programmed user registers.
  *
  */
-void test_Pmic_commIntf_recvByte_forProperOperation(void);
+void test_Pmic_commIntf_recvByte_forCorrectReads(void);
 
 /**
  * \brief Unity test to check if the PMIC handle's read function is
  *        able to read correct values from Burton OTP-programmed user registers
  *
  */
-void test_pmicCoreHandle_PmicCommIoRead_forProperOperation(void);
+void test_pmicCoreHandle_PmicCommIoRead_forCorrectReads(void);
 
 /**
  * \brief Unity test to check if the driver's send byte API is
  *        able to write the correct values to Burton OTP-programmed user registers.
  *
  */
-void test_Pmic_commIntf_sendByte_forProperOperation(void);
+void test_Pmic_commIntf_sendByte_forCorrectWrites(void);
 
 /**
  * \brief Unity test to check if the PMIC handle's write function is
  *        able to write the correct values to Burton OTP-programmed user registers.
  *
  */
-void test_pmicCoreHandle_PmicCommIoWrite_forProperOperation(void);
+void test_pmicCoreHandle_PmicCommIoWrite_forCorrectWrites(void);
 
 #ifdef __cplusplus
 }

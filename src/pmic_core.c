@@ -61,6 +61,13 @@ static const Pmic_DevSubSysInfo_t pmicSubSysInfo[] = {
      .wdgEnable = (bool)true,
      .buckEnable = (bool)true,
      .ldoEnable = (bool)false,
+     .esmEnable = (bool)true},
+ /* PMIC_DEV_BURTON_TPS6522x */
+    {.gpioEnable = (bool)true,
+     .rtcEnable = (bool)false,
+     .wdgEnable = (bool)true,
+     .buckEnable = (bool)true,
+     .ldoEnable = (bool)true,
      .esmEnable = (bool)true}
 };
 
@@ -330,7 +337,8 @@ static int32_t Pmic_initCoreHandleBasicDevCfgParams(const Pmic_CoreCfg_t *pPmicC
     if (((bool)true) == pmic_validParamCheck(pPmicConfigData->validParams, PMIC_CFG_DEVICE_TYPE_VALID))
     {
         if ((PMIC_DEV_HERA_LP8764X != pPmicConfigData->pmicDeviceType) &&
-            (PMIC_DEV_LEO_TPS6594X != pPmicConfigData->pmicDeviceType))
+            (PMIC_DEV_LEO_TPS6594X != pPmicConfigData->pmicDeviceType) &&
+            (PMIC_DEV_BURTON_TPS6522X != pPmicConfigData->pmicDeviceType))
         {
             pmicStatus = PMIC_ST_ERR_INV_PARAM;
         }

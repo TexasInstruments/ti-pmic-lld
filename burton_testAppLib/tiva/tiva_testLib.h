@@ -8,6 +8,7 @@
 #include "tiva_misc.h"
 #include "tiva_pmic_intf.h"
 #include "tiva_timer.h"
+#include "tiva_gpio.h"
 
 #ifdef __cplusplus
 extern "C"
