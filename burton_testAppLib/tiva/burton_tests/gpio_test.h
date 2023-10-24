@@ -6,21 +6,15 @@
  * \date 2023-10-12
  *
  * \copyright Copyright (c) 2023
- *
  */
 #ifndef GPIO_TEST_H
 #define GPIO_TEST_H
 
-#include "driverlib/sysctl.h"
-#include "driverlib/gpio.h"
+#include "common_test.h"
 
 #ifdef __cplusplus
 extern "C"
 {
-#endif
-
-#ifndef PMIC_TPS6522X_GPIO_PIN_MAX
-#define PMIC_TPS6522X_GPIO_PIN_MAX (6U)
 #endif
 
 #ifndef PMIC_GPIOX_CONF_GPIO_SEL_SHIFT
@@ -55,45 +49,128 @@ extern "C"
 #define GPIO_RISE_INT_UNMASKED   (bool)(false)
 
 /**
- * \brief test Pmic_gpioGetConfiguration : Read all GPIO configurations
- *
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to VMON1_m functionality
  */
-void test_Pmic_gpioGetConfiguration_forCorrectReads(void);
+void test_Pmic_gpioSetConfiguration_VMON1_m(void);
 
 /**
- * \brief test Pmic_gpioSetConfiguration : Reset values of all GPIO configuration registers
- *        to zero then set their values to the NVM default configuration
- *
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to VMON2 functionality
  */
-void test_Pmic_gpioSetConfiguration_resetSetAllGpioCfg(void);
+void test_Pmic_gpioSetConfiguration_VMON2(void);
 
 /**
- * \brief test Pmic_gpioGetValue : Read all PMIC GPIOs values; test the value received
- *        from driver API against value received from application layer created read API
- *
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to Push Button functionality
  */
-void test_Pmic_gpioGetValue_forCorrectReads(void);
+void test_Pmic_gpioSetConfiguration_pushButton(void);
 
 /**
- * \brief test Pmic_gpioSetValue : Set all GPIO output values to one. Afterwards, reset all GPIO output
- *                                 values to zero. In both scenarios, check for expected output values
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to nSLEEP1 functionality
+ */
+void test_Pmic_gpioSetConfiguration_nSLEEP1(void);
+
+/**
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to nSLEEP2 functionality
+ */
+void test_Pmic_gpioSetConfiguration_nSLEEP2(void);
+
+/**
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to ADC_IN functionality
+ */
+void test_Pmic_gpioSetConfiguration_ADC_IN(void);
+
+/**
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to WKUP functionality
+ */
+void test_Pmic_gpioSetConfiguration_WKUP(void);
+
+/**
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to SYNCCLKIN functionality
+ */
+void test_Pmic_gpioSetConfiguration_SYNCCLKIN(void);
+
+/**
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to nERR_MCU functionality
+ */
+void test_Pmic_gpioSetConfiguration_nERR_MCU(void);
+
+/**
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to SDA_I2C2/SDO_SPI functionality
+ */
+void test_Pmic_gpioSetConfiguration_SDA_I2C2_SDO_SPI(void);
+
+/**
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to SCL_I2C2/CS_SPI functionality
+ */
+void test_Pmic_gpioSetConfiguration_SCL_I2C2_CS_SPI(void);
+
+/**
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to nINT functionality
+ */
+void test_Pmic_gpioSetConfiguration_nINT(void);
+
+/**
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to TRIG_WDOG functionality
+ */
+void test_Pmic_gpioSetConfiguration_TRIG_WDOG(void);
+
+/**
+ * \brief test Pmic_gpioGetValue: Send a high signal level from MCU to PMIC and get PMIC GPIO input value
  *
  * \note For this test, there must be a total of 6 physical GPIO pin connections between Burton and test MCU
+ */
+void test_Pmic_gpioGetValue_readGpioSignalLvl(void);
+
+/**
+ * \brief test Pmic_gpioSetValue: Set all GPIO output values to one. Afterwards, reset all GPIO output
+ *                                values to zero. In both scenarios, check for expected output values
  *
+ * \note For this test, there must be a total of 6 physical GPIO pin connections between Burton and test MCU
  */
 void test_Pmic_gpioSetValue_setGpioSignalLvl(void);
 
 /**
- * \brief test Pmic_gpioSetIntr :  Configure interrupts for all GPIO pins
- *
+ * \brief test Pmic_gpioSetEnPbVsensePinConfiguration: Parameter validation of PMIC handle
  */
-void test_Pmic_gpioSetIntr_configIntOnAllGpio(void);
+void test_Pmic_gpioSetEnPbVsensePinConfiguration_validatePmicHandle(void);
 
 /**
- * \brief test Pmic_gpioSetIntr : Disable interrupts for all GPIO pins
- *
+ * \brief test Pmic_gpioSetEnPbVsensePinConfiguration: Parameter validation of pin functionality struct member of
+ *                                                     enPbVsenseCfg
  */
-void test_Pmic_gpioSetIntr_disableIntOnAllGpio(void);
+void test_Pmic_gpioSetEnPbVsensePinConfiguration_validatePinFunc(void);
+
+/**
+ * \brief test Pmic_gpioSetEnPbVsensePinConfiguration: Configure EN/PB/VSENSE pin to EN functionality
+ */
+void test_Pmic_gpioSetEnPbVsensePinConfiguration_enableFunc(void);
+
+/**
+ * \brief test Pmic_gpioSetEnPbVsensePinConfiguration: Configure EN/PB/VSENSE pin to PB functionality
+ */
+void test_Pmic_gpioSetEnPbVsensePinConfiguration_pushButtonFunc(void);
+
+/**
+ * \brief test Pmic_gpioSetEnPbVsensePinConfiguration: Configure EN/PB/VSENSE pin to VSENSE functionality
+ */
+void test_Pmic_gpioSetEnPbVsensePinConfiguration_vsenseFunc(void);
+
+/**
+ * \brief test Push Button On Request: Validate that the push button generates an On Request (PB_SHORT_INT
+ *                                     flag is raised and nRSTOUT signal is set high)
+ *
+ * \note At the start of the test, it is required that the push button is to be pressed within 15 seconds
+ *       or test will fail
+ */
+void test_pushButton_onRequest(void);
+
+/**
+ * \brief test Push Button Off Request: Validate that the push button generates an Off Request (PB_LONG_INT
+ *                                      flag is raised and nRSTOUT signal is set low)
+ *
+ * \note At the start of the test, there will be 15 seconds to hold the push button for 8 seconds
+ *       or else test will fail
+ */
+void test_pushButton_offRequest(void);
 
 #ifdef __cplusplus
 }

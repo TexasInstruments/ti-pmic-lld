@@ -70,7 +70,7 @@ extern "C"
 /*                         Function Declarations                              */
 /* ========================================================================== */
 
-/*
+/**
  * \brief  Function to get the PMIC GPIO Pins with Input Ouput Configuration
  *         for TPS6522x BURTON PMIC
  *
@@ -78,7 +78,7 @@ extern "C"
  */
 void pmic_get_tps6522x_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg);
 
-/*
+/**
  * \brief  Function to get the PMIC GPIO Interrupt Register array for
  *         TPS6522x BURTON PMIC
  *

@@ -77,8 +77,8 @@ extern "C"
  *
  *  @{
  */
-#define PMIC_GPIO_DEGLITCH_DISABLE           (0U)
-#define PMIC_GPIO_DEGLITCH_ENABLE            (1U)
+#define PMIC_GPIO_DEGLITCH_DISABLE                     (0U)
+#define PMIC_GPIO_DEGLITCH_ENABLE                      (1U)
 /*  @} */
 
 /**
@@ -87,8 +87,8 @@ extern "C"
  *
  *  @{
  */
-#define PMIC_GPIO_INPUT                      (0U)
-#define PMIC_GPIO_OUTPUT                     (1U)
+#define PMIC_GPIO_INPUT                                (0U)
+#define PMIC_GPIO_OUTPUT                               (1U)
 /*  @} */
 
 /**
@@ -97,8 +97,8 @@ extern "C"
  *
  *  @{
  */
-#define PMIC_GPIO_PUSH_PULL_OUTPUT           (0U)
-#define PMIC_GPIO_OPEN_DRAIN_OUTPUT          (1U)
+#define PMIC_GPIO_PUSH_PULL_OUTPUT                     (0U)
+#define PMIC_GPIO_OPEN_DRAIN_OUTPUT                    (1U)
 /*  @} */
 
 /**
@@ -107,8 +107,8 @@ extern "C"
  *
  *  @{
  */
-#define PMIC_GPIO_LOW                        (0U)
-#define PMIC_GPIO_HIGH                       (1U)
+#define PMIC_GPIO_LOW                                  (0U)
+#define PMIC_GPIO_HIGH                                 (1U)
 /*  @} */
 
 /**
@@ -117,8 +117,8 @@ extern "C"
  *
  *  @{
  */
-#define PMIC_GPIO_PD_SELECT                  (0U)
-#define PMIC_GPIO_PU_SELECT                  (1U)
+#define PMIC_GPIO_PD_SELECT                            (0U)
+#define PMIC_GPIO_PU_SELECT                            (1U)
 /*  @} */
 
 /**
@@ -127,8 +127,8 @@ extern "C"
  *
  *  @{
  */
-#define PMIC_GPIO_PU_PD_DISABLE              (0U)
-#define PMIC_GPIO_PU_PD_ENABLE               (1U)
+#define PMIC_GPIO_PU_PD_DISABLE                        (0U)
+#define PMIC_GPIO_PU_PD_ENABLE                         (1U)
 /*  @} */
 
 /**
@@ -139,22 +139,22 @@ extern "C"
  */
 /** \brief validParams value used to set/get gpio pin Direction
  *         Valid only for GPIO pins only. Invalid for NPWRON/Enable */
-#define PMIC_GPIO_CFG_DIR_VALID              (0x00U)
+#define PMIC_GPIO_CFG_DIR_VALID                        (0x00U)
 /** \brief validParams value used to set/get output signal type
  *         Valid only for GPIO pins only. Invalid for NPWRON/Enable */
-#define PMIC_GPIO_CFG_OD_VALID               (0x01U)
+#define PMIC_GPIO_CFG_OD_VALID                         (0x01U)
 /** \brief validParams value used to set/get pullup/pull down control
  */
-#define PMIC_GPIO_CFG_PULL_VALID             (0x02U)
+#define PMIC_GPIO_CFG_PULL_VALID                       (0x02U)
 /** \brief validParams value used to set/get signal deglitch time
  *         enable/disable */
-#define PMIC_GPIO_CFG_DEGLITCH_VALID         (0x03U)
+#define PMIC_GPIO_CFG_DEGLITCH_VALID                   (0x03U)
 /** \brief validParams value used to set/get pin mux function */
-#define PMIC_GPIO_CFG_PINFUNC_VALID          (0x04U)
+#define PMIC_GPIO_CFG_PINFUNC_VALID                    (0x04U)
 /** \brief validParams value used to set/get pin polarity
  *         Valid only for Enable pin for TPS6594x Leo and LP8764x Hera device
  *         Invalid for NPWRON pin for TPS6594x Leo device*/
-#define PMIC_ENABLE_CFG_POLARITY_VALID       (0x05U)
+#define PMIC_ENABLE_CFG_POLARITY_VALID                 (0x05U)
 /*  @} */
 
 /**
@@ -166,12 +166,12 @@ extern "C"
  *
  *  @{
  */
-#define PMIC_GPIO_CFG_DIR_VALID_SHIFT        (0x01U << PMIC_GPIO_CFG_DIR_VALID)
-#define PMIC_GPIO_CFG_OD_VALID_SHIFT         (0x01U << PMIC_GPIO_CFG_OD_VALID)
-#define PMIC_GPIO_CFG_PULL_VALID_SHIFT       (0x01U << PMIC_GPIO_CFG_PULL_VALID)
-#define PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT   (0x01U << PMIC_GPIO_CFG_DEGLITCH_VALID)
-#define PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT    (0x01U << PMIC_GPIO_CFG_PINFUNC_VALID)
-#define PMIC_ENABLE_CFG_POLARITY_VALID_SHIFT (0x01U << PMIC_ENABLE_CFG_POLARITY_VALID)
+#define PMIC_GPIO_CFG_DIR_VALID_SHIFT                  (0x01U << PMIC_GPIO_CFG_DIR_VALID)
+#define PMIC_GPIO_CFG_OD_VALID_SHIFT                   (0x01U << PMIC_GPIO_CFG_OD_VALID)
+#define PMIC_GPIO_CFG_PULL_VALID_SHIFT                 (0x01U << PMIC_GPIO_CFG_PULL_VALID)
+#define PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT             (0x01U << PMIC_GPIO_CFG_DEGLITCH_VALID)
+#define PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT              (0x01U << PMIC_GPIO_CFG_PINFUNC_VALID)
+#define PMIC_ENABLE_CFG_POLARITY_VALID_SHIFT           (0x01U << PMIC_ENABLE_CFG_POLARITY_VALID)
 /* @} */
 
 /**
@@ -180,9 +180,9 @@ extern "C"
  *
  *  @{
  */
-#define PMIC_GPIO_PULL_DISABLED              (0x0U)
-#define PMIC_GPIO_PULL_DOWN                  (0x1U)
-#define PMIC_GPIO_PULL_UP                    (0x2U)
+#define PMIC_GPIO_PULL_DISABLED                        (0x0U)
+#define PMIC_GPIO_PULL_DOWN                            (0x1U)
+#define PMIC_GPIO_PULL_UP                              (0x2U)
 /*  @} */
 
 /**
@@ -191,10 +191,10 @@ extern "C"
  *
  *  @{
  */
-#define PMIC_GPIO_FALL_INTERRUPT             (0U)
-#define PMIC_GPIO_RISE_INTERRUPT             (1U)
-#define PMIC_GPIO_FALL_RISE_INTERRUPT        (2U)
-#define PMIC_GPIO_DISABLE_INTERRUPT          (3U)
+#define PMIC_GPIO_FALL_INTERRUPT                       (0U)
+#define PMIC_GPIO_RISE_INTERRUPT                       (1U)
+#define PMIC_GPIO_FALL_RISE_INTERRUPT                  (2U)
+#define PMIC_GPIO_DISABLE_INTERRUPT                    (3U)
 /*  @} */
 
 /**

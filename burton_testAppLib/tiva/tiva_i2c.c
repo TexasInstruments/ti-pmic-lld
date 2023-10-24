@@ -1,12 +1,13 @@
 #include "tiva_priv.h"
 #include "tiva_i2c.h"
 
-int32_t initializeI2C(i2cHandle_t *i2cHandle)
+/**
+ * \brief Given an I2C handle, this function initializes an I2C module on the Tiva.
+ *
+ * \param i2cHandle [IN] Handle that is used to initialize an I2C module on the Tiva
+ */
+void initializeI2C(i2cHandle_t *i2cHandle)
 {
-
-    if (i2cHandle == NULL)
-        return INVALID_INPUT_PARAM;
-
     // Enable the I2C module
     SysCtlPeripheralEnable(i2cHandle->sysPeriphI2C);
 
@@ -28,46 +29,55 @@ int32_t initializeI2C(i2cHandle_t *i2cHandle)
 
     // Initialize the I2C module for use as a master running at a clock rate of 100 KHz
     I2CMasterInitExpClk(i2cHandle->i2cBase, SysCtlClockGet(), false);
-
-    return SUCCESS;
 }
 
-int32_t initializeI2C1Handle(i2cHandle_t *i2cHandle)
+/**
+ * \brief Function to initialize the handle to I2C1 on the Tiva.
+ *
+ * \param i2cHandle [OUT] Handle to initialize
+ */
+void initializeI2C1Handle(i2cHandle_t *i2cHandle)
 {
-    if (i2cHandle == NULL)
-        return INVALID_INPUT_PARAM;
-
-    i2cHandle->sysPeriphI2C  = SYSCTL_PERIPH_I2C0;
+    i2cHandle->sysPeriphI2C = SYSCTL_PERIPH_I2C0;
     i2cHandle->sysPeriphGPIO = SYSCTL_PERIPH_GPIOB;
-    i2cHandle->gpioPortBase  = GPIO_PORTB_BASE;
-    i2cHandle->i2cBase       = I2C0_BASE;
-    i2cHandle->sdaPin        = GPIO_PIN_3;
-    i2cHandle->sclPin        = GPIO_PIN_2;
-    i2cHandle->sdaPinToI2C   = GPIO_PB3_I2C0SDA;
-    i2cHandle->sclPinToI2C   = GPIO_PB2_I2C0SCL;
-    i2cHandle->slaveAddr     = BURTON_I2C_USER_PAGE_ADDRESS;
-
-    return SUCCESS;
+    i2cHandle->gpioPortBase = GPIO_PORTB_BASE;
+    i2cHandle->i2cBase = I2C0_BASE;
+    i2cHandle->sdaPin = GPIO_PIN_3;
+    i2cHandle->sclPin = GPIO_PIN_2;
+    i2cHandle->sdaPinToI2C = GPIO_PB3_I2C0SDA;
+    i2cHandle->sclPinToI2C = GPIO_PB2_I2C0SCL;
+    i2cHandle->slaveAddr = BURTON_I2C_USER_PAGE_ADDRESS;
 }
 
-int32_t initializeI2C2Handle(i2cHandle_t *i2cHandle)
+/**
+ * \brief Function to initialize the handle to I2C2 on the Tiva.
+ *
+ * \param i2cHandle [OUT] Handle to initialize
+ */
+void initializeI2C2Handle(i2cHandle_t *i2cHandle)
 {
-    if (i2cHandle == NULL)
-        return INVALID_INPUT_PARAM;
-
-    i2cHandle->sysPeriphI2C  = SYSCTL_PERIPH_I2C1;
+    i2cHandle->sysPeriphI2C = SYSCTL_PERIPH_I2C1;
     i2cHandle->sysPeriphGPIO = SYSCTL_PERIPH_GPIOA;
-    i2cHandle->gpioPortBase  = GPIO_PORTA_BASE;
-    i2cHandle->i2cBase       = I2C1_BASE;
-    i2cHandle->sdaPin        = GPIO_PIN_7;
-    i2cHandle->sclPin        = GPIO_PIN_6;
-    i2cHandle->sdaPinToI2C   = GPIO_PA7_I2C1SDA;
-    i2cHandle->sclPinToI2C   = GPIO_PA6_I2C1SCL;
-    i2cHandle->slaveAddr     = BURTON_I2C_WDG_PAGE_ADDRESS;
-
-    return SUCCESS;
+    i2cHandle->gpioPortBase = GPIO_PORTA_BASE;
+    i2cHandle->i2cBase = I2C1_BASE;
+    i2cHandle->sdaPin = GPIO_PIN_7;
+    i2cHandle->sclPin = GPIO_PIN_6;
+    i2cHandle->sdaPinToI2C = GPIO_PA7_I2C1SDA;
+    i2cHandle->sclPinToI2C = GPIO_PA6_I2C1SCL;
+    i2cHandle->slaveAddr = BURTON_I2C_WDG_PAGE_ADDRESS;
 }
 
+/**
+ * \brief Function to write consecutive bytes to a target I2C device.
+ *
+ * \param i2cHandle [IN]        Handle to an I2C module on the Tiva
+ * \param regAddr   [IN]        Target internal register address of the I2C device
+ * \param bufLen    [IN]        Number of bytes to send consecutively over I2C
+ * \param pTxBuf    [IN]        Pointer to the buffer containing the bytes to send over I2C
+ *
+ * \return          int32_t     PMIC_ST_SUCCESS in case of success or appropriate error code.
+ *                              For valid values \ref Pmic_ErrorCodes.
+ */
 int32_t I2CBurstWrite(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t bufLen, uint8_t *pTxBuf)
 {
     // Variable declaration/initialization
@@ -134,6 +144,16 @@ int32_t I2CBurstWrite(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t bufLen, u
     return PMIC_ST_SUCCESS;
 }
 
+/**
+ * \brief Function to write a single byte to a target I2C device.
+ *
+ * \param i2cHandle [IN]        Handle to an I2C module on the Tiva
+ * \param regAddr   [IN]        Target internal register address of the I2C device
+ * \param pTxBuf    [IN]        Pointer to the buffer containing the byte to send over I2C
+ *
+ * \return          int32_t     PMIC_ST_SUCCESS in case of success or appropriate error code.
+ *                              For valid values \ref Pmic_ErrorCodes.
+ */
 int32_t I2CSingleWrite(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t *pTxBuf)
 {
     // Parameter check
@@ -184,6 +204,17 @@ int32_t I2CSingleWrite(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t *pTxBuf)
     return PMIC_ST_SUCCESS;
 }
 
+/**
+ * \brief Function to read consecutive bytes from a target I2C device.
+ *
+ * \param i2cHandle [IN]        Handle to an I2C module on the Tiva
+ * \param regAddr   [IN]        Target internal register address of the I2C device
+ * \param bufLen    [IN]        Number of bytes to read consecutively over I2C
+ * \param pRxBuf    [OUT]       Pointer to the buffer that stores bytes received over I2C
+ *
+ * \return          int32_t     PMIC_ST_SUCCESS in case of success or appropriate error code.
+ *                              For valid values \ref Pmic_ErrorCodes.
+ */
 int32_t I2CBurstRead(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t bufLen, uint8_t *pRxBuf)
 {
     // Variable declaration/initialization
@@ -256,6 +287,16 @@ int32_t I2CBurstRead(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t bufLen, ui
     return PMIC_ST_SUCCESS;
 }
 
+/**
+ * \brief Function to read a single byte from a target I2C device.
+ *
+ * \param i2cHandle [IN]        Handle to an I2C module on the Tiva
+ * \param regAddr   [IN]        Target internal register address of the I2C device
+ * \param pRxBuf    [OUT]       Pointer to the buffer that stores the byte received over I2C
+ *
+ * \return          int32_t     PMIC_ST_SUCCESS in case of success or appropriate error code.
+ *                              For valid values \ref Pmic_ErrorCodes.
+ */
 int32_t I2CSingleRead(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t *pRxBuf)
 {
     // Parameter check

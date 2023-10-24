@@ -6,7 +6,6 @@
  * \date 2023-10-11
  *
  * \copyright Copyright (c) 2023
- *
  */
 
 /* Standard includes */
@@ -27,8 +26,8 @@
 /* PMIC driver */
 #include "pmic_drv/pmic.h"
 
-Pmic_CoreHandle_t *pmicCoreHandle = NULL;
-gpioPinHandle_t   *gpioPinHandle = NULL;
+Pmic_CoreHandle_t pmicCoreHandle;
+gpioPinHandle_t   gpioPinHandle[PMIC_TPS6522X_GPIO_PIN_MAX];
 
 int main(void)
 {
@@ -36,7 +35,6 @@ int main(void)
     // clang-format off
     uartHandle_t vcpHandle;
     i2cHandle_t I2C1Handle;
-    static Pmic_CoreHandle_t pmicLocalCoreHandle;
     Pmic_CoreCfg_t pmicConfigData = {
         .validParams =
             PMIC_CFG_DEVICE_TYPE_VALID_SHIFT | PMIC_CFG_COMM_MODE_VALID_SHIFT | PMIC_CFG_SLAVEADDR_VALID_SHIFT |
@@ -68,13 +66,12 @@ int main(void)
     initializeI2C(&I2C1Handle);
 
     /*** GPIO setup ***/
-    initializeGpioInputPinHandles(&gpioPinHandle);
+    initializeGpioPinHandles(gpioPinHandle, false);
     initializeGpioPins(gpioPinHandle);
 
     /*** PMIC setup ***/
-    initializePmicCoreHandle(&pmicLocalCoreHandle);
-    Pmic_init(&pmicConfigData, &pmicLocalCoreHandle);
-    pmicCoreHandle = &pmicLocalCoreHandle;
+    initializePmicCoreHandle(&pmicCoreHandle);
+    Pmic_init(&pmicConfigData, &pmicCoreHandle);
 
     /*** Clear the console before printing anything ***/
     clearConsole(&vcpHandle);
@@ -85,188 +82,630 @@ int main(void)
     /*** Begin unity testing ***/
     UNITY_BEGIN();
 
-    RUN_TEST(test_Pmic_gpioGetConfiguration_forCorrectReads);
-    RUN_TEST(test_Pmic_gpioSetConfiguration_resetSetAllGpioCfg);
-    RUN_TEST(test_Pmic_gpioGetValue_forCorrectReads);
     RUN_TEST(test_Pmic_gpioSetValue_setGpioSignalLvl);
-    RUN_TEST(test_Pmic_gpioSetIntr_configIntOnAllGpio);
-    RUN_TEST(test_Pmic_gpioSetIntr_disableIntOnAllGpio);
+    RUN_TEST(test_Pmic_gpioGetValue_readGpioSignalLvl);
+    RUN_TEST(test_Pmic_gpioSetConfiguration_VMON1_m);
+    RUN_TEST(test_Pmic_gpioSetConfiguration_VMON2);
+    RUN_TEST(test_Pmic_gpioSetConfiguration_pushButton);
+    RUN_TEST(test_Pmic_gpioSetConfiguration_nSLEEP1);
+    RUN_TEST(test_Pmic_gpioSetConfiguration_nSLEEP2);
+    RUN_TEST(test_Pmic_gpioSetConfiguration_ADC_IN);
+    RUN_TEST(test_Pmic_gpioSetConfiguration_WKUP);
+    RUN_TEST(test_Pmic_gpioSetConfiguration_SYNCCLKIN);
+    RUN_TEST(test_Pmic_gpioSetConfiguration_nERR_MCU);
+    RUN_TEST(test_Pmic_gpioSetConfiguration_SDA_I2C2_SDO_SPI);
+    RUN_TEST(test_Pmic_gpioSetConfiguration_SCL_I2C2_CS_SPI);
+    RUN_TEST(test_Pmic_gpioSetConfiguration_nINT);
+    RUN_TEST(test_Pmic_gpioSetConfiguration_TRIG_WDOG);
 
     /*** Finish unity testing ***/
     return UNITY_END();
 }
 
 /**
- * \brief Private helper function to reset a GPIO configuration struct with all valid parameters set
- *
- * \param pGpioCfg  [OUT]   GPIO configuration struct to reset with valid parameters
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to TRIG_WDOG functionality
  *
  */
-static void resetGpioCfg_withAllValidParams(Pmic_GpioCfg_t *pGpioCfg)
+void test_Pmic_gpioSetConfiguration_TRIG_WDOG(void)
 {
-    pGpioCfg->validParams = PMIC_GPIO_CFG_DIR_VALID_SHIFT | PMIC_GPIO_CFG_OD_VALID_SHIFT |
-                            PMIC_GPIO_CFG_PULL_VALID_SHIFT | PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT |
-                            PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT;
-    pGpioCfg->pinDir = 0;
-    pGpioCfg->outputSignalType = 0;
-    pGpioCfg->pullCtrl = 0;
-    pGpioCfg->deglitchEnable = 0;
-    pGpioCfg->pinFunc = 0;
-    pGpioCfg->pinPolarity = 0;
-}
-
-/**
- * \brief Private helper function to reset a specific GPIO pin's configuration register to NVM default.
- *        Should only be called within certain tests.
- *
- * \param pin   [IN]    GPIO pin to reset
- *
- */
-static void resetGpioPinCfgToDefault(const uint8_t pin)
-{
-    uint8_t status = 0;
-    uint8_t actualCfgData = 0;
-    uint8_t NVMCfgData[PMIC_TPS6522X_GPIO_PIN_MAX] = {0x20, 0x20, 0x18, 0x1C, 0x60, 0x18};
-
-    TEST_ASSERT_LESS_OR_EQUAL(PMIC_TPS6522X_GPIO_PIN_MAX, pin);
-
-    status = pmicI2CWrite(pmicCoreHandle, PMIC_MAIN_INST, 0x31 + pin - 1, NVMCfgData + pin - 1, 1);
-    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
-
-    status = pmicI2CRead(pmicCoreHandle, PMIC_MAIN_INST, 0x31 + pin - 1, &actualCfgData, 1);
-    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
-
-    TEST_ASSERT_EQUAL_UINT8(NVMCfgData[pin - 1], actualCfgData);
-}
-
-/**
- * \brief Private helper function to reset all GPIO configuration registers to NVM default.
- *        Should only be called within certain tests
- *
- */
-static void resetAllGpioCfgToDefault(void)
-{
-    uint8_t pin = 0;
-    uint8_t status = 0;
-    uint8_t actualCfgData = 0;
-    uint8_t NVMCfgData[PMIC_TPS6522X_GPIO_PIN_MAX] = {0x20, 0x20, 0x18, 0x1C, 0x60, 0x18};
-
-    for (pin = PMIC_TPS6522X_GPIO1_PIN; pin <= PMIC_TPS6522X_GPIO_PIN_MAX; pin++)
-    {
-        status = pmicI2CWrite(pmicCoreHandle, PMIC_MAIN_INST, 0x31 + pin - 1, NVMCfgData + pin - 1, 1);
-        TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
-
-        status = pmicI2CRead(pmicCoreHandle, PMIC_MAIN_INST, 0x31 + pin - 1, &actualCfgData, 1);
-        TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
-
-        TEST_ASSERT_EQUAL_UINT8(NVMCfgData[pin - 1], actualCfgData);
-    }
-}
-
-/**
- * \brief test Pmic_gpioGetConfiguration : Read all NVM default GPIO configurations
- *
- */
-void test_Pmic_gpioGetConfiguration_forCorrectReads(void)
-{
-    Pmic_GpioCfg_t gpioCfg;
-    uint8_t        pin = 0;
+    const uint8_t  pin = PMIC_TPS6522X_GPIO2_PIN;
     int32_t        status = PMIC_ST_SUCCESS;
-    uint8_t        actualCfgData = 0;
-    uint8_t        expectedCfgData[PMIC_TPS6522X_GPIO_PIN_MAX] = {0x20, 0x20, 0x18, 0x1C, 0x60, 0x18};
+    Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
 
-    for (pin = PMIC_TPS6522X_GPIO1_PIN; pin <= PMIC_TPS6522X_GPIO_PIN_MAX; pin++)
-    {
-        resetGpioCfg_withAllValidParams(&gpioCfg);
-        status = Pmic_gpioGetConfiguration(pmicCoreHandle, pin, &gpioCfg);
-        TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+    // Initialize all config structs
+    // clang-format off
+   resetGpioCfg_withAllValidParams(&nvmGpioCfg);
+   resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
+                                                        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                                                        PMIC_GPIO_CFG_PULL_VALID_SHIFT    |
+                                                        PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
+   resetGpioCfg_withSpecificValidParams(&expectedGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
+                                                          PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                                                          PMIC_GPIO_CFG_PULL_VALID_SHIFT    |
+                                                          PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
+    // clang-format on
 
-        // clang-format off
-        actualCfgData = (gpioCfg.pinFunc           << PMIC_GPIOX_CONF_GPIO_SEL_SHIFT)          |
-                        (gpioCfg.deglitchEnable    << PMIC_GPIOX_CONF_GPIO_DEGLITCH_EN_SHIFT)  |
-                        (gpioCfg.outputSignalType  << PMIC_GPIOX_CONF_GPIO_OD_SHIFT)           |
-                        (gpioCfg.pinDir            << PMIC_GPIOX_CONF_GPIO_DIR_SHIFT);
-        // clang-format on
-        if (gpioCfg.pullCtrl == PMIC_GPIO_PULL_DOWN)
-        {
-            actualCfgData |= (0b1 << PMIC_GPIOX_CONF_GPIO_PU_PD_EN_SHIFT);
-        }
-        else if (gpioCfg.pullCtrl == PMIC_GPIO_PULL_UP)
-        {
-            actualCfgData |= (0b11 << PMIC_GPIOX_CONF_GPIO_PU_SEL_SHIFT);
-        }
-
-        TEST_ASSERT_EQUAL_UINT8(expectedCfgData[pin - 1], actualCfgData);
-    }
-}
-
-/**
- * \brief test Pmic_gpioSetConfiguration : Reset values of all GPIO configuration registers
- *        to zero then set their values to the NVM default configuration
- *
- */
-void test_Pmic_gpioSetConfiguration_resetSetAllGpioCfg(void)
-{
-    uint8_t        pin = 0;
-    int8_t         status = PMIC_ST_SUCCESS;
-    Pmic_GpioCfg_t expected_gpioCfg, actual_gpioCfg;
-
-    resetGpioCfg_withAllValidParams(&expected_gpioCfg);
-    resetGpioCfg_withAllValidParams(&actual_gpioCfg);
-
-    for (pin = PMIC_TPS6522X_GPIO1_PIN; pin <= PMIC_TPS6522X_GPIO_PIN_MAX; pin++)
-    {
-        status = Pmic_gpioSetConfiguration(pmicCoreHandle, pin, expected_gpioCfg);
-        TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
-
-        status = Pmic_gpioGetConfiguration(pmicCoreHandle, pin, &actual_gpioCfg);
-        TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
-
-        TEST_ASSERT_EQUAL_UINT8(expected_gpioCfg.pinFunc, actual_gpioCfg.pinFunc);
-        TEST_ASSERT_EQUAL_UINT8(expected_gpioCfg.deglitchEnable, actual_gpioCfg.deglitchEnable);
-        TEST_ASSERT_EQUAL_UINT8(expected_gpioCfg.pullCtrl, actual_gpioCfg.pullCtrl);
-        TEST_ASSERT_EQUAL_UINT8(expected_gpioCfg.outputSignalType, actual_gpioCfg.outputSignalType);
-        TEST_ASSERT_EQUAL_UINT8(expected_gpioCfg.pinDir, actual_gpioCfg.pinDir);
-
-        resetGpioCfg_withAllValidParams(&actual_gpioCfg);
-    }
-
-    resetAllGpioCfgToDefault();
-}
-
-/**
- * \brief test Pmic_gpioGetValue : Read all PMIC GPIOs values; test the value received
- *        from driver API against value received from application layer created read API
- *
- */
-void test_Pmic_gpioGetValue_forCorrectReads(void)
-{
-    uint8_t       pin = 0;
-    uint8_t       pinValue_fromDriverAPI = 0;
-    uint8_t       regValue_fromApplicationAPI = 0;
-    uint8_t       pinValue_fromApplicationAPI = 0;
-    const uint8_t GPIO_IN_1_REG_ADDR = 0x3F;
-    int32_t       status = PMIC_ST_SUCCESS;
-
-    status = pmicI2CRead(pmicCoreHandle, PMIC_MAIN_INST, GPIO_IN_1_REG_ADDR, &regValue_fromApplicationAPI, 1);
+    // Save NVM configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
     TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
 
-    for (pin = PMIC_TPS6522X_GPIO1_PIN; pin <= PMIC_TPS6522X_GPIO_PIN_MAX; pin++)
-    {
-        status = Pmic_gpioGetValue(pmicCoreHandle, pin, &pinValue_fromDriverAPI);
-        TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+    // Set new configuration of pin
+    expectedGpioCfg.pinDir = PMIC_GPIO_INPUT;
+    expectedGpioCfg.pinFunc = PMIC_TPS6522X_GPIO_PINFUNC_GPIO2_TRIG_WDOG;
+    expectedGpioCfg.pullCtrl = PMIC_GPIO_PULL_DOWN;
+    expectedGpioCfg.deglitchEnable = PMIC_GPIO_DEGLITCH_ENABLE;
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, expectedGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
 
-        pinValue_fromApplicationAPI = ((regValue_fromApplicationAPI >> (pin - 1)) & 1);
-        TEST_ASSERT_EQUAL_UINT8(pinValue_fromApplicationAPI, pinValue_fromDriverAPI);
-    }
+    // Get actual configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &actualGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Compare actual vs. expected configuration
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pinDir, actualGpioCfg.pinDir);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pinFunc, actualGpioCfg.pinFunc);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pullCtrl, actualGpioCfg.pullCtrl);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.deglitchEnable, actualGpioCfg.deglitchEnable);
+
+    // Restore NVM configuration of pin
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, nvmGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
 }
 
 /**
- * \brief test Pmic_gpioSetValue : Set all GPIO output values to one. Afterwards, reset all GPIO output
- *                                 values to zero. In both scenarios, check for expected output values
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to nINT functionality
+ */
+void test_Pmic_gpioSetConfiguration_nINT(void)
+{
+    const uint8_t  pin = PMIC_TPS6522X_GPIO1_PIN;
+    int32_t        status = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
+
+    // Initialize all config structs
+    // clang-format off
+   resetGpioCfg_withAllValidParams(&nvmGpioCfg);
+   resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
+                                                        PMIC_GPIO_CFG_OD_VALID_SHIFT      |
+                                                        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                                                        PMIC_GPIO_CFG_PULL_VALID_SHIFT);
+   resetGpioCfg_withSpecificValidParams(&expectedGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
+                                                          PMIC_GPIO_CFG_OD_VALID_SHIFT      |
+                                                          PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                                                          PMIC_GPIO_CFG_PULL_VALID_SHIFT);
+    // clang-format on
+
+    // Save NVM configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Set new configuration of pin
+    expectedGpioCfg.pinDir = PMIC_GPIO_OUTPUT;
+    expectedGpioCfg.outputSignalType = PMIC_GPIO_OPEN_DRAIN_OUTPUT;
+    expectedGpioCfg.pinFunc = PMIC_TPS6522X_GPIO_PINFUNC_GPIO1_NINT;
+    expectedGpioCfg.pullCtrl = PMIC_GPIO_PULL_UP;
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, expectedGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Get actual configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &actualGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Compare actual vs. expected configuration
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pinDir, actualGpioCfg.pinDir);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.outputSignalType, actualGpioCfg.outputSignalType);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pinFunc, actualGpioCfg.pinFunc);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pullCtrl, actualGpioCfg.pullCtrl);
+
+    // Restore NVM configuration of pin
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, nvmGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+}
+
+/**
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to SCL_I2C2/CS_SPI functionality
+ */
+void test_Pmic_gpioSetConfiguration_SCL_I2C2_CS_SPI(void)
+{
+    const uint8_t  pin = PMIC_TPS6522X_GPIO2_PIN;
+    int32_t        status = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
+
+    // Initialize all config structs
+    // clang-format off
+   resetGpioCfg_withAllValidParams(&nvmGpioCfg);
+   resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
+                                                        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                                                        PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
+   resetGpioCfg_withSpecificValidParams(&expectedGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
+                                                          PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                                                          PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
+    // clang-format on
+
+    // Save NVM configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Set new configuration of pin
+    expectedGpioCfg.pinDir = PMIC_GPIO_INPUT;
+    expectedGpioCfg.pinFunc = PMIC_TPS6522X_GPIO_PINFUNC_GPIO2_SCL_I2C2_CS_SPI;
+    expectedGpioCfg.deglitchEnable = PMIC_GPIO_DEGLITCH_ENABLE;
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, expectedGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Get actual configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &actualGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Compare actual vs. expected configuration
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pinDir, actualGpioCfg.pinDir);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pinFunc, actualGpioCfg.pinFunc);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.deglitchEnable, actualGpioCfg.deglitchEnable);
+
+    // Restore NVM configuration of pin
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, nvmGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+}
+
+/**
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to SDA_I2C2/SDO_SPI functionality
+ */
+void test_Pmic_gpioSetConfiguration_SDA_I2C2_SDO_SPI(void)
+{
+    const uint8_t  pin = PMIC_TPS6522X_GPIO1_PIN;
+    int32_t        status = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
+
+    // Initialize all config structs
+    // clang-format off
+   resetGpioCfg_withAllValidParams(&nvmGpioCfg);
+   resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_OD_VALID_SHIFT      |
+                                                        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                                                        PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
+   resetGpioCfg_withSpecificValidParams(&expectedGpioCfg, PMIC_GPIO_CFG_OD_VALID_SHIFT      |
+                                                          PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                                                          PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
+    // clang-format on
+
+    // Save NVM configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Set new configuration of pin
+    expectedGpioCfg.outputSignalType = PMIC_GPIO_OPEN_DRAIN_OUTPUT;
+    expectedGpioCfg.pinFunc = PMIC_TPS6522X_GPIO_PINFUNC_GPIO1_SDA_I2C2_SDO_SPI;
+    expectedGpioCfg.deglitchEnable = PMIC_GPIO_DEGLITCH_ENABLE;
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, expectedGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Get actual configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &actualGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Compare actual vs. expected configuration
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.outputSignalType, actualGpioCfg.outputSignalType);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pinFunc, actualGpioCfg.pinFunc);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.deglitchEnable, actualGpioCfg.deglitchEnable);
+
+    // Restore NVM configuration of pin
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, nvmGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+}
+
+/**
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to nERR_MCU functionality
+ */
+void test_Pmic_gpioSetConfiguration_nERR_MCU(void)
+{
+    const uint8_t  pin = PMIC_TPS6522X_GPIO6_PIN;
+    int32_t        status = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
+
+    // Initialize all config structs
+    // clang-format off
+   resetGpioCfg_withAllValidParams(&nvmGpioCfg);
+   resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
+                                                        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                                                        PMIC_GPIO_CFG_PULL_VALID_SHIFT    |
+                                                        PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
+   resetGpioCfg_withSpecificValidParams(&expectedGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
+                                                          PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                                                          PMIC_GPIO_CFG_PULL_VALID_SHIFT    |
+                                                          PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
+    // clang-format on
+
+    // Save NVM configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Set new configuration of pin
+    expectedGpioCfg.pinDir = PMIC_GPIO_INPUT;
+    expectedGpioCfg.pinFunc = PMIC_TPS6522X_GPIO_PINFUNC_GPIO6_NERR_MCU;
+    expectedGpioCfg.pullCtrl = PMIC_GPIO_PULL_DOWN;
+    expectedGpioCfg.deglitchEnable = PMIC_GPIO_DEGLITCH_ENABLE;
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, expectedGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Get actual configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &actualGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Compare actual vs. expected configuration
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pinDir, actualGpioCfg.pinDir);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pinFunc, actualGpioCfg.pinFunc);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pullCtrl, actualGpioCfg.pullCtrl);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.deglitchEnable, actualGpioCfg.deglitchEnable);
+
+    // Restore NVM configuration of pin
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, nvmGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+}
+
+/**
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to SYNCCLKIN functionality
+ */
+void test_Pmic_gpioSetConfiguration_SYNCCLKIN(void)
+{
+    const uint8_t  pin = PMIC_TPS6522X_GPIO5_PIN;
+    int32_t        status = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
+
+    // Initialize all config structs
+    // clang-format off
+   resetGpioCfg_withAllValidParams(&nvmGpioCfg);
+   resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
+                                                        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                                                        PMIC_GPIO_CFG_PULL_VALID_SHIFT);
+   resetGpioCfg_withSpecificValidParams(&expectedGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
+                                                          PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                                                          PMIC_GPIO_CFG_PULL_VALID_SHIFT);
+    // clang-format on
+
+    // Save NVM configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Set new configuration of pin
+    expectedGpioCfg.pinDir = PMIC_GPIO_INPUT;
+    expectedGpioCfg.pinFunc = PMIC_TPS6522X_GPIO_PINFUNC_GPIO5_SYNCCLKIN;
+    expectedGpioCfg.pullCtrl = PMIC_GPIO_PULL_DOWN;
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, expectedGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Get actual configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &actualGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Compare actual vs. expected configuration
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pinDir, actualGpioCfg.pinDir);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pinFunc, actualGpioCfg.pinFunc);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pullCtrl, actualGpioCfg.pullCtrl);
+
+    // Restore NVM configuration of pin
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, nvmGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+}
+
+/**
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to WKUP functionality
+ */
+void test_Pmic_gpioSetConfiguration_WKUP(void)
+{
+    const uint8_t  pin = PMIC_TPS6522X_GPIO5_PIN;
+    int32_t        status = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
+
+    // Initialize all config structs
+    // clang-format off
+   resetGpioCfg_withAllValidParams(&nvmGpioCfg);
+   resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
+                                                        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                                                        PMIC_GPIO_CFG_PULL_VALID_SHIFT    |
+                                                        PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
+   resetGpioCfg_withSpecificValidParams(&expectedGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
+                                                          PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                                                          PMIC_GPIO_CFG_PULL_VALID_SHIFT    |
+                                                          PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
+    // clang-format on
+
+    // Save NVM configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Set new configuration of pin
+    expectedGpioCfg.pinDir = PMIC_GPIO_INPUT;
+    expectedGpioCfg.pinFunc = PMIC_TPS6522X_GPIO_PINFUNC_GPIO5_WKUP;
+    expectedGpioCfg.pullCtrl = PMIC_GPIO_PULL_DOWN;
+    expectedGpioCfg.deglitchEnable = PMIC_GPIO_DEGLITCH_ENABLE;
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, expectedGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Get actual configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &actualGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Compare actual vs. expected configuration
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pinDir, actualGpioCfg.pinDir);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pinFunc, actualGpioCfg.pinFunc);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pullCtrl, actualGpioCfg.pullCtrl);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.deglitchEnable, actualGpioCfg.deglitchEnable);
+
+    // Restore NVM configuration of pin
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, nvmGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+}
+
+/**
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to ADC_IN functionality
+ */
+void test_Pmic_gpioSetConfiguration_ADC_IN(void)
+{
+    const uint8_t  pin = PMIC_TPS6522X_GPIO4_PIN;
+    int32_t        status = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
+
+    // Initialize all config structs
+    // clang-format off
+   resetGpioCfg_withAllValidParams(&nvmGpioCfg);
+   resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT |
+                                                        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT);
+   resetGpioCfg_withSpecificValidParams(&expectedGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT |
+                                                          PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT);
+    // clang-format on
+
+    // Save NVM configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Set new configuration of pin
+    expectedGpioCfg.pinDir = PMIC_GPIO_INPUT;
+    expectedGpioCfg.pinFunc = PMIC_TPS6522X_GPIO_PINFUNC_GPIO4_ADC_IN;
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, expectedGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Get actual configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &actualGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Compare actual vs. expected configuration
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pinDir, actualGpioCfg.pinDir);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pinFunc, actualGpioCfg.pinFunc);
+
+    // Restore NVM configuration of pin
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, nvmGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+}
+
+/**
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to nSLEEP2 functionality
+ */
+void test_Pmic_gpioSetConfiguration_nSLEEP2(void)
+{
+    const uint8_t  pin = PMIC_TPS6522X_GPIO6_PIN;
+    int32_t        status = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
+
+    // Initialize all config structs
+    // clang-format off
+   resetGpioCfg_withAllValidParams(&nvmGpioCfg);
+   resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
+                                                        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                                                        PMIC_GPIO_CFG_PULL_VALID_SHIFT    |
+                                                        PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
+   resetGpioCfg_withSpecificValidParams(&expectedGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
+                                                          PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                                                          PMIC_GPIO_CFG_PULL_VALID_SHIFT    |
+                                                          PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
+    // clang-format on
+
+    // Save NVM configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Set new configuration of pin
+    expectedGpioCfg.pinDir = PMIC_GPIO_INPUT;
+    expectedGpioCfg.pinFunc = PMIC_TPS6522X_GPIO_PINFUNC_GPIO6_NSLEEP2;
+    expectedGpioCfg.pullCtrl = PMIC_GPIO_PULL_UP;
+    expectedGpioCfg.deglitchEnable = PMIC_GPIO_DEGLITCH_ENABLE;
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, expectedGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Get actual configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &actualGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Compare actual vs. expected configuration
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pinDir, actualGpioCfg.pinDir);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pinFunc, actualGpioCfg.pinFunc);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pullCtrl, actualGpioCfg.pullCtrl);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.deglitchEnable, actualGpioCfg.deglitchEnable);
+
+    // Restore NVM configuration of pin
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, nvmGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+}
+
+/**
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to nSLEEP1 functionality
+ */
+void test_Pmic_gpioSetConfiguration_nSLEEP1(void)
+{
+    const uint8_t  pin = PMIC_TPS6522X_GPIO2_PIN;
+    int32_t        status = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
+
+    // Initialize all config structs
+    // clang-format off
+   resetGpioCfg_withAllValidParams(&nvmGpioCfg);
+   resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
+                                                        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                                                        PMIC_GPIO_CFG_PULL_VALID_SHIFT    |
+                                                        PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
+   resetGpioCfg_withSpecificValidParams(&expectedGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
+                                                          PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                                                          PMIC_GPIO_CFG_PULL_VALID_SHIFT    |
+                                                          PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
+    // clang-format on
+
+    // Save NVM configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Set new configuration of pin
+    expectedGpioCfg.pinDir = PMIC_GPIO_INPUT;
+    expectedGpioCfg.pinFunc = PMIC_TPS6522X_GPIO_PINFUNC_GPIO2_NSLEEP1;
+    expectedGpioCfg.pullCtrl = PMIC_GPIO_PULL_UP;
+    expectedGpioCfg.deglitchEnable = PMIC_GPIO_DEGLITCH_ENABLE;
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, expectedGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Get actual configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &actualGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Compare actual vs. expected configuration
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pinDir, actualGpioCfg.pinDir);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pinFunc, actualGpioCfg.pinFunc);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pullCtrl, actualGpioCfg.pullCtrl);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.deglitchEnable, actualGpioCfg.deglitchEnable);
+
+    // Restore NVM configuration of pin
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, nvmGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+}
+
+/**
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to Push Button functionality
+ */
+void test_Pmic_gpioSetConfiguration_pushButton(void)
+{
+    const uint8_t  pin = PMIC_TPS6522X_GPIO3_PIN;
+    int32_t        status = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
+
+    // Initialize all config structs
+    // clang-format off
+   resetGpioCfg_withAllValidParams(&nvmGpioCfg);
+   resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
+                                                        PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                                                        PMIC_GPIO_CFG_PULL_VALID_SHIFT    |
+                                                        PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
+   resetGpioCfg_withSpecificValidParams(&expectedGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
+                                                          PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                                                          PMIC_GPIO_CFG_PULL_VALID_SHIFT    |
+                                                          PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
+    // clang-format on
+
+    // Save NVM configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Set new configuration of pin
+    expectedGpioCfg.pinDir = PMIC_GPIO_INPUT;
+    expectedGpioCfg.pinFunc = PMIC_TPS6522X_GPIO_PINFUNC_GPIO3_PUSH_BUTTON;
+    expectedGpioCfg.pullCtrl = PMIC_GPIO_PULL_UP;
+    expectedGpioCfg.deglitchEnable = PMIC_GPIO_DEGLITCH_ENABLE;
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, expectedGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Get actual configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &actualGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Compare actual vs. expected configuration
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pinDir, actualGpioCfg.pinDir);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pinFunc, actualGpioCfg.pinFunc);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pullCtrl, actualGpioCfg.pullCtrl);
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.deglitchEnable, actualGpioCfg.deglitchEnable);
+
+    // Restore NVM configuration of pin
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, nvmGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+}
+
+/**
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to VMON2 functionality
+ */
+void test_Pmic_gpioSetConfiguration_VMON2(void)
+{
+    const uint8_t  pin = PMIC_TPS6522X_GPIO4_PIN;
+    int32_t        status = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
+
+    // Initialize all config structs
+    // clang-format off
+    resetGpioCfg_withAllValidParams(&nvmGpioCfg);
+    resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                                                         PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
+    resetGpioCfg_withSpecificValidParams(&expectedGpioCfg, PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                                                           PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
+    // clang-format on
+
+    // Save NVM configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Set new configuration of pin
+    expectedGpioCfg.pinFunc = PMIC_TPS6522X_GPIO_PINFUNC_GPIO4_VMON2;
+    expectedGpioCfg.deglitchEnable = PMIC_GPIO_DEGLITCH_ENABLE;
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, expectedGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Get actual configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &actualGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Compare actual vs. expected configuration
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pinFunc, actualGpioCfg.pinFunc);
+
+    // Restore NVM configuration of pin
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, nvmGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+}
+
+/**
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to VMON1_m functionality
+ */
+void test_Pmic_gpioSetConfiguration_VMON1_m(void)
+{
+    const uint8_t  pin = PMIC_TPS6522X_GPIO3_PIN;
+    int32_t        status = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
+
+    // Initialize all config structs
+    // clang-format off
+    resetGpioCfg_withAllValidParams(&nvmGpioCfg);
+    resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT|
+                                                         PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
+    resetGpioCfg_withSpecificValidParams(&expectedGpioCfg, PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
+                                                           PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
+    // clang-format on
+
+    // Save NVM configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Set new configuration of pin
+    expectedGpioCfg.pinFunc = PMIC_TPS6522X_GPIO_PINFUNC_GPIO3_VMON1_M;
+    expectedGpioCfg.deglitchEnable = PMIC_GPIO_DEGLITCH_ENABLE;
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, expectedGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Get actual configuration of pin
+    status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &actualGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Compare actual vs. expected configuration
+    TEST_ASSERT_EQUAL_UINT8(expectedGpioCfg.pinFunc, actualGpioCfg.pinFunc);
+
+    // Restore NVM configuration of pin
+    status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, nvmGpioCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+}
+
+/**
+ * \brief test Pmic_gpioSetValue: Set all GPIO output values to one, then reset all GPIO output values to zero.
  *
  * \note For this test, there must be a total of 6 physical GPIO pin connections between Burton and test MCU
- *
  */
 void test_Pmic_gpioSetValue_setGpioSignalLvl(void)
 {
@@ -275,6 +714,7 @@ void test_Pmic_gpioSetValue_setGpioSignalLvl(void)
     uint8_t actual_pinValue = 0;
     int32_t status          = PMIC_ST_SUCCESS;
     uint8_t signalLvl       = PMIC_GPIO_HIGH;
+    Pmic_GpioCfg_t nvmGpioCfg;
     Pmic_GpioCfg_t outputGpioCfg = {
         .validParams        = PMIC_GPIO_CFG_DIR_VALID_SHIFT      |
                               PMIC_GPIO_CFG_OD_VALID_SHIFT       |
@@ -289,204 +729,110 @@ void test_Pmic_gpioSetValue_setGpioSignalLvl(void)
     };
     // clang-format on
 
+    // Re-initialize MCU's GPIO pins to be input
+    initializeGpioPinHandles(gpioPinHandle, false);
+    initializeGpioPins(gpioPinHandle);
+
+    // For every pin...
     for (pin = PMIC_TPS6522X_GPIO1_PIN; pin <= PMIC_TPS6522X_GPIO_PIN_MAX; pin++)
     {
-        status = Pmic_gpioSetConfiguration(pmicCoreHandle, pin, outputGpioCfg);
-        TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
-    }
-
-    for (pin = PMIC_TPS6522X_GPIO1_PIN; pin <= PMIC_TPS6522X_GPIO_PIN_MAX; pin++)
-    {
-        status = Pmic_gpioSetValue(pmicCoreHandle, pin, signalLvl);
+        // Save NVM GPIO configuration settings
+        resetGpioCfg_withAllValidParams(&nvmGpioCfg);
+        status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
         TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
 
+        // Set pin's GPIO configuration to be output GPIO
+        status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, outputGpioCfg);
+        TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+        // Set value of GPIO output pin
+        status = Pmic_gpioSetValue(&pmicCoreHandle, pin, signalLvl);
+        TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+        // Read actual value of GPIO output pin and compare expected vs. actual
         actual_pinValue = GPIOPinRead(gpioPinHandle[pin - 1].gpioPortBase, gpioPinHandle[pin - 1].gpioPin);
         actual_pinValue >>= gpioPinHandle[pin - 1].gpioShiftVal;
         TEST_ASSERT_EQUAL_UINT8(signalLvl, actual_pinValue);
 
-        // Reset all output singal levels for next Unity test
+        // Restore NVM default settings for the GPIO pin
+        status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, nvmGpioCfg);
+        TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+        // After setting the signal level of all GPIO pins to be high, begin setting the levels to be low
         if ((pin == PMIC_TPS6522X_GPIO_PIN_MAX) && (signalLvl == PMIC_GPIO_HIGH))
         {
             pin = PMIC_TPS6522X_GPIO1_PIN;
             signalLvl = PMIC_GPIO_LOW;
         }
     }
-
-    resetAllGpioCfgToDefault();
 }
 
 /**
- * \brief test Pmic_gpioSetIntr :  Configure interrupts for all GPIO pins
+ * \brief test Pmic_gpioGetValue: Send a high signal level from MCU to PMIC, then send a low signal level
+ *                                 from MCU to PMIC.
  *
+ * \note For this test, there must be a total of 6 physical GPIO pin connections between Burton and test MCU
  */
-void test_Pmic_gpioSetIntr_configIntOnAllGpio(void)
+void test_Pmic_gpioGetValue_readGpioSignalLvl(void)
 {
     // clang-format off
-    uint8_t pin = 0;
-    int32_t status = PMIC_ST_SUCCESS;
-    uint8_t regData = 0, actual_gpioIntMask = 0;
-    uint8_t actual_maskPol = 0, expected_maskPol = 0;
-    uint8_t actual_intrType = 0, expected_intrType = 0;
-    Pmic_GpioCfg_t outputGpioCfg = {
-        .validParams        = PMIC_GPIO_CFG_DIR_VALID_SHIFT      |
-                              PMIC_GPIO_CFG_OD_VALID_SHIFT       |
-                              PMIC_GPIO_CFG_PULL_VALID_SHIFT     |
-                              PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT |
-                              PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
-        .pinDir             = PMIC_GPIO_OUTPUT,
+    uint8_t pin             = 0;
+    uint8_t actualPinValue  = 0;
+    int32_t status          = PMIC_ST_SUCCESS;
+    Pmic_GpioCfg_t nvmGpioCfg;
+    Pmic_GpioCfg_t inputGpioCfg = {
+        .validParams        = PMIC_GPIO_CFG_DIR_VALID_SHIFT        |
+                                PMIC_GPIO_CFG_OD_VALID_SHIFT       |
+                                PMIC_GPIO_CFG_PULL_VALID_SHIFT     |
+                                PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT |
+                                PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
+        .pinDir             = PMIC_GPIO_INPUT,
         .outputSignalType   = PMIC_GPIO_PUSH_PULL_OUTPUT,
-        .pullCtrl           = PMIC_GPIO_PULL_DISABLED,
+        .pullCtrl           = PMIC_GPIO_PULL_DOWN,
         .deglitchEnable     = PMIC_GPIO_DEGLITCH_ENABLE,
         .pinFunc            = PMIC_TPS6522X_GPIO_PINFUNC_GPIO
     };
     // clang-format on
 
-    // Configure all GPIO pins on the PMIC to be output
+    // Re-initialize MCU's GPIO pins to be output
+    initializeGpioPinHandles(gpioPinHandle, true);
+    initializeGpioPins(gpioPinHandle);
+
+    // For each GPIO pin...
     for (pin = PMIC_TPS6522X_GPIO1_PIN; pin <= PMIC_TPS6522X_GPIO_PIN_MAX; pin++)
     {
-        status = Pmic_gpioSetConfiguration(pmicCoreHandle, pin, outputGpioCfg);
-        TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
-    }
-
-    // Set interrupts on all GPIO pins
-    expected_maskPol = PMIC_GPIO_POL_LOW;
-    expected_intrType = PMIC_GPIO_FALL_INTERRUPT;
-    for (pin = PMIC_TPS6522X_GPIO1_PIN; pin <= PMIC_TPS6522X_GPIO_PIN_MAX; pin++)
-    {
-        status = Pmic_gpioSetIntr(pmicCoreHandle, pin, expected_intrType, expected_maskPol);
-        TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
-    }
-
-    // For all pins up to but not including pin 5, get actual GPIO interrupt mask and polarity,
-    // compare expected vs. actual
-    for (pin = PMIC_TPS6522X_GPIO1_PIN; pin < PMIC_TPS6522X_GPIO5_PIN; pin++)
-    {
-        // Get actual interrupt mask and mask polarity from the PMIC
-        status = pmicI2CRead(pmicCoreHandle, PMIC_MAIN_INST, FSM_TRIG_MASK_1_REG_ADDR, &regData, 1);
+        // Save PMIC GPIO NVM configuration
+        status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
         TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
 
-        // Compare expected vs. actual mask and mask polarity
-        actual_gpioIntMask = (regData >> (2 * (pin - 1))) & 1;
-        actual_maskPol = (regData >> ((2 * pin) - 1)) & 1;
-        TEST_ASSERT_EQUAL_UINT8(GPIO_INT_UNMASKED, actual_gpioIntMask);
-        TEST_ASSERT_EQUAL_UINT8(expected_maskPol, actual_maskPol);
-    }
-
-    // For remaining pins, get actual GPIO interrupt mask and polarity, compare expected vs. actual
-    for (pin = PMIC_TPS6522X_GPIO5_PIN; pin <= PMIC_TPS6522X_GPIO6_PIN; pin++)
-    {
-        // Get actual interrupt mask and mask polarity from the PMIC
-        status = pmicI2CRead(pmicCoreHandle, PMIC_MAIN_INST, FSM_TRIG_MASK_2_REG_ADDR, &regData, 1);
-        TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
-        switch (pin)
-        {
-            case PMIC_TPS6522X_GPIO5_PIN:
-                actual_gpioIntMask = regData & 1;
-                actual_maskPol = (regData >> 1) & 1;
-                break;
-            case PMIC_TPS6522X_GPIO6_PIN:
-                actual_gpioIntMask = (regData >> 2) & 1;
-                actual_maskPol = (regData >> 3) & 1;
-                break;
-            default:
-                break;
-        }
-
-        // Compare expected vs. actual mask and mask polarity
-        TEST_ASSERT_EQUAL_UINT8(GPIO_INT_UNMASKED, actual_gpioIntMask);
-        TEST_ASSERT_EQUAL_UINT8(expected_maskPol, actual_maskPol);
-    }
-
-    // For all pins, get actual interrupt type and compare expected vs. actual
-    for (pin = PMIC_TPS6522X_GPIO1_PIN; pin <= PMIC_TPS6522X_GPIO_PIN_MAX; pin++)
-    {
-        // Get actual interrupt type from the PMIC
-        status = pmicI2CRead(pmicCoreHandle, PMIC_MAIN_INST, MASK_GPIO_FALL_REG_ADDR, &regData, 1);
+        // Configure PMIC GPIO pin to be input
+        status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, inputGpioCfg);
         TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
 
-        // Compare expected vs. actual interrupt type
-        if (((regData >> (pin - 1)) & 1) == 0)
-        {
-            actual_intrType = PMIC_GPIO_FALL_INTERRUPT;
-        }
-        else
-        {
-            actual_intrType = 0xFF;
-        }
-        TEST_ASSERT_EQUAL_UINT8(expected_intrType, actual_intrType);
-    }
-}
+        // Write a high signal from MCU pin to PMIC pin
+        GPIOPinWrite(
+            gpioPinHandle[pin - 1].gpioPortBase, gpioPinHandle[pin - 1].gpioPin, gpioPinHandle[pin - 1].gpioPin);
 
-/**
- * \brief test Pmic_gpioSetIntr : Disable interrupts for all GPIO pins
- *
- */
-void test_Pmic_gpioSetIntr_disableIntOnAllGpio(void)
-{
-    uint8_t regData = 0;
-    int32_t status = PMIC_ST_SUCCESS;
-    uint8_t actual_gpioIntMask = 0;
-    uint8_t pin = 0;
-
-    // Disable interrupt on all GPIO pins
-    for (pin = PMIC_TPS6522X_GPIO1_PIN; pin <= PMIC_TPS6522X_GPIO_PIN_MAX; pin++)
-    {
-        status = Pmic_gpioSetIntr(pmicCoreHandle, pin, PMIC_GPIO_DISABLE_INTERRUPT, PMIC_GPIO_POL_LOW);
-        TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
-    }
-
-    // For all pins up to but not including pin 5, get actual GPIO interrupt mask and compare expected vs. actual
-    for (pin = PMIC_TPS6522X_GPIO1_PIN; pin < PMIC_TPS6522X_GPIO5_PIN; pin++)
-    {
-        // Get actual interrupt mask value from the PMIC
-        status = pmicI2CRead(pmicCoreHandle, PMIC_MAIN_INST, FSM_TRIG_MASK_1_REG_ADDR, &regData, 1);
+        // Get actual signal level
+        status = Pmic_gpioGetValue(&pmicCoreHandle, pin, &actualPinValue);
         TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
 
-        // Compare expected vs. actual GPIO interrupt mask value
-        actual_gpioIntMask = (regData >> (2 * (pin - 1))) & 1;
-        TEST_ASSERT_EQUAL_UINT8(GPIO_INT_MASKED, actual_gpioIntMask);
-    }
+        // Compare expected vs. actual
+        TEST_ASSERT_EQUAL_UINT8(PMIC_GPIO_HIGH, actualPinValue);
 
-    // For the remaining GPIO pins, get actual GPIO interrupt mask and compare expected vs. actual
-    for (pin = PMIC_TPS6522X_GPIO5_PIN; pin <= PMIC_TPS6522X_GPIO6_PIN; pin++)
-    {
-        // Get actual interrupt mask from the PMIC
-        status = pmicI2CRead(pmicCoreHandle, PMIC_MAIN_INST, FSM_TRIG_MASK_2_REG_ADDR, &regData, 1);
-        TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
-        switch (pin)
-        {
-            case PMIC_TPS6522X_GPIO5_PIN:
-                actual_gpioIntMask = regData & 1;
-                break;
-            case PMIC_TPS6522X_GPIO6_PIN:
-                actual_gpioIntMask = (regData >> 2) & 1;
-                break;
-            default:
-                break;
-        }
+        // Write a low signal from MCU pin to PMIC pin
+        GPIOPinWrite(gpioPinHandle[pin - 1].gpioPortBase, gpioPinHandle[pin - 1].gpioPin, 0x00);
 
-        // Compare expected vs. actual interrupt mask value
-        TEST_ASSERT_EQUAL_UINT8(GPIO_INT_MASKED, actual_gpioIntMask);
-    }
-
-    // For all pins, get actual interrupt type and compare expected vs. actual
-    for (pin = PMIC_TPS6522X_GPIO1_PIN; pin <= PMIC_TPS6522X_GPIO_PIN_MAX; pin++)
-    {
-        // Get actual fall interrupt type from the PMIC
-        status = pmicI2CRead(pmicCoreHandle, PMIC_MAIN_INST, MASK_GPIO_FALL_REG_ADDR, &regData, 1);
+        // Get actual signal level
+        status = Pmic_gpioGetValue(&pmicCoreHandle, pin, &actualPinValue);
         TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
 
-        // compare expected vs. actual interrupt type
-        TEST_ASSERT_EQUAL_UINT8(GPIO_FALL_INT_MASKED, ((regData >> (pin - 1)) & 1));
+        // Compare expected vs. actual
+        TEST_ASSERT_EQUAL_UINT8(PMIC_GPIO_LOW, actualPinValue);
 
-        // Get actual rise interrupt type from the PMIC
-        status = pmicI2CRead(pmicCoreHandle, PMIC_MAIN_INST, MASK_GPIO_RISE_REG_ADDR, &regData, 1);
+        // Restore PMIC GPIO NVM configuration for the pin
+        status = Pmic_gpioSetConfiguration(&pmicCoreHandle, pin, nvmGpioCfg);
         TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
-
-        // compare expected vs. actual interrupt type
-        TEST_ASSERT_EQUAL_UINT8(GPIO_RISE_INT_MASKED, ((regData >> (pin - 1)) & 1));
-
-        resetGpioPinCfgToDefault(pin);
     }
 }
 

@@ -40,7 +40,9 @@
  */
 
 #include "../../../include/pmic_types.h"
+#include "../../../include/pmic_gpio.h"
 #include "../../pmic_core_priv.h"
+#include "../../pmic_io_priv.h"
 #include "pmic_gpio_tps6522x_priv.h"
 
 // clang-format off

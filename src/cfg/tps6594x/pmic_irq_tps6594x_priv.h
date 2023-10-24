@@ -55,11 +55,6 @@ extern "C"
 /*                             Macros & Typedefs                             */
 /* ========================================================================= */
 
-/*!
- *  \brief  PMIC Interrupt Hierarchy Level 1 Register offsets.
- */
-#define PMIC_INT_LDO_VMON_REGADDR                     (0x5FU)
-
 /** Interrupt Hierarchy Level 2 Register offsets */
 /*!
  * \brief  INT_BUCK Sources

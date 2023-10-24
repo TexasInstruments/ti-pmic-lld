@@ -3,59 +3,55 @@
 #include "burton_tests/gpio_test.h"
 
 /**
- * \brief Initializes an array of GPIO pin handles for use as GPIO input pin handles
+ * \brief Function to initialize an array of GPIO pin handles
  *
  * \param gpioPinHandle     [OUT]    Reference to array of handles to GPIO pins
- *
+ * \param bOutput           [IN]     This parameter set as true will configure every handle to be handles to output
+ *                                   pins. Otherwise, it will configure every handle to be handles to input pins
  */
-void initializeGpioInputPinHandles(gpioPinHandle_t **gpioPinHandle)
+void initializeGpioPinHandles(gpioPinHandle_t *gpioPinHandle, bool bOutput)
 {
-    static gpioPinHandle_t gpioPinHandle_internal[6];
+    gpioPinHandle[0].sysPeriphGPIO = SYSCTL_PERIPH_GPIOE;
+    gpioPinHandle[0].gpioPortBase = GPIO_PORTE_BASE;
+    gpioPinHandle[0].gpioPin = GPIO_PIN_0;
+    gpioPinHandle[0].gpioPinDir = (bOutput) ? GPIO_DIR_MODE_OUT : GPIO_DIR_MODE_IN;
+    gpioPinHandle[0].gpioShiftVal = 0;
 
-    gpioPinHandle_internal[0].sysPeriphGPIO = SYSCTL_PERIPH_GPIOE;
-    gpioPinHandle_internal[0].gpioPortBase  = GPIO_PORTE_BASE;
-    gpioPinHandle_internal[0].gpioPin       = GPIO_PIN_0;
-    gpioPinHandle_internal[0].gpioPinDir    = GPIO_DIR_MODE_IN;
-    gpioPinHandle_internal[0].gpioShiftVal  = 0;
+    gpioPinHandle[1].sysPeriphGPIO = SYSCTL_PERIPH_GPIOB;
+    gpioPinHandle[1].gpioPortBase = GPIO_PORTB_BASE;
+    gpioPinHandle[1].gpioPin = GPIO_PIN_7;
+    gpioPinHandle[1].gpioPinDir = (bOutput) ? GPIO_DIR_MODE_OUT : GPIO_DIR_MODE_IN;
+    gpioPinHandle[1].gpioShiftVal = 7;
 
-    gpioPinHandle_internal[1].sysPeriphGPIO = SYSCTL_PERIPH_GPIOB;
-    gpioPinHandle_internal[1].gpioPortBase  = GPIO_PORTB_BASE;
-    gpioPinHandle_internal[1].gpioPin       = GPIO_PIN_7;
-    gpioPinHandle_internal[1].gpioPinDir    = GPIO_DIR_MODE_IN;
-    gpioPinHandle_internal[1].gpioShiftVal  = 7;
+    gpioPinHandle[2].sysPeriphGPIO = SYSCTL_PERIPH_GPIOB;
+    gpioPinHandle[2].gpioPortBase = GPIO_PORTB_BASE;
+    gpioPinHandle[2].gpioPin = GPIO_PIN_6;
+    gpioPinHandle[2].gpioPinDir = (bOutput) ? GPIO_DIR_MODE_OUT : GPIO_DIR_MODE_IN;
+    gpioPinHandle[2].gpioShiftVal = 6;
 
-    gpioPinHandle_internal[2].sysPeriphGPIO = SYSCTL_PERIPH_GPIOB;
-    gpioPinHandle_internal[2].gpioPortBase  = GPIO_PORTB_BASE;
-    gpioPinHandle_internal[2].gpioPin       = GPIO_PIN_6;
-    gpioPinHandle_internal[2].gpioPinDir    = GPIO_DIR_MODE_IN;
-    gpioPinHandle_internal[2].gpioShiftVal  = 6;
+    gpioPinHandle[3].sysPeriphGPIO = SYSCTL_PERIPH_GPIOC;
+    gpioPinHandle[3].gpioPortBase = GPIO_PORTC_BASE;
+    gpioPinHandle[3].gpioPin = GPIO_PIN_4;
+    gpioPinHandle[3].gpioPinDir = (bOutput) ? GPIO_DIR_MODE_OUT : GPIO_DIR_MODE_IN;
+    gpioPinHandle[3].gpioShiftVal = 4;
 
-    gpioPinHandle_internal[3].sysPeriphGPIO = SYSCTL_PERIPH_GPIOC;
-    gpioPinHandle_internal[3].gpioPortBase  = GPIO_PORTC_BASE;
-    gpioPinHandle_internal[3].gpioPin       = GPIO_PIN_4;
-    gpioPinHandle_internal[3].gpioPinDir    = GPIO_DIR_MODE_IN;
-    gpioPinHandle_internal[3].gpioShiftVal  = 4;
+    gpioPinHandle[4].sysPeriphGPIO = SYSCTL_PERIPH_GPIOC;
+    gpioPinHandle[4].gpioPortBase = GPIO_PORTC_BASE;
+    gpioPinHandle[4].gpioPin = GPIO_PIN_5;
+    gpioPinHandle[4].gpioPinDir = (bOutput) ? GPIO_DIR_MODE_OUT : GPIO_DIR_MODE_IN;
+    gpioPinHandle[4].gpioShiftVal = 5;
 
-    gpioPinHandle_internal[4].sysPeriphGPIO = SYSCTL_PERIPH_GPIOC;
-    gpioPinHandle_internal[4].gpioPortBase  = GPIO_PORTC_BASE;
-    gpioPinHandle_internal[4].gpioPin       = GPIO_PIN_5;
-    gpioPinHandle_internal[4].gpioPinDir    = GPIO_DIR_MODE_IN;
-    gpioPinHandle_internal[4].gpioShiftVal  = 5;
-
-    gpioPinHandle_internal[5].sysPeriphGPIO = SYSCTL_PERIPH_GPIOC;
-    gpioPinHandle_internal[5].gpioPortBase  = GPIO_PORTC_BASE;
-    gpioPinHandle_internal[5].gpioPin       = GPIO_PIN_6;
-    gpioPinHandle_internal[5].gpioPinDir    = GPIO_DIR_MODE_IN;
-    gpioPinHandle_internal[5].gpioShiftVal  = 6;
-
-    *gpioPinHandle = (gpioPinHandle_t*)(&gpioPinHandle_internal);
+    gpioPinHandle[5].sysPeriphGPIO = SYSCTL_PERIPH_GPIOF;
+    gpioPinHandle[5].gpioPortBase = GPIO_PORTF_BASE;
+    gpioPinHandle[5].gpioPin = GPIO_PIN_1;
+    gpioPinHandle[5].gpioPinDir = (bOutput) ? GPIO_DIR_MODE_OUT : GPIO_DIR_MODE_IN;
+    gpioPinHandle[5].gpioShiftVal = 1;
 }
 
 /**
- * \brief Initialize all GPIO for use as input pins
+ * \brief Function to initialize all GPIOs for use as input pins
  *
  * \param gpioPinHandle  [IN]   array of handles used to configure Tiva GPIO pins as input/output
- *
  */
 void initializeGpioPins(gpioPinHandle_t *gpioPinHandle)
 {
@@ -75,7 +71,46 @@ void initializeGpioPins(gpioPinHandle_t *gpioPinHandle)
         }
         else if (gpioPinHandle[pin - 1].gpioPinDir == GPIO_DIR_MODE_OUT)
         {
-            GPIOPinTypeGPIOInput(gpioPinHandle[pin - 1].gpioPortBase, gpioPinHandle[pin - 1].gpioPin);
+            GPIOPinTypeGPIOOutput(gpioPinHandle[pin - 1].gpioPortBase, gpioPinHandle[pin - 1].gpioPin);
         }
     }
+}
+
+/**
+ * \brief Function to initialize a GPIO for use as an input or output pin. Whether GPIO is input
+ *        or output is dependent on the gpioPinDir struct member of gpioPinHandle parameter
+ *
+ * \param gpioPinHandle     [IN]    Handle to a GPIO pin
+ */
+void initializeGpioPin(const gpioPinHandle_t gpioPinHandle)
+{
+    SysCtlPeripheralEnable(gpioPinHandle.sysPeriphGPIO);
+
+    while (!SysCtlPeripheralReady(gpioPinHandle.sysPeriphGPIO))
+    {
+    }
+
+    if (gpioPinHandle.gpioPinDir == GPIO_DIR_MODE_IN)
+    {
+        GPIOPinTypeGPIOInput(gpioPinHandle.gpioPortBase, gpioPinHandle.gpioPin);
+    }
+    else if (gpioPinHandle.gpioPinDir == GPIO_DIR_MODE_OUT)
+    {
+        GPIOPinTypeGPIOOutput(gpioPinHandle.gpioPortBase, gpioPinHandle.gpioPin);
+    }
+}
+
+/**
+ * \brief Function to initialize a handle to a GPIO output that is interfacing the ESM. Target
+ *        GPIO output pin will be PF1
+ *
+ * \param gpioPinHandle     [OUT]    GPIO pin handle to initialize
+ */
+void initializeEsmGpioOutputHandle(gpioPinHandle_t *gpioPinHandle)
+{
+    gpioPinHandle->sysPeriphGPIO = SYSCTL_PERIPH_GPIOF;
+    gpioPinHandle->gpioPortBase = GPIO_PORTF_BASE;
+    gpioPinHandle->gpioPin = GPIO_PIN_1;
+    gpioPinHandle->gpioPinDir = GPIO_DIR_MODE_OUT;
+    gpioPinHandle->gpioShiftVal = 1;
 }

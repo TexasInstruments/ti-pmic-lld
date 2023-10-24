@@ -1,22 +1,24 @@
 #include "tiva_priv.h"
 #include "tiva_timer.h"
 
-int32_t initializeTimerHandle(timerHandle_t *timerHandle)
+/**
+ * \brief Function to initialize a timer handle.
+ *
+ * \param timerHandle [OUT] Handle to timer module
+ */
+void initializeTimerHandle(timerHandle_t *timerHandle)
 {
-    if (timerHandle == NULL)
-        return INVALID_INPUT_PARAM;
-
     timerHandle->sysctlPeriphTimer = SYSCTL_PERIPH_TIMER0;
-    timerHandle->timerBase         = TIMER0_BASE;
-
-    return SUCCESS;
+    timerHandle->timerBase = TIMER0_BASE;
 }
 
-int32_t initializeTimer(timerHandle_t *timerHandle)
+/**
+ * \brief Given a timer handle, this function initializes timer module 0 on the Tiva.
+ *
+ * \param timerHandle [IN] Handle to timer module
+ */
+void initializeTimer(timerHandle_t *timerHandle)
 {
-    if (timerHandle == NULL)
-        return INVALID_INPUT_PARAM;
-
     // Enable the target timer peripheral
     SysCtlPeripheralEnable(timerHandle->sysctlPeriphTimer);
 
@@ -25,18 +27,85 @@ int32_t initializeTimer(timerHandle_t *timerHandle)
     {
     }
 
-    // Disable timer before configuration
+    // Ensure timer is disabled so that other Timer APIs could configure the timer module
     TimerDisable(timerHandle->timerBase, TIMER_BOTH);
+}
 
-    // Write to configuration register the value 0x0000.0000
-    TimerConfigure(timerHandle->timerBase, 0x0);
+/**
+ * \brief This function is used to generate a specified delay in milliseconds
+ *
+ * \param timerHandle   [IN]    Handle to timer module
+ * \param milliseconds  [IN]    Duration of delay in milliseconds
+ */
+void delayTimeInMs(timerHandle_t *timerHandle, uint16_t milliseconds)
+{
+    uint32_t cycles = 0;
+    uint32_t seconds = 0;
 
-    // Configure the timer to be a full-width periodic timer with a .20s period
-    TimerConfigure(timerHandle->timerBase, TIMER_CFG_PERIODIC);
-    TimerLoadSet(timerHandle->timerBase, TIMER_A, SysCtlClockGet() / 5); // Channel A controls the module
+    seconds = milliseconds / 1000U;
+    milliseconds %= 1000U;
 
-    // Enable timer after configuration
-    TimerEnable(timerHandle->timerBase, TIMER_A);
+    /*** Delay for specified fraction of a second ***/
 
-    return SUCCESS;
+    if (milliseconds != 0)
+    {
+        // Disable timer before configuration
+        TimerDisable(timerHandle->timerBase, TIMER_BOTH);
+
+        // Configure timer to be in full-width One-Shot mode counting down
+        TimerConfigure(timerHandle->timerBase, 0x0);
+        TimerConfigure(timerHandle->timerBase, TIMER_CFG_ONE_SHOT);
+
+        cycles = (uint32_t)(((uint64_t)SysCtlClockGet() * (uint64_t)milliseconds) / (uint64_t)1000U);
+        TimerLoadSet(timerHandle->timerBase, TIMER_A, cycles); // In full-width CH. A controls timer
+
+        // Clear any pending timer interrupt
+        TimerIntClear(timerHandle->timerBase, TIMER_TIMA_TIMEOUT);
+
+        // Enable timer and start counting
+        TimerEnable(timerHandle->timerBase, TIMER_A);
+
+        // Wait the fraction of a second
+        while (TimerIntStatus(timerHandle->timerBase, false) != TIMER_TIMA_TIMEOUT)
+        {
+        }
+
+        // Clear flag
+        TimerIntClear(timerHandle->timerBase, TIMER_TIMA_TIMEOUT);
+    }
+
+    /*** Delay for specified number of seconds ***/
+
+    if (seconds != 0)
+    {
+        // Disable timer before configuration
+        TimerDisable(timerHandle->timerBase, TIMER_BOTH);
+
+        // Configure timer to be in full-width Periodic mode counting down
+        TimerConfigure(timerHandle->timerBase, 0x0);
+        TimerConfigure(timerHandle->timerBase, TIMER_CFG_PERIODIC);
+
+        // Configure timer to generate a 1 second period
+        TimerLoadSet(timerHandle->timerBase, TIMER_A, SysCtlClockGet());
+
+        // Clear any pending timer interrupt
+        TimerIntClear(timerHandle->timerBase, TIMER_TIMA_TIMEOUT);
+
+        // Enable timer and start counting
+        TimerEnable(timerHandle->timerBase, TIMER_A);
+
+        // Delay for specified seconds
+        while (seconds != 0)
+        {
+            while (TimerIntStatus(timerHandle->timerBase, false) != TIMER_TIMA_TIMEOUT)
+            {
+            }
+
+            TimerIntClear(timerHandle->timerBase, TIMER_TIMA_TIMEOUT);
+            seconds--;
+        }
+    }
+
+    // Disable timer after target duration has been met
+    TimerDisable(timerHandle->timerBase, TIMER_BOTH);
 }

@@ -60,6 +60,7 @@
 /*                             Include Files                                 */
 /* ==========================================================================*/
 #include "pmic_core.h"
+#include "cfg/tps6522x/pmic_irq_tps6522x.h"
 #include "cfg/tps6594x/pmic_irq_tps6594x.h"
 #include "cfg/lp8764x/pmic_irq_lp8764x.h"
 

@@ -90,6 +90,7 @@ static void Pmic_get_gpioIntRegCfg(const Pmic_CoreHandle_t *pPmicCoreHandle, Pmi
             break;
         case PMIC_DEV_BURTON_TPS6522X:
             pmic_get_tps6522x_gpioIntRegCfg(pGpioIntRegCfg);
+            break;
         default:
             /* Default case is valid only for TPS6594x LEO PMIC */
             pmic_get_tps6594x_gpioIntRegCfg(pGpioIntRegCfg);

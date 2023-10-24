@@ -14,12 +14,16 @@
 
 #include <stdint.h>
 
+#include "common_test.h"
+
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-#define BURTON_NUM_USER_OTP_REGS (uint8_t)(71)
+#define BURTON_NUM_USER_OTP_REGS   (uint8_t)(71)
+
+#define SCRATCH_PAD_REG_1_REG_ADDR (0xC9U)
 
 /**
  * \brief Unity test to check if the driver's Receive Byte API is

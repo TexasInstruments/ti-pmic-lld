@@ -70,6 +70,7 @@ extern "C"
 #define PMIC_TPS6522X_GPIO4_PIN                           (4U)
 #define PMIC_TPS6522X_GPIO5_PIN                           (5U)
 #define PMIC_TPS6522X_GPIO6_PIN                           (6U)
+/*  @} */
 
 /**
  *  \anchor Pmic_Tps6522xBurton_GpioPinFunc
@@ -103,7 +104,7 @@ extern "C"
 #define PMIC_TPS6522X_GPIO_PINFUNC_GPIO3_VMON1_M          (1U)
 /** \brief Used to configure Push-Button Function.
  *         Valid only for GPIO3 Pin */
-#define PMIC_TPS6522X_GPIO_PINFUNC_GPIO3_PB               (2U)
+#define PMIC_TPS6522X_GPIO_PINFUNC_GPIO3_PUSH_BUTTON      (2U)
 /** \brief Used to configure nSLEEP1 Function.
  *         Valid only for GPIO3 Pin */
 #define PMIC_TPS6522X_GPIO_PINFUNC_GPIO3_NSLEEP1          (3U)

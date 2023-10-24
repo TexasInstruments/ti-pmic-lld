@@ -1,19 +1,21 @@
 #include "tiva_priv.h"
 #include "tiva_misc.h"
 
-int32_t convertUint32toBinaryStr(uint8_t **str, uint32_t num)
+/**
+ * \brief Convert a uint32_t to binary, represented as a string
+ *
+ * \param num   [IN]        Number to convert to binary
+ *
+ * \return      uint8_t*    Address of the first non-null character in the binary string
+ */
+uint8_t *uint32ToBinaryStr(uint32_t num)
 {
     // Variable declaration/initialization
-    uint8_t        i   = 0;
+    uint8_t        i = 0;
     uint32_t       bit = 0;
-    static uint8_t binaryStr[33]; // last bit is for null terminator
-
-    // Parameter check
-    if (str == NULL)
-        return INVALID_INPUT_PARAM;
+    static uint8_t binaryStr[33]; // last index is for null terminator
 
     // Reset variables
-    *str = NULL;
     for (i = 0; i < 33; i++)
     {
         binaryStr[i] = '\0';
@@ -24,9 +26,7 @@ int32_t convertUint32toBinaryStr(uint8_t **str, uint32_t num)
     if (num == 0)
     {
         binaryStr[i] = '0';
-        *str         = binaryStr;
-
-        return SUCCESS;
+        return binaryStr;
     }
 
     // Convert num to binary (represented as a string)
@@ -42,27 +42,26 @@ int32_t convertUint32toBinaryStr(uint8_t **str, uint32_t num)
         num >>= 0b1;
     }
 
-    // Deference pointer to string pointer and make the string pointer point
-    // to the location that's holding the first non-NULL value in binaryStr
+    // Return the location that's holding the first non-NULL value in binaryStr
     i--;
-    *str = binaryStr + (31 - i);
-
-    return SUCCESS;
+    return (binaryStr + (31 - i));
 }
 
-int32_t convertUint32toHexStr(uint8_t **str, uint32_t num)
+/**
+ * \brief Convert a uint32_t to hex, represented as a string
+ *
+ * \param num   [IN]        Number to convert to hex
+ *
+ * \return      uint8_t*    Address of the first non-null character in the hex string
+ */
+uint8_t *uint32toHexStr(uint32_t num)
 {
     // Variable declaration/initialization
-    uint8_t        i        = 0;
+    uint8_t        i = 0;
     uint32_t       hexDigit = 0;
-    static uint8_t hexStr[9]; // last bit reserved for NULL terminator
-
-    // Parameter check
-    if (str == NULL)
-        return INVALID_INPUT_PARAM;
+    static uint8_t hexStr[9]; // last index reserved for NULL terminator
 
     // Reset variables
-    *str = NULL;
     for (i = 0; i < 9; i++)
     {
         hexStr[i] = '\0';
@@ -73,9 +72,7 @@ int32_t convertUint32toHexStr(uint8_t **str, uint32_t num)
     if (num == 0)
     {
         hexStr[i] = '0';
-        *str      = hexStr;
-
-        return SUCCESS;
+        return hexStr;
     }
 
     // Convert num to hex (represented as a string)
@@ -91,14 +88,17 @@ int32_t convertUint32toHexStr(uint8_t **str, uint32_t num)
         num >>= 4;
     }
 
-    // Deference pointer to string pointer and make the string pointer point
-    // to the location that's holding the first non-NULL value in hexStr
+    // return the location that's holding the first non-NULL value in hexStr
     i--;
-    *str = hexStr + (7 - i);
-
-    return SUCCESS;
+    return (hexStr + (7 - i));
 }
 
+/**
+ * \brief This function is generally called at the beginning of a test application
+ *        and is used to clear the terminal.
+ *
+ * \param uartHandle [IN] Handle to the UART that is interfacing the virtual communication port
+ */
 void clearConsole(uartHandle_t *uartHandle)
 {
     if (uartHandle == NULL)

@@ -62,6 +62,7 @@ extern "C"
  *  \brief  PMIC Interrupt Hierarchy Level 1 Register offsets
  */
 #define PMIC_INT_BUCK_REGADDR                                  (0x5BU)
+#define PMIC_INT_LDO_VMON_REGADDR                              (0x5FU)
 #define PMIC_INT_GPIO_REGADDR                                  (0x63U)
 #define PMIC_INT_STARTUP_REGADDR                               (0x65U)
 #define PMIC_INT_MISC_REGADDR                                  (0x66U)
@@ -197,7 +198,7 @@ extern "C"
  */
 #define PMIC_INT_STARTUP_ENABLE_INT_MASK                       (0x02U)
 #define PMIC_INT_STARTUP_FSD_INT_MASK                          (0x10U)
-/*! Valid only PG 2.0 */
+/*! Valid only Burton and PG 2.0 Leo/Hera */
 #define PMIC_INT_STARTUP_SOFT_REBOOT_INT_MASK                  (0x20U)
 
 /*!
@@ -214,8 +215,8 @@ extern "C"
 #define PMIC_INT_MODERATE_ERR_BIST_FAIL_INT_MASK               (0x02U)
 #define PMIC_INT_MODERATE_ERR_REG_CRC_ERR_INT_MASK             (0x04U)
 
-/** \brief PMIC_INT_MODERATE_ERR_NRSTOUT_READBACK_INT_MASK Bit Positions
- *         valid only for PG2.0 */
+/** \brief PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_MASK Bit Positions
+ *         valid only for Burton and PG2.0 Leo/Hera */
 #define PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_MASK               (0x08U)
 
 /** \brief PMIC_INT_MODERATE_ERR_PFSM_ERR_INT_MASK_PG_1_0 Bit Positions
@@ -242,6 +243,7 @@ extern "C"
 #define PMIC_INT_SEVERE_ERR_TSD_IMM_INT_MASK                   (0x01U)
 #define PMIC_INT_SEVERE_ERR_VCCA_OVP_INT_MASK                  (0x02U)
 #define PMIC_INT_SEVERE_ERR_PFSM_ERR_INT_MASK                  (0x04U)
+#define PMIC_INT_SEVERE_ERR_BG_XMON_INT_MASK                   (0x08U)
 
 /*!
  * \brief  PMIC_INT_COMM_ERR Register Bit Masks
@@ -314,12 +316,15 @@ extern "C"
 #define PMIC_INT_COMM_ERR_COMM_FRM_ERR_INT_SHIFT               (0x0U)
 
 /*! PMIC_INT_FSM_ERR Register Bit Positions */
+#define PMIC_INT_FSM_ERR_I2C2_ERR_INT_SHIFT                    (0x5U)
+#define PMIC_INT_FSM_ERR_COMM_ERR_INT_SHIFT                    (0x4U)
 #define PMIC_INT_FSM_ERR_SOC_PWR_ERR_INT_SHIFT                 (0x3U)
 #define PMIC_INT_FSM_ERR_MCU_PWR_ERR_INT_SHIFT                 (0x2U)
 #define PMIC_INT_FSM_ERR_ORD_SHUTDOWN_INT_SHIFT                (0x1U)
 #define PMIC_INT_FSM_ERR_IMM_SHUTDOWN_INT_SHIFT                (0x0U)
 
 /*! PMIC_INT_SEVERE_ERR Register Bit Positions */
+#define PMIC_INT_SEVERE_ERR_BG_XMON_INT_SHIFT                  (0x3U)
 #define PMIC_INT_SEVERE_ERR_PFSM_ERR_INT_SHIFT                 (0x2U)
 #define PMIC_INT_SEVERE_ERR_VCCA_OVP_INT_SHIFT                 (0x1U)
 #define PMIC_INT_SEVERE_ERR_TSD_IMM_INT_SHIFT                  (0x0U)
@@ -344,7 +349,7 @@ extern "C"
 #define PMIC_INT_MODERATE_ERR_PFSM_ERR_INT_SHIFT_PG_1_0        (0x3U)
 
 /** \brief PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_SHIFT Bit Positions
- *         valid only for PG2.0 */
+ *         valid only for Burton and PG2.0 Leo/Hera */
 #define PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_SHIFT              (0x3U)
 
 #define PMIC_INT_MODERATE_ERR_REG_CRC_ERR_INT_SHIFT            (0x2U)
@@ -356,8 +361,7 @@ extern "C"
 #define PMIC_INT_MISC_EXT_CLK_INT_SHIFT                        (0x1U)
 #define PMIC_INT_MISC_BIST_PASS_INT_SHIFT                      (0x0U)
 
-/*! PMIC_INT_STARTUP Register Bit Positions */
-/*! Valid only for PG2.0 */
+/*! PMIC_INT_STARTUP Register Bit Positions for Burton and PG2.0 Leo/Hera */
 #define PMIC_INT_STARTUP_SOFT_REBOOT_INT_SHIFT                 (0x5U)
 #define PMIC_INT_STARTUP_FSD_INT_SHIFT                         (0x4U)
 #define PMIC_INT_STARTUP_ENABLE_INT_SHIFT                      (0x1U)
@@ -433,6 +437,8 @@ extern "C"
 #define PMIC_MASK_COMM_ERR_COMM_FRM_ERR_MASK_SHIFT             (0x0U)
 
 /*! PMIC_MASK_FSM_ERR Register Bit Positions */
+#define PMIC_MASK_FSM_ERR_I2C2_ERR_MASK_SHIFT                  (0x5U)
+#define PMIC_MASK_FSM_ERR_COMM_ERR_MASK_SHIFT                  (0x4U)
 #define PMIC_MASK_FSM_ERR_SOC_PWR_ERR_MASK_SHIFT               (0x3U)
 #define PMIC_MASK_FSM_ERR_MCU_PWR_ERR_MASK_SHIFT               (0x2U)
 #define PMIC_MASK_FSM_ERR_ORD_SHUTDOWN_MASK_SHIFT              (0x1U)
@@ -455,8 +461,7 @@ extern "C"
 #define PMIC_MASK_MISC_EXT_CLK_MASK_SHIFT                      (0x1U)
 #define PMIC_MASK_MISC_BIST_PASS_MASK_SHIFT                    (0x0U)
 
-/*! PMIC_MASK_STARTUP Register Bit Positions */
-/*! Valid only for PG 2.0 */
+/*! PMIC_MASK_STARTUP Register Bit Positions for Burton and PG 2.0 Leo/Hera */
 #define PMIC_MASK_STARTUP_SOFT_REBOOT_MASK_SHIFT               (0x5U)
 #define PMIC_MASK_STARTUP_FSD_MASK_SHIFT                       (0x4U)
 #define PMIC_MASK_STARTUP_ENABLE_MASK_SHIFT                    (0x1U)

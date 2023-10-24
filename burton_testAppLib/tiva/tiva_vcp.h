@@ -22,11 +22,43 @@ typedef struct uartHandle_s
     uint32_t baudRate;
 } uartHandle_t;
 
-int32_t initializeVCP(uartHandle_t *vcpHandle);
-int32_t initializeVCPHandle(uartHandle_t *vcpHandle);
-int32_t UARTStrPut(uartHandle_t *UARTHandle, uint8_t *str);
-int32_t UARTInt32Put(uartHandle_t *UARTHandle, int32_t num);
-int32_t UARTUint32Put(uartHandle_t *UARTHandle, uint32_t num);
+/**
+ * \brief Function to initialize the UART that's interfacing the virtual communication port.
+ *
+ * \param vcpHandle [IN] Handle to the virtual communication port UART
+ */
+void initializeVCP(uartHandle_t *vcpHandle);
+
+/**
+ * \brief Function to initialize the virtual communication port UART handle
+ *
+ * \param vcpHandle [OUT] Handle to the virtual communication port UART
+ */
+void initializeVCPHandle(uartHandle_t *vcpHandle);
+
+/**
+ * \brief Function to transmit a string via UART
+ *
+ * \param UARTHandle    [IN]        Handle to the UART module
+ * \param str           [IN]        String to transmit via UART
+ */
+void UARTStrPut(uartHandle_t *UARTHandle, uint8_t *str);
+
+/**
+ * \brief Function to transmit an unsigned 32-bit integer via UART
+ *
+ * \param UARTHandle    [IN]        Handle to the UART module
+ * \param num           [IN]        Number to transmit over UART
+ */
+void UARTUint32Put(uartHandle_t *UARTHandle, uint32_t num);
+
+/**
+ * \brief Function to transmit a signed 32-bit integer via UART
+ *
+ * \param UARTHandle    [IN]        Handle to the UART module
+ * \param num           [IN]        Number to transmit over UART
+ */
+void UARTInt32Put(uartHandle_t *UARTHandle, int32_t num);
 
 #ifdef __cplusplus
 }

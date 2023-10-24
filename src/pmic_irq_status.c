@@ -56,9 +56,13 @@ void Pmic_intrBitSet(Pmic_IrqStatus_t *pErrStat, uint32_t pos)
 {
     uint32_t intStatSize = 0U;
 
-    /* Size of intStatus in bits */
+    // 4 x 8 = 32 -> size of intStatus[0] in bits
     intStatSize = sizeof(pErrStat->intStatus[0U]) << 3U;
 
+    // interrupts 0 to 31 go to index 0, interrupts 32 to 63 go to index 1,
+    // interrupts 64 to 95 go to index 2, interrupts 96 to 127 go to index 3
+    // At an index, the interrupt is stored at its corresponding bit
+    // (e.g., interrupt 49 will be stored at bit 17 at index 1)
     pErrStat->intStatus[pos / intStatSize] |= (((uint32_t)1U) << (pos % intStatSize));
 }
 
@@ -69,9 +73,13 @@ static void Pmic_intrBitClear(Pmic_IrqStatus_t *pErrStat, const uint8_t *pIrqNum
 {
     uint32_t intStatSize = 0U;
 
-    /* Size of intStatus in bits */
+    // 4 x 8 = 32 -> size of intStatus[0] in bits
     intStatSize = sizeof(pErrStat->intStatus[0U]) << 3U;
 
+    // interrupts 0 to 31 go to index 0, interrupts 32 to 63 go to index 1,
+    // interrupts 64 to 95 go to index 2, interrupts 96 to 127 go to index 3
+    // At an index, an interrupt's corresponding bit is cleared
+    // (e.g., interrupt 49 will be stored at bit 17 at index 1)
     pErrStat->intStatus[(*pIrqNum) / intStatSize] &= ~(1U << ((*pIrqNum) % intStatSize));
 }
 
@@ -122,10 +130,9 @@ static int32_t Pmic_irqValidateIrqNum(const Pmic_CoreHandle_t *pPmicCoreHandle, 
                 maxVal = PMIC_LP8764X_IRQ_MAX_NUM_PG_2_0;
             }
 
-            if ((irqNum > maxVal) && (irqNum != PMIC_IRQ_ALL))
-            {
-                pmicStatus = PMIC_ST_ERR_INV_PARAM;
-            }
+            break;
+        case PMIC_DEV_BURTON_TPS6522X:
+            maxVal = PMIC_TPS6522X_IRQ_MAX_NUM;
 
             break;
         default:
@@ -139,13 +146,11 @@ static int32_t Pmic_irqValidateIrqNum(const Pmic_CoreHandle_t *pPmicCoreHandle, 
             {
                 maxVal = PMIC_TPS6594X_IRQ_MAX_NUM_PG_2_0;
             }
+    }
 
-            if ((irqNum > maxVal) && (irqNum != PMIC_IRQ_ALL))
-            {
-                pmicStatus = PMIC_ST_ERR_INV_PARAM;
-            }
-
-            break;
+    if ((irqNum > maxVal) && (irqNum != PMIC_IRQ_ALL))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
     }
 
     return pmicStatus;
@@ -177,10 +182,9 @@ static int32_t Pmic_irqValidateIrqNumGetMaskIntrStatus(const Pmic_CoreHandle_t *
                 maxVal = PMIC_LP8764X_IRQ_MAX_NUM_PG_2_0;
             }
 
-            if (irqNum > maxVal)
-            {
-                pmicStatus = PMIC_ST_ERR_INV_PARAM;
-            }
+            break;
+        case PMIC_DEV_BURTON_TPS6522X:
+            maxVal = PMIC_TPS6522X_IRQ_MAX_NUM;
 
             break;
         default:
@@ -195,12 +199,12 @@ static int32_t Pmic_irqValidateIrqNumGetMaskIntrStatus(const Pmic_CoreHandle_t *
                 maxVal = PMIC_TPS6594X_IRQ_MAX_NUM_PG_2_0;
             }
 
-            if (irqNum > maxVal)
-            {
-                pmicStatus = PMIC_ST_ERR_INV_PARAM;
-            }
-
             break;
+    }
+
+    if (irqNum > maxVal)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
     }
 
     return pmicStatus;
@@ -228,8 +232,12 @@ static void Pmic_getMaxVal(const Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t *ma
             {
                 (*maxVal) = PMIC_LP8764X_IRQ_MAX_NUM_PG_2_0;
             }
-            break;
 
+            break;
+        case PMIC_DEV_BURTON_TPS6522X:
+            (*maxVal) = PMIC_TPS6522X_IRQ_MAX_NUM;
+
+            break;
         default:
             /* Default case is valid only for TPS6594x LEO PMIC */
             if (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
@@ -241,6 +249,7 @@ static void Pmic_getMaxVal(const Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t *ma
             {
                 (*maxVal) = PMIC_TPS6594X_IRQ_MAX_NUM_PG_2_0;
             }
+
             break;
     }
 }
@@ -261,7 +270,9 @@ static void Pmic_get_intrCfg(const Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_Intr
         case PMIC_DEV_HERA_LP8764X:
             pmic_get_lp8764x_intrCfg(pIntrCfg);
             break;
-
+        case PMIC_DEV_BURTON_TPS6522X:
+            pmic_get_tps6522x_intrCfg(pIntrCfg);
+            break;
         default:
             /* Default case is valid only for TPS6594x LEO PMIC */
             pmic_get_tps6594x_intrCfg(pIntrCfg);
@@ -582,8 +593,8 @@ Pmic_irqGetL1Reg(const Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue, uin
             {
                 (*l1RegAddr) = PMIC_INT_VMON_REGADDR;
             }
-
-            if (PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType)
+            else if ((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) ||
+                     (PMIC_DEV_BURTON_TPS6522X == pPmicCoreHandle->pmicDeviceType))
             {
                 (*l1RegAddr) = PMIC_INT_LDO_VMON_REGADDR;
             }
@@ -632,7 +643,9 @@ static int32_t Pmic_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t l
         case PMIC_DEV_HERA_LP8764X:
             pmicStatus = Pmic_lp8764x_irqGetL2Error(pPmicCoreHandle, l1RegAddr, pErrStat);
             break;
-
+        case PMIC_DEV_BURTON_TPS6522X:
+            pmicStatus = Pmic_tps6522x_irqGetL2Error(pPmicCoreHandle, l1RegAddr, pErrStat);
+            break;
         default:
             /* Default case is valid only for TPS6594x LEO PMIC */
             pmicStatus = Pmic_tps6594x_irqGetL2Error(pPmicCoreHandle, l1RegAddr, pErrStat);
@@ -712,12 +725,13 @@ int32_t Pmic_irqGetErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_IrqStatus_
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
-        /* Clearing all Error Status structure members */
+        // Clearing all Error Status structure members
         pErrStat->intStatus[0U] = 0U;
         pErrStat->intStatus[1U] = 0U;
         pErrStat->intStatus[2U] = 0U;
         pErrStat->intStatus[3U] = 0U;
 
+        // Read value of INT_TOP
         pmicStatus = Pmic_getIntrTopRegVal(pPmicCoreHandle, &regValue);
 
         if (PMIC_ST_SUCCESS == pmicStatus)
@@ -725,9 +739,13 @@ int32_t Pmic_irqGetErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_IrqStatus_
             for (count = 7U;; count--)
             {
                 l1RegAddr = 0U;
+
+                // If a bit field within INT_TOP is non-zero, get the l1RegAddr of the bit field
                 Pmic_irqGetL1Reg(pPmicCoreHandle, regValue, &l1RegAddr, count);
+
                 if (0U != l1RegAddr)
                 {
+                    // Find and record all errors pertaining to the non-zero bitfield found in INT_TOP
                     pmicStatus = Pmic_irqGetL2Error(pPmicCoreHandle, l1RegAddr, pErrStat);
                 }
                 if ((PMIC_ST_SUCCESS != pmicStatus) || (count == 0U))

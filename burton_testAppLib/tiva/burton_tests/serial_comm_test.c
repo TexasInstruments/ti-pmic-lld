@@ -6,7 +6,6 @@
  * \date 2023-10-11
  *
  * \copyright Copyright (c) 2023
- *
  */
 
 /* Standard includes */
@@ -44,14 +43,13 @@ const uint8_t burtonUserOTPRegVal[BURTON_NUM_USER_OTP_REGS] = {
     0x18, 0x1c, 0x60, 0x18, 0x80, 0x00, 0x55, 0x64, 0xa0, 0x1e, 0x01, 0x05, 0x01, 0x00, 0x40, 0x3f, 0x3f, 0x36,
     0x72, 0x04, 0x00, 0x00, 0x01, 0xc3, 0x00, 0x0f, 0x00, 0x00, 0x0a, 0x00, 0x00, 0x60, 0xd5, 0x00, 0x09};
 
-Pmic_CoreHandle_t *pmicCoreHandle = NULL;
+Pmic_CoreHandle_t pmicCoreHandle;
 
 int main(void)
 {
     /*** Variable declaration/initialization ***/
     uartHandle_t         vcpHandle;
     i2cHandle_t          I2C1Handle;
-    Pmic_CoreHandle_t    pmicLocalCoreHandle;
     const Pmic_CoreCfg_t pmicConfigData = {
         .validParams =
             PMIC_CFG_DEVICE_TYPE_VALID_SHIFT | PMIC_CFG_COMM_MODE_VALID_SHIFT | PMIC_CFG_SLAVEADDR_VALID_SHIFT |
@@ -82,9 +80,8 @@ int main(void)
     initializeI2C(&I2C1Handle);
 
     /*** PMIC setup ***/
-    initializePmicCoreHandle(&pmicLocalCoreHandle);
-    Pmic_init(&pmicConfigData, &pmicLocalCoreHandle);
-    pmicCoreHandle = &pmicLocalCoreHandle;
+    initializePmicCoreHandle(&pmicCoreHandle);
+    Pmic_init(&pmicConfigData, &pmicCoreHandle);
 
     /*** Clear the console before printing anything ***/
     clearConsole(&vcpHandle);
@@ -110,7 +107,6 @@ int main(void)
 /**
  * \brief Unity test to check if the driver's Receive Byte API is
  * able to read correct values from Burton OTP-programmed user registers.
- *
  */
 void test_Pmic_commIntf_recvByte_forCorrectReads(void)
 {
@@ -120,7 +116,7 @@ void test_Pmic_commIntf_recvByte_forCorrectReads(void)
 
     for (i = 0; i < BURTON_NUM_USER_OTP_REGS; i++)
     {
-        status = Pmic_commIntf_recvByte(pmicCoreHandle, burtonUserOTPRegAddr[i], &rxBuf);
+        status = Pmic_commIntf_recvByte(&pmicCoreHandle, burtonUserOTPRegAddr[i], &rxBuf);
         TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
 
         TEST_ASSERT_EQUAL_UINT8(burtonUserOTPRegVal[i], rxBuf);
@@ -129,38 +125,38 @@ void test_Pmic_commIntf_recvByte_forCorrectReads(void)
 
 /**
  * \brief Unity test to check if the PMIC handle's read function is
- * able to read correct values from Burton OTP-programmed user registers
- *
+ *        able to read correct values from Burton OTP-programmed user registers
  */
 void test_pmicCoreHandle_PmicCommIoRead_forCorrectReads(void)
 {
-    uint8_t rxBuf[11] = {0};
-    int32_t status = PMIC_ST_SUCCESS;
+    const uint8_t firstRegAddr = 0x1;
+    const uint8_t bufLen = 11;
+    uint8_t       rxBuf[11] = {0};
+    int32_t       status = PMIC_ST_SUCCESS;
 
-    status = pmicCoreHandle->pFnPmicCommIoRead(pmicCoreHandle, PMIC_MAIN_INST, 0x1, rxBuf, 11);
+    status = pmicCoreHandle.pFnPmicCommIoRead(&pmicCoreHandle, PMIC_MAIN_INST, firstRegAddr, rxBuf, bufLen);
     TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
 
-    TEST_ASSERT_EQUAL_UINT8_ARRAY(burtonUserOTPRegVal, rxBuf, 11);
+    TEST_ASSERT_EQUAL_UINT8_ARRAY(burtonUserOTPRegVal, rxBuf, bufLen);
 }
 
 /**
  * \brief Unity test to check if the driver's send byte API is
- * able to write the correct values to Burton OTP-programmed user registers.
- *
+ *        able to write the correct values to Burton OTP-programmed user registers.
  */
 void test_Pmic_commIntf_sendByte_forCorrectWrites(void)
 {
     uint8_t  i = 0;
     uint8_t  actualVal[4] = {0x0};
     uint32_t status = PMIC_ST_SUCCESS;
-    uint8_t  expectedVal[4] = {0xA, 0xB, 0xC, 0xD}; // Arbitrary values
+    uint8_t  expectedVal[4] = {0xA, 0xB, 0xC, 0xD}; // Arbitrary values to write
 
     for (i = 0; i < 4; i++)
     {
-        status = Pmic_commIntf_sendByte(pmicCoreHandle, 0xC9 + i, expectedVal[i]);
+        status = Pmic_commIntf_sendByte(&pmicCoreHandle, SCRATCH_PAD_REG_1_REG_ADDR + i, expectedVal[i]);
         TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
 
-        status = Pmic_commIntf_recvByte(pmicCoreHandle, 0xC9 + i, actualVal + i);
+        status = Pmic_commIntf_recvByte(&pmicCoreHandle, SCRATCH_PAD_REG_1_REG_ADDR + i, actualVal + i);
         TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
 
         TEST_ASSERT_EQUAL_UINT8(expectedVal[i], actualVal[i]);
@@ -169,27 +165,28 @@ void test_Pmic_commIntf_sendByte_forCorrectWrites(void)
 
 /**
  * \brief Unity test to check if the PMIC handle's write function is
- * able to write the correct values to Burton OTP-programmed user registers.
- *
+ *        able to write the correct values to Burton OTP-programmed user registers.
  */
 void test_pmicCoreHandle_PmicCommIoWrite_forCorrectWrites(void)
 {
-    uint8_t  actualVal[4] = {0x0};
-    uint32_t status = PMIC_ST_SUCCESS;
-    uint8_t  expectedVal[4] = {0xFF, 0xEE, 0xDD, 0xCC}; // Arbitrary values
+    const uint8_t bufLen = 4;
+    uint32_t      status = PMIC_ST_SUCCESS;
+    uint8_t       actualVal[4] = {0x0};
+    uint8_t       expectedVal[4] = {0xFF, 0xEE, 0xDD, 0xCC}; // Arbitrary values to write
 
-    status = pmicCoreHandle->pFnPmicCommIoWrite(pmicCoreHandle, PMIC_MAIN_INST, 0xC9, expectedVal, 4);
+    status = pmicCoreHandle.pFnPmicCommIoWrite(
+        &pmicCoreHandle, PMIC_MAIN_INST, SCRATCH_PAD_REG_1_REG_ADDR, expectedVal, bufLen);
     TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
 
-    status = pmicCoreHandle->pFnPmicCommIoRead(pmicCoreHandle, PMIC_MAIN_INST, 0xC9, actualVal, 4);
+    status = pmicCoreHandle.pFnPmicCommIoRead(
+        &pmicCoreHandle, PMIC_MAIN_INST, SCRATCH_PAD_REG_1_REG_ADDR, actualVal, bufLen);
     TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
 
-    TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedVal, actualVal, 4);
+    TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedVal, actualVal, bufLen);
 }
 
 /**
  * \brief This function is called by Unity when it starts a test
- *
  */
 void setUp(void)
 {
@@ -197,22 +194,7 @@ void setUp(void)
 
 /**
  * \brief This function is called by Unity when it finishes a test
- *
  */
 void tearDown(void)
 {
-}
-
-/**
- * \brief Unity uses this API in all its write, put, or print APIs
- *
- * \param ucData    [IN]    Character to write to the terminal
- */
-void unityCharPut(unsigned char ucData)
-{
-    UARTCharPut(UART0_BASE, ucData);
-    if (ucData == '\n')
-    {
-        UARTCharPut(UART0_BASE, '\r');
-    }
 }
