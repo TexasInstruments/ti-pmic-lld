@@ -151,3 +151,226 @@ void pmic_get_tps6522x_gpioIntRegCfg(Pmic_GpioIntRegCfg_t **pGpioIntRegCfg)
 {
     *pGpioIntRegCfg = tps6522x_gpioIntRegCfg;
 }
+
+/**
+ * \brief   Set TPS6522x EN/PB/VSENSE Pin Functionality
+ *          This function is used to set the pin functionality of the EN/PB/VSENSE pin
+ *          on TPS6522x
+ *
+ * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle
+ * \param   enPbVsenseCfg     [IN]    EN/PB/VSENSE configuration struct to set
+ *                                    pin functionality of EN/PB/VSENSE pin
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+static int32_t Pmic_gpioTps6522xSetEnPbVsensePinFunc(Pmic_CoreHandle_t         *pPmicCoreHandle,
+                                                     const Pmic_EnPbVsenseCfg_t enPbVsenseCfg)
+{
+    uint8_t regData = 0;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Parameter validation
+    if (enPbVsenseCfg.pinFuncSel > PMIC_EN_PB_VSENSE_FUNCTIONALITY_SELECT_VSENSE)
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    // Start critical section
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    // Read POWER_ON_CONFIG register
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, POWER_ON_CONFIG_REGADDR, &regData);
+    }
+
+    // Modify register value and write back
+    if (status == PMIC_ST_SUCCESS)
+    {
+        Pmic_setBitField(&regData,
+                         PMIC_POWER_ON_CONFIG_EN_PB_VSENSE_CONFIG_SHIFT,
+                         PMIC_POWER_ON_CONFIG_EN_PB_VSENSE_CONFIG_MASK,
+                         enPbVsenseCfg.pinFuncSel);
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, POWER_ON_CONFIG_REGADDR, regData);
+    }
+
+    // Stop critical section
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return status;
+}
+
+/**
+ * \brief   Set TPS6522x EN/PB/VSENSE deglitch configuration
+ *          This function is used to set the deglitch configuration of the EN/PB/VSENSE pin
+ *          on TPS6522x
+ *
+ * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle
+ * \param   enPbVsenseCfg     [IN]    EN/PB/VSENSE configuration struct to set
+ *                                    deglitch configuration of EN/PB/VSENSE pin
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+static int32_t Pmic_gpioTps6522xSetEnPbVsenseDeglitch(Pmic_CoreHandle_t         *pPmicCoreHandle,
+                                                      const Pmic_EnPbVsenseCfg_t enPbVsenseCfg)
+{
+    uint8_t regData = 0;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Start critical section
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    // Read POWER_ON_CONFIG register
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle, POWER_ON_CONFIG_REGADDR, &regData);
+
+    // Modify register value and write back
+    if (status == PMIC_ST_SUCCESS)
+    {
+        Pmic_setBitField(&regData,
+                         PMIC_POWER_ON_CONFIG_EN_PB_DEGL_SHIFT,
+                         PMIC_POWER_ON_CONFIG_EN_PB_DEGL_MASK,
+                         enPbVsenseCfg.deglitchSel);
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, POWER_ON_CONFIG_REGADDR, regData);
+    }
+
+    // Stop critical section
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return status;
+}
+
+/**
+ * \brief   Function to get the pin functionality of the EN/PB/VSENSE pin
+ *
+ * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
+ * \param   pEnPbVsenseCfg  [OUT]      Pointer to store EN/PB/VSENSE
+ *                                     pin functionality
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+static int32_t Pmic_gpioTps6522xGetEnPbVsensePinFunc(Pmic_CoreHandle_t    *pPmicCoreHandle,
+                                                     Pmic_EnPbVsenseCfg_t *pEnPbVsenseCfg)
+{
+    uint8_t regData = 0;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Start critical section
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    // Read POWER_ON_CONFIG register
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle, POWER_ON_CONFIG_REGADDR, &regData);
+
+    // Extract functionality of EN/PB/VSENSE pin
+    if (status == PMIC_ST_SUCCESS)
+    {
+        pEnPbVsenseCfg->pinFuncSel = Pmic_getBitField(
+            regData, PMIC_POWER_ON_CONFIG_EN_PB_VSENSE_CONFIG_SHIFT, PMIC_POWER_ON_CONFIG_EN_PB_VSENSE_CONFIG_MASK);
+    }
+
+    // Stop critical section
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return status;
+}
+
+/**
+ * \brief   Function to get the deglitch configuration of the EN/PB/VSENSE pin
+ *
+ * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
+ * \param   pEnPbVsenseCfg  [OUT]      Pointer to store EN/PB/VSENSE
+ *                                     deglitch configuration
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+static int32_t Pmic_gpioTps6522xGetEnPbVsenseDeglitch(Pmic_CoreHandle_t    *pPmicCoreHandle,
+                                                      Pmic_EnPbVsenseCfg_t *pEnPbVsenseCfg)
+{
+    uint8_t regData = 0;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Start critical section
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    // Read POWER_ON_CONFIG register
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle, POWER_ON_CONFIG_REGADDR, &regData);
+
+    // Extract functionality of EN/PB/VSENSE pin
+    if (status == PMIC_ST_SUCCESS)
+    {
+        pEnPbVsenseCfg->deglitchSel = (bool)Pmic_getBitField(
+            regData, PMIC_POWER_ON_CONFIG_EN_PB_DEGL_SHIFT, PMIC_POWER_ON_CONFIG_EN_PB_DEGL_MASK);
+    }
+
+    // Stop critical section
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return status;
+}
+
+/**
+ * \brief   Function to set the configuration of EN/PB/VSENSE pin for TPS6522x
+ *          BURTON PMIC
+ *
+ * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle
+ * \param   enPbVsenseCfg     [IN]    EN/PB/VSENSE configuration struct to set
+ *                                    configuration of EN/PB/VSENSE pin
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_gpioTps6522xSetEnPbVsensePinConfiguration(Pmic_CoreHandle_t         *pPmicCoreHandle,
+                                                       const Pmic_EnPbVsenseCfg_t enPbVsenseCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Set functionality of the EN/PB/VSENSE pin
+    if (pmic_validParamCheck(enPbVsenseCfg.validParams, PMIC_EN_PB_VSENSE_CFG_FUNC_SEL_VALID) == true)
+    {
+        status = Pmic_gpioTps6522xSetEnPbVsensePinFunc(pPmicCoreHandle, enPbVsenseCfg);
+    }
+
+    // Set deglitch of the EN/PB/VSENSE pin
+    if ((status == PMIC_ST_SUCCESS) &&
+        pmic_validParamCheck(enPbVsenseCfg.validParams, PMIC_EN_PB_VSENSE_CFG_DEGLITCH_SEL_VALID) == true)
+    {
+        status = Pmic_gpioTps6522xSetEnPbVsenseDeglitch(pPmicCoreHandle, enPbVsenseCfg);
+    }
+
+    return status;
+}
+
+/**
+ * \brief   Function to get the configuration of EN/PB/VSENSE pin for TPS6522x
+ *          BURTON PMIC
+ *
+ * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
+ * \param   pEnPbVsenseCfg  [IN/OUT]   Pointer to store EN/PB/VSENSE
+ *                                     pin configuration
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_gpioTps6522xGetEnPbVsensePinConfiguration(Pmic_CoreHandle_t    *pPmicCoreHandle,
+                                                       Pmic_EnPbVsenseCfg_t *pEnPbVsenseCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Get functionality of the EN/PB/VSENSE pin
+    if (pmic_validParamCheck(pEnPbVsenseCfg->validParams, PMIC_EN_PB_VSENSE_CFG_FUNC_SEL_VALID) == true)
+    {
+        status = Pmic_gpioTps6522xGetEnPbVsensePinFunc(pPmicCoreHandle, pEnPbVsenseCfg);
+    }
+
+    // Get deglitch of the EN/PB/VSENSE pin
+    if ((status == PMIC_ST_SUCCESS) &&
+        pmic_validParamCheck(pEnPbVsenseCfg->validParams, PMIC_EN_PB_VSENSE_CFG_DEGLITCH_SEL_VALID) == true)
+    {
+        status = Pmic_gpioTps6522xGetEnPbVsenseDeglitch(pPmicCoreHandle, pEnPbVsenseCfg);
+    }
+
+    return status;
+}

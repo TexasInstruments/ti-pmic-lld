@@ -40,6 +40,7 @@ extern "C"
 #define FSM_TRIG_MASK_2_REG_ADDR (0x47U)
 #define MASK_GPIO_FALL_REG_ADDR  (0x4FU)
 #define MASK_GPIO_RISE_REG_ADDR  (0x50U)
+#define POWER_ON_CONFIG_REG_ADDR (0x3CU)
 
 #define GPIO_INT_MASKED          (bool)(true)
 #define GPIO_INT_UNMASKED        (bool)(false)

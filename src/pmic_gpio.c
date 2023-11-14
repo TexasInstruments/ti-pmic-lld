@@ -1473,3 +1473,106 @@ int32_t Pmic_gpioGetNPwronEnablePinConfiguration(Pmic_CoreHandle_t *pPmicCoreHan
 
     return status;
 }
+
+/*!
+ * \brief   This function is used to validate the PMIC interface struct and
+ *          EN/PB/VSENSE configuration struct
+ */
+static int32_t Pmic_gpioEnPbVsenseParamCheck(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_EnPbVsenseCfg_t *enPbVsenseCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    status = Pmic_gpioValidateParams(pPmicCoreHandle);
+    if ((status == PMIC_ST_SUCCESS) && (enPbVsenseCfg == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    return status;
+}
+
+/*!
+ * \brief   API to set configuration for EN/PB/VSENSE pin.
+ *
+ *          This function is used to set the required configuration for the
+ *          EN/PB/VSENSE pin when corresponding validParam bit field is set
+ *          in the Pmic_EnPbVsenseCfg_t
+ *          For more information \ref Pmic_EnPbVsenseCfg_t
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6522x
+ *                BURTON PMIC. If adding support for a new PMIC device, the
+ *                developer must update the API implementation for the new device.
+ *
+ * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
+ * \param   enPbVsenseCfg   [IN]    Set EN/PB/VSENSE pin configuration
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_gpioSetEnPbVsensePinConfiguration(Pmic_CoreHandle_t         *pPmicCoreHandle,
+                                               const Pmic_EnPbVsenseCfg_t enPbVsenseCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Parameter validation
+    status = Pmic_gpioValidateParams(pPmicCoreHandle);
+
+    // Set the configuration of the EN/PB/VSENSE pin
+    if (status == PMIC_ST_SUCCESS)
+    {
+        switch (pPmicCoreHandle->pmicDeviceType)
+        {
+            case PMIC_DEV_BURTON_TPS6522X:
+                status = Pmic_gpioTps6522xSetEnPbVsensePinConfiguration(pPmicCoreHandle, enPbVsenseCfg);
+                break;
+            default:
+                status = PMIC_ST_ERR_INV_DEVICE;
+                break;
+        }
+    }
+
+    return status;
+}
+
+/*!
+ * \brief   API to get configuration for EN/PB/VSENSE pin.
+ *
+ *          This function is used to read the configuration for the
+ *          EN/PB/VSENSE pin when corresponding validParam bit field is set
+ *          in the Pmic_EnPbVsenseCfg_t
+ *          For more information \ref Pmic_EnPbVsenseCfg_t
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6522x
+ *                BURTON PMIC. If adding support for a new PMIC device, the
+ *                developer must update the API implementation for the new device.
+ *
+ * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
+ * \param   pEnPbVsenseCfg  [IN/OUT]   Pointer to store EN/PB/VSENSE
+ *                                     pin configuration
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_gpioGetEnPbVsensePinConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_EnPbVsenseCfg_t *pEnPbVsenseCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Parameter validation
+    status = Pmic_gpioEnPbVsenseParamCheck(pPmicCoreHandle, pEnPbVsenseCfg);
+
+    // Get the configuration of the EN/PB/VSENSE pin
+    if (status == PMIC_ST_SUCCESS)
+    {
+        switch (pPmicCoreHandle->pmicDeviceType)
+        {
+            case PMIC_DEV_BURTON_TPS6522X:
+                status = Pmic_gpioTps6522xGetEnPbVsensePinConfiguration(pPmicCoreHandle, pEnPbVsenseCfg);
+                break;
+            default:
+                status = PMIC_ST_ERR_INV_DEVICE;
+                break;
+        }
+    }
+
+    return status;
+}

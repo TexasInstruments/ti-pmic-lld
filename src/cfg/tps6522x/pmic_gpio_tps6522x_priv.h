@@ -56,11 +56,32 @@ extern "C"
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
+/*!
+ * \brief  EN/PB/VSENSE Pin and nINT Pin Configuration Register for TPS6522x Burton PMIC
+ */
+#define POWER_ON_CONFIG_REGADDR                        (0x3CU)
+
+/*!
+ * \brief  POWER ON CONFIG register bit fields
+ */
+#define PMIC_POWER_ON_CONFIG_EN_PB_VSENSE_CONFIG_SHIFT (0x06U)
+#define PMIC_POWER_ON_CONFIG_EN_PB_DEGL_SHIFT          (0x05U)
+#define PMIC_POWER_ON_CONFIG_NINT_ENDRV_SEL_SHIFT      (0x01U)
+#define PMIC_POWER_ON_CONFIG_NINT_ENDRV_PU_SEL_SHIFT   (0x00U)
+
+/*!
+ * \brief  POWER ON CONFIG register bit masks
+ */
+#define PMIC_POWER_ON_CONFIG_EN_PB_VSENSE_CONFIG_MASK  (0x03U << PMIC_POWER_ON_CONFIG_EN_PB_VSENSE_CONFIG_SHIFT)
+#define PMIC_POWER_ON_CONFIG_EN_PB_DEGL_MASK           (0x01U << PMIC_POWER_ON_CONFIG_EN_PB_DEGL_SHIFT)
+#define PMIC_POWER_ON_CONFIG_NINT_ENDRV_SEL_MASK       (0x01U << PMIC_POWER_ON_CONFIG_NINT_ENDRV_SEL_SHIFT)
+#define PMIC_POWER_ON_CONFIG_NINT_ENDRV_PU_SEL_MASK    (0x01U << PMIC_POWER_ON_CONFIG_NINT_ENDRV_PU_SEL_SHIFT)
+
 /*
  * \brief  Min and Max PMIC GPIO pin supported
  */
-#define PMIC_TPS6522X_GPIO_PIN_MIN (1U)
-#define PMIC_TPS6522X_GPIO_PIN_MAX (6U)
+#define PMIC_TPS6522X_GPIO_PIN_MIN                     (1U)
+#define PMIC_TPS6522X_GPIO_PIN_MAX                     (6U)
 
 /* ========================================================================== */
 /*                         Structures and Enums                               */
@@ -85,6 +106,34 @@ void pmic_get_tps6522x_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg);
  * \param   pGpioIntRegCfg   [OUT]  to store tps6522x gpio register configuration
  */
 void pmic_get_tps6522x_gpioIntRegCfg(Pmic_GpioIntRegCfg_t **pGpioIntRegCfg);
+
+/**
+ * \brief   Function to set the configuration of EN/PB/VSENSE pin for TPS6522x
+ *          BURTON PMIC
+ *
+ * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle
+ * \param   enPbVsenseCfg     [IN]    EN/PB/VSENSE configuration struct to set
+ *                                    configuration of EN/PB/VSENSE pin
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_gpioTps6522xSetEnPbVsensePinConfiguration(Pmic_CoreHandle_t         *pPmicCoreHandle,
+                                                       const Pmic_EnPbVsenseCfg_t enPbVsenseCfg);
+
+/**
+ * \brief   Function to get the configuration of EN/PB/VSENSE pin for TPS6522x
+ *          BURTON PMIC
+ *
+ * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
+ * \param   pEnPbVsenseCfg  [IN/OUT]   Pointer to store EN/PB/VSENSE
+ *                                     pin configuration
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_gpioTps6522xGetEnPbVsensePinConfiguration(Pmic_CoreHandle_t    *pPmicCoreHandle,
+                                                       Pmic_EnPbVsenseCfg_t *pEnPbVsenseCfg);
 
 #ifdef __cplusplus
 }

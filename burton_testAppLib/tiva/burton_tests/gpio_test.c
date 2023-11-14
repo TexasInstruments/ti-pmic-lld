@@ -27,7 +27,10 @@
 #include "pmic_drv/pmic.h"
 
 Pmic_CoreHandle_t pmicCoreHandle;
+timerHandle_t     timerHandle;
 gpioPinHandle_t   gpioPinHandle[PMIC_TPS6522X_GPIO_PIN_MAX];
+
+static void disableVMON1LDO2(void);
 
 int main(void)
 {
@@ -69,6 +72,10 @@ int main(void)
     initializeGpioPinHandles(gpioPinHandle, false);
     initializeGpioPins(gpioPinHandle);
 
+    /*** Timer setup ***/
+    initializeTimerHandle(&timerHandle);
+    initializeTimer(&timerHandle);
+
     /*** PMIC setup ***/
     initializePmicCoreHandle(&pmicCoreHandle);
     Pmic_init(&pmicConfigData, &pmicCoreHandle);
@@ -76,12 +83,20 @@ int main(void)
     /*** Clear the console before printing anything ***/
     clearConsole(&vcpHandle);
 
+    /*** Disable VMON1 and LDO2 OV/UV comparators ***/
+    disableVMON1LDO2();
+
+    // Clear all interrupt flags
+    (void)Pmic_irqClrErrStatus(&pmicCoreHandle, PMIC_IRQ_ALL);
+
     /*** Print welcome message ***/
     UARTStrPut(&vcpHandle, "Running all PMIC GPIO tests...\r\n\r\n");
 
     /*** Begin unity testing ***/
     UNITY_BEGIN();
 
+    RUN_TEST(test_pushButton_onRequest);
+    RUN_TEST(test_pushButton_offRequest);
     RUN_TEST(test_Pmic_gpioSetValue_setGpioSignalLvl);
     RUN_TEST(test_Pmic_gpioGetValue_readGpioSignalLvl);
     RUN_TEST(test_Pmic_gpioSetConfiguration_VMON1_m);
@@ -97,14 +112,113 @@ int main(void)
     RUN_TEST(test_Pmic_gpioSetConfiguration_SCL_I2C2_CS_SPI);
     RUN_TEST(test_Pmic_gpioSetConfiguration_nINT);
     RUN_TEST(test_Pmic_gpioSetConfiguration_TRIG_WDOG);
+    RUN_TEST(test_Pmic_gpioSetEnPbVsensePinConfiguration_validatePmicHandle);
+    RUN_TEST(test_Pmic_gpioSetEnPbVsensePinConfiguration_validatePinFunc);
+    RUN_TEST(test_Pmic_gpioSetEnPbVsensePinConfiguration_enableFunc);
+    RUN_TEST(test_Pmic_gpioSetEnPbVsensePinConfiguration_pushButtonFunc);
+    RUN_TEST(test_Pmic_gpioSetEnPbVsensePinConfiguration_vsenseFunc);
 
     /*** Finish unity testing ***/
     return UNITY_END();
 }
 
 /**
- * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to TRIG_WDOG functionality
+ * \brief By TPS6522430-Q1 OTP default, LDO2 is monitored by VMON1. This private function is
+ *        used to disable VMON1 and LDO2 and mask their interrupts to prevent their influence
+ *        during tests
+ */
+static void disableVMON1LDO2(void)
+{
+    const int32_t done = 0xFFF;
+    int32_t       status = PMIC_ST_SUCCESS;
+    uint8_t       regData = 0;
+
+    // Disable VMON 1 OV/UV comparator
+    while (status != done)
+    {
+        status = pmicI2CRead(&pmicCoreHandle, PMIC_MAIN_INST, VCCA_VMON_CTRL_REG_ADDR, &regData, 1);
+        if (status != PMIC_ST_SUCCESS)
+        {
+            continue;
+        }
+
+        regData &= ~(0b10);
+        status = pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, VCCA_VMON_CTRL_REG_ADDR, &regData, 1);
+        if (status == PMIC_ST_SUCCESS)
+        {
+            status = done;
+        }
+    }
+
+    status = PMIC_ST_SUCCESS;
+
+    // Disable LDO2 and its voltage monitor
+    while (status != done)
+    {
+        status = pmicI2CRead(&pmicCoreHandle, PMIC_MAIN_INST, LDO2_CTRL_REG_ADDR, &regData, 1);
+        if (status != PMIC_ST_SUCCESS)
+        {
+            continue;
+        }
+
+        regData &= ~(0b10001);
+        status = pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, LDO2_CTRL_REG_ADDR, &regData, 1);
+        if (status == PMIC_ST_SUCCESS)
+        {
+            status = done;
+        }
+    }
+
+    // Mask VMON1 and LDO2 interrupts
+    (void)Pmic_irqMaskIntr(&pmicCoreHandle, PMIC_TPS6522X_VMON1_UVOV_INT, PMIC_IRQ_MASK);
+    (void)Pmic_irqMaskIntr(&pmicCoreHandle, PMIC_TPS6522X_LDO2_UVOV_INT, PMIC_IRQ_MASK);
+
+    // Clear VMON1 and LDO2 interrupts
+    (void)Pmic_irqClrErrStatus(&pmicCoreHandle, PMIC_TPS6522X_VMON1_UVOV_INT);
+    (void)Pmic_irqClrErrStatus(&pmicCoreHandle, PMIC_TPS6522X_LDO2_UVOV_INT);
+}
+
+/**
+ * \brief   This private helper function is used to test the Pmic_gpioSetEnPbVsensePinConfiguration
+ *          API. It checks whether the API can set the pin functionality and deglitching of
+ *          of the EN/PB/VSENSE pin.
  *
+ * \param pinFunc   [IN]    Functionality selection
+ */
+static void setEnPbVsensePinConfigurationTest(uint8_t pinFunc)
+{
+    uint8_t              regData = 0;
+    int32_t              status = PMIC_ST_SUCCESS;
+    Pmic_EnPbVsenseCfg_t expectedEnPbVsenseCfg = {
+        .validParams = (PMIC_EN_PB_VSENSE_CFG_FUNC_SEL_VALID_SHIFT | PMIC_EN_PB_VSENSE_CFG_DEGLITCH_SEL_VALID_SHIFT),
+        .pinFuncSel = pinFunc,
+        .deglitchSel = PMIC_EN_PB_VSENSE_DEGLITCH_SELECTION_LONG};
+    Pmic_EnPbVsenseCfg_t actualEnPbVsenseCfg = {
+        .validParams = (PMIC_EN_PB_VSENSE_CFG_FUNC_SEL_VALID_SHIFT | PMIC_EN_PB_VSENSE_CFG_DEGLITCH_SEL_VALID_SHIFT),
+        .pinFuncSel = 0,
+        .deglitchSel = false};
+
+    // Save the NVM default configuration of the EN/PB/VSENSE pin
+    (void)pmicI2CRead(&pmicCoreHandle, PMIC_MAIN_INST, POWER_ON_CONFIG_REG_ADDR, &regData, 1);
+
+    // Set the configuration of the EN/PB/VSENSE pin
+    status = Pmic_gpioSetEnPbVsensePinConfiguration(&pmicCoreHandle, expectedEnPbVsenseCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Get the actual configuration of the EN/PB/VSENSE pin
+    status = Pmic_gpioGetEnPbVsensePinConfiguration(&pmicCoreHandle, &actualEnPbVsenseCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Compare expected vs. actual
+    TEST_ASSERT_EQUAL(expectedEnPbVsenseCfg.pinFuncSel, actualEnPbVsenseCfg.pinFuncSel);
+    TEST_ASSERT_EQUAL(expectedEnPbVsenseCfg.deglitchSel, actualEnPbVsenseCfg.deglitchSel);
+
+    // Restore the NVM default configuration of the EN/PB/VSENSE pin
+    (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, POWER_ON_CONFIG_REG_ADDR, &regData, 1);
+}
+
+/**
+ * \brief test Pmic_gpioSetConfiguration: Configure a GPIO pin to TRIG_WDOG functionality
  */
 void test_Pmic_gpioSetConfiguration_TRIG_WDOG(void)
 {
@@ -837,8 +951,161 @@ void test_Pmic_gpioGetValue_readGpioSignalLvl(void)
 }
 
 /**
- * \brief This function is called by Unity when it starts a test
+ * \brief test Pmic_gpioSetEnPbVsensePinConfiguration: Parameter validation of PMIC handle
+ */
+void test_Pmic_gpioSetEnPbVsensePinConfiguration_validatePmicHandle(void)
+{
+    int32_t              status = PMIC_ST_SUCCESS;
+    Pmic_EnPbVsenseCfg_t enPbVsenseCfg = {
+        .validParams = (PMIC_EN_PB_VSENSE_CFG_FUNC_SEL_VALID_SHIFT | PMIC_EN_PB_VSENSE_CFG_DEGLITCH_SEL_VALID_SHIFT),
+        .pinFuncSel = PMIC_EN_PB_VSENSE_FUNCTIONALITY_SELECT_VSENSE,
+        .deglitchSel = PMIC_EN_PB_VSENSE_DEGLITCH_SELECTION_LONG};
+
+    // Pass in NULL PMIC handle and capture return code
+    status = Pmic_gpioSetEnPbVsensePinConfiguration(NULL, enPbVsenseCfg);
+
+    // Compare expected vs. actual
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_ERR_INV_HANDLE, status);
+}
+
+/**
+ * \brief test Pmic_gpioSetEnPbVsensePinConfiguration: Parameter validation of pin functionality struct member of
+ *                                                     enPbVsenseCfg
+ */
+void test_Pmic_gpioSetEnPbVsensePinConfiguration_validatePinFunc(void)
+{
+    int32_t              status = PMIC_ST_SUCCESS;
+    Pmic_EnPbVsenseCfg_t enPbVsenseCfg = {
+        .validParams = (PMIC_EN_PB_VSENSE_CFG_FUNC_SEL_VALID_SHIFT | PMIC_EN_PB_VSENSE_CFG_DEGLITCH_SEL_VALID_SHIFT),
+        .pinFuncSel = UINT8_MAX,
+        .deglitchSel = PMIC_EN_PB_VSENSE_DEGLITCH_SELECTION_LONG};
+
+    // Pass in an invalid pin functionality and capture return code
+    status = Pmic_gpioSetEnPbVsensePinConfiguration(&pmicCoreHandle, enPbVsenseCfg);
+
+    // Compare expected vs. actual
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_ERR_INV_PARAM, status);
+}
+
+/**
+ * \brief test Pmic_gpioSetEnPbVsensePinConfiguration: Configure EN/PB/VSENSE pin to EN functionality
+ */
+void test_Pmic_gpioSetEnPbVsensePinConfiguration_enableFunc(void)
+{
+    uint8_t pinFunc = PMIC_EN_PB_VSENSE_FUNCTIONALITY_SELECT_EN;
+
+    setEnPbVsensePinConfigurationTest(pinFunc);
+}
+
+/**
+ * \brief test Pmic_gpioSetEnPbVsensePinConfiguration: Configure EN/PB/VSENSE pin to PB functionality
+ */
+void test_Pmic_gpioSetEnPbVsensePinConfiguration_pushButtonFunc(void)
+{
+    uint8_t pinFunc = PMIC_EN_PB_VSENSE_FUNCTIONALITY_SELECT_PB;
+
+    setEnPbVsensePinConfigurationTest(pinFunc);
+}
+
+/**
+ * \brief test Pmic_gpioSetEnPbVsensePinConfiguration: Configure EN/PB/VSENSE pin to VSENSE functionality
+ */
+void test_Pmic_gpioSetEnPbVsensePinConfiguration_vsenseFunc(void)
+{
+    uint8_t pinFunc = PMIC_EN_PB_VSENSE_FUNCTIONALITY_SELECT_VSENSE;
+
+    setEnPbVsensePinConfigurationTest(pinFunc);
+}
+
+/**
+ * \brief This private helper function is used to test the push button for short or long presses
  *
+ * \param pbIrqNum  [IN] Target push button interrupt number to look for during the test
+ * \param timeout   [IN] Approximate max number of seconds before test fails
+ */
+static void pushButtonTest(uint8_t pbIrqNum, uint8_t timeout)
+{
+    uint8_t              iter = 0;
+    uint8_t              regData = 0;
+    int32_t              status = PMIC_ST_SUCCESS;
+    uint8_t              actualIrqNum = 0;
+    Pmic_IrqStatus_t     errStat;
+    Pmic_EnPbVsenseCfg_t enPbVsenseCfg = {
+        .validParams = (PMIC_EN_PB_VSENSE_CFG_FUNC_SEL_VALID_SHIFT | PMIC_EN_PB_VSENSE_CFG_DEGLITCH_SEL_VALID_SHIFT),
+        .pinFuncSel = PMIC_EN_PB_VSENSE_FUNCTIONALITY_SELECT_PB,
+        .deglitchSel = PMIC_EN_PB_VSENSE_DEGLITCH_SELECTION_SHORT};
+
+    // Save the NVM default configuration of the EN/PB/VSENSE pin
+    (void)pmicI2CRead(&pmicCoreHandle, PMIC_MAIN_INST, POWER_ON_CONFIG_REG_ADDR, &regData, 1);
+
+    // Configure EN/PB/VSENSE pin to PB functionality
+    status = Pmic_gpioSetEnPbVsensePinConfiguration(&pmicCoreHandle, enPbVsenseCfg);
+    TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+    // Check to see if push button interrupt flag is raised before timeout
+    for (iter = 0; iter < timeout; iter++)
+    {
+        // Delay for 1 second
+        delayTimeInMs(&timerHandle, 1000);
+
+        // After 1 second delay, get status of all interrupts
+        status = Pmic_irqGetErrStatus(&pmicCoreHandle, &errStat, PMIC_IRQ_CLEAR_NONE);
+        TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
+
+        // Search for target PB interrupt
+        while (status != PMIC_ST_ERR_INV_INT)
+        {
+            status = Pmic_getNextErrorStatus(&pmicCoreHandle, &errStat, &actualIrqNum);
+            if ((status == PMIC_ST_SUCCESS) && (actualIrqNum == pbIrqNum))
+            {
+                break;
+            }
+        }
+
+        // If PMIC has detected PB press and has set proper interrupt flag, break out of loop
+        if (actualIrqNum == pbIrqNum)
+        {
+            break;
+        }
+    }
+    TEST_ASSERT_LESS_THAN_UINT8(timeout, iter);
+
+    // Restore the NVM default configuration of the EN/PB/VSENSE pin
+    (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, POWER_ON_CONFIG_REG_ADDR, &regData, 1);
+}
+
+/**
+ * \brief test Push Button On Request: Validate that the push button generates an On Request (PB_SHORT_INT
+ *                                     flag is raised and nRSTOUT signal is set high)
+ *
+ * \note At the start of the test, it is required that the push button is to be pressed within 10 seconds
+ *       or test will fail
+ */
+void test_pushButton_onRequest(void)
+{
+    uint8_t pbIrqNum = PMIC_TPS6522X_PB_SHORT_INT;
+    uint8_t timeout = 10;
+
+    pushButtonTest(pbIrqNum, timeout);
+}
+
+/**
+ * \brief test Push Button Off Request: Validate that the push button generates an Off Request (PB_LONG_INT
+ *                                      flag is raised and nRSTOUT signal is set low)
+ *
+ * \note At the start of the test, there will be 15 seconds to hold the push button for 8 seconds
+ *       or else test will fail
+ */
+void test_pushButton_offRequest(void)
+{
+    uint8_t pbIrqNum = PMIC_TPS6522X_PB_LONG_INT;
+    uint8_t timeout = 15;
+
+    pushButtonTest(pbIrqNum, timeout);
+}
+
+/**
+ * \brief This function is called by Unity when it starts a test
  */
 void setUp(void)
 {
@@ -846,23 +1113,7 @@ void setUp(void)
 
 /**
  * \brief This function is called by Unity when it finishes a test
- *
  */
 void tearDown(void)
 {
-}
-
-/**
- * \brief Unity uses this API in all its write, put, or print APIs
- *
- * \param ucData    [IN]    Character to write to the terminal
- *
- */
-void unityCharPut(unsigned char ucData)
-{
-    UARTCharPut(UART0_BASE, ucData);
-    if (ucData == '\n')
-    {
-        UARTCharPut(UART0_BASE, '\r');
-    }
 }

@@ -203,8 +203,52 @@ extern "C"
  *
  *  @{
  */
-#define PMIC_GPIO_POL_LOW                    (0U)
-#define PMIC_GPIO_POL_HIGH                   (1U)
+#define PMIC_GPIO_POL_LOW                              (0U)
+#define PMIC_GPIO_POL_HIGH                             (1U)
+/*  @} */
+
+/**
+ *  \anchor Pmic_EnPbVsenseCflag
+ *  \name   PMIC Pmic_EnPbVsenseCfg_s member configuration type
+ *
+ *  @{
+ */
+#define PMIC_EN_PB_VSENSE_CFG_FUNC_SEL_VALID           (0U)
+#define PMIC_EN_PB_VSENSE_CFG_DEGLITCH_SEL_VALID       (1U)
+/*  @} */
+
+/**
+ *  \anchor Pmic_EnPbVsenseCfgStructPrmBitShiftVal
+ *  \name   EN/PB/VSENSE Configuration Structure Param Bit shift values
+ *
+ *  Application can use below shifted values to set the validParams
+ *  struct member defined in Pmic_EnPbVsenseCfg_t structure
+ *
+ *  @{
+ */
+#define PMIC_EN_PB_VSENSE_CFG_FUNC_SEL_VALID_SHIFT     (0x01U << PMIC_EN_PB_VSENSE_CFG_FUNC_SEL_VALID)
+#define PMIC_EN_PB_VSENSE_CFG_DEGLITCH_SEL_VALID_SHIFT (0x01U << PMIC_EN_PB_VSENSE_CFG_DEGLITCH_SEL_VALID)
+/* @} */
+
+/**
+ *  \anchor Pmic_EnPbVsense_funcSel
+ *  \name   PMIC EN/PB/VSENSE pin functionality selection
+ *
+ *  @{
+ */
+#define PMIC_EN_PB_VSENSE_FUNCTIONALITY_SELECT_EN      (0U)
+#define PMIC_EN_PB_VSENSE_FUNCTIONALITY_SELECT_PB      (1U)
+#define PMIC_EN_PB_VSENSE_FUNCTIONALITY_SELECT_VSENSE  (2U)
+/*  @} */
+
+/**
+ *  \anchor Pmic_EnPbVsense_deglitchSel
+ *  \name   PMIC EN/PB/VSENSE pin deglitch selection
+ *
+ *  @{
+ */
+#define PMIC_EN_PB_VSENSE_DEGLITCH_SELECTION_SHORT     (0U)
+#define PMIC_EN_PB_VSENSE_DEGLITCH_SELECTION_LONG      (1U)
 /*  @} */
 
 /*==========================================================================*/
@@ -261,6 +305,33 @@ typedef struct Pmic_GpioCfg_s
     uint8_t pinFunc;
     uint8_t pinPolarity;
 } Pmic_GpioCfg_t;
+
+/*!
+ * \brief  PMIC EN/PB/VSENSE pin configuration structure.
+ *         Note: validParams is input param for all Set and Get APIs. other
+ *         params except validParams is input param for Set APIs and output
+ *         param for Get APIs
+ *
+ * \param   validParams         Selection of structure parameters to be set,
+ *                              from the combination of \ref Pmic_EnPbVsenseCflag
+ *                              and the corresponding member value must be
+ *                              updated.
+ *                              Valid values \ref Pmic_EnPbVsenseCflag.
+ * \param   pinFuncSel          EN/PB/VSENSE pin functionality select.
+ *                              Valid values \ref Pmic_EnPbVsense_funcSel.
+ *                                Valid only when PMIC_EN_PB_VSENSE_CFG_FUNC_SEL_VALID
+ *                                bit is set.
+ * \param   deglitchSel         Deglitch Selection. Valid only for EN and PB functionalities.
+ *                              Valid values \ref Pmic_EnPbVsense_deglitchSel.
+ *                                Valid only when PMIC_EN_PB_VSENSE_CFG_DEGLITCH_SEL_VALID
+ *                                bit is set.
+ */
+typedef struct Pmic_EnPbVsenseCfg_s
+{
+    uint8_t validParams;
+    uint8_t pinFuncSel;
+    bool    deglitchSel;
+} Pmic_EnPbVsenseCfg_t;
 
 /*==========================================================================*/
 /*                         Function Declarations                            */
@@ -451,6 +522,49 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(Pmic_CoreHandle_t *pPmicCoreHan
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_gpioGetNPwronEnablePinConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_GpioCfg_t *pGpioCfg);
+
+/*!
+ * \brief   API to set configuration for EN/PB/VSENSE pin.
+ *
+ *          This function is used to set the required configuration for the
+ *          EN/PB/VSENSE pin when corresponding validParam bit field is set
+ *          in the Pmic_EnPbVsenseCfg_t
+ *          For more information \ref Pmic_EnPbVsenseCfg_t
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6522x
+ *                BURTON PMIC. If adding support for a new PMIC device, the
+ *                developer must update the API implementation for the new device.
+ *
+ * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
+ * \param   enPbVsenseCfg   [IN]    Set EN/PB/VSENSE pin configuration
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_gpioSetEnPbVsensePinConfiguration(Pmic_CoreHandle_t         *pPmicCoreHandle,
+                                               const Pmic_EnPbVsenseCfg_t enPbVsenseCfg);
+
+/*!
+ * \brief   API to get configuration for EN/PB/VSENSE pin.
+ *
+ *          This function is used to read the configuration for the
+ *          EN/PB/VSENSE pin when corresponding validParam bit field is set
+ *          in the Pmic_EnPbVsenseCfg_t
+ *          For more information \ref Pmic_EnPbVsenseCfg_t
+ *
+ *          Note: In this API, the default PMIC device is assumed as TPS6522x
+ *                BURTON PMIC. If adding support for a new PMIC device, the
+ *                developer must update the API implementation for the new device.
+ *
+ * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
+ * \param   pEnPbVsenseCfg  [IN/OUT]   Pointer to store EN/PB/VSENSE
+ *                                     pin configuration
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_gpioGetEnPbVsensePinConfiguration(Pmic_CoreHandle_t    *pPmicCoreHandle,
+                                               Pmic_EnPbVsenseCfg_t *pEnPbVsenseCfg);
 
 #ifdef __cplusplus
 }
