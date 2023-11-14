@@ -116,7 +116,8 @@ static int32_t Pmic_esmDeviceCheck(const Pmic_CoreHandle_t *pPmicCoreHandle, con
     switch (pPmicCoreHandle->pmicDeviceType)
     {
         case PMIC_DEV_HERA_LP8764X:
-            if (((bool)true) == esmType)
+        case PMIC_DEV_BURTON_TPS6522X:
+            if (PMIC_ESM_MODE_SOC == esmType)
             {
                 pmicStatus = PMIC_ST_ERR_INV_DEVICE;
             }
@@ -291,6 +292,20 @@ Pmic_esmIntrEnable(Pmic_CoreHandle_t *pPmicCoreHandle, const bool esmType, const
             if (PMIC_ST_SUCCESS == pmicStatus)
             {
                 pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_LP8764X_ESM_MCU_RST_INT, !esmIntrCfg.esmRstIntr);
+            }
+
+            break;
+        case PMIC_DEV_BURTON_TPS6522X:
+            pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_TPS6522X_ESM_MCU_PIN_INT, !esmIntrCfg.esmPinIntr);
+
+            if (PMIC_ST_SUCCESS == pmicStatus)
+            {
+                pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_TPS6522X_ESM_MCU_FAIL_INT, !esmIntrCfg.esmFailIntr);
+            }
+
+            if (PMIC_ST_SUCCESS == pmicStatus)
+            {
+                pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle, PMIC_TPS6522X_ESM_MCU_RST_INT, !esmIntrCfg.esmRstIntr);
             }
 
             break;
