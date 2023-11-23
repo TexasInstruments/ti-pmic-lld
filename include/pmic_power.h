@@ -63,6 +63,7 @@
 /*                             Include Files                                 */
 /* ========================================================================= */
 #include "pmic_core.h"
+#include "cfg/tps6522x/pmic_power_tps6522x.h"
 #include "cfg/tps6594x/pmic_power_tps6594x.h"
 #include "cfg/lp8764x/pmic_power_lp8764x.h"
 

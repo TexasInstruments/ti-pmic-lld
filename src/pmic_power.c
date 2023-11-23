@@ -44,6 +44,7 @@
 
 #include "pmic_core_priv.h"
 
+#include "cfg/tps6522x/pmic_power_tps6522x_priv.h"
 #include "cfg/tps6594x/pmic_power_tps6594x_priv.h"
 #include "cfg/lp8764x/pmic_power_lp8764x_priv.h"
 

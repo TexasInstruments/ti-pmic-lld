@@ -45,6 +45,7 @@
  *  Supported PMIC Devices are:
  *    1. TPS6594x (Leo PMIC Device)
  *    2. LP8764x  (Hera PMIC Device)
+ *    3. TPS6522x (Burton PMIC Device)
  *
  *  Above PMICs have multiple functionalities and configurable features. Like,
  *  Real Time Clock (RTC) which provides Time, Calendar, Alarm and timer,
