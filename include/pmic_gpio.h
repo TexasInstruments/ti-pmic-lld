@@ -566,6 +566,8 @@ int32_t Pmic_gpioSetEnPbVsensePinConfiguration(Pmic_CoreHandle_t         *pPmicC
 int32_t Pmic_gpioGetEnPbVsensePinConfiguration(Pmic_CoreHandle_t    *pPmicCoreHandle,
                                                Pmic_EnPbVsenseCfg_t *pEnPbVsenseCfg);
 
+int32_t Pmic_gpioPinTypeADC(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t gpioPin);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

@@ -26,6 +26,7 @@
 /* PMIC driver */
 #include "pmic_drv/pmic.h"
 
+timerHandle_t     timerHandle;
 Pmic_CoreHandle_t pmicCoreHandle;
 
 static void disablePmicPowerResources(void);
@@ -36,7 +37,6 @@ int main(void)
     // clang-format off
     uartHandle_t vcpHandle;
     i2cHandle_t I2C1Handle;
-    timerHandle_t timerHandle;
     Pmic_CoreCfg_t pmicConfigData = {
         .validParams =
             (PMIC_CFG_DEVICE_TYPE_VALID_SHIFT | PMIC_CFG_COMM_MODE_VALID_SHIFT    | PMIC_CFG_SLAVEADDR_VALID_SHIFT |
@@ -138,6 +138,18 @@ int main(void)
     RUN_TEST(test_power_setConfiguration_vmon2PgSet);
     RUN_TEST(test_power_setConfiguration_vmon1_2_RailGrpSel);
     RUN_TEST(test_power_setConfiguration_vmon1_2_Thr);
+    RUN_TEST(test_power_getPwrRsrcStat_nullParam);
+    RUN_TEST(test_power_getPwrRsrcStat_allPwrRsrc);
+    RUN_TEST(test_power_getPwrRsrcStat_vmon1_2_UVOVStatDetection);
+    RUN_TEST(test_power_getPwrThermalStat_nullParam);
+    RUN_TEST(test_power_getPwrThermalStat_noValidParams);
+    RUN_TEST(test_power_getPwrThermalStat_getAllStatus);
+    RUN_TEST(test_power_getThermalCfg_nullParam);
+    RUN_TEST(test_power_getThermalCfg_noValidParams);
+    RUN_TEST(test_power_setThermalCfg_nullParam);
+    RUN_TEST(test_power_setThermalCfg_noValidParams);
+    RUN_TEST(test_power_setThermalCfg_TsdOrdLevel);
+    RUN_TEST(test_power_setThermalCfg_TwarnLevel);
 
     /*** Finish unity testing ***/
     return UNITY_END();
@@ -257,10 +269,11 @@ static void resetBurtonPwrCfg_withAllValidParams(Pmic_powerTps6522xPowerResource
     for (i = 0; i < PMIC_POWER_TPS6522X_MAX_BUCK_NUM; i++)
     {
         burtonPwrRsrcCfg->buckPwrRsrcCfg[i].validParams =
-            PMIC_POWER_TPS6522X_CFG_BUCK_PLDN_VALID_SHIFT       | PMIC_POWER_TPS6522X_CFG_BUCK_VMON_EN_VALID_SHIFT      |
-            PMIC_POWER_TPS6522X_CFG_BUCK_PWM_OPTION_VALID_SHIFT | PMIC_POWER_TPS6522X_CFG_BUCK_EN_VALID_SHIFT           |
-            PMIC_POWER_TPS6522X_CFG_BUCK_SLEW_RATE_VALID_SHIFT  | PMIC_POWER_TPS6522X_CFG_BUCK_VOLTAGE_MV_VALID_SHIFT   |
-            PMIC_POWER_TPS6522X_CFG_BUCK_VMON_THR_VALID_SHIFT   | PMIC_POWER_TPS6522X_CFG_BUCK_RAIL_GRP_SEL_VALID_SHIFT;
+            PMIC_POWER_TPS6522X_CFG_BUCK_PLDN_VALID_SHIFT       | PMIC_POWER_TPS6522X_CFG_BUCK_VMON_EN_VALID_SHIFT |
+            PMIC_POWER_TPS6522X_CFG_BUCK_PWM_OPTION_VALID_SHIFT | PMIC_POWER_TPS6522X_CFG_BUCK_EN_VALID_SHIFT |
+            PMIC_POWER_TPS6522X_CFG_BUCK_SLEW_RATE_VALID_SHIFT  | PMIC_POWER_TPS6522X_CFG_BUCK_VOLTAGE_MV_VALID_SHIFT
+            | PMIC_POWER_TPS6522X_CFG_BUCK_VMON_THR_VALID_SHIFT   |
+            PMIC_POWER_TPS6522X_CFG_BUCK_RAIL_GRP_SEL_VALID_SHIFT;
 
         burtonPwrRsrcCfg->buckPwrRsrcCfg[i].buckPldn       = PMIC_POWER_TPS6522X_BUCK_PLDN_DISABLE;
         burtonPwrRsrcCfg->buckPwrRsrcCfg[i].buckVmonEn     = PMIC_POWER_TPS6522X_BUCK_VMON_DISABLE;
@@ -290,12 +303,13 @@ static void resetBurtonPwrCfg_withAllValidParams(Pmic_powerTps6522xPowerResource
     }
 
     burtonPwrRsrcCfg->vccaVmonPwrRsrcCfg.validParams =
-        PMIC_POWER_TPS6522X_CFG_VMON_DEGLITCH_SEL_VALID_SHIFT  | PMIC_POWER_TPS6522X_CFG_VMON2_EN_VALID_SHIFT           |
-        PMIC_POWER_TPS6522X_CFG_VMON1_EN_VALID_SHIFT           | PMIC_POWER_TPS6522X_CFG_VCCA_VMON_EN_VALID_SHIFT       |
-        PMIC_POWER_TPS6522X_CFG_VCCA_PG_LEVEL_VALID_SHIFT      | PMIC_POWER_TPS6522X_CFG_VCCA_VMON_THR_VALID_SHIFT      |
-        PMIC_POWER_TPS6522X_CFG_VCCA_RAIL_GRP_SEL_VALID_SHIFT  | PMIC_POWER_TPS6522X_CFG_VMON1_THR_VALID_SHIFT          |
-        PMIC_POWER_TPS6522X_CFG_VMON1_PG_LEVEL_MV_VALID_SHIFT  | PMIC_POWER_TPS6522X_CFG_VMON1_RAIL_GRP_SEL_VALID_SHIFT |
-        PMIC_POWER_TPS6522X_CFG_VMON2_THR_VALID_SHIFT          | PMIC_POWER_TPS6522X_CFG_VMON2_PG_LEVEL_MV_VALID_SHIFT  |
+        PMIC_POWER_TPS6522X_CFG_VMON_DEGLITCH_SEL_VALID_SHIFT  | PMIC_POWER_TPS6522X_CFG_VMON2_EN_VALID_SHIFT |
+        PMIC_POWER_TPS6522X_CFG_VMON1_EN_VALID_SHIFT           | PMIC_POWER_TPS6522X_CFG_VCCA_VMON_EN_VALID_SHIFT |
+        PMIC_POWER_TPS6522X_CFG_VCCA_PG_LEVEL_VALID_SHIFT      | PMIC_POWER_TPS6522X_CFG_VCCA_VMON_THR_VALID_SHIFT |
+        PMIC_POWER_TPS6522X_CFG_VCCA_RAIL_GRP_SEL_VALID_SHIFT  | PMIC_POWER_TPS6522X_CFG_VMON1_THR_VALID_SHIFT |
+        PMIC_POWER_TPS6522X_CFG_VMON1_PG_LEVEL_MV_VALID_SHIFT  |
+        PMIC_POWER_TPS6522X_CFG_VMON1_RAIL_GRP_SEL_VALID_SHIFT | PMIC_POWER_TPS6522X_CFG_VMON2_THR_VALID_SHIFT |
+        PMIC_POWER_TPS6522X_CFG_VMON2_PG_LEVEL_MV_VALID_SHIFT  |
         PMIC_POWER_TPS6522X_CFG_VMON2_RAIL_GRP_SEL_VALID_SHIFT;
 
     burtonPwrRsrcCfg->vccaVmonPwrRsrcCfg.vmonDeglitchSel =
@@ -420,7 +434,8 @@ void test_power_getConfiguration_pwrRsrcCfg_noValidParam(void)
 }
 
 /**
- * \brief   Pmic_powerTps6522xGetPwrResourceCfg: Test API error handling for when there are no valid parameters within
+ * \brief   Pmic_powerTps6522xGetPwrResourceCfg: Test API error handling for when there are no valid parameters
+ within
  *                                               Buck Power Resource CFG
  */
 void test_power_getConfiguration_buckPwrRsrcCfg_noValidParam(void)
@@ -452,7 +467,8 @@ void test_power_getConfiguration_buckPwrRsrcCfg_noValidParam(void)
 }
 
 /**
- * \brief   Pmic_powerTps6522xGetPwrResourceCfg: Test API error handling for when there are no valid parameters within
+ * \brief   Pmic_powerTps6522xGetPwrResourceCfg: Test API error handling for when there are no valid parameters
+ within
  *                                               LDO Power Resource CFG
  */
 void test_power_getConfiguration_ldoPwrRsrcCfg_noValidParam(void)
@@ -484,7 +500,8 @@ void test_power_getConfiguration_ldoPwrRsrcCfg_noValidParam(void)
 }
 
 /**
- * \brief   Pmic_powerTps6522xGetPwrResourceCfg: Test API error handling for when there are no valid parameters within
+ * \brief   Pmic_powerTps6522xGetPwrResourceCfg: Test API error handling for when there are no valid parameters
+ within
  *                                               VCCA_VMON/VMONx Power Resource CFG
  */
 void test_power_getConfiguration_vccaVmonPwrRsrcCfg_noValidParam(void)
@@ -504,7 +521,8 @@ void test_power_getConfiguration_vccaVmonPwrRsrcCfg_noValidParam(void)
 }
 
 /**
- * \brief   Pmic_powerTps6522xGetPwrResourceCfg: Test API response for when all its input parameters are valid (no null
+ * \brief   Pmic_powerTps6522xGetPwrResourceCfg: Test API response for when all its input parameters are valid (no
+ null
  *                                               parameters, acceptable power resource CFG validParams, etc.)
  */
 void test_power_getConfiguration_validParameters(void)
@@ -2725,14 +2743,306 @@ void test_power_setConfiguration_vmon1_2_RailGrpSel(void)
 }
 
 /**
- * \brief This function is called by Unity when it starts a test
+ *  \brief  Pmic_powerTps6522xGetPwrRsrcStat: Test API error handling for when parameters are NULL
+ */
+void test_power_getPwrRsrcStat_nullParam(void)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    bool    underOverVoltageStat = false;
+
+    // Pass NULL handle into the API and compare expected vs. actual return code
+    status = Pmic_powerTps6522xGetPwrRsrcStat(NULL, PMIC_POWER_TPS6522X_BUCK1_UVOV_STAT, &underOverVoltageStat);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+
+    // Pass NULL variable into the API and compare expected vs. actual return code
+    status = Pmic_powerTps6522xGetPwrRsrcStat(&pmicCoreHandle, PMIC_POWER_TPS6522X_BUCK1_UVOV_STAT, NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+}
+
+/**
+ *  \brief  Pmic_powerTps6522xGetPwrRsrcStat: Test whether API can read all Buck, LDO, and VCCA_VMON/VMONx status
+ */
+void test_power_getPwrRsrcStat_allPwrRsrc(void)
+{
+    int32_t             status = PMIC_ST_SUCCESS;
+    pwrRsrcUVOVStatus_t pwrRsrcUVOVStat = PMIC_POWER_TPS6522X_BUCK1_UVOV_STAT;
+    bool                underOverVoltageStat = false;
+
+    do
+    {
+        // Get power resource UVOV status
+        status = Pmic_powerTps6522xGetPwrRsrcStat(&pmicCoreHandle, pwrRsrcUVOVStat, &underOverVoltageStat);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        // Iterate until all power resource UVOV statuses are read
+    }
+    while ((pwrRsrcUVOVStat++) != PMIC_POWER_TPS6522X_VCCA_UVOV_STAT);
+}
+
+/**
+ *  \brief   Pmic_powerTps6522xGetPwrRsrcStat: Test whether API can detect a UVOV status on VMON1 and VMON2.
+ *
+ *  \note    This test assumes that the VMONs are not connected to any voltage sources
+ */
+void test_power_getPwrRsrcStat_vmon1_2_UVOVStatDetection(void)
+{
+    int32_t                              status = PMIC_ST_SUCCESS;
+    pwrRsrcUVOVStatus_t                  pwrRsrcUVOVStat = PMIC_POWER_TPS6522X_VMON1_UVOV_STAT;
+    bool                                 underOverVoltageStat = false;
+    Pmic_powerTps6522xPowerResourceCfg_t pwrRsrcCfg;
+
+    // Initialize pwrRsrcCfg with VMON1 and VMON2 configuration
+    resetBurtonPwrCfg_withNoValidParams(&pwrRsrcCfg);
+    pwrRsrcCfg.validParams = PMIC_POWER_TPS6522X_CFG_VMON1_VALID_SHIFT | PMIC_POWER_TPS6522X_CFG_VMON2_VALID_SHIFT;
+    pwrRsrcCfg.vccaVmonPwrRsrcCfg.validParams =
+        PMIC_POWER_TPS6522X_CFG_VMON1_EN_VALID | PMIC_POWER_TPS6522X_CFG_VMON2_EN_VALID |
+        PMIC_POWER_TPS6522X_CFG_VMON1_PG_LEVEL_MV_VALID | PMIC_POWER_TPS6522X_CFG_VMON1_RAIL_GRP_SEL_VALID |
+        PMIC_POWER_TPS6522X_CFG_VMON2_PG_LEVEL_MV_VALID | PMIC_POWER_TPS6522X_CFG_VMON2_RAIL_GRP_SEL_VALID;
+    pwrRsrcCfg.vccaVmonPwrRsrcCfg.vmon1En = PMIC_POWER_TPS6522X_VMON1_ENABLE;
+    pwrRsrcCfg.vccaVmonPwrRsrcCfg.vmon2En = PMIC_POWER_TPS6522X_VMON2_ENABLE;
+    pwrRsrcCfg.vccaVmonPwrRsrcCfg.vmon1PgLevel_mv = 3000;
+    pwrRsrcCfg.vccaVmonPwrRsrcCfg.vmon2PgLevel_mv = 3000;
+    pwrRsrcCfg.vccaVmonPwrRsrcCfg.vmon1RailGrpSel = PMIC_POWER_TPS6522X_VMON1_RAIL_SEL_MCU;
+    pwrRsrcCfg.vccaVmonPwrRsrcCfg.vmon2RailGrpSel = PMIC_POWER_TPS6522X_VMON2_RAIL_SEL_MCU;
+
+    // Set power resource configuration
+    status = Pmic_powerTps6522xSetPwrResourceCfg(&pmicCoreHandle, pwrRsrcCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    // Wait a short period of time so VMON1 and VMON2 could detect UV
+    delayTimeInMs(&timerHandle, 500);
+
+    do
+    {
+        // Get UVOV status
+        status = Pmic_powerTps6522xGetPwrRsrcStat(&pmicCoreHandle, pwrRsrcUVOVStat, &underOverVoltageStat);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        // Compare expected vs. actual UVOV status
+        TEST_ASSERT_EQUAL(true, underOverVoltageStat);
+    }
+    while ((pwrRsrcUVOVStat++) != PMIC_POWER_TPS6522X_VMON2_UVOV_STAT);
+}
+
+static void resetThermalStat_withAllValidParams(Pmic_powerTps6522xThermalStat_t *thermalStat)
+{
+    thermalStat->validParams =
+        PMIC_THERMAL_STAT_WARN_VALID | PMIC_THERMAL_STAT_ORD_SHTDWN_VALID | PMIC_THERMAL_STAT_IMM_SHTDWN_VALID;
+    thermalStat->twarnStat = false;
+    thermalStat->tsdOrdStat = false;
+    thermalStat->tsdImmStat = false;
+}
+
+/**
+ *  \brief  Pmic_powerTps6522xGetPwrThermalStat: Test API error handling for when parameters are NULL
+ */
+void test_power_getPwrThermalStat_nullParam(void)
+{
+    int32_t                         status = PMIC_ST_SUCCESS;
+    Pmic_powerTps6522xThermalStat_t thermalStat;
+
+    // Initialize thermalStat
+    resetThermalStat_withAllValidParams(&thermalStat);
+
+    // Pass NULL PMIC handle into the API and compare expected vs. actual return code
+    status = Pmic_powerTps6522xGetThermalStat(NULL, &thermalStat);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+
+    // Pass NULL thermal status struct into the API and compare expected vs. actual return code
+    status = Pmic_powerTps6522xGetThermalStat(&pmicCoreHandle, NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+}
+
+/**
+ *  \brief  Pmic_powerTps6522xGetPwrThermalStat: Test API error handling for when there are no valid parameters
+ */
+void test_power_getPwrThermalStat_noValidParams(void)
+{
+    int32_t                         status = PMIC_ST_SUCCESS;
+    Pmic_powerTps6522xThermalStat_t thermalStat = {.validParams = 0};
+
+    // Pass struct with validParams into API and compare expected vs. actual return code
+    status = Pmic_powerTps6522xGetThermalStat(&pmicCoreHandle, &thermalStat);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+}
+
+/**
+ *  \brief  Pmic_powerTps6522xGetPwrThermalStat: Test whether API can get the thermal warning, orderly, and
+ *                                               immediate thermal statuses
+ */
+void test_power_getPwrThermalStat_getAllStatus(void)
+{
+    int32_t                         status = PMIC_ST_SUCCESS;
+    Pmic_powerTps6522xThermalStat_t thermalStat;
+
+    // Initialize thermalStat
+    resetThermalStat_withAllValidParams(&thermalStat);
+
+    // Get thermal status
+    status = Pmic_powerTps6522xGetThermalStat(&pmicCoreHandle, &thermalStat);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+}
+
+static void resetThermalCfg_withAllValidParams(Pmic_powerTps6522xThermalCfg_t *pThermalCfg)
+{
+    pThermalCfg->validParams =
+        PMIC_POWER_TPS6522X_TWARN_LEVEL_VALID_SHIFT | PMIC_POWER_TPS6522X_TSD_ORD_LEVEL_VALID_SHIFT;
+    pThermalCfg->tsdOrdLvl = PMIC_POWER_TPS6522X_TSD_ORD_LVL_140_C;
+    pThermalCfg->twarnLvl = PMIC_POWER_TPS6522X_TWARN_LVL_130C;
+}
+
+static void resetThermalCfg_withNoValidParams(Pmic_powerTps6522xThermalCfg_t *pThermalCfg)
+{
+    pThermalCfg->validParams = 0;
+    pThermalCfg->tsdOrdLvl = PMIC_POWER_TPS6522X_TSD_ORD_LVL_140_C;
+    pThermalCfg->twarnLvl = PMIC_POWER_TPS6522X_TWARN_LVL_130C;
+}
+
+/**
+ *  \brief  Pmic_powerTps6522xGetThermalCfg: Test API error handling for when parameters are NULL
+ */
+void test_power_getThermalCfg_nullParam(void)
+{
+    int32_t                        status = PMIC_ST_SUCCESS;
+    Pmic_powerTps6522xThermalCfg_t thermalCfg;
+
+    // Initialize thermalCfg
+    resetThermalCfg_withAllValidParams(&thermalCfg);
+
+    // Pass NULL PMIC handle into the API and compare expected vs. actual return code
+    status = Pmic_powerTps6522xGetThermalCfg(NULL, &thermalCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+
+    // Pass NULL struct into the API and compare expected vs. actual return code
+    status = Pmic_powerTps6522xGetThermalCfg(&pmicCoreHandle, NULL);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+}
+
+/**
+ *  \brief  Pmic_powerTps6522xGetThermalCfg: Test API error handling for when there are no valid parameters
+ */
+void test_power_getThermalCfg_noValidParams(void)
+{
+    int32_t                        status = PMIC_ST_SUCCESS;
+    Pmic_powerTps6522xThermalCfg_t thermalCfg;
+
+    // Initialize thermalCfg with no valid Parameters
+    resetThermalCfg_withNoValidParams(&thermalCfg);
+
+    // Pass thermalCfg into the API and compare expected vs. actual return code
+    status = Pmic_powerTps6522xGetThermalCfg(&pmicCoreHandle, &thermalCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+}
+
+/**
+ *  \brief  Pmic_powerTps6522xSetThermalCfg: Test API error handling for when parameters are NULL
+ */
+void test_power_setThermalCfg_nullParam(void)
+{
+    int32_t                        status = PMIC_ST_SUCCESS;
+    Pmic_powerTps6522xThermalCfg_t thermalCfg;
+
+    // Initialize thermalCfg
+    resetThermalCfg_withAllValidParams(&thermalCfg);
+
+    // Pass NULL PMIC handle into the API and compare expected vs. actual return code
+    status = Pmic_powerTps6522xSetThermalCfg(NULL, thermalCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
+}
+
+/**
+ *  \brief  Pmic_powerTps6522xSetThermalCfg: Test API error handling for when there are no valid parameters
+ */
+void test_power_setThermalCfg_noValidParams(void)
+{
+    int32_t                        status = PMIC_ST_SUCCESS;
+    Pmic_powerTps6522xThermalCfg_t thermalCfg;
+
+    // Initialize thermalCfg with no valid Parameters
+    resetThermalCfg_withNoValidParams(&thermalCfg);
+
+    // Pass thermalCfg into the API and compare expected vs. actual return code
+    status = Pmic_powerTps6522xSetThermalCfg(&pmicCoreHandle, thermalCfg);
+    TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
+}
+
+/**
+ *  \brief  Pmic_powerTps6522xSetThermalCfg: Test whether API can configure the orderly thermal shutdown level
+ */
+void test_power_setThermalCfg_TsdOrdLevel(void)
+{
+    int32_t                        status = PMIC_ST_SUCCESS;
+    Pmic_powerTps6522xThermalCfg_t thermalCfg_expected, thermalCfg_actual;
+
+    // Initialize thermal CFGs
+    resetThermalCfg_withNoValidParams(&thermalCfg_expected);
+    resetThermalCfg_withAllValidParams(&thermalCfg_actual);
+    thermalCfg_expected.validParams = PMIC_POWER_TPS6522X_TSD_ORD_LEVEL_VALID_SHIFT;
+
+    // Set TSD_ORD_LEVEL to be 145C
+    thermalCfg_expected.tsdOrdLvl = PMIC_POWER_TPS6522X_TSD_ORD_LVL_145_C;
+    status = Pmic_powerTps6522xSetThermalCfg(&pmicCoreHandle, thermalCfg_expected);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    // Get actual thermal configuration and compare expected vs. actual TSD_ORD_LEVEL
+    status = Pmic_powerTps6522xGetThermalCfg(&pmicCoreHandle, &thermalCfg_actual);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(thermalCfg_expected.tsdOrdLvl, thermalCfg_actual.tsdOrdLvl);
+
+    // Set TSD_ORD_LEVEL to be 140C
+    thermalCfg_expected.tsdOrdLvl = PMIC_POWER_TPS6522X_TSD_ORD_LVL_140_C;
+    status = Pmic_powerTps6522xSetThermalCfg(&pmicCoreHandle, thermalCfg_expected);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    // Get actual thermal configuration and compare expected vs. actual TSD_ORD_LEVEL
+    status = Pmic_powerTps6522xGetThermalCfg(&pmicCoreHandle, &thermalCfg_actual);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(thermalCfg_expected.tsdOrdLvl, thermalCfg_actual.tsdOrdLvl);
+}
+
+/**
+ *  \brief  Pmic_powerTps6522xSetThermalCfg: Test whether API can configure the thermal warning level
+ */
+void test_power_setThermalCfg_TwarnLevel(void)
+{
+    int32_t                        status = PMIC_ST_SUCCESS;
+    Pmic_powerTps6522xThermalCfg_t thermalCfg_expected, thermalCfg_actual;
+
+    // Initialize thermal CFGs
+    resetThermalCfg_withNoValidParams(&thermalCfg_expected);
+    resetThermalCfg_withAllValidParams(&thermalCfg_actual);
+    thermalCfg_expected.validParams = PMIC_POWER_TPS6522X_TWARN_LEVEL_VALID_SHIFT;
+
+    // Set TWARN_LEVEL to be 140C
+    thermalCfg_expected.twarnLvl = PMIC_POWER_TPS6522X_TWARN_LVL_140C;
+    status = Pmic_powerTps6522xSetThermalCfg(&pmicCoreHandle, thermalCfg_expected);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    // Get actual thermal configuration and compare expected vs. actual TWARN_LEVEL
+    status = Pmic_powerTps6522xGetThermalCfg(&pmicCoreHandle, &thermalCfg_actual);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(thermalCfg_expected.twarnLvl, thermalCfg_actual.twarnLvl);
+
+    // Set TWARN_LEVEL to be 130C
+    thermalCfg_expected.twarnLvl = PMIC_POWER_TPS6522X_TWARN_LVL_130C;
+    status = Pmic_powerTps6522xSetThermalCfg(&pmicCoreHandle, thermalCfg_expected);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+    // Get actual thermal configuration and compare expected vs. actual TWARN_LEVEL
+    status = Pmic_powerTps6522xGetThermalCfg(&pmicCoreHandle, &thermalCfg_actual);
+    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+    TEST_ASSERT_EQUAL(thermalCfg_expected.twarnLvl, thermalCfg_actual.twarnLvl);
+}
+
+/**
+ *  \brief  This function is called by Unity when it starts a test
  */
 void setUp(void)
 {
 }
 
 /**
- * \brief This function is called by Unity when it finishes a test
+ *  \brief  This function is called by Unity when it finishes a test
  */
 void tearDown(void)
 {

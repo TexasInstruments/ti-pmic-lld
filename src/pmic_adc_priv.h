@@ -32,20 +32,18 @@
  *****************************************************************************/
 
 /**
- * \file   pmic_power_tps6522x_priv.h
+ * \file   pmic_adc_priv.h
  *
- * \brief  The macro definitions, structures and function prototypes for
- *         TPS6522x BURTON PMIC driver specific PMIC power configuration
- *
+ * \brief: This file contains macro definitions, structures and function
+ *         prototypes for driver specific PMIC ADC configuration
  */
 
-#ifndef PMIC_POWER_TPS6522X_PRIV_H_
-#define PMIC_POWER_TPS6522X_PRIV_H_
+#ifndef PMIC_ADC_PRIV_H_
+#define PMIC_ADC_PRIV_H_
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
-#include "../../pmic_power_priv.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -56,31 +54,40 @@ extern "C"
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/*!
- *  \anchor     Pmic_Tps6522xBurton_powerRegAddr
- *  \brief      Burton power register addresses for internal use
- */
-#define PMIC_TPS6522X_INVALID_REGADDR         (0x00U)
-#define PMIC_TPS6522X_VCCA_VMON_CTRL_REGADDR  (0x2BU)
-#define PMIC_TPS6522X_VCCA_PG_WINDOW_REGADDR  (0x2CU)
-#define PMIC_TPS6522X_VMON1_PG_WINDOW_REGADDR (0x2DU)
-#define PMIC_TPS6522X_VMON1_PG_LEVEL_REGADDR  (0x2EU)
-#define PMIC_TPS6522X_VMON2_PG_WINDOW_REGADDR (0x2FU)
-#define PMIC_TPS6522X_VMON2_PG_LEVEL_REGADDR  (0x30U)
-#define PMIC_TPS6522X_RAIL_SEL_3_REGADDR      (0x43U)
-#define PMIC_TPS6522X_STAT_BUCK_REGADDR       (0x6DU)
-#define PMIC_TPS6522X_STAT_LDO_VMON_REGADDR   (0x70U)
+#define PMIC_ADC_CTRL_REGADDR                      (0xACU)
+#define PMIC_ADC_RESULT_REG_1_REGADDR              (0xADU)
+#define PMIC_ADC_RESULT_REG_2_REGADDR              (0xAEU)
+
+#define PMIC_ADC_CTRL_STATUS_SHIFT                 (4U)
+#define PMIC_ADC_CTRL_RDIV_EN_SHIFT                (3U)
+#define PMIC_ADC_CTRL_THERMAL_SEL_SHIFT            (2U)
+#define PMIC_ADC_CTRL_CONT_CONV_SHIFT              (1U)
+#define PMIC_ADC_CTRL_START_SHIFT                  (0U)
+
+#define PMIC_ADC_CTRL_STATUS_MASK                  (1U << PMIC_ADC_CTRL_STATUS_SHIFT)
+#define PMIC_ADC_CTRL_RDIV_EN_MASK                 (1U << PMIC_ADC_CTRL_RDIV_EN_SHIFT)
+#define PMIC_ADC_CTRL_THERMAL_SEL_MASK             (1U << PMIC_ADC_CTRL_THERMAL_SEL_SHIFT)
+#define PMIC_ADC_CTRL_CONT_CONV_MASK               (1U << PMIC_ADC_CTRL_CONT_CONV_SHIFT)
+#define PMIC_ADC_CTRL_START_MASK                   (1U << PMIC_ADC_CTRL_START_SHIFT)
+
+#define PMIC_ADC_RESULT_REG_2_ADC_RESULT_3_0_SHIFT (4U)
+
+#define PMIC_ADC_RESULT_REG_2_ADC_RESULT_3_0_MASK  (15U << PMIC_ADC_RESULT_REG_2_ADC_RESULT_3_0_SHIFT)
+
+#define PMIC_ADC_START                             (1U)
+
+#define PMIC_ADC_RESISTOR_DIVIDER_VAL              (6U)
 
 /* ========================================================================== */
-/*                          Structures and Enums                              */
-/* ========================================================================== */
+/*                            Structures and Enums                            */
+/*==========================================================================  */
 
 /* ========================================================================== */
-/*                         Function Declarations                              */
+/*                           Function Declarations                            */
 /* ========================================================================== */
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif /* PMIC_POWER_TPS6522X_PRIV_H_ */
+#endif /* PMIC_ADC_PRIV_H_ */

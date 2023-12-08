@@ -1,3 +1,42 @@
+/******************************************************************************
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
+ *  are met:
+ *
+ *    Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ *    Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the
+ *    distribution.
+ *
+ *    Neither the name of Texas Instruments Incorporated nor the names of
+ *    its contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *****************************************************************************/
+/**
+ *  \file   pmic_power.c
+ *
+ *  \brief  This source file contains TPS6522x Burton specific power API definitions
+ *          and data structures.
+ */
+
 #include "../../../include/pmic_types.h"
 #include "../../../include/pmic_power.h"
 #include "../../pmic_core_priv.h"
@@ -5,7 +44,6 @@
 #include "pmic_power_tps6522x_priv.h"
 
 // clang-format off
-// Make this array a const 
 static const Pmic_powerTps6522xBuckRegisters_t gTps6522xBuckRegisters[] =
 {
     {
@@ -2021,7 +2059,7 @@ int32_t Pmic_powerTps6522xSetPwrResourceCfg(Pmic_CoreHandle_t                   
         }
     }
 
-    // If read of BUCK power resource configuration was successful...
+    // If configuration of BUCK power resource was successful...
     if (status == PMIC_ST_SUCCESS)
     {
         // For each LDO...
@@ -2045,7 +2083,7 @@ int32_t Pmic_powerTps6522xSetPwrResourceCfg(Pmic_CoreHandle_t                   
         }
     }
 
-    // If read of LDO power resource configuration was successful...
+    // If configuration of LDO power resource was successful...
     if (status == PMIC_ST_SUCCESS)
     {
         // For each VMON...
@@ -2069,6 +2107,344 @@ int32_t Pmic_powerTps6522xSetPwrResourceCfg(Pmic_CoreHandle_t                   
             }
         }
     }
+
+    return status;
+}
+
+static int32_t Pmic_powerTps6522xParamCheck_pmicHandle(Pmic_CoreHandle_t *pPmicCoreHandle)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // NULL handle
+    if (pPmicCoreHandle == NULL)
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    // Invalid device type
+    if ((status == PMIC_ST_SUCCESS) && (pPmicCoreHandle->pmicDeviceType != PMIC_DEV_BURTON_TPS6522X))
+    {
+        status = PMIC_ST_ERR_INV_DEVICE;
+    }
+
+    // Invalid subsystem
+    if ((status == PMIC_ST_SUCCESS) && ((pPmicCoreHandle->pPmic_SubSysInfo->buckEnable == false) ||
+                                        (pPmicCoreHandle->pPmic_SubSysInfo->ldoEnable == false)))
+    {
+        status = PMIC_ST_ERR_INV_SUBSYSTEM;
+    }
+
+    return status;
+}
+
+int32_t Pmic_powerTps6522xGetBuckStat(Pmic_CoreHandle_t        *pPmicCoreHandle,
+                                      const pwrRsrcUVOVStatus_t pwrRsrcUVOVStatus,
+                                      bool                     *pUnderOverVoltStat)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t statBuckRegData = 0;
+
+    // Start critical section before reading
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    // Read STAT_BUCK register
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TPS6522X_STAT_BUCK_REGADDR, &statBuckRegData);
+
+    // Extract desired UVOV status
+    if (status == PMIC_ST_SUCCESS)
+    {
+        switch (pwrRsrcUVOVStatus)
+        {
+            case PMIC_POWER_TPS6522X_BUCK4_UVOV_STAT:
+                *pUnderOverVoltStat = (bool)Pmic_getBitField(statBuckRegData,
+                                                             PMIC_POWER_TPS6522X_STAT_BUCK_BUCK4_UVOV_STAT_SHIFT,
+                                                             PMIC_POWER_TPS6522X_STAT_BUCK_BUCK4_UVOV_STAT_MASK);
+
+                break;
+            case PMIC_POWER_TPS6522X_BUCK3_UVOV_STAT:
+                *pUnderOverVoltStat = (bool)Pmic_getBitField(statBuckRegData,
+                                                             PMIC_POWER_TPS6522X_STAT_BUCK_BUCK3_UVOV_STAT_SHIFT,
+                                                             PMIC_POWER_TPS6522X_STAT_BUCK_BUCK3_UVOV_STAT_MASK);
+
+                break;
+            case PMIC_POWER_TPS6522X_BUCK2_UVOV_STAT:
+                *pUnderOverVoltStat = (bool)Pmic_getBitField(statBuckRegData,
+                                                             PMIC_POWER_TPS6522X_STAT_BUCK_BUCK2_UVOV_STAT_SHIFT,
+                                                             PMIC_POWER_TPS6522X_STAT_BUCK_BUCK2_UVOV_STAT_MASK);
+
+                break;
+            case PMIC_POWER_TPS6522X_BUCK1_UVOV_STAT:
+                *pUnderOverVoltStat = (bool)Pmic_getBitField(statBuckRegData,
+                                                             PMIC_POWER_TPS6522X_STAT_BUCK_BUCK1_UVOV_STAT_SHIFT,
+                                                             PMIC_POWER_TPS6522X_STAT_BUCK_BUCK1_UVOV_STAT_MASK);
+
+                break;
+        }
+    }
+
+    // Stop critical section after reading
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return status;
+}
+
+int32_t Pmic_powerTps6522xGetLdoVccaVmonStat(Pmic_CoreHandle_t        *pPmicCoreHandle,
+                                             const pwrRsrcUVOVStatus_t pwrRsrcUVOVStatus,
+                                             bool                     *pUnderOverVoltStat)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t statLdoVmonRegData = 0;
+
+    // Start critical section before reading
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    // Read STAT_LDO_VMON register
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TPS6522X_STAT_LDO_VMON_REGADDR, &statLdoVmonRegData);
+
+    // Extract desired UVOV status
+    if (status == PMIC_ST_SUCCESS)
+    {
+        switch (pwrRsrcUVOVStatus)
+        {
+            case PMIC_POWER_TPS6522X_VMON2_UVOV_STAT:
+                *pUnderOverVoltStat = (bool)Pmic_getBitField(statLdoVmonRegData,
+                                                             PMIC_POWER_TPS6522X_STAT_LDO_VMON_VMON2_UVOV_STAT_SHIFT,
+                                                             PMIC_POWER_TPS6522X_STAT_LDO_VMON_VMON2_UVOV_STAT_MASK);
+
+                break;
+            case PMIC_POWER_TPS6522X_VMON1_UVOV_STAT:
+                *pUnderOverVoltStat = (bool)Pmic_getBitField(statLdoVmonRegData,
+                                                             PMIC_POWER_TPS6522X_STAT_LDO_VMON_VMON1_UVOV_STAT_SHIFT,
+                                                             PMIC_POWER_TPS6522X_STAT_LDO_VMON_VMON1_UVOV_STAT_MASK);
+
+                break;
+            case PMIC_POWER_TPS6522X_VCCA_UVOV_STAT:
+                *pUnderOverVoltStat = (bool)Pmic_getBitField(statLdoVmonRegData,
+                                                             PMIC_POWER_TPS6522X_STAT_LDO_VMON_VCCA_UVOV_STAT_SHIFT,
+                                                             PMIC_POWER_TPS6522X_STAT_LDO_VMON_VCCA_UVOV_STAT_MASK);
+
+                break;
+            case PMIC_POWER_TPS6522X_LDO3_UVOV_STAT:
+                *pUnderOverVoltStat = (bool)Pmic_getBitField(statLdoVmonRegData,
+                                                             PMIC_POWER_TPS6522X_STAT_LDO_VMON_LDO3_UVOV_STAT_SHIFT,
+                                                             PMIC_POWER_TPS6522X_STAT_LDO_VMON_LDO3_UVOV_STAT_MASK);
+
+                break;
+            case PMIC_POWER_TPS6522X_LDO2_UVOV_STAT:
+                *pUnderOverVoltStat = (bool)Pmic_getBitField(statLdoVmonRegData,
+                                                             PMIC_POWER_TPS6522X_STAT_LDO_VMON_LDO2_UVOV_STAT_SHIFT,
+                                                             PMIC_POWER_TPS6522X_STAT_LDO_VMON_LDO2_UVOV_STAT_MASK);
+
+                break;
+            case PMIC_POWER_TPS6522X_LDO1_UVOV_STAT:
+                *pUnderOverVoltStat = (bool)Pmic_getBitField(statLdoVmonRegData,
+                                                             PMIC_POWER_TPS6522X_STAT_LDO_VMON_LDO1_UVOV_STAT_SHIFT,
+                                                             PMIC_POWER_TPS6522X_STAT_LDO_VMON_LDO1_UVOV_STAT_MASK);
+
+                break;
+        }
+    }
+
+    // Stop critical section after reading
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return status;
+}
+
+int32_t Pmic_powerTps6522xGetPwrRsrcStat(Pmic_CoreHandle_t        *pPmicCoreHandle,
+                                         const pwrRsrcUVOVStatus_t pwrRsrcUVOVStatus,
+                                         bool                     *pUnderOverVoltStat)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Parameter check
+    status = Pmic_powerTps6522xParamCheck_pmicHandle(pPmicCoreHandle);
+    if ((status == PMIC_ST_SUCCESS) && (pUnderOverVoltStat == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+    if ((status == PMIC_ST_SUCCESS) && ((uint8_t)pwrRsrcUVOVStatus > (uint8_t)PMIC_POWER_TPS6522X_VCCA_UVOV_STAT))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        // Get Buck UVOV status if user specified Buck UVOV status
+        if (pwrRsrcUVOVStatus <= PMIC_POWER_TPS6522X_BUCK4_UVOV_STAT)
+        {
+            status = Pmic_powerTps6522xGetBuckStat(pPmicCoreHandle, pwrRsrcUVOVStatus, pUnderOverVoltStat);
+        }
+        // Get LDO or VCCA_VMON/VMONx UVOV status if user specified LDO or VCCA_VMON/VMONx UVOV status
+        else
+        {
+            status = Pmic_powerTps6522xGetLdoVccaVmonStat(pPmicCoreHandle, pwrRsrcUVOVStatus, pUnderOverVoltStat);
+        }
+    }
+
+    return status;
+}
+
+int32_t Pmic_powerTps6522xGetThermalStat(Pmic_CoreHandle_t               *pPmicCoreHandle,
+                                         Pmic_powerTps6522xThermalStat_t *pThermalStat)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0;
+
+    // Parameter check
+    status = Pmic_powerTps6522xParamCheck_pmicHandle(pPmicCoreHandle);
+    if ((status == PMIC_ST_SUCCESS) && (pThermalStat == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+    if ((status == PMIC_ST_SUCCESS) && (pThermalStat->validParams == 0))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    // Start critical section before reading
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    // If TWARN_STAT validParam set, read STAT_MISC register and extract the TWARN_STAT bit
+    if ((status == PMIC_ST_SUCCESS) && pmic_validParamCheck(pThermalStat->validParams, PMIC_THERMAL_STAT_WARN_VALID))
+    {
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_STAT_MISC_REGADDR, &regData);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            pThermalStat->twarnStat =
+                Pmic_getBitField(regData, PMIC_POWER_TPS6522X_TWARN_STAT_SHIFT, PMIC_POWER_TPS6522X_TWARN_STAT_MASK);
+        }
+    }
+
+    // If TWARN_ORD_STAT validParam set, read STAT_MODERATE_ERR register and extract the TSD_ORD_STAT bit
+    if ((status == PMIC_ST_SUCCESS) &&
+        pmic_validParamCheck(pThermalStat->validParams, PMIC_THERMAL_STAT_ORD_SHTDWN_VALID))
+    {
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_STAT_MODERATE_ERR_REGADDR, &regData);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            pThermalStat->tsdOrdStat = Pmic_getBitField(
+                regData, PMIC_POWER_TPS6522X_TSD_ORD_STAT_SHIFT, PMIC_POWER_TPS6522X_TSD_ORD_STAT_MASK);
+        }
+    }
+
+    // If TSD_IMM_STAT validParam set, read STAT_SEVERE_ERR register and extract the TSD_IMM_STAT bit
+    if ((status == PMIC_ST_SUCCESS) &&
+        pmic_validParamCheck(pThermalStat->validParams, PMIC_THERMAL_STAT_IMM_SHTDWN_VALID))
+    {
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_STAT_SEVERE_ERR_REGADDR, &regData);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            pThermalStat->tsdImmStat = Pmic_getBitField(
+                regData, PMIC_POWER_TPS6522X_TSD_IMM_STAT_SHIFT, PMIC_POWER_TPS6522X_TSD_IMM_STAT_MASK);
+        }
+    }
+
+    // Stop critical section after reading
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return status;
+}
+
+int32_t Pmic_powerTps6522xGetThermalCfg(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_powerTps6522xThermalCfg_t *pThermalCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0;
+
+    // Parameter check
+    status = Pmic_powerTps6522xParamCheck_pmicHandle(pPmicCoreHandle);
+    if ((status == PMIC_ST_SUCCESS) && (pThermalCfg == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+    if ((status == PMIC_ST_SUCCESS) && (pThermalCfg->validParams == 0))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    // Start critical section before reading
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        // Read CONFIG_1 register
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_CONFIG_1_REGADDR, &regData);
+    }
+
+    // If TSD_ORD_LEVEL validParam is set, extract TSD_ORD_LEVEL bit
+    if ((status == PMIC_ST_SUCCESS) &&
+        pmic_validParamCheck(pThermalCfg->validParams, PMIC_POWER_TPS6522X_TSD_ORD_LEVEL_VALID))
+    {
+        pThermalCfg->tsdOrdLvl = (Pmic_powerTps6522xTsdOrdLvl_t)Pmic_getBitField(
+            regData, PMIC_POWER_TPS6522X_TSD_ORD_LEVEL_SHIFT, PMIC_POWER_TPS6522X_TSD_ORD_LEVEL_MASK);
+    }
+    // If TWARN_LEVEL validParam is set, extract TWARN_LEVEL bit
+    if ((status == PMIC_ST_SUCCESS) &&
+        pmic_validParamCheck(pThermalCfg->validParams, PMIC_POWER_TPS6522X_TWARN_LEVEL_VALID))
+    {
+        pThermalCfg->twarnLvl = (Pmic_powerTps6522xTwarnLvl_t)Pmic_getBitField(
+            regData, PMIC_POWER_TPS6522X_TWARN_LEVEL_SHIFT, PMIC_POWER_TPS6522X_TWARN_LEVEL_MASK);
+    }
+
+    // Stop critical section after reading
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return status;
+}
+
+int32_t Pmic_powerTps6522xSetThermalCfg(Pmic_CoreHandle_t                   *pPmicCoreHandle,
+                                        const Pmic_powerTps6522xThermalCfg_t thermalCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0;
+
+    // Parameter check
+    status = Pmic_powerTps6522xParamCheck_pmicHandle(pPmicCoreHandle);
+    if ((status == PMIC_ST_SUCCESS) && (thermalCfg.validParams == 0))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    // Start critical section before read-modify-write
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    // Read CONFIG_1 register
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_CONFIG_1_REGADDR, &regData);
+    }
+
+    // If TSD_ORD_LEVEL validParam is set, modify TSD_ORD_LEVEL bit field
+    if ((status == PMIC_ST_SUCCESS) &&
+        pmic_validParamCheck(thermalCfg.validParams, PMIC_POWER_TPS6522X_TSD_ORD_LEVEL_VALID))
+    {
+        Pmic_setBitField(&regData,
+                         PMIC_POWER_TPS6522X_TSD_ORD_LEVEL_SHIFT,
+                         PMIC_POWER_TPS6522X_TSD_ORD_LEVEL_MASK,
+                         (uint8_t)thermalCfg.tsdOrdLvl);
+    }
+
+    // If TWARN_LEVEL validParam is set, modify TWARN_LEVEL bit field
+    if ((status == PMIC_ST_SUCCESS) &&
+        pmic_validParamCheck(thermalCfg.validParams, PMIC_POWER_TPS6522X_TWARN_LEVEL_VALID))
+    {
+        Pmic_setBitField(&regData,
+                         PMIC_POWER_TPS6522X_TWARN_LEVEL_SHIFT,
+                         PMIC_POWER_TPS6522X_TWARN_LEVEL_MASK,
+                         (uint8_t)thermalCfg.twarnLvl);
+    }
+
+    // Write new CONFIG_1 register value back to PMIC
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_CONFIG_1_REGADDR, regData);
+    }
+
+    // Stop critical section after read-modify-write
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return status;
 }

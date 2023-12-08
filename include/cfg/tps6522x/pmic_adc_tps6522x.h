@@ -30,49 +30,36 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
+/**
+ *  \addtogroup DRV_PMIC_ADC_MODULE
+ *
+ *  @{
+ */
 
 /**
- * \file   pmic_power_tps6522x_priv.h
+ * \file   pmic_adc_tps6522x.h
  *
- * \brief  The macro definitions, structures and function prototypes for
- *         TPS6522x BURTON PMIC driver specific PMIC power configuration
+ * \brief  PMIC TPS6522x Burton PMIC ADC Driver API/interface file.
  *
  */
 
-#ifndef PMIC_POWER_TPS6522X_PRIV_H_
-#define PMIC_POWER_TPS6522X_PRIV_H_
+#ifndef PMIC_ADC_TPS6522X_H_
+#define PMIC_ADC_TPS6522X_H_
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
-#include "../../pmic_power_priv.h"
-
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
 /* ========================================================================== */
-/*                             Macros & Typedefs                              */
+/*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
-/*!
- *  \anchor     Pmic_Tps6522xBurton_powerRegAddr
- *  \brief      Burton power register addresses for internal use
- */
-#define PMIC_TPS6522X_INVALID_REGADDR         (0x00U)
-#define PMIC_TPS6522X_VCCA_VMON_CTRL_REGADDR  (0x2BU)
-#define PMIC_TPS6522X_VCCA_PG_WINDOW_REGADDR  (0x2CU)
-#define PMIC_TPS6522X_VMON1_PG_WINDOW_REGADDR (0x2DU)
-#define PMIC_TPS6522X_VMON1_PG_LEVEL_REGADDR  (0x2EU)
-#define PMIC_TPS6522X_VMON2_PG_WINDOW_REGADDR (0x2FU)
-#define PMIC_TPS6522X_VMON2_PG_LEVEL_REGADDR  (0x30U)
-#define PMIC_TPS6522X_RAIL_SEL_3_REGADDR      (0x43U)
-#define PMIC_TPS6522X_STAT_BUCK_REGADDR       (0x6DU)
-#define PMIC_TPS6522X_STAT_LDO_VMON_REGADDR   (0x70U)
-
 /* ========================================================================== */
-/*                          Structures and Enums                              */
+/*                         Structures and Enums                               */
 /* ========================================================================== */
 
 /* ========================================================================== */
@@ -83,4 +70,6 @@ extern "C"
 }
 #endif /* __cplusplus */
 
-#endif /* PMIC_POWER_TPS6522X_PRIV_H_ */
+#endif /* PMIC_ADC_TPS6522X_H_ */
+
+/* @} */

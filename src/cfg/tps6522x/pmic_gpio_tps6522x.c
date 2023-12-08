@@ -35,7 +35,7 @@
  *   \file    pmic_gpio_tps6522x.c
  *
  *   \brief   This file contains the TPS6522x BURTON PMIC GPIO Specific
- *            configuration API's and structures
+ *            configuration APIs and structures
  *
  */
 
@@ -370,6 +370,38 @@ int32_t Pmic_gpioTps6522xGetEnPbVsensePinConfiguration(Pmic_CoreHandle_t    *pPm
         pmic_validParamCheck(pEnPbVsenseCfg->validParams, PMIC_EN_PB_VSENSE_CFG_DEGLITCH_SEL_VALID) == true)
     {
         status = Pmic_gpioTps6522xGetEnPbVsenseDeglitch(pPmicCoreHandle, pEnPbVsenseCfg);
+    }
+
+    return status;
+}
+
+int32_t Pmic_tps6522xGpioPinTypeADC(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t gpioPin)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    // fix
+    const Pmic_GpioCfg_t adcGpioCfg = {.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
+                                       .pinFunc = ((gpioPin == PMIC_TPS6522X_GPIO4_PIN) ?
+                                                       PMIC_TPS6522X_GPIO_PINFUNC_GPIO4_ADC_IN :
+                                                       PMIC_TPS6522X_GPIO_PINFUNC_GPIO5_ADC_IN)};
+
+    // Parameter check
+    if (pPmicCoreHandle == NULL)
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+    if ((status == PMIC_ST_SUCCESS) && (pPmicCoreHandle->pPmic_SubSysInfo->adcEnable == false))
+    {
+        status = PMIC_ST_ERR_INV_DEVICE;
+    }
+    if ((status == PMIC_ST_SUCCESS) && (gpioPin != PMIC_TPS6522X_GPIO4_PIN) && (gpioPin != PMIC_TPS6522X_GPIO5_PIN))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    // Configure GPIO type to be ADC
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_gpioSetConfiguration(pPmicCoreHandle, gpioPin, adcGpioCfg);
     }
 
     return status;

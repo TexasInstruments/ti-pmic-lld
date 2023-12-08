@@ -54,21 +54,24 @@ static const Pmic_DevSubSysInfo_t pmicSubSysInfo[] = {
      .wdgEnable = (bool)true,
      .buckEnable = (bool)true,
      .ldoEnable = (bool)true,
-     .esmEnable = (bool)true},
+     .esmEnable = (bool)true,
+     .adcEnable = (bool)false},
  /* PMIC_DEV_HERA_LP8764x */
     {.gpioEnable = (bool)true,
      .rtcEnable = (bool)false,
      .wdgEnable = (bool)true,
      .buckEnable = (bool)true,
      .ldoEnable = (bool)false,
-     .esmEnable = (bool)true},
+     .esmEnable = (bool)true,
+     .adcEnable = (bool)false},
  /* PMIC_DEV_BURTON_TPS6522x */
     {.gpioEnable = (bool)true,
      .rtcEnable = (bool)false,
      .wdgEnable = (bool)true,
      .buckEnable = (bool)true,
      .ldoEnable = (bool)true,
-     .esmEnable = (bool)true}
+     .esmEnable = (bool)true,
+     .adcEnable = (bool)true }
 };
 
 /*!

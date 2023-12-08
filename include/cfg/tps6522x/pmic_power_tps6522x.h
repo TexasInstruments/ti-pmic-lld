@@ -588,14 +588,14 @@ extern "C"
 /*  @} */
 
 /*!
- *  \anchor     Pmic_Tps6522xBurton_railSel3RegMaskVal
+ *  \anchor     Pmic_Tps6522xBurton_railSel3RegShiftVal
  *  \name       RAIL_SEL_3 register shift values supported by TPS6522x Burton
  *
  *  @{
  */
-#define PMIC_POWER_TPS6522X_RAIL_SEL_3_VMON2_GRP_SEL_SHIFT     (6U)
-#define PMIC_POWER_TPS6522X_RAIL_SEL_3_VMON1_GRP_SEL_SHIFT     (4U)
-#define PMIC_POWER_TPS6522X_RAIL_SEL_3_VCCA_GRP_SEL_SHIFT      (2U)
+#define PMIC_POWER_TPS6522X_RAIL_SEL_3_VMON2_GRP_SEL_SHIFT      (6U)
+#define PMIC_POWER_TPS6522X_RAIL_SEL_3_VMON1_GRP_SEL_SHIFT      (4U)
+#define PMIC_POWER_TPS6522X_RAIL_SEL_3_VCCA_GRP_SEL_SHIFT       (2U)
 /*  @} */
 
 /*!
@@ -604,9 +604,132 @@ extern "C"
  *
  *  @{
  */
-#define PMIC_POWER_TPS6522X_RAIL_SEL_3_VMON2_GRP_SEL_MASK      (3U << PMIC_POWER_TPS6522X_RAIL_SEL_3_VMON2_GRP_SEL_SHIFT)
-#define PMIC_POWER_TPS6522X_RAIL_SEL_3_VMON1_GRP_SEL_MASK      (3U << PMIC_POWER_TPS6522X_RAIL_SEL_3_VMON1_GRP_SEL_SHIFT)
-#define PMIC_POWER_TPS6522X_RAIL_SEL_3_VCCA_GRP_SEL_MASK       (3U << PMIC_POWER_TPS6522X_RAIL_SEL_3_VCCA_GRP_SEL_SHIFT)
+#define PMIC_POWER_TPS6522X_RAIL_SEL_3_VMON2_GRP_SEL_MASK       (3U << PMIC_POWER_TPS6522X_RAIL_SEL_3_VMON2_GRP_SEL_SHIFT)
+#define PMIC_POWER_TPS6522X_RAIL_SEL_3_VMON1_GRP_SEL_MASK       (3U << PMIC_POWER_TPS6522X_RAIL_SEL_3_VMON1_GRP_SEL_SHIFT)
+#define PMIC_POWER_TPS6522X_RAIL_SEL_3_VCCA_GRP_SEL_MASK        (3U << PMIC_POWER_TPS6522X_RAIL_SEL_3_VCCA_GRP_SEL_SHIFT)
+/*  @} */
+
+/*!
+ *  \anchor     Pmic_Tps6522xBurton_statBuckRegShiftVal
+ *  \name       STAT_BUCK register shift values supported by TPS6522x Burton
+ *
+ *  @{
+ */
+#define PMIC_POWER_TPS6522X_STAT_BUCK_BUCK4_UVOV_STAT_SHIFT     (3U)
+#define PMIC_POWER_TPS6522X_STAT_BUCK_BUCK3_UVOV_STAT_SHIFT     (2U)
+#define PMIC_POWER_TPS6522X_STAT_BUCK_BUCK2_UVOV_STAT_SHIFT     (1U)
+#define PMIC_POWER_TPS6522X_STAT_BUCK_BUCK1_UVOV_STAT_SHIFT     (0U)
+/*  @} */
+
+/*!
+ *  \anchor     Pmic_Tps6522xBurton_statBuckRegMaskVal
+ *  \name       STAT_BUCK register mask values supported by TPS6522x Burton
+ *
+ *  @{
+ */
+#define PMIC_POWER_TPS6522X_STAT_BUCK_BUCK4_UVOV_STAT_MASK      (1U << PMIC_POWER_TPS6522X_STAT_BUCK_BUCK4_UVOV_STAT_SHIFT)
+#define PMIC_POWER_TPS6522X_STAT_BUCK_BUCK3_UVOV_STAT_MASK      (1U << PMIC_POWER_TPS6522X_STAT_BUCK_BUCK3_UVOV_STAT_SHIFT)
+#define PMIC_POWER_TPS6522X_STAT_BUCK_BUCK2_UVOV_STAT_MASK      (1U << PMIC_POWER_TPS6522X_STAT_BUCK_BUCK2_UVOV_STAT_SHIFT)
+#define PMIC_POWER_TPS6522X_STAT_BUCK_BUCK1_UVOV_STAT_MASK      (1U << PMIC_POWER_TPS6522X_STAT_BUCK_BUCK1_UVOV_STAT_SHIFT)
+/*  @} */
+
+/*!
+ *  \anchor     Pmic_Tps6522xBurton_statLdoVmonRegShiftVal
+ *  \name       STAT_LDO_VMON register shift values supported by TPS6522x Burton
+ *
+ *  @{
+ */
+#define PMIC_POWER_TPS6522X_STAT_LDO_VMON_VMON2_UVOV_STAT_SHIFT (6U)
+#define PMIC_POWER_TPS6522X_STAT_LDO_VMON_VMON1_UVOV_STAT_SHIFT (5U)
+#define PMIC_POWER_TPS6522X_STAT_LDO_VMON_VCCA_UVOV_STAT_SHIFT  (4U)
+#define PMIC_POWER_TPS6522X_STAT_LDO_VMON_LDO3_UVOV_STAT_SHIFT  (2U)
+#define PMIC_POWER_TPS6522X_STAT_LDO_VMON_LDO2_UVOV_STAT_SHIFT  (1U)
+#define PMIC_POWER_TPS6522X_STAT_LDO_VMON_LDO1_UVOV_STAT_SHIFT  (0U)
+/*  @} */
+
+/*!
+ *  \anchor     Pmic_Tps6522xBurton_statLdoVmonRegMaskVal
+ *  \name       STAT_LDO_VMON register mask values supported by TPS6522x Burton
+ *
+ *  @{
+ */
+#define PMIC_POWER_TPS6522X_STAT_LDO_VMON_VMON2_UVOV_STAT_MASK                                                         \
+    (1U << PMIC_POWER_TPS6522X_STAT_LDO_VMON_VMON2_UVOV_STAT_SHIFT)
+#define PMIC_POWER_TPS6522X_STAT_LDO_VMON_VMON1_UVOV_STAT_MASK                                                         \
+    (1U << PMIC_POWER_TPS6522X_STAT_LDO_VMON_VMON1_UVOV_STAT_SHIFT)
+#define PMIC_POWER_TPS6522X_STAT_LDO_VMON_VCCA_UVOV_STAT_MASK                                                          \
+    (1U << PMIC_POWER_TPS6522X_STAT_LDO_VMON_VCCA_UVOV_STAT_SHIFT)
+#define PMIC_POWER_TPS6522X_STAT_LDO_VMON_LDO3_UVOV_STAT_MASK                                                          \
+    (1U << PMIC_POWER_TPS6522X_STAT_LDO_VMON_LDO3_UVOV_STAT_SHIFT)
+#define PMIC_POWER_TPS6522X_STAT_LDO_VMON_LDO2_UVOV_STAT_MASK                                                          \
+    (1U << PMIC_POWER_TPS6522X_STAT_LDO_VMON_LDO2_UVOV_STAT_SHIFT)
+#define PMIC_POWER_TPS6522X_STAT_LDO_VMON_LDO1_UVOV_STAT_MASK                                                          \
+    (1U << PMIC_POWER_TPS6522X_STAT_LDO_VMON_LDO1_UVOV_STAT_SHIFT)
+/*  @} */
+
+/*!
+ *  \anchor     Pmic_Tps6522xBurton_thermalStatShiftVal
+ *  \name       Register shift values for thermal status supported by TPS6522x Burton
+ *
+ *  @{
+ */
+#define PMIC_POWER_TPS6522X_TWARN_STAT_SHIFT                   (3U)
+#define PMIC_POWER_TPS6522X_TSD_ORD_STAT_SHIFT                 (0U)
+#define PMIC_POWER_TPS6522X_TSD_IMM_STAT_SHIFT                 (0U)
+/*  @} */
+
+/*!
+ *  \anchor     Pmic_Tps6522xBurton_thermalStatMaskVal
+ *  \name       Register mask values for thermal status supported by TPS6522x Burton
+ *
+ *  @{
+ */
+#define PMIC_POWER_TPS6522X_TWARN_STAT_MASK                    (1U << PMIC_POWER_TPS6522X_TWARN_STAT_SHIFT)
+#define PMIC_POWER_TPS6522X_TSD_ORD_STAT_MASK                  (1U << PMIC_POWER_TPS6522X_TSD_ORD_STAT_SHIFT)
+#define PMIC_POWER_TPS6522X_TSD_IMM_STAT_MASK                  (1U << PMIC_POWER_TPS6522X_TSD_IMM_STAT_SHIFT)
+/*  @} */
+
+/*!
+ *  \anchor     Pmic_Tps6522xBurton_thermalCfgShiftVal
+ *  \name       Register shift values for thermal configuration supported by TPS6522x Burton
+ *
+ *  @{
+ */
+#define PMIC_POWER_TPS6522X_TSD_ORD_LEVEL_SHIFT                (1U)
+#define PMIC_POWER_TPS6522X_TWARN_LEVEL_SHIFT                  (0U)
+/*  @} */
+
+/*!
+ *  \anchor     Pmic_Tps6522xBurton_thermalCfgMaskVal
+ *  \name       Register mask values for thermal configuration supported by TPS6522x Burton
+ *
+ *  @{
+ */
+#define PMIC_POWER_TPS6522X_TWARN_LEVEL_MASK                   (1U << PMIC_POWER_TPS6522X_TWARN_LEVEL_SHIFT)
+#define PMIC_POWER_TPS6522X_TSD_ORD_LEVEL_MASK                 (1U << PMIC_POWER_TPS6522X_TSD_ORD_LEVEL_SHIFT)
+/*  @} */
+
+/*!
+ *  \anchor     Pmic_Tps6522xBurton_thermalCfgValidParam
+ *  \name       Valid parameters of Thermal Configuration struct for TPS6522x Burton
+ *
+ *  @{
+ */
+#define PMIC_POWER_TPS6522X_TWARN_LEVEL_VALID                  (0U)
+#define PMIC_POWER_TPS6522X_TSD_ORD_LEVEL_VALID                (1U)
+/*  @} */
+
+/*!
+ *  \anchor     Pmic_Tps6522xBurton_thermalCfgValidParamShift
+ *  \name       Valid parameter shift values of Thermal Configuration struct for TPS6522x Burton
+ *
+ *  \brief      Application can use these shift values to configure validParams of Thermal Configuration
+ *              struct
+ *
+ *  @{
+ */
+#define PMIC_POWER_TPS6522X_TWARN_LEVEL_VALID_SHIFT            (1U << PMIC_POWER_TPS6522X_TWARN_LEVEL_VALID)
+#define PMIC_POWER_TPS6522X_TSD_ORD_LEVEL_VALID_SHIFT          (1U << PMIC_POWER_TPS6522X_TSD_ORD_LEVEL_VALID)
 /*  @} */
 
 /*!
@@ -630,7 +753,9 @@ extern "C"
  *  \name       Valid parameter shift values of BUCK Power Resource Configuration struct for TPS6522x Burton
  *
  *  \brief      Application can use these shift values to configure validParams of BUCK Power Resource Configuration
- * struct
+ *              struct
+ *
+ *  @{
  */
 #define PMIC_POWER_TPS6522X_CFG_BUCK_PLDN_VALID_SHIFT          (1U << PMIC_POWER_TPS6522X_CFG_BUCK_PLDN_VALID)
 #define PMIC_POWER_TPS6522X_CFG_BUCK_VMON_EN_VALID_SHIFT       (1U << PMIC_POWER_TPS6522X_CFG_BUCK_VMON_EN_VALID)
@@ -761,6 +886,50 @@ extern "C"
 /* ========================================================================== */
 /*                         Structures and Enums                               */
 /* ========================================================================== */
+
+/*!
+ *  \anchor     Pmic_Tps6522xBurton_pwrRsrcUVOVStatus
+ *  \name       Power Resource UVOV Status Enumeration
+ *
+ *  \brief      Enumeration of all the possible UVOV statuses for power resources
+ */
+typedef enum pwrRsrcUVOVStatus_e
+{
+    PMIC_POWER_TPS6522X_BUCK1_UVOV_STAT,
+    PMIC_POWER_TPS6522X_BUCK2_UVOV_STAT,
+    PMIC_POWER_TPS6522X_BUCK3_UVOV_STAT,
+    PMIC_POWER_TPS6522X_BUCK4_UVOV_STAT,
+    PMIC_POWER_TPS6522X_LDO1_UVOV_STAT,
+    PMIC_POWER_TPS6522X_LDO2_UVOV_STAT,
+    PMIC_POWER_TPS6522X_LDO3_UVOV_STAT,
+    PMIC_POWER_TPS6522X_VMON1_UVOV_STAT,
+    PMIC_POWER_TPS6522X_VMON2_UVOV_STAT,
+    PMIC_POWER_TPS6522X_VCCA_UVOV_STAT,
+} pwrRsrcUVOVStatus_t;
+
+/*!
+ *  \anchor     Pmic_Tps6522xBurton_tsdOrdLvlBitField
+ *  \name       Orderly Thermal Shutdown Level Bit Field Enumeration
+ *
+ *  \brief      Orderly TSD threshold configuration
+ */
+typedef enum Pmic_powerTps6522xTsdOrdLvl_e
+{
+    PMIC_POWER_TPS6522X_TSD_ORD_LVL_140_C,
+    PMIC_POWER_TPS6522X_TSD_ORD_LVL_145_C
+} Pmic_powerTps6522xTsdOrdLvl_t;
+
+/*!
+ *  \anchor     Pmic_Tps6522xBurton_TwarnLvlBitField
+ *  \name       Thermal Warning Level Bit Field Enumeration
+ *
+ *  \brief      Thermal warning threshold configuration
+ */
+typedef enum Pmic_powerTps6522xTwarnLvl_e
+{
+    PMIC_POWER_TPS6522X_TWARN_LVL_130C,
+    PMIC_POWER_TPS6522X_TWARN_LVL_140C
+} Pmic_powerTps6522xTwarnLvl_t;
 
 /*!
  *  \anchor     Pmic_Tps6522xBurton_buckPldnEnBitField
@@ -1081,7 +1250,8 @@ typedef enum Pmic_powerTps6522xVmon2RailSel_e
  *  \anchor     Pmic_Tps6522xBurton_buckPwrRsrcCfg
  *  \name       BUCK Power Configuration Struct for TPS6522x Burton
  *
- *  \brief      This struct holds information relevent to the BUCK power resource
+ *  \brief      This struct holds information relevent to the BUCK power resource. For validParams,
+ *              refer to \ref Pmic_Tps6522xBurton_buckPwrRsrcCfgValidParamShift
  */
 typedef struct Pmic_powerTps6522xBuckPowerResourceCfg_s
 {
@@ -1100,7 +1270,8 @@ typedef struct Pmic_powerTps6522xBuckPowerResourceCfg_s
  *  \anchor     Pmic_Tps6522xBurton_ldoPwrRsrcCfg
  *  \name       LDO Power Configuration Struct for TPS6522x Burton
  *
- *  \brief      This struct holds information relevent to the LDO power resource
+ *  \brief      This struct holds information relevent to the LDO power resource. For validParams,
+ *              refer to \ref Pmic_Tps6522xBurton_ldoPwrRsrcCfgValidParamShift
  */
 typedef struct Pmic_powerTps6522xLdoPowerResourceCfg_s
 {
@@ -1118,7 +1289,8 @@ typedef struct Pmic_powerTps6522xLdoPowerResourceCfg_s
  *  \anchor     Pmic_Tps6522xBurton_vccaVmonPwrRsrcCfg
  *  \name       VCCA_VMON/VMONx Power Configuration Struct for TPS6522x Burton
  *
- *  \brief      This struct holds information relevent to the VCCA_VMON and VMONx power resources
+ *  \brief      This struct holds information relevent to the VCCA_VMON and VMONx power resources.
+ *              For validParams, refer to \ref Pmic_Tps6522xBurton_vccaVmonPwrRsrcCfgValidParamShift
  */
 typedef struct Pmic_powerTps6522xVccaVmonPowerResourceCfg_s
 {
@@ -1142,7 +1314,8 @@ typedef struct Pmic_powerTps6522xVccaVmonPowerResourceCfg_s
  *  \anchor     Pmic_Tps6522xBurton_pwrRsrcCfg
  *  \name       Power Configuration Struct for TPS6522x Burton
  *
- *  \brief      This struct holds information relevent to all power resource of TPS6522x Burton
+ *  \brief      This struct holds information relevent to all power resource of TPS6522x Burton.
+ *              For validParams, refer to \ref Pmic_Tps6522xBurton_pwrRsrcCfgValidParamShift
  */
 typedef struct Pmic_powerTps6522xPowerResourceCfg_s
 {
@@ -1196,57 +1369,135 @@ typedef struct Pmic_powerTps6522xVccaVmonRegisters_s
     uint8_t vccaVmonRailSelRegAddr;
 } Pmic_powerTps6522xVccaVmonRegisters_t;
 
+/*!
+ *  \anchor     Pmic_Tps6522xBurton_thermalStat
+ *  \name       TPS6522x Burton Thermal Statuses
+ *
+ *  \brief      This struct holds all the thermal statuses. For validParams,
+ *              refer to \ref Pmic_PowerThermalStatValidParamCfg
+ */
+typedef struct Pmic_powerTps6522xThermalStat_s
+{
+    uint8_t validParams;
+    bool    twarnStat;
+    bool    tsdOrdStat;
+    bool    tsdImmStat;
+} Pmic_powerTps6522xThermalStat_t;
+
+/*!
+ *  \anchor     Pmic_Tps6522xBurton_thermalCfg
+ *  \name       TPS6522x Burton Thermal Configuration Struct
+ *
+ *  \brief      This struct holds information that is relevant to PMIC thermal configurations.
+ *              For possible validParams, refer to \ref Pmic_Tps6522xBurton_thermalCfgValidParam
+ */
+typedef struct Pmic_powerTps6522xThermalCfg_s
+{
+    uint8_t                       validParams;
+    Pmic_powerTps6522xTsdOrdLvl_t tsdOrdLvl;
+    Pmic_powerTps6522xTwarnLvl_t  twarnLvl;
+} Pmic_powerTps6522xThermalCfg_t;
+
 /* ========================================================================== */
 /*                         Function Declarations                              */
 /* ========================================================================== */
 
 /**
- *  \brief  This function is used to get the configuration of any TPS6522x Burton power resource
- *          (BUCKs, LDOs, and voltage monitors).
+ *  \brief      This function is used to obtain an array of all BUCK registers - each element being a set
+ *              of registers for a BUCK. For example, element zero is the set of all registers for BUCK1.
  *
- *  \param  pPmicCoreHandle     [IN]        PMIC interface handle
- *  \param  pPwrResourceCfg     [IN/OUT]    Struct that stores power resource configuration
+ *  \param      pBuckRegisters      [OUT]       Address of pointer to array of BUCK registers
+ */
+void Pmic_get_tps6522x_pwrBuckRegs(const Pmic_powerTps6522xBuckRegisters_t **pBuckRegisters);
+
+/**
+ *  \brief      This function is used to obtain an array of all LDO registers - each element being a set
+ *              of registers for a LDO. For example, element zero is the set of all registers for LDO1.
  *
- *  \return int32_t                         Error/success code
+ *  \param      pBuckRegisters      [OUT]       Address of pointer to array of LDO registers
+ */
+void Pmic_get_tps6522x_pwrLdoRegs(const Pmic_powerTps6522xLdoRegisters_t **pLdoRegisters);
+
+/**
+ *  \brief      This function is used to obtain an array of all VMON registers - each element being a set
+ *              of registers for a VMON. For example, element zero is the set of all registers for VMON1.
+ *
+ *  \param      pVccaVmonRegisters  [OUT]       Address of pointer to array of VCCA_VMON/VMONx registers
+ */
+void Pmic_get_tps6522x_PwrVccaVmonRegisters(const Pmic_powerTps6522xVccaVmonRegisters_t **pVccaVmonRegisters);
+
+/**
+ *  \brief      This function is used to get the configuration of any TPS6522x Burton power resource
+ *              BUCKs, LDOs, and voltage monitors).
+ *
+ *  \param      pPmicCoreHandle     [IN]        PMIC interface handle
+ *  \param      pPwrResourceCfg     [OUT]       Struct that stores power resource configuration
+ *
+ *  \return     Success code is power resource configurations were obtained, error code otherwise
  */
 int32_t Pmic_powerTps6522xGetPwrResourceCfg(Pmic_CoreHandle_t                    *pPmicCoreHandle,
                                             Pmic_powerTps6522xPowerResourceCfg_t *pPwrResourceCfg);
 
 /**
- *  \brief  This function is used to set the configuration of any TPS6522x Burton power resource
- *          (BUCKs, LDOs, and voltage monitors).
+ *  \brief      This function is used to set the configuration of any TPS6522x Burton power resource
+ *              (BUCKs, LDOs, and voltage monitors).
  *
- *  \param  pPmicCoreHandle     [IN]        PMIC interface handle
- *  \param  pwrResourceCfg      [IN/OUT]    Struct that stores power resource configuration
+ *  \param      pPmicCoreHandle     [IN]        PMIC interface handle
+ *  \param      pwrResourceCfg      [IN]        Struct used to set power resource configuration
  *
- *  \return int32_t                         Error/success code
+ *  \return     Success code if power resource configurations were set, error code otherwise
  */
 int32_t Pmic_powerTps6522xSetPwrResourceCfg(Pmic_CoreHandle_t                         *pPmicCoreHandle,
                                             const Pmic_powerTps6522xPowerResourceCfg_t pwrResourceCfg);
 
 /**
- *  \brief  This function is used to obtain an array of all BUCK registers - each element being a set
- *          of registers for a BUCK. For example, element zero is the set of all registers for BUCK1.
+ *  \brief      This function is used to get the UVOV status of any TPS6522x Burton power resource
+ *              (BUCKs, LDOs, and voltage monitors).
  *
- *  \param  pBuckRegisters      [OUT]       Address of pointer to array of BUCK registers
+ *  \param      pPmicCoreHandle     [IN]    PMIC interface handle
+ *  \param      pwrRsrcUVOVStatus   [IN]    Desired power resource UVOV status to be obtained
+ *  \param      pUnderOverVoltStat  [OUT]   Reference to boolean holding power resource UVOV status
+ *
+ *  \return     Success code if power resource UVOV status is obtained, error code otherwise
  */
-void Pmic_get_tps6522x_pwrBuckRegs(const Pmic_powerTps6522xBuckRegisters_t **pBuckRegisters);
+int32_t Pmic_powerTps6522xGetPwrRsrcStat(Pmic_CoreHandle_t        *pPmicCoreHandle,
+                                         const pwrRsrcUVOVStatus_t pwrRsrcUVOVStatus,
+                                         bool                     *pUnderOverVoltStat);
 
 /**
- *  \brief  This function is used to obtain an array of all LDO registers - each element being a set
- *          of registers for a LDO. For example, element zero is the set of all registers for LDO1.
+ *  \brief      This function is used to get the thermal statuses of TPS6522x Burton (TWARN_STAT, TSD_ORD_STAT,
+ *              TSD_IMM_STAT).
  *
- *  \param  pBuckRegisters      [OUT]       Address of pointer to array of LDO registers
+ *  \param      pPmicCoreHandle     [IN]    PMIC interface handle
+ *  \param      pThermalStat        [OUT]   Pointer to thermal status struct that will hold the thermal statuses
+ *
+ *  \return     Success code if thermal statuses are obtained, error code otherwise
  */
-void Pmic_get_tps6522x_pwrLdoRegs(const Pmic_powerTps6522xLdoRegisters_t **pLdoRegisters);
+int32_t Pmic_powerTps6522xGetThermalStat(Pmic_CoreHandle_t               *pPmicCoreHandle,
+                                         Pmic_powerTps6522xThermalStat_t *pThermalStat);
 
 /**
- *  \brief  This function is used to obtain an array of all VMON registers - each element being a set
- *          of registers for a VMON. For example, element zero is the set of all registers for VMON1.
+ *  \brief      This function is used to get the thermal configuration of TPS6522x Burton.
  *
- *  \param  pVccaVmonRegisters  [OUT]       Address of pointer to array of VCCA_VMON/VMONx registers
+ *  \param      pPmicCoreHandle     [IN]    PMIC interface handle
+ *  \param      pThermalCfg         [OUT]   Pointer to thermal configuration struct that will hold the thermal
+ *                                          configurations
+ *
+ *  \return     Success code if thermal configurations are obtained, error code otherwise
  */
-void Pmic_get_tps6522x_PwrVccaVmonRegisters(const Pmic_powerTps6522xVccaVmonRegisters_t **pVccaVmonRegisters);
+int32_t Pmic_powerTps6522xGetThermalCfg(Pmic_CoreHandle_t              *pPmicCoreHandle,
+                                        Pmic_powerTps6522xThermalCfg_t *pThermalCfg);
+
+/**
+ *  \brief      This function is used to set the thermal configuration of TPS6522x Burton.
+ *
+ *  \param      pPmicCoreHandle     [IN]    PMIC interface handle
+ *  \param      thermalCfg          [IN]    Thermal configuration struct
+ *
+ *  \return     Success code if PMIC thermal configurations are set, error code otherwise
+ */
+int32_t Pmic_powerTps6522xSetThermalCfg(Pmic_CoreHandle_t                   *pPmicCoreHandle,
+                                        const Pmic_powerTps6522xThermalCfg_t thermalCfg);
 
 #ifdef __cplusplus
 }

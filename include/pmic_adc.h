@@ -1,0 +1,239 @@
+/******************************************************************************
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
+ *
+ *  Redistribution and use in source and binary forms, with or without
+ *  modification, are permitted provided that the following conditions
+ *  are met:
+ *
+ *    Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ *
+ *    Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the
+ *    distribution.
+ *
+ *    Neither the name of Texas Instruments Incorporated nor the names of
+ *    its contributors may be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *****************************************************************************/
+
+/**
+ *  \ingroup DRV_PMIC_MODULE
+ *  \defgroup DRV_PMIC_ADC_MODULE PMIC ADC Driver API
+ *
+ *  PMIC ADC driver header file containing API function prototypes and data structures
+ *  for setting/getting the configurations of the ADC, starting ADC conversions, getting
+ *  ADC status, and getting ADC result.
+ *
+ *  Supported PMIC devices for ADC module:
+ *  1. TPS6522x
+ *
+ *  @{
+ */
+
+/**
+ *  \file pmic_adc.h
+ *
+ *  \brief PMIC Driver ADC API/interface file.
+ */
+
+#ifndef PMIC_ADC_H_
+#define PMIC_ADC_H_
+
+/* ========================================================================== */
+/*                             Include Files                                  */
+/* ========================================================================== */
+#include "pmic_core.h"
+#include "cfg/tps6522x/pmic_adc_tps6522x.h"
+
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
+/* ========================================================================== */
+/*                             Macros & Typedefs                              */
+/* ========================================================================== */
+
+/*!
+ *  \anchor     Pmic_AdcCfgValidParam
+ *  \name       Valid parameters of ADC Configuration struct
+ *
+ *  @{
+ */
+#define PMIC_ADC_CFG_RDIV_EN_VALID           (0U)
+#define PMIC_ADC_CFG_THERMAL_SEL_VALID       (1U)
+#define PMIC_ADC_CFG_CONT_CONV_VALID         (2U)
+/*  @} */
+
+/*!
+ *  \anchor     Pmic_AdcCfgValidParamShift
+ *  \name       Valid parameter shift values of ADC Configuration struct
+ *
+ *  \brief      Appliation can use these shift values to configure validParams of ADC
+ *              configuration struct
+ *
+ *  @{
+ */
+#define PMIC_ADC_CFG_RDIV_EN_VALID_SHIFT     (1U << PMIC_ADC_CFG_RDIV_EN_VALID)
+#define PMIC_ADC_CFG_THERMAL_SEL_VALID_SHIFT (1U << PMIC_ADC_CFG_THERMAL_SEL_VALID)
+#define PMIC_ADC_CFG_CONT_CONV_VALID_SHIFT   (1U << PMIC_ADC_CFG_CONT_CONV_VALID)
+/*  @} */
+
+/* ========================================================================== */
+/*                            Structures and Enums                            */
+/* ========================================================================== */
+
+/*!
+ *  \anchor     Pmic_adcRDivEnBitField
+ *  \name       ADC_RDIV_EN Bit Field Enumeration
+ *
+ *  \brief      ADC resistor divider enable/disable options
+ */
+typedef enum Pmic_adcRDivEn_e
+{
+    PMIC_ADC_RESISTOR_DIVIDER_DISABLED,
+    PMIC_ADC_RESISTOR_DIVIDER_ENABLED
+} Pmic_adcRDivEn_t;
+
+/*!
+ *  \anchor     Pmic_adcThermalSelBitField
+ *  \name       ADC_THERMAL_SEL Bit Field Enumeration
+ *
+ *  \brief      ADC conversion source selection
+ */
+typedef enum Pmic_adcThermalSel_e
+{
+    PMIC_ADC_THERMAL_SEL_ADC_INPUT,
+    PMIC_ADC_THERMAL_SEL_THERMAL_SENSOR
+} Pmic_adcThermalSel_t;
+
+/*!
+ *  \anchor     Pmic_adcContConvBitField
+ *  \name       ADC_CONT_CONV Bit Field Enumeration
+ *
+ *  \brief      ADC continuous conversion enable/disable options
+ */
+typedef enum Pmic_adcContConv_e
+{
+    PMIC_ADC_CONTINUOUS_CONVERSION_DISABLED,
+    PMIC_ADC_CONTINUOUS_CONVERSION_ENABLED
+} Pmic_adcContConv_t;
+
+/*!
+ *  \anchor     Pmic_adcCfg
+ *  \name       PMIC ADC configuration struct
+ *
+ *  \brief      This struct is used to set/get PMIC ADC configuration. For possible validParams,
+ *              \ref Pmic_AdcCfgValidParamShift
+ */
+typedef struct Pmic_adcCfg_s
+{
+    uint8_t              validParams;
+    Pmic_adcRDivEn_t     rDivEn;
+    Pmic_adcThermalSel_t thermalSel;
+    Pmic_adcContConv_t   contConv;
+} Pmic_adcCfg_t;
+
+/* ========================================================================== */
+/*                           Function Declarations                            */
+/* ========================================================================== */
+
+/**
+ *  \brief      This function is used to set the following PMIC ADC configurations:
+ *              1. ADC_RDIV_EN
+ *              2. ADC_THERMAL_SEL
+ *              3. ADC_CONT_CONV
+ *
+ *  \param      pPmicCoreHandle     [IN]    PMIC interface handle
+ *  \param      adcCfg              [IN]    ADC configuration
+ *
+ *  \return     Success code if ADC configurations are set, error code otherwise
+ */
+int32_t Pmic_ADCSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_adcCfg_t adcCfg);
+
+/**
+ *  \brief      This function is used to get the following PMIC ADC configurations:
+ *              1. ADC_RDIV_EN
+ *              2. ADC_THERMAL_SEL
+ *              3. ADC_CONT_CONV
+ *
+ *  \param      pPmicCoreHandle     [IN]    PMIC interface handle
+ *  \param      pAdcCfg             [OUT]   Reference to ADC configuration struct
+ *
+ *  \return     Success code if ADC configurations are obtained, error code otherwise
+ */
+int32_t Pmic_ADCGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_adcCfg_t *pAdcCfg);
+
+/**
+ *  \brief      This function is used to start a single ADC conversion. If the ADC is busy,
+ *              the function does nothing and returns.
+ *
+ *  \param      pPmicCoreHandle     [IN]    PMIC interface handle
+ *
+ *  \return     Success code if ADC single conversion is started, error code otherwise
+ */
+int32_t Pmic_ADCStartSingleConversion(Pmic_CoreHandle_t *pPmicCoreHandle);
+
+/**
+ *  \brief      This function is used to start a single ADC conversion. If the ADC is busy,
+ *              it waits until the ADC becomes idle.
+ *
+ *  \param      pPmicCoreHandle     [IN]    PMIC interface handle
+ *
+ *  \return     Success code if ADC single conversion is started, error code otherwise
+ */
+int32_t Pmic_ADCStartSingleConversionBlocking(Pmic_CoreHandle_t *pPmicCoreHandle);
+
+/**
+ *  \brief      This function is used to get the status of the ADC (whether it is busy or idle).
+ *
+ *  \param      pPmicCoreHandle     [IN]    PMIC interface handle
+ *  \param      pAdcBusy            [OUT]   Reference to ADC Busy boolean variable
+ *
+ *  \return     Success code if ADC status is obtained, error code otherwise
+ */
+int32_t Pmic_ADCGetStatus(Pmic_CoreHandle_t *pPmicCoreHandle, bool *pAdcBusy);
+
+/**
+ *  \brief      This function is used to get the ADC result code that is outputted after an ADC conversion.
+ *
+ *  \param      pPmicCoreHandle     [IN]    PMIC interface handle
+ *  \param      pAdcResult          [OUT]   Reference to ADC result variable
+ *
+ *  \return     Success code if ADC result code is obtained, error code otherwise
+ */
+int32_t Pmic_ADCGetResultCode(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t *pAdcResult);
+
+/**
+ *  \brief      This function is used to get the ADC voltage result (if ADC conversion source is ADC input)
+ *              or ADC temperature result (if ADC conversion source is temperature sensor).
+ *
+ *  \param      pPmicCoreHandle     [IN]    PMIC interface handle
+ *  \param      pAdcResult          [OUT]   Reference to ADC result variable
+ *
+ *  \return     Success code if ADC result is obtained, error code otherwise
+ */
+int32_t Pmic_ADCGetResult(Pmic_CoreHandle_t *pPmicCoreHandle, int32_t *pAdcResult);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+
+#endif /* PMIC_ADC_H_ */
+
+/* @} */

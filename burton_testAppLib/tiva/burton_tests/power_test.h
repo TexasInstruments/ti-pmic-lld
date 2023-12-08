@@ -261,6 +261,69 @@ void test_power_setConfiguration_vmon1_2_Thr(void);
  */
 void test_power_setConfiguration_vmon1_2_RailGrpSel(void);
 
+/**
+ *  \brief  Pmic_powerTps6522xGetPwrRsrcStat: Test API error handling for when parameters are NULL
+ */
+void test_power_getPwrRsrcStat_nullParam(void);
+
+/**
+ *  \brief  Pmic_powerTps6522xGetPwrRsrcStat: Test whether API can read all Buck, LDO, and VCCA_VMON/VMONx status
+ */
+void test_power_getPwrRsrcStat_allPwrRsrc(void);
+
+/**
+ *  \brief   Pmic_powerTps6522xGetPwrRsrcStat: Test whether API can detect a UVOV status on VMON1 and VMON2.
+ *
+ *  \note    This test assumes that the VMONs are not connected to any voltage sources
+ */
+void test_power_getPwrRsrcStat_vmon1_2_UVOVStatDetection(void);
+
+/**
+ *  \brief  Pmic_powerTps6522xGetPwrThermalStat: Test API error handling for when parameters are NULL
+ */
+void test_power_getPwrThermalStat_nullParam(void);
+
+/**
+ *  \brief  Pmic_powerTps6522xGetPwrThermalStat: Test API error handling for when there are no valid parameters
+ */
+void test_power_getPwrThermalStat_noValidParams(void);
+
+/**
+ *  \brief  Pmic_powerTps6522xGetPwrThermalStat: Test whether API can get the thermal warning, orderly, and
+ *                                               immediate thermal statuses
+ */
+void test_power_getPwrThermalStat_getAllStatus(void);
+
+/**
+ *  \brief  Pmic_powerTps6522xGetThermalCfg: Test API error handling for when parameters are NULL
+ */
+void test_power_getThermalCfg_nullParam(void);
+
+/**
+ *  \brief  Pmic_powerTps6522xGetThermalCfg: Test API error handling for when there are no valid parameters
+ */
+void test_power_getThermalCfg_noValidParams(void);
+
+/**
+ *  \brief  Pmic_powerTps6522xSetThermalCfg: Test API error handling for when parameters are NULL
+ */
+void test_power_setThermalCfg_nullParam(void);
+
+/**
+ *  \brief  Pmic_powerTps6522xSetThermalCfg: Test API error handling for when there are no valid parameters
+ */
+void test_power_setThermalCfg_noValidParams(void);
+
+/**
+ *  \brief  Pmic_powerTps6522xSetThermalCfg: Test whether API can configure the orderly thermal shutdown level
+ */
+void test_power_setThermalCfg_TsdOrdLevel(void);
+
+/**
+ *  \brief  Pmic_powerTps6522xSetThermalCfg: Test whether API can configure the thermal warning level
+ */
+void test_power_setThermalCfg_TwarnLevel(void);
+
 #ifdef __cplusplus
 }
 

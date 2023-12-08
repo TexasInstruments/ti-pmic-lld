@@ -1576,3 +1576,28 @@ int32_t Pmic_gpioGetEnPbVsensePinConfiguration(Pmic_CoreHandle_t *pPmicCoreHandl
 
     return status;
 }
+
+int32_t Pmic_gpioPinTypeADC(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t gpioPin)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Check PMIC handle and GPIO pin number
+    status = Pmic_gpioParamCheck(pPmicCoreHandle, gpioPin);
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        switch (pPmicCoreHandle->pmicDeviceType)
+        {
+            case PMIC_DEV_BURTON_TPS6522X:
+                status = Pmic_tps6522xGpioPinTypeADC(pPmicCoreHandle, gpioPin);
+
+                break;
+            default:
+                status = PMIC_ST_ERR_NOT_SUPPORTED;
+
+                break;
+        }
+    }
+
+    return status;
+}

@@ -135,6 +135,8 @@ int32_t Pmic_gpioTps6522xSetEnPbVsensePinConfiguration(Pmic_CoreHandle_t        
 int32_t Pmic_gpioTps6522xGetEnPbVsensePinConfiguration(Pmic_CoreHandle_t    *pPmicCoreHandle,
                                                        Pmic_EnPbVsenseCfg_t *pEnPbVsenseCfg);
 
+int32_t Pmic_tps6522xGpioPinTypeADC(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t gpioPin);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

@@ -98,6 +98,7 @@
 #include "include/pmic_wdg.h"
 #include "include/pmic_esm.h"
 #include "include/pmic_fsm.h"
+#include "include/pmic_adc.h"
 #include "src/pmic_io_priv.h"
 
 #ifdef __cplusplus
@@ -207,6 +208,9 @@ extern "C"
 #define PMIC_ST_ERR_NOT_SUPPORTED          (-((int32_t)40))
 /** \brief Error Code for Invalid PMIC Device Silicon Revision*/
 #define PMIC_ST_ERR_INV_SILICON_REVISION   (-((int32_t)41))
+/** \brief Error Code for ADC Continuous Conversion enabled when
+ *         Pmic_ADCStartSingleConversion API is called*/
+#define PMIC_ST_ERR_ADC_CONT_CONV_EN       (-((int32_t)42))
 /* @} */
 
 /**

@@ -83,6 +83,7 @@ extern "C"
  *  \param   buckEnable    PMIC BUCK SubSystem
  *  \param   ldoEnable     PMIC LDO SubSystem
  *  \param   esmEnable     PMIC ESM SubSystem
+ *  \param   adcEnable     PMIC ADC Subsystem
  */
 typedef struct Pmic_DevSubSysInfo_s
 {
@@ -92,6 +93,7 @@ typedef struct Pmic_DevSubSysInfo_s
     bool buckEnable;
     bool ldoEnable;
     bool esmEnable;
+    bool adcEnable;
 } Pmic_DevSubSysInfo_t;
 
 // clang-format off
