@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -39,8 +39,8 @@
  *
  */
 
-#include "../../../include/pmic_types.h"
-#include "../../pmic_core_priv.h"
+#include "pmic_types.h"
+#include "pmic_core_priv.h"
 #include "pmic_gpio_lp8764x_priv.h"
 
 // clang-format off
@@ -175,33 +175,16 @@ static Pmic_GpioIntRegCfg_t lp8764x_gpioIntRegCfg[] =
 };
 // clang-format on
 
-/*
- * \brief   Get LP8764x GPIO config
- *          This function is used to get LP8764x GPIO configuration
- *
- * \param   pGpioInOutCfg   [OUT]  to store lp8764x gpio configuration
- */
 void pmic_get_lp8764x_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg)
 {
     *pGpioInOutCfg = gLp8764x_gpioInOutCfg;
 }
 
-/*
- * \brief   Get LP8764x GPIO Interrupt Register config
- *          This function is used to get LP8764x GPIO Interrupt register
- *          configuration
- *
- * \param   pGpioIntRegCfg   [OUT]  to store lp8764x gpio register configuration
- */
 void pmic_get_lp8764x_gpioIntRegCfg(Pmic_GpioIntRegCfg_t **pGpioIntRegCfg)
 {
     *pGpioIntRegCfg = lp8764x_gpioIntRegCfg;
 }
 
-/*!
- * \brief   This function is used to configure Enable pin for LP8764X
- *          PMIC HERA Device.
- */
 int32_t Pmic_gpioLp8764xSetEnablePinConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_GpioCfg_t gpioCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -223,10 +206,6 @@ int32_t Pmic_gpioLp8764xSetEnablePinConfiguration(Pmic_CoreHandle_t *pPmicCoreHa
     return status;
 }
 
-/*!
- * \brief   This function is used to read Enable pin configuration for LP8764X
- *          PMIC HERA Device.
- */
 int32_t Pmic_gpioLp8764xGetEnablePinConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_GpioCfg_t *pGpioCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;

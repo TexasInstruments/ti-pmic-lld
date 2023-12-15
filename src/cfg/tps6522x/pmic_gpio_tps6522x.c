@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -39,10 +39,10 @@
  *
  */
 
-#include "../../../include/pmic_types.h"
-#include "../../../include/pmic_gpio.h"
-#include "../../pmic_core_priv.h"
-#include "../../pmic_io_priv.h"
+#include "pmic_types.h"
+#include "pmic_gpio.h"
+#include "pmic_core_priv.h"
+#include "pmic_io_priv.h"
 #include "pmic_gpio_tps6522x_priv.h"
 
 // clang-format off
@@ -129,24 +129,11 @@ static Pmic_GpioIntRegCfg_t tps6522x_gpioIntRegCfg[] =
 };
 // clang-format on
 
-/**
- * \brief   Get TPS6522x GPIO config
- *          This function is used to get TPS6522x GPIO configuration
- *
- * \param   pGpioInOutCfg   [OUT]  to store TPS6522x gpio configuration
- */
 void pmic_get_tps6522x_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg)
 {
     *pGpioInOutCfg = gTps6522x_gpioInOutCfg;
 }
 
-/**
- * \brief   Get TPS6522x GPIO Interrupt Register config
- *          This function is used to get TPS6522x GPIO Interrupt register
- *          configuration
- *
- * \param   pGpioIntRegCfg   [OUT]  to store tps6522x gpio register configuration
- */
 void pmic_get_tps6522x_gpioIntRegCfg(Pmic_GpioIntRegCfg_t **pGpioIntRegCfg)
 {
     *pGpioIntRegCfg = tps6522x_gpioIntRegCfg;
@@ -311,17 +298,6 @@ static int32_t Pmic_gpioTps6522xGetEnPbVsenseDeglitch(Pmic_CoreHandle_t    *pPmi
     return status;
 }
 
-/**
- * \brief   Function to set the configuration of EN/PB/VSENSE pin for TPS6522x
- *          BURTON PMIC
- *
- * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle
- * \param   enPbVsenseCfg     [IN]    EN/PB/VSENSE configuration struct to set
- *                                    configuration of EN/PB/VSENSE pin
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_gpioTps6522xSetEnPbVsensePinConfiguration(Pmic_CoreHandle_t         *pPmicCoreHandle,
                                                        const Pmic_EnPbVsenseCfg_t enPbVsenseCfg)
 {
@@ -343,17 +319,6 @@ int32_t Pmic_gpioTps6522xSetEnPbVsensePinConfiguration(Pmic_CoreHandle_t        
     return status;
 }
 
-/**
- * \brief   Function to get the configuration of EN/PB/VSENSE pin for TPS6522x
- *          BURTON PMIC
- *
- * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
- * \param   pEnPbVsenseCfg  [IN/OUT]   Pointer to store EN/PB/VSENSE
- *                                     pin configuration
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_gpioTps6522xGetEnPbVsensePinConfiguration(Pmic_CoreHandle_t    *pPmicCoreHandle,
                                                        Pmic_EnPbVsenseCfg_t *pEnPbVsenseCfg)
 {
@@ -377,8 +342,7 @@ int32_t Pmic_gpioTps6522xGetEnPbVsensePinConfiguration(Pmic_CoreHandle_t    *pPm
 
 int32_t Pmic_tps6522xGpioPinTypeADC(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t gpioPin)
 {
-    int32_t status = PMIC_ST_SUCCESS;
-    // fix
+    int32_t              status = PMIC_ST_SUCCESS;
     const Pmic_GpioCfg_t adcGpioCfg = {.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
                                        .pinFunc = ((gpioPin == PMIC_TPS6522X_GPIO4_PIN) ?
                                                        PMIC_TPS6522X_GPIO_PINFUNC_GPIO4_ADC_IN :

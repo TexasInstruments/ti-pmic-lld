@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -70,6 +70,7 @@ extern "C"
 #define PMIC_LP8764X_EEPROM_DEFAULTS_LOAD_TO_CONF_OTHER_REGS        (0U)
 /** \brief EEPROM defaults are not loaded to Conf registers */
 #define PMIC_LP8764X_EEPROM_DEFAULTS_NOT_LOADED_TO_CONF_OTHER_REGS  (1U)
+/** @} */
 
 /**
  *  \anchor Pmic_Lp8764xHera_Skip_EepromDef_LdCfg
@@ -83,6 +84,7 @@ extern "C"
 /** \brief Skip EEPROM defaults are loaded to Conf and Other registers is
  *         enabled */
 #define PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_ENABLED  1U
+/** @} */
 
 /**
  *  \anchor Pmic_Lp8764xHera_RefOutPinCtrl_Cfg
@@ -94,7 +96,7 @@ extern "C"
 #define PMIC_LP8764X_REF_OUT_PIN_CFG_DISABLE                        0U
 /** \brief Enable Bandgap voltage to REFOUT pin  */
 #define PMIC_LP8764X_REF_OUT_PIN_CFG_ENABLE                         1U
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_Lp8764xHera_ExtClk_Freq_Sel
@@ -110,7 +112,7 @@ extern "C"
 #define PMIC_LP8764X_SYNCCLKIN_4_4_MHZ                              (2U)
 /** \brief  SYNCCLKIN Frequency as 8.8 MHz */
 #define PMIC_LP8764X_SYNCCLKIN_8_8_MHZ                              (3U)
-/*  @} */
+/** @} */
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */

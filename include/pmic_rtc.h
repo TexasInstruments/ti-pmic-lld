@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -32,15 +32,16 @@
  *****************************************************************************/
 
 /**
- *  \ingroup DRV_PMIC_MODULE
- *  \defgroup DRV_PMIC_RTC_MODULE PMIC RTC Driver API
- *      This Module explains PMIC RTC APIs and their usage. This Module
- *  has APIs to cover all PMIC RTC features. like, set/get RTC time, Alarm
- *  time, RTC frequncy compensation, timer interrupt period and enable or
- *  disable RTC and RTC/Alarm interrupts.
+ *  \ingroup    DRV_PMIC_MODULE
+ *  \defgroup   DRV_PMIC_RTC_MODULE PMIC RTC Driver API
  *
- *  Supported PMIC Devices for RTC Module:
- *  1. TPS6594x (Leo PMIC Device)
+ *  \brief      This Module explains PMIC RTC APIs and their usage. This Module
+ *              has APIs to cover all PMIC RTC features. like, set/get RTC time,
+ *              Alarm time, RTC frequncy compensation, timer interrupt period and
+ *              enable or disable RTC and RTC/Alarm interrupts.
+ *
+ *              Supported PMIC Devices for RTC Module:
+ *              1. TPS6594x (Leo PMIC Device)
  *
  *  @{
  */
@@ -78,7 +79,7 @@ extern "C"
 #define PMIC_RTC_MINUTE_INTR_PERIOD                       (0x1U)
 #define PMIC_RTC_HOUR_INTR_PERIOD                         (0x2U)
 #define PMIC_RTC_DAY_INTR_PERIOD                          (0x3U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_RtcAlramIntrEnable
@@ -88,7 +89,7 @@ extern "C"
  */
 #define PMIC_RTC_ALARM_INTR_ENABLE                        1U
 #define PMIC_RTC_ALARM_INTR_DISABLE                       0U
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_RtcTimerIntrEnable
@@ -98,7 +99,7 @@ extern "C"
  */
 #define PMIC_RTC_TIMER_INTR_ENABLE                        1U
 #define PMIC_RTC_TIMER_INTR_DISABLE                       0U
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_RtcTimeMode
@@ -108,7 +109,7 @@ extern "C"
  */
 #define PMIC_RTC_24_HOUR_MODE                             (0x0U)
 #define PMIC_RTC_12_HOUR_MODE                             (0x1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_RtcMeridienMode
@@ -118,7 +119,7 @@ extern "C"
  */
 #define PMIC_RTC_AM_MODE                                  (0x0U)
 #define PMIC_RTC_PM_MODE                                  (0x1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_RtcState
@@ -128,7 +129,7 @@ extern "C"
  */
 #define PMIC_RTC_STOP                                     0U
 #define PMIC_RTC_START                                    1U
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_RtcStatus
@@ -138,7 +139,7 @@ extern "C"
  */
 #define PMIC_RTC_STATUS_FROZEN                            0U
 #define PMIC_RTC_STATUS_RUNNING                           1U
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_RtcResetStatus
@@ -150,7 +151,7 @@ extern "C"
 #define PMIC_RTC_RST_STATUS_RESET_VAL                     (0x0U)
 /** \brief Used to set RESET_STATUS_RTC register bit field */
 #define PMIC_RTC_RST_STATUS_SET_VAL                       (0x1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_RtcPowerUpStatus
@@ -162,7 +163,7 @@ extern "C"
 #define PMIC_RTC_POWERUP_STATUS_CLR_VAL                   (0x0U)
 /** \brief POWERUP_STATUS reset value when RTC domain is powered down */
 #define PMIC_RTC_POWERUP_STATUS_RESET_VAL                 (0x1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_RtcWeekDay
@@ -177,7 +178,7 @@ extern "C"
 #define PMIC_RTC_WEEKDAY_THURSDAY                         (5U)
 #define PMIC_RTC_WEEKDAY_FRIDAY                           (6U)
 #define PMIC_RTC_WEEKDAY_SATURDAY                         (7U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_RtcMonth
@@ -199,7 +200,7 @@ extern "C"
 #define PMIC_RTC_MONTH_OCT                                (10U)
 #define PMIC_RTC_MONTH_NOV                                (11U)
 #define PMIC_RTC_MONTH_DEC                                (12U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_Rtc32KCounterCfg
@@ -209,7 +210,7 @@ extern "C"
  */
 /** \brief Set 32K counter with RTC compensation values */
 #define PMIC_RTC_32K_COUNTER_COMP_VAL_SET                 (0x1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_RtcCrystalOscCfg
@@ -219,7 +220,7 @@ extern "C"
  */
 #define PMIC_RTC_CRYSTAL_OSC_DISABLE                      0U
 #define PMIC_RTC_CRYSTAL_OSC_ENABLE                       1U
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_RtcRoundTime
@@ -229,7 +230,7 @@ extern "C"
  */
 /** \brief Round the time to closest minute */
 #define PMIC_RTC_ROUND_TIME_SET                           (0x1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_RtcTimeDateRegSel
@@ -241,7 +242,7 @@ extern "C"
 #define PMIC_RTC_DYNAMIC_REG_SEL                          (0x0U)
 /** \brief RTC register read from Static Shadowed registers */
 #define PMIC_RTC_STATIC_SHADOWED_REG_SEL                  (0x1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_RtcCrystalOscType
@@ -255,7 +256,7 @@ extern "C"
 #define PMIC_RTC_CRYSTAL_OSC_TYPE_9PF                     (0x1U)
 /** \brief Selects Crystal Oscillator type as 12.5PF */
 #define PMIC_RTC_CRYSTAL_OSC_TYPE_12_5PF                  (0x2U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_RtcRstStatusType
@@ -267,7 +268,7 @@ extern "C"
 #define PMIC_RTC_RST_STATUS                               (0x0U)
 /** \brief Selects RTC Powerup Status */
 #define PMIC_RTC_POWERUP_STATUS                           (0x1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_RtcTimeValidParamCfg
@@ -285,7 +286,7 @@ extern "C"
 #define PMIC_RTC_TIME_CFG_TIMEMODE_VALID                  (3U)
 /** \brief validParams value used to set/get Maridian Mode */
 #define PMIC_RTC_TIME_CFG_MERIDIAN_VALID                  (4U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_RtcTimeValidParamBits
@@ -301,7 +302,7 @@ extern "C"
 #define PMIC_RTC_TIME_CFG_HRS_VALID_SHIFT                 (1U << PMIC_RTC_TIME_CFG_HRS_VALID)
 #define PMIC_RTC_TIME_CFG_TIMEMODE_VALID_SHIFT            (1U << PMIC_RTC_TIME_CFG_TIMEMODE_VALID)
 #define PMIC_RTC_TIME_CFG_MERIDIAN_VALID_SHIFT            (1U << PMIC_RTC_TIME_CFG_MERIDIAN_VALID)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_RtcDateValidParamCfg
@@ -318,7 +319,7 @@ extern "C"
 /** \brief validParams value used to set/get Value to represent the weekday of
  *         the week */
 #define PMIC_RTC_DATE_CFG_WEEKDAY_VALID                   (3U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_RtcDateValidParamBits
@@ -333,7 +334,7 @@ extern "C"
 #define PMIC_RTC_DATE_CFG_MONTH_VALID_SHIFT               (1U << PMIC_RTC_DATE_CFG_MONTH_VALID)
 #define PMIC_RTC_DATE_CFG_YEAR_VALID_SHIFT                (1U << PMIC_RTC_DATE_CFG_YEAR_VALID)
 #define PMIC_RTC_DATE_CFG_WEEKDAY_VALID_SHIFT             (1U << PMIC_RTC_DATE_CFG_WEEKDAY_VALID)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_RtcRstStatusValidParam
@@ -345,7 +346,7 @@ extern "C"
 #define PMIC_RTC_RESET_STATUS_VALID                       (0U)
 /** \brief validParams value used to get power-up status of RTC */
 #define PMIC_RTC_POWERUP_STATUS_VALID                     (1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_RtcRstStatusValidParamBits
@@ -358,7 +359,7 @@ extern "C"
  */
 #define PMIC_RTC_RESET_STATUS_VALID_SHIFT                 (1U << PMIC_RTC_RESET_STATUS_VALID)
 #define PMIC_RTC_POWERUP_STATUS_VALID_SHIFT               (1U << PMIC_RTC_POWERUP_STATUS_VALID)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_RtcConfigValidParamCfg
@@ -381,7 +382,7 @@ extern "C"
 /** \brief validParams value used to set/get to Select Crystal Oscillator Type
  */
 #define PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID               (4U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_RtcConfigValidParamBits
@@ -398,16 +399,16 @@ extern "C"
 #define PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID_SHIFT           (1U << PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID)
 #define PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID_SHIFT        (1U << PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID)
 #define PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID_SHIFT         (1U << PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID)
-/* @} */
+/** @} */
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
 
-/*!
- *  \brief  RTC time configuration.
- *          The Pmic_RtcTime_s structure contains set of time parameters to
- *          set/get the RTC time.
+/**
+ *  \name                       RTC Time Configuration Structure
+ *  \brief                      This struct is used to set/get the RTC time
+ *                              of supported PMICs (TPS6594x).
  *
  *  \param   validParams        Validate params Bits.
  *                              Depending on the parameters want to get/set,
@@ -433,6 +434,8 @@ extern "C"
  *                                Valid only when
  *                                PMIC_RTC_TIME_CFG_MERIDIAN_VALID bit of
  *                                validParams is set.
+ *
+ *  @{
  */
 typedef struct Pmic_RtcTime_s
 {
@@ -443,11 +446,12 @@ typedef struct Pmic_RtcTime_s
     uint8_t  timeMode;
     uint8_t  meridianMode;
 } Pmic_RtcTime_t;
+/** @} */
 
-/*!
- *  \brief   RTC Date configuration.
- *           The Pmic_RtcDate_s structure contains set of date parameters to
- *           set/get the RTC Date.
+/**
+ *  \name                       RTC Date Configuration Structure
+ *  \brief                      This structure is used to set/get the RTC Date on
+ *                              supported PMICs (TPS6594x).
  *
  *  \param   validParams        Validate params Bits.
  *                              Depending on the parameters want to get/set,
@@ -468,6 +472,7 @@ typedef struct Pmic_RtcTime_s
  *                                PMIC_RTC_DATE_CFG_WEEKDAY_VALID
  *                                bit of validParams is set.
  *
+ *  @{
  */
 typedef struct Pmic_RtcDate_s
 {
@@ -477,13 +482,15 @@ typedef struct Pmic_RtcDate_s
     uint16_t year;
     uint8_t  weekday;
 } Pmic_RtcDate_t;
+/** @} */
 
-/*!
- *  \brief   RTC Reset Status
- *           The Pmic_RtcRstStatus_s structure contains status of RTC Reset and
- *           power-up status.
- *           Note: validParams is input param for all Get APIs. other params
- *           except validParams is output param for Get APIs
+/**
+ *  \name                       RTC Reset Status Structure
+ *  \brief                      This structure is used to get RTC Reset and power-up
+ *                              statuses of supported PMICs (TPS6594x).
+ *
+ *  \note                       ValidParams is input param for all Get APIs. Other
+ *                              params except validParams are output params for Get APIs
  *
  *  \param   validParams        Validate params Bits.
  *                              Depending on the parameters want to get,
@@ -500,6 +507,8 @@ typedef struct Pmic_RtcDate_s
  *                                bit of validParams is set.
  *                                  For valid values
  *                                      \ref Pmic_RtcPowerUpStatus
+ *
+ *  @{
  */
 typedef struct Pmic_RtcRstStatus_s
 {
@@ -507,54 +516,58 @@ typedef struct Pmic_RtcRstStatus_s
     bool     rtcRstStatus;
     bool     powerupStatus;
 } Pmic_RtcRstStatus_t;
+/** @} */
 
-/*!
- *  \brief   RTC configuration
- *           The Pmic_RtcRstStatus_s structure contains status of RTC Reset and
- *           power-up status.
- *           Note: validParams is input param for all Set and Get APIs. other
- *           params except validParams is input param for Set APIs and output
- *           param for Get APIs
+/**
+ *  \name                           RTC Configuration Struct
+ *  \brief                          This structure is used to set or get the RTC
+ *                                  configurations of supported PMICs (TPS6594x).
  *
- *  \param   validParams          Validate params Bits.
- *                                Depending on the parameters want to get,
- *                                corresponding bits should be set in validParam
- *                                  For Valid values
- *                                         \ref Pmic_RtcConfigValidParamCfg
- *  \param   crystalOScEn         Enable/Disable Crystal Oscillator
- *                                Valid only when
- *                                PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID
- *                                bit of validParams is set.
- *                                  For valid values
- *                                      \ref Pmic_RtcCrystalOscCfg
- *  \param   set32KCounterCompVal Set 32K counter with compensation values.
- *                                Application can configure this only when
- *                                RTC is frozen
- *                                Valid only when
- *                                PMIC_RTC_CFG_32K_COUNTER_COMP_VAL_SET_VALID
- *                                bit of validParams is set.
- *                                  For valid values
- *                                      \ref Pmic_Rtc32KCounterCfg
- *  \param   setRtcTimeRound30s   Set RTC time config to Round the time to
- *                                closest minute
- *                                Valid only when
- *                                PMIC_RTC_CFG_RTC_TIME_ROUND_30S_SET_VALID
- *                                bit of validParams is set.
- *                                  For valid values
- *                                      \ref Pmic_RtcRoundTime
- *  \param   timeDateRegSel       Select RTC Time and Date Register read from
- *                                Dynamic or Static Shadowed Registers.
- *                                Valid only when
- *                                PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID
- *                                bit of validParams is set.
- *                                  For valid values
- *                                      \ref Pmic_RtcTimeDateRegSel
- *  \param   crystalOScType       Select Crystal Oscillator Type
- *                                Valid only when
- *                                PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID
- *                                bit of validParams is set.
- *                                  For valid values
- *                                      \ref Pmic_RtcCrystalOscType
+ *  \note                           ValidParams is input param for all Set and Get APIs.
+ *                                  Other params except validParams are input params for
+ *                                  Set APIs and output params for Get APIs.
+ *
+ *  \param   validParams            Validate params Bits.
+ *                                  Depending on the parameters want to get,
+ *                                  corresponding bits should be set in validParam
+ *                                    For Valid values
+ *                                           \ref Pmic_RtcConfigValidParamCfg
+ *  \param   crystalOScEn           Enable/Disable Crystal Oscillator
+ *                                  Valid only when
+ *                                  PMIC_RTC_CFG_CRYSTAL_OSC_EN_VALID
+ *                                  bit of validParams is set.
+ *                                    For valid values
+ *                                        \ref Pmic_RtcCrystalOscCfg
+ *  \param   set32KCounterCompVal   Set 32K counter with compensation values.
+ *                                  Application can configure this only when
+ *                                  RTC is frozen
+ *                                  Valid only when
+ *                                  PMIC_RTC_CFG_32K_COUNTER_COMP_VAL_SET_VALID
+ *                                  bit of validParams is set.
+ *                                    For valid values
+ *                                        \ref Pmic_Rtc32KCounterCfg
+ *  \param   setRtcTimeRound30s     Set RTC time config to Round the time to
+ *                                  closest minute
+ *                                  Valid only when
+ *                                  PMIC_RTC_CFG_RTC_TIME_ROUND_30S_SET_VALID
+ *                                  bit of validParams is set.
+ *                                    For valid values
+ *                                        \ref Pmic_RtcRoundTime
+ *  \param   timeDateRegSel         Select RTC Time and Date Register read from
+ *                                  Dynamic or Static Shadowed Registers.
+ *                                  Valid only when
+ *                                  PMIC_RTC_CFG_TIME_DATE_REG_SEL_VALID
+ *                                  bit of validParams is set.
+ *                                    For valid values
+ *                                        \ref Pmic_RtcTimeDateRegSel
+ *  \param   crystalOScType         Select Crystal Oscillator Type
+ *                                  Valid only when
+ *                                  PMIC_RTC_CFG_CRYSTAL_OSC_TYPE_VALID
+ *                                  bit of validParams is set.
+ *                                    For valid values
+ *                                        \ref Pmic_RtcCrystalOscType
+ *
+ *  @{
  */
 typedef struct Pmic_RtcCfg_s
 {
@@ -565,12 +578,13 @@ typedef struct Pmic_RtcCfg_s
     uint8_t  timeDateRegSel;
     uint8_t  crystalOScType;
 } Pmic_RtcCfg_t;
+/** @} */
 
 /*==========================================================================*/
 /*                         Function Declarations                            */
 /*==========================================================================*/
 
-/*!
+/**
  * \brief   API to Set the alarm Time and Date to PMIC RTC.
  *
  * Requirement: REQ_TAG(PDK-5855)
@@ -591,7 +605,7 @@ typedef struct Pmic_RtcCfg_s
 int32_t
 Pmic_rtcSetAlarmInfo(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_RtcTime_t timeCfg, const Pmic_RtcDate_t dateCfg);
 
-/*!
+/**
  * \brief   API to Get the alarm Time and Date from PMIC RTC function.
  *
  * Requirement: REQ_TAG(PDK-5855)
@@ -611,7 +625,7 @@ Pmic_rtcSetAlarmInfo(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_RtcTime_t ti
  */
 int32_t Pmic_rtcGetAlarmInfo(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_RtcTime_t *pTimeCfg, Pmic_RtcDate_t *pDateCfg);
 
-/*!
+/**
  * \brief   API to Set the timer interrupt Period to PMIC RTC.
  *
  * Requirement: REQ_TAG(PDK-5855)
@@ -631,7 +645,7 @@ int32_t Pmic_rtcGetAlarmInfo(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_RtcTime_t 
  */
 int32_t Pmic_rtcSetTimerPeriod(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t timerPeriod);
 
-/*!
+/**
  * \brief   API to Get the timer interrupt period from PMIC RTC.
  *
  * Requirement: REQ_TAG(PDK-5855)
@@ -649,7 +663,7 @@ int32_t Pmic_rtcSetTimerPeriod(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t
  */
 int32_t Pmic_rtcGetTimerPeriod(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t *pTimerPeriod);
 
-/*!
+/**
  * \brief   API to Set the RTC Time and Date to PMIC RTC.
  *
  * Requirement: REQ_TAG(PDK-5855)
@@ -670,7 +684,7 @@ int32_t Pmic_rtcGetTimerPeriod(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t *pTim
 int32_t
 Pmic_rtcSetTimeDateInfo(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_RtcTime_t timeCfg, const Pmic_RtcDate_t dateCfg);
 
-/*!
+/**
  * \brief   API to Get the RTC Time and Date from PMIC RTC function.
  *
  * Requirement: REQ_TAG(PDK-5855)
@@ -690,7 +704,7 @@ Pmic_rtcSetTimeDateInfo(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_RtcTime_t
  */
 int32_t Pmic_rtcGetTimeDateInfo(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_RtcTime_t *pTimeCfg, Pmic_RtcDate_t *pDateCfg);
 
-/*!
+/**
  * \brief   API to Set the RTC frequency compensation value.
  *
  * Requirement: REQ_TAG(PDK-5855)
@@ -708,7 +722,7 @@ int32_t Pmic_rtcGetTimeDateInfo(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_RtcTime
  */
 int32_t Pmic_rtcSetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle, const uint16_t compensation);
 
-/*!
+/**
  * \brief   API to Get the RTC frequency compensation value.
  *
  * Requirement: REQ_TAG(PDK-5855)
@@ -727,7 +741,7 @@ int32_t Pmic_rtcSetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle, const uint16_t c
  */
 int32_t Pmic_rtcGetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t *pCompensation);
 
-/*!
+/**
  * \brief   API to Enable/Disable the RTC.
  *
  * Requirement: REQ_TAG(PDK-5855)
@@ -745,7 +759,7 @@ int32_t Pmic_rtcGetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t *pCompe
  */
 int32_t Pmic_rtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle, const bool enableRtc);
 
-/*!
+/**
  * \brief   API to read RTC status which defines RTC is started or not
  *
  * Requirement: REQ_TAG(PDK-9155)
@@ -764,7 +778,7 @@ int32_t Pmic_rtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle, const bool enableRtc)
  */
 int32_t Pmic_rtcGetStatus(Pmic_CoreHandle_t *pPmicCoreHandle, bool *pRtcstatus);
 
-/*!
+/**
  * \brief   API to Enable/Disable the RTC Timer Interrupt.
  *
  * Requirement: REQ_TAG(PDK-5855), REQ_TAG(PDK-5831)
@@ -784,7 +798,7 @@ int32_t Pmic_rtcGetStatus(Pmic_CoreHandle_t *pPmicCoreHandle, bool *pRtcstatus);
  */
 int32_t Pmic_rtcEnableTimerIntr(Pmic_CoreHandle_t *pPmicCoreHandle, const bool enableIntr);
 
-/*!
+/**
  * \brief   API to Enable/Disable the RTC Alarm Interrupt.
  *
  * Requirement: REQ_TAG(PDK-5855), REQ_TAG(PDK-5831)
@@ -804,7 +818,7 @@ int32_t Pmic_rtcEnableTimerIntr(Pmic_CoreHandle_t *pPmicCoreHandle, const bool e
  */
 int32_t Pmic_rtcEnableAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle, const bool enableIntr);
 
-/*!
+/**
  * \brief   API to Get the Reset status of RTC.
  *
  * Requirement: REQ_TAG(PDK-9145), REQ_TAG(PDK-9142)
@@ -823,7 +837,7 @@ int32_t Pmic_rtcEnableAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle, const bool e
  */
 int32_t Pmic_rtcGetRstStatus(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_RtcRstStatus_t *pRtcRstStatus);
 
-/*!
+/**
  * \brief   API to clear the Reset status of RTC.
  *
  * Requirement: REQ_TAG(PDK-9142), REQ_TAG(PDK-9145)
@@ -843,7 +857,7 @@ int32_t Pmic_rtcGetRstStatus(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_RtcRstStat
  */
 int32_t Pmic_rtcClrRstStatus(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t rtcRstStatType);
 
-/*!
+/**
  * \brief   API to Set PMIC RTC Configuration
  *
  * Requirement: REQ_TAG(PDK-9141), REQ_TAG(PDK-9135), REQ_TAG(PDK-9111)
@@ -861,7 +875,7 @@ int32_t Pmic_rtcClrRstStatus(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t r
  */
 int32_t Pmic_rtcSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_RtcCfg_t rtcCfg);
 
-/*!
+/**
  * \brief   API to Get PMIC RTC Configuration
  *
  * Requirement: REQ_TAG(PDK-9141), REQ_TAG(PDK-9135)
@@ -887,4 +901,4 @@ int32_t Pmic_rtcGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_RtcCfg
 
 #endif /* PMIC_RTC_H_ */
 
-/* @} */
+/** @} */

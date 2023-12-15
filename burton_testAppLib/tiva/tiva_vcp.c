@@ -1,11 +1,6 @@
 #include "tiva_priv.h"
 #include "tiva_vcp.h"
 
-/**
- * \brief Function to initialize the UART that's interfacing the virtual communication port.
- *
- * \param vcpHandle [IN] Handle to the virtual communication port UART
- */
 void initializeVCP(uartHandle_t *vcpHandle)
 {
     // Enable the UART module for PC <--> MCU communication
@@ -48,11 +43,6 @@ void initializeVCP(uartHandle_t *vcpHandle)
     UARTEnable(vcpHandle->uartBase);
 }
 
-/**
- * \brief Function to initialize the virtual communication port UART handle
- *
- * \param vcpHandle [IN] Handle to the virtual communication port UART
- */
 void initializeVCPHandle(uartHandle_t *vcpHandle)
 {
     vcpHandle->sysctlPeriphUART = SYSCTL_PERIPH_UART0;
@@ -68,12 +58,6 @@ void initializeVCPHandle(uartHandle_t *vcpHandle)
     vcpHandle->baudRate = 9600;
 }
 
-/**
- * \brief Function to transmit a string via UART
- *
- * \param UARTHandle    [IN]        Handle to the UART module
- * \param str           [IN]        String to transmit via UART
- */
 void UARTStrPut(uartHandle_t *UARTHandle, uint8_t *str)
 {
     if ((str == NULL) || (*str == '\0') || (UARTHandle == NULL))
@@ -85,12 +69,6 @@ void UARTStrPut(uartHandle_t *UARTHandle, uint8_t *str)
     }
 }
 
-/**
- * \brief Function to transmit an unsigned 32-bit integer via UART
- *
- * \param UARTHandle    [IN]        Handle to the UART module
- * \param num           [IN]        Number to transmit over UART
- */
 void UARTUint32Put(uartHandle_t *UARTHandle, uint32_t num)
 {
     uint8_t len = 0, i, digit;
@@ -118,12 +96,6 @@ void UARTUint32Put(uartHandle_t *UARTHandle, uint32_t num)
     }
 }
 
-/**
- * \brief Function to transmit a signed 32-bit integer via UART
- *
- * \param UARTHandle    [IN]        Handle to the UART module
- * \param num           [IN]        Number to transmit over UART
- */
 void UARTInt32Put(uartHandle_t *UARTHandle, int32_t num)
 {
     uint8_t len = 0, i, digit;

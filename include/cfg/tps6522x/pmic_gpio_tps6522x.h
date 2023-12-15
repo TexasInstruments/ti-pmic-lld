@@ -70,7 +70,7 @@ extern "C"
 #define PMIC_TPS6522X_GPIO4_PIN                           (4U)
 #define PMIC_TPS6522X_GPIO5_PIN                           (5U)
 #define PMIC_TPS6522X_GPIO6_PIN                           (6U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_Tps6522xBurton_GpioPinFunc
@@ -138,7 +138,7 @@ extern "C"
 /** \brief Used to configure SYNCCLKIN Function.
  *         Valid only for GPIO6 Pin */
 #define PMIC_TPS6522X_GPIO_PINFUNC_GPIO6_SYNCCLKIN        (4U)
-/*  @} */
+/** @} */
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
@@ -154,4 +154,4 @@ extern "C"
 
 #endif /* PMIC_GPIO_TPS6522X_H_ */
 
-/* @} */
+/** @} */

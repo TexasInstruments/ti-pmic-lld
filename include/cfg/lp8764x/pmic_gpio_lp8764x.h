@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -74,7 +74,7 @@ extern "C"
 #define PMIC_LP8764X_GPIO8_PIN                             (8U)
 #define PMIC_LP8764X_GPIO9_PIN                             (9U)
 #define PMIC_LP8764X_GPIO10_PIN                            (10U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_Lp8764xHera_GpioPinFunc
@@ -166,7 +166,7 @@ extern "C"
 /** \brief Used to configure WKUP2 Pin Function.
  *         Valid only for GPIO1 to GPIO10 Pins */
 #define PMIC_LP8764X_GPIO_PINFUNC_WKUP2                    (7U)
-/*  @} */
+/** @} */
 
 #ifdef __cplusplus
 }
@@ -174,4 +174,4 @@ extern "C"
 
 #endif /* PMIC_GPIO_LP8764X_H_ */
 
-/* @} */
+/** @} */

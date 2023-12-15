@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -45,7 +45,7 @@
 /*                             Include Files                                 */
 /* ========================================================================= */
 
-#include "cfg/tps6594x/pmic_rtc_tps6594x_priv.h"
+#include "pmic_rtc_tps6594x_priv.h"
 
 #ifdef __cplusplus
 extern "C"

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -218,8 +218,7 @@ extern "C"
 #define PMIC_LP8764X_IRQ_MAX_NUM_PG_1_0       (66U)
 /*! PMIC Max Interrupt Number on PG2.0*/
 #define PMIC_LP8764X_IRQ_MAX_NUM_PG_2_0       (67U)
-
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_lp8764x_IrqGpioNum
@@ -237,8 +236,7 @@ extern "C"
 #define PMIC_LP8764X_IRQ_GPIO_8_INT_MASK_NUM  (7U)
 #define PMIC_LP8764X_IRQ_GPIO_9_INT_MASK_NUM  (8U)
 #define PMIC_LP8764X_IRQ_GPIO_10_INT_MASK_NUM (9U)
-
-/* @} */
+/** @} */
 
 #ifdef __cplusplus
 }
@@ -246,4 +244,4 @@ extern "C"
 
 #endif /* PMIC_IRQ_LP8764X_H_ */
 
-/* @} */
+/** @} */

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -49,7 +49,7 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
-#include "../../pmic_core.h"
+#include "pmic_core.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -77,7 +77,7 @@ extern "C"
 #define PMIC_TPS6594X_GPIO9_PIN                                (9U)
 #define PMIC_TPS6594X_GPIO10_PIN                               (10U)
 #define PMIC_TPS6594X_GPIO11_PIN                               (11U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_Tps6594xLeo_GpioPinFunc
@@ -154,7 +154,7 @@ extern "C"
 /** \brief Used to configure LP_WKUP2 Pin Function.
  *         Valid only for GPIO3 and GPIO4 pins */
 #define PMIC_TPS6594X_GPIO_PINFUNC_GPIO3_GPIO4_LP_WKUP2        (7U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_GpioNPWRONPinFunc
@@ -168,7 +168,7 @@ extern "C"
 #define PMIC_TPS6594X_NPWRON_PINFUNC_NPWRON                    (1U)
 /** \brief None Function for NPWRON/ENABLE pin */
 #define PMIC_TPS6594X_NPWRON_PINFUNC_NONE                      (2U)
-/*  @} */
+/** @} */
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
@@ -204,4 +204,4 @@ int32_t Pmic_gpioTps6594xNPwronPinGetValue(Pmic_CoreHandle_t *pPmicCoreHandle, u
 
 #endif /* PMIC_GPIO_TPS6594X_H_ */
 
-/* @} */
+/** @} */

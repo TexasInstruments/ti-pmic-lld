@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -44,7 +44,7 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
-#include "../pmic.h"
+#include "pmic.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -104,7 +104,17 @@ extern "C"
  *         Instance Setup shall use this Send byte function to do IO with
  *         PMIC to control and monitor register values.
  *         This function will call application initilized Communication IO write
- *         callback functions
+ *         callback functions.
+ *         1. If CRC8 is enabled, calculates CRC8 value for given data byte
+ *         2. In case of SPI, forms SPI transfer header for PMIC to understand
+ *             which register needs to be accessed - 2 byte header
+ *             formation is as per TRM
+ *         3. If the register to be addressed is Watchdog register, it updates
+ *            the Slave and Register address as per TRM to properly communicate
+ *            with PMIC Watchdog module and access it's registers
+ *         4. Calls Application provided Transfer function to send the
+ *            data byte, along with CRC8 if supported.
+ *         5. Works with the valid PMIC instance else does not do any operation
  *
  * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle
  * \param   regAddr           [IN]    Register address
@@ -122,7 +132,18 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t regA
  *         Instance Setup shall use this receive byte function to do IO with
  *         PMIC to control and monitor register values.
  *         This function will call application initilized Communication IO read
- *         callback functions
+ *         callback functions.
+ *         1. If CRC8 is enabled, calculates CRC8 value for given data byte
+ *         2. In case of SPI, forms SPI transfer header for PMIC to understand
+ *             which register needs to be accessed - 2 byte header
+ *             formation is as per TRM
+ *         3. If the register to be addressed is Watchdog register, it updates
+ *            the Slave and Register address as per TRM to properly communicate
+ *            with PMIC Watchdog module and access it's registers
+ *         4. Calls Application provided Transfer function to recive  the
+ *            data byte, along with CRC8 if supported.
+ *         5. Copies received data byte into pRxBuffer byte buffer
+ *         6. Works with the valid PMIC instance else does not do any operation
  *
  * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
  * \param   regAddr           [IN]    Register address.

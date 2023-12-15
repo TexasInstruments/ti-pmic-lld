@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -39,14 +39,14 @@
  *
  */
 
-#include "../../../include/pmic_irq.h"
-#include "../../pmic_core_priv.h"
-#include "../../pmic_irq_priv.h"
-#include "../../../include/cfg/tps6594x/pmic_irq_tps6594x.h"
+#include "pmic_irq.h"
+#include "pmic_core_priv.h"
+#include "pmic_irq_priv.h"
+#include "pmic_irq_tps6594x.h"
 #include "pmic_irq_tps6594x_priv.h"
 #include "pmic_rtc_tps6594x_priv.h"
-#include "../../pmic_power_priv.h"
-#include "../../pmic_wdg_priv.h"
+#include "pmic_power_priv.h"
+#include "pmic_wdg_priv.h"
 
 // clang-format off
 /* PMIC TPS6594x Interrupt Configuration as per Pmic_tps6594x_IrqNum. */
@@ -662,23 +662,11 @@ static Pmic_GpioIntrTypeCfg_t tps6594x_gpioIntrCfg[] =
 };
 // clang-format on
 
-/*
- * \brief   Get TPS6594x Interrupt config.
- *          This function is used to get TPS6594x Interrupt configuration.
- *
- * \param   pIntrCfg   [OUT]  to store tps6594x Interrupt configuration.
- */
 void pmic_get_tps6594x_intrCfg(Pmic_IntrCfg_t **pIntrCfg)
 {
     *pIntrCfg = gTps6594x_intCfg;
 }
 
-/*
- * \brief   Get TPS6594x Interrupt config.
- *          This function is used to get TPS6594x Interrupt configuration.
- *
- * \param   pGpioIntrCfg   [OUT]  to store tps6594x Interrupt configuration.
- */
 void pmic_get_tps6594x_intrGpioCfg(Pmic_GpioIntrTypeCfg_t **pGpioIntrCfg)
 {
     *pGpioIntrCfg = tps6594x_gpioIntrCfg;
@@ -1559,9 +1547,6 @@ static int32_t Pmic_tps6594x_getStartupMiscModerateSevereFsmErr(Pmic_CoreHandle_
     return pmicStatus;
 }
 
-/*!
- * \brief  Function to decipher the L2 Error for TPS6594x Leo PMIC.
- */
 int32_t Pmic_tps6594x_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t l1RegAddr, Pmic_IrqStatus_t *pErrStat)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -1610,10 +1595,6 @@ int32_t Pmic_tps6594x_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t
     return pmicStatus;
 }
 
-/*!
- * \brief  Function to reinitialise Interrupt configuration based on PMIC
- *         Silicon Revision
- */
 void Pmic_tps6594x_reInitInterruptConfig(void)
 {
     Pmic_IntrCfg_t *pIntrCfg = gTps6594x_intCfg;

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -31,16 +31,19 @@
  *
  *****************************************************************************/
 /**
- *  \ingroup DRV_PMIC_MODULE
- *  \defgroup DRV_PMIC_GPIO_MODULE PMIC GPIO Driver API
- *      This Module explains about PMIC GPIO driver parameters and APIs usage.
- *  PMIC GPIO Driver module covers all GPIO features APIs. Like, set/get gpio
- *  pin functions, pull up/down, drive strength, output drain, pin value,
- *  enable/disable gpio interrupt and configure nPWRON or ENABLE pin features.
+ *  \ingroup    DRV_PMIC_MODULE
+ *  \defgroup   DRV_PMIC_GPIO_MODULE PMIC GPIO Driver API
  *
- *  Supported PMIC devices for GPIO Module:
- *  1. TPS6594x (Leo PMIC Device)
- *  2. LP8764x  (Hera PMIC Device)
+ *  \brief      This Module explains about PMIC GPIO driver parameters and APIs
+ *              usage. PMIC GPIO Driver module covers all GPIO features APIs. Like,
+ *              set/get gpio pin functions, pull up/down, drive strength, output drain,
+ *              pin value, enable/disable gpio interrupt and configure nPWRON or ENABLE
+ *              pin features.
+ *
+ *              Supported PMIC devices for GPIO Module:
+ *              1. TPS6594x (Leo PMIC Device)
+ *              2. LP8764x  (Hera PMIC Device)
+ *              3. TPS6522x (Burton PMIC Deivce)
  *
  *  @{
  */
@@ -58,9 +61,9 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 #include "pmic_core.h"
-#include "cfg/tps6522x/pmic_gpio_tps6522x.h"
-#include "cfg/tps6594x/pmic_gpio_tps6594x.h"
-#include "cfg/lp8764x/pmic_gpio_lp8764x.h"
+#include "pmic_gpio_tps6522x.h"
+#include "pmic_gpio_tps6594x.h"
+#include "pmic_gpio_lp8764x.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -79,7 +82,7 @@ extern "C"
  */
 #define PMIC_GPIO_DEGLITCH_DISABLE                     (0U)
 #define PMIC_GPIO_DEGLITCH_ENABLE                      (1U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_Gpio_SignalDir
@@ -89,7 +92,7 @@ extern "C"
  */
 #define PMIC_GPIO_INPUT                                (0U)
 #define PMIC_GPIO_OUTPUT                               (1U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_Gpio_SignalType
@@ -99,7 +102,7 @@ extern "C"
  */
 #define PMIC_GPIO_PUSH_PULL_OUTPUT                     (0U)
 #define PMIC_GPIO_OPEN_DRAIN_OUTPUT                    (1U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_Gpio_SignalLvl
@@ -109,7 +112,7 @@ extern "C"
  */
 #define PMIC_GPIO_LOW                                  (0U)
 #define PMIC_GPIO_HIGH                                 (1U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_Gpio_PU_PD_Sel
@@ -119,7 +122,7 @@ extern "C"
  */
 #define PMIC_GPIO_PD_SELECT                            (0U)
 #define PMIC_GPIO_PU_SELECT                            (1U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_Gpio_PU_PD_En
@@ -129,7 +132,7 @@ extern "C"
  */
 #define PMIC_GPIO_PU_PD_DISABLE                        (0U)
 #define PMIC_GPIO_PU_PD_ENABLE                         (1U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_GpioCflag
@@ -155,7 +158,7 @@ extern "C"
  *         Valid only for Enable pin for TPS6594x Leo and LP8764x Hera device
  *         Invalid for NPWRON pin for TPS6594x Leo device*/
 #define PMIC_ENABLE_CFG_POLARITY_VALID                 (0x05U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_GpioPinCfgStructPrmBitShiftVal
@@ -172,7 +175,7 @@ extern "C"
 #define PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT             (0x01U << PMIC_GPIO_CFG_DEGLITCH_VALID)
 #define PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT              (0x01U << PMIC_GPIO_CFG_PINFUNC_VALID)
 #define PMIC_ENABLE_CFG_POLARITY_VALID_SHIFT           (0x01U << PMIC_ENABLE_CFG_POLARITY_VALID)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_GpioPinPullCtrl
@@ -183,7 +186,7 @@ extern "C"
 #define PMIC_GPIO_PULL_DISABLED                        (0x0U)
 #define PMIC_GPIO_PULL_DOWN                            (0x1U)
 #define PMIC_GPIO_PULL_UP                              (0x2U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_GpioInterruptCfg
@@ -195,7 +198,7 @@ extern "C"
 #define PMIC_GPIO_RISE_INTERRUPT                       (1U)
 #define PMIC_GPIO_FALL_RISE_INTERRUPT                  (2U)
 #define PMIC_GPIO_DISABLE_INTERRUPT                    (3U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_GpioInterruptPolCfg
@@ -205,7 +208,7 @@ extern "C"
  */
 #define PMIC_GPIO_POL_LOW                              (0U)
 #define PMIC_GPIO_POL_HIGH                             (1U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_EnPbVsenseCflag
@@ -215,7 +218,7 @@ extern "C"
  */
 #define PMIC_EN_PB_VSENSE_CFG_FUNC_SEL_VALID           (0U)
 #define PMIC_EN_PB_VSENSE_CFG_DEGLITCH_SEL_VALID       (1U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_EnPbVsenseCfgStructPrmBitShiftVal
@@ -228,7 +231,7 @@ extern "C"
  */
 #define PMIC_EN_PB_VSENSE_CFG_FUNC_SEL_VALID_SHIFT     (0x01U << PMIC_EN_PB_VSENSE_CFG_FUNC_SEL_VALID)
 #define PMIC_EN_PB_VSENSE_CFG_DEGLITCH_SEL_VALID_SHIFT (0x01U << PMIC_EN_PB_VSENSE_CFG_DEGLITCH_SEL_VALID)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_EnPbVsense_funcSel
@@ -239,7 +242,7 @@ extern "C"
 #define PMIC_EN_PB_VSENSE_FUNCTIONALITY_SELECT_EN      (0U)
 #define PMIC_EN_PB_VSENSE_FUNCTIONALITY_SELECT_PB      (1U)
 #define PMIC_EN_PB_VSENSE_FUNCTIONALITY_SELECT_VSENSE  (2U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_EnPbVsense_deglitchSel
@@ -249,17 +252,20 @@ extern "C"
  */
 #define PMIC_EN_PB_VSENSE_DEGLITCH_SELECTION_SHORT     (0U)
 #define PMIC_EN_PB_VSENSE_DEGLITCH_SELECTION_LONG      (1U)
-/*  @} */
+/** @} */
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
 
-/*!
- * \brief  PMIC GPIO/NPWRON/ENABLE pin configuration structure.
- *         Note: validParams is input param for all Set and Get APIs. other
- *         params except validParams is input param for Set APIs and output
- *         param for Get APIs
+/**
+ * \name                        PMIC GPIO/NPWRON/ENABLE Pin Configuration Structure
+ * \brief                       This struct is used to set and get GPIO configurations
+ *                              of supported PMICs (TPS6522x, TPS6594x, LP8764x).
+ *
+ * \note                        ValidParams is input param for all Set and Get APIs.
+ *                              Other params except validParams are input params for Set
+ *                              APIs and output params for Get APIs.
  *
  * \param   validParams         Selection of structure parameters to be set,
  *                              from the combination of \ref Pmic_GpioCflag
@@ -288,12 +294,16 @@ extern "C"
  *                              \ref Pmic_Tps6594xLeo_GpioPinFunc.
  *                              Valid values for LP8764x HERA Device
  *                              \ref Pmic_Lp8764xHera_GpioPinFunc.
+ *                              Valid values for TPS6522x Burton Device
+ *                              \ref Pmic_Tps6522xBurton_GpioPinFunc.
  *                                Valid only when PMIC_GPIO_CFG_PINFUNC_VALID
  *                                bit is set.
  * \param   pinPolarity         Configure pin polarity.
  *                              Valid only for Enable pin.
  *                                Valid only when PMIC_ENABLE_CFG_POLARITY_VALID
  *                                bit is set.
+ *
+ * @{
  */
 typedef struct Pmic_GpioCfg_s
 {
@@ -305,12 +315,16 @@ typedef struct Pmic_GpioCfg_s
     uint8_t pinFunc;
     uint8_t pinPolarity;
 } Pmic_GpioCfg_t;
+/** @} */
 
-/*!
- * \brief  PMIC EN/PB/VSENSE pin configuration structure.
- *         Note: validParams is input param for all Set and Get APIs. other
- *         params except validParams is input param for Set APIs and output
- *         param for Get APIs
+/**
+ * \name                        PMIC EN/PB/VSENSE Pin Configuration Structure
+ * \brief                       This struct is used to set and get EN/PB/VSENSE pin
+ *                              configurations of supported PMICs (TPS6522x).
+ *
+ * \note                        ValidParams is input param for all Set and Get APIs.
+ *                              Other params except validParams are input params for
+ *                              Set APIs and output params for Get APIs.
  *
  * \param   validParams         Selection of structure parameters to be set,
  *                              from the combination of \ref Pmic_EnPbVsenseCflag
@@ -325,6 +339,8 @@ typedef struct Pmic_GpioCfg_s
  *                              Valid values \ref Pmic_EnPbVsense_deglitchSel.
  *                                Valid only when PMIC_EN_PB_VSENSE_CFG_DEGLITCH_SEL_VALID
  *                                bit is set.
+ *
+ * @{
  */
 typedef struct Pmic_EnPbVsenseCfg_s
 {
@@ -332,11 +348,12 @@ typedef struct Pmic_EnPbVsenseCfg_s
     uint8_t pinFuncSel;
     bool    deglitchSel;
 } Pmic_EnPbVsenseCfg_t;
+/** @} */
 
 /*==========================================================================*/
 /*                         Function Declarations                            */
 /*==========================================================================*/
-/*!
+/**
  * \brief   API to set PMIC GPIO configuration.
  *
  * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-5844), REQ_TAG(PDK-9111),
@@ -359,6 +376,8 @@ typedef struct Pmic_EnPbVsenseCfg_s
  *                                   \ref Pmic_Tps6594xLeo_GpioPin.
  *                                   Valid values for LP8764x HERA Device
  *                                   \ref Pmic_Lp8764xHera_GpioPin.
+ *                                   Valid values for TPS6522x Device
+ *                                   \ref Pmic_Tps6522xBurton_GpioPin.
  * \param   gpioCfg         [IN]    Set required configuration for
  *                                  the specified GPIO pin.
  *
@@ -367,7 +386,7 @@ typedef struct Pmic_EnPbVsenseCfg_s
  */
 int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, const Pmic_GpioCfg_t gpioCfg);
 
-/*!
+/**
  * \brief   API to get PMIC GPIO configuration.
  *
  * Requirement: REQ_TAG(PDK-5808)
@@ -385,6 +404,8 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const uint
  *                                    \ref Pmic_Tps6594xLeo_GpioPin.
  *                                    Valid values for LP8764x HERA Device
  *                                    \ref Pmic_Lp8764xHera_GpioPin.
+ *                                    Valid values for TPS6522x Burton Device
+ *                                    \ref Pmic_Tps6522xBurton_GpioPin.
  * \param   pGpioCfg        [IN/OUT] Pointer to store specified GPIO pin
  *                                   configuration
  *
@@ -393,7 +414,7 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const uint
  */
 int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, Pmic_GpioCfg_t *pGpioCfg);
 
-/*!
+/**
  * \brief   API to set PMIC GPIO value.
  *
  * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-9111)
@@ -409,6 +430,8 @@ int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const uint
  *                                   \ref Pmic_Tps6594xLeo_GpioPin.
  *                                   Valid values for LP8764x HERA Device
  *                                   \ref Pmic_Lp8764xHera_GpioPin.
+ *                                   Valid values for TPS6522x Burton Device
+ *                                   \ref Pmic_Tps6522xBurton_GpioPin.
  * \param   pinValue        [IN]    PMIC GPIO signal level High/Low to be
  *                                  configured.
  *                                  Valid values \ref Pmic_Gpio_SignalLvl.
@@ -420,7 +443,7 @@ int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin,
 
 int32_t Pmic_gpioSetDir(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, const uint8_t pinDir);
 
-/*!
+/**
  * \brief   API to get PMIC GPIO value.
  *
  * Requirement: REQ_TAG(PDK-5808)
@@ -435,6 +458,8 @@ int32_t Pmic_gpioSetDir(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, c
  *                                   \ref Pmic_Tps6594xLeo_GpioPin.
  *                                   Valid values for LP8764x HERA Device
  *                                   \ref Pmic_Lp8764xHera_GpioPin.
+ *                                   Valid values for TPS6522x Burton Device
+ *                                   \ref Pmic_Tps6522xBurton_GpioPin.
  * \param   pPinValue       [OUT]   To store PMIC GPIO signal level High/Low.
  *                                  Valid values \ref Pmic_Gpio_SignalLvl
  *
@@ -443,7 +468,7 @@ int32_t Pmic_gpioSetDir(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, c
  */
 int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, uint8_t *pPinValue);
 
-/*!
+/**
  * \brief   API to enable/disable GPIO interrupt.
  *
  * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
@@ -458,10 +483,11 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin,
  *                                   \ref Pmic_Tps6594xLeo_GpioPin.
  *                                   Valid values for LP8764x HERA Device
  *                                   \ref Pmic_Lp8764xHera_GpioPin.
+ *                                   Valid values for TPS6522x Burton Device
+ *                                   \ref Pmic_Tps6522xBurton_GpioPin.
  * \param   intrType        [IN]    Interrupt type \ref Pmic_GpioInterruptCfg
  * \param   maskPol         [IN]    FSM trigger masking polarity select for GPIO
- *                                  Valid values refer
- *                                  \ref Pmic_GpioInterruptPolCfg.
+ *                                  Valid values refer \ref Pmic_GpioInterruptPolCfg.
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
@@ -469,7 +495,7 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin,
 int32_t
 Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, const uint8_t intrType, const uint8_t maskPol);
 
-/*!
+/**
  * \brief   API to set configuration for NPWRON/Enable pin.
  *
  * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-9111), REQ_TAG(PDK-9162)
@@ -496,7 +522,7 @@ Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, const ui
  */
 int32_t Pmic_gpioSetNPwronEnablePinConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_GpioCfg_t gpioCfg);
 
-/*!
+/**
  * \brief   API to get configuration for NPWRON/Enable pin.
  *
  * Requirement: REQ_TAG(PDK-5808)
@@ -523,7 +549,7 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(Pmic_CoreHandle_t *pPmicCoreHan
  */
 int32_t Pmic_gpioGetNPwronEnablePinConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_GpioCfg_t *pGpioCfg);
 
-/*!
+/**
  * \brief   API to set configuration for EN/PB/VSENSE pin.
  *
  *          This function is used to set the required configuration for the
@@ -544,7 +570,7 @@ int32_t Pmic_gpioGetNPwronEnablePinConfiguration(Pmic_CoreHandle_t *pPmicCoreHan
 int32_t Pmic_gpioSetEnPbVsensePinConfiguration(Pmic_CoreHandle_t         *pPmicCoreHandle,
                                                const Pmic_EnPbVsenseCfg_t enPbVsenseCfg);
 
-/*!
+/**
  * \brief   API to get configuration for EN/PB/VSENSE pin.
  *
  *          This function is used to read the configuration for the
@@ -552,13 +578,13 @@ int32_t Pmic_gpioSetEnPbVsensePinConfiguration(Pmic_CoreHandle_t         *pPmicC
  *          in the Pmic_EnPbVsenseCfg_t
  *          For more information \ref Pmic_EnPbVsenseCfg_t
  *
- *          Note: In this API, the default PMIC device is assumed as TPS6522x
- *                BURTON PMIC. If adding support for a new PMIC device, the
- *                developer must update the API implementation for the new device.
- *
  * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
  * \param   pEnPbVsenseCfg  [IN/OUT]   Pointer to store EN/PB/VSENSE
  *                                     pin configuration
+ *
+ * \note    In this API, the default PMIC device is assumed as TPS6522x
+ *          BURTON PMIC. If adding support for a new PMIC device, the
+ *          developer must update the API implementation for the new device.
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
@@ -566,6 +592,19 @@ int32_t Pmic_gpioSetEnPbVsensePinConfiguration(Pmic_CoreHandle_t         *pPmicC
 int32_t Pmic_gpioGetEnPbVsensePinConfiguration(Pmic_CoreHandle_t    *pPmicCoreHandle,
                                                Pmic_EnPbVsenseCfg_t *pEnPbVsenseCfg);
 
+/**
+ *  \brief      This function is used to configure a GPIO pin to ADC functionality.
+ *
+ *  \param      pPmicCoreHandle     [IN]    PMIC interface handle
+ *  \param      gpioPin             [IN]    GPIO pin to configure to ADC functionality
+ *
+ *  \note       In this API, the default PMIC device is assumed as TPS6522x
+ *              BURTON PMIC. If adding support for a new PMIC device, the
+ *              developer must update the API implementation for the new device.
+ *
+ *  \return     Success code if GPIO pin is configured to ADC type, error code otherwise.
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
 int32_t Pmic_gpioPinTypeADC(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t gpioPin);
 
 #ifdef __cplusplus
@@ -574,4 +613,4 @@ int32_t Pmic_gpioPinTypeADC(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t gp
 
 #endif /* PMIC_GPIO_H_ */
 
-/* @} */
+/** @} */

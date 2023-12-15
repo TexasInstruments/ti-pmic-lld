@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -39,10 +39,10 @@
  *
  */
 
-#include "../../../include/pmic_types.h"
-#include "../../../include/pmic_power.h"
-#include "../../pmic_core_priv.h"
-#include "../../pmic_io_priv.h"
+#include "pmic_types.h"
+#include "pmic_power.h"
+#include "pmic_core_priv.h"
+#include "pmic_io_priv.h"
 #include "pmic_power_tps6594x_priv.h"
 
 // clang-format off
@@ -297,53 +297,21 @@ static Pmic_powerIntCfg_t tps6594x_pwrIntCfg[] =
 };
 // clang-format on
 
-/*!
- * \brief  PMIC power common interrupt get Configuration function
- *         This function is used to read the interrupt
- *         Configuration
- *
- * \param  pwrRsrcRegCfg   [OUT]  Pointer to store power interrupt
- *                                number.
- */
 void pmic_get_tps6594x_pwrCommonIntCfg(Pmic_powerIntCfg_t **pPwrCommonIntCfg)
 {
     *pPwrCommonIntCfg = tps6594x_pwrIntCfg;
 }
 
-/*!
- * \brief  PMIC power resources get Configuration function
- *         This function is used to read the PMIC POWER resources register
- *         Configuration
- *
- * \param  pwrRsrcRegCfg   [OUT]  Pointer to store power resource register
- *                                configuration
- */
 void pmic_get_tps6594x_pwrRsrceRegCfg(Pmic_powerRsrcRegCfg_t **pPwrRsrcRegCfg)
 {
     *pPwrRsrcRegCfg = gTps6594x_pwrRsrcRegCfg;
 }
 
-/*!
- * \brief  PMIC power get Configuration function
- *         This function is used to read the PMIC pgood sources register
- *         Configuration
- *
- * \param  pPgoodSrcRegCfg   [OUT]  Pointer to store power-good source register
- *                                  configuration
- */
 void pmic_get_tps6594x_pwrPgoodSrcRegCfg(Pmic_powerPgoodSrcRegCfg_t **pPgoodSrcRegCfg)
 {
     *pPgoodSrcRegCfg = tps6594x_pgoodSrcRegCfg;
 }
 
-/*!
- * \brief   This function is used to convert the millivolt value to vset value
- *          for LEO TPS6594x PMIC
- *
- *          Note: In this API, While adding support for New pwrRsrcType,
- *                developer need to update the API functionality for New
- *                pwrRsrcType accordingly.
- */
 int32_t Pmic_powerTPS6594xConvertVoltage2VSetVal(uint16_t millivolt, uint16_t pwrRsrc, uint8_t *pVSetVal)
 {
     int32_t  status = PMIC_ST_SUCCESS;
@@ -377,14 +345,6 @@ int32_t Pmic_powerTPS6594xConvertVoltage2VSetVal(uint16_t millivolt, uint16_t pw
     return status;
 }
 
-/*!
- * \brief   This function is used to convert the vset value to voltage in mv
- *          for PMIC LEO TPS6594x
- *
- *          Note: In this API, While adding support for New pwrRsrcType,
- *                developer need to update the API functionality for New
- *                pwrRsrcType accordingly.
- */
 void Pmic_powerTPS6594xConvertVSet2Voltage(const uint8_t *pVSetVal, uint16_t pwrRsrc, uint16_t *millivolt)
 {
     uint16_t baseMillivolt = 0U;
@@ -439,10 +399,6 @@ static int32_t Pmic_validate_tps6594x_pGoodVccaBuckLDOSrcType(uint16_t pgoodSrc,
     return status;
 }
 
-/*!
- * \brief   This function is to validate the power good source limit for the
- *          specific PMIC device.
- */
 int32_t Pmic_validate_tps6594x_pGoodSrcType(uint16_t pgoodSrc)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -517,14 +473,6 @@ static int32_t Pmic_validate_tps6594x_pGoodSelBuckLdoNrstoutNrstoutsoc(uint8_t p
     return status;
 }
 
-/*!
- * \brief   This function is to validate the power good signal source selection
- *          limit for the specific PMIC device.
- *
- *          Note: In this API, While adding support for New pGoodSrcType,
- *                developer need to update the API functionality for New
- *                pGoodSrcType accordingly.
- */
 int32_t Pmic_validate_tps6594x_pGoodSelType(uint16_t pgoodSrc, uint8_t pgoodSelType)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -629,23 +577,6 @@ static int32_t Pmic_powerGetLdoRtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle, boo
     return status;
 }
 
-/*!
- * \brief   API to enable/disable LDORTC regulator
- *
- * Requirement: REQ_TAG(PDK-5841)
- * Design: did_pmic_power_cfg_readback
- * Architecture: aid_pmic_power_cfg
- *
- *          This function is used to enable/disable LDORTC regulator.
- *
- * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
- * \param   ldortcEnable       [IN]    Enable/Disable the LDORTC.
- *                                     Valid values:
- *                                     \ref Pmic_Tps6594x_PowerLdoRtcCfg
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_powerSetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle, bool ldortcEnable)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -663,24 +594,6 @@ int32_t Pmic_powerSetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle, bool ldortcEnabl
     return pmicStatus;
 }
 
-/*!
- * \brief   API to get enable/disable status for LODRTC regulator
- *
- * Requirement: REQ_TAG(PDK-5841)
- * Design: did_pmic_power_cfg_readback
- * Architecture: aid_pmic_power_cfg
- *
- *          This function is used to get enable/disable status for LDORTC
- *          regulator.
- *
- * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
- * \param   pLdortcEnable      [IN]    Pointer to hold Enable/Disable status.
- *                                     Valid values:
- *                                     \ref Pmic_Tps6594x_PowerLdoRtcCfg
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_powerGetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle, bool *pLdortcEnable)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -703,14 +616,6 @@ int32_t Pmic_powerGetLdoRtc(Pmic_CoreHandle_t *pPmicCoreHandle, bool *pLdortcEna
     return pmicStatus;
 }
 
-/**
- * \brief   This function is used to validate the voltage levels for
- *          Regulators/VMON for TPS6594x PMIC
- *
- *          Note: In this API, While adding support for New pwrRsrcType,
- *                developer need to update the API functionality for New
- *                pwrRsrcType accordingly.
- */
 int32_t Pmic_powerTPS6594xValidateVoltageLevel(uint8_t pwrRsrcType, uint16_t pwrRsrc, uint16_t voltage_mV)
 {
     int32_t  status = PMIC_ST_SUCCESS;
@@ -745,10 +650,6 @@ int32_t Pmic_powerTPS6594xValidateVoltageLevel(uint8_t pwrRsrcType, uint16_t pwr
     return status;
 }
 
-/*!
- * \brief   This function is to validate the power resource limit for the
- *          TPS6594x PMIC device.
- */
 int32_t
 Pmic_powerTPS6594xValidatePwrRsrcLimit(const Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t pwrRsrcType, uint16_t pwrRsrc)
 {
@@ -797,14 +698,6 @@ Pmic_powerTPS6594xValidatePwrRsrcLimit(const Pmic_CoreHandle_t *pPmicCoreHandle,
     return status;
 }
 
-/*!
- * \brief   This function is to validate the power resource interrupt type
- *          for the TPS6594x PMIC device.
- *
- *          Note: In this API, While adding support for New pwrResourceType,
- *                developer need to update the API functionality for New
- *                pwrResourceType accordingly.
- */
 int32_t Pmic_powerTPS6594xValidateIntrType(uint8_t pwrResourceType, uint8_t intrType)
 {
     int32_t status = PMIC_ST_SUCCESS;

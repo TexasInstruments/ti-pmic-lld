@@ -38,12 +38,20 @@
  *          setting/getting the configurations of the ADC, starting ADC
  *          conversions, getting ADC status, and getting ADC result.
  */
-#include "../include/pmic_types.h"
-#include "../include/pmic_adc.h"
+#include "pmic_types.h"
+#include "pmic_adc.h"
 #include "pmic_core_priv.h"
 #include "pmic_io_priv.h"
-#include "cfg/tps6522x/pmic_adc_tps6522x_priv.h"
+#include "pmic_adc_tps6522x_priv.h"
 
+/**
+ *  \brief      This function is used to verify the PMIC handle that is passed into ADC APIs.
+ *
+ *  \param      pPmicCoreHandle     [IN]    PMIC interface handle
+ *
+ *  \return     Success code if PMIC handle is valid, error code otherwise.
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
 static int32_t Pmic_ADCParamCheck_pmicHandle(Pmic_CoreHandle_t *pPmicCoreHandle)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -63,19 +71,14 @@ static int32_t Pmic_ADCParamCheck_pmicHandle(Pmic_CoreHandle_t *pPmicCoreHandle)
     return status;
 }
 
-static int32_t Pmic_ADCParamCheck_constAdcCfg(const Pmic_adcCfg_t adcCfg)
-{
-    int32_t status = PMIC_ST_SUCCESS;
-
-    // No validParams
-    if (adcCfg.validParams == 0)
-    {
-        status = PMIC_ST_ERR_INV_PARAM;
-    }
-
-    return status;
-}
-
+/**
+ *  \brief      This function is used to verify whether an ADC CFG reference is valid.
+ *
+ *  \param      pAdcCfg     [IN]    Pointer to ADC configuration struct
+ *
+ *  \return     Success code if ADC CFG reference is valid, error code otherwise.
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
 static int32_t Pmic_ADCParamCheck_pAdcCfg(Pmic_adcCfg_t *pAdcCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -102,9 +105,9 @@ int32_t Pmic_ADCSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_
 
     // Parameter check
     status = Pmic_ADCParamCheck_pmicHandle(pPmicCoreHandle);
-    if (status == PMIC_ST_SUCCESS)
+    if ((status == PMIC_ST_SUCCESS) && (adcCfg.validParams == 0))
     {
-        status = Pmic_ADCParamCheck_constAdcCfg(adcCfg);
+        status = PMIC_ST_ERR_INV_PARAM;
     }
 
     // Start critical section before read-modify-write
@@ -197,12 +200,37 @@ int32_t Pmic_ADCGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_adcCfg
     return status;
 }
 
+/**
+ *  \brief      This function is used to check whether the ADC_CONT_CONV bit is set
+ *              within the ADC_CTRL register.
+ *
+ *  \param      adcCtrlRegData      [IN]        ADC_CTRL register data
+ *
+ *  \return     Success code if ADC_CONT_CONV bit is zero, PMIC_ST_ERR_ADC_CONT_CONV_EN error
+ *              code otherwise.
+ */
+static int32_t Pmic_ADCContConvCheck(const uint8_t adcCtrlRegData)
+{
+    Pmic_adcContConv_t contConv = PMIC_ADC_CONTINUOUS_CONVERSION_DISABLED;
+
+    contConv = (Pmic_adcContConv_t)Pmic_getBitField(
+        adcCtrlRegData, PMIC_ADC_CTRL_CONT_CONV_SHIFT, PMIC_ADC_CTRL_CONT_CONV_MASK);
+
+    if (contConv == PMIC_ADC_CONTINUOUS_CONVERSION_ENABLED)
+    {
+        return PMIC_ST_ERR_ADC_CONT_CONV_EN;
+    }
+    else
+    {
+        return PMIC_ST_SUCCESS;
+    }
+}
+
 int32_t Pmic_ADCStartSingleConversion(Pmic_CoreHandle_t *pPmicCoreHandle)
 {
-    int32_t            status = PMIC_ST_SUCCESS;
-    uint8_t            adcCtrlRegData = 0;
-    bool               adcBusy = false;
-    Pmic_adcContConv_t contConv = PMIC_ADC_CONTINUOUS_CONVERSION_DISABLED;
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t adcCtrlRegData = 0;
+    bool    adcBusy = false;
 
     // Parameter check
     status = Pmic_ADCParamCheck_pmicHandle(pPmicCoreHandle);
@@ -219,15 +247,10 @@ int32_t Pmic_ADCStartSingleConversion(Pmic_CoreHandle_t *pPmicCoreHandle)
     // Check if continuous conversion is enabled; return error if it is enabled
     if (status == PMIC_ST_SUCCESS)
     {
-        contConv = (Pmic_adcContConv_t)Pmic_getBitField(
-            adcCtrlRegData, PMIC_ADC_CTRL_CONT_CONV_SHIFT, PMIC_ADC_CTRL_CONT_CONV_MASK);
-        if (contConv == PMIC_ADC_CONTINUOUS_CONVERSION_ENABLED)
-        {
-            status = PMIC_ST_ERR_ADC_CONT_CONV_EN;
-        }
+        status = Pmic_ADCContConvCheck(adcCtrlRegData);
     }
 
-    // If ADC is not busy, set the start bit
+    // Check if ADC is busy; set the start bit if ADC not busy
     adcBusy = (bool)Pmic_getBitField(adcCtrlRegData, PMIC_ADC_CTRL_STATUS_SHIFT, PMIC_ADC_CTRL_STATUS_MASK);
     if ((status == PMIC_ST_SUCCESS) && !adcBusy)
     {
@@ -248,15 +271,16 @@ int32_t Pmic_ADCStartSingleConversion(Pmic_CoreHandle_t *pPmicCoreHandle)
 
 int32_t Pmic_ADCStartSingleConversionBlocking(Pmic_CoreHandle_t *pPmicCoreHandle)
 {
-    int32_t            status = PMIC_ST_SUCCESS;
-    uint8_t            adcCtrlRegData = 0;
-    bool               adcBusy = true;
-    Pmic_adcContConv_t contConv = PMIC_ADC_CONTINUOUS_CONVERSION_DISABLED;
+    uint8_t       iter = 0;
+    const uint8_t maxIter = 50;
+    int32_t       status = PMIC_ST_SUCCESS;
+    uint8_t       adcCtrlRegData = 0;
+    bool          adcBusy = true;
 
     // Parameter check
     status = Pmic_ADCParamCheck_pmicHandle(pPmicCoreHandle);
 
-    // Start critical section before serial comm. operations
+    // Start critical section before reading
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     // Read ADC_CTRL register
@@ -268,44 +292,35 @@ int32_t Pmic_ADCStartSingleConversionBlocking(Pmic_CoreHandle_t *pPmicCoreHandle
     // Check if continuous conversion is enabled; return error if it is enabled
     if (status == PMIC_ST_SUCCESS)
     {
-        contConv = (Pmic_adcContConv_t)Pmic_getBitField(
-            adcCtrlRegData, PMIC_ADC_CTRL_CONT_CONV_SHIFT, PMIC_ADC_CTRL_CONT_CONV_MASK);
-        if (contConv == PMIC_ADC_CONTINUOUS_CONVERSION_ENABLED)
-        {
-            status = PMIC_ST_ERR_ADC_CONT_CONV_EN;
-        }
+        status = Pmic_ADCContConvCheck(adcCtrlRegData);
     }
 
-    // Wait while ADC is busy
-    while (adcBusy)
+    // Stop critical section after reading
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    // Wait while ADC is busy and max iterations has not been met
+    while ((status == PMIC_ST_SUCCESS) && adcBusy && ((iter++) != maxIter))
     {
-        if (status == PMIC_ST_SUCCESS)
-        {
-            adcBusy = (bool)Pmic_getBitField(adcCtrlRegData, PMIC_ADC_CTRL_STATUS_SHIFT, PMIC_ADC_CTRL_STATUS_MASK);
-            if (!adcBusy)
-            {
-                break;
-            }
-            else
-            {
-                status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_ADC_CTRL_REGADDR, &adcCtrlRegData);
-            }
-        }
+        status = Pmic_ADCGetStatus(pPmicCoreHandle, &adcBusy);
     }
 
-    // Once ADC is idle, set the ADC start bit
+    // Check if max iterations have been met
+    if ((status == PMIC_ST_SUCCESS) && (iter >= maxIter))
+    {
+        status = PMIC_ST_ERR_FAIL;
+    }
+
+    // Start critical section before writing
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    // Set the ADC start bit and write new ADC_CTRL value back to PMIC
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_setBitField(&adcCtrlRegData, PMIC_ADC_CTRL_START_SHIFT, PMIC_ADC_CTRL_START_MASK, PMIC_ADC_START);
-    }
-
-    // Write new ADC_CTRL value back to PMIC
-    if (status == PMIC_ST_SUCCESS)
-    {
         status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_ADC_CTRL_REGADDR, adcCtrlRegData);
     }
 
-    // Stop critical section after serial comm. operations
+    // Stop critical section after writing
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return status;
@@ -375,9 +390,9 @@ int32_t Pmic_ADCGetResultCode(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t *pAdc
 
     // Combine bits 11-4 and 3-0 and store the value
     // at the location that pAdcResult is pointing to
-    *pAdcResult = (adcResultReg1Data << 4) | Pmic_getBitField(adcResultReg2Data,
-                                                              PMIC_ADC_RESULT_REG_2_ADC_RESULT_3_0_SHIFT,
-                                                              PMIC_ADC_RESULT_REG_2_ADC_RESULT_3_0_MASK);
+    *pAdcResult = ((uint16_t)adcResultReg1Data << 4) | Pmic_getBitField(adcResultReg2Data,
+                                                                        PMIC_ADC_RESULT_REG_2_ADC_RESULT_3_0_SHIFT,
+                                                                        PMIC_ADC_RESULT_REG_2_ADC_RESULT_3_0_MASK);
 
     // Stop critical section after reading
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -385,12 +400,28 @@ int32_t Pmic_ADCGetResultCode(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t *pAdc
     return status;
 }
 
+/**
+ *  \brief      This function is used to convert an ADC result code to microvolts.
+ *
+ *  \param      adcResultCode   [IN]    ADC result code that is generated after an ADC conversion
+ *  \param      adcRDivEn       [IN]    ADC resistor divider enable
+ *  \param      pAdcResult      [OUT]   ADC result in microvolts
+ */
 static inline void
-adcConvertCodeToMicroVoltage(const uint16_t adcResultCode, const Pmic_adcRDivEn_t adcRDivEn, int32_t *pAdcResult)
+adcConvertCodeToMicroVolts(const uint16_t adcResultCode, const Pmic_adcRDivEn_t adcRDivEn, int32_t *pAdcResult)
 {
-    // Inverse of ADC Output equation for voltage (equation found in TRM), multiplied
-    // by 10^6 to provide more precision and reduce impact of integer truncation
-    *pAdcResult = (1200000 * adcResultCode) / 4095;
+    // ADC result code is 12 bits. If adcResultCode exceeds maximum 12-bit value,
+    // set ADC result to be maximum microvolts
+    if (adcResultCode >= 4095)
+    {
+        *pAdcResult = 1200000;
+    }
+    else
+    {
+        // Inverse of ADC output equation for voltage (equation found in TRM), multiplied
+        // by 10^6 to provide more precision and reduce impact of integer truncation
+        *pAdcResult = (int32_t)((1200000.0 / 4095.0) * adcResultCode);
+    }
 
     if (adcRDivEn == PMIC_ADC_RESISTOR_DIVIDER_ENABLED)
     {
@@ -398,11 +429,16 @@ adcConvertCodeToMicroVoltage(const uint16_t adcResultCode, const Pmic_adcRDivEn_
     }
 }
 
+/**
+ *  \brief      This function is used to convert an ADC result code to temperature (degrees celsius)
+ *
+ *  \param      adcResultCode   [IN]    ADC result code that is generated after an ADC conversion
+ *  \param      pAdcResult      [OUT]   ADC result in degrees celsius
+ */
 static inline void adcConvertCodeToTemp(const uint16_t adcResultCode, int32_t *pAdcResult)
 {
-    // Inverse of ADC Output equation for temperature (equation found in TRM)
-    *pAdcResult =
-        (float)(((float)(1200) / (float)(4095 * (float)1.201)) * adcResultCode) - (float)(335 / (float)1.201) + 27;
+    // Inverse of ADC output equation for temperature (equation found in TRM)
+    *pAdcResult = (int32_t)(((1200.0 / (4095.0 * 1.201)) * (float)adcResultCode) - (335.0 / 1.201) + 27.0);
 }
 
 int32_t Pmic_ADCGetResult(Pmic_CoreHandle_t *pPmicCoreHandle, int32_t *pAdcResult)
@@ -453,7 +489,7 @@ int32_t Pmic_ADCGetResult(Pmic_CoreHandle_t *pPmicCoreHandle, int32_t *pAdcResul
         // If ADC conversion source is ADC input, convert ADC result code to voltage
         if (thermalSel == PMIC_ADC_THERMAL_SEL_ADC_INPUT)
         {
-            adcConvertCodeToMicroVoltage(adcResultCode, adcRDivEn, pAdcResult);
+            adcConvertCodeToMicroVolts(adcResultCode, adcRDivEn, pAdcResult);
         }
         // Else, convert ADC result code to temperature
         else

@@ -1,22 +1,12 @@
 #include "tiva_priv.h"
 #include "tiva_timer.h"
 
-/**
- * \brief Function to initialize a timer handle.
- *
- * \param timerHandle [OUT] Handle to timer module
- */
 void initializeTimerHandle(timerHandle_t *timerHandle)
 {
     timerHandle->sysctlPeriphTimer = SYSCTL_PERIPH_TIMER0;
     timerHandle->timerBase = TIMER0_BASE;
 }
 
-/**
- * \brief Given a timer handle, this function initializes timer module 0 on the Tiva.
- *
- * \param timerHandle [IN] Handle to timer module
- */
 void initializeTimer(timerHandle_t *timerHandle)
 {
     // Enable the target timer peripheral
@@ -31,12 +21,6 @@ void initializeTimer(timerHandle_t *timerHandle)
     TimerDisable(timerHandle->timerBase, TIMER_BOTH);
 }
 
-/**
- * \brief This function is used to generate a specified delay in milliseconds
- *
- * \param timerHandle   [IN]    Handle to timer module
- * \param milliseconds  [IN]    Duration of delay in milliseconds
- */
 void delayTimeInMs(timerHandle_t *timerHandle, uint16_t milliseconds)
 {
     uint32_t cycles = 0;

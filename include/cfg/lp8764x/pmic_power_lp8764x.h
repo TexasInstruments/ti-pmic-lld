@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -68,7 +68,7 @@ extern "C"
 #define PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK                       (1U)
 #define PMIC_LP8764X_POWER_RESOURCE_TYPE_LDO                        (2U)
 #define PMIC_LP8764X_POWER_RESOURCE_TYPE_VMON                       (3U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_Lp8764xHera_Power_Resource
@@ -83,7 +83,7 @@ extern "C"
 #define PMIC_LP8764X_REGULATOR_BUCK4                                ((((uint16_t)PMIC_LP8764X_POWER_RESOURCE_TYPE_BUCK << 8U) | 0x4U))
 #define PMIC_LP8764X_POWER_SOURCE_VMON1                             ((((uint16_t)PMIC_LP8764X_POWER_RESOURCE_TYPE_VMON << 8U) | 0x5U))
 #define PMIC_LP8764X_POWER_SOURCE_VMON2                             ((((uint16_t)PMIC_LP8764X_POWER_RESOURCE_TYPE_VMON << 8U) | 0x6U))
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Regulator_Vmon_RV_Check
@@ -97,7 +97,7 @@ extern "C"
 #define PMIC_LP8764X_REGULATOR_VMON_RV_SEL_ENABLE                   (0x1U)
 /** \brief Used to disable the residual voltage check */
 #define PMIC_LP8764X_REGULATOR_VMON_RV_SEL_DISABLE                  (0x0U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Buck_Pull_Down_Resistor
@@ -109,7 +109,7 @@ extern "C"
 #define PMIC_LP8764X_REGULATOR_BUCK_PLDN_ENABLE                     (0x1U)
 /** \brief Used to disable the pull down resistor for BUCK regulator */
 #define PMIC_LP8764X_REGULATOR_BUCK_PLDN_DISABLE                    (0x0U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Vmon_Enable
@@ -123,7 +123,7 @@ extern "C"
 #define PMIC_LP8764X_VMON_DISABLE                                   (0x0U)
 /** \brief Used to enable the voltage monitor */
 #define PMIC_LP8764X_VMON_ENABLE                                    (0x1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Regulator_Buck_Vout_Sel
@@ -137,7 +137,7 @@ extern "C"
 #define PMIC_LP8764X_REGULATOR_BUCK_VOUT_SEL_VOUT2                  (bool)true
 /** \brief Used to select VOUT1 register for voltage selection */
 #define PMIC_LP8764X_REGULATOR_BUCK_VOUT_SEL_VOUT1                  (bool)false
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Regulator_Pwm_Pfm_Mode
@@ -152,7 +152,7 @@ extern "C"
 #define PMIC_LP8764X_REGULATOR_PWM_MODE                             (0x1U)
 /** \brief Used to select Automatic transition between PFM and PWM modes */
 #define PMIC_LP8764X_REGULATOR_AUTO_PWM_PFM_MODE                    (0x0U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor PMIC_LP8764X_Regulator_Pwm_Mp_Mode
@@ -167,7 +167,7 @@ extern "C"
 #define PMIC_LP8764X_REGULATOR_PWM_MP_MODE                          (0x1U)
 /** \brief Used to select Automatic phase adding and shedding mode */
 #define PMIC_LP8764X_REGULATOR_AUTO_PHASE_MODE                      (0x0U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Buck_Regulator_enable
@@ -179,7 +179,7 @@ extern "C"
 #define PMIC_LP8764X_BUCK_REGULATOR_ENABLE                          (0x1U)
 /** \brief Used to disable the BUCK regulator */
 #define PMIC_LP8764X_BUCK_REGULATOR_DISABLE                         (0x0U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Vmon_DeglitchTime_Sel
@@ -191,7 +191,7 @@ extern "C"
 #define PMIC_LP8764X_POWER_RESOURCE_DEGLITCH_SEL_4US                (0x0U)
 /** \brief Used to select the degitch time as 20 usec */
 #define PMIC_LP8764X_POWER_RESOURCE_DEGLITCH_SEL_20US               (0x1U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_VccaPowerGoodLimit
@@ -203,7 +203,7 @@ extern "C"
 #define PMIC_LP8764X_VCCA_PG_3V3_LEVEL                              (0x0U)
 /** \brief Used to select the powergood level for VCCA to be 5v */
 #define PMIC_LP8764X_VCCA_PG_5V_LEVEL                               (0x1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Power_Vmon_Range
@@ -215,7 +215,7 @@ extern "C"
 #define PMIC_LP8764X_VMON_RANGE_0V3_3V34                            (bool)false
 /** \brief Used to select range 3.5 -5V */
 #define PMIC_LP8764X_VMON_RANGE_3V35_5V                             (bool)true
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Buck_Current_Limit
@@ -233,7 +233,7 @@ extern "C"
 #define PMIC_LP8764X_REGULATOR_BUCK_CURRENT_LIMIT_5A5               (0x5U)
 /** \brief Used to configure BUCK current limit as 6.5 Ampere */
 #define PMIC_LP8764X_REGULATOR_BUCK_CURRENT_LIMIT_6A5               (0x6U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Buck_Vmon_Slew_Rate
@@ -257,7 +257,7 @@ extern "C"
 #define PMIC_LP8764X_REGULATOR_BUCK_VMON_SLEW_RATE_0MV63            (0x6U)
 /** \brief Used to configure BUCK current limit as 0.31mv */
 #define PMIC_LP8764X_REGULATOR_BUCK_VMON_SLEW_RATE_0MV31            (0x7U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Pg_Ov_Uv_Threshold_lvl
@@ -301,7 +301,7 @@ extern "C"
  *         +/-10%
  */
 #define PMIC_LP8764X_PG_OV_UV_THRESHOLD_LVL_100_OR_10               (7U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Power_Rail_Sel
@@ -321,7 +321,7 @@ extern "C"
 #define PMIC_LP8764X_POWER_RAIL_SEL_SOC                             (0x2U)
 /** \brief Used to select rail group as other rail group */
 #define PMIC_LP8764X_POWER_RAIL_SEL_OTHER                           (0x3U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_Lp8764xHera_Pgood_SourceType
@@ -336,7 +336,7 @@ extern "C"
 #define PMIC_LP8764X_PGOOD_SOURCE_TYPE_TDIE                         (4U)
 /* LDO type is not supported by HERA LP8764X PMIC */
 #define PMIC_LP8764X_PGOOD_SOURCE_TYPE_VMON                         (6U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_Lp8764xHera_Pgood_Source
@@ -354,7 +354,7 @@ extern "C"
 #define PMIC_LP8764X_PGOOD_SOURCE_TDIE                              ((((uint16_t)PMIC_LP8764X_PGOOD_SOURCE_TYPE_TDIE << 8U) | 7U))
 #define PMIC_LP8764X_PGOOD_SOURCE_VMON1                             ((((uint16_t)PMIC_LP8764X_PGOOD_SOURCE_TYPE_VMON << 8U) | 8U))
 #define PMIC_LP8764X_PGOOD_SOURCE_VMON2                             ((((uint16_t)PMIC_LP8764X_PGOOD_SOURCE_TYPE_VMON << 8U) | 9U))
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Power_Good_Window
@@ -366,7 +366,7 @@ extern "C"
 #define PMIC_LP8764X_POWER_GOOD_UV_MONITOR_ENABLE                   (0x0U)
 /** \brief Both undervoltage and overvoltage are monitored */
 #define PMIC_LP8764X_POWER_GOOD_UV_OV_MONITOR_ENABLE                (0x1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Power_Good_Polarity
@@ -378,7 +378,7 @@ extern "C"
 #define PMIC_LP8764X_POWER_PGOOD_POL_HIGH                           (0x0U)
 /** \brief PGOOD signal is low when monitored inputs are valid */
 #define PMIC_LP8764X_POWER_PGOOD_POL_LOW                            (0x1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Power_Good_Nrstout_Soc
@@ -390,7 +390,7 @@ extern "C"
 #define PMIC_LP8764X_POWER_PGOOD_SEL_NRSTOUT_SOC_MASKED             (0x0U)
 /** \brief nRSTOUT_SOC pin low state forces PGOOD signal to low */
 #define PMIC_LP8764X_POWER_PGOOD_SEL_NRSTOUT_SOC                    (0x1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Power_Good_Nrstout
@@ -402,7 +402,7 @@ extern "C"
 #define PMIC_LP8764X_POWER_PGOOD_SEL_NRSTOUT_MASKED                 (0x0U)
 /** \brief nRSTOUT pin low state forces PGOOD signal to low */
 #define PMIC_LP8764X_POWER_PGOOD_SEL_NRSTOUT                        (0x1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Power_Good_Thermal_Warn
@@ -414,7 +414,7 @@ extern "C"
 #define PMIC_LP8764X_POWER_PGOOD_SEL_TDIE_WARN_MASKED               (0x0U)
 /** \brief Thermal warning affecting to PGOOD signal */
 #define PMIC_LP8764X_POWER_PGOOD_SEL_TDIE_WARN                      (0x1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Power_Good_Vcca_Vmon
@@ -426,7 +426,7 @@ extern "C"
 #define PMIC_LP8764X_POWER_PGOOD_SEL_VCCA_VMON_DISABLE              (0x0U)
 /** \brief VCCA/VMON OV/UV threshold affecting PGOOD signal */
 #define PMIC_LP8764X_POWER_PGOOD_SEL_VCCA_VMON_ENABLE               (0x1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Power_Good_Buck_Signal
@@ -440,7 +440,7 @@ extern "C"
 #define PMIC_LP8764X_POWER_PGOOD_SEL_SRC_VOLTAGE                    (0x1U)
 /** \brief Powergood threshold voltage AND current limit */
 #define PMIC_LP8764X_POWER_PGOOD_SEL_SRC_VOLTAGE_CURRENT            (0x2U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Power_Current_Status
@@ -454,7 +454,7 @@ extern "C"
 /** \brief Status indicating that output current is below current limit
            level. */
 #define PMIC_LP8764X_POWER_CURRENT_LIMIT_STATUS_BELOW_LIMIT         (0x1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Regulator_Under_Voltage_Status
@@ -471,7 +471,7 @@ extern "C"
            threshold
 */
 #define PMIC_LP8764X_REGULATOR_OUTPUT_UNDER_VOLTAGE_STATUS_BELOW_UV (0x1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Vcca_Vmon_Under_Voltage_Status
@@ -486,7 +486,7 @@ level */
 /** \brief Status indicating that input voltage is below under-voltage
 level */
 #define PMIC_LP8764X_VCCA_VMON_INPUT_UNDER_VOLTAGE_STATUS_BELOW_UV  (0x1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Regulator_Over_Voltage_Status
@@ -503,7 +503,7 @@ level */
            threshold
 */
 #define PMIC_LP8764X_REGULATOR_OUTPUT_OVER_VOLTAGE_STATUS_BELOW_OV  (0x1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Vcca_Vmon_Over_Voltage_Status
@@ -518,7 +518,7 @@ level */
 /** \brief Status indicating that input voltage is below over-voltage
 level */
 #define PMIC_LP8764X_VCCA_VMON_INPUT_OVER_VOLTAGE_STATUS_BELOW_OV   (0x1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Vcca_Voltage_Status
@@ -533,7 +533,7 @@ level */
 /** \brief Status indicating that voltage is below over-voltage protection
 level */
 #define PMIC_LP8764X_VCCA_OVER_VOLTAGE_LVL_STATUS_BELOW_OV          (0x1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Power_Thermal_Shutdown_Level
@@ -545,7 +545,7 @@ level */
 #define PMIC_LP8764X_THERMAL_TEMP_TSD_ORD_140C                      (0U)
 /** \brief Used to set the Thermal shutdown threshold level to 145 Celsius */
 #define PMIC_LP8764X_THERMAL_TEMP_TSD_ORD_145C                      (1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_Pwr_Thermal_Warn_Lvl
@@ -557,7 +557,7 @@ level */
 #define PMIC_LP8764X_THERMAL_TEMP_WARN_120C                         (0U)
 /** \brief Used to set the Thermal warning threshold level to 130 Celsius */
 #define PMIC_LP8764X_THERMAL_TEMP_WARN_130C                         (1U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_PowerInterruptType
@@ -568,7 +568,7 @@ level */
 #define PMIC_LP8764X_POWER_OV_INT                                   (0U)
 #define PMIC_LP8764X_POWER_UV_INT                                   (1U)
 #define PMIC_LP8764X_POWER_ILIM_INT                                 (3U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_LP8764x_PowerInterruptCommonType
@@ -584,7 +584,7 @@ level */
 #define PMIC_LP8764X_POWER_INTERRUPT_IMM_SHUTDOWN                   (5U)
 #define PMIC_LP8764X_POWER_INTERRUPT_NRSTOUT_SOC_READBACK           (6U)
 #define PMIC_LP8764X_POWER_INTERRUPT_EN_DRV_READBACK                (7U)
-/*  @} */
+/** @} */
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
@@ -600,4 +600,4 @@ level */
 
 #endif /* PMIC_POWER_LP8764X_H_ */
 
-/* @} */
+/** @} */

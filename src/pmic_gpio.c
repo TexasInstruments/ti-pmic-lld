@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -39,15 +39,15 @@
  *
  */
 
-#include "../include/pmic_types.h"
-#include "../include/pmic_gpio.h"
-#include "../include/pmic_irq.h"
+#include "pmic_types.h"
+#include "pmic_gpio.h"
+#include "pmic_irq.h"
 
 #include "pmic_core_priv.h"
 #include "pmic_io_priv.h"
-#include "cfg/tps6522x/pmic_gpio_tps6522x_priv.h"
-#include "cfg/tps6594x/pmic_gpio_tps6594x_priv.h"
-#include "cfg/lp8764x/pmic_gpio_lp8764x_priv.h"
+#include "pmic_gpio_tps6522x_priv.h"
+#include "pmic_gpio_tps6594x_priv.h"
+#include "pmic_gpio_lp8764x_priv.h"
 
 /*!
  * \brief   This function is used to get the PMIC GPIO configuration.
@@ -228,9 +228,6 @@ Pmic_gpioSelectRegister(uint8_t pmicDeviceType, const uint8_t pin, const uint8_t
     }
 }
 
-/*!
- * \brief   This function is used to set the GPIO and NPWRON Pin Functionality
- */
 int32_t Pmic_gpioSetPinFunc(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, const Pmic_GpioCfg_t gpioCfg)
 {
     int32_t              status = PMIC_ST_SUCCESS;
@@ -295,9 +292,6 @@ int32_t Pmic_gpioSetPinFunc(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pi
     return status;
 }
 
-/*!
- * \brief   This function is used to get the GPIO and NPWRON Pin Functionality
- */
 int32_t Pmic_gpioGetPinFunc(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, Pmic_GpioCfg_t *pGpioCfg)
 {
     int32_t              status = PMIC_ST_SUCCESS;
@@ -342,14 +336,6 @@ int32_t Pmic_gpioGetPinFunc(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pi
     return status;
 }
 
-/*!
- * \brief   This function is used to set the NPWRON Pin Polarity.
- *
- *          Note: In this API, the default PMIC device is assumed as TPS6594x
- *                LEO PMIC. While adding support for New PMIC device, developer
- *                need to update the API functionality for New PMIC device
- *                accordingly.
- */
 int32_t Pmic_gpioSetPinPolarity(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_GpioCfg_t gpioCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -393,14 +379,6 @@ int32_t Pmic_gpioSetPinPolarity(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_G
     return status;
 }
 
-/*!
- * \brief   This function is used to get the NPWRON Pin Polarity.
- *
- *          Note: In this API, the default PMIC device is assumed as TPS6594x
- *                LEO PMIC. While adding support for New PMIC device, developer
- *                need to update the API functionality for New PMIC device
- *                accordingly.
- */
 int32_t Pmic_gpioGetPinPolarity(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_GpioCfg_t *pGpioCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -520,9 +498,6 @@ static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle, const ui
     return status;
 }
 
-/*!
- * \brief   This function is used to get the GPIO and NPWRON Pin Pull Control
- */
 int32_t Pmic_gpioGetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, Pmic_GpioCfg_t *pGpioCfg)
 {
     int32_t              status = PMIC_ST_SUCCESS;
@@ -697,9 +672,6 @@ Pmic_gpioSetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, 
     return status;
 }
 
-/*!
- * \brief   This function is used to get the GPIO and NPWRON Deglitch time
- */
 int32_t Pmic_gpioGetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, Pmic_GpioCfg_t *pGpioCfg)
 {
     int32_t              status = PMIC_ST_SUCCESS;
@@ -936,35 +908,6 @@ static int32_t Pmic_gpioSetDeglitchOutsigtypePulCtrlCfg(Pmic_CoreHandle_t   *pPm
     return status;
 }
 
-/*!
- * \brief   API to set PMIC GPIO configuration.
- *
- * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-5844), REQ_TAG(PDK-9111),
- *              REQ_TAG(PDK-9157)
- * Design: did_pmic_gpio_cfg_readback, did_pmic_lpstandby_wkup_cfg
- * Architecture: aid_pmic_gpio_cfg
- *
- *          This function is used to set the required configuration for the
- *          specified GPIO pin when corresponding validParam bit field is set in
- *          the Pmic_GpioCfg_t
- *          For more information \ref Pmic_GpioCfg_t
- *          Note: Application has to ensure to do proper configuration of GPIO
- *                pin when connected to Enable pin of other peripherals on the
- *                board. If not configured properly then it may down the
- *                peripheral or system
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- * \param   pin             [IN]    PMIC GPIO pin number.
- *                                   Valid values for TPS6594x Leo Device
- *                                   \ref Pmic_Tps6594xLeo_GpioPin.
- *                                   Valid values for LP8764x HERA Device
- *                                   \ref Pmic_Lp8764xHera_GpioPin.
- * \param   gpioCfg         [IN]    set required configuration for
- *                                  the specified GPIO pin.
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, const Pmic_GpioCfg_t gpioCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -995,30 +938,6 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const uint
     return status;
 }
 
-/*!
- * \brief   API to get PMIC GPIO configuration.
- *
- * Requirement: REQ_TAG(PDK-5808)
- * Design: did_pmic_gpio_cfg_readback
- * Architecture: aid_pmic_gpio_cfg
- *
- *          This function is used to read the configuration for the specified
- *          GPIO pin when corresponding validParam bit field is set in
- *          the Pmic_GpioCfg_t
- *          For more information \ref Pmic_GpioCfg_t
- *
- * \param   pPmicCoreHandle [IN]     PMIC Interface Handle
- * \param   pin             [IN]     PMIC GPIO pin number.
- *                                    Valid values for TPS6594x Leo Device
- *                                    \ref Pmic_Tps6594xLeo_GpioPin.
- *                                    Valid values for LP8764x HERA Device
- *                                    \ref Pmic_Lp8764xHera_GpioPin.
- * \param   pGpioCfg        [IN/OUT] Pointer to store specified GPIO pin
- *                                   configuration
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, Pmic_GpioCfg_t *pGpioCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -1109,29 +1028,6 @@ static int32_t Pmic_gpioSetPinValue(Pmic_CoreHandle_t         *pPmicCoreHandle,
     return status;
 }
 
-/*!
- * \brief   API to set PMIC GPIO value.
- *
- * Requirement: REQ_TAG(PDK-5808)
- * Design: did_pmic_gpio_cfg_readback
- * Architecture: aid_pmic_gpio_cfg
- *
- *          This function is used to configure the signal level of the
- *          specified GPIO pin.
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- * \param   pin             [IN]    PMIC GPIO pin number.
- *                                   Valid values for TPS6594x Leo Device
- *                                   \ref Pmic_Tps6594xLeo_GpioPin.
- *                                   Valid values for LP8764x HERA Device
- *                                   \ref Pmic_Lp8764xHera_GpioPin.
- * \param   pinValue        [IN]    PMIC GPIO signal level High/Low to be
- *                                  configured.
- *                                  Valid values \ref Pmic_Gpio_SignalLvl.
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, const uint8_t pinValue)
 {
     int32_t              status = PMIC_ST_SUCCESS;
@@ -1160,27 +1056,6 @@ int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin,
     return status;
 }
 
-/*!
- * \brief   API to get PMIC GPIO value.
- *
- * Requirement: REQ_TAG(PDK-5808)
- * Design: did_pmic_gpio_cfg_readback
- * Architecture: aid_pmic_gpio_cfg
- *
- *          This function is used to read the signal level of the gpio pin
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
- * \param   pin             [IN]    PMIC GPIO pin number.
- *                                   Valid values for TPS6594x Leo Device
- *                                   \ref Pmic_Tps6594xLeo_GpioPin.
- *                                   Valid values for LP8764x HERA Device
- *                                   \ref Pmic_Lp8764xHera_GpioPin.
- * \param   pPinValue       [OUT]   To store PMIC GPIO signal level High/Low.
- *                                  Valid values \ref Pmic_Gpio_SignalLvl
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, uint8_t *pPinValue)
 {
     int32_t              status = PMIC_ST_SUCCESS;
@@ -1231,28 +1106,6 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin,
     return status;
 }
 
-/*!
- * \brief   API to set PMIC GPIO direction.
- *
- * Requirement: REQ_TAG(PDK-5808)
- * Design: did_pmic_gpio_cfg_readback
- * Architecture: aid_pmic_gpio_cfg
- *
- *          This function is used to configure the direction of the
- *          specified GPIO pin.
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- * \param   pin             [IN]    PMIC GPIO pin number.
- *                                   Valid values for TPS6594x Leo Device
- *                                   \ref Pmic_Tps6594xLeo_GpioPin.
- *                                   Valid values for LP8764x HERA Device
- *                                   \ref Pmic_Lp8764xHera_GpioPin.
- * \param   pinDir          [IN]    PMIC GPIO signal direction In/Out to be
- *                                  configured.
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_gpioSetDir(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, const uint8_t pinDir)
 {
     int32_t        status = PMIC_ST_SUCCESS;
@@ -1275,29 +1128,6 @@ int32_t Pmic_gpioSetDir(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, c
     return status;
 }
 
-/*!
- * \brief   API to enable/disable GPIO interrupt.
- *
- * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
- * Design: did_pmic_gpio_cfg_readback
- * Architecture: aid_pmic_gpio_cfg
- *
- *          This function is used to enable GPIO pin Interrupts
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- * \param   pin             [IN]    PMIC GPIO number.
- *                                   Valid values for TPS6594x Leo Device
- *                                   \ref Pmic_Tps6594xLeo_GpioPin.
- *                                   Valid values for LP8764x HERA Device
- *                                   \ref Pmic_Lp8764xHera_GpioPin.
- * \param   intrType        [IN]    Interrupt type \ref Pmic_GpioInterruptCfg
- * \param   maskPol         [IN]    FSM trigger masking polarity select for GPIO.
- *                                  Valid values
- *                                  \ref Pmic_GpioInterruptPolCfg.
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t
 Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, const uint8_t intrType, const uint8_t maskPol)
 {
@@ -1335,11 +1165,6 @@ Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, const ui
     return status;
 }
 
-/*!
- * \brief   This function is used to set the NPWRON/Enable deglitch time and
- *          NPWRON/Enable Pull UP/Down configuration
- *          Valid only for TPS6594x PMIC
- */
 int32_t Pmic_gpioSetNPwronEnableDeglitchPullCtrlCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_GpioCfg_t gpioCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -1376,31 +1201,6 @@ int32_t Pmic_gpioSetNPwronEnableDeglitchPullCtrlCfg(Pmic_CoreHandle_t *pPmicCore
     return status;
 }
 
-/*!
- * \brief   API to set configuration for NPWRON/Enable pin.
- *
- * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-9111), REQ_TAG(PDK-9162)
- * Design: did_pmic_gpio_cfg_readback
- * Architecture: aid_pmic_gpio_cfg
- *
- *          This function is used to set the required configuration for the
- *          NPWRON OR ENABLE pin when corresponding validParam bit field is set
- *          in the Pmic_GpioCfg_t
- *          For more information \ref Pmic_GpioCfg_t
- *          NPWRON is valid only for TPS6594x Leo Device.
- *
- *          Note: In this API, the default PMIC device is assumed as TPS6594x
- *                LEO PMIC. While adding support for New PMIC device, developer
- *                need to update the API functionality for New PMIC device
- *                accordingly.
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
- * \param   gpioCfg         [IN]    Set NPWRON or ENABLE GPIO pin
- *                                  configuration
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_gpioSetNPwronEnablePinConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_GpioCfg_t gpioCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -1425,31 +1225,6 @@ int32_t Pmic_gpioSetNPwronEnablePinConfiguration(Pmic_CoreHandle_t *pPmicCoreHan
     return status;
 }
 
-/*!
- * \brief   API to get configuration for NPWRON/Enable pin.
- *
- * Requirement: REQ_TAG(PDK-5808)
- * Design: did_pmic_gpio_cfg_readback
- * Architecture: aid_pmic_gpio_cfg
- *
- *          This function is used to read the configuration for the
- *          NPWRON OR ENABLE pin when corresponding validParam bit field is set
- *          in the Pmic_GpioCfg_t
- *          For more information \ref Pmic_GpioCfg_t
- *          NPWRON is valid only for TPS6594x Leo Device.
- *
- *          Note: In this API, the default PMIC device is assumed as TPS6594x
- *                LEO PMIC. While adding support for New PMIC device, developer
- *                need to update the API functionality for New PMIC device
- *                accordingly.
- *
- * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
- * \param   pGpioCfg        [IN/OUT]   Pointer to store NPWRON OR ENABLE GPIO
- *                                     pin configuration
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_gpioGetNPwronEnablePinConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_GpioCfg_t *pGpioCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -1491,24 +1266,6 @@ static int32_t Pmic_gpioEnPbVsenseParamCheck(Pmic_CoreHandle_t *pPmicCoreHandle,
     return status;
 }
 
-/*!
- * \brief   API to set configuration for EN/PB/VSENSE pin.
- *
- *          This function is used to set the required configuration for the
- *          EN/PB/VSENSE pin when corresponding validParam bit field is set
- *          in the Pmic_EnPbVsenseCfg_t
- *          For more information \ref Pmic_EnPbVsenseCfg_t
- *
- *          Note: In this API, the default PMIC device is assumed as TPS6522x
- *                BURTON PMIC. If adding support for a new PMIC device, the
- *                developer must update the API implementation for the new device.
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
- * \param   enPbVsenseCfg   [IN]    Set EN/PB/VSENSE pin configuration
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_gpioSetEnPbVsensePinConfiguration(Pmic_CoreHandle_t         *pPmicCoreHandle,
                                                const Pmic_EnPbVsenseCfg_t enPbVsenseCfg)
 {
@@ -1534,25 +1291,6 @@ int32_t Pmic_gpioSetEnPbVsensePinConfiguration(Pmic_CoreHandle_t         *pPmicC
     return status;
 }
 
-/*!
- * \brief   API to get configuration for EN/PB/VSENSE pin.
- *
- *          This function is used to read the configuration for the
- *          EN/PB/VSENSE pin when corresponding validParam bit field is set
- *          in the Pmic_EnPbVsenseCfg_t
- *          For more information \ref Pmic_EnPbVsenseCfg_t
- *
- *          Note: In this API, the default PMIC device is assumed as TPS6522x
- *                BURTON PMIC. If adding support for a new PMIC device, the
- *                developer must update the API implementation for the new device.
- *
- * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
- * \param   pEnPbVsenseCfg  [IN/OUT]   Pointer to store EN/PB/VSENSE
- *                                     pin configuration
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_gpioGetEnPbVsensePinConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_EnPbVsenseCfg_t *pEnPbVsenseCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -39,10 +39,10 @@
  *
  */
 
-#include "../../../include/pmic_types.h"
-#include "../../../include/pmic_gpio.h"
-#include "../../pmic_core_priv.h"
-#include "../../pmic_io_priv.h"
+#include "pmic_types.h"
+#include "pmic_gpio.h"
+#include "pmic_core_priv.h"
+#include "pmic_io_priv.h"
 #include "pmic_gpio_tps6594x_priv.h"
 
 // clang-format off
@@ -189,50 +189,16 @@ static Pmic_GpioIntRegCfg_t tps6594x_gpioIntRegCfg[] =
 };
 // clang-format on
 
-/*!
- * \brief  PMIC GPIO pin get Input Ouput Configuration function
- *         This function is used to read the PMIC GPIO Pins with Input Ouput
- *         Configuration
- *
- * \param  pGpioInOutCfg   [OUT]  Pointer to store gpio Input Ouput
- *                                configuration
- */
 void pmic_get_tps6594x_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg)
 {
     *pGpioInOutCfg = gTps6594x_gpioInOutCfg;
 }
 
-/*!
- * \brief  Get PMIC GPIO Pin Interrupt Register configuration
- *         This function is used to read the PMIC GPIO Interrupt Register
- *         configuration
- *
- * \param   pGpioIntRegCfg   [OUT]  Pointer to store gpio Interrupt Register
- *                                  configuration
- */
 void pmic_get_tps6594x_gpioIntRegCfg(Pmic_GpioIntRegCfg_t **pGpioIntRegCfg)
 {
     *pGpioIntRegCfg = tps6594x_gpioIntRegCfg;
 }
 
-/*!
- * \brief   API to get PMIC GPIO NPWRON pin value.
- *
- * Requirement: REQ_TAG(PDK-5808)
- * Design: did_pmic_gpio_cfg_readback
- * Architecture: aid_pmic_gpio_cfg
- *
- *          This function is used to read the signal level of the NPWRON/Enable
- *          pin.
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
- * \param   pPinValue       [OUT]   Pointer to store PMIC GPIO signal level
- *                                  High/Low.
- *                                  Valid values \ref Pmic_Gpio_SignalLvl
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_gpioTps6594xNPwronPinGetValue(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t *pPinValue)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -278,10 +244,6 @@ int32_t Pmic_gpioTps6594xNPwronPinGetValue(Pmic_CoreHandle_t *pPmicCoreHandle, u
     return status;
 }
 
-/*!
- * \brief   This function is used to configure NPWRON pin for TPS6594x
- *          PMIC LEO Device.
- */
 int32_t Pmic_gpioTps6594xSetNPwronPinConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_GpioCfg_t gpioCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -316,10 +278,6 @@ int32_t Pmic_gpioTps6594xSetNPwronPinConfiguration(Pmic_CoreHandle_t *pPmicCoreH
     return status;
 }
 
-/*!
- * \brief   This function is used to read NPWRON pin configuration for TPS6594x
- *          PMIC LEO Device.
- */
 int32_t Pmic_gpioTps6594xGetNPwronPinConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_GpioCfg_t *pGpioCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;

@@ -175,11 +175,11 @@ extern "C"
 /*! PMIC Max Interrupt Number */
 #define PMIC_TPS6522X_IRQ_MAX_NUM             (49U)
 
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_tps6522x_IrqGpioNum
- *  \name PMIC GPIO Interrupt Mask values for tps6522x.
+ *  \name PMIC GPIO Interrupt Mask Values for TPS6522x
  *
  *  @{
  */
@@ -190,7 +190,7 @@ extern "C"
 #define PMIC_TPS6522X_IRQ_GPIO_5_INT_MASK_NUM (4U)
 #define PMIC_TPS6522X_IRQ_GPIO_6_INT_MASK_NUM (5U)
 
-/* @} */
+/** @} */
 
 #ifdef __cplusplus
 }
@@ -198,4 +198,4 @@ extern "C"
 
 #endif /* PMIC_IRQ_TPS6522X_H_ */
 
-/* @} */
+/** @} */

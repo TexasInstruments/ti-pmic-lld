@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -39,14 +39,14 @@
  *
  */
 
-#include "../include/pmic_types.h"
-#include "../include/pmic_power.h"
+#include "pmic_types.h"
+#include "pmic_power.h"
 
 #include "pmic_core_priv.h"
 
-#include "cfg/tps6522x/pmic_power_tps6522x_priv.h"
-#include "cfg/tps6594x/pmic_power_tps6594x_priv.h"
-#include "cfg/lp8764x/pmic_power_lp8764x_priv.h"
+#include "pmic_power_tps6522x_priv.h"
+#include "pmic_power_tps6594x_priv.h"
+#include "pmic_power_lp8764x_priv.h"
 
 /*!
  * \brief   This function is used to validate BUCK power resource subtype for
@@ -560,10 +560,6 @@ static int32_t Pmic_powerGetRvCheckEn(Pmic_CoreHandle_t *pPmicCoreHandle, uint16
     return pmicStatus;
 }
 
-/*!
- * \brief   This function is used to convert the vset value to voltage in mv
-            for BUCK/VMON
- */
 void Pmic_powerBuckVmonConvertVSetVal2Voltage(const uint8_t *pVSetVal,
                                               uint16_t      *pBaseMillivolt,
                                               uint8_t       *pMillivoltStep,
@@ -595,11 +591,6 @@ void Pmic_powerBuckVmonConvertVSetVal2Voltage(const uint8_t *pVSetVal,
     }
 }
 
-/*!
- * \brief   This function is used to convert the vset value to voltage in mv
- *          when the selected voltage monitoring range for VMON is
- *          PMIC_LP8764X_VMON_RANGE_3V35_5V
- */
 void Pmic_powerVmonRange1ConvertVSetVal2Voltage(uint16_t *pBaseMillivolt,
                                                 uint8_t  *pMillivoltStep,
                                                 uint8_t  *pBaseVoutCode)
@@ -609,10 +600,6 @@ void Pmic_powerVmonRange1ConvertVSetVal2Voltage(uint16_t *pBaseMillivolt,
     *pBaseVoutCode = PMIC_POWER_VSET_VAL_0x1D;
 }
 
-/*!
- * \brief   This function is used to convert the vset value to voltage in mv
- *          for LDO
- */
 void Pmic_powerLdoConvertVSetVal2Voltage(uint16_t  pwrRsrc,
                                          uint16_t *pBaseMillivolt,
                                          uint8_t  *pMillivoltStep,
@@ -661,10 +648,6 @@ Pmic_powerConvertVolt(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t vSetVal, uint1
     return status;
 }
 
-/*!
- * \brief   This function is used to convert the millivolt value to vset value
- *          for BUCK/VMON (For VMON : When range = 0)
- */
 int32_t Pmic_powerBuckVmonConvertVoltage2VSetVal(uint16_t  millivolt,
                                                  uint16_t *pBaseMillivolt,
                                                  uint8_t  *pMillivoltStep,
@@ -710,11 +693,6 @@ int32_t Pmic_powerBuckVmonConvertVoltage2VSetVal(uint16_t  millivolt,
     return status;
 }
 
-/*!
- * \brief   This function is used to convert the millivolt value to vset code
- *          when the selected voltage monitoring range for VMON is
- *          PMIC_LP8764X_VMON_RANGE_3V35_5V
- */
 void Pmic_powerVmonRange1ConvertVoltage2VSetVal(uint16_t *pBaseMillivolt,
                                                 uint8_t  *pMillivoltStep,
                                                 uint8_t  *pBaseVoutCode)
@@ -724,10 +702,6 @@ void Pmic_powerVmonRange1ConvertVoltage2VSetVal(uint16_t *pBaseMillivolt,
     *pBaseVoutCode = PMIC_POWER_VSET_VAL_0x1D;
 }
 
-/*!
- * \brief   This function is used to convert the millivolt value to vset value
- *          for LDO Regulators
- */
 void Pmic_powerLdoConvertVoltage2VSetVal(uint16_t  pwrRsrc,
                                          uint16_t *pBaseMillivolt,
                                          uint8_t  *pMillivoltStep,
@@ -749,10 +723,6 @@ void Pmic_powerLdoConvertVoltage2VSetVal(uint16_t  pwrRsrc,
     }
 }
 
-/*!
- * \brief   This function is used to get OV/UV voltage monitoring range for
- *          VMON2 and VMON1
- */
 int32_t Pmic_powerGetVmonRange(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t pwrRsrc, bool *pVmonRange)
 {
     int32_t                 pmicStatus = PMIC_ST_SUCCESS;
@@ -4222,64 +4192,6 @@ static int32_t Pmic_powerSetRegulatorenVmonenVoltagemvCfg(Pmic_CoreHandle_t     
     return pmicStatus;
 }
 
-/**
- * \brief   API to set power resources configurations.
- *
- * Requirement: REQ_TAG(PDK-5829), REQ_TAG(PDK-5841), REQ_TAG(PDK-5848),
- *              REQ_TAG(PDK-9111), REQ_TAG(PDK-9163), REQ_TAG(PDK-9149),
- *              REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
- * Design: did_pmic_power_cfg_readback
- * Architecture: aid_pmic_power_cfg
- *
- *          This function can be used to configure the various control and
- *          configuration parameters for BUCK/LDO/VCCA/VMON power resources  and
- *          also used to set the various control and configuration of
- *          voltage monitor parameters for BUCK/LDO/VCCA/VMON power resources
- *
- *          To set control and configuration params for BUCK, the application
- *          has to configure the below defined structure members of
- *          Pmic_PowerResourceCfg_t:
- *          rvCheckEn, buckPullDownEn, vmonEn, buckVoutRegSel, buckFpwmMode,
- *          buckFpwmMpMode, regulatorEn, buckCurrentLimit,
- *          buckVmonSlewRate, voltage_mV, pgUvThresholdLvl,
- *          pgOvThresholdLvl, railGrpSel
- *
- *          To set control and configuration params for LDO, the application
- *          has to configure the below defined structure members of
- *          Pmic_PowerResourceCfg_t:
- *          rvCheckEn, vmonEn, regulatorEn, ldoPullDownSel, ldoSlowRampEn,
- *          ldoBypassModeEn, ldoRvTimeoutSel, voltage_mV,
- *          pgUvThresholdLvl, pgOvThresholdLvl, railGrpSel
- *
- *          To set control and configuration params for VCCA, the application
- *          has to configure the below defined structure members of
- *          Pmic_PowerResourceCfg_t:
- *          vmonEn, vccaPwrGudLvl, pgUvThresholdLvl,
- *          pgOvThresholdLvl, railGrpSel
- *
- *          To set control and configuration params for VMON, the application
- *          has to configure the below defined structure members of
- *          Pmic_PowerResourceCfg_t:
- *          rvCheckEn, vmonEn, vccaPwrGudLvl, vmonRange,
- *          pgUvThresholdLvl, pgOvThresholdLvl, railGrpSel, voltage_mV
- *          Valid only for LP8764x HERA Device
- *          Note: Application has to ensure configured regulator voltage is
- *                within the operating voltages of the connected component.If
- *                not configured properly then it may break the system or
- *                component
- *
- * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
- * \param   pwrResource        [IN]    PMIC Power resource
- *                                     Valid values for TPS6594x Leo Device
- *                                     \ref Pmic_Tps6594xLeo_Power_Resource.
- *                                     Valid values for LP8764x HERA Device
- *                                     \ref Pmic_Lp8764xHera_Power_Resource.
- * \param   pwrResourceCfg     [IN]    Power Resource configuration for
- *                                     BUCK/LDO/VMON/VCCA
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_powerSetPwrResourceCfg(Pmic_CoreHandle_t            *pPmicCoreHandle,
                                     const uint16_t                pwrResource,
                                     const Pmic_PowerResourceCfg_t pwrResourceCfg)
@@ -4374,59 +4286,6 @@ static int32_t Pmic_powerGetLdobypassLdorvtoselRailgrpselVoltagemvCfg(Pmic_CoreH
     return pmicStatus;
 }
 
-/**
- * \brief   API to get power resources configurations.
- *
- * Requirement: REQ_TAG(PDK-5829), REQ_TAG(PDK-5848), REQ_TAG(PDK-5850),
- *              REQ_TAG(PDK-9163)
- * Design: did_pmic_power_cfg_readback
- * Architecture: aid_pmic_power_cfg
- *
- *          This function can be used to get the various control and
- *          configuration parameters for BUCK/LDO/VCCA/VMON power resources and
- *          also used to get the various control and configuration of
- *          voltage monitor parameters for BUCK/LDO/VCCA/VMON power resources
- *
- *          Application can get these control and configuration params for BUCK,
- *          which is stored in the below defined structure members of
- *          Pmic_PowerResourceCfg_t:
- *          rvCheckEn, buckPullDownEn, vmonEn, buckVoutRegSel, buckFpwmMode,
- *          buckFpwmMpMode, regulatorEn, buckCurrentLimit,
- *          buckVmonSlewRate, voltage_mV, pgUvThresholdLvl,
- *          pgOvThresholdLvl, railGrpSel
- *
- *          Application can get these control and configuration params for LDO,
- *          which is stored in the below defined structure members of
- *          Pmic_PowerResourceCfg_t:
- *          rvCheckEn, vmonEn, regulatorEn, ldoPullDownSel, ldoSlowRampEn,
- *          ldoBypassModeEn, ldoRvTimeoutSel, voltage_mV,
- *          pgUvThresholdLvl, pgOvThresholdLvl, railGrpSel
- *
- *          Application can get these control and configuration params for VCCA,
- *          which is stored in the below defined structure members of
- *          Pmic_PowerResourceCfg_t:
- *          vmonEn, vccaPwrGudLvl, pgUvThresholdLvl,
- *          pgOvThresholdLvl, railGrpSel
- *
- *          Application can get these control and configuration params for VMON,
- *          which is stored in the below defined structure members of
- *          Pmic_PowerResourceCfg_t:
- *          rvCheckEn, vmonEn, vccaPwrGudLvl, vmonRange,
- *          pgUvThresholdLvl, pgOvThresholdLvl, railGrpSel, voltage_mV
- *          Valid only for LP8764x HERA Device
- *
- * \param   pPmicCoreHandle    [IN]      PMIC Interface Handle.
- * \param   pwrResource        [IN]      PMIC Power resource
- *                                       Valid values for TPS6594x Leo Device
- *                                       \ref Pmic_Tps6594xLeo_Power_Resource.
- *                                       Valid values for LP8764x HERA Device
- *                                       \ref Pmic_Lp8764xHera_Power_Resource.
- * \param   pPwrResourceCfg    [IN/OUT]  Pointer to store Power Resource
- *                                       configuration for BUCK/LDO/VMON/VCCA
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_powerGetPwrResourceCfg(Pmic_CoreHandle_t       *pPmicCoreHandle,
                                     const uint16_t           pwrResource,
                                     Pmic_PowerResourceCfg_t *pPwrResourceCfg)
@@ -4510,50 +4369,6 @@ static int32_t Pmic_powerSetTriggerSelCfg(Pmic_CoreHandle_t          *pPmicCoreH
     return pmicStatus;
 }
 
-/**
- * \brief   API to Set Power configuration
- *
- * Requirement: REQ_TAG(PDK-5829), REQ_TAG(PDK-5848), REQ_TAG(PDK_5847),
- *              REQ_TAG(PDK-9111), REQ_TAG(PDK-9149), REQ_TAG(PDK-9159),
- *              REQ_TAG(PDK-9329)
- * Design: did_pmic_power_cfg_readback, did_pmic_power_pgood_cfg_readback
- * Architecture: aid_pmic_power_cfg
- *
- *          This function is used to set the power configuration
- *          parameters such as selection of type of voltage monitoring, and
- *          polarity of the power-good signal, deglitch time select for all
- *          power resources.
- *
- *          Application can set the voltage monitoring for PGOOD
- *          by configuring the following structure members of
- *          Pmic_PowerCommonCfg_t:
- *          pgoodWindow
- *
- *          Application can set the PGOOD signal polarity
- *          by configuring the following structure members of
- *          Pmic_PowerCommonCfg_t:
- *          pgoodPolarity
- *
- *          Application can set the Deglitch time select for all power resources
- *          by configuring the following structure members of
- *          Pmic_PowerCommonCfg_t:
- *          deglitchTimeSel
- *
- *          Application can set/select  trigger selection for :
- *          severe Error, other rail group, soc rail group, mcu rail group and
- *          Moderate Error
- *          by configuring the following structure members of
- *          Pmic_PowerCommonCfg_t:
- *          severeErrorTrig, otherRailTrig, socRailTrig, mcuRailTrig
- *          moderateRailTrig
- *
- *
- * \param   pPmicCoreHandle  [IN]    PMIC Interface Handle.
- * \param   powerCommonCfg   [IN]    Power configuration.
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_powerSetCommonConfig(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_PowerCommonCfg_t powerCommonCfg)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -4647,47 +4462,6 @@ static int32_t Pmic_powerGetTriggerSelCfg(Pmic_CoreHandle_t *pPmicCoreHandle, Pm
     return pmicStatus;
 }
 
-/**
- * \brief   API to Get Power configuration
- *
- * Requirement: REQ_TAG(PDK-5829), REQ_TAG(PDK-5848), REQ_TAG(PDK_5847)
- * Design: did_pmic_power_cfg_readback, did_pmic_power_pgood_cfg_readback
- * Architecture: aid_pmic_power_cfg
- *
- *          This function is used to get the power configuration
- *          parameters such as selection of type of voltage monitoring, and
- *          polarity of the power-good signal, deglitch time select for all
- *          power resources.
- *
- *          Application can get the voltage monitoring for PGOOD
- *          by configuring the following structure members of
- *          Pmic_PowerCommonCfg_t:
- *          pgoodWindow
- *
- *          Application can get the PGOOD signal polarity
- *          by configuring the following structure members of
- *          Pmic_PowerCommonCfg_t:
- *          pgoodPolarity
- *
- *          Application can get the Deglitch time select for all power resources
- *          by configuring the following structure members of
- *          Pmic_PowerCommonCfg_t:
- *          deglitchTimeSel
- *
- *          Application can get trigger selection for :
- *          severe Error, other rail group, soc rail group, mcu rail group and
- *          Moderate Error
- *          by configuring the following structure members of
- *          Pmic_PowerCommonCfg_t:
- *          severeErrorTrig, otherRailTrig, socRailTrig, mcuRailTrig
- *          moderateRailTrig
- *
- * \param   pPmicCoreHandle  [IN]       PMIC Interface Handle.
- * \param   pPowerCommonCfg  [IN/OUT]   Pointer to hold Power configuration.
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_powerGetCommonConfig(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_PowerCommonCfg_t *pPowerCommonCfg)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -4742,52 +4516,6 @@ int32_t Pmic_powerGetCommonConfig(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_Power
     return pmicStatus;
 }
 
-/**
- * \brief   API to Set Power good configuration
- *
- * Requirement: REQ_TAG(PDK-5847), REQ_TAG(PDK-9111)
- * Design: did_pmic_power_pgood_cfg_readback
- * Architecture: aid_pmic_power_cfg
- *
- *          This function is used to control and configure the power good
- *          source control. For the
- *          following, power good signal control can be selected:
- *          All supported Bucks and Ldo by the PMIC, VCCA , thermal warning,
- *          nRSTOUT pin and nRSTOUT_SOC pin.
- *
- * \param   pPmicCoreHandle  [IN]     PMIC Interface Handle.
- * \param   pgoodSrcSel      [IN]     Power Good Source.
- *                                    Valid values for TPS6594x Leo Device
- *                                    \ref Pmic_Tps6594xLeo_Pgood_Source.
- *                                    Valid values for LP8764x HERA Device
- *                                    \ref Pmic_Lp8764xHera_Pgood_Source.
- * \param   pgoodSelType     [IN]     Power Good configuration.
- *                                    Valid values for TPS6594x Leo Device
- *                                For  LDO/BUCK
- *                                \ref Pmic_TPS6594x_Power_Good_Regulator_Signal
- *                                For  VCCA
- *                                    \ref Pmic_TPS6594x_Power_Good_Vcca
- *                                For  Thermal Warning
- *                                    \ref Pmic_TPS6594x_Power_Good_Thermal_Warn
- *                                For  nRSTOUT
- *                                    \ref Pmic_TPS6594x_Power_Good_Nrstout
- *                                For  nRSTOUT_SOC
- *                                    \ref Pmic_TPS6594x_Power_Good_Nrstout_Soc
- *                                    Valid values for LP8764x HERA Device
- *                                For  BUCK
- *                                    \ref Pmic_LP8764x_Power_Good_Buck_Signal
- *                                For  VCCA/VMON
- *                                    \ref Pmic_LP8764x_Power_Good_Vcca_Vmon
- *                                For : Thermal Warning
- *                                    \ref Pmic_LP8764x_Power_Good_Thermal_Warn
- *                                For  nRSTOUT
- *                                    \ref Pmic_LP8764x_Power_Good_Nrstout
- *                                For  nRSTOUT_SOC
- *                                    \ref Pmic_LP8764x_Power_Good_Nrstout_Soc
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t
 Pmic_powerSetConfigPowerGood(Pmic_CoreHandle_t *pPmicCoreHandle, const uint16_t pgoodSrcSel, const uint8_t pgoodSelType)
 {
@@ -4808,28 +4536,6 @@ Pmic_powerSetConfigPowerGood(Pmic_CoreHandle_t *pPmicCoreHandle, const uint16_t 
     return pmicStatus;
 }
 
-/**
- * \brief   Get Power good configuration
- *
- * Requirement: REQ_TAG(PDK-5847)
- * Design: did_pmic_power_pgood_cfg_readback
- * Architecture: aid_pmic_power_cfg
- *
- *          This function is used to get various power good conifg.
- *          This funci=tion also provides the pgood source control for
- *          different power resources and pins.
- *
- * \param   pPmicCoreHandle  [IN]     PMIC Interface Handle.
- * \param   pgoodSrcSel      [IN]     Power Good Source.
- *                                    Valid values for TPS6594x Leo Device
- *                                    \ref Pmic_Tps6594xLeo_Pgood_Source.
- *                                    Valid values for LP8764x HERA Device
- *                                    \ref Pmic_Lp8764xHera_Pgood_Source.
- * \param   pPgoodSelType    [OUT]    Power Good configuration.
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t
 Pmic_powerGetConfigPowerGood(Pmic_CoreHandle_t *pPmicCoreHandle, const uint16_t pgoodSrcSel, uint8_t *pPgoodSelType)
 {
@@ -4891,58 +4597,6 @@ static int32_t Pmic_powerGetUvOvVccaVoltageStat(Pmic_CoreHandle_t        *pPmicC
     return pmicStatus;
 }
 
-/**
- * \brief   API to get power resources status.
- *
- * Requirement: REQ_TAG(PDK-5829), REQ_TAG(PDK-5848), REQ_TAG(PDK-5850)
- * Design: did_pmic_power_cfg_readback
- * Architecture: aid_pmic_power_cfg
- *
- *          This function can be used to get the status related to current limit
- *          , voltage over and under limit for BUCK/LDO/VCCA/VMON power
- *          resources
- *
- *          Application can get the current limit status that if the output
- *          current is above current limit level for BUCK by configuring the
- *          following structure members of
- *          Pmic_PowerResourceStat_t:
- *          currentLimitLvlStat
- *
- *          Application can get the output voltage status that if the
- *          output voltage is below undervoltage threshold for BUCK/LDO by
- *          configuring the following structure members of
- *          Pmic_PowerResourceStat_t :
- *          underVoltageTholdStat
- *          For VMON/VCCA the same member is used to get the input voltage
- *          status that if input voltage is below undervoltage level.
- *
- *          Application can get the output voltage status that if the
- *          output voltage is above overvoltage threshold for BUCK/LDO by
- *          configuring the following structure members of
- *          Pmic_PowerResourceStat_t :
- *          overVoltageTholdStat
- *          For VMON/VCCA the same member is used to get the input voltage
- *          status that if input voltage is above overvoltage level.
- *
- *          Application can get the VCCA voltage status that if the VCCA
- *          voltage is above overvoltage protection level  by configuring the
- *          following structure members of
- *          Pmic_PowerResourceStat_t :
- *          overVoltageProtectionLvlStat
- *
- *
- * \param   pPmicCoreHandle    [IN]       PMIC Interface Handle.
- * \param   pwrResource        [IN]       PMIC Power resource
- *                                        Valid values for TPS6594x Leo Device
- *                                        \ref Pmic_Tps6594xLeo_Power_Resource.
- *                                        Valid values for LP8764x HERA Device
- *                                        \ref Pmic_Lp8764xHera_Power_Resource.
- * \param   pPwrRsrcStatCfg    [IN/OUT]   Pointer to store Power Resource
- *                                        Status for BUCK/LDO/VMON/VCCA
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_powerGetPwrRsrcStat(Pmic_CoreHandle_t        *pPmicCoreHandle,
                                  const uint16_t            pwrResource,
                                  Pmic_PowerResourceStat_t *pPwrRsrcStatCfg)
@@ -4983,41 +4637,6 @@ int32_t Pmic_powerGetPwrRsrcStat(Pmic_CoreHandle_t        *pPmicCoreHandle,
     return pmicStatus;
 }
 
-/**
- * \brief   API to get PMIC die temperature thermal status.
- *
- * Requirement: REQ_TAG(PDK-5840)
- * Design: did_pmic_power_thermal_cfg_readback
- * Architecture: aid_pmic_power_cfg
- *
- *          This function is used to get the thermal status of the PMIC
- *          (die temperature)
- *
- *          Application can get the thermal status that if the  die junction
- *          above the thermal warning level  by
- *          configuring the following structure members of
- *          Pmic_PowerThermalStat_t:
- *          thermalStateWarning
- *
- *          Application can get the thermal status that if the  die junction
- *          above the thermal level causing a sequenced shutdown by
- *          configuring the following structure members of
- *          Pmic_PowerThermalStat_t:
- *          thermalStateOderlyShtDwn
- *
- *          Application can get the thermal status that if the  die junction
- *          above the thermal level causing an immediate shutdown by
- *          configuring the following structure members of
- *          Pmic_PowerThermalStat_t:
- *          thermalStateImmShtDwn
- *
- * \param   pPmicCoreHandle       [IN]       PMIC Interface Handle.
- * \param   pPwrThermalStatCfg    [IN/OUT]   Pointer to store Thermal
- *                                           configuration for PMIC
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_powerGetPwrThermalStat(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_PowerThermalStat_t *pPwrThermalStatCfg)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -5056,29 +4675,6 @@ int32_t Pmic_powerGetPwrThermalStat(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_Pow
     return pmicStatus;
 }
 
-/**
- * \brief    API to configure the thermal temperature threshold level for PMIC.
- *
- * Requirement: REQ_TAG(PDK-5840), REQ_TAG(PDK-9111), REQ_TAG(PDK-9117)
- * Design: did_pmic_power_thermal_cfg_readback
- * Architecture: aid_pmic_power_cfg
- *
- *          To configure the the thermal wrarning threshold temperature level,
- *          the application has to configure the below defined structure
- *          member of the Pmic_PowerThermalCfg_t:
- *          thermalWarnThold
- *
- *          To configure the the thermal shutdown threshold temperature level,
- *          the application has to configure the below defined structure member
- *          of the Pmic_PowerThermalCfg_t:
- *          thermalShutdownThold
- *
- * \param   pPmicCoreHandle       [IN]    PMIC Interface Handle.
- * \param   thermalThreshold      [IN]    Thermal Configuration.
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_powerSetThermalConfig(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_PowerThermalCfg_t thermalThreshold)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -5114,32 +4710,6 @@ int32_t Pmic_powerSetThermalConfig(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmi
     return pmicStatus;
 }
 
-/**
- * \brief   Get the PMIC thermal threshold value function.
- *
- * Requirement: REQ_TAG(PDK-5840), REQ_TAG(PDK-9117)
- * Design: did_pmic_power_thermal_cfg_readback
- * Architecture: aid_pmic_power_cfg
- *
- *          This function is used to get the thermal temperature threshold
- *          value for the PMIC.
- *
- *          To get the the thermal wrarning threshold temperature level,
- *          the application has to configure the below defined structure
- *          member of the Pmic_PowerThermalCfg_t:
- *          thermalWarnThold
- *
- *          To get the the thermal shutdown threshold temperature level,
- *          the application has to configure the below defined structure member
- *          of the Pmic_PowerThermalCfg_t:
- *          thermalShutdownThold
- *
- * \param   pPmicCoreHandle       [IN]        PMIC Interface Handle.
- * \param   pThermalThreshold     [IN/OUT]    Pointer to hold Thermal Cfg
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_powerGetThermalConfig(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_PowerThermalCfg_t *pThermalThreshold)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -5179,34 +4749,6 @@ int32_t Pmic_powerGetThermalConfig(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_Powe
     return pmicStatus;
 }
 
-/*!
- * \brief   API to enable/disable Power interrupt.
- *
- * Requirement: REQ_TAG(PDK-5829), REQ_TAG(PDK-5848)
- * Design: did_pmic_power_cfg_readback
- * Architecture: aid_pmic_power_cfg
- *
- *          This function is used to enable/disable thermal Interrupts
- *
- *
- * \param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
- * \param   pwrResource        [IN]    PMIC Power resource
- *                                     Valid values for TPS6594x Leo Device
- *                                     \ref Pmic_Tps6594xLeo_Power_Resource.
- *                                     Valid values for LP8764x HERA Device
- *                                     \ref Pmic_Lp8764xHera_Power_Resource
- * \param   intrType           [IN]    Interrupt type
- *                                     Valid values for TPS6594x Leo Device
- *                                     \ref Pmic_Tps6594x_PowerInterruptType
- *                                     Valid values for LP8764x HERA Device
- *                                     \ref Pmic_LP8764x_PowerInterruptType
- * \param   intrEnable         [IN]    Enable/Disable the interrupt.
- *                                     For Vaild values:
- *                                     \ref Pmic_PowerInterruptCfg
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_powerSetPwrRsrcIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
                                  const uint16_t     pwrResource,
                                  const uint8_t      intrType,
@@ -5229,28 +4771,6 @@ int32_t Pmic_powerSetPwrRsrcIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
     return pmicStatus;
 }
 
-/*!
- * \brief   API to enable/disable Power interrupt.
- *
- * Requirement: REQ_TAG(PDK-5841), REQ_TAG(PDK-5840)
- * Design: did_pmic_power_cfg_readback, did_pmic_power_thermal_cfg_readback
- * Architecture: aid_pmic_power_cfg
- *
- *          This function is used to enable/disable power Interrupts
- *
- * \param   pPmicCoreHandle  [IN]    PMIC Interface Handle.
- * \param   intrType         [IN]    Interrupt type
- *                                   Valid values for TPS6594x Leo Device
- *                                   \ref Pmic_Tps6594x_PowerInterruptCommonType
- *                                   Valid values for LP8764x HERA Device
- *                                   \ref Pmic_LP8764x_PowerInterruptCommonType
- * \param   intrEnable       [IN]    Enable/Disable the interrupt.
- *                                   For Vaild values:
- *                                   \ref Pmic_PowerInterruptCfg
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_powerSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t intrType, const bool intrEnable)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;

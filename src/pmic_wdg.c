@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -32,9 +32,9 @@
  *****************************************************************************/
 
 /**
- *   @file    pmic_wdg.c
+ *   \file    pmic_wdg.c
  *
- *   @brief   This file contains the API definitions for PMIC Watchdog
+ *   \brief   This file contains the API definitions for PMIC Watchdog
  *            configuration
  *
  */
@@ -42,7 +42,7 @@
 #include "pmic_wdg_priv.h"
 #include "pmic_core_priv.h"
 
-/*
+/*!
  * \brief  Function to Check pmic core handle
  */
 static int32_t Pmic_checkPmicCoreHandle(const Pmic_CoreHandle_t *pPmicCoreHandle)
@@ -84,7 +84,7 @@ static int32_t Pmic_checkPmicCoreHandle(const Pmic_CoreHandle_t *pPmicCoreHandle
     return status;
 }
 
-/*
+/*!
  * \brief  Function to Check watchdog subsystem and pmic core handle
  */
 static int32_t Pmic_WdgValidatePmicCoreHandle(const Pmic_CoreHandle_t *pPmicCoreHandle)
@@ -105,7 +105,7 @@ static int32_t Pmic_WdgValidatePmicCoreHandle(const Pmic_CoreHandle_t *pPmicCore
     return status;
 }
 
-/*
+/*!
  * \brief  Function to covert wdg Long window time interval to WD_LONGWIN[7:0]
  *         bits for TPS6594x PMIC PG2.0 or LP8764x PMIC PG2.0
  */
@@ -131,7 +131,7 @@ static uint8_t Pmic_WdgCovertLongWinTimeIntervaltoRegBits(const Pmic_WdgCfg_t wd
     return regVal;
 }
 
-/*
+/*!
  * \brief  Function to Set wdg window1 and window2 time interval
  */
 static int32_t Pmic_WdgSetWindow1Window2TimeIntervals(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_WdgCfg_t wdgCfg)
@@ -185,7 +185,7 @@ static int32_t Pmic_WdgSetWindow1Window2TimeIntervals(Pmic_CoreHandle_t *pPmicCo
     return status;
 }
 
-/*
+/*!
  * \brief  Function to set watchdog windows time intervals
  *          Note: In this API, the default PMIC Revision is assumed as PG2.0
  *                for LEO and HERA PMIC. While adding support for New PMIC
@@ -254,7 +254,7 @@ static int32_t Pmic_WdgSetWindowsTimeIntervals(Pmic_CoreHandle_t *pPmicCoreHandl
     return status;
 }
 
-/*
+/*!
  * \brief  Function to Get wdg window1 and window2 time interval
  */
 static int32_t Pmic_WdgGetWindow1Window2TimeIntervals(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_WdgCfg_t *pWdgCfg)
@@ -300,7 +300,7 @@ static int32_t Pmic_WdgGetWindow1Window2TimeIntervals(Pmic_CoreHandle_t *pPmicCo
     return status;
 }
 
-/*
+/*!
  * \brief  Function to get watchdog windows time intervals
  *          Note: In this API, the default PMIC Revision is assumed as PG2.0
  *                for LEO and HERA PMIC. While adding support for New PMIC
@@ -364,7 +364,7 @@ static int32_t Pmic_WdgGetWindowsTimeIntervals(Pmic_CoreHandle_t *pPmicCoreHandl
     return status;
 }
 
-/*
+/*!
  * \brief  Function to set watchdog Threshold values
  */
 static int32_t Pmic_WdgSetThresholdValues(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_WdgCfg_t wdgCfg)
@@ -427,7 +427,7 @@ static int32_t Pmic_WdgSetThresholdValues(Pmic_CoreHandle_t *pPmicCoreHandle, co
     return status;
 }
 
-/*
+/*!
  * \brief  Function to get watchdog Threshold values
  */
 static int32_t Pmic_WdgGetThresholdValues(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_WdgCfg_t *pWdgCfg)
@@ -474,7 +474,7 @@ static int32_t Pmic_WdgGetThresholdValues(Pmic_CoreHandle_t *pPmicCoreHandle, Pm
     return status;
 }
 
-/*
+/*!
  * \brief  Function to set watchdog return long window control
  */
 static int32_t Pmic_WdgSetRetToLongWindowCfg(Pmic_CoreHandle_t *pPmicCoreHandle, bool enable)
@@ -505,7 +505,7 @@ static int32_t Pmic_WdgSetRetToLongWindowCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
     return status;
 }
 
-/*
+/*!
  * \brief  Function to set wdg warm reset enable value
  */
 static int32_t Pmic_WdgSetWarmRstEnableCfg(Pmic_CoreHandle_t *pPmicCoreHandle, bool enable)
@@ -535,7 +535,7 @@ static int32_t Pmic_WdgSetWarmRstEnableCfg(Pmic_CoreHandle_t *pPmicCoreHandle, b
     return status;
 }
 
-/*
+/*!
  * \brief  Function to set wdg power hold value
  */
 static int32_t Pmic_WdgSetPwrHoldCfg(Pmic_CoreHandle_t *pPmicCoreHandle, bool enable)
@@ -565,7 +565,7 @@ static int32_t Pmic_WdgSetPwrHoldCfg(Pmic_CoreHandle_t *pPmicCoreHandle, bool en
     return status;
 }
 
-/*
+/*!
  * \brief  Function to set wdg Mode
  */
 static int32_t Pmic_WdgSetModeCfg(Pmic_CoreHandle_t *pPmicCoreHandle, bool enable)
@@ -595,7 +595,7 @@ static int32_t Pmic_WdgSetModeCfg(Pmic_CoreHandle_t *pPmicCoreHandle, bool enabl
     return status;
 }
 
-/*
+/*!
  * \brief  Function to set watchdog control parameters
  */
 static int32_t Pmic_WdgSetCtrlParams(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_WdgCfg_t wdgCfg)
@@ -633,7 +633,7 @@ static int32_t Pmic_WdgSetCtrlParams(Pmic_CoreHandle_t *pPmicCoreHandle, const P
     return status;
 }
 
-/*
+/*!
  * \brief  Function to get watchdog control parameters
  */
 static int32_t Pmic_WdgGetCtrlParams(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_WdgCfg_t *pWdgCfg)
@@ -693,7 +693,7 @@ static int32_t Pmic_WdgGetCtrlParams(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_Wd
     return status;
 }
 
-/*
+/*!
  * \brief  Function to set watchdog QA Question Seed value
  */
 static int32_t Pmic_wdgSetQaQuesSeedValue(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_WdgCfg_t wdgCfg)
@@ -732,7 +732,7 @@ static int32_t Pmic_wdgSetQaQuesSeedValue(Pmic_CoreHandle_t *pPmicCoreHandle, co
     return status;
 }
 
-/*
+/*!
  * \brief  Function to set watchdog QA configurations
  */
 static int32_t Pmic_WdgSetQaConfigurations(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_WdgCfg_t wdgCfg)
@@ -799,7 +799,7 @@ static int32_t Pmic_WdgSetQaConfigurations(Pmic_CoreHandle_t *pPmicCoreHandle, c
     return status;
 }
 
-/*
+/*!
  * \brief  Function to get watchdog QA configurations
  */
 static int32_t Pmic_WdgGetQaConfigurations(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_WdgCfg_t *pWdgCfg)
@@ -838,7 +838,7 @@ static int32_t Pmic_WdgGetQaConfigurations(Pmic_CoreHandle_t *pPmicCoreHandle, P
     return status;
 }
 
-/*
+/*!
  * \brief  Function to Enable/Disable Watchdog Timer
  */
 static int32_t Pmic_wdgEnDisState(Pmic_CoreHandle_t *pPmicCoreHandle, bool enable)
@@ -868,7 +868,7 @@ static int32_t Pmic_wdgEnDisState(Pmic_CoreHandle_t *pPmicCoreHandle, bool enabl
     return status;
 }
 
-/*
+/*!
  * \brief  Function to get watchdog QA answer count and question value
  */
 static int32_t
@@ -897,7 +897,7 @@ Pmic_wdgReadQuesandAnswerCount(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t *pQaA
     return status;
 }
 
-/*
+/*!
  * \brief  Function to get watchdog bad event
  */
 static bool is_wdgBadEventDetected(Pmic_CoreHandle_t *pPmicCoreHandle)
@@ -924,7 +924,7 @@ static bool is_wdgBadEventDetected(Pmic_CoreHandle_t *pPmicCoreHandle)
     return bitFieldVal;
 }
 
-/*
+/*!
  * \brief  Function to get 4X1 mux output.
  *
  *         Note: In this API, the default case is for qaFdbk value is 3U.
@@ -952,7 +952,7 @@ static uint8_t mux_4x1(uint8_t x0, uint8_t x1, uint8_t x2, uint8_t x3, uint8_t q
     return y;
 }
 
-/*
+/*!
  * \brief  Function to Evaluate Watchdog Answers
  */
 static uint8_t Pmic_getAnswerByte(uint8_t qaQuesCnt, uint8_t qaAnsCnt, uint8_t qaFdbk)
@@ -989,7 +989,7 @@ static uint8_t Pmic_getAnswerByte(uint8_t qaQuesCnt, uint8_t qaAnsCnt, uint8_t q
     return qaAns;
 }
 
-/*
+/*!
  * \brief  Function to Evaluate and write Watchdog Answer based on
  *         qaFdbk, qaAnsCnt and qaQuesCnt Value
  */
@@ -1014,7 +1014,7 @@ static int32_t Pmic_wdgQaEvaluateAndWriteAnswer(Pmic_CoreHandle_t *pPmicCoreHand
     return status;
 }
 
-/*
+/*!
  * \brief  Function to Evaluate and write Watchdog Four Answers based on
  *         qaFdbk Value
  */
@@ -1047,7 +1047,7 @@ static int32_t Pmic_wdgQaEvaluateAndWriteAnswers(Pmic_CoreHandle_t *pPmicCoreHan
     return status;
 }
 
-/*
+/*!
  * \brief  Function to Evaluate and write Watchdog Four Answers
  */
 static int32_t Pmic_wdgQaWriteAnswers(Pmic_CoreHandle_t *pPmicCoreHandle)
@@ -1078,22 +1078,6 @@ static int32_t Pmic_wdgQaWriteAnswers(Pmic_CoreHandle_t *pPmicCoreHandle)
     return status;
 }
 
-/*!
- * \brief   API to Enable Watchdog timer.
- *
- * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854)
- * Design: did_pmic_wdg_cfg_readback
- * Architecture: aid_pmic_wdg_cfg
- *
- *          This function is used to Enable the PMIC watchdog. User ensure
- *          that, this function needs to be called to enable watchdog timer
- *          before configuring or starting watchdog trigger or QA mode.
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_wdgEnable(Pmic_CoreHandle_t *pPmicCoreHandle)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -1109,22 +1093,6 @@ int32_t Pmic_wdgEnable(Pmic_CoreHandle_t *pPmicCoreHandle)
     return status;
 }
 
-/*!
- * \brief   API to Disable Watchdog timer.
- *
- * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854)
- * Design: did_pmic_wdg_cfg_readback
- * Architecture: aid_pmic_wdg_cfg
- *
- *          This function is used to Disable the PMIC watchdog. User ensure
- *          that, after using this function, complete watchdog functionality
- *          and configuration will be deactivated.
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_wdgDisable(Pmic_CoreHandle_t *pPmicCoreHandle)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -1140,26 +1108,39 @@ int32_t Pmic_wdgDisable(Pmic_CoreHandle_t *pPmicCoreHandle)
     return status;
 }
 
-/*!
- * \brief   API to set PMIC watchdog configurations.
- *
- * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854) REQ_TAG(PDK-9115),
- *              REQ_TAG(PDK-9116)
- * Design: did_pmic_wdg_cfg_readback
- * Architecture: aid_pmic_wdg_cfg
- *
- *          This function is used to configure the watchdog parameters
- *          in the PMIC for trigger mode or Q&A(question and answer) mode,
- *          when corresponding validParam bit fields are set in
- *          Pmic_WdgCfg_t structure.
- *          User has to call Pmic_wdgEnable() before set the configuration.
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
- * \param   wdgCfg          [IN]    Watchdog configuration
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
+int32_t Pmic_wdgGetEnableState(Pmic_CoreHandle_t *pPmicCoreHandle, bool *pWdgEnabled)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0;
+
+    // Parameter check
+    status = Pmic_WdgValidatePmicCoreHandle(pPmicCoreHandle);
+    if ((status == PMIC_ST_SUCCESS) && (pWdgEnabled == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    // Start critical section before reading
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    // Read WD_THR_CFG register
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_THR_CFG_REGADDR, &regData);
+    }
+
+    // Extract WD_EN bit
+    if (status == PMIC_ST_SUCCESS)
+    {
+        *pWdgEnabled = (bool)Pmic_getBitField(regData, PMIC_WD_THR_CFG_WD_EN_SHIFT, PMIC_WD_THR_CFG_WD_EN_MASK);
+    }
+
+    // Stop critical section after reading
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return status;
+}
+
 int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_WdgCfg_t wdgCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -1190,26 +1171,6 @@ int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_WdgCfg_t w
     return status;
 }
 
-/*!
- * \brief   API to get PMIC watchdog configurations.
- *
- * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854), REQ_TAG(PDK-9115),
- *              REQ_TAG(PDK-9116)
- * Design: did_pmic_wdg_cfg_readback
- * Architecture: aid_pmic_wdg_cfg
- *
- *          This function is used to get configuration of the watchdog
- *          from the PMIC for trigger mode or Q&A(question and answer) mode,
- *          when corresponding validParam bit fields are set in
- *          Pmic_WdgCfg_t structure.
- *          User has to call Pmic_wdgEnable() before get the configuration.
- *
- * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
- * \param   pWdgCfg         [IN/OUT]   Watchdog configuration pointer
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_WdgCfg_t *pWdgCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -1245,7 +1206,7 @@ int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_WdgCfg_t *pWdgCf
     return status;
 }
 
-/*
+/*!
  * \brief  API to set Watch Dog QA Mode, Disable ret to Long Window and
  *         Write Answers for Long Window
  */
@@ -1320,7 +1281,7 @@ static int32_t Pmic_wdgQaSetModeRetlongwinCfgWriteAnswersLongwindow(Pmic_CoreHan
     return status;
 }
 
-/*
+/*!
  * \brief  API to Write QA Answers for given numbers of sequences
  */
 static int32_t
@@ -1401,48 +1362,6 @@ Pmic_wdgQaWriteAnswersNumSequence(Pmic_CoreHandle_t *pPmicCoreHandle, uint32_t s
     return status;
 }
 
-/*!
- * \brief   API to Start watchdog QA mode.
- *
- * Requirement: REQ_TAG(PDK-5839)
- * Design: did_pmic_wdg_cfg_readback
- * Architecture: aid_pmic_wdg_cfg
- *
- *          This function is used to start watchdog sequence and continues
- *          till the given num_of_sequences. User has to ensure, configure
- *          all Watchdog QA parameters properly using Pmic_wdgSetCfg() API,
- *          before starting QA sequence using this API. User can use
- *          Pmic_wdgSetCfg() API to stop watchdog trigger mode.
- *
- *          Note: To perform QA sequences, user has to adjust Long window
- *                time interval, Window1 time interval and Window2 time
- *                intervals depends on errors given by API. If user gets
- *                PMIC_ST_ERR_INV_WDG_WINDOW, then user has to increase the
- *                Long window or window1 time interval. If user gets
- *                PMIC_ST_ERR_WDG_EARLY_ANSWER, then user has to reduce
- *                the Window1 time interval.
- *                Application has to ensure to do proper configuration of WDG
- *                window time intervals. If not configured properly then WDG
- *                will trigger the warm reset to the PMIC device. This may cause
- *                system reset if PMIC is connected to SOC/MCU
- *                Application has to ensure to do proper configuration of WDG
- *                parameters. If not configured properly then API doesn't
- *                receive good or bad event from the PMIC FSM. Due to this API
- *                returns timeout error
- *                API receive bad event due to wrong answer then API detects and
- *                returns an error
- *
- * \param   pPmicCoreHandle  [IN]    PMIC Interface Handle
- * \param   num_of_sequences [IN]    number of QA sequences.
- *                                   If PMIC_WD_QA_INFINITE_SEQ is used,
- *                                   then API runs for infinite sequence.
- * \param   maxCnt           [IN]    Number of iterations to wait for an
- *                                   Good/Bad event. The value should be greater
- *                                   than or equal to PMIC_WDG_WAIT_CNT_MIN_VAL.
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_wdgStartQaSequence(Pmic_CoreHandle_t *pPmicCoreHandle, uint32_t num_of_sequences, uint32_t maxCnt)
 {
     int32_t  status = PMIC_ST_SUCCESS;
@@ -1501,7 +1420,7 @@ int32_t Pmic_wdgStartQaSequence(Pmic_CoreHandle_t *pPmicCoreHandle, uint32_t num
     return status;
 }
 
-/*
+/*!
  * \brief  API to Get watchdog error status - SEQ_ERR, ANSW_ERR, FAIL_INT,
  *         RST_INT
  */
@@ -1556,7 +1475,7 @@ static void Pmic_wdgGetSeqAnswErrFailRstIntStat(Pmic_WdgErrStatus_t *pErrStatus,
     }
 }
 
-/*
+/*!
  * \brief  API to Get watchdog error status - TRIG_EARLY, TIMEOUT,
  *         LONGWIN_TIMEOUT_INT, ANSW_EARLY
  */
@@ -1617,25 +1536,6 @@ static void Pmic_wdgGetLongwintointTimeoutTrigAnswEarlyErrStat(Pmic_WdgErrStatus
     }
 }
 
-/*!
- * \brief   API to get PMIC watchdog error status.
- *
- * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854)
- * Design: did_pmic_wdg_cfg_readback
- * Architecture: aid_pmic_wdg_cfg
- *
- *          This function is used to get the watchdog error status from the
- *          PMIC for trigger mode or Q&A(question and answer) mode,
- *          when corresponding validParam bit fields are set in
- *          Pmic_WdgErrStatus_t structure.
- *          User has to call Pmic_wdgEnable() before getting the error status.
- *
- * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
- * \param   pErrStatus      [IN/OUT]   Watchdog error status pointer
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_WdgErrStatus_t *pErrStatus)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -1651,13 +1551,13 @@ int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_WdgErrSt
 
     if (PMIC_ST_SUCCESS == status)
     {
-        /*! Start Critical Section */
+        /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        /*! Reading error status register */
+        /* Reading error status register */
         status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_ERR_STATUS_REGADDR, &regVal);
 
-        /*! Stop Critical Section */
+        /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
@@ -1675,23 +1575,6 @@ int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_WdgErrSt
     return status;
 }
 
-/*!
- * \brief   API to get PMIC watchdog fail count status.
- *
- * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854)
- * Design: did_pmic_wdg_cfg_readback
- * Architecture: aid_pmic_wdg_cfg
- *
- *          This function is used to get the watchdog fail count status from the
- *          PMIC for trigger mode or Q&A(question and answer) mode.
- *          User has to call Pmic_wdgEnable() before getting the fail count.
- *
- * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
- * \param   pFailCount      [IN/OUT]   Watchdog fail count pointer
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_wdgGetFailCntStat(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_WdgFailCntStat_t *pFailCount)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -1707,13 +1590,13 @@ int32_t Pmic_wdgGetFailCntStat(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_WdgFailC
 
     if (PMIC_ST_SUCCESS == status)
     {
-        /*! Start Critical Section */
+        /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        /*! Reading error status register */
+        /* Reading error status register */
         status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_FAIL_CNT_REG_REGADDR, &regVal);
 
-        /*! Stop Critical Section */
+        /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
@@ -1758,42 +1641,6 @@ int32_t Pmic_wdgGetFailCntStat(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_WdgFailC
     return status;
 }
 
-/*!
- * \brief   API to Start watchdog Trigger mode.
- *
- * Requirement: REQ_TAG(PDK-5854)
- * Design: did_pmic_wdg_cfg_readback
- * Architecture: aid_pmic_wdg_cfg
- *
- *          This function is used to start watchdog trigger mode.
- *          User has to ensure, configure all Watchdog trigger parameters
- *          properly using Pmic_wdgSetCfg() API, before starting watchdog
- *          trigger mode using this API. User can use Pmic_wdgSetCfg() API
- *          to stop watchdog trigger mode.
- *
- *          Note: To perform watchdog trigger mode, user has to
- *                adjust Long window time interval, Window1 time interval
- *                and Window2 time inervals as below, depends on the
- *                time-period of the trigger pulse provided by other
- *                device.
- *                1. Longwindow time interval must be greater than Trigger
- *                   pulse time period.
- *                2. Window1 time interval must be less than T-off time of
- *                   the Trigger pulse time period.
- *                3. Window2 time interval must be greater than T-on time
- *                   of the Trigger pulse time period.
- *                4. (Window1 time interval + Window2 time interval)
- *                   approximately equal to the Trigger pulse time period.
- *                Application has to ensure to do proper configuration of WDG
- *                window time intervals. If not configured properly in Trigger
- *                mode then WDG will trigger the warm reset to the PMIC device.
- *                This may cause system reset if PMIC is connected to SOC/MCU
- *
- * \param   pPmicCoreHandle  [IN]    PMIC Interface Handle
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_wdgStartTriggerSequence(Pmic_CoreHandle_t *pPmicCoreHandle)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -1804,10 +1651,10 @@ int32_t Pmic_wdgStartTriggerSequence(Pmic_CoreHandle_t *pPmicCoreHandle)
 
     if (PMIC_ST_SUCCESS == status)
     {
-        /*! Start Critical Section */
+        /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        /*! Reading watchdog mode value */
+        /* Reading watchdog mode value */
         status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_MODE_REG_REGADDR, &regVal);
 
         if (PMIC_ST_SUCCESS == status)
@@ -1816,11 +1663,11 @@ int32_t Pmic_wdgStartTriggerSequence(Pmic_CoreHandle_t *pPmicCoreHandle)
                              PMIC_WD_MODE_REG_WD_MODE_SELECT_SHIFT,
                              PMIC_WD_MODE_REG_WD_MODE_SELECT_MASK,
                              PMIC_WDG_TRIGGER_MODE);
-            /*! Set watchdog mode to trigger mode */
+            /* Set watchdog mode to trigger mode */
             status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_MODE_REG_REGADDR, regVal);
         }
 
-        /*! Stop Critical Section */
+        /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
@@ -1906,26 +1753,6 @@ Pmic_wdgClrErrStatusWdgErrType(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t
     return status;
 }
 
-/*!
- * \brief   API to clear PMIC watchdog error status.
- *
- * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-5854)
- * Design: did_pmic_wdg_cfg_readback
- * Architecture: aid_pmic_wdg_cfg
- *
- *          This function is used to clear the watchdog error status from the
- *          PMIC for trigger mode or Q&A(question and answer) mode,
- *          Note: User has to clear the WDG Error status only when Error status
- *          bit is set for the corresponding wdgErrType
- *
- * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
- * \param   wdgErrType      [IN]       Watchdog error type to clear the status
- *                                     For Valid values:
- *                                     \ref Pmic_WdgErrType
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_wdgClrErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t wdgErrType)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -1941,10 +1768,10 @@ int32_t Pmic_wdgClrErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t w
 
     if (PMIC_ST_SUCCESS == status)
     {
-        /*! Start Critical Section */
+        /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        /*! Reading error status register */
+        /* Reading error status register */
         status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_ERR_STATUS_REGADDR, &regVal);
         if (0U == regVal)
         {
@@ -1956,7 +1783,7 @@ int32_t Pmic_wdgClrErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t w
             status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_ERR_STATUS_REGADDR, regVal);
         }
 
-        /*! Stop Critical Section */
+        /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
@@ -1968,43 +1795,6 @@ int32_t Pmic_wdgClrErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t w
     return status;
 }
 
-/*!
- * \brief   API to Write Answers in Long Window/ Window1/ Window2 Interval for
- *          watchdog QA Sequence.
- *
- * Requirement: REQ_TAG(PDK-5839), REQ_TAG(PDK-9115), REQ_TAG(PDK-9116)
- * Design: did_pmic_wdg_cfg_readback
- * Architecture: aid_pmic_wdg_cfg
- *
- *          This function is used to write Answers in Long Window/ Window1/
- *          Window2 Interval for the WDG QA Sequence
- *          User has to ensure, configure all Watchdog QA parameters properly
- *          using Pmic_wdgSetCfg() API, before writing Answers using this API
- *          for the QA Sequence
- *
- *          Note: To perform QA sequences, user has to adjust Long window
- *                time interval, Window1 time interval and Window2 time
- *                intervals If the Pmic_wdgQaWriteAnswer API returns
- *                PMIC_ST_ERR_INV_WDG_ANSWER error
- *                If the Pmic_wdgQaWriteAnswer API returns
- *                PMIC_ST_ERR_INV_WDG_ANSWER error user has
- *                to call Pmic_wdgGetErrorStatus API to read the WDG error.
- *                If the WDG error is Long Window Timeout or Timeout, user has
- *                to increase the Long window or window1 time interval
- *                accordingly
- *                If the WDG error is Answer early, user has to reduce the
- *                Window1 time interval
- *                For other WDG errors, user has to take action accordingly
- *                Application has to ensure to do proper configuration of WDG
- *                window time intervals. If not configured properly in QA mode
- *                then WDG will trigger the warm reset to the PMIC device. This
- *                may cause system reset if PMIC is connected to SOC/MCU
- *
- * \param   pPmicCoreHandle  [IN]    PMIC Interface Handle
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_wdgQaSequenceWriteAnswer(Pmic_CoreHandle_t *pPmicCoreHandle)
 {
     int32_t status = PMIC_ST_SUCCESS;

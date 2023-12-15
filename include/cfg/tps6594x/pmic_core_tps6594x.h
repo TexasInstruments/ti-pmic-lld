@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -70,6 +70,7 @@ extern "C"
 #define PMIC_TPS6594X_EEPROM_DEFAULTS_LOAD_TO_RTC_DOMAIN_BITS       (0U)
 /** \brief EEPROM defaults are not loaded to RTC domain bits */
 #define PMIC_TPS6594X_EEPROM_DEFAULTS_NOT_LOADED_TO_RTC_DOMAIN_BITS (1U)
+/** @} */
 
 /**
  *  \anchor Pmic_Tps6594xLeo_AMuxOutPinCtrl_Cfg
@@ -81,7 +82,7 @@ extern "C"
 #define PMIC_TPS6594X_AMUX_OUT_PIN_CFG_DISABLE                      0U
 /** \brief Disable Bandgap voltage to AMUXOUT pin */
 #define PMIC_TPS6594X_AMUX_OUT_PIN_CFG_ENABLE                       1U
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_Tps6594xLeo_ExtClk_Freq_Sel
@@ -95,7 +96,7 @@ extern "C"
 #define PMIC_TPS6594X_SYNCCLKIN_2_2_MHZ                             (1U)
 /** \brief  SYNCCLKIN Frequency as 4.4 MHz */
 #define PMIC_TPS6594X_SYNCCLKIN_4_4_MHZ                             (2U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_Tps6594xLeo_Charging_Current_Sel
@@ -107,7 +108,7 @@ extern "C"
 #define PMIC_TPS6594X_BB_CHARGING_CURRENT_100                       (0U)
 /** \brief  Backup Battery charging current as 500 Micro Ampere */
 #define PMIC_TPS6594X_BB_CHARGING_CURRENT_500                       (1U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_Tps6594xLeo_EndOfChargeVoltage_Sel
@@ -123,7 +124,7 @@ extern "C"
 #define PMIC_TPS6594X_BB_ENDOF_CHARGE_VOLATGE_3_0_V                 (2U)
 /** \brief  Backup Battery charger End of Charge Volatge as 3.3V  */
 #define PMIC_TPS6594X_BB_ENDOF_CHARGE_VOLATGE_3_3_V                 (3U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_Tps6594xLeo_BatteryCharging_Cfg
@@ -135,7 +136,7 @@ extern "C"
 #define PMIC_TPS6594X_BB_CHARGINGING_CFG_DISABLE                    0U
 /** \brief Enable Backup Battery Charging */
 #define PMIC_TPS6594X_BB_CHARGINGING_CFG_ENABLE                     1U
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_Tps6594xLeo_BBEoCIndicationStat
@@ -147,7 +148,7 @@ extern "C"
 #define PMIC_TPS6594X_BB_EOC_STATUS_NOT_ENABLED                     (0U)
 /** \brief  Backup Battery Charger reached termination voltage set by BB_VEOC */
 #define PMIC_TPS6594X_BB_EOC_STATUS_READY                           (1U)
-/*  @} */
+/** @} */
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */

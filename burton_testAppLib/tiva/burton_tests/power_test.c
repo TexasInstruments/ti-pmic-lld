@@ -414,8 +414,8 @@ void test_power_getConfiguration_pwrRsrcCfg_null(void)
 }
 
 /**
- *  \brief  Pmic_powerTps6522xGetPwrResourceCfg: Test API error handing for when there are no valid parameters within
- *                                               Power Resource CFG input param
+ *  \brief  Pmic_powerTps6522xGetPwrResourceCfg: Test API error handing for when there are no valid parameters
+ *                                               within Power Resource CFG input param
  */
 void test_power_getConfiguration_pwrRsrcCfg_noValidParam(void)
 {
@@ -434,9 +434,8 @@ void test_power_getConfiguration_pwrRsrcCfg_noValidParam(void)
 }
 
 /**
- * \brief   Pmic_powerTps6522xGetPwrResourceCfg: Test API error handling for when there are no valid parameters
- within
- *                                               Buck Power Resource CFG
+ *  \brief  Pmic_powerTps6522xGetPwrResourceCfg: Test API error handling for when there are no valid parameters
+ *                                               within Buck Power Resource CFG
  */
 void test_power_getConfiguration_buckPwrRsrcCfg_noValidParam(void)
 {
@@ -467,9 +466,8 @@ void test_power_getConfiguration_buckPwrRsrcCfg_noValidParam(void)
 }
 
 /**
- * \brief   Pmic_powerTps6522xGetPwrResourceCfg: Test API error handling for when there are no valid parameters
- within
- *                                               LDO Power Resource CFG
+ *  \brief  Pmic_powerTps6522xGetPwrResourceCfg: Test API error handling for when there are no valid parameters
+ *                                               within LDO Power Resource CFG
  */
 void test_power_getConfiguration_ldoPwrRsrcCfg_noValidParam(void)
 {
@@ -500,9 +498,8 @@ void test_power_getConfiguration_ldoPwrRsrcCfg_noValidParam(void)
 }
 
 /**
- * \brief   Pmic_powerTps6522xGetPwrResourceCfg: Test API error handling for when there are no valid parameters
- within
- *                                               VCCA_VMON/VMONx Power Resource CFG
+ *  \brief  Pmic_powerTps6522xGetPwrResourceCfg: Test API error handling for when there are no valid parameters
+ *                                               within VCCA_VMON/VMONx Power Resource CFG
  */
 void test_power_getConfiguration_vccaVmonPwrRsrcCfg_noValidParam(void)
 {
@@ -521,9 +518,9 @@ void test_power_getConfiguration_vccaVmonPwrRsrcCfg_noValidParam(void)
 }
 
 /**
- * \brief   Pmic_powerTps6522xGetPwrResourceCfg: Test API response for when all its input parameters are valid (no
- null
- *                                               parameters, acceptable power resource CFG validParams, etc.)
+ *  \brief  Pmic_powerTps6522xGetPwrResourceCfg: Test API response for when all its input parameters are valid
+ *                                               (no null parameters, acceptable power resource CFG validParams,
+ *                                               etc.)
  */
 void test_power_getConfiguration_validParameters(void)
 {

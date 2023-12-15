@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -32,17 +32,19 @@
  *****************************************************************************/
 
 /**
- *  \ingroup  DRV_PMIC_MODULE
- *  \defgroup DRV_PMIC_IRQ_MODULE PMIC Interrupt Driver API.
- *      This module explains about PMIC Interrupt driver parameters and API
- *      usage. PMIC Interrupt Driver module covers all Interrupt feature APIs,
- *      which includes Get/clear Interrupt status, extract the Interrupt status
- *      as per Interrupt hierarchy, masking/unmasking of all Interrupts and
- *      a separate API for GPIO Interrupt masking/unmasking.
+ *  \ingroup    DRV_PMIC_MODULE
+ *  \defgroup   DRV_PMIC_IRQ_MODULE PMIC Interrupt Driver API
  *
- *      Supported PMIC devices for Interrupt Module:
- *      1. TPS6594x (Leo PMIC Device).
- *      2. LP8764x  (Hera PMIC Device).
+ *  \brief      This module explains about PMIC Interrupt driver parameters and
+ *              API usage. PMIC Interrupt Driver module covers all Interrupt feature
+ *              APIs, which includes Get/clear Interrupt status, extract the Interrupt
+ *              status as per Interrupt hierarchy, masking/unmasking of all Interrupts
+ *              and a separate API for GPIO Interrupt masking/unmasking.
+ *
+ *              Supported PMIC devices for Interrupt Module:
+ *              1. TPS6594x (Leo PMIC Device).
+ *              2. LP8764x  (Hera PMIC Device).
+ *              3. TPS6522x (Burton PMIC Deivce)
  *
  *  @{
  */
@@ -59,18 +61,21 @@
 /* ==========================================================================*/
 /*                             Include Files                                 */
 /* ==========================================================================*/
+
 #include "pmic_core.h"
-#include "cfg/tps6522x/pmic_irq_tps6522x.h"
-#include "cfg/tps6594x/pmic_irq_tps6594x.h"
-#include "cfg/lp8764x/pmic_irq_lp8764x.h"
+#include "pmic_irq_tps6522x.h"
+#include "pmic_irq_tps6594x.h"
+#include "pmic_irq_lp8764x.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
+
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
+
 /**
  *  \anchor Pmic_IrqGpioNum
  *  \name PMIC GPIO Interrupt Mask values
@@ -78,7 +83,7 @@ extern "C"
  *  @{
  */
 #define PMIC_IRQ_GPIO_ALL_INT_MASK_NUM   (12U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_IrqNum
@@ -87,7 +92,7 @@ extern "C"
  *  @{
  */
 #define PMIC_IRQ_ALL                     (0xFFU)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_IrqClearFlag
@@ -97,7 +102,7 @@ extern "C"
  */
 #define PMIC_IRQ_CLEAR_NONE              (0U)
 #define PMIC_IRQ_CLEAR                   (1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_IrqMaskFlag
@@ -107,7 +112,7 @@ extern "C"
  */
 #define PMIC_IRQ_UNMASK                  (bool)false
 #define PMIC_IRQ_MASK                    (bool)true
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_IrqGpioIntrType
@@ -118,26 +123,31 @@ extern "C"
 #define PMIC_IRQ_GPIO_FALL_INT_TYPE      (0x0U)
 #define PMIC_IRQ_GPIO_RISE_INT_TYPE      (0x1U)
 #define PMIC_IRQ_GPIO_RISE_FALL_INT_TYPE (0x2U)
-/* @} */
+/** @} */
 
-/*==========================================================================*/
-/*                         Structures and Enums                             */
-/*==========================================================================*/
-/*!
- * \brief   PMIC Interrupt status object structure.
+/* ========================================================================== */
+/*                          Structures and Enums                              */
+/* ========================================================================== */
+
+/**
+ * \anchor  Pmic_IrqStatus
+ * \name    PMIC Interrupt status object structure
  *
- * \param   intStatus    To store all available interrupts using bit fields.
+ * \param   intStatus   Used store all available interrupts using bit fields
  *
+ * @{
  */
 typedef struct Pmic_IrqStatus_s
 {
     uint32_t intStatus[4];
 } Pmic_IrqStatus_t;
+/** @} */
 
-/*==========================================================================*/
-/*                         Function Declarations                            */
-/*==========================================================================*/
-/*!
+/* ========================================================================== */
+/*                          Function Declarations                             */
+/* ========================================================================== */
+
+/**
  * \brief   API to read Error status.
  *
  * Requirement: REQ_TAG(PDK-5805), REQ_TAG(PDK-5842), REQ_TAG(PDK-5832),
@@ -173,7 +183,7 @@ typedef struct Pmic_IrqStatus_s
  */
 int32_t Pmic_irqGetErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_IrqStatus_t *pErrStat, const bool clearIRQ);
 
-/*!
+/**
  * \brief   API to clear Error status.
  *
  * Requirement: REQ_TAG(PDK-5805), REQ_TAG(PDK-9113), REQ_TAG(PDK-9120)
@@ -195,6 +205,8 @@ int32_t Pmic_irqGetErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_IrqStatus_
  *                                    for TPS6594x LEO PMIC,
  *                                    \ref Pmic_lp8764x_IrqNum
  *                                    for LP8764x HERA PMIC,
+ *                                    \ref Pmic_tps6522x_IrqNum
+ *                                    for TPS6522x BURTON PMIC,
  *                                    \ref Pmic_IrqNum
  *                                    for all interrupts except gpio.
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
@@ -202,7 +214,7 @@ int32_t Pmic_irqGetErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_IrqStatus_
  */
 int32_t Pmic_irqClrErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t irqNum);
 
-/*!
+/**
  * \brief   API to mask/unmask interrupts.
  *
  * Requirement: REQ_TAG(PDK-5805)
@@ -221,6 +233,8 @@ int32_t Pmic_irqClrErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t i
  *                                    for TPS6594x LEO PMIC,
  *                                    \ref Pmic_lp8764x_IrqNum
  *                                    for LP8764x HERA PMIC,
+ *                                    \ref Pmic_tps6522x_IrqNum
+ *                                    for TPS6522x BURTON PMIC,
  *                                    \ref Pmic_IrqNum
  *                                    for all interrupts except gpio.
  * \param   mask              [IN]    Parameter to mask/unmask INTR.
@@ -230,7 +244,7 @@ int32_t Pmic_irqClrErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t i
  */
 int32_t Pmic_irqMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t irqNum, const bool mask);
 
-/*!
+/**
  * \brief   API to extract each Error status.
  *
  * Requirement: REQ_TAG(PDK-5805)
@@ -249,12 +263,14 @@ int32_t Pmic_irqMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t irqNu
  *                                    \ref Pmic_tps6594x_IrqNum.
  *                                    For LP8764x HERA:
  *                                    \ref Pmic_lp8764x_IrqNum.
+ *                                    For TPS6522x BURTON:
+ *                                    \ref Pmic_tps6522x_IrqNum.
  * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
  *          For valid values \ref Pmic_ErrorCodes.
  */
 int32_t Pmic_getNextErrorStatus(const Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_IrqStatus_t *pErrStat, uint8_t *pIrqNum);
 
-/*!
+/**
  * \brief   API to mask/unmask GPIO interrupts.
  *
  * Requirement: REQ_TAG(PDK-5812)
@@ -271,6 +287,8 @@ int32_t Pmic_getNextErrorStatus(const Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_I
  *                                    for TPS6594x LEO PMIC,
  *                                    \ref Pmic_lp8764x_IrqGpioNum
  *                                    for LP8764x HERA PMIC,
+ *                                    \ref Pmic_tps6522x_IrqGpioNum
+ *                                    for TPS6522x BURTON PMIC,
  *                                    \ref Pmic_IrqGpioNum
  *                                    for all gpio interrupts.
  * \param   mask              [IN]    Parameter to mask/unmask INTR.
@@ -286,7 +304,7 @@ int32_t Pmic_irqGpioMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
                              const bool         mask,
                              const uint8_t      gpioIntrType);
 
-/*!
+/**
  * \brief   API to read the status of PMIC interrupts is masked or not
  *
  * Requirement: REQ_TAG(PDK-9153)
@@ -306,6 +324,8 @@ int32_t Pmic_irqGpioMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  *                                    for TPS6594x LEO PMIC,
  *                                    \ref Pmic_lp8764x_IrqNum
  *                                    for LP8764x HERA PMIC,
+ *                                    \ref Pmic_tps6522x_IrqNum
+ *                                    for TPS6522x BURTON PMIC
  * \param   pMaskStatus       [OUT]   Pointer to hold the status of interrupt is
  *                                    masked or not
  *                                    For Valid values:
@@ -315,7 +335,7 @@ int32_t Pmic_irqGpioMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
  */
 int32_t Pmic_irqGetMaskIntrStatus(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t irqNum, bool *pMaskStatus);
 
-/*!
+/**
  * \brief   API to read the status of PMIC GPIO interrupts is masked or not
  *
  * Requirement: REQ_TAG(PDK-9152)
@@ -332,6 +352,8 @@ int32_t Pmic_irqGetMaskIntrStatus(Pmic_CoreHandle_t *pPmicCoreHandle, const uint
  *                                    for TPS6594x LEO PMIC,
  *                                    \ref Pmic_lp8764x_IrqGpioNum
  *                                    for LP8764x HERA PMIC,
+ *                                    \ref Pmic_tps6522x_IrqGpioNum
+ *                                    for TPS6522x BURTON PMIC,
  * \param   gpioIntrType      [IN]    Parameter to mask GPIO RISE and FALL
  *                                    Interrupt.
  *                                    Valid values: \ref Pmic_IrqGpioIntrType.
@@ -365,4 +387,4 @@ int32_t Pmic_irqGetGpioMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 #endif /* PMIC_IRQ_H_ */
 
-/* @} */
+/** @} */

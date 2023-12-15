@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -38,7 +38,7 @@
  *          to set/get time calendar register, set/get alarm/timer interrupt
  *          and to enable/disable RTC.
  */
-#include "../include/pmic_rtc.h"
+#include "pmic_rtc.h"
 #include "pmic_core_priv.h"
 #include "pmic_rtc_priv.h"
 
@@ -1584,24 +1584,6 @@ static int32_t Pmic_rtcEnableRtc(Pmic_CoreHandle_t *pPmicCoreHandle, bool enable
     return pmicStatus;
 }
 
-/*!
- * \brief   API to Set the alarm Time and Date to PMIC RTC.
- *
- * Requirement: REQ_TAG(PDK-5855)
- * Design: did_pmic_rtc_cfg_readback
- * Architecture: aid_pmic_rtc_cfg
- *
- *          This function is used to set the alarm Date and Time parameters
- *          depending upon the bit fields set in validParams of Time and Date
- *          structures in RTC of PMIC Device.
- *
- * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * \param   timeCfg           [IN]    PMIC RTC time configuration
- * \param   dateCfg           [IN]    PMIC RTC date configuration
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes.
- */
 int32_t
 Pmic_rtcSetAlarmInfo(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_RtcTime_t timeCfg, const Pmic_RtcDate_t dateCfg)
 {
@@ -1643,24 +1625,6 @@ Pmic_rtcSetAlarmInfo(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_RtcTime_t ti
     return (pmicStatus);
 }
 
-/*!
- * \brief   API to Get the alarm Time and Date from PMIC RTC function.
- *
- * Requirement: REQ_TAG(PDK-5855)
- * Design: did_pmic_rtc_cfg_readback
- * Architecture: aid_pmic_rtc_cfg
- *
- *          This function is used to Get the alarm date and time parameters
- *          depending upon the bit fields set in validParams of Time and Date
- *          structures in RTC of the PMIC Device.
- *
- * \param   pPmicCoreHandle   [IN]     PMIC Interface Handle.
- * \param   pTimeCfg          [OUT]    PMIC RTC time configuration
- * \param   pDateCfg          [OUT]    PMIC RTC date configuration
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_rtcGetAlarmInfo(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_RtcTime_t *pTimeCfg, Pmic_RtcDate_t *pDateCfg)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -1698,24 +1662,6 @@ int32_t Pmic_rtcGetAlarmInfo(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_RtcTime_t 
     return (pmicStatus);
 }
 
-/*!
- * \brief   API to Set the timer interrupt Period to PMIC RTC.
- *
- * Requirement: REQ_TAG(PDK-5855)
- * Design: did_pmic_rtc_cfg_readback
- * Architecture: aid_pmic_rtc_cfg
- *
- *          This function is used to set the timer interrupt Period to
- *          the RTC present in the PMIC.
- *
- * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * \param   timerPeriod       [IN]    Timer interrupt periods.
- *                                    For Valid values:
- *                                          \ref Pmic_RtcTimerIntrPeriod.
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_rtcSetTimerPeriod(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t timerPeriod)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -1756,22 +1702,6 @@ int32_t Pmic_rtcSetTimerPeriod(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t
     return pmicStatus;
 }
 
-/*!
- * \brief   API to Get the timer interrupt period from PMIC RTC.
- *
- * Requirement: REQ_TAG(PDK-5855)
- * Design: did_pmic_rtc_cfg_readback
- * Architecture: aid_pmic_rtc_cfg
- *
- *          This function is used to get the timer interrupt period from RTC
- *          present in the PMIC.
- *
- * \param   pPmicCoreHandle   [IN]     PMIC Interface Handle.
- * \param   pTimerPeriod      [OUT]    Timer interrupt period
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_rtcGetTimerPeriod(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t *pTimerPeriod)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -1809,24 +1739,6 @@ int32_t Pmic_rtcGetTimerPeriod(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t *pTim
     return pmicStatus;
 }
 
-/*!
- * \brief   API to Set the RTC Time and Date to PMIC RTC.
- *
- * Requirement: REQ_TAG(PDK-5855)
- * Design: did_pmic_rtc_cfg_readback
- * Architecture: aid_pmic_rtc_cfg
- *
- *          This function is used to set the RTC Date and Time parameters
- *          depending upon the bit fields set in validParams of Time and Date
- *          structures in RTC of PMIC Device.
- *
- * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * \param   timeCfg           [IN]    PMIC RTC time configuration
- * \param   dateCfg           [IN]    PMIC RTC date configuration
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes.
- */
 int32_t
 Pmic_rtcSetTimeDateInfo(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_RtcTime_t timeCfg, const Pmic_RtcDate_t dateCfg)
 {
@@ -1880,24 +1792,6 @@ Pmic_rtcSetTimeDateInfo(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_RtcTime_t
     return pmicStatus;
 }
 
-/*!
- * \brief   API to Get the RTC Time and Date from PMIC RTC function.
- *
- * Requirement: REQ_TAG(PDK-5855)
- * Design: did_pmic_rtc_cfg_readback
- * Architecture: aid_pmic_rtc_cfg
- *
- *          This function is used to Get the RTC date and time parameters
- *          depending upon the bit fields set in validParams of Time and Date
- *          structures in RTC of the PMIC Device.
- *
- * \param   pPmicCoreHandle   [IN]     PMIC Interface Handle.
- * \param   pTimeCfg          [OUT]    PMIC RTC time configuration
- * \param   pDateCfg          [OUT]    PMIC RTC date configuration
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_rtcGetTimeDateInfo(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_RtcTime_t *pTimeCfg, Pmic_RtcDate_t *pDateCfg)
 {
     int32_t       pmicStatus = PMIC_ST_SUCCESS;
@@ -1950,23 +1844,6 @@ int32_t Pmic_rtcGetTimeDateInfo(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_RtcTime
     return (pmicStatus);
 }
 
-/*!
- * \brief   API to Set the RTC frequency compensation value.
- *
- * Requirement: REQ_TAG(PDK-5855)
- * Design: did_pmic_rtc_cfg_readback
- * Architecture: aid_pmic_rtc_cfg
- *
- *          This function is used to set the frequency compensation
- *          value in the RTC of the PMIC Device.
- *
- * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * \param   compensation      [IN]    PMIC RTC frequency compensation value
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
-
 int32_t Pmic_rtcSetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle, const uint16_t compensation)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -1989,23 +1866,6 @@ int32_t Pmic_rtcSetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle, const uint16_t c
     return pmicStatus;
 }
 
-/*!
- * \brief   API to Get the RTC frequency compensation value.
- *
- * Requirement: REQ_TAG(PDK-5855)
- * Design: did_pmic_rtc_cfg_readback
- * Architecture: aid_pmic_rtc_cfg
- *
- *          This function is used to get the frequency compensation
- *          value from the RTC of the PMIC Device.
- *
- * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * \param   pCompensation     [OUT]   Pointer to store frequency compensation
- *                                    value
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_rtcGetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t *pCompensation)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -2034,22 +1894,6 @@ int32_t Pmic_rtcGetFreqComp(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t *pCompe
     return pmicStatus;
 }
 
-/*!
- * \brief   API to Enable/Disable the RTC.
- *
- * Requirement: REQ_TAG(PDK-5855)
- * Design: did_pmic_rtc_cfg_readback
- * Architecture: aid_pmic_rtc_cfg
- *
- *          This function is used to Start/Stop the RTC present in PMIC.
- *
- * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * \param   enableRtc         [IN]    Parameter to start/stop RTC.
- *                                    Valid values: \ref Pmic_RtcState
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_rtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle, const bool enableRtc)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -2072,24 +1916,6 @@ int32_t Pmic_rtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle, const bool enableRtc)
     return pmicStatus;
 }
 
-/*!
- * \brief   API to Enable/Disable the RTC Alarm Interrupt.
- *
- * Requirement: REQ_TAG(PDK-5855), REQ_TAG(PDK-5831)
- * Design: did_pmic_rtc_cfg_readback, did_pmic_lpstandby_wkup_cfg
- * Architecture: aid_pmic_rtc_cfg
- *
- *          This function is used to enable/disable the RTC alarm interrupt.
- *
- * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * \param   enableIntr        [IN]    Parameter to enable/disable Alarm
- *                                    Interrupt.
- *                                    For Valid values:
- *                                        \ref Pmic_RtcAlramIntrEnable
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_rtcEnableAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle, const bool enableIntr)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -2114,24 +1940,6 @@ int32_t Pmic_rtcEnableAlarmIntr(Pmic_CoreHandle_t *pPmicCoreHandle, const bool e
     return pmicStatus;
 }
 
-/*!
- * \brief   API to Enable/Disable the RTC Timer Interrupt.
- *
- * Requirement: REQ_TAG(PDK-5855), REQ_TAG(PDK-5831)
- * Design: did_pmic_rtc_cfg_readback, did_pmic_lpstandby_wkup_cfg
- * Architecture: aid_pmic_rtc_cfg
- *
- *          This function is used to enable/disable the RTC timer interrupt.
- *
- * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * \param   enableIntr        [IN]    Parameter to enable/disable Timer
- *                                    Interrupt.
- *                                    For Valid values:
- *                                        \ref Pmic_RtcTimerIntrEnable
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_rtcEnableTimerIntr(Pmic_CoreHandle_t *pPmicCoreHandle, const bool enableIntr)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -2189,23 +1997,6 @@ static int32_t Pmic_rtcGetPowerupStatus(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic
     return pmicStatus;
 }
 
-/*!
- * \brief   API to Get the Reset status of RTC.
- *
- * Requirement: REQ_TAG(PDK-9145), REQ_TAG(PDK-9142)
- * Design: did_pmic_rtc_rst_status
- * Architecture: aid_pmic_rtc_cfg
- *
- *          This function is used to get the Reset status of the RTC
- *          depending on the bit fields set in validParams of
- *          struct Pmic_RtcRstStatus_t structures.
- *
- * \param   pPmicCoreHandle   [IN]       PMIC Interface Handle.
- * \param   pRtcRstStatus     [IN/OUT]   Pointer to hold RTC Reset status.
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_rtcGetRstStatus(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_RtcRstStatus_t *pRtcRstStatus)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -2266,23 +2057,6 @@ int32_t Pmic_rtcGetRstStatus(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_RtcRstStat
     return pmicStatus;
 }
 
-/*!
- * \brief   API to read RTC status which defines RTC is started or not
- *
- * Requirement: REQ_TAG(PDK-9155)
- * Design: did_pmic_rtc_status
- * Architecture: aid_pmic_rtc_cfg
- *
- *          This function is read RTC status which defines RTC is started or not
- *
- * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * \param   pRtcstatus         [IN]   Pointer to store the RTC status which
- *                                    defines  RTC is started or not
- *                                        Valid values: \ref Pmic_RtcStatus
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_rtcGetStatus(Pmic_CoreHandle_t *pPmicCoreHandle, bool *pRtcstatus)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -2329,24 +2103,6 @@ int32_t Pmic_rtcGetStatus(Pmic_CoreHandle_t *pPmicCoreHandle, bool *pRtcstatus)
     return pmicStatus;
 }
 
-/*!
- * \brief   API to clear the Reset status of RTC.
- *
- * Requirement: REQ_TAG(PDK-9142), REQ_TAG(PDK-9145)
- * Design: did_pmic_rtc_clr_rst_status
- * Architecture: aid_pmic_rtc_cfg
- *
- *          This function is used to clear the Reset status of the RTC
- *          depending on the Pmic_RtcRstStatusType
- *
- * \param   pPmicCoreHandle   [IN]   PMIC Interface Handle.
- * \param   rtcRstStatType    [IN]   RTC Reset Status Type
- *                                   For Valid values:
- *                                        \ref Pmic_RtcRstStatusType
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_rtcClrRstStatus(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t rtcRstStatType)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -2722,22 +2478,6 @@ static int32_t Pmic_rtcSetCrystalOscCfg(Pmic_CoreHandle_t *pPmicCoreHandle, cons
     return pmicStatus;
 }
 
-/*!
- * \brief   API to Set PMIC RTC Configuration
- *
- * Requirement: REQ_TAG(PDK-9141), REQ_TAG(PDK-9135), REQ_TAG(PDK-9111)
- * Design: did_pmic_rtc_cfg_readback
- * Architecture: aid_pmic_rtc_cfg
- *
- *          This function is used to set RTC configuration depending upon the
- *          bit fields set in validParams of Pmic_RtcCfg_t structure.
- *
- * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * \param   rtcCfg            [IN]    Set required RTC configuration
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes.
- */
 int32_t Pmic_rtcSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_RtcCfg_t rtcCfg)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -2783,23 +2523,6 @@ int32_t Pmic_rtcSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_
     return pmicStatus;
 }
 
-/*!
- * \brief   API to Get PMIC RTC Configuration
- *
- * Requirement: REQ_TAG(PDK-9141), REQ_TAG(PDK-9135)
- * Design: did_pmic_rtc_cfg_readback
- * Architecture: aid_pmic_rtc_cfg
- *
- *          This function is used to Get RTC configuration depending upon the
- *          bit fields set in validParams of Pmic_RtcCfg_t structure.
- *
- * \param   pPmicCoreHandle   [IN]       PMIC Interface Handle.
- * \param   pRtcCfg           [IN/OUT]   Pointer to store required RTC
- *                                       configuration
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes.
- */
 int32_t Pmic_rtcGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_RtcCfg_t *pRtcCfg)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -44,7 +44,7 @@
 #include "pmic_wdg_priv.h"
 #include "pmic_fsm_priv.h"
 #include "pmic_power_priv.h"
-#include "cfg/lp8764x/pmic_power_lp8764x_priv.h"
+#include "pmic_power_lp8764x_priv.h"
 #include "pmic_irq_priv.h"
 #include "pmic_esm_priv.h"
 #include "pmic_rtc_priv.h"
@@ -202,27 +202,6 @@ static int32_t Pmic_validatePmicHandleGetRegWrProtectStat(Pmic_CoreHandle_t *pPm
     return pmicStatus;
 }
 
-/*!
- * \brief: Function call wrappers for LLD write API with CRC8 support
- *         This function does the following:
- *         1. If CRC8 is enabled, calculates CRC8 value for given data byte
- *         2. In case of SPI, forms SPI transfer header for PMIC to understand
- *             which register needs to be accessed - 2 byte header
- *             formation is as per TRM
- *         3. If the register to be addressed is Watchdog register, it updates
- *            the Slave and Register address as per TRM to properly communicate
- *            with PMIC Watchdog module and access it's registers
- *         4. Calls Application provided Transfer function to send the
- *            data byte, along with CRC8 if supported.
- *         5. Works with the valid PMIC instance else does not do any operation
- *
- * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle
- * \param   regAddr           [IN]    Register address
- * \param   txData            [IN]    Data to be written
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t regAddr, uint8_t txData)
 {
     int32_t  pmicStatus = PMIC_ST_SUCCESS;
@@ -494,28 +473,6 @@ static int32_t Pmic_commIoStoreI2cCrcData(const Pmic_CoreHandle_t *pPmicCoreHand
     return pmicStatus;
 }
 
-/*!
- * \brief: Function call wrappers for LLD write API with CRC8 support
- *         This function does the following:
- *         1. If CRC8 is enabled, calculates CRC8 value for given data byte
- *         2. In case of SPI, forms SPI transfer header for PMIC to understand
- *             which register needs to be accessed - 2 byte header
- *             formation is as per TRM
- *         3. If the register to be addressed is Watchdog register, it updates
- *            the Slave and Register address as per TRM to properly communicate
- *            with PMIC Watchdog module and access it's registers
- *         4. Calls Application provided Transfer function to recive  the
- *            data byte, along with CRC8 if supported.
- *         5. Copies received data byte into pRxBuffer byte buffer
- *         6. Works with the valid PMIC instance else does not do any operation
- *
- * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * \param   regAddr           [IN]    Register address.
- * \param   pRxBuffer         [OUT]   BUffer to receive data
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t regAddr, uint8_t *pRxBuffer)
 {
     int32_t  pmicStatus = PMIC_ST_SUCCESS;

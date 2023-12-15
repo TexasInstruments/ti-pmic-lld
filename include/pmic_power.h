@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -32,21 +32,22 @@
  *****************************************************************************/
 
 /**
- *  \ingroup DRV_PMIC_MODULE
- *  \defgroup DRV_PMIC_POWER_MODULE PMIC Power Driver API
- *      This module explains about PMIC Power Resources driver parameters and
- *      API usage. PMIC Power Module covers all power resources feature APIs,
- *      which includes set/get BUCK and LDO regulator output voltage
- *      configurations, set/get volatge monitor, current monitor, power good
- *      monitor and short circuit protection configuration for external power
- *      sources, set/get thermal monitoring/shutdown of the PMIC module,
- *      APIs to configure regulator and VMON interrupts to notify the
- *      application when PMIC power related errors are found on the power
- *      Rails
+ *  \ingroup    DRV_PMIC_MODULE
+ *  \defgroup   DRV_PMIC_POWER_MODULE PMIC Power Driver API
  *
- *      Supported PMIC devices for Power Module:
- *      1. TPS6594x (Leo PMIC Device)
- *      2. LP8764x  (Hera PMIC Device)
+ *  \brief      This module explains about PMIC Power Resources driver parameters
+ *              and API usage. PMIC Power Module covers all power resources feature
+ *              APIs, which includes set/get BUCK and LDO regulator output voltage
+ *              configurations, set/get volatge monitor, current monitor, power good
+ *              monitor and short circuit protection configuration for external power
+ *              sources, set/get thermal monitoring/shutdown of the PMIC module, APIs
+ *              to configure regulator and VMON interrupts to notify the application
+ *              when PMIC power related errors are found on the power rails.
+ *
+ *              Supported PMIC devices for Power Module:
+ *              1. TPS6594x (Leo PMIC Device)
+ *              2. LP8764x  (Hera PMIC Device)
+ *
  *  @{
  */
 
@@ -63,9 +64,9 @@
 /*                             Include Files                                 */
 /* ========================================================================= */
 #include "pmic_core.h"
-#include "cfg/tps6522x/pmic_power_tps6522x.h"
-#include "cfg/tps6594x/pmic_power_tps6594x.h"
-#include "cfg/lp8764x/pmic_power_lp8764x.h"
+#include "pmic_power_tps6522x.h"
+#include "pmic_power_tps6594x.h"
+#include "pmic_power_lp8764x.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -163,7 +164,7 @@ extern "C"
  *         Powergood voltage level(For VMON1/VMON2) in mv
  *         Valid only for VMON1/VMMON2/BUCK/LDO */
 #define PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID             (19U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_PowerResourcesValidParamBitShiftValues
@@ -193,7 +194,7 @@ extern "C"
 #define PMIC_CFG_PWR_RESOURCE_PG_OV_THRESHOLD_LVL_VALID_SHIFT (1U << PMIC_CFG_PWR_RESOURCE_PG_OV_THRESHOLD_LVL_VALID)
 #define PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID_SHIFT        (1U << PMIC_CFG_PWR_RESOURCE_RAIL_GRP_SEL_VALID)
 #define PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID_SHIFT       (1U << PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_PowerCommonParamCfg
@@ -230,7 +231,7 @@ extern "C"
 /** \brief validParams value used to set/get Select the trigger selection for
  *         Moderate Error  */
 #define PMIC_MODERATE_ERR_TRIG_VALID                          (7U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_PowerCommonParamBitShiftValues
@@ -249,6 +250,7 @@ extern "C"
 #define PMIC_SOC_RAIL_TRIG_VALID_SHIFT                        (1U << PMIC_SOC_RAIL_TRIG_VALID)
 #define PMIC_MCU_RAIL_TRIG_VALID_SHIFT                        (1U << PMIC_MCU_RAIL_TRIG_VALID)
 #define PMIC_MODERATE_ERR_TRIG_VALID_SHIFT                    (1U << PMIC_MODERATE_ERR_TRIG_VALID)
+/** @} */
 
 /**
  *  \anchor Pmic_PowerStatusValidParamCfg
@@ -274,7 +276,7 @@ extern "C"
 /** \brief validParams value used to get voltage level status for VCCA
  *         Valid only for VCCA */
 #define PMIC_POWER_VCCA_OV_LVL_STAT_VALID                     (3U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_PowerStatusValidParamCfgBitShiftValues
@@ -289,6 +291,7 @@ extern "C"
 #define PMIC_POWER_RESOURCE_UV_STAT_VALID_SHIFT               (1U << PMIC_POWER_RESOURCE_UV_STAT_VALID)
 #define PMIC_POWER_RESOURCE_OV_STAT_VALID_SHIFT               (1U << PMIC_POWER_RESOURCE_OV_STAT_VALID)
 #define PMIC_POWER_VCCA_OV_LVL_STAT_VALID_SHIFT               (1U << PMIC_POWER_VCCA_OV_LVL_STAT_VALID)
+/** @} */
 
 /**
  *  \anchor Pmic_PowerThermalThresholdValidParamCfg
@@ -305,7 +308,7 @@ extern "C"
  *         and PG2.0
  */
 #define PMIC_THERMAL_SHTDWN_VALID                             (2U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_PowerThermalThresholdValidParamCfgBits
@@ -318,7 +321,7 @@ extern "C"
  */
 #define PMIC_THERMAL_WARN_VALID_SHIFT                         (1U << PMIC_THERMAL_WARN_VALID)
 #define PMIC_THERMAL_SHTDWN_VALID_SHIFT                       (1U << PMIC_THERMAL_SHTDWN_VALID)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_PowerThermalStatValidParamCfg
@@ -332,7 +335,7 @@ extern "C"
 #define PMIC_THERMAL_STAT_ORD_SHTDWN_VALID                    (2U)
 /** \brief validParams value used to get Immediate Shutdown status */
 #define PMIC_THERMAL_STAT_IMM_SHTDWN_VALID                    (3U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_PowerThermalStatValidParamCfgBits
@@ -346,7 +349,7 @@ extern "C"
 #define PMIC_THERMAL_STAT_WARN_VALID_SHIFT                    (1U << PMIC_THERMAL_STAT_WARN_VALID)
 #define PMIC_THERMAL_STAT_ORD_SHTDWN_VALID_SHIFT              (1U << PMIC_THERMAL_STAT_ORD_SHTDWN_VALID)
 #define PMIC_THERMAL_STAT_IMM_SHTDWN_VALID_SHIFT              (1U << PMIC_THERMAL_STAT_IMM_SHTDWN_VALID)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_PowerInterruptCfg
@@ -356,7 +359,7 @@ extern "C"
  */
 #define PMIC_POWER_INTERRUPT_ENABLE                           (0U)
 #define PMIC_POWER_INTERRUPT_DISABLE                          (1U)
-/*  @} */
+/** @} */
 
 /**
  *  \anchor Pmic_Power_Good_Window
@@ -368,7 +371,7 @@ extern "C"
 #define PMIC_POWER_GOOD_UV_MONITOR_ENABLE                     (0x0U)
 /** \brief Both undervoltage and overvoltage are monitored */
 #define PMIC_POWER_GOOD_UV_OV_MONITOR_ENABLE                  (0x1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_Power_Good_Polarity
@@ -380,7 +383,7 @@ extern "C"
 #define PMIC_POWER_PGOOD_POL_HIGH                             (0x0U)
 /** \brief PGOOD signal is low when monitored inputs are valid */
 #define PMIC_POWER_PGOOD_POL_LOW                              (0x1U)
-/* @} */
+/** @} */
 
 /**
  *  \anchor Pmic_Power_Trigger_Sel
@@ -392,17 +395,17 @@ extern "C"
 #define PMIC_POWER_TRIG_ODERLY_SHUTDOWN                       (1U)
 #define PMIC_POWER_TRIG_MCU_PWR_ERR                           (2U)
 #define PMIC_POWER_TRIG_SOC_PWR_ERR                           (3U)
-/*  @} */
+/** @} */
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
 
-/*!
+/**
  *  \anchor  Pmic_PowerResourceCfg_s
  *  \brief   Pmic Power resources control and configuration structure.
- *           Note: validParams is input param for all Set and Get APIs. other
- *           params except validParams is input param for Set APIs and output
- *           param for Get APIs
+ *           Note: validParams is input param for all Set and Get APIs. Other
+ *           params except validParams are input params for Set APIs and output
+ *           params for Get APIs
  *
  *  \param   validParams         Selection of structure parameters to be set,
  *                               from the combination of
@@ -558,6 +561,8 @@ extern "C"
  *                               Valid only when
  *                               PMIC_CFG_REGULATOR_VMON_VOLTAGE_SET_VALID
  *                               bit is set
+ *
+ *  @{
  */
 typedef struct Pmic_PowerResourceCfg_s
 {
@@ -582,14 +587,15 @@ typedef struct Pmic_PowerResourceCfg_s
     uint8_t  railGrpSel;
     uint16_t voltage_mV;
 } Pmic_PowerResourceCfg_t;
+/** @} */
 
-/*!
+/**
  *  \anchor  Pmic_PowerCommonCfg_s
  *  \brief   Power configuration
  *           The power control and config structure
- *           Note: validParams is input param for all Set and Get APIs. other
- *           params except validParams is input param for Set APIs and output
- *           param for Get APIs
+ *           Note: validParams is input param for all Set and Get APIs. Other
+ *           params except validParams are input params for Set APIs and output
+ *           params for Get APIs
  *
  *  \param   validParams         Selection of structure parameters to be set,
  *                               from the combination of
@@ -653,6 +659,7 @@ typedef struct Pmic_PowerResourceCfg_s
  *                               Valid only when
  *                               PMIC_MODERATE_ERR_TRIG_VALID bit set
  *
+ *  @{
  */
 typedef struct Pmic_PowerCommonCfg_s
 {
@@ -666,13 +673,14 @@ typedef struct Pmic_PowerCommonCfg_s
     uint8_t  mcuRailTrig;
     uint8_t  moderateRailTrig;
 } Pmic_PowerCommonCfg_t;
+/** @} */
 
-/*!
+/**
  *  \anchor  Pmic_PowerResourceStat_s
  *  \brief   PMIC power status.
  *           The PMIC power and thermal status structure.
- *           Note: validParams is input param for all Get APIs. other params
- *           except validParams is output param for Get APIs
+ *           Note: validParams is input param for all Get APIs. Other params
+ *           except validParams are output param for Get APIs
  *
  *  \param   validParams       Selection of structure parameters to be set,
  *                             from the combination of
@@ -747,6 +755,8 @@ typedef struct Pmic_PowerCommonCfg_s
  *                             \ref Pmic_LP8764x_Vcca_Voltage_Status
  *                             Valid only when
  *                             PMIC_POWER_VCCA_OV_LVL_STAT_VALID bit set
+ *
+ *  @{
  */
 typedef struct Pmic_PowerResourceStat_s
 {
@@ -756,13 +766,14 @@ typedef struct Pmic_PowerResourceStat_s
     bool     overVoltageTholdStat;
     bool     overVoltageProtectionLvlStat;
 } Pmic_PowerResourceStat_t;
+/** @} */
 
-/*!
+/**
  *  \anchor  Pmic_PowerThermalCfg_s
  *  \brief   PMIC Power Thermal configuration structure
- *           Note: validParams is input param for all Set and Get APIs. other
- *           params except validParams is input param for Set APIs and output
- *           param for Get APIs
+ *           Note: validParams is input param for all Set and Get APIs. Other
+ *           params except validParams are input params for Set APIs and output
+ *           params for Get APIs
  *
  *  \param   validParams         Selection of structure parameters to be set,
  *                               from the combination of
@@ -797,6 +808,7 @@ typedef struct Pmic_PowerResourceStat_s
  *                               PMIC_THERMAL_SHTDWN_VALID bit of
  *                               validParams is set.
  *
+ *  @{
  */
 typedef struct Pmic_PowerThermalCfg_s
 {
@@ -804,12 +816,13 @@ typedef struct Pmic_PowerThermalCfg_s
     bool     thermalWarnThold;
     bool     thermalShutdownThold;
 } Pmic_PowerThermalCfg_t;
+/** @} */
 
-/*!
+/**
  *  \anchor  Pmic_PowerThermalStat_t
  *  \brief   PMIC Power Thermal status structure
- *           Note: validParams is input param for all Get APIs. other params
- *           except validParams is output param for Get APIs
+ *           Note: validParams is input param for all Get APIs. Other params
+ *           except validParams are output params for Get APIs
  *
  *  \param   validParams         Selection of structure parameters to be set,
  *                               from the combination of
@@ -839,6 +852,7 @@ typedef struct Pmic_PowerThermalCfg_s
  *                               Valid only when
  *                               PMIC_THERMAL_STAT_IMM_SHTDWN_VALID bit is set
  *
+ *  @{
  */
 typedef struct Pmic_PowerThermalStat_s
 {
@@ -847,6 +861,7 @@ typedef struct Pmic_PowerThermalStat_s
     bool     thermalStateOderlyShtDwn;
     bool     thermalStateImmShtDwn;
 } Pmic_PowerThermalStat_t;
+/** @} */
 
 /*==========================================================================*/
 /*                         Function Declarations                            */
@@ -1304,7 +1319,7 @@ int32_t Pmic_powerSetThermalConfig(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmi
  */
 int32_t Pmic_powerGetThermalConfig(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_PowerThermalCfg_t *pThermalThreshold);
 
-/*!
+/**
  * \brief   API to enable/disable Power interrupt.
  *
  * Requirement: REQ_TAG(PDK-5829), REQ_TAG(PDK-5848)
@@ -1337,7 +1352,7 @@ int32_t Pmic_powerSetPwrRsrcIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
                                  const uint8_t      intrType,
                                  const bool         intrEnable);
 
-/*!
+/**
  * \brief   API to enable/disable Power interrupt.
  *
  * Requirement: REQ_TAG(PDK-5841), REQ_TAG(PDK-5840)
@@ -1367,4 +1382,4 @@ int32_t Pmic_powerSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t intr
 
 #endif /* PMIC_POWER_H_ */
 
-/* @} */
+/** @} */

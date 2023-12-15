@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -39,13 +39,13 @@
  *
  */
 
-#include "../../../include/pmic_irq.h"
-#include "../../pmic_core_priv.h"
-#include "../../pmic_irq_priv.h"
-#include "../../../include/cfg/lp8764x/pmic_irq_lp8764x.h"
+#include "pmic_irq.h"
+#include "pmic_core_priv.h"
+#include "pmic_irq_priv.h"
+#include "pmic_irq_lp8764x.h"
 #include "pmic_irq_lp8764x_priv.h"
-#include "../../pmic_power_priv.h"
-#include "../../pmic_wdg_priv.h"
+#include "pmic_power_priv.h"
+#include "pmic_wdg_priv.h"
 
 // clang-format off
 /* PMIC LP8764x Interrupt Configuration as per Pmic_lp8764x_IrqNum. */
@@ -521,23 +521,11 @@ static Pmic_GpioIntrTypeCfg_t lp8764x_gpioIntrCfg[] =
 };
 // clang-format on
 
-/*
- * \brief   Get LP8764x Interrupt config.
- *          This function is used to get LP8764x Interrupt configuration.
- *
- * \param   pIntCfg   [OUT]  To store lp8764x Interrupt configuration.
- */
 void pmic_get_lp8764x_intrCfg(Pmic_IntrCfg_t **pIntrCfg)
 {
     *pIntrCfg = gLp8764x_intCfg;
 }
 
-/*
- * \brief   Get LP8764x Interrupt config.
- *          This function is used to get LP8764x Interrupt configuration.
- *
- * \param   pGpioIntrCfg   [OUT]  To store lp8764x Interrupt configuration.
- */
 void pmic_get_lp8764x_intrGpioCfg(Pmic_GpioIntrTypeCfg_t **pGpioIntrCfg)
 {
     *pGpioIntrCfg = lp8764x_gpioIntrCfg;
@@ -1134,9 +1122,6 @@ static int32_t Pmic_lp8764x_irqGetStartupMiscModerateSevereFsmErr(Pmic_CoreHandl
     return pmicStatus;
 }
 
-/*!
- * \brief  Function to decipher the L2 Error for LP8764x Hera PMIC
- */
 int32_t Pmic_lp8764x_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t l1RegAddr, Pmic_IrqStatus_t *pErrStat)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;

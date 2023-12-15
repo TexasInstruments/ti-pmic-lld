@@ -72,4 +72,4 @@ extern "C"
 
 #endif /* PMIC_ADC_TPS6522X_H_ */
 
-/* @} */
+/** @} */

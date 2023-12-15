@@ -1,11 +1,6 @@
 #include "tiva_priv.h"
 #include "tiva_pwm.h"
 
-/**
- * \brief Function to initialize a handle to PWM output M1PWM7
- *
- * \param pwmHandle [OUT] PWM pin to initialize
- */
 void initializePwmHandle(pwmHandle_t *pwmHandle)
 {
     // clang-format off
@@ -24,11 +19,6 @@ void initializePwmHandle(pwmHandle_t *pwmHandle)
     // clang-format on
 }
 
-/**
- * \brief Function to initialize a PWM pin given a PWM handle
- *
- * \param pwmHandle [IN] Handle used to initialze PWM pin
- */
 void initializePwmPin(const pwmHandle_t pwmHandle)
 {
     // Enable and provide a clock to PWM module

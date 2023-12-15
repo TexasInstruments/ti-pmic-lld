@@ -222,7 +222,7 @@ void test_ADC_gpioPinTypeADC_invalidGpioNum(void)
     for (gpioNum = 0; gpioNum < 20; gpioNum++)
     {
         status = Pmic_gpioPinTypeADC(&pmicCoreHandle, gpioNum);
-        if ((gpioNum = PMIC_TPS6522X_GPIO4_PIN) || (gpioNum = PMIC_TPS6522X_GPIO5_PIN))
+        if ((gpioNum == PMIC_TPS6522X_GPIO4_PIN) || (gpioNum == PMIC_TPS6522X_GPIO5_PIN))
         {
             continue;
         }
@@ -609,7 +609,7 @@ void test_ADC_getStatus_idle(void)
     delayTimeInMs(&timerHandle, 100);
 
     // Get ADC status and compare expected vs. actual status
-    status = Pmic_ADCGetStatus(&pmicCoreHandle, adcBusy);
+    status = Pmic_ADCGetStatus(&pmicCoreHandle, &adcBusy);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
     TEST_ASSERT_EQUAL(false, adcBusy);
 }
@@ -642,7 +642,7 @@ void test_ADC_getStatus_busy(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Get ADC status and compare expected vs. actual status
-    status = Pmic_ADCGetStatus(&pmicCoreHandle, adcBusy);
+    status = Pmic_ADCGetStatus(&pmicCoreHandle, &adcBusy);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
     TEST_ASSERT_EQUAL(true, adcBusy);
 }

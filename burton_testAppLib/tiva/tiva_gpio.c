@@ -2,13 +2,6 @@
 #include "tiva_gpio.h"
 #include "burton_tests/gpio_test.h"
 
-/**
- * \brief Function to initialize an array of GPIO pin handles
- *
- * \param gpioPinHandle     [OUT]    Reference to array of handles to GPIO pins
- * \param bOutput           [IN]     This parameter set as true will configure every handle to be handles to output
- *                                   pins. Otherwise, it will configure every handle to be handles to input pins
- */
 void initializeGpioPinHandles(gpioPinHandle_t *gpioPinHandle, bool bOutput)
 {
     gpioPinHandle[0].sysPeriphGPIO = SYSCTL_PERIPH_GPIOE;
@@ -48,11 +41,6 @@ void initializeGpioPinHandles(gpioPinHandle_t *gpioPinHandle, bool bOutput)
     gpioPinHandle[5].gpioShiftVal = 1;
 }
 
-/**
- * \brief Function to initialize all GPIOs for use as input pins
- *
- * \param gpioPinHandle  [IN]   array of handles used to configure Tiva GPIO pins as input/output
- */
 void initializeGpioPins(gpioPinHandle_t *gpioPinHandle)
 {
     uint8_t pin = 0;
@@ -76,12 +64,6 @@ void initializeGpioPins(gpioPinHandle_t *gpioPinHandle)
     }
 }
 
-/**
- * \brief Function to initialize a GPIO for use as an input or output pin. Whether GPIO is input
- *        or output is dependent on the gpioPinDir struct member of gpioPinHandle parameter
- *
- * \param gpioPinHandle     [IN]    Handle to a GPIO pin
- */
 void initializeGpioPin(const gpioPinHandle_t gpioPinHandle)
 {
     SysCtlPeripheralEnable(gpioPinHandle.sysPeriphGPIO);
@@ -100,12 +82,6 @@ void initializeGpioPin(const gpioPinHandle_t gpioPinHandle)
     }
 }
 
-/**
- * \brief Function to initialize a handle to a GPIO output that is interfacing the ESM. Target
- *        GPIO output pin will be PF1
- *
- * \param gpioPinHandle     [OUT]    GPIO pin handle to initialize
- */
 void initializeEsmGpioOutputHandle(gpioPinHandle_t *gpioPinHandle)
 {
     gpioPinHandle->sysPeriphGPIO = SYSCTL_PERIPH_GPIOF;

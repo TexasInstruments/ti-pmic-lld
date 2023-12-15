@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -40,33 +40,30 @@
  *  \mainpage  PMIC LLD
  *
  *
- *  This is an API guide for PMIC(Power Management Integrated Circuit) Driver.
- *  PMIC Driver is designed to power up different components on the embedded
- *  boards or provide supply to MCU(Micro Controller Unit) or
- *  SoC(System on chip) using APIs provided in the guide.
+ *  This is an API guide for PMIC (Power Management Integrated Circuit) Driver.
+ *  The PMIC Driver provides a set of low level APIs that aim to establish the
+ *  foundation for the end-user's software application with PMICs and jumpstart
+ *  development/evaluation. The PMIC Driver is designed to be MCU-agnostic and
+ *  can be used in baremetal or RTOS applications. Using the PMIC driver alongside
+ *  a supported PMIC, the end-user can manage the power of and provide power to MCUs,
+ *  SoCs, and/or different components on embedded systems.
  *
  *  The PMIC Driver supports below mentioned PMIC devices and their
- *  features or Modules.
+ *  features or modules.
  *
  *  Supported PMIC Devices are:
  *    1. TPS6594x (Leo PMIC Device)
  *    2. LP8764x  (Hera PMIC Device)
+ *    3. TPS6522x (Burton PMIC Device)
  *
- *  Above PMICs have multiple functionalities and configurable features. Like,
- *  Real Time Clock (RTC) which provides Time, Calendar, Alarm and timer,
- *  Configurable GPIO pins to support wakeup, nSLEEP, PGOOD, nRESET for
- *  SOC/MCU, GPIOs with configurable PU/PD to enable other chips,
- *  Have number of BUCK(with different phases) and LDO regulators to provide
- *  supply to other modules on the board, Have the Voltage Monitor feature
- *  to monitor and notify for OV, UV, SC and Over Heat(Thermal Monitor).
- *  Have interrupt feature to notify severe, moderate, fsm Errors and provide
- *  asynchronous events for all supported features including GPIO External
- *  Interrupts, Have the WatchDog feature to monitor correct operation of the
- *  MCU using WDG trigger mode or using WDOG QA mode, Supports I2C(single and
- *  dual mode) and SPI communication protocols to access the registers for
- *  Read/Write operations with or without CRC.
+ *  PMIC features that are accessible and configurable by the PMIC Driver are the
+ *  following: PMIC communication (such as communicating with or without CRC),
+ *  general purpose input/output (GPIO), real time clock (RTC), interrupt requests
+ *  (IRQ), error state monitor (ESM), finite state machine (FSM), watchdog (WDG),
+ *  analog-to-digital converter (ADC), power (including BUCKs, LDOs, VMONs, thermal),
+ *  and miscellaneous functions (such as writing to scratchpad registers).
  *
- *  The PMIC-LLD includes the following sub-modules/drivers
+ *  The PMIC-LLD includes the following sub-modules/drivers:
  *
  *   - <b> Common </b> (See \ref DRV_PMIC_COMMON_MODULE) <br>
  *   - <b> GPIO </b> (See \ref DRV_PMIC_GPIO_MODULE) <br>
@@ -76,8 +73,9 @@
  *   - <b> FSM </b> (See \ref DRV_PMIC_FSM_MODULE) <br>
  *   - <b> POWER </b> (See \ref DRV_PMIC_POWER_MODULE) <br>
  *   - <b> WDG </b> (See \ref DRV_PMIC_WDG_MODULE) <br>
+ *   - <b> ADC </b> (See \ref DRV_PMIC_ADC_MODULE) <br>
  *
- *  All above PMICs features can be accessed or configured by using PMIC Driver
- *  APIs and illustrated in the guide.
+ *  All above PMIC features/modules can be accessed or configured by using PMIC Driver
+ *  APIs documented within this guide.
  *
  */

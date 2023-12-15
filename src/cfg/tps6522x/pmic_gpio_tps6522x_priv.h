@@ -45,7 +45,7 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
-#include "../../pmic_gpio_priv.h"
+#include "pmic_gpio_priv.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -135,6 +135,15 @@ int32_t Pmic_gpioTps6522xSetEnPbVsensePinConfiguration(Pmic_CoreHandle_t        
 int32_t Pmic_gpioTps6522xGetEnPbVsensePinConfiguration(Pmic_CoreHandle_t    *pPmicCoreHandle,
                                                        Pmic_EnPbVsenseCfg_t *pEnPbVsenseCfg);
 
+/**
+ *  \brief      This function is used to configure a TPS6522x GPIO pin to ADC functionality.
+ *
+ *  \param      pPmicCoreHandle     [IN]    PMIC interface handle
+ *  \param      gpioPin             [IN]    GPIO pin to configure to ADC functionality
+ *
+ *  \return     Success code if GPIO pin is configured to ADC type, error code otherwise.
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
 int32_t Pmic_tps6522xGpioPinTypeADC(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t gpioPin);
 
 #ifdef __cplusplus

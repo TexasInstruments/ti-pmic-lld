@@ -31,16 +31,16 @@
  *
  *****************************************************************************/
 /**
- *  \file   pmic_power.c
+ *  \file   pmic_power_tps6522x.c
  *
  *  \brief  This source file contains TPS6522x Burton specific power API definitions
  *          and data structures.
  */
 
-#include "../../../include/pmic_types.h"
-#include "../../../include/pmic_power.h"
-#include "../../pmic_core_priv.h"
-#include "../../pmic_io_priv.h"
+#include "pmic_types.h"
+#include "pmic_power.h"
+#include "pmic_core_priv.h"
+#include "pmic_io_priv.h"
 #include "pmic_power_tps6522x_priv.h"
 
 // clang-format off
@@ -139,6 +139,16 @@ void Pmic_get_tps6522x_PwrVccaVmonRegisters(const Pmic_powerTps6522xVccaVmonRegi
     *pVccaVmonRegisters = gTps6522xVccaVmonRegisters;
 }
 
+/**
+ *  \brief      This function is used to verify the PMIC handle and pointer to TPS6522x power resource
+ *              configuration struct.
+ *
+ *  \param      pPmicCoreHandle     [IN]        PMIC interface handle
+ *  \param      pPwrResourceCfg     [IN]        Pointer to power resource configuration struct
+ *
+ *  \return     Success code if PMIC handle and power resource references are valid, error code otherwise.
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
 static int32_t Pmic_powerTps6522xParamCheck_pPwrRsrcCfg(Pmic_CoreHandle_t                    *pPmicCoreHandle,
                                                         Pmic_powerTps6522xPowerResourceCfg_t *pPwrResourceCfg)
 {
@@ -172,8 +182,18 @@ static int32_t Pmic_powerTps6522xParamCheck_pPwrRsrcCfg(Pmic_CoreHandle_t       
     return status;
 }
 
+/**
+ *  \brief      This function is used to verify the PMIC handle and constant TPS6522x power resource
+ *              configuration struct.
+ *
+ *  \param      pPmicCoreHandle     [IN]        PMIC interface handle
+ *  \param      pwrResourceCfg      [IN]        Power resource configuration struct
+ *
+ *  \return     Success code if PMIC handle and constant power resource CFG are valid, error code otherwise.
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
 static int32_t Pmic_powerTps6522xParamCheck_constPwrRsrcCfg(Pmic_CoreHandle_t                         *pPmicCoreHandle,
-                                                            const Pmic_powerTps6522xPowerResourceCfg_t pPwrResourceCfg)
+                                                            const Pmic_powerTps6522xPowerResourceCfg_t pwrResourceCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -197,7 +217,7 @@ static int32_t Pmic_powerTps6522xParamCheck_constPwrRsrcCfg(Pmic_CoreHandle_t   
     }
 
     // Power Resource CFG validParam check
-    if ((status == PMIC_ST_SUCCESS) && (pPwrResourceCfg.validParams == 0))
+    if ((status == PMIC_ST_SUCCESS) && (pwrResourceCfg.validParams == 0))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -205,8 +225,17 @@ static int32_t Pmic_powerTps6522xParamCheck_constPwrRsrcCfg(Pmic_CoreHandle_t   
     return status;
 }
 
+/**
+ *  \brief      This function is used to check whether a voltage is valid for a Buck.
+ *
+ *  \param      pBuckPwrRsrcCfg     [IN]        Array of Buck power resource configuration structs
+ *  \param      buckNum             [IN]        Buck number
+ *
+ *  \return     Success code if Buck voltage is within range, error code otherwise.
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
 static int32_t
-Pmic_powerTps6522xBuckVoltageWithinRangeCheck(const Pmic_powerTps6522xBuckPowerResourceCfg_t *buckPwrRsrcCfg,
+Pmic_powerTps6522xBuckVoltageWithinRangeCheck(const Pmic_powerTps6522xBuckPowerResourceCfg_t *pBuckPwrRsrcCfg,
                                               const uint8_t                                   buckNum)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -214,8 +243,8 @@ Pmic_powerTps6522xBuckVoltageWithinRangeCheck(const Pmic_powerTps6522xBuckPowerR
     switch (buckNum)
     {
         case PMIC_POWER_TPS6522X_REGULATOR_BUCK1:
-            if ((buckPwrRsrcCfg[buckNum].buckVoltage_mv < PMIC_POWER_TPS6522X_BUCK1_VOLTAGE_MIN_500_MV) ||
-                (buckPwrRsrcCfg[buckNum].buckVoltage_mv > PMIC_POWER_TPS6522X_BUCK1_VOLTAGE_MAX_3300_MV))
+            if ((pBuckPwrRsrcCfg[buckNum].buckVoltage_mv < PMIC_POWER_TPS6522X_BUCK1_VOLTAGE_MIN_500_MV) ||
+                (pBuckPwrRsrcCfg[buckNum].buckVoltage_mv > PMIC_POWER_TPS6522X_BUCK1_VOLTAGE_MAX_3300_MV))
             {
                 status = PMIC_ST_ERR_INV_VOLTAGE;
             }
@@ -224,8 +253,8 @@ Pmic_powerTps6522xBuckVoltageWithinRangeCheck(const Pmic_powerTps6522xBuckPowerR
         case PMIC_POWER_TPS6522X_REGULATOR_BUCK2:
         case PMIC_POWER_TPS6522X_REGULATOR_BUCK3:
         case PMIC_POWER_TPS6522X_REGULATOR_BUCK4:
-            if ((buckPwrRsrcCfg[buckNum].buckVoltage_mv < PMIC_POWER_TPS6522X_BUCK2_3_4_VOLTAGE_MIN_500_MV) ||
-                (buckPwrRsrcCfg[buckNum].buckVoltage_mv > PMIC_POWER_TPS6522X_BUCK2_3_4_VOLTAGE_MAX_3300_MV))
+            if ((pBuckPwrRsrcCfg[buckNum].buckVoltage_mv < PMIC_POWER_TPS6522X_BUCK2_3_4_VOLTAGE_MIN_500_MV) ||
+                (pBuckPwrRsrcCfg[buckNum].buckVoltage_mv > PMIC_POWER_TPS6522X_BUCK2_3_4_VOLTAGE_MAX_3300_MV))
             {
                 status = PMIC_ST_ERR_INV_VOLTAGE;
             }
@@ -236,8 +265,17 @@ Pmic_powerTps6522xBuckVoltageWithinRangeCheck(const Pmic_powerTps6522xBuckPowerR
     return status;
 }
 
+/**
+ *  \brief      This function is used to check whether a voltage is valid for a LDO.
+ *
+ *  \param      pLdoPwrRsrcCfg      [IN]        Array of LDO power resource configuration structs
+ *  \param      ldoNum              [IN]        LDO number
+ *
+ *  \return     Success code if LDO voltage is within range, error code otherwise.
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
 static int32_t
-Pmic_powerTps6522xLdoVoltageWithinRangeCheck(const Pmic_powerTps6522xLdoPowerResourceCfg_t *ldoPwrRsrcCfg,
+Pmic_powerTps6522xLdoVoltageWithinRangeCheck(const Pmic_powerTps6522xLdoPowerResourceCfg_t *pLdoPwrRsrcCfg,
                                              const uint8_t                                  ldoNum)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -245,8 +283,8 @@ Pmic_powerTps6522xLdoVoltageWithinRangeCheck(const Pmic_powerTps6522xLdoPowerRes
     switch (ldoNum)
     {
         case PMIC_POWER_TPS6522X_REGULATOR_LDO1:
-            if ((ldoPwrRsrcCfg[ldoNum].ldoVoltage_mv < PMIC_POWER_TPS6522X_LDO1_VOLTAGE_MIN_1200_MV) ||
-                (ldoPwrRsrcCfg[ldoNum].ldoVoltage_mv > PMIC_POWER_TPS6522X_LDO1_VOLTAGE_MAX_3300_MV))
+            if ((pLdoPwrRsrcCfg[ldoNum].ldoVoltage_mv < PMIC_POWER_TPS6522X_LDO1_VOLTAGE_MIN_1200_MV) ||
+                (pLdoPwrRsrcCfg[ldoNum].ldoVoltage_mv > PMIC_POWER_TPS6522X_LDO1_VOLTAGE_MAX_3300_MV))
             {
                 status = PMIC_ST_ERR_INV_VOLTAGE;
             }
@@ -254,8 +292,8 @@ Pmic_powerTps6522xLdoVoltageWithinRangeCheck(const Pmic_powerTps6522xLdoPowerRes
             break;
         case PMIC_POWER_TPS6522X_REGULATOR_LDO2:
         case PMIC_POWER_TPS6522X_REGULATOR_LDO3:
-            if ((ldoPwrRsrcCfg[ldoNum].ldoVoltage_mv < PMIC_POWER_TPS6522X_LDO2_3_VOLTAGE_MIN_600_MV) ||
-                (ldoPwrRsrcCfg[ldoNum].ldoVoltage_mv > PMIC_POWER_TPS6522X_LDO2_3_VOLTAGE_MAX_3400_MV))
+            if ((pLdoPwrRsrcCfg[ldoNum].ldoVoltage_mv < PMIC_POWER_TPS6522X_LDO2_3_VOLTAGE_MIN_600_MV) ||
+                (pLdoPwrRsrcCfg[ldoNum].ldoVoltage_mv > PMIC_POWER_TPS6522X_LDO2_3_VOLTAGE_MAX_3400_MV))
             {
                 status = PMIC_ST_ERR_INV_VOLTAGE;
             }
@@ -266,6 +304,15 @@ Pmic_powerTps6522xLdoVoltageWithinRangeCheck(const Pmic_powerTps6522xLdoPowerRes
     return status;
 }
 
+/**
+ *  \brief      This function is used to check whether a voltage is valid for a VMON.
+ *
+ *  \param      vccaVmonPwrRsrcCfg      [IN]        VCCA_VMON/VMONx power resource configuration struct
+ *  \param      vmonNum                 [IN]        VMON number
+ *
+ *  \return     Success code if VMON voltage is within range, error code otherwise.
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
 static int32_t
 Pmic_powerTps6522xVmonVoltageWithinRangeCheck(const Pmic_powerTps6522xVccaVmonPowerResourceCfg_t vccaVmonPwrRsrcCfg,
                                               const uint8_t                                      vmonNum)
@@ -295,6 +342,15 @@ Pmic_powerTps6522xVmonVoltageWithinRangeCheck(const Pmic_powerTps6522xVccaVmonPo
     return status;
 }
 
+/**
+ *  \brief      This function is used to check whether voltages are within range for all valid power resources
+ *              (valid power resources are governed by validParams).
+ *
+ *  \param      pwrResourceCfg      [IN]        TPS6522x power resource configuration struct
+ *
+ *  \return     Success code if the voltages of all valid power resources are within range, error code otherwise.
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
 static int32_t Pmic_powerTps6522xVoltageWithinRangeCheck(const Pmic_powerTps6522xPowerResourceCfg_t pwrResourceCfg)
 {
     uint8_t  iter = 0;
@@ -323,64 +379,78 @@ static int32_t Pmic_powerTps6522xVoltageWithinRangeCheck(const Pmic_powerTps6522
         }
     }
 
-    // For each LDO...
-    for (iter = 0; iter < PMIC_POWER_TPS6522X_MAX_LDO_NUM; iter++)
+    // If BUCK voltages within range...
+    if (status == PMIC_ST_SUCCESS)
     {
-        // Calculate LDO validParam
-        validParam = PMIC_POWER_TPS6522X_CFG_LDO1_VALID + iter;
-
-        // If LDO validParam and its voltage_mv validParam are set...
-        if (pmic_validParamCheck(pwrResourceCfg.validParams, validParam) &&
-            pmic_validParamCheck(pwrResourceCfg.ldoPwrRsrcCfg[iter].validParams,
-                                 PMIC_POWER_TPS6522X_CFG_LDO_VOLTAGE_MV_VALID))
+        // For each LDO...
+        for (iter = 0; iter < PMIC_POWER_TPS6522X_MAX_LDO_NUM; iter++)
         {
-            // Check that LDO voltage is within range
-            status = Pmic_powerTps6522xLdoVoltageWithinRangeCheck(pwrResourceCfg.ldoPwrRsrcCfg, iter);
-        }
+            // Calculate LDO validParam
+            validParam = PMIC_POWER_TPS6522X_CFG_LDO1_VALID + iter;
 
-        // If LDO voltage not within range, break
-        if (status != PMIC_ST_SUCCESS)
-        {
-            break;
+            // If LDO validParam and its voltage_mv validParam are set...
+            if (pmic_validParamCheck(pwrResourceCfg.validParams, validParam) &&
+                pmic_validParamCheck(pwrResourceCfg.ldoPwrRsrcCfg[iter].validParams,
+                                     PMIC_POWER_TPS6522X_CFG_LDO_VOLTAGE_MV_VALID))
+            {
+                // Check that LDO voltage is within range
+                status = Pmic_powerTps6522xLdoVoltageWithinRangeCheck(pwrResourceCfg.ldoPwrRsrcCfg, iter);
+            }
+
+            // If LDO voltage not within range, break
+            if (status != PMIC_ST_SUCCESS)
+            {
+                break;
+            }
         }
     }
 
-    // For each VMONx...
-    for (iter = 0; iter < PMIC_POWER_TPS6522X_MAX_LDO_NUM - 1; iter++)
+    // If LDO voltages within range...
+    if (status == PMIC_ST_SUCCESS)
     {
-        // Calculate VMONx validParam
-        validParam = PMIC_POWER_TPS6522X_CFG_VMON1_VALID + iter;
-
-        // If VMONx validParam is set...
-        if (pmic_validParamCheck(pwrResourceCfg.validParams, validParam))
+        // For each VMONx...
+        for (iter = 0; iter < PMIC_POWER_TPS6522X_MAX_LDO_NUM - 1; iter++)
         {
-            // Calculate VMONx PG_LEVEL_MV validParam
-            validParam = (iter == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON1) ?
-                             PMIC_POWER_TPS6522X_CFG_VMON1_PG_LEVEL_MV_VALID :
-                             PMIC_POWER_TPS6522X_CFG_VMON2_PG_LEVEL_MV_VALID;
+            // Calculate VMONx validParam
+            validParam = PMIC_POWER_TPS6522X_CFG_VMON1_VALID + iter;
 
-            // If VMONx PG_LEVEL_MV validParam is set...
-            if (pmic_validParamCheck(pwrResourceCfg.vccaVmonPwrRsrcCfg.validParams, validParam))
+            // If VMONx validParam is set...
+            if (pmic_validParamCheck(pwrResourceCfg.validParams, validParam))
             {
-                // Check that VMONx voltage is within range
-                status = Pmic_powerTps6522xVmonVoltageWithinRangeCheck(pwrResourceCfg.vccaVmonPwrRsrcCfg, iter);
-            }
-        }
+                // Calculate VMONx PG_LEVEL_MV validParam
+                validParam = (iter == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON1) ?
+                                 PMIC_POWER_TPS6522X_CFG_VMON1_PG_LEVEL_MV_VALID :
+                                 PMIC_POWER_TPS6522X_CFG_VMON2_PG_LEVEL_MV_VALID;
 
-        // If VMONx voltage not within range, break
-        if (status != PMIC_ST_SUCCESS)
-        {
-            break;
+                // If VMONx PG_LEVEL_MV validParam is set...
+                if (pmic_validParamCheck(pwrResourceCfg.vccaVmonPwrRsrcCfg.validParams, validParam))
+                {
+                    // Check that VMONx voltage is within range
+                    status = Pmic_powerTps6522xVmonVoltageWithinRangeCheck(pwrResourceCfg.vccaVmonPwrRsrcCfg, iter);
+                }
+            }
+
+            // If VMONx voltage not within range, break
+            if (status != PMIC_ST_SUCCESS)
+            {
+                break;
+            }
         }
     }
 
     return status;
 }
 
+/**
+ *  \brief      This function is used to store desired bit fields of the BUCK_CTRL register into the BUCK
+ *              power resource CFG (desired bit fields are governed by validParams).
+ *
+ *  \param      pBuckPowerResourceCfg       [IN/OUT]    Pointer to BUCK power resource configuration struct
+ *  \param      buckCtrlRegData             [IN]        BUCK_CTRL register data obtained from a prior read of the PMIC
+ */
 static void Pmic_powerTps6522xGetBuckCtrlRegBitFields(Pmic_powerTps6522xBuckPowerResourceCfg_t *pBuckPowerResourceCfg,
                                                       const uint8_t                             buckCtrlRegData)
 {
-    // Get bitfields from the BUCK_CTRL register
     if (pmic_validParamCheck(pBuckPowerResourceCfg->validParams, PMIC_POWER_TPS6522X_CFG_BUCK_PLDN_VALID))
     {
         pBuckPowerResourceCfg->buckPldn = (Pmic_powerTps6522xBuckPldnEn_t)Pmic_getBitField(
@@ -405,6 +475,13 @@ static void Pmic_powerTps6522xGetBuckCtrlRegBitFields(Pmic_powerTps6522xBuckPowe
     }
 }
 
+/**
+ *  \brief      This function is used to store desired bit fields of the BUCK_CONF register into the BUCK
+ *              power resource CFG (desired bit fields are governed by validParams).
+ *
+ *  \param      pBuckPowerResourceCfg       [IN/OUT]    Pointer to BUCK power resource configuration struct
+ *  \param      buckConfRegData             [IN]        BUCK_CONF register data obtained from a prior read of the PMIC
+ */
 static void Pmic_powerTps6522xGetBuckConfRegBitFields(Pmic_powerTps6522xBuckPowerResourceCfg_t *pBuckPowerResourceCfg,
                                                       const uint8_t                             buckConfRegData)
 {
@@ -417,7 +494,14 @@ static void Pmic_powerTps6522xGetBuckConfRegBitFields(Pmic_powerTps6522xBuckPowe
     }
 }
 
-static void Pmic_powerTps6522xBuckConvertVsetVal2Voltage(uint16_t     *buckVoltage_mv,
+/**
+ *  \brief      This function is used to convert a BUCK VSET value to a BUCK voltage value.
+ *
+ *  \param      pBuckVoltage_mv     [OUT]       BUCK voltage value in millivolts
+ *  \param      buckVoltage_vset    [IN]        BUCK voltage value in VSET form
+ *  \param      buckNum             [IN]        BUCK number
+ */
+static void Pmic_powerTps6522xBuckConvertVsetVal2Voltage(uint16_t     *pBuckVoltage_mv,
                                                          const uint8_t buckVoltage_vset,
                                                          const uint8_t buckNum)
 {
@@ -478,10 +562,18 @@ static void Pmic_powerTps6522xBuckConvertVsetVal2Voltage(uint16_t     *buckVolta
 
     if ((baseVoltage_mv != 0) && (voltageStep != 0))
     {
-        *buckVoltage_mv = baseVoltage_mv + (voltageStep * (buckVoltage_vset - baseVoltage_vset));
+        *pBuckVoltage_mv = baseVoltage_mv + (voltageStep * (buckVoltage_vset - baseVoltage_vset));
     }
 }
 
+/**
+ *  \brief      This function is used to convert BUCK_VOUT register data from VSET to voltage (mV)
+ *              and store it into the BUCK power resource CFG struct (if validParam is set).
+ *
+ *  \param      pBuckPowerResourceCfg       [IN/OUT]    Pointer to BUCK power resource configuration struct
+ *  \param      buckVoutRegData             [IN]        BUCK_VOUT register data obtained from a prior read of the PMIC
+ *  \param      buckNum                     [IN]        BUCK number
+ */
 static void Pmic_powerTps6522xGetBuckVoutRegBitFields(Pmic_powerTps6522xBuckPowerResourceCfg_t *pBuckPowerResourceCfg,
                                                       const uint8_t                             buckVoutRegData,
                                                       const uint8_t                             buckNum)
@@ -493,6 +585,14 @@ static void Pmic_powerTps6522xGetBuckVoutRegBitFields(Pmic_powerTps6522xBuckPowe
     }
 }
 
+/**
+ *  \brief      This function is used to store desired bit fields of the BUCK_PG_WINDOW register into the BUCK
+ *              power resource CFG struct (desired bit fields are governed by validParams).
+ *
+ *  \param      pBuckPowerResourceCfg       [IN/OUT]    Pointer to BUCK power resource configuration struct
+ *  \param      buckPgWindowRegData         [IN]        BUCK_PG_WINDOW register data obtained from a prior read
+ *                                                      of the PMIC
+ */
 static void
 Pmic_powerTps6522xGetBuckPgWindowRegBitFields(Pmic_powerTps6522xBuckPowerResourceCfg_t *pBuckPowerResourceCfg,
                                               const uint8_t                             buckPgWindowRegData)
@@ -506,6 +606,14 @@ Pmic_powerTps6522xGetBuckPgWindowRegBitFields(Pmic_powerTps6522xBuckPowerResourc
     }
 }
 
+/**
+ *  \brief      This function is used to store desired bit fields of the RAIL_SEL_1 register into the BUCK
+ *              power resource CFG struct (desired bit fields are governed by validParams).
+ *
+ *  \param      pBuckPowerResourceCfg       [IN/OUT]    Pointer to BUCK power resource configuration struct
+ *  \param      buckRailSelRegData          [IN]        RAIL_SEL_1 register data obtained from a prior read of the PMIC
+ *  \param      buckNum                     [IN]        BUCK number
+ */
 static void Pmic_PowerTps6522xGetRailSel1RegBitFields(Pmic_powerTps6522xBuckPowerResourceCfg_t *pBuckPowerResourceCfg,
                                                       const uint8_t                             buckRailSelRegData,
                                                       const uint8_t                             buckNum)
@@ -546,6 +654,27 @@ static void Pmic_PowerTps6522xGetRailSel1RegBitFields(Pmic_powerTps6522xBuckPowe
     }
 }
 
+/**
+ *  \brief      This function is used to get all desired information for a BUCK (desired information is specified
+ *              by validParams).
+ *
+ *              Supported obtainable configurations by this API for a BUCK are:
+ *              1. Buck pull-down resistor
+ *              2. Buck VMON enable
+ *              3. Buck PWM mode (auto or forced)
+ *              4. Buck enable
+ *              5. Buck slew-rate
+ *              6. Buck voltage (mV)
+ *              7. Buck VMON powergood threshold
+ *              8. Buck rail group selection
+ *
+ *  \param      pPmicCoreHandle             [IN]        PMIC interface handle
+ *  \param      pBuckPowerResourceCfg       [IN/OUT]    Array of BUCK power resource configuration structs
+ *  \param      buckNum                     [IN]        Buck number
+ *
+ *  \return     Success code if BUCK information is stored at index buckNum of array pBuckPowerResourceCfg,
+ *              error code otherwise. For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
 static int32_t Pmic_powerTps6522xGetBuckPwrResourceCfg(Pmic_CoreHandle_t                        *pPmicCoreHandle,
                                                        Pmic_powerTps6522xBuckPowerResourceCfg_t *pBuckPowerResourceCfg,
                                                        const uint8_t                             buckNum)
@@ -603,8 +732,8 @@ static int32_t Pmic_powerTps6522xGetBuckPwrResourceCfg(Pmic_CoreHandle_t        
     // After read, stop critical section
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
-    // For each register pertaining to the BUCK resource, get the relevant bit fields of the register
-    // (relevant bit fields are governed by validParams)
+    // For each register pertaining to the BUCK resource, get the desired bit fields of the register
+    // (desired bit fields are governed by validParams)
     if (status == PMIC_ST_SUCCESS)
     {
         // BUCK_CTRL register
@@ -626,6 +755,13 @@ static int32_t Pmic_powerTps6522xGetBuckPwrResourceCfg(Pmic_CoreHandle_t        
     return status;
 }
 
+/**
+ *  \brief      This function is used to store desired bit fields of the LDO_CTRL register into the LDO
+ *              power resource CFG struct (desired bit fields are governed by validParams).
+ *
+ *  \param      pLdoPowerResourceCfg        [IN/OUT]    Pointer to LDO power resource configuration struct
+ *  \param      ldoCtrlRegData              [IN]        LDO_CTRL register data obtained from a prior read of the PMIC
+ */
 static void Pmic_powerTps6522xGetLdoCtrlRegBitFields(Pmic_powerTps6522xLdoPowerResourceCfg_t *pLdoPowerResourceCfg,
                                                      const uint8_t                            ldoCtrlRegData)
 {
@@ -648,7 +784,14 @@ static void Pmic_powerTps6522xGetLdoCtrlRegBitFields(Pmic_powerTps6522xLdoPowerR
     }
 }
 
-static void Pmic_powerTps6522xLdoConvertVsetVal2Voltage(uint16_t     *ldoVoltage_mv,
+/**
+ *  \brief      This function is used to convert a LDO VSET value to LDO voltage value (mV).
+ *
+ *  \param      pLdoVoltage_mv      [OUT]       LDO voltage value in millivolts
+ *  \param      ldoVoltage_vset     [IN]        LDO voltage value in VSET form
+ *  \param      ldoNum              [IN]        LDO number
+ */
+static void Pmic_powerTps6522xLdoConvertVsetVal2Voltage(uint16_t     *pLdoVoltage_mv,
                                                         const uint8_t ldoVoltage_vset,
                                                         const uint8_t ldoNum)
 {
@@ -700,10 +843,18 @@ static void Pmic_powerTps6522xLdoConvertVsetVal2Voltage(uint16_t     *ldoVoltage
 
     if (baseVoltage_mv != 0)
     {
-        *ldoVoltage_mv = baseVoltage_mv + (voltageStep * (ldoVoltage_vset - baseVoltage_vset));
+        *pLdoVoltage_mv = baseVoltage_mv + (voltageStep * (ldoVoltage_vset - baseVoltage_vset));
     }
 }
 
+/**
+ *  \brief      This function is used to get the desired bit fields of the LDO_VOUT register
+ *              (desired bit fields are governed by validParams).
+ *
+ *  \param      pLdoPowerResourceCfg        [IN/OUT]    Pointer to LDO power resource configuration struct
+ *  \param      ldoVoutRegData              [IN]        LDO_VOUT register data obtained from a prior read of the PMIC
+ *  \param      ldoNum                      [IN]        LDO number
+ */
 static void Pmic_powerTps6522xGetLdoVoutRegBitFields(Pmic_powerTps6522xLdoPowerResourceCfg_t *pLdoPowerResourceCfg,
                                                      const uint8_t                            ldoVoutRegData,
                                                      const uint8_t                            ldoNum)
@@ -724,6 +875,14 @@ static void Pmic_powerTps6522xGetLdoVoutRegBitFields(Pmic_powerTps6522xLdoPowerR
     }
 }
 
+/**
+ *  \brief      This function is used to store desired bit fields of the LDO_PG_WINDOW register into the LDO
+ *              power resource CFG struct (desired bit fields are governed by validParams).
+ *
+ *  \param      pLdoPowerResourceCfg        [IN/OUT]    Pointer to LDO power resource configuration struct
+ *  \param      ldoPgWindowRegData          [IN]        LDO_PG_WINDOW register data obtained from a prior read
+ *                                                      of the PMIC
+ */
 static void Pmic_powerTps6522xGetLdoPgWindowRegBitFields(Pmic_powerTps6522xLdoPowerResourceCfg_t *pLdoPowerResourceCfg,
                                                          const uint8_t                            ldoPgWindowRegData)
 {
@@ -736,9 +895,17 @@ static void Pmic_powerTps6522xGetLdoPgWindowRegBitFields(Pmic_powerTps6522xLdoPo
     }
 }
 
-void Pmic_powerTps6522xGetRailSel2RegBitFields(Pmic_powerTps6522xLdoPowerResourceCfg_t *pLdoPowerResourceCfg,
-                                               const uint8_t                            ldoRailSelRegData,
-                                               const uint8_t                            ldoNum)
+/**
+ *  \brief      This function is used to store desired bit fields of the RAIL_SEL_2 register into the LDO
+ *              power resource CFG struct (desired bit fields are governed by validParams).
+ *
+ *  \param      pLdoPowerResourceCfg        [IN/OUT]    Pointer to LDO power resource configuration struct
+ *  \param      ldoRailSelRegData           [IN]        RAIL_SEL_2 register data obtained from a prior read of the PMIC
+ *  \param      ldoNum                      [IN]        LDO number
+ */
+static void Pmic_powerTps6522xGetRailSel2RegBitFields(Pmic_powerTps6522xLdoPowerResourceCfg_t *pLdoPowerResourceCfg,
+                                                      const uint8_t                            ldoRailSelRegData,
+                                                      const uint8_t                            ldoNum)
 {
     if (pmic_validParamCheck(pLdoPowerResourceCfg->validParams, PMIC_POWER_TPS6522X_CFG_LDO_RAIL_GRP_SEL_VALID))
     {
@@ -769,9 +936,29 @@ void Pmic_powerTps6522xGetRailSel2RegBitFields(Pmic_powerTps6522xLdoPowerResourc
     }
 }
 
-int32_t Pmic_powerTps6522xGetLdoPwrResourceCfg(Pmic_CoreHandle_t                       *pPmicCoreHandle,
-                                               Pmic_powerTps6522xLdoPowerResourceCfg_t *pLdoPowerResourceCfg,
-                                               const uint8_t                            ldoNum)
+/**
+ *  \brief      This function is used to get all desired information for a LDO (desired information is
+ *              governed by validParams).
+ *
+ *              Supported configurable options by this API for a LDO are:
+ *              1. LDO discharge enable
+ *              2. LDO VMON enable
+ *              3. LDO enable
+ *              4. LDO mode (bypass mode, LDO mode)
+ *              5. LDO voltage (mV)
+ *              6. LDO VMON powergood threshold
+ *              7. LDO rail group selection
+ *
+ *  \param      pPmicCoreHandle         [IN]        PMIC interface handle
+ *  \param      pLdoPowerResourceCfg    [IN/OUT]    Array of LDO power resource configuration structs
+ *  \param      ldoNum                  [IN]        LDO number
+ *
+ *  \return     Success code if LDO information is stored at index ldoNum of array pLdoPowerResourceCfg,
+ *              error code otherwise. For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
+static int32_t Pmic_powerTps6522xGetLdoPwrResourceCfg(Pmic_CoreHandle_t                       *pPmicCoreHandle,
+                                                      Pmic_powerTps6522xLdoPowerResourceCfg_t *pLdoPowerResourceCfg,
+                                                      const uint8_t                            ldoNum)
 {
     // clang-format off
     uint8_t ldoCtrlRegData      = 0;
@@ -819,8 +1006,8 @@ int32_t Pmic_powerTps6522xGetLdoPwrResourceCfg(Pmic_CoreHandle_t                
     // After read, stop critical section
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
-    // For each register pertaining to the LDO resource, get the relevant bit fields of the register
-    // (relevant bit fields are governed by validParams)
+    // For each register pertaining to the LDO resource, get the desired bit fields of the register
+    // (desired bit fields are governed by validParams)
     if (status == PMIC_ST_SUCCESS)
     {
         // LDO_CTRL register
@@ -839,86 +1026,119 @@ int32_t Pmic_powerTps6522xGetLdoPwrResourceCfg(Pmic_CoreHandle_t                
     return status;
 }
 
-static void Pmic_powerTps6522xGetVccaVmonCtrlBitFields(Pmic_powerTps6522xVccaVmonPowerResourceCfg_t *vccaVmonPwrRsrcCfg,
-                                                       uint8_t       vccaVmonCtrlRegData,
-                                                       const uint8_t vmonNum)
+/**
+ *  \brief      This function is used to store desired bit fields of the VCCA_VMON_CTRL register into the VCCA/VMON
+ *              power resource CFG struct (desired bit fields are governed by validParams).
+ *
+ *  \param      pVccaVmonPwrRsrcCfg     [IN/OUT]        Pointer to VCCA/VMON power resource configuration struct
+ *  \param      vccaVmonCtrlRegData     [IN]            VCCA_VMON_CTRL register data obtained from a prior read of
+ *                                                      the PMIC
+ *  \param      vmonNum                 [IN]            VMON number
+ */
+static void
+Pmic_powerTps6522xGetVccaVmonCtrlBitFields(Pmic_powerTps6522xVccaVmonPowerResourceCfg_t *pVccaVmonPwrRsrcCfg,
+                                           uint8_t                                       vccaVmonCtrlRegData,
+                                           const uint8_t                                 vmonNum)
 {
     if ((vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON1) &&
-        pmic_validParamCheck(vccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VMON1_EN_VALID))
+        pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VMON1_EN_VALID))
     {
-        vccaVmonPwrRsrcCfg->vmon1En =
+        pVccaVmonPwrRsrcCfg->vmon1En =
             (Pmic_powerTps6522xVmon1En_t)Pmic_getBitField(vccaVmonCtrlRegData,
                                                           PMIC_POWER_TPS6522X_VCCA_VMON_CTRL_VMON1_EN_SHIFT,
                                                           PMIC_POWER_TPS6522X_VCCA_VMON_CTRL_VMON1_EN_MASK);
     }
     else if ((vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON2) &&
-             pmic_validParamCheck(vccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VMON2_EN_VALID))
+             pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VMON2_EN_VALID))
     {
-        vccaVmonPwrRsrcCfg->vmon2En =
+        pVccaVmonPwrRsrcCfg->vmon2En =
             (Pmic_powerTps6522xVmon2En_t)Pmic_getBitField(vccaVmonCtrlRegData,
                                                           PMIC_POWER_TPS6522X_VCCA_VMON_CTRL_VMON2_EN_SHIFT,
                                                           PMIC_POWER_TPS6522X_VCCA_VMON_CTRL_VMON2_EN_MASK);
     }
     else if ((vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VCCA_VMON) &&
-             pmic_validParamCheck(vccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VCCA_VMON_EN_VALID))
+             pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VCCA_VMON_EN_VALID))
     {
-        vccaVmonPwrRsrcCfg->vccaVmonEn =
+        pVccaVmonPwrRsrcCfg->vccaVmonEn =
             (Pmic_powerTps6522xVccaVmonEn_t)Pmic_getBitField(vccaVmonCtrlRegData,
                                                              PMIC_POWER_TPS6522X_VCCA_VMON_CTRL_VCCA_VMON_EN_SHIFT,
                                                              PMIC_POWER_TPS6522X_VCCA_VMON_CTRL_VCCA_VMON_EN_MASK);
     }
 
-    if (pmic_validParamCheck(vccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VMON_DEGLITCH_SEL_VALID))
+    if (pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VMON_DEGLITCH_SEL_VALID))
     {
-        vccaVmonPwrRsrcCfg->vmonDeglitchSel =
+        pVccaVmonPwrRsrcCfg->vmonDeglitchSel =
             (Pmic_powerTps6522xVmonDeglitchSel_t)Pmic_getBitField(vccaVmonCtrlRegData,
                                                                   PMIC_POWER_TPS6522X_VCCA_VMON_CTRL_DEGLITCH_SEL_SHIFT,
                                                                   PMIC_POWER_TPS6522X_VCCA_VMON_CTRL_DEGLITCH_SEL_MASK);
     }
 }
 
-static Pmic_powerTps6522xGetVccaPgWindowBitFields(Pmic_powerTps6522xVccaVmonPowerResourceCfg_t *vccaVmonPwrRsrcCfg,
+/**
+ *  \brief      This function is used to store desired bit fields of the VCCA_PG_WINDOW register into the VCCA/VMON
+ *              power resource CFG struct (desired bit fields are governed by validParams).
+ *
+ *  \param      pVccaVmonPwrRsrcCfg     [IN/OUT]        Pointer to VCCA/VMON power resource configuration struct
+ *  \param      vccaPgWindowRegData     [IN]            VCCA_PG_WINDOW register data
+ */
+static Pmic_powerTps6522xGetVccaPgWindowBitFields(Pmic_powerTps6522xVccaVmonPowerResourceCfg_t *pVccaVmonPwrRsrcCfg,
                                                   uint8_t                                       vccaPgWindowRegData)
 {
-    if (pmic_validParamCheck(vccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VCCA_PG_LEVEL_VALID))
+    if (pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VCCA_PG_LEVEL_VALID))
     {
-        vccaVmonPwrRsrcCfg->vccaPgLevel =
+        pVccaVmonPwrRsrcCfg->vccaPgLevel =
             (Pmic_powerTps6522xVccaPgLevel_t)Pmic_getBitField(vccaPgWindowRegData,
                                                               PMIC_POWER_TPS6522X_VCCA_PG_WINDOW_VCCA_PG_SET_SHIFT,
                                                               PMIC_POWER_TPS6522X_VCCA_PG_WINDOW_VCCA_PG_SET_MASK);
     }
-    if (pmic_validParamCheck(vccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VCCA_VMON_THR_VALID))
+    if (pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VCCA_VMON_THR_VALID))
     {
-        vccaVmonPwrRsrcCfg->vccaVmonThr =
+        pVccaVmonPwrRsrcCfg->vccaVmonThr =
             (Pmic_powerTps6522xVccaVmonThr_t)Pmic_getBitField(vccaPgWindowRegData,
                                                               PMIC_POWER_TPS6522X_VCCA_PG_WINDOW_VCCA_VMON_THR_SHIFT,
                                                               PMIC_POWER_TPS6522X_VCCA_PG_WINDOW_VCCA_VMON_THR_MASK);
     }
 }
 
-static Pmic_powerTps6522xGetVmonPgWindowBitFields(Pmic_powerTps6522xVccaVmonPowerResourceCfg_t *vccaVmonPwrRsrcCfg,
+/**
+ *  \brief      This function is used to store desired bit fields of the VMON_PG_WINDOW register into the VCCA/VMON
+ *              power resource CFG struct (desired bit fields are governed by validParams).
+ *
+ *  \param      pVccaVmonPwrRsrcCfg     [IN/OUT]        Pointer to VCCA/VMON power resource configuration struct
+ *  \param      vmonPgWindowRegData     [IN]            VMON_PG_WINDOW register data obtained from a prior read of
+ *                                                      the PMIC
+ *  \param      vmonNum                 [IN]            VMON number
+ */
+static Pmic_powerTps6522xGetVmonPgWindowBitFields(Pmic_powerTps6522xVccaVmonPowerResourceCfg_t *pVccaVmonPwrRsrcCfg,
                                                   uint8_t                                       vmonPgWindowRegData,
                                                   const uint8_t                                 vmonNum)
 {
     if ((vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON1) &&
-        pmic_validParamCheck(vccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VMON1_THR_VALID))
+        pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VMON1_THR_VALID))
     {
-        vccaVmonPwrRsrcCfg->vmon1Thr =
+        pVccaVmonPwrRsrcCfg->vmon1Thr =
             (Pmic_powerTps6522xVmon1Thr_t)Pmic_getBitField(vmonPgWindowRegData,
                                                            PMIC_POWER_TPS6522X_VMON1_PG_WINDOW_VMON1_THR_SHIFT,
                                                            PMIC_POWER_TPS6522X_VMON1_PG_WINDOW_VMON1_THR_MASK);
     }
     else if ((vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON2) &&
-             pmic_validParamCheck(vccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VMON2_THR_VALID))
+             pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VMON2_THR_VALID))
     {
-        vccaVmonPwrRsrcCfg->vmon2Thr =
+        pVccaVmonPwrRsrcCfg->vmon2Thr =
             (Pmic_powerTps6522xVmon2Thr_t)Pmic_getBitField(vmonPgWindowRegData,
                                                            PMIC_POWER_TPS6522X_VMON2_PG_WINDOW_VMON2_THR_SHIFT,
                                                            PMIC_POWER_TPS6522X_VMON2_PG_WINDOW_VMON2_THR_MASK);
     }
 }
 
-static void Pmic_powerTps6522xVmonConvertPgSet2Voltage(uint16_t     *vmonPgLevel_mv,
+/**
+ *  \brief      This function is used to convert a VMON PG_SET value to VMON voltage value (mV).
+ *
+ *  \param      pVmonPgLevel_mv         [OUT]       VMON voltage value in millivolts
+ *  \param      vmonPgLevel_pgSet       [IN]        VMON voltage value in PG_SET form
+ *  \param      vmonNum                 [IN]        VMON number
+ */
+static void Pmic_powerTps6522xVmonConvertPgSet2Voltage(uint16_t     *pVmonPgLevel_mv,
                                                        const uint8_t vmonPgLevel_pgSet,
                                                        const uint8_t vmonNum)
 {
@@ -977,59 +1197,95 @@ static void Pmic_powerTps6522xVmonConvertPgSet2Voltage(uint16_t     *vmonPgLevel
 
     if ((baseVoltage_mv != 0) && (voltageStep != 0))
     {
-        *vmonPgLevel_mv = baseVoltage_mv + (voltageStep * (vmonPgLevel_pgSet - baseVoltage_pgSet));
+        *pVmonPgLevel_mv = baseVoltage_mv + (voltageStep * (vmonPgLevel_pgSet - baseVoltage_pgSet));
     }
 }
 
-static Pmic_powerTps6522xGetVmonPgLevelBitFields(Pmic_powerTps6522xVccaVmonPowerResourceCfg_t *vccaVmonPwrRsrcCfg,
+/**
+ *  \brief      This function is used to convert VMON_PG_LEVEL register data from PG_SET to voltage (mV)
+ *              and store it into the VCCA/VMON power resource CFG struct (if validParam is set).
+ *
+ *  \param      pVccaVmonPwrRsrcCfg     [IN/OUT]    Pointer to VCCA/VMON power resource configuration struct
+ *  \param      vmonPgLevelRegData      [IN]        VMON_PG_LEVEL register data obtained from a prior read of the PMIC
+ *  \param      vmonNum                 [IN]        VMON number
+ */
+static Pmic_powerTps6522xGetVmonPgLevelBitFields(Pmic_powerTps6522xVccaVmonPowerResourceCfg_t *pVccaVmonPwrRsrcCfg,
                                                  uint8_t                                       vmonPgLevelRegData,
                                                  const uint8_t                                 vmonNum)
 {
     if ((vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON1) &&
-        pmic_validParamCheck(vccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VMON1_PG_LEVEL_MV_VALID))
+        pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VMON1_PG_LEVEL_MV_VALID))
     {
-        Pmic_powerTps6522xVmonConvertPgSet2Voltage(&(vccaVmonPwrRsrcCfg->vmon1PgLevel_mv), vmonPgLevelRegData, vmonNum);
+        Pmic_powerTps6522xVmonConvertPgSet2Voltage(
+            &(pVccaVmonPwrRsrcCfg->vmon1PgLevel_mv), vmonPgLevelRegData, vmonNum);
     }
     else if ((vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON2) &&
-             pmic_validParamCheck(vccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VMON2_PG_LEVEL_MV_VALID))
+             pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VMON2_PG_LEVEL_MV_VALID))
     {
-        Pmic_powerTps6522xVmonConvertPgSet2Voltage(&(vccaVmonPwrRsrcCfg->vmon2PgLevel_mv), vmonPgLevelRegData, vmonNum);
+        Pmic_powerTps6522xVmonConvertPgSet2Voltage(
+            &(pVccaVmonPwrRsrcCfg->vmon2PgLevel_mv), vmonPgLevelRegData, vmonNum);
     }
 }
 
-static Pmic_powerTps6522xGetRailSel3RegBitFields(Pmic_powerTps6522xVccaVmonPowerResourceCfg_t *vccaVmonPwrRsrcCfg,
+/**
+ *  \brief      This function is used to store desired bit fields of the RAIL_SEL_3 register into the VCCA/VMON
+ *              power resource CFG struct (desired bit fields are governed by validParams).
+ *
+ *  \param      pVccaVmonPwrRsrcCfg         [IN/OUT]    Pointer to VCCA/VMON power resource configuration struct
+ *  \param      vccaVmonRailSelRegData      [IN]        RAIL_SEL_3 register data obtained from a prior read of the PMIC
+ *  \param      vmonNum                     [IN]        VMON number
+ */
+static Pmic_powerTps6522xGetRailSel3RegBitFields(Pmic_powerTps6522xVccaVmonPowerResourceCfg_t *pVccaVmonPwrRsrcCfg,
                                                  uint8_t                                       vccaVmonRailSelRegData,
                                                  const uint8_t                                 vmonNum)
 {
     if ((vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON1) &&
-        pmic_validParamCheck(vccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VMON1_RAIL_GRP_SEL_VALID))
+        pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VMON1_RAIL_GRP_SEL_VALID))
     {
-        vccaVmonPwrRsrcCfg->vmon1RailGrpSel =
+        pVccaVmonPwrRsrcCfg->vmon1RailGrpSel =
             (Pmic_powerTps6522xVmon1RailSel_t)Pmic_getBitField(vccaVmonRailSelRegData,
                                                                PMIC_POWER_TPS6522X_RAIL_SEL_3_VMON1_GRP_SEL_SHIFT,
                                                                PMIC_POWER_TPS6522X_RAIL_SEL_3_VMON1_GRP_SEL_MASK);
     }
     else if ((vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON2) &&
-             pmic_validParamCheck(vccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VMON2_RAIL_GRP_SEL_VALID))
+             pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VMON2_RAIL_GRP_SEL_VALID))
     {
-        vccaVmonPwrRsrcCfg->vmon2RailGrpSel =
+        pVccaVmonPwrRsrcCfg->vmon2RailGrpSel =
             (Pmic_powerTps6522xVmon2RailSel_t)Pmic_getBitField(vccaVmonRailSelRegData,
                                                                PMIC_POWER_TPS6522X_RAIL_SEL_3_VMON2_GRP_SEL_SHIFT,
                                                                PMIC_POWER_TPS6522X_RAIL_SEL_3_VMON2_GRP_SEL_MASK);
     }
     else if ((vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VCCA_VMON) &&
-             pmic_validParamCheck(vccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VCCA_RAIL_GRP_SEL_VALID))
+             pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VCCA_RAIL_GRP_SEL_VALID))
     {
-        vccaVmonPwrRsrcCfg->vccaRailGrpSel =
+        pVccaVmonPwrRsrcCfg->vccaRailGrpSel =
             (Pmic_powerTps6522xVccaRailSel_t)Pmic_getBitField(vccaVmonRailSelRegData,
                                                               PMIC_POWER_TPS6522X_RAIL_SEL_3_VCCA_GRP_SEL_SHIFT,
                                                               PMIC_POWER_TPS6522X_RAIL_SEL_3_VCCA_GRP_SEL_MASK);
     }
 }
 
+/**
+ *  \brief      This function is used to get all desired information for a VCCA_VMON/VMONx
+ *              (desired information is governed by validParams).
+ *
+ *              Supported obtainable configurations by this API for a VCCA_VMON/VMONx are:
+ *              1. VMON deglitch selection
+ *              2. VCCA_VMON/VMONx enable
+ *              3. VCCA_VMON/VMONx powergood threshold
+ *              4. VCCA_VMON/VMONx powergood level (mV)
+ *              5. VCCA_VMON/VMONx rail group selection
+ *
+ *  \param      pPmicCoreHandle         [IN]        PMIC interface handle
+ *  \param      pVccaVmonPwrRsrcCfg     [IN/OUT]    pointer to VCCA/VMON power resource configuration struct
+ *  \param      vmonNum                 [IN]        VMON number
+ *
+ *  \return     Success code if VCCA/VMON information is stored in pVccaVmonPwrRsrcCfg, error code otherwise.
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
 static int32_t
 Pmic_powerTps6522xGetVccaVmonPwrResourceCfg(Pmic_CoreHandle_t                            *pPmicCoreHandle,
-                                            Pmic_powerTps6522xVccaVmonPowerResourceCfg_t *vccaVmonPwrRsrcCfg,
+                                            Pmic_powerTps6522xVccaVmonPowerResourceCfg_t *pVccaVmonPwrRsrcCfg,
                                             const uint8_t                                 vmonNum)
 {
     // clang-format off
@@ -1043,11 +1299,11 @@ Pmic_powerTps6522xGetVccaVmonPwrResourceCfg(Pmic_CoreHandle_t                   
     // clang-format on
 
     // Parameter check
-    if (vccaVmonPwrRsrcCfg == NULL)
+    if (pVccaVmonPwrRsrcCfg == NULL)
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
-    if ((status == PMIC_ST_SUCCESS) && (vccaVmonPwrRsrcCfg->validParams == 0))
+    if ((status == PMIC_ST_SUCCESS) && (pVccaVmonPwrRsrcCfg->validParams == 0))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -1089,24 +1345,24 @@ Pmic_powerTps6522xGetVccaVmonPwrResourceCfg(Pmic_CoreHandle_t                   
     // After read, stop critical section
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
-    // For each register pertaining to the VCCA/VMON resource, get the relevant bit fields of the register
-    // (relevant bit fields are governed by validParams)
+    // For each register pertaining to the VCCA/VMON resource, get the desired bit fields of the register
+    // (desired bit fields are governed by validParams)
     if (status == PMIC_ST_SUCCESS)
     {
         // VCCA_VMON_CTRL
-        Pmic_powerTps6522xGetVccaVmonCtrlBitFields(vccaVmonPwrRsrcCfg, vccaVmonCtrlRegData, vmonNum);
+        Pmic_powerTps6522xGetVccaVmonCtrlBitFields(pVccaVmonPwrRsrcCfg, vccaVmonCtrlRegData, vmonNum);
 
         // VCCA_PG_WINDOW
-        Pmic_powerTps6522xGetVccaPgWindowBitFields(vccaVmonPwrRsrcCfg, vccaPgWindowRegData);
+        Pmic_powerTps6522xGetVccaPgWindowBitFields(pVccaVmonPwrRsrcCfg, vccaPgWindowRegData);
 
         // VMON_PG_WINDOW
-        Pmic_powerTps6522xGetVmonPgWindowBitFields(vccaVmonPwrRsrcCfg, vmonPgWindowRegData, vmonNum);
+        Pmic_powerTps6522xGetVmonPgWindowBitFields(pVccaVmonPwrRsrcCfg, vmonPgWindowRegData, vmonNum);
 
         // VMON_PG_LEVEL
-        Pmic_powerTps6522xGetVmonPgLevelBitFields(vccaVmonPwrRsrcCfg, vmonPgLevelRegData, vmonNum);
+        Pmic_powerTps6522xGetVmonPgLevelBitFields(pVccaVmonPwrRsrcCfg, vmonPgLevelRegData, vmonNum);
 
         // RAIL_SEL_3
-        Pmic_powerTps6522xGetRailSel3RegBitFields(vccaVmonPwrRsrcCfg, vccaVmonRailSelRegData, vmonNum);
+        Pmic_powerTps6522xGetRailSel3RegBitFields(pVccaVmonPwrRsrcCfg, vccaVmonRailSelRegData, vmonNum);
     }
 
     // After read, stop critical section
@@ -1202,54 +1458,75 @@ int32_t Pmic_powerTps6522xGetPwrResourceCfg(Pmic_CoreHandle_t                   
     return status;
 }
 
+/**
+ *  \brief      This function is used to set desired bit fields of the BUCK_CTRL register (desired bit fields
+ *              are governed by validParams).
+ *
+ *  \param      buckPowerResourceCfg    [IN]        BUCK power resource configuration struct
+ *  \param      pBuckCtrlRegData        [OUT]       Pointer to BUCK_CTRL register data
+ */
 static void
 Pmic_powerTps6522xSetBuckCtrlRegBitFields(const Pmic_powerTps6522xBuckPowerResourceCfg_t buckPowerResourceCfg,
-                                          uint8_t                                       *buckCtrlRegData)
+                                          uint8_t                                       *pBuckCtrlRegData)
 {
     if (pmic_validParamCheck(buckPowerResourceCfg.validParams, PMIC_POWER_TPS6522X_CFG_BUCK_PLDN_VALID))
     {
-        Pmic_setBitField(buckCtrlRegData,
+        Pmic_setBitField(pBuckCtrlRegData,
                          PMIC_POWER_TPS6522X_BUCK_CTRL_PLDN_SHIFT,
                          PMIC_POWER_TPS6522X_BUCK_CTRL_PLDN_MASK,
                          (uint8_t)buckPowerResourceCfg.buckPldn);
     }
     if (pmic_validParamCheck(buckPowerResourceCfg.validParams, PMIC_POWER_TPS6522X_CFG_BUCK_VMON_EN_VALID))
     {
-        Pmic_setBitField(buckCtrlRegData,
+        Pmic_setBitField(pBuckCtrlRegData,
                          PMIC_POWER_TPS6522X_BUCK_CTRL_VMON_EN_SHIFT,
                          PMIC_POWER_TPS6522X_BUCK_CTRL_VMON_EN_MASK,
                          (uint8_t)buckPowerResourceCfg.buckVmonEn);
     }
     if (pmic_validParamCheck(buckPowerResourceCfg.validParams, PMIC_POWER_TPS6522X_CFG_BUCK_PWM_OPTION_VALID))
     {
-        Pmic_setBitField(buckCtrlRegData,
+        Pmic_setBitField(pBuckCtrlRegData,
                          PMIC_POWER_TPS6522X_BUCK_CTRL_PWM_OPTION_SHIFT,
                          PMIC_POWER_TPS6522X_BUCK_CTRL_PWM_OPTION_MASK,
                          (uint8_t)buckPowerResourceCfg.buckPwmOption);
     }
     if (pmic_validParamCheck(buckPowerResourceCfg.validParams, PMIC_POWER_TPS6522X_CFG_BUCK_EN_VALID))
     {
-        Pmic_setBitField(buckCtrlRegData,
+        Pmic_setBitField(pBuckCtrlRegData,
                          PMIC_POWER_TPS6522X_BUCK_CTRL_EN_SHIFT,
                          PMIC_POWER_TPS6522X_BUCK_CTRL_EN_MASK,
                          (uint8_t)buckPowerResourceCfg.buckEn);
     }
 }
 
+/**
+ *  \brief      This function is used to set desired bit fields of the BUCK_CONF register (desired bit fields
+ *              are governed by validParams).
+ *
+ *  \param      buckPowerResourceCfg    [IN]        BUCK power resource configuration struct
+ *  \param      pBuckConfRegData        [OUT]       Pointer to BUCK_CONF register data
+ */
 static void
 Pmic_powerTps6522xSetBuckConfRegBitFields(const Pmic_powerTps6522xBuckPowerResourceCfg_t buckPowerResourceCfg,
-                                          uint8_t                                       *buckConfRegData)
+                                          uint8_t                                       *pBuckConfRegData)
 {
     if (pmic_validParamCheck(buckPowerResourceCfg.validParams, PMIC_POWER_TPS6522X_CFG_BUCK_SLEW_RATE_VALID))
     {
-        Pmic_setBitField(buckConfRegData,
+        Pmic_setBitField(pBuckConfRegData,
                          PMIC_POWER_TPS6522X_BUCK_CONF_SLEW_RATE_SHIFT,
                          PMIC_POWER_TPS6522X_BUCK_CONF_SLEW_RATE_MASK,
                          (uint8_t)buckPowerResourceCfg.buckSlewRate);
     }
 }
 
-static void Pmic_powerTps6522xBuckConvertVoltage2VsetVal(uint8_t       *buckVoltage_vset,
+/**
+ *  \brief      This function is used to convert a BUCK voltage value (mV) to BUCK VSET value.
+ *
+ *  \param      pBuckVoltage_vset   [OUT]       BUCK voltage in VSET form
+ *  \param      buckVoltage_mv      [IN]        BUCK voltage in millivolts
+ *  \param      buckNum             [IN]        BUCK number
+ */
+static void Pmic_powerTps6522xBuckConvertVoltage2VsetVal(uint8_t       *pBuckVoltage_vset,
                                                          const uint16_t buckVoltage_mv,
                                                          const uint8_t  buckNum)
 {
@@ -1311,80 +1588,125 @@ static void Pmic_powerTps6522xBuckConvertVoltage2VsetVal(uint8_t       *buckVolt
 
     if ((baseVoltage_mv != 0) && (voltageStep != 0))
     {
-        *buckVoltage_vset = baseVoltage_vset + ((buckVoltage_mv - baseVoltage_mv) / voltageStep);
+        *pBuckVoltage_vset = baseVoltage_vset + ((buckVoltage_mv - baseVoltage_mv) / voltageStep);
     }
 }
 
+/**
+ *  \brief      This function calculates a VSET value given a milivolt value (obtained from BUCK power resource CFG)
+ *              and sets the BUCK_VOUT register data equal to the VSET value (if validParam is set).
+ *
+ *  \param      pBuckPowerResourceCfg       [IN]        Pointer to Buck power resource configuration register
+ *  \param      pBuckVoutRegData            [OUT]       Pointer to BUCK_VOUT register data
+ *  \param      buckNum                     [IN]        Buck number
+ */
 static void
-Pmic_powerTps6522xSetBuckVoutRegBitFields(const Pmic_powerTps6522xBuckPowerResourceCfg_t *buckPowerResourceCfg,
-                                          uint8_t                                        *buckVoutRegData,
+Pmic_powerTps6522xSetBuckVoutRegBitFields(const Pmic_powerTps6522xBuckPowerResourceCfg_t *pBuckPowerResourceCfg,
+                                          uint8_t                                        *pBuckVoutRegData,
                                           const uint8_t                                   buckNum)
 {
-    if (pmic_validParamCheck(buckPowerResourceCfg[buckNum].validParams, PMIC_POWER_TPS6522X_CFG_BUCK_VOLTAGE_MV_VALID))
+    if (pmic_validParamCheck(pBuckPowerResourceCfg[buckNum].validParams, PMIC_POWER_TPS6522X_CFG_BUCK_VOLTAGE_MV_VALID))
     {
         Pmic_powerTps6522xBuckConvertVoltage2VsetVal(
-            buckVoutRegData, buckPowerResourceCfg[buckNum].buckVoltage_mv, buckNum);
+            pBuckVoutRegData, pBuckPowerResourceCfg[buckNum].buckVoltage_mv, buckNum);
     }
 }
 
+/**
+ *  \brief      This function is used to set desired bit fields of the BUCK_PG_WINDOW register (desired
+ *              bit fields are governed by validParams).
+ *
+ *  \param      buckPowerResourceCfg    [IN]        BUCK power resource configuration struct
+ *  \param      pBuckPgWindowRegData    [OUT]       Pointer to BUCK_PG_WINDOW register data
+ */
 static void
 Pmic_powerTps6522xSetBuckPgWindowRegBitFields(const Pmic_powerTps6522xBuckPowerResourceCfg_t buckPowerResourceCfg,
-                                              uint8_t                                       *buckPgWindowRegData)
+                                              uint8_t                                       *pBuckPgWindowRegData)
 {
     if (pmic_validParamCheck(buckPowerResourceCfg.validParams, PMIC_POWER_TPS6522X_CFG_BUCK_VMON_THR_VALID))
     {
-        Pmic_setBitField(buckPgWindowRegData,
+        Pmic_setBitField(pBuckPgWindowRegData,
                          PMIC_POWER_TPS6522X_BUCK_PG_WINDOW_VMON_THR_SHIFT,
                          PMIC_POWER_TPS6522X_BUCK_PG_WINDOW_VMON_THR_MASK,
                          (uint8_t)buckPowerResourceCfg.buckVmonThr);
     }
 }
 
+/**
+ *  \brief      This function is used to set the desired bit fields of the RAIL_SEL_1 register (desired
+ *              bit fields are governed by validParams).
+ *
+ *  \param      pBuckPowerResourceCfg   [IN]        Pointer to BUCK power resource configuration struct
+ *  \param      pBuckRailSelRegData     [OUT]       Pointer to RAIL_SEL_1 register data
+ *  \param      buckNum                 [IN]        Buck number
+ */
 static void
-Pmic_powerTps6522xSetRailSel1RegBitFields(const Pmic_powerTps6522xBuckPowerResourceCfg_t *buckPowerResourceCfg,
-                                          uint8_t                                        *buckRailSelRegData,
+Pmic_powerTps6522xSetRailSel1RegBitFields(const Pmic_powerTps6522xBuckPowerResourceCfg_t *pBuckPowerResourceCfg,
+                                          uint8_t                                        *pBuckRailSelRegData,
                                           const uint8_t                                   buckNum)
 {
-    if (pmic_validParamCheck(buckPowerResourceCfg[buckNum].validParams,
+    if (pmic_validParamCheck(pBuckPowerResourceCfg[buckNum].validParams,
                              PMIC_POWER_TPS6522X_CFG_BUCK_RAIL_GRP_SEL_VALID))
     {
         switch (buckNum)
         {
             case PMIC_POWER_TPS6522X_REGULATOR_BUCK1:
-                Pmic_setBitField(buckRailSelRegData,
+                Pmic_setBitField(pBuckRailSelRegData,
                                  PMIC_POWER_TPS6522X_CFG_RAIL_SEL_1_BUCK1_GRP_SEL_SHIFT,
                                  PMIC_POWER_TPS6522X_CFG_RAIL_SEL_1_BUCK1_GRP_SEL_MASK,
-                                 (uint8_t)buckPowerResourceCfg[buckNum].buckRailGrpSel);
+                                 (uint8_t)pBuckPowerResourceCfg[buckNum].buckRailGrpSel);
 
                 break;
             case PMIC_POWER_TPS6522X_REGULATOR_BUCK2:
-                Pmic_setBitField(buckRailSelRegData,
+                Pmic_setBitField(pBuckRailSelRegData,
                                  PMIC_POWER_TPS6522X_CFG_RAIL_SEL_1_BUCK2_GRP_SEL_SHIFT,
                                  PMIC_POWER_TPS6522X_CFG_RAIL_SEL_1_BUCK2_GRP_SEL_MASK,
-                                 (uint8_t)buckPowerResourceCfg[buckNum].buckRailGrpSel);
+                                 (uint8_t)pBuckPowerResourceCfg[buckNum].buckRailGrpSel);
 
                 break;
             case PMIC_POWER_TPS6522X_REGULATOR_BUCK3:
-                Pmic_setBitField(buckRailSelRegData,
+                Pmic_setBitField(pBuckRailSelRegData,
                                  PMIC_POWER_TPS6522X_CFG_RAIL_SEL_1_BUCK3_GRP_SEL_SHIFT,
                                  PMIC_POWER_TPS6522X_CFG_RAIL_SEL_1_BUCK3_GRP_SEL_MASK,
-                                 (uint8_t)buckPowerResourceCfg[buckNum].buckRailGrpSel);
+                                 (uint8_t)pBuckPowerResourceCfg[buckNum].buckRailGrpSel);
 
                 break;
             case PMIC_POWER_TPS6522X_REGULATOR_BUCK4:
-                Pmic_setBitField(buckRailSelRegData,
+                Pmic_setBitField(pBuckRailSelRegData,
                                  PMIC_POWER_TPS6522X_CFG_RAIL_SEL_1_BUCK4_GRP_SEL_SHIFT,
                                  PMIC_POWER_TPS6522X_CFG_RAIL_SEL_1_BUCK4_GRP_SEL_MASK,
-                                 (uint8_t)buckPowerResourceCfg[buckNum].buckRailGrpSel);
+                                 (uint8_t)pBuckPowerResourceCfg[buckNum].buckRailGrpSel);
 
                 break;
         }
     }
 }
 
-int32_t Pmic_powerTps6522xSetBuckPwrResourceCfg(Pmic_CoreHandle_t                              *pPmicCoreHandle,
-                                                const Pmic_powerTps6522xBuckPowerResourceCfg_t *buckPowerResourceCfg,
-                                                const uint8_t                                   buckNum)
+/**
+ *  \brief      This function is used to set all desired configurations for a BUCK power resource
+ *              (desired configurations are governed by validParams).
+ *
+ *              Supported configurable options by this API for a BUCK are:
+ *              1. Buck pull-down resistor
+ *              2. Buck VMON enable
+ *              3. Buck PWM mode (auto or forced)
+ *              4. Buck enable
+ *              5. Buck slew-rate
+ *              6. Buck voltage (mV)
+ *              7. Buck VMON powergood threshold
+ *              8. Buck rail group selection
+ *
+ *  \param      pPmicCoreHandle             [IN]        PMIC interface handle
+ *  \param      pBuckPowerResourceCfg       [IN]        Array of BUCK power resource configuration structs
+ *  \param      buckNum                     [IN]        Buck number
+ *
+ *  \return     Success code if Buck power resource configurations are set, error code otherwise.
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
+static int32_t
+Pmic_powerTps6522xSetBuckPwrResourceCfg(Pmic_CoreHandle_t                              *pPmicCoreHandle,
+                                        const Pmic_powerTps6522xBuckPowerResourceCfg_t *pBuckPowerResourceCfg,
+                                        const uint8_t                                   buckNum)
 {
     // clang-format off
     uint8_t buckCtrlRegData     = 0;
@@ -1397,7 +1719,7 @@ int32_t Pmic_powerTps6522xSetBuckPwrResourceCfg(Pmic_CoreHandle_t               
     // clang-format on
 
     // Parameter check
-    if (buckPowerResourceCfg[buckNum].validParams == 0)
+    if (pBuckPowerResourceCfg[buckNum].validParams == 0)
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -1432,24 +1754,24 @@ int32_t Pmic_powerTps6522xSetBuckPwrResourceCfg(Pmic_CoreHandle_t               
             Pmic_commIntf_recvByte(pPmicCoreHandle, pBuckRegisters[buckNum].buckRailSelRegAddr, &buckRailSelRegData);
     }
 
-    // For each register pertaining to the BUCK resource, modify the relevant bit fields of the register
-    // (relevant bit fields are governed by validParams)
+    // For each register pertaining to the BUCK resource, modify the desired bit fields of the register
+    // (desired bit fields are governed by validParams)
     if (status == PMIC_ST_SUCCESS)
     {
         // BUCK_CTRL register
-        Pmic_powerTps6522xSetBuckCtrlRegBitFields(buckPowerResourceCfg[buckNum], &buckCtrlRegData);
+        Pmic_powerTps6522xSetBuckCtrlRegBitFields(pBuckPowerResourceCfg[buckNum], &buckCtrlRegData);
 
         // BUCK_CONF register
-        Pmic_powerTps6522xSetBuckConfRegBitFields(buckPowerResourceCfg[buckNum], &buckConfRegData);
+        Pmic_powerTps6522xSetBuckConfRegBitFields(pBuckPowerResourceCfg[buckNum], &buckConfRegData);
 
         // BUCK_VOUT register
-        Pmic_powerTps6522xSetBuckVoutRegBitFields(buckPowerResourceCfg, &buckVoutRegData, buckNum);
+        Pmic_powerTps6522xSetBuckVoutRegBitFields(pBuckPowerResourceCfg, &buckVoutRegData, buckNum);
 
         // BUCK_PG_WINDOW register
-        Pmic_powerTps6522xSetBuckPgWindowRegBitFields(buckPowerResourceCfg[buckNum], &buckPgWindowRegData);
+        Pmic_powerTps6522xSetBuckPgWindowRegBitFields(pBuckPowerResourceCfg[buckNum], &buckPgWindowRegData);
 
         // RAIL_SEL_1 register
-        Pmic_powerTps6522xSetRailSel1RegBitFields(buckPowerResourceCfg, &buckRailSelRegData, buckNum);
+        Pmic_powerTps6522xSetRailSel1RegBitFields(pBuckPowerResourceCfg, &buckRailSelRegData, buckNum);
     }
 
     // After modification of register bit fields, write values back to PMIC
@@ -1482,33 +1804,47 @@ int32_t Pmic_powerTps6522xSetBuckPwrResourceCfg(Pmic_CoreHandle_t               
     return status;
 }
 
+/**
+ *  \brief      This function is used to set the desired bit fields of the LDO_CTRL register
+ *              (desired bit fields are governed by validParams).
+ *
+ *  \param      ldoPowerResourceCfg     [IN]        LDO power resource configuration struct
+ *  \param      pLdoCtrlRegData         [OUT]       Pointer to LDO_CTRL register data
+ */
 static void Pmic_powerTps6522xSetLdoCtrlRegBitFields(const Pmic_powerTps6522xLdoPowerResourceCfg_t ldoPowerResourceCfg,
-                                                     uint8_t                                      *ldoCtrlRegData)
+                                                     uint8_t                                      *pLdoCtrlRegData)
 {
     if (pmic_validParamCheck(ldoPowerResourceCfg.validParams, PMIC_POWER_TPS6522X_CFG_LDO_DISCHARGE_EN_VALID))
     {
-        Pmic_setBitField(ldoCtrlRegData,
+        Pmic_setBitField(pLdoCtrlRegData,
                          PMIC_POWER_TPS6522X_LDO_CTRL_DISCHARGE_EN_SHIFT,
                          PMIC_POWER_TPS6522X_LDO_CTRL_DISCHARGE_EN_MASK,
                          (uint8_t)ldoPowerResourceCfg.ldoDischargeEn);
     }
     if (pmic_validParamCheck(ldoPowerResourceCfg.validParams, PMIC_POWER_TPS6522X_CFG_LDO_VMON_EN_VALID))
     {
-        Pmic_setBitField(ldoCtrlRegData,
+        Pmic_setBitField(pLdoCtrlRegData,
                          PMIC_POWER_TPS6522X_LDO_CTRL_VMON_EN_SHIFT,
                          PMIC_POWER_TPS6522X_LDO_CTRL_VMON_EN_MASK,
                          (uint8_t)ldoPowerResourceCfg.ldoVmonEn);
     }
     if (pmic_validParamCheck(ldoPowerResourceCfg.validParams, PMIC_POWER_TPS6522X_CFG_LDO_EN_VALID))
     {
-        Pmic_setBitField(ldoCtrlRegData,
+        Pmic_setBitField(pLdoCtrlRegData,
                          PMIC_POWER_TPS6522X_LDO_CTRL_EN_SHIFT,
                          PMIC_POWER_TPS6522X_LDO_CTRL_EN_MASK,
                          (uint8_t)ldoPowerResourceCfg.ldoEn);
     }
 }
 
-static void Pmic_powerTps6522xLdoConvertVoltage2VsetVal(uint8_t       *ldoVoltage_vset,
+/**
+ *  \brief      This function is used to convert LDO voltage (mV) to LDO VSET value.
+ *
+ *  \param      pLdoVoltage_vset    [OUT]       LDO voltage value in VSET form
+ *  \param      ldoVoltage_mv       [IN]        LDO voltage value in millivolts
+ *  \param      ldoNum              [IN]        LDO number
+ */
+static void Pmic_powerTps6522xLdoConvertVoltage2VsetVal(uint8_t       *pLdoVoltage_vset,
                                                         const uint16_t ldoVoltage_mv,
                                                         const uint8_t  ldoNum)
 {
@@ -1562,83 +1898,126 @@ static void Pmic_powerTps6522xLdoConvertVoltage2VsetVal(uint8_t       *ldoVoltag
 
     if (baseVoltage_mv != 0)
     {
-        *ldoVoltage_vset = baseVoltage_vset + ((ldoVoltage_mv - baseVoltage_mv) / voltageStep);
+        *pLdoVoltage_vset = baseVoltage_vset + ((ldoVoltage_mv - baseVoltage_mv) / voltageStep);
     }
 }
 
-static void Pmic_powerTps6522xSetLdoVoutRegBitFields(const Pmic_powerTps6522xLdoPowerResourceCfg_t *ldoPowerResourceCfg,
-                                                     uint8_t                                       *ldoVoutRegData,
-                                                     const uint8_t                                  ldoNum)
+/**
+ *  \brief      This function is used to set the desired bit fields of the LDO_VOUT register
+ *              (desired bit fields are governed by validParams).
+ *
+ *  \param      pLdoPowerResourceCfg    [IN]        Pointer to LDO power resource configuration struct
+ *  \param      pLdoVoutRegData         [OUT]       Pointer to LDO_VOUT register data
+ *  \param      ldoNum                  [IN]        LDO number
+ */
+static void Pmic_powerTps6522xSetLdoVoutRegBitFields(
+    const Pmic_powerTps6522xLdoPowerResourceCfg_t *pLdoPowerResourceCfg, uint8_t *pLdoVoutRegData, const uint8_t ldoNum)
 {
     uint8_t ldoVoltage_vset = 0;
 
-    if (pmic_validParamCheck(ldoPowerResourceCfg[ldoNum].validParams, PMIC_POWER_TPS6522X_CFG_LDO_MODE_VALID))
+    if (pmic_validParamCheck(pLdoPowerResourceCfg[ldoNum].validParams, PMIC_POWER_TPS6522X_CFG_LDO_MODE_VALID))
     {
-        Pmic_setBitField(ldoVoutRegData,
+        Pmic_setBitField(pLdoVoutRegData,
                          PMIC_POWER_TPS6522X_LDO_VOUT_LDO_MODE_SHIFT,
                          PMIC_POWER_TPS6522X_LDO_VOUT_LDO_MODE_MASK,
-                         (uint8_t)ldoPowerResourceCfg[ldoNum].ldoMode);
+                         (uint8_t)pLdoPowerResourceCfg[ldoNum].ldoMode);
     }
-    if (pmic_validParamCheck(ldoPowerResourceCfg[ldoNum].validParams, PMIC_POWER_TPS6522X_CFG_LDO_VOLTAGE_MV_VALID))
+    if (pmic_validParamCheck(pLdoPowerResourceCfg[ldoNum].validParams, PMIC_POWER_TPS6522X_CFG_LDO_VOLTAGE_MV_VALID))
     {
         Pmic_powerTps6522xLdoConvertVoltage2VsetVal(
-            &ldoVoltage_vset, ldoPowerResourceCfg[ldoNum].ldoVoltage_mv, ldoNum);
+            &ldoVoltage_vset, pLdoPowerResourceCfg[ldoNum].ldoVoltage_mv, ldoNum);
 
-        Pmic_setBitField(ldoVoutRegData,
+        Pmic_setBitField(pLdoVoutRegData,
                          PMIC_POWER_TPS6522X_LDO_VOUT_LDO_VSET_SHIFT,
                          PMIC_POWER_TPS6522X_LDO_VOUT_LDO_VSET_MASK,
                          ldoVoltage_vset);
     }
 }
 
+/**
+ *  \brief      This function is used to set the desired bit fields of the LDO_PG_WINDOW register
+ *              (desired bit fields are governed by validParams).
+ *
+ *  \param      ldoPowerResourceCfg     [IN]        LDO power resource configuration struct
+ *  \param      pLdoPgWindowRegData     [OUT]       Pointer to LDO_PG_WINDOW register data
+ */
 static void
 Pmic_powerTps6522xSetLdoPgWindowRegBitFields(const Pmic_powerTps6522xLdoPowerResourceCfg_t ldoPowerResourceCfg,
-                                             uint8_t                                      *ldoPgWindowRegData)
+                                             uint8_t                                      *pLdoPgWindowRegData)
 {
     if (pmic_validParamCheck(ldoPowerResourceCfg.validParams, PMIC_POWER_TPS6522X_CFG_LDO_VMON_THR_VALID))
     {
-        Pmic_setBitField(ldoPgWindowRegData,
+        Pmic_setBitField(pLdoPgWindowRegData,
                          PMIC_POWER_TPS6522X_LDO_PG_WINDOW_LDO_VMON_THR_SHIFT,
                          PMIC_POWER_TPS6522X_LDO_PG_WINDOW_LDO_VMON_THR_MASK,
                          (uint8_t)ldoPowerResourceCfg.ldoVmonThr);
     }
 }
 
+/**
+ *  \brief      This function is used to set the desired bit fields of the RAIL_SEL_2 register
+ *              (desired bit fields are governed by validParams).
+ *
+ *  \param      pLdoPowerResourceCfg    [IN]        Pointer to LDO power resource configuration struct
+ *  \param      pLdoRailSelRegData      [OUT]       Pointer to RAIL_SEL_2 register data
+ *  \param      ldoNum                  [IN]        LDO number
+ */
 static void Pmic_powerTps6522xSetRailSel2RegBitFields(
-    const Pmic_powerTps6522xLdoPowerResourceCfg_t *ldoPowerResourceCfg, uint8_t *ldoRailSelRegData, uint8_t ldoNum)
+    const Pmic_powerTps6522xLdoPowerResourceCfg_t *pLdoPowerResourceCfg, uint8_t *pLdoRailSelRegData, uint8_t ldoNum)
 {
-    if (pmic_validParamCheck(ldoPowerResourceCfg[ldoNum].validParams, PMIC_POWER_TPS6522X_CFG_LDO_RAIL_GRP_SEL_VALID))
+    if (pmic_validParamCheck(pLdoPowerResourceCfg[ldoNum].validParams, PMIC_POWER_TPS6522X_CFG_LDO_RAIL_GRP_SEL_VALID))
     {
         switch (ldoNum)
         {
             case PMIC_POWER_TPS6522X_REGULATOR_LDO1:
-                Pmic_setBitField(ldoRailSelRegData,
+                Pmic_setBitField(pLdoRailSelRegData,
                                  PMIC_POWER_TPS6522X_RAIL_SEL_2_LDO1_GRP_SEL_SHIFT,
                                  PMIC_POWER_TPS6522X_RAIL_SEL_2_LDO1_GRP_SEL_MASK,
-                                 (uint8_t)ldoPowerResourceCfg[ldoNum].ldoRailGrpSel);
+                                 (uint8_t)pLdoPowerResourceCfg[ldoNum].ldoRailGrpSel);
 
                 break;
             case PMIC_POWER_TPS6522X_REGULATOR_LDO2:
-                Pmic_setBitField(ldoRailSelRegData,
+                Pmic_setBitField(pLdoRailSelRegData,
                                  PMIC_POWER_TPS6522X_RAIL_SEL_2_LDO2_GRP_SEL_SHIFT,
                                  PMIC_POWER_TPS6522X_RAIL_SEL_2_LDO2_GRP_SEL_MASK,
-                                 (uint8_t)ldoPowerResourceCfg[ldoNum].ldoRailGrpSel);
+                                 (uint8_t)pLdoPowerResourceCfg[ldoNum].ldoRailGrpSel);
 
                 break;
             case PMIC_POWER_TPS6522X_REGULATOR_LDO3:
-                Pmic_setBitField(ldoRailSelRegData,
+                Pmic_setBitField(pLdoRailSelRegData,
                                  PMIC_POWER_TPS6522X_RAIL_SEL_2_LDO3_GRP_SEL_SHIFT,
                                  PMIC_POWER_TPS6522X_RAIL_SEL_2_LDO3_GRP_SEL_MASK,
-                                 (uint8_t)ldoPowerResourceCfg[ldoNum].ldoRailGrpSel);
+                                 (uint8_t)pLdoPowerResourceCfg[ldoNum].ldoRailGrpSel);
 
                 break;
         }
     }
 }
 
-int32_t Pmic_powerTps6522xSetLdoPwrResourceCfg(Pmic_CoreHandle_t                             *pPmicCoreHandle,
-                                               const Pmic_powerTps6522xLdoPowerResourceCfg_t *ldoPowerResourceCfg,
-                                               const uint8_t                                  ldoNum)
+/**
+ *  \brief      This function is used to set the desired configurations of a LDO power resource
+ *              (desired configurations are governed by validParams).
+ *
+ *              Supported configurable options by this API for a LDO are:
+ *              1. LDO discharge enable
+ *              2. LDO VMON enable
+ *              3. LDO enable
+ *              4. LDO mode (bypass mode, LDO mode)
+ *              5. LDO voltage (mV)
+ *              6. LDO VMON powergood threshold
+ *              7. LDO rail group selection
+ *
+ *  \param      pPmicCoreHandle         [IN]        PMIC interface handle
+ *  \param      pLdoPowerResourceCfg    [IN]        Array of LDO power resource configuration structs
+ *  \param      ldoNum                  [IN]        LDO number
+ *
+ *  \return     Success code if LDO power resource configurations are set, error code otherwise.
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
+static int32_t
+Pmic_powerTps6522xSetLdoPwrResourceCfg(Pmic_CoreHandle_t                             *pPmicCoreHandle,
+                                       const Pmic_powerTps6522xLdoPowerResourceCfg_t *pLdoPowerResourceCfg,
+                                       const uint8_t                                  ldoNum)
 {
     // clang-format off
     uint8_t ldoCtrlRegData      = 0;
@@ -1650,7 +2029,7 @@ int32_t Pmic_powerTps6522xSetLdoPwrResourceCfg(Pmic_CoreHandle_t                
     // clang-format on
 
     // Parameter check
-    if (ldoPowerResourceCfg[ldoNum].validParams == 0)
+    if (pLdoPowerResourceCfg[ldoNum].validParams == 0)
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -1679,21 +2058,21 @@ int32_t Pmic_powerTps6522xSetLdoPwrResourceCfg(Pmic_CoreHandle_t                
         status = Pmic_commIntf_recvByte(pPmicCoreHandle, pLdoRegisters[ldoNum].ldoRailSelRegAddr, &ldoRailSelRegData);
     }
 
-    // For each register pertaining to the LDO resource, modify the relevant bit fields of the register
-    // (relevant bit fields are governed by validParams)
+    // For each register pertaining to the LDO resource, modify the desired bit fields of the register
+    // (desired bit fields are governed by validParams)
     if (status == PMIC_ST_SUCCESS)
     {
         // LDO_CTRL register
-        Pmic_powerTps6522xSetLdoCtrlRegBitFields(ldoPowerResourceCfg[ldoNum], &ldoCtrlRegData);
+        Pmic_powerTps6522xSetLdoCtrlRegBitFields(pLdoPowerResourceCfg[ldoNum], &ldoCtrlRegData);
 
         // LDO_VOUT register
-        Pmic_powerTps6522xSetLdoVoutRegBitFields(ldoPowerResourceCfg, &ldoVoutRegData, ldoNum);
+        Pmic_powerTps6522xSetLdoVoutRegBitFields(pLdoPowerResourceCfg, &ldoVoutRegData, ldoNum);
 
         // LDO_PG_WINDOW register
-        Pmic_powerTps6522xSetLdoPgWindowRegBitFields(ldoPowerResourceCfg[ldoNum], &ldoPgWindowRegData);
+        Pmic_powerTps6522xSetLdoPgWindowRegBitFields(pLdoPowerResourceCfg[ldoNum], &ldoPgWindowRegData);
 
         // RAIL_SEL_2 register
-        Pmic_powerTps6522xSetRailSel2RegBitFields(ldoPowerResourceCfg, &ldoRailSelRegData, ldoNum);
+        Pmic_powerTps6522xSetRailSel2RegBitFields(pLdoPowerResourceCfg, &ldoRailSelRegData, ldoNum);
     }
 
     // After modification of register bit fields, write values back to PMIC
@@ -1720,70 +2099,93 @@ int32_t Pmic_powerTps6522xSetLdoPwrResourceCfg(Pmic_CoreHandle_t                
     return status;
 }
 
+/**
+ *  \brief      This function is used to set the desired bit fields of the VCCA_VMON_CTRL register
+ *              (desired bit fields are governed by validParams).
+ *
+ *  \param      vccaVmonPwrRsrcCfg      [IN]        VCCA/VMON power resource configuration struct
+ *  \param      pVccaVmonCtrlRegData    [OUT]       Pointer to VCCA_VMON_CTRL register data
+ *  \param      vmonNum                 [IN]        VMON number
+ */
 static void
 Pmic_powerTps6522xSetVccaVmonCtrlBitFields(const Pmic_powerTps6522xVccaVmonPowerResourceCfg_t vccaVmonPwrRsrcCfg,
-                                           uint8_t                                           *vccaVmonCtrlRegData,
+                                           uint8_t                                           *pVccaVmonCtrlRegData,
                                            const uint8_t                                      vmonNum)
 {
     if (pmic_validParamCheck(vccaVmonPwrRsrcCfg.validParams, PMIC_POWER_TPS6522X_CFG_VMON_DEGLITCH_SEL_VALID))
     {
-        Pmic_setBitField(vccaVmonCtrlRegData,
+        Pmic_setBitField(pVccaVmonCtrlRegData,
                          PMIC_POWER_TPS6522X_VCCA_VMON_CTRL_DEGLITCH_SEL_SHIFT,
                          PMIC_POWER_TPS6522X_VCCA_VMON_CTRL_DEGLITCH_SEL_MASK,
                          (uint8_t)vccaVmonPwrRsrcCfg.vmonDeglitchSel);
     }
     if (pmic_validParamCheck(vccaVmonPwrRsrcCfg.validParams, PMIC_POWER_TPS6522X_CFG_VMON2_EN_VALID))
     {
-        Pmic_setBitField(vccaVmonCtrlRegData,
+        Pmic_setBitField(pVccaVmonCtrlRegData,
                          PMIC_POWER_TPS6522X_VCCA_VMON_CTRL_VMON2_EN_SHIFT,
                          PMIC_POWER_TPS6522X_VCCA_VMON_CTRL_VMON2_EN_MASK,
                          (uint8_t)vccaVmonPwrRsrcCfg.vmon2En);
     }
     if (pmic_validParamCheck(vccaVmonPwrRsrcCfg.validParams, PMIC_POWER_TPS6522X_CFG_VMON1_EN_VALID))
     {
-        Pmic_setBitField(vccaVmonCtrlRegData,
+        Pmic_setBitField(pVccaVmonCtrlRegData,
                          PMIC_POWER_TPS6522X_VCCA_VMON_CTRL_VMON1_EN_SHIFT,
                          PMIC_POWER_TPS6522X_VCCA_VMON_CTRL_VMON1_EN_MASK,
                          (uint8_t)vccaVmonPwrRsrcCfg.vmon1En);
     }
     if (pmic_validParamCheck(vccaVmonPwrRsrcCfg.validParams, PMIC_POWER_TPS6522X_CFG_VCCA_VMON_EN_VALID))
     {
-        Pmic_setBitField(vccaVmonCtrlRegData,
+        Pmic_setBitField(pVccaVmonCtrlRegData,
                          PMIC_POWER_TPS6522X_VCCA_VMON_CTRL_VCCA_VMON_EN_SHIFT,
                          PMIC_POWER_TPS6522X_VCCA_VMON_CTRL_VCCA_VMON_EN_MASK,
                          (uint8_t)vccaVmonPwrRsrcCfg.vccaVmonEn);
     }
 }
 
+/**
+ *  \brief      This function is used to set desired bit fields of the VCCA_PG_WINDOW register
+ *              (desired bit fields are governed by validParams).
+ *
+ *  \param      vccaVmonPwrRsrcCfg      [IN]        VCCA/VMON power resource configuration struct
+ *  \param      pVccaPgWindowRegData    [OUT]       Pointer to VCCA_PG_WINDOW register data
+ */
 static void
 Pmic_powerTps6522xSetVccaPgWindowBitFields(const Pmic_powerTps6522xVccaVmonPowerResourceCfg_t vccaVmonPwrRsrcCfg,
-                                           uint8_t                                           *vccaPgWindowRegData)
+                                           uint8_t                                           *pVccaPgWindowRegData)
 {
     if (pmic_validParamCheck(vccaVmonPwrRsrcCfg.validParams, PMIC_POWER_TPS6522X_CFG_VCCA_PG_LEVEL_VALID))
     {
-        Pmic_setBitField(vccaPgWindowRegData,
+        Pmic_setBitField(pVccaPgWindowRegData,
                          PMIC_POWER_TPS6522X_VCCA_PG_WINDOW_VCCA_PG_SET_SHIFT,
                          PMIC_POWER_TPS6522X_VCCA_PG_WINDOW_VCCA_PG_SET_MASK,
                          (uint8_t)vccaVmonPwrRsrcCfg.vccaPgLevel);
     }
     if (pmic_validParamCheck(vccaVmonPwrRsrcCfg.validParams, PMIC_POWER_TPS6522X_CFG_VCCA_VMON_THR_VALID))
     {
-        Pmic_setBitField(vccaPgWindowRegData,
+        Pmic_setBitField(pVccaPgWindowRegData,
                          PMIC_POWER_TPS6522X_VCCA_PG_WINDOW_VCCA_VMON_THR_SHIFT,
                          PMIC_POWER_TPS6522X_VCCA_PG_WINDOW_VCCA_VMON_THR_MASK,
                          (uint8_t)vccaVmonPwrRsrcCfg.vccaVmonThr);
     }
 }
 
+/**
+ *  \brief      This function is used to set desired bit fields of the VMON_PG_WINDOW register
+ *              (desired bit fields are governed by validParams).
+ *
+ *  \param      vccaVmonPwrRsrcCfg      [IN]        VCCA/VMON power resource configuration struct
+ *  \param      pVmonPgWindowRegData    [OUT]       Pointer to VMON_PG_WINDOW register data
+ *  \param      vmonNum                 [IN]        VMON number
+ */
 static void
 Pmic_powerTps6522xSetVmonPgWindowBitFields(const Pmic_powerTps6522xVccaVmonPowerResourceCfg_t vccaVmonPwrRsrcCfg,
-                                           uint8_t                                           *vmonPgWindowRegData,
+                                           uint8_t                                           *pVmonPgWindowRegData,
                                            const uint8_t                                      vmonNum)
 {
     if ((vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON1) &&
         pmic_validParamCheck(vccaVmonPwrRsrcCfg.validParams, PMIC_POWER_TPS6522X_CFG_VMON1_THR_VALID))
     {
-        Pmic_setBitField(vmonPgWindowRegData,
+        Pmic_setBitField(pVmonPgWindowRegData,
                          PMIC_POWER_TPS6522X_VMON1_PG_WINDOW_VMON1_THR_SHIFT,
                          PMIC_POWER_TPS6522X_VMON1_PG_WINDOW_VMON1_THR_MASK,
                          (uint8_t)vccaVmonPwrRsrcCfg.vmon1Thr);
@@ -1791,14 +2193,21 @@ Pmic_powerTps6522xSetVmonPgWindowBitFields(const Pmic_powerTps6522xVccaVmonPower
     else if ((vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON2) &&
              pmic_validParamCheck(vccaVmonPwrRsrcCfg.validParams, PMIC_POWER_TPS6522X_CFG_VMON2_THR_VALID))
     {
-        Pmic_setBitField(vmonPgWindowRegData,
+        Pmic_setBitField(pVmonPgWindowRegData,
                          PMIC_POWER_TPS6522X_VMON2_PG_WINDOW_VMON2_THR_SHIFT,
                          PMIC_POWER_TPS6522X_VMON2_PG_WINDOW_VMON2_THR_MASK,
                          (uint8_t)vccaVmonPwrRsrcCfg.vmon2Thr);
     }
 }
 
-static void Pmic_powerTps6522xVmonConvertVoltage2PgSet(uint8_t       *vmonPgLevel_pgSet,
+/**
+ *  \brief      This function is used to convert a VMON voltage value (mV) to VMON PG_SET value.
+ *
+ *  \param      pVmonPgLevel_pgSet      [OUT]       VMON PG level in PG_SET form
+ *  \param      vmonPgLevel_mv          [IN]        VMON PG level in millivolts
+ *  \param      vmonNum                 [IN]        VMON number
+ */
+static void Pmic_powerTps6522xVmonConvertVoltage2PgSet(uint8_t       *pVmonPgLevel_pgSet,
                                                        const uint16_t vmonPgLevel_mv,
                                                        const uint8_t  vmonNum)
 {
@@ -1858,36 +2267,53 @@ static void Pmic_powerTps6522xVmonConvertVoltage2PgSet(uint8_t       *vmonPgLeve
 
     if ((baseVoltage_mv != 0) && (voltageStep != 0))
     {
-        *vmonPgLevel_pgSet = baseVoltage_vset + ((vmonPgLevel_mv - baseVoltage_mv) / voltageStep);
+        *pVmonPgLevel_pgSet = baseVoltage_vset + ((vmonPgLevel_mv - baseVoltage_mv) / voltageStep);
     }
 }
 
+/**
+ *  \brief      This function is used to set the desired bit fields of the VMON_PG_LEVEL register.
+ *              It converts a millivolt value obtained from the VCCA/VMON power resource CFG struct
+ *              to PG_SET and sets the VMON_PG_LEVEL register equal to the PG_SET value.
+ *
+ *  \param      vccaVmonPwrRsrcCfg      [IN]        VCCA/VMON power resource configuration register
+ *  \param      pVmonPgLevelRegData     [OUT]       Pointer to VMON_PG_LEVEL register data
+ *  \param      vmonNum                 [IN]        VMON number
+ */
 static void
 Pmic_powerTps6522xSetVmonPgLevelBitFields(const Pmic_powerTps6522xVccaVmonPowerResourceCfg_t vccaVmonPwrRsrcCfg,
-                                          uint8_t                                           *vmonPgLevelRegData,
+                                          uint8_t                                           *pVmonPgLevelRegData,
                                           const uint8_t                                      vmonNum)
 {
     if ((vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON1) &&
         pmic_validParamCheck(vccaVmonPwrRsrcCfg.validParams, PMIC_POWER_TPS6522X_CFG_VMON1_PG_LEVEL_MV_VALID))
     {
-        Pmic_powerTps6522xVmonConvertVoltage2PgSet(vmonPgLevelRegData, vccaVmonPwrRsrcCfg.vmon1PgLevel_mv, vmonNum);
+        Pmic_powerTps6522xVmonConvertVoltage2PgSet(pVmonPgLevelRegData, vccaVmonPwrRsrcCfg.vmon1PgLevel_mv, vmonNum);
     }
     else if ((vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON2) &&
              pmic_validParamCheck(vccaVmonPwrRsrcCfg.validParams, PMIC_POWER_TPS6522X_CFG_VMON2_PG_LEVEL_MV_VALID))
     {
-        Pmic_powerTps6522xVmonConvertVoltage2PgSet(vmonPgLevelRegData, vccaVmonPwrRsrcCfg.vmon2PgLevel_mv, vmonNum);
+        Pmic_powerTps6522xVmonConvertVoltage2PgSet(pVmonPgLevelRegData, vccaVmonPwrRsrcCfg.vmon2PgLevel_mv, vmonNum);
     }
 }
 
+/**
+ *  \brief      This function is used to set the desired bit fields of the RAIL_SEL_3 register
+ *              (desired bit fields are governed by validParams).
+ *
+ *  \param      vccaVmonPwrRsrcCfg          [IN]        VCCA/VMON power resource configuration struct
+ *  \param      pVccaVmonRailSelRegData     [OUT]       Pointer to RAIL_SEL_3 register
+ *  \param      vmonNum                     [IN]        VMON number
+ */
 static void
 Pmic_powerTps6522xSetRailSel3RegBitFields(const Pmic_powerTps6522xVccaVmonPowerResourceCfg_t vccaVmonPwrRsrcCfg,
-                                          uint8_t                                           *vccaVmonRailSelRegData,
+                                          uint8_t                                           *pVccaVmonRailSelRegData,
                                           const uint8_t                                      vmonNum)
 {
     if ((vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON1) &&
         pmic_validParamCheck(vccaVmonPwrRsrcCfg.validParams, PMIC_POWER_TPS6522X_CFG_VMON1_RAIL_GRP_SEL_VALID))
     {
-        Pmic_setBitField(vccaVmonRailSelRegData,
+        Pmic_setBitField(pVccaVmonRailSelRegData,
                          PMIC_POWER_TPS6522X_RAIL_SEL_3_VMON1_GRP_SEL_SHIFT,
                          PMIC_POWER_TPS6522X_RAIL_SEL_3_VMON1_GRP_SEL_MASK,
                          (uint8_t)vccaVmonPwrRsrcCfg.vmon1RailGrpSel);
@@ -1895,7 +2321,7 @@ Pmic_powerTps6522xSetRailSel3RegBitFields(const Pmic_powerTps6522xVccaVmonPowerR
     else if ((vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON2) &&
              pmic_validParamCheck(vccaVmonPwrRsrcCfg.validParams, PMIC_POWER_TPS6522X_CFG_VMON2_RAIL_GRP_SEL_VALID))
     {
-        Pmic_setBitField(vccaVmonRailSelRegData,
+        Pmic_setBitField(pVccaVmonRailSelRegData,
                          PMIC_POWER_TPS6522X_RAIL_SEL_3_VMON2_GRP_SEL_SHIFT,
                          PMIC_POWER_TPS6522X_RAIL_SEL_3_VMON2_GRP_SEL_MASK,
                          (uint8_t)vccaVmonPwrRsrcCfg.vmon2RailGrpSel);
@@ -1903,14 +2329,25 @@ Pmic_powerTps6522xSetRailSel3RegBitFields(const Pmic_powerTps6522xVccaVmonPowerR
     else if ((vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VCCA_VMON) &&
              pmic_validParamCheck(vccaVmonPwrRsrcCfg.validParams, PMIC_POWER_TPS6522X_CFG_VCCA_RAIL_GRP_SEL_VALID))
     {
-        Pmic_setBitField(vccaVmonRailSelRegData,
+        Pmic_setBitField(pVccaVmonRailSelRegData,
                          PMIC_POWER_TPS6522X_RAIL_SEL_3_VCCA_GRP_SEL_SHIFT,
                          PMIC_POWER_TPS6522X_RAIL_SEL_3_VCCA_GRP_SEL_MASK,
                          (uint8_t)vccaVmonPwrRsrcCfg.vccaRailGrpSel);
     }
 }
 
-int32_t
+/**
+ *  \brief      This function is used to set all desired configurations of VCCA_VMON/VMONx power resource
+ *              (desired configurations are governed by validParams).
+ *
+ *  \param      pPmicCoreHandle         [IN]        PMIC interface handle
+ *  \param      vccaVmonPwrRsrcCfg      [IN]        VCCA/VMON power resource configuration struct
+ *  \param      vmonNum                 [IN]        VMON number
+ *
+ *  \return     Success code if VCCA_VMON/VMONx configurations are set, error code otherwise.
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
+static int32_t
 Pmic_powerTps6522xSetVccaVmonPwrResourceCfg(Pmic_CoreHandle_t                                 *pPmicCoreHandle,
                                             const Pmic_powerTps6522xVccaVmonPowerResourceCfg_t vccaVmonPwrRsrcCfg,
                                             const uint8_t                                      vmonNum)
@@ -1966,8 +2403,8 @@ Pmic_powerTps6522xSetVccaVmonPwrResourceCfg(Pmic_CoreHandle_t                   
             pPmicCoreHandle, pVccaVmonRegisters[vmonNum].vccaVmonRailSelRegAddr, &vccaVmonRailSelRegData);
     }
 
-    // For each register pertaining to the VCCA_VMON/VMONx resource, modify the relevant bit fields
-    // of the register (relevant bit fields are governed by validParams)
+    // For each register pertaining to the VCCA_VMON/VMONx resource, modify the desired bit fields
+    // of the register (desired bit fields are governed by validParams)
     if (status == PMIC_ST_SUCCESS)
     {
         // VCCA_VMON_CTRL
@@ -2111,6 +2548,14 @@ int32_t Pmic_powerTps6522xSetPwrResourceCfg(Pmic_CoreHandle_t                   
     return status;
 }
 
+/**
+ * \brief       This function is used to check whether the PMIC handle is valid.
+ *
+ * \param       pPmicCoreHandle     [IN]    PMIC interface handle
+ *
+ * \return      Success code if PMIC handle is valid, error code otherwise.
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
 static int32_t Pmic_powerTps6522xParamCheck_pmicHandle(Pmic_CoreHandle_t *pPmicCoreHandle)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -2137,9 +2582,20 @@ static int32_t Pmic_powerTps6522xParamCheck_pmicHandle(Pmic_CoreHandle_t *pPmicC
     return status;
 }
 
-int32_t Pmic_powerTps6522xGetBuckStat(Pmic_CoreHandle_t        *pPmicCoreHandle,
-                                      const pwrRsrcUVOVStatus_t pwrRsrcUVOVStatus,
-                                      bool                     *pUnderOverVoltStat)
+/**
+ *  \brief      This function is used to get the desired BUCK UVOV status.
+ *
+ *  \param      pPmicCoreHandle         [IN]        PMIC interface handle
+ *  \param      pwrRsrcUVOVStatus       [IN]        Indicates which UVOV status to look for
+ *  \param      pUnderOverVoltStat      [OUT]       Pointer to UVOV status variable in which API
+ *                                                  will use to store the UVOV status
+ *
+ *  \return     Success code if BUCK UVOV status is obtained, error code otherwise.
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
+static int32_t Pmic_powerTps6522xGetBuckStat(Pmic_CoreHandle_t        *pPmicCoreHandle,
+                                             const pwrRsrcUVOVStatus_t pwrRsrcUVOVStatus,
+                                             bool                     *pUnderOverVoltStat)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t statBuckRegData = 0;
@@ -2188,9 +2644,20 @@ int32_t Pmic_powerTps6522xGetBuckStat(Pmic_CoreHandle_t        *pPmicCoreHandle,
     return status;
 }
 
-int32_t Pmic_powerTps6522xGetLdoVccaVmonStat(Pmic_CoreHandle_t        *pPmicCoreHandle,
-                                             const pwrRsrcUVOVStatus_t pwrRsrcUVOVStatus,
-                                             bool                     *pUnderOverVoltStat)
+/**
+ *  \brief      This function is used to get the desired LDO UVOV status or VCCA/VMON UVOV status.
+ *
+ *  \param      pPmicCoreHandle         [IN]        PMIC interface handle
+ *  \param      pwrRsrcUVOVStatus       [IN]        Indicates which UVOV status to look for
+ *  \param      pUnderOverVoltStat      [OUT]       Pointer to UVOV status variable in which API
+ *                                                  will use to store the UVOV status
+ *
+ *  \return     Success code if LDO UVOV status or VCCA/VMON UVOV status is obtained, error code otherwise.
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
+static int32_t Pmic_powerTps6522xGetLdoVccaVmonStat(Pmic_CoreHandle_t        *pPmicCoreHandle,
+                                                    const pwrRsrcUVOVStatus_t pwrRsrcUVOVStatus,
+                                                    bool                     *pUnderOverVoltStat)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t statLdoVmonRegData = 0;

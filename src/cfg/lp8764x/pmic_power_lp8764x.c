@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -39,10 +39,10 @@
  *
  */
 
-#include "../../../include/pmic_types.h"
-#include "../../../include/pmic_power.h"
-#include "../../pmic_core_priv.h"
-#include "../../pmic_io_priv.h"
+#include "pmic_types.h"
+#include "pmic_power.h"
+#include "pmic_core_priv.h"
+#include "pmic_io_priv.h"
 #include "pmic_power_lp8764x_priv.h"
 
 // clang-format off
@@ -236,53 +236,21 @@ static Pmic_powerIntCfg_t lp8764x_pwrIntCfg[] =
 };
 // clang-format on
 
-/*!
- * \brief  PMIC power common interrupt get Configuration function
- *         This function is used to read the interrupt
- *         Configuration
- *
- * \param  pwrRsrcRegCfg   [OUT]  Pointer to store power interrupt
- *                                number.
- */
 void pmic_get_lp8764x_pwrCommonIntCfg(Pmic_powerIntCfg_t **pPwrCommonIntCfg)
 {
     *pPwrCommonIntCfg = lp8764x_pwrIntCfg;
 }
 
-/*!
- * \brief  PMIC power resources get Configuration function
- *         This function is used to read the PMIC POWER resources register
- *         Configuration
- *
- * \param  pwrRsrcRegCfg   [OUT]  Pointer to store power resource register
- *                                configuration
- */
 void pmic_get_lp8764x_pwrRsrceRegCfg(Pmic_powerRsrcRegCfg_t **pPwrRsrcRegCfg)
 {
     *pPwrRsrcRegCfg = gLp8764x_pwrRsrcRegCfg;
 }
 
-/*!
- * \brief  PMIC power get Configuration function
- *         This function is used to read the PMIC pgood sources register
- *         Configuration
- *
- * \param  pPgoodSrcRegCfg   [OUT]  Pointer to store power-good source register
- *                                  configuration
- */
 void pmic_get_lp8764x_pwrPgoodSrcRegCfg(Pmic_powerPgoodSrcRegCfg_t **pPgoodSrcRegCfg)
 {
     *pPgoodSrcRegCfg = lp8764x_pgoodSrcRegCfg;
 }
 
-/*!
- * \brief   This function is used to convert the millivolt value to vset value
- *          for HERA LP8764x PMIC
- *
- *          Note: In this API, While adding support for New pwrRsrcType/ New
- *                vmonRange, developer need to update the API functionality for
- *                New pwrRsrcType/New vmonRange accordingly.
- */
 int32_t Pmic_powerLP8764xConvertVoltage2VSetVal(Pmic_CoreHandle_t *pPmicCoreHandle,
                                                 uint16_t           millivolt,
                                                 uint16_t           pwrRsrc,
@@ -338,14 +306,6 @@ int32_t Pmic_powerLP8764xConvertVoltage2VSetVal(Pmic_CoreHandle_t *pPmicCoreHand
     return status;
 }
 
-/*!
- * \brief   This function is used to convert the vsetvalue to voltage in mv
- *          for PMIC HERA LP8764x
- *
- *          Note: In this API, While adding support for New pwrRsrcType/ New
- *                vmonRange, developer need to update the API functionality for
- *                New pwrRsrcType/New vmonRange accordingly.
- */
 int32_t Pmic_powerLP8764xConvertVSetVal2Voltage(Pmic_CoreHandle_t *pPmicCoreHandle,
                                                 const uint8_t     *pVSetVal,
                                                 uint16_t           pwrRsrc,
@@ -427,10 +387,6 @@ static int32_t Pmic_validate_lp8764x_pGoodVccaNrstOutNrstOutsocSrcType(uint16_t 
     return status;
 }
 
-/*!
- * \brief   This function is to validate the power good source limit for the
- *          specific PMIC device.
- */
 int32_t Pmic_validate_lp8764x_pGoodSrcType(uint16_t pgoodSrc)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -506,14 +462,6 @@ static int32_t Pmic_validate_lp8764x_pGoodSelBuckLdoNrstoutNrstoutsoc(uint8_t pg
     return status;
 }
 
-/*!
- * \brief   This function is to validate the power good signal source selection
- *          limit for the specific PMIC device.
- *
- *          Note: In this API, While adding support for New pGoodSrcType,
- *                developer need to update the API functionality for New
- *                pGoodSrcType accordingly.
- */
 int32_t Pmic_validate_lp8764x_pGoodSelType(uint16_t pgoodSrc, uint8_t pgoodSelType)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -547,14 +495,6 @@ int32_t Pmic_validate_lp8764x_pGoodSelType(uint16_t pgoodSrc, uint8_t pgoodSelTy
     return status;
 }
 
-/**
- * \brief   This function is used to validate the voltage levels for
- *          Regulators/VMON for LP8764x PMIC
- *
- *          Note: In this API, While adding support for New pwrRsrcType/ New
- *                vmonRange, developer need to update the API functionality for
- *                New pwrRsrcType/New vmonRange accordingly.
- */
 int32_t Pmic_powerLP8764xValidateVoltageLevel(Pmic_CoreHandle_t *pPmicCoreHandle,
                                               uint8_t            pwrRsrcType,
                                               uint16_t           pwrRsrc,
@@ -598,10 +538,6 @@ int32_t Pmic_powerLP8764xValidateVoltageLevel(Pmic_CoreHandle_t *pPmicCoreHandle
     return status;
 }
 
-/*!
- * \brief   This function is to validate the power resource limit for the
- *          LP8764x PMIC device.
- */
 int32_t
 Pmic_powerLP8764xValidatePwrRsrcLimit(const Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t pwrRsrcType, uint16_t pwrRsrc)
 {
@@ -648,14 +584,6 @@ Pmic_powerLP8764xValidatePwrRsrcLimit(const Pmic_CoreHandle_t *pPmicCoreHandle, 
     return status;
 }
 
-/*!
- * \brief   This function is to validate the power resource interrupt type
- *          for the LP8764x PMIC device.
- *
- *          Note: In this API, While adding support for New pwrResourceType,
- *                developer need to update the API functionality for New
- *                pwrResourceType accordingly.
- */
 int32_t Pmic_powerLP8764xValidateIntrType(uint8_t pwrResourceType, uint8_t intrType)
 {
     int32_t status = PMIC_ST_SUCCESS;
