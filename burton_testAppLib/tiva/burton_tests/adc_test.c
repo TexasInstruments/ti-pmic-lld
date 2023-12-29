@@ -15,16 +15,16 @@
 #include <stdlib.h>
 
 /* Tiva test app library */
-#include "pmic_drv/burton_testAppLib/tiva/tiva_testLib.h"
+#include "tiva_testLib.h"
 
 /* Test specific include */
-#include "pmic_drv/burton_testAppLib/tiva/burton_tests/adc_test.h"
+#include "adc_test.h"
 
 /* Unity testing library */
-#include "unity/unity.h"
+#include "unity.h"
 
 /* PMIC driver */
-#include "pmic_drv/pmic.h"
+#include "pmic.h"
 
 Pmic_CoreHandle_t pmicCoreHandle;
 timerHandle_t     timerHandle;

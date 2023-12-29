@@ -32,18 +32,20 @@
  *****************************************************************************/
 
 /**
- *  \file pmic_core_tps6522x.h
+ * \file   pmic_core_tps6522x_priv.h
  *
- *  \brief  The macro definitions for TPS6522x Burton PMIC driver specific
- *          PMIC common configuration
+ * \brief  The macro definitions, structures and function prototypes for
+ *         TPS6522x Burton PMIC driver specific PMIC Core configuration
+ *
  */
 
-#ifndef PMIC_CORE_TPS6522X_H_
-#define PMIC_CORE_TPS6522X_H_
+#ifndef PMIC_CORE_TPS6522X_PRIV_H_
+#define PMIC_CORE_TPS6522X_PRIV_H_
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
+#include "pmic_core_priv.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -51,35 +53,25 @@ extern "C"
 #endif
 
 /* ========================================================================== */
-/*                             Macros & Typedefs                              */
+/*                            Macros & Typedefs                               */
 /* ========================================================================== */
 
-/**
- *  \anchor Pmic_Tps6522xBurton_ExtClk_Freq_Sel
- *  \name   PMIC External Clock (SYNCCLKIN) Frequency selection
- *
- *  @{
+/*!
+ * \brief   PMIC TPS6522x Spread Spectrum 1 Register Mask Values
  */
-/** \brief  SYNCCLKIN Frequency as 1.1 MHz */
-#define PMIC_TPS6522X_SYNCCLKIN_1_1_MHZ (0U)
-/** \brief  SYNCCLKIN Frequency as 2.2 MHz */
-#define PMIC_TPS6522X_SYNCCLKIN_2_2_MHZ (1U)
-/** \brief  SYNCCLKIN Frequency as 4.4 MHz */
-#define PMIC_TPS6522X_SYNCCLKIN_4_4_MHZ (2U)
-/** \brief  SYNCCLKIN Frequency as 8.8 MHz */
-#define PMIC_TPS6522X_SYNCCLKIN_8_8_MHZ (3U)
-/** @} */
+#define PMIC_TPS6522X_SPREAD_SPECTRUM_1_SS_DEPTH_MASK ((uint8_t)(0x01U << PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_SHIFT))
 
-/*==========================================================================*/
-/*                         Structures and Enums                             */
-/*==========================================================================*/
+/* ========================================================================== */
+/*                           Structures and Enums                             */
+/* ========================================================================== */
 
-/*==========================================================================*/
-/*                         Function Declarations                            */
-/*==========================================================================*/
+/* ========================================================================== */
+/*                          Function Declarations                             */
+/* ========================================================================== */
 
 #ifdef __cplusplus
 }
+
 #endif /* __cplusplus */
 
-#endif /* PMIC_CORE_TPS6522X_H_ */
+#endif /* PMIC_CORE_TPS6522X_PRIV_H_ */

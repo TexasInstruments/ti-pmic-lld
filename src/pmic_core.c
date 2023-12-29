@@ -39,11 +39,13 @@
 
 #include "pmic_core_priv.h"
 #include "pmic_core_tps6594x.h"
+#include "pmic_core_tps6522x.h"
 #include "pmic_core_lp8764x.h"
 
 #include "pmic_rtc_tps6594x_priv.h"
 #include "pmic_fsm_priv.h"
 #include "pmic_irq_tps6594x_priv.h"
+#include "pmic_core_tps6522x_priv.h"
 
 #include "pmic_power_priv.h"
 
@@ -103,13 +105,14 @@ int32_t Pmic_setRecoveryCntCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_Re
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regVal;
-    uint8_t clrCntVal = 1U;
 
+    // Check for NULL handle
     if (NULL == pPmicCoreHandle)
     {
         pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
+    // Check for valid RECOV_CNT_THR param
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         (((bool)true) == pmic_validParamCheck(recovCntCfg.validParams, PMIC_CFG_RECOV_CNT_THR_VAL_VALID)) &&
         ((recovCntCfg.thrVal > PMIC_RECOV_CNT_THR_MAX)))
@@ -117,6 +120,7 @@ int32_t Pmic_setRecoveryCntCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_Re
         pmicStatus = PMIC_ST_ERR_INV_PARAM;
     }
 
+    // Check for valid RECOV_CNT_CLR param
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         (((bool)true) == pmic_validParamCheck(recovCntCfg.validParams, PMIC_CFG_RECOV_CNT_CLR_CNT_VALID)) &&
         (recovCntCfg.clrCnt != ((bool)true)))
@@ -126,33 +130,37 @@ int32_t Pmic_setRecoveryCntCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_Re
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
-        /* Start Critical Section */
+        // Start critical section before read-modify-write
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
+        // Read recovery count configuration register
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_RECOV_CNT_REG_2_REGADDR, &regVal);
 
         if (PMIC_ST_SUCCESS == pmicStatus)
         {
+            // Modify RECOV_CNT_CLR bit field if param is valid
             if (((bool)true) == pmic_validParamCheck(recovCntCfg.validParams, PMIC_CFG_RECOV_CNT_CLR_CNT_VALID))
             {
                 Pmic_setBitField(&regVal,
                                  PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_SHIFT,
                                  PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_MASK,
-                                 clrCntVal);
+                                 (uint8_t)recovCntCfg.clrCnt);
             }
 
+            // Modify RECOV_CNT_THR bit field if param is valid
             if (((bool)true) == pmic_validParamCheck(recovCntCfg.validParams, PMIC_CFG_RECOV_CNT_THR_VAL_VALID))
             {
                 Pmic_setBitField(&regVal,
-                                 PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_SHIFT,
-                                 PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_MASK,
+                                 PMIC_RECOV_CNT_REG_2_RECOV_CNT_THR_SHIFT,
+                                 PMIC_RECOV_CNT_REG_2_RECOV_CNT_THR_MASK,
                                  recovCntCfg.thrVal);
             }
 
+            // Write new regVal back to PMIC
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_RECOV_CNT_REG_2_REGADDR, regVal);
         }
 
-        /* Stop Critical Section */
+        // Stop critical section after read-modify-write
         Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
@@ -164,11 +172,13 @@ int32_t Pmic_getRecoveryCntCfg(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_RecovCnt
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
+    // Check for NULL handle
     if (NULL == pPmicCoreHandle)
     {
         pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
+    // Check for NULL recovery count CFG
     if ((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pRecovCntCfg))
     {
         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
@@ -176,31 +186,26 @@ int32_t Pmic_getRecoveryCntCfg(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_RecovCnt
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
-
-        /* Start Critical Section */
+        // Read the recovery counter CFG register
         Pmic_criticalSectionStart(pPmicCoreHandle);
-
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_RECOV_CNT_REG_2_REGADDR, &regVal);
-        /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
+        // Extract RECOV_CNT_THR bit field if its validParam is set
         if (((bool)true) == pmic_validParamCheck(pRecovCntCfg->validParams, PMIC_CFG_RECOV_CNT_THR_VAL_VALID))
         {
             pRecovCntCfg->thrVal = Pmic_getBitField(
                 regVal, PMIC_RECOV_CNT_REG_2_RECOV_CNT_THR_SHIFT, PMIC_RECOV_CNT_REG_2_RECOV_CNT_THR_MASK);
         }
+
+        // Extract RECOV_CNT_CLR bit field if its validParam is set
         if (((bool)true) == pmic_validParamCheck(pRecovCntCfg->validParams, PMIC_CFG_RECOV_CNT_CLR_CNT_VALID))
         {
-            pRecovCntCfg->clrCnt = ((bool)true);
-
-            if ((Pmic_getBitField(
-                    regVal, PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_SHIFT, PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_MASK)) == 0U)
-            {
-                pRecovCntCfg->clrCnt = ((bool)false);
-            }
+            pRecovCntCfg->clrCnt = (bool)Pmic_getBitField(
+                regVal, PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_SHIFT, PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_MASK);
         }
     }
 
@@ -212,11 +217,13 @@ int32_t Pmic_getRecoveryCnt(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t *pRecovC
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
+    // Check for NULL PMIC handle
     if (NULL == pPmicCoreHandle)
     {
         pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
+    // Check for NULL recovery count variable
     if ((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pRecovCntVal))
     {
         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
@@ -224,17 +231,15 @@ int32_t Pmic_getRecoveryCnt(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t *pRecovC
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
-        /* Start Critical Section */
+        // Read recovery count value register
         Pmic_criticalSectionStart(pPmicCoreHandle);
-
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_RECOV_CNT_REG_1_REGADDR, &regVal);
-
-        /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
+        // Get recovery count value
         *pRecovCntVal =
             Pmic_getBitField(regVal, PMIC_RECOV_CNT_REG_1_RECOV_CNT_SHIFT, PMIC_RECOV_CNT_REG_1_RECOV_CNT_MASK);
     }
@@ -758,16 +763,19 @@ int32_t Pmic_setScratchPadValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regAddr;
 
+    // Check for NULL PMIC handle
     if (NULL == pPmicCoreHandle)
     {
         pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
+    // Check for valid scratchpad register ID
     if ((PMIC_ST_SUCCESS == pmicStatus) && (scratchPadRegId > PMIC_SCRATCH_PAD_REG_4))
     {
         pmicStatus = PMIC_ST_ERR_INV_PARAM;
     }
 
+    // Get desired scratchpad register address then write desired data to register
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
         Pmic_getScratchPadRegAddr(scratchPadRegId, &regAddr);
@@ -785,21 +793,25 @@ int32_t Pmic_getScratchPadValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regAddr;
 
+    // Check for NULL PMIC handle
     if (NULL == pPmicCoreHandle)
     {
         pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
+    // Check for valid scratchpad register ID
     if ((PMIC_ST_SUCCESS == pmicStatus) && (scratchPadRegId > PMIC_SCRATCH_PAD_REG_4))
     {
         pmicStatus = PMIC_ST_ERR_INV_PARAM;
     }
 
+    // Check for NULL data variable
     if ((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pData))
     {
         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
     }
 
+    // Get desired scratchpad register address then read data from register
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
         Pmic_getScratchPadRegAddr(scratchPadRegId, &regAddr);
@@ -847,16 +859,31 @@ int32_t Pmic_setUserSpareValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t bitShift, bitMask, regVal;
 
+    // Check for NULL PMIC handle
     if (NULL == pPmicCoreHandle)
     {
         pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
-    if ((PMIC_ST_SUCCESS == pmicStatus) && (userSpareRegNum > PMIC_USER_SPARE_REG_4))
+    // Check for valid user spare register ID
+    if (PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        switch (pPmicCoreHandle->pmicDeviceType)
+        {
+            case PMIC_DEV_BURTON_TPS6522X:
+                if ((userSpareRegNum != PMIC_USER_SPARE_REG_4) && (userSpareRegNum != PMIC_USER_SPARE_REG_1))
+                {
+                    pmicStatus = PMIC_ST_ERR_INV_PARAM;
+                }
+            default:
+                if (userSpareRegNum > PMIC_USER_SPARE_REG_4)
+                {
+                    pmicStatus = PMIC_ST_ERR_INV_PARAM;
+                }
+        }
     }
 
+    // Check for valid data to be written to user spare register
     if ((PMIC_ST_SUCCESS == pmicStatus) && (data > PMIC_USER_SPARE_REG_VAL_1))
     {
         pmicStatus = PMIC_ST_ERR_INV_PARAM;
@@ -864,8 +891,14 @@ int32_t Pmic_setUserSpareValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
+        // Start critical section before read-modify-write
         Pmic_criticalSectionStart(pPmicCoreHandle);
+
+        // Read user spare register
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_USER_SPARE_REGS_REGADDR, &regVal);
+
+        // Get desired user spare register bit field, modify the
+        // bit field, and write new register data back to PMIC
         if (PMIC_ST_SUCCESS == pmicStatus)
         {
             Pmic_getUserSpareRegBitFields(userSpareRegNum, &bitShift, &bitMask);
@@ -875,6 +908,7 @@ int32_t Pmic_setUserSpareValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_USER_SPARE_REGS_REGADDR, regVal);
         }
 
+        // Stop critical section after read-modify-write
         Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
@@ -886,21 +920,37 @@ int32_t Pmic_getUserSpareValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regVal, bitShift, bitMask;
 
+    // Check for NULL PMIC handle
     if (NULL == pPmicCoreHandle)
     {
         pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
-    if ((PMIC_ST_SUCCESS == pmicStatus) && (userSpareRegNum > PMIC_USER_SPARE_REG_4))
+    // Check for valid user spare register ID
+    if (PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        switch (pPmicCoreHandle->pmicDeviceType)
+        {
+            case PMIC_DEV_BURTON_TPS6522X:
+                if ((userSpareRegNum != PMIC_USER_SPARE_REG_4) && (userSpareRegNum != PMIC_USER_SPARE_REG_1))
+                {
+                    pmicStatus = PMIC_ST_ERR_INV_PARAM;
+                }
+            default:
+                if (userSpareRegNum > PMIC_USER_SPARE_REG_4)
+                {
+                    pmicStatus = PMIC_ST_ERR_INV_PARAM;
+                }
+        }
     }
 
+    // Check for NULL data variable
     if ((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pData))
     {
         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
     }
 
+    // Read user spare register
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -908,6 +958,7 @@ int32_t Pmic_getUserSpareValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t
         Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
+    // Extract desired user spare register value
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
         Pmic_getUserSpareRegBitFields(userSpareRegNum, &bitShift, &bitMask);
@@ -926,30 +977,25 @@ static int32_t Pmic_spreadSpectrumEnable(Pmic_CoreHandle_t *pPmicCoreHandle, con
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
+    // Start critical section before read-modify-write
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
+    // Read SPREAD_SPECTRUM_1 register
     pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_SPREAD_SPECTRUM_1_REGADDR, &regData);
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
-        if (((bool)PMIC_SPREAD_SPECTRUM_CFG_ENABLE) == commonCtrlCfg.sreadSpectrumEn)
-        {
-            Pmic_setBitField(&regData,
-                             PMIC_SPREAD_SPECTRUM_1_SS_EN_SHIFT,
-                             PMIC_SPREAD_SPECTRUM_1_SS_EN_MASK,
-                             PMIC_SPREAD_SPECTRUM_CFG_ENABLE);
-        }
-        else
-        {
-            Pmic_setBitField(&regData,
-                             PMIC_SPREAD_SPECTRUM_1_SS_EN_SHIFT,
-                             PMIC_SPREAD_SPECTRUM_1_SS_EN_MASK,
-                             PMIC_SPREAD_SPECTRUM_CFG_DISABLE);
-        }
+        // Modify SS_EN bit field
+        Pmic_setBitField(&regData,
+                         PMIC_SPREAD_SPECTRUM_1_SS_EN_SHIFT,
+                         PMIC_SPREAD_SPECTRUM_1_SS_EN_MASK,
+                         (uint8_t)commonCtrlCfg.spreadSpectrumEn);
 
+        // Write back to PMIC
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_SPREAD_SPECTRUM_1_REGADDR, regData);
     }
 
+    // Stop critical section after read-modify-write
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return pmicStatus;
@@ -963,18 +1009,16 @@ static int32_t Pmic_getSpreadSpectrumEnable(Pmic_CoreHandle_t *pPmicCoreHandle, 
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
+    // Read SPREAD_SPECTRUM_1 register
     Pmic_criticalSectionStart(pPmicCoreHandle);
     pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_SPREAD_SPECTRUM_1_REGADDR, &regData);
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
+    // Extract SS_EN bit
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
-        pCommonCtrlCfg->sreadSpectrumEn = (bool)false;
-
-        if (Pmic_getBitField(regData, PMIC_SPREAD_SPECTRUM_1_SS_EN_SHIFT, PMIC_SPREAD_SPECTRUM_1_SS_EN_MASK) == 1U)
-        {
-            pCommonCtrlCfg->sreadSpectrumEn = (bool)true;
-        }
+        pCommonCtrlCfg->spreadSpectrumEn =
+            (bool)Pmic_getBitField(regData, PMIC_SPREAD_SPECTRUM_1_SS_EN_SHIFT, PMIC_SPREAD_SPECTRUM_1_SS_EN_MASK);
     }
 
     return pmicStatus;
@@ -992,7 +1036,7 @@ static int32_t Pmic_skipEepromDefaultLoadEnable(Pmic_CoreHandle_t         *pPmic
 
     if (PMIC_DEV_HERA_LP8764X != pPmicCoreHandle->pmicDeviceType)
     {
-        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
     }
 
     if (PMIC_ST_SUCCESS == pmicStatus)
@@ -1038,9 +1082,17 @@ static int32_t Pmic_getSkipEepromDefaultLoadEnable(Pmic_CoreHandle_t    *pPmicCo
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_STARTUP_CTRL_REGADDR, &regData);
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+    if (pPmicCoreHandle->pmicDeviceType != PMIC_DEV_HERA_LP8764X)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+    }
+
+    if (PMIC_ST_SUCCESS == pmicStatus)
+    {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_STARTUP_CTRL_REGADDR, &regData);
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -1101,12 +1153,15 @@ static int32_t Pmic_eepromDefaultLoadEnable(Pmic_CoreHandle_t         *pPmicCore
         case PMIC_DEV_HERA_LP8764X:
             maxVal = PMIC_LP8764X_EEPROM_DEFAULTS_NOT_LOADED_TO_CONF_OTHER_REGS;
             break;
-        default:
+        case PMIC_DEV_LEO_TPS6594X:
             maxVal = PMIC_TPS6594X_EEPROM_DEFAULTS_NOT_LOADED_TO_RTC_DOMAIN_BITS;
+            break;
+        default:
+            pmicStatus = PMIC_ST_ERR_INV_DEVICE;
             break;
     }
 
-    if (commonCtrlCfg.eepromDefaultLoad > maxVal)
+    if ((pmicStatus == PMIC_ST_SUCCESS) && (commonCtrlCfg.eepromDefaultLoad > maxVal))
     {
         pmicStatus = PMIC_ST_ERR_INV_PARAM;
     }
@@ -1142,13 +1197,22 @@ static int32_t Pmic_getEepromDefaultLoadEnable(Pmic_CoreHandle_t *pPmicCoreHandl
     uint8_t regData = 0U;
     uint8_t regAddr = 0U, bitShift = 0U, bitMask = 0U;
 
-    Pmic_getEepromDefaultLoadRegAddrBitFields(pPmicCoreHandle, &regAddr, &bitShift, &bitMask);
+    if (pPmicCoreHandle->pmicDeviceType != PMIC_DEV_HERA_LP8764X &&
+        pPmicCoreHandle->pmicDeviceType != PMIC_DEV_LEO_TPS6594X)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+    }
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+    if (pmicStatus == PMIC_ST_SUCCESS)
+    {
+        Pmic_getEepromDefaultLoadRegAddrBitFields(pPmicCoreHandle, &regAddr, &bitShift, &bitMask);
 
-    if (PMIC_ST_SUCCESS == pmicStatus)
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
+
+    if (pmicStatus == PMIC_ST_SUCCESS)
     {
         pCommonCtrlCfg->eepromDefaultLoad = Pmic_getBitField(regData, bitShift, bitMask);
     }
@@ -1164,6 +1228,7 @@ static int32_t Pmic_setEnableDrvPinCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t forceEnDrvLowVal, regData = 0U;
 
+    // EN_DRV can only be high or low
     if (commonCtrlCfg.enDrv > PMIC_PIN_SIGNAL_LEVEL_HIGH)
     {
         pmicStatus = PMIC_ST_ERR_INV_PARAM;
@@ -1171,14 +1236,20 @@ static int32_t Pmic_setEnableDrvPinCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
+        // Start critical section before read-modify-write
         Pmic_criticalSectionStart(pPmicCoreHandle);
+
+        // Read ENABLE_DRV_STAT register
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_ENABLE_DRV_STAT_REGADDR, &regData);
 
         if (PMIC_ST_SUCCESS == pmicStatus)
         {
+            // Get FORCE_EN_DRV_LOW bit field
             forceEnDrvLowVal = Pmic_getBitField(
                 regData, PMIC_ENABLE_DRV_STAT_FORCE_EN_DRV_LOW_SHIFT, PMIC_ENABLE_DRV_STAT_FORCE_EN_DRV_LOW_MASK);
 
+            // If FORCE_EN_DRV_LOW bit field has a value of 1, ENABLE_DRV
+            // bit is forced low and cannot be written high by I2C/SPI
             if (PMIC_ENABLE_DRV_I2C_SPI_CONFIG_DISABLE == forceEnDrvLowVal)
             {
                 pmicStatus = PMIC_ST_ERR_INV_EN_DRV_PIN_CFG;
@@ -1187,19 +1258,23 @@ static int32_t Pmic_setEnableDrvPinCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const
 
         if (PMIC_ST_SUCCESS == pmicStatus)
         {
+            // Read ENABLE_DRV_REG register
             pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_ENABLE_DRV_REG_REGADDR, &regData);
         }
 
         if (PMIC_ST_SUCCESS == pmicStatus)
         {
+            // Modify ENABLE_DRV bit field
             Pmic_setBitField(&regData,
                              PMIC_ENABLE_DRV_REG_ENABLE_DRV_SHIFT,
                              PMIC_ENABLE_DRV_REG_ENABLE_DRV_MASK,
                              commonCtrlCfg.enDrv);
 
+            // Write new register value back to PMIC
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_ENABLE_DRV_REG_REGADDR, regData);
         }
 
+        // Stop critical section after read-write-modify
         Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
@@ -1214,12 +1289,14 @@ static int32_t Pmic_getEnableDrvPinCfg(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
+    // Read  ENABLE_DRV_REG register
     Pmic_criticalSectionStart(pPmicCoreHandle);
     pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_ENABLE_DRV_REG_REGADDR, &regData);
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
+        // Extract ENABLE_DRV bit
         pCommonCtrlCfg->enDrv =
             Pmic_getBitField(regData, PMIC_ENABLE_DRV_REG_ENABLE_DRV_SHIFT, PMIC_ENABLE_DRV_REG_ENABLE_DRV_MASK);
     }
@@ -1228,14 +1305,15 @@ static int32_t Pmic_getEnableDrvPinCfg(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_
 }
 
 /*!
- * \brief  API to set Register Lock/UnLock Configuration
+ * \brief  API to set Register Lock/Unlock Configuration
  */
-static int32_t Pmic_setRegisterLockUnLockCfg(Pmic_CoreHandle_t         *pPmicCoreHandle,
+static int32_t Pmic_setRegisterLockUnlockCfg(Pmic_CoreHandle_t         *pPmicCoreHandle,
                                              const Pmic_CommonCtrlCfg_t commonCtrlCfg)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
+    // Check lock/unlock value
     if ((PMIC_REGISTER_UNLOCK != commonCtrlCfg.regLock) && (PMIC_REGISTER_LOCK != commonCtrlCfg.regLock))
     {
         pmicStatus = PMIC_ST_ERR_INV_PARAM;
@@ -1243,10 +1321,10 @@ static int32_t Pmic_setRegisterLockUnLockCfg(Pmic_CoreHandle_t         *pPmicCor
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
+        // Start critical section before write
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_REGISTER_LOCK_REGADDR, &regData);
-
+        // Write the lock/unlock value to the REGISTER_LOCK register
         if (PMIC_ST_SUCCESS == pmicStatus)
         {
             Pmic_setBitField(&regData,
@@ -1257,6 +1335,7 @@ static int32_t Pmic_setRegisterLockUnLockCfg(Pmic_CoreHandle_t         *pPmicCor
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_REGISTER_LOCK_REGADDR, regData);
         }
 
+        // Stop critical section after write
         Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
@@ -1272,27 +1351,58 @@ static int32_t Pmic_setSpreadSpectrumModDepthCfg(Pmic_CoreHandle_t         *pPmi
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    if (commonCtrlCfg.spreadSpectrumDepth > PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_8_4_PERCENT)
+    // Check whether spread spectrum depth value is valid
+    switch (pPmicCoreHandle->pmicDeviceType)
     {
-        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        case PMIC_DEV_HERA_LP8764X:
+        case PMIC_DEV_LEO_TPS6594X:
+            if (commonCtrlCfg.spreadSpectrumDepth > PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_8_4_PERCENT)
+            {
+                pmicStatus = PMIC_ST_ERR_INV_PARAM;
+            }
+            break;
+        case PMIC_DEV_BURTON_TPS6522X:
+            if (commonCtrlCfg.spreadSpectrumDepth > PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_7_PERCENT)
+            {
+                pmicStatus = PMIC_ST_ERR_INV_PARAM;
+            }
+            break;
+        default:
+            pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+            break;
     }
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
+        // Start critical section before read-modify-write
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
+        // Read SPREAD_SPECTRUM_1 register
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_SPREAD_SPECTRUM_1_REGADDR, &regData);
 
         if (PMIC_ST_SUCCESS == pmicStatus)
         {
-            Pmic_setBitField(&regData,
-                             PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_SHIFT,
-                             PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_MASK,
-                             commonCtrlCfg.spreadSpectrumDepth);
+            // Modify SS_DEPTH bit field
+            if (pPmicCoreHandle->pmicDeviceType == PMIC_DEV_BURTON_TPS6522X)
+            {
+                Pmic_setBitField(&regData,
+                                 PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_SHIFT,
+                                 PMIC_TPS6522X_SPREAD_SPECTRUM_1_SS_DEPTH_MASK,
+                                 commonCtrlCfg.spreadSpectrumDepth);
+            }
+            else
+            {
+                Pmic_setBitField(&regData,
+                                 PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_SHIFT,
+                                 PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_MASK,
+                                 commonCtrlCfg.spreadSpectrumDepth);
+            }
 
+            // Write new register value back to PMIC
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_SPREAD_SPECTRUM_1_REGADDR, regData);
         }
 
+        // Stop critical section after read-modify-write
         Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
@@ -1308,14 +1418,24 @@ static int32_t Pmic_getSpreadSpectrumModDepthCfg(Pmic_CoreHandle_t    *pPmicCore
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
+    // Read SPREAD_SPECTRUM_1 register
     Pmic_criticalSectionStart(pPmicCoreHandle);
     pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_SPREAD_SPECTRUM_1_REGADDR, &regData);
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
-        pCommonCtrlCfg->spreadSpectrumDepth =
-            Pmic_getBitField(regData, PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_SHIFT, PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_MASK);
+        // Extract SS_DEPTH bit field
+        if (pPmicCoreHandle->pmicDeviceType == PMIC_DEV_BURTON_TPS6522X)
+        {
+            pCommonCtrlCfg->spreadSpectrumDepth = Pmic_getBitField(
+                regData, PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_SHIFT, PMIC_TPS6522X_SPREAD_SPECTRUM_1_SS_DEPTH_MASK);
+        }
+        else
+        {
+            pCommonCtrlCfg->spreadSpectrumDepth =
+                Pmic_getBitField(regData, PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_SHIFT, PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_MASK);
+        }
     }
 
     return pmicStatus;
@@ -1325,50 +1445,51 @@ int32_t Pmic_setCommonCtrlConfig(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
+    // Check for NULL PMIC handle
     if (NULL == pPmicCoreHandle)
     {
         pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
+    // Enable/disable spread spectrum
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(commonCtrlCfg.validParams, PMIC_CFG_SPREAD_SPECTRUM_EN_VALID)))
     {
-        /* Enable/Disable Spread Spectrum */
         pmicStatus = Pmic_spreadSpectrumEnable(pPmicCoreHandle, commonCtrlCfg);
     }
 
+    // Enable/Disable Skip EEPROM Default Load to CONF and other registers (valid only for LP8764x)
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(commonCtrlCfg.validParams, PMIC_CFG_SKIP_EEPROM_LOAD_VALID)))
     {
-        /* Enable/Disable Skip EEPROM Default Load to CONF and Other registers*/
         pmicStatus = Pmic_skipEepromDefaultLoadEnable(pPmicCoreHandle, commonCtrlCfg);
     }
 
+    // Enable/Disable EEPROM Default Load to CONF registers (valid only for TPS6522x and LP8764x)
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(commonCtrlCfg.validParams, PMIC_CFG_EEPROM_DEFAULT_VALID)))
     {
-        /* Enable/Disable EEPROM Default Load to CONF registers*/
         pmicStatus = Pmic_eepromDefaultLoadEnable(pPmicCoreHandle, commonCtrlCfg);
     }
 
+    // Set ENABLE_DRV Pin Configuration
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(commonCtrlCfg.validParams, PMIC_CFG_ENABLE_DRV_VALID)))
     {
-        /* Set ENABLE_DRV Pin Configuration */
         pmicStatus = Pmic_setEnableDrvPinCfg(pPmicCoreHandle, commonCtrlCfg);
     }
 
+    // Set Register Lock/Unlock Configuration
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(commonCtrlCfg.validParams, PMIC_CFG_REG_LOCK_VALID)))
     {
-        /* Set Register Lock/UnLock Configuration */
-        pmicStatus = Pmic_setRegisterLockUnLockCfg(pPmicCoreHandle, commonCtrlCfg);
+        pmicStatus = Pmic_setRegisterLockUnlockCfg(pPmicCoreHandle, commonCtrlCfg);
     }
 
+    // Set Spread Spectrum modulation Depth Value Configuration
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(commonCtrlCfg.validParams, PMIC_CFG_SPREAD_SPECTRUM_DEPTH_VALID)))
     {
-        /* Spread Spectrum modulation Depth Value Configuration */
         pmicStatus = Pmic_setSpreadSpectrumModDepthCfg(pPmicCoreHandle, commonCtrlCfg);
     }
 
@@ -1379,57 +1500,50 @@ int32_t Pmic_getCommonCtrlConfig(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_Common
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
+    // Check for NULL PMIC handle
     if (NULL == pPmicCoreHandle)
     {
         pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
+    // Check for NULL CTRL CFG
     if ((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pCommonCtrlCfg))
     {
         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
     }
 
+    // Get Spread Spectrum enable/disable status
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(pCommonCtrlCfg->validParams, PMIC_CFG_SPREAD_SPECTRUM_EN_VALID)))
     {
-        /* Get the status of Spread Spectrum is Enabled/Disabled  */
         pmicStatus = Pmic_getSpreadSpectrumEnable(pPmicCoreHandle, pCommonCtrlCfg);
     }
 
+    // Get Skip EEPROM Default Load status (valid only for LP8764x)
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(pCommonCtrlCfg->validParams, PMIC_CFG_SKIP_EEPROM_LOAD_VALID)))
     {
-        if (PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
-        {
-            /* Get the status of Skip EEPROM Default Load to CONF and Other
-             * registers is Enabled/Disabled */
-            pmicStatus = Pmic_getSkipEepromDefaultLoadEnable(pPmicCoreHandle, pCommonCtrlCfg);
-        }
-        else
-        {
-            pmicStatus = PMIC_ST_ERR_INV_PARAM;
-        }
+        pmicStatus = Pmic_getSkipEepromDefaultLoadEnable(pPmicCoreHandle, pCommonCtrlCfg);
     }
 
+    // Get EEPROM Default Load status (valid only for TPS6522x and LP8764x)
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(pCommonCtrlCfg->validParams, PMIC_CFG_EEPROM_DEFAULT_VALID)))
     {
-        /* Get the status of EEPROM Default Load to CONF registers is
-         * Enabled/Disabled */
         pmicStatus = Pmic_getEepromDefaultLoadEnable(pPmicCoreHandle, pCommonCtrlCfg);
     }
 
+    // Get ENABLE_DRV Pin Configuration
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(pCommonCtrlCfg->validParams, PMIC_CFG_ENABLE_DRV_VALID)))
     {
-        /* Get ENABLE_DRV Pin Configuration */
         pmicStatus = Pmic_getEnableDrvPinCfg(pPmicCoreHandle, pCommonCtrlCfg);
     }
 
+    // Get Spread Spectrum Modulation Depth Value Configuration
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(pCommonCtrlCfg->validParams, PMIC_CFG_SPREAD_SPECTRUM_DEPTH_VALID)))
     {
-        /* Get Spread Spectrum modulation Depth Value Configuration */
         pmicStatus = Pmic_getSpreadSpectrumModDepthCfg(pPmicCoreHandle, pCommonCtrlCfg);
     }
 
@@ -1445,11 +1559,20 @@ static int32_t Pmic_setAmuxOutRefOutPinCfg(Pmic_CoreHandle_t *pPmicCoreHandle, c
     uint8_t regData = 0U;
     bool    amuxRefEn = miscCtrlCfg.amuxOutRefOutEn;
 
+    if ((pPmicCoreHandle->pmicDeviceType != PMIC_DEV_HERA_LP8764X) &&
+        (pPmicCoreHandle->pmicDeviceType != PMIC_DEV_LEO_TPS6594X))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+    }
+
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_MISC_CTRL_REGADDR, &regData);
+    if (pmicStatus == PMIC_ST_SUCCESS)
+    {
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_MISC_CTRL_REGADDR, &regData);
+    }
 
-    if (PMIC_ST_SUCCESS == pmicStatus)
+    if (pmicStatus == PMIC_ST_SUCCESS)
     {
         switch (pPmicCoreHandle->pmicDeviceType)
         {
@@ -1504,9 +1627,18 @@ static int32_t Pmic_getAmuxOutRefOutPinCfg(Pmic_CoreHandle_t *pPmicCoreHandle, P
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_MISC_CTRL_REGADDR, &regData);
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+    if ((pPmicCoreHandle->pmicDeviceType != PMIC_DEV_HERA_LP8764X) &&
+        (pPmicCoreHandle->pmicDeviceType != PMIC_DEV_LEO_TPS6594X))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+    }
+
+    if (pmicStatus == PMIC_ST_SUCCESS)
+    {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_MISC_CTRL_REGADDR, &regData);
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -1530,9 +1662,18 @@ static int32_t Pmic_setInternalClkMonitorCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
+    if ((pPmicCoreHandle->pmicDeviceType != PMIC_DEV_HERA_LP8764X) &&
+        (pPmicCoreHandle->pmicDeviceType != PMIC_DEV_LEO_TPS6594X))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+    }
+
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_MISC_CTRL_REGADDR, &regData);
+    if (pmicStatus == PMIC_ST_SUCCESS)
+    {
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_MISC_CTRL_REGADDR, &regData);
+    }
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -1589,11 +1730,20 @@ static int32_t Pmic_getInternalClkMonitorCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_MISC_CTRL_REGADDR, &regData);
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+    if ((pPmicCoreHandle->pmicDeviceType != PMIC_DEV_HERA_LP8764X) &&
+        (pPmicCoreHandle->pmicDeviceType != PMIC_DEV_LEO_TPS6594X))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+    }
 
-    if (PMIC_ST_SUCCESS == pmicStatus)
+    if (pmicStatus == PMIC_ST_SUCCESS)
+    {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_MISC_CTRL_REGADDR, &regData);
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
+
+    if (pmicStatus == PMIC_ST_SUCCESS)
     {
         pMiscCtrlCfg->clkMonEn = (bool)false;
 
@@ -1614,18 +1764,24 @@ static int32_t Pmic_selectSyncClkOutFreq(Pmic_CoreHandle_t *pPmicCoreHandle, con
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    if (miscCtrlCfg.syncClkOutFreqSel > PMIC_SYNCCLKOUT_4_4_MHZ)
+    if ((pPmicCoreHandle->pmicDeviceType != PMIC_DEV_HERA_LP8764X) &&
+        (pPmicCoreHandle->pmicDeviceType != PMIC_DEV_LEO_TPS6594X))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+    }
+
+    if ((pmicStatus == PMIC_ST_SUCCESS) && (miscCtrlCfg.syncClkOutFreqSel > PMIC_SYNCCLKOUT_4_4_MHZ))
     {
         pmicStatus = PMIC_ST_ERR_INV_PARAM;
     }
 
-    if (PMIC_ST_SUCCESS == pmicStatus)
+    if (pmicStatus == PMIC_ST_SUCCESS)
     {
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_MISC_CTRL_REGADDR, &regData);
 
-        if (PMIC_ST_SUCCESS == pmicStatus)
+        if (pmicStatus == PMIC_ST_SUCCESS)
         {
             Pmic_setBitField(&regData,
                              PMIC_MISC_CTRL_SYNCCLKOUT_FREQ_SEL_SHIFT,
@@ -1649,11 +1805,20 @@ static int32_t Pmic_getSyncClkOutFreqSelectCfg(Pmic_CoreHandle_t *pPmicCoreHandl
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_MISC_CTRL_REGADDR, &regData);
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+    if ((pPmicCoreHandle->pmicDeviceType != PMIC_DEV_HERA_LP8764X) &&
+        (pPmicCoreHandle->pmicDeviceType != PMIC_DEV_LEO_TPS6594X))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+    }
 
-    if (PMIC_ST_SUCCESS == pmicStatus)
+    if (pmicStatus == PMIC_ST_SUCCESS)
+    {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_MISC_CTRL_REGADDR, &regData);
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
+
+    if (pmicStatus == PMIC_ST_SUCCESS)
     {
         pMiscCtrlCfg->syncClkOutFreqSel = Pmic_getBitField(
             regData, PMIC_MISC_CTRL_SYNCCLKOUT_FREQ_SEL_SHIFT, PMIC_MISC_CTRL_SYNCCLKOUT_FREQ_SEL_MASK);
@@ -1670,6 +1835,7 @@ static int32_t Pmic_selectExternalClk(Pmic_CoreHandle_t *pPmicCoreHandle, const 
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
+    // External clock only has two modes of operaton (automatic or forced)
     if (miscCtrlCfg.extClkSel > PMIC_AUTOMATIC_EXT_CLK)
     {
         pmicStatus = PMIC_ST_ERR_INV_PARAM;
@@ -1677,18 +1843,23 @@ static int32_t Pmic_selectExternalClk(Pmic_CoreHandle_t *pPmicCoreHandle, const 
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
+        // Start critical section before read-modify-write
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
+        // Read MISC_CTRL register
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_MISC_CTRL_REGADDR, &regData);
 
         if (PMIC_ST_SUCCESS == pmicStatus)
         {
+            // Modify SEL_EXT_CLK bit field
             Pmic_setBitField(
                 &regData, PMIC_MISC_CTRL_SEL_EXT_CLK_SHIFT, PMIC_MISC_CTRL_SEL_EXT_CLK_MASK, miscCtrlCfg.extClkSel);
 
+            // Write new register value back to PMIC
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_MISC_CTRL_REGADDR, regData);
         }
 
+        // Stop critical section after read-modify-write
         Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
@@ -1703,12 +1874,14 @@ static int32_t Pmic_getExternalClkSelectCfg(Pmic_CoreHandle_t *pPmicCoreHandle, 
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
+    // Read MISC_CTRL register
     Pmic_criticalSectionStart(pPmicCoreHandle);
     pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_MISC_CTRL_REGADDR, &regData);
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
+        // Extract SEL_EXT_CLK bit field
         pMiscCtrlCfg->extClkSel =
             Pmic_getBitField(regData, PMIC_MISC_CTRL_SEL_EXT_CLK_SHIFT, PMIC_MISC_CTRL_SEL_EXT_CLK_MASK);
     }
@@ -1723,18 +1896,23 @@ static int32_t Pmic_selectExternalClkFreq(Pmic_CoreHandle_t *pPmicCoreHandle, co
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
-    uint8_t maxVal;
+    uint8_t maxVal = 0U;
 
+    // Find max clock frequency for each device
     switch (pPmicCoreHandle->pmicDeviceType)
     {
         case PMIC_DEV_HERA_LP8764X:
             maxVal = PMIC_LP8764X_SYNCCLKIN_8_8_MHZ;
+            break;
+        case PMIC_DEV_BURTON_TPS6522X:
+            maxVal = PMIC_TPS6522X_SYNCCLKIN_8_8_MHZ;
             break;
         default:
             maxVal = PMIC_TPS6594X_SYNCCLKIN_4_4_MHZ;
             break;
     }
 
+    // Check whether clock frequency parameter is within range
     if (miscCtrlCfg.syncClkInFreq > maxVal)
     {
         pmicStatus = PMIC_ST_ERR_INV_PARAM;
@@ -1742,18 +1920,23 @@ static int32_t Pmic_selectExternalClkFreq(Pmic_CoreHandle_t *pPmicCoreHandle, co
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
+        // Start critical section before read-modify-write
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
+        // Read PLL_CTRL register
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_PLL_CTRL_REGADDR, &regData);
 
         if (PMIC_ST_SUCCESS == pmicStatus)
         {
+            // Modify EXT_CLK_FREQ bit field
             Pmic_setBitField(
                 &regData, PMIC_PLL_CTRL_EXT_CLK_FREQ_SHIFT, PMIC_PLL_CTRL_EXT_CLK_FREQ_MASK, miscCtrlCfg.syncClkInFreq);
 
+            // Write new register value back to PMIC
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_PLL_CTRL_REGADDR, regData);
         }
 
+        // Stop critical section after read-modify-write
         Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
@@ -1768,7 +1951,13 @@ static int32_t Pmic_setNRstOutSocSignalCfg(Pmic_CoreHandle_t *pPmicCoreHandle, c
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    if (miscCtrlCfg.nRstOutSocSignal > PMIC_PIN_SIGNAL_LEVEL_HIGH)
+    if ((pPmicCoreHandle->pmicDeviceType != PMIC_DEV_HERA_LP8764X) &&
+        (pPmicCoreHandle->pmicDeviceType != PMIC_DEV_LEO_TPS6594X))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+    }
+
+    if ((pmicStatus == PMIC_ST_SUCCESS) && (miscCtrlCfg.nRstOutSocSignal > PMIC_PIN_SIGNAL_LEVEL_HIGH))
     {
         pmicStatus = PMIC_ST_ERR_INV_PARAM;
     }
@@ -1803,6 +1992,7 @@ static int32_t Pmic_setNRstOutSignalCfg(Pmic_CoreHandle_t *pPmicCoreHandle, cons
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
+    // NRSTOUT signal can only be high or low
     if (miscCtrlCfg.nRstOutSignal > PMIC_PIN_SIGNAL_LEVEL_HIGH)
     {
         pmicStatus = PMIC_ST_ERR_INV_PARAM;
@@ -1810,18 +2000,23 @@ static int32_t Pmic_setNRstOutSignalCfg(Pmic_CoreHandle_t *pPmicCoreHandle, cons
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
+        // Start critical section before read-modify-write
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
+        // Read MISC_CTRL register
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_MISC_CTRL_REGADDR, &regData);
 
         if (PMIC_ST_SUCCESS == pmicStatus)
         {
+            // Modify NRSTOUT bit field
             Pmic_setBitField(
                 &regData, PMIC_MISC_CTRL_NRSTOUT_SHIFT, PMIC_MISC_CTRL_NRSTOUT_MASK, miscCtrlCfg.nRstOutSignal);
 
+            // Write new register value back to PMIC
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_MISC_CTRL_REGADDR, regData);
         }
 
+        // Stop critical section after read-modify-write
         Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
@@ -1836,12 +2031,14 @@ static int32_t Pmic_getExternalClkFreqSelectCfg(Pmic_CoreHandle_t *pPmicCoreHand
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
+    // Read PLL_CTRL register
     Pmic_criticalSectionStart(pPmicCoreHandle);
     pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_PLL_CTRL_REGADDR, &regData);
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
+        // Extract EXT_CLK_FREQ bit
         pMiscCtrlCfg->syncClkInFreq =
             Pmic_getBitField(regData, PMIC_PLL_CTRL_EXT_CLK_FREQ_SHIFT, PMIC_PLL_CTRL_EXT_CLK_FREQ_MASK);
     }
@@ -1857,11 +2054,20 @@ static int32_t Pmic_getNRstOutSocSignalCfg(Pmic_CoreHandle_t *pPmicCoreHandle, P
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_MISC_CTRL_REGADDR, &regData);
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+    if ((pPmicCoreHandle->pmicDeviceType != PMIC_DEV_HERA_LP8764X) ||
+        (pPmicCoreHandle->pmicDeviceType != PMIC_DEV_LEO_TPS6594X))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+    }
 
-    if (PMIC_ST_SUCCESS == pmicStatus)
+    if (pmicStatus == PMIC_ST_SUCCESS)
+    {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_MISC_CTRL_REGADDR, &regData);
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
+
+    if (pmicStatus == PMIC_ST_SUCCESS)
     {
         pMiscCtrlCfg->nRstOutSocSignal =
             Pmic_getBitField(regData, PMIC_MISC_CTRL_NRSTOUT_SOC_SHIFT, PMIC_MISC_CTRL_NRSTOUT_SOC_MASK);
@@ -1878,12 +2084,14 @@ static int32_t Pmic_getNRstOutSignalCfg(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
+    // Read MISC_CTRL register
     Pmic_criticalSectionStart(pPmicCoreHandle);
     pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_MISC_CTRL_REGADDR, &regData);
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
+        // Extract NRSTOUT bit
         pMiscCtrlCfg->nRstOutSignal =
             Pmic_getBitField(regData, PMIC_MISC_CTRL_NRSTOUT_SHIFT, PMIC_MISC_CTRL_NRSTOUT_MASK);
     }
@@ -1892,7 +2100,7 @@ static int32_t Pmic_getNRstOutSignalCfg(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic
 }
 
 /*!
- * \brief   API to set ExternalClk Frequency Selection, NRSTOUT_SOC and
+ * \brief   API to set ExternalClk Frequency Selection, NRSTOUT_SOC, and
  *          NRSTOUT Signal Configuration
  */
 static int32_t Pmic_setExtclkfreqSelNRstOutSocNRstOutCfg(Pmic_CoreHandle_t       *pPmicCoreHandle,
@@ -1900,23 +2108,23 @@ static int32_t Pmic_setExtclkfreqSelNRstOutSocNRstOutCfg(Pmic_CoreHandle_t      
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
+    // Set External Clock Frequency selection
     if ((bool)true == pmic_validParamCheck(miscCtrlCfg.validParams, PMIC_CFG_SYNC_CLK_IN_FREQ_VALID))
     {
-        /* Selects External Clock Frequency */
         pmicStatus = Pmic_selectExternalClkFreq(pPmicCoreHandle, miscCtrlCfg);
     }
 
+    // Configure NRSTOUT_SOC signal (valid only for LP8764x and TPS6594x)
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(miscCtrlCfg.validParams, PMIC_CFG_NRSTOUT_SOC_VALID)))
     {
-        /* Configure NRSTOUT_SOC Signal */
         pmicStatus = Pmic_setNRstOutSocSignalCfg(pPmicCoreHandle, miscCtrlCfg);
     }
 
+    // Configure NRSTOUT signal
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(miscCtrlCfg.validParams, PMIC_CFG_NRSTOUT_VALID)))
     {
-        /* Configure NRSTOUT Signal */
         pmicStatus = Pmic_setNRstOutSignalCfg(pPmicCoreHandle, miscCtrlCfg);
     }
 
@@ -1932,38 +2140,37 @@ int32_t Pmic_setMiscCtrlConfig(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_Mi
         pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
+    // Set AMUX_OUT/REF_OUT Pin Control Configuration (valid only for LP8764x and TPS6594x)
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(miscCtrlCfg.validParams, PMIC_CFG_AMUX_OUT_REF_OUT_EN_VALID)))
     {
-        /* Set AMUX_OUT/REF_OUT Pin Control Configuration */
         pmicStatus = Pmic_setAmuxOutRefOutPinCfg(pPmicCoreHandle, miscCtrlCfg);
     }
 
+    // Set Internal Clock Monitoring Configuration (valid only for LP8764x and TPS6594x)
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(miscCtrlCfg.validParams, PMIC_CFG_CLK_MON_EN_VALID)))
     {
-        /* Set Internal Clock Monitoring Configuration*/
         pmicStatus = Pmic_setInternalClkMonitorCfg(pPmicCoreHandle, miscCtrlCfg);
     }
 
+    // Set SYNCCLKOUT Frequency (valid only for LP8764x and TPS6594x)
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(miscCtrlCfg.validParams, PMIC_CFG_SYNC_CLK_OUT_FREQ_SEL_VALID)))
     {
-        /* Selects SYNCCLKOUT Frequency*/
         pmicStatus = Pmic_selectSyncClkOutFreq(pPmicCoreHandle, miscCtrlCfg);
     }
 
+    // Set External Clock
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(miscCtrlCfg.validParams, PMIC_CFG_EXT_CLK_SEL_VALID)))
     {
-        /* Select External Clock */
         pmicStatus = Pmic_selectExternalClk(pPmicCoreHandle, miscCtrlCfg);
     }
 
+    // Configure External Clock Frequency, NRSTOUT_SOC, and NRSTOUT Signal
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
-        /* Selects External Clock Frequency, Configure NRSTOUT_SOC and NRSTOUT
-         * Signal */
         pmicStatus = Pmic_setExtclkfreqSelNRstOutSocNRstOutCfg(pPmicCoreHandle, miscCtrlCfg);
     }
 
@@ -1979,23 +2186,23 @@ static int32_t Pmic_getExtclkfreqSelNRstOutSocNRstOutCfg(Pmic_CoreHandle_t  *pPm
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
+    // Get ExternalClk Frequency Selection Configuration
     if ((bool)true == pmic_validParamCheck(pMiscCtrlCfg->validParams, PMIC_CFG_SYNC_CLK_IN_FREQ_VALID))
     {
-        /* Get ExternalClk Frequency Selection Configuration */
         pmicStatus = Pmic_getExternalClkFreqSelectCfg(pPmicCoreHandle, pMiscCtrlCfg);
     }
 
+    // Get NRSTOUT_SOC Signal Configuration (valid only for LP8764x and TPS6594x)
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(pMiscCtrlCfg->validParams, PMIC_CFG_NRSTOUT_SOC_VALID)))
     {
-        /* Get NRSTOUT_SOC Signal Configuration */
         pmicStatus = Pmic_getNRstOutSocSignalCfg(pPmicCoreHandle, pMiscCtrlCfg);
     }
 
+    // Get NRSTOUT Signal Configuration
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(pMiscCtrlCfg->validParams, PMIC_CFG_NRSTOUT_VALID)))
     {
-        /* Get NRSTOUT Signal Configuration */
         pmicStatus = Pmic_getNRstOutSignalCfg(pPmicCoreHandle, pMiscCtrlCfg);
     }
 
@@ -2006,48 +2213,49 @@ int32_t Pmic_getMiscCtrlConfig(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_MiscCtrl
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
+    // Check for NULL PMIC handle
     if (NULL == pPmicCoreHandle)
     {
         pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
+    // Check for NULL CTRL CFG
     if ((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pMiscCtrlCfg))
     {
         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
     }
 
+    // Get AMUX_OUT/REF_OUT Pin Control Configuration (valid only for LP8764x and TPS6594x)
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(pMiscCtrlCfg->validParams, PMIC_CFG_AMUX_OUT_REF_OUT_EN_VALID)))
     {
-        /* Get AMUX_OUT/REF_OUT Pin Control Configuration */
         pmicStatus = Pmic_getAmuxOutRefOutPinCfg(pPmicCoreHandle, pMiscCtrlCfg);
     }
 
+    // Get Internal Clock Monitoring Configuration (valid only for LP8764x and TPS6594x)
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(pMiscCtrlCfg->validParams, PMIC_CFG_CLK_MON_EN_VALID)))
     {
-        /* Get Internal Clock Monitoring Configuration*/
         pmicStatus = Pmic_getInternalClkMonitorCfg(pPmicCoreHandle, pMiscCtrlCfg);
     }
 
+    // Get SYNCCLKOUT Frequency Selection Configuration (valid only for LP8764x and TPS6594x)
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(pMiscCtrlCfg->validParams, PMIC_CFG_SYNC_CLK_OUT_FREQ_SEL_VALID)))
     {
-        /* Get SYNCCLKOUT Frequency Selection Configuration */
         pmicStatus = Pmic_getSyncClkOutFreqSelectCfg(pPmicCoreHandle, pMiscCtrlCfg);
     }
 
+    // Get External Clock Selection Configuration
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(pMiscCtrlCfg->validParams, PMIC_CFG_EXT_CLK_SEL_VALID)))
     {
-        /* Get External Clock Selection Configuration */
         pmicStatus = Pmic_getExternalClkSelectCfg(pPmicCoreHandle, pMiscCtrlCfg);
     }
 
+    // Get ExternalClk Frequency Selection, NRSTOUT_SOC, and NRSTOUT Signal Configuration
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
-        /* Get ExternalClk Frequency Selection, NRSTOUT_SOC and NRSTOUT Signal
-         * Configuration */
         pmicStatus = Pmic_getExtclkfreqSelNRstOutSocNRstOutCfg(pPmicCoreHandle, pMiscCtrlCfg);
     }
 
@@ -2223,7 +2431,7 @@ int32_t Pmic_setBatteryCtrlConfig(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic
         pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
-    if ((PMIC_ST_SUCCESS == pmicStatus) && (PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType))
+    if ((PMIC_ST_SUCCESS == pmicStatus) && (PMIC_DEV_LEO_TPS6594X != pPmicCoreHandle->pmicDeviceType))
     {
         pmicStatus = PMIC_ST_ERR_NOT_SUPPORTED;
     }
@@ -2282,7 +2490,7 @@ int32_t Pmic_getBatteryCtrlConfig(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_Batte
         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if ((PMIC_ST_SUCCESS == pmicStatus) && (PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType))
+    if ((PMIC_ST_SUCCESS == pmicStatus) && (PMIC_DEV_LEO_TPS6594X != pPmicCoreHandle->pmicDeviceType))
     {
         pmicStatus = PMIC_ST_ERR_NOT_SUPPORTED;
     }
@@ -2382,9 +2590,18 @@ static int32_t Pmic_getSpmiLpmCtrlCfg(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_C
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_ENABLE_DRV_STAT_REGADDR, &regData);
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+    if (pPmicCoreHandle->pmicDeviceType != PMIC_DEV_HERA_LP8764X &&
+        pPmicCoreHandle->pmicDeviceType != PMIC_DEV_LEO_TPS6594X)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+    }
+
+    if (pmicStatus == PMIC_ST_SUCCESS)
+    {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_ENABLE_DRV_STAT_REGADDR, &regData);
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -2431,9 +2648,17 @@ static int32_t Pmic_getBackupBatteryEocIndicationStat(Pmic_CoreHandle_t     *pPm
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_CONFIG_2_REGADDR, &regData);
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+    if (pPmicCoreHandle->pmicDeviceType != PMIC_DEV_LEO_TPS6594X)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+    }
+
+    if (pmicStatus == PMIC_ST_SUCCESS)
+    {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_CONFIG_2_REGADDR, &regData);
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -2498,7 +2723,7 @@ static int32_t Pmic_getStartupPinStat(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_C
     pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_STAT_STARTUP_REGADDR, &regData);
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
-    if (PMIC_ST_SUCCESS == pmicStatus)
+    if (pmicStatus == PMIC_ST_SUCCESS)
     {
         pCommonCtrlStat->startupPin =
             Pmic_getBitField(regData, PMIC_STAT_STARTUP_ENABLE_STAT_SHIFT, PMIC_STAT_STARTUP_ENABLE_STAT_MASK);
@@ -2515,11 +2740,20 @@ static int32_t Pmic_getEnDrvPinStat(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_Com
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_STAT_READBACK_ERR_REGADDR, &regData);
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+    if ((pPmicCoreHandle->pmicDeviceType != PMIC_DEV_HERA_LP8764X) &&
+        (pPmicCoreHandle->pmicDeviceType != PMIC_DEV_LEO_TPS6594X))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+    }
 
-    if (PMIC_ST_SUCCESS == pmicStatus)
+    if (pmicStatus == PMIC_ST_SUCCESS)
+    {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_STAT_READBACK_ERR_REGADDR, &regData);
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
+
+    if (pmicStatus == PMIC_ST_SUCCESS)
     {
         pCommonCtrlStat->enDrvPin = Pmic_getBitField(regData,
                                                      PMIC_STAT_READBACK_ERR_EN_DRV_READBACK_STAT_SHIFT,
@@ -2537,11 +2771,20 @@ static int32_t Pmic_getNRstOutSocPinStat(Pmic_CoreHandle_t *pPmicCoreHandle, Pmi
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_STAT_READBACK_ERR_REGADDR, &regData);
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+    if ((pPmicCoreHandle->pmicDeviceType != PMIC_DEV_HERA_LP8764X) &&
+        (pPmicCoreHandle->pmicDeviceType != PMIC_DEV_LEO_TPS6594X))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+    }
 
-    if (PMIC_ST_SUCCESS == pmicStatus)
+    if (pmicStatus == PMIC_ST_SUCCESS)
+    {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_STAT_READBACK_ERR_REGADDR, &regData);
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
+
+    if (pmicStatus == PMIC_ST_SUCCESS)
     {
         pCommonCtrlStat->nRstOutSocPin = Pmic_getBitField(regData,
                                                           PMIC_STAT_READBACK_ERR_NRSTOUT_SOC_READBACK_STAT_SHIFT,
@@ -2559,11 +2802,20 @@ static int32_t Pmic_getNRstOutPinStat(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_C
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_STAT_READBACK_ERR_REGADDR, &regData);
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+    if ((pPmicCoreHandle->pmicDeviceType != PMIC_DEV_HERA_LP8764X) &&
+        (pPmicCoreHandle->pmicDeviceType != PMIC_DEV_LEO_TPS6594X))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+    }
 
-    if (PMIC_ST_SUCCESS == pmicStatus)
+    if (pmicStatus == PMIC_ST_SUCCESS)
+    {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_STAT_READBACK_ERR_REGADDR, &regData);
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
+
+    if (pmicStatus == PMIC_ST_SUCCESS)
     {
         pCommonCtrlStat->nRstOutPin = Pmic_getBitField(regData,
                                                        PMIC_STAT_READBACK_ERR_NRSTOUT_READBACK_STAT_SHIFT,
@@ -2581,11 +2833,20 @@ static int32_t Pmic_getNIntPinStat(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_Comm
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_STAT_READBACK_ERR_REGADDR, &regData);
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+    if ((pPmicCoreHandle->pmicDeviceType != PMIC_DEV_HERA_LP8764X) &&
+        (pPmicCoreHandle->pmicDeviceType != PMIC_DEV_LEO_TPS6594X))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+    }
 
-    if (PMIC_ST_SUCCESS == pmicStatus)
+    if (pmicStatus == PMIC_ST_SUCCESS)
+    {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_STAT_READBACK_ERR_REGADDR, &regData);
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
+
+    if (pmicStatus == PMIC_ST_SUCCESS)
     {
         pCommonCtrlStat->nIntPin = Pmic_getBitField(
             regData, PMIC_STAT_READBACK_ERR_NINT_READBACK_STAT_SHIFT, PMIC_STAT_READBACK_ERR_NINT_READBACK_STAT_MASK);
@@ -2603,37 +2864,37 @@ static int32_t Pmic_getStartupEndrvNrstoutsocNrstoutNintPinStat(Pmic_CoreHandle_
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
+    // Get Startup Pin Status
     if ((bool)true == pmic_validParamCheck(pCommonCtrlStat->validParams, PMIC_CFG_STARTUP_PIN_STAT_VALID))
     {
-        /* Get Startup Pin Status*/
         pmicStatus = Pmic_getStartupPinStat(pPmicCoreHandle, pCommonCtrlStat);
     }
 
+    // Get EN_DRV Pin Status (valid only for LP8764x and TPS6594x)
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(pCommonCtrlStat->validParams, PMIC_CFG_EN_DRV_PIN_STAT_VALID)))
     {
-        /* Get EN_DRV Pin Status*/
         pmicStatus = Pmic_getEnDrvPinStat(pPmicCoreHandle, pCommonCtrlStat);
     }
 
+    // Get NRSTOUT_SOC Pin Status (valid only for LP8764x and TPS6594x)
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(pCommonCtrlStat->validParams, PMIC_CFG_NRSTOUTSOC_PIN_STAT_VALID)))
     {
-        /* Get NRSTOUT_SOC Pin Status*/
         pmicStatus = Pmic_getNRstOutSocPinStat(pPmicCoreHandle, pCommonCtrlStat);
     }
 
+    // Get NRSTOUT Pin Status (valid only for LP8764x and TPS6594x)
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(pCommonCtrlStat->validParams, PMIC_CFG_NRSTOUT_PIN_STAT_VALID)))
     {
-        /* Get NRSTOUT Pin Status*/
         pmicStatus = Pmic_getNRstOutPinStat(pPmicCoreHandle, pCommonCtrlStat);
     }
 
+    // Get NINT Pin Status (valid only for LP8764x and TPS6594x)
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(pCommonCtrlStat->validParams, PMIC_CFG_NINT_PIN_STAT_VALID)))
     {
-        /* Get NINT Pin Status*/
         pmicStatus = Pmic_getNIntPinStat(pPmicCoreHandle, pCommonCtrlStat);
     }
 
@@ -2654,44 +2915,44 @@ int32_t Pmic_getCommonCtrlStat(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_CommonCt
         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
     }
 
+    // Get SPMI LPM Control enabled/disabled status (valid only  for LP8764x and TPS6594x)
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(pCommonCtrlStat->validParams, PMIC_CFG_SPMI_LPM_STAT_VALID)))
     {
-        /* Get the status of SPMI LPM Control is Enabled/Disabled  */
         pmicStatus = Pmic_getSpmiLpmCtrlCfg(pPmicCoreHandle, pCommonCtrlStat);
     }
 
+    // Get enable/disable status of ENABLE_DRV Configuration by I2C/SPI
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(pCommonCtrlStat->validParams, PMIC_CFG_FORCE_ENABLE_DRV_LOW_STAT_VALID)))
     {
-        /* Get the status of ENABLE_DRV Configuration by I2C/SPI is Enabled or not*/
         pmicStatus = Pmic_getEnableDrvI2CSPICfg(pPmicCoreHandle, pCommonCtrlStat);
     }
 
+    // Get Backup Battery charging End of charge Indication Status (valid only for TPS6594x)
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(pCommonCtrlStat->validParams, PMIC_CFG_BB_EOC_INDICATION_STAT_VALID)))
     {
-        /* Get Backup Battery charging End of charge Indication Status*/
         pmicStatus = Pmic_getBackupBatteryEocIndicationStat(pPmicCoreHandle, pCommonCtrlStat);
     }
 
+    // Get Register Lock Status
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(pCommonCtrlStat->validParams, PMIC_CFG_REGISTER_LOCK_STAT_VALID)))
     {
-        /* Get Register Lock Status*/
         pmicStatus = Pmic_getRegLockStat(pPmicCoreHandle, pCommonCtrlStat);
     }
 
+    // Get External Clock Validity Status
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         ((bool)true == pmic_validParamCheck(pCommonCtrlStat->validParams, PMIC_CFG_EXT_CLK_VALIDITY_STAT_VALID)))
     {
-        /* Get External Clock Validity Status*/
         pmicStatus = Pmic_getExtClkValidityStat(pPmicCoreHandle, pCommonCtrlStat);
     }
 
+    // Get Startup, EN_DRV, NRSTOUT_SOC, NRSTOUT and NINT Pin Status
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
-        /* Get Startup, EN_DRV, NRSTOUT_SOC, NRSTOUT and NINT Pin Status */
         pmicStatus = Pmic_getStartupEndrvNrstoutsocNrstoutNintPinStat(pPmicCoreHandle, pCommonCtrlStat);
     }
 
@@ -2817,37 +3078,52 @@ int32_t Pmic_getDeviceInfo(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_DeviceInfo_t
         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if ((PMIC_ST_SUCCESS == pmicStatus) && ((PMIC_SILICON_REV_ID_PG_2_0 != pPmicCoreHandle->pmicDevSiliconRev) &&
-                                            (PMIC_SILICON_REV_ID_PG_1_0 != pPmicCoreHandle->pmicDevSiliconRev)))
+    if ((pPmicCoreHandle->pmicDeviceType == PMIC_DEV_HERA_LP8764X) ||
+        (pPmicCoreHandle->pmicDeviceType == PMIC_DEV_LEO_TPS6594X))
     {
-        pmicStatus = PMIC_ST_ERR_INV_SILICON_REVISION;
+        if ((PMIC_ST_SUCCESS == pmicStatus) && ((PMIC_SILICON_REV_ID_PG_2_0 != pPmicCoreHandle->pmicDevSiliconRev) &&
+                                                (PMIC_SILICON_REV_ID_PG_1_0 != pPmicCoreHandle->pmicDevSiliconRev)))
+        {
+            pmicStatus = PMIC_ST_ERR_INV_SILICON_REVISION;
+        }
     }
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
+        // Start critical section before reads
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
+        // Read DEV_REV register
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_DEV_REV_REGADDR, &regVal);
+
+        // Get TI Device ID info
         if (PMIC_ST_SUCCESS == pmicStatus)
         {
             pDeviceInfo->deviceID = Pmic_getBitField(
                 regVal, PMIC_DEV_REV_TI_DEVICE_ID_SILICON_REV_SHIFT, PMIC_DEV_REV_TI_DEVICE_ID_SILICON_REV_MASK);
 
-            if (PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+            if ((pPmicCoreHandle->pmicDeviceType == PMIC_DEV_HERA_LP8764X) ||
+                (pPmicCoreHandle->pmicDeviceType == PMIC_DEV_LEO_TPS6594X))
             {
-                pDeviceInfo->deviceID = Pmic_getBitField(regVal,
-                                                         PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_SHIFT,
-                                                         PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_MASK);
+                if (PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
+                {
+                    pDeviceInfo->deviceID = Pmic_getBitField(regVal,
+                                                             PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_SHIFT,
+                                                             PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_MASK);
+                }
             }
 
+            // Get NVM ID
             pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_NVM_CODE_1_REGADDR, &(pDeviceInfo->nvmID));
         }
 
+        // Get NVM Revision
         if (PMIC_ST_SUCCESS == pmicStatus)
         {
             pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_NVM_CODE_2_REGADDR, &(pDeviceInfo->nvmRev));
         }
 
+        // Get manufacture version info ([5:3] - ALR; [2:0] - Metal)
         if (PMIC_ST_SUCCESS == pmicStatus)
         {
             pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_MANUFACTURING_VER_REGADDR, &regVal);
@@ -2856,12 +3132,15 @@ int32_t Pmic_getDeviceInfo(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_DeviceInfo_t
                 regVal, PMIC_MANUFACTURING_VER_SILICON_REV_SHIFT, PMIC_MANUFACTURING_VER_SILICON_REV_MASK);
         }
 
-        if ((PMIC_ST_SUCCESS == pmicStatus) && (PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev))
+        // Get Customer NVM ID info
+        if ((PMIC_ST_SUCCESS == pmicStatus) && ((PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev) ||
+                                                (pPmicCoreHandle->pmicDeviceType == PMIC_DEV_BURTON_TPS6522X)))
         {
             pmicStatus =
                 Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_CUSTOMER_NVM_ID_REG_REGADDR, &(pDeviceInfo->customNvmID));
         }
 
+        // Stop critical section after reads
         Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
@@ -2880,11 +3159,15 @@ int32_t Pmic_setI2CSpeedCfg(Pmic_CoreHandle_t *pPmicCoreHandle)
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
+        // Start critical section before read-modify-write
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
+        // Read CONFIG_1 register
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_CONFIG_1_REGADDR, &regVal);
+
         if (PMIC_ST_SUCCESS == pmicStatus)
         {
+            // Modify I2C1_HS bit for either single or dual I2C mode
             if ((PMIC_INTF_SINGLE_I2C == pPmicCoreHandle->commMode) ||
                 (PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode))
             {
@@ -2892,15 +3175,18 @@ int32_t Pmic_setI2CSpeedCfg(Pmic_CoreHandle_t *pPmicCoreHandle)
                     &regVal, PMIC_CONFIG_1_I2C1_HS_SHIFT, PMIC_CONFIG_1_I2C1_HS_MASK, pPmicCoreHandle->i2c1Speed);
             }
 
+            // Modify I2C2_HS bit for only dual I2C mode
             if (PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode)
             {
                 Pmic_setBitField(
                     &regVal, PMIC_CONFIG_1_I2C2_HS_SHIFT, PMIC_CONFIG_1_I2C2_HS_MASK, pPmicCoreHandle->i2c2Speed);
             }
 
+            // Write new register value back to PMIC
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_CONFIG_1_REGADDR, regVal);
         }
 
+        // Stop critical section after read-modify-write
         Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 

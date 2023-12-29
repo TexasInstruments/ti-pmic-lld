@@ -10,11 +10,7 @@
 #ifndef COMMON_TEST_H
 #define COMMON_TEST_H
 
-#include "pmic_drv/pmic.h"
-#include "driverlib/uart.h"
-#include "driverlib/sysctl.h"
-#include "driverlib/gpio.h"
-#include "inc/hw_memmap.h"
+#include "tiva_testLib.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -29,27 +25,35 @@ extern "C"
 #define LDO2_CTRL_REG_ADDR      (0x1EU)
 
 /**
- * \brief Helper function to reset a GPIO configuration struct with all valid parameters set.
- *        Driver APIs will consider a struct member as invalid if its corresponding validParams is not set.
+ *  \brief  Helper function to reset a GPIO configuration struct with all valid parameters set.
+ *          Driver APIs will consider a struct member as invalid if its corresponding validParams is not set.
  *
- * \param pGpioCfg  [OUT]   GPIO configuration struct to reset with valid parameters
+ *  \param  pGpioCfg    [OUT]   GPIO configuration struct to reset with valid parameters
  */
 void resetGpioCfg_withAllValidParams(Pmic_GpioCfg_t *pGpioCfg);
 
 /**
- * \brief Helper function to reset a GPIO configuration struct with specific valid parameters set.
- *        Driver APIs will consider a struct member as invalid if its corresponding validParams is not set.
+ *  \brief  Helper function to reset a GPIO configuration struct with specific valid parameters set.
+ *          Driver APIs will consider a struct member as invalid if its corresponding validParams is not set.
  *
- * \param pGpioCfg  [OUT]   GPIO configuration struct to reset with valid parameters
+ *  \param  pGpioCfg    [OUT]   GPIO configuration struct to reset with valid parameters
  */
 void resetGpioCfg_withSpecificValidParams(Pmic_GpioCfg_t *pGpioCfg, uint8_t validParams);
 
 /**
- * \brief Unity uses this API in all its write, put, or print APIs
+ *  \brief  Unity uses this API in all its write, put, or print APIs
  *
- * \param ucData    [IN]    Character to write to the terminal
+ *  \param  ucData      [IN]    Character to write to the terminal
  */
 void unityCharPut(unsigned char ucData);
+
+/**
+ *  \brief  This function is used to disable all power resources on TPS6522x PMIC.
+ *          The function is intended for testing purposes to isolate unit testing.
+ *
+ *  \param  pmicCoreHandle      [IN]    PMIC interface handle
+ */
+void disablePmicPowerResources(Pmic_CoreHandle_t pmicCoreHandle);
 
 #ifdef __cplusplus
 }

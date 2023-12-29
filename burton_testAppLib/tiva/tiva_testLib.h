@@ -3,6 +3,8 @@
 #ifndef TIVA_TEST_SUITE_H_
 #define TIVA_TEST_SUITE_H_
 
+#include "driverlib/sysctl.h"
+
 #include "tiva_vcp.h"
 #include "tiva_i2c.h"
 #include "tiva_misc.h"

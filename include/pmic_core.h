@@ -42,6 +42,7 @@
  *              Supported PMIC devices for Core Module:
  *              1. TPS6594x (Leo PMIC Device)
  *              2. LP8764x  (Hera PMIC Device)
+ *              3. TPS6522x (Burton PMIC Device)
  *
  *  @{
  */
@@ -60,6 +61,7 @@
 /* ========================================================================== */
 #include "pmic_types.h"
 #include "pmic_core_tps6594x.h"
+#include "pmic_core_tps6522x.h"
 #include "pmic_core_lp8764x.h"
 
 #ifdef __cplusplus
@@ -277,12 +279,16 @@ extern "C"
  *
  *  @{
  */
-/** \brief No Modulation */
+/** \brief  No Modulation. Valid only for LP8764x and TPS6594x */
 #define PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_NONE        (0U)
-/** \brief  Modulation Depth as +/- 6.3%  */
+/** \brief  Modulation Depth as +/- 6.3%. Valid only for LP8764x and TPS6594x */
 #define PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_6_3_PERCENT (1U)
-/** \brief  Modulation Depth as +/- 8.4% */
+/** \brief  Modulation Depth as +/- 8.4%. Valid only for LP8764x and TPS6594x */
 #define PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_8_4_PERCENT (2U)
+/** \brief  Modulation Depth as 4%. Valid only for TPS6522x */
+#define PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_4_PERCENT   (0U)
+/** \brief  Modulation Depth as 7%. Valid only for TPS6522x */
+#define PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_7_PERCENT   (1U)
 /** @} */
 
 /**
@@ -500,7 +506,7 @@ extern "C"
  *  \name                   PMIC Recovery Counter Configuration Structure
  *  \brief                  This struct is used in setting or getting the configurations
  *                          of the PMIC recovery counter on supported PMICs (TPS6594x,
- *                          LP8764x).
+ *                          TPS6522x, LP8764x).
  *
  *  \note                   ValidParams is input param for all Set and Get APIs. Other
  *                          params except validParams are input params for Set APIs and
@@ -530,7 +536,7 @@ typedef struct Pmic_RecovCntCfg_s
 /**
  *  \name                           PMIC Common Control Configuration Structure
  *  \brief                          This struct is used in setting or getting common PMIC
- *                                  attributes of supported PMICs (TPS6522x, LP8764x).
+ *                                  attributes of supported PMICs (TPS6522x, TPS6522x, LP8764x).
  *
  *  \note                           ValidParams is input param for all Set and Get APIs. other
  *                                  params except validParams are input params for Set APIs and
@@ -540,7 +546,7 @@ typedef struct Pmic_RecovCntCfg_s
  *                                  combination of \ref Pmic_CommonCtrlValidParamCfg
  *                                  and the corresponding member value must be updated.
  *                                  Valid values \ref Pmic_CommonCtrlValidParamCfg
- *  \param  sreadSpectrumEn         Spread Spectrum Enable Value.
+ *  \param  spreadSpectrumEn        Spread Spectrum Enable Value.
  *                                  Valid only when PMIC_CFG_SPREAD_SPECTRUM_EN_VALID bit is set.
  *                                  Valid values \ref Pmic_SpreadSpectrum_Cfg
  *  \param  skipEepromDefaultLoadEn Enable/Disable to skip EEPROM defaults load
@@ -597,7 +603,7 @@ typedef struct Pmic_RecovCntCfg_s
 typedef struct Pmic_CommonCtrlCfg_s
 {
     uint8_t validParams;
-    bool    sreadSpectrumEn;
+    bool    spreadSpectrumEn;
     bool    skipEepromDefaultLoadEn;
     uint8_t eepromDefaultLoad;
     uint8_t enDrv;
@@ -609,7 +615,8 @@ typedef struct Pmic_CommonCtrlCfg_s
 /**
  *  \name                       PMIC Miscellaneous Control Configuration Structure
  *  \brief                      This struct is used in setting or getting miscellanous
- *                              control attributes of supported PMICs (TPS6522x, LP8764x).
+ *                              control attributes of supported PMICs (TPS6522x, TPS6522x,
+ *                              LP8764x).
  *
  *  \note                       ValidParams is input param for all Set and Get APIs.
  *                              Other params except validParams are input params for Set
@@ -720,8 +727,8 @@ typedef struct Pmic_BatteryCtrlCfg_s
 
 /**
  *  \name                       PMIC Common Control Status Structure
- *  \brief                      This struct is used to get common PMIC control statuses
- *                              of supported PMICs (TPS6594x, LP8764x).
+ *  \brief                      This struct is used to get common PMIC control
+ *                              statuses of supported PMICs (TPS6594x, TPS6522x, LP8764x).
  *
  *  \note                       ValidParams is input param for all Get APIs. Other
  *                              params except validParams are output params for Get APIs.
@@ -803,7 +810,7 @@ typedef struct Pmic_CommonCtrlStat_s
 /**
  *  \name                   PMIC Device Information Structure
  *  \brief                  This struct is used to get device information of
- *                          supported PMICs (TPS6594x, LP8764x).
+ *                          supported PMICs (TPS6594x, TPS6522x, LP8764x).
  *
  *  \param  deviceID        TI Device ID Value
  *  \param  nvmID           TI NVM ID Value

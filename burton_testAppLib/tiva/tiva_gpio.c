@@ -1,6 +1,6 @@
 #include "tiva_priv.h"
 #include "tiva_gpio.h"
-#include "burton_tests/gpio_test.h"
+#include "gpio_test.h"
 
 void initializeGpioPinHandles(gpioPinHandle_t *gpioPinHandle, bool bOutput)
 {

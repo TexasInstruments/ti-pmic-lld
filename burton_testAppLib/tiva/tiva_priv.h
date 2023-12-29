@@ -21,13 +21,13 @@
 #include "driverlib/timer.h"
 #include "driverlib/uart.h"
 
-#include "inc/hw_memmap.h"
-#include "inc/tm4c123gh6pm.h"
+#include "hw_memmap.h"
+#include "tm4c123gh6pm.h"
 
-#include "pmic_drv/pmic.h"
+#include "pmic.h"
 
 #include "tiva_testLib.h"
 
-#include "unity/unity.h"
+#include "unity.h"
 
 #endif /* TIVA_PRIV_H_ */

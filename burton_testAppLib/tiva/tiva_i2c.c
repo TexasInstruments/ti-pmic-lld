@@ -22,8 +22,9 @@ void initializeI2C(i2cHandle_t *i2cHandle)
     GPIOPinConfigure(i2cHandle->sdaPinToI2C);
     GPIOPinConfigure(i2cHandle->sclPinToI2C);
 
-    // Initialize the I2C module for use as a master running at a clock rate of 100 KHz
-    I2CMasterInitExpClk(i2cHandle->i2cBase, SysCtlClockGet(), false);
+    // Initialize the I2C module for use as a master
+    // running at a clock rate of 100 KHz or 400 KHz
+    I2CMasterInitExpClk(i2cHandle->i2cBase, SysCtlClockGet(), i2cHandle->bFast);
 }
 
 void initializeI2C1Handle(i2cHandle_t *i2cHandle)
@@ -37,6 +38,7 @@ void initializeI2C1Handle(i2cHandle_t *i2cHandle)
     i2cHandle->sdaPinToI2C = GPIO_PB3_I2C0SDA;
     i2cHandle->sclPinToI2C = GPIO_PB2_I2C0SCL;
     i2cHandle->slaveAddr = BURTON_I2C_USER_PAGE_ADDRESS;
+    i2cHandle->bFast = false;
 }
 
 void initializeI2C2Handle(i2cHandle_t *i2cHandle)
@@ -50,6 +52,7 @@ void initializeI2C2Handle(i2cHandle_t *i2cHandle)
     i2cHandle->sdaPinToI2C = GPIO_PA7_I2C1SDA;
     i2cHandle->sclPinToI2C = GPIO_PA6_I2C1SCL;
     i2cHandle->slaveAddr = BURTON_I2C_WDG_PAGE_ADDRESS;
+    i2cHandle->bFast = false;
 }
 
 int32_t I2CBurstWrite(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t bufLen, uint8_t *pTxBuf)

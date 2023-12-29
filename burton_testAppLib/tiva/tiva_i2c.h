@@ -18,6 +18,7 @@ typedef struct i2cHandle_s
     uint32_t sdaPinToI2C;
     uint32_t sclPinToI2C;
     uint8_t  slaveAddr;
+    bool     bFast;
 } i2cHandle_t;
 
 /**

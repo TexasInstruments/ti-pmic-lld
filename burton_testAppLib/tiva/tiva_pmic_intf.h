@@ -1,7 +1,7 @@
 #ifndef TIVA_PMIC_INTF_H_
 #define TIVA_PMIC_INTF_H_
 
-#include "pmic_drv/pmic.h"
+#include "pmic.h"
 
 #ifdef __cplusplus
 extern "C"
