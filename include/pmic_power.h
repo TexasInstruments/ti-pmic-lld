@@ -47,6 +47,7 @@
  *              Supported PMIC devices for Power Module:
  *              1. TPS6594x (Leo PMIC Device)
  *              2. LP8764x  (Hera PMIC Device)
+ *              3. TPS6522x (Burton PMIC Device)
  *
  *  @{
  */

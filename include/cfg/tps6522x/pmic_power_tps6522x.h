@@ -37,10 +37,9 @@
  */
 
 /**
- * \file   pmic_power_tps6522x.h
+ * \file    pmic_power_tps6522x.h
  *
- * \brief  PMIC TPS6522x Burton PMIC Power Resources Driver API/interface file.
- *
+ * \brief   PMIC TPS6522x Burton PMIC Power Resources Driver API/interface file.
  */
 
 #ifndef PMIC_POWER_TPS6522X_H_
@@ -70,7 +69,7 @@ extern "C"
 /** @} */
 
 /**
- *  \anchor     Pmic_Tps6522xBurton_buckPwrRsrc
+ *  \anchor     Pmic_Tps6522xBurton_buckPwrRsrcNum
  *  \name       BUCK power resources supported by TPS6522x Burton
  *
  *  @{
@@ -82,7 +81,7 @@ extern "C"
 /** @} */
 
 /**
- *  \anchor     Pmic_Tps6522xBurton_ldoPwrRsrc
+ *  \anchor     Pmic_Tps6522xBurton_ldoPwrRsrcNum
  *  \name       LDO power resources supported by TPS6522x Burton
  *
  *  @{
@@ -93,7 +92,7 @@ extern "C"
 /** @} */
 
 /**
- *  \anchor     Pmic_Tps6522xBurton_ldoPwrRsrc
+ *  \anchor     Pmic_Tps6522xBurton_vccaVmonPwrRsrcNum
  *  \name       voltage monitor power resources supported by TPS6522x Burton
  *
  *  @{
@@ -119,7 +118,7 @@ extern "C"
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_buck1VoltageRangesMV
- *  \name       BUCK 1 Voltage Ranges in mV
+ *  \name       BUCK 1 Voltage Ranges in mV supported by TPS6522x Burton
  *
  *  \brief      Ranges supported by TPS6522x Burton:
  *              - Range 1: 500 mV to 580 mV in 20 mV steps
@@ -141,7 +140,7 @@ extern "C"
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_buck1VoltageRangesVset
- *  \name       BUCK 1 voltage ranges in VSET
+ *  \name       BUCK 1 voltage ranges in VSET supported by TPS6522x Burton
  *
  *  \brief      Ranges supported by TPS6522x Burton:
  *              - Range 1: 0xA to 0xE
@@ -163,7 +162,7 @@ extern "C"
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_buck2_3_4_VoltageRangesMV
- *  \name       BUCK 2, 3, 4 voltage ranges in mV
+ *  \name       BUCK 2, 3, 4 voltage ranges in mV supported by TPS6522x Burton
  *
  *  \brief      Ranges supported by TPS6522x Burton:
  *              - Range 1: 500 mV to 1150 mV in 25 mV steps
@@ -179,7 +178,7 @@ extern "C"
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_buck2_3_4_VoltageRangesVset
- *  \name       BUCK 2, 3, 4 voltage ranges in VSET
+ *  \name       BUCK 2, 3, 4 voltage ranges in VSET supported by TPS6522x Burton
  *
  *  \brief      Ranges supported by TPS6522x Burton:
  *              - Range 1: 0x0 to 0x1A
@@ -903,7 +902,7 @@ extern "C"
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_pwrRsrcUVOVStatus
- *  \name       Power Resource UVOV Status Enumeration
+ *  \name       Power Resource UVOV Status Enumeration for TPS6522x Burton
  *
  *  \brief      Enumeration of all the possible UVOV statuses for power resources.
  *
@@ -911,22 +910,22 @@ extern "C"
  */
 typedef enum pwrRsrcUVOVStatus_e
 {
-    PMIC_POWER_TPS6522X_BUCK1_UVOV_STAT,
-    PMIC_POWER_TPS6522X_BUCK2_UVOV_STAT,
-    PMIC_POWER_TPS6522X_BUCK3_UVOV_STAT,
-    PMIC_POWER_TPS6522X_BUCK4_UVOV_STAT,
-    PMIC_POWER_TPS6522X_LDO1_UVOV_STAT,
-    PMIC_POWER_TPS6522X_LDO2_UVOV_STAT,
-    PMIC_POWER_TPS6522X_LDO3_UVOV_STAT,
-    PMIC_POWER_TPS6522X_VMON1_UVOV_STAT,
-    PMIC_POWER_TPS6522X_VMON2_UVOV_STAT,
-    PMIC_POWER_TPS6522X_VCCA_UVOV_STAT,
+    PMIC_POWER_TPS6522X_BUCK1_UVOV_STAT, /*!< BUCK1 undervoltage/overvoltage status */
+    PMIC_POWER_TPS6522X_BUCK2_UVOV_STAT, /*!< BUCK2 undervoltage/overvoltage status */
+    PMIC_POWER_TPS6522X_BUCK3_UVOV_STAT, /*!< BUCK3 undervoltage/overvoltage status */
+    PMIC_POWER_TPS6522X_BUCK4_UVOV_STAT, /*!< BUCK4 undervoltage/overvoltage status */
+    PMIC_POWER_TPS6522X_LDO1_UVOV_STAT,  /*!< LDO1 undervoltage/overvoltage status */
+    PMIC_POWER_TPS6522X_LDO2_UVOV_STAT,  /*!< LDO2 undervoltage/overvoltage status */
+    PMIC_POWER_TPS6522X_LDO3_UVOV_STAT,  /*!< LDO3 undervoltage/overvoltage status */
+    PMIC_POWER_TPS6522X_VMON1_UVOV_STAT, /*!< VMON1 undervoltage/overvoltage status */
+    PMIC_POWER_TPS6522X_VMON2_UVOV_STAT, /*!< VMON1 undervoltage/overvoltage status */
+    PMIC_POWER_TPS6522X_VCCA_UVOV_STAT,  /*!< VCCA_VMON undervoltage/overvoltage status */
 } pwrRsrcUVOVStatus_t;
 /** @} */
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_tsdOrdLvlBitField
- *  \name       Orderly Thermal Shutdown Level Bit Field Enumeration
+ *  \name       Orderly Thermal Shutdown Level Bit Field Enumeration for TPS6522x Burton
  *
  *  \brief      Orderly TSD threshold configuration.
  *
@@ -934,14 +933,14 @@ typedef enum pwrRsrcUVOVStatus_e
  */
 typedef enum Pmic_powerTps6522xTsdOrdLvl_e
 {
-    PMIC_POWER_TPS6522X_TSD_ORD_LVL_140_C,
-    PMIC_POWER_TPS6522X_TSD_ORD_LVL_145_C
+    PMIC_POWER_TPS6522X_TSD_ORD_LVL_140_C, /*!< Orderly thermal shutdown level at 140 degrees celsius */
+    PMIC_POWER_TPS6522X_TSD_ORD_LVL_145_C  /*!< Orderly thermal shutdown level at 145 degrees celsius */
 } Pmic_powerTps6522xTsdOrdLvl_t;
 /** @} */
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_TwarnLvlBitField
- *  \name       Thermal Warning Level Bit Field Enumeration
+ *  \name       Thermal Warning Level Bit Field Enumeration for TPS6522x Burton
  *
  *  \brief      Thermal warning threshold configuration.
  *
@@ -949,14 +948,14 @@ typedef enum Pmic_powerTps6522xTsdOrdLvl_e
  */
 typedef enum Pmic_powerTps6522xTwarnLvl_e
 {
-    PMIC_POWER_TPS6522X_TWARN_LVL_130C,
-    PMIC_POWER_TPS6522X_TWARN_LVL_140C
+    PMIC_POWER_TPS6522X_TWARN_LVL_130C, /*!< Temperature warning level at 130 degrees celsius */
+    PMIC_POWER_TPS6522X_TWARN_LVL_140C  /*!< Temperature warning level at 140 degrees celsius */
 } Pmic_powerTps6522xTwarnLvl_t;
 /** @} */
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_buckPldnEnBitField
- *  \name       BUCK_PLDN Bit Field Enumeration
+ *  \name       BUCK_PLDN Bit Field Enumeration for TPS6522x Burton
  *
  *  \brief      Enable/disable output pull-down resistor when BUCK is disabled.
  *
@@ -964,14 +963,14 @@ typedef enum Pmic_powerTps6522xTwarnLvl_e
  */
 typedef enum Pmic_powerTps6522xBuckPldnEn_e
 {
-    PMIC_POWER_TPS6522X_BUCK_PLDN_DISABLE,
-    PMIC_POWER_TPS6522X_BUCK_PLDN_ENABLE
+    PMIC_POWER_TPS6522X_BUCK_PLDN_DISABLE, /*!< Disable BUCK pulldown resistor */
+    PMIC_POWER_TPS6522X_BUCK_PLDN_ENABLE   /*!< Enable BUCK pulldown resistor */
 } Pmic_powerTps6522xBuckPldnEn_t;
 /** @} */
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_buckVmonEnBitField
- *  \name       BUCK_VMON_EN Bit Field Enumeration
+ *  \name       BUCK_VMON_EN Bit Field Enumeration for TPS6522x Burton
  *
  *  \brief      Enable/disable BUCK OV and UV comparators.
  *
@@ -979,14 +978,14 @@ typedef enum Pmic_powerTps6522xBuckPldnEn_e
  */
 typedef enum Pmic_powerTps6522xBuckVmonEn_e
 {
-    PMIC_POWER_TPS6522X_BUCK_VMON_DISABLE,
-    PMIC_POWER_TPS6522X_BUCK_VMON_ENABLE
+    PMIC_POWER_TPS6522X_BUCK_VMON_DISABLE, /*!< Disable BUCK pulldown resistor */
+    PMIC_POWER_TPS6522X_BUCK_VMON_ENABLE   /*!< Enable BUCK pulldown resistor */
 } Pmic_powerTps6522xBuckVmonEn_t;
 /** @} */
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_buckFPWMBitField
- *  \name       BUCK_FPWM Bit Field Enumeration
+ *  \name       BUCK_FPWM Bit Field Enumeration for TPS6522x Burton
  *
  *  \brief      Choose between automatic transitions between PFM and PWM mode or forced PWM mode.
  *
@@ -994,14 +993,14 @@ typedef enum Pmic_powerTps6522xBuckVmonEn_e
  */
 typedef enum Pmic_powerTps6522xBuckPwmOption_e
 {
-    PMIC_POWER_TPS6522X_BUCK_PWM_AUTO,
-    PMIC_POWER_TPS6522X_BUCK_PWM_FORCED
+    PMIC_POWER_TPS6522X_BUCK_PWM_AUTO,  /*!< BUCK operates in automatic PWM mode */
+    PMIC_POWER_TPS6522X_BUCK_PWM_FORCED /*!< BUCK operates in forced PWM mode */
 } Pmic_powerTps6522xBuckPwmOption_t;
 /** @} */
 
 /**
  * \anchor  Pmic_Tps6522xBurton_buckEnBitField
- * \name    BUCK_EN Bit Field Enumeration
+ * \name    BUCK_EN Bit Field Enumeration for TPS6522x Burton
  *
  * \brief   Enable/disable BUCK regulator.
  *
@@ -1009,14 +1008,14 @@ typedef enum Pmic_powerTps6522xBuckPwmOption_e
  */
 typedef enum Pmic_powerTps6522xBuckEn_e
 {
-    PMIC_POWER_TPS6522X_BUCK_DISABLE,
-    PMIC_POWER_TPS6522X_BUCK_ENABLE
+    PMIC_POWER_TPS6522X_BUCK_DISABLE, /*!< Disable BUCK power resource */
+    PMIC_POWER_TPS6522X_BUCK_ENABLE   /*!< Enable BUCK power resource */
 } Pmic_powerTps6522xBuckEn_t;
 /** @} */
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_buckSlewRateBitField
- *  \name       BUCK_SLEW_RATE Bit Field Enumeration
+ *  \name       BUCK_SLEW_RATE Bit Field Enumeration for TPS6522x Burton
  *
  *  \brief      BUCK ouput voltage slew rate (rising and falling edges).
  *
@@ -1024,16 +1023,16 @@ typedef enum Pmic_powerTps6522xBuckEn_e
  */
 typedef enum Pmic_powerTps6522xBuckSlewRate_e
 {
-    PMIC_POWER_TPS6522X_BUCK_SLEW_RATE_10_MV_PER_US,
-    PMIC_POWER_TPS6522X_BUCK_SLEW_RATE_5_MV_PER_US,
-    PMIC_POWER_TPS6522X_BUCK_SLEW_RATE_2_5_MV_PER_US,
-    PMIC_POWER_TPS6522X_BUCK_SLEW_RATE_1_25_MV_PER_US
+    PMIC_POWER_TPS6522X_BUCK_SLEW_RATE_10_MV_PER_US,  /*!< BUCK output voltage slew rate at 10 mV/us */
+    PMIC_POWER_TPS6522X_BUCK_SLEW_RATE_5_MV_PER_US,   /*!< BUCK output voltage slew rate at 5 mV/us */
+    PMIC_POWER_TPS6522X_BUCK_SLEW_RATE_2_5_MV_PER_US, /*!< BUCK output voltage slew rate at 2.5 mV/us */
+    PMIC_POWER_TPS6522X_BUCK_SLEW_RATE_1_25_MV_PER_US /*!< BUCK output voltage slew rate at 1.25 mV/us */
 } Pmic_powerTps6522xBuckSlewRate_t;
 /** @} */
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_buckVmonThrBitField
- *  \name       BUCK_VMON_THR Bit Field Enumeration
+ *  \name       BUCK_VMON_THR Bit Field Enumeration for TPS6522x Burton
  *
  *  \brief      BUCK powergood high/low threshold level.
  *
@@ -1041,16 +1040,20 @@ typedef enum Pmic_powerTps6522xBuckSlewRate_e
  */
 typedef enum Pmic_powerTps6522xBuckVmonThr_e
 {
-    PMIC_POWER_TPS6522X_BUCK_VMON_THR_3_PCT_OR_30_MV,
-    PMIC_POWER_TPS6522X_BUCK_VMON_THR_4_PCT_OR_40_MV,
-    PMIC_POWER_TPS6522X_BUCK_VMON_THR_6_PCT_OR_60_MV,
-    PMIC_POWER_TPS6522X_BUCK_VMON_THR_8_PCT_OR_80_MV
+    PMIC_POWER_TPS6522X_BUCK_VMON_THR_3_PCT_OR_30_MV, /*!< BUCK VMON powergood high/low threshold level at
+                                                      3% or 30 mV */
+    PMIC_POWER_TPS6522X_BUCK_VMON_THR_4_PCT_OR_40_MV, /*!< BUCK VMON powergood high/low threshold level at
+                                                      4% or 40 mV */
+    PMIC_POWER_TPS6522X_BUCK_VMON_THR_6_PCT_OR_60_MV, /*!< BUCK VMON powergood high/low threshold level at
+                                                      6% or 60 mV */
+    PMIC_POWER_TPS6522X_BUCK_VMON_THR_8_PCT_OR_80_MV  /*!< BUCK VMON powergood high/low threshold level at
+                                                      8% or 80 mV */
 } Pmic_powerTps6522xBuckVmonThr_t;
 /** @} */
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_buckRailSelBitField
- *  \name       BUCK_GRP_SEL Bit Field Enumeration
+ *  \name       BUCK_GRP_SEL Bit Field Enumeration for TPS6522x Burton
  *
  *  \brief      BUCK rail group selection.
  *
@@ -1058,16 +1061,16 @@ typedef enum Pmic_powerTps6522xBuckVmonThr_e
  */
 typedef enum Pmic_powerTps6522xBuckRailSel_e
 {
-    PMIC_POWER_TPS6522X_BUCK_RAIL_SEL_NONE,
-    PMIC_POWER_TPS6522X_BUCK_RAIL_SEL_MCU,
-    PMIC_POWER_TPS6522X_BUCK_RAIL_SEL_SOC,
-    PMIC_POWER_TPS6522X_BUCK_RAIL_SEL_OTHER
+    PMIC_POWER_TPS6522X_BUCK_RAIL_SEL_NONE, /*!< BUCK assigned to no rail group */
+    PMIC_POWER_TPS6522X_BUCK_RAIL_SEL_MCU,  /*!< BUCK assigned to MCU rail group */
+    PMIC_POWER_TPS6522X_BUCK_RAIL_SEL_SOC,  /*!< BUCK assigned to SOC rail group */
+    PMIC_POWER_TPS6522X_BUCK_RAIL_SEL_OTHER /*!< BUCK assigned to other rail group */
 } Pmic_powerTps6522xBuckRailSel_t;
 /** @} */
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_ldoDischargeEnBitField
- *  \name       LDO_DISCHARGE_EN Bit Field Enumeration
+ *  \name       LDO_DISCHARGE_EN Bit Field Enumeration for TPS6522x Burton
  *
  *  \brief      LDO discharge enable setting.
  *
@@ -1075,14 +1078,14 @@ typedef enum Pmic_powerTps6522xBuckRailSel_e
  */
 typedef enum Pmic_powerTps6522xLdoDischargeEn_e
 {
-    PMIC_POWER_TPS6522X_LDO_DISCHARGE_DISABLE,
-    PMIC_POWER_TPS6522X_LDO_DISCHARGE_ENABLE
+    PMIC_POWER_TPS6522X_LDO_DISCHARGE_DISABLE, /*!< Disable LDO discharge */
+    PMIC_POWER_TPS6522X_LDO_DISCHARGE_ENABLE   /*!< Enable LDO discharge */
 } Pmic_powerTps6522xLdoDischargeEn_t;
 /** @} */
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_ldoVmonEnBitField
- *  \name       LDO_VMON_EN Bit Field Enumeration
+ *  \name       LDO_VMON_EN Bit Field Enumeration for TPS6522x Burton
  *
  *  \brief      LDO Enable/Disable OV and UV comparators.
  *
@@ -1090,14 +1093,14 @@ typedef enum Pmic_powerTps6522xLdoDischargeEn_e
  */
 typedef enum Pmic_powerTps6522xLdoVmonEn_e
 {
-    PMIC_POWER_TPS6522X_LDO_VMON_DISABLE,
-    PMIC_POWER_TPS6522X_LDO_VMON_ENABLE
+    PMIC_POWER_TPS6522X_LDO_VMON_DISABLE, /*!< Disable LDO VMON */
+    PMIC_POWER_TPS6522X_LDO_VMON_ENABLE   /*!< Enable LDO VMON */
 } Pmic_powerTps6522xLdoVmonEn_t;
 /** @} */
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_ldoEnBitField
- *  \name       LDO_EN Bit Field Enumeration
+ *  \name       LDO_EN Bit Field Enumeration for TPS6522x Burton
  *
  *  \brief      LDO Enable/disable regulator.
  *
@@ -1105,14 +1108,14 @@ typedef enum Pmic_powerTps6522xLdoVmonEn_e
  */
 typedef enum Pmic_powerTps6522xLdoEn_e
 {
-    PMIC_POWER_TPS6522X_LDO_DISABLE,
-    PMIC_POWER_TPS6522X_LDO_ENABLE
+    PMIC_POWER_TPS6522X_LDO_DISABLE, /*!< Disable LDO power resource */
+    PMIC_POWER_TPS6522X_LDO_ENABLE   /*!< Enable LDO power resource */
 } Pmic_powerTps6522xLdoEn_t;
 /** @} */
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_bypConfigBitField
- *  \name       LDO_BYP_CONFIG Bit Field Enumeration
+ *  \name       LDO_BYP_CONFIG Bit Field Enumeration for TPS6522x Burton
  *
  *  \brief      LDO modes of operation.
  *
@@ -1120,14 +1123,14 @@ typedef enum Pmic_powerTps6522xLdoEn_e
  */
 typedef enum Pmic_powerTps6522xLdoBypassConfig_e
 {
-    PMIC_POWER_TPS6522X_LDO_BYP_CONFIG_LDO_MODE,
-    PMIC_POWER_TPS6522X_LDO_BYP_CONFIG_BYPASS_MODE,
+    PMIC_POWER_TPS6522X_LDO_BYP_CONFIG_LDO_MODE,    /*!< LDO power resource operates in LDO mode */
+    PMIC_POWER_TPS6522X_LDO_BYP_CONFIG_BYPASS_MODE, /*!< LDO power resource operates in bypass mode */
 } Pmic_powerTps6522xLdoBypassConfig_t;
 /** @} */
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_ldoVmonThrBitField
- *  \name       LDO_VMON_THR Bit Field Enumeration
+ *  \name       LDO_VMON_THR Bit Field Enumeration for TPS6522x Burton
  *
  *  \brief      LDO powergood high/low threshold level for LDO.
  *
@@ -1135,16 +1138,16 @@ typedef enum Pmic_powerTps6522xLdoBypassConfig_e
  */
 typedef enum Pmic_powerTps6522xLdoVmonThr_e
 {
-    PMIC_POWER_TPS6522X_LDO_VMON_THR_3_PCT,
-    PMIC_POWER_TPS6522X_LDO_VMON_THR_4_PCT,
-    PMIC_POWER_TPS6522X_LDO_VMON_THR_6_PCT,
-    PMIC_POWER_TPS6522X_LDO_VMON_THR_8_PCT
+    PMIC_POWER_TPS6522X_LDO_VMON_THR_3_PCT, /*!< LDO VMON powergood high/low threshold level at 3% */
+    PMIC_POWER_TPS6522X_LDO_VMON_THR_4_PCT, /*!< LDO VMON powergood high/low threshold level at 4% */
+    PMIC_POWER_TPS6522X_LDO_VMON_THR_6_PCT, /*!< LDO VMON powergood high/low threshold level at 6% */
+    PMIC_POWER_TPS6522X_LDO_VMON_THR_8_PCT  /*!< LDO VMON powergood high/low threshold level at 8% */
 } Pmic_powerTps6522xLdoVmonThr_t;
 /** @} */
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_ldoRailSelBitField
- *  \name       LDO_GRP_SEL Bit Field Enumeration
+ *  \name       LDO_GRP_SEL Bit Field Enumeration for TPS6522x Burton
  *
  *  \brief      LDO rail group selection.
  *
@@ -1152,16 +1155,16 @@ typedef enum Pmic_powerTps6522xLdoVmonThr_e
  */
 typedef enum Pmic_powerTps6522xLdoRailSel_e
 {
-    PMIC_POWER_TPS6522X_LDO_RAIL_SEL_NONE,
-    PMIC_POWER_TPS6522X_LDO_RAIL_SEL_MCU,
-    PMIC_POWER_TPS6522X_LDO_RAIL_SEL_SOC,
-    PMIC_POWER_TPS6522X_LDO_RAIL_SEL_OTHER
+    PMIC_POWER_TPS6522X_LDO_RAIL_SEL_NONE, /*!< LDO assigned to no rail group */
+    PMIC_POWER_TPS6522X_LDO_RAIL_SEL_MCU,  /*!< LDO assigned to MCU rail group */
+    PMIC_POWER_TPS6522X_LDO_RAIL_SEL_SOC,  /*!< LDO assigned to SOC rail group */
+    PMIC_POWER_TPS6522X_LDO_RAIL_SEL_OTHER /*!< LDO assigned to other rail group */
 } Pmic_powerTps6522xLdoRailSel_t;
 /** @} */
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_vmonDeglitchSelBitField
- *  \name       VMON_DEGLITCH_SEL Bit Field Enumeration
+ *  \name       VMON_DEGLITCH_SEL Bit Field Enumeration for TPS6522x Burton
  *
  *  \brief      VMON deglitch time select for BUCKx_VMON, LDOx_VMON, VMONx, and VCCA_VMON.
  *
@@ -1169,19 +1172,26 @@ typedef enum Pmic_powerTps6522xLdoRailSel_e
  */
 typedef enum Pmic_powerTps6522xVmonDeglitchSel_e
 {
-    PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_4_US_VCCA_4_US,
-    PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_20_US_VCCA_20_US,
-    PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_0_5_US_VCCA_0_5_US,
-    PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_0_5_US_VCCA_4_US,
-    PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_0_5_US_VCCA_20_US,
-    PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_4_US_VCCA_0_5_US,
-    PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_4_US_VCCA_20_US
+    PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_4_US_VCCA_4_US,     /*!< BUCK, LDO, VMONx deglitch time is
+                                                                                    4 us; VCCA deglitch time is 4 us */
+    PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_20_US_VCCA_20_US,   /*!< BUCK, LDO, VMONx deglitch time is
+                                                                                  20 us; VCCA deglitch time is 20 us */
+    PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_0_5_US_VCCA_0_5_US, /*!< BUCK, LDO, VMONx deglitch time is
+                                                                                0.5 us; VCCA deglitch time is 0.5 us */
+    PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_0_5_US_VCCA_4_US,   /*!< BUCK, LDO, VMONx deglitch time is
+                                                                                  0.5 us; VCCA deglitch time is 4 us */
+    PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_0_5_US_VCCA_20_US,  /*!< BUCK, LDO, VMONx deglitch time is
+                                                                                 0.5 us; VCCA deglitch time is 20 us */
+    PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_4_US_VCCA_0_5_US,   /*!< BUCK, LDO, VMONx deglitch time is
+                                                                                  4 us; VCCA deglitch time is 0.5 us */
+    PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_4_US_VCCA_20_US     /*!< BUCK, LDO, VMONx deglitch time is
+                                                                                    4 us; VCCA deglitch time is 20 us */
 } Pmic_powerTps6522xVmonDeglitchSel_t;
 /** @} */
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_vmon2EnBitField
- *  \name       VMON2_EN Bit Field Enumeration
+ *  \name       VMON2_EN Bit Field Enumeration for TPS6522x Burton
  *
  *  \brief      VMON2 enable/disable.
  *
@@ -1189,14 +1199,14 @@ typedef enum Pmic_powerTps6522xVmonDeglitchSel_e
  */
 typedef enum Pmic_powerTps6522xVmon2En_e
 {
-    PMIC_POWER_TPS6522X_VMON2_DISABLE,
-    PMIC_POWER_TPS6522X_VMON2_ENABLE
+    PMIC_POWER_TPS6522X_VMON2_DISABLE, /*!< Disable voltage monitor 2 */
+    PMIC_POWER_TPS6522X_VMON2_ENABLE   /*!< Enable voltage monitor 2 */
 } Pmic_powerTps6522xVmon2En_t;
 /** @} */
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_vmon1EnBitField
- *  \name       VMON1_EN Bit Field Enumeration
+ *  \name       VMON1_EN Bit Field Enumeration for TPS6522x Burton
  *
  *  \brief      VMON1 enable/disable.
  *
@@ -1204,14 +1214,14 @@ typedef enum Pmic_powerTps6522xVmon2En_e
  */
 typedef enum Pmic_powerTps6522xVmon1En_e
 {
-    PMIC_POWER_TPS6522X_VMON1_DISABLE,
-    PMIC_POWER_TPS6522X_VMON1_ENABLE
+    PMIC_POWER_TPS6522X_VMON1_DISABLE, /*!< Disable voltage monitor 1 */
+    PMIC_POWER_TPS6522X_VMON1_ENABLE   /*!< Enable voltage monitor 1 */
 } Pmic_powerTps6522xVmon1En_t;
 /** @} */
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_vccaVmonEnBitField
- *  \name       VCCA_VMON_EN Bit Field Enumeration
+ *  \name       VCCA_VMON_EN Bit Field Enumeration for TPS6522x Burton
  *
  *  \brief      VCCA_VMON enable/disable.
  *
@@ -1219,14 +1229,14 @@ typedef enum Pmic_powerTps6522xVmon1En_e
  */
 typedef enum Pmic_powerTps6522xVccaVmonEn_e
 {
-    PMIC_POWER_TPS6522X_VCCA_VMON_DISABLE,
-    PMIC_POWER_TPS6522X_VCCA_VMON_ENABLE
+    PMIC_POWER_TPS6522X_VCCA_VMON_DISABLE, /*!< Disable VCCA voltage monitor */
+    PMIC_POWER_TPS6522X_VCCA_VMON_ENABLE   /*!< Enable VCCA voltage monitor */
 } Pmic_powerTps6522xVccaVmonEn_t;
 /** @} */
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_vccaPgSetBitField
- *  \name       VCCA_PG_SET Bit Field Enumeration
+ *  \name       VCCA_PG_SET Bit Field Enumeration for TPS6522x Burton
  *
  *  \brief      VCCA_VMON powergood level.
  *
@@ -1234,14 +1244,14 @@ typedef enum Pmic_powerTps6522xVccaVmonEn_e
  */
 typedef enum Pmic_powerTps6522xVccaPgLevel_e
 {
-    PMIC_POWER_TPS6522X_VCCA_PG_LEVEL_3_3_V,
-    PMIC_POWER_TPS6522X_VCCA_PG_LEVEL_5_0_V
+    PMIC_POWER_TPS6522X_VCCA_PG_LEVEL_3_3_V, /*!< VCCA_VMON powergood level at 3.3V */
+    PMIC_POWER_TPS6522X_VCCA_PG_LEVEL_5_0_V  /*!< VCCA_VMON powergood level at 5.0V */
 } Pmic_powerTps6522xVccaPgLevel_t;
 /** @} */
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_vccaVmonThrBitField
- *  \name       VCCA_VMON_THR Bit Field Enumeration
+ *  \name       VCCA_VMON_THR Bit Field Enumeration for TPS6522x Burton
  *
  *  \brief      VCCA_VMON powergood high/low threshold level.
  *
@@ -1249,16 +1259,16 @@ typedef enum Pmic_powerTps6522xVccaPgLevel_e
  */
 typedef enum Pmic_powerTps6522xVccaVmonThr_e
 {
-    PMIC_POWER_TPS6522X_VCCA_VMON_THR_3_PCT,
-    PMIC_POWER_TPS6522X_VCCA_VMON_THR_4_PCT,
-    PMIC_POWER_TPS6522X_VCCA_VMON_THR_6_PCT,
-    PMIC_POWER_TPS6522X_VCCA_VMON_THR_10_PCT,
+    PMIC_POWER_TPS6522X_VCCA_VMON_THR_3_PCT,  /*!< VCCA_VMON powergood high/low threshold level at 3% */
+    PMIC_POWER_TPS6522X_VCCA_VMON_THR_4_PCT,  /*!< VCCA_VMON powergood high/low threshold level at 4% */
+    PMIC_POWER_TPS6522X_VCCA_VMON_THR_6_PCT,  /*!< VCCA_VMON powergood high/low threshold level at 6% */
+    PMIC_POWER_TPS6522X_VCCA_VMON_THR_10_PCT, /*!< VCCA_VMON powergood high/low threshold level at 10% */
 } Pmic_powerTps6522xVccaVmonThr_t;
 /** @} */
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_vccaRailSelBitField
- *  \name       VCCA_GRP_SEL Bit Field Enumeration
+ *  \name       VCCA_GRP_SEL Bit Field Enumeration for TPS6522x Burton
  *
  *  \brief      VCCA_VMON rail group selection.
  *
@@ -1266,16 +1276,16 @@ typedef enum Pmic_powerTps6522xVccaVmonThr_e
  */
 typedef enum Pmic_powerTps6522xVccaRailSel_e
 {
-    PMIC_POWER_TPS6522X_VCCA_RAIL_SEL_NONE,
-    PMIC_POWER_TPS6522X_VCCA_RAIL_SEL_MCU,
-    PMIC_POWER_TPS6522X_VCCA_RAIL_SEL_SOC,
-    PMIC_POWER_TPS6522X_VCCA_RAIL_SEL_OTHER
+    PMIC_POWER_TPS6522X_VCCA_RAIL_SEL_NONE, /*!< VCCA_VMON assigned to no rail group */
+    PMIC_POWER_TPS6522X_VCCA_RAIL_SEL_MCU,  /*!< VCCA_VMON assigned to MCU rail group */
+    PMIC_POWER_TPS6522X_VCCA_RAIL_SEL_SOC,  /*!< VCCA_VMON assigned to SOC rail group */
+    PMIC_POWER_TPS6522X_VCCA_RAIL_SEL_OTHER /*!< VCCA_VMON assigned to other rail group */
 } Pmic_powerTps6522xVccaRailSel_t;
 /** @} */
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_vmon1ThrBitField
- *  \name       VMON1_THR Bit Field Enumeration
+ *  \name       VMON1_THR Bit Field Enumeration for TPS6522x Burton
  *
  *  \brief      VMON1 powergood high/low threshold level for VMON.
  *
@@ -1283,16 +1293,16 @@ typedef enum Pmic_powerTps6522xVccaRailSel_e
  */
 typedef enum Pmic_powerTps6522xVmon1Thr_e
 {
-    PMIC_POWER_TPS6522X_VMON1_THR_3_PCT_OR_30_MV,
-    PMIC_POWER_TPS6522X_VMON1_THR_4_PCT_OR_40_MV,
-    PMIC_POWER_TPS6522X_VMON1_THR_6_PCT_OR_60_MV,
-    PMIC_POWER_TPS6522X_VMON1_THR_8_PCT_OR_80_MV
+    PMIC_POWER_TPS6522X_VMON1_THR_3_PCT_OR_30_MV, /*!< VMON1 powergood high/low threshold level at 3% or 30 mV */
+    PMIC_POWER_TPS6522X_VMON1_THR_4_PCT_OR_40_MV, /*!< VMON1 powergood high/low threshold level at 4% or 40 mV */
+    PMIC_POWER_TPS6522X_VMON1_THR_6_PCT_OR_60_MV, /*!< VMON1 powergood high/low threshold level at 6% or 60 mV */
+    PMIC_POWER_TPS6522X_VMON1_THR_8_PCT_OR_80_MV  /*!< VMON1 powergood high/low threshold level at 8% or 80 mV */
 } Pmic_powerTps6522xVmon1Thr_t;
 /** @} */
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_vmon1RailSelBitField
- *  \name       VMON1_GRP_SEL Bit Field Enumeration
+ *  \name       VMON1_GRP_SEL Bit Field Enumeration for TPS6522x Burton
  *
  *  \brief      VMON1 rail group selection.
  *
@@ -1300,16 +1310,16 @@ typedef enum Pmic_powerTps6522xVmon1Thr_e
  */
 typedef enum Pmic_powerTps6522xVmon1RailSel_e
 {
-    PMIC_POWER_TPS6522X_VMON1_RAIL_SEL_NONE,
-    PMIC_POWER_TPS6522X_VMON1_RAIL_SEL_MCU,
-    PMIC_POWER_TPS6522X_VMON1_RAIL_SEL_SOC,
-    PMIC_POWER_TPS6522X_VMON1_RAIL_SEL_OTHER
+    PMIC_POWER_TPS6522X_VMON1_RAIL_SEL_NONE, /*!< VMON1 assigned to no rail group */
+    PMIC_POWER_TPS6522X_VMON1_RAIL_SEL_MCU,  /*!< VMON1 assigned to MCU rail group */
+    PMIC_POWER_TPS6522X_VMON1_RAIL_SEL_SOC,  /*!< VMON1 assigned to SOC rail group */
+    PMIC_POWER_TPS6522X_VMON1_RAIL_SEL_OTHER /*!< VMON1 assigned to other rail group */
 } Pmic_powerTps6522xVmon1RailSel_t;
 /** @} */
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_vmon2ThrBitField
- *  \name       VMON2_THR Bit Field Enumeration
+ *  \name       VMON2_THR Bit Field Enumeration for TPS6522x Burton
  *
  *  \brief      VMON2 powergood high/low threshold level for VMON.
  *
@@ -1317,16 +1327,16 @@ typedef enum Pmic_powerTps6522xVmon1RailSel_e
  */
 typedef enum Pmic_powerTps6522xVmon2Thr_e
 {
-    PMIC_POWER_TPS6522X_VMON2_THR_3_PCT,
-    PMIC_POWER_TPS6522X_VMON2_THR_4_PCT,
-    PMIC_POWER_TPS6522X_VMON2_THR_6_PCT,
-    PMIC_POWER_TPS6522X_VMON2_THR_8_PCT
+    PMIC_POWER_TPS6522X_VMON2_THR_3_PCT, /*!< VMON2 powergood high/low threshold level at 3% */
+    PMIC_POWER_TPS6522X_VMON2_THR_4_PCT, /*!< VMON2 powergood high/low threshold level at 4% */
+    PMIC_POWER_TPS6522X_VMON2_THR_6_PCT, /*!< VMON2 powergood high/low threshold level at 6% */
+    PMIC_POWER_TPS6522X_VMON2_THR_8_PCT  /*!< VMON2 powergood high/low threshold level at 8% */
 } Pmic_powerTps6522xVmon2Thr_t;
 /** @} */
 
 /**
  *  \anchor     Pmic_Tps6522xBurton_vmon2RailSelBitField
- *  \name       VMON2_GRP_SEL Bit Field Enumeration
+ *  \name       VMON2_GRP_SEL Bit Field Enumeration for TPS6522x Burton
  *
  *  \brief      VMON2 rail group selection.
  *
@@ -1334,15 +1344,15 @@ typedef enum Pmic_powerTps6522xVmon2Thr_e
  */
 typedef enum Pmic_powerTps6522xVmon2RailSel_e
 {
-    PMIC_POWER_TPS6522X_VMON2_RAIL_SEL_NONE,
-    PMIC_POWER_TPS6522X_VMON2_RAIL_SEL_MCU,
-    PMIC_POWER_TPS6522X_VMON2_RAIL_SEL_SOC,
-    PMIC_POWER_TPS6522X_VMON2_RAIL_SEL_OTHER
+    PMIC_POWER_TPS6522X_VMON2_RAIL_SEL_NONE, /*!< VMON2 assigned to no rail group */
+    PMIC_POWER_TPS6522X_VMON2_RAIL_SEL_MCU,  /*!< VMON2 assigned to MCU rail group */
+    PMIC_POWER_TPS6522X_VMON2_RAIL_SEL_SOC,  /*!< VMON2 assigned to SOC rail group */
+    PMIC_POWER_TPS6522X_VMON2_RAIL_SEL_OTHER /*!< VMON2 assigned to other rail group */
 } Pmic_powerTps6522xVmon2RailSel_t;
 /** @} */
 
 /**
- *  \anchor     Pmic_Tps6522xBurton_buckPwrRsrcCfg
+ *  \anchor     Pmic_powerTps6522xBuckPowerResourceCfg_s
  *  \name       BUCK Power Configuration Struct for TPS6522x Burton
  *
  *  \brief      This struct holds information relevent to the BUCK power resource. For validParams,
@@ -1388,7 +1398,7 @@ typedef struct Pmic_powerTps6522xBuckPowerResourceCfg_s
 /** @} */
 
 /**
- *  \anchor     Pmic_Tps6522xBurton_ldoPwrRsrcCfg
+ *  \anchor     Pmic_powerTps6522xLdoPowerResourceCfg_s
  *  \name       LDO Power Configuration Struct for TPS6522x Burton
  *
  *  \brief      This struct holds information relevent to the LDO power resource. For validParams,
@@ -1431,7 +1441,7 @@ typedef struct Pmic_powerTps6522xLdoPowerResourceCfg_s
 /** @} */
 
 /**
- *  \anchor     Pmic_Tps6522xBurton_vccaVmonPwrRsrcCfg
+ *  \anchor     Pmic_powerTps6522xVccaVmonPowerResourceCfg_s
  *  \name       VCCA_VMON/VMONx Power Configuration Struct for TPS6522x Burton
  *
  *  \brief      This struct holds information relevent to the VCCA_VMON and VMONx power resources.
@@ -1487,7 +1497,7 @@ typedef struct Pmic_powerTps6522xVccaVmonPowerResourceCfg_s
 /** @} */
 
 /**
- *  \anchor     Pmic_Tps6522xBurton_pwrRsrcCfg
+ *  \anchor     Pmic_powerTps6522xPowerResourceCfg_s
  *  \name       Power Configuration Struct for TPS6522x Burton
  *
  *  \brief      This struct holds information relevent to all power resource of TPS6522x Burton.
@@ -1520,7 +1530,7 @@ typedef struct Pmic_powerTps6522xPowerResourceCfg_s
 /** @} */
 
 /**
- *  \anchor     Pmic_Tps6522xBurton_buckRegs
+ *  \anchor     Pmic_powerTps6522xBuckRegisters_s
  *  \name       TPS6522x Burton BUCK Registers
  *
  *  \brief      This struct holds registers relevent to the BUCK power resource.
@@ -1538,7 +1548,7 @@ typedef struct Pmic_powerTps6522xBuckRegisters_s
 /** @} */
 
 /**
- *  \anchor     Pmic_Tps6522xBurton_ldoRegs
+ *  \anchor     Pmic_powerTps6522xLdoRegisters_s
  *  \name       TPS6522x Burton LDO Registers
  *
  *  \brief      This struct holds registers relevent to the LDO power resource.
@@ -1555,7 +1565,7 @@ typedef struct Pmic_powerTps6522xLdoRegisters_s
 /** @} */
 
 /**
- *  \anchor     Pmic_Tps6522xBurton_vccaVmonRegs
+ *  \anchor     Pmic_powerTps6522xVccaVmonRegisters_s
  *  \name       TPS6522x Burton VCCA_VMON and VMONx Registers
  *
  *  \brief      This struct holds registers relevent to the VCCA_VMON and VMONx power resources.
@@ -1573,7 +1583,7 @@ typedef struct Pmic_powerTps6522xVccaVmonRegisters_s
 /** @} */
 
 /**
- *  \anchor     Pmic_Tps6522xBurton_thermalStat
+ *  \anchor     Pmic_powerTps6522xThermalStat_s
  *  \name       TPS6522x Burton Thermal Statuses
  *
  *  \brief      This struct holds all the thermal statuses. For validParams,
@@ -1598,7 +1608,7 @@ typedef struct Pmic_powerTps6522xThermalStat_s
 /** @} */
 
 /**
- *  \anchor     Pmic_Tps6522xBurton_thermalCfg
+ *  \anchor     Pmic_powerTps6522xThermalCfg_s
  *  \name       TPS6522x Burton Thermal Configuration Struct
  *
  *  \brief      This struct holds information that is relevant to PMIC thermal configurations.
@@ -1623,37 +1633,64 @@ typedef struct Pmic_powerTps6522xThermalCfg_s
 } Pmic_powerTps6522xThermalCfg_t;
 /** @} */
 
+/**
+ *  \name       TPS6522x BUCK Registers
+ *  \brief      Array of BUCK register sets. Each element in this array is a set of configuration
+ *              registers for a particular BUCK. For instance, element zero is the set of registers
+ *              for BUCK1. This array is mainly used interally by the Power APIs, but end-user could
+ *              utilize this array if direct register access is desired.
+ *
+ *  @{
+ */
+extern const Pmic_powerTps6522xBuckRegisters_t gTps6522xBuckRegisters[];
+/** @} */
+
+/**
+ *  \name       TPS6522x LDO Registers
+ *  \brief      Array of LDO register sets. Each element in this array is a set of configuration
+ *              registers for a particular LDO. For instance, element zero is the set of registers
+ *              for LDO1. This array is mainly used interally by the Power APIs, but end-user could
+ *              utilize this array if direct register access is desired.
+ *
+ *  @{
+ */
+extern const Pmic_powerTps6522xLdoRegisters_t gTps6522xLdoRegisters[];
+/** @} */
+
+/**
+ *  \name       TPS6522x VCCA/VMONx Registers
+ *  \brief      Array of VCCA/VMONx register sets. Each element in this array is a set of configuration
+ *              registers for a particular VCCA/VMONx. For instance, element zero is the set of registers
+ *              for VMON1. This array is mainly used interally by the Power APIs, but end-user could utilize
+ *              this array if direct register access is desired.
+ *
+ *  @{
+ */
+extern const Pmic_powerTps6522xVccaVmonRegisters_t gTps6522xVccaVmonRegisters[];
+/** @} */
+
 /* ========================================================================== */
 /*                         Function Declarations                              */
 /* ========================================================================== */
 
 /**
- *  \brief      This function is used to obtain an array of all BUCK registers - each element being a set
- *              of registers for a BUCK. For example, element zero is the set of all registers for BUCK1.
+ *  \brief      This function is used to get the configuration of any number of TPS6522x
+ *              Burton power resources (BUCKs, LDOs, and voltage monitors). In particular,
+ *              The API can be used to get the configurations of a single power resource,
+ *              get the configurations of multiple power resources, or get the configurations
+ *              of all power resources at once via single API call.
  *
- *  \param      pBuckRegisters      [OUT]       Array of BUCK registers
- */
-void Pmic_get_tps6522x_pwrBuckRegs(const Pmic_powerTps6522xBuckRegisters_t **pBuckRegisters);
-
-/**
- *  \brief      This function is used to obtain an array of all LDO registers - each element being a set
- *              of registers for a LDO. For example, element zero is the set of all registers for LDO1.
- *
- *  \param      pBuckRegisters      [OUT]       Array of LDO registers
- */
-void Pmic_get_tps6522x_pwrLdoRegs(const Pmic_powerTps6522xLdoRegisters_t **pLdoRegisters);
-
-/**
- *  \brief      This function is used to obtain an array of all VMON registers - each element being a set
- *              of registers for a VMON. For example, element zero is the set of all registers for VMON1.
- *
- *  \param      pVccaVmonRegisters  [OUT]       Array of VCCA_VMON/VMONx registers
- */
-void Pmic_get_tps6522x_PwrVccaVmonRegisters(const Pmic_powerTps6522xVccaVmonRegisters_t **pVccaVmonRegisters);
-
-/**
- *  \brief      This function is used to get the configuration of any TPS6522x Burton power resource
- *              (BUCKs, LDOs, and voltage monitors).
+ *  \details    To use this API, end user needs to set the desired power resource's
+ *              validParam within \p pPwrResourceCfg struct. For valid values, refer to
+ *              \ref Pmic_Tps6522xBurton_pwrRsrcCfgValidParamShift. Setting the validParam
+ *              indicates that the end user is interested in that specific power resource.
+ *              Afterwards, end user will need to set the desired power resource's configuration
+ *              validParam(s) within buckPwrRsrcCfg, ldoPwrRsrcCfg, or vccaVmonPwrRsrcCfg. For
+ *              valid values, refer to \ref Pmic_Tps6522xBurton_buckPwrRsrcCfgValidParamShift,
+ *              \ref Pmic_Tps6522xBurton_ldoPwrRsrcCfgValidParamShift, and
+ *              \ref Pmic_Tps6522xBurton_vccaVmonPwrRsrcCfgValidParamShift.
+ *              Setting a validParam indicates that the end user is interested in getting
+ *              a specific configuration of a power resource.
  *
  *              Supported obtainable configurations by this API for a BUCK are:
  *              1. Buck pull-down resistor
@@ -1692,8 +1729,127 @@ int32_t Pmic_powerTps6522xGetPwrResourceCfg(Pmic_CoreHandle_t                   
                                             Pmic_powerTps6522xPowerResourceCfg_t *pPwrResourceCfg);
 
 /**
- *  \brief      This function is used to set the configuration of any TPS6522x Burton power resource
- *              (BUCKs, LDOs, and voltage monitors).
+ *  \brief      This function is used to get all desired information for a BUCK.
+ *              Desired information is specified by the user via setting validParams
+ *              within \p pBuckPowerResourceCfg struct. For values of validParams,
+ *              refer to \ref Pmic_Tps6522xBurton_buckPwrRsrcCfgValidParamShift.
+ *
+ *  \details    End user could use this API if they only want to get the configuration
+ *              of a single BUCK power resource. End user could also use this API to get
+ *              BUCK power resource configuration if their application is memory constrained.
+ *              The API Pmic_powerTps6522xGetPwrResourceCfg() is a superset of this
+ *              API and will accomplish more in a single API call than this API,
+ *              however it is more memory intensive.
+ *
+ *              Supported obtainable configurations by this API for a BUCK are:
+ *              1. Buck pull-down resistor
+ *              2. Buck VMON enable
+ *              3. Buck PWM mode (auto or forced)
+ *              4. Buck enable
+ *              5. Buck slew-rate
+ *              6. Buck voltage (mV)
+ *              7. Buck VMON powergood threshold
+ *              8. Buck rail group selection
+ *
+ *  \param      pPmicCoreHandle             [IN]        PMIC interface handle
+ *  \param      pBuckPowerResourceCfg       [IN/OUT]    BUCK power resource configuration
+ *  \param      buckNum                     [IN]        Indicates which BUCK the API is working with.
+ *                                                      For valid values, refer to
+ *                                                          \ref Pmic_Tps6522xBurton_buckPwrRsrcNum
+ *
+ *  \return     Success code if BUCK information is stored at pBuckPowerResourceCfg,
+ *              error code otherwise. For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_powerTps6522xGetBuckPwrResourceCfg(Pmic_CoreHandle_t                        *pPmicCoreHandle,
+                                                Pmic_powerTps6522xBuckPowerResourceCfg_t *pBuckPowerResourceCfg,
+                                                const uint8_t                             buckNum);
+
+/**
+ *  \brief      This function is used to get all desired information for a LDO.
+ *              Desired information is specified by the user via setting validParams
+ *              within \p pLdoPowerResourceCfg struct. For values of validParams,
+ *              refer to \ref Pmic_Tps6522xBurton_ldoPwrRsrcCfgValidParamShift.
+ *
+ *  \details    End user could use this API if they only want to get the configuration
+ *              of a single LDO power resource. End user could also use this API to get
+ *              LDO power resource configuration if their application is memory constrained.
+ *              The API Pmic_powerTps6522xGetPwrResourceCfg() is a superset of this
+ *              API and will accomplish more in a single API call than this API,
+ *              however it is more memory intensive.
+ *
+ *              Supported configurable options by this API for a LDO are:
+ *              1. LDO discharge enable
+ *              2. LDO VMON enable
+ *              3. LDO enable
+ *              4. LDO mode (bypass mode, LDO mode)
+ *              5. LDO voltage (mV)
+ *              6. LDO VMON powergood threshold
+ *              7. LDO rail group selection
+ *
+ *  \param      pPmicCoreHandle         [IN]        PMIC interface handle
+ *  \param      pLdoPowerResourceCfg    [IN/OUT]    LDO power resource configuration
+ *  \param      ldoNum                  [IN]        Indicates which LDO the API is working with.
+ *                                                  For valid values, refer to
+ *                                                      \ref Pmic_Tps6522xBurton_ldoPwrRsrcNum
+ *
+ *  \return     Success code if desired LDO information is stored at pLdoPowerResourceCfg,
+ *              error code otherwise. For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_powerTps6522xGetLdoPwrResourceCfg(Pmic_CoreHandle_t                       *pPmicCoreHandle,
+                                               Pmic_powerTps6522xLdoPowerResourceCfg_t *pLdoPowerResourceCfg,
+                                               const uint8_t                            ldoNum);
+
+/**
+ *  \brief      This function is used to get all desired information for a VCCA/VMONx.
+ *              Desired information is specified by the user via setting validParams
+ *              within \p pVccaVmonPwrRsrcCfg struct. For values of validParams,
+ *              refer to \ref Pmic_Tps6522xBurton_vccaVmonPwrRsrcCfgValidParamShift.
+ *
+ *  \details    End user could use this API if they only want to get the configuration
+ *              of a single VCCA/VMONx power resource. End user could also use this API to
+ *              get VCCA/VMONx power resource configuration if their application is memory
+ *              constrained. The API Pmic_powerTps6522xGetPwrResourceCfg() is a superset of
+ *              this API and will accomplish more in a single API call than this API, however
+ *              it is more memory intensive.
+ *
+ *              Supported obtainable configurations by this API for a VCCA_VMON/VMONx are:
+ *              1. VMON deglitch selection
+ *              2. VCCA_VMON/VMONx enable
+ *              3. VCCA_VMON/VMONx powergood threshold
+ *              4. VCCA_VMON/VMONx powergood level (mV)
+ *              5. VCCA_VMON/VMONx rail group selection
+ *
+ *  \param      pPmicCoreHandle         [IN]        PMIC interface handle
+ *  \param      pVccaVmonPwrRsrcCfg     [IN/OUT]    VCCA/VMONx power resource configuration
+ *  \param      vmonNum                 [IN]        Indicates which VCCA/VMONx the API is working with
+ *                                                  For valid values, refer to
+ *                                                      \ref Pmic_Tps6522xBurton_vccaVmonPwrRsrcNum
+ *
+ *  \return     Success code if VCCA/VMON information is stored at pVccaVmonPwrRsrcCfg,
+ *              error code otherwise. For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_powerTps6522xGetVccaVmonPwrResourceCfg(Pmic_CoreHandle_t                            *pPmicCoreHandle,
+                                                    Pmic_powerTps6522xVccaVmonPowerResourceCfg_t *pVccaVmonPwrRsrcCfg,
+                                                    const uint8_t                                 vmonNum);
+
+/**
+ *  \brief      This function is used to set the configuration of any number of TPS6522x Burton
+ *              power resources (BUCKs, LDOs, and voltage monitors). In particular, The API can
+ *              be used to set the configurations of a single power resource, set the configurations
+ *              of multiple power resources, or set the configurations of all power resources at once
+ *              via single API call.
+ *
+ *  \details    To use this API, end user needs to set the desired power resource's
+ *              validParam within \p pPwrResourceCfg struct. For valid values, refer to
+ *              \ref Pmic_Tps6522xBurton_pwrRsrcCfgValidParamShift. Setting the validParam
+ *              indicates that the end user is interested in that specific power resource.
+ *              Afterwards, end user will need to set the desired power resource's configuration
+ *              validParam(s) within buckPwrRsrcCfg, ldoPwrRsrcCfg, or vccaVmonPwrRsrcCfg. For
+ *              valid values, refer to \ref Pmic_Tps6522xBurton_buckPwrRsrcCfgValidParamShift,
+ *              \ref Pmic_Tps6522xBurton_ldoPwrRsrcCfgValidParamShift, and
+ *              \ref Pmic_Tps6522xBurton_vccaVmonPwrRsrcCfgValidParamShift.
+ *              Setting a validParam indicates that the end user is interested in setting
+ *              a specific configuration of a power resource.
  *
  *              Supported configurable options by this API for a BUCK are:
  *              1. Buck pull-down resistor
@@ -1730,6 +1886,111 @@ int32_t Pmic_powerTps6522xGetPwrResourceCfg(Pmic_CoreHandle_t                   
  */
 int32_t Pmic_powerTps6522xSetPwrResourceCfg(Pmic_CoreHandle_t                         *pPmicCoreHandle,
                                             const Pmic_powerTps6522xPowerResourceCfg_t pwrResourceCfg);
+
+/**
+ *  \brief      This function is used to set all desired information for a BUCK.
+ *              Desired information is specified by the user via setting validParams
+ *              within \p pBuckPowerResourceCfg struct. For values of validParams,
+ *              refer to \ref Pmic_Tps6522xBurton_buckPwrRsrcCfgValidParamShift.
+ *
+ *  \details    End user could use this API if they only want to set the configuration
+ *              of a single BUCK power resource. End user could also use this API to set
+ *              BUCK power resource configuration if their application is memory constrained.
+ *              The API Pmic_powerTps6522xSetPwrResourceCfg() is a superset of this
+ *              API and will accomplish more in a single API call than this API,
+ *              however it is more memory intensive.
+ *
+ *              Supported configurable options by this API for a BUCK are:
+ *              1. Buck pull-down resistor
+ *              2. Buck VMON enable
+ *              3. Buck PWM mode (auto or forced)
+ *              4. Buck enable
+ *              5. Buck slew-rate
+ *              6. Buck voltage (mV)
+ *              7. Buck VMON powergood threshold
+ *              8. Buck rail group selection
+ *
+ *  \param      pPmicCoreHandle             [IN]        PMIC interface handle
+ *  \param      buckPowerResourceCfg        [IN]        BUCK power resource configuration struct
+ *  \param      buckNum                     [IN]        Indicates which BUCK the API is working with.
+ *                                                      For valid values, refer to
+ *                                                          \ref Pmic_Tps6522xBurton_buckPwrRsrcNum
+ *
+ *  \return     Success code if Buck power resource configurations are set, error code otherwise.
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_powerTps6522xSetBuckPwrResourceCfg(Pmic_CoreHandle_t                             *pPmicCoreHandle,
+                                                const Pmic_powerTps6522xBuckPowerResourceCfg_t buckPowerResourceCfg,
+                                                const uint8_t                                  buckNum);
+
+/**
+ *  \brief      This function is used to set all desired information for a LDO.
+ *              Desired information is specified by the user via setting validParams
+ *              within \p pLdoPowerResourceCfg struct. For values of validParams,
+ *              refer to \ref Pmic_Tps6522xBurton_ldoPwrRsrcCfgValidParamShift.
+ *
+ *  \details    End user could use this API if they only want to set the configuration
+ *              of a single LDO power resource. End user could also use this API to set
+ *              LDO power resource configuration if their application is memory constrained.
+ *              The API Pmic_powerTps6522xSetPwrResourceCfg() is a superset of this
+ *              API and will accomplish more in a single API call than this API,
+ *              however it is more memory intensive.
+ *
+ *              Supported configurable options by this API for a LDO are:
+ *              1. LDO discharge enable
+ *              2. LDO VMON enable
+ *              3. LDO enable
+ *              4. LDO mode (bypass mode, LDO mode)
+ *              5. LDO voltage (mV)
+ *              6. LDO VMON powergood threshold
+ *              7. LDO rail group selection
+ *
+ *  \param      pPmicCoreHandle         [IN]        PMIC interface handle
+ *  \param      ldoPowerResourceCfg     [IN]        LDO power resource configuration struct
+ *  \param      ldoNum                  [IN]        Indicates which LDO the API is working with.
+ *                                                  For valid values, refer to
+ *                                                      \ref Pmic_Tps6522xBurton_ldoPwrRsrcNum
+ *
+ *  \return     Success code if LDO power resource configurations are set, error code otherwise.
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_powerTps6522xSetLdoPwrResourceCfg(Pmic_CoreHandle_t                            *pPmicCoreHandle,
+                                               const Pmic_powerTps6522xLdoPowerResourceCfg_t ldoPowerResourceCfg,
+                                               const uint8_t                                 ldoNum);
+
+/**
+ *  \brief      This function is used to get all desired information for a VCCA/VMONx.
+ *              Desired information is specified by the user via setting validParams
+ *              within \p pVccaVmonPwrRsrcCfg struct. For values of validParams,
+ *              refer to \ref Pmic_Tps6522xBurton_vccaVmonPwrRsrcCfgValidParamShift.
+ *
+ *  \details    End user could use this API if they only want to get the configuration
+ *              of a single VCCA/VMONx power resource. End user could also use this API to
+ *              get VCCA/VMONx power resource configuration if their application is memory
+ *              constrained. The API Pmic_powerTps6522xGetPwrResourceCfg() is a superset of
+ *              this API and will accomplish more in a single API call than this API, however
+ *              it is more memory intensive.
+ *
+ *              Supported configurable options by this API for a VCCA_VMON/VMONx are:
+ *              1. VMON deglitch selection
+ *              2. VCCA_VMON/VMONx enable
+ *              3. VCCA_VMON/VMONx powergood threshold
+ *              4. VCCA_VMON/VMONx powergood level (mV)
+ *              5. VCCA_VMON/VMONx rail group selection
+ *
+ *  \param      pPmicCoreHandle         [IN]        PMIC interface handle
+ *  \param      vccaVmonPwrRsrcCfg      [IN]        VCCA/VMON power resource configuration struct
+ *  \param      vmonNum                 [IN]        Indicates which VCCA/VMONx the API is working with.
+ *                                                  For valid values, refer to
+ *                                                      \ref Pmic_Tps6522xBurton_vccaVmonPwrRsrcNum
+ *
+ *  \return     Success code if VCCA_VMON/VMONx configurations are set, error code otherwise.
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
+int32_t
+Pmic_powerTps6522xSetVccaVmonPwrResourceCfg(Pmic_CoreHandle_t                                 *pPmicCoreHandle,
+                                            const Pmic_powerTps6522xVccaVmonPowerResourceCfg_t vccaVmonPwrRsrcCfg,
+                                            const uint8_t                                      vmonNum);
 
 /**
  *  \brief      This function is used to get the UVOV status of any TPS6522x Burton power resource

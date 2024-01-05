@@ -44,7 +44,7 @@
 #include "pmic_power_tps6522x_priv.h"
 
 // clang-format off
-static const Pmic_powerTps6522xBuckRegisters_t gTps6522xBuckRegisters[] =
+const Pmic_powerTps6522xBuckRegisters_t gTps6522xBuckRegisters[] =
 {
     {
         PMIC_BUCK1_CTRL_REGADDR,
@@ -76,7 +76,7 @@ static const Pmic_powerTps6522xBuckRegisters_t gTps6522xBuckRegisters[] =
     }
 };
 
-static const Pmic_powerTps6522xLdoRegisters_t gTps6522xLdoRegisters[] =
+const Pmic_powerTps6522xLdoRegisters_t gTps6522xLdoRegisters[] =
 {
     {
         PMIC_LDO1_CTRL_REGADDR, 
@@ -98,7 +98,7 @@ static const Pmic_powerTps6522xLdoRegisters_t gTps6522xLdoRegisters[] =
     }
 };
 
-static const Pmic_powerTps6522xVccaVmonRegisters_t gTps6522xVccaVmonRegisters[] =
+const Pmic_powerTps6522xVccaVmonRegisters_t gTps6522xVccaVmonRegisters[] =
 {
     {
         PMIC_TPS6522X_VCCA_VMON_CTRL_REGADDR, 
@@ -123,21 +123,6 @@ static const Pmic_powerTps6522xVccaVmonRegisters_t gTps6522xVccaVmonRegisters[] 
     }
 };
 // clang-format on
-
-void Pmic_get_tps6522x_pwrBuckRegs(const Pmic_powerTps6522xBuckRegisters_t **pBuckRegisters)
-{
-    *pBuckRegisters = gTps6522xBuckRegisters;
-}
-
-void Pmic_get_tps6522x_pwrLdoRegs(const Pmic_powerTps6522xLdoRegisters_t **pLdoRegisters)
-{
-    *pLdoRegisters = gTps6522xLdoRegisters;
-}
-
-void Pmic_get_tps6522x_PwrVccaVmonRegisters(const Pmic_powerTps6522xVccaVmonRegisters_t **pVccaVmonRegisters)
-{
-    *pVccaVmonRegisters = gTps6522xVccaVmonRegisters;
-}
 
 /**
  *  \brief      This function is used to verify the PMIC handle and pointer to TPS6522x power resource
@@ -229,7 +214,7 @@ static int32_t Pmic_powerTps6522xParamCheck_constPwrRsrcCfg(Pmic_CoreHandle_t   
  *  \brief      This function is used to check whether a voltage is valid for a Buck.
  *
  *  \param      pBuckPwrRsrcCfg     [IN]        Array of Buck power resource configuration structs
- *  \param      buckNum             [IN]        Buck number
+ *  \param      buckNum             [IN]        Indicates which BUCK the API is working with
  *
  *  \return     Success code if Buck voltage is within range, error code otherwise.
  *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
@@ -269,7 +254,7 @@ Pmic_powerTps6522xBuckVoltageWithinRangeCheck(const Pmic_powerTps6522xBuckPowerR
  *  \brief      This function is used to check whether a voltage is valid for a LDO.
  *
  *  \param      pLdoPwrRsrcCfg      [IN]        Array of LDO power resource configuration structs
- *  \param      ldoNum              [IN]        LDO number
+ *  \param      ldoNum              [IN]        Indicates which LDO the API is working with
  *
  *  \return     Success code if LDO voltage is within range, error code otherwise.
  *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
@@ -308,7 +293,7 @@ Pmic_powerTps6522xLdoVoltageWithinRangeCheck(const Pmic_powerTps6522xLdoPowerRes
  *  \brief      This function is used to check whether a voltage is valid for a VMON.
  *
  *  \param      vccaVmonPwrRsrcCfg      [IN]        VCCA_VMON/VMONx power resource configuration struct
- *  \param      vmonNum                 [IN]        VMON number
+ *  \param      vmonNum                 [IN]        Indicates which VCCA/VMONx the API is working with
  *
  *  \return     Success code if VMON voltage is within range, error code otherwise.
  *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
@@ -499,7 +484,7 @@ static void Pmic_powerTps6522xGetBuckConfRegBitFields(Pmic_powerTps6522xBuckPowe
  *
  *  \param      pBuckVoltage_mv     [OUT]       BUCK voltage value in millivolts
  *  \param      buckVoltage_vset    [IN]        BUCK voltage value in VSET form
- *  \param      buckNum             [IN]        BUCK number
+ *  \param      buckNum             [IN]        Indicates which BUCK the API is working with
  */
 static void Pmic_powerTps6522xBuckConvertVsetVal2Voltage(uint16_t     *pBuckVoltage_mv,
                                                          const uint8_t buckVoltage_vset,
@@ -572,7 +557,7 @@ static void Pmic_powerTps6522xBuckConvertVsetVal2Voltage(uint16_t     *pBuckVolt
  *
  *  \param      pBuckPowerResourceCfg       [IN/OUT]    Pointer to BUCK power resource configuration struct
  *  \param      buckVoutRegData             [IN]        BUCK_VOUT register data obtained from a prior read of the PMIC
- *  \param      buckNum                     [IN]        BUCK number
+ *  \param      buckNum                     [IN]        Indicates which BUCK the API is working with
  */
 static void Pmic_powerTps6522xGetBuckVoutRegBitFields(Pmic_powerTps6522xBuckPowerResourceCfg_t *pBuckPowerResourceCfg,
                                                       const uint8_t                             buckVoutRegData,
@@ -612,7 +597,7 @@ Pmic_powerTps6522xGetBuckPgWindowRegBitFields(Pmic_powerTps6522xBuckPowerResourc
  *
  *  \param      pBuckPowerResourceCfg       [IN/OUT]    Pointer to BUCK power resource configuration struct
  *  \param      buckRailSelRegData          [IN]        RAIL_SEL_1 register data obtained from a prior read of the PMIC
- *  \param      buckNum                     [IN]        BUCK number
+ *  \param      buckNum                     [IN]        Indicates which BUCK the API is working with
  */
 static void Pmic_PowerTps6522xGetRailSel1RegBitFields(Pmic_powerTps6522xBuckPowerResourceCfg_t *pBuckPowerResourceCfg,
                                                       const uint8_t                             buckRailSelRegData,
@@ -654,30 +639,9 @@ static void Pmic_PowerTps6522xGetRailSel1RegBitFields(Pmic_powerTps6522xBuckPowe
     }
 }
 
-/**
- *  \brief      This function is used to get all desired information for a BUCK (desired information is specified
- *              by validParams).
- *
- *              Supported obtainable configurations by this API for a BUCK are:
- *              1. Buck pull-down resistor
- *              2. Buck VMON enable
- *              3. Buck PWM mode (auto or forced)
- *              4. Buck enable
- *              5. Buck slew-rate
- *              6. Buck voltage (mV)
- *              7. Buck VMON powergood threshold
- *              8. Buck rail group selection
- *
- *  \param      pPmicCoreHandle             [IN]        PMIC interface handle
- *  \param      pBuckPowerResourceCfg       [IN/OUT]    Array of BUCK power resource configuration structs
- *  \param      buckNum                     [IN]        Buck number
- *
- *  \return     Success code if BUCK information is stored at index buckNum of array pBuckPowerResourceCfg,
- *              error code otherwise. For valid success/error codes, refer to \ref Pmic_ErrorCodes
- */
-static int32_t Pmic_powerTps6522xGetBuckPwrResourceCfg(Pmic_CoreHandle_t                        *pPmicCoreHandle,
-                                                       Pmic_powerTps6522xBuckPowerResourceCfg_t *pBuckPowerResourceCfg,
-                                                       const uint8_t                             buckNum)
+int32_t Pmic_powerTps6522xGetBuckPwrResourceCfg(Pmic_CoreHandle_t                        *pPmicCoreHandle,
+                                                Pmic_powerTps6522xBuckPowerResourceCfg_t *pBuckPowerResourceCfg,
+                                                const uint8_t                             buckNum)
 {
     // clang-format off
     uint8_t buckCtrlRegData     = 0;
@@ -686,21 +650,17 @@ static int32_t Pmic_powerTps6522xGetBuckPwrResourceCfg(Pmic_CoreHandle_t        
     uint8_t buckPgWindowRegData = 0;
     uint8_t buckRailSelRegData  = 0;
     int32_t status              = PMIC_ST_SUCCESS;
-    const Pmic_powerTps6522xBuckRegisters_t *pBuckRegisters = NULL;
     // clang-format on
 
     // Parameter check
-    if ((pBuckPowerResourceCfg + buckNum) == NULL)
+    if (pBuckPowerResourceCfg == NULL)
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
-    if ((status == PMIC_ST_SUCCESS) && (pBuckPowerResourceCfg[buckNum].validParams == 0))
+    if ((status == PMIC_ST_SUCCESS) && (pBuckPowerResourceCfg->validParams == 0))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
-
-    // Get all BUCK resource registers
-    Pmic_get_tps6522x_pwrBuckRegs(&pBuckRegisters);
 
     // As we are about to read, start critical section
     Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -708,48 +668,51 @@ static int32_t Pmic_powerTps6522xGetBuckPwrResourceCfg(Pmic_CoreHandle_t        
     // Read all registers pertaining to the BUCK resource
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, pBuckRegisters[buckNum].buckCtrlRegAddr, &buckCtrlRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, pBuckRegisters[buckNum].buckConfRegAddr, &buckConfRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, pBuckRegisters[buckNum].buckVoutRegAddr, &buckVoutRegData);
+        status =
+            Pmic_commIntf_recvByte(pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckCtrlRegAddr, &buckCtrlRegData);
     }
     if (status == PMIC_ST_SUCCESS)
     {
         status =
-            Pmic_commIntf_recvByte(pPmicCoreHandle, pBuckRegisters[buckNum].buckPgWindowRegAddr, &buckPgWindowRegData);
+            Pmic_commIntf_recvByte(pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckConfRegAddr, &buckConfRegData);
     }
     if (status == PMIC_ST_SUCCESS)
     {
         status =
-            Pmic_commIntf_recvByte(pPmicCoreHandle, pBuckRegisters[buckNum].buckRailSelRegAddr, &buckRailSelRegData);
+            Pmic_commIntf_recvByte(pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckVoutRegAddr, &buckVoutRegData);
+    }
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_recvByte(
+            pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckPgWindowRegAddr, &buckPgWindowRegData);
+    }
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_recvByte(
+            pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckRailSelRegAddr, &buckRailSelRegData);
     }
 
     // After read, stop critical section
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
-    // For each register pertaining to the BUCK resource, get the desired bit fields of the register
+    // Get the desired bit fields from the registers that were read
     // (desired bit fields are governed by validParams)
     if (status == PMIC_ST_SUCCESS)
     {
         // BUCK_CTRL register
-        Pmic_powerTps6522xGetBuckCtrlRegBitFields(pBuckPowerResourceCfg + buckNum, buckCtrlRegData);
+        Pmic_powerTps6522xGetBuckCtrlRegBitFields(pBuckPowerResourceCfg, buckCtrlRegData);
 
         // BUCK_CONF register
-        Pmic_powerTps6522xGetBuckConfRegBitFields(pBuckPowerResourceCfg + buckNum, buckConfRegData);
+        Pmic_powerTps6522xGetBuckConfRegBitFields(pBuckPowerResourceCfg, buckConfRegData);
 
         // BUCK_VOUT register
-        Pmic_powerTps6522xGetBuckVoutRegBitFields(pBuckPowerResourceCfg + buckNum, buckVoutRegData, buckNum);
+        Pmic_powerTps6522xGetBuckVoutRegBitFields(pBuckPowerResourceCfg, buckVoutRegData, buckNum);
 
         // BUCK_PG_WINDOW register
-        Pmic_powerTps6522xGetBuckPgWindowRegBitFields(pBuckPowerResourceCfg + buckNum, buckPgWindowRegData);
+        Pmic_powerTps6522xGetBuckPgWindowRegBitFields(pBuckPowerResourceCfg, buckPgWindowRegData);
 
         // RAIL_SEL_1 register
-        Pmic_PowerTps6522xGetRailSel1RegBitFields(pBuckPowerResourceCfg + buckNum, buckRailSelRegData, buckNum);
+        Pmic_PowerTps6522xGetRailSel1RegBitFields(pBuckPowerResourceCfg, buckRailSelRegData, buckNum);
     }
 
     return status;
@@ -789,7 +752,7 @@ static void Pmic_powerTps6522xGetLdoCtrlRegBitFields(Pmic_powerTps6522xLdoPowerR
  *
  *  \param      pLdoVoltage_mv      [OUT]       LDO voltage value in millivolts
  *  \param      ldoVoltage_vset     [IN]        LDO voltage value in VSET form
- *  \param      ldoNum              [IN]        LDO number
+ *  \param      ldoNum              [IN]        Indicates which LDO the API is working with
  */
 static void Pmic_powerTps6522xLdoConvertVsetVal2Voltage(uint16_t     *pLdoVoltage_mv,
                                                         const uint8_t ldoVoltage_vset,
@@ -853,7 +816,7 @@ static void Pmic_powerTps6522xLdoConvertVsetVal2Voltage(uint16_t     *pLdoVoltag
  *
  *  \param      pLdoPowerResourceCfg        [IN/OUT]    Pointer to LDO power resource configuration struct
  *  \param      ldoVoutRegData              [IN]        LDO_VOUT register data obtained from a prior read of the PMIC
- *  \param      ldoNum                      [IN]        LDO number
+ *  \param      ldoNum                      [IN]        Indicates which LDO the API is working with
  */
 static void Pmic_powerTps6522xGetLdoVoutRegBitFields(Pmic_powerTps6522xLdoPowerResourceCfg_t *pLdoPowerResourceCfg,
                                                      const uint8_t                            ldoVoutRegData,
@@ -901,7 +864,7 @@ static void Pmic_powerTps6522xGetLdoPgWindowRegBitFields(Pmic_powerTps6522xLdoPo
  *
  *  \param      pLdoPowerResourceCfg        [IN/OUT]    Pointer to LDO power resource configuration struct
  *  \param      ldoRailSelRegData           [IN]        RAIL_SEL_2 register data obtained from a prior read of the PMIC
- *  \param      ldoNum                      [IN]        LDO number
+ *  \param      ldoNum                      [IN]        Indicates which LDO the API is working with
  */
 static void Pmic_powerTps6522xGetRailSel2RegBitFields(Pmic_powerTps6522xLdoPowerResourceCfg_t *pLdoPowerResourceCfg,
                                                       const uint8_t                            ldoRailSelRegData,
@@ -936,29 +899,9 @@ static void Pmic_powerTps6522xGetRailSel2RegBitFields(Pmic_powerTps6522xLdoPower
     }
 }
 
-/**
- *  \brief      This function is used to get all desired information for a LDO (desired information is
- *              governed by validParams).
- *
- *              Supported configurable options by this API for a LDO are:
- *              1. LDO discharge enable
- *              2. LDO VMON enable
- *              3. LDO enable
- *              4. LDO mode (bypass mode, LDO mode)
- *              5. LDO voltage (mV)
- *              6. LDO VMON powergood threshold
- *              7. LDO rail group selection
- *
- *  \param      pPmicCoreHandle         [IN]        PMIC interface handle
- *  \param      pLdoPowerResourceCfg    [IN/OUT]    Array of LDO power resource configuration structs
- *  \param      ldoNum                  [IN]        LDO number
- *
- *  \return     Success code if LDO information is stored at index ldoNum of array pLdoPowerResourceCfg,
- *              error code otherwise. For valid success/error codes, refer to \ref Pmic_ErrorCodes
- */
-static int32_t Pmic_powerTps6522xGetLdoPwrResourceCfg(Pmic_CoreHandle_t                       *pPmicCoreHandle,
-                                                      Pmic_powerTps6522xLdoPowerResourceCfg_t *pLdoPowerResourceCfg,
-                                                      const uint8_t                            ldoNum)
+int32_t Pmic_powerTps6522xGetLdoPwrResourceCfg(Pmic_CoreHandle_t                       *pPmicCoreHandle,
+                                               Pmic_powerTps6522xLdoPowerResourceCfg_t *pLdoPowerResourceCfg,
+                                               const uint8_t                            ldoNum)
 {
     // clang-format off
     uint8_t ldoCtrlRegData      = 0;
@@ -966,21 +909,17 @@ static int32_t Pmic_powerTps6522xGetLdoPwrResourceCfg(Pmic_CoreHandle_t         
     uint8_t ldoPgWindowRegData  = 0;
     uint8_t ldoRailSelRegData   = 0;
     int32_t status              = PMIC_ST_SUCCESS;
-    const Pmic_powerTps6522xLdoRegisters_t *pLdoRegisters = NULL;
     // clang-format on
 
     // Parameter check
-    if ((pLdoPowerResourceCfg + ldoNum) == NULL)
+    if (pLdoPowerResourceCfg == NULL)
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
-    if ((status == PMIC_ST_SUCCESS) && (pLdoPowerResourceCfg[ldoNum].validParams == 0))
+    if ((status == PMIC_ST_SUCCESS) && (pLdoPowerResourceCfg->validParams == 0))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
-
-    // Get all LDO resource registers
-    Pmic_get_tps6522x_pwrLdoRegs(&pLdoRegisters);
 
     // As we are about to read, start critical section
     Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -988,39 +927,41 @@ static int32_t Pmic_powerTps6522xGetLdoPwrResourceCfg(Pmic_CoreHandle_t         
     // Read all registers pertaining to the LDO resource
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, pLdoRegisters[ldoNum].ldoCtrlRegAddr, &ldoCtrlRegData);
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, gTps6522xLdoRegisters[ldoNum].ldoCtrlRegAddr, &ldoCtrlRegData);
     }
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, pLdoRegisters[ldoNum].ldoVoutRegAddr, &ldoVoutRegData);
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, gTps6522xLdoRegisters[ldoNum].ldoVoutRegAddr, &ldoVoutRegData);
     }
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, pLdoRegisters[ldoNum].ldoPgWindowRegAddr, &ldoPgWindowRegData);
+        status = Pmic_commIntf_recvByte(
+            pPmicCoreHandle, gTps6522xLdoRegisters[ldoNum].ldoPgWindowRegAddr, &ldoPgWindowRegData);
     }
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, pLdoRegisters[ldoNum].ldoRailSelRegAddr, &ldoRailSelRegData);
+        status = Pmic_commIntf_recvByte(
+            pPmicCoreHandle, gTps6522xLdoRegisters[ldoNum].ldoRailSelRegAddr, &ldoRailSelRegData);
     }
 
     // After read, stop critical section
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
-    // For each register pertaining to the LDO resource, get the desired bit fields of the register
+    // Get the desired bit fields from the registers that were read
     // (desired bit fields are governed by validParams)
     if (status == PMIC_ST_SUCCESS)
     {
         // LDO_CTRL register
-        Pmic_powerTps6522xGetLdoCtrlRegBitFields(pLdoPowerResourceCfg + ldoNum, ldoCtrlRegData);
+        Pmic_powerTps6522xGetLdoCtrlRegBitFields(pLdoPowerResourceCfg, ldoCtrlRegData);
 
         // LDO_VOUT register
-        Pmic_powerTps6522xGetLdoVoutRegBitFields(pLdoPowerResourceCfg + ldoNum, ldoVoutRegData, ldoNum);
+        Pmic_powerTps6522xGetLdoVoutRegBitFields(pLdoPowerResourceCfg, ldoVoutRegData, ldoNum);
 
         // LDO_PG_WINDOW register
-        Pmic_powerTps6522xGetLdoPgWindowRegBitFields(pLdoPowerResourceCfg + ldoNum, ldoPgWindowRegData);
+        Pmic_powerTps6522xGetLdoPgWindowRegBitFields(pLdoPowerResourceCfg, ldoPgWindowRegData);
 
         // RAIL_SEL_2 register
-        Pmic_powerTps6522xGetRailSel2RegBitFields(pLdoPowerResourceCfg + ldoNum, ldoRailSelRegData, ldoNum);
+        Pmic_powerTps6522xGetRailSel2RegBitFields(pLdoPowerResourceCfg, ldoRailSelRegData, ldoNum);
     }
 
     return status;
@@ -1033,7 +974,7 @@ static int32_t Pmic_powerTps6522xGetLdoPwrResourceCfg(Pmic_CoreHandle_t         
  *  \param      pVccaVmonPwrRsrcCfg     [IN/OUT]        Pointer to VCCA/VMON power resource configuration struct
  *  \param      vccaVmonCtrlRegData     [IN]            VCCA_VMON_CTRL register data obtained from a prior read of
  *                                                      the PMIC
- *  \param      vmonNum                 [IN]            VMON number
+ *  \param      vmonNum                 [IN]            Indicates which VCCA/VMONx the API is working with
  */
 static void
 Pmic_powerTps6522xGetVccaVmonCtrlBitFields(Pmic_powerTps6522xVccaVmonPowerResourceCfg_t *pVccaVmonPwrRsrcCfg,
@@ -1107,7 +1048,7 @@ static Pmic_powerTps6522xGetVccaPgWindowBitFields(Pmic_powerTps6522xVccaVmonPowe
  *  \param      pVccaVmonPwrRsrcCfg     [IN/OUT]        Pointer to VCCA/VMON power resource configuration struct
  *  \param      vmonPgWindowRegData     [IN]            VMON_PG_WINDOW register data obtained from a prior read of
  *                                                      the PMIC
- *  \param      vmonNum                 [IN]            VMON number
+ *  \param      vmonNum                 [IN]            Indicates which VCCA/VMONx the API is working with
  */
 static Pmic_powerTps6522xGetVmonPgWindowBitFields(Pmic_powerTps6522xVccaVmonPowerResourceCfg_t *pVccaVmonPwrRsrcCfg,
                                                   uint8_t                                       vmonPgWindowRegData,
@@ -1136,7 +1077,7 @@ static Pmic_powerTps6522xGetVmonPgWindowBitFields(Pmic_powerTps6522xVccaVmonPowe
  *
  *  \param      pVmonPgLevel_mv         [OUT]       VMON voltage value in millivolts
  *  \param      vmonPgLevel_pgSet       [IN]        VMON voltage value in PG_SET form
- *  \param      vmonNum                 [IN]        VMON number
+ *  \param      vmonNum                 [IN]        Indicates which VCCA/VMONx the API is working with
  */
 static void Pmic_powerTps6522xVmonConvertPgSet2Voltage(uint16_t     *pVmonPgLevel_mv,
                                                        const uint8_t vmonPgLevel_pgSet,
@@ -1207,7 +1148,7 @@ static void Pmic_powerTps6522xVmonConvertPgSet2Voltage(uint16_t     *pVmonPgLeve
  *
  *  \param      pVccaVmonPwrRsrcCfg     [IN/OUT]    Pointer to VCCA/VMON power resource configuration struct
  *  \param      vmonPgLevelRegData      [IN]        VMON_PG_LEVEL register data obtained from a prior read of the PMIC
- *  \param      vmonNum                 [IN]        VMON number
+ *  \param      vmonNum                 [IN]        Indicates which VCCA/VMONx the API is working with
  */
 static Pmic_powerTps6522xGetVmonPgLevelBitFields(Pmic_powerTps6522xVccaVmonPowerResourceCfg_t *pVccaVmonPwrRsrcCfg,
                                                  uint8_t                                       vmonPgLevelRegData,
@@ -1233,7 +1174,7 @@ static Pmic_powerTps6522xGetVmonPgLevelBitFields(Pmic_powerTps6522xVccaVmonPower
  *
  *  \param      pVccaVmonPwrRsrcCfg         [IN/OUT]    Pointer to VCCA/VMON power resource configuration struct
  *  \param      vccaVmonRailSelRegData      [IN]        RAIL_SEL_3 register data obtained from a prior read of the PMIC
- *  \param      vmonNum                     [IN]        VMON number
+ *  \param      vmonNum                     [IN]        Indicates which VCCA/VMONx the API is working with
  */
 static Pmic_powerTps6522xGetRailSel3RegBitFields(Pmic_powerTps6522xVccaVmonPowerResourceCfg_t *pVccaVmonPwrRsrcCfg,
                                                  uint8_t                                       vccaVmonRailSelRegData,
@@ -1265,28 +1206,9 @@ static Pmic_powerTps6522xGetRailSel3RegBitFields(Pmic_powerTps6522xVccaVmonPower
     }
 }
 
-/**
- *  \brief      This function is used to get all desired information for a VCCA_VMON/VMONx
- *              (desired information is governed by validParams).
- *
- *              Supported obtainable configurations by this API for a VCCA_VMON/VMONx are:
- *              1. VMON deglitch selection
- *              2. VCCA_VMON/VMONx enable
- *              3. VCCA_VMON/VMONx powergood threshold
- *              4. VCCA_VMON/VMONx powergood level (mV)
- *              5. VCCA_VMON/VMONx rail group selection
- *
- *  \param      pPmicCoreHandle         [IN]        PMIC interface handle
- *  \param      pVccaVmonPwrRsrcCfg     [IN/OUT]    pointer to VCCA/VMON power resource configuration struct
- *  \param      vmonNum                 [IN]        VMON number
- *
- *  \return     Success code if VCCA/VMON information is stored in pVccaVmonPwrRsrcCfg, error code otherwise.
- *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
- */
-static int32_t
-Pmic_powerTps6522xGetVccaVmonPwrResourceCfg(Pmic_CoreHandle_t                            *pPmicCoreHandle,
-                                            Pmic_powerTps6522xVccaVmonPowerResourceCfg_t *pVccaVmonPwrRsrcCfg,
-                                            const uint8_t                                 vmonNum)
+int32_t Pmic_powerTps6522xGetVccaVmonPwrResourceCfg(Pmic_CoreHandle_t                            *pPmicCoreHandle,
+                                                    Pmic_powerTps6522xVccaVmonPowerResourceCfg_t *pVccaVmonPwrRsrcCfg,
+                                                    const uint8_t                                 vmonNum)
 {
     // clang-format off
     uint8_t vccaVmonCtrlRegData     = 0;
@@ -1295,7 +1217,6 @@ Pmic_powerTps6522xGetVccaVmonPwrResourceCfg(Pmic_CoreHandle_t                   
     uint8_t vmonPgLevelRegData      = 0;
     uint8_t vccaVmonRailSelRegData  = 0;
     int32_t status                  = PMIC_ST_SUCCESS;
-    const Pmic_powerTps6522xVccaVmonRegisters_t *pVccaVmonRegisters = NULL;
     // clang-format on
 
     // Parameter check
@@ -1308,44 +1229,41 @@ Pmic_powerTps6522xGetVccaVmonPwrResourceCfg(Pmic_CoreHandle_t                   
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    // Get VCCA_VMON and VMONx registers
-    Pmic_get_tps6522x_PwrVccaVmonRegisters(&pVccaVmonRegisters);
-
     // As we are about to read, start critical section
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     if (status == PMIC_ST_SUCCESS)
     {
         status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, pVccaVmonRegisters[vmonNum].vccaVmonCtrlRegAddr, &vccaVmonCtrlRegData);
+            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vccaVmonCtrlRegAddr, &vccaVmonCtrlRegData);
     }
     if ((status == PMIC_ST_SUCCESS) && (vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VCCA_VMON))
     {
         status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, pVccaVmonRegisters[vmonNum].vccaPgWindowRegAddr, &vccaPgWindowRegData);
+            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vccaPgWindowRegAddr, &vccaPgWindowRegData);
     }
     if ((status == PMIC_ST_SUCCESS) && ((vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON1) ||
                                         (vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON2)))
     {
         status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, pVccaVmonRegisters[vmonNum].vmonPgWindowRegAddr, &vmonPgWindowRegData);
+            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vmonPgWindowRegAddr, &vmonPgWindowRegData);
     }
     if ((status == PMIC_ST_SUCCESS) && ((vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON1) ||
                                         (vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON2)))
     {
         status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, pVccaVmonRegisters[vmonNum].vmonPgLevelRegAddr, &vmonPgLevelRegData);
+            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vmonPgLevelRegAddr, &vmonPgLevelRegData);
     }
     if (status == PMIC_ST_SUCCESS)
     {
         status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, pVccaVmonRegisters[vmonNum].vccaVmonRailSelRegAddr, &vccaVmonRailSelRegData);
+            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vccaVmonRailSelRegAddr, &vccaVmonRailSelRegData);
     }
 
     // After read, stop critical section
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
-    // For each register pertaining to the VCCA/VMON resource, get the desired bit fields of the register
+    // Get the desired bit fields from the registers that were read
     // (desired bit fields are governed by validParams)
     if (status == PMIC_ST_SUCCESS)
     {
@@ -1394,8 +1312,8 @@ int32_t Pmic_powerTps6522xGetPwrResourceCfg(Pmic_CoreHandle_t                   
             if (pmic_validParamCheck(pPwrResourceCfg->validParams, validParam))
             {
                 // Get BUCK's power resource configuration
-                status =
-                    Pmic_powerTps6522xGetBuckPwrResourceCfg(pPmicCoreHandle, pPwrResourceCfg->buckPwrRsrcCfg, iter);
+                status = Pmic_powerTps6522xGetBuckPwrResourceCfg(
+                    pPmicCoreHandle, pPwrResourceCfg->buckPwrRsrcCfg + iter, iter);
             }
 
             // Upon error, break out of loop
@@ -1419,7 +1337,8 @@ int32_t Pmic_powerTps6522xGetPwrResourceCfg(Pmic_CoreHandle_t                   
             if (pmic_validParamCheck(pPwrResourceCfg->validParams, validParam))
             {
                 // Get LDO's power resource configuration
-                status = Pmic_powerTps6522xGetLdoPwrResourceCfg(pPmicCoreHandle, pPwrResourceCfg->ldoPwrRsrcCfg, iter);
+                status = Pmic_powerTps6522xGetLdoPwrResourceCfg(
+                    pPmicCoreHandle, pPwrResourceCfg->ldoPwrRsrcCfg + iter, iter);
             }
 
             // Upon error, break out of loop
@@ -1524,7 +1443,7 @@ Pmic_powerTps6522xSetBuckConfRegBitFields(const Pmic_powerTps6522xBuckPowerResou
  *
  *  \param      pBuckVoltage_vset   [OUT]       BUCK voltage in VSET form
  *  \param      buckVoltage_mv      [IN]        BUCK voltage in millivolts
- *  \param      buckNum             [IN]        BUCK number
+ *  \param      buckNum             [IN]        Indicates which BUCK the API is working with
  */
 static void Pmic_powerTps6522xBuckConvertVoltage2VsetVal(uint8_t       *pBuckVoltage_vset,
                                                          const uint16_t buckVoltage_mv,
@@ -1596,19 +1515,18 @@ static void Pmic_powerTps6522xBuckConvertVoltage2VsetVal(uint8_t       *pBuckVol
  *  \brief      This function calculates a VSET value given a milivolt value (obtained from BUCK power resource CFG)
  *              and sets the BUCK_VOUT register data equal to the VSET value (if validParam is set).
  *
- *  \param      pBuckPowerResourceCfg       [IN]        Pointer to Buck power resource configuration register
+ *  \param      buckPowerResourceCfg        [IN]        BUCK power resource configuration struct
  *  \param      pBuckVoutRegData            [OUT]       Pointer to BUCK_VOUT register data
- *  \param      buckNum                     [IN]        Buck number
+ *  \param      buckNum                     [IN]        Indicates which BUCK the API is working with
  */
 static void
-Pmic_powerTps6522xSetBuckVoutRegBitFields(const Pmic_powerTps6522xBuckPowerResourceCfg_t *pBuckPowerResourceCfg,
-                                          uint8_t                                        *pBuckVoutRegData,
-                                          const uint8_t                                   buckNum)
+Pmic_powerTps6522xSetBuckVoutRegBitFields(const Pmic_powerTps6522xBuckPowerResourceCfg_t buckPowerResourceCfg,
+                                          uint8_t                                       *pBuckVoutRegData,
+                                          const uint8_t                                  buckNum)
 {
-    if (pmic_validParamCheck(pBuckPowerResourceCfg[buckNum].validParams, PMIC_POWER_TPS6522X_CFG_BUCK_VOLTAGE_MV_VALID))
+    if (pmic_validParamCheck(buckPowerResourceCfg.validParams, PMIC_POWER_TPS6522X_CFG_BUCK_VOLTAGE_MV_VALID))
     {
-        Pmic_powerTps6522xBuckConvertVoltage2VsetVal(
-            pBuckVoutRegData, pBuckPowerResourceCfg[buckNum].buckVoltage_mv, buckNum);
+        Pmic_powerTps6522xBuckConvertVoltage2VsetVal(pBuckVoutRegData, buckPowerResourceCfg.buckVoltage_mv, buckNum);
     }
 }
 
@@ -1636,17 +1554,16 @@ Pmic_powerTps6522xSetBuckPgWindowRegBitFields(const Pmic_powerTps6522xBuckPowerR
  *  \brief      This function is used to set the desired bit fields of the RAIL_SEL_1 register (desired
  *              bit fields are governed by validParams).
  *
- *  \param      pBuckPowerResourceCfg   [IN]        Pointer to BUCK power resource configuration struct
+ *  \param      buckPowerResourceCfg    [IN]        BUCK power resource configuration struct
  *  \param      pBuckRailSelRegData     [OUT]       Pointer to RAIL_SEL_1 register data
- *  \param      buckNum                 [IN]        Buck number
+ *  \param      buckNum                 [IN]        Indicates which BUCK the API is working with
  */
 static void
-Pmic_powerTps6522xSetRailSel1RegBitFields(const Pmic_powerTps6522xBuckPowerResourceCfg_t *pBuckPowerResourceCfg,
-                                          uint8_t                                        *pBuckRailSelRegData,
-                                          const uint8_t                                   buckNum)
+Pmic_powerTps6522xSetRailSel1RegBitFields(const Pmic_powerTps6522xBuckPowerResourceCfg_t buckPowerResourceCfg,
+                                          uint8_t                                       *pBuckRailSelRegData,
+                                          const uint8_t                                  buckNum)
 {
-    if (pmic_validParamCheck(pBuckPowerResourceCfg[buckNum].validParams,
-                             PMIC_POWER_TPS6522X_CFG_BUCK_RAIL_GRP_SEL_VALID))
+    if (pmic_validParamCheck(buckPowerResourceCfg.validParams, PMIC_POWER_TPS6522X_CFG_BUCK_RAIL_GRP_SEL_VALID))
     {
         switch (buckNum)
         {
@@ -1654,59 +1571,37 @@ Pmic_powerTps6522xSetRailSel1RegBitFields(const Pmic_powerTps6522xBuckPowerResou
                 Pmic_setBitField(pBuckRailSelRegData,
                                  PMIC_POWER_TPS6522X_CFG_RAIL_SEL_1_BUCK1_GRP_SEL_SHIFT,
                                  PMIC_POWER_TPS6522X_CFG_RAIL_SEL_1_BUCK1_GRP_SEL_MASK,
-                                 (uint8_t)pBuckPowerResourceCfg[buckNum].buckRailGrpSel);
+                                 (uint8_t)buckPowerResourceCfg.buckRailGrpSel);
 
                 break;
             case PMIC_POWER_TPS6522X_REGULATOR_BUCK2:
                 Pmic_setBitField(pBuckRailSelRegData,
                                  PMIC_POWER_TPS6522X_CFG_RAIL_SEL_1_BUCK2_GRP_SEL_SHIFT,
                                  PMIC_POWER_TPS6522X_CFG_RAIL_SEL_1_BUCK2_GRP_SEL_MASK,
-                                 (uint8_t)pBuckPowerResourceCfg[buckNum].buckRailGrpSel);
+                                 (uint8_t)buckPowerResourceCfg.buckRailGrpSel);
 
                 break;
             case PMIC_POWER_TPS6522X_REGULATOR_BUCK3:
                 Pmic_setBitField(pBuckRailSelRegData,
                                  PMIC_POWER_TPS6522X_CFG_RAIL_SEL_1_BUCK3_GRP_SEL_SHIFT,
                                  PMIC_POWER_TPS6522X_CFG_RAIL_SEL_1_BUCK3_GRP_SEL_MASK,
-                                 (uint8_t)pBuckPowerResourceCfg[buckNum].buckRailGrpSel);
+                                 (uint8_t)buckPowerResourceCfg.buckRailGrpSel);
 
                 break;
             case PMIC_POWER_TPS6522X_REGULATOR_BUCK4:
                 Pmic_setBitField(pBuckRailSelRegData,
                                  PMIC_POWER_TPS6522X_CFG_RAIL_SEL_1_BUCK4_GRP_SEL_SHIFT,
                                  PMIC_POWER_TPS6522X_CFG_RAIL_SEL_1_BUCK4_GRP_SEL_MASK,
-                                 (uint8_t)pBuckPowerResourceCfg[buckNum].buckRailGrpSel);
+                                 (uint8_t)buckPowerResourceCfg.buckRailGrpSel);
 
                 break;
         }
     }
 }
 
-/**
- *  \brief      This function is used to set all desired configurations for a BUCK power resource
- *              (desired configurations are governed by validParams).
- *
- *              Supported configurable options by this API for a BUCK are:
- *              1. Buck pull-down resistor
- *              2. Buck VMON enable
- *              3. Buck PWM mode (auto or forced)
- *              4. Buck enable
- *              5. Buck slew-rate
- *              6. Buck voltage (mV)
- *              7. Buck VMON powergood threshold
- *              8. Buck rail group selection
- *
- *  \param      pPmicCoreHandle             [IN]        PMIC interface handle
- *  \param      pBuckPowerResourceCfg       [IN]        Array of BUCK power resource configuration structs
- *  \param      buckNum                     [IN]        Buck number
- *
- *  \return     Success code if Buck power resource configurations are set, error code otherwise.
- *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
- */
-static int32_t
-Pmic_powerTps6522xSetBuckPwrResourceCfg(Pmic_CoreHandle_t                              *pPmicCoreHandle,
-                                        const Pmic_powerTps6522xBuckPowerResourceCfg_t *pBuckPowerResourceCfg,
-                                        const uint8_t                                   buckNum)
+int32_t Pmic_powerTps6522xSetBuckPwrResourceCfg(Pmic_CoreHandle_t                             *pPmicCoreHandle,
+                                                const Pmic_powerTps6522xBuckPowerResourceCfg_t buckPowerResourceCfg,
+                                                const uint8_t                                  buckNum)
 {
     // clang-format off
     uint8_t buckCtrlRegData     = 0;
@@ -1715,17 +1610,13 @@ Pmic_powerTps6522xSetBuckPwrResourceCfg(Pmic_CoreHandle_t                       
     uint8_t buckPgWindowRegData = 0;
     uint8_t buckRailSelRegData  = 0;
     int32_t status              = PMIC_ST_SUCCESS;
-    const Pmic_powerTps6522xBuckRegisters_t *pBuckRegisters = NULL;
     // clang-format on
 
     // Parameter check
-    if (pBuckPowerResourceCfg[buckNum].validParams == 0)
+    if (buckPowerResourceCfg.validParams == 0)
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
-
-    // Get all BUCK resource registers
-    Pmic_get_tps6522x_pwrBuckRegs(&pBuckRegisters);
 
     // As we are about to read, start critical section
     Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -1733,69 +1624,75 @@ Pmic_powerTps6522xSetBuckPwrResourceCfg(Pmic_CoreHandle_t                       
     // Read all registers pertaining to the BUCK resource
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, pBuckRegisters[buckNum].buckCtrlRegAddr, &buckCtrlRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, pBuckRegisters[buckNum].buckConfRegAddr, &buckConfRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, pBuckRegisters[buckNum].buckVoutRegAddr, &buckVoutRegData);
+        status =
+            Pmic_commIntf_recvByte(pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckCtrlRegAddr, &buckCtrlRegData);
     }
     if (status == PMIC_ST_SUCCESS)
     {
         status =
-            Pmic_commIntf_recvByte(pPmicCoreHandle, pBuckRegisters[buckNum].buckPgWindowRegAddr, &buckPgWindowRegData);
+            Pmic_commIntf_recvByte(pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckConfRegAddr, &buckConfRegData);
     }
     if (status == PMIC_ST_SUCCESS)
     {
         status =
-            Pmic_commIntf_recvByte(pPmicCoreHandle, pBuckRegisters[buckNum].buckRailSelRegAddr, &buckRailSelRegData);
+            Pmic_commIntf_recvByte(pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckVoutRegAddr, &buckVoutRegData);
+    }
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_recvByte(
+            pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckPgWindowRegAddr, &buckPgWindowRegData);
+    }
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_recvByte(
+            pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckRailSelRegAddr, &buckRailSelRegData);
     }
 
-    // For each register pertaining to the BUCK resource, modify the desired bit fields of the register
+    // modify the desired bit fields of the registers that were read
     // (desired bit fields are governed by validParams)
     if (status == PMIC_ST_SUCCESS)
     {
         // BUCK_CTRL register
-        Pmic_powerTps6522xSetBuckCtrlRegBitFields(pBuckPowerResourceCfg[buckNum], &buckCtrlRegData);
+        Pmic_powerTps6522xSetBuckCtrlRegBitFields(buckPowerResourceCfg, &buckCtrlRegData);
 
         // BUCK_CONF register
-        Pmic_powerTps6522xSetBuckConfRegBitFields(pBuckPowerResourceCfg[buckNum], &buckConfRegData);
+        Pmic_powerTps6522xSetBuckConfRegBitFields(buckPowerResourceCfg, &buckConfRegData);
 
         // BUCK_VOUT register
-        Pmic_powerTps6522xSetBuckVoutRegBitFields(pBuckPowerResourceCfg, &buckVoutRegData, buckNum);
+        Pmic_powerTps6522xSetBuckVoutRegBitFields(buckPowerResourceCfg, &buckVoutRegData, buckNum);
 
         // BUCK_PG_WINDOW register
-        Pmic_powerTps6522xSetBuckPgWindowRegBitFields(pBuckPowerResourceCfg[buckNum], &buckPgWindowRegData);
+        Pmic_powerTps6522xSetBuckPgWindowRegBitFields(buckPowerResourceCfg, &buckPgWindowRegData);
 
         // RAIL_SEL_1 register
-        Pmic_powerTps6522xSetRailSel1RegBitFields(pBuckPowerResourceCfg, &buckRailSelRegData, buckNum);
+        Pmic_powerTps6522xSetRailSel1RegBitFields(buckPowerResourceCfg, &buckRailSelRegData, buckNum);
     }
 
     // After modification of register bit fields, write values back to PMIC
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_sendByte(pPmicCoreHandle, pBuckRegisters[buckNum].buckConfRegAddr, buckConfRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_commIntf_sendByte(pPmicCoreHandle, pBuckRegisters[buckNum].buckVoutRegAddr, buckVoutRegData);
+        status =
+            Pmic_commIntf_sendByte(pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckConfRegAddr, buckConfRegData);
     }
     if (status == PMIC_ST_SUCCESS)
     {
         status =
-            Pmic_commIntf_sendByte(pPmicCoreHandle, pBuckRegisters[buckNum].buckPgWindowRegAddr, buckPgWindowRegData);
+            Pmic_commIntf_sendByte(pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckVoutRegAddr, buckVoutRegData);
+    }
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_sendByte(
+            pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckPgWindowRegAddr, buckPgWindowRegData);
+    }
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_sendByte(
+            pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckRailSelRegAddr, buckRailSelRegData);
     }
     if (status == PMIC_ST_SUCCESS)
     {
         status =
-            Pmic_commIntf_sendByte(pPmicCoreHandle, pBuckRegisters[buckNum].buckRailSelRegAddr, buckRailSelRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_commIntf_sendByte(pPmicCoreHandle, pBuckRegisters[buckNum].buckCtrlRegAddr, buckCtrlRegData);
+            Pmic_commIntf_sendByte(pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckCtrlRegAddr, buckCtrlRegData);
     }
 
     // After read-modify-write, stop critical section
@@ -1842,7 +1739,7 @@ static void Pmic_powerTps6522xSetLdoCtrlRegBitFields(const Pmic_powerTps6522xLdo
  *
  *  \param      pLdoVoltage_vset    [OUT]       LDO voltage value in VSET form
  *  \param      ldoVoltage_mv       [IN]        LDO voltage value in millivolts
- *  \param      ldoNum              [IN]        LDO number
+ *  \param      ldoNum              [IN]        Indicates which LDO the API is working with
  */
 static void Pmic_powerTps6522xLdoConvertVoltage2VsetVal(uint8_t       *pLdoVoltage_vset,
                                                         const uint16_t ldoVoltage_mv,
@@ -1906,26 +1803,26 @@ static void Pmic_powerTps6522xLdoConvertVoltage2VsetVal(uint8_t       *pLdoVolta
  *  \brief      This function is used to set the desired bit fields of the LDO_VOUT register
  *              (desired bit fields are governed by validParams).
  *
- *  \param      pLdoPowerResourceCfg    [IN]        Pointer to LDO power resource configuration struct
+ *  \param      ldoPowerResourceCfg     [IN]        LDO power resource configuration struct
  *  \param      pLdoVoutRegData         [OUT]       Pointer to LDO_VOUT register data
- *  \param      ldoNum                  [IN]        LDO number
+ *  \param      ldoNum                  [IN]        Indicates which LDO the API is working with
  */
-static void Pmic_powerTps6522xSetLdoVoutRegBitFields(
-    const Pmic_powerTps6522xLdoPowerResourceCfg_t *pLdoPowerResourceCfg, uint8_t *pLdoVoutRegData, const uint8_t ldoNum)
+static void Pmic_powerTps6522xSetLdoVoutRegBitFields(const Pmic_powerTps6522xLdoPowerResourceCfg_t ldoPowerResourceCfg,
+                                                     uint8_t                                      *pLdoVoutRegData,
+                                                     const uint8_t                                 ldoNum)
 {
     uint8_t ldoVoltage_vset = 0;
 
-    if (pmic_validParamCheck(pLdoPowerResourceCfg[ldoNum].validParams, PMIC_POWER_TPS6522X_CFG_LDO_MODE_VALID))
+    if (pmic_validParamCheck(ldoPowerResourceCfg.validParams, PMIC_POWER_TPS6522X_CFG_LDO_MODE_VALID))
     {
         Pmic_setBitField(pLdoVoutRegData,
                          PMIC_POWER_TPS6522X_LDO_VOUT_LDO_MODE_SHIFT,
                          PMIC_POWER_TPS6522X_LDO_VOUT_LDO_MODE_MASK,
-                         (uint8_t)pLdoPowerResourceCfg[ldoNum].ldoMode);
+                         (uint8_t)ldoPowerResourceCfg.ldoMode);
     }
-    if (pmic_validParamCheck(pLdoPowerResourceCfg[ldoNum].validParams, PMIC_POWER_TPS6522X_CFG_LDO_VOLTAGE_MV_VALID))
+    if (pmic_validParamCheck(ldoPowerResourceCfg.validParams, PMIC_POWER_TPS6522X_CFG_LDO_VOLTAGE_MV_VALID))
     {
-        Pmic_powerTps6522xLdoConvertVoltage2VsetVal(
-            &ldoVoltage_vset, pLdoPowerResourceCfg[ldoNum].ldoVoltage_mv, ldoNum);
+        Pmic_powerTps6522xLdoConvertVoltage2VsetVal(&ldoVoltage_vset, ldoPowerResourceCfg.ldoVoltage_mv, ldoNum);
 
         Pmic_setBitField(pLdoVoutRegData,
                          PMIC_POWER_TPS6522X_LDO_VOUT_LDO_VSET_SHIFT,
@@ -1958,14 +1855,15 @@ Pmic_powerTps6522xSetLdoPgWindowRegBitFields(const Pmic_powerTps6522xLdoPowerRes
  *  \brief      This function is used to set the desired bit fields of the RAIL_SEL_2 register
  *              (desired bit fields are governed by validParams).
  *
- *  \param      pLdoPowerResourceCfg    [IN]        Pointer to LDO power resource configuration struct
+ *  \param      ldoPowerResourceCfg     [IN]        LDO power resource configuration struct
  *  \param      pLdoRailSelRegData      [OUT]       Pointer to RAIL_SEL_2 register data
- *  \param      ldoNum                  [IN]        LDO number
+ *  \param      ldoNum                  [IN]        Indicates which LDO the API is working with
  */
-static void Pmic_powerTps6522xSetRailSel2RegBitFields(
-    const Pmic_powerTps6522xLdoPowerResourceCfg_t *pLdoPowerResourceCfg, uint8_t *pLdoRailSelRegData, uint8_t ldoNum)
+static void Pmic_powerTps6522xSetRailSel2RegBitFields(const Pmic_powerTps6522xLdoPowerResourceCfg_t ldoPowerResourceCfg,
+                                                      uint8_t                                      *pLdoRailSelRegData,
+                                                      uint8_t                                       ldoNum)
 {
-    if (pmic_validParamCheck(pLdoPowerResourceCfg[ldoNum].validParams, PMIC_POWER_TPS6522X_CFG_LDO_RAIL_GRP_SEL_VALID))
+    if (pmic_validParamCheck(ldoPowerResourceCfg.validParams, PMIC_POWER_TPS6522X_CFG_LDO_RAIL_GRP_SEL_VALID))
     {
         switch (ldoNum)
         {
@@ -1973,51 +1871,30 @@ static void Pmic_powerTps6522xSetRailSel2RegBitFields(
                 Pmic_setBitField(pLdoRailSelRegData,
                                  PMIC_POWER_TPS6522X_RAIL_SEL_2_LDO1_GRP_SEL_SHIFT,
                                  PMIC_POWER_TPS6522X_RAIL_SEL_2_LDO1_GRP_SEL_MASK,
-                                 (uint8_t)pLdoPowerResourceCfg[ldoNum].ldoRailGrpSel);
+                                 (uint8_t)ldoPowerResourceCfg.ldoRailGrpSel);
 
                 break;
             case PMIC_POWER_TPS6522X_REGULATOR_LDO2:
                 Pmic_setBitField(pLdoRailSelRegData,
                                  PMIC_POWER_TPS6522X_RAIL_SEL_2_LDO2_GRP_SEL_SHIFT,
                                  PMIC_POWER_TPS6522X_RAIL_SEL_2_LDO2_GRP_SEL_MASK,
-                                 (uint8_t)pLdoPowerResourceCfg[ldoNum].ldoRailGrpSel);
+                                 (uint8_t)ldoPowerResourceCfg.ldoRailGrpSel);
 
                 break;
             case PMIC_POWER_TPS6522X_REGULATOR_LDO3:
                 Pmic_setBitField(pLdoRailSelRegData,
                                  PMIC_POWER_TPS6522X_RAIL_SEL_2_LDO3_GRP_SEL_SHIFT,
                                  PMIC_POWER_TPS6522X_RAIL_SEL_2_LDO3_GRP_SEL_MASK,
-                                 (uint8_t)pLdoPowerResourceCfg[ldoNum].ldoRailGrpSel);
+                                 (uint8_t)ldoPowerResourceCfg.ldoRailGrpSel);
 
                 break;
         }
     }
 }
 
-/**
- *  \brief      This function is used to set the desired configurations of a LDO power resource
- *              (desired configurations are governed by validParams).
- *
- *              Supported configurable options by this API for a LDO are:
- *              1. LDO discharge enable
- *              2. LDO VMON enable
- *              3. LDO enable
- *              4. LDO mode (bypass mode, LDO mode)
- *              5. LDO voltage (mV)
- *              6. LDO VMON powergood threshold
- *              7. LDO rail group selection
- *
- *  \param      pPmicCoreHandle         [IN]        PMIC interface handle
- *  \param      pLdoPowerResourceCfg    [IN]        Array of LDO power resource configuration structs
- *  \param      ldoNum                  [IN]        LDO number
- *
- *  \return     Success code if LDO power resource configurations are set, error code otherwise.
- *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
- */
-static int32_t
-Pmic_powerTps6522xSetLdoPwrResourceCfg(Pmic_CoreHandle_t                             *pPmicCoreHandle,
-                                       const Pmic_powerTps6522xLdoPowerResourceCfg_t *pLdoPowerResourceCfg,
-                                       const uint8_t                                  ldoNum)
+int32_t Pmic_powerTps6522xSetLdoPwrResourceCfg(Pmic_CoreHandle_t                            *pPmicCoreHandle,
+                                               const Pmic_powerTps6522xLdoPowerResourceCfg_t ldoPowerResourceCfg,
+                                               const uint8_t                                 ldoNum)
 {
     // clang-format off
     uint8_t ldoCtrlRegData      = 0;
@@ -2025,17 +1902,13 @@ Pmic_powerTps6522xSetLdoPwrResourceCfg(Pmic_CoreHandle_t                        
     uint8_t ldoPgWindowRegData  = 0;
     uint8_t ldoRailSelRegData   = 0;
     int32_t status              = PMIC_ST_SUCCESS;
-    const Pmic_powerTps6522xLdoRegisters_t *pLdoRegisters = NULL;
     // clang-format on
 
     // Parameter check
-    if (pLdoPowerResourceCfg[ldoNum].validParams == 0)
+    if (ldoPowerResourceCfg.validParams == 0)
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
-
-    // Get all LDO resource registers
-    Pmic_get_tps6522x_pwrLdoRegs(&pLdoRegisters);
 
     // As we are about to read, start critical section
     Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -2043,54 +1916,58 @@ Pmic_powerTps6522xSetLdoPwrResourceCfg(Pmic_CoreHandle_t                        
     // Read all registers pertaining to the LDO resource
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, pLdoRegisters[ldoNum].ldoCtrlRegAddr, &ldoCtrlRegData);
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, gTps6522xLdoRegisters[ldoNum].ldoCtrlRegAddr, &ldoCtrlRegData);
     }
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, pLdoRegisters[ldoNum].ldoVoutRegAddr, &ldoVoutRegData);
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, gTps6522xLdoRegisters[ldoNum].ldoVoutRegAddr, &ldoVoutRegData);
     }
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, pLdoRegisters[ldoNum].ldoPgWindowRegAddr, &ldoPgWindowRegData);
+        status = Pmic_commIntf_recvByte(
+            pPmicCoreHandle, gTps6522xLdoRegisters[ldoNum].ldoPgWindowRegAddr, &ldoPgWindowRegData);
     }
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, pLdoRegisters[ldoNum].ldoRailSelRegAddr, &ldoRailSelRegData);
+        status = Pmic_commIntf_recvByte(
+            pPmicCoreHandle, gTps6522xLdoRegisters[ldoNum].ldoRailSelRegAddr, &ldoRailSelRegData);
     }
 
-    // For each register pertaining to the LDO resource, modify the desired bit fields of the register
+    // modify the desired bit fields of the registers that were read
     // (desired bit fields are governed by validParams)
     if (status == PMIC_ST_SUCCESS)
     {
         // LDO_CTRL register
-        Pmic_powerTps6522xSetLdoCtrlRegBitFields(pLdoPowerResourceCfg[ldoNum], &ldoCtrlRegData);
+        Pmic_powerTps6522xSetLdoCtrlRegBitFields(ldoPowerResourceCfg, &ldoCtrlRegData);
 
         // LDO_VOUT register
-        Pmic_powerTps6522xSetLdoVoutRegBitFields(pLdoPowerResourceCfg, &ldoVoutRegData, ldoNum);
+        Pmic_powerTps6522xSetLdoVoutRegBitFields(ldoPowerResourceCfg, &ldoVoutRegData, ldoNum);
 
         // LDO_PG_WINDOW register
-        Pmic_powerTps6522xSetLdoPgWindowRegBitFields(pLdoPowerResourceCfg[ldoNum], &ldoPgWindowRegData);
+        Pmic_powerTps6522xSetLdoPgWindowRegBitFields(ldoPowerResourceCfg, &ldoPgWindowRegData);
 
         // RAIL_SEL_2 register
-        Pmic_powerTps6522xSetRailSel2RegBitFields(pLdoPowerResourceCfg, &ldoRailSelRegData, ldoNum);
+        Pmic_powerTps6522xSetRailSel2RegBitFields(ldoPowerResourceCfg, &ldoRailSelRegData, ldoNum);
     }
 
     // After modification of register bit fields, write values back to PMIC
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_sendByte(pPmicCoreHandle, pLdoRegisters[ldoNum].ldoVoutRegAddr, ldoVoutRegData);
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, gTps6522xLdoRegisters[ldoNum].ldoVoutRegAddr, ldoVoutRegData);
     }
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_sendByte(pPmicCoreHandle, pLdoRegisters[ldoNum].ldoPgWindowRegAddr, ldoPgWindowRegData);
+        status = Pmic_commIntf_sendByte(
+            pPmicCoreHandle, gTps6522xLdoRegisters[ldoNum].ldoPgWindowRegAddr, ldoPgWindowRegData);
     }
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_sendByte(pPmicCoreHandle, pLdoRegisters[ldoNum].ldoRailSelRegAddr, ldoRailSelRegData);
+        status =
+            Pmic_commIntf_sendByte(pPmicCoreHandle, gTps6522xLdoRegisters[ldoNum].ldoRailSelRegAddr, ldoRailSelRegData);
     }
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_sendByte(pPmicCoreHandle, pLdoRegisters[ldoNum].ldoCtrlRegAddr, ldoCtrlRegData);
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, gTps6522xLdoRegisters[ldoNum].ldoCtrlRegAddr, ldoCtrlRegData);
     }
 
     // After read-modify-write, stop critical section
@@ -2105,7 +1982,7 @@ Pmic_powerTps6522xSetLdoPwrResourceCfg(Pmic_CoreHandle_t                        
  *
  *  \param      vccaVmonPwrRsrcCfg      [IN]        VCCA/VMON power resource configuration struct
  *  \param      pVccaVmonCtrlRegData    [OUT]       Pointer to VCCA_VMON_CTRL register data
- *  \param      vmonNum                 [IN]        VMON number
+ *  \param      vmonNum                 [IN]        Indicates which VCCA/VMONx the API is working with
  */
 static void
 Pmic_powerTps6522xSetVccaVmonCtrlBitFields(const Pmic_powerTps6522xVccaVmonPowerResourceCfg_t vccaVmonPwrRsrcCfg,
@@ -2175,7 +2052,7 @@ Pmic_powerTps6522xSetVccaPgWindowBitFields(const Pmic_powerTps6522xVccaVmonPower
  *
  *  \param      vccaVmonPwrRsrcCfg      [IN]        VCCA/VMON power resource configuration struct
  *  \param      pVmonPgWindowRegData    [OUT]       Pointer to VMON_PG_WINDOW register data
- *  \param      vmonNum                 [IN]        VMON number
+ *  \param      vmonNum                 [IN]        Indicates which VCCA/VMONx the API is working with
  */
 static void
 Pmic_powerTps6522xSetVmonPgWindowBitFields(const Pmic_powerTps6522xVccaVmonPowerResourceCfg_t vccaVmonPwrRsrcCfg,
@@ -2205,7 +2082,7 @@ Pmic_powerTps6522xSetVmonPgWindowBitFields(const Pmic_powerTps6522xVccaVmonPower
  *
  *  \param      pVmonPgLevel_pgSet      [OUT]       VMON PG level in PG_SET form
  *  \param      vmonPgLevel_mv          [IN]        VMON PG level in millivolts
- *  \param      vmonNum                 [IN]        VMON number
+ *  \param      vmonNum                 [IN]        Indicates which VCCA/VMONx the API is working with
  */
 static void Pmic_powerTps6522xVmonConvertVoltage2PgSet(uint8_t       *pVmonPgLevel_pgSet,
                                                        const uint16_t vmonPgLevel_mv,
@@ -2278,7 +2155,7 @@ static void Pmic_powerTps6522xVmonConvertVoltage2PgSet(uint8_t       *pVmonPgLev
  *
  *  \param      vccaVmonPwrRsrcCfg      [IN]        VCCA/VMON power resource configuration register
  *  \param      pVmonPgLevelRegData     [OUT]       Pointer to VMON_PG_LEVEL register data
- *  \param      vmonNum                 [IN]        VMON number
+ *  \param      vmonNum                 [IN]        Indicates which VCCA/VMONx the API is working with
  */
 static void
 Pmic_powerTps6522xSetVmonPgLevelBitFields(const Pmic_powerTps6522xVccaVmonPowerResourceCfg_t vccaVmonPwrRsrcCfg,
@@ -2303,7 +2180,7 @@ Pmic_powerTps6522xSetVmonPgLevelBitFields(const Pmic_powerTps6522xVccaVmonPowerR
  *
  *  \param      vccaVmonPwrRsrcCfg          [IN]        VCCA/VMON power resource configuration struct
  *  \param      pVccaVmonRailSelRegData     [OUT]       Pointer to RAIL_SEL_3 register
- *  \param      vmonNum                     [IN]        VMON number
+ *  \param      vmonNum                     [IN]        Indicates which VCCA/VMONx the API is working with
  */
 static void
 Pmic_powerTps6522xSetRailSel3RegBitFields(const Pmic_powerTps6522xVccaVmonPowerResourceCfg_t vccaVmonPwrRsrcCfg,
@@ -2336,18 +2213,7 @@ Pmic_powerTps6522xSetRailSel3RegBitFields(const Pmic_powerTps6522xVccaVmonPowerR
     }
 }
 
-/**
- *  \brief      This function is used to set all desired configurations of VCCA_VMON/VMONx power resource
- *              (desired configurations are governed by validParams).
- *
- *  \param      pPmicCoreHandle         [IN]        PMIC interface handle
- *  \param      vccaVmonPwrRsrcCfg      [IN]        VCCA/VMON power resource configuration struct
- *  \param      vmonNum                 [IN]        VMON number
- *
- *  \return     Success code if VCCA_VMON/VMONx configurations are set, error code otherwise.
- *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
- */
-static int32_t
+int32_t
 Pmic_powerTps6522xSetVccaVmonPwrResourceCfg(Pmic_CoreHandle_t                                 *pPmicCoreHandle,
                                             const Pmic_powerTps6522xVccaVmonPowerResourceCfg_t vccaVmonPwrRsrcCfg,
                                             const uint8_t                                      vmonNum)
@@ -2359,7 +2225,6 @@ Pmic_powerTps6522xSetVccaVmonPwrResourceCfg(Pmic_CoreHandle_t                   
     uint8_t vmonPgLevelRegData      = 0;
     uint8_t vccaVmonRailSelRegData  = 0;
     int32_t status                  = PMIC_ST_SUCCESS;
-    const Pmic_powerTps6522xVccaVmonRegisters_t *pVccaVmonRegisters = NULL;
     // clang-format on
 
     // Parameter check
@@ -2368,9 +2233,6 @@ Pmic_powerTps6522xSetVccaVmonPwrResourceCfg(Pmic_CoreHandle_t                   
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    // Get VCCA_VMON and VMONx registers
-    Pmic_get_tps6522x_PwrVccaVmonRegisters(&pVccaVmonRegisters);
-
     // As we are about to read, start critical section
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
@@ -2378,32 +2240,32 @@ Pmic_powerTps6522xSetVccaVmonPwrResourceCfg(Pmic_CoreHandle_t                   
     if (status == PMIC_ST_SUCCESS)
     {
         status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, pVccaVmonRegisters[vmonNum].vccaVmonCtrlRegAddr, &vccaVmonCtrlRegData);
+            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vccaVmonCtrlRegAddr, &vccaVmonCtrlRegData);
     }
     if ((status == PMIC_ST_SUCCESS) && (vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VCCA_VMON))
     {
         status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, pVccaVmonRegisters[vmonNum].vccaPgWindowRegAddr, &vccaPgWindowRegData);
+            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vccaPgWindowRegAddr, &vccaPgWindowRegData);
     }
     if ((status == PMIC_ST_SUCCESS) && ((vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON1) ||
                                         (vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON2)))
     {
         status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, pVccaVmonRegisters[vmonNum].vmonPgWindowRegAddr, &vmonPgWindowRegData);
+            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vmonPgWindowRegAddr, &vmonPgWindowRegData);
     }
     if ((status == PMIC_ST_SUCCESS) && ((vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON1) ||
                                         (vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON2)))
     {
         status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, pVccaVmonRegisters[vmonNum].vmonPgLevelRegAddr, &vmonPgLevelRegData);
+            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vmonPgLevelRegAddr, &vmonPgLevelRegData);
     }
     if (status == PMIC_ST_SUCCESS)
     {
         status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, pVccaVmonRegisters[vmonNum].vccaVmonRailSelRegAddr, &vccaVmonRailSelRegData);
+            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vccaVmonRailSelRegAddr, &vccaVmonRailSelRegData);
     }
 
-    // For each register pertaining to the VCCA_VMON/VMONx resource, modify the desired bit fields
+    // modify the desired bit fields of the registers that were read
     // of the register (desired bit fields are governed by validParams)
     if (status == PMIC_ST_SUCCESS)
     {
@@ -2427,29 +2289,29 @@ Pmic_powerTps6522xSetVccaVmonPwrResourceCfg(Pmic_CoreHandle_t                   
     if ((status == PMIC_ST_SUCCESS) && (vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VCCA_VMON))
     {
         status = Pmic_commIntf_sendByte(
-            pPmicCoreHandle, pVccaVmonRegisters[vmonNum].vccaPgWindowRegAddr, vccaPgWindowRegData);
+            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vccaPgWindowRegAddr, vccaPgWindowRegData);
     }
     if ((status == PMIC_ST_SUCCESS) && ((vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON1) ||
                                         (vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON2)))
     {
         status = Pmic_commIntf_sendByte(
-            pPmicCoreHandle, pVccaVmonRegisters[vmonNum].vmonPgWindowRegAddr, vmonPgWindowRegData);
+            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vmonPgWindowRegAddr, vmonPgWindowRegData);
     }
     if ((status == PMIC_ST_SUCCESS) && ((vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON1) ||
                                         (vmonNum == PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON2)))
     {
-        status =
-            Pmic_commIntf_sendByte(pPmicCoreHandle, pVccaVmonRegisters[vmonNum].vmonPgLevelRegAddr, vmonPgLevelRegData);
+        status = Pmic_commIntf_sendByte(
+            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vmonPgLevelRegAddr, vmonPgLevelRegData);
     }
     if (status == PMIC_ST_SUCCESS)
     {
         status = Pmic_commIntf_sendByte(
-            pPmicCoreHandle, pVccaVmonRegisters[vmonNum].vccaVmonRailSelRegAddr, vccaVmonRailSelRegData);
+            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vccaVmonRailSelRegAddr, vccaVmonRailSelRegData);
     }
     if (status == PMIC_ST_SUCCESS)
     {
         status = Pmic_commIntf_sendByte(
-            pPmicCoreHandle, pVccaVmonRegisters[vmonNum].vccaVmonCtrlRegAddr, vccaVmonCtrlRegData);
+            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vccaVmonCtrlRegAddr, vccaVmonCtrlRegData);
     }
 
     // After read-modify-write, stop critical section
@@ -2485,7 +2347,8 @@ int32_t Pmic_powerTps6522xSetPwrResourceCfg(Pmic_CoreHandle_t                   
             if (pmic_validParamCheck(pwrResourceCfg.validParams, validParam))
             {
                 // Set BUCK's power resource configuration
-                status = Pmic_powerTps6522xSetBuckPwrResourceCfg(pPmicCoreHandle, pwrResourceCfg.buckPwrRsrcCfg, iter);
+                status =
+                    Pmic_powerTps6522xSetBuckPwrResourceCfg(pPmicCoreHandle, pwrResourceCfg.buckPwrRsrcCfg[iter], iter);
             }
 
             // Upon error, break out of loop
@@ -2509,7 +2372,8 @@ int32_t Pmic_powerTps6522xSetPwrResourceCfg(Pmic_CoreHandle_t                   
             if (pmic_validParamCheck(pwrResourceCfg.validParams, validParam))
             {
                 // Set LDO's power resource configuration
-                status = Pmic_powerTps6522xSetLdoPwrResourceCfg(pPmicCoreHandle, pwrResourceCfg.ldoPwrRsrcCfg, iter);
+                status =
+                    Pmic_powerTps6522xSetLdoPwrResourceCfg(pPmicCoreHandle, pwrResourceCfg.ldoPwrRsrcCfg[iter], iter);
             }
 
             // Upon error, break out of loop
