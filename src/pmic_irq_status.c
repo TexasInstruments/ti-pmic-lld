@@ -1055,3 +1055,76 @@ int32_t Pmic_irqGetGpioMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     return pmicStatus;
 }
+
+int32_t Pmic_getErrorStatus(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t irqNum, bool *pError)
+{
+    int32_t         status = PMIC_ST_SUCCESS;
+    uint8_t         regData = 0;
+    Pmic_IntrCfg_t *irqArr = NULL;
+
+    // Parameter check
+    if ((pPmicCoreHandle == NULL) || (pError == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+    if (status == PMIC_ST_SUCCESS)
+    {
+        switch (pPmicCoreHandle->pmicDeviceType)
+        {
+            case PMIC_DEV_BURTON_TPS6522X:
+                if (irqNum > (PMIC_TPS6522X_IRQ_MAX_NUM - 1))
+                {
+                    status = PMIC_ST_ERR_INV_PARAM;
+                }
+                break;
+            case PMIC_DEV_LEO_TPS6594X:
+                if ((pPmicCoreHandle->pmicDevSiliconRev == PMIC_SILICON_REV_ID_PG_2_0) &&
+                    (irqNum > (PMIC_TPS6594X_IRQ_MAX_NUM_PG_2_0 - 1)))
+                {
+                    status = PMIC_ST_ERR_INV_PARAM;
+                }
+                else if ((pPmicCoreHandle->pmicDevSiliconRev == PMIC_SILICON_REV_ID_PG_1_0) &&
+                         (irqNum > (PMIC_TPS6594X_IRQ_MAX_NUM_PG_1_0 - 1)))
+                {
+                    status = PMIC_ST_ERR_INV_PARAM;
+                }
+                break;
+            case PMIC_DEV_HERA_LP8764X:
+                if ((pPmicCoreHandle->pmicDevSiliconRev == PMIC_SILICON_REV_ID_PG_2_0) &&
+                    (irqNum > (PMIC_LP8764X_IRQ_MAX_NUM_PG_2_0 - 1)))
+                {
+                    status = PMIC_ST_ERR_INV_PARAM;
+                }
+                else if ((pPmicCoreHandle->pmicDevSiliconRev == PMIC_SILICON_REV_ID_PG_1_0) &&
+                         (irqNum > (PMIC_LP8764X_IRQ_MAX_NUM_PG_1_0 - 1)))
+                {
+                    status = PMIC_ST_ERR_INV_PARAM;
+                }
+                break;
+            default:
+                status = PMIC_ST_ERR_INV_DEVICE;
+                break;
+        }
+    }
+
+    // Get array of IRQ registers
+    pmic_get_tps6522x_intrCfg(&irqArr);
+
+    // Start critical section before read access
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    // Read IRQ's interrupt register
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle, irqArr[irqNum].intrClrRegAddr, &regData);
+
+    // Extract IRQ status bit
+    if (status == PMIC_ST_SUCCESS)
+    {
+        // The IRQ status bit field is 1 bit, hence a mask of 1 is used
+        *pError = (bool)Pmic_getBitField(regData, irqArr[irqNum].intrClrBitPos, 1);
+    }
+
+    // Stop critical section after read access
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return status;
+}

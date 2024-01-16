@@ -2,7 +2,7 @@
 #include "tiva_pmic_intf.h"
 
 int32_t
-pmicI2CWrite(Pmic_CoreHandle_t *pmicCorehandle, uint8_t instType, uint16_t regAddr, uint8_t *pTxBuf, uint8_t bufLen)
+pmicI2CWrite(Pmic_CoreHandle_t *pmicCoreHandle, uint8_t instType, uint16_t regAddr, uint8_t *pTxBuf, uint8_t bufLen)
 {
     // Variable declaration/initialization
     int32_t      status = PMIC_ST_SUCCESS;
@@ -10,11 +10,11 @@ pmicI2CWrite(Pmic_CoreHandle_t *pmicCorehandle, uint8_t instType, uint16_t regAd
     i2cHandle_t *I2C2Handle = NULL;
 
     // Parameter check
-    if (pmicCorehandle == NULL)
+    if (pmicCoreHandle == NULL)
     {
         return PMIC_ST_ERR_INV_HANDLE;
     }
-    if ((bufLen == 0) || (pmicCorehandle->crcEnable == true) || (instType == PMIC_NVM_INST))
+    if ((bufLen == 0) || (pmicCoreHandle->crcEnable == true) || (instType == PMIC_NVM_INST))
     {
         return PMIC_ST_ERR_INV_PARAM;
     }
@@ -29,8 +29,8 @@ pmicI2CWrite(Pmic_CoreHandle_t *pmicCorehandle, uint8_t instType, uint16_t regAd
     }
 
     // Obtain communication handles as they will be passed into helper functions
-    I2C1Handle = (i2cHandle_t *)pmicCorehandle->pCommHandle;
-    I2C2Handle = (i2cHandle_t *)pmicCorehandle->pQACommHandle;
+    I2C1Handle = (i2cHandle_t *)pmicCoreHandle->pCommHandle;
+    I2C2Handle = (i2cHandle_t *)pmicCoreHandle->pQACommHandle;
 
     // Main instance
     if (instType == PMIC_MAIN_INST)
@@ -42,7 +42,7 @@ pmicI2CWrite(Pmic_CoreHandle_t *pmicCorehandle, uint8_t instType, uint16_t regAd
     // Q&A instance
     else if (instType == PMIC_QA_INST)
     {
-        if (pmicCorehandle->commMode == PMIC_INTF_DUAL_I2C)
+        if (pmicCoreHandle->commMode == PMIC_INTF_DUAL_I2C)
         {
             status = ((bufLen == 1) ? I2CSingleWrite(I2C2Handle, (uint8_t)regAddr, pTxBuf) :
                                       I2CBurstWrite(I2C2Handle, (uint8_t)regAddr, bufLen, pTxBuf));
@@ -71,7 +71,7 @@ pmicI2CWrite(Pmic_CoreHandle_t *pmicCorehandle, uint8_t instType, uint16_t regAd
 }
 
 int32_t
-pmicI2CRead(Pmic_CoreHandle_t *pmicCorehandle, uint8_t instType, uint16_t regAddr, uint8_t *pRxBuf, uint8_t bufLen)
+pmicI2CRead(Pmic_CoreHandle_t *pmicCoreHandle, uint8_t instType, uint16_t regAddr, uint8_t *pRxBuf, uint8_t bufLen)
 {
     // Variable declaration/initialization
     int32_t      status = PMIC_ST_SUCCESS;
@@ -79,11 +79,11 @@ pmicI2CRead(Pmic_CoreHandle_t *pmicCorehandle, uint8_t instType, uint16_t regAdd
     i2cHandle_t *I2C2Handle = NULL;
 
     // Parameter check
-    if (pmicCorehandle == NULL)
+    if (pmicCoreHandle == NULL)
     {
         return PMIC_ST_ERR_INV_HANDLE;
     }
-    if ((bufLen == 0) || (pmicCorehandle->crcEnable == true))
+    if ((bufLen == 0) || (pmicCoreHandle->crcEnable == true))
     {
         return PMIC_ST_ERR_INV_PARAM;
     }
@@ -98,8 +98,8 @@ pmicI2CRead(Pmic_CoreHandle_t *pmicCorehandle, uint8_t instType, uint16_t regAdd
     }
 
     // Obtain communication handles as they will be passed into helper functions
-    I2C1Handle = (i2cHandle_t *)pmicCorehandle->pCommHandle;
-    I2C2Handle = (i2cHandle_t *)pmicCorehandle->pQACommHandle;
+    I2C1Handle = (i2cHandle_t *)pmicCoreHandle->pCommHandle;
+    I2C2Handle = (i2cHandle_t *)pmicCoreHandle->pQACommHandle;
 
     // Main instance
     if (instType == PMIC_MAIN_INST)
@@ -111,7 +111,7 @@ pmicI2CRead(Pmic_CoreHandle_t *pmicCorehandle, uint8_t instType, uint16_t regAdd
     // Q&A instance
     else if (instType == PMIC_QA_INST)
     {
-        if (pmicCorehandle->commMode == PMIC_INTF_DUAL_I2C)
+        if (pmicCoreHandle->commMode == PMIC_INTF_DUAL_I2C)
         {
             status = ((bufLen == 1) ? I2CSingleRead(I2C2Handle, (uint8_t)regAddr, pRxBuf) :
                                       I2CBurstRead(I2C2Handle, (uint8_t)regAddr, bufLen, pRxBuf));

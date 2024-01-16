@@ -208,6 +208,9 @@ extern "C"
 /** \brief Error Code for ADC Continuous Conversion enabled when
  *         Pmic_ADCStartSingleConversion API is called*/
 #define PMIC_ST_ERR_ADC_CONT_CONV_EN       (-((int32_t)42))
+/** \brief Error Code for when Watchdog is disabled
+ *         (Watchdog is not configurable when disabled) */
+#define PMIC_ST_ERR_WDG_DISABLED           (-((int32_t)43))
 /* @} */
 
 /**

@@ -62,7 +62,7 @@ int main(void)
     uartHandle_t vcpHandle;
     i2cHandle_t I2C1Handle;
     const Pmic_CoreCfg_t pmicCoreCfg = {
-        .validParams = (PMIC_CFG_DEVICE_TYPE_VALID_SHIFT    | PMIC_CFG_COMM_MODE_VALID_SHIFT      | 
+        .validParams = (PMIC_CFG_DEVICE_TYPE_VALID_SHIFT    | PMIC_CFG_COMM_MODE_VALID_SHIFT      |
                         PMIC_CFG_SLAVEADDR_VALID_SHIFT      | PMIC_CFG_QASLAVEADDR_VALID_SHIFT    |
                         PMIC_CFG_COMM_HANDLE_VALID_SHIFT    | PMIC_CFG_QACOMM_HANDLE_VALID_SHIFT  |
                         PMIC_CFG_COMM_IO_RD_VALID_SHIFT     | PMIC_CFG_COMM_IO_WR_VALID_SHIFT     |
@@ -75,9 +75,9 @@ int main(void)
         .pCommHandle = &I2C1Handle,
         .pQACommHandle = &I2C1Handle,
         .pFnPmicCommIoRead = &pmicI2CRead,
-        .pFnPmicCommIoWrite = &pmicI2CWrite, 
+        .pFnPmicCommIoWrite = &pmicI2CWrite,
         .pFnPmicCritSecStart = &pmicCritSecStart,
-        .pFnPmicCritSecStop = &pmicCritSecStop, 
+        .pFnPmicCritSecStop = &pmicCritSecStop,
         .i2c1Speed = PMIC_I2C_STANDARD_MODE
     };
     int32_t status = PMIC_ST_SUCCESS;
@@ -587,7 +587,7 @@ void test_core_setBatteryCtrlCfg_invalidDevice(void)
         .validParams = (PMIC_CFG_CHARGING_EN_VALID_SHIFT            |
                         PMIC_CFG_END_OF_CHARGE_VOLTAGE_VALID_SHIFT  |
                         PMIC_CFG_CHARGE_CURRENT_VALID_SHIFT),
-        .chargingEn         = true, 
+        .chargingEn         = true,
         .endOfChargeVoltage = PMIC_TPS6594X_BB_ENDOF_CHARGE_VOLATGE_3_3_V,
         .chargeCurrent      = PMIC_TPS6594X_BB_CHARGING_CURRENT_500
     };
@@ -610,7 +610,7 @@ void test_core_getBatteryCtrlCfg_invalidDevice(void)
     Pmic_BatteryCtrlCfg_t batteryCtrlCfg = {
         .validParams = (PMIC_CFG_CHARGING_EN_VALID_SHIFT            |
                         PMIC_CFG_END_OF_CHARGE_VOLTAGE_VALID_SHIFT  |
-                        PMIC_CFG_CHARGE_CURRENT_VALID_SHIFT)    
+                        PMIC_CFG_CHARGE_CURRENT_VALID_SHIFT)
     };
     // clang-format on
 

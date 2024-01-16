@@ -15,8 +15,8 @@ typedef struct i2cHandle_s
     uint32_t i2cBase;
     uint32_t sdaPin;
     uint32_t sclPin;
-    uint32_t sdaPinToI2C;
-    uint32_t sclPinToI2C;
+    uint32_t gpioToSDA;
+    uint32_t gpioToSCL;
     uint8_t  slaveAddr;
     bool     bFast;
 } i2cHandle_t;

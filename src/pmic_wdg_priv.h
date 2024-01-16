@@ -91,6 +91,8 @@ extern "C"
 #define PMIC_WD_MODE_REG_WD_RETURN_LONGWIN_SHIFT        (0x00U)
 #define PMIC_WD_MODE_REG_WD_MODE_SELECT_SHIFT           (0x01U)
 #define PMIC_WD_MODE_REG_WD_PWRHOLD_SHIFT               (0x02U)
+#define PMIC_WD_MODE_REG_WD_CNT_SEL_SHIFT               (0x07U)
+#define PMIC_WD_MODE_REG_WD_ENDRV_SEL_SHIFT             (0x06U)
 
 /*!
  * \brief WD_QA_CFG Register bit shift values
@@ -148,6 +150,8 @@ extern "C"
 #define PMIC_WD_MODE_REG_WD_RETURN_LONGWIN_MASK         (0x1U << PMIC_WD_MODE_REG_WD_RETURN_LONGWIN_SHIFT)
 #define PMIC_WD_MODE_REG_WD_MODE_SELECT_MASK            (0x1U << PMIC_WD_MODE_REG_WD_MODE_SELECT_SHIFT)
 #define PMIC_WD_MODE_REG_WD_PWRHOLD_MASK                (0x1U << PMIC_WD_MODE_REG_WD_PWRHOLD_SHIFT)
+#define PMIC_WD_MODE_REG_WD_CNT_SEL_MASK                (0x1U << PMIC_WD_MODE_REG_WD_CNT_SEL_SHIFT)
+#define PMIC_WD_MODE_REG_WD_ENDRV_SEL_MASK              (0x1U << PMIC_WD_MODE_REG_WD_ENDRV_SEL_SHIFT)
 
 /*!
  * \brief WD_QA_CFG Register bit mask values

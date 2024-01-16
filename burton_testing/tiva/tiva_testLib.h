@@ -4,6 +4,7 @@
 #define TIVA_TEST_SUITE_H_
 
 #include "driverlib/sysctl.h"
+#include "driverlib/gpio.h"
 
 #include "tiva_vcp.h"
 #include "tiva_i2c.h"

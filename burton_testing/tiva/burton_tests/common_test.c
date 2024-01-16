@@ -72,55 +72,57 @@ void unityCharPut(unsigned char ucData)
 
 static void resetAllTps6522xBuckRegisters(Pmic_CoreHandle_t pmicCoreHandle)
 {
-    uint8_t                                  i = 0;
-    uint8_t                                  txBuffer = 0;
-    const Pmic_powerTps6522xBuckRegisters_t *pBuckRegisters = NULL;
-
-    // Obtain BUCK registers
-    Pmic_get_tps6522x_pwrBuckRegs(&pBuckRegisters);
+    uint8_t       i = 0;
+    uint8_t       regData = 0;
+    const uint8_t intBuckRegAddr = 0x5B;
 
     // Set values of all BUCK registers to be zero
-    (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, pBuckRegisters[0].buckRailSelRegAddr, &txBuffer, 1);
+    (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, gTps6522xBuckRegisters[0].buckRailSelRegAddr, &regData, 1);
     for (i = 0; i < PMIC_POWER_TPS6522X_MAX_BUCK_NUM; i++)
     {
-        (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, pBuckRegisters[i].buckCtrlRegAddr, &txBuffer, 1);
-        (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, pBuckRegisters[i].buckConfRegAddr, &txBuffer, 1);
-        (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, pBuckRegisters[i].buckVoutRegAddr, &txBuffer, 1);
-        (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, pBuckRegisters[i].buckPgWindowRegAddr, &txBuffer, 1);
+        (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, gTps6522xBuckRegisters[i].buckCtrlRegAddr, &regData, 1);
+        (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, gTps6522xBuckRegisters[i].buckConfRegAddr, &regData, 1);
+        (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, gTps6522xBuckRegisters[i].buckVoutRegAddr, &regData, 1);
+        (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, gTps6522xBuckRegisters[i].buckPgWindowRegAddr, &regData, 1);
     }
+
+    // Clear BUCK interrupts
+    (void)pmicI2CRead(&pmicCoreHandle, PMIC_MAIN_INST, intBuckRegAddr, &regData, 1);
+    regData |= 0xF;
+    (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, intBuckRegAddr, &regData, 1);
 }
 
 static void resetAllTps6522xLdoRegisters(Pmic_CoreHandle_t pmicCoreHandle)
 {
-    uint8_t                                 i = 0;
-    uint8_t                                 txBuffer = 0;
-    const Pmic_powerTps6522xLdoRegisters_t *pLdoRegisters = NULL;
-
-    // Obtain LDO registers
-    Pmic_get_tps6522x_pwrLdoRegs(&pLdoRegisters);
+    uint8_t       i = 0;
+    uint8_t       regData = 0;
+    const uint8_t intLdoVmonRegAddr = 0x5F;
 
     // Set values of all LDO registers to be zero
-    (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, pLdoRegisters[0].ldoRailSelRegAddr, &txBuffer, 1);
+    (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, gTps6522xLdoRegisters[0].ldoRailSelRegAddr, &regData, 1);
     for (i = 0; i < PMIC_POWER_TPS6522X_MAX_LDO_NUM; i++)
     {
-        (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, pLdoRegisters[i].ldoCtrlRegAddr, &txBuffer, 1);
-        (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, pLdoRegisters[i].ldoVoutRegAddr, &txBuffer, 1);
-        (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, pLdoRegisters[i].ldoPgWindowRegAddr, &txBuffer, 1);
+        (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, gTps6522xLdoRegisters[i].ldoCtrlRegAddr, &regData, 1);
+        (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, gTps6522xLdoRegisters[i].ldoVoutRegAddr, &regData, 1);
+        (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, gTps6522xLdoRegisters[i].ldoPgWindowRegAddr, &regData, 1);
     }
+
+    // Clear LDO interrupts
+    (void)pmicI2CRead(&pmicCoreHandle, PMIC_MAIN_INST, intLdoVmonRegAddr, &regData, 1);
+    regData |= 0b111;
+    (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, intLdoVmonRegAddr, &regData, 1);
 }
 
 static void resetAllTps6522xVccaVmonRegisters(Pmic_CoreHandle_t pmicCoreHandle)
 {
-    uint8_t                                      i = 0;
-    uint8_t                                      txBuffer = 0;
-    const Pmic_powerTps6522xVccaVmonRegisters_t *pVccaVmonRegisters = NULL;
-
-    // Obtain VCCA_VMON/VMONx registers
-    Pmic_get_tps6522x_PwrVccaVmonRegisters(&pVccaVmonRegisters);
+    uint8_t       i = 0;
+    uint8_t       regData = 0;
+    const uint8_t intLdoVmonRegAddr = 0x5F;
 
     // Set values of all VCCA_MON/VMONx registers to be zero
-    (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, pVccaVmonRegisters[0].vccaVmonCtrlRegAddr, &txBuffer, 1);
-    (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, pVccaVmonRegisters[0].vccaVmonRailSelRegAddr, &txBuffer, 1);
+    (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, gTps6522xVccaVmonRegisters[0].vccaVmonCtrlRegAddr, &regData, 1);
+    (void)pmicI2CWrite(
+        &pmicCoreHandle, PMIC_MAIN_INST, gTps6522xVccaVmonRegisters[0].vccaVmonRailSelRegAddr, &regData, 1);
     for (i = 0; i < PMIC_POWER_TPS6522X_MAX_VOLTAGE_MONITOR_NUM; i++)
     {
         switch (i)
@@ -128,18 +130,23 @@ static void resetAllTps6522xVccaVmonRegisters(Pmic_CoreHandle_t pmicCoreHandle)
             case PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON1:
             case PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON2:
                 (void)pmicI2CWrite(
-                    &pmicCoreHandle, PMIC_MAIN_INST, pVccaVmonRegisters[i].vmonPgLevelRegAddr, &txBuffer, 1);
+                    &pmicCoreHandle, PMIC_MAIN_INST, gTps6522xVccaVmonRegisters[i].vmonPgLevelRegAddr, &regData, 1);
                 (void)pmicI2CWrite(
-                    &pmicCoreHandle, PMIC_MAIN_INST, pVccaVmonRegisters[i].vmonPgWindowRegAddr, &txBuffer, 1);
+                    &pmicCoreHandle, PMIC_MAIN_INST, gTps6522xVccaVmonRegisters[i].vmonPgWindowRegAddr, &regData, 1);
 
                 break;
             case PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VCCA_VMON:
                 (void)pmicI2CWrite(
-                    &pmicCoreHandle, PMIC_MAIN_INST, pVccaVmonRegisters[i].vccaPgWindowRegAddr, &txBuffer, 1);
+                    &pmicCoreHandle, PMIC_MAIN_INST, gTps6522xVccaVmonRegisters[i].vccaPgWindowRegAddr, &regData, 1);
 
                 break;
         }
     }
+
+    // Clear VMON interrupts
+    (void)pmicI2CRead(&pmicCoreHandle, PMIC_MAIN_INST, intLdoVmonRegAddr, &regData, 1);
+    regData |= (0b111 << 4);
+    (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, intLdoVmonRegAddr, &regData, 1);
 }
 
 void disablePmicPowerResources(Pmic_CoreHandle_t pmicCoreHandle)

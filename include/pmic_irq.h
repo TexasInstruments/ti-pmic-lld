@@ -271,6 +271,27 @@ int32_t Pmic_irqMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t irqNu
 int32_t Pmic_getNextErrorStatus(const Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_IrqStatus_t *pErrStat, uint8_t *pIrqNum);
 
 /**
+ *  \brief      This API is used to get the error status of an IRQ. That is to say,
+ *              it used to check for whether an IRQ's error status bit is raised.
+ *
+ *  \param      pPmicCoreHandle     [IN]        PMIC Interface handle
+ *  \param      irqNum              [IN]        Interrupt request number
+ *                                              For TPS6594x LEO:
+ *                                                  \ref Pmic_tps6594x_IrqNum.
+ *                                              For LP8764x HERA:
+ *                                                  \ref Pmic_lp8764x_IrqNum.
+ *                                              For TPS6522x BURTON:
+ *                                                  \ref Pmic_tps6522x_IrqNum.
+ *  \param      pError              [OUT]       Error status of the IRQ. If variable is set
+ *                                              to true, IRQ is pending; else, IRQ is not
+ *                                              pending.
+ *
+ *  \return     Success code if error status of the IRQ is obtained, error code otherwise.
+ *              For valid values of success/error codes, refer to Pmic_ErrorCodes
+ */
+int32_t Pmic_getErrorStatus(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t irqNum, bool *pError);
+
+/**
  * \brief   API to mask/unmask GPIO interrupts.
  *
  * Requirement: REQ_TAG(PDK-5812)
