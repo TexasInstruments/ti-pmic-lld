@@ -53,11 +53,14 @@
 
 #ifndef PMIC_ESM_H_
 #define PMIC_ESM_H_
-
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
-#include <pmic_core.h>
+
+#include "pmic.h"
+#include "pmic_core.h"
+#include "pmic_core_priv.h"
+#include "pmic_io_priv.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -66,6 +69,7 @@ extern "C" {
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
+
 /**
  *  \anchor Pmic_EsmTypes
  *  \name PMIC ESM types
@@ -74,7 +78,6 @@ extern "C" {
  */
 #define PMIC_ESM_MODE_MCU           (bool)false
 #define PMIC_ESM_MODE_SOC           (bool)true
-/*  @} */
 
 /**
  *  \anchor Pmic_EsmStates
@@ -105,7 +108,6 @@ extern "C" {
 #define PMIC_ESM_LEVEL_MODE         (bool)false
 #define PMIC_ESM_PWM_MODE           (bool)true
 /*  @} */
-
 /**
  *  \anchor Pmic_EsmEnDrvSel
  *  \name PMIC ESM EN DRV Clear CFG
@@ -126,13 +128,9 @@ extern "C" {
 #define PMIC_ESM_INTERRUPT_ENABLE                (bool)true
 /*  @} */
 
-/**
- *  \anchor Pmic_EsmCflag
- *  \name PMIC Pmic_EsmCfg_s member configuration type
- *
- *  @{
- */
- /** \brief validParams value used to set/get ESM delay-1 time interval */
+#define PMIC_ESM_VAL_1                    (1U)
+
+/** \brief validParams value used to set/get ESM delay-1 time interval */
 #define PMIC_ESM_CFG_DELAY1_VALID           (0x00U)
 /** \brief validParams value used to set/get ESM delay-2 time interval  */
 #define PMIC_ESM_CFG_DELAY2_VALID           (0x01U)
@@ -155,17 +153,8 @@ extern "C" {
 #define PMIC_ESM_CFG_EN_DRV_VALID           (0x07U)
 /** \brief validParams value used to set/get ESM mode */
 #define PMIC_ESM_CFG_MODE_VALID             (0x08U)
-/*  @} */
 
-/**
- *  \anchor Pmic_EsmCfgStructPrmBitShiftVal
- *  \name PMIC ESM Configuration Structure Param Bit shift values
- *
- *  Application can use the below shifted values to set the validParams struct
- *  member defined in Pmic_EsmCfg_t structure.
- *
- *  @{
- */
+
 #define PMIC_ESM_CFG_DELAY1_VALID_SHIFT           \
                                         (0x01U << PMIC_ESM_CFG_DELAY1_VALID)
 #define PMIC_ESM_CFG_DELAY2_VALID_SHIFT           \
@@ -184,7 +173,7 @@ extern "C" {
                                         (0x01U << PMIC_ESM_CFG_EN_DRV_VALID)
 #define PMIC_ESM_CFG_MODE_VALID_SHIFT             \
                                         (0x01U << PMIC_ESM_CFG_MODE_VALID)
-/*  @} */
+
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
@@ -251,7 +240,7 @@ extern "C" {
  *                               bit is set
  * \param   esmEnDrv             ESM ENABLE_DRV clear configuration.
  *                               Valid values: \ref Pmic_EsmEnDrvSel.
- *                               Valid only when PMIC_ESM_CFG_EN_DRV_VALID
+ *                              #endif Valid only when PMIC_ESM_CFG_EN_DRV_VALID
  *                               bit is set
  * \param   esmMode              ESM mode select.
  *                               Valid values: \ref Pmic_EsmMode.
@@ -289,213 +278,28 @@ typedef struct Pmic_EsmIntrCfg_s
     bool        esmRstIntr;
 } Pmic_EsmIntrCfg_t;
 
-/*==========================================================================*/
-/*                         Function Declarations                            */
-/*==========================================================================*/
-/*!
- * \brief   API to start PMIC ESM.
- *
- * Requirement: REQ_TAG(PDK-5833)
- * Design: did_pmic_esm_cfg_readback
- * Architecture: aid_pmic_esm_cfg
- *
- *          This function is used to Start/Stop the PMIC ESM_MCU/ESM_SOC
- *          Note: Application has to ensure to do proper configuration of ESM
- *                time intervals of Level or PWM  mode.If not configured
- *                properly then ESM will trigger the warm reset to the PMIC
- *                device. This may cause system reset if PMIC is connected to
- *                SOC/MCU
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- * \param   esmType         [IN]    PMIC ESM Type
- *                                  For valid values:
- *                                  \ref Pmic_EsmTypes
- * \param   esmState        [IN]    To start or stop PMIC ESM
- *                                  For valid values:
- *                                  \ref Pmic_EsmStates
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_esmStart(Pmic_CoreHandle_t   *pPmicCoreHandle,
                       const bool           esmType,
                       const bool           esmState);
 
-/*!
- * \brief   API to read status of PMIC ESM is started or not.
- *
- * Requirement: REQ_TAG(PDK-9150)
- * Design: did_pmic_esm_cfg_readback
- * Architecture: aid_pmic_esm_cfg
- *
- *          This function is used to read status of PMIC ESM_MCU/ESM_SOC is
- *          started or not
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- * \param   esmType         [IN]    PMIC ESM Type
- *                                  For valid values:
- *                                  \ref Pmic_EsmTypes
- * \param   pEsmState        [IN]   Pointer to store the status of PMIC ESM is
- *                                  started or not
- *                                  For valid values:
- *                                  \ref Pmic_EsmStates
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
-int32_t Pmic_esmGetStatus(Pmic_CoreHandle_t   *pPmicCoreHandle,
-                          const bool           esmType,
-                          bool                *pEsmState);
-
-/*!
- * \brief   API to Enable/Disable PMIC ESM.
- *
- * Requirement: REQ_TAG(PDK-5833)
- * Design: did_pmic_esm_cfg_readback
- * Architecture: aid_pmic_esm_cfg
- *
- *          This function is used to Enable/Disable the PMIC ESM_MCU/ESM_SOC
- *          This API must be called only when ESM is in STOP state.
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- * \param   esmType         [IN]    PMIC ESM Type
- *                                  For valid values:
- *                                  \ref Pmic_EsmTypes
- * \param   esmToggle       [IN]    To Enable/Disable PMIC ESM_MCU/ESM_SOC
- *                                  For valid values:
- *                                  \ref Pmic_EsmToggle
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_esmEnable(Pmic_CoreHandle_t   *pPmicCoreHandle,
                        const bool           esmType,
                        const bool           esmToggle);
 
-/*!
- * \brief   API to Read PMIC ESM Enable/Disable state.
- *
- * Requirement: REQ_TAG(PDK-5833)
- * Design: did_pmic_esm_cfg_readback
- * Architecture: aid_pmic_esm_cfg
- *
- *          This function is used to read the Enable/Disable state of
- *          PMIC ESM_MCU/ESM_SOC.
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- * \param   esmType         [IN]    PMIC ESM Type
- *                                  For valid values:
- *                                  \ref Pmic_EsmTypes
- * \param   pEsmState       [OUT]   Pointer to store ESM Enable State.
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
-int32_t Pmic_esmGetEnableState(Pmic_CoreHandle_t   *pPmicCoreHandle,
-                               const bool           esmType,
-                               bool                *pEsmState);
-
-/*!
- * \brief   API to Set PMIC ESM Configuration.
- *
- * Requirement: REQ_TAG(PDK-5833)
- * Design: did_pmic_esm_cfg_readback
- * Architecture: aid_pmic_esm_cfg
- *
- *          This function is used to set the ESM mode, delay-1 and delay-2 time
- *          time intervals, Error Count Threshold value, HMAX, HMIN, LMAX,
- *          LMIN and select EN DRV clear for ESM_MCU and ESM_SOC.
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- * \param   esmType         [IN]    PMIC ESM Type
- *                                  For valid values:
- *                                  \ref Pmic_EsmTypes
- * \param   esmCfg          [IN]    PMIC ESM Configuration
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_esmSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
                                  const bool           esmType,
                                  const Pmic_EsmCfg_t  esmCfg);
 
-/*!
- * \brief   API to Get the PMIC ESM Configuration.
- *
- * Requirement: REQ_TAG(PDK-5833)
- * Design: did_pmic_esm_cfg_readback
- * Architecture: aid_pmic_esm_cfg
- *
- *          This function is used to get the configured ESM mode, delay-1 and
- *          delay-2 time time intervals, Error Count Threshold value, HMAX,
- *          HMIN, LMAX, LMIN and select EN DRV clear for ESM_MCU and ESM_SOC
- *          when corresponding validParam bit fields are set in Pmic_EsmCfg_t
- *          structure
- *
- * \param   pPmicCoreHandle [IN]       PMIC Interface Handle.
- * \param   esmType         [IN]       PMIC ESM Type.
- *                                     For valid values:
- *                                     \ref Pmic_EsmTypes.
- * \param   pEsmCfg         [IN/OUT]   Pointer to store the specified ESM
- *                                     configuration.
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values: \ref Pmic_ErrorCodes
- */
 int32_t Pmic_esmGetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
                                  const bool           esmType,
                                  Pmic_EsmCfg_t       *pEsmCfg);
 
-/*!
- * \brief   API to Set PMIC ESM Interrupts.
- *
- * Requirement: REQ_TAG(PDK-5833)
- * Design: did_pmic_esm_cfg_readback
- * Architecture: aid_pmic_esm_cfg
- *
- *          This function is used to mask/unmask the ESM RST, FAIL and
- *          PIN Interrupts for both ESM MCU and ESM SOC.
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- * \param   esmType         [IN]    PMIC ESM Type
- *                                  For valid values:
- *                                  \ref Pmic_EsmTypes
- * \param   esmIntrCfg      [IN]    PMIC ESM interrupts mask/un-mask.
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
-int32_t Pmic_esmSetInterrupt(Pmic_CoreHandle_t        *pPmicCoreHandle,
-                             const bool                esmType,
-                             const Pmic_EsmIntrCfg_t   esmIntrCfg);
-
-/*!
- * \brief   API to Get the current ESM Error Count.
- *
- * Requirement: REQ_TAG(PDK-5833)
- * Design: did_pmic_esm_cfg_readback
- * Architecture: aid_pmic_esm_cfg
- *
- *          This function is used to get the current Error count for ESM MCU
- *          ESM SOC.
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- * \param   esmType         [IN]    PMIC ESM Type.
- *                                  For valid values:
- *                                  \ref Pmic_EsmTypes.
- * \param   pEsmErrCnt      [OUT]   Pointer to store the Error Count.
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values: \ref Pmic_ErrorCodes
- */
 int32_t Pmic_esmGetErrCnt(Pmic_CoreHandle_t   *pPmicCoreHandle,
                           const bool           esmType,
                           uint8_t             *pEsmErrCnt);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+int32_t Pmic_esmGetStatus(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                          const bool           esmType,
+                          bool                *pEsmState);
 
 #endif /* PMIC_ESM_H_ */
-
-/* @} */

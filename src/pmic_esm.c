@@ -34,19 +34,13 @@
 /**
 *   \file    pmic_esm.c
 *
-*   \brief   This file contains the default APIs for PMIC ESM
-*            configuration.
+*   \brief   This file contains the default API's for PMIC esm
+*            configuration
 *
 */
 
-#include <pmic_esm.h>
-#include <pmic_esm_priv.h>
-#include <pmic_core_priv.h>
-#include <pmic_io_priv.h>
-
-#include <pmic_irq.h>
-#include <pmic_irq_tps6594x.h>
-#include <pmic_irq_lp8764x.h>
+#include "pmic_esm_priv.h"
+#include "pmic_esm.h"
 
 /*!
  * \brief   This function returns the corresponding uint8 value
@@ -86,56 +80,10 @@ static int32_t Pmic_esmValidateParams(const Pmic_CoreHandle_t *pPmicCoreHandle)
     return pmicStatus;
 }
 
-/*!
- * \brief   This function is used to get the ESM_MCU/ESM_SOC Base Register
- *          address
- */
 static void Pmic_esmGetBaseRegAddr(const bool  esmType,
                                    uint8_t    *pEsmBaseAddr)
 {
-    if(0U != Pmic_esmGetU8Val(esmType))
-    {
-        (*pEsmBaseAddr) = PMIC_ESM_SOC_BASE_REGADDR;
-    }
-    else
-    {
-        (*pEsmBaseAddr) = PMIC_ESM_MCU_BASE_REGADDR;
-    }
-}
-
-/*!
- * \brief   This function is used to check the Device used.
- *
- *          Note: In this API, the default PMIC device is assumed as TPS6594x
- *                LEO PMIC. While adding support for New PMIC device, developer
- *                need to update the API functionality for New PMIC device
- *                accordingly.
- */
-static int32_t Pmic_esmDeviceCheck(const Pmic_CoreHandle_t  *pPmicCoreHandle,
-                                   const bool                esmType)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-
-    switch(pPmicCoreHandle->pmicDeviceType)
-    {
-        case PMIC_DEV_HERA_LP8764X:
-            if(((bool)true) == esmType)
-            {
-                pmicStatus = PMIC_ST_ERR_INV_DEVICE;
-            }
-            else
-            {
-                pmicStatus = PMIC_ST_SUCCESS;
-            }
-
-            break;
-        default:
-            /* Default case is valid only for TPS6594x LEO PMIC */
-            pmicStatus = PMIC_ST_SUCCESS;
-            break;
-    }
-
-    return pmicStatus;
+        (*pEsmBaseAddr) = ESM_CTRL_REG;
 }
 
 /*!
@@ -149,7 +97,8 @@ static int32_t Pmic_esmCheckState(Pmic_CoreHandle_t   *pPmicCoreHandle,
     uint8_t regAddr    = 0U;
     uint8_t regData    = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_START_REG_OFFSET);
+    //regAddr = esmBaseRegAddr;
+    regAddr = ESM_CTRL_REG;
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -160,8 +109,8 @@ static int32_t Pmic_esmCheckState(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
        (Pmic_getBitField(regData,
-                         PMIC_ESM_X_START_REG_ESM_X_START_SHIFT,
-                         PMIC_ESM_X_START_REG_ESM_X_START_MASK)
+                         ESM_CTRL_REG_SHIFT,
+                         ESM_CTRL_REG_MASK)
         == PMIC_ESM_VAL_1))
     {
         pmicStatus = PMIC_ST_ERR_ESM_STARTED;
@@ -185,7 +134,8 @@ static int32_t Pmic_esmXStart(Pmic_CoreHandle_t   *pPmicCoreHandle,
     uint8_t regData     = 0U;
     uint8_t esmU8Val = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_START_REG_OFFSET);
+    //regAddr = esmBaseRegAddr ;
+    regAddr = ESM_CTRL_REG;
     esmU8Val = Pmic_esmGetU8Val(esmState);
 
     /* Start Critical Section */
@@ -200,8 +150,8 @@ static int32_t Pmic_esmXStart(Pmic_CoreHandle_t   *pPmicCoreHandle,
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         Pmic_setBitField(&regData,
-                         PMIC_ESM_X_START_REG_ESM_X_START_SHIFT,
-                         PMIC_ESM_X_START_REG_ESM_X_START_MASK,
+                         ESM_CTRL_REG_SHIFT,
+                         ESM_CTRL_REG_MASK,
                          esmU8Val);
 
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -232,7 +182,8 @@ static int32_t Pmic_esmXEnable(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        regAddr = (esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
+        //regAddr = esmBaseRegAddr;
+        regAddr = ESM_CFG1_REG;
         esmU8Val = Pmic_esmGetU8Val(esmToggle);
 
         /* Start Critical Section */
@@ -249,8 +200,8 @@ static int32_t Pmic_esmXEnable(Pmic_CoreHandle_t   *pPmicCoreHandle,
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
             Pmic_setBitField(&regData,
-                             PMIC_ESM_X_MODE_CFG_ESM_X_EN_SHIFT,
-                             PMIC_ESM_X_MODE_CFG_ESM_X_EN_MASK,
+                             ESM_CFG1_ESM_EN_SHIFT,
+                             ESM_CFG1_ESM_EN_MASK,
                              esmU8Val);
 
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -260,108 +211,6 @@ static int32_t Pmic_esmXEnable(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
         /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
-    }
-
-    return pmicStatus;
-}
-
-/*!
- * \brief   This function is used to Enable/Disable PMIC ESM SOC Interrupts
- */
-static int32_t Pmic_esmSocIntrEnable(Pmic_CoreHandle_t        *pPmicCoreHandle,
-                                     const Pmic_EsmIntrCfg_t   esmIntrCfg)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-
-    /* Mask/Un-mask ESM SOC Interrupts */
-
-    pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
-                                  PMIC_TPS6594X_ESM_SOC_PIN_INT,
-                                  !esmIntrCfg.esmPinIntr);
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
-                                      PMIC_TPS6594X_ESM_SOC_FAIL_INT,
-                                      !esmIntrCfg.esmFailIntr);
-    }
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-
-        pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
-                                      PMIC_TPS6594X_ESM_SOC_RST_INT,
-                                      !esmIntrCfg.esmRstIntr);
-    }
-
-    return pmicStatus;
-}
-
-/*!
- * \brief   This function is used to Enable/Disable PMIC ESM Interrupts.
- *
- *          Note: In this API, the default PMIC device is assumed as TPS6594x
- *                LEO PMIC. While adding support for New PMIC device, developer
- *                need to update the API functionality for New PMIC device
- *                accordingly.
- */
-static int32_t Pmic_esmIntrEnable(Pmic_CoreHandle_t        *pPmicCoreHandle,
-                                  const bool                esmType,
-                                  const Pmic_EsmIntrCfg_t   esmIntrCfg)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-
-    switch(pPmicCoreHandle->pmicDeviceType)
-    {
-        case PMIC_DEV_HERA_LP8764X:
-            pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
-                                      PMIC_LP8764X_ESM_MCU_PIN_INT,
-                                      !esmIntrCfg.esmPinIntr);
-
-            if(PMIC_ST_SUCCESS == pmicStatus)
-            {
-                pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
-                                              PMIC_LP8764X_ESM_MCU_FAIL_INT,
-                                              !esmIntrCfg.esmFailIntr);
-            }
-
-            if(PMIC_ST_SUCCESS == pmicStatus)
-            {
-                pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
-                                              PMIC_LP8764X_ESM_MCU_RST_INT,
-                                              !esmIntrCfg.esmRstIntr);
-            }
-
-            break;
-        default:
-            /* Default case is valid only for TPS6594x LEO PMIC */
-            if(PMIC_ESM_MODE_MCU == esmType)
-            {
-                pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
-                                          PMIC_TPS6594X_ESM_MCU_PIN_INT,
-                                          !esmIntrCfg.esmPinIntr);
-                if(PMIC_ST_SUCCESS == pmicStatus)
-                {
-                    pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
-                                                PMIC_TPS6594X_ESM_MCU_FAIL_INT,
-                                                !esmIntrCfg.esmFailIntr);
-                }
-
-                if(PMIC_ST_SUCCESS == pmicStatus)
-                {
-                    pmicStatus = Pmic_irqMaskIntr(pPmicCoreHandle,
-                                                 PMIC_TPS6594X_ESM_MCU_RST_INT,
-                                                 !esmIntrCfg.esmRstIntr);
-                }
-            }
-            else
-            {
-                 /* Mask/Un-mask ESM SOC Interrupts */
-                pmicStatus = Pmic_esmSocIntrEnable(pPmicCoreHandle,
-                                                   esmIntrCfg);
-            }
-
-            break;
     }
 
     return pmicStatus;
@@ -378,8 +227,8 @@ static int32_t Pmic_esmSetDelay1Value(Pmic_CoreHandle_t   *pPmicCoreHandle,
     uint8_t regData    = 0U;
     uint8_t regAddr    = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_DELAY1_REG_OFFSET);
-
+    //regAddr = esmBaseRegAddr;
+    regAddr = ESM_DELAY1_REG;
     if(PMIC_ESM_DELAY_MICROSEC_MAX < esmCfg.esmDelay1_us)
     {
        pmicStatus = PMIC_ST_ERR_INV_ESM_VAL;
@@ -403,9 +252,6 @@ static int32_t Pmic_esmSetDelay1Value(Pmic_CoreHandle_t   *pPmicCoreHandle,
     return pmicStatus;
 }
 
-/*!
- * \brief   This function is used to Set the ESM DELAY2 value
- */
 static int32_t Pmic_esmSetDelay2Value(Pmic_CoreHandle_t   *pPmicCoreHandle,
                                       const Pmic_EsmCfg_t  esmCfg,
                                       const uint8_t        esmBaseRegAddr)
@@ -414,8 +260,8 @@ static int32_t Pmic_esmSetDelay2Value(Pmic_CoreHandle_t   *pPmicCoreHandle,
     uint8_t regData    = 0U;
     uint8_t regAddr    = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_DELAY2_REG_OFFSET);
-
+    //regAddr = (esmBaseRegAddr + PMIC_ESM_DELAY2_REG_OFFSET);
+    regAddr = ESM_DELAY2_REG;
     if(PMIC_ESM_DELAY_MICROSEC_MAX < esmCfg.esmDelay2_us)
     {
        pmicStatus = PMIC_ST_ERR_INV_ESM_VAL;
@@ -450,7 +296,8 @@ static int32_t Pmic_esmSetErrCntThrValue(Pmic_CoreHandle_t   *pPmicCoreHandle,
     uint8_t regData    = 0U;
     uint8_t regAddr    = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
+    //regAddr = (esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
+    regAddr = ESM_ERR_STAT_REG;
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -462,8 +309,8 @@ static int32_t Pmic_esmSetErrCntThrValue(Pmic_CoreHandle_t   *pPmicCoreHandle,
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         Pmic_setBitField(&regData,
-                         PMIC_ESM_X_MODE_CFG_ESM_X_ERR_CNT_TH_SHIFT,
-                         PMIC_ESM_X_MODE_CFG_ESM_X_ERR_CNT_TH_MASK,
+                         ESM_ERR_STAT_ESM_ERR_CNT_SHIFT,
+                         ESM_ERR_STAT_ESM_ERR_CNT_MASK,
                          esmCfg.esmErrCntThr);
 
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
@@ -630,183 +477,6 @@ static int32_t Pmic_esmSetLminValue(Pmic_CoreHandle_t   *pPmicCoreHandle,
 }
 
 /*!
- * \brief   This function is used to configure the ESM EN DRV clear
- */
-static int32_t Pmic_esmSetEnDrvValue(Pmic_CoreHandle_t   *pPmicCoreHandle,
-                                     const Pmic_EsmCfg_t  esmCfg,
-                                     const uint8_t        esmBaseRegAddr)
-{
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
-    uint8_t regData     = 0U;
-    uint8_t regAddr     = 0U;
-    uint8_t esmU8Val = 0U;
-
-    regAddr = (esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
-    esmU8Val = Pmic_esmGetU8Val(esmCfg.esmEnDrv);
-
-    /* Start Critical Section */
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        regAddr,
-                                        &regData);
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_setBitField(&regData,
-                         PMIC_ESM_X_MODE_CFG_ESM_X_ENDRV_SHIFT,
-                         PMIC_ESM_X_MODE_CFG_ESM_X_ENDRV_MASK,
-                         esmU8Val);
-
-        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                            regAddr,
-                                            regData);
-    }
-
-    /* Stop Critical Section */
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    return pmicStatus;
-}
-
-/*!
- * \brief   This function is used to Set the ESM Mode
- */
-static int32_t Pmic_esmSetMode(Pmic_CoreHandle_t   *pPmicCoreHandle,
-                               const Pmic_EsmCfg_t  esmCfg,
-                               const uint8_t        esmBaseRegAddr)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint8_t regData    = 0U;
-    uint8_t regAddr    = 0U;
-    uint8_t esmU8Val = 0U;
-
-    regAddr = (esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
-    esmU8Val = Pmic_esmGetU8Val(esmCfg.esmMode);
-
-    /* Start Critical Section */
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        regAddr,
-                                        &regData);
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_setBitField(&regData,
-                         PMIC_ESM_X_MODE_CFG_ESM_X_MODE_SHIFT,
-                         PMIC_ESM_X_MODE_CFG_ESM_X_MODE_MASK,
-                         esmU8Val);
-
-        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                            regAddr,
-                                            regData);
-    }
-
-    /* Stop Critical Section */
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    return pmicStatus;
-}
-
-/*!
- * \brief   This function is used to Get the configured ESM DELAY1 value
- */
-static int32_t Pmic_esmGetDelay1Value(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                      Pmic_EsmCfg_t     *pEsmCfg,
-                                      const uint8_t      esmBaseRegAddr)
-{
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
-    uint8_t regData     = 0U;
-    uint8_t regAddr     = 0U;
-
-    regAddr = (esmBaseRegAddr + PMIC_ESM_DELAY1_REG_OFFSET);
-
-    /* Start Critical Section */
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        regAddr,
-                                        &regData);
-
-    /* Stop Critical Section */
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pEsmCfg->esmDelay1_us = ((uint32_t)regData * PMIC_ESM_DELAY_MICROSEC_DIV);
-    }
-
-    return pmicStatus;
-}
-
-/*!
- * \brief   This function is used to Get the configured ESM DELAY2 value
- */
-static int32_t Pmic_esmGetDelay2Value(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                      Pmic_EsmCfg_t     *pEsmCfg,
-                                      const uint8_t      esmBaseRegAddr)
-{
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
-    uint8_t regData     = 0U;
-    uint8_t regAddr     = 0U;
-
-    regAddr = (esmBaseRegAddr + PMIC_ESM_DELAY2_REG_OFFSET);
-
-    /* Start Critical Section */
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        regAddr,
-                                        &regData);
-
-    /* Stop Critical Section */
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pEsmCfg->esmDelay2_us = ((uint32_t)regData *
-                                 PMIC_ESM_DELAY_MICROSEC_DIV);
-    }
-
-    return pmicStatus;
-}
-
-/*!
- * \brief   This function is used to Get the configured ESM Error count
- *          threshold value
- */
-static int32_t Pmic_esmGetErrCntThrValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                         Pmic_EsmCfg_t     *pEsmCfg,
-                                         const uint8_t      esmBaseRegAddr)
-{
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
-    uint8_t regData     = 0U;
-    uint8_t regAddr     = 0U;
-
-    regAddr = (esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
-
-    /* Start Critical Section */
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        regAddr,
-                                        &regData);
-
-    /* Stop Critical Section */
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pEsmCfg->esmErrCntThr = Pmic_getBitField(regData,
-                                  PMIC_ESM_X_MODE_CFG_ESM_X_ERR_CNT_TH_SHIFT,
-                                  PMIC_ESM_X_MODE_CFG_ESM_X_ERR_CNT_TH_MASK);
-    }
-
-    return pmicStatus;
-}
-
-/*!
  * \brief   This function is used to Get the configured ESM HMAX value
  */
 static int32_t Pmic_esmGetHmaxValue(Pmic_CoreHandle_t *pPmicCoreHandle,
@@ -939,18 +609,90 @@ static int32_t Pmic_esmGetLminValue(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /*!
- * \brief   This function is used to Get the configured ESM EN DRV bit
+ * \brief   This function is used to Set the ESM Mode
  */
-static int32_t Pmic_esmGetEnDrvValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                     Pmic_EsmCfg_t     *pEsmCfg,
-                                     const uint8_t      esmBaseRegAddr)
+static int32_t Pmic_esmSetMode(Pmic_CoreHandle_t   *pPmicCoreHandle,
+                               const Pmic_EsmCfg_t  esmCfg,
+                               const uint8_t        esmBaseRegAddr)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData    = 0U;
+    uint8_t regAddr    = 0U;
+    uint8_t esmU8Val = 0U;
+
+    //regAddr = (esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
+    regAddr = ESM_CFG1_REG;
+    esmU8Val = Pmic_esmGetU8Val(esmCfg.esmMode);
+
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        Pmic_setBitField(&regData,
+                         ESM_CFG1_ESM_CFG_SHIFT,
+                         ESM_CFG1_ESM_CFG_MASK,
+                         esmU8Val);
+
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                            regAddr,
+                                            regData);
+    }
+
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief   This function is used to Get the configured ESM DELAY1 value
+ */
+static int32_t Pmic_esmGetDelay1Value(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                      Pmic_EsmCfg_t     *pEsmCfg,
+                                      const uint8_t      esmBaseRegAddr)
 {
     int32_t pmicStatus  = PMIC_ST_SUCCESS;
     uint8_t regData     = 0U;
     uint8_t regAddr     = 0U;
-    uint8_t bitFieldVal = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
+    //regAddr = (esmBaseRegAddr + PMIC_ESM_DELAY1_REG_OFFSET);
+    regAddr = ESM_DELAY1_REG;
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
+
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pEsmCfg->esmDelay1_us = ((uint32_t)regData * PMIC_ESM_DELAY_MICROSEC_DIV);
+    }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief   This function is used to Get the configured ESM DELAY2 value
+ */
+static int32_t Pmic_esmGetDelay2Value(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                      Pmic_EsmCfg_t     *pEsmCfg,
+                                      const uint8_t      esmBaseRegAddr)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+    uint8_t regData     = 0U;
+    uint8_t regAddr     = 0U;
+
+    //regAddr = (esmBaseRegAddr + PMIC_ESM_DELAY2_REG_OFFSET);
+    regAddr = ESM_DELAY2_REG;
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -964,18 +706,44 @@ static int32_t Pmic_esmGetEnDrvValue(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        bitFieldVal = Pmic_getBitField(regData,
-                                         PMIC_ESM_X_MODE_CFG_ESM_X_ENDRV_SHIFT,
-                                         PMIC_ESM_X_MODE_CFG_ESM_X_ENDRV_MASK);
-        if(bitFieldVal != 0U)
-        {
-            pEsmCfg->esmEnDrv = (bool)true;
-        }
-        else
-        {
-            pEsmCfg->esmEnDrv = (bool)false;
-        }
+        pEsmCfg->esmDelay2_us = ((uint32_t)regData *
+                                 PMIC_ESM_DELAY_MICROSEC_DIV);
+    }
 
+    return pmicStatus;
+}
+
+
+/*!
+ * \brief   This function is used to Get the configured ESM Error count
+ *          threshold value
+ */
+static int32_t Pmic_esmGetErrCntThrValue(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                         Pmic_EsmCfg_t     *pEsmCfg,
+                                         const uint8_t      esmBaseRegAddr)
+{
+    int32_t pmicStatus  = PMIC_ST_SUCCESS;
+    uint8_t regData     = 0U;
+    uint8_t regAddr     = 0U;
+
+    //regAddr = (esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
+    regAddr = ESM_ERR_STAT_REG;
+
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        regAddr,
+                                        &regData);
+
+    /* Stop Critical Section */
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    if(PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pEsmCfg->esmErrCntThr = Pmic_getBitField(regData,
+                                                 ESM_ERR_STAT_ESM_ERR_CNT_SHIFT,
+                                                 ESM_ERR_STAT_ESM_ERR_CNT_MASK);
     }
 
     return pmicStatus;
@@ -993,8 +761,8 @@ static int32_t Pmic_esmGetModeValue(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t regAddr     = 0U;
     uint8_t bitFieldVal = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
-
+    //regAddr = (esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
+    regAddr = ESM_CFG1_REG;
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
@@ -1008,8 +776,8 @@ static int32_t Pmic_esmGetModeValue(Pmic_CoreHandle_t *pPmicCoreHandle,
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         bitFieldVal = Pmic_getBitField(regData,
-                                       PMIC_ESM_X_MODE_CFG_ESM_X_MODE_SHIFT,
-                                       PMIC_ESM_X_MODE_CFG_ESM_X_MODE_MASK);
+                                       ESM_CFG1_ESM_EN_SHIFT,
+                                       ESM_CFG1_ESM_EN_MASK);
         if(bitFieldVal != 0U)
         {
             pEsmCfg->esmMode = (bool)true;
@@ -1060,11 +828,6 @@ int32_t Pmic_esmStart(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = Pmic_esmDeviceCheck(pPmicCoreHandle, esmType);
-    }
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
         Pmic_esmGetBaseRegAddr(esmType, &esmBaseRegAddr);
         pmicStatus = Pmic_esmXStart(pPmicCoreHandle,
                                     esmBaseRegAddr,
@@ -1103,11 +866,6 @@ int32_t Pmic_esmEnable(Pmic_CoreHandle_t   *pPmicCoreHandle,
     uint8_t esmBaseRegAddr = 0U;
 
     pmicStatus = Pmic_esmValidateParams(pPmicCoreHandle);
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_esmDeviceCheck(pPmicCoreHandle, esmType);
-    }
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -1157,13 +915,8 @@ int32_t Pmic_esmGetEnableState(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = Pmic_esmDeviceCheck(pPmicCoreHandle, esmType);
-    }
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
         Pmic_esmGetBaseRegAddr(esmType, &esmBaseRegAddr);
-        regAddr = (esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
+        regAddr = (esmBaseRegAddr + PMIC_ESM_CFG1_REG_OFFSET);
         *pEsmState = (bool)false;
 
         /* Start Critical Section */
@@ -1178,8 +931,8 @@ int32_t Pmic_esmGetEnableState(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
         if((PMIC_ST_SUCCESS == pmicStatus) &&
            (Pmic_getBitField(regData,
-                             PMIC_ESM_X_MODE_CFG_ESM_X_EN_SHIFT,
-                             PMIC_ESM_X_MODE_CFG_ESM_X_EN_MASK)
+                             ESM_CFG1_ESM_EN_SHIFT,
+                             ESM_CFG1_ESM_EN_MASK)
             == PMIC_ESM_VAL_1))
         {
             *pEsmState = (bool)true;
@@ -1214,16 +967,6 @@ static int32_t Pmic_esmSetErrcntthresholdEndrvClrModeCfg(
                                                    esmCfg,
                                                    esmBaseRegAddr);
         }
-    }
-
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(esmCfg.validParams,
-                                           PMIC_ESM_CFG_EN_DRV_VALID)))
-    {
-        /* Set ESM EN DRV */
-        pmicStatus = Pmic_esmSetEnDrvValue(pPmicCoreHandle,
-                                           esmCfg,
-                                           esmBaseRegAddr);
     }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
@@ -1316,12 +1059,12 @@ static int32_t Pmic_esmSetConfig(Pmic_CoreHandle_t  *pPmicCoreHandle,
                                             esmBaseRegAddr);
     }
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_esmSetErrcntthresholdEndrvClrModeCfg(pPmicCoreHandle,
-                                                               esmCfg,
-                                                               esmBaseRegAddr);
-    }
+//    if(PMIC_ST_SUCCESS == pmicStatus)
+//    {
+//        pmicStatus = Pmic_esmSetErrcntthresholdEndrvClrModeCfg(pPmicCoreHandle,
+//                                                               esmCfg,
+//                                                               esmBaseRegAddr);
+//    }
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
@@ -1363,10 +1106,6 @@ int32_t Pmic_esmSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     pmicStatus = Pmic_esmValidateParams(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_esmDeviceCheck(pPmicCoreHandle, esmType);
-    }
 
     if((PMIC_ST_SUCCESS == pmicStatus) && (0U == esmCfg.validParams))
     {
@@ -1472,15 +1211,15 @@ static int32_t Pmic_esmGetConfig(Pmic_CoreHandle_t   *pPmicCoreHandle,
                                                esmBaseRegAddr);
     }
 
-    if((PMIC_ST_SUCCESS == pmicStatus) &&
-       (((bool)true) == pmic_validParamCheck(pEsmCfg->validParams,
-                                           PMIC_ESM_CFG_EN_DRV_VALID)))
-    {
-        /* Get ESM EN DRV */
-        pmicStatus = Pmic_esmGetEnDrvValue(pPmicCoreHandle,
-                                           pEsmCfg,
-                                           esmBaseRegAddr);
-    }
+//    if((PMIC_ST_SUCCESS == pmicStatus) &&
+//       (((bool)true) == pmic_validParamCheck(pEsmCfg->validParams,
+//                                           PMIC_ESM_CFG_EN_DRV_VALID)))
+//    {
+//        /* Get ESM EN DRV */
+//        pmicStatus = Pmic_esmGetEnDrvValue(pPmicCoreHandle,
+//                                           pEsmCfg,
+//                                           esmBaseRegAddr);
+//    }
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
        (((bool)true) == pmic_validParamCheck(pEsmCfg->validParams,
@@ -1501,6 +1240,7 @@ static int32_t Pmic_esmGetConfig(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     return pmicStatus;
 }
+
 
 /*!
  * \brief   API to Get the PMIC ESM Configuration.
@@ -1532,10 +1272,6 @@ int32_t Pmic_esmGetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     pmicStatus = Pmic_esmValidateParams(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_esmDeviceCheck(pPmicCoreHandle, esmType);
-    }
 
     if((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pEsmCfg))
     {
@@ -1554,48 +1290,6 @@ int32_t Pmic_esmGetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
         pmicStatus = Pmic_esmGetConfig(pPmicCoreHandle,
                                        pEsmCfg,
                                        esmBaseRegAddr);
-    }
-
-    return pmicStatus;
-}
-
-/*!
- * \brief   API to Set PMIC ESM Interrupts.
- *
- * Requirement: REQ_TAG(PDK-5833)
- * Design: did_pmic_esm_cfg_readback
- * Architecture: aid_pmic_esm_cfg
- *
- *          This function is used to mask/unmask the ESM RST, FAIL and
- *          PIN Interrupts for both ESM MCU and ESM SOC.
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- * \param   esmType         [IN]    PMIC ESM Type
- *                                  For valid values:
- *                                  \ref Pmic_EsmTypes
- * \param   esmIntrCfg      [IN]    PMIC ESM interrupts mask/un-mask.
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
-int32_t Pmic_esmSetInterrupt(Pmic_CoreHandle_t        *pPmicCoreHandle,
-                             const bool                esmType,
-                             const Pmic_EsmIntrCfg_t   esmIntrCfg)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-
-    pmicStatus = Pmic_esmValidateParams(pPmicCoreHandle);
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_esmDeviceCheck(pPmicCoreHandle, esmType);
-    }
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_esmIntrEnable(pPmicCoreHandle,
-                                        esmType,
-                                        esmIntrCfg);
     }
 
     return pmicStatus;
@@ -1638,13 +1332,9 @@ int32_t Pmic_esmGetErrCnt(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = Pmic_esmDeviceCheck(pPmicCoreHandle, esmType);
-    }
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
         Pmic_esmGetBaseRegAddr(esmType, &esmBaseRegAddr);
-        regAddr = (esmBaseRegAddr + PMIC_ESM_ERR_CNT_REG_OFFSET);
+        //regAddr = (esmBaseRegAddr + PMIC_ESM_ERR_CNT_REG_OFFSET);
+        regAddr = ESM_ERR_STAT_REG;
 
         /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -1660,8 +1350,8 @@ int32_t Pmic_esmGetErrCnt(Pmic_CoreHandle_t   *pPmicCoreHandle,
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
         (*pEsmErrCnt) = Pmic_getBitField(regData,
-                                  PMIC_ESM_X_ERR_CNT_REG_ESM_X_ERR_CNT_SHIFT,
-                                  PMIC_ESM_X_ERR_CNT_REG_ESM_X_ERR_CNT_MASK);
+                                         ESM_ERR_STAT_ESM_ERR_CNT_SHIFT,
+                                         ESM_ERR_STAT_ESM_ERR_CNT_MASK);
     }
 
     return pmicStatus;
@@ -1701,11 +1391,6 @@ int32_t Pmic_esmGetStatus(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     pmicStatus = Pmic_esmValidateParams(pPmicCoreHandle);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        pmicStatus = Pmic_esmDeviceCheck(pPmicCoreHandle, esmType);
-    }
-
     if((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pEsmState))
     {
         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
@@ -1715,7 +1400,8 @@ int32_t Pmic_esmGetStatus(Pmic_CoreHandle_t   *pPmicCoreHandle,
     {
         Pmic_esmGetBaseRegAddr(esmType, &esmBaseRegAddr);
 
-        regAddr = (esmBaseRegAddr + PMIC_ESM_START_REG_OFFSET);
+        //regAddr = (esmBaseRegAddr + PMIC_ESM_START_REG_OFFSET);
+        regAddr = ESM_CTRL_REG;
         *pEsmState = PMIC_ESM_STOP;
 
         /* Start Critical Section */
@@ -1731,8 +1417,8 @@ int32_t Pmic_esmGetStatus(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     if((PMIC_ST_SUCCESS == pmicStatus) &&
        (Pmic_getBitField(regData,
-                         PMIC_ESM_X_START_REG_ESM_X_START_SHIFT,
-                         PMIC_ESM_X_START_REG_ESM_X_START_MASK)
+                         ESM_CTRL_REG_SHIFT,
+                         ESM_CTRL_REG_MASK)
         == PMIC_ESM_VAL_1))
     {
         *pEsmState = PMIC_ESM_START;
@@ -1740,3 +1426,5 @@ int32_t Pmic_esmGetStatus(Pmic_CoreHandle_t   *pPmicCoreHandle,
 
     return pmicStatus;
 }
+
+

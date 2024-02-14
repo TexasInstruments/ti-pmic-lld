@@ -35,86 +35,89 @@
  * \file   pmic_esm_priv.h
  *
  * \brief: This file contains macro definitions, structures and function
- *         prototypes for driver specific PMIC esm configuration
+ *         prototypes for driver specific PMIC ESM configuration
  */
-
-#ifndef PMIC_ESM_PRIV_H_
-#define PMIC_ESM_PRIV_H_
-
-/* ========================================================================== */
-/*                             Include Files                                  */
-/* ========================================================================== */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/* ========================================================================== */
-/*                             Macros & Typedefs                              */
-/* ========================================================================== */
-/*!
- * \brief  ESM Register Address
- */
-/*! ESM MCU Register Base Address */
-#define PMIC_ESM_MCU_BASE_REGADDR                   (0x8FU)
-
-/*! ESM SOC Register Base Address */
-#define PMIC_ESM_SOC_BASE_REGADDR                   (0x98U)
 
 /*! ESM Register Offsets */
-#define PMIC_ESM_START_REG_OFFSET                   (0x0U)
-#define PMIC_ESM_DELAY1_REG_OFFSET                  (0x1U)
-#define PMIC_ESM_DELAY2_REG_OFFSET                  (0x2U)
-#define PMIC_ESM_MODE_CFG_REG_OFFSET                (0x3U)
-#define PMIC_ESM_HMAX_REG_OFFSET                    (0x4U)
-#define PMIC_ESM_HMIN_REG_OFFSET                    (0x5U)
-#define PMIC_ESM_LMAX_REG_OFFSET                    (0x6U)
-#define PMIC_ESM_LMIN_REG_OFFSET                    (0x7U)
-#define PMIC_ESM_ERR_CNT_REG_OFFSET                 (0x8U)
+#define PMIC_ESM_CFG1_REG_OFFSET                (0x01U)
+#define PMIC_ESM_CFG2_REG_OFFSET                (0x02U)
+#define PMIC_ESM_INT_CFG_REG_OFFSET             (0x03U)
+#define PMIC_ESM_DELAY1_REG_OFFSET              (0x04U)
+#define PMIC_ESM_DELAY2_REG_OFFSET              (0x05U)
+#define PMIC_ESM_HMAX_REG_OFFSET                (0x06U)
+#define PMIC_ESM_HMIN_REG_OFFSET                (0x07U)
+#define PMIC_ESM_LMAX_REG_OFFSET                (0x08U)
+#define PMIC_ESM_LMIN_REG_OFFSET                (0x09U)
+#define PMIC_ESM_ERR_STAT_REG_OFFSET            (0x10U)
+
+/*Macros for ESM_CTRL*/
+#define ESM_CTRL_REG                            (0x47U) // Enable ESM
+#define ESM_CTRL_REG_SHIFT                      (0x00U)
+#define ESM_CTRL_REG_MASK                       (0x01U)
+
+/*Macros for ESM_CFG_1*/
+#define ESM_CFG1_REG                            (0x48U)
+
+#define ESM_CFG1_ERR_TH_SHIFT                   (0x00U)
+#define ESM_CFG1_ESM_EN_SHIFT                   (0x06U)
+#define ESM_CFG1_ESM_CFG_SHIFT                  (0x07U)
+
+#define ESM_CFG1_ERR_TH_MASK                    (0x07U << ESM_CFG1_ERR_TH_SHIFT)
+#define ESM_CFG1_ESM_EN_MASK                    (0x01U << ESM_CFG1_ESM_EN_SHIFT)
+#define ESM_CFG1_ESM_CFG_MASK                   (0x01U << ESM_CFG1_ESM_CFG_SHIFT)
+
+/*Macros for ESM_CFG_2*/
+#define ESM_CFG2_REG                            (0x49U)
+
+#define ESM_CFG2_TIME_CFG_SHIFT                 (0x00U)
+#define ESM_CFG2_ESM_DGL_SHIFT                  (0x03U)
+#define ESM_CFG2_ESM_LVL_POL_SHIFT              (0x04U)
+
+#define ESM_CFG2_TIME_CFG_MASK                  (0x03U << ESM_CFG2_TIME_CFG_SHIFT)
+#define ESM_CFG2_ESM_DGL_MASK                   (0x01U << ESM_CFG2_ESM_DGL_SHIFT)
+#define ESM_CFG2_ESM_LVL_POL_MASK               (0x01U << ESM_CFG2_ESM_LVL_POL_SHIFT)
+
+/*Macros for Interrupt*/
+#define ESM_INT_CFG_REG                         (0x4AU)
+
+#define ESM_INT_MASK_SHIFT                      (0X01U)
+#define ESM_DLY1_INT_MASK_SHIFT                 (0X02U)
+#define ESM_DLY1_INT_CFG_SHIFT                  (0X03U)
+#define ESM_DLY2_INT_MASK_SHIFT                 (0X04U)
+#define ESM_DLY2_INT_CFG_SHIFT                  (0X05U)
+
+#define ESM_INT_MASK_MASK                       (0X01U << ESM_INT_MASK_SHIFT)
+#define ESM_DLY1_INT_MASK_MASK                  (0X01U << ESM_DLY1_INT_MASK_SHIFT)
+#define ESM_DLY1_INT_CFG_MASK                   (0X03U << ESM_DLY1_INT_CFG_SHIFT)
+#define ESM_DLY2_INT_MASK_MASK                  (0X01U << ESM_DLY2_INT_MASK_SHIFT)
+#define ESM_DLY2_INT_CFG_MASK                   (0X03U << ESM_DLY2_INT_CFG_SHIFT)
+
+//Macro Delay Time
+#define ESM_DELAY1_REG                          (0x4BU)
+#define ESM_DELAY2_REG                          (0x4CU)
+
+#define ESM_HMAX_CFG_REG                        (0x4DU)
+#define ESM_HMIN_CFG_REG                        (0x4EU)
+#define ESM_LMAX_CFG_REG                        (0x4FU)
+#define ESM_LMIN_CFG_REG                        (0x50U)
+
+/*Macros for Error Stat*/
+#define ESM_ERR_STAT_REG                        (0x51U)
+
+#define ESM_ERR_STAT_ESM_ERR_CNT_SHIFT          (0X00U)
+#define ESM_ERR_STAT_ESM_ERR_SHIFT              (0X05U)
+#define ESM_ERR_STAT_ESM_DLY1_ERR_SHIFT         (0X06U)
+#define ESM_ERR_STAT_ESM_DLY2_ERR_SHIFT         (0X07U)
+
+#define ESM_ERR_STAT_ESM_ERR_CNT_MASK           (0X07U << ESM_ERR_STAT_ESM_ERR_CNT_SHIFT)
+#define ESM_ERR_STAT_ESM_ERR_MASK               (0X01U << ESM_ERR_STAT_ESM_ERR_SHIFT)
+#define ESM_ERR_STAT_ESM_DLY1_ERR_MASK          (0X01U << ESM_ERR_STAT_ESM_DLY1_ERR_SHIFT)
+#define ESM_ERR_STAT_ESM_DLY2_ERR_MASK          (0X01U << ESM_ERR_STAT_ESM_DLY2_ERR_SHIFT)
 
 /*!
- * \brief  ESM MCU and ESM SOC Register Bit fields
+ * \brief  ESM Error Count Threshold Max Value
  */
-#define PMIC_ESM_X_START_REG_ESM_X_START_SHIFT          (0x0U)
-#define PMIC_ESM_X_DELAY1_REG_ESM_X_DELAY1_SHIFT        (0x0U)
-#define PMIC_ESM_X_DELAY2_REG_ESM_X_DELAY2_SHIFT        (0x0U)
-#define PMIC_ESM_X_MODE_CFG_ESM_X_MODE_SHIFT            (0x7U)
-#define PMIC_ESM_X_MODE_CFG_ESM_X_EN_SHIFT              (0x6U)
-#define PMIC_ESM_X_MODE_CFG_ESM_X_ENDRV_SHIFT           (0x5U)
-#define PMIC_ESM_X_MODE_CFG_ESM_X_ERR_CNT_TH_SHIFT      (0x0U)
-#define PMIC_ESM_X_HMAX_REG_ESM_X_HMAX_SHIFT            (0x0U)
-#define PMIC_ESM_X_HMIN_REG_ESM_X_HMIN_SHIFT            (0x0U)
-#define PMIC_ESM_X_LMAX_REG_ESM_X_LMAX_SHIFT            (0x0U)
-#define PMIC_ESM_X_LMIN_REG_ESM_X_LMIN_SHIFT            (0x0U)
-#define PMIC_ESM_X_ERR_CNT_REG_ESM_X_ERR_CNT_SHIFT      (0x0U)
-
-/*!
- * \brief  ESM MCU and ESM SOC Register Bit masks
- */
-#define PMIC_ESM_X_START_REG_ESM_X_START_MASK           ((uint8_t)   \
-                       (0x1U << PMIC_ESM_X_START_REG_ESM_X_START_SHIFT))
-#define PMIC_ESM_X_DELAY1_REG_ESM_X_DELAY1_MASK         ((uint8_t)   \
-                       (0x7U << PMIC_ESM_X_DELAY1_REG_ESM_X_DELAY1_SHIFT))
-#define PMIC_ESM_X_DELAY2_REG_ESM_X_DELAY2_MASK         ((uint8_t)   \
-                       (0x7U << PMIC_ESM_X_DELAY2_REG_ESM_X_DELAY2_SHIFT))
-#define PMIC_ESM_X_MODE_CFG_ESM_X_MODE_MASK             ((uint8_t)   \
-                       (0x1U << PMIC_ESM_X_MODE_CFG_ESM_X_MODE_SHIFT))
-#define PMIC_ESM_X_MODE_CFG_ESM_X_EN_MASK               ((uint8_t)   \
-                       (0x1U << PMIC_ESM_X_MODE_CFG_ESM_X_EN_SHIFT))
-#define PMIC_ESM_X_MODE_CFG_ESM_X_ENDRV_MASK            ((uint8_t)   \
-                       (0x1U << PMIC_ESM_X_MODE_CFG_ESM_X_ENDRV_SHIFT))
-#define PMIC_ESM_X_MODE_CFG_ESM_X_ERR_CNT_TH_MASK       ((uint8_t)   \
-                       (0x0FU << PMIC_ESM_X_MODE_CFG_ESM_X_ERR_CNT_TH_SHIFT))
-#define PMIC_ESM_X_HMAX_REG_ESM_X_HMAX_MASK             ((uint8_t)   \
-                       (0x7U << PMIC_ESM_X_HMAX_REG_ESM_X_HMAX_SHIFT))
-#define PMIC_ESM_X_HMIN_REG_ESM_X_HMIN_MASK             ((uint8_t)   \
-                       (0x7U << PMIC_ESM_X_HMIN_REG_ESM_X_HMIN_SHIFT))
-#define PMIC_ESM_X_LMAX_REG_ESM_X_LMAX_MASK             ((uint8_t)   \
-                       (0x7U << PMIC_ESM_X_LMAX_REG_ESM_X_LMAX_SHIFT))
-#define PMIC_ESM_X_LMIN_REG_ESM_X_LMIN_MASK             ((uint8_t)   \
-                       (0x7U << PMIC_ESM_X_LMIN_REG_ESM_X_LMIN_SHIFT))
-#define PMIC_ESM_X_ERR_CNT_REG_ESM_X_ERR_CNT_MASK       ((uint8_t)   \
-                       (0x4U << PMIC_ESM_X_ERR_CNT_REG_ESM_X_ERR_CNT_SHIFT))
+#define PMIC_ESM_ERR_CNT_THR_MAX                (15U)
 
 /*!
  * \brief  ESM Delay1 and Delay2 Time interval Max and Divisor macros
@@ -122,31 +125,38 @@ extern "C" {
 #define PMIC_ESM_DELAY_MICROSEC_MAX             (522240U)
 #define PMIC_ESM_DELAY_MICROSEC_DIV             (2048U)
 
-/*!
- * \brief  ESM HMAX, HMIN, LMAX, LMIN Time interval Min, Max and Divisor macros
- */
 #define PMIC_ESM_PWM_PULSE_MICROSEC_MIN                   (15U)
 #define PMIC_ESM_PWM_PULSE_MICROSEC_MAX                   (3840U)
 #define PMIC_ESM_PWM_PULSE_MICROSEC_DIV                   (15U)
 
-/*!
- * \brief  ESM Error Count Threshold Max Value
+/**
+ *  \anchor Pmic_EsmCflag
+ *  \name PMIC Pmic_EsmCfg_s member configuration type
+ *
+ *  @{
  */
-#define PMIC_ESM_ERR_CNT_THR_MAX                (15U)
+ /** \brief validParams value used to set/get ESM delay-1 time interval */
+#define PMIC_ESM_CFG_DELAY1_VALID           (0x00U)
+/** \brief validParams value used to set/get ESM delay-2 time interval  */
+#define PMIC_ESM_CFG_DELAY2_VALID           (0x01U)
+/** \brief validParams value used to set/get ESM Error count Threshold value */
+#define PMIC_ESM_CFG_ERR_CNT_THR_VALID      (0x02U)
+/** \brief validParams value used to set/get ESM Maximum high-pulse
+ *         time-threshold value  */
+#define PMIC_ESM_CFG_HMAX_VALID             (0x03U)
+/** \brief validParams value used to set/get ESM Minimum high-pulse
+ *         time-threshold value  */
+#define PMIC_ESM_CFG_HMIN_VALID             (0x04U)
+/** \brief validParams value used to set/get ESM Maximum low-pulse
+ *         time-threshold value */
+#define PMIC_ESM_CFG_LMAX_VALID             (0x05U)
+/** \brief validParams value used to set/get  ESM Minimum low-pulse
+ *         time-threshold value */
+#define PMIC_ESM_CFG_LMIN_VALID             (0x06U)
+/** \brief validParams value used to set/get ESM ENABLE_DRV clear configuration
+ */
+#define PMIC_ESM_CFG_EN_DRV_VALID           (0x07U)
+/** \brief validParams value used to set/get ESM mode */
+#define PMIC_ESM_CFG_MODE_VALID             (0x08U)
+/*  @} */
 
-#define PMIC_ESM_VAL_1                    (1U)
-
-/*==========================================================================*/
-/*                         Structures and Enums                             */
-/*==========================================================================*/
-
-/*==========================================================================*/
-/*                         Function Declarations                            */
-/*==========================================================================*/
-
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
-#endif/* PMIC_ESM_PRIV_H_ */
