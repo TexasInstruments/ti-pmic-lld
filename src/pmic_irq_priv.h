@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -44,6 +44,7 @@
 /* ========================================================================= */
 /*                             Include Files                                 */
 /* ========================================================================= */
+#include "pmic_irq.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -55,498 +56,423 @@ extern "C" {
 /*!
  * \brief  Interrupt Hierarchy Level 0 Register offsets
  */
-#define PMIC_INT_TOP_REGADDR                  (0x5AU)
-
-/*!
- *  \brief  PMIC Interrupt Hierarchy Level 1 Register offsets
- */
-#define PMIC_INT_BUCK_REGADDR                 (0x5BU)
-#define PMIC_INT_GPIO_REGADDR                 (0x63U)
-#define PMIC_INT_STARTUP_REGADDR              (0x65U)
-#define PMIC_INT_MISC_REGADDR                 (0x66U)
-#define PMIC_INT_MODERATE_ERR_REGADDR         (0x67U)
-#define PMIC_INT_SEVERE_ERR_REGADDR           (0x68U)
-#define PMIC_INT_FSM_ERR_REGADDR              (0x69U)
-
-/*! Interrupt Hierarchy Level 2 Register offsets */
-/*!
- * \brief  INT_BUCK Sources
- */
-#define PMIC_INT_BUCK1_2_REGADDR              (0x5CU)
-#define PMIC_INT_BUCK3_4_REGADDR              (0x5DU)
-
-/*!
- * \brief  INT_LDO_VMON Sources
- */
-#define PMIC_INT_VMON_REGADDR                 (0x62U)
-
-/*!
- * \brief  INT_GPIO Sources
- */
-#define PMIC_INT_GPIO1_8_REGADDR              (0x64U)
-
-/*!
- * \brief  INT_FSM sources
- */
-#define PMIC_INT_COMM_ERR_REGADDR             (0x6AU)
-#define PMIC_INT_READBACK_ERR_REGADDR         (0x6BU)
-#define PMIC_INT_ESM_REGADDR                  (0x6CU)
-#define PMIC_WD_ERR_STATUS_REGADDR            (0x408U)
-
-#define PMIC_INT_UNUSED_REGADDR               (0xFFU)
+#define PMIC_SAFETY_CFG_REGADDR (0x07U)
+#define PMIC_RDBK_INT_CFG1_REGADDR (0x0DU)
+#define PMIC_RDBK_INT_CFG2_REGADDR (0x0EU)
+#define PMIC_OFF_STATE_STAT1_REGADDR (0x0FU)
+#define PMIC_OV_INT_CFG1_REGADDR (0x35U)
+#define PMIC_OV_INT_CFG2_REGADDR (0x36U)
+#define PMIC_OV_DCDC_CFG_REGADDR (0x37U)
+#define PMIC_UV_INT_CFG1_REGADDR (0x39U)
+#define PMIC_UV_INT_CFG2_REGADDR (0x3AU)
+#define PMIC_UV_DCDC_CFG_REGADDR (0x3BU)
+#define PMIC_WDG_INT_CFG_REGADDR (0x42U)
+#define PMIC_WD_ERR_STAT_REGADDR (0x46U) // need to check, old pmic 408
+#define PMIC_ESM_CFG_REGADDR (0x48U)     // need to check
+#define PMIC_ESM_INT_CFG_REGADDR (0x4AU)
+#define PMIC_CM_COMP_INT_MASK_CFG_REGADDR (0x79U)
+#define PMIC_CM_VMON_INT_CFG_REGADDR (0x7BU)
+#define PMIC_INT_UNUSED_REGADDR (0xFFU)
 
 /*!
  *  \brief  PMIC Interrupt MASK register offsets
  */
-#define PMIC_MASK_BUCK1_2_REGADDR         (0x49U)
-#define PMIC_MASK_BUCK3_4_REGADDR         (0x4AU)
-#define PMIC_MASK_VMON_REGADDR            (0x4EU)
-#define PMIC_MASK_GPIO1_8_FALL_REGADDR    (0x4FU)
-#define PMIC_MASK_GPIO1_8_RISE_REGADDR    (0x50U)
-#define PMIC_MASK_STARTUP_REGADDR         (0x52U)
-#define PMIC_MASK_MISC_REGADDR            (0x53U)
-#define PMIC_MASK_MODERATE_ERR_REGADDR    (0x54U)
-#define PMIC_MASK_FSM_ERR_REGADDR         (0x56U)
-#define PMIC_MASK_COMM_ERR_REGADDR        (0x57U)
-#define PMIC_MASK_READBACK_ERR_REGADDR    (0x58U)
-#define PMIC_MASK_ESM_REGADDR             (0x59U)
+#define PMIC_RDBK_INT_MASK_REGADDR (0x0CU)
+#define PMIC_OV_INT_MASK_REGADDR (0x34U)
+#define PMIC_UV_INT_MASK_REGADDR (0x38U)
+#define PMIC_CM_VMON_INT_MASK_REGADDR (0x7AU)
 
 /*!
- * \brief  INT_TOP Register Bit Masks
+ * \brief  SAFETY_CFG Register Bit Masks
  */
-#define PMIC_INT_TOP_BUCK_INT_MASK                 (0x01U)
-#define PMIC_INT_TOP_GPIO_INT_MASK                 (0x04U)
-#define PMIC_INT_TOP_STARTUP_INT_MASK              (0x08U)
-#define PMIC_INT_TOP_MISC_INT_MASK                 (0x10U)
-#define PMIC_INT_TOP_MODERATE_ERR_INT_MASK         (0x20U)
-#define PMIC_INT_TOP_SEVERE_ERR_INT_MASK           (0x40U)
-#define PMIC_INT_TOP_FSM_ERR_INT_MASK              (0x80U)
-
-/*! Interrupt Hierarchy Level 1 Registers Bit Masks */
-/*!
- * \brief  Buck Interrupt Mask
- */
-#define PMIC_INT_BUCK_BUCK1_2_INT_MASK         (0x01U)
-#define PMIC_INT_BUCK_BUCK3_4_INT_MASK         (0x02U)
+#define PMIC_SAFETY_CFG_CFG_REG_CRC_INT_CFG_MASK (0x40U)
 
 /*!
- * \brief  GPIO Interrupt Mask
+ * \brief  All Interrupt Register Bit Masks
  */
-#define PMIC_INT_GPIO_GPIO9_INT_MASK           (0x01U)
-#define PMIC_INT_GPIO_GPIO10_INT_MASK          (0x02U)
-#define PMIC_INT_GPIO_GPIO1_8_INT_MASK         (0x08U)
+#define PMIC_SAFETY_OFF_STATE_CFG_MASK (0x01U)
+#define PMIC_RDBK_INT_CFG_MASK (0x02U)
+#define PMIC_OV_INT_CFG_MASK (0x04U)
+#define PMIC_UV_INT_CFG_MASK (0x08U)
+#define PMIC_WD_ERR_STAT_MASK (0x10U)
+#define PMIC_ESM_INT_CFG_MASK (0x20U)
+#define PMIC_CM_COMP_INT_MASK_CFG_MASK (0x40U)
+#define PMIC_CM_VMON_INT_CFG_MASK (0x80U)
 
 /*!
- * \brief  FSM Error Interrupt Mask
+ * \brief  RDBK_INT_MASK_CFG Register Bit Masks
  */
-#define PMIC_INT_FSM_ERR_IMM_SHUTDOWN_INT_MASK     (0x01U)
-#define PMIC_INT_FSM_ERR_ORD_SHUTDOWN_INT_MASK     (0x02U)
-#define PMIC_INT_FSM_ERR_MCU_PWR_ERR_INT_MASK      (0x04U)
-#define PMIC_INT_FSM_ERR_SOC_PWR_ERR_INT_MASK      (0x08U)
-#define PMIC_INT_FSM_ERR_COMM_ERR_INT_MASK         (0x10U)
-#define PMIC_INT_FSM_ERR_READBACK_ERR_INT_MASK     (0x20U)
-#define PMIC_INT_FSM_ERR_ESM_INT_MASK              (0x40U)
-#define PMIC_INT_FSM_ERR_WD_INT_MASK               (0x80U)
-
-/*! Interrupt Hierarchy Level 2 Registers Bit Masks */
-/*!
- * \brief  PMIC_INT_BUCK1_2 Register Bit Masks
- */
-#define PMIC_INT_BUCK1_2_BUCK1_OV_INT_MASK                       (0x01U)
-#define PMIC_INT_BUCK1_2_BUCK1_UV_INT_MASK                       (0x02U)
-#define PMIC_INT_BUCK1_2_BUCK1_SC_INT_MASK                       (0x04U)
-#define PMIC_INT_BUCK1_2_BUCK1_ILIM_INT_MASK                     (0x08U)
-#define PMIC_INT_BUCK1_2_BUCK2_OV_INT_MASK                       (0x10U)
-#define PMIC_INT_BUCK1_2_BUCK2_UV_INT_MASK                       (0x20U)
-#define PMIC_INT_BUCK1_2_BUCK2_SC_INT_MASK                       (0x40U)
-#define PMIC_INT_BUCK1_2_BUCK2_ILIM_INT_MASK                     (0x80U)
+#define PMIC_RDBK_INT_MASK_NRST_RDBK_INT_MASK_MASK (0x01U)
+#define PMIC_RDBK_INT_MASK_SAFE_OUT1_RDBK_INT_MASK_MASK (0x02U)
+#define PMIC_RDBK_INT_MASK_EN_OUT_RDBK_INT_MASK_MASK (0x04U)
+#define PMIC_RDBK_INT_MASK_GPO1_RDBK_INT_MASK_MASK (0x08U)
+#define PMIC_RDBK_INT_MASK_GPO2_RDBK_INT_MASK_MASK (0x10U)
+#define PMIC_RDBK_INT_MASK_GPO3_RDBK_INT_MASK_MASK (0x20U)
+#define PMIC_RDBK_INT_MASK_GPO4_RDBK_INT_MASK_MASK (0x40U)
 
 /*!
- * \brief  PMIC_INT_BUCK3_4 Register Bit Masks
+ * \brief  RDBK_INT_CFG1 Register Bit Masks
  */
-#define PMIC_INT_BUCK3_4_BUCK3_OV_INT_MASK                       (0x01U)
-#define PMIC_INT_BUCK3_4_BUCK3_UV_INT_MASK                       (0x02U)
-#define PMIC_INT_BUCK3_4_BUCK3_SC_INT_MASK                       (0x04U)
-#define PMIC_INT_BUCK3_4_BUCK3_ILIM_INT_MASK                     (0x08U)
-#define PMIC_INT_BUCK3_4_BUCK4_OV_INT_MASK                       (0x10U)
-#define PMIC_INT_BUCK3_4_BUCK4_UV_INT_MASK                       (0x20U)
-#define PMIC_INT_BUCK3_4_BUCK4_SC_INT_MASK                       (0x40U)
-#define PMIC_INT_BUCK3_4_BUCK4_ILIM_INT_MASK                     (0x80U)
+#define PMIC_RDBK_INT_CFG1_NRST_RDBK_INT_CFG_MASK (0x01U)
+#define PMIC_RDBK_INT_CFG1_SAFE_OUT1_RDBK_INT_CFG_MASK (0x04U)
+#define PMIC_RDBK_INT_CFG1_EN_OUT_RDBK_INT_CFG_MASK (0x10U)
 
 /*!
- * \brief  PMIC_INT_VMON Register Bit Masks
+ * \brief  RDBK_INT_CFG2 Register Bit Masks
  */
-#define PMIC_INT_VMON_VCCA_OV_INT_MASK                           (0x01U)
-#define PMIC_INT_VMON_VCCA_UV_INT_MASK                           (0x02U)
+#define PMIC_RDBK_INT_CFG2_GPO1_RDBK_INT_CFG_MASK (0x01U)
+#define PMIC_RDBK_INT_CFG2_GPO2_RDBK_INT_CFG_MASK (0x04U)
+#define PMIC_RDBK_INT_CFG2_GPO3_RDBK_INT_CFG_MASK (0x10U)
+#define PMIC_RDBK_INT_CFG2_GPO4_RDBK_INT_CFG_MASK (0x40U)
 
 /*!
- * \brief  PMIC_INT_GPIO1_8 Register Bit Masks
+ * \brief  OFF_STATE_STAT1 Register Bit Masks
  */
-#define PMIC_INT_GPIO1_8_GPIO1_INT_MASK                          (0x01U)
-#define PMIC_INT_GPIO1_8_GPIO2_INT_MASK                          (0x02U)
-#define PMIC_INT_GPIO1_8_GPIO3_INT_MASK                          (0x04U)
-#define PMIC_INT_GPIO1_8_GPIO4_INT_MASK                          (0x08U)
-#define PMIC_INT_GPIO1_8_GPIO5_INT_MASK                          (0x10U)
-#define PMIC_INT_GPIO1_8_GPIO6_INT_MASK                          (0x20U)
-#define PMIC_INT_GPIO1_8_GPIO7_INT_MASK                          (0x40U)
-#define PMIC_INT_GPIO1_8_GPIO8_INT_MASK                          (0x80U)
+#define PMIC_OFF_STATE_STAT1_OFF_INT_EVT_ERR_MASK (0x01U)
 
 /*!
- * \brief  PMIC_INT_STARTUP Register Bit Masks
+ * \brief  UV_INT_MASK Register Bit Masks
  */
-#define PMIC_INT_STARTUP_ENABLE_INT_MASK                         (0x02U)
-#define PMIC_INT_STARTUP_FSD_INT_MASK                            (0x10U)
-/*! Valid only PG 2.0 */
-#define PMIC_INT_STARTUP_SOFT_REBOOT_INT_MASK                    (0x20U)
+#define PMIC_OV_INT_MASK_LDO1_OV_INT_MASK_MASK (0x01U)
+#define PMIC_OV_INT_MASK_LDO2_OV_INT_MASK_MASK (0x02U)
+#define PMIC_OV_INT_MASK_LDO3_OV_INT_MASK_MASK (0x04U)
+#define PMIC_OV_INT_MASK_LDO4_OV_INT_MASK_MASK (0x08U)
+#define PMIC_OV_INT_MASK_PLDO1_OV_INT_MASK_MASK (0x10U)
+#define PMIC_OV_INT_MASK_PLDO2_OV_INT_MASK_MASK (0x20U)
+#define PMIC_OV_INT_MASK_EXT_VMON1_OV_INT_MASK_MASK (0x40U)
+#define PMIC_OV_INT_MASK_EXT_VMON2_OV_INT_MASK_MASK (0x80U)
 
 /*!
- * \brief  PMIC_INT_MISC Register Bit Masks
+ * \brief  OV_INIT_CFG1 Register Bit Masks
  */
-#define PMIC_INT_MISC_BIST_PASS_INT_MASK                         (0x01U)
-#define PMIC_INT_MISC_EXT_CLK_INT_MASK                           (0x02U)
-#define PMIC_INT_MISC_TWARN_INT_MASK                             (0x08U)
+#define PMIC_OV_INT_CFG1_LDO1_OV_INT_CFG_MASK (0x01U)
+#define PMIC_OV_INT_CFG1_LDO2_OV_INT_CFG_MASK (0x04U)
+#define PMIC_OV_INT_CFG1_LDO3_OV_INT_CFG_MASK (0x10U)
+#define PMIC_OV_INT_CFG1_LDO4_OV_INT_CFG_MASK (0x40U)
 
 /*!
- * \brief  PMIC_INT_MODERATE_ERR Register Bit Masks
+ * \brief  OV_INT_CFG2 Register Bit Masks
  */
-#define PMIC_INT_MODERATE_ERR_TSD_ORD_INT_MASK                   (0x01U)
-#define PMIC_INT_MODERATE_ERR_BIST_FAIL_INT_MASK                 (0x02U)
-#define PMIC_INT_MODERATE_ERR_REG_CRC_ERR_INT_MASK               (0x04U)
-
-/** \brief PMIC_INT_MODERATE_ERR_NRSTOUT_READBACK_INT_MASK Bit Positions
- *         valid only for PG2.0 */
-#define PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_MASK                 (0x08U)
-
-/** \brief PMIC_INT_MODERATE_ERR_PFSM_ERR_INT_MASK_PG_1_0 Bit Positions
- *         valid only for PG1.0 */
-#define PMIC_INT_MODERATE_ERR_PFSM_ERR_INT_MASK_PG_1_0           (0x08U)
-
-#define PMIC_INT_MODERATE_ERR_SPMI_ERR_INT_MASK                  (0x10U)
-
-/** \brief PMIC_INT_MODERATE_ERR_NINT_READBACK_INT_MASK Bit Positions
- *         valid only for PG2.0 */
-#define PMIC_INT_MODERATE_ERR_NINT_READBACK_INT_MASK             (0x40U)
-
-/** \brief PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_MASK_PG_1_0 Bit Positions
- *         valid only for PG1.0 */
-#define PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_MASK_PG_1_0          (0x40U)
-
-/** \brief PMIC_INT_MODERATE_ERR_NRSTOUT_READBACK_INT_MASK Bit Positions
- *         valid only for PG2.0 */
-#define PMIC_INT_MODERATE_ERR_NRSTOUT_READBACK_INT_MASK          (0x80U)
+#define PMIC_OV_INT_CFG2_PLDO1_OV_INT_CFG_MASK (0x01U)
+#define PMIC_OV_INT_CFG2_PLDO2_OV_INT_CFG_MASK (0x04U)
+#define PMIC_OV_INT_CFG2_EXT_VMON1_OV_INT_CFG_MASK (0x10U)
+#define PMIC_OV_INT_CFG2_EXT_VMON2_OV_INT_CFG_MASK (0x40U)
 
 /*!
- * \brief  PMIC_INT_SEVERE_ERR Register Bit Masks
+ * \brief  OV_DCDC_CFG Register Bit Masks
  */
-#define PMIC_INT_SEVERE_ERR_TSD_IMM_INT_MASK                     (0x01U)
-#define PMIC_INT_SEVERE_ERR_VCCA_OVP_INT_MASK                    (0x02U)
-#define PMIC_INT_SEVERE_ERR_PFSM_ERR_INT_MASK                    (0x04U)
+#define PMIC_OV_DCDC_CFG_BB_OV_INT_MASK_MASK (0x01U)
+#define PMIC_OV_DCDC_CFG_BB_OV_INT_CFG_MASK (0x02U)
 
 /*!
- * \brief  PMIC_INT_COMM_ERR Register Bit Masks
+ * \brief  UV_INT_MASK Register Bit Masks
  */
-#define PMIC_INT_COMM_ERR_COMM_FRM_ERR_INT_MASK                  (0x01U)
-#define PMIC_INT_COMM_ERR_COMM_CRC_ERR_INT_MASK                  (0x02U)
-#define PMIC_INT_COMM_ERR_COMM_ADR_ERR_INT_MASK                  (0x08U)
-#define PMIC_INT_COMM_ERR_I2C2_CRC_ERR_INT_MASK                  (0x20U)
-#define PMIC_INT_COMM_ERR_I2C2_ADR_ERR_INT_MASK                  (0x80U)
+#define PMIC_UV_INT_MASK_LDO1_UV_INT_MASK_MASK (0x01U)
+#define PMIC_UV_INT_MASK_LDO2_UV_INT_MASK_MASK (0x02U)
+#define PMIC_UV_INT_MASK_LDO3_UV_INT_MASK_MASK (0x04U)
+#define PMIC_UV_INT_MASK_LDO4_UV_INT_MASK_MASK (0x08U)
+#define PMIC_UV_INT_MASK_PLDO1_UV_INT_MASK_MASK (0x10U)
+#define PMIC_UV_INT_MASK_PLDO2_UV_INT_MASK_MASK (0x20U)
+#define PMIC_UV_INT_MASK_EXT_VMON1_UV_INT_MASK_MASK (0x40U)
+#define PMIC_UV_INT_MASK_EXT_VMON2_UV_INT_MASK_MASK (0x80U)
 
 /*!
- * \brief  PMIC_INT_READBACK_ERR Register Bit Masks
+ * \brief  UV_INT_CFG1 Register Bit Masks
  */
-#define PMIC_INT_READBACK_ERR_EN_DRV_READBACK_INT_MASK           (0x01U)
-
-/** \brief PMIC_INT_READBACK_ERR_NINT_READBACK_INT_MASK Bit Positions
- *         valid only for PG1.0 */
-#define PMIC_INT_READBACK_ERR_NINT_READBACK_INT_MASK             (0x02U)
-
-/** \brief PMIC_INT_READBACK_ERR_NRSTOUT_READBACK_INT_MASK Bit Positions
- *         valid only for PG1.0 */
-#define PMIC_INT_READBACK_ERR_NRSTOUT_READBACK_INT_MASK          (0x04U)
-
-#define PMIC_INT_READBACK_ERR_NRSTOUT_SOC_READBACK_INT_MASK      (0x08U)
+#define PMIC_UV_INT_CFG1_LDO1_UV_INT_CFG_MASK (0x01U)
+#define PMIC_UV_INT_CFG1_LDO2_UV_INT_CFG_MASK (0x04U)
+#define PMIC_UV_INT_CFG1_LDO3_UV_INT_CFG_MASK (0x10U)
+#define PMIC_UV_INT_CFG1_LDO4_UV_INT_CFG_MASK (0x40U)
 
 /*!
- * \brief  PMIC_INT_ESM Register Bit Masks
+ * \brief  UV_INT_CFG2 Register Bit Masks
  */
-#define PMIC_INT_ESM_ESM_SOC_PIN_INT_MASK                        (0x01U)
-#define PMIC_INT_ESM_ESM_SOC_FAIL_INT_MASK                       (0x02U)
-#define PMIC_INT_ESM_ESM_SOC_RST_INT_MASK                        (0x04U)
-#define PMIC_INT_ESM_ESM_MCU_PIN_INT_MASK                        (0x08U)
-#define PMIC_INT_ESM_ESM_MCU_FAIL_INT_MASK                       (0x10U)
-#define PMIC_INT_ESM_ESM_MCU_RST_INT_MASK                        (0x20U)
+#define PMIC_UV_INT_CFG2_PLDO1_UV_INT_CFG_MASK (0x01U)
+#define PMIC_UV_INT_CFG2_PLDO2_UV_INT_CFG_MASK (0x04U)
+#define PMIC_UV_INT_CFG2_EXT_VMON1_UV_INT_CFG_MASK (0x10U)
+#define PMIC_UV_INT_CFG2_EXT_VMON2_UV_INT_CFG_MASK (0x40U)
 
 /*!
- * \brief  IRQ Mask Bits to validate error bits
+ * \brief  UV_DCDC_CFG Register Bit Masks
  */
-#define PMIC_INT_WD_ERR_MASK                   (0xC1U)
+#define PMIC_UV_DCDC_CFG_BB_UV_INT_MASK_MASK (0x01U)
+#define PMIC_UV_DCDC_CFG_BB_UV_INT_CFG_MASK (0x02U)
+
+/*!
+ * \brief  WD_INT_CFG Register Bit Masks
+ */
+#define PMIC_WD_INT_CFG_WD_TH1_INT_MASK_MASK (0x01U)
+#define PMIC_WD_INT_CFG_WD_TH1_INT_CFG_MASK (0x02U)
+#define PMIC_WD_INT_CFG_WD_TH2_INT_MASK_MASK (0x10U)
+#define PMIC_WD_INT_CFG_WD_TH2_INT_CFG_MASK (0x20U)
+
+/*!
+ * \brief  ESM_CFG1 Register Bit Masks
+ */
+#define PMIC_ESM_CFG1_ESM_ERR_TH_MASK (0x00U)
+#define PMIC_ESM_CFG1_ESM_EN_MASK (0x04U)
+#define PMIC_ESM_CFG1_ESM_CFG_MASK (0x07U)
+
+/*!
+ * \brief  ESM_INT_CFG Register Bit Masks
+ */
+#define PMIC_ESM_INT_CFG_ESM_INT_MASK_MASK (0x01U)
+#define PMIC_ESM_INT_CFG_ESM_DLY1_INT_MASK_MASK (0x02U)
+#define PMIC_ESM_INT_CFG_ESM_DLY1_INT_CFG_MASK (0x04U)
+#define PMIC_ESM_INT_CFG_ESM_DLY2_INT_MASK_MASK (0x10U)
+#define PMIC_ESM_INT_CFG_ESM_DLY2_INT_CFG_MASK (0x20U)
+
+/*!
+ * \brief  CM_COMP_INT_MASK_CFG Register Bit Masks
+ */
+#define PMIC_CM_COMP_INT_MASK_CFG_COMP1_INT_MASK_MASK (0x01U)
+#define PMIC_CM_COMP_INT_MASK_CFG_COMP2_INT_MASK_MASK (0x02U)
+#define PMIC_CM_COMP_INT_MASK_CFG_COMP1_INT_CFG_MASK (0x10U)
+#define PMIC_CM_COMP_INT_MASK_CFG_COMP2_INT_CFG_MASK (0x40U)
+
+/*!
+ * \brief  CM_VMON_INT_MASK Register Bit Masks
+ */
+#define PMIC_CM_VMON_INT_CFG_COMP1P_UV_INT_MASK_MASK (0x01U)
+#define PMIC_CM_VMON_INT_CFG_COMP1P_OV_INT_MASK_MASK (0x02U)
+#define PMIC_CM_VMON_INT_CFG_COMP1N_UV_INT_MASK_MASK (0x04U)
+#define PMIC_CM_VMON_INT_CFG_COMP1N_OV_INT_MASK_MASK (0x08U)
+#define PMIC_CM_VMON_INT_CFG_COMP2P_UV_INT_MASK_MASK (0x10U)
+#define PMIC_CM_VMON_INT_CFG_COMP2P_OV_INT_MASK_MASK (0x20U)
+#define PMIC_CM_VMON_INT_CFG_COMP2N_UV_INT_MASK_MASK (0x40U)
+#define PMIC_CM_VMON_INT_CFG_COMP2N_OV_INT_MASK_MASK (0x80U)
+
+/*!
+ * \brief  CM_VMON_INT_CFG Register Bit Masks
+ */
+#define PMIC_CM_VMON_INT_CFG_COMP1P_UV_INT_CFG_MASK (0x01U)
+#define PMIC_CM_VMON_INT_CFG_COMP1P_OV_INT_CFG_MASK (0x02U)
+#define PMIC_CM_VMON_INT_CFG_COMP1N_UV_INT_CFG_MASK (0x04U)
+#define PMIC_CM_VMON_INT_CFG_COMP1N_OV_INT_CFG_MASK (0x08U)
+#define PMIC_CM_VMON_INT_CFG_COMP2P_UV_INT_CFG_MASK (0x10U)
+#define PMIC_CM_VMON_INT_CFG_COMP2P_OV_INT_CFG_MASK (0x20U)
+#define PMIC_CM_VMON_INT_CFG_COMP2N_UV_INT_CFG_MASK (0x40U)
+#define PMIC_CM_VMON_INT_CFG_COMP2N_OV_INT_CFG_MASK (0x80U)
 
 /*!
  * \brief  PMIC Interrupt register Bit Positions
  */
-/*! PMIC_INT_ESM Register Bit Positions */
-#define PMIC_INT_ESM_ESM_MCU_RST_INT_SHIFT                      (0x5U)
-#define PMIC_INT_ESM_ESM_MCU_FAIL_INT_SHIFT                     (0x4U)
-#define PMIC_INT_ESM_ESM_MCU_PIN_INT_SHIFT                      (0x3U)
-#define PMIC_INT_ESM_ESM_SOC_RST_INT_SHIFT                      (0x2U)
-#define PMIC_INT_ESM_ESM_SOC_FAIL_INT_SHIFT                     (0x1U)
-#define PMIC_INT_ESM_ESM_SOC_PIN_INT_SHIFT                      (0x0U)
-
-/*! PMIC_INT_READBACK_ERR Register Bit Positions */
-#define PMIC_INT_READBACK_ERR_NRSTOUT_SOC_READBACK_INT_SHIFT    (0x3U)
-
-/** \brief PMIC_INT_READBACK_ERR_NRSTOUT_READBACK_INT_SHIFT Bit Positions
- *         valid only for PG1.0 */
-#define PMIC_INT_READBACK_ERR_NRSTOUT_READBACK_INT_SHIFT        (0x2U)
-
-/** \brief PMIC_INT_READBACK_ERR_NINT_READBACK_INT_SHIFT Bit Positions
- *         valid only for PG1.0 */
-#define PMIC_INT_READBACK_ERR_NINT_READBACK_INT_SHIFT           (0x1U)
-
-#define PMIC_INT_READBACK_ERR_EN_DRV_READBACK_INT_SHIFT         (0x0U)
-
-/*! PMIC_INT_COMM_ERR Register Bit Positions */
-#define PMIC_INT_COMM_ERR_I2C2_ADR_ERR_INT_SHIFT                (0x7U)
-#define PMIC_INT_COMM_ERR_I2C2_CRC_ERR_INT_SHIFT                (0x5U)
-#define PMIC_INT_COMM_ERR_COMM_ADR_ERR_INT_SHIFT                (0x3U)
-#define PMIC_INT_COMM_ERR_COMM_CRC_ERR_INT_SHIFT                (0x1U)
-#define PMIC_INT_COMM_ERR_COMM_FRM_ERR_INT_SHIFT                (0x0U)
-
-/*! PMIC_INT_FSM_ERR Register Bit Positions */
-#define PMIC_INT_FSM_ERR_SOC_PWR_ERR_INT_SHIFT                  (0x3U)
-#define PMIC_INT_FSM_ERR_MCU_PWR_ERR_INT_SHIFT                  (0x2U)
-#define PMIC_INT_FSM_ERR_ORD_SHUTDOWN_INT_SHIFT                 (0x1U)
-#define PMIC_INT_FSM_ERR_IMM_SHUTDOWN_INT_SHIFT                 (0x0U)
-
-/*! PMIC_INT_SEVERE_ERR Register Bit Positions */
-#define PMIC_INT_SEVERE_ERR_PFSM_ERR_INT_SHIFT                  (0x2U)
-#define PMIC_INT_SEVERE_ERR_VCCA_OVP_INT_SHIFT                  (0x1U)
-#define PMIC_INT_SEVERE_ERR_TSD_IMM_INT_SHIFT                   (0x0U)
-
-/*! PMIC_INT_MODERATE_ERR Register Bit Positions */
-
-/** \brief PMIC_INT_MODERATE_ERR_NRSTOUT_READBACK_INT_SHIFT Bit Positions
- *         valid only for PG2.0 */
-#define PMIC_INT_MODERATE_ERR_NRSTOUT_READBACK_INT_SHIFT        (0x7U)
-/** \brief PMIC_INT_MODERATE_ERR_NINT_READBACK_INT_SHIFT Bit Positions
- *         valid only for PG2.0 */
-#define PMIC_INT_MODERATE_ERR_NINT_READBACK_INT_SHIFT           (0x6U)
-
-/** \brief PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_SHIFT Bit Positions
- *         valid only for PG1.0 */
-#define PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_SHIFT_PG_1_0        (0x6U)
-
-#define PMIC_INT_MODERATE_ERR_SPMI_ERR_INT_SHIFT                (0x4U)
-
-/** \brief PMIC_INT_MODERATE_ERR_PFSM_ERR_INT_SHIFT Bit Positions
- *         valid only for PG1.0 */
-#define PMIC_INT_MODERATE_ERR_PFSM_ERR_INT_SHIFT_PG_1_0         (0x3U)
-
-/** \brief PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_SHIFT Bit Positions
- *         valid only for PG2.0 */
-#define PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_SHIFT               (0x3U)
-
-#define PMIC_INT_MODERATE_ERR_REG_CRC_ERR_INT_SHIFT             (0x2U)
-#define PMIC_INT_MODERATE_ERR_BIST_FAIL_INT_SHIFT               (0x1U)
-#define PMIC_INT_MODERATE_ERR_TSD_ORD_INT_SHIFT                 (0x0U)
-
-/*! PMIC_INT_MISC Register Bit Positions */
-#define PMIC_INT_MISC_TWARN_INT_SHIFT                           (0x3U)
-#define PMIC_INT_MISC_EXT_CLK_INT_SHIFT                         (0x1U)
-#define PMIC_INT_MISC_BIST_PASS_INT_SHIFT                       (0x0U)
-
-/*! PMIC_INT_STARTUP Register Bit Positions */
-/*! Valid only for PG2.0 */
-#define PMIC_INT_STARTUP_SOFT_REBOOT_INT_SHIFT                  (0x5U)
-#define PMIC_INT_STARTUP_FSD_INT_SHIFT                          (0x4U)
-#define PMIC_INT_STARTUP_ENABLE_INT_SHIFT                       (0x1U)
-
-/*! PMIC_INT_GPIO1_8 Register Bit Positions */
-#define PMIC_INT_GPIO1_8_GPIO8_INT_SHIFT                        (0x7U)
-#define PMIC_INT_GPIO1_8_GPIO7_INT_SHIFT                        (0x6U)
-#define PMIC_INT_GPIO1_8_GPIO6_INT_SHIFT                        (0x5U)
-#define PMIC_INT_GPIO1_8_GPIO5_INT_SHIFT                        (0x4U)
-#define PMIC_INT_GPIO1_8_GPIO4_INT_SHIFT                        (0x3U)
-#define PMIC_INT_GPIO1_8_GPIO3_INT_SHIFT                        (0x2U)
-#define PMIC_INT_GPIO1_8_GPIO2_INT_SHIFT                        (0x1U)
-#define PMIC_INT_GPIO1_8_GPIO1_INT_SHIFT                        (0x0U)
-
-/*! PMIC_INT_GPIO Register Bit Positions */
-#define PMIC_INT_GPIO_GPIO10_INT_SHIFT                          (0x1U)
-#define PMIC_INT_GPIO_GPIO9_INT_SHIFT                           (0x0U)
-
-/*! PMIC_INT_VMON Register Bit Positions */
-#define PMIC_INT_VMON_VCCA_UV_INT_SHIFT                         (0x1U)
-#define PMIC_INT_VMON_VCCA_OV_INT_SHIFT                         (0x0U)
-
-/*! PMIC_INT_BUCK3_4 Register Bit Positions */
-#define PMIC_INT_BUCK3_4_BUCK4_ILIM_INT_SHIFT                   (0x7U)
-#define PMIC_INT_BUCK3_4_BUCK4_SC_INT_SHIFT                     (0x6U)
-#define PMIC_INT_BUCK3_4_BUCK4_UV_INT_SHIFT                     (0x5U)
-#define PMIC_INT_BUCK3_4_BUCK4_OV_INT_SHIFT                     (0x4U)
-#define PMIC_INT_BUCK3_4_BUCK3_ILIM_INT_SHIFT                   (0x3U)
-#define PMIC_INT_BUCK3_4_BUCK3_SC_INT_SHIFT                     (0x2U)
-#define PMIC_INT_BUCK3_4_BUCK3_UV_INT_SHIFT                     (0x1U)
-#define PMIC_INT_BUCK3_4_BUCK3_OV_INT_SHIFT                     (0x0U)
-
-/*! PMIC_INT_BUCK1_2 Register Bit Positions */
-#define PMIC_INT_BUCK1_2_BUCK2_ILIM_INT_SHIFT                   (0x7U)
-#define PMIC_INT_BUCK1_2_BUCK2_SC_INT_SHIFT                     (0x6U)
-#define PMIC_INT_BUCK1_2_BUCK2_UV_INT_SHIFT                     (0x5U)
-#define PMIC_INT_BUCK1_2_BUCK2_OV_INT_SHIFT                     (0x4U)
-#define PMIC_INT_BUCK1_2_BUCK1_ILIM_INT_SHIFT                   (0x3U)
-#define PMIC_INT_BUCK1_2_BUCK1_SC_INT_SHIFT                     (0x2U)
-#define PMIC_INT_BUCK1_2_BUCK1_UV_INT_SHIFT                     (0x1U)
-#define PMIC_INT_BUCK1_2_BUCK1_OV_INT_SHIFT                     (0x0U)
 
 /*!
- * \brief  PMIC Mask register Bit Positions
+ * \brief  SAFETY_CFG Register Bit Positions
  */
+#define PMIC_SAFETY_CFG_CFG_REG_CRC_INT_CFG_SHIFT (0x06U)
 
-/*! PMIC_MASK_ESM Register Bit Positions */
-#define PMIC_MASK_ESM_ESM_MCU_RST_MASK_SHIFT                        (0x5U)
-#define PMIC_MASK_ESM_ESM_MCU_FAIL_MASK_SHIFT                       (0x4U)
-#define PMIC_MASK_ESM_ESM_MCU_PIN_MASK_SHIFT                        (0x3U)
-#define PMIC_MASK_ESM_ESM_SOC_RST_MASK_SHIFT                        (0x2U)
-#define PMIC_MASK_ESM_ESM_SOC_FAIL_MASK_SHIFT                       (0x1U)
-#define PMIC_MASK_ESM_ESM_SOC_PIN_MASK_SHIFT                        (0x0U)
+/*!
+ * \brief  RDBK_INT_MASK_CFG Register Bit Positions
+ */
+#define PMIC_RDBK_INT_MASK_CFG_NRST_RDBK_INT_MASK_SHIFT (0x00U)
+#define PMIC_RDBK_INT_MASK_CFG_SAFE_OUT1_RDBK_INT_MASK_SHIFT (0x01U)
+#define PMIC_RDBK_INT_MASK_CFG_EN_OUT_RDBK_INT_MASK_SHIFT (0x02U)
+#define PMIC_RDBK_INT_MASK_CFG_GPO1_RDBK_INT_MASK_SHIFT (0x03U)
+#define PMIC_RDBK_INT_MASK_CFG_GPO2_RDBK_INT_MASK_SHIFT (0x04U)
+#define PMIC_RDBK_INT_MASK_CFG_GPO3_RDBK_INT_MASK_SHIFT (0x05U)
+#define PMIC_RDBK_INT_MASK_CFG_GPO4_RDBK_INT_MASK_SHIFT (0x06U)
 
-/*! PMIC_MASK_READBACK_ERR Register Bit Positions */
-#define PMIC_MASK_READBACK_ERR_NRSTOUT_SOC_READBACK_MASK_SHIFT      (0x3U)
+/*!
+ * \brief  RDBK_INT_CFG1 Register Bit Positions
+ */
+#define PMIC_RDBK_INT_CFG1_NRST_RDBK_INT_CFG_SHIFT (0x00U)
+#define PMIC_RDBK_INT_CFG1_SAFE_OUT1_RDBK_INT_CFG_SHIFT (0x02U)
+#define PMIC_RDBK_INT_CFG1_EN_OUT_RDBK_INT_CFG_SHIFT (0x04U)
 
-/** \brief PMIC_MASK_READBACK_ERR_NRSTOUT_READBACK_MASK_SHIFT Bit Positions
- *         valid only for PG1.0 */
-#define PMIC_MASK_READBACK_ERR_NRSTOUT_READBACK_MASK_SHIFT          (0x2U)
+/*!
+ * \brief  RDBK_INT_CFG2 Register Bit Positions
+ */
+#define PMIC_RDBK_INT_CFG2_GPO1_RDBK_INT_CFG_SHIFT (0x00U)
+#define PMIC_RDBK_INT_CFG2_GPO2_RDBK_INT_CFG_SHIFT (0x02U)
+#define PMIC_RDBK_INT_CFG2_GPO3_RDBK_INT_CFG_SHIFT (0x04U)
+#define PMIC_RDBK_INT_CFG2_GPO4_RDBK_INT_CFG_SHIFT (0x06U)
 
-/** \brief PMIC_MASK_READBACK_ERR_NINT_READBACK_MASK_SHIFT Bit Positions
- *         valid only for PG1.0 */
-#define PMIC_MASK_READBACK_ERR_NINT_READBACK_MASK_SHIFT             (0x1U)
+/*!
+ * \brief  OFF_STATE_STAT1 Register Bit Positions
+ */
+#define PMIC_OFF_STATE_STAT1_OFF_INT_EVT_ERR_SHIFT (0x01U)
 
-#define PMIC_MASK_READBACK_ERR_EN_DRV_READBACK_MASK_SHIFT           (0x0U)
+/*!
+ * \brief  OV_INT_MASK Register Bit Positions
+ */
+#define PMIC_OV_INT_MASK_LDO1_OV_INT_MASK_SHIFT (0x00U)
+#define PMIC_OV_INT_MASK_LDO2_OV_INT_MASK_SHIFT (0x01U)
+#define PMIC_OV_INT_MASK_LDO3_OV_INT_MASK_SHIFT (0x02U)
+#define PMIC_OV_INT_MASK_LDO4_OV_INT_MASK_SHIFT (0x03U)
+#define PMIC_OV_INT_MASK_PLDO1_OV_INT_MASK_SHIFT (0x04U)
+#define PMIC_OV_INT_MASK_PLDO2_OV_INT_MASK_SHIFT (0x05U)
+#define PMIC_OV_INT_MASK_EXT_VMON1_OV_INT_MASK_SHIFT (0x06U)
+#define PMIC_OV_INT_MASK_EXT_VMON2_OV_INT_MASK_SHIFT (0x07U)
 
-/*! PMIC_MASK_COMM_ERR Register Bit Positions */
-#define PMIC_MASK_COMM_ERR_I2C2_ADR_ERR_MASK_SHIFT                  (0x7U)
-#define PMIC_MASK_COMM_ERR_I2C2_CRC_ERR_MASK_SHIFT                  (0x5U)
-#define PMIC_MASK_COMM_ERR_COMM_ADR_ERR_MASK_SHIFT                  (0x3U)
-#define PMIC_MASK_COMM_ERR_COMM_CRC_ERR_MASK_SHIFT                  (0x1U)
-#define PMIC_MASK_COMM_ERR_COMM_FRM_ERR_MASK_SHIFT                  (0x0U)
+/*!
+ * \brief  OV_INIT_CFG1 Register Bit Positions
+ */
+#define PMIC_OV_INT_CFG1_LDO1_OV_INT_CFG_SHIFT (0x00U)
+#define PMIC_OV_INT_CFG1_LDO2_OV_INT_CFG_SHIFT (0x02U)
+#define PMIC_OV_INT_CFG1_LDO3_OV_INT_CFG_SHIFT (0x04U)
+#define PMIC_OV_INT_CFG1_LDO4_OV_INT_CFG_SHIFT (0x06U)
 
-/*! PMIC_MASK_FSM_ERR Register Bit Positions */
-#define PMIC_MASK_FSM_ERR_SOC_PWR_ERR_MASK_SHIFT                    (0x3U)
-#define PMIC_MASK_FSM_ERR_MCU_PWR_ERR_MASK_SHIFT                    (0x2U)
-#define PMIC_MASK_FSM_ERR_ORD_SHUTDOWN_MASK_SHIFT                   (0x1U)
-#define PMIC_MASK_FSM_ERR_IMM_SHUTDOWN_MASK_SHIFT                   (0x0U)
+/*!
+ * \brief  OV_INT_CFG2 Register Bit Positions
+ */
+#define PMIC_OV_INT_CFG2_PLDO1_OV_INT_CFG_SHIFT (0x00U)
+#define PMIC_OV_INT_CFG2_PLDO2_OV_INT_CFG_SHIFT (0x02U)
+#define PMIC_OV_INT_CFG2_EXT_VMON1_OV_INT_CFG_SHIFT (0x04U)
+#define PMIC_OV_INT_CFG2_EXT_VMON2_OV_INT_CFG_SHIFT (0x06U)
 
-/*! PMIC_MASK_MODERATE_ERR Register Bit Positions */
+/*!
+ * \brief  OV_DCDC_CFG Register Bit Positions
+ */
+#define PMIC_OV_DCDC_CFG_BB_OV_INT_MASK_SHIFT (0x00U)
+#define PMIC_OV_DCDC_CFG_BB_OV_INT_CFG_SHIFT (0x01U)
 
-/** \brief PMIC_MASK_MODERATE_ERR_NRSTOUT_READBACK_MASK_SHIFT Bit Positions
- *         valid only for PG2.0 */
-#define PMIC_MASK_MODERATE_ERR_NRSTOUT_READBACK_MASK_SHIFT          (0x7U)
-/** \brief PMIC_MASK_MODERATE_ERR_NINT_READBACK_MASK_SHIFT Bit Positions
- *         valid only for PG2.0 */
-#define PMIC_MASK_MODERATE_ERR_NINT_READBACK_MASK_SHIFT             (0x6U)
+/*!
+ * \brief  UV_INT_MASK Register Bit Positions
+ */
+#define PMIC_UV_INT_MASK_LDO1_UV_INT_MASK_SHIFT (0x00U)
+#define PMIC_UV_INT_MASK_LDO2_UV_INT_MASK_SHIFT (0x01U)
+#define PMIC_UV_INT_MASK_LDO3_UV_INT_MASK_SHIFT (0x02U)
+#define PMIC_UV_INT_MASK_LDO4_UV_INT_MASK_SHIFT (0x03U)
+#define PMIC_UV_INT_MASK_PLDO1_UV_INT_MASK_SHIFT (0x04U)
+#define PMIC_UV_INT_MASK_PLDO2_UV_INT_MASK_SHIFT (0x05U)
+#define PMIC_UV_INT_MASK_EXT_VMON1_UV_INT_MASK_SHIFT (0x06U)
+#define PMIC_UV_INT_MASK_EXT_VMON2_UV_INT_MASK_SHIFT (0x07U)
 
-#define PMIC_MASK_MODERATE_ERR_SPMI_ERR_MASK_SHIFT                  (0x4U)
-#define PMIC_MASK_MODERATE_ERR_REG_CRC_ERR_MASK_SHIFT               (0x2U)
-#define PMIC_MASK_MODERATE_ERR_BIST_FAIL_MASK_SHIFT                 (0x1U)
+/*!
+ * \brief  UV_INT_CFG1 Register Bit Positions
+ */
+#define PMIC_UV_INT_CFG1_LDO1_UV_INT_CFG_SHIFT (0x00U)
+#define PMIC_UV_INT_CFG1_LDO2_UV_INT_CFG_SHIFT (0x02U)
+#define PMIC_UV_INT_CFG1_LDO3_UV_INT_CFG_SHIFT (0x04U)
+#define PMIC_UV_INT_CFG1_LDO4_UV_INT_CFG_SHIFT (0x06U)
 
-/*! PMIC_MASK_MISC Register Bit Positions */
-#define PMIC_MASK_MISC_EXT_CLK_MASK_SHIFT                           (0x1U)
-#define PMIC_MASK_MISC_BIST_PASS_MASK_SHIFT                         (0x0U)
+/*!
+ * \brief  UV_INT_CFG2 Register Bit Positions
+ */
+#define PMIC_UV_INT_CFG2_PLDO1_UV_INT_CFG_SHIFT (0x00U)
+#define PMIC_UV_INT_CFG2_PLDO2_UV_INT_CFG_SHIFT (0x02U)
+#define PMIC_UV_INT_CFG2_EXT_VMON1_UV_INT_CFG_SHIFT (0x04U)
+#define PMIC_UV_INT_CFG2_EXT_VMON2_UV_INT_CFG_SHIFT (0x06U)
 
-/*! PMIC_MASK_STARTUP Register Bit Positions */
-/*! Valid only for PG 2.0 */
-#define PMIC_MASK_STARTUP_SOFT_REBOOT_MASK_SHIFT                    (0x5U)
-#define PMIC_MASK_STARTUP_FSD_MASK_SHIFT                            (0x4U)
-#define PMIC_MASK_STARTUP_ENABLE_MASK_SHIFT                         (0x1U)
+/*!
+ * \brief  UV_DCDC_CFG Register Bit Positions
+ */
+#define PMIC_UV_DCDC_CFG_BB_UV_INT_MASK_SHIFT (0x00U)
+#define PMIC_UV_DCDC_CFG_BB_UV_INT_CFG_SHIFT (0x01U)
 
-/*! PMIC_MASK_GPIO1_8_RISE Register Bit Positions */
-#define PMIC_MASK_GPIO1_8_RISE_GPIO8_RISE_MASK_SHIFT                (0x7U)
-#define PMIC_MASK_GPIO1_8_RISE_GPIO7_RISE_MASK_SHIFT                (0x6U)
-#define PMIC_MASK_GPIO1_8_RISE_GPIO6_RISE_MASK_SHIFT                (0x5U)
-#define PMIC_MASK_GPIO1_8_RISE_GPIO5_RISE_MASK_SHIFT                (0x4U)
-#define PMIC_MASK_GPIO1_8_RISE_GPIO4_RISE_MASK_SHIFT                (0x3U)
-#define PMIC_MASK_GPIO1_8_RISE_GPIO3_RISE_MASK_SHIFT                (0x2U)
-#define PMIC_MASK_GPIO1_8_RISE_GPIO2_RISE_MASK_SHIFT                (0x1U)
-#define PMIC_MASK_GPIO1_8_RISE_GPIO1_RISE_MASK_SHIFT                (0x0U)
+/*!
+ * \brief  WD_INT_CFG Register Bit Positions
+ */
+#define PMIC_WD_INT_CFG_WD_TH1_INT_MASK_SHIFT (0x00U)
+#define PMIC_WD_INT_CFG_WD_TH1_INT_CFG_SHIFT (0x01U)
+#define PMIC_WD_INT_CFG_WD_TH2_INT_MASK_SHIFT (0x04U)
+#define PMIC_WD_INT_CFG_WD_TH2_INT_CFG_SHIFT (0x05U)
 
-/*! PMIC_MASK_GPIO1_8_FALL Register Bit Positions */
-#define PMIC_MASK_GPIO1_8_FALL_GPIO8_FALL_MASK_SHIFT                (0x7U)
-#define PMIC_MASK_GPIO1_8_FALL_GPIO7_FALL_MASK_SHIFT                (0x6U)
-#define PMIC_MASK_GPIO1_8_FALL_GPIO6_FALL_MASK_SHIFT                (0x5U)
-#define PMIC_MASK_GPIO1_8_FALL_GPIO5_FALL_MASK_SHIFT                (0x4U)
-#define PMIC_MASK_GPIO1_8_FALL_GPIO4_FALL_MASK_SHIFT                (0x3U)
-#define PMIC_MASK_GPIO1_8_FALL_GPIO3_FALL_MASK_SHIFT                (0x2U)
-#define PMIC_MASK_GPIO1_8_FALL_GPIO2_FALL_MASK_SHIFT                (0x1U)
-#define PMIC_MASK_GPIO1_8_FALL_GPIO1_FALL_MASK_SHIFT                (0x0U)
+/*!
+ * \brief  ESM_CFG1 Register Bit Positions
+ */
+#define PMIC_ESM_CFG1_ESM_ERR_TH_SHIFT (0x00U)
+#define PMIC_ESM_CFG1_ESM_EN_SHIFT (0x04U)
+#define PMIC_ESM_CFG1_ESM_CFG_SHIFT (0x07U)
 
-/*! PMIC_MASK_BUCK3_4 Register Bit Positions */
-#define PMIC_MASK_BUCK3_4_BUCK4_ILIM_MASK_SHIFT                     (0x7U)
-#define PMIC_MASK_BUCK3_4_BUCK4_UV_MASK_SHIFT                       (0x5U)
-#define PMIC_MASK_BUCK3_4_BUCK4_OV_MASK_SHIFT                       (0x4U)
-#define PMIC_MASK_BUCK3_4_BUCK3_ILIM_MASK_SHIFT                     (0x3U)
-#define PMIC_MASK_BUCK3_4_BUCK3_UV_MASK_SHIFT                       (0x1U)
-#define PMIC_MASK_BUCK3_4_BUCK3_OV_MASK_SHIFT                       (0x0U)
+/*!
+ * \brief  ESM_INT_CFG Register Bit Positions
+ */
+#define PMIC_ESM_INT_CFG_ESM_INT_MASK_SHIFT (0x00U)
+#define PMIC_ESM_INT_CFG_ESM_DLY1_INT_MASK_SHIFT (0x01U)
+#define PMIC_ESM_INT_CFG_ESM_DLY1_INT_CFG_SHIFT (0x02U)
+#define PMIC_ESM_INT_CFG_ESM_DLY2_INT_MASK_SHIFT (0x04U)
+#define PMIC_ESM_INT_CFG_ESM_DLY2_INT_CFG_SHIFT (0x05U)
 
-/*! PMIC_MASK_BUCK1_2 Register Bit Positions */
-#define PMIC_MASK_BUCK1_2_BUCK2_ILIM_MASK_SHIFT                     (0x7U)
-#define PMIC_MASK_BUCK1_2_BUCK2_UV_MASK_SHIFT                       (0x5U)
-#define PMIC_MASK_BUCK1_2_BUCK2_OV_MASK_SHIFT                       (0x4U)
-#define PMIC_MASK_BUCK1_2_BUCK1_ILIM_MASK_SHIFT                     (0x3U)
-#define PMIC_MASK_BUCK1_2_BUCK1_UV_MASK_SHIFT                       (0x1U)
-#define PMIC_MASK_BUCK1_2_BUCK1_OV_MASK_SHIFT                       (0x0U)
+/*!
+ * \brief  CM_COMP_INT_MASK_CFG Register Bit Positions
+ */
+#define PMIC_CM_COMP_INT_MASK_CFG_COMP1_INT_MASK_SHIFT (0x00U)
+#define PMIC_CM_COMP_INT_MASK_CFG_COMP2_INT_MASK_SHIFT (0x01U)
+#define PMIC_CM_COMP_INT_MASK_CFG_COMP1_INT_CFG_SHIFT (0x04U)
+#define PMIC_CM_COMP_INT_MASK_CFG_COMP2_INT_CFG_SHIFT (0x06U)
+
+/*!
+ * \brief  CM_VMON_INT_MASK Register Bit Positions
+ */
+#define PMIC_CM_VMON_INT_CFG_COMP1P_UV_INT_MASK_SHIFT (0x00U)
+#define PMIC_CM_VMON_INT_CFG_COMP1P_OV_INT_MASK_SHIFT (0x01U)
+#define PMIC_CM_VMON_INT_CFG_COMP1N_UV_INT_MASK_SHIFT (0x02U)
+#define PMIC_CM_VMON_INT_CFG_COMP1N_OV_INT_MASK_SHIFT (0x03U)
+#define PMIC_CM_VMON_INT_CFG_COMP2P_UV_INT_MASK_SHIFT (0x04U)
+#define PMIC_CM_VMON_INT_CFG_COMP2P_OV_INT_MASK_SHIFT (0x05U)
+#define PMIC_CM_VMON_INT_CFG_COMP2N_UV_INT_MASK_SHIFT (0x06U)
+#define PMIC_CM_VMON_INT_CFG_COMP2N_OV_INT_MASK_SHIFT (0x07U)
+
+/*!
+ * \brief  CM_VMON_INT_CFG Register Bit Positions
+ */
+#define PMIC_CM_VMON_INT_CFG_COMP1P_UV_INT_CFG_SHIFT (0x00U)
+#define PMIC_CM_VMON_INT_CFG_COMP1P_OV_INT_CFG_SHIFT (0x01U)
+#define PMIC_CM_VMON_INT_CFG_COMP1N_UV_INT_CFG_SHIFT (0x02U)
+#define PMIC_CM_VMON_INT_CFG_COMP1N_OV_INT_CFG_SHIFT (0x03U)
+#define PMIC_CM_VMON_INT_CFG_COMP2P_UV_INT_CFG_SHIFT (0x04U)
+#define PMIC_CM_VMON_INT_CFG_COMP2P_OV_INT_CFG_SHIFT (0x05U)
+#define PMIC_CM_VMON_INT_CFG_COMP2N_UV_INT_CFG_SHIFT (0x06U)
+#define PMIC_CM_VMON_INT_CFG_COMP2N_OV_INT_CFG_SHIFT (0x07U)
+
+/*!
+ * \brief  CM_VMON_INT_CFG Register Bit Positions
+ */
+#define PMIC_RDBK_INT_MASK_NRST_RDBK_INT_MASK_SHIFT (0x00U)
+#define PMIC_RDBK_INT_MASK_SAFE_OUT1_RDBK_INT_MASK_SHIFT (0x01U)
+#define PMIC_RDBK_INT_MASK_EN_OUT_RDBK_INT_MASK_SHIFT (0x02U)
+#define PMIC_RDBK_INT_MASK_GPO1_RDBK_INT_MASK_SHIFT (0x03U)
+#define PMIC_RDBK_INT_MASK_GPO2_RDBK_INT_MASK_SHIFT (0x04U)
+#define PMIC_RDBK_INT_MASK_GPO3_RDBK_INT_MASK_SHIFT (0x05U)
+#define PMIC_RDBK_INT_MASK_GPO4_RDBK_INT_MASK_SHIFT (0x06U)
 
 /*! PMIC INVALID MACROS */
-#define PMIC_IRQ_INVALID_REGADDR                                    (0x0U)
-#define PMIC_IRQ_INVALID_BIT_SHIFT                                  (0x0U)
-#define PMIC_INVALID_DEVICE                                         (0xFFU)
+#define PMIC_IRQ_INVALID_REGADDR (0x0U)
+#define PMIC_IRQ_INVALID_BIT_SHIFT (0x0U)
+#define PMIC_INVALID_DEVICE (0xFFU)
 
 /*!
  * \brief Bit field Value for intrMaskBitPos/intrClrBitPos/
  *        gpioRiseMaskBitPos/gpioFallMaskBitPos
  */
-#define PMIC_IRQ_MASK_CLR_BITFIELD                                  (1U)
+#define PMIC_IRQ_MASK_CLR_BITFIELD (1U)
 
 /*!
  * \brief Mask Value of the PMIC IRQ
  */
-#define PMIC_IRQ_MASK_VAL_1                                         (1U)
+#define PMIC_IRQ_MASK_VAL_1 (1U)
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
 /*!
-* \brief   PMIC Interrupt details object structure.
-*
-* \param   intrClrRegAddr    Interrupt Clear Register Address.
-* \param   intrClrBitPos     Interrupt Clear Register Bit Position.
-* \param   intrMaskRegAddr   Interrupt Mask Register Address.
-* \param   intrMaskBitPos    Interrupt Mask Register bit position.
-*/
-typedef struct Pmic_IntrCfg_s
-{
-    uint16_t intrClrRegAddr;
-    uint8_t  intrClrBitPos;
-    uint8_t  intrMaskRegAddr;
-    uint8_t  intrMaskBitPos;
+ * \brief   PMIC Interrupt details object structure.
+ *
+ * \param   intrClrRegAddr    Interrupt Clear Register Address.
+ * \param   intrClrBitPos     Interrupt Clear Register Bit Position.
+ * \param   intrMaskRegAddr   Interrupt Mask Register Address.
+ * \param   intrMaskBitPos    Interrupt Mask Register bit position.
+ */
+typedef struct Pmic_IntrCfg_s {
+  uint16_t intrClrRegAddr;
+  uint8_t intrClrBitPos;
+  uint8_t intrMaskRegAddr;
+  uint8_t intrMaskBitPos;
 } Pmic_IntrCfg_t;
 
 /*!
-* \brief   PMIC GPIO Interrupt Mask details object structure.
-*
-* \param   gpioRiseIntrMaskRegAddr    GPIO RISE Interrupt Mask Register Address
-* \param   gpioRiseMaskBitPos         GPIO RISE Interrupt Mask Register Bit
-*                                     position.
-* \param   gpioFallIntrMaskRegAddr    GPIO FALL Interrupt Mask Register Address
-* \param   gpioFallMaskBitPos         GPIO FALL Interrupt Mask Register Bit
-*                                     position.
-*/
-typedef struct Pmic_GpioIntrTypeCfg_s
-{
-    uint8_t gpioRiseIntrMaskRegAddr;
-    uint8_t gpioRiseMaskBitPos;
-    uint8_t gpioFallIntrMaskRegAddr;
-    uint8_t gpioFallMaskBitPos;
+ * \brief   PMIC GPIO Interrupt Mask details object structure.
+ *
+ * \param   gpioIntrMaskRegAddr    GPIO Interrupt Mask Register Address
+ * \param   gpioMaskBitPos         GPIO Interrupt Mask Register Bit
+ *                                     position.
+ */
+typedef struct Pmic_GpioIntrTypeCfg_s {
+  uint8_t gpioIntrMaskRegAddr;
+  uint8_t gpioMaskBitPos;
 } Pmic_GpioIntrTypeCfg_t;
 
 /*==========================================================================*/
@@ -555,7 +481,7 @@ typedef struct Pmic_GpioIntrTypeCfg_s
 /*!
  * \brief  Function to Set the intStatus bit position.
  */
-void Pmic_intrBitSet(Pmic_IrqStatus_t  *pErrStat, uint32_t pos);
+void Pmic_intrBitSet(Pmic_IrqStatus_t *pErrStat, uint32_t pos);
 
 #ifdef __cplusplus
 }
