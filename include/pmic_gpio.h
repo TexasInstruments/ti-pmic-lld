@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -30,452 +30,209 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-/**
- *  \ingroup DRV_PMIC_MODULE
- *  \defgroup DRV_PMIC_GPIO_MODULE PMIC GPIO Driver API
- *      This Module explains about PMIC GPIO driver parameters and APIs usage.
- *  PMIC GPIO Driver module covers all GPIO features APIs. Like, set/get gpio
- *  pin functions, pull up/down, drive strength, output drain, pin value,
- *  enable/disable gpio interrupt and configure nPWRON or ENABLE pin features.
- *
- *  Supported PMIC devices for GPIO Module:
- *  1. TPS6594x (Leo PMIC Device)
- *  2. LP8764x  (Hera PMIC Device)
- *
- *  @{
- */
 
 /**
  * \file   pmic_gpio.h
  *
- * \brief  PMIC Low Level Driver API/interface file for GPIO API
+ * \brief: This file contains macro definitions, structures and function
+ *         prototypes for driver specific PMIC gpio configuration
  */
 
 #ifndef PMIC_GPIO_H_
 #define PMIC_GPIO_H_
 
-/* ========================================================================== */
-/*                             Include Files                                  */
-/* ========================================================================== */
-#include <pmic_core.h>
-#include <cfg/tps6594x/pmic_gpio_tps6594x.h>
-#include <cfg/lp8764x/pmic_gpio_lp8764x.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/* ========================================================================== */
-/*                             Macros & Typedefs                              */
-/* ========================================================================== */
-
-/**
- *  \anchor Pmic_Gpio_DeglitchTimeCfg
- *  \name   PMIC GPIO Deglitch Time Enable or Disable Configuration
- *
- *  @{
- */
-#define PMIC_GPIO_DEGLITCH_DISABLE     (0U)
-#define PMIC_GPIO_DEGLITCH_ENABLE      (1U)
-/*  @} */
-
-/**
- *  \anchor Pmic_Gpio_SignalDir
- *  \name   PMIC GPIO signal direction
- *
- *  @{
- */
-#define PMIC_GPIO_INPUT                (0U)
-#define PMIC_GPIO_OUTPUT               (1U)
-/*  @} */
-
-/**
- *  \anchor Pmic_Gpio_SignalType
- *  \name   PMIC GPIO signal type when configured as output
- *
- *  @{
- */
-#define PMIC_GPIO_PUSH_PULL_OUTPUT     (0U)
-#define PMIC_GPIO_OPEN_DRAIN_OUTPUT    (1U)
-/*  @} */
-
-/**
- *  \anchor Pmic_Gpio_SignalLvl
- *  \name   PMIC GPIO/NPWRON/ENABLE signal level
- *
- *  @{
- */
-#define PMIC_GPIO_LOW                  (0U)
-#define PMIC_GPIO_HIGH                 (1U)
-/*  @} */
-
-/**
- *  \anchor Pmic_Gpio_PU_PD_Sel
- *  \name   PMIC GPIO Pull-up/pull-down select
- *
- *  @{
- */
-#define PMIC_GPIO_PD_SELECT            (0U)
-#define PMIC_GPIO_PU_SELECT            (1U)
-/*  @} */
-
-/**
- *  \anchor Pmic_Gpio_PU_PD_En
- *  \name   PMIC GPIO Pull-up/pull-down enable/disable
- *
- *  @{
- */
-#define PMIC_GPIO_PU_PD_DISABLE        (0U)
-#define PMIC_GPIO_PU_PD_ENABLE         (1U)
-/*  @} */
-
-/**
- *  \anchor Pmic_GpioCflag
- *  \name   PMIC Pmic_GpioCfg_s member configuration type
- *
- *  @{
- */
- /** \brief validParams value used to set/get gpio pin Direction
-  *         Valid only for GPIO pins only. Invalid for NPWRON/Enable */
-#define PMIC_GPIO_CFG_DIR_VALID            (0x00U)
- /** \brief validParams value used to set/get output signal type
-  *         Valid only for GPIO pins only. Invalid for NPWRON/Enable */
-#define PMIC_GPIO_CFG_OD_VALID             (0x01U)
-/** \brief validParams value used to set/get pullup/pull down control
- */
-#define PMIC_GPIO_CFG_PULL_VALID           (0x02U)
-/** \brief validParams value used to set/get signal deglitch time
- *         enable/disable */
-#define PMIC_GPIO_CFG_DEGLITCH_VALID       (0x03U)
-/** \brief validParams value used to set/get pin mux function */
-#define PMIC_GPIO_CFG_PINFUNC_VALID        (0x04U)
-/** \brief validParams value used to set/get pin polarity
- *         Valid only for Enable pin for TPS6594x Leo and LP8764x Hera device
- *         Invalid for NPWRON pin for TPS6594x Leo device*/
-#define PMIC_ENABLE_CFG_POLARITY_VALID     (0x05U)
-/*  @} */
-
-/**
- *  \anchor Pmic_GpioPinCfgStructPrmBitShiftVal
- *  \name   PMIC GPIO Pin Configuration Structure Param Bit shift values
- *
- *  Application can use below shifted values to set the validParams
- *  struct member defined in Pmic_GpioCfg_t structure
- *
- *  @{
- */
-#define PMIC_GPIO_CFG_DIR_VALID_SHIFT        \
-                          (0x01U << PMIC_GPIO_CFG_DIR_VALID)
-#define PMIC_GPIO_CFG_OD_VALID_SHIFT         \
-                          (0x01U << PMIC_GPIO_CFG_OD_VALID)
-#define PMIC_GPIO_CFG_PULL_VALID_SHIFT       \
-                          (0x01U << PMIC_GPIO_CFG_PULL_VALID)
-#define PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT   \
-                          (0x01U << PMIC_GPIO_CFG_DEGLITCH_VALID)
-#define PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT    \
-                          (0x01U << PMIC_GPIO_CFG_PINFUNC_VALID)
-#define PMIC_ENABLE_CFG_POLARITY_VALID_SHIFT \
-                          (0x01U << PMIC_ENABLE_CFG_POLARITY_VALID)
-/* @} */
-
-/**
- *  \anchor Pmic_GpioPinPullCtrl
- *  \name   PMIC GPIO pull up/pull down selectionn
- *
- *  @{
- */
-#define PMIC_GPIO_PULL_DISABLED        (0x0U)
-#define PMIC_GPIO_PULL_DOWN            (0x1U)
-#define PMIC_GPIO_PULL_UP              (0x2U)
-/*  @} */
-
-/**
- *  \anchor Pmic_GpioInterruptCfg
- *  \name   PMIC GPIO Interrupt selection
- *
- *  @{
- */
-#define PMIC_GPIO_FALL_INTERRUPT        (0U)
-#define PMIC_GPIO_RISE_INTERRUPT        (1U)
-#define PMIC_GPIO_FALL_RISE_INTERRUPT   (2U)
-#define PMIC_GPIO_DISABLE_INTERRUPT     (3U)
-/*  @} */
-
-/**
- *  \anchor Pmic_GpioInterruptPolCfg
- *  \name   PMIC GPIO Interrupt Polarity selection
- *
- *  @{
- */
-#define PMIC_GPIO_POL_LOW              (0U)
-#define PMIC_GPIO_POL_HIGH             (1U)
-/*  @} */
+#include "pmic_core.h"
+#include "pmic_types.h"
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
-
 /*!
- * \brief  PMIC GPIO/NPWRON/ENABLE pin configuration structure.
- *         Note: validParams is input param for all Set and Get APIs. other
- *         params except validParams is input param for Set APIs and output
- *         param for Get APIs
+ * \brief   PMIC GPIO Pins with Input Ouput Configuration
  *
- * \param   validParams         Selection of structure parameters to be set,
- *                              from the combination of \ref Pmic_GpioCflag
- *                              and the corresponding member value must be
- *                              updated.
- *                              Valid values \ref Pmic_GpioCflag.
- * \param   pinDir              gpio pin Direction. Valid only for GPIO pins.
- *                              Valid values \ref Pmic_Gpio_SignalDir.
- *                                Valid only when PMIC_GPIO_CFG_DIR_VALID
- *                                bit is set.
- * \param   outputSignalType    output signal type.
- *                              Valid values \ref Pmic_Gpio_SignalType.
- *                                Valid only when PMIC_GPIO_CFG_OD_VALID
- *                                bit is set.
- *                                Valid only for GPIO Pins.
- * \param   pullCtrl            pullup/pull down control.
- *                              Valid values \ref Pmic_GpioPinPullCtrl.
- *                                Valid only when PMIC_GPIO_CFG_PULL_VALID
- *                                bit is set.
- * \param   deglitchEnable      signal deglitch time enable/disable.
- *                              Valid values \ref Pmic_Gpio_DeglitchTimeCfg.
- *                                Valid only when PMIC_GPIO_CFG_DEGLITCH_VALID
- *                                bit is set.
- * \param   pinFunc             pin mux function.
- *                              Valid values for TPS6594x Leo Device
- *                              \ref Pmic_Tps6594xLeo_GpioPinFunc.
- *                              Valid values for LP8764x HERA Device
- *                              \ref Pmic_Lp8764xHera_GpioPinFunc.
- *                                Valid only when PMIC_GPIO_CFG_PINFUNC_VALID
- *                                bit is set.
- * \param   pinPolarity         Configure pin polarity.
- *                              Valid only for Enable pin.
- *                                Valid only when PMIC_ENABLE_CFG_POLARITY_VALID
- *                                bit is set.
+ * \param   regAddr          GPIO Pin Register Address
+ * \param   outRegAddr       GPIO OUT Register Address
+ * \param   inRegAddr        GPIO IN Register Address
+ * \param   inRegBitPos      Bit position of GPIO IN Register bit position
+ * \param   outRegBitPos     Bit position of GPIO OUT Register bit position
  */
-typedef struct Pmic_GpioCfg_s
-{
-    uint8_t                   validParams;
-    uint8_t                   pinDir;
-    uint8_t                   outputSignalType;
-    uint8_t                   pullCtrl;
-    uint8_t                   deglitchEnable;
-    uint8_t                   pinFunc;
-    uint8_t                   pinPolarity;
+typedef struct Pmic_GpioInOutCfg_s {
+  uint8_t regAddr;
+  uint8_t outRegAddr;
+  uint8_t inRegAddr;
+  uint8_t inRegBitPos;
+  uint8_t outRegBitPos;
+} Pmic_GpioInOutCfg_t;
+
+typedef struct Pmic_GpioCfg_s {
+  uint8_t validParams;
+  uint8_t pinDir; // for EN_OUT in GPO_Cfg2
+  uint8_t outputSignalType;
+  uint8_t pullCtrl;
+  uint8_t deglitchEnable;
+  uint8_t pinFunc;
+  uint8_t pinPolarity;
+
+  union {
+    struct {
+      uint8_t gpo1Cfg; // Configuration for GPO1
+      uint8_t gpo2Cfg; // Configuration for GPO2
+    } gpoCfg1;
+    struct {
+      uint8_t gpo3Cfg; // Configuration for GPO3
+      uint8_t gpo4Cfg; // Configuration for GPO4
+    } gpoCfg2;
+    uint8_t gpi1Cfg;
+    uint8_t gpi4Cfg;
+  };
 } Pmic_GpioCfg_t;
+
+typedef struct Pmic_GpioRdbkDglCfg_s {
+  uint8_t validParams;
+  uint8_t gpo1FDglConfig;
+  uint8_t gpo1RDglConfig;
+  uint8_t gpo2FDglConfig;
+  uint8_t gpo2RDglConfig;
+  uint8_t gpo3FDglConfig;
+  uint8_t gpo3RDglConfig;
+  uint8_t gpo4FDglConfig;
+  uint8_t gpo4RDglConfig;
+  uint8_t gpo1FDglData;
+  uint8_t gpo1RDglData;
+  uint8_t gpo2FDglData;
+  uint8_t gpo2RDglData;
+  uint8_t gpo3FDglData;
+  uint8_t gpo3RDglData;
+  uint8_t gpo4FDglData;
+  uint8_t gpo4RDglData;
+
+} Pmic_GpioRdbkDglCfg_t;
+
+#define PMIC_LOW 0U
+#define PMIC_HIGH 1U
+
+/* Pins for GPO1, GPO2, GPO3, GPO4 */
+#define PMIC_GPO1 0x01U
+#define PMIC_GPO2 0x02U
+#define PMIC_GPO3 0x03U
+#define PMIC_GPO4 0x04U
+#define PMIC_GPI1 0x05U
+#define PMIC_GPI4 0x06U
+
+#define PMIC_GPIO_CFG_PULL_VALID (0x02U)
+#define PMIC_GPIO_CFG_DEGLITCH_VALID (0x03U)
+
+/* MACROS for GPO_CFG1_GPO1 */
+#define LOW_LEVEL 0U
+#define HIGH_LEVEL 1U
+#define N_EN 2U
+#define nINT 3U
+#define N_EN_HIGH_Z_1 4U
+#define N_EN_HIGH_Z_2 5U
+#define N_EN_HIGH_Z_3 6U
+#define RO_CNTR 7U
+
+/* MACROS for GPO_CFG1_GPO2*/
+#define LOW_LEVEL 0U
+#define HIGH_LEVEL 1U
+#define N_EN 2U
+#define COMP1_OUT 3U
+#define EN_OUT2 4U
+#define N_EN_HIGH_Z_4 5U
+#define N_EN_HIGH_Z_5 6U
+#define RO_CNTR 7U
+
+/* MACROS for EN_OUT GPO_CFG2 */
+#define PULL_UP_VDDIO 0U
+#define PULL_UP_LDO_IN 1U
+#define INTL_PULL_UP 2U
+
+/* MACROS for GPO_CFG2_GPO3 */
+#define LOW_LEVEL 0U
+#define HIGH_LEVEL 1U
+#define N_EN 2U
+#define SAFE_OUT2 3U
+#define N_EN_HIGH_Z_6 4U
+#define N_EN_HIGH_Z_7 5U
+#define N_EN_HIGH_Z_8 6U
+#define RO_CNTR 7U
+
+/* MACROS for GPO_CFG2_GPO4 */
+#define LOW_LEVEL 0U
+#define HIGH_LEVEL 1U
+#define N_EN 2U
+#define PGOOD 3U
+#define COMP2_OUT 4U
+#define N_EN_HIGH_Z_9 5U
+#define N_EN_HIGH_Z_10 6U
+#define RO_CNTR 7U
+
+/* MACROS for GPI_CFG_GPI1 */
+#define COMP1_IN 0U
+#define WD_IN 1U
+#define COS_N 2U
+
+/* MACROS for GPI_CFG_GPI4 */
+#define ESM_IN 0U
+#define WD_IN 1U
+
+int32_t Pmic_gpiSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                 const uint8_t pin,
+                                 const Pmic_GpioCfg_t gpioCfg);
+
+int32_t Pmic_gpiGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                 const uint8_t pin, Pmic_GpioCfg_t *pGpioCfg);
 
 /*==========================================================================*/
 /*                         Function Declarations                            */
 /*==========================================================================*/
-/*!
- * \brief   API to set PMIC GPIO configuration.
- *
- * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-5844), REQ_TAG(PDK-9111),
- *              REQ_TAG(PDK-9157)
- * Design: did_pmic_gpio_cfg_readback, did_pmic_lpstandby_wkup_cfg
- * Architecture: aid_pmic_gpio_cfg
- *
- *          This function is used to set the required configuration for the
- *          specified GPIO pin when corresponding validParam bit field is set in
- *          the Pmic_GpioCfg_t
- *          For more information \ref Pmic_GpioCfg_t
- *          Note: Application has to ensure to do proper configuration of GPIO
- *                pin when connected to Enable pin of other peripherals on the
- *                board. If not configured properly then it may down the
- *                peripheral or system
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- * \param   pin             [IN]    PMIC GPIO pin number.
- *                                   Valid values for TPS6594x Leo Device
- *                                   \ref Pmic_Tps6594xLeo_GpioPin.
- *                                   Valid values for LP8764x HERA Device
- *                                   \ref Pmic_Lp8764xHera_GpioPin.
- * \param   gpioCfg         [IN]    Set required configuration for
- *                                  the specified GPIO pin.
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
-int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t   *pPmicCoreHandle,
-                                  const uint8_t        pin,
+
+int32_t Pmic_gpioSetPinFunc(Pmic_CoreHandle_t *pPmicCoreHandle,
+                            const uint8_t pin, const Pmic_GpioCfg_t gpioCfg);
+
+int32_t
+Pmic_gpioSetNPwronEnableDeglitchPullCtrlCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                            const Pmic_GpioCfg_t gpioCfg);
+
+int32_t Pmic_gpioSetPinPolarity(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                const Pmic_GpioCfg_t gpioCfg);
+
+int32_t Pmic_gpioGetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                 const uint8_t pin, Pmic_GpioCfg_t *pGpioCfg);
+
+int32_t Pmic_gpioGetPinFunc(Pmic_CoreHandle_t *pPmicCoreHandle,
+                            const uint8_t pin, Pmic_GpioCfg_t *pGpioCfg);
+
+int32_t Pmic_gpioGetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
+                             const uint8_t pin, Pmic_GpioCfg_t *pGpioCfg);
+
+int32_t Pmic_gpioGetPinPolarity(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                Pmic_GpioCfg_t *pGpioCfg);
+
+int32_t Pmic_gpo12SetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                  Pmic_GpioRdbkDglCfg_t *GpioRdbkDglCfg);
+
+int32_t Pmic_gpo12GetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                  Pmic_GpioRdbkDglCfg_t *GpioRdbkDglCfg);
+
+int32_t Pmic_gpo34SetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                  Pmic_GpioRdbkDglCfg_t *GpioRdbkDglCfg);
+
+int32_t Pmic_gpo34GetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                  Pmic_GpioRdbkDglCfg_t *GpioRdbkDglCfg);
+
+void Pmic_get_gpioInOutCfg(const Pmic_CoreHandle_t *pPmicCoreHandle,
+                           Pmic_GpioInOutCfg_t *pGpioInOutCfg);
+
+int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin,
+                          const uint8_t pinValue);
+
+int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                  const uint8_t pin, Pmic_GpioCfg_t *pGpioCfg,
+                                  Pmic_GpioRdbkDglCfg_t *GpioRdbkDglCfg);
+
+int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                  const uint8_t pin,
                                   const Pmic_GpioCfg_t gpioCfg);
 
-/*!
- * \brief   API to get PMIC GPIO configuration.
- *
- * Requirement: REQ_TAG(PDK-5808)
- * Design: did_pmic_gpio_cfg_readback
- * Architecture: aid_pmic_gpio_cfg
- *
- *          This function is used to read the configuration for the specified
- *          GPIO pin when corresponding validParam bit field is set in
- *          the Pmic_GpioCfg_t
- *          For more information \ref Pmic_GpioCfg_t
- *
- * \param   pPmicCoreHandle [IN]     PMIC Interface Handle
- * \param   pin             [IN]     PMIC GPIO pin number.
- *                                    Valid values for TPS6594x Leo Device
- *                                    \ref Pmic_Tps6594xLeo_GpioPin.
- *                                    Valid values for LP8764x HERA Device
- *                                    \ref Pmic_Lp8764xHera_GpioPin.
- * \param   pGpioCfg        [IN/OUT] Pointer to store specified GPIO pin
- *                                   configuration
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
-int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                  const uint8_t      pin,
-                                  Pmic_GpioCfg_t    *pGpioCfg);
-
-/*!
- * \brief   API to set PMIC GPIO value.
- *
- * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-9111)
- * Design: did_pmic_gpio_cfg_readback
- * Architecture: aid_pmic_gpio_cfg
- *
- *          This function is used to configure the signal level of the
- *          specified GPIO pin.
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- * \param   pin             [IN]    PMIC GPIO pin number.
- *                                   Valid values for TPS6594x Leo Device
- *                                   \ref Pmic_Tps6594xLeo_GpioPin.
- *                                   Valid values for LP8764x HERA Device
- *                                   \ref Pmic_Lp8764xHera_GpioPin.
- * \param   pinValue        [IN]    PMIC GPIO signal level High/Low to be
- *                                  configured.
- *                                  Valid values \ref Pmic_Gpio_SignalLvl.
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
-int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                          const uint8_t      pin,
-                          const uint8_t      pinValue);
-
-int32_t Pmic_gpioSetDir(Pmic_CoreHandle_t *pPmicCoreHandle,
-                          const uint8_t      pin,
-                          const uint8_t      pinDir);
-
-/*!
- * \brief   API to get PMIC GPIO value.
- *
- * Requirement: REQ_TAG(PDK-5808)
- * Design: did_pmic_gpio_cfg_readback
- * Architecture: aid_pmic_gpio_cfg
- *
- *          This function is used to read the signal level of the gpio pin
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
- * \param   pin             [IN]    PMIC GPIO pin number.
- *                                   Valid values for TPS6594x Leo Device
- *                                   \ref Pmic_Tps6594xLeo_GpioPin.
- *                                   Valid values for LP8764x HERA Device
- *                                   \ref Pmic_Lp8764xHera_GpioPin.
- * \param   pPinValue       [OUT]   To store PMIC GPIO signal level High/Low.
- *                                  Valid values \ref Pmic_Gpio_SignalLvl
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
-int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                          const uint8_t      pin,
-                          uint8_t           *pPinValue);
-
-/*!
- * \brief   API to enable/disable GPIO interrupt.
- *
- * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
- * Design: did_pmic_gpio_cfg_readback
- * Architecture: aid_pmic_gpio_cfg
- *
- *          This function is used to enable/disable GPIO pin Interrupts
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- * \param   pin             [IN]    PMIC GPIO number.
- *                                   Valid values for TPS6594x Leo Device
- *                                   \ref Pmic_Tps6594xLeo_GpioPin.
- *                                   Valid values for LP8764x HERA Device
- *                                   \ref Pmic_Lp8764xHera_GpioPin.
- * \param   intrType        [IN]    Interrupt type \ref Pmic_GpioInterruptCfg
- * \param   maskPol         [IN]    FSM trigger masking polarity select for GPIO
- *                                  Valid values refer
- *                                  \ref Pmic_GpioInterruptPolCfg.
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
-int32_t Pmic_gpioSetIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
-                         const uint8_t      pin,
-                         const uint8_t      intrType,
-                         const uint8_t      maskPol);
-
-/*!
- * \brief   API to set configuration for NPWRON/Enable pin.
- *
- * Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-9111), REQ_TAG(PDK-9162)
- * Design: did_pmic_gpio_cfg_readback
- * Architecture: aid_pmic_gpio_cfg
- *
- *          This function is used to set the required configuration for the
- *          NPWRON OR ENABLE pin when corresponding validParam bit field is set
- *          in the Pmic_GpioCfg_t
- *          For more information \ref Pmic_GpioCfg_t
- *          NPWRON is valid only for TPS6594x Leo Device.
- *
- *          Note: In this API, the default PMIC device is assumed as TPS6594x
- *                LEO PMIC. While adding support for New PMIC device, developer
- *                need to update the API functionality for New PMIC device
- *                accordingly.
- *
- * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
- * \param   gpioCfg         [IN]    Set NPWRON or ENABLE GPIO pin
- *                                  configuration
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
-int32_t Pmic_gpioSetNPwronEnablePinConfiguration(
-                                        Pmic_CoreHandle_t   *pPmicCoreHandle,
-                                        const Pmic_GpioCfg_t gpioCfg);
-
-/*!
- * \brief   API to get configuration for NPWRON/Enable pin.
- *
- * Requirement: REQ_TAG(PDK-5808)
- * Design: did_pmic_gpio_cfg_readback
- * Architecture: aid_pmic_gpio_cfg
- *
- *          This function is used to read the configuration for the
- *          NPWRON OR ENABLE pin when corresponding validParam bit field is set
- *          in the Pmic_GpioCfg_t
- *          For more information \ref Pmic_GpioCfg_t
- *          NPWRON is valid only for TPS6594x Leo Device.
- *
- *          Note: In this API, the default PMIC device is assumed as TPS6594x
- *                LEO PMIC. While adding support for New PMIC device, developer
- *                need to update the API functionality for New PMIC device
- *                accordingly.
- *
- * \param   pPmicCoreHandle [IN]       PMIC Interface Handle
- * \param   pGpioCfg        [IN/OUT]   Pointer to store NPWRON OR ENABLE GPIO
- *                                     pin configuration
- *
- * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
- */
-int32_t Pmic_gpioGetNPwronEnablePinConfiguration(
-                                            Pmic_CoreHandle_t *pPmicCoreHandle,
-                                            Pmic_GpioCfg_t    *pGpioCfg);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
 #endif /* PMIC_GPIO_H_ */
-
-/* @} */
