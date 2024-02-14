@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2020 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -14,7 +14,7 @@
  *    distribution.
  *
  *    Neither the name of Texas Instruments Incorporated nor the names of
- *    its contributors may be used to endorse or promote products derived
+ *    its contributors may be used to endorse or promote products derived@
  *    from this software without specific prior written permission.
  *
  *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
@@ -30,11 +30,10 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-
 /**
  *  \file pmic_core_priv.h
  *
- *  \brief This file contains PMIC Driver specific common API
+ *  @brief This file contains PMIC Driver specific common API
  */
 
 #ifndef PMIC_CORE_PRIV_H_
@@ -43,8 +42,8 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
-#include <pmic.h>
-#include <pmic_io_priv.h>
+#include "pmic.h"
+#include "pmic_io_priv.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -54,447 +53,342 @@ extern "C" {
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/*!
- * \brief: PMIC Module Device Revision Infos
+/**
+ * @brief: PMIC Module Device Revision Infos
  */
-/*!  PMIC TI Device ID register Address */
-#define PMIC_DEV_REV_REGADDR                (0x01U)
-/*!  PMIC TI NVM ID register Address */
-#define PMIC_NVM_CODE_1_REGADDR             (0x02U)
-/*!  PMIC TI NVM Revision register Address */
-#define PMIC_NVM_CODE_2_REGADDR             (0x03U)
-/*!  PMIC TI Silicon Revision register Address */
-#define PMIC_MANUFACTURING_VER_REGADDR      (0xA6U)
-/*!  PMIC CUSTOMER NVM ID register Address */
-#define PMIC_CUSTOMER_NVM_ID_REG_REGADDR    (0xA7U)
+#define PMIC_DEV_ID_REGADDR (0x00U)
 
-#define PMIC_WDG_LONGWIN_CFG_REGADDR        (0x405U)
-
-/*!
- * \brief  PMIC STAT_STARTUP register Addresses
+/**
+ * @brief  PMIC STAT_READBACK_ERR register Addresses
  */
-#define PMIC_STAT_STARTUP_REGADDR           (0x73U)
+#define PMIC_RDBK_ERR_STAT_REGADDR (0xAU)
 
-/*!
- * \brief  PMIC STAT_READBACK_ERR register Addresses
+/**
+ * @brief   PMIC AMUX/DMUX Control Register Address
  */
-#define PMIC_STAT_READBACK_ERR_REGADDR      (0x77U)
+#define PMIC_DIAG_OUT_CFG_CTR_REGADDR (0x58U)
 
-/*!
- * \brief  PMIC PLL_CTRL register Addresses
+/**
+ * @brief: PMIC STATE_STAT and RST_MCU_TMR Registers
  */
-#define PMIC_PLL_CTRL_REGADDR               (0x7CU)
+#define PMIC_STATE_CTRL_REGADDR (0x16U)
+#define PMIC_STATE_STAT_REGADDR (0x17U)
+#define PMIC_RST_MCU_TMR_REGADDR (0x18U)
 
-/*!
- * \brief  PMIC power Configuration Register Address
+/**
+ * @brief  PMIC Dual Random Spread Spectrum register Addresses
  */
-#define PMIC_CONFIG_1_REGADDR               (0x7DU)
+#define PMIC_BUCK_BST_CFG_REGADDR (0x1BU)
 
-/*!
- * \brief  PMIC CONFIG_2 register Addresses
+/**
+ * @brief  PMIC Register, Timer and Counter Lock register Addresses
  */
-#define PMIC_CONFIG_2_REGADDR               (0x7EU)
 
-/*!
- * \brief  PMIC ENABLE_DRV register Addresses
+#define PMIC_REGISTER_UNLOCK_REGADDR (0x03U)
+#define PMIC_TMR_COUNTER_UNLOCK_REGADDR (0x04U)
+#define PMIC_REGISTER_LOCK_STATUS_REGADDR (0x09U)
+
+/**
+ * @brief  PMIC Scratchpad register Addresses
  */
-#define PMIC_ENABLE_DRV_REG_REGADDR         (0x80U)
+#define PMIC_CUSTOMER_SCRATCH1_REGADDR (0x68U)
+#define PMIC_CUSTOMER_SCRATCH2_REGADDR (0x69U)
 
-/*!
- * \brief   PMIC MISC Control Register Address
+/**
+ * @brief  PMIC Watchdog Long Window Config register Addresses
  */
-#define PMIC_MISC_CTRL_REGADDR              (0x81U)
+#define PMIC_WD_LONGWIN_CFG_REGADDR (0x3DU)
 
-/*!
- * \brief  PMIC ENABLE_DRV_STAT register Addresses
+/**
+ * @brief  PMIC SAFE_TMO_CFG register Addresses
  */
-#define PMIC_ENABLE_DRV_STAT_REGADDR        (0x82U)
+#define PMIC_SAFE_TMO_CFG_REGADDR (0x52U)
 
-/*!
- * \brief: PMIC Recovery Counter Control and Status Registers
+/**
+ * @brief  PMIC SAFE_OUT register Addresses
  */
-#define PMIC_RECOV_CNT_REG_1_REGADDR        (0x83U)
-#define PMIC_RECOV_CNT_REG_2_REGADDR        (0x84U)
+#define PMIC_SAFE_OUT_CFG_CTRL_REGADDR (0x54U)
 
-/*!
- * \brief  PMIC Spread Spectrum 1 register Addresses
+/**
+ * @brief  PMIC SAFE_OUT2_CFG1 register Addresses
  */
-#define PMIC_SPREAD_SPECTRUM_1_REGADDR      (0x88U)
+#define PMIC_SAFE_OUT2_CFG1_REGADDR     (0x55U)
 
-/*!
- * \brief  PMIC User Spare register Addresses
+/**
+ * @brief  PMIC SAFE_OUT2_CFG2 register Addresses
  */
-#define PMIC_USER_SPARE_REGS_REGADDR        (0x8EU)
+#define PMIC_SAFE_OUT2_CFG2_REGADDR     (0x56U)
 
-/*!
- * \brief  PMIC Register Lock register Addresses
+/**
+ * @brief  PMIC SAFE_OUT2_CFG3 register Addresses
  */
-#define PMIC_REGISTER_LOCK_REGADDR          (0xA1U)
+#define PMIC_SAFE_OUT2_CFG3_REGADDR     (0x57U)
 
-/*!
- * \brief  PMIC Soft Reboot register Addresses
+/**
+ * @brief  PMIC invalid register address
  */
-#define PMIC_SOFT_REBOOT_REG_REGADDR        (0xABU)
+#define PMIC_INVALID_REGADDR (0xFFU)
 
-/*!
- * \brief: HERA PMIC StartUP Control Register
+/**
+ * @brief  PMIC invalid BIT SHIFT value
  */
-#define PMIC_STARTUP_CTRL_REGADDR           (0xC3U)
+#define PMIC_INVALID_BIT_SHIFT (0xFFU)
 
-/*!
- * \brief  PMIC Scratchpad register Addresses
+#define PMIC_CUSTOMER_SCRATCH1_SHIFT (0X00U)
+#define PMIC_CUSTOMER_SCRATCH2_SHIFT (0X00U)
+
+/**
+ * @brief: PMIC STATE_STAT Register Shift Values
  */
-#define PMIC_SCRATCH_PAD_REG_1_REGADDR      (0xC9U)
-#define PMIC_SCRATCH_PAD_REG_2_REGADDR      (0xCAU)
-#define PMIC_SCRATCH_PAD_REG_3_REGADDR      (0xCBU)
-#define PMIC_SCRATCH_PAD_REG_4_REGADDR      (0xCCU)
+#define PMIC_STATE_STAT_STATE_SHIFT (0x00U)
+#define PMIC_STATE_STAT_PWRD_DLY_ACTV_SHIFT (0x04U)
+#define PMIC_STATE_STAT_RST_MCU_RQ_FLAG_SHIFT (0x05U)
+#define PMIC_STATE_STAT_RST_MCU_CNT_SHIFT (0x06U)
 
-/*!
- * \brief  PMIC invalid register address
+/**
+ * @brief: PMIC RST_MCU_TMR Register Shift Values
  */
-#define PMIC_INVALID_REGADDR                (0xFFU)
+#define PMIC_RST_MCU_TMR_SHIFT (0x00U)
 
-/*!
- * \brief: PMIC SERIAL_IF_CONFIG register address (Bank/Page 1 Register address)
- *         Application can only read this register to check I2C1SPI/I2C2 CRC
- *         is enabled or not
+/**
+ * @brief   PMIC SAFE_OUT Register Shift Values
  */
-#define PMIC_SERIAL_IF_CONFIG_REGADDR           (0x11AU)
+#define PMIC_ENABLE_SAFE_OUTEN1_SHIFT (0x0U)
+#define PMIC_ENABLE_SAFE_OUTEN2_SHIFT (0x1U)
 
-/*!
- * \brief  PMIC invalid BIT SHIFT value
+/**
+ * @brief   PMIC Dual Random Spread Spectrum Register Shift Values
  */
-#define PMIC_INVALID_BIT_SHIFT              (0xFFU)
+#define PMIC_DRSS_SS_EN_SHIFT (0x4U)
 
-/*!
- * \brief  PMIC CONFIG_1 register Shift Values
+/**
+ * @brief   PMIC Register Unlock Seq Register Shift Values
  */
-#define PMIC_CONFIG_1_TWARN_LEVEL_SHIFT                     (0U)
-#define PMIC_CONFIG_1_TSD_ORD_LEVEL_SHIFT                   (1U)
-#define PMIC_CONFIG_1_I2C1_HS_SHIFT                         (3U)
-#define PMIC_CONFIG_1_I2C2_HS_SHIFT                         (4U)
-#define PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_SHIFT                (5U)
-#define PMIC_CONFIG_1_NSLEEP1_MASK_SHIFT                    (6U)
-#define PMIC_CONFIG_1_NSLEEP2_MASK_SHIFT                    (7U)
+#define PMIC_REGISTER_CFG_REG_UNLOCK_SEQ_SHIFT (0x0U)
 
-/*!
- * \brief: PMIC Recovery Counter Register 1 Shift Values
+/**
+ * @brief   PMIC Register Unlock Status Register Shift Values
  */
-#define PMIC_RECOV_CNT_REG_1_RECOV_CNT_SHIFT        (0x00U)
+#define PMIC_REGISTER_CFG_REG_LOCKED_STATUS_SHIFT (0x0U)
+#define PMIC_REGISTER_CNT_REG_LOCKED_STATUS_SHIFT (0x1U)
+#define PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_SHIFT (0x0U)
 
-/*!
- * \brief: PMIC Recovery Counter Register 2 Shift Values
+/**
+ * @brief   PMIC BB DIAGANOSTIC OUT Register Shift Values
  */
-#define PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_SHIFT        (0x04U)
-#define PMIC_RECOV_CNT_REG_2_RECOV_CNT_THR_SHIFT        (0x00U)
+#define PMIC_DIAG_GRP_SEL_SHIFT (0x0U)
+#define PMIC_DIAG_OUT_CTRL_SHIFT (0x6U)
 
-/*!
- * \brief: HERA PMIC StartUP Shift Values
+/**
+ * @brief  BB_PMIC STAT_READBACK_ERR register Shift Values
  */
-#define PMIC_STARTUP_CTRL_SKIP_LP_STANDBY_EE_READ_SHIFT     (0x02U)
-#define PMIC_STARTUP_CTRL_LP_STANDBY_SEL_SHIFT              (0x03U)
-#define PMIC_STARTUP_CTRL_FAST_BIST_SHIFT                   (0x04U)
-#define PMIC_STARTUP_CTRL_STARTUP_DEST_SHIFT                (0x05U)
-#define PMIC_STARTUP_CTRL_FIRST_STARTUP_DONE_SHIFT          (0x07U)
+#define PMIC_STAT_READBACK_ERR_NRST_RDBK_LVL_SHIFT (0x0U)
+#define PMIC_STAT_READBACK_ERR_SAFE_OUT1_RDBK_LVL_SHIFT (0x1U)
+#define PMIC_STAT_READBACK_ERR_EN_OUT_RDBK_LVL_SHIFT (0x2U)
 
-/*!
- * \brief   PMIC StartUp NSLEEP Shift Values
+/**
+ * @brief   PMIC DEV_REV Register Shift Values
  */
-#define PMIC_STARTUP_DEST_NSLEEP2B_SHIFT              (0x1U)
-#define PMIC_STARTUP_DEST_NSLEEP1B_SHIFT              (0x0U)
+#define PMIC_DEV_ID_SHIFT (0x0U)
 
-/*!
- * \brief   PMIC MANUFACTURING_VER Register Shift Values
+#define PMIC_RST_MCU_CNT_SHIFT 6   /* Shift value for RST_MCU_CNT bits (7-6) */
+#define PMIC_RST_MCU_CNT_MASK 0xC0 /* Mask to isolate RST_MCU_CNT bits */
+
+#define PMIC_RST_MCU_RQ_FLAG_SHIFT                                             \
+  5 /* Shift value for RST_MCU_RQ_FLAG bit (5) */
+#define PMIC_RST_MCU_RQ_FLAG_MASK                                              \
+  0x20 /* Mask to isolate RST_MCU_RQ_FLAG bit                                  \
+        */
+
+#define PMIC_PWRD_DLY_ACTV_SHIFT 4   /* Shift value for PWRD_DLY_ACTV bit (4) */
+#define PMIC_PWRD_DLY_ACTV_MASK 0x10 /* Mask to isolate PWRD_DLY_ACTV bit */
+
+#define PMIC_STATE_SHIFT 0   /* Shift value for STATE bits (3-0) */
+#define PMIC_STATE_MASK 0x0F /* Mask to isolate STATE bits */
+
+#define PMIC_STATE_CTRL_STATE_REQ_SHIFT 0
+#define PMIC_STATE_CTRL_STATE_REQ_MASK                                         \
+  ((uint8_t)(0x03U << PMIC_STATE_CTRL_STATE_REQ_SHIFT))
+
+/**
+ * @brief: PMIC State Stat Register  Mask Values
  */
-#define PMIC_MANUFACTURING_VER_SILICON_REV_SHIFT      (0x0U)
+#define PMIC_STATE_STAT_STATE_MASK                                             \
+  ((uint8_t)(0x0FU << PMIC_STATE_STAT_STATE_SHIFT))
+#define PMIC_STATE_STAT_PWRD_DLY_ACTV_MASK                                     \
+  ((uint8_t)(0x01U << PMIC_STATE_STAT_PWRD_DLY_ACTV_SHIFT))
+#define PMIC_STATE_STAT_RST_MCU_RQ_FLAG_MASK                                   \
+  ((uint8_t)(0x01U << PMIC_STATE_STAT_RST_MCU_RQ_FLAG_SHIFT))
+#define PMIC_STATE_STAT_RST_MCU_CNT_MASK                                       \
+  ((uint8_t)(0x03U << PMIC_STATE_STAT_RST_MCU_CNT_SHIFT))
 
-/*!
- * \brief   PMIC User Spare Register Shift Values
+/**
+ * @brief: PMIC Reset mcu Timer Register  Mask Values
  */
-#define PMIC_USER_SPARE_REGS_USER_SPARE_1_SHIFT       (0x0U)
-#define PMIC_USER_SPARE_REGS_USER_SPARE_2_SHIFT       (0x1U)
-#define PMIC_USER_SPARE_REGS_USER_SPARE_3_SHIFT       (0x2U)
-#define PMIC_USER_SPARE_REGS_USER_SPARE_4_SHIFT       (0x3U)
+#define PMIC_RST_MCU_TMR_MASK ((uint8_t)(0x7FU << PMIC_RST_MCU_TMR_SHIFT))
 
-/*!
- * \brief   PMIC ENABLE_DRV Register Shift Values
+/**
+ * @brief   PMIC Dual Random Spread Spectrum Register Mask Values
  */
-#define PMIC_ENABLE_DRV_REG_ENABLE_DRV_SHIFT         (0x0U)
+#define PMIC_DRSS_SS_EN_MASK ((uint8_t)(0x01U << PMIC_DRSS_SS_EN_SHIFT))
 
-/*!
- * \brief   PMIC ENABLE_DRV_STAT Register Shift Values
+/**
+ * @brief   PMIC Safe Out Enable Register Mask Values
  */
-#define PMIC_ENABLE_DRV_STAT_EN_DRV_IN_SHIFT            (0x0U)
-#define PMIC_ENABLE_DRV_STAT_NRSTOUT_IN_SHIFT           (0x1U)
-#define PMIC_ENABLE_DRV_STAT_NRSTOUT_SOC_IN_SHIFT       (0x2U)
-#define PMIC_ENABLE_DRV_STAT_FORCE_EN_DRV_LOW_SHIFT     (0x3U)
-#define PMIC_ENABLE_DRV_STAT_SPMI_LPM_EN_SHIFT          (0x4U)
+#define PMIC_ENABLE_SAFE_OUTEN1_MASK                                           \
+  ((uint8_t)(0x01U << PMIC_ENABLE_SAFE_OUTEN1_SHIFT))
+#define PMIC_ENABLE_SAFE_OUTEN2_MASK                                           \
+  ((uint8_t)(0x01U << PMIC_ENABLE_SAFE_OUTEN2_SHIFT))
 
-/*!
- * \brief   PMIC Spread Spectrum 1 Register Shift Values
+#define PMIC_CUSTOMER_SCRATCH1_MASK                                            \
+  ((uint8_t)(0xFFU << PMIC_CUSTOMER_SCRATCH1_SHIFT))
+#define PMIC_CUSTOMER_SCRATCH2_MASK                                            \
+  ((uint8_t)(0xFFU << PMIC_CUSTOMER_SCRATCH2_SHIFT))
+
+/**
+ * @brief   PMIC Register Lock Register Mask Values
  */
-#define PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_SHIFT           (0x0U)
-#define PMIC_SPREAD_SPECTRUM_1_SS_EN_SHIFT              (0x2U)
+/*  PMIC Register Lock Register Mask Values to read the register lock status */
+#define PMIC_REGISTER_LOCK_REGISTER_CFG_STATUS_MASK                            \
+  ((uint8_t)(0x01U << PMIC_REGISTER_CFG_REG_UNLOCK_SEQ_SHIFT))
 
-/*!
- * \brief   PMIC Register Lock Register Shift Values
- */
-#define PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_SHIFT    (0x0U)
+/*  PMIC Register Lock Register Mask Values to read the register lock status */
+#define PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_READ_MASK                      \
+  ((uint8_t)(0x03U << PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_SHIFT))
 
-/*!
- * \brief   PMIC MISC Control Register Shift Values
- */
-#define PMIC_MISC_CTRL_NRSTOUT_SHIFT                (0x0U)
-#define PMIC_MISC_CTRL_NRSTOUT_SOC_SHIFT            (0x1U)
-#define PMIC_MISC_CTRL_LPM_EN_SHIFT                 (0x2U)
-#define PMIC_MISC_CTRL_CLKMON_EN_SHIFT              (0x3U)
-#define PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_SHIFT      (0x4U)
-#define PMIC_MISC_CTRL_SEL_EXT_CLK_SHIFT            (0x5U)
-#define PMIC_MISC_CTRL_SYNCCLKOUT_FREQ_SEL_SHIFT    (0x6U)
+#define PMIC_REGISTER_LOCK_CFG_REG_LOCKED_STATUS_READ_MASK                     \
+  ((uint8_t)(0x01U << PMIC_REGISTER_CFG_REG_LOCKED_STATUS_SHIFT))
 
-/*!
- * \brief   PMIC PLL Control Register Shift Values
- */
-#define PMIC_PLL_CTRL_EXT_CLK_FREQ_SHIFT            (0x0U)
+#define PMIC_REGISTER_LOCK_CNT_REG_LOCKED_STATUS_READ_MASK                     \
+  ((uint8_t)(0x01U << PMIC_REGISTER_CNT_REG_LOCKED_STATUS_SHIFT))
 
-/*!
- * \brief   PMIC CONFIG_2 Register Shift Values
- */
-#define PMIC_CONFIG_2_BB_CHARGER_EN_SHIFT           (0x0U)
-#define PMIC_CONFIG_2_BB_ICHR_SHIFT                 (0x1U)
-#define PMIC_CONFIG_2_BB_VEOC_SHIFT                 (0x2U)
-#define PMIC_CONFIG_2_BB_EOC_RDY_SHIFT              (0x7U)
-
-/*!
- * \brief  PMIC External Clock Validity status register bit field Shift Values
- */
-#define PMIC_STAT_MISC_EXT_CLK_STAT_SHIFT           (0x1U)
-
-/*!
- * \brief  PMIC ENABLE_STAT register bit field Shift Values
- */
-#define PMIC_STAT_STARTUP_ENABLE_STAT_SHIFT           (0x1U)
-
-/*!
- * \brief  PMIC STAT_READBACK_ERR register Shift Values
- */
-#define PMIC_STAT_READBACK_ERR_EN_DRV_READBACK_STAT_SHIFT        (0x0U)
-#define PMIC_STAT_READBACK_ERR_NINT_READBACK_STAT_SHIFT          (0x1U)
-#define PMIC_STAT_READBACK_ERR_NRSTOUT_READBACK_STAT_SHIFT       (0x2U)
-#define PMIC_STAT_READBACK_ERR_NRSTOUT_SOC_READBACK_STAT_SHIFT   (0x3U)
-
-/*!
- * \brief  PMIC SERIAL_IF_CONFIG register Shift Values
- */
-#define PMIC_SERIAL_IF_CONFIG_I2C1_SPI_CRC_EN_SHIFT              (0x1U)
-#define PMIC_SERIAL_IF_CONFIG_I2C2_CRC_EN_SHIFT                  (0x2U)
-
-/*!
- * \brief   PMIC DEV_REV Register Shift Values
- */
-/* Valid only PG 2.0 */
-#define PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_SHIFT        (0x1U)
-/* Valid only PG 1.0 */
-#define PMIC_DEV_REV_TI_DEVICE_ID_SILICON_REV_SHIFT               (0x0U)
-
-/*!
- * \brief: PMIC Recovery Counter Register 1 Mask Values
- */
-#define PMIC_RECOV_CNT_REG_1_RECOV_CNT_MASK                   \
-                      ((uint8_t)(0x0FU << PMIC_RECOV_CNT_REG_1_RECOV_CNT_SHIFT))
-
-/*!
- * \brief: PMIC Recovery Counter Register 2 Mask Values
- */
-#define PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_MASK                   \
-                  ((uint8_t)(0x01U << PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_SHIFT))
-#define PMIC_RECOV_CNT_REG_2_RECOV_CNT_THR_MASK                   \
-                  ((uint8_t)(0x0FU << PMIC_RECOV_CNT_REG_2_RECOV_CNT_THR_SHIFT))
-
-/*!
- * \brief: HERA PMIC StartUP Mask Values
- */
-#define PMIC_STARTUP_CTRL_SKIP_LP_STANDBY_EE_READ_MASK                   \
-           ((uint8_t)(0x01U << PMIC_STARTUP_CTRL_SKIP_LP_STANDBY_EE_READ_SHIFT))
-#define PMIC_STARTUP_CTRL_LP_STANDBY_SEL_MASK                   \
-           ((uint8_t)(0x01U << PMIC_STARTUP_CTRL_LP_STANDBY_SEL_SHIFT))
-#define PMIC_STARTUP_CTRL_FAST_BIST_MASK                   \
-           ((uint8_t)(0x01U << PMIC_STARTUP_CTRL_FAST_BIST_SHIFT))
-#define PMIC_STARTUP_CTRL_STARTUP_DEST_MASK                     \
-           ((uint8_t)(0x03U << PMIC_STARTUP_CTRL_STARTUP_DEST_SHIFT))
-#define PMIC_STARTUP_CTRL_FIRST_STARTUP_DONE_MASK                     \
-           ((uint8_t)(0x01U << PMIC_STARTUP_CTRL_FIRST_STARTUP_DONE_SHIFT))
-
-/*!
- * \brief  PMIC CONFIG_1 register bit masks
- */
-#define PMIC_CONFIG_1_TWARN_LEVEL_MASK                              \
-                         ((uint8_t)(0x01U << PMIC_CONFIG_1_TWARN_LEVEL_SHIFT))
-#define PMIC_CONFIG_1_TSD_ORD_LEVEL_MASK                            \
-                         ((uint8_t)(0x01U << PMIC_CONFIG_1_TSD_ORD_LEVEL_SHIFT))
-#define PMIC_CONFIG_1_I2C1_HS_MASK                                  \
-                         ((uint8_t)(0x01U << PMIC_CONFIG_1_I2C1_HS_SHIFT))
-#define PMIC_CONFIG_1_I2C2_HS_MASK                                  \
-                         ((uint8_t)(0x01U << PMIC_CONFIG_1_I2C2_HS_SHIFT))
-#define PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_MASK                         \
-                         ((uint8_t)(0x01U << PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_SHIFT))
-#define PMIC_CONFIG_1_NSLEEP1_MASK_MASK                             \
-                         ((uint8_t)(0x01U << PMIC_CONFIG_1_NSLEEP1_MASK_SHIFT))
-#define PMIC_CONFIG_1_NSLEEP2_MASK_MASK                             \
-                         ((uint8_t)(0x01U << PMIC_CONFIG_1_NSLEEP2_MASK_SHIFT))
-
-/*!
- * \brief   PMIC StartUp NSLEEP Mask Values
- */
-#define PMIC_STARTUP_DEST_NSLEEP2B_MASK                            \
-                         ((uint8_t)(0x01U << PMIC_STARTUP_DEST_NSLEEP2B_SHIFT))
-#define PMIC_STARTUP_DEST_NSLEEP1B_MASK                            \
-                         ((uint8_t)(0x01U << PMIC_STARTUP_DEST_NSLEEP1B_SHIFT))
-
-/*!
- * \brief   PMIC MANUFACTURING_VER Register Mask Values
- */
-#define PMIC_MANUFACTURING_VER_SILICON_REV_MASK                            \
-                  ((uint8_t)(0x3FU << PMIC_MANUFACTURING_VER_SILICON_REV_SHIFT))
-
-/*!
- * \brief   PMIC User Spare Register Mask Values
- */
-#define PMIC_USER_SPARE_REGS_USER_SPARE_1_MASK                            \
-                  ((uint8_t)(0x01U << PMIC_USER_SPARE_REGS_USER_SPARE_1_SHIFT))
-#define PMIC_USER_SPARE_REGS_USER_SPARE_2_MASK                            \
-                  ((uint8_t)(0x01U << PMIC_USER_SPARE_REGS_USER_SPARE_2_SHIFT))
-#define PMIC_USER_SPARE_REGS_USER_SPARE_3_MASK                            \
-                  ((uint8_t)(0x01U << PMIC_USER_SPARE_REGS_USER_SPARE_3_SHIFT))
-#define PMIC_USER_SPARE_REGS_USER_SPARE_4_MASK                            \
-                  ((uint8_t)(0x01U << PMIC_USER_SPARE_REGS_USER_SPARE_4_SHIFT))
-
-/*!
- * \brief   PMIC Spread Spectrum 1 Register Mask Values
- */
-#define PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_MASK                            \
-                  ((uint8_t)(0x03U << PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_SHIFT))
-#define PMIC_SPREAD_SPECTRUM_1_SS_EN_MASK                            \
-                  ((uint8_t)(0x01U << PMIC_SPREAD_SPECTRUM_1_SS_EN_SHIFT))
-
-/*!
- * \brief   PMIC ENABLE_DRV Register Mask Values
- */
-#define PMIC_ENABLE_DRV_REG_ENABLE_DRV_MASK                            \
-                  ((uint8_t)(0x01U << PMIC_ENABLE_DRV_REG_ENABLE_DRV_SHIFT))
-
-/*!
- * \brief   PMIC ENABLE_DRV_STAT Register Mask Values
- */
-#define PMIC_ENABLE_DRV_STAT_EN_DRV_IN_MASK                            \
-               ((uint8_t)(0x01U << PMIC_ENABLE_DRV_STAT_EN_DRV_IN_SHIFT))
-#define PMIC_ENABLE_DRV_STAT_NRSTOUT_IN_MASK                            \
-               ((uint8_t)(0x01U << PMIC_ENABLE_DRV_STAT_NRSTOUT_IN_SHIFT))
-#define PMIC_ENABLE_DRV_STAT_NRSTOUT_SOC_IN_MASK                            \
-               ((uint8_t)(0x01U << PMIC_ENABLE_DRV_STAT_NRSTOUT_SOC_IN_SHIFT))
-#define PMIC_ENABLE_DRV_STAT_FORCE_EN_DRV_LOW_MASK                            \
-               ((uint8_t)(0x01U << PMIC_ENABLE_DRV_STAT_FORCE_EN_DRV_LOW_SHIFT))
-#define PMIC_ENABLE_DRV_STAT_SPMI_LPM_EN_MASK                            \
-               ((uint8_t)(0x01U << PMIC_ENABLE_DRV_STAT_SPMI_LPM_EN_SHIFT))
-
-/*!
- * \brief   PMIC Register Lock Register Mask Values
- */
-/*!  PMIC Register Lock Register Mask Values to read the register lock status */
-#define PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_READ_MASK              \
-             ((uint8_t)(0x01U << PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_SHIFT))
-
-/*!  PMIC Register Lock Register Mask Values to write lock/unlock value to
+/**  PMIC Register Lock Register Mask Values to write lock/unlock value to
  *   register lock register */
-#define PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_WRITE_MASK             \
-             ((uint8_t)(0xFFU << PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_SHIFT))
+#define PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_WRITE_MASK                     \
+  ((uint8_t)(0xFFU << PMIC_REGISTER_CFG_REG_UNLOCK_SEQ_SHIFT))
 
+/**
+ * @brief   PMIC BB DIAGANOSTIC OUT Register Mask Values
+ */
+#define PMIC_DIAG_GRP_SEL_MASK ((uint8_t)(0x1FU << PMIC_DIAG_GRP_SEL_SHIFT))
+#define PMIC_DIAG_OUT_CTRL_MASK ((uint8_t)(0x03U << PMIC_DIAG_OUT_CTRL_SHIFT))
+
+/**
+ * @brief  BB_PMIC STAT_READBACK_ERR register Mask Values
+ */
+#define PMIC_STAT_READBACK_ERR_NRST_RDBK_LVL_MASK                              \
+  ((uint8_t)(0x01U << PMIC_STAT_READBACK_ERR_NRST_RDBK_LVL_SHIFT))
+#define PMIC_STAT_READBACK_ERR_SAFE_OUT1_RDBK_LVL_MASK                         \
+  ((uint8_t)(0x01U << PMIC_STAT_READBACK_ERR_SAFE_OUT1_RDBK_LVL_SHIFT))
+#define PMIC_STAT_READBACK_ERR_EN_OUT_RDBK_LVL_MASK                            \
+  ((uint8_t)(0x01U << PMIC_STAT_READBACK_ERR_EN_OUT_RDBK_LVL_SHIFT))
+
+/**
+ * @brief   PMIC DEV_REV Register Mask Values
+ */
+#define PMIC_DEV_ID_MASK ((uint8_t)(0x7FU << PMIC_DEV_ID_SHIFT))
+
+/**
+ * @brief   PMIC REG_STAT Mask Values
+ */
+#define CFG_REG_LOCK_MASK (0x01) /* Bit mask for CFG_REG_LOCK */
+#define CNT_REG_LOCK_MASK (0x02) /* Bit mask for CNT_REG_LOCK */
+
+/**
+ * @brief  PMIC CONFIG_1 register Shift Values
+ */
+#define PMIC_CONFIG_1_TWARN_LEVEL_SHIFT (0U)
+#define PMIC_CONFIG_1_TSD_ORD_LEVEL_SHIFT (1U)
+#define PMIC_CONFIG_1_I2C1_HS_SHIFT (3U)
+#define PMIC_CONFIG_1_I2C2_HS_SHIFT (4U)
+#define PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_SHIFT (5U)
+#define PMIC_CONFIG_1_NSLEEP1_MASK_SHIFT (6U)
+#define PMIC_CONFIG_1_NSLEEP2_MASK_SHIFT (7U)
+
+/**
+ * @brief  PMIC CONFIG_1 register bit masks
+ */
+#define PMIC_CONFIG_1_TWARN_LEVEL_MASK                                         \
+  ((uint8_t)(0x01U << PMIC_CONFIG_1_TWARN_LEVEL_SHIFT))
+#define PMIC_CONFIG_1_TSD_ORD_LEVEL_MASK                                       \
+  ((uint8_t)(0x01U << PMIC_CONFIG_1_TSD_ORD_LEVEL_SHIFT))
+#define PMIC_CONFIG_1_I2C1_HS_MASK                                             \
+  ((uint8_t)(0x01U << PMIC_CONFIG_1_I2C1_HS_SHIFT))
+#define PMIC_CONFIG_1_I2C2_HS_MASK                                             \
+  ((uint8_t)(0x01U << PMIC_CONFIG_1_I2C2_HS_SHIFT))
+#define PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_MASK                                    \
+  ((uint8_t)(0x01U << PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_SHIFT))
+#define PMIC_CONFIG_1_NSLEEP1_MASK_MASK                                        \
+  ((uint8_t)(0x01U << PMIC_CONFIG_1_NSLEEP1_MASK_SHIFT))
+#define PMIC_CONFIG_1_NSLEEP2_MASK_MASK                                        \
+  ((uint8_t)(0x01U << PMIC_CONFIG_1_NSLEEP2_MASK_SHIFT))
 
 
 /*!
- * \brief   PMIC MISC Control Register Mask Values
+ * @brief   PMIC SAFE STATE TIMEOUT CONFIG SHIFT AND MASK VALUES
  */
-#define PMIC_MISC_CTRL_NRSTOUT_MASK              \
-                  ((uint8_t)(0x01U << PMIC_MISC_CTRL_NRSTOUT_SHIFT))
-#define PMIC_MISC_CTRL_NRSTOUT_SOC_MASK              \
-                  ((uint8_t)(0x01U << PMIC_MISC_CTRL_NRSTOUT_SOC_SHIFT))
-#define PMIC_MISC_CTRL_LPM_EN_MASK              \
-                  ((uint8_t)(0x01U << PMIC_MISC_CTRL_LPM_EN_SHIFT))
-#define PMIC_MISC_CTRL_CLKMON_EN_MASK              \
-                  ((uint8_t)(0x01U << PMIC_MISC_CTRL_CLKMON_EN_SHIFT))
-#define PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_MASK              \
-                  ((uint8_t)(0x01U << PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_SHIFT))
-#define PMIC_MISC_CTRL_SEL_EXT_CLK_MASK              \
-                  ((uint8_t)(0x01U << PMIC_MISC_CTRL_SEL_EXT_CLK_SHIFT))
-#define PMIC_MISC_CTRL_SYNCCLKOUT_FREQ_SEL_MASK              \
-                  ((uint8_t)(0x03U << PMIC_MISC_CTRL_SYNCCLKOUT_FREQ_SEL_SHIFT))
+/* PMIC SAFE STATE SHIFT VALUES */
+#define PMIC_SAFE_TMO_SHIFT         (0x5U)
+#define PMIC_SAFE_LOCK_TH_SHIFT     (0x0U)
+/* PMIC SAFE STATE MASK VALUES */
+#define PMIC_SAFE_TMO_MASK          ((uint8_t)(0x07U << PMIC_SAFE_TMO_SHIFT))
+#define PMIC_SAFE_LOCK_TH_MASK      ((uint8_t)(0x1FU << PMIC_SAFE_LOCK_TH_SHIFT))
 
 /*!
- * \brief   PMIC PLL Control Register Mask Values
+ * @brief   PMIC SAFE STATE OUT CONFIG CONTROL SHIFT AND MASK VALUES
  */
-#define PMIC_PLL_CTRL_EXT_CLK_FREQ_MASK              \
-                  ((uint8_t)(0x03U << PMIC_PLL_CTRL_EXT_CLK_FREQ_SHIFT))
+/* PMIC SAFE STATE SHIFT VALUES */
+#define PMIC_SAFE_OUT2_CFG_SHIFT  (0x2U)
+#define PMIC_SAFE_OUT2_EN_SHIFT   (0x1U)
+#define PMIC_SAFE_OUT1_EN_SHIFT   (0x0U)
+/* PMIC SAFE STATE MASK VALUES */
+#define PMIC_SAFE_OUT2_CFG_MASK   ((uint8_t)(0x07U << PMIC_SAFE_OUT2_CFG_SHIFT))
+#define PMIC_SAFE_OUT2_EN_MASK    ((uint8_t)(0x01U << PMIC_SAFE_OUT2_EN_SHIFT))
+#define PMIC_SAFE_OUT1_EN_MASK    ((uint8_t)(0x01U << PMIC_SAFE_OUT1_EN_SHIFT))
 
 
 /*!
- * \brief   PMIC CONFIG_2 Register Mask Values
+ * @brief   PMIC SAFE STATE OUT2 CONFIG-1 SHIFT AND MASK VALUES
  */
-#define PMIC_CONFIG_2_BB_CHARGER_EN_MASK              \
-                  ((uint8_t)(0x01U << PMIC_CONFIG_2_BB_CHARGER_EN_SHIFT))
-#define PMIC_CONFIG_2_BB_ICHR_MASK              \
-                  ((uint8_t)(0x01U << PMIC_CONFIG_2_BB_ICHR_SHIFT))
-#define PMIC_CONFIG_2_BB_VEOC_MASK              \
-                  ((uint8_t)(0x03U << PMIC_CONFIG_2_BB_VEOC_SHIFT))
-#define PMIC_CONFIG_2_BB_EOC_RDY_MASK              \
-                  ((uint8_t)(0x01U << PMIC_CONFIG_2_BB_EOC_RDY_SHIFT))
+/* PMIC SAFE STATE SHIFT VALUES */
+#define PMIC_SAFE_OUT2_PS2_SHIFT    (0x3U)
+#define PMIC_SAFE_OUT2_PS1_SHIFT    (0x0U)
+/* PMIC SAFE STATE MASK VALUES */
+#define PMIC_SAFE_OUT2_PS2_MASK     ((uint8_t)(0x03U << PMIC_SAFE_OUT2_PS2_SHIFT))
+#define PMIC_SAFE_OUT2_PS1_MASK     ((uint8_t)(0x03U << PMIC_SAFE_OUT2_PS1_SHIFT))
+
 
 /*!
- * \brief  PMIC Extrnal Clock Validity status Mask Values
+ * @brief   PMIC SAFE STATE OUT2 CONFIG-2 SHIFT AND MASK VALUES
  */
-#define PMIC_STAT_MISC_EXT_CLK_STAT_MASK              \
-                  ((uint8_t)(0x01U << PMIC_STAT_MISC_EXT_CLK_STAT_SHIFT))
+/* PMIC SAFE STATE SHIFT VALUES */
+#define PMIC_SAFE_OUT2_PWMH_NSC_SHIFT   (0x4U)
+#define PMIC_SAFE_OUT2_PWML_NSC_SHIFT   (0x0U)
+/* PMIC SAFE STATE MASK VALUES */
+#define PMIC_SAFE_OUT2_PWMH_NSC_MASK    ((uint8_t)(0x0FU << PMIC_SAFE_OUT2_PWMH_NSC_SHIFT))
+#define PMIC_SAFE_OUT2_PWML_NSC_MASK    ((uint8_t)(0x0FU << PMIC_SAFE_OUT2_PWML_NSC_SHIFT))
+
 
 /*!
- * \brief  PMIC ENABLE_STAT register bit field Mask Values
+ * @brief   PMIC SAFE STATE OUT2 CONFIG-3 SHIFT AND MASK VALUES
  */
-#define PMIC_STAT_STARTUP_ENABLE_STAT_MASK              \
-                  ((uint8_t)(0x01U << PMIC_STAT_STARTUP_ENABLE_STAT_SHIFT))
+/* PMIC SAFE STATE SHIFT VALUES */
+#define PMIC_SAFE_OUT2_PWMH_DLY_SC_SHIFT   (0x4U)
+#define PMIC_SAFE_OUT2_PWML_PLS_SC_SHIFT   (0x0U)
+/* PMIC SAFE STATE MASK VALUES */
+#define PMIC_SAFE_OUT2_PWMH_DLY_SC_MASK    ((uint8_t)(0x0FU << PMIC_SAFE_OUT2_PWMH_DLY_SC_SHIFT))
+#define PMIC_SAFE_OUT2_PWML_PLS_SC_MASK    ((uint8_t)(0x0FU << PMIC_SAFE_OUT2_PWML_PLS_SC_SHIFT))
 
-/*!
- * \brief  PMIC STAT_READBACK_ERR register Mask Values
+
+/**
+ * @brief  PMIC power Configuration Register Address
  */
-#define PMIC_STAT_READBACK_ERR_EN_DRV_READBACK_STAT_MASK              \
-    ((uint8_t)(0x01U << PMIC_STAT_READBACK_ERR_EN_DRV_READBACK_STAT_SHIFT))
-#define PMIC_STAT_READBACK_ERR_NINT_READBACK_STAT_MASK              \
-    ((uint8_t)(0x01U << PMIC_STAT_READBACK_ERR_NINT_READBACK_STAT_SHIFT))
-#define PMIC_STAT_READBACK_ERR_NRSTOUT_READBACK_STAT_MASK              \
-    ((uint8_t)(0x01U << PMIC_STAT_READBACK_ERR_NRSTOUT_READBACK_STAT_SHIFT))
-#define PMIC_STAT_READBACK_ERR_NRSTOUT_SOC_READBACK_STAT_MASK              \
-    ((uint8_t)(0x01U << PMIC_STAT_READBACK_ERR_NRSTOUT_SOC_READBACK_STAT_SHIFT))
+#define PMIC_CONFIG_1_REGADDR (0x7DU)
 
-/*!
- * \brief  PMIC SERIAL_IF_CONFIG register Mask Values
+/**
+ * @brief  PMIC CONFIG_2 register Addresses
  */
-#define PMIC_SERIAL_IF_CONFIG_I2C1_SPI_CRC_EN_MASK              \
-    ((uint8_t)(0x01U << PMIC_SERIAL_IF_CONFIG_I2C1_SPI_CRC_EN_SHIFT))
-#define PMIC_SERIAL_IF_CONFIG_I2C2_CRC_EN_MASK              \
-    ((uint8_t)(0x01U << PMIC_SERIAL_IF_CONFIG_I2C2_CRC_EN_SHIFT))
-
-/*!
- * \brief   PMIC DEV_REV Register Mask Values
- */
-/* Valid only PG 2.0 */
-#define PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_MASK              \
-    ((uint8_t)(0x7FU << PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_SHIFT))
-/* Valid only PG 1.0 */
-#define PMIC_DEV_REV_TI_DEVICE_ID_SILICON_REV_MASK              \
-    ((uint8_t)(0xFFU << PMIC_DEV_REV_TI_DEVICE_ID_SILICON_REV_SHIFT))
-
-/*!
- * \brief: PMIC Recovery Counter Threshold Max Value
- */
-#define PMIC_RECOV_CNT_THR_MAX                          (0x0FU)
-
+#define PMIC_CONFIG_2_REGADDR (0x7EU)
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
@@ -503,61 +397,55 @@ extern "C" {
 /*                         Function Declarations                            */
 /*==========================================================================*/
 
-/*!
- *  \brief   This function is used to write a specific bit field value
+/**
+ *  @brief   This function is used to write a specific bit field value
  */
-static inline void Pmic_setBitField(uint8_t *pRegVal,
-                                    uint8_t  regFieldShift,
-                                    uint8_t  regFieldMask,
-                                    uint8_t  fieldVal)
-{
-    *pRegVal = (((*pRegVal) & (uint8_t) (~(uint8_t) regFieldMask)) |  \
-               ((((uint8_t) fieldVal) << (uint8_t) regFieldShift)  &  \
-                  (uint8_t) regFieldMask));
+static inline void Pmic_setBitField(uint8_t *pRegVal, uint8_t regFieldShift,
+                                    uint8_t regFieldMask, uint8_t fieldVal) {
+  *pRegVal = (((*pRegVal) & (uint8_t)(~(uint8_t)regFieldMask)) |
+              ((((uint8_t)fieldVal) << (uint8_t)regFieldShift) &
+               (uint8_t)regFieldMask));
 }
 
-/*!
- * \brief   This function is used to read a specific bit field value
+/**
+ * @brief   This function is used to read a specific bit field value
  */
-static inline uint8_t Pmic_getBitField(uint8_t regData,
-                                       uint8_t regFieldShift,
-                                       uint8_t regFieldMask)
-{
-   uint8_t fieldVal;
+static inline uint8_t Pmic_getBitField(uint8_t regData, uint8_t regFieldShift,
+                                       uint8_t regFieldMask) {
+  uint8_t fieldVal;
 
-    fieldVal = (((regData) & (uint8_t) regFieldMask) >>  \
-                 (uint8_t) regFieldShift);
+  fieldVal = (((regData) & (uint8_t)regFieldMask) >> (uint8_t)regFieldShift);
 
-   return fieldVal;
+  return fieldVal;
 }
 
-/*!
- * \brief: Checks the validParam bit position is set or not in validParamVal
+/**
+ * @brief: Checks the validParam bit position is set or not in validParamVal
  *         This function checks the given bit position is being set or not in
  *         the validParamVal argument
  *
- *  \param   validParamVal [IN]   Valid param value
- *  \param   bitPos        [IN]   bit position value
+ *  @param   validParamVal [IN]   Valid param value
+ *  @param   bitPos        [IN]   bit position value
  *
  *  \retval  Return true if the given bit pos is set, else return false
  */
 bool pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos);
 
-/*!
- * \brief: Function call wrapper to lock PMIC LLD critical section
+/**
+ * @brief: Function call wrapper to lock PMIC LLD critical section
  *         This function locks to critical area by calling registred locking
  *         mechanism using pmic core handle.
  *
- *  \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
+ *  @param   pPmicCoreHandle  [IN]  PMIC Interface Handle
  */
 void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *pPmicCoreHandle);
 
-/*!
- * \brief: Function call wrapper to unlock PMIC LLD critical section
+/**
+ * @brief: Function call wrapper to unlock PMIC LLD critical section
  *         This function unlocks to critical area by calling registred locking
  *         mechanism using pmic core handle.
  *
- *  \param   pPmicCoreHandle  [IN]  PMIC Interface Handle
+ *  @param   pPmicCoreHandle  [IN]  PMIC Interface Handle
  */
 void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *pPmicCoreHandle);
 
