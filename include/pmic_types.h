@@ -32,15 +32,9 @@
  *****************************************************************************/
 
 /**
- *  \addtogroup DRV_PMIC_COMMON_MODULE
+ *  @file pmic_types.h
  *
- *  @{
- */
-
-/**
- *  \file pmic_types.h
- *
- *  \brief PMIC Driver Common data types file.
+ *  @brief PMIC Driver Common data types file.
  */
 
 #ifndef PMIC_TYPES_H_
@@ -49,6 +43,7 @@
 /* ========================================================================= */
 /*                             Include Files                                 */
 /* ========================================================================= */
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -73,15 +68,15 @@ extern "C" {
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
-/*!
- * \brief PMIC Subsystems
+/**
+ * @brief PMIC Subsystems
  *
- *  \param   gpioEnable    PMIC GPIO SubSystem
- *  \param   rtcEnable     PMIC RTC SubSystem
- *  \param   wdgEnable     PMIC Watchdog SubSystem
- *  \param   buckEnable    PMIC BUCK SubSystem
- *  \param   ldoEnable     PMIC LDO SubSystem
- *  \param   esmEnable     PMIC ESM SubSystem
+ *  @param   gpioEnable    PMIC GPIO SubSystem
+ *  @param   rtcEnable     PMIC RTC SubSystem
+ *  @param   wdgEnable     PMIC Watchdog SubSystem
+ *  @param   buckEnable    PMIC BUCK SubSystem
+ *  @param   ldoEnable     PMIC LDO SubSystem
+ *  @param   esmEnable     PMIC ESM SubSystem
  */
 typedef struct Pmic_DevSubSysInfo_s {
   bool gpioEnable;
@@ -92,8 +87,8 @@ typedef struct Pmic_DevSubSysInfo_s {
   bool esmEnable;
 } Pmic_DevSubSysInfo_t;
 
-/*!
- * \brief  PMIC Interface Handle.
+/**
+ * @brief  PMIC Interface Handle.
  *         Contains various PMIC driver instance specific information. like,
  *         the PMIC device type, PMIC interface mode, Slave addresses,
  *         various application defined API function pointers for
@@ -103,44 +98,44 @@ typedef struct Pmic_DevSubSysInfo_s {
  *               pmic core handle to user application. User should ensure that
  *               application shall not modify the PMIC Handle information.
  *
- *  \param   pPmic_SubSysInfo             PMIC driver subsystem information
- *  \param   drvInitStatus                PMIC Driver initialization status.
+ *  @param   pPmic_SubSysInfo             PMIC driver subsystem information
+ *  @param   drvInitStatus                PMIC Driver initialization status.
  *                                        Valid driver status:
  *                                        For Main instance:
  *                                           DRV_INIT_STATUS | PMIC_MAIN_INST.
  *                                        For QA instance:
  *                                           DRV_INIT_STATUS | PMIC_QA_INST.
- *  \param   pmicDeviceType               PMIC device type
- *  \param   pmicDevRev                   PMIC device revision ID
- *  \param   pmicDevSiliconRev            PMIC device silicon revision ID
- *  \param   commMode                     Interface mode - Single I2C, Dual
+ *  @param   pmicDeviceType               PMIC device type
+ *  @param   pmicDevRev                   PMIC device revision ID
+ *  @param   pmicDevSiliconRev            PMIC device silicon revision ID
+ *  @param   commMode                     Interface mode - Single I2C, Dual
  *                                        I2C or SPI.
- *  \param   slaveAddr                    Main Interface Slave Address
- *  \param   qaSlaveAddr                  WDOG QA Interface Slave Address
- *  \param   nvmSlaveAddr                 NVM Slave Address which provides only
+ *  @param   slaveAddr                    Main Interface Slave Address
+ *  @param   qaSlaveAddr                  WDOG QA Interface Slave Address
+ *  @param   nvmSlaveAddr                 NVM Slave Address which provides only
  *                                        read access to CRC status of Page-1
  *                                        Application shall use this slave
  *                                        address to read only CRC status.
  *                                        Application shall not do
  *                                        any write operations using this slave
  *                                        address
- *  \param   i2c1Speed                    I2C1 Speed when commMode is Single or
+ *  @param   i2c1Speed                    I2C1 Speed when commMode is Single or
  *                                        Dual I2C
- *  \param   i2c2Speed                    I2C2 Speed when commMode is Dual I2C
- *  \param   crcEnable                    Parameter to enable/disable CRC
+ *  @param   i2c2Speed                    I2C2 Speed when commMode is Dual I2C
+ *  @param   crcEnable                    Parameter to enable/disable CRC
  *                                        For Valid Values:
  *                                                       \ref Pmic_CrcEnableCfg
- *  \param   pFnPmicCommIoRead            Pointer to I2C/SPI Comm LLD Read
+ *  @param   pFnPmicCommIoRead            Pointer to I2C/SPI Comm LLD Read
  *                                        Function
- *  \param   pFnPmicCommIoWrite           Pointer to I2C/SPI Comm LLD Write
+ *  @param   pFnPmicCommIoWrite           Pointer to I2C/SPI Comm LLD Write
  *                                        Function
- *  \param   pCommHandle                  Pointer to Handle for I2C1/SPI
+ *  @param   pCommHandle                  Pointer to Handle for I2C1/SPI
  *                                        Main Interface
- *  \param   pQACommHandle                Pointer to Handle for I2C2-QA
+ *  @param   pQACommHandle                Pointer to Handle for I2C2-QA
  *                                        Interface
- *  \param   pFnPmicCritSecStart          Pointer to Pmic Critical-Section
+ *  @param   pFnPmicCritSecStart          Pointer to Pmic Critical-Section
  *                                        Start Function
- *  \param   pFnPmicCritSecStop           Pointer to Pmic Critical-Section
+ *  @param   pFnPmicCritSecStop           Pointer to Pmic Critical-Section
  *                                        Stop Function
  */
 typedef struct Pmic_CoreHandle_s {
@@ -178,5 +173,3 @@ typedef struct Pmic_CoreHandle_s {
 #endif /* __cplusplus */
 
 #endif /* PMIC_TYPES_H_ */
-
-/* @} */

@@ -32,26 +32,42 @@
  *****************************************************************************/
 
 /**
- * \file   pmic_irq_status.c
+ * @file   pmic_irq_status.c
  *
  * @brief  This file contains APIs definitions for PMIC Interrupt IRQ Status
  *         Handler.
- *
  */
+
+/* ========================================================================== */
+/*                             Include Files                                  */
+/* ========================================================================== */
 
 #include "pmic_core_priv.h"
 #include "pmic_irq.h"
 #include "pmic_irq_priv.h"
+#include "pmic_irq_tps65386x.h"
 #include "pmic_irq_tps65386x_priv.h"
-#include <pmic_irq_tps65386x.h>
+
+/* ========================================================================== */
+/*                           Macros & Typedefs                                */
+/* ========================================================================== */
+
+/* ========================================================================== */
+/*                         Structure Declarations                             */
+/* ========================================================================== */
+
+/* ========================================================================== */
+/*                          Function Definitions                              */
+/* ========================================================================== */
 
 /**
- * @brief  Function to Set the intStatus bit position.
+ * @brief Set a specific bit in the interrupt status.
+ * This function sets a specific bit in the interrupt status based on the
+ * position provided.
  *
- *  [IN]:Pmic_IrqStatus_t  *pErrStat - structure contains an array -
- * intStatus[4] [IN]:uint32_t pos will tell the position of bit in which
- * operation will happpen
- *
+ * @param pErrStat Pointer to the interrupt status.
+ * @param pos Position of the bit to set.
+ * @return void
  */
 void Pmic_intrBitSet(Pmic_IrqStatus_t *pErrStat, uint32_t pos) {
   uint32_t intStatSize = 0U;
@@ -64,7 +80,13 @@ void Pmic_intrBitSet(Pmic_IrqStatus_t *pErrStat, uint32_t pos) {
 }
 
 /**
- * @brief  Function to Clear the intStatus bit position.
+ * @brief Clear a specific bit in the interrupt status.
+ * This function clears a specific bit in the interrupt status based on the IRQ
+ * number provided.
+ *
+ * @param pErrStat Pointer to the interrupt status.
+ * @param pIrqNum Pointer to the IRQ number.
+ * @return void
  */
 static void Pmic_intrBitClear(Pmic_IrqStatus_t *pErrStat,
                               const uint8_t *pIrqNum) {
@@ -78,7 +100,13 @@ static void Pmic_intrBitClear(Pmic_IrqStatus_t *pErrStat,
 }
 
 /**
- * @brief  Function to Extract the intStatus bit position.
+ * @brief Extract the IRQ number from the interrupt status.
+ * This function extracts the IRQ number from the interrupt status up to a
+ * maximum value.
+ *
+ * @param pErrStat Pointer to the interrupt status.
+ * @param maxVal Maximum value for the IRQ number.
+ * @return irqNum Extracted IRQ number.
  */
 static uint8_t Pmic_intrBitExtract(const Pmic_IrqStatus_t *pErrStat,
                                    uint8_t maxVal) {
@@ -98,7 +126,13 @@ static uint8_t Pmic_intrBitExtract(const Pmic_IrqStatus_t *pErrStat,
 }
 
 /**
- * @brief  Function to Check the device specific Max IrqNum.
+ * @brief Validate the IRQ number.
+ * This function validates the IRQ number based on the PMIC device type.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param irqNum IRQ number to validate.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the IRQ number is valid;
+ * otherwise, returns an error code.
  */
 static int32_t Pmic_irqValidateIrqNum(const Pmic_CoreHandle_t *pPmicCoreHandle,
                                       const uint8_t irqNum) {
@@ -116,7 +150,14 @@ static int32_t Pmic_irqValidateIrqNum(const Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief  Function to Check the device specific Max IrqNum
+ * @brief Validate the IRQ number for getting the mask interrupt status.
+ * This function validates the IRQ number for getting the mask interrupt status
+ * based on the PMIC device type.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param irqNum IRQ number to validate.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the IRQ number is valid;
+ * otherwise, returns an error code.
  */
 static int32_t Pmic_irqValidateIrqNumGetMaskIntrStatus(
     const Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t irqNum) {
@@ -134,7 +175,13 @@ static int32_t Pmic_irqValidateIrqNumGetMaskIntrStatus(
 }
 
 /**
- * @brief  Function to get the device specific Max IrqNum.
+ * @brief Get the maximum value for IRQ.
+ * This function retrieves the maximum value for IRQ based on the PMIC device
+ * type.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param maxVal Pointer to store the maximum value for IRQ.
+ * @return void
  */
 static void Pmic_getMaxVal(const Pmic_CoreHandle_t *pPmicCoreHandle,
                            uint8_t *maxVal) {
@@ -142,8 +189,13 @@ static void Pmic_getMaxVal(const Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief  Function to get the Device specific Interrupt Configuration
- *         registers.
+ * @brief Get the interrupt configuration.
+ * This function retrieves the interrupt configuration based on the PMIC device
+ * type.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pIntrCfg Pointer to store the interrupt configuration.
+ * @return void
  */
 static void Pmic_get_intrCfg(const Pmic_CoreHandle_t *pPmicCoreHandle,
                              Pmic_IntrCfg_t **pIntrCfg) {
@@ -153,8 +205,13 @@ static void Pmic_get_intrCfg(const Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief  Function to get the Device specific GPIO Interrupt configuration
- *         registers.
+ * @brief Get the GPIO interrupt configuration.
+ * This function retrieves the GPIO interrupt configuration based on the PMIC
+ * device type.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pGpioIntrCfg Pointer to store the GPIO interrupt configuration.
+ * @return void
  */
 static void Pmic_get_gpioIntrCfg(const Pmic_CoreHandle_t *pPmicCoreHandle,
                                  Pmic_GpioIntrTypeCfg_t **pGpioIntrCfg) {
@@ -162,7 +219,16 @@ static void Pmic_get_gpioIntrCfg(const Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief  Function to Mask/Unmask GPIO Interrupts.
+ * @brief Mask or unmask the GPIO interrupt.
+ * This function masks or unmasks the GPIO interrupt based on the provided
+ * parameters.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param irqGpioNum IRQ number for GPIO interrupt.
+ * @param mask Boolean value indicating whether to mask or unmask the interrupt.
+ * @param gpioIntrType GPIO interrupt type.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 static int32_t Pmic_irqGpioMask(Pmic_CoreHandle_t *pPmicCoreHandle,
                                 const uint8_t irqGpioNum, const bool mask,
@@ -204,7 +270,17 @@ static int32_t Pmic_irqGpioMask(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief  Function to Mask/Unmask GPIO Interrupts.
+ * @brief Mask or unmask all GPIO interrupts.
+ * This function masks or unmasks all GPIO interrupts based on the provided
+ * parameters.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param irqGpioNum IRQ number for GPIO interrupt.
+ * @param mask Boolean value indicating whether to mask or unmask the
+ * interrupts.
+ * @param gpioIntrType GPIO interrupt type.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 static int32_t Pmic_maskGpioIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
                                  const uint8_t irqGpioNum, const bool mask,
@@ -230,7 +306,13 @@ static int32_t Pmic_maskGpioIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief  Function to clear IRQ status.
+ * @brief Clear the interrupt status.
+ * This function clears the interrupt status based on the provided IRQ number.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param irqNum IRQ number to clear.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 static int32_t Pmic_irqClear(Pmic_CoreHandle_t *pPmicCoreHandle,
                              const uint8_t irqNum) {
@@ -262,7 +344,13 @@ static int32_t Pmic_irqClear(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief  Function to Clear Interrupt Status register.
+ * @brief Clear all interrupt statuses.
+ * This function clears all interrupt statuses based on the provided IRQ number.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param irqNum IRQ number to clear.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 static int32_t Pmic_irqClearStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
                                    const uint8_t irqNum) {
@@ -286,7 +374,16 @@ static int32_t Pmic_irqClearStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief  Function to Mask/Unmask Interrupts.
+ * @brief Mask or unmask a specific IRQ.
+ * This function masks or unmasks a specific IRQ based on the provided
+ * parameters.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param irqNum IRQ number to mask or unmask.
+ * @param mask Boolean value indicating whether to mask or unmask the IRQ.
+ * @param pIntrCfg Pointer to the interrupt configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 static int32_t Pmic_irqMask(Pmic_CoreHandle_t *pPmicCoreHandle,
                             const uint8_t irqNum, const bool mask,
@@ -320,7 +417,15 @@ static int32_t Pmic_irqMask(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief  Function to Mask/Unmask PMIC Interrupts except GPIO.
+ * @brief Mask or unmask interrupts.
+ * This function masks or unmasks interrupts based on the provided parameters.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param irqNum IRQ number to mask or unmask.
+ * @param mask Boolean value indicating whether to mask or unmask the
+ * interrupts.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 static int32_t Pmic_maskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
                              const uint8_t irqNum, const bool mask) {
@@ -357,7 +462,13 @@ static int32_t Pmic_maskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief  Function to get the L1 error registers.
+ * @brief Get the L1 register address for IRQ.
+ * This function retrieves the L1 register address for IRQ based on the count.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param l1RegAddr Pointer to store the L1 register address.
+ * @param count Count to determine the L1 register address.
+ * @return void
  */
 static void Pmic_irqGetL1Reg(const Pmic_CoreHandle_t *pPmicCoreHandle,
                              uint16_t *l1RegAddr, uint8_t count) {
@@ -406,12 +517,14 @@ static void Pmic_irqGetL1Reg(const Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief  Function to decipher L2 Error.
+ * @brief Get the L2 error for the specified L1 register address.
+ * This function retrieves the L2 error for the specified L1 register address.
  *
- *          Note: In this API, the default PMIC device is assumed as TPS65386x
- *                BB PMIC. While adding support for New PMIC device, developer
- *                need to update the API functionality for New PMIC device
- *                accordingly.
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param l1RegAddr L1 register address.
+ * @param pErrStat Pointer to store the error status.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 static int32_t Pmic_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle,
                                   uint16_t l1RegAddr,
@@ -429,8 +542,14 @@ static int32_t Pmic_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief   Function to Extract Interrupts as per Hierarchy given in TRM and
- *          clear the bit in pErrStat.
+ * @brief Extract the error status from the PMIC.
+ * This function extracts the error status from the PMIC and clears the error
+ * bit position.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pErrStat Pointer to the error status structure.
+ * @param pIrqNum Pointer to store the IRQ number.
+ * @return void
  */
 static void Pmic_extractErrStatus(const Pmic_CoreHandle_t *pPmicCoreHandle,
                                   Pmic_IrqStatus_t *pErrStat,
@@ -445,31 +564,15 @@ static void Pmic_extractErrStatus(const Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief   API to read Error status.
+ * @brief Get the error status from the PMIC.
+ * This function retrieves the error status from the PMIC and optionally clears
+ * the IRQ.
  *
- * Requirement:
- * Design: did_pmic_irq_cfg_readback
- * Architecture:
- *
- *          This function does the following:
- *             1. This function gets the interrupt status by reading pmic
- *                IRQ register as per IRQ hierarchy defined in device TRM.
- *             2. Decipher error from top register to actual error code.
- *             3. Store the status of all Interrupts.
- *             4. Support clearing interrupts depends on clearIRQ flag.
- *          Note: Application has to ensure to clear the interrupts after the
- *                interrupt has been serviced. If the interrupts are not cleared
- *                after the interrupt had been serviced then Application will
- *                not get any further interrupts which results in event miss
- *
- * @param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * @param   pErrStat          [OUT]   Pointer to store Error status.
- * @param   clearIRQ          [IN]    Flag to clear Interrupt status after
- *                                    deciphering the interrupt status.
- *                                    For valid values: \ref Pmic_IrqClearFlag.
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values: \ref Pmic_ErrorCodes.
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pErrStat Pointer to store the error status.
+ * @param clearIRQ Boolean value indicating whether to clear the IRQ.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_irqGetErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
                              Pmic_IrqStatus_t *pErrStat, const bool clearIRQ) {
@@ -518,28 +621,13 @@ int32_t Pmic_irqGetErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief   API to clear Error status.
+ * @brief Clear the error status of the specified IRQ.
+ * This function clears the error status of the specified IRQ.
  *
- * Requirement:
- * Design: did_pmic_irq_cfg_readback
- * Architecture:
- *
- *          This function does the following:
- *          1. This function clears the IRQ status in PMIC register for a given
- *             IRQ Number.
- *          2. Validates given IRQ Number and find the IRQ register that is
- *             to be cleared.
- *          3. Expected to be called after an IRQ status is deciphered by
- *             Pmic_irqGetErrStatus().
- *
- * @param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * @param   irqNum            [IN]    Interrupt number to clear the status.
- *                                    Valid values are:
- *                                    For TPS659386x BB:
- *                                    \ref Pmic_tps65386x_IrqNum.
- *                                    For all: \ref Pmic_IrqNum.
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values: \ref Pmic_ErrorCodes.
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param irqNum IRQ number to clear the error status.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_irqClrErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
                              const uint8_t irqNum) {
@@ -561,27 +649,15 @@ int32_t Pmic_irqClrErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief   API to mask/unmask interrupts.
+ * @brief Mask or unmask a specific interrupt.
+ * This function masks or unmasks a specific interrupt based on the provided
+ * parameters.
  *
- * Requirement:
- * Design: did_pmic_irq_cfg_readback
- * Architecture:
- *
- *          This function does the following:
- *          1. This function mask/unmask the given IRQ Number.
- *          2. Validates given IRQ Number and find the IRQ register that
- *             is to be masked/unmasked.
- *
- * @param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * @param   irqNum            [IN]    Interrupt status to be cleared.
- *                                    Valid values are:
- *                                    For TPS65386x BB:
- *                                    \ref Pmic_tps65386x_IrqNum.
- *                                    For all: \ref Pmic_IrqNum.
- * @param   mask              [IN]    Parameter to mask/unmask INTR.
- *                                    For valid values: \ref Pmic_IrqMaskFlag.
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values: \ref Pmic_ErrorCodes.
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param irqNum IRQ number to mask or unmask.
+ * @param mask Boolean value indicating whether to mask or unmask the interrupt.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_irqMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
                          const uint8_t irqNum, const bool mask) {
@@ -603,24 +679,14 @@ int32_t Pmic_irqMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief   API to extract each Error status.
+ * @brief Get the next error status from the PMIC.
+ * This function retrieves the next error status from the PMIC.
  *
- * Requirement:
- * Design: did_pmic_irq_cfg_readback
- * Architecture:
- *
- *          This function is used to extract each Error status from pErrStat
- *          as per the hierarchy given in the TRM. This function clears the
- *          Error status after the status is extracted. This API is expected to
- *          be called after Pmic_irqGetErrStatus.
- *
- * @param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * @param   pErrStat          [IN]    Pointer containing Error Status.
- * @param   pIrqNum           [OUT]   Pointer to store the IRQ Number extracted
- *                                    For TPS65386x BB:
- *                                    \ref Pmic_tps65386x_IrqNum.
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref: Pmic_ErrorCodes.
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pErrStat Pointer to store the error status.
+ * @param pIrqNum Pointer to store the IRQ number associated with the error.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_getNextErrorStatus(const Pmic_CoreHandle_t *pPmicCoreHandle,
                                 Pmic_IrqStatus_t *pErrStat, uint8_t *pIrqNum) {
@@ -652,27 +718,16 @@ int32_t Pmic_getNextErrorStatus(const Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief   API to mask/unmask GPIO interrupts.
+ * @brief Mask or unmask a specific GPIO interrupt.
+ * This function masks or unmasks a specific GPIO interrupt based on the
+ * provided parameters.
  *
- * Requirement:
- * Design: did_pmic_irq_cfg_readback
- * Architecture:
- *
- *          This function is used to Mask or Unmask GPIO Rise and Fall
- *          Interrupts based on the GPIO IRQ Number.
- *
- * @param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * @param   irqGpioNum        [IN]    GPIO Interrupt to be masked/unmasked.
- *                                    Valid values:
- *                                    For TPS65386x BB PMIC:
- *                                    \ref Pmic_tps65386x_IrqGpioNum.
- *                                    For all: \ref Pmic_IrqGpioNum.
- * @param   mask              [IN]    Parameter to mask/unmask INTR.
- *                                    Valid values: \ref Pmic_IrqMaskFlag.
- * @param   gpioIntrType      [IN]    Parameter to mask GPIO Interrupt.
- *                                    Valid values: \ref Pmic_IrqGpioIntrType.
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes.
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param irqGpioNum IRQ GPIO number to mask or unmask.
+ * @param mask Boolean value indicating whether to mask or unmask the interrupt.
+ * @param gpioIntrType Type of GPIO interrupt.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_irqGpioMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
                              const uint8_t irqGpioNum, const bool mask,
@@ -698,7 +753,16 @@ int32_t Pmic_irqGpioMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief  Function to get status of the Interrupts is masked or not.
+ * @brief Get the mask status of a specific IRQ.
+ * This function retrieves the mask status of a specific IRQ based on the
+ * provided parameters.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param irqNum IRQ number to get the mask status.
+ * @param pMaskStatus Pointer to store the mask status.
+ * @param pIntrCfg Pointer to the interrupt configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 static int32_t Pmic_getIrqMaskStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
                                      const uint8_t irqNum, bool *pMaskStatus,
@@ -729,8 +793,15 @@ static int32_t Pmic_getIrqMaskStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief  Function to get status of the Interrupts is masked or not except
- *         GPIO Interrupts.
+ * @brief Get the mask status of a specific interrupt.
+ * This function retrieves the mask status of a specific interrupt based on the
+ * provided parameters.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param irqNum IRQ number to get the mask status.
+ * @param pMaskStatus Pointer to store the mask status.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 static int32_t Pmic_getMaskIntrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
                                       const uint8_t irqNum, bool *pMaskStatus) {
@@ -752,29 +823,15 @@ static int32_t Pmic_getMaskIntrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief   API to read the status of PMIC interrupts is masked or not
+ * @brief Get the mask status of a specific IRQ.
+ * This function retrieves the mask status of a specific IRQ based on the
+ * provided parameters.
  *
- * Requirement:
- * Design: did_pmic_irq_mask_status
- * Architecture:
- *
- *          This function does the following:
- *          1. This function reads the status of interrupt is masked or not for
- *             the given IRQ Number.
- *          2. Validates given IRQ Number and find the IRQ register to check
- *             the status of interrupt is masked or not
- *
- * @param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * @param   irqNum            [IN]    Interrupt number to be masked.
- *                                    For Valid values:
- *                                    \ref Pmic_tps65386x_IrqNum
- *                                    for TPS65386x BB PMIC
- * @param   pMaskStatus       [OUT]   Pointer to hold the status of interrupt is
- *                                    masked or not
- *                                    For Valid values:
- *                                    \ref Pmic_IrqMaskFlag
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values: \ref Pmic_ErrorCodes.
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param irqNum IRQ number to get the mask status.
+ * @param pMaskStatus Pointer to store the mask status.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_irqGetMaskIntrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
                                   const uint8_t irqNum, bool *pMaskStatus) {
@@ -801,7 +858,16 @@ int32_t Pmic_irqGetMaskIntrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief  Function to read the status of GPIO Interrupts is masked or not
+ * @brief Get the mask status of a specific GPIO interrupt.
+ * This function retrieves the mask status of a specific GPIO interrupt based on
+ * the provided parameters.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param irqGpioNum IRQ GPIO number to get the mask status.
+ * @param gpioIntrType Type of GPIO interrupt.
+ * @param pIntrMaskStat Pointer to store the mask status.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 static int32_t Pmic_getIrqGpioMaskStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
                                          const uint8_t irqGpioNum,
@@ -841,7 +907,14 @@ static int32_t Pmic_getIrqGpioMaskStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief  Function to read the status of GPIO Interrupts is masked or not
+ * @brief Get the mask status of a specific IRQ.
+ * This function retrieves the mask status of a specific IRQ.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param irqNum IRQ number to get the mask status.
+ * @param pMaskStatus Pointer to store the mask status.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 static int32_t Pmic_getMaskGpioIntrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
                                           const uint8_t irqGpioNum,
@@ -856,27 +929,15 @@ static int32_t Pmic_getMaskGpioIntrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief   API to read the status of PMIC GPIO interrupts is masked or not
- *          This function reads the status of GPIO Rise and Fall interrupt is
- *          masked or not for the given GPIO IRQ Number
+ * @brief Get the mask status of a specific GPIO interrupt.
+ * This function retrieves the mask status of a specific GPIO interrupt.
  *
- * @param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * @param   irqGpioNum        [IN]    GPIO Interrupt to be masked/unmasked.
- *                                    For Valid values:
- *                                    \ref Pmic_tps65386x_IrqGpioNum
- *                                    for TPS65386x BB PMIC,
- * @param   gpioIntrType      [IN]    Parameter to mask GPO Interrupt.
- *                                    Valid values: \ref Pmic_IrqGpioIntrType.
- * @param   pRiseIntrMaskStat [OUT]   Pointer to hold status of GPIO
- *                                    Interrupt is masked or not
- *                                    For Valid values:
- *                                    \ref Pmic_IrqMaskFlag
- * @param   pFallIntrMaskStat [OUT]   Pointer to hold status of GPIO
- *                                    Interrupt is masked or not
- *                                    For Valid values:
- *                                    \ref Pmic_IrqMaskFlag
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes.
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param irqGpioNum IRQ GPIO number to get the mask status.
+ * @param gpioIntrType Type of GPIO interrupt.
+ * @param pIntrMaskStat Pointer to store the mask status.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_irqGetGpioMaskIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
                                 const uint8_t irqGpioNum,

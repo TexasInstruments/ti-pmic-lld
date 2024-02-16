@@ -32,92 +32,39 @@
  *****************************************************************************/
 
 /**
- *  @file pmic_core_tps6594x.h
+ * @file   pmic_power_tps65386x.h
  *
- *  @brief  The macro definitions for TPS6594x Leo PMIC driver specific
- *          PMIC common configuration
+ * @brief  PMIC TPS65386x BB PMIC Power Resources Driver API/interface file.
+ *
  */
 
-#ifndef PMIC_CORE_TPS65386X_H_
-#define PMIC_CORE_TPS65386X_H_
+#ifndef PMIC_POWER_TPS65386x_PRIV_H_
+#define PMIC_POWER_TPS65386x_PRIV_H_
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "pmic_core_priv.h"
+#include "pmic_io_priv.h"
+#include "pmic_power_priv.h"
+#include "pmic_types.h"
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/* Sub address command as per tps653860xx datasheet */
-#define CRC_POLY (0x107U)
-#define CRC_LEN (9U)
-#define CMD_SHIFT (24U)
-#define RW_SHIFT (16U)
-#define DAT_SHIFT (8U)
-#define CRC_SHIFT (0U)
-#define CMD_RD_EN (0x10)
-#define CMD_WR_EN (0x00)
+#define PMIC_TPS65386X_BB_CFG_STATUS_NOT_INCLUDED (0x0U)
+#define PMIC_TPS65386X_BB_CFG_STATUS_INCLUDED (0x1U)
 
-#define CMD_DEVICE_ID (0x00)
-#define CMD_REV_ID (0x01)
+#define PMIC_TPS65386X_BB_CFG_DRSS_DISABLED (0x0U)
+#define PMIC_TPS65386X_BB_CFG_DRSS_ENABLED (0x1U)
 
-#define CMD_REG_UNLOCK (0x03)
-#define CNT_REG_UNLOCK (0x04)
-#define CMD_REG_STATUS (0x09)
+#define PMIC_TPS65386X_BB_CFG_4V (0x0U)
+#define PMIC_TPS65386X_BB_CFG_SAME_BBCFG (0x1U)
 
-#define CMD_LDO2_CFG (0x1F)
-#define CMD_LDO3_CFG (0x20)
-#define CMD_LDO4_CFG (0x21)
-#define CMD_LDO_CTRL (0x26)
+#define PMIC_TPS65386X_BB_CFG_BB_LVL_CFG_4_3V (0x0U)
+#define PMIC_TPS65386X_BB_CFG_BB_LVL_CFG_5V (0x1U)
+#define PMIC_TPS65386X_BB_CFG_BB_LVL_CFG_6V (0x2U)
 
-#define DAT_REG_UNLOCK_1 (0x98)
-#define DAT_REG_UNLOCK_2 (0xB8)
-
-#define DAT_REG_LOCK (0x10)
-
-#define CNT_REG_UNLOCK_1 (0x13)
-#define CNT_REG_UNLOCK_2 (0x7D)
-
-#define DAT_LDO2_CFG (0x93)
-#define DAT_LDO3_CFG (0x94)
-#define DAT_LDO4_CFG (0x90)
-#define DAT_LDO_CTRL (0x55)
-
-#define CFG_REG_LOCK_MASK (0x01) /* Bit mask for CFG_REG_LOCK */
-#define CNT_REG_LOCK_MASK (0x02) /* Bit mask for CNT_REG_LOCK */
-
-#define PMIC_MCSPI_MSGSIZE (1U)
-
-#define PMIC_TPS65386X_DEV_ID (0x3CU)
-
-/**
- *  @name   PMIC DIAG OUT Pin Control Configuration
- *
- *  @{
- */
-/** @brief AMUX Enabled */
-#define PMIC_TPS65386X_DIAG_OUT_AMUX_ENABLE (1U)
-/** @brief DMUX Enabled */
-#define PMIC_TPS65386X_DIAG_OUT_DMUX_ENABLE (2U)
-/** @brief AMUX/DMUX Disabled */
-#define PMIC_TPS65386X_DIAG_OUT_DISABLE (0U)
-/*  @} */
-
-/*==========================================================================*/
-/*                         Structures and Enums                             */
-/*==========================================================================*/
-
-/*==========================================================================*/
-/*                         Function Declarations                            */
-/*==========================================================================*/
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
-#endif /* PMIC_CORE_TPS65386X_H_ */
+#endif /* PMIC_POWER_TPS65386x_PRIV_H_ */

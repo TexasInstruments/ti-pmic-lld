@@ -32,504 +32,580 @@
  *****************************************************************************/
 
 /**
-*   \file    pmic_low_iq_timer.c
-*
-*   @brief   This file contains the default API's for PMIC FSM state
-*            configuration
-*/
+ *   @file    pmic_low_iq_timer.c
+ *
+ *   @brief   This file contains the default API's for PMIC FSM state
+ *            configuration
+ */
+
+/* ========================================================================== */
+/*                             Include Files                                  */
+/* ========================================================================== */
 
 #include "pmic_low_iq_timer.h"
 #include "pmic_low_iq_timer_priv.h"
 
-/*!
- * \brief API to set Timer Configuration
+/* ========================================================================== */
+/*                           Macros & Typedefs                                */
+/* ========================================================================== */
+
+/* ========================================================================== */
+/*                         Structure Declarations                             */
+/* ========================================================================== */
+
+/* ========================================================================== */
+/*                          Function Definitions                              */
+/* ========================================================================== */
+
+/**
+ * @brief Set the configuration of the PMIC timer.
+ * This function sets the configuration of the PMIC timer based on the provided
+ * parameters.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param tmrData Timer data to be set.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
-int32_t Pmic_SetTimerConfig(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t  tmrData)
-{
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
-    uint8_t regData     = 0U;
+int32_t Pmic_SetTimerConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
+                            uint8_t tmrData) {
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
+  uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
+  Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_TMR_CFG_REG_REGADDR,
-                                        &regData);
+  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CFG_REG_REGADDR,
+                                      &regData);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        switch(tmrData)
-        {
-            case 0 :
-                Pmic_setBitField(&regData,
-                                 PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
-                                 PMIC_TMR_CFG_REG_TMR_CFG_MASK,
-                                 PMIC_TMR_CFG_DATA0);
-                break;
+  if (PMIC_ST_SUCCESS == pmicStatus) {
+    switch (tmrData) {
+    case 0:
+      Pmic_setBitField(&regData, PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
+                       PMIC_TMR_CFG_REG_TMR_CFG_MASK, PMIC_TMR_CFG_DATA0);
+      break;
 
-            case 1 :
-                Pmic_setBitField(&regData,
-                                 PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
-                                 PMIC_TMR_CFG_REG_TMR_CFG_MASK,
-                                 PMIC_TMR_CFG_DATA1);
-                break;
+    case 1:
+      Pmic_setBitField(&regData, PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
+                       PMIC_TMR_CFG_REG_TMR_CFG_MASK, PMIC_TMR_CFG_DATA1);
+      break;
 
-            case 2 :
-                Pmic_setBitField(&regData,
-                                 PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
-                                 PMIC_TMR_CFG_REG_TMR_CFG_MASK,
-                                 PMIC_TMR_CFG_DATA2);
-                break;
+    case 2:
+      Pmic_setBitField(&regData, PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
+                       PMIC_TMR_CFG_REG_TMR_CFG_MASK, PMIC_TMR_CFG_DATA2);
+      break;
 
-            case 3 :
-                Pmic_setBitField(&regData,
-                                 PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
-                                 PMIC_TMR_CFG_REG_TMR_CFG_MASK,
-                                 PMIC_TMR_CFG_DATA3);
-                break;
+    case 3:
+      Pmic_setBitField(&regData, PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
+                       PMIC_TMR_CFG_REG_TMR_CFG_MASK, PMIC_TMR_CFG_DATA3);
+      break;
 
-            case 4 :
-                Pmic_setBitField(&regData,
-                                 PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
-                                 PMIC_TMR_CFG_REG_TMR_CFG_MASK,
-                                 PMIC_TMR_CFG_DATA4);
-                break;
+    case 4:
+      Pmic_setBitField(&regData, PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
+                       PMIC_TMR_CFG_REG_TMR_CFG_MASK, PMIC_TMR_CFG_DATA4);
+      break;
 
-            default :
-                Pmic_setBitField(&regData,
-                                 PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
-                                 PMIC_TMR_CFG_REG_TMR_CFG_MASK,
-                                 PMIC_TMR_CFG_DATA5);
-                break;
-
-        }
-
-        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                            PMIC_TMR_CFG_REG_REGADDR,
-                                            regData);
-    }
-
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    return pmicStatus;
-}
-
-/*!
- * \brief API to get Timer Configuration
- */
-int32_t Pmic_GetTimerConfig(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t  *tmrConfigData)
-{
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
-    uint8_t regData     = 0U;
-
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_TMR_CFG_REG_REGADDR,
-                                        &regData);
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        *tmrConfigData = Pmic_getBitField(regData,
-                                          PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
-                                          PMIC_TMR_CFG_REG_TMR_CFG_MASK);
-    }
-
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    return pmicStatus;
-}
-
-/*!
- * \brief API to set Timer Prescale
- */
-int32_t Pmic_SetTimerPrescale(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t  tmrData)
-{
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
-    uint8_t regData     = 0U;
-
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_TMR_CFG_REG_REGADDR,
-                                        &regData);
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        switch(tmrData)
-        {
-            case 0 :
-                Pmic_setBitField(&regData,
-                                 PMIC_TMR_CFG_REG_TMR_PS_SHIFT,
-                                 PMIC_TMR_CFG_REG_TMR_PS_MASK,
-                                 PMIC_TMR_PS_DATA0);
-                break;
-
-            case 1 :
-                Pmic_setBitField(&regData,
-                                 PMIC_TMR_CFG_REG_TMR_PS_SHIFT,
-                                 PMIC_TMR_CFG_REG_TMR_PS_MASK,
-                                 PMIC_TMR_PS_DATA1);
-                break;
-
-            case 2 :
-                Pmic_setBitField(&regData,
-                                 PMIC_TMR_CFG_REG_TMR_PS_SHIFT,
-                                 PMIC_TMR_CFG_REG_TMR_PS_MASK,
-                                 PMIC_TMR_PS_DATA2);
-                break;
-
-            default :
-                Pmic_setBitField(&regData,
-                                 PMIC_TMR_CFG_REG_TMR_PS_SHIFT,
-                                 PMIC_TMR_CFG_REG_TMR_PS_MASK,
-                                 PMIC_TMR_CFG_DATA3);
-                break;
-        }
-
-        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                            PMIC_TMR_CFG_REG_REGADDR,
-                                            regData);
-    }
-
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    return pmicStatus;
-}
-
-/*!
- * \brief API to get Timer Prescale
- */
-int32_t Pmic_GetTimerPrescale(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t  *tmrConfigData)
-{
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
-    uint8_t regData     = 0U;
-
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_TMR_CFG_REG_REGADDR,
-                                        &regData);
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        *tmrConfigData = Pmic_getBitField(regData,
-                                          PMIC_TMR_CFG_REG_TMR_PS_SHIFT,
-                                          PMIC_TMR_CFG_REG_TMR_PS_MASK);
-    }
-
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    return pmicStatus;
-}
-
-/*!
- * \brief API to Clears (resets) low power timer to 0
- */
-int32_t Pmic_TimerClear(Pmic_CoreHandle_t *pPmicCoreHandle)
-{
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
-    uint8_t regData     = 0U;
-
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_TMR_CFG_REG_REGADDR,
-                                        &regData);
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_setBitField(&regData,
-                         PMIC_TMR_CFG_REG_TMR_CLR_SHIFT,
-                         PMIC_TMR_CFG_REG_TMR_CLR_MASK,
-                         PMIC_TMR_CLR_DATA);
+    default:
+      Pmic_setBitField(&regData, PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
+                       PMIC_TMR_CFG_REG_TMR_CFG_MASK, PMIC_TMR_CFG_DATA5);
+      break;
     }
 
     pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                        PMIC_TMR_CFG_REG_REGADDR,
-                                        regData);
+                                        PMIC_TMR_CFG_REG_REGADDR, regData);
+  }
 
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+  Pmic_criticalSectionStop(pPmicCoreHandle);
 
-    return pmicStatus;
+  return pmicStatus;
 }
 
-int32_t Pmic_GetLPWake0(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t  *tmrlpwakeData)
-{
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
-    uint8_t regData     = 0U;
+/**
+ * @brief Get the configuration of the PMIC timer.
+ * This function retrieves the configuration of the PMIC timer.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param tmrConfigData Pointer to store the timer configuration data.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
+int32_t Pmic_GetTimerConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
+                            uint8_t *tmrConfigData) {
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
+  uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
+  Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_TMR_LP_WAKE0_REGADDR,
-                                        &regData);
+  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CFG_REG_REGADDR,
+                                      &regData);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        *tmrlpwakeData = Pmic_getBitField(regData,
-                                       PMIC_TMR_LP_WAKE0_TMR_LP_WAKE_B0_SHIFT,
-                                       PMIC_TMR_LP_WAKE0_TMR_LP_WAKE_B0_MASK);
-    }
+  if (PMIC_ST_SUCCESS == pmicStatus) {
+    *tmrConfigData = Pmic_getBitField(regData, PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
+                                      PMIC_TMR_CFG_REG_TMR_CFG_MASK);
+  }
 
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+  Pmic_criticalSectionStop(pPmicCoreHandle);
 
-    return pmicStatus;
+  return pmicStatus;
 }
 
-int32_t Pmic_SetLPWake0(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t  tmrlpwakeData)
-{
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
-    uint8_t regData     = 0U;
+/**
+ * @brief Set the prescale value of the PMIC timer.
+ * This function sets the prescale value of the PMIC timer based on the provided
+ * parameters.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param tmrData Prescale data to be set.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
+int32_t Pmic_SetTimerPrescale(Pmic_CoreHandle_t *pPmicCoreHandle,
+                              uint8_t tmrData) {
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
+  uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
+  Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_TMR_LP_WAKE0_REGADDR,
-                                        &regData);
+  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CFG_REG_REGADDR,
+                                      &regData);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_setBitField(&regData,
-                         PMIC_TMR_LP_WAKE0_TMR_LP_WAKE_B0_SHIFT,
-                         PMIC_TMR_LP_WAKE0_TMR_LP_WAKE_B0_MASK,
-                         tmrlpwakeData);
+  if (PMIC_ST_SUCCESS == pmicStatus) {
+    switch (tmrData) {
+    case 0:
+      Pmic_setBitField(&regData, PMIC_TMR_CFG_REG_TMR_PS_SHIFT,
+                       PMIC_TMR_CFG_REG_TMR_PS_MASK, PMIC_TMR_PS_DATA0);
+      break;
+
+    case 1:
+      Pmic_setBitField(&regData, PMIC_TMR_CFG_REG_TMR_PS_SHIFT,
+                       PMIC_TMR_CFG_REG_TMR_PS_MASK, PMIC_TMR_PS_DATA1);
+      break;
+
+    case 2:
+      Pmic_setBitField(&regData, PMIC_TMR_CFG_REG_TMR_PS_SHIFT,
+                       PMIC_TMR_CFG_REG_TMR_PS_MASK, PMIC_TMR_PS_DATA2);
+      break;
+
+    default:
+      Pmic_setBitField(&regData, PMIC_TMR_CFG_REG_TMR_PS_SHIFT,
+                       PMIC_TMR_CFG_REG_TMR_PS_MASK, PMIC_TMR_CFG_DATA3);
+      break;
     }
 
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+    pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                        PMIC_TMR_CFG_REG_REGADDR, regData);
+  }
 
-    return pmicStatus;
+  Pmic_criticalSectionStop(pPmicCoreHandle);
+
+  return pmicStatus;
 }
 
-int32_t Pmic_GetLPWake1(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t  *tmrlpwakeData)
-{
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
-    uint8_t regData     = 0U;
+/**
+ * @brief Get the prescale value of the PMIC timer.
+ * This function retrieves the prescale value of the PMIC timer.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param tmrConfigData Pointer to store the timer prescale data.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
+int32_t Pmic_GetTimerPrescale(Pmic_CoreHandle_t *pPmicCoreHandle,
+                              uint8_t *tmrConfigData) {
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
+  uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
+  Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_TMR_LP_WAKE1_REGADDR,
-                                        &regData);
+  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CFG_REG_REGADDR,
+                                      &regData);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        *tmrlpwakeData = Pmic_getBitField(regData,
-                                       PMIC_TMR_LP_WAKE1_TMR_LP_WAKE_B1_SHIFT,
-                                       PMIC_TMR_LP_WAKE1_TMR_LP_WAKE_B1_MASK);
-    }
+  if (PMIC_ST_SUCCESS == pmicStatus) {
+    *tmrConfigData = Pmic_getBitField(regData, PMIC_TMR_CFG_REG_TMR_PS_SHIFT,
+                                      PMIC_TMR_CFG_REG_TMR_PS_MASK);
+  }
 
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+  Pmic_criticalSectionStop(pPmicCoreHandle);
 
-    return pmicStatus;
+  return pmicStatus;
 }
 
-int32_t Pmic_SetLPWake1(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t  tmrlpwakeData)
-{
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
-    uint8_t regData     = 0U;
+/**
+ * @brief Clear the PMIC timer.
+ * This function clears the PMIC timer.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
+int32_t Pmic_TimerClear(Pmic_CoreHandle_t *pPmicCoreHandle) {
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
+  uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
+  Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_TMR_LP_WAKE1_REGADDR,
-                                        &regData);
+  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CFG_REG_REGADDR,
+                                      &regData);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_setBitField(&regData,
-                         PMIC_TMR_LP_WAKE1_TMR_LP_WAKE_B1_SHIFT,
-                         PMIC_TMR_LP_WAKE1_TMR_LP_WAKE_B1_MASK,
-                         tmrlpwakeData);
-    }
+  if (PMIC_ST_SUCCESS == pmicStatus) {
+    Pmic_setBitField(&regData, PMIC_TMR_CFG_REG_TMR_CLR_SHIFT,
+                     PMIC_TMR_CFG_REG_TMR_CLR_MASK, PMIC_TMR_CLR_DATA);
+  }
 
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+  pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_TMR_CFG_REG_REGADDR,
+                                      regData);
 
-    return pmicStatus;
+  Pmic_criticalSectionStop(pPmicCoreHandle);
+
+  return pmicStatus;
 }
 
-int32_t Pmic_GetLPWake2(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t  *tmrlpwakeData)
-{
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
-    uint8_t regData     = 0U;
+/**
+ * @brief Get the value of LP_WAKE0 register.
+ * This function retrieves the value of the LP_WAKE0 register.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param tmrlpwakeData Pointer to store the value of LP_WAKE0 register.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
+int32_t Pmic_GetLPWake0(Pmic_CoreHandle_t *pPmicCoreHandle,
+                        uint8_t *tmrlpwakeData) {
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
+  uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
+  Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_TMR_LP_WAKE2_REGADDR,
-                                        &regData);
+  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                      PMIC_TMR_LP_WAKE0_REGADDR, &regData);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        *tmrlpwakeData = Pmic_getBitField(regData,
-                                       PMIC_TMR_LP_WAKE2_TMR_LP_WAKE_B2_SHIFT,
-                                       PMIC_TMR_LP_WAKE2_TMR_LP_WAKE_B2_MASK);
-    }
+  if (PMIC_ST_SUCCESS == pmicStatus) {
+    *tmrlpwakeData =
+        Pmic_getBitField(regData, PMIC_TMR_LP_WAKE0_TMR_LP_WAKE_B0_SHIFT,
+                         PMIC_TMR_LP_WAKE0_TMR_LP_WAKE_B0_MASK);
+  }
 
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+  Pmic_criticalSectionStop(pPmicCoreHandle);
 
-    return pmicStatus;
+  return pmicStatus;
 }
 
-int32_t Pmic_SetLPWake2(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t  tmrlpwakeData)
-{
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
-    uint8_t regData     = 0U;
+/**
+ * @brief Set the value of LP_WAKE0 register.
+ * This function sets the value of the LP_WAKE0 register.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param tmrlpwakeData Value to be set in LP_WAKE0 register.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
+int32_t Pmic_SetLPWake0(Pmic_CoreHandle_t *pPmicCoreHandle,
+                        uint8_t tmrlpwakeData) {
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
+  uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
+  Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_TMR_LP_WAKE2_REGADDR,
-                                        &regData);
+  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                      PMIC_TMR_LP_WAKE0_REGADDR, &regData);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_setBitField(&regData,
-                         PMIC_TMR_LP_WAKE2_TMR_LP_WAKE_B2_SHIFT,
-                         PMIC_TMR_LP_WAKE2_TMR_LP_WAKE_B2_MASK,
-                         tmrlpwakeData);
-    }
+  if (PMIC_ST_SUCCESS == pmicStatus) {
+    Pmic_setBitField(&regData, PMIC_TMR_LP_WAKE0_TMR_LP_WAKE_B0_SHIFT,
+                     PMIC_TMR_LP_WAKE0_TMR_LP_WAKE_B0_MASK, tmrlpwakeData);
+  }
 
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+  Pmic_criticalSectionStop(pPmicCoreHandle);
 
-    return pmicStatus;
+  return pmicStatus;
 }
 
-int32_t Pmic_GetTimerCounter0(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t  *tmrcntData)
-{
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
-    uint8_t regData     = 0U;
+/**
+ * @brief Get the value of LP_WAKE1 register.
+ * This function retrieves the value of the LP_WAKE1 register.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param tmrlpwakeData Pointer to store the value of LP_WAKE1 register.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
+int32_t Pmic_GetLPWake1(Pmic_CoreHandle_t *pPmicCoreHandle,
+                        uint8_t *tmrlpwakeData) {
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
+  uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
+  Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_TMR_CNT0_REGADDR,
-                                        &regData);
+  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                      PMIC_TMR_LP_WAKE1_REGADDR, &regData);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        *tmrcntData = Pmic_getBitField(regData,
-                                       PMIC_TMR_CNT0_TMR_CNT_B0_SHIFT,
-                                       PMIC_TMR_CNT0_TMR_CNT_B0_MASK);
-    }
+  if (PMIC_ST_SUCCESS == pmicStatus) {
+    *tmrlpwakeData =
+        Pmic_getBitField(regData, PMIC_TMR_LP_WAKE1_TMR_LP_WAKE_B1_SHIFT,
+                         PMIC_TMR_LP_WAKE1_TMR_LP_WAKE_B1_MASK);
+  }
 
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+  Pmic_criticalSectionStop(pPmicCoreHandle);
 
-    return pmicStatus;
+  return pmicStatus;
 }
 
-int32_t Pmic_SetTimerCounter0(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t  tmrcntData)
-{
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
-    uint8_t regData     = 0U;
+/**
+ * @brief Set the value of LP_WAKE1 register.
+ * This function sets the value of the LP_WAKE1 register.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param tmrlpwakeData Value to be set in LP_WAKE1 register.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
+int32_t Pmic_SetLPWake1(Pmic_CoreHandle_t *pPmicCoreHandle,
+                        uint8_t tmrlpwakeData) {
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
+  uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
+  Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_TMR_CNT0_REGADDR,
-                                        &regData);
+  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                      PMIC_TMR_LP_WAKE1_REGADDR, &regData);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_setBitField(&regData,
-                         PMIC_TMR_CNT0_TMR_CNT_B0_SHIFT,
-                         PMIC_TMR_CNT0_TMR_CNT_B0_MASK,
-                         tmrcntData);
-    }
+  if (PMIC_ST_SUCCESS == pmicStatus) {
+    Pmic_setBitField(&regData, PMIC_TMR_LP_WAKE1_TMR_LP_WAKE_B1_SHIFT,
+                     PMIC_TMR_LP_WAKE1_TMR_LP_WAKE_B1_MASK, tmrlpwakeData);
+  }
 
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+  Pmic_criticalSectionStop(pPmicCoreHandle);
 
-    return pmicStatus;
+  return pmicStatus;
 }
 
-int32_t Pmic_GetTimerCounter1(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t  *tmrcntData)
-{
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
-    uint8_t regData     = 0U;
+/**
+ * @brief Get the value of LP_WAKE2 register.
+ * This function retrieves the value of the LP_WAKE2 register.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param tmrlpwakeData Pointer to store the value of LP_WAKE2 register.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
+int32_t Pmic_GetLPWake2(Pmic_CoreHandle_t *pPmicCoreHandle,
+                        uint8_t *tmrlpwakeData) {
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
+  uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
+  Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_TMR_CNT1_REGADDR,
-                                        &regData);
+  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                      PMIC_TMR_LP_WAKE2_REGADDR, &regData);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        *tmrcntData = Pmic_getBitField(regData,
-                                       PMIC_TMR_CNT1_TMR_CNT_B1_SHIFT,
-                                       PMIC_TMR_CNT1_TMR_CNT_B1_MASK);
-    }
+  if (PMIC_ST_SUCCESS == pmicStatus) {
+    *tmrlpwakeData =
+        Pmic_getBitField(regData, PMIC_TMR_LP_WAKE2_TMR_LP_WAKE_B2_SHIFT,
+                         PMIC_TMR_LP_WAKE2_TMR_LP_WAKE_B2_MASK);
+  }
 
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+  Pmic_criticalSectionStop(pPmicCoreHandle);
 
-    return pmicStatus;
+  return pmicStatus;
 }
 
-int32_t Pmic_SetTimerCounter1(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t  tmrcntData)
-{
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
-    uint8_t regData     = 0U;
+/**
+ * @brief Set the value of LP_WAKE2 register.
+ * This function sets the value of the LP_WAKE2 register.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param tmrlpwakeData Value to be set in LP_WAKE2 register.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
+int32_t Pmic_SetLPWake2(Pmic_CoreHandle_t *pPmicCoreHandle,
+                        uint8_t tmrlpwakeData) {
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
+  uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
+  Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_TMR_CNT1_REGADDR,
-                                        &regData);
+  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                      PMIC_TMR_LP_WAKE2_REGADDR, &regData);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_setBitField(&regData,
-                         PMIC_TMR_CNT1_TMR_CNT_B1_SHIFT,
-                         PMIC_TMR_CNT1_TMR_CNT_B1_MASK,
-                         tmrcntData);
-    }
+  if (PMIC_ST_SUCCESS == pmicStatus) {
+    Pmic_setBitField(&regData, PMIC_TMR_LP_WAKE2_TMR_LP_WAKE_B2_SHIFT,
+                     PMIC_TMR_LP_WAKE2_TMR_LP_WAKE_B2_MASK, tmrlpwakeData);
+  }
 
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+  Pmic_criticalSectionStop(pPmicCoreHandle);
 
-    return pmicStatus;
-}
-int32_t Pmic_GetTimerCounter2(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t  *tmrcntData)
-{
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
-    uint8_t regData     = 0U;
-
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_TMR_CNT2_REGADDR,
-                                        &regData);
-
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        *tmrcntData = Pmic_getBitField(regData,
-                                       PMIC_TMR_CNT2_TMR_CNT_B2_SHIFT,
-                                       PMIC_TMR_CNT2_TMR_CNT_B2_MASK);
-    }
-
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    return pmicStatus;
+  return pmicStatus;
 }
 
-int32_t Pmic_SetTimerCounter2(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t  tmrcntData)
-{
-    int32_t pmicStatus  = PMIC_ST_SUCCESS;
-    uint8_t regData     = 0U;
+/**
+ * @brief Get the value of Timer Counter 0 register.
+ * This function retrieves the value of Timer Counter 0 register.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param tmrcntData Pointer to store the value of Timer Counter 0 register.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
+int32_t Pmic_GetTimerCounter0(Pmic_CoreHandle_t *pPmicCoreHandle,
+                              uint8_t *tmrcntData) {
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
+  uint8_t regData = 0U;
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
+  Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_TMR_CNT2_REGADDR,
-                                        &regData);
+  pmicStatus =
+      Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CNT0_REGADDR, &regData);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
-        Pmic_setBitField(&regData,
-                         PMIC_TMR_CNT2_TMR_CNT_B2_SHIFT,
-                         PMIC_TMR_CNT2_TMR_CNT_B2_MASK,
-                         tmrcntData);
-    }
+  if (PMIC_ST_SUCCESS == pmicStatus) {
+    *tmrcntData = Pmic_getBitField(regData, PMIC_TMR_CNT0_TMR_CNT_B0_SHIFT,
+                                   PMIC_TMR_CNT0_TMR_CNT_B0_MASK);
+  }
 
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+  Pmic_criticalSectionStop(pPmicCoreHandle);
 
-    return pmicStatus;
+  return pmicStatus;
+}
+
+/**
+ * @brief Set the value of Timer Counter 0 register.
+ * This function sets the value of Timer Counter 0 register.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param tmrcntData Value to be set in Timer Counter 0 register.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
+int32_t Pmic_SetTimerCounter0(Pmic_CoreHandle_t *pPmicCoreHandle,
+                              uint8_t tmrcntData) {
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
+  uint8_t regData = 0U;
+
+  Pmic_criticalSectionStart(pPmicCoreHandle);
+
+  pmicStatus =
+      Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CNT0_REGADDR, &regData);
+
+  if (PMIC_ST_SUCCESS == pmicStatus) {
+    Pmic_setBitField(&regData, PMIC_TMR_CNT0_TMR_CNT_B0_SHIFT,
+                     PMIC_TMR_CNT0_TMR_CNT_B0_MASK, tmrcntData);
+  }
+
+  Pmic_criticalSectionStop(pPmicCoreHandle);
+
+  return pmicStatus;
+}
+
+/**
+ * @brief Get the value of Timer Counter 1 register.
+ * This function retrieves the value of Timer Counter 1 register.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param tmrcntData Pointer to store the value of Timer Counter 1 register.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
+int32_t Pmic_GetTimerCounter1(Pmic_CoreHandle_t *pPmicCoreHandle,
+                              uint8_t *tmrcntData) {
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
+  uint8_t regData = 0U;
+
+  Pmic_criticalSectionStart(pPmicCoreHandle);
+
+  pmicStatus =
+      Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CNT1_REGADDR, &regData);
+
+  if (PMIC_ST_SUCCESS == pmicStatus) {
+    *tmrcntData = Pmic_getBitField(regData, PMIC_TMR_CNT1_TMR_CNT_B1_SHIFT,
+                                   PMIC_TMR_CNT1_TMR_CNT_B1_MASK);
+  }
+
+  Pmic_criticalSectionStop(pPmicCoreHandle);
+
+  return pmicStatus;
+}
+
+/**
+ * @brief Set the value of Timer Counter 1 register.
+ * This function sets the value of Timer Counter 1 register.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param tmrcntData Value to be set in Timer Counter 1 register.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
+int32_t Pmic_SetTimerCounter1(Pmic_CoreHandle_t *pPmicCoreHandle,
+                              uint8_t tmrcntData) {
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
+  uint8_t regData = 0U;
+
+  Pmic_criticalSectionStart(pPmicCoreHandle);
+
+  pmicStatus =
+      Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CNT1_REGADDR, &regData);
+
+  if (PMIC_ST_SUCCESS == pmicStatus) {
+    Pmic_setBitField(&regData, PMIC_TMR_CNT1_TMR_CNT_B1_SHIFT,
+                     PMIC_TMR_CNT1_TMR_CNT_B1_MASK, tmrcntData);
+  }
+
+  Pmic_criticalSectionStop(pPmicCoreHandle);
+
+  return pmicStatus;
+}
+
+/**
+ * @brief Get the value of Timer Counter 2 register.
+ * This function retrieves the value of Timer Counter 2 register.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param tmrcntData Pointer to store the value of Timer Counter 2 register.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
+int32_t Pmic_GetTimerCounter2(Pmic_CoreHandle_t *pPmicCoreHandle,
+                              uint8_t *tmrcntData) {
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
+  uint8_t regData = 0U;
+
+  Pmic_criticalSectionStart(pPmicCoreHandle);
+
+  pmicStatus =
+      Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CNT2_REGADDR, &regData);
+
+  if (PMIC_ST_SUCCESS == pmicStatus) {
+    *tmrcntData = Pmic_getBitField(regData, PMIC_TMR_CNT2_TMR_CNT_B2_SHIFT,
+                                   PMIC_TMR_CNT2_TMR_CNT_B2_MASK);
+  }
+
+  Pmic_criticalSectionStop(pPmicCoreHandle);
+
+  return pmicStatus;
+}
+
+/**
+ * @brief Set the value of Timer Counter 2 register.
+ * This function sets the value of Timer Counter 2 register.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param tmrcntData Value to be set in Timer Counter 2 register.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
+int32_t Pmic_SetTimerCounter2(Pmic_CoreHandle_t *pPmicCoreHandle,
+                              uint8_t tmrcntData) {
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
+  uint8_t regData = 0U;
+
+  Pmic_criticalSectionStart(pPmicCoreHandle);
+
+  pmicStatus =
+      Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CNT2_REGADDR, &regData);
+
+  if (PMIC_ST_SUCCESS == pmicStatus) {
+    Pmic_setBitField(&regData, PMIC_TMR_CNT2_TMR_CNT_B2_SHIFT,
+                     PMIC_TMR_CNT2_TMR_CNT_B2_MASK, tmrcntData);
+  }
+
+  Pmic_criticalSectionStop(pPmicCoreHandle);
+
+  return pmicStatus;
 }

@@ -55,13 +55,14 @@
 #define CMD_DEVICE_ID (0x00)
 
 /* ========================================================================== */
-/*                          Function Declarations                             */
+/*                         Structure Declarations                             */
 /* ========================================================================== */
-uint8_t PMIC_calcCRC8(char cmd, char rdwr, char dat);
 
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
+
+uint8_t PMIC_calcCRC8(char cmd, char rdwr, char dat);
 
 /**
  * @brief: Function call wrappers for LLD write API with CRC8 support
@@ -80,9 +81,8 @@ uint8_t PMIC_calcCRC8(char cmd, char rdwr, char dat);
  * @param   pPmicCoreHandle   [IN]    PMIC Interface Handle
  * @param   regAddr           [IN]    Register address
  * @param   txData            [IN]    Data to be written
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
+ * @return  pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
                                uint16_t regAddr, uint8_t txData) {
@@ -128,6 +128,15 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
+/**
+ * @brief Validate the PMIC core handle.
+ * This function validates the PMIC core handle to ensure that it is properly
+ * initialized.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the core handle is valid;
+ * otherwise, returns an error code.
+ */
 static int32_t
 Pmic_validateCorehandle(const Pmic_CoreHandle_t *pPmicCoreHandle) {
   int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -144,9 +153,18 @@ Pmic_validateCorehandle(const Pmic_CoreHandle_t *pPmicCoreHandle) {
   return pmicStatus;
 }
 
-/*
- * @brief  Function to read data from PMIC registers based on Comm IO interface
- *         I2C or SPI Interface
+/**
+ * @brief Read data from the PMIC communication interface.
+ * This function reads data from the PMIC communication interface based on the
+ * provided parameters.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pRegAddr Pointer to the PMIC register address to read from.
+ * @param pBuffLength Pointer to the length of the buffer for received data.
+ * @param pRxBuf Pointer to the buffer to store received data.
+ * @param pInstType Pointer to the instruction type for the communication.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 static int32_t Pmic_commIoReadData(Pmic_CoreHandle_t *pPmicCoreHandle,
                                    uint16_t *pRegAddr, uint8_t *pBuffLength,
@@ -207,9 +225,8 @@ static int32_t Pmic_commIoReadData(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
  * @param   regAddr           [IN]    Register address.
  * @param   pRxBuffer         [OUT]   BUffer to receive data
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
+ * @return  pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
                                uint16_t regAddr, uint8_t *pRxBuffer) {

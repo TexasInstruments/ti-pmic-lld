@@ -42,10 +42,22 @@
 #ifndef PMIC_FSM_H_
 #define PMIC_FSM_H_
 
+/* ========================================================================== */
+/*                             Include Files                                  */
+/* ========================================================================== */
+
 #include "pmic_core.h"
 #include "pmic_core_priv.h"
 #include "pmic_io_priv.h"
 #include "pmic_types.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*==========================================================================*/
+/*                         Structures and Enums                             */
+/*==========================================================================*/
 
 typedef struct Pmic_FsmCfg_s {
   uint8_t validParams;
@@ -55,8 +67,12 @@ typedef struct Pmic_FsmCfg_s {
   uint8_t fsmStarupDestSel;
 } Pmic_FsmCfg_t;
 
-// Function Prototypes
+/*==========================================================================*/
+/*                         Function Declarations                            */
+/*==========================================================================*/
+
 int32_t Pmic_setS2RState(Pmic_CoreHandle_t *pPmicCoreHandle);
+
 void Pmic_fsmGetstandByCfgRegFields(uint8_t pmicNextState, uint8_t *pRegAddr,
                                     uint8_t *pBitPos, uint8_t *pBitMask,
                                     uint8_t *pBitVal, uint8_t *pDeviceState);
@@ -82,5 +98,9 @@ int32_t Pmic_fsmGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
                                  Pmic_FsmCfg_t *pFsmCfg);
 
 int32_t Pmic_fsmRequestRuntimeBist(Pmic_CoreHandle_t *pPmicCoreHandle);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* PMIC_FSM_H_ */

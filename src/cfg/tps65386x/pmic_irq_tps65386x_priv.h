@@ -32,9 +32,9 @@
  *****************************************************************************/
 
 /**
- * \file   pmic_irq_tps6594x_priv.h
+ * @file   pmic_irq_tps6594x_priv.h
  *
- * \brief  The macro definitions, structures and function prototypes for
+ * @brief  The macro definitions, structures and function prototypes for
  *         configuring PMIC IRQ.
  */
 
@@ -61,28 +61,15 @@ extern "C" {
 /*==========================================================================*/
 /*                         Function Declarations                            */
 /*==========================================================================*/
-/*!
- * \brief  Function to get the PMIC Interrupt Registers for TPS65386x BB PMIC.
- */
+
 void pmic_get_tps65386x_intrCfg(Pmic_IntrCfg_t **pIntrCfg);
 
-/*!
- * \brief  Function to get the PMIC GPIO Interrupt Mask Registers for
- *         TPS65386x BB PMIC.
- */
 void pmic_get_tps65386x_intrGpioCfg(Pmic_GpioIntrTypeCfg_t **pIntGpioCfg);
 
-/*!
- * \brief  Function to decipher the L2 Error for TPS6594x Leo PMIC.
- */
 int32_t Pmic_tps65386x_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle,
                                      uint16_t l1RegAddr,
                                      Pmic_IrqStatus_t *pErrStat);
 
-/*!
- * \brief  Function to reinitialise Interrupt configuration based on PMIC
- *         Silicon Revision
- */
 void Pmic_tps65386x_reInitInterruptConfig(void);
 
 #ifdef __cplusplus

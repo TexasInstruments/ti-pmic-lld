@@ -32,33 +32,41 @@
  *****************************************************************************/
 
 /**
-*   @file    pmic_low_iq_timer.h
-*
-*   @brief   This file contains the default MACRO's and function definitions for PMIC Low IQ Timer state
-*            configuration
-*
-*/
+ *   @file    pmic_low_iq_timer.h
+ *
+ *   @brief   This file contains the default MACRO's and function definitions
+ * for PMIC Low IQ Timer state configuration
+ *
+ */
 
 #ifndef PMIC_PMIC_LOW_IQ_TIMER_H_
 #define PMIC_PMIC_LOW_IQ_TIMER_H_
 
+/* ==========================================================================*/
+/*                             Include Files                                 */
+/* ==========================================================================*/
+
 #include "pmic_core.h"
-#include "pmic_types.h"
 #include "pmic_core_priv.h"
 #include "pmic_io_priv.h"
+#include "pmic_types.h"
 
+/*==========================================================================*/
+/*                         Function Declarations                            */
+/*==========================================================================*/
 
-
-// Function Prototypes
-int32_t Pmic_SetTimerConfig(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t  tmrData);
-int32_t Pmic_GetTimerConfig(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t  *tmrConfigData);
-int32_t Pmic_SetTimerPrescale(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t  tmrData);
-int32_t Pmic_GetTimerPrescale(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t  *tmrConfigData);
+int32_t Pmic_SetTimerConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
+                            uint8_t tmrData);
+int32_t Pmic_GetTimerConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
+                            uint8_t *tmrConfigData);
+int32_t Pmic_SetTimerPrescale(Pmic_CoreHandle_t *pPmicCoreHandle,
+                              uint8_t tmrData);
+int32_t Pmic_GetTimerPrescale(Pmic_CoreHandle_t *pPmicCoreHandle,
+                              uint8_t *tmrConfigData);
 int32_t Pmic_TimerClear(Pmic_CoreHandle_t *pPmicCoreHandle);
-int32_t Pmic_SetTimerCounter0(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t  tmrcntData);
-int32_t Pmic_GetTimerCounter0(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t  *tmrcntData);
-
-
-
+int32_t Pmic_SetTimerCounter0(Pmic_CoreHandle_t *pPmicCoreHandle,
+                              uint8_t tmrcntData);
+int32_t Pmic_GetTimerCounter0(Pmic_CoreHandle_t *pPmicCoreHandle,
+                              uint8_t *tmrcntData);
 
 #endif /* PMIC_PMIC_LOW_IQ_TIMER_H_ */

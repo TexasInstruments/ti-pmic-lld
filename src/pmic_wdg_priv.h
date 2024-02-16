@@ -34,11 +34,19 @@
 #ifndef PMIC_INC_PMIC_WDG_PRIV_H_
 #define PMIC_INC_PMIC_WDG_PRIV_H_
 
+/* ==========================================================================*/
+/*                             Include Files                                 */
+/* ==========================================================================*/
+
 #include "pmic.h"
 #include "pmic_core.h"
 
-/*!
- * \brief  PMIC Watch Dog Register Offsets
+/* ========================================================================== */
+/*                             Macros & Typedefs                              */
+/* ========================================================================== */
+
+/**
+ * @brief  PMIC Watch Dog Register Offsets
  */
 #define PMIC_WD_CFG_REGADDR (0x3CU)
 #define PMIC_WD_LONGWIN_CFG_REGADDR (0x3DU)
@@ -52,8 +60,8 @@
 #define PMIC_WD_STATUS_REGADDR (0x45U)
 #define PMIC_WD_ERR_STATUS_REGADDR (0x46U)
 
-/*!
- * \brief  PMIC Watch Dog Register Shift Values
+/**
+ * @brief  PMIC Watch Dog Register Shift Values
  */
 /* Watch Dog Configuration Register Shift Values */
 #define PMIC_WD_EN_SHIFT (0x03U)
@@ -108,8 +116,8 @@
 #define PMIC_WD_ERR_STAT_REG_WD_TRIG_EARLY_SHIFT (0x01U)
 #define PMIC_WD_ERR_STAT_REG_WD_TMO_SHIFT (0x00U)
 
-/*!
- * \brief  PMIC Watch Dog Register Mask Values
+/**
+ * @brief  PMIC Watch Dog Register Mask Values
  */
 /* Watchdog Configuration Register Shift Values */
 #define PMIC_WD_EN_MASK (0x01U << PMIC_WD_EN_SHIFT)
@@ -190,10 +198,10 @@
 #define PMIC_WD_ERR_STAT_REG_WD_TMO_MASK                                       \
   (0x01U << PMIC_WD_ERR_STAT_REG_WD_TMO_SHIFT)
 
-/*!
- * \brief  Watchdog Long Window Max, Min and Divisor macros
+/**
+ * @brief  Watchdog Long Window Max, Min and Divisor macros
  */
-/*! \brief  Valid only for PG2.0 */
+/** @brief  Valid only for PG2.0 */
 #define PMIG_WD_LONGWIN_80_MILLISEC (80U)
 #define PMIG_WD_LONGWIN_125_MILLISEC (125U)
 #define PMIG_WD_LONGWIN_8000_MILLISEC (8000U)
@@ -208,14 +216,14 @@
 #define PMIG_WD_LONGWIN_REG_VAL_1 (0x1U)
 #define PMIG_WD_LONGWIN_REG_VAL_64 (0x40U)
 
-/*! \brief  Valid only for PG1.0 */
+/** @brief  Valid only for PG1.0 */
 #define PMIG_WD_LONGWIN_100_MILLISEC (100U)
 #define PMIG_WD_LONGWIN_MILLISEC_MIN (3000U)
 #define PMIG_WD_LONGWIN_MILLISEC_MAX (765000U)
 #define PMIG_WD_LONGWIN_MILLISEC_DIV (3000U)
 
-/*!
- * \brief  Watchdog Window1 Max, Min and Divisor macros
+/**
+ * @brief  Watchdog Window1 Max, Min and Divisor macros
  */
 #define PMIG_WD_WIN1_2_MICROSEC_MIN (550U)
 #define PMIG_WD_WIN1_2_MICROSEC_MAX (70400U)

@@ -32,18 +32,6 @@
  *****************************************************************************/
 
 /**
- *  @ingroup DRV_PMIC_MODULE
- *  @defgroup DRV_PMIC_COMMON_MODULE PMIC Common Driver API
- *
- *  PMIC common Driver contains Miscellaneous APIs supported by all supported
- *  PMIC Devices.
- *  Like, PMIC recovery count APIs, Read/Write Scratchpad registers APIs
- *  and PMIC nSLEEP Setup APIs.
- *
- *  @{
- */
-
-/**
  *  @file pmic_core.h
  *
  *  @brief PMIC Driver Common API/interface file.
@@ -199,7 +187,6 @@ extern "C" {
  */
 
 /** @brief Unlock PMIC Registers */
-// BB
 #define PMIC_REGISTER_UNLOCK_DATA1 (0x98U)
 #define PMIC_REGISTER_UNLOCK_DATA2 (0xB8U)
 #define PMIC_TMR_COUNTER_UNLOCK_DATA1 (0x13U)
@@ -207,7 +194,6 @@ extern "C" {
 
 /** @brief  Lock PMIC Registers - Write any value other than.
  *          Here 0x10 is used  */
-// BB
 #define PMIC_REGISTER_LOCK_1 (0x10U)
 #define PMIC_REGISTER_LOCK_2 (0x10U)
 /*  @} */
@@ -338,7 +324,6 @@ extern "C" {
 #define PMIC_CFG_SPREAD_SPECTRUM_EN_VALID (1U)
 /** \brief validParams value used to set/get ENABLE_DRV pin
  *         configuration */
-// BB
 #define PMIC_CFG_ENABLE_SAFEOUT_VALID (1U)
 /** \brief validParams value used to set/get Register Lock
  *         configuration */
@@ -391,7 +376,6 @@ extern "C" {
  *          Voltage to AMUX OUT/REF OUT Pin */
 #define PMIC_CFG_AMUX_OUT_REF_OUT_EN_VALID (0U)
 
-// BB
 #define PMIC_CFG_AMUX_DMUX_EN_VALID (6U)
 /** @brief validParams value used to set/get to Enable or Disable internal
  *         Clock Monitoring */
@@ -471,39 +455,38 @@ extern "C" {
   (1U << PMIC_CFG_CHARGE_CURRENT_VALID)
 /*  @} */
 
-
-/*!
+/**
  * @brief   PMIC SAFE STATE OUT CONFIG CONTROL MACROS
  */
-#define PMIC_SAFE_OUT1_ENABLE_LOW                   (0x00U)
-#define PMIC_SAFE_OUT1_ENABLE_HIGH                  (0x01U)
+#define PMIC_SAFE_OUT1_ENABLE_LOW (0x00U)
+#define PMIC_SAFE_OUT1_ENABLE_HIGH (0x01U)
 
-#define PMIC_SAFE_OUT2_ENABLE_LOW                   (0x00U)
-#define PMIC_SAFE_OUT2_ENABLE_FOLLOW_CFG            (0x01U)
+#define PMIC_SAFE_OUT2_ENABLE_LOW (0x00U)
+#define PMIC_SAFE_OUT2_ENABLE_FOLLOW_CFG (0x01U)
 
-#define PMIC_SAFE_OUT2_CFG_INV_LEVEL                (0x00U)
-#define PMIC_SAFE_OUT2_CFG_MATCH_LEVEL              (0x01U)
-#define PMIC_SAFE_OUT2_CFG_PWM_HEARTBEAT_LOW        (0x02U)
-#define PMIC_SAFE_OUT2_CFG_PWM_HEARTBEAT_SECOND     (0x03U)
-#define PMIC_SAFE_OUT2_CFG_DELAYED_CONTINUOUS       (0x04U)
-#define PMIC_SAFE_OUT2_CFG_DELAYED_PULSE            (0x05U)
+#define PMIC_SAFE_OUT2_CFG_INV_LEVEL (0x00U)
+#define PMIC_SAFE_OUT2_CFG_MATCH_LEVEL (0x01U)
+#define PMIC_SAFE_OUT2_CFG_PWM_HEARTBEAT_LOW (0x02U)
+#define PMIC_SAFE_OUT2_CFG_PWM_HEARTBEAT_SECOND (0x03U)
+#define PMIC_SAFE_OUT2_CFG_DELAYED_CONTINUOUS (0x04U)
+#define PMIC_SAFE_OUT2_CFG_DELAYED_PULSE (0x05U)
 
-/*!
+/**
  * @brief   PMIC SAFE STATE OUT2 CONFIG-1 MACROS
  */
-#define PMIC_SAFE_OUT2_PRESCALE_4US    (0x00U)
-#define PMIC_SAFE_OUT2_PRESCALE_16US   (0x01U)
-#define PMIC_SAFE_OUT2_PRESCALE_64US   (0x02U)
-#define PMIC_SAFE_OUT2_PRESCALE_256US  (0x03U)
-#define PMIC_SAFE_OUT2_PRESCALE_1MS    (0x04U)
-#define PMIC_SAFE_OUT2_PRESCALE_4MS    (0x05U)
-#define PMIC_SAFE_OUT2_PRESCALE_16MS   (0x06U)
-#define PMIC_SAFE_OUT2_PRESCALE_65MS   (0x07U)
+#define PMIC_SAFE_OUT2_PRESCALE_4US (0x00U)
+#define PMIC_SAFE_OUT2_PRESCALE_16US (0x01U)
+#define PMIC_SAFE_OUT2_PRESCALE_64US (0x02U)
+#define PMIC_SAFE_OUT2_PRESCALE_256US (0x03U)
+#define PMIC_SAFE_OUT2_PRESCALE_1MS (0x04U)
+#define PMIC_SAFE_OUT2_PRESCALE_4MS (0x05U)
+#define PMIC_SAFE_OUT2_PRESCALE_16MS (0x06U)
+#define PMIC_SAFE_OUT2_PRESCALE_65MS (0x07U)
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
-/*!
+/**
  * @brief  PMIC Recovery Counter Configuration
  *         Note: validParams is input param for all Set and Get APIs. other
  *         params except validParams is input param for Set APIS and output
@@ -526,7 +509,7 @@ typedef struct Pmic_RecovCntCfg_s {
   bool clrCnt;
 } Pmic_RecovCntCfg_t;
 
-/*!
+/**
  * @brief  PMIC common control param configuration
  *         Note: validParams is input param for all Set and Get APIs. other
  *         params except validParams is input param for Set APIs and output
@@ -608,15 +591,18 @@ typedef struct Pmic_CommonCtrlCfg_s {
   uint8_t cntLock_2;
 } Pmic_CommonCtrlCfg_t;
 
-
+/**
+ * @brief Structure to hold PMIC safe state configuration.
+ *
+ * This structure contains parameters related to PMIC safe state configuration.
+ */
 typedef struct Pmic_SafeStateCfg_s {
-  uint8_t validParams;
-  uint8_t safeStateTMO;
-  uint8_t safeLockThreshold;
+  uint8_t validParams;       /**< Indicates which parameters are valid */
+  uint8_t safeStateTMO;      /**< Safe state timeout */
+  uint8_t safeLockThreshold; /**< Safe state lock threshold */
 } Pmic_SafeStateCfg_t;
 
-
-/*!
+/**
  * @brief  PMIC Miscellaneous control param Configuration
  *         Note: validParams is input param for all Set and Get APIs. other
  *         params except validParams is input param for Set APIs and output
@@ -683,16 +669,22 @@ typedef struct Pmic_MiscCtrlCfg_s {
   uint8_t nRstOutSignal;
 } Pmic_MiscCtrlCfg_t;
 
-// BB
+/**
+ * @brief Structure to hold PMIC diagnostic output configuration control
+ * information.
+ *
+ * This structure contains various control parameters related to PMIC diagnostic
+ * output configuration.
+ */
 typedef struct Pmic_DiagOutCfgCtrl_s {
-  uint8_t validParams;
-  uint8_t DiagOutCtrl;
-  uint8_t DiagOutCtrl_AMUXEn;
-  uint8_t DiagOutCtrl_DMUXEn;
-  uint8_t DiagGrpSel;
+  uint8_t validParams;        /**< Indicates which parameters are valid */
+  uint8_t DiagOutCtrl;        /**< Diagnostic output control */
+  uint8_t DiagOutCtrl_AMUXEn; /**< Diagnostic output AMUX enable */
+  uint8_t DiagOutCtrl_DMUXEn; /**< Diagnostic output DMUX enable */
+  uint8_t DiagGrpSel;         /**< Diagnostic group selection */
 } Pmic_DiagOutCfgCtrl_t;
 
-/*!
+/**
  * @brief  PMIC Backup Battery control param Configuration
  *         Note: validParams is input param for all Set and Get APIs. other
  *         params except validParams is input param for Set APIs and output
@@ -729,7 +721,7 @@ typedef struct Pmic_BatteryCtrlCfg_s {
   uint8_t chargeCurrent;
 } Pmic_BatteryCtrlCfg_t;
 
-/*!
+/**
  * @brief  PMIC common control param status
  *         Note: validParams is input param for all Get APIs. other params
  *         except validParams is output param for Get APIs
@@ -799,7 +791,6 @@ typedef struct Pmic_CommonCtrlStat_s {
   uint8_t nRstOutSocPin;
   uint8_t nRstOutPin;
   uint8_t nIntPin;
-  // BB
   uint8_t enOutPin;
   uint8_t safeOut1Pin;
   uint8_t nRstPin;
@@ -807,7 +798,7 @@ typedef struct Pmic_CommonCtrlStat_s {
   uint8_t cntregLockStat;
 } Pmic_CommonCtrlStat_t;
 
-/*!
+/**
  * @brief  PMIC Device Information
  *
  *  @param  deviceID        TI Device ID Value
@@ -826,474 +817,93 @@ typedef struct Pmic_DeviceInfo_s {
   uint8_t customNvmID;
 } Pmic_DeviceInfo_t;
 
+/**
+ * @brief Structure to hold common PMIC state status information.
+ *
+ * This structure contains pointers to various status bits related to PMIC
+ * state.
+ */
 typedef struct Pmic_CommonStateStat_s {
-  uint8_t *rstMcuCnt;    // Pointer to RST_MCU_CNT bits (7-6)
-  uint8_t *rstMcuRqFlag; // Pointer to RST_MCU_RQ_FLAG bit (5)
-  uint8_t *pwrdDlyActv;  // Pointer to PWRD_DLY_ACTV bit (4)
-  uint8_t *state;        // Pointer to STATE bits (3-0)
+  uint8_t *rstMcuCnt;    /**< Pointer to RST_MCU_CNT bits (7-6) */
+  uint8_t *rstMcuRqFlag; /**< Pointer to RST_MCU_RQ_FLAG bit (5) */
+  uint8_t *pwrdDlyActv;  /**< Pointer to PWRD_DLY_ACTV bit (4) */
+  uint8_t *state;        /**< Pointer to STATE bits (3-0) */
 } Pmic_CommonStateStat_t;
 
+/**
+ * @brief Structure to hold common PMIC state control information.
+ *
+ * This structure contains the state request information for PMIC.
+ */
 typedef struct Pmic_CommonStateCtrl_s {
-  uint8_t state_req;
+  uint8_t state_req; /**< State request value */
 } Pmic_CommonStateCtrl_t;
 
 /*==========================================================================*/
 /*                         Function Declarations                            */
 /*==========================================================================*/
 
-/**
- * @defgroup DRV_PMIC_MAIN_MODULE PMIC Core
- * @brief  Checks the validParam bit position is set or not in validParamVal
- *         This function checks the given bit position is being set or not in
- *         the validParamVal argument
- *
- * @param   validParamVal [IN]   Valid param value
- * @param   bitPos        [IN]   bit position value
- *
- * @retval  Return true if the given bit pos is set, else return false
- */
 bool pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos);
 
-/**
- * @addtogroup DRV_PMIC_MAIN_MODULE PMIC Core
- * @brief  Function call wrapper to lock PMIC LLD critical section
- *         This function locks to critical area by calling registered locking
- *         mechanism using pmic core handle.
- *
- * @param   pPmicCoreHandle  [IN]  PMIC Interface Handle
- * @return  NULL
- */
 void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *pPmicCoreHandle);
 
-/**
- * @addtogroup DRV_PMIC_MAIN_MODULE PMIC Core
- * @brief  Function call wrapper to unlock PMIC LLD critical section
- *         This function unlocks to critical area by calling registred locking
- *         mechanism using pmic core handle.
- *
- * @param   pPmicCoreHandle  [IN]  PMIC Interface Handle
- * @return  NULL
- */
 void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *pPmicCoreHandle);
 
-/**
- * @brief  API to Set Recovery Counter Configuration.
- *         This function configures PMIC Recovery Counter register, controlling
- *         recovery count Threshold and Clear, when corresponding validParam
- *         bit field is set in the Pmic_RecovCntCfg_t structure.
- *         For more information @ref Pmic_RecovCntCfg_t
- *
- * @param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * @param   recovCntCfg       [IN]    Set configuration value for
- *                                    Recovery counter
- *
- * @retval  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values @ref Pmic_ErrorCodes
- */
 int32_t Pmic_setRecoveryCntCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                const Pmic_RecovCntCfg_t recovCntCfg);
 
-/*!
- * @brief  API to Get Recovery Counter Configuration.
- *
- * Requirement: REQ_TAG(PDK-5809)
- * Design: did_pmic_err_recov_cnt_cfg_readback
- * Architecture: aid_pmic_core_misc_cfg
- *
- *         This function gets PMIC Recovery Counter configuration values. Like,
- *         recovery count Threshold and Clear, when corresponding validParam
- *         bit field is set in the Pmic_RecovCntCfg_t structure.
- *         For more information @ref Pmic_RecovCntCfg_t
- *
- * @param   pPmicCoreHandle       [IN]       PMIC Interface Handle.
- * @param   pRecovCntCfg          [IN/OUT]   Pointer to store recovery counter
- *                                           configuration value
- *
- * @retval  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values @ref Pmic_ErrorCodes
- */
 int32_t Pmic_getRecoveryCntCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                Pmic_RecovCntCfg_t *pRecovCntCfg);
 
-/*!
- * @brief  API to Read Recovery Count Value.
- *
- * Requirement: REQ_TAG(PDK-5809)
- * Design: did_pmic_err_recov_cnt_cfg_readback
- * Architecture: aid_pmic_core_misc_cfg
- *
- *         This function reads out the recovery count value.
- *
- * @param   pPmicCoreHandle       [IN]    PMIC Interface Handle.
- * @param   pRecovCntVal          [OUT]   Pointer to store recovery count
- *                                        value
- *
- * @retval  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values @ref Pmic_ErrorCodes
- */
 int32_t Pmic_getRecoveryCnt(Pmic_CoreHandle_t *pPmicCoreHandle,
                             uint8_t *pRecovCntVal);
 
-/*!
- * @brief   API to set/write value in/to scratchpad register.
- *
- * Requirement: REQ_TAG(PDK-5810), REQ_TAG(PDK-5843)
- * Design: did_pmic_comm_single_i2c_cfg, did_pmic_comm_spi_cfg
- * Architecture: aid_pmic_core_misc_cfg
- *
- *          This function is used write data to scratchpad register of PMIC
- *
- * @param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
- * @param   scratchPadRegNum   [IN]    ScratchPad register number
- *                                         Valid values @ref Pmic_ScratchPad_Sel
- * @param   data               [IN]    Data/Value to be written to scratchpad.
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values @ref Pmic_ErrorCodes
- */
 int32_t Pmic_setScratchPadValue(Pmic_CoreHandle_t *pPmicCoreHandle,
                                 const uint8_t scratchPadRegNum,
                                 const uint8_t data);
 
-/*!
- * @brief   API to get/read data from scratchpad register.
- *
- * Requirement: REQ_TAG(PDK-5810), REQ_TAG(PDK-5843)
- * Design: did_pmic_comm_single_i2c_cfg, did_pmic_comm_spi_cfg
- * Architecture: aid_pmic_core_misc_cfg
- *
- *          This function is used read data from scratchpad register of PMIC
- *
- * @param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
- * @param   scratchPadRegNum   [IN]    ScratchPad register number
- *                                          Valid values@ref Pmic_ScratchPad_Sel
- * @param   pData               [OUT]  Parameter to hold the Data/Value read
- *                                     from scratchpad.
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values @ref Pmic_ErrorCodes
- */
 int32_t Pmic_getScratchPadValue(Pmic_CoreHandle_t *pPmicCoreHandle,
                                 const uint8_t scratchPadRegNum, uint8_t *pData);
 
-/*!
- * @brief   API to set/write value in/to User Spare register.
- *
- * Requirement: REQ_TAG(PDK-9133)
- * Design: did_pmic_user_spare_cfg_readback
- * Architecture: aid_pmic_core_misc_cfg
- *
- *          This function is used write data to User Spare register of PMIC
- *
- * @param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
- * @param   userSpareRegNum    [IN]    UserSpare register number
- *                                       Valid values @ref Pmic_UserSpareReg_Sel
- * @param   data               [IN]    Data/Value to be written to UserSpare
- *                                     register
- *                                       Valid values @ref Pmic_UserSpareReg_Val
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values @ref Pmic_ErrorCodes
- */
 int32_t Pmic_setUserSpareValue(Pmic_CoreHandle_t *pPmicCoreHandle,
                                const uint8_t userSpareRegNum,
                                const uint8_t data);
 
-/*!
- * @brief   API to get/read data from User Spare register.
- *
- * Requirement: REQ_TAG(PDK-9133)
- * Design: did_pmic_user_spare_cfg_readback
- * Architecture: aid_pmic_core_misc_cfg
- *
- *          This function is used read data from User Spare register of PMIC
- *
- * @param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
- * @param   userSpareRegNum    [IN]    User Spare register number
- *                                       Valid values @ref Pmic_UserSpareReg_Sel
- * @param   pData              [OUT]   Parameter to hold the Data/Value read
- *                                     from User Spare register.
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values @ref Pmic_ErrorCodes
- */
 int32_t Pmic_getUserSpareValue(Pmic_CoreHandle_t *pPmicCoreHandle,
                                const uint8_t userSpareRegNum, uint8_t *pData);
 
-/*!
- * @brief   API to set PMIC common control parameter configuration.
- *
- * Requirement: REQ_TAG(PDK-9112), REQ_TAG(PDK-9114), REQ_TAG(PDK-9131),
- *              REQ_TAG(PDK-9143), REQ_TAG(PDK-9111)
- * Design: did_pmic_common_ctrl_cfg_readback
- * Architecture: aid_pmic_core_misc_cfg
- *
- *          This function is used to set the required common control parameter
- *          configuration when corresponding validParam bit field is set in
- *          the Pmic_CommonCtrlCfg_t
- *          For more information @ref Pmic_CommonCtrlCfg_t
- *
- * @param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- * @param   commonCtrlCfg   [IN]    Set PMIC required common control parameter
- *                                  configuration.
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values @ref Pmic_ErrorCodes
- */
 int32_t Pmic_setCommonCtrlConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
                                  const Pmic_CommonCtrlCfg_t commonCtrlCfg);
 
-/*!
- * @brief   API to get PMIC common control parameter configuration.
- *
- * Requirement: REQ_TAG(PDK-9112), REQ_TAG(PDK-9114), REQ_TAG(PDK-9131),
- *              REQ_TAG(PDK-9143)
- * Design: did_pmic_common_ctrl_cfg_readback
- * Architecture: aid_pmic_core_misc_cfg
- *
- *          This function is used to get the required common control parameter
- *          configuration when corresponding validParam bit field is set in
- *          the Pmic_CommonCtrlCfg_t
- *          For more information @ref Pmic_CommonCtrlCfg_t
- *
- * @param   pPmicCoreHandle [IN]        PMIC Interface Handle.
- * @param   pCommonCtrlCfg  [IN/OUT]    Pointer to store PMIC required common
- *                                      control parameter configuration.
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values @ref Pmic_ErrorCodes
- */
 int32_t Pmic_getCommonCtrlConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
                                  Pmic_CommonCtrlCfg_t *pCommonCtrlCfg);
 
-/*!
- * @brief   API to set PMIC Miscellaneous control parameter configuration.
- *
- * Requirement: REQ_TAG(PDK-9132), REQ_TAG(PDK-9127), REQ_TAG(PDK-9111)
- * Design: did_pmic_misc_ctrl_cfg_readback
- * Architecture: aid_pmic_core_misc_cfg
- *
- *          This function is used to set the required miscellaneous control
- *          parameter configuration when corresponding validParam bit field is
- *          set in the Pmic_MiscCtrlCfg_t
- *          For more information @ref Pmic_MiscCtrlCfg_t
- *
- * @param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- * @param   miscCtrlCfg     [IN]    Set PMIC required miscellaneous control
- *                                  parameter configuration.
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values @ref Pmic_ErrorCodes
- */
 int32_t Pmic_setMiscCtrlConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
                                const Pmic_MiscCtrlCfg_t miscCtrlCfg);
 
-/*!
- * @brief   API to get PMIC Miscellaneous control parameter configuration.
- *
- * Requirement: REQ_TAG(PDK-9132), REQ_TAG(PDK-9127)
- * Design: did_pmic_misc_ctrl_cfg_readback
- * Architecture: aid_pmic_core_misc_cfg
- *
- *          This function is used to get the required miscellaneous control
- *          parameter configuration when corresponding validParam bit field is
- *          set in the Pmic_MiscCtrlCfg_t
- *          For more information @ref Pmic_MiscCtrlCfg_t
- *
- * @param   pPmicCoreHandle [IN]       PMIC Interface Handle.
- * @param   pMiscCtrlCfg    [IN/OUT]   Pointer to store PMIC required
- *                                     miscellaneous control parameter
- *                                     configuration.
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values @ref Pmic_ErrorCodes
- */
 int32_t Pmic_getMiscCtrlConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
                                Pmic_MiscCtrlCfg_t *pMiscCtrlCfg);
 
-/*!
- * @brief   API to set PMIC Battery Backup control parameter configuration.
- *
- * Requirement: REQ_TAG(PDK-9130), REQ_TAG(PDK-9111)
- * Design: did_pmic_battery_ctrl_cfg_readback
- * Architecture: aid_pmic_core_misc_cfg
- *
- *          This function is used to set the required Battery Backup control
- *          parameter configuration when corresponding validParam bit field is
- *          set in the Pmic_BatteryCtrlCfg_t
- *          For more information @ref Pmic_BatteryCtrlCfg_t
- *
- * @param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- * @param   batteryCtrlCfg  [IN]    Set PMIC required Battery Backup control
- *                                  parameter configuration.
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values @ref Pmic_ErrorCodes
- */
 int32_t Pmic_setBatteryCtrlConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
                                   const Pmic_BatteryCtrlCfg_t batteryCtrlCfg);
 
-/*!
- * @brief   API to get PMIC Battery Backup control parameter configuration.
- *         Note: validParams is input param for all Set and Get APIs. other
- *         params except validParams is input param for Set APIs and output
- *         param for Get APIs
- *
- * Requirement: REQ_TAG(PDK-9130)
- * Design: did_pmic_battery_ctrl_cfg_readback
- * Architecture: aid_pmic_core_misc_cfg
- *
- *          This function is used to get the required Battery Backup control
- *          parameter configuration when corresponding validParam bit field is
- *          set in the Pmic_BatteryCtrlCfg_t
- *          For more information @ref Pmic_BatteryCtrlCfg_t
- *
- * @param   pPmicCoreHandle    [IN]       PMIC Interface Handle.
- * @param   pBatteryCtrlCfg    [IN/OUT]   Pointer to store PMIC required Battery
- *                                        Backup control parameter configuration
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values @ref Pmic_ErrorCodes
- */
 int32_t Pmic_getBatteryCtrlConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
                                   Pmic_BatteryCtrlCfg_t *pBatteryCtrlCfg);
 
-/*!
- * @brief   API to get PMIC GPIO NRSTOUT_SOC/ NRSTOUT/ EN_DRV Pin
- *
- * Requirement: REQ_TAG(PDK-9137), REQ_TAG(PDK-9131)
- * Design: did_pmic_pin_readback
- * Architecture: aid_pmic_core_misc_cfg
- *
- *          This function is used to read the signal level of the NRSTOUT_SOC/
- *          NRSTOUT/ EN_DRV Pin
- *
- * @param   pPmicCoreHandle [IN]    PMIC Interface Handle
- * @param   pinType         [IN]    PMIC pin type.
- *                                   Valid values of pin type
- *                                   @ref Pmic_PinType_Sel
- * @param   pPinValue       [OUT]   Pointer to store the status of pin type
- *                                    Valid values @ref Pmic_SignalLvl
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values @ref Pmic_ErrorCodes
- */
 int32_t Pmic_getPinValue(Pmic_CoreHandle_t *pPmicCoreHandle,
                          const uint8_t pinType, uint8_t *pPinValue);
 
-/*!
- * @brief   API to get PMIC common control parameter status.
- *
- * Requirement: REQ_TAG(PDK-9126), REQ_TAG(PDK-9124), REQ_TAG(PDK-9130),
- *              REQ_TAG(PDK-9125), REQ_TAG(PDK-9139), REQ_TAG(PDK-9138),
- *              REQ_TAG(PDK-9112)
- * Design: did_pmic_common_ctrl_status_readback
- * Architecture: aid_pmic_core_misc_cfg
- *
- *          This function is used to get the required common control parameter
- *          status when corresponding validParam bit field is set in
- *          the Pmic_CommonCtrlStat_t
- *          For more information @ref Pmic_CommonCtrlStat_t
- *
- * @param   pPmicCoreHandle  [IN]       PMIC Interface Handle.
- * @param   pCommonCtrlStat  [IN/OUT]   Pointer to store PMIC required common
- *                                      control parameter status.
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values @ref Pmic_ErrorCodes
- */
 int32_t Pmic_getCommonCtrlStat(Pmic_CoreHandle_t *pPmicCoreHandle,
                                Pmic_CommonCtrlStat_t *pCommonCtrlStat);
 
-/*!
- * @brief   API to get configured value for I2C1 or I2C2 Speed based on commMode
- *
- * Requirement: REQ_TAG(PDK-9129)
- * Design: did_pmic_i2c_speed_readback
- * Architecture: aid_pmic_core_misc_cfg
- *
- *          This function is used to get the configured value for I2C1 or
- *          I2C2 Speed based on commMode
- *
- * @param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- * @param   pI2C1Speed      [OUT]   Pointer to store I2C1 Speed for both
- *                                  PMIC_INTF_SINGLE_I2C and PMIC_INTF_DUAL_I2C
- *                                  interface
- *                                     Valid Vaues @ref Pmic_I2CSpeedSel
- * @param   pI2C2Speed      [OUT]   Pointer to store I2C2 Speed for both
- *                                  PMIC_INTF_DUAL_I2C interface only
- *                                     Valid Vaues @ref Pmic_I2CSpeedSel
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values @ref Pmic_ErrorCodes
- */
 int32_t Pmic_getI2CSpeed(Pmic_CoreHandle_t *pPmicCoreHandle,
                          uint8_t *pI2C1Speed, uint8_t *pI2C2Speed);
 
-/*!
- * @brief   API to Enable CRC
- *
- * Requirement: REQ_TAG(PDK-9119)
- * Design: did_pmic_crc_enable
- * Architecture: aid_pmic_core_misc_cfg
- *
- *          This function is used to enable CRC on Primary PMIC which enables
- *          CRC for I2C1, I2C2, SPI interface of both Primary and Secondary PMIC
- *          Note: Application shall not do reads and writes of the any
- *          PMIC registers for at least 2ms to allow the recalculation of the
- *          register CRC value due to the change
- *          Valid only for TPS6594x Leo PMIC PG2.0 and LP8764x Hera PMIC PG2.0
- *
- * @param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values @ref Pmic_ErrorCodes
- */
 int32_t Pmic_enableCRC(Pmic_CoreHandle_t *pPmicCoreHandle);
 
-/*!
- * @brief   API to get CRC Status
- *
- * Requirement: REQ_TAG(PDK-9329)
- * Design: did_pmic_crc_status
- * Architecture: aid_pmic_core_misc_cfg
- *
- *          This function is used to get the CRC Status based on commMode
- *
- * @param   pPmicCoreHandle      [IN]    PMIC Interface Handle.
- * @param   pI2c1SpiCrcStatus    [OUT]   Pointer to store CRC Status for I2C1/
- *                                       SPI interface
- *                                       Valid Vaues @ref Pmic_CrcStatus
- * @param   pI2c2CrcStatus       [OUT]   Pointer to store CRC Status for I2C2
- *                                       interface
- *                                       Valid Vaues @ref Pmic_CrcStatus
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values @ref Pmic_ErrorCodes
- */
 int32_t Pmic_getCrcStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
                           uint8_t *pI2c1SpiCrcStatus, uint8_t *pI2c2CrcStatus);
 
-/*!
- * @brief   API to get PMIC Device Information
- *
- * Requirement: REQ_TAG(PDK-9109), REQ_TAG(PDK-9110), REQ_TAG(PDK-9149),
- *              REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
- * Design: did_pmic_dev_info_readback
- * Architecture: aid_pmic_core_misc_cfg
- *
- *          This function is used to get PMIC Device Information such as
- *          TI DeviceID, TI NVM ID, TI NVM Revision, TI Silicon Revision,
- *          Custom NVM ID
- *          Note: customNvmID is valid only for TPS6594x Leo PMIC PG2.0 and
- *          LP8764x Hera PMIC PG2.0
- *
- * @param   pPmicCoreHandle      [IN]    PMIC Interface Handle.
- * @param   pDeviceInfo          [OUT]   PMIC Device Information value
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values @ref Pmic_ErrorCodes
- */
 int32_t Pmic_getDeviceInfo(Pmic_CoreHandle_t *pPmicCoreHandle,
                            Pmic_DeviceInfo_t *pDeviceInfo);
 
@@ -1320,25 +930,6 @@ int32_t Pmic_setEnableSafeOutCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 int32_t Pmic_getSafeOutPinCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                               Pmic_CommonCtrlCfg_t *pCommonCtrlCfg);
 
-/*!
- * @brief   API to set I2C1 or I2C2 Speed based on commMode
- *
- * Requirement: REQ_TAG(PDK-9129)
- * Design: did_pmic_i2c_speed_readback
- * Architecture: aid_pmic_core_misc_cfg
- *
- *          This function is used to configure I2C1 speed for Single or Dual I2C
- *          Interface and I2C2 Speed for Dual I2C Interface based on commMode.
- *
- *          Note: I2C Master before switching the I2C speed to HS/Standard Mode,
- *          I2C Master has to configure I2C1/I2C2 speed accordingly then only
- *          I2C Master can communicate with PMIC in HS/Standard Mode
- *
- * @param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values @ref Pmic_ErrorCodes
- */
 int32_t Pmic_setI2CSpeedCfg(Pmic_CoreHandle_t *pPmicCoreHandle);
 
 int32_t Pmic_setRegisterLockUnlock(Pmic_CoreHandle_t *pPmicCoreHandle,
@@ -1358,5 +949,3 @@ int32_t Pmic_getTmrCntLockStat(Pmic_CoreHandle_t *pPmicCoreHandle,
 #endif /* __cplusplus */
 
 #endif /* PMIC_CORE_H_ */
-
-/* @} */

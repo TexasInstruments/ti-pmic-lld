@@ -52,16 +52,9 @@ extern "C" {
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
-/*!
- * \brief  GPIO Register Address
- */
 
-/*!
- * \brief  GPIO Interrupt Mask Register Address
- */
-
-/*!
- * \brief  GPIO Register bit fields for all GPIO pins
+/**
+ * \brief  GPIO CONF Register bit fields
  */
 #define PMIC_GPIOX_CONF_GPIO_SEL_SHIFT (0x05U)
 #define PMIC_GPIOX_CONF_GPIO_DEGLITCH_EN_SHIFT (0x04U)
@@ -70,7 +63,7 @@ extern "C" {
 #define PMIC_GPIOX_CONF_GPIO_OD_SHIFT (0x01U)
 #define PMIC_GPIOX_CONF_GPIO_DIR_SHIFT (0x00U)
 
-/*!
+/**
  * \brief  GPIO IN Register bit fields
  */
 #define PMIC_GPIO_IN_1_GPIO1_IN_SHIFT (0x00U)
@@ -84,7 +77,7 @@ extern "C" {
 #define PMIC_GPIO_IN_2_GPIO9_IN_SHIFT (0x00U)
 #define PMIC_GPIO_IN_2_GPIO10_IN_SHIFT (0x01U)
 
-/*!
+/**
  * \brief  GPIO OUT Register bit fields
  */
 #define PMIC_GPIO_OUT_1_GPIO1_OUT_SHIFT (0x00U)
@@ -98,7 +91,7 @@ extern "C" {
 #define PMIC_GPIO_OUT_2_GPIO9_OUT_SHIFT (0x00U)
 #define PMIC_GPIO_OUT_2_GPIO10_OUT_SHIFT (0x01U)
 
-/*!
+/**
  * \brief  GPIO Register bit mask values for all GPIO pins
  */
 #define PMIC_GPIOX_CONF_GPIO_SEL_MASK                                          \
@@ -114,7 +107,7 @@ extern "C" {
 #define PMIC_GPIOX_CONF_GPIO_DIR_MASK                                          \
   (uint8_t)(0x01U << PMIC_GPIOX_CONF_GPIO_DIR_SHIFT)
 
-/*!
+/**
  * \brief  GPIO IN/OUT bit field
  */
 #define PMIC_GPIO_IN_OUT_X_GPIOX_IN_OUT_BITFIELD (1U)
@@ -122,24 +115,14 @@ extern "C" {
 /** \brief Max value for GPIO Pin Function */
 #define PMIC_GPIO_PINFUNC_MAX (7U)
 
-/**
- *  \anchor Pmic_GpioInterruptMask
- *  \name   PMIC GPIO Interrupt Mask selection
- *
- *  @{
- */
-
-/*==========================================================================*/
-/*                            Macros                                        */
-/*==========================================================================*/
 #define PMIC_GPIO_INT_ENABLE (0U)
 #define PMIC_GPIO_INT_MASK (1U)
 #define PMIC_DEV_BB_TPS653860XX (3U)
 
-#define GPO1 (1)
-#define GPO2 (2)
-#define GPO3 (3)
-#define GPO4 (4)
+#define PMIC_BB_GPO1 (1)
+#define PMIC_BB_GPO2 (2)
+#define PMIC_BB_GPO3 (3)
+#define PMIC_BB_GPO4 (4)
 
 #define PMIC_TPS653860XX_GPIO_PIN_MIN (1U)
 #define PMIC_TPS653860XX_GPIO_PIN_MAX (6U)
@@ -191,40 +174,38 @@ extern "C" {
 #define PMIC_GPO_CFG2_EN_OUT_PU_CFG_MASK                                       \
   (0x03U << PMIC_GPO_CFG2_EN_OUT_PU_CFG_SHIFT)
 
-#define PMIC_GPO_HIGH_IMPEDANCE 0x02U
-#define PMIC_GPO_PULL_UP_LDO 0x01U
-#define PMIC_GPO_PULL_UP_VDDIO 0x00U
+#define PMIC_GPO_HIGH_IMPEDANCE (0x02U)
+#define PMIC_GPO_PULL_UP_LDO (0x01U)
+#define PMIC_GPO_PULL_UP_VDDIO (0x00U)
 
-#define PMIC_GPIO_PULL_DISABLED 0x00U
-#define PMIC_GPIO_PULL_UP 0x01U
-#define PMIC_GPIO_PULL_UP_TO_LDO 0x02U
+#define PMIC_GPIO_PULL_DISABLED (0x00U)
+#define PMIC_GPIO_PULL_UP (0x01U)
+#define PMIC_GPIO_PULL_UP_TO_LDO (0x02U)
 
 /* Macros for GPO_CFG1 register (7Ch) */
-#define PMIC_GPO_CFG1_REG_ADDR 0x7CU
-#define PMIC_GPO_CFG1_M_PMIC_CFG_SHIFT 6
+#define PMIC_GPO_CFG1_REG_ADDR (0x7CU)
+#define PMIC_GPO_CFG1_M_PMIC_CFG_SHIFT (6)
 #define PMIC_GPO_CFG1_M_PMIC_CFG_MASK (0x01U << PMIC_GPO_CFG1_M_PMIC_CFG_SHIFT)
-#define PMIC_GPO_CFG1_GPO2_CFG_SHIFT 3
+#define PMIC_GPO_CFG1_GPO2_CFG_SHIFT (3)
 #define PMIC_GPO_CFG1_GPO2_CFG_MASK (0x07U << PMIC_GPO_CFG1_GPO2_CFG_SHIFT)
-#define PMIC_GPO_CFG1_GPO1_CFG_SHIFT 0
+#define PMIC_GPO_CFG1_GPO1_CFG_SHIFT (0)
 #define PMIC_GPO_CFG1_GPO1_CFG_MASK (0x07U << PMIC_GPO_CFG1_GPO1_CFG_SHIFT)
 
 /* Macros for GPO_CFG2 register (7Dh) */
-#define PMIC_GPO_CFG2_REG_ADDR 0x7DU
-#define PMIC_GPO_CFG2_GPO_EN_SHIFT 5
+#define PMIC_GPO_CFG2_REG_ADDR (0x7DU)
+#define PMIC_GPO_CFG2_GPO_EN_SHIFT (5)
 #define PMIC_GPO_CFG2_GPO_EN_MASK (0x06U << PMIC_GPO_CFG2_GPO_EN_SHIFT)
-#define PMIC_GPO_CFG2_GPO4_CFG_SHIFT 3
+#define PMIC_GPO_CFG2_GPO4_CFG_SHIFT (3)
 #define PMIC_GPO_CFG2_GPO4_CFG_MASK (0x07U << PMIC_GPO_CFG2_GPO4_CFG_SHIFT)
-#define PMIC_GPO_CFG2_GPO3_CFG_SHIFT 0
+#define PMIC_GPO_CFG2_GPO3_CFG_SHIFT (0)
 #define PMIC_GPO_CFG2_GPO3_CFG_MASK (0x07U << PMIC_GPO_CFG2_GPO3_CFG_SHIFT)
 
 /* Macros for GPI_CFG register (7Eh)*/
-#define PMIC_GPI_CFG_REG_ADDR 0x7EU
-#define PMIC_GPI_CFG_GPI1_SHIFT 0U
+#define PMIC_GPI_CFG_REG_ADDR (0x7EU)
+#define PMIC_GPI_CFG_GPI1_SHIFT (0U)
 #define PMIC_GPI_CFG_GPI1_MASK (0x1U << PMIC_GPI_CFG_GPI1_SHIFT)
-#define PMIC_GPI_CFG_GPI4_SHIFT 1U
+#define PMIC_GPI_CFG_GPI4_SHIFT (1U)
 #define PMIC_GPI_CFG_GPI4_MASK (0x3U << PMIC_GPI_CFG_GPI4_SHIFT)
-
-/*  @} */
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */

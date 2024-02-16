@@ -64,6 +64,15 @@ static const Pmic_DevSubSysInfo_t pmicSubSysInfo[] = {
 /*                          Function Definitions                              */
 /* ========================================================================== */
 
+/**
+ * @brief Check if a specific bit position in a parameter validity value is set.
+ * This function checks whether a specific bit position in a parameter validity
+ * value is set.
+ *
+ * @param validParamVal Validity parameter value to check.
+ * @param bitPos Bit position to check.
+ * @return bool True if the specified bit is set, false otherwise.
+ */
 bool pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos) {
   bool retVal = (bool)false;
 
@@ -74,12 +83,28 @@ bool pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos) {
   return retVal;
 }
 
+/**
+ * @brief Start a critical section for PMIC operations.
+ * This function starts a critical section for PMIC operations, if the critical
+ * section start function pointer is not NULL.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle structure.
+ * @return void No return value.
+ */
 void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *pPmicCoreHandle) {
   if (NULL != pPmicCoreHandle->pFnPmicCritSecStart) {
     pPmicCoreHandle->pFnPmicCritSecStart();
   }
 }
 
+/**
+ * @brief Stop a critical section for PMIC operations.
+ * This function stops a critical section for PMIC operations, if the critical
+ * section stop function pointer is not NULL.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle structure.
+ * @return void No return value.
+ */
 void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *pPmicCoreHandle) {
   if (NULL != pPmicCoreHandle->pFnPmicCritSecStop) {
     pPmicCoreHandle->pFnPmicCritSecStop();
@@ -87,22 +112,14 @@ void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *pPmicCoreHandle) {
 }
 
 /**
- * @brief:  Set or clear the register lock/unlock configuration for PMIC.
- *          This function is used to either lock or unlock the configuration
- *          registers of the PMIC. It sends the appropriate unlock data to the
- *          PMIC based on the provided configuration. The function first
- *          checks for valid unlock data and then sends the unlock sequence.
- *          The critical section is used to protect the communication interface
- *          during the operation.
+ * @brief Set register lock/unlock configuration.
+ * This function sets the register lock/unlock configuration based on the
+ * provided parameters.
  *
- * @param   pPmicCoreHandle [IN]    PMIC Core Handle.
- * @param   commonCtrlCfg   [IN]    Configuration structure containing register
- * lock/unlock data.
- *
- * @return Status of the API call.
- *         - PMIC_ST_SUCCESS if the operation is successful.
- *         - PMIC_ST_ERR_INV_PARAM if the provided unlock data is invalid.
- *         - Error codes from underlying functions on communication failure.
+ * @param pPmicCoreHandle Pointer to the PMIC core handle structure.
+ * @param commonCtrlCfg Common control configuration structure.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_setRegisterLockUnlock(Pmic_CoreHandle_t *pPmicCoreHandle,
                                    const Pmic_CommonCtrlCfg_t commonCtrlCfg) {
@@ -123,23 +140,15 @@ int32_t Pmic_setRegisterLockUnlock(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-/*!
- * @brief:  Set or clear the counter register lock/unlock configuration for
- * PMIC. This function is used to either lock or unlock the timer and counter
- *          registers of the PMIC. It sends the appropriate unlock data to the
- *          PMIC based on the provided configuration. The function first checks
- *          for valid unlock data and then sends the unlock sequence. The
- * critical section is used to protect the communication interface during the
- * operation.
+/**
+ * @brief Set counter lock/unlock configuration.
+ * This function sets the counter lock/unlock configuration based on the
+ * provided parameters.
  *
- * @param   pPmicCoreHandle [IN]    PMIC Core Handle.
- * @param   commonCtrlCfg   [IN]    Configuration structure containing counter
- * register lock/unlock data.
- *
- * @return  Status of the API call.
- *         - PMIC_ST_SUCCESS if the operation is successful.
- *         - PMIC_ST_ERR_INV_PARAM if the provided unlock data is invalid.
- *         - Error codes from underlying functions on communication failure.
+ * @param pPmicCoreHandle Pointer to the PMIC core handle structure.
+ * @param commonCtrlCfg Common control configuration structure.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_setCounterLockUnlock(Pmic_CoreHandle_t *pPmicCoreHandle,
                                   const Pmic_CommonCtrlCfg_t commonCtrlCfg) {
@@ -162,8 +171,15 @@ int32_t Pmic_setCounterLockUnlock(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-/*!
- * @brief  API to get Register Lock Status
+/**
+ * @brief Get register lock status.
+ * This function retrieves the register lock status.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle structure.
+ * @param pCommonCtrlStat Pointer to the common control status structure to
+ * store the retrieved status.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_getRegLockStat(Pmic_CoreHandle_t *pPmicCoreHandle,
                             Pmic_CommonCtrlStat_t *pCommonCtrlStat) {
@@ -185,8 +201,15 @@ int32_t Pmic_getRegLockStat(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-/*!
- * @brief  API to get Timer and Counter Lock Status
+/**
+ * @brief Get timer counter lock status.
+ * This function retrieves the timer counter lock status.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle structure.
+ * @param pCommonCtrlStat Pointer to the common control status structure to
+ * store the retrieved status.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_getTmrCntLockStat(Pmic_CoreHandle_t *pPmicCoreHandle,
                                Pmic_CommonCtrlStat_t *pCommonCtrlStat) {
@@ -208,16 +231,14 @@ int32_t Pmic_getTmrCntLockStat(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-/*!
- * @brief  API to Read RST-MCU Count Value.
- *         This function reads out the RST-MCU count value.
+/**
+ * @brief Get the MCU reset counter value.
+ * This function retrieves the MCU reset counter value.
  *
- * @param   pPmicCoreHandle       [IN]    PMIC Interface Handle.
- * @param   pRecovCntVal          [OUT]   Pointer to store recovery count
- *                                        value
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
+ * @param pPmicCoreHandle Pointer to the PMIC core handle structure.
+ * @param pRecovCntVal Pointer to store the recovered counter value.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_getRstmcuCnt(Pmic_CoreHandle_t *pPmicCoreHandle,
                           uint8_t *pRecovCntVal) {
@@ -251,6 +272,17 @@ int32_t Pmic_getRstmcuCnt(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
+/**
+ * @brief Set state status register.
+ * This function sets the state status register based on the provided
+ * parameters.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle structure.
+ * @param pCommonCtrlStat Pointer to the common control status structure
+ * containing the data to set.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
 int32_t Pmic_setStateStatReg(Pmic_CoreHandle_t *pPmicCoreHandle,
                              Pmic_CommonStateStat_t *pCommonCtrlStat) {
   int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -290,6 +322,17 @@ int32_t Pmic_setStateStatReg(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
+/**
+ * @brief Set state control register.
+ * This function sets the state control register based on the provided
+ * parameters.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle structure.
+ * @param pCommonStateCtrl Pointer to the common state control structure
+ * containing the data to set.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
 int32_t Pmic_setStateCtrlReg(Pmic_CoreHandle_t *pPmicCoreHandle,
                              Pmic_CommonStateCtrl_t *pCommonStateCtrl) {
   int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -316,6 +359,16 @@ int32_t Pmic_setStateCtrlReg(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
+/**
+ * @brief Get state control register.
+ * This function retrieves the state control register value.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle structure.
+ * @param pCommonStateCtrl Pointer to the common state control structure to
+ * store the retrieved value.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
 int32_t Pmic_getStateCtrlReg(Pmic_CoreHandle_t *pPmicCoreHandle,
                              Pmic_CommonStateCtrl_t *pCommonStateCtrl) {
   int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -342,6 +395,16 @@ int32_t Pmic_getStateCtrlReg(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
+/**
+ * @brief Get state status register.
+ * This function retrieves the state status register value.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle structure.
+ * @param pCommonCtrlStat Pointer to the common control status structure to
+ * store the retrieved value.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
 int32_t Pmic_getStateStatReg(Pmic_CoreHandle_t *pPmicCoreHandle,
                              Pmic_CommonStateStat_t *pCommonCtrlStat) {
   int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -390,13 +453,16 @@ int32_t Pmic_getStateStatReg(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-/*!
- * @brief  API to Initialize pPmicCoreHandle for pmicDeviceType, Comm Mode,
- *         Main Slave Address, and NVM Slave Address
+/**
+ * @brief Initialize the PMIC core handle with basic device configuration
+ * parameters. This function initializes the PMIC core handle with basic device
+ * configuration parameters.
  *
- *         This function gets device configuration from pPmicConfigData and
- *         initializes pPmicCoreHandle after validation of given params depends
- *         on validParams bit fields
+ * @param pPmicConfigData Pointer to the PMIC core configuration data structure.
+ * @param pPmicCoreHandle Pointer to the PMIC core handle structure to be
+ * initialized.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 static int32_t
 Pmic_initCoreHandleBasicDevCfgParams(const Pmic_CoreCfg_t *pPmicConfigData,
@@ -431,13 +497,16 @@ Pmic_initCoreHandleBasicDevCfgParams(const Pmic_CoreCfg_t *pPmicConfigData,
   return pmicStatus;
 }
 
-/*!
- * @brief  API to Initialize pPmicCoreHandle for Comm IO RD Fn, Comm IO Wr Fn,
- *         Critical Section Start Fn and Critical Section Stop Fn
+/**
+ * @brief Initialize the PMIC core handle with communication I/O critical
+ * section function pointers. This function initializes the PMIC core handle
+ * with communication I/O critical section function pointers.
  *
- *         This function gets device configuration from pPmicConfigData and
- *         initializes pPmicCoreHandle after validation of given params depends
- *         on validParams bit fields
+ * @param pPmicConfigData Pointer to the PMIC core configuration data structure.
+ * @param pPmicCoreHandle Pointer to the PMIC core handle structure to be
+ * initialized.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 static int32_t Pmic_initCoreHandleCommIOCriticalSectionFns(
     const Pmic_CoreCfg_t *pPmicConfigData, Pmic_CoreHandle_t *pPmicCoreHandle) {
@@ -489,14 +558,13 @@ static int32_t Pmic_initCoreHandleCommIOCriticalSectionFns(
   return pmicStatus;
 }
 
-/*!
- * @brief  API to check if the device requested is the one on the bus
+/**
+ * @brief Validate the presence of the device on the bus.
+ * This function validates the presence of the device on the bus.
  *
- *         Note: In this API, the default PMIC device is assumed as TPS6594x
- *               LEO PMIC. While adding support for New PMIC device, developer
- *               need to update the API functionality for New PMIC device
- *               accordingly.
- *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle structure.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_validateDevOnBus(Pmic_CoreHandle_t *pPmicCoreHandle) {
   int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -539,9 +607,17 @@ int32_t Pmic_validateDevOnBus(Pmic_CoreHandle_t *pPmicCoreHandle) {
   return pmicStatus;
 }
 
-/*!
- * @brief  API to update PMIC subsystem info to PMIC handle and Check the Main
- *         and QA communication interface if PMIC handle is ready for rw
+/**
+ * @brief Update subsystem information and validate main Q&A communication
+ * interface read/write.
+ * This function updates subsystem information and validates the main Q&A
+ * communication interface read/write.
+ *
+ * @param pPmicConfigData Pointer to the PMIC core configuration data structure.
+ * @param pPmicCoreHandle Pointer to the PMIC core handle structure to be
+ * updated.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 static int32_t Pmic_updateSubSysInfoValidateMainQaCommIFRdWr(
     const Pmic_CoreCfg_t *pPmicConfigData, Pmic_CoreHandle_t *pPmicCoreHandle) {
@@ -577,53 +653,16 @@ static int32_t Pmic_updateSubSysInfoValidateMainQaCommIFRdWr(
   return pmicStatus;
 }
 
-/*!
- * @brief  API to Initialize pmic core handle for PMIC LLD.
+/**
+ * @brief Initialize the PMIC core.
+ * This function initializes the PMIC core based on the provided configuration
+ * data.
  *
- * Requirement: REQ_TAG(PDK-5814), REQ_TAG(PDK-5810), REQ_TAG(PDK-5813),
- *              REQ_TAG(PDK-5843), REQ_TAG(PDK-5811), REQ_TAG(PDK-5853),
- *              REQ_TAG(PDK-9129), REQ_TAG(PDK-9329), REQ_TAG(PDK-9159),
- *              REQ_TAG(PDK-5816), REQ_TAG(PDK-5817), REQ_TAG(PDK-5818),
- *              REQ_TAG(PDK-5819), REQ_TAG(PDK-5820), REQ_TAG(PDK-5821),
- *              REQ_TAG(PDK-5822), REQ_TAG(PDK-5823), REQ_TAG(PDK-5824),
- *              REQ_TAG(PDK-5825), REQ_TAG(PDK-5826), REQ_TAG(PDK-5827),
- *              REQ_TAG(PDK-5856), REQ_TAG(PDK-5857), REQ_TAG(PDK-5858),
- *              REQ_TAG(PDK-5859), REQ_TAG(PDK-5860)
- * Design: did_pmic_comm_intf_cfg, did_pmic_comm_single_i2c_cfg,
- *         did_pmic_comm_dual_i2c_cfg, did_pmic_comm_spi_cfg,
- *         did_pmic_tps6594x_j721e_support, did_pmic_lp8764x_j7200_support,
- *         did_pmic_validation_feature_support, did_pmic_performance_support,
- *         did_pmic_generic_feature_support, did_pmic_safety_feature_support,
- *         did_pmic_pre_emption_support, did_pmic_stateless_reentrant_support,
- *         did_pmic_dynamic_alloc_mem_not_supported, did_pmic_build_infra_cfg,
- *         did_pmic_debug_release_profile_support, did_pmic_standalone_support,
- *         did_pmic_multiple_pmic_support, did_pmic_baremetal_support
- * Architecture: aid_pmic_tps6594x_lp8764x_support, aid_pmic_standalone_support,
- *               aid_pmic_multiple_pmic_support, aid_pmic_pre_emption_support,
- *               aid_pmic_stateless_reentrant_support, aid_pmic_generic_support,
- *               aid_pmic_baremetal_support, aid_pmic_comm_intf_i2c_spi_cfg,
- *               aid_pmic_dynamic_alloc_mem_not_supported,
- *               aid_pmic_build_infra_cfg,
- *               aid_pmic_debug_release_profile_support,
- *               aid_pmic_performance_support, aid_pmic_test_support
- *
- *         This function gets device configuration from pPmicConfigData and
- *         initializes device specific information in pPmicCoreHandle after
- *         validation of given params depends on validParams bit fields
- *         and does some basic validation on PMIC interface I2C/SPI,
- *         confirming that PMIC is accessible for PMIC configuration and
- *         monitor features.
- *         Note:  Application has to ensure to avoid access to write protection
- *                registers using PMIC Driver APIs when register lock status is
- *                locked. API returns an erroe when application access to write
- *                protection registers using PMIC Driver APIs when register lock
- *                status is locked
- *
- *  @param   pPmicConfigData [IN]   PMIC Configuration data
- *  @param   pPmicCoreHandle [OUT]  PMIC Interface Handle.
- *
- *  @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *           For valid values \ref Pmic_ErrorCodes
+ * @param pPmicConfigData Pointer to the PMIC core configuration data structure.
+ * @param pPmicCoreHandle Pointer to the PMIC core handle structure to be
+ * initialized.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
                   Pmic_CoreHandle_t *pPmicCoreHandle) {
@@ -667,22 +706,13 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
   return pmicStatus;
 }
 
-/*!
- * @brief  API to DeInitilizes an existing PMIC Instance.
+/**
+ * @brief Deinitialize the PMIC core.
+ * This function deinitializes the PMIC core.
  *
- * Requirement: REQ_TAG(PDK-5814)
- * Design: did_pmic_comm_intf_cfg
- * Architecture: aid_pmic_tps6594x_lp8764x_support
- *
- *         This function takes an existing Instance pPmicCoreHandle and
- *         closes the LLD being used for this Instance. It should be called
- *         only once per valid pPmicCoreHandle. Should not be called
- *         if Pmic_init() is not called.
- *
- *  @param   pPmicCoreHandle  [IN] PMIC Interface Handle.
- *
- *  @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *           For valid values \ref Pmic_ErrorCodes
+ * @param pPmicCoreHandle Pointer to the PMIC core handle structure.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_deinit(Pmic_CoreHandle_t *pPmicCoreHandle) {
   int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -705,12 +735,14 @@ int32_t Pmic_deinit(Pmic_CoreHandle_t *pPmicCoreHandle) {
   return pmicStatus;
 }
 
-/*!
- * @brief   API to get Scratch pad Register Address
- *          Note: In this API, the default scratchPadRegId is assumed as
- *                PMIC_SCRATCH_PAD_REG_1. While adding support for New PMIC
- *                device, developer need to update the API functionality for
- *                New PMIC device accordingly.
+/**
+ * @brief Get the address of the scratch pad register.
+ * This function retrieves the address of the scratch pad register based on the
+ * specified register ID.
+ *
+ * @param scratchPadRegId Scratch pad register ID.
+ * @param pRegAddr Pointer to store the address of the scratch pad register.
+ * @return void
  */
 static void Pmic_getScratchPadRegAddr(uint8_t scratchPadRegId,
                                       uint8_t *pRegAddr) {
@@ -727,22 +759,15 @@ static void Pmic_getScratchPadRegAddr(uint8_t scratchPadRegId,
   }
 }
 
-/*!
- * @brief   API to set/write value in/to scratchpad register.
+/**
+ * @brief Set value to the scratch pad register.
+ * This function sets a value to the scratch pad register.
  *
- * Requirement: REQ_TAG(PDK-5810), REQ_TAG(PDK-5843)
- * Design: did_pmic_comm_single_i2c_cfg, did_pmic_comm_spi_cfg
- * Architecture: aid_pmic_core_misc_cfg
- *
- *          This function is used write data to scratchpad register of PMIC
- *
- * @param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
- * @param   scratchPadRegNum   [IN]    ScratchPad register number
- *                                     \ref Pmic_ScratchPad_Sel
- * @param   data               [IN]    Data/Value to be written to scratchpad.
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
+ * @param pPmicCoreHandle Pointer to the PMIC core handle structure.
+ * @param scratchPadRegId Scratch pad register ID.
+ * @param data Data to be written to the scratch pad register.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_setScratchPadValue(Pmic_CoreHandle_t *pPmicCoreHandle,
                                 const uint8_t scratchPadRegId,
@@ -770,23 +795,16 @@ int32_t Pmic_setScratchPadValue(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-/*!
- * @brief   API to get/read data from scratchpad register.
+/**
+ * @brief Get value from the scratch pad register.
+ * This function retrieves a value from the scratch pad register.
  *
- * Requirement: REQ_TAG(PDK-5810), REQ_TAG(PDK-5843)
- * Design: did_pmic_comm_single_i2c_cfg, did_pmic_comm_spi_cfg
- * Architecture: aid_pmic_core_misc_cfg
- *
- *          This function is used read data from scratchpad register of PMIC
- *
- * @param   pPmicCoreHandle    [IN]    PMIC Interface Handle.
- * @param   scratchPadRegNum   [IN]    ScratchPad register number
- *                                     \ref Pmic_ScratchPad_Sel
- * @param   data               [OUT]   Parameter to hold the Data/Value read
- *                                     from scratchpad.
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
+ * @param pPmicCoreHandle Pointer to the PMIC core handle structure.
+ * @param scratchPadRegId Scratch pad register ID.
+ * @param pData Pointer to store the retrieved data from the scratch pad
+ * register.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_getScratchPadValue(Pmic_CoreHandle_t *pPmicCoreHandle,
                                 const uint8_t scratchPadRegId, uint8_t *pData) {
@@ -819,8 +837,15 @@ int32_t Pmic_getScratchPadValue(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-/*!
- * @brief  API to Enable/Disable Spread Spectrum
+/**
+ * @brief Enable or disable spread spectrum.
+ * This function enables or disables spread spectrum based on the provided
+ * configuration.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param commonCtrlCfg Spread spectrum configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_spreadSpectrumEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
                                   const Pmic_CommonCtrlCfg_t commonCtrlCfg) {
@@ -851,8 +876,14 @@ int32_t Pmic_spreadSpectrumEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-/*!
- * @brief  API to get the status of  Spread Spectrum is Enabled/Disabled
+/**
+ * @brief Get the spread spectrum enable status.
+ * This function retrieves the status of spread spectrum.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pCommonCtrlCfg Pointer to store the spread spectrum configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_getSpreadSpectrumEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
                                      Pmic_CommonCtrlCfg_t *pCommonCtrlCfg) {
@@ -876,8 +907,14 @@ int32_t Pmic_getSpreadSpectrumEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-/*!
- * @brief  API to Enable SAFE_OUT Pin Configuration
+/**
+ * @brief Set the safe output pin configuration.
+ * This function sets the configuration for safe output pin.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param commonCtrlCfg Safe output pin configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_setEnableSafeOutCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                  const Pmic_CommonCtrlCfg_t commonCtrlCfg) {
@@ -909,8 +946,14 @@ int32_t Pmic_setEnableSafeOutCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-/*!
- * @brief  API to get SAFE_OUT Pin Configuration
+/**
+ * @brief Get the safe output pin configuration.
+ * This function retrieves the configuration of safe output pin.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pCommonCtrlCfg Pointer to store the safe output pin configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_getSafeOutPinCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                               Pmic_CommonCtrlCfg_t *pCommonCtrlCfg) {
@@ -933,7 +976,15 @@ int32_t Pmic_getSafeOutPinCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-
+/**
+ * @brief Set the safe state timeout configuration.
+ * This function sets the safe state timeout configuration.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param safeCfg Safe state timeout configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
 int32_t Pmic_setSafeStateTimeoutCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                     Pmic_SafeStateCfg_t safeCfg) {
   int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -941,16 +992,16 @@ int32_t Pmic_setSafeStateTimeoutCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 
   if (PMIC_ST_SUCCESS == pmicStatus) {
     Pmic_criticalSectionStart(pPmicCoreHandle);
-    pmicStatus = Pmic_commIntf_recvByte(
-        pPmicCoreHandle, PMIC_SAFE_TMO_CFG_REGADDR, &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_SAFE_TMO_CFG_REGADDR, &regData);
     if (PMIC_ST_SUCCESS == pmicStatus) {
-        Pmic_getBitField(regData, PMIC_SAFE_TMO_SHIFT, PMIC_SAFE_TMO_MASK);
+      Pmic_getBitField(regData, PMIC_SAFE_TMO_SHIFT, PMIC_SAFE_TMO_MASK);
 
-        Pmic_setBitField(&regData, PMIC_SAFE_TMO_SHIFT,
-                         PMIC_SAFE_TMO_MASK, safeCfg.safeStateTMO);
+      Pmic_setBitField(&regData, PMIC_SAFE_TMO_SHIFT, PMIC_SAFE_TMO_MASK,
+                       safeCfg.safeStateTMO);
 
-      pmicStatus = Pmic_commIntf_sendByte(
-          pPmicCoreHandle, PMIC_SAFE_TMO_CFG_REGADDR, regData);
+      pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                          PMIC_SAFE_TMO_CFG_REGADDR, regData);
     }
     Pmic_criticalSectionStop(pPmicCoreHandle);
   }
@@ -958,7 +1009,15 @@ int32_t Pmic_setSafeStateTimeoutCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-
+/**
+ * @brief Get the safe state timeout configuration.
+ * This function retrieves the safe state timeout configuration.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param safeCfg Pointer to store the safe state timeout configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
 int32_t Pmic_getSafeStateTimeoutCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                     Pmic_SafeStateCfg_t safeCfg) {
   int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -966,12 +1025,11 @@ int32_t Pmic_getSafeStateTimeoutCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 
   if (PMIC_ST_SUCCESS == pmicStatus) {
     Pmic_criticalSectionStart(pPmicCoreHandle);
-    pmicStatus = Pmic_commIntf_recvByte(
-        pPmicCoreHandle, PMIC_SAFE_TMO_CFG_REGADDR, &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_SAFE_TMO_CFG_REGADDR, &regData);
     if (PMIC_ST_SUCCESS == pmicStatus) {
-        safeCfg.safeStateTMO = Pmic_getBitField(regData,
-                                PMIC_SAFE_TMO_SHIFT,
-                                PMIC_SAFE_TMO_MASK);
+      safeCfg.safeStateTMO =
+          Pmic_getBitField(regData, PMIC_SAFE_TMO_SHIFT, PMIC_SAFE_TMO_MASK);
     }
     Pmic_criticalSectionStop(pPmicCoreHandle);
   }
@@ -979,7 +1037,15 @@ int32_t Pmic_getSafeStateTimeoutCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-
+/**
+ * @brief Set the safe state threshold configuration.
+ * This function sets the safe state threshold configuration.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param safeCfg Safe state threshold configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
 int32_t Pmic_setSafeStateThresholdCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                       Pmic_SafeStateCfg_t safeCfg) {
   int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -987,20 +1053,17 @@ int32_t Pmic_setSafeStateThresholdCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 
   if (PMIC_ST_SUCCESS == pmicStatus) {
     Pmic_criticalSectionStart(pPmicCoreHandle);
-    pmicStatus = Pmic_commIntf_recvByte(
-        pPmicCoreHandle, PMIC_SAFE_TMO_CFG_REGADDR, &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_SAFE_TMO_CFG_REGADDR, &regData);
     if (PMIC_ST_SUCCESS == pmicStatus) {
-      Pmic_getBitField(regData,
-                       PMIC_SAFE_LOCK_TH_SHIFT,
+      Pmic_getBitField(regData, PMIC_SAFE_LOCK_TH_SHIFT,
                        PMIC_SAFE_LOCK_TH_MASK);
 
-      Pmic_setBitField(&regData,
-                       PMIC_SAFE_LOCK_TH_SHIFT,
-                       PMIC_SAFE_LOCK_TH_MASK,
-                       safeCfg.safeLockThreshold);
+      Pmic_setBitField(&regData, PMIC_SAFE_LOCK_TH_SHIFT,
+                       PMIC_SAFE_LOCK_TH_MASK, safeCfg.safeLockThreshold);
 
-      pmicStatus = Pmic_commIntf_sendByte(
-          pPmicCoreHandle, PMIC_SAFE_TMO_CFG_REGADDR, regData);
+      pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                          PMIC_SAFE_TMO_CFG_REGADDR, regData);
     }
     Pmic_criticalSectionStop(pPmicCoreHandle);
   }
@@ -1008,7 +1071,15 @@ int32_t Pmic_setSafeStateThresholdCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-
+/**
+ * @brief Get the safe state threshold configuration.
+ * This function retrieves the safe state threshold configuration.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param safeCfg Pointer to store the safe state threshold configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
 int32_t Pmic_getSafeStateThresholdCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                       Pmic_SafeStateCfg_t safeCfg) {
   int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -1016,12 +1087,11 @@ int32_t Pmic_getSafeStateThresholdCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 
   if (PMIC_ST_SUCCESS == pmicStatus) {
     Pmic_criticalSectionStart(pPmicCoreHandle);
-    pmicStatus = Pmic_commIntf_recvByte(
-        pPmicCoreHandle, PMIC_SAFE_TMO_CFG_REGADDR, &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                        PMIC_SAFE_TMO_CFG_REGADDR, &regData);
     if (PMIC_ST_SUCCESS == pmicStatus) {
-        safeCfg.safeLockThreshold = Pmic_getBitField(regData,
-                                     PMIC_SAFE_LOCK_TH_SHIFT,
-                                     PMIC_SAFE_LOCK_TH_MASK);
+      safeCfg.safeLockThreshold = Pmic_getBitField(
+          regData, PMIC_SAFE_LOCK_TH_SHIFT, PMIC_SAFE_LOCK_TH_MASK);
     }
     Pmic_criticalSectionStop(pPmicCoreHandle);
   }
@@ -1029,25 +1099,14 @@ int32_t Pmic_getSafeStateThresholdCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-/*!
- * @brief   API to set PMIC common control parameter configuration.
+/**
+ * @brief Set the common control configuration.
+ * This function sets the common control configuration.
  *
- * Requirement: REQ_TAG(PDK-9112), REQ_TAG(PDK-9114), REQ_TAG(PDK-9131),
- *              REQ_TAG(PDK-9143)
- * Design: did_pmic_common_ctrl_cfg_readback
- * Architecture: aid_pmic_core_misc_cfg
- *
- *          This function is used to set the required common control parameter
- *          configuration when corresponding validParam bit field is set in
- *          the Pmic_CommonCtrlCfg_t
- *          For more information \ref Pmic_CommonCtrlCfg_t
- *
- * @param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- * @param   commonCtrlCfg   [IN]    Set PMIC required common control parameter
- *                                  configuration.
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param CommonCtrlCfg Common control configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_setCommonCtrlConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
                                  const Pmic_CommonCtrlCfg_t CommonCtrlCfg) {
@@ -1084,25 +1143,14 @@ int32_t Pmic_setCommonCtrlConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-/*!
- * @brief   API to get PMIC common control parameter configuration.
+/**
+ * @brief Get the common control configuration.
+ * This function retrieves the common control configuration.
  *
- * Requirement: REQ_TAG(PDK-9112), REQ_TAG(PDK-9114), REQ_TAG(PDK-9131),
- *              REQ_TAG(PDK-9143)
- * Design: did_pmic_common_ctrl_cfg_readback
- * Architecture: aid_pmic_core_misc_cfg
- *
- *          This function is used to get the required common control parameter
- *          configuration when corresponding validParam bit field is set in
- *          the Pmic_CommonCtrlCfg_t
- *          For more information \ref Pmic_CommonCtrlCfg_t
- *
- * @param   pPmicCoreHandle [IN]        PMIC Interface Handle.
- * @param   pCommonCtrlCfg  [IN/OUT]    Pointer to store PMIC required common
- *                                      control parameter configuration.
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pCommonCtrlCfg Pointer to store the common control configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_getCommonCtrlConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
                                  Pmic_CommonCtrlCfg_t *pCommonCtrlCfg) {
@@ -1125,9 +1173,6 @@ int32_t Pmic_getCommonCtrlConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-/*!
- * @brief  API to set AMUX/DMUX Pin Control Configuration
- */
 int32_t Pmic_setAmuxDmuxPinCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                const Pmic_DiagOutCfgCtrl_t diagoutCfgCtrl) {
   int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -1164,9 +1209,6 @@ int32_t Pmic_setAmuxDmuxPinCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-/*!
- * @brief  API to get AMUX/DMUX Pin Control Configuration
- */
 int32_t Pmic_getAmuxDmuxPinCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                Pmic_DiagOutCfgCtrl_t *pDiagOutCfgCtrl) {
   int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -1185,24 +1227,14 @@ int32_t Pmic_getAmuxDmuxPinCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-/*!
- * @brief   API to set PMIC Miscellaneous control parameter configuration.
+/**
+ * @brief Set the diagnostics output pin control configuration.
+ * This function sets the diagnostics output pin control configuration.
  *
- * Requirement: REQ_TAG(PDK-9132), REQ_TAG(PDK-9127), REQ_TAG(PDK-9111)
- * Design: did_pmic_misc_ctrl_cfg_readback
- * Architecture: aid_pmic_core_misc_cfg
- *
- *          This function is used to set the required miscellaneous control
- *          parameter configuration when corresponding validParam bit field is
- *          set in the Pmic_MiscCtrlCfg_t
- *          For more information \ref Pmic_MiscCtrlCfg_t
- *
- * @param   pPmicCoreHandle [IN]    PMIC Interface Handle.
- * @param   miscCtrlCfg     [IN]    Set PMIC required miscellaneous control
- *                                  parameter configuration.
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param DiagOutCfgCtrl Diagnostics output pin control configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_setDiagOutCtrlConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
                                   const Pmic_DiagOutCfgCtrl_t DiagOutCfgCtrl) {
@@ -1220,25 +1252,15 @@ int32_t Pmic_setDiagOutCtrlConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-/*!
- * @brief   API to get PMIC Miscellaneous control parameter configuration
+/**
+ * @brief Get the diagnostics output pin control configuration.
+ * This function retrieves the diagnostics output pin control configuration.
  *
- * Requirement: REQ_TAG(PDK-9132), REQ_TAG(PDK-9127)
- * Design: did_pmic_misc_ctrl_cfg_readback
- * Architecture: aid_pmic_core_misc_cfg
- *
- *          This function is used to get the required miscellaneous control
- *          parameter configuration when corresponding validParam bit field is
- *          set in the Pmic_MiscCtrlCfg_t
- *          For more information \ref Pmic_MiscCtrlCfg_t
- *
- * @param   pPmicCoreHandle [IN]       PMIC Interface Handle.
- * @param   pMiscCtrlCfg    [IN/OUT]   Pointer to store PMIC required
- *                                     miscellaneous control parameter
- *                                     configuration.
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pDiagOutCfgCtrl Pointer to store the diagnostics output pin control
+ * configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_getDiagOutCtrlConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
                                   Pmic_DiagOutCfgCtrl_t *pDiagOutCfgCtrl) {
@@ -1256,12 +1278,6 @@ int32_t Pmic_getDiagOutCtrlConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-/*!
- * @brief   API to get NRST/SAFE_OUT1/EN_OUT Register Bit fields
- *          Note: In this API, the default pinType is assumed as EN_OUT. While
- *          adding support for New PMIC device, developer need to update the API
- *          functionality for New PMIC device accordingly.
- */
 static void Pmic_getPinTypeRegBitFields(const uint8_t pinType,
                                         uint8_t *pBitShift, uint8_t *pBitMask) {
   switch (pinType) {
@@ -1280,25 +1296,15 @@ static void Pmic_getPinTypeRegBitFields(const uint8_t pinType,
   }
 }
 
-/*!
- * @brief   API to get PMIC GPIO NRST/SAFE_OUT1/EN_OUT Pin
+/**
+ * @brief Get the pin value.
+ * This function retrieves the value of the specified pin.
  *
- * Requirement: REQ_TAG(PDK-9137), REQ_TAG(PDK-9131)
- * Design: did_pmic_pin_readback
- * Architecture: aid_pmic_core_misc_cfg
- *
- *          This function is used to read the signal level of the NRSTOUT_SOC/
- *          NRSTOUT/ EN_DRV Pin
- *
- * @param   pPmicCoreHandle [IN]    PMIC Interface Handle
- * @param   pinType         [IN]    PMIC pin type.
- *                                   Valid values of pin type
- *                                   \ref Pmic_PinType_Sel
- * @param   pPinValue       [OUT]   Pointer to store the status of pin type
- *                                    Valid values \ref Pmic_SignalLvl
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pinType Type of the pin.
+ * @param pPinValue Pointer to store the pin value.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_getPinValue(Pmic_CoreHandle_t *pPmicCoreHandle,
                          const uint8_t pinType, uint8_t *pPinValue) {
@@ -1335,8 +1341,14 @@ int32_t Pmic_getPinValue(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-/*!
- * @brief  API to get SAFE_OUT1 Pin status
+/**
+ * @brief Get the status of the safe output 1 pin.
+ * This function retrieves the status of the safe output 1 pin.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pCommonCtrlStat Pointer to store the common control status.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 static int32_t Pmic_getSafeOut1Stat(Pmic_CoreHandle_t *pPmicCoreHandle,
                                     Pmic_CommonCtrlStat_t *pCommonCtrlStat) {
@@ -1357,8 +1369,14 @@ static int32_t Pmic_getSafeOut1Stat(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-/*!
- * @brief  API to get NRST Pin Status
+/**
+ * @brief Get the status of the nRST pin.
+ * This function retrieves the status of the nRST pin.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pCommonCtrlStat Pointer to store the common control status.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 static int32_t Pmic_getNRstPinStat(Pmic_CoreHandle_t *pPmicCoreHandle,
                                    Pmic_CommonCtrlStat_t *pCommonCtrlStat) {
@@ -1379,8 +1397,14 @@ static int32_t Pmic_getNRstPinStat(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-/*!
- * @brief  API to get EN_OUT Pin Status
+/**
+ * @brief Get the status of the EN_OUT pin.
+ * This function retrieves the status of the EN_OUT pin.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pCommonCtrlStat Pointer to store the common control status.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 static int32_t Pmic_getEnOutPinStat(Pmic_CoreHandle_t *pPmicCoreHandle,
                                     Pmic_CommonCtrlStat_t *pCommonCtrlStat) {
@@ -1401,8 +1425,15 @@ static int32_t Pmic_getEnOutPinStat(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-/*!
- * @brief   API to get EN_Out Pin, NRST Pin, and Safe_Out1 Pin Status
+/**
+ * @brief Get the status of the EN_OUT, nRST, and safe output 1 pins.
+ * This function retrieves the status of the EN_OUT, nRST, and safe output 1
+ * pins.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pCommonCtrlStat Pointer to store the common control status.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 static int32_t
 Pmic_getEnOutNrstSafeOut1PinStat(Pmic_CoreHandle_t *pPmicCoreHandle,
@@ -1432,19 +1463,14 @@ Pmic_getEnOutNrstSafeOut1PinStat(Pmic_CoreHandle_t *pPmicCoreHandle,
   return pmicStatus;
 }
 
-/*!
- * @brief   API to get PMIC common control parameter status.
- *          This function is used to get the required common control parameter
- *          status when corresponding validParam bit field is set in
- *          the Pmic_CommonCtrlStat_t
- *          For more information \ref Pmic_CommonCtrlStat_t
+/**
+ * @brief Get the common status.
+ * This function retrieves the common control status.
  *
- * @param   pPmicCoreHandle  [IN]       PMIC Interface Handle.
- * @param   pCommonCtrlStat  [IN/OUT]   Pointer to store PMIC required common
- *                                      control parameter status.
- *
- * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
- *          For valid values \ref Pmic_ErrorCodes
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pCommonCtrlStat Pointer to store the common control status.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_getCommonStat(Pmic_CoreHandle_t *pPmicCoreHandle,
                            Pmic_CommonCtrlStat_t *pCommonCtrlStat) {

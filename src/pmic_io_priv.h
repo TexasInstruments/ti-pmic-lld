@@ -32,9 +32,9 @@
  *****************************************************************************/
 
 /**
- *  \file  pmic_io_priv.h
+ *  @file  pmic_io_priv.h
  *
- *  \brief  This file contains LLD-Communication wrappers with CRC8 support for
+ *  @brief  This file contains LLD-Communication wrappers with CRC8 support for
  *          I2C/SPI
  */
 
@@ -54,37 +54,37 @@ extern "C" {
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/*!
- * \brief: WatchDog register I2C access
+/**
+ * @brief: WatchDog register I2C access
  */
 #define PMIC_WDG_PAGEADDR (0x400U)
 #define PMIC_WDG_PAGEADDR_MASK (0x3FFU)
 
-/*!
- * \brief: PMIC SERIAL_IF_CONFIG register address (Bank/Page 1 Register address)
+/**
+ * @brief: PMIC SERIAL_IF_CONFIG register address (Bank/Page 1 Register address)
  *         Application can only read this register to check I2C1SPI/I2C2 CRC
  *         is enabled or not
  */
 #define PMIC_SERIAL_IF_CONFIG_PAGEADDR (0x100U)
 #define PMIC_SERIAL_IF_CONFIG_PAGEADDR_MASK (0xFFU)
 
-/*!
- * \brief: SPI R/W bit Position
+/**
+ * @brief: SPI R/W bit Position
  */
 #define PMIC_IO_REQ_RW (((uint32_t)1U) << 4U)
 
-/*!
- * \brief: IO Buffer Size
+/**
+ * @brief: IO Buffer Size
  */
 #define PMIC_IO_BUF_SIZE (4U)
 
-/*!
- * \brief: Initial value for CRC
+/**
+ * @brief: Initial value for CRC
  */
 #define PMIC_COMM_CRC_INITIAL_VALUE (0xFF)
 
-/*!
- * \brief: IO READ bits
+/**
+ * @brief: IO READ bits
  */
 #define PMIC_IO_READ (0x01U)
 
@@ -96,41 +96,9 @@ extern "C" {
 /*                         Function Declarations                            */
 /*==========================================================================*/
 
-/*!
- * \brief: PMIC I2C/SPI IO Wrapper function used internally by driver to send
- *         register values with or without CRC.
- *         All PMIC Driver API functions which are called after successful PMIC
- *         Instance Setup shall use this Send byte function to do IO with
- *         PMIC to control and monitor register values.
- *         This function will call application initilized Communication IO write
- *         callback functions
- *
- * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle
- * \param   regAddr           [IN]    Register address
- * \param   txData            [IN]    Data to be written
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
                                uint16_t regAddr, uint8_t txData);
 
-/*!
- * \brief: PMIC I2C/SPI IO Wrapper function pointers used internally by driver
- *         to receive register values with or without CRC.
- *         All PMIC Driver API functions which are called after successful PMIC
- *         Instance Setup shall use this receive byte function to do IO with
- *         PMIC to control and monitor register values.
- *         This function will call application initilized Communication IO read
- *         callback functions
- *
- * \param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * \param   regAddr           [IN]    Register address.
- * \param   pRxBuffer         [OUT]   Pointer to Buffer to receive data
- *
- * \retval  PMIC_ST_SUCCESS in case of success or appropriate error code.
- *          For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
                                uint16_t regAddr, uint8_t *pRxBuffer);
 

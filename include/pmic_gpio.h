@@ -41,140 +41,144 @@
 #ifndef PMIC_GPIO_H_
 #define PMIC_GPIO_H_
 
+/* ========================================================================== */
+/*                             Include Files                                  */
+/* ========================================================================== */
+
 #include "pmic_core.h"
 #include "pmic_types.h"
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
-/*!
- * \brief   PMIC GPIO Pins with Input Ouput Configuration
- *
- * \param   regAddr          GPIO Pin Register Address
- * \param   outRegAddr       GPIO OUT Register Address
- * \param   inRegAddr        GPIO IN Register Address
- * \param   inRegBitPos      Bit position of GPIO IN Register bit position
- * \param   outRegBitPos     Bit position of GPIO OUT Register bit position
+/**
+ * @brief GPIO pin configuration for input/output selection.
  */
 typedef struct Pmic_GpioInOutCfg_s {
-  uint8_t regAddr;
-  uint8_t outRegAddr;
-  uint8_t inRegAddr;
-  uint8_t inRegBitPos;
-  uint8_t outRegBitPos;
+  uint8_t regAddr;      /**< Register address for GPIO pin configuration. */
+  uint8_t outRegAddr;   /**< Register address for GPIO output configuration. */
+  uint8_t inRegAddr;    /**< Register address for GPIO input configuration. */
+  uint8_t inRegBitPos;  /**< Bit position in the input register. */
+  uint8_t outRegBitPos; /**< Bit position in the output register. */
 } Pmic_GpioInOutCfg_t;
 
+/**
+ * @brief GPIO pin configuration structure.
+ */
 typedef struct Pmic_GpioCfg_s {
-  uint8_t validParams;
-  uint8_t pinDir; // for EN_OUT in GPO_Cfg2
-  uint8_t outputSignalType;
-  uint8_t pullCtrl;
-  uint8_t deglitchEnable;
-  uint8_t pinFunc;
-  uint8_t pinPolarity;
-
-  union {
-    struct {
-      uint8_t gpo1Cfg; // Configuration for GPO1
-      uint8_t gpo2Cfg; // Configuration for GPO2
-    } gpoCfg1;
-    struct {
-      uint8_t gpo3Cfg; // Configuration for GPO3
-      uint8_t gpo4Cfg; // Configuration for GPO4
-    } gpoCfg2;
-    uint8_t gpi1Cfg;
-    uint8_t gpi4Cfg;
-  };
+  uint8_t validParams;      /**< Valid parameters indicator. */
+  uint8_t pinDir;           /**< Pin direction configuration. */
+  uint8_t outputSignalType; /**< Output signal type configuration. */
+  uint8_t pullCtrl;         /**< Pull control configuration. */
+  uint8_t deglitchEnable;   /**< Deglitch enable configuration. */
+  uint8_t pinFunc;          /**< Pin function configuration. */
+  uint8_t pinPolarity;      /**< Pin polarity configuration. */
+  uint8_t gpo1Cfg;          /**< Configuration for PMIC_BB_GPO1. */
+  uint8_t gpo2Cfg;          /**< Configuration for PMIC_BB_GPO2. */
+  uint8_t gpo3Cfg;          /**< Configuration for PMIC_BB_GPO3. */
+  uint8_t gpo4Cfg;          /**< Configuration for PMIC_BB_GPO4. */
+  uint8_t gpi1Cfg;          /**< Configuration for GPI1. */
+  uint8_t gpi4Cfg;          /**< Configuration for GPI4. */
 } Pmic_GpioCfg_t;
 
+/**
+ * @brief GPIO pin read-back deglitch configuration structure.
+ */
 typedef struct Pmic_GpioRdbkDglCfg_s {
-  uint8_t validParams;
-  uint8_t gpo1FDglConfig;
-  uint8_t gpo1RDglConfig;
-  uint8_t gpo2FDglConfig;
-  uint8_t gpo2RDglConfig;
-  uint8_t gpo3FDglConfig;
-  uint8_t gpo3RDglConfig;
-  uint8_t gpo4FDglConfig;
-  uint8_t gpo4RDglConfig;
-  uint8_t gpo1FDglData;
-  uint8_t gpo1RDglData;
-  uint8_t gpo2FDglData;
-  uint8_t gpo2RDglData;
-  uint8_t gpo3FDglData;
-  uint8_t gpo3RDglData;
-  uint8_t gpo4FDglData;
-  uint8_t gpo4RDglData;
-
+  uint8_t validParams;    /**< Valid parameters indicator. */
+  uint8_t gpo1FDglConfig; /**< GPO1 falling edge deglitch configuration. */
+  uint8_t gpo1RDglConfig; /**< GPO1 rising edge deglitch configuration. */
+  uint8_t gpo2FDglConfig; /**< GPO2 falling edge deglitch configuration. */
+  uint8_t gpo2RDglConfig; /**< GPO2 rising edge deglitch configuration. */
+  uint8_t gpo3FDglConfig; /**< GPO3 falling edge deglitch configuration. */
+  uint8_t gpo3RDglConfig; /**< GPO3 rising edge deglitch configuration. */
+  uint8_t gpo4FDglConfig; /**< GPO4 falling edge deglitch configuration. */
+  uint8_t gpo4RDglConfig; /**< GPO4 rising edge deglitch configuration. */
+  uint8_t gpo1FDglData;   /**< GPO1 falling edge deglitch data. */
+  uint8_t gpo1RDglData;   /**< GPO1 rising edge deglitch data. */
+  uint8_t gpo2FDglData;   /**< GPO2 falling edge deglitch data. */
+  uint8_t gpo2RDglData;   /**< GPO2 rising edge deglitch data. */
+  uint8_t gpo3FDglData;   /**< GPO3 falling edge deglitch data. */
+  uint8_t gpo3RDglData;   /**< GPO3 rising edge deglitch data. */
+  uint8_t gpo4FDglData;   /**< GPO4 falling edge deglitch data. */
+  uint8_t gpo4RDglData;   /**< GPO4 rising edge deglitch data. */
 } Pmic_GpioRdbkDglCfg_t;
 
-#define PMIC_LOW 0U
-#define PMIC_HIGH 1U
+/* ========================================================================== */
+/*                             Macros & Typedefs                              */
+/* ========================================================================== */
 
-/* Pins for GPO1, GPO2, GPO3, GPO4 */
-#define PMIC_GPO1 0x01U
-#define PMIC_GPO2 0x02U
-#define PMIC_GPO3 0x03U
-#define PMIC_GPO4 0x04U
-#define PMIC_GPI1 0x05U
-#define PMIC_GPI4 0x06U
+#define PMIC_LOW (0U)
+#define PMIC_HIGH (1U)
+
+/* Pins for PMIC_BB_GPO1, PMIC_BB_GPO2, PMIC_BB_GPO3, PMIC_BB_GPO4 */
+#define PMIC_GPO1 (0x01U)
+#define PMIC_GPO2 (0x02U)
+#define PMIC_GPO3 (0x03U)
+#define PMIC_GPO4 (0x04U)
+#define PMIC_GPI1 (0x05U)
+#define PMIC_GPI4 (0x06U)
 
 #define PMIC_GPIO_CFG_PULL_VALID (0x02U)
 #define PMIC_GPIO_CFG_DEGLITCH_VALID (0x03U)
 
 /* MACROS for GPO_CFG1_GPO1 */
-#define LOW_LEVEL 0U
-#define HIGH_LEVEL 1U
-#define N_EN 2U
-#define nINT 3U
-#define N_EN_HIGH_Z_1 4U
-#define N_EN_HIGH_Z_2 5U
-#define N_EN_HIGH_Z_3 6U
-#define RO_CNTR 7U
+#define LOW_LEVEL (0U)
+#define HIGH_LEVEL (1U)
+#define N_EN (2U)
+#define nINT (3U)
+#define N_EN_HIGH_Z_1 (4U)
+#define N_EN_HIGH_Z_2 (5U)
+#define N_EN_HIGH_Z_3 (6U)
+#define RO_CNTR (7U)
 
 /* MACROS for GPO_CFG1_GPO2*/
-#define LOW_LEVEL 0U
-#define HIGH_LEVEL 1U
-#define N_EN 2U
-#define COMP1_OUT 3U
-#define EN_OUT2 4U
-#define N_EN_HIGH_Z_4 5U
-#define N_EN_HIGH_Z_5 6U
-#define RO_CNTR 7U
+#define LOW_LEVEL (0U)
+#define HIGH_LEVEL (1U)
+#define N_EN (2U)
+#define COMP1_OUT (3U)
+#define EN_OUT2 (4U)
+#define N_EN_HIGH_Z_4 (5U)
+#define N_EN_HIGH_Z_5 (6U)
+#define RO_CNTR (7U)
 
 /* MACROS for EN_OUT GPO_CFG2 */
-#define PULL_UP_VDDIO 0U
-#define PULL_UP_LDO_IN 1U
-#define INTL_PULL_UP 2U
+#define PULL_UP_VDDIO (0U)
+#define PULL_UP_LDO_IN (1U)
+#define INTL_PULL_UP (2U)
 
 /* MACROS for GPO_CFG2_GPO3 */
-#define LOW_LEVEL 0U
-#define HIGH_LEVEL 1U
-#define N_EN 2U
-#define SAFE_OUT2 3U
-#define N_EN_HIGH_Z_6 4U
-#define N_EN_HIGH_Z_7 5U
-#define N_EN_HIGH_Z_8 6U
-#define RO_CNTR 7U
+#define LOW_LEVEL (0U)
+#define HIGH_LEVEL (1U)
+#define N_EN (2U)
+#define SAFE_OUT2 (3U)
+#define N_EN_HIGH_Z_6 (4U)
+#define N_EN_HIGH_Z_7 (5U)
+#define N_EN_HIGH_Z_8 (6U)
+#define RO_CNTR (7U)
 
 /* MACROS for GPO_CFG2_GPO4 */
-#define LOW_LEVEL 0U
-#define HIGH_LEVEL 1U
-#define N_EN 2U
-#define PGOOD 3U
-#define COMP2_OUT 4U
-#define N_EN_HIGH_Z_9 5U
-#define N_EN_HIGH_Z_10 6U
-#define RO_CNTR 7U
+#define LOW_LEVEL (0U)
+#define HIGH_LEVEL (1U)
+#define N_EN (2U)
+#define PGOOD (3U)
+#define COMP2_OUT (4U)
+#define N_EN_HIGH_Z_9 (5U)
+#define N_EN_HIGH_Z_10 (6U)
+#define RO_CNTR (7U)
 
 /* MACROS for GPI_CFG_GPI1 */
-#define COMP1_IN 0U
-#define WD_IN 1U
-#define COS_N 2U
+#define COMP1_IN (0U)
+#define WD_IN (1U)
+#define COS_N (2U)
 
 /* MACROS for GPI_CFG_GPI4 */
-#define ESM_IN 0U
-#define WD_IN 1U
+#define ESM_IN (0U)
+#define WD_IN (1U)
+
+/*==========================================================================*/
+/*                         Function Declarations                            */
+/*==========================================================================*/
 
 int32_t Pmic_gpiSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
                                  const uint8_t pin,
@@ -182,10 +186,6 @@ int32_t Pmic_gpiSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 int32_t Pmic_gpiGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
                                  const uint8_t pin, Pmic_GpioCfg_t *pGpioCfg);
-
-/*==========================================================================*/
-/*                         Function Declarations                            */
-/*==========================================================================*/
 
 int32_t Pmic_gpioSetPinFunc(Pmic_CoreHandle_t *pPmicCoreHandle,
                             const uint8_t pin, const Pmic_GpioCfg_t gpioCfg);

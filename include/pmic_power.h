@@ -32,28 +32,23 @@
  *****************************************************************************/
 
 /**
- *  \addtogroup DRV_PMIC_POWER_MODULE
+ * @file   pmic_power.h
  *
- *  @{
- */
-
-/**
- * \file   pmic_power_tps65386x.h
- *
- * \brief  PMIC TPS65386x BB PMIC Power Resources Driver API/interface file.
+ * @brief  PMIC PMIC Power Resources Driver API/interface file.
  *
  */
 
-#ifndef PMIC_POWER_TPS65386X_H_
-#define PMIC_POWER_TPS65386X_H_
+#ifndef PMIC_POWER_H_
+#define PMIC_POWER_H_
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
-#include <pmic_core_priv.h>
-#include <pmic_io_priv.h>
-#include <pmic_power_priv.h>
-#include <pmic_types.h>
+
+#include "pmic_core_priv.h"
+#include "pmic_io_priv.h"
+#include "pmic_power_priv.h"
+#include "pmic_types.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -63,25 +58,11 @@ extern "C" {
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/**
- *  \anchor Pmic_TPS65386x BB_Power_ResourceType
- *  \name   PMIC Power Resource Type for BB TPS65386x
- *
- *  @{
- */
 #define PMIC_TPS65386X_POWER_RESOURCE_TYPE_VCCA (0U)
 #define PMIC_TPS65386X_POWER_RESOURCE_TYPE_BUCK (1U)
 #define PMIC_TPS65386X_POWER_RESOURCE_TYPE_LDO (2U)
 #define PMIC_TPS65386X_POWER_RESOURCE_TYPE_PLDO (3U)
 
-/*  @} */
-
-/**
- *  \anchor Pmic_TPS65386x BB_Power_Resource
- *  \name   PMIC Power Resources for BB TPS65386x
- *
- *  @{
- */
 #define PMIC_TPS65386X_POWER_SOURCE_VCCA                                       \
   ((((uint16_t)PMIC_TPS65386X_POWER_RESOURCE_TYPE_VCCA << 8U) | 0x0U))
 
@@ -297,6 +278,11 @@ int32_t Pmic_powerSetBuckBstCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                 Pmic_powerRsrcRegCfg_t *pwrRsrcRegCfg,
                                 Pmic_powerRsrcCfg_t *pwrRsrcCfg);
 
+int32_t Pmic_powerGetBuckBstCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                Pmic_powerBuckBoostCfgReg_t *buckBstCfg,
+                                Pmic_powerRsrcRegCfg_t *pwrRsrcRegCfg,
+                                Pmic_powerRsrcCfg_t *pwrRsrcCfg);
+
 int32_t Pmic_powerSetLdoConfigRegister(void *pPmicCoreHandle, uint8_t ldoNumber,
                                        Pmic_ldoCfgReg_t *ldoConfig,
                                        Pmic_powerRsrcCfg_t *pwrRsrcCfg,
@@ -306,6 +292,4 @@ int32_t Pmic_powerSetLdoConfigRegister(void *pPmicCoreHandle, uint8_t ldoNumber,
 }
 #endif /* __cplusplus */
 
-#endif /* PMIC_POWER_TPS65386X_H_ */
-
-/* @} */
+#endif /* PMIC_POWER_H_ */

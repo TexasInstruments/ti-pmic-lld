@@ -70,9 +70,9 @@
  */
 
 /**
- *  \file pmic.h
+ *  @file pmic.h
  *
- *  \brief PMIC Driver initialization API/interface file.
+ *  @brief PMIC Driver initialization API/interface file.
  */
 
 #ifndef PMIC_H_
@@ -92,117 +92,117 @@ extern "C" {
 /* ========================================================================= */
 
 /**
- *  \anchor Pmic_ErrorCodes
- *  \name PMIC Error Codes
+ *  @anchor Pmic_ErrorCodes
+ *  @name PMIC Error Codes
  *
  *  Error codes returned by PMIC APIs
  *
  *  @{
  */
-/** \brief Error Code for SUCCESS */
+/** @brief Error Code for SUCCESS */
 #define PMIC_ST_SUCCESS (0)
-/** \brief Error Code for Invalid PMIC Default Data */
+/** @brief Error Code for Invalid PMIC Default Data */
 #define PMIC_ST_DEFAULT_DATA (9)
-/** \brief Error Code for Invalid input Handle */
+/** @brief Error Code for Invalid input Handle */
 #define PMIC_ST_ERR_INV_HANDLE (-((int32_t)1))
-/** \brief Error Code when input Param is NULL */
+/** @brief Error Code when input Param is NULL */
 #define PMIC_ST_ERR_NULL_PARAM (-((int32_t)2))
-/** \brief Error Code for Invalid input Param */
+/** @brief Error Code for Invalid input Param */
 #define PMIC_ST_ERR_INV_PARAM (-((int32_t)3))
-/** \brief Error Code for Invalid PMIC Device */
+/** @brief Error Code for Invalid PMIC Device */
 #define PMIC_ST_ERR_INV_DEVICE (-((int32_t)4))
-/** \brief Error Code when input Function pointer is NULL */
+/** @brief Error Code when input Function pointer is NULL */
 #define PMIC_ST_ERR_NULL_FPTR (-((int32_t)5))
-/** \brief Error Code for Invalid PMIC Subsystem */
+/** @brief Error Code for Invalid PMIC Subsystem */
 #define PMIC_ST_ERR_INV_SUBSYSTEM (-((int32_t)6))
-/** \brief Error Code for Insufficient input configuration params for PMIC
+/** @brief Error Code for Insufficient input configuration params for PMIC
  *         Device Initialization */
 #define PMIC_ST_ERR_INSUFFICIENT_CFG (-((int32_t)7))
-/** \brief Error Code for I2C Communication Fail */
+/** @brief Error Code for I2C Communication Fail */
 #define PMIC_ST_ERR_I2C_COMM_FAIL (-((int32_t)8))
-/** \brief Error Code for SPI Communication Fail */
+/** @brief Error Code for SPI Communication Fail */
 #define PMIC_ST_ERR_SPI_COMM_FAIL (-((int32_t)9))
-/** \brief Error Code for IO data failure when CRC is enabled */
+/** @brief Error Code for IO data failure when CRC is enabled */
 #define PMIC_ST_ERR_DATA_IO_CRC (-((int32_t)10))
-/** \brief Error Code for Interface Selected is not working properly */
+/** @brief Error Code for Interface Selected is not working properly */
 #define PMIC_ST_ERR_INTF_SETUP_FAILED (-((int32_t)11))
-/** \brief Error Code for Interface Init Fail */
+/** @brief Error Code for Interface Init Fail */
 #define PMIC_ST_ERR_COMM_INTF_INIT_FAIL (-((int32_t)12))
-/** \brief Error Code if Pmic_init() function called before PMIC driver is
+/** @brief Error Code if Pmic_init() function called before PMIC driver is
  *         initialized */
 #define PMIC_ST_ERR_UNINIT (-((int32_t)13))
-/** \brief Error Code for Invalid Voltage Value */
+/** @brief Error Code for Invalid Voltage Value */
 #define PMIC_ST_ERR_INV_VOLTAGE (-((int32_t)14))
-/** \brief Error Code for Invalid Power resource Value */
+/** @brief Error Code for Invalid Power resource Value */
 #define PMIC_ST_ERR_INV_REGULATOR (-((int32_t)15))
-/** \brief Error Code for Invalid Power Good Threshold Value */
+/** @brief Error Code for Invalid Power Good Threshold Value */
 #define PMIC_ST_ERR_INV_PGOOD_LEVEL (-((int32_t)16))
-/** \brief Error Code for Invalid Temperature Threshold value */
+/** @brief Error Code for Invalid Temperature Threshold value */
 #define PMIC_ST_ERR_INV_TEMP_THRESHOLD (-((int32_t)17))
-/** \brief Error Code for Invalid input GPIO PIN */
+/** @brief Error Code for Invalid input GPIO PIN */
 #define PMIC_ST_ERR_INV_GPIO (-((int32_t)18))
-/** \brief Error Code for Invalid GPIO Functionality */
+/** @brief Error Code for Invalid GPIO Functionality */
 #define PMIC_ST_ERR_INV_GPIO_FUNC (-((int32_t)19))
-/** \brief Error Code for input GPIO handle is invalid */
+/** @brief Error Code for input GPIO handle is invalid */
 #define PMIC_ST_ERR_INV_GPIO_LINE_PARAMS (-((int32_t)20))
-/** \brief Error Code for Invalid Pin for GPIO Configuration */
+/** @brief Error Code for Invalid Pin for GPIO Configuration */
 #define PMIC_ST_ERR_PIN_NOT_GPIO (-((int32_t)21))
-/** \brief Error Code for Invalid Watchdog longwindow or Window-1
+/** @brief Error Code for Invalid Watchdog longwindow or Window-1
  *         or Window-2 duration */
 #define PMIC_ST_ERR_INV_WDG_WINDOW (-((int32_t)22))
-/** \brief Error Code for Invalid Watchdog Answer */
+/** @brief Error Code for Invalid Watchdog Answer */
 #define PMIC_ST_ERR_INV_WDG_ANSWER (-((int32_t)23))
-/** \brief Error Code for Watchdog early Answer */
+/** @brief Error Code for Watchdog early Answer */
 #define PMIC_ST_ERR_WDG_EARLY_ANSWER (-((int32_t)24))
-/** \brief Error Code for input ESM TargetID is invalid */
+/** @brief Error Code for input ESM TargetID is invalid */
 #define PMIC_ST_ERR_INV_ESM_TARGET (-((int32_t)25))
-/** \brief Error Code for ESM Operation Mode is invalid */
+/** @brief Error Code for ESM Operation Mode is invalid */
 #define PMIC_ST_ERR_INV_ESM_MODE (-((int32_t)26))
-/** \brief Error Code for Invalid Interrupt */
+/** @brief Error Code for Invalid Interrupt */
 #define PMIC_ST_ERR_INV_INT (-((int32_t)27))
-/** \brief Error Code when Interrupts Clear is failed */
+/** @brief Error Code when Interrupts Clear is failed */
 #define PMIC_ST_ERR_CLEAR_INT_FAILED (-((int32_t)28))
-/** \brief Error Code for Invalid Time */
+/** @brief Error Code for Invalid Time */
 #define PMIC_ST_ERR_INV_TIME (-((int32_t)29))
-/** \brief Error Code for Invalid Date */
+/** @brief Error Code for Invalid Date */
 #define PMIC_ST_ERR_INV_DATE (-((int32_t)30))
-/** \brief Error Code for RTC Stop command failure */
+/** @brief Error Code for RTC Stop command failure */
 #define PMIC_ST_ERR_RTC_STOP_FAIL (-((int32_t)31))
-/** \brief Error Code for any other failures */
+/** @brief Error Code for any other failures */
 #define PMIC_ST_ERR_FAIL (-((int32_t)32))
-/** \brief Error Code for ESM in Start State */
+/** @brief Error Code for ESM in Start State */
 #define PMIC_ST_ERR_ESM_STARTED (-((int32_t)33))
-/** \brief Error Code for Invalid ESM delay1, delay2, HMAX, HMIN, LMAX and
+/** @brief Error Code for Invalid ESM delay1, delay2, HMAX, HMIN, LMAX and
  *         LMIN values */
 #define PMIC_ST_ERR_INV_ESM_VAL (-((int32_t)34))
-/** \brief warning Code for Device ID mismatch warning */
+/** @brief warning Code for Device ID mismatch warning */
 #define PMIC_ST_WARN_INV_DEVICE_ID (-((int32_t)35))
-/** \brief Error Code for EN_DRV Pin configuration when FORCE_EN_DRV_LOW is set
+/** @brief Error Code for EN_DRV Pin configuration when FORCE_EN_DRV_LOW is set
  *         to '1'  */
 #define PMIC_ST_ERR_INV_EN_DRV_PIN_CFG (-((int32_t)36))
-/** \brief Error Code for I2C Speed configuration when commMode is set
+/** @brief Error Code for I2C Speed configuration when commMode is set
  *         to PMIC_INTF_SPI  */
 #define PMIC_ST_ERR_INV_COMM_MODE (-((int32_t)37))
-/** \brief Error Code for CRC Status Failure */
+/** @brief Error Code for CRC Status Failure */
 #define PMIC_ST_ERR_CRC_STATUS_FAIL (-((int32_t)38))
-/** \brief Error Code for Register Write Failure when register is locked */
+/** @brief Error Code for Register Write Failure when register is locked */
 #define PMIC_ST_ERR_REG_LOCKED_WR_FAIL (-((int32_t)39))
-/** \brief Error Code for when a feature is not supported on PMIC device type
+/** @brief Error Code for when a feature is not supported on PMIC device type
  *         or PMIC silicon revision */
 #define PMIC_ST_ERR_NOT_SUPPORTED (-((int32_t)40))
-/** \brief Error Code for Invalid PMIC Device Silicon Revision */
+/** @brief Error Code for Invalid PMIC Device Silicon Revision */
 #define PMIC_ST_ERR_INV_SILICON_REVISION (-((int32_t)41))
-/** \brief Error Code for Invalid PMIC FSM Mode */
+/** @brief Error Code for Invalid PMIC FSM Mode */
 #define PMIC_ST_ERR_INV_FSM_MODE (-((int32_t)42))
-/** \brief Error Code for Invalid PMIC Invalid Data */
+/** @brief Error Code for Invalid PMIC Invalid Data */
 #define PMIC_ST_INVALID_DATA (-((int32_t)44))
-/** \brief Error Code for Invalid PMIC Watchdog */
+/** @brief Error Code for Invalid PMIC Watchdog */
 #define PMIC_ST_ERR_WDG_DISABLED (-((int32_t)45))
 /* @} */
 
 /**
- *  \anchor Pmic_DeviceType
- *  \name PMIC Device type
+ *  @anchor Pmic_DeviceType
+ *  @name PMIC Device type
  *
  *  @{
  */
@@ -212,8 +212,8 @@ extern "C" {
 /* @} */
 
 /**
- *  \anchor Pmic_CommMode
- *  \name PMIC Communication Mode
+ *  @anchor Pmic_CommMode
+ *  @name PMIC Communication Mode
  *
  *  @{
  */
@@ -223,84 +223,84 @@ extern "C" {
 /* @} */
 
 /**
- *  \anchor Pmic_I2CSpeedSel
- *  \name PMIC Select I2C Speed
+ *  @anchor Pmic_I2CSpeedSel
+ *  @name PMIC Select I2C Speed
  *          Note: I2C Master before switching the I2C speed to HS/Standard Mode,
  *          I2C Master has to set/reset I2C1_HS/I2C2_HS bit field accordingly
  *          then only I2C Master can communicate with PMIC in HS/Standard Mode
  *
  *  @{
  */
-/** \brief  Standard or Fast or Fast+ Mode  */
+/** @brief  Standard or Fast or Fast+ Mode  */
 #define PMIC_I2C_STANDARD_MODE (0U)
-/** \brief  High-Speed Mode */
+/** @brief  High-Speed Mode */
 #define PMIC_I2C_FORCED_HS_MODE (1U)
 /* @} */
 
 /**
- *  \anchor Pmic_InstType
- *  \name PMIC Instance Type
+ *  @anchor Pmic_InstType
+ *  @name PMIC Instance Type
  *
  *  @{
  */
 #define PMIC_MAIN_INST (1U << 0U)
 #define PMIC_QA_INST (1U << 1U)
-/** \brief  Valid only to read CRC status from Page-1 using NVM Slave Address
+/** @brief  Valid only to read CRC status from Page-1 using NVM Slave Address
  *          Valid only while calling the pFnPmicCommIoRead API
  */
 #define PMIC_NVM_INST (1U << 2U)
 /* @} */
 
 /**
- *  \anchor Pmic_ValidParamCfg
- *  \name  PMIC Config Structure Param Bits
+ *  @anchor Pmic_ValidParamCfg
+ *  @name  PMIC Config Structure Param Bits
  *
  *  @{
  */
-/** \brief validParams value used to set PMIC device type of PMIC Driver
+/** @brief validParams value used to set PMIC device type of PMIC Driver
  *         Handle */
 #define PMIC_CFG_DEVICE_TYPE_VALID (0U)
-/** \brief validParams value used to set Interface mode of PMIC Driver
+/** @brief validParams value used to set Interface mode of PMIC Driver
  *         Handle */
 #define PMIC_CFG_COMM_MODE_VALID (1U)
-/** \brief validParams value used to set Main Interface Slave Address of PMIC
+/** @brief validParams value used to set Main Interface Slave Address of PMIC
  *         Driver Handle */
 #define PMIC_CFG_SLAVEADDR_VALID (2U)
-/** \brief validParams value used to set WDOG QA Interface Slave Address of
+/** @brief validParams value used to set WDOG QA Interface Slave Address of
  *         PMIC Driver Handle */
 #define PMIC_CFG_QASLAVEADDR_VALID (3U)
-/** \brief validParams value used to set NVM Slave Address of PMIC Driver
+/** @brief validParams value used to set NVM Slave Address of PMIC Driver
  *         Handle */
 #define PMIC_CFG_NVMSLAVEADDR_VALID (4U)
-/** \brief validParams value used to set Pointer to Handle for I2C1/SPI
+/** @brief validParams value used to set Pointer to Handle for I2C1/SPI
  *         Main Interface of PMIC Driver Handle */
 #define PMIC_CFG_COMM_HANDLE_VALID (5U)
-/** \brief validParams value used to set Pointer to Handle for I2C2-QA
+/** @brief validParams value used to set Pointer to Handle for I2C2-QA
  *         Interface of PMIC Driver Handle */
 #define PMIC_CFG_QACOMM_HANDLE_VALID (6U)
-/** \brief validParams value used to set Pointer to I2C/SPI Comm LLD Read
+/** @brief validParams value used to set Pointer to I2C/SPI Comm LLD Read
  *         Function of PMIC Driver Handle */
 #define PMIC_CFG_COMM_IO_RD_VALID (7U)
-/** \brief validParams value used to set Pointer to I2C/SPI Comm LLD Write
+/** @brief validParams value used to set Pointer to I2C/SPI Comm LLD Write
  *         Function of PMIC Driver Handle */
 #define PMIC_CFG_COMM_IO_WR_VALID (8U)
-/** \brief validParams value used to set Pointer to Pmic Critical-Section
+/** @brief validParams value used to set Pointer to Pmic Critical-Section
  *         Start Function of PMIC Driver Handle */
 #define PMIC_CFG_CRITSEC_START_VALID (9U)
-/** \brief validParams value used to set Pointer to Pmic Critical-Section
+/** @brief validParams value used to set Pointer to Pmic Critical-Section
  *         Stop Function of PMIC Driver Handle */
 #define PMIC_CFG_CRITSEC_STOP_VALID (10U)
-/** \brief validParams value used to set I2C1 Speed of PMIC Driver
+/** @brief validParams value used to set I2C1 Speed of PMIC Driver
  *         Handle */
 #define PMIC_CFG_I2C1_SPEED_VALID (11U)
-/** \brief validParams value used to set I2C2 Speed of PMIC Driver
+/** @brief validParams value used to set I2C2 Speed of PMIC Driver
  *         Handle */
 #define PMIC_CFG_I2C2_SPEED_VALID (12U)
 /* @} */
 
 /**
- *  \anchor Pmic_CfgStructPrmBitShiftVal
- *  \name PMIC Config Structure Param Bit shift values
+ *  @anchor Pmic_CfgStructPrmBitShiftVal
+ *  @name PMIC Config Structure Param Bit shift values
  *
  *  Application can use below shifted values to set the validParam
  *  struct member defined in Pmic_CoreCfg_t structure
@@ -326,7 +326,7 @@ extern "C" {
 /*                         Structures and Enums                             */
 /*==========================================================================*/
 /*!
- * \brief  PMIC configuration structure.
+ * @brief  PMIC configuration structure.
  *         Contains various parameters which are needed to prepare
  *         PMIC driver handle using Valid params.
  *         like, PMIC device type, PMIC interface mode, Slave address,
@@ -340,34 +340,34 @@ extern "C" {
  *         to set PMIC_CFG_DEVICE_TYPE_VALID bit of validParams struct
  *         and then call pmic_init().
  *
- *  \param   validParams                  Validate params Bits.
+ *  @param   validParams                  Validate params Bits.
  *                                        Selection of structure parameters to
  *                                        be set, from the combination of
  *                                        \ref Pmic_ValidParamCfg and the
  *                                        corresponding member value must be
  *                                        updated.
- *  \param   instType                     Instance type.
+ *  @param   instType                     Instance type.
  *                                        For Valid Values: \ref Pmic_InstType.
- *  \param   pmicDeviceType               PMIC device type.
+ *  @param   pmicDeviceType               PMIC device type.
  *                                        For Valid Values: \ref Pmic_DeviceType
  *                                        Valid only when
  *                                        PMIC_CFG_DEVICE_TYPE_VALID bit of
  *                                        validParams is set.
- *  \param   commMode                     Interface mode - Single I2C, Dual
+ *  @param   commMode                     Interface mode - Single I2C, Dual
  *                                        I2C or SPI.
  *                                        For Valid Values: \ref Pmic_CommMode.
  *                                        Valid only when
  *                                        PMIC_CFG_COMM_MODE_VALID bit of
  *                                        validParams is set.
- *  \param   slaveAddr                    Main Interface Slave Address.
+ *  @param   slaveAddr                    Main Interface Slave Address.
  *                                        Valid only when
  *                                        PMIC_CFG_SLAVEADDR_VALID bit of
  *                                        validParams is set.
- *  \param   qaSlaveAddr                  WDOG QA Interface Slave Address.
+ *  @param   qaSlaveAddr                  WDOG QA Interface Slave Address.
  *                                        Valid only when
  *                                        PMIC_CFG_QASLAVEADDR_VALID bit
  *                                        of validParams is set.
- *  \param   nvmSlaveAddr                 NVM Slave Address which provides only
+ *  @param   nvmSlaveAddr                 NVM Slave Address which provides only
  *                                        read access to CRC status of Page-1
  *                                        Application shall use this slave
  *                                        address to read only CRC status.
@@ -377,39 +377,39 @@ extern "C" {
  *                                        Valid only when
  *                                        PMIC_CFG_NVMSLAVEADDR_VALID bit
  *                                        of validParams is set.
- *  \param   i2c1Speed                    Configures I2C1 Speed when commMode is
+ *  @param   i2c1Speed                    Configures I2C1 Speed when commMode is
  *                                        Single or Dual I2C
  *                                        For Valid Values:
  *                                                  \ref Pmic_I2CSpeedSel
  *                                        Valid only when
  *                                        PMIC_CFG_I2C1_SPEED_VALID bit is set
- *  \param   i2c2Speed                    Configures I2C2 Speed when commMode is
+ *  @param   i2c2Speed                    Configures I2C2 Speed when commMode is
  *                                        Dual I2C
  *                                        For Valid Values:
  *                                                  \ref Pmic_I2CSpeedSel
  *                                        Valid only when
  *                                        PMIC_CFG_I2C2_SPEED_VALID bit is set
- *  \param   pFnPmicCommIoRead            Pointer to I2C/SPI Comm LLD Read
+ *  @param   pFnPmicCommIoRead            Pointer to I2C/SPI Comm LLD Read
  *                                        Function. Valid only when
  *                                        PMIC_CFG_COMM_IO_RD_VALID bit
  *                                        of validParams is set.
- *  \param   pFnPmicCommIoWrite           Pointer to I2C/SPI Comm LLD Write
+ *  @param   pFnPmicCommIoWrite           Pointer to I2C/SPI Comm LLD Write
  *                                        Function. Valid only when
  *                                        PMIC_CFG_COMM_IO_WR_VALID bit
  *                                        of validParams is set.
- *  \param   pCommHandle                  Pointer to Handle for I2C1/SPI
+ *  @param   pCommHandle                  Pointer to Handle for I2C1/SPI
  *                                        Main Interface. Valid only when
  *                                        PMIC_CFG_COMM_HANDLE_VALID bit
  *                                        of validParams is set.
- *  \param   pQACommHandle                Pointer to Handle for I2C2-QA
+ *  @param   pQACommHandle                Pointer to Handle for I2C2-QA
  *                                        Interface. Valid only when
  *                                        PMIC_CFG_QACOMM_HANDLE_VALID bit
  *                                        of validParams is set.
- *  \param   pFnPmicCritSecStart          Pointer to Pmic Critical-Section
+ *  @param   pFnPmicCritSecStart          Pointer to Pmic Critical-Section
  *                                        Start Function. Valid only when
  *                                        PMIC_CFG_CRITSEC_START_VALID bit
  *                                        of validParams is set.
- *  \param   pFnPmicCritSecStop           Pointer to Pmic Critical-Section
+ *  @param   pFnPmicCritSecStop           Pointer to Pmic Critical-Section
  *                                        Stop Function. Valid only when
  *                                        PMIC_CFG_CRITSECSTOP_VALID bit of
  *                                        validParams is set.
@@ -439,69 +439,10 @@ typedef struct Pmic_CoreCfg_s {
 /*==========================================================================*/
 /*                         Function Declarations                            */
 /*==========================================================================*/
-/*!
- * \brief  API to Initialize pmic core handle for PMIC LLD.
- *
- * Requirement: REQ_TAG(PDK-5814), REQ_TAG(PDK-5810), REQ_TAG(PDK-5813),
- *              REQ_TAG(PDK-5843), REQ_TAG(PDK-5811), REQ_TAG(PDK-5853),
- *              REQ_TAG(PDK-9129), REQ_TAG(PDK-9329), REQ_TAG(PDK-9159),
- *              REQ_TAG(PDK-5816), REQ_TAG(PDK-5817), REQ_TAG(PDK-5818),
- *              REQ_TAG(PDK-5819), REQ_TAG(PDK-5820), REQ_TAG(PDK-5821),
- *              REQ_TAG(PDK-5822), REQ_TAG(PDK-5823), REQ_TAG(PDK-5824),
- *              REQ_TAG(PDK-5825), REQ_TAG(PDK-5826), REQ_TAG(PDK-5827),
- *              REQ_TAG(PDK-5856), REQ_TAG(PDK-5857), REQ_TAG(PDK-5858),
- *              REQ_TAG(PDK-5859), REQ_TAG(PDK-5860)
- * Design: did_pmic_comm_intf_cfg, did_pmic_comm_single_i2c_cfg,
- *         did_pmic_comm_dual_i2c_cfg, did_pmic_comm_spi_cfg,
- *         did_pmic_tps6594x_j721e_support, did_pmic_lp8764x_j7200_support,
- *         did_pmic_validation_feature_support, did_pmic_performance_support,
- *         did_pmic_generic_feature_support, did_pmic_safety_feature_support,
- *         did_pmic_pre_emption_support, did_pmic_stateless_reentrant_support,
- *         did_pmic_dynamic_alloc_mem_not_supported, did_pmic_build_infra_cfg,
- *         did_pmic_debug_release_profile_support, did_pmic_standalone_support,
- *         did_pmic_multiple_pmic_support, did_pmic_baremetal_support
- * Architecture: aid_pmic_tps6594x_lp8764x_support, aid_pmic_standalone_support,
- *               aid_pmic_multiple_pmic_support, aid_pmic_pre_emption_support,
- *               aid_pmic_stateless_reentrant_support, aid_pmic_generic_support,
- *               aid_pmic_baremetal_support, aid_pmic_comm_intf_i2c_spi_cfg,
- *               aid_pmic_dynamic_alloc_mem_not_supported,
- *               aid_pmic_build_infra_cfg,
- *               aid_pmic_debug_release_profile_support,
- *               aid_pmic_performance_support, aid_pmic_test_support
- *
- *         This function gets device configuration from pPmicConfigData and
- *         initializes device specific information in pPmicCoreHandle after
- *         validation of given params depends on validParams bit fields
- *         and does some basic validation on PMIC interface I2C/SPI,
- *         confirming that PMIC is accessible for PMIC configuration and
- *         monitor features.
- *
- *  \param   pPmicConfigData [IN]   PMIC Configuration data
- *  \param   pPmicCoreHandle [OUT]  PMIC Interface Handle.
- *
- *  \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
- *           For valid values \ref Pmic_ErrorCodes
- */
+
 int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
                   Pmic_CoreHandle_t *pPmicCoreHandle);
 
-/*!
- * \brief  API to DeInitilizes an existing PMIC Instance.
- *
- * Requirement: REQ_TAG(PDK-5814)
- * Design: did_pmic_comm_intf_cfg
- * Architecture: aid_pmic_tps6594x_lp8764x_support
- *
- *         This function takes an existing Instance pPmicCoreHandle and
- *         closes the LLD being used for this Instance. It should be called
- *         only once per valid pPmicCoreHandle. Should not be called
- *         if Pmic_init() is not called
- *
- *  \param   pPmicCoreHandle  [IN] PMIC Interface Handle.
- *
- *  \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
- *           For valid values \ref Pmic_ErrorCodes
- */
 int32_t Pmic_deinit(Pmic_CoreHandle_t *pPmicCoreHandle);
 
 #ifdef __cplusplus

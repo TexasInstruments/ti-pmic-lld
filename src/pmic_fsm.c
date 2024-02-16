@@ -32,23 +32,40 @@
  *****************************************************************************/
 
 /**
- *   \file    pmic_fsm.c
+ *   @file    pmic_fsm.c
  *
  *   @brief   This file contains the default API's for PMIC FSM state
  *            configuration
  */
 
+/* ========================================================================== */
+/*                             Include Files                                  */
+/* ========================================================================== */
+
 #include "pmic_fsm.h"
 #include "pmic_fsm_priv.h"
 
+/* ========================================================================== */
+/*                           Macros & Typedefs                                */
+/* ========================================================================== */
+
+/* ========================================================================== */
+/*                         Structure Declarations                             */
+/* ========================================================================== */
+
+/* ========================================================================== */
+/*                          Function Definitions                              */
+/* ========================================================================== */
+
 /**
- * @brief   Gets the PMIC Standby Configuration Register Fields
+ * @brief  Gets the PMIC Standby Configuration Register Fields
  *
- * @param   pmicNextState   Next state for PMIC FSM
- * @param   pRegAddr        Pointer to register address
- * @param   pBitPos         Pointer to bit position
- * @param   pBitMask        Pointer to bit mask
- * @param   pBitVal         Pointer to bit value
+ * @param  pmicNextState   Next state for PMIC FSM
+ * @param  pRegAddr        Pointer to register address
+ * @param  pBitPos         Pointer to bit position
+ * @param  pBitMask        Pointer to bit mask
+ * @param  pBitVal         Pointer to bit value
+ * @return void
  */
 void Pmic_fsmGetstandByCfgRegFields(uint8_t pmicNextState, uint8_t *pRegAddr,
                                     uint8_t *pBitPos, uint8_t *pBitMask,
@@ -86,11 +103,12 @@ void Pmic_fsmGetstandByCfgRegFields(uint8_t pmicNextState, uint8_t *pRegAddr,
 }
 
 /**
- * @brief   Gets the NSLEEP Mask Bit Field
+ * @brief  Gets the NSLEEP Mask Bit Field
  *
- * @param   nsleepType  Type of NSLEEP signal
- * @param   pBitPos     Pointer to bit position
- * @param   pBitMask    Pointer to bit mask
+ * @param  nsleepType  Type of NSLEEP signal
+ * @param  pBitPos     Pointer to bit position
+ * @param  pBitMask    Pointer to bit mask
+ * @return void
  */
 void Pmic_fsmGetNsleepMaskBitField(bool nsleepType, uint8_t *pBitPos,
                                    uint8_t *pBitMask) {
@@ -106,13 +124,11 @@ void Pmic_fsmGetNsleepMaskBitField(bool nsleepType, uint8_t *pBitPos,
 }
 
 /**
- * @brief   Sets the S2R State for PMIC
+ * @brief  Sets the S2R State for PMIC
  *
- * @param   pPmicCoreHandle     Pointer to PMIC Core Handle
- *
- * @return  Status of the operation
- * \retval  PMIC_ST_SUCCESS     Operation successful
- * \retval  PMIC_ST_ERR_INV_HANDLE Invalid PMIC handle
+ * @param  pPmicCoreHandle     Pointer to PMIC Core Handle
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_setS2RState(Pmic_CoreHandle_t *pPmicCoreHandle) {
   int32_t status = PMIC_ST_SUCCESS;
@@ -160,11 +176,11 @@ int32_t Pmic_setS2RState(Pmic_CoreHandle_t *pPmicCoreHandle) {
 }
 
 /**
- * @brief   Gets the Device State Configuration for PMIC
+ * @brief  Gets the Device State Configuration for PMIC
  *
- * @param   pPmicCoreHandle     Pointer to PMIC Core Handle
- *
- * @return  Device state configuration
+ * @param  pPmicCoreHandle     Pointer to PMIC Core Handle
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_fsmGetDeviceStateCfg(Pmic_CoreHandle_t *pPmicCoreHandle) {
   int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -187,12 +203,12 @@ int32_t Pmic_fsmGetDeviceStateCfg(Pmic_CoreHandle_t *pPmicCoreHandle) {
 }
 
 /**
- * @brief   Handles PMIC FSM device request configuration
+ * @brief  Handles PMIC FSM device request configuration
  *
- * @param   pPmicCoreHandle     Pointer to the PMIC Core Handle
- * @param   fsmState            FSM State to set
- *
- * @return  Status of the operation
+ * @param  pPmicCoreHandle     Pointer to the PMIC Core Handle
+ * @param  fsmState            FSM State to set
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_fsmDeviceRequestCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                  uint8_t fsmState) {
@@ -233,12 +249,12 @@ int32_t Pmic_fsmDeviceRequestCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief   Sets the PMIC state based on the given FSM state
+ * @brief  Sets the PMIC state based on the given FSM state
  *
- * @param   pPmicCoreHandle     Pointer to the PMIC Core Handle
- * @param   pmicNextState       Next state for PMIC FSM
- *
- * @return  Status of the operation
+ * @param  pPmicCoreHandle     Pointer to the PMIC Core Handle
+ * @param  pmicNextState       Next state for PMIC FSM
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_setState(Pmic_CoreHandle_t *pPmicCoreHandle,
                       uint8_t pmicNextState) {
@@ -273,12 +289,12 @@ int32_t Pmic_setState(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief   Enables or disables Fast Built-in Self Test (BIST) for the PMIC
+ * @brief  Enables or disables Fast Built-in Self Test (BIST) for the PMIC
  *
- * @param   pPmicCoreHandle     Pointer to the PMIC Core Handle
- * @param   fsmCfg              FSM configuration settings
- *
- * @return  Status of the operation
+ * @param  pPmicCoreHandle     Pointer to the PMIC Core Handle
+ * @param  fsmCfg              FSM configuration settings
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_fsmRequestRuntimeBist(Pmic_CoreHandle_t *pPmicCoreHandle) {
   int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -313,15 +329,12 @@ int32_t Pmic_fsmRequestRuntimeBist(Pmic_CoreHandle_t *pPmicCoreHandle) {
 }
 
 /**
- * @brief   Sets the PMIC state to the provided state
+ * @brief  Sets the PMIC state to the provided state
  *
- * @param   pPmicCoreHandle     Pointer to the PMIC Core Handle
- * @param   pmicState           State to be set for the PMIC
- *
- * @return  Status of the operation
- *          - PMIC_ST_SUCCESS     Operation successful
- *          - PMIC_ST_ERR_INV_HANDLE Invalid PMIC Core Handle
- *          - PMIC_ST_ERR_INV_PARAM  Invalid parameter provided
+ * @param  pPmicCoreHandle     Pointer to the PMIC Core Handle
+ * @param  pmicState           State to be set for the PMIC
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_fsmSetMissionState(Pmic_CoreHandle_t *pPmicCoreHandle,
                                 const uint8_t pmicState) {
@@ -343,15 +356,13 @@ int32_t Pmic_fsmSetMissionState(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief   Sets or clears the NSLEEP signal mask for PMIC
+ * @brief  Sets or clears the NSLEEP signal mask for PMIC
  *
- * @param   pPmicCoreHandle     Pointer to the PMIC Core Handle
- * @param   nsleepType          Type of NSLEEP signal (NSLEEP1 or NSLEEP2)
- * @param   maskEnable          Enable or disable the mask for the NSLEEP signal
- *
- * @return  Status of the operation
- * \retval  PMIC_ST_SUCCESS     Operation successful
- * \retval  [error codes]       Possible error codes indicating failure
+ * @param  pPmicCoreHandle     Pointer to the PMIC Core Handle
+ * @param  nsleepType          Type of NSLEEP signal (NSLEEP1 or NSLEEP2)
+ * @param  maskEnable          Enable or disable the mask for the NSLEEP signal
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_fsmSetNsleepSignalMask(Pmic_CoreHandle_t *pPmicCoreHandle,
                                     const bool nsleepType,
@@ -392,17 +403,14 @@ int32_t Pmic_fsmSetNsleepSignalMask(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief   Gets the status of the NSLEEP signal mask for PMIC
+ * @brief  Gets the status of the NSLEEP signal mask for PMIC
  *
- * @param   pPmicCoreHandle     Pointer to the PMIC Core Handle
- * @param   nsleepType          Type of NSLEEP signal (NSLEEP1 or NSLEEP2)
- * @param   pNsleepStat         Pointer to the variable to store the NSLEEP
+ * @param  pPmicCoreHandle     Pointer to the PMIC Core Handle
+ * @param  nsleepType          Type of NSLEEP signal (NSLEEP1 or NSLEEP2)
+ * @param  pNsleepStat         Pointer to the variable to store the NSLEEP
  * status
- *
- * @return  Status of the operation
- * \retval  PMIC_ST_SUCCESS     Operation successful
- * \retval  PMIC_ST_ERR_NULL_PARAM Null parameter provided
- * \retval  [error codes]       Possible error codes indicating failure
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_fsmGetNsleepSignalMaskStat(Pmic_CoreHandle_t *pPmicCoreHandle,
                                         const bool nsleepType,
@@ -443,14 +451,12 @@ int32_t Pmic_fsmGetNsleepSignalMaskStat(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief   Enables or disables the Fast BIST for PMIC
+ * @brief  Enables or disables the Fast BIST for PMIC
  *
- * @param   pPmicCoreHandle     Pointer to the PMIC Core Handle
- * @param   fsmCfg              FSM configuration settings for Fast BIST control
- *
- * @return  Status of the operation
- * \retval  PMIC_ST_SUCCESS     Operation successful
- * \retval  [error codes]       Possible error codes indicating failure
+ * @param  pPmicCoreHandle     Pointer to the PMIC Core Handle
+ * @param  fsmCfg              FSM configuration settings for Fast BIST control
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 static int32_t Pmic_fsmEnableFastBIST(Pmic_CoreHandle_t *pPmicCoreHandle,
                                       const Pmic_FsmCfg_t fsmCfg) {
@@ -488,14 +494,12 @@ static int32_t Pmic_fsmEnableFastBIST(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief   Gets the configuration of Fast BIST for PMIC
+ * @brief  Gets the configuration of Fast BIST for PMIC
  *
- * @param   pPmicCoreHandle     Pointer to the PMIC Core Handle
- * @param   pFsmCfg             Pointer to store the Fast BIST configuration
- *
- * @return  Status of the operation
- * \retval  PMIC_ST_SUCCESS     Operation successful
- * \retval  [error codes]       Possible error codes indicating failure
+ * @param  pPmicCoreHandle     Pointer to the PMIC Core Handle
+ * @param  pFsmCfg             Pointer to store the Fast BIST configuration
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 static int32_t Pmic_fsmGetFastBISTCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                       Pmic_FsmCfg_t *pFsmCfg) {
@@ -534,15 +538,13 @@ static int32_t Pmic_fsmGetFastBISTCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief   Enables or disables the Buck LDO ILIM INT affecting FSM
+ * @brief  Enables or disables the Buck LDO ILIM INT affecting FSM
  *
- * @param   pPmicCoreHandle     Pointer to the PMIC Core Handle
- * @param   fsmCfg              FSM configuration settings for ILIM INT FSM
+ * @param  pPmicCoreHandle     Pointer to the PMIC Core Handle
+ * @param  fsmCfg              FSM configuration settings for ILIM INT FSM
  * control
- *
- * @return  Status of the operation
- * \retval  PMIC_ST_SUCCESS     Operation successful
- * \retval  [error codes]       Possible error codes indicating failure
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 static int32_t
 Pmic_fsmEnableBuckLdoIlimIntAffectFsm(Pmic_CoreHandle_t *pPmicCoreHandle,
@@ -580,12 +582,12 @@ Pmic_fsmEnableBuckLdoIlimIntAffectFsm(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- * @brief   Gets the configuration of Buck LDO ILIM INT affecting FSM
+ * @brief  Gets the configuration of Buck LDO ILIM INT affecting FSM
  *
- * @param   pPmicCoreHandle     Pointer to the PMIC Core Handle
- * @param   pFsmCfg             Pointer to FSM configuration settings
- *
- * @return  Status of the operation
+ * @param  pPmicCoreHandle     Pointer to the PMIC Core Handle
+ * @param  pFsmCfg             Pointer to FSM configuration settings
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 static int32_t
 Pmic_fsmGetBuckLdoIlimIntAffectFsmCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
@@ -618,14 +620,13 @@ Pmic_fsmGetBuckLdoIlimIntAffectFsmCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /**
  * @brief Set the Power Management Integrated Circuit (PMIC) FSM configuration.
- *
  * This function sets various configurations for the PMIC FSM (Finite State
  * Machine).
  *
- * @param[in] pPmicCoreHandle Pointer to the PMIC core handle.
- * @param[in] fsmCfg          Configuration structure for FSM.
- *
- * @return Status of the function execution as per \ref Pmic_StatusCode.
+ * @param  pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param  fsmCfg          Configuration structure for FSM.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_fsmSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
                                  const Pmic_FsmCfg_t fsmCfg) {
@@ -656,13 +657,12 @@ int32_t Pmic_fsmSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 /**
  * @brief Get the Power Management Integrated Circuit (PMIC) FSM configuration.
- *
  * This function retrieves the configured settings of the PMIC FSM.
  *
- * @param[in]  pPmicCoreHandle Pointer to the PMIC core handle.
- * @param[out] pFsmCfg         Pointer to the FSM configuration structure.
- *
- * @return Status of the function execution as per \ref Pmic_StatusCode.
+ * @param  pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param  pFsmCfg         Pointer to the FSM configuration structure.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
  */
 int32_t Pmic_fsmGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
                                  Pmic_FsmCfg_t *pFsmCfg) {

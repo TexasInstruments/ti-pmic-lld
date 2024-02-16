@@ -32,9 +32,9 @@
  *****************************************************************************/
 
 /**
- *  \file pmic_power_priv.h
+ * @file pmic_power_priv.h
  *
- * \brief: This file contains macro definitions, structures and function
+ * @brief: This file contains macro definitions, structures and function
  *         prototypes for driver specific PMIC power configuration
  */
 
@@ -70,13 +70,13 @@ extern "C" {
 #define PMIC_EN_OUT2 (2U)
 #define PMIC_EN_OUT_ALL (3U)
 
-/*!
- * \brief  BUCK configuration Register Address
+/**
+ * @brief  BUCK configuration Register Address
  */
 #define PMIC_BUCK_BST_CFG_REGADDR (0x1BU)
 
-/*!
- * \brief  LDO configuration Register Address
+/**
+ * @brief  LDO configuration Register Address
  */
 #define PMIC_LDO1_CFG_REGADDR (0x1EU) // LDO mode,Bypass mode, VMON mode
 #define PMIC_LDO2_CFG_REGADDR (0x1FU)
@@ -88,8 +88,8 @@ extern "C" {
 
 #define PMIC_LDO_DSCG_CFG_REGADDR (0x28U) // Discharge for LDO & PLDO
 
-/*!
- * \brief  PLDO configuration Register Address
+/**
+ * @brief  PLDO configuration Register Address
  */
 #define PMIC_PLDO1_CFG_REGADDR (0x22U)
 #define PMIC_PLDO2_CFG_REGADDR (0x23U)
@@ -97,8 +97,8 @@ extern "C" {
 #define PMIC_PLDO_CFG_REGADDR (0x24U)
 #define PMIC_PLDO_EN_OUT_CTRL_REGADDR (0x27U)
 
-/*!
- * \brief  VCCA Vmon configuration Register Address
+/**
+ * @brief  VCCA Vmon configuration Register Address
  */
 #define PMIC_VMON_TH_CFG1_REGADDR (0x29U) // for LDO
 #define PMIC_VMON_TH_CFG2_REGADDR (0x2AU) // for PLDO
@@ -111,8 +111,8 @@ extern "C" {
 #define PMIC_VMON_DGL_CFG2_REGADDR (0x32U) // for LDO
 #define PMIC_VMON_DGL_CFG3_REGADDR (0x33U) // for PLDO
 
-/*!
- * \brief  PMIC power voltage levels
+/**
+ * @brief  PMIC power voltage levels
  */
 #define PMIC_BUCK_VOLTAGE_4000MV (0U)
 #define PMIC_BUCK_VOLTAGE_BB_VOL (1U)
@@ -238,8 +238,8 @@ extern "C" {
 /*                         Function Declarations                            */
 /*==========================================================================*/
 
-/*!
- * \brief   This function is used to get the id of power resource.
+/**
+ * @brief   This function is used to get the id of power resource.
  *          BUCK1/BUCK2/LDO1...etc
  */
 static inline uint8_t Pmic_powerGetPwrRsrcId(uint16_t pwrRsrc) {
@@ -249,8 +249,8 @@ static inline uint8_t Pmic_powerGetPwrRsrcId(uint16_t pwrRsrc) {
   return pwrRsrcId;
 }
 
-/*!
- * \brief   This function is used to get the type of power resource.
+/**
+ * @brief   This function is used to get the type of power resource.
  *          BUCK/LDO/VCCA/VMON
  */
 static inline uint8_t Pmic_powerGetPwrRsrcType(uint16_t pwrRsrc) {
@@ -260,15 +260,15 @@ static inline uint8_t Pmic_powerGetPwrRsrcType(uint16_t pwrRsrc) {
   return pwrRsrcType;
 }
 
-/*!
- * \brief   This function is used to get OV/UV voltage monitoring range for
+/**
+ * @brief   This function is used to get OV/UV voltage monitoring range for
  *          VMON2 and VMON1
  */
 int32_t Pmic_powerGetVmonRange(Pmic_CoreHandle_t *pPmicCoreHandle,
                                uint16_t pwrRsrc, bool *pVmonRange);
 
-/*!
- * \brief   This function is used to convert the millivolt value to vset value
+/**
+ * @brief   This function is used to convert the millivolt value to vset value
  *          for BUCK/VMON (For VMON : When range = 0)
  */
 int32_t Pmic_powerBuckVmonConvertVoltage2VSetVal(uint16_t millivolt,
@@ -276,8 +276,8 @@ int32_t Pmic_powerBuckVmonConvertVoltage2VSetVal(uint16_t millivolt,
                                                  uint8_t *pMillivoltStep,
                                                  uint8_t *pBaseVoutCode);
 
-/*!
- * \brief   This function is used to convert the millivolt value to vset value
+/**
+ * @brief   This function is used to convert the millivolt value to vset value
  *          for LDO Regulators
  */
 void Pmic_powerLdoConvertVoltage2VSetVal(uint16_t pwrRsrc,
@@ -285,8 +285,8 @@ void Pmic_powerLdoConvertVoltage2VSetVal(uint16_t pwrRsrc,
                                          uint8_t *pMillivoltStep,
                                          uint8_t *pBaseVoutCode);
 
-/*!
- * \brief   This function is used to convert the millivolt value to vset code
+/**
+ * @brief   This function is used to convert the millivolt value to vset code
  *          when the selected voltage monitoring range for VMON is
  *          PMIC_LP8764X_VMON_RANGE_3V35_5V
  */
@@ -294,8 +294,8 @@ void Pmic_powerVmonRange1ConvertVoltage2VSetVal(uint16_t *pBaseMillivolt,
                                                 uint8_t *pMillivoltStep,
                                                 uint8_t *pBaseVoutCode);
 
-/*!
- * \brief   This function is used to convert the vset value to voltage in mv
+/**
+ * @brief   This function is used to convert the vset value to voltage in mv
             for BUCK/VMON
  */
 void Pmic_powerBuckVmonConvertVSetVal2Voltage(const uint8_t *pVSetVal,
@@ -303,8 +303,8 @@ void Pmic_powerBuckVmonConvertVSetVal2Voltage(const uint8_t *pVSetVal,
                                               uint8_t *pMillivoltStep,
                                               uint8_t *pBaseVoutCode);
 
-/*!
- * \brief   This function is used to convert the vset value to voltage in mv
+/**
+ * @brief   This function is used to convert the vset value to voltage in mv
  *          for LDO
  */
 void Pmic_powerLdoConvertVSetVal2Voltage(uint16_t pwrRsrc,
@@ -312,8 +312,8 @@ void Pmic_powerLdoConvertVSetVal2Voltage(uint16_t pwrRsrc,
                                          uint8_t *pMillivoltStep,
                                          uint8_t *pBaseVoutCode);
 
-/*!
- * \brief   This function is used to convert the vset value to voltage in mv
+/**
+ * @brief   This function is used to convert the vset value to voltage in mv
  *          when the selected voltage monitoring range for VMON is
  *          PMIC_LP8764X_VMON_RANGE_3V35_5V
  */

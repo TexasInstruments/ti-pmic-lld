@@ -32,15 +32,9 @@
  *****************************************************************************/
 
 /**
- *  \addtogroup DRV_PMIC_IRQ_MODULE
+ * @file   pmic_irq_tps6594x.h
  *
- *  @{
- */
-
-/**
- * \file   pmic_irq_tps6594x.h
- *
- * \brief  TPS6594x LEO PMIC IRQ Driver API/interface file.
+ * @brief  TPS6594x LEO PMIC IRQ Driver API/interface file.
  *
  */
 
@@ -57,12 +51,6 @@ extern "C" {
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
-/**
- *  \anchor Pmic_tps6594x_IrqNum
- *  \name PMIC IRQ Interrupt values for tps6594x LEO PMIC device
- *
- *  @{
- */
 
 #define PMIC_TPS65386X_CFG_REG_CRC_INT_CFG (0U)
 
@@ -170,25 +158,13 @@ extern "C" {
 
 #define PMIC_TPS65386X_IRQ_MAX_NUM (81U)
 
-/* @} */
-
-/**
- *  \anchor Pmic_tps6594x_IrqGpioNum
- *  \name PMIC GPIO Interrupt Mask values for tps6594x
- *
- *  @{
- */
 #define PMIC_TPS65386X_IRQ_GPO_0_INT_MASK_NUM (0U)
 #define PMIC_TPS65386X_IRQ_GPO_1_INT_MASK_NUM (1U)
 #define PMIC_TPS65386X_IRQ_GPO_2_INT_MASK_NUM (2U)
 #define PMIC_TPS65386X_IRQ_GPO_3_INT_MASK_NUM (3U)
-
-/* @} */
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
 #endif /* PMIC_IRQ_TPS6594X_H_ */
-
-/* @} */

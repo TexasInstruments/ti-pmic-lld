@@ -32,12 +32,16 @@
  *****************************************************************************/
 
 /**
- *   \file    pmic_gpio.c
+ *   @file    pmic_gpio.c
  *
- *   \brief   This file contains the default API's for PMIC gpio
+ *   @brief   This file contains the default API's for PMIC gpio
  *            configuration
  *
  */
+
+/* ========================================================================== */
+/*                             Include Files                                  */
+/* ========================================================================== */
 
 #include "pmic_gpio.h"
 #include "pmic.h"
@@ -45,66 +49,127 @@
 #include "pmic_gpio_priv.h"
 #include "pmic_types.h"
 
+/* ========================================================================== */
+/*                           Macros & Typedefs                                */
+/* ========================================================================== */
+
+/* ========================================================================== */
+/*                         Structure Declarations                             */
+/* ========================================================================== */
+
+/* ========================================================================== */
+/*                          Function Definitions                              */
+/* ========================================================================== */
+
+/**
+ * @brief  Get the pointer to the GPIO input/output configuration.
+ * This function retrieves the pointer to the GPIO input/output configuration.
+ *
+ * @param  pGpioInOutCfg Pointer to the GPIO input/output configuration pointer.
+ * @return void
+ */
 void pmic_get_tps653860xx_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg) {
   *pGpioInOutCfg = gTps65386_gpioInOutCfg;
 }
 
+/**
+ * @brief Get the GPIO input/output configuration.
+ * This function gets the GPIO input/output configuration.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pGpioInOutCfg Pointer to store the GPIO input/output configuration.
+ * @return void
+ */
 void Pmic_get_gpioInOutCfg(const Pmic_CoreHandle_t *pPmicCoreHandle,
                            Pmic_GpioInOutCfg_t *pGpioInOutCfg) {
   pmic_get_tps653860xx_gpioInOutCfg(&pGpioInOutCfg);
 }
 
+/**
+ * @brief Validate the GPIO pin.
+ * This function validates the GPIO pin.
+ *
+ * @param pin GPIO pin to be validated.
+ *
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the pin is valid;
+ * otherwise, returns an error code.
+ */
 static int32_t Pmic_gpioValidatePin(const uint8_t pin) {
-  int32_t status = PMIC_ST_SUCCESS;
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
 
   if (((pin >= PMIC_TPS653860XX_GPIO_PIN_MIN) &&
        (pin <= PMIC_TPS653860XX_GPIO_PIN_MAX))) {
-    status = PMIC_ST_ERR_INV_PARAM;
+    pmicStatus = PMIC_ST_ERR_INV_PARAM;
   }
 
-  return status;
+  return pmicStatus;
 }
 
+/**
+ * @brief Validate the GPIO parameters.
+ * This function validates the GPIO parameters.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the parameters are valid;
+ * otherwise, returns an error code.
+ */
 static int32_t
 Pmic_gpioValidateParams(const Pmic_CoreHandle_t *pPmicCoreHandle) {
-  int32_t status = PMIC_ST_ERR_INV_HANDLE;
+  int32_t pmicStatus = PMIC_ST_ERR_INV_HANDLE;
 
   if (NULL != pPmicCoreHandle) {
     if ((bool)true == pPmicCoreHandle->pPmic_SubSysInfo->gpioEnable) {
-      status = PMIC_ST_SUCCESS;
+      pmicStatus = PMIC_ST_SUCCESS;
     } else {
-      status = PMIC_ST_ERR_INV_DEVICE;
+      pmicStatus = PMIC_ST_ERR_INV_DEVICE;
     }
   }
 
-  return status;
+  return pmicStatus;
 }
 
+/**
+ * @brief Check and validate the GPIO parameters.
+ * This function checks and validates the GPIO parameters.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pin GPIO pin to be checked and validated.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the parameters are valid;
+ * otherwise, returns an error code.
+ */
 static int32_t Pmic_gpioParamCheck(const Pmic_CoreHandle_t *pPmicCoreHandle,
                                    const uint8_t pin) {
-  int32_t status = PMIC_ST_SUCCESS;
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-  status = Pmic_gpioValidateParams(pPmicCoreHandle);
-  if (PMIC_ST_SUCCESS == status) {
-    status = Pmic_gpioValidatePin(pin);
+  pmicStatus = Pmic_gpioValidateParams(pPmicCoreHandle);
+  if (PMIC_ST_SUCCESS == pmicStatus) {
+    pmicStatus = Pmic_gpioValidatePin(pin);
   }
 
-  return status;
+  return pmicStatus;
 }
 
+/**
+ * @brief Select the register for the GPIO.
+ * This function selects the register for the GPIO based on the GPO number.
+ *
+ * @param gpo GPO number.
+ * @param pRegAddr Pointer to store the register address.
+ * @return void
+ */
 void Pmic_gpioSelectRegister(uint8_t gpo, uint8_t *pRegAddr) {
 
   switch (gpo) {
-  case (GPO1):
+  case (PMIC_BB_GPO1):
     *pRegAddr = PMIC_GPO_1_CONF_REGADDR;
     break;
-  case (GPO2):
+  case (PMIC_BB_GPO2):
     *pRegAddr = PMIC_GPO_1_CONF_REGADDR;
     break;
-  case (GPO3):
+  case (PMIC_BB_GPO3):
     *pRegAddr = PMIC_GPO_2_CONF_REGADDR;
     break;
-  case (GPO4):
+  case (PMIC_BB_GPO4):
     *pRegAddr = PMIC_GPO_2_CONF_REGADDR;
     break;
   default:
@@ -112,19 +177,29 @@ void Pmic_gpioSelectRegister(uint8_t gpo, uint8_t *pRegAddr) {
   }
 }
 
+/**
+ * @brief Set the pull control for the GPIO.
+ * This function sets the pull control for the GPIO pin.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pin GPIO pin to set the pull control.
+ * @param gpioCfg GPIO configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
 static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
                                     const uint8_t pin,
                                     const Pmic_GpioCfg_t gpioCfg) {
-  int32_t status = PMIC_ST_SUCCESS;
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
   uint8_t regData = 0U;
   uint8_t regAddr = 0x7DU; /* Register address for GPO_CFG2 */
   Pmic_GpioInOutCfg_t *pGpioInOutCfg = NULL;
 
   if (gpioCfg.pullCtrl > PMIC_GPIO_PULL_UP_TO_LDO) {
-    status = PMIC_ST_ERR_INV_PARAM;
+    pmicStatus = PMIC_ST_ERR_INV_PARAM;
   }
 
-  if (PMIC_ST_SUCCESS == status) {
+  if (PMIC_ST_SUCCESS == pmicStatus) {
     /* Get PMIC gpio configuration */
     Pmic_get_gpioInOutCfg(pPmicCoreHandle, pGpioInOutCfg);
 
@@ -132,9 +207,9 @@ static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     /* Reading GPO_CFG2 register */
-    status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
 
-    if (PMIC_ST_SUCCESS == status) {
+    if (PMIC_ST_SUCCESS == pmicStatus) {
       if (PMIC_GPIO_PULL_DISABLED == gpioCfg.pullCtrl) {
         /* Set as high impedance (internal pull-up not enabled) */
         Pmic_setBitField(&regData, PMIC_GPO_CFG2_EN_OUT_PU_CFG_SHIFT,
@@ -155,19 +230,29 @@ static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
         }
       }
 
-      status = Pmic_commIntf_sendByte(pPmicCoreHandle, regAddr, regData);
+      pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, regAddr, regData);
     }
 
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
   }
 
-  return status;
+  return pmicStatus;
 }
 
+/**
+ * @brief Get the pull control for the GPIO.
+ * This function gets the pull control for the GPIO pin.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pin GPIO pin to get the pull control.
+ * @param pGpioCfg Pointer to store the GPIO configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
 int32_t Pmic_gpioGetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
                              const uint8_t pin, Pmic_GpioCfg_t *pGpioCfg) {
-  int32_t status = PMIC_ST_SUCCESS;
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
   uint8_t regData = 0U;
   uint8_t regAddr = 0x7DU; /* Register address for GPO_CFG2 */
   Pmic_GpioInOutCfg_t *pGpioInOutCfg = NULL;
@@ -179,12 +264,12 @@ int32_t Pmic_gpioGetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
   Pmic_criticalSectionStart(pPmicCoreHandle);
 
   /* Reading the GPO_CFG2 register */
-  status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
+  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
 
   /* Stop Critical Section */
   Pmic_criticalSectionStop(pPmicCoreHandle);
 
-  if (PMIC_ST_SUCCESS == status) {
+  if (PMIC_ST_SUCCESS == pmicStatus) {
     /* Reading gpio pull control */
     if (Pmic_getBitField(regData, PMIC_GPO_CFG2_EN_OUT_PU_CFG_SHIFT,
                          PMIC_GPO_CFG2_EN_OUT_PU_CFG_MASK) ==
@@ -199,34 +284,56 @@ int32_t Pmic_gpioGetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
                PMIC_GPO_PULL_UP_LDO) {
       pGpioCfg->pullCtrl = PMIC_GPIO_PULL_UP_TO_LDO;
     } else {
-      status = PMIC_ST_ERR_FAIL;
+      pmicStatus = PMIC_ST_ERR_FAIL;
     }
   }
 
-  return status;
+  return pmicStatus;
 }
 
+/**
+ * @brief Set the deglitch time, output signal type, and pull control for the
+ * GPIO. This function sets the deglitch time, output signal type, and pull
+ * control for the GPIO.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pin GPIO pin to set the configuration.
+ * @param GpioRdbkDglCfg Pointer to the GPIO debounce and deglitch
+ * configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
 static int32_t Pmic_gpioSetDeglitchOutsigtypePulCtrlCfg(
     Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin,
     Pmic_GpioRdbkDglCfg_t *GpioRdbkDglCfg) {
-  int32_t status = PMIC_ST_SUCCESS;
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
 
   /* setting deglitch time */
   if ((pin == PMIC_GPO1) || (pin == PMIC_GPO2)) {
-    status = Pmic_gpo12SetDeglitchTime(pPmicCoreHandle, GpioRdbkDglCfg);
+    pmicStatus = Pmic_gpo12SetDeglitchTime(pPmicCoreHandle, GpioRdbkDglCfg);
   }
 
   else {
-    status = Pmic_gpo34SetDeglitchTime(pPmicCoreHandle, GpioRdbkDglCfg);
+    pmicStatus = Pmic_gpo34SetDeglitchTime(pPmicCoreHandle, GpioRdbkDglCfg);
   }
 
-  return status;
+  return pmicStatus;
 }
 
+/**
+ * @brief Set the configuration for the GPIO.
+ * This function sets the configuration for the GPIO pin.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pin GPIO pin to set the configuration.
+ * @param gpioCfg GPIO configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
 int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
                                   const uint8_t pin,
                                   const Pmic_GpioCfg_t gpioCfg) {
-  int32_t status = PMIC_ST_SUCCESS;
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
   uint8_t regAddr = 0U;
   uint8_t regData = 0U;
 
@@ -244,36 +351,38 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
     regAddr = PMIC_GPO_CFG2_REG_ADDR;
     break;
   default:
-    status = PMIC_ST_ERR_INV_PARAM; /* Invalid pin */
+    pmicStatus = PMIC_ST_ERR_INV_PARAM; /* Invalid pin */
     break;
   }
 
-  status = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
+  pmicStatus = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
 
   {
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     /* Reading the GPO_CFG register */
-    status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
 
-    if (PMIC_ST_SUCCESS == status) {
-      /* Setting configurations for GPO1, GPO2, GPO3, GPO4 based on pin */
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+      /* Setting configurations for PMIC_BB_GPO1, PMIC_BB_GPO2, PMIC_BB_GPO3,
+       * PMIC_BB_GPO4 based on pin
+       */
       switch (pin) {
       case PMIC_GPO1:
         /* Modify GPO1_CFG bits in GPO_CFG1*/
         Pmic_setBitField(&regData, PMIC_GPO_CFG1_GPO1_CFG_SHIFT,
-                         PMIC_GPO_CFG1_GPO1_CFG_MASK, gpioCfg.gpoCfg1.gpo1Cfg);
+                         PMIC_GPO_CFG1_GPO1_CFG_MASK, gpioCfg.gpo1Cfg);
         break;
       case PMIC_GPO2:
         /* Modify GPO2_CFG bits in GPO_CFG1*/
         Pmic_setBitField(&regData, PMIC_GPO_CFG1_GPO2_CFG_SHIFT,
-                         PMIC_GPO_CFG1_GPO2_CFG_MASK, gpioCfg.gpoCfg1.gpo2Cfg);
+                         PMIC_GPO_CFG1_GPO2_CFG_MASK, gpioCfg.gpo2Cfg);
         break;
       case PMIC_GPO3:
         /* Modify GPO3_CFG bits in GPO_CFG2*/
         Pmic_setBitField(&regData, PMIC_GPO_CFG2_GPO3_CFG_SHIFT,
-                         PMIC_GPO_CFG2_GPO3_CFG_MASK, gpioCfg.gpoCfg2.gpo3Cfg);
+                         PMIC_GPO_CFG2_GPO3_CFG_MASK, gpioCfg.gpo3Cfg);
         Pmic_setBitField(&regData, PMIC_GPO_CFG2_GPO_EN_SHIFT,
                          PMIC_GPO_CFG2_GPO_EN_MASK, gpioCfg.pinDir);
         break;
@@ -282,17 +391,17 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
         Pmic_setBitField(&regData, PMIC_GPO_CFG2_GPO_EN_SHIFT,
                          PMIC_GPO_CFG2_GPO_EN_MASK, gpioCfg.pinDir);
         Pmic_setBitField(&regData, PMIC_GPO_CFG2_GPO4_CFG_SHIFT,
-                         PMIC_GPO_CFG2_GPO4_CFG_MASK, gpioCfg.gpoCfg2.gpo4Cfg);
+                         PMIC_GPO_CFG2_GPO4_CFG_MASK, gpioCfg.gpo4Cfg);
         break;
       default:
         /* Invalid Pin */
-        status = PMIC_ST_ERR_INV_PARAM;
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
         break;
       }
 
-      if (PMIC_ST_SUCCESS == status) {
+      if (PMIC_ST_SUCCESS == pmicStatus) {
         /* Sending modified configuration back to the register */
-        status = Pmic_commIntf_sendByte(pPmicCoreHandle, regAddr, regData);
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, regAddr, regData);
       }
     }
 
@@ -300,157 +409,212 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_criticalSectionStop(pPmicCoreHandle);
   }
 
-  return status;
+  return pmicStatus;
 }
 
+/**
+ * @brief Get the GPO configuration for the GPIO.
+ * This function gets the GPO configuration for the GPIO pin.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param regAddr Register address for the GPIO.
+ * @param pGpioCfg Pointer to store the GPIO configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
 int32_t Pmic_gpioGetGPOConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
                               uint8_t regAddr, Pmic_GpioCfg_t *pGpioCfg) {
-  int32_t status = PMIC_ST_SUCCESS;
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
   uint8_t regData = 0U;
 
   /* Start Critical Section */
   Pmic_criticalSectionStart(pPmicCoreHandle);
 
   /* Read GPO configuration register */
-  status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
+  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
 
   /* Stop Critical Section */
   Pmic_criticalSectionStop(pPmicCoreHandle);
 
-  if (PMIC_ST_SUCCESS == status) {
+  if (PMIC_ST_SUCCESS == pmicStatus) {
     /* Process and populate the GPIO configuration */
     if (regAddr == PMIC_GPO_CFG1_REG_ADDR) {
-      /* GPO1 and GPO2 configurations */
-      pGpioCfg->gpoCfg1.gpo1Cfg = Pmic_getBitField(
+      /* PMIC_BB_GPO1 and PMIC_BB_GPO2 configurations */
+      pGpioCfg->gpo1Cfg = Pmic_getBitField(
           regData, PMIC_GPO_CFG1_GPO1_CFG_SHIFT, PMIC_GPO_CFG1_GPO1_CFG_MASK);
-      pGpioCfg->gpoCfg1.gpo2Cfg = Pmic_getBitField(
+      pGpioCfg->gpo2Cfg = Pmic_getBitField(
           regData, PMIC_GPO_CFG1_GPO2_CFG_SHIFT, PMIC_GPO_CFG1_GPO2_CFG_MASK);
     } else if (regAddr == PMIC_GPO_CFG2_REG_ADDR) {
-      /* GPO3 and GPO4 configurations */
-      pGpioCfg->gpoCfg2.gpo3Cfg = Pmic_getBitField(
+      /* PMIC_BB_GPO3 and PMIC_BB_GPO4 configurations */
+      pGpioCfg->gpo3Cfg = Pmic_getBitField(
           regData, PMIC_GPO_CFG2_GPO3_CFG_SHIFT, PMIC_GPO_CFG2_GPO3_CFG_MASK);
-      pGpioCfg->gpoCfg2.gpo4Cfg = Pmic_getBitField(
+      pGpioCfg->gpo4Cfg = Pmic_getBitField(
           regData, PMIC_GPO_CFG2_GPO4_CFG_SHIFT, PMIC_GPO_CFG2_GPO4_CFG_MASK);
       pGpioCfg->pinDir = Pmic_getBitField(regData, PMIC_GPO_CFG2_GPO_EN_SHIFT,
                                           PMIC_GPO_CFG2_GPO_EN_MASK);
     }
   }
 
-  return status;
+  return pmicStatus;
 }
 
+/**
+ * @brief Get the configuration of a GPIO pin.
+ * This function retrieves the configuration of a GPIO pin.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pin GPIO pin to get the configuration for.
+ * @param pGpioCfg Pointer to store the GPIO configuration.
+ * @param GpioRdbkDglCfg Pointer to store the GPIO debounce and deglitch
+ * configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
 int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
                                   const uint8_t pin, Pmic_GpioCfg_t *pGpioCfg,
                                   Pmic_GpioRdbkDglCfg_t *GpioRdbkDglCfg) {
-  int32_t status = PMIC_ST_SUCCESS;
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-  if (PMIC_ST_SUCCESS == status) {
+  if (PMIC_ST_SUCCESS == pmicStatus) {
     switch (pin) {
     case PMIC_GPO1:
-      status = Pmic_gpioGetGPOConfig(pPmicCoreHandle, PMIC_GPO_CFG1_REG_ADDR,
-                                     pGpioCfg);
+      pmicStatus = Pmic_gpioGetGPOConfig(pPmicCoreHandle,
+                                         PMIC_GPO_CFG1_REG_ADDR, pGpioCfg);
       break;
     case PMIC_GPO2:
-      status = Pmic_gpioGetGPOConfig(pPmicCoreHandle, PMIC_GPO_CFG1_REG_ADDR,
-                                     pGpioCfg);
+      pmicStatus = Pmic_gpioGetGPOConfig(pPmicCoreHandle,
+                                         PMIC_GPO_CFG1_REG_ADDR, pGpioCfg);
       break;
     case PMIC_GPO3:
-      status = Pmic_gpioGetGPOConfig(pPmicCoreHandle, PMIC_GPO_CFG2_REG_ADDR,
-                                     pGpioCfg);
+      pmicStatus = Pmic_gpioGetGPOConfig(pPmicCoreHandle,
+                                         PMIC_GPO_CFG2_REG_ADDR, pGpioCfg);
       break;
     case PMIC_GPO4:
-      status = Pmic_gpioGetGPOConfig(pPmicCoreHandle, PMIC_GPO_CFG2_REG_ADDR,
-                                     pGpioCfg);
+      pmicStatus = Pmic_gpioGetGPOConfig(pPmicCoreHandle,
+                                         PMIC_GPO_CFG2_REG_ADDR, pGpioCfg);
       break;
     default:
-      status = PMIC_ST_ERR_INV_PARAM; /* Invalid pin */
+      pmicStatus = PMIC_ST_ERR_INV_PARAM; /* Invalid pin */
       break;
     }
   }
 
-  return status;
+  return pmicStatus;
 }
 
+/**
+ * @brief Set the value of a GPIO pin.
+ * This function sets the value of a GPIO pin based on the provided
+ * configuration.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pGpioInOutCfg Pointer to the GPIO input/output configuration.
+ * @param pinValue The value to be set for the GPIO pin (0 for LOW, 1 for HIGH).
+ * @param index Index of the GPIO pin in the GPIO input/output configuration
+ * array.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
 static int32_t Pmic_gpioSetPinValue(Pmic_CoreHandle_t *pPmicCoreHandle,
                                     const Pmic_GpioInOutCfg_t *pGpioInOutCfg,
                                     const uint8_t pinValue, uint8_t index) {
   uint8_t regData = 0U;
-  int32_t status = PMIC_ST_SUCCESS;
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
   uint8_t bitMask = 0U;
 
   /* Start Critical Section */
   Pmic_criticalSectionStart(pPmicCoreHandle);
 
   /* checking for the pin direction to be output */
-  status = Pmic_commIntf_recvByte(pPmicCoreHandle, pGpioInOutCfg[index].regAddr,
-                                  &regData);
+  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                      pGpioInOutCfg[index].regAddr, &regData);
 
-  if (PMIC_ST_SUCCESS == status) {
+  if (PMIC_ST_SUCCESS == pmicStatus) {
     /* Setting the GPIO value */
-    status = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                    pGpioInOutCfg[index].outRegAddr, &regData);
-    if (PMIC_ST_SUCCESS == status) {
+    pmicStatus = Pmic_commIntf_recvByte(
+        pPmicCoreHandle, pGpioInOutCfg[index].outRegAddr, &regData);
+    if (PMIC_ST_SUCCESS == pmicStatus) {
       bitMask = (PMIC_GPIO_IN_OUT_X_GPIOX_IN_OUT_BITFIELD
                  << pGpioInOutCfg[index].outRegBitPos);
       Pmic_setBitField(&regData, pGpioInOutCfg[index].outRegBitPos, bitMask,
                        pinValue);
-      status = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                      pGpioInOutCfg[index].outRegAddr, regData);
+      pmicStatus = Pmic_commIntf_sendByte(
+          pPmicCoreHandle, pGpioInOutCfg[index].outRegAddr, regData);
     }
   }
 
   /* Stop Critical Section */
   Pmic_criticalSectionStop(pPmicCoreHandle);
 
-  return status;
+  return pmicStatus;
 }
 
+/**
+ * @brief Set the value of a GPIO pin.
+ * This function sets the value of a GPIO pin.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pin GPIO pin to set the value for.
+ * @param pinValue Value to set for the GPIO pin.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
 int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin,
                           const uint8_t pinValue) {
-  int32_t status = PMIC_ST_SUCCESS;
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
   uint8_t index = 0U;
   Pmic_GpioInOutCfg_t *pGpioInOutCfg = NULL;
 
-  status = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
+  pmicStatus = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
 
   /* Set Pmic_GpioIntRegCfg_t array index for given GPIO Pin */
   index = pin - 1U;
 
-  if ((PMIC_ST_SUCCESS == status) && (pinValue > PMIC_HIGH)) {
-    status = PMIC_ST_ERR_INV_PARAM;
+  if ((PMIC_ST_SUCCESS == pmicStatus) && (pinValue > PMIC_HIGH)) {
+    pmicStatus = PMIC_ST_ERR_INV_PARAM;
   }
 
-  if (PMIC_ST_SUCCESS == status) {
+  if (PMIC_ST_SUCCESS == pmicStatus) {
     /* Get PMIC gpio configuration */
     Pmic_get_gpioInOutCfg(pPmicCoreHandle, pGpioInOutCfg);
 
     /* Set PMIC gpio pin value */
-    status =
+    pmicStatus =
         Pmic_gpioSetPinValue(pPmicCoreHandle, pGpioInOutCfg, pinValue, index);
   }
 
-  return status;
+  return pmicStatus;
 }
 
+/**
+ * @brief Get the value of a GPIO pin.
+ * This function gets the value of a GPIO pin.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pin GPIO pin to get the value for.
+ * @param pPinValue Pointer to store the value of the GPIO pin.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
 int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin,
                           uint8_t *pPinValue) {
-  int32_t status = PMIC_ST_SUCCESS;
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
   uint8_t regData = 0U;
   uint8_t index = 0U;
   Pmic_GpioInOutCfg_t *pGpioInOutCfg = NULL;
   uint8_t bitMask = 0U;
 
   /* Parameter Validation */
-  status = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
+  pmicStatus = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
 
   /* Set Pmic_GpioIntRegCfg_t array index for given GPIO Pin */
   index = pin - 1U;
 
-  if ((PMIC_ST_SUCCESS == status) && (NULL == pPinValue)) {
-    status = PMIC_ST_ERR_NULL_PARAM;
+  if ((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pPinValue)) {
+    pmicStatus = PMIC_ST_ERR_NULL_PARAM;
   }
 
-  if (PMIC_ST_SUCCESS == status) {
+  if (PMIC_ST_SUCCESS == pmicStatus) {
     /* Get PMIC gpio configuration */
     Pmic_get_gpioInOutCfg(pPmicCoreHandle, pGpioInOutCfg);
 
@@ -458,13 +622,13 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin,
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     /* Reading the pin value */
-    status = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                    pGpioInOutCfg[index].inRegAddr, &regData);
+    pmicStatus = Pmic_commIntf_recvByte(
+        pPmicCoreHandle, pGpioInOutCfg[index].inRegAddr, &regData);
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
   }
 
-  if (PMIC_ST_SUCCESS == status) {
+  if (PMIC_ST_SUCCESS == pmicStatus) {
     bitMask = (PMIC_GPIO_IN_OUT_X_GPIOX_IN_OUT_BITFIELD
                << pGpioInOutCfg[index].inRegBitPos);
 
@@ -476,26 +640,37 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin,
     }
   }
 
-  return status;
+  return pmicStatus;
 }
 
+/**
+ * @brief Set the configuration of a GPI pin.
+ * This function sets the configuration of a GPI pin.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pin GPI pin to set the configuration for.
+ * @param gpioCfg GPI configuration to set.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
 int32_t Pmic_gpiSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
                                  const uint8_t pin,
                                  const Pmic_GpioCfg_t gpioCfg) {
-  int32_t status = PMIC_ST_SUCCESS;
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
   uint8_t regAddr = PMIC_GPI_CFG_REG_ADDR;
   uint8_t regData = 0U;
 
-  status = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
+  pmicStatus = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
 
   /* Start Critical Section */
   Pmic_criticalSectionStart(pPmicCoreHandle);
 
   /* Reading the GPO_CFG register */
-  status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
+  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
 
-  if (PMIC_ST_SUCCESS == status) {
-    /* Setting configurations for GPO1, GPO2, GPO3, GPO4 based on pin */
+  if (PMIC_ST_SUCCESS == pmicStatus) {
+    /* Setting configurations for PMIC_BB_GPO1, PMIC_BB_GPO2, PMIC_BB_GPO3,
+     * PMIC_BB_GPO4 based on pin */
     switch (pin) {
     case PMIC_GPI1:
       /* Modify GPI1_CFG bits in GPI_CFG*/
@@ -509,85 +684,116 @@ int32_t Pmic_gpiSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
       break;
     default:
       /* Invalid pin */
-      status = PMIC_ST_ERR_INV_PARAM;
+      pmicStatus = PMIC_ST_ERR_INV_PARAM;
       break;
     }
-    if (PMIC_ST_SUCCESS == status) {
+    if (PMIC_ST_SUCCESS == pmicStatus) {
       /* Sending modified configuration back to the register */
-      status = Pmic_commIntf_sendByte(pPmicCoreHandle, regAddr, regData);
+      pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, regAddr, regData);
     }
   }
   /* Stop Critical Section */
   Pmic_criticalSectionStop(pPmicCoreHandle);
 
-  return status;
+  return pmicStatus;
 }
+
+/**
+ * @brief Get the configuration of GPI pins.
+ * This function retrieves the configuration of GPI pins from the specified
+ * register address.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param regAddr Register address from which to read the GPI configuration.
+ * @param pGpioCfg Pointer to store the GPI configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
 
 int32_t Pmic_gpioGetGPIConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
                               uint8_t regAddr, Pmic_GpioCfg_t *pGpioCfg) {
-  int32_t status = PMIC_ST_SUCCESS;
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
   uint8_t regData = 0U;
 
   /* Start Critical Section */
   Pmic_criticalSectionStart(pPmicCoreHandle);
 
   /* Read GPO configuration register */
-  status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
+  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
 
   /* Stop Critical Section */
   Pmic_criticalSectionStop(pPmicCoreHandle);
 
-  if (PMIC_ST_SUCCESS == status) {
+  if (PMIC_ST_SUCCESS == pmicStatus) {
     /* Process and populate the GPIO configuration */
 
-    /* GPO1 and GPO2 configurations*/
+    /* PMIC_BB_GPO1 and PMIC_BB_GPO2 configurations*/
     pGpioCfg->gpi1Cfg = Pmic_getBitField(regData, PMIC_GPI_CFG_GPI1_SHIFT,
                                          PMIC_GPI_CFG_GPI1_MASK);
     pGpioCfg->gpi4Cfg = Pmic_getBitField(regData, PMIC_GPI_CFG_GPI4_SHIFT,
                                          PMIC_GPI_CFG_GPI4_MASK);
   }
-  return status;
+  return pmicStatus;
 }
 
+/**
+ * @brief Get the configuration of a GPI pin.
+ * This function gets the configuration of a GPI pin.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pin GPI pin to get the configuration for.
+ * @param pGpioCfg Pointer to store the GPI configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
 int32_t Pmic_gpiGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
                                  const uint8_t pin, Pmic_GpioCfg_t *pGpioCfg) {
-  int32_t status = PMIC_ST_SUCCESS;
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-  if (PMIC_ST_SUCCESS == status) {
+  if (PMIC_ST_SUCCESS == pmicStatus) {
     switch (pin) {
     case PMIC_GPI1:
-      status = Pmic_gpioGetGPIConfig(pPmicCoreHandle, PMIC_GPI_CFG_REG_ADDR,
-                                     pGpioCfg);
+      pmicStatus = Pmic_gpioGetGPIConfig(pPmicCoreHandle, PMIC_GPI_CFG_REG_ADDR,
+                                         pGpioCfg);
       break;
     case PMIC_GPI4:
-      status = Pmic_gpioGetGPIConfig(pPmicCoreHandle, PMIC_GPI_CFG_REG_ADDR,
-                                     pGpioCfg);
+      pmicStatus = Pmic_gpioGetGPIConfig(pPmicCoreHandle, PMIC_GPI_CFG_REG_ADDR,
+                                         pGpioCfg);
       break;
     default:
-      status = PMIC_ST_ERR_INV_PARAM; /* Invalid pin */
+      pmicStatus = PMIC_ST_ERR_INV_PARAM; /* Invalid pin */
       break;
     }
   }
 
-  return status;
+  return pmicStatus;
 }
 
+/**
+ * @brief Get the deglitch time for PMIC_BB_GPO1 and PMIC_BB_GPO2.
+ * This function gets the deglitch time for PMIC_BB_GPO1 and PMIC_BB_GPO2.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param GpioRdbkDglCfg Pointer to store the deglitch time configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
 int32_t Pmic_gpo12GetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
                                   Pmic_GpioRdbkDglCfg_t *GpioRdbkDglCfg) {
-  int32_t status = PMIC_ST_SUCCESS;
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
   uint8_t regData = 0;
 
   /* Start Critical Section */
   Pmic_criticalSectionStart(pPmicCoreHandle);
 
   /* Reading the GPIO configuration */
-  status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_RDBK_DGL_CFG2_REGADDR,
-                                  &regData);
+  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                      PMIC_RDBK_DGL_CFG2_REGADDR, &regData);
 
   /* Stop Critical Section */
   Pmic_criticalSectionStop(pPmicCoreHandle);
 
-  if (PMIC_ST_SUCCESS == status) {
+  if (PMIC_ST_SUCCESS == pmicStatus) {
 
     GpioRdbkDglCfg->gpo1FDglData = Pmic_getBitField(
         regData, PMIC_RDBK_GPO1_F_SHIFT, PMIC_RDBK_GPO1_F_MASK);
@@ -601,22 +807,31 @@ int32_t Pmic_gpo12GetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
     GpioRdbkDglCfg->gpo2RDglData = Pmic_getBitField(
         regData, PMIC_RDBK_GPO2_R_SHIFT, PMIC_RDBK_GPO2_R_MASK);
   }
-  return status;
+  return pmicStatus;
 }
 
+/**
+ * @brief Set the deglitch time for PMIC_BB_GPO1 and PMIC_BB_GPO2.
+ * This function sets the deglitch time for PMIC_BB_GPO1 and PMIC_BB_GPO2.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param GpioRdbkDglCfg Pointer to the deglitch time configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
 int32_t Pmic_gpo12SetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
                                   Pmic_GpioRdbkDglCfg_t *GpioRdbkDglCfg) {
-  int32_t status = PMIC_ST_SUCCESS;
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
   uint8_t regData = 0;
 
   /* Start Critical Section */
   Pmic_criticalSectionStart(pPmicCoreHandle);
 
   /* Reading the GPIO configuration */
-  status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_RDBK_DGL_CFG2_REGADDR,
-                                  &regData);
+  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                      PMIC_RDBK_DGL_CFG2_REGADDR, &regData);
 
-  if (PMIC_ST_SUCCESS == status) {
+  if (PMIC_ST_SUCCESS == pmicStatus) {
     if (GpioRdbkDglCfg->gpo1FDglConfig == 1) {
       /* Reading signal deglitch time */
       Pmic_setBitField(&regData, PMIC_RDBK_GPO1_F_SHIFT, PMIC_RDBK_GPO1_F_MASK,
@@ -637,28 +852,37 @@ int32_t Pmic_gpo12SetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
       Pmic_setBitField(&regData, PMIC_RDBK_GPO2_R_SHIFT, PMIC_RDBK_GPO2_R_MASK,
                        GpioRdbkDglCfg->gpo2RDglData);
     }
-    status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_RDBK_DGL_CFG2_REGADDR,
-                                    regData);
+    pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                        PMIC_RDBK_DGL_CFG2_REGADDR, regData);
 
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
   }
-  return status;
+  return pmicStatus;
 }
 
+/**
+ * @brief Set the deglitch time for PMIC_BB_GPO3 and PMIC_BB_GPO4.
+ * This function sets the deglitch time for PMIC_BB_GPO3 and PMIC_BB_GPO4.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param GpioRdbkDglCfg Pointer to the deglitch time configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
 int32_t Pmic_gpo34SetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
                                   Pmic_GpioRdbkDglCfg_t *GpioRdbkDglCfg) {
-  int32_t status = PMIC_ST_SUCCESS;
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
   uint8_t regData = 0;
 
   /* Start Critical Section */
   Pmic_criticalSectionStart(pPmicCoreHandle);
 
   /* Reading the GPIO configuration */
-  status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_RDBK_DGL_CFG3_REGADDR,
-                                  &regData);
+  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                      PMIC_RDBK_DGL_CFG3_REGADDR, &regData);
 
-  if (PMIC_ST_SUCCESS == status) {
+  if (PMIC_ST_SUCCESS == pmicStatus) {
     if (GpioRdbkDglCfg->gpo3FDglConfig == 1) {
       /* Reading signal deglitch time */
       Pmic_setBitField(&regData, PMIC_RDBK_GPO3_F_SHIFT, PMIC_RDBK_GPO3_F_MASK,
@@ -679,31 +903,40 @@ int32_t Pmic_gpo34SetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
       Pmic_setBitField(&regData, PMIC_RDBK_GPO4_R_SHIFT, PMIC_RDBK_GPO4_R_MASK,
                        GpioRdbkDglCfg->gpo4RDglData);
     }
-    status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_RDBK_DGL_CFG3_REGADDR,
-                                    regData);
+    pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                                        PMIC_RDBK_DGL_CFG3_REGADDR, regData);
 
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
   }
-  return status;
+  return pmicStatus;
 }
 
+/**
+ * @brief Get the deglitch time for PMIC_BB_GPO3 and PMIC_BB_GPO4.
+ * This function gets the deglitch time for PMIC_BB_GPO3 and PMIC_BB_GPO4.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param GpioRdbkDglCfg Pointer to store the deglitch time configuration.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
 int32_t Pmic_gpo34GetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
                                   Pmic_GpioRdbkDglCfg_t *GpioRdbkDglCfg) {
-  int32_t status = PMIC_ST_SUCCESS;
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
   uint8_t regData = 0;
 
   /* Start Critical Section */
   Pmic_criticalSectionStart(pPmicCoreHandle);
 
   /* Reading the GPIO configuration */
-  status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_RDBK_DGL_CFG3_REGADDR,
-                                  &regData);
+  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+                                      PMIC_RDBK_DGL_CFG3_REGADDR, &regData);
 
   /* Stop Critical Section */
   Pmic_criticalSectionStop(pPmicCoreHandle);
 
-  if (PMIC_ST_SUCCESS == status) {
+  if (PMIC_ST_SUCCESS == pmicStatus) {
 
     GpioRdbkDglCfg->gpo3FDglData = Pmic_getBitField(
         regData, PMIC_RDBK_GPO3_F_SHIFT, PMIC_RDBK_GPO3_F_MASK);
@@ -717,5 +950,5 @@ int32_t Pmic_gpo34GetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
     GpioRdbkDglCfg->gpo4RDglData = Pmic_getBitField(
         regData, PMIC_RDBK_GPO4_R_SHIFT, PMIC_RDBK_GPO4_R_MASK);
   }
-  return status;
+  return pmicStatus;
 }
