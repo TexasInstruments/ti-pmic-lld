@@ -41,6 +41,7 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 
+#include "pmic_types.h"
 #include "pmic_core_tps65386x.h"
 #include <board/pmic.h>
 #include <drivers/hw_include/csl_types.h>
