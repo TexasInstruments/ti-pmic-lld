@@ -195,10 +195,10 @@ extern "C" {
 #define PMIC_RST_MCU_CNT_MASK 0xC0 /* Mask to isolate RST_MCU_CNT bits */
 
 #define PMIC_RST_MCU_RQ_FLAG_SHIFT                                             \
-  5 /* Shift value for RST_MCU_RQ_FLAG bit (5) */
+    5 /* Shift value for RST_MCU_RQ_FLAG bit (5) */
 #define PMIC_RST_MCU_RQ_FLAG_MASK                                              \
-  0x20 /* Mask to isolate RST_MCU_RQ_FLAG bit                                  \
-        */
+    0x20 /* Mask to isolate RST_MCU_RQ_FLAG bit                                \
+          */
 
 #define PMIC_PWRD_DLY_ACTV_SHIFT 4   /* Shift value for PWRD_DLY_ACTV bit (4) */
 #define PMIC_PWRD_DLY_ACTV_MASK 0x10 /* Mask to isolate PWRD_DLY_ACTV bit */
@@ -208,19 +208,19 @@ extern "C" {
 
 #define PMIC_STATE_CTRL_STATE_REQ_SHIFT 0
 #define PMIC_STATE_CTRL_STATE_REQ_MASK                                         \
-  ((uint8_t)(0x03U << PMIC_STATE_CTRL_STATE_REQ_SHIFT))
+    ((uint8_t)(0x03U << PMIC_STATE_CTRL_STATE_REQ_SHIFT))
 
 /**
  * @brief: PMIC State Stat Register  Mask Values
  */
 #define PMIC_STATE_STAT_STATE_MASK                                             \
-  ((uint8_t)(0x0FU << PMIC_STATE_STAT_STATE_SHIFT))
+    ((uint8_t)(0x0FU << PMIC_STATE_STAT_STATE_SHIFT))
 #define PMIC_STATE_STAT_PWRD_DLY_ACTV_MASK                                     \
-  ((uint8_t)(0x01U << PMIC_STATE_STAT_PWRD_DLY_ACTV_SHIFT))
+    ((uint8_t)(0x01U << PMIC_STATE_STAT_PWRD_DLY_ACTV_SHIFT))
 #define PMIC_STATE_STAT_RST_MCU_RQ_FLAG_MASK                                   \
-  ((uint8_t)(0x01U << PMIC_STATE_STAT_RST_MCU_RQ_FLAG_SHIFT))
+    ((uint8_t)(0x01U << PMIC_STATE_STAT_RST_MCU_RQ_FLAG_SHIFT))
 #define PMIC_STATE_STAT_RST_MCU_CNT_MASK                                       \
-  ((uint8_t)(0x03U << PMIC_STATE_STAT_RST_MCU_CNT_SHIFT))
+    ((uint8_t)(0x03U << PMIC_STATE_STAT_RST_MCU_CNT_SHIFT))
 
 /**
  * @brief: PMIC Reset mcu Timer Register  Mask Values
@@ -236,36 +236,36 @@ extern "C" {
  * @brief   PMIC Safe Out Enable Register Mask Values
  */
 #define PMIC_ENABLE_SAFE_OUTEN1_MASK                                           \
-  ((uint8_t)(0x01U << PMIC_ENABLE_SAFE_OUTEN1_SHIFT))
+    ((uint8_t)(0x01U << PMIC_ENABLE_SAFE_OUTEN1_SHIFT))
 #define PMIC_ENABLE_SAFE_OUTEN2_MASK                                           \
-  ((uint8_t)(0x01U << PMIC_ENABLE_SAFE_OUTEN2_SHIFT))
+    ((uint8_t)(0x01U << PMIC_ENABLE_SAFE_OUTEN2_SHIFT))
 
 #define PMIC_CUSTOMER_SCRATCH1_MASK                                            \
-  ((uint8_t)(0xFFU << PMIC_CUSTOMER_SCRATCH1_SHIFT))
+    ((uint8_t)(0xFFU << PMIC_CUSTOMER_SCRATCH1_SHIFT))
 #define PMIC_CUSTOMER_SCRATCH2_MASK                                            \
-  ((uint8_t)(0xFFU << PMIC_CUSTOMER_SCRATCH2_SHIFT))
+    ((uint8_t)(0xFFU << PMIC_CUSTOMER_SCRATCH2_SHIFT))
 
 /**
  * @brief   PMIC Register Lock Register Mask Values
  */
 /*  PMIC Register Lock Register Mask Values to read the register lock status */
 #define PMIC_REGISTER_LOCK_REGISTER_CFG_STATUS_MASK                            \
-  ((uint8_t)(0x01U << PMIC_REGISTER_CFG_REG_UNLOCK_SEQ_SHIFT))
+    ((uint8_t)(0x01U << PMIC_REGISTER_CFG_REG_UNLOCK_SEQ_SHIFT))
 
 /*  PMIC Register Lock Register Mask Values to read the register lock status */
 #define PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_READ_MASK                      \
-  ((uint8_t)(0x03U << PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_SHIFT))
+    ((uint8_t)(0x03U << PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_SHIFT))
 
 #define PMIC_REGISTER_LOCK_CFG_REG_LOCKED_STATUS_READ_MASK                     \
-  ((uint8_t)(0x01U << PMIC_REGISTER_CFG_REG_LOCKED_STATUS_SHIFT))
+    ((uint8_t)(0x01U << PMIC_REGISTER_CFG_REG_LOCKED_STATUS_SHIFT))
 
 #define PMIC_REGISTER_LOCK_CNT_REG_LOCKED_STATUS_READ_MASK                     \
-  ((uint8_t)(0x01U << PMIC_REGISTER_CNT_REG_LOCKED_STATUS_SHIFT))
+    ((uint8_t)(0x01U << PMIC_REGISTER_CNT_REG_LOCKED_STATUS_SHIFT))
 
 /**  PMIC Register Lock Register Mask Values to write lock/unlock value to
  *   register lock register */
 #define PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_WRITE_MASK                     \
-  ((uint8_t)(0xFFU << PMIC_REGISTER_CFG_REG_UNLOCK_SEQ_SHIFT))
+    ((uint8_t)(0xFFU << PMIC_REGISTER_CFG_REG_UNLOCK_SEQ_SHIFT))
 
 /**
  * @brief   PMIC BB DIAGANOSTIC OUT Register Mask Values
@@ -277,11 +277,11 @@ extern "C" {
  * @brief  BB_PMIC STAT_READBACK_ERR register Mask Values
  */
 #define PMIC_STAT_READBACK_ERR_NRST_RDBK_LVL_MASK                              \
-  ((uint8_t)(0x01U << PMIC_STAT_READBACK_ERR_NRST_RDBK_LVL_SHIFT))
+    ((uint8_t)(0x01U << PMIC_STAT_READBACK_ERR_NRST_RDBK_LVL_SHIFT))
 #define PMIC_STAT_READBACK_ERR_SAFE_OUT1_RDBK_LVL_MASK                         \
-  ((uint8_t)(0x01U << PMIC_STAT_READBACK_ERR_SAFE_OUT1_RDBK_LVL_SHIFT))
+    ((uint8_t)(0x01U << PMIC_STAT_READBACK_ERR_SAFE_OUT1_RDBK_LVL_SHIFT))
 #define PMIC_STAT_READBACK_ERR_EN_OUT_RDBK_LVL_MASK                            \
-  ((uint8_t)(0x01U << PMIC_STAT_READBACK_ERR_EN_OUT_RDBK_LVL_SHIFT))
+    ((uint8_t)(0x01U << PMIC_STAT_READBACK_ERR_EN_OUT_RDBK_LVL_SHIFT))
 
 /**
  * @brief   PMIC DEV_REV Register Mask Values
@@ -309,19 +309,19 @@ extern "C" {
  * @brief  PMIC CONFIG_1 register bit masks
  */
 #define PMIC_CONFIG_1_TWARN_LEVEL_MASK                                         \
-  ((uint8_t)(0x01U << PMIC_CONFIG_1_TWARN_LEVEL_SHIFT))
+    ((uint8_t)(0x01U << PMIC_CONFIG_1_TWARN_LEVEL_SHIFT))
 #define PMIC_CONFIG_1_TSD_ORD_LEVEL_MASK                                       \
-  ((uint8_t)(0x01U << PMIC_CONFIG_1_TSD_ORD_LEVEL_SHIFT))
+    ((uint8_t)(0x01U << PMIC_CONFIG_1_TSD_ORD_LEVEL_SHIFT))
 #define PMIC_CONFIG_1_I2C1_HS_MASK                                             \
-  ((uint8_t)(0x01U << PMIC_CONFIG_1_I2C1_HS_SHIFT))
+    ((uint8_t)(0x01U << PMIC_CONFIG_1_I2C1_HS_SHIFT))
 #define PMIC_CONFIG_1_I2C2_HS_MASK                                             \
-  ((uint8_t)(0x01U << PMIC_CONFIG_1_I2C2_HS_SHIFT))
+    ((uint8_t)(0x01U << PMIC_CONFIG_1_I2C2_HS_SHIFT))
 #define PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_MASK                                    \
-  ((uint8_t)(0x01U << PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_SHIFT))
+    ((uint8_t)(0x01U << PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_SHIFT))
 #define PMIC_CONFIG_1_NSLEEP1_MASK_MASK                                        \
-  ((uint8_t)(0x01U << PMIC_CONFIG_1_NSLEEP1_MASK_SHIFT))
+    ((uint8_t)(0x01U << PMIC_CONFIG_1_NSLEEP1_MASK_SHIFT))
 #define PMIC_CONFIG_1_NSLEEP2_MASK_MASK                                        \
-  ((uint8_t)(0x01U << PMIC_CONFIG_1_NSLEEP2_MASK_SHIFT))
+    ((uint8_t)(0x01U << PMIC_CONFIG_1_NSLEEP2_MASK_SHIFT))
 
 /**
  * @brief   PMIC SAFE STATE TIMEOUT CONFIG SHIFT AND MASK VALUES
@@ -363,9 +363,9 @@ extern "C" {
 #define PMIC_SAFE_OUT2_PWML_NSC_SHIFT (0x0U)
 /* PMIC SAFE STATE MASK VALUES */
 #define PMIC_SAFE_OUT2_PWMH_NSC_MASK                                           \
-  ((uint8_t)(0x0FU << PMIC_SAFE_OUT2_PWMH_NSC_SHIFT))
+    ((uint8_t)(0x0FU << PMIC_SAFE_OUT2_PWMH_NSC_SHIFT))
 #define PMIC_SAFE_OUT2_PWML_NSC_MASK                                           \
-  ((uint8_t)(0x0FU << PMIC_SAFE_OUT2_PWML_NSC_SHIFT))
+    ((uint8_t)(0x0FU << PMIC_SAFE_OUT2_PWML_NSC_SHIFT))
 
 /**
  * @brief   PMIC SAFE STATE OUT2 CONFIG-3 SHIFT AND MASK VALUES
@@ -375,9 +375,9 @@ extern "C" {
 #define PMIC_SAFE_OUT2_PWML_PLS_SC_SHIFT (0x0U)
 /* PMIC SAFE STATE MASK VALUES */
 #define PMIC_SAFE_OUT2_PWMH_DLY_SC_MASK                                        \
-  ((uint8_t)(0x0FU << PMIC_SAFE_OUT2_PWMH_DLY_SC_SHIFT))
+    ((uint8_t)(0x0FU << PMIC_SAFE_OUT2_PWMH_DLY_SC_SHIFT))
 #define PMIC_SAFE_OUT2_PWML_PLS_SC_MASK                                        \
-  ((uint8_t)(0x0FU << PMIC_SAFE_OUT2_PWML_PLS_SC_SHIFT))
+    ((uint8_t)(0x0FU << PMIC_SAFE_OUT2_PWML_PLS_SC_SHIFT))
 
 /**
  * @brief  PMIC power Configuration Register Address
@@ -401,9 +401,9 @@ extern "C" {
  */
 static inline void Pmic_setBitField(uint8_t *pRegVal, uint8_t regFieldShift,
                                     uint8_t regFieldMask, uint8_t fieldVal) {
-  *pRegVal = (((*pRegVal) & (uint8_t)(~(uint8_t)regFieldMask)) |
-              ((((uint8_t)fieldVal) << (uint8_t)regFieldShift) &
-               (uint8_t)regFieldMask));
+    *pRegVal = (((*pRegVal) & (uint8_t)(~(uint8_t)regFieldMask)) |
+                ((((uint8_t)fieldVal) << (uint8_t)regFieldShift) &
+                 (uint8_t)regFieldMask));
 }
 
 /**
@@ -411,15 +411,17 @@ static inline void Pmic_setBitField(uint8_t *pRegVal, uint8_t regFieldShift,
  */
 static inline uint8_t Pmic_getBitField(uint8_t regData, uint8_t regFieldShift,
                                        uint8_t regFieldMask) {
-  uint8_t fieldVal;
+    uint8_t fieldVal;
 
-  fieldVal = (((regData) & (uint8_t)regFieldMask) >> (uint8_t)regFieldShift);
+    fieldVal = (((regData) & (uint8_t)regFieldMask) >> (uint8_t)regFieldShift);
 
-  return fieldVal;
+    return fieldVal;
 }
 
 bool pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos);
+
 void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *pPmicCoreHandle);
+
 void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *pPmicCoreHandle);
 
 #ifdef __cplusplus

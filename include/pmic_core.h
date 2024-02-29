@@ -120,23 +120,23 @@ extern "C" {
  *  @{
  */
 #define PMIC_CFG_BB_EOC_INDICATION_STAT_VALID_SHIFT                            \
-  (1U << PMIC_CFG_BB_EOC_INDICATION_STAT_VALID)
+    (1U << PMIC_CFG_BB_EOC_INDICATION_STAT_VALID)
 #define PMIC_CFG_REGISTER_LOCK_STAT_VALID_SHIFT                                \
-  (1U << PMIC_CFG_REGISTER_LOCK_STAT_VALID)
+    (1U << PMIC_CFG_REGISTER_LOCK_STAT_VALID)
 #define PMIC_CFG_EXT_CLK_VALIDITY_STAT_VALID_SHIFT                             \
-  (1U << PMIC_CFG_EXT_CLK_VALIDITY_STAT_VALID)
+    (1U << PMIC_CFG_EXT_CLK_VALIDITY_STAT_VALID)
 #define PMIC_CFG_STARTUP_PIN_STAT_VALID_SHIFT                                  \
-  (1U << PMIC_CFG_STARTUP_PIN_STAT_VALID)
+    (1U << PMIC_CFG_STARTUP_PIN_STAT_VALID)
 #define PMIC_CFG_EN_DRV_PIN_STAT_VALID_SHIFT                                   \
-  (1U << PMIC_CFG_EN_DRV_PIN_STAT_VALID)
+    (1U << PMIC_CFG_EN_DRV_PIN_STAT_VALID)
 #define PMIC_CFG_NRSTOUTSOC_PIN_STAT_VALID_SHIFT                               \
-  (1U << PMIC_CFG_NRSTOUTSOC_PIN_STAT_VALID)
+    (1U << PMIC_CFG_NRSTOUTSOC_PIN_STAT_VALID)
 #define PMIC_CFG_NRSTOUT_PIN_STAT_VALID_SHIFT                                  \
-  (1U << PMIC_CFG_NRSTOUT_PIN_STAT_VALID)
+    (1U << PMIC_CFG_NRSTOUT_PIN_STAT_VALID)
 #define PMIC_CFG_NINT_PIN_STAT_VALID_SHIFT (1U << PMIC_CFG_NINT_PIN_STAT_VALID)
 #define PMIC_CFG_SPMI_LPM_STAT_VALID_SHIFT (1U << PMIC_CFG_SPMI_LPM_STAT_VALID)
 #define PMIC_CFG_FORCE_ENABLE_DRV_LOW_STAT_VALID_SHIFT                         \
-  (1U << PMIC_CFG_FORCE_ENABLE_DRV_LOW_STAT_VALID)
+    (1U << PMIC_CFG_FORCE_ENABLE_DRV_LOW_STAT_VALID)
 /*  @} */
 
 /**
@@ -351,15 +351,15 @@ extern "C" {
  *  @{
  */
 #define PMIC_CFG_SPREAD_SPECTRUM_EN_VALID_SHIFT                                \
-  (1U << PMIC_CFG_SPREAD_SPECTRUM_EN_VALID)
+    (1U << PMIC_CFG_SPREAD_SPECTRUM_EN_VALID)
 #define PMIC_CFG_ENABLE_DRV_VALID_SHIFT (1U << PMIC_CFG_ENABLE_DRV_VALID)
 #define PMIC_CFG_REG_LOCK_VALID_SHIFT (1U << PMIC_CFG_REG_LOCK_VALID)
 #define PMIC_CFG_SPREAD_SPECTRUM_DEPTH_VALID_SHIFT                             \
-  (1U << PMIC_CFG_SPREAD_SPECTRUM_DEPTH_VALID)
+    (1U << PMIC_CFG_SPREAD_SPECTRUM_DEPTH_VALID)
 #define PMIC_CFG_EEPROM_DEFAULT_VALID_SHIFT                                    \
-  (1U << PMIC_CFG_EEPROM_DEFAULT_VALID)
+    (1U << PMIC_CFG_EEPROM_DEFAULT_VALID)
 #define PMIC_CFG_SKIP_EEPROM_LOAD_VALID_SHIFT                                  \
-  (1U << PMIC_CFG_SKIP_EEPROM_LOAD_VALID)
+    (1U << PMIC_CFG_SKIP_EEPROM_LOAD_VALID)
 /*  @} */
 
 /**
@@ -406,13 +406,13 @@ extern "C" {
  *  @{
  */
 #define PMIC_CFG_AMUX_OUT_REF_OUT_EN_VALID_SHIFT                               \
-  (1U << PMIC_CFG_AMUX_OUT_REF_OUT_EN_VALID)
+    (1U << PMIC_CFG_AMUX_OUT_REF_OUT_EN_VALID)
 #define PMIC_CFG_CLK_MON_EN_VALID_SHIFT (1U << PMIC_CFG_CLK_MON_EN_VALID)
 #define PMIC_CFG_SYNC_CLK_OUT_FREQ_SEL_VALID_SHIFT                             \
-  (1U << PMIC_CFG_SYNC_CLK_OUT_FREQ_SEL_VALID)
+    (1U << PMIC_CFG_SYNC_CLK_OUT_FREQ_SEL_VALID)
 #define PMIC_CFG_EXT_CLK_SEL_VALID_SHIFT (1U << PMIC_CFG_EXT_CLK_SEL_VALID)
 #define PMIC_CFG_SYNC_CLK_IN_FREQ_VALID_SHIFT                                  \
-  (1U << PMIC_CFG_SYNC_CLK_IN_FREQ_VALID)
+    (1U << PMIC_CFG_SYNC_CLK_IN_FREQ_VALID)
 #define PMIC_CFG_NRSTOUT_SOC_VALID_SHIFT (1U << PMIC_CFG_NRSTOUT_SOC_VALID)
 #define PMIC_CFG_NRSTOUT_VALID_SHIFT (1U << PMIC_CFG_NRSTOUT_VALID)
 /*  @} */
@@ -450,9 +450,9 @@ extern "C" {
  */
 #define PMIC_CFG_CHARGING_EN_VALID_SHIFT (1U << PMIC_CFG_CHARGING_EN_VALID)
 #define PMIC_CFG_END_OF_CHARGE_VOLTAGE_VALID_SHIFT                             \
-  (1U << PMIC_CFG_END_OF_CHARGE_VOLTAGE_VALID)
+    (1U << PMIC_CFG_END_OF_CHARGE_VOLTAGE_VALID)
 #define PMIC_CFG_CHARGE_CURRENT_VALID_SHIFT                                    \
-  (1U << PMIC_CFG_CHARGE_CURRENT_VALID)
+    (1U << PMIC_CFG_CHARGE_CURRENT_VALID)
 /*  @} */
 
 /**
@@ -504,9 +504,9 @@ extern "C" {
  *                         bit is set.
  */
 typedef struct Pmic_RecovCntCfg_s {
-  uint8_t validParams;
-  uint8_t thrVal;
-  bool clrCnt;
+    uint8_t validParams;
+    uint8_t thrVal;
+    bool clrCnt;
 } Pmic_RecovCntCfg_t;
 
 /**
@@ -576,19 +576,19 @@ typedef struct Pmic_RecovCntCfg_s {
  *                                  bit is set.
  */
 typedef struct Pmic_CommonCtrlCfg_s {
-  uint8_t validParams;
-  bool sreadSpectrumEn;
-  bool skipEepromDefaultLoadEn;
-  uint8_t eepromDefaultLoad;
-  uint8_t enDrv;
-  uint8_t regLock;
-  uint8_t spreadSpectrumDepth;
-  uint8_t eNsafeOut1;
-  uint8_t eNsafeOut2;
-  uint8_t regLock_1;
-  uint8_t regLock_2;
-  uint8_t cntLock_1;
-  uint8_t cntLock_2;
+    uint8_t validParams;
+    bool sreadSpectrumEn;
+    bool skipEepromDefaultLoadEn;
+    uint8_t eepromDefaultLoad;
+    uint8_t enDrv;
+    uint8_t regLock;
+    uint8_t spreadSpectrumDepth;
+    uint8_t eNsafeOut1;
+    uint8_t eNsafeOut2;
+    uint8_t regLock_1;
+    uint8_t regLock_2;
+    uint8_t cntLock_1;
+    uint8_t cntLock_2;
 } Pmic_CommonCtrlCfg_t;
 
 /**
@@ -597,9 +597,9 @@ typedef struct Pmic_CommonCtrlCfg_s {
  * This structure contains parameters related to PMIC safe state configuration.
  */
 typedef struct Pmic_SafeStateCfg_s {
-  uint8_t validParams;       /**< Indicates which parameters are valid */
-  uint8_t safeStateTMO;      /**< Safe state timeout */
-  uint8_t safeLockThreshold; /**< Safe state lock threshold */
+    uint8_t validParams;       /**< Indicates which parameters are valid */
+    uint8_t safeStateTMO;      /**< Safe state timeout */
+    uint8_t safeLockThreshold; /**< Safe state lock threshold */
 } Pmic_SafeStateCfg_t;
 
 /**
@@ -659,14 +659,14 @@ typedef struct Pmic_SafeStateCfg_s {
  *                                 Valid values @ref Pmic_SignalLvl
  */
 typedef struct Pmic_MiscCtrlCfg_s {
-  uint8_t validParams;
-  bool amuxOutRefOutEn;
-  bool clkMonEn;
-  uint8_t syncClkOutFreqSel;
-  uint8_t extClkSel;
-  uint8_t syncClkInFreq;
-  uint8_t nRstOutSocSignal;
-  uint8_t nRstOutSignal;
+    uint8_t validParams;
+    bool amuxOutRefOutEn;
+    bool clkMonEn;
+    uint8_t syncClkOutFreqSel;
+    uint8_t extClkSel;
+    uint8_t syncClkInFreq;
+    uint8_t nRstOutSocSignal;
+    uint8_t nRstOutSignal;
 } Pmic_MiscCtrlCfg_t;
 
 /**
@@ -677,11 +677,11 @@ typedef struct Pmic_MiscCtrlCfg_s {
  * output configuration.
  */
 typedef struct Pmic_DiagOutCfgCtrl_s {
-  uint8_t validParams;        /**< Indicates which parameters are valid */
-  uint8_t DiagOutCtrl;        /**< Diagnostic output control */
-  uint8_t DiagOutCtrl_AMUXEn; /**< Diagnostic output AMUX enable */
-  uint8_t DiagOutCtrl_DMUXEn; /**< Diagnostic output DMUX enable */
-  uint8_t DiagGrpSel;         /**< Diagnostic group selection */
+    uint8_t validParams;        /**< Indicates which parameters are valid */
+    uint8_t DiagOutCtrl;        /**< Diagnostic output control */
+    uint8_t DiagOutCtrl_AMUXEn; /**< Diagnostic output AMUX enable */
+    uint8_t DiagOutCtrl_DMUXEn; /**< Diagnostic output DMUX enable */
+    uint8_t DiagGrpSel;         /**< Diagnostic group selection */
 } Pmic_DiagOutCfgCtrl_t;
 
 /**
@@ -715,10 +715,10 @@ typedef struct Pmic_DiagOutCfgCtrl_s {
  *                                    @ref Pmic_Tps6594xLeo_Charging_Current_Sel
  */
 typedef struct Pmic_BatteryCtrlCfg_s {
-  uint8_t validParams;
-  bool chargingEn;
-  uint8_t endOfChargeVoltage;
-  uint8_t chargeCurrent;
+    uint8_t validParams;
+    bool chargingEn;
+    uint8_t endOfChargeVoltage;
+    uint8_t chargeCurrent;
 } Pmic_BatteryCtrlCfg_t;
 
 /**
@@ -780,22 +780,22 @@ typedef struct Pmic_BatteryCtrlCfg_s {
  *                                Valid values @ref Pmic_SignalLvl
  */
 typedef struct Pmic_CommonCtrlStat_s {
-  uint32_t validParams;
-  bool spmiLpmStat;
-  uint8_t forceEnDrvLowStat;
-  uint8_t bbEndOfChargeIndication;
-  uint8_t regLockStat;
-  uint8_t extClkValidity;
-  uint8_t startupPin;
-  uint8_t enDrvPin;
-  uint8_t nRstOutSocPin;
-  uint8_t nRstOutPin;
-  uint8_t nIntPin;
-  uint8_t enOutPin;
-  uint8_t safeOut1Pin;
-  uint8_t nRstPin;
-  uint8_t cfgregLockStat;
-  uint8_t cntregLockStat;
+    uint32_t validParams;
+    bool spmiLpmStat;
+    uint8_t forceEnDrvLowStat;
+    uint8_t bbEndOfChargeIndication;
+    uint8_t regLockStat;
+    uint8_t extClkValidity;
+    uint8_t startupPin;
+    uint8_t enDrvPin;
+    uint8_t nRstOutSocPin;
+    uint8_t nRstOutPin;
+    uint8_t nIntPin;
+    uint8_t enOutPin;
+    uint8_t safeOut1Pin;
+    uint8_t nRstPin;
+    uint8_t cfgregLockStat;
+    uint8_t cntregLockStat;
 } Pmic_CommonCtrlStat_t;
 
 /**
@@ -810,11 +810,11 @@ typedef struct Pmic_CommonCtrlStat_s {
  *                          PMIC PG2.0 and LP8764x Hera PMIC PG2.0
  */
 typedef struct Pmic_DeviceInfo_s {
-  uint8_t deviceID;
-  uint8_t nvmID;
-  uint8_t nvmRev;
-  uint8_t siliconRev;
-  uint8_t customNvmID;
+    uint8_t deviceID;
+    uint8_t nvmID;
+    uint8_t nvmRev;
+    uint8_t siliconRev;
+    uint8_t customNvmID;
 } Pmic_DeviceInfo_t;
 
 /**
@@ -824,10 +824,10 @@ typedef struct Pmic_DeviceInfo_s {
  * state.
  */
 typedef struct Pmic_CommonStateStat_s {
-  uint8_t *rstMcuCnt;    /**< Pointer to RST_MCU_CNT bits (7-6) */
-  uint8_t *rstMcuRqFlag; /**< Pointer to RST_MCU_RQ_FLAG bit (5) */
-  uint8_t *pwrdDlyActv;  /**< Pointer to PWRD_DLY_ACTV bit (4) */
-  uint8_t *state;        /**< Pointer to STATE bits (3-0) */
+    uint8_t *rstMcuCnt;    /**< Pointer to RST_MCU_CNT bits (7-6) */
+    uint8_t *rstMcuRqFlag; /**< Pointer to RST_MCU_RQ_FLAG bit (5) */
+    uint8_t *pwrdDlyActv;  /**< Pointer to PWRD_DLY_ACTV bit (4) */
+    uint8_t *state;        /**< Pointer to STATE bits (3-0) */
 } Pmic_CommonStateStat_t;
 
 /**
@@ -836,18 +836,12 @@ typedef struct Pmic_CommonStateStat_s {
  * This structure contains the state request information for PMIC.
  */
 typedef struct Pmic_CommonStateCtrl_s {
-  uint8_t state_req; /**< State request value */
+    uint8_t state_req; /**< State request value */
 } Pmic_CommonStateCtrl_t;
 
 /*==========================================================================*/
 /*                         Function Declarations                            */
 /*==========================================================================*/
-
-bool pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos);
-
-void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *pPmicCoreHandle);
-
-void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *pPmicCoreHandle);
 
 int32_t Pmic_setRecoveryCntCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                const Pmic_RecovCntCfg_t recovCntCfg);
