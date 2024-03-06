@@ -420,7 +420,7 @@ void test_ADC_setConfiguration_RDiv_EnableDisable(void)
     TEST_ASSERT_EQUAL(expectedAdcCfg.rDivEn, actualAdcCfg.rDivEn);
 }
 
-static void adcSetConfigurationThermalSel_test(Pmic_adcThermalSel_t thermalSel)
+static void adcSetConfigurationThermalSel_test(uint8_t thermalSel)
 {
     int32_t       status = PMIC_ST_SUCCESS;
     Pmic_adcCfg_t expectedAdcCfg, actualAdcCfg;

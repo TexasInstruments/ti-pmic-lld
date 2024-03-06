@@ -438,24 +438,24 @@ static void Pmic_powerTps6522xGetBuckCtrlRegBitFields(Pmic_powerTps6522xBuckPowe
 {
     if (pmic_validParamCheck(pBuckPowerResourceCfg->validParams, PMIC_POWER_TPS6522X_CFG_BUCK_PLDN_VALID))
     {
-        pBuckPowerResourceCfg->buckPldn = (Pmic_powerTps6522xBuckPldnEn_t)Pmic_getBitField(
+        pBuckPowerResourceCfg->buckPldn = (uint8_t)Pmic_getBitField(
             buckCtrlRegData, PMIC_POWER_TPS6522X_BUCK_CTRL_PLDN_SHIFT, PMIC_POWER_TPS6522X_BUCK_CTRL_PLDN_MASK);
     }
     if (pmic_validParamCheck(pBuckPowerResourceCfg->validParams, PMIC_POWER_TPS6522X_CFG_BUCK_VMON_EN_VALID))
     {
-        pBuckPowerResourceCfg->buckVmonEn = (Pmic_powerTps6522xBuckVmonEn_t)Pmic_getBitField(
+        pBuckPowerResourceCfg->buckVmonEn = (uint8_t)Pmic_getBitField(
             buckCtrlRegData, PMIC_POWER_TPS6522X_BUCK_CTRL_VMON_EN_SHIFT, PMIC_POWER_TPS6522X_BUCK_CTRL_VMON_EN_MASK);
     }
     if (pmic_validParamCheck(pBuckPowerResourceCfg->validParams, PMIC_POWER_TPS6522X_CFG_BUCK_PWM_OPTION_VALID))
     {
         pBuckPowerResourceCfg->buckPwmOption =
-            (Pmic_powerTps6522xBuckPwmOption_t)Pmic_getBitField(buckCtrlRegData,
+            (uint8_t)Pmic_getBitField(buckCtrlRegData,
                                                                 PMIC_POWER_TPS6522X_BUCK_CTRL_PWM_OPTION_SHIFT,
                                                                 PMIC_POWER_TPS6522X_BUCK_CTRL_PWM_OPTION_MASK);
     }
     if (pmic_validParamCheck(pBuckPowerResourceCfg->validParams, PMIC_POWER_TPS6522X_CFG_BUCK_EN_VALID))
     {
-        pBuckPowerResourceCfg->buckEn = (Pmic_powerTps6522xBuckEn_t)Pmic_getBitField(
+        pBuckPowerResourceCfg->buckEn = (uint8_t)Pmic_getBitField(
             buckCtrlRegData, PMIC_POWER_TPS6522X_BUCK_CTRL_EN_SHIFT, PMIC_POWER_TPS6522X_BUCK_CTRL_EN_MASK);
     }
 }
@@ -473,7 +473,7 @@ static void Pmic_powerTps6522xGetBuckConfRegBitFields(Pmic_powerTps6522xBuckPowe
     if (pmic_validParamCheck(pBuckPowerResourceCfg->validParams, PMIC_POWER_TPS6522X_CFG_BUCK_SLEW_RATE_VALID))
     {
         pBuckPowerResourceCfg->buckSlewRate =
-            (Pmic_powerTps6522xBuckSlewRate_t)Pmic_getBitField(buckConfRegData,
+            (uint8_t)Pmic_getBitField(buckConfRegData,
                                                                PMIC_POWER_TPS6522X_BUCK_CONF_SLEW_RATE_SHIFT,
                                                                PMIC_POWER_TPS6522X_BUCK_CONF_SLEW_RATE_MASK);
     }
@@ -585,7 +585,7 @@ Pmic_powerTps6522xGetBuckPgWindowRegBitFields(Pmic_powerTps6522xBuckPowerResourc
     if (pmic_validParamCheck(pBuckPowerResourceCfg->validParams, PMIC_POWER_TPS6522X_CFG_BUCK_VMON_THR_VALID))
     {
         pBuckPowerResourceCfg->buckVmonThr =
-            (Pmic_powerTps6522xBuckVmonThr_t)Pmic_getBitField(buckPgWindowRegData,
+            (uint8_t)Pmic_getBitField(buckPgWindowRegData,
                                                               PMIC_POWER_TPS6522X_BUCK_PG_WINDOW_VMON_THR_SHIFT,
                                                               PMIC_POWER_TPS6522X_BUCK_PG_WINDOW_VMON_THR_MASK);
     }
@@ -608,28 +608,28 @@ static void Pmic_PowerTps6522xGetRailSel1RegBitFields(Pmic_powerTps6522xBuckPowe
         switch (buckNum)
         {
             case PMIC_POWER_TPS6522X_REGULATOR_BUCK1:
-                pBuckPowerResourceCfg->buckRailGrpSel = (Pmic_powerTps6522xBuckRailSel_t)Pmic_getBitField(
+                pBuckPowerResourceCfg->buckRailGrpSel = (uint8_t)Pmic_getBitField(
                     buckRailSelRegData,
                     PMIC_POWER_TPS6522X_CFG_RAIL_SEL_1_BUCK1_GRP_SEL_SHIFT,
                     PMIC_POWER_TPS6522X_CFG_RAIL_SEL_1_BUCK1_GRP_SEL_MASK);
 
                 break;
             case PMIC_POWER_TPS6522X_REGULATOR_BUCK2:
-                pBuckPowerResourceCfg->buckRailGrpSel = (Pmic_powerTps6522xBuckRailSel_t)Pmic_getBitField(
+                pBuckPowerResourceCfg->buckRailGrpSel = (uint8_t)Pmic_getBitField(
                     buckRailSelRegData,
                     PMIC_POWER_TPS6522X_CFG_RAIL_SEL_1_BUCK2_GRP_SEL_SHIFT,
                     PMIC_POWER_TPS6522X_CFG_RAIL_SEL_1_BUCK2_GRP_SEL_MASK);
 
                 break;
             case PMIC_POWER_TPS6522X_REGULATOR_BUCK3:
-                pBuckPowerResourceCfg->buckRailGrpSel = (Pmic_powerTps6522xBuckRailSel_t)Pmic_getBitField(
+                pBuckPowerResourceCfg->buckRailGrpSel = (uint8_t)Pmic_getBitField(
                     buckRailSelRegData,
                     PMIC_POWER_TPS6522X_CFG_RAIL_SEL_1_BUCK3_GRP_SEL_SHIFT,
                     PMIC_POWER_TPS6522X_CFG_RAIL_SEL_1_BUCK3_GRP_SEL_MASK);
 
                 break;
             case PMIC_POWER_TPS6522X_REGULATOR_BUCK4:
-                pBuckPowerResourceCfg->buckRailGrpSel = (Pmic_powerTps6522xBuckRailSel_t)Pmic_getBitField(
+                pBuckPowerResourceCfg->buckRailGrpSel = (uint8_t)Pmic_getBitField(
                     buckRailSelRegData,
                     PMIC_POWER_TPS6522X_CFG_RAIL_SEL_1_BUCK4_GRP_SEL_SHIFT,
                     PMIC_POWER_TPS6522X_CFG_RAIL_SEL_1_BUCK4_GRP_SEL_MASK);
@@ -731,18 +731,18 @@ static void Pmic_powerTps6522xGetLdoCtrlRegBitFields(Pmic_powerTps6522xLdoPowerR
     if (pmic_validParamCheck(pLdoPowerResourceCfg->validParams, PMIC_POWER_TPS6522X_CFG_LDO_DISCHARGE_EN_VALID))
     {
         pLdoPowerResourceCfg->ldoDischargeEn =
-            (Pmic_powerTps6522xLdoDischargeEn_t)Pmic_getBitField(ldoCtrlRegData,
+            (uint8_t)Pmic_getBitField(ldoCtrlRegData,
                                                                  PMIC_POWER_TPS6522X_LDO_CTRL_DISCHARGE_EN_SHIFT,
                                                                  PMIC_POWER_TPS6522X_LDO_CTRL_DISCHARGE_EN_MASK);
     }
     if (pmic_validParamCheck(pLdoPowerResourceCfg->validParams, PMIC_POWER_TPS6522X_CFG_LDO_VMON_EN_VALID))
     {
-        pLdoPowerResourceCfg->ldoVmonEn = (Pmic_powerTps6522xLdoVmonEn_t)Pmic_getBitField(
+        pLdoPowerResourceCfg->ldoVmonEn = (uint8_t)Pmic_getBitField(
             ldoCtrlRegData, PMIC_POWER_TPS6522X_LDO_CTRL_VMON_EN_SHIFT, PMIC_POWER_TPS6522X_LDO_CTRL_VMON_EN_MASK);
     }
     if (pmic_validParamCheck(pLdoPowerResourceCfg->validParams, PMIC_POWER_TPS6522X_CFG_LDO_EN_VALID))
     {
-        pLdoPowerResourceCfg->ldoEn = (Pmic_powerTps6522xLdoEn_t)Pmic_getBitField(
+        pLdoPowerResourceCfg->ldoEn = (uint8_t)Pmic_getBitField(
             ldoCtrlRegData, PMIC_POWER_TPS6522X_LDO_CTRL_EN_SHIFT, PMIC_POWER_TPS6522X_LDO_CTRL_EN_MASK);
     }
 }
@@ -826,7 +826,7 @@ static void Pmic_powerTps6522xGetLdoVoutRegBitFields(Pmic_powerTps6522xLdoPowerR
 
     if (pmic_validParamCheck(pLdoPowerResourceCfg->validParams, PMIC_POWER_TPS6522X_CFG_LDO_MODE_VALID))
     {
-        pLdoPowerResourceCfg->ldoMode = (Pmic_powerTps6522xLdoBypassConfig_t)Pmic_getBitField(
+        pLdoPowerResourceCfg->ldoMode = (uint8_t)Pmic_getBitField(
             ldoVoutRegData, PMIC_POWER_TPS6522X_LDO_VOUT_LDO_MODE_SHIFT, PMIC_POWER_TPS6522X_LDO_VOUT_LDO_MODE_MASK);
     }
     if (pmic_validParamCheck(pLdoPowerResourceCfg->validParams, PMIC_POWER_TPS6522X_CFG_LDO_VOLTAGE_MV_VALID))
@@ -852,7 +852,7 @@ static void Pmic_powerTps6522xGetLdoPgWindowRegBitFields(Pmic_powerTps6522xLdoPo
     if (pmic_validParamCheck(pLdoPowerResourceCfg->validParams, PMIC_POWER_TPS6522X_CFG_LDO_VMON_THR_VALID))
     {
         pLdoPowerResourceCfg->ldoVmonThr =
-            (Pmic_powerTps6522xLdoVmonThr_t)Pmic_getBitField(ldoPgWindowRegData,
+            (uint8_t)Pmic_getBitField(ldoPgWindowRegData,
                                                              PMIC_POWER_TPS6522X_LDO_PG_WINDOW_LDO_VMON_THR_SHIFT,
                                                              PMIC_POWER_TPS6522X_LDO_PG_WINDOW_LDO_VMON_THR_MASK);
     }
@@ -876,21 +876,21 @@ static void Pmic_powerTps6522xGetRailSel2RegBitFields(Pmic_powerTps6522xLdoPower
         {
             case PMIC_POWER_TPS6522X_REGULATOR_LDO1:
                 pLdoPowerResourceCfg->ldoRailGrpSel =
-                    (Pmic_powerTps6522xLdoRailSel_t)Pmic_getBitField(ldoRailSelRegData,
+                    (uint8_t)Pmic_getBitField(ldoRailSelRegData,
                                                                      PMIC_POWER_TPS6522X_RAIL_SEL_2_LDO1_GRP_SEL_SHIFT,
                                                                      PMIC_POWER_TPS6522X_RAIL_SEL_2_LDO1_GRP_SEL_MASK);
 
                 break;
             case PMIC_POWER_TPS6522X_REGULATOR_LDO2:
                 pLdoPowerResourceCfg->ldoRailGrpSel =
-                    (Pmic_powerTps6522xLdoRailSel_t)Pmic_getBitField(ldoRailSelRegData,
+                    (uint8_t)Pmic_getBitField(ldoRailSelRegData,
                                                                      PMIC_POWER_TPS6522X_RAIL_SEL_2_LDO2_GRP_SEL_SHIFT,
                                                                      PMIC_POWER_TPS6522X_RAIL_SEL_2_LDO2_GRP_SEL_MASK);
 
                 break;
             case PMIC_POWER_TPS6522X_REGULATOR_LDO3:
                 pLdoPowerResourceCfg->ldoRailGrpSel =
-                    (Pmic_powerTps6522xLdoRailSel_t)Pmic_getBitField(ldoRailSelRegData,
+                    (uint8_t)Pmic_getBitField(ldoRailSelRegData,
                                                                      PMIC_POWER_TPS6522X_RAIL_SEL_2_LDO3_GRP_SEL_SHIFT,
                                                                      PMIC_POWER_TPS6522X_RAIL_SEL_2_LDO3_GRP_SEL_MASK);
 
@@ -985,7 +985,7 @@ Pmic_powerTps6522xGetVccaVmonCtrlBitFields(Pmic_powerTps6522xVccaVmonPowerResour
         pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VMON1_EN_VALID))
     {
         pVccaVmonPwrRsrcCfg->vmon1En =
-            (Pmic_powerTps6522xVmon1En_t)Pmic_getBitField(vccaVmonCtrlRegData,
+            (uint8_t)Pmic_getBitField(vccaVmonCtrlRegData,
                                                           PMIC_POWER_TPS6522X_VCCA_VMON_CTRL_VMON1_EN_SHIFT,
                                                           PMIC_POWER_TPS6522X_VCCA_VMON_CTRL_VMON1_EN_MASK);
     }
@@ -993,7 +993,7 @@ Pmic_powerTps6522xGetVccaVmonCtrlBitFields(Pmic_powerTps6522xVccaVmonPowerResour
              pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VMON2_EN_VALID))
     {
         pVccaVmonPwrRsrcCfg->vmon2En =
-            (Pmic_powerTps6522xVmon2En_t)Pmic_getBitField(vccaVmonCtrlRegData,
+            (uint8_t)Pmic_getBitField(vccaVmonCtrlRegData,
                                                           PMIC_POWER_TPS6522X_VCCA_VMON_CTRL_VMON2_EN_SHIFT,
                                                           PMIC_POWER_TPS6522X_VCCA_VMON_CTRL_VMON2_EN_MASK);
     }
@@ -1001,7 +1001,7 @@ Pmic_powerTps6522xGetVccaVmonCtrlBitFields(Pmic_powerTps6522xVccaVmonPowerResour
              pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VCCA_VMON_EN_VALID))
     {
         pVccaVmonPwrRsrcCfg->vccaVmonEn =
-            (Pmic_powerTps6522xVccaVmonEn_t)Pmic_getBitField(vccaVmonCtrlRegData,
+            (uint8_t)Pmic_getBitField(vccaVmonCtrlRegData,
                                                              PMIC_POWER_TPS6522X_VCCA_VMON_CTRL_VCCA_VMON_EN_SHIFT,
                                                              PMIC_POWER_TPS6522X_VCCA_VMON_CTRL_VCCA_VMON_EN_MASK);
     }
@@ -1009,7 +1009,7 @@ Pmic_powerTps6522xGetVccaVmonCtrlBitFields(Pmic_powerTps6522xVccaVmonPowerResour
     if (pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VMON_DEGLITCH_SEL_VALID))
     {
         pVccaVmonPwrRsrcCfg->vmonDeglitchSel =
-            (Pmic_powerTps6522xVmonDeglitchSel_t)Pmic_getBitField(vccaVmonCtrlRegData,
+            (uint8_t)Pmic_getBitField(vccaVmonCtrlRegData,
                                                                   PMIC_POWER_TPS6522X_VCCA_VMON_CTRL_DEGLITCH_SEL_SHIFT,
                                                                   PMIC_POWER_TPS6522X_VCCA_VMON_CTRL_DEGLITCH_SEL_MASK);
     }
@@ -1028,14 +1028,14 @@ static Pmic_powerTps6522xGetVccaPgWindowBitFields(Pmic_powerTps6522xVccaVmonPowe
     if (pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VCCA_PG_LEVEL_VALID))
     {
         pVccaVmonPwrRsrcCfg->vccaPgLevel =
-            (Pmic_powerTps6522xVccaPgLevel_t)Pmic_getBitField(vccaPgWindowRegData,
+            (uint8_t)Pmic_getBitField(vccaPgWindowRegData,
                                                               PMIC_POWER_TPS6522X_VCCA_PG_WINDOW_VCCA_PG_SET_SHIFT,
                                                               PMIC_POWER_TPS6522X_VCCA_PG_WINDOW_VCCA_PG_SET_MASK);
     }
     if (pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VCCA_VMON_THR_VALID))
     {
         pVccaVmonPwrRsrcCfg->vccaVmonThr =
-            (Pmic_powerTps6522xVccaVmonThr_t)Pmic_getBitField(vccaPgWindowRegData,
+            (uint8_t)Pmic_getBitField(vccaPgWindowRegData,
                                                               PMIC_POWER_TPS6522X_VCCA_PG_WINDOW_VCCA_VMON_THR_SHIFT,
                                                               PMIC_POWER_TPS6522X_VCCA_PG_WINDOW_VCCA_VMON_THR_MASK);
     }
@@ -1058,7 +1058,7 @@ static Pmic_powerTps6522xGetVmonPgWindowBitFields(Pmic_powerTps6522xVccaVmonPowe
         pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VMON1_THR_VALID))
     {
         pVccaVmonPwrRsrcCfg->vmon1Thr =
-            (Pmic_powerTps6522xVmon1Thr_t)Pmic_getBitField(vmonPgWindowRegData,
+            (uint8_t)Pmic_getBitField(vmonPgWindowRegData,
                                                            PMIC_POWER_TPS6522X_VMON1_PG_WINDOW_VMON1_THR_SHIFT,
                                                            PMIC_POWER_TPS6522X_VMON1_PG_WINDOW_VMON1_THR_MASK);
     }
@@ -1066,7 +1066,7 @@ static Pmic_powerTps6522xGetVmonPgWindowBitFields(Pmic_powerTps6522xVccaVmonPowe
              pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VMON2_THR_VALID))
     {
         pVccaVmonPwrRsrcCfg->vmon2Thr =
-            (Pmic_powerTps6522xVmon2Thr_t)Pmic_getBitField(vmonPgWindowRegData,
+            (uint8_t)Pmic_getBitField(vmonPgWindowRegData,
                                                            PMIC_POWER_TPS6522X_VMON2_PG_WINDOW_VMON2_THR_SHIFT,
                                                            PMIC_POWER_TPS6522X_VMON2_PG_WINDOW_VMON2_THR_MASK);
     }
@@ -1184,7 +1184,7 @@ static Pmic_powerTps6522xGetRailSel3RegBitFields(Pmic_powerTps6522xVccaVmonPower
         pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VMON1_RAIL_GRP_SEL_VALID))
     {
         pVccaVmonPwrRsrcCfg->vmon1RailGrpSel =
-            (Pmic_powerTps6522xVmon1RailSel_t)Pmic_getBitField(vccaVmonRailSelRegData,
+            (uint8_t)Pmic_getBitField(vccaVmonRailSelRegData,
                                                                PMIC_POWER_TPS6522X_RAIL_SEL_3_VMON1_GRP_SEL_SHIFT,
                                                                PMIC_POWER_TPS6522X_RAIL_SEL_3_VMON1_GRP_SEL_MASK);
     }
@@ -1192,7 +1192,7 @@ static Pmic_powerTps6522xGetRailSel3RegBitFields(Pmic_powerTps6522xVccaVmonPower
              pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VMON2_RAIL_GRP_SEL_VALID))
     {
         pVccaVmonPwrRsrcCfg->vmon2RailGrpSel =
-            (Pmic_powerTps6522xVmon2RailSel_t)Pmic_getBitField(vccaVmonRailSelRegData,
+            (uint8_t)Pmic_getBitField(vccaVmonRailSelRegData,
                                                                PMIC_POWER_TPS6522X_RAIL_SEL_3_VMON2_GRP_SEL_SHIFT,
                                                                PMIC_POWER_TPS6522X_RAIL_SEL_3_VMON2_GRP_SEL_MASK);
     }
@@ -1200,7 +1200,7 @@ static Pmic_powerTps6522xGetRailSel3RegBitFields(Pmic_powerTps6522xVccaVmonPower
              pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, PMIC_POWER_TPS6522X_CFG_VCCA_RAIL_GRP_SEL_VALID))
     {
         pVccaVmonPwrRsrcCfg->vccaRailGrpSel =
-            (Pmic_powerTps6522xVccaRailSel_t)Pmic_getBitField(vccaVmonRailSelRegData,
+            (uint8_t)Pmic_getBitField(vccaVmonRailSelRegData,
                                                               PMIC_POWER_TPS6522X_RAIL_SEL_3_VCCA_GRP_SEL_SHIFT,
                                                               PMIC_POWER_TPS6522X_RAIL_SEL_3_VCCA_GRP_SEL_MASK);
     }
@@ -2458,7 +2458,7 @@ static int32_t Pmic_powerTps6522xParamCheck_pmicHandle(Pmic_CoreHandle_t *pPmicC
  *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
  */
 static int32_t Pmic_powerTps6522xGetBuckStat(Pmic_CoreHandle_t        *pPmicCoreHandle,
-                                             const pwrRsrcUVOVStatus_t pwrRsrcUVOVStatus,
+                                             const uint8_t pwrRsrcUVOVStatus,
                                              bool                     *pUnderOverVoltStat)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -2520,7 +2520,7 @@ static int32_t Pmic_powerTps6522xGetBuckStat(Pmic_CoreHandle_t        *pPmicCore
  *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
  */
 static int32_t Pmic_powerTps6522xGetLdoVccaVmonStat(Pmic_CoreHandle_t        *pPmicCoreHandle,
-                                                    const pwrRsrcUVOVStatus_t pwrRsrcUVOVStatus,
+                                                    const uint8_t pwrRsrcUVOVStatus,
                                                     bool                     *pUnderOverVoltStat)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -2583,7 +2583,7 @@ static int32_t Pmic_powerTps6522xGetLdoVccaVmonStat(Pmic_CoreHandle_t        *pP
 }
 
 int32_t Pmic_powerTps6522xGetPwrRsrcStat(Pmic_CoreHandle_t        *pPmicCoreHandle,
-                                         const pwrRsrcUVOVStatus_t pwrRsrcUVOVStatus,
+                                         const uint8_t pwrRsrcUVOVStatus,
                                          bool                     *pUnderOverVoltStat)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -2709,14 +2709,14 @@ int32_t Pmic_powerTps6522xGetThermalCfg(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic
     if ((status == PMIC_ST_SUCCESS) &&
         pmic_validParamCheck(pThermalCfg->validParams, PMIC_POWER_TPS6522X_TSD_ORD_LEVEL_VALID))
     {
-        pThermalCfg->tsdOrdLvl = (Pmic_powerTps6522xTsdOrdLvl_t)Pmic_getBitField(
+        pThermalCfg->tsdOrdLvl = (uint8_t)Pmic_getBitField(
             regData, PMIC_POWER_TPS6522X_TSD_ORD_LEVEL_SHIFT, PMIC_POWER_TPS6522X_TSD_ORD_LEVEL_MASK);
     }
     // If TWARN_LEVEL validParam is set, extract TWARN_LEVEL bit
     if ((status == PMIC_ST_SUCCESS) &&
         pmic_validParamCheck(pThermalCfg->validParams, PMIC_POWER_TPS6522X_TWARN_LEVEL_VALID))
     {
-        pThermalCfg->twarnLvl = (Pmic_powerTps6522xTwarnLvl_t)Pmic_getBitField(
+        pThermalCfg->twarnLvl = (uint8_t)Pmic_getBitField(
             regData, PMIC_POWER_TPS6522X_TWARN_LEVEL_SHIFT, PMIC_POWER_TPS6522X_TWARN_LEVEL_MASK);
     }
 

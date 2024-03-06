@@ -179,17 +179,17 @@ int32_t Pmic_ADCGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_adcCfg
     {
         if (pmic_validParamCheck(pAdcCfg->validParams, PMIC_ADC_CFG_RDIV_EN_VALID))
         {
-            pAdcCfg->rDivEn = (Pmic_adcRDivEn_t)Pmic_getBitField(
+            pAdcCfg->rDivEn = (uint8_t)Pmic_getBitField(
                 adcCtrlRegData, PMIC_ADC_CTRL_RDIV_EN_SHIFT, PMIC_ADC_CTRL_RDIV_EN_MASK);
         }
         if (pmic_validParamCheck(pAdcCfg->validParams, PMIC_ADC_CFG_THERMAL_SEL_VALID))
         {
-            pAdcCfg->thermalSel = (Pmic_adcThermalSel_t)Pmic_getBitField(
+            pAdcCfg->thermalSel = (uint8_t)Pmic_getBitField(
                 adcCtrlRegData, PMIC_ADC_CTRL_THERMAL_SEL_SHIFT, PMIC_ADC_CTRL_THERMAL_SEL_MASK);
         }
         if (pmic_validParamCheck(pAdcCfg->validParams, PMIC_ADC_CFG_CONT_CONV_VALID))
         {
-            pAdcCfg->contConv = (Pmic_adcContConv_t)Pmic_getBitField(
+            pAdcCfg->contConv = (uint8_t)Pmic_getBitField(
                 adcCtrlRegData, PMIC_ADC_CTRL_CONT_CONV_SHIFT, PMIC_ADC_CTRL_CONT_CONV_MASK);
         }
     }
@@ -211,9 +211,9 @@ int32_t Pmic_ADCGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_adcCfg
  */
 static int32_t Pmic_ADCContConvCheck(const uint8_t adcCtrlRegData)
 {
-    Pmic_adcContConv_t contConv = PMIC_ADC_CONTINUOUS_CONVERSION_DISABLED;
+    uint8_t contConv = PMIC_ADC_CONTINUOUS_CONVERSION_DISABLED;
 
-    contConv = (Pmic_adcContConv_t)Pmic_getBitField(
+    contConv = (uint8_t)Pmic_getBitField(
         adcCtrlRegData, PMIC_ADC_CTRL_CONT_CONV_SHIFT, PMIC_ADC_CTRL_CONT_CONV_MASK);
 
     if (contConv == PMIC_ADC_CONTINUOUS_CONVERSION_ENABLED)
@@ -408,7 +408,7 @@ int32_t Pmic_ADCGetResultCode(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t *pAdc
  *  \param      pAdcResult      [OUT]   ADC result in microvolts
  */
 static inline void
-adcConvertCodeToMicroVolts(const uint16_t adcResultCode, const Pmic_adcRDivEn_t adcRDivEn, int32_t *pAdcResult)
+adcConvertCodeToMicroVolts(const uint16_t adcResultCode, const uint8_t adcRDivEn, int32_t *pAdcResult)
 {
     // ADC result code is 12 bits. If adcResultCode exceeds maximum 12-bit value,
     // set ADC result to be maximum microvolts
@@ -446,8 +446,8 @@ int32_t Pmic_ADCGetResult(Pmic_CoreHandle_t *pPmicCoreHandle, int32_t *pAdcResul
     int32_t              status = PMIC_ST_SUCCESS;
     uint8_t              adcCtrlRegData = 0;
     uint16_t             adcResultCode = 0;
-    Pmic_adcRDivEn_t     adcRDivEn = PMIC_ADC_RESISTOR_DIVIDER_DISABLED;
-    Pmic_adcThermalSel_t thermalSel = PMIC_ADC_THERMAL_SEL_ADC_INPUT;
+    uint8_t     adcRDivEn = PMIC_ADC_RESISTOR_DIVIDER_DISABLED;
+    uint8_t thermalSel = PMIC_ADC_THERMAL_SEL_ADC_INPUT;
 
     // Parameter check
     status = Pmic_ADCParamCheck_pmicHandle(pPmicCoreHandle);
@@ -468,11 +468,11 @@ int32_t Pmic_ADCGetResult(Pmic_CoreHandle_t *pPmicCoreHandle, int32_t *pAdcResul
     // Extract ADC_THERMAL_SEL and ADC_RDIV_EN bits from ADC_CTRL
     if (status == PMIC_ST_SUCCESS)
     {
-        thermalSel = (Pmic_adcThermalSel_t)Pmic_getBitField(
+        thermalSel = (uint8_t)Pmic_getBitField(
             adcCtrlRegData, PMIC_ADC_CTRL_THERMAL_SEL_SHIFT, PMIC_ADC_CTRL_THERMAL_SEL_MASK);
 
         adcRDivEn =
-            (Pmic_adcRDivEn_t)Pmic_getBitField(adcCtrlRegData, PMIC_ADC_CTRL_RDIV_EN_SHIFT, PMIC_ADC_CTRL_RDIV_EN_MASK);
+            (uint8_t)Pmic_getBitField(adcCtrlRegData, PMIC_ADC_CTRL_RDIV_EN_SHIFT, PMIC_ADC_CTRL_RDIV_EN_MASK);
     }
 
     // Stop critical section after reading

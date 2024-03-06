@@ -44,6 +44,7 @@
 
 #ifndef PMIC_POWER_TPS6522X_H_
 #define PMIC_POWER_TPS6522X_H_
+#include <stdint.h>
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -908,19 +909,16 @@ extern "C"
  *
  *  @{
  */
-typedef enum pwrRsrcUVOVStatus_e
-{
-    PMIC_POWER_TPS6522X_BUCK1_UVOV_STAT, /*!< BUCK1 undervoltage/overvoltage status */
-    PMIC_POWER_TPS6522X_BUCK2_UVOV_STAT, /*!< BUCK2 undervoltage/overvoltage status */
-    PMIC_POWER_TPS6522X_BUCK3_UVOV_STAT, /*!< BUCK3 undervoltage/overvoltage status */
-    PMIC_POWER_TPS6522X_BUCK4_UVOV_STAT, /*!< BUCK4 undervoltage/overvoltage status */
-    PMIC_POWER_TPS6522X_LDO1_UVOV_STAT,  /*!< LDO1 undervoltage/overvoltage status */
-    PMIC_POWER_TPS6522X_LDO2_UVOV_STAT,  /*!< LDO2 undervoltage/overvoltage status */
-    PMIC_POWER_TPS6522X_LDO3_UVOV_STAT,  /*!< LDO3 undervoltage/overvoltage status */
-    PMIC_POWER_TPS6522X_VMON1_UVOV_STAT, /*!< VMON1 undervoltage/overvoltage status */
-    PMIC_POWER_TPS6522X_VMON2_UVOV_STAT, /*!< VMON1 undervoltage/overvoltage status */
-    PMIC_POWER_TPS6522X_VCCA_UVOV_STAT,  /*!< VCCA_VMON undervoltage/overvoltage status */
-} pwrRsrcUVOVStatus_t;
+#define PMIC_POWER_TPS6522X_BUCK1_UVOV_STAT (0U)
+#define PMIC_POWER_TPS6522X_BUCK2_UVOV_STAT (1U)
+#define PMIC_POWER_TPS6522X_BUCK3_UVOV_STAT (2U)
+#define PMIC_POWER_TPS6522X_BUCK4_UVOV_STAT (3U)
+#define PMIC_POWER_TPS6522X_LDO1_UVOV_STAT  (4U)
+#define PMIC_POWER_TPS6522X_LDO2_UVOV_STAT  (5U)
+#define PMIC_POWER_TPS6522X_LDO3_UVOV_STAT  (6U)
+#define PMIC_POWER_TPS6522X_VMON1_UVOV_STAT (7U)
+#define PMIC_POWER_TPS6522X_VMON2_UVOV_STAT (8U)
+#define PMIC_POWER_TPS6522X_VCCA_UVOV_STAT  (9U)
 /** @} */
 
 /**
@@ -931,11 +929,8 @@ typedef enum pwrRsrcUVOVStatus_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xTsdOrdLvl_e
-{
-    PMIC_POWER_TPS6522X_TSD_ORD_LVL_140_C, /*!< Orderly thermal shutdown level at 140 degrees celsius */
-    PMIC_POWER_TPS6522X_TSD_ORD_LVL_145_C  /*!< Orderly thermal shutdown level at 145 degrees celsius */
-} Pmic_powerTps6522xTsdOrdLvl_t;
+#define PMIC_POWER_TPS6522X_TSD_ORD_LVL_140C (0U)
+#define PMIC_POWER_TPS6522X_TSD_ORD_LVL_145C (1U)
 /** @} */
 
 /**
@@ -946,11 +941,8 @@ typedef enum Pmic_powerTps6522xTsdOrdLvl_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xTwarnLvl_e
-{
-    PMIC_POWER_TPS6522X_TWARN_LVL_130C, /*!< Temperature warning level at 130 degrees celsius */
-    PMIC_POWER_TPS6522X_TWARN_LVL_140C  /*!< Temperature warning level at 140 degrees celsius */
-} Pmic_powerTps6522xTwarnLvl_t;
+#define PMIC_POWER_TPS6522X_TWARN_LVL_130C (0U)
+#define PMIC_POWER_TPS6522X_TWARN_LVL_140C (1U)
 /** @} */
 
 /**
@@ -961,11 +953,8 @@ typedef enum Pmic_powerTps6522xTwarnLvl_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xBuckPldnEn_e
-{
-    PMIC_POWER_TPS6522X_BUCK_PLDN_DISABLE, /*!< Disable BUCK pulldown resistor */
-    PMIC_POWER_TPS6522X_BUCK_PLDN_ENABLE   /*!< Enable BUCK pulldown resistor */
-} Pmic_powerTps6522xBuckPldnEn_t;
+#define PMIC_POWER_TPS6522X_BUCK_PLDN_DISABLE (0U)
+#define PMIC_POWER_TPS6522X_BUCK_PLDN_ENABLE  (1U)
 /** @} */
 
 /**
@@ -976,11 +965,8 @@ typedef enum Pmic_powerTps6522xBuckPldnEn_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xBuckVmonEn_e
-{
-    PMIC_POWER_TPS6522X_BUCK_VMON_DISABLE, /*!< Disable BUCK pulldown resistor */
-    PMIC_POWER_TPS6522X_BUCK_VMON_ENABLE   /*!< Enable BUCK pulldown resistor */
-} Pmic_powerTps6522xBuckVmonEn_t;
+#define PMIC_POWER_TPS6522X_BUCK_VMON_DISABLE (0U)
+#define PMIC_POWER_TPS6522X_BUCK_VMON_ENABLE  (1U)
 /** @} */
 
 /**
@@ -991,11 +977,8 @@ typedef enum Pmic_powerTps6522xBuckVmonEn_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xBuckPwmOption_e
-{
-    PMIC_POWER_TPS6522X_BUCK_PWM_AUTO,  /*!< BUCK operates in automatic PWM mode */
-    PMIC_POWER_TPS6522X_BUCK_PWM_FORCED /*!< BUCK operates in forced PWM mode */
-} Pmic_powerTps6522xBuckPwmOption_t;
+#define PMIC_POWER_TPS6522X_BUCK_PWM_AUTO   (0U)
+#define PMIC_POWER_TPS6522X_BUCK_PWM_FORCED (1U)
 /** @} */
 
 /**
@@ -1006,11 +989,8 @@ typedef enum Pmic_powerTps6522xBuckPwmOption_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xBuckEn_e
-{
-    PMIC_POWER_TPS6522X_BUCK_DISABLE, /*!< Disable BUCK power resource */
-    PMIC_POWER_TPS6522X_BUCK_ENABLE   /*!< Enable BUCK power resource */
-} Pmic_powerTps6522xBuckEn_t;
+#define PMIC_POWER_TPS6522X_BUCK_DISABLE (0U)
+#define PMIC_POWER_TPS6522X_BUCK_ENABLE  (1U)
 /** @} */
 
 /**
@@ -1021,13 +1001,10 @@ typedef enum Pmic_powerTps6522xBuckEn_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xBuckSlewRate_e
-{
-    PMIC_POWER_TPS6522X_BUCK_SLEW_RATE_10_MV_PER_US,  /*!< BUCK output voltage slew rate at 10 mV/us */
-    PMIC_POWER_TPS6522X_BUCK_SLEW_RATE_5_MV_PER_US,   /*!< BUCK output voltage slew rate at 5 mV/us */
-    PMIC_POWER_TPS6522X_BUCK_SLEW_RATE_2_5_MV_PER_US, /*!< BUCK output voltage slew rate at 2.5 mV/us */
-    PMIC_POWER_TPS6522X_BUCK_SLEW_RATE_1_25_MV_PER_US /*!< BUCK output voltage slew rate at 1.25 mV/us */
-} Pmic_powerTps6522xBuckSlewRate_t;
+#define PMIC_POWER_TPS6522X_BUCK_SLEW_RATE_10_MV_PER_US   (0U)
+#define PMIC_POWER_TPS6522X_BUCK_SLEW_RATE_5_MV_PER_US    (1U)
+#define PMIC_POWER_TPS6522X_BUCK_SLEW_RATE_2_5_MV_PER_US  (2U)
+#define PMIC_POWER_TPS6522X_BUCK_SLEW_RATE_1_25_MV_PER_US (3U)
 /** @} */
 
 /**
@@ -1038,17 +1015,10 @@ typedef enum Pmic_powerTps6522xBuckSlewRate_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xBuckVmonThr_e
-{
-    PMIC_POWER_TPS6522X_BUCK_VMON_THR_3_PCT_OR_30_MV, /*!< BUCK VMON powergood high/low threshold level at
-                                                      3% or 30 mV */
-    PMIC_POWER_TPS6522X_BUCK_VMON_THR_4_PCT_OR_40_MV, /*!< BUCK VMON powergood high/low threshold level at
-                                                      4% or 40 mV */
-    PMIC_POWER_TPS6522X_BUCK_VMON_THR_6_PCT_OR_60_MV, /*!< BUCK VMON powergood high/low threshold level at
-                                                      6% or 60 mV */
-    PMIC_POWER_TPS6522X_BUCK_VMON_THR_8_PCT_OR_80_MV  /*!< BUCK VMON powergood high/low threshold level at
-                                                      8% or 80 mV */
-} Pmic_powerTps6522xBuckVmonThr_t;
+#define PMIC_POWER_TPS6522X_BUCK_VMON_THR_3_PCT_OR_30_MV (0U)
+#define PMIC_POWER_TPS6522X_BUCK_VMON_THR_4_PCT_OR_40_MV (1U)
+#define PMIC_POWER_TPS6522X_BUCK_VMON_THR_6_PCT_OR_60_MV (2U)
+#define PMIC_POWER_TPS6522X_BUCK_VMON_THR_8_PCT_OR_80_MV (3U)
 /** @} */
 
 /**
@@ -1059,13 +1029,10 @@ typedef enum Pmic_powerTps6522xBuckVmonThr_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xBuckRailSel_e
-{
-    PMIC_POWER_TPS6522X_BUCK_RAIL_SEL_NONE, /*!< BUCK assigned to no rail group */
-    PMIC_POWER_TPS6522X_BUCK_RAIL_SEL_MCU,  /*!< BUCK assigned to MCU rail group */
-    PMIC_POWER_TPS6522X_BUCK_RAIL_SEL_SOC,  /*!< BUCK assigned to SOC rail group */
-    PMIC_POWER_TPS6522X_BUCK_RAIL_SEL_OTHER /*!< BUCK assigned to other rail group */
-} Pmic_powerTps6522xBuckRailSel_t;
+#define PMIC_POWER_TPS6522X_BUCK_RAIL_SEL_NONE  (0U)
+#define PMIC_POWER_TPS6522X_BUCK_RAIL_SEL_MCU   (1U)
+#define PMIC_POWER_TPS6522X_BUCK_RAIL_SEL_SOC   (2U)
+#define PMIC_POWER_TPS6522X_BUCK_RAIL_SEL_OTHER (3U)
 /** @} */
 
 /**
@@ -1076,11 +1043,8 @@ typedef enum Pmic_powerTps6522xBuckRailSel_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xLdoDischargeEn_e
-{
-    PMIC_POWER_TPS6522X_LDO_DISCHARGE_DISABLE, /*!< Disable LDO discharge */
-    PMIC_POWER_TPS6522X_LDO_DISCHARGE_ENABLE   /*!< Enable LDO discharge */
-} Pmic_powerTps6522xLdoDischargeEn_t;
+#define PMIC_POWER_TPS6522X_LDO_DISCHARGE_DISABLE (0U)
+#define PMIC_POWER_TPS6522X_LDO_DISCHARGE_ENABLE  (1U)
 /** @} */
 
 /**
@@ -1091,11 +1055,8 @@ typedef enum Pmic_powerTps6522xLdoDischargeEn_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xLdoVmonEn_e
-{
-    PMIC_POWER_TPS6522X_LDO_VMON_DISABLE, /*!< Disable LDO VMON */
-    PMIC_POWER_TPS6522X_LDO_VMON_ENABLE   /*!< Enable LDO VMON */
-} Pmic_powerTps6522xLdoVmonEn_t;
+#define PMIC_POWER_TPS6522X_LDO_VMON_DISABLE (0U)
+#define PMIC_POWER_TPS6522X_LDO_VMON_ENABLE  (1U)
 /** @} */
 
 /**
@@ -1106,11 +1067,8 @@ typedef enum Pmic_powerTps6522xLdoVmonEn_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xLdoEn_e
-{
-    PMIC_POWER_TPS6522X_LDO_DISABLE, /*!< Disable LDO power resource */
-    PMIC_POWER_TPS6522X_LDO_ENABLE   /*!< Enable LDO power resource */
-} Pmic_powerTps6522xLdoEn_t;
+#define PMIC_POWER_TPS6522X_LDO_DISABLE (0U)
+#define PMIC_POWER_TPS6522X_LDO_ENABLE  (1U)
 /** @} */
 
 /**
@@ -1121,11 +1079,8 @@ typedef enum Pmic_powerTps6522xLdoEn_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xLdoBypassConfig_e
-{
-    PMIC_POWER_TPS6522X_LDO_BYP_CONFIG_LDO_MODE,    /*!< LDO power resource operates in LDO mode */
-    PMIC_POWER_TPS6522X_LDO_BYP_CONFIG_BYPASS_MODE, /*!< LDO power resource operates in bypass mode */
-} Pmic_powerTps6522xLdoBypassConfig_t;
+#define PMIC_POWER_TPS6522X_LDO_BYP_CONFIG_LDO_MODE    (0U)
+#define PMIC_POWER_TPS6522X_LDO_BYP_CONFIG_BYPASS_MODE (1U)
 /** @} */
 
 /**
@@ -1136,13 +1091,10 @@ typedef enum Pmic_powerTps6522xLdoBypassConfig_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xLdoVmonThr_e
-{
-    PMIC_POWER_TPS6522X_LDO_VMON_THR_3_PCT, /*!< LDO VMON powergood high/low threshold level at 3% */
-    PMIC_POWER_TPS6522X_LDO_VMON_THR_4_PCT, /*!< LDO VMON powergood high/low threshold level at 4% */
-    PMIC_POWER_TPS6522X_LDO_VMON_THR_6_PCT, /*!< LDO VMON powergood high/low threshold level at 6% */
-    PMIC_POWER_TPS6522X_LDO_VMON_THR_8_PCT  /*!< LDO VMON powergood high/low threshold level at 8% */
-} Pmic_powerTps6522xLdoVmonThr_t;
+#define PMIC_POWER_TPS6522X_LDO_VMON_THR_3_PCT (0U)
+#define PMIC_POWER_TPS6522X_LDO_VMON_THR_4_PCT (1U)
+#define PMIC_POWER_TPS6522X_LDO_VMON_THR_6_PCT (2U)
+#define PMIC_POWER_TPS6522X_LDO_VMON_THR_8_PCT (3U)
 /** @} */
 
 /**
@@ -1153,13 +1105,10 @@ typedef enum Pmic_powerTps6522xLdoVmonThr_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xLdoRailSel_e
-{
-    PMIC_POWER_TPS6522X_LDO_RAIL_SEL_NONE, /*!< LDO assigned to no rail group */
-    PMIC_POWER_TPS6522X_LDO_RAIL_SEL_MCU,  /*!< LDO assigned to MCU rail group */
-    PMIC_POWER_TPS6522X_LDO_RAIL_SEL_SOC,  /*!< LDO assigned to SOC rail group */
-    PMIC_POWER_TPS6522X_LDO_RAIL_SEL_OTHER /*!< LDO assigned to other rail group */
-} Pmic_powerTps6522xLdoRailSel_t;
+#define PMIC_POWER_TPS6522X_LDO_RAIL_SEL_NONE  (0U)
+#define PMIC_POWER_TPS6522X_LDO_RAIL_SEL_MCU   (1U)
+#define PMIC_POWER_TPS6522X_LDO_RAIL_SEL_SOC   (2U)
+#define PMIC_POWER_TPS6522X_LDO_RAIL_SEL_OTHER (3U)
 /** @} */
 
 /**
@@ -1170,23 +1119,13 @@ typedef enum Pmic_powerTps6522xLdoRailSel_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xVmonDeglitchSel_e
-{
-    PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_4_US_VCCA_4_US,     /*!< BUCK, LDO, VMONx deglitch time is
-                                                                                    4 us; VCCA deglitch time is 4 us */
-    PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_20_US_VCCA_20_US,   /*!< BUCK, LDO, VMONx deglitch time is
-                                                                                  20 us; VCCA deglitch time is 20 us */
-    PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_0_5_US_VCCA_0_5_US, /*!< BUCK, LDO, VMONx deglitch time is
-                                                                                0.5 us; VCCA deglitch time is 0.5 us */
-    PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_0_5_US_VCCA_4_US,   /*!< BUCK, LDO, VMONx deglitch time is
-                                                                                  0.5 us; VCCA deglitch time is 4 us */
-    PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_0_5_US_VCCA_20_US,  /*!< BUCK, LDO, VMONx deglitch time is
-                                                                                 0.5 us; VCCA deglitch time is 20 us */
-    PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_4_US_VCCA_0_5_US,   /*!< BUCK, LDO, VMONx deglitch time is
-                                                                                  4 us; VCCA deglitch time is 0.5 us */
-    PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_4_US_VCCA_20_US     /*!< BUCK, LDO, VMONx deglitch time is
-                                                                                    4 us; VCCA deglitch time is 20 us */
-} Pmic_powerTps6522xVmonDeglitchSel_t;
+#define PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_4_US_VCCA_4_US     (0U)
+#define PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_20_US_VCCA_20_US   (1U)
+#define PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_0_5_US_VCCA_0_5_US (2U)
+#define PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_0_5_US_VCCA_4_US   (3U)
+#define PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_0_5_US_VCCA_20_US  (4U)
+#define PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_4_US_VCCA_0_5_US   (5U)
+#define PMIC_POWER_TPS6522X_VMON_DEGLITCH_SEL_BUCK_LDO_VMON_4_US_VCCA_20_US    (6U)
 /** @} */
 
 /**
@@ -1197,11 +1136,8 @@ typedef enum Pmic_powerTps6522xVmonDeglitchSel_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xVmon2En_e
-{
-    PMIC_POWER_TPS6522X_VMON2_DISABLE, /*!< Disable voltage monitor 2 */
-    PMIC_POWER_TPS6522X_VMON2_ENABLE   /*!< Enable voltage monitor 2 */
-} Pmic_powerTps6522xVmon2En_t;
+#define PMIC_POWER_TPS6522X_VMON2_DISABLE (0U)
+#define PMIC_POWER_TPS6522X_VMON2_ENABLE  (1U)
 /** @} */
 
 /**
@@ -1212,11 +1148,8 @@ typedef enum Pmic_powerTps6522xVmon2En_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xVmon1En_e
-{
-    PMIC_POWER_TPS6522X_VMON1_DISABLE, /*!< Disable voltage monitor 1 */
-    PMIC_POWER_TPS6522X_VMON1_ENABLE   /*!< Enable voltage monitor 1 */
-} Pmic_powerTps6522xVmon1En_t;
+#define PMIC_POWER_TPS6522X_VMON1_DISABLE (0U)
+#define PMIC_POWER_TPS6522X_VMON1_ENABLE  (1U)
 /** @} */
 
 /**
@@ -1227,11 +1160,8 @@ typedef enum Pmic_powerTps6522xVmon1En_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xVccaVmonEn_e
-{
-    PMIC_POWER_TPS6522X_VCCA_VMON_DISABLE, /*!< Disable VCCA voltage monitor */
-    PMIC_POWER_TPS6522X_VCCA_VMON_ENABLE   /*!< Enable VCCA voltage monitor */
-} Pmic_powerTps6522xVccaVmonEn_t;
+#define PMIC_POWER_TPS6522X_VCCA_VMON_DISABLE (0U)
+#define PMIC_POWER_TPS6522X_VCCA_VMON_ENABLE  (1U)
 /** @} */
 
 /**
@@ -1242,11 +1172,8 @@ typedef enum Pmic_powerTps6522xVccaVmonEn_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xVccaPgLevel_e
-{
-    PMIC_POWER_TPS6522X_VCCA_PG_LEVEL_3_3_V, /*!< VCCA_VMON powergood level at 3.3V */
-    PMIC_POWER_TPS6522X_VCCA_PG_LEVEL_5_0_V  /*!< VCCA_VMON powergood level at 5.0V */
-} Pmic_powerTps6522xVccaPgLevel_t;
+#define PMIC_POWER_TPS6522X_VCCA_PG_LEVEL_3_3_V (0U)
+#define PMIC_POWER_TPS6522X_VCCA_PG_LEVEL_5_0_V (1U)
 /** @} */
 
 /**
@@ -1257,13 +1184,10 @@ typedef enum Pmic_powerTps6522xVccaPgLevel_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xVccaVmonThr_e
-{
-    PMIC_POWER_TPS6522X_VCCA_VMON_THR_3_PCT,  /*!< VCCA_VMON powergood high/low threshold level at 3% */
-    PMIC_POWER_TPS6522X_VCCA_VMON_THR_4_PCT,  /*!< VCCA_VMON powergood high/low threshold level at 4% */
-    PMIC_POWER_TPS6522X_VCCA_VMON_THR_6_PCT,  /*!< VCCA_VMON powergood high/low threshold level at 6% */
-    PMIC_POWER_TPS6522X_VCCA_VMON_THR_10_PCT, /*!< VCCA_VMON powergood high/low threshold level at 10% */
-} Pmic_powerTps6522xVccaVmonThr_t;
+#define PMIC_POWER_TPS6522X_VCCA_VMON_THR_3_PCT  (0U)
+#define PMIC_POWER_TPS6522X_VCCA_VMON_THR_4_PCT  (1U)
+#define PMIC_POWER_TPS6522X_VCCA_VMON_THR_6_PCT  (2U)
+#define PMIC_POWER_TPS6522X_VCCA_VMON_THR_10_PCT (3U)
 /** @} */
 
 /**
@@ -1274,13 +1198,10 @@ typedef enum Pmic_powerTps6522xVccaVmonThr_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xVccaRailSel_e
-{
-    PMIC_POWER_TPS6522X_VCCA_RAIL_SEL_NONE, /*!< VCCA_VMON assigned to no rail group */
-    PMIC_POWER_TPS6522X_VCCA_RAIL_SEL_MCU,  /*!< VCCA_VMON assigned to MCU rail group */
-    PMIC_POWER_TPS6522X_VCCA_RAIL_SEL_SOC,  /*!< VCCA_VMON assigned to SOC rail group */
-    PMIC_POWER_TPS6522X_VCCA_RAIL_SEL_OTHER /*!< VCCA_VMON assigned to other rail group */
-} Pmic_powerTps6522xVccaRailSel_t;
+#define PMIC_POWER_TPS6522X_VCCA_RAIL_SEL_NONE  (0U)
+#define PMIC_POWER_TPS6522X_VCCA_RAIL_SEL_MCU   (1U)
+#define PMIC_POWER_TPS6522X_VCCA_RAIL_SEL_SOC   (2U)
+#define PMIC_POWER_TPS6522X_VCCA_RAIL_SEL_OTHER (3U)
 /** @} */
 
 /**
@@ -1291,13 +1212,10 @@ typedef enum Pmic_powerTps6522xVccaRailSel_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xVmon1Thr_e
-{
-    PMIC_POWER_TPS6522X_VMON1_THR_3_PCT_OR_30_MV, /*!< VMON1 powergood high/low threshold level at 3% or 30 mV */
-    PMIC_POWER_TPS6522X_VMON1_THR_4_PCT_OR_40_MV, /*!< VMON1 powergood high/low threshold level at 4% or 40 mV */
-    PMIC_POWER_TPS6522X_VMON1_THR_6_PCT_OR_60_MV, /*!< VMON1 powergood high/low threshold level at 6% or 60 mV */
-    PMIC_POWER_TPS6522X_VMON1_THR_8_PCT_OR_80_MV  /*!< VMON1 powergood high/low threshold level at 8% or 80 mV */
-} Pmic_powerTps6522xVmon1Thr_t;
+#define PMIC_POWER_TPS6522X_VMON1_THR_3_PCT_OR_30_MV (0U)
+#define PMIC_POWER_TPS6522X_VMON1_THR_4_PCT_OR_40_MV (1U)
+#define PMIC_POWER_TPS6522X_VMON1_THR_6_PCT_OR_60_MV (2U)
+#define PMIC_POWER_TPS6522X_VMON1_THR_8_PCT_OR_80_MV (3U)
 /** @} */
 
 /**
@@ -1308,13 +1226,10 @@ typedef enum Pmic_powerTps6522xVmon1Thr_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xVmon1RailSel_e
-{
-    PMIC_POWER_TPS6522X_VMON1_RAIL_SEL_NONE, /*!< VMON1 assigned to no rail group */
-    PMIC_POWER_TPS6522X_VMON1_RAIL_SEL_MCU,  /*!< VMON1 assigned to MCU rail group */
-    PMIC_POWER_TPS6522X_VMON1_RAIL_SEL_SOC,  /*!< VMON1 assigned to SOC rail group */
-    PMIC_POWER_TPS6522X_VMON1_RAIL_SEL_OTHER /*!< VMON1 assigned to other rail group */
-} Pmic_powerTps6522xVmon1RailSel_t;
+#define PMIC_POWER_TPS6522X_VMON1_RAIL_SEL_NONE  (0U)
+#define PMIC_POWER_TPS6522X_VMON1_RAIL_SEL_MCU   (1U)
+#define PMIC_POWER_TPS6522X_VMON1_RAIL_SEL_SOC   (2U)
+#define PMIC_POWER_TPS6522X_VMON1_RAIL_SEL_OTHER (3U)
 /** @} */
 
 /**
@@ -1325,13 +1240,10 @@ typedef enum Pmic_powerTps6522xVmon1RailSel_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xVmon2Thr_e
-{
-    PMIC_POWER_TPS6522X_VMON2_THR_3_PCT, /*!< VMON2 powergood high/low threshold level at 3% */
-    PMIC_POWER_TPS6522X_VMON2_THR_4_PCT, /*!< VMON2 powergood high/low threshold level at 4% */
-    PMIC_POWER_TPS6522X_VMON2_THR_6_PCT, /*!< VMON2 powergood high/low threshold level at 6% */
-    PMIC_POWER_TPS6522X_VMON2_THR_8_PCT  /*!< VMON2 powergood high/low threshold level at 8% */
-} Pmic_powerTps6522xVmon2Thr_t;
+#define PMIC_POWER_TPS6522X_VMON2_THR_3_PCT (0U)
+#define PMIC_POWER_TPS6522X_VMON2_THR_4_PCT (1U)
+#define PMIC_POWER_TPS6522X_VMON2_THR_6_PCT (2U)
+#define PMIC_POWER_TPS6522X_VMON2_THR_8_PCT (3U)
 /** @} */
 
 /**
@@ -1342,13 +1254,10 @@ typedef enum Pmic_powerTps6522xVmon2Thr_e
  *
  *  @{
  */
-typedef enum Pmic_powerTps6522xVmon2RailSel_e
-{
-    PMIC_POWER_TPS6522X_VMON2_RAIL_SEL_NONE, /*!< VMON2 assigned to no rail group */
-    PMIC_POWER_TPS6522X_VMON2_RAIL_SEL_MCU,  /*!< VMON2 assigned to MCU rail group */
-    PMIC_POWER_TPS6522X_VMON2_RAIL_SEL_SOC,  /*!< VMON2 assigned to SOC rail group */
-    PMIC_POWER_TPS6522X_VMON2_RAIL_SEL_OTHER /*!< VMON2 assigned to other rail group */
-} Pmic_powerTps6522xVmon2RailSel_t;
+#define PMIC_POWER_TPS6522X_VMON2_RAIL_SEL_NONE  (0U)
+#define PMIC_POWER_TPS6522X_VMON2_RAIL_SEL_MCU   (1U)
+#define PMIC_POWER_TPS6522X_VMON2_RAIL_SEL_SOC   (2U)
+#define PMIC_POWER_TPS6522X_VMON2_RAIL_SEL_OTHER (3U)
 /** @} */
 
 /**
@@ -1385,15 +1294,15 @@ typedef enum Pmic_powerTps6522xVmon2RailSel_e
  */
 typedef struct Pmic_powerTps6522xBuckPowerResourceCfg_s
 {
-    uint8_t                           validParams;
-    Pmic_powerTps6522xBuckPldnEn_t    buckPldn;
-    Pmic_powerTps6522xBuckVmonEn_t    buckVmonEn;
-    Pmic_powerTps6522xBuckPwmOption_t buckPwmOption;
-    Pmic_powerTps6522xBuckEn_t        buckEn;
-    Pmic_powerTps6522xBuckSlewRate_t  buckSlewRate;
-    uint16_t                          buckVoltage_mv;
-    Pmic_powerTps6522xBuckVmonThr_t   buckVmonThr;
-    Pmic_powerTps6522xBuckRailSel_t   buckRailGrpSel;
+    uint8_t validParams;
+    uint8_t buckPldn;
+    uint8_t buckVmonEn;
+    uint8_t buckPwmOption;
+    uint8_t buckEn;
+    uint8_t buckSlewRate;
+    uint16_t buckVoltage_mv;
+    uint8_t buckVmonThr;
+    uint8_t buckRailGrpSel;
 } Pmic_powerTps6522xBuckPowerResourceCfg_t;
 /** @} */
 
@@ -1429,14 +1338,14 @@ typedef struct Pmic_powerTps6522xBuckPowerResourceCfg_s
  */
 typedef struct Pmic_powerTps6522xLdoPowerResourceCfg_s
 {
-    uint8_t                             validParams;
-    Pmic_powerTps6522xLdoDischargeEn_t  ldoDischargeEn;
-    Pmic_powerTps6522xLdoVmonEn_t       ldoVmonEn;
-    Pmic_powerTps6522xLdoEn_t           ldoEn;
-    Pmic_powerTps6522xLdoBypassConfig_t ldoMode;
-    uint16_t                            ldoVoltage_mv;
-    Pmic_powerTps6522xLdoVmonThr_t      ldoVmonThr;
-    Pmic_powerTps6522xLdoRailSel_t      ldoRailGrpSel;
+    uint8_t validParams;
+    uint8_t ldoDischargeEn;
+    uint8_t ldoVmonEn;
+    uint8_t ldoEn;
+    uint8_t ldoMode;
+    uint16_t ldoVoltage_mv;
+    uint8_t ldoVmonThr;
+    uint8_t ldoRailGrpSel;
 } Pmic_powerTps6522xLdoPowerResourceCfg_t;
 /** @} */
 
@@ -1479,20 +1388,20 @@ typedef struct Pmic_powerTps6522xLdoPowerResourceCfg_s
  */
 typedef struct Pmic_powerTps6522xVccaVmonPowerResourceCfg_s
 {
-    uint16_t                            validParams;
-    Pmic_powerTps6522xVmonDeglitchSel_t vmonDeglitchSel;
-    Pmic_powerTps6522xVmon2En_t         vmon2En;
-    Pmic_powerTps6522xVmon1En_t         vmon1En;
-    Pmic_powerTps6522xVccaVmonEn_t      vccaVmonEn;
-    Pmic_powerTps6522xVccaPgLevel_t     vccaPgLevel;
-    Pmic_powerTps6522xVccaVmonThr_t     vccaVmonThr;
-    Pmic_powerTps6522xVccaRailSel_t     vccaRailGrpSel;
-    Pmic_powerTps6522xVmon1Thr_t        vmon1Thr;
-    uint16_t                            vmon1PgLevel_mv;
-    Pmic_powerTps6522xVmon1RailSel_t    vmon1RailGrpSel;
-    Pmic_powerTps6522xVmon2Thr_t        vmon2Thr;
-    uint16_t                            vmon2PgLevel_mv;
-    Pmic_powerTps6522xVmon2RailSel_t    vmon2RailGrpSel;
+    uint16_t validParams;
+    uint8_t vmonDeglitchSel;
+    uint8_t vmon2En;
+    uint8_t vmon1En;
+    uint8_t vccaVmonEn;
+    uint8_t vccaPgLevel;
+    uint8_t vccaVmonThr;
+    uint8_t vccaRailGrpSel;
+    uint8_t vmon1Thr;
+    uint16_t vmon1PgLevel_mv;
+    uint8_t vmon1RailGrpSel;
+    uint8_t vmon2Thr;
+    uint16_t vmon2PgLevel_mv;
+    uint8_t vmon2RailGrpSel;
 } Pmic_powerTps6522xVccaVmonPowerResourceCfg_t;
 /** @} */
 
@@ -1627,9 +1536,9 @@ typedef struct Pmic_powerTps6522xThermalStat_s
  */
 typedef struct Pmic_powerTps6522xThermalCfg_s
 {
-    uint8_t                       validParams;
-    Pmic_powerTps6522xTsdOrdLvl_t tsdOrdLvl;
-    Pmic_powerTps6522xTwarnLvl_t  twarnLvl;
+    uint8_t validParams;
+    uint8_t tsdOrdLvl;
+    uint8_t twarnLvl;
 } Pmic_powerTps6522xThermalCfg_t;
 /** @} */
 
@@ -2004,7 +1913,7 @@ Pmic_powerTps6522xSetVccaVmonPwrResourceCfg(Pmic_CoreHandle_t                   
  *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
  */
 int32_t Pmic_powerTps6522xGetPwrRsrcStat(Pmic_CoreHandle_t        *pPmicCoreHandle,
-                                         const pwrRsrcUVOVStatus_t pwrRsrcUVOVStatus,
+                                         const uint8_t pwrRsrcUVOVStatus,
                                          bool                     *pUnderOverVoltStat);
 
 /**

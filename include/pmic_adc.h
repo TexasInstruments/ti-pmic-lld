@@ -57,6 +57,8 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
+#include <stdint.h>
+
 #include "pmic_core.h"
 #include "pmic_adc_tps6522x.h"
 
@@ -110,11 +112,8 @@ extern "C"
  *                                                  will be enabled.
  *  @{
  */
-typedef enum Pmic_adcRDivEn_e
-{
-    PMIC_ADC_RESISTOR_DIVIDER_DISABLED,
-    PMIC_ADC_RESISTOR_DIVIDER_ENABLED
-} Pmic_adcRDivEn_t;
+#define PMIC_ADC_RESISTOR_DIVIDER_DISABLED (0U)
+#define PMIC_ADC_RESISTOR_DIVIDER_ENABLED  (1U)
 /** @} */
 
 /**
@@ -130,11 +129,8 @@ typedef enum Pmic_adcRDivEn_e
  *
  *  @{
  */
-typedef enum Pmic_adcThermalSel_e
-{
-    PMIC_ADC_THERMAL_SEL_ADC_INPUT,
-    PMIC_ADC_THERMAL_SEL_THERMAL_SENSOR
-} Pmic_adcThermalSel_t;
+#define PMIC_ADC_THERMAL_SEL_ADC_INPUT      (0U)
+#define PMIC_ADC_THERMAL_SEL_THERMAL_SENSOR (1U)
 /** @} */
 
 /**
@@ -150,11 +146,8 @@ typedef enum Pmic_adcThermalSel_e
  *
  *  @{
  */
-typedef enum Pmic_adcContConv_e
-{
-    PMIC_ADC_CONTINUOUS_CONVERSION_DISABLED,
-    PMIC_ADC_CONTINUOUS_CONVERSION_ENABLED
-} Pmic_adcContConv_t;
+#define PMIC_ADC_CONTINUOUS_CONVERSION_DISABLED (0U)
+#define PMIC_ADC_CONTINUOUS_CONVERSION_ENABLED  (1U)
 /** @} */
 
 /**
@@ -178,10 +171,10 @@ typedef enum Pmic_adcContConv_e
  */
 typedef struct Pmic_adcCfg_s
 {
-    uint8_t              validParams;
-    Pmic_adcRDivEn_t     rDivEn;
-    Pmic_adcThermalSel_t thermalSel;
-    Pmic_adcContConv_t   contConv;
+    uint8_t validParams;
+    uint8_t rDivEn;
+    uint8_t thermalSel;
+    uint8_t contConv;
 } Pmic_adcCfg_t;
 /** @} */
 

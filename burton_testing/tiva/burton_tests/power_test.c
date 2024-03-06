@@ -758,7 +758,7 @@ void test_power_setConfiguration_buckPldnEnableDisable(void)
         expectedPwrRsrcCfg.buckPwrRsrcCfg[i].validParams = PMIC_POWER_TPS6522X_CFG_BUCK_PLDN_VALID_SHIFT;
 
         // Enable BUCK_PLDN
-        expectedPwrRsrcCfg.buckPwrRsrcCfg[i].buckPldn = PMIC_POWER_TPS6522X_BUCK_PLDN_ENABLE;
+        expectedPwrRsrcCfg.buckPwrRsrcCfg[i].buckPldn = PMIC_POWER_TPS6522X_BUCK_PLDN_ENABLEE;
         status = Pmic_powerTps6522xSetPwrResourceCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -811,7 +811,7 @@ void test_power_setConfiguration_buckVmonEnableDisable(void)
         expectedPwrRsrcCfg.buckPwrRsrcCfg[i].validParams = PMIC_POWER_TPS6522X_CFG_BUCK_VMON_EN_VALID_SHIFT;
 
         // Enable buck VMON
-        expectedPwrRsrcCfg.buckPwrRsrcCfg[i].buckVmonEn = PMIC_POWER_TPS6522X_BUCK_VMON_ENABLE;
+        expectedPwrRsrcCfg.buckPwrRsrcCfg[i].buckVmonEn = PMIC_POWER_TPS6522X_BUCK_VMON_ENABLEE;
         status = Pmic_powerTps6522xSetPwrResourceCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -957,7 +957,7 @@ void test_power_setConfiguration_buckSlewRate(void)
     uint8_t                              i = 0;
     int32_t                              status = PMIC_ST_SUCCESS;
     Pmic_powerTps6522xPowerResourceCfg_t expectedPwrRsrcCfg, actualPwrRsrcCfg, initialPwrRsrcCfg;
-    Pmic_powerTps6522xBuckSlewRate_t     buckSlewRate;
+    uint8_t     buckSlewRate;
 
     // Initialize power resource CFGs
     resetBurtonPwrCfg_withNoValidParams(&expectedPwrRsrcCfg);
@@ -1238,7 +1238,7 @@ void test_power_setConfiguration_buckVmonThr(void)
     uint8_t                              i = 0;
     int32_t                              status = PMIC_ST_SUCCESS;
     Pmic_powerTps6522xPowerResourceCfg_t expectedPwrRsrcCfg, actualPwrRsrcCfg, initialPwrRsrcCfg;
-    Pmic_powerTps6522xBuckVmonThr_t      buckVmonThr;
+    uint8_t      buckVmonThr;
 
     // Initialize power resource CFGs
     resetBurtonPwrCfg_withNoValidParams(&expectedPwrRsrcCfg);
@@ -1288,7 +1288,7 @@ void test_power_setConfiguration_buckRailGrpSel(void)
     uint8_t                              i = 0;
     int32_t                              status = PMIC_ST_SUCCESS;
     Pmic_powerTps6522xPowerResourceCfg_t expectedPwrRsrcCfg, actualPwrRsrcCfg, initialPwrRsrcCfg;
-    Pmic_powerTps6522xBuckRailSel_t      buckRailGrpSel;
+    uint8_t      buckRailGrpSel;
 
     // Initialize power resource CFGs
     resetBurtonPwrCfg_withNoValidParams(&expectedPwrRsrcCfg);
@@ -1889,7 +1889,7 @@ void test_power_setConfiguration_ldoVmonThr(void)
     uint8_t                              i = 0;
     int32_t                              status = PMIC_ST_SUCCESS;
     Pmic_powerTps6522xPowerResourceCfg_t expectedPwrRsrcCfg, actualPwrRsrcCfg, initialPwrRsrcCfg;
-    Pmic_powerTps6522xLdoVmonThr_t       ldoVmonThr;
+    uint8_t       ldoVmonThr;
 
     // Initialize power resource CFGs
     resetBurtonPwrCfg_withNoValidParams(&expectedPwrRsrcCfg);
@@ -1939,7 +1939,7 @@ void test_power_setConfiguration_ldoRailGrpSel(void)
     uint8_t                              i = 0;
     int32_t                              status = PMIC_ST_SUCCESS;
     Pmic_powerTps6522xPowerResourceCfg_t expectedPwrRsrcCfg, actualPwrRsrcCfg, initialPwrRsrcCfg;
-    Pmic_powerTps6522xLdoRailSel_t       ldoRailGrpSel;
+    uint8_t       ldoRailGrpSel;
 
     // Initialize power resource CFGs
     resetBurtonPwrCfg_withNoValidParams(&expectedPwrRsrcCfg);
@@ -1988,7 +1988,7 @@ void test_power_setConfiguration_vmonDeglitch(void)
 {
     int32_t                              status = PMIC_ST_SUCCESS;
     Pmic_powerTps6522xPowerResourceCfg_t expectedPwrRsrcCfg, actualPwrRsrcCfg, initialPwrRsrcCfg;
-    Pmic_powerTps6522xVmonDeglitchSel_t  vmonDeglitchSel;
+    uint8_t  vmonDeglitchSel;
 
     // Initialize power resource CFGs
     resetBurtonPwrCfg_withNoValidParams(&expectedPwrRsrcCfg);
@@ -2193,7 +2193,7 @@ void test_power_setConfiguration_vccaVmonThr(void)
 {
     int32_t                              status = PMIC_ST_SUCCESS;
     Pmic_powerTps6522xPowerResourceCfg_t expectedPwrRsrcCfg, actualPwrRsrcCfg, initialPwrRsrcCfg;
-    Pmic_powerTps6522xVccaVmonThr_t      vccaVmonThr;
+    uint8_t      vccaVmonThr;
 
     // Initialize power resource CFGs
     resetBurtonPwrCfg_withNoValidParams(&expectedPwrRsrcCfg);
@@ -2238,7 +2238,7 @@ void test_power_setConfiguration_vccaRailGrpSel(void)
 {
     int32_t                              status = PMIC_ST_SUCCESS;
     Pmic_powerTps6522xPowerResourceCfg_t expectedPwrRsrcCfg, actualPwrRsrcCfg, initialPwrRsrcCfg;
-    Pmic_powerTps6522xVccaRailSel_t      vccaRailGrpSel;
+    uint8_t      vccaRailGrpSel;
 
     // Initialize power resource CFGs
     resetBurtonPwrCfg_withNoValidParams(&expectedPwrRsrcCfg);
@@ -2505,7 +2505,7 @@ void test_power_setConfiguration_vmon1_2_Thr(void)
     uint8_t                              i = 0;
     int32_t                              status = PMIC_ST_SUCCESS;
     Pmic_powerTps6522xPowerResourceCfg_t expectedPwrRsrcCfg, actualPwrRsrcCfg, initialPwrRsrcCfg;
-    Pmic_powerTps6522xVmon1Thr_t         vmon1Thr;
+    uint8_t         vmon1Thr;
 
     // Initialize power resource CFGs
     resetBurtonPwrCfg_withNoValidParams(&expectedPwrRsrcCfg);
@@ -2544,7 +2544,7 @@ void test_power_setConfiguration_vmon1_2_Thr(void)
                     break;
                 case PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON2:
                     // Set VMON2 Powergood Threshold
-                    expectedPwrRsrcCfg.vccaVmonPwrRsrcCfg.vmon2Thr = (Pmic_powerTps6522xVmon2Thr_t)vmon1Thr;
+                    expectedPwrRsrcCfg.vccaVmonPwrRsrcCfg.vmon2Thr = (uint8_t)vmon1Thr;
                     status = Pmic_powerTps6522xSetPwrResourceCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
                     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -2575,7 +2575,7 @@ void test_power_setConfiguration_vmon1_2_RailGrpSel(void)
     uint8_t                              i = 0;
     int32_t                              status = PMIC_ST_SUCCESS;
     Pmic_powerTps6522xPowerResourceCfg_t expectedPwrRsrcCfg, actualPwrRsrcCfg, initialPwrRsrcCfg;
-    Pmic_powerTps6522xVmon1RailSel_t     vmon1RailGrpSel;
+    uint8_t     vmon1RailGrpSel;
 
     // Initialize power resource CFGs
     resetBurtonPwrCfg_withNoValidParams(&expectedPwrRsrcCfg);
@@ -2615,7 +2615,7 @@ void test_power_setConfiguration_vmon1_2_RailGrpSel(void)
                 case PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON2:
                     // Set VMON2 rail group
                     expectedPwrRsrcCfg.vccaVmonPwrRsrcCfg.vmon2RailGrpSel =
-                        (Pmic_powerTps6522xVmon2RailSel_t)vmon1RailGrpSel;
+                        (uint8_t)vmon1RailGrpSel;
                     status = Pmic_powerTps6522xSetPwrResourceCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
                     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -2661,7 +2661,7 @@ void test_power_getPwrRsrcStat_nullParam(void)
 void test_power_getPwrRsrcStat_allPwrRsrc(void)
 {
     int32_t             status = PMIC_ST_SUCCESS;
-    pwrRsrcUVOVStatus_t pwrRsrcUVOVStat = PMIC_POWER_TPS6522X_BUCK1_UVOV_STAT;
+    uint8_t pwrRsrcUVOVStat = PMIC_POWER_TPS6522X_BUCK1_UVOV_STAT;
     bool                underOverVoltageStat = false;
 
     do
@@ -2683,7 +2683,7 @@ void test_power_getPwrRsrcStat_allPwrRsrc(void)
 void test_power_getPwrRsrcStat_vmon1_2_UVOVStatDetection(void)
 {
     int32_t                              status = PMIC_ST_SUCCESS;
-    pwrRsrcUVOVStatus_t                  pwrRsrcUVOVStat = PMIC_POWER_TPS6522X_VMON1_UVOV_STAT;
+    uint8_t                  pwrRsrcUVOVStat = PMIC_POWER_TPS6522X_VMON1_UVOV_STAT;
     bool                                 underOverVoltageStat = false;
     Pmic_powerTps6522xPowerResourceCfg_t pwrRsrcCfg;
 
@@ -2783,14 +2783,14 @@ static void resetThermalCfg_withAllValidParams(Pmic_powerTps6522xThermalCfg_t *p
 {
     pThermalCfg->validParams =
         PMIC_POWER_TPS6522X_TWARN_LEVEL_VALID_SHIFT | PMIC_POWER_TPS6522X_TSD_ORD_LEVEL_VALID_SHIFT;
-    pThermalCfg->tsdOrdLvl = PMIC_POWER_TPS6522X_TSD_ORD_LVL_140_C;
+    pThermalCfg->tsdOrdLvl = PMIC_POWER_TPS6522X_TSD_ORD_LVL_140C;
     pThermalCfg->twarnLvl = PMIC_POWER_TPS6522X_TWARN_LVL_130C;
 }
 
 static void resetThermalCfg_withNoValidParams(Pmic_powerTps6522xThermalCfg_t *pThermalCfg)
 {
     pThermalCfg->validParams = 0;
-    pThermalCfg->tsdOrdLvl = PMIC_POWER_TPS6522X_TSD_ORD_LVL_140_C;
+    pThermalCfg->tsdOrdLvl = PMIC_POWER_TPS6522X_TSD_ORD_LVL_140C;
     pThermalCfg->twarnLvl = PMIC_POWER_TPS6522X_TWARN_LVL_130C;
 }
 
@@ -2876,7 +2876,7 @@ void test_power_setThermalCfg_TsdOrdLevel(void)
     thermalCfg_expected.validParams = PMIC_POWER_TPS6522X_TSD_ORD_LEVEL_VALID_SHIFT;
 
     // Set TSD_ORD_LEVEL to be 145C
-    thermalCfg_expected.tsdOrdLvl = PMIC_POWER_TPS6522X_TSD_ORD_LVL_145_C;
+    thermalCfg_expected.tsdOrdLvl = PMIC_POWER_TPS6522X_TSD_ORD_LVL_145C;
     status = Pmic_powerTps6522xSetThermalCfg(&pmicCoreHandle, thermalCfg_expected);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -2886,7 +2886,7 @@ void test_power_setThermalCfg_TsdOrdLevel(void)
     TEST_ASSERT_EQUAL(thermalCfg_expected.tsdOrdLvl, thermalCfg_actual.tsdOrdLvl);
 
     // Set TSD_ORD_LEVEL to be 140C
-    thermalCfg_expected.tsdOrdLvl = PMIC_POWER_TPS6522X_TSD_ORD_LVL_140_C;
+    thermalCfg_expected.tsdOrdLvl = PMIC_POWER_TPS6522X_TSD_ORD_LVL_140C;
     status = Pmic_powerTps6522xSetThermalCfg(&pmicCoreHandle, thermalCfg_expected);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -2910,7 +2910,7 @@ void test_power_setThermalCfg_TwarnLevel(void)
     thermalCfg_expected.validParams = PMIC_POWER_TPS6522X_TWARN_LEVEL_VALID_SHIFT;
 
     // Set TWARN_LEVEL to be 140C
-    thermalCfg_expected.twarnLvl = PMIC_POWER_TPS6522X_TWARN_LVL_140C;
+    thermalCfg_expected.twarnLvl = PMIC_POWER_TPS6522X_TWARN_LVL_140CC;
     status = Pmic_powerTps6522xSetThermalCfg(&pmicCoreHandle, thermalCfg_expected);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
