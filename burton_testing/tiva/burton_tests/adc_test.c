@@ -54,8 +54,6 @@
 Pmic_CoreHandle_t pmicCoreHandle;
 timerHandle_t     timerHandle;
 
-static void disablePmicPowerResources(void);
-
 int main(void)
 {
     /*** Variable declaration/initialization ***/

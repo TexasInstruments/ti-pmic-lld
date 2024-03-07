@@ -78,7 +78,7 @@ static void resetAllTps6522xBuckRegisters(Pmic_CoreHandle_t pmicCoreHandle)
 
     // Set values of all BUCK registers to be zero
     (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, gTps6522xBuckRegisters[0].buckRailSelRegAddr, &regData, 1);
-    for (i = 0; i < PMIC_POWER_TPS6522X_MAX_BUCK_NUM; i++)
+    for (i = 0; i < TPS6522X_MAX_BUCK_NUM; i++)
     {
         (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, gTps6522xBuckRegisters[i].buckCtrlRegAddr, &regData, 1);
         (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, gTps6522xBuckRegisters[i].buckConfRegAddr, &regData, 1);
@@ -100,7 +100,7 @@ static void resetAllTps6522xLdoRegisters(Pmic_CoreHandle_t pmicCoreHandle)
 
     // Set values of all LDO registers to be zero
     (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, gTps6522xLdoRegisters[0].ldoRailSelRegAddr, &regData, 1);
-    for (i = 0; i < PMIC_POWER_TPS6522X_MAX_LDO_NUM; i++)
+    for (i = 0; i < TPS6522X_MAX_LDO_NUM; i++)
     {
         (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, gTps6522xLdoRegisters[i].ldoCtrlRegAddr, &regData, 1);
         (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, gTps6522xLdoRegisters[i].ldoVoutRegAddr, &regData, 1);
@@ -123,19 +123,19 @@ static void resetAllTps6522xVccaVmonRegisters(Pmic_CoreHandle_t pmicCoreHandle)
     (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, gTps6522xVccaVmonRegisters[0].vccaVmonCtrlRegAddr, &regData, 1);
     (void)pmicI2CWrite(
         &pmicCoreHandle, PMIC_MAIN_INST, gTps6522xVccaVmonRegisters[0].vccaVmonRailSelRegAddr, &regData, 1);
-    for (i = 0; i < PMIC_POWER_TPS6522X_MAX_VOLTAGE_MONITOR_NUM; i++)
+    for (i = 0; i < TPS6522X_MAX_VOLTAGE_MONITOR_NUM; i++)
     {
         switch (i)
         {
-            case PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON1:
-            case PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON2:
+            case TPS6522X_VOLTAGE_MONITOR_VMON1:
+            case TPS6522X_VOLTAGE_MONITOR_VMON2:
                 (void)pmicI2CWrite(
                     &pmicCoreHandle, PMIC_MAIN_INST, gTps6522xVccaVmonRegisters[i].vmonPgLevelRegAddr, &regData, 1);
                 (void)pmicI2CWrite(
                     &pmicCoreHandle, PMIC_MAIN_INST, gTps6522xVccaVmonRegisters[i].vmonPgWindowRegAddr, &regData, 1);
 
                 break;
-            case PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VCCA_VMON:
+            case TPS6522X_VOLTAGE_MONITOR_VCCA_VMON:
                 (void)pmicI2CWrite(
                     &pmicCoreHandle, PMIC_MAIN_INST, gTps6522xVccaVmonRegisters[i].vccaPgWindowRegAddr, &regData, 1);
 
