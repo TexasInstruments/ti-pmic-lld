@@ -20,7 +20,6 @@
 // Unit testing
 #include "unity.h"
 
-// clang-format off
 #define RUN_CORE_TESTS  RUN_TEST(test_core_setRecoveryCntCfg_thrVal);                   \
                         RUN_TEST(test_core_setRecoveryCntCfg_clrCnt);                   \
                         RUN_TEST(test_core_setScratchPadValue_allScratchPads);          \
@@ -51,14 +50,12 @@
                         RUN_TEST(test_core_getCommonCtrlStat_nRstOutPin);               \
                         RUN_TEST(test_core_getCommonCtrlStat_nIntPin);                  \
                         RUN_TEST(test_core_getDeviceInfo)
-// clang-format on
 
 timerHandle_t     timerHandle;
 Pmic_CoreHandle_t pmicCoreHandle;
 
 int main(void)
 {
-    // clang-format off
     uartHandle_t vcpHandle;
     i2cHandle_t I2C1Handle;
     const Pmic_CoreCfg_t pmicCoreCfg = {
@@ -81,7 +78,6 @@ int main(void)
         .i2c1Speed = PMIC_I2C_STANDARD_MODE
     };
     int32_t status = PMIC_ST_SUCCESS;
-    // clang-format on
 
     // Initialize system clock
     SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN |
@@ -581,7 +577,7 @@ void test_core_setMiscCtrlCfg_nRstOutSignal(void)
  */
 void test_core_setBatteryCtrlCfg_invalidDevice(void)
 {
-    // clang-format off
+    
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_BatteryCtrlCfg_t batteryCtrlCfg = {
         .validParams = (PMIC_CFG_CHARGING_EN_VALID_SHIFT            |
@@ -591,7 +587,7 @@ void test_core_setBatteryCtrlCfg_invalidDevice(void)
         .endOfChargeVoltage = PMIC_TPS6594X_BB_ENDOF_CHARGE_VOLATGE_3_3_V,
         .chargeCurrent      = PMIC_TPS6594X_BB_CHARGING_CURRENT_500
     };
-    // clang-format on
+    
 
     // Set battery CTRL CFG and compare expected vs. actual return code
     status = Pmic_setBatteryCtrlConfig(&pmicCoreHandle, batteryCtrlCfg);
@@ -605,14 +601,14 @@ void test_core_setBatteryCtrlCfg_invalidDevice(void)
  */
 void test_core_getBatteryCtrlCfg_invalidDevice(void)
 {
-    // clang-format off
+    
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_BatteryCtrlCfg_t batteryCtrlCfg = {
         .validParams = (PMIC_CFG_CHARGING_EN_VALID_SHIFT            |
                         PMIC_CFG_END_OF_CHARGE_VOLTAGE_VALID_SHIFT  |
                         PMIC_CFG_CHARGE_CURRENT_VALID_SHIFT)
     };
-    // clang-format on
+    
 
     // Get battery CTRL CFG and compare expected vs. actual return code
     status = Pmic_getBatteryCtrlConfig(&pmicCoreHandle, &batteryCtrlCfg);

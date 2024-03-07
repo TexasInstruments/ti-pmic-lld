@@ -45,7 +45,6 @@
 #include "pmic_io_priv.h"
 #include "pmic_gpio_tps6594x_priv.h"
 
-// clang-format off
 /* PMIC GPIO Pins with Input Ouput Configuration */
 static Pmic_GpioInOutCfg_t gTps6594x_gpioInOutCfg[] =
 {
@@ -187,7 +186,6 @@ static Pmic_GpioIntRegCfg_t tps6594x_gpioIntRegCfg[] =
         PMIC_FSM_TRIG_MASK_3_GPIO11_FSM_MASK_POL_SHIFT
     }
 };
-// clang-format on
 
 void pmic_get_tps6594x_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg)
 {

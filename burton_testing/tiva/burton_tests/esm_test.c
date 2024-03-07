@@ -44,7 +44,6 @@ static void saveNvmGpio6EsmConfig(void);
 int main(void)
 {
     /*** Variable declaration/initialization ***/
-    // clang-format off
     uartHandle_t vcpHandle;
     i2cHandle_t I2C1Handle;
     Pmic_CoreCfg_t pmicConfigData = {
@@ -64,7 +63,6 @@ int main(void)
         .pQACommHandle      = &I2C1Handle,
         .pFnPmicCommIoRead  = &pmicI2CRead,
         .pFnPmicCommIoWrite = &pmicI2CWrite};
-    // clang-format on
 
     /*** System clock setup ***/
     SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN |
@@ -126,7 +124,6 @@ int main(void)
  */
 static void resetEsmCfg_withAllValidParams(Pmic_EsmCfg_t *esmCfg)
 {
-    // clang-format off
     esmCfg->validParams  = (PMIC_ESM_CFG_DELAY1_VALID_SHIFT      | PMIC_ESM_CFG_DELAY2_VALID_SHIFT |
                             PMIC_ESM_CFG_ERR_CNT_THR_VALID_SHIFT | PMIC_ESM_CFG_HMAX_VALID_SHIFT   |
                             PMIC_ESM_CFG_HMIN_VALID_SHIFT        | PMIC_ESM_CFG_LMAX_VALID_SHIFT   |
@@ -141,7 +138,6 @@ static void resetEsmCfg_withAllValidParams(Pmic_EsmCfg_t *esmCfg)
     esmCfg->esmErrCntThr = 0;
     esmCfg->esmEnDrv     = PMIC_ESM_ERR_EN_DRV_CLEAR_DISABLE;
     esmCfg->esmMode      = PMIC_ESM_LEVEL_MODE;
-    // clang-format on
 }
 
 /**
@@ -230,7 +226,6 @@ static void disableVMON1LDO2(void)
  */
 static void initEsmCfg_forConfigurationTest(Pmic_EsmCfg_t *esmCfg, bool esmMode)
 {
-    // clang-format off
     esmCfg->validParams  = (PMIC_ESM_CFG_DELAY1_VALID_SHIFT      | PMIC_ESM_CFG_DELAY2_VALID_SHIFT |
                             PMIC_ESM_CFG_ERR_CNT_THR_VALID_SHIFT | PMIC_ESM_CFG_HMAX_VALID_SHIFT   |
                             PMIC_ESM_CFG_HMIN_VALID_SHIFT        | PMIC_ESM_CFG_LMAX_VALID_SHIFT   |
@@ -245,7 +240,6 @@ static void initEsmCfg_forConfigurationTest(Pmic_EsmCfg_t *esmCfg, bool esmMode)
     esmCfg->esmErrCntThr = 0xF; // ESM error count threshold is 4 bit
     esmCfg->esmEnDrv     = PMIC_ESM_ERR_EN_DRV_CLEAR_DISABLE;
     esmCfg->esmMode      = esmMode;
-    // clang-format on
 }
 
 /**
@@ -256,7 +250,6 @@ static void initEsmCfg_forConfigurationTest(Pmic_EsmCfg_t *esmCfg, bool esmMode)
  */
 static void initEsmCfg_forLevelModeErrTest(Pmic_EsmCfg_t *esmCfg)
 {
-    // clang-format off
     esmCfg->validParams  = (PMIC_ESM_CFG_DELAY1_VALID_SHIFT      | PMIC_ESM_CFG_DELAY2_VALID_SHIFT |
                             PMIC_ESM_CFG_ERR_CNT_THR_VALID_SHIFT | PMIC_ESM_CFG_EN_DRV_VALID_SHIFT |
                             PMIC_ESM_CFG_MODE_VALID_SHIFT);
@@ -265,7 +258,6 @@ static void initEsmCfg_forLevelModeErrTest(Pmic_EsmCfg_t *esmCfg)
     esmCfg->esmErrCntThr = 3;
     esmCfg->esmEnDrv     = PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE;
     esmCfg->esmMode      = PMIC_ESM_LEVEL_MODE;
-    // clang-format on
 }
 
 /**
@@ -276,7 +268,6 @@ static void initEsmCfg_forLevelModeErrTest(Pmic_EsmCfg_t *esmCfg)
  */
 static void initEsmCfg_forPwmModeErrTest(Pmic_EsmCfg_t *esmCfg)
 {
-    // clang-format off
     esmCfg->validParams     = (PMIC_ESM_CFG_DELAY1_VALID_SHIFT      | PMIC_ESM_CFG_DELAY2_VALID_SHIFT |
                                PMIC_ESM_CFG_ERR_CNT_THR_VALID_SHIFT | PMIC_ESM_CFG_HMAX_VALID_SHIFT   |
                                PMIC_ESM_CFG_HMIN_VALID_SHIFT        | PMIC_ESM_CFG_LMAX_VALID_SHIFT   |
@@ -291,7 +282,6 @@ static void initEsmCfg_forPwmModeErrTest(Pmic_EsmCfg_t *esmCfg)
     esmCfg->esmErrCntThr    = 3;
     esmCfg->esmEnDrv        = PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE;
     esmCfg->esmMode         = PMIC_ESM_PWM_MODE;
-    // clang-format on
 }
 
 /**
@@ -323,7 +313,6 @@ static void setPmicGpioConfig_GPIO6_nERR_MCU(void)
     int32_t        status = PMIC_ST_SUCCESS;
     Pmic_GpioCfg_t nERR_MCU_gpioCfg;
 
-    // clang-format off
     resetGpioCfg_withSpecificValidParams(&nERR_MCU_gpioCfg, (PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
                                                              PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
                                                              PMIC_GPIO_CFG_PULL_VALID_SHIFT    |
@@ -334,7 +323,6 @@ static void setPmicGpioConfig_GPIO6_nERR_MCU(void)
     nERR_MCU_gpioCfg.deglitchEnable = PMIC_GPIO_DEGLITCH_ENABLE;
     status = Pmic_gpioSetConfiguration(&pmicCoreHandle, PMIC_TPS6522X_GPIO6_PIN, nERR_MCU_gpioCfg);
     TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
-    // clang-format on
 }
 
 /**

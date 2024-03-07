@@ -45,7 +45,6 @@
 #include "pmic_io_priv.h"
 #include "pmic_power_tps6594x_priv.h"
 
-// clang-format off
 static Pmic_powerRsrcRegCfg_t gTps6594x_pwrRsrcRegCfg[] =
 {
     {
@@ -295,7 +294,6 @@ static Pmic_powerIntCfg_t tps6594x_pwrIntCfg[] =
     },
 
 };
-// clang-format on
 
 void pmic_get_tps6594x_pwrCommonIntCfg(Pmic_powerIntCfg_t **pPwrCommonIntCfg)
 {

@@ -49,7 +49,6 @@
 
 #include "pmic_power_priv.h"
 
-// clang-format off
 static const Pmic_DevSubSysInfo_t pmicSubSysInfo[] = {
   /* PMIC_DEV_LEO_TPS6594x */
     {.gpioEnable = (bool)true,
@@ -71,7 +70,6 @@ static const Pmic_DevSubSysInfo_t pmicSubSysInfo[] = {
      .esmEnable = (bool)true,
      .adcEnable = (bool)true }
 };
-// clang-format on
 
 bool pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos)
 {

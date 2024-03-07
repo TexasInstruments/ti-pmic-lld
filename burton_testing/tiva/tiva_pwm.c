@@ -3,7 +3,6 @@
 
 void initializePwmHandle(pwmHandle_t *pwmHandle)
 {
-    // clang-format off
     pwmHandle->sysPeriphPWM      = SYSCTL_PERIPH_PWM1;
     pwmHandle->sysPeriphGPIO     = SYSCTL_PERIPH_GPIOF;
     pwmHandle->pwmGpioPortBase   = GPIO_PORTF_BASE;
@@ -16,7 +15,6 @@ void initializePwmHandle(pwmHandle_t *pwmHandle)
     pwmHandle->gpioPinToPWM      = GPIO_PF1_M1PWM5;
     pwmHandle->period_cycles     = (((SysCtlClockGet() / 4) / 1000000) * 4000); // 250 Hz
     pwmHandle->pulseWidth_cycles = (pwmHandle->period_cycles) / 2; // 50% duty cycle
-    // clang-format on
 }
 
 void initializePwmPin(const pwmHandle_t pwmHandle)

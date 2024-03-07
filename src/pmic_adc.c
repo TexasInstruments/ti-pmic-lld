@@ -179,8 +179,8 @@ int32_t Pmic_ADCGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_adcCfg
     {
         if (pmic_validParamCheck(pAdcCfg->validParams, PMIC_ADC_CFG_RDIV_EN_VALID))
         {
-            pAdcCfg->rDivEn = (uint8_t)Pmic_getBitField(
-                adcCtrlRegData, PMIC_ADC_CTRL_RDIV_EN_SHIFT, PMIC_ADC_CTRL_RDIV_EN_MASK);
+            pAdcCfg->rDivEn =
+                (uint8_t)Pmic_getBitField(adcCtrlRegData, PMIC_ADC_CTRL_RDIV_EN_SHIFT, PMIC_ADC_CTRL_RDIV_EN_MASK);
         }
         if (pmic_validParamCheck(pAdcCfg->validParams, PMIC_ADC_CFG_THERMAL_SEL_VALID))
         {
@@ -189,8 +189,8 @@ int32_t Pmic_ADCGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_adcCfg
         }
         if (pmic_validParamCheck(pAdcCfg->validParams, PMIC_ADC_CFG_CONT_CONV_VALID))
         {
-            pAdcCfg->contConv = (uint8_t)Pmic_getBitField(
-                adcCtrlRegData, PMIC_ADC_CTRL_CONT_CONV_SHIFT, PMIC_ADC_CTRL_CONT_CONV_MASK);
+            pAdcCfg->contConv =
+                (uint8_t)Pmic_getBitField(adcCtrlRegData, PMIC_ADC_CTRL_CONT_CONV_SHIFT, PMIC_ADC_CTRL_CONT_CONV_MASK);
         }
     }
 
@@ -213,8 +213,7 @@ static int32_t Pmic_ADCContConvCheck(const uint8_t adcCtrlRegData)
 {
     uint8_t contConv = PMIC_ADC_CONTINUOUS_CONVERSION_DISABLED;
 
-    contConv = (uint8_t)Pmic_getBitField(
-        adcCtrlRegData, PMIC_ADC_CTRL_CONT_CONV_SHIFT, PMIC_ADC_CTRL_CONT_CONV_MASK);
+    contConv = (uint8_t)Pmic_getBitField(adcCtrlRegData, PMIC_ADC_CTRL_CONT_CONV_SHIFT, PMIC_ADC_CTRL_CONT_CONV_MASK);
 
     if (contConv == PMIC_ADC_CONTINUOUS_CONVERSION_ENABLED)
     {
@@ -396,107 +395,6 @@ int32_t Pmic_ADCGetResultCode(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t *pAdc
 
     // Stop critical section after reading
     Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    return status;
-}
-
-/**
- *  \brief      This function is used to convert an ADC result code to microvolts.
- *
- *  \param      adcResultCode   [IN]    ADC result code that is generated after an ADC conversion
- *  \param      adcRDivEn       [IN]    ADC resistor divider enable
- *  \param      pAdcResult      [OUT]   ADC result in microvolts
- */
-static inline void
-adcConvertCodeToMicroVolts(const uint16_t adcResultCode, const uint8_t adcRDivEn, int32_t *pAdcResult)
-{
-    // ADC result code is 12 bits. If adcResultCode exceeds maximum 12-bit value,
-    // set ADC result to be maximum microvolts
-    if (adcResultCode >= 4095)
-    {
-        *pAdcResult = 1200000;
-    }
-    else
-    {
-        // Inverse of ADC output equation for voltage (equation found in TRM), multiplied
-        // by 10^6 to provide more precision and reduce impact of integer truncation
-        *pAdcResult = (int32_t)((1200000.0 / 4095.0) * adcResultCode);
-    }
-
-    if (adcRDivEn == PMIC_ADC_RESISTOR_DIVIDER_ENABLED)
-    {
-        *pAdcResult *= PMIC_ADC_RESISTOR_DIVIDER_VAL;
-    }
-}
-
-/**
- *  \brief      This function is used to convert an ADC result code to temperature (degrees celsius)
- *
- *  \param      adcResultCode   [IN]    ADC result code that is generated after an ADC conversion
- *  \param      pAdcResult      [OUT]   ADC result in degrees celsius
- */
-static inline void adcConvertCodeToTemp(const uint16_t adcResultCode, int32_t *pAdcResult)
-{
-    // Inverse of ADC output equation for temperature (equation found in TRM)
-    *pAdcResult = (int32_t)(((1200.0 / (4095.0 * 1.201)) * (float)adcResultCode) - (335.0 / 1.201) + 27.0);
-}
-
-int32_t Pmic_ADCGetResult(Pmic_CoreHandle_t *pPmicCoreHandle, int32_t *pAdcResult)
-{
-    int32_t              status = PMIC_ST_SUCCESS;
-    uint8_t              adcCtrlRegData = 0;
-    uint16_t             adcResultCode = 0;
-    uint8_t     adcRDivEn = PMIC_ADC_RESISTOR_DIVIDER_DISABLED;
-    uint8_t thermalSel = PMIC_ADC_THERMAL_SEL_ADC_INPUT;
-
-    // Parameter check
-    status = Pmic_ADCParamCheck_pmicHandle(pPmicCoreHandle);
-    if ((status == PMIC_ST_SUCCESS) && (pAdcResult == NULL))
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    // Start critical section before reading
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    // Read ADC_CTRL register
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_ADC_CTRL_REGADDR, &adcCtrlRegData);
-    }
-
-    // Extract ADC_THERMAL_SEL and ADC_RDIV_EN bits from ADC_CTRL
-    if (status == PMIC_ST_SUCCESS)
-    {
-        thermalSel = (uint8_t)Pmic_getBitField(
-            adcCtrlRegData, PMIC_ADC_CTRL_THERMAL_SEL_SHIFT, PMIC_ADC_CTRL_THERMAL_SEL_MASK);
-
-        adcRDivEn =
-            (uint8_t)Pmic_getBitField(adcCtrlRegData, PMIC_ADC_CTRL_RDIV_EN_SHIFT, PMIC_ADC_CTRL_RDIV_EN_MASK);
-    }
-
-    // Stop critical section after reading
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    // Get ADC result code
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_ADCGetResultCode(pPmicCoreHandle, &adcResultCode);
-    }
-
-    if (status == PMIC_ST_SUCCESS)
-    {
-        // If ADC conversion source is ADC input, convert ADC result code to voltage
-        if (thermalSel == PMIC_ADC_THERMAL_SEL_ADC_INPUT)
-        {
-            adcConvertCodeToMicroVolts(adcResultCode, adcRDivEn, pAdcResult);
-        }
-        // Else, convert ADC result code to temperature
-        else
-        {
-            adcConvertCodeToTemp(adcResultCode, pAdcResult);
-        }
-    }
 
     return status;
 }

@@ -6,7 +6,6 @@
 
 #include "unity.h"
 
-// clang-format off
 #define RUN_WDG_TESTS   RUN_TEST(test_wdg_enableDisable);                   \
                         RUN_TEST(test_wdg_setCfg_longWindowDuration);       \
                         RUN_TEST(test_wdg_setCfg_window1Duration);          \
@@ -31,8 +30,6 @@
                         RUN_TEST(test_wdg_QaMode_detect_failError);         \
                         RUN_TEST(test_wdg_QaMode_detect_resetError)
 
-// clang-format on
-
 int32_t configurePmicI2CPins(Pmic_CoreHandle_t pmicCoreHandle);
 
 uartHandle_t      vcpHandle;
@@ -41,7 +38,6 @@ Pmic_CoreHandle_t pmicCoreHandle;
 
 int main(void)
 {
-    // clang-format off
     // uartHandle_t vcpHandle;
     i2cHandle_t I2C1Handle, I2C2Handle;
     const Pmic_CoreCfg_t pmicCoreCfg = {
@@ -66,7 +62,6 @@ int main(void)
         .i2c2Speed = PMIC_I2C_STANDARD_MODE
     };
     int32_t status = PMIC_ST_SUCCESS;
-    // clang-format on
 
     // Initialize system clock
     SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN |

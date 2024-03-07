@@ -43,7 +43,6 @@
 #include "pmic_core_priv.h"
 #include "pmic_gpio_lp8764x_priv.h"
 
-// clang-format off
 /* PMIC GPIO Pins with Input Ouput Configuration */
 static Pmic_GpioInOutCfg_t gLp8764x_gpioInOutCfg[] =
 {
@@ -173,7 +172,6 @@ static Pmic_GpioIntRegCfg_t lp8764x_gpioIntRegCfg[] =
         PMIC_FSM_TRIG_MASK_3_GPIO10_FSM_MASK_POL_SHIFT
     }
 };
-// clang-format on
 
 void pmic_get_lp8764x_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg)
 {

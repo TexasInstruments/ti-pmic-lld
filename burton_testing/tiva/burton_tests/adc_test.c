@@ -26,6 +26,31 @@
 /* PMIC driver */
 #include "pmic.h"
 
+#define RUN_ADC_TESTS   RUN_TEST(test_ADC_gpioPinTypeADC_nullPmicHandle);                   \
+                        RUN_TEST(test_ADC_gpioPinTypeADC_invalidGpioNum);                   \
+                        RUN_TEST(test_ADC_gpioPinTypeADC_gpio4);                            \
+                        RUN_TEST(test_ADC_gpioPinTypeADC_gpio5);                            \
+                        RUN_TEST(test_ADC_getConfiguration_nullPmicHandle);                 \
+                        RUN_TEST(test_ADC_getConfiguration_nullAdcCfg);                     \
+                        RUN_TEST(test_ADC_getConfiguration_noValidParam);                   \
+                        RUN_TEST(test_ADC_setConfiguration_nullPmicHandle);                 \
+                        RUN_TEST(test_ADC_setConfiguration_noValidParam);                   \
+                        RUN_TEST(test_ADC_setConfiguration_RDiv_EnableDisable);             \
+                        RUN_TEST(test_ADC_setConfiguration_thermalSel_adcInput);            \
+                        RUN_TEST(test_ADC_setConfiguration_thermalSel_thermalSensor);       \
+                        RUN_TEST(test_ADC_setConfiguration_contConv_enableDisable);         \
+                        RUN_TEST(test_ADC_startSingleConversion_nullPmicHandle);            \
+                        RUN_TEST(test_ADC_startSingleConversion_contConvEnabled);           \
+                        RUN_TEST(test_ADC_startSingleConversionBlocking_nullPmicHandle);    \
+                        RUN_TEST(test_ADC_startSingleConversionBlocking_contConvEnabled);   \
+                        RUN_TEST(test_ADC_getStatus_nullParam);                             \
+                        RUN_TEST(test_ADC_getStatus_idle);                                  \
+                        RUN_TEST(test_ADC_getStatus_busy);                                  \
+                        RUN_TEST(test_ADC_getResultCode_nullParam);                         \
+                        RUN_TEST(test_ADC_getResultCode_voltage);                           \
+                        RUN_TEST(test_ADC_getResultCode_temperature);                       \
+                        RUN_TEST(test_ADC_gpioPinTypeADC_nullPmicHandle) 
+
 Pmic_CoreHandle_t pmicCoreHandle;
 timerHandle_t     timerHandle;
 
@@ -34,7 +59,6 @@ static void disablePmicPowerResources(void);
 int main(void)
 {
     /*** Variable declaration/initialization ***/
-    // clang-format off
     uartHandle_t vcpHandle;
     i2cHandle_t I2C1Handle;
     Pmic_CoreCfg_t pmicConfigData = {
@@ -54,7 +78,6 @@ int main(void)
         .pQACommHandle      = &I2C1Handle,
         .pFnPmicCommIoRead  = &pmicI2CRead,
         .pFnPmicCommIoWrite = &pmicI2CWrite};
-    // clang-format on
 
     /*** System clock setup ***/
     SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN |
@@ -80,7 +103,7 @@ int main(void)
     clearConsole(&vcpHandle);
 
     /*** Put PMIC power resources into a known state for testing ***/
-    disablePmicPowerResources();
+    disablePmicPowerResources(pmicCoreHandle);
     (void)Pmic_irqClrErrStatus(&pmicCoreHandle, PMIC_IRQ_ALL);
 
     /*** Ensure changes are propagated by waiting a certain period of time ***/
@@ -92,107 +115,10 @@ int main(void)
     /*** Begin unity testing ***/
     UNITY_BEGIN();
 
+    RUN_ADC_TESTS;
+
     /*** Finish unity testing ***/
     return UNITY_END();
-}
-
-static void resetAllTps6522xBuckRegisters(void)
-{
-    uint8_t                                  i = 0;
-    uint8_t                                  txBuffer = 0;
-    const Pmic_powerTps6522xBuckRegisters_t *pBuckRegisters = NULL;
-
-    // Obtain BUCK registers
-    Pmic_get_tps6522x_pwrBuckRegs(&pBuckRegisters);
-
-    // Set values of all BUCK registers to be zero
-    (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, pBuckRegisters[0].buckRailSelRegAddr, &txBuffer, 1);
-    for (i = 0; i < PMIC_POWER_TPS6522X_MAX_BUCK_NUM; i++)
-    {
-        (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, pBuckRegisters[i].buckCtrlRegAddr, &txBuffer, 1);
-        (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, pBuckRegisters[i].buckConfRegAddr, &txBuffer, 1);
-        (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, pBuckRegisters[i].buckVoutRegAddr, &txBuffer, 1);
-        (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, pBuckRegisters[i].buckPgWindowRegAddr, &txBuffer, 1);
-    }
-}
-
-static void resetAllTps6522xLdoRegisters(void)
-{
-    uint8_t                                 i = 0;
-    uint8_t                                 txBuffer = 0;
-    const Pmic_powerTps6522xLdoRegisters_t *pLdoRegisters = NULL;
-
-    // Obtain LDO registers
-    Pmic_get_tps6522x_pwrLdoRegs(&pLdoRegisters);
-
-    // Set values of all LDO registers to be zero
-    (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, pLdoRegisters[0].ldoRailSelRegAddr, &txBuffer, 1);
-    for (i = 0; i < PMIC_POWER_TPS6522X_MAX_LDO_NUM; i++)
-    {
-        (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, pLdoRegisters[i].ldoCtrlRegAddr, &txBuffer, 1);
-        (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, pLdoRegisters[i].ldoVoutRegAddr, &txBuffer, 1);
-        (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, pLdoRegisters[i].ldoPgWindowRegAddr, &txBuffer, 1);
-    }
-}
-
-static void resetAllTps6522xVccaVmonRegisters(void)
-{
-    uint8_t                                      i = 0;
-    uint8_t                                      txBuffer = 0;
-    const Pmic_powerTps6522xVccaVmonRegisters_t *pVccaVmonRegisters = NULL;
-
-    // Obtain VCCA_VMON/VMONx registers
-    Pmic_get_tps6522x_PwrVccaVmonRegisters(&pVccaVmonRegisters);
-
-    // Set values of all VCCA_MON/VMONx registers to be zero
-    (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, pVccaVmonRegisters[0].vccaVmonCtrlRegAddr, &txBuffer, 1);
-    (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, pVccaVmonRegisters[0].vccaVmonRailSelRegAddr, &txBuffer, 1);
-    for (i = 0; i < PMIC_POWER_TPS6522X_MAX_VOLTAGE_MONITOR_NUM; i++)
-    {
-        switch (i)
-        {
-            case PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON1:
-            case PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VMON2:
-                (void)pmicI2CWrite(
-                    &pmicCoreHandle, PMIC_MAIN_INST, pVccaVmonRegisters[i].vmonPgLevelRegAddr, &txBuffer, 1);
-                (void)pmicI2CWrite(
-                    &pmicCoreHandle, PMIC_MAIN_INST, pVccaVmonRegisters[i].vmonPgWindowRegAddr, &txBuffer, 1);
-
-                break;
-            case PMIC_POWER_TPS6522X_VOLTAGE_MONITOR_VCCA_VMON:
-                (void)pmicI2CWrite(
-                    &pmicCoreHandle, PMIC_MAIN_INST, pVccaVmonRegisters[i].vccaPgWindowRegAddr, &txBuffer, 1);
-
-                break;
-        }
-    }
-}
-
-static void disablePmicPowerResources(void)
-{
-    const uint8_t devIdReg = 0x01;
-    uint8_t       pmicDevId = 0x00;
-    int32_t       status = PMIC_ST_SUCCESS;
-
-    // Wait for PMIC connection
-    while (1)
-    {
-        status = pmicI2CRead(&pmicCoreHandle, PMIC_MAIN_INST, devIdReg, &pmicDevId, 1);
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            break;
-        }
-    }
-
-    // Set all BUCK registers to zero
-    resetAllTps6522xBuckRegisters();
-
-    // Set all LDO registers to zero
-    resetAllTps6522xLdoRegisters();
-
-    // Set all VCCA_VMON/VMONx registers to zero
-    resetAllTps6522xVccaVmonRegisters();
 }
 
 /**

@@ -48,7 +48,6 @@
 #include "pmic_power_priv.h"
 #include "pmic_wdg_priv.h"
 
-// clang-format off
 /* PMIC TPS6594x Interrupt Configuration as per Pmic_tps6594x_IrqNum. */
 static Pmic_IntrCfg_t gTps6594x_intCfg[] =
 {
@@ -660,7 +659,6 @@ static Pmic_GpioIntrTypeCfg_t tps6594x_gpioIntrCfg[] =
         PMIC_MASK_GPIO9_11_GPIO11_FALL_MASK_SHIFT
     },
 };
-// clang-format on
 
 void pmic_get_tps6594x_intrCfg(Pmic_IntrCfg_t **pIntrCfg)
 {

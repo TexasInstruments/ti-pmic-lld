@@ -47,7 +47,6 @@
 #include "pmic_power_priv.h"
 #include "pmic_wdg_priv.h"
 
-// clang-format off
 /* PMIC TPS6522x Interrupt Configuration as per Pmic_tps6522x_IrqNum. */
 static Pmic_IntrCfg_t gTps6522x_intCfg[] =
 {
@@ -347,7 +346,6 @@ static Pmic_IntrCfg_t gTps6522x_intCfg[] =
     }
 };
 
-// clang-format off
 /*  PMIC TPS6522x GPIO Interrupt Mask Configuration as per Pmic_IrqGpioNum. */
 static Pmic_GpioIntrTypeCfg_t tps6522x_gpioIntrCfg[] =
 {
@@ -388,7 +386,6 @@ static Pmic_GpioIntrTypeCfg_t tps6522x_gpioIntrCfg[] =
         PMIC_MASK_GPIO1_8_FALL_GPIO6_FALL_MASK_SHIFT
     }
 };
-// clang-format on
 
 void pmic_get_tps6522x_intrCfg(Pmic_IntrCfg_t **pIntrCfg)
 {

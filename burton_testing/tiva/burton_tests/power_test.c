@@ -26,13 +26,71 @@
 /* PMIC driver */
 #include "pmic.h"
 
+#define RUN_POWER_TESTS     RUN_TEST(test_power_getConfiguration_pmicHandle_null);                      \
+                            RUN_TEST(test_power_getConfiguration_pwrRsrcCfg_null);                      \
+                            RUN_TEST(test_power_getConfiguration_pwrRsrcCfg_noValidParam);              \
+                            RUN_TEST(test_power_getConfiguration_buckPwrRsrcCfg_noValidParam);          \
+                            RUN_TEST(test_power_getConfiguration_ldoPwrRsrcCfg_noValidParam);           \
+                            RUN_TEST(test_power_getConfiguration_vccaVmonPwrRsrcCfg_noValidParam);      \
+                            RUN_TEST(test_power_getConfiguration_validParameters);                      \
+                            RUN_TEST(test_power_setConfiguration_pmicHandle_null);                      \
+                            RUN_TEST(test_power_setConfiguration_pwrRsrcCfg_noValidParam);              \
+                            RUN_TEST(test_power_setConfiguration_buckPwrRsrcCfg_noValidParam);          \
+                            RUN_TEST(test_power_setConfiguration_ldoPwrRsrcCfg_noValidParam);           \
+                            RUN_TEST(test_power_setConfiguration_vccaVmonPwrRsrcCfg_noValidParam);      \
+                            RUN_TEST(test_power_setConfiguration_buckPldnEnableDisable);                \
+                            RUN_TEST(test_power_setConfiguration_buckVmonEnableDisable);                \
+                            RUN_TEST(test_power_setConfiguration_buckFPWM);                             \
+                            RUN_TEST(test_power_setConfiguration_buckEn);                               \
+                            RUN_TEST(test_power_setConfiguration_buckSlewRate);                         \
+                            RUN_TEST(test_power_setConfiguration_buckVout_voltageBelowRange);           \
+                            RUN_TEST(test_power_setConfiguration_buckVout_voltageAboveRange);           \
+                            RUN_TEST(test_power_setConfiguration_buck1_buckVout);                       \
+                            RUN_TEST(test_power_setConfiguration_buck2_3_4_buckVout);                   \
+                            RUN_TEST(test_power_setConfiguration_buckVmonThr);                          \
+                            RUN_TEST(test_power_setConfiguration_buckRailGrpSel);                       \
+                            RUN_TEST(test_power_setConfiguration_ldoDischargeEnableDisable);            \
+                            RUN_TEST(test_power_setConfiguration_ldoVmonEnableDisable);                 \
+                            RUN_TEST(test_power_setConfiguration_ldoEnableDisable);                     \
+                            RUN_TEST(test_power_setConfiguration_ldoBypassConfig);                      \
+                            RUN_TEST(test_power_setConfiguration_ldo1Vout_voltageBelowRange);           \
+                            RUN_TEST(test_power_setConfiguration_ldo1Vout_voltageAboveRange);           \
+                            RUN_TEST(test_power_setConfiguration_ldo2_3_Vout_voltageBelowRange);        \
+                            RUN_TEST(test_power_setConfiguration_ldo2_3_Vout_voltageAboveRange);        \
+                            RUN_TEST(test_power_setConfiguration_ldo1_ldoVout);                         \
+                            RUN_TEST(test_power_setConfiguration_ldo2_3_ldoVout);                       \
+                            RUN_TEST(test_power_setConfiguration_ldoVmonThr);                           \
+                            RUN_TEST(test_power_setConfiguration_ldoRailGrpSel);                        \
+                            RUN_TEST(test_power_setConfiguration_vmonDeglitch);                         \
+                            RUN_TEST(test_power_setConfiguration_VMON1_2_VCCA_VMON_EnableDisable);      \
+                            RUN_TEST(test_power_setConfiguration_vccaPgLevel);                          \
+                            RUN_TEST(test_power_setConfiguration_vccaVmonThr);                          \
+                            RUN_TEST(test_power_setConfiguration_vccaRailGrpSel);                       \
+                            RUN_TEST(test_power_setConfiguration_vmon1PgSet_voltageOutOfRange);         \
+                            RUN_TEST(test_power_setConfiguration_vmon2PgSet_voltageOutOfRange);         \
+                            RUN_TEST(test_power_setConfiguration_vmon1PgSet);                           \
+                            RUN_TEST(test_power_setConfiguration_vmon2PgSet);                           \
+                            RUN_TEST(test_power_setConfiguration_vmon1_2_RailGrpSel);                   \
+                            RUN_TEST(test_power_setConfiguration_vmon1_2_Thr);                          \
+                            RUN_TEST(test_power_getPwrRsrcStat_nullParam);                              \
+                            RUN_TEST(test_power_getPwrRsrcStat_allPwrRsrc);                             \
+                            RUN_TEST(test_power_getPwrRsrcStat_vmon1_2_UVOVStatDetection);              \
+                            RUN_TEST(test_power_getPwrThermalStat_nullParam);                           \
+                            RUN_TEST(test_power_getPwrThermalStat_noValidParams);                       \
+                            RUN_TEST(test_power_getPwrThermalStat_getAllStatus);                        \
+                            RUN_TEST(test_power_getThermalCfg_nullParam);                               \
+                            RUN_TEST(test_power_getThermalCfg_noValidParams);                           \
+                            RUN_TEST(test_power_setThermalCfg_nullParam);                               \
+                            RUN_TEST(test_power_setThermalCfg_noValidParams);                           \
+                            RUN_TEST(test_power_setThermalCfg_TsdOrdLevel);                             \
+                            RUN_TEST(test_power_setThermalCfg_TwarnLevel)                               \
+
 timerHandle_t     timerHandle;
 Pmic_CoreHandle_t pmicCoreHandle;
 
 int main(void)
 {
     /*** Variable declaration/initialization ***/
-    // clang-format off
     uartHandle_t vcpHandle;
     i2cHandle_t I2C1Handle;
     Pmic_CoreCfg_t pmicConfigData = {
@@ -52,7 +110,6 @@ int main(void)
         .pQACommHandle      = &I2C1Handle,
         .pFnPmicCommIoRead  = &pmicI2CRead,
         .pFnPmicCommIoWrite = &pmicI2CWrite};
-    // clang-format on
 
     /*** System clock setup ***/
     SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN |
@@ -90,64 +147,7 @@ int main(void)
     /*** Begin unity testing ***/
     UNITY_BEGIN();
 
-    RUN_TEST(test_power_getConfiguration_pmicHandle_null);
-    RUN_TEST(test_power_getConfiguration_pwrRsrcCfg_null);
-    RUN_TEST(test_power_getConfiguration_pwrRsrcCfg_noValidParam);
-    RUN_TEST(test_power_getConfiguration_buckPwrRsrcCfg_noValidParam);
-    RUN_TEST(test_power_getConfiguration_ldoPwrRsrcCfg_noValidParam);
-    RUN_TEST(test_power_getConfiguration_vccaVmonPwrRsrcCfg_noValidParam);
-    RUN_TEST(test_power_getConfiguration_validParameters);
-    RUN_TEST(test_power_setConfiguration_pmicHandle_null);
-    RUN_TEST(test_power_setConfiguration_pwrRsrcCfg_noValidParam);
-    RUN_TEST(test_power_setConfiguration_buckPwrRsrcCfg_noValidParam);
-    RUN_TEST(test_power_setConfiguration_ldoPwrRsrcCfg_noValidParam);
-    RUN_TEST(test_power_setConfiguration_vccaVmonPwrRsrcCfg_noValidParam);
-    RUN_TEST(test_power_setConfiguration_buckPldnEnableDisable);
-    RUN_TEST(test_power_setConfiguration_buckVmonEnableDisable);
-    RUN_TEST(test_power_setConfiguration_buckFPWM);
-    RUN_TEST(test_power_setConfiguration_buckEn);
-    RUN_TEST(test_power_setConfiguration_buckSlewRate);
-    RUN_TEST(test_power_setConfiguration_buckVout_voltageBelowRange);
-    RUN_TEST(test_power_setConfiguration_buckVout_voltageAboveRange);
-    RUN_TEST(test_power_setConfiguration_buck1_buckVout);
-    RUN_TEST(test_power_setConfiguration_buck2_3_4_buckVout);
-    RUN_TEST(test_power_setConfiguration_buckVmonThr);
-    RUN_TEST(test_power_setConfiguration_buckRailGrpSel);
-    RUN_TEST(test_power_setConfiguration_ldoDischargeEnableDisable);
-    RUN_TEST(test_power_setConfiguration_ldoVmonEnableDisable);
-    RUN_TEST(test_power_setConfiguration_ldoEnableDisable);
-    RUN_TEST(test_power_setConfiguration_ldoBypassConfig);
-    RUN_TEST(test_power_setConfiguration_ldo1Vout_voltageBelowRange);
-    RUN_TEST(test_power_setConfiguration_ldo1Vout_voltageAboveRange);
-    RUN_TEST(test_power_setConfiguration_ldo2_3_Vout_voltageBelowRange);
-    RUN_TEST(test_power_setConfiguration_ldo2_3_Vout_voltageAboveRange);
-    RUN_TEST(test_power_setConfiguration_ldo1_ldoVout);
-    RUN_TEST(test_power_setConfiguration_ldo2_3_ldoVout);
-    RUN_TEST(test_power_setConfiguration_ldoVmonThr);
-    RUN_TEST(test_power_setConfiguration_ldoRailGrpSel);
-    RUN_TEST(test_power_setConfiguration_vmonDeglitch);
-    RUN_TEST(test_power_setConfiguration_VMON1_2_VCCA_VMON_EnableDisable);
-    RUN_TEST(test_power_setConfiguration_vccaPgLevel);
-    RUN_TEST(test_power_setConfiguration_vccaVmonThr);
-    RUN_TEST(test_power_setConfiguration_vccaRailGrpSel);
-    RUN_TEST(test_power_setConfiguration_vmon1PgSet_voltageOutOfRange);
-    RUN_TEST(test_power_setConfiguration_vmon2PgSet_voltageOutOfRange);
-    RUN_TEST(test_power_setConfiguration_vmon1PgSet);
-    RUN_TEST(test_power_setConfiguration_vmon2PgSet);
-    RUN_TEST(test_power_setConfiguration_vmon1_2_RailGrpSel);
-    RUN_TEST(test_power_setConfiguration_vmon1_2_Thr);
-    RUN_TEST(test_power_getPwrRsrcStat_nullParam);
-    RUN_TEST(test_power_getPwrRsrcStat_allPwrRsrc);
-    RUN_TEST(test_power_getPwrRsrcStat_vmon1_2_UVOVStatDetection);
-    RUN_TEST(test_power_getPwrThermalStat_nullParam);
-    RUN_TEST(test_power_getPwrThermalStat_noValidParams);
-    RUN_TEST(test_power_getPwrThermalStat_getAllStatus);
-    RUN_TEST(test_power_getThermalCfg_nullParam);
-    RUN_TEST(test_power_getThermalCfg_noValidParams);
-    RUN_TEST(test_power_setThermalCfg_nullParam);
-    RUN_TEST(test_power_setThermalCfg_noValidParams);
-    RUN_TEST(test_power_setThermalCfg_TsdOrdLevel);
-    RUN_TEST(test_power_setThermalCfg_TwarnLevel);
+    RUN_POWER_TESTS;
 
     /*** Finish unity testing ***/
     return UNITY_END();
@@ -155,7 +155,6 @@ int main(void)
 
 static void resetBurtonPwrCfg_withAllValidParams(Pmic_powerTps6522xPowerResourceCfg_t *burtonPwrRsrcCfg)
 {
-    // clang-format off
     uint8_t i = 0;
 
     burtonPwrRsrcCfg->validParams =
@@ -225,13 +224,10 @@ static void resetBurtonPwrCfg_withAllValidParams(Pmic_powerTps6522xPowerResource
     burtonPwrRsrcCfg->vccaVmonPwrRsrcCfg.vmon2Thr        = PMIC_POWER_TPS6522X_VMON2_THR_3_PCT;
     burtonPwrRsrcCfg->vccaVmonPwrRsrcCfg.vmon2PgLevel_mv = 500;
     burtonPwrRsrcCfg->vccaVmonPwrRsrcCfg.vmon2RailGrpSel = PMIC_POWER_TPS6522X_VMON2_RAIL_SEL_NONE;
-
-    // clang-format on
 }
 
 static void resetBurtonPwrCfg_withNoValidParams(Pmic_powerTps6522xPowerResourceCfg_t *burtonPwrRsrcCfg)
 {
-    // clang-format off
     uint8_t i = 0;
 
     burtonPwrRsrcCfg->validParams = 0;
@@ -279,8 +275,6 @@ static void resetBurtonPwrCfg_withNoValidParams(Pmic_powerTps6522xPowerResourceC
     burtonPwrRsrcCfg->vccaVmonPwrRsrcCfg.vmon2Thr        = PMIC_POWER_TPS6522X_VMON2_THR_3_PCT;
     burtonPwrRsrcCfg->vccaVmonPwrRsrcCfg.vmon2PgLevel_mv = 500;
     burtonPwrRsrcCfg->vccaVmonPwrRsrcCfg.vmon2RailGrpSel = PMIC_POWER_TPS6522X_VMON2_RAIL_SEL_NONE;
-
-    // clang-format on
 }
 
 /**
@@ -758,7 +752,7 @@ void test_power_setConfiguration_buckPldnEnableDisable(void)
         expectedPwrRsrcCfg.buckPwrRsrcCfg[i].validParams = PMIC_POWER_TPS6522X_CFG_BUCK_PLDN_VALID_SHIFT;
 
         // Enable BUCK_PLDN
-        expectedPwrRsrcCfg.buckPwrRsrcCfg[i].buckPldn = PMIC_POWER_TPS6522X_BUCK_PLDN_ENABLEE;
+        expectedPwrRsrcCfg.buckPwrRsrcCfg[i].buckPldn = PMIC_POWER_TPS6522X_BUCK_PLDN_ENABLE;
         status = Pmic_powerTps6522xSetPwrResourceCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -811,7 +805,7 @@ void test_power_setConfiguration_buckVmonEnableDisable(void)
         expectedPwrRsrcCfg.buckPwrRsrcCfg[i].validParams = PMIC_POWER_TPS6522X_CFG_BUCK_VMON_EN_VALID_SHIFT;
 
         // Enable buck VMON
-        expectedPwrRsrcCfg.buckPwrRsrcCfg[i].buckVmonEn = PMIC_POWER_TPS6522X_BUCK_VMON_ENABLEE;
+        expectedPwrRsrcCfg.buckPwrRsrcCfg[i].buckVmonEn = PMIC_POWER_TPS6522X_BUCK_VMON_ENABLE;
         status = Pmic_powerTps6522xSetPwrResourceCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -2910,7 +2904,7 @@ void test_power_setThermalCfg_TwarnLevel(void)
     thermalCfg_expected.validParams = PMIC_POWER_TPS6522X_TWARN_LEVEL_VALID_SHIFT;
 
     // Set TWARN_LEVEL to be 140C
-    thermalCfg_expected.twarnLvl = PMIC_POWER_TPS6522X_TWARN_LVL_140CC;
+    thermalCfg_expected.twarnLvl = PMIC_POWER_TPS6522X_TWARN_LVL_140C;
     status = Pmic_powerTps6522xSetThermalCfg(&pmicCoreHandle, thermalCfg_expected);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 

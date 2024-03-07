@@ -6,7 +6,6 @@ extern "C"
 {
 #endif
 
-// clang-format off
 typedef struct gpioPinHandle_s
 {
     uint32_t sysPeriphGPIO;
@@ -15,7 +14,6 @@ typedef struct gpioPinHandle_s
     uint32_t gpioPinDir;
     uint32_t gpioShiftVal;
 }gpioPinHandle_t;
-// clang-format on
 
 /**
  * \brief Initializes an array of GPIO pin handles

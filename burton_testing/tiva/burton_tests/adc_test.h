@@ -142,25 +142,6 @@ void test_ADC_getResultCode_voltage(void);
  */
 void test_ADC_getResultCode_temperature(void);
 
-/**
- *  \brief  Pmic_ADCGetResultCode: Test API error handling for when its parameters are NULL
- */
-void test_ADC_getResult_nullParam(void);
-
-/**
- *  \brief  Pmic_ADCGetResultCode: Test whether API can obtain the result after a voltage value
- *                                 is processed by the ADC
- *
- *  \note   For this test, the voltage input must be connected to PMIC GPIO4
- */
-void test_ADC_getResult_voltage(void);
-
-/**
- *  \brief  Pmic_ADCGetResultCode: Test whether API can obtain the result after a temperature value
- *                                 is processed by the ADC
- */
-void test_ADC_getResult_temperature(void);
-
 #ifdef __cplusplus
 }
 

@@ -43,7 +43,6 @@
 #include "pmic_io_priv.h"
 #include "pmic_power_tps6522x_priv.h"
 
-// clang-format off
 const Pmic_powerTps6522xBuckRegisters_t gTps6522xBuckRegisters[] =
 {
     {
@@ -122,7 +121,6 @@ const Pmic_powerTps6522xVccaVmonRegisters_t gTps6522xVccaVmonRegisters[] =
         PMIC_TPS6522X_RAIL_SEL_3_REGADDR
     }
 };
-// clang-format on
 
 /**
  *  \brief      This function is used to verify the PMIC handle and pointer to TPS6522x power resource
@@ -643,14 +641,12 @@ int32_t Pmic_powerTps6522xGetBuckPwrResourceCfg(Pmic_CoreHandle_t               
                                                 Pmic_powerTps6522xBuckPowerResourceCfg_t *pBuckPowerResourceCfg,
                                                 const uint8_t                             buckNum)
 {
-    // clang-format off
     uint8_t buckCtrlRegData     = 0;
     uint8_t buckConfRegData     = 0;
     uint8_t buckVoutRegData     = 0;
     uint8_t buckPgWindowRegData = 0;
     uint8_t buckRailSelRegData  = 0;
     int32_t status              = PMIC_ST_SUCCESS;
-    // clang-format on
 
     // Parameter check
     if (pBuckPowerResourceCfg == NULL)
@@ -903,13 +899,11 @@ int32_t Pmic_powerTps6522xGetLdoPwrResourceCfg(Pmic_CoreHandle_t                
                                                Pmic_powerTps6522xLdoPowerResourceCfg_t *pLdoPowerResourceCfg,
                                                const uint8_t                            ldoNum)
 {
-    // clang-format off
     uint8_t ldoCtrlRegData      = 0;
     uint8_t ldoVoutRegData      = 0;
     uint8_t ldoPgWindowRegData  = 0;
     uint8_t ldoRailSelRegData   = 0;
     int32_t status              = PMIC_ST_SUCCESS;
-    // clang-format on
 
     // Parameter check
     if (pLdoPowerResourceCfg == NULL)
@@ -1210,14 +1204,12 @@ int32_t Pmic_powerTps6522xGetVccaVmonPwrResourceCfg(Pmic_CoreHandle_t           
                                                     Pmic_powerTps6522xVccaVmonPowerResourceCfg_t *pVccaVmonPwrRsrcCfg,
                                                     const uint8_t                                 vmonNum)
 {
-    // clang-format off
     uint8_t vccaVmonCtrlRegData     = 0;
     uint8_t vccaPgWindowRegData     = 0;
     uint8_t vmonPgWindowRegData     = 0;
     uint8_t vmonPgLevelRegData      = 0;
     uint8_t vccaVmonRailSelRegData  = 0;
     int32_t status                  = PMIC_ST_SUCCESS;
-    // clang-format on
 
     // Parameter check
     if (pVccaVmonPwrRsrcCfg == NULL)
@@ -1603,14 +1595,12 @@ int32_t Pmic_powerTps6522xSetBuckPwrResourceCfg(Pmic_CoreHandle_t               
                                                 const Pmic_powerTps6522xBuckPowerResourceCfg_t buckPowerResourceCfg,
                                                 const uint8_t                                  buckNum)
 {
-    // clang-format off
     uint8_t buckCtrlRegData     = 0;
     uint8_t buckConfRegData     = 0;
     uint8_t buckVoutRegData     = 0;
     uint8_t buckPgWindowRegData = 0;
     uint8_t buckRailSelRegData  = 0;
     int32_t status              = PMIC_ST_SUCCESS;
-    // clang-format on
 
     // Parameter check
     if (buckPowerResourceCfg.validParams == 0)
@@ -1896,13 +1886,11 @@ int32_t Pmic_powerTps6522xSetLdoPwrResourceCfg(Pmic_CoreHandle_t                
                                                const Pmic_powerTps6522xLdoPowerResourceCfg_t ldoPowerResourceCfg,
                                                const uint8_t                                 ldoNum)
 {
-    // clang-format off
     uint8_t ldoCtrlRegData      = 0;
     uint8_t ldoVoutRegData      = 0;
     uint8_t ldoPgWindowRegData  = 0;
     uint8_t ldoRailSelRegData   = 0;
     int32_t status              = PMIC_ST_SUCCESS;
-    // clang-format on
 
     // Parameter check
     if (ldoPowerResourceCfg.validParams == 0)
@@ -2218,14 +2206,12 @@ Pmic_powerTps6522xSetVccaVmonPwrResourceCfg(Pmic_CoreHandle_t                   
                                             const Pmic_powerTps6522xVccaVmonPowerResourceCfg_t vccaVmonPwrRsrcCfg,
                                             const uint8_t                                      vmonNum)
 {
-    // clang-format off
     uint8_t vccaVmonCtrlRegData     = 0;
     uint8_t vccaPgWindowRegData     = 0;
     uint8_t vmonPgWindowRegData     = 0;
     uint8_t vmonPgLevelRegData      = 0;
     uint8_t vccaVmonRailSelRegData  = 0;
     int32_t status                  = PMIC_ST_SUCCESS;
-    // clang-format on
 
     // Parameter check
     if (vccaVmonPwrRsrcCfg.validParams == 0)

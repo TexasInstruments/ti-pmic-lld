@@ -29,6 +29,25 @@
 /* Tiva system clock APIs and definitions */
 #include "sysctl.h"
 
+#define RUN_IRQ_TESTS   RUN_TEST(test_GPIO1_interrupt_enableDisable);   \
+                        RUN_TEST(test_GPIO2_interrupt_enableDisable);   \
+                        RUN_TEST(test_GPIO3_interrupt_enableDisable);   \
+                        RUN_TEST(test_GPIO4_interrupt_enableDisable);   \
+                        RUN_TEST(test_GPIO5_interrupt_enableDisable);   \
+                        RUN_TEST(test_GPIO6_interrupt_enableDisable);   \
+                        RUN_TEST(test_GPIO1_interrupt_fallingEdge);     \
+                        RUN_TEST(test_GPIO1_interrupt_risingEdge);      \
+                        RUN_TEST(test_GPIO2_interrupt_fallingEdge);     \
+                        RUN_TEST(test_GPIO2_interrupt_risingEdge);      \
+                        RUN_TEST(test_GPIO3_interrupt_fallingEdge);     \
+                        RUN_TEST(test_GPIO3_interrupt_risingEdge);      \
+                        RUN_TEST(test_GPIO4_interrupt_fallingEdge);     \
+                        RUN_TEST(test_GPIO4_interrupt_risingEdge);      \
+                        RUN_TEST(test_GPIO5_interrupt_fallingEdge);     \
+                        RUN_TEST(test_GPIO5_interrupt_risingEdge);      \
+                        RUN_TEST(test_GPIO6_interrupt_fallingEdge);     \
+                        RUN_TEST(test_GPIO6_interrupt_risingEdge)      
+
 Pmic_CoreHandle_t pmicCoreHandle;
 timerHandle_t     timerHandle;
 
@@ -88,24 +107,7 @@ int main(void)
     /*** Begin unity testing ***/
     UNITY_BEGIN();
 
-    RUN_TEST(test_GPIO1_interrupt_enableDisable);
-    RUN_TEST(test_GPIO2_interrupt_enableDisable);
-    RUN_TEST(test_GPIO3_interrupt_enableDisable);
-    RUN_TEST(test_GPIO4_interrupt_enableDisable);
-    RUN_TEST(test_GPIO5_interrupt_enableDisable);
-    RUN_TEST(test_GPIO6_interrupt_enableDisable);
-    RUN_TEST(test_GPIO1_interrupt_fallingEdge);
-    RUN_TEST(test_GPIO1_interrupt_risingEdge);
-    RUN_TEST(test_GPIO2_interrupt_fallingEdge);
-    RUN_TEST(test_GPIO2_interrupt_risingEdge);
-    RUN_TEST(test_GPIO3_interrupt_fallingEdge);
-    RUN_TEST(test_GPIO3_interrupt_risingEdge);
-    RUN_TEST(test_GPIO4_interrupt_fallingEdge);
-    RUN_TEST(test_GPIO4_interrupt_risingEdge);
-    RUN_TEST(test_GPIO5_interrupt_fallingEdge);
-    RUN_TEST(test_GPIO5_interrupt_risingEdge);
-    RUN_TEST(test_GPIO6_interrupt_fallingEdge);
-    RUN_TEST(test_GPIO6_interrupt_risingEdge);
+    RUN_IRQ_TESTS;
 
     /*** Finish unity testing ***/
     return UNITY_END();
@@ -530,7 +532,6 @@ void test_GPIO6_interrupt_enableDisable(void)
  */
 void setUp(void)
 {
-    // clang-format off
     uint8_t pin = 0;
 
     // Save NVM default GPIO configurations
@@ -555,7 +556,6 @@ void setUp(void)
     {
         (void)Pmic_gpioSetIntr(&pmicCoreHandle, pin, PMIC_GPIO_DISABLE_INTERRUPT, PMIC_GPIO_POL_LOW);
     }
-    // clang-format on
 }
 
 /**

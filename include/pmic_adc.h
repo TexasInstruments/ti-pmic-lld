@@ -77,9 +77,9 @@ extern "C"
  *
  *  @{
  */
-#define PMIC_ADC_CFG_RDIV_EN_VALID           (0U)
-#define PMIC_ADC_CFG_THERMAL_SEL_VALID       (1U)
-#define PMIC_ADC_CFG_CONT_CONV_VALID         (2U)
+#define PMIC_ADC_CFG_RDIV_EN_VALID              (0U)
+#define PMIC_ADC_CFG_THERMAL_SEL_VALID          (1U)
+#define PMIC_ADC_CFG_CONT_CONV_VALID            (2U)
 /** @} */
 
 /**
@@ -91,9 +91,9 @@ extern "C"
  *
  *  @{
  */
-#define PMIC_ADC_CFG_RDIV_EN_VALID_SHIFT     (1U << PMIC_ADC_CFG_RDIV_EN_VALID)
-#define PMIC_ADC_CFG_THERMAL_SEL_VALID_SHIFT (1U << PMIC_ADC_CFG_THERMAL_SEL_VALID)
-#define PMIC_ADC_CFG_CONT_CONV_VALID_SHIFT   (1U << PMIC_ADC_CFG_CONT_CONV_VALID)
+#define PMIC_ADC_CFG_RDIV_EN_VALID_SHIFT        (1U << PMIC_ADC_CFG_RDIV_EN_VALID)
+#define PMIC_ADC_CFG_THERMAL_SEL_VALID_SHIFT    (1U << PMIC_ADC_CFG_THERMAL_SEL_VALID)
+#define PMIC_ADC_CFG_CONT_CONV_VALID_SHIFT      (1U << PMIC_ADC_CFG_CONT_CONV_VALID)
 /** @} */
 
 /* ========================================================================== */
@@ -112,8 +112,8 @@ extern "C"
  *                                                  will be enabled.
  *  @{
  */
-#define PMIC_ADC_RESISTOR_DIVIDER_DISABLED (0U)
-#define PMIC_ADC_RESISTOR_DIVIDER_ENABLED  (1U)
+#define PMIC_ADC_RESISTOR_DIVIDER_DISABLED      (0U)
+#define PMIC_ADC_RESISTOR_DIVIDER_ENABLED       (1U)
 /** @} */
 
 /**
@@ -129,8 +129,8 @@ extern "C"
  *
  *  @{
  */
-#define PMIC_ADC_THERMAL_SEL_ADC_INPUT      (0U)
-#define PMIC_ADC_THERMAL_SEL_THERMAL_SENSOR (1U)
+#define PMIC_ADC_THERMAL_SEL_ADC_INPUT          (0U)
+#define PMIC_ADC_THERMAL_SEL_THERMAL_SENSOR     (1U)
 /** @} */
 
 /**
@@ -253,21 +253,6 @@ int32_t Pmic_ADCGetStatus(Pmic_CoreHandle_t *pPmicCoreHandle, bool *pAdcBusy);
  *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
  */
 int32_t Pmic_ADCGetResultCode(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t *pAdcResult);
-
-/**
- *  \brief      This function is used to get the ADC voltage result (if ADC conversion source is ADC input)
- *              or ADC temperature result (if ADC conversion source is temperature sensor).
- *
- *  \param      pPmicCoreHandle     [IN]    PMIC interface handle
- *  \param      pAdcResult          [OUT]   Pointer to ADC result variable
- *
- *  \note       The ADC voltage result is in microvolts and is unsigned. The ADC temperature result is in
- *              degrees celsius and can be negative.
- *
- *  \return     Success code if ADC result is obtained, error code otherwise.
- *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
- */
-int32_t Pmic_ADCGetResult(Pmic_CoreHandle_t *pPmicCoreHandle, int32_t *pAdcResult);
 
 #ifdef __cplusplus
 }

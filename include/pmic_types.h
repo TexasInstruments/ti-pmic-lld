@@ -99,7 +99,6 @@ typedef struct Pmic_DevSubSysInfo_s
 } Pmic_DevSubSysInfo_t;
 /** @} */
 
-// clang-format off
 /*!
  *  \name                           PMIC Interface Handle
  *  \brief                          This structure contains various PMIC driver instance
@@ -184,7 +183,6 @@ typedef struct Pmic_CoreHandle_s {
     void (*pFnPmicCritSecStop)(void);
 } Pmic_CoreHandle_t;
 /** @} */
-// clang-format on
 
 /*==========================================================================*/
 /*                         Function Declarations                            */

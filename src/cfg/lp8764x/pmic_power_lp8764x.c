@@ -45,7 +45,6 @@
 #include "pmic_io_priv.h"
 #include "pmic_power_lp8764x_priv.h"
 
-// clang-format off
 static Pmic_powerRsrcRegCfg_t gLp8764x_pwrRsrcRegCfg[] =
 {
     {
@@ -234,7 +233,6 @@ static Pmic_powerIntCfg_t lp8764x_pwrIntCfg[] =
     },
 
 };
-// clang-format on
 
 void pmic_get_lp8764x_pwrCommonIntCfg(Pmic_powerIntCfg_t **pPwrCommonIntCfg)
 {

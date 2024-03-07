@@ -338,7 +338,6 @@ extern "C"
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
-// clang-format off
 /*!
  * \brief  PMIC configuration structure.
  *         Contains various parameters which are needed to prepare
@@ -453,7 +452,6 @@ typedef struct Pmic_CoreCfg_s {
     void (*pFnPmicCritSecStart)(void);
     void (*pFnPmicCritSecStop)(void);
 } Pmic_CoreCfg_t;
-// clang-format on
 
 /*==========================================================================*/
 /*                         Function Declarations                            */

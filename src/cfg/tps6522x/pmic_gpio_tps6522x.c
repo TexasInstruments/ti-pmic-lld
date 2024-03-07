@@ -45,7 +45,6 @@
 #include "pmic_io_priv.h"
 #include "pmic_gpio_tps6522x_priv.h"
 
-// clang-format off
 /* PMIC GPIO Pins with Input Ouput Configuration */
 static Pmic_GpioInOutCfg_t gTps6522x_gpioInOutCfg[] =
 {
@@ -127,7 +126,6 @@ static Pmic_GpioIntRegCfg_t tps6522x_gpioIntRegCfg[] =
         PMIC_FSM_TRIG_MASK_2_GPIO6_FSM_MASK_POL_SHIFT
     }
 };
-// clang-format on
 
 void pmic_get_tps6522x_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg)
 {

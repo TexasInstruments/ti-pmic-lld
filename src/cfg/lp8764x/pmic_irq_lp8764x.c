@@ -47,7 +47,6 @@
 #include "pmic_power_priv.h"
 #include "pmic_wdg_priv.h"
 
-// clang-format off
 /* PMIC LP8764x Interrupt Configuration as per Pmic_lp8764x_IrqNum. */
 static Pmic_IntrCfg_t gLp8764x_intCfg[] =
 {
@@ -519,7 +518,6 @@ static Pmic_GpioIntrTypeCfg_t lp8764x_gpioIntrCfg[] =
         PMIC_MASK_GPIO9_10_GPIO10_FALL_MASK_SHIFT
     }
 };
-// clang-format on
 
 void pmic_get_lp8764x_intrCfg(Pmic_IntrCfg_t **pIntrCfg)
 {

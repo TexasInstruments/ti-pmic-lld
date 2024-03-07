@@ -26,6 +26,29 @@
 /* PMIC driver */
 #include "pmic.h"
 
+#define RUN_GPIO_TESTS  RUN_TEST(test_pushButton_onRequest);                                        \
+                        RUN_TEST(test_pushButton_offRequest);                                       \
+                        RUN_TEST(test_Pmic_gpioSetValue_setGpioSignalLvl);                          \
+                        RUN_TEST(test_Pmic_gpioGetValue_readGpioSignalLvl);                         \
+                        RUN_TEST(test_Pmic_gpioSetConfiguration_VMON1_m);                           \
+                        RUN_TEST(test_Pmic_gpioSetConfiguration_VMON2);                             \
+                        RUN_TEST(test_Pmic_gpioSetConfiguration_pushButton);                        \
+                        RUN_TEST(test_Pmic_gpioSetConfiguration_nSLEEP1);                           \
+                        RUN_TEST(test_Pmic_gpioSetConfiguration_nSLEEP2);                           \
+                        RUN_TEST(test_Pmic_gpioSetConfiguration_ADC_IN);                            \
+                        RUN_TEST(test_Pmic_gpioSetConfiguration_WKUP);                              \
+                        RUN_TEST(test_Pmic_gpioSetConfiguration_SYNCCLKIN);                         \
+                        RUN_TEST(test_Pmic_gpioSetConfiguration_nERR_MCU);                          \
+                        RUN_TEST(test_Pmic_gpioSetConfiguration_SDA_I2C2_SDO_SPI);                  \
+                        RUN_TEST(test_Pmic_gpioSetConfiguration_SCL_I2C2_CS_SPI);                   \
+                        RUN_TEST(test_Pmic_gpioSetConfiguration_nINT);                              \
+                        RUN_TEST(test_Pmic_gpioSetConfiguration_TRIG_WDOG);                         \
+                        RUN_TEST(test_Pmic_gpioSetEnPbVsensePinConfiguration_validatePmicHandle);   \
+                        RUN_TEST(test_Pmic_gpioSetEnPbVsensePinConfiguration_validatePinFunc);      \
+                        RUN_TEST(test_Pmic_gpioSetEnPbVsensePinConfiguration_enableFunc);           \
+                        RUN_TEST(test_Pmic_gpioSetEnPbVsensePinConfiguration_pushButtonFunc);       \
+                        RUN_TEST(test_Pmic_gpioSetEnPbVsensePinConfiguration_vsenseFunc)            
+
 Pmic_CoreHandle_t pmicCoreHandle;
 timerHandle_t     timerHandle;
 gpioPinHandle_t   gpioPinHandle[PMIC_TPS6522X_GPIO_PIN_MAX];
@@ -35,7 +58,6 @@ static void disableVMON1LDO2(void);
 int main(void)
 {
     /*** Variable declaration/initialization ***/
-    // clang-format off
     uartHandle_t vcpHandle;
     i2cHandle_t I2C1Handle;
     Pmic_CoreCfg_t pmicConfigData = {
@@ -54,7 +76,6 @@ int main(void)
         .pQACommHandle      = &I2C1Handle,
         .pFnPmicCommIoRead  = &pmicI2CRead,
         .pFnPmicCommIoWrite = &pmicI2CWrite};
-    // clang-format on
 
     /*** System clock setup ***/
     SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN |
@@ -95,28 +116,7 @@ int main(void)
     /*** Begin unity testing ***/
     UNITY_BEGIN();
 
-    RUN_TEST(test_pushButton_onRequest);
-    RUN_TEST(test_pushButton_offRequest);
-    RUN_TEST(test_Pmic_gpioSetValue_setGpioSignalLvl);
-    RUN_TEST(test_Pmic_gpioGetValue_readGpioSignalLvl);
-    RUN_TEST(test_Pmic_gpioSetConfiguration_VMON1_m);
-    RUN_TEST(test_Pmic_gpioSetConfiguration_VMON2);
-    RUN_TEST(test_Pmic_gpioSetConfiguration_pushButton);
-    RUN_TEST(test_Pmic_gpioSetConfiguration_nSLEEP1);
-    RUN_TEST(test_Pmic_gpioSetConfiguration_nSLEEP2);
-    RUN_TEST(test_Pmic_gpioSetConfiguration_ADC_IN);
-    RUN_TEST(test_Pmic_gpioSetConfiguration_WKUP);
-    RUN_TEST(test_Pmic_gpioSetConfiguration_SYNCCLKIN);
-    RUN_TEST(test_Pmic_gpioSetConfiguration_nERR_MCU);
-    RUN_TEST(test_Pmic_gpioSetConfiguration_SDA_I2C2_SDO_SPI);
-    RUN_TEST(test_Pmic_gpioSetConfiguration_SCL_I2C2_CS_SPI);
-    RUN_TEST(test_Pmic_gpioSetConfiguration_nINT);
-    RUN_TEST(test_Pmic_gpioSetConfiguration_TRIG_WDOG);
-    RUN_TEST(test_Pmic_gpioSetEnPbVsensePinConfiguration_validatePmicHandle);
-    RUN_TEST(test_Pmic_gpioSetEnPbVsensePinConfiguration_validatePinFunc);
-    RUN_TEST(test_Pmic_gpioSetEnPbVsensePinConfiguration_enableFunc);
-    RUN_TEST(test_Pmic_gpioSetEnPbVsensePinConfiguration_pushButtonFunc);
-    RUN_TEST(test_Pmic_gpioSetEnPbVsensePinConfiguration_vsenseFunc);
+    RUN_GPIO_TESTS;
 
     /*** Finish unity testing ***/
     return UNITY_END();
@@ -227,7 +227,6 @@ void test_Pmic_gpioSetConfiguration_TRIG_WDOG(void)
     Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
 
     // Initialize all config structs
-    // clang-format off
    resetGpioCfg_withAllValidParams(&nvmGpioCfg);
    resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
                                                         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
@@ -237,7 +236,6 @@ void test_Pmic_gpioSetConfiguration_TRIG_WDOG(void)
                                                           PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
                                                           PMIC_GPIO_CFG_PULL_VALID_SHIFT    |
                                                           PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
-    // clang-format on
 
     // Save NVM configuration of pin
     status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
@@ -276,7 +274,6 @@ void test_Pmic_gpioSetConfiguration_nINT(void)
     Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
 
     // Initialize all config structs
-    // clang-format off
    resetGpioCfg_withAllValidParams(&nvmGpioCfg);
    resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
                                                         PMIC_GPIO_CFG_OD_VALID_SHIFT      |
@@ -286,7 +283,6 @@ void test_Pmic_gpioSetConfiguration_nINT(void)
                                                           PMIC_GPIO_CFG_OD_VALID_SHIFT      |
                                                           PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
                                                           PMIC_GPIO_CFG_PULL_VALID_SHIFT);
-    // clang-format on
 
     // Save NVM configuration of pin
     status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
@@ -325,7 +321,6 @@ void test_Pmic_gpioSetConfiguration_SCL_I2C2_CS_SPI(void)
     Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
 
     // Initialize all config structs
-    // clang-format off
    resetGpioCfg_withAllValidParams(&nvmGpioCfg);
    resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
                                                         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
@@ -333,7 +328,6 @@ void test_Pmic_gpioSetConfiguration_SCL_I2C2_CS_SPI(void)
    resetGpioCfg_withSpecificValidParams(&expectedGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
                                                           PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
                                                           PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
-    // clang-format on
 
     // Save NVM configuration of pin
     status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
@@ -370,7 +364,6 @@ void test_Pmic_gpioSetConfiguration_SDA_I2C2_SDO_SPI(void)
     Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
 
     // Initialize all config structs
-    // clang-format off
    resetGpioCfg_withAllValidParams(&nvmGpioCfg);
    resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_OD_VALID_SHIFT      |
                                                         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
@@ -378,7 +371,6 @@ void test_Pmic_gpioSetConfiguration_SDA_I2C2_SDO_SPI(void)
    resetGpioCfg_withSpecificValidParams(&expectedGpioCfg, PMIC_GPIO_CFG_OD_VALID_SHIFT      |
                                                           PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
                                                           PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
-    // clang-format on
 
     // Save NVM configuration of pin
     status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
@@ -415,7 +407,6 @@ void test_Pmic_gpioSetConfiguration_nERR_MCU(void)
     Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
 
     // Initialize all config structs
-    // clang-format off
    resetGpioCfg_withAllValidParams(&nvmGpioCfg);
    resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
                                                         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
@@ -425,7 +416,6 @@ void test_Pmic_gpioSetConfiguration_nERR_MCU(void)
                                                           PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
                                                           PMIC_GPIO_CFG_PULL_VALID_SHIFT    |
                                                           PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
-    // clang-format on
 
     // Save NVM configuration of pin
     status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
@@ -464,7 +454,6 @@ void test_Pmic_gpioSetConfiguration_SYNCCLKIN(void)
     Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
 
     // Initialize all config structs
-    // clang-format off
    resetGpioCfg_withAllValidParams(&nvmGpioCfg);
    resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
                                                         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
@@ -472,7 +461,6 @@ void test_Pmic_gpioSetConfiguration_SYNCCLKIN(void)
    resetGpioCfg_withSpecificValidParams(&expectedGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
                                                           PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
                                                           PMIC_GPIO_CFG_PULL_VALID_SHIFT);
-    // clang-format on
 
     // Save NVM configuration of pin
     status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
@@ -509,7 +497,6 @@ void test_Pmic_gpioSetConfiguration_WKUP(void)
     Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
 
     // Initialize all config structs
-    // clang-format off
    resetGpioCfg_withAllValidParams(&nvmGpioCfg);
    resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
                                                         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
@@ -519,7 +506,6 @@ void test_Pmic_gpioSetConfiguration_WKUP(void)
                                                           PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
                                                           PMIC_GPIO_CFG_PULL_VALID_SHIFT    |
                                                           PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
-    // clang-format on
 
     // Save NVM configuration of pin
     status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
@@ -558,13 +544,11 @@ void test_Pmic_gpioSetConfiguration_ADC_IN(void)
     Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
 
     // Initialize all config structs
-    // clang-format off
    resetGpioCfg_withAllValidParams(&nvmGpioCfg);
    resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT |
                                                         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT);
    resetGpioCfg_withSpecificValidParams(&expectedGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT |
                                                           PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT);
-    // clang-format on
 
     // Save NVM configuration of pin
     status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
@@ -599,7 +583,6 @@ void test_Pmic_gpioSetConfiguration_nSLEEP2(void)
     Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
 
     // Initialize all config structs
-    // clang-format off
    resetGpioCfg_withAllValidParams(&nvmGpioCfg);
    resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
                                                         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
@@ -609,7 +592,6 @@ void test_Pmic_gpioSetConfiguration_nSLEEP2(void)
                                                           PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
                                                           PMIC_GPIO_CFG_PULL_VALID_SHIFT    |
                                                           PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
-    // clang-format on
 
     // Save NVM configuration of pin
     status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
@@ -648,7 +630,6 @@ void test_Pmic_gpioSetConfiguration_nSLEEP1(void)
     Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
 
     // Initialize all config structs
-    // clang-format off
    resetGpioCfg_withAllValidParams(&nvmGpioCfg);
    resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
                                                         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
@@ -658,7 +639,6 @@ void test_Pmic_gpioSetConfiguration_nSLEEP1(void)
                                                           PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
                                                           PMIC_GPIO_CFG_PULL_VALID_SHIFT    |
                                                           PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
-    // clang-format on
 
     // Save NVM configuration of pin
     status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
@@ -697,7 +677,6 @@ void test_Pmic_gpioSetConfiguration_pushButton(void)
     Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
 
     // Initialize all config structs
-    // clang-format off
    resetGpioCfg_withAllValidParams(&nvmGpioCfg);
    resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_DIR_VALID_SHIFT     |
                                                         PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
@@ -707,7 +686,6 @@ void test_Pmic_gpioSetConfiguration_pushButton(void)
                                                           PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
                                                           PMIC_GPIO_CFG_PULL_VALID_SHIFT    |
                                                           PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
-    // clang-format on
 
     // Save NVM configuration of pin
     status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
@@ -746,13 +724,11 @@ void test_Pmic_gpioSetConfiguration_VMON2(void)
     Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
 
     // Initialize all config structs
-    // clang-format off
     resetGpioCfg_withAllValidParams(&nvmGpioCfg);
     resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
                                                          PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
     resetGpioCfg_withSpecificValidParams(&expectedGpioCfg, PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
                                                            PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
-    // clang-format on
 
     // Save NVM configuration of pin
     status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
@@ -786,13 +762,11 @@ void test_Pmic_gpioSetConfiguration_VMON1_m(void)
     Pmic_GpioCfg_t nvmGpioCfg, actualGpioCfg, expectedGpioCfg;
 
     // Initialize all config structs
-    // clang-format off
     resetGpioCfg_withAllValidParams(&nvmGpioCfg);
     resetGpioCfg_withSpecificValidParams(&actualGpioCfg, PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT|
                                                          PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
     resetGpioCfg_withSpecificValidParams(&expectedGpioCfg, PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT |
                                                            PMIC_GPIO_CFG_DEGLITCH_VALID_SHIFT);
-    // clang-format on
 
     // Save NVM configuration of pin
     status = Pmic_gpioGetConfiguration(&pmicCoreHandle, pin, &nvmGpioCfg);
@@ -823,7 +797,6 @@ void test_Pmic_gpioSetConfiguration_VMON1_m(void)
  */
 void test_Pmic_gpioSetValue_setGpioSignalLvl(void)
 {
-    // clang-format off
     uint8_t pin             = 0;
     uint8_t actual_pinValue = 0;
     int32_t status          = PMIC_ST_SUCCESS;
@@ -841,7 +814,6 @@ void test_Pmic_gpioSetValue_setGpioSignalLvl(void)
         .deglitchEnable     = PMIC_GPIO_DEGLITCH_ENABLE,
         .pinFunc            = PMIC_TPS6522X_GPIO_PINFUNC_GPIO
     };
-    // clang-format on
 
     // Re-initialize MCU's GPIO pins to be input
     initializeGpioPinHandles(gpioPinHandle, false);
@@ -889,7 +861,6 @@ void test_Pmic_gpioSetValue_setGpioSignalLvl(void)
  */
 void test_Pmic_gpioGetValue_readGpioSignalLvl(void)
 {
-    // clang-format off
     uint8_t pin             = 0;
     uint8_t actualPinValue  = 0;
     int32_t status          = PMIC_ST_SUCCESS;
@@ -906,7 +877,6 @@ void test_Pmic_gpioGetValue_readGpioSignalLvl(void)
         .deglitchEnable     = PMIC_GPIO_DEGLITCH_ENABLE,
         .pinFunc            = PMIC_TPS6522X_GPIO_PINFUNC_GPIO
     };
-    // clang-format on
 
     // Re-initialize MCU's GPIO pins to be output
     initializeGpioPinHandles(gpioPinHandle, true);
