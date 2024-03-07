@@ -45,7 +45,6 @@
 #include "pmic_rtc_tps6594x_priv.h"
 #include "pmic_fsm_priv.h"
 #include "pmic_irq_tps6594x_priv.h"
-#include "pmic_core_tps6522x_priv.h"
 
 #include "pmic_power_priv.h"
 

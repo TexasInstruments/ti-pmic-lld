@@ -60,7 +60,6 @@
 #include <stdint.h>
 
 #include "pmic_core.h"
-#include "pmic_adc_tps6522x.h"
 
 #ifdef __cplusplus
 extern "C"

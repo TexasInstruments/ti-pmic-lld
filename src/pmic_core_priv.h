@@ -352,8 +352,9 @@ extern "C"
 /*!
  * \brief   PMIC Spread Spectrum 1 Register Mask Values
  */
-#define PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_MASK       ((uint8_t)(0x03U << PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_SHIFT))
-#define PMIC_SPREAD_SPECTRUM_1_SS_EN_MASK          ((uint8_t)(0x01U << PMIC_SPREAD_SPECTRUM_1_SS_EN_SHIFT))
+#define PMIC_TPS6522X_SPREAD_SPECTRUM_1_SS_DEPTH_MASK   ((uint8_t)(0x01U << PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_SHIFT))
+#define PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_MASK            ((uint8_t)(0x03U << PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_SHIFT))
+#define PMIC_SPREAD_SPECTRUM_1_SS_EN_MASK               ((uint8_t)(0x01U << PMIC_SPREAD_SPECTRUM_1_SS_EN_SHIFT))
 
 /*!
  * \brief   PMIC ENABLE_DRV Register Mask Values

@@ -42,7 +42,7 @@
 #include "pmic_adc.h"
 #include "pmic_core_priv.h"
 #include "pmic_io_priv.h"
-#include "pmic_adc_tps6522x_priv.h"
+#include "pmic_adc_priv.h"
 
 /**
  *  \brief      This function is used to verify the PMIC handle that is passed into ADC APIs.
