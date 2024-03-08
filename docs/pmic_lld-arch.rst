@@ -1,18 +1,6 @@
 ########################################################
 PMIC LLD Software Architecture Document
 ########################################################
-.. table:: Revision History
-    :class: longtable
-    :widths: 10 20 20 40 10
-
-    +--------+-------------+--------------+------------------------+-------------+
-    |Version | Date        |  Author      |    Change History      |   Status    |
-    +========+=============+==============+========================+=============+
-    |0.1     | 08 Nov 2021 |Deepa Gopinath|  Initial draft         | Released    |
-    +--------+-------------+--------------+------------------------+-------------+
-    |0.2     | 08 Nov 2021 |Deepa Gopinath|  Addressed review      | Released    |
-    |        |             |              |  comments              |             |
-    +--------+-------------+--------------+------------------------+-------------+
 
 .. table:: Terms and Abbreviations
     :class: longtable

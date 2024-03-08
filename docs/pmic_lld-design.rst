@@ -2,135 +2,6 @@
 PMIC LLD Software Design Document
 ########################################################
 
-**Revision History**
-
-.. table:: Revision History
-    :class: longtable
-    :widths: 10 20 20 40 10
-
-    +--------+-------------+--------------+------------------------+-------------+
-    |Version | Date        |  Author      |    Change History      |   Status    |
-    +========+=============+==============+========================+=============+
-    |1.0     | 23 Dec 2019 | Amit Agarwal |  Initial draft         | Released    |
-    +--------+-------------+--------------+------------------------+-------------+
-    |2.0     | 07 Jan 2020 | Amit Agarwal | Design and requirement | Released    |
-    |        |             |              | handling updated as    |             |
-    |        |             |              | per initial review and |             |
-    |        |             |              | feature support        |             |
-    |        |             |              | clarifications         |             |
-    +--------+-------------+--------------+------------------------+-------------+
-    |2.1     | 11 Jan 2020 | Amit Agarwal | - Updated Watchdog QA  | Released    |
-    |        |             |              |   API description      |             |
-    |        |             |              | - Details in Figure 2  |             |
-    |        |             |              | - Added DAR section    |             |
-    |        |             |              |   'Watchdog QA Window  |             |
-    |        |             |              |   Timing’              |             |
-    |        |             |              | - Updated API          |             |
-    |        |             |              |   description for      |             |
-    |        |             |              |   Regulator Voltage    |             |
-    |        |             |              |   configuration API    |             |
-    +--------+-------------+--------------+------------------------+-------------+
-    |2.2     | 21-Jan-2020 | Amit Agarwal | -  Updated as per      | Released    |
-    |        |             |              |    review comments for |             |
-    |        |             |              |    document template,  |             |
-    |        |             |              |    Design IDs and      |             |
-    |        |             |              |    content correction  |             |
-    +--------+-------------+--------------+------------------------+-------------+
-    |2.3     | 23-Jan-2020 | Amit Agarwal | -  Updated DAR for     | Released    |
-    |        |             |              |    Critical Section    |             |
-    |        |             |              | -  Corrected few API   |             |
-    |        |             |              |    descriptions        |             |
-    |        |             |              | -  Updated Design ID   |             |
-    |        |             |              |    maps for API Data   |             |
-    |        |             |              |    Types               |             |
-    +--------+-------------+--------------+------------------------+-------------+
-    |2.4     | 04-Feb-2020 | Amit Agarwal | -  Updated Design      | Released    |
-    |        |             |              |    document based on   |             |
-    |        |             |              |    review feedback.    |             |
-    |        |             |              | -  Updated API details |             |
-    +--------+-------------+--------------+------------------------+-------------+
-    |2.5     | 07-Feb-2020 | Amit Agarwal | -  Fixed Review        | Released    |
-    |        |             |              |    comments            |             |
-    |        |             |              | -  Updated             |             |
-    |        |             |              |    Non-supported       |             |
-    |        |             |              |    requirement         |             |
-    |        |             |              |    section.            |             |
-    |        |             |              | -  Details added       |             |
-    |        |             |              |    related to multiple |             |
-    |        |             |              |    instance of PMIC    |             |
-    |        |             |              |    driver.             |             |
-    +--------+-------------+--------------+------------------------+-------------+
-    |2.6     | 18-Feb-2020 | Amit Agarwal | -  Fixed Review        | Released    |
-    |        |             |              |    comments            |             |
-    |        |             |              | -  Updated Low power   |             |
-    |        |             |              |    standby mode        |             |
-    |        |             |              | -  Updated error       |             |
-    |        |             |              |    recovery words.     |             |
-    +--------+-------------+--------------+------------------------+-------------+
-    |2.7     | 16-Mar-2020 | Amit Agarwal | -  Added new design ID | Released    |
-    |        |             |              |    to accommodate      |             |
-    |        |             |              |    newly added         |             |
-    |        |             |              |    requirements.       |             |
-    |        |             |              | -  API table updated   |             |
-    +--------+-------------+--------------+------------------------+-------------+
-    |2.8     | 20-Oct-2020 | Rahul Rawat  | Updated the following  | Released    |
-    |        |             |              | sections:              |             |
-    |        |             |              | Design Requirements,   |             |
-    |        |             |              | Design Description,    |             |
-    |        |             |              | PMIC Core Functionality|             |
-    |        |             |              | Components, PMIC Driver|             |
-    |        |             |              | Setup and Instance     |             |
-    |        |             |              | Management, PMIC CRC   |             |
-    |        |             |              | Validation Feature,    |             |
-    |        |             |              | API Definitions, API   |             |
-    |        |             |              | Function Descriptions  |             |
-    +--------+-------------+--------------+------------------------+-------------+
-    |2.9     | 25-Mar-2020 | Akshay       | Adressed SQA Review    | Released    |
-    |        |             | Manikantan   | comments:              |             |
-    |        |             |              | Updated the directory  |             |
-    |        |             |              | structure.             |             |
-    |        |             |              | Added references to    |             |
-    |        |             |              | error codes in         |             |
-    |        |             |              | Error handling and API |             |
-    |        |             |              | Functions Descriptions |             |
-    |        |             |              | sections.              |             |
-    |        |             |              | Updated Assumptions    |             |
-    |        |             |              | and Constraints section|             |
-    +--------+-------------+--------------+------------------------+-------------+
-    |2.10    | 09-Aug-2021 | Abhishek     | Updated the following  | Released    |
-    |        |             | Kumar        | sections:              |             |
-    |        |             |              | Design Requirements,   |             |
-    |        |             |              | Design Description,    |             |
-    |        |             |              | PMIC Core Functionality|             |
-    |        |             |              | Components, PMIC Driver|             |
-    |        |             |              | Setup and Instance     |             |
-    |        |             |              | Management, PMIC CRC   |             |
-    |        |             |              | Validation Feature, API|             |
-    |        |             |              | Definitions, API       |             |
-    |        |             |              | Function Descriptions  |             |
-    +--------+-------------+--------------+------------------------+-------------+
-    |2.11    | 20-Sep-2021 | Deepa        | Updated the following  | Released    |
-    |        |             | Gopinath     | sections:              |             |
-    |        |             |              | Design Requirements,   |             |
-    |        |             |              | Design Description, API|             |
-    |        |             |              | Function Descriptions  |             |
-    +--------+-------------+--------------+------------------------+-------------+
-    |2.12    | 08-Nov-2021 | Abhishek     | Updated the following  | Released    |
-    |        |             | Kumar        | sections:              |             |
-    |        |             |              | Design Requirements,   |             |
-    |        |             |              | API Function           |             |
-    |        |             |              | Descriptions and Added |             |
-    |        |             |              | New Test Ids           |             |
-    +--------+-------------+--------------+------------------------+-------------+
-    |2.13    | 08-Nov-2021 | Abhishek     | Fixed formatting issues| Released    |
-    |        |             | Kumar        | at sections:           |             |
-    |        |             |              | Design Requirements    |             |
-    +--------+-------------+--------------+------------------------+-------------+
-
-.. raw:: latex
-
-    \newpage
-
 Introduction
 ============
 
@@ -138,9 +9,9 @@ Overview
 --------
 
 The purpose of this document is to define the software design for *PMIC*
-LLD development for TPS6594x Leo and LP8764x Hera (from Texas Instruments).
-The document shall be a reference for software developers who use TI’s Leo
-or LP8764x Hera PMIC module on their Hardware to understand the various LLD
+LLD development for TPS6538x BlackBird (from Texas Instruments).
+The document shall be a reference for software developers who use TI’s Blackbird 
+PMIC module on their Hardware to understand the various LLD
 aspects like:
 
 -  LLD architecture
@@ -182,897 +53,6 @@ Stakeholders
 This document is meant for software developers who will use the design information as reference
 for software implementation.
 
-Notational Conventions
----------------------------
-
-See `Directory`_.
-
-Glossary
----------------------------
-
-See `Directory`_.
-
-
-References
----------------------------
-
-See `Directory`_.
-
-
-Design Requirements
-~~~~~~~~~~~~~~~~~~~~
-
-Some of the designs IDs drawn from requirement IDs are redundant as
-different requirements categorize/classify in different manner and same
-configuration/event/interrupt/status item could be part of 2 or more
-requirements, in which case the redundant design IDs are marked as
-Redundant and moved to Unsupported Design Requirements Table
-
-Following table lists all the Design Requirements IDs supported by PMIC
-LLD.
-
-.. table:: PMIC Design Requirements
-    :widths: 40 20 20 20
-    
-    +------------------------------------+----------------+----------------+----------------+
-    | Design ID                          | Requirements   | Requirement    | Description    |
-    |                                    | ID             | Type           |                |
-    +====================================+================+================+================+
-    | did_pmic_tps6594x_j721e_support    | PDK-5811       | Safety         | LLD shall      |
-    |                                    | PDK-9329       | Functional     | support        |
-    |                                    |                |                | TPS6594x       |
-    |                                    |                |                | (Leo). Testing |
-    |                                    |                |                | will be on     |
-    |                                    |                |                | J721E EVM with |
-    |                                    |                |                | TPS6594x PMIC  |
-    |                                    |                |                | and Driver     |
-    |                                    |                |                | shall read CRC |
-    |                                    |                |                | status         |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_lp8764x_j7200_support     | PDK-5853       | Safety         | LLD design &   |
-    |                                    | PDK-9329       | Functional     | implementation |
-    |                                    |                |                | shall be       |
-    |                                    |                |                | modular to     |
-    |                                    |                |                | support        |
-    |                                    |                |                | reduced        |
-    |                                    |                |                | feature set of |
-    |                                    |                |                | LP8764x (Hera) |
-    |                                    |                |                | Testing will   |
-    |                                    |                |                | be on J7200    |
-    |                                    |                |                | EVM with Hera  |
-    |                                    |                |                | LP8764x PMIC   |
-    |                                    |                |                | and Driver     |
-    |                                    |                |                | shall read     |
-    |                                    |                |                | CRC status     |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_power_cfg_readback        | PDK-5850       | Safety         | LLD API to     |
-    |                                    |                | Functional     | take human     |
-    |                                    |                |                | readable       |
-    |                                    |                |                | value, convert |
-    |                                    |                |                | and configure  |
-    |                                    |                |                | the target     |
-    |                                    |                |                | Buck/LDO       |
-    |                                    |                |                | Voltage        |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_power_cfg_readback        | PDK-5841       | Safety         | Driver shall   |
-    |                                    |                | Functional     | implement an   |
-    |                                    |                |                | API to         |
-    |                                    |                |                | configure buck |
-    |                                    |                |                | and LDO        |
-    |                                    |                |                | regulator      |
-    |                                    |                |                | outputvoltages |
-    |                                    |                |                |                |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_power_cfg_readback        | PDK-5829       | Safety         | Driver shall   |
-    |                                    |                | Functional     | configure for  |
-    |                                    |                |                | voltage monitor|
-    |                                    |                |                | for over/under |
-    |                                    |                |                | voltage        |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_power_cfg_readback        | PDK-5848       | Safety         | Driver shall   |
-    |                                    |                | Functional     | configure for  |
-    |                                    |                |                | current        |
-    |                                    |                |                | monitor and    |
-    |                                    |                |                | short circuit  |
-    |                                    |                |                | protection     |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_power_thermal_cfg_readback| PDK-5840       | Safety         | Driver shall   |
-    |                                    | PDK-9111       | Functional     | configure      |
-    |                                    |                |                | thermal        |
-    |                                    |                |                | monit          |
-    |                                    |                |                | oring/shutdown |
-    |                                    |                |                | of the PMIC and|
-    |                                    |                |                | support        |
-    |                                    |                |                | Register Write |
-    |                                    |                |                | Protection for |
-    |                                    |                |                | control and    |
-    |                                    |                |                | configuration  |
-    |                                    |                |                | registers      |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_power_pgood_cfg_readback  | PDK-5847       | Safety         | Driver shall   |
-    |                                    | PDK-9111       | Functional     | read back      |
-    |                                    |                |                | Power Good     |
-    |                                    |                |                | Monitor        |
-    |                                    |                |                | Configuration  |
-    |                                    |                |                | of Buck/LDO and|
-    |                                    |                |                | support        |
-    |                                    |                |                | Register Write |
-    |                                    |                |                | Protection for |
-    |                                    |                |                | control and    |
-    |                                    |                |                | configuration  |
-    |                                    |                |                | registers      |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_comm_intf_cfg             | PDK-5814       | Safety         | Driver shall   |
-    |                                    |                | Functional     | have a runtime |
-    |                                    |                |                | configuration  |
-    |                                    | PDK-5858       | Other          | option to      |
-    |                                    | PDK-5824       |                | enable the     |
-    |                                    |                |                | interface type |
-    |                                    |                |                | supported,     |
-    |                                    |                |                | either I2C or  |
-    |                                    |                |                | SPI            |
-    |                                    |                |                | Driver shall   |
-    |                                    |                |                | support an     |
-    |                                    |                |                | application    |
-    |                                    |                |                | registered     |
-    |                                    |                |                | call table     |
-    |                                    |                |                | for the PMIC   |
-    |                                    |                |                | I2C/SPI        |
-    |                                    |                |                | interface      |
-    |                                    |                |                | using TI       |
-    |                                    |                |                | I2C/SPI LLD API|
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_comm_single_i2c_cfg       | PDK-5810       | Safety         | Driver shall   |
-    |                                    | PDK-9129       | Functional     | support single |
-    |                                    |                |                | I2C interface  |
-    |                                    |                |                | in which only  |
-    |                                    |                |                | I2C1 will be   |
-    |                                    |                |                | used to        |
-    |                                    |                |                | configure and  |
-    |                                    |                |                | monitor the    |
-    |                                    |                |                | PMIC  and      |
-    |                                    |                |                | configure I2C1 |
-    |                                    |                |                | and I2C2       |
-    |                                    |                |                | interface as   |
-    |                                    |                |                | Standard or HS |
-    |                                    |                |                | mode           |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_comm_dual_i2c_cfg         | PDK-5813       | Safety         | Driver shall   |
-    |                                    |                | Functional     | support dual   |
-    |                                    |                |                | I2C interface  |
-    |                                    |                |                | in which       |
-    |                                    |                |                | I2C1 will      |
-    |                                    |                |                | help to do     |
-    |                                    |                |                | PMIC           |
-    |                                    |                |                | configuration  |
-    |                                    |                |                | and monitor    |
-    |                                    |                |                | except WDG     |
-    |                                    |                |                | QA,I2C2 will   |
-    |                                    |                |                | help to do     |
-    |                                    |                |                | WDG QA         |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_comm_spi_cfg              | PDK-5843       | Safety         | Driver shall   |
-    |                                    |                | Functional     | support SPI    |
-    |                                    |                |                | interface      |
-    |                                    |                |                | which will be  |
-    |                                    |                |                | used to        |
-    |                                    |                |                | configure and  |
-    |                                    |                |                | monitor the    |
-    |                                    |                |                | PMIC           |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_gpio_cfg_readback         | PDK-5808       | Safety         | Driver shall   |
-    |                                    |                | Functional     | configure PMIC |
-    |                                    |                |                | GPIO pins as:  |
-    |                                    |                |                | NSLEEP         |
-    |                                    |                |                | Triggers,      |
-    |                                    |                |                | Reset pin      |
-    |                                    |                |                | for SOC,       |
-    |                                    |                |                | WKUP           |
-    |                                    |                |                | sources,       |
-    |                                    |                |                | General        |
-    |                                    |                |                | Input/output   |
-    |                                    |                |                | pins,          |
-    |                                    |                |                | I2C2 SCLK      |
-    |                                    |                |                | and SDA        |
-    |                                    |                |                | lines,         |
-    |                                    |                |                | SPI CS or      |
-    |                                    |                |                | SDO lines,     |
-    |                                    |                |                | Watchdog       |
-    |                                    |                |                | Trigger        |
-    |                                    |                |                | line,          |
-    |                                    |                |                | ESM Error      |
-    |                                    |                |                | Pins for       |
-    |                                    |                |                | SOC/MCU,       |
-    |                                    |                |                | SPMI,          |
-    |                                    |                |                | SCLK/SDATA,    |
-    |                                    |                |                | SYNCCLKOUT,    |
-    |                                    |                |                | SYNCLKIN       |
-    |                                    |                |                | and            |
-    |                                    |                |                | CLK32KOUT,     |
-    |                                    |                |                | Watchdog       |
-    |                                    |                |                | Disable        |
-    |                                    |                |                | Pin,           |
-    |                                    |                |                | Power Good     |
-    |                                    |                |                | Indication     |
-    |                                    |                |                | Line           |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_gpio_cfg_readback         | PDK-5808       | Safety         | Driver shall   |
-    |                                    |                | Functional     | configure PMIC |
-    |                                    |                |                | GPIO pin       |
-    |                                    |                |                | functionality  |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_irq_cfg_readback          | PDK-5805       | Safety         | PMIC: Driver   |
-    |                                    |                | Functional     | shall decipher |
-    |                                    |                |                | error events   |
-    |                                    |                |                | and call out   |
-    |                                    |                |                | to application |
-    |                                    |                |                | with error code|
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_irq_cfg_readback          | PDK-9113       | Safety         | Driver shall   |
-    |                                    |                | Functional     | not support    |
-    |                                    |                |                | write          |
-    |                                    |                |                | protection to  |
-    |                                    |                |                | clear the      |
-    |                                    |                |                | interrupt      |
-    |                                    |                |                | register in    |
-    |                                    |                |                | PG2.0          |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_irq_cfg_readback          | PDK-9120       | Safety         | Driver shall   |
-    |                                    |                | Functional     | support write  |
-    |                                    |                |                | protection to  |
-    |                                    |                |                | clear the      |
-    |                                    |                |                | interrupt      |
-    |                                    |                |                | register  in   |
-    |                                    |                |                | PG1.0          |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_irq_cfg_readback          | PDK-5838       | Safety         | Driver shall   |
-    |                                    |                | Functional     | read PMIC      |
-    |                                    |                |                | registers to   |
-    |                                    |                |                | decipher a     |
-    |                                    |                |                | Severe Error   |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_irq_cfg_readback          | PDK-5842       | Safety         | Driver shall   |
-    |                                    |                | Functional     | read PMIC      |
-    |                                    |                |                | registers to   |
-    |                                    |                |                | decipher a Buck|
-    |                                    |                |                | Error          |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_irq_cfg_readback          | PDK-5832       | Safety         | Driver shall   |
-    |                                    |                | Safety         | read PMIC      |
-    |                                    |                |                | registers to   |
-    |                                    |                |                | decipher a LDO |
-    |                                    |                |                | Error          |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_irq_cfg_readback          | PDK-5852       | Safety         | Driver shall   |
-    |                                    |                | Functional     | read PMIC      |
-    |                                    |                |                | registers to   |
-    |                                    |                |                | decipher a     |
-    |                                    |                |                | Moderate Error |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_irq_cfg_readback          | PDK-5834       | Safety         | Driver shall   |
-    |                                    |                | Functional     | read PMIC      |
-    |                                    |                |                | registers to   |
-    |                                    |                |                | decipher a     |
-    |                                    |                |                | Warning        |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_irq_cfg_readback          | PDK-5806       | Safety         | Driver shall   |
-    |                                    |                | Functional     | read PMIC      |
-    |                                    |                |                | registers to   |
-    |                                    |                |                | decipher a     |
-    |                                    |                |                | startup source |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_irq_cfg_readback          | PDK-5828       | Safety         | Driver shall   |
-    |                                    |                | Functional     | read PMIC      |
-    |                                    |                |                | registers to   |
-    |                                    |                |                | decipher a     |
-    |                                    |                |                | FSM ERROR      |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_irq_cfg_readback          | PDK-5807       | Safety         | Driver shall   |
-    |                                    |                | Functional     | read PMIC      |
-    |                                    |                |                | registers to   |
-    |                                    |                |                | decipher a     |
-    |                                    |                |                | Watchdog error |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_irq_cfg_readback          | PDK-5846       | Safety         | Driver shall   |
-    |                                    |                | Functional     | read PMIC      |
-    |                                    |                |                | registers to   |
-    |                                    |                |                | decipher a     |
-    |                                    |                |                | ESM error      |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_esm_cfg_readback          | PDK-5833       | Safety         | Driver API to  |
-    |                                    |                | Functional     | configure ESM  |
-    |                                    |                |                | MCU by         |
-    |                                    |                |                | resetting      |
-    |                                    |                |                | ESM_MCU_START  |
-    |                                    |                |                | to 0, update   |
-    |                                    |                |                | ESM MCU        |
-    |                                    |                |                | Configuration  |
-    |                                    |                |                | registers and  |
-    |                                    |                |                | setting        |
-    |                                    |                |                | ESM_MCU_START  |
-    |                                    |                |                | to 1           |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_esm_cfg_readback          | PDK-5833       | Safety         | Driver API to  |
-    |                                    |                | Functional     | configure ESM  |
-    |                                    |                |                | SOC by         |
-    |                                    |                |                | resetting      |
-    |                                    |                |                | ESM_SOC_START  |
-    |                                    |                |                | to 0, update   |
-    |                                    |                |                | ESM SOC        |
-    |                                    |                |                | Configuration  |
-    |                                    |                |                | registers and  |
-    |                                    |                |                | setting        |
-    |                                    |                |                | ESM_SOC_START  |
-    |                                    |                |                | to 1           |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_esm_cfg_readback          | PDK-5833       | Safety         | Driver API to  |
-    |                                    |                | Functional     | Stop ESM MCU   |
-    |                                    |                |                | Monitor by     |
-    |                                    |                |                | resetting      |
-    |                                    |                |                | ESM_MCU_START  |
-    |                                    |                |                | to 0           |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_esm_cfg_readback          | PDK-5833       | Safety         | Driver API to  |
-    |                                    |                | Functional     | Stop ESM SOC   |
-    |                                    |                |                | Monitor by     |
-    |                                    |                |                | resetting      |
-    |                                    |                |                | ESM_SOC_START  |
-    |                                    |                |                | to 0           |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_esm_cfg_readback          | PDK-5833       | Safety         | Driver API to  |
-    |                                    |                | Functional     | read ESM MCU   |
-    |                                    |                |                | Configuration  |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_esm_cfg_readback          | PDK-5833       | Safety         | Driver API to  |
-    |                                    |                | Functional     | read ESM SOC   |
-    |                                    |                |                | Configuration  |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_wdg_cfg_readback          | PDK-5854       | Safety         | Driver API to  |
-    |                                    |                | Functional     | configure      |
-    |                                    |                |                | Watchdog in    |
-    |                                    |                |                | Trigger mode   |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_wdg_cfg_readback          | PDK-5854       | Safety         | Driver API to  |
-    |                                    | PDK-5839       | Functional     | read back      |
-    |                                    |                |                | Watchdog       |
-    |                                    |                |                | configuration  |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_wdg_cfg_readback          | PDK-5839       | Safety         | Driver API to  |
-    |                                    |                | Functional     | configure      |
-    |                                    |                |                | Watchdog in QA |
-    |                                    |                |                | mode           |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_wdg_cfg_readback          | PDK-5839       | Safety         | Driver API to  |
-    |                                    |                | Functional     | perform        |
-    |                                    |                |                | Watchdog QA    |
-    |                                    |                |                | with PMIC      |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_wdg_cfg_readback          | PDK-5854       | Safety         | Driver API to  |
-    |                                    |                | Functional     | perform        |
-    |                                    | PDK-5839       |                | Watchdog       |
-    |                                    |                |                | Enable/Disable |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_wdg_cfg_readback          | PDK-9115       | Safety         | Driver shall   |
-    |                                    |                | Functional     | support to     |
-    |                                    |                |                | configure      |
-    |                                    |                |                | Watchdog Long  |
-    |                                    |                |                | Window step    |
-    |                                    |                |                | size for a     |
-    |                                    |                |                | faster WDOG    |
-    |                                    |                |                | error detection|
-    |                                    |                |                | in PG2.0       |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_wdg_cfg_readback          | PDK-9116       | Safety         | Driver shall   |
-    |                                    |                | Functional     | support to     |
-    |                                    |                |                | configure      |
-    |                                    |                |                | Watchdog Long  |
-    |                                    |                |                | Window step    |
-    |                                    |                |                | size for a     |
-    |                                    |                |                | WDOG error     |
-    |                                    |                |                | detection      |
-    |                                    |                |                | in PG1.0       |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_fsm_cfg_readback          | PDK-5837       | Safety         | Driver shall   |
-    |                                    |                | Functional     | support        |
-    |                                    |                |                | configuring    |
-    |                                    |                |                | NSLEEP         |
-    |                                    |                |                | registers for  |
-    |                                    |                |                | Processor low  |
-    |                                    |                |                | power.         |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_fsm_cfg_readback          | PDK-5837       | Safety         | Driver shall   |
-    |                                    |                | Functional     | readback       |
-    |                                    |                |                | NSLEEP         |
-    |                                    |                |                | registers to   |
-    |                                    |                |                | get wake or    |
-    |                                    |                |                | sleep status.  |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
-    |                                    |                | Functional     | configure RTC  |
-    |                                    |                |                | Alarm          |
-    |                                    |                |                | Interrupts and |
-    |                                    |                |                | enable RTC     |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
-    |                                    |                | Functional     | readback RTC   |
-    |                                    |                |                | Alarm          |
-    |                                    |                |                | configuration  |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
-    |                                    |                | Functional     | configure RTC  |
-    |                                    |                |                | Timer          |
-    |                                    |                |                | Interrupts and |
-    |                                    |                |                | enable RTC     |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
-    |                                    |                | Functional     | readback RTC   |
-    |                                    |                |                | Timer          |
-    |                                    |                |                | Configuration  |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
-    |                                    |                | Functional     | disable RTC    |
-    |                                    |                |                | module         |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
-    |                                    |                | Functional     | enable RTC     |
-    |                                    |                |                | module         |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
-    |                                    |                | Functional     | configure RTC  |
-    |                                    |                |                | time calendar  |
-    |                                    |                |                | registers      |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
-    |                                    |                | Functional     | readback RTC   |
-    |                                    |                |                | time calendar  |
-    |                                    |                |                | registers.     |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
-    |                                    |                | Functional     | enable RTC     |
-    |                                    |                |                | Frequency      |
-    |                                    |                |                | compensation.  |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver shall   |
-    |                                    |                | Functional     | configure RTC  |
-    |                                    |                |                | Frequency      |
-    |                                    |                |                | compensation   |
-    |                                    |                |                | readback.      |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver API     |
-    |                                    |                | Functional     | shall read the |
-    |                                    |                |                | current status |
-    |                                    |                |                | of RTC         |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver API to  |
-    |                                    |                | Functional     | support        |
-    |                                    |                |                | Enable/Disable |
-    |                                    |                |                | of RTC Alarm   |
-    |                                    |                |                | Interrupt      |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_rtc_cfg_readback          | PDK-5855       | Safety         | Driver API to  |
-    |                                    |                | Functional     | support        |
-    |                                    |                |                | Enable/Disable |
-    |                                    |                |                | of RTC Timer   |
-    |                                    |                |                | Interrupt      |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_lpstandby_wkup_cfg        | PDK-5844       | Safety         | Driver shall   |
-    |                                    |                | Functional     | support Ultra  |
-    |                                    |                |                | Low Power      |
-    |                                    |                |                | Standby with   |
-    |                                    |                |                | CAN WakeUp for |
-    |                                    |                |                | PMIC           |
-    |                                    |                |                |                |
-    |                                    |                |                | Note:          |
-    |                                    |                |                | Ultra-Low      |
-    |                                    |                |                | Power Mode is  |
-    |                                    |                |                | synonymous to  |
-    |                                    |                |                | LP_STANDBY     |
-    |                                    |                |                | state in the   |
-    |                                    |                |                | TRM.           |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_lpstandby_wkup_cfg        | PDK-5831       | Safety         | Driver shall   |
-    |                                    |                | Functional     | support Ultra  |
-    |                                    |                |                | Low Power      |
-    |                                    |                |                | Standby with   |
-    |                                    |                |                | RTC WakeUp for |
-    |                                    |                |                | PMIC           |
-    |                                    |                |                |                |
-    |                                    |                |                | Note:          |
-    |                                    |                |                | Ultra-Low      |
-    |                                    |                |                | Power Mode is  |
-    |                                    |                |                | synonymous to  |
-    |                                    |                |                | LP_STANDBY     |
-    |                                    |                |                | state in the   |
-    |                                    |                |                | TRM.           |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_lpstandby_cfg             | PDK-5851       | Safety         | Driver must    |
-    |                                    |                | Functional     | allow          |
-    |                                    |                |                | configuration  |
-    |                                    |                |                | of the PMIC    |
-    |                                    |                |                | low power LP   |
-    |                                    |                |                | STANDBY state  |
-    |                                    |                |                | by writing to  |
-    |                                    |                |                | I2C_TRIGGER_0. |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_err_recov_cnt_cfg_readback| PDK-5809       | Safety         | Driver shall   |
-    |                                    |                | Functional     | provide an API |
-    |                                    |                |                | to query the   |
-    |                                    |                |                | error recovery |
-    |                                    |                |                | count.         |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_i2c_speed_readback        | PDK-9129       | Safety         | Driver shall   |
-    |                                    |                | Functional     | configure I2C1 |
-    |                                    |                |                | or I2C2 Speed  |
-    |                                    |                |                | in HS or       |
-    |                                    |                |                | Standard mode. |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_dev_info_readback         | PDK-9109       | Interface      | Driver shall   |
-    |                                    | PDK-9110       |                | read TI Device,|
-    |                                    |                |                | NVM Information|
-    |                                    |                |                | and customer   |
-    |                                    |                |                | NVM Information|
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_crc_status                | PDK-9329       | Safety         | Driver shall   |
-    |                                    |                | Functional     | read CRC Status|
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_crc_enable                | PDK-9119       | Safety         | Driver shall   |
-    |                                    |                | Functional     | enable CRC     |
-    +------------------------------------+----------------+----------------+----------------+
-    |did_pmic_common_ctrl_status_readback| PDK-9126       | Safety         | Driver shall   |
-    |                                    | PDK-9124       | Functional     | read readback  |
-    |                                    | PDK-9125       |                | status error,  |
-    |                                    | PDK-9130       |                | nPWRON/Enable  |
-    |                                    | PDK-9139       |                | pin status,    |
-    |                                    | PDK-9138       |                | external clock |
-    |                                    |                |                | validity status|
-    |                                    |                |                | Driver shall   |
-    |                                    |                |                | read status    |
-    |                                    |                |                | of  backup     |
-    |                                    |                |                | battery        |
-    |                                    |                |                | parameters,    |
-    |                                    |                |                | force EN_DRV   |
-    |                                    |                |                | bit and        |
-    |                                    |                |                | enable status  |
-    |                                    |                |                | of SPMI low    |
-    |                                    |                |                | power mode     |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_pin_readback              | PDK-9131       | Safety         | Driver shall   |
-    |                                    | PDK-9137       | Functional     | read EN_DRV    |
-    |                                    |                |                | value,         |
-    |                                    |                |                | NRSTOUT_SOC and|
-    |                                    |                |                | NRSTOUT pin    |
-    |                                    |                |                | status         |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_battery_ctrl_cfg_readback | PDK-9130       | Safety         | Driver shall   |
-    |                                    |                | Functional     | configure      |
-    |                                    |                |                | backup battery |
-    |                                    |                |                | control        |
-    |                                    |                |                | parameters     |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_misc_ctrl_cfg_readback    | PDK-9132       | Safety         | Driver shall   |
-    |                                    | PDK-9127       | Functional     | configure      |
-    |                                    |                |                | miscellaneous  |
-    |                                    |                |                | control        |
-    |                                    |                |                | parameters and |
-    |                                    |                |                | frequency of   |
-    |                                    |                |                | the external   |
-    |                                    |                |                | clock          |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_common_ctrl_cfg_readback  | PDK-9112       | Safety         | Driver shall   |
-    |                                    | PDK-9131       | Functional     | configure and  |
-    |                                    |                |                | read the status|
-    |                                    |                |                | of register    |
-    |                                    |                |                | lock, EN_DRV   |
-    |                                    |                |                | pin value      |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_common_ctrl_cfg_readback  | PDK-9114       | Safety         | Driver shall   |
-    |                                    | PDK-9143       | Functional     | support to     |
-    |                                    | PDK-9111       |                | enable the     |
-    |                                    |                |                | spread spectrum|
-    |                                    |                |                | modulation,    |
-    |                                    |                |                | configure the  |
-    |                                    |                |                | percentage of  |
-    |                                    |                |                | modulation     |
-    |                                    |                |                | depth and      |
-    |                                    |                |                | enable or      |
-    |                                    |                |                | disable to load|
-    |                                    |                |                | EEPROM defaults|
-    |                                    |                |                | when device    |
-    |                                    |                |                | transition from|
-    |                                    |                |                | LpStandby/     |
-    |                                    |                |                | SafeRecovery to|
-    |                                    |                |                | INIT state and |
-    |                                    |                |                | support        |
-    |                                    |                |                | Register Write |
-    |                                    |                |                | Protection for |
-    |                                    |                |                | control and    |
-    |                                    |                |                | configuration  |
-    |                                    |                |                | registers      |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_user_spare_cfg_readback   | PDK-9133       | Safety         | Driver shall   |
-    |                                    |                | Functional     | configure and  |
-    |                                    |                |                | read User Spare|
-    |                                    |                |                | Registers      |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_rtc_cfg_readback          | PDK-9141       | Safety         | Driver shall   |
-    |                                    | PDK-9135       | Functional     | configure RTC  |
-    |                                    | PDK-9111       |                | control        |
-    |                                    |                |                | parameters,    |
-    |                                    |                |                | enable crystal |
-    |                                    |                |                | oscillator and |
-    |                                    |                |                | its type and   |
-    |                                    |                |                | support        |
-    |                                    |                |                | Register Write |
-    |                                    |                |                | Protection for |
-    |                                    |                |                | control and    |
-    |                                    |                |                | configuration  |
-    |                                    |                |                | registers      |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_rtc_clr_rst_status        | PDK-9142       | Safety         | Driver shall   |
-    |                                    |                | Functional     | read and clear |
-    |                                    |                |                | RTC POWER_UP   |
-    |                                    |                |                | status         |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_rtc_status                | PDK-9155       | Safety         | Driver shall   |
-    |                                    |                | Functional     | read status of |
-    |                                    |                |                | RTC is started |
-    |                                    |                |                | or not         |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_irq_cfg_readback          | PDK-9147       | Safety         | Driver shall   |
-    |                                    | PDK-9148       | Functional     | support        |
-    |                                    |                |                | RECOV_CNT_INT, |
-    |                                    |                |                | NRSTOUT        |
-    |                                    |                |                | READBACK_INT,  |
-    |                                    |                |                | and NINT       |
-    |                                    |                |                | READBACK_INT   |
-    |                                    |                |                | as part of     |
-    |                                    |                |                | INT_READBACK   |
-    |                                    |                |                | ERR register in|
-    |                                    |                |                | PG1.0          |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_irq_cfg_readback          | PDK-9149       | Safety         | Driver shall   |
-    |                                    |                | Functional     | not support    |
-    |                                    |                |                | few features in|
-    |                                    |                |                | PG1.0          |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_irq_mask_status           | PDK-9153       | Safety         | Driver shall   |
-    |                                    |                | Functional     | read status of |
-    |                                    |                |                | PMIC interrupt |
-    |                                    |                |                | is masked or   |
-    |                                    |                |                | not            |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_irq_mask_status           | PDK-9152       | Safety         | Driver shall   |
-    |                                    |                | Functional     | read status of |
-    |                                    |                |                | GPIO rise or   |
-    |                                    |                |                | fall interrupt |
-    |                                    |                |                | is masked or   |
-    |                                    |                |                | not            |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_fsm_cfg_readback          | PDK-9151       | Safety         | Driver shall   |
-    |                                    |                | Functional     | read status of |
-    |                                    |                |                | NSLEEP signal  |
-    |                                    |                |                | is masked or   |
-    |                                    |                |                | not            |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_fsm_cfg_readback          | PDK-9144       | Safety         | Driver shall   |
-    |                                    | PDK-9134       | Functional     | configure FSM  |
-    |                                    | PDK-9128       |                | startup        |
-    |                                    |                |                | destination,   |
-    |                                    |                |                | enable fast    |
-    |                                    |                |                | BIST and ILIM  |
-    |                                    |                |                | interrupts     |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_pfsm_cfg_readback         | PDK-9136       | Safety         | Driver shall   |
-    |                                    |                | Functional     | configure and  |
-    |                                    |                |                | read PFSM delay|
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_fsm_cfg_readback          | PDK-9146       | Safety         | Driver shall   |
-    |                                    |                | Functional     | support FSM    |
-    |                                    |                |                | transition     |
-    |                                    |                |                | using NSLEEP   |
-    |                                    |                |                | signal         |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_fsm_recover_soc_pwr_err   | PDK-9123       | Safety         | Driver shall   |
-    |                                    |                | Functional     | support        |
-    |                                    |                |                | switching the  |
-    |                                    |                |                | PMIC state from|
-    |                                    |                |                | Active to MCU  |
-    |                                    |                |                | and MCU to     |
-    |                                    |                |                | Active using   |
-    |                                    |                |                | nsleep signals |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_fsm_i2c_trigger           | PDK-9330       | Safety         | Driver shall   |
-    |                                    |                | Functional     | configure      |
-    |                                    |                |                | TRIGER_I2C_X   |
-    |                                    |                |                | to triger for  |
-    |                                    |                |                | PFSM           |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_ddr_gpio_retention_cfg    | PDK-9563       | Safety         | Driver shall   |
-    |                                    | PDK-9564       | Functional     | support DDR and|
-    |                                    |                |                | GPIO Retention |
-    |                                    |                |                | mode           |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_esm_cfg_readback          | PDK-9150       | Safety         | Driver shall   |
-    |                                    |                | Functional     | read status of |
-    |                                    |                |                | ESM MCU/SOC is |
-    |                                    |                |                | started or not |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_rtc_rst_status            | PDK-9145       | Safety         | Driver shall   |
-    |                                    |                | Functional     | read and clear |
-    |                                    |                |                | RTC Reset      |
-    |                                    |                |                | status         |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_wdg_cfg_readback          | PDK-5839       | Safety         | Driver shall   |
-    |                                    |                | Functional     | configure      |
-    |                                    |                |                | Watchdog Qa    |
-    |                                    |                |                | sequence write |
-    |                                    |                |                | answer         |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_wdg_cfg_readback          | PDK-5839       | Safety         | Driver shall   |
-    |                                    | PDK-5854       | Functional     | configure      |
-    |                                    |                |                | Watchdog clear |
-    |                                    |                |                | Error status   |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_lp8764x_j7200_support     | PDK-9159       | Safety         | PMIC: Driver   |
-    |                                    |                | Functional     | shall implement|
-    |                                    |                |                | all TPS6594x   |
-    |                                    |                |                | Leo PMIC       |
-    |                                    |                |                | PG1.0 and PG2.0|
-    |                                    |                |                | new Features   |
-    |                                    |                |                | for Hera       |
-    |                                    |                |                | LP8764x PMIC   |
-    |                                    |                |                | PG1.0          |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_gpio_cfg_readback         | PDK-9157       | Safety         | To validate    |
-    |                                    |                | Functional     | GPIO 9         |
-    |                                    |                |                | configuration  |
-    |                                    |                |                | functionality  |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_power_cfg_readback        | PDK-9163       | Safety         | PMIC: Driver   |
-    |                                    |                | Functional     | shall support  |
-    |                                    |                |                | to configure   |
-    |                                    |                |                | and readback   |
-    |                                    |                |                | LDO slow ramp  |
-    |                                    |                |                | configuration  |
-    |                                    |                |                | for LDO        |
-    |                                    |                |                | regulators on  |
-    |                                    |                |                | TPS6594x PMIC  |
-    |                                    |                |                | PG 2.0         |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_power_thermal_cfg_readback| PDK-9117       | Safety         | PMIC: Driver   |
-    |                                    |                | Functional     | shall support  |
-    |                                    |                |                | to configure   |
-    |                                    |                |                | and readback   |
-    |                                    |                |                | thermal        |
-    |                                    |                |                | monitoring     |
-    |                                    |                |                | levels to      |
-    |                                    |                |                | support higher |
-    |                                    |                |                | ambient        |
-    |                                    |                |                | temperature on |
-    |                                    |                |                | TPS6594x PMIC  |
-    |                                    |                |                | PG 2.0         |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_irq_cfg_readback          | PDK-9122       | Safety         | Driver shall   |
-    |                                    |                | Functional     | read PMIC      |
-    |                                    |                |                | registers to   |
-    |                                    |                |                | decipher a Soft|
-    |                                    |                |                | Reboot Error   |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_generic_feature_support   | PDK-5817       | Other          | Driver shall   |
-    |                                    | PDK-5818       |                | use TI         |
-    |                                    | PDK-5819       |                | Processor SDK, |
-    |                                    | PDK-5826       |                | Coding style   |
-    |                                    | PDK-5823       |                | shall follow   |
-    |                                    |                |                | TI Processor   |
-    |                                    |                |                | SDK coding     |
-    |                                    |                |                | guidelines,    |
-    |                                    |                |                | Documentation  |
-    |                                    |                |                | template shall |
-    |                                    |                |                | follow TI      |
-    |                                    |                |                | Processor SDK  |
-    |                                    |                |                | style, Customer|
-    |                                    |                |                | deliverables   |
-    |                                    |                |                | independent of |
-    |                                    |                |                | Processor SDK  |
-    |                                    |                |                | and integrated |
-    |                                    |                |                | in Processor   |
-    |                                    |                |                | SDK RTOS       |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_validation_feature_support| PDK-5827       | Testing        | Processor SDK  |
-    |                                    | PDK-5860       |                | shall contain  |
-    |                                    |                |                | automated PMIC |
-    |                                    |                |                | driver unit    |
-    |                                    |                |                | test,          |
-    |                                    |                |                | implemented    |
-    |                                    |                |                | using Unity    |
-    |                                    |                |                | test framework,|
-    |                                    |                |                | Stub functional|
-    |                                    |                |                | shall be       |
-    |                                    |                |                | implemented for|
-    |                                    |                |                | any            |
-    |                                    |                |                | functionality  |
-    |                                    |                |                | not testable   |
-    |                                    |                |                | on EVM         |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_validation_feature_support| PDK-5859       | Performance and| Processor SDK  |
-    |                                    |                | Resources      | shall contain a|
-    |                                    |                |                | PMIC driver    |
-    |                                    |                |                | benchmark      |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_safety_feature_support    | PDK-5856       | Other          | Driver shall   |
-    |                                    | PDK-5857       |                | follow the     |
-    |                                    |                |                | Functional     |
-    |                                    |                |                | Safety process,|
-    |                                    |                |                | shall support  |
-    |                                    |                |                | Customer       |
-    |                                    |                |                | deliverables   |
-    |                                    |                |                | for functional |
-    |                                    |                |                | safety         |
-    +------------------------------------+----------------+----------------+----------------+
-    |did_pmic_stateless_reentrant_support| PDK-5820       | Other          | Driver shall   |
-    |                                    |                |                | stateless and  |
-    |                                    |                |                | reentrant      |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_multiple_pmic_support     | PDK-5825       | Other          | Driver source  |
-    |                                    |                |                | code           |
-    |                                    |                |                | architecture   |
-    |                                    |                |                | shall support  |
-    |                                    |                |                | multiple PMICs |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_standalone_support        | PDK-5816       | Other          | Driver shall be|
-    |                                    |                |                | independent    |
-    |                                    |                |                | architecture   |
-    |                                    |                |                | of TI Processor|
-    |                                    |                |                | SDK for        |
-    |                                    |                |                | standalone use |
-    |                                    |                |                | case           |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_pre_emption_support       | PDK-5822       | Other          | Driver shall   |
-    |                                    |                |                | support        |
-    |                                    |                |                | multiple       |
-    |                                    |                |                | applications   |
-    |                                    |                |                | and protect for|
-    |                                    |                |                | pre-emption    |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_baremetal_support         | PDK-5811       | Safety         | Driver is      |
-    |                                    | PDK-5853       | Functional     | OS-agnostic,   |
-    |                                    |                |                | and can be run |
-    |                                    |                |                | on bare-metal  |
-    |                                    |                |                | environments   |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_performance_support       | PDK-5859       | Performance    | Processor      |
-    |                                    |                | and Resources  | SDK shall      |
-    |                                    |                |                | contain a PMIC |
-    |                                    |                |                | driver         |
-    |                                    |                |                | benchmark for  |
-    |                                    |                |                | Pmic           |
-    |                                    |                |                | Initialization |
-    |                                    |                |                | and WDG QA     |
-    |                                    |                |                | Answer         |
-    |                                    |                |                | computation    |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_dynamic_alloc_mem_not     | PDK-5811       | Safety         | Driver shall   |
-    | _supported                         | PDK-5853       | Functional     | not do any     |
-    |                                    |                |                | dynamic        |
-    |                                    |                |                | allocation of  |
-    |                                    |                |                | memory         |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_build_infra_cfg           | PDK-5821       | Other          | Driver shall   |
-    |                                    |                |                | shall compile  |
-    |                                    |                |                | via make(Linux)|
-    |                                    |                |                | and XDC gmake  |
-    |                                    |                |                | (Windows)      |
-    +------------------------------------+----------------+----------------+----------------+
-    | did_pmic_debug_release_profile     | PDK-5811       | Safety         | Driver code    |
-    | _support                           | PDK-5853       | Functional     | shall be       |
-    |                                    |                |                | buildable in   |
-    |                                    |                |                | debug mode so  |
-    |                                    |                |                | that it stepped|
-    |                                    |                |                | using debugger |
-    |                                    |                |                | and program    |
-    |                                    |                |                | as CCS         |
-    +------------------------------------+----------------+----------------+----------------+
-
 Design Description
 ==================
 
@@ -1094,100 +74,28 @@ with application and hardware layers.
 
 Figure PMIC Driver Software Architecture
 
-| Design Id: (did_pmic_generic_feature_support)
-| Architecture: aid_pmic_generic_support
-| Requirement: REQ_TAG(PDK-5817) REQ_TAG(PDK-5818) REQ_TAG(PDK-5819)
-               REQ_TAG(PDK-5823) REQ_TAG(PDK-5826)
+The software architecture of the PMIC driver is derived from the functional 
+block diagram of BlackBird, which provides a comprehensive overview of the 
+system's hardware components and their interactions. The BlackBird functional 
+block diagram illustrates the various modules and subsystems within the hardware 
+platform, including the processor, memory, peripherals, and external interfaces.
 
-| Design Id: (did_pmic_stateless_reentrant_support)
-| Architecture: aid_pmic_stateless_reentrant_support
-| Requirement: REQ_TAG(PDK-5820)
+.. figure:: pmic_lld_design_diagram/BlackBird_PMIC_Functional_Block_Diagram.png
+   :width: 80%
+   :align: center
 
-Driver shall be stateless and reentrant 
+   Figure: BlackBird Functional Block Diagram
 
-| Design Id: (did_pmic_multiple_pmic_support)
-| Architecture: aid_pmic_multiple_pmic_support
-| Requirement: REQ_TAG(PDK-5825)
+Based on the BlackBird functional block diagram, the PMIC driver software 
+architecture is designed to interface seamlessly with the underlying hardware 
+components and leverage the capabilities of the platform's operating system 
+(OS) or software development kit (SDK). It adheres to the principle of 
+separation of concerns by ensuring that hardware interface drivers such as 
+I2C, SPI, and GPIO, as well as critical section/locking mechanisms, are implemented 
+at the platform level rather than within the PMIC driver itself. Instead, the 
+PMIC driver interacts with these features through platform-specific API hooks, 
+allowing for greater flexibility, portability, and maintainability of the overall system.
 
-Driver source code architecture shall support multiple PMICs. 
-
-| Design Id: (did_pmic_standalone_support)
-| Architecture: aid_pmic_standalone_support
-| Requirement: REQ_TAG(PDK-5816)
-
-Driver shall be independent of TI Processor SDK for standalone use case
-
-| Design Id: (did_pmic_pre_emption_support)
-| Architecture: aid_pmic_pre_emption_support
-| Requirement: REQ_TAG(PDK-5822)
-
-Driver shall support multiple applications and protect for pre-emption
-
-| Design Id: (did_pmic_baremetal_support)
-| Architecture: aid_pmic_baremetal_support
-| Requirement: REQ_TAG(PDK-5811), REQ_TAG(PDK-5853)
-
-Driver is OS-agnostic, and can be run on bare-metal environments as well as OS
-(freeRTOS, safeRTOS, etc.) This is accomplished by defining an OSAL interface 
-which must be provided by the application. 
-
-The PMIC Driver does not depend on any operating system and supports execution
-with baremetal application
-
-Coding style shall follow TI Processor SDK coding guidelines and 
-Documentation template shall follow TI Processor SDK style
-
-Customer deliverables independent of Processor SDK and integrated in Processor
-SDK RTOS
-
-| Design Id: (did_pmic_validation_feature_support)
-| Architecture: aid_pmic_test_support
-| Requirement: REQ_TAG(PDK-5827) REQ_TAG(PDK-5860)
-
-Processor SDK shall contain automated PMIC driver unit test, implemented using
-Unity test framework, Stub functional shall be implemented for any functionality
-not testable on EVM. Driver validation on TI EVM shall use TI Processor SDK
-
-| Design Id: (did_pmic_performance_support)
-| Architecture: aid_pmic_performance_support
-| Requirement: REQ_TAG(PDK-5859)
-
-Processor SDK shall contain a PMIC driver benchmark for Pmic Initialization and
-PMIC WDG QA Answer computation
-
-| Design Id: (did_pmic_safety_feature_support)
-| Architecture: aid_pmic_generic_support
-| Requirement: REQ_TAG(PDK-5856) REQ_TAG(PDK-5857)
-
-Driver shall follow the Functional Safety process and shall support customer
-deliverables for functional safety
-
-| Design Id: (did_pmic_dynamic_alloc_mem_not_supported)
-| Architecture: aid_pmic_dynamic_alloc_mem_not_supported
-| Requirement: REQ_TAG(PDK-5811), REQ_TAG(PDK-5853)
-
-PMIC LLD is a library and memory placement of code and data is done by
-application. It is expected that the application places PMIC LLD in RAM. PMIC
-LLD shall not do any dynamic allocation of memory 
-
-| Design Id: (did_pmic_build_infra_cfg)
-| Architecture: aid_pmic_build_infra_cfg
-| Requirement: REQ_TAG(PDK-5821)
-
-PMIC LLD shall compile and link via make on Linux and XDC-provided gmake on
-Window. The build infrastructure shall be standalone to integrate with non TI
-SDKs
-
-| Design Id: (did_pmic_debug_release_profile_support)
-| Architecture: aid_pmic_debug_release_profile_support
-| Requirement: REQ_TAG(PDK-5811), REQ_TAG(PDK-5853)
-
-The code shall be buildable in debug mode so that it may be stepped
-through using a debugger and a program such as Code Composer Studio
-(CCS).
-
-For testing, display of results of the test code will need access to
-UART port
 
 Platform Integration
 --------------------
@@ -1213,25 +121,17 @@ Figure Platform Integration - TI / non-TI SDK platform
 Interrupt Service Routines
 --------------------------
 
-PMIC Driver Requirement specifies that PMIC Driver software shall not
-provide any Interrupt Service Routines, demanding the Application layer
-provide and maintain the ISRs without driver intervention.
+The PMIC Driver software is designed to abstain from providing Interrupt Service Routines (ISRs), delegating this responsibility to the Application layer instead. It is expected that the Application layer will handle and maintain the ISRs without direct intervention from the driver.
 
-Driver shall provide API to read error/status information from PMIC
-registers and return a corresponding deciphered code. The API also gives
-a feature to clear the Interrupts from within the same function call
-using a control flag. This API can be invoked by application layer after
-receiving an event/error Interrupt.
+The Driver does, however, offer an API for reading error/status information from PMIC registers. This API returns deciphered error/status codes, allowing the Application layer to retrieve relevant information. Additionally, the API provides a feature to clear interrupts within the same function call by utilizing a control flag. This functionality enables the Application layer to clear interrupts promptly upon receiving an event/error Interrupt.
 
 Error Handling
 --------------
 
-Driver shall provide API just to read error information from PMIC
-registers and return a corresponding deciphered error code. This API can
-be invoked by application layer depending on info taken from error ISR.
+The PMIC Driver API is designed to facilitate the reading of error information from PMIC registers and to return deciphered error codes. This API is intended for invocation by the application layer based on information retrieved from error Interrupt Service Routines (ISRs).
 
-PMIC driver API shall be able to decode various errors detected in PMIC
-hardware and provide the relevant error code to Application.
+Furthermore, the PMIC driver API is equipped to decode various errors detected within the PMIC hardware, ensuring that the relevant error code is provided to the Application layer.
+
 See section `API Function Return Status`_.
 
 Components
@@ -1245,11 +145,6 @@ are divided into two categories:
 
 PMIC Communication Interface Components
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-| Design Id: (did_pmic_comm_intf_cfg)
-| Architecture: aid_pmic_comm_intf_i2c_spi_cfg
-| Requirement: REQ_TAG(PDK-5814) REQ_TAG(PDK-5824) REQ_TAG(PDK-5858)
-
 
 PMIC contains I2C1,I2C2 and SPI interfaces to configure, monitor and
 control various components in PMIC module.
@@ -1285,11 +180,6 @@ communication.
 
 **I2C Single Interface mode**
 '''''''''''''''''''''''''''''
-
-| Design Id: (did_pmic_comm_single_i2c_cfg)
-| Architecture: aid_pmic_comm_intf_i2c_spi_cfg
-| Requirement: REQ_TAG(PDK-5810) REQ_TAG(PDK-9129)
-
 This mode is used when only one I2C interface is enough to communicate
 with PMIC module. I2C2 lines shall be configured to function as GPIO
 only for this mode.
@@ -1303,11 +193,6 @@ read the I2C1 and i2C2 interface mode.
 
 **I2C Dual Interface mode**
 '''''''''''''''''''''''''''
-
-| Design Id: (did_pmic_comm_dual_i2c_cfg)
-| Architecture: aid_pmic_comm_intf_i2c_spi_cfg
-| Requirement: REQ_TAG(PDK-5813)
-
 This mode is used when both I2C interfaces are required to communicate
 with PMIC module. Corresponding GPIO lines shall be configured by the application
 to function as I2C Clock and Data lines for this mode.
@@ -1331,10 +216,6 @@ Interface mode:
 -  I2C2: Used to accept IO requests to help MCU do watchdog Trigger and
    Q/A communication with PMIC
 
-| Design Id: (did_pmic_i2c_speed_readback)
-| Architecture: aid_pmic_core_misc_cfg
-| Requirement: REQ_TAG(PDK-9129)
-
 This mode is used to configure I2C1 and I2C2 interface as Standard or HS mode.
 
 I2C Master before switching the I2C speed to HS/Standard Mode,
@@ -1343,11 +224,6 @@ I2C Master can communicate with PMIC in HS/Standard Mode
 
 SPI Interface
 ^^^^^^^^^^^^^
-
-| Design Id: (did_pmic_comm_spi_cfg)
-| Architecture: aid_pmic_comm_intf_i2c_spi_cfg
-| Requirement: REQ_TAG(PDK-5843)
-
 The device supports SPI serial-bus interface and it operates as a slave.
 A single read and write transmissions consist of 24-bit write and read
 cycles (32-bit if CRC is enabled).
@@ -1374,12 +250,6 @@ PMIC Core Functionality Components
 
 GPIO
 ^^^^
-
-| Design Id: (did_pmic_gpio_cfg_readback)
-| Architecture: aid_pmic_gpio_cfg
-| Requirement: REQ_TAG(PDK-5808), REQ_TAG(PDK-9111), REQ_TAG(PDK-9157),
-|              REQ_TAG(PDK-9159), REQ_TAG(PDK-9329), REQ_TAG(PDK-9162)
-
 PMIC GPIO Driver has APIs that supports all GPIO features Like, set/get
 gpio pin functions, pull up/down, drive strength, output drain, pin
 value, enable/disable gpio interrupt, configure nPWRON or ENABLE pin
@@ -1396,11 +266,6 @@ For more details please refer PMIC API Guide
 
 RTC
 ^^^
-
-| Design Id: (did_pmic_rtc_cfg_readback)
-| Architecture: aid_pmic_rtc_cfg
-| Requirement: REQ_TAG(PDK-5855), REQ_TAG(PDK-9141), REQ_TAG(PDK-9135),
-|              REQ_TAG(PDK-9111)
 
 PMIC RTC Driver has APIs to supports all PMIC RTC features.like, set/get RTC time,
 Alarm time, RTC frequncy compensation, timer interrupt period and enable or
@@ -1419,37 +284,10 @@ It is used to enable or disable Crystal oscillator and to configure Crystal
 oscillator type. Also provide an API to read the status of Crystal oscillator
 is enable or disabled and to read the Crystal oscillator type 
 
-| Design Id: (did_pmic_rtc_clr_rst_status)
-| Architecture: aid_pmic_rtc_cfg
-| Requirement: REQ_TAG(PDK-9142), REQ_TAG(PDK-9145)
-
-PMIC RTC Driver shall read and clear RTC POWER_UP status. RTC POWER_UP status
-indicates that a reset occurred and that RTC data are not valid anymore
-
-| Design Id: (did_pmic_rtc_status)
-| Architecture: aid_pmic_rtc_cfg
-| Requirement: REQ_TAG(PDK-9155)
-
-PMIC RTC Driver  shall read status of whether RTC is started or not
-
-| Design Id: (did_pmic_rtc_rst_status)
-| Architecture: aid_pmic_rtc_cfg
-| Requirement: REQ_TAG(PDK-9145), REQ_TAG(PDK-9142)
-
-PMIC RTC Driver shall read RTC Reset status. RTC Reset status bit can only be
-set to one and is cleared when a manual reset or a POR (case of VOUT_LDO_RTC
-below the LDO_RTC POR level) occur. If this bit is reset it means that the RTC
-has lost its configuration.
-
 For more details please refer PMIC API Guide
 
 Watchdog
 ^^^^^^^^
-
-| Design Id: (did_pmic_wdg_cfg_readback)
-| Architecture: aid_pmic_wdg_cfg
-| Requirement: REQ_TAG(PDK-5854), REQ_TAG(PDK-5839), REQ_TAG(PDK-9115),
-|              REQ_TAG(PDK-9116)
 
 PMIC WatchDog Driver has APIs that supports all WatchDog features Like,
 set/get watchdog configuration, Enable or disable watchdog,
@@ -1494,22 +332,12 @@ For more details please refer PMIC API Guide
 Runtime BIST
 ^^^^^^^^^^^^
 
-| Design Id: (did_pmic_runtime_bist_cfg)
-| Architecture: aid_pmic_fsm_cfg
-| Requirement: REQ_TAG(PDK-5849)
-
 PMIC Driver has API that initiates a request to exrecise runtime BIST.
 
 For more details please refer PMIC API Guide
 
 Power Management
 ^^^^^^^^^^^^^^^^
-
-| Design Id: (did_pmic_power_cfg_readback)
-| Architecture: aid_pmic_power_cfg
-| Requirement: REQ_TAG(PDK-5850), REQ_TAG(PDK-5848), REQ_TAG(PDK-5841),
-|              REQ_TAG(PDK-5829), REQ_TAG(PDK-9111), REQ_TAG(PDK-9163),
-|              REQ_TAG(PDK-9149), REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
 
 PMIC Power supports all power resources feature APIs,
 which includes set/get BUCK and LDO regulator output voltage
@@ -1523,14 +351,10 @@ errors are found on the power Rails and also support register write
 protection for configuration registers.
 
 PMIC Power supports to set/get LDO slow ramp configuration for LDO regulators on
-TPS6594x PG2.0
+TPS65386x
 
 Power-Good
 ^^^^^^^^^^
-
-| Design Id: (did_pmic_power_pgood_cfg_readback)
-| Architecture: aid_pmic_power_cfg
-| Requirement: REQ_TAG(PDK-5847), REQ_TAG(PDK-9111)
 
 PMIC Power supports power resources feature APIs,
 which includes power good monitor of the PMIC module and
@@ -1541,32 +365,17 @@ For more details please refer PMIC API Guide
 Thermal Monitoring
 ^^^^^^^^^^^^^^^^^^
 
-| Design Id: (did_pmic_power_thermal_cfg_readback)
-| Architecture: aid_pmic_power_cfg
-| Requirement: REQ_TAG(PDK-5840), REQ_TAG(PDK-9111), REQ_TAG(PDK-9117)
-
 PMIC Power supports all power resources feature APIs,
 which includes  set/get thermal monitoring/shutdown of the PMIC module
 and support register write protection for registers.
 
 PMIC Power supports to set/get thermal monitoring levels to support 
-higher ambient temperature on TPS6594x PMIC PG2.0
+higher ambient temperature on TPS65386x
 
 For more details please refer PMIC API Guide
 
 Interrupts
 ^^^^^^^^^^
-
-| Design Id: (did_pmic_irq_cfg_readback)
-| Architecture: aid_pmic_irq_cfg
-| Requirement: REQ_TAG(PDK-5805), REQ_TAG(PDK-5842), REQ_TAG(PDK-5832),
-|              REQ_TAG(PDK-5838), REQ_TAG(PDK-5852), REQ_TAG(PDK-5834),
-|              REQ_TAG(PDK-5806), REQ_TAG(PDK-5828), REQ_TAG(PDK-5807),
-|              REQ_TAG(PDK-5846), REQ_TAG(PDK-5830), REQ_TAG(PDK-5812),
-|              REQ_TAG(PDK-5845), REQ_TAG(PDK-5835), REQ_TAG(PDK-5836),
-|              REQ_TAG(PDK-9147), REQ_TAG(PDK-9148), REQ_TAG(PDK-9149),
-|              REQ_TAG(PDK-9113), REQ_TAG(PDK-9120), REQ_TAG(PDK-9122),
-|              REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
 
 PMIC Interrupt Driver module supports all Interrupt feature APIs, which
 includes Get/clear Interrupt status, extract the Interrupt status as per
@@ -1595,10 +404,6 @@ It shall not support write protection to clear the Interrupt registers
 In PG1.0, The API shall support write protection for clearing the interrupt
 registers
 
-| Design Id: (did_pmic_irq_mask_status)
-| Architecture: aid_pmic_irq_cfg
-| Requirement: REQ_TAG(PDK-9153), REQ_TAG(PDK-9152)
-
 PMIC Interrupt Driver module supports all Interrupt feature APIs, which
 includes Get GPIO mask interrupt and Get mask interrupt status
 
@@ -1614,10 +419,6 @@ For more details please refer PMIC API Guide
 Error Signal Monitor (ESM)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-| Design Id: (did_pmic_esm_cfg_readback)
-| Architecture: aid_pmic_esm_cfg
-| Requirement: REQ_TAG(PDK-5833), REQ_TAG(PDK-9150)
-
 PMIC ESM Driver module supports all ESM feature APIs which includes
 Start/stop ESM, Enable/Disable ESM mode, set/get ESM configurations,
 enable/diable ESM interrupts and reading current ESM error count.
@@ -1629,12 +430,6 @@ For more details please refer PMIC API Guide
 
 Finite State Machine (FSM)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-| Design Id: (did_pmic_fsm_cfg_readback)
-| Architecture: aid_pmic_fsm_cfg
-| Requirement: REQ_TAG(PDK-5837), REQ_TAG(PDK-9151), REQ_TAG(PDK-9144),
-|              REQ_TAG(PDK-9134), REQ_TAG(PDK-9128), REQ_TAG(PDK-9136),
-|              REQ_TAG(PDK-9146)
 
 PMIC FSM Driver module supports all FSM features APIs. Like, set/get FSM
 states, enable FSM I2C Triggers, Mask and UnMask Nsleep Signals and
@@ -1662,10 +457,6 @@ PMIC FSM Driver module shall support set/get Nsleep signal value
 
 It shall support FSM transitions using Nsleep1/NSleep2 and NSleep1B/NSleep2B Signals.
 
-| Design Id: (did_pmic_fsm_recover_soc_pwr_err)
-| Architecture: aid_pmic_fsm_cfg
-| Requirement: REQ_TAG(PDK-9123), REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
-
 The API shall configure switching the PMIC state from Active to MCU and MCU to
 Active using nsleep signals and configure Nsleep2 pin and NSLEEP1 pin from ‘11’
 to ‘10’ then back to ‘11’.
@@ -1686,43 +477,29 @@ primary PMIC. The time delay between the NSLEEP1 signal changes need to be
 greater than 8us due to the input deglitch time if customer uses a redefined 
 GPIO pins for the NSLEEP1 signal, but there is no maximum time limit.
 
-| Design Id: (did_pmic_fsm_i2c_trigger)
-| Architecture: aid_pmic_fsm_cfg
-| Requirement: REQ_TAG(PDK-9330)
+The PMIC FSM Driver is responsible for configuring and enabling I2C/SPI triggers, as well as retrieving I2C/SPI trigger values. Here are the specifications:
 
-The PMIC FSM Driver shall configure enable i2c trigger and get i2c trigger value
+    I2C Trigger Configuration:
+        The API configures TRIGER_I2C_x to trigger for PFSM, where x ranges from 0 to 7 (excluding x = 3).
+        Configuration of TRIGER_I2C_3 is not supported.
+        TRIGER_I2C_4, TRIGER_I2C_5, TRIGER_I2C_6, and TRIGER_I2C_7 can be configured to trigger PFSM based on custom configuration, supporting trigger values of 0 or 1.
+        TRIGER_I2C_0, TRIGER_I2C_1, and TRIGER_I2C_2 bits are automatically cleared and support a trigger value of 1.
 
-a) The API shall configure TRIGER_I2C_x to trigger for PFSM Where x varies from
-   0 to 7 i.e TRIGER_I2C_0 to TRIGER_I2C_7 except for x= 3  i.e TRIGER_I2C_3
-   Configuration of TRIGER_I2C_3 is not supported.
-b) The API shall configure TRIGER_I2C_4/ TRIGER_I2C_5/ TRIGER_I2C_6/ TRIGER_I2C_7
-   to trigger PFSM based on Custom configuration. Supports Trigger value as either
-   0 or 1
-c) The API shall configure TRIGER_I2C_0/ TRIGER_I2C_1/ TRIGER_I2C_2 bits are
-   automatically cleared . Supports Trigger value as 1
+    J721E and J7200 EVMs Configuration:
+        For J721E and J7200 EVMs:
+            TRIGER_I2C_0 configures PFSM state as LPStandby or Standby state.
+            TRIGER_I2C_1 exercises Runtime BIST and is supported only for PG2.0.
+            TRIGER_I2C_2 enables CRC and is supported only for PG2.0.
 
-For J721E and J7200 EVMs, It shall configure
-
-a) TRIGER_I2C_0 to configure PFSM state as LPStandby or Standby state
-b) TRIGER_I2C_1 to exercise Runtime BIST and supported only for PG2.0
-c) TRIGER_I2C_2 to enable CRC and supported only for PG2.0
-
-| Design Id: (did_pmic_ddr_gpio_retention_cfg)
-| Architecture: aid_pmic_fsm_cfg
-| Requirement: REQ_TAG(PDK-9563) REQ_TAG(PDK-9564)
-
-PMIC FSM Driver shall initiates a request to exercise DDR/GPIO Retention Mode.
-Retention Mode is valid only for J7200 SOC
+    AM263Px Configuration (SPI):
+        Additionally, for the AM263Px platform, the PMIC FSM Driver also handles SPI triggers.
+        The driver initiates a request to exercise DDR/GPIO Retention Mode.
 
 For more details please refer PMIC API Guide
 
 
 LP Standby State
 ^^^^^^^^^^^^^^^^
-
-| Design Id: (did_pmic_lpstandby_cfg)
-| Architecture: aid_pmic_fsm_cfg
-| Requirement: REQ_TAG(PDK-5851), REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
 
 PMIC FSM Driver module supports  FSM features APIs. Like, set/get FSM
 states, enable FSM I2C Triggers, Mask and UnMask Nsleep Signals.
@@ -1733,10 +510,6 @@ For more details please refer PMIC API Guide
 LP Standby WAKE UP
 ^^^^^^^^^^^^^^^^^^^
 
-| Design Id: (did_pmic_lpstandby_wkup_cfg)
-| Architecture: aid_pmic_fsm_cfg
-| Requirement: REQ_TAG(PDK-5831), REQ_TAG(PDK-5844)
-
 PMIC FSM Driver module supports LP standby APIs.using set FSM
 states, enable FSM I2C Triggers, Mask Nsleep Signals.
 
@@ -1746,12 +519,6 @@ For more details please refer PMIC API Guide
 
 Core
 ^^^^
-
-| Design Id: (did_pmic_common_ctrl_status_readback)
-| Architecture: aid_pmic_core_misc_cfg
-| Requirement: REQ_TAG(PDK-9126), REQ_TAG(PDK-9124), REQ_TAG(PDK-9125),
-|              REQ_TAG(PDK-9130), REQ_TAG(PDK-9138), REQ_TAG(PDK-9139),
-|              REQ_TAG(PDK-9112)
 
 PMIC Driver has APIs that supports get common control status.
 
@@ -1778,22 +545,6 @@ end of charge indication
 
 It shall read enable status of SPMI low power mode and status of force EN_DRV bit
 
-| Design Id: (did_pmic_battery_ctrl_cfg_readback)
-| Architecture: aid_pmic_core_misc_cfg
-| Requirement: REQ_TAG(PDK-9130)
-
-PMIC Driver has APIs that supports set/get battery control configuration
-
-It is used to configure backup battery charging current, enable or
-disable backup battery charging and to configure end of charge voltage
-for backup battery charger.
-
-| Design Id: (did_pmic_misc_ctrl_cfg_readback)
-| Architecture: aid_pmic_core_misc_cfg
-| Requirement: REQ_TAG(PDK-9132), REQ_TAG(PDK-9127)
-
-PMIC Driver has APIs that supports set/get miscellaneous control configuration
-
 The API shall configure Miscellaneous control Parameters as defined here
 a) Selection of external clock - SYNCCLKIN
 b) SYNCCLKOUT enable/frequency select - SYNCCLKOUT_FREQ_SEL
@@ -1804,41 +555,12 @@ e) To enable or disable internal clock monitoring
 
 Also Provide API to read the Miscellaneous control Parameters configuration
 
-| Design Id: (did_pmic_common_ctrl_cfg_readback)
-| Architecture: aid_pmic_core_misc_cfg
-| Requirement: REQ_TAG(PDK-9112), REQ_TAG(PDK-9131), REQ_TAG(PDK-9114),
-|              REQ_TAG(PDK-9143), REQ_TAG(PDK-9111)
-
-PMIC Driver has APIs that supports set/get common control configuration and
-support register write protection for control and configuration registers.
-
 Driver shall used to configure and read the status of register lock and EN_DRV
 pin value
 
 Driver enable/disable the spread spectrum modulation and the percentage of
 modulation depth and also read the status of spread spectrum modulation and
 percentage of modulation depth.
-
-For TPS6594x Leo device it is used to enable/disable to load EEPROM defaults
-on RTC domain regsiters when the device transitions from LPStandby/SafeRecovery
-state to INIT state.
-
-For LP8764x Hera device it is used to load EEPROM defaults on conf registers
-when the device transitions from LPStandby/SafeRecovery state to INIT state.
-
-| Design Id: (did_pmic_user_spare_cfg_readback)
-| Architecture: aid_pmic_core_misc_cfg
-| Requirement: REQ_TAG(PDK-9133)
-
-PMIC Driver has APIs that supports set/get user spare value. It is used to
-configure and read user space register
-
-| Design Id: (did_pmic_pin_readback)
-| Architecture: aid_pmic_core_misc_cfg
-| Requirement: REQ_TAG(PDK-9137), REQ_TAG(PDK-9131)
-
-PMIC driver shall configure EN_DRV Pin and read the status of NRSTOUT_SOC/
-NRSTOUT/ EN_DRV Pin.
 
 For more details please refer PMIC API Guide
 
@@ -1905,6 +627,17 @@ internal functionality of the driver software and read CRC status of the
 PMIC on I2C or SPI Interface for TPS6594x Leo or LP8764x Hera devices
 
 
+TPS65386x BlackBird Support
+--------------------
+
+This section explains design w.r.t the multiple Driver instance support
+to handle a system with two or more PMIC devices of different kinds
+(e.g. TPS65386x BlackBird) which could be configured and monitored using the
+same driver software, although device specific feature sets control the
+internal functionality of the driver software and read CRC status of the
+PMIC on SPI Interface for TPS65386x BlackBird devices.
+
+
 PMIC CRC Validation Feature
 ---------------------------
 
@@ -1915,16 +648,9 @@ as per customer requirement.
 It is user responsibility to enable or disable the CRC as per NVM
 configuration at the application during PMIC Handle creation.
 
-| Design Id: (did_pmic_crc_status)
-| Architecture: aid_pmic_tps6594x_lp8764x_support
-| Requirement: REQ_TAG(PDK-9329)
-
 PMIC driver API shall read CRC status of the primary or secondary PMIC on
-I2C1 and I2C2 or SPI interface for TPS6594x Leo or LP8764x Hera devices
-
-| Design Id: (did_pmic_crc_enable)
-| Architecture: aid_pmic_core_misc_cfg
-| Requirement: REQ_TAG(PDK-9119)
+I2C1 and I2C2 or SPI interface for TPS6594x Leo, LP8764x Hera or TPS65386x 
+BlackBird devices
 
 It is used to configure TRIGER_I2C_2 to '1' from the primary PMIC to enable
 CRC feature on I2C1 and I2C2 or SPI interface for TPS6594x Leo or LP8764x Hera
@@ -1940,20 +666,11 @@ I2C/SPI interface
 PMIC Recovery Count
 -------------------
 
-| Design Id: (did_pmic_err_recov_cnt_cfg_readback)
-| Architecture: aid_pmic_core_misc_cfg
-| Requirement: REQ_TAG(PDK-5809)
-
 PMIC common Driver API contains miscellaneous APIs like pmic recovery count API.
 
 
 PMIC Device Information
 -----------------------
-
-| Design Id: (did_pmic_dev_info_readback)
-| Architecture: aid_pmic_core_misc_cfg
-| Requirement: REQ_TAG(PDK-9109), REQ_TAG(PDK-9110), REQ_TAG(PDK-9149),
-|              REQ_TAG(PDK-9159), REQ_TAG(PDK-9329)
 
 PMIC driver shall implement an API to read TI device ID, NVM ID, NVM Revision,
 and Silicon Revision and customer NVM ID
@@ -2201,8 +918,9 @@ PMIC LLD Directory Structure
 ============================
 
 The below diagram shows the file structure for PMIC LLD.
-The cfg/tps6594x contains LEO PMIC specific header and source files and
-cfg/lp8764x contains HERA PMIC specific header and source files.
+The cfg/tps6594x contains LEO PMIC specific header and source files,
+cfg/lp8764x contains HERA PMIC specific header and source files and 
+cfg/tps65386x contains BLACKBIRD PMIC specific header and source files.
 
 .. figure:: pmic_lld_design_diagram/PMIC_LLD_Directory_Structure.png
    :width: 80%
@@ -2399,6 +1117,8 @@ PMIC Device Type
 #define PMIC_DEV_LEO_TPS6594X (0U)
 
 #define PMIC_DEV_HERA_LP8764X (1U)
+
+#define PMIC_DEV_BB_TPS65386X (2U)
 
 PMIC Interface Configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2709,6 +1429,24 @@ GPIO Configuration
       *                              Valid only for Enable pin.
       *                              Valid only when PMIC_ENABLE_CFG_POLARITY_VALID
       *                              bit is set.
+      * \param   gpo1Cfg             Configure GPO-1 operational mode.
+      *                              Valid only when PMIC_ENABLE_CFG_POLARITY_VALID
+      *                              bit is set.
+      * \param   gpo2Cfg             Configure GPO-2 operational mode.
+      *                              Valid only when PMIC_ENABLE_CFG_POLARITY_VALID
+      *                              bit is set.
+      * \param   gpo3Cfg             Configure GPO-3 operational mode.
+      *                              Valid only when PMIC_ENABLE_CFG_POLARITY_VALID
+      *                              bit is set.
+      * \param   gpo4Cfg             Configure GPO-4 operational mode.
+      *                              Valid only when PMIC_ENABLE_CFG_POLARITY_VALID
+      *                              bit is set.
+      * \param   gpi1Cfg             Configure GPI-1 operational mode.
+      *                              Valid only when PMIC_ENABLE_CFG_POLARITY_VALID
+      *                              bit is set.
+      * \param   gpi4Cfg             Configure GPI-4 operational mode.
+      *                              Valid only when PMIC_ENABLE_CFG_POLARITY_VALID
+      *                              bit is set.
       */
      typedef struct Pmic_GpioCfg_s
      {
@@ -2719,6 +1457,12 @@ GPIO Configuration
           uint8_t                   deglitchEnable;
           uint8_t                   pinFunc;
           uint8_t                   pinPolarity;
+          uint8_t                   gpo1Cfg;
+          uint8_t                   gpo2Cfg;
+          uint8_t                   gpo3Cfg;
+          uint8_t                   gpo4Cfg;
+          uint8_t                   gpi1Cfg;
+          uint8_t                   gpi4Cfg;
      } Pmic_GpioCfg_t
 
 Watchdog Configuration
@@ -3745,6 +2489,16 @@ Core Configuration
       *                                  Valid only when
       *                                  PMIC_CFG_SPREAD_SPECTRUM_DEPTH_VALID
       *                                  bit is set.
+      *  \param  eNsafeOut1              Control bit to enable the SAFE_OUT1 output.
+      *  \param  eNsafeOut2              Control bit to enable the SAFE_OUT2 output.
+      *  \param  regLock_1               Lock/Unlock sequence-1 for configuration
+      *                                  register lock/unlock.
+      *  \param  regLock_2               Lock/Unlock sequence-2 for configuration
+      *                                  register lock/unlock.
+      *  \param  cntLock_1               Lock/Unlock sequence-1 for timer and
+      *                                  rotation counter register lock/unlock.
+      *  \param  cntLock_2               Lock/Unlock sequence-2 for timer and
+      *                                  rotation counter register lock/unlock.
       */
      typedef struct Pmic_CommonCtrlCfg_s
      {
@@ -3755,6 +2509,12 @@ Core Configuration
           uint8_t    enDrv;
           uint8_t    regLock;
           uint8_t    spreadSpectrumDepth;
+          uint8_t    eNsafeOut1;
+          uint8_t    eNsafeOut2;
+          uint8_t    regLock_1;
+          uint8_t    regLock_2;
+          uint8_t    cntLock_1;
+          uint8_t    cntLock_2;
      } Pmic_CommonCtrlCfg_t;
 
 .. code-block:: ruby
@@ -3942,6 +2702,11 @@ Core Configuration
           uint8_t    nRstOutSocPin;
           uint8_t    nRstOutPin;
           uint8_t    nIntPin;
+          uint8_t    enOutPin;
+          uint8_t    safeOut1Pin;
+          uint8_t    nRstPin;
+          uint8_t    cfgregLockStat;
+          uint8_t    cntregLockStat;
      } Pmic_CommonCtrlStat_t;
 
 .. code-block:: ruby
@@ -8493,37 +7258,3 @@ Following are referred to help design and development of PMIC LLD:
 #. AP216 Process.
 #. Coding Guidelines:
    https://confluence.itg.ti.com/display/SWRD/OneMCU+Coding+Standard
-
-
-
-.. raw:: latex
-
-    \newpage
-
-**Template Revision**
-
-+---------------+----------------------+-----------------+--------------------------------------------------------------------------------------------------------------------------+
-| **Version**   | **Date**             | **Author**      | **Description**                                                                                                          |
-+===============+======================+=================+==========================================================================================================================+
-| 0.01          | November 2017        | Jon Nafziger    | Initial version                                                                                                          |
-+---------------+----------------------+-----------------+--------------------------------------------------------------------------------------------------------------------------+
-| 0.02          | July 12, 2018        | Krishna Allam   | Updates to synchronize this SDD template with the methodology described in the Software Architecture document template   |
-+---------------+----------------------+-----------------+--------------------------------------------------------------------------------------------------------------------------+
-| 1.0           | September 19, 2018   | Frank Fruth     | Updates:                                                                                                                 |
-|               |                      |                 |                                                                                                                          |
-|               |                      |                 | -  Added a separate section/table for template revision (this table).                                                    |
-|               |                      |                 |                                                                                                                          |
-|               |                      |                 | -  Cleared revision history at start of document to be reserved for document revision                                    |
-|               |                      |                 |                                                                                                                          |
-|               |                      |                 | -  Minor cosmetic changes to title page, e.g., removed literature number reference;                                      |
-+---------------+----------------------+-----------------+--------------------------------------------------------------------------------------------------------------------------+
-| 1.0A          | November 19, 2018    | Sam Nelson      | Updates:                                                                                                                 |
-|               |                      | Siluvaimani     |                                                                                                                          |
-|               |                      |                 | -  Converted to RST format                                                                                               |
-+---------------+----------------------+-----------------+--------------------------------------------------------------------------------------------------------------------------+
-| 1.0B          | January 15, 2019     | Sam Nelson      | Updates:                                                                                                                 |
-|               |                      | Siluvaimani     |                                                                                                                          |
-|               |                      |                 | -  Some formatting changes and handling of references updated                                                            |
-+---------------+----------------------+-----------------+--------------------------------------------------------------------------------------------------------------------------+
-
-
