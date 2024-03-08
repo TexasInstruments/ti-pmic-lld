@@ -131,7 +131,7 @@ static int32_t Pmic_getRegWriteProtectionStatus(Pmic_CoreHandle_t *pPmicCoreHand
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
         regLockStat = Pmic_getBitField(
-            regData, PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_SHIFT, PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_READ_MASK);
+            regData, PMIC_REGISTER_LOCK_STATUS_SHIFT, PMIC_REGISTER_LOCK_STATUS_READ_MASK);
     }
 
     if ((PMIC_ST_SUCCESS == pmicStatus) && (PMIC_REGISTER_STATUS_LOCK == regLockStat))
@@ -156,7 +156,7 @@ static int32_t Pmic_getRegWriteProtectionStatus(Pmic_CoreHandle_t *pPmicCoreHand
             {
                 if (((regAddr >= PMIC_BUCK1_CTRL_REGADDR) && (regAddr <= PMIC_BUCK4_PG_WIN_REGADDR)) ||
                     ((regAddr >= PMIC_VCCA_VMON_CTRL_REGADDR) && (regAddr <= PMIC_MISC_CTRL_REGADDR)) ||
-                    (regAddr == PMIC_VMON_CONF_REGADDR) || (regAddr == PMIC_STARTUP_CTRL_REGADDR))
+                    (regAddr == PMIC_LP8764X_VMON_CONF_REGADDR) || (regAddr == PMIC_STARTUP_CTRL_REGADDR))
                 {
                     pmicStatus = PMIC_ST_ERR_REG_LOCKED_WR_FAIL;
                 }
@@ -164,7 +164,7 @@ static int32_t Pmic_getRegWriteProtectionStatus(Pmic_CoreHandle_t *pPmicCoreHand
 
             if ((PMIC_ST_SUCCESS == pmicStatus) &&
                 (((regAddr >= PMIC_RECOV_CNT_REG_2_REGADDR) && (regAddr <= PMIC_USER_SPARE_REGS_REGADDR)) ||
-                 ((regAddr >= PMIC_SCRATCH_PAD_REG_1_REGADDR) && (regAddr <= PMIC_FSM_PFSM_DELAY_REG_4_REGADDR))))
+                 ((regAddr >= PMIC_SCRATCH_PAD_REG_1_REGADDR) && (regAddr <= PMIC_PFSM_DELAY_REG_4_REGADDR))))
             {
                 pmicStatus = PMIC_ST_ERR_REG_LOCKED_WR_FAIL;
             }

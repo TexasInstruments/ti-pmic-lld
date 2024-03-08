@@ -57,106 +57,106 @@ extern "C"
 /*!
  * \brief LDO_VMON interrupt mask register address
  */
-#define PMIC_MASK_LDO_VMON_REGADDR               (0x4CU)
+#define TPS6522X_MASK_LDO_VMON_REGADDR               (0x4CU)
 
 /*!
  * \brief BUCK interrupt mask register address
  */
-#define PMIC_MASK_BUCK_REGADDR                   (0x49U)
+#define TPS6522X_MASK_BUCK_REGADDR                   (0x49U)
 
-/*! PMIC INT_BUCK Register Bit Masks */
-#define PMIC_INT_BUCK_BUCK1_UVOV_INT_MASK        (0x01U)
-#define PMIC_INT_BUCK_BUCK2_UVOV_INT_MASK        (0x02U)
-#define PMIC_INT_BUCK_BUCK3_UVOV_INT_MASK        (0x04U)
-#define PMIC_INT_BUCK_BUCK4_UVOV_INT_MASK        (0x08U)
+/*! TPS6522X INT_BUCK Register Bit Masks */
+#define TPS6522X_BUCK1_UVOV_INT_MASK        (0x01U)
+#define TPS6522X_BUCK2_UVOV_INT_MASK        (0x02U)
+#define TPS6522X_BUCK3_UVOV_INT_MASK        (0x04U)
+#define TPS6522X_BUCK4_UVOV_INT_MASK        (0x08U)
 
-/*! PMIC INT_LDO_VMON Register Bit Masks */
-#define PMIC_INT_LDO_VMON_LDO1_UVOV_INT_MASK     (0x01U)
-#define PMIC_INT_LDO_VMON_LDO2_UVOV_INT_MASK     (0x02U)
-#define PMIC_INT_LDO_VMON_LDO3_UVOV_INT_MASK     (0x04U)
-#define PMIC_INT_LDO_VMON_VCCA_UVOV_INT_MASK     (0x10U)
-#define PMIC_INT_LDO_VMON_VMON1_UVOV_INT_MASK    (0x20U)
-#define PMIC_INT_LDO_VMON_VMON2_UVOV_INT_MASK    (0x40U)
+/*! TPS6522X INT_LDO_VMON Register Bit Masks */
+#define TPS6522X_LDO1_UVOV_INT_MASK     (0x01U)
+#define TPS6522X_LDO2_UVOV_INT_MASK     (0x02U)
+#define TPS6522X_LDO3_UVOV_INT_MASK     (0x04U)
+#define TPS6522X_VCCA_UVOV_INT_MASK     (0x10U)
+#define TPS6522X_VMON1_UVOV_INT_MASK    (0x20U)
+#define TPS6522X_VMON2_UVOV_INT_MASK    (0x40U)
 
-/*! PMIC INT_GPIO Register Bit Masks */
-#define PMIC_INT_GPIO_GPIO1_INT_MASK             (0x01U)
-#define PMIC_INT_GPIO_GPIO2_INT_MASK             (0x02U)
-#define PMIC_INT_GPIO_GPIO3_INT_MASK             (0x04U)
-#define PMIC_INT_GPIO_GPIO4_INT_MASK             (0x08U)
-#define PMIC_INT_GPIO_GPIO5_INT_MASK             (0x10U)
-#define PMIC_INT_GPIO_GPIO6_INT_MASK             (0x20U)
+/*! TPS6522X INT_GPIO Register Bit Masks */
+#define TPS6522X_GPIO1_INT_MASK             (0x01U)
+#define TPS6522X_GPIO2_INT_MASK             (0x02U)
+#define TPS6522X_GPIO3_INT_MASK             (0x04U)
+#define TPS6522X_GPIO4_INT_MASK             (0x08U)
+#define TPS6522X_GPIO5_INT_MASK             (0x10U)
+#define TPS6522X_GPIO6_INT_MASK             (0x20U)
 
-/*! PMIC INT_STARTUP Register Bit Masks */
-#define PMIC_INT_STARTUP_VSENSE_INT_MASK         (0x01U)
-#define PMIC_INT_STARTUP_PB_SHORT_INT_MASK       (0x04U)
+/*! TPS6522X INT_STARTUP Register Bit Masks */
+#define TPS6522X_VSENSE_INT_MASK         (0x01U)
+#define TPS6522X_PB_SHORT_INT_MASK       (0x04U)
 
-/*! PMIC INT_MISC Register Bit Masks */
-#define PMIC_INT_MISC_REG_UNLOCK_INT_MASK        (0x04U)
-#define PMIC_INT_MISC_PB_LONG_INT_MASK           (0x10U)
-#define PMIC_INT_MISC_PB_FALL_INT_MASK           (0x20U)
-#define PMIC_INT_MISC_PB_RISE_INT_MASK           (0x40U)
-#define PMIC_INT_MISC_ADC_CONV_READY_INT_MASK    (0x80U)
+/*! TPS6522X INT_MISC Register Bit Masks */
+#define TPS6522X_REG_UNLOCK_INT_MASK        (0x04U)
+#define TPS6522X_PB_LONG_INT_MASK           (0x10U)
+#define TPS6522X_PB_FALL_INT_MASK           (0x20U)
+#define TPS6522X_PB_RISE_INT_MASK           (0x40U)
+#define TPS6522X_ADC_CONV_READY_INT_MASK    (0x80U)
 
-/*! PMIC INT_FSM_ERR Register Bit Masks */
-#define PMIC_INT_FSM_ERR_I2C2_ERR_INT_MASK       (0x20U)
+/*! TPS6522X INT_FSM_ERR Register Bit Masks */
+#define TPS6522X_I2C2_ERR_INT_MASK          (0x20U)
 
-/*! PMIC_INT_MISC Register Bit Positions */
-#define PMIC_INT_MISC_ADC_CONV_READY_INT_SHIFT   (0x7U)
-#define PMIC_INT_MISC_PB_RISE_INT_SHIFT          (0x6U)
-#define PMIC_INT_MISC_PB_FALL_INT_SHIFT          (0x5U)
-#define PMIC_INT_MISC_PB_LONG_INT_SHIFT          (0x4U)
-#define PMIC_INT_MISC_REG_UNLOCK_INT_SHIFT       (0x2U)
+/*! TPS6522X INT_MISC Register Bit Positions */
+#define TPS6522X_ADC_CONV_READY_INT_SHIFT   (0x7U)
+#define TPS6522X_PB_RISE_INT_SHIFT          (0x6U)
+#define TPS6522X_PB_FALL_INT_SHIFT          (0x5U)
+#define TPS6522X_PB_LONG_INT_SHIFT          (0x4U)
+#define TPS6522X_REG_UNLOCK_INT_SHIFT       (0x2U)
 
-/*! PMIC_INT_STARTUP Register Bit Positions */
-#define PMIC_INT_STARTUP_PB_SHORT_INT_SHIFT      (0x2U)
-#define PMIC_INT_STARTUP_VSENSE_INT_SHIFT        (0x0U)
+/*! TPS6522X INT_STARTUP Register Bit Positions */
+#define TPS6522X_PB_SHORT_INT_SHIFT      (0x2U)
+#define TPS6522X_VSENSE_INT_SHIFT        (0x0U)
 
-/*! PMIC_MASK_MISC Register Bit Positions */
-#define PMIC_MASK_MISC_ADC_CONV_READY_MASK_SHIFT (0x7U)
-#define PMIC_MASK_MISC_PB_RISE_MASK_SHIFT        (0x6U)
-#define PMIC_MASK_MISC_PB_FALL_MASK_SHIFT        (0x5U)
-#define PMIC_MASK_MISC_PB_LONG_MASK_SHIFT        (0x4U)
-#define PMIC_MASK_MISC_REG_UNLOCK_MASK_SHIFT     (0x2U)
+/*! TPS6522X MASK_MISC Register Bit Positions */
+#define TPS6522X_ADC_CONV_READY_MASK_SHIFT (0x7U)
+#define TPS6522X_PB_RISE_MASK_SHIFT        (0x6U)
+#define TPS6522X_PB_FALL_MASK_SHIFT        (0x5U)
+#define TPS6522X_PB_LONG_MASK_SHIFT        (0x4U)
+#define TPS6522X_REG_UNLOCK_MASK_SHIFT     (0x2U)
 
-/*! PMIC_MASK_STARTUP Register Bit Positions */
-#define PMIC_MASK_STARTUP_PB_SHORT_MASK_SHIFT    (0x2U)
-#define PMIC_MASK_STARTUP_VSENSE_MASK_SHIFT      (0x0U)
+/*! TPS6522X MASK_STARTUP Register Bit Positions */
+#define TPS6522X_PB_SHORT_MASK_SHIFT    (0x2U)
+#define TPS6522X_VSENSE_MASK_SHIFT      (0x0U)
 
-/*! PMIC_INT_GPIO Register Bit Positions */
-#define PMIC_INT_GPIO_GPIO6_INT_SHIFT            (0x5U)
-#define PMIC_INT_GPIO_GPIO5_INT_SHIFT            (0x4U)
-#define PMIC_INT_GPIO_GPIO4_INT_SHIFT            (0x3U)
-#define PMIC_INT_GPIO_GPIO3_INT_SHIFT            (0x2U)
-#define PMIC_INT_GPIO_GPIO2_INT_SHIFT            (0x1U)
-#define PMIC_INT_GPIO_GPIO1_INT_SHIFT            (0x0U)
+/*! TPS6522X INT_GPIO Register Bit Positions */
+#define TPS6522X_GPIO6_INT_SHIFT            (0x5U)
+#define TPS6522X_GPIO5_INT_SHIFT            (0x4U)
+#define TPS6522X_GPIO4_INT_SHIFT            (0x3U)
+#define TPS6522X_GPIO3_INT_SHIFT            (0x2U)
+#define TPS6522X_GPIO2_INT_SHIFT            (0x1U)
+#define TPS6522X_GPIO1_INT_SHIFT            (0x0U)
 
-/*! PMIC_INT_LDO_VMON Register Bit Positions */
-#define PMIC_INT_LDO_VMON_VMON2_UVOV_INT_SHIFT   (0x6U)
-#define PMIC_INT_LDO_VMON_VMON1_UVOV_INT_SHIFT   (0x5U)
-#define PMIC_INT_LDO_VMON_VCCA_UVOV_INT_SHIFT    (0x4U)
-#define PMIC_INT_LDO_VMON_LDO3_UVOV_INT_SHIFT    (0x2U)
-#define PMIC_INT_LDO_VMON_LDO2_UVOV_INT_SHIFT    (0x1U)
-#define PMIC_INT_LDO_VMON_LDO1_UVOV_INT_SHIFT    (0x0U)
+/*! TPS6522X INT_LDO_VMON Register Bit Positions */
+#define TPS6522X_VMON2_UVOV_INT_SHIFT   (0x6U)
+#define TPS6522X_VMON1_UVOV_INT_SHIFT   (0x5U)
+#define TPS6522X_VCCA_UVOV_INT_SHIFT    (0x4U)
+#define TPS6522X_LDO3_UVOV_INT_SHIFT    (0x2U)
+#define TPS6522X_LDO2_UVOV_INT_SHIFT    (0x1U)
+#define TPS6522X_LDO1_UVOV_INT_SHIFT    (0x0U)
 
-/*! PMIC_MASK_LDO_VMON Register Bit Positions */
-#define PMIC_MASK_LDO_VMON_VMON2_UVOV_MASK_SHIFT (0x6U)
-#define PMIC_MASK_LDO_VMON_VMON1_UVOV_MASK_SHIFT (0x5U)
-#define PMIC_MASK_LDO_VMON_VCCA_UVOV_MASK_SHIFT  (0x4U)
-#define PMIC_MASK_LDO_VMON_LDO3_UVOV_MASK_SHIFT  (0x2U)
-#define PMIC_MASK_LDO_VMON_LDO2_UVOV_MASK_SHIFT  (0x1U)
-#define PMIC_MASK_LDO_VMON_LDO1_UVOV_MASK_SHIFT  (0x0U)
+/*! TPS6522X MASK_LDO_VMON Register Bit Positions */
+#define TPS6522X_VMON2_UVOV_MASK_SHIFT (0x6U)
+#define TPS6522X_VMON1_UVOV_MASK_SHIFT (0x5U)
+#define TPS6522X_VCCA_UVOV_MASK_SHIFT  (0x4U)
+#define TPS6522X_LDO3_UVOV_MASK_SHIFT  (0x2U)
+#define TPS6522X_LDO2_UVOV_MASK_SHIFT  (0x1U)
+#define TPS6522X_LDO1_UVOV_MASK_SHIFT  (0x0U)
 
-/*! PMIC_INT_BUCK Register Bit Positions */
-#define PMIC_INT_BUCK4_UVOV_INT_SHIFT            (0x3U)
-#define PMIC_INT_BUCK3_UVOV_INT_SHIFT            (0x2U)
-#define PMIC_INT_BUCK2_UVOV_INT_SHIFT            (0x1U)
-#define PMIC_INT_BUCK1_UVOV_INT_SHIFT            (0x0U)
+/*! TPS6522X INT_BUCK Register Bit Positions */
+#define TPS6522X_BUCK4_UVOV_INT_SHIFT            (0x3U)
+#define TPS6522X_BUCK3_UVOV_INT_SHIFT            (0x2U)
+#define TPS6522X_BUCK2_UVOV_INT_SHIFT            (0x1U)
+#define TPS6522X_BUCK1_UVOV_INT_SHIFT            (0x0U)
 
-/*! PMIC_MASK_BUCK Register Bit Positions */
-#define PMIC_MASK_BUCK4_UVOV_MASK_SHIFT          (0x3U)
-#define PMIC_MASK_BUCK3_UVOV_MASK_SHIFT          (0x2U)
-#define PMIC_MASK_BUCK2_UVOV_MASK_SHIFT          (0x1U)
-#define PMIC_MASK_BUCK1_UVOV_MASK_SHIFT          (0x0U)
+/*! TPS6522X MASK_BUCK Register Bit Positions */
+#define TPS6522X_BUCK4_UVOV_MASK_SHIFT          (0x3U)
+#define TPS6522X_BUCK3_UVOV_MASK_SHIFT          (0x2U)
+#define TPS6522X_BUCK2_UVOV_MASK_SHIFT          (0x1U)
+#define TPS6522X_BUCK1_UVOV_MASK_SHIFT          (0x0U)
 
 /* ========================================================================= */
 /*                          Structures and Enums                             */

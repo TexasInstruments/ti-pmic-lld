@@ -132,7 +132,7 @@ const tps6522xVccaVmonRegs_t gTps6522xVccaVmonRegisters[] =
  *  \return     Success code if PMIC handle and power resource references are valid, error code otherwise.
  *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
  */
-static int32_t tps6522xParamCheck_pPwrRsrcCfg(Pmic_CoreHandle_t *pPmicCoreHandle, tps6522xPwrRsrcCfg_t *pPwrRsrcCfg)
+static int32_t tps6522xParamCheck_pPwrRsrcCfg(const Pmic_CoreHandle_t *pPmicCoreHandle, const tps6522xPwrRsrcCfg_t *pPwrRsrcCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -149,14 +149,14 @@ static int32_t tps6522xParamCheck_pPwrRsrcCfg(Pmic_CoreHandle_t *pPmicCoreHandle
     }
 
     // TPS6522x power subsystem check
-    if ((status == PMIC_ST_SUCCESS) && ((pPmicCoreHandle->pPmic_SubSysInfo->buckEnable == false) ||
-                                        (pPmicCoreHandle->pPmic_SubSysInfo->ldoEnable == false)))
+    if ((status == PMIC_ST_SUCCESS) && ((pPmicCoreHandle->pPmic_SubSysInfo->buckEnable == (bool)false) ||
+                                        (pPmicCoreHandle->pPmic_SubSysInfo->ldoEnable == (bool)false)))
     {
         status = PMIC_ST_ERR_INV_SUBSYSTEM;
     }
 
     // Power Resource CFG validParam check
-    if ((status == PMIC_ST_SUCCESS) && (pPwrRsrcCfg->validParams == 0))
+    if ((status == PMIC_ST_SUCCESS) && (pPwrRsrcCfg->validParams == 0U))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -174,7 +174,7 @@ static int32_t tps6522xParamCheck_pPwrRsrcCfg(Pmic_CoreHandle_t *pPmicCoreHandle
  *  \return     Success code if PMIC handle and constant power resource CFG are valid, error code otherwise.
  *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
  */
-static int32_t tps6522xParamCheck_constPwrRsrcCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
+static int32_t tps6522xParamCheck_constPwrRsrcCfg(const Pmic_CoreHandle_t *pPmicCoreHandle,
                                                   const tps6522xPwrRsrcCfg_t pwrRsrcCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -192,14 +192,14 @@ static int32_t tps6522xParamCheck_constPwrRsrcCfg(Pmic_CoreHandle_t *pPmicCoreHa
     }
 
     // TPS6522x power subsystem check
-    if ((status == PMIC_ST_SUCCESS) && ((pPmicCoreHandle->pPmic_SubSysInfo->buckEnable == false) ||
-                                        (pPmicCoreHandle->pPmic_SubSysInfo->ldoEnable == false)))
+    if ((status == PMIC_ST_SUCCESS) && ((pPmicCoreHandle->pPmic_SubSysInfo->buckEnable == (bool)false) ||
+                                        (pPmicCoreHandle->pPmic_SubSysInfo->ldoEnable == (bool)false)))
     {
         status = PMIC_ST_ERR_INV_SUBSYSTEM;
     }
 
     // Power Resource CFG validParam check
-    if ((status == PMIC_ST_SUCCESS) && (pwrRsrcCfg.validParams == 0))
+    if ((status == PMIC_ST_SUCCESS) && (pwrRsrcCfg.validParams == 0U))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -223,22 +223,21 @@ static int32_t tps6522xBuckVoltageWithinRangeCheck(const tps6522xBuckCfg_t *pBuc
     switch (buckNum)
     {
         case TPS6522X_REGULATOR_BUCK1:
-            if ((pBuckCfg[buckNum].buckVoltage_mv < TPS6522X_BUCK1_VOLTAGE_MIN_500_MV) ||
-                (pBuckCfg[buckNum].buckVoltage_mv > TPS6522X_BUCK1_VOLTAGE_MAX_3300_MV))
+            if ((pBuckCfg[buckNum].buckVoltage_mv < 500U) || (pBuckCfg[buckNum].buckVoltage_mv > 3300U))
             {
                 status = PMIC_ST_ERR_INV_VOLTAGE;
             }
-
             break;
         case TPS6522X_REGULATOR_BUCK2:
         case TPS6522X_REGULATOR_BUCK3:
         case TPS6522X_REGULATOR_BUCK4:
-            if ((pBuckCfg[buckNum].buckVoltage_mv < TPS6522X_BUCK2_3_4_VOLTAGE_MIN_500_MV) ||
-                (pBuckCfg[buckNum].buckVoltage_mv > TPS6522X_BUCK2_3_4_VOLTAGE_MAX_3300_MV))
+            if ((pBuckCfg[buckNum].buckVoltage_mv < 500U) || (pBuckCfg[buckNum].buckVoltage_mv > 3300U))
             {
                 status = PMIC_ST_ERR_INV_VOLTAGE;
             }
-
+            break;
+        // Invalid Buck number
+        default:
             break;
     }
 
@@ -261,21 +260,20 @@ static int32_t tps6522xLdoVoltageWithinRangeCheck(const tps6522xLdoCfg_t *pLdoCf
     switch (ldoNum)
     {
         case TPS6522X_REGULATOR_LDO1:
-            if ((pLdoCfg[ldoNum].ldoVoltage_mv < TPS6522X_LDO1_VOLTAGE_MIN_1200_MV) ||
-                (pLdoCfg[ldoNum].ldoVoltage_mv > TPS6522X_LDO1_VOLTAGE_MAX_3300_MV))
+            if ((pLdoCfg[ldoNum].ldoVoltage_mv < 1200U) || (pLdoCfg[ldoNum].ldoVoltage_mv > 3300U))
             {
                 status = PMIC_ST_ERR_INV_VOLTAGE;
             }
-
             break;
         case TPS6522X_REGULATOR_LDO2:
         case TPS6522X_REGULATOR_LDO3:
-            if ((pLdoCfg[ldoNum].ldoVoltage_mv < TPS6522X_LDO2_3_VOLTAGE_MIN_600_MV) ||
-                (pLdoCfg[ldoNum].ldoVoltage_mv > TPS6522X_LDO2_3_VOLTAGE_MAX_3400_MV))
+            if ((pLdoCfg[ldoNum].ldoVoltage_mv < 600U) || (pLdoCfg[ldoNum].ldoVoltage_mv > 3400U))
             {
                 status = PMIC_ST_ERR_INV_VOLTAGE;
             }
-
+            break;
+        // Invalid LDO number
+        default:
             break;
     }
 
@@ -298,20 +296,19 @@ static int32_t tps6522xVmonVoltageWithinRangeCheck(const tps6522xVccaVmonCfg_t v
     switch (vmonNum)
     {
         case TPS6522X_VOLTAGE_MONITOR_VMON1:
-            if ((vccaVmonCfg.vmon1PgLevel_mv < TPS6522X_VMON1_VOLTAGE_MIN_500_MV) ||
-                (vccaVmonCfg.vmon1PgLevel_mv > TPS6522X_VMON1_VOLTAGE_MAX_3340_MV))
+            if ((vccaVmonCfg.vmon1PgLevel_mv < 500U) || (vccaVmonCfg.vmon1PgLevel_mv > 3340U))
             {
                 status = PMIC_ST_ERR_INV_VOLTAGE;
             }
-
             break;
         case TPS6522X_VOLTAGE_MONITOR_VMON2:
-            if ((vccaVmonCfg.vmon2PgLevel_mv < TPS6522X_VMON2_VOLTAGE_MIN_500_MV) ||
-                (vccaVmonCfg.vmon2PgLevel_mv > TPS6522X_VMON2_VOLTAGE_MAX_3300_MV))
+            if ((vccaVmonCfg.vmon2PgLevel_mv < 500U) || (vccaVmonCfg.vmon2PgLevel_mv > 3300U))
             {
                 status = PMIC_ST_ERR_INV_VOLTAGE;
             }
-
+            break;
+        // Invalid VMON number
+        default:
             break;
     }
 
@@ -329,9 +326,9 @@ static int32_t tps6522xVmonVoltageWithinRangeCheck(const tps6522xVccaVmonCfg_t v
  */
 static int32_t tps6522xVoltageWithinRangeCheck(const tps6522xPwrRsrcCfg_t pwrRsrcCfg)
 {
-    uint8_t  iter = 0;
-    uint16_t validParam = 0;
-    int32_t  status = PMIC_ST_SUCCESS;
+    uint8_t iter = 0;
+    uint8_t validParam = 0;
+    int32_t status = PMIC_ST_SUCCESS;
 
     // For each BUCK...
     for (iter = 0; iter < TPS6522X_MAX_BUCK_NUM; iter++)
@@ -385,7 +382,7 @@ static int32_t tps6522xVoltageWithinRangeCheck(const tps6522xPwrRsrcCfg_t pwrRsr
     if (status == PMIC_ST_SUCCESS)
     {
         // For each VMONx...
-        for (iter = 0; iter < TPS6522X_MAX_LDO_NUM - 1; iter++)
+        for (iter = 0; iter < (TPS6522X_MAX_LDO_NUM - 1U); iter++)
         {
             // Calculate VMONx validParam
             validParam = TPS6522X_VMON1_VALID + iter;
@@ -429,24 +426,24 @@ static void tps6522xGetBuckCtrlRegBitFields(tps6522xBuckCfg_t *pBuckCfg, const u
     if (pmic_validParamCheck(pBuckCfg->validParams, TPS6522X_BUCK_PLDN_VALID))
     {
         pBuckCfg->buckPldn = Pmic_getBitField(
-            buckCtrlRegData, TPS6522X_BUCK_CTRL_PLDN_SHIFT, TPS6522X_BUCK_CTRL_PLDN_MASK);
+            buckCtrlRegData, TPS6522X_BUCK_PLDN_SHIFT, TPS6522X_BUCK_PLDN_MASK);
     }
     if (pmic_validParamCheck(pBuckCfg->validParams, TPS6522X_BUCK_VMON_EN_VALID))
     {
         pBuckCfg->buckVmonEn = Pmic_getBitField(
-            buckCtrlRegData, TPS6522X_BUCK_CTRL_VMON_EN_SHIFT, TPS6522X_BUCK_CTRL_VMON_EN_MASK);
+            buckCtrlRegData, TPS6522X_BUCK_VMON_EN_SHIFT, TPS6522X_BUCK_VMON_EN_MASK);
     }
     if (pmic_validParamCheck(pBuckCfg->validParams, TPS6522X_BUCK_PWM_OPTION_VALID))
     {
         pBuckCfg->buckPwmOption =
             Pmic_getBitField(buckCtrlRegData,
-                                                                TPS6522X_BUCK_CTRL_PWM_OPTION_SHIFT,
-                                                                TPS6522X_BUCK_CTRL_PWM_OPTION_MASK);
+                                                                TPS6522X_BUCK_PWM_OPTION_SHIFT,
+                                                                TPS6522X_BUCK_PWM_OPTION_MASK);
     }
     if (pmic_validParamCheck(pBuckCfg->validParams, TPS6522X_BUCK_EN_VALID))
     {
         pBuckCfg->buckEn = Pmic_getBitField(
-            buckCtrlRegData, TPS6522X_BUCK_CTRL_EN_SHIFT, TPS6522X_BUCK_CTRL_EN_MASK);
+            buckCtrlRegData, TPS6522X_BUCK_EN_SHIFT, TPS6522X_BUCK_EN_MASK);
     }
 }
 
@@ -462,8 +459,8 @@ static void tps6522xGetBuckConfRegBitFields(tps6522xBuckCfg_t *pBuckCfg, const u
     if (pmic_validParamCheck(pBuckCfg->validParams, TPS6522X_BUCK_SLEW_RATE_VALID))
     {
         pBuckCfg->buckSlewRate = Pmic_getBitField(buckConfRegData, 
-                                                  TPS6522X_BUCK_CONF_SLEW_RATE_SHIFT, 
-                                                  TPS6522X_BUCK_CONF_SLEW_RATE_MASK);
+                                                  TPS6522X_BUCK_SLEW_RATE_SHIFT, 
+                                                  TPS6522X_BUCK_SLEW_RATE_MASK);
     }
 }
 
@@ -483,57 +480,69 @@ static void tps6522xBuckConvertVsetVal2Voltage(uint16_t *pBuckVoltage_mv,
     switch (buckNum)
     {
         case TPS6522X_REGULATOR_BUCK1:
-            if ((buckVoltage_vset >= TPS6522X_BUCK1_VOLT_RANGE_1_MIN_VSET) &&
-                (buckVoltage_vset <= TPS6522X_BUCK1_VOLT_RANGE_1_MAX_VSET))
+            // BUCK1 voltage range 1: 500 mV to 580 mV in 20 mV steps (VSET: 0xA to 0xE)
+            if ((buckVoltage_vset >= 0xAU) && (buckVoltage_vset <= 0xEU))
             {
-                baseVoltage_mv = TPS6522X_BUCK1_VOLT_RANGE_1_MIN_VOLT;
-                baseVoltage_vset = TPS6522X_BUCK1_VOLT_RANGE_1_MIN_VSET;
-                voltageStep = TPS6522X_VOLTAGE_STEP_20_MV;
+                baseVoltage_mv = 500U;
+                baseVoltage_vset = 0xAU;
+                voltageStep = 20U;
             }
-            else if ((buckVoltage_vset >= TPS6522X_BUCK1_VOLT_RANGE_2_MIN_VSET) &&
-                     (buckVoltage_vset <= TPS6522X_BUCK1_VOLT_RANGE_2_MAX_VSET))
+            // BUCK1 voltage range 2: 600 mV to 1095 mV in 5 mV steps (VSET: 0xF to 0x72)
+            else if ((buckVoltage_vset >= 0xFU) && (buckVoltage_vset <= 0x72U))
             {
-                baseVoltage_mv = TPS6522X_BUCK1_VOLT_RANGE_2_MIN_VOLT;
-                baseVoltage_vset = TPS6522X_BUCK1_VOLT_RANGE_2_MIN_VSET;
-                voltageStep = TPS6522X_VOLTAGE_STEP_5_MV;
+                baseVoltage_mv = 600U;
+                baseVoltage_vset = 0xFU;
+                voltageStep = 5U;
             }
-            else if ((buckVoltage_vset >= TPS6522X_BUCK1_VOLT_RANGE_3_MIN_VSET) &&
-                     (buckVoltage_vset <= TPS6522X_BUCK1_VOLT_RANGE_3_MAX_VSET))
+            // BUCK1 voltage range 3: 1100 mV to 1650 mV in 10 mV steps (VSET: 0x73 to 0xAA)
+            else if ((buckVoltage_vset >= 0x73U) && (buckVoltage_vset <= 0xAAU))
             {
-                baseVoltage_mv = TPS6522X_BUCK1_VOLT_RANGE_3_MIN_VOLT;
-                baseVoltage_vset = TPS6522X_BUCK1_VOLT_RANGE_3_MIN_VSET;
-                voltageStep = TPS6522X_VOLTAGE_STEP_10_MV;
+                baseVoltage_mv = 1100U;
+                baseVoltage_vset = 0x73U;
+                voltageStep = 10U;
             }
-            else if ((buckVoltage_vset >= TPS6522X_BUCK1_VOLT_RANGE_4_MIN_VSET) &&
-                     (buckVoltage_vset <= TPS6522X_BUCK1_VOLT_RANGE_4_MAX_VSET))
+            // BUCK1 voltage range 4: 1660 mV to 3300 mV in 20 mV steps (VSET: 0xAB to 0xFD)
+            else if ((buckVoltage_vset >= 0xABU) && (buckVoltage_vset <= 0xFDU))
             {
-                baseVoltage_mv = TPS6522X_BUCK1_VOLT_RANGE_4_MIN_VOLT;
-                baseVoltage_vset = TPS6522X_BUCK1_VOLT_RANGE_4_MIN_VSET;
-                voltageStep = TPS6522X_VOLTAGE_STEP_20_MV;
+                baseVoltage_mv = 1660U;
+                baseVoltage_vset = 0xABU;
+                voltageStep = 20U;
+            }
+            else
+            {
+                /* Invalid VSET value */
             }
 
             break;
         case TPS6522X_REGULATOR_BUCK2:
         case TPS6522X_REGULATOR_BUCK3:
         case TPS6522X_REGULATOR_BUCK4:
-            if (buckVoltage_vset <= TPS6522X_BUCK2_3_4_VOLT_RANGE_1_MAX_VSET)
+            // BUCK2, BUCK3, BUCK4 voltage range 1: 500 mV to 1150 mV in 25 mV steps (VSET: 0x0 to 0x1A)
+            if (buckVoltage_vset <= 0x1AU)
             {
-                baseVoltage_mv = TPS6522X_BUCK2_3_4_VOLT_RANGE_1_MIN_VOLT;
-                baseVoltage_vset = TPS6522X_BUCK2_3_4_VOLT_RANGE_1_MIN_VSET;
-                voltageStep = TPS6522X_VOLTAGE_STEP_25_MV;
+                baseVoltage_mv = 500U;
+                baseVoltage_vset = 0x0U;
+                voltageStep = 25U;
             }
-            else if ((buckVoltage_vset >= TPS6522X_BUCK2_3_4_VOLT_RANGE_2_MIN_VSET) &&
-                     (buckVoltage_vset <= TPS6522X_BUCK2_3_4_VOLT_RANGE_2_MAX_VSET))
+            // BUCK2, BUCK3, BUCK4 voltage range 2: 1200 mV to 3300 mV in 50 mV steps (VSET: 0x1B to 0x45)
+            else if ((buckVoltage_vset >= 0x1BU) && (buckVoltage_vset <= 0x45U))
             {
-                baseVoltage_mv = TPS6522X_BUCK2_3_4_VOLT_RANGE_2_MIN_VOLT;
-                baseVoltage_vset = TPS6522X_BUCK2_3_4_VOLT_RANGE_2_MIN_VSET;
-                voltageStep = TPS6522X_VOLTAGE_STEP_50_MV;
+                baseVoltage_mv = 1200U;
+                baseVoltage_vset = 0x1BU;
+                voltageStep = 50U;
+            }
+            else 
+            {
+                /* Invalid VSET value */ 
             }
 
             break;
+        // Invalid Buck number
+        default:
+            break;
     }
 
-    if ((baseVoltage_mv != 0) && (voltageStep != 0))
+    if ((baseVoltage_mv != 0U) && (voltageStep != 0U))
     {
         *pBuckVoltage_mv = baseVoltage_mv + (voltageStep * (buckVoltage_vset - baseVoltage_vset));
     }
@@ -572,8 +581,8 @@ static void tps6522xGetBuckPgWindowRegBitFields(tps6522xBuckCfg_t *pBuckCfg, con
     {
         pBuckCfg->buckVmonThr =
             Pmic_getBitField(buckPgWindowRegData, 
-                                      TPS6522X_BUCK_PG_WINDOW_VMON_THR_SHIFT,
-                                      TPS6522X_BUCK_PG_WINDOW_VMON_THR_MASK);
+                                      TPS6522X_BUCK_VMON_THR_SHIFT,
+                                      TPS6522X_BUCK_VMON_THR_MASK);
     }
 }
 
@@ -596,30 +605,33 @@ static void Pmic_PowerTps6522xGetRailSel1RegBitFields(tps6522xBuckCfg_t *pBuckCf
             case TPS6522X_REGULATOR_BUCK1:
                 pBuckCfg->buckRailGrpSel = Pmic_getBitField(
                     buckRailSelRegData,
-                    TPS6522X_RAIL_SEL_1_BUCK1_GRP_SEL_SHIFT,
-                    TPS6522X_RAIL_SEL_1_BUCK1_GRP_SEL_MASK);
+                    TPS6522X_BUCK1_GRP_SEL_SHIFT,
+                    TPS6522X_BUCK1_GRP_SEL_MASK);
 
                 break;
             case TPS6522X_REGULATOR_BUCK2:
                 pBuckCfg->buckRailGrpSel = Pmic_getBitField(
                     buckRailSelRegData,
-                    TPS6522X_RAIL_SEL_1_BUCK2_GRP_SEL_SHIFT,
-                    TPS6522X_RAIL_SEL_1_BUCK2_GRP_SEL_MASK);
+                    TPS6522X_BUCK2_GRP_SEL_SHIFT,
+                    TPS6522X_BUCK2_GRP_SEL_MASK);
 
                 break;
             case TPS6522X_REGULATOR_BUCK3:
                 pBuckCfg->buckRailGrpSel = Pmic_getBitField(
                     buckRailSelRegData,
-                    TPS6522X_RAIL_SEL_1_BUCK3_GRP_SEL_SHIFT,
-                    TPS6522X_RAIL_SEL_1_BUCK3_GRP_SEL_MASK);
+                    TPS6522X_BUCK3_GRP_SEL_SHIFT,
+                    TPS6522X_BUCK3_GRP_SEL_MASK);
 
                 break;
             case TPS6522X_REGULATOR_BUCK4:
                 pBuckCfg->buckRailGrpSel = Pmic_getBitField(
                     buckRailSelRegData,
-                    TPS6522X_RAIL_SEL_1_BUCK4_GRP_SEL_SHIFT,
-                    TPS6522X_RAIL_SEL_1_BUCK4_GRP_SEL_MASK);
+                    TPS6522X_BUCK4_GRP_SEL_SHIFT,
+                    TPS6522X_BUCK4_GRP_SEL_MASK);
 
+                break;
+            // Invalid Buck number
+            default:
                 break;
         }
     }
@@ -639,7 +651,7 @@ int32_t tps6522xGetBuckCfg(Pmic_CoreHandle_t *pPmicCoreHandle, tps6522xBuckCfg_t
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
-    if ((status == PMIC_ST_SUCCESS) && (pBuckCfg->validParams == 0))
+    if ((status == PMIC_ST_SUCCESS) && (pBuckCfg->validParams == 0U))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -712,17 +724,17 @@ static void tps6522xGetLdoCtrlRegBitFields(tps6522xLdoCfg_t *pLdoCfg, const uint
     if (pmic_validParamCheck(pLdoCfg->validParams, TPS6522X_LDO_DISCHARGE_EN_VALID))
     {
         pLdoCfg->ldoDischargeEn = Pmic_getBitField(
-                ldoCtrlRegData, TPS6522X_LDO_CTRL_DISCHARGE_EN_SHIFT, TPS6522X_LDO_CTRL_DISCHARGE_EN_MASK);
+                ldoCtrlRegData, TPS6522X_LDO_DISCHARGE_EN_SHIFT, TPS6522X_LDO_DISCHARGE_EN_MASK);
     }
     if (pmic_validParamCheck(pLdoCfg->validParams, TPS6522X_LDO_VMON_EN_VALID))
     {
         pLdoCfg->ldoVmonEn = Pmic_getBitField(
-            ldoCtrlRegData, TPS6522X_LDO_CTRL_VMON_EN_SHIFT, TPS6522X_LDO_CTRL_VMON_EN_MASK);
+            ldoCtrlRegData, TPS6522X_LDO_VMON_EN_SHIFT, TPS6522X_LDO_VMON_EN_MASK);
     }
     if (pmic_validParamCheck(pLdoCfg->validParams, TPS6522X_LDO_EN_VALID))
     {
         pLdoCfg->ldoEn = Pmic_getBitField(
-            ldoCtrlRegData, TPS6522X_LDO_CTRL_EN_SHIFT, TPS6522X_LDO_CTRL_EN_MASK);
+            ldoCtrlRegData, TPS6522X_LDO_EN_SHIFT, TPS6522X_LDO_EN_MASK);
     }
 }
 
@@ -742,48 +754,61 @@ static void tps6522xLdoConvertVsetVal2Voltage(uint16_t *pLdoVoltage_mv,
     switch (ldoNum)
     {
         case TPS6522X_REGULATOR_LDO1:
-            if (ldoVoltage_vset <= TPS6522X_LDO1_VOLT_RANGE_1_MAX_VSET)
+            // LDO1 voltage range 1: 1200 mV to 1200 mV in 0 mV steps (VSET: 0x0 to 0xC)
+            if (ldoVoltage_vset <= 0xCU)
             {
-                baseVoltage_mv = TPS6522X_LDO1_VOLT_RANGE_1_MIN_VOLT;
-                baseVoltage_vset = TPS6522X_LDO1_VOLT_RANGE_1_MIN_VSET;
-                voltageStep = TPS6522X_VOLTAGE_STEP_0_MV;
+                baseVoltage_mv = 1200U;
+                baseVoltage_vset = 0x0U;
+                voltageStep = 0U;
             }
-            else if ((ldoVoltage_vset >= TPS6522X_LDO1_VOLT_RANGE_2_MIN_VSET) &&
-                     (ldoVoltage_vset <= TPS6522X_LDO1_VOLT_RANGE_2_MAX_VSET))
+            // LDO1 voltage range 2: 1250 mV to 3250 mV in 50 mV steps (VSET: 0xD to 0x35)
+            else if ((ldoVoltage_vset >= 0xDU) && (ldoVoltage_vset <= 0x35U))
             {
-                baseVoltage_mv = TPS6522X_LDO1_VOLT_RANGE_2_MIN_VOLT;
-                baseVoltage_vset = TPS6522X_LDO1_VOLT_RANGE_2_MIN_VSET;
-                voltageStep = TPS6522X_VOLTAGE_STEP_50_MV;
+                baseVoltage_mv = 1250U;
+                baseVoltage_vset = 0xDU;
+                voltageStep = 50U;
             }
-            else if ((ldoVoltage_vset >= TPS6522X_LDO1_VOLT_RANGE_3_MIN_VSET) &&
-                     (ldoVoltage_vset <= TPS6522X_LDO1_VOLT_RANGE_3_MAX_VSET))
+            // LDO1 voltage range 3: 3300 mV to 3300 mV in 0 mV steps (VSET: 0x36 to 0x3F)
+            else if ((ldoVoltage_vset >= 0x36U) && (ldoVoltage_vset <= 0x3FU))
             {
-                baseVoltage_mv = TPS6522X_LDO1_VOLT_RANGE_3_MIN_VOLT;
-                baseVoltage_vset = TPS6522X_LDO1_VOLT_RANGE_3_MIN_VSET;
-                voltageStep = TPS6522X_VOLTAGE_STEP_0_MV;
+                baseVoltage_mv = 3300U;
+                baseVoltage_vset = 0x36U;
+                voltageStep = 0U;
+            }
+            else 
+            {
+                /* Invalid VSET value */
             }
 
             break;
         case TPS6522X_REGULATOR_LDO2:
         case TPS6522X_REGULATOR_LDO3:
-            if (ldoVoltage_vset <= TPS6522X_LDO2_3_VOLT_RANGE_1_MAX_VSET)
+            // LDO2 and LDO3 voltage range 1: 600 mV to 3350 mV in 50 mV steps (VSET: 0x0 to 0x37)
+            if (ldoVoltage_vset <= 0x37U)
             {
-                baseVoltage_mv = TPS6522X_LDO2_3_VOLT_RANGE_1_MIN_VOLT;
-                baseVoltage_vset = TPS6522X_LDO2_3_VOLT_RANGE_1_MIN_VSET;
-                voltageStep = TPS6522X_VOLTAGE_STEP_50_MV;
+                baseVoltage_mv = 600U;
+                baseVoltage_vset = 0x0U;
+                voltageStep = 50U;
             }
-            else if ((ldoVoltage_vset >= TPS6522X_LDO2_3_VOLT_RANGE_2_MIN_VSET) &&
-                     (ldoVoltage_vset <= TPS6522X_LDO2_3_VOLT_RANGE_2_MAX_VSET))
+            // LDO2 and LDO3 voltage range 2: 3400 mV to 3400 mV in 0 mV steps (VSET: 0x38 to 0x3F)
+            else if ((ldoVoltage_vset >= 0x38U) && (ldoVoltage_vset <= 0x3FU))
             {
-                baseVoltage_mv = TPS6522X_LDO2_3_VOLT_RANGE_2_MIN_VOLT;
-                baseVoltage_vset = TPS6522X_LDO2_3_VOLT_RANGE_2_MIN_VSET;
-                voltageStep = TPS6522X_VOLTAGE_STEP_0_MV;
+                baseVoltage_mv = 3400U;
+                baseVoltage_vset = 0x38U;
+                voltageStep = 0U;
+            }
+            else
+            {
+                /* Invalid VSET value */
             }
 
             break;
+        // Invalid LDO number
+        default:
+            break;
     }
 
-    if (baseVoltage_mv != 0)
+    if (baseVoltage_mv != 0U)
     {
         *pLdoVoltage_mv = baseVoltage_mv + (voltageStep * (ldoVoltage_vset - baseVoltage_vset));
     }
@@ -806,12 +831,12 @@ static void tps6522xGetLdoVoutRegBitFields(tps6522xLdoCfg_t *pLdoCfg,
     if (pmic_validParamCheck(pLdoCfg->validParams, TPS6522X_LDO_MODE_VALID))
     {
         pLdoCfg->ldoMode = Pmic_getBitField(
-            ldoVoutRegData, TPS6522X_LDO_VOUT_LDO_MODE_SHIFT, TPS6522X_LDO_VOUT_LDO_MODE_MASK);
+            ldoVoutRegData, TPS6522X_LDO_MODE_SHIFT, TPS6522X_LDO_MODE_MASK);
     }
     if (pmic_validParamCheck(pLdoCfg->validParams, TPS6522X_LDO_VOLTAGE_MV_VALID))
     {
         ldoVoltage_vset = Pmic_getBitField(
-            ldoVoutRegData, TPS6522X_LDO_VOUT_LDO_VSET_SHIFT, TPS6522X_LDO_VOUT_LDO_VSET_MASK);
+            ldoVoutRegData, TPS6522X_LDO_VSET_SHIFT, TPS6522X_LDO_VSET_MASK);
 
         tps6522xLdoConvertVsetVal2Voltage(&(pLdoCfg->ldoVoltage_mv), ldoVoltage_vset, ldoNum);
     }
@@ -830,7 +855,7 @@ static void tps6522xGetLdoPgWindowRegBitFields(tps6522xLdoCfg_t *pLdoCfg, const 
     if (pmic_validParamCheck(pLdoCfg->validParams, TPS6522X_LDO_VMON_THR_VALID))
     {
         pLdoCfg->ldoVmonThr = Pmic_getBitField(
-            ldoPgWindowRegData, TPS6522X_LDO_PG_WINDOW_LDO_VMON_THR_SHIFT, TPS6522X_LDO_PG_WINDOW_LDO_VMON_THR_MASK);
+            ldoPgWindowRegData, TPS6522X_LDO_VMON_THR_SHIFT, TPS6522X_LDO_VMON_THR_MASK);
     }
 }
 
@@ -852,19 +877,19 @@ static void tps6522xGetRailSel2RegBitFields(tps6522xLdoCfg_t *pLdoCfg,
         {
             case TPS6522X_REGULATOR_LDO1:
                 pLdoCfg->ldoRailGrpSel = Pmic_getBitField(
-                    ldoRailSelRegData, TPS6522X_RAIL_SEL_2_LDO1_GRP_SEL_SHIFT, TPS6522X_RAIL_SEL_2_LDO1_GRP_SEL_MASK);
-
+                    ldoRailSelRegData, TPS6522X_LDO1_GRP_SEL_SHIFT, TPS6522X_LDO1_GRP_SEL_MASK);
                 break;
             case TPS6522X_REGULATOR_LDO2:
                 pLdoCfg->ldoRailGrpSel = Pmic_getBitField(
-                    ldoRailSelRegData, TPS6522X_RAIL_SEL_2_LDO2_GRP_SEL_SHIFT, TPS6522X_RAIL_SEL_2_LDO2_GRP_SEL_MASK);
-
+                    ldoRailSelRegData, TPS6522X_LDO2_GRP_SEL_SHIFT, TPS6522X_LDO2_GRP_SEL_MASK);
                 break;
             case TPS6522X_REGULATOR_LDO3:
                 pLdoCfg->ldoRailGrpSel =
                     Pmic_getBitField(
-                        ldoRailSelRegData, TPS6522X_RAIL_SEL_2_LDO3_GRP_SEL_SHIFT, TPS6522X_RAIL_SEL_2_LDO3_GRP_SEL_MASK);
-
+                        ldoRailSelRegData, TPS6522X_LDO3_GRP_SEL_SHIFT, TPS6522X_LDO3_GRP_SEL_MASK);
+                break;
+            // Invalid LDO number
+            default: 
                 break;
         }
     }
@@ -883,7 +908,7 @@ int32_t tps6522xGetLdoCfg(Pmic_CoreHandle_t *pPmicCoreHandle, tps6522xLdoCfg_t *
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
-    if ((status == PMIC_ST_SUCCESS) && (pLdoCfg->validParams == 0))
+    if ((status == PMIC_ST_SUCCESS) && (pLdoCfg->validParams == 0U))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -947,32 +972,36 @@ static void tps6522xGetVccaVmonCtrlBitFields(tps6522xVccaVmonCfg_t *pVccaVmonCfg
                                              uint8_t vccaVmonCtrlRegData,
                                              const uint8_t vmonNum)
 {
+    if (pmic_validParamCheck(pVccaVmonCfg->validParams, TPS6522X_VMON_DEGLITCH_SEL_VALID))
+    {
+        pVccaVmonCfg->vmonDeglitchSel =
+            Pmic_getBitField(
+                vccaVmonCtrlRegData, TPS6522X_VCCA_VMON_DEGL_SEL_SHIFT, TPS6522X_VCCA_VMON_DEGL_SEL_MASK);
+    }
+
     if ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON1) &&
         pmic_validParamCheck(pVccaVmonCfg->validParams, TPS6522X_VMON1_EN_VALID))
     {
         pVccaVmonCfg->vmon1En = Pmic_getBitField(
-            vccaVmonCtrlRegData, TPS6522X_VCCA_VMON_CTRL_VMON1_EN_SHIFT, TPS6522X_VCCA_VMON_CTRL_VMON1_EN_MASK);
+            vccaVmonCtrlRegData, TPS6522X_VMON1_EN_SHIFT, TPS6522X_VMON1_EN_MASK);
     }
     else if ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON2) &&
              pmic_validParamCheck(pVccaVmonCfg->validParams, TPS6522X_VMON2_EN_VALID))
     {
         pVccaVmonCfg->vmon2En =
             Pmic_getBitField(
-                vccaVmonCtrlRegData, TPS6522X_VCCA_VMON_CTRL_VMON2_EN_SHIFT, TPS6522X_VCCA_VMON_CTRL_VMON2_EN_MASK);
+                vccaVmonCtrlRegData, TPS6522X_VMON2_EN_SHIFT, TPS6522X_VMON2_EN_MASK);
     }
     else if ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VCCA_VMON) &&
              pmic_validParamCheck(pVccaVmonCfg->validParams, TPS6522X_VCCA_VMON_EN_VALID))
     {
         pVccaVmonCfg->vccaVmonEn =
             Pmic_getBitField(
-                vccaVmonCtrlRegData, TPS6522X_VCCA_VMON_CTRL_VCCA_VMON_EN_SHIFT, TPS6522X_VCCA_VMON_CTRL_VCCA_VMON_EN_MASK);
+                vccaVmonCtrlRegData, TPS6522X_VCCA_VMON_EN_SHIFT, TPS6522X_VCCA_VMON_EN_MASK);
     }
-
-    if (pmic_validParamCheck(pVccaVmonCfg->validParams, TPS6522X_VMON_DEGLITCH_SEL_VALID))
+    else
     {
-        pVccaVmonCfg->vmonDeglitchSel =
-            Pmic_getBitField(
-                vccaVmonCtrlRegData, TPS6522X_VCCA_VMON_CTRL_DEGLITCH_SEL_SHIFT, TPS6522X_VCCA_VMON_CTRL_DEGLITCH_SEL_MASK);
+        /* Invalid VMON number or validParam is not set */
     }
 }
 
@@ -983,17 +1012,18 @@ static void tps6522xGetVccaVmonCtrlBitFields(tps6522xVccaVmonCfg_t *pVccaVmonCfg
  *  \param      pVccaVmonPwrRsrcCfg     [IN/OUT]    Pointer to VCCA/VMON power resource configuration struct
  *  \param      vccaPgWindowRegData     [IN]        VCCA_PG_WINDOW register data
  */
-static tps6522xGetVccaPgWindowBitFields(tps6522xVccaVmonCfg_t *pVccaVmonPwrRsrcCfg, uint8_t vccaPgWindowRegData)
+static void tps6522xGetVccaPgWindowBitFields(tps6522xVccaVmonCfg_t *pVccaVmonPwrRsrcCfg, uint8_t vccaPgWindowRegData)
 {
     if (pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, TPS6522X_VCCA_PG_LEVEL_VALID))
     {
         pVccaVmonPwrRsrcCfg->vccaPgLevel = Pmic_getBitField(
-            vccaPgWindowRegData, TPS6522X_VCCA_PG_WINDOW_VCCA_PG_SET_SHIFT, TPS6522X_VCCA_PG_WINDOW_VCCA_PG_SET_MASK);
+            vccaPgWindowRegData, TPS6522X_VCCA_PG_SET_SHIFT, TPS6522X_VCCA_PG_SET_MASK);
     }
+
     if (pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, TPS6522X_VCCA_VMON_THR_VALID))
     {
         pVccaVmonPwrRsrcCfg->vccaVmonThr = Pmic_getBitField(
-            vccaPgWindowRegData, TPS6522X_VCCA_PG_WINDOW_VCCA_VMON_THR_SHIFT, TPS6522X_VCCA_PG_WINDOW_VCCA_VMON_THR_MASK);
+            vccaPgWindowRegData, TPS6522X_VCCA_VMON_THR_SHIFT, TPS6522X_VCCA_VMON_THR_MASK);
     }
 }
 
@@ -1006,21 +1036,25 @@ static tps6522xGetVccaPgWindowBitFields(tps6522xVccaVmonCfg_t *pVccaVmonPwrRsrcC
  *                                                      the PMIC
  *  \param      vmonNum                 [IN]            Indicates which VCCA/VMONx the API is working with
  */
-static tps6522xGetVmonPgWindowBitFields(tps6522xVccaVmonCfg_t *pVccaVmonPwrRsrcCfg,
-                                        uint8_t vmonPgWindowRegData,
-                                        const uint8_t vmonNum)
+static void tps6522xGetVmonPgWindowBitFields(tps6522xVccaVmonCfg_t *pVccaVmonPwrRsrcCfg,
+                                            uint8_t vmonPgWindowRegData,
+                                            const uint8_t vmonNum)
 {
     if ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON1) &&
         pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, TPS6522X_VMON1_THR_VALID))
     {
         pVccaVmonPwrRsrcCfg->vmon1Thr = Pmic_getBitField(
-            vmonPgWindowRegData, TPS6522X_VMON1_PG_WINDOW_VMON1_THR_SHIFT, TPS6522X_VMON1_PG_WINDOW_VMON1_THR_MASK);
+            vmonPgWindowRegData, TPS6522X_VMON1_THR_SHIFT, TPS6522X_VMON1_THR_MASK);
     }
     else if ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON2) &&
              pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, TPS6522X_VMON2_THR_VALID))
     {
         pVccaVmonPwrRsrcCfg->vmon2Thr = Pmic_getBitField(
-            vmonPgWindowRegData, TPS6522X_VMON2_PG_WINDOW_VMON2_THR_SHIFT, TPS6522X_VMON2_PG_WINDOW_VMON2_THR_MASK);
+            vmonPgWindowRegData, TPS6522X_VMON2_THR_SHIFT, TPS6522X_VMON2_THR_MASK);
+    }
+    else
+    {
+        /* Invalid VMON number and/or validParam not set */
     }
 }
 
@@ -1040,55 +1074,65 @@ static void tps6522xVmonConvertPgSet2Voltage(uint16_t *pVmonPgLevel_mv,
     switch (vmonNum)
     {
         case TPS6522X_VOLTAGE_MONITOR_VMON1:
-            if ((vmonPgLevel_pgSet >= TPS6522X_VMON1_VOLT_RANGE_1_MIN_VSET) &&
-                (vmonPgLevel_pgSet <= TPS6522X_VMON1_VOLT_RANGE_1_MAX_VSET))
+            // VMON1 voltage range 1: 500 mV to 580 mV in 20 mV steps (PG_SET: 0xA to 0xE)
+            if ((vmonPgLevel_pgSet >= 0xAU) && (vmonPgLevel_pgSet <= 0xEU))
             {
-                baseVoltage_mv = TPS6522X_VMON1_VOLT_RANGE_1_MIN_VOLT;
-                baseVoltage_pgSet = TPS6522X_VMON1_VOLT_RANGE_1_MIN_VSET;
-                voltageStep = TPS6522X_VOLTAGE_STEP_20_MV;
+                baseVoltage_mv = 500U;
+                baseVoltage_pgSet = 0xAU;
+                voltageStep = 20U;
             }
-            else if ((vmonPgLevel_pgSet >= TPS6522X_VMON1_VOLT_RANGE_2_MIN_VSET) &&
-                     (vmonPgLevel_pgSet <= TPS6522X_VMON1_VOLT_RANGE_2_MAX_VSET))
+            // VMON1 voltage range 2: 600 mV to 1095 mV in 5 mV steps (PG_SET: 0xF to 0x72)
+            else if ((vmonPgLevel_pgSet >= 0xFU) && (vmonPgLevel_pgSet <= 0x72U))
             {
-                baseVoltage_mv = TPS6522X_VMON1_VOLT_RANGE_2_MIN_VOLT;
-                baseVoltage_pgSet = TPS6522X_VMON1_VOLT_RANGE_2_MIN_VSET;
-                voltageStep = TPS6522X_VOLTAGE_STEP_5_MV;
+                baseVoltage_mv = 600U;
+                baseVoltage_pgSet = 0xFU;
+                voltageStep = 5U;
             }
-            else if ((vmonPgLevel_pgSet >= TPS6522X_VMON1_VOLT_RANGE_3_MIN_VSET) &&
-                     (vmonPgLevel_pgSet <= TPS6522X_VMON1_VOLT_RANGE_3_MAX_VSET))
+            // VMON1 voltage range 3: 1100 mV to 1650 mV in 10 mV steps (PG_SET: 0x73 to 0xAA)
+            else if ((vmonPgLevel_pgSet >= 0x73U) && (vmonPgLevel_pgSet <= 0xAAU))
             {
-                baseVoltage_mv = TPS6522X_VMON1_VOLT_RANGE_3_MIN_VOLT;
-                baseVoltage_pgSet = TPS6522X_VMON1_VOLT_RANGE_3_MIN_VSET;
-                voltageStep = TPS6522X_VOLTAGE_STEP_10_MV;
+                baseVoltage_mv = 1100U;
+                baseVoltage_pgSet = 0x73U;
+                voltageStep = 10U;
             }
-            else if ((vmonPgLevel_pgSet >= TPS6522X_VMON1_VOLT_RANGE_4_MIN_VSET) &&
-                     (vmonPgLevel_pgSet <= TPS6522X_VMON1_VOLT_RANGE_4_MAX_VSET))
+            // VMON1 voltage range 4: 1660 mV to 3340 mV in 20 mV steps (PG_SET: 0xAB to 0xFD)
+            else if ((vmonPgLevel_pgSet >= 0xABU) && (vmonPgLevel_pgSet <= 0xFFU))
             {
-                baseVoltage_mv = TPS6522X_VMON1_VOLT_RANGE_4_MIN_VOLT;
-                baseVoltage_pgSet = TPS6522X_VMON1_VOLT_RANGE_4_MIN_VSET;
-                voltageStep = TPS6522X_VOLTAGE_STEP_20_MV;
+                baseVoltage_mv = 1660U;
+                baseVoltage_pgSet = 0xABU;
+                voltageStep = 20U;
             }
-
+            else
+            {
+                /* Invalid PG_SET value */
+            }
             break;
         case TPS6522X_VOLTAGE_MONITOR_VMON2:
-            if (vmonPgLevel_pgSet <= TPS6522X_VMON2_VOLT_RANGE_1_MAX_VSET)
+            // VMON2 voltage range 1: 500 mV to 1150 mV in 25 mV steps (PG_SET: 0x0 to 0x1A)
+            if (vmonPgLevel_pgSet <= 0x1AU)
             {
-                baseVoltage_mv = TPS6522X_VMON2_VOLT_RANGE_1_MIN_VOLT;
-                baseVoltage_pgSet = TPS6522X_VMON2_VOLT_RANGE_1_MIN_VSET;
-                voltageStep = TPS6522X_VOLTAGE_STEP_25_MV;
+                baseVoltage_mv = 500U;
+                baseVoltage_pgSet = 0x0U;
+                voltageStep = 25U;
             }
-            else if ((vmonPgLevel_pgSet >= TPS6522X_VMON2_VOLT_RANGE_2_MIN_VSET) &&
-                     (vmonPgLevel_pgSet <= TPS6522X_VMON2_VOLT_RANGE_2_MAX_VSET))
+            // VMON2 voltage range 2: 1200 mV to 3300 mV in 50 mV steps (PG_SET: 0x1B to 0x45)
+            else if ((vmonPgLevel_pgSet >= 0x1BU) && (vmonPgLevel_pgSet <= 0x45U))
             {
-                baseVoltage_mv = TPS6522X_VMON2_VOLT_RANGE_2_MIN_VOLT;
-                baseVoltage_pgSet = TPS6522X_VMON2_VOLT_RANGE_2_MIN_VSET;
-                voltageStep = TPS6522X_VOLTAGE_STEP_50_MV;
+                baseVoltage_mv = 1200U;
+                baseVoltage_pgSet = 0x1BU;
+                voltageStep = 50U;
             }
-
+            else
+            {
+                /* Invalid PG_SET value */
+            }
+            break;
+        // Invalid VMON number
+        default:
             break;
     }
 
-    if ((baseVoltage_mv != 0) && (voltageStep != 0))
+    if ((baseVoltage_mv != 0U) && (voltageStep != 0U))
     {
         *pVmonPgLevel_mv = baseVoltage_mv + (voltageStep * (vmonPgLevel_pgSet - baseVoltage_pgSet));
     }
@@ -1102,9 +1146,9 @@ static void tps6522xVmonConvertPgSet2Voltage(uint16_t *pVmonPgLevel_mv,
  *  \param      vmonPgLevelRegData      [IN]        VMON_PG_LEVEL register data obtained from a prior read of the PMIC
  *  \param      vmonNum                 [IN]        Indicates which VCCA/VMONx the API is working with
  */
-static tps6522xGetVmonPgLevelBitFields(tps6522xVccaVmonCfg_t *pVccaVmonPwrRsrcCfg,
-                                       uint8_t vmonPgLevelRegData,
-                                       const uint8_t vmonNum)
+static void tps6522xGetVmonPgLevelBitFields(tps6522xVccaVmonCfg_t *pVccaVmonPwrRsrcCfg,
+                                            uint8_t vmonPgLevelRegData,
+                                            const uint8_t vmonNum)
 {
     if ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON1) &&
         pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, TPS6522X_VMON1_PG_LEVEL_MV_VALID))
@@ -1118,6 +1162,10 @@ static tps6522xGetVmonPgLevelBitFields(tps6522xVccaVmonCfg_t *pVccaVmonPwrRsrcCf
         tps6522xVmonConvertPgSet2Voltage(
             &(pVccaVmonPwrRsrcCfg->vmon2PgLevel_mv), vmonPgLevelRegData, vmonNum);
     }
+    else
+    {
+        /* Invalid VMON number or validParam not set */
+    }
 }
 
 /**
@@ -1128,7 +1176,7 @@ static tps6522xGetVmonPgLevelBitFields(tps6522xVccaVmonCfg_t *pVccaVmonPwrRsrcCf
  *  \param      vccaVmonRailSelRegData      [IN]        RAIL_SEL_3 register data obtained from a prior read of the PMIC
  *  \param      vmonNum                     [IN]        Indicates which VCCA/VMONx the API is working with
  */
-static tps6522xGetRailSel3RegBitFields(tps6522xVccaVmonCfg_t *pVccaVmonPwrRsrcCfg,
+static void tps6522xGetRailSel3RegBitFields(tps6522xVccaVmonCfg_t *pVccaVmonPwrRsrcCfg,
                                        uint8_t vccaVmonRailSelRegData,
                                        const uint8_t vmonNum)
 {
@@ -1136,19 +1184,23 @@ static tps6522xGetRailSel3RegBitFields(tps6522xVccaVmonCfg_t *pVccaVmonPwrRsrcCf
         pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, TPS6522X_VMON1_RAIL_GRP_SEL_VALID))
     {
         pVccaVmonPwrRsrcCfg->vmon1RailGrpSel = Pmic_getBitField(
-                vccaVmonRailSelRegData, TPS6522X_RAIL_SEL_3_VMON1_GRP_SEL_SHIFT, TPS6522X_RAIL_SEL_3_VMON1_GRP_SEL_MASK);
+                vccaVmonRailSelRegData, TPS6522X_VMON1_GRP_SEL_SHIFT, TPS6522X_VMON1_GRP_SEL_MASK);
     }
     else if ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON2) &&
              pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, TPS6522X_VMON2_RAIL_GRP_SEL_VALID))
     {
         pVccaVmonPwrRsrcCfg->vmon2RailGrpSel = Pmic_getBitField(
-                vccaVmonRailSelRegData, TPS6522X_RAIL_SEL_3_VMON2_GRP_SEL_SHIFT, TPS6522X_RAIL_SEL_3_VMON2_GRP_SEL_MASK);
+                vccaVmonRailSelRegData, TPS6522X_VMON2_GRP_SEL_SHIFT, TPS6522X_VMON2_GRP_SEL_MASK);
     }
     else if ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VCCA_VMON) &&
              pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, TPS6522X_VCCA_RAIL_GRP_SEL_VALID))
     {
         pVccaVmonPwrRsrcCfg->vccaRailGrpSel = Pmic_getBitField(
-                vccaVmonRailSelRegData, TPS6522X_RAIL_SEL_3_VCCA_GRP_SEL_SHIFT, TPS6522X_RAIL_SEL_3_VCCA_GRP_SEL_MASK);
+                vccaVmonRailSelRegData, TPS6522X_VCCA_GRP_SEL_SHIFT, TPS6522X_VCCA_GRP_SEL_MASK);
+    }
+    else
+    {
+        /* Invalid VMON number and/or validParam not set */
     }
 }
 
@@ -1168,7 +1220,7 @@ int32_t tps6522xGetVccaVmonCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
-    if ((status == PMIC_ST_SUCCESS) && (pVccaVmonPwrRsrcCfg->validParams == 0))
+    if ((status == PMIC_ST_SUCCESS) && (pVccaVmonPwrRsrcCfg->validParams == 0U))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -1236,7 +1288,7 @@ int32_t tps6522xGetVccaVmonCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 int32_t tps6522xGetPwrRsrcCfg(Pmic_CoreHandle_t *pPmicCoreHandle, tps6522xPwrRsrcCfg_t *pPwrRsrcCfg)
 {
     uint8_t  iter = 0;
-    uint16_t validParam = 0;
+    uint8_t validParam = 0;
     int32_t  status = PMIC_ST_SUCCESS;
 
     // Parameter check
@@ -1256,7 +1308,7 @@ int32_t tps6522xGetPwrRsrcCfg(Pmic_CoreHandle_t *pPmicCoreHandle, tps6522xPwrRsr
             {
                 // Get BUCK's power resource configuration
                 status = tps6522xGetBuckCfg(
-                    pPmicCoreHandle, pPwrRsrcCfg->buckCfg + iter, iter);
+                    pPmicCoreHandle, &(pPwrRsrcCfg->buckCfg[iter]), iter);
             }
 
             // Upon error, break out of loop
@@ -1281,7 +1333,7 @@ int32_t tps6522xGetPwrRsrcCfg(Pmic_CoreHandle_t *pPmicCoreHandle, tps6522xPwrRsr
             {
                 // Get LDO's power resource configuration
                 status = tps6522xGetLdoCfg(
-                    pPmicCoreHandle, pPwrRsrcCfg->ldoCfg + iter, iter);
+                    pPmicCoreHandle, &(pPwrRsrcCfg->ldoCfg[iter]), iter);
             }
 
             // Upon error, break out of loop
@@ -1333,29 +1385,29 @@ static void tps6522xSetBuckCtrlRegBitFields(const tps6522xBuckCfg_t buckCfg,
     if (pmic_validParamCheck(buckCfg.validParams, TPS6522X_BUCK_PLDN_VALID))
     {
         Pmic_setBitField(pBuckCtrlRegData,
-                         TPS6522X_BUCK_CTRL_PLDN_SHIFT,
-                         TPS6522X_BUCK_CTRL_PLDN_MASK,
+                         TPS6522X_BUCK_PLDN_SHIFT,
+                         TPS6522X_BUCK_PLDN_MASK,
                          buckCfg.buckPldn);
     }
     if (pmic_validParamCheck(buckCfg.validParams, TPS6522X_BUCK_VMON_EN_VALID))
     {
         Pmic_setBitField(pBuckCtrlRegData,
-                         TPS6522X_BUCK_CTRL_VMON_EN_SHIFT,
-                         TPS6522X_BUCK_CTRL_VMON_EN_MASK,
+                         TPS6522X_BUCK_VMON_EN_SHIFT,
+                         TPS6522X_BUCK_VMON_EN_MASK,
                          buckCfg.buckVmonEn);
     }
     if (pmic_validParamCheck(buckCfg.validParams, TPS6522X_BUCK_PWM_OPTION_VALID))
     {
         Pmic_setBitField(pBuckCtrlRegData,
-                         TPS6522X_BUCK_CTRL_PWM_OPTION_SHIFT,
-                         TPS6522X_BUCK_CTRL_PWM_OPTION_MASK,
+                         TPS6522X_BUCK_PWM_OPTION_SHIFT,
+                         TPS6522X_BUCK_PWM_OPTION_MASK,
                          buckCfg.buckPwmOption);
     }
     if (pmic_validParamCheck(buckCfg.validParams, TPS6522X_BUCK_EN_VALID))
     {
         Pmic_setBitField(pBuckCtrlRegData,
-                         TPS6522X_BUCK_CTRL_EN_SHIFT,
-                         TPS6522X_BUCK_CTRL_EN_MASK,
+                         TPS6522X_BUCK_EN_SHIFT,
+                         TPS6522X_BUCK_EN_MASK,
                          buckCfg.buckEn);
     }
 }
@@ -1372,8 +1424,8 @@ static void tps6522xSetBuckConfRegBitFields(const tps6522xBuckCfg_t buckCfg, uin
     if (pmic_validParamCheck(buckCfg.validParams, TPS6522X_BUCK_SLEW_RATE_VALID))
     {
         Pmic_setBitField(pBuckConfRegData,
-                         TPS6522X_BUCK_CONF_SLEW_RATE_SHIFT,
-                         TPS6522X_BUCK_CONF_SLEW_RATE_MASK,
+                         TPS6522X_BUCK_SLEW_RATE_SHIFT,
+                         TPS6522X_BUCK_SLEW_RATE_MASK,
                          buckCfg.buckSlewRate);
     }
 }
@@ -1394,60 +1446,69 @@ static void tps6522xBuckConvertVoltage2VsetVal(uint8_t *pBuckVoltage_vset,
     switch (buckNum)
     {
         case TPS6522X_REGULATOR_BUCK1:
-            if ((buckVoltage_mv >= TPS6522X_BUCK1_VOLT_RANGE_1_MIN_VOLT) &&
-                (buckVoltage_mv <= TPS6522X_BUCK1_VOLT_RANGE_1_MAX_VOLT))
+            // BUCK1 voltage range 1: 500 mV to 580 mV in 20 mV steps (VSET: 0xA to 0xE)
+            if ((buckVoltage_mv >= 500U) && (buckVoltage_mv <= 580U))
             {
-                baseVoltage_vset = TPS6522X_BUCK1_VOLT_RANGE_1_MIN_VSET;
-                baseVoltage_mv = TPS6522X_BUCK1_VOLT_RANGE_1_MIN_VOLT;
-                voltageStep = TPS6522X_VOLTAGE_STEP_20_MV;
+                baseVoltage_vset = 0xAU;
+                baseVoltage_mv = 500U;
+                voltageStep = 20U;
             }
-            else if ((buckVoltage_mv >= TPS6522X_BUCK1_VOLT_RANGE_2_MIN_VOLT) &&
-                     (buckVoltage_mv <= TPS6522X_BUCK1_VOLT_RANGE_2_MAX_VOLT))
+            // BUCK1 voltage range 2: 600 mV to 1095 mV in 5 mV steps (VSET: 0xF to 0x72)
+            else if ((buckVoltage_mv >= 600U) && (buckVoltage_mv <= 1095U))
             {
-                baseVoltage_vset = TPS6522X_BUCK1_VOLT_RANGE_2_MIN_VSET;
-                baseVoltage_mv = TPS6522X_BUCK1_VOLT_RANGE_2_MIN_VOLT;
-                voltageStep = TPS6522X_VOLTAGE_STEP_5_MV;
+                baseVoltage_vset = 0xFU;
+                baseVoltage_mv = 600U;
+                voltageStep = 5U;
             }
-            else if ((buckVoltage_mv >= TPS6522X_BUCK1_VOLT_RANGE_3_MIN_VOLT) &&
-                     (buckVoltage_mv <= TPS6522X_BUCK1_VOLT_RANGE_3_MAX_VOLT))
+            // BUCK1 voltage range 3: 1100 mV to 1650 mV in 10 mV steps (VSET: 0x73 to 0xAA)
+            else if ((buckVoltage_mv >= 1100U) && (buckVoltage_mv <= 1650U))
             {
-                baseVoltage_vset = TPS6522X_BUCK1_VOLT_RANGE_3_MIN_VSET;
-                baseVoltage_mv = TPS6522X_BUCK1_VOLT_RANGE_3_MIN_VOLT;
-                voltageStep = TPS6522X_VOLTAGE_STEP_10_MV;
+                baseVoltage_vset = 0x73U;
+                baseVoltage_mv = 1100U;
+                voltageStep = 10U;
             }
-            else if ((buckVoltage_mv >= TPS6522X_BUCK1_VOLT_RANGE_4_MIN_VOLT) &&
-                     (buckVoltage_mv <= TPS6522X_BUCK1_VOLT_RANGE_4_MAX_VOLT))
+            // BUCK1 voltage range 4: 1660 mV to 3300 mV in 20 mV steps (VSET: 0xAB to 0xFD)
+            else if ((buckVoltage_mv >= 1660U) && (buckVoltage_mv <= 3300U))
             {
-                baseVoltage_vset = TPS6522X_BUCK1_VOLT_RANGE_4_MIN_VSET;
-                baseVoltage_mv = TPS6522X_BUCK1_VOLT_RANGE_4_MIN_VOLT;
-                voltageStep = TPS6522X_VOLTAGE_STEP_20_MV;
+                baseVoltage_vset = 0xABU;
+                baseVoltage_mv = 1660U;
+                voltageStep = 20U;
             }
-
+            else
+            {
+                /* Invalid voltage value */
+            }
             break;
         case TPS6522X_REGULATOR_BUCK2:
         case TPS6522X_REGULATOR_BUCK3:
         case TPS6522X_REGULATOR_BUCK4:
-            if ((buckVoltage_mv >= TPS6522X_BUCK2_3_4_VOLT_RANGE_1_MIN_VOLT) &&
-                (buckVoltage_mv <= TPS6522X_BUCK2_3_4_VOLT_RANGE_1_MAX_VOLT))
+        // BUCK2, BUCK3, BUCK4 voltage range 1: 500 mV to 1150 mV in 25 mV steps (VSET: 0x0 to 0x1A)
+            if ((buckVoltage_mv >= 500U) && (buckVoltage_mv <= 1150U))
             {
-                baseVoltage_vset = TPS6522X_BUCK2_3_4_VOLT_RANGE_1_MIN_VSET;
-                baseVoltage_mv = TPS6522X_BUCK2_3_4_VOLT_RANGE_1_MIN_VOLT;
-                voltageStep = TPS6522X_VOLTAGE_STEP_25_MV;
+                baseVoltage_vset = 0x0U;
+                baseVoltage_mv = 500U;
+                voltageStep = 25U;
             }
-            else if ((buckVoltage_mv >= TPS6522X_BUCK2_3_4_VOLT_RANGE_2_MIN_VOLT) &&
-                     (buckVoltage_mv <= TPS6522X_BUCK2_3_4_VOLT_RANGE_2_MAX_VOLT))
+            // BUCK2, BUCK3, BUCK4 voltage range 2: 1200 mV to 3300 mV in 50 mV steps (VSET: 0x1B to 0x45)
+            else if ((buckVoltage_mv >= 1200U) && (buckVoltage_mv <= 3300U))
             {
-                baseVoltage_vset = TPS6522X_BUCK2_3_4_VOLT_RANGE_2_MIN_VSET;
-                baseVoltage_mv = TPS6522X_BUCK2_3_4_VOLT_RANGE_2_MIN_VOLT;
-                voltageStep = TPS6522X_VOLTAGE_STEP_50_MV;
+                baseVoltage_vset = 0x1BU;
+                baseVoltage_mv = 1200U;
+                voltageStep = 50U;
             }
-
+            else
+            {
+                /* Invalid voltage value */
+            }
+            break;
+        // Invalid Buck number
+        default:
             break;
     }
 
-    if ((baseVoltage_mv != 0) && (voltageStep != 0))
+    if ((baseVoltage_mv != 0U) && (voltageStep != 0U))
     {
-        *pBuckVoltage_vset = baseVoltage_vset + ((buckVoltage_mv - baseVoltage_mv) / voltageStep);
+        *pBuckVoltage_vset = (uint8_t)(baseVoltage_vset + ((buckVoltage_mv - baseVoltage_mv) / voltageStep));
     }
 }
 
@@ -1481,8 +1542,8 @@ static void tps6522xSetBuckPgWindowRegBitFields(const tps6522xBuckCfg_t buckCfg,
     if (pmic_validParamCheck(buckCfg.validParams, TPS6522X_BUCK_VMON_THR_VALID))
     {
         Pmic_setBitField(pBuckPgWindowRegData,
-                         TPS6522X_BUCK_PG_WINDOW_VMON_THR_SHIFT,
-                         TPS6522X_BUCK_PG_WINDOW_VMON_THR_MASK,
+                         TPS6522X_BUCK_VMON_THR_SHIFT,
+                         TPS6522X_BUCK_VMON_THR_MASK,
                          buckCfg.buckVmonThr);
     }
 }
@@ -1505,31 +1566,30 @@ static void tps6522xSetRailSel1RegBitFields(const tps6522xBuckCfg_t buckCfg,
         {
             case TPS6522X_REGULATOR_BUCK1:
                 Pmic_setBitField(pBuckRailSelRegData,
-                                 TPS6522X_RAIL_SEL_1_BUCK1_GRP_SEL_SHIFT,
-                                 TPS6522X_RAIL_SEL_1_BUCK1_GRP_SEL_MASK,
+                                 TPS6522X_BUCK1_GRP_SEL_SHIFT,
+                                 TPS6522X_BUCK1_GRP_SEL_MASK,
                                  buckCfg.buckRailGrpSel);
-
                 break;
             case TPS6522X_REGULATOR_BUCK2:
                 Pmic_setBitField(pBuckRailSelRegData,
-                                 TPS6522X_RAIL_SEL_1_BUCK2_GRP_SEL_SHIFT,
-                                 TPS6522X_RAIL_SEL_1_BUCK2_GRP_SEL_MASK,
+                                 TPS6522X_BUCK2_GRP_SEL_SHIFT,
+                                 TPS6522X_BUCK2_GRP_SEL_MASK,
                                  buckCfg.buckRailGrpSel);
-
                 break;
             case TPS6522X_REGULATOR_BUCK3:
                 Pmic_setBitField(pBuckRailSelRegData,
-                                 TPS6522X_RAIL_SEL_1_BUCK3_GRP_SEL_SHIFT,
-                                 TPS6522X_RAIL_SEL_1_BUCK3_GRP_SEL_MASK,
+                                 TPS6522X_BUCK3_GRP_SEL_SHIFT,
+                                 TPS6522X_BUCK3_GRP_SEL_MASK,
                                  buckCfg.buckRailGrpSel);
-
                 break;
             case TPS6522X_REGULATOR_BUCK4:
                 Pmic_setBitField(pBuckRailSelRegData,
-                                 TPS6522X_RAIL_SEL_1_BUCK4_GRP_SEL_SHIFT,
-                                 TPS6522X_RAIL_SEL_1_BUCK4_GRP_SEL_MASK,
+                                 TPS6522X_BUCK4_GRP_SEL_SHIFT,
+                                 TPS6522X_BUCK4_GRP_SEL_MASK,
                                  buckCfg.buckRailGrpSel);
-
+                break;
+            // Invalid Buck number
+            default:
                 break;
         }
     }
@@ -1545,7 +1605,7 @@ int32_t tps6522xSetBuckCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const tps6522xBuc
     int32_t status              = PMIC_ST_SUCCESS;
 
     // Parameter check
-    if (buckCfg.validParams == 0)
+    if (buckCfg.validParams == 0U)
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -1645,22 +1705,22 @@ static void tps6522xSetLdoCtrlRegBitFields(const tps6522xLdoCfg_t ldoCfg, uint8_
     if (pmic_validParamCheck(ldoCfg.validParams, TPS6522X_LDO_DISCHARGE_EN_VALID))
     {
         Pmic_setBitField(pLdoCtrlRegData,
-                         TPS6522X_LDO_CTRL_DISCHARGE_EN_SHIFT,
-                         TPS6522X_LDO_CTRL_DISCHARGE_EN_MASK,
+                         TPS6522X_LDO_DISCHARGE_EN_SHIFT,
+                         TPS6522X_LDO_DISCHARGE_EN_MASK,
                          ldoCfg.ldoDischargeEn);
     }
     if (pmic_validParamCheck(ldoCfg.validParams, TPS6522X_LDO_VMON_EN_VALID))
     {
         Pmic_setBitField(pLdoCtrlRegData,
-                         TPS6522X_LDO_CTRL_VMON_EN_SHIFT,
-                         TPS6522X_LDO_CTRL_VMON_EN_MASK,
+                         TPS6522X_LDO_VMON_EN_SHIFT,
+                         TPS6522X_LDO_VMON_EN_MASK,
                          ldoCfg.ldoVmonEn);
     }
     if (pmic_validParamCheck(ldoCfg.validParams, TPS6522X_LDO_EN_VALID))
     {
         Pmic_setBitField(pLdoCtrlRegData,
-                         TPS6522X_LDO_CTRL_EN_SHIFT,
-                         TPS6522X_LDO_CTRL_EN_MASK,
+                         TPS6522X_LDO_EN_SHIFT,
+                         TPS6522X_LDO_EN_MASK,
                          ldoCfg.ldoEn);
     }
 }
@@ -1681,52 +1741,63 @@ static void tps6522xLdoConvertVoltage2VsetVal(uint8_t *pLdoVoltage_vset,
     switch (ldoNum)
     {
         case TPS6522X_REGULATOR_LDO1:
-            if ((ldoVoltage_mv >= TPS6522X_LDO1_VOLT_RANGE_1_MIN_VOLT) &&
-                (ldoVoltage_mv <= TPS6522X_LDO1_VOLT_RANGE_1_MAX_VOLT))
+        // LDO1 voltage range 1: 1200 mV to 1200 mV in 0 mV steps (VSET: 0x0 to 0xC)
+            if (ldoVoltage_mv == 1200U)
             {
-                baseVoltage_vset = TPS6522X_LDO1_VOLT_RANGE_1_MIN_VSET;
-                baseVoltage_mv = TPS6522X_LDO1_VOLT_RANGE_1_MIN_VOLT;
-                voltageStep = TPS6522X_VOLTAGE_STEP_0_MV;
+                baseVoltage_vset = 0x0U;
+                baseVoltage_mv = 1200U;
+                voltageStep = 0U;
             }
-            else if ((ldoVoltage_mv >= TPS6522X_LDO1_VOLT_RANGE_2_MIN_VOLT) &&
-                     (ldoVoltage_mv <= TPS6522X_LDO1_VOLT_RANGE_2_MAX_VOLT))
+            // LDO1 voltage range 2: 1250 mV to 3250 mV in 50 mV steps (VSET: 0xD to 0x35)
+            else if ((ldoVoltage_mv >= 1250U) && (ldoVoltage_mv <= 3250U))
             {
-                baseVoltage_vset = TPS6522X_LDO1_VOLT_RANGE_2_MIN_VSET;
-                baseVoltage_mv = TPS6522X_LDO1_VOLT_RANGE_2_MIN_VOLT;
-                voltageStep = TPS6522X_VOLTAGE_STEP_50_MV;
+                baseVoltage_vset = 0xDU;
+                baseVoltage_mv = 1250U;
+                voltageStep = 50U;
             }
-            else if ((ldoVoltage_mv >= TPS6522X_LDO1_VOLT_RANGE_3_MIN_VOLT) &&
-                     (ldoVoltage_mv <= TPS6522X_LDO1_VOLT_RANGE_3_MAX_VOLT))
+            // LDO1 voltage range 3: 3300 mV to 3300 mV in 0 mV steps (VSET: 0x36 to 0x3F)
+            else if (ldoVoltage_mv == 3300U)
             {
-                baseVoltage_vset = TPS6522X_LDO1_VOLT_RANGE_3_MIN_VSET;
-                baseVoltage_mv = TPS6522X_LDO1_VOLT_RANGE_3_MIN_VOLT;
-                voltageStep = TPS6522X_VOLTAGE_STEP_0_MV;
+                baseVoltage_vset = 0x36U;
+                baseVoltage_mv = 3300U;
+                voltageStep = 0U;
+            }
+            else
+            {
+                /* Invalid voltage number */
             }
 
             break;
         case TPS6522X_REGULATOR_LDO2:
         case TPS6522X_REGULATOR_LDO3:
-            if ((ldoVoltage_mv >= TPS6522X_LDO2_3_VOLT_RANGE_1_MIN_VOLT) &&
-                (ldoVoltage_mv <= TPS6522X_LDO2_3_VOLT_RANGE_1_MAX_VOLT))
+        // LDO2 and LDO3 voltage range 1: 600 mV to 3350 mV in 50 mV steps (VSET: 0x0 to 0x37)
+            if ((ldoVoltage_mv >= 600U) && (ldoVoltage_mv <= 3350U))
             {
-                baseVoltage_vset = TPS6522X_LDO2_3_VOLT_RANGE_1_MIN_VSET;
-                baseVoltage_mv = TPS6522X_LDO2_3_VOLT_RANGE_1_MIN_VOLT;
-                voltageStep = TPS6522X_VOLTAGE_STEP_50_MV;
+                baseVoltage_vset = 0x0U;
+                baseVoltage_mv = 600U;
+                voltageStep = 50U;
             }
-            else if ((ldoVoltage_mv >= TPS6522X_LDO2_3_VOLT_RANGE_2_MIN_VOLT) &&
-                     (ldoVoltage_mv <= TPS6522X_LDO2_3_VOLT_RANGE_2_MAX_VOLT))
+            // LDO2 and LDO3 voltage range 2: 3400 mV to 3400 mV in 0 mV steps (VSET: 0x38 to 0x3F)
+            else if (ldoVoltage_mv == 3400U)
             {
-                baseVoltage_vset = TPS6522X_LDO2_3_VOLT_RANGE_2_MIN_VSET;
-                baseVoltage_mv = TPS6522X_LDO2_3_VOLT_RANGE_2_MIN_VOLT;
-                voltageStep = TPS6522X_VOLTAGE_STEP_0_MV;
+                baseVoltage_vset = 0x38U;
+                baseVoltage_mv = 3400U;
+                voltageStep = 0U;
+            }
+            else
+            {
+                /* Invalid voltage number */
             }
 
             break;
+        // Invalid LDO number
+        default:
+            break;
     }
 
-    if (baseVoltage_mv != 0)
+    if (baseVoltage_mv != 0U)
     {
-        *pLdoVoltage_vset = baseVoltage_vset + ((ldoVoltage_mv - baseVoltage_mv) / voltageStep);
+        *pLdoVoltage_vset = (uint8_t)(baseVoltage_vset + ((ldoVoltage_mv - baseVoltage_mv) / voltageStep));
     }
 }
 
@@ -1747,17 +1818,18 @@ static void tps6522xSetLdoVoutRegBitFields(const tps6522xLdoCfg_t ldoCfg,
     if (pmic_validParamCheck(ldoCfg.validParams, TPS6522X_LDO_MODE_VALID))
     {
         Pmic_setBitField(pLdoVoutRegData,
-                         TPS6522X_LDO_VOUT_LDO_MODE_SHIFT,
-                         TPS6522X_LDO_VOUT_LDO_MODE_MASK,
+                         TPS6522X_LDO_MODE_SHIFT,
+                         TPS6522X_LDO_MODE_MASK,
                          ldoCfg.ldoMode);
     }
+
     if (pmic_validParamCheck(ldoCfg.validParams, TPS6522X_LDO_VOLTAGE_MV_VALID))
     {
         tps6522xLdoConvertVoltage2VsetVal(&ldoVoltage_vset, ldoCfg.ldoVoltage_mv, ldoNum);
 
         Pmic_setBitField(pLdoVoutRegData,
-                         TPS6522X_LDO_VOUT_LDO_VSET_SHIFT,
-                         TPS6522X_LDO_VOUT_LDO_VSET_MASK,
+                         TPS6522X_LDO_VSET_SHIFT,
+                         TPS6522X_LDO_VSET_MASK,
                          ldoVoltage_vset);
     }
 }
@@ -1775,8 +1847,8 @@ static void tps6522xSetLdoPgWindowRegBitFields(const tps6522xLdoCfg_t ldoCfg,
     if (pmic_validParamCheck(ldoCfg.validParams, TPS6522X_LDO_VMON_THR_VALID))
     {
         Pmic_setBitField(pLdoPgWindowRegData,
-                         TPS6522X_LDO_PG_WINDOW_LDO_VMON_THR_SHIFT,
-                         TPS6522X_LDO_PG_WINDOW_LDO_VMON_THR_MASK,
+                         TPS6522X_LDO_VMON_THR_SHIFT,
+                         TPS6522X_LDO_VMON_THR_MASK,
                          ldoCfg.ldoVmonThr);
     }
 }
@@ -1797,24 +1869,24 @@ static void tps6522xSetRailSel2RegBitFields(const tps6522xLdoCfg_t ldoCfg, uint8
         {
             case TPS6522X_REGULATOR_LDO1:
                 Pmic_setBitField(pLdoRailSelRegData,
-                                 TPS6522X_RAIL_SEL_2_LDO1_GRP_SEL_SHIFT,
-                                 TPS6522X_RAIL_SEL_2_LDO1_GRP_SEL_MASK,
+                                 TPS6522X_LDO1_GRP_SEL_SHIFT,
+                                 TPS6522X_LDO1_GRP_SEL_MASK,
                                  ldoCfg.ldoRailGrpSel);
-
                 break;
             case TPS6522X_REGULATOR_LDO2:
                 Pmic_setBitField(pLdoRailSelRegData,
-                                 TPS6522X_RAIL_SEL_2_LDO2_GRP_SEL_SHIFT,
-                                 TPS6522X_RAIL_SEL_2_LDO2_GRP_SEL_MASK,
+                                 TPS6522X_LDO2_GRP_SEL_SHIFT,
+                                 TPS6522X_LDO2_GRP_SEL_MASK,
                                  ldoCfg.ldoRailGrpSel);
-
                 break;
             case TPS6522X_REGULATOR_LDO3:
                 Pmic_setBitField(pLdoRailSelRegData,
-                                 TPS6522X_RAIL_SEL_2_LDO3_GRP_SEL_SHIFT,
-                                 TPS6522X_RAIL_SEL_2_LDO3_GRP_SEL_MASK,
+                                 TPS6522X_LDO3_GRP_SEL_SHIFT,
+                                 TPS6522X_LDO3_GRP_SEL_MASK,
                                  ldoCfg.ldoRailGrpSel);
-
+                break;
+            // Invalid LDO number
+            default:
                 break;
         }
     }
@@ -1829,7 +1901,7 @@ int32_t tps6522xSetLdoCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const tps6522xLdoC
     int32_t status              = PMIC_ST_SUCCESS;
 
     // Parameter check
-    if (ldoCfg.validParams == 0)
+    if (ldoCfg.validParams == 0U)
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -1909,35 +1981,34 @@ int32_t tps6522xSetLdoCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const tps6522xLdoC
  *  \param      vmonNum                 [IN]        Indicates which VCCA/VMONx the API is working with
  */
 static void tps6522xSetVccaVmonCtrlBitFields(const tps6522xVccaVmonCfg_t vccaVmonCfg,
-                                             uint8_t *pVccaVmonCtrlRegData,
-                                             const uint8_t vmonNum)
+                                             uint8_t *pVccaVmonCtrlRegData)
 {
     if (pmic_validParamCheck(vccaVmonCfg.validParams, TPS6522X_VMON_DEGLITCH_SEL_VALID))
     {
         Pmic_setBitField(pVccaVmonCtrlRegData,
-                         TPS6522X_VCCA_VMON_CTRL_DEGLITCH_SEL_SHIFT,
-                         TPS6522X_VCCA_VMON_CTRL_DEGLITCH_SEL_MASK,
+                         TPS6522X_VCCA_VMON_DEGL_SEL_SHIFT,
+                         TPS6522X_VCCA_VMON_DEGL_SEL_MASK,
                          vccaVmonCfg.vmonDeglitchSel);
     }
     if (pmic_validParamCheck(vccaVmonCfg.validParams, TPS6522X_VMON2_EN_VALID))
     {
         Pmic_setBitField(pVccaVmonCtrlRegData,
-                         TPS6522X_VCCA_VMON_CTRL_VMON2_EN_SHIFT,
-                         TPS6522X_VCCA_VMON_CTRL_VMON2_EN_MASK,
+                         TPS6522X_VMON2_EN_SHIFT,
+                         TPS6522X_VMON2_EN_MASK,
                          vccaVmonCfg.vmon2En);
     }
     if (pmic_validParamCheck(vccaVmonCfg.validParams, TPS6522X_VMON1_EN_VALID))
     {
         Pmic_setBitField(pVccaVmonCtrlRegData,
-                         TPS6522X_VCCA_VMON_CTRL_VMON1_EN_SHIFT,
-                         TPS6522X_VCCA_VMON_CTRL_VMON1_EN_MASK,
+                         TPS6522X_VMON1_EN_SHIFT,
+                         TPS6522X_VMON1_EN_MASK,
                          vccaVmonCfg.vmon1En);
     }
     if (pmic_validParamCheck(vccaVmonCfg.validParams, TPS6522X_VCCA_VMON_EN_VALID))
     {
         Pmic_setBitField(pVccaVmonCtrlRegData,
-                         TPS6522X_VCCA_VMON_CTRL_VCCA_VMON_EN_SHIFT,
-                         TPS6522X_VCCA_VMON_CTRL_VCCA_VMON_EN_MASK,
+                         TPS6522X_VCCA_VMON_EN_SHIFT,
+                         TPS6522X_VCCA_VMON_EN_MASK,
                          vccaVmonCfg.vccaVmonEn);
     }
 }
@@ -1954,15 +2025,16 @@ static void tps6522xSetVccaPgWindowBitFields(const tps6522xVccaVmonCfg_t vccaVmo
     if (pmic_validParamCheck(vccaVmonCfg.validParams, TPS6522X_VCCA_PG_LEVEL_VALID))
     {
         Pmic_setBitField(pVccaPgWindowRegData,
-                         TPS6522X_VCCA_PG_WINDOW_VCCA_PG_SET_SHIFT,
-                         TPS6522X_VCCA_PG_WINDOW_VCCA_PG_SET_MASK,
+                         TPS6522X_VCCA_PG_SET_SHIFT,
+                         TPS6522X_VCCA_PG_SET_MASK,
                          vccaVmonCfg.vccaPgLevel);
     }
+
     if (pmic_validParamCheck(vccaVmonCfg.validParams, TPS6522X_VCCA_VMON_THR_VALID))
     {
         Pmic_setBitField(pVccaPgWindowRegData,
-                         TPS6522X_VCCA_PG_WINDOW_VCCA_VMON_THR_SHIFT,
-                         TPS6522X_VCCA_PG_WINDOW_VCCA_VMON_THR_MASK,
+                         TPS6522X_VCCA_VMON_THR_SHIFT,
+                         TPS6522X_VCCA_VMON_THR_MASK,
                          vccaVmonCfg.vccaVmonThr);
     }
 }
@@ -1983,17 +2055,21 @@ static void tps6522xSetVmonPgWindowBitFields(const tps6522xVccaVmonCfg_t vccaVmo
         pmic_validParamCheck(vccaVmonCfg.validParams, TPS6522X_VMON1_THR_VALID))
     {
         Pmic_setBitField(pVmonPgWindowRegData,
-                         TPS6522X_VMON1_PG_WINDOW_VMON1_THR_SHIFT,
-                         TPS6522X_VMON1_PG_WINDOW_VMON1_THR_MASK,
+                         TPS6522X_VMON1_THR_SHIFT,
+                         TPS6522X_VMON1_THR_MASK,
                          vccaVmonCfg.vmon1Thr);
     }
     else if ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON2) &&
              pmic_validParamCheck(vccaVmonCfg.validParams, TPS6522X_VMON2_THR_VALID))
     {
         Pmic_setBitField(pVmonPgWindowRegData,
-                         TPS6522X_VMON2_PG_WINDOW_VMON2_THR_SHIFT,
-                         TPS6522X_VMON2_PG_WINDOW_VMON2_THR_MASK,
+                         TPS6522X_VMON2_THR_SHIFT,
+                         TPS6522X_VMON2_THR_MASK,
                          vccaVmonCfg.vmon2Thr);
+    }
+    else
+    {
+        /* Invalid VMON number or validParam not set */
     }
 }
 
@@ -2013,58 +2089,67 @@ static void tps6522xVmonConvertVoltage2PgSet(uint8_t *pVmonPgLevel_pgSet,
     switch (vmonNum)
     {
         case TPS6522X_VOLTAGE_MONITOR_VMON1:
-            if ((vmonPgLevel_mv >= TPS6522X_VMON1_VOLT_RANGE_1_MIN_VOLT) &&
-                (vmonPgLevel_mv <= TPS6522X_VMON1_VOLT_RANGE_1_MAX_VOLT))
+            // VMON1 voltage range 1: 500 mV to 580 mV in 20 mV steps (PG_SET: 0xA to 0xE)
+            if ((vmonPgLevel_mv >= 500U) && (vmonPgLevel_mv <= 580U))
             {
-                baseVoltage_vset = TPS6522X_VMON1_VOLT_RANGE_1_MIN_VSET;
-                baseVoltage_mv = TPS6522X_VMON1_VOLT_RANGE_1_MIN_VOLT;
-                voltageStep = TPS6522X_VOLTAGE_STEP_20_MV;
+                baseVoltage_vset = 0xAU;
+                baseVoltage_mv = 500U;
+                voltageStep = 20U;
             }
-            else if ((vmonPgLevel_mv >= TPS6522X_VMON1_VOLT_RANGE_2_MIN_VOLT) &&
-                     (vmonPgLevel_mv <= TPS6522X_VMON1_VOLT_RANGE_2_MAX_VOLT))
+            // VMON1 voltage range 2: 600 mV to 1095 mV in 5 mV steps (PG_SET: 0xF to 0x72)
+            else if ((vmonPgLevel_mv >= 600U) && (vmonPgLevel_mv <= 1095U))
             {
-                baseVoltage_vset = TPS6522X_VMON1_VOLT_RANGE_2_MIN_VSET;
-                baseVoltage_mv = TPS6522X_VMON1_VOLT_RANGE_2_MIN_VOLT;
-                voltageStep = TPS6522X_VOLTAGE_STEP_5_MV;
+                baseVoltage_vset = 0xFU;
+                baseVoltage_mv = 600U;
+                voltageStep = 5U;
             }
-            else if ((vmonPgLevel_mv >= TPS6522X_VMON1_VOLT_RANGE_3_MIN_VOLT) &&
-                     (vmonPgLevel_mv <= TPS6522X_VMON1_VOLT_RANGE_3_MAX_VOLT))
+            // VMON1 voltage range 3: 1100 mV to 1650 mV in 10 mV steps (PG_SET: 0x73 to 0xAA)
+            else if ((vmonPgLevel_mv >= 1100U) && (vmonPgLevel_mv <= 1650U))
             {
-                baseVoltage_vset = TPS6522X_VMON1_VOLT_RANGE_3_MIN_VSET;
-                baseVoltage_mv = TPS6522X_VMON1_VOLT_RANGE_3_MIN_VOLT;
-                voltageStep = TPS6522X_VOLTAGE_STEP_10_MV;
+                baseVoltage_vset = 0x73U;
+                baseVoltage_mv = 1100U;
+                voltageStep = 10U;
             }
-            else if ((vmonPgLevel_mv >= TPS6522X_VMON1_VOLT_RANGE_4_MIN_VOLT) &&
-                     (vmonPgLevel_mv <= TPS6522X_VMON1_VOLT_RANGE_4_MAX_VOLT))
+            // VMON1 voltage range 4: 1660 mV to 3340 mV in 20 mV steps (PG_SET: 0xAB to 0xFD)
+            else if ((vmonPgLevel_mv >= 1660U) && (vmonPgLevel_mv <= 3340U))
             {
-                baseVoltage_vset = TPS6522X_VMON1_VOLT_RANGE_4_MIN_VSET;
-                baseVoltage_mv = TPS6522X_VMON1_VOLT_RANGE_4_MIN_VOLT;
-                voltageStep = TPS6522X_VOLTAGE_STEP_20_MV;
+                baseVoltage_vset = 0xABU;
+                baseVoltage_mv = 1660U;
+                voltageStep = 20U;
             }
-
+            else
+            {
+                /* Invalid voltage value */
+            }
             break;
         case TPS6522X_VOLTAGE_MONITOR_VMON2:
-            if ((vmonPgLevel_mv >= TPS6522X_VMON2_VOLT_RANGE_1_MIN_VOLT) &&
-                (vmonPgLevel_mv <= TPS6522X_VMON2_VOLT_RANGE_1_MAX_VOLT))
+            // VMON2 voltage range 1: 500 mV to 1150 mV in 25 mV steps (PG_SET: 0x0 to 0x1A)
+            if ((vmonPgLevel_mv >= 500U) && (vmonPgLevel_mv <= 1150U))
             {
-                baseVoltage_vset = TPS6522X_VMON2_VOLT_RANGE_1_MIN_VSET;
-                baseVoltage_mv = TPS6522X_VMON2_VOLT_RANGE_1_MIN_VOLT;
-                voltageStep = TPS6522X_VOLTAGE_STEP_25_MV;
+                baseVoltage_vset = 0x0U;
+                baseVoltage_mv = 500U;
+                voltageStep = 25U;
             }
-            else if ((vmonPgLevel_mv >= TPS6522X_VMON2_VOLT_RANGE_2_MIN_VOLT) &&
-                     (vmonPgLevel_mv <= TPS6522X_VMON2_VOLT_RANGE_2_MAX_VOLT))
+            // VMON2 voltage range 2: 1200 mV to 3300 mV in 50 mV steps (PG_SET: 0x1B to 0x45)
+            else if ((vmonPgLevel_mv >= 1200U) && (vmonPgLevel_mv <= 3300U))
             {
-                baseVoltage_vset = TPS6522X_VMON2_VOLT_RANGE_2_MIN_VSET;
-                baseVoltage_mv = TPS6522X_VMON2_VOLT_RANGE_2_MIN_VOLT;
-                voltageStep = TPS6522X_VOLTAGE_STEP_50_MV;
+                baseVoltage_vset = 0x1BU;
+                baseVoltage_mv = 1200U;
+                voltageStep = 50U;
             }
-
+            else
+            {
+                /* Invalid voltage value */
+            }
+            break;
+        // Invalid VMON number
+        default:
             break;
     }
 
-    if ((baseVoltage_mv != 0) && (voltageStep != 0))
+    if ((baseVoltage_mv != 0U) && (voltageStep != 0U))
     {
-        *pVmonPgLevel_pgSet = baseVoltage_vset + ((vmonPgLevel_mv - baseVoltage_mv) / voltageStep);
+        *pVmonPgLevel_pgSet = (uint8_t)(baseVoltage_vset + ((vmonPgLevel_mv - baseVoltage_mv) / voltageStep));
     }
 }
 
@@ -2091,6 +2176,10 @@ static void tps6522xSetVmonPgLevelBitFields(const tps6522xVccaVmonCfg_t vccaVmon
     {
         tps6522xVmonConvertVoltage2PgSet(pVmonPgLevelRegData, vccaVmonCfg.vmon2PgLevel_mv, vmonNum);
     }
+    else
+    {
+        /* Invalid VMON number or validParam not set */
+    }
 }
 
 /**
@@ -2109,25 +2198,29 @@ static void tps6522xSetRailSel3RegBitFields(const tps6522xVccaVmonCfg_t vccaVmon
         pmic_validParamCheck(vccaVmonCfg.validParams, TPS6522X_VMON1_RAIL_GRP_SEL_VALID))
     {
         Pmic_setBitField(pVccaVmonRailSelRegData,
-                         TPS6522X_RAIL_SEL_3_VMON1_GRP_SEL_SHIFT,
-                         TPS6522X_RAIL_SEL_3_VMON1_GRP_SEL_MASK,
+                         TPS6522X_VMON1_GRP_SEL_SHIFT,
+                         TPS6522X_VMON1_GRP_SEL_MASK,
                          vccaVmonCfg.vmon1RailGrpSel);
     }
     else if ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON2) &&
              pmic_validParamCheck(vccaVmonCfg.validParams, TPS6522X_VMON2_RAIL_GRP_SEL_VALID))
     {
         Pmic_setBitField(pVccaVmonRailSelRegData,
-                         TPS6522X_RAIL_SEL_3_VMON2_GRP_SEL_SHIFT,
-                         TPS6522X_RAIL_SEL_3_VMON2_GRP_SEL_MASK,
+                         TPS6522X_VMON2_GRP_SEL_SHIFT,
+                         TPS6522X_VMON2_GRP_SEL_MASK,
                          vccaVmonCfg.vmon2RailGrpSel);
     }
     else if ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VCCA_VMON) &&
              pmic_validParamCheck(vccaVmonCfg.validParams, TPS6522X_VCCA_RAIL_GRP_SEL_VALID))
     {
         Pmic_setBitField(pVccaVmonRailSelRegData,
-                         TPS6522X_RAIL_SEL_3_VCCA_GRP_SEL_SHIFT,
-                         TPS6522X_RAIL_SEL_3_VCCA_GRP_SEL_MASK,
+                         TPS6522X_VCCA_GRP_SEL_SHIFT,
+                         TPS6522X_VCCA_GRP_SEL_MASK,
                          vccaVmonCfg.vccaRailGrpSel);
+    }
+    else
+    {
+        /* Invalid VMON number or validParam not set */
     }
 }
 
@@ -2143,7 +2236,7 @@ int32_t tps6522xSetVccaVmonCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
     int32_t status                  = PMIC_ST_SUCCESS;
 
     // Parameter check
-    if (vccaVmonCfg.validParams == 0)
+    if (vccaVmonCfg.validParams == 0U)
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -2185,7 +2278,7 @@ int32_t tps6522xSetVccaVmonCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
     if (status == PMIC_ST_SUCCESS)
     {
         // VCCA_VMON_CTRL
-        tps6522xSetVccaVmonCtrlBitFields(vccaVmonCfg, &vccaVmonCtrlRegData, vmonNum);
+        tps6522xSetVccaVmonCtrlBitFields(vccaVmonCfg, &vccaVmonCtrlRegData);
 
         // VCCA_PG_WINDOW
         tps6522xSetVccaPgWindowBitFields(vccaVmonCfg, &vccaPgWindowRegData);
@@ -2238,9 +2331,9 @@ int32_t tps6522xSetVccaVmonCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 int32_t tps6522xSetPwrRsrcCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                               const tps6522xPwrRsrcCfg_t pwrRsrcCfg)
 {
-    int32_t  status = PMIC_ST_SUCCESS;
-    uint8_t  iter = 0;
-    uint16_t validParam = 0;
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t iter = 0;
+    uint8_t validParam = 0;
 
     // Parameter check
     status = tps6522xParamCheck_constPwrRsrcCfg(pPmicCoreHandle, pwrRsrcCfg);
@@ -2335,7 +2428,7 @@ int32_t tps6522xSetPwrRsrcCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
  * \return      Success code if PMIC handle is valid, error code otherwise.
  *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
  */
-static int32_t tps6522xParamCheck_pmicHandle(Pmic_CoreHandle_t *pPmicCoreHandle)
+static int32_t tps6522xParamCheck_pmicHandle(const Pmic_CoreHandle_t *pPmicCoreHandle)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -2352,8 +2445,8 @@ static int32_t tps6522xParamCheck_pmicHandle(Pmic_CoreHandle_t *pPmicCoreHandle)
     }
 
     // Invalid subsystem
-    if ((status == PMIC_ST_SUCCESS) && ((pPmicCoreHandle->pPmic_SubSysInfo->buckEnable == false) ||
-                                        (pPmicCoreHandle->pPmic_SubSysInfo->ldoEnable == false)))
+    if ((status == PMIC_ST_SUCCESS) && ((pPmicCoreHandle->pPmic_SubSysInfo->buckEnable == (bool)false) ||
+                                        (pPmicCoreHandle->pPmic_SubSysInfo->ldoEnable == (bool)false)))
     {
         status = PMIC_ST_ERR_INV_SUBSYSTEM;
     }
@@ -2391,28 +2484,23 @@ static int32_t tps6522xGetBuckStat(Pmic_CoreHandle_t *pPmicCoreHandle,
         switch (pwrRsrcUVOVStatus)
         {
             case TPS6522X_BUCK4_UVOV_STAT:
-                *pUnderOverVoltStat = (bool)Pmic_getBitField(statBuckRegData,
-                                                             TPS6522X_STAT_BUCK_BUCK4_UVOV_STAT_SHIFT,
-                                                             TPS6522X_STAT_BUCK_BUCK4_UVOV_STAT_MASK);
-
+                *pUnderOverVoltStat = Pmic_getBitField_b(statBuckRegData,
+                                                         TPS6522X_BUCK4_UVOV_STAT_SHIFT);
                 break;
             case TPS6522X_BUCK3_UVOV_STAT:
-                *pUnderOverVoltStat = (bool)Pmic_getBitField(statBuckRegData,
-                                                             TPS6522X_STAT_BUCK_BUCK3_UVOV_STAT_SHIFT,
-                                                             TPS6522X_STAT_BUCK_BUCK3_UVOV_STAT_MASK);
-
+                *pUnderOverVoltStat = Pmic_getBitField_b(statBuckRegData,
+                                                         TPS6522X_BUCK3_UVOV_STAT_SHIFT);
                 break;
             case TPS6522X_BUCK2_UVOV_STAT:
-                *pUnderOverVoltStat = (bool)Pmic_getBitField(statBuckRegData,
-                                                             TPS6522X_STAT_BUCK_BUCK2_UVOV_STAT_SHIFT,
-                                                             TPS6522X_STAT_BUCK_BUCK2_UVOV_STAT_MASK);
-
+                *pUnderOverVoltStat = Pmic_getBitField_b(statBuckRegData,
+                                                         TPS6522X_BUCK2_UVOV_STAT_SHIFT);
                 break;
             case TPS6522X_BUCK1_UVOV_STAT:
-                *pUnderOverVoltStat = (bool)Pmic_getBitField(statBuckRegData,
-                                                             TPS6522X_STAT_BUCK_BUCK1_UVOV_STAT_SHIFT,
-                                                             TPS6522X_STAT_BUCK_BUCK1_UVOV_STAT_MASK);
-
+                *pUnderOverVoltStat = Pmic_getBitField_b(statBuckRegData,
+                                                         TPS6522X_BUCK1_UVOV_STAT_SHIFT);
+                break;
+            // Invalid UVOV status
+            default:
                 break;
         }
     }
@@ -2453,40 +2541,31 @@ static int32_t tps6522xGetLdoVccaVmonStat(Pmic_CoreHandle_t *pPmicCoreHandle,
         switch (pwrRsrcUVOVStatus)
         {
             case TPS6522X_VMON2_UVOV_STAT:
-                *pUnderOverVoltStat = (bool)Pmic_getBitField(statLdoVmonRegData,
-                                                             TPS6522X_STAT_LDO_VMON_VMON2_UVOV_STAT_SHIFT,
-                                                             TPS6522X_STAT_LDO_VMON_VMON2_UVOV_STAT_MASK);
-
+                *pUnderOverVoltStat = Pmic_getBitField_b(statLdoVmonRegData,
+                                                       TPS6522X_VMON2_UVOV_STAT_SHIFT);
                 break;
             case TPS6522X_VMON1_UVOV_STAT:
-                *pUnderOverVoltStat = (bool)Pmic_getBitField(statLdoVmonRegData,
-                                                             TPS6522X_STAT_LDO_VMON_VMON1_UVOV_STAT_SHIFT,
-                                                             TPS6522X_STAT_LDO_VMON_VMON1_UVOV_STAT_MASK);
-
+                *pUnderOverVoltStat = Pmic_getBitField_b(statLdoVmonRegData,
+                                                       TPS6522X_VMON1_UVOV_STAT_SHIFT);
                 break;
             case TPS6522X_VCCA_UVOV_STAT:
-                *pUnderOverVoltStat = (bool)Pmic_getBitField(statLdoVmonRegData,
-                                                             TPS6522X_STAT_LDO_VMON_VCCA_UVOV_STAT_SHIFT,
-                                                             TPS6522X_STAT_LDO_VMON_VCCA_UVOV_STAT_MASK);
-
+                *pUnderOverVoltStat = Pmic_getBitField_b(statLdoVmonRegData,
+                                                       TPS6522X_VCCA_UVOV_STAT_SHIFT);
                 break;
             case TPS6522X_LDO3_UVOV_STAT:
-                *pUnderOverVoltStat = (bool)Pmic_getBitField(statLdoVmonRegData,
-                                                             TPS6522X_STAT_LDO_VMON_LDO3_UVOV_STAT_SHIFT,
-                                                             TPS6522X_STAT_LDO_VMON_LDO3_UVOV_STAT_MASK);
-
+                *pUnderOverVoltStat = Pmic_getBitField_b(statLdoVmonRegData,
+                                                       TPS6522X_LDO3_UVOV_STAT_SHIFT);
                 break;
             case TPS6522X_LDO2_UVOV_STAT:
-                *pUnderOverVoltStat = (bool)Pmic_getBitField(statLdoVmonRegData,
-                                                             TPS6522X_STAT_LDO_VMON_LDO2_UVOV_STAT_SHIFT,
-                                                             TPS6522X_STAT_LDO_VMON_LDO2_UVOV_STAT_MASK);
-
+                *pUnderOverVoltStat = Pmic_getBitField_b(statLdoVmonRegData,
+                                                       TPS6522X_LDO2_UVOV_STAT_SHIFT);
                 break;
             case TPS6522X_LDO1_UVOV_STAT:
-                *pUnderOverVoltStat = (bool)Pmic_getBitField(statLdoVmonRegData,
-                                                             TPS6522X_STAT_LDO_VMON_LDO1_UVOV_STAT_SHIFT,
-                                                             TPS6522X_STAT_LDO_VMON_LDO1_UVOV_STAT_MASK);
-
+                *pUnderOverVoltStat = Pmic_getBitField_b(statLdoVmonRegData,
+                                                       TPS6522X_LDO1_UVOV_STAT_SHIFT);
+                break;
+            // Invalid UVOV status
+            default:
                 break;
         }
     }
@@ -2543,7 +2622,7 @@ int32_t tps6522xGetThermalStat(Pmic_CoreHandle_t *pPmicCoreHandle,
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
-    if ((status == PMIC_ST_SUCCESS) && (pThermalStat->validParams == 0))
+    if ((status == PMIC_ST_SUCCESS) && (pThermalStat->validParams == 0U))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -2558,8 +2637,7 @@ int32_t tps6522xGetThermalStat(Pmic_CoreHandle_t *pPmicCoreHandle,
 
         if (status == PMIC_ST_SUCCESS)
         {
-            pThermalStat->twarnStat =
-                Pmic_getBitField(regData, TPS6522X_TWARN_STAT_SHIFT, TPS6522X_TWARN_STAT_MASK);
+            pThermalStat->twarnStat = Pmic_getBitField_b(regData, TPS6522X_TWARN_STAT_SHIFT);
         }
     }
 
@@ -2571,8 +2649,7 @@ int32_t tps6522xGetThermalStat(Pmic_CoreHandle_t *pPmicCoreHandle,
 
         if (status == PMIC_ST_SUCCESS)
         {
-            pThermalStat->tsdOrdStat = Pmic_getBitField(
-                regData, TPS6522X_TSD_ORD_STAT_SHIFT, TPS6522X_TSD_ORD_STAT_MASK);
+            pThermalStat->tsdOrdStat = Pmic_getBitField_b(regData, TPS6522X_TSD_ORD_STAT_SHIFT);
         }
     }
 
@@ -2584,8 +2661,7 @@ int32_t tps6522xGetThermalStat(Pmic_CoreHandle_t *pPmicCoreHandle,
 
         if (status == PMIC_ST_SUCCESS)
         {
-            pThermalStat->tsdImmStat = Pmic_getBitField(
-                regData, TPS6522X_TSD_IMM_STAT_SHIFT, TPS6522X_TSD_IMM_STAT_MASK);
+            pThermalStat->tsdImmStat = Pmic_getBitField_b(regData, TPS6522X_TSD_IMM_STAT_SHIFT);
         }
     }
 
@@ -2606,7 +2682,7 @@ int32_t tps6522xGetThermalCfg(Pmic_CoreHandle_t *pPmicCoreHandle, tps6522xTherma
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
-    if ((status == PMIC_ST_SUCCESS) && (pThermalCfg->validParams == 0))
+    if ((status == PMIC_ST_SUCCESS) && (pThermalCfg->validParams == 0U))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -2649,7 +2725,7 @@ int32_t tps6522xSetThermalCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     // Parameter check
     status = tps6522xParamCheck_pmicHandle(pPmicCoreHandle);
-    if ((status == PMIC_ST_SUCCESS) && (thermalCfg.validParams == 0))
+    if ((status == PMIC_ST_SUCCESS) && (thermalCfg.validParams == 0U))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }

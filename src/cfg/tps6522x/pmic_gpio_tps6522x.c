@@ -52,43 +52,43 @@ static Pmic_GpioInOutCfg_t gTps6522x_gpioInOutCfg[] =
         PMIC_GPIO1_CONF_REGADDR,
         PMIC_GPIO_OUT_1_REGADDR,
         PMIC_GPIO_IN_1_REGADDR,
-        PMIC_GPIO_IN_1_GPIO1_IN_SHIFT,
-        PMIC_GPIO_OUT_1_GPIO1_OUT_SHIFT
+        PMIC_GPIO1_IN_SHIFT,
+        PMIC_GPIO1_OUT_SHIFT
     },
     {
         PMIC_GPIO2_CONF_REGADDR,
         PMIC_GPIO_OUT_1_REGADDR,
         PMIC_GPIO_IN_1_REGADDR,
-        PMIC_GPIO_IN_1_GPIO2_IN_SHIFT,
-        PMIC_GPIO_OUT_1_GPIO2_OUT_SHIFT
+        PMIC_GPIO2_IN_SHIFT,
+        PMIC_GPIO2_OUT_SHIFT
     },
     {
         PMIC_GPIO3_CONF_REGADDR,
         PMIC_GPIO_OUT_1_REGADDR,
         PMIC_GPIO_IN_1_REGADDR,
-        PMIC_GPIO_IN_1_GPIO3_IN_SHIFT,
-        PMIC_GPIO_OUT_1_GPIO3_OUT_SHIFT
+        PMIC_GPIO3_IN_SHIFT,
+        PMIC_GPIO3_OUT_SHIFT
     },
     {
         PMIC_GPIO4_CONF_REGADDR,
         PMIC_GPIO_OUT_1_REGADDR,
         PMIC_GPIO_IN_1_REGADDR,
-        PMIC_GPIO_IN_1_GPIO4_IN_SHIFT,
-        PMIC_GPIO_OUT_1_GPIO4_OUT_SHIFT
+        PMIC_GPIO4_IN_SHIFT,
+        PMIC_GPIO4_OUT_SHIFT
     },
     {
         PMIC_GPIO5_CONF_REGADDR,
         PMIC_GPIO_OUT_1_REGADDR,
         PMIC_GPIO_IN_1_REGADDR,
-        PMIC_GPIO_IN_1_GPIO5_IN_SHIFT,
-        PMIC_GPIO_OUT_1_GPIO5_OUT_SHIFT
+        PMIC_GPIO5_IN_SHIFT,
+        PMIC_GPIO5_OUT_SHIFT
     },
     {
         PMIC_GPIO6_CONF_REGADDR,
         PMIC_GPIO_OUT_1_REGADDR,
         PMIC_GPIO_IN_1_REGADDR,
-        PMIC_GPIO_IN_1_GPIO6_IN_SHIFT,
-        PMIC_GPIO_OUT_1_GPIO6_OUT_SHIFT
+        PMIC_GPIO6_IN_SHIFT,
+        PMIC_GPIO6_OUT_SHIFT
     },
 };
 
@@ -97,33 +97,33 @@ static Pmic_GpioIntRegCfg_t tps6522x_gpioIntRegCfg[] =
 {
     {
         PMIC_FSM_TRIG_MASK_1_REGADDR,
-        PMIC_FSM_TRIG_MASK_1_GPIO1_FSM_MASK_SHIFT,
-        PMIC_FSM_TRIG_MASK_1_GPIO1_FSM_MASK_POL_SHIFT
+        PMIC_GPIO1_FSM_MASK_SHIFT,
+        PMIC_GPIO1_FSM_MASK_POL_SHIFT
     },
     {
         PMIC_FSM_TRIG_MASK_1_REGADDR,
-        PMIC_FSM_TRIG_MASK_1_GPIO2_FSM_MASK_SHIFT,
-        PMIC_FSM_TRIG_MASK_1_GPIO2_FSM_MASK_POL_SHIFT
+        PMIC_GPIO2_FSM_MASK_SHIFT,
+        PMIC_GPIO2_FSM_MASK_POL_SHIFT
     },
     {
         PMIC_FSM_TRIG_MASK_1_REGADDR,
-        PMIC_FSM_TRIG_MASK_1_GPIO3_FSM_MASK_SHIFT,
-        PMIC_FSM_TRIG_MASK_1_GPIO3_FSM_MASK_POL_SHIFT
+        PMIC_GPIO3_FSM_MASK_SHIFT,
+        PMIC_GPIO3_FSM_MASK_POL_SHIFT
     },
     {
         PMIC_FSM_TRIG_MASK_1_REGADDR,
-        PMIC_FSM_TRIG_MASK_1_GPIO4_FSM_MASK_SHIFT,
-        PMIC_FSM_TRIG_MASK_1_GPIO4_FSM_MASK_POL_SHIFT
+        PMIC_GPIO4_FSM_MASK_SHIFT,
+        PMIC_GPIO4_FSM_MASK_POL_SHIFT
     },
     {
         PMIC_FSM_TRIG_MASK_2_REGADDR,
-        PMIC_FSM_TRIG_MASK_2_GPIO5_FSM_MASK_SHIFT,
-        PMIC_FSM_TRIG_MASK_2_GPIO5_FSM_MASK_POL_SHIFT
+        PMIC_GPIO5_FSM_MASK_SHIFT,
+        PMIC_GPIO5_FSM_MASK_POL_SHIFT
     },
     {
         PMIC_FSM_TRIG_MASK_2_REGADDR,
-        PMIC_FSM_TRIG_MASK_2_GPIO6_FSM_MASK_SHIFT,
-        PMIC_FSM_TRIG_MASK_2_GPIO6_FSM_MASK_POL_SHIFT
+        PMIC_GPIO6_FSM_MASK_SHIFT,
+        PMIC_GPIO6_FSM_MASK_POL_SHIFT
     }
 };
 
@@ -167,17 +167,17 @@ static int32_t Pmic_gpioTps6522xSetEnPbVsensePinFunc(Pmic_CoreHandle_t         *
     // Read POWER_ON_CONFIG register
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, POWER_ON_CONFIG_REGADDR, &regData);
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, TPS6522X_POWER_ON_CONFIG_REGADDR, &regData);
     }
 
     // Modify register value and write back
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_setBitField(&regData,
-                         PMIC_POWER_ON_CONFIG_EN_PB_VSENSE_CONFIG_SHIFT,
-                         PMIC_POWER_ON_CONFIG_EN_PB_VSENSE_CONFIG_MASK,
+                         TPS6522X_EN_PB_VSENSE_CONFIG_SHIFT,
+                         TPS6522X_EN_PB_VSENSE_CONFIG_MASK,
                          enPbVsenseCfg.pinFuncSel);
-        status = Pmic_commIntf_sendByte(pPmicCoreHandle, POWER_ON_CONFIG_REGADDR, regData);
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, TPS6522X_POWER_ON_CONFIG_REGADDR, regData);
     }
 
     // Stop critical section
@@ -208,16 +208,16 @@ static int32_t Pmic_gpioTps6522xSetEnPbVsenseDeglitch(Pmic_CoreHandle_t         
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     // Read POWER_ON_CONFIG register
-    status = Pmic_commIntf_recvByte(pPmicCoreHandle, POWER_ON_CONFIG_REGADDR, &regData);
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle, TPS6522X_POWER_ON_CONFIG_REGADDR, &regData);
 
     // Modify register value and write back
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_setBitField(&regData,
-                         PMIC_POWER_ON_CONFIG_EN_PB_DEGL_SHIFT,
-                         PMIC_POWER_ON_CONFIG_EN_PB_DEGL_MASK,
-                         enPbVsenseCfg.deglitchSel);
-        status = Pmic_commIntf_sendByte(pPmicCoreHandle, POWER_ON_CONFIG_REGADDR, regData);
+                         TPS6522X_EN_PB_DEGL_SHIFT,
+                         TPS6522X_EN_PB_DEGL_MASK,
+                         (enPbVsenseCfg.deglitchSel == (bool)true) ? 1U : 0U);
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, TPS6522X_POWER_ON_CONFIG_REGADDR, regData);
     }
 
     // Stop critical section
@@ -246,13 +246,13 @@ static int32_t Pmic_gpioTps6522xGetEnPbVsensePinFunc(Pmic_CoreHandle_t    *pPmic
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     // Read POWER_ON_CONFIG register
-    status = Pmic_commIntf_recvByte(pPmicCoreHandle, POWER_ON_CONFIG_REGADDR, &regData);
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle, TPS6522X_POWER_ON_CONFIG_REGADDR, &regData);
 
     // Extract functionality of EN/PB/VSENSE pin
     if (status == PMIC_ST_SUCCESS)
     {
         pEnPbVsenseCfg->pinFuncSel = Pmic_getBitField(
-            regData, PMIC_POWER_ON_CONFIG_EN_PB_VSENSE_CONFIG_SHIFT, PMIC_POWER_ON_CONFIG_EN_PB_VSENSE_CONFIG_MASK);
+            regData, TPS6522X_EN_PB_VSENSE_CONFIG_SHIFT, TPS6522X_EN_PB_VSENSE_CONFIG_MASK);
     }
 
     // Stop critical section
@@ -281,13 +281,12 @@ static int32_t Pmic_gpioTps6522xGetEnPbVsenseDeglitch(Pmic_CoreHandle_t    *pPmi
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     // Read POWER_ON_CONFIG register
-    status = Pmic_commIntf_recvByte(pPmicCoreHandle, POWER_ON_CONFIG_REGADDR, &regData);
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle, TPS6522X_POWER_ON_CONFIG_REGADDR, &regData);
 
     // Extract functionality of EN/PB/VSENSE pin
     if (status == PMIC_ST_SUCCESS)
     {
-        pEnPbVsenseCfg->deglitchSel = (bool)Pmic_getBitField(
-            regData, PMIC_POWER_ON_CONFIG_EN_PB_DEGL_SHIFT, PMIC_POWER_ON_CONFIG_EN_PB_DEGL_MASK);
+        pEnPbVsenseCfg->deglitchSel = Pmic_getBitField_b(regData, TPS6522X_EN_PB_DEGL_SHIFT);
     }
 
     // Stop critical section
@@ -302,14 +301,14 @@ int32_t Pmic_gpioTps6522xSetEnPbVsensePinConfiguration(Pmic_CoreHandle_t        
     int32_t status = PMIC_ST_SUCCESS;
 
     // Set functionality of the EN/PB/VSENSE pin
-    if (pmic_validParamCheck(enPbVsenseCfg.validParams, PMIC_EN_PB_VSENSE_CFG_FUNC_SEL_VALID) == true)
+    if (pmic_validParamCheck(enPbVsenseCfg.validParams, PMIC_EN_PB_VSENSE_CFG_FUNC_SEL_VALID) == (bool)true)
     {
         status = Pmic_gpioTps6522xSetEnPbVsensePinFunc(pPmicCoreHandle, enPbVsenseCfg);
     }
 
     // Set deglitch of the EN/PB/VSENSE pin
     if ((status == PMIC_ST_SUCCESS) &&
-        pmic_validParamCheck(enPbVsenseCfg.validParams, PMIC_EN_PB_VSENSE_CFG_DEGLITCH_SEL_VALID) == true)
+        (pmic_validParamCheck(enPbVsenseCfg.validParams, PMIC_EN_PB_VSENSE_CFG_DEGLITCH_SEL_VALID) == (bool)true))
     {
         status = Pmic_gpioTps6522xSetEnPbVsenseDeglitch(pPmicCoreHandle, enPbVsenseCfg);
     }
@@ -323,14 +322,14 @@ int32_t Pmic_gpioTps6522xGetEnPbVsensePinConfiguration(Pmic_CoreHandle_t    *pPm
     int32_t status = PMIC_ST_SUCCESS;
 
     // Get functionality of the EN/PB/VSENSE pin
-    if (pmic_validParamCheck(pEnPbVsenseCfg->validParams, PMIC_EN_PB_VSENSE_CFG_FUNC_SEL_VALID) == true)
+    if (pmic_validParamCheck(pEnPbVsenseCfg->validParams, PMIC_EN_PB_VSENSE_CFG_FUNC_SEL_VALID) == (bool)true)
     {
         status = Pmic_gpioTps6522xGetEnPbVsensePinFunc(pPmicCoreHandle, pEnPbVsenseCfg);
     }
 
     // Get deglitch of the EN/PB/VSENSE pin
     if ((status == PMIC_ST_SUCCESS) &&
-        pmic_validParamCheck(pEnPbVsenseCfg->validParams, PMIC_EN_PB_VSENSE_CFG_DEGLITCH_SEL_VALID) == true)
+        (pmic_validParamCheck(pEnPbVsenseCfg->validParams, PMIC_EN_PB_VSENSE_CFG_DEGLITCH_SEL_VALID) == (bool)true))
     {
         status = Pmic_gpioTps6522xGetEnPbVsenseDeglitch(pPmicCoreHandle, pEnPbVsenseCfg);
     }
@@ -340,7 +339,7 @@ int32_t Pmic_gpioTps6522xGetEnPbVsensePinConfiguration(Pmic_CoreHandle_t    *pPm
 
 int32_t Pmic_tps6522xGpioPinTypeADC(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t gpioPin)
 {
-    int32_t              status = PMIC_ST_SUCCESS;
+    int32_t status = PMIC_ST_SUCCESS;
     const Pmic_GpioCfg_t adcGpioCfg = {.validParams = PMIC_GPIO_CFG_PINFUNC_VALID_SHIFT,
                                        .pinFunc = ((gpioPin == PMIC_TPS6522X_GPIO4_PIN) ?
                                                        PMIC_TPS6522X_GPIO_PINFUNC_GPIO4_ADC_IN :
@@ -351,7 +350,7 @@ int32_t Pmic_tps6522xGpioPinTypeADC(Pmic_CoreHandle_t *pPmicCoreHandle, const ui
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
-    if ((status == PMIC_ST_SUCCESS) && (pPmicCoreHandle->pPmic_SubSysInfo->adcEnable == false))
+    if ((status == PMIC_ST_SUCCESS) && (pPmicCoreHandle->pPmic_SubSysInfo->adcEnable == (bool)false))
     {
         status = PMIC_ST_ERR_INV_DEVICE;
     }

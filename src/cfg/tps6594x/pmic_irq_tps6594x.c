@@ -53,537 +53,537 @@ static Pmic_IntrCfg_t gTps6594x_intCfg[] =
 {
     {
         PMIC_WD_ERR_STATUS_REGADDR,
-        PMIC_WD_ERR_STATUS_WD_RST_INT_SHIFT,
+        PMIC_WD_RST_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_WD_ERR_STATUS_REGADDR,
-        PMIC_WD_ERR_STATUS_WD_FAIL_INT_SHIFT,
+        PMIC_WD_FAIL_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_WD_ERR_STATUS_REGADDR,
-        PMIC_WD_ERR_STATUS_WD_LONGWIN_TIMEOUT_INT_SHIFT,
+        PMIC_WD_LONGWIN_TIMEOUT_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_ESM_REGADDR,
-        PMIC_INT_ESM_ESM_MCU_RST_INT_SHIFT,
+        PMIC_ESM_MCU_RST_INT_SHIFT,
         PMIC_MASK_ESM_REGADDR,
-        PMIC_MASK_ESM_ESM_MCU_RST_MASK_SHIFT
+        PMIC_ESM_MCU_RST_MASK_SHIFT
     },
     {
         PMIC_INT_ESM_REGADDR,
-        PMIC_INT_ESM_ESM_MCU_FAIL_INT_SHIFT,
+        PMIC_ESM_MCU_FAIL_INT_SHIFT,
         PMIC_MASK_ESM_REGADDR,
-        PMIC_MASK_ESM_ESM_MCU_FAIL_MASK_SHIFT
+        PMIC_ESM_MCU_FAIL_MASK_SHIFT
     },
     {
         PMIC_INT_ESM_REGADDR,
-        PMIC_INT_ESM_ESM_MCU_PIN_INT_SHIFT,
+        PMIC_ESM_MCU_PIN_INT_SHIFT,
         PMIC_MASK_ESM_REGADDR,
-        PMIC_MASK_ESM_ESM_MCU_PIN_MASK_SHIFT
+        PMIC_ESM_MCU_PIN_MASK_SHIFT
     },
     {
         PMIC_INT_ESM_REGADDR,
-        PMIC_INT_ESM_ESM_SOC_RST_INT_SHIFT,
+        PMIC_ESM_SOC_RST_INT_SHIFT,
         PMIC_MASK_ESM_REGADDR,
-        PMIC_MASK_ESM_ESM_SOC_RST_MASK_SHIFT
+        PMIC_ESM_SOC_RST_MASK_SHIFT
     },
     {
         PMIC_INT_ESM_REGADDR,
-        PMIC_INT_ESM_ESM_SOC_FAIL_INT_SHIFT,
+        PMIC_ESM_SOC_FAIL_INT_SHIFT,
         PMIC_MASK_ESM_REGADDR,
-        PMIC_MASK_ESM_ESM_SOC_FAIL_MASK_SHIFT
+        PMIC_ESM_SOC_FAIL_MASK_SHIFT
     },
     {
         PMIC_INT_ESM_REGADDR,
-        PMIC_INT_ESM_ESM_SOC_PIN_INT_SHIFT,
+        PMIC_ESM_SOC_PIN_INT_SHIFT,
         PMIC_MASK_ESM_REGADDR,
-        PMIC_MASK_ESM_ESM_SOC_PIN_MASK_SHIFT
+        PMIC_ESM_SOC_PIN_MASK_SHIFT
     },
     {
         PMIC_INT_READBACK_ERR_REGADDR,
-        PMIC_INT_READBACK_ERR_NRSTOUT_SOC_READBACK_INT_SHIFT,
+        PMIC_NRSTOUT_SOC_READBACK_INT_SHIFT,
         PMIC_MASK_READBACK_ERR_REGADDR,
-        PMIC_MASK_READBACK_ERR_NRSTOUT_SOC_READBACK_MASK_SHIFT
+        PMIC_NRSTOUT_SOC_READBACK_MASK_SHIFT
     },
     {
         PMIC_INT_READBACK_ERR_REGADDR,
-        PMIC_INT_READBACK_ERR_EN_DRV_READBACK_INT_SHIFT,
+        PMIC_EN_DRV_READBACK_INT_SHIFT,
         PMIC_MASK_READBACK_ERR_REGADDR,
-        PMIC_MASK_READBACK_ERR_EN_DRV_READBACK_MASK_SHIFT
+        PMIC_EN_DRV_READBACK_MASK_SHIFT
     },
     {
         PMIC_INT_COMM_ERR_REGADDR,
-        PMIC_INT_COMM_ERR_I2C2_ADR_ERR_INT_SHIFT,
+        PMIC_I2C2_ADR_ERR_INT_SHIFT,
         PMIC_MASK_COMM_ERR_REGADDR,
-        PMIC_MASK_COMM_ERR_I2C2_ADR_ERR_MASK_SHIFT
+        PMIC_I2C2_ADR_ERR_MASK_SHIFT
     },
     {
         PMIC_INT_COMM_ERR_REGADDR,
-        PMIC_INT_COMM_ERR_I2C2_CRC_ERR_INT_SHIFT,
+        PMIC_I2C2_CRC_ERR_INT_SHIFT,
         PMIC_MASK_COMM_ERR_REGADDR,
-        PMIC_MASK_COMM_ERR_I2C2_CRC_ERR_MASK_SHIFT
+        PMIC_I2C2_CRC_ERR_MASK_SHIFT
     },
     {
         PMIC_INT_COMM_ERR_REGADDR,
-        PMIC_INT_COMM_ERR_COMM_ADR_ERR_INT_SHIFT,
+        PMIC_COMM_ADR_ERR_INT_SHIFT,
         PMIC_MASK_COMM_ERR_REGADDR,
-        PMIC_MASK_COMM_ERR_COMM_ADR_ERR_MASK_SHIFT
+        PMIC_COMM_ADR_ERR_MASK_SHIFT
     },
     {
         PMIC_INT_COMM_ERR_REGADDR,
-        PMIC_INT_COMM_ERR_COMM_CRC_ERR_INT_SHIFT,
+        PMIC_COMM_CRC_ERR_INT_SHIFT,
         PMIC_MASK_COMM_ERR_REGADDR,
-        PMIC_MASK_COMM_ERR_COMM_CRC_ERR_MASK_SHIFT
+        PMIC_COMM_CRC_ERR_MASK_SHIFT
     },
     {
         PMIC_INT_COMM_ERR_REGADDR,
-        PMIC_INT_COMM_ERR_COMM_FRM_ERR_INT_SHIFT,
+        PMIC_COMM_FRM_ERR_INT_SHIFT,
         PMIC_MASK_COMM_ERR_REGADDR,
-        PMIC_MASK_COMM_ERR_COMM_FRM_ERR_MASK_SHIFT
+        PMIC_COMM_FRM_ERR_MASK_SHIFT
     },
     {
         PMIC_INT_FSM_ERR_REGADDR,
-        PMIC_INT_FSM_ERR_SOC_PWR_ERR_INT_SHIFT,
+        PMIC_SOC_PWR_ERR_INT_SHIFT,
         PMIC_MASK_FSM_ERR_REGADDR,
-        PMIC_MASK_FSM_ERR_SOC_PWR_ERR_MASK_SHIFT
+        PMIC_SOC_PWR_ERR_MASK_SHIFT
     },
     {
         PMIC_INT_FSM_ERR_REGADDR,
-        PMIC_INT_FSM_ERR_MCU_PWR_ERR_INT_SHIFT,
+        PMIC_MCU_PWR_ERR_INT_SHIFT,
         PMIC_MASK_FSM_ERR_REGADDR,
-        PMIC_MASK_FSM_ERR_MCU_PWR_ERR_MASK_SHIFT
+        PMIC_MCU_PWR_ERR_MASK_SHIFT
     },
     {
         PMIC_INT_FSM_ERR_REGADDR,
-        PMIC_INT_FSM_ERR_ORD_SHUTDOWN_INT_SHIFT,
+        PMIC_ORD_SHUTDOWN_INT_SHIFT,
         PMIC_MASK_FSM_ERR_REGADDR,
-        PMIC_MASK_FSM_ERR_ORD_SHUTDOWN_MASK_SHIFT
+        PMIC_ORD_SHUTDOWN_MASK_SHIFT
     },
     {
         PMIC_INT_FSM_ERR_REGADDR,
-        PMIC_INT_FSM_ERR_IMM_SHUTDOWN_INT_SHIFT,
+        PMIC_IMM_SHUTDOWN_INT_SHIFT,
         PMIC_MASK_FSM_ERR_REGADDR,
-        PMIC_MASK_FSM_ERR_IMM_SHUTDOWN_MASK_SHIFT
+        PMIC_IMM_SHUTDOWN_MASK_SHIFT
     },
     {
         PMIC_INT_SEVERE_ERR_REGADDR,
-        PMIC_INT_SEVERE_ERR_PFSM_ERR_INT_SHIFT,
-        PMIC_IRQ_INVALID_REGADDR,
-        PMIC_IRQ_INVALID_BIT_SHIFT
-    },
-    {
-        PMIC_INT_SEVERE_ERR_REGADDR,
-        PMIC_INT_SEVERE_ERR_VCCA_OVP_INT_SHIFT,
+        PMIC_PFSM_ERR_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_SEVERE_ERR_REGADDR,
-        PMIC_INT_SEVERE_ERR_TSD_IMM_INT_SHIFT,
+        PMIC_VCCA_OVP_INT_SHIFT,
+        PMIC_IRQ_INVALID_REGADDR,
+        PMIC_IRQ_INVALID_BIT_SHIFT
+    },
+    {
+        PMIC_INT_SEVERE_ERR_REGADDR,
+        PMIC_TSD_IMM_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_MODERATE_ERR_REGADDR,
-        PMIC_INT_MODERATE_ERR_NRSTOUT_READBACK_INT_SHIFT,
+        PMIC_NRSTOUT_RDBK_INT_SHIFT,
         PMIC_MASK_MODERATE_ERR_REGADDR,
-        PMIC_MASK_MODERATE_ERR_NRSTOUT_READBACK_MASK_SHIFT
+        PMIC_NRSTOUT_RDBK_MASK_SHIFT
     },
     {
         PMIC_INT_MODERATE_ERR_REGADDR,
-        PMIC_INT_MODERATE_ERR_NINT_READBACK_INT_SHIFT,
+        PMIC_NINT_READBACK_INT_SHIFT,
         PMIC_MASK_MODERATE_ERR_REGADDR,
-        PMIC_MASK_MODERATE_ERR_NINT_READBACK_MASK_SHIFT
+        PMIC_NINT_READBACK_MASK_SHIFT
     },
     {
         PMIC_INT_MODERATE_ERR_REGADDR,
-        PMIC_INT_MODERATE_ERR_NPWRON_LONG_INT_SHIFT,
+        PMIC_TPS6594X_NPWRON_LONG_INT_SHIFT,
         PMIC_MASK_MODERATE_ERR_REGADDR,
-        PMIC_MASK_MODERATE_ERR_NPWRON_LONG_MASK_SHIFT
+        PMIC_TPS6594X_NPWRON_LONG_MASK_SHIFT
     },
     {
         PMIC_INT_MODERATE_ERR_REGADDR,
-        PMIC_INT_MODERATE_ERR_SPMI_ERR_INT_SHIFT,
+        PMIC_SPMI_ERR_INT_SHIFT,
         PMIC_MASK_MODERATE_ERR_REGADDR,
-        PMIC_MASK_MODERATE_ERR_SPMI_ERR_MASK_SHIFT
+        PMIC_SPMI_ERR_MASK_SHIFT
     },
     {
         PMIC_INT_MODERATE_ERR_REGADDR,
-        PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_SHIFT,
+        PMIC_RECOV_CNT_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_MODERATE_ERR_REGADDR,
-        PMIC_INT_MODERATE_ERR_REG_CRC_ERR_INT_SHIFT,
+        PMIC_REG_CRC_ERR_INT_SHIFT,
         PMIC_MASK_MODERATE_ERR_REGADDR,
-        PMIC_MASK_MODERATE_ERR_REG_CRC_ERR_MASK_SHIFT
+        PMIC_REG_CRC_ERR_MASK_SHIFT
     },
     {
         PMIC_INT_MODERATE_ERR_REGADDR,
-        PMIC_INT_MODERATE_ERR_BIST_FAIL_INT_SHIFT,
+        PMIC_BIST_FAIL_INT_SHIFT,
         PMIC_MASK_MODERATE_ERR_REGADDR,
-        PMIC_MASK_MODERATE_ERR_BIST_FAIL_MASK_SHIFT
+        PMIC_BIST_FAIL_MASK_SHIFT
     },
     {
         PMIC_INT_MODERATE_ERR_REGADDR,
-        PMIC_INT_MODERATE_ERR_TSD_ORD_INT_SHIFT,
+        PMIC_TSD_ORD_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_MISC_REGADDR,
-        PMIC_INT_MISC_TWARN_INT_SHIFT,
+        PMIC_TWARN_INT_SHIFT,
         PMIC_MASK_MISC_REGADDR,
-        PMIC_MASK_MISC_TWARN_MASK_SHIFT
+        PMIC_TWARN_MASK_SHIFT
     },
     {
         PMIC_INT_MISC_REGADDR,
-        PMIC_INT_MISC_EXT_CLK_INT_SHIFT,
+        PMIC_EXT_CLK_INT_SHIFT,
         PMIC_MASK_MISC_REGADDR,
-        PMIC_MASK_MISC_EXT_CLK_MASK_SHIFT
+        PMIC_EXT_CLK_MASK_SHIFT
     },
     {
         PMIC_INT_MISC_REGADDR,
-        PMIC_INT_MISC_BIST_PASS_INT_SHIFT,
+        PMIC_BIST_PASS_INT_SHIFT,
         PMIC_MASK_MISC_REGADDR,
-        PMIC_MASK_MISC_BIST_PASS_MASK_SHIFT
+        PMIC_BIST_PASS_MASK_SHIFT
     },
     {
         PMIC_INT_STARTUP_REGADDR,
-        PMIC_INT_STARTUP_FSD_INT_SHIFT,
+        PMIC_FSD_INT_SHIFT,
         PMIC_MASK_STARTUP_REGADDR,
-        PMIC_MASK_STARTUP_FSD_MASK_SHIFT
+        PMIC_FSD_MASK_SHIFT
     },
     {
         PMIC_RTC_STATUS_REGADDR,
-        PMIC_RTC_STATUS_ALARM_SHIFT,
+        PMIC_RTC_ALARM_SHIFT,
         PMIC_RTC_INTERRUPTS_REGADDR,
-        PMIC_RTC_INTERRUPTS_IT_ALARM_SHIFT
+        PMIC_RTC_IT_ALARM_SHIFT
     },
     {
         PMIC_RTC_STATUS_REGADDR,
-        PMIC_RTC_STATUS_TIMER_SHIFT,
+        PMIC_RTC_TIMER_SHIFT,
         PMIC_RTC_INTERRUPTS_REGADDR,
-        PMIC_RTC_INTERRUPTS_IT_TIMER_SHIFT
+        PMIC_RTC_IT_TIMER_SHIFT
     },
     {
         PMIC_INT_STARTUP_REGADDR,
-        PMIC_INT_STARTUP_ENABLE_INT_SHIFT,
+        PMIC_ENABLE_INT_SHIFT,
         PMIC_MASK_STARTUP_REGADDR,
-        PMIC_MASK_STARTUP_ENABLE_MASK_SHIFT,
+        PMIC_ENABLE_MASK_SHIFT,
     },
     {
         PMIC_INT_STARTUP_REGADDR,
-        PMIC_INT_STARTUP_NPWRON_START_INT_SHIFT,
+        PMIC_TPS6594X_NPWRON_STRT_INT_SHIFT,
         PMIC_MASK_STARTUP_REGADDR,
-        PMIC_MASK_STARTUP_NPWRON_START_MASK_SHIFT
+        PMIC_TPS6594X_NPWRON_STRT_MASK_SHIFT
     },
     {
         PMIC_INT_GPIO1_8_REGADDR,
-        PMIC_INT_GPIO1_8_GPIO8_INT_SHIFT,
+        PMIC_GPIO8_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_GPIO1_8_REGADDR,
-        PMIC_INT_GPIO1_8_GPIO7_INT_SHIFT,
+        PMIC_GPIO7_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_GPIO1_8_REGADDR,
-        PMIC_INT_GPIO1_8_GPIO6_INT_SHIFT,
+        PMIC_GPIO6_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_GPIO1_8_REGADDR,
-        PMIC_INT_GPIO1_8_GPIO5_INT_SHIFT,
+        PMIC_GPIO5_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_GPIO1_8_REGADDR,
-        PMIC_INT_GPIO1_8_GPIO4_INT_SHIFT,
+        PMIC_GPIO4_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_GPIO1_8_REGADDR,
-        PMIC_INT_GPIO1_8_GPIO3_INT_SHIFT,
+        PMIC_GPIO3_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_GPIO1_8_REGADDR,
-        PMIC_INT_GPIO1_8_GPIO2_INT_SHIFT,
+        PMIC_GPIO2_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_GPIO1_8_REGADDR,
-        PMIC_INT_GPIO1_8_GPIO1_INT_SHIFT,
+        PMIC_GPIO1_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_GPIO_REGADDR,
-        PMIC_INT_GPIO_GPIO11_INT_SHIFT,
+        PMIC_TPS6594X_GPIO11_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_GPIO_REGADDR,
-        PMIC_INT_GPIO_GPIO10_INT_SHIFT,
+        PMIC_GPIO10_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_GPIO_REGADDR,
-        PMIC_INT_GPIO_GPIO9_INT_SHIFT,
+        PMIC_GPIO9_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_VMON_REGADDR,
-        PMIC_INT_VMON_VCCA_UV_INT_SHIFT,
+        PMIC_VCCA_UV_INT_SHIFT,
         PMIC_MASK_VMON_REGADDR,
-        PMIC_MASK_VMON_VCCA_UV_MASK_SHIFT
+        PMIC_VCCA_UV_MASK_SHIFT
     },
     {
         PMIC_INT_VMON_REGADDR,
-        PMIC_INT_VMON_VCCA_OV_INT_SHIFT,
+        PMIC_VCCA_OV_INT_SHIFT,
         PMIC_MASK_VMON_REGADDR,
-        PMIC_MASK_VMON_VCCA_OV_MASK_SHIFT
+        PMIC_VCCA_OV_MASK_SHIFT
     },
     {
-        PMIC_INT_LDO3_4_REGADDR,
-        PMIC_INT_LDO3_4_LDO4_ILIM_INT_SHIFT,
-        PMIC_MASK_LDO3_4_REGADDR,
-        PMIC_MASK_LDO3_4_LDO4_ILIM_MASK_SHIFT
+        PMIC_TPS6594X_INT_LDO3_4_REGADDR,
+        PMIC_TPS6594X_LDO4_ILIM_INT_SHIFT,
+        PMIC_TPS6594X_MASK_LDO3_4_REGADDR,
+        PMIC_TPS6594X_LDO4_ILIM_MASK_SHIFT
     },
     {
-        PMIC_INT_LDO3_4_REGADDR,
-        PMIC_INT_LDO3_4_LDO4_SC_INT_SHIFT,
+        PMIC_TPS6594X_INT_LDO3_4_REGADDR,
+        PMIC_TPS6594X_LDO4_SC_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
-        PMIC_INT_LDO3_4_REGADDR,
-        PMIC_INT_LDO3_4_LDO4_UV_INT_SHIFT,
-        PMIC_MASK_LDO3_4_REGADDR,
-        PMIC_MASK_LDO3_4_LDO4_UV_MASK_SHIFT
+        PMIC_TPS6594X_INT_LDO3_4_REGADDR,
+        PMIC_TPS6594X_LDO4_UV_INT_SHIFT,
+        PMIC_TPS6594X_MASK_LDO3_4_REGADDR,
+        PMIC_TPS6594X_LDO4_UV_MASK_SHIFT
     },
     {
-        PMIC_INT_LDO3_4_REGADDR,
-        PMIC_INT_LDO3_4_LDO4_OV_INT_SHIFT,
-        PMIC_MASK_LDO3_4_REGADDR,
-        PMIC_MASK_LDO3_4_LDO4_OV_MASK_SHIFT
+        PMIC_TPS6594X_INT_LDO3_4_REGADDR,
+        PMIC_TPS6594X_LDO4_OV_INT_SHIFT,
+        PMIC_TPS6594X_MASK_LDO3_4_REGADDR,
+        PMIC_TPS6594X_LDO4_OV_MASK_SHIFT
     },
     {
-        PMIC_INT_LDO3_4_REGADDR,
-        PMIC_INT_LDO3_4_LDO3_ILIM_INT_SHIFT,
-        PMIC_MASK_LDO3_4_REGADDR,
-        PMIC_MASK_LDO3_4_LDO3_ILIM_MASK_SHIFT
+        PMIC_TPS6594X_INT_LDO3_4_REGADDR,
+        PMIC_TPS6594X_LDO3_ILIM_INT_SHIFT,
+        PMIC_TPS6594X_MASK_LDO3_4_REGADDR,
+        PMIC_TPS6594X_LDO3_ILIM_MASK_SHIFT
     },
     {
-        PMIC_INT_LDO3_4_REGADDR,
-        PMIC_INT_LDO3_4_LDO3_SC_INT_SHIFT,
+        PMIC_TPS6594X_INT_LDO3_4_REGADDR,
+        PMIC_TPS6594X_LDO3_SC_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
-        PMIC_INT_LDO3_4_REGADDR,
-        PMIC_INT_LDO3_4_LDO3_UV_INT_SHIFT,
-        PMIC_MASK_LDO3_4_REGADDR,
-        PMIC_MASK_LDO3_4_LDO3_UV_MASK_SHIFT
+        PMIC_TPS6594X_INT_LDO3_4_REGADDR,
+        PMIC_TPS6594X_LDO3_UV_INT_SHIFT,
+        PMIC_TPS6594X_MASK_LDO3_4_REGADDR,
+        PMIC_TPS6594X_LDO3_UV_MASK_SHIFT
     },
     {
-        PMIC_INT_LDO3_4_REGADDR,
-        PMIC_INT_LDO3_4_LDO3_OV_INT_SHIFT,
-        PMIC_MASK_LDO3_4_REGADDR,
-        PMIC_MASK_LDO3_4_LDO3_OV_MASK_SHIFT
+        PMIC_TPS6594X_INT_LDO3_4_REGADDR,
+        PMIC_TPS6594X_LDO3_OV_INT_SHIFT,
+        PMIC_TPS6594X_MASK_LDO3_4_REGADDR,
+        PMIC_TPS6594X_LDO3_OV_MASK_SHIFT
     },
     {
-        PMIC_INT_LDO1_2_REGADDR,
-        PMIC_INT_LDO1_2_LDO2_ILIM_INT_SHIFT,
-        PMIC_MASK_LDO1_2_REGADDR,
-        PMIC_MASK_LDO1_2_LDO2_ILIM_MASK_SHIFT
+        PMIC_TPS6594X_INT_LDO1_2_REGADDR,
+        PMIC_TPS6594X_LDO2_ILIM_INT_SHIFT,
+        PMIC_TPS6594X_MASK_LDO1_2_REGADDR,
+        PMIC_TPS6594X_LDO2_ILIM_MASK_SHIFT
     },
     {
-        PMIC_INT_LDO1_2_REGADDR,
-        PMIC_INT_LDO1_2_LDO2_SC_INT_SHIFT,
+        PMIC_TPS6594X_INT_LDO1_2_REGADDR,
+        PMIC_TPS6594X_LDO2_SC_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
-        PMIC_INT_LDO1_2_REGADDR,
-        PMIC_INT_LDO1_2_LDO2_UV_INT_SHIFT,
-        PMIC_MASK_LDO1_2_REGADDR,
-        PMIC_MASK_LDO1_2_LDO2_UV_MASK_SHIFT
+        PMIC_TPS6594X_INT_LDO1_2_REGADDR,
+        PMIC_TPS6594X_LDO2_UV_INT_SHIFT,
+        PMIC_TPS6594X_MASK_LDO1_2_REGADDR,
+        PMIC_TPS6594X_LDO2_UV_MASK_SHIFT
     },
     {
-        PMIC_INT_LDO1_2_REGADDR,
-        PMIC_INT_LDO1_2_LDO2_OV_INT_SHIFT,
-        PMIC_MASK_LDO1_2_REGADDR,
-        PMIC_MASK_LDO1_2_LDO2_OV_MASK_SHIFT
+        PMIC_TPS6594X_INT_LDO1_2_REGADDR,
+        PMIC_TPS6594X_LDO2_OV_INT_SHIFT,
+        PMIC_TPS6594X_MASK_LDO1_2_REGADDR,
+        PMIC_TPS6594X_LDO2_OV_MASK_SHIFT
     },
     {
-        PMIC_INT_LDO1_2_REGADDR,
-        PMIC_INT_LDO1_2_LDO1_ILIM_INT_SHIFT,
-        PMIC_MASK_LDO1_2_REGADDR,
-        PMIC_MASK_LDO1_2_LDO1_ILIM_MASK_SHIFT
+        PMIC_TPS6594X_INT_LDO1_2_REGADDR,
+        PMIC_TPS6594X_LDO1_ILIM_INT_SHIFT,
+        PMIC_TPS6594X_MASK_LDO1_2_REGADDR,
+        PMIC_TPS6594X_LDO1_ILIM_MASK_SHIFT
     },
     {
-        PMIC_INT_LDO1_2_REGADDR,
-        PMIC_INT_LDO1_2_LDO1_SC_INT_SHIFT,
+        PMIC_TPS6594X_INT_LDO1_2_REGADDR,
+        PMIC_TPS6594X_LDO1_SC_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
-        PMIC_INT_LDO1_2_REGADDR,
-        PMIC_INT_LDO1_2_LDO1_UV_INT_SHIFT,
-        PMIC_MASK_LDO1_2_REGADDR,
-        PMIC_MASK_LDO1_2_LDO1_UV_MASK_SHIFT
+        PMIC_TPS6594X_INT_LDO1_2_REGADDR,
+        PMIC_TPS6594X_LDO1_UV_INT_SHIFT,
+        PMIC_TPS6594X_MASK_LDO1_2_REGADDR,
+        PMIC_TPS6594X_LDO1_UV_MASK_SHIFT
     },
     {
-        PMIC_INT_LDO1_2_REGADDR,
-        PMIC_INT_LDO1_2_LDO1_OV_INT_SHIFT,
-        PMIC_MASK_LDO1_2_REGADDR,
-        PMIC_MASK_LDO1_2_LDO1_OV_MASK_SHIFT
+        PMIC_TPS6594X_INT_LDO1_2_REGADDR,
+        PMIC_TPS6594X_LDO1_OV_INT_SHIFT,
+        PMIC_TPS6594X_MASK_LDO1_2_REGADDR,
+        PMIC_TPS6594X_LDO1_OV_MASK_SHIFT
     },
     {
-        PMIC_INT_BUCK5_REGADDR,
-        PMIC_INT_BUCK5_BUCK5_ILIM_INT_SHIFT,
-        PMIC_MASK_BUCK5_REGADDR,
-        PMIC_MASK_BUCK5_BUCK5_ILIM_MASK_SHIFT
+        PMIC_TPS6594X_INT_BUCK5_REGADDR,
+        PMIC_TPS6594X_BUCK5_ILIM_INT_SHIFT,
+        PMIC_TPS6594X_MASK_BUCK5_REGADDR,
+        PMIC_BUCK5_ILIM_MASK_SHIFT
     },
     {
-        PMIC_INT_BUCK5_REGADDR,
-        PMIC_INT_BUCK5_BUCK5_SC_INT_SHIFT,
+        PMIC_TPS6594X_INT_BUCK5_REGADDR,
+        PMIC_TPS6594X_BUCK5_SC_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
-        PMIC_INT_BUCK5_REGADDR,
-        PMIC_INT_BUCK5_BUCK5_UV_INT_SHIFT,
-        PMIC_MASK_BUCK5_REGADDR,
-        PMIC_MASK_BUCK5_BUCK5_UV_MASK_SHIFT
+        PMIC_TPS6594X_INT_BUCK5_REGADDR,
+        PMIC_TPS6594X_BUCK5_UV_INT_SHIFT,
+        PMIC_TPS6594X_MASK_BUCK5_REGADDR,
+        PMIC_BUCK5_UV_MASK_SHIFT
     },
     {
-        PMIC_INT_BUCK5_REGADDR,
-        PMIC_INT_BUCK5_BUCK5_OV_INT_SHIFT,
-        PMIC_MASK_BUCK5_REGADDR,
-        PMIC_MASK_BUCK5_BUCK5_OV_MASK_SHIFT
+        PMIC_TPS6594X_INT_BUCK5_REGADDR,
+        PMIC_TPS6594X_BUCK5_OV_INT_SHIFT,
+        PMIC_TPS6594X_MASK_BUCK5_REGADDR,
+        PMIC_BUCK5_OV_MASK_SHIFT
     },
     {
         PMIC_INT_BUCK3_4_REGADDR,
-        PMIC_INT_BUCK3_4_BUCK4_ILIM_INT_SHIFT,
+        PMIC_BUCK4_ILIM_INT_SHIFT,
         PMIC_MASK_BUCK3_4_REGADDR,
-        PMIC_MASK_BUCK3_4_BUCK4_ILIM_MASK_SHIFT
+        PMIC_BUCK4_ILIM_MASK_SHIFT
     },
     {
         PMIC_INT_BUCK3_4_REGADDR,
-        PMIC_INT_BUCK3_4_BUCK4_SC_INT_SHIFT,
+        PMIC_BUCK4_SC_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_BUCK3_4_REGADDR,
-        PMIC_INT_BUCK3_4_BUCK4_UV_INT_SHIFT,
+        PMIC_BUCK4_UV_INT_SHIFT,
         PMIC_MASK_BUCK3_4_REGADDR,
-        PMIC_MASK_BUCK3_4_BUCK4_UV_MASK_SHIFT
+        PMIC_BUCK4_UV_MASK_SHIFT
     },
     {
         PMIC_INT_BUCK3_4_REGADDR,
-        PMIC_INT_BUCK3_4_BUCK4_OV_INT_SHIFT,
+        PMIC_BUCK4_OV_INT_SHIFT,
         PMIC_MASK_BUCK3_4_REGADDR,
-        PMIC_MASK_BUCK3_4_BUCK4_OV_MASK_SHIFT
+        PMIC_BUCK4_OV_MASK_SHIFT
     },
     {
         PMIC_INT_BUCK3_4_REGADDR,
-        PMIC_INT_BUCK3_4_BUCK3_ILIM_INT_SHIFT,
+        PMIC_BUCK3_ILIM_INT_SHIFT,
         PMIC_MASK_BUCK3_4_REGADDR,
-        PMIC_MASK_BUCK3_4_BUCK3_ILIM_MASK_SHIFT
+        PMIC_BUCK3_ILIM_MASK_SHIFT
     },
     {
         PMIC_INT_BUCK3_4_REGADDR,
-        PMIC_INT_BUCK3_4_BUCK3_SC_INT_SHIFT,
+        PMIC_BUCK3_SC_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_BUCK3_4_REGADDR,
-        PMIC_INT_BUCK3_4_BUCK3_UV_INT_SHIFT,
+        PMIC_BUCK3_UV_INT_SHIFT,
         PMIC_MASK_BUCK3_4_REGADDR,
-        PMIC_MASK_BUCK3_4_BUCK3_UV_MASK_SHIFT
+        PMIC_BUCK3_UV_MASK_SHIFT
     },
     {
         PMIC_INT_BUCK3_4_REGADDR,
-        PMIC_INT_BUCK3_4_BUCK3_OV_INT_SHIFT,
+        PMIC_BUCK3_OV_INT_SHIFT,
         PMIC_MASK_BUCK3_4_REGADDR,
-        PMIC_MASK_BUCK3_4_BUCK3_OV_MASK_SHIFT
+        PMIC_BUCK3_OV_MASK_SHIFT
     },
     {
         PMIC_INT_BUCK1_2_REGADDR,
-        PMIC_INT_BUCK1_2_BUCK2_ILIM_INT_SHIFT,
+        PMIC_BUCK2_ILIM_INT_SHIFT,
         PMIC_MASK_BUCK1_2_REGADDR,
-        PMIC_MASK_BUCK1_2_BUCK2_ILIM_MASK_SHIFT
+        PMIC_BUCK2_ILIM_MASK_SHIFT
     },
     {
         PMIC_INT_BUCK1_2_REGADDR,
-        PMIC_INT_BUCK1_2_BUCK2_SC_INT_SHIFT,
+        PMIC_BUCK2_SC_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_BUCK1_2_REGADDR,
-        PMIC_INT_BUCK1_2_BUCK2_UV_INT_SHIFT,
+        PMIC_BUCK2_UV_INT_SHIFT,
         PMIC_MASK_BUCK1_2_REGADDR,
-        PMIC_MASK_BUCK1_2_BUCK2_UV_MASK_SHIFT
+        PMIC_BUCK2_UV_MASK_SHIFT
     },
     {
         PMIC_INT_BUCK1_2_REGADDR,
-        PMIC_INT_BUCK1_2_BUCK2_OV_INT_SHIFT,
+        PMIC_BUCK2_OV_INT_SHIFT,
         PMIC_MASK_BUCK1_2_REGADDR,
-        PMIC_MASK_BUCK1_2_BUCK2_OV_MASK_SHIFT
+        PMIC_BUCK2_OV_MASK_SHIFT
     },
     {
         PMIC_INT_BUCK1_2_REGADDR,
-        PMIC_INT_BUCK1_2_BUCK1_ILIM_INT_SHIFT,
+        PMIC_BUCK1_ILIM_INT_SHIFT,
         PMIC_MASK_BUCK1_2_REGADDR,
-        PMIC_MASK_BUCK1_2_BUCK1_ILIM_MASK_SHIFT
+        PMIC_BUCK1_ILIM_MASK_SHIFT
     },
     {
         PMIC_INT_BUCK1_2_REGADDR,
-        PMIC_INT_BUCK1_2_BUCK1_SC_INT_SHIFT,
+        PMIC_BUCK1_SC_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_BUCK1_2_REGADDR,
-        PMIC_INT_BUCK1_2_BUCK1_UV_INT_SHIFT,
+        PMIC_BUCK1_UV_INT_SHIFT,
         PMIC_MASK_BUCK1_2_REGADDR,
-        PMIC_MASK_BUCK1_2_BUCK1_UV_MASK_SHIFT
+        PMIC_BUCK1_UV_MASK_SHIFT
     },
     {
         PMIC_INT_BUCK1_2_REGADDR,
-        PMIC_INT_BUCK1_2_BUCK1_OV_INT_SHIFT,
+        PMIC_BUCK1_OV_INT_SHIFT,
         PMIC_MASK_BUCK1_2_REGADDR,
-        PMIC_MASK_BUCK1_2_BUCK1_OV_MASK_SHIFT
+        PMIC_BUCK1_OV_MASK_SHIFT
     },
     {
         PMIC_INT_STARTUP_REGADDR,
-        PMIC_INT_STARTUP_SOFT_REBOOT_INT_SHIFT,
+        PMIC_SOFT_REBOOT_INT_SHIFT,
         PMIC_MASK_STARTUP_REGADDR,
-        PMIC_MASK_STARTUP_SOFT_REBOOT_MASK_SHIFT
+        PMIC_SOFT_REBOOT_MASK_SHIFT
     },
 };
 
@@ -594,69 +594,69 @@ static Pmic_GpioIntrTypeCfg_t tps6594x_gpioIntrCfg[] =
 {
     {
         PMIC_MASK_GPIO1_8_RISE_REGADDR,
-        PMIC_MASK_GPIO1_8_RISE_GPIO1_RISE_MASK_SHIFT,
+        PMIC_GPIO1_RISE_MASK_SHIFT,
         PMIC_MASK_GPIO1_8_FALL_REGADDR,
-        PMIC_MASK_GPIO1_8_FALL_GPIO1_FALL_MASK_SHIFT
+        PMIC_GPIO1_FALL_MASK_SHIFT
     },
     {
         PMIC_MASK_GPIO1_8_RISE_REGADDR,
-        PMIC_MASK_GPIO1_8_RISE_GPIO2_RISE_MASK_SHIFT,
+        PMIC_GPIO2_RISE_MASK_SHIFT,
         PMIC_MASK_GPIO1_8_FALL_REGADDR,
-        PMIC_MASK_GPIO1_8_FALL_GPIO2_FALL_MASK_SHIFT
+        PMIC_GPIO2_FALL_MASK_SHIFT
     },
     {
         PMIC_MASK_GPIO1_8_RISE_REGADDR,
-        PMIC_MASK_GPIO1_8_RISE_GPIO3_RISE_MASK_SHIFT,
+        PMIC_GPIO3_RISE_MASK_SHIFT,
         PMIC_MASK_GPIO1_8_FALL_REGADDR,
-        PMIC_MASK_GPIO1_8_FALL_GPIO3_FALL_MASK_SHIFT
+        PMIC_GPIO3_FALL_MASK_SHIFT
     },
     {
         PMIC_MASK_GPIO1_8_RISE_REGADDR,
-        PMIC_MASK_GPIO1_8_RISE_GPIO4_RISE_MASK_SHIFT,
+        PMIC_GPIO4_RISE_MASK_SHIFT,
         PMIC_MASK_GPIO1_8_FALL_REGADDR,
-        PMIC_MASK_GPIO1_8_FALL_GPIO4_FALL_MASK_SHIFT
+        PMIC_GPIO4_FALL_MASK_SHIFT
     },
     {
         PMIC_MASK_GPIO1_8_RISE_REGADDR,
-        PMIC_MASK_GPIO1_8_RISE_GPIO5_RISE_MASK_SHIFT,
+        PMIC_GPIO5_RISE_MASK_SHIFT,
         PMIC_MASK_GPIO1_8_FALL_REGADDR,
-        PMIC_MASK_GPIO1_8_FALL_GPIO5_FALL_MASK_SHIFT
+        PMIC_GPIO5_FALL_MASK_SHIFT
     },
     {
         PMIC_MASK_GPIO1_8_RISE_REGADDR,
-        PMIC_MASK_GPIO1_8_RISE_GPIO6_RISE_MASK_SHIFT,
+        PMIC_GPIO6_RISE_MASK_SHIFT,
         PMIC_MASK_GPIO1_8_FALL_REGADDR,
-        PMIC_MASK_GPIO1_8_FALL_GPIO6_FALL_MASK_SHIFT
+        PMIC_GPIO6_FALL_MASK_SHIFT
     },
     {
         PMIC_MASK_GPIO1_8_RISE_REGADDR,
-        PMIC_MASK_GPIO1_8_RISE_GPIO7_RISE_MASK_SHIFT,
+        PMIC_GPIO7_RISE_MASK_SHIFT,
         PMIC_MASK_GPIO1_8_FALL_REGADDR,
-        PMIC_MASK_GPIO1_8_FALL_GPIO7_FALL_MASK_SHIFT
+        PMIC_GPIO7_FALL_MASK_SHIFT
     },
     {
         PMIC_MASK_GPIO1_8_RISE_REGADDR,
-        PMIC_MASK_GPIO1_8_RISE_GPIO8_RISE_MASK_SHIFT,
+        PMIC_GPIO8_RISE_MASK_SHIFT,
         PMIC_MASK_GPIO1_8_FALL_REGADDR,
-        PMIC_MASK_GPIO1_8_FALL_GPIO8_FALL_MASK_SHIFT
+        PMIC_GPIO8_FALL_MASK_SHIFT
     },
     {
-        PMIC_MASK_GPIO9_11_REGADDR,
-        PMIC_MASK_GPIO9_11_GPIO9_RISE_MASK_SHIFT,
-        PMIC_MASK_GPIO9_11_REGADDR,
-        PMIC_MASK_GPIO9_11_GPIO9_FALL_MASK_SHIFT
+        PMIC_TPS6594X_MASK_GPIO9_11_REGADDR,
+        PMIC_TPS6594X_GPIO9_RISE_MASK_SHIFT,
+        PMIC_TPS6594X_MASK_GPIO9_11_REGADDR,
+        PMIC_TPS6594X_GPIO9_FALL_MASK_SHIFT
     },
     {
-        PMIC_MASK_GPIO9_11_REGADDR,
-        PMIC_MASK_GPIO9_11_GPIO10_RISE_MASK_SHIFT,
-        PMIC_MASK_GPIO9_11_REGADDR,
-        PMIC_MASK_GPIO9_11_GPIO10_FALL_MASK_SHIFT
+        PMIC_TPS6594X_MASK_GPIO9_11_REGADDR,
+        PMIC_TPS6594X_GPIO10_RISE_MASK_SHIFT,
+        PMIC_TPS6594X_MASK_GPIO9_11_REGADDR,
+        PMIC_TPS6594X_GPIO10_FALL_MASK_SHIFT
     },
     {
-        PMIC_MASK_GPIO9_11_REGADDR,
-        PMIC_MASK_GPIO9_11_GPIO11_RISE_MASK_SHIFT,
-        PMIC_MASK_GPIO9_11_REGADDR,
-        PMIC_MASK_GPIO9_11_GPIO11_FALL_MASK_SHIFT
+        PMIC_TPS6594X_MASK_GPIO9_11_REGADDR,
+        PMIC_TPS6594X_GPIO11_RISE_MASK_SHIFT,
+        PMIC_TPS6594X_MASK_GPIO9_11_REGADDR,
+        PMIC_TPS6594X_GPIO11_FALL_MASK_SHIFT
     },
 };
 
@@ -688,42 +688,42 @@ static int32_t Pmic_tps6594x_getBuck1Buck2Err(Pmic_CoreHandle_t *pPmicCoreHandle
 
     if ((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
     {
-        if ((regData & PMIC_INT_BUCK1_2_BUCK2_OV_INT_MASK) != 0U)
+        if ((regData & PMIC_BUCK2_OV_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK2_OV_INT);
         }
 
-        if ((regData & PMIC_INT_BUCK1_2_BUCK2_UV_INT_MASK) != 0U)
+        if ((regData & PMIC_BUCK2_UV_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK2_UV_INT);
         }
 
-        if ((regData & PMIC_INT_BUCK1_2_BUCK2_SC_INT_MASK) != 0U)
+        if ((regData & PMIC_BUCK2_SC_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK2_SC_INT);
         }
 
-        if ((regData & PMIC_INT_BUCK1_2_BUCK2_ILIM_INT_MASK) != 0U)
+        if ((regData & PMIC_BUCK2_ILIM_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK2_ILIM_INT);
         }
 
-        if ((regData & PMIC_INT_BUCK1_2_BUCK1_OV_INT_MASK) != 0U)
+        if ((regData & PMIC_BUCK1_OV_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK1_OV_INT);
         }
 
-        if ((regData & PMIC_INT_BUCK1_2_BUCK1_UV_INT_MASK) != 0U)
+        if ((regData & PMIC_BUCK1_UV_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK1_UV_INT);
         }
 
-        if ((regData & PMIC_INT_BUCK1_2_BUCK1_SC_INT_MASK) != 0U)
+        if ((regData & PMIC_BUCK1_SC_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK1_SC_INT);
         }
 
-        if ((regData & PMIC_INT_BUCK1_2_BUCK1_ILIM_INT_MASK) != 0U)
+        if ((regData & PMIC_BUCK1_ILIM_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK1_ILIM_INT);
         }
@@ -750,42 +750,42 @@ static int32_t Pmic_tps6594x_getBuck3Buck4Err(Pmic_CoreHandle_t *pPmicCoreHandle
 
     if ((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
     {
-        if ((regData & PMIC_INT_BUCK3_4_BUCK4_OV_INT_MASK) != 0U)
+        if ((regData & PMIC_BUCK4_OV_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK4_OV_INT);
         }
 
-        if ((regData & PMIC_INT_BUCK3_4_BUCK4_UV_INT_MASK) != 0U)
+        if ((regData & PMIC_BUCK4_UV_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK4_UV_INT);
         }
 
-        if ((regData & PMIC_INT_BUCK3_4_BUCK4_SC_INT_MASK) != 0U)
+        if ((regData & PMIC_BUCK4_SC_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK4_SC_INT);
         }
 
-        if ((regData & PMIC_INT_BUCK3_4_BUCK4_ILIM_INT_MASK) != 0U)
+        if ((regData & PMIC_BUCK4_ILIM_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK4_ILIM_INT);
         }
 
-        if ((regData & PMIC_INT_BUCK3_4_BUCK3_OV_INT_MASK) != 0U)
+        if ((regData & PMIC_BUCK3_OV_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK3_OV_INT);
         }
 
-        if ((regData & PMIC_INT_BUCK3_4_BUCK3_UV_INT_MASK) != 0U)
+        if ((regData & PMIC_BUCK3_UV_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK3_UV_INT);
         }
 
-        if ((regData & PMIC_INT_BUCK3_4_BUCK3_SC_INT_MASK) != 0U)
+        if ((regData & PMIC_BUCK3_SC_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK3_SC_INT);
         }
 
-        if ((regData & PMIC_INT_BUCK3_4_BUCK3_ILIM_INT_MASK) != 0U)
+        if ((regData & PMIC_BUCK3_ILIM_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK3_ILIM_INT);
         }
@@ -804,33 +804,33 @@ Pmic_tps6594x_getBuckErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue, P
     uint8_t regData = 0U;
 
     /* PMIC BUCK 5 Interrupt Status Check */
-    if ((regValue & PMIC_INT_BUCK_BUCK5_INT_MASK) != 0U)
+    if ((regValue & PMIC_TPS6594X_BUCK5_INT_MASK) != 0U)
     {
         /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_INT_BUCK5_REGADDR, &regData);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TPS6594X_INT_BUCK5_REGADDR, &regData);
         /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
 
         if ((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
         {
-            if ((regData & PMIC_INT_BUCK5_BUCK5_OV_INT_MASK) != 0U)
+            if ((regData & PMIC_TPS6594X_BUCK5_OV_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK5_OV_INT);
             }
 
-            if ((regData & PMIC_INT_BUCK5_BUCK5_UV_INT_MASK) != 0U)
+            if ((regData & PMIC_TPS6594X_BUCK5_UV_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK5_UV_INT);
             }
 
-            if ((regData & PMIC_INT_BUCK5_BUCK5_SC_INT_MASK) != 0U)
+            if ((regData & PMIC_TPS6594X_BUCK5_SC_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK5_SC_INT);
             }
 
-            if ((regData & PMIC_INT_BUCK5_BUCK5_ILIM_INT_MASK) != 0U)
+            if ((regData & PMIC_TPS6594X_BUCK5_ILIM_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BUCK5_ILIM_INT);
             }
@@ -838,13 +838,13 @@ Pmic_tps6594x_getBuckErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue, P
     }
 
     /* PMIC BUCK3_4 Interrupt Status Check */
-    if ((regValue & PMIC_INT_BUCK_BUCK3_4_INT_MASK) != 0U)
+    if ((regValue & PMIC_BUCK3_4_INT_MASK) != 0U)
     {
         pmicStatus = Pmic_tps6594x_getBuck3Buck4Err(pPmicCoreHandle, pErrStat);
     }
 
     /* PMIC BUCK1_2 Interrupt Status Check */
-    if ((regValue & PMIC_INT_BUCK_BUCK1_2_INT_MASK) != 0U)
+    if ((regValue & PMIC_BUCK1_2_INT_MASK) != 0U)
     {
         pmicStatus = Pmic_tps6594x_getBuck1Buck2Err(pPmicCoreHandle, pErrStat);
     }
@@ -864,48 +864,48 @@ static int32_t Pmic_tps6594x_getLdo3Ldo4Err(Pmic_CoreHandle_t *pPmicCoreHandle, 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_INT_LDO3_4_REGADDR, &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TPS6594X_INT_LDO3_4_REGADDR, &regData);
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if ((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
     {
-        if ((regData & PMIC_INT_LDO3_4_LDO3_OV_INT_MASK) != 0U)
+        if ((regData & PMIC_TPS6594X_LDO3_OV_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO3_OV_INT);
         }
 
-        if ((regData & PMIC_INT_LDO3_4_LDO3_UV_INT_MASK) != 0U)
+        if ((regData & PMIC_TPS6594X_LDO3_UV_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO3_UV_INT);
         }
 
-        if ((regData & PMIC_INT_LDO3_4_LDO3_SC_INT_MASK) != 0U)
+        if ((regData & PMIC_TPS6594X_LDO3_SC_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO3_SC_INT);
         }
 
-        if ((regData & PMIC_INT_LDO3_4_LDO3_ILIM_INT_MASK) != 0U)
+        if ((regData & PMIC_TPS6594X_LDO3_ILIM_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO3_ILIM_INT);
         }
 
-        if ((regData & PMIC_INT_LDO3_4_LDO4_OV_INT_MASK) != 0U)
+        if ((regData & PMIC_TPS6594X_LDO4_OV_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO4_OV_INT);
         }
 
-        if ((regData & PMIC_INT_LDO3_4_LDO4_UV_INT_MASK) != 0U)
+        if ((regData & PMIC_TPS6594X_LDO4_UV_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO4_UV_INT);
         }
 
-        if ((regData & PMIC_INT_LDO3_4_LDO4_SC_INT_MASK) != 0U)
+        if ((regData & PMIC_TPS6594X_LDO4_SC_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO4_SC_INT);
         }
 
-        if ((regData & PMIC_INT_LDO3_4_LDO4_ILIM_INT_MASK) != 0U)
+        if ((regData & PMIC_TPS6594X_LDO4_ILIM_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO4_ILIM_INT);
         }
@@ -926,48 +926,48 @@ static int32_t Pmic_tps6594x_getLdo1Ldo2Err(Pmic_CoreHandle_t *pPmicCoreHandle, 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_INT_LDO1_2_REGADDR, &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TPS6594X_INT_LDO1_2_REGADDR, &regData);
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if ((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
     {
-        if ((regData & PMIC_INT_LDO1_2_LDO1_OV_INT_MASK) != 0U)
+        if ((regData & PMIC_TPS6594X_LDO1_OV_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO1_OV_INT);
         }
 
-        if ((regData & PMIC_INT_LDO1_2_LDO1_UV_INT_MASK) != 0U)
+        if ((regData & PMIC_TPS6594X_LDO1_UV_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO1_UV_INT);
         }
 
-        if ((regData & PMIC_INT_LDO1_2_LDO1_SC_INT_MASK) != 0U)
+        if ((regData & PMIC_TPS6594X_LDO1_SC_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO1_SC_INT);
         }
 
-        if ((regData & PMIC_INT_LDO1_2_LDO1_ILIM_INT_MASK) != 0U)
+        if ((regData & PMIC_TPS6594X_LDO1_ILIM_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO1_ILIM_INT);
         }
 
-        if ((regData & PMIC_INT_LDO1_2_LDO2_OV_INT_MASK) != 0U)
+        if ((regData & PMIC_TPS6594X_LDO2_OV_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO2_OV_INT);
         }
 
-        if ((regData & PMIC_INT_LDO1_2_LDO2_UV_INT_MASK) != 0U)
+        if ((regData & PMIC_TPS6594X_LDO2_UV_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO2_UV_INT);
         }
 
-        if ((regData & PMIC_INT_LDO1_2_LDO2_SC_INT_MASK) != 0U)
+        if ((regData & PMIC_TPS6594X_LDO2_SC_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO2_SC_INT);
         }
 
-        if ((regData & PMIC_INT_LDO1_2_LDO2_ILIM_INT_MASK) != 0U)
+        if ((regData & PMIC_TPS6594X_LDO2_ILIM_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_LDO2_ILIM_INT);
         }
@@ -985,17 +985,17 @@ Pmic_tps6594x_getLdoVmonErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    if ((regValue & PMIC_INT_LDO_VMON_LDO1_2_INT_MASK) != 0U)
+    if ((regValue & PMIC_TPS6594X_LDO1_2_INT_MASK) != 0U)
     {
         pmicStatus = Pmic_tps6594x_getLdo1Ldo2Err(pPmicCoreHandle, pErrStat);
     }
 
-    if ((regValue & PMIC_INT_LDO_VMON_LDO3_4_INT_MASK) != 0U)
+    if ((regValue & PMIC_TPS6594X_LDO3_4_INT_MASK) != 0U)
     {
         pmicStatus = Pmic_tps6594x_getLdo3Ldo4Err(pPmicCoreHandle, pErrStat);
     }
 
-    if ((regValue & PMIC_INT_LDO_VMON_VCCA_INT_MASK) != 0U)
+    if ((regValue & PMIC_TPS6594X_VCCA_INT_MASK) != 0U)
     {
         /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -1005,12 +1005,12 @@ Pmic_tps6594x_getLdoVmonErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue
 
         if ((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
         {
-            if ((regData & PMIC_INT_VMON_VCCA_OV_INT_MASK) != 0U)
+            if ((regData & PMIC_VCCA_OV_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_VCCA_OV_INT);
             }
 
-            if ((regData & PMIC_INT_VMON_VCCA_UV_INT_MASK) != 0U)
+            if ((regData & PMIC_VCCA_UV_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_VCCA_UV_INT);
             }
@@ -1026,42 +1026,42 @@ Pmic_tps6594x_getLdoVmonErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue
 static void Pmic_tps6594x_getGpio1ToGpio8Err(Pmic_IrqStatus_t *pErrStat, uint8_t regData)
 {
 
-    if ((regData & PMIC_INT_GPIO1_8_GPIO1_INT_MASK) != 0U)
+    if ((regData & PMIC_GPIO1_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO1_INT);
     }
 
-    if ((regData & PMIC_INT_GPIO1_8_GPIO2_INT_MASK) != 0U)
+    if ((regData & PMIC_GPIO2_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO2_INT);
     }
 
-    if ((regData & PMIC_INT_GPIO1_8_GPIO3_INT_MASK) != 0U)
+    if ((regData & PMIC_GPIO3_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO3_INT);
     }
 
-    if ((regData & PMIC_INT_GPIO1_8_GPIO4_INT_MASK) != 0U)
+    if ((regData & PMIC_GPIO4_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO4_INT);
     }
 
-    if ((regData & PMIC_INT_GPIO1_8_GPIO5_INT_MASK) != 0U)
+    if ((regData & PMIC_GPIO5_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO5_INT);
     }
 
-    if ((regData & PMIC_INT_GPIO1_8_GPIO6_INT_MASK) != 0U)
+    if ((regData & PMIC_GPIO6_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO6_INT);
     }
 
-    if ((regData & PMIC_INT_GPIO1_8_GPIO7_INT_MASK) != 0U)
+    if ((regData & PMIC_GPIO7_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO7_INT);
     }
 
-    if ((regData & PMIC_INT_GPIO1_8_GPIO8_INT_MASK) != 0U)
+    if ((regData & PMIC_GPIO8_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO8_INT);
     }
@@ -1077,7 +1077,7 @@ Pmic_tps6594x_getGpioErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue, P
     uint8_t regData = 0U;
 
     /* Checking GPIO1_8 Bit field for INT_GPIO Register */
-    if ((regValue & PMIC_INT_GPIO_GPIO1_8_INT_MASK) != 0U)
+    if ((regValue & PMIC_GPIO1_8_INT_MASK) != 0U)
     {
         /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -1092,17 +1092,17 @@ Pmic_tps6594x_getGpioErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue, P
         }
     }
 
-    if ((regValue & PMIC_INT_GPIO_GPIO9_INT_MASK) != 0U)
+    if ((regValue & PMIC_GPIO9_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO9_INT);
     }
 
-    if ((regValue & PMIC_INT_GPIO_GPIO10_INT_MASK) != 0U)
+    if ((regValue & PMIC_GPIO10_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO10_INT);
     }
 
-    if ((regValue & PMIC_INT_GPIO_GPIO11_INT_MASK) != 0U)
+    if ((regValue & PMIC_TPS6594X_GPIO11_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_GPIO11_INT);
     }
@@ -1119,22 +1119,22 @@ Pmic_tps6594x_getStartupErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    if ((regValue & PMIC_INT_STARTUP_NPWRON_START_INT_MASK) != 0U)
+    if ((regValue & PMIC_TPS6594X_NPWRON_STRT_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_NPWRON_START_INT);
     }
 
-    if ((regValue & PMIC_INT_STARTUP_ENABLE_INT_MASK) != 0U)
+    if ((regValue & PMIC_ENABLE_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_ENABLE_INT);
     }
 
-    if ((regValue & PMIC_INT_STARTUP_FSD_INT_MASK) != 0U)
+    if ((regValue & PMIC_FSD_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_FSD_INT);
     }
 
-    if ((regValue & PMIC_INT_STARTUP_RTC_INT_MASK) != 0U)
+    if ((regValue & PMIC_TPS6594X_RTC_INT_MASK) != 0U)
     {
         /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -1143,12 +1143,12 @@ Pmic_tps6594x_getStartupErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue
 
         if (PMIC_ST_SUCCESS == pmicStatus)
         {
-            if ((regData & PMIC_RTC_STATUS_TIMER_MASK) != 0U)
+            if ((regData & PMIC_RTC_TIMER_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_RTC_TIMER_INT);
             }
 
-            if ((regData & PMIC_RTC_STATUS_ALARM_MASK) != 0U)
+            if ((regData & PMIC_RTC_ALARM_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_RTC_ALARM_INT);
             }
@@ -1160,7 +1160,7 @@ Pmic_tps6594x_getStartupErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue
 
     if (PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
     {
-        if ((regValue & PMIC_INT_STARTUP_SOFT_REBOOT_INT_MASK) != 0U)
+        if ((regValue & PMIC_SOFT_REBOOT_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_SOFT_REBOOT_INT);
         }
@@ -1174,17 +1174,17 @@ Pmic_tps6594x_getStartupErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue
  */
 static void Pmic_tps6594x_getMiscErr(uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
 {
-    if ((regValue & PMIC_INT_MISC_BIST_PASS_INT_MASK) != 0U)
+    if ((regValue & PMIC_BIST_PASS_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BIST_PASS_INT);
     }
 
-    if ((regValue & PMIC_INT_MISC_EXT_CLK_INT_MASK) != 0U)
+    if ((regValue & PMIC_EXT_CLK_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_EXT_CLK_INT);
     }
 
-    if ((regValue & PMIC_INT_MISC_TWARN_INT_MASK) != 0U)
+    if ((regValue & PMIC_TWARN_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_TWARN_INT);
     }
@@ -1196,27 +1196,27 @@ static void Pmic_tps6594x_getMiscErr(uint8_t regValue, Pmic_IrqStatus_t *pErrSta
  */
 static void Pmic_tps6594x_getErrTsdordBistFailRegcrcSpmiNpwronlong(uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
 {
-    if ((regValue & PMIC_INT_MODERATE_ERR_TSD_ORD_INT_MASK) != 0U)
+    if ((regValue & PMIC_TSD_ORD_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_TSD_ORD_INT);
     }
 
-    if ((regValue & PMIC_INT_MODERATE_ERR_BIST_FAIL_INT_MASK) != 0U)
+    if ((regValue & PMIC_BIST_FAIL_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_BIST_FAIL_INT);
     }
 
-    if ((regValue & PMIC_INT_MODERATE_ERR_REG_CRC_ERR_INT_MASK) != 0U)
+    if ((regValue & PMIC_REG_CRC_ERR_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_REG_CRC_ERR_INT);
     }
 
-    if ((regValue & PMIC_INT_MODERATE_ERR_SPMI_ERR_INT_MASK) != 0U)
+    if ((regValue & PMIC_SPMI_ERR_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_SPMI_ERR_INT);
     }
 
-    if ((regValue & PMIC_INT_MODERATE_ERR_NPWRON_LONG_INT_MASK) != 0U)
+    if ((regValue & PMIC_TPS6594X_NPWRON_LONG_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_NPWRON_LONG_INT);
     }
@@ -1237,29 +1237,29 @@ Pmic_tps6594x_getModerateErr(const Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t r
 
     if (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
     {
-        if ((regValue & PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_MASK_PG_1_0) != 0U)
+        if ((regValue & PMIC_RECOV_CNT_INT_MASK_PG_1_0) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_RECOV_CNT_INT);
         }
 
-        if ((regValue & PMIC_INT_MODERATE_ERR_PFSM_ERR_INT_MASK_PG_1_0) != 0U)
+        if ((regValue & PMIC_PFSM_ERR_INT_MASK_PG_1_0) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_PFSM_ERR_INT);
         }
     }
     else
     {
-        if ((regValue & PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_MASK) != 0U)
+        if ((regValue & PMIC_RECOV_CNT_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_RECOV_CNT_INT);
         }
 
-        if ((regValue & PMIC_INT_MODERATE_ERR_NINT_READBACK_INT_MASK) != 0U)
+        if ((regValue & PMIC_NINT_READBACK_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_NINT_READBACK_INT);
         }
 
-        if ((regValue & PMIC_INT_MODERATE_ERR_NRSTOUT_READBACK_INT_MASK) != 0U)
+        if ((regValue & PMIC_NRSTOUT_READBACK_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_NRSTOUT_READBACK_INT);
         }
@@ -1272,19 +1272,19 @@ Pmic_tps6594x_getModerateErr(const Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t r
 static void
 Pmic_tps6594x_getSevereErr(const Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
 {
-    if ((regValue & PMIC_INT_SEVERE_ERR_TSD_IMM_INT_MASK) != 0U)
+    if ((regValue & PMIC_TSD_IMM_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_TSD_IMM_INT);
     }
 
-    if ((regValue & PMIC_INT_SEVERE_ERR_VCCA_OVP_INT_MASK) != 0U)
+    if ((regValue & PMIC_VCCA_OVP_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_VCCA_OVP_INT);
     }
 
     if (PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
     {
-        if ((regValue & PMIC_INT_SEVERE_ERR_PFSM_ERR_INT_MASK) != 0U)
+        if ((regValue & PMIC_PFSM_ERR_INT_MASK) != 0U)
         {
             Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_PFSM_ERR_INT);
         }
@@ -1300,7 +1300,7 @@ Pmic_tps6594x_getFsmCommErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    if ((regValue & PMIC_INT_FSM_ERR_COMM_ERR_INT_MASK) != 0U)
+    if ((regValue & PMIC_COMM_ERR_INT_MASK) != 0U)
     {
         /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -1311,27 +1311,27 @@ Pmic_tps6594x_getFsmCommErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue
 
         if ((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
         {
-            if ((regData & PMIC_INT_COMM_ERR_COMM_FRM_ERR_INT_MASK) != 0U)
+            if ((regData & PMIC_COMM_FRM_ERR_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_COMM_FRM_ERR_INT);
             }
 
-            if ((regData & PMIC_INT_COMM_ERR_COMM_CRC_ERR_INT_MASK) != 0U)
+            if ((regData & PMIC_COMM_CRC_ERR_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_COMM_CRC_ERR_INT);
             }
 
-            if ((regData & PMIC_INT_COMM_ERR_COMM_ADR_ERR_INT_MASK) != 0U)
+            if ((regData & PMIC_COMM_ADR_ERR_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_COMM_ADR_ERR_INT);
             }
 
-            if ((regData & PMIC_INT_COMM_ERR_I2C2_CRC_ERR_INT_MASK) != 0U)
+            if ((regData & PMIC_I2C2_CRC_ERR_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_I2C2_CRC_ERR_INT);
             }
 
-            if ((regData & PMIC_INT_COMM_ERR_I2C2_ADR_ERR_INT_MASK) != 0U)
+            if ((regData & PMIC_I2C2_ADR_ERR_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_I2C2_ADR_ERR_INT);
             }
@@ -1348,7 +1348,7 @@ Pmic_tps6594x_getFsmReadbackErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regV
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    if ((regValue & PMIC_INT_FSM_ERR_READBACK_ERR_INT_MASK) != 0U)
+    if ((regValue & PMIC_READBACK_ERR_INT_MASK) != 0U)
     {
 
         /* Start Critical Section */
@@ -1360,24 +1360,24 @@ Pmic_tps6594x_getFsmReadbackErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regV
 
         if ((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
         {
-            if ((regData & PMIC_INT_READBACK_ERR_EN_DRV_READBACK_INT_MASK) != 0U)
+            if ((regData & PMIC_EN_DRV_READBACK_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_EN_DRV_READBACK_INT);
             }
 
-            if ((regData & PMIC_INT_READBACK_ERR_NRSTOUT_SOC_READBACK_INT_MASK) != 0U)
+            if ((regData & PMIC_NRSTOUT_SOC_READBACK_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_NRSTOUT_SOC_READBACK_INT);
             }
 
             if (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
             {
-                if ((regData & PMIC_INT_READBACK_ERR_NINT_READBACK_INT_MASK) != 0U)
+                if ((regData & PMIC_NINT_READBACK_INT_MASK_PG_1_0) != 0U)
                 {
                     Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_NINT_READBACK_INT);
                 }
 
-                if ((regData & PMIC_INT_READBACK_ERR_NRSTOUT_READBACK_INT_MASK) != 0U)
+                if ((regData & PMIC_NRSTOUT_READBACK_INT_MASK_PG_1_0) != 0U)
                 {
                     Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_NRSTOUT_READBACK_INT);
                 }
@@ -1394,7 +1394,7 @@ static void Pmic_tps6594x_getFsmEsmErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    if ((regValue & PMIC_INT_FSM_ERR_ESM_INT_MASK) != 0U)
+    if ((regValue & PMIC_ESM_INT_MASK) != 0U)
     {
 
         /* Start Critical Section */
@@ -1406,32 +1406,32 @@ static void Pmic_tps6594x_getFsmEsmErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8
 
         if ((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
         {
-            if ((regData & PMIC_INT_ESM_ESM_SOC_PIN_INT_MASK) != 0U)
+            if ((regData & PMIC_ESM_SOC_PIN_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_ESM_SOC_PIN_INT);
             }
 
-            if ((regData & PMIC_INT_ESM_ESM_SOC_FAIL_INT_MASK) != 0U)
+            if ((regData & PMIC_ESM_SOC_FAIL_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_ESM_SOC_FAIL_INT);
             }
 
-            if ((regData & PMIC_INT_ESM_ESM_SOC_RST_INT_MASK) != 0U)
+            if ((regData & PMIC_ESM_SOC_RST_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_ESM_SOC_RST_INT);
             }
 
-            if ((regData & PMIC_INT_ESM_ESM_MCU_PIN_INT_MASK) != 0U)
+            if ((regData & PMIC_ESM_MCU_PIN_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_ESM_MCU_PIN_INT);
             }
 
-            if ((regData & PMIC_INT_ESM_ESM_MCU_FAIL_INT_MASK) != 0U)
+            if ((regData & PMIC_ESM_MCU_FAIL_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_ESM_MCU_FAIL_INT);
             }
 
-            if ((regData & PMIC_INT_ESM_ESM_MCU_RST_INT_MASK) != 0U)
+            if ((regData & PMIC_ESM_MCU_RST_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_ESM_MCU_RST_INT);
             }
@@ -1447,22 +1447,22 @@ static int32_t Pmic_tps6594x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    if ((regValue & PMIC_INT_FSM_ERR_IMM_SHUTDOWN_INT_MASK) != 0U)
+    if ((regValue & PMIC_IMM_SHUTDOWN_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_IMM_SHUTOWN_INT);
     }
 
-    if ((regValue & PMIC_INT_FSM_ERR_ORD_SHUTDOWN_INT_MASK) != 0U)
+    if ((regValue & PMIC_ORD_SHUTDOWN_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_ORD_SHUTDOWN_INT);
     }
 
-    if ((regValue & PMIC_INT_FSM_ERR_MCU_PWR_ERR_INT_MASK) != 0U)
+    if ((regValue & PMIC_MCU_PWR_ERR_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_MCU_PWR_ERR_INT);
     }
 
-    if ((regValue & PMIC_INT_FSM_ERR_SOC_PWR_ERR_INT_MASK) != 0U)
+    if ((regValue & PMIC_SOC_PWR_ERR_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_SOC_PWR_ERR_INT);
     }
@@ -1477,7 +1477,7 @@ static int32_t Pmic_tps6594x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8
     Pmic_tps6594x_getFsmEsmErr(pPmicCoreHandle, regValue, pErrStat);
 
     /* Check decipher FSM Error for IRQ Mask Bit */
-    if ((regValue & PMIC_INT_FSM_ERR_WD_INT_MASK) != 0U)
+    if ((regValue & PMIC_WD_INT_MASK) != 0U)
     {
         /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -1488,17 +1488,17 @@ static int32_t Pmic_tps6594x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8
 
         if ((PMIC_ST_SUCCESS == pmicStatus) && ((regData & PMIC_INT_WD_ERR_MASK) != 0U))
         {
-            if ((regData & PMIC_WD_ERR_STATUS_WD_RST_INT_MASK) != 0U)
+            if ((regData & PMIC_WD_RST_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_WD_RST_INT);
             }
 
-            if ((regData & PMIC_WD_ERR_STATUS_WD_FAIL_INT_MASK) != 0U)
+            if ((regData & PMIC_WD_FAIL_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_WD_FAIL_INT);
             }
 
-            if ((regData & PMIC_WD_ERR_STATUS_WD_LONGWIN_TIMEOUT_INT_MASK) != 0U)
+            if ((regData & PMIC_WD_LONGWIN_TIMEOUT_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6594X_WD_LONGWIN_TIMEOUT_INT);
             }
@@ -1600,24 +1600,24 @@ void Pmic_tps6594x_reInitInterruptConfig(void)
     uint8_t irqNum = PMIC_TPS6594X_NRSTOUT_READBACK_INT;
 
     pIntrCfg[irqNum].intrClrRegAddr = PMIC_INT_READBACK_ERR_REGADDR;
-    pIntrCfg[irqNum].intrClrBitPos = PMIC_INT_READBACK_ERR_NRSTOUT_READBACK_INT_SHIFT;
+    pIntrCfg[irqNum].intrClrBitPos = PMIC_NRSTOUT_READBACK_INT_SHIFT_PG_1_0;
     pIntrCfg[irqNum].intrMaskRegAddr = PMIC_MASK_READBACK_ERR_REGADDR;
-    pIntrCfg[irqNum].intrMaskBitPos = PMIC_MASK_READBACK_ERR_NRSTOUT_READBACK_MASK_SHIFT;
+    pIntrCfg[irqNum].intrMaskBitPos = PMIC_NRSTOUT_READBACK_MASK_SHIFT_PG_1_0;
 
     irqNum = PMIC_TPS6594X_NINT_READBACK_INT;
 
     pIntrCfg[irqNum].intrClrRegAddr = PMIC_INT_READBACK_ERR_REGADDR;
-    pIntrCfg[irqNum].intrClrBitPos = PMIC_INT_READBACK_ERR_NINT_READBACK_INT_SHIFT;
+    pIntrCfg[irqNum].intrClrBitPos = PMIC_NINT_READBACK_INT_SHIFT_PG_1_0;
     pIntrCfg[irqNum].intrMaskRegAddr = PMIC_MASK_READBACK_ERR_REGADDR;
-    pIntrCfg[irqNum].intrMaskBitPos = PMIC_MASK_READBACK_ERR_NINT_READBACK_MASK_SHIFT;
+    pIntrCfg[irqNum].intrMaskBitPos = PMIC_NINT_READBACK_MASK_SHIFT_PG_1_0;
 
     irqNum = PMIC_TPS6594X_RECOV_CNT_INT;
 
     pIntrCfg[irqNum].intrClrRegAddr = PMIC_INT_MODERATE_ERR_REGADDR;
-    pIntrCfg[irqNum].intrClrBitPos = PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_SHIFT_PG_1_0;
+    pIntrCfg[irqNum].intrClrBitPos = PMIC_RECOV_CNT_INT_SHIFT_PG_1_0;
 
     irqNum = PMIC_TPS6594X_PFSM_ERR_INT;
 
     pIntrCfg[irqNum].intrClrRegAddr = PMIC_INT_MODERATE_ERR_REGADDR;
-    pIntrCfg[irqNum].intrClrBitPos = PMIC_INT_MODERATE_ERR_PFSM_ERR_INT_SHIFT_PG_1_0;
+    pIntrCfg[irqNum].intrClrBitPos = PMIC_PFSM_ERR_INT_SHIFT_PG_1_0;
 }

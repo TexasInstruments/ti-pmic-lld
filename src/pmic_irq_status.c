@@ -103,11 +103,6 @@ static uint8_t Pmic_intrBitExtract(const Pmic_IrqStatus_t *pErrStat, uint8_t max
 
 /*!
  * \brief  Function to Check the device specific Max IrqNum.
- *
- *          Note: In this API, the default PMIC device is assumed as TPS6594x
- *                LEO PMIC. While adding support for New PMIC device, developer
- *                need to update the API functionality for New PMIC device
- *                accordingly.
  */
 static int32_t Pmic_irqValidateIrqNum(const Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t irqNum)
 {
@@ -119,7 +114,7 @@ static int32_t Pmic_irqValidateIrqNum(const Pmic_CoreHandle_t *pPmicCoreHandle, 
         case PMIC_DEV_HERA_LP8764X:
             if (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
             {
-                /* SOFT REBOOT is not valid for PG 1.0*/
+                /* SOFT REBOOT is not valid for PG 1.0 */
                 maxVal = PMIC_LP8764X_IRQ_MAX_NUM_PG_1_0;
             }
             else
@@ -132,20 +127,24 @@ static int32_t Pmic_irqValidateIrqNum(const Pmic_CoreHandle_t *pPmicCoreHandle, 
             maxVal = PMIC_TPS6522X_IRQ_MAX_NUM;
 
             break;
-        default:
-            /* Default case is valid only for TPS6594x LEO PMIC */
+        case PMIC_DEV_LEO_TPS6594X:
             if (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev)
             {
-                /* SOFT REBOOT is not valid for PG 1.0*/
+                /* SOFT REBOOT is not valid for PG 1.0 */
                 maxVal = PMIC_TPS6594X_IRQ_MAX_NUM_PG_1_0;
             }
             else
             {
                 maxVal = PMIC_TPS6594X_IRQ_MAX_NUM_PG_2_0;
             }
+
+            break;
+        default:
+            pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+            break;
     }
 
-    if ((irqNum > maxVal) && (irqNum != PMIC_IRQ_ALL))
+    if ((pmicStatus == PMIC_ST_SUCCESS) && (irqNum > maxVal) && (irqNum != PMIC_IRQ_ALL))
     {
         pmicStatus = PMIC_ST_ERR_INV_PARAM;
     }
@@ -553,15 +552,15 @@ static void Pmic_irqGetMiscModerateSevereFsmErr(uint8_t regValue, uint16_t *l1Re
 {
     switch (regValue & (1U << count))
     {
-        case PMIC_INT_TOP_MISC_INT_MASK:
+        case PMIC_MISC_INT_MASK:
             (*l1RegAddr) = PMIC_INT_MISC_REGADDR;
             break;
 
-        case PMIC_INT_TOP_MODERATE_ERR_INT_MASK:
+        case PMIC_MODERATE_ERR_INT_MASK:
             (*l1RegAddr) = PMIC_INT_MODERATE_ERR_REGADDR;
             break;
 
-        case PMIC_INT_TOP_SEVERE_ERR_INT_MASK:
+        case PMIC_SEVERE_ERR_INT_MASK:
             (*l1RegAddr) = PMIC_INT_SEVERE_ERR_REGADDR;
             break;
 
@@ -581,11 +580,11 @@ Pmic_irqGetL1Reg(const Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue, uin
 
     switch (regValue & (1U << count))
     {
-        case PMIC_INT_TOP_BUCK_INT_MASK:
+        case PMIC_BUCK_INT_MASK:
             (*l1RegAddr) = PMIC_INT_BUCK_REGADDR;
             break;
 
-        case PMIC_INT_TOP_LDO_VMON_INT_MASK:
+        case PMIC_LDO_VMON_INT_MASK:
             if (PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
             {
                 (*l1RegAddr) = PMIC_INT_VMON_REGADDR;
@@ -595,21 +594,26 @@ Pmic_irqGetL1Reg(const Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue, uin
             {
                 (*l1RegAddr) = PMIC_INT_LDO_VMON_REGADDR;
             }
+            // Invalid device
+            else
+            {
+                (*l1RegAddr) = PMIC_INVALID_REGADDR;
+            }
 
             break;
 
-        case PMIC_INT_TOP_GPIO_INT_MASK:
+        case PMIC_GPIO_INT_MASK:
             (*l1RegAddr) = PMIC_INT_GPIO_REGADDR;
             break;
 
-        case PMIC_INT_TOP_STARTUP_INT_MASK:
+        case PMIC_STARTUP_INT_MASK:
             (*l1RegAddr) = PMIC_INT_STARTUP_REGADDR;
             break;
 
-        case PMIC_INT_TOP_MISC_INT_MASK:
-        case PMIC_INT_TOP_MODERATE_ERR_INT_MASK:
-        case PMIC_INT_TOP_SEVERE_ERR_INT_MASK:
-        case PMIC_INT_TOP_FSM_ERR_INT_MASK:
+        case PMIC_MISC_INT_MASK:
+        case PMIC_MODERATE_ERR_INT_MASK:
+        case PMIC_SEVERE_ERR_INT_MASK:
+        case PMIC_FSM_ERR_INT_MASK:
             Pmic_irqGetMiscModerateSevereFsmErr(regValue, l1RegAddr, count);
             break;
 
@@ -1072,34 +1076,39 @@ int32_t Pmic_getErrorStatus(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t ir
         switch (pPmicCoreHandle->pmicDeviceType)
         {
             case PMIC_DEV_BURTON_TPS6522X:
-                if (irqNum > (PMIC_TPS6522X_IRQ_MAX_NUM - 1))
+                if (irqNum > (PMIC_TPS6522X_IRQ_MAX_NUM - 1U))
                 {
                     status = PMIC_ST_ERR_INV_PARAM;
                 }
+
                 break;
             case PMIC_DEV_LEO_TPS6594X:
                 if ((pPmicCoreHandle->pmicDevSiliconRev == PMIC_SILICON_REV_ID_PG_2_0) &&
-                    (irqNum > (PMIC_TPS6594X_IRQ_MAX_NUM_PG_2_0 - 1)))
+                    (irqNum > (PMIC_TPS6594X_IRQ_MAX_NUM_PG_2_0 - 1U)))
                 {
                     status = PMIC_ST_ERR_INV_PARAM;
                 }
-                else if ((pPmicCoreHandle->pmicDevSiliconRev == PMIC_SILICON_REV_ID_PG_1_0) &&
-                         (irqNum > (PMIC_TPS6594X_IRQ_MAX_NUM_PG_1_0 - 1)))
+                
+                if ((status == PMIC_ST_SUCCESS) && (pPmicCoreHandle->pmicDevSiliconRev == PMIC_SILICON_REV_ID_PG_1_0) &&
+                    (irqNum > (PMIC_TPS6594X_IRQ_MAX_NUM_PG_1_0 - 1U)))
                 {
                     status = PMIC_ST_ERR_INV_PARAM;
                 }
+
                 break;
             case PMIC_DEV_HERA_LP8764X:
                 if ((pPmicCoreHandle->pmicDevSiliconRev == PMIC_SILICON_REV_ID_PG_2_0) &&
-                    (irqNum > (PMIC_LP8764X_IRQ_MAX_NUM_PG_2_0 - 1)))
+                    (irqNum > (PMIC_LP8764X_IRQ_MAX_NUM_PG_2_0 - 1U)))
                 {
                     status = PMIC_ST_ERR_INV_PARAM;
                 }
-                else if ((pPmicCoreHandle->pmicDevSiliconRev == PMIC_SILICON_REV_ID_PG_1_0) &&
-                         (irqNum > (PMIC_LP8764X_IRQ_MAX_NUM_PG_1_0 - 1)))
+                
+                if ((status == PMIC_ST_SUCCESS) && (pPmicCoreHandle->pmicDevSiliconRev == PMIC_SILICON_REV_ID_PG_1_0) &&
+                         (irqNum > (PMIC_LP8764X_IRQ_MAX_NUM_PG_1_0 - 1U)))
                 {
                     status = PMIC_ST_ERR_INV_PARAM;
                 }
+
                 break;
             default:
                 status = PMIC_ST_ERR_INV_DEVICE;
@@ -1107,20 +1116,20 @@ int32_t Pmic_getErrorStatus(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t ir
         }
     }
 
-    // Get array of IRQ registers
-    pmic_get_tps6522x_intrCfg(&irqArr);
-
     // Start critical section before read access
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    // Read IRQ's interrupt register
-    status = Pmic_commIntf_recvByte(pPmicCoreHandle, irqArr[irqNum].intrClrRegAddr, &regData);
+    // Get array of IRQ registers and read IRQ's interrupt register
+    if (status == PMIC_ST_SUCCESS)
+    {
+        pmic_get_tps6522x_intrCfg(&irqArr);
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, irqArr[irqNum].intrClrRegAddr, &regData);
+    }
 
     // Extract IRQ status bit
     if (status == PMIC_ST_SUCCESS)
     {
-        // The IRQ status bit field is 1 bit, hence a mask of 1 is used
-        *pError = (bool)Pmic_getBitField(regData, irqArr[irqNum].intrClrBitPos, 1);
+        *pError = Pmic_getBitField_b(regData, irqArr[irqNum].intrClrBitPos);
     }
 
     // Stop critical section after read access

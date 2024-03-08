@@ -94,9 +94,9 @@ extern "C"
  *  @{
  */
 /** \brief Used to enable the residual voltage check */
-#define PMIC_LP8764X_REGULATOR_VMON_RV_SEL_ENABLE                   (0x1U)
+#define PMIC_LP8764X_VMON_RV_SEL_ENABLE                   (0x1U)
 /** \brief Used to disable the residual voltage check */
-#define PMIC_LP8764X_REGULATOR_VMON_RV_SEL_DISABLE                  (0x0U)
+#define PMIC_LP8764X_VMON_RV_SEL_DISABLE                  (0x0U)
 /** @} */
 
 /**
@@ -106,9 +106,9 @@ extern "C"
  *  @{
  */
 /** \brief Used to enable the pull down resistor for BUCK regulator */
-#define PMIC_LP8764X_REGULATOR_BUCK_PLDN_ENABLE                     (0x1U)
+#define PMIC_LP8764X_BUCK_PLDN_ENABLE                     (0x1U)
 /** \brief Used to disable the pull down resistor for BUCK regulator */
-#define PMIC_LP8764X_REGULATOR_BUCK_PLDN_DISABLE                    (0x0U)
+#define PMIC_LP8764X_BUCK_PLDN_DISABLE                    (0x0U)
 /** @} */
 
 /**
@@ -134,9 +134,9 @@ extern "C"
  *  @{
  */
 /** \brief Used to select VOUT2 register for voltage selection */
-#define PMIC_LP8764X_REGULATOR_BUCK_VOUT_SEL_VOUT2                  (bool)true
+#define PMIC_LP8764X_BUCK_VOUT_SEL_VOUT2                  (bool)true
 /** \brief Used to select VOUT1 register for voltage selection */
-#define PMIC_LP8764X_REGULATOR_BUCK_VOUT_SEL_VOUT1                  (bool)false
+#define PMIC_LP8764X_BUCK_VOUT_SEL_VOUT1                  (bool)false
 /** @} */
 
 /**
@@ -149,9 +149,9 @@ extern "C"
  *  @{
  */
 /** \brief Used to select PWM mode */
-#define PMIC_LP8764X_REGULATOR_PWM_MODE                             (0x1U)
+#define PMIC_LP8764X_PWM_MODE                             (0x1U)
 /** \brief Used to select Automatic transition between PFM and PWM modes */
-#define PMIC_LP8764X_REGULATOR_AUTO_PWM_PFM_MODE                    (0x0U)
+#define PMIC_LP8764X_AUTO_PWM_PFM_MODE                    (0x0U)
 /** @} */
 
 /**
@@ -164,9 +164,9 @@ extern "C"
  *  @{
  */
 /** \brief Used to select multi-phase operation */
-#define PMIC_LP8764X_REGULATOR_PWM_MP_MODE                          (0x1U)
+#define PMIC_LP8764X_PWM_MP_MODE                          (0x1U)
 /** \brief Used to select Automatic phase adding and shedding mode */
-#define PMIC_LP8764X_REGULATOR_AUTO_PHASE_MODE                      (0x0U)
+#define PMIC_LP8764X_AUTO_PHASE_MODE                      (0x0U)
 /** @} */
 
 /**
@@ -176,9 +176,9 @@ extern "C"
  *  @{
  */
 /** \brief Used to enable the BUCK regulator */
-#define PMIC_LP8764X_BUCK_REGULATOR_ENABLE                          (0x1U)
+#define PMIC_LP8764X_BUCK_ENABLE                          (0x1U)
 /** \brief Used to disable the BUCK regulator */
-#define PMIC_LP8764X_BUCK_REGULATOR_DISABLE                         (0x0U)
+#define PMIC_LP8764X_BUCK_DISABLE                         (0x0U)
 /** @} */
 
 /**
@@ -188,9 +188,9 @@ extern "C"
  *  @{
  */
 /** \brief Used to select the degitch time as 4 usec */
-#define PMIC_LP8764X_POWER_RESOURCE_DEGLITCH_SEL_4US                (0x0U)
+#define PMIC_LP8764X_DEGLITCH_SEL_4US                (0x0U)
 /** \brief Used to select the degitch time as 20 usec */
-#define PMIC_LP8764X_POWER_RESOURCE_DEGLITCH_SEL_20US               (0x1U)
+#define PMIC_LP8764X_DEGLITCH_SEL_20US               (0x1U)
 /** @} */
 
 /**
@@ -224,15 +224,15 @@ extern "C"
  *  @{
  */
 /** \brief Used to configure BUCK current limit as 2.5 Ampere */
-#define PMIC_LP8764X_REGULATOR_BUCK_CURRENT_LIMIT_2A5               (0x2U)
+#define PMIC_LP8764X_BUCK_CURRENT_LIMIT_2A5               (0x2U)
 /** \brief Used to configure BUCK current limit as 3.5 Ampere */
-#define PMIC_LP8764X_REGULATOR_BUCK_CURRENT_LIMIT_3A5               (0x3U)
+#define PMIC_LP8764X_BUCK_CURRENT_LIMIT_3A5               (0x3U)
 /** \brief Used to configure BUCK current limit as 4.5 Ampere */
-#define PMIC_LP8764X_REGULATOR_BUCK_CURRENT_LIMIT_4A5               (0x4U)
+#define PMIC_LP8764X_BUCK_CURRENT_LIMIT_4A5               (0x4U)
 /** \brief Used to configure BUCK current limit as 5.5 Ampere */
-#define PMIC_LP8764X_REGULATOR_BUCK_CURRENT_LIMIT_5A5               (0x5U)
+#define PMIC_LP8764X_BUCK_CURRENT_LIMIT_5A5               (0x5U)
 /** \brief Used to configure BUCK current limit as 6.5 Ampere */
-#define PMIC_LP8764X_REGULATOR_BUCK_CURRENT_LIMIT_6A5               (0x6U)
+#define PMIC_LP8764X_BUCK_CURRENT_LIMIT_6A5               (0x6U)
 /** @} */
 
 /**
@@ -242,21 +242,21 @@ extern "C"
  *  @{
  */
 /** \brief Used to configure BUCK current limit as 30mv */
-#define PMIC_LP8764X_REGULATOR_BUCK_VMON_SLEW_RATE_33MV             (0x0U)
+#define PMIC_LP8764X_BUCK_SLEW_RATE_33MV             (0x0U)
 /** \brief Used to configure BUCK current limit as 20mv */
-#define PMIC_LP8764X_REGULATOR_BUCK_VMON_SLEW_RATE_20MV             (0x1U)
+#define PMIC_LP8764X_BUCK_SLEW_RATE_20MV             (0x1U)
 /** \brief Used to configure BUCK current limit as 10mv */
-#define PMIC_LP8764X_REGULATOR_BUCK_VMON_SLEW_RATE_10MV             (0x2U)
+#define PMIC_LP8764X_BUCK_SLEW_RATE_10MV             (0x2U)
 /** \brief Used to configure BUCK current limit as 5mv */
-#define PMIC_LP8764X_REGULATOR_BUCK_VMON_SLEW_RATE_05MV             (0x3U)
+#define PMIC_LP8764X_BUCK_SLEW_RATE_05MV             (0x3U)
 /** \brief Used to configure BUCK current limit as 2.5mv */
-#define PMIC_LP8764X_REGULATOR_BUCK_VMON_SLEW_RATE_2MV5             (0x4U)
+#define PMIC_LP8764X_BUCK_SLEW_RATE_2MV5             (0x4U)
 /** \brief Used to configure BUCK current limit as 1.3mv */
-#define PMIC_LP8764X_REGULATOR_BUCK_VMON_SLEW_RATE_1MV3             (0x5U)
+#define PMIC_LP8764X_BUCK_SLEW_RATE_1MV3             (0x5U)
 /** \brief Used to configure BUCK current limit as 0.63mv */
-#define PMIC_LP8764X_REGULATOR_BUCK_VMON_SLEW_RATE_0MV63            (0x6U)
+#define PMIC_LP8764X_BUCK_SLEW_RATE_0MV63            (0x6U)
 /** \brief Used to configure BUCK current limit as 0.31mv */
-#define PMIC_LP8764X_REGULATOR_BUCK_VMON_SLEW_RATE_0MV31            (0x7U)
+#define PMIC_LP8764X_BUCK_SLEW_RATE_0MV31            (0x7U)
 /** @} */
 
 /**

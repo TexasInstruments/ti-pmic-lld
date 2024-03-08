@@ -64,14 +64,14 @@ Pmic_fsmGetstandByCfgRegFields(uint8_t pmicDeviceType, uint8_t *pRegAddr, uint8_
     {
         case PMIC_DEV_HERA_LP8764X:
             *pRegAddr = PMIC_STARTUP_CTRL_REGADDR;
-            *pBitPos = PMIC_STARTUP_CTRL_LP_STANDBY_SEL_SHIFT;
-            *pBitMask = PMIC_STARTUP_CTRL_LP_STANDBY_SEL_MASK;
+            *pBitPos = PMIC_LP_STANDBY_SEL_SHIFT;
+            *pBitMask = PMIC_LP_STANDBY_SEL_MASK;
             break;
         default:
             /* Default case is valid only for TPS6594x LEO PMIC */
             *pRegAddr = PMIC_RTC_CTRL_2_REGADDR;
-            *pBitPos = PMIC_RTC_CTRL_2_LP_STANDBY_SEL_SHIFT;
-            *pBitMask = PMIC_RTC_CTRL_2_LP_STANDBY_SEL_MASK;
+            *pBitPos = PMIC_LP_STANDBY_SEL_SHIFT;
+            *pBitMask = PMIC_LP_STANDBY_SEL_MASK;
             break;
     }
 }
@@ -84,14 +84,14 @@ static void Pmic_fsmGetNsleepMaskBitField(bool nsleepType, uint8_t *pBitPos, uin
 {
     if (nsleepType == PMIC_NSLEEP1_SIGNAL)
     {
-        *pBitPos = PMIC_CONFIG_1_NSLEEP1_MASK_SHIFT;
-        *pBitMask = PMIC_CONFIG_1_NSLEEP1_MASK_MASK;
+        *pBitPos = PMIC_NSLEEP1_MASK_SHIFT;
+        *pBitMask = PMIC_NSLEEP1_MASK_MASK;
     }
 
     if (nsleepType == PMIC_NSLEEP2_SIGNAL)
     {
-        *pBitPos = PMIC_CONFIG_1_NSLEEP2_MASK_SHIFT;
-        *pBitMask = PMIC_CONFIG_1_NSLEEP2_MASK_MASK;
+        *pBitPos = PMIC_NSLEEP2_MASK_SHIFT;
+        *pBitMask = PMIC_NSLEEP2_MASK_MASK;
     }
 }
 
@@ -104,36 +104,36 @@ static void Pmic_fsmGetI2cTriggerMaskBitField(uint8_t i2cTriggerType, uint8_t *p
     switch (i2cTriggerType)
     {
         case PMIC_FSM_I2C_TRIGGER1:
-            *pBitPos = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_1_SHIFT;
-            *pBitMask = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_1_MASK;
+            *pBitPos = PMIC_TRIGGER_I2C_1_SHIFT;
+            *pBitMask = PMIC_TRIGGER_I2C_1_MASK;
             break;
         case PMIC_FSM_I2C_TRIGGER2:
-            *pBitPos = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_2_SHIFT;
-            *pBitMask = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_2_MASK;
+            *pBitPos = PMIC_TRIGGER_I2C_2_SHIFT;
+            *pBitMask = PMIC_TRIGGER_I2C_2_MASK;
             break;
         case PMIC_FSM_I2C_TRIGGER3:
-            *pBitPos = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_3_SHIFT;
-            *pBitMask = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_3_MASK;
+            *pBitPos = PMIC_TRIGGER_I2C_3_SHIFT;
+            *pBitMask = PMIC_TRIGGER_I2C_3_MASK;
             break;
         case PMIC_FSM_I2C_TRIGGER4:
-            *pBitPos = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_4_SHIFT;
-            *pBitMask = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_4_MASK;
+            *pBitPos = PMIC_TRIGGER_I2C_4_SHIFT;
+            *pBitMask = PMIC_TRIGGER_I2C_4_MASK;
             break;
         case PMIC_FSM_I2C_TRIGGER5:
-            *pBitPos = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_5_SHIFT;
-            *pBitMask = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_5_MASK;
+            *pBitPos = PMIC_TRIGGER_I2C_5_SHIFT;
+            *pBitMask = PMIC_TRIGGER_I2C_5_MASK;
             break;
         case PMIC_FSM_I2C_TRIGGER6:
-            *pBitPos = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_6_SHIFT;
-            *pBitMask = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_6_MASK;
+            *pBitPos = PMIC_TRIGGER_I2C_6_SHIFT;
+            *pBitMask = PMIC_TRIGGER_I2C_6_MASK;
             break;
         case PMIC_FSM_I2C_TRIGGER7:
-            *pBitPos = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_7_SHIFT;
-            *pBitMask = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_7_MASK;
+            *pBitPos = PMIC_TRIGGER_I2C_7_SHIFT;
+            *pBitMask = PMIC_TRIGGER_I2C_7_MASK;
             break;
         default:
-            *pBitPos = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_0_SHIFT;
-            *pBitMask = PMIC_FSM_I2C_TRIGGERS_TRIGGER_I2C_0_MASK;
+            *pBitPos = PMIC_TRIGGER_I2C_0_SHIFT;
+            *pBitMask = PMIC_TRIGGER_I2C_0_MASK;
             break;
     }
 }
@@ -152,8 +152,8 @@ static int32_t Pmic_setS2RState(Pmic_CoreHandle_t *pPmicCoreHandle)
     if (PMIC_ST_SUCCESS == status)
     {
         Pmic_setBitField(&regData,
-                         PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B_SHIFT,
-                         (PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B_MASK | PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B_MASK),
+                         PMIC_NSLEEP1B_SHIFT,
+                         (PMIC_NSLEEP2B_MASK | PMIC_NSLEEP1B_MASK),
                          PMIC_FSM_NSLEEPX_RESET);
         status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_FSM_NSLEEP_TRIGGERS_REGADDR, regData);
     }
@@ -184,13 +184,13 @@ int32_t Pmic_fsmSetNsleepSignalVal(Pmic_CoreHandle_t *pPmicCoreHandle, const boo
     {
         if (PMIC_NSLEEP1_SIGNAL == nsleepType)
         {
-            bitPos = PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B_SHIFT;
-            bitMask = PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B_MASK;
+            bitPos = PMIC_NSLEEP1B_SHIFT;
+            bitMask = PMIC_NSLEEP1B_MASK;
         }
         if (PMIC_NSLEEP2_SIGNAL == nsleepType)
         {
-            bitPos = PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B_SHIFT;
-            bitMask = PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B_MASK;
+            bitPos = PMIC_NSLEEP2B_SHIFT;
+            bitMask = PMIC_NSLEEP2B_MASK;
         }
 
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -229,13 +229,13 @@ int32_t Pmic_fsmGetNsleepSignalVal(Pmic_CoreHandle_t *pPmicCoreHandle, const boo
     {
         if (PMIC_NSLEEP1_SIGNAL == nsleepType)
         {
-            bitPos = PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B_SHIFT;
-            bitMask = PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B_MASK;
+            bitPos = PMIC_NSLEEP1B_SHIFT;
+            bitMask = PMIC_NSLEEP1B_MASK;
         }
         if (PMIC_NSLEEP2_SIGNAL == nsleepType)
         {
-            bitPos = PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B_SHIFT;
-            bitMask = PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B_MASK;
+            bitPos = PMIC_NSLEEP2B_SHIFT;
+            bitMask = PMIC_NSLEEP2B_MASK;
         }
 
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -492,15 +492,15 @@ int32_t Pmic_fsmDeviceOnRequest(Pmic_CoreHandle_t *pPmicCoreHandle)
             case PMIC_DEV_HERA_LP8764X:
                 srcRegAddr = PMIC_STARTUP_CTRL_REGADDR;
                 dstRegAddr = PMIC_FSM_NSLEEP_TRIGGERS_REGADDR;
-                srcBitMask = PMIC_STARTUP_CTRL_STARTUP_DEST_MASK;
-                srcBitShift = PMIC_STARTUP_CTRL_STARTUP_DEST_SHIFT;
+                srcBitMask = PMIC_STARTUP_DEST_MASK;
+                srcBitShift = PMIC_STARTUP_DEST_SHIFT;
                 break;
             default:
                 /* Default case is valid only for TPS6594x LEO PMIC */
                 srcRegAddr = PMIC_RTC_CTRL_2_REGADDR;
                 dstRegAddr = PMIC_FSM_NSLEEP_TRIGGERS_REGADDR;
-                srcBitMask = PMIC_RTC_CTRL_2_STARTUP_DEST_MASK;
-                srcBitShift = PMIC_RTC_CTRL_2_STARTUP_DEST_SHIFT;
+                srcBitMask = PMIC_STARTUP_DEST_MASK;
+                srcBitShift = PMIC_STARTUP_DEST_SHIFT;
                 break;
         }
 
@@ -520,15 +520,15 @@ int32_t Pmic_fsmDeviceOnRequest(Pmic_CoreHandle_t *pPmicCoreHandle)
             bitShift = 0x1U;
             bitMask = (0x1U << bitShift);
             Pmic_setBitField(&regData,
-                             PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B_SHIFT,
-                             PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP2B_MASK,
+                             PMIC_NSLEEP2B_SHIFT,
+                             PMIC_NSLEEP2B_MASK,
                              (Pmic_getBitField(regVal, bitShift, bitMask)));
 
             bitShift = 0U;
             bitMask = (0x1U << bitShift);
             Pmic_setBitField(&regData,
-                             PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B_SHIFT,
-                             PMIC_FSM_NSLEEP_TRIGGERS_NSLEEP1B_MASK,
+                             PMIC_NSLEEP1B_SHIFT,
+                             PMIC_NSLEEP1B_MASK,
                              (Pmic_getBitField(regVal, bitShift, bitMask)));
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, dstRegAddr, regData);
         }
@@ -658,13 +658,13 @@ static int32_t Pmic_fsmEnableFastBIST(Pmic_CoreHandle_t *pPmicCoreHandle, const 
     {
         case PMIC_DEV_HERA_LP8764X:
             regAddr = PMIC_STARTUP_CTRL_REGADDR;
-            bitMask = PMIC_STARTUP_CTRL_FAST_BIST_MASK;
-            bitShift = PMIC_STARTUP_CTRL_FAST_BIST_SHIFT;
+            bitMask = PMIC_FAST_BIST_MASK;
+            bitShift = PMIC_FAST_BIST_SHIFT;
             break;
         default:
             regAddr = PMIC_RTC_CTRL_2_REGADDR;
-            bitMask = PMIC_RTC_CTRL_2_FAST_BIST_MASK;
-            bitShift = PMIC_RTC_CTRL_2_FAST_BIST_SHIFT;
+            bitMask = PMIC_FAST_BIST_MASK;
+            bitShift = PMIC_FAST_BIST_SHIFT;
             break;
     }
 
@@ -710,13 +710,13 @@ static int32_t Pmic_fsmGetFastBISTCfg(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_F
     {
         case PMIC_DEV_HERA_LP8764X:
             regAddr = PMIC_STARTUP_CTRL_REGADDR;
-            bitMask = PMIC_STARTUP_CTRL_FAST_BIST_MASK;
-            bitShift = PMIC_STARTUP_CTRL_FAST_BIST_SHIFT;
+            bitMask = PMIC_FAST_BIST_MASK;
+            bitShift = PMIC_FAST_BIST_SHIFT;
             break;
         default:
             regAddr = PMIC_RTC_CTRL_2_REGADDR;
-            bitMask = PMIC_RTC_CTRL_2_FAST_BIST_MASK;
-            bitShift = PMIC_RTC_CTRL_2_FAST_BIST_SHIFT;
+            bitMask = PMIC_FAST_BIST_MASK;
+            bitShift = PMIC_FAST_BIST_SHIFT;
             break;
     }
 
@@ -758,13 +758,13 @@ static int32_t Pmic_fsmSetLpStandbyState(Pmic_CoreHandle_t *pPmicCoreHandle, con
     {
         case PMIC_DEV_HERA_LP8764X:
             regAddr = PMIC_STARTUP_CTRL_REGADDR;
-            bitMask = PMIC_STARTUP_CTRL_LP_STANDBY_SEL_MASK;
-            bitShift = PMIC_STARTUP_CTRL_LP_STANDBY_SEL_SHIFT;
+            bitMask = PMIC_LP_STANDBY_SEL_MASK;
+            bitShift = PMIC_LP_STANDBY_SEL_SHIFT;
             break;
         default:
             regAddr = PMIC_RTC_CTRL_2_REGADDR;
-            bitMask = PMIC_RTC_CTRL_2_LP_STANDBY_SEL_MASK;
-            bitShift = PMIC_RTC_CTRL_2_LP_STANDBY_SEL_SHIFT;
+            bitMask = PMIC_LP_STANDBY_SEL_MASK;
+            bitShift = PMIC_LP_STANDBY_SEL_SHIFT;
             break;
     }
 
@@ -810,13 +810,13 @@ static int32_t Pmic_fsmGetLpStandbyStateCfg(Pmic_CoreHandle_t *pPmicCoreHandle, 
     {
         case PMIC_DEV_HERA_LP8764X:
             regAddr = PMIC_STARTUP_CTRL_REGADDR;
-            bitMask = PMIC_STARTUP_CTRL_LP_STANDBY_SEL_MASK;
-            bitShift = PMIC_STARTUP_CTRL_LP_STANDBY_SEL_SHIFT;
+            bitMask = PMIC_LP_STANDBY_SEL_MASK;
+            bitShift = PMIC_LP_STANDBY_SEL_SHIFT;
             break;
         default:
             regAddr = PMIC_RTC_CTRL_2_REGADDR;
-            bitMask = PMIC_RTC_CTRL_2_LP_STANDBY_SEL_MASK;
-            bitShift = PMIC_RTC_CTRL_2_LP_STANDBY_SEL_SHIFT;
+            bitMask = PMIC_LP_STANDBY_SEL_MASK;
+            bitShift = PMIC_LP_STANDBY_SEL_SHIFT;
             break;
     }
 
@@ -856,15 +856,15 @@ static int32_t Pmic_fsmEnableBuckLdoIlimIntAffectFsm(Pmic_CoreHandle_t *pPmicCor
         if (((bool)PMIC_FSM_ILIM_INT_FSMCTRL_ENABLE) == fsmCfg.ilimIntfsmCtrlEn)
         {
             Pmic_setBitField(&regData,
-                             PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_SHIFT,
-                             PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_MASK,
+                             PMIC_EN_ILIM_FSM_CTRL_SHIFT,
+                             PMIC_EN_ILIM_FSM_CTRL_MASK,
                              PMIC_FSM_ILIM_INT_FSMCTRL_ENABLE);
         }
         else
         {
             Pmic_setBitField(&regData,
-                             PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_SHIFT,
-                             PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_MASK,
+                             PMIC_EN_ILIM_FSM_CTRL_SHIFT,
+                             PMIC_EN_ILIM_FSM_CTRL_MASK,
                              PMIC_FSM_ILIM_INT_FSMCTRL_DISABLE);
         }
 
@@ -895,7 +895,7 @@ static int32_t Pmic_fsmGetBuckLdoIlimIntAffectFsmCfg(Pmic_CoreHandle_t *pPmicCor
     {
         pFsmCfg->ilimIntfsmCtrlEn = (bool)false;
 
-        if (Pmic_getBitField(regData, PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_SHIFT, PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_MASK) == 1U)
+        if (Pmic_getBitField(regData, PMIC_EN_ILIM_FSM_CTRL_SHIFT, PMIC_EN_ILIM_FSM_CTRL_MASK) == 1U)
         {
             pFsmCfg->ilimIntfsmCtrlEn = (bool)true;
         }
@@ -923,13 +923,13 @@ static int32_t Pmic_fsmSetStartupDestState(Pmic_CoreHandle_t *pPmicCoreHandle, c
     {
         case PMIC_DEV_HERA_LP8764X:
             regAddr = PMIC_STARTUP_CTRL_REGADDR;
-            bitMask = PMIC_STARTUP_CTRL_STARTUP_DEST_MASK;
-            bitShift = PMIC_STARTUP_CTRL_STARTUP_DEST_SHIFT;
+            bitMask = PMIC_STARTUP_DEST_MASK;
+            bitShift = PMIC_STARTUP_DEST_SHIFT;
             break;
         default:
             regAddr = PMIC_RTC_CTRL_2_REGADDR;
-            bitMask = PMIC_RTC_CTRL_2_STARTUP_DEST_MASK;
-            bitShift = PMIC_RTC_CTRL_2_STARTUP_DEST_SHIFT;
+            bitMask = PMIC_STARTUP_DEST_MASK;
+            bitShift = PMIC_STARTUP_DEST_SHIFT;
             break;
     }
 
@@ -968,13 +968,13 @@ static int32_t Pmic_fsmGetStartupDestStateCfg(Pmic_CoreHandle_t *pPmicCoreHandle
     {
         case PMIC_DEV_HERA_LP8764X:
             regAddr = PMIC_STARTUP_CTRL_REGADDR;
-            bitMask = PMIC_STARTUP_CTRL_STARTUP_DEST_MASK;
-            bitShift = PMIC_STARTUP_CTRL_STARTUP_DEST_SHIFT;
+            bitMask = PMIC_STARTUP_DEST_MASK;
+            bitShift = PMIC_STARTUP_DEST_SHIFT;
             break;
         default:
             regAddr = PMIC_RTC_CTRL_2_REGADDR;
-            bitMask = PMIC_RTC_CTRL_2_STARTUP_DEST_MASK;
-            bitShift = PMIC_RTC_CTRL_2_STARTUP_DEST_SHIFT;
+            bitMask = PMIC_STARTUP_DEST_MASK;
+            bitShift = PMIC_STARTUP_DEST_SHIFT;
             break;
     }
 
@@ -1107,16 +1107,16 @@ int32_t Pmic_fsmSetPfsmDelay(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t p
         switch (pFsmDelayType)
         {
             case PMIC_PFSM_DELAY2:
-                regAddr = PMIC_FSM_PFSM_DELAY_REG_2_REGADDR;
+                regAddr = PMIC_PFSM_DELAY_REG_2_REGADDR;
                 break;
             case PMIC_PFSM_DELAY3:
-                regAddr = PMIC_FSM_PFSM_DELAY_REG_3_REGADDR;
+                regAddr = PMIC_PFSM_DELAY_REG_3_REGADDR;
                 break;
             case PMIC_PFSM_DELAY4:
-                regAddr = PMIC_FSM_PFSM_DELAY_REG_4_REGADDR;
+                regAddr = PMIC_PFSM_DELAY_REG_4_REGADDR;
                 break;
             default:
-                regAddr = PMIC_FSM_PFSM_DELAY_REG_1_REGADDR;
+                regAddr = PMIC_PFSM_DELAY_REG_1_REGADDR;
                 break;
         }
 
@@ -1153,16 +1153,16 @@ int32_t Pmic_fsmGetPfsmDelay(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t pFsmDel
         switch (pFsmDelayType)
         {
             case PMIC_PFSM_DELAY2:
-                regAddr = PMIC_FSM_PFSM_DELAY_REG_2_REGADDR;
+                regAddr = PMIC_PFSM_DELAY_REG_2_REGADDR;
                 break;
             case PMIC_PFSM_DELAY3:
-                regAddr = PMIC_FSM_PFSM_DELAY_REG_3_REGADDR;
+                regAddr = PMIC_PFSM_DELAY_REG_3_REGADDR;
                 break;
             case PMIC_PFSM_DELAY4:
-                regAddr = PMIC_FSM_PFSM_DELAY_REG_4_REGADDR;
+                regAddr = PMIC_PFSM_DELAY_REG_4_REGADDR;
                 break;
             default:
-                regAddr = PMIC_FSM_PFSM_DELAY_REG_1_REGADDR;
+                regAddr = PMIC_PFSM_DELAY_REG_1_REGADDR;
                 break;
         }
 

@@ -80,138 +80,138 @@ extern "C"
 #define PMIC_FSM_TRIG_MASK_3_REGADDR                   (0x48U)
 
 /*!
- * \brief  GPIO Register bit fields for all GPIO pins
+ * \brief  PMIC GPIOX_CONF Register bit fields for all GPIO pins
  */
-#define PMIC_GPIOX_CONF_GPIO_SEL_SHIFT                 (0x05U)
-#define PMIC_GPIOX_CONF_GPIO_DEGLITCH_EN_SHIFT         (0x04U)
-#define PMIC_GPIOX_CONF_GPIO_PU_PD_EN_SHIFT            (0x03U)
-#define PMIC_GPIOX_CONF_GPIO_PU_SEL_SHIFT              (0x02U)
-#define PMIC_GPIOX_CONF_GPIO_OD_SHIFT                  (0x01U)
-#define PMIC_GPIOX_CONF_GPIO_DIR_SHIFT                 (0x00U)
+#define PMIC_GPIO_SEL_SHIFT                         (0x05U)
+#define PMIC_GPIO_DEGLITCH_EN_SHIFT                 (0x04U)
+#define PMIC_GPIO_PU_PD_EN_SHIFT                    (0x03U)
+#define PMIC_GPIO_PU_SEL_SHIFT                      (0x02U)
+#define PMIC_GPIO_OD_SHIFT                          (0x01U)
+#define PMIC_GPIO_DIR_SHIFT                         (0x00U)
 
 /*!
- * \brief  GPIO IN Register bit fields
+ * \brief  GPIO_IN_1 and GPIO_IN_2 Register bit fields
  */
-#define PMIC_GPIO_IN_1_GPIO1_IN_SHIFT                  (0x00U)
-#define PMIC_GPIO_IN_1_GPIO2_IN_SHIFT                  (0x01U)
-#define PMIC_GPIO_IN_1_GPIO3_IN_SHIFT                  (0x02U)
-#define PMIC_GPIO_IN_1_GPIO4_IN_SHIFT                  (0x03U)
-#define PMIC_GPIO_IN_1_GPIO5_IN_SHIFT                  (0x04U)
-#define PMIC_GPIO_IN_1_GPIO6_IN_SHIFT                  (0x05U)
-#define PMIC_GPIO_IN_1_GPIO7_IN_SHIFT                  (0x06U)
-#define PMIC_GPIO_IN_1_GPIO8_IN_SHIFT                  (0x07U)
-#define PMIC_GPIO_IN_2_GPIO9_IN_SHIFT                  (0x00U)
-#define PMIC_GPIO_IN_2_GPIO10_IN_SHIFT                 (0x01U)
+#define PMIC_GPIO1_IN_SHIFT                         (0x00U)
+#define PMIC_GPIO2_IN_SHIFT                         (0x01U)
+#define PMIC_GPIO3_IN_SHIFT                         (0x02U)
+#define PMIC_GPIO4_IN_SHIFT                         (0x03U)
+#define PMIC_GPIO5_IN_SHIFT                         (0x04U)
+#define PMIC_GPIO6_IN_SHIFT                         (0x05U)
+#define PMIC_GPIO7_IN_SHIFT                         (0x06U)
+#define PMIC_GPIO8_IN_SHIFT                         (0x07U)
+#define PMIC_GPIO9_IN_SHIFT                         (0x00U)
+#define PMIC_GPIO10_IN_SHIFT                        (0x01U)
 
 /*!
- * \brief  GPIO OUT Register bit fields
+ * \brief  PMIC GPIO_OUT_1 and GPIO_OUT_2 Register bit fields
  */
-#define PMIC_GPIO_OUT_1_GPIO1_OUT_SHIFT                (0x00U)
-#define PMIC_GPIO_OUT_1_GPIO2_OUT_SHIFT                (0x01U)
-#define PMIC_GPIO_OUT_1_GPIO3_OUT_SHIFT                (0x02U)
-#define PMIC_GPIO_OUT_1_GPIO4_OUT_SHIFT                (0x03U)
-#define PMIC_GPIO_OUT_1_GPIO5_OUT_SHIFT                (0x04U)
-#define PMIC_GPIO_OUT_1_GPIO6_OUT_SHIFT                (0x05U)
-#define PMIC_GPIO_OUT_1_GPIO7_OUT_SHIFT                (0x06U)
-#define PMIC_GPIO_OUT_1_GPIO8_OUT_SHIFT                (0x07U)
-#define PMIC_GPIO_OUT_2_GPIO9_OUT_SHIFT                (0x00U)
-#define PMIC_GPIO_OUT_2_GPIO10_OUT_SHIFT               (0x01U)
+#define PMIC_GPIO1_OUT_SHIFT                        (0x00U)
+#define PMIC_GPIO2_OUT_SHIFT                        (0x01U)
+#define PMIC_GPIO3_OUT_SHIFT                        (0x02U)
+#define PMIC_GPIO4_OUT_SHIFT                        (0x03U)
+#define PMIC_GPIO5_OUT_SHIFT                        (0x04U)
+#define PMIC_GPIO6_OUT_SHIFT                        (0x05U)
+#define PMIC_GPIO7_OUT_SHIFT                        (0x06U)
+#define PMIC_GPIO8_OUT_SHIFT                        (0x07U)
+#define PMIC_GPIO9_OUT_SHIFT                        (0x00U)
+#define PMIC_GPIO10_OUT_SHIFT                       (0x01U)
 
 /*!
  * \brief  GPIO FSM TRIG Mask Register bit fields
  */
 /*! Bit fields for PMIC_FSM_TRIG_MASK_1_REG */
-#define PMIC_FSM_TRIG_MASK_1_GPIO1_FSM_MASK_SHIFT      (0x0U)
-#define PMIC_FSM_TRIG_MASK_1_GPIO1_FSM_MASK_POL_SHIFT  (0x1U)
-#define PMIC_FSM_TRIG_MASK_1_GPIO2_FSM_MASK_SHIFT      (0x2U)
-#define PMIC_FSM_TRIG_MASK_1_GPIO2_FSM_MASK_POL_SHIFT  (0x3U)
-#define PMIC_FSM_TRIG_MASK_1_GPIO3_FSM_MASK_SHIFT      (0x4U)
-#define PMIC_FSM_TRIG_MASK_1_GPIO3_FSM_MASK_POL_SHIFT  (0x5U)
-#define PMIC_FSM_TRIG_MASK_1_GPIO4_FSM_MASK_SHIFT      (0x6U)
-#define PMIC_FSM_TRIG_MASK_1_GPIO4_FSM_MASK_POL_SHIFT  (0x7U)
+#define PMIC_GPIO1_FSM_MASK_SHIFT                   (0x0U)
+#define PMIC_GPIO1_FSM_MASK_POL_SHIFT               (0x1U)
+#define PMIC_GPIO2_FSM_MASK_SHIFT                   (0x2U)
+#define PMIC_GPIO2_FSM_MASK_POL_SHIFT               (0x3U)
+#define PMIC_GPIO3_FSM_MASK_SHIFT                   (0x4U)
+#define PMIC_GPIO3_FSM_MASK_POL_SHIFT               (0x5U)
+#define PMIC_GPIO4_FSM_MASK_SHIFT                   (0x6U)
+#define PMIC_GPIO4_FSM_MASK_POL_SHIFT               (0x7U)
 /*! Bit fields for PMIC_FSM_TRIG_MASK_2_REG */
-#define PMIC_FSM_TRIG_MASK_2_GPIO5_FSM_MASK_SHIFT      (0x0U)
-#define PMIC_FSM_TRIG_MASK_2_GPIO5_FSM_MASK_POL_SHIFT  (0x1U)
-#define PMIC_FSM_TRIG_MASK_2_GPIO6_FSM_MASK_SHIFT      (0x2U)
-#define PMIC_FSM_TRIG_MASK_2_GPIO6_FSM_MASK_POL_SHIFT  (0x3U)
-#define PMIC_FSM_TRIG_MASK_2_GPIO7_FSM_MASK_SHIFT      (0x4U)
-#define PMIC_FSM_TRIG_MASK_2_GPIO7_FSM_MASK_POL_SHIFT  (0x5U)
-#define PMIC_FSM_TRIG_MASK_2_GPIO8_FSM_MASK_SHIFT      (0x6U)
-#define PMIC_FSM_TRIG_MASK_2_GPIO8_FSM_MASK_POL_SHIFT  (0x7U)
+#define PMIC_GPIO5_FSM_MASK_SHIFT                   (0x0U)
+#define PMIC_GPIO5_FSM_MASK_POL_SHIFT               (0x1U)
+#define PMIC_GPIO6_FSM_MASK_SHIFT                   (0x2U)
+#define PMIC_GPIO6_FSM_MASK_POL_SHIFT               (0x3U)
+#define PMIC_GPIO7_FSM_MASK_SHIFT                   (0x4U)
+#define PMIC_GPIO7_FSM_MASK_POL_SHIFT               (0x5U)
+#define PMIC_GPIO8_FSM_MASK_SHIFT                   (0x6U)
+#define PMIC_GPIO8_FSM_MASK_POL_SHIFT               (0x7U)
 /*! Bit fields for PMIC_FSM_TRIG_MASK_3_REG */
-#define PMIC_FSM_TRIG_MASK_3_GPIO9_FSM_MASK_SHIFT      (0x0U)
-#define PMIC_FSM_TRIG_MASK_3_GPIO9_FSM_MASK_POL_SHIFT  (0x1U)
-#define PMIC_FSM_TRIG_MASK_3_GPIO10_FSM_MASK_SHIFT     (0x2U)
-#define PMIC_FSM_TRIG_MASK_3_GPIO10_FSM_MASK_POL_SHIFT (0x3U)
-#define PMIC_FSM_TRIG_MASK_3_GPIO11_FSM_MASK_SHIFT     (0x4U)
-#define PMIC_FSM_TRIG_MASK_3_GPIO11_FSM_MASK_POL_SHIFT (0x5U)
+#define PMIC_GPIO9_FSM_MASK_SHIFT                   (0x0U)
+#define PMIC_GPIO9_FSM_MASK_POL_SHIFT               (0x1U)
+#define PMIC_GPIO10_FSM_MASK_SHIFT                  (0x2U)
+#define PMIC_GPIO10_FSM_MASK_POL_SHIFT              (0x3U)
+#define PMIC_GPIO11_FSM_MASK_SHIFT                  (0x4U)
+#define PMIC_GPIO11_FSM_MASK_POL_SHIFT              (0x5U)
 
 /*!
- * \brief  GPIO Register bit mask values for all GPIO pins
+ * \brief  PMIC GPIOX_CONF Register bit mask values for all GPIO pins
  */
-#define PMIC_GPIOX_CONF_GPIO_SEL_MASK                  (uint8_t)(0x07U << PMIC_GPIOX_CONF_GPIO_SEL_SHIFT)
-#define PMIC_GPIOX_CONF_GPIO_DEGLITCH_EN_MASK          (uint8_t)(0x01U << PMIC_GPIOX_CONF_GPIO_DEGLITCH_EN_SHIFT)
-#define PMIC_GPIOX_CONF_GPIO_PU_PD_EN_MASK             (uint8_t)(0x01U << PMIC_GPIOX_CONF_GPIO_PU_PD_EN_SHIFT)
-#define PMIC_GPIOX_CONF_GPIO_PU_SEL_MASK               (uint8_t)(0x01U << PMIC_GPIOX_CONF_GPIO_PU_SEL_SHIFT)
-#define PMIC_GPIOX_CONF_GPIO_OD_MASK                   (uint8_t)(0x01U << PMIC_GPIOX_CONF_GPIO_OD_SHIFT)
-#define PMIC_GPIOX_CONF_GPIO_DIR_MASK                  (uint8_t)(0x01U << PMIC_GPIOX_CONF_GPIO_DIR_SHIFT)
+#define PMIC_GPIO_SEL_MASK                          (uint8_t)(0x07U << PMIC_GPIO_SEL_SHIFT)
+#define PMIC_GPIO_DEGLITCH_EN_MASK                  (uint8_t)(0x01U << PMIC_GPIO_DEGLITCH_EN_SHIFT)
+#define PMIC_GPIO_PU_PD_EN_MASK                     (uint8_t)(0x01U << PMIC_GPIO_PU_PD_EN_SHIFT)
+#define PMIC_GPIO_PU_SEL_MASK                       (uint8_t)(0x01U << PMIC_GPIO_PU_SEL_SHIFT)
+#define PMIC_GPIO_OD_MASK                           (uint8_t)(0x01U << PMIC_GPIO_OD_SHIFT)
+#define PMIC_GPIO_DIR_MASK                          (uint8_t)(0x01U << PMIC_GPIO_DIR_SHIFT)
 
-/*!
- * \brief  GPIO IN Register bit mask values
- */
-#define PMIC_GPIO_IN_1_GPIO1_IN_MASK                   (uint8_t)(0x01U << PMIC_GPIO_IN_1_GPIO1_IN_SHIFT)
-#define PMIC_GPIO_IN_1_GPIO2_IN_MASK                   (uint8_t)(0x01U << PMIC_GPIO_IN_1_GPIO2_IN_SHIFT)
-#define PMIC_GPIO_IN_1_GPIO3_IN_MASK                   (uint8_t)(0x01U << PMIC_GPIO_IN_1_GPIO3_IN_SHIFT)
-#define PMIC_GPIO_IN_1_GPIO4_IN_MASK                   (uint8_t)(0x01U << PMIC_GPIO_IN_1_GPIO4_IN_SHIFT)
-#define PMIC_GPIO_IN_1_GPIO5_IN_MASK                   (uint8_t)(0x01U << PMIC_GPIO_IN_1_GPIO5_IN_SHIFT)
-#define PMIC_GPIO_IN_1_GPIO6_IN_MASK                   (uint8_t)(0x01U << PMIC_GPIO_IN_1_GPIO6_IN_SHIFT)
-#define PMIC_GPIO_IN_1_GPIO7_IN_MASK                   (uint8_t)(0x01U << PMIC_GPIO_IN_1_GPIO7_IN_SHIFT)
-#define PMIC_GPIO_IN_1_GPIO8_IN_MASK                   (uint8_t)(0x01U << PMIC_GPIO_IN_1_GPIO8_IN_SHIFT)
-#define PMIC_GPIO_IN_2_GPIO9_IN_MASK                   (uint8_t)(0x01U << PMIC_GPIO_IN_2_GPIO9_IN_SHIFT)
-#define PMIC_GPIO_IN_2_GPIO10_IN_MASK                  (uint8_t)(0x01U << PMIC_GPIO_IN_2_GPIO10_IN_SHIFT)
+/*!     
+ * \brief  PMIC GPIO_IN_1 and GPIO_IN_2 Register bit mask values     
+ */     
+#define PMIC_GPIO1_IN_MASK                           (uint8_t)(0x01U << PMIC_GPIO1_IN_SHIFT)
+#define PMIC_GPIO2_IN_MASK                           (uint8_t)(0x01U << PMIC_GPIO2_IN_SHIFT)
+#define PMIC_GPIO3_IN_MASK                           (uint8_t)(0x01U << PMIC_GPIO3_IN_SHIFT)
+#define PMIC_GPIO4_IN_MASK                           (uint8_t)(0x01U << PMIC_GPIO4_IN_SHIFT)
+#define PMIC_GPIO5_IN_MASK                           (uint8_t)(0x01U << PMIC_GPIO5_IN_SHIFT)
+#define PMIC_GPIO6_IN_MASK                           (uint8_t)(0x01U << PMIC_GPIO6_IN_SHIFT)
+#define PMIC_GPIO7_IN_MASK                           (uint8_t)(0x01U << PMIC_GPIO7_IN_SHIFT)
+#define PMIC_GPIO8_IN_MASK                           (uint8_t)(0x01U << PMIC_GPIO8_IN_SHIFT)
+#define PMIC_GPIO9_IN_MASK                           (uint8_t)(0x01U << PMIC_GPIO9_IN_SHIFT)
+#define PMIC_GPIO10_IN_MASK                          (uint8_t)(0x01U << PMIC_GPIO10_IN_SHIFT)
 
-/*!
- * \brief  GPIO OUT Register bit mask values
- */
-#define PMIC_GPIO_OUT_1_GPIO1_OUT_MASK                 (uint8_t)(0x01U << PMIC_GPIO_OUT_1_GPIO1_OUT_SHIFT)
-#define PMIC_GPIO_OUT_1_GPIO2_OUT_MASK                 (uint8_t)(0x01U << PMIC_GPIO_OUT_1_GPIO2_OUT_SHIFT)
-#define PMIC_GPIO_OUT_1_GPIO3_OUT_MASK                 (uint8_t)(0x01U << PMIC_GPIO_OUT_1_GPIO3_OUT_SHIFT)
-#define PMIC_GPIO_OUT_1_GPIO4_OUT_MASK                 (uint8_t)(0x01U << PMIC_GPIO_OUT_1_GPIO4_OUT_SHIFT)
-#define PMIC_GPIO_OUT_1_GPIO5_OUT_MASK                 (uint8_t)(0x01U << PMIC_GPIO_OUT_1_GPIO5_OUT_SHIFT)
-#define PMIC_GPIO_OUT_1_GPIO6_OUT_MASK                 (uint8_t)(0x01U << PMIC_GPIO_OUT_1_GPIO6_OUT_SHIFT)
-#define PMIC_GPIO_OUT_1_GPIO7_OUT_MASK                 (uint8_t)(0x01U << PMIC_GPIO_OUT_1_GPIO7_OUT_SHIFT)
-#define PMIC_GPIO_OUT_1_GPIO8_OUT_MASK                 (uint8_t)(0x01U << PMIC_GPIO_OUT_1_GPIO8_OUT_SHIFT)
-#define PMIC_GPIO_OUT_2_GPIO9_OUT_MASK                 (uint8_t)(0x01U << PMIC_GPIO_OUT_2_GPIO9_OUT_SHIFT)
-#define PMIC_GPIO_OUT_2_GPIO10_OUT_MASK                (uint8_t)(0x01U << PMIC_GPIO_OUT_2_GPIO10_OUT_SHIFT)
+/*!     
+ * \brief  PMIC GPIO_OUT_1 and GPIO_OUT_2 Register bit mask values        
+ */     
+#define PMIC_GPIO1_OUT_MASK                         (uint8_t)(0x01U << PMIC_GPIO1_OUT_SHIFT)
+#define PMIC_GPIO2_OUT_MASK                         (uint8_t)(0x01U << PMIC_GPIO2_OUT_SHIFT)
+#define PMIC_GPIO3_OUT_MASK                         (uint8_t)(0x01U << PMIC_GPIO3_OUT_SHIFT)
+#define PMIC_GPIO4_OUT_MASK                         (uint8_t)(0x01U << PMIC_GPIO4_OUT_SHIFT)
+#define PMIC_GPIO5_OUT_MASK                         (uint8_t)(0x01U << PMIC_GPIO5_OUT_SHIFT)
+#define PMIC_GPIO6_OUT_MASK                         (uint8_t)(0x01U << PMIC_GPIO6_OUT_SHIFT)
+#define PMIC_GPIO7_OUT_MASK                         (uint8_t)(0x01U << PMIC_GPIO7_OUT_SHIFT)
+#define PMIC_GPIO8_OUT_MASK                         (uint8_t)(0x01U << PMIC_GPIO8_OUT_SHIFT)
+#define PMIC_GPIO9_OUT_MASK                         (uint8_t)(0x01U << PMIC_GPIO9_OUT_SHIFT)
+#define PMIC_GPIO10_OUT_MASK                        (uint8_t)(0x01U << PMIC_GPIO10_OUT_SHIFT)
 
 /*!
  * \brief  GPIO FSM TRIG Mask Register bit mask
  */
 /*! Bit Mask for PMIC_FSM_TRIG_MASK_1_REG */
-#define PMIC_FSM_TRIG_MASK_1_GPIO1_FSM_MASK_MASK       (uint8_t)(0x01 << PMIC_FSM_TRIG_MASK_1_GPIO1_FSM_MASK_SHIFT)
-#define PMIC_FSM_TRIG_MASK_1_GPIO1_FSM_MASK_POL_MASK   (uint8_t)(0x01 << PMIC_FSM_TRIG_MASK_1_GPIO1_FSM_MASK_POL_SHIFT)
-#define PMIC_FSM_TRIG_MASK_1_GPIO2_FSM_MASK_MASK       (uint8_t)(0x01 << PMIC_FSM_TRIG_MASK_1_GPIO2_FSM_MASK_SHIFT)
-#define PMIC_FSM_TRIG_MASK_1_GPIO2_FSM_MASK_POL_MASK   (uint8_t)(0x01 << PMIC_FSM_TRIG_MASK_1_GPIO2_FSM_MASK_POL_SHIFT)
-#define PMIC_FSM_TRIG_MASK_1_GPIO3_FSM_MASK_MASK       (uint8_t)(0x01 << PMIC_FSM_TRIG_MASK_1_GPIO3_FSM_MASK_SHIFT)
-#define PMIC_FSM_TRIG_MASK_1_GPIO3_FSM_MASK_POL_MASK   (uint8_t)(0x01 << PMIC_FSM_TRIG_MASK_1_GPIO3_FSM_MASK_POL_SHIFT)
-#define PMIC_FSM_TRIG_MASK_1_GPIO4_FSM_MASK_MASK       (uint8_t)(0x01 << PMIC_FSM_TRIG_MASK_1_GPIO4_FSM_MASK_SHIFT)
-#define PMIC_FSM_TRIG_MASK_1_GPIO4_FSM_MASK_POL_MASK   (uint8_t)(0x01 << PMIC_FSM_TRIG_MASK_1_GPIO4_FSM_MASK_POL_SHIFT)
+#define PMIC_GPIO1_FSM_MASK_MASK                    (uint8_t)(0x01 << PMIC_GPIO1_FSM_MASK_SHIFT)
+#define PMIC_GPIO1_FSM_MASK_POL_MASK                (uint8_t)(0x01 << PMIC_GPIO1_FSM_MASK_POL_SHIFT)
+#define PMIC_GPIO2_FSM_MASK_MASK                    (uint8_t)(0x01 << PMIC_GPIO2_FSM_MASK_SHIFT)
+#define PMIC_GPIO2_FSM_MASK_POL_MASK                (uint8_t)(0x01 << PMIC_GPIO2_FSM_MASK_POL_SHIFT)
+#define PMIC_GPIO3_FSM_MASK_MASK                    (uint8_t)(0x01 << PMIC_GPIO3_FSM_MASK_SHIFT)
+#define PMIC_GPIO3_FSM_MASK_POL_MASK                (uint8_t)(0x01 << PMIC_GPIO3_FSM_MASK_POL_SHIFT)
+#define PMIC_GPIO4_FSM_MASK_MASK                    (uint8_t)(0x01 << PMIC_GPIO4_FSM_MASK_SHIFT)
+#define PMIC_GPIO4_FSM_MASK_POL_MASK                (uint8_t)(0x01 << PMIC_GPIO4_FSM_MASK_POL_SHIFT)
 /*! Bit Mask for PMIC_FSM_TRIG_MASK_2_REG */
-#define PMIC_FSM_TRIG_MASK_2_GPIO5_FSM_MASK_MASK       (uint8_t)(0x01 << PMIC_FSM_TRIG_MASK_2_GPIO5_FSM_MASK_SHIFT)
-#define PMIC_FSM_TRIG_MASK_2_GPIO5_FSM_MASK_POL_MASK   (uint8_t)(0x01 << PMIC_FSM_TRIG_MASK_2_GPIO5_FSM_MASK_POL_SHIFT)
-#define PMIC_FSM_TRIG_MASK_2_GPIO6_FSM_MASK_MASK       (uint8_t)(0x01 << PMIC_FSM_TRIG_MASK_2_GPIO6_FSM_MASK_SHIFT)
-#define PMIC_FSM_TRIG_MASK_2_GPIO6_FSM_MASK_POL_MASK   (uint8_t)(0x01 << PMIC_FSM_TRIG_MASK_2_GPIO6_FSM_MASK_POL_SHIFT)
-#define PMIC_FSM_TRIG_MASK_2_GPIO7_FSM_MASK_MASK       (uint8_t)(0x01 << PMIC_FSM_TRIG_MASK_2_GPIO7_FSM_MASK_SHIFT)
-#define PMIC_FSM_TRIG_MASK_2_GPIO7_FSM_MASK_POL_MASK   (uint8_t)(0x01 << PMIC_FSM_TRIG_MASK_2_GPIO7_FSM_MASK_POL_SHIFT)
-#define PMIC_FSM_TRIG_MASK_2_GPIO8_FSM_MASK_MASK       (uint8_t)(0x01 << PMIC_FSM_TRIG_MASK_2_GPIO8_FSM_MASK_SHIFT)
-#define PMIC_FSM_TRIG_MASK_2_GPIO8_FSM_MASK_POL_MASK   (uint8_t)(0x01 << PMIC_FSM_TRIG_MASK_2_GPIO8_FSM_MASK_POL_SHIFT)
+#define PMIC_GPIO5_FSM_MASK_MASK                    (uint8_t)(0x01 << PMIC_GPIO5_FSM_MASK_SHIFT)
+#define PMIC_GPIO5_FSM_MASK_POL_MASK                (uint8_t)(0x01 << PMIC_GPIO5_FSM_MASK_POL_SHIFT)
+#define PMIC_GPIO6_FSM_MASK_MASK                    (uint8_t)(0x01 << PMIC_GPIO6_FSM_MASK_SHIFT)
+#define PMIC_GPIO6_FSM_MASK_POL_MASK                (uint8_t)(0x01 << PMIC_GPIO6_FSM_MASK_POL_SHIFT)
+#define PMIC_GPIO7_FSM_MASK_MASK                    (uint8_t)(0x01 << PMIC_GPIO7_FSM_MASK_SHIFT)
+#define PMIC_GPIO7_FSM_MASK_POL_MASK                (uint8_t)(0x01 << PMIC_GPIO7_FSM_MASK_POL_SHIFT)
+#define PMIC_GPIO8_FSM_MASK_MASK                    (uint8_t)(0x01 << PMIC_GPIO8_FSM_MASK_SHIFT)
+#define PMIC_GPIO8_FSM_MASK_POL_MASK                (uint8_t)(0x01 << PMIC_GPIO8_FSM_MASK_POL_SHIFT)
 /*! Bit Mask for PMIC_FSM_TRIG_MASK_3_REG */
-#define PMIC_FSM_TRIG_MASK_3_GPIO9_FSM_MASK_MASK       (uint8_t)(0x01 << PMIC_FSM_TRIG_MASK_3_GPIO9_FSM_MASK_SHIFT)
-#define PMIC_FSM_TRIG_MASK_2_GPIO9_FSM_MASK_POL_MASK   (uint8_t)(0x01 << PMIC_FSM_TRIG_MASK_3_GPIO9_FSM_MASK_POL_SHIFT)
-#define PMIC_FSM_TRIG_MASK_3_GPIO10_FSM_MASK_MASK      (uint8_t)(0x01 << PMIC_FSM_TRIG_MASK_3_GPIO10_FSM_MASK_SHIFT)
-#define PMIC_FSM_TRIG_MASK_2_GPIO10_FSM_MASK_POL_MASK  (uint8_t)(0x01 << PMIC_FSM_TRIG_MASK_3_GPIO10_FSM_MASK_POL_SHIFT)
-#define PMIC_FSM_TRIG_MASK_3_GPIO11_FSM_MASK_MASK      (uint8_t)(0x01 << PMIC_FSM_TRIG_MASK_3_GPIO11_FSM_MASK_SHIFT)
-#define PMIC_FSM_TRIG_MASK_2_GPIO11_FSM_MASK_POL_MASK  (uint8_t)(0x01 << PMIC_FSM_TRIG_MASK_3_GPIO11_FSM_MASK_POL_SHIFT)
+#define PMIC_GPIO9_FSM_MASK_MASK                    (uint8_t)(0x01 << PMIC_GPIO9_FSM_MASK_SHIFT)
+#define PMIC_GPIO9_FSM_MASK_POL_MASK                (uint8_t)(0x01 << PMIC_GPIO9_FSM_MASK_POL_SHIFT)
+#define PMIC_GPIO10_FSM_MASK_MASK                   (uint8_t)(0x01 << PMIC_GPIO10_FSM_MASK_SHIFT)
+#define PMIC_GPIO10_FSM_MASK_POL_MASK               (uint8_t)(0x01 << PMIC_GPIO10_FSM_MASK_POL_SHIFT)
+#define PMIC_GPIO11_FSM_MASK_MASK                   (uint8_t)(0x01 << PMIC_GPIO11_FSM_MASK_SHIFT)
+#define PMIC_GPIO11_FSM_MASK_POL_MASK               (uint8_t)(0x01 << PMIC_GPIO11_FSM_MASK_POL_SHIFT)
 
 /*!
  * \brief  GPIO NPWRON/Enable PIN

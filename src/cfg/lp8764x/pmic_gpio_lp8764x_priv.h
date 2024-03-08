@@ -59,45 +59,41 @@ extern "C"
 /*!
  * \brief  GPIO Register Offsets
  */
-#define PMIC_ENABLE_CONF_REGADDR                  (0x3CU)
+#define PMIC_LP8764X_ENABLE_CONF_REGADDR        (0x3CU)
+#define PMIC_LP8764X_MASK_GPIO9_10_REGADDR      (0x51U)
 
 /*!
- * \brief Bit fields for PMIC_MASK_GPIO9_10_REG
+ * \brief  Bit fields for PMIC_MASK_GPIO9_10_REG
  */
-#define PMIC_MASK_GPIO9_10_GPIO9_FALL_MASK_SHIFT  (0x0U)
-#define PMIC_MASK_GPIO9_10_GPIO9_RISE_MASK_SHIFT  (0x3U)
-#define PMIC_MASK_GPIO9_10_GPIO10_FALL_MASK_SHIFT (0x1U)
-#define PMIC_MASK_GPIO9_10_GPIO10_RISE_MASK_SHIFT (0x4U)
+#define PMIC_GPIO9_FALL_MASK_SHIFT              (0x0U)
+#define PMIC_GPIO9_RISE_MASK_SHIFT              (0x3U)
+#define PMIC_GPIO10_FALL_MASK_SHIFT             (0x1U)
+#define PMIC_GPIO10_RISE_MASK_SHIFT             (0x4U)
 
 /*!
- * \brief  GPIO Register Offsets
+ * \brief  PMIC ENABLE_CONF register bit positions
  */
-#define PMIC_MASK_GPIO9_10_REGADDR                (0x51U)
+#define PMIC_LP8764X_ENABLE_POL_SHIFT           (0x05U)
 
 /*!
- * \brief  ENABLE Register bit fields
- */
-#define PMIC_ENABLE_CONF_ENABLE_POL_SHIFT         (0x05U)
-
-/*!
- * \brief  ENABLE Register bit mask values
+ * \brief  PMIC ENABLE_CONF register bit masks
  */
 
-#define PMIC_ENABLE_CONF_ENABLE_POL_MASK          ((uint8_t)(0x01U << PMIC_ENABLE_CONF_ENABLE_POL_SHIFT))
+#define PMIC_LP8764X_ENABLE_POL_MASK            ((uint8_t)(0x01U << PMIC_LP8764X_ENABLE_POL_SHIFT))
 
 /*!
  * \brief  Bit Mask for PMIC_MASK_GPIO9_10_REG
  */
-#define PMIC_MASK_GPIO9_10_GPIO9_FALL_MASK_MASK   ((uint8_t)(0x01 << PMIC_MASK_GPIO9_10_GPIO9_FALL_MASK_SHIFT))
-#define PMIC_MASK_GPIO9_10_GPIO10_FALL_MASK_MASK  ((uint8_t)(0x01 << PMIC_MASK_GPIO9_10_GPIO10_FALL_MASK_SHIFT))
-#define PMIC_MASK_GPIO9_10_GPIO9_RISE_MASK_MASK   ((uint8_t)(0x01 << PMIC_MASK_GPIO9_10_GPIO9_RISE_MASK_SHIFT))
-#define PMIC_MASK_GPIO9_10_GPIO10_RISE_MASK_MASK  ((uint8_t)(0x01 << PMIC_MASK_GPIO9_10_GPIO10_RISE_MASK_SHIFT))
+#define PMIC_GPIO9_FALL_MASK_MASK               ((uint8_t)(0x01 << PMIC_GPIO9_FALL_MASK_SHIFT))
+#define PMIC_GPIO10_FALL_MASK_MASK              ((uint8_t)(0x01 << PMIC_GPIO10_FALL_MASK_SHIFT))
+#define PMIC_GPIO9_RISE_MASK_MASK               ((uint8_t)(0x01 << PMIC_GPIO9_RISE_MASK_SHIFT))
+#define PMIC_GPIO10_RISE_MASK_MASK              ((uint8_t)(0x01 << PMIC_GPIO10_RISE_MASK_SHIFT))
 
 /*
  * \brief  Min and Max PMIC GPIO pin supported
  */
-#define PMIC_LP8764X_GPIO_PIN_MIN                 (1U)
-#define PMIC_LP8764X_GPIO_PIN_MAX                 (10U)
+#define PMIC_LP8764X_GPIO_PIN_MIN               (1U)
+#define PMIC_LP8764X_GPIO_PIN_MAX               (10U)
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */

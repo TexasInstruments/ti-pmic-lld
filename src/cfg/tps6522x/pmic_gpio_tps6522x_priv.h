@@ -57,31 +57,31 @@ extern "C"
 /* ========================================================================== */
 
 /*!
- * \brief  EN/PB/VSENSE Pin and nINT Pin Configuration Register for TPS6522x Burton PMIC
+ * \brief  EN/PB/VSENSE Pin and nINT Pin Configuration Register for TPS6522x
  */
-#define POWER_ON_CONFIG_REGADDR                        (0x3CU)
+#define TPS6522X_POWER_ON_CONFIG_REGADDR   (0x3CU)
 
 /*!
- * \brief  POWER ON CONFIG register bit fields
+ * \brief  POWER_ON_CONFIG register bit fields
  */
-#define PMIC_POWER_ON_CONFIG_EN_PB_VSENSE_CONFIG_SHIFT (0x06U)
-#define PMIC_POWER_ON_CONFIG_EN_PB_DEGL_SHIFT          (0x05U)
-#define PMIC_POWER_ON_CONFIG_NINT_ENDRV_SEL_SHIFT      (0x01U)
-#define PMIC_POWER_ON_CONFIG_NINT_ENDRV_PU_SEL_SHIFT   (0x00U)
+#define TPS6522X_EN_PB_VSENSE_CONFIG_SHIFT (0x06U)
+#define TPS6522X_EN_PB_DEGL_SHIFT          (0x05U)
+#define TPS6522X_NINT_ENDRV_SEL_SHIFT      (0x01U)
+#define TPS6522X_NINT_ENDRV_PU_SEL_SHIFT   (0x00U)
 
 /*!
- * \brief  POWER ON CONFIG register bit masks
+ * \brief  POWER_ON_CONFIG register bit masks
  */
-#define PMIC_POWER_ON_CONFIG_EN_PB_VSENSE_CONFIG_MASK  (0x03U << PMIC_POWER_ON_CONFIG_EN_PB_VSENSE_CONFIG_SHIFT)
-#define PMIC_POWER_ON_CONFIG_EN_PB_DEGL_MASK           (0x01U << PMIC_POWER_ON_CONFIG_EN_PB_DEGL_SHIFT)
-#define PMIC_POWER_ON_CONFIG_NINT_ENDRV_SEL_MASK       (0x01U << PMIC_POWER_ON_CONFIG_NINT_ENDRV_SEL_SHIFT)
-#define PMIC_POWER_ON_CONFIG_NINT_ENDRV_PU_SEL_MASK    (0x01U << PMIC_POWER_ON_CONFIG_NINT_ENDRV_PU_SEL_SHIFT)
+#define TPS6522X_EN_PB_VSENSE_CONFIG_MASK  (0x03U << TPS6522X_EN_PB_VSENSE_CONFIG_SHIFT)
+#define TPS6522X_EN_PB_DEGL_MASK           (0x01U << TPS6522X_EN_PB_DEGL_SHIFT)
+#define TPS6522X_NINT_ENDRV_SEL_MASK       (0x01U << TPS6522X_NINT_ENDRV_SEL_SHIFT)
+#define TPS6522X_NINT_ENDRV_PU_SEL_MASK    (0x01U << TPS6522X_NINT_ENDRV_PU_SEL_SHIFT)
 
 /*
  * \brief  Min and Max PMIC GPIO pin supported
  */
-#define PMIC_TPS6522X_GPIO_PIN_MIN                     (1U)
-#define PMIC_TPS6522X_GPIO_PIN_MAX                     (6U)
+#define TPS6522X_GPIO_PIN_MIN              (1U)
+#define TPS6522X_GPIO_PIN_MAX              (6U)
 
 /* ========================================================================== */
 /*                         Structures and Enums                               */

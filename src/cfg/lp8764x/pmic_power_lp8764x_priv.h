@@ -57,82 +57,82 @@ extern "C"
 /* ========================================================================== */
 
 /*!
- * \brief  VMON powergood Window Register Address
+ * \brief  PMIC VMONX_PG_WINDOW register address, shortened for MISRA-C
  */
-#define PMIC_VMON1_PG_WINDOW_REGADDR            (0x2D)
-#define PMIC_VMON2_PG_WINDOW_REGADDR            (0x2F)
+#define PMIC_LP8764X_VMON1_PG_WIN_REGADDR            (0x2D)
+#define PMIC_LP8764X_VMON2_PG_WIN_REGADDR            (0x2F)
 
 /*!
- * \brief  VMON powergood Level Register Address
+ * \brief  PMIC VMONX_PG_LEVEL register address
  */
-#define PMIC_VMON1_PG_LEVEL_REGADDR             (0x2E)
-#define PMIC_VMON2_PG_LEVEL_REGADDR             (0x30)
+#define PMIC_LP8764X_VMON1_PG_LEVEL_REGADDR             (0x2E)
+#define PMIC_LP8764X_VMON2_PG_LEVEL_REGADDR             (0x30)
 
 /*!
- * \brief  VMON powergood Level Register Address
+ * \brief  PMIC VMON_CONF register address
  */
-#define PMIC_VMON_CONF_REGADDR                  (0xA8U)
+#define PMIC_LP8764X_VMON_CONF_REGADDR                  (0xA8U)
 
 /*!
- * \brief  PMIC Power voltage range bit fields
+ * \brief  PMIC VMONX_PG_WINDOW register bit positions
  */
-#define PMIC_VMON_PG_WINDOW_VMON_RANGE_SHIFT    (6U)
+#define PMIC_LP8764X_VMONX_RANGE_SHIFT    (6U)
 
 /*!
- * \brief  PMIC Powergood level bit fields
+ * \brief  PMIC VMONX_PG_LEVEL register bit positions
  */
-#define PMIC_VMONX_PG_LEVEL_VMONX_PG_SET_SHIFT  (0U)
+#define PMIC_LP8764X_VMONX_PG_SET_SHIFT  (0U)
 
 /*!
- * \brief  PMIC VMON1 and VMON2 slew rate bit fields.
+ * \brief  PMIC VMON_CONF register bit positions
  */
-#define PMIC_VMON_CONF_VMON2_SLEW_RATE_SHIFT    (3U)
-#define PMIC_VMON_CONF_VMON1_SLEW_RATE_SHIFT    (0U)
+#define PMIC_LP8764X_VMON2_SLEW_RATE_SHIFT    (3U)
+#define PMIC_LP8764X_VMON1_SLEW_RATE_SHIFT    (0U)
 
 /*!
  * \brief  PMIC voltage range for VMON when VMON range
             is PMIC_VMON_RANGE_3V35_5V.
  */
-#define PMIC_LP8764X_RANGE1_VMON_MIN_VOLTAGE    (3350U)
-#define PMIC_LP8764X_RANGE1_VMON_MAX_VOLTAGE    (5000U)
+#define PMIC_LP8764X_RANGE1_VMON_MIN_VOLT    (3350U)
+#define PMIC_LP8764X_RANGE1_VMON_MAX_VOLT    (5000U)
 
 /*!
- * \brief  PMIC VMON1 and VMON2 slew rate bit masks.
+ * \brief  PMIC VMON_CONF VMON1 and VMON2 slew rate bit masks.
  */
-#define PMIC_VMON_CONF_VMON2_SLEW_RATE_MASK     (uint8_t)(0x07U << PMIC_VMON_CONF_VMON2_SLEW_RATE_SHIFT)
-#define PMIC_VMON_CONF_VMON1_SLEW_RATE_MASK     (uint8_t)(0x07U << PMIC_VMON_CONF_VMON1_SLEW_RATE_SHIFT)
+#define PMIC_LP8764X_VMON2_SLEW_RATE_MASK     (uint8_t)(0x07U << PMIC_LP8764X_VMON2_SLEW_RATE_SHIFT)
+#define PMIC_LP8764X_VMON1_SLEW_RATE_MASK     (uint8_t)(0x07U << PMIC_LP8764X_VMON1_SLEW_RATE_SHIFT)
 /*!
- * \brief  PMIC Power voltage range bit masks
+ * \brief  PMIC VMONX_PG_WINDOW power voltage range bit masks
  */
-#define PMIC_VMON_PG_WINDOW_VMON_RANGE_MASK     (uint8_t)(0x01U << PMIC_VMON_PG_WINDOW_VMON_RANGE_SHIFT)
+#define PMIC_LP8764X_VMONX_RANGE_MASK     (uint8_t)(0x01U << PMIC_LP8764X_VMONX_RANGE_SHIFT)
 
 /*!
- * \brief  PMIC Powergood level bit masks
+ * \brief  PMIC VMONX_PG_LEVEL powergood level bit masks
  */
-#define PMIC_VMONX_PG_LEVEL_VMONX_PG_SET_MASK   (uint8_t)(0xFFU << PMIC_VMONX_PG_LEVEL_VMONX_PG_SET_SHIFT)
+#define PMIC_LP8764X_VMONX_PG_SET_MASK   (uint8_t)(0xFFU << PMIC_LP8764X_VMONX_PG_SET_SHIFT)
 /*!
  * \brief  PMIC Power Volatage range for BUCK regulator
  */
-#define PMIC_LP8764X_REGULATOR_BUCK_MIN_VOLTAGE PMIC_POWER_VOLTAGE_300MV
-#define PMIC_LP8764X_REGULATOR_BUCK_MAX_VOLTAGE PMIC_POWER_VOLTAGE_3340MV
+#define PMIC_LP8764X_BUCK_MIN_VOLT PMIC_POWER_VOLTAGE_300MV
+#define PMIC_LP8764X_BUCK_MAX_VOLT PMIC_POWER_VOLTAGE_3340MV
 
 /*!
  * \brief  PMIC Power Volatage range for VMON, when Range is 0
  */
-#define PMIC_LP8764X_RANGE0_VMON_MIN_VOLTAGE    PMIC_POWER_VOLTAGE_300MV
-#define PMIC_LP8764X_RANGE0_VMON_MAX_VOLTAGE    PMIC_POWER_VOLTAGE_3340MV
+#define PMIC_LP8764X_RANGE0_VMON_MIN_VOLT    PMIC_POWER_VOLTAGE_300MV
+#define PMIC_LP8764X_RANGE0_VMON_MAX_VOLT    PMIC_POWER_VOLTAGE_3340MV
 
 /*!
  * \brief  PMIC Power Current range for BUCK regulator
  */
-#define PMIC_LP8764X_BUCK_CURRENT_LIMIT_MIN     PMIC_LP8764X_REGULATOR_BUCK_CURRENT_LIMIT_2A5
-#define PMIC_LP8764X_BUCK_CURRENT_LIMIT_MAX     PMIC_LP8764X_REGULATOR_BUCK_CURRENT_LIMIT_6A5
+#define PMIC_LP8764X_BUCK_ILIM_MIN     PMIC_LP8764X_BUCK_CURRENT_LIMIT_2A5
+#define PMIC_LP8764X_BUCK_ILIM_MAX     PMIC_LP8764X_BUCK_CURRENT_LIMIT_6A5
 
 /*!
  * \brief  PMIC Power Slew Rate range for BUCK regulator
  */
-#define PMIC_LP8764X_BUCK_SLEW_RATE_MIN         PMIC_LP8764X_REGULATOR_BUCK_VMON_SLEW_RATE_33MV
-#define PMIC_LP8764X_BUCK_SLEW_RATE_MAX         PMIC_LP8764X_REGULATOR_BUCK_VMON_SLEW_RATE_0MV31
+#define PMIC_LP8764X_BUCK_SLEW_RATE_MIN         PMIC_LP8764X_BUCK_SLEW_RATE_33MV
+#define PMIC_LP8764X_BUCK_SLEW_RATE_MAX         PMIC_LP8764X_BUCK_SLEW_RATE_0MV31
 /*!
  * \brief  PMIC Power Buck regulator range
  */

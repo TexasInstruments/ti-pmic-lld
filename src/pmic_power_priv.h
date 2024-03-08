@@ -44,6 +44,7 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
+#include "pmic_irq_priv.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -139,17 +140,6 @@ extern "C"
 #define PMIC_PGOOD_SEL_4_REGADDR                                    (0x7BU)
 
 /*!
- * \brief  PMIC Power Interrupt Mask Register Address
- */
-#define PMIC_MASK_BUCK1_2_REGADDR                                   (0x49U)
-#define PMIC_MASK_BUCK3_4_REGADDR                                   (0x4AU)
-#define PMIC_MASK_BUCK5_REGADDR                                     (0x4BU)
-#define PMIC_MASK_LDO1_2_REGADDR                                    (0x4CU)
-#define PMIC_MASK_LDO3_4_REGADDR                                    (0x4DU)
-#define PMIC_MASK_VMON_REGADDR                                      (0x4EU)
-#define PMIC_MASK_MISC_REGADDR                                      (0x53U)
-
-/*!
  * \brief  PMIC Power status Register Address
  */
 #define PMIC_STAT_BUCK1_2_REGADDR                                   (0x6DU)
@@ -222,412 +212,470 @@ extern "C"
 #define PMIC_POWER_LDO4_MIN_VOLTAGE                                 (1200U)
 #define PMIC_POWER_LDO_MAX_VOLTAGE                                  (3300U)
 
-/*!
- * \brief  PMIC power resources and vmon control bit fields.
+/**
+ * \brief  Power Resource (Buck, LDO, VMON) control bit positions
+ *          1. BUCKX_CTRL
+ *          2. LDOX_CTRL
  */
-#define PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_RV_SEL_SHIFT      (7U)
-#define PMIC_POWER_VCCA_VMON_CTRL_VMON1_RV_SEL_SHIFT                (2U)
-#define PMIC_POWER_VCCA_VMON_CTRL_VMON2_RV_SEL_SHIFT                (4U)
-#define PMIC_BUCKX_CTRL_BUCKX_PLDN_SHIFT                            (5U)
-#define PMIC_LDOX_CTRL_LDOX_PLDN_SHIFT                              (5U)
-#define PMIC_VCCA_VMON_CTRL_VMON_DEGLITCH_SEL_SHIFT                 (5U)
-#define PMIC_REGULATOR_CTRL_REGULATOR_VMON_EN_SHIFT                 (4U)
-#define PMIC_VCCA_VMON_CTRL_VCCA_VMON_EN_SHIFT                      (0U)
-#define PMIC_VCCA_VMON_CTRL_VMON2_EN_SHIFT                          (3U)
-#define PMIC_VCCA_VMON_CTRL_VMON1_EN_SHIFT                          (1U)
-#define PMIC_BUCKX_CTRL_BUCKX_VSEL_SHIFT                            (3U)
-#define PMIC_BUCKX_CTRL_BUCKX_FPWM_MP_SHIFT                         (2U)
-#define PMIC_BUCKX_CTRL_BUCKX_FPWM_SHIFT                            (1U)
-#define PMIC_LDOX_CTRL_LDOX_SLOW_RAMP_EN_SHIFT                      (1U)
-#define PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_EN_SHIFT          (0U)
-
-/*!
- * \brief  PMIC power resources and vmon bit fields.
+#define PMIC_POWER_RESOURCEX_RV_SEL_SHIFT               (7U)
+#define PMIC_POWER_RESOURCEX_EN_SHIFT                   (0U)
+/** 
+ * \brief   VCCA_VMON_CTRL register bit positions   
+ */ 
+#define PMIC_VMON1_RV_SEL_SHIFT                         (2U)
+#define PMIC_VMON2_RV_SEL_SHIFT                         (4U)
+#define PMIC_VCCA_VMON_EN_SHIFT                         (0U)
+#define PMIC_VMON2_EN_SHIFT                             (3U)
+#define PMIC_VMON1_EN_SHIFT                             (1U)
+#define PMIC_VMON_DEGLITCH_SEL_SHIFT                    (5U)
+/**         
+ * @brief   BUCKX_CTRL register bit positions           
+ */         
+#define PMIC_BUCKX_PLDN_SHIFT                           (5U)
+#define PMIC_BUCKX_VSEL_SHIFT                           (3U)
+#define PMIC_BUCKX_FPWM_MP_SHIFT                        (2U)
+#define PMIC_BUCKX_FPWM_SHIFT                           (1U)
+/**         
+ * \brief   LDOX_CTRL register bit positions            
+ */         
+#define PMIC_LDOX_PLDN_SHIFT                            (5U)
+#define PMIC_LDOX_SLOW_RAMP_EN_SHIFT                    (1U)
+/**
+ * \brief   VMON enable bit position in power resource control registers
+ *          1. BUCKX_CTRL
+ *          2. LDOX_CTRL
  */
-#define PMIC_BUCKX_CONF_BUCKX_ILIM_SHIFT                            (3U)
-#define PMIC_BUCKX_CONF_BUCKX_SLEW_RATE_SHIFT                       (0U)
-
-/*!
- * \brief  BUCK voltage selection bit fields
- */
-#define PMIC_BUCKX_VOUT_X_BUCKX_VSETX_SHIFT                         (0U)
-
-/*!
- * \brief  PMIC Over and Under Voltage Threshold bit fields
- */
-#define PMIC_POWER_RESOURCEX_PG_WINDOW_POWER_RESOURCEX_UV_THR_SHIFT (3U)
-#define PMIC_POWER_RESOURCEX_PG_WINDOW_POWER_RESOURCEX_OV_THR_SHIFT (0U)
-
-/*!
- * \brief  PMIC LDORTC control bit fields
- */
-#define PMIC_LDORTC_CTRL_LDORTC_DIS_SHIFT                           (0U)
+#define PMIC_REGULATOR_VMON_EN_SHIFT                    (4U)
 
 /*!
- * \brief  LDO VOUT register bit fields
+ * \brief  PMIC BUCKX_CONF bit positions 
  */
-#define PMIC_LDO1_2_3_VOUT_LDO1_2_3_BYPASS_SHIFT                    (7U)
-#define PMIC_LDO1_2_3_VOUT_LDO1_2_3_VSET_SHIFT                      (1U)
-#define PMIC_LDO4_VOUT_LDO4_VSET_SHIFT                              (0U)
+#define PMIC_BUCKX_ILIM_SHIFT                           (3U)
+#define PMIC_BUCKX_SLEW_RATE_SHIFT                      (0U)
 
 /*!
- * \brief  PMIC Power-good level for VCCA pin bit fields
+ * \brief  BUCK BUCKX_VOUT_X bit positions
  */
-#define PMIC_VCCA_PG_WINDOW_VCCA_PG_SET_SHIFT                       (6U)
+#define PMIC_BUCKX_VSETX_SHIFT                          (0U)
 
 /*!
- * \brief  PMIC Rail select bit fields
+ * \brief  PMIC Over and Under Voltage Threshold bit positions
+ *          1. LDOX_PG_WINDOW
+ *          2. BUCKX_PG_WINDOW
+ *          3. VCCA_PG_WINDOW
+ *          4. VMONX_PG_WINDOW
  */
-#define PMIC_RAIL_SEL_1_BUCK1_GRP_SEL_SHIFT                         (0U)
-#define PMIC_RAIL_SEL_1_BUCK2_GRP_SEL_SHIFT                         (2U)
-#define PMIC_RAIL_SEL_1_BUCK3_GRP_SEL_SHIFT                         (4U)
-#define PMIC_RAIL_SEL_1_BUCK4_GRP_SEL_SHIFT                         (6U)
-#define PMIC_RAIL_SEL_2_BUCK5_GRP_SEL_SHIFT                         (0U)
-#define PMIC_RAIL_SEL_2_LDO1_GRP_SEL_SHIFT                          (2U)
-#define PMIC_RAIL_SEL_2_LDO2_GRP_SEL_SHIFT                          (4U)
-#define PMIC_RAIL_SEL_2_LDO3_GRP_SEL_SHIFT                          (6U)
-#define PMIC_RAIL_SEL_3_LDO4_GRP_SEL_SHIFT                          (0U)
-#define PMIC_RAIL_SEL_3_VCCA_GRP_SEL_SHIFT                          (2U)
-#define PMIC_RAIL_SEL_3_VMON1_GRP_SEL_SHIFT                         (4U)
-#define PMIC_RAIL_SEL_3_VMON2_GRP_SEL_SHIFT                         (6U)
+#define PMIC_POWER_RESOURCEX_UV_THR_SHIFT               (3U)
+#define PMIC_POWER_RESOURCEX_OV_THR_SHIFT               (0U)
 
 /*!
- * \brief  PMIC Rail bit field
+ * \brief  PMIC LDORTC_CTRL bit positions
  */
-#define PMIC_RAIL_SEL_X_PWR_RSRC_X_GRP_SEL_BITFIELD                 (0x3U)
+#define PMIC_LDORTC_DIS_SHIFT                           (0U)
 
 /*!
- * \brief  PMIC Interrupt masking bit fields
+ * \brief  LDOX_VOUT register bit positions
  */
-#define PMIC_MASK_BUCKX_Y_BUCK2_4_ILIM_MASK_SHIFT                   (7U)
-#define PMIC_MASK_BUCKX_Y_BUCK2_4_UV_MASK_SHIFT                     (5U)
-#define PMIC_MASK_BUCKX_Y_BUCK2_4_OV_MASK_SHIFT                     (4U)
+#define PMIC_LDOX_BYPASS_SHIFT                          (7U)
+#define PMIC_LDOX_VSET_SHIFT                            (1U)
+#define PMIC_LDO4_VSET_SHIFT                            (0U)
 
-#define PMIC_MASK_BUCKX_Y_BUCK1_3_ILIM_MASK_SHIFT                   (3U)
-#define PMIC_MASK_BUCKX_Y_BUCK1_3_UV_MASK_SHIFT                     (1U)
-#define PMIC_MASK_BUCKX_Y_BUCK1_3_OV_MASK_SHIFT                     (0U)
+/*!
+ * \brief  PMIC VCCA_PG_WINDOW register bit positions
+ */
+#define PMIC_VCCA_PG_SET_SHIFT                          (6U)
 
-#define PMIC_MASK_BUCK5_BUCK5_ILIM_MASK_SHIFT                       (3U)
-#define PMIC_MASK_BUCK5_BUCK5_UV_MASK_SHIFT                         (1U)
-#define PMIC_MASK_BUCK5_BUCK5_OV_MASK_SHIFT                         (0U)
+/*!
+ * \brief  PMIC RAIL_SEL_X bit positions 
+ */
+#define PMIC_BUCK1_GRP_SEL_SHIFT                        (0U)
+#define PMIC_BUCK2_GRP_SEL_SHIFT                        (2U)
+#define PMIC_BUCK3_GRP_SEL_SHIFT                        (4U)
+#define PMIC_BUCK4_GRP_SEL_SHIFT                        (6U)
+#define PMIC_BUCK5_GRP_SEL_SHIFT                        (0U)
+#define PMIC_LDO1_GRP_SEL_SHIFT                         (2U)
+#define PMIC_LDO2_GRP_SEL_SHIFT                         (4U)
+#define PMIC_LDO3_GRP_SEL_SHIFT                         (6U)
+#define PMIC_LDO4_GRP_SEL_SHIFT                         (0U)
+#define PMIC_VCCA_GRP_SEL_SHIFT                         (2U)
+#define PMIC_VMON1_GRP_SEL_SHIFT                        (4U)
+#define PMIC_VMON2_GRP_SEL_SHIFT                        (6U)
 
-#define PMIC_MASK_LDOX_Y_LDO2_4_ILIM_MASK_SHIFT                     (7U)
-#define PMIC_MASK_LDOX_Y_LDO2_4_UV_MASK_SHIFT                       (5U)
-#define PMIC_MASK_LDOX_Y_LDO2_4_OV_MASK_SHIFT                       (4U)
+/*!
+ * \brief  PMIC RAIL_SEL_X register GRP_SEL bit mask
+ */
+#define PMIC_PWR_RSRC_X_GRP_SEL_BITFIELD                (0x3U)
 
-#define PMIC_MASK_LDOX_Y_LDO1_3_ILIM_MASK_SHIFT                     (3U)
-#define PMIC_MASK_LDOX_Y_LDO1_3_UV_MASK_SHIFT                       (1U)
-#define PMIC_MASK_LDOX_Y_LDO1_3_OV_MASK_SHIFT                       (0U)
+/*!
+ * \brief  PMIC MASK_BUCKX_Y register bit positions
+ */
+#define PMIC_BUCK2_4_ILIM_MASK_SHIFT                    (7U)
+#define PMIC_BUCK2_4_UV_MASK_SHIFT                      (5U)
+#define PMIC_BUCK2_4_OV_MASK_SHIFT                      (4U)
+#define PMIC_BUCK1_3_ILIM_MASK_SHIFT                    (3U)
+#define PMIC_BUCK1_3_UV_MASK_SHIFT                      (1U)
+#define PMIC_BUCK1_3_OV_MASK_SHIFT                      (0U)
+/*!
+* \brief   MASK_BUCK5 register bit positions 
+*/
+#define PMIC_BUCK5_ILIM_MASK_SHIFT                      (3U)
+#define PMIC_BUCK5_UV_MASK_SHIFT                        (1U)
+#define PMIC_BUCK5_OV_MASK_SHIFT                        (0U)
+/*!
+ * \brief  PMIC MASK_LDOX_Y bit positions
+ */
+#define PMIC_LDO2_4_ILIM_MASK_SHIFT                     (7U)
+#define PMIC_LDO2_4_UV_MASK_SHIFT                       (5U)
+#define PMIC_LDO2_4_OV_MASK_SHIFT                       (4U)
+#define PMIC_LDO1_3_ILIM_MASK_SHIFT                     (3U)
+#define PMIC_LDO1_3_UV_MASK_SHIFT                       (1U)
+#define PMIC_LDO1_3_OV_MASK_SHIFT                       (0U)
+/*!
+ * \brief  PMIC MASK_VMON bit poisitions
+ */
+#define PMIC_VCCA_UV_MASK_SHIFT                         (1U)
+#define PMIC_VCCA_OV_MASK_SHIFT                         (0U)
+#define PMIC_VMON2_UV_MASK_SHIFT                        (6U)
+#define PMIC_VMON2_OV_MASK_SHIFT                        (5U)
+#define PMIC_VMON1_UV_MASK_SHIFT                        (3U)
+#define PMIC_VMON1_OV_MASK_SHIFT                        (2U)
 
-#define PMIC_MASK_VMON_VCCA_UV_MASK_SHIFT                           (1U)
-#define PMIC_MASK_VMON_VCCA_OV_MASK_SHIFT                           (0U)
-
-#define PMIC_MASK_VMON_VMON2_UV_MASK_SHIFT                          (6U)
-#define PMIC_MASK_VMON_VMON2_OV_MASK_SHIFT                          (5U)
-
-#define PMIC_MASK_VMON_VMON1_UV_MASK_SHIFT                          (3U)
-#define PMIC_MASK_VMON_VMON1_OV_MASK_SHIFT                          (2U)
-
-#define PMIC_MASK_MISC_TWARN_MASK_SHIFT                             (3U)
+/*!
+ * \brief  PMIC MASK_MISC register bit positions
+ */
+#define PMIC_TWARN_MASK_SHIFT                           (3U)
 
 /*!
  * \brief  PMIC Power Resource Interrupt bit field
  */
-#define PMIC_PWR_RSRC_INTR_MASK_BITFIELD                            (1U)
+#define PMIC_PWR_RSRC_INTR_MASK_BITFIELD                (1U)
 
 /*!
- * \brief  PMIC Power Resources Status bit fields
+ * \brief  PMIC STAT_BUCKX_Y register bit positions
  */
-#define PMIC_STAT_BUCKX_Y_BUCK2_4_ILIM_STAT_SHIFT                   (7U)
-#define PMIC_STAT_BUCKX_Y_BUCK2_4_UV_STAT_SHIFT                     (5U)
-#define PMIC_STAT_BUCKX_Y_BUCK2_4_OV_STAT_SHIFT                     (4U)
-
-#define PMIC_STAT_BUCKX_Y_BUCK1_3_ILIM_STAT_SHIFT                   (3U)
-#define PMIC_STAT_BUCKX_Y_BUCK1_3_UV_STAT_SHIFT                     (1U)
-#define PMIC_STAT_BUCKX_Y_BUCK1_3_OV_STAT_SHIFT                     (0U)
-
-#define PMIC_STAT_BUCK5_BUCK5_ILIM_STAT_SHIFT                       (3U)
-#define PMIC_STAT_BUCK5_BUCK5_UV_STAT_SHIFT                         (1U)
-#define PMIC_STAT_BUCK5_BUCK5_OV_STAT_SHIFT                         (0U)
-
-#define PMIC_STAT_LDOX_Y_LDO2_4_ILIM_STAT_SHIFT                     (7U)
-#define PMIC_STAT_LDOX_Y_LDO2_4_UV_STAT_SHIFT                       (5U)
-#define PMIC_STAT_LDOX_Y_LDO2_4_OV_STAT_SHIFT                       (4U)
-
-#define PMIC_STAT_LDOX_Y_LDO1_3_ILIM_STAT_SHIFT                     (3U)
-#define PMIC_STAT_LDOX_Y_LDO1_3_UV_STAT_SHIFT                       (1U)
-#define PMIC_STAT_LDOX_Y_LDO1_3_OV_STAT_SHIFT                       (0U)
-
-#define PMIC_STAT_VMON_VCCA_UV_STAT_SHIFT                           (1U)
-#define PMIC_STAT_VMON_VCCA_OV_STAT_SHIFT                           (0U)
-
-#define PMIC_STAT_VMON_VMON2_UV_STAT_SHIFT                          (6U)
-#define PMIC_STAT_VMON_VMON2_OV_STAT_SHIFT                          (5U)
-
-#define PMIC_STAT_VMON_VMON1_UV_STAT_SHIFT                          (3U)
-#define PMIC_STAT_VMON_VMON1_OV_STAT_SHIFT                          (2U)
+#define PMIC_BUCK2_4_ILIM_STAT_SHIFT                    (7U)
+#define PMIC_BUCK2_4_UV_STAT_SHIFT                      (5U)
+#define PMIC_BUCK2_4_OV_STAT_SHIFT                      (4U)
+#define PMIC_BUCK1_3_ILIM_STAT_SHIFT                    (3U)
+#define PMIC_BUCK1_3_UV_STAT_SHIFT                      (1U)
+#define PMIC_BUCK1_3_OV_STAT_SHIFT                      (0U)
 /*!
- * \brief  PMIC Power Resources Status bit field
+ * \brief  PMIC STAT_BUCK5 register bit positions
  */
-#define PMIC_POWER_RESOURCE_STATUS_BITFIELD                         (1U)
+#define PMIC_BUCK5_ILIM_STAT_SHIFT                      (3U)
+#define PMIC_BUCK5_UV_STAT_SHIFT                        (1U)
+#define PMIC_BUCK5_OV_STAT_SHIFT                        (0U)
 /*!
- * \brief  PMIC Thermal status for die bit fields
+ * \brief  PMIC STAT_LDOX_Y register bit positions
  */
-#define PMIC_STAT_MISC_TWARN_STAT_SHIFT                             (3U)
-#define PMIC_STAT_MODERATE_ERR_TSD_ORD_STAT_SHIFT                   (0U)
-#define PMIC_STAT_SEVERE_ERR_TSD_IMM_STAT_SHIFT                     (0U)
-
+#define PMIC_LDO2_4_ILIM_STAT_SHIFT                     (7U)
+#define PMIC_LDO2_4_UV_STAT_SHIFT                       (5U)
+#define PMIC_LDO2_4_OV_STAT_SHIFT                       (4U)
+#define PMIC_LDO1_3_ILIM_STAT_SHIFT                     (3U)
+#define PMIC_LDO1_3_UV_STAT_SHIFT                       (1U)
+#define PMIC_LDO1_3_OV_STAT_SHIFT                       (0U)
 /*!
- * \brief  PMIC severe error for VCCA OV bit field
+ * \brief  PMIC STAT_VMON bit positions
  */
-#define PMIC_STAT_SEVERE_ERR_VCCA_OVP_STAT_SHIFT                    (1U)
-
+#define PMIC_VCCA_UV_STAT_SHIFT                         (1U)
+#define PMIC_VCCA_OV_STAT_SHIFT                         (0U)
+#define PMIC_VMON2_UV_STAT_SHIFT                        (6U)
+#define PMIC_VMON2_OV_STAT_SHIFT                        (5U)
+#define PMIC_VMON1_UV_STAT_SHIFT                        (3U)
+#define PMIC_VMON1_OV_STAT_SHIFT                        (2U)
 /*!
- * \brief  PMIC Power-good signal source control bit fields
+ * \brief  PMIC Power Resources Status bit positions
  */
-#define PMIC_PGOOD_SEL_1_PGOOD_SEL_BUCK1_SHIFT                      (0U)
-#define PMIC_PGOOD_SEL_1_PGOOD_SEL_BUCK2_SHIFT                      (2U)
-#define PMIC_PGOOD_SEL_1_PGOOD_SEL_BUCK3_SHIFT                      (4U)
-#define PMIC_PGOOD_SEL_1_PGOOD_SEL_BUCK4_SHIFT                      (6U)
-#define PMIC_PGOOD_SEL_2_PGOOD_SEL_BUCK5_SHIFT                      (0U)
-#define PMIC_PGOOD_SEL_3_PGOOD_SEL_LDO1_SHIFT                       (0U)
-#define PMIC_PGOOD_SEL_3_PGOOD_SEL_LDO2_SHIFT                       (2U)
-#define PMIC_PGOOD_SEL_3_PGOOD_SEL_LDO3_SHIFT                       (4U)
-#define PMIC_PGOOD_SEL_3_PGOOD_SEL_LDO4_SHIFT                       (6U)
-#define PMIC_PGOOD_SEL_4_PGOOD_WINDOW_SHIFT                         (7U)
-#define PMIC_PGOOD_SEL_4_PGOOD_POL_SHIFT                            (6U)
-#define PMIC_PGOOD_SEL_4_PGOOD_SEL_NRSTOUT_SOC_SHIFT                (5U)
-#define PMIC_PGOOD_SEL_4_PGOOD_SEL_NRSTOUT_SHIFT                    (4U)
-#define PMIC_PGOOD_SEL_4_PGOOD_SEL_TDIE_WARN_SHIFT                  (3U)
-#define PMIC_PGOOD_SEL_4_PGOOD_SEL_VMON2_SHIFT                      (2U)
-#define PMIC_PGOOD_SEL_4_PGOOD_SEL_VMON1_SHIFT                      (1U)
-#define PMIC_PGOOD_SEL_4_PGOOD_SEL_VCCA_SHIFT                       (0U)
+#define PMIC_POWER_RESOURCE_STATUS_BITFIELD             (1U)
+/*!
+ * \brief  PMIC Thermal status for die bit positions
+ *         1. STAT_MISC
+ *         2. STAT_MODERATE_ERR
+ *         3. STAT_SEVERE_ERR
+ */
+#define PMIC_TWARN_STAT_SHIFT                           (3U)
+#define PMIC_TSD_ORD_STAT_SHIFT                         (0U)
+#define PMIC_TSD_IMM_STAT_SHIFT                         (0U)
 
 /*!
- * \brief  PMIC Power-good signal source control bit  field
+ * \brief  PMIC severe error for VCCA OV bit positions
+            1. STAT_SEVERE_ERR
  */
-#define PMIC_PGOOD_SEL_PGOOD_SRC_BITFIELD                           (0x1U)
-#define PMIC_PGOOD_SEL_PGOOD_SRC_REGULATOR_BITFIELD                 (0x3U)
+#define PMIC_VCCA_OVP_STAT_SHIFT                        (1U)
 
 /*!
- * \brief  PMIC LDO residual voltage bit fields
+ * \brief  PMIC PGOOD_SEL_X bit positions, where X is in the range of [1, 4]
  */
-#define PMIC_LDO_RV_TIMEOUT_REG_LDO2_4_RV_TIMEOUT_SHIFT             (4U)
-#define PMIC_LDO_RV_TIMEOUT_REG_LDO1_3_RV_TIMEOUT_SHIFT             (0U)
+#define PMIC_PGOOD_SEL_BUCK1_SHIFT                      (0U)
+#define PMIC_PGOOD_SEL_BUCK2_SHIFT                      (2U)
+#define PMIC_PGOOD_SEL_BUCK3_SHIFT                      (4U)
+#define PMIC_PGOOD_SEL_BUCK4_SHIFT                      (6U)
+#define PMIC_PGOOD_SEL_BUCK5_SHIFT                      (0U)
+#define PMIC_PGOOD_SEL_LDO1_SHIFT                       (0U)
+#define PMIC_PGOOD_SEL_LDO2_SHIFT                       (2U)
+#define PMIC_PGOOD_SEL_LDO3_SHIFT                       (4U)
+#define PMIC_PGOOD_SEL_LDO4_SHIFT                       (6U)
+#define PMIC_PGOOD_WINDOW_SHIFT                         (7U)
+#define PMIC_PGOOD_POL_SHIFT                            (6U)
+#define PMIC_PGOOD_SEL_NRSTOUT_SOC_SHIFT                (5U)
+#define PMIC_PGOOD_SEL_NRSTOUT_SHIFT                    (4U)
+#define PMIC_PGOOD_SEL_TDIE_WARN_SHIFT                  (3U)
+#define PMIC_PGOOD_SEL_VMON2_SHIFT                      (2U)
+#define PMIC_PGOOD_SEL_VMON1_SHIFT                      (1U)
+#define PMIC_PGOOD_SEL_VCCA_SHIFT                       (0U)
 
 /*!
- * \brief  PMIC FSM TRIG bit fields
+ * \brief  PMIC Power-good signal source control bit field
  */
-#define PMIC_FSM_TRIG_SEL_1_SEVERE_ERR_TRIG_SHIFT                   (6U)
-#define PMIC_FSM_TRIG_SEL_1_OTHER_RAIL_TRIG_SHIFT                   (4U)
-#define PMIC_FSM_TRIG_SEL_1_SOC_RAIL_TRIG_SHIFT                     (2U)
-#define PMIC_FSM_TRIG_SEL_1_MCU_RAIL_TRIG_SHIFT                     (0U)
-#define PMIC_FSM_TRIG_SEL_2_MODERATE_ERR_TRIG_SHIFT                 (0U)
+#define PMIC_PGOOD_SRC_BITFIELD                         (0x1U)
+#define PMIC_PGOOD_SRC_REGULATOR_BITFIELD               (0x3U)
 
 /*!
- * \brief  PMIC power resources and vmon control bit masks.
+ * \brief  PMIC 2 LDO_RV_TIMEOUT_REG_X register bit positions
  */
-#define PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_RV_SEL_MASK                                                          \
-    (uint8_t)(0x01U << PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_RV_SEL_SHIFT)
-#define PMIC_POWER_VCCA_VMON_CTRL_VMON1_RV_SEL_MASK (uint8_t)(0x01U << PMIC_POWER_VCCA_VMON_CTRL_VMON1_RV_SEL_SHIFT)
-#define PMIC_POWER_VCCA_VMON_CTRL_VMON2_RV_SEL_MASK (uint8_t)(0x01U << PMIC_POWER_VCCA_VMON_CTRL_VMON2_RV_SEL_SHIFT)
-#define PMIC_BUCKX_CTRL_BUCKX_PLDN_MASK             (uint8_t)(0x01U << PMIC_BUCKX_CTRL_BUCKX_PLDN_SHIFT)
-#define PMIC_LDOX_CTRL_LDOX_PLDN_MASK               (uint8_t)(0x3U << PMIC_LDOX_CTRL_LDOX_PLDN_SHIFT)
-#define PMIC_VCCA_VMON_CTRL_VMON_DEGLITCH_SEL_MASK  (uint8_t)(0x01U << PMIC_VCCA_VMON_CTRL_VMON_DEGLITCH_SEL_SHIFT)
-#define PMIC_REGULATOR_CTRL_REGULATOR_VMON_EN_MASK  (uint8_t)(0x01U << PMIC_REGULATOR_CTRL_REGULATOR_VMON_EN_SHIFT)
-#define PMIC_VCCA_VMON_CTRL_VCCA_VMON_EN_MASK       (uint8_t)(0x01U << PMIC_VCCA_VMON_CTRL_VCCA_VMON_EN_SHIFT)
-#define PMIC_VCCA_VMON_CTRL_VMON2_EN_MASK           (uint8_t)(0x01U << PMIC_VCCA_VMON_CTRL_VMON2_EN_SHIFT)
-#define PMIC_VCCA_VMON_CTRL_VMON1_EN_MASK           (uint8_t)(0x01U << PMIC_VCCA_VMON_CTRL_VMON1_EN_SHIFT)
-#define PMIC_BUCKX_CTRL_BUCKX_VSEL_MASK             (uint8_t)(0x01U << PMIC_BUCKX_CTRL_BUCKX_VSEL_SHIFT)
-#define PMIC_BUCKX_CTRL_BUCKX_FPWM_MP_MASK          (uint8_t)(0x01U << PMIC_BUCKX_CTRL_BUCKX_FPWM_MP_SHIFT)
-#define PMIC_BUCKX_CTRL_BUCKX_FPWM_MASK             (uint8_t)(0x01U << PMIC_BUCKX_CTRL_BUCKX_FPWM_SHIFT)
-#define PMIC_LDOX_CTRL_LDOX_SLOW_RAMP_EN_MASK       (uint8_t)(0x01U << PMIC_LDOX_CTRL_LDOX_SLOW_RAMP_EN_SHIFT)
-#define PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_EN_MASK                                                              \
-    (uint8_t)(0x01U << PMIC_POWER_RESOURCEX_CTRL_POWER_RESOURCEX_EN_SHIFT)
+#define PMIC_LDO2_4_RV_TIMEOUT_SHIFT                    (4U)
+#define PMIC_LDO1_3_RV_TIMEOUT_SHIFT                    (0U)
 
 /*!
- * \brief  PMIC power resources and vmon bit masks.
+ * \brief  PMIC FSM_TRIG_SEL_X register bit positions
  */
-#define PMIC_BUCKX_CONF_BUCKX_ILIM_MASK      (uint8_t)(0x07U << PMIC_BUCKX_CONF_BUCKX_ILIM_SHIFT)
-#define PMIC_BUCKX_CONF_BUCKX_SLEW_RATE_MASK (uint8_t)(0x07U << PMIC_BUCKX_CONF_BUCKX_SLEW_RATE_SHIFT)
+#define PMIC_SEVERE_ERR_TRIG_SHIFT                      (6U)
+#define PMIC_OTHER_RAIL_TRIG_SHIFT                      (4U)
+#define PMIC_SOC_RAIL_TRIG_SHIFT                        (2U)
+#define PMIC_MCU_RAIL_TRIG_SHIFT                        (0U)
+#define PMIC_MODERATE_ERR_TRIG_SHIFT                    (0U)
 
 /*!
- * \brief  BUCK voltage selection bit masks
+ * \brief  Power Resource (Buck, LDO, VMON) control bit masks
+ *          1. BUCKX_CTRL
+ *          2. LDOX_CTRL
  */
-#define PMIC_BUCKX_VOUT_X_BUCKX_VSETX_MASK   (uint8_t)(0xFFU << PMIC_BUCKX_VOUT_X_BUCKX_VSETX_SHIFT)
+#define PMIC_POWER_RESOURCEX_RV_SEL_MASK                (uint8_t)(0x01U << PMIC_POWER_RESOURCEX_RV_SEL_SHIFT)
+#define PMIC_POWER_RESOURCEX_EN_MASK                    (uint8_t)(0x01U << PMIC_POWER_RESOURCEX_EN_SHIFT)
+/*! 
+ * \brief   VCCA_VMON_CTRL register bit masks 
+ */ 
+#define PMIC_VMON1_RV_SEL_MASK                          (uint8_t)(0x01U << PMIC_VMON1_RV_SEL_SHIFT)
+#define PMIC_VMON2_RV_SEL_MASK                          (uint8_t)(0x01U << PMIC_VMON2_RV_SEL_SHIFT)
+#define PMIC_VCCA_VMON_EN_MASK                          (uint8_t)(0x01U << PMIC_VCCA_VMON_EN_SHIFT)
+#define PMIC_VMON2_EN_MASK                              (uint8_t)(0x01U << PMIC_VMON2_EN_SHIFT)
+#define PMIC_VMON1_EN_MASK                              (uint8_t)(0x01U << PMIC_VMON1_EN_SHIFT)
+#define PMIC_VMON_DEGLITCH_SEL_MASK                     (uint8_t)(0x01U << PMIC_VMON_DEGLITCH_SEL_SHIFT)
+/*!         
+ * \brief   BUCKX_CTRL register bit masks           
+ */    
+#define PMIC_BUCKX_PLDN_MASK                            (uint8_t)(0x01U << PMIC_BUCKX_PLDN_SHIFT)
+#define PMIC_BUCKX_VSEL_MASK                            (uint8_t)(0x01U << PMIC_BUCKX_VSEL_SHIFT)
+#define PMIC_BUCKX_FPWM_MP_MASK                         (uint8_t)(0x01U << PMIC_BUCKX_FPWM_MP_SHIFT)
+#define PMIC_BUCKX_FPWM_MASK                            (uint8_t)(0x01U << PMIC_BUCKX_FPWM_SHIFT)
+/**         
+ * \brief   LDOX_CTRL register bit masks           
+ */         
+#define PMIC_LDOX_PLDN_MASK                             (uint8_t)(0x3U << PMIC_LDOX_PLDN_SHIFT)
+#define PMIC_LDOX_SLOW_RAMP_EN_MASK                     (uint8_t)(0x01U << PMIC_LDOX_SLOW_RAMP_EN_SHIFT)
+
+/**
+ * \brief   VMON enable bit masks in power resource control registers
+ *          1. BUCKX_CTRL
+ *          2. LDOX_CTRL
+ */
+#define PMIC_REGULATOR_VMON_EN_MASK                     (uint8_t)(0x01U << PMIC_REGULATOR_VMON_EN_SHIFT)
+
+/*!
+ * \brief  PMIC BUCKX_CONF register bit masks
+ */
+#define PMIC_BUCKX_ILIM_MASK                            (uint8_t)(0x07U << PMIC_BUCKX_ILIM_SHIFT)
+#define PMIC_BUCKX_SLEW_RATE_MASK                       (uint8_t)(0x07U << PMIC_BUCKX_SLEW_RATE_SHIFT)
+
+/*!
+ * \brief  PMIC BUCKX_VOUT_X register bit masks
+ */
+#define PMIC_BUCKX_VSETX_MASK                           (uint8_t)(0xFFU << PMIC_BUCKX_VSETX_SHIFT)
 
 /*!
  * \brief  PMIC Over and Under Voltage Threshold bit masks
+ *          1. LDOX_PG_WINDOW
+ *          2. BUCKX_PG_WINDOW
+ *          3. VCCA_PG_WINDOW
+ *          4. VMONX_PG_WINDOW
  */
-#define PMIC_POWER_RESOURCEX_PG_WINDOW_POWER_RESOURCEX_UV_THR_MASK                                                     \
-    (uint8_t)(0x7U << PMIC_POWER_RESOURCEX_PG_WINDOW_POWER_RESOURCEX_UV_THR_SHIFT)
-#define PMIC_POWER_RESOURCEX_PG_WINDOW_POWER_RESOURCEX_OV_THR_MASK                                                     \
-    (uint8_t)(0x7U << PMIC_POWER_RESOURCEX_PG_WINDOW_POWER_RESOURCEX_OV_THR_SHIFT)
+#define PMIC_POWER_RESOURCEX_UV_THR_MASK                (uint8_t)(0x7U << PMIC_POWER_RESOURCEX_UV_THR_SHIFT)
+#define PMIC_POWER_RESOURCEX_OV_THR_MASK                (uint8_t)(0x7U << PMIC_POWER_RESOURCEX_OV_THR_SHIFT)
 
 /*!
- * \brief  PMIC LDORTC control bit masks
+ * \brief  PMIC LDORTC_CTRL register bit masks
  */
-#define PMIC_LDORTC_CTRL_LDORTC_DIS_MASK            (uint8_t)(0x01U << PMIC_LDORTC_CTRL_LDORTC_DIS_SHIFT)
+#define PMIC_LDORTC_DIS_MASK                            (uint8_t)(0x01U << PMIC_LDORTC_DIS_SHIFT)
 
 /*!
- * \brief  LDO VOUT register bit masks
+ * \brief  LDOX_VOUT register bit masks
  */
-#define PMIC_LDO1_2_3_VOUT_LDO1_2_3_BYPASS_MASK     (uint8_t)(0x01U << PMIC_LDO1_2_3_VOUT_LDO1_2_3_BYPASS_SHIFT)
-#define PMIC_LDO1_2_3_VOUT_LDO1_2_3_VSET_MASK       (uint8_t)(0x3FU << PMIC_LDO1_2_3_VOUT_LDO1_2_3_VSET_SHIFT)
-#define PMIC_LDO4_VOUT_LDO4_VSET_MASK               (uint8_t)(0x7FU << PMIC_LDO4_VOUT_LDO4_VSET_SHIFT)
+#define PMIC_LDOX_BYPASS_MASK                           (uint8_t)(0x01U << PMIC_LDOX_BYPASS_SHIFT)
+#define PMIC_LDOX_VSET_MASK                             (uint8_t)(0x3FU << PMIC_LDOX_VSET_SHIFT)
+#define PMIC_LDO4_VSET_MASK                             (uint8_t)(0x7FU << PMIC_LDO4_VSET_SHIFT)
 
 /*!
- * \brief  PMIC Power-good level for VCCA pin bit masks
+ * \brief  PMIC VCCA_PG_WINDOW register bit masks
  */
-#define PMIC_VCCA_PG_WINDOW_VCCA_PG_SET_MASK        (uint8_t)(0x01U << PMIC_VCCA_PG_WINDOW_VCCA_PG_SET_SHIFT)
+#define PMIC_VCCA_PG_SET_MASK                           (uint8_t)(0x01U << PMIC_VCCA_PG_SET_SHIFT)
 
 /*!
- * \brief  PMIC Rail select bit masks
+ * \brief  PMIC RAIL_SEL_X register bit masks
  */
-#define PMIC_RAIL_SEL_1_BUCK1_GRP_SEL_MASK          (uint8_t)(0x03U << PMIC_RAIL_SEL_1_BUCK1_GRP_SEL_SHIFT)
-#define PMIC_RAIL_SEL_1_BUCK2_GRP_SEL_MASK          (uint8_t)(0x03U << PMIC_RAIL_SEL_1_BUCK2_GRP_SEL_SHIFT)
-#define PMIC_RAIL_SEL_1_BUCK3_GRP_SEL_MASK          (uint8_t)(0x03U << PMIC_RAIL_SEL_1_BUCK3_GRP_SEL_SHIFT)
-#define PMIC_RAIL_SEL_1_BUCK4_GRP_SEL_MASK          (uint8_t)(0x03U << PMIC_RAIL_SEL_1_BUCK4_GRP_SEL_SHIFT)
-#define PMIC_RAIL_SEL_2_BUCK5_GRP_SEL_MASK          (uint8_t)(0x03U << PMIC_RAIL_SEL_2_BUCK5_GRP_SEL_SHIFT)
-#define PMIC_RAIL_SEL_2_LDO1_GRP_SEL_MASK           (uint8_t)(0x03U << PMIC_RAIL_SEL_2_LDO1_GRP_SEL_SHIFT)
-#define PMIC_RAIL_SEL_2_LDO2_GRP_SEL_MASK           (uint8_t)(0x03U << PMIC_RAIL_SEL_2_LDO2_GRP_SEL_SHIFT)
-#define PMIC_RAIL_SEL_2_LDO3_GRP_SEL_MASK           (uint8_t)(0x03U << PMIC_RAIL_SEL_2_LDO3_GRP_SEL_SHIFT)
-#define PMIC_RAIL_SEL_3_LDO4_GRP_SEL_MASK           (uint8_t)(0x03U << PMIC_RAIL_SEL_3_LDO4_GRP_SEL_SHIFT)
-#define PMIC_RAIL_SEL_3_VCCA_GRP_SEL_MASK           (uint8_t)(0x03U << PMIC_RAIL_SEL_3_VCCA_GRP_SEL_SHIFT)
-#define PMIC_RAIL_SEL_3_VMON1_GRP_SEL_MASK          (uint8_t)(0x03U << PMIC_RAIL_SEL_3_VMON1_GRP_SEL_SHIFT)
-#define PMIC_RAIL_SEL_3_VMON2_GRP_SEL_MASK          (uint8_t)(0x03U << PMIC_RAIL_SEL_3_VMON2_GRP_SEL_SHIFT)
+#define PMIC_BUCK1_GRP_SEL_MASK                         (uint8_t)(0x03U << PMIC_BUCK1_GRP_SEL_SHIFT)
+#define PMIC_BUCK2_GRP_SEL_MASK                         (uint8_t)(0x03U << PMIC_BUCK2_GRP_SEL_SHIFT)
+#define PMIC_BUCK3_GRP_SEL_MASK                         (uint8_t)(0x03U << PMIC_BUCK3_GRP_SEL_SHIFT)
+#define PMIC_BUCK4_GRP_SEL_MASK                         (uint8_t)(0x03U << PMIC_BUCK4_GRP_SEL_SHIFT)
+#define PMIC_BUCK5_GRP_SEL_MASK                         (uint8_t)(0x03U << PMIC_BUCK5_GRP_SEL_SHIFT)
+#define PMIC_LDO1_GRP_SEL_MASK                          (uint8_t)(0x03U << PMIC_LDO1_GRP_SEL_SHIFT)
+#define PMIC_LDO2_GRP_SEL_MASK                          (uint8_t)(0x03U << PMIC_LDO2_GRP_SEL_SHIFT)
+#define PMIC_LDO3_GRP_SEL_MASK                          (uint8_t)(0x03U << PMIC_LDO3_GRP_SEL_SHIFT)
+#define PMIC_LDO4_GRP_SEL_MASK                          (uint8_t)(0x03U << PMIC_LDO4_GRP_SEL_SHIFT)
+#define PMIC_VCCA_GRP_SEL_MASK                          (uint8_t)(0x03U << PMIC_VCCA_GRP_SEL_SHIFT)
+#define PMIC_VMON1_GRP_SEL_MASK                         (uint8_t)(0x03U << PMIC_VMON1_GRP_SEL_SHIFT)
+#define PMIC_VMON2_GRP_SEL_MASK                         (uint8_t)(0x03U << PMIC_VMON2_GRP_SEL_SHIFT)
 
 /*!
- * \brief  PMIC Interrupt masking bit masks
+ * \brief  PMIC MASK_BUCKX_Y register bit masks
  */
-#define PMIC_MASK_BUCKX_Y_BUCK2_4_ILIM_MASK_MASK    (uint8_t)(0x01U << PMIC_MASK_BUCKX_Y_BUCK2_4_ILIM_MASK_SHIFT)
-#define PMIC_MASK_BUCKX_Y_BUCK2_4_UV_MASK_MASK      (uint8_t)(0x01U << PMIC_MASK_BUCKX_Y_BUCK2_4_UV_MASK_SHIFT)
-#define PMIC_MASK_BUCKX_Y_BUCK2_4_OV_MASK_MASK      (uint8_t)(0x01U << PMIC_MASK_BUCKX_Y_BUCK2_4_OV_MASK_SHIFT)
-
-#define PMIC_MASK_BUCKX_Y_BUCK1_3_ILIM_MASK_MASK    (uint8_t)(0x01U << PMIC_MASK_BUCKX_Y_BUCK1_3_ILIM_MASK_SHIFT)
-#define PMIC_MASK_BUCKX_Y_BUCK1_3_UV_MASK_MASK      (uint8_t)(0x01U << PMIC_MASK_BUCKX_Y_BUCK1_3_UV_MASK_SHIFT)
-#define PMIC_MASK_BUCKX_Y_BUCK1_3_OV_MASK_MASK      (uint8_t)(0x01U << PMIC_MASK_BUCKX_Y_BUCK1_3_OV_MASK_SHIFT)
-
-#define PMIC_MASK_BUCK5_BUCK5_ILIM_MASK_MASK        (uint8_t)(0x01U << PMIC_MASK_BUCK5_BUCK5_ILIM_MASK_SHIFT)
-#define PMIC_MASK_BUCK5_BUCK5_UV_MASK_MASK          (uint8_t)(0x01U << PMIC_MASK_BUCK5_BUCK5_UV_MASK_SHIFT)
-#define PMIC_MASK_BUCK5_BUCK5_OV_MASK_MASK          (uint8_t)(0x01U << PMIC_MASK_BUCK5_BUCK5_OV_MASK_SHIFT)
-
-#define PMIC_MASK_LDOX_Y_LDO2_4_ILIM_MASK_MASK      (uint8_t)(0x01U << PMIC_MASK_LDOX_Y_LDO2_4_ILIM_MASK_SHIFT)
-#define PMIC_MASK_LDOX_Y_LDO2_4_UV_MASK_MASK        (uint8_t)(0x01U << PMIC_MASK_LDOX_Y_LDO2_4_UV_MASK_SHIFT)
-#define PMIC_MASK_LDOX_Y_LDO2_4_OV_MASK_MASK        (uint8_t)(0x01U << PMIC_MASK_LDOX_Y_LDO2_4_OV_MASK_SHIFT)
-
-#define PMIC_MASK_LDOX_Y_LDO1_3_ILIM_MASK_MASK      (uint8_t)(0x01U << PMIC_MASK_LDOX_Y_LDO1_3_ILIM_MASK_SHIFT)
-#define PMIC_MASK_LDOX_Y_LDO1_3_UV_MASK_MASK        (uint8_t)(0x01U << PMIC_MASK_LDOX_Y_LDO1_3_UV_MASK_SHIFT)
-#define PMIC_MASK_LDOX_Y_LDO1_3_OV_MASK_MASK        (uint8_t)(0x01U << PMIC_MASK_LDOX_Y_LDO1_3_OV_MASK_SHIFT)
-
-#define PMIC_MASK_VMON_VCCA_UV_MASK_MASK            (uint8_t)(0x01U << PMIC_MASK_VMON_VCCA_UV_MASK_SHIFT)
-#define PMIC_MASK_VMON_VCCA_OV_MASK_MASK            (uint8_t)(0x01U << PMIC_MASK_VMON_VCCA_OV_MASK_SHIFT)
-#define PMIC_MASK_VMON_VMON2_UV_MASK_MASK           (uint8_t)(0x01U << PMIC_MASK_VMON_VMON2_UV_MASK_SHIFT)
-#define PMIC_MASK_VMON_VMON2_OV_MASK_MASK           (uint8_t)(0x01U << PMIC_MASK_VMON_VMON2_OV_MASK_SHIFT)
-
-#define PMIC_MASK_VMON_VMON1_UV_MASK_MASK           (uint8_t)(0x01U << PMIC_MASK_VMON_VMON1_UV_MASK_SHIFT)
-#define PMIC_MASK_VMON_VMON1_OV_MASK_MASK           (uint8_t)(0x01U << PMIC_MASK_VMON_VMON1_OV_MASK_SHIFT)
-
-#define PMIC_MASK_MISC_TWARN_MASK_MASK              (uint8_t)(0x01U << PMIC_MASK_MISC_TWARN_MASK_SHIFT)
+#define PMIC_BUCK2_4_ILIM_MASK_MASK                     (uint8_t)(0x01U << PMIC_BUCK2_4_ILIM_MASK_SHIFT)
+#define PMIC_BUCK2_4_UV_MASK_MASK                       (uint8_t)(0x01U << PMIC_BUCK2_4_UV_MASK_SHIFT)
+#define PMIC_BUCK2_4_OV_MASK_MASK                       (uint8_t)(0x01U << PMIC_BUCK2_4_OV_MASK_SHIFT)
+#define PMIC_BUCK1_3_ILIM_MASK_MASK                     (uint8_t)(0x01U << PMIC_BUCK1_3_ILIM_MASK_SHIFT)
+#define PMIC_BUCK1_3_UV_MASK_MASK                       (uint8_t)(0x01U << PMIC_BUCK1_3_UV_MASK_SHIFT)
+#define PMIC_BUCK1_3_OV_MASK_MASK                       (uint8_t)(0x01U << PMIC_BUCK1_3_OV_MASK_SHIFT)
 /*!
- * \brief  PMIC Power Resources Status bit masks
+ * \brief  PMIC MASK_BUCK5 register bit masks
  */
-#define PMIC_STAT_BUCKX_Y_BUCK2_4_ILIM_STAT_MASK    (uint8_t)(0x01U << PMIC_STAT_BUCKX_Y_BUCK2_4_ILIM_STAT_SHIFT)
-#define PMIC_STAT_BUCKX_Y_BUCK2_4_UV_STAT_MASK      (uint8_t)(0x01U << PMIC_STAT_BUCKX_Y_BUCK2_4_UV_STAT_SHIFT)
-#define PMIC_STAT_BUCKX_Y_BUCK2_4_OV_STAT_MASK      (uint8_t)(0x01U << PMIC_STAT_BUCKX_Y_BUCK2_4_OV_STAT_SHIFT)
+#define PMIC_BUCK5_ILIM_MASK_MASK                       (uint8_t)(0x01U << PMIC_BUCK5_ILIM_MASK_SHIFT)
+#define PMIC_BUCK5_UV_MASK_MASK                         (uint8_t)(0x01U << PMIC_BUCK5_UV_MASK_SHIFT)
+#define PMIC_BUCK5_OV_MASK_MASK                         (uint8_t)(0x01U << PMIC_BUCK5_OV_MASK_SHIFT)
+/*!
+ * \brief  PMIC MASK_LDOX_Y register bit masks 
+ */
+#define PMIC_LDO2_4_ILIM_MASK_MASK                      (uint8_t)(0x01U << PMIC_LDO2_4_ILIM_MASK_SHIFT)
+#define PMIC_LDO2_4_UV_MASK_MASK                        (uint8_t)(0x01U << PMIC_LDO2_4_UV_MASK_SHIFT)
+#define PMIC_LDO2_4_OV_MASK_MASK                        (uint8_t)(0x01U << PMIC_LDO2_4_OV_MASK_SHIFT)
+#define PMIC_LDO1_3_ILIM_MASK_MASK                      (uint8_t)(0x01U << PMIC_LDO1_3_ILIM_MASK_SHIFT)
+#define PMIC_LDO1_3_UV_MASK_MASK                        (uint8_t)(0x01U << PMIC_LDO1_3_UV_MASK_SHIFT)
+#define PMIC_LDO1_3_OV_MASK_MASK                        (uint8_t)(0x01U << PMIC_LDO1_3_OV_MASK_SHIFT)
+/*!
+ * \brief  PMIC MASK_VMON register bit masks 
+ */
+#define PMIC_VCCA_UV_MASK_MASK                          (uint8_t)(0x01U << PMIC_VCCA_UV_MASK_SHIFT)
+#define PMIC_VCCA_OV_MASK_MASK                          (uint8_t)(0x01U << PMIC_VCCA_OV_MASK_SHIFT)
+#define PMIC_VMON2_UV_MASK_MASK                         (uint8_t)(0x01U << PMIC_VMON2_UV_MASK_SHIFT)
+#define PMIC_VMON2_OV_MASK_MASK                         (uint8_t)(0x01U << PMIC_VMON2_OV_MASK_SHIFT)
+#define PMIC_VMON1_UV_MASK_MASK                         (uint8_t)(0x01U << PMIC_VMON1_UV_MASK_SHIFT)
+#define PMIC_VMON1_OV_MASK_MASK                         (uint8_t)(0x01U << PMIC_VMON1_OV_MASK_SHIFT)
 
-#define PMIC_STAT_BUCKX_Y_BUCK1_3_ILIM_STAT_MASK    (uint8_t)(0x01U << PMIC_STAT_BUCKX_Y_BUCK1_3_ILIM_STAT_SHIFT)
-#define PMIC_STAT_BUCKX_Y_BUCK1_3_UV_STAT_MASK      (uint8_t)(0x01U << PMIC_STAT_BUCKX_Y_BUCK1_3_UV_STAT_SHIFT)
-#define PMIC_STAT_BUCKX_Y_BUCK1_3_OV_STAT_MASK      (uint8_t)(0x01U << PMIC_STAT_BUCKX_Y_BUCK1_3_OV_STAT_SHIFT)
-
-#define PMIC_STAT_BUCK5_BUCK5_ILIM_STAT_MASK        (uint8_t)(0x01U << PMIC_STAT_BUCK5_BUCK5_ILIM_STAT_SHIFT)
-#define PMIC_STAT_BUCK5_BUCK5_UV_STAT_MASK          (uint8_t)(0x01U << PMIC_STAT_BUCK5_BUCK5_UV_STAT_SHIFT)
-#define PMIC_STAT_BUCK5_BUCK5_OV_STAT_MASK          (uint8_t)(0x01U << PMIC_STAT_BUCK5_BUCK5_OV_STAT_SHIFT)
-
-#define PMIC_STAT_LDOX_Y_LDO2_4_ILIM_STAT_MASK      (uint8_t)(0x01U << PMIC_STAT_LDOX_Y_LDO2_4_ILIM_STAT_SHIFT)
-#define PMIC_STAT_LDOX_Y_LDO2_4_UV_STAT_MASK        (uint8_t)(0x01U << PMIC_STAT_LDOX_Y_LDO2_4_UV_STAT_SHIFT)
-#define PMIC_STAT_LDOX_Y_LDO2_4_OV_STAT_MASK        (uint8_t)(0x01U << PMIC_STAT_LDOX_Y_LDO2_4_OV_STAT_SHIFT)
-
-#define PMIC_STAT_LDOX_Y_LDO1_3_ILIM_STAT_MASK      (uint8_t)(0x01U << PMIC_STAT_LDOX_Y_LDO1_3_ILIM_STAT_SHIFT)
-#define PMIC_STAT_LDOX_Y_LDO1_3_UV_STAT_MASK        (uint8_t)(0x01U << PMIC_STAT_LDOX_Y_LDO1_3_UV_STAT_SHIFT)
-#define PMIC_STAT_LDOX_Y_LDO1_3_OV_STAT_MASK        (uint8_t)(0x01U << PMIC_STAT_LDOX_Y_LDO1_3_OV_STAT_SHIFT)
-
-#define PMIC_STAT_VMON_VCCA_UV_STAT_MASK            (uint8_t)(0x01U << PMIC_STAT_VMON_VCCA_UV_STAT_SHIFT)
-#define PMIC_STAT_VMON_VCCA_OV_STAT_MASK            (uint8_t)(0x01U << PMIC_STAT_VMON_VCCA_OV_STAT_SHIFT)
-
-#define PMIC_STAT_VMON_VMON2_UV_STAT_MASK           (uint8_t)(0x01U << PMIC_STAT_VMON_VMON2_UV_STAT_SHIFT)
-#define PMIC_STAT_VMON_VMON2_OV_STAT_MASK           (uint8_t)(0x01U << PMIC_STAT_VMON_VMON2_OV_STAT_SHIFT)
-
-#define PMIC_STAT_VMON_VMON1_UV_STAT_MASK           (uint8_t)(0x01U << PMIC_STAT_VMON_VMON1_UV_STAT_SHIFT)
-#define PMIC_STAT_VMON_VMON1_OV_STAT_MASK           (uint8_t)(0x01U << PMIC_STAT_VMON_VMON1_OV_STAT_SHIFT)
+/*!
+ * \brief PMIC MASK_MISC register bit masks 
+ */
+#define PMIC_TWARN_MASK_MASK                            (uint8_t)(0x01U << PMIC_TWARN_MASK_SHIFT)
+/*!
+ * \brief  PMIC STAT_BUCKX_Y register bit masks
+ */
+#define PMIC_BUCK2_4_ILIM_STAT_MASK                     (uint8_t)(0x01U << PMIC_BUCK2_4_ILIM_STAT_SHIFT)
+#define PMIC_BUCK2_4_UV_STAT_MASK                       (uint8_t)(0x01U << PMIC_BUCK2_4_UV_STAT_SHIFT)
+#define PMIC_BUCK2_4_OV_STAT_MASK                       (uint8_t)(0x01U << PMIC_BUCK2_4_OV_STAT_SHIFT)
+#define PMIC_BUCK1_3_ILIM_STAT_MASK                     (uint8_t)(0x01U << PMIC_BUCK1_3_ILIM_STAT_SHIFT)
+#define PMIC_BUCK1_3_UV_STAT_MASK                       (uint8_t)(0x01U << PMIC_BUCK1_3_UV_STAT_SHIFT)
+#define PMIC_BUCK1_3_OV_STAT_MASK                       (uint8_t)(0x01U << PMIC_BUCK1_3_OV_STAT_SHIFT)
+/*!
+ * \brief PMIC STAT_BUCK5 register bit masks
+ */
+#define PMIC_BUCK5_ILIM_STAT_MASK                       (uint8_t)(0x01U << PMIC_BUCK5_ILIM_STAT_SHIFT)
+#define PMIC_BUCK5_UV_STAT_MASK                         (uint8_t)(0x01U << PMIC_BUCK5_UV_STAT_SHIFT)
+#define PMIC_BUCK5_OV_STAT_MASK                         (uint8_t)(0x01U << PMIC_BUCK5_OV_STAT_SHIFT)
+/*!
+ * \brief PMIC STAT_LDOX_Y register bit masks 
+ */
+#define PMIC_LDO2_4_ILIM_STAT_MASK                      (uint8_t)(0x01U << PMIC_LDO2_4_ILIM_STAT_SHIFT)
+#define PMIC_LDO2_4_UV_STAT_MASK                        (uint8_t)(0x01U << PMIC_LDO2_4_UV_STAT_SHIFT)
+#define PMIC_LDO2_4_OV_STAT_MASK                        (uint8_t)(0x01U << PMIC_LDO2_4_OV_STAT_SHIFT)
+#define PMIC_LDO1_3_ILIM_STAT_MASK                      (uint8_t)(0x01U << PMIC_LDO1_3_ILIM_STAT_SHIFT)
+#define PMIC_LDO1_3_UV_STAT_MASK                        (uint8_t)(0x01U << PMIC_LDO1_3_UV_STAT_SHIFT)
+#define PMIC_LDO1_3_OV_STAT_MASK                        (uint8_t)(0x01U << PMIC_LDO1_3_OV_STAT_SHIFT)
+/*!
+ * \brief STAT_VMON register bit masks 
+ */
+#define PMIC_VCCA_UV_STAT_MASK                          (uint8_t)(0x01U << PMIC_VCCA_UV_STAT_SHIFT)
+#define PMIC_VCCA_OV_STAT_MASK                          (uint8_t)(0x01U << PMIC_VCCA_OV_STAT_SHIFT)
+#define PMIC_VMON2_UV_STAT_MASK                         (uint8_t)(0x01U << PMIC_VMON2_UV_STAT_SHIFT)
+#define PMIC_VMON2_OV_STAT_MASK                         (uint8_t)(0x01U << PMIC_VMON2_OV_STAT_SHIFT)
+#define PMIC_VMON1_UV_STAT_MASK                         (uint8_t)(0x01U << PMIC_VMON1_UV_STAT_SHIFT)
+#define PMIC_VMON1_OV_STAT_MASK                         (uint8_t)(0x01U << PMIC_VMON1_OV_STAT_SHIFT)
 
 /*!
  * \brief  PMIC Thermal status for die bit masks
+ *          1. STAT_MISC
+ *          2. STAT_MODERATE_ERR
+ *          3. STAT_SEVERE_ERR
  */
-#define PMIC_STAT_MISC_TWARN_STAT_MASK              (uint8_t)(0x01U << PMIC_STAT_MISC_TWARN_STAT_SHIFT)
-#define PMIC_STAT_MODERATE_ERR_TSD_ORD_STAT_MASK    (uint8_t)(0x01U << PMIC_STAT_MODERATE_ERR_TSD_ORD_STAT_SHIFT)
-#define PMIC_STAT_SEVERE_ERR_TSD_IMM_STAT_MASK      (uint8_t)(0x01U << PMIC_STAT_SEVERE_ERR_TSD_IMM_STAT_SHIFT)
+#define PMIC_TWARN_STAT_MASK                            (uint8_t)(0x01U << PMIC_TWARN_STAT_SHIFT)
+#define PMIC_TSD_ORD_STAT_MASK                          (uint8_t)(0x01U << PMIC_TSD_ORD_STAT_SHIFT)
+#define PMIC_TSD_IMM_STAT_MASK                          (uint8_t)(0x01U << PMIC_TSD_IMM_STAT_SHIFT)
 /*!
  * \brief  PMIC severe error for VCCA OV bit masks
+ *         1. STAT_SEVERE_ERR
  */
-#define PMIC_STAT_SEVERE_ERR_VCCA_OVP_STAT_MASK     (uint8_t)(0x01U << PMIC_STAT_SEVERE_ERR_VCCA_OVP_STAT_SHIFT)
+#define PMIC_VCCA_OVP_STAT_MASK                         (uint8_t)(0x01U << PMIC_VCCA_OVP_STAT_SHIFT)
 
 /*!
- * \brief  PMIC Power-good signal source control bit mask
+ * \brief  PMIC PGOOD_SEL_X register bit masks, where X is in the range of [1, 4]
  */
-#define PMIC_PGOOD_SEL_1_PGOOD_SEL_BUCK1_MASK       (uint8_t)(0x03U << PMIC_PGOOD_SEL_1_PGOOD_SEL_BUCK1_SHIFT)
-#define PMIC_PGOOD_SEL_1_PGOOD_SEL_BUCK2_MASK       (uint8_t)(0x03U << PMIC_PGOOD_SEL_1_PGOOD_SEL_BUCK2_SHIFT)
-#define PMIC_PGOOD_SEL_1_PGOOD_SEL_BUCK3_MASK       (uint8_t)(0x03U << PMIC_PGOOD_SEL_1_PGOOD_SEL_BUCK3_SHIFT)
-#define PMIC_PGOOD_SEL_1_PGOOD_SEL_BUCK4_MASK       (uint8_t)(0x03U << PMIC_PGOOD_SEL_1_PGOOD_SEL_BUCK4_SHIFT)
-#define PMIC_PGOOD_SEL_2_PGOOD_SEL_BUCK5_MASK       (uint8_t)(0x03U << PMIC_PGOOD_SEL_2_PGOOD_SEL_BUCK5_SHIFT)
-#define PMIC_PGOOD_SEL_3_PGOOD_SEL_LDO1_MASK        (uint8_t)(0x03U << PMIC_PGOOD_SEL_3_PGOOD_SEL_LDO1_SHIFT)
-#define PMIC_PGOOD_SEL_3_PGOOD_SEL_LDO2_MASK        (uint8_t)(0x03U << PMIC_PGOOD_SEL_3_PGOOD_SEL_LDO2_SHIFT)
-#define PMIC_PGOOD_SEL_3_PGOOD_SEL_LDO3_MASK        (uint8_t)(0x03U << PMIC_PGOOD_SEL_3_PGOOD_SEL_LDO3_SHIFT)
-#define PMIC_PGOOD_SEL_3_PGOOD_SEL_LDO4_MASK        (uint8_t)(0x03U << PMIC_PGOOD_SEL_3_PGOOD_SEL_LDO4_SHIFT)
-#define PMIC_PGOOD_SEL_4_PGOOD_WINDOW_MASK          (uint8_t)(0x01U << PMIC_PGOOD_SEL_4_PGOOD_WINDOW_SHIFT)
-#define PMIC_PGOOD_SEL_4_PGOOD_POL_MASK             (uint8_t)(0x01U << PMIC_PGOOD_SEL_4_PGOOD_POL_SHIFT)
-#define PMIC_PGOOD_SEL_4_PGOOD_SEL_NRSTOUT_SOC_MASK (uint8_t)(0x01U << PMIC_PGOOD_SEL_4_PGOOD_SEL_NRSTOUT_SOC_SHIFT)
-#define PMIC_PGOOD_SEL_4_PGOOD_SEL_NRSTOUT_MASK     (uint8_t)(0x01U << PMIC_PGOOD_SEL_4_PGOOD_SEL_NRSTOUT_SHIFT)
-#define PMIC_PGOOD_SEL_4_PGOOD_SEL_TDIE_WARN_MASK   (uint8_t)(0x01U << PMIC_PGOOD_SEL_4_PGOOD_SEL_TDIE_WARN_SHIFT)
-#define PMIC_PGOOD_SEL_4_PGOOD_SEL_VMON2_MASK       (uint8_t)(0x01U << PMIC_PGOOD_SEL_4_PGOOD_SEL_VMON2_SHIFT)
-#define PMIC_PGOOD_SEL_4_PGOOD_SEL_VMON1_MASK       (uint8_t)(0x01U << PMIC_PGOOD_SEL_4_PGOOD_SEL_VMON1_SHIFT)
-#define PMIC_PGOOD_SEL_4_PGOOD_SEL_VCCA_MASK        (uint8_t)(0x01U << PMIC_PGOOD_SEL_4_PGOOD_SEL_VCCA_SHIFT)
+#define PMIC_PGOOD_SEL_BUCK1_MASK           (uint8_t)(0x03U << PMIC_PGOOD_SEL_BUCK1_SHIFT)
+#define PMIC_PGOOD_SEL_BUCK2_MASK           (uint8_t)(0x03U << PMIC_PGOOD_SEL_BUCK2_SHIFT)
+#define PMIC_PGOOD_SEL_BUCK3_MASK           (uint8_t)(0x03U << PMIC_PGOOD_SEL_BUCK3_SHIFT)
+#define PMIC_PGOOD_SEL_BUCK4_MASK           (uint8_t)(0x03U << PMIC_PGOOD_SEL_BUCK4_SHIFT)
+#define PMIC_PGOOD_SEL_BUCK5_MASK           (uint8_t)(0x03U << PMIC_PGOOD_SEL_BUCK5_SHIFT)
+#define PMIC_PGOOD_SEL_LDO1_MASK            (uint8_t)(0x03U << PMIC_PGOOD_SEL_LDO1_SHIFT)
+#define PMIC_PGOOD_SEL_LDO2_MASK            (uint8_t)(0x03U << PMIC_PGOOD_SEL_LDO2_SHIFT)
+#define PMIC_PGOOD_SEL_LDO3_MASK            (uint8_t)(0x03U << PMIC_PGOOD_SEL_LDO3_SHIFT)
+#define PMIC_PGOOD_SEL_LDO4_MASK            (uint8_t)(0x03U << PMIC_PGOOD_SEL_LDO4_SHIFT)
+#define PMIC_PGOOD_WINDOW_MASK              (uint8_t)(0x01U << PMIC_PGOOD_WINDOW_SHIFT)
+#define PMIC_PGOOD_POL_MASK                 (uint8_t)(0x01U << PMIC_PGOOD_POL_SHIFT)
+#define PMIC_PGOOD_SEL_NRSTOUT_SOC_MASK     (uint8_t)(0x01U << PMIC_PGOOD_SEL_NRSTOUT_SOC_SHIFT)
+#define PMIC_PGOOD_SEL_NRSTOUT_MASK         (uint8_t)(0x01U << PMIC_PGOOD_SEL_NRSTOUT_SHIFT)
+#define PMIC_PGOOD_SEL_TDIE_WARN_MASK       (uint8_t)(0x01U << PMIC_PGOOD_SEL_TDIE_WARN_SHIFT)
+#define PMIC_PGOOD_SEL_VMON2_MASK           (uint8_t)(0x01U << PMIC_PGOOD_SEL_VMON2_SHIFT)
+#define PMIC_PGOOD_SEL_VMON1_MASK           (uint8_t)(0x01U << PMIC_PGOOD_SEL_VMON1_SHIFT)
+#define PMIC_PGOOD_SEL_VCCA_MASK            (uint8_t)(0x01U << PMIC_PGOOD_SEL_VCCA_SHIFT)
 
 /*!
- * \brief  PMIC LDO residual voltage bit masks
+ * \brief  PMIC LDO_RV_TIMEOUT_REG_X register bit masks, where X is in the range of [1, 2]
  */
-#define PMIC_LDO_RV_TIMEOUT_REG_LDO2_4_RV_TIMEOUT_MASK                                                                 \
-    (uint8_t)(0x0FU << PMIC_LDO_RV_TIMEOUT_REG_LDO2_4_RV_TIMEOUT_SHIFT)
-#define PMIC_LDO_RV_TIMEOUT_REG_LDO1_3_RV_TIMEOUT_MASK                                                                 \
-    (uint8_t)(0x0FU << PMIC_LDO_RV_TIMEOUT_REG_LDO1_3_RV_TIMEOUT_SHIFT)
+#define PMIC_LDO2_4_RV_TIMEOUT_MASK     (uint8_t)(0x0FU << PMIC_LDO2_4_RV_TIMEOUT_SHIFT)
+#define PMIC_LDO1_3_RV_TIMEOUT_MASK     (uint8_t)(0x0FU << PMIC_LDO1_3_RV_TIMEOUT_SHIFT)
 
 /*!
- * \brief  PMIC FSM TRIG bit fields masks
+ * \brief  PMIC FSM_TRIG_SEL_1 register bit masks, where X is in the range of [1, 2]
  */
-#define PMIC_FSM_TRIG_SEL_1_SEVERE_ERR_TRIG_MASK   (uint8_t)(0x03U << PMIC_FSM_TRIG_SEL_1_SEVERE_ERR_TRIG_SHIFT)
-#define PMIC_FSM_TRIG_SEL_1_OTHER_RAIL_TRIG_MASK   (uint8_t)(0x03U << PMIC_FSM_TRIG_SEL_1_OTHER_RAIL_TRIG_SHIFT)
-#define PMIC_FSM_TRIG_SEL_1_SOC_RAIL_TRIG_MASK     (uint8_t)(0x03FU << PMIC_FSM_TRIG_SEL_1_SOC_RAIL_TRIG_SHIFT)
-#define PMIC_FSM_TRIG_SEL_1_MCU_RAIL_TRIG_MASK     (uint8_t)(0x03U << PMIC_FSM_TRIG_SEL_1_MCU_RAIL_TRIG_SHIFT)
-#define PMIC_FSM_TRIG_SEL_2_MODERATE_ERR_TRIG_MASK (uint8_t)(0x03U << PMIC_FSM_TRIG_SEL_2_MODERATE_ERR_TRIG_SHIFT)
+#define PMIC_SEVERE_ERR_TRIG_MASK       (uint8_t)(0x03U << PMIC_SEVERE_ERR_TRIG_SHIFT)
+#define PMIC_OTHER_RAIL_TRIG_MASK       (uint8_t)(0x03U << PMIC_OTHER_RAIL_TRIG_SHIFT)
+#define PMIC_SOC_RAIL_TRIG_MASK         (uint8_t)(0x03FU << PMIC_SOC_RAIL_TRIG_SHIFT)
+#define PMIC_MCU_RAIL_TRIG_MASK         (uint8_t)(0x03U << PMIC_MCU_RAIL_TRIG_SHIFT)
+#define PMIC_MODERATE_ERR_TRIG_MASK     (uint8_t)(0x03U << PMIC_MODERATE_ERR_TRIG_SHIFT)
 
 /*!
  * \brief  PMIC power VSET Range Values
  */
-#define PMIC_POWER_VSET_VAL_0xE                    (0xEU)
-#define PMIC_POWER_VSET_VAL_0xF                    (0xFU)
-#define PMIC_POWER_VSET_VAL_0x1D                   (0x1DU)
-#define PMIC_POWER_VSET_VAL_0x72                   (0x72U)
-#define PMIC_POWER_VSET_VAL_0x73                   (0x73U)
-#define PMIC_POWER_VSET_VAL_0xAA                   (0xAAU)
-#define PMIC_POWER_VSET_VAL_0xAB                   (0xABU)
-#define PMIC_POWER_VSET_VAL_0xFF                   (0xFFU)
+#define PMIC_POWER_VSET_VAL_0xE         (0xEU)
+#define PMIC_POWER_VSET_VAL_0xF         (0xFU)
+#define PMIC_POWER_VSET_VAL_0x1D        (0x1DU)
+#define PMIC_POWER_VSET_VAL_0x72        (0x72U)
+#define PMIC_POWER_VSET_VAL_0x73        (0x73U)
+#define PMIC_POWER_VSET_VAL_0xAA        (0xAAU)
+#define PMIC_POWER_VSET_VAL_0xAB        (0xABU)
+#define PMIC_POWER_VSET_VAL_0xFF        (0xFFU)
 
 /*!
  * \brief  PMIC power VSET Values
  */
-#define PMIC_POWER_VSET_VAL_0x0                    (0x0U)
-#define PMIC_POWER_VSET_VAL_0x4                    (0x4U)
-#define PMIC_POWER_VSET_VAL_0x20                   (0x20U)
+#define PMIC_POWER_VSET_VAL_0x0          (0x0U)
+#define PMIC_POWER_VSET_VAL_0x4          (0x4U)
+#define PMIC_POWER_VSET_VAL_0x20         (0x20U)
 
 /*!
  * \brief   Bit field Value for buckFreq

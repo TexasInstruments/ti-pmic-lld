@@ -70,6 +70,30 @@ static const Pmic_DevSubSysInfo_t pmicSubSysInfo[] = {
      .adcEnable = (bool)true }
 };
 
+void Pmic_setBitField(uint8_t *pRegVal, uint8_t regFieldShift, uint8_t regFieldMask, uint8_t fieldVal)
+{
+    *pRegVal = (((*pRegVal) & (uint8_t)(~(uint8_t)regFieldMask)) |
+                ((((uint8_t)fieldVal) << (uint8_t)regFieldShift) & (uint8_t)regFieldMask));
+}
+
+uint8_t Pmic_getBitField(uint8_t regData, uint8_t regFieldShift, uint8_t regFieldMask)
+{
+    uint8_t fieldVal;
+
+    fieldVal = (((regData) & (uint8_t)regFieldMask) >> (uint8_t)regFieldShift);
+
+    return fieldVal;
+}
+
+bool Pmic_getBitField_b(uint8_t regData, uint8_t regFieldShift)
+{
+    uint8_t bitVal;
+
+    bitVal = (((regData) & (1U << regFieldShift)) >> (uint8_t)regFieldShift);
+
+    return (bitVal == 1U) ? (bool)true : (bool)false;
+}
+
 bool pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos)
 {
     bool retVal = (bool)false;
@@ -84,7 +108,7 @@ bool pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos)
 
 void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *pPmicCoreHandle)
 {
-    if (NULL != pPmicCoreHandle->pFnPmicCritSecStart)
+    if ((pPmicCoreHandle != NULL) && (pPmicCoreHandle->pFnPmicCritSecStart != NULL))
     {
         pPmicCoreHandle->pFnPmicCritSecStart();
     }
@@ -92,7 +116,7 @@ void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *pPmicCoreHandle)
 
 void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *pPmicCoreHandle)
 {
-    if (NULL != pPmicCoreHandle->pFnPmicCritSecStop)
+    if ((pPmicCoreHandle != NULL) && (pPmicCoreHandle->pFnPmicCritSecStop != NULL))
     {
         pPmicCoreHandle->pFnPmicCritSecStop();
     }
@@ -138,19 +162,14 @@ int32_t Pmic_setRecoveryCntCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_Re
             // Modify RECOV_CNT_CLR bit field if param is valid
             if (((bool)true) == pmic_validParamCheck(recovCntCfg.validParams, PMIC_CFG_RECOV_CNT_CLR_CNT_VALID))
             {
-                Pmic_setBitField(&regVal,
-                                 PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_SHIFT,
-                                 PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_MASK,
-                                 (uint8_t)recovCntCfg.clrCnt);
+                Pmic_setBitField(&regVal, PMIC_RECOV_CNT_CLR_SHIFT, PMIC_RECOV_CNT_CLR_MASK,
+                                 (recovCntCfg.clrCnt == (bool)true) ? 1U : 0U);
             }
 
             // Modify RECOV_CNT_THR bit field if param is valid
             if (((bool)true) == pmic_validParamCheck(recovCntCfg.validParams, PMIC_CFG_RECOV_CNT_THR_VAL_VALID))
             {
-                Pmic_setBitField(&regVal,
-                                 PMIC_RECOV_CNT_REG_2_RECOV_CNT_THR_SHIFT,
-                                 PMIC_RECOV_CNT_REG_2_RECOV_CNT_THR_MASK,
-                                 recovCntCfg.thrVal);
+                Pmic_setBitField(&regVal, PMIC_RECOV_CNT_THR_SHIFT, PMIC_RECOV_CNT_THR_MASK, recovCntCfg.thrVal);
             }
 
             // Write new regVal back to PMIC
@@ -194,15 +213,13 @@ int32_t Pmic_getRecoveryCntCfg(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_RecovCnt
         // Extract RECOV_CNT_THR bit field if its validParam is set
         if (((bool)true) == pmic_validParamCheck(pRecovCntCfg->validParams, PMIC_CFG_RECOV_CNT_THR_VAL_VALID))
         {
-            pRecovCntCfg->thrVal = Pmic_getBitField(
-                regVal, PMIC_RECOV_CNT_REG_2_RECOV_CNT_THR_SHIFT, PMIC_RECOV_CNT_REG_2_RECOV_CNT_THR_MASK);
+            pRecovCntCfg->thrVal = Pmic_getBitField( regVal, PMIC_RECOV_CNT_THR_SHIFT, PMIC_RECOV_CNT_THR_MASK);
         }
 
         // Extract RECOV_CNT_CLR bit field if its validParam is set
         if (((bool)true) == pmic_validParamCheck(pRecovCntCfg->validParams, PMIC_CFG_RECOV_CNT_CLR_CNT_VALID))
         {
-            pRecovCntCfg->clrCnt = (bool)Pmic_getBitField(
-                regVal, PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_SHIFT, PMIC_RECOV_CNT_REG_2_RECOV_CNT_CLR_MASK);
+            pRecovCntCfg->clrCnt = Pmic_getBitField_b(regVal, PMIC_RECOV_CNT_CLR_SHIFT);
         }
     }
 
@@ -237,8 +254,7 @@ int32_t Pmic_getRecoveryCnt(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t *pRecovC
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
         // Get recovery count value
-        *pRecovCntVal =
-            Pmic_getBitField(regVal, PMIC_RECOV_CNT_REG_1_RECOV_CNT_SHIFT, PMIC_RECOV_CNT_REG_1_RECOV_CNT_MASK);
+        *pRecovCntVal = Pmic_getBitField(regVal, PMIC_RECOV_CNT_SHIFT, PMIC_RECOV_CNT_MASK);
     }
 
     return pmicStatus;
@@ -512,8 +528,8 @@ static int32_t Pmic_validateDevOnBus(Pmic_CoreHandle_t *pPmicCoreHandle, int32_t
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
         pPmicCoreHandle->pmicDevRev = Pmic_getBitField(regVal,
-                                                       PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_SHIFT,
-                                                       PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_MASK);
+                                                       PMIC_DEV_ID_PG2_0_SIL_REV_SHIFT,
+                                                       PMIC_DEV_ID_PG2_0_SIL_REV_MASK);
 
         /* Validate if the device requested is the one on the bus */
         switch (pPmicCoreHandle->pmicDeviceType)
@@ -618,7 +634,7 @@ static int32_t Pmic_updateSubSysInfoValidateMainQaCommIFRdWr(const Pmic_CoreCfg_
             if (PMIC_ST_SUCCESS == pmicStatus)
             {
                 pPmicCoreHandle->pmicDevSiliconRev = Pmic_getBitField(
-                    regVal, PMIC_MANUFACTURING_VER_SILICON_REV_SHIFT, PMIC_MANUFACTURING_VER_SILICON_REV_MASK);
+                    regVal, PMIC_SILICON_REV_SHIFT, PMIC_SILICON_REV_MASK);
 
                 if ((PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType) &&
                     (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle->pmicDevSiliconRev))
@@ -833,20 +849,20 @@ static void Pmic_getUserSpareRegBitFields(uint8_t userSpareRegNum, uint8_t *pBit
     switch (userSpareRegNum)
     {
         case PMIC_USER_SPARE_REG_2:
-            *pBitShift = PMIC_USER_SPARE_REGS_USER_SPARE_2_SHIFT;
-            *pBitMask = PMIC_USER_SPARE_REGS_USER_SPARE_2_MASK;
+            *pBitShift = PMIC_USER_SPARE_2_SHIFT;
+            *pBitMask = PMIC_USER_SPARE_2_MASK;
             break;
         case PMIC_USER_SPARE_REG_3:
-            *pBitShift = PMIC_USER_SPARE_REGS_USER_SPARE_3_SHIFT;
-            *pBitMask = PMIC_USER_SPARE_REGS_USER_SPARE_3_MASK;
+            *pBitShift = PMIC_USER_SPARE_3_SHIFT;
+            *pBitMask = PMIC_USER_SPARE_3_MASK;
             break;
         case PMIC_USER_SPARE_REG_4:
-            *pBitShift = PMIC_USER_SPARE_REGS_USER_SPARE_4_SHIFT;
-            *pBitMask = PMIC_USER_SPARE_REGS_USER_SPARE_4_MASK;
+            *pBitShift = PMIC_USER_SPARE_4_SHIFT;
+            *pBitMask = PMIC_USER_SPARE_4_MASK;
             break;
         default:
-            *pBitShift = PMIC_USER_SPARE_REGS_USER_SPARE_1_SHIFT;
-            *pBitMask = PMIC_USER_SPARE_REGS_USER_SPARE_1_MASK;
+            *pBitShift = PMIC_USER_SPARE_1_SHIFT;
+            *pBitMask = PMIC_USER_SPARE_1_MASK;
             break;
     }
 }
@@ -872,11 +888,13 @@ int32_t Pmic_setUserSpareValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t
                 {
                     pmicStatus = PMIC_ST_ERR_INV_PARAM;
                 }
+                break;
             default:
                 if (userSpareRegNum > PMIC_USER_SPARE_REG_4)
                 {
                     pmicStatus = PMIC_ST_ERR_INV_PARAM;
                 }
+                break;
         }
     }
 
@@ -933,11 +951,13 @@ int32_t Pmic_getUserSpareValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t
                 {
                     pmicStatus = PMIC_ST_ERR_INV_PARAM;
                 }
+                break;
             default:
                 if (userSpareRegNum > PMIC_USER_SPARE_REG_4)
                 {
                     pmicStatus = PMIC_ST_ERR_INV_PARAM;
                 }
+                break;
         }
     }
 
@@ -984,9 +1004,9 @@ static int32_t Pmic_spreadSpectrumEnable(Pmic_CoreHandle_t *pPmicCoreHandle, con
     {
         // Modify SS_EN bit field
         Pmic_setBitField(&regData,
-                         PMIC_SPREAD_SPECTRUM_1_SS_EN_SHIFT,
-                         PMIC_SPREAD_SPECTRUM_1_SS_EN_MASK,
-                         (uint8_t)commonCtrlCfg.spreadSpectrumEn);
+                         PMIC_SS_EN_SHIFT,
+                         PMIC_SS_EN_MASK,
+                         (commonCtrlCfg.spreadSpectrumEn == (bool)true) ? 1U : 0U);
 
         // Write back to PMIC
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_SPREAD_SPECTRUM_1_REGADDR, regData);
@@ -1014,8 +1034,7 @@ static int32_t Pmic_getSpreadSpectrumEnable(Pmic_CoreHandle_t *pPmicCoreHandle, 
     // Extract SS_EN bit
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
-        pCommonCtrlCfg->spreadSpectrumEn =
-            (bool)Pmic_getBitField(regData, PMIC_SPREAD_SPECTRUM_1_SS_EN_SHIFT, PMIC_SPREAD_SPECTRUM_1_SS_EN_MASK);
+        pCommonCtrlCfg->spreadSpectrumEn = Pmic_getBitField_b(regData, PMIC_SS_EN_SHIFT);
     }
 
     return pmicStatus;
@@ -1048,15 +1067,15 @@ static int32_t Pmic_skipEepromDefaultLoadEnable(Pmic_CoreHandle_t         *pPmic
                 commonCtrlCfg.skipEepromDefaultLoadEn)
             {
                 Pmic_setBitField(&regData,
-                                 PMIC_STARTUP_CTRL_SKIP_LP_STANDBY_EE_READ_SHIFT,
-                                 PMIC_STARTUP_CTRL_SKIP_LP_STANDBY_EE_READ_MASK,
+                                 PMIC_SKIP_LP_STANDBY_EE_READ_SHIFT,
+                                 PMIC_SKIP_LP_STANDBY_EE_READ_MASK,
                                  PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_ENABLED);
             }
             else
             {
                 Pmic_setBitField(&regData,
-                                 PMIC_STARTUP_CTRL_SKIP_LP_STANDBY_EE_READ_SHIFT,
-                                 PMIC_STARTUP_CTRL_SKIP_LP_STANDBY_EE_READ_MASK,
+                                 PMIC_SKIP_LP_STANDBY_EE_READ_SHIFT,
+                                 PMIC_SKIP_LP_STANDBY_EE_READ_MASK,
                                  PMIC_LP8764X_SKIP_EEPROM_DEF_LD_TO_CONF_OTHER_REGS_DISABLED);
             }
 
@@ -1096,8 +1115,8 @@ static int32_t Pmic_getSkipEepromDefaultLoadEnable(Pmic_CoreHandle_t    *pPmicCo
         pCommonCtrlCfg->skipEepromDefaultLoadEn = (bool)false;
 
         if (Pmic_getBitField(regData,
-                             PMIC_STARTUP_CTRL_SKIP_LP_STANDBY_EE_READ_SHIFT,
-                             PMIC_STARTUP_CTRL_SKIP_LP_STANDBY_EE_READ_MASK) == 1U)
+                             PMIC_SKIP_LP_STANDBY_EE_READ_SHIFT,
+                             PMIC_SKIP_LP_STANDBY_EE_READ_MASK) == 1U)
         {
             pCommonCtrlCfg->skipEepromDefaultLoadEn = (bool)true;
         }
@@ -1123,13 +1142,13 @@ static void Pmic_getEepromDefaultLoadRegAddrBitFields(const Pmic_CoreHandle_t *p
     {
         case PMIC_DEV_HERA_LP8764X:
             *pRegAddr = PMIC_RTC_CTRL_2_REGADDR;
-            *pBitShift = PMIC_RTC_CTRL_2_FIRST_STARTUP_DONE_SHIFT;
-            *pBitMask = PMIC_RTC_CTRL_2_FIRST_STARTUP_DONE_MASK;
+            *pBitShift = PMIC_FIRST_STARTUP_DONE_SHIFT;
+            *pBitMask = PMIC_FIRST_STARTUP_DONE_MASK;
             break;
         default:
             *pRegAddr = PMIC_STARTUP_CTRL_REGADDR;
-            *pBitShift = PMIC_STARTUP_CTRL_FIRST_STARTUP_DONE_SHIFT;
-            *pBitMask = PMIC_STARTUP_CTRL_FIRST_STARTUP_DONE_MASK;
+            *pBitShift = PMIC_FIRST_STARTUP_DONE_SHIFT;
+            *pBitMask = PMIC_FIRST_STARTUP_DONE_MASK;
             break;
     }
 }
@@ -1194,8 +1213,8 @@ static int32_t Pmic_getEepromDefaultLoadEnable(Pmic_CoreHandle_t *pPmicCoreHandl
     uint8_t regData = 0U;
     uint8_t regAddr = 0U, bitShift = 0U, bitMask = 0U;
 
-    if (pPmicCoreHandle->pmicDeviceType != PMIC_DEV_HERA_LP8764X &&
-        pPmicCoreHandle->pmicDeviceType != PMIC_DEV_LEO_TPS6594X)
+    if ((pPmicCoreHandle->pmicDeviceType != PMIC_DEV_HERA_LP8764X) &&
+        (pPmicCoreHandle->pmicDeviceType != PMIC_DEV_LEO_TPS6594X))
     {
         pmicStatus = PMIC_ST_ERR_INV_DEVICE;
     }
@@ -1243,7 +1262,7 @@ static int32_t Pmic_setEnableDrvPinCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const
         {
             // Get FORCE_EN_DRV_LOW bit field
             forceEnDrvLowVal = Pmic_getBitField(
-                regData, PMIC_ENABLE_DRV_STAT_FORCE_EN_DRV_LOW_SHIFT, PMIC_ENABLE_DRV_STAT_FORCE_EN_DRV_LOW_MASK);
+                regData, PMIC_FORCE_EN_DRV_LOW_SHIFT, PMIC_FORCE_EN_DRV_LOW_MASK);
 
             // If FORCE_EN_DRV_LOW bit field has a value of 1, ENABLE_DRV
             // bit is forced low and cannot be written high by I2C/SPI
@@ -1263,8 +1282,8 @@ static int32_t Pmic_setEnableDrvPinCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const
         {
             // Modify ENABLE_DRV bit field
             Pmic_setBitField(&regData,
-                             PMIC_ENABLE_DRV_REG_ENABLE_DRV_SHIFT,
-                             PMIC_ENABLE_DRV_REG_ENABLE_DRV_MASK,
+                             PMIC_ENABLE_DRV_SHIFT,
+                             PMIC_ENABLE_DRV_MASK,
                              commonCtrlCfg.enDrv);
 
             // Write new register value back to PMIC
@@ -1295,7 +1314,7 @@ static int32_t Pmic_getEnableDrvPinCfg(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_
     {
         // Extract ENABLE_DRV bit
         pCommonCtrlCfg->enDrv =
-            Pmic_getBitField(regData, PMIC_ENABLE_DRV_REG_ENABLE_DRV_SHIFT, PMIC_ENABLE_DRV_REG_ENABLE_DRV_MASK);
+            Pmic_getBitField(regData, PMIC_ENABLE_DRV_SHIFT, PMIC_ENABLE_DRV_MASK);
     }
 
     return pmicStatus;
@@ -1325,8 +1344,8 @@ static int32_t Pmic_setRegisterLockUnlockCfg(Pmic_CoreHandle_t         *pPmicCor
         if (PMIC_ST_SUCCESS == pmicStatus)
         {
             Pmic_setBitField(&regData,
-                             PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_SHIFT,
-                             PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_WRITE_MASK,
+                             PMIC_REGISTER_LOCK_STATUS_SHIFT,
+                             PMIC_REGISTER_LOCK_STATUS_WRITE_MASK,
                              commonCtrlCfg.regLock);
 
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_REGISTER_LOCK_REGADDR, regData);
@@ -1383,15 +1402,15 @@ static int32_t Pmic_setSpreadSpectrumModDepthCfg(Pmic_CoreHandle_t         *pPmi
             if (pPmicCoreHandle->pmicDeviceType == PMIC_DEV_BURTON_TPS6522X)
             {
                 Pmic_setBitField(&regData,
-                                 PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_SHIFT,
-                                 PMIC_TPS6522X_SPREAD_SPECTRUM_1_SS_DEPTH_MASK,
+                                 PMIC_SS_DEPTH_SHIFT,
+                                 PMIC_TPS6522X_SS_DEPTH_MASK,
                                  commonCtrlCfg.spreadSpectrumDepth);
             }
             else
             {
                 Pmic_setBitField(&regData,
-                                 PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_SHIFT,
-                                 PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_MASK,
+                                 PMIC_SS_DEPTH_SHIFT,
+                                 PMIC_SS_DEPTH_MASK,
                                  commonCtrlCfg.spreadSpectrumDepth);
             }
 
@@ -1426,12 +1445,12 @@ static int32_t Pmic_getSpreadSpectrumModDepthCfg(Pmic_CoreHandle_t    *pPmicCore
         if (pPmicCoreHandle->pmicDeviceType == PMIC_DEV_BURTON_TPS6522X)
         {
             pCommonCtrlCfg->spreadSpectrumDepth = Pmic_getBitField(
-                regData, PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_SHIFT, PMIC_TPS6522X_SPREAD_SPECTRUM_1_SS_DEPTH_MASK);
+                regData, PMIC_SS_DEPTH_SHIFT, PMIC_TPS6522X_SS_DEPTH_MASK);
         }
         else
         {
             pCommonCtrlCfg->spreadSpectrumDepth =
-                Pmic_getBitField(regData, PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_SHIFT, PMIC_SPREAD_SPECTRUM_1_SS_DEPTH_MASK);
+                Pmic_getBitField(regData, PMIC_SS_DEPTH_SHIFT, PMIC_SS_DEPTH_MASK);
         }
     }
 
@@ -1577,15 +1596,15 @@ static int32_t Pmic_setAmuxOutRefOutPinCfg(Pmic_CoreHandle_t *pPmicCoreHandle, c
                 if (((bool)PMIC_LP8764X_REF_OUT_PIN_CFG_ENABLE) == amuxRefEn)
                 {
                     Pmic_setBitField(&regData,
-                                     PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_SHIFT,
-                                     PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_MASK,
+                                     PMIC_AMUXOUT_REFOUT_EN_SHIFT,
+                                     PMIC_AMUXOUT_REFOUT_EN_MASK,
                                      PMIC_LP8764X_REF_OUT_PIN_CFG_ENABLE);
                 }
                 else
                 {
                     Pmic_setBitField(&regData,
-                                     PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_SHIFT,
-                                     PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_MASK,
+                                     PMIC_AMUXOUT_REFOUT_EN_SHIFT,
+                                     PMIC_AMUXOUT_REFOUT_EN_MASK,
                                      PMIC_LP8764X_REF_OUT_PIN_CFG_DISABLE);
                 }
                 break;
@@ -1594,15 +1613,15 @@ static int32_t Pmic_setAmuxOutRefOutPinCfg(Pmic_CoreHandle_t *pPmicCoreHandle, c
                 if (((bool)PMIC_TPS6594X_AMUX_OUT_PIN_CFG_ENABLE) == amuxRefEn)
                 {
                     Pmic_setBitField(&regData,
-                                     PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_SHIFT,
-                                     PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_MASK,
+                                     PMIC_AMUXOUT_REFOUT_EN_SHIFT,
+                                     PMIC_AMUXOUT_REFOUT_EN_MASK,
                                      PMIC_TPS6594X_AMUX_OUT_PIN_CFG_ENABLE);
                 }
                 else
                 {
                     Pmic_setBitField(&regData,
-                                     PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_SHIFT,
-                                     PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_MASK,
+                                     PMIC_AMUXOUT_REFOUT_EN_SHIFT,
+                                     PMIC_AMUXOUT_REFOUT_EN_MASK,
                                      PMIC_TPS6594X_AMUX_OUT_PIN_CFG_DISABLE);
                 }
                 break;
@@ -1641,8 +1660,7 @@ static int32_t Pmic_getAmuxOutRefOutPinCfg(Pmic_CoreHandle_t *pPmicCoreHandle, P
     {
         pMiscCtrlCfg->amuxOutRefOutEn = (bool)false;
 
-        if (Pmic_getBitField(regData, PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_SHIFT, PMIC_MISC_CTRL_AMUXOUT_REFOUT_EN_MASK) ==
-            1U)
+        if (Pmic_getBitField(regData, PMIC_AMUXOUT_REFOUT_EN_SHIFT, PMIC_AMUXOUT_REFOUT_EN_MASK) == 1U)
         {
             pMiscCtrlCfg->amuxOutRefOutEn = (bool)true;
         }
@@ -1680,15 +1698,15 @@ static int32_t Pmic_setInternalClkMonitorCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                 if (((bool)PMIC_LP8764X_REF_OUT_PIN_CFG_ENABLE) == miscCtrlCfg.clkMonEn)
                 {
                     Pmic_setBitField(&regData,
-                                     PMIC_MISC_CTRL_CLKMON_EN_SHIFT,
-                                     PMIC_MISC_CTRL_CLKMON_EN_MASK,
+                                     PMIC_CLKMON_EN_SHIFT,
+                                     PMIC_CLKMON_EN_MASK,
                                      PMIC_LP8764X_REF_OUT_PIN_CFG_ENABLE);
                 }
                 else
                 {
                     Pmic_setBitField(&regData,
-                                     PMIC_MISC_CTRL_CLKMON_EN_SHIFT,
-                                     PMIC_MISC_CTRL_CLKMON_EN_MASK,
+                                     PMIC_CLKMON_EN_SHIFT,
+                                     PMIC_CLKMON_EN_MASK,
                                      PMIC_LP8764X_REF_OUT_PIN_CFG_DISABLE);
                 }
                 break;
@@ -1697,15 +1715,15 @@ static int32_t Pmic_setInternalClkMonitorCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                 if (((bool)PMIC_TPS6594X_AMUX_OUT_PIN_CFG_ENABLE) == miscCtrlCfg.clkMonEn)
                 {
                     Pmic_setBitField(&regData,
-                                     PMIC_MISC_CTRL_CLKMON_EN_SHIFT,
-                                     PMIC_MISC_CTRL_CLKMON_EN_MASK,
+                                     PMIC_CLKMON_EN_SHIFT,
+                                     PMIC_CLKMON_EN_MASK,
                                      PMIC_TPS6594X_AMUX_OUT_PIN_CFG_ENABLE);
                 }
                 else
                 {
                     Pmic_setBitField(&regData,
-                                     PMIC_MISC_CTRL_CLKMON_EN_SHIFT,
-                                     PMIC_MISC_CTRL_CLKMON_EN_MASK,
+                                     PMIC_CLKMON_EN_SHIFT,
+                                     PMIC_CLKMON_EN_MASK,
                                      PMIC_TPS6594X_AMUX_OUT_PIN_CFG_DISABLE);
                 }
                 break;
@@ -1744,7 +1762,7 @@ static int32_t Pmic_getInternalClkMonitorCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
     {
         pMiscCtrlCfg->clkMonEn = (bool)false;
 
-        if (Pmic_getBitField(regData, PMIC_MISC_CTRL_CLKMON_EN_SHIFT, PMIC_MISC_CTRL_CLKMON_EN_MASK) == 1U)
+        if (Pmic_getBitField(regData, PMIC_CLKMON_EN_SHIFT, PMIC_CLKMON_EN_MASK) == 1U)
         {
             pMiscCtrlCfg->clkMonEn = (bool)true;
         }
@@ -1781,8 +1799,8 @@ static int32_t Pmic_selectSyncClkOutFreq(Pmic_CoreHandle_t *pPmicCoreHandle, con
         if (pmicStatus == PMIC_ST_SUCCESS)
         {
             Pmic_setBitField(&regData,
-                             PMIC_MISC_CTRL_SYNCCLKOUT_FREQ_SEL_SHIFT,
-                             PMIC_MISC_CTRL_SYNCCLKOUT_FREQ_SEL_MASK,
+                             PMIC_SYNCCLKOUT_FREQ_SEL_SHIFT,
+                             PMIC_SYNCCLKOUT_FREQ_SEL_MASK,
                              miscCtrlCfg.syncClkOutFreqSel);
 
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_MISC_CTRL_REGADDR, regData);
@@ -1818,7 +1836,7 @@ static int32_t Pmic_getSyncClkOutFreqSelectCfg(Pmic_CoreHandle_t *pPmicCoreHandl
     if (pmicStatus == PMIC_ST_SUCCESS)
     {
         pMiscCtrlCfg->syncClkOutFreqSel = Pmic_getBitField(
-            regData, PMIC_MISC_CTRL_SYNCCLKOUT_FREQ_SEL_SHIFT, PMIC_MISC_CTRL_SYNCCLKOUT_FREQ_SEL_MASK);
+            regData, PMIC_SYNCCLKOUT_FREQ_SEL_SHIFT, PMIC_SYNCCLKOUT_FREQ_SEL_MASK);
     }
 
     return pmicStatus;
@@ -1850,7 +1868,7 @@ static int32_t Pmic_selectExternalClk(Pmic_CoreHandle_t *pPmicCoreHandle, const 
         {
             // Modify SEL_EXT_CLK bit field
             Pmic_setBitField(
-                &regData, PMIC_MISC_CTRL_SEL_EXT_CLK_SHIFT, PMIC_MISC_CTRL_SEL_EXT_CLK_MASK, miscCtrlCfg.extClkSel);
+                &regData, PMIC_SEL_EXT_CLK_SHIFT, PMIC_SEL_EXT_CLK_MASK, miscCtrlCfg.extClkSel);
 
             // Write new register value back to PMIC
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_MISC_CTRL_REGADDR, regData);
@@ -1880,7 +1898,7 @@ static int32_t Pmic_getExternalClkSelectCfg(Pmic_CoreHandle_t *pPmicCoreHandle, 
     {
         // Extract SEL_EXT_CLK bit field
         pMiscCtrlCfg->extClkSel =
-            Pmic_getBitField(regData, PMIC_MISC_CTRL_SEL_EXT_CLK_SHIFT, PMIC_MISC_CTRL_SEL_EXT_CLK_MASK);
+            Pmic_getBitField(regData, PMIC_SEL_EXT_CLK_SHIFT, PMIC_SEL_EXT_CLK_MASK);
     }
 
     return pmicStatus;
@@ -1927,7 +1945,7 @@ static int32_t Pmic_selectExternalClkFreq(Pmic_CoreHandle_t *pPmicCoreHandle, co
         {
             // Modify EXT_CLK_FREQ bit field
             Pmic_setBitField(
-                &regData, PMIC_PLL_CTRL_EXT_CLK_FREQ_SHIFT, PMIC_PLL_CTRL_EXT_CLK_FREQ_MASK, miscCtrlCfg.syncClkInFreq);
+                &regData, PMIC_EXT_CLK_FREQ_SHIFT, PMIC_EXT_CLK_FREQ_MASK, miscCtrlCfg.syncClkInFreq);
 
             // Write new register value back to PMIC
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_PLL_CTRL_REGADDR, regData);
@@ -1968,8 +1986,8 @@ static int32_t Pmic_setNRstOutSocSignalCfg(Pmic_CoreHandle_t *pPmicCoreHandle, c
         if (PMIC_ST_SUCCESS == pmicStatus)
         {
             Pmic_setBitField(&regData,
-                             PMIC_MISC_CTRL_NRSTOUT_SOC_SHIFT,
-                             PMIC_MISC_CTRL_NRSTOUT_SOC_MASK,
+                             PMIC_NRSTOUT_SOC_SHIFT,
+                             PMIC_NRSTOUT_SOC_MASK,
                              miscCtrlCfg.nRstOutSocSignal);
 
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_MISC_CTRL_REGADDR, regData);
@@ -2007,7 +2025,7 @@ static int32_t Pmic_setNRstOutSignalCfg(Pmic_CoreHandle_t *pPmicCoreHandle, cons
         {
             // Modify NRSTOUT bit field
             Pmic_setBitField(
-                &regData, PMIC_MISC_CTRL_NRSTOUT_SHIFT, PMIC_MISC_CTRL_NRSTOUT_MASK, miscCtrlCfg.nRstOutSignal);
+                &regData, PMIC_NRSTOUT_SHIFT, PMIC_NRSTOUT_MASK, miscCtrlCfg.nRstOutSignal);
 
             // Write new register value back to PMIC
             pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_MISC_CTRL_REGADDR, regData);
@@ -2037,7 +2055,7 @@ static int32_t Pmic_getExternalClkFreqSelectCfg(Pmic_CoreHandle_t *pPmicCoreHand
     {
         // Extract EXT_CLK_FREQ bit
         pMiscCtrlCfg->syncClkInFreq =
-            Pmic_getBitField(regData, PMIC_PLL_CTRL_EXT_CLK_FREQ_SHIFT, PMIC_PLL_CTRL_EXT_CLK_FREQ_MASK);
+            Pmic_getBitField(regData, PMIC_EXT_CLK_FREQ_SHIFT, PMIC_EXT_CLK_FREQ_MASK);
     }
 
     return pmicStatus;
@@ -2067,7 +2085,7 @@ static int32_t Pmic_getNRstOutSocSignalCfg(Pmic_CoreHandle_t *pPmicCoreHandle, P
     if (pmicStatus == PMIC_ST_SUCCESS)
     {
         pMiscCtrlCfg->nRstOutSocSignal =
-            Pmic_getBitField(regData, PMIC_MISC_CTRL_NRSTOUT_SOC_SHIFT, PMIC_MISC_CTRL_NRSTOUT_SOC_MASK);
+            Pmic_getBitField(regData, PMIC_NRSTOUT_SOC_SHIFT, PMIC_NRSTOUT_SOC_MASK);
     }
 
     return pmicStatus;
@@ -2090,7 +2108,7 @@ static int32_t Pmic_getNRstOutSignalCfg(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic
     {
         // Extract NRSTOUT bit
         pMiscCtrlCfg->nRstOutSignal =
-            Pmic_getBitField(regData, PMIC_MISC_CTRL_NRSTOUT_SHIFT, PMIC_MISC_CTRL_NRSTOUT_MASK);
+            Pmic_getBitField(regData, PMIC_NRSTOUT_SHIFT, PMIC_NRSTOUT_MASK);
     }
 
     return pmicStatus;
@@ -2277,15 +2295,15 @@ static int32_t Pmic_backupBatteryChargingEnable(Pmic_CoreHandle_t          *pPmi
         if (((bool)PMIC_TPS6594X_BB_CHARGINGING_CFG_ENABLE) == batteryCtrlCfg.chargingEn)
         {
             Pmic_setBitField(&regData,
-                             PMIC_CONFIG_2_BB_CHARGER_EN_SHIFT,
-                             PMIC_CONFIG_2_BB_CHARGER_EN_MASK,
+                             PMIC_BB_CHARGER_EN_SHIFT,
+                             PMIC_BB_CHARGER_EN_MASK,
                              PMIC_TPS6594X_BB_CHARGINGING_CFG_ENABLE);
         }
         else
         {
             Pmic_setBitField(&regData,
-                             PMIC_CONFIG_2_BB_CHARGER_EN_SHIFT,
-                             PMIC_CONFIG_2_BB_CHARGER_EN_MASK,
+                             PMIC_BB_CHARGER_EN_SHIFT,
+                             PMIC_BB_CHARGER_EN_MASK,
                              PMIC_TPS6594X_BB_CHARGINGING_CFG_DISABLE);
         }
 
@@ -2314,7 +2332,7 @@ static int32_t Pmic_getBackupBatteryChargingCfg(Pmic_CoreHandle_t     *pPmicCore
     {
         pBatteryCtrlCfg->chargingEn = (bool)false;
 
-        if (Pmic_getBitField(regData, PMIC_CONFIG_2_BB_CHARGER_EN_SHIFT, PMIC_CONFIG_2_BB_CHARGER_EN_MASK) == 1U)
+        if (Pmic_getBitField(regData, PMIC_BB_CHARGER_EN_SHIFT, PMIC_BB_CHARGER_EN_MASK) == 1U)
         {
             pBatteryCtrlCfg->chargingEn = (bool)true;
         }
@@ -2339,7 +2357,7 @@ static int32_t Pmic_setBackupBatteryEndOfChargeVoltage(Pmic_CoreHandle_t        
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
         Pmic_setBitField(
-            &regData, PMIC_CONFIG_2_BB_VEOC_SHIFT, PMIC_CONFIG_2_BB_VEOC_MASK, batteryCtrlCfg.endOfChargeVoltage);
+            &regData, PMIC_BB_VEOC_SHIFT, PMIC_BB_VEOC_MASK, batteryCtrlCfg.endOfChargeVoltage);
 
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_CONFIG_2_REGADDR, regData);
     }
@@ -2365,7 +2383,7 @@ static int32_t Pmic_getBackupBatteryEndOfChargeVoltage(Pmic_CoreHandle_t     *pP
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
         pBatteryCtrlCfg->endOfChargeVoltage =
-            Pmic_getBitField(regData, PMIC_CONFIG_2_BB_VEOC_SHIFT, PMIC_CONFIG_2_BB_VEOC_MASK);
+            Pmic_getBitField(regData, PMIC_BB_VEOC_SHIFT, PMIC_BB_VEOC_MASK);
     }
 
     return pmicStatus;
@@ -2387,7 +2405,7 @@ static int32_t Pmic_setBackupBatteryChargingCurrentVal(Pmic_CoreHandle_t        
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
         Pmic_setBitField(
-            &regData, PMIC_CONFIG_2_BB_ICHR_SHIFT, PMIC_CONFIG_2_BB_ICHR_MASK, batteryCtrlCfg.chargeCurrent);
+            &regData, PMIC_BB_ICHR_SHIFT, PMIC_BB_ICHR_MASK, batteryCtrlCfg.chargeCurrent);
 
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_CONFIG_2_REGADDR, regData);
     }
@@ -2413,7 +2431,7 @@ static int32_t Pmic_getBackupBatteryChargingCurrentVal(Pmic_CoreHandle_t     *pP
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
         pBatteryCtrlCfg->chargeCurrent =
-            Pmic_getBitField(regData, PMIC_CONFIG_2_BB_ICHR_SHIFT, PMIC_CONFIG_2_BB_ICHR_MASK);
+            Pmic_getBitField(regData, PMIC_BB_ICHR_SHIFT, PMIC_BB_ICHR_MASK);
     }
 
     return pmicStatus;
@@ -2527,16 +2545,16 @@ static void Pmic_getPinTypeRegBitFields(const uint8_t pinType, uint8_t *pBitShif
     switch (pinType)
     {
         case PMIC_PIN_TYPE_NRSTOUT_SOC:
-            *pBitShift = PMIC_ENABLE_DRV_STAT_NRSTOUT_SOC_IN_SHIFT;
-            *pBitMask = PMIC_ENABLE_DRV_STAT_NRSTOUT_SOC_IN_MASK;
+            *pBitShift = PMIC_NRSTOUT_SOC_IN_SHIFT;
+            *pBitMask = PMIC_NRSTOUT_SOC_IN_MASK;
             break;
         case PMIC_PIN_TYPE_NRSTOUT:
-            *pBitShift = PMIC_ENABLE_DRV_STAT_NRSTOUT_IN_SHIFT;
-            *pBitMask = PMIC_ENABLE_DRV_STAT_NRSTOUT_IN_MASK;
+            *pBitShift = PMIC_NRSTOUT_IN_SHIFT;
+            *pBitMask = PMIC_NRSTOUT_IN_MASK;
             break;
         default:
-            *pBitShift = PMIC_ENABLE_DRV_STAT_EN_DRV_IN_SHIFT;
-            *pBitMask = PMIC_ENABLE_DRV_STAT_EN_DRV_IN_MASK;
+            *pBitShift = PMIC_EN_DRV_IN_SHIFT;
+            *pBitMask = PMIC_EN_DRV_IN_MASK;
             break;
     }
 }
@@ -2587,8 +2605,8 @@ static int32_t Pmic_getSpmiLpmCtrlCfg(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_C
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    if (pPmicCoreHandle->pmicDeviceType != PMIC_DEV_HERA_LP8764X &&
-        pPmicCoreHandle->pmicDeviceType != PMIC_DEV_LEO_TPS6594X)
+    if ((pPmicCoreHandle->pmicDeviceType != PMIC_DEV_HERA_LP8764X) &&
+        (pPmicCoreHandle->pmicDeviceType != PMIC_DEV_LEO_TPS6594X))
     {
         pmicStatus = PMIC_ST_ERR_INV_DEVICE;
     }
@@ -2604,8 +2622,7 @@ static int32_t Pmic_getSpmiLpmCtrlCfg(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_C
     {
         pCommonCtrlStat->spmiLpmStat = (bool)false;
 
-        if (Pmic_getBitField(regData, PMIC_ENABLE_DRV_STAT_SPMI_LPM_EN_SHIFT, PMIC_ENABLE_DRV_STAT_SPMI_LPM_EN_MASK) ==
-            1U)
+        if (Pmic_getBitField(regData, PMIC_SPMI_LPM_EN_SHIFT, PMIC_SPMI_LPM_EN_MASK) == 1U)
         {
             pCommonCtrlStat->spmiLpmStat = (bool)true;
         }
@@ -2630,7 +2647,7 @@ static int32_t Pmic_getEnableDrvI2CSPICfg(Pmic_CoreHandle_t *pPmicCoreHandle, Pm
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
         pCommonCtrlStat->forceEnDrvLowStat = Pmic_getBitField(
-            regData, PMIC_ENABLE_DRV_STAT_FORCE_EN_DRV_LOW_SHIFT, PMIC_ENABLE_DRV_STAT_FORCE_EN_DRV_LOW_MASK);
+            regData, PMIC_FORCE_EN_DRV_LOW_SHIFT, PMIC_FORCE_EN_DRV_LOW_MASK);
     }
 
     return pmicStatus;
@@ -2660,7 +2677,7 @@ static int32_t Pmic_getBackupBatteryEocIndicationStat(Pmic_CoreHandle_t     *pPm
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
         pCommonCtrlStat->bbEndOfChargeIndication =
-            Pmic_getBitField(regData, PMIC_CONFIG_2_BB_EOC_RDY_SHIFT, PMIC_CONFIG_2_BB_EOC_RDY_MASK);
+            Pmic_getBitField(regData, PMIC_BB_EOC_RDY_SHIFT, PMIC_BB_EOC_RDY_MASK);
     }
 
     return pmicStatus;
@@ -2681,7 +2698,7 @@ static int32_t Pmic_getRegLockStat(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_Comm
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
         pCommonCtrlStat->regLockStat = Pmic_getBitField(
-            regData, PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_SHIFT, PMIC_REGISTER_LOCK_REGISTER_LOCK_STATUS_READ_MASK);
+            regData, PMIC_REGISTER_LOCK_STATUS_SHIFT, PMIC_REGISTER_LOCK_STATUS_READ_MASK);
     }
 
     return pmicStatus;
@@ -2702,7 +2719,7 @@ static int32_t Pmic_getExtClkValidityStat(Pmic_CoreHandle_t *pPmicCoreHandle, Pm
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
         pCommonCtrlStat->extClkValidity =
-            Pmic_getBitField(regData, PMIC_STAT_MISC_EXT_CLK_STAT_SHIFT, PMIC_STAT_MISC_EXT_CLK_STAT_MASK);
+            Pmic_getBitField(regData, PMIC_EXT_CLK_STAT_SHIFT, PMIC_EXT_CLK_STAT_MASK);
     }
 
     return pmicStatus;
@@ -2723,7 +2740,7 @@ static int32_t Pmic_getStartupPinStat(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_C
     if (pmicStatus == PMIC_ST_SUCCESS)
     {
         pCommonCtrlStat->startupPin =
-            Pmic_getBitField(regData, PMIC_STAT_STARTUP_ENABLE_STAT_SHIFT, PMIC_STAT_STARTUP_ENABLE_STAT_MASK);
+            Pmic_getBitField(regData, PMIC_ENABLE_STAT_SHIFT, PMIC_ENABLE_STAT_MASK);
     }
 
     return pmicStatus;
@@ -2753,8 +2770,8 @@ static int32_t Pmic_getEnDrvPinStat(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_Com
     if (pmicStatus == PMIC_ST_SUCCESS)
     {
         pCommonCtrlStat->enDrvPin = Pmic_getBitField(regData,
-                                                     PMIC_STAT_READBACK_ERR_EN_DRV_READBACK_STAT_SHIFT,
-                                                     PMIC_STAT_READBACK_ERR_EN_DRV_READBACK_STAT_MASK);
+                                                     PMIC_EN_DRV_READBACK_STAT_SHIFT,
+                                                     PMIC_EN_DRV_READBACK_STAT_MASK);
     }
 
     return pmicStatus;
@@ -2783,9 +2800,8 @@ static int32_t Pmic_getNRstOutSocPinStat(Pmic_CoreHandle_t *pPmicCoreHandle, Pmi
 
     if (pmicStatus == PMIC_ST_SUCCESS)
     {
-        pCommonCtrlStat->nRstOutSocPin = Pmic_getBitField(regData,
-                                                          PMIC_STAT_READBACK_ERR_NRSTOUT_SOC_READBACK_STAT_SHIFT,
-                                                          PMIC_STAT_READBACK_ERR_NRSTOUT_SOC_READBACK_STAT_MASK);
+        pCommonCtrlStat->nRstOutSocPin = Pmic_getBitField(
+            regData, PMIC_NRSTOUT_SOC_RDBK_ST_SHIFT, PMIC_NRSTOUT_SOC_RDBK_ST_MASK);
     }
 
     return pmicStatus;
@@ -2815,8 +2831,8 @@ static int32_t Pmic_getNRstOutPinStat(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_C
     if (pmicStatus == PMIC_ST_SUCCESS)
     {
         pCommonCtrlStat->nRstOutPin = Pmic_getBitField(regData,
-                                                       PMIC_STAT_READBACK_ERR_NRSTOUT_READBACK_STAT_SHIFT,
-                                                       PMIC_STAT_READBACK_ERR_NRSTOUT_READBACK_STAT_MASK);
+                                                       PMIC_NRSTOUT_READBACK_STAT_SHIFT,
+                                                       PMIC_NRSTOUT_READBACK_STAT_MASK);
     }
 
     return pmicStatus;
@@ -2846,7 +2862,7 @@ static int32_t Pmic_getNIntPinStat(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_Comm
     if (pmicStatus == PMIC_ST_SUCCESS)
     {
         pCommonCtrlStat->nIntPin = Pmic_getBitField(
-            regData, PMIC_STAT_READBACK_ERR_NINT_READBACK_STAT_SHIFT, PMIC_STAT_READBACK_ERR_NINT_READBACK_STAT_MASK);
+            regData, PMIC_NINT_READBACK_STAT_SHIFT, PMIC_NINT_READBACK_STAT_MASK);
     }
 
     return pmicStatus;
@@ -2985,11 +3001,11 @@ int32_t Pmic_getI2CSpeed(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t *pI2C1Speed
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
-        *pI2C1Speed = Pmic_getBitField(regVal, PMIC_CONFIG_1_I2C1_HS_SHIFT, PMIC_CONFIG_1_I2C1_HS_MASK);
+        *pI2C1Speed = Pmic_getBitField(regVal, PMIC_I2C1_HS_SHIFT, PMIC_I2C1_HS_MASK);
 
         if (PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode)
         {
-            *pI2C2Speed = Pmic_getBitField(regVal, PMIC_CONFIG_1_I2C2_HS_SHIFT, PMIC_CONFIG_1_I2C2_HS_MASK);
+            *pI2C2Speed = Pmic_getBitField(regVal, PMIC_I2C2_HS_SHIFT, PMIC_I2C2_HS_MASK);
         }
     }
 
@@ -3048,12 +3064,12 @@ int32_t Pmic_getCrcStatus(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t *pI2c1SpiC
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
         *pI2c1SpiCrcStatus = Pmic_getBitField(
-            regVal, PMIC_SERIAL_IF_CONFIG_I2C1_SPI_CRC_EN_SHIFT, PMIC_SERIAL_IF_CONFIG_I2C1_SPI_CRC_EN_MASK);
+            regVal, PMIC_I2C1_SPI_CRC_EN_SHIFT, PMIC_I2C1_SPI_CRC_EN_MASK);
 
         if (PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode)
         {
             *pI2c2CrcStatus = Pmic_getBitField(
-                regVal, PMIC_SERIAL_IF_CONFIG_I2C2_CRC_EN_SHIFT, PMIC_SERIAL_IF_CONFIG_I2C2_CRC_EN_MASK);
+                regVal, PMIC_I2C2_CRC_EN_SHIFT, PMIC_I2C2_CRC_EN_MASK);
         }
     }
 
@@ -3097,16 +3113,15 @@ int32_t Pmic_getDeviceInfo(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_DeviceInfo_t
         if (PMIC_ST_SUCCESS == pmicStatus)
         {
             pDeviceInfo->deviceID = Pmic_getBitField(
-                regVal, PMIC_DEV_REV_TI_DEVICE_ID_SILICON_REV_SHIFT, PMIC_DEV_REV_TI_DEVICE_ID_SILICON_REV_MASK);
+                regVal, PMIC_TI_DEVICE_ID_SILICON_REV_SHIFT, PMIC_TI_DEVICE_ID_SILICON_REV_MASK);
 
             if ((pPmicCoreHandle->pmicDeviceType == PMIC_DEV_HERA_LP8764X) ||
                 (pPmicCoreHandle->pmicDeviceType == PMIC_DEV_LEO_TPS6594X))
             {
                 if (PMIC_SILICON_REV_ID_PG_2_0 == pPmicCoreHandle->pmicDevSiliconRev)
                 {
-                    pDeviceInfo->deviceID = Pmic_getBitField(regVal,
-                                                             PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_SHIFT,
-                                                             PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_MASK);
+                    pDeviceInfo->deviceID = Pmic_getBitField(
+                        regVal, PMIC_DEV_ID_PG2_0_SIL_REV_SHIFT, PMIC_DEV_ID_PG2_0_SIL_REV_MASK);
                 }
             }
 
@@ -3126,7 +3141,7 @@ int32_t Pmic_getDeviceInfo(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_DeviceInfo_t
             pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_MANUFACTURING_VER_REGADDR, &regVal);
 
             pDeviceInfo->siliconRev = Pmic_getBitField(
-                regVal, PMIC_MANUFACTURING_VER_SILICON_REV_SHIFT, PMIC_MANUFACTURING_VER_SILICON_REV_MASK);
+                regVal, PMIC_SILICON_REV_SHIFT, PMIC_SILICON_REV_MASK);
         }
 
         // Get Customer NVM ID info
@@ -3169,14 +3184,14 @@ int32_t Pmic_setI2CSpeedCfg(Pmic_CoreHandle_t *pPmicCoreHandle)
                 (PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode))
             {
                 Pmic_setBitField(
-                    &regVal, PMIC_CONFIG_1_I2C1_HS_SHIFT, PMIC_CONFIG_1_I2C1_HS_MASK, pPmicCoreHandle->i2c1Speed);
+                    &regVal, PMIC_I2C1_HS_SHIFT, PMIC_I2C1_HS_MASK, pPmicCoreHandle->i2c1Speed);
             }
 
             // Modify I2C2_HS bit for only dual I2C mode
             if (PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode)
             {
                 Pmic_setBitField(
-                    &regVal, PMIC_CONFIG_1_I2C2_HS_SHIFT, PMIC_CONFIG_1_I2C2_HS_MASK, pPmicCoreHandle->i2c2Speed);
+                    &regVal, PMIC_I2C2_HS_SHIFT, PMIC_I2C2_HS_MASK, pPmicCoreHandle->i2c2Speed);
             }
 
             // Write new register value back to PMIC

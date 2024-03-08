@@ -66,6 +66,7 @@ static void Pmic_get_gpioInOutCfg(const Pmic_CoreHandle_t *pPmicCoreHandle, Pmic
             break;
         case PMIC_DEV_BURTON_TPS6522X:
             pmic_get_tps6522x_gpioInOutCfg(pGpioInOutCfg);
+            break;
         default:
             /* Default case is valid only for TPS6594x LEO PMIC */
             pmic_get_tps6594x_gpioInOutCfg(pGpioInOutCfg);
@@ -120,10 +121,11 @@ static int32_t Pmic_gpioValidatePin(const uint8_t pmicDeviceType, const uint8_t 
             }
             break;
         case PMIC_DEV_BURTON_TPS6522X:
-            if ((pin < PMIC_TPS6522X_GPIO_PIN_MIN) || (pin > PMIC_TPS6522X_GPIO_PIN_MAX))
+            if ((pin < TPS6522X_GPIO_PIN_MIN) || (pin > TPS6522X_GPIO_PIN_MAX))
             {
                 status = PMIC_ST_ERR_INV_PARAM;
             }
+            break;
         default:
             /* Default case is valid only for TPS6594x LEO PMIC */
             if ((pin < PMIC_TPS6594X_GPIO_PIN_MIN) || (pin > PMIC_TPS6594X_GPIO_PIN_MAX))
@@ -279,7 +281,7 @@ int32_t Pmic_gpioSetPinFunc(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pi
             {
                 /* For GPIO pin function */
                 Pmic_setBitField(
-                    &regData, PMIC_GPIOX_CONF_GPIO_SEL_SHIFT, PMIC_GPIOX_CONF_GPIO_SEL_MASK, gpioCfg.pinFunc);
+                    &regData, PMIC_GPIO_SEL_SHIFT, PMIC_GPIO_SEL_MASK, gpioCfg.pinFunc);
             }
             /* Setting GPIO pin function */
             status = Pmic_commIntf_sendByte(pPmicCoreHandle, regAddr, regData);
@@ -329,7 +331,7 @@ int32_t Pmic_gpioGetPinFunc(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pi
         {
             /* For GPIO pin function */
             pGpioCfg->pinFunc =
-                Pmic_getBitField(regData, PMIC_GPIOX_CONF_GPIO_SEL_SHIFT, PMIC_GPIOX_CONF_GPIO_SEL_MASK);
+                Pmic_getBitField(regData, PMIC_GPIO_SEL_SHIFT, PMIC_GPIO_SEL_MASK);
         }
     }
 
@@ -347,9 +349,9 @@ int32_t Pmic_gpioSetPinPolarity(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_G
     switch (pPmicCoreHandle->pmicDeviceType)
     {
         case PMIC_DEV_HERA_LP8764X:
-            regAddr = PMIC_ENABLE_CONF_REGADDR;
-            bitPos = PMIC_ENABLE_CONF_ENABLE_POL_SHIFT;
-            bitMask = PMIC_ENABLE_CONF_ENABLE_POL_MASK;
+            regAddr = PMIC_LP8764X_ENABLE_CONF_REGADDR;
+            bitPos = PMIC_LP8764X_ENABLE_POL_SHIFT;
+            bitMask = PMIC_LP8764X_ENABLE_POL_MASK;
             break;
         default:
             /* Default case is valid only for TPS6594x LEO PMIC */
@@ -390,9 +392,9 @@ int32_t Pmic_gpioGetPinPolarity(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_GpioCfg
     switch (pPmicCoreHandle->pmicDeviceType)
     {
         case PMIC_DEV_HERA_LP8764X:
-            regAddr = PMIC_ENABLE_CONF_REGADDR;
-            bitPos = PMIC_ENABLE_CONF_ENABLE_POL_SHIFT;
-            bitMask = PMIC_ENABLE_CONF_ENABLE_POL_MASK;
+            regAddr = PMIC_LP8764X_ENABLE_CONF_REGADDR;
+            bitPos = PMIC_LP8764X_ENABLE_POL_SHIFT;
+            bitMask = PMIC_LP8764X_ENABLE_POL_MASK;
             break;
         default:
             /* Default case is valid only for TPS6594x LEO PMIC */
@@ -458,8 +460,8 @@ static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle, const ui
             {
                 /* Disable pull-up/pull-down feature */
                 Pmic_setBitField(&regData,
-                                 PMIC_GPIOX_CONF_GPIO_PU_PD_EN_SHIFT,
-                                 PMIC_GPIOX_CONF_GPIO_PU_PD_EN_MASK,
+                                 PMIC_GPIO_PU_PD_EN_SHIFT,
+                                 PMIC_GPIO_PU_PD_EN_MASK,
                                  PMIC_GPIO_PU_PD_DISABLE);
             }
 
@@ -467,24 +469,24 @@ static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle, const ui
             {
                 /* Enable pull-up/pull-down feature */
                 Pmic_setBitField(&regData,
-                                 PMIC_GPIOX_CONF_GPIO_PU_PD_EN_SHIFT,
-                                 PMIC_GPIOX_CONF_GPIO_PU_PD_EN_MASK,
+                                 PMIC_GPIO_PU_PD_EN_SHIFT,
+                                 PMIC_GPIO_PU_PD_EN_MASK,
                                  PMIC_GPIO_PU_PD_ENABLE);
 
                 if (PMIC_GPIO_PULL_UP == gpioCfg.pullCtrl)
                 {
                     /* select pull-up resistor */
                     Pmic_setBitField(&regData,
-                                     PMIC_GPIOX_CONF_GPIO_PU_SEL_SHIFT,
-                                     PMIC_GPIOX_CONF_GPIO_PU_SEL_MASK,
+                                     PMIC_GPIO_PU_SEL_SHIFT,
+                                     PMIC_GPIO_PU_SEL_MASK,
                                      PMIC_GPIO_PU_SELECT);
                 }
                 else
                 {
                     /* Select pull-down resistor */
                     Pmic_setBitField(&regData,
-                                     PMIC_GPIOX_CONF_GPIO_PU_SEL_SHIFT,
-                                     PMIC_GPIOX_CONF_GPIO_PU_SEL_MASK,
+                                     PMIC_GPIO_PU_SEL_SHIFT,
+                                     PMIC_GPIO_PU_SEL_MASK,
                                      PMIC_GPIO_PD_SELECT);
                 }
             }
@@ -526,11 +528,11 @@ int32_t Pmic_gpioGetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t p
     if (PMIC_ST_SUCCESS == status)
     {
         /* Reading gpio pull control */
-        if (Pmic_getBitField(regData, PMIC_GPIOX_CONF_GPIO_PU_PD_EN_SHIFT, PMIC_GPIOX_CONF_GPIO_PU_PD_EN_MASK) == 0U)
+        if (Pmic_getBitField(regData, PMIC_GPIO_PU_PD_EN_SHIFT, PMIC_GPIO_PU_PD_EN_MASK) == 0U)
         {
             pGpioCfg->pullCtrl = PMIC_GPIO_PULL_DISABLED;
         }
-        else if (Pmic_getBitField(regData, PMIC_GPIOX_CONF_GPIO_PU_SEL_SHIFT, PMIC_GPIOX_CONF_GPIO_PU_SEL_MASK) != 0U)
+        else if (Pmic_getBitField(regData, PMIC_GPIO_PU_SEL_SHIFT, PMIC_GPIO_PU_SEL_MASK) != 0U)
         {
             pGpioCfg->pullCtrl = PMIC_GPIO_PULL_UP;
         }
@@ -575,7 +577,7 @@ static int32_t Pmic_gpioSetPinDir(Pmic_CoreHandle_t *pPmicCoreHandle, const uint
         if (PMIC_ST_SUCCESS == status)
         {
             /* set gpio pin direction */
-            Pmic_setBitField(&regData, PMIC_GPIOX_CONF_GPIO_DIR_SHIFT, PMIC_GPIOX_CONF_GPIO_DIR_MASK, gpioCfg.pinDir);
+            Pmic_setBitField(&regData, PMIC_GPIO_DIR_SHIFT, PMIC_GPIO_DIR_MASK, gpioCfg.pinDir);
 
             status = Pmic_commIntf_sendByte(pPmicCoreHandle, pGpioInOutCfg[index].regAddr, regData);
         }
@@ -615,7 +617,7 @@ static int32_t Pmic_gpioGetPinDir(Pmic_CoreHandle_t *pPmicCoreHandle, const uint
     if (PMIC_ST_SUCCESS == status)
     {
         /* Reading gpio direction */
-        pGpioCfg->pinDir = Pmic_getBitField(regData, PMIC_GPIOX_CONF_GPIO_DIR_SHIFT, PMIC_GPIOX_CONF_GPIO_DIR_MASK);
+        pGpioCfg->pinDir = Pmic_getBitField(regData, PMIC_GPIO_DIR_SHIFT, PMIC_GPIO_DIR_MASK);
     }
 
     return status;
@@ -658,8 +660,8 @@ Pmic_gpioSetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, 
         {
             /* setting deglitch time */
             Pmic_setBitField(&regData,
-                             PMIC_GPIOX_CONF_GPIO_DEGLITCH_EN_SHIFT,
-                             PMIC_GPIOX_CONF_GPIO_DEGLITCH_EN_MASK,
+                             PMIC_GPIO_DEGLITCH_EN_SHIFT,
+                             PMIC_GPIO_DEGLITCH_EN_MASK,
                              gpioCfg.deglitchEnable);
 
             status = Pmic_commIntf_sendByte(pPmicCoreHandle, regAddr, regData);
@@ -701,7 +703,7 @@ int32_t Pmic_gpioGetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8
     {
         /* Reading signal deglitch time */
         pGpioCfg->deglitchEnable =
-            Pmic_getBitField(regData, PMIC_GPIOX_CONF_GPIO_DEGLITCH_EN_SHIFT, PMIC_GPIOX_CONF_GPIO_DEGLITCH_EN_MASK);
+            Pmic_getBitField(regData, PMIC_GPIO_DEGLITCH_EN_SHIFT, PMIC_GPIO_DEGLITCH_EN_MASK);
     }
 
     return status;
@@ -744,7 +746,7 @@ Pmic_gpioSetOutputSignalType(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t p
         {
             /* selecting output type */
             Pmic_setBitField(
-                &regData, PMIC_GPIOX_CONF_GPIO_OD_SHIFT, PMIC_GPIOX_CONF_GPIO_OD_MASK, gpioCfg.outputSignalType);
+                &regData, PMIC_GPIO_OD_SHIFT, PMIC_GPIO_OD_MASK, gpioCfg.outputSignalType);
 
             status = Pmic_commIntf_sendByte(pPmicCoreHandle, regAddr, regData);
         }
@@ -789,7 +791,7 @@ Pmic_gpioGetOutputSignalType(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t p
     {
         /* Reading output signal type */
         pGpioCfg->outputSignalType =
-            Pmic_getBitField(regData, PMIC_GPIOX_CONF_GPIO_OD_SHIFT, PMIC_GPIOX_CONF_GPIO_OD_MASK);
+            Pmic_getBitField(regData, PMIC_GPIO_OD_SHIFT, PMIC_GPIO_OD_MASK);
     }
 
     return status;
@@ -1003,7 +1005,7 @@ static int32_t Pmic_gpioSetPinValue(Pmic_CoreHandle_t         *pPmicCoreHandle,
 
     if (PMIC_ST_SUCCESS == status)
     {
-        if (Pmic_getBitField(regData, PMIC_GPIOX_CONF_GPIO_DIR_SHIFT, PMIC_GPIOX_CONF_GPIO_DIR_MASK) ==
+        if (Pmic_getBitField(regData, PMIC_GPIO_DIR_SHIFT, PMIC_GPIO_DIR_MASK) ==
             PMIC_GPIO_OUTPUT)
         {
             /* Setting the GPIO value */
@@ -1253,7 +1255,8 @@ int32_t Pmic_gpioGetNPwronEnablePinConfiguration(Pmic_CoreHandle_t *pPmicCoreHan
  * \brief   This function is used to validate the PMIC interface struct and
  *          EN/PB/VSENSE configuration struct
  */
-static int32_t Pmic_gpioEnPbVsenseParamCheck(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_EnPbVsenseCfg_t *enPbVsenseCfg)
+static int32_t Pmic_gpioEnPbVsenseParamCheck(const Pmic_CoreHandle_t *pPmicCoreHandle, 
+                                             const Pmic_EnPbVsenseCfg_t *enPbVsenseCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 

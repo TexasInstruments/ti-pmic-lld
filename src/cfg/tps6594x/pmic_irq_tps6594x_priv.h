@@ -57,162 +57,155 @@ extern "C"
 
 /** Interrupt Hierarchy Level 2 Register offsets */
 /*!
- * \brief  INT_BUCK Sources
+ * \brief  PMIC INT_BUCK Sources
  */
-#define PMIC_INT_BUCK5_REGADDR                        (0x5EU)
+#define PMIC_TPS6594X_INT_BUCK5_REGADDR             (0x5EU)
 
 /*!
- * \brief  INT_LDO_VMON Sources
+ * \brief  PMIC INT_LDO_VMON Sources
  */
-#define PMIC_INT_LDO1_2_REGADDR                       (0x60U)
-#define PMIC_INT_LDO3_4_REGADDR                       (0x61U)
+#define PMIC_TPS6594X_INT_LDO1_2_REGADDR            (0x60U)
+#define PMIC_TPS6594X_INT_LDO3_4_REGADDR            (0x61U)
 
 /*!
- * \brief  Interrupt MASK registers address
+ * \brief  PMIC Interrupt MASK registers address
  */
-#define PMIC_MASK_GPIO9_11_REGADDR                    (0x51U)
-#define PMIC_MASK_BUCK5_REGADDR                       (0x4BU)
-#define PMIC_MASK_LDO1_2_REGADDR                      (0x4CU)
-#define PMIC_MASK_LDO3_4_REGADDR                      (0x4DU)
+#define PMIC_TPS6594X_MASK_GPIO9_11_REGADDR         (0x51U)
+#define PMIC_TPS6594X_MASK_BUCK5_REGADDR            (0x4BU)
+#define PMIC_TPS6594X_MASK_LDO1_2_REGADDR           (0x4CU)
+#define PMIC_TPS6594X_MASK_LDO3_4_REGADDR           (0x4DU)
 
 /*!
- * \brief  INT_TOP Register Bit Masks
+ * \brief  PMIC INT_STARTUP Error Interrupt Mask. The define
+           for NPWRON_STRT_INT is shortened for MISRA-C
  */
-#define PMIC_INT_TOP_LDO_VMON_INT_MASK                (0x02U)
+#define PMIC_TPS6594X_RTC_INT_MASK                  (0x04U)
+#define PMIC_TPS6594X_NPWRON_STRT_INT_MASK          (0x01U)
 
 /*!
- * \brief  STARTUP Error Interrupt Mask
+ * \brief  PMIC INT_LDO_VMON Interrupt Mask
  */
-#define PMIC_INT_STARTUP_RTC_INT_MASK                 (0x04U)
+#define PMIC_TPS6594X_LDO1_2_INT_MASK               (0x01U)
+#define PMIC_TPS6594X_LDO3_4_INT_MASK               (0x02U)
+#define PMIC_TPS6594X_VCCA_INT_MASK                 (0x10U)
 
 /*!
- * \brief  LDO Interrupt Mask
+ * \brief  PMIC INT_GPIO Interrupt Mask
  */
-#define PMIC_INT_LDO_VMON_LDO1_2_INT_MASK             (0x01U)
-#define PMIC_INT_LDO_VMON_LDO3_4_INT_MASK             (0x02U)
-#define PMIC_INT_LDO_VMON_VCCA_INT_MASK               (0x10U)
-
-#define PMIC_INT_GPIO_GPIO11_INT_MASK                 (0x04U)
-#define PMIC_INT_STARTUP_NPWRON_START_INT_MASK        (0x01U)
-#define PMIC_INT_MODERATE_ERR_NPWRON_LONG_INT_MASK    (0x20U)
+#define PMIC_TPS6594X_GPIO11_INT_MASK               (0x04U)
 
 /*!
- * \brief  PMIC_INT_BUCK Register Bit Mask
+ * \brief  PMIC INT_MODERATE_ERR Interrupt Mask 
  */
-#define PMIC_INT_BUCK_BUCK5_INT_MASK                  (0x04U)
+#define PMIC_TPS6594X_NPWRON_LONG_INT_MASK          (0x20U)
 
 /*!
- * \brief  INT_STARTUP Sources
+ * \brief  PMIC INT_BUCK Register Bit Mask
  */
-#define PMIC_RTC_STATUS_REGADDR                       (0xC4U)
-#define PMIC_RTC_INTERRUPTS_REGADDR                   (0xC5U)
+#define PMIC_TPS6594X_BUCK5_INT_MASK                (0x04U)
 
 /*!
- * \brief  PMIC_INT_BUCK5 Register Bit Masks
+ * \brief  PMIC INT_BUCK5 Register Bit Masks
  */
-#define PMIC_INT_BUCK5_BUCK5_OV_INT_MASK              (0x01U)
-#define PMIC_INT_BUCK5_BUCK5_UV_INT_MASK              (0x02U)
-#define PMIC_INT_BUCK5_BUCK5_SC_INT_MASK              (0x04U)
-#define PMIC_INT_BUCK5_BUCK5_ILIM_INT_MASK            (0x08U)
+#define PMIC_TPS6594X_BUCK5_OV_INT_MASK             (0x01U)
+#define PMIC_TPS6594X_BUCK5_UV_INT_MASK             (0x02U)
+#define PMIC_TPS6594X_BUCK5_SC_INT_MASK             (0x04U)
+#define PMIC_TPS6594X_BUCK5_ILIM_INT_MASK           (0x08U)
 
 /*!
- * \brief  PMIC_INT_LDO1_2 Register Bit Masks
+ * \brief  PMIC INT_LDO1_2 Register Bit Masks
  */
-#define PMIC_INT_LDO1_2_LDO1_OV_INT_MASK              (0x01U)
-#define PMIC_INT_LDO1_2_LDO1_UV_INT_MASK              (0x02U)
-#define PMIC_INT_LDO1_2_LDO1_SC_INT_MASK              (0x04U)
-#define PMIC_INT_LDO1_2_LDO1_ILIM_INT_MASK            (0x08U)
-#define PMIC_INT_LDO1_2_LDO2_OV_INT_MASK              (0x10U)
-#define PMIC_INT_LDO1_2_LDO2_UV_INT_MASK              (0x20U)
-#define PMIC_INT_LDO1_2_LDO2_SC_INT_MASK              (0x40U)
-#define PMIC_INT_LDO1_2_LDO2_ILIM_INT_MASK            (0x80U)
+#define PMIC_TPS6594X_LDO1_OV_INT_MASK              (0x01U)
+#define PMIC_TPS6594X_LDO1_UV_INT_MASK              (0x02U)
+#define PMIC_TPS6594X_LDO1_SC_INT_MASK              (0x04U)
+#define PMIC_TPS6594X_LDO1_ILIM_INT_MASK            (0x08U)
+#define PMIC_TPS6594X_LDO2_OV_INT_MASK              (0x10U)
+#define PMIC_TPS6594X_LDO2_UV_INT_MASK              (0x20U)
+#define PMIC_TPS6594X_LDO2_SC_INT_MASK              (0x40U)
+#define PMIC_TPS6594X_LDO2_ILIM_INT_MASK            (0x80U)
 
 /*!
- * \brief  PMIC_INT_LDO3_4 Register Bit Masks
+ * \brief  PMIC INT_LDO3_4 Register Bit Masks
  */
-#define PMIC_INT_LDO3_4_LDO3_OV_INT_MASK              (0x01U)
-#define PMIC_INT_LDO3_4_LDO3_UV_INT_MASK              (0x02U)
-#define PMIC_INT_LDO3_4_LDO3_SC_INT_MASK              (0x04U)
-#define PMIC_INT_LDO3_4_LDO3_ILIM_INT_MASK            (0x08U)
-#define PMIC_INT_LDO3_4_LDO4_OV_INT_MASK              (0x10U)
-#define PMIC_INT_LDO3_4_LDO4_UV_INT_MASK              (0x20U)
-#define PMIC_INT_LDO3_4_LDO4_SC_INT_MASK              (0x40U)
-#define PMIC_INT_LDO3_4_LDO4_ILIM_INT_MASK            (0x80U)
+#define PMIC_TPS6594X_LDO3_OV_INT_MASK              (0x01U)
+#define PMIC_TPS6594X_LDO3_UV_INT_MASK              (0x02U)
+#define PMIC_TPS6594X_LDO3_SC_INT_MASK              (0x04U)
+#define PMIC_TPS6594X_LDO3_ILIM_INT_MASK            (0x08U)
+#define PMIC_TPS6594X_LDO4_OV_INT_MASK              (0x10U)
+#define PMIC_TPS6594X_LDO4_UV_INT_MASK              (0x20U)
+#define PMIC_TPS6594X_LDO4_SC_INT_MASK              (0x40U)
+#define PMIC_TPS6594X_LDO4_ILIM_INT_MASK            (0x80U)
 
 /*!
  * \brief  PMIC Interrupt Register Bit positions
  */
-/*! PMIC_INT_MODERATE_ERR Register bit position  */
-#define PMIC_INT_MODERATE_ERR_NPWRON_LONG_INT_SHIFT   (0x5U)
+/*! PMIC INT_MODERATE_ERR Register bit position  */
+#define PMIC_TPS6594X_NPWRON_LONG_INT_SHIFT         (0x5U)
 
-/*! PMIC_RTC_STATUS Register bit position  */
-#define PMIC_RTC_STATUS_ALARM_SHIFT                   (0x06U)
-#define PMIC_RTC_STATUS_TIMER_SHIFT                   (0x05U)
+/*! PMIC INT_STARTUP Register bit position, shortened for MISRA-C */
+#define PMIC_TPS6594X_NPWRON_STRT_INT_SHIFT        (0x0U)
 
-/*! PMIC_INT_STARTUP Register bit position  */
-#define PMIC_INT_STARTUP_NPWRON_START_INT_SHIFT       (0x0U)
+/*! PMIC INT_GPIO Register bit position  */
+#define PMIC_TPS6594X_GPIO11_INT_SHIFT              (0x2U)
 
-/*! PMIC_INT_GPIO Register bit position  */
-#define PMIC_INT_GPIO_GPIO11_INT_SHIFT                (0x2U)
+/*! PMIC INT_LDO3_4 Register bit position  */
+#define PMIC_TPS6594X_LDO4_ILIM_INT_SHIFT           (0x7U)
+#define PMIC_TPS6594X_LDO4_SC_INT_SHIFT             (0x6U)
+#define PMIC_TPS6594X_LDO4_UV_INT_SHIFT             (0x5U)
+#define PMIC_TPS6594X_LDO4_OV_INT_SHIFT             (0x4U)
+#define PMIC_TPS6594X_LDO3_ILIM_INT_SHIFT           (0x3U)
+#define PMIC_TPS6594X_LDO3_SC_INT_SHIFT             (0x2U)
+#define PMIC_TPS6594X_LDO3_UV_INT_SHIFT             (0x1U)
+#define PMIC_TPS6594X_LDO3_OV_INT_SHIFT             (0x0U)
 
-/*! PMIC_INT_LDO3_4 Register bit position  */
-#define PMIC_INT_LDO3_4_LDO4_ILIM_INT_SHIFT           (0x7U)
-#define PMIC_INT_LDO3_4_LDO4_SC_INT_SHIFT             (0x6U)
-#define PMIC_INT_LDO3_4_LDO4_UV_INT_SHIFT             (0x5U)
-#define PMIC_INT_LDO3_4_LDO4_OV_INT_SHIFT             (0x4U)
-#define PMIC_INT_LDO3_4_LDO3_ILIM_INT_SHIFT           (0x3U)
-#define PMIC_INT_LDO3_4_LDO3_SC_INT_SHIFT             (0x2U)
-#define PMIC_INT_LDO3_4_LDO3_UV_INT_SHIFT             (0x1U)
-#define PMIC_INT_LDO3_4_LDO3_OV_INT_SHIFT             (0x0U)
+/*! PMIC INT_LDO1_2 Register bit position  */
+#define PMIC_TPS6594X_LDO2_ILIM_INT_SHIFT           (0x7U)
+#define PMIC_TPS6594X_LDO2_SC_INT_SHIFT             (0x6U)
+#define PMIC_TPS6594X_LDO2_UV_INT_SHIFT             (0x5U)
+#define PMIC_TPS6594X_LDO2_OV_INT_SHIFT             (0x4U)
+#define PMIC_TPS6594X_LDO1_ILIM_INT_SHIFT           (0x3U)
+#define PMIC_TPS6594X_LDO1_SC_INT_SHIFT             (0x2U)
+#define PMIC_TPS6594X_LDO1_UV_INT_SHIFT             (0x1U)
+#define PMIC_TPS6594X_LDO1_OV_INT_SHIFT             (0x0U)
 
-/*! PMIC_INT_LDO1_2 Register bit position  */
-#define PMIC_INT_LDO1_2_LDO2_ILIM_INT_SHIFT           (0x7U)
-#define PMIC_INT_LDO1_2_LDO2_SC_INT_SHIFT             (0x6U)
-#define PMIC_INT_LDO1_2_LDO2_UV_INT_SHIFT             (0x5U)
-#define PMIC_INT_LDO1_2_LDO2_OV_INT_SHIFT             (0x4U)
-#define PMIC_INT_LDO1_2_LDO1_ILIM_INT_SHIFT           (0x3U)
-#define PMIC_INT_LDO1_2_LDO1_SC_INT_SHIFT             (0x2U)
-#define PMIC_INT_LDO1_2_LDO1_UV_INT_SHIFT             (0x1U)
-#define PMIC_INT_LDO1_2_LDO1_OV_INT_SHIFT             (0x0U)
-
-/*! PMIC_BUCK5 Register bit position  */
-#define PMIC_INT_BUCK5_BUCK5_ILIM_INT_SHIFT           (0x3U)
-#define PMIC_INT_BUCK5_BUCK5_SC_INT_SHIFT             (0x2U)
-#define PMIC_INT_BUCK5_BUCK5_UV_INT_SHIFT             (0x1U)
-#define PMIC_INT_BUCK5_BUCK5_OV_INT_SHIFT             (0x0U)
+/*! PMIC INT_BUCK5 Register bit position  */
+#define PMIC_TPS6594X_BUCK5_ILIM_INT_SHIFT          (0x3U)
+#define PMIC_TPS6594X_BUCK5_SC_INT_SHIFT            (0x2U)
+#define PMIC_TPS6594X_BUCK5_UV_INT_SHIFT            (0x1U)
+#define PMIC_TPS6594X_BUCK5_OV_INT_SHIFT            (0x0U)
 
 /*!
  * \brief  PMIC Mask Register Bit positions
  */
-/*! PMIC_MASK_MODERATE_ERR Register Bit Position */
-#define PMIC_MASK_MODERATE_ERR_NPWRON_LONG_MASK_SHIFT (0x5U)
+/*! PMIC MASK_MODERATE_ERR Register Bit Position */
+#define PMIC_TPS6594X_NPWRON_LONG_MASK_SHIFT        (0x5U)
 
-/*! PMIC_STARTUP Register Bit Position */
-#define PMIC_MASK_STARTUP_NPWRON_START_MASK_SHIFT     (0x0U)
+/*! PMIC MASK_STARTUP Register Bit Position, shortened for MISRA-C */
+#define PMIC_TPS6594X_NPWRON_STRT_MASK_SHIFT       (0x0U)
 
-/*! PMIC_MASK_GPIO9_11 Register Bit Positions */
-#define PMIC_MASK_GPIO9_11_GPIO10_RISE_MASK_SHIFT     (0x4U)
-#define PMIC_MASK_GPIO9_11_GPIO9_RISE_MASK_SHIFT      (0x3U)
-#define PMIC_MASK_GPIO9_11_GPIO10_FALL_MASK_SHIFT     (0x1U)
-#define PMIC_MASK_GPIO9_11_GPIO9_FALL_MASK_SHIFT      (0x0U)
-#define PMIC_MASK_GPIO9_11_GPIO11_FALL_MASK_SHIFT     (0x2U)
-#define PMIC_MASK_GPIO9_11_GPIO11_RISE_MASK_SHIFT     (0x5U)
+/*! PMIC MASK_GPIO9_11 Register Bit Positions */
+#define PMIC_TPS6594X_GPIO10_RISE_MASK_SHIFT        (0x4U)
+#define PMIC_TPS6594X_GPIO9_RISE_MASK_SHIFT         (0x3U)
+#define PMIC_TPS6594X_GPIO10_FALL_MASK_SHIFT        (0x1U)
+#define PMIC_TPS6594X_GPIO9_FALL_MASK_SHIFT         (0x0U)
+#define PMIC_TPS6594X_GPIO11_FALL_MASK_SHIFT        (0x2U)
+#define PMIC_TPS6594X_GPIO11_RISE_MASK_SHIFT        (0x5U)
 
-/*! PMIC_MASK_LDO3_4 Register Bit Position */
-#define PMIC_MASK_LDO3_4_LDO4_ILIM_MASK_SHIFT         (0x7U)
-#define PMIC_MASK_LDO3_4_LDO4_UV_MASK_SHIFT           (0x5U)
-#define PMIC_MASK_LDO3_4_LDO4_OV_MASK_SHIFT           (0x4U)
-#define PMIC_MASK_LDO3_4_LDO3_ILIM_MASK_SHIFT         (0x3U)
-#define PMIC_MASK_LDO3_4_LDO3_UV_MASK_SHIFT           (0x1U)
-#define PMIC_MASK_LDO3_4_LDO3_OV_MASK_SHIFT           (0x0U)
+/*! PMIC_TPS6594X_MASK_LDO3_4 Register Bit Position */
+#define PMIC_TPS6594X_LDO4_ILIM_MASK_SHIFT          (0x7U)
+#define PMIC_TPS6594X_LDO4_UV_MASK_SHIFT            (0x5U)
+#define PMIC_TPS6594X_LDO4_OV_MASK_SHIFT            (0x4U)
+#define PMIC_TPS6594X_LDO3_ILIM_MASK_SHIFT          (0x3U)
+#define PMIC_TPS6594X_LDO3_UV_MASK_SHIFT            (0x1U)
+#define PMIC_TPS6594X_LDO3_OV_MASK_SHIFT            (0x0U)
 
-/*! PMIC_MASK_LDO1_2 Register Bit Position */
-#define PMIC_MASK_LDO1_2_LDO2_ILIM_MASK_SHIFT         (0x7U)
-#define PMIC_MASK_LDO1_2_LDO2_UV_MASK_SHIFT           (0x5U)
-#define PMIC_MASK_LDO1_2_LDO2_OV_MASK_SHIFT           (0x4U)
-#define PMIC_MASK_LDO1_2_LDO1_ILIM_MASK_SHIFT         (0x3U)
-#define PMIC_MASK_LDO1_2_LDO1_UV_MASK_SHIFT           (0x1U)
-#define PMIC_MASK_LDO1_2_LDO1_OV_MASK_SHIFT           (0x0U)
+/*! PMIC_TPS6594X_MASK_LDO1_2 Register Bit Position */
+#define PMIC_TPS6594X_LDO2_ILIM_MASK_SHIFT          (0x7U)
+#define PMIC_TPS6594X_LDO2_UV_MASK_SHIFT            (0x5U)
+#define PMIC_TPS6594X_LDO2_OV_MASK_SHIFT            (0x4U)
+#define PMIC_TPS6594X_LDO1_ILIM_MASK_SHIFT          (0x3U)
+#define PMIC_TPS6594X_LDO1_UV_MASK_SHIFT            (0x1U)
+#define PMIC_TPS6594X_LDO1_OV_MASK_SHIFT            (0x0U)
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */

@@ -56,12 +56,12 @@ static Pmic_powerRsrcRegCfg_t gTps6594x_pwrRsrcRegCfg[] =
         PMIC_TPS6594X_VCCA_OV_INT,
         PMIC_STAT_VMON_REGADDR,
         PMIC_RAIL_SEL_3_REGADDR,
-        PMIC_RAIL_SEL_3_VCCA_GRP_SEL_SHIFT,
+        PMIC_VCCA_GRP_SEL_SHIFT,
         PMIC_INVALID_REGADDR,
         PMIC_INVALID_BIT_SHIFT,
         PMIC_INVALID_BIT_SHIFT,
-        PMIC_STAT_VMON_VCCA_UV_STAT_SHIFT,
-        PMIC_STAT_VMON_VCCA_OV_STAT_SHIFT
+        PMIC_VCCA_UV_STAT_SHIFT,
+        PMIC_VCCA_OV_STAT_SHIFT
     },
     {
         PMIC_BUCK1_CTRL_REGADDR,
@@ -72,12 +72,12 @@ static Pmic_powerRsrcRegCfg_t gTps6594x_pwrRsrcRegCfg[] =
         PMIC_TPS6594X_BUCK1_OV_INT,
         PMIC_STAT_BUCK1_2_REGADDR,
         PMIC_RAIL_SEL_1_REGADDR,
-        PMIC_RAIL_SEL_1_BUCK1_GRP_SEL_SHIFT,
+        PMIC_BUCK1_GRP_SEL_SHIFT,
         PMIC_INVALID_REGADDR,
         PMIC_INVALID_BIT_SHIFT,
-        PMIC_STAT_BUCKX_Y_BUCK1_3_ILIM_STAT_SHIFT,
-        PMIC_STAT_BUCKX_Y_BUCK1_3_UV_STAT_SHIFT,
-        PMIC_STAT_BUCKX_Y_BUCK1_3_OV_STAT_SHIFT
+        PMIC_BUCK1_3_ILIM_STAT_SHIFT,
+        PMIC_BUCK1_3_UV_STAT_SHIFT,
+        PMIC_BUCK1_3_OV_STAT_SHIFT
     },
     {
         PMIC_BUCK2_CTRL_REGADDR,
@@ -88,12 +88,12 @@ static Pmic_powerRsrcRegCfg_t gTps6594x_pwrRsrcRegCfg[] =
         PMIC_TPS6594X_BUCK2_OV_INT,
         PMIC_RAIL_SEL_1_REGADDR,
         PMIC_STAT_BUCK1_2_REGADDR,
-        PMIC_RAIL_SEL_1_BUCK2_GRP_SEL_SHIFT,
+        PMIC_BUCK2_GRP_SEL_SHIFT,
         PMIC_INVALID_REGADDR,
         PMIC_INVALID_BIT_SHIFT,
-        PMIC_STAT_BUCKX_Y_BUCK2_4_ILIM_STAT_SHIFT,
-        PMIC_STAT_BUCKX_Y_BUCK2_4_UV_STAT_SHIFT,
-        PMIC_STAT_BUCKX_Y_BUCK2_4_OV_STAT_SHIFT
+        PMIC_BUCK2_4_ILIM_STAT_SHIFT,
+        PMIC_BUCK2_4_UV_STAT_SHIFT,
+        PMIC_BUCK2_4_OV_STAT_SHIFT
     },
     {
         PMIC_BUCK3_CTRL_REGADDR,
@@ -104,12 +104,12 @@ static Pmic_powerRsrcRegCfg_t gTps6594x_pwrRsrcRegCfg[] =
         PMIC_TPS6594X_BUCK3_OV_INT,
         PMIC_STAT_BUCK3_4_REGADDR,
         PMIC_RAIL_SEL_1_REGADDR,
-        PMIC_RAIL_SEL_1_BUCK3_GRP_SEL_SHIFT,
+        PMIC_BUCK3_GRP_SEL_SHIFT,
         PMIC_INVALID_REGADDR,
         PMIC_INVALID_BIT_SHIFT,
-        PMIC_STAT_BUCKX_Y_BUCK1_3_ILIM_STAT_SHIFT,
-        PMIC_STAT_BUCKX_Y_BUCK1_3_UV_STAT_SHIFT,
-        PMIC_STAT_BUCKX_Y_BUCK1_3_OV_STAT_SHIFT
+        PMIC_BUCK1_3_ILIM_STAT_SHIFT,
+        PMIC_BUCK1_3_UV_STAT_SHIFT,
+        PMIC_BUCK1_3_OV_STAT_SHIFT
     },
     {
         PMIC_BUCK4_CTRL_REGADDR,
@@ -120,12 +120,12 @@ static Pmic_powerRsrcRegCfg_t gTps6594x_pwrRsrcRegCfg[] =
         PMIC_TPS6594X_BUCK4_OV_INT,
         PMIC_STAT_BUCK3_4_REGADDR,
         PMIC_RAIL_SEL_1_REGADDR,
-        PMIC_RAIL_SEL_1_BUCK4_GRP_SEL_SHIFT,
+        PMIC_BUCK4_GRP_SEL_SHIFT,
         PMIC_INVALID_REGADDR,
         PMIC_INVALID_BIT_SHIFT,
-        PMIC_STAT_BUCKX_Y_BUCK2_4_ILIM_STAT_SHIFT,
-        PMIC_STAT_BUCKX_Y_BUCK2_4_UV_STAT_SHIFT,
-        PMIC_STAT_BUCKX_Y_BUCK2_4_OV_STAT_SHIFT
+        PMIC_BUCK2_4_ILIM_STAT_SHIFT,
+        PMIC_BUCK2_4_UV_STAT_SHIFT,
+        PMIC_BUCK2_4_OV_STAT_SHIFT
     },
     {
         PMIC_BUCK5_CTRL_REGADDR,
@@ -136,12 +136,12 @@ static Pmic_powerRsrcRegCfg_t gTps6594x_pwrRsrcRegCfg[] =
         PMIC_TPS6594X_BUCK5_OV_INT,
         PMIC_STAT_BUCK5_REGADDR,
         PMIC_RAIL_SEL_2_REGADDR,
-        PMIC_RAIL_SEL_2_BUCK5_GRP_SEL_SHIFT,
+        PMIC_BUCK5_GRP_SEL_SHIFT,
         PMIC_INVALID_REGADDR,
         PMIC_INVALID_BIT_SHIFT,
-        PMIC_STAT_BUCK5_BUCK5_ILIM_STAT_SHIFT,
-        PMIC_STAT_BUCK5_BUCK5_UV_STAT_SHIFT,
-        PMIC_STAT_BUCK5_BUCK5_OV_STAT_SHIFT
+        PMIC_BUCK5_ILIM_STAT_SHIFT,
+        PMIC_BUCK5_UV_STAT_SHIFT,
+        PMIC_BUCK5_OV_STAT_SHIFT
     },
     {
         PMIC_LDO1_CTRL_REGADDR,
@@ -152,12 +152,12 @@ static Pmic_powerRsrcRegCfg_t gTps6594x_pwrRsrcRegCfg[] =
         PMIC_TPS6594X_LDO1_OV_INT,
         PMIC_STAT_LDO1_2_REGADDR,
         PMIC_RAIL_SEL_2_REGADDR,
-        PMIC_RAIL_SEL_2_LDO1_GRP_SEL_SHIFT,
+        PMIC_LDO1_GRP_SEL_SHIFT,
         PMIC_LDO_RV_TIMEOUT_REG_1_REGADDR,
-        PMIC_LDO_RV_TIMEOUT_REG_LDO1_3_RV_TIMEOUT_SHIFT,
-        PMIC_STAT_LDOX_Y_LDO1_3_ILIM_STAT_SHIFT,
-        PMIC_STAT_LDOX_Y_LDO1_3_UV_STAT_SHIFT,
-        PMIC_STAT_LDOX_Y_LDO1_3_OV_STAT_SHIFT
+        PMIC_LDO1_3_RV_TIMEOUT_SHIFT,
+        PMIC_LDO1_3_ILIM_STAT_SHIFT,
+        PMIC_LDO1_3_UV_STAT_SHIFT,
+        PMIC_LDO1_3_OV_STAT_SHIFT
     },
     {
         PMIC_LDO2_CTRL_REGADDR,
@@ -168,12 +168,12 @@ static Pmic_powerRsrcRegCfg_t gTps6594x_pwrRsrcRegCfg[] =
         PMIC_TPS6594X_LDO2_OV_INT,
         PMIC_STAT_LDO1_2_REGADDR,
         PMIC_RAIL_SEL_2_REGADDR,
-        PMIC_RAIL_SEL_2_LDO2_GRP_SEL_SHIFT,
+        PMIC_LDO2_GRP_SEL_SHIFT,
         PMIC_LDO_RV_TIMEOUT_REG_1_REGADDR,
-        PMIC_LDO_RV_TIMEOUT_REG_LDO2_4_RV_TIMEOUT_SHIFT,
-        PMIC_STAT_LDOX_Y_LDO2_4_ILIM_STAT_SHIFT,
-        PMIC_STAT_LDOX_Y_LDO2_4_UV_STAT_SHIFT,
-        PMIC_STAT_LDOX_Y_LDO2_4_OV_STAT_SHIFT
+        PMIC_LDO2_4_RV_TIMEOUT_SHIFT,
+        PMIC_LDO2_4_ILIM_STAT_SHIFT,
+        PMIC_LDO2_4_UV_STAT_SHIFT,
+        PMIC_LDO2_4_OV_STAT_SHIFT
     },
     {
         PMIC_LDO3_CTRL_REGADDR,
@@ -184,12 +184,12 @@ static Pmic_powerRsrcRegCfg_t gTps6594x_pwrRsrcRegCfg[] =
         PMIC_TPS6594X_LDO3_OV_INT,
         PMIC_STAT_LDO3_4_REGADDR,
         PMIC_RAIL_SEL_2_REGADDR,
-        PMIC_RAIL_SEL_2_LDO3_GRP_SEL_SHIFT,
+        PMIC_LDO3_GRP_SEL_SHIFT,
         PMIC_LDO_RV_TIMEOUT_REG_2_REGADDR,
-        PMIC_LDO_RV_TIMEOUT_REG_LDO1_3_RV_TIMEOUT_SHIFT,
-        PMIC_STAT_LDOX_Y_LDO1_3_ILIM_STAT_SHIFT,
-        PMIC_STAT_LDOX_Y_LDO1_3_UV_STAT_SHIFT,
-        PMIC_STAT_LDOX_Y_LDO1_3_OV_STAT_SHIFT
+        PMIC_LDO1_3_RV_TIMEOUT_SHIFT,
+        PMIC_LDO1_3_ILIM_STAT_SHIFT,
+        PMIC_LDO1_3_UV_STAT_SHIFT,
+        PMIC_LDO1_3_OV_STAT_SHIFT
     },
     {
         PMIC_LDO4_CTRL_REGADDR,
@@ -200,12 +200,12 @@ static Pmic_powerRsrcRegCfg_t gTps6594x_pwrRsrcRegCfg[] =
         PMIC_TPS6594X_LDO4_OV_INT,
         PMIC_STAT_LDO3_4_REGADDR,
         PMIC_RAIL_SEL_3_REGADDR,
-        PMIC_RAIL_SEL_3_LDO4_GRP_SEL_SHIFT,
+        PMIC_LDO4_GRP_SEL_SHIFT,
         PMIC_LDO_RV_TIMEOUT_REG_2_REGADDR,
-        PMIC_LDO_RV_TIMEOUT_REG_LDO2_4_RV_TIMEOUT_SHIFT,
-        PMIC_STAT_LDOX_Y_LDO2_4_ILIM_STAT_SHIFT,
-        PMIC_STAT_LDOX_Y_LDO2_4_UV_STAT_SHIFT,
-        PMIC_STAT_LDOX_Y_LDO2_4_OV_STAT_SHIFT
+        PMIC_LDO2_4_RV_TIMEOUT_SHIFT,
+        PMIC_LDO2_4_ILIM_STAT_SHIFT,
+        PMIC_LDO2_4_UV_STAT_SHIFT,
+        PMIC_LDO2_4_OV_STAT_SHIFT
     },
 
 };
@@ -214,55 +214,55 @@ static Pmic_powerPgoodSrcRegCfg_t tps6594x_pgoodSrcRegCfg[] =
 {
     {
         PMIC_PGOOD_SEL_4_REGADDR,
-        PMIC_PGOOD_SEL_4_PGOOD_SEL_VCCA_SHIFT,
+        PMIC_PGOOD_SEL_VCCA_SHIFT,
     },
     {
         PMIC_PGOOD_SEL_1_REGADDR,
-        PMIC_PGOOD_SEL_1_PGOOD_SEL_BUCK1_SHIFT,
+        PMIC_PGOOD_SEL_BUCK1_SHIFT,
     },
     {
         PMIC_PGOOD_SEL_1_REGADDR,
-        PMIC_PGOOD_SEL_1_PGOOD_SEL_BUCK2_SHIFT,
+        PMIC_PGOOD_SEL_BUCK2_SHIFT,
     },
     {
         PMIC_PGOOD_SEL_1_REGADDR,
-        PMIC_PGOOD_SEL_1_PGOOD_SEL_BUCK3_SHIFT,
+        PMIC_PGOOD_SEL_BUCK3_SHIFT,
     },
     {
         PMIC_PGOOD_SEL_1_REGADDR,
-        PMIC_PGOOD_SEL_1_PGOOD_SEL_BUCK4_SHIFT,
+        PMIC_PGOOD_SEL_BUCK4_SHIFT,
     },
     {
         PMIC_PGOOD_SEL_2_REGADDR,
-        PMIC_PGOOD_SEL_2_PGOOD_SEL_BUCK5_SHIFT,
+        PMIC_PGOOD_SEL_BUCK5_SHIFT,
     },
     {
         PMIC_PGOOD_SEL_4_REGADDR,
-        PMIC_PGOOD_SEL_4_PGOOD_SEL_NRSTOUT_SHIFT,
+        PMIC_PGOOD_SEL_NRSTOUT_SHIFT,
     },
     {
         PMIC_PGOOD_SEL_4_REGADDR,
-        PMIC_PGOOD_SEL_4_PGOOD_SEL_NRSTOUT_SOC_SHIFT,
+        PMIC_PGOOD_SEL_NRSTOUT_SOC_SHIFT,
     },
     {
         PMIC_PGOOD_SEL_4_REGADDR,
-        PMIC_PGOOD_SEL_4_PGOOD_SEL_TDIE_WARN_SHIFT,
+        PMIC_PGOOD_SEL_TDIE_WARN_SHIFT,
     },
     {
         PMIC_PGOOD_SEL_3_REGADDR,
-        PMIC_PGOOD_SEL_3_PGOOD_SEL_LDO1_SHIFT,
+        PMIC_PGOOD_SEL_LDO1_SHIFT,
     },
     {
         PMIC_PGOOD_SEL_3_REGADDR,
-        PMIC_PGOOD_SEL_3_PGOOD_SEL_LDO2_SHIFT,
+        PMIC_PGOOD_SEL_LDO2_SHIFT,
     },
     {
         PMIC_PGOOD_SEL_3_REGADDR,
-        PMIC_PGOOD_SEL_3_PGOOD_SEL_LDO3_SHIFT,
+        PMIC_PGOOD_SEL_LDO3_SHIFT,
     },
     {
         PMIC_PGOOD_SEL_3_REGADDR,
-        PMIC_PGOOD_SEL_3_PGOOD_SEL_LDO4_SHIFT,
+        PMIC_PGOOD_SEL_LDO4_SHIFT,
     },
 };
 
@@ -526,7 +526,7 @@ static int32_t Pmic_powerLdoRtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle, bool l
 
                 /* Set ldortcEnable */
                 Pmic_setBitField(
-                    &regData, PMIC_LDORTC_CTRL_LDORTC_DIS_SHIFT, PMIC_LDORTC_CTRL_LDORTC_DIS_MASK, ldortcEnableVal);
+                    &regData, PMIC_LDORTC_DIS_SHIFT, PMIC_LDORTC_DIS_MASK, ldortcEnableVal);
                 status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_LDORTC_CTRL_REGADDR, regData);
             }
 
@@ -555,8 +555,7 @@ static int32_t Pmic_powerGetLdoRtcEnable(Pmic_CoreHandle_t *pPmicCoreHandle, boo
             if (PMIC_ST_SUCCESS == status)
             {
                 /* Get ldortcEnable */
-                if (Pmic_getBitField(regData, PMIC_LDORTC_CTRL_LDORTC_DIS_SHIFT, PMIC_LDORTC_CTRL_LDORTC_DIS_MASK) !=
-                    0U)
+                if (Pmic_getBitField(regData, PMIC_LDORTC_DIS_SHIFT, PMIC_LDORTC_DIS_MASK) != 0U)
                 {
                     *pLdortcEnable = (bool)true;
                 }
@@ -621,8 +620,8 @@ int32_t Pmic_powerTPS6594xValidateVoltageLevel(uint8_t pwrRsrcType, uint16_t pwr
 
     if (PMIC_TPS6594X_POWER_RESOURCE_TYPE_BUCK == pwrRsrcType)
     {
-        if ((voltage_mV < PMIC_TPS6594X_REGULATOR_BUCK_MIN_VOLTAGE) ||
-            (voltage_mV > PMIC_TPS6594X_REGULATOR_BUCK_MAX_VOLTAGE))
+        if ((voltage_mV < PMIC_TPS6594X_BUCK_MIN_VOLTAGE) ||
+            (voltage_mV > PMIC_TPS6594X_BUCK_MAX_VOLTAGE))
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -632,14 +631,14 @@ int32_t Pmic_powerTPS6594xValidateVoltageLevel(uint8_t pwrRsrcType, uint16_t pwr
         /* Else case for LDO pwrRsrcType */
         if (PMIC_TPS6594X_REGULATOR_LDO4 == pwrRsrc)
         {
-            ldoMinVoltageValue = PMIC_TPS6594X_POWER_LDO4_MIN_VOLTAGE;
+            ldoMinVoltageValue = PMIC_TPS6594X_LDO4_MIN_VOLTAGE;
         }
         else
         {
-            ldoMinVoltageValue = PMIC_TPS6594X_POWER_LDO1_2_3_MIN_VOLTAGE;
+            ldoMinVoltageValue = PMIC_TPS6594X_LDO1_2_3_MIN_VOLTAGE;
         }
 
-        if ((voltage_mV < ldoMinVoltageValue) || (voltage_mV > PMIC_TPS6594X_POWER_LDO_MAX_VOLTAGE))
+        if ((voltage_mV < ldoMinVoltageValue) || (voltage_mV > PMIC_TPS6594X_LDO_MAX_VOLTAGE))
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }

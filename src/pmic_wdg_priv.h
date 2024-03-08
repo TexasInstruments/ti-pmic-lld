@@ -72,120 +72,120 @@ extern "C"
 /*!
  * \brief WD_QUESTION_ANSW_CNT Register bit shift values
  */
-#define PMIC_WD_QUESTION_ANSW_CNT_WD_ANSW_CNT_SHIFT     (0x04U)
-#define PMIC_WD_QUESTION_ANSW_CNT_WD_QUESTION_SHIFT     (0x00U)
+#define PMIC_WD_ANSW_CNT_SHIFT     (0x04U)
+#define PMIC_WD_QUESTION_SHIFT     (0x00U)
 
 /*!
  * \brief WD_WIN1_CFG Register bit shift values
  */
-#define PMIC_WD_WIN1_CFG_WD_WIN1_SHIFT                  (0x00U)
+#define PMIC_WD_WIN1_SHIFT            (0x00U)
 
 /*!
  * \brief WD_WIN2_CFG Register bit shift values
  */
-#define PMIC_WD_WIN2_CFG_WD_WIN2_SHIFT                  (0x00U)
+#define PMIC_WD_WIN2_SHIFT            (0x00U)
 
 /*!
  * \brief WD_MODE_REG Register bit shift values
  */
-#define PMIC_WD_MODE_REG_WD_RETURN_LONGWIN_SHIFT        (0x00U)
-#define PMIC_WD_MODE_REG_WD_MODE_SELECT_SHIFT           (0x01U)
-#define PMIC_WD_MODE_REG_WD_PWRHOLD_SHIFT               (0x02U)
-#define PMIC_WD_MODE_REG_WD_CNT_SEL_SHIFT               (0x07U)
-#define PMIC_WD_MODE_REG_WD_ENDRV_SEL_SHIFT             (0x06U)
+#define PMIC_WD_RETURN_LONGWIN_SHIFT        (0x00U)
+#define PMIC_WD_MODE_SELECT_SHIFT           (0x01U)
+#define PMIC_WD_PWRHOLD_SHIFT               (0x02U)
+#define PMIC_WD_CNT_SEL_SHIFT               (0x07U)
+#define PMIC_WD_ENDRV_SEL_SHIFT             (0x06U)
 
 /*!
  * \brief WD_QA_CFG Register bit shift values
  */
-#define PMIC_WD_QA_CFG_WD_QUESTION_SEED_SHIFT           (0x00U)
-#define PMIC_WD_QA_CFG_WD_QA_LFSR_SHIFT                 (0x04U)
-#define PMIC_WD_QA_CFG_WD_QA_FDBK_SHIFT                 (0x06U)
+#define PMIC_WD_QUESTION_SEED_SHIFT           (0x00U)
+#define PMIC_WD_QA_LFSR_SHIFT                 (0x04U)
+#define PMIC_WD_QA_FDBK_SHIFT                 (0x06U)
 
 /*!
  * \brief WD_ERR_STATUS Register bit shift values
  */
-#define PMIC_WD_ERR_STATUS_WD_LONGWIN_TIMEOUT_INT_SHIFT (0x00U)
-#define PMIC_WD_ERR_STATUS_WD_TIMEOUT_SHIFT             (0x01U)
-#define PMIC_WD_ERR_STATUS_WD_TRIG_EARLY_SHIFT          (0x02U)
-#define PMIC_WD_ERR_STATUS_WD_ANSW_EARLY_SHIFT          (0x03U)
-#define PMIC_WD_ERR_STATUS_WD_SEQ_ERR_SHIFT             (0x04U)
-#define PMIC_WD_ERR_STATUS_WD_ANSW_ERR_SHIFT            (0x05U)
-#define PMIC_WD_ERR_STATUS_WD_FAIL_INT_SHIFT            (0x06U)
-#define PMIC_WD_ERR_STATUS_WD_RST_INT_SHIFT             (0x07U)
+#define PMIC_WD_LONGWIN_TIMEOUT_INT_SHIFT (0x00U)
+#define PMIC_WD_TIMEOUT_SHIFT             (0x01U)
+#define PMIC_WD_TRIG_EARLY_SHIFT          (0x02U)
+#define PMIC_WD_ANSW_EARLY_SHIFT          (0x03U)
+#define PMIC_WD_SEQ_ERR_SHIFT             (0x04U)
+#define PMIC_WD_ANSW_ERR_SHIFT            (0x05U)
+#define PMIC_WD_FAIL_INT_SHIFT            (0x06U)
+#define PMIC_WD_RST_INT_SHIFT             (0x07U)
 
 /*!
  * \brief WD_THR_CFG Register bit shift values
  */
-#define PMIC_WD_THR_CFG_WD_RST_TH_SHIFT                 (0x00U)
-#define PMIC_WD_THR_CFG_WD_FAIL_TH_SHIFT                (0x03U)
-#define PMIC_WD_THR_CFG_WD_EN_SHIFT                     (0x06U)
-#define PMIC_WD_THR_CFG_WD_RST_EN_SHIFT                 (0x07U)
+#define PMIC_WD_RST_TH_SHIFT                 (0x00U)
+#define PMIC_WD_FAIL_TH_SHIFT                (0x03U)
+#define PMIC_WD_EN_SHIFT                     (0x06U)
+#define PMIC_WD_RST_EN_SHIFT                 (0x07U)
 
 /*!
  * \brief WD_FAIL_CNT_REG Register bit shift values
  */
-#define PMIC_WD_FAIL_CNT_REG_WD_FAIL_CNT_SHIFT          (0x00U)
-#define PMIC_WD_FAIL_CNT_REG_WD_FIRST_OK_SHIFT          (0x05U)
-#define PMIC_WD_FAIL_CNT_REG_WD_BAD_EVENT_SHIFT         (0x06U)
+#define PMIC_WD_FAIL_CNT_SHIFT          (0x00U)
+#define PMIC_WD_FIRST_OK_SHIFT          (0x05U)
+#define PMIC_WD_BAD_EVENT_SHIFT         (0x06U)
 
 /*!
  * \brief WD_QUESTION_ANSW_CNT Register bit mask values
  */
-#define PMIC_WD_QUESTION_ANSW_CNT_WD_ANSW_CNT_MASK      (0x3U << PMIC_WD_QUESTION_ANSW_CNT_WD_ANSW_CNT_SHIFT)
-#define PMIC_WD_QUESTION_ANSW_CNT_WD_QUESTION_MASK      (0xFU << PMIC_WD_QUESTION_ANSW_CNT_WD_QUESTION_SHIFT)
+#define PMIC_WD_ANSW_CNT_MASK      (0x3U << PMIC_WD_ANSW_CNT_SHIFT)
+#define PMIC_WD_QUESTION_MASK      (0xFU << PMIC_WD_QUESTION_SHIFT)
 
 /*!
  * \brief WD_WIN1_CFG Register bit mask values
  */
-#define PMIC_WD_WIN1_CFG_WD_WIN1_MASK                   (0x7FU << PMIC_WD_WIN1_CFG_WD_WIN1_SHIFT)
+#define PMIC_WD_WIN1_MASK                   (0x7FU << PMIC_WD_WIN1_SHIFT)
 
 /*!
  * \brief WD_WIN2_CFG Register bit mask values
  */
-#define PMIC_WD_WIN2_CFG_WD_WIN2_MASK                   (0x7FU << PMIC_WD_WIN2_CFG_WD_WIN2_SHIFT)
+#define PMIC_WD_WIN2_MASK                   (0x7FU << PMIC_WD_WIN2_SHIFT)
 
 /*!
  * \brief WD_MODE_REG Register bit mask values
  */
-#define PMIC_WD_MODE_REG_WD_RETURN_LONGWIN_MASK         (0x1U << PMIC_WD_MODE_REG_WD_RETURN_LONGWIN_SHIFT)
-#define PMIC_WD_MODE_REG_WD_MODE_SELECT_MASK            (0x1U << PMIC_WD_MODE_REG_WD_MODE_SELECT_SHIFT)
-#define PMIC_WD_MODE_REG_WD_PWRHOLD_MASK                (0x1U << PMIC_WD_MODE_REG_WD_PWRHOLD_SHIFT)
-#define PMIC_WD_MODE_REG_WD_CNT_SEL_MASK                (0x1U << PMIC_WD_MODE_REG_WD_CNT_SEL_SHIFT)
-#define PMIC_WD_MODE_REG_WD_ENDRV_SEL_MASK              (0x1U << PMIC_WD_MODE_REG_WD_ENDRV_SEL_SHIFT)
+#define PMIC_WD_RETURN_LONGWIN_MASK         (0x1U << PMIC_WD_RETURN_LONGWIN_SHIFT)
+#define PMIC_WD_MODE_SELECT_MASK            (0x1U << PMIC_WD_MODE_SELECT_SHIFT)
+#define PMIC_WD_PWRHOLD_MASK                (0x1U << PMIC_WD_PWRHOLD_SHIFT)
+#define PMIC_WD_CNT_SEL_MASK                (0x1U << PMIC_WD_CNT_SEL_SHIFT)
+#define PMIC_WD_ENDRV_SEL_MASK              (0x1U << PMIC_WD_ENDRV_SEL_SHIFT)
 
 /*!
  * \brief WD_QA_CFG Register bit mask values
  */
-#define PMIC_WD_QA_CFG_WD_QUESTION_SEED_MASK            (0xFU << PMIC_WD_QA_CFG_WD_QUESTION_SEED_SHIFT)
-#define PMIC_WD_QA_CFG_WD_QA_LFSR_MASK                  (0x3U << PMIC_WD_QA_CFG_WD_QA_LFSR_SHIFT)
-#define PMIC_WD_QA_CFG_WD_QA_FDBK_MASK                  (0x3U << PMIC_WD_QA_CFG_WD_QA_FDBK_SHIFT)
+#define PMIC_WD_QUESTION_SEED_MASK            (0xFU << PMIC_WD_QUESTION_SEED_SHIFT)
+#define PMIC_WD_QA_LFSR_MASK                  (0x3U << PMIC_WD_QA_LFSR_SHIFT)
+#define PMIC_WD_QA_FDBK_MASK                  (0x3U << PMIC_WD_QA_FDBK_SHIFT)
 
 /*!
  * \brief WD_ERR_STATUS Register bit mask values
  */
-#define PMIC_WD_ERR_STATUS_WD_LONGWIN_TIMEOUT_INT_MASK  (0x1U << PMIC_WD_ERR_STATUS_WD_LONGWIN_TIMEOUT_INT_SHIFT)
-#define PMIC_WD_ERR_STATUS_WD_TIMEOUT_MASK              (0x1U << PMIC_WD_ERR_STATUS_WD_TIMEOUT_SHIFT)
-#define PMIC_WD_ERR_STATUS_WD_TRIG_EARLY_MASK           (0x1U << PMIC_WD_ERR_STATUS_WD_TRIG_EARLY_SHIFT)
-#define PMIC_WD_ERR_STATUS_WD_ANSW_EARLY_MASK           (0x1U << PMIC_WD_ERR_STATUS_WD_ANSW_EARLY_SHIFT)
-#define PMIC_WD_ERR_STATUS_WD_SEQ_ERR_MASK              (0x1U << PMIC_WD_ERR_STATUS_WD_SEQ_ERR_SHIFT)
-#define PMIC_WD_ERR_STATUS_WD_ANSW_ERR_MASK             (0x1U << PMIC_WD_ERR_STATUS_WD_ANSW_ERR_SHIFT)
-#define PMIC_WD_ERR_STATUS_WD_FAIL_INT_MASK             (0x1U << PMIC_WD_ERR_STATUS_WD_FAIL_INT_SHIFT)
-#define PMIC_WD_ERR_STATUS_WD_RST_INT_MASK              (0x1U << PMIC_WD_ERR_STATUS_WD_RST_INT_SHIFT)
+#define PMIC_WD_LONGWIN_TIMEOUT_INT_MASK  (0x1U << PMIC_WD_LONGWIN_TIMEOUT_INT_SHIFT)
+#define PMIC_WD_TIMEOUT_MASK              (0x1U << PMIC_WD_TIMEOUT_SHIFT)
+#define PMIC_WD_TRIG_EARLY_MASK           (0x1U << PMIC_WD_TRIG_EARLY_SHIFT)
+#define PMIC_WD_ANSW_EARLY_MASK           (0x1U << PMIC_WD_ANSW_EARLY_SHIFT)
+#define PMIC_WD_SEQ_ERR_MASK              (0x1U << PMIC_WD_SEQ_ERR_SHIFT)
+#define PMIC_WD_ANSW_ERR_MASK             (0x1U << PMIC_WD_ANSW_ERR_SHIFT)
+#define PMIC_WD_FAIL_INT_MASK             (0x1U << PMIC_WD_FAIL_INT_SHIFT)
+#define PMIC_WD_RST_INT_MASK              (0x1U << PMIC_WD_RST_INT_SHIFT)
 
 /*!
  * \brief WD_THR_CFG Register bit mask values
  */
-#define PMIC_WD_THR_CFG_WD_RST_TH_MASK                  (0x7U << PMIC_WD_THR_CFG_WD_RST_TH_SHIFT)
-#define PMIC_WD_THR_CFG_WD_FAIL_TH_MASK                 (0x7U << PMIC_WD_THR_CFG_WD_FAIL_TH_SHIFT)
-#define PMIC_WD_THR_CFG_WD_EN_MASK                      (0x1U << PMIC_WD_THR_CFG_WD_EN_SHIFT)
-#define PMIC_WD_THR_CFG_WD_RST_EN_MASK                  (0x1U << PMIC_WD_THR_CFG_WD_RST_EN_SHIFT)
+#define PMIC_WD_RST_TH_MASK                  (0x7U << PMIC_WD_RST_TH_SHIFT)
+#define PMIC_WD_FAIL_TH_MASK                 (0x7U << PMIC_WD_FAIL_TH_SHIFT)
+#define PMIC_WD_EN_MASK                      (0x1U << PMIC_WD_EN_SHIFT)
+#define PMIC_WD_RST_EN_MASK                  (0x1U << PMIC_WD_RST_EN_SHIFT)
 
 /*!
  * \brief WD_FAIL_CNT_REG Register bit mask values
  */
-#define PMIC_WD_FAIL_CNT_REG_WD_FAIL_CNT_MASK           (0xFU << PMIC_WD_FAIL_CNT_REG_WD_FAIL_CNT_SHIFT)
-#define PMIC_WD_FAIL_CNT_REG_WD_FIRST_OK_MASK           (0x1U << PMIC_WD_FAIL_CNT_REG_WD_FIRST_OK_SHIFT)
-#define PMIC_WD_FAIL_CNT_REG_WD_BAD_EVENT_MASK          (0x1U << PMIC_WD_FAIL_CNT_REG_WD_BAD_EVENT_SHIFT)
+#define PMIC_WD_FAIL_CNT_MASK           (0xFU << PMIC_WD_FAIL_CNT_SHIFT)
+#define PMIC_WD_FIRST_OK_MASK           (0x1U << PMIC_WD_FIRST_OK_SHIFT)
+#define PMIC_WD_BAD_EVENT_MASK          (0x1U << PMIC_WD_BAD_EVENT_SHIFT)
 
 /*!
  * \brief  Watchdog Long Window Max, Min and Divisor macros

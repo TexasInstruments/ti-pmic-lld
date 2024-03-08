@@ -52,7 +52,7 @@
  *  \return     Success code if PMIC handle is valid, error code otherwise.
  *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
  */
-static int32_t Pmic_ADCParamCheck_pmicHandle(Pmic_CoreHandle_t *pPmicCoreHandle)
+static int32_t Pmic_ADCParamCheck_pmicHandle(const Pmic_CoreHandle_t *pPmicCoreHandle)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -63,7 +63,7 @@ static int32_t Pmic_ADCParamCheck_pmicHandle(Pmic_CoreHandle_t *pPmicCoreHandle)
     }
 
     // ADC subsystem disabled
-    if ((status == PMIC_ST_SUCCESS) && (pPmicCoreHandle->pPmic_SubSysInfo->adcEnable == false))
+    if ((status == PMIC_ST_SUCCESS) && (pPmicCoreHandle->pPmic_SubSysInfo->adcEnable == (bool)false))
     {
         status = PMIC_ST_ERR_INV_DEVICE;
     }
@@ -79,7 +79,7 @@ static int32_t Pmic_ADCParamCheck_pmicHandle(Pmic_CoreHandle_t *pPmicCoreHandle)
  *  \return     Success code if ADC CFG reference is valid, error code otherwise.
  *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
  */
-static int32_t Pmic_ADCParamCheck_pAdcCfg(Pmic_adcCfg_t *pAdcCfg)
+static int32_t Pmic_ADCParamCheck_pAdcCfg(const Pmic_adcCfg_t *pAdcCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -90,7 +90,7 @@ static int32_t Pmic_ADCParamCheck_pAdcCfg(Pmic_adcCfg_t *pAdcCfg)
     }
 
     // No validparams
-    if ((status == PMIC_ST_SUCCESS) && (pAdcCfg->validParams == 0))
+    if ((status == PMIC_ST_SUCCESS) && (pAdcCfg->validParams == 0U))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -101,11 +101,11 @@ static int32_t Pmic_ADCParamCheck_pAdcCfg(Pmic_adcCfg_t *pAdcCfg)
 int32_t Pmic_ADCSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_adcCfg_t adcCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    uint8_t adcCtrlRegData = 0;
+    uint8_t adcCtrlRegData = 0U;
 
     // Parameter check
     status = Pmic_ADCParamCheck_pmicHandle(pPmicCoreHandle);
-    if ((status == PMIC_ST_SUCCESS) && (adcCfg.validParams == 0))
+    if ((status == PMIC_ST_SUCCESS) && (adcCfg.validParams == 0U))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -125,19 +125,19 @@ int32_t Pmic_ADCSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_
         if (pmic_validParamCheck(adcCfg.validParams, PMIC_ADC_CFG_RDIV_EN_VALID))
         {
             Pmic_setBitField(
-                &adcCtrlRegData, PMIC_ADC_CTRL_RDIV_EN_SHIFT, PMIC_ADC_CTRL_RDIV_EN_MASK, (uint8_t)adcCfg.rDivEn);
+                &adcCtrlRegData, PMIC_ADC_RDIV_EN_SHIFT, PMIC_ADC_RDIV_EN_MASK, adcCfg.rDivEn);
         }
         if (pmic_validParamCheck(adcCfg.validParams, PMIC_ADC_CFG_THERMAL_SEL_VALID))
         {
             Pmic_setBitField(&adcCtrlRegData,
-                             PMIC_ADC_CTRL_THERMAL_SEL_SHIFT,
-                             PMIC_ADC_CTRL_THERMAL_SEL_MASK,
-                             (uint8_t)adcCfg.thermalSel);
+                             PMIC_ADC_THERMAL_SEL_SHIFT,
+                             PMIC_ADC_THERMAL_SEL_MASK,
+                             adcCfg.thermalSel);
         }
         if (pmic_validParamCheck(adcCfg.validParams, PMIC_ADC_CFG_CONT_CONV_VALID))
         {
             Pmic_setBitField(
-                &adcCtrlRegData, PMIC_ADC_CTRL_CONT_CONV_SHIFT, PMIC_ADC_CTRL_CONT_CONV_MASK, (uint8_t)adcCfg.contConv);
+                &adcCtrlRegData, PMIC_ADC_CONT_CONV_SHIFT, PMIC_ADC_CONT_CONV_MASK, adcCfg.contConv);
         }
     }
 
@@ -156,7 +156,7 @@ int32_t Pmic_ADCSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_
 int32_t Pmic_ADCGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_adcCfg_t *pAdcCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    uint8_t adcCtrlRegData = 0;
+    uint8_t adcCtrlRegData = 0U;
 
     // Parameter check
     status = Pmic_ADCParamCheck_pmicHandle(pPmicCoreHandle);
@@ -179,18 +179,18 @@ int32_t Pmic_ADCGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_adcCfg
     {
         if (pmic_validParamCheck(pAdcCfg->validParams, PMIC_ADC_CFG_RDIV_EN_VALID))
         {
-            pAdcCfg->rDivEn =
-                (uint8_t)Pmic_getBitField(adcCtrlRegData, PMIC_ADC_CTRL_RDIV_EN_SHIFT, PMIC_ADC_CTRL_RDIV_EN_MASK);
+            pAdcCfg->rDivEn = Pmic_getBitField(
+                adcCtrlRegData, PMIC_ADC_RDIV_EN_SHIFT, PMIC_ADC_RDIV_EN_MASK);
         }
         if (pmic_validParamCheck(pAdcCfg->validParams, PMIC_ADC_CFG_THERMAL_SEL_VALID))
         {
-            pAdcCfg->thermalSel = (uint8_t)Pmic_getBitField(
-                adcCtrlRegData, PMIC_ADC_CTRL_THERMAL_SEL_SHIFT, PMIC_ADC_CTRL_THERMAL_SEL_MASK);
+            pAdcCfg->thermalSel = Pmic_getBitField(
+                adcCtrlRegData, PMIC_ADC_THERMAL_SEL_SHIFT, PMIC_ADC_THERMAL_SEL_MASK);
         }
         if (pmic_validParamCheck(pAdcCfg->validParams, PMIC_ADC_CFG_CONT_CONV_VALID))
         {
-            pAdcCfg->contConv =
-                (uint8_t)Pmic_getBitField(adcCtrlRegData, PMIC_ADC_CTRL_CONT_CONV_SHIFT, PMIC_ADC_CTRL_CONT_CONV_MASK);
+            pAdcCfg->contConv = Pmic_getBitField(
+                adcCtrlRegData, PMIC_ADC_CONT_CONV_SHIFT, PMIC_ADC_CONT_CONV_MASK);
         }
     }
 
@@ -211,25 +211,28 @@ int32_t Pmic_ADCGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_adcCfg
  */
 static int32_t Pmic_ADCContConvCheck(const uint8_t adcCtrlRegData)
 {
+    int32_t status = PMIC_ST_SUCCESS;
     uint8_t contConv = PMIC_ADC_CONTINUOUS_CONVERSION_DISABLED;
 
-    contConv = (uint8_t)Pmic_getBitField(adcCtrlRegData, PMIC_ADC_CTRL_CONT_CONV_SHIFT, PMIC_ADC_CTRL_CONT_CONV_MASK);
+    contConv = Pmic_getBitField(adcCtrlRegData, PMIC_ADC_CONT_CONV_SHIFT, PMIC_ADC_CONT_CONV_MASK);
 
     if (contConv == PMIC_ADC_CONTINUOUS_CONVERSION_ENABLED)
     {
-        return PMIC_ST_ERR_ADC_CONT_CONV_EN;
+        status = PMIC_ST_ERR_ADC_CONT_CONV_EN;
     }
     else
     {
-        return PMIC_ST_SUCCESS;
+        status = PMIC_ST_SUCCESS;
     }
+
+    return status;
 }
 
 int32_t Pmic_ADCStartSingleConversion(Pmic_CoreHandle_t *pPmicCoreHandle)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    uint8_t adcCtrlRegData = 0;
-    bool    adcBusy = false;
+    uint8_t adcCtrlRegData = 0U;
+    bool adcBusy = (bool)false;
 
     // Parameter check
     status = Pmic_ADCParamCheck_pmicHandle(pPmicCoreHandle);
@@ -250,10 +253,10 @@ int32_t Pmic_ADCStartSingleConversion(Pmic_CoreHandle_t *pPmicCoreHandle)
     }
 
     // Check if ADC is busy; set the start bit if ADC not busy
-    adcBusy = (bool)Pmic_getBitField(adcCtrlRegData, PMIC_ADC_CTRL_STATUS_SHIFT, PMIC_ADC_CTRL_STATUS_MASK);
+    adcBusy = Pmic_getBitField_b(adcCtrlRegData, PMIC_ADC_STATUS_SHIFT);
     if ((status == PMIC_ST_SUCCESS) && !adcBusy)
     {
-        Pmic_setBitField(&adcCtrlRegData, PMIC_ADC_CTRL_START_SHIFT, PMIC_ADC_CTRL_START_MASK, PMIC_ADC_START);
+        Pmic_setBitField(&adcCtrlRegData, PMIC_ADC_START_SHIFT, PMIC_ADC_START_MASK, PMIC_ADC_START);
     }
 
     // Write new ADC_CTRL value back to PMIC
@@ -270,11 +273,11 @@ int32_t Pmic_ADCStartSingleConversion(Pmic_CoreHandle_t *pPmicCoreHandle)
 
 int32_t Pmic_ADCStartSingleConversionBlocking(Pmic_CoreHandle_t *pPmicCoreHandle)
 {
-    uint8_t       iter = 0;
-    const uint8_t maxIter = 50;
-    int32_t       status = PMIC_ST_SUCCESS;
-    uint8_t       adcCtrlRegData = 0;
-    bool          adcBusy = true;
+    uint8_t iter = 0U;
+    const uint8_t maxIter = 50U;
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t adcCtrlRegData = 0U;
+    bool adcBusy = (bool)true;
 
     // Parameter check
     status = Pmic_ADCParamCheck_pmicHandle(pPmicCoreHandle);
@@ -298,9 +301,10 @@ int32_t Pmic_ADCStartSingleConversionBlocking(Pmic_CoreHandle_t *pPmicCoreHandle
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
     // Wait while ADC is busy and max iterations has not been met
-    while ((status == PMIC_ST_SUCCESS) && adcBusy && ((iter++) != maxIter))
+    while ((status == PMIC_ST_SUCCESS) && adcBusy && (iter != maxIter))
     {
         status = Pmic_ADCGetStatus(pPmicCoreHandle, &adcBusy);
+        iter++;
     }
 
     // Check if max iterations have been met
@@ -315,7 +319,7 @@ int32_t Pmic_ADCStartSingleConversionBlocking(Pmic_CoreHandle_t *pPmicCoreHandle
     // Set the ADC start bit and write new ADC_CTRL value back to PMIC
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_setBitField(&adcCtrlRegData, PMIC_ADC_CTRL_START_SHIFT, PMIC_ADC_CTRL_START_MASK, PMIC_ADC_START);
+        Pmic_setBitField(&adcCtrlRegData, PMIC_ADC_START_SHIFT, PMIC_ADC_START_MASK, PMIC_ADC_START);
         status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_ADC_CTRL_REGADDR, adcCtrlRegData);
     }
 
@@ -349,8 +353,7 @@ int32_t Pmic_ADCGetStatus(Pmic_CoreHandle_t *pPmicCoreHandle, bool *pAdcBusy)
     // Extract ADC_STATUS bit
     if (status == PMIC_ST_SUCCESS)
     {
-        *pAdcBusy =
-            (bool)Pmic_getBitField(PMIC_ADC_CTRL_REGADDR, PMIC_ADC_CTRL_STATUS_SHIFT, PMIC_ADC_CTRL_STATUS_MASK);
+        *pAdcBusy = Pmic_getBitField_b(PMIC_ADC_CTRL_REGADDR, PMIC_ADC_STATUS_SHIFT);
     }
 
     // Stop critical section after reading
@@ -389,10 +392,13 @@ int32_t Pmic_ADCGetResultCode(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t *pAdc
 
     // Combine bits 11-4 and 3-0 and store the value
     // at the location that pAdcResult is pointing to
-    *pAdcResult = ((uint16_t)adcResultReg1Data << 4) | Pmic_getBitField(adcResultReg2Data,
-                                                                        PMIC_ADC_RESULT_REG_2_ADC_RESULT_3_0_SHIFT,
-                                                                        PMIC_ADC_RESULT_REG_2_ADC_RESULT_3_0_MASK);
-
+    if (status == PMIC_ST_SUCCESS)
+    {
+        *pAdcResult = ((uint16_t)adcResultReg1Data << 4) | Pmic_getBitField(adcResultReg2Data,
+                                                                            PMIC_ADC_RESULT_3_0_SHIFT,
+                                                                            PMIC_ADC_RESULT_3_0_MASK);
+    }
+    
     // Stop critical section after reading
     Pmic_criticalSectionStop(pPmicCoreHandle);
 

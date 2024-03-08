@@ -62,34 +62,34 @@ extern "C"
  * \brief  PMIC Interrupt Registers Mask values and bit positions
  */
 /*! PMIC_INT_VMON Register Mask values */
-#define PMIC_INT_VMON_VMON2_RV_INT_MASK           (0x80U)
-#define PMIC_INT_VMON_VMON2_UV_INT_MASK           (0x40U)
-#define PMIC_INT_VMON_VMON2_OV_INT_MASK           (0x20U)
-#define PMIC_INT_VMON_VMON1_RV_INT_MASK           (0x10U)
-#define PMIC_INT_VMON_VMON1_UV_INT_MASK           (0x08U)
-#define PMIC_INT_VMON_VMON1_OV_INT_MASK           (0x04U)
+#define PMIC_LP8764X_VMON2_RV_INT_MASK           (0x80U)
+#define PMIC_LP8764X_VMON2_UV_INT_MASK           (0x40U)
+#define PMIC_LP8764X_VMON2_OV_INT_MASK           (0x20U)
+#define PMIC_LP8764X_VMON1_RV_INT_MASK           (0x10U)
+#define PMIC_LP8764X_VMON1_UV_INT_MASK           (0x08U)
+#define PMIC_LP8764X_VMON1_OV_INT_MASK           (0x04U)
 
 /*! PMIC_INT_VMON Register Bit positions */
-#define PMIC_INT_VMON_VMON2_RV_INT_SHIFT          (0x7U)
-#define PMIC_INT_VMON_VMON2_UV_INT_SHIFT          (0x6U)
-#define PMIC_INT_VMON_VMON2_OV_INT_SHIFT          (0x5U)
-#define PMIC_INT_VMON_VMON1_RV_INT_SHIFT          (0x4U)
-#define PMIC_INT_VMON_VMON1_UV_INT_SHIFT          (0x3U)
-#define PMIC_INT_VMON_VMON1_OV_INT_SHIFT          (0x2U)
+#define PMIC_LP8764X_VMON2_RV_INT_SHIFT          (0x7U)
+#define PMIC_LP8764X_VMON2_UV_INT_SHIFT          (0x6U)
+#define PMIC_LP8764X_VMON2_OV_INT_SHIFT          (0x5U)
+#define PMIC_LP8764X_VMON1_RV_INT_SHIFT          (0x4U)
+#define PMIC_LP8764X_VMON1_UV_INT_SHIFT          (0x3U)
+#define PMIC_LP8764X_VMON1_OV_INT_SHIFT          (0x2U)
 
 /*!
  * \brief  Individual interrupt bitmasks for GPIO9_10 RISE/FALL
  */
-#define PMIC_MASK_GPIO9_10_GPIO10_RISE_MASK_MASK  (0x10U)
-#define PMIC_MASK_GPIO9_10_GPIO9_RISE_MASK_MASK   (0x08U)
-#define PMIC_MASK_GPIO9_10_GPIO10_FALL_MASK_MASK  (0x02U)
-#define PMIC_MASK_GPIO9_10_GPIO9_FALL_MASK_MASK   (0x01U)
+#define PMIC_LP8764X_GPIO10_RISE_MASK_MASK      (0x10U)
+#define PMIC_LP8764X_GPIO9_RISE_MASK_MASK       (0x08U)
+#define PMIC_LP8764X_GPIO10_FALL_MASK_MASK      (0x02U)
+#define PMIC_LP8764X_GPIO9_FALL_MASK_MASK       (0x01U)
 
 /*! PMIC GPIO9_10 MASK Register bit shift values */
-#define PMIC_MASK_GPIO9_10_GPIO10_RISE_MASK_SHIFT (0x4U)
-#define PMIC_MASK_GPIO9_10_GPIO9_RISE_MASK_SHIFT  (0x3U)
-#define PMIC_MASK_GPIO9_10_GPIO10_FALL_MASK_SHIFT (0x1U)
-#define PMIC_MASK_GPIO9_10_GPIO9_FALL_MASK_SHIFT  (0x0U)
+#define PMIC_LP8764X_GPIO10_RISE_MASK_SHIFT     (0x4U)
+#define PMIC_LP8764X_GPIO9_RISE_MASK_SHIFT      (0x3U)
+#define PMIC_LP8764X_GPIO10_FALL_MASK_SHIFT     (0x1U)
+#define PMIC_LP8764X_GPIO9_FALL_MASK_SHIFT      (0x0U)
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */

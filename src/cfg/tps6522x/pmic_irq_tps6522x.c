@@ -52,297 +52,297 @@ static Pmic_IntrCfg_t gTps6522x_intCfg[] =
 {
     {
         PMIC_WD_ERR_STATUS_REGADDR,
-        PMIC_WD_ERR_STATUS_WD_RST_INT_SHIFT,
+        PMIC_WD_RST_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_WD_ERR_STATUS_REGADDR,
-        PMIC_WD_ERR_STATUS_WD_FAIL_INT_SHIFT,
+        PMIC_WD_FAIL_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_WD_ERR_STATUS_REGADDR,
-        PMIC_WD_ERR_STATUS_WD_LONGWIN_TIMEOUT_INT_SHIFT,
+        PMIC_WD_LONGWIN_TIMEOUT_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_ESM_REGADDR,
-        PMIC_INT_ESM_ESM_MCU_RST_INT_SHIFT,
+        PMIC_ESM_MCU_RST_INT_SHIFT,
         PMIC_MASK_ESM_REGADDR,
-        PMIC_MASK_ESM_ESM_MCU_RST_MASK_SHIFT
+        PMIC_ESM_MCU_RST_MASK_SHIFT
     },
     {
         PMIC_INT_ESM_REGADDR,
-        PMIC_INT_ESM_ESM_MCU_FAIL_INT_SHIFT,
+        PMIC_ESM_MCU_FAIL_INT_SHIFT,
         PMIC_MASK_ESM_REGADDR,
-        PMIC_MASK_ESM_ESM_MCU_FAIL_MASK_SHIFT
+        PMIC_ESM_MCU_FAIL_MASK_SHIFT
     },
     {
         PMIC_INT_ESM_REGADDR,
-        PMIC_INT_ESM_ESM_MCU_PIN_INT_SHIFT,
+        PMIC_ESM_MCU_PIN_INT_SHIFT,
         PMIC_MASK_ESM_REGADDR,
-        PMIC_MASK_ESM_ESM_MCU_PIN_MASK_SHIFT
+        PMIC_ESM_MCU_PIN_MASK_SHIFT
     },
     {
         PMIC_INT_FSM_ERR_REGADDR,
-        PMIC_INT_FSM_ERR_I2C2_ERR_INT_SHIFT,
+        PMIC_I2C2_ERR_INT_SHIFT,
         PMIC_MASK_FSM_ERR_REGADDR,
-        PMIC_MASK_FSM_ERR_I2C2_ERR_MASK_SHIFT
+        PMIC_I2C2_ERR_MASK_SHIFT
     },
     {
         PMIC_INT_FSM_ERR_REGADDR,
-        PMIC_INT_FSM_ERR_COMM_ERR_INT_SHIFT,
+        PMIC_COMM_ERR_INT_SHIFT,
         PMIC_MASK_FSM_ERR_REGADDR,
-        PMIC_MASK_FSM_ERR_COMM_ERR_MASK_SHIFT
+        PMIC_COMM_ERR_MASK_SHIFT
     },
     {
         PMIC_INT_FSM_ERR_REGADDR,
-        PMIC_INT_FSM_ERR_SOC_PWR_ERR_INT_SHIFT,
+        PMIC_SOC_PWR_ERR_INT_SHIFT,
         PMIC_MASK_FSM_ERR_REGADDR,
-        PMIC_MASK_FSM_ERR_SOC_PWR_ERR_MASK_SHIFT
+        PMIC_SOC_PWR_ERR_MASK_SHIFT
     },
     {
         PMIC_INT_FSM_ERR_REGADDR,
-        PMIC_INT_FSM_ERR_MCU_PWR_ERR_INT_SHIFT,
+        PMIC_MCU_PWR_ERR_INT_SHIFT,
         PMIC_MASK_FSM_ERR_REGADDR,
-        PMIC_MASK_FSM_ERR_MCU_PWR_ERR_MASK_SHIFT
+        PMIC_MCU_PWR_ERR_MASK_SHIFT
     },
     {
         PMIC_INT_FSM_ERR_REGADDR,
-        PMIC_INT_FSM_ERR_ORD_SHUTDOWN_INT_SHIFT,
+        PMIC_ORD_SHUTDOWN_INT_SHIFT,
         PMIC_MASK_FSM_ERR_REGADDR,
-        PMIC_MASK_FSM_ERR_ORD_SHUTDOWN_MASK_SHIFT
+        PMIC_ORD_SHUTDOWN_MASK_SHIFT
     },
     {
         PMIC_INT_FSM_ERR_REGADDR,
-        PMIC_INT_FSM_ERR_IMM_SHUTDOWN_INT_SHIFT,
+        PMIC_IMM_SHUTDOWN_INT_SHIFT,
         PMIC_MASK_FSM_ERR_REGADDR,
-        PMIC_MASK_FSM_ERR_IMM_SHUTDOWN_MASK_SHIFT
+        PMIC_IMM_SHUTDOWN_MASK_SHIFT
     },
     {
         PMIC_INT_SEVERE_ERR_REGADDR,
-        PMIC_INT_SEVERE_ERR_BG_XMON_INT_SHIFT,
+        PMIC_BG_XMON_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_SEVERE_ERR_REGADDR,
-        PMIC_INT_SEVERE_ERR_PFSM_ERR_INT_SHIFT,
+        PMIC_PFSM_ERR_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_SEVERE_ERR_REGADDR,
-        PMIC_INT_SEVERE_ERR_VCCA_OVP_INT_SHIFT,
+        PMIC_VCCA_OVP_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_SEVERE_ERR_REGADDR,
-        PMIC_INT_SEVERE_ERR_TSD_IMM_INT_SHIFT,
+        PMIC_TSD_IMM_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_MODERATE_ERR_REGADDR,
-        PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_SHIFT,
+        PMIC_RECOV_CNT_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_MODERATE_ERR_REGADDR,
-        PMIC_INT_MODERATE_ERR_REG_CRC_ERR_INT_SHIFT,
+        PMIC_REG_CRC_ERR_INT_SHIFT,
         PMIC_MASK_MODERATE_ERR_REGADDR,
-        PMIC_MASK_MODERATE_ERR_REG_CRC_ERR_MASK_SHIFT
+        PMIC_REG_CRC_ERR_MASK_SHIFT
     },
     {
         PMIC_INT_MODERATE_ERR_REGADDR,
-        PMIC_INT_MODERATE_ERR_BIST_FAIL_INT_SHIFT,
+        PMIC_BIST_FAIL_INT_SHIFT,
         PMIC_MASK_MODERATE_ERR_REGADDR,
-        PMIC_MASK_MODERATE_ERR_BIST_FAIL_MASK_SHIFT
+        PMIC_BIST_FAIL_MASK_SHIFT
     },
     {
         PMIC_INT_MODERATE_ERR_REGADDR,
-        PMIC_INT_MODERATE_ERR_TSD_ORD_INT_SHIFT,
+        PMIC_TSD_ORD_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_MISC_REGADDR,
-        PMIC_INT_MISC_ADC_CONV_READY_INT_SHIFT,
+        TPS6522X_ADC_CONV_READY_INT_SHIFT,
         PMIC_MASK_MISC_REGADDR,
-        PMIC_MASK_MISC_ADC_CONV_READY_MASK_SHIFT
+        TPS6522X_ADC_CONV_READY_MASK_SHIFT
     },
     {
         PMIC_INT_MISC_REGADDR,
-        PMIC_INT_MISC_PB_RISE_INT_SHIFT,
+        TPS6522X_PB_RISE_INT_SHIFT,
         PMIC_MASK_MISC_REGADDR,
-        PMIC_MASK_MISC_PB_RISE_MASK_SHIFT
+        TPS6522X_PB_RISE_MASK_SHIFT
     },
     {
         PMIC_INT_MISC_REGADDR,
-        PMIC_INT_MISC_PB_FALL_INT_SHIFT,
+        TPS6522X_PB_FALL_INT_SHIFT,
         PMIC_MASK_MISC_REGADDR,
-        PMIC_MASK_MISC_PB_FALL_MASK_SHIFT
+        TPS6522X_PB_FALL_MASK_SHIFT
     },
     {
         PMIC_INT_MISC_REGADDR,
-        PMIC_INT_MISC_PB_LONG_INT_SHIFT,
+        TPS6522X_PB_LONG_INT_SHIFT,
         PMIC_MASK_MISC_REGADDR,
-        PMIC_MASK_MISC_PB_LONG_MASK_SHIFT
+        TPS6522X_PB_LONG_MASK_SHIFT
     },
     {
         PMIC_INT_MISC_REGADDR,
-        PMIC_INT_MISC_TWARN_INT_SHIFT,
+        PMIC_TWARN_INT_SHIFT,
         PMIC_MASK_MISC_REGADDR,
-        PMIC_MASK_MISC_TWARN_MASK_SHIFT
+        PMIC_TWARN_MASK_SHIFT
     },
     {
         PMIC_INT_MISC_REGADDR,
-        PMIC_INT_MISC_REG_UNLOCK_INT_SHIFT,
+        TPS6522X_REG_UNLOCK_INT_SHIFT,
         PMIC_MASK_MISC_REGADDR,
-        PMIC_MASK_MISC_REG_UNLOCK_MASK_SHIFT
+        TPS6522X_REG_UNLOCK_MASK_SHIFT
     },
     {
         PMIC_INT_MISC_REGADDR,
-        PMIC_INT_MISC_EXT_CLK_INT_SHIFT,
+        PMIC_EXT_CLK_INT_SHIFT,
         PMIC_MASK_MISC_REGADDR,
-        PMIC_MASK_MISC_EXT_CLK_MASK_SHIFT
+        PMIC_EXT_CLK_MASK_SHIFT
     },
     {
         PMIC_INT_MISC_REGADDR,
-        PMIC_INT_MISC_BIST_PASS_INT_SHIFT,
+        PMIC_BIST_PASS_INT_SHIFT,
         PMIC_MASK_MISC_REGADDR,
-        PMIC_MASK_MISC_BIST_PASS_MASK_SHIFT
+        PMIC_BIST_PASS_MASK_SHIFT
     },
     {
         PMIC_INT_STARTUP_REGADDR,
-        PMIC_INT_STARTUP_SOFT_REBOOT_INT_SHIFT,
+        PMIC_SOFT_REBOOT_INT_SHIFT,
         PMIC_MASK_STARTUP_REGADDR,
-        PMIC_MASK_STARTUP_SOFT_REBOOT_MASK_SHIFT
+        PMIC_SOFT_REBOOT_MASK_SHIFT
     },
     {
         PMIC_INT_STARTUP_REGADDR,
-        PMIC_INT_STARTUP_FSD_INT_SHIFT,
+        PMIC_FSD_INT_SHIFT,
         PMIC_MASK_STARTUP_REGADDR,
-        PMIC_MASK_STARTUP_FSD_MASK_SHIFT
+        PMIC_FSD_MASK_SHIFT
     },
     {
         PMIC_INT_STARTUP_REGADDR,
-        PMIC_INT_STARTUP_PB_SHORT_INT_SHIFT,
+        TPS6522X_PB_SHORT_INT_SHIFT,
         PMIC_MASK_STARTUP_REGADDR,
-        PMIC_MASK_STARTUP_PB_SHORT_MASK_SHIFT
+        TPS6522X_PB_SHORT_MASK_SHIFT
     },
     {
         PMIC_INT_STARTUP_REGADDR,
-        PMIC_INT_STARTUP_ENABLE_INT_SHIFT,
+        PMIC_ENABLE_INT_SHIFT,
         PMIC_MASK_STARTUP_REGADDR,
-        PMIC_MASK_STARTUP_ENABLE_MASK_SHIFT,
+        PMIC_ENABLE_MASK_SHIFT,
     },
     {
         PMIC_INT_STARTUP_REGADDR,
-        PMIC_INT_STARTUP_VSENSE_INT_SHIFT,
+        TPS6522X_VSENSE_INT_SHIFT,
         PMIC_MASK_STARTUP_REGADDR,
-        PMIC_MASK_STARTUP_VSENSE_MASK_SHIFT,
+        TPS6522X_VSENSE_MASK_SHIFT,
     },
     {
         PMIC_INT_GPIO_REGADDR,
-        PMIC_INT_GPIO_GPIO6_INT_SHIFT,
+        PMIC_GPIO6_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_GPIO_REGADDR,
-        PMIC_INT_GPIO_GPIO5_INT_SHIFT,
+        PMIC_GPIO5_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_GPIO_REGADDR,
-        PMIC_INT_GPIO_GPIO4_INT_SHIFT,
+        PMIC_GPIO4_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_GPIO_REGADDR,
-        PMIC_INT_GPIO_GPIO3_INT_SHIFT,
+        PMIC_GPIO3_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_GPIO_REGADDR,
-        PMIC_INT_GPIO_GPIO2_INT_SHIFT,
+        PMIC_GPIO2_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_GPIO_REGADDR,
-        PMIC_INT_GPIO_GPIO1_INT_SHIFT,
+        PMIC_GPIO1_INT_SHIFT,
         PMIC_IRQ_INVALID_REGADDR,
         PMIC_IRQ_INVALID_BIT_SHIFT
     },
     {
         PMIC_INT_LDO_VMON_REGADDR,
-        PMIC_INT_LDO_VMON_VMON2_UVOV_INT_SHIFT,
-        PMIC_MASK_LDO_VMON_REGADDR,
-        PMIC_MASK_LDO_VMON_VMON2_UVOV_MASK_SHIFT
+        TPS6522X_VMON2_UVOV_INT_SHIFT,
+        TPS6522X_MASK_LDO_VMON_REGADDR,
+        TPS6522X_VMON2_UVOV_MASK_SHIFT
     },
     {
         PMIC_INT_LDO_VMON_REGADDR,
-        PMIC_INT_LDO_VMON_VMON1_UVOV_INT_SHIFT,
-        PMIC_MASK_LDO_VMON_REGADDR,
-        PMIC_MASK_LDO_VMON_VMON1_UVOV_MASK_SHIFT
+        TPS6522X_VMON1_UVOV_INT_SHIFT,
+        TPS6522X_MASK_LDO_VMON_REGADDR,
+        TPS6522X_VMON1_UVOV_MASK_SHIFT
     },
     {
         PMIC_INT_LDO_VMON_REGADDR,
-        PMIC_INT_LDO_VMON_VCCA_UVOV_INT_SHIFT,
-        PMIC_MASK_LDO_VMON_REGADDR,
-        PMIC_MASK_LDO_VMON_VCCA_UVOV_MASK_SHIFT
+        TPS6522X_VCCA_UVOV_INT_SHIFT,
+        TPS6522X_MASK_LDO_VMON_REGADDR,
+        TPS6522X_VCCA_UVOV_MASK_SHIFT
     },
     {
         PMIC_INT_LDO_VMON_REGADDR,
-        PMIC_INT_LDO_VMON_LDO3_UVOV_INT_SHIFT,
-        PMIC_MASK_LDO_VMON_REGADDR,
-        PMIC_MASK_LDO_VMON_LDO3_UVOV_MASK_SHIFT
+        TPS6522X_LDO3_UVOV_INT_SHIFT,
+        TPS6522X_MASK_LDO_VMON_REGADDR,
+        TPS6522X_LDO3_UVOV_MASK_SHIFT
     },
     {
         PMIC_INT_LDO_VMON_REGADDR,
-        PMIC_INT_LDO_VMON_LDO2_UVOV_INT_SHIFT,
-        PMIC_MASK_LDO_VMON_REGADDR,
-        PMIC_MASK_LDO_VMON_LDO2_UVOV_MASK_SHIFT
+        TPS6522X_LDO2_UVOV_INT_SHIFT,
+        TPS6522X_MASK_LDO_VMON_REGADDR,
+        TPS6522X_LDO2_UVOV_MASK_SHIFT
     },
     {
         PMIC_INT_LDO_VMON_REGADDR,
-        PMIC_INT_LDO_VMON_LDO1_UVOV_INT_SHIFT,
-        PMIC_MASK_LDO_VMON_REGADDR,
-        PMIC_MASK_LDO_VMON_LDO1_UVOV_MASK_SHIFT
+        TPS6522X_LDO1_UVOV_INT_SHIFT,
+        TPS6522X_MASK_LDO_VMON_REGADDR,
+        TPS6522X_LDO1_UVOV_MASK_SHIFT
     },
     {
         PMIC_INT_BUCK_REGADDR,
-        PMIC_INT_BUCK4_UVOV_INT_SHIFT,
-        PMIC_MASK_BUCK_REGADDR,
-        PMIC_MASK_BUCK4_UVOV_MASK_SHIFT
+        TPS6522X_BUCK4_UVOV_INT_SHIFT,
+        TPS6522X_MASK_BUCK_REGADDR,
+        TPS6522X_BUCK4_UVOV_MASK_SHIFT
     },
     {
         PMIC_INT_BUCK_REGADDR,
-        PMIC_INT_BUCK3_UVOV_INT_SHIFT,
-        PMIC_MASK_BUCK_REGADDR,
-        PMIC_MASK_BUCK3_UVOV_MASK_SHIFT
+        TPS6522X_BUCK3_UVOV_INT_SHIFT,
+        TPS6522X_MASK_BUCK_REGADDR,
+        TPS6522X_BUCK3_UVOV_MASK_SHIFT
     },
     {
         PMIC_INT_BUCK_REGADDR,
-        PMIC_INT_BUCK2_UVOV_INT_SHIFT,
-        PMIC_MASK_BUCK_REGADDR,
-        PMIC_MASK_BUCK2_UVOV_MASK_SHIFT
+        TPS6522X_BUCK2_UVOV_INT_SHIFT,
+        TPS6522X_MASK_BUCK_REGADDR,
+        TPS6522X_BUCK2_UVOV_MASK_SHIFT
     },
     {
         PMIC_INT_BUCK_REGADDR,
-        PMIC_INT_BUCK1_UVOV_INT_SHIFT,
-        PMIC_MASK_BUCK_REGADDR,
-        PMIC_MASK_BUCK1_UVOV_MASK_SHIFT
+        TPS6522X_BUCK1_UVOV_INT_SHIFT,
+        TPS6522X_MASK_BUCK_REGADDR,
+        TPS6522X_BUCK1_UVOV_MASK_SHIFT
     }
 };
 
@@ -351,39 +351,39 @@ static Pmic_GpioIntrTypeCfg_t tps6522x_gpioIntrCfg[] =
 {
     {
         PMIC_MASK_GPIO1_8_RISE_REGADDR,
-        PMIC_MASK_GPIO1_8_RISE_GPIO1_RISE_MASK_SHIFT,
+        PMIC_GPIO1_RISE_MASK_SHIFT,
         PMIC_MASK_GPIO1_8_FALL_REGADDR,
-        PMIC_MASK_GPIO1_8_FALL_GPIO1_FALL_MASK_SHIFT
+        PMIC_GPIO1_FALL_MASK_SHIFT
     },
     {
         PMIC_MASK_GPIO1_8_RISE_REGADDR,
-        PMIC_MASK_GPIO1_8_RISE_GPIO2_RISE_MASK_SHIFT,
+        PMIC_GPIO2_RISE_MASK_SHIFT,
         PMIC_MASK_GPIO1_8_FALL_REGADDR,
-        PMIC_MASK_GPIO1_8_FALL_GPIO2_FALL_MASK_SHIFT
+        PMIC_GPIO2_FALL_MASK_SHIFT
     },
     {
         PMIC_MASK_GPIO1_8_RISE_REGADDR,
-        PMIC_MASK_GPIO1_8_RISE_GPIO3_RISE_MASK_SHIFT,
+        PMIC_GPIO3_RISE_MASK_SHIFT,
         PMIC_MASK_GPIO1_8_FALL_REGADDR,
-        PMIC_MASK_GPIO1_8_FALL_GPIO3_FALL_MASK_SHIFT
+        PMIC_GPIO3_FALL_MASK_SHIFT
     },
     {
         PMIC_MASK_GPIO1_8_RISE_REGADDR,
-        PMIC_MASK_GPIO1_8_RISE_GPIO4_RISE_MASK_SHIFT,
+        PMIC_GPIO4_RISE_MASK_SHIFT,
         PMIC_MASK_GPIO1_8_FALL_REGADDR,
-        PMIC_MASK_GPIO1_8_FALL_GPIO4_FALL_MASK_SHIFT
+        PMIC_GPIO4_FALL_MASK_SHIFT
     },
     {
         PMIC_MASK_GPIO1_8_RISE_REGADDR,
-        PMIC_MASK_GPIO1_8_RISE_GPIO5_RISE_MASK_SHIFT,
+        PMIC_GPIO5_RISE_MASK_SHIFT,
         PMIC_MASK_GPIO1_8_FALL_REGADDR,
-        PMIC_MASK_GPIO1_8_FALL_GPIO5_FALL_MASK_SHIFT
+        PMIC_GPIO5_FALL_MASK_SHIFT
     },
     {
         PMIC_MASK_GPIO1_8_RISE_REGADDR,
-        PMIC_MASK_GPIO1_8_RISE_GPIO6_RISE_MASK_SHIFT,
+        PMIC_GPIO6_RISE_MASK_SHIFT,
         PMIC_MASK_GPIO1_8_FALL_REGADDR,
-        PMIC_MASK_GPIO1_8_FALL_GPIO6_FALL_MASK_SHIFT
+        PMIC_GPIO6_FALL_MASK_SHIFT
     }
 };
 
@@ -400,24 +400,24 @@ void pmic_get_tps6522x_intrGpioCfg(Pmic_GpioIntrTypeCfg_t **pGpioIntrCfg)
 /*!
  * \brief  Function to decipher BUCK Error
  */
-static void Pmic_tps6522x_getBuckErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
+static void Pmic_tps6522x_getBuckErr(uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
 {
-    if ((regValue & PMIC_INT_BUCK_BUCK1_UVOV_INT_MASK) != 0U)
+    if ((regValue & TPS6522X_BUCK1_UVOV_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_BUCK1_UVOV_INT);
     }
 
-    if ((regValue & PMIC_INT_BUCK_BUCK2_UVOV_INT_MASK) != 0U)
+    if ((regValue & TPS6522X_BUCK2_UVOV_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_BUCK2_UVOV_INT);
     }
 
-    if ((regValue & PMIC_INT_BUCK_BUCK3_UVOV_INT_MASK) != 0U)
+    if ((regValue & TPS6522X_BUCK3_UVOV_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_BUCK3_UVOV_INT);
     }
 
-    if ((regValue & PMIC_INT_BUCK_BUCK4_UVOV_INT_MASK) != 0U)
+    if ((regValue & TPS6522X_BUCK4_UVOV_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_BUCK4_UVOV_INT);
     }
@@ -426,35 +426,34 @@ static void Pmic_tps6522x_getBuckErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t
 /*!
  * \brief  Function to decipher LDO_VMON Error
  */
-static void
-Pmic_tps6522x_getLdoVmonErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
+static void Pmic_tps6522x_getLdoVmonErr(uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
 {
-    if ((regValue & PMIC_INT_LDO_VMON_LDO1_UVOV_INT_MASK) != 0U)
+    if ((regValue & TPS6522X_LDO1_UVOV_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_LDO1_UVOV_INT);
     }
 
-    if ((regValue & PMIC_INT_LDO_VMON_LDO2_UVOV_INT_MASK) != 0U)
+    if ((regValue & TPS6522X_LDO2_UVOV_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_LDO2_UVOV_INT);
     }
 
-    if ((regValue & PMIC_INT_LDO_VMON_LDO3_UVOV_INT_MASK) != 0U)
+    if ((regValue & TPS6522X_LDO3_UVOV_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_LDO3_UVOV_INT);
     }
 
-    if ((regValue & PMIC_INT_LDO_VMON_VCCA_UVOV_INT_MASK) != 0U)
+    if ((regValue & TPS6522X_VCCA_UVOV_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_VCCA_UVOV_INT);
     }
 
-    if ((regValue & PMIC_INT_LDO_VMON_VMON1_UVOV_INT_MASK) != 0U)
+    if ((regValue & TPS6522X_VMON1_UVOV_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_VMON1_UVOV_INT);
     }
 
-    if ((regValue & PMIC_INT_LDO_VMON_VMON2_UVOV_INT_MASK) != 0U)
+    if ((regValue & TPS6522X_VMON2_UVOV_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_VMON2_UVOV_INT);
     }
@@ -463,34 +462,34 @@ Pmic_tps6522x_getLdoVmonErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue
 /*!
  * \brief  Function to decipher GPIO Error
  */
-static void Pmic_tps6522x_getGpioErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
+static void Pmic_tps6522x_getGpioErr(uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
 {
-    if ((regValue & PMIC_INT_GPIO_GPIO1_INT_MASK) != 0U)
+    if ((regValue & TPS6522X_GPIO1_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_GPIO1_INT);
     }
 
-    if ((regValue & PMIC_INT_GPIO_GPIO2_INT_MASK) != 0U)
+    if ((regValue & TPS6522X_GPIO2_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_GPIO2_INT);
     }
 
-    if ((regValue & PMIC_INT_GPIO_GPIO3_INT_MASK) != 0U)
+    if ((regValue & TPS6522X_GPIO3_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_GPIO3_INT);
     }
 
-    if ((regValue & PMIC_INT_GPIO_GPIO4_INT_MASK) != 0U)
+    if ((regValue & TPS6522X_GPIO4_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_GPIO4_INT);
     }
 
-    if ((regValue & PMIC_INT_GPIO_GPIO5_INT_MASK) != 0U)
+    if ((regValue & TPS6522X_GPIO5_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_GPIO5_INT);
     }
 
-    if ((regValue & PMIC_INT_GPIO_GPIO6_INT_MASK) != 0U)
+    if ((regValue & TPS6522X_GPIO6_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_GPIO6_INT);
     }
@@ -499,30 +498,29 @@ static void Pmic_tps6522x_getGpioErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t
 /*!
  * \brief  Function to decipher STARTUP Error.
  */
-static void
-Pmic_tps6522x_getStartupErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
+static void Pmic_tps6522x_getStartupErr(uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
 {
-    if ((regValue & PMIC_INT_STARTUP_VSENSE_INT_MASK) != 0U)
+    if ((regValue & TPS6522X_VSENSE_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_VSENSE_INT);
     }
 
-    if ((regValue & PMIC_INT_STARTUP_ENABLE_INT_MASK) != 0U)
+    if ((regValue & PMIC_ENABLE_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_ENABLE_INT);
     }
 
-    if ((regValue & PMIC_INT_STARTUP_PB_SHORT_INT_MASK) != 0U)
+    if ((regValue & TPS6522X_PB_SHORT_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_PB_SHORT_INT);
     }
 
-    if ((regValue & PMIC_INT_STARTUP_FSD_INT_MASK) != 0U)
+    if ((regValue & PMIC_FSD_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_FSD_INT);
     }
 
-    if ((regValue & PMIC_INT_STARTUP_SOFT_REBOOT_INT_MASK) != 0U)
+    if ((regValue & PMIC_SOFT_REBOOT_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_SOFT_REBOOT_INT);
     }
@@ -533,42 +531,42 @@ Pmic_tps6522x_getStartupErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue
  */
 static void Pmic_tps6522x_getMiscErr(uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
 {
-    if ((regValue & PMIC_INT_MISC_BIST_PASS_INT_MASK) != 0U)
+    if ((regValue & PMIC_BIST_PASS_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_BIST_PASS_INT);
     }
 
-    if ((regValue & PMIC_INT_MISC_EXT_CLK_INT_MASK) != 0U)
+    if ((regValue & PMIC_EXT_CLK_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_EXT_CLK_INT);
     }
 
-    if ((regValue & PMIC_INT_MISC_REG_UNLOCK_INT_MASK) != 0U)
+    if ((regValue & TPS6522X_REG_UNLOCK_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_REG_UNLOCK_INT);
     }
 
-    if ((regValue & PMIC_INT_MISC_TWARN_INT_MASK) != 0U)
+    if ((regValue & PMIC_TWARN_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_TWARN_INT);
     }
 
-    if ((regValue & PMIC_INT_MISC_PB_LONG_INT_MASK) != 0U)
+    if ((regValue & TPS6522X_PB_LONG_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_PB_LONG_INT);
     }
 
-    if ((regValue & PMIC_INT_MISC_PB_FALL_INT_MASK) != 0U)
+    if ((regValue & TPS6522X_PB_FALL_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_PB_FALL_INT);
     }
 
-    if ((regValue & PMIC_INT_MISC_PB_RISE_INT_MASK) != 0U)
+    if ((regValue & TPS6522X_PB_RISE_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_PB_RISE_INT);
     }
 
-    if ((regValue & PMIC_INT_MISC_ADC_CONV_READY_INT_MASK) != 0U)
+    if ((regValue & TPS6522X_ADC_CONV_READY_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_ADC_CONV_READY_INT);
     }
@@ -578,25 +576,24 @@ static void Pmic_tps6522x_getMiscErr(uint8_t regValue, Pmic_IrqStatus_t *pErrSta
  * \brief  Function to decipher MODERATE Error
  *
  */
-static void
-Pmic_tps6522x_getModerateErr(const Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
+static void Pmic_tps6522x_getModerateErr(uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
 {
-    if ((regValue & PMIC_INT_MODERATE_ERR_TSD_ORD_INT_MASK) != 0U)
+    if ((regValue & PMIC_TSD_ORD_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_TSD_ORD_INT);
     }
 
-    if ((regValue & PMIC_INT_MODERATE_ERR_BIST_FAIL_INT_MASK) != 0U)
+    if ((regValue & PMIC_BIST_FAIL_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_BIST_FAIL_INT);
     }
 
-    if ((regValue & PMIC_INT_MODERATE_ERR_REG_CRC_ERR_INT_MASK) != 0U)
+    if ((regValue & PMIC_REG_CRC_ERR_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_REG_CRC_ERR_INT);
     }
 
-    if ((regValue & PMIC_INT_MODERATE_ERR_RECOV_CNT_INT_MASK) != 0U)
+    if ((regValue & PMIC_RECOV_CNT_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_RECOV_CNT_INT);
     }
@@ -605,25 +602,24 @@ Pmic_tps6522x_getModerateErr(const Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t r
 /*!
  * \brief  Function to decipher SEVERE Error
  */
-static void
-Pmic_tps6522x_getSevereErr(const Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
+static void Pmic_tps6522x_getSevereErr(uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
 {
-    if ((regValue & PMIC_INT_SEVERE_ERR_TSD_IMM_INT_MASK) != 0U)
+    if ((regValue & PMIC_TSD_IMM_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_TSD_IMM_INT);
     }
 
-    if ((regValue & PMIC_INT_SEVERE_ERR_VCCA_OVP_INT_MASK) != 0U)
+    if ((regValue & PMIC_VCCA_OVP_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_VCCA_OVP_INT);
     }
 
-    if ((regValue & PMIC_INT_SEVERE_ERR_PFSM_ERR_INT_MASK) != 0U)
+    if ((regValue & PMIC_PFSM_ERR_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_PFSM_ERR_INT);
     }
 
-    if ((regValue & PMIC_INT_SEVERE_ERR_BG_XMON_INT_MASK) != 0U)
+    if ((regValue & PMIC_BG_XMON_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_BG_XMON_INT);
     }
@@ -637,7 +633,7 @@ static void Pmic_tps6522x_getFsmEsmErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    if ((regValue & PMIC_INT_FSM_ERR_ESM_INT_MASK) != 0U)
+    if ((regValue & PMIC_ESM_INT_MASK) != 0U)
     {
         /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -649,17 +645,17 @@ static void Pmic_tps6522x_getFsmEsmErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8
 
         if ((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
         {
-            if ((regData & PMIC_INT_ESM_ESM_MCU_PIN_INT_MASK) != 0U)
+            if ((regData & PMIC_ESM_MCU_PIN_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_ESM_MCU_PIN_INT);
             }
 
-            if ((regData & PMIC_INT_ESM_ESM_MCU_FAIL_INT_MASK) != 0U)
+            if ((regData & PMIC_ESM_MCU_FAIL_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_ESM_MCU_FAIL_INT);
             }
 
-            if ((regData & PMIC_INT_ESM_ESM_MCU_RST_INT_MASK) != 0U)
+            if ((regData & PMIC_ESM_MCU_RST_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_ESM_MCU_RST_INT);
             }
@@ -675,32 +671,32 @@ static int32_t Pmic_tps6522x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    if ((regValue & PMIC_INT_FSM_ERR_IMM_SHUTDOWN_INT_MASK) != 0U)
+    if ((regValue & PMIC_IMM_SHUTDOWN_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_IMM_SHUTOWN_INT);
     }
 
-    if ((regValue & PMIC_INT_FSM_ERR_ORD_SHUTDOWN_INT_MASK) != 0U)
+    if ((regValue & PMIC_ORD_SHUTDOWN_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_ORD_SHUTDOWN_INT);
     }
 
-    if ((regValue & PMIC_INT_FSM_ERR_MCU_PWR_ERR_INT_MASK) != 0U)
+    if ((regValue & PMIC_MCU_PWR_ERR_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_MCU_PWR_ERR_INT);
     }
 
-    if ((regValue & PMIC_INT_FSM_ERR_SOC_PWR_ERR_INT_MASK) != 0U)
+    if ((regValue & PMIC_SOC_PWR_ERR_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_SOC_PWR_ERR_INT);
     }
 
-    if ((regValue & PMIC_INT_FSM_ERR_COMM_ERR_INT_MASK) != 0U)
+    if ((regValue & PMIC_COMM_ERR_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_COMM_ERR_INT);
     }
 
-    if ((regValue & PMIC_INT_FSM_ERR_I2C2_ERR_INT_MASK) != 0U)
+    if ((regValue & TPS6522X_I2C2_ERR_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_I2C2_ERR_INT);
     }
@@ -709,7 +705,7 @@ static int32_t Pmic_tps6522x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8
     Pmic_tps6522x_getFsmEsmErr(pPmicCoreHandle, regValue, pErrStat);
 
     /* Check/decipher FSM Error for IRQ Mask Bit */
-    if ((regValue & PMIC_INT_FSM_ERR_WD_INT_MASK) != 0U)
+    if ((regValue & PMIC_WD_INT_MASK) != 0U)
     {
         /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -721,17 +717,17 @@ static int32_t Pmic_tps6522x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8
 
         if ((PMIC_ST_SUCCESS == pmicStatus) && ((regData & PMIC_INT_WD_ERR_MASK) != 0U))
         {
-            if ((regData & PMIC_WD_ERR_STATUS_WD_RST_INT_MASK) != 0U)
+            if ((regData & PMIC_WD_RST_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_WD_RST_INT);
             }
 
-            if ((regData & PMIC_WD_ERR_STATUS_WD_FAIL_INT_MASK) != 0U)
+            if ((regData & PMIC_WD_FAIL_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_WD_FAIL_INT);
             }
 
-            if ((regData & PMIC_WD_ERR_STATUS_WD_LONGWIN_TIMEOUT_INT_MASK) != 0U)
+            if ((regData & PMIC_WD_LONGWIN_TIMEOUT_INT_MASK) != 0U)
             {
                 Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_WD_LONGWIN_TIMEOUT_INT);
             }
@@ -755,7 +751,7 @@ static int32_t Pmic_tps6522x_getStartupMiscModerateSevereFsmErr(Pmic_CoreHandle_
     switch (l1RegAddr)
     {
         case PMIC_INT_STARTUP_REGADDR:
-            Pmic_tps6522x_getStartupErr(pPmicCoreHandle, regValue, pErrStat);
+            Pmic_tps6522x_getStartupErr(regValue, pErrStat);
             break;
 
         case PMIC_INT_MISC_REGADDR:
@@ -763,11 +759,11 @@ static int32_t Pmic_tps6522x_getStartupMiscModerateSevereFsmErr(Pmic_CoreHandle_
             break;
 
         case PMIC_INT_MODERATE_ERR_REGADDR:
-            Pmic_tps6522x_getModerateErr(pPmicCoreHandle, regValue, pErrStat);
+            Pmic_tps6522x_getModerateErr(regValue, pErrStat);
             break;
 
         case PMIC_INT_SEVERE_ERR_REGADDR:
-            Pmic_tps6522x_getSevereErr(pPmicCoreHandle, regValue, pErrStat);
+            Pmic_tps6522x_getSevereErr(regValue, pErrStat);
             break;
 
         default:
@@ -797,15 +793,15 @@ int32_t Pmic_tps6522x_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t
         switch (l1RegAddr)
         {
             case PMIC_INT_BUCK_REGADDR:
-                Pmic_tps6522x_getBuckErr(pPmicCoreHandle, regValue, pErrStat);
+                Pmic_tps6522x_getBuckErr(regValue, pErrStat);
                 break;
 
             case PMIC_INT_LDO_VMON_REGADDR:
-                Pmic_tps6522x_getLdoVmonErr(pPmicCoreHandle, regValue, pErrStat);
+                Pmic_tps6522x_getLdoVmonErr(regValue, pErrStat);
                 break;
 
             case PMIC_INT_GPIO_REGADDR:
-                Pmic_tps6522x_getGpioErr(pPmicCoreHandle, regValue, pErrStat);
+                Pmic_tps6522x_getGpioErr(regValue, pErrStat);
                 break;
 
             case PMIC_INT_STARTUP_REGADDR:
