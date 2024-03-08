@@ -70,6 +70,8 @@ void test_pmic_get_diagout();
 void test_pmic_enable_diagout();
 void test_pmic_get_safeout_cfg();
 void test_pmic_enable_safeout_cfg();
+void test_pmicDiagControl_AMUX();
+void test_pmicDiagControl_DMUX();
 void *test_pmic_core(void *args);
 
 #ifdef __cplusplus
