@@ -43,39 +43,38 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#include "pmic_test_common.h"
 #include "pmic_power.h"
 #include "pmic_power_priv.h"
 #include "pmic_power_tps65386x_priv.h"
+#include "pmic_test_common.h"
 
 /* ========================================================================= */
 /*                             Macros & Typedefs                             */
 /* ========================================================================= */
 
-#define PMIC_TPS65386X_LDO_MAX  PMIC_POWER_LDO_MAX
-#define PMIC_TPS65386X_BUCK1_4_CURRENT_LIMIT_MAX      \
-                               PMIC_TPS65386X_REGULATOR_BUCK_CURRENT_LIMIT_5A5
-#define PMIC_TPS65386X_BUCK5_CURRENT_LIMIT_MAX        \
-                               PMIC_TPS65386X_REGULATOR_BUCK_CURRENT_LIMIT_3A5
-#define PMIC_TPS65386X_BUCK_SLEW_RATE_MAX             \
-                               PMIC_TPS65386X_REGULATOR_BUCK_SLEW_RATE_0MV31
-#define PMIC_TPS65386X_REGULATOR_LDO_PLDN_VAL_MAX     \
-                               PMIC_TPS65386X_REGULATOR_LDO_PLDN_VAL_500OHM
-#define PMIC_TPS65386X_REGULATOR_LDO_MAX_VOLTAGE      (3300U)
-#define PMIC_TPS65386X_POWER_RAIL_SEL_MAX             \
-                               PMIC_TPS65386X_POWER_RAIL_SEL_OTHER
-#define PMIC_TPS65386X_REGULATOR_LDO_RV_TIMEOUT_MAX   \
-                               PMIC_TPS65386X_REGULATOR_LDO_RV_TIMEOUT_16MS
+#define PMIC_TPS65386X_LDO_MAX PMIC_POWER_LDO_MAX
+#define PMIC_TPS65386X_BUCK1_4_CURRENT_LIMIT_MAX                               \
+    PMIC_TPS65386X_REGULATOR_BUCK_CURRENT_LIMIT_5A5
+#define PMIC_TPS65386X_BUCK5_CURRENT_LIMIT_MAX                                 \
+    PMIC_TPS65386X_REGULATOR_BUCK_CURRENT_LIMIT_3A5
+#define PMIC_TPS65386X_BUCK_SLEW_RATE_MAX                                      \
+    PMIC_TPS65386X_REGULATOR_BUCK_SLEW_RATE_0MV31
+#define PMIC_TPS65386X_REGULATOR_LDO_PLDN_VAL_MAX                              \
+    PMIC_TPS65386X_REGULATOR_LDO_PLDN_VAL_500OHM
+#define PMIC_TPS65386X_REGULATOR_LDO_MAX_VOLTAGE (3300U)
+#define PMIC_TPS65386X_POWER_RAIL_SEL_MAX PMIC_TPS65386X_POWER_RAIL_SEL_OTHER
+#define PMIC_TPS65386X_REGULATOR_LDO_RV_TIMEOUT_MAX                            \
+    PMIC_TPS65386X_REGULATOR_LDO_RV_TIMEOUT_16MS
 
-#define PMIC_POWER_NUM_OF_TESTCASES     \
-        (sizeof(pmic_power_tests)/sizeof(pmic_power_tests[0]))
+#define PMIC_POWER_NUM_OF_TESTCASES                                            \
+    (sizeof(pmic_power_tests) / sizeof(pmic_power_tests[0]))
 
-#define PMIC_UT_TPS65386X_REGULATOR_BUCK_MAX_VOLTAGE  (3340U)
-#define PMIC_UT_LP8764X_REGULATOR_BUCK_MAX_VOLTAGE   (3340U)
-#define PMIC_UT_TPS65386X_REGULATOR_BUCK_MIN_VOLTAGE  (300U)
-#define PMIC_UT_LP8764X_REGULATOR_BUCK_MIN_VOLTAGE   (300U)
-#define PMIC_UT_TPS65386X_POWER_LDO1_2_3_MIN_VOLTAGE  (600U)
-#define PMIC_UT_TPS65386X_POWER_LDO4_MIN_VOLTAGE      (1200U)
+#define PMIC_UT_TPS65386X_REGULATOR_BUCK_MAX_VOLTAGE (3340U)
+#define PMIC_UT_LP8764X_REGULATOR_BUCK_MAX_VOLTAGE (3340U)
+#define PMIC_UT_TPS65386X_REGULATOR_BUCK_MIN_VOLTAGE (300U)
+#define PMIC_UT_LP8764X_REGULATOR_BUCK_MIN_VOLTAGE (300U)
+#define PMIC_UT_TPS65386X_POWER_LDO1_2_3_MIN_VOLTAGE (600U)
+#define PMIC_UT_TPS65386X_POWER_LDO4_MIN_VOLTAGE (1200U)
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */

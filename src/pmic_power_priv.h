@@ -66,6 +66,9 @@ extern "C" {
 #define PMIC_PLDO1 (1U)
 #define PMIC_PLDO2 (2U)
 
+#define PMIC_EXT_VMON1 (1U)
+#define PMIC_EXT_VMON2 (2U)
+
 #define PMIC_EN_OUT1 (1U)
 #define PMIC_EN_OUT2 (2U)
 #define PMIC_EN_OUT_ALL (3U)
@@ -212,23 +215,130 @@ extern "C" {
 #define PLDO1_CTRL_MASK (0x03U)
 
 /* Define Macros for LDO and PLDO Discharge pull-down configuration */
-#define PMIC_PLDO2_DSCG_SHIFT
-#define PMIC_PLDO2_DSCG_MASK
+#define PMIC_PLDO2_DSCG_SHIFT (0x05U)
+#define PMIC_PLDO2_DSCG_MASK (0x01U)
 
-#define PMIC_PLDO1_DSCG_SHIFT
-#define PMIC_PLDO1_DSCG_MASK
+#define PMIC_PLDO1_DSCG_SHIFT (0x04U)
+#define PMIC_PLDO1_DSCG_MASK (0x01U)
 
-#define PMIC_LDO4_DSCG_SHIFT
-#define PMIC_LDO4_DSCG_MASK
+#define PMIC_LDO4_DSCG_SHIFT (0x03U)
+#define PMIC_LDO4_DSCG_MASK (0x01U)
 
-#define PMIC_LDO3_DSCG_SHIFT
-#define PMIC_LDO3_DSCG_MASK
+#define PMIC_LDO3_DSCG_SHIFT (0x02U)
+#define PMIC_LDO3_DSCG_MASK (0x01U)
 
-#define PMIC_LDO2_DSCG_SHIFT
-#define PMIC_LDO2_DSCG_MASK
+#define PMIC_LDO2_DSCG_SHIFT (0x01U)
+#define PMIC_LDO2_DSCG_MASK (0x01U)
 
-#define PMIC_LDO1_DSCG_SHIFT
-#define PMIC_LDO1_DSCG_MASK
+#define PMIC_LDO1_DSCG_SHIFT (0x00U)
+#define PMIC_LDO1_DSCG_MASK (0x01U)
+
+/* Define Macros for Low Power VMon Control Register */
+#define PMIC_LP_EXT_VMON2_CTRL_SHIFT        (0x07U)
+#define PMIC_LP_EXT_VMON2_CTRL_MASK         (0x01U)
+
+#define PMIC_LP_EXT_VMON1_CTRL_SHIFT        (0x06U)
+#define PMIC_LP_EXT_VMON1_CTRL_MASK         (0x01U)
+
+#define PMIC_LP_PLDO2_VMON_CTRL_SHIFT       (0x05U)
+#define PMIC_LP_PLDO2_VMON_CTRL_MASK        (0x01U)
+
+#define PMIC_LP_PLDO1_VMON_CTRL_SHIFT       (0x04U)
+#define PMIC_LP_PLDO1_VMON_CTRL_MASK        (0x01U)
+
+#define PMIC_LP_LDO4_VMON_CTRL_SHIFT        (0x03U)
+#define PMIC_LP_LDO4_VMON_CTRL_MASK         (0x01U)
+
+#define PMIC_LP_LDO3_VMON_CTRL_SHIFT        (0x02U)
+#define PMIC_LP_LDO3_VMON_CTRL_MASK         (0x01U)
+
+#define PMIC_LP_LDO2_VMON_CTRL_SHIFT        (0x01U)
+#define PMIC_LP_LDO2_VMON_CTRL_MASK         (0x01U)
+
+#define PMIC_LP_LDO1_VMON_CTRL_SHIFT        (0x00U)
+#define PMIC_LP_LDO1_VMON_CTRL_MASK         (0x01U)
+
+/* Define Macros for Low Power Configuration Register */
+#define PMIC_LP_BB_OVP_CTRL_SHIFT           (0x07U)
+#define PMIC_LP_BB_OVP_CTRL_MASK            (0x01U)
+
+#define PMIC_LP_BB_VMON_CTRL_SHIFT          (0x06U)
+#define PMIC_LP_BB_VMON_CTRL_MASK           (0x01U)
+
+#define PMIC_LP_TSD_PER_CFG_SHIFT           (0x01U)
+#define PMIC_LP_TSD_PER_CFG_MASK            (0x01U)
+
+#define PMIC_LP_VMON_PER_CFG_SHIFT          (0x00U)
+#define PMIC_LP_VMON_PER_CFG_MASK           (0x01U)
+
+/* Define Macros for LDO VMON Threshold Config-1 Register configuration */
+#define PMIC_VMON_TH_CFG1_LDO4_VMON_TH_SHIFT (0x06U)
+#define PMIC_VMON_TH_CFG1_LDO4_VMON_TH_MASK (0x03U)
+
+#define PMIC_VMON_TH_CFG1_LDO3_VMON_TH_SHIFT (0x04U)
+#define PMIC_VMON_TH_CFG1_LDO3_VMON_TH_MASK (0x03U)
+
+#define PMIC_VMON_TH_CFG1_LDO2_VMON_TH_SHIFT (0x02U)
+#define PMIC_VMON_TH_CFG1_LDO2_VMON_TH_MASK (0x03U)
+
+#define PMIC_VMON_TH_CFG1_LDO1_VMON_TH_SHIFT (0x00U)
+#define PMIC_VMON_TH_CFG1_LDO1_VMON_TH_MASK (0x03U)
+
+/* Define Macros for Ext_VMON and PLDO VMON Threshold Config-2 Register
+ * configuration */
+#define PMIC_VMON_TH_CFG2_EXT_VMON2_TH_SHIFT (0x06U)
+#define PMIC_VMON_TH_CFG2_EXT_VMON2_TH_MASK (0x03U)
+
+#define PMIC_VMON_TH_CFG2_EXT_VMON1_TH_SHIFT (0x04U)
+#define PMIC_VMON_TH_CFG2_EXT_VMON1_TH_MASK (0x03U)
+
+#define PMIC_VMON_TH_CFG2_PLDO2_VMON_TH_SHIFT (0x02U)
+#define PMIC_VMON_TH_CFG2_PLDO2_VMON_TH_MASK (0x03U)
+
+#define PMIC_VMON_TH_CFG2_PLDO1_VMON_TH_SHIFT (0x00U)
+#define PMIC_VMON_TH_CFG2_PLDO1_VMON_TH_MASK (0x03U)
+
+/* Define Macros for Buck-Boost VMON Threshold Config-3 Register configuration
+ */
+#define PMIC_VMON_TH_CFG3_BB_TMO_CFG_SHIFT (0x02U)
+#define PMIC_VMON_TH_CFG3_BB_TMO_CFG_MASK (0x03U)
+
+#define PMIC_VMON_TH_CFG3_BB_VMON_TH_SHIFT (0x00U)
+#define PMIC_VMON_TH_CFG3_BB_VMON_TH_MASK (0x03U)
+
+/* Define Macros for VMON De-Glitch Config-1 Register configuration */
+#define PMIC_VMON_DGL_CFG1_VBAT_VMON_DGL_SHIFT (0x05U)
+#define PMIC_VMON_DGL_CFG1_VBAT_VMON_DGL_MASK (0x03U)
+
+#define PMIC_VMON_DGL_CFG1_BB_VMON_DGL_SHIFT (0x06U)
+#define PMIC_VMON_DGL_CFG1_BB_VMON_DGL_MASK (0x01U)
+
+/* Define Macros for LDO VMON De-Glitch Config-2 Register configuration */
+#define PMIC_VMON_DGL_CFG2_LDO4_VMON_DGL_SHIFT (0x06U)
+#define PMIC_VMON_DGL_CFG2_LDO4_VMON_DGL_MASK (0x03U)
+
+#define PMIC_VMON_DGL_CFG2_LDO3_VMON_DGL_SHIFT (0x04U)
+#define PMIC_VMON_DGL_CFG2_LDO3_VMON_DGL_MASK (0x03U)
+
+#define PMIC_VMON_DGL_CFG2_LDO2_VMON_DGL_SHIFT (0x02U)
+#define PMIC_VMON_DGL_CFG2_LDO2_VMON_DGL_MASK (0x03U)
+
+#define PMIC_VMON_DGL_CFG2_LDO1_VMON_DGL_SHIFT (0x00U)
+#define PMIC_VMON_DGL_CFG2_LDO1_VMON_DGL_MASK (0x03U)
+
+/* Define Macros for Ext_VMON and PLDO VMON De-Glitch Config-3 Register
+ * configuration */
+#define PMIC_VMON_DGL_CFG3_EXT_VMON1_DGL_SHIFT (0x06U)
+#define PMIC_VMON_DGL_CFG3_EXT_VMON1_DGL_MASK (0x03U)
+
+#define PMIC_VMON_DGL_CFG3_EXT_VMON2_DGL_SHIFT (0x04U)
+#define PMIC_VMON_DGL_CFG3_EXT_VMON2_DGL_MASK (0x03U)
+
+#define PMIC_VMON_DGL_CFG3_PLDO2_VMON_DGL_SHIFT (0x02U)
+#define PMIC_VMON_DGL_CFG3_PLDO2_VMON_DGL_MASK (0x03U)
+
+#define PMIC_VMON_DGL_CFG3_PLDO1_VMON_DGL_SHIFT (0x00U)
+#define PMIC_VMON_DGL_CFG3_PLDO1_VMON_DGL_MASK (0x03U)
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
@@ -243,10 +353,10 @@ extern "C" {
  *          BUCK1/BUCK2/LDO1...etc
  */
 static inline uint8_t Pmic_powerGetPwrRsrcId(uint16_t pwrRsrc) {
-  uint8_t pwrRsrcId;
-  pwrRsrcId = (uint8_t)(pwrRsrc & 0xFFU);
+    uint8_t pwrRsrcId;
+    pwrRsrcId = (uint8_t)(pwrRsrc & 0xFFU);
 
-  return pwrRsrcId;
+    return pwrRsrcId;
 }
 
 /**
@@ -254,10 +364,10 @@ static inline uint8_t Pmic_powerGetPwrRsrcId(uint16_t pwrRsrc) {
  *          BUCK/LDO/VCCA/VMON
  */
 static inline uint8_t Pmic_powerGetPwrRsrcType(uint16_t pwrRsrc) {
-  uint8_t pwrRsrcType;
-  pwrRsrcType = (uint8_t)((pwrRsrc >> 0x8U) & 0xFFU);
+    uint8_t pwrRsrcType;
+    pwrRsrcType = (uint8_t)((pwrRsrc >> 0x8U) & 0xFFU);
 
-  return pwrRsrcType;
+    return pwrRsrcType;
 }
 
 /**
