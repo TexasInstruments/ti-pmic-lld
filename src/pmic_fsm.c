@@ -46,7 +46,7 @@
 #include "pmic_io_priv.h"
 #include "pmic_fsm_priv.h"
 
-#include "pmic_rtc_tps6594x_priv.h"
+#include "pmic_rtc_priv.h"
 
 /*!
  * \brief   This function is used to get the regAddr, mask and shift values to

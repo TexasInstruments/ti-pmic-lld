@@ -44,7 +44,7 @@
 #include "pmic_irq_priv.h"
 #include "pmic_irq_tps6594x.h"
 #include "pmic_irq_tps6594x_priv.h"
-#include "pmic_rtc_tps6594x_priv.h"
+#include "pmic_rtc_priv.h"
 #include "pmic_power_priv.h"
 #include "pmic_wdg_priv.h"
 
