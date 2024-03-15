@@ -415,25 +415,25 @@ extern "C" {
  *                                        validParams is set.
  */
 typedef struct Pmic_CoreCfg_s {
-  uint32_t validParams;
-  uint32_t instType;
-  uint8_t pmicDeviceType;
-  uint8_t commMode;
-  uint8_t slaveAddr;
-  uint8_t qaSlaveAddr;
-  uint8_t nvmSlaveAddr;
-  uint8_t i2c1Speed;
-  uint8_t i2c2Speed;
-  void *pCommHandle;
-  void *pQACommHandle;
-  int32_t (*pFnPmicCommIoRead)(struct Pmic_CoreHandle_s *pmicCorehandle,
-                               uint8_t instType, uint16_t regAddr,
-                               uint8_t *pRxBuf, uint8_t bufLen);
-  int32_t (*pFnPmicCommIoWrite)(struct Pmic_CoreHandle_s *pmicCorehandle,
-                                uint8_t instType, uint16_t regAddr,
-                                uint8_t *pTxBuf, uint8_t bufLen);
-  void (*pFnPmicCritSecStart)(void);
-  void (*pFnPmicCritSecStop)(void);
+    uint32_t validParams;
+    uint32_t instType;
+    uint8_t pmicDeviceType;
+    uint8_t commMode;
+    uint8_t slaveAddr;
+    uint8_t qaSlaveAddr;
+    uint8_t nvmSlaveAddr;
+    uint8_t i2c1Speed;
+    uint8_t i2c2Speed;
+    void *pCommHandle;
+    void *pQACommHandle;
+    int32_t (*pFnPmicCommIoRead)(struct Pmic_CoreHandle_s *pmicCorehandle,
+                                 uint8_t instType, uint16_t regAddr,
+                                 uint8_t *pRxBuf, uint8_t bufLen);
+    int32_t (*pFnPmicCommIoWrite)(struct Pmic_CoreHandle_s *pmicCorehandle,
+                                  uint8_t instType, uint16_t regAddr,
+                                  uint8_t *pTxBuf, uint8_t bufLen);
+    void (*pFnPmicCritSecStart)(void);
+    void (*pFnPmicCritSecStop)(void);
 } Pmic_CoreCfg_t;
 
 /*==========================================================================*/

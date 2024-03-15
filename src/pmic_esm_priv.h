@@ -66,7 +66,6 @@ extern "C" {
  * @brief Contains macros used in the ESM module of PMIC driver.
  */
 
-
 /**
  * @brief Offset value for the ESM configuration register 1.
  *
@@ -142,7 +141,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMPrivMacros
  */
-#define ESM_CTRL_REG (0x47U)
+#define PMIC_ESM_CTRL_REG_ADDR (0x47U)
 
 /**
  * @brief Bit shift position for enabling ESM in the control register.
@@ -166,7 +165,8 @@ extern "C" {
 #define ESM_CFG1_REG (0x48U)
 
 /**
- * @brief Bit shift position for error threshold configuration in ESM configuration register 1.
+ * @brief Bit shift position for error threshold configuration in ESM
+ * configuration register 1.
  *
  * @ingroup Pmic_ESMPrivMacros
  */
@@ -180,14 +180,16 @@ extern "C" {
 #define ESM_CFG1_ESM_EN_SHIFT (0x06U)
 
 /**
- * @brief Bit shift position for configuring ESM mode in ESM configuration register 1.
+ * @brief Bit shift position for configuring ESM mode in ESM configuration
+ * register 1.
  *
  * @ingroup Pmic_ESMPrivMacros
  */
 #define ESM_CFG1_ESM_CFG_SHIFT (0x07U)
 
 /**
- * @brief Bit mask for error threshold configuration in ESM configuration register 1.
+ * @brief Bit mask for error threshold configuration in ESM configuration
+ * register 1.
  *
  * @ingroup Pmic_ESMPrivMacros
  */
@@ -215,21 +217,24 @@ extern "C" {
 #define ESM_CFG2_REG (0x49U)
 
 /**
- * @brief Bit shift position for time configuration in ESM configuration register 2.
+ * @brief Bit shift position for time configuration in ESM configuration
+ * register 2.
  *
  * @ingroup Pmic_ESMPrivMacros
  */
 #define ESM_CFG2_TIME_CFG_SHIFT (0x00U)
 
 /**
- * @brief Bit shift position for configuring ESM deglitch in ESM configuration register 2.
+ * @brief Bit shift position for configuring ESM deglitch in ESM configuration
+ * register 2.
  *
  * @ingroup Pmic_ESMPrivMacros
  */
 #define ESM_CFG2_ESM_DGL_SHIFT (0x03U)
 
 /**
- * @brief Bit shift position for configuring ESM level polarity in ESM configuration register 2.
+ * @brief Bit shift position for configuring ESM level polarity in ESM
+ * configuration register 2.
  *
  * @ingroup Pmic_ESMPrivMacros
  */
@@ -250,7 +255,8 @@ extern "C" {
 #define ESM_CFG2_ESM_DGL_MASK (0x01U << ESM_CFG2_ESM_DGL_SHIFT)
 
 /**
- * @brief Bit mask for configuring ESM level polarity in ESM configuration register 2.
+ * @brief Bit mask for configuring ESM level polarity in ESM configuration
+ * register 2.
  *
  * @ingroup Pmic_ESMPrivMacros
  */
@@ -264,70 +270,80 @@ extern "C" {
 #define ESM_INT_CFG_REG (0x4AU)
 
 /**
- * @brief Bit shift position for ESM interrupt mask in ESM interrupt configuration register.
+ * @brief Bit shift position for ESM interrupt mask in ESM interrupt
+ * configuration register.
  *
  * @ingroup Pmic_ESMPrivMacros
  */
 #define ESM_INT_MASK_SHIFT (0X01U)
 
 /**
- * @brief Bit shift position for ESM delay 1 interrupt mask in ESM interrupt configuration register.
+ * @brief Bit shift position for ESM delay 1 interrupt mask in ESM interrupt
+ * configuration register.
  *
  * @ingroup Pmic_ESMPrivMacros
  */
 #define ESM_DLY1_INT_MASK_SHIFT (0X02U)
 
 /**
- * @brief Bit shift position for ESM delay 1 interrupt configuration in ESM interrupt configuration register.
+ * @brief Bit shift position for ESM delay 1 interrupt configuration in ESM
+ * interrupt configuration register.
  *
  * @ingroup Pmic_ESMPrivMacros
  */
 #define ESM_DLY1_INT_CFG_SHIFT (0X03U)
 
 /**
- * @brief Bit shift position for ESM delay 2 interrupt mask in ESM interrupt configuration register.
+ * @brief Bit shift position for ESM delay 2 interrupt mask in ESM interrupt
+ * configuration register.
  *
  * @ingroup Pmic_ESMPrivMacros
  */
 #define ESM_DLY2_INT_MASK_SHIFT (0X04U)
 
 /**
- * @brief Bit shift position for ESM delay 2 interrupt configuration in ESM interrupt configuration register.
+ * @brief Bit shift position for ESM delay 2 interrupt configuration in ESM
+ * interrupt configuration register.
  *
  * @ingroup Pmic_ESMPrivMacros
  */
 #define ESM_DLY2_INT_CFG_SHIFT (0X05U)
 
 /**
- * @brief Bit mask for ESM interrupt mask in ESM interrupt configuration register.
+ * @brief Bit mask for ESM interrupt mask in ESM interrupt configuration
+ * register.
  *
  * @ingroup Pmic_ESMPrivMacros
  */
 #define ESM_INT_MASK_MASK (0X01U << ESM_INT_MASK_SHIFT)
 
 /**
- * @brief Bit mask for ESM delay 1 interrupt mask in ESM interrupt configuration register.
+ * @brief Bit mask for ESM delay 1 interrupt mask in ESM interrupt configuration
+ * register.
  *
  * @ingroup Pmic_ESMPrivMacros
  */
 #define ESM_DLY1_INT_MASK_MASK (0X01U << ESM_DLY1_INT_MASK_SHIFT)
 
 /**
- * @brief Bit mask for ESM delay 1 interrupt configuration in ESM interrupt configuration register.
+ * @brief Bit mask for ESM delay 1 interrupt configuration in ESM interrupt
+ * configuration register.
  *
  * @ingroup Pmic_ESMPrivMacros
  */
 #define ESM_DLY1_INT_CFG_MASK (0X03U << ESM_DLY1_INT_CFG_SHIFT)
 
 /**
- * @brief Bit mask for ESM delay 2 interrupt mask in ESM interrupt configuration register.
+ * @brief Bit mask for ESM delay 2 interrupt mask in ESM interrupt configuration
+ * register.
  *
  * @ingroup Pmic_ESMPrivMacros
  */
 #define ESM_DLY2_INT_MASK_MASK (0X01U << ESM_DLY2_INT_MASK_SHIFT)
 
 /**
- * @brief Bit mask for ESM delay 2 interrupt configuration in ESM interrupt configuration register.
+ * @brief Bit mask for ESM delay 2 interrupt configuration in ESM interrupt
+ * configuration register.
  *
  * @ingroup Pmic_ESMPrivMacros
  */
@@ -429,14 +445,16 @@ extern "C" {
  *
  * @ingroup Pmic_ESMPrivMacros
  */
-#define ESM_ERR_STAT_ESM_DLY1_ERR_MASK (0X01U << ESM_ERR_STAT_ESM_DLY1_ERR_SHIFT)
+#define ESM_ERR_STAT_ESM_DLY1_ERR_MASK                                         \
+  (0X01U << ESM_ERR_STAT_ESM_DLY1_ERR_SHIFT)
 
 /**
  * @brief Bit mask for ESM delay 2 error in the error status register.
  *
  * @ingroup Pmic_ESMPrivMacros
  */
-#define ESM_ERR_STAT_ESM_DLY2_ERR_MASK (0X01U << ESM_ERR_STAT_ESM_DLY2_ERR_SHIFT)
+#define ESM_ERR_STAT_ESM_DLY2_ERR_MASK                                         \
+  (0X01U << ESM_ERR_STAT_ESM_DLY2_ERR_SHIFT)
 
 /**
  * @brief Maximum value for error count threshold in ESM configuration.
@@ -453,28 +471,32 @@ extern "C" {
 #define PMIC_ESM_DELAY_MICROSEC_MAX (522240U)
 
 /**
- * @brief Divider value for converting delay from microseconds to internal units.
+ * @brief Divider value for converting delay from microseconds to internal
+ * units.
  *
  * @ingroup Pmic_ESMPrivMacros
  */
 #define PMIC_ESM_DELAY_MICROSEC_DIV (2048U)
 
 /**
- * @brief Minimum value for PWM pulse duration in microseconds for ESM configuration.
+ * @brief Minimum value for PWM pulse duration in microseconds for ESM
+ * configuration.
  *
  * @ingroup Pmic_ESMPrivMacros
  */
 #define PMIC_ESM_PWM_PULSE_MICROSEC_MIN (15U)
 
 /**
- * @brief Maximum value for PWM pulse duration in microseconds for ESM configuration.
+ * @brief Maximum value for PWM pulse duration in microseconds for ESM
+ * configuration.
  *
  * @ingroup Pmic_ESMPrivMacros
  */
 #define PMIC_ESM_PWM_PULSE_MICROSEC_MAX (3840U)
 
 /**
- * @brief Divider value for converting PWM pulse duration from microseconds to internal units.
+ * @brief Divider value for converting PWM pulse duration from microseconds to
+ * internal units.
  *
  * @ingroup Pmic_ESMPrivMacros
  */
@@ -495,7 +517,8 @@ extern "C" {
 #define PMIC_ESM_CFG_DELAY2_VALID (0x01U)
 
 /**
- * @brief Bit indicating the validity of error count threshold configuration parameter.
+ * @brief Bit indicating the validity of error count threshold configuration
+ * parameter.
  *
  * @ingroup Pmic_ESMPrivMacros
  */
@@ -530,7 +553,8 @@ extern "C" {
 #define PMIC_ESM_CFG_LMIN_VALID (0x06U)
 
 /**
- * @brief Bit indicating the validity of error enable drive configuration parameter.
+ * @brief Bit indicating the validity of error enable drive configuration
+ * parameter.
  *
  * @ingroup Pmic_ESMPrivMacros
  */
@@ -542,7 +566,6 @@ extern "C" {
  * @ingroup Pmic_ESMPrivMacros
  */
 #define PMIC_ESM_CFG_MODE_VALID (0x08U)
-
 
 /**
  * @}

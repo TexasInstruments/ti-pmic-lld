@@ -410,7 +410,7 @@ extern "C" {
  */
 static inline void Pmic_setBitField(uint8_t *pRegVal, uint8_t regFieldShift,
                                     uint8_t regFieldMask, uint8_t fieldVal) {
-  *pRegVal = (((*pRegVal) & (uint8_t)(~(uint8_t)regFieldMask)) |
+  *pRegVal = (uint8_t)(((*pRegVal) & (uint8_t)(~(uint8_t)regFieldMask)) |
               ((((uint8_t)fieldVal) << (uint8_t)regFieldShift) &
                (uint8_t)regFieldMask));
 }

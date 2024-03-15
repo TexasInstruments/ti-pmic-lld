@@ -453,21 +453,21 @@ extern "C" {
  * @brief Structure for configuring PMIC interrupt handling.
  */
 typedef struct Pmic_IntrCfg_s {
-  uint16_t intrClrRegAddr; /**< Address of the interrupt clear register. */
-  uint8_t intrClrBitPos;   /**< Bit position of the interrupt in the clear
-                              register. */
-  uint8_t intrMaskRegAddr; /**< Address of the interrupt mask register. */
-  uint8_t intrMaskBitPos;  /**< Bit position of the interrupt in the mask
-                              register. */
+    uint16_t intrClrRegAddr; /**< Address of the interrupt clear register. */
+    uint8_t intrClrBitPos;   /**< Bit position of the interrupt in the clear
+                                register. */
+    uint8_t intrMaskRegAddr; /**< Address of the interrupt mask register. */
+    uint8_t intrMaskBitPos;  /**< Bit position of the interrupt in the mask
+                                register. */
 } Pmic_IntrCfg_t;
 
 /**
  * @brief Structure for configuring GPIO interrupt type.
  */
 typedef struct Pmic_GpioIntrTypeCfg_s {
-  uint8_t
-      gpioIntrMaskRegAddr; /**< Address of the GPIO interrupt mask register. */
-  uint8_t gpioMaskBitPos;  /**< Bit position of the GPIO interrupt mask. */
+    uint8_t gpioIntrMaskRegAddr; /**< Address of the GPIO interrupt mask
+                                    register. */
+    uint8_t gpioMaskBitPos; /**< Bit position of the GPIO interrupt mask. */
 } Pmic_GpioIntrTypeCfg_t;
 
 /*==========================================================================*/

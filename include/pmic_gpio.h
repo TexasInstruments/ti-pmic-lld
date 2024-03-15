@@ -108,8 +108,8 @@ typedef struct Pmic_GpioRdbkDglCfg_s {
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-#define PMIC_LOW (0U)
-#define PMIC_HIGH (1U)
+#define PMIC_GPIO_ENABLE true
+#define PMIC_GPIO_DISABLE false
 
 /* Pins for PMIC_BB_GPO1, PMIC_BB_GPO2, PMIC_BB_GPO3, PMIC_BB_GPO4 */
 #define PMIC_GPO1 (0x01U)
@@ -122,59 +122,47 @@ typedef struct Pmic_GpioRdbkDglCfg_s {
 #define PMIC_GPIO_CFG_PULL_VALID (0x02U)
 #define PMIC_GPIO_CFG_DEGLITCH_VALID (0x03U)
 
-/* MACROS for GPO_CFG1_GPO1 */
-#define LOW_LEVEL (0U)
-#define HIGH_LEVEL (1U)
-#define N_EN (2U)
-#define nINT (3U)
-#define N_EN_HIGH_Z_1 (4U)
-#define N_EN_HIGH_Z_2 (5U)
-#define N_EN_HIGH_Z_3 (6U)
-#define RO_CNTR (7U)
+/* MACROS for GPO_CFG1_GPO1, GPO_CFG1_GPO2, GPO_CFG2_GPO3,
+   GPO_CFG2_GPO4, GPI_CFG_GPI1 and GPI_CFG_GPI4 */
+#define PMIC_GPIO_LOW_LEVEL (0U)
+#define PMIC_GPIO_HIGH_LEVEL (1U)
+#define PMIC_GPIO_N_EN (2U)
+#define PMIC_GPIO_nINT (3U)
+#define PMIC_GPIO_WD_IN (1U)
+#define PMIC_GPIO_COS_N (2U)
+#define PMIC_GPIO_PGOOD (3U)
+#define PMIC_GPIO_COMP1_IN (0U)
+#define PMIC_GPIO_COMP1_OUT (3U)
+#define PMIC_GPIO_COMP2_OUT (4U)
+#define PMIC_GPIO_ESM_IN (0U)
+#define PMIC_GPIO_EN_OUT2 (4U)
+#define PMIC_GPIO_SAFE_OUT2 (3U)
+#define PMIC_GPIO_N_EN_HIGH_Z_1 (4U)
+#define PMIC_GPIO_N_EN_HIGH_Z_2 (5U)
+#define PMIC_GPIO_N_EN_HIGH_Z_3 (6U)
+#define PMIC_GPIO_N_EN_HIGH_Z_4 (5U)
+#define PMIC_GPIO_N_EN_HIGH_Z_5 (6U)
+#define PMIC_GPIO_N_EN_HIGH_Z_6 (4U)
+#define PMIC_GPIO_N_EN_HIGH_Z_7 (5U)
+#define PMIC_GPIO_N_EN_HIGH_Z_8 (6U)
+#define PMIC_GPIO_N_EN_HIGH_Z_9 (5U)
+#define PMIC_GPIO_N_EN_HIGH_Z_10 (6U)
+#define PMIC_GPIO_PULL_UP_VDDIO (0U)
+#define PMIC_GPIO_PULL_UP_LDO_IN (1U)
+#define PMIC_GPIO_INTL_PULL_UP (2U)
+#define PMIC_GPIO_RO_CNTR (7U)
 
-/* MACROS for GPO_CFG1_GPO2*/
-#define LOW_LEVEL (0U)
-#define HIGH_LEVEL (1U)
-#define N_EN (2U)
-#define COMP1_OUT (3U)
-#define EN_OUT2 (4U)
-#define N_EN_HIGH_Z_4 (5U)
-#define N_EN_HIGH_Z_5 (6U)
-#define RO_CNTR (7U)
+/* MACROS for GPIO Readback De-Glitch Rising-edge Configuration */
+#define PMIC_GPO_RISING_DGL_TIME_1US (0U)
+#define PMIC_GPO_RISING_DGL_TIME_2US (1U)
+#define PMIC_GPO_RISING_DGL_TIME_4US (2U)
+#define PMIC_GPO_RISING_DGL_TIME_8US (3U)
 
-/* MACROS for EN_OUT GPO_CFG2 */
-#define PULL_UP_VDDIO (0U)
-#define PULL_UP_LDO_IN (1U)
-#define INTL_PULL_UP (2U)
-
-/* MACROS for GPO_CFG2_GPO3 */
-#define LOW_LEVEL (0U)
-#define HIGH_LEVEL (1U)
-#define N_EN (2U)
-#define SAFE_OUT2 (3U)
-#define N_EN_HIGH_Z_6 (4U)
-#define N_EN_HIGH_Z_7 (5U)
-#define N_EN_HIGH_Z_8 (6U)
-#define RO_CNTR (7U)
-
-/* MACROS for GPO_CFG2_GPO4 */
-#define LOW_LEVEL (0U)
-#define HIGH_LEVEL (1U)
-#define N_EN (2U)
-#define PGOOD (3U)
-#define COMP2_OUT (4U)
-#define N_EN_HIGH_Z_9 (5U)
-#define N_EN_HIGH_Z_10 (6U)
-#define RO_CNTR (7U)
-
-/* MACROS for GPI_CFG_GPI1 */
-#define COMP1_IN (0U)
-#define WD_IN (1U)
-#define COS_N (2U)
-
-/* MACROS for GPI_CFG_GPI4 */
-#define ESM_IN (0U)
-#define WD_IN (1U)
+/* MACROS for GPIO Readback De-Glitch Falling-edge Configuration */
+#define PMIC_GPO_FALLING_DGL_TIME_250NS (0U)
+#define PMIC_GPO_FALLING_DGL_TIME_500NS (1U)
+#define PMIC_GPO_FALLING_DGL_TIME_1US (2U)
+#define PMIC_GPO_FALLING_DGL_TIME_2US (3U)
 
 /*==========================================================================*/
 /*                         Function Declarations                            */

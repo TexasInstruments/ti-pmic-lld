@@ -51,8 +51,8 @@
  *
  *  @{
  */
-#define PMIC_WDG_DISABLE (bool)false
-#define PMIC_WDG_ENABLE (bool)true
+#define PMIC_WDG_DISABLE 0
+#define PMIC_WDG_ENABLE 1
 /** @} */
 
 /**
@@ -71,8 +71,8 @@
  *
  *  @{
  */
-#define PMIC_WDG_RETLONGWIN_DISABLE (bool)false
-#define PMIC_WDG_RETLONGWIN_ENABLE (bool)true
+#define PMIC_WDG_RETLONGWIN_DISABLE 0
+#define PMIC_WDG_RETLONGWIN_ENABLE 1
 /** @} */
 
 /**
@@ -912,6 +912,113 @@ int32_t Pmic_wdgQaSequenceWriteAnswer(Pmic_CoreHandle_t *pPmicCoreHandle);
  * valid success/error codes, refer to \ref Pmic_ErrorCodes
  */
 int32_t Pmic_wdgBeginSequences(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               const uint8_t wdgMode);
+                               const uint8_t wdgMde);
+
+static int32_t
+Pmic_checkPmicCoreHandle(const Pmic_CoreHandle_t *pPmicCoreHandle);
+
+static int32_t
+Pmic_WdgValidatePmicCoreHandle(const Pmic_CoreHandle_t *pPmicCoreHandle);
+
+static uint8_t
+Pmic_WdgCovertLongWinTimeIntervaltoRegBits(const Pmic_WdgCfg_t wdgCfg);
+
+static int32_t
+Pmic_WdgSetWindow1Window2TimeIntervals(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                       const Pmic_WdgCfg_t wdgCfg);
+
+static int32_t
+Pmic_WdgSetWindowsTimeIntervals(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                const Pmic_WdgCfg_t wdgCfg);
+
+static int32_t
+Pmic_WdgGetWindow1Window2TimeIntervals(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                       Pmic_WdgCfg_t *pWdgCfg);
+
+static int32_t
+Pmic_WdgGetWindowsTimeIntervals(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                Pmic_WdgCfg_t *pWdgCfg);
+
+static int32_t Pmic_WdgSetThresholdValues(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                          const Pmic_WdgCfg_t wdgCfg);
+
+static int32_t Pmic_WdgGetThresholdValues(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                          Pmic_WdgCfg_t *pWdgCfg);
+
+static int32_t Pmic_WdgSetRetToLongWindowCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                             bool returnLongWindow);
+
+static int32_t Pmic_WdgSetWarmRstEnableCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                           bool rstEnble);
+
+static int32_t Pmic_WdgSetPwrHoldCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                     bool pwrHld);
+
+static int32_t Pmic_WdgSetModeCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                  bool wdgMde);
+
+int32_t Pmic_WdgSetCntSelCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
+                             uint8_t wdgCntSel);
+
+int32_t Pmic_WdgSetEnDrvSelCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
+                               uint8_t wdgEnDrvSel);
+
+static int32_t Pmic_WdgSetCtrlParams(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                     const Pmic_WdgCfg_t wdgCfg);
+
+static int32_t Pmic_WdgGetCtrlParams(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                     Pmic_WdgCfg_t *pWdgCfg);
+
+static int32_t Pmic_wdgSetQaQuesSeedValue(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                          const Pmic_WdgCfg_t wdgCfg);
+
+static int32_t Pmic_WdgSetQaConfigurations(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                           const Pmic_WdgCfg_t wdgCfg);
+
+static int32_t Pmic_WdgGetQaConfigurations(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                           Pmic_WdgCfg_t *pWdgCfg);
+
+static int32_t Pmic_wdgEnDisState(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                  bool enable);
+
+static int32_t
+Pmic_wdgReadQuesandAnswerCount(Pmic_CoreHandle_t *pPmicCoreHandle,
+                               uint8_t *pQaAnsCnt, uint8_t *pQaQuesCnt);
+
+static bool is_wdgBadEventDetected(Pmic_CoreHandle_t *pPmicCoreHandle);
+
+static uint8_t mux_4x1(uint8_t x0, uint8_t x1, uint8_t x2, uint8_t x3,
+                       uint8_t qaFdk);
+
+static uint8_t Pmic_getAnswerByte(uint8_t qaQuesCnt, uint8_t qaAnsCnt,
+                                  uint8_t qaFbk);
+
+static int32_t
+Pmic_wdgQaEvaluateAndWriteAnswer(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                 uint8_t qaAnsCnt, uint8_t qaQuesCnt,
+                                 uint8_t qaFbk);
+
+static int32_t
+Pmic_wdgQaEvaluateAndWriteAnswers(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                  uint8_t qaFbk);
+
+static int32_t Pmic_wdgQaWriteAnswers(Pmic_CoreHandle_t *pPmicCoreHandle);
+
+static int32_t Pmic_wdgQaSetModeRetlongwinCfgWriteAnswersLongwindow(
+    Pmic_CoreHandle_t *pPmicCoreHandle);
+
+static int32_t
+Pmic_wdgQaWriteAnswersNumSequence(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                  uint32_t sequences, uint32_t maxCnt);
+
+static void Pmic_wdgGetSeqAnswErrFailRstIntStat(Pmic_WdgErrStatus_t *pErrStatus,
+                                                uint8_t regVal);
+
+static void Pmic_wdgGetLongwintointTimeoutTrigAnswEarlyErrStat(
+    Pmic_WdgErrStatus_t *pErrStatus, uint8_t regVal);
+
+static int32_t
+Pmic_wdgClrErrStatusWdgErrType(Pmic_CoreHandle_t *pPmicCoreHandle,
+                               const uint8_t wdgErrType, uint8_t regVal);
 
 #endif /* PMIC_INC_PMIC_WDG_H_ */

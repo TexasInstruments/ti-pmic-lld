@@ -140,63 +140,63 @@
 
 /* Watch Dog QA Configuration Mask Values */
 #define PMIC_WD_QA_CFG_WD_QUESTION_SEED_MASK                                   \
-  (0x0FU << PMIC_WD_QA_CFG_WD_QUESTION_SEED_SHIFT)
+    (0x0FU << PMIC_WD_QA_CFG_WD_QUESTION_SEED_SHIFT)
 #define PMIC_WD_QA_CFG_WD_QA_LFSR_MASK                                         \
-  (0x03U << PMIC_WD_QA_CFG_WD_QA_LFSR_SHIFT)
+    (0x03U << PMIC_WD_QA_CFG_WD_QA_LFSR_SHIFT)
 #define PMIC_WD_QA_CFG_WD_QA_FDBK_MASK                                         \
-  (0x03U << PMIC_WD_QA_CFG_WD_QA_FDBK_SHIFT)
+    (0x03U << PMIC_WD_QA_CFG_WD_QA_FDBK_SHIFT)
 
 /* Watch Dog Threshold Interrupt Configuration Mask Values */
 #define PMIC_WD_THR2_INT_CFG_MASK (0x03U << PMIC_WD_THR2_INT_CFG_SHIFT)
 #define PMIC_WD_THR2_INT_MASK_CFG_MASK                                         \
-  (0x01U << PMIC_WD_THR2_INT_MASK_CFG_SHIFT)
+    (0x01U << PMIC_WD_THR2_INT_MASK_CFG_SHIFT)
 #define PMIC_WD_THR1_INT_CFG_MASK (0x03U << PMIC_WD_THR1_INT_CFG_SHIFT)
 #define PMIC_WD_THR1_INT_MASK_CFG_MASK                                         \
-  (0x01U << PMIC_WD_THR1_INT_MASK_CFG_SHIFT)
+    (0x01U << PMIC_WD_THR1_INT_MASK_CFG_SHIFT)
 
 /* Watch Dog Question Answer Count Register Mask Values */
 #define PMIC_WD_QUESTION_ANSW_CNT_WD_ANSW_CNT_MASK                             \
-  (0x03U << PMIC_WD_QUESTION_ANSW_CNT_WD_ANSW_CNT_SHIFT)
+    (0x03U << PMIC_WD_QUESTION_ANSW_CNT_WD_ANSW_CNT_SHIFT)
 #define PMIC_WD_QUESTION_ANSW_CNT_WD_QUESTION_MASK                             \
-  (0x0FU << PMIC_WD_QUESTION_ANSW_CNT_WD_QUESTION_SHIFT)
+    (0x0FU << PMIC_WD_QUESTION_ANSW_CNT_WD_QUESTION_SHIFT)
 
 /* Watch Dog Answer byte Register Mask Values */
 #define PMIC_WD_ANSWER_MASK (0xFFU << PMIC_WD_ANSWER_SHIFT)
 
 /* Watch Dog Status Register Mask Values */
 #define PMIC_WD_STAT_REG_WD_FIRST_OK_MASK                                      \
-  (0x01U << PMIC_WD_STAT_REG_WD_FIRST_OK_SHIFT)
+    (0x01U << PMIC_WD_STAT_REG_WD_FIRST_OK_SHIFT)
 #define PMIC_WD_STAT_REG_WD_LONGWIN_ACTIVE_MASK                                \
-  (0x01U << PMIC_WD_STAT_REG_WD_LONGWIN_ACTIVE_SHIFT)
+    (0x01U << PMIC_WD_STAT_REG_WD_LONGWIN_ACTIVE_SHIFT)
 #define PMIC_WD_STAT_REG_WD_BAD_EVENT_MASK                                     \
-  (0x01U << PMIC_WD_STAT_REG_WD_BAD_EVENT_SHIFT)
+    (0x01U << PMIC_WD_STAT_REG_WD_BAD_EVENT_SHIFT)
 #define PMIC_WD_STAT_REG_WD_ERR_CNT_MASK                                       \
-  (0x0FU << PMIC_WD_STAT_REG_WD_ERR_CNT_SHIFT)
+    (0x0FU << PMIC_WD_STAT_REG_WD_ERR_CNT_SHIFT)
 
 /* Watch Dog Error Status Register Mask Values */
 #define PMIC_WD_ERR_STAT_REG_WD_TH2_ERR_MASK                                   \
-  (0x01U << PMIC_WD_ERR_STAT_REG_WD_TH2_ERR_SHIFT)
+    (0x01U << PMIC_WD_ERR_STAT_REG_WD_TH2_ERR_SHIFT)
 
 #define PMIC_WD_ERR_STAT_REG_WD_TH1_ERR_MASK                                   \
-  (0x01U << PMIC_WD_ERR_STAT_REG_WD_TH1_ERR_SHIFT)
+    (0x01U << PMIC_WD_ERR_STAT_REG_WD_TH1_ERR_SHIFT)
 
 #define PMIC_WD_ERR_STAT_REG_WD_LONGWIN_TMO_MASK                               \
-  (0x01U << PMIC_WD_ERR_STAT_REG_WD_LONGWIN_TMO_SHIFT)
+    (0x01U << PMIC_WD_ERR_STAT_REG_WD_LONGWIN_TMO_SHIFT)
 
 #define PMIC_WD_ERR_STAT_REG_WD_ANSW_ERR_MASK                                  \
-  (0x01U << PMIC_WD_ERR_STAT_REG_WD_ANSW_ERR_SHIFT)
+    (0x01U << PMIC_WD_ERR_STAT_REG_WD_ANSW_ERR_SHIFT)
 
 #define PMIC_WD_ERR_STAT_REG_WD_SEQ_ERR_MASK                                   \
-  (0x01U << PMIC_WD_ERR_STAT_REG_WD_SEQ_ERR_SHIFT)
+    (0x01U << PMIC_WD_ERR_STAT_REG_WD_SEQ_ERR_SHIFT)
 
 #define PMIC_WD_ERR_STAT_REG_WD_ANSW_EARLY_MASK                                \
-  (0x01U << PMIC_WD_ERR_STAT_REG_WD_ANSW_EARLY_SHIFT)
+    (0x01U << PMIC_WD_ERR_STAT_REG_WD_ANSW_EARLY_SHIFT)
 
 #define PMIC_WD_ERR_STAT_REG_WD_TRIG_EARLY_MASK                                \
-  (0x01U << PMIC_WD_ERR_STAT_REG_WD_TRIG_EARLY_SHIFT)
+    (0x01U << PMIC_WD_ERR_STAT_REG_WD_TRIG_EARLY_SHIFT)
 
 #define PMIC_WD_ERR_STAT_REG_WD_TMO_MASK                                       \
-  (0x01U << PMIC_WD_ERR_STAT_REG_WD_TMO_SHIFT)
+    (0x01U << PMIC_WD_ERR_STAT_REG_WD_TMO_SHIFT)
 
 /**
  * @brief  Watchdog Long Window Max, Min and Divisor macros
@@ -245,19 +245,19 @@
 
 #define PMIC_WD_THR_CFG_WD_RST_TH_MASK (0x7U << PMIC_WD_THR_CFG_WD_RST_TH_SHIFT)
 #define PMIC_WD_THR_CFG_WD_FAIL_TH_MASK                                        \
-  (0x7U << PMIC_WD_THR_CFG_WD_FAIL_TH_SHIFT)
+    (0x7U << PMIC_WD_THR_CFG_WD_FAIL_TH_SHIFT)
 #define PMIC_WD_THR_CFG_WD_EN_MASK (0x1U << PMIC_WD_THR_CFG_WD_EN_SHIFT)
 #define PMIC_WD_THR_CFG_WD_RST_EN_MASK (0x1U << PMIC_WD_THR_CFG_WD_RST_EN_SHIFT)
 
 #define PMIC_WD_MODE_REG_WD_RETURN_LONGWIN_MASK                                \
-  (0x1U << PMIC_WD_MODE_REG_WD_RETURN_LONGWIN_SHIFT)
+    (0x1U << PMIC_WD_MODE_REG_WD_RETURN_LONGWIN_SHIFT)
 #define PMIC_WD_MODE_REG_WD_MODE_SELECT_MASK                                   \
-  (0x1U << PMIC_WD_MODE_REG_WD_MODE_SELECT_SHIFT)
+    (0x1U << PMIC_WD_MODE_REG_WD_MODE_SELECT_SHIFT)
 #define PMIC_WD_MODE_REG_WD_PWRHOLD_MASK                                       \
-  (0x1U << PMIC_WD_MODE_REG_WD_PWRHOLD_SHIFT)
+    (0x1U << PMIC_WD_MODE_REG_WD_PWRHOLD_SHIFT)
 #define PMIC_WD_MODE_REG_WD_CNT_SEL_MASK                                       \
-  (0x1U << PMIC_WD_MODE_REG_WD_CNT_SEL_SHIFT)
+    (0x1U << PMIC_WD_MODE_REG_WD_CNT_SEL_SHIFT)
 #define PMIC_WD_MODE_REG_WD_ENDRV_SEL_MASK                                     \
-  (0x1U << PMIC_WD_MODE_REG_WD_ENDRV_SEL_SHIFT)
+    (0x1U << PMIC_WD_MODE_REG_WD_ENDRV_SEL_SHIFT)
 
 #endif /* PMIC_INC_PMIC_WDG_PRIV_H_ */

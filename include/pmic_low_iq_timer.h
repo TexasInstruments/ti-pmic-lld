@@ -51,22 +51,42 @@
 #include "pmic_io_priv.h"
 #include "pmic_types.h"
 
-/*==========================================================================*/
-/*                         Function Declarations                            */
-/*==========================================================================*/
+/* ========================================================================== */
+/*                          Function Prototypess */
+/* ========================================================================== */
 
 int32_t Pmic_SetTimerConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
                             uint8_t tmrData);
 int32_t Pmic_GetTimerConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
                             uint8_t *tmrConfigData);
 int32_t Pmic_SetTimerPrescale(Pmic_CoreHandle_t *pPmicCoreHandle,
-                              uint8_t tmrData);
+                              uint8_t tmrPSData);
 int32_t Pmic_GetTimerPrescale(Pmic_CoreHandle_t *pPmicCoreHandle,
-                              uint8_t *tmrConfigData);
+                              uint8_t *tmrPSData);
 int32_t Pmic_TimerClear(Pmic_CoreHandle_t *pPmicCoreHandle);
 int32_t Pmic_SetTimerCounter0(Pmic_CoreHandle_t *pPmicCoreHandle,
-                              uint8_t tmrcntData);
+                              uint8_t tmrcntData0);
+int32_t Pmic_SetTimerCounter1(Pmic_CoreHandle_t *pPmicCoreHandle,
+                              uint8_t tmrcntData1);
+int32_t Pmic_SetTimerCounter2(Pmic_CoreHandle_t *pPmicCoreHandle,
+                              uint8_t tmrcntData2);
 int32_t Pmic_GetTimerCounter0(Pmic_CoreHandle_t *pPmicCoreHandle,
-                              uint8_t *tmrcntData);
+                              uint8_t *tmrcntData0);
+int32_t Pmic_GetTimerCounter1(Pmic_CoreHandle_t *pPmicCoreHandle,
+                              uint8_t *tmrcntData1);
+int32_t Pmic_GetTimerCounter2(Pmic_CoreHandle_t *pPmicCoreHandle,
+                              uint8_t *tmrcntData2);
+int32_t Pmic_GetLPWake0(Pmic_CoreHandle_t *pPmicCoreHandle,
+                        uint8_t *tmrlpwakeData);
+int32_t Pmic_GetLPWake1(Pmic_CoreHandle_t *pPmicCoreHandle,
+                        uint8_t *tmrlpwakeData);
+int32_t Pmic_GetLPWake2(Pmic_CoreHandle_t *pPmicCoreHandle,
+                        uint8_t *tmrlpwakeData);
+int32_t Pmic_SetLPWake0(Pmic_CoreHandle_t *pPmicCoreHandle,
+                        uint8_t tmrlpwakeData);
+int32_t Pmic_SetLPWake1(Pmic_CoreHandle_t *pPmicCoreHandle,
+                        uint8_t tmrlpwakeData);
+int32_t Pmic_SetLPWake2(Pmic_CoreHandle_t *pPmicCoreHandle,
+                        uint8_t tmrlpwakeData);
 
 #endif /* PMIC_PMIC_LOW_IQ_TIMER_H_ */

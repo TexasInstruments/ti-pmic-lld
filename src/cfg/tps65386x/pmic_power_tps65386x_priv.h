@@ -32,7 +32,7 @@
  *****************************************************************************/
 
 /**
- * @file   pmic_power_tps65386x.h
+ * @file   pmic_power_tps65386x_priv.h
  *
  * @brief  PMIC TPS65386x BB PMIC Power Resources Driver API/interface file.
  *
@@ -54,17 +54,22 @@
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-#define PMIC_TPS65386X_BB_CFG_STATUS_NOT_INCLUDED (0x0U)
-#define PMIC_TPS65386X_BB_CFG_STATUS_INCLUDED (0x1U)
+#define PMIC_BB_CFG_STATUS_NOT_INCLUDED (0x0U)
+#define PMIC_BB_CFG_STATUS_INCLUDED (0x1U)
 
-#define PMIC_TPS65386X_BB_CFG_DRSS_DISABLED (0x0U)
-#define PMIC_TPS65386X_BB_CFG_DRSS_ENABLED (0x1U)
+#define PMIC_BB_CFG_DRSS_DISABLED (0x0U)
+#define PMIC_BB_CFG_DRSS_ENABLED (0x1U)
 
-#define PMIC_TPS65386X_BB_CFG_4V (0x0U)
-#define PMIC_TPS65386X_BB_CFG_SAME_BBCFG (0x1U)
+#define PMIC_BB_CFG_4V (0x0U)
+#define PMIC_BB_CFG_SAME_BBCFG (0x1U)
 
-#define PMIC_TPS65386X_BB_CFG_BB_LVL_CFG_4_3V (0x0U)
-#define PMIC_TPS65386X_BB_CFG_BB_LVL_CFG_5V (0x1U)
-#define PMIC_TPS65386X_BB_CFG_BB_LVL_CFG_6V (0x2U)
+#define PMIC_BB_CFG_BB_LVL_CFG_4_3V (0x0U)
+#define PMIC_BB_CFG_BB_LVL_CFG_5V (0x1U)
+#define PMIC_BB_CFG_BB_LVL_CFG_6V (0x2U)
+
+/* ========================================================================== */
+/*                         Structure Declarations                             */
+/* ========================================================================== */
+
 
 #endif /* PMIC_POWER_TPS65386x_PRIV_H_ */

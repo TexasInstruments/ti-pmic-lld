@@ -41,13 +41,19 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
+/* None */
+
 /* ========================================================================== */
 /*                         Structure Declarations                             */
 /* ========================================================================== */
 
+/* None */
+
 /* ========================================================================== */
 /*                          Function Declarations                             */
 /* ========================================================================== */
+
+/* None */
 
 /* ========================================================================== */
 /*                            Global Variables                                */
@@ -74,21 +80,21 @@ extern uint32_t gPmicConfigNum;
  * successful; otherwise, returns NULL.
  */
 PMIC_Handle PMIC_open(uint32_t instanceId, const PMIC_Params *params) {
-    PMIC_Config *config = NULL;
+  PMIC_Config *config = NULL;
 
-    if (instanceId < gPmicConfigNum) {
-        config = &gPmicConfig[instanceId];
-        if (config->fxns && config->fxns->openFxn) {
-            int32_t status;
+  if (instanceId < gPmicConfigNum) {
+    config = &gPmicConfig[instanceId];
+    if (config->fxns && config->fxns->openFxn) {
+      int32_t status;
 
-            status = config->fxns->openFxn(config, params);
-            if (status != SystemP_SUCCESS) {
-                config = NULL;
-            }
-        }
+      status = config->fxns->openFxn(config, params);
+      if (status != SystemP_SUCCESS) {
+        config = NULL;
+      }
     }
+  }
 
-    return (config);
+  return (config);
 }
 
 /**
@@ -102,15 +108,15 @@ PMIC_Handle PMIC_open(uint32_t instanceId, const PMIC_Params *params) {
  * otherwise, returns SystemP_FAILURE.
  */
 int32_t PMIC_configure(PMIC_Handle handle) {
-    int32_t status = SystemP_FAILURE;
+  int32_t status = SystemP_FAILURE;
 
-    PMIC_Config *config = (PMIC_Config *)handle;
+  PMIC_Config *config = (PMIC_Config *)handle;
 
-    if (config && config->fxns && config->fxns->configureFxn) {
-        config->fxns->configureFxn(config);
-    }
+  if (config && config->fxns && config->fxns->configureFxn) {
+    config->fxns->configureFxn(config);
+  }
 
-    return status;
+  return status;
 }
 
 /**
@@ -121,11 +127,11 @@ int32_t PMIC_configure(PMIC_Handle handle) {
  * @param handle Handle to the PMIC instance to close.
  */
 void PMIC_close(PMIC_Handle handle) {
-    PMIC_Config *config = (PMIC_Config *)handle;
+  PMIC_Config *config = (PMIC_Config *)handle;
 
-    if (config && config->fxns && config->fxns->closeFxn) {
-        config->fxns->closeFxn(config);
-    }
+  if (config && config->fxns && config->fxns->closeFxn) {
+    config->fxns->closeFxn(config);
+  }
 
-    return;
+  return;
 }

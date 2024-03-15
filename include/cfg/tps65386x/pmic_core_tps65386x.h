@@ -34,7 +34,7 @@
 /**
  *  @file pmic_core_tps6594x.h
  *
- *  @brief  The macro definitions for TPS6594x Leo PMIC driver specific
+ *  @brief  The macro definitions for TPS65386x BlackBird PMIC driver specific
  *          PMIC common configuration
  */
 

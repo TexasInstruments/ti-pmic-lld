@@ -52,3 +52,27 @@ This release includes several new features, enhancements, and bug fixes to impro
 
 ## Known Issues
 - N/A
+
+
+
+# Release Notes - Milestone 5.1
+
+## Overview
+This release includes several new features, enhancements, and bug fixes to improve the overall functionality and stability of the application.
+
+- **Release Date:** March 15, 2024
+
+## New Features
+- Introduced Low Power "STBY" Functionality [commit](1d66b5171daa98933efd704384d71bc0246be497)
+- Added support for Reset [commit](61ab83287dde5a23ae2968a9f9b419fdd5e7843a)
+- Implemented support for SW: Shutdown [commit](670f370ba803723075443aa01dad31b1155dc385)
+
+## Enhancements
+- Added Doxygen comments for the PMIC source driver code
+- Created separate Doxygen documentation for the source code and tests
+
+## Bug Fixes
+- N/A
+
+## Known Issues
+- N/A

@@ -68,7 +68,7 @@
  * @param  pGpioInOutCfg Pointer to the GPIO input/output configuration pointer.
  * @return void
  */
-void pmic_get_tps653860xx_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg) {
+void pmic_get_tps653860_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg) {
   *pGpioInOutCfg = gTps65386_gpioInOutCfg;
 }
 
@@ -82,7 +82,7 @@ void pmic_get_tps653860xx_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg) {
  */
 void Pmic_get_gpioInOutCfg(const Pmic_CoreHandle_t *pPmicCoreHandle,
                            Pmic_GpioInOutCfg_t *pGpioInOutCfg) {
-  pmic_get_tps653860xx_gpioInOutCfg(&pGpioInOutCfg);
+  pmic_get_tps653860_gpioInOutCfg(&pGpioInOutCfg);
 }
 
 /**
@@ -118,7 +118,7 @@ Pmic_gpioValidateParams(const Pmic_CoreHandle_t *pPmicCoreHandle) {
   int32_t pmicStatus = PMIC_ST_ERR_INV_HANDLE;
 
   if (NULL != pPmicCoreHandle) {
-    if ((bool)true == pPmicCoreHandle->pPmic_SubSysInfo->gpioEnable) {
+    if (true == pPmicCoreHandle->pPmic_SubSysInfo->gpioEnable) {
       pmicStatus = PMIC_ST_SUCCESS;
     } else {
       pmicStatus = PMIC_ST_ERR_INV_DEVICE;
@@ -174,6 +174,7 @@ void Pmic_gpioSelectRegister(uint8_t gpo, uint8_t *pRegAddr) {
     break;
   default:
     *pRegAddr = PMIC_GPO_1_CONF_REGADDR;
+    break;
   }
 }
 
@@ -188,8 +189,7 @@ void Pmic_gpioSelectRegister(uint8_t gpo, uint8_t *pRegAddr) {
  * otherwise, returns an error code.
  */
 static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                    const uint8_t pin,
-                                    const Pmic_GpioCfg_t gpioCfg) {
+                                    uint8_t pin, const Pmic_GpioCfg_t gpioCfg) {
   int32_t pmicStatus = PMIC_ST_SUCCESS;
   uint8_t regData = 0U;
   uint8_t regAddr = 0x7DU; /* Register address for GPO_CFG2 */
@@ -207,7 +207,8 @@ static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     /* Reading GPO_CFG2 register */
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
+    pmicStatus =
+        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, &regData);
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
       if (PMIC_GPIO_PULL_DISABLED == gpioCfg.pullCtrl) {
@@ -230,7 +231,8 @@ static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
         }
       }
 
-      pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, regAddr, regData);
+      pmicStatus =
+          Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t)regAddr, regData);
     }
 
     /* Stop Critical Section */
@@ -264,7 +266,8 @@ int32_t Pmic_gpioGetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
   Pmic_criticalSectionStart(pPmicCoreHandle);
 
   /* Reading the GPO_CFG2 register */
-  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
+  pmicStatus =
+      Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, &regData);
 
   /* Stop Critical Section */
   Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -362,11 +365,12 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     /* Reading the GPO_CFG register */
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
+    pmicStatus =
+        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, &regData);
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
-      /* Setting configurations for PMIC_BB_GPO1, PMIC_BB_GPO2, PMIC_BB_GPO3,
-       * PMIC_BB_GPO4 based on pin
+      /* Setting configurations for PMIC_BB_GPO1, PMIC_BB_GPO2,
+       * PMIC_BB_GPO3, PMIC_BB_GPO4 based on pin
        */
       switch (pin) {
       case PMIC_GPO1:
@@ -401,7 +405,8 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
 
       if (PMIC_ST_SUCCESS == pmicStatus) {
         /* Sending modified configuration back to the register */
-        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, regAddr, regData);
+        pmicStatus =
+            Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t)regAddr, regData);
       }
     }
 
@@ -431,7 +436,8 @@ int32_t Pmic_gpioGetGPOConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
   Pmic_criticalSectionStart(pPmicCoreHandle);
 
   /* Read GPO configuration register */
-  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
+  pmicStatus =
+      Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, &regData);
 
   /* Stop Critical Section */
   Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -452,6 +458,8 @@ int32_t Pmic_gpioGetGPOConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
           regData, PMIC_GPO_CFG2_GPO4_CFG_SHIFT, PMIC_GPO_CFG2_GPO4_CFG_MASK);
       pGpioCfg->pinDir = Pmic_getBitField(regData, PMIC_GPO_CFG2_GPO_EN_SHIFT,
                                           PMIC_GPO_CFG2_GPO_EN_MASK);
+    } else {
+      pmicStatus = PMIC_ST_ERR_FAIL;
     }
   }
 
@@ -570,7 +578,7 @@ int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin,
   /* Set Pmic_GpioIntRegCfg_t array index for given GPIO Pin */
   index = pin - 1U;
 
-  if ((PMIC_ST_SUCCESS == pmicStatus) && (pinValue > PMIC_HIGH)) {
+  if ((PMIC_ST_SUCCESS == pmicStatus) && (pinValue > PMIC_GPIO_HIGH_LEVEL)) {
     pmicStatus = PMIC_ST_ERR_INV_PARAM;
   }
 
@@ -634,9 +642,9 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin,
 
     if (Pmic_getBitField(regData, pGpioInOutCfg[index].inRegBitPos, bitMask) !=
         0U) {
-      *pPinValue = PMIC_HIGH;
+      *pPinValue = PMIC_GPIO_HIGH_LEVEL;
     } else {
-      *pPinValue = PMIC_LOW;
+      *pPinValue = PMIC_GPIO_LOW_LEVEL;
     }
   }
 
@@ -666,7 +674,8 @@ int32_t Pmic_gpiSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
   Pmic_criticalSectionStart(pPmicCoreHandle);
 
   /* Reading the GPO_CFG register */
-  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
+  pmicStatus =
+      Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, &regData);
 
   if (PMIC_ST_SUCCESS == pmicStatus) {
     /* Setting configurations for PMIC_BB_GPO1, PMIC_BB_GPO2, PMIC_BB_GPO3,
@@ -689,7 +698,8 @@ int32_t Pmic_gpiSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
     }
     if (PMIC_ST_SUCCESS == pmicStatus) {
       /* Sending modified configuration back to the register */
-      pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, regAddr, regData);
+      pmicStatus =
+          Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t)regAddr, regData);
     }
   }
   /* Stop Critical Section */
@@ -719,7 +729,8 @@ int32_t Pmic_gpioGetGPIConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
   Pmic_criticalSectionStart(pPmicCoreHandle);
 
   /* Read GPO configuration register */
-  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
+  pmicStatus =
+      Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, &regData);
 
   /* Stop Critical Section */
   Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -823,6 +834,7 @@ int32_t Pmic_gpo12SetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
                                   Pmic_GpioRdbkDglCfg_t *GpioRdbkDglCfg) {
   int32_t pmicStatus = PMIC_ST_SUCCESS;
   uint8_t regData = 0;
+  Pmic_GpioRdbkDglCfg_t *tempCfg = GpioRdbkDglCfg;
 
   /* Start Critical Section */
   Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -832,25 +844,25 @@ int32_t Pmic_gpo12SetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
                                       PMIC_RDBK_DGL_CFG2_REGADDR, &regData);
 
   if (PMIC_ST_SUCCESS == pmicStatus) {
-    if (GpioRdbkDglCfg->gpo1FDglConfig == 1) {
+    if (tempCfg->gpo1FDglConfig == PMIC_GPIO_ENABLE) {
       /* Reading signal deglitch time */
       Pmic_setBitField(&regData, PMIC_RDBK_GPO1_F_SHIFT, PMIC_RDBK_GPO1_F_MASK,
-                       GpioRdbkDglCfg->gpo1FDglData);
+                       tempCfg->gpo1FDglData);
     }
-    if (GpioRdbkDglCfg->gpo1RDglConfig == 1) {
+    if (tempCfg->gpo1RDglConfig == PMIC_GPIO_ENABLE) {
       /* Reading signal deglitch time */
       Pmic_setBitField(&regData, PMIC_RDBK_GPO1_R_SHIFT, PMIC_RDBK_GPO1_R_MASK,
-                       GpioRdbkDglCfg->gpo1RDglData);
+                       tempCfg->gpo1RDglData);
     }
-    if (GpioRdbkDglCfg->gpo2FDglConfig == 1) {
+    if (tempCfg->gpo2FDglConfig == PMIC_GPIO_ENABLE) {
       /* Reading signal deglitch time */
       Pmic_setBitField(&regData, PMIC_RDBK_GPO2_F_SHIFT, PMIC_RDBK_GPO2_F_MASK,
-                       GpioRdbkDglCfg->gpo2FDglData);
+                       tempCfg->gpo2FDglData);
     }
-    if (GpioRdbkDglCfg->gpo2RDglConfig == 1) {
+    if (tempCfg->gpo2RDglConfig == PMIC_GPIO_ENABLE) {
       /* Reading signal deglitch time */
       Pmic_setBitField(&regData, PMIC_RDBK_GPO2_R_SHIFT, PMIC_RDBK_GPO2_R_MASK,
-                       GpioRdbkDglCfg->gpo2RDglData);
+                       tempCfg->gpo2RDglData);
     }
     pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                         PMIC_RDBK_DGL_CFG2_REGADDR, regData);
@@ -874,6 +886,7 @@ int32_t Pmic_gpo34SetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
                                   Pmic_GpioRdbkDglCfg_t *GpioRdbkDglCfg) {
   int32_t pmicStatus = PMIC_ST_SUCCESS;
   uint8_t regData = 0;
+  Pmic_GpioRdbkDglCfg_t *tempCfg = GpioRdbkDglCfg;
 
   /* Start Critical Section */
   Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -883,25 +896,25 @@ int32_t Pmic_gpo34SetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
                                       PMIC_RDBK_DGL_CFG3_REGADDR, &regData);
 
   if (PMIC_ST_SUCCESS == pmicStatus) {
-    if (GpioRdbkDglCfg->gpo3FDglConfig == 1) {
+    if (tempCfg->gpo3FDglConfig == PMIC_GPIO_ENABLE) {
       /* Reading signal deglitch time */
       Pmic_setBitField(&regData, PMIC_RDBK_GPO3_F_SHIFT, PMIC_RDBK_GPO3_F_MASK,
-                       GpioRdbkDglCfg->gpo3FDglData);
+                       tempCfg->gpo3FDglData);
     }
-    if (GpioRdbkDglCfg->gpo3RDglConfig == 1) {
+    if (tempCfg->gpo3RDglConfig == PMIC_GPIO_ENABLE) {
       /* Reading signal deglitch time */
       Pmic_setBitField(&regData, PMIC_RDBK_GPO3_R_SHIFT, PMIC_RDBK_GPO3_R_MASK,
-                       GpioRdbkDglCfg->gpo3RDglData);
+                       tempCfg->gpo3RDglData);
     }
-    if (GpioRdbkDglCfg->gpo4FDglConfig == 1) {
+    if (tempCfg->gpo4FDglConfig == PMIC_GPIO_ENABLE) {
       /* Reading signal deglitch time */
       Pmic_setBitField(&regData, PMIC_RDBK_GPO4_F_SHIFT, PMIC_RDBK_GPO4_F_MASK,
-                       GpioRdbkDglCfg->gpo4FDglData);
+                       tempCfg->gpo4FDglData);
     }
-    if (GpioRdbkDglCfg->gpo4RDglConfig == 1) {
+    if (tempCfg->gpo4RDglConfig == PMIC_GPIO_ENABLE) {
       /* Reading signal deglitch time */
       Pmic_setBitField(&regData, PMIC_RDBK_GPO4_R_SHIFT, PMIC_RDBK_GPO4_R_MASK,
-                       GpioRdbkDglCfg->gpo4RDglData);
+                       tempCfg->gpo4RDglData);
     }
     pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
                                         PMIC_RDBK_DGL_CFG3_REGADDR, regData);

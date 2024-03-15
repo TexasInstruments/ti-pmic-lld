@@ -41,8 +41,8 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#include "pmic_types.h"
 #include "pmic_core_tps65386x.h"
+#include "pmic_types.h"
 #include <board/pmic.h>
 #include <drivers/hw_include/csl_types.h>
 #include <drivers/mcspi.h>
@@ -90,30 +90,30 @@ uint32_t gPmicMcspiRxBuffer[PMIC_MCSPI_MSGSIZE];
  * @return crc Calculated CRC-8 checksum value.
  */
 uint8_t PMIC_calcCRC8(char cmd, char rdwr, char dat) {
-  int i = 0;
-  uint8_t crc;
-  uint32_t tmp;
+    int i = 0;
+    uint8_t crc;
+    uint32_t tmp;
 
-  tmp = ((cmd << 16) | (rdwr << 8) | dat);
-  crc = 0xFF;
+    tmp = ((cmd << 16) | (rdwr << 8) | dat);
+    crc = 0xFF;
 
-  /* Standard CRC-8 polynomial ,X8 + X2 + X1 + 1.,is used to calculate the
-   * checksum value based on the command and data which the MCU transmits
-   * to the TPS653850A-Q1 device.
-   */
+    /* Standard CRC-8 polynomial ,X8 + X2 + X1 + 1.,is used to calculate the
+     * checksum value based on the command and data which the MCU transmits
+     * to the TPS653850A-Q1 device.
+     */
 
-  for (i = 0; i < 24; i++) {
-    long D;
-    D = (tmp & 0x800000) / 8388608;
-    tmp = (tmp & 0x7FFFFF) * 2;
-    D = (D ^ (((long)crc & 0x80) / 128));
-    crc = (crc & 0x7Fu) * 2u;
-    D = D * 7;
-    crc = (crc ^ (unsigned char)D);
-  }
+    for (i = 0; i < 24; i++) {
+        long D;
+        D = (tmp & 0x800000) / 8388608;
+        tmp = (tmp & 0x7FFFFF) * 2;
+        D = (D ^ (((long)crc & 0x80) / 128));
+        crc = (crc & 0x7Fu) * 2u;
+        D = D * 7;
+        crc = (crc ^ (unsigned char)D);
+    }
 
-  /* Return the PMIC SPI MCRC value */
-  return crc;
+    /* Return the PMIC SPI MCRC value */
+    return crc;
 }
 
 /**
@@ -127,23 +127,23 @@ uint8_t PMIC_calcCRC8(char cmd, char rdwr, char dat) {
  * SystemP_FAILURE otherwise).
  */
 int32_t PMIC_tps653860xxOpen(PMIC_Config *config, const PMIC_Params *params) {
-  int32_t status = SystemP_SUCCESS;
-  PMIC_Object *object;
+    int32_t status = SystemP_SUCCESS;
+    PMIC_Object *object;
 
-  if ((NULL == config) || (NULL == params)) {
-    status = SystemP_FAILURE;
-  }
-
-  if (status == SystemP_SUCCESS) {
-    object = (PMIC_Object *)config->object;
-    object->mcspiInstance = params->mcspiInstance;
-    object->mcspiHandle = MCSPI_getHandle(object->mcspiInstance);
-    if (NULL == object->mcspiHandle) {
-      status = SystemP_FAILURE;
+    if ((NULL == config) || (NULL == params)) {
+        status = SystemP_FAILURE;
     }
-  }
 
-  return status;
+    if (status == SystemP_SUCCESS) {
+        object = (PMIC_Object *)config->object;
+        object->mcspiInstance = params->mcspiInstance;
+        object->mcspiHandle = MCSPI_getHandle(object->mcspiInstance);
+        if (NULL == object->mcspiHandle) {
+            status = SystemP_FAILURE;
+        }
+    }
+
+    return status;
 }
 
 /**
@@ -154,20 +154,20 @@ int32_t PMIC_tps653860xxOpen(PMIC_Config *config, const PMIC_Params *params) {
  * @return void No return value.
  */
 void PMIC_tps653860xxClose(PMIC_Config *config) {
-  int32_t status = SystemP_SUCCESS;
-  PMIC_Object *object;
+    int32_t status = SystemP_SUCCESS;
+    PMIC_Object *object;
 
-  if (NULL == config) {
-    status = SystemP_FAILURE;
-  }
+    if (NULL == config) {
+        status = SystemP_FAILURE;
+    }
 
-  if (status == SystemP_SUCCESS) {
-    object = (PMIC_Object *)config->object;
+    if (status == SystemP_SUCCESS) {
+        object = (PMIC_Object *)config->object;
 
-    object->mcspiHandle = NULL;
-  }
+        object->mcspiHandle = NULL;
+    }
 
-  return;
+    return;
 }
 
 /**
@@ -185,24 +185,24 @@ void PMIC_tps653860xxClose(PMIC_Config *config) {
 int32_t PMIC_mcspiWriteRegister(MCSPI_Handle handle,
                                 MCSPI_Transaction *spiTransaction, uint8_t cmd,
                                 uint8_t data) {
-  int32_t status = SystemP_SUCCESS;
-  uint8_t crc = 0;
+    int32_t status = SystemP_SUCCESS;
+    uint8_t crc = 0;
 
-  crc = PMIC_calcCRC8(cmd, CMD_WR_EN, data);
-  gPmicMcspiTxBuffer[0] =
-      (cmd << CMD_SHIFT) | (CMD_WR_EN << RW_SHIFT) | (data << DAT_SHIFT) | crc;
-  gPmicMcspiRxBuffer[0] = 0;
+    crc = PMIC_calcCRC8(cmd, CMD_WR_EN, data);
+    gPmicMcspiTxBuffer[0] = (cmd << CMD_SHIFT) | (CMD_WR_EN << RW_SHIFT) |
+                            (data << DAT_SHIFT) | crc;
+    gPmicMcspiRxBuffer[0] = 0;
 
-  status = MCSPI_transfer(handle, spiTransaction);
+    status = MCSPI_transfer(handle, spiTransaction);
 
-  if ((status != SystemP_SUCCESS) ||
-      (MCSPI_TRANSFER_COMPLETED != spiTransaction->status)) {
-    /* MCSPI transfer failed!! */
-    DebugP_assert(FALSE);
-    status = SystemP_FAILURE;
-  }
+    if ((status != SystemP_SUCCESS) ||
+        (MCSPI_TRANSFER_COMPLETED != spiTransaction->status)) {
+        /* MCSPI transfer failed!! */
+        DebugP_assert(FALSE);
+        status = SystemP_FAILURE;
+    }
 
-  return status;
+    return status;
 }
 
 /**
@@ -220,24 +220,24 @@ int32_t PMIC_mcspiWriteRegister(MCSPI_Handle handle,
 int32_t PMIC_mcspiReadRegister(MCSPI_Handle handle,
                                MCSPI_Transaction *spiTransaction, uint8_t cmd,
                                uint8_t *data) {
-  int32_t status = SystemP_SUCCESS;
-  uint8_t crc = 0;
+    int32_t status = SystemP_SUCCESS;
+    uint8_t crc = 0;
 
-  crc = PMIC_calcCRC8(cmd, CMD_RD_EN, 0);
-  gPmicMcspiTxBuffer[0] =
-      (cmd << CMD_SHIFT) | (CMD_RD_EN << RW_SHIFT) | (0 << DAT_SHIFT) | crc;
-  gPmicMcspiRxBuffer[0] = 0;
+    crc = PMIC_calcCRC8(cmd, CMD_RD_EN, 0);
+    gPmicMcspiTxBuffer[0] =
+        (cmd << CMD_SHIFT) | (CMD_RD_EN << RW_SHIFT) | (0 << DAT_SHIFT) | crc;
+    gPmicMcspiRxBuffer[0] = 0;
 
-  status = MCSPI_transfer(handle, spiTransaction);
+    status = MCSPI_transfer(handle, spiTransaction);
 
-  if ((status != SystemP_SUCCESS) ||
-      (MCSPI_TRANSFER_COMPLETED != spiTransaction->status)) {
-    /* MCSPI transfer failed!! */
-    DebugP_assert(FALSE);
-    status = SystemP_FAILURE;
-  } else {
-    *data = (gPmicMcspiRxBuffer[0] >> 8) & 0xFF;
-  }
+    if ((status != SystemP_SUCCESS) ||
+        (MCSPI_TRANSFER_COMPLETED != spiTransaction->status)) {
+        /* MCSPI transfer failed!! */
+        DebugP_assert(FALSE);
+        status = SystemP_FAILURE;
+    } else {
+        *data = (gPmicMcspiRxBuffer[0] >> 8) & 0xFF;
+    }
 
-  return status;
+    return status;
 }

@@ -59,8 +59,8 @@ extern "C" {
 #define PMIC_IRQ_CLEAR_NONE (0U)
 #define PMIC_IRQ_CLEAR (1U)
 
-#define PMIC_IRQ_UNMASK (bool)false
-#define PMIC_IRQ_MASK (bool)true
+#define PMIC_IRQ_UNMASK ((bool)-1)
+#define PMIC_IRQ_MASK ((bool)0)
 
 #define PMIC_IRQ_GPIO_INT_TYPE (0x0U)
 
