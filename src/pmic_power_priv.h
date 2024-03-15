@@ -76,12 +76,12 @@ extern "C" {
 /**
  * @brief  BUCK configuration Register Address
  */
-#define PMIC_BUCK_BST_CFG_REGADDR (0x1BU)
+#define PMIC_POWER_BUCK_CFG_REGADDR (0x1BU)
 
 /**
  * @brief  LDO configuration Register Address
  */
-#define PMIC_LDO1_CFG_REGADDR (0x1EU) // LDO mode,Bypass mode, VMON mode
+#define PMIC_LDO1_CFG_REGADDR (0x1EU)
 #define PMIC_LDO2_CFG_REGADDR (0x1FU)
 #define PMIC_LDO3_CFG_REGADDR (0x20U)
 #define PMIC_LDO4_CFG_REGADDR (0x21U)
@@ -89,7 +89,7 @@ extern "C" {
 #define PMIC_LDO_PGOOD_CFG_REGADDR (0x25U)
 #define PMIC_LDO_CTRL_REGADDR (0x26U)
 
-#define PMIC_LDO_DSCG_CFG_REGADDR (0x28U) // Discharge for LDO & PLDO
+#define PMIC_LDO_DSCG_CFG_REGADDR (0x28U)
 
 /**
  * @brief  PLDO configuration Register Address
@@ -103,16 +103,16 @@ extern "C" {
 /**
  * @brief  VCCA Vmon configuration Register Address
  */
-#define PMIC_VMON_TH_CFG1_REGADDR (0x29U) // for LDO
-#define PMIC_VMON_TH_CFG2_REGADDR (0x2AU) // for PLDO
-#define PMIC_VMON_TH_CFG3_REGADDR (0x2BU) // for BUCK
+#define PMIC_VMON_TH_CFG1_REGADDR (0x29U)
+#define PMIC_VMON_TH_CFG2_REGADDR (0x2AU)
+#define PMIC_VMON_TH_CFG3_REGADDR (0x2BU)
 
-#define PMIC_LP_VMON_CTRL_REGADDR (0x2CU) // low power LDO & PLDO
-#define PMIC_LP_CFG_REGADDR (0x2FU)       // for BUCK
+#define PMIC_LP_VMON_CTRL_REGADDR (0x2CU)
+#define PMIC_LP_CFG_REGADDR (0x2FU)
 
-#define PMIC_VMON_DGL_CFG1_REGADDR (0x31U) // for BUCK
-#define PMIC_VMON_DGL_CFG2_REGADDR (0x32U) // for LDO
-#define PMIC_VMON_DGL_CFG3_REGADDR (0x33U) // for PLDO
+#define PMIC_VMON_DGL_CFG1_REGADDR (0x31U)
+#define PMIC_VMON_DGL_CFG2_REGADDR (0x32U)
+#define PMIC_VMON_DGL_CFG3_REGADDR (0x33U)
 
 /**
  * @brief  PMIC power voltage levels
@@ -234,111 +234,116 @@ extern "C" {
 #define PMIC_LDO1_DSCG_MASK (0x01U)
 
 /* Define Macros for Low Power VMon Control Register */
-#define PMIC_LP_EXT_VMON2_CTRL_SHIFT        (0x07U)
-#define PMIC_LP_EXT_VMON2_CTRL_MASK         (0x01U)
+#define PMIC_LP_EXT_VMON2_CTRL_SHIFT (0x07U)
+#define PMIC_LP_EXT_VMON2_CTRL_MASK (0x01U)
 
-#define PMIC_LP_EXT_VMON1_CTRL_SHIFT        (0x06U)
-#define PMIC_LP_EXT_VMON1_CTRL_MASK         (0x01U)
+#define PMIC_LP_EXT_VMON1_CTRL_SHIFT (0x06U)
+#define PMIC_LP_EXT_VMON1_CTRL_MASK (0x01U)
 
-#define PMIC_LP_PLDO2_VMON_CTRL_SHIFT       (0x05U)
-#define PMIC_LP_PLDO2_VMON_CTRL_MASK        (0x01U)
+#define PMIC_LP_PLDO2_VMON_CTRL_SHIFT (0x05U)
+#define PMIC_LP_PLDO2_VMON_CTRL_MASK (0x01U)
 
-#define PMIC_LP_PLDO1_VMON_CTRL_SHIFT       (0x04U)
-#define PMIC_LP_PLDO1_VMON_CTRL_MASK        (0x01U)
+#define PMIC_LP_PLDO1_VMON_CTRL_SHIFT (0x04U)
+#define PMIC_LP_PLDO1_VMON_CTRL_MASK (0x01U)
 
-#define PMIC_LP_LDO4_VMON_CTRL_SHIFT        (0x03U)
-#define PMIC_LP_LDO4_VMON_CTRL_MASK         (0x01U)
+#define PMIC_LP_LDO4_VMON_CTRL_SHIFT (0x03U)
+#define PMIC_LP_LDO4_VMON_CTRL_MASK (0x01U)
 
-#define PMIC_LP_LDO3_VMON_CTRL_SHIFT        (0x02U)
-#define PMIC_LP_LDO3_VMON_CTRL_MASK         (0x01U)
+#define PMIC_LP_LDO3_VMON_CTRL_SHIFT (0x02U)
+#define PMIC_LP_LDO3_VMON_CTRL_MASK (0x01U)
 
-#define PMIC_LP_LDO2_VMON_CTRL_SHIFT        (0x01U)
-#define PMIC_LP_LDO2_VMON_CTRL_MASK         (0x01U)
+#define PMIC_LP_LDO2_VMON_CTRL_SHIFT (0x01U)
+#define PMIC_LP_LDO2_VMON_CTRL_MASK (0x01U)
 
-#define PMIC_LP_LDO1_VMON_CTRL_SHIFT        (0x00U)
-#define PMIC_LP_LDO1_VMON_CTRL_MASK         (0x01U)
+#define PMIC_LP_LDO1_VMON_CTRL_SHIFT (0x00U)
+#define PMIC_LP_LDO1_VMON_CTRL_MASK (0x01U)
 
 /* Define Macros for Low Power Configuration Register */
-#define PMIC_LP_BB_OVP_CTRL_SHIFT           (0x07U)
-#define PMIC_LP_BB_OVP_CTRL_MASK            (0x01U)
+#define PMIC_LP_BB_OVP_CTRL_SHIFT (0x07U)
+#define PMIC_LP_BB_OVP_CTRL_MASK (0x01U)
 
-#define PMIC_LP_BB_VMON_CTRL_SHIFT          (0x06U)
-#define PMIC_LP_BB_VMON_CTRL_MASK           (0x01U)
+#define PMIC_LP_BB_VMON_CTRL_SHIFT (0x06U)
+#define PMIC_LP_BB_VMON_CTRL_MASK (0x01U)
 
-#define PMIC_LP_TSD_PER_CFG_SHIFT           (0x01U)
-#define PMIC_LP_TSD_PER_CFG_MASK            (0x01U)
+#define PMIC_LP_TSD_PER_CFG_SHIFT (0x01U)
+#define PMIC_LP_TSD_PER_CFG_MASK (0x01U)
 
-#define PMIC_LP_VMON_PER_CFG_SHIFT          (0x00U)
-#define PMIC_LP_VMON_PER_CFG_MASK           (0x01U)
+#define PMIC_LP_VMON_PER_CFG_SHIFT (0x00U)
+#define PMIC_LP_VMON_PER_CFG_MASK (0x01U)
 
 /* Define Macros for LDO VMON Threshold Config-1 Register configuration */
-#define PMIC_VMON_TH_CFG1_LDO4_VMON_TH_SHIFT (0x06U)
-#define PMIC_VMON_TH_CFG1_LDO4_VMON_TH_MASK (0x03U)
+#define PMIC_VMON_CFG1_LDO4_VMON_SHIFT (0x06U)
+#define PMIC_VMON_CFG1_LDO4_VMON_MASK (0x03U)
 
-#define PMIC_VMON_TH_CFG1_LDO3_VMON_TH_SHIFT (0x04U)
-#define PMIC_VMON_TH_CFG1_LDO3_VMON_TH_MASK (0x03U)
+#define PMIC_VMON_CFG1_LDO3_VMON_SHIFT (0x04U)
+#define PMIC_VMON_CFG1_LDO3_VMON_MASK (0x03U)
 
-#define PMIC_VMON_TH_CFG1_LDO2_VMON_TH_SHIFT (0x02U)
-#define PMIC_VMON_TH_CFG1_LDO2_VMON_TH_MASK (0x03U)
+#define PMIC_VMON_CFG1_LDO2_VMON_SHIFT (0x02U)
+#define PMIC_VMON_CFG1_LDO2_VMON_MASK (0x03U)
 
-#define PMIC_VMON_TH_CFG1_LDO1_VMON_TH_SHIFT (0x00U)
-#define PMIC_VMON_TH_CFG1_LDO1_VMON_TH_MASK (0x03U)
+#define PMIC_VMON_CFG1_LDO1_VMON_SHIFT (0x00U)
+#define PMIC_VMON_CFG1_LDO1_VMON_MASK (0x03U)
 
 /* Define Macros for Ext_VMON and PLDO VMON Threshold Config-2 Register
  * configuration */
-#define PMIC_VMON_TH_CFG2_EXT_VMON2_TH_SHIFT (0x06U)
-#define PMIC_VMON_TH_CFG2_EXT_VMON2_TH_MASK (0x03U)
+#define PMIC_VMON_CFG2_EXT_VMON2_SHIFT (0x06U)
+#define PMIC_VMON_CFG2_EXT_VMON2_MASK (0x03U)
 
-#define PMIC_VMON_TH_CFG2_EXT_VMON1_TH_SHIFT (0x04U)
-#define PMIC_VMON_TH_CFG2_EXT_VMON1_TH_MASK (0x03U)
+#define PMIC_VMON_CFG2_EXT_VMON1_SHIFT (0x04U)
+#define PMIC_VMON_CFG2_EXT_VMON1_MASK (0x03U)
 
-#define PMIC_VMON_TH_CFG2_PLDO2_VMON_TH_SHIFT (0x02U)
-#define PMIC_VMON_TH_CFG2_PLDO2_VMON_TH_MASK (0x03U)
+#define PMIC_VMON_CFG2_PLDO2_VMON_SHIFT (0x02U)
+#define PMIC_VMON_CFG2_PLDO2_VMON_MASK (0x03U)
 
-#define PMIC_VMON_TH_CFG2_PLDO1_VMON_TH_SHIFT (0x00U)
-#define PMIC_VMON_TH_CFG2_PLDO1_VMON_TH_MASK (0x03U)
+#define PMIC_VMON_CFG2_PLDO1_VMON_SHIFT (0x00U)
+#define PMIC_VMON_CFG2_PLDO1_VMON_MASK (0x03U)
 
 /* Define Macros for Buck-Boost VMON Threshold Config-3 Register configuration
  */
-#define PMIC_VMON_TH_CFG3_BB_TMO_CFG_SHIFT (0x02U)
-#define PMIC_VMON_TH_CFG3_BB_TMO_CFG_MASK (0x03U)
+#define PMIC_VMON_CFG3_BB_TMO_CFG_SHIFT (0x02U)
+#define PMIC_VMON_CFG3_BB_TMO_CFG_MASK (0x03U)
 
-#define PMIC_VMON_TH_CFG3_BB_VMON_TH_SHIFT (0x00U)
-#define PMIC_VMON_TH_CFG3_BB_VMON_TH_MASK (0x03U)
+#define PMIC_VMON_CFG3_BB_VMON_TH_SHIFT (0x00U)
+#define PMIC_VMON_CFG3_BB_VMON_TH_MASK (0x03U)
 
 /* Define Macros for VMON De-Glitch Config-1 Register configuration */
-#define PMIC_VMON_DGL_CFG1_VBAT_VMON_DGL_SHIFT (0x05U)
-#define PMIC_VMON_DGL_CFG1_VBAT_VMON_DGL_MASK (0x03U)
+#define PMIC_VMON_DGL_CFG1_VBAT_SHIFT (0x05U)
+#define PMIC_VMON_DGL_CFG1_VBAT_MASK (0x03U)
 
-#define PMIC_VMON_DGL_CFG1_BB_VMON_DGL_SHIFT (0x06U)
-#define PMIC_VMON_DGL_CFG1_BB_VMON_DGL_MASK (0x01U)
+#define PMIC_VMON_DGL_CFG1_BB_SHIFT (0x06U)
+#define PMIC_VMON_DGL_CFG1_BB_MASK (0x01U)
 
 /* Define Macros for LDO VMON De-Glitch Config-2 Register configuration */
-#define PMIC_VMON_DGL_CFG2_LDO4_VMON_DGL_SHIFT (0x06U)
-#define PMIC_VMON_DGL_CFG2_LDO4_VMON_DGL_MASK (0x03U)
+#define PMIC_VMON_DGL_CFG2_LDO4_SHIFT (0x06U)
+#define PMIC_VMON_DGL_CFG2_LDO4_MASK (0x03U)
 
-#define PMIC_VMON_DGL_CFG2_LDO3_VMON_DGL_SHIFT (0x04U)
-#define PMIC_VMON_DGL_CFG2_LDO3_VMON_DGL_MASK (0x03U)
+#define PMIC_VMON_DGL_CFG2_LDO3_SHIFT (0x04U)
+#define PMIC_VMON_DGL_CFG2_LDO3_MASK (0x03U)
 
-#define PMIC_VMON_DGL_CFG2_LDO2_VMON_DGL_SHIFT (0x02U)
-#define PMIC_VMON_DGL_CFG2_LDO2_VMON_DGL_MASK (0x03U)
+#define PMIC_VMON_DGL_CFG2_LDO2_SHIFT (0x02U)
+#define PMIC_VMON_DGL_CFG2_LDO2_MASK (0x03U)
 
-#define PMIC_VMON_DGL_CFG2_LDO1_VMON_DGL_SHIFT (0x00U)
-#define PMIC_VMON_DGL_CFG2_LDO1_VMON_DGL_MASK (0x03U)
+#define PMIC_VMON_DGL_CFG2_LDO1_SHIFT (0x00U)
+#define PMIC_VMON_DGL_CFG2_LDO1_MASK (0x03U)
 
 /* Define Macros for Ext_VMON and PLDO VMON De-Glitch Config-3 Register
  * configuration */
-#define PMIC_VMON_DGL_CFG3_EXT_VMON1_DGL_SHIFT (0x06U)
-#define PMIC_VMON_DGL_CFG3_EXT_VMON1_DGL_MASK (0x03U)
+#define PMIC_VMON_DGL_CFG3_EXT_V1_SHIFT (0x06U)
+#define PMIC_VMON_DGL_CFG3_EXT_V1_MASK (0x03U)
 
-#define PMIC_VMON_DGL_CFG3_EXT_VMON2_DGL_SHIFT (0x04U)
-#define PMIC_VMON_DGL_CFG3_EXT_VMON2_DGL_MASK (0x03U)
+#define PMIC_VMON_DGL_CFG3_EXT_V2_SHIFT (0x04U)
+#define PMIC_VMON_DGL_CFG3_EXT_V2_MASK (0x03U)
 
-#define PMIC_VMON_DGL_CFG3_PLDO2_VMON_DGL_SHIFT (0x02U)
-#define PMIC_VMON_DGL_CFG3_PLDO2_VMON_DGL_MASK (0x03U)
+#define PMIC_VMON_DGL_CFG3_PLDO2_SHIFT (0x02U)
+#define PMIC_VMON_DGL_CFG3_PLDO2_MASK (0x03U)
 
-#define PMIC_VMON_DGL_CFG3_PLDO1_VMON_DGL_SHIFT (0x00U)
-#define PMIC_VMON_DGL_CFG3_PLDO1_VMON_DGL_MASK (0x03U)
+#define PMIC_VMON_DGL_CFG3_PLDO1_SHIFT (0x00U)
+#define PMIC_VMON_DGL_CFG3_PLDO1_MASK (0x03U)
+
+/* Define PMIC Power EN-OUT Switch case macros*/
+#define PMIC_ONLY_ENOUT1_EN (0b01U)
+#define PMIC_ONLY_ENOUT2_EN (0b10U)
+#define PMIC_BOTH_ENOUT1_ENOUT2_EN (0b11U)
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
@@ -353,10 +358,10 @@ extern "C" {
  *          BUCK1/BUCK2/LDO1...etc
  */
 static inline uint8_t Pmic_powerGetPwrRsrcId(uint16_t pwrRsrc) {
-    uint8_t pwrRsrcId;
-    pwrRsrcId = (uint8_t)(pwrRsrc & 0xFFU);
+  uint8_t pwrRsrcId;
+  pwrRsrcId = (uint8_t)(pwrRsrc & 0xFFU);
 
-    return pwrRsrcId;
+  return pwrRsrcId;
 }
 
 /**
@@ -364,72 +369,11 @@ static inline uint8_t Pmic_powerGetPwrRsrcId(uint16_t pwrRsrc) {
  *          BUCK/LDO/VCCA/VMON
  */
 static inline uint8_t Pmic_powerGetPwrRsrcType(uint16_t pwrRsrc) {
-    uint8_t pwrRsrcType;
-    pwrRsrcType = (uint8_t)((pwrRsrc >> 0x8U) & 0xFFU);
+  uint8_t pwrRsrcType;
+  pwrRsrcType = (uint8_t)((pwrRsrc >> 0x8U) & 0xFFU);
 
-    return pwrRsrcType;
+  return pwrRsrcType;
 }
-
-/**
- * @brief   This function is used to get OV/UV voltage monitoring range for
- *          VMON2 and VMON1
- */
-int32_t Pmic_powerGetVmonRange(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               uint16_t pwrRsrc, bool *pVmonRange);
-
-/**
- * @brief   This function is used to convert the millivolt value to vset value
- *          for BUCK/VMON (For VMON : When range = 0)
- */
-int32_t Pmic_powerBuckVmonConvertVoltage2VSetVal(uint16_t millivolt,
-                                                 uint16_t *pBaseMillivolt,
-                                                 uint8_t *pMillivoltStep,
-                                                 uint8_t *pBaseVoutCode);
-
-/**
- * @brief   This function is used to convert the millivolt value to vset value
- *          for LDO Regulators
- */
-void Pmic_powerLdoConvertVoltage2VSetVal(uint16_t pwrRsrc,
-                                         uint16_t *pBaseMillivolt,
-                                         uint8_t *pMillivoltStep,
-                                         uint8_t *pBaseVoutCode);
-
-/**
- * @brief   This function is used to convert the millivolt value to vset code
- *          when the selected voltage monitoring range for VMON is
- *          PMIC_LP8764X_VMON_RANGE_3V35_5V
- */
-void Pmic_powerVmonRange1ConvertVoltage2VSetVal(uint16_t *pBaseMillivolt,
-                                                uint8_t *pMillivoltStep,
-                                                uint8_t *pBaseVoutCode);
-
-/**
- * @brief   This function is used to convert the vset value to voltage in mv
-            for BUCK/VMON
- */
-void Pmic_powerBuckVmonConvertVSetVal2Voltage(const uint8_t *pVSetVal,
-                                              uint16_t *pBaseMillivolt,
-                                              uint8_t *pMillivoltStep,
-                                              uint8_t *pBaseVoutCode);
-
-/**
- * @brief   This function is used to convert the vset value to voltage in mv
- *          for LDO
- */
-void Pmic_powerLdoConvertVSetVal2Voltage(uint16_t pwrRsrc,
-                                         uint16_t *pBaseMillivolt,
-                                         uint8_t *pMillivoltStep,
-                                         uint8_t *pBaseVoutCode);
-
-/**
- * @brief   This function is used to convert the vset value to voltage in mv
- *          when the selected voltage monitoring range for VMON is
- *          PMIC_LP8764X_VMON_RANGE_3V35_5V
- */
-void Pmic_powerVmonRange1ConvertVSetVal2Voltage(uint16_t *pBaseMillivolt,
-                                                uint8_t *pMillivoltStep,
-                                                uint8_t *pBaseVoutCode);
 
 #ifdef __cplusplus
 }
