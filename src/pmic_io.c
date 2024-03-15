@@ -86,46 +86,46 @@ uint8_t PMIC_calcCRC8(char cmd, char rdwr, char dat);
  */
 int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
                                uint16_t regAddr, uint8_t txData) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t buffLength = 1U;
-  uint8_t instType = PMIC_MAIN_INST;
-  uint8_t txBuf[PMIC_IO_BUF_SIZE] = {0};
-  uint16_t pmicRegAddr = regAddr;
-  uint8_t data = txData;
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t buffLength = 1U;
+    uint8_t instType = PMIC_MAIN_INST;
+    uint8_t txBuf[PMIC_IO_BUF_SIZE] = {0};
+    uint16_t pmicRegAddr = regAddr;
+    uint8_t data = txData;
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    /*
-     * Frame 3 Bytes with IO header+data as per PMIC SPI IO algorithm
-     * explained in PMIC TRM
-     */
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        /*
+         * Frame 3 Bytes with IO header+data as per PMIC SPI IO algorithm
+         * explained in PMIC TRM
+         */
 
-    buffLength = 0;
-    /* Set ADDR to txbuf[0] with ADDR[7:0] */
-    txBuf[buffLength] = (uint8_t)(pmicRegAddr & 0xFFU);
-    buffLength++;
+        buffLength = 0;
+        /* Set ADDR to txbuf[0] with ADDR[7:0] */
+        txBuf[buffLength] = (uint8_t)(pmicRegAddr & 0xFFU);
+        buffLength++;
 
-    /* Set PAGE to txBuf[1] 7:5 bits with PAGE[2:0] */
-    txBuf[buffLength] = (uint8_t)(((pmicRegAddr >> 8U) & 0x7U) << 5U);
+        /* Set PAGE to txBuf[1] 7:5 bits with PAGE[2:0] */
+        txBuf[buffLength] = (uint8_t)(((pmicRegAddr >> 8U) & 0x7U) << 5U);
 
-    /* Set R/W in txBuf[1] as bit-4, for Write Request */
-    txBuf[buffLength] &= (uint8_t)(~PMIC_IO_REQ_RW);
-    buffLength++;
+        /* Set R/W in txBuf[1] as bit-4, for Write Request */
+        txBuf[buffLength] &= (uint8_t)(~PMIC_IO_REQ_RW);
+        buffLength++;
 
-    /* Set write data to txBuf[2], with WDATA[7:0] */
-    txBuf[buffLength] = data;
-    buffLength++;
+        /* Set write data to txBuf[2], with WDATA[7:0] */
+        txBuf[buffLength] = data;
+        buffLength++;
 
-    /* Set CRC data to txBuf[3], Bits 25-32 CRC */
-    txBuf[buffLength] = PMIC_calcCRC8(txBuf[0], txBuf[1], txBuf[2]);
-    /* Increment 1 more byte to store CRC8 */
-    buffLength++;
-  }
+        /* Set CRC data to txBuf[3], Bits 25-32 CRC */
+        txBuf[buffLength] = PMIC_calcCRC8(txBuf[0], txBuf[1], txBuf[2]);
+        /* Increment 1 more byte to store CRC8 */
+        buffLength++;
+    }
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    pmicStatus = pPmicCoreHandle->pFnPmicCommIoWrite(
-        pPmicCoreHandle, instType, pmicRegAddr, txBuf, buffLength);
-  }
-  return pmicStatus;
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        pmicStatus = pPmicCoreHandle->pFnPmicCommIoWrite(
+            pPmicCoreHandle, instType, pmicRegAddr, txBuf, buffLength);
+    }
+    return pmicStatus;
 }
 
 /**
@@ -139,18 +139,18 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
  */
 static int32_t
 Pmic_validateCorehandle(const Pmic_CoreHandle_t *pPmicCoreHandle) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-  if (NULL == pPmicCoreHandle->pCommHandle) {
-    pmicStatus = PMIC_ST_ERR_NULL_PARAM;
-  }
+    if (NULL == pPmicCoreHandle->pCommHandle) {
+        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+    }
 
-  if ((PMIC_ST_SUCCESS == pmicStatus) &&
-      (NULL == pPmicCoreHandle->pFnPmicCommIoRead)) {
-    pmicStatus = PMIC_ST_ERR_NULL_FPTR;
-  }
+    if ((PMIC_ST_SUCCESS == pmicStatus) &&
+        (NULL == pPmicCoreHandle->pFnPmicCommIoRead)) {
+        pmicStatus = PMIC_ST_ERR_NULL_FPTR;
+    }
 
-  return pmicStatus;
+    return pmicStatus;
 }
 
 /**
@@ -169,42 +169,42 @@ Pmic_validateCorehandle(const Pmic_CoreHandle_t *pPmicCoreHandle) {
 static int32_t Pmic_commIoReadData(Pmic_CoreHandle_t *pPmicCoreHandle,
                                    uint16_t *pRegAddr, uint8_t *pBuffLength,
                                    uint8_t *pRxBuf, uint8_t *pInstType) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t buffLength = *pBuffLength;
-  uint16_t pmicRegAddr = *pRegAddr;
-  uint8_t instType = *pInstType;
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t buffLength = *pBuffLength;
+    uint16_t pmicRegAddr = *pRegAddr;
+    uint8_t instType = *pInstType;
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    /*
-     * Frame 3 Bytes with IO header+data as per PMIC SPI IO algorithm
-     * explained in PMIC TRM
-     */
-    buffLength = 0U;
-    /* Set ADDR to pRxBuf[0], with ADDR[7:0] */
-    pRxBuf[buffLength] = (uint8_t)(pmicRegAddr & 0xFFU);
-    buffLength++;
-    /* Set PAGE to pRxBuf[1] 7:5 bits, with PAGE[2:0] */
-    pRxBuf[buffLength] = (uint8_t)(((pmicRegAddr >> 8U) & 0x7U) << 5U);
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        /*
+         * Frame 3 Bytes with IO header+data as per PMIC SPI IO algorithm
+         * explained in PMIC TRM
+         */
+        buffLength = 0U;
+        /* Set ADDR to pRxBuf[0], with ADDR[7:0] */
+        pRxBuf[buffLength] = (uint8_t)(pmicRegAddr & 0xFFU);
+        buffLength++;
+        /* Set PAGE to pRxBuf[1] 7:5 bits, with PAGE[2:0] */
+        pRxBuf[buffLength] = (uint8_t)(((pmicRegAddr >> 8U) & 0x7U) << 5U);
 
-    /* Set R/W in pRxBuf[1] as bit-4, for read Request */
-    pRxBuf[buffLength] |= PMIC_IO_REQ_RW;
-    buffLength++;
-    /* Increment 1 more byte for 8-bit data read from PMIC register */
-    buffLength++;
+        /* Set R/W in pRxBuf[1] as bit-4, for read Request */
+        pRxBuf[buffLength] |= PMIC_IO_REQ_RW;
+        buffLength++;
+        /* Increment 1 more byte for 8-bit data read from PMIC register */
+        buffLength++;
 
-    /* Increment 1 more byte to read CRC8 */
-    buffLength++;
+        /* Increment 1 more byte to read CRC8 */
+        buffLength++;
 
-    *pBuffLength = buffLength;
-    *pRegAddr = pmicRegAddr;
-  }
+        *pBuffLength = buffLength;
+        *pRegAddr = pmicRegAddr;
+    }
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    pmicStatus = pPmicCoreHandle->pFnPmicCommIoRead(
-        pPmicCoreHandle, instType, pmicRegAddr, pRxBuf, buffLength);
-  }
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        pmicStatus = pPmicCoreHandle->pFnPmicCommIoRead(
+            pPmicCoreHandle, instType, pmicRegAddr, pRxBuf, buffLength);
+    }
 
-  return pmicStatus;
+    return pmicStatus;
 }
 
 /**
@@ -230,37 +230,37 @@ static int32_t Pmic_commIoReadData(Pmic_CoreHandle_t *pPmicCoreHandle,
  */
 int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
                                uint16_t regAddr, uint8_t *pRxBuffer) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t buffLength = 1U;
-  uint8_t rxBuf[PMIC_IO_BUF_SIZE] = {0};
-  uint8_t crcData[PMIC_IO_BUF_SIZE] = {0};
-  uint8_t instType = PMIC_MAIN_INST;
-  uint8_t crcDataLen = 0U;
-  uint16_t pmicRegAddr = regAddr;
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t buffLength = 1U;
+    uint8_t rxBuf[PMIC_IO_BUF_SIZE] = {0};
+    uint8_t crcData[PMIC_IO_BUF_SIZE] = {0};
+    uint8_t instType = PMIC_MAIN_INST;
+    uint8_t crcDataLen = 0U;
+    uint16_t pmicRegAddr = regAddr;
 
-  pmicStatus = Pmic_commIoReadData(pPmicCoreHandle, &pmicRegAddr, &buffLength,
-                                   rxBuf, &instType);
-  if (PMIC_ST_SUCCESS != pmicStatus) {
-    pmicStatus = PMIC_ST_ERR_FAIL;
-  }
-
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    if (PMIC_INTF_SPI == pPmicCoreHandle->commMode) {
-      /* Copy SPI frame data to crcData */
-      for (crcDataLen = 0U; crcDataLen < (PMIC_IO_BUF_SIZE - 1U);
-           crcDataLen++) {
-        crcData[crcDataLen] = rxBuf[crcDataLen];
-      }
-    } else {
-      pmicStatus = PMIC_ST_ERR_INV_PARAM;
+    pmicStatus = Pmic_commIoReadData(pPmicCoreHandle, &pmicRegAddr, &buffLength,
+                                     rxBuf, &instType);
+    if (PMIC_ST_SUCCESS != pmicStatus) {
+        pmicStatus = PMIC_ST_ERR_FAIL;
     }
-    buffLength--;
-  }
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    /* Copy data which shall be in rxBuf[2]/rxBuf[0] to pRxBuffer */
-    *pRxBuffer = rxBuf[2];
-  }
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        if (PMIC_INTF_SPI == pPmicCoreHandle->commMode) {
+            /* Copy SPI frame data to crcData */
+            for (crcDataLen = 0U; crcDataLen < (PMIC_IO_BUF_SIZE - 1U);
+                 crcDataLen++) {
+                crcData[crcDataLen] = rxBuf[crcDataLen];
+            }
+        } else {
+            pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        }
+        buffLength--;
+    }
 
-  return pmicStatus;
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        /* Copy data which shall be in rxBuf[2]/rxBuf[0] to pRxBuffer */
+        *pRxBuffer = rxBuf[2];
+    }
+
+    return pmicStatus;
 }

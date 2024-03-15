@@ -60,11 +60,6 @@ extern "C" {
 #define PMIC_FSM_STATE_MAX (6)
 
 /**
- * @brief PMIC state control register address.
- */
-#define PMIC_STATE_CTRL_REGADDR (0x16U)
-
-/**
  * @brief Shift value for PMIC state control.
  */
 #define PMIC_STATE_CTRL_SHIFT (0x0U)
@@ -103,11 +98,6 @@ extern "C" {
  * @brief Off state control value.
  */
 #define PMIC_STATE_CTRL_OFF (0x05U)
-
-/**
- * @brief PMIC state status register address.
- */
-#define PMIC_STATE_STAT_REGADDR (0x17U)
 
 /**
  * @brief Mask value for PMIC state status.
@@ -217,12 +207,22 @@ extern "C" {
 /**
  * @brief BIST enable shift value.
  */
-#define PMIC_BIST_CTRL_EN_SHIFT (0x04U)
+#define PMIC_BIST_CTRL_EN_SHIFT (0x02U)
+
+/**
+ * @brief BIST enable mask value.
+ */
+#define PMIC_BIST_CTRL_EN_MASK (0x01U << PMIC_BIST_CTRL_EN_SHIFT)
+
+/**
+ * @brief BIST configuration shift value.
+ */
+#define PMIC_BIST_CTRL_CFG_SHIFT (0x00U)
 
 /**
  * @brief BIST configuration mask value.
  */
-#define PMIC_BIST_CTRL_CFG_MASK (0x07U)
+#define PMIC_BIST_CTRL_CFG_MASK (0x03U << PMIC_BIST_CTRL_CFG_SHIFT)
 
 /**
  * @brief ILIM configuration register address.
@@ -397,22 +397,22 @@ extern "C" {
 /**
  * @brief NSLEEP1 signal value.
  */
-#define PMIC_NSLEEP1_SIGNAL (bool)false
+#define PMIC_NSLEEP1_SIGNAL (0U)
 
 /**
  * @brief NSLEEP2 signal value.
  */
-#define PMIC_NSLEEP2_SIGNAL (bool)true
+#define PMIC_NSLEEP2_SIGNAL (1U)
 
 /**
  * @brief ILIM interrupt FSM control enable value.
  */
-#define PMIC_FSM_ILIM_INT_FSMCTRL_ENABLE (1U)
+#define PMIC_FSM_ILIM_INT_ENABLE (1U)
 
 /**
  * @brief ILIM interrupt FSM control disable value.
  */
-#define PMIC_FSM_ILIM_INT_FSMCTRL_DISABLE (0U)
+#define PMIC_FSM_ILIM_INT_DISABLE (0U)
 
 /**
  * @brief Fast BIST enable configuration valid value.
@@ -422,17 +422,17 @@ extern "C" {
 /**
  * @brief LP Standby selection configuration valid value.
  */
-#define PMIC_FSM_CFG_LP_STANDBYSEL_VALID (1U)
+#define PMIC_FSM_CFG_LP_STBY_SEL_VALID (1U)
 
 /**
  * @brief ILIM interrupt FSM control enable configuration valid value.
  */
-#define PMIC_FSM_CFG_ILIM_INT_FSMCTRL_EN_VALID (2U)
+#define PMIC_FSM_CFG_ILIM_INT_EN_VALID (2U)
 
 /**
  * @brief FSM startup destination selection configuration valid value.
  */
-#define PMIC_FSM_CFG_FSM_STARTUP_DEST_SEL_VALID (3U)
+#define PMIC_FSM_STARTUP_DEST_SEL_VALID (3U)
 
 /**
  * @brief FSM startup destination active value.
@@ -440,27 +440,15 @@ extern "C" {
 #define PMIC_FSM_STARTUPDEST_ACTIVE (3U)
 
 /**
- * @brief Configuration valid value for enabling fast BIST.
- */
-#define PMIC_FSM_CFG_FAST_BIST_EN_VALID (0U)
-
-/**
- * @brief Configuration valid value for enabling ILIM interrupt FSM control.
- */
-#define PMIC_FSM_CFG_ILIM_INT_FSMCTRL_EN_VALID (2U)
-
-/**
  * @brief Shift value for the valid configuration of enabling fast BIST.
  */
-#define PMIC_FSM_CFG_FAST_BIST_EN_VALID_SHIFT                                  \
-  (1U << PMIC_FSM_CFG_FAST_BIST_EN_VALID)
+#define PMIC_FAST_BIST_EN_VALID_SHIFT (1U << PMIC_FSM_CFG_FAST_BIST_EN_VALID)
 
 /**
  * @brief Shift value for the valid configuration of enabling ILIM interrupt FSM
  * control.
  */
-#define PMIC_FSM_CFG_ILIM_INT_FSMCTRL_EN_VALID_SHIFT                           \
-  (1U << PMIC_FSM_CFG_ILIM_INT_FSMCTRL_EN_VALID)
+#define PMIC_ILIM_INT_EN_VALID_SHIFT (1U << PMIC_FSM_CFG_ILIM_INT_EN_VALID)
 
 #ifdef __cplusplus
 }

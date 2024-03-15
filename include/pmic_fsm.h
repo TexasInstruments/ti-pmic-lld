@@ -61,11 +61,22 @@ extern "C" {
 
 typedef struct Pmic_FsmCfg_s {
   uint8_t validParams;
-  bool fastBistEn;
+  uint8_t fastBistEn;
   bool lpStandbySel;
-  bool ilimIntfsmCtrlEn;
+  uint8_t ilimIntfsmCtrlEn;
   uint8_t fsmStarupDestSel;
 } Pmic_FsmCfg_t;
+
+/* ========================================================================== */
+/*                             Macros & Typedefs                              */
+/* ========================================================================== */
+
+#define PMIC_BIST_BIT_ENABLE (0x01U)
+#define PMIC_BIST_BIT_DISABLE (0x00U)
+
+#define PMIC_BIST_MODE_SEL (0x00U)
+#define PMIC_LBIST_MODE_SEL (0x01U)
+#define PMIC_ABIST_MODE_SEL (0x02U)
 
 /*==========================================================================*/
 /*                         Function Declarations                            */
@@ -77,10 +88,19 @@ void Pmic_fsmGetstandByCfgRegFields(uint8_t pmicNextState, uint8_t *pRegAddr,
                                     uint8_t *pBitPos, uint8_t *pBitMask,
                                     uint8_t *pBitVal, uint8_t *pDeviceState);
 
-void Pmic_fsmGetNsleepMaskBitField(bool nsleepType, uint8_t *pBitPos,
+int32_t Pmic_fsmSetNsleepSignalMask(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                    const uint8_t nsleepType,
+                                    const bool maskEnable);
+
+int32_t Pmic_fsmGetNsleepSignalMaskStat(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                        const uint8_t nsleepType,
+                                        bool *pNsleepStat);
+
+void Pmic_fsmGetNsleepMaskBitField(uint8_t nsleepType, uint8_t *pBitPos,
                                    uint8_t *pBitMask);
 
-int32_t Pmic_fsmGetDeviceStateCfg(Pmic_CoreHandle_t *pPmicCoreHandle);
+int32_t Pmic_fsmGetDeviceStateCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                  uint8_t *deviceState);
 
 int32_t Pmic_fsmDeviceRequestCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                  uint8_t fsmState);
@@ -98,6 +118,20 @@ int32_t Pmic_fsmGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
                                  Pmic_FsmCfg_t *pFsmCfg);
 
 int32_t Pmic_fsmRequestRuntimeBist(Pmic_CoreHandle_t *pPmicCoreHandle);
+
+static int32_t Pmic_fsmEnableFastBIST(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                      const Pmic_FsmCfg_t fsmCfg);
+
+static int32_t
+Pmic_fsmGetBuckLdoIlimIntAftCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                  Pmic_FsmCfg_t *pFsmCfg);
+
+static int32_t
+Pmic_fsmEnabBckLdoIlimIntAffect(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                const Pmic_FsmCfg_t fsmCfg);
+
+static int32_t Pmic_fsmGetFastBISTCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                      Pmic_FsmCfg_t *pFsmCfg);
 
 #ifdef __cplusplus
 }

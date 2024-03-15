@@ -45,9 +45,9 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#include "pmic_test_common.h"
 #include "pmic_fsm.h"
 #include "pmic_fsm_priv.h"
+#include "pmic_test_common.h"
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */

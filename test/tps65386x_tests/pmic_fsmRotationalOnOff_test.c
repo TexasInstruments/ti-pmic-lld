@@ -63,59 +63,56 @@ Pmic_CoreHandle_t *pPmicCoreHandle_fsm = NULL;
  *
  * @return  Returns the status of the initialization process.
  */
-int32_t test_pmic_fsm_config_init(void)
-{
-    int32_t status                = PMIC_ST_SUCCESS;
-    Pmic_CoreCfg_t pmicConfigData = {0U};
+int32_t test_pmic_fsm_config_init(void) {
+  int32_t status = PMIC_ST_SUCCESS;
+  Pmic_CoreCfg_t pmicConfigData = {0U};
 
-    /* Fill parameters to pmicConfigData */
-    pmicConfigData.pmicDeviceType      = PMIC_DEV_BB_TPS65386X;
-    pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
+  /* Fill parameters to pmicConfigData */
+  pmicConfigData.pmicDeviceType = PMIC_DEV_BB_TPS65386X;
+  pmicConfigData.validParams |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
 
-    pmicConfigData.commMode            = PMIC_INTF_SPI;
-    pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
+  pmicConfigData.commMode = PMIC_INTF_SPI;
+  pmicConfigData.validParams |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
-    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
+  pmicConfigData.pFnPmicCommIoRead = test_pmic_regRead;
+  pmicConfigData.validParams |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
 
-    pmicConfigData.pFnPmicCommIoWrite   = test_pmic_regWrite;
-    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
+  pmicConfigData.pFnPmicCommIoWrite = test_pmic_regWrite;
+  pmicConfigData.validParams |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
 
-    pmicConfigData.pFnPmicCritSecStart  = test_pmic_criticalSectionStartFn;
-    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
+  pmicConfigData.pFnPmicCritSecStart = test_pmic_criticalSectionStartFn;
+  pmicConfigData.validParams |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
 
-    pmicConfigData.pFnPmicCritSecStop   = test_pmic_criticalSectionStopFn;
-    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
+  pmicConfigData.pFnPmicCritSecStop = test_pmic_criticalSectionStopFn;
+  pmicConfigData.validParams |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
 
-    status = test_pmic_appInit(&pPmicCoreHandle_fsm, &pmicConfigData);
-    if (PMIC_ST_SUCCESS != status)
-    {
-        DebugP_log("%s(): %d: FAILED with status: %d\r\n",
-                 __func__, __LINE__, status);
-    }
-    return status;
+  status = test_pmic_appInit(&pPmicCoreHandle_fsm, &pmicConfigData);
+  if (PMIC_ST_SUCCESS != status) {
+    DebugP_log("%s(): %d: FAILED with status: %d\r\n", __func__, __LINE__,
+               status);
+  }
+  return status;
 }
 
 /*!
  * @brief   Deinitialize the PMIC FSM configuration after testing.
- * This function deinitializes the PMIC FSM configuration after testing is completed.
- * It deinitializes the PMIC core handle and frees up any allocated memory.
+ * This function deinitializes the PMIC FSM configuration after testing is
+ * completed. It deinitializes the PMIC core handle and frees up any allocated
+ * memory.
  *
  * @return  Returns the status of the deinitialization process.
  */
-int32_t test_pmic_fsm_config_deinit(void)
-{
-    int32_t status = PMIC_ST_SUCCESS;
+int32_t test_pmic_fsm_config_deinit(void) {
+  int32_t status = PMIC_ST_SUCCESS;
 
-    status = Pmic_deinit(pPmicCoreHandle_fsm);
-    free(pPmicCoreHandle_fsm);
-    SemaphoreP_destruct(&gpmicCoreObj);
-    if (PMIC_ST_SUCCESS != status)
-    {
-        DebugP_log("%s(): %d: FAILED with status: %d\r\n",
-                 __func__, __LINE__,  status);
-    }
-    return status;
+  status = Pmic_deinit(pPmicCoreHandle_fsm);
+  free(pPmicCoreHandle_fsm);
+  SemaphoreP_destruct(&gpmicCoreObj);
+  if (PMIC_ST_SUCCESS != status) {
+    DebugP_log("%s(): %d: FAILED with status: %d\r\n", __func__, __LINE__,
+               status);
+  }
+  return status;
 }
 
 /**
@@ -128,10 +125,16 @@ int32_t test_pmic_fsm_config_deinit(void)
  * @return  NULL
  */
 void test_pmic_fsm_state_get() {
+  int32_t pmicStatus = PMIC_ST_SUCCESS;
   uint8_t deviceState = 0;
 
-  deviceState = Pmic_fsmGetDeviceStateCfg(pPmicCoreHandle_fsm);
-  DebugP_log("PMIC_FSM Current State: %u\r\n", deviceState);
+  pmicStatus = Pmic_fsmGetDeviceStateCfg(pPmicCoreHandle_fsm, &deviceState);
+  if (pmicStatus != PMIC_ST_SUCCESS) {
+    DebugP_log("Failed to retrieve current FSM state.\r\n");
+  } else {
+    DebugP_log("PMIC_FSM Current State: %u\r\n", deviceState);
+  }
+
   delay(2000);
 }
 
@@ -214,6 +217,33 @@ void test_pmic_fsmSetMissionState_standby(void) {
 }
 
 /**
+ * @brief:  Tests setting the FSM Mission State to RESET.
+ * This function tests setting the FSM Mission State to RESET using
+ * `Pmic_fsmSetMissionState` and validates the result. It logs whether
+ * the test passed or failed along with the expected and actual status.
+ *
+ * @param   void
+ * @return  NULL
+ */
+void test_pmic_fsmSetMissionState_reset(void) {
+  int32_t expectedStatus = PMIC_FSM_STAT_RESET_MCU;
+  int32_t status = PMIC_ST_SUCCESS;
+  uint8_t pmicState = 0U;
+
+  pmicState = PMIC_FSM_MCU_ONLY_STATE;
+
+  status = Pmic_fsmSetMissionState(pPmicCoreHandle_fsm, pmicState);
+  if (status != expectedStatus) {
+    DebugP_log("Test failed: Setting FSM Mission State to RESET failed.\r\n");
+    DebugP_log("Expected status: %ld, Actual status: %ld\r\n", expectedStatus,
+               status);
+  } else {
+    DebugP_log("Test passed: Setting FSM Mission State to RESET passed.\r\n");
+  }
+}
+
+
+/**
  * @brief:  Tests setting FSM Configuration to Enable FAST BIST.
  * This function tests setting FSM Configuration to enable FAST BIST
  * using `Pmic_fsmSetConfiguration` and validates the result. It
@@ -228,11 +258,11 @@ void test_pmic_fsmSetConfiguration_fastBistEnable(void) {
   int32_t status = PMIC_ST_SUCCESS;
 
   Pmic_FsmCfg_t fsmCfg_rd = {
-      PMIC_FSM_CFG_FAST_BIST_EN_VALID_SHIFT,
+      PMIC_FAST_BIST_EN_VALID_SHIFT,
   };
   Pmic_FsmCfg_t fsmCfg = {
-      PMIC_FSM_CFG_FAST_BIST_EN_VALID_SHIFT, PMIC_FSM_FAST_BIST_ENABLE,
-      PMIC_FSM_SELECT_STANDBY_STATE, PMIC_FSM_ILIM_INT_FSMCTRL_DISABLE,
+      PMIC_FAST_BIST_EN_VALID_SHIFT, PMIC_FSM_FAST_BIST_ENABLE,
+      PMIC_FSM_SELECT_STANDBY_STATE, PMIC_FSM_ILIM_INT_DISABLE,
       PMIC_FSM_STARTUPDEST_ACTIVE};
 
   status = Pmic_fsmSetConfiguration(pPmicCoreHandle_fsm, fsmCfg);
@@ -273,11 +303,11 @@ void test_pmic_fsmSetConfiguration_fastBistDisable(void) {
   int32_t status = PMIC_ST_SUCCESS;
 
   Pmic_FsmCfg_t fsmCfg_rd = {
-      PMIC_FSM_CFG_FAST_BIST_EN_VALID_SHIFT,
+      PMIC_FAST_BIST_EN_VALID_SHIFT,
   };
   Pmic_FsmCfg_t fsmCfg = {
-      PMIC_FSM_CFG_FAST_BIST_EN_VALID_SHIFT, PMIC_FSM_FAST_BIST_DISABLE,
-      PMIC_FSM_SELECT_STANDBY_STATE, PMIC_FSM_ILIM_INT_FSMCTRL_DISABLE,
+      PMIC_FAST_BIST_EN_VALID_SHIFT, PMIC_FSM_FAST_BIST_DISABLE,
+      PMIC_FSM_SELECT_STANDBY_STATE, PMIC_FSM_ILIM_INT_DISABLE,
       PMIC_FSM_STARTUPDEST_ACTIVE};
 
   status = Pmic_fsmSetConfiguration(pPmicCoreHandle_fsm, fsmCfg);
@@ -317,33 +347,33 @@ void test_pmic_fsmSetConfiguration_ilimIntfsmCtrlEnable(void) {
   int32_t status = PMIC_ST_SUCCESS;
 
   Pmic_FsmCfg_t fsmCfg_rd = {
-      PMIC_FSM_CFG_ILIM_INT_FSMCTRL_EN_VALID_SHIFT,
+      PMIC_ILIM_INT_EN_VALID_SHIFT,
   };
   Pmic_FsmCfg_t fsmCfg = {
-      PMIC_FSM_CFG_ILIM_INT_FSMCTRL_EN_VALID_SHIFT, PMIC_FSM_FAST_BIST_ENABLE,
-      PMIC_FSM_SELECT_STANDBY_STATE, PMIC_FSM_ILIM_INT_FSMCTRL_ENABLE,
+      PMIC_ILIM_INT_EN_VALID_SHIFT, PMIC_FSM_FAST_BIST_ENABLE,
+      PMIC_FSM_SELECT_STANDBY_STATE, PMIC_FSM_ILIM_INT_ENABLE,
       PMIC_FSM_STARTUPDEST_ACTIVE};
 
   status = Pmic_fsmSetConfiguration(pPmicCoreHandle_fsm, fsmCfg);
   if (status != expectedStatus) {
-    DebugP_log(
-        "Test failed: Setting FSM Configuration to Enable ILIM failed.\r\n");
+    DebugP_log("Test failed: Setting FSM Configuration to Enable ILIM "
+               "failed.\r\n");
     DebugP_log("Expected status: %ld, Actual status: %ld\r\n", expectedStatus,
                status);
   } else {
-    DebugP_log(
-        "Test passed: Setting FSM Configuration to Enable ILIM passed.\r\n");
+    DebugP_log("Test passed: Setting FSM Configuration to Enable ILIM "
+               "passed.\r\n");
   }
 
   status = Pmic_fsmGetConfiguration(pPmicCoreHandle_fsm, &fsmCfg_rd);
   if (status != expectedStatus) {
-    DebugP_log(
-        "Test failed: Getting FSM Configuration to Enable ILIM failed.\r\n");
+    DebugP_log("Test failed: Getting FSM Configuration to Enable ILIM "
+               "failed.\r\n");
     DebugP_log("Expected status: %ld, Actual status: %ld\r\n", expectedStatus,
                status);
   } else {
-    DebugP_log(
-        "Test passed: Getting FSM Configuration to Enable ILIM passed.\r\n");
+    DebugP_log("Test passed: Getting FSM Configuration to Enable ILIM "
+               "passed.\r\n");
   }
 }
 
@@ -361,41 +391,42 @@ void test_pmic_fsmSetConfiguration_ilimIntfsmCtrlDisable(void) {
   int32_t status = PMIC_ST_SUCCESS;
 
   Pmic_FsmCfg_t fsmCfg_rd = {
-      PMIC_FSM_CFG_ILIM_INT_FSMCTRL_EN_VALID_SHIFT,
+      PMIC_ILIM_INT_EN_VALID_SHIFT,
   };
   Pmic_FsmCfg_t fsmCfg = {
-      PMIC_FSM_CFG_ILIM_INT_FSMCTRL_EN_VALID_SHIFT, PMIC_FSM_FAST_BIST_DISABLE,
-      PMIC_FSM_SELECT_STANDBY_STATE, PMIC_FSM_ILIM_INT_FSMCTRL_DISABLE,
+      PMIC_ILIM_INT_EN_VALID_SHIFT, PMIC_FSM_FAST_BIST_DISABLE,
+      PMIC_FSM_SELECT_STANDBY_STATE, PMIC_FSM_ILIM_INT_DISABLE,
       PMIC_FSM_STARTUPDEST_ACTIVE};
 
   status = Pmic_fsmSetConfiguration(pPmicCoreHandle_fsm, fsmCfg);
   if (status != expectedStatus) {
-    DebugP_log(
-        "Test failed: Setting FSM Configuration to Disable ILIM failed.\r\n");
+    DebugP_log("Test failed: Setting FSM Configuration to Disable ILIM "
+               "failed.\r\n");
     DebugP_log("Expected status: %ld, Actual status: %ld\r\n", expectedStatus,
                status);
   } else {
-    DebugP_log(
-        "Test passed: Setting FSM Configuration to Disable ILIM passed.\r\n");
+    DebugP_log("Test passed: Setting FSM Configuration to Disable ILIM "
+               "passed.\r\n");
   }
 
   status = Pmic_fsmGetConfiguration(pPmicCoreHandle_fsm, &fsmCfg_rd);
   if (status != expectedStatus) {
-    DebugP_log(
-        "Test failed: Getting FSM Configuration to Disable ILIM failed.\r\n");
+    DebugP_log("Test failed: Getting FSM Configuration to Disable ILIM "
+               "failed.\r\n");
     DebugP_log("Expected status: %ld, Actual status: %ld\r\n", expectedStatus,
                status);
   } else {
-    DebugP_log(
-        "Test passed: Getting FSM Configuration to Disable ILIM passed.\r\n");
+    DebugP_log("Test passed: Getting FSM Configuration to Disable ILIM "
+               "passed.\r\n");
   }
 }
 
 /**
  * @brief:  Tests requesting Runtime BIST with a negative scenario.
- * This function tests requesting Runtime BIST using `Pmic_fsmRequestRuntimeBist`
- * with a negative scenario and validates the result. It logs whether the test
- * passed or failed along with the expected and actual status.
+ * This function tests requesting Runtime BIST using
+ * `Pmic_fsmRequestRuntimeBist` with a negative scenario and validates the
+ * result. It logs whether the test passed or failed along with the expected and
+ * actual status.
  *
  * @param   void
  * @return  NULL
@@ -410,22 +441,21 @@ void test_pmic_negativefsmRuntimeBistRequest(void) {
     DebugP_log("Expected status: %ld, Actual status: %ld\r\n", expectedStatus,
                status);
   } else {
-    DebugP_log(
-        "Test passed: Getting FSM Configuration to Disable ILIM passed.\r\n");
+    DebugP_log("Test passed: Getting FSM Configuration to Disable ILIM "
+               "passed.\r\n");
   }
 }
 
 /*!
  * @brief   Main function for testing PMIC FSM.
- * This function serves as the main entry point for testing PMIC FSM functionality.
- * It initializes the necessary drivers and hardware, performs various tests,
- * and then deinitializes the configuration.
+ * This function serves as the main entry point for testing PMIC FSM
+ * functionality. It initializes the necessary drivers and hardware, performs
+ * various tests, and then deinitializes the configuration.
  *
  * @param args Arguments passed to the function (not used).
  * @return void* Returns NULL when testing is completed.
  */
-void *test_pmic_FSM(void *args)
-{
+void *test_pmic_FSM(void *args) {
   Drivers_open();
   Board_driversOpen();
 
@@ -460,6 +490,9 @@ void *test_pmic_FSM(void *args)
   test_pmic_fsmSetMissionState_active();
   delay(10000);
 
+  DebugP_log("\n[TEST] SET FSM STATE - RESET\r\n");
+  test_pmic_fsmSetMissionState_reset();
+
   DebugP_log("\n[TEST] ENABLE FAST BIST\r\n");
   test_pmic_fsmSetConfiguration_fastBistEnable();
   delay(10000);
@@ -492,5 +525,3 @@ void *test_pmic_FSM(void *args)
 
   return NULL;
 }
-
-
