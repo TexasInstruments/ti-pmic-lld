@@ -102,7 +102,7 @@ extern "C" {
 /** @brief Error Code for SUCCESS */
 #define PMIC_ST_SUCCESS (0)
 /** @brief Error Code for Invalid PMIC Default Data */
-#define PMIC_ST_DEFAULT_DATA (9)
+#define PMIC_ST_DEFAULT_DATA ((uint8_t)9)
 /** @brief Error Code for Invalid input Handle */
 #define PMIC_ST_ERR_INV_HANDLE (-((int32_t)1))
 /** @brief Error Code when input Param is NULL */

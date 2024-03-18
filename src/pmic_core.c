@@ -342,15 +342,15 @@ int32_t Pmic_getRegLockStat(Pmic_CoreHandle_t *pPmicCoreHandle,
 
   Pmic_criticalSectionStart(pPmicCoreHandle);
   pmicStatus =
-      Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_REGISTER_LOCK_STATUS_REGADDR,
+      Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_REG_LOCK_STATUS_REGADDR,
                              &pCommonCtrlStat->cfgregLockStat);
   Pmic_criticalSectionStop(pPmicCoreHandle);
 
   if (PMIC_ST_SUCCESS == pmicStatus) {
     pCommonCtrlStat->cfgregLockStat =
         Pmic_getBitField(pCommonCtrlStat->cfgregLockStat,
-                         PMIC_REGISTER_CFG_REG_LOCKED_STATUS_SHIFT,
-                         PMIC_REGISTER_LOCK_CFG_REG_LOCKED_STATUS_READ_MASK);
+                         PMIC_CFGREG_LOCKED_STATUS_SHIFT,
+                         PMIC_CFGREG_LOCK_STATUS_RD_MASK);
   }
 
   return pmicStatus;
@@ -372,15 +372,15 @@ int32_t Pmic_getTmrCntLockStat(Pmic_CoreHandle_t *pPmicCoreHandle,
 
   Pmic_criticalSectionStart(pPmicCoreHandle);
   pmicStatus =
-      Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_REGISTER_LOCK_STATUS_REGADDR,
+      Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_REG_LOCK_STATUS_REGADDR,
                              &pCommonCtrlStat->cntregLockStat);
   Pmic_criticalSectionStop(pPmicCoreHandle);
 
   if (PMIC_ST_SUCCESS == pmicStatus) {
     pCommonCtrlStat->cntregLockStat =
         Pmic_getBitField(pCommonCtrlStat->cntregLockStat,
-                         PMIC_REGISTER_CNT_REG_LOCKED_STATUS_SHIFT,
-                         PMIC_REGISTER_LOCK_CNT_REG_LOCKED_STATUS_READ_MASK);
+                         PMIC_CNTREG_LOCKED_STATUS_SHIFT,
+                         PMIC_CNTREG_LOCK_STATUS_RD_MASK);
   }
 
   return pmicStatus;
@@ -420,8 +420,8 @@ int32_t Pmic_getRstmcuCnt(Pmic_CoreHandle_t *pPmicCoreHandle,
   }
 
   if (PMIC_ST_SUCCESS == pmicStatus) {
-    *pRecovCntVal = Pmic_getBitField(regVal, PMIC_STATE_STAT_RST_MCU_CNT_SHIFT,
-                                     PMIC_STATE_STAT_RST_MCU_CNT_MASK);
+    *pRecovCntVal = Pmic_getBitField(regVal, PMIC_RST_MCU_CNT_SHIFT,
+                                     PMIC_RST_MCU_CNT_MASK);
   }
 
   return pmicStatus;
@@ -1358,18 +1358,18 @@ int32_t Pmic_setAmuxDmuxPinCtrlCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 
   if ((PMIC_ST_SUCCESS == pmicStatus) &&
       (PMIC_DEV_BB_TPS65386X == pPmicCoreHandle->pmicDeviceType)) {
-    if ((PMIC_TPS65386X_DIAG_OUT_AMUX_ENABLE) == diagoutAMUXEn) {
+    if ((PMIC_BB_DIAG_OUT_AMUX_ENABLE) == diagoutAMUXEn) {
       Pmic_setBitField(&regData, PMIC_DIAG_OUT_CTRL_SHIFT,
                        PMIC_DIAG_OUT_CTRL_MASK,
-                       PMIC_TPS65386X_DIAG_OUT_AMUX_ENABLE);
-    } else if ((PMIC_TPS65386X_DIAG_OUT_DMUX_ENABLE) == diagoutDMUXEn) {
+                       PMIC_BB_DIAG_OUT_AMUX_ENABLE);
+    } else if ((PMIC_BB_DIAG_OUT_DMUX_ENABLE) == diagoutDMUXEn) {
       Pmic_setBitField(&regData, PMIC_DIAG_OUT_CTRL_SHIFT,
                        PMIC_DIAG_OUT_CTRL_MASK,
-                       PMIC_TPS65386X_DIAG_OUT_DMUX_ENABLE);
+                       PMIC_BB_DIAG_OUT_DMUX_ENABLE);
     } else {
       Pmic_setBitField(&regData, PMIC_DIAG_OUT_CTRL_SHIFT,
                        PMIC_DIAG_OUT_CTRL_MASK,
-                       PMIC_TPS65386X_DIAG_OUT_DISABLE);
+                       PMIC_BB_DIAG_OUT_DISABLE);
     }
     pmicStatus = Pmic_commIntf_sendByte(
         pPmicCoreHandle, PMIC_DIAG_OUT_CFG_CTRL_REGADDR, regData);
@@ -1464,8 +1464,8 @@ int32_t Pmic_setDiagMUXSelectionCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                     Pmic_DiagOutCfgCtrl_t diagoutCfgCtrl) {
   int32_t pmicStatus = PMIC_ST_SUCCESS;
   uint8_t regData = 0U;
-  int32_t diagGrpSel = diagoutCfgCtrl.DiagGrpSel;
-  int32_t diagChannelSel = diagoutCfgCtrl.DiagChannelSel;
+  uint8_t diagGrpSel = diagoutCfgCtrl.DiagGrpSel;
+  uint8_t diagChannelSel = diagoutCfgCtrl.DiagChannelSel;
 
   /* Set Diagnostic Control Group number */
   Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -1551,8 +1551,8 @@ int32_t Pmic_getDiagAMUXFeatureCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                    Pmic_AMUXFeatures *feature) {
   int32_t pmicStatus = PMIC_ST_SUCCESS;
   Pmic_DiagOutCfgCtrl_t diagoutCfgCtrl;
-  int32_t diagGrpSel = 0U;
-  int32_t diagChannelSel = 0U;
+  uint32_t diagGrpSel = 0U;
+  uint32_t diagChannelSel = 0U;
 
   pmicStatus = Pmic_getDiagMUXSelectionCfg(pPmicCoreHandle, &diagoutCfgCtrl);
 
@@ -1561,9 +1561,9 @@ int32_t Pmic_getDiagAMUXFeatureCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 
   if (PMIC_ST_SUCCESS == pmicStatus) {
     /* Loop through the feature mappings to find a match */
-    for (int i = 0; i < AMUX_NUM_FEATURES; ++i) {
-      if (Pmic_amuxFeatureMappings[i].group == diagGrpSel &&
-          Pmic_amuxFeatureMappings[i].channel == diagChannelSel) {
+    for (int8_t i = 0; i < (int8_t)AMUX_NUM_FEATURES; ++i) {
+      if ((Pmic_amuxFeatureMappings[i].group == diagGrpSel) &&
+          (Pmic_amuxFeatureMappings[i].channel == diagChannelSel)) {
         /* Return the corresponding feature */
         *feature = (Pmic_AMUXFeatures)i;
       }
@@ -1594,8 +1594,8 @@ int32_t Pmic_getDiagDMUXFeatureCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                    Pmic_DMUXFeatures *feature) {
   int32_t pmicStatus = PMIC_ST_SUCCESS;
   Pmic_DiagOutCfgCtrl_t diagoutCfgCtrl;
-  int32_t diagGrpSel = 0U;
-  int32_t diagChannelSel = 0U;
+  uint32_t diagGrpSel = 0U;
+  uint32_t diagChannelSel = 0U;
 
   pmicStatus = Pmic_getDiagMUXSelectionCfg(pPmicCoreHandle, &diagoutCfgCtrl);
 
@@ -1604,9 +1604,9 @@ int32_t Pmic_getDiagDMUXFeatureCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 
   if (PMIC_ST_SUCCESS == pmicStatus) {
     /* Loop through the feature mappings to find a match */
-    for (int i = 0; i < DMUX_NUM_FEATURES; ++i) {
-      if (Pmic_dmuxFeatureMappings[i].group == diagGrpSel &&
-          Pmic_dmuxFeatureMappings[i].channel == diagChannelSel) {
+    for (int8_t i = 0; i < (int8_t)DMUX_NUM_FEATURES; ++i) {
+      if ((Pmic_dmuxFeatureMappings[i].group == diagGrpSel) &&
+          (Pmic_dmuxFeatureMappings[i].channel == diagChannelSel)) {
         /* Return the corresponding feature */
         *feature = (Pmic_DMUXFeatures)i;
       }
@@ -1620,16 +1620,16 @@ static void Pmic_getPinTypeRegBitFields(const uint8_t pinType,
                                         uint8_t *pBitShift, uint8_t *pBitMask) {
   switch (pinType) {
   case PMIC_PIN_TYPE_NRST_RDBK_LVL:
-    *pBitShift = PMIC_STAT_READBACK_ERR_NRST_RDBK_LVL_SHIFT;
-    *pBitMask = PMIC_STAT_READBACK_ERR_NRST_RDBK_LVL_MASK;
+    *pBitShift = PMIC_NRST_RDBK_LVL_SHIFT;
+    *pBitMask = PMIC_NRST_RDBK_LVL_MASK;
     break;
-  case PMIC_PIN_TYPE_SAFE_OUT1_RDBK_LVL:
-    *pBitShift = PMIC_STAT_READBACK_ERR_SAFE_OUT1_RDBK_LVL_SHIFT;
-    *pBitMask = PMIC_STAT_READBACK_ERR_SAFE_OUT1_RDBK_LVL_MASK;
+  case PMIC_PIN_TYPE_SAFEOUT1_RDBK_LVL:
+    *pBitShift = PMIC_SAFE_OUT1_RDBK_LVL_SHIFT;
+    *pBitMask = PMIC_SAFE_OUT1_RDBK_LVL_MASK;
     break;
   default:
-    *pBitShift = PMIC_STAT_READBACK_ERR_EN_OUT_RDBK_LVL_SHIFT;
-    *pBitMask = PMIC_STAT_READBACK_ERR_EN_OUT_RDBK_LVL_MASK;
+    *pBitShift = PMIC_EN_OUT_RDBK_LVL_SHIFT;
+    *pBitMask = PMIC_EN_OUT_RDBK_LVL_MASK;
     break;
   }
 }
@@ -1700,8 +1700,8 @@ static int32_t Pmic_getSafeOut1Stat(Pmic_CoreHandle_t *pPmicCoreHandle,
 
   if (PMIC_ST_SUCCESS == pmicStatus) {
     pCommonCtrlStat->safeOut1Pin = Pmic_getBitField(
-        regData, PMIC_STAT_READBACK_ERR_SAFE_OUT1_RDBK_LVL_SHIFT,
-        PMIC_STAT_READBACK_ERR_SAFE_OUT1_RDBK_LVL_MASK);
+        regData, PMIC_SAFE_OUT1_RDBK_LVL_SHIFT,
+        PMIC_SAFE_OUT1_RDBK_LVL_MASK);
   }
 
   return pmicStatus;
@@ -1728,8 +1728,8 @@ static int32_t Pmic_getNRstPinStat(Pmic_CoreHandle_t *pPmicCoreHandle,
 
   if (PMIC_ST_SUCCESS == pmicStatus) {
     pCommonCtrlStat->nRstPin =
-        Pmic_getBitField(regData, PMIC_STAT_READBACK_ERR_NRST_RDBK_LVL_SHIFT,
-                         PMIC_STAT_READBACK_ERR_NRST_RDBK_LVL_MASK);
+        Pmic_getBitField(regData, PMIC_NRST_RDBK_LVL_SHIFT,
+                         PMIC_NRST_RDBK_LVL_MASK);
   }
 
   return pmicStatus;
@@ -1756,8 +1756,8 @@ static int32_t Pmic_getEnOutPinStat(Pmic_CoreHandle_t *pPmicCoreHandle,
 
   if (PMIC_ST_SUCCESS == pmicStatus) {
     pCommonCtrlStat->enOutPin =
-        Pmic_getBitField(regData, PMIC_STAT_READBACK_ERR_EN_OUT_RDBK_LVL_SHIFT,
-                         PMIC_STAT_READBACK_ERR_EN_OUT_RDBK_LVL_MASK);
+        Pmic_getBitField(regData, PMIC_EN_OUT_RDBK_LVL_SHIFT,
+                         PMIC_EN_OUT_RDBK_LVL_MASK);
   }
 
   return pmicStatus;
@@ -1820,7 +1820,7 @@ int32_t Pmic_getCommonStat(Pmic_CoreHandle_t *pPmicCoreHandle,
 
   if ((PMIC_ST_SUCCESS == pmicStatus) &&
       (true == pmic_validParamCheck(pCommonCtrlStat->validParams,
-                                    PMIC_CFG_REGISTER_LOCK_STAT_VALID))) {
+                                    PMIC_CFG_REG_LOCK_STAT_VALID))) {
     /* Get Register Lock Status*/
     pmicStatus = Pmic_getRegLockStat(pPmicCoreHandle, pCommonCtrlStat);
   }

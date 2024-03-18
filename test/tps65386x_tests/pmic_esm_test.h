@@ -45,9 +45,9 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#include "pmic_test_common.h"
 #include "pmic_esm.h"
 #include "pmic_esm_priv.h"
+#include "pmic_test_common.h"
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
@@ -70,8 +70,7 @@ static void test_pmic_esm_setConfigurationPrmValTest_lminValue(void);
 static void test_pmic_esm_getconfiguration_PrmValTest_validParams(void);
 static void test_Pmic_esmGetErrCnt(void);
 static void test_pmic_esm_getStatusEsmMcu(void);
-void *test_pmic_esm(void *args);
-
+void *test_pmic_ESM(void *args);
 
 #ifdef __cplusplus
 }

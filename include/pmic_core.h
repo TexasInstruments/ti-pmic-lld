@@ -111,7 +111,7 @@ extern "C" {
  *
  * @ingroup Pmic_CoreMacros
  */
-#define PMIC_CFG_REGISTER_LOCK_STAT_VALID (1U)
+#define PMIC_CFG_REG_LOCK_STAT_VALID (1U)
 
 /**
  * @brief validParams value used to get External clock validity status
@@ -198,15 +198,15 @@ extern "C" {
  *
  * @ingroup Pmic_CoreMacros
  */
-#define PMIC_CFG_REGISTER_LOCK_STAT_VALID_SHIFT                                \
-  (1U << PMIC_CFG_REGISTER_LOCK_STAT_VALID)
+#define PMIC_CFG_REG_LOCK_STAT_VALID_SHIFT                                \
+  (1U << PMIC_CFG_REG_LOCK_STAT_VALID)
 
 /**
  * @brief Shift value for the external clock validity status validity bit.
  *
  * @ingroup Pmic_CoreMacros
  */
-#define PMIC_CFG_EXT_CLK_VALIDITY_STAT_VALID_SHIFT                             \
+#define PMIC_CFG_EXTCLK_VALIDITY_STAT_VALID_SHIFT                             \
   (1U << PMIC_CFG_EXT_CLK_VALIDITY_STAT_VALID)
 
 /**
@@ -214,7 +214,7 @@ extern "C" {
  *
  * @ingroup Pmic_CoreMacros
  */
-#define PMIC_CFG_STARTUP_PIN_STAT_VALID_SHIFT                                  \
+#define PMIC_CFG_STARTUP_PINSTAT_VALID_SHIFT                                  \
   (1U << PMIC_CFG_STARTUP_PIN_STAT_VALID)
 
 /**
@@ -231,7 +231,7 @@ extern "C" {
  *
  * @ingroup Pmic_CoreMacros
  */
-#define PMIC_CFG_NRSTOUTSOC_PIN_STAT_VALID_SHIFT                               \
+#define PMIC_CFG_NRSTOUTSOC_PINSTAT_VALID_SHIFT                               \
   (1U << PMIC_CFG_NRSTOUTSOC_PIN_STAT_VALID)
 
 /**
@@ -239,7 +239,7 @@ extern "C" {
  *
  * @ingroup Pmic_CoreMacros
  */
-#define PMIC_CFG_NRSTOUT_PIN_STAT_VALID_SHIFT                                  \
+#define PMIC_CFG_NRSTOUT_PINSTAT_VALID_SHIFT                                  \
   (1U << PMIC_CFG_NRSTOUT_PIN_STAT_VALID)
 
 /**
@@ -262,7 +262,7 @@ extern "C" {
  *
  * @ingroup Pmic_CoreMacros
  */
-#define PMIC_CFG_FORCE_ENABLE_DRV_LOW_STAT_VALID_SHIFT                         \
+#define PMIC_CFG_FORCE_EN_DRV_LOW_STAT_VALID_SHIFT                         \
   (1U << PMIC_CFG_FORCE_ENABLE_DRV_LOW_STAT_VALID)
 
 /**
@@ -312,7 +312,7 @@ extern "C" {
  *
  * @ingroup Pmic_CoreMacros
  */
-#define PMIC_PIN_TYPE_SAFE_OUT1_RDBK_LVL (1U)
+#define PMIC_PIN_TYPE_SAFEOUT1_RDBK_LVL (1U)
 
 /**
  * @brief EN_OUT_RDBK_LVL (Enable Output Readback Level) pin type.
@@ -354,14 +354,14 @@ extern "C" {
  *
  * @ingroup Pmic_CoreMacros
  */
-#define PMIC_ENABLE_DRV_I2C_SPI_CONFIG_ENABLE (0U)
+#define PMIC_EN_DRV_I2C_SPI_CFG_ENABLE (0U)
 
 /**
  * @brief Enable driver I2C/SPI configuration disable.
  *
  * @ingroup Pmic_CoreMacros
  */
-#define PMIC_ENABLE_DRV_I2C_SPI_CONFIG_DISABLE (1U)
+#define PMIC_EN_DRV_I2C_SPI_CFG_DISABLE (1U)
 
 /**
  * @brief Unlock data 1 for register and timer counter.
@@ -445,14 +445,14 @@ extern "C" {
  *
  * @ingroup Pmic_CoreMacros
  */
-#define PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_6_3_PERCENT (1U)
+#define PMIC_SS_MODULATION_DEPTH_6_3_PERCENT (1U)
 
 /**
  * @brief Spread spectrum modulation depth indicating 8.4% modulation.
  *
  * @ingroup Pmic_CoreMacros
  */
-#define PMIC_SPREAD_SPECTRUM_MODULATION_DEPTH_8_4_PERCENT (2U)
+#define PMIC_SS_MODULATION_DEPTH_8_4_PERCENT (2U)
 
 /**
  * @brief Configuration for SPMI (System Packet Interface - Master) LPM (Low
@@ -481,7 +481,7 @@ extern "C" {
  *
  * @ingroup Pmic_CoreMacros
  */
-#define PMIC_INTERNAL_CLK_MONITORING_CFG_ENABLE (1U)
+#define PMIC_INTERNALCLK_MONITORING_CFG_ENABLE (1U)
 
 /**
  * @brief Configuration for synchronous clock output when disabled.
@@ -600,7 +600,7 @@ extern "C" {
  *
  * @ingroup Pmic_CoreMacros
  */
-#define PMIC_CFG_SPREAD_SPECTRUM_EN_VALID_SHIFT                                \
+#define PMIC_CFG_SPREADSPECTRUM_EN_VALID_SHIFT                                \
   (1U << PMIC_CFG_SPREAD_SPECTRUM_EN_VALID)
 
 /**
@@ -622,7 +622,7 @@ extern "C" {
  *
  * @ingroup Pmic_CoreMacros
  */
-#define PMIC_CFG_SPREAD_SPECTRUM_DEPTH_VALID_SHIFT                             \
+#define PMIC_CFG_SPREADSPECTRUM_DEPTH_VALID_SHIFT                             \
   (1U << PMIC_CFG_SPREAD_SPECTRUM_DEPTH_VALID)
 
 /**
@@ -638,7 +638,7 @@ extern "C" {
  *
  * @ingroup Pmic_CoreMacros
  */
-#define PMIC_CFG_SKIP_EEPROM_LOAD_VALID_SHIFT                                  \
+#define PMIC_CFG_SKIPEEPROM_LOAD_VALID_SHIFT                                  \
   (1U << PMIC_CFG_SKIP_EEPROM_LOAD_VALID)
 
 /**
@@ -704,7 +704,7 @@ extern "C" {
  *
  * @ingroup Pmic_CoreMacros
  */
-#define PMIC_CFG_AMUX_OUT_REF_OUT_EN_VALID_SHIFT                               \
+#define PMIC_CFG_AMUXOUT_REF_OUT_EN_VALID_SHIFT                               \
   (1U << PMIC_CFG_AMUX_OUT_REF_OUT_EN_VALID)
 
 /**
@@ -720,7 +720,7 @@ extern "C" {
  *
  * @ingroup Pmic_CoreMacros
  */
-#define PMIC_CFG_SYNC_CLK_OUT_FREQ_SEL_VALID_SHIFT                             \
+#define PMIC_CFG_SYNC_CLKOUT_FREQ_SEL_VALID_SHIFT                             \
   (1U << PMIC_CFG_SYNC_CLK_OUT_FREQ_SEL_VALID)
 
 /**
@@ -737,7 +737,7 @@ extern "C" {
  *
  * @ingroup Pmic_CoreMacros
  */
-#define PMIC_CFG_SYNC_CLK_IN_FREQ_VALID_SHIFT                                  \
+#define PMIC_CFG_SYNC_CLKIN_FREQ_VALID_SHIFT                                  \
   (1U << PMIC_CFG_SYNC_CLK_IN_FREQ_VALID)
 
 /**
@@ -833,7 +833,7 @@ extern "C" {
  *
  * @ingroup Pmic_CoreMacros
  */
-#define PMIC_SAFE_OUT2_CFG_PWM_HEARTBEAT_SECOND (0x03U)
+#define PMIC_SAFEOUT2_CFG_PWM_HEARTBEAT_SECOND (0x03U)
 
 /**
  * @brief Value representing delayed continuous configuration for Safe Output 2.
@@ -1024,8 +1024,8 @@ typedef struct Pmic_RecovCntCfg_s {
  * @ingroup Pmic_CoreStructures
  */
 typedef struct Pmic_CommonCtrlCfg_s {
-  uint8_t validParams;
-  bool sreadSpectrumEn;
+  uint32_t validParams;
+  uint32_t sreadSpectrumEn;
   bool skipEepromDefaultLoadEn;
   uint8_t eepromDefaultLoad;
   uint8_t enDrv;
@@ -1178,7 +1178,7 @@ typedef struct Pmic_DiagOutCfgCtrl_s {
  *                                 Valid values
  *                                     @ref Pmic_Tps6594xLeo_BBEoCIndicationStat
  *  @param  regLockStat        Register lock status
- *                             Valid only when PMIC_CFG_REGISTER_LOCK_STAT_VALID
+ *                             Valid only when PMIC_CFG_REG_LOCK_STAT_VALID
  *                             bit is set
  *                                 Valid values @ref Pmic_RegisterLock_Stat
  *  @param  extClkValidity     External clock validity status. The status value
@@ -2279,6 +2279,18 @@ int32_t Pmic_setDiagDMUXFeatureCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 
 int32_t Pmic_getDiagDMUXFeatureCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                    Pmic_DMUXFeatures *feature);
+
+int32_t Pmic_setAmuxDmuxPinCtrlCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                   const Pmic_DiagOutCfgCtrl_t diagoutCfgCtrl);
+
+int32_t Pmic_getAmuxDmuxPinCtrlCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                   Pmic_DiagOutCfgCtrl_t *pDiagOutCfgCtrl);
+
+int32_t Pmic_setDiagMUXSelectionCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                    Pmic_DiagOutCfgCtrl_t diagoutCfgCtrl);
+
+int32_t Pmic_getDiagMUXSelectionCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                    Pmic_DiagOutCfgCtrl_t *diagoutCfgCtrl);
 
 /**
  * @}

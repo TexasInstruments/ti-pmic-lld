@@ -198,8 +198,8 @@ int32_t Pmic_fsmGetDeviceStateCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                         PMIC_STATE_STAT_REGADDR, &regData);
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
-    *deviceState = Pmic_getBitField(regData, PMIC_STATE_STAT_STATE_SHIFT,
-                                    PMIC_STATE_STAT_STATE_MASK);
+    *deviceState = Pmic_getBitField(regData, PMIC_STATE_SHIFT,
+                                    PMIC_STATE_MASK);
 
     if (pmicStatus != PMIC_ST_SUCCESS) {
       pmicStatus = PMIC_ST_ERR_FAIL;
@@ -571,12 +571,12 @@ Pmic_fsmEnabBckLdoIlimIntAffect(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
       if (PMIC_FSM_ILIM_INT_ENABLE == fsmCfg.ilimIntfsmCtrlEn) {
-        Pmic_setBitField(&regData, PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_SHIFT,
-                         PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_MASK,
+        Pmic_setBitField(&regData, PMIC_CFG1_EN_ILM_FSM_CTRL_SHIFT,
+                         PMIC_CFG1_EN_ILIM_FSM_CTRL_MASK,
                          PMIC_FSM_ILIM_INT_ENABLE);
       } else {
-        Pmic_setBitField(&regData, PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_SHIFT,
-                         PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_MASK,
+        Pmic_setBitField(&regData, PMIC_CFG1_EN_ILM_FSM_CTRL_SHIFT,
+                         PMIC_CFG1_EN_ILIM_FSM_CTRL_MASK,
                          PMIC_FSM_ILIM_INT_DISABLE);
       }
 
@@ -619,8 +619,8 @@ Pmic_fsmGetBuckLdoIlimIntAftCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
     if (PMIC_ST_SUCCESS == pmicStatus) {
       pFsmCfg->ilimIntfsmCtrlEn = false;
 
-      if (1U == Pmic_getBitField(regData, PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_SHIFT,
-                                 PMIC_CONFIG_1_EN_ILIM_FSM_CTRL_MASK)) {
+      if (1U == Pmic_getBitField(regData, PMIC_CFG1_EN_ILM_FSM_CTRL_SHIFT,
+                                 PMIC_CFG1_EN_ILIM_FSM_CTRL_MASK)) {
         pFsmCfg->ilimIntfsmCtrlEn = true;
       }
     }

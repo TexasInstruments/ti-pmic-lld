@@ -45,6 +45,8 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 
+#include "pmic_types.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -101,11 +103,11 @@ extern "C" {
  *  @{
  */
 /** @brief AMUX Enabled */
-#define PMIC_TPS65386X_DIAG_OUT_AMUX_ENABLE (1U)
+#define PMIC_BB_DIAG_OUT_AMUX_ENABLE (1U)
 /** @brief DMUX Enabled */
-#define PMIC_TPS65386X_DIAG_OUT_DMUX_ENABLE (2U)
+#define PMIC_BB_DIAG_OUT_DMUX_ENABLE (2U)
 /** @brief AMUX/DMUX Disabled */
-#define PMIC_TPS65386X_DIAG_OUT_DISABLE (0U)
+#define PMIC_BB_DIAG_OUT_DISABLE (0U)
 /*  @} */
 
 /*==========================================================================*/
@@ -115,6 +117,8 @@ extern "C" {
 /*==========================================================================*/
 /*                         Function Declarations                            */
 /*==========================================================================*/
+
+uint8_t PMIC_calcCRC8(uint8_t cmd, uint8_t rdwr, uint8_t dat);
 
 #ifdef __cplusplus
 }
