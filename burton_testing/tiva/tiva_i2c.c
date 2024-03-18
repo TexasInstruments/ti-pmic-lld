@@ -66,7 +66,7 @@ int32_t I2CBurstWrite(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t bufLen, u
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
-    if ((status == PMIC_ST_SUCCESS) && (bufLen < 2))
+    if ((status == PMIC_ST_SUCCESS) && (bufLen < 2U))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -99,39 +99,43 @@ int32_t I2CBurstWrite(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t bufLen, u
     /************ Transmitting data to I2C device's internal register ************/
     /*****************************************************************************/
 
-    for (i = 0; i < bufLen; i++)
+    if (status == PMIC_ST_SUCCESS)
     {
-        if (status != PMIC_ST_SUCCESS)
+        for (i = 0; i < bufLen; i++)
         {
-            I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_SEND_STOP);
-            break;
-        }
+            // Put data into the data register
+            I2CMasterDataPut(i2cHandle->i2cBase, pTxBuf[i]);
 
-        // Put data into the data register
-        I2CMasterDataPut(i2cHandle->i2cBase, pTxBuf[i]);
+            // If on last iteration, Generate stop condition at end of transmission
+            if ((bufLen - i) == 1U)
+            {
+                I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_SEND_FINISH);
+            }
+            // Else continue sending data
+            else
+            {
+                I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_SEND_CONT);
+            }
 
-        // If on last iteration, Generate stop condition at end of transmission
-        if ((bufLen - i) == 1)
-        {
-            I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_SEND_FINISH);
-        }
-        // Else continue sending data
-        else
-        {
-            I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_SEND_CONT);
-        }
+            // Wait while the master is busy writing data to I2C device
+            while (I2CMasterBusy(i2cHandle->i2cBase))
+            {
+            }
 
-        // Wait while the master is busy writing data to I2C device
-        while (I2CMasterBusy(i2cHandle->i2cBase))
-        {
-        }
+            // Check to see if there is an error
+            status = I2CMasterErr(i2cHandle->i2cBase);
 
-        // Check to see if there is an error
-        status = I2CMasterErr(i2cHandle->i2cBase);
+            // If error, send stop bit 
+            if (status != PMIC_ST_SUCCESS)
+            {
+                I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_SEND_STOP);
+                break;
+            }
+        }
     }
 
-    if (((status & I2C_MASTER_ERR_ADDR_ACK) != 0) || ((status & I2C_MASTER_ERR_DATA_ACK) != 0) ||
-        ((status & I2C_MASTER_ERR_ARB_LOST) != 0) || ((status & I2C_MASTER_ERR_CLK_TOUT) != 0))
+    if ((status > 0) && (((status & I2C_MASTER_ERR_ADDR_ACK) != 0) || ((status & I2C_MASTER_ERR_DATA_ACK) != 0) ||
+        ((status & I2C_MASTER_ERR_ARB_LOST) != 0) || ((status & I2C_MASTER_ERR_CLK_TOUT) != 0)))
     {
         status = PMIC_ST_ERR_I2C_COMM_FAIL;
     }
@@ -194,8 +198,8 @@ int32_t I2CSingleWrite(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t *pTxBuf)
         status = I2CMasterErr(i2cHandle->i2cBase);
     }
 
-    if (((status & I2C_MASTER_ERR_ADDR_ACK) != 0) || ((status & I2C_MASTER_ERR_DATA_ACK) != 0) ||
-        ((status & I2C_MASTER_ERR_ARB_LOST) != 0) || ((status & I2C_MASTER_ERR_CLK_TOUT) != 0))
+    if ((status > 0) && (((status & I2C_MASTER_ERR_ADDR_ACK) != 0) || ((status & I2C_MASTER_ERR_DATA_ACK) != 0) ||
+        ((status & I2C_MASTER_ERR_ARB_LOST) != 0) || ((status & I2C_MASTER_ERR_CLK_TOUT) != 0)))
     {
         status = PMIC_ST_ERR_I2C_COMM_FAIL;
     }
@@ -214,7 +218,7 @@ int32_t I2CBurstRead(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t bufLen, ui
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
-    if ((status == PMIC_ST_SUCCESS) && (bufLen < 2))
+    if ((status == PMIC_ST_SUCCESS) && (bufLen < 2U))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -258,7 +262,7 @@ int32_t I2CBurstRead(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t bufLen, ui
                 I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_RECEIVE_START);
             }
             // Else if on last iteration, send NACK to stop after next received byte
-            else if ((bufLen - i) == 1)
+            else if ((bufLen - i) == 1U)
             {
                 I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_RECEIVE_FINISH);
             }
@@ -288,8 +292,8 @@ int32_t I2CBurstRead(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t bufLen, ui
         }
     }
 
-    if (((status & I2C_MASTER_ERR_ADDR_ACK) != 0) || ((status & I2C_MASTER_ERR_DATA_ACK) != 0) ||
-        ((status & I2C_MASTER_ERR_ARB_LOST) != 0) || ((status & I2C_MASTER_ERR_CLK_TOUT) != 0))
+    if ((status > 0) && (((status & I2C_MASTER_ERR_ADDR_ACK) != 0) || ((status & I2C_MASTER_ERR_DATA_ACK) != 0) ||
+        ((status & I2C_MASTER_ERR_ARB_LOST) != 0) || ((status & I2C_MASTER_ERR_CLK_TOUT) != 0)))
     {
         status = PMIC_ST_ERR_I2C_COMM_FAIL;
     }
@@ -352,15 +356,16 @@ int32_t I2CSingleRead(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t *pRxBuf)
         status = I2CMasterErr(i2cHandle->i2cBase);
     }
 
+    if ((status > 0) && (((status & I2C_MASTER_ERR_ADDR_ACK) != 0) || ((status & I2C_MASTER_ERR_DATA_ACK) != 0) ||
+            ((status & I2C_MASTER_ERR_ARB_LOST) != 0) || ((status & I2C_MASTER_ERR_CLK_TOUT) != 0)))
+    {
+        status = PMIC_ST_ERR_I2C_COMM_FAIL;
+    }
+    
     if (status == PMIC_ST_SUCCESS)
     {
         // Read from data register if there is no error
         *pRxBuf = I2CMasterDataGet(i2cHandle->i2cBase);
-    }
-    else if (((status & I2C_MASTER_ERR_ADDR_ACK) != 0) || ((status & I2C_MASTER_ERR_DATA_ACK) != 0) ||
-             ((status & I2C_MASTER_ERR_ARB_LOST) != 0) || ((status & I2C_MASTER_ERR_CLK_TOUT) != 0))
-    {
-        status = PMIC_ST_ERR_I2C_COMM_FAIL;
     }
 
     return status;

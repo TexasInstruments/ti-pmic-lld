@@ -60,6 +60,14 @@ void UARTUint32Put(uartHandle_t *UARTHandle, uint32_t num);
  */
 void UARTInt32Put(uartHandle_t *UARTHandle, int32_t num);
 
+/**
+ * \brief This function is generally called at the beginning of a test application
+ *        and is used to clear the terminal.
+ *
+ * \param uartHandle [IN] Handle to the UART that is interfacing the virtual communication port
+ */
+void clearConsole(uartHandle_t *uartHandle);
+
 #ifdef __cplusplus
 }
 

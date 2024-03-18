@@ -130,3 +130,12 @@ void UARTInt32Put(uartHandle_t *UARTHandle, int32_t num)
         UARTCharPut(UARTHandle->uartBase, str[len - 1 - i]);
     }
 }
+
+void clearConsole(uartHandle_t *uartHandle)
+{
+    if (uartHandle == NULL)
+        return;
+
+    UARTStrPut(uartHandle, "\033[2J");
+    UARTStrPut(uartHandle, "\033[1;1H");
+}

@@ -45,7 +45,7 @@ void resetGpioCfg_withSpecificValidParams(Pmic_GpioCfg_t *pGpioCfg, uint8_t vali
  *
  *  \param  ucData      [IN]    Character to write to the terminal
  */
-void unityCharPut(unsigned char ucData);
+void unityCharPut(uint8_t ucData);
 
 /**
  *  \brief  This function is used to disable all power resources on TPS6522x PMIC.

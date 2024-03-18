@@ -61,7 +61,7 @@ void resetGpioCfg_withSpecificValidParams(Pmic_GpioCfg_t *pGpioCfg, uint8_t vali
  *
  * \param ucData    [IN]    Character to write to the terminal
  */
-void unityCharPut(unsigned char ucData)
+void unityCharPut(uint8_t ucData)
 {
     UARTCharPut(UART0_BASE, ucData);
     if (ucData == '\n')
@@ -88,7 +88,7 @@ static void resetAllTps6522xBuckRegisters(Pmic_CoreHandle_t pmicCoreHandle)
 
     // Clear BUCK interrupts
     (void)pmicI2CRead(&pmicCoreHandle, PMIC_MAIN_INST, intBuckRegAddr, &regData, 1);
-    regData |= 0xF;
+    regData |= 0xFU;
     (void)pmicI2CWrite(&pmicCoreHandle, PMIC_MAIN_INST, intBuckRegAddr, &regData, 1);
 }
 
@@ -140,6 +140,9 @@ static void resetAllTps6522xVccaVmonRegisters(Pmic_CoreHandle_t pmicCoreHandle)
                     &pmicCoreHandle, PMIC_MAIN_INST, gTps6522xVccaVmonRegisters[i].vccaPgWindowRegAddr, &regData, 1);
 
                 break;
+            // Invalid VCCA_VMON/VMON
+            default:
+                break;
         }
     }
 
@@ -161,7 +164,7 @@ void disablePmicPowerResources(Pmic_CoreHandle_t pmicCoreHandle)
     }
 
     // Wait for PMIC connection
-    while (1)
+    while ((bool)true)
     {
         status = pmicI2CRead(&pmicCoreHandle, PMIC_MAIN_INST, devIdReg, &pmicDevId, 1);
 

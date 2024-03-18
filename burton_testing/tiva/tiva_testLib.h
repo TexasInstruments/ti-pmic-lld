@@ -8,7 +8,6 @@
 
 #include "tiva_vcp.h"
 #include "tiva_i2c.h"
-#include "tiva_misc.h"
 #include "tiva_pmic_intf.h"
 #include "tiva_timer.h"
 #include "tiva_gpio.h"
