@@ -4,9 +4,11 @@ import subprocess
 if __name__ == "__main__":
     kwlpFile = ".kwlp"
     kwpsFile = ".kwps"
-    pconfFile = "analysis_profile_SA_plus_MISRAC_2012_HIS.pconf"
-    mconfFile = "his_metrics_community.mconf"
+    pconfFile = "analysis_profile_SA_plus_MISRAC_2012_HIS_modified.pconf"
+    mconfFile = "his_metrics_community_old.mconf"
     sconfFile = "kw_filter.sconf"
+    kwReport = "kw_report.xml"
+    kwOutput = "kwinject.out"
 
     if ((not os.path.exists(kwlpFile)) and (not os.path.exists(kwpsFile))):
         subprocess.run(["kwcheck", "create"])
@@ -26,4 +28,13 @@ if __name__ == "__main__":
         else:
             print(sconfFile + " not found.")
             exit(-1)
+    
+    if (os.path.exists(kwReport)):
+        os.remove(kwReport)
+    else:
+        print("Existing " + kwReport + " file not found")
+    if (os.path.exists(kwOutput)):
+        os.remove(kwOutput)
+    else:
+        print("Existing " + kwOutput + " file not found")
         
