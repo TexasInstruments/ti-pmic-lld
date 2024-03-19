@@ -3,3 +3,4 @@ lib/*
 *.o
 docs/html
 docs/DoxygenLayout.xml
+test\burton\lib\.vscode
