@@ -1,0 +1,38 @@
+{ "issue_suppressions": [    
+    { "kind": "directory",
+      "name": "ccs1230",
+      "all_issue_codes": true,
+      "filter": true
+    },
+    { "kind": "directory",
+      "name": "unity",
+      "all_issue_codes": true,
+      "filter": true
+    },
+    { "kind": "directory",
+      "name": "driverlib",
+      "all_issue_codes": true,
+      "filter": true
+    },
+    { "kind": "directory",
+      "name": "inc",
+      "all_issue_codes": true,
+      "filter": true
+    },
+    { "kind": "directory",
+      "name": "test",
+      "all_issue_codes": false,
+      "filter": false
+    },
+    { "kind": "file",
+      "name": "tm4c123gh6pm_startup_ccs.c",
+      "all_issue_codes": true,
+      "filter": true
+    },
+    { "kind": "file",
+      "name": "main.c",
+      "all_issue_codes": true,
+      "filter": true
+    }
+  ]
+}
