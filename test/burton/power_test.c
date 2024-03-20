@@ -26,7 +26,7 @@
 /* PMIC driver */
 #include "pmic.h"
 
-#define RUN_POWER_TESTS     RUN_TEST(test_power_getConfiguration_pmicHandle_null);                      \
+#define RUN_POWER_TESTS()   RUN_TEST(test_power_getConfiguration_pmicHandle_null);                      \
                             RUN_TEST(test_power_getConfiguration_pwrRsrcCfg_null);                      \
                             RUN_TEST(test_power_getConfiguration_pwrRsrcCfg_noValidParam);              \
                             RUN_TEST(test_power_getConfiguration_buckCfg_noValidParam);                 \
@@ -85,7 +85,7 @@
                             RUN_TEST(test_power_setThermalCfg_TsdOrdLevel);                             \
                             RUN_TEST(test_power_setThermalCfg_TwarnLevel)                               \
 
-timerHandle_t     timerHandle;
+timerHandle_t tHandle;
 Pmic_CoreHandle_t pmicCoreHandle;
 
 int main(void)
@@ -129,8 +129,8 @@ int main(void)
     Pmic_init(&pmicConfigData, &pmicCoreHandle);
 
     /*** Timer setup ***/
-    initializeTimerHandle(&timerHandle);
-    initializeTimer(&timerHandle);
+    initializeTimerHandle(&tHandle);
+    initializeTimer(&tHandle);
 
     /*** Clear the console before printing anything ***/
     clearConsole(&vcpHandle);
@@ -140,7 +140,7 @@ int main(void)
     (void)Pmic_irqClrErrStatus(&pmicCoreHandle, PMIC_IRQ_ALL);
 
     /*** Ensure changes are propagated by waiting a certain period of time ***/
-    delayTimeInMs(&timerHandle, 1000);
+    delayTimeInMs(&tHandle, 1000);
 
     /*** Print welcome message ***/
     UARTStrPut(&vcpHandle, "Running all PMIC Power tests...\r\n\r\n");
@@ -148,7 +148,7 @@ int main(void)
     /*** Begin unity testing ***/
     UNITY_BEGIN();
 
-    RUN_POWER_TESTS;
+    RUN_POWER_TESTS();
 
     /*** Finish unity testing ***/
     return UNITY_END();
@@ -2657,7 +2657,7 @@ void test_power_getPwrRsrcStat_vmon1_2_UVOVStatDetection(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Wait a short period of time so VMON1 and VMON2 could detect UV
-    delayTimeInMs(&timerHandle, 500);
+    delayTimeInMs(&tHandle, 500);
 
     do
     {

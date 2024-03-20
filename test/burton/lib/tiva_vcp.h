@@ -13,8 +13,8 @@ typedef struct uartHandle_s
     uint32_t sysctlPeriphGPIO;
     uint32_t gpioPortBase;
     uint32_t uartBase;
-    uint32_t gpioTxPin;
-    uint32_t gpioRxPin;
+    uint8_t gpioTxPin;
+    uint8_t gpioRxPin;
     uint32_t TxPinToUART;
     uint32_t RxPinToUART;
     uint32_t clkSrc;
@@ -27,7 +27,7 @@ typedef struct uartHandle_s
  *
  * \param vcpHandle [IN] Handle to the virtual communication port UART
  */
-void initializeVCP(uartHandle_t *vcpHandle);
+void initializeVCP(const uartHandle_t *vcpHandle);
 
 /**
  * \brief Function to initialize the virtual communication port UART handle
@@ -42,7 +42,7 @@ void initializeVCPHandle(uartHandle_t *vcpHandle);
  * \param UARTHandle    [IN]        Handle to the UART module
  * \param str           [IN]        String to transmit via UART
  */
-void UARTStrPut(uartHandle_t *UARTHandle, uint8_t *str);
+void UARTStrPut(const uartHandle_t *UARTHandle, const uint8_t *str);
 
 /**
  * \brief Function to transmit an unsigned 32-bit integer via UART
@@ -50,7 +50,7 @@ void UARTStrPut(uartHandle_t *UARTHandle, uint8_t *str);
  * \param UARTHandle    [IN]        Handle to the UART module
  * \param num           [IN]        Number to transmit over UART
  */
-void UARTUint32Put(uartHandle_t *UARTHandle, uint32_t num);
+void UARTUint32Put(const uartHandle_t *UARTHandle, uint32_t num);
 
 /**
  * \brief Function to transmit a signed 32-bit integer via UART
@@ -58,7 +58,7 @@ void UARTUint32Put(uartHandle_t *UARTHandle, uint32_t num);
  * \param UARTHandle    [IN]        Handle to the UART module
  * \param num           [IN]        Number to transmit over UART
  */
-void UARTInt32Put(uartHandle_t *UARTHandle, int32_t num);
+void UARTInt32Put(const uartHandle_t *UARTHandle, int32_t num);
 
 /**
  * \brief This function is generally called at the beginning of a test application
@@ -66,7 +66,7 @@ void UARTInt32Put(uartHandle_t *UARTHandle, int32_t num);
  *
  * \param uartHandle [IN] Handle to the UART that is interfacing the virtual communication port
  */
-void clearConsole(uartHandle_t *uartHandle);
+void clearConsole(const uartHandle_t *uartHandle);
 
 #ifdef __cplusplus
 }

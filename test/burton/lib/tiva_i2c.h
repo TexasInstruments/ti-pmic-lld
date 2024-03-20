@@ -13,12 +13,12 @@ typedef struct i2cHandle_s
     uint32_t sysPeriphGPIO;
     uint32_t gpioPortBase;
     uint32_t i2cBase;
-    uint32_t sdaPin;
-    uint32_t sclPin;
+    uint8_t sdaPin;
+    uint8_t sclPin;
     uint32_t gpioToSDA;
     uint32_t gpioToSCL;
-    uint8_t  slaveAddr;
-    bool     bFast;
+    uint8_t slaveAddr;
+    bool bFast;
 } i2cHandle_t;
 
 /**
@@ -43,54 +43,35 @@ void initializeI2C1Handle(i2cHandle_t *i2cHandle);
 void initializeI2C2Handle(i2cHandle_t *i2cHandle);
 
 /**
- * \brief Function to write consecutive bytes to a target I2C device.
+ * \brief Function to write data (bytes) to a target I2C device.
  *
  * \param i2cHandle [IN]        Handle to an I2C module on the Tiva
  * \param regAddr   [IN]        Target internal register address of the I2C device
- * \param bufLen    [IN]        Number of bytes to send consecutively over I2C
- * \param pTxBuf    [IN]        Pointer to the buffer containing the bytes to send over I2C
+ * \param bufLen    [IN]        Number of bytes to write consecutively over I2C
+ * \param pTxBuf    [OUT]       Pointer to the buffer that contains bytes to write over I2C.
+ *                              Index zero is the first byte to be sent and index bufLen-1
+ *                              is the last byte to be sent
  *
- * \return          int32_t     PMIC_ST_SUCCESS in case of success or appropriate error code.
- *                              For valid values \ref Pmic_ErrorCodes.
+ * \return          int32_t     PMIC_ST_SUCCESS when all bytes in \p pTxBuf has been transmitted,
+ *                              error code otherwise. For valid values refer to \ref Pmic_ErrorCodes
  */
-int32_t I2CBurstWrite(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t bufLen, uint8_t *pRxBuf);
+int32_t I2CWrite(const i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t bufLen, const uint8_t *pTxBuf);
 
 /**
- * \brief Function to write a single byte to a target I2C device.
- *
- * \param i2cHandle [IN]        Handle to an I2C module on the Tiva
- * \param regAddr   [IN]        Target internal register address of the I2C device
- * \param pTxBuf    [IN]        Pointer to the buffer containing the byte to send over I2C
- *
- * \return          int32_t     PMIC_ST_SUCCESS in case of success or appropriate error code.
- *                              For valid values \ref Pmic_ErrorCodes.
- */
-int32_t I2CSingleWrite(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t *pRxBuf);
-
-/**
- * \brief Function to read consecutive bytes from a target I2C device.
+ * \brief Function to read data (bytes) from a target I2C device.
  *
  * \param i2cHandle [IN]        Handle to an I2C module on the Tiva
  * \param regAddr   [IN]        Target internal register address of the I2C device
  * \param bufLen    [IN]        Number of bytes to read consecutively over I2C
- * \param pRxBuf    [OUT]       Pointer to the buffer that stores bytes received over I2C
+ * \param pRxBuf    [OUT]       Pointer to the buffer that stores bytes received over I2C. 
+ *                              Index zero is the first byte received and index bufLen-1
+ *                              is the last byte received 
  *
- * \return          int32_t     PMIC_ST_SUCCESS in case of success or appropriate error code.
- *                              For valid values \ref Pmic_ErrorCodes.
+ * \return          int32_t     PMIC_ST_SUCCESS when \p bufLen bytes are received over I2C and
+ *                              stored in \p pRxBuf error code otherwise. For valid values refer
+ *                              to \ref Pmic_ErrorCodes.
  */
-int32_t I2CBurstRead(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t bufLen, uint8_t *pRxBuf);
-
-/**
- * \brief Function to read a single byte from a target I2C device.
- *
- * \param i2cHandle [IN]        Handle to an I2C module on the Tiva
- * \param regAddr   [IN]        Target internal register address of the I2C device
- * \param pRxBuf    [OUT]       Pointer to the buffer that stores the byte received over I2C
- *
- * \return          int32_t     PMIC_ST_SUCCESS in case of success or appropriate error code.
- *                              For valid values \ref Pmic_ErrorCodes.
- */
-int32_t I2CSingleRead(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t *pRxBuf);
+int32_t I2CRead(const i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t bufLen, uint8_t *pRxBuf);
 
 #ifdef __cplusplus
 }

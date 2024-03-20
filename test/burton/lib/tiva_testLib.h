@@ -30,11 +30,6 @@ extern "C"
 /* Burton register lock key */
 #define BURTON_REGISTER_LOCK_KEY      (uint8_t)(0x9B)
 
-/* Status codes definitions */
-#define INVALID_INPUT_PARAM           (int32_t)(-2)
-#define FAILURE                       (int32_t)(-1)
-#define SUCCESS                       (0U)
-
 #ifdef __cplusplus
 }
 

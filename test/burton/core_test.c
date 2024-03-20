@@ -20,38 +20,37 @@
 // Unit testing
 #include "unity.h"
 
-#define RUN_CORE_TESTS  RUN_TEST(test_core_setRecoveryCntCfg_thrVal);                   \
-                        RUN_TEST(test_core_setRecoveryCntCfg_clrCnt);                   \
-                        RUN_TEST(test_core_setScratchPadValue_allScratchPads);          \
-                        RUN_TEST(test_core_setUserSpareValue_allUserSpares);            \
-                        RUN_TEST(test_core_setCommonCtrlCfg_spreadSpectrumEn);          \
-                        RUN_TEST(test_core_setCommonCtrlCfg_skipEepromDefaultLoadEn);   \
-                        RUN_TEST(test_core_setCommonCtrlCfg_eepromDefaultLoad);         \
-                        RUN_TEST(test_core_setCommonCtrlCfg_enDrv);                     \
-                        RUN_TEST(test_core_setCommonCtrlCfg_regLock);                   \
-                        RUN_TEST(test_core_setCommonCtrlCfg_spreadSpectrumDepth);       \
-                        RUN_TEST(test_core_setMiscCtrlCfg_amuxOutRefOutEn);             \
-                        RUN_TEST(test_core_setMiscCtrlCfg_clkMonEn);                    \
-                        RUN_TEST(test_core_setMiscCtrlCfg_syncClkOutFreqSel);           \
-                        RUN_TEST(test_core_setMiscCtrlCfg_extClkSel);                   \
-                        RUN_TEST(test_core_setMiscCtrlCfg_syncClkInFreq);               \
-                        RUN_TEST(test_core_setMiscCtrlCfg_nRstOutSocSignal);            \
-                        RUN_TEST(test_core_setMiscCtrlCfg_nRstOutSignal);               \
-                        RUN_TEST(test_core_setBatteryCtrlCfg_invalidDevice);            \
-                        RUN_TEST(test_core_getBatteryCtrlCfg_invalidDevice);            \
-                        RUN_TEST(test_core_getCommonCtrlStat_spmiLpmStat);              \
-                        RUN_TEST(test_core_getCommonCtrlStat_forceEnDrvLowStat);        \
-                        RUN_TEST(test_core_getCommonCtrlStat_bbEndOfChargeIndication);  \
-                        RUN_TEST(test_core_getCommonCtrlStat_regLockStat);              \
-                        RUN_TEST(test_core_getCommonCtrlStat_extClkValidity);           \
-                        RUN_TEST(test_core_getCommonCtrlStat_startupPin);               \
-                        RUN_TEST(test_core_getCommonCtrlStat_enDrvPin);                 \
-                        RUN_TEST(test_core_getCommonCtrlStat_nRstOutSocPin);            \
-                        RUN_TEST(test_core_getCommonCtrlStat_nRstOutPin);               \
-                        RUN_TEST(test_core_getCommonCtrlStat_nIntPin);                  \
-                        RUN_TEST(test_core_getDeviceInfo)
+#define RUN_CORE_TESTS()    RUN_TEST(test_core_setRecoveryCntCfg_thrVal);                   \
+                            RUN_TEST(test_core_setRecoveryCntCfg_clrCnt);                   \
+                            RUN_TEST(test_core_setScratchPadValue_allScratchPads);          \
+                            RUN_TEST(test_core_setUserSpareValue_allUserSpares);            \
+                            RUN_TEST(test_core_setCommonCtrlCfg_spreadSpectrumEn);          \
+                            RUN_TEST(test_core_setCommonCtrlCfg_skipEepromDefaultLoadEn);   \
+                            RUN_TEST(test_core_setCommonCtrlCfg_eepromDefaultLoad);         \
+                            RUN_TEST(test_core_setCommonCtrlCfg_enDrv);                     \
+                            RUN_TEST(test_core_setCommonCtrlCfg_regLock);                   \
+                            RUN_TEST(test_core_setCommonCtrlCfg_spreadSpectrumDepth);       \
+                            RUN_TEST(test_core_setMiscCtrlCfg_amuxOutRefOutEn);             \
+                            RUN_TEST(test_core_setMiscCtrlCfg_clkMonEn);                    \
+                            RUN_TEST(test_core_setMiscCtrlCfg_syncClkOutFreqSel);           \
+                            RUN_TEST(test_core_setMiscCtrlCfg_extClkSel);                   \
+                            RUN_TEST(test_core_setMiscCtrlCfg_syncClkInFreq);               \
+                            RUN_TEST(test_core_setMiscCtrlCfg_nRstOutSocSignal);            \
+                            RUN_TEST(test_core_setMiscCtrlCfg_nRstOutSignal);               \
+                            RUN_TEST(test_core_setBatteryCtrlCfg_invalidDevice);            \
+                            RUN_TEST(test_core_getBatteryCtrlCfg_invalidDevice);            \
+                            RUN_TEST(test_core_getCommonCtrlStat_spmiLpmStat);              \
+                            RUN_TEST(test_core_getCommonCtrlStat_forceEnDrvLowStat);        \
+                            RUN_TEST(test_core_getCommonCtrlStat_bbEndOfChargeIndication);  \
+                            RUN_TEST(test_core_getCommonCtrlStat_regLockStat);              \
+                            RUN_TEST(test_core_getCommonCtrlStat_extClkValidity);           \
+                            RUN_TEST(test_core_getCommonCtrlStat_startupPin);               \
+                            RUN_TEST(test_core_getCommonCtrlStat_enDrvPin);                 \
+                            RUN_TEST(test_core_getCommonCtrlStat_nRstOutSocPin);            \
+                            RUN_TEST(test_core_getCommonCtrlStat_nRstOutPin);               \
+                            RUN_TEST(test_core_getCommonCtrlStat_nIntPin);                  \
+                            RUN_TEST(test_core_getDeviceInfo)
 
-timerHandle_t     timerHandle;
 Pmic_CoreHandle_t pmicCoreHandle;
 
 int main(void)
@@ -83,10 +82,6 @@ int main(void)
     SysCtlClockSet(SYSCTL_SYSDIV_4 | SYSCTL_USE_PLL | SYSCTL_OSC_MAIN |
                    SYSCTL_XTAL_16MHZ); // 400 / 2 / 4 = 50 MHz clock rate
 
-    // Initialize timer
-    initializeTimerHandle(&timerHandle);
-    initializeTimer(&timerHandle);
-
     // Enable printing to console
     initializeVCPHandle(&vcpHandle);
     initializeVCP(&vcpHandle);
@@ -114,7 +109,7 @@ int main(void)
             UARTStrPut(&vcpHandle, "Running all PMIC Core tests...\r\n\r\n");
 
             UNITY_BEGIN();
-            RUN_CORE_TESTS;
+            RUN_CORE_TESTS();
             UNITY_END();
         }
         // Error message if IRQs were not able to be cleared

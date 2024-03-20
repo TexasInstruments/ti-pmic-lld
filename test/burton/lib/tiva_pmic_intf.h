@@ -51,9 +51,9 @@ void pmicCritSecStop(void);
 /**
  * \brief This function initalizes the handle to a PMIC.
  *
- * \param pmicCoreHandle [OUT] PMIC handle to initialize
+ * \param pmicHandle [OUT] PMIC handle to initialize
  */
-void initializePmicCoreHandle(Pmic_CoreHandle_t *pmicCoreHandle);
+void initializePmicCoreHandle(Pmic_CoreHandle_t *pmicHandle);
 
 #ifdef __cplusplus
 }

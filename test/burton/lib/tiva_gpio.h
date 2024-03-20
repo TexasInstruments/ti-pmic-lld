@@ -29,7 +29,7 @@ void initializeGpioPinHandles(gpioPinHandle_t *gpioPinHandle, bool bOutput);
  *
  * \param gpioPinHandle     [IN]    array of handles used to configure Tiva GPIO pins as input/output
  */
-void initializeGpioPins(gpioPinHandle_t *gpioPinHandle);
+void initializeGpioPins(const gpioPinHandle_t *gpioPinHandle);
 
 /**
  * \brief Initialize a GPIO for use as an input or output pin. Whether GPIO is input or output

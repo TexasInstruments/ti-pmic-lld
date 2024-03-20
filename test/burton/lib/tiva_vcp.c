@@ -1,7 +1,7 @@
 #include "tiva_priv.h"
 #include "tiva_vcp.h"
 
-void initializeVCP(uartHandle_t *vcpHandle)
+void initializeVCP(const uartHandle_t *vcpHandle)
 {
     // Enable the UART module for PC <--> MCU communication
     SysCtlPeripheralEnable(vcpHandle->sysctlPeriphUART);
@@ -36,7 +36,7 @@ void initializeVCP(uartHandle_t *vcpHandle)
     UARTConfigSetExpClk(vcpHandle->uartBase,
                         vcpHandle->clkSrcFreq,
                         vcpHandle->baudRate,
-                        UART_CONFIG_WLEN_8 | UART_CONFIG_STOP_ONE | UART_CONFIG_PAR_NONE);
+                        (UART_CONFIG_WLEN_8 | UART_CONFIG_STOP_ONE | UART_CONFIG_PAR_NONE));
     UARTClockSourceSet(vcpHandle->uartBase, vcpHandle->clkSrc);
 
     // Enable the UART after configuration
@@ -58,84 +58,91 @@ void initializeVCPHandle(uartHandle_t *vcpHandle)
     vcpHandle->baudRate = 9600;
 }
 
-void UARTStrPut(uartHandle_t *UARTHandle, uint8_t *str)
+void UARTStrPut(const uartHandle_t *UARTHandle, const uint8_t *str)
 {
-    if ((str == NULL) || (*str == '\0') || (UARTHandle == NULL))
-        return;
-
-    while (*str != '\0')
+    if ((str != NULL) && (*str != '\0') && (UARTHandle != NULL))
     {
-        UARTCharPut(UARTHandle->uartBase, *(str++));
+        while (*str != '\0')
+        {
+            UARTCharPut(UARTHandle->uartBase, *str);
+            str++;
+        }
     }
 }
 
-void UARTUint32Put(uartHandle_t *UARTHandle, uint32_t num)
+void UARTUint32Put(const uartHandle_t *UARTHandle, uint32_t num)
 {
     uint8_t len = 0, i, digit;
     uint8_t str[32] = {0};
 
-    if (UARTHandle == NULL)
-        return;
-    if (num == 0)
+    if (UARTHandle != NULL)
     {
-        UARTCharPut(UARTHandle->uartBase, '0');
-        return;
-    }
+        if (num == 0)
+        {
+            UARTCharPut(UARTHandle->uartBase, '0');
+        }
+        else
+        {
+            while (num > 0)
+            {
+                digit = num % 10;
+                str[len] = '0' + digit;
 
-    while (num > 0)
-    {
-        digit = num % 10;
-        str[len++] = '0' + digit;
+                len++;
+                num /= 10;
+            }
 
-        num /= 10;
-    }
-
-    for (i = 0; i < len; i++)
-    {
-        UARTCharPut(UARTHandle->uartBase, str[len - 1 - i]);
+            for (i = 0; i < len; i++)
+            {
+                UARTCharPut(UARTHandle->uartBase, str[len - 1U - i]);
+            }
+        }
     }
 }
 
-void UARTInt32Put(uartHandle_t *UARTHandle, int32_t num)
+void UARTInt32Put(const uartHandle_t *UARTHandle, int32_t num)
 {
     uint8_t len = 0, i, digit;
     uint8_t str[31] = {0};
 
-    if (UARTHandle == NULL)
-        return;
-    if (num == 0)
+    if (UARTHandle != NULL)
     {
-        UARTCharPut(UARTHandle->uartBase, '0');
-        return;
-    }
+        if (num == 0)
+        {
+            UARTCharPut(UARTHandle->uartBase, '0');
+        }
+        else
+        {
+            // If num is negative, print a negative sign and apply two's complement
+            if (num < 0)
+            {
+                UARTCharPut(UARTHandle->uartBase, '-');
+                num ^= 0xFFFFFFFF;
+                num += 1;
+            }
 
-    // If num is negative, print a negative sign and apply two's complement
-    if (num < 0)
-    {
-        UARTCharPut(UARTHandle->uartBase, '-');
-        num ^= 0xFFFFFFFF;
-        num += 1;
-    }
+            while (num != 0)
+            {
+                digit = num % 10;
+                str[len] = '0' + digit;
 
-    while (num != 0)
-    {
-        digit = num % 10;
-        str[len++] = '0' + digit;
+                len++;
+                num /= 10;
+            }
 
-        num /= 10;
-    }
-
-    for (i = 0; i < len; i++)
-    {
-        UARTCharPut(UARTHandle->uartBase, str[len - 1 - i]);
+            for (i = 0; i < len; i++)
+            {
+                UARTCharPut(UARTHandle->uartBase, str[len - 1U - i]);
+            }
+        }
     }
 }
 
-void clearConsole(uartHandle_t *uartHandle)
+void clearConsole(const uartHandle_t *uartHandle)
 {
-    if (uartHandle == NULL)
-        return;
-
-    UARTStrPut(uartHandle, "\033[2J");
-    UARTStrPut(uartHandle, "\033[1;1H");
+    if (uartHandle != NULL)
+    {
+        UARTStrPut(uartHandle, "\033[2J");
+        UARTStrPut(uartHandle, "\033[1;1H");
+    }
 }

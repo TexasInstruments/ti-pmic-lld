@@ -13,7 +13,7 @@ typedef struct pwmHandle_s
     uint32_t sysPeriphPWM;
     uint32_t sysPeriphGPIO;
     uint32_t pwmGpioPortBase;
-    uint32_t pwmGpioPin;
+    uint8_t pwmGpioPin;
     uint32_t pwmBase;
     uint32_t pwmGen;
     uint32_t pwmOutNum;

@@ -26,33 +26,33 @@
 /* PMIC driver */
 #include "pmic.h"
 
-#define RUN_ADC_TESTS   RUN_TEST(test_ADC_gpioPinTypeADC_nullPmicHandle);                   \
-                        RUN_TEST(test_ADC_gpioPinTypeADC_invalidGpioNum);                   \
-                        RUN_TEST(test_ADC_gpioPinTypeADC_gpio4);                            \
-                        RUN_TEST(test_ADC_gpioPinTypeADC_gpio5);                            \
-                        RUN_TEST(test_ADC_getConfiguration_nullPmicHandle);                 \
-                        RUN_TEST(test_ADC_getConfiguration_nullAdcCfg);                     \
-                        RUN_TEST(test_ADC_getConfiguration_noValidParam);                   \
-                        RUN_TEST(test_ADC_setConfiguration_nullPmicHandle);                 \
-                        RUN_TEST(test_ADC_setConfiguration_noValidParam);                   \
-                        RUN_TEST(test_ADC_setConfiguration_RDiv_EnableDisable);             \
-                        RUN_TEST(test_ADC_setConfiguration_thermalSel_adcInput);            \
-                        RUN_TEST(test_ADC_setConfiguration_thermalSel_thermalSensor);       \
-                        RUN_TEST(test_ADC_setConfiguration_contConv_enableDisable);         \
-                        RUN_TEST(test_ADC_startSingleConversion_nullPmicHandle);            \
-                        RUN_TEST(test_ADC_startSingleConversion_contConvEnabled);           \
-                        RUN_TEST(test_ADC_startSingleConversionBlocking_nullPmicHandle);    \
-                        RUN_TEST(test_ADC_startSingleConversionBlocking_contConvEnabled);   \
-                        RUN_TEST(test_ADC_getStatus_nullParam);                             \
-                        RUN_TEST(test_ADC_getStatus_idle);                                  \
-                        RUN_TEST(test_ADC_getStatus_busy);                                  \
-                        RUN_TEST(test_ADC_getResultCode_nullParam);                         \
-                        RUN_TEST(test_ADC_getResultCode_voltage);                           \
-                        RUN_TEST(test_ADC_getResultCode_temperature);                       \
-                        RUN_TEST(test_ADC_gpioPinTypeADC_nullPmicHandle) 
+#define RUN_ADC_TESTS()     RUN_TEST(test_ADC_gpioPinTypeADC_nullPmicHandle);                   \
+                            RUN_TEST(test_ADC_gpioPinTypeADC_invalidGpioNum);                   \
+                            RUN_TEST(test_ADC_gpioPinTypeADC_gpio4);                            \
+                            RUN_TEST(test_ADC_gpioPinTypeADC_gpio5);                            \
+                            RUN_TEST(test_ADC_getConfiguration_nullPmicHandle);                 \
+                            RUN_TEST(test_ADC_getConfiguration_nullAdcCfg);                     \
+                            RUN_TEST(test_ADC_getConfiguration_noValidParam);                   \
+                            RUN_TEST(test_ADC_setConfiguration_nullPmicHandle);                 \
+                            RUN_TEST(test_ADC_setConfiguration_noValidParam);                   \
+                            RUN_TEST(test_ADC_setConfiguration_RDiv_EnableDisable);             \
+                            RUN_TEST(test_ADC_setConfiguration_thermalSel_adcInput);            \
+                            RUN_TEST(test_ADC_setConfiguration_thermalSel_thermalSensor);       \
+                            RUN_TEST(test_ADC_setConfiguration_contConv_enableDisable);         \
+                            RUN_TEST(test_ADC_startSingleConversion_nullPmicHandle);            \
+                            RUN_TEST(test_ADC_startSingleConversion_contConvEnabled);           \
+                            RUN_TEST(test_ADC_startSingleConversionBlocking_nullPmicHandle);    \
+                            RUN_TEST(test_ADC_startSingleConversionBlocking_contConvEnabled);   \
+                            RUN_TEST(test_ADC_getStatus_nullParam);                             \
+                            RUN_TEST(test_ADC_getStatus_idle);                                  \
+                            RUN_TEST(test_ADC_getStatus_busy);                                  \
+                            RUN_TEST(test_ADC_getResultCode_nullParam);                         \
+                            RUN_TEST(test_ADC_getResultCode_voltage);                           \
+                            RUN_TEST(test_ADC_getResultCode_temperature);                       \
+                            RUN_TEST(test_ADC_gpioPinTypeADC_nullPmicHandle) 
 
+timerHandle_t tHandle;
 Pmic_CoreHandle_t pmicCoreHandle;
-timerHandle_t     timerHandle;
 
 int main(void)
 {
@@ -94,8 +94,8 @@ int main(void)
     Pmic_init(&pmicConfigData, &pmicCoreHandle);
 
     /*** Timer setup ***/
-    initializeTimerHandle(&timerHandle);
-    initializeTimer(&timerHandle);
+    initializeTimerHandle(&tHandle);
+    initializeTimer(&tHandle);
 
     /*** Clear the console before printing anything ***/
     clearConsole(&vcpHandle);
@@ -105,7 +105,7 @@ int main(void)
     (void)Pmic_irqClrErrStatus(&pmicCoreHandle, PMIC_IRQ_ALL);
 
     /*** Ensure changes are propagated by waiting a certain period of time ***/
-    delayTimeInMs(&timerHandle, 1000);
+    delayTimeInMs(&tHandle, 1000);
 
     /*** Print welcome message ***/
     UARTStrPut(&vcpHandle, "Running all PMIC ADC tests...\r\n\r\n");
@@ -113,7 +113,7 @@ int main(void)
     /*** Begin unity testing ***/
     UNITY_BEGIN();
 
-    RUN_ADC_TESTS;
+    RUN_ADC_TESTS();
 
     /*** Finish unity testing ***/
     return UNITY_END();
@@ -530,7 +530,7 @@ void test_ADC_getStatus_idle(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Wait a short period of time so ADC stays idle
-    delayTimeInMs(&timerHandle, 100);
+    delayTimeInMs(&tHandle, 100);
 
     // Get ADC status and compare expected vs. actual status
     status = Pmic_ADCGetStatus(&pmicCoreHandle, &adcBusy);

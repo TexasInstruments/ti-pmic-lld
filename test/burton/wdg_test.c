@@ -6,39 +6,38 @@
 
 #include "unity.h"
 
-#define RUN_WDG_TESTS   RUN_TEST(test_wdg_enableDisable);                   \
-                        RUN_TEST(test_wdg_setCfg_longWindowDuration);       \
-                        RUN_TEST(test_wdg_setCfg_window1Duration);          \
-                        RUN_TEST(test_wdg_setCfg_window2Duration);          \
-                        RUN_TEST(test_wdg_setCfg_failThreshold);            \
-                        RUN_TEST(test_wdg_setCfg_resetThreshold);           \
-                        RUN_TEST(test_wdg_setCfg_resetEnable);              \
-                        RUN_TEST(test_wdg_setCfg_wdgMode);                  \
-                        RUN_TEST(test_wdg_setCfg_powerHold);                \
-                        RUN_TEST(test_wdg_setCfg_ReturnLongWindow);         \
-                        RUN_TEST(test_wdg_setCfg_QA_feedback);              \
-                        RUN_TEST(test_wdg_setCfg_QA_LFSR);                  \
-                        RUN_TEST(test_wdg_setCfg_QA_questionSeed);          \
-                        RUN_TEST(test_wdg_setCfg_cntSel);                   \
-                        RUN_TEST(test_wdg_setCfg_enDrvSel);                 \
-                        RUN_TEST(test_wdg_QaMode_noErrors);                 \
-                        RUN_TEST(test_wdg_QaMode_detect_longWindowTimeout); \
-                        RUN_TEST(test_wdg_QaMode_detect_windowTimeout);     \
-                        RUN_TEST(test_wdg_QaMode_detect_answerEarly);       \
-                        RUN_TEST(test_wdg_QaMode_detect_sequenceError);     \
-                        RUN_TEST(test_wdg_QaMode_detect_answerError);       \
-                        RUN_TEST(test_wdg_QaMode_detect_failError);         \
-                        RUN_TEST(test_wdg_QaMode_detect_resetError)
+#define RUN_WDG_TESTS()     RUN_TEST(test_wdg_enableDisable);                   \
+                            RUN_TEST(test_wdg_setCfg_longWindowDuration);       \
+                            RUN_TEST(test_wdg_setCfg_window1Duration);          \
+                            RUN_TEST(test_wdg_setCfg_window2Duration);          \
+                            RUN_TEST(test_wdg_setCfg_failThreshold);            \
+                            RUN_TEST(test_wdg_setCfg_resetThreshold);           \
+                            RUN_TEST(test_wdg_setCfg_resetEnable);              \
+                            RUN_TEST(test_wdg_setCfg_wdgMode);                  \
+                            RUN_TEST(test_wdg_setCfg_powerHold);                \
+                            RUN_TEST(test_wdg_setCfg_ReturnLongWindow);         \
+                            RUN_TEST(test_wdg_setCfg_QA_feedback);              \
+                            RUN_TEST(test_wdg_setCfg_QA_LFSR);                  \
+                            RUN_TEST(test_wdg_setCfg_QA_questionSeed);          \
+                            RUN_TEST(test_wdg_setCfg_cntSel);                   \
+                            RUN_TEST(test_wdg_setCfg_enDrvSel);                 \
+                            RUN_TEST(test_wdg_QaMode_noErrors);                 \
+                            RUN_TEST(test_wdg_QaMode_detect_longWindowTimeout); \
+                            RUN_TEST(test_wdg_QaMode_detect_windowTimeout);     \
+                            RUN_TEST(test_wdg_QaMode_detect_answerEarly);       \
+                            RUN_TEST(test_wdg_QaMode_detect_sequenceError);     \
+                            RUN_TEST(test_wdg_QaMode_detect_answerError);       \
+                            RUN_TEST(test_wdg_QaMode_detect_failError);         \
+                            RUN_TEST(test_wdg_QaMode_detect_resetError)
 
 int32_t configurePmicI2CPins(Pmic_CoreHandle_t pmicCoreHandle);
 
-uartHandle_t      vcpHandle;
-timerHandle_t     timerHandle;
+timerHandle_t tHandle;
 Pmic_CoreHandle_t pmicCoreHandle;
 
 int main(void)
 {
-    // uartHandle_t vcpHandle;
+    uartHandle_t vcpHandle;
     i2cHandle_t I2C1Handle, I2C2Handle;
     const Pmic_CoreCfg_t pmicCoreCfg = {
         .validParams = (PMIC_CFG_DEVICE_TYPE_VALID_SHIFT    | PMIC_CFG_COMM_MODE_VALID_SHIFT      |
@@ -68,8 +67,8 @@ int main(void)
                    SYSCTL_XTAL_16MHZ); // 400 / 2 / 4 = 50 MHz clock rate
 
     // Initialize timer
-    initializeTimerHandle(&timerHandle);
-    initializeTimer(&timerHandle);
+    initializeTimerHandle(&tHandle);
+    initializeTimer(&tHandle);
 
     // Enable printing to console
     initializeVCPHandle(&vcpHandle);
@@ -105,7 +104,7 @@ int main(void)
                 UARTStrPut(&vcpHandle, "Running all PMIC Watchdog tests...\r\n\r\n");
 
                 UNITY_BEGIN();
-                RUN_WDG_TESTS;
+                RUN_WDG_TESTS();
                 UNITY_END();
             }
             // Error message if IRQs were not able to be cleared
@@ -596,7 +595,7 @@ void test_wdg_QaMode_noErrors(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Wait a small period of time so that changes propagate
-    delayTimeInMs(&timerHandle, 100);
+    delayTimeInMs(&tHandle, 100);
 
     // Begin Q&A sequences
     status = Pmic_wdgBeginSequences(&pmicCoreHandle, PMIC_WDG_QA_MODE);
@@ -632,7 +631,7 @@ void test_wdg_QaMode_noErrors(void)
         }
 
         // Wait until Window-1 time elapses
-        delayTimeInMs(&timerHandle, 71);
+        delayTimeInMs(&tHandle, 71);
 
         // Enter Window-2; calculate and send last answer byte; check for any WDG errors
         status = Pmic_wdgQaSequenceWriteAnswer(&pmicCoreHandle);
@@ -681,7 +680,7 @@ void test_wdg_QaMode_detect_longWindowTimeout(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Wait a small period of time so that changes propagate
-    delayTimeInMs(&timerHandle, 100);
+    delayTimeInMs(&tHandle, 100);
 
     // Begin Q&A sequence
     status = Pmic_wdgBeginSequences(&pmicCoreHandle, PMIC_WDG_QA_MODE);
@@ -690,7 +689,7 @@ void test_wdg_QaMode_detect_longWindowTimeout(void)
     // Watchdog is currently in Long Window mode awaiting the first four
     // answer bytes; wait the duration of the Long Window period without
     // sending anything to cause Long Window timeout error
-    delayTimeInMs(&timerHandle, 600);
+    delayTimeInMs(&tHandle, 600);
 
     // Enable return to Long Window and set WD_PWRHOLD to make WDG stay in Long Window
     wdgCfg.validParams = (PMIC_CFG_WDG_PWRHOLD_VALID_SHIFT | PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT);
@@ -743,7 +742,7 @@ void test_wdg_QaMode_detect_windowTimeout(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Wait a small period of time so that changes propagate
-    delayTimeInMs(&timerHandle, 100);
+    delayTimeInMs(&tHandle, 100);
 
     // Begin Q&A sequences
     status = Pmic_wdgBeginSequences(&pmicCoreHandle, PMIC_WDG_QA_MODE);
@@ -764,10 +763,10 @@ void test_wdg_QaMode_detect_windowTimeout(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Watchdog has entered Window-1; wait duration of Window-1 to cause WD_TIMEOUT error
-    delayTimeInMs(&timerHandle, 71);
+    delayTimeInMs(&tHandle, 71);
 
     // Wait duration of Window-2 to end the sequence
-    delayTimeInMs(&timerHandle, 71);
+    delayTimeInMs(&tHandle, 71);
 
     // WDG has returned to Long Window; set WD_PWRHOLD so that WDG remains in Long Window
     wdgCfg.validParams = PMIC_CFG_WDG_PWRHOLD_VALID_SHIFT;
@@ -822,7 +821,7 @@ void test_wdg_QaMode_detect_answerEarly(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Wait a small period of time so that changes propagate
-    delayTimeInMs(&timerHandle, 100);
+    delayTimeInMs(&tHandle, 100);
 
     // Begin Q&A sequences
     status = Pmic_wdgBeginSequences(&pmicCoreHandle, PMIC_WDG_QA_MODE);
@@ -850,10 +849,10 @@ void test_wdg_QaMode_detect_answerEarly(void)
     }
 
     // Wait until Window-1 elapses
-    delayTimeInMs(&timerHandle, 71);
+    delayTimeInMs(&tHandle, 71);
 
     // Watchdog has entered Window-2; wait until Window-2 elapses to end sequence
-    delayTimeInMs(&timerHandle, 71);
+    delayTimeInMs(&tHandle, 71);
 
     // WDG has returned to Long Window; set WD_PWRHOLD so that WDG remains in Long Window
     wdgCfg.validParams = PMIC_CFG_WDG_PWRHOLD_VALID_SHIFT;
@@ -908,7 +907,7 @@ void test_wdg_QaMode_detect_sequenceError(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Wait a small period of time so that changes propagate
-    delayTimeInMs(&timerHandle, 100);
+    delayTimeInMs(&tHandle, 100);
 
     // Begin Q&A sequences
     status = Pmic_wdgBeginSequences(&pmicCoreHandle, PMIC_WDG_QA_MODE);
@@ -930,7 +929,7 @@ void test_wdg_QaMode_detect_sequenceError(void)
 
     // Watchdog has entered Window-1; wait until Window-1
     // elapses in order to send all answer bytes in Window-2
-    delayTimeInMs(&timerHandle, 71);
+    delayTimeInMs(&tHandle, 71);
 
     // Watchdog has entered Window-2; send all answer bytes in this window to cause WD_SEQ_ERR error
     for (answerCnt = 4; answerCnt != 0; answerCnt--)
@@ -994,7 +993,7 @@ void test_wdg_QaMode_detect_answerError(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Wait a small period of time so that changes propagate
-    delayTimeInMs(&timerHandle, 100);
+    delayTimeInMs(&tHandle, 100);
 
     // Begin Q&A sequences
     status = Pmic_wdgBeginSequences(&pmicCoreHandle, PMIC_WDG_QA_MODE);
@@ -1023,7 +1022,7 @@ void test_wdg_QaMode_detect_answerError(void)
     }
 
     // Wait until Window-1 elapses
-    delayTimeInMs(&timerHandle, 71);
+    delayTimeInMs(&tHandle, 71);
 
     // Watchdog has entered Window-2; send incorrect Window-2 answer byte
     status = pmicI2CWrite(&pmicCoreHandle, PMIC_QA_INST, wdgAnswRegAddr, &regData, 1);
@@ -1085,7 +1084,7 @@ void test_wdg_QaMode_detect_failError(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Wait a small period of time so that changes propagate
-    delayTimeInMs(&timerHandle, 100);
+    delayTimeInMs(&tHandle, 100);
 
     // Begin Q&A sequences
     status = Pmic_wdgBeginSequences(&pmicCoreHandle, PMIC_WDG_QA_MODE);
@@ -1112,7 +1111,7 @@ void test_wdg_QaMode_detect_failError(void)
         }
 
         // Enter Window-1; wait until Window-1 elapses
-        delayTimeInMs(&timerHandle, 71);
+        delayTimeInMs(&tHandle, 71);
 
         // There should be a WD_TIMEOUT error; check whether there is a bad event
         failCntStat.validParams = PMIC_CFG_WD_BAD_EVENT_STAT_VALID_SHIFT;
@@ -1121,7 +1120,7 @@ void test_wdg_QaMode_detect_failError(void)
         TEST_ASSERT_EQUAL(true, failCntStat.wdBadEvent);
 
         // Enter Window-2; wait until Window-2 elapses
-        delayTimeInMs(&timerHandle, 71);
+        delayTimeInMs(&tHandle, 71);
 
         // Fail counter should increment at the end of every sequence as a result of WDG
         // not receiving any answers; Compare expected vs. actual fail count for every
@@ -1193,7 +1192,7 @@ void test_wdg_QaMode_detect_resetError(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Wait a small period of time so that changes propagate
-    delayTimeInMs(&timerHandle, 100);
+    delayTimeInMs(&tHandle, 100);
 
     // Begin Q&A sequences
     status = Pmic_wdgBeginSequences(&pmicCoreHandle, PMIC_WDG_QA_MODE);
@@ -1220,10 +1219,10 @@ void test_wdg_QaMode_detect_resetError(void)
         }
 
         // Enter Window-1; wait until Window-1 elapses
-        delayTimeInMs(&timerHandle, 71);
+        delayTimeInMs(&tHandle, 71);
 
         // Enter Window-2; wait until Window-2 elapses
-        delayTimeInMs(&timerHandle, 71);
+        delayTimeInMs(&tHandle, 71);
     }
 
     // WDG has returned to Long Window; set WD_PWRHOLD so that WDG remains in Long Window

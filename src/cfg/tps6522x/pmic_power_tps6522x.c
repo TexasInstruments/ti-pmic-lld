@@ -488,21 +488,21 @@ static void tps6522xBuckConvertVsetVal2Voltage(uint16_t *pBuckVoltage_mv,
                 voltageStep = 20U;
             }
             // BUCK1 voltage range 2: 600 mV to 1095 mV in 5 mV steps (VSET: 0xF to 0x72)
-            else if ((buckVoltage_vset >= 0xFU) && (buckVoltage_vset <= 0x72U))
+            else if (buckVoltage_vset <= 0x72U)
             {
                 baseVoltage_mv = 600U;
                 baseVoltage_vset = 0xFU;
                 voltageStep = 5U;
             }
             // BUCK1 voltage range 3: 1100 mV to 1650 mV in 10 mV steps (VSET: 0x73 to 0xAA)
-            else if ((buckVoltage_vset >= 0x73U) && (buckVoltage_vset <= 0xAAU))
+            else if (buckVoltage_vset <= 0xAAU)
             {
                 baseVoltage_mv = 1100U;
                 baseVoltage_vset = 0x73U;
                 voltageStep = 10U;
             }
             // BUCK1 voltage range 4: 1660 mV to 3300 mV in 20 mV steps (VSET: 0xAB to 0xFD)
-            else if ((buckVoltage_vset >= 0xABU) && (buckVoltage_vset <= 0xFDU))
+            else if (buckVoltage_vset <= 0xFDU)
             {
                 baseVoltage_mv = 1660U;
                 baseVoltage_vset = 0xABU;
@@ -525,7 +525,7 @@ static void tps6522xBuckConvertVsetVal2Voltage(uint16_t *pBuckVoltage_mv,
                 voltageStep = 25U;
             }
             // BUCK2, BUCK3, BUCK4 voltage range 2: 1200 mV to 3300 mV in 50 mV steps (VSET: 0x1B to 0x45)
-            else if ((buckVoltage_vset >= 0x1BU) && (buckVoltage_vset <= 0x45U))
+            else if (buckVoltage_vset <= 0x45U)
             {
                 baseVoltage_mv = 1200U;
                 baseVoltage_vset = 0x1BU;
@@ -762,14 +762,14 @@ static void tps6522xLdoConvertVsetVal2Voltage(uint16_t *pLdoVoltage_mv,
                 voltageStep = 0U;
             }
             // LDO1 voltage range 2: 1250 mV to 3250 mV in 50 mV steps (VSET: 0xD to 0x35)
-            else if ((ldoVoltage_vset >= 0xDU) && (ldoVoltage_vset <= 0x35U))
+            else if (ldoVoltage_vset <= 0x35U)
             {
                 baseVoltage_mv = 1250U;
                 baseVoltage_vset = 0xDU;
                 voltageStep = 50U;
             }
             // LDO1 voltage range 3: 3300 mV to 3300 mV in 0 mV steps (VSET: 0x36 to 0x3F)
-            else if ((ldoVoltage_vset >= 0x36U) && (ldoVoltage_vset <= 0x3FU))
+            else if (ldoVoltage_vset <= 0x3FU)
             {
                 baseVoltage_mv = 3300U;
                 baseVoltage_vset = 0x36U;
@@ -791,7 +791,7 @@ static void tps6522xLdoConvertVsetVal2Voltage(uint16_t *pLdoVoltage_mv,
                 voltageStep = 50U;
             }
             // LDO2 and LDO3 voltage range 2: 3400 mV to 3400 mV in 0 mV steps (VSET: 0x38 to 0x3F)
-            else if ((ldoVoltage_vset >= 0x38U) && (ldoVoltage_vset <= 0x3FU))
+            else if (ldoVoltage_vset <= 0x3FU)
             {
                 baseVoltage_mv = 3400U;
                 baseVoltage_vset = 0x38U;
@@ -1095,8 +1095,8 @@ static void tps6522xVmonConvertPgSet2Voltage(uint16_t *pVmonPgLevel_mv,
                 baseVoltage_pgSet = 0x73U;
                 voltageStep = 10U;
             }
-            // VMON1 voltage range 4: 1660 mV to 3340 mV in 20 mV steps (PG_SET: 0xAB to 0xFD)
-            else if ((vmonPgLevel_pgSet >= 0xABU) && (vmonPgLevel_pgSet <= 0xFFU))
+            // VMON1 voltage range 4: 1660 mV to 3340 mV in 20 mV steps (PG_SET: 0xAB to 0xFF)
+            else if (vmonPgLevel_pgSet >= 0xABU)
             {
                 baseVoltage_mv = 1660U;
                 baseVoltage_pgSet = 0xABU;
@@ -1116,7 +1116,7 @@ static void tps6522xVmonConvertPgSet2Voltage(uint16_t *pVmonPgLevel_mv,
                 voltageStep = 25U;
             }
             // VMON2 voltage range 2: 1200 mV to 3300 mV in 50 mV steps (PG_SET: 0x1B to 0x45)
-            else if ((vmonPgLevel_pgSet >= 0x1BU) && (vmonPgLevel_pgSet <= 0x45U))
+            else if (vmonPgLevel_pgSet <= 0x45U)
             {
                 baseVoltage_mv = 1200U;
                 baseVoltage_pgSet = 0x1BU;
@@ -1795,7 +1795,7 @@ static void tps6522xLdoConvertVoltage2VsetVal(uint8_t *pLdoVoltage_vset,
             break;
     }
 
-    if (baseVoltage_mv != 0U)
+    if (voltageStep != 0U)
     {
         *pLdoVoltage_vset = (uint8_t)(baseVoltage_vset + ((ldoVoltage_mv - baseVoltage_mv) / voltageStep));
     }

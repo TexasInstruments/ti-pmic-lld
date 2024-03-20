@@ -7,7 +7,7 @@ void initializeTimerHandle(timerHandle_t *timerHandle)
     timerHandle->timerBase = TIMER0_BASE;
 }
 
-void initializeTimer(timerHandle_t *timerHandle)
+void initializeTimer(const timerHandle_t *timerHandle)
 {
     // Enable the target timer peripheral
     SysCtlPeripheralEnable(timerHandle->sysctlPeriphTimer);
@@ -21,7 +21,7 @@ void initializeTimer(timerHandle_t *timerHandle)
     TimerDisable(timerHandle->timerBase, TIMER_BOTH);
 }
 
-void delayTimeInMs(timerHandle_t *timerHandle, uint16_t milliseconds)
+void delayTimeInMs(const timerHandle_t *timerHandle, uint16_t milliseconds)
 {
     uint32_t cycles = 0;
 

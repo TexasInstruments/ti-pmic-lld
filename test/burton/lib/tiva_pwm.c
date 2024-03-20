@@ -49,7 +49,7 @@ void initializePwmPin(const pwmHandle_t pwmHandle)
     PWMGenDisable(pwmHandle.pwmBase, pwmHandle.pwmGen);
 
     // Configure PWM0 to count down without synchronization
-    PWMGenConfigure(pwmHandle.pwmBase, pwmHandle.pwmGen, PWM_GEN_MODE_DOWN | PWM_GEN_MODE_NO_SYNC);
+    PWMGenConfigure(pwmHandle.pwmBase, pwmHandle.pwmGen, (PWM_GEN_MODE_DOWN | PWM_GEN_MODE_NO_SYNC));
 
     // Set the PWM period
     PWMGenPeriodSet(pwmHandle.pwmBase, pwmHandle.pwmGen, pwmHandle.period_cycles);

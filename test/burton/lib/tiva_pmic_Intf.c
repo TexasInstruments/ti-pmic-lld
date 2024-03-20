@@ -2,138 +2,140 @@
 #include "tiva_pmic_intf.h"
 
 int32_t
-pmicI2CWrite(Pmic_CoreHandle_t *pmicCoreHandle, uint8_t instType, uint16_t regAddr, uint8_t *pTxBuf, uint8_t bufLen)
+pmicI2CWrite(Pmic_CoreHandle_t *pmicHandle, uint8_t instType, uint16_t regAddr, uint8_t *pTxBuf, uint8_t bufLen)
 {
     // Variable declaration/initialization
-    int32_t      status = PMIC_ST_SUCCESS;
+    int32_t status = PMIC_ST_SUCCESS;
     i2cHandle_t *I2C1Handle = NULL;
     i2cHandle_t *I2C2Handle = NULL;
 
     // Parameter check
-    if (pmicCoreHandle == NULL)
+    if (pmicHandle == NULL)
     {
-        return PMIC_ST_ERR_INV_HANDLE;
+        status = PMIC_ST_ERR_INV_HANDLE;
     }
-    if ((bufLen == 0) || (pmicCoreHandle->crcEnable == true) || (instType == PMIC_NVM_INST))
-    {
-        return PMIC_ST_ERR_INV_PARAM;
-    }
-    if (pTxBuf == NULL)
-    {
-        return PMIC_ST_ERR_NULL_PARAM;
-    }
-    if (regAddr >= 0x401)
-    {
-        instType = PMIC_QA_INST;
-        regAddr -= 0x400;
-    }
-
-    // Obtain communication handles as they will be passed into helper functions
-    I2C1Handle = (i2cHandle_t *)pmicCoreHandle->pCommHandle;
-    I2C2Handle = (i2cHandle_t *)pmicCoreHandle->pQACommHandle;
-
-    // Main instance
-    if (instType == PMIC_MAIN_INST)
-    {
-        I2C1Handle->slaveAddr = BURTON_I2C_USER_PAGE_ADDRESS;
-        status = ((bufLen == 1) ? I2CSingleWrite(I2C1Handle, (uint8_t)regAddr, pTxBuf) :
-                                  I2CBurstWrite(I2C1Handle, (uint8_t)regAddr, bufLen, pTxBuf));
-    }
-    // Q&A instance
-    else if (instType == PMIC_QA_INST)
-    {
-        if (pmicCoreHandle->commMode == PMIC_INTF_DUAL_I2C)
-        {
-            status = ((bufLen == 1) ? I2CSingleWrite(I2C2Handle, (uint8_t)regAddr, pTxBuf) :
-                                      I2CBurstWrite(I2C2Handle, (uint8_t)regAddr, bufLen, pTxBuf));
-        }
-        else
-        {
-            I2C1Handle->slaveAddr = BURTON_I2C_WDG_PAGE_ADDRESS;
-            status = ((bufLen == 1) ? I2CSingleWrite(I2C1Handle, (uint8_t)regAddr, pTxBuf) :
-                                      I2CBurstWrite(I2C1Handle, (uint8_t)regAddr, bufLen, pTxBuf));
-        }
-    }
-    // NVM instance
-    else if (instType == PMIC_NVM_INST)
-    {
-        I2C1Handle->slaveAddr = BURTON_I2C_NVM_PAGE_ADDRESS;
-        status = ((bufLen == 1) ? I2CSingleWrite(I2C1Handle, (uint8_t)regAddr, pTxBuf) :
-                                  I2CBurstWrite(I2C1Handle, (uint8_t)regAddr, bufLen, pTxBuf));
-    }
-    // Unrecognized instance
-    else
+    if ((status == PMIC_ST_SUCCESS) && ((bufLen == 0) || (pmicHandle->crcEnable == true)))
     {
         status = PMIC_ST_ERR_INV_PARAM;
+    }
+    if ((status == PMIC_ST_SUCCESS) && (pTxBuf == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        if (regAddr >= 0x401)
+        {
+            instType = PMIC_QA_INST;
+            regAddr -= 0x400;
+        }
+
+        // Obtain communication handles as they will be passed into helper functions
+        I2C1Handle = (i2cHandle_t *)pmicHandle->pCommHandle;
+        I2C2Handle = (i2cHandle_t *)pmicHandle->pQACommHandle;
+        
+        // Main instance
+        if (instType == PMIC_MAIN_INST)
+        {
+            I2C1Handle->slaveAddr = BURTON_I2C_USER_PAGE_ADDRESS;
+            status = I2CWrite(I2C1Handle, (uint8_t)regAddr, bufLen, pTxBuf);
+        }
+        // Q&A instance
+        else if (instType == PMIC_QA_INST)
+        {
+            // Dual I2C
+            if (pmicHandle->commMode == PMIC_INTF_DUAL_I2C)
+            {
+                status = I2CWrite(I2C2Handle, (uint8_t)regAddr, bufLen, pTxBuf);
+            }
+            // Single I2C
+            else
+            {
+                I2C1Handle->slaveAddr = BURTON_I2C_WDG_PAGE_ADDRESS;
+                status = I2CWrite(I2C1Handle, (uint8_t)regAddr, bufLen, pTxBuf);
+            }
+        }
+        // NVM instance
+        else if (instType == PMIC_NVM_INST)
+        {
+            I2C1Handle->slaveAddr = BURTON_I2C_NVM_PAGE_ADDRESS;
+            status = I2CWrite(I2C1Handle, (uint8_t)regAddr, bufLen, pTxBuf);
+        }
+        // Unrecognized instance
+        else
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
     }
 
     return status;
 }
 
 int32_t
-pmicI2CRead(Pmic_CoreHandle_t *pmicCoreHandle, uint8_t instType, uint16_t regAddr, uint8_t *pRxBuf, uint8_t bufLen)
+pmicI2CRead(Pmic_CoreHandle_t *pmicHandle, uint8_t instType, uint16_t regAddr, uint8_t *pRxBuf, uint8_t bufLen)
 {
     // Variable declaration/initialization
-    int32_t      status = PMIC_ST_SUCCESS;
+    int32_t status = PMIC_ST_SUCCESS;
     i2cHandle_t *I2C1Handle = NULL;
     i2cHandle_t *I2C2Handle = NULL;
 
     // Parameter check
-    if (pmicCoreHandle == NULL)
+    if (pmicHandle == NULL)
     {
-        return PMIC_ST_ERR_INV_HANDLE;
+        status = PMIC_ST_ERR_INV_HANDLE;
     }
-    if ((bufLen == 0) || (pmicCoreHandle->crcEnable == true))
-    {
-        return PMIC_ST_ERR_INV_PARAM;
-    }
-    if (pRxBuf == NULL)
-    {
-        return PMIC_ST_ERR_NULL_PARAM;
-    }
-    if (regAddr >= 0x401)
-    {
-        instType = PMIC_QA_INST;
-        regAddr -= 0x400;
-    }
-
-    // Obtain communication handles as they will be passed into helper functions
-    I2C1Handle = (i2cHandle_t *)pmicCoreHandle->pCommHandle;
-    I2C2Handle = (i2cHandle_t *)pmicCoreHandle->pQACommHandle;
-
-    // Main instance
-    if (instType == PMIC_MAIN_INST)
-    {
-        I2C1Handle->slaveAddr = BURTON_I2C_USER_PAGE_ADDRESS;
-        status = ((bufLen == 1) ? I2CSingleRead(I2C1Handle, (uint8_t)regAddr, pRxBuf) :
-                                  I2CBurstRead(I2C1Handle, (uint8_t)regAddr, bufLen, pRxBuf));
-    }
-    // Q&A instance
-    else if (instType == PMIC_QA_INST)
-    {
-        if (pmicCoreHandle->commMode == PMIC_INTF_DUAL_I2C)
-        {
-            status = ((bufLen == 1) ? I2CSingleRead(I2C2Handle, (uint8_t)regAddr, pRxBuf) :
-                                      I2CBurstRead(I2C2Handle, (uint8_t)regAddr, bufLen, pRxBuf));
-        }
-        else
-        {
-            I2C1Handle->slaveAddr = BURTON_I2C_WDG_PAGE_ADDRESS;
-            status = ((bufLen == 1) ? I2CSingleRead(I2C1Handle, (uint8_t)regAddr, pRxBuf) :
-                                      I2CBurstRead(I2C1Handle, (uint8_t)regAddr, bufLen, pRxBuf));
-        }
-    }
-    // NVM instance
-    else if (instType == PMIC_NVM_INST)
-    {
-        I2C1Handle->slaveAddr = BURTON_I2C_NVM_PAGE_ADDRESS;
-        status = ((bufLen == 1) ? I2CSingleRead(I2C1Handle, (uint8_t)regAddr, pRxBuf) :
-                                  I2CBurstRead(I2C1Handle, (uint8_t)regAddr, bufLen, pRxBuf));
-    }
-    // Unrecognized instance
-    else
+    if ((status == PMIC_ST_SUCCESS) && ((bufLen == 0) || (pmicHandle->crcEnable == true)))
     {
         status = PMIC_ST_ERR_INV_PARAM;
+    }
+    if ((status == PMIC_ST_SUCCESS) && (pRxBuf == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        if (regAddr >= 0x401)
+        {
+            instType = PMIC_QA_INST;
+            regAddr -= 0x400;
+        }
+
+        // Obtain communication handles as they will be passed into helper functions
+        I2C1Handle = (i2cHandle_t *)pmicHandle->pCommHandle;
+        I2C2Handle = (i2cHandle_t *)pmicHandle->pQACommHandle;
+
+        // Main instance
+        if (instType == PMIC_MAIN_INST)
+        {
+            I2C1Handle->slaveAddr = BURTON_I2C_USER_PAGE_ADDRESS;
+            status = I2CRead(I2C1Handle, (uint8_t)regAddr, bufLen, pRxBuf);
+        }
+        // Q&A instance
+        else if (instType == PMIC_QA_INST)
+        {
+            if (pmicHandle->commMode == PMIC_INTF_DUAL_I2C)
+            {
+                status = I2CRead(I2C2Handle, (uint8_t)regAddr, bufLen, pRxBuf);
+            }
+            else
+            {
+                I2C1Handle->slaveAddr = BURTON_I2C_WDG_PAGE_ADDRESS;
+                status = I2CRead(I2C1Handle, (uint8_t)regAddr, bufLen, pRxBuf);
+            }
+        }
+        // NVM instance
+        else if (instType == PMIC_NVM_INST)
+        {
+            I2C1Handle->slaveAddr = BURTON_I2C_NVM_PAGE_ADDRESS;
+            status = I2CRead(I2C1Handle, (uint8_t)regAddr, bufLen, pRxBuf);
+        }
+        // Unrecognized instance
+        else
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
     }
 
     return status;
@@ -147,24 +149,24 @@ void pmicCritSecStop(void)
 {
 }
 
-void initializePmicCoreHandle(Pmic_CoreHandle_t *pmicCoreHandle)
+void initializePmicCoreHandle(Pmic_CoreHandle_t *pmicHandle)
 {
-    pmicCoreHandle->pPmic_SubSysInfo = NULL;
-    pmicCoreHandle->drvInitStatus = 0x00;
-    pmicCoreHandle->pmicDeviceType = 0xFF;
-    pmicCoreHandle->pmicDevRev = 0xFF;
-    pmicCoreHandle->pmicDevSiliconRev = 0xFF;
-    pmicCoreHandle->commMode = 0xFF;
-    pmicCoreHandle->slaveAddr = 0xFF;
-    pmicCoreHandle->qaSlaveAddr = 0xFF;
-    pmicCoreHandle->nvmSlaveAddr = 0xFF;
-    pmicCoreHandle->i2c1Speed = 0xFF;
-    pmicCoreHandle->i2c2Speed = 0xFF;
-    pmicCoreHandle->crcEnable = false;
-    pmicCoreHandle->pCommHandle = NULL;
-    pmicCoreHandle->pQACommHandle = NULL;
-    pmicCoreHandle->pFnPmicCommIoRead = NULL;
-    pmicCoreHandle->pFnPmicCommIoWrite = NULL;
-    pmicCoreHandle->pFnPmicCritSecStart = &pmicCritSecStart;
-    pmicCoreHandle->pFnPmicCritSecStop = &pmicCritSecStop;
+    pmicHandle->pPmic_SubSysInfo = NULL;
+    pmicHandle->drvInitStatus = 0x00;
+    pmicHandle->pmicDeviceType = 0xFF;
+    pmicHandle->pmicDevRev = 0xFF;
+    pmicHandle->pmicDevSiliconRev = 0xFF;
+    pmicHandle->commMode = 0xFF;
+    pmicHandle->slaveAddr = 0xFF;
+    pmicHandle->qaSlaveAddr = 0xFF;
+    pmicHandle->nvmSlaveAddr = 0xFF;
+    pmicHandle->i2c1Speed = 0xFF;
+    pmicHandle->i2c2Speed = 0xFF;
+    pmicHandle->crcEnable = false;
+    pmicHandle->pCommHandle = NULL;
+    pmicHandle->pQACommHandle = NULL;
+    pmicHandle->pFnPmicCommIoRead = NULL;
+    pmicHandle->pFnPmicCommIoWrite = NULL;
+    pmicHandle->pFnPmicCritSecStart = &pmicCritSecStart;
+    pmicHandle->pFnPmicCritSecStop = &pmicCritSecStop;
 }

@@ -115,7 +115,7 @@ extern "C"
  *  @{
  */
 /** \brief Error Code for SUCCESS */
-#define PMIC_ST_SUCCESS                    (0)
+#define PMIC_ST_SUCCESS                    ((int32_t)0)
 /** \brief Error Code for Invalid input Handle */
 #define PMIC_ST_ERR_INV_HANDLE             (-((int32_t)1))
 /** \brief Error Code when input Param is NULL */

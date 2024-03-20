@@ -1341,15 +1341,12 @@ static int32_t Pmic_setRegisterLockUnlockCfg(Pmic_CoreHandle_t         *pPmicCor
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         // Write the lock/unlock value to the REGISTER_LOCK register
-        if (PMIC_ST_SUCCESS == pmicStatus)
-        {
-            Pmic_setBitField(&regData,
-                             PMIC_REGISTER_LOCK_STATUS_SHIFT,
-                             PMIC_REGISTER_LOCK_STATUS_WRITE_MASK,
-                             commonCtrlCfg.regLock);
+        Pmic_setBitField(&regData,
+                            PMIC_REGISTER_LOCK_STATUS_SHIFT,
+                            PMIC_REGISTER_LOCK_STATUS_WRITE_MASK,
+                            commonCtrlCfg.regLock);
 
-            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_REGISTER_LOCK_REGADDR, regData);
-        }
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_REGISTER_LOCK_REGADDR, regData);
 
         // Stop critical section after write
         Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -2069,7 +2066,7 @@ static int32_t Pmic_getNRstOutSocSignalCfg(Pmic_CoreHandle_t *pPmicCoreHandle, P
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
-    if ((pPmicCoreHandle->pmicDeviceType != PMIC_DEV_HERA_LP8764X) ||
+    if ((pPmicCoreHandle->pmicDeviceType != PMIC_DEV_HERA_LP8764X) &&
         (pPmicCoreHandle->pmicDeviceType != PMIC_DEV_LEO_TPS6594X))
     {
         pmicStatus = PMIC_ST_ERR_INV_DEVICE;

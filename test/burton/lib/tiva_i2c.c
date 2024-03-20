@@ -55,139 +55,75 @@ void initializeI2C2Handle(i2cHandle_t *i2cHandle)
     i2cHandle->bFast = false;
 }
 
-int32_t I2CBurstWrite(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t bufLen, uint8_t *pTxBuf)
+static inline int32_t I2CStartWrite(const i2cHandle_t *i2cHandle, uint8_t regAddr)
 {
-    // Variable declaration/initialization
-    uint8_t i = 0;
     int32_t status = PMIC_ST_SUCCESS;
 
-    // Parameter check
-    if ((i2cHandle == NULL) || (pTxBuf == NULL))
-    {
-        status = PMIC_ST_ERR_NULL_PARAM;
-    }
-    if ((status == PMIC_ST_SUCCESS) && (bufLen < 2U))
-    {
-        status = PMIC_ST_ERR_INV_PARAM;
-    }
-
-    if (status == PMIC_ST_SUCCESS)
-    {
-        // Set target device I2C address and indicate that we want to write
-        I2CMasterSlaveAddrSet(i2cHandle->i2cBase, i2cHandle->slaveAddr, false);
-
-        /*****************************************************************************/
-        /**************** Transmitting internal register address frame ***************/
-        /*****************************************************************************/
-
-        // Put the target internal register address into the data register
-        I2CMasterDataPut(i2cHandle->i2cBase, regAddr);
-
-        // Send the start condition, I2C address, write bit, and internal register addr
-        I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_SEND_START);
-
-        // Wait while the master is busy sending data to target I2C device
-        while (I2CMasterBusy(i2cHandle->i2cBase))
-        {
-        }
-
-        // Check to see if there is an error
-        status = I2CMasterErr(i2cHandle->i2cBase);
-    }
+    // Set target device I2C address and indicate that we want to write
+    I2CMasterSlaveAddrSet(i2cHandle->i2cBase, i2cHandle->slaveAddr, false);
 
     /*****************************************************************************/
-    /************ Transmitting data to I2C device's internal register ************/
+    /**************** Transmitting internal register address frame ***************/
     /*****************************************************************************/
 
-    if (status == PMIC_ST_SUCCESS)
+    // Put the target internal register address into the data register
+    I2CMasterDataPut(i2cHandle->i2cBase, regAddr);
+
+    // Send the start condition, I2C address, write bit, and internal register addr
+    I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_SEND_START);
+
+    // Wait while the master is busy sending data to target I2C device
+    while (I2CMasterBusy(i2cHandle->i2cBase))
     {
-        for (i = 0; i < bufLen; i++)
-        {
-            // Put data into the data register
-            I2CMasterDataPut(i2cHandle->i2cBase, pTxBuf[i]);
-
-            // If on last iteration, Generate stop condition at end of transmission
-            if ((bufLen - i) == 1U)
-            {
-                I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_SEND_FINISH);
-            }
-            // Else continue sending data
-            else
-            {
-                I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_SEND_CONT);
-            }
-
-            // Wait while the master is busy writing data to I2C device
-            while (I2CMasterBusy(i2cHandle->i2cBase))
-            {
-            }
-
-            // Check to see if there is an error
-            status = I2CMasterErr(i2cHandle->i2cBase);
-
-            // If error, send stop bit 
-            if (status != PMIC_ST_SUCCESS)
-            {
-                I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_SEND_STOP);
-                break;
-            }
-        }
     }
 
-    if ((status > 0) && (((status & I2C_MASTER_ERR_ADDR_ACK) != 0) || ((status & I2C_MASTER_ERR_DATA_ACK) != 0) ||
-        ((status & I2C_MASTER_ERR_ARB_LOST) != 0) || ((status & I2C_MASTER_ERR_CLK_TOUT) != 0)))
-    {
-        status = PMIC_ST_ERR_I2C_COMM_FAIL;
-    }
+    // Check to see if there is an error
+    status = I2CMasterErr(i2cHandle->i2cBase);
 
     return status;
 }
 
-int32_t I2CSingleWrite(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t *pTxBuf)
+static inline int32_t I2CSingleWrite(const i2cHandle_t *i2cHandle, const uint8_t *pTxBuf)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    // Parameter check
-    if ((i2cHandle == NULL) || (pTxBuf == NULL))
+    // Put data into the data register
+    I2CMasterDataPut(i2cHandle->i2cBase, *pTxBuf);
+
+    // Send the start bit, I2C address, write bit, and data across the bus
+    I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_SEND_FINISH);
+
+    // Wait while the master is busy writing data to I2C device
+    while (I2CMasterBusy(i2cHandle->i2cBase))
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if (status == PMIC_ST_SUCCESS)
+    // Check to see if there is an error
+    status = I2CMasterErr(i2cHandle->i2cBase);
+
+    return status;
+}
+
+static inline int32_t I2CBurstWrite(const i2cHandle_t *i2cHandle, uint8_t bufLen, const uint8_t *pTxBuf)
+{
+    uint8_t i = 0;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    for (i = 0; i < bufLen; i++)
     {
-        // Set target device I2C address and indicate that we want to write
-        I2CMasterSlaveAddrSet(i2cHandle->i2cBase, i2cHandle->slaveAddr, false);
-
-        /*****************************************************************************/
-        /**************** Transmitting internal register address frame ***************/
-        /*****************************************************************************/
-
-        // Put the target internal register address into the data register
-        I2CMasterDataPut(i2cHandle->i2cBase, regAddr);
-
-        // Send the start condition, I2C address, write bit, and internal register addr
-        I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_SEND_START);
-
-        // Wait while the master is busy sending data to target I2C device
-        while (I2CMasterBusy(i2cHandle->i2cBase))
-        {
-        }
-
-        // Check to see if there is an error
-        status = I2CMasterErr(i2cHandle->i2cBase);
-    }
-
-    if (status == PMIC_ST_SUCCESS)
-    {
-        /*****************************************************************************/
-        /************ Transmitting data to I2C device's internal register ************/
-        /*****************************************************************************/
-
         // Put data into the data register
-        I2CMasterDataPut(i2cHandle->i2cBase, *pTxBuf);
+        I2CMasterDataPut(i2cHandle->i2cBase, pTxBuf[i]);
 
-        // Send the start bit, I2C address, write bit, and data across the bus
-        I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_SEND_FINISH);
+        // If on last iteration, Generate stop condition at end of transmission
+        if ((bufLen - i) == 1U)
+        {
+            I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_SEND_FINISH);
+        }
+        // Else continue sending data
+        else
+        {
+            I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_SEND_CONT);
+        }
 
         // Wait while the master is busy writing data to I2C device
         while (I2CMasterBusy(i2cHandle->i2cBase))
@@ -196,10 +132,40 @@ int32_t I2CSingleWrite(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t *pTxBuf)
 
         // Check to see if there is an error
         status = I2CMasterErr(i2cHandle->i2cBase);
+
+        // If error, send stop bit 
+        if (status != PMIC_ST_SUCCESS)
+        {
+            I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_SEND_STOP);
+            break;
+        }
     }
 
-    if ((status > 0) && (((status & I2C_MASTER_ERR_ADDR_ACK) != 0) || ((status & I2C_MASTER_ERR_DATA_ACK) != 0) ||
-        ((status & I2C_MASTER_ERR_ARB_LOST) != 0) || ((status & I2C_MASTER_ERR_CLK_TOUT) != 0)))
+    return status;
+}
+
+int32_t I2CWrite(const i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t bufLen, const uint8_t *pTxBuf)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Parameter check
+    if ((i2cHandle == NULL) || (pTxBuf == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = I2CStartWrite(i2cHandle, regAddr);
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = (bufLen == 1U) ? I2CSingleWrite(i2cHandle, pTxBuf) : I2CBurstWrite(i2cHandle, bufLen, pTxBuf);
+    }
+
+    // The return code of the API I2CMasterErr() is positive when there is an I2C-related error
+    if (status > 0)
     {
         status = PMIC_ST_ERR_I2C_COMM_FAIL;
     }
@@ -207,102 +173,111 @@ int32_t I2CSingleWrite(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t *pTxBuf)
     return status;
 }
 
-int32_t I2CBurstRead(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t bufLen, uint8_t *pRxBuf)
+static inline int32_t I2CStartRead(const i2cHandle_t *i2cHandle, uint8_t regAddr)
 {
-    // Variable declaration/initialization
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Set target device I2C address and indicate that we want to write
+    I2CMasterSlaveAddrSet(i2cHandle->i2cBase, i2cHandle->slaveAddr, false);
+
+    /*****************************************************************************/
+    /**************** Transmitting internal register address frame ***************/
+    /*****************************************************************************/
+
+    // Put the target internal register address into the data register
+    I2CMasterDataPut(i2cHandle->i2cBase, regAddr);
+
+    // Send the start condition, I2C address, write bit, and internal register addr
+    I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_SINGLE_SEND);
+
+    // Wait while the master is busy sending data to target I2C device
+    while (I2CMasterBusy(i2cHandle->i2cBase))
+    {
+    }
+
+    // Check to see if there is an error
+    status = I2CMasterErr(i2cHandle->i2cBase);
+
+    return status;
+}
+
+static inline int32_t I2CBurstRead(const i2cHandle_t *i2cHandle, uint8_t bufLen, uint8_t *pRxBuf)
+{
     uint8_t i = 0;
     int32_t status = PMIC_ST_SUCCESS;
 
-    // Parameter check
-    if ((i2cHandle == NULL) || (pRxBuf == NULL))
+    for (i = 0; i < bufLen; i++)
     {
-        status = PMIC_ST_ERR_NULL_PARAM;
-    }
-    if ((status == PMIC_ST_SUCCESS) && (bufLen < 2U))
-    {
-        status = PMIC_ST_ERR_INV_PARAM;
-    }
+        // If beginning, set device I2C address, send the start condition, I2C address, and read bit
+        if (i == 0U)
+        {
+            I2CMasterSlaveAddrSet(i2cHandle->i2cBase, i2cHandle->slaveAddr, true);
+            I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_RECEIVE_START);
+        }
+        // Else if on last iteration, send NACK to stop after next received byte
+        else if ((bufLen - i) == 1U)
+        {
+            I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_RECEIVE_FINISH);
+        }
+        // Else send an ACK to indicate that we want to continue receiving
+        else
+        {
+            I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_RECEIVE_CONT);
+        }
 
-    if (status == PMIC_ST_SUCCESS)
-    {
-        // Set target device I2C address and indicate that we want to write
-        I2CMasterSlaveAddrSet(i2cHandle->i2cBase, i2cHandle->slaveAddr, false);
-
-        /*****************************************************************************/
-        /**************** Transmitting internal register address frame ***************/
-        /*****************************************************************************/
-
-        // Put the target internal register address into the data register
-        I2CMasterDataPut(i2cHandle->i2cBase, regAddr);
-
-        // Send the start condition, I2C address, write bit, and internal register addr
-        I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_SINGLE_SEND);
-
-        // Wait while the master is busy sending data to target I2C device
+        // Wait while the master is busy receiving data from target I2C device
         while (I2CMasterBusy(i2cHandle->i2cBase))
         {
         }
 
-        // Check to see if there is an error
+        // Check if there is an error
         status = I2CMasterErr(i2cHandle->i2cBase);
-    }
 
-    /*****************************************************************************/
-    /************ Receiving data from I2C device's internal register *************/
-    /*****************************************************************************/
-
-    if (status == PMIC_ST_SUCCESS)
-    {
-        for (i = 0; i < bufLen; i++)
+        // If there is no error, read from data register 
+        if (status == PMIC_ST_SUCCESS)
         {
-            // If beginning, send the start condition, I2C address, and read bit
-            if (i == 0)
-            {
-                I2CMasterSlaveAddrSet(i2cHandle->i2cBase, i2cHandle->slaveAddr, true);
-                I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_RECEIVE_START);
-            }
-            // Else if on last iteration, send NACK to stop after next received byte
-            else if ((bufLen - i) == 1U)
-            {
-                I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_RECEIVE_FINISH);
-            }
-            // Else send an ACK to indicate that we want to continue receiving
-            else
-            {
-                I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_BURST_RECEIVE_CONT);
-            }
-
-            // Wait while the master is busy receiving data from target I2C device
-            while (I2CMasterBusy(i2cHandle->i2cBase))
-            {
-            }
-
-            // Check to see if there is an error
-            status = I2CMasterErr(i2cHandle->i2cBase);
-
-            if (status == PMIC_ST_SUCCESS)
-            {
-                // Read from data register if there is no error
-                pRxBuf[i] = I2CMasterDataGet(i2cHandle->i2cBase);
-            }
-            else
-            {
-                break;
-            }
+            pRxBuf[i] = I2CMasterDataGet(i2cHandle->i2cBase);
         }
-    }
-
-    if ((status > 0) && (((status & I2C_MASTER_ERR_ADDR_ACK) != 0) || ((status & I2C_MASTER_ERR_DATA_ACK) != 0) ||
-        ((status & I2C_MASTER_ERR_ARB_LOST) != 0) || ((status & I2C_MASTER_ERR_CLK_TOUT) != 0)))
-    {
-        status = PMIC_ST_ERR_I2C_COMM_FAIL;
+        // Else if there is an error, stop reading
+        else
+        {
+            break;
+        }
     }
 
     return status;
 }
 
-int32_t I2CSingleRead(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t *pRxBuf)
+static inline int32_t I2CSingleRead(const i2cHandle_t *i2cHandle, uint8_t *pRxBuf)
 {
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Set target device I2C address and indicate that we want to read
+    I2CMasterSlaveAddrSet(i2cHandle->i2cBase, i2cHandle->slaveAddr, true);
+
+    // Send the start condition, I2C address, and read bit across the bus
+    I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_SINGLE_RECEIVE);
+
+    // Wait while the master is busy reading data from target I2C device
+    while (I2CMasterBusy(i2cHandle->i2cBase))
+    {
+    }
+
+    // Check if there is an error
+    status = I2CMasterErr(i2cHandle->i2cBase);
+
+    // If there is no error, read from data register 
+    if (status == PMIC_ST_SUCCESS)
+    {
+        *pRxBuf = I2CMasterDataGet(i2cHandle->i2cBase);
+    }
+
+    return status;
+}
+
+int32_t I2CRead(const i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t bufLen, uint8_t *pRxBuf)
+{
+    // Variable declaration/initialization
     int32_t status = PMIC_ST_SUCCESS;
 
     // Parameter check
@@ -313,59 +288,18 @@ int32_t I2CSingleRead(i2cHandle_t *i2cHandle, uint8_t regAddr, uint8_t *pRxBuf)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Set target device I2C address and indicate that we want to write
-        I2CMasterSlaveAddrSet(i2cHandle->i2cBase, i2cHandle->slaveAddr, false);
-
-        /*****************************************************************************/
-        /**************** Transmitting internal register address frame ***************/
-        /*****************************************************************************/
-
-        // Put the target internal register address into the data register
-        I2CMasterDataPut(i2cHandle->i2cBase, regAddr);
-
-        // Send the start condition, I2C address, write bit, and internal register addr
-        I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_SINGLE_SEND);
-
-        // Wait while the master is busy sending data to target I2C device
-        while (I2CMasterBusy(i2cHandle->i2cBase))
-        {
-        }
-
-        // Check to see if there is an error
-        status = I2CMasterErr(i2cHandle->i2cBase);
+        status = I2CStartRead(i2cHandle, regAddr);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        /*****************************************************************************/
-        /************ Receiving data from I2C device's internal register *************/
-        /*****************************************************************************/
-
-        // Set target device I2C address and indicate that we want to read
-        I2CMasterSlaveAddrSet(i2cHandle->i2cBase, i2cHandle->slaveAddr, true);
-
-        // Send the start condition, I2C address, and read bit across the bus
-        I2CMasterControl(i2cHandle->i2cBase, I2C_MASTER_CMD_SINGLE_RECEIVE);
-
-        // Wait while the master is busy reading data from target I2C device
-        while (I2CMasterBusy(i2cHandle->i2cBase))
-        {
-        }
-
-        // Check to see if there is an error
-        status = I2CMasterErr(i2cHandle->i2cBase);
+        status = (bufLen == 1U) ? I2CSingleRead(i2cHandle, pRxBuf) : I2CBurstRead(i2cHandle, bufLen, pRxBuf);
     }
 
-    if ((status > 0) && (((status & I2C_MASTER_ERR_ADDR_ACK) != 0) || ((status & I2C_MASTER_ERR_DATA_ACK) != 0) ||
-            ((status & I2C_MASTER_ERR_ARB_LOST) != 0) || ((status & I2C_MASTER_ERR_CLK_TOUT) != 0)))
+    // The return code of the API I2CMasterErr() is positive when there is an I2C-related error
+    if (status > 0)
     {
         status = PMIC_ST_ERR_I2C_COMM_FAIL;
-    }
-    
-    if (status == PMIC_ST_SUCCESS)
-    {
-        // Read from data register if there is no error
-        *pRxBuf = I2CMasterDataGet(i2cHandle->i2cBase);
     }
 
     return status;

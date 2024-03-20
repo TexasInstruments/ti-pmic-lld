@@ -29,32 +29,32 @@
 /* Tiva system clock APIs and definitions */
 #include "sysctl.h"
 
-#define RUN_IRQ_TESTS   RUN_TEST(test_GPIO1_interrupt_enableDisable);   \
-                        RUN_TEST(test_GPIO2_interrupt_enableDisable);   \
-                        RUN_TEST(test_GPIO3_interrupt_enableDisable);   \
-                        RUN_TEST(test_GPIO4_interrupt_enableDisable);   \
-                        RUN_TEST(test_GPIO5_interrupt_enableDisable);   \
-                        RUN_TEST(test_GPIO6_interrupt_enableDisable);   \
-                        RUN_TEST(test_GPIO1_interrupt_fallingEdge);     \
-                        RUN_TEST(test_GPIO1_interrupt_risingEdge);      \
-                        RUN_TEST(test_GPIO2_interrupt_fallingEdge);     \
-                        RUN_TEST(test_GPIO2_interrupt_risingEdge);      \
-                        RUN_TEST(test_GPIO3_interrupt_fallingEdge);     \
-                        RUN_TEST(test_GPIO3_interrupt_risingEdge);      \
-                        RUN_TEST(test_GPIO4_interrupt_fallingEdge);     \
-                        RUN_TEST(test_GPIO4_interrupt_risingEdge);      \
-                        RUN_TEST(test_GPIO5_interrupt_fallingEdge);     \
-                        RUN_TEST(test_GPIO5_interrupt_risingEdge);      \
-                        RUN_TEST(test_GPIO6_interrupt_fallingEdge);     \
-                        RUN_TEST(test_GPIO6_interrupt_risingEdge)      
+#define RUN_IRQ_TESTS()     RUN_TEST(test_GPIO1_interrupt_enableDisable);   \
+                            RUN_TEST(test_GPIO2_interrupt_enableDisable);   \
+                            RUN_TEST(test_GPIO3_interrupt_enableDisable);   \
+                            RUN_TEST(test_GPIO4_interrupt_enableDisable);   \
+                            RUN_TEST(test_GPIO5_interrupt_enableDisable);   \
+                            RUN_TEST(test_GPIO6_interrupt_enableDisable);   \
+                            RUN_TEST(test_GPIO1_interrupt_fallingEdge);     \
+                            RUN_TEST(test_GPIO1_interrupt_risingEdge);      \
+                            RUN_TEST(test_GPIO2_interrupt_fallingEdge);     \
+                            RUN_TEST(test_GPIO2_interrupt_risingEdge);      \
+                            RUN_TEST(test_GPIO3_interrupt_fallingEdge);     \
+                            RUN_TEST(test_GPIO3_interrupt_risingEdge);      \
+                            RUN_TEST(test_GPIO4_interrupt_fallingEdge);     \
+                            RUN_TEST(test_GPIO4_interrupt_risingEdge);      \
+                            RUN_TEST(test_GPIO5_interrupt_fallingEdge);     \
+                            RUN_TEST(test_GPIO5_interrupt_risingEdge);      \
+                            RUN_TEST(test_GPIO6_interrupt_fallingEdge);     \
+                            RUN_TEST(test_GPIO6_interrupt_risingEdge)      
 
+timerHandle_t tHandle;
 Pmic_CoreHandle_t pmicCoreHandle;
-timerHandle_t     timerHandle;
 
 /* For setup and teardown of tests */
 Pmic_GpioCfg_t nvmGpioCfg[PMIC_TPS6522X_GPIO_PIN_MAX];
-bool           nvmRiseIntrMaskStat[PMIC_TPS6522X_GPIO_PIN_MAX];
-bool           nvmFallIntrMaskStat[PMIC_TPS6522X_GPIO_PIN_MAX];
+bool nvmRiseIntrMaskStat[PMIC_TPS6522X_GPIO_PIN_MAX];
+bool nvmFallIntrMaskStat[PMIC_TPS6522X_GPIO_PIN_MAX];
 
 int main(void)
 {
@@ -91,8 +91,8 @@ int main(void)
     initializeI2C(&I2C1Handle);
 
     /*** Timer setup ***/
-    initializeTimerHandle(&timerHandle);
-    initializeTimer(&timerHandle);
+    initializeTimerHandle(&tHandle);
+    initializeTimer(&tHandle);
 
     /*** PMIC setup ***/
     initializePmicCoreHandle(&pmicCoreHandle);
@@ -107,7 +107,7 @@ int main(void)
     /*** Begin unity testing ***/
     UNITY_BEGIN();
 
-    RUN_IRQ_TESTS;
+    RUN_IRQ_TESTS();
 
     /*** Finish unity testing ***/
     return UNITY_END();
@@ -159,7 +159,7 @@ static void gpioXIntFallingEdgeTest(const uint8_t pin, const uint8_t expectedIrq
     TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
 
     // Wait a certain time period to allow PMIC to raise flag (.25 seconds)
-    delayTimeInMs(&timerHandle, 250);
+    delayTimeInMs(&tHandle, 250);
 
     // Ensure the GPIO interrupt flag is raised
     status = pmicI2CRead(&pmicCoreHandle, PMIC_MAIN_INST, INT_GPIO_REG_ADDR, &rxBuf, 1);
@@ -237,7 +237,7 @@ static void gpioXIntRisingEdgeTest(const uint8_t pin, const uint8_t expectedIrqN
     TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
 
     // Wait a certain time period to allow PMIC to raise flag (.25 seconds)
-    delayTimeInMs(&timerHandle, 250);
+    delayTimeInMs(&tHandle, 250);
 
     // Ensure the GPIO interrupt flag is raised
     status = pmicI2CRead(&pmicCoreHandle, PMIC_MAIN_INST, INT_GPIO_REG_ADDR, &rxBuf, 1);

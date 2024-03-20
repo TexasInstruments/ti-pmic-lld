@@ -51,9 +51,9 @@ void unityCharPut(uint8_t ucData);
  *  \brief  This function is used to disable all power resources on TPS6522x PMIC.
  *          The function is intended for testing purposes to isolate unit testing.
  *
- *  \param  pmicCoreHandle      [IN]    PMIC interface handle
+ *  \param  pmicHandle      [IN]    PMIC interface handle
  */
-void disablePmicPowerResources(Pmic_CoreHandle_t pmicCoreHandle);
+void disablePmicPowerResources(Pmic_CoreHandle_t pmicHandle);
 
 #ifdef __cplusplus
 }

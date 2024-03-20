@@ -252,6 +252,10 @@ int32_t Pmic_gpioSetPinFunc(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pi
             status = PMIC_ST_ERR_INV_GPIO_FUNC;
         }
     }
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
+    }
 
     if (PMIC_ST_SUCCESS == status)
     {
@@ -302,22 +306,27 @@ int32_t Pmic_gpioGetPinFunc(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pi
     uint8_t              index = 0U;
     Pmic_GpioInOutCfg_t *pGpioInOutCfg = NULL;
 
-    /* Set Pmic_GpioIntRegCfg_t array index for given GPIO Pin */
-    index = pin - 1U;
+    status = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
 
-    /* Get PMIC gpio configuration */
-    Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
+    if (status == PMIC_ST_SUCCESS)
+    {
+        /* Set Pmic_GpioIntRegCfg_t array index for given GPIO Pin */
+        index = pin - 1U;
 
-    Pmic_gpioSelectRegister(pPmicCoreHandle->pmicDeviceType, pin, (uint8_t)pGpioInOutCfg[index].regAddr, &regAddr);
+        /* Get PMIC gpio configuration */
+        Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
 
-    /* Start Critical Section */
-    Pmic_criticalSectionStart(pPmicCoreHandle);
+        Pmic_gpioSelectRegister(pPmicCoreHandle->pmicDeviceType, pin, (uint8_t)pGpioInOutCfg[index].regAddr, &regAddr);
 
-    /* Reading the GPIO configuration */
-    status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
+        /* Start Critical Section */
+        Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    /* Stop Critical Section */
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+        /* Reading the GPIO configuration */
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
+
+        /* Stop Critical Section */
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
 
     if (PMIC_ST_SUCCESS == status)
     {
@@ -433,7 +442,8 @@ static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle, const ui
     uint8_t              regAddr = 0U;
     Pmic_GpioInOutCfg_t *pGpioInOutCfg = NULL;
 
-    if (gpioCfg.pullCtrl > PMIC_GPIO_PULL_UP)
+    status = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
+    if ((status == PMIC_ST_SUCCESS) && (gpioCfg.pullCtrl > PMIC_GPIO_PULL_UP))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -508,22 +518,27 @@ int32_t Pmic_gpioGetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t p
     Pmic_GpioInOutCfg_t *pGpioInOutCfg = NULL;
     uint8_t              index = 0;
 
-    /* Set Pmic_GpioIntRegCfg_t array index for given GPIO Pin */
-    index = pin - 1U;
+    status = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
 
-    /* Get PMIC gpio configuration */
-    Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
+    if (status == PMIC_ST_SUCCESS)
+    {
+        /* Set Pmic_GpioIntRegCfg_t array index for given GPIO Pin */
+        index = pin - 1U;
 
-    Pmic_gpioSelectRegister(pPmicCoreHandle->pmicDeviceType, pin, (uint8_t)pGpioInOutCfg[index].regAddr, &regAddr);
+        /* Get PMIC gpio configuration */
+        Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
 
-    /* Start Critical Section */
-    Pmic_criticalSectionStart(pPmicCoreHandle);
+        Pmic_gpioSelectRegister(pPmicCoreHandle->pmicDeviceType, pin, (uint8_t)pGpioInOutCfg[index].regAddr, &regAddr);
 
-    /* Reading the GPIO configuration */
-    status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
+        /* Start Critical Section */
+        Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    /* Stop Critical Section */
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+        /* Reading the GPIO configuration */
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
+
+        /* Stop Critical Section */
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
 
     if (PMIC_ST_SUCCESS == status)
     {
@@ -555,7 +570,8 @@ static int32_t Pmic_gpioSetPinDir(Pmic_CoreHandle_t *pPmicCoreHandle, const uint
     uint8_t              index = 0U;
     Pmic_GpioInOutCfg_t *pGpioInOutCfg = NULL;
 
-    if (gpioCfg.pinDir > PMIC_GPIO_OUTPUT)
+    status = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
+    if ((status == PMIC_ST_SUCCESS) && (gpioCfg.pinDir > PMIC_GPIO_OUTPUT))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -599,20 +615,25 @@ static int32_t Pmic_gpioGetPinDir(Pmic_CoreHandle_t *pPmicCoreHandle, const uint
     Pmic_GpioInOutCfg_t *pGpioInOutCfg = NULL;
     uint8_t              index = 0U;
 
-    /* Set Pmic_GpioIntRegCfg_t array index for given GPIO Pin */
-    index = pin - 1U;
+    status = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
 
-    /* Get PMIC gpio configuration */
-    Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
+    if (status == PMIC_ST_SUCCESS)
+    {
+        /* Set Pmic_GpioIntRegCfg_t array index for given GPIO Pin */
+        index = pin - 1U;
 
-    /* Start Critical Section */
-    Pmic_criticalSectionStart(pPmicCoreHandle);
+        /* Get PMIC gpio configuration */
+        Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
 
-    /* Reading the GPIO configuration */
-    status = Pmic_commIntf_recvByte(pPmicCoreHandle, pGpioInOutCfg[index].regAddr, &regData);
+        /* Start Critical Section */
+        Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    /* Stop Critical Section */
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+        /* Reading the GPIO configuration */
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, pGpioInOutCfg[index].regAddr, &regData);
+
+        /* Stop Critical Section */
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
 
     if (PMIC_ST_SUCCESS == status)
     {
@@ -635,7 +656,8 @@ Pmic_gpioSetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, 
     uint8_t              regAddr = 0U;
     Pmic_GpioInOutCfg_t *pGpioInOutCfg = NULL;
 
-    if (gpioCfg.deglitchEnable > PMIC_GPIO_DEGLITCH_ENABLE)
+    status = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
+    if ((status == PMIC_ST_SUCCESS) && (gpioCfg.deglitchEnable > PMIC_GPIO_DEGLITCH_ENABLE))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -682,22 +704,27 @@ int32_t Pmic_gpioGetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8
     uint8_t              index = 0U;
     Pmic_GpioInOutCfg_t *pGpioInOutCfg = NULL;
 
-    /* Set Pmic_GpioIntRegCfg_t array index for given GPIO Pin */
-    index = pin - 1U;
+    status = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
 
-    /* Get PMIC gpio configuration */
-    Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
+    if (status == PMIC_ST_SUCCESS)
+    {
+        /* Set Pmic_GpioIntRegCfg_t array index for given GPIO Pin */
+        index = pin - 1U;
 
-    Pmic_gpioSelectRegister(pPmicCoreHandle->pmicDeviceType, pin, (uint8_t)pGpioInOutCfg[index].regAddr, &regAddr);
+        /* Get PMIC gpio configuration */
+        Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
 
-    /* Start Critical Section */
-    Pmic_criticalSectionStart(pPmicCoreHandle);
+        Pmic_gpioSelectRegister(pPmicCoreHandle->pmicDeviceType, pin, (uint8_t)pGpioInOutCfg[index].regAddr, &regAddr);
 
-    /* Reading the GPIO configuration */
-    status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
+        /* Start Critical Section */
+        Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    /* Stop Critical Section */
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+        /* Reading the GPIO configuration */
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
+
+        /* Stop Critical Section */
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
 
     if (PMIC_ST_SUCCESS == status)
     {
@@ -721,7 +748,8 @@ Pmic_gpioSetOutputSignalType(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t p
     uint8_t              regAddr = 0U;
     Pmic_GpioInOutCfg_t *pGpioInOutCfg = NULL;
 
-    if (gpioCfg.outputSignalType > PMIC_GPIO_OPEN_DRAIN_OUTPUT)
+    status = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
+    if ((PMIC_ST_SUCCESS) && (gpioCfg.outputSignalType > PMIC_GPIO_OPEN_DRAIN_OUTPUT))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -770,22 +798,27 @@ Pmic_gpioGetOutputSignalType(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t p
     uint8_t              index = 0U;
     Pmic_GpioInOutCfg_t *pGpioInOutCfg = NULL;
 
-    /* Set Pmic_GpioIntRegCfg_t array index for given GPIO Pin */
-    index = pin - 1U;
+    status = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
 
-    /* Get PMIC gpio configuration */
-    Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
+    if (status == PMIC_ST_SUCCESS)
+    {
+        /* Set Pmic_GpioIntRegCfg_t array index for given GPIO Pin */
+        index = pin - 1U;
 
-    Pmic_gpioSelectRegister(pPmicCoreHandle->pmicDeviceType, pin, (uint8_t)pGpioInOutCfg[index].regAddr, &regAddr);
+        /* Get PMIC gpio configuration */
+        Pmic_get_gpioInOutCfg(pPmicCoreHandle, &pGpioInOutCfg);
 
-    /* Start Critical Section */
-    Pmic_criticalSectionStart(pPmicCoreHandle);
+        Pmic_gpioSelectRegister(pPmicCoreHandle->pmicDeviceType, pin, (uint8_t)pGpioInOutCfg[index].regAddr, &regAddr);
 
-    /* Reading the GPIO configuration */
-    status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
+        /* Start Critical Section */
+        Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    /* Stop Critical Section */
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+        /* Reading the GPIO configuration */
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, regAddr, &regData);
+
+        /* Stop Critical Section */
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
 
     if (PMIC_ST_SUCCESS == status)
     {

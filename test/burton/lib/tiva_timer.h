@@ -25,7 +25,7 @@ void initializeTimerHandle(timerHandle_t *timerHandle);
  *
  * \param timerHandle [IN] Handle to timer module
  */
-void initializeTimer(timerHandle_t *timerHandle);
+void initializeTimer(const timerHandle_t *timerHandle);
 
 /**
  * \brief This function is used to generate a specified delay in milliseconds
@@ -33,7 +33,7 @@ void initializeTimer(timerHandle_t *timerHandle);
  * \param timerHandle   [IN]    Handle to timer module
  * \param milliseconds  [IN]    Duration of delay in milliseconds
  */
-void delayTimeInMs(timerHandle_t *timerHandle, uint16_t milliseconds);
+void delayTimeInMs(const timerHandle_t *timerHandle, uint16_t milliseconds);
 
 #ifdef __cplusplus
 }

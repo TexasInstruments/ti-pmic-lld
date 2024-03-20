@@ -32,11 +32,11 @@ Pmic_CoreHandle_t pmicCoreHandle;
  * \brief   These variables are used in the Unity setup() and teardown() functions
  *          to save and restore NVM default ESM settings/configurations
  */
-bool           nvmEsmEnableState = false;
-bool           nvmEsmStartState = false;
-Pmic_EsmCfg_t  nvmEsmCfg;
+bool nvmEsmEnableState = false;
+bool nvmEsmStartState = false;
+Pmic_EsmCfg_t nvmEsmCfg;
 Pmic_GpioCfg_t nvmGpio6Cfg;
-timerHandle_t  timerHandle;
+timerHandle_t tHandle;
 
 static void disableVMON1LDO2(void);
 static void saveNvmGpio6EsmConfig(void);
@@ -77,8 +77,8 @@ int main(void)
     initializeI2C(&I2C1Handle);
 
     /*** Timer setup ***/
-    initializeTimerHandle(&timerHandle);
-    initializeTimer(&timerHandle);
+    initializeTimerHandle(&tHandle);
+    initializeTimer(&tHandle);
 
     /*** PMIC setup ***/
     initializePmicCoreHandle(&pmicCoreHandle);
@@ -491,7 +491,7 @@ static void esmNoErrTest(uint8_t esmMode)
     TEST_ASSERT_EQUAL_INT32(PMIC_ST_SUCCESS, status);
 
     // Wait for 2 seconds (enough time for all ESM interrupt flags to be raised by the PMIC)
-    delayTimeInMs(&timerHandle, 2000);
+    delayTimeInMs(&tHandle, 2000);
 
     // Get status of all interrupts
     status = Pmic_irqGetErrStatus(&pmicCoreHandle, &errStat, PMIC_IRQ_CLEAR_NONE);
@@ -580,7 +580,7 @@ static void esmErrTest(uint8_t esmIrqNum, uint8_t esmMode)
     }
 
     // Wait while the nERR_MCU pin is reading low to trigger target interrupt
-    delayTimeInMs(&timerHandle, milliseconds);
+    delayTimeInMs(&tHandle, milliseconds);
 
     // Stop the ESM
     status = Pmic_esmStart(&pmicCoreHandle, PMIC_ESM_MODE_MCU, PMIC_ESM_STOP);

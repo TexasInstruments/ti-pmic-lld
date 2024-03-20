@@ -41,25 +41,29 @@ void initializeGpioPinHandles(gpioPinHandle_t *gpioPinHandle, bool bOutput)
     gpioPinHandle[5].gpioShiftVal = 1;
 }
 
-void initializeGpioPins(gpioPinHandle_t *gpioPinHandle)
+void initializeGpioPins(const gpioPinHandle_t *gpioPinHandle)
 {
     uint8_t pin = 0;
 
     for (pin = PMIC_TPS6522X_GPIO1_PIN; pin <= PMIC_TPS6522X_GPIO_PIN_MAX; pin++)
     {
-        SysCtlPeripheralEnable(gpioPinHandle[pin - 1].sysPeriphGPIO);
+        SysCtlPeripheralEnable(gpioPinHandle[pin - 1U].sysPeriphGPIO);
 
-        while (!SysCtlPeripheralReady(gpioPinHandle[pin - 1].sysPeriphGPIO))
+        while (!SysCtlPeripheralReady(gpioPinHandle[pin - 1U].sysPeriphGPIO))
         {
         }
 
-        if (gpioPinHandle[pin - 1].gpioPinDir == GPIO_DIR_MODE_IN)
+        if (gpioPinHandle[pin - 1U].gpioPinDir == GPIO_DIR_MODE_IN)
         {
-            GPIOPinTypeGPIOInput(gpioPinHandle[pin - 1].gpioPortBase, gpioPinHandle[pin - 1].gpioPin);
+            GPIOPinTypeGPIOInput(gpioPinHandle[pin - 1U].gpioPortBase, gpioPinHandle[pin - 1U].gpioPin);
         }
-        else if (gpioPinHandle[pin - 1].gpioPinDir == GPIO_DIR_MODE_OUT)
+        else if (gpioPinHandle[pin - 1U].gpioPinDir == GPIO_DIR_MODE_OUT)
         {
-            GPIOPinTypeGPIOOutput(gpioPinHandle[pin - 1].gpioPortBase, gpioPinHandle[pin - 1].gpioPin);
+            GPIOPinTypeGPIOOutput(gpioPinHandle[pin - 1U].gpioPortBase, gpioPinHandle[pin - 1U].gpioPin);
+        }
+        else
+        {
+            /* Invalid GPIO pin direction value */
         }
     }
 }
@@ -79,6 +83,10 @@ void initializeGpioPin(const gpioPinHandle_t gpioPinHandle)
     else if (gpioPinHandle.gpioPinDir == GPIO_DIR_MODE_OUT)
     {
         GPIOPinTypeGPIOOutput(gpioPinHandle.gpioPortBase, gpioPinHandle.gpioPin);
+    }
+    else
+    {
+        /* Invalid GPIO pin direction value  */
     }
 }
 

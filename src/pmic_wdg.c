@@ -121,11 +121,15 @@ static uint8_t Pmic_WdgCovertLongWinTimeIntervaltoRegBits(const Pmic_WdgCfg_t wd
     {
         regVal = (uint8_t)(wdgCfg.longWinDuration_ms / PMIG_WD_LONGWIN_MILLISEC_DIV_125);
     }
-    else
+    else if (wdgCfg.longWinDuration_ms <= 772000U)
     {
         baseVal = (uint8_t)(PMIG_WD_LONGWIN_8000_MILLISEC / PMIG_WD_LONGWIN_MILLISEC_DIV_125);
-        regVal = baseVal + ((uint8_t)((wdgCfg.longWinDuration_ms - PMIG_WD_LONGWIN_8000_MILLISEC) /
-                                      PMIG_WD_LONGWIN_MILLISEC_DIV_4000));
+        regVal = (uint8_t)(baseVal + ((uint8_t)((wdgCfg.longWinDuration_ms - PMIG_WD_LONGWIN_8000_MILLISEC) /
+                                      PMIG_WD_LONGWIN_MILLISEC_DIV_4000)));
+    }
+    else
+    {
+        /* Invalid Long Window duration */ 
     }
 
     return regVal;

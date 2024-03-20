@@ -26,32 +26,32 @@
 /* PMIC driver */
 #include "pmic.h"
 
-#define RUN_GPIO_TESTS  RUN_TEST(test_pushButton_onRequest);                                        \
-                        RUN_TEST(test_pushButton_offRequest);                                       \
-                        RUN_TEST(test_Pmic_gpioSetValue_setGpioSignalLvl);                          \
-                        RUN_TEST(test_Pmic_gpioGetValue_readGpioSignalLvl);                         \
-                        RUN_TEST(test_Pmic_gpioSetConfiguration_VMON1_m);                           \
-                        RUN_TEST(test_Pmic_gpioSetConfiguration_VMON2);                             \
-                        RUN_TEST(test_Pmic_gpioSetConfiguration_pushButton);                        \
-                        RUN_TEST(test_Pmic_gpioSetConfiguration_nSLEEP1);                           \
-                        RUN_TEST(test_Pmic_gpioSetConfiguration_nSLEEP2);                           \
-                        RUN_TEST(test_Pmic_gpioSetConfiguration_ADC_IN);                            \
-                        RUN_TEST(test_Pmic_gpioSetConfiguration_WKUP);                              \
-                        RUN_TEST(test_Pmic_gpioSetConfiguration_SYNCCLKIN);                         \
-                        RUN_TEST(test_Pmic_gpioSetConfiguration_nERR_MCU);                          \
-                        RUN_TEST(test_Pmic_gpioSetConfiguration_SDA_I2C2_SDO_SPI);                  \
-                        RUN_TEST(test_Pmic_gpioSetConfiguration_SCL_I2C2_CS_SPI);                   \
-                        RUN_TEST(test_Pmic_gpioSetConfiguration_nINT);                              \
-                        RUN_TEST(test_Pmic_gpioSetConfiguration_TRIG_WDOG);                         \
-                        RUN_TEST(test_Pmic_gpioSetEnPbVsensePinConfiguration_validatePmicHandle);   \
-                        RUN_TEST(test_Pmic_gpioSetEnPbVsensePinConfiguration_validatePinFunc);      \
-                        RUN_TEST(test_Pmic_gpioSetEnPbVsensePinConfiguration_enableFunc);           \
-                        RUN_TEST(test_Pmic_gpioSetEnPbVsensePinConfiguration_pushButtonFunc);       \
-                        RUN_TEST(test_Pmic_gpioSetEnPbVsensePinConfiguration_vsenseFunc)            
+#define RUN_GPIO_TESTS()    RUN_TEST(test_pushButton_onRequest);                                        \
+                            RUN_TEST(test_pushButton_offRequest);                                       \
+                            RUN_TEST(test_Pmic_gpioSetValue_setGpioSignalLvl);                          \
+                            RUN_TEST(test_Pmic_gpioGetValue_readGpioSignalLvl);                         \
+                            RUN_TEST(test_Pmic_gpioSetConfiguration_VMON1_m);                           \
+                            RUN_TEST(test_Pmic_gpioSetConfiguration_VMON2);                             \
+                            RUN_TEST(test_Pmic_gpioSetConfiguration_pushButton);                        \
+                            RUN_TEST(test_Pmic_gpioSetConfiguration_nSLEEP1);                           \
+                            RUN_TEST(test_Pmic_gpioSetConfiguration_nSLEEP2);                           \
+                            RUN_TEST(test_Pmic_gpioSetConfiguration_ADC_IN);                            \
+                            RUN_TEST(test_Pmic_gpioSetConfiguration_WKUP);                              \
+                            RUN_TEST(test_Pmic_gpioSetConfiguration_SYNCCLKIN);                         \
+                            RUN_TEST(test_Pmic_gpioSetConfiguration_nERR_MCU);                          \
+                            RUN_TEST(test_Pmic_gpioSetConfiguration_SDA_I2C2_SDO_SPI);                  \
+                            RUN_TEST(test_Pmic_gpioSetConfiguration_SCL_I2C2_CS_SPI);                   \
+                            RUN_TEST(test_Pmic_gpioSetConfiguration_nINT);                              \
+                            RUN_TEST(test_Pmic_gpioSetConfiguration_TRIG_WDOG);                         \
+                            RUN_TEST(test_Pmic_gpioSetEnPbVsensePinConfiguration_validatePmicHandle);   \
+                            RUN_TEST(test_Pmic_gpioSetEnPbVsensePinConfiguration_validatePinFunc);      \
+                            RUN_TEST(test_Pmic_gpioSetEnPbVsensePinConfiguration_enableFunc);           \
+                            RUN_TEST(test_Pmic_gpioSetEnPbVsensePinConfiguration_pushButtonFunc);       \
+                            RUN_TEST(test_Pmic_gpioSetEnPbVsensePinConfiguration_vsenseFunc)            
 
+timerHandle_t tHandle;
 Pmic_CoreHandle_t pmicCoreHandle;
-timerHandle_t     timerHandle;
-gpioPinHandle_t   gpioPinHandle[PMIC_TPS6522X_GPIO_PIN_MAX];
+gpioPinHandle_t gpioPinHandle[PMIC_TPS6522X_GPIO_PIN_MAX];
 
 static void disableVMON1LDO2(void);
 
@@ -94,8 +94,8 @@ int main(void)
     initializeGpioPins(gpioPinHandle);
 
     /*** Timer setup ***/
-    initializeTimerHandle(&timerHandle);
-    initializeTimer(&timerHandle);
+    initializeTimerHandle(&tHandle);
+    initializeTimer(&tHandle);
 
     /*** PMIC setup ***/
     initializePmicCoreHandle(&pmicCoreHandle);
@@ -116,7 +116,7 @@ int main(void)
     /*** Begin unity testing ***/
     UNITY_BEGIN();
 
-    RUN_GPIO_TESTS;
+    RUN_GPIO_TESTS();
 
     /*** Finish unity testing ***/
     return UNITY_END();
@@ -1016,7 +1016,7 @@ static void pushButtonTest(uint8_t pbIrqNum, uint8_t timeout)
     for (iter = 0; iter < timeout; iter++)
     {
         // Delay for 1 second
-        delayTimeInMs(&timerHandle, 1000);
+        delayTimeInMs(&tHandle, 1000);
 
         // After 1 second delay, get status of all interrupts
         status = Pmic_irqGetErrStatus(&pmicCoreHandle, &errStat, PMIC_IRQ_CLEAR_NONE);
