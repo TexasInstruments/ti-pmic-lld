@@ -78,11 +78,7 @@ void Pmic_setBitField(uint8_t *pRegVal, uint8_t regFieldShift, uint8_t regFieldM
 
 uint8_t Pmic_getBitField(uint8_t regData, uint8_t regFieldShift, uint8_t regFieldMask)
 {
-    uint8_t fieldVal;
-
-    fieldVal = (((regData) & (uint8_t)regFieldMask) >> (uint8_t)regFieldShift);
-
-    return fieldVal;
+    return (((regData) & (uint8_t)regFieldMask) >> (uint8_t)regFieldShift);
 }
 
 bool Pmic_getBitField_b(uint8_t regData, uint8_t regFieldShift)
@@ -91,19 +87,12 @@ bool Pmic_getBitField_b(uint8_t regData, uint8_t regFieldShift)
 
     bitVal = (((regData) & (1U << regFieldShift)) >> (uint8_t)regFieldShift);
 
-    return (bitVal == 1U) ? (bool)true : (bool)false;
+    return (bool)(bitVal == 1U);
 }
 
 bool pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos)
 {
-    bool retVal = (bool)false;
-
-    if (((validParamVal >> bitPos) & 0x01U) != 0U)
-    {
-        retVal = (bool)true;
-    }
-
-    return retVal;
+    return (bool)(((validParamVal >> bitPos) & 0x01U) != 0U);
 }
 
 void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *pPmicCoreHandle)
@@ -1342,9 +1331,9 @@ static int32_t Pmic_setRegisterLockUnlockCfg(Pmic_CoreHandle_t         *pPmicCor
 
         // Write the lock/unlock value to the REGISTER_LOCK register
         Pmic_setBitField(&regData,
-                            PMIC_REGISTER_LOCK_STATUS_SHIFT,
-                            PMIC_REGISTER_LOCK_STATUS_WRITE_MASK,
-                            commonCtrlCfg.regLock);
+                         PMIC_REGISTER_LOCK_STATUS_SHIFT,
+                         PMIC_REGISTER_LOCK_STATUS_WRITE_MASK,
+                         commonCtrlCfg.regLock);
 
         pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_REGISTER_LOCK_REGADDR, regData);
 
@@ -3088,11 +3077,11 @@ int32_t Pmic_getDeviceInfo(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_DeviceInfo_t
         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if ((pPmicCoreHandle->pmicDeviceType == PMIC_DEV_HERA_LP8764X) ||
-        (pPmicCoreHandle->pmicDeviceType == PMIC_DEV_LEO_TPS6594X))
+    if ((PMIC_ST_SUCCESS == pmicStatus) && ((pPmicCoreHandle->pmicDeviceType == PMIC_DEV_HERA_LP8764X) ||
+        (pPmicCoreHandle->pmicDeviceType == PMIC_DEV_LEO_TPS6594X)))
     {
-        if ((PMIC_ST_SUCCESS == pmicStatus) && ((PMIC_SILICON_REV_ID_PG_2_0 != pPmicCoreHandle->pmicDevSiliconRev) &&
-                                                (PMIC_SILICON_REV_ID_PG_1_0 != pPmicCoreHandle->pmicDevSiliconRev)))
+        if ((PMIC_SILICON_REV_ID_PG_2_0 != pPmicCoreHandle->pmicDevSiliconRev) &&
+            (PMIC_SILICON_REV_ID_PG_1_0 != pPmicCoreHandle->pmicDevSiliconRev))
         {
             pmicStatus = PMIC_ST_ERR_INV_SILICON_REVISION;
         }

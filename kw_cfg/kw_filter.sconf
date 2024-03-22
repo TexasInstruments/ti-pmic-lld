@@ -21,8 +21,8 @@
     },
     { "kind": "directory",
       "name": "test",
-      "all_issue_codes": false,
-      "filter": false
+      "all_issue_codes": true,
+      "filter": true
     },
     { "kind": "file",
       "name": "tm4c123gh6pm_startup_ccs.c",

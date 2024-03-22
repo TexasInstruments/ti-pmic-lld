@@ -194,6 +194,7 @@ extern "C"
 #define PMIG_WD_LONGWIN_80_MILLISEC                     (80U)
 #define PMIG_WD_LONGWIN_125_MILLISEC                    (125U)
 #define PMIG_WD_LONGWIN_8000_MILLISEC                   (8000U)
+#define PMIG_WD_LONGWIN_77200_MILLISEC                  (772000U)
 
 #define PMIG_WD_LONGWIN_MILLISEC_DIV_125                (125U)
 #define PMIG_WD_LONGWIN_MILLISEC_DIV_4000               (4000U)

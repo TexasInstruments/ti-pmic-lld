@@ -252,6 +252,7 @@ int32_t Pmic_gpioSetPinFunc(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pi
             status = PMIC_ST_ERR_INV_GPIO_FUNC;
         }
     }
+    
     if (status == PMIC_ST_SUCCESS)
     {
         status = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
@@ -443,7 +444,7 @@ static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle, const ui
     Pmic_GpioInOutCfg_t *pGpioInOutCfg = NULL;
 
     status = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
-    if ((status == PMIC_ST_SUCCESS) && (gpioCfg.pullCtrl > PMIC_GPIO_PULL_UP))
+    if ((PMIC_ST_SUCCESS == status) && (PMIC_GPIO_PULL_UP < gpioCfg.pullCtrl))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -571,7 +572,7 @@ static int32_t Pmic_gpioSetPinDir(Pmic_CoreHandle_t *pPmicCoreHandle, const uint
     Pmic_GpioInOutCfg_t *pGpioInOutCfg = NULL;
 
     status = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
-    if ((status == PMIC_ST_SUCCESS) && (gpioCfg.pinDir > PMIC_GPIO_OUTPUT))
+    if ((PMIC_ST_SUCCESS == status) && (PMIC_GPIO_OUTPUT < gpioCfg.pinDir))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -657,7 +658,7 @@ Pmic_gpioSetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t pin, 
     Pmic_GpioInOutCfg_t *pGpioInOutCfg = NULL;
 
     status = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
-    if ((status == PMIC_ST_SUCCESS) && (gpioCfg.deglitchEnable > PMIC_GPIO_DEGLITCH_ENABLE))
+    if ((PMIC_ST_SUCCESS == status) && (PMIC_GPIO_DEGLITCH_ENABLE < gpioCfg.deglitchEnable))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -749,7 +750,7 @@ Pmic_gpioSetOutputSignalType(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t p
     Pmic_GpioInOutCfg_t *pGpioInOutCfg = NULL;
 
     status = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
-    if ((PMIC_ST_SUCCESS) && (gpioCfg.outputSignalType > PMIC_GPIO_OPEN_DRAIN_OUTPUT))
+    if ((PMIC_ST_SUCCESS == status) && (PMIC_GPIO_OPEN_DRAIN_OUTPUT < gpioCfg.outputSignalType))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }

@@ -1,51 +1,50 @@
 import os
+import platform
 import subprocess
 
 if __name__ == "__main__":
+    success = 0
     kwlpFile = ".kwlp"
     kwpsFile = ".kwps"
-    pconfFile = "..\\pmic_drv\\kw_cfg\\analysis_profile_SA_MISRA_HIS_2022.pconf"
-    mconfFile = "..\\pmic_drv\\kw_cfg\\his_metrics_community.mconf"
-    sconfFile = "..\\pmic_drv\\kw_cfg\\kw_filter.sconf"
     kwReport = "kw_report.xml"
     kwOutput = "kwinject.out"
 
+    if (platform.system() == "Windows"):
+        pconfFile = "..\\pmic_drv\\kw_cfg\\analysis_profile_SA_MISRA_HIS_2022.pconf"
+        mconfFile = "..\\pmic_drv\\kw_cfg\\his_metrics_community.mconf"
+        sconfFile = "..\\pmic_drv\\kw_cfg\\kw_filter.sconf"
+    elif (platform.system() == "Linux"):
+        pconfFile = "../pmic_drv/kw_cfg/analysis_profile_SA_MISRA_HIS_2022.pconf"
+        mconfFile = "../pmic_drv/kw_cfg/his_metrics_community.mconf"
+        sconfFile = "../pmic_drv/kw_cfg/kw_filter.sconf"
+    else:
+        print("Error: unsupported system")
+        exit(-1)    
+
     # If Klocwork local project does not exist...
     if ((not os.path.exists(kwlpFile)) and (not os.path.exists(kwpsFile))):
-        # Create local project, set license host and port
-        subprocess.run(["kwcheck", "create"])
-        subprocess.run(["kwcheck", "set", "license.host=kw-lic.ent.ti.com", "license.port=27005"])
+        try:
+            # Create local project
+            subprocess.run(["kwcheck", "create"])
 
-        # Import .pconf file
-        if (os.path.exists(pconfFile)):
+            # Set license host and port
+            subprocess.run(["kwcheck", "set", "license.host=kw-lic.ent.ti.com", "license.port=27005"])
+
+            # Import .pconf file
             subprocess.run(["kwcheck", "import", pconfFile])
-        else:
-            print(pconfFile + " not found.")
-            exit(-1)
-        
-        # Import .mconf file
-        if (os.path.exists(mconfFile)):
+            
+            # Import .mconf file
             subprocess.run(["kwcheck", "import", mconfFile])
-        else:
-            print(mconfFile + " not found.")
-            exit(-2)
 
-        # Import .sconf file
-        if (os.path.exists(sconfFile)):
+            # Import .sconf file
             subprocess.run(["kwcheck", "import", sconfFile])
-        else:
-            print(sconfFile + " not found.")
-            exit(-3)
+        except Exception as e:
+            print("\"" + str(e) + "\" exception at line number " + str(e.__traceback__.tb_lineno))
+            exit(-1)
     
-    # Delete existing KW report
-    if (os.path.exists(kwReport)):
-        os.remove(kwReport)
-    else:
-        print("Existing " + kwReport + " file not found")
-    
-    # Delete existing KW build specification (i.e., KW output)
-    if (os.path.exists(kwOutput)):
-        os.remove(kwOutput)
-    else:
-        print("Existing " + kwOutput + " file not found")
+    # Delete existing KW report and KW build specification (i.e., KW output)
+    try: os.remove(kwReport)
+    except: print("Could not find an existing " + kwReport + " to delete")
+    try: os.remove(kwOutput)
+    except: print("Could not find an existing " + kwOutput + " to delete")
         

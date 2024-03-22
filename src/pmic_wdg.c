@@ -121,7 +121,7 @@ static uint8_t Pmic_WdgCovertLongWinTimeIntervaltoRegBits(const Pmic_WdgCfg_t wd
     {
         regVal = (uint8_t)(wdgCfg.longWinDuration_ms / PMIG_WD_LONGWIN_MILLISEC_DIV_125);
     }
-    else if (wdgCfg.longWinDuration_ms <= 772000U)
+    else if (wdgCfg.longWinDuration_ms <= PMIG_WD_LONGWIN_77200_MILLISEC)
     {
         baseVal = (uint8_t)(PMIG_WD_LONGWIN_8000_MILLISEC / PMIG_WD_LONGWIN_MILLISEC_DIV_125);
         regVal = (uint8_t)(baseVal + ((uint8_t)((wdgCfg.longWinDuration_ms - PMIG_WD_LONGWIN_8000_MILLISEC) /

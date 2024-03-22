@@ -4021,8 +4021,16 @@ static int32_t Pmic_powerRsrcIntrEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType, pwrResource, &pwrRsrcIndex, &pPwrRsrcRegCfg);
 
     irqNum = pPwrRsrcRegCfg[pwrRsrcIndex].irqNumber;
-    irqNum = irqNum - intrType;
-    status = Pmic_irqMaskIntr(pPmicCoreHandle, irqNum, intrEnable);
+    if(irqNum < intrType)
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        irqNum = irqNum - intrType;
+        status = Pmic_irqMaskIntr(pPmicCoreHandle, irqNum, intrEnable);
+    }
 
     return status;
 }

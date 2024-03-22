@@ -210,35 +210,38 @@ static int32_t tps6522xParamCheck_constPwrRsrcCfg(const Pmic_CoreHandle_t *pPmic
 /**
  *  \brief      This function is used to check whether a voltage is valid for a Buck.
  *
- *  \param      pBuckCfg    [IN]    Array of Buck power resource configuration structs
+ *  \param      buckCfg     [IN]    Buck power resource configuration struct
  *  \param      buckNum     [IN]    Indicates which BUCK the API is working with
  *
  *  \return     Success code if Buck voltage is within range, error code otherwise.
  *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
  */
-static int32_t tps6522xBuckVoltageWithinRangeCheck(const tps6522xBuckCfg_t *pBuckCfg, const uint8_t buckNum)
+static int32_t tps6522xBuckVoltageWithinRangeCheck(const tps6522xBuckCfg_t buckCfg, const uint8_t buckNum)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    switch (buckNum)
+    if (pmic_validParamCheck(buckCfg.validParams, TPS6522X_BUCK_VOLTAGE_MV_VALID))
     {
-        case TPS6522X_REGULATOR_BUCK1:
-            if ((pBuckCfg[buckNum].buckVoltage_mv < 500U) || (pBuckCfg[buckNum].buckVoltage_mv > 3300U))
-            {
-                status = PMIC_ST_ERR_INV_VOLTAGE;
-            }
-            break;
-        case TPS6522X_REGULATOR_BUCK2:
-        case TPS6522X_REGULATOR_BUCK3:
-        case TPS6522X_REGULATOR_BUCK4:
-            if ((pBuckCfg[buckNum].buckVoltage_mv < 500U) || (pBuckCfg[buckNum].buckVoltage_mv > 3300U))
-            {
-                status = PMIC_ST_ERR_INV_VOLTAGE;
-            }
-            break;
-        // Invalid Buck number
-        default:
-            break;
+        switch (buckNum)
+        {
+            case TPS6522X_REGULATOR_BUCK1:
+                if ((buckCfg.buckVoltage_mv < 500U) || (buckCfg.buckVoltage_mv > 3300U))
+                {
+                    status = PMIC_ST_ERR_INV_VOLTAGE;
+                }
+                break;
+            case TPS6522X_REGULATOR_BUCK2:
+            case TPS6522X_REGULATOR_BUCK3:
+            case TPS6522X_REGULATOR_BUCK4:
+                if ((buckCfg.buckVoltage_mv < 500U) || (buckCfg.buckVoltage_mv > 3300U))
+                {
+                    status = PMIC_ST_ERR_INV_VOLTAGE;
+                }
+                break;
+            // Invalid Buck number
+            default:
+                break;
+        }
     }
 
     return status;
@@ -247,168 +250,76 @@ static int32_t tps6522xBuckVoltageWithinRangeCheck(const tps6522xBuckCfg_t *pBuc
 /**
  *  \brief      This function is used to check whether a voltage is valid for a LDO.
  *
- *  \param      pLdoCfg     [IN]    Array of LDO power resource configuration structs
+ *  \param      ldoCfg      [IN]    LDO power resource configuration struct
  *  \param      ldoNum      [IN]    Indicates which LDO the API is working with
  *
  *  \return     Success code if LDO voltage is within range, error code otherwise.
  *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
  */
-static int32_t tps6522xLdoVoltageWithinRangeCheck(const tps6522xLdoCfg_t *pLdoCfg, const uint8_t ldoNum)
+static int32_t tps6522xLdoVoltageWithinRangeCheck(const tps6522xLdoCfg_t ldoCfg, const uint8_t ldoNum)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    switch (ldoNum)
+    if (pmic_validParamCheck(ldoCfg.validParams, TPS6522X_LDO_VOLTAGE_MV_VALID))
     {
-        case TPS6522X_REGULATOR_LDO1:
-            if ((pLdoCfg[ldoNum].ldoVoltage_mv < 1200U) || (pLdoCfg[ldoNum].ldoVoltage_mv > 3300U))
-            {
-                status = PMIC_ST_ERR_INV_VOLTAGE;
-            }
-            break;
-        case TPS6522X_REGULATOR_LDO2:
-        case TPS6522X_REGULATOR_LDO3:
-            if ((pLdoCfg[ldoNum].ldoVoltage_mv < 600U) || (pLdoCfg[ldoNum].ldoVoltage_mv > 3400U))
-            {
-                status = PMIC_ST_ERR_INV_VOLTAGE;
-            }
-            break;
-        // Invalid LDO number
-        default:
-            break;
+        switch (ldoNum)
+        {
+            case TPS6522X_REGULATOR_LDO1:
+                if ((ldoCfg.ldoVoltage_mv < 1200U) || (ldoCfg.ldoVoltage_mv > 3300U))
+                {
+                    status = PMIC_ST_ERR_INV_VOLTAGE;
+                }
+                break;
+            case TPS6522X_REGULATOR_LDO2:
+            case TPS6522X_REGULATOR_LDO3:
+                if ((ldoCfg.ldoVoltage_mv < 600U) || (ldoCfg.ldoVoltage_mv > 3400U))
+                {
+                    status = PMIC_ST_ERR_INV_VOLTAGE;
+                }
+                break;
+            // Invalid LDO number
+            default:
+                break;
+        }
     }
 
     return status;
 }
 
 /**
- *  \brief      This function is used to check whether a voltage is valid for a VMON.
- *
- *  \param      vccaVmonCfg     [IN]    VCCA_VMON/VMONx power resource configuration struct
- *  \param      vmonNum         [IN]    Indicates which VCCA/VMONx the API is working with
- *
- *  \return     Success code if VMON voltage is within range, error code otherwise.
- *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ *  \brief      This function is used as a helper function to check whether the 
+ *              user-specified voltage for VMON1 or VMON2 is valid.
+ * 
+ *  \param      vccaVmonCfg     VCCA/VMON power resource configuration struct
+ *  \param      vmonNum         VMON number (either VMON1 or VMON2)
+ * 
+ *  \return     Success code if voltage is valid for the VMON specified by \p vmonNum 
+ *              error code otherwise. For valid success/error codes, refer to 
+ *              \ref Pmic_ErrorCodes
  */
 static int32_t tps6522xVmonVoltageWithinRangeCheck(const tps6522xVccaVmonCfg_t vccaVmonCfg, const uint8_t vmonNum)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    switch (vmonNum)
+    if ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON1) && 
+        pmic_validParamCheck(vccaVmonCfg.validParams, TPS6522X_VMON1_PG_LEVEL_MV_VALID))
     {
-        case TPS6522X_VOLTAGE_MONITOR_VMON1:
-            if ((vccaVmonCfg.vmon1PgLevel_mv < 500U) || (vccaVmonCfg.vmon1PgLevel_mv > 3340U))
-            {
-                status = PMIC_ST_ERR_INV_VOLTAGE;
-            }
-            break;
-        case TPS6522X_VOLTAGE_MONITOR_VMON2:
-            if ((vccaVmonCfg.vmon2PgLevel_mv < 500U) || (vccaVmonCfg.vmon2PgLevel_mv > 3300U))
-            {
-                status = PMIC_ST_ERR_INV_VOLTAGE;
-            }
-            break;
-        // Invalid VMON number
-        default:
-            break;
-    }
-
-    return status;
-}
-
-/**
- *  \brief      This function is used to check whether voltages are within range for all valid power resources
- *              (valid power resources are governed by validParams).
- *
- *  \param      pwrRsrcCfg      [IN]    TPS6522x power resource configuration struct
- *
- *  \return     Success code if the voltages of all valid power resources are within range, error code otherwise.
- *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
- */
-static int32_t tps6522xVoltageWithinRangeCheck(const tps6522xPwrRsrcCfg_t pwrRsrcCfg)
-{
-    uint8_t iter = 0;
-    uint8_t validParam = 0;
-    int32_t status = PMIC_ST_SUCCESS;
-
-    // For each BUCK...
-    for (iter = 0; iter < TPS6522X_MAX_BUCK_NUM; iter++)
-    {
-        // Calculate BUCK validParam
-        validParam = TPS6522X_BUCK1_VALID + iter;
-
-        // If BUCK validParam and its voltage_mv validParam are set...
-        if (pmic_validParamCheck(pwrRsrcCfg.validParams, validParam) &&
-            pmic_validParamCheck(pwrRsrcCfg.buckCfg[iter].validParams,
-                                 TPS6522X_BUCK_VOLTAGE_MV_VALID))
+        if ((vccaVmonCfg.vmon1PgLevel_mv < 500U) || (vccaVmonCfg.vmon1PgLevel_mv > 3340U))
         {
-            // Check that BUCK voltage is within range
-            status = tps6522xBuckVoltageWithinRangeCheck(pwrRsrcCfg.buckCfg, iter);
-        }
-
-        // If BUCK voltage not within range, break
-        if (status != PMIC_ST_SUCCESS)
-        {
-            break;
+            status = PMIC_ST_ERR_INV_VOLTAGE;
         }
     }
-
-    // If BUCK voltages within range...
-    if (status == PMIC_ST_SUCCESS)
+    else if ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON2) && 
+            pmic_validParamCheck(vccaVmonCfg.validParams, TPS6522X_VMON2_PG_LEVEL_MV_VALID))
     {
-        // For each LDO...
-        for (iter = 0; iter < TPS6522X_MAX_LDO_NUM; iter++)
+        if ((vccaVmonCfg.vmon2PgLevel_mv < 500U) || (vccaVmonCfg.vmon2PgLevel_mv > 3300U))
         {
-            // Calculate LDO validParam
-            validParam = TPS6522X_LDO1_VALID + iter;
-
-            // If LDO validParam and its voltage_mv validParam are set...
-            if (pmic_validParamCheck(pwrRsrcCfg.validParams, validParam) &&
-                pmic_validParamCheck(pwrRsrcCfg.ldoCfg[iter].validParams,
-                                     TPS6522X_LDO_VOLTAGE_MV_VALID))
-            {
-                // Check that LDO voltage is within range
-                status = tps6522xLdoVoltageWithinRangeCheck(pwrRsrcCfg.ldoCfg, iter);
-            }
-
-            // If LDO voltage not within range, break
-            if (status != PMIC_ST_SUCCESS)
-            {
-                break;
-            }
+            status = PMIC_ST_ERR_INV_VOLTAGE;
         }
     }
-
-    // If LDO voltages within range...
-    if (status == PMIC_ST_SUCCESS)
+    else
     {
-        // For each VMONx...
-        for (iter = 0; iter < (TPS6522X_MAX_LDO_NUM - 1U); iter++)
-        {
-            // Calculate VMONx validParam
-            validParam = TPS6522X_VMON1_VALID + iter;
-
-            // If VMONx validParam is set...
-            if (pmic_validParamCheck(pwrRsrcCfg.validParams, validParam))
-            {
-                // Calculate VMONx PG_LEVEL_MV validParam
-                validParam = (iter == TPS6522X_VOLTAGE_MONITOR_VMON1) ?
-                                 TPS6522X_VMON1_PG_LEVEL_MV_VALID :
-                                 TPS6522X_VMON2_PG_LEVEL_MV_VALID;
-
-                // If VMONx PG_LEVEL_MV validParam is set...
-                if (pmic_validParamCheck(pwrRsrcCfg.vccaVmonCfg.validParams, validParam))
-                {
-                    // Check that VMONx voltage is within range
-                    status = tps6522xVmonVoltageWithinRangeCheck(pwrRsrcCfg.vccaVmonCfg, iter);
-                }
-            }
-
-            // If VMONx voltage not within range, break
-            if (status != PMIC_ST_SUCCESS)
-            {
-                break;
-            }
-        }
+        /* Invalid VMON number */
     }
 
     return status;
@@ -1294,21 +1205,15 @@ int32_t tps6522xGetPwrRsrcCfg(Pmic_CoreHandle_t *pPmicCoreHandle, tps6522xPwrRsr
     // Parameter check
     status = tps6522xParamCheck_pPwrRsrcCfg(pPmicCoreHandle, pPwrRsrcCfg);
 
-    // If parameters are valid...
     if (status == PMIC_ST_SUCCESS)
     {
-        // For each BUCK...
+        // For each BUCK, if the validParam for it is set, get the power resource configuration
         for (iter = 0; iter < TPS6522X_MAX_BUCK_NUM; iter++)
         {
-            // Calculate BUCK validParam
             validParam = TPS6522X_BUCK1_VALID + iter;
-
-            // If BUCK validParam is set...
             if (pmic_validParamCheck(pPwrRsrcCfg->validParams, validParam))
             {
-                // Get BUCK's power resource configuration
-                status = tps6522xGetBuckCfg(
-                    pPmicCoreHandle, &(pPwrRsrcCfg->buckCfg[iter]), iter);
+                status = tps6522xGetBuckCfg(pPmicCoreHandle, &(pPwrRsrcCfg->buckCfg[iter]), iter);
             }
 
             // Upon error, break out of loop
@@ -1319,21 +1224,15 @@ int32_t tps6522xGetPwrRsrcCfg(Pmic_CoreHandle_t *pPmicCoreHandle, tps6522xPwrRsr
         }
     }
 
-    // If read of BUCK power resource configuration was successful...
     if (status == PMIC_ST_SUCCESS)
     {
-        // For each LDO...
+        // For each LDO, if the validParam for it is set, get the power resource configuration
         for (iter = 0; iter < TPS6522X_MAX_LDO_NUM; iter++)
         {
-            // Calculate LDO validParam
             validParam = TPS6522X_LDO1_VALID + iter;
-
-            // If LDO validParam is set...
             if (pmic_validParamCheck(pPwrRsrcCfg->validParams, validParam))
             {
-                // Get LDO's power resource configuration
-                status = tps6522xGetLdoCfg(
-                    pPmicCoreHandle, &(pPwrRsrcCfg->ldoCfg[iter]), iter);
+                status = tps6522xGetLdoCfg(pPmicCoreHandle, &(pPwrRsrcCfg->ldoCfg[iter]), iter);
             }
 
             // Upon error, break out of loop
@@ -1344,21 +1243,15 @@ int32_t tps6522xGetPwrRsrcCfg(Pmic_CoreHandle_t *pPmicCoreHandle, tps6522xPwrRsr
         }
     }
 
-    // If read of LDO power resource configuration was successful...
     if (status == PMIC_ST_SUCCESS)
     {
-        // For each VMON...
+        // For each VMON, if the validParam for it is set, get the power resource configuration
         for (iter = 0; iter < TPS6522X_MAX_VOLTAGE_MONITOR_NUM; iter++)
         {
-            // Calculate VCCA/VMON validParam
             validParam = TPS6522X_VMON1_VALID + iter;
-
-            // If VMON validParam is set...
             if (pmic_validParamCheck(pPwrRsrcCfg->validParams, validParam))
             {
-                // Get VMON's power resource configuration
-                status = tps6522xGetVccaVmonCfg(
-                    pPmicCoreHandle, &(pPwrRsrcCfg->vccaVmonCfg), iter);
+                status = tps6522xGetVccaVmonCfg(pPmicCoreHandle, &(pPwrRsrcCfg->vccaVmonCfg), iter);
             }
 
             // Upon error, break out of loop
@@ -1506,7 +1399,7 @@ static void tps6522xBuckConvertVoltage2VsetVal(uint8_t *pBuckVoltage_vset,
             break;
     }
 
-    if ((baseVoltage_mv != 0U) && (voltageStep != 0U))
+    if (voltageStep != 0U)
     {
         *pBuckVoltage_vset = (uint8_t)(baseVoltage_vset + ((buckVoltage_mv - baseVoltage_mv) / voltageStep));
     }
@@ -1608,6 +1501,10 @@ int32_t tps6522xSetBuckCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const tps6522xBuc
     if (buckCfg.validParams == 0U)
     {
         status = PMIC_ST_ERR_INV_PARAM;
+    }
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = tps6522xBuckVoltageWithinRangeCheck(buckCfg, buckNum);
     }
 
     // As we are about to read, start critical section
@@ -1744,9 +1641,7 @@ static void tps6522xLdoConvertVoltage2VsetVal(uint8_t *pLdoVoltage_vset,
         // LDO1 voltage range 1: 1200 mV to 1200 mV in 0 mV steps (VSET: 0x0 to 0xC)
             if (ldoVoltage_mv == 1200U)
             {
-                baseVoltage_vset = 0x0U;
-                baseVoltage_mv = 1200U;
-                voltageStep = 0U;
+                *pLdoVoltage_vset = 0x0U;
             }
             // LDO1 voltage range 2: 1250 mV to 3250 mV in 50 mV steps (VSET: 0xD to 0x35)
             else if ((ldoVoltage_mv >= 1250U) && (ldoVoltage_mv <= 3250U))
@@ -1758,9 +1653,7 @@ static void tps6522xLdoConvertVoltage2VsetVal(uint8_t *pLdoVoltage_vset,
             // LDO1 voltage range 3: 3300 mV to 3300 mV in 0 mV steps (VSET: 0x36 to 0x3F)
             else if (ldoVoltage_mv == 3300U)
             {
-                baseVoltage_vset = 0x36U;
-                baseVoltage_mv = 3300U;
-                voltageStep = 0U;
+                *pLdoVoltage_vset = 0x36U;
             }
             else
             {
@@ -1780,9 +1673,7 @@ static void tps6522xLdoConvertVoltage2VsetVal(uint8_t *pLdoVoltage_vset,
             // LDO2 and LDO3 voltage range 2: 3400 mV to 3400 mV in 0 mV steps (VSET: 0x38 to 0x3F)
             else if (ldoVoltage_mv == 3400U)
             {
-                baseVoltage_vset = 0x38U;
-                baseVoltage_mv = 3400U;
-                voltageStep = 0U;
+                *pLdoVoltage_vset = 0x38U;
             }
             else
             {
@@ -1904,6 +1795,10 @@ int32_t tps6522xSetLdoCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const tps6522xLdoC
     if (ldoCfg.validParams == 0U)
     {
         status = PMIC_ST_ERR_INV_PARAM;
+    }
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = tps6522xLdoVoltageWithinRangeCheck(ldoCfg, ldoNum);
     }
 
     // As we are about to read, start critical section
@@ -2147,7 +2042,7 @@ static void tps6522xVmonConvertVoltage2PgSet(uint8_t *pVmonPgLevel_pgSet,
             break;
     }
 
-    if ((baseVoltage_mv != 0U) && (voltageStep != 0U))
+    if (voltageStep != 0U)
     {
         *pVmonPgLevel_pgSet = (uint8_t)(baseVoltage_vset + ((vmonPgLevel_mv - baseVoltage_mv) / voltageStep));
     }
@@ -2240,7 +2135,11 @@ int32_t tps6522xSetVccaVmonCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
-
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = tps6522xVmonVoltageWithinRangeCheck(vccaVmonCfg, vmonNum);
+    }
+    
     // As we are about to read, start critical section
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
@@ -2337,26 +2236,16 @@ int32_t tps6522xSetPwrRsrcCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 
     // Parameter check
     status = tps6522xParamCheck_constPwrRsrcCfg(pPmicCoreHandle, pwrRsrcCfg);
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = tps6522xVoltageWithinRangeCheck(pwrRsrcCfg);
-    }
 
-    // If parameters are valid...
     if (status == PMIC_ST_SUCCESS)
     {
-        // For each BUCK...
+        // For each BUCK, if the validParam for it is set, set the power resource configuration
         for (iter = 0; iter < TPS6522X_MAX_BUCK_NUM; iter++)
         {
-            // Calculate BUCK validParam
             validParam = TPS6522X_BUCK1_VALID + iter;
-
-            // If BUCK validParam is set...
             if (pmic_validParamCheck(pwrRsrcCfg.validParams, validParam))
             {
-                // Set BUCK's power resource configuration
-                status =
-                    tps6522xSetBuckCfg(pPmicCoreHandle, pwrRsrcCfg.buckCfg[iter], iter);
+                status = tps6522xSetBuckCfg(pPmicCoreHandle, pwrRsrcCfg.buckCfg[iter], iter);
             }
 
             // Upon error, break out of loop
@@ -2367,21 +2256,15 @@ int32_t tps6522xSetPwrRsrcCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
         }
     }
 
-    // If configuration of BUCK power resource was successful...
     if (status == PMIC_ST_SUCCESS)
     {
-        // For each LDO...
+        // For each LDO, if the validParam for it is set, set the power resource configuration
         for (iter = 0; iter < TPS6522X_MAX_LDO_NUM; iter++)
         {
-            // Calculate LDO validParam
             validParam = TPS6522X_LDO1_VALID + iter;
-
-            // If LDO validParam is set...
             if (pmic_validParamCheck(pwrRsrcCfg.validParams, validParam))
             {
-                // Set LDO's power resource configuration
-                status =
-                    tps6522xSetLdoCfg(pPmicCoreHandle, pwrRsrcCfg.ldoCfg[iter], iter);
+                status = tps6522xSetLdoCfg(pPmicCoreHandle, pwrRsrcCfg.ldoCfg[iter], iter);
             }
 
             // Upon error, break out of loop
@@ -2392,21 +2275,15 @@ int32_t tps6522xSetPwrRsrcCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
         }
     }
 
-    // If configuration of LDO power resource was successful...
     if (status == PMIC_ST_SUCCESS)
     {
-        // For each VMON...
+        // For each VMON, if the validParam for it is set, set the power resource configuration
         for (iter = 0; iter < TPS6522X_MAX_VOLTAGE_MONITOR_NUM; iter++)
         {
-            // Calculate VCCA_VMON/VMON validParam
             validParam = TPS6522X_VMON1_VALID + iter;
-
-            // If VCCA_VMON/VMON validParam is set...
             if (pmic_validParamCheck(pwrRsrcCfg.validParams, validParam))
             {
-                // Set VCCA_VMON/VMON's power resource configuration
-                status = tps6522xSetVccaVmonCfg(
-                    pPmicCoreHandle, pwrRsrcCfg.vccaVmonCfg, iter);
+                status = tps6522xSetVccaVmonCfg(pPmicCoreHandle, pwrRsrcCfg.vccaVmonCfg, iter);
             }
 
             // Upon error, break out of loop
