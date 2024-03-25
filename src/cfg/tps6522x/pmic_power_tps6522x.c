@@ -548,14 +548,102 @@ static void Pmic_PowerTps6522xGetRailSel1RegBitFields(tps6522xBuckCfg_t *pBuckCf
     }
 }
 
+/**
+ *  \brief      This function is used to read all PMIC registers relevant to a Buck
+ *              power resource and stores the data into the \p regData parameter. 
+ * 
+ *  \param      pPmicCoreHandle     [IN]    PMIC interface handle
+ *  \param      regData             [OUT]   Array of PMIC register data. For valid indices
+ *                                          of the array, see \ref Tps6522x_buckRegDataIndex
+ *  \param      buckNum             [IN]    Indicates which Buck the API is working with
+ * 
+ *  \return     Success code if all Buck PMIC registers were read and the data has been
+ *              stored in \p regData parameter, error code otherwise. For valid success/error
+ *              codes, refer to \ref Pmic_ErrorCodes
+ */
+static int32_t tps6522xReadBuckRegs(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t *regData, const uint8_t buckNum)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // As we are about to read, start critical section
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    // Read BUCK_CTRL
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle, 
+                                    gTps6522xBuckRegisters[buckNum].buckCtrlRegAddr, 
+                                    &(regData[TPS6522X_BUCK_CTRL_REGDATA_INDEX]));
+
+    // Read BUCK_CONF
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, 
+                                        gTps6522xBuckRegisters[buckNum].buckConfRegAddr, 
+                                        &(regData[TPS6522X_BUCK_CONF_REGDATA_INDEX]));
+    }
+
+    // Read BUCK_VOUT
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, 
+                                        gTps6522xBuckRegisters[buckNum].buckVoutRegAddr, 
+                                        &(regData[TPS6522X_BUCK_VOUT_REGDATA_INDEX]));
+    }
+    
+    // Read BUCK_PG_WINDOW
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, 
+                                        gTps6522xBuckRegisters[buckNum].buckPgWindowRegAddr, 
+                                        &(regData[TPS6522X_BUCK_PG_WINDOW_REGDATA_INDEX]));
+    }
+
+    // Read RAIL_SEL_1
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, 
+                                        gTps6522xBuckRegisters[buckNum].buckRailSelRegAddr, 
+                                        &(regData[TPS6522X_BUCK_RAIL_SEL_REGDATA_INDEX]));
+    }
+
+    // After read, stop critical section
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return status;
+}
+
+/**
+ *  \brief      This function is used to extract relevant Buck information from
+ *              the \p regData parameter - relevant information is governed by 
+ *              the validParams of the \p pBuckCfg parameter. 
+ * 
+ *  \param      pBuckCfg    [IN/OUT]    Buck power resource configuration. The Buck 
+ *                                      information will be stored in this struct
+ *  \param      regData     [IN]        Array of PMIC register data. For valid indices
+ *                                      of the array, see \ref Tps6522x_buckRegDataIndex
+ *  \param      buckNum     [IN]        Indicates which Buck the API is working with
+ */
+static inline void tps6522xGetBuckInfo(tps6522xBuckCfg_t *pBuckCfg, const uint8_t *regData, const uint8_t buckNum)
+{
+    // BUCK_CTRL register
+    tps6522xGetBuckCtrlRegBitFields(pBuckCfg, regData[TPS6522X_BUCK_CTRL_REGDATA_INDEX]);
+
+    // BUCK_CONF register
+    tps6522xGetBuckConfRegBitFields(pBuckCfg, regData[TPS6522X_BUCK_CONF_REGDATA_INDEX]);
+
+    // BUCK_VOUT register
+    tps6522xGetBuckVoutRegBitFields(pBuckCfg, regData[TPS6522X_BUCK_VOUT_REGDATA_INDEX], buckNum);
+
+    // BUCK_PG_WINDOW register
+    tps6522xGetBuckPgWindowRegBitFields(pBuckCfg, regData[TPS6522X_BUCK_PG_WINDOW_REGDATA_INDEX]);
+
+    // RAIL_SEL_1 register
+    Pmic_PowerTps6522xGetRailSel1RegBitFields(pBuckCfg, regData[TPS6522X_BUCK_RAIL_SEL_REGDATA_INDEX], buckNum);
+}
+
 int32_t tps6522xGetBuckCfg(Pmic_CoreHandle_t *pPmicCoreHandle, tps6522xBuckCfg_t *pBuckCfg, const uint8_t buckNum)
 {
-    uint8_t buckCtrlRegData     = 0;
-    uint8_t buckConfRegData     = 0;
-    uint8_t buckVoutRegData     = 0;
-    uint8_t buckPgWindowRegData = 0;
-    uint8_t buckRailSelRegData  = 0;
-    int32_t status              = PMIC_ST_SUCCESS;
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData[TPS6522X_BUCK_REGDATA_NUM_INDICES] = {0U};
 
     // Parameter check
     if (pBuckCfg == NULL)
@@ -567,57 +655,17 @@ int32_t tps6522xGetBuckCfg(Pmic_CoreHandle_t *pPmicCoreHandle, tps6522xBuckCfg_t
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    // As we are about to read, start critical section
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    // Read all registers pertaining to the BUCK resource
+    // Read all registers that are relevant to the BUCK power resource
     if (status == PMIC_ST_SUCCESS)
     {
-        status =
-            Pmic_commIntf_recvByte(pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckCtrlRegAddr, &buckCtrlRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status =
-            Pmic_commIntf_recvByte(pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckConfRegAddr, &buckConfRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status =
-            Pmic_commIntf_recvByte(pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckVoutRegAddr, &buckVoutRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckPgWindowRegAddr, &buckPgWindowRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckRailSelRegAddr, &buckRailSelRegData);
+        status = tps6522xReadBuckRegs(pPmicCoreHandle, regData, buckNum);
     }
 
-    // After read, stop critical section
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    // Get the desired bit fields from the registers that were read
-    // (desired bit fields are governed by validParams)
+    // Get the desired information (bit fields) from the registers 
+    // that were read (desired bit fields are governed by validParams)
     if (status == PMIC_ST_SUCCESS)
     {
-        // BUCK_CTRL register
-        tps6522xGetBuckCtrlRegBitFields(pBuckCfg, buckCtrlRegData);
-
-        // BUCK_CONF register
-        tps6522xGetBuckConfRegBitFields(pBuckCfg, buckConfRegData);
-
-        // BUCK_VOUT register
-        tps6522xGetBuckVoutRegBitFields(pBuckCfg, buckVoutRegData, buckNum);
-
-        // BUCK_PG_WINDOW register
-        tps6522xGetBuckPgWindowRegBitFields(pBuckCfg, buckPgWindowRegData);
-
-        // RAIL_SEL_1 register
-        Pmic_PowerTps6522xGetRailSel1RegBitFields(pBuckCfg, buckRailSelRegData, buckNum);
+        tps6522xGetBuckInfo(pBuckCfg, regData, buckNum);
     }
 
     return status;
@@ -806,13 +854,91 @@ static void tps6522xGetRailSel2RegBitFields(tps6522xLdoCfg_t *pLdoCfg,
     }
 }
 
+/**
+ *  \brief      This function is used to read all PMIC registers relevant to a LDO
+ *              power resource and stores the data into the \p regData parameter. 
+ *
+ *  \param      pPmicCoreHandle     [IN]        PMIC interface handle
+ *  \param      regData             [OUT]       Array of PMIC register data. For valid indices
+ *                                              of the array, see \ref Tps6522x_ldoRegDataIndex
+ *  \param      ldoNum              [IN]        Indicates which LDO the API is working with 
+ * 
+ *  \return     Success code if all LDO PMIC registers were read and the data has been
+ *              stored in \p regData parameter, error code otherwise. For valid success/error
+ *              codes, refer to \ref Pmic_ErrorCodes
+ */
+static int32_t tps6522xReadLdoRegs(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t *regData, const uint8_t ldoNum)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // As we are about to read, start critical section
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    // Read LDO_CTRL
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle, 
+                                    gTps6522xLdoRegisters[ldoNum].ldoCtrlRegAddr, 
+                                    &(regData[TPS6522X_LDO_CTRL_REGDATA_INDEX]));
+
+    // Read LDO_VOUT
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, 
+                                        gTps6522xLdoRegisters[ldoNum].ldoVoutRegAddr, 
+                                        &(regData[TPS6522X_LDO_VOUT_REGDATA_INDEX]));
+    }
+
+    // Read LDO_PG_WINDOW
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, 
+                                        gTps6522xLdoRegisters[ldoNum].ldoPgWindowRegAddr, 
+                                        &(regData[TPS6522X_LDO_PG_WINDOW_REGDATA_INDEX]));
+    }
+    
+    // Read RAIL_SEL_2
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, 
+                                        gTps6522xLdoRegisters[ldoNum].ldoRailSelRegAddr, 
+                                        &(regData[TPS6522X_LDO_RAIL_SEL_REGDATA_INDEX]));
+    }
+
+    // After read, stop critical section
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return status;
+}
+
+/**
+ *  \brief      This function is used to extract relevant LDO information from
+ *              the \p regData parameter - relevant information is governed by 
+ *              the validParams of the \p pLdoCfg parameter. 
+ * 
+ *  \param      pLdoCfg     [IN/OUT]    LDO power resource configuration. The LDO
+ *                                      information will be stored in this struct
+ *  \param      regData     [IN]        Array of PMIC register data. For valid indices
+ *                                      of the array, see \ref Tps6522x_LdoRegDataIndex
+ *  \param      ldoNum      [IN]        Indicates which Buck the API is working with 
+ */
+static inline void tps6522xGetLdoInfo(tps6522xLdoCfg_t *pLdoCfg, const uint8_t *regData, const uint8_t ldoNum)
+{
+    // LDO_CTRL register
+    tps6522xGetLdoCtrlRegBitFields(pLdoCfg, regData[TPS6522X_LDO_CTRL_REGDATA_INDEX]);
+
+    // LDO_VOUT register
+    tps6522xGetLdoVoutRegBitFields(pLdoCfg, regData[TPS6522X_LDO_VOUT_REGDATA_INDEX], ldoNum);
+
+    // LDO_PG_WINDOW register
+    tps6522xGetLdoPgWindowRegBitFields(pLdoCfg, regData[TPS6522X_LDO_PG_WINDOW_REGDATA_INDEX]);
+
+    // RAIL_SEL_2 register
+    tps6522xGetRailSel2RegBitFields(pLdoCfg, regData[TPS6522X_LDO_RAIL_SEL_REGDATA_INDEX], ldoNum);
+}
+
 int32_t tps6522xGetLdoCfg(Pmic_CoreHandle_t *pPmicCoreHandle, tps6522xLdoCfg_t *pLdoCfg, const uint8_t ldoNum)
 {
-    uint8_t ldoCtrlRegData      = 0;
-    uint8_t ldoVoutRegData      = 0;
-    uint8_t ldoPgWindowRegData  = 0;
-    uint8_t ldoRailSelRegData   = 0;
-    int32_t status              = PMIC_ST_SUCCESS;
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData[TPS6522X_LDO_REGDATA_NUM_INDICES] = {0};
 
     // Parameter check
     if (pLdoCfg == NULL)
@@ -824,47 +950,17 @@ int32_t tps6522xGetLdoCfg(Pmic_CoreHandle_t *pPmicCoreHandle, tps6522xLdoCfg_t *
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    // As we are about to read, start critical section
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    // Read all registers pertaining to the LDO resource
+    // Read all registers that are relevant to the LDO power resource
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, gTps6522xLdoRegisters[ldoNum].ldoCtrlRegAddr, &ldoCtrlRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, gTps6522xLdoRegisters[ldoNum].ldoVoutRegAddr, &ldoVoutRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, gTps6522xLdoRegisters[ldoNum].ldoPgWindowRegAddr, &ldoPgWindowRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, gTps6522xLdoRegisters[ldoNum].ldoRailSelRegAddr, &ldoRailSelRegData);
+        status = tps6522xReadLdoRegs(pPmicCoreHandle, regData, ldoNum);
     }
 
-    // After read, stop critical section
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    // Get the desired bit fields from the registers that were read
-    // (desired bit fields are governed by validParams)
+    // Get the desired information (bit fields) from the registers 
+    // that were read (desired bit fields are governed by validParams)
     if (status == PMIC_ST_SUCCESS)
     {
-        // LDO_CTRL register
-        tps6522xGetLdoCtrlRegBitFields(pLdoCfg, ldoCtrlRegData);
-
-        // LDO_VOUT register
-        tps6522xGetLdoVoutRegBitFields(pLdoCfg, ldoVoutRegData, ldoNum);
-
-        // LDO_PG_WINDOW register
-        tps6522xGetLdoPgWindowRegBitFields(pLdoCfg, ldoPgWindowRegData);
-
-        // RAIL_SEL_2 register
-        tps6522xGetRailSel2RegBitFields(pLdoCfg, ldoRailSelRegData, ldoNum);
+        tps6522xGetLdoInfo(pLdoCfg, regData, ldoNum);
     }
 
     return status;
@@ -1115,16 +1211,106 @@ static void tps6522xGetRailSel3RegBitFields(tps6522xVccaVmonCfg_t *pVccaVmonPwrR
     }
 }
 
+/**
+ *  \brief      This function is used to read all PMIC registers relevant to a 
+ *              VCCA_VMON/VMONx power resource and stores the data into the 
+ *              \p regData parameter. 
+ * 
+ *  \param      pPmicCoreHandle     [IN]    PMIC interface handle
+ *  \param      regData             [OUT]   Array of PMIC register data. For valid indices
+ *                                          of the array, see \ref Tps6522x_vccaVmonRegDataIndex
+ *  \param      vmonNum             [IN]    Indicates which VMON the API is working with
+ * 
+ *  \return     Success code if all VCCA_VMON/VMONx PMIC registers were read and the data 
+ *              has been stored in \p regData parameter, error code otherwise. For valid 
+ *              success/error codes, refer to \ref Pmic_ErrorCodes
+ */
+static int32_t tps6522xReadVccaVmonRegs(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t *regData, const uint8_t vmonNum)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    // Read VCCA_VMON_CTRL
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle, 
+                                    gTps6522xVccaVmonRegisters[vmonNum].vccaVmonCtrlRegAddr, 
+                                    &(regData[TPS6522X_VCCA_VMON_CTRL_REGDATA_INDEX]));
+
+    // Read VCCA_PG_WINDOW 
+    if ((status == PMIC_ST_SUCCESS) && (vmonNum == TPS6522X_VOLTAGE_MONITOR_VCCA_VMON))
+    {
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, 
+                                        gTps6522xVccaVmonRegisters[vmonNum].vccaPgWindowRegAddr, 
+                                        &(regData[TPS6522X_VCCA_PG_WINDOW_REGDATA_INDEX]));
+    }
+
+    // Read VMON_PG_WINDOW
+    if ((status == PMIC_ST_SUCCESS) && ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON1) ||
+                                        (vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON2)))
+    {
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, 
+                                        gTps6522xVccaVmonRegisters[vmonNum].vmonPgWindowRegAddr,
+                                        &(regData[TPS6522X_VMON_PG_WINDOW_REGDATA_INDEX]));
+    }
+
+    // Read VMON_PG_LEVEL
+    if ((status == PMIC_ST_SUCCESS) && ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON1) ||
+                                        (vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON2)))
+    {
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, 
+                                        gTps6522xVccaVmonRegisters[vmonNum].vmonPgLevelRegAddr,
+                                        &(regData[TPS6522X_VMON_PG_LEVEL_REGDATA_INDEX]));
+    }
+    
+    // Read RAIL_SEL_3
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, 
+                                        gTps6522xVccaVmonRegisters[vmonNum].vccaVmonRailSelRegAddr, 
+                                        &(regData[TPS6522X_VCCA_VMON_RAIL_SEL_REGDATA_INDEX]));
+    }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return status;
+}
+
+/**
+ *  \brief      This function is used to extract relevant VCCA_VMON/VMONx information 
+ *              from the \p regData parameter - relevant information is governed by 
+ *              the validParams of the \p pVccaVmonPwrRsrcCfg parameter. 
+ * 
+ *  \param      pVccaVmonPwrRsrcCfg     [IN/OUT]        VCCA_VMON/VMONx power resource configuration. The  
+ *                                                      VMON information will be stored in this struct
+ *  \param      regData                 [IN]            Array of PMIC register data. For valid indices
+ *                                                      of the array, see \ref Tps6522x_vccaVmonRegDataIndex
+ *  \param      vmonNum                 [IN]            Indicates which VMON the API is working with
+ */
+static inline void tps6522xGetVccaVmonInfo(
+    tps6522xVccaVmonCfg_t *pVccaVmonPwrRsrcCfg, const uint8_t *regData, const uint8_t vmonNum)
+{
+    // VCCA_VMON_CTRL
+    tps6522xGetVccaVmonCtrlBitFields(pVccaVmonPwrRsrcCfg, regData[TPS6522X_VCCA_VMON_CTRL_REGDATA_INDEX], vmonNum);
+
+    // VCCA_PG_WINDOW
+    tps6522xGetVccaPgWindowBitFields(pVccaVmonPwrRsrcCfg, regData[TPS6522X_VCCA_PG_WINDOW_REGDATA_INDEX]);
+
+    // VMON_PG_WINDOW
+    tps6522xGetVmonPgWindowBitFields(pVccaVmonPwrRsrcCfg, regData[TPS6522X_VMON_PG_WINDOW_REGDATA_INDEX], vmonNum);
+
+    // VMON_PG_LEVEL
+    tps6522xGetVmonPgLevelBitFields(pVccaVmonPwrRsrcCfg, regData[TPS6522X_VMON_PG_LEVEL_REGDATA_INDEX], vmonNum);
+
+    // RAIL_SEL_3
+    tps6522xGetRailSel3RegBitFields(pVccaVmonPwrRsrcCfg, regData[TPS6522X_VCCA_VMON_RAIL_SEL_REGDATA_INDEX], vmonNum);
+}
+
 int32_t tps6522xGetVccaVmonCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                tps6522xVccaVmonCfg_t *pVccaVmonPwrRsrcCfg,
                                const uint8_t vmonNum)
 {
-    uint8_t vccaVmonCtrlRegData     = 0;
-    uint8_t vccaPgWindowRegData     = 0;
-    uint8_t vmonPgWindowRegData     = 0;
-    uint8_t vmonPgLevelRegData      = 0;
-    uint8_t vccaVmonRailSelRegData  = 0;
-    int32_t status                  = PMIC_ST_SUCCESS;
+    uint8_t regData[TPS6522X_VCCA_VMON_REGDATA_NUM_INDICES] = {0};
+    int32_t status = PMIC_ST_SUCCESS;
 
     // Parameter check
     if (pVccaVmonPwrRsrcCfg == NULL)
@@ -1136,130 +1322,159 @@ int32_t tps6522xGetVccaVmonCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    // As we are about to read, start critical section
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
+    // Read all registers relevant to VCCA_VMON, VMON1, and VMON2
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vccaVmonCtrlRegAddr, &vccaVmonCtrlRegData);
+        status = tps6522xReadVccaVmonRegs(pPmicCoreHandle, regData, vmonNum);
     }
-    if ((status == PMIC_ST_SUCCESS) && (vmonNum == TPS6522X_VOLTAGE_MONITOR_VCCA_VMON))
-    {
-        status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vccaPgWindowRegAddr, &vccaPgWindowRegData);
-    }
-    if ((status == PMIC_ST_SUCCESS) && ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON1) ||
-                                        (vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON2)))
-    {
-        status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vmonPgWindowRegAddr, &vmonPgWindowRegData);
-    }
-    if ((status == PMIC_ST_SUCCESS) && ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON1) ||
-                                        (vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON2)))
-    {
-        status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vmonPgLevelRegAddr, &vmonPgLevelRegData);
-    }
+
+    // Get the desired information (bit fields) from the registers 
+    // that were read (desired bit fields are governed by validParams)
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vccaVmonRailSelRegAddr, &vccaVmonRailSelRegData);
+        tps6522xGetVccaVmonInfo(pVccaVmonPwrRsrcCfg, regData, vmonNum);
     }
 
-    // After read, stop critical section
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+    return status;
+}
 
-    // Get the desired bit fields from the registers that were read
-    // (desired bit fields are governed by validParams)
-    if (status == PMIC_ST_SUCCESS)
+/**
+ *  \brief      This function is used to get the configurations of valid Bucks. 
+ *              Valid Bucks are specified by the end-user via the validParams 
+ *              of the \p pPwrRsrcCfg parameter.
+ * 
+ *  \param      pPmicCoreHandle     [IN]        PMIC interface handle
+ *  \param      pPwrRsrcCfg         [OUT]       Power resource configuration struct
+ *                                              in which all valid Buck configurations
+ *                                              will be stored in
+ * 
+ *  \return     Success code if the configurations of valid Bucks were obtained
+ *              and stored in the \p pPwrRsrcCfg parameter, error code otherwise. 
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
+static int32_t tps6522xGetAllValidBuckCfg(Pmic_CoreHandle_t *pPmicCoreHandle, tps6522xPwrRsrcCfg_t *pPwrRsrcCfg)
+{
+    uint8_t iter = 0;
+    uint8_t validParam = 0;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // For each BUCK, if the validParam for it is set, get the power resource configuration
+    for (iter = 0; iter < TPS6522X_MAX_BUCK_NUM; iter++)
     {
-        // VCCA_VMON_CTRL
-        tps6522xGetVccaVmonCtrlBitFields(pVccaVmonPwrRsrcCfg, vccaVmonCtrlRegData, vmonNum);
+        validParam = TPS6522X_BUCK1_VALID + iter;
+        if (pmic_validParamCheck(pPwrRsrcCfg->validParams, validParam))
+        {
+            status = tps6522xGetBuckCfg(pPmicCoreHandle, &(pPwrRsrcCfg->buckCfg[iter]), iter);
+        }
 
-        // VCCA_PG_WINDOW
-        tps6522xGetVccaPgWindowBitFields(pVccaVmonPwrRsrcCfg, vccaPgWindowRegData);
-
-        // VMON_PG_WINDOW
-        tps6522xGetVmonPgWindowBitFields(pVccaVmonPwrRsrcCfg, vmonPgWindowRegData, vmonNum);
-
-        // VMON_PG_LEVEL
-        tps6522xGetVmonPgLevelBitFields(pVccaVmonPwrRsrcCfg, vmonPgLevelRegData, vmonNum);
-
-        // RAIL_SEL_3
-        tps6522xGetRailSel3RegBitFields(pVccaVmonPwrRsrcCfg, vccaVmonRailSelRegData, vmonNum);
+        // Upon error, break out of loop
+        if (status != PMIC_ST_SUCCESS)
+        {
+            break;
+        }
     }
 
-    // After read, stop critical section
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+    return status;
+}
+
+/**
+ *  \brief      This function is used to get the configurations of valid LDOs. 
+ *              Valid LDOs are specified by the end-user via the validParams 
+ *              of the \p pPwrRsrcCfg parameter.
+ * 
+ *  \param      pPmicCoreHandle     [IN]        PMIC interface handle
+ *  \param      pPwrRsrcCfg         [OUT]       Power resource configuration struct
+ *                                              in which all valid LDO configurations
+ *                                              will be stored in
+ * 
+ *  \return     Success code if the configurations of valid LDOs were obtained
+ *              and stored in the \p pPwrRsrcCfg parameter, error code otherwise. 
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
+static int32_t tps6522xGetAllValidLdoCfg(Pmic_CoreHandle_t *pPmicCoreHandle, tps6522xPwrRsrcCfg_t *pPwrRsrcCfg)
+{
+    uint8_t iter = 0;
+    uint8_t validParam = 0;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // For each LDO, if the validParam for it is set, get the power resource configuration
+    for (iter = 0; iter < TPS6522X_MAX_LDO_NUM; iter++)
+    {
+        validParam = TPS6522X_LDO1_VALID + iter;
+        if (pmic_validParamCheck(pPwrRsrcCfg->validParams, validParam))
+        {
+            status = tps6522xGetLdoCfg(pPmicCoreHandle, &(pPwrRsrcCfg->ldoCfg[iter]), iter);
+        }
+
+        // Upon error, break out of loop
+        if (status != PMIC_ST_SUCCESS)
+        {
+            break;
+        }
+    }
+
+    return status;
+}
+
+/**
+ *  \brief      This function is used to get the configurations of valid VMONs
+ *              (VCCA_VMON/VMONx). Valid VMONs are specified by the end-user via
+ *              the validParams of the \p pPwrRsrcCfg parameter.
+ * 
+ *  \param      pPmicCoreHandle     [IN]        PMIC interface handle
+ *  \param      pPwrRsrcCfg         [OUT]       Power resource configuration struct
+ *                                              in which all valid VMON configurations
+ *                                              will be stored in
+ * 
+ *  \return     Success code if the configurations of valid VMONs were obtained
+ *              and stored in the \p pPwrRsrcCfg parameter, error code otherwise. 
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
+static int32_t tps6522xGetAllValidVccaVmonCfg(Pmic_CoreHandle_t *pPmicCoreHandle, 
+                                                    tps6522xPwrRsrcCfg_t *pPwrRsrcCfg)
+{
+    uint8_t iter = 0;
+    uint8_t validParam = 0;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // For each VMON, if the validParam for it is set, get the power resource configuration
+    for (iter = 0; iter < TPS6522X_MAX_VOLTAGE_MONITOR_NUM; iter++)
+    {
+        validParam = TPS6522X_VMON1_VALID + iter;
+        if (pmic_validParamCheck(pPwrRsrcCfg->validParams, validParam))
+        {
+            status = tps6522xGetVccaVmonCfg(pPmicCoreHandle, &(pPwrRsrcCfg->vccaVmonCfg), iter);
+        }
+
+        // Upon error, break out of loop
+        if (status != PMIC_ST_SUCCESS)
+        {
+            break;
+        }
+    }
 
     return status;
 }
 
 int32_t tps6522xGetPwrRsrcCfg(Pmic_CoreHandle_t *pPmicCoreHandle, tps6522xPwrRsrcCfg_t *pPwrRsrcCfg)
 {
-    uint8_t  iter = 0;
-    uint8_t validParam = 0;
-    int32_t  status = PMIC_ST_SUCCESS;
+    int32_t status = PMIC_ST_SUCCESS;
 
-    // Parameter check
     status = tps6522xParamCheck_pPwrRsrcCfg(pPmicCoreHandle, pPwrRsrcCfg);
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // For each BUCK, if the validParam for it is set, get the power resource configuration
-        for (iter = 0; iter < TPS6522X_MAX_BUCK_NUM; iter++)
-        {
-            validParam = TPS6522X_BUCK1_VALID + iter;
-            if (pmic_validParamCheck(pPwrRsrcCfg->validParams, validParam))
-            {
-                status = tps6522xGetBuckCfg(pPmicCoreHandle, &(pPwrRsrcCfg->buckCfg[iter]), iter);
-            }
-
-            // Upon error, break out of loop
-            if (status != PMIC_ST_SUCCESS)
-            {
-                break;
-            }
-        }
+        status = tps6522xGetAllValidBuckCfg(pPmicCoreHandle, pPwrRsrcCfg);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // For each LDO, if the validParam for it is set, get the power resource configuration
-        for (iter = 0; iter < TPS6522X_MAX_LDO_NUM; iter++)
-        {
-            validParam = TPS6522X_LDO1_VALID + iter;
-            if (pmic_validParamCheck(pPwrRsrcCfg->validParams, validParam))
-            {
-                status = tps6522xGetLdoCfg(pPmicCoreHandle, &(pPwrRsrcCfg->ldoCfg[iter]), iter);
-            }
-
-            // Upon error, break out of loop
-            if (status != PMIC_ST_SUCCESS)
-            {
-                break;
-            }
-        }
+        status = tps6522xGetAllValidLdoCfg(pPmicCoreHandle, pPwrRsrcCfg);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // For each VMON, if the validParam for it is set, get the power resource configuration
-        for (iter = 0; iter < TPS6522X_MAX_VOLTAGE_MONITOR_NUM; iter++)
-        {
-            validParam = TPS6522X_VMON1_VALID + iter;
-            if (pmic_validParamCheck(pPwrRsrcCfg->validParams, validParam))
-            {
-                status = tps6522xGetVccaVmonCfg(pPmicCoreHandle, &(pPwrRsrcCfg->vccaVmonCfg), iter);
-            }
-
-            // Upon error, break out of loop
-            if (status != PMIC_ST_SUCCESS)
-            {
-                break;
-            }
-        }
+        status = tps6522xGetAllValidVccaVmonCfg(pPmicCoreHandle, pPwrRsrcCfg);
     }
 
     return status;
@@ -1488,14 +1703,97 @@ static void tps6522xSetRailSel1RegBitFields(const tps6522xBuckCfg_t buckCfg,
     }
 }
 
+/**
+ *  \brief      This function is used to modify all Buck data supplied by the 
+ *              \p regData parameter. \p regData will be modified in accordance
+ *              to the struct members of the \p buckCfg parameter. 
+ * 
+ *  \param      buckCfg     [IN]    Buck power resource configuration struct
+ *  \param      regData     [OUT]   Array of modified Buck data. For valid indices,
+ *                                  refer to \ref Tps6522x_buckRegDataIndex
+ *  \param      buckNum     [IN]    Indicates which Buck the API is working with 
+ */
+static inline void tps6522xModifyBuckData(const tps6522xBuckCfg_t buckCfg, uint8_t *regData, const uint8_t buckNum)
+{
+    // BUCK_CTRL register
+    tps6522xSetBuckCtrlRegBitFields(buckCfg, &(regData[TPS6522X_BUCK_CTRL_REGDATA_INDEX]));
+
+    // BUCK_CONF register
+    tps6522xSetBuckConfRegBitFields(buckCfg, &(regData[TPS6522X_BUCK_CONF_REGDATA_INDEX]));
+
+    // BUCK_VOUT register
+    tps6522xSetBuckVoutRegBitFields(buckCfg, &(regData[TPS6522X_BUCK_VOUT_REGDATA_INDEX]), buckNum);
+
+    // BUCK_PG_WINDOW register
+    tps6522xSetBuckPgWindowRegBitFields(buckCfg, &(regData[TPS6522X_BUCK_PG_WINDOW_REGDATA_INDEX]));
+
+    // RAIL_SEL_1 register
+    tps6522xSetRailSel1RegBitFields(buckCfg, &(regData[TPS6522X_BUCK_RAIL_SEL_REGDATA_INDEX]), buckNum);
+}
+
+/**
+ *  \brief      This function is used to write Buck register data \p regData to the PMIC. 
+ * 
+ *  \param      pPmicCoreHandle     [IN]    PMIC interface handle
+ *  \param      regData             [IN]    Register data to be written to the PMIC. 
+ *                                          For valid indices, refer to \ref Tps6522x_buckRegDataIndex
+ *  \param      buckNum             [IN]    Indicates which Buck the API is working with
+ * 
+ *  \return     Success code if the data was written to the PMIC, error code otherwise.
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
+static int32_t tps6522xWriteBuckData(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t *regData, const uint8_t buckNum)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    // Write to BUCK_CONF
+    status = Pmic_commIntf_sendByte(pPmicCoreHandle, 
+                                    gTps6522xBuckRegisters[buckNum].buckConfRegAddr, 
+                                    regData[TPS6522X_BUCK_CONF_REGDATA_INDEX]);
+
+    // Write to BUCK_VOUT
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, 
+                                        gTps6522xBuckRegisters[buckNum].buckVoutRegAddr, 
+                                        regData[TPS6522X_BUCK_VOUT_REGDATA_INDEX]);
+    }
+
+    // Write to BUCK_PG_WINDOW
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, 
+                                        gTps6522xBuckRegisters[buckNum].buckPgWindowRegAddr, 
+                                        regData[TPS6522X_BUCK_PG_WINDOW_REGDATA_INDEX]);
+    }
+
+    // Write to RAIL_SEL_1
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, 
+                                        gTps6522xBuckRegisters[buckNum].buckRailSelRegAddr, 
+                                        regData[TPS6522X_BUCK_RAIL_SEL_REGDATA_INDEX]);
+    }
+
+    // Write to BUCK_CTRL
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, 
+                                        gTps6522xBuckRegisters[buckNum].buckCtrlRegAddr, 
+                                        regData[TPS6522X_BUCK_CTRL_REGDATA_INDEX]);
+    }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return status;
+}
+
 int32_t tps6522xSetBuckCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const tps6522xBuckCfg_t buckCfg, const uint8_t buckNum)
 {
-    uint8_t buckCtrlRegData     = 0;
-    uint8_t buckConfRegData     = 0;
-    uint8_t buckVoutRegData     = 0;
-    uint8_t buckPgWindowRegData = 0;
-    uint8_t buckRailSelRegData  = 0;
-    int32_t status              = PMIC_ST_SUCCESS;
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData[TPS6522X_BUCK_REGDATA_NUM_INDICES] = {0U};
 
     // Parameter check
     if (buckCfg.validParams == 0U)
@@ -1507,85 +1805,24 @@ int32_t tps6522xSetBuckCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const tps6522xBuc
         status = tps6522xBuckVoltageWithinRangeCheck(buckCfg, buckNum);
     }
 
-    // As we are about to read, start critical section
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
     // Read all registers pertaining to the BUCK resource
     if (status == PMIC_ST_SUCCESS)
     {
-        status =
-            Pmic_commIntf_recvByte(pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckCtrlRegAddr, &buckCtrlRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status =
-            Pmic_commIntf_recvByte(pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckConfRegAddr, &buckConfRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status =
-            Pmic_commIntf_recvByte(pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckVoutRegAddr, &buckVoutRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckPgWindowRegAddr, &buckPgWindowRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckRailSelRegAddr, &buckRailSelRegData);
+        status = tps6522xReadBuckRegs(pPmicCoreHandle, regData, buckNum);
     }
 
-    // modify the desired bit fields of the registers that were read
-    // (desired bit fields are governed by validParams)
+    // modify the desired bit fields of the registers that were 
+    // read (desired bit fields are governed by validParams)
     if (status == PMIC_ST_SUCCESS)
     {
-        // BUCK_CTRL register
-        tps6522xSetBuckCtrlRegBitFields(buckCfg, &buckCtrlRegData);
-
-        // BUCK_CONF register
-        tps6522xSetBuckConfRegBitFields(buckCfg, &buckConfRegData);
-
-        // BUCK_VOUT register
-        tps6522xSetBuckVoutRegBitFields(buckCfg, &buckVoutRegData, buckNum);
-
-        // BUCK_PG_WINDOW register
-        tps6522xSetBuckPgWindowRegBitFields(buckCfg, &buckPgWindowRegData);
-
-        // RAIL_SEL_1 register
-        tps6522xSetRailSel1RegBitFields(buckCfg, &buckRailSelRegData, buckNum);
+        tps6522xModifyBuckData(buckCfg, regData, buckNum);
     }
 
     // After modification of register bit fields, write values back to PMIC
     if (status == PMIC_ST_SUCCESS)
     {
-        status =
-            Pmic_commIntf_sendByte(pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckConfRegAddr, buckConfRegData);
+        status = tps6522xWriteBuckData(pPmicCoreHandle, regData, buckNum);
     }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status =
-            Pmic_commIntf_sendByte(pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckVoutRegAddr, buckVoutRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_commIntf_sendByte(
-            pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckPgWindowRegAddr, buckPgWindowRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_commIntf_sendByte(
-            pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckRailSelRegAddr, buckRailSelRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status =
-            Pmic_commIntf_sendByte(pPmicCoreHandle, gTps6522xBuckRegisters[buckNum].buckCtrlRegAddr, buckCtrlRegData);
-    }
-
-    // After read-modify-write, stop critical section
-    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return status;
 }
@@ -1783,13 +2020,86 @@ static void tps6522xSetRailSel2RegBitFields(const tps6522xLdoCfg_t ldoCfg, uint8
     }
 }
 
+/**
+ *  \brief      This function is used to modify all LDO data supplied by the 
+ *              \p regData parameter. \p regData will be modified in accordance
+ *              to the struct members of the \p ldoCfg parameter. 
+ * 
+ *  \param      ldoCfg      [IN]    LDO power resource configuration struct
+ *  \param      regData     [OUT]   Array of modified LDO data. For valid indices,
+ *                                  refer to \ref Tps6522x_ldoRegDataIndex
+ *  \param      ldoNum      [IN]    Indicates which LDO the API is working with 
+ */
+static inline void tps6522xModifyLdoData(const tps6522xLdoCfg_t ldoCfg, uint8_t *regData, const uint8_t ldoNum)
+{
+    // LDO_CTRL register
+    tps6522xSetLdoCtrlRegBitFields(ldoCfg, &(regData[TPS6522X_LDO_CTRL_REGDATA_INDEX]));
+
+    // LDO_VOUT register
+    tps6522xSetLdoVoutRegBitFields(ldoCfg, &(regData[TPS6522X_LDO_VOUT_REGDATA_INDEX]), ldoNum);
+
+    // LDO_PG_WINDOW register
+    tps6522xSetLdoPgWindowRegBitFields(ldoCfg, &(regData[TPS6522X_LDO_PG_WINDOW_REGDATA_INDEX]));
+
+    // RAIL_SEL_2 register
+    tps6522xSetRailSel2RegBitFields(ldoCfg, &(regData[TPS6522X_LDO_RAIL_SEL_REGDATA_INDEX]), ldoNum);
+}
+
+/**
+ *  \brief      This function is used to write LDO register data \p regData to the PMIC. 
+ * 
+ *  \param      pPmicCoreHandle     [IN]    PMIC interface handle
+ *  \param      regData             [IN]    Register data to be written to the PMIC 
+ *                                          For valid indices, refer to \ref Tps6522x_ldoRegDataIndex
+ *  \param      ldoNum              [IN]    Indicates which LDO the API is working with
+ * 
+ *  \return     Success code if the data was written to the PMIC, error code otherwise.
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
+static int32_t tps6522xWriteLdoData(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t *regData, const uint8_t ldoNum)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    // Write to LDO_VOUT
+    status = Pmic_commIntf_sendByte(pPmicCoreHandle, 
+                                    gTps6522xLdoRegisters[ldoNum].ldoVoutRegAddr, 
+                                    regData[TPS6522X_LDO_VOUT_REGDATA_INDEX]);
+
+    // Write to LDO_PG_WINDOW
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, 
+                                        gTps6522xLdoRegisters[ldoNum].ldoPgWindowRegAddr, 
+                                        regData[TPS6522X_LDO_PG_WINDOW_REGDATA_INDEX]);
+    }
+
+    // Write to RAIL_SEL_2
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, 
+                                        gTps6522xLdoRegisters[ldoNum].ldoRailSelRegAddr, 
+                                        regData[TPS6522X_LDO_RAIL_SEL_REGDATA_INDEX]);
+    }
+
+    // Write to LDO_CTRL
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, 
+                                        gTps6522xLdoRegisters[ldoNum].ldoCtrlRegAddr, 
+                                        regData[TPS6522X_LDO_CTRL_REGDATA_INDEX]);
+    }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return status;
+}
+
 int32_t tps6522xSetLdoCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const tps6522xLdoCfg_t ldoCfg, const uint8_t ldoNum)
 {
-    uint8_t ldoCtrlRegData      = 0;
-    uint8_t ldoVoutRegData      = 0;
-    uint8_t ldoPgWindowRegData  = 0;
-    uint8_t ldoRailSelRegData   = 0;
-    int32_t status              = PMIC_ST_SUCCESS;
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData[TPS6522X_LDO_REGDATA_NUM_INDICES] = {0};
 
     // Parameter check
     if (ldoCfg.validParams == 0U)
@@ -1807,58 +2117,20 @@ int32_t tps6522xSetLdoCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const tps6522xLdoC
     // Read all registers pertaining to the LDO resource
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, gTps6522xLdoRegisters[ldoNum].ldoCtrlRegAddr, &ldoCtrlRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, gTps6522xLdoRegisters[ldoNum].ldoVoutRegAddr, &ldoVoutRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, gTps6522xLdoRegisters[ldoNum].ldoPgWindowRegAddr, &ldoPgWindowRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, gTps6522xLdoRegisters[ldoNum].ldoRailSelRegAddr, &ldoRailSelRegData);
+        status = tps6522xReadLdoRegs(pPmicCoreHandle, regData, ldoNum);
     }
 
-    // modify the desired bit fields of the registers that were read
-    // (desired bit fields are governed by validParams)
+    // modify the desired bit fields of the registers that were 
+    // read (desired bit fields are governed by validParams)
     if (status == PMIC_ST_SUCCESS)
     {
-        // LDO_CTRL register
-        tps6522xSetLdoCtrlRegBitFields(ldoCfg, &ldoCtrlRegData);
-
-        // LDO_VOUT register
-        tps6522xSetLdoVoutRegBitFields(ldoCfg, &ldoVoutRegData, ldoNum);
-
-        // LDO_PG_WINDOW register
-        tps6522xSetLdoPgWindowRegBitFields(ldoCfg, &ldoPgWindowRegData);
-
-        // RAIL_SEL_2 register
-        tps6522xSetRailSel2RegBitFields(ldoCfg, &ldoRailSelRegData, ldoNum);
+        tps6522xModifyLdoData(ldoCfg, regData, ldoNum);
     }
 
     // After modification of register bit fields, write values back to PMIC
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_sendByte(pPmicCoreHandle, gTps6522xLdoRegisters[ldoNum].ldoVoutRegAddr, ldoVoutRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_commIntf_sendByte(
-            pPmicCoreHandle, gTps6522xLdoRegisters[ldoNum].ldoPgWindowRegAddr, ldoPgWindowRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status =
-            Pmic_commIntf_sendByte(pPmicCoreHandle, gTps6522xLdoRegisters[ldoNum].ldoRailSelRegAddr, ldoRailSelRegData);
-    }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_commIntf_sendByte(pPmicCoreHandle, gTps6522xLdoRegisters[ldoNum].ldoCtrlRegAddr, ldoCtrlRegData);
+        status = tps6522xWriteLdoData(pPmicCoreHandle, regData, ldoNum);
     }
 
     // After read-modify-write, stop critical section
@@ -2119,16 +2391,106 @@ static void tps6522xSetRailSel3RegBitFields(const tps6522xVccaVmonCfg_t vccaVmon
     }
 }
 
+/**
+ *  \brief      This function is used to modify all VMON (VCCA_VMON/VMONx) data supplied 
+ *              by the \p regData parameter. \p regData will be modified in accordance
+ *              to the struct members of the \p vccaVmonCfg parameter. 
+ * 
+ *  \param      vccaVmonCfg     [IN]    VMON power resource configuration struct
+ *  \param      regData         [OUT]   Array of modified VMON data. For valid indices,
+ *                                      refer to \ref Tps6522x_vccaVmonRegDataIndex
+ *  \param      vmonNum         [IN]    Indicates which VMON the API is working with 
+ */
+static inline void tps6522xModifyVccaVmonData(
+    const tps6522xVccaVmonCfg_t vccaVmonCfg, uint8_t *regData, const uint8_t vmonNum)
+{
+    // VCCA_VMON_CTRL
+    tps6522xSetVccaVmonCtrlBitFields(vccaVmonCfg, &(regData[TPS6522X_VCCA_VMON_CTRL_REGDATA_INDEX]));
+
+    // VCCA_PG_WINDOW
+    tps6522xSetVccaPgWindowBitFields(vccaVmonCfg, &(regData[TPS6522X_VCCA_PG_WINDOW_REGDATA_INDEX]));
+
+    // VMON_PG_WINDOW
+    tps6522xSetVmonPgWindowBitFields(vccaVmonCfg, &(regData[TPS6522X_VMON_PG_WINDOW_REGDATA_INDEX]), vmonNum);
+
+    // VMON_PG_LEVEL
+    tps6522xSetVmonPgLevelBitFields(vccaVmonCfg, &(regData[TPS6522X_VMON_PG_LEVEL_REGDATA_INDEX]), vmonNum);
+
+    // RAIL_SEL_3
+    tps6522xSetRailSel3RegBitFields(vccaVmonCfg, &(regData[TPS6522X_VCCA_VMON_RAIL_SEL_REGDATA_INDEX]), vmonNum);
+}
+
+/**
+ *  \brief      This function is used to write VMON (VCCA_VMON/VMONx) register data \p regData to the PMIC. 
+ * 
+ *  \param      pPmicCoreHandle     [IN]    PMIC interface handle
+ *  \param      regData             [IN]    Register data to be written to the PMIC. 
+ *                                          For valid indices, refer to \ref Tps6522x_vccaVmonRegDataIndex
+ *  \param      vmonNum             [IN]    Indicates which VMON the API is working with
+ * 
+ *  \return     Success code if the data was written to the PMIC, error code otherwise.
+ *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
+static int32_t tps6522xWriteVccaVmonData(
+    Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t *regData, const uint8_t vmonNum)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+
+    // Write to VCCA_PG_WINDOW
+    if (vmonNum == TPS6522X_VOLTAGE_MONITOR_VCCA_VMON)
+    {
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, 
+                                        gTps6522xVccaVmonRegisters[vmonNum].vccaPgWindowRegAddr, 
+                                        regData[TPS6522X_VCCA_PG_WINDOW_REGDATA_INDEX]);
+    }
+
+    // Write to VMON_PG_WINDOW
+    if ((status == PMIC_ST_SUCCESS) && ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON1) ||
+                                        (vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON2)))
+    {
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, 
+                                        gTps6522xVccaVmonRegisters[vmonNum].vmonPgWindowRegAddr, 
+                                        regData[TPS6522X_VMON_PG_WINDOW_REGDATA_INDEX]);
+    }
+
+    // Write to VMON_PG_LEVEL
+    if ((status == PMIC_ST_SUCCESS) && ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON1) ||
+                                        (vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON2)))
+    {
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, 
+                                        gTps6522xVccaVmonRegisters[vmonNum].vmonPgLevelRegAddr, 
+                                        regData[TPS6522X_VMON_PG_LEVEL_REGDATA_INDEX]);
+    }
+
+    // Write to RAIL_SEL_3
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, 
+                                        gTps6522xVccaVmonRegisters[vmonNum].vccaVmonRailSelRegAddr, 
+                                        regData[TPS6522X_VCCA_VMON_RAIL_SEL_REGDATA_INDEX]);
+    }
+
+    // Write to VCCA_VMON_CTRL
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, 
+                                        gTps6522xVccaVmonRegisters[vmonNum].vccaVmonCtrlRegAddr, 
+                                        regData[TPS6522X_VCCA_VMON_CTRL_REGDATA_INDEX]);
+    }
+    
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return status;
+}
+
 int32_t tps6522xSetVccaVmonCfg(Pmic_CoreHandle_t *pPmicCoreHandle, 
                                const tps6522xVccaVmonCfg_t vccaVmonCfg,
                                const uint8_t vmonNum)
 {
-    uint8_t vccaVmonCtrlRegData     = 0;
-    uint8_t vccaPgWindowRegData     = 0;
-    uint8_t vmonPgWindowRegData     = 0;
-    uint8_t vmonPgLevelRegData      = 0;
-    uint8_t vccaVmonRailSelRegData  = 0;
-    int32_t status                  = PMIC_ST_SUCCESS;
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData[TPS6522X_VCCA_VMON_REGDATA_NUM_INDICES] = {0U};
 
     // Parameter check
     if (vccaVmonCfg.validParams == 0U)
@@ -2140,158 +2502,162 @@ int32_t tps6522xSetVccaVmonCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
         status = tps6522xVmonVoltageWithinRangeCheck(vccaVmonCfg, vmonNum);
     }
     
-    // As we are about to read, start critical section
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
     // Read all registers pertaining to the VCCA_VMON/VMONx resource
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vccaVmonCtrlRegAddr, &vccaVmonCtrlRegData);
+        status = tps6522xReadVccaVmonRegs(pPmicCoreHandle, regData, vmonNum);
     }
-    if ((status == PMIC_ST_SUCCESS) && (vmonNum == TPS6522X_VOLTAGE_MONITOR_VCCA_VMON))
-    {
-        status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vccaPgWindowRegAddr, &vccaPgWindowRegData);
-    }
-    if ((status == PMIC_ST_SUCCESS) && ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON1) ||
-                                        (vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON2)))
-    {
-        status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vmonPgWindowRegAddr, &vmonPgWindowRegData);
-    }
-    if ((status == PMIC_ST_SUCCESS) && ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON1) ||
-                                        (vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON2)))
-    {
-        status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vmonPgLevelRegAddr, &vmonPgLevelRegData);
-    }
+
+    // modify the desired bit fields of the registers that were 
+    // read (desired bit fields are governed by validParams)
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vccaVmonRailSelRegAddr, &vccaVmonRailSelRegData);
-    }
-
-    // modify the desired bit fields of the registers that were read
-    // of the register (desired bit fields are governed by validParams)
-    if (status == PMIC_ST_SUCCESS)
-    {
-        // VCCA_VMON_CTRL
-        tps6522xSetVccaVmonCtrlBitFields(vccaVmonCfg, &vccaVmonCtrlRegData);
-
-        // VCCA_PG_WINDOW
-        tps6522xSetVccaPgWindowBitFields(vccaVmonCfg, &vccaPgWindowRegData);
-
-        // VMON_PG_WINDOW
-        tps6522xSetVmonPgWindowBitFields(vccaVmonCfg, &vmonPgWindowRegData, vmonNum);
-
-        // VMON_PG_LEVEL
-        tps6522xSetVmonPgLevelBitFields(vccaVmonCfg, &vmonPgLevelRegData, vmonNum);
-
-        // RAIL_SEL_3
-        tps6522xSetRailSel3RegBitFields(vccaVmonCfg, &vccaVmonRailSelRegData, vmonNum);
+        tps6522xModifyVccaVmonData(vccaVmonCfg, regData, vmonNum);
     }
 
     // After modification of register bit fields, write values back to PMIC
-    if ((status == PMIC_ST_SUCCESS) && (vmonNum == TPS6522X_VOLTAGE_MONITOR_VCCA_VMON))
-    {
-        status = Pmic_commIntf_sendByte(
-            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vccaPgWindowRegAddr, vccaPgWindowRegData);
-    }
-    if ((status == PMIC_ST_SUCCESS) && ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON1) ||
-                                        (vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON2)))
-    {
-        status = Pmic_commIntf_sendByte(
-            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vmonPgWindowRegAddr, vmonPgWindowRegData);
-    }
-    if ((status == PMIC_ST_SUCCESS) && ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON1) ||
-                                        (vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON2)))
-    {
-        status = Pmic_commIntf_sendByte(
-            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vmonPgLevelRegAddr, vmonPgLevelRegData);
-    }
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_sendByte(
-            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vccaVmonRailSelRegAddr, vccaVmonRailSelRegData);
+        status = tps6522xWriteVccaVmonData(pPmicCoreHandle, regData, vmonNum);
     }
-    if (status == PMIC_ST_SUCCESS)
-    {
-        status = Pmic_commIntf_sendByte(
-            pPmicCoreHandle, gTps6522xVccaVmonRegisters[vmonNum].vccaVmonCtrlRegAddr, vccaVmonCtrlRegData);
-    }
-
-    // After read-modify-write, stop critical section
-    Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return status;
+}
+
+/**
+ *  @brief      This function is used to set the configuration of all valid Bucks.
+ *              Valid Bucks are specified by the end-user via the \p pwrRsrcCfg
+ *              parameter. 
+ * 
+ *  @param      pPmicCoreHandle     [IN]    PMIC interface handle
+ *  @param      pwrRsrcCfg          [IN]    Power resource configuration struct
+ *                                          holding all user-specified BUCK information
+ * 
+ *  @return     Success code if the configuration of all valid Bucks are set, error
+ *              code otherwise. For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
+static int32_t tps6522xSetAllValidBuckCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                          const tps6522xPwrRsrcCfg_t pwrRsrcCfg)
+{
+    uint8_t iter = 0;
+    uint8_t validParam = 0;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // For each BUCK, if the validParam for it is set, set the power resource configuration
+    for (iter = 0; iter < TPS6522X_MAX_BUCK_NUM; iter++)
+    {
+        validParam = TPS6522X_BUCK1_VALID + iter;
+        if (pmic_validParamCheck(pwrRsrcCfg.validParams, validParam))
+        {
+            status = tps6522xSetBuckCfg(pPmicCoreHandle, pwrRsrcCfg.buckCfg[iter], iter);
+        }
+
+        // Upon error, break out of loop
+        if (status != PMIC_ST_SUCCESS)
+        {
+            break;
+        }
+    }
+
+    return status;
+}
+
+/**
+ *  @brief      This function is used to set the configuration of all valid LDOs.
+ *              Valid LDOs are specified by the end-user via the \p pwrRsrcCfg
+ *              parameter. 
+ * 
+ *  @param      pPmicCoreHandle     [IN]    PMIC interface handle
+ *  @param      pwrRsrcCfg          [IN]    Power resource configuration struct
+ *                                          holding all user-specified LDO information
+ * 
+ *  @return     Success code if the configuration of all valid LDOs are set, error
+ *              code otherwise. For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
+static int32_t tps6522xSetAllValidLdoCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                         const tps6522xPwrRsrcCfg_t pwrRsrcCfg)
+{
+    uint8_t iter = 0;
+    uint8_t validParam = 0;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // For each LDO, if the validParam for it is set, set the power resource configuration
+    for (iter = 0; iter < TPS6522X_MAX_LDO_NUM; iter++)
+    {
+        validParam = TPS6522X_LDO1_VALID + iter;
+        if (pmic_validParamCheck(pwrRsrcCfg.validParams, validParam))
+        {
+            status = tps6522xSetLdoCfg(pPmicCoreHandle, pwrRsrcCfg.ldoCfg[iter], iter);
+        }
+
+        // Upon error, break out of loop
+        if (status != PMIC_ST_SUCCESS)
+        {
+            break;
+        }
+    }
+
+    return status;
+}
+
+/**
+ *  @brief      This function is used to set the configuration of all valid VMONs
+ *              (VCCA_VMON/VMONx). Valid VMONs are specified by the end-user via the 
+ *              \p pwrRsrcCfg parameter. 
+ * 
+ *  @param      pPmicCoreHandle     [IN]    PMIC interface handle
+ *  @param      pwrRsrcCfg          [IN]    Power resource configuration struct
+ *                                          holding all user-specified VMON information
+ * 
+ *  @return     Success code if the configuration of all valid VMONs are set, error
+ *              code otherwise. For valid success/error codes, refer to \ref Pmic_ErrorCodes
+ */
+static int32_t tps6522xSetAllValidVccaVmonCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                              const tps6522xPwrRsrcCfg_t pwrRsrcCfg)
+{
+    uint8_t iter = 0;
+    uint8_t validParam = 0;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // For each VMON, if the validParam for it is set, set the power resource configuration
+    for (iter = 0; iter < TPS6522X_MAX_VOLTAGE_MONITOR_NUM; iter++)
+    {
+        validParam = TPS6522X_VMON1_VALID + iter;
+        if (pmic_validParamCheck(pwrRsrcCfg.validParams, validParam))
+        {
+            status = tps6522xSetVccaVmonCfg(pPmicCoreHandle, pwrRsrcCfg.vccaVmonCfg, iter);
+        }
+
+        // Upon error, break out of loop
+        if (status != PMIC_ST_SUCCESS)
+        {
+            break;
+        }
+    }
+
+    return status; 
 }
 
 int32_t tps6522xSetPwrRsrcCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                               const tps6522xPwrRsrcCfg_t pwrRsrcCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    uint8_t iter = 0;
-    uint8_t validParam = 0;
 
-    // Parameter check
     status = tps6522xParamCheck_constPwrRsrcCfg(pPmicCoreHandle, pwrRsrcCfg);
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // For each BUCK, if the validParam for it is set, set the power resource configuration
-        for (iter = 0; iter < TPS6522X_MAX_BUCK_NUM; iter++)
-        {
-            validParam = TPS6522X_BUCK1_VALID + iter;
-            if (pmic_validParamCheck(pwrRsrcCfg.validParams, validParam))
-            {
-                status = tps6522xSetBuckCfg(pPmicCoreHandle, pwrRsrcCfg.buckCfg[iter], iter);
-            }
-
-            // Upon error, break out of loop
-            if (status != PMIC_ST_SUCCESS)
-            {
-                break;
-            }
-        }
+        status = tps6522xSetAllValidBuckCfg(pPmicCoreHandle, pwrRsrcCfg);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // For each LDO, if the validParam for it is set, set the power resource configuration
-        for (iter = 0; iter < TPS6522X_MAX_LDO_NUM; iter++)
-        {
-            validParam = TPS6522X_LDO1_VALID + iter;
-            if (pmic_validParamCheck(pwrRsrcCfg.validParams, validParam))
-            {
-                status = tps6522xSetLdoCfg(pPmicCoreHandle, pwrRsrcCfg.ldoCfg[iter], iter);
-            }
-
-            // Upon error, break out of loop
-            if (status != PMIC_ST_SUCCESS)
-            {
-                break;
-            }
-        }
+        status = tps6522xSetAllValidLdoCfg(pPmicCoreHandle, pwrRsrcCfg);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // For each VMON, if the validParam for it is set, set the power resource configuration
-        for (iter = 0; iter < TPS6522X_MAX_VOLTAGE_MONITOR_NUM; iter++)
-        {
-            validParam = TPS6522X_VMON1_VALID + iter;
-            if (pmic_validParamCheck(pwrRsrcCfg.validParams, validParam))
-            {
-                status = tps6522xSetVccaVmonCfg(pPmicCoreHandle, pwrRsrcCfg.vccaVmonCfg, iter);
-            }
-
-            // Upon error, break out of loop
-            if (status != PMIC_ST_SUCCESS)
-            {
-                break;
-            }
-        }
+        status = tps6522xSetAllValidVccaVmonCfg(pPmicCoreHandle, pwrRsrcCfg);
     }
 
     return status;

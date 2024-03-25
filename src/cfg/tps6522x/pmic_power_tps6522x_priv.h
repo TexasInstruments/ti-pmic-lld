@@ -56,6 +56,21 @@ extern "C"
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
+/*!
+ *  \anchor     Tps6522x_powerRegAddr
+ *  \brief      Burton power register addresses for internal use
+ */
+#define TPS6522X_INVALID_REGADDR         (0x00U)
+#define TPS6522X_VCCA_VMON_CTRL_REGADDR  (0x2BU)
+#define TPS6522X_VCCA_PG_WINDOW_REGADDR  (0x2CU)
+#define TPS6522X_VMON1_PG_WINDOW_REGADDR (0x2DU)
+#define TPS6522X_VMON1_PG_LEVEL_REGADDR  (0x2EU)
+#define TPS6522X_VMON2_PG_WINDOW_REGADDR (0x2FU)
+#define TPS6522X_VMON2_PG_LEVEL_REGADDR  (0x30U)
+#define TPS6522X_RAIL_SEL_3_REGADDR      (0x43U)
+#define TPS6522X_STAT_BUCK_REGADDR       (0x6DU)
+#define TPS6522X_STAT_LDO_VMON_REGADDR   (0x70U)
+
 /**
  *  \anchor     Tps6522x_buckCtrlRegShiftVal
  *  \name       BUCK_CTRL register shift values supported by TPS6522x Burton
@@ -402,20 +417,52 @@ extern "C"
 #define TPS6522X_TSD_ORD_LEVEL_MASK                 (1U << TPS6522X_TSD_ORD_LEVEL_SHIFT)
 /** @} */
 
-/*!
- *  \anchor     Tps6522x_powerRegAddr
- *  \brief      Burton power register addresses for internal use
+/**
+ *  \anchor     Tps6522x_vccaVmonRegDataIndex
+ *  \name       Register data indices for VCCA/VMON
+ *  
+ *  \brief      These defines are used to access register data for the set/get
+ *              VCCA/VMON power resource configuration APIs
+ *  @{
  */
-#define TPS6522X_INVALID_REGADDR         (0x00U)
-#define TPS6522X_VCCA_VMON_CTRL_REGADDR  (0x2BU)
-#define TPS6522X_VCCA_PG_WINDOW_REGADDR  (0x2CU)
-#define TPS6522X_VMON1_PG_WINDOW_REGADDR (0x2DU)
-#define TPS6522X_VMON1_PG_LEVEL_REGADDR  (0x2EU)
-#define TPS6522X_VMON2_PG_WINDOW_REGADDR (0x2FU)
-#define TPS6522X_VMON2_PG_LEVEL_REGADDR  (0x30U)
-#define TPS6522X_RAIL_SEL_3_REGADDR      (0x43U)
-#define TPS6522X_STAT_BUCK_REGADDR       (0x6DU)
-#define TPS6522X_STAT_LDO_VMON_REGADDR   (0x70U)
+#define TPS6522X_VCCA_VMON_CTRL_REGDATA_INDEX       (0U)
+#define TPS6522X_VCCA_PG_WINDOW_REGDATA_INDEX       (1U)
+#define TPS6522X_VMON_PG_WINDOW_REGDATA_INDEX       (2U)
+#define TPS6522X_VMON_PG_LEVEL_REGDATA_INDEX        (3U)
+#define TPS6522X_VCCA_VMON_RAIL_SEL_REGDATA_INDEX   (4U)
+#define TPS6522X_VCCA_VMON_REGDATA_NUM_INDICES      (5U)
+/** @} */
+
+/**
+ *  \anchor     Tps6522x_ldoRegDataIndex
+ *  \name       Register data indices for LDO
+ *  
+ *  \brief      These defines are used to access register data for the set/get
+ *              LDO power resource configuration APIs
+ *  @{
+ */
+#define TPS6522X_LDO_CTRL_REGDATA_INDEX         (0U)
+#define TPS6522X_LDO_VOUT_REGDATA_INDEX         (1U)
+#define TPS6522X_LDO_PG_WINDOW_REGDATA_INDEX    (2U)
+#define TPS6522X_LDO_RAIL_SEL_REGDATA_INDEX     (3U)
+#define TPS6522X_LDO_REGDATA_NUM_INDICES        (4U)
+/** @} */
+
+/**
+ *  \anchor     Tps6522x_buckRegDataIndex
+ *  \name       Register data indices for BUCK
+ *  
+ *  \brief      These defines are used to access register data for the set/get
+ *              BUCK power resource configuration APIs
+ *  @{
+ */
+#define TPS6522X_BUCK_CTRL_REGDATA_INDEX            (0U)
+#define TPS6522X_BUCK_CONF_REGDATA_INDEX            (1U)
+#define TPS6522X_BUCK_VOUT_REGDATA_INDEX            (2U)
+#define TPS6522X_BUCK_PG_WINDOW_REGDATA_INDEX       (3U)
+#define TPS6522X_BUCK_RAIL_SEL_REGDATA_INDEX        (4U)
+#define TPS6522X_BUCK_REGDATA_NUM_INDICES           (5U)
+/** @} */
 
 /* ========================================================================== */
 /*                          Structures and Enums                              */
