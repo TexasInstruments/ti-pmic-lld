@@ -10,13 +10,13 @@ if __name__ == "__main__":
     kwOutput = "kwinject.out"
 
     if (platform.system() == "Windows"):
-        pconfFile = "..\\pmic_drv\\kw_cfg\\analysis_profile_SA_MISRA_HIS_2022.pconf"
-        mconfFile = "..\\pmic_drv\\kw_cfg\\his_metrics_community.mconf"
-        sconfFile = "..\\pmic_drv\\kw_cfg\\kw_filter.sconf"
+        pconfFile = "..\\pmic-lld\\docs\\kw_cfg\\analysis_profile_SA_MISRA_HIS_2022.pconf"
+        mconfFile = "..\\pmic-lld\\docs\\kw_cfg\\his_metrics_community.mconf"
+        sconfFile = "..\\pmic-lld\\docs\\kw_cfg\\kw_filter.sconf"
     elif (platform.system() == "Linux"):
-        pconfFile = "../pmic_drv/kw_cfg/analysis_profile_SA_MISRA_HIS_2022.pconf"
-        mconfFile = "../pmic_drv/kw_cfg/his_metrics_community.mconf"
-        sconfFile = "../pmic_drv/kw_cfg/kw_filter.sconf"
+        pconfFile = "../pmic-lld/docs/kw_cfg/analysis_profile_SA_MISRA_HIS_2022.pconf"
+        mconfFile = "../pmic-lld/docs/kw_cfg/his_metrics_community.mconf"
+        sconfFile = "../pmic-lld/docs/kw_cfg/kw_filter.sconf"
     else:
         print("Error: unsupported system")
         exit(-1)    
