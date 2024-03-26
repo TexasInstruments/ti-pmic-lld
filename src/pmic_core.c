@@ -87,12 +87,12 @@ bool Pmic_getBitField_b(uint8_t regData, uint8_t regFieldShift)
 
     bitVal = (((regData) & (1U << regFieldShift)) >> (uint8_t)regFieldShift);
 
-    return (bool)(bitVal == 1U);
+    return (bitVal == 1U) ? (bool)true : (bool)false;
 }
 
 bool pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos)
 {
-    return (bool)(((validParamVal >> bitPos) & 0x01U) != 0U);
+    return (((validParamVal >> bitPos) & 0x01U) != 0U) ? (bool)true : (bool)false;
 }
 
 void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *pPmicCoreHandle)

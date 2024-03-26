@@ -146,7 +146,7 @@ static int32_t Pmic_esmCheckState(Pmic_CoreHandle_t *pPmicCoreHandle, const uint
     uint16_t regAddr = 0U;
     uint8_t regData = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_START_REG_OFFSET);
+    regAddr = ((uint16_t)esmBaseRegAddr + PMIC_ESM_START_REG_OFFSET);
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -214,7 +214,7 @@ static int32_t Pmic_esmXEnable(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
-        regAddr = (esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
+        regAddr = ((uint16_t)esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
         esmU8Val = Pmic_esmGetU8Val(esmToggle);
 
         /* Start Critical Section */
@@ -347,7 +347,7 @@ Pmic_esmSetDelay1Value(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_EsmCfg_t e
     uint8_t regData = 0U;
     uint16_t regAddr = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_DELAY1_REG_OFFSET);
+    regAddr = ((uint16_t)esmBaseRegAddr + PMIC_ESM_DELAY1_REG_OFFSET);
 
     if (PMIC_ESM_DELAY_MICROSEC_MAX < esmCfg.esmDelay1_us)
     {
@@ -380,7 +380,7 @@ Pmic_esmSetDelay2Value(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_EsmCfg_t e
     uint8_t regData = 0U;
     uint16_t regAddr = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_DELAY2_REG_OFFSET);
+    regAddr = ((uint16_t)esmBaseRegAddr + PMIC_ESM_DELAY2_REG_OFFSET);
 
     if (PMIC_ESM_DELAY_MICROSEC_MAX < esmCfg.esmDelay2_us)
     {
@@ -413,7 +413,7 @@ Pmic_esmSetErrCntThrValue(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_EsmCfg_
     uint8_t regData = 0U;
     uint16_t regAddr = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
+    regAddr = ((uint16_t)esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -443,7 +443,7 @@ Pmic_esmSetHmaxValue(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_EsmCfg_t esm
     uint8_t regData = 0U;
     uint16_t regAddr = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_HMAX_REG_OFFSET);
+    regAddr = ((uint16_t)esmBaseRegAddr + PMIC_ESM_HMAX_REG_OFFSET);
 
     if ((PMIC_ESM_PWM_PULSE_MICROSEC_MAX < esmCfg.esmHmax_us) || (PMIC_ESM_PWM_PULSE_MICROSEC_MIN > esmCfg.esmHmax_us))
     {
@@ -476,7 +476,7 @@ Pmic_esmSetHminValue(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_EsmCfg_t esm
     uint8_t regData = 0U;
     uint16_t regAddr = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_HMIN_REG_OFFSET);
+    regAddr = ((uint16_t)esmBaseRegAddr + PMIC_ESM_HMIN_REG_OFFSET);
 
     if ((PMIC_ESM_PWM_PULSE_MICROSEC_MAX < esmCfg.esmHmin_us) || (PMIC_ESM_PWM_PULSE_MICROSEC_MIN > esmCfg.esmHmin_us))
     {
@@ -509,7 +509,7 @@ Pmic_esmSetLmaxValue(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_EsmCfg_t esm
     uint8_t regData = 0U;
     uint16_t regAddr = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_LMAX_REG_OFFSET);
+    regAddr = ((uint16_t)esmBaseRegAddr + PMIC_ESM_LMAX_REG_OFFSET);
 
     if ((PMIC_ESM_PWM_PULSE_MICROSEC_MAX < esmCfg.esmLmax_us) || (PMIC_ESM_PWM_PULSE_MICROSEC_MIN > esmCfg.esmLmax_us))
     {
@@ -542,7 +542,7 @@ Pmic_esmSetLminValue(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_EsmCfg_t esm
     uint8_t regData = 0U;
     uint16_t regAddr = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_LMIN_REG_OFFSET);
+    regAddr = ((uint16_t)esmBaseRegAddr + PMIC_ESM_LMIN_REG_OFFSET);
 
     if ((PMIC_ESM_PWM_PULSE_MICROSEC_MAX < esmCfg.esmLmin_us) || (PMIC_ESM_PWM_PULSE_MICROSEC_MIN > esmCfg.esmLmin_us))
     {
@@ -576,7 +576,7 @@ Pmic_esmSetEnDrvValue(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_EsmCfg_t es
     uint16_t regAddr = 0U;
     uint8_t esmU8Val = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
+    regAddr = ((uint16_t)esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
     esmU8Val = Pmic_esmGetU8Val(esmCfg.esmEnDrv);
 
     /* Start Critical Section */
@@ -608,7 +608,7 @@ Pmic_esmSetMode(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_EsmCfg_t esmCfg, 
     uint16_t regAddr = 0U;
     uint8_t esmU8Val = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
+    regAddr = ((uint16_t)esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
     esmU8Val = Pmic_esmGetU8Val(esmCfg.esmMode);
 
     /* Start Critical Section */
@@ -639,7 +639,7 @@ Pmic_esmGetDelay1Value(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_EsmCfg_t *pEsmCf
     uint8_t regData = 0U;
     uint16_t regAddr = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_DELAY1_REG_OFFSET);
+    regAddr = ((uint16_t)esmBaseRegAddr + PMIC_ESM_DELAY1_REG_OFFSET);
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -667,7 +667,7 @@ Pmic_esmGetDelay2Value(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_EsmCfg_t *pEsmCf
     uint8_t regData = 0U;
     uint16_t regAddr = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_DELAY2_REG_OFFSET);
+    regAddr = ((uint16_t)esmBaseRegAddr + PMIC_ESM_DELAY2_REG_OFFSET);
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -696,7 +696,7 @@ Pmic_esmGetErrCntThrValue(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_EsmCfg_t *pEs
     uint8_t regData = 0U;
     uint16_t regAddr = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
+    regAddr = ((uint16_t)esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -724,7 +724,7 @@ Pmic_esmGetHmaxValue(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_EsmCfg_t *pEsmCfg,
     uint8_t regData = 0U;
     uint16_t regAddr = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_HMAX_REG_OFFSET);
+    regAddr = ((uint16_t)esmBaseRegAddr + PMIC_ESM_HMAX_REG_OFFSET);
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -753,7 +753,7 @@ Pmic_esmGetHminValue(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_EsmCfg_t *pEsmCfg,
     uint8_t regData = 0U;
     uint16_t regAddr = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_HMIN_REG_OFFSET);
+    regAddr = ((uint16_t)esmBaseRegAddr + PMIC_ESM_HMIN_REG_OFFSET);
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -782,7 +782,7 @@ Pmic_esmGetLmaxValue(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_EsmCfg_t *pEsmCfg,
     uint8_t regData = 0U;
     uint16_t regAddr = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_LMAX_REG_OFFSET);
+    regAddr = ((uint16_t)esmBaseRegAddr + PMIC_ESM_LMAX_REG_OFFSET);
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -811,7 +811,7 @@ Pmic_esmGetLminValue(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_EsmCfg_t *pEsmCfg,
     uint8_t regData = 0U;
     uint16_t regAddr = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_LMIN_REG_OFFSET);
+    regAddr = ((uint16_t)esmBaseRegAddr + PMIC_ESM_LMIN_REG_OFFSET);
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -841,7 +841,7 @@ Pmic_esmGetEnDrvValue(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_EsmCfg_t *pEsmCfg
     uint16_t regAddr = 0U;
     uint8_t bitFieldVal = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
+    regAddr = ((uint16_t)esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -878,7 +878,7 @@ Pmic_esmGetModeValue(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_EsmCfg_t *pEsmCfg,
     uint16_t regAddr = 0U;
     uint8_t bitFieldVal = 0U;
 
-    regAddr = (esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
+    regAddr = ((uint16_t)esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -968,7 +968,7 @@ int32_t Pmic_esmGetEnableState(Pmic_CoreHandle_t *pPmicCoreHandle, const bool es
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
         Pmic_esmGetBaseRegAddr(esmType, &esmBaseRegAddr);
-        regAddr = (esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
+        regAddr = ((uint16_t)esmBaseRegAddr + PMIC_ESM_MODE_CFG_REG_OFFSET);
         *pEsmState = (bool)false;
 
         /* Start Critical Section */
@@ -1287,7 +1287,7 @@ int32_t Pmic_esmGetErrCnt(Pmic_CoreHandle_t *pPmicCoreHandle, const bool esmType
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
         Pmic_esmGetBaseRegAddr(esmType, &esmBaseRegAddr);
-        regAddr = (esmBaseRegAddr + PMIC_ESM_ERR_CNT_REG_OFFSET);
+        regAddr = ((uint16_t)esmBaseRegAddr + PMIC_ESM_ERR_CNT_REG_OFFSET);
 
         /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -1330,7 +1330,7 @@ int32_t Pmic_esmGetStatus(Pmic_CoreHandle_t *pPmicCoreHandle, const bool esmType
     {
         Pmic_esmGetBaseRegAddr(esmType, &esmBaseRegAddr);
 
-        regAddr = (esmBaseRegAddr + PMIC_ESM_START_REG_OFFSET);
+        regAddr = ((uint16_t)esmBaseRegAddr + PMIC_ESM_START_REG_OFFSET);
         *pEsmState = PMIC_ESM_STOP;
 
         /* Start Critical Section */
