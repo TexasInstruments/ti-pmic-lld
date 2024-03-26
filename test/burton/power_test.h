@@ -23,13 +23,13 @@ extern "C"
 void test_power_getConfiguration_pmicHandle_null(void);
 
 /**
- *  \brief  tps6522xGetPwrResourceCfg: Test API error handing for when Power Resource CFG input parameter
+ *  \brief  tps6522xGetPwrResourceCfg: Test API error handling for when Power Resource CFG input parameter
  *                                     is NULL
  */
 void test_power_getConfiguration_pwrRsrcCfg_null(void);
 
 /**
- *  \brief  tps6522xGetPwrResourceCfg: Test API error handing for when there are no valid parameters
+ *  \brief  tps6522xGetPwrResourceCfg: Test API error handling for when there are no valid parameters
  *                                     within Power Resource CFG input param
  */
 void test_power_getConfiguration_pwrRsrcCfg_noValidParam(void);
@@ -65,26 +65,26 @@ void test_power_getConfiguration_validParameters(void);
 void test_power_setConfiguration_pmicHandle_null(void);
 
 /**
- *  \brief  tps6522xSetPwrRsrcCfg: Test API error handing for when there are no valid parameters
- *                                     within Power Resource CFG input param
+ *  \brief  tps6522xSetPwrRsrcCfg: Test API error handling for when there are no valid parameters
+ *                                 within Power Resource CFG input param
  */
 void test_power_setConfiguration_pwrRsrcCfg_noValidParam(void);
 
 /**
  *  \brief  tps6522xSetPwrRsrcCfg: Test API error handling for when there are no valid parameters
- *                                     within Buck Power Resource CFG
+ *                                 within Buck Power Resource CFG
  */
 void test_power_setConfiguration_buckCfg_noValidParam(void);
 
 /**
  *  \brief  tps6522xSetPwrRsrcCfg: Test API error handling for when there are no valid parameters
- *                                     within LDO Power Resource CFG
+ *                                 within LDO Power Resource CFG
  */
 void test_power_setConfiguration_ldoCfg_noValidParam(void);
 
 /**
  *  \brief  tps6522xSetPwrRsrcCfg: Test API error handling for when there are no valid parameters
- *                                     within VCCA_VMON/VMONx Power Resource CFG
+ *                                 within VCCA_VMON/VMONx Power Resource CFG
  */
 void test_power_setConfiguration_vccaVmonCfg_noValidParam(void);
 
@@ -100,7 +100,7 @@ void test_power_setConfiguration_buckVmonEnableDisable(void);
 
 /**
  *  \brief  tps6522xSetPwrRsrcCfg: Test whether API can configure Buck to operate in AUTO mode
- *                                     or FPWM mode
+ *                                 or FPWM mode
  */
 void test_power_setConfiguration_buckFPWM(void);
 
@@ -115,24 +115,21 @@ void test_power_setConfiguration_buckEn(void);
 void test_power_setConfiguration_buckSlewRate(void);
 
 /**
- *  \brief  tps6522xSetPwrRsrcCfg: Test API error handing for when Buck voltage is below range
+ *  \brief  tps6522xSetPwrRsrcCfg: Test API error handling for when BUCK1, BUCK2, BUCK3,
+ *                                 and BUCK4 VSET are below range
  */
-void test_power_setConfiguration_buckVout_voltageBelowRange(void);
+void test_power_setConfiguration_buckVset_belowRange(void);
 
 /**
- *  \brief  tps6522xSetPwrRsrcCfg: Test API error handing for when Buck voltage is above range
+ *  \brief  tps6522xSetPwrRsrcCfg: Test API error handling for when BUCK1, BUCK2, BUCK3, 
+ *                                 and BUCK4 VSET are above range
  */
-void test_power_setConfiguration_buckVout_voltageAboveRange(void);
+void test_power_setConfiguration_buckVset_aboveRange(void);
 
 /**
- *  \brief  tps6522xSetPwrRsrcCfg: Test whether API can set Buck 1 output voltage
+ *  \brief  tps6522xSetPwrRsrcCfg: Test whether API can set BUCK1, BUCK2, BUCK3, and BUCK4 VSET
  */
-void test_power_setConfiguration_buck1_buckVout(void);
-
-/**
- *  \brief  tps6522xSetPwrRsrcCfg: Test whether API can set Buck 2, Buck 3, Buck 4 output voltage
- */
-void test_power_setConfiguration_buck2_3_4_buckVout(void);
+void test_power_setConfiguration_buckVset(void);
 
 /**
  *  \brief  tps6522xSetPwrRsrcCfg: Test whether API can set Buck VMON Threshold
@@ -161,39 +158,20 @@ void test_power_setConfiguration_ldoEnableDisable(void);
 
 /**
  *  \brief  tps6522xSetPwrRsrcCfg: Test whether API can configure LDO to operate in
- *                                     Bypass Mode or LDO Mode
+ *                                 Bypass Mode or LDO Mode
  */
 void test_power_setConfiguration_ldoBypassConfig(void);
 
 /**
- *  \brief  tps6522xSetPwrRsrcCfg: Test API error handing for when LDO voltage is below range
+ *  \brief  tps6522xSetPwrRsrcCfg: Test API error handling for when LDO1, LDO2, 
+ *                                 and LDO3 VSET are above range
  */
-void test_power_setConfiguration_ldo1Vout_voltageBelowRange(void);
+void test_power_setConfiguration_ldoVset_aboveRange(void);
 
 /**
- *  \brief  tps6522xSetPwrRsrcCfg: Test API error handing for when LDO1 voltage is above range
+ *  \brief  tps6522xSetPwrRsrcCfg:  Test whether API can set LDO1, LDO2, and LDO3 VSET
  */
-void test_power_setConfiguration_ldo1Vout_voltageAboveRange(void);
-
-/**
- *  \brief  tps6522xSetPwrRsrcCfg: Test API error handing for when LDO2, LDO3 voltage is below range
- */
-void test_power_setConfiguration_ldo2_3_Vout_voltageBelowRange(void);
-
-/**
- *  \brief  tps6522xSetPwrRsrcCfg: Test API error handing for when LDO2, LDO3 voltage is above range
- */
-void test_power_setConfiguration_ldo2_3_Vout_voltageAboveRange(void);
-
-/**
- *  \brief  tps6522xSetPwrRsrcCfg:  Test whether API can set LDO1 output voltage
- */
-void test_power_setConfiguration_ldo1_ldoVout(void);
-
-/**
- *  \brief  tps6522xSetPwrRsrcCfg:  Test whether API can set LDO1 output voltage
- */
-void test_power_setConfiguration_ldo2_3_ldoVout(void);
+void test_power_setConfiguration_ldoVset(void);
 
 /**
  *  \brief  tps6522xSetPwrRsrcCfg: Test whether API can set LDO VMON threshold
@@ -216,9 +194,9 @@ void test_power_setConfiguration_vmonDeglitch(void);
 void test_power_setConfiguration_VMON1_2_VCCA_VMON_EnableDisable(void);
 
 /**
- *  \brief  tps6522xSetPwrRsrcCfg: Test whether API can set VCCA_VMON PG Level
+ *  \brief  tps6522xSetPwrRsrcCfg: Test whether API can set VCCA_VMON PG_SET
  */
-void test_power_setConfiguration_vccaPgLevel(void);
+void test_power_setConfiguration_vccaPgSet(void);
 
 /**
  *  \brief  tps6522xSetPwrRsrcCfg: Test whether API can set VCCA_VMON Threshold
@@ -231,26 +209,21 @@ void test_power_setConfiguration_vccaVmonThr(void);
 void test_power_setConfiguration_vccaRailGrpSel(void);
 
 /**
- *  \brief  tps6522xSetPwrRsrcCfg: Test API error handing for when VMON1 voltage is below range
- *                                     and above range
+ *  \brief  tps6522xSetPwrRsrcCfg: Test API error handling for when VMON1 PG_SET is out of acceptable
+ *                                 range
  */
-void test_power_setConfiguration_vmon1PgSet_voltageOutOfRange(void);
+void test_power_setConfiguration_vmon1PgSet_outOfRange(void);
 
 /**
- *  \brief  tps6522xSetPwrRsrcCfg: Test API error handing for when VMON2 voltage is below range
- *                                     and above range
+ *  \brief  tps6522xSetPwrRsrcCfg: Test API error handling for when VMON2 PG_SET is out of acceptable
+ *                                 range
  */
-void test_power_setConfiguration_vmon2PgSet_voltageOutOfRange(void);
+void test_power_setConfiguration_vmon2PgSet_outOfRange(void);
 
 /**
- *  \brief  tps6522xSetPwrRsrcCfg: Test whether API can set VMON1 PG Level
+ *  \brief  tps6522xSetPwrRsrcCfg: Test whether API can set VMON1 and VMON2 PG_SET
  */
-void test_power_setConfiguration_vmon1PgSet(void);
-
-/**
- *  \brief  tps6522xSetPwrRsrcCfg: Test whether API can set VMON2 PG Level
- */
-void test_power_setConfiguration_vmon2PgSet(void);
+void test_power_setConfiguration_vmonPgSet(void);
 
 /**
  *  \brief  tps6522xSetPwrRsrcCfg: Test whether API can set VMON1 and VMON2 Threshold

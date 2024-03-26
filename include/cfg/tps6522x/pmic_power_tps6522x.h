@@ -94,13 +94,39 @@ extern "C"
 
 /**
  *  \anchor     Tps6522x_vccaVmonPwrRsrcNum
- *  \name       voltage monitor power resources supported by TPS6522x Burton
+ *  \name       Voltage monitor power resources supported by TPS6522x Burton
  *
  *  @{
  */
 #define TPS6522X_VOLTAGE_MONITOR_VMON1                 (0U)
 #define TPS6522X_VOLTAGE_MONITOR_VMON2                 (1U)
 #define TPS6522X_VOLTAGE_MONITOR_VCCA_VMON             (2U)
+/** @} */
+
+/**
+ *  \anchor     Tps6522x_buckLdoMinMaxVset
+ *  \name       Minimum and maximum VSET values for TPS6522x Bucks and LDOs
+ *
+ *  @{
+ */
+#define TPS6522X_BUCK1_MIN_VSET                         (0xAU)
+#define TPS6522X_BUCK1_MAX_VSET                         (0xFDU)
+#define TPS6522X_BUCK2_3_4_MIN_VSET                     (0x0U)
+#define TPS6522X_BUCK2_3_4_MAX_VSET                     (0x45U)
+#define TPS6522X_LDO1_2_3_MIN_VSET                      (0x0U)
+#define TPS6522X_LDO1_2_3_MAX_VSET                      (0x3FU)
+/** @} */
+
+/**
+ *  \anchor     Tps6522x_vmonMinMaxPgSet
+ *  \name       Minimum and maximum PG_SET values for TPS6522x VMON1 and VMON2 
+ *
+ *  @{
+ */
+#define TPS6522X_VMON1_MIN_PG_SET                       (0xAU)
+#define TPS6522X_VMON1_MAX_PG_SET                       (0xFFU)
+#define TPS6522X_VMON2_MIN_PG_SET                       (0x0U)
+#define TPS6522X_VMON2_MAX_PG_SET                       (0x45U)
 /** @} */
 
 /**
@@ -137,7 +163,7 @@ extern "C"
 #define TPS6522X_BUCK_PWM_OPTION_VALID          (2U)
 #define TPS6522X_BUCK_EN_VALID                  (3U)
 #define TPS6522X_BUCK_SLEW_RATE_VALID           (4U)
-#define TPS6522X_BUCK_VOLTAGE_MV_VALID          (5U)
+#define TPS6522X_BUCK_VSET_VALID                (5U)
 #define TPS6522X_BUCK_VMON_THR_VALID            (6U)
 #define TPS6522X_BUCK_RAIL_GRP_SEL_VALID        (7U)
 /** @} */
@@ -156,7 +182,7 @@ extern "C"
 #define TPS6522X_BUCK_PWM_OPTION_VALID_SHIFT    (1U << TPS6522X_BUCK_PWM_OPTION_VALID)
 #define TPS6522X_BUCK_EN_VALID_SHIFT            (1U << TPS6522X_BUCK_EN_VALID)
 #define TPS6522X_BUCK_SLEW_RATE_VALID_SHIFT     (1U << TPS6522X_BUCK_SLEW_RATE_VALID)
-#define TPS6522X_BUCK_VOLTAGE_MV_VALID_SHIFT    (1U << TPS6522X_BUCK_VOLTAGE_MV_VALID)
+#define TPS6522X_BUCK_VSET_VALID_SHIFT          (1U << TPS6522X_BUCK_VSET_VALID)
 #define TPS6522X_BUCK_VMON_THR_VALID_SHIFT      (1U << TPS6522X_BUCK_VMON_THR_VALID)
 #define TPS6522X_BUCK_RAIL_GRP_SEL_VALID_SHIFT  (1U << TPS6522X_BUCK_RAIL_GRP_SEL_VALID)
 /** @} */
@@ -171,7 +197,7 @@ extern "C"
 #define TPS6522X_LDO_VMON_EN_VALID              (1U)
 #define TPS6522X_LDO_EN_VALID                   (2U)
 #define TPS6522X_LDO_MODE_VALID                 (3U)
-#define TPS6522X_LDO_VOLTAGE_MV_VALID           (4U)
+#define TPS6522X_LDO_VSET_VALID                 (4U)
 #define TPS6522X_LDO_VMON_THR_VALID             (5U)
 #define TPS6522X_LDO_RAIL_GRP_SEL_VALID         (6U)
 /** @} */
@@ -188,7 +214,7 @@ extern "C"
 #define TPS6522X_LDO_VMON_EN_VALID_SHIFT        (1U << TPS6522X_LDO_VMON_EN_VALID)
 #define TPS6522X_LDO_EN_VALID_SHIFT             (1U << TPS6522X_LDO_EN_VALID)
 #define TPS6522X_LDO_MODE_VALID_SHIFT           (1U << TPS6522X_LDO_MODE_VALID)
-#define TPS6522X_LDO_VOLTAGE_MV_VALID_SHIFT     (1U << TPS6522X_LDO_VOLTAGE_MV_VALID)
+#define TPS6522X_LDO_VSET_VALID_SHIFT           (1U << TPS6522X_LDO_VSET_VALID)
 #define TPS6522X_LDO_VMON_THR_VALID_SHIFT       (1U << TPS6522X_LDO_VMON_THR_VALID)
 #define TPS6522X_LDO_RAIL_GRP_SEL_VALID_SHIFT   (1U << TPS6522X_LDO_RAIL_GRP_SEL_VALID)
 /** @} */
@@ -203,14 +229,14 @@ extern "C"
 #define TPS6522X_VMON2_EN_VALID                 (1U)
 #define TPS6522X_VMON1_EN_VALID                 (2U)
 #define TPS6522X_VCCA_VMON_EN_VALID             (3U)
-#define TPS6522X_VCCA_PG_LEVEL_VALID            (4U)
+#define TPS6522X_VCCA_PG_SET_VALID              (4U)
 #define TPS6522X_VCCA_VMON_THR_VALID            (5U)
 #define TPS6522X_VCCA_RAIL_GRP_SEL_VALID        (6U)
 #define TPS6522X_VMON1_THR_VALID                (7U)
-#define TPS6522X_VMON1_PG_LEVEL_MV_VALID        (8U)
+#define TPS6522X_VMON1_PG_SET_VALID             (8U)
 #define TPS6522X_VMON1_RAIL_GRP_SEL_VALID       (9U)
 #define TPS6522X_VMON2_THR_VALID                (10U)
-#define TPS6522X_VMON2_PG_LEVEL_MV_VALID        (11U)
+#define TPS6522X_VMON2_PG_SET_VALID             (11U)
 #define TPS6522X_VMON2_RAIL_GRP_SEL_VALID       (12U)
 /** @} */
 
@@ -227,14 +253,14 @@ extern "C"
 #define TPS6522X_VMON2_EN_VALID_SHIFT           (1U << TPS6522X_VMON2_EN_VALID)
 #define TPS6522X_VMON1_EN_VALID_SHIFT           (1U << TPS6522X_VMON1_EN_VALID)
 #define TPS6522X_VCCA_VMON_EN_VALID_SHIFT       (1U << TPS6522X_VCCA_VMON_EN_VALID)
-#define TPS6522X_VCCA_PG_LEVEL_VALID_SHIFT      (1U << TPS6522X_VCCA_PG_LEVEL_VALID)
+#define TPS6522X_VCCA_PG_SET_VALID_SHIFT        (1U << TPS6522X_VCCA_PG_SET_VALID)
 #define TPS6522X_VCCA_VMON_THR_VALID_SHIFT      (1U << TPS6522X_VCCA_VMON_THR_VALID)
 #define TPS6522X_VCCA_RAIL_GRP_SEL_VALID_SHIFT  (1U << TPS6522X_VCCA_RAIL_GRP_SEL_VALID)
 #define TPS6522X_VMON1_THR_VALID_SHIFT          (1U << TPS6522X_VMON1_THR_VALID)
-#define TPS6522X_VMON1_PG_LEVEL_MV_VALID_SHIFT  (1U << TPS6522X_VMON1_PG_LEVEL_MV_VALID)
+#define TPS6522X_VMON1_PG_SET_VALID_SHIFT       (1U << TPS6522X_VMON1_PG_SET_VALID)
 #define TPS6522X_VMON1_RAIL_GRP_SEL_VALID_SHIFT (1U << TPS6522X_VMON1_RAIL_GRP_SEL_VALID)
 #define TPS6522X_VMON2_THR_VALID_SHIFT          (1U << TPS6522X_VMON2_THR_VALID)
-#define TPS6522X_VMON2_PG_LEVEL_MV_VALID_SHIFT  (1U << TPS6522X_VMON2_PG_LEVEL_MV_VALID)
+#define TPS6522X_VMON2_PG_SET_VALID_SHIFT       (1U << TPS6522X_VMON2_PG_SET_VALID)
 #define TPS6522X_VMON2_RAIL_GRP_SEL_VALID_SHIFT (1U << TPS6522X_VMON2_RAIL_GRP_SEL_VALID)
 /** @} */
 
@@ -548,8 +574,8 @@ extern "C"
  *
  *  @{
  */
-#define TPS6522X_VCCA_PG_LEVEL_3_3_V (0U)
-#define TPS6522X_VCCA_PG_LEVEL_5_0_V (1U)
+#define TPS6522X_VCCA_PG_SET_3_3_V (0U)
+#define TPS6522X_VCCA_PG_SET_5_0_V (1U)
 /** @} */
 
 /**
@@ -664,8 +690,7 @@ extern "C"
  *                                      \ref Tps6522x_buckEnBitField
  *  \param      buckSlewRate        BUCK slew rate. For valid values, refer to
  *                                      \ref Tps6522x_buckSlewRateBitField
- *  \param      buckVoltage_mv      BUCK voltage (mV). For possible ranges of BUCK1,
- *                                      refer to \ref Tps6522x_buck1VoltageRangesMV.
+ *  \param      buckVset            BUCK voltage in VSET form
  *                                  For possible ranges of BUCK2, BUCK3, BUCK4, refer to
  *                                      \ref Tps6522x_buck2_3_4_VoltageRangesMV
  *  \param      buckVmonThr         BUCK VMON threshold. For valid values, refer to
@@ -683,7 +708,7 @@ typedef struct tps6522xBuckCfg_s
     uint8_t buckPwmOption;
     uint8_t buckEn;
     uint8_t buckSlewRate;
-    uint16_t buckVoltage_mv;
+    uint8_t buckVset;
     uint8_t buckVmonThr;
     uint8_t buckRailGrpSel;
 } tps6522xBuckCfg_t;
@@ -711,8 +736,7 @@ typedef struct tps6522xBuckCfg_s
  *                                      \ref Tps6522x_ldoEnBitField
  *  \param      ldoMode             LDO mode. For valid values, refer to
  *                                      \ref Tps6522x_bypConfigBitField
- *  \param      ldoVoltage_mv       LDO voltage (mV). For possible ranges of LDO1, refer to
- *                                      \ref Tps6522x_ldo1VoltageRangesMV.
+ *  \param      ldoVset             LDO voltage in VSET form
  *                                  For possible ranges of LDO2 and LDO3, refer to
  *                                      \ref Tps6522x_ldo2_3_VoltageRangesMV
  *  \param      ldoVmonThr          LDO VMON threshold. For valid values, refer to
@@ -729,7 +753,7 @@ typedef struct tps6522xLdoCfg_s
     uint8_t ldoVmonEn;
     uint8_t ldoEn;
     uint8_t ldoMode;
-    uint16_t ldoVoltage_mv;
+    uint8_t ldoVset;
     uint8_t ldoVmonThr;
     uint8_t ldoRailGrpSel;
 } tps6522xLdoCfg_t;
@@ -755,7 +779,7 @@ typedef struct tps6522xLdoCfg_s
  *  \param      vmon1En             VMON1 enable. For valid values, refer to \ref Tps6522x_vmon1EnBitField
  *  \param      vccaVmonEn          VCCA_VMON enable. For valid values, refer to
  *                                      \ref Tps6522x_vccaVmonEnBitField
- *  \param      vccaPgLevel         VCCA_VMON PG level. For valid values, refer to
+ *  \param      vccaPgSet           VCCA_VMON PG level in PG_SET from. For valid values, refer to
  *                                      \ref Tps6522x_vccaPgSetBitField
  *  \param      vccaVmonThr         VCCA_VMON threshold. For valid values, refer to
  *                                      \ref Tps6522x_vccaVmonThrBitField
@@ -763,14 +787,12 @@ typedef struct tps6522xLdoCfg_s
  *                                      refer to \ref Tps6522x_vccaRailSelBitField
  *  \param      vmon1Thr            VMON1 threshold. For valid values, refer to
  *                                      \ref Tps6522x_vmon1ThrBitField
- *  \param      vmon1PgLevel_mv     VMON1 PG level (mV). For possible ranges,
- *                                      \ref Tps6522x_vmon1VoltageRangesMV
+ *  \param      vmon1PgSet          VMON1 PG level in PG_SET form
  *  \param      vmon1RailGrpSel     VMON1 rail group selection. For valid values, refer to
  *                                      \ref Tps6522x_vmon1RailSelBitField
  *  \param      vmon2Thr            VMON2 treshold. For valid values, refer to
  *                                      \ref Tps6522x_vmon2ThrBitField
- *  \param      vmon2PgLevel_mv     VMON2 PG level (mV). For possible ranges,
- *                                      \ref Tps6522x_vmon2VoltageRangesMV
+ *  \param      vmon2PgSet          VMON2 PG level in PG_SET form
  *  \param      vmon2RailGrpSel     VMON2 rail group selection. For valid values, refer to
  *                                      \ref Tps6522x_vmon2RailSelBitField
  *  @{
@@ -782,14 +804,14 @@ typedef struct tps6522xVccaVmonCfg_s
     uint8_t vmon2En;
     uint8_t vmon1En;
     uint8_t vccaVmonEn;
-    uint8_t vccaPgLevel;
+    uint8_t vccaPgSet;
     uint8_t vccaVmonThr;
     uint8_t vccaRailGrpSel;
     uint8_t vmon1Thr;
-    uint16_t vmon1PgLevel_mv;
+    uint8_t vmon1PgSet;
     uint8_t vmon1RailGrpSel;
     uint8_t vmon2Thr;
-    uint16_t vmon2PgLevel_mv;
+    uint8_t vmon2PgSet;
     uint8_t vmon2RailGrpSel;
 } tps6522xVccaVmonCfg_t;
 /** @} */
@@ -1007,7 +1029,7 @@ extern const tps6522xVccaVmonRegs_t gTps6522xVccaVmonRegisters[];
  *              3. Buck PWM mode (auto or forced)
  *              4. Buck enable
  *              5. Buck slew-rate
- *              6. Buck voltage (mV)
+ *              6. Buck VSET
  *              7. Buck VMON powergood threshold
  *              8. Buck rail group selection
  *
@@ -1016,7 +1038,7 @@ extern const tps6522xVccaVmonRegs_t gTps6522xVccaVmonRegisters[];
  *              2. LDO VMON enable
  *              3. LDO enable
  *              4. LDO mode (bypass mode, LDO mode)
- *              5. LDO voltage (mV)
+ *              5. LDO VSET
  *              6. LDO VMON powergood threshold
  *              7. LDO rail group selection
  *
@@ -1024,7 +1046,7 @@ extern const tps6522xVccaVmonRegs_t gTps6522xVccaVmonRegisters[];
  *              1. VMON deglitch selection
  *              2. VCCA_VMON/VMONx enable
  *              3. VCCA_VMON/VMONx powergood threshold
- *              4. VCCA_VMON/VMONx powergood level (mV)
+ *              4. VCCA_VMON/VMONx powergood level (PG_SET)
  *              5. VCCA_VMON/VMONx rail group selection
  *
  *  \param      pPmicCoreHandle     [IN]        PMIC interface handle
@@ -1054,7 +1076,7 @@ int32_t tps6522xGetPwrRsrcCfg(Pmic_CoreHandle_t *pPmicCoreHandle, tps6522xPwrRsr
  *              3. Buck PWM mode (auto or forced)
  *              4. Buck enable
  *              5. Buck slew-rate
- *              6. Buck voltage (mV)
+ *              6. Buck VSET
  *              7. Buck VMON powergood threshold
  *              8. Buck rail group selection
  *
@@ -1086,7 +1108,7 @@ int32_t tps6522xGetBuckCfg(Pmic_CoreHandle_t *pPmicCoreHandle, tps6522xBuckCfg_t
  *              2. LDO VMON enable
  *              3. LDO enable
  *              4. LDO mode (bypass mode, LDO mode)
- *              5. LDO voltage (mV)
+ *              5. LDO VSET
  *              6. LDO VMON powergood threshold
  *              7. LDO rail group selection
  *
@@ -1118,7 +1140,7 @@ int32_t tps6522xGetLdoCfg(Pmic_CoreHandle_t *pPmicCoreHandle, tps6522xLdoCfg_t *
  *              1. VMON deglitch selection
  *              2. VCCA_VMON/VMONx enable
  *              3. VCCA_VMON/VMONx powergood threshold
- *              4. VCCA_VMON/VMONx powergood level (mV)
+ *              4. VCCA_VMON/VMONx powergood level (PG_SET)
  *              5. VCCA_VMON/VMONx rail group selection
  *
  *  \param      pPmicCoreHandle         [IN]        PMIC interface handle
@@ -1160,7 +1182,7 @@ int32_t tps6522xGetVccaVmonCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
  *              3. Buck PWM mode (auto or forced)
  *              4. Buck enable
  *              5. Buck slew-rate
- *              6. Buck voltage (mV)
+ *              6. Buck VSET
  *              7. Buck VMON powergood threshold
  *              8. Buck rail group selection
  *
@@ -1169,7 +1191,7 @@ int32_t tps6522xGetVccaVmonCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
  *              2. LDO VMON enable
  *              3. LDO enable
  *              4. LDO mode (bypass mode, LDO mode)
- *              5. LDO voltage (mV)
+ *              5. LDO VSET
  *              6. LDO VMON powergood threshold
  *              7. LDO rail group selection
  *
@@ -1177,7 +1199,7 @@ int32_t tps6522xGetVccaVmonCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
  *              1. VMON deglitch selection
  *              2. VCCA_VMON/VMONx enable
  *              3. VCCA_VMON/VMONx powergood threshold
- *              4. VCCA_VMON/VMONx powergood level (mV)
+ *              4. VCCA_VMON/VMONx powergood level (PG_SET)
  *              5. VCCA_VMON/VMONx rail group selection
  *
  *  \param      pPmicCoreHandle     [IN]        PMIC interface handle
@@ -1208,7 +1230,7 @@ int32_t tps6522xSetPwrRsrcCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const tps6522x
  *              3. Buck PWM mode (auto or forced)
  *              4. Buck enable
  *              5. Buck slew-rate
- *              6. Buck voltage (mV)
+ *              6. Buck VSET
  *              7. Buck VMON powergood threshold
  *              8. Buck rail group selection
  *
@@ -1241,7 +1263,7 @@ int32_t tps6522xSetBuckCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const tps6522xBuc
  *              2. LDO VMON enable
  *              3. LDO enable
  *              4. LDO mode (bypass mode, LDO mode)
- *              5. LDO voltage (mV)
+ *              5. LDO VSET
  *              6. LDO VMON powergood threshold
  *              7. LDO rail group selection
  *
@@ -1273,7 +1295,7 @@ int32_t tps6522xSetLdoCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const tps6522xLdoC
  *              1. VMON deglitch selection
  *              2. VCCA_VMON/VMONx enable
  *              3. VCCA_VMON/VMONx powergood threshold
- *              4. VCCA_VMON/VMONx powergood level (mV)
+ *              4. VCCA_VMON/VMONx powergood level (PG_SET)
  *              5. VCCA_VMON/VMONx rail group selection
  *
  *  \param      pPmicCoreHandle         [IN]        PMIC interface handle

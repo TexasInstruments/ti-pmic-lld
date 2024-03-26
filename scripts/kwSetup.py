@@ -25,19 +25,33 @@ if __name__ == "__main__":
     if ((not os.path.exists(kwlpFile)) and (not os.path.exists(kwpsFile))):
         try:
             # Create local project
-            subprocess.run(["kwcheck", "create"])
-
+            status = subprocess.run(["kwcheck", "create"])
+            status.check_returncode()
+            
             # Set license host and port
-            subprocess.run(["kwcheck", "set", "license.host=kw-lic.ent.ti.com", "license.port=27005"])
+            status = subprocess.run(["kwcheck", "set", "license.host=kw-lic.ent.ti.com", "license.port=27005"])
+            status.check_returncode()
 
             # Import .pconf file
-            subprocess.run(["kwcheck", "import", pconfFile])
-            
-            # Import .mconf file
-            subprocess.run(["kwcheck", "import", mconfFile])
+            if (os.path.exists(pconfFile)):
+                status = subprocess.run(["kwcheck", "import", pconfFile])
+                status.check_returncode()
+            else:
+                raise FileNotFoundError(pconfFile)
 
+            # Import .mconf file
+            if (os.path.exists(mconfFile)):
+                status = subprocess.run(["kwcheck", "import", mconfFile])
+                status.check_returncode()
+            else:
+                raise FileNotFoundError(mconfFile)
+                
             # Import .sconf file
-            subprocess.run(["kwcheck", "import", sconfFile])
+            if (os.path.exists(sconfFile)):
+                status = subprocess.run(["kwcheck", "import", sconfFile])
+                status.check_returncode()
+            else:
+                raise FileNotFoundError(sconfFile)
         except Exception as e:
             print("\"" + str(e) + "\" exception at line number " + str(e.__traceback__.tb_lineno))
             exit(-1)

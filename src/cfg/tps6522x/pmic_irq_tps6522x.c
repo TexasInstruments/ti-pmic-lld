@@ -526,10 +526,7 @@ static void Pmic_tps6522x_getStartupErr(uint8_t regValue, Pmic_IrqStatus_t *pErr
     }
 }
 
-/*!
- * \brief  Function to decipher MISC Error.
- */
-static void Pmic_tps6522x_getMiscErr(uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
+static inline void Pmic_tps6522xGet_BISTPass_EXTClk_REGUnlock_Twarn_Err(uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
 {
     if ((regValue & PMIC_BIST_PASS_INT_MASK) != 0U)
     {
@@ -550,7 +547,10 @@ static void Pmic_tps6522x_getMiscErr(uint8_t regValue, Pmic_IrqStatus_t *pErrSta
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_TWARN_INT);
     }
+}
 
+static inline void Pmic_tps6522xGet_PBLong_PBFall_PBRise_ADCConvReady_Err(uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
+{
     if ((regValue & TPS6522X_PB_LONG_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_PB_LONG_INT);
@@ -570,6 +570,16 @@ static void Pmic_tps6522x_getMiscErr(uint8_t regValue, Pmic_IrqStatus_t *pErrSta
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_ADC_CONV_READY_INT);
     }
+}
+
+/*!
+ * \brief  Function to decipher MISC Error. The function is split into two to avoid 
+           HIS metrics issues (2^8 > 80; too many paths for one function alone)
+ */
+static void Pmic_tps6522x_getMiscErr(uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
+{
+    Pmic_tps6522xGet_BISTPass_EXTClk_REGUnlock_Twarn_Err(regValue, pErrStat);
+    Pmic_tps6522xGet_PBLong_PBFall_PBRise_ADCConvReady_Err(regValue, pErrStat);
 }
 
 /*!
@@ -628,19 +638,15 @@ static void Pmic_tps6522x_getSevereErr(uint8_t regValue, Pmic_IrqStatus_t *pErrS
 /*!
  * \brief  Function to check FSM - ESM Error
  */
-static void Pmic_tps6522x_getFsmEsmErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
+static void Pmic_tps6522x_getEsmErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
     if ((regValue & PMIC_ESM_INT_MASK) != 0U)
     {
-        /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
-
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_INT_ESM_REGADDR, &regData);
-
-        /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
 
         if ((PMIC_ST_SUCCESS == pmicStatus) && (0U != regData))
@@ -663,14 +669,8 @@ static void Pmic_tps6522x_getFsmEsmErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8
     }
 }
 
-/*!
- * \brief  Function to decipher FSM Error.
- */
-static int32_t Pmic_tps6522x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
+static inline void Pmic_tps6522xGetIntFsmErr(uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
 {
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint8_t regData = 0U;
-
     if ((regValue & PMIC_IMM_SHUTDOWN_INT_MASK) != 0U)
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_IMM_SHUTOWN_INT);
@@ -700,19 +700,18 @@ static int32_t Pmic_tps6522x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8
     {
         Pmic_intrBitSet(pErrStat, PMIC_TPS6522X_I2C2_ERR_INT);
     }
+}
 
-    /* Check/decipher FSM Error for PMIC_INT_ESM Register Bit */
-    Pmic_tps6522x_getFsmEsmErr(pPmicCoreHandle, regValue, pErrStat);
+static int32_t Pmic_tps6522xGetWdgErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
 
     /* Check/decipher FSM Error for IRQ Mask Bit */
     if ((regValue & PMIC_WD_INT_MASK) != 0U)
     {
-        /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
-
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_ERR_STATUS_REGADDR, &regData);
-
-        /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
 
         if ((PMIC_ST_SUCCESS == pmicStatus) && ((regData & PMIC_INT_WD_ERR_MASK) != 0U))
@@ -733,6 +732,25 @@ static int32_t Pmic_tps6522x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8
             }
         }
     }
+
+    return pmicStatus;
+}
+
+/*!
+ * \brief  Function to decipher FSM Error.
+ */
+static int32_t Pmic_tps6522x_getFSMErr(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t regValue, Pmic_IrqStatus_t *pErrStat)
+{
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+
+    /* Check/decipher INT_FSM_ERR register */
+    Pmic_tps6522xGetIntFsmErr(regValue, pErrStat);
+
+    /* Check/decipher FSM error for PMIC_INT_ESM Register Bit */
+    Pmic_tps6522x_getEsmErr(pPmicCoreHandle, regValue, pErrStat);
+
+    /* Check/decipher the FSM error WD_INT */
+    pmicStatus = Pmic_tps6522xGetWdgErr(pPmicCoreHandle, regValue, pErrStat);
 
     return pmicStatus;
 }

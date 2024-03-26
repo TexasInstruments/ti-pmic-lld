@@ -43,33 +43,27 @@
                             RUN_TEST(test_power_setConfiguration_buckFPWM);                             \
                             RUN_TEST(test_power_setConfiguration_buckEn);                               \
                             RUN_TEST(test_power_setConfiguration_buckSlewRate);                         \
-                            RUN_TEST(test_power_setConfiguration_buckVout_voltageBelowRange);           \
-                            RUN_TEST(test_power_setConfiguration_buckVout_voltageAboveRange);           \
-                            RUN_TEST(test_power_setConfiguration_buck1_buckVout);                       \
-                            RUN_TEST(test_power_setConfiguration_buck2_3_4_buckVout);                   \
+                            RUN_TEST(test_power_setConfiguration_buckVset_belowRange);                  \
+                            RUN_TEST(test_power_setConfiguration_buckVset_aboveRange);                  \
+                            RUN_TEST(test_power_setConfiguration_buckVset);                             \
                             RUN_TEST(test_power_setConfiguration_buckVmonThr);                          \
                             RUN_TEST(test_power_setConfiguration_buckRailGrpSel);                       \
                             RUN_TEST(test_power_setConfiguration_ldoDischargeEnableDisable);            \
                             RUN_TEST(test_power_setConfiguration_ldoVmonEnableDisable);                 \
                             RUN_TEST(test_power_setConfiguration_ldoEnableDisable);                     \
                             RUN_TEST(test_power_setConfiguration_ldoBypassConfig);                      \
-                            RUN_TEST(test_power_setConfiguration_ldo1Vout_voltageBelowRange);           \
-                            RUN_TEST(test_power_setConfiguration_ldo1Vout_voltageAboveRange);           \
-                            RUN_TEST(test_power_setConfiguration_ldo2_3_Vout_voltageBelowRange);        \
-                            RUN_TEST(test_power_setConfiguration_ldo2_3_Vout_voltageAboveRange);        \
-                            RUN_TEST(test_power_setConfiguration_ldo1_ldoVout);                         \
-                            RUN_TEST(test_power_setConfiguration_ldo2_3_ldoVout);                       \
+                            RUN_TEST(test_power_setConfiguration_ldoVset_aboveRange);                   \
+                            RUN_TEST(test_power_setConfiguration_ldoVset);                              \
                             RUN_TEST(test_power_setConfiguration_ldoVmonThr);                           \
                             RUN_TEST(test_power_setConfiguration_ldoRailGrpSel);                        \
                             RUN_TEST(test_power_setConfiguration_vmonDeglitch);                         \
                             RUN_TEST(test_power_setConfiguration_VMON1_2_VCCA_VMON_EnableDisable);      \
-                            RUN_TEST(test_power_setConfiguration_vccaPgLevel);                          \
+                            RUN_TEST(test_power_setConfiguration_vccaPgSet);                            \
                             RUN_TEST(test_power_setConfiguration_vccaVmonThr);                          \
                             RUN_TEST(test_power_setConfiguration_vccaRailGrpSel);                       \
-                            RUN_TEST(test_power_setConfiguration_vmon1PgSet_voltageOutOfRange);         \
-                            RUN_TEST(test_power_setConfiguration_vmon2PgSet_voltageOutOfRange);         \
-                            RUN_TEST(test_power_setConfiguration_vmon1PgSet);                           \
-                            RUN_TEST(test_power_setConfiguration_vmon2PgSet);                           \
+                            RUN_TEST(test_power_setConfiguration_vmon1PgSet_outOfRange);                \
+                            RUN_TEST(test_power_setConfiguration_vmon2PgSet_outOfRange);                \
+                            RUN_TEST(test_power_setConfiguration_vmonPgSet);                            \
                             RUN_TEST(test_power_setConfiguration_vmon1_2_RailGrpSel);                   \
                             RUN_TEST(test_power_setConfiguration_vmon1_2_Thr);                          \
                             RUN_TEST(test_power_getPwrRsrcStat_nullParam);                              \
@@ -168,18 +162,17 @@ static void resetBurtonPwrCfg_withAllValidParams(tps6522xPwrRsrcCfg_t *burtonPwr
     for (i = 0U; i < TPS6522X_MAX_BUCK_NUM; i++)
     {
         burtonPwrRsrcCfg->buckCfg[i].validParams =
-            TPS6522X_BUCK_PLDN_VALID_SHIFT       | TPS6522X_BUCK_VMON_EN_VALID_SHIFT |
-            TPS6522X_BUCK_PWM_OPTION_VALID_SHIFT | TPS6522X_BUCK_EN_VALID_SHIFT |
-            TPS6522X_BUCK_SLEW_RATE_VALID_SHIFT  | TPS6522X_BUCK_VOLTAGE_MV_VALID_SHIFT
-            | TPS6522X_BUCK_VMON_THR_VALID_SHIFT   |
-            TPS6522X_BUCK_RAIL_GRP_SEL_VALID_SHIFT;
+            TPS6522X_BUCK_PLDN_VALID_SHIFT          | TPS6522X_BUCK_VMON_EN_VALID_SHIFT     |
+            TPS6522X_BUCK_PWM_OPTION_VALID_SHIFT    | TPS6522X_BUCK_EN_VALID_SHIFT          |
+            TPS6522X_BUCK_SLEW_RATE_VALID_SHIFT     | TPS6522X_BUCK_VSET_VALID_SHIFT        | 
+            TPS6522X_BUCK_VMON_THR_VALID_SHIFT      | TPS6522X_BUCK_RAIL_GRP_SEL_VALID_SHIFT;
 
         burtonPwrRsrcCfg->buckCfg[i].buckPldn       = TPS6522X_BUCK_PLDN_DISABLE;
         burtonPwrRsrcCfg->buckCfg[i].buckVmonEn     = TPS6522X_BUCK_VMON_DISABLE;
         burtonPwrRsrcCfg->buckCfg[i].buckPwmOption  = TPS6522X_BUCK_PWM_AUTO;
         burtonPwrRsrcCfg->buckCfg[i].buckEn         = TPS6522X_BUCK_DISABLE;
         burtonPwrRsrcCfg->buckCfg[i].buckSlewRate   = TPS6522X_BUCK_SLEW_RATE_10_MV_PER_US;
-        burtonPwrRsrcCfg->buckCfg[i].buckVoltage_mv = 500U;
+        burtonPwrRsrcCfg->buckCfg[i].buckVset       = (i == TPS6522X_REGULATOR_BUCK1) ? 0xAU : 0x0U;
         burtonPwrRsrcCfg->buckCfg[i].buckVmonThr    = TPS6522X_BUCK_VMON_THR_3_PCT_OR_30_MV;
         burtonPwrRsrcCfg->buckCfg[i].buckRailGrpSel = TPS6522X_BUCK_RAIL_SEL_NONE;
     }
@@ -189,26 +182,25 @@ static void resetBurtonPwrCfg_withAllValidParams(tps6522xPwrRsrcCfg_t *burtonPwr
         burtonPwrRsrcCfg->ldoCfg[i].validParams =
             TPS6522X_LDO_DISCHARGE_EN_VALID_SHIFT | TPS6522X_LDO_VMON_EN_VALID_SHIFT  |
             TPS6522X_LDO_EN_VALID_SHIFT           | TPS6522X_LDO_MODE_VALID_SHIFT     |
-            TPS6522X_LDO_VOLTAGE_MV_VALID_SHIFT   | TPS6522X_LDO_VMON_THR_VALID_SHIFT |
+            TPS6522X_LDO_VSET_VALID_SHIFT         | TPS6522X_LDO_VMON_THR_VALID_SHIFT |
             TPS6522X_LDO_RAIL_GRP_SEL_VALID_SHIFT;
 
         burtonPwrRsrcCfg->ldoCfg[i].ldoDischargeEn = TPS6522X_LDO_DISCHARGE_DISABLE;
         burtonPwrRsrcCfg->ldoCfg[i].ldoVmonEn      = TPS6522X_LDO_VMON_DISABLE;
         burtonPwrRsrcCfg->ldoCfg[i].ldoEn          = TPS6522X_LDO_DISABLE;
         burtonPwrRsrcCfg->ldoCfg[i].ldoMode        = TPS6522X_LDO_BYP_CONFIG_LDO_MODE;
-        burtonPwrRsrcCfg->ldoCfg[i].ldoVoltage_mv  = 500U;
+        burtonPwrRsrcCfg->ldoCfg[i].ldoVset        = 0x0U;
         burtonPwrRsrcCfg->ldoCfg[i].ldoVmonThr     = TPS6522X_LDO_VMON_THR_3_PCT;
         burtonPwrRsrcCfg->ldoCfg[i].ldoRailGrpSel  = TPS6522X_LDO_RAIL_SEL_NONE;
     }
 
     burtonPwrRsrcCfg->vccaVmonCfg.validParams =
-        TPS6522X_VMON_DEGLITCH_SEL_VALID_SHIFT  | TPS6522X_VMON2_EN_VALID_SHIFT |
-        TPS6522X_VMON1_EN_VALID_SHIFT           | TPS6522X_VCCA_VMON_EN_VALID_SHIFT |
-        TPS6522X_VCCA_PG_LEVEL_VALID_SHIFT      | TPS6522X_VCCA_VMON_THR_VALID_SHIFT |
-        TPS6522X_VCCA_RAIL_GRP_SEL_VALID_SHIFT  | TPS6522X_VMON1_THR_VALID_SHIFT |
-        TPS6522X_VMON1_PG_LEVEL_MV_VALID_SHIFT  |
-        TPS6522X_VMON1_RAIL_GRP_SEL_VALID_SHIFT | TPS6522X_VMON2_THR_VALID_SHIFT |
-        TPS6522X_VMON2_PG_LEVEL_MV_VALID_SHIFT  |
+        TPS6522X_VMON_DEGLITCH_SEL_VALID_SHIFT  | TPS6522X_VMON2_EN_VALID_SHIFT             |
+        TPS6522X_VMON1_EN_VALID_SHIFT           | TPS6522X_VCCA_VMON_EN_VALID_SHIFT         |
+        TPS6522X_VCCA_PG_SET_VALID_SHIFT        | TPS6522X_VCCA_VMON_THR_VALID_SHIFT        |
+        TPS6522X_VCCA_RAIL_GRP_SEL_VALID_SHIFT  | TPS6522X_VMON1_THR_VALID_SHIFT            |
+        TPS6522X_VMON1_PG_SET_VALID_SHIFT       | TPS6522X_VMON1_RAIL_GRP_SEL_VALID_SHIFT   | 
+        TPS6522X_VMON2_THR_VALID_SHIFT          | TPS6522X_VMON2_PG_SET_VALID_SHIFT         |
         TPS6522X_VMON2_RAIL_GRP_SEL_VALID_SHIFT;
 
     burtonPwrRsrcCfg->vccaVmonCfg.vmonDeglitchSel =
@@ -216,14 +208,14 @@ static void resetBurtonPwrCfg_withAllValidParams(tps6522xPwrRsrcCfg_t *burtonPwr
     burtonPwrRsrcCfg->vccaVmonCfg.vmon2En         = TPS6522X_VMON2_DISABLE;
     burtonPwrRsrcCfg->vccaVmonCfg.vmon1En         = TPS6522X_VMON1_DISABLE;
     burtonPwrRsrcCfg->vccaVmonCfg.vccaVmonEn      = TPS6522X_VCCA_VMON_DISABLE;
-    burtonPwrRsrcCfg->vccaVmonCfg.vccaPgLevel     = TPS6522X_VCCA_PG_LEVEL_3_3_V;
+    burtonPwrRsrcCfg->vccaVmonCfg.vccaPgSet       = TPS6522X_VCCA_PG_SET_3_3_V;
     burtonPwrRsrcCfg->vccaVmonCfg.vccaVmonThr     = TPS6522X_VCCA_VMON_THR_3_PCT;
     burtonPwrRsrcCfg->vccaVmonCfg.vccaRailGrpSel  = TPS6522X_VCCA_RAIL_SEL_NONE;
     burtonPwrRsrcCfg->vccaVmonCfg.vmon1Thr        = TPS6522X_VMON1_THR_3_PCT_OR_30_MV;
-    burtonPwrRsrcCfg->vccaVmonCfg.vmon1PgLevel_mv = 500U;
+    burtonPwrRsrcCfg->vccaVmonCfg.vmon1PgSet      = 0xAU;
     burtonPwrRsrcCfg->vccaVmonCfg.vmon1RailGrpSel = TPS6522X_VMON1_RAIL_SEL_NONE;
     burtonPwrRsrcCfg->vccaVmonCfg.vmon2Thr        = TPS6522X_VMON2_THR_3_PCT;
-    burtonPwrRsrcCfg->vccaVmonCfg.vmon2PgLevel_mv = 500U;
+    burtonPwrRsrcCfg->vccaVmonCfg.vmon2PgSet      = 0x0U;
     burtonPwrRsrcCfg->vccaVmonCfg.vmon2RailGrpSel = TPS6522X_VMON2_RAIL_SEL_NONE;
 }
 
@@ -242,7 +234,7 @@ static void resetBurtonPwrCfg_withNoValidParams(tps6522xPwrRsrcCfg_t *burtonPwrR
         burtonPwrRsrcCfg->buckCfg[i].buckPwmOption  = TPS6522X_BUCK_PWM_AUTO;
         burtonPwrRsrcCfg->buckCfg[i].buckEn         = TPS6522X_BUCK_DISABLE;
         burtonPwrRsrcCfg->buckCfg[i].buckSlewRate   = TPS6522X_BUCK_SLEW_RATE_10_MV_PER_US;
-        burtonPwrRsrcCfg->buckCfg[i].buckVoltage_mv = 500U;
+        burtonPwrRsrcCfg->buckCfg[i].buckVset       = (i == TPS6522X_REGULATOR_BUCK1) ? 0xAU : 0x0U;
         burtonPwrRsrcCfg->buckCfg[i].buckVmonThr    = TPS6522X_BUCK_VMON_THR_3_PCT_OR_30_MV;
         burtonPwrRsrcCfg->buckCfg[i].buckRailGrpSel = TPS6522X_BUCK_RAIL_SEL_NONE;
     }
@@ -255,7 +247,7 @@ static void resetBurtonPwrCfg_withNoValidParams(tps6522xPwrRsrcCfg_t *burtonPwrR
         burtonPwrRsrcCfg->ldoCfg[i].ldoVmonEn      = TPS6522X_LDO_VMON_DISABLE;
         burtonPwrRsrcCfg->ldoCfg[i].ldoEn          = TPS6522X_LDO_DISABLE;
         burtonPwrRsrcCfg->ldoCfg[i].ldoMode        = TPS6522X_LDO_BYP_CONFIG_LDO_MODE;
-        burtonPwrRsrcCfg->ldoCfg[i].ldoVoltage_mv  = 500U;
+        burtonPwrRsrcCfg->ldoCfg[i].ldoVset        = 0x0U;
         burtonPwrRsrcCfg->ldoCfg[i].ldoVmonThr     = TPS6522X_LDO_VMON_THR_3_PCT;
         burtonPwrRsrcCfg->ldoCfg[i].ldoRailGrpSel  = TPS6522X_LDO_RAIL_SEL_NONE;
     }
@@ -267,14 +259,14 @@ static void resetBurtonPwrCfg_withNoValidParams(tps6522xPwrRsrcCfg_t *burtonPwrR
     burtonPwrRsrcCfg->vccaVmonCfg.vmon2En         = TPS6522X_VMON2_DISABLE;
     burtonPwrRsrcCfg->vccaVmonCfg.vmon1En         = TPS6522X_VMON1_DISABLE;
     burtonPwrRsrcCfg->vccaVmonCfg.vccaVmonEn      = TPS6522X_VCCA_VMON_DISABLE;
-    burtonPwrRsrcCfg->vccaVmonCfg.vccaPgLevel     = TPS6522X_VCCA_PG_LEVEL_3_3_V;
+    burtonPwrRsrcCfg->vccaVmonCfg.vccaPgSet       = TPS6522X_VCCA_PG_SET_3_3_V;
     burtonPwrRsrcCfg->vccaVmonCfg.vccaVmonThr     = TPS6522X_VCCA_VMON_THR_3_PCT;
     burtonPwrRsrcCfg->vccaVmonCfg.vccaRailGrpSel  = TPS6522X_VCCA_RAIL_SEL_NONE;
     burtonPwrRsrcCfg->vccaVmonCfg.vmon1Thr        = TPS6522X_VMON1_THR_3_PCT_OR_30_MV;
-    burtonPwrRsrcCfg->vccaVmonCfg.vmon1PgLevel_mv = 500U;
+    burtonPwrRsrcCfg->vccaVmonCfg.vmon1PgSet      = 0xAU;
     burtonPwrRsrcCfg->vccaVmonCfg.vmon1RailGrpSel = TPS6522X_VMON1_RAIL_SEL_NONE;
     burtonPwrRsrcCfg->vccaVmonCfg.vmon2Thr        = TPS6522X_VMON2_THR_3_PCT;
-    burtonPwrRsrcCfg->vccaVmonCfg.vmon2PgLevel_mv = 500U;
+    burtonPwrRsrcCfg->vccaVmonCfg.vmon2PgSet      = 0x0U;
     burtonPwrRsrcCfg->vccaVmonCfg.vmon2RailGrpSel = TPS6522X_VMON2_RAIL_SEL_NONE;
 }
 
@@ -295,7 +287,7 @@ void test_power_getConfiguration_pmicHandle_null(void)
 }
 
 /**
- *  \brief  tps6522xGetPwrRsrcCfg: Test API error handing for when Power Resource CFG input parameter
+ *  \brief  tps6522xGetPwrRsrcCfg: Test API error handling for when Power Resource CFG input parameter
  *                                               is NULL
  */
 void test_power_getConfiguration_pwrRsrcCfg_null(void)
@@ -308,7 +300,7 @@ void test_power_getConfiguration_pwrRsrcCfg_null(void)
 }
 
 /**
- *  \brief  tps6522xGetPwrRsrcCfg: Test API error handing for when there are no valid parameters
+ *  \brief  tps6522xGetPwrRsrcCfg: Test API error handling for when there are no valid parameters
  *                                               within Power Resource CFG input param
  */
 void test_power_getConfiguration_pwrRsrcCfg_noValidParam(void)
@@ -446,8 +438,8 @@ void test_power_setConfiguration_pmicHandle_null(void)
 }
 
 /**
- *  \brief  tps6522xSetPwrRsrcCfg: Test API error handing for when there are no valid parameters
- *                                               within Power Resource CFG input param
+ *  \brief  tps6522xSetPwrRsrcCfg: Test API error handling for when there are no valid parameters
+ *                                 within Power Resource CFG input param
  */
 void test_power_setConfiguration_pwrRsrcCfg_noValidParam(void)
 {
@@ -464,7 +456,7 @@ void test_power_setConfiguration_pwrRsrcCfg_noValidParam(void)
 
 /**
  * \brief   tps6522xSetPwrRsrcCfg: Test API error handling for when there are no valid parameters
- *                                               within Buck Power Resource CFG
+ *                                 within Buck Power Resource CFG
  */
 void test_power_setConfiguration_buckCfg_noValidParam(void)
 {
@@ -489,7 +481,7 @@ void test_power_setConfiguration_buckCfg_noValidParam(void)
 
 /**
  * \brief   tps6522xSetPwrRsrcCfg: Test API error handling for when there are no valid parameters
- *                                               within LDO Power Resource CFG
+ *                                 within LDO Power Resource CFG
  */
 void test_power_setConfiguration_ldoCfg_noValidParam(void)
 {
@@ -514,7 +506,7 @@ void test_power_setConfiguration_ldoCfg_noValidParam(void)
 
 /**
  * \brief   tps6522xSetPwrRsrcCfg: Test API error handling for when there are no valid parameters
- *                                               within VCCA_VMON/VMONx Power Resource CFG
+ *                                 within VCCA_VMON/VMONx Power Resource CFG
  */
 void test_power_setConfiguration_vccaVmonCfg_noValidParam(void)
 {
@@ -561,9 +553,9 @@ static void compareBuckPwrRsrcCfg(const tps6522xBuckCfg_t buckCfg_1,
     {
         TEST_ASSERT_EQUAL(buckCfg_1.buckSlewRate, buckCfg_2.buckSlewRate);
     }
-    if (bitFieldValidParamShift_ignore != TPS6522X_BUCK_VOLTAGE_MV_VALID_SHIFT)
+    if (bitFieldValidParamShift_ignore != TPS6522X_BUCK_VSET_VALID_SHIFT)
     {
-        TEST_ASSERT_EQUAL(buckCfg_1.buckVoltage_mv, buckCfg_2.buckVoltage_mv);
+        TEST_ASSERT_EQUAL(buckCfg_1.buckVset, buckCfg_2.buckVset);
     }
     if (bitFieldValidParamShift_ignore != TPS6522X_BUCK_RAIL_GRP_SEL_VALID_SHIFT)
     {
@@ -591,9 +583,9 @@ static void compareLdoPwrRsrcCfg(const tps6522xLdoCfg_t ldoCfg_1,
     {
         TEST_ASSERT_EQUAL(ldoCfg_1.ldoMode, ldoCfg_2.ldoMode);
     }
-    if (bitFieldValidParamShift_ignore != TPS6522X_LDO_VOLTAGE_MV_VALID_SHIFT)
+    if (bitFieldValidParamShift_ignore != TPS6522X_LDO_VSET_VALID_SHIFT)
     {
-        TEST_ASSERT_EQUAL(ldoCfg_1.ldoVoltage_mv, ldoCfg_2.ldoVoltage_mv);
+        TEST_ASSERT_EQUAL(ldoCfg_1.ldoVset, ldoCfg_2.ldoVset);
     }
     if (bitFieldValidParamShift_ignore != TPS6522X_LDO_VMON_THR_VALID_SHIFT)
     {
@@ -625,9 +617,9 @@ static void compareVccaVmonPwrRsrcCfg(const tps6522xVccaVmonCfg_t vccaVmonCfg_1,
     {
         TEST_ASSERT_EQUAL(vccaVmonCfg_1.vccaVmonEn, vccaVmonCfg_2.vccaVmonEn);
     }
-    if (bitFieldValidParamShift_ignore != TPS6522X_VCCA_PG_LEVEL_VALID_SHIFT)
+    if (bitFieldValidParamShift_ignore != TPS6522X_VCCA_PG_SET_VALID_SHIFT)
     {
-        TEST_ASSERT_EQUAL(vccaVmonCfg_1.vccaPgLevel, vccaVmonCfg_2.vccaPgLevel);
+        TEST_ASSERT_EQUAL(vccaVmonCfg_1.vccaPgSet, vccaVmonCfg_2.vccaPgSet);
     }
     if (bitFieldValidParamShift_ignore != TPS6522X_VCCA_VMON_THR_VALID_SHIFT)
     {
@@ -641,9 +633,9 @@ static void compareVccaVmonPwrRsrcCfg(const tps6522xVccaVmonCfg_t vccaVmonCfg_1,
     {
         TEST_ASSERT_EQUAL(vccaVmonCfg_1.vmon1Thr, vccaVmonCfg_2.vmon1Thr);
     }
-    if (bitFieldValidParamShift_ignore != TPS6522X_VMON1_PG_LEVEL_MV_VALID_SHIFT)
+    if (bitFieldValidParamShift_ignore != TPS6522X_VMON1_PG_SET_VALID_SHIFT)
     {
-        TEST_ASSERT_EQUAL(vccaVmonCfg_1.vmon1PgLevel_mv, vccaVmonCfg_2.vmon1PgLevel_mv);
+        TEST_ASSERT_EQUAL(vccaVmonCfg_1.vmon1PgSet, vccaVmonCfg_2.vmon1PgSet);
     }
     if (bitFieldValidParamShift_ignore != TPS6522X_VMON1_RAIL_GRP_SEL_VALID_SHIFT)
     {
@@ -653,9 +645,9 @@ static void compareVccaVmonPwrRsrcCfg(const tps6522xVccaVmonCfg_t vccaVmonCfg_1,
     {
         TEST_ASSERT_EQUAL(vccaVmonCfg_1.vmon2Thr, vccaVmonCfg_2.vmon2Thr);
     }
-    if (bitFieldValidParamShift_ignore != TPS6522X_VMON2_PG_LEVEL_MV_VALID_SHIFT)
+    if (bitFieldValidParamShift_ignore != TPS6522X_VMON2_PG_SET_VALID_SHIFT)
     {
-        TEST_ASSERT_EQUAL(vccaVmonCfg_1.vmon2PgLevel_mv, vccaVmonCfg_2.vmon2PgLevel_mv);
+        TEST_ASSERT_EQUAL(vccaVmonCfg_1.vmon2PgSet, vccaVmonCfg_2.vmon2PgSet);
     }
     if (bitFieldValidParamShift_ignore != TPS6522X_VMON2_RAIL_GRP_SEL_VALID_SHIFT)
     {
@@ -665,8 +657,8 @@ static void compareVccaVmonPwrRsrcCfg(const tps6522xVccaVmonCfg_t vccaVmonCfg_1,
 
 static void comparePwrRsrcCfg_ignoreBitField(const tps6522xPwrRsrcCfg_t pwrRsrcCfg_1,
                                              const tps6522xPwrRsrcCfg_t pwrRsrcCfg_2,
-                                             const uint16_t                             pwrRsrcValidParamShift_ignore,
-                                             const uint16_t                             bitFieldValidParamShift_ignore)
+                                             const uint16_t pwrRsrcValidParamShift_ignore,
+                                             const uint16_t bitFieldValidParamShift_ignore)
 {
     uint8_t  i = 0U;
     uint16_t pwrRsrcValidParamShift = 0U;
@@ -744,7 +736,7 @@ void test_power_setConfiguration_buckPldnEnableDisable(void)
     // For each buck...
     for (i = 0U; i < TPS6522X_MAX_BUCK_NUM; i++)
     {
-        // Capture current configuration state of power resources for later comparison
+        // Capture initial configuration state of power resources for later comparison
         status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -797,7 +789,7 @@ void test_power_setConfiguration_buckVmonEnableDisable(void)
     // For each buck...
     for (i = 0U; i < TPS6522X_MAX_BUCK_NUM; i++)
     {
-        // Capture current configuration state of power resources for later comparison
+        // Capture initial configuration state of power resources for later comparison
         status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -837,7 +829,7 @@ void test_power_setConfiguration_buckVmonEnableDisable(void)
 
 /**
  *  \brief  tps6522xSetPwrRsrcCfg: Test whether API can configure Buck to operate in AUTO mode
- *                                               or FPWM mode
+ *                                 or FPWM mode
  */
 void test_power_setConfiguration_buckFPWM(void)
 {
@@ -853,7 +845,7 @@ void test_power_setConfiguration_buckFPWM(void)
     // For each buck...
     for (i = 0U; i < TPS6522X_MAX_BUCK_NUM; i++)
     {
-        // Capture current configuration state of power resources for later comparison
+        // Capture initial configuration state of power resources for later comparison
         status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -908,7 +900,7 @@ void test_power_setConfiguration_buckEn(void)
     // For each buck...
     for (i = 0U; i < TPS6522X_MAX_BUCK_NUM; i++)
     {
-        // Capture current configuration state of power resources for later comparison
+        // Capture initial configuration state of power resources for later comparison
         status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -962,7 +954,7 @@ void test_power_setConfiguration_buckSlewRate(void)
     // For each buck...
     for (i = 0U; i < TPS6522X_MAX_BUCK_NUM; i++)
     {
-        // Capture current configuration state of power resources for later comparison
+        // Capture initial configuration state of power resources for later comparison
         status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -995,12 +987,12 @@ void test_power_setConfiguration_buckSlewRate(void)
 }
 
 /**
- *  \brief  tps6522xSetPwrRsrcCfg: Test API error handing for when Buck voltage is below range
+ *  \brief  tps6522xSetPwrRsrcCfg: Test API error handling for when Buck VSET is below range
  */
-void test_power_setConfiguration_buckVout_voltageBelowRange(void)
+void test_power_setConfiguration_buckVset_belowRange(void)
 {
     uint8_t i = 0U;
-    uint16_t voltage_mv = 0U;
+    uint8_t vset = 0U, minVset = 0U;
     int32_t status = PMIC_ST_SUCCESS;
     tps6522xPwrRsrcCfg_t expectedPwrRsrcCfg, actualPwrRsrcCfg, initialPwrRsrcCfg;
 
@@ -1010,20 +1002,22 @@ void test_power_setConfiguration_buckVout_voltageBelowRange(void)
     resetBurtonPwrCfg_withAllValidParams(&initialPwrRsrcCfg);
 
     // For each buck...
-    for (i = 0U; i < TPS6522X_MAX_BUCK_NUM; i++)
+    for (i = TPS6522X_REGULATOR_BUCK1; i <= TPS6522X_REGULATOR_BUCK4; i++)
     {
-        // Capture current configuration state of power resources for later comparison
+        minVset = (i == TPS6522X_REGULATOR_BUCK1) ? 0xAU : 0x0;
+
+        // Capture initial configuration state of power resources for later comparison
         status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-        // Set buck validParam and BUCK_VOLTAGE_MV validParam
+        // Set buck validParam and BUCK_VSET validParam
         expectedPwrRsrcCfg.validParams = TPS6522X_BUCK1_VALID_SHIFT << i;
-        expectedPwrRsrcCfg.buckCfg[i].validParams = TPS6522X_BUCK_VOLTAGE_MV_VALID_SHIFT;
+        expectedPwrRsrcCfg.buckCfg[i].validParams = TPS6522X_BUCK_VSET_VALID_SHIFT;
 
-        // Setting voltage_mv to anything less than 500 mV for a buck should result in an error
-        for (voltage_mv = 499; voltage_mv != 0; voltage_mv--)
+        // Set VSET to a value less than the min Buck VSET value and observe error code
+        for (vset = (minVset - 1U); vset != UINT8_MAX; vset--)
         {
-            expectedPwrRsrcCfg.buckCfg[i].buckVoltage_mv = voltage_mv;
+            expectedPwrRsrcCfg.buckCfg[i].buckVset = vset;
             status = tps6522xSetPwrRsrcCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
             TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_VOLTAGE, status);
         }
@@ -1039,12 +1033,12 @@ void test_power_setConfiguration_buckVout_voltageBelowRange(void)
 }
 
 /**
- *  \brief  tps6522xSetPwrRsrcCfg: Test API error handing for when Buck voltage is above range
+ *  \brief  tps6522xSetPwrRsrcCfg: Test API error handling for when Buck VSET is above range
  */
-void test_power_setConfiguration_buckVout_voltageAboveRange(void)
+void test_power_setConfiguration_buckVset_aboveRange(void)
 {
     uint8_t i = 0U;
-    uint16_t voltage_mv = 0U;
+    uint8_t vset = 0U, maxVset = 0U;
     int32_t status = PMIC_ST_SUCCESS;
     tps6522xPwrRsrcCfg_t expectedPwrRsrcCfg, actualPwrRsrcCfg, initialPwrRsrcCfg;
 
@@ -1054,20 +1048,22 @@ void test_power_setConfiguration_buckVout_voltageAboveRange(void)
     resetBurtonPwrCfg_withAllValidParams(&initialPwrRsrcCfg);
 
     // For each buck...
-    for (i = 0U; i < TPS6522X_MAX_BUCK_NUM; i++)
+    for (i = TPS6522X_REGULATOR_BUCK1; i <= TPS6522X_REGULATOR_BUCK4; i++)
     {
-        // Capture current configuration state of power resources for later comparison
+        maxVset = (i == TPS6522X_REGULATOR_BUCK1) ? 0xFDU : 0x45U;
+
+        // Capture initial configuration state of power resources for later comparison
         status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-        // Set buck validParam and BUCK_VOLTAGE_MV validParam
+        // Set buck validParam and BUCK_VSET validParam
         expectedPwrRsrcCfg.validParams = TPS6522X_BUCK1_VALID_SHIFT << i;
-        expectedPwrRsrcCfg.buckCfg[i].validParams = TPS6522X_BUCK_VOLTAGE_MV_VALID_SHIFT;
+        expectedPwrRsrcCfg.buckCfg[i].validParams = TPS6522X_BUCK_VSET_VALID_SHIFT;
 
-        // Setting voltage_mv to anything above 3300 mV for a buck should result in an error
-        for (voltage_mv = 3301; voltage_mv != 4000; voltage_mv++)
+        // Set VSET to a value greater than the max Buck VSET value and observe error code
+        for (vset = (maxVset + 1); vset != 0U; vset++)
         {
-            expectedPwrRsrcCfg.buckCfg[i].buckVoltage_mv = voltage_mv;
+            expectedPwrRsrcCfg.buckCfg[i].buckVset = vset;
             status = tps6522xSetPwrRsrcCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
             TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_VOLTAGE, status);
         }
@@ -1082,80 +1078,14 @@ void test_power_setConfiguration_buckVout_voltageAboveRange(void)
     }
 }
 
-static void setPwrConfig_buck1Vout_test(const uint16_t voltageRangeMin_mv,
-                                        const uint16_t voltageRangeMax_mv,
-                                        const uint8_t  voltageStep)
-{
-    uint16_t voltage_mv = 0U;
-    int32_t status = PMIC_ST_SUCCESS;
-    tps6522xPwrRsrcCfg_t expectedPwrRsrcCfg, actualPwrRsrcCfg, initialPwrRsrcCfg;
-
-    // Initialize power resource CFG
-    resetBurtonPwrCfg_withNoValidParams(&expectedPwrRsrcCfg);
-    resetBurtonPwrCfg_withNoValidParams(&actualPwrRsrcCfg);
-    resetBurtonPwrCfg_withAllValidParams(&initialPwrRsrcCfg);
-
-    // Set buck validParam and BUCK_VOLTAGE_MV validParam
-    // for both expected and actual power resource CFGs
-    expectedPwrRsrcCfg.validParams = TPS6522X_BUCK1_VALID_SHIFT;
-    expectedPwrRsrcCfg.buckCfg[TPS6522X_REGULATOR_BUCK1].validParams =
-        TPS6522X_BUCK_VOLTAGE_MV_VALID_SHIFT;
-    actualPwrRsrcCfg.validParams = expectedPwrRsrcCfg.validParams;
-    actualPwrRsrcCfg.buckCfg[TPS6522X_REGULATOR_BUCK1].validParams =
-        expectedPwrRsrcCfg.buckCfg[TPS6522X_REGULATOR_BUCK1].validParams;
-
-    // Capture current configuration state of power resources for later comparison
-    status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    // for each voltage step...
-    for (voltage_mv = voltageRangeMin_mv; voltage_mv <= voltageRangeMax_mv; voltage_mv += voltageStep)
-    {
-        // Set voltage
-        expectedPwrRsrcCfg.buckCfg[TPS6522X_REGULATOR_BUCK1].buckVoltage_mv = voltage_mv;
-        status = tps6522xSetPwrRsrcCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-        // Get actual voltage and compare expected vs. actual voltage
-        status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &actualPwrRsrcCfg);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-        TEST_ASSERT_EQUAL(expectedPwrRsrcCfg.buckCfg[TPS6522X_REGULATOR_BUCK1].buckVoltage_mv,
-                          actualPwrRsrcCfg.buckCfg[TPS6522X_REGULATOR_BUCK1].buckVoltage_mv);
-    }
-
-    // Ensure that only the target bit field has been changed and no other registers/bit fields are modified
-    resetBurtonPwrCfg_withAllValidParams(&actualPwrRsrcCfg);
-    status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &actualPwrRsrcCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-    comparePwrRsrcCfg_ignoreBitField(
-        initialPwrRsrcCfg,
-        actualPwrRsrcCfg,
-        expectedPwrRsrcCfg.validParams,
-        expectedPwrRsrcCfg.buckCfg[TPS6522X_REGULATOR_BUCK1].validParams);
-}
-
 /**
- *  \brief  tps6522xSetPwrRsrcCfg: Test whether API can set Buck 1 output voltage
+ *  \brief  tps6522xSetPwrRsrcCfg: Test whether API can set BUCK1, BUCK2, BUCK3, and BUCK4 VSET
  */
-void test_power_setConfiguration_buck1_buckVout(void)
+void test_power_setConfiguration_buckVset(void)
 {
-    // Test setting BUCK1 VOUT within the range of 500 mV to 580 mV (20 mV steps)
-    setPwrConfig_buck1Vout_test(500U, 580U, 20U);
-    // Test setting BUCK1 VOUT within the range of 600 mV to 1095 mV (5 mV steps)
-    setPwrConfig_buck1Vout_test(600U, 1095U, 5U);
-    // Test setting BUCK1 VOUT within the range of 1100 mV to 1650 mV (10 mV steps)
-    setPwrConfig_buck1Vout_test(1100U, 1650U, 10U);
-    // Test setting BUCK1 VOUT within the range of 1660 mV to 3300 mV (20 mV steps)
-    setPwrConfig_buck1Vout_test(1660U, 3300, 20U);
-}
-
-static void setPwrConfig_buck2_3_4_Vout_test(const uint16_t voltageRangeMin_mv,
-                                             const uint16_t voltageRangeMax_mv,
-                                             const uint8_t  voltageStep)
-{
-    uint8_t buckNum = 0U;
-    uint16_t voltage_mv = 0U;
+    uint8_t i = 0U;
     int32_t status = PMIC_ST_SUCCESS;
+    uint8_t vset = 0U, buckMinVSET, buckMaxVSET;
     tps6522xPwrRsrcCfg_t expectedPwrRsrcCfg, actualPwrRsrcCfg, initialPwrRsrcCfg;
 
     // Initialize power resource CFG
@@ -1163,54 +1093,46 @@ static void setPwrConfig_buck2_3_4_Vout_test(const uint16_t voltageRangeMin_mv,
     resetBurtonPwrCfg_withNoValidParams(&actualPwrRsrcCfg);
     resetBurtonPwrCfg_withAllValidParams(&initialPwrRsrcCfg);
 
-    for (buckNum = TPS6522X_REGULATOR_BUCK2; buckNum <= TPS6522X_REGULATOR_BUCK4; buckNum++)
+    // For each Buck...
+    for (i = TPS6522X_REGULATOR_BUCK1; i <= TPS6522X_REGULATOR_BUCK4; i++)
     {
-        // Set buck validParam and BUCK_VOLTAGE_MV validParam
+        buckMinVSET = (i == TPS6522X_REGULATOR_BUCK1) ? 0xAU : 0x0U;
+        buckMaxVSET = (i == TPS6522X_REGULATOR_BUCK1) ? 0xFDU : 0x45U;
+
+        // Set buck validParam and BUCK_VSET validParam
         // for both expected and actual power resource CFGs
-        expectedPwrRsrcCfg.validParams = TPS6522X_BUCK1_VALID_SHIFT << buckNum;
-        expectedPwrRsrcCfg.buckCfg[buckNum].validParams = TPS6522X_BUCK_VOLTAGE_MV_VALID_SHIFT;
+        expectedPwrRsrcCfg.validParams = TPS6522X_BUCK1_VALID_SHIFT << i;
+        expectedPwrRsrcCfg.buckCfg[i].validParams = TPS6522X_BUCK_VSET_VALID_SHIFT;
         actualPwrRsrcCfg.validParams = expectedPwrRsrcCfg.validParams;
-        actualPwrRsrcCfg.buckCfg[buckNum].validParams = expectedPwrRsrcCfg.buckCfg[buckNum].validParams;
+        actualPwrRsrcCfg.buckCfg[i].validParams = expectedPwrRsrcCfg.buckCfg[i].validParams;
 
-        // Capture current configuration state of power resources for later comparison
+        // Capture initial configuration state of power resources for later comparison
         status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-        // for each voltage step...
-        for (voltage_mv = voltageRangeMin_mv; voltage_mv <= voltageRangeMax_mv; voltage_mv += voltageStep)
+        for (vset = buckMinVSET; vset <= buckMaxVSET; vset++)
         {
-            // Set voltage
-            expectedPwrRsrcCfg.buckCfg[buckNum].buckVoltage_mv = voltage_mv;
+            // Set VSET
+            expectedPwrRsrcCfg.buckCfg[i].buckVset = vset;
             status = tps6522xSetPwrRsrcCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
             TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-            // Get actual voltage and compare expected vs. actual voltage
+            // Get actual VSET and compare expected vs. actual VSET
             status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &actualPwrRsrcCfg);
             TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-            TEST_ASSERT_EQUAL(expectedPwrRsrcCfg.buckCfg[buckNum].buckVoltage_mv,
-                              actualPwrRsrcCfg.buckCfg[buckNum].buckVoltage_mv);
+            TEST_ASSERT_EQUAL(expectedPwrRsrcCfg.buckCfg[i].buckVset, actualPwrRsrcCfg.buckCfg[i].buckVset);
         }
 
         // Ensure that only the target bit field has been changed and no other registers/bit fields are modified
         resetBurtonPwrCfg_withAllValidParams(&actualPwrRsrcCfg);
         status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &actualPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-        comparePwrRsrcCfg_ignoreBitField(initialPwrRsrcCfg,
-                                         actualPwrRsrcCfg,
-                                         expectedPwrRsrcCfg.validParams,
-                                         expectedPwrRsrcCfg.buckCfg[buckNum].validParams);
+        comparePwrRsrcCfg_ignoreBitField(
+            initialPwrRsrcCfg,
+            actualPwrRsrcCfg,
+            expectedPwrRsrcCfg.validParams,
+            expectedPwrRsrcCfg.buckCfg[i].validParams);
     }
-}
-
-/**
- *  \brief  tps6522xSetPwrRsrcCfg: Test whether API can set Buck 2, Buck 3, Buck 4 output voltage
- */
-void test_power_setConfiguration_buck2_3_4_buckVout(void)
-{
-    // Test setting BUCK2, BUCK3, BUCK4 VOUT within the range of 500 mV to 1150 mV (25 mV steps)
-    setPwrConfig_buck2_3_4_Vout_test(500U, 1150U, 25U);
-    // Test setting BUCK2, BUCK3, BUCK4 VOUT within the range of 1200 mV to 3300 mV (50 mV steps)
-    setPwrConfig_buck2_3_4_Vout_test(1200U, 3300U, 50U);
 }
 
 /**
@@ -1231,7 +1153,7 @@ void test_power_setConfiguration_buckVmonThr(void)
     // For each buck...
     for (i = 0U; i < TPS6522X_MAX_BUCK_NUM; i++)
     {
-        // Capture current configuration state of power resources for later comparison
+        // Capture initial configuration state of power resources for later comparison
         status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -1281,7 +1203,7 @@ void test_power_setConfiguration_buckRailGrpSel(void)
     // For each buck...
     for (i = 0U; i < TPS6522X_MAX_BUCK_NUM; i++)
     {
-        // Capture current configuration state of power resources for later comparison
+        // Capture initial configuration state of power resources for later comparison
         status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -1330,7 +1252,7 @@ void test_power_setConfiguration_ldoDischargeEnableDisable(void)
     // For each LDO...
     for (i = 0U; i < TPS6522X_MAX_LDO_NUM; i++)
     {
-        // Capture current configuration state of power resources for later comparison
+        // Capture initial configuration state of power resources for later comparison
         status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -1385,7 +1307,7 @@ void test_power_setConfiguration_ldoVmonEnableDisable(void)
     // For each LDO...
     for (i = 0U; i < TPS6522X_MAX_LDO_NUM; i++)
     {
-        // Capture current configuration state of power resources for later comparison
+        // Capture initial configuration state of power resources for later comparison
         status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -1438,7 +1360,7 @@ void test_power_setConfiguration_ldoEnableDisable(void)
     // For each LDO...
     for (i = 0U; i < TPS6522X_MAX_LDO_NUM; i++)
     {
-        // Capture current configuration state of power resources for later comparison
+        // Capture initial configuration state of power resources for later comparison
         status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -1492,7 +1414,7 @@ void test_power_setConfiguration_ldoBypassConfig(void)
     // For each LDO...
     for (i = 0U; i < TPS6522X_MAX_LDO_NUM; i++)
     {
-        // Capture current configuration state of power resources for later comparison
+        // Capture initial configuration state of power resources for later comparison
         status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -1529,11 +1451,13 @@ void test_power_setConfiguration_ldoBypassConfig(void)
 }
 
 /**
- *  \brief  tps6522xSetPwrRsrcCfg: Test API error handing for when LDO voltage is below range
+ *  \brief  tps6522xSetPwrRsrcCfg: Test API error handling for when LDO1, LDO2, 
+ *                                 and LDO3 VSET are above range
  */
-void test_power_setConfiguration_ldo1Vout_voltageBelowRange(void)
+void test_power_setConfiguration_ldoVset_aboveRange(void)
 {
-    uint16_t voltage_mv = 0U;
+    uint8_t i = 0U, vset = 0U;
+    const uint8_t ldoMaxVset = 0x3FU;
     int32_t status = PMIC_ST_SUCCESS;
     tps6522xPwrRsrcCfg_t expectedPwrRsrcCfg, actualPwrRsrcCfg, initialPwrRsrcCfg;
 
@@ -1542,102 +1466,19 @@ void test_power_setConfiguration_ldo1Vout_voltageBelowRange(void)
     resetBurtonPwrCfg_withAllValidParams(&actualPwrRsrcCfg);
     resetBurtonPwrCfg_withAllValidParams(&initialPwrRsrcCfg);
 
-    // Capture current configuration state of power resources for later comparison
-    status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    // Set LDO validParam and LDO_VOLTAGE_MV validParam
-    expectedPwrRsrcCfg.validParams = TPS6522X_LDO1_VALID_SHIFT;
-    expectedPwrRsrcCfg.ldoCfg[TPS6522X_REGULATOR_LDO1].validParams =
-        TPS6522X_LDO_VOLTAGE_MV_VALID_SHIFT;
-
-    // Setting voltage_mv to anything less than 1200 mV for LDO1 should result in an error
-    for (voltage_mv = 1199U; voltage_mv != 0; voltage_mv--)
+    for (i = TPS6522X_REGULATOR_LDO1; i <= TPS6522X_REGULATOR_LDO3; i++)
     {
-        expectedPwrRsrcCfg.ldoCfg[TPS6522X_REGULATOR_LDO1].ldoVoltage_mv = voltage_mv;
-        status = tps6522xSetPwrRsrcCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
-        TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_VOLTAGE, status);
-    }
-
-    // Ensure that only the target bit field has been changed and no other registers/bit fields are modified
-    status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &actualPwrRsrcCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-    comparePwrRsrcCfg_ignoreBitField(initialPwrRsrcCfg,
-                                     actualPwrRsrcCfg,
-                                     expectedPwrRsrcCfg.validParams,
-                                     expectedPwrRsrcCfg.ldoCfg[TPS6522X_REGULATOR_LDO1].validParams);
-}
-
-/**
- *  \brief  tps6522xSetPwrRsrcCfg: Test API error handing for when LDO1 voltage is above range
- */
-void test_power_setConfiguration_ldo1Vout_voltageAboveRange(void)
-{
-    uint16_t voltage_mv = 0U;
-    int32_t status = PMIC_ST_SUCCESS;
-    tps6522xPwrRsrcCfg_t expectedPwrRsrcCfg, actualPwrRsrcCfg, initialPwrRsrcCfg;
-
-    // Initialize power resource CFGs
-    resetBurtonPwrCfg_withNoValidParams(&expectedPwrRsrcCfg);
-    resetBurtonPwrCfg_withAllValidParams(&actualPwrRsrcCfg);
-    resetBurtonPwrCfg_withAllValidParams(&initialPwrRsrcCfg);
-
-    // Capture current configuration state of power resources for later comparison
-    status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    // Set LDO validParam and LDO_VOLTAGE_MV validParam
-    expectedPwrRsrcCfg.validParams = TPS6522X_LDO1_VALID_SHIFT;
-    expectedPwrRsrcCfg.ldoCfg[TPS6522X_REGULATOR_LDO1].validParams =
-        TPS6522X_LDO_VOLTAGE_MV_VALID_SHIFT;
-
-    // Setting voltage_mv to anything above 3300 mV for LDO1 should result in an error
-    for (voltage_mv = 3301U; voltage_mv <= 3500U; voltage_mv++)
-    {
-        expectedPwrRsrcCfg.ldoCfg[TPS6522X_REGULATOR_LDO1].ldoVoltage_mv = voltage_mv;
-        status = tps6522xSetPwrRsrcCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
-        TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_VOLTAGE, status);
-    }
-
-    // Ensure that only the target bit field has been changed and no other registers/bit fields are modified
-    status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &actualPwrRsrcCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-    comparePwrRsrcCfg_ignoreBitField(initialPwrRsrcCfg,
-                                     actualPwrRsrcCfg,
-                                     expectedPwrRsrcCfg.validParams,
-                                     expectedPwrRsrcCfg.ldoCfg[TPS6522X_REGULATOR_LDO1].validParams);
-}
-
-/**
- *  \brief  tps6522xSetPwrRsrcCfg: Test API error handing for when LDO2, LDO3 voltage is below range
- */
-void test_power_setConfiguration_ldo2_3_Vout_voltageBelowRange(void)
-{
-    uint8_t i = 0U;
-    uint16_t voltage_mv = 0U;
-    int32_t status = PMIC_ST_SUCCESS;
-    tps6522xPwrRsrcCfg_t expectedPwrRsrcCfg, actualPwrRsrcCfg, initialPwrRsrcCfg;
-
-    // Initialize power resource CFGs
-    resetBurtonPwrCfg_withNoValidParams(&expectedPwrRsrcCfg);
-    resetBurtonPwrCfg_withAllValidParams(&actualPwrRsrcCfg);
-    resetBurtonPwrCfg_withAllValidParams(&initialPwrRsrcCfg);
-
-    // For LDO2 and LDO3...
-    for (i = TPS6522X_REGULATOR_LDO2; i < TPS6522X_REGULATOR_LDO3; i++)
-    {
-        // Capture current configuration state of power resources for later comparison
+        // Capture initial configuration state of power resources for later comparison
         status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-        // Set LDO validParam and LDO_VOLTAGE_MV validParam
+        // Set LDO validParam and LDO_VSET validParam
         expectedPwrRsrcCfg.validParams = TPS6522X_LDO1_VALID_SHIFT << i;
-        expectedPwrRsrcCfg.ldoCfg[i].validParams = TPS6522X_LDO_VOLTAGE_MV_VALID_SHIFT;
+        expectedPwrRsrcCfg.ldoCfg[i].validParams = TPS6522X_LDO_VSET_VALID_SHIFT;
 
-        // Setting voltage_mv to anything less than 600 mV for LDO2, LDO3 should result in an error
-        for (voltage_mv = 599U; voltage_mv != 0U; voltage_mv--)
+        for (vset = (ldoMaxVset + 1U); vset != 0U; vset++)
         {
-            expectedPwrRsrcCfg.ldoCfg[i].ldoVoltage_mv = voltage_mv;
+            expectedPwrRsrcCfg.ldoCfg[i].ldoVset = vset;
             status = tps6522xSetPwrRsrcCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
             TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_VOLTAGE, status);
         }
@@ -1646,64 +1487,20 @@ void test_power_setConfiguration_ldo2_3_Vout_voltageBelowRange(void)
         status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &actualPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
         comparePwrRsrcCfg_ignoreBitField(initialPwrRsrcCfg,
-                                         actualPwrRsrcCfg,
-                                         expectedPwrRsrcCfg.validParams,
-                                         expectedPwrRsrcCfg.ldoCfg[i].validParams);
+                                        actualPwrRsrcCfg,
+                                        expectedPwrRsrcCfg.validParams,
+                                        expectedPwrRsrcCfg.ldoCfg[i].validParams);
     }
 }
 
 /**
- *  \brief  tps6522xSetPwrRsrcCfg: Test API error handing for when LDO2, LDO3 voltage is above range
+ *  \brief  tps6522xSetPwrRsrcCfg:  Test whether API can set LDO1, LDO2, and LDO3 VSET
  */
-void test_power_setConfiguration_ldo2_3_Vout_voltageAboveRange(void)
+void test_power_setConfiguration_ldoVset(void)
 {
-    uint8_t i = 0U;
-    uint16_t voltage_mv = 0U;
+    uint8_t i = 0U, vset = 0U;
     int32_t status = PMIC_ST_SUCCESS;
-    tps6522xPwrRsrcCfg_t expectedPwrRsrcCfg, actualPwrRsrcCfg, initialPwrRsrcCfg;
-
-    // Initialize power resource CFGs
-    resetBurtonPwrCfg_withNoValidParams(&expectedPwrRsrcCfg);
-    resetBurtonPwrCfg_withAllValidParams(&actualPwrRsrcCfg);
-    resetBurtonPwrCfg_withAllValidParams(&initialPwrRsrcCfg);
-
-    // For LDO2 and LDO3...
-    for (i = TPS6522X_REGULATOR_LDO2; i < TPS6522X_REGULATOR_LDO3; i++)
-    {
-        // Capture current configuration state of power resources for later comparison
-        status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-        // Set LDO validParam and LDO_VOLTAGE_MV validParam
-        expectedPwrRsrcCfg.validParams = TPS6522X_LDO1_VALID_SHIFT << i;
-        expectedPwrRsrcCfg.ldoCfg[i].validParams = TPS6522X_LDO_VOLTAGE_MV_VALID_SHIFT;
-
-        // Setting voltage_mv to anything above 3400 mV for LDO2, LDO3 should result in an error
-        for (voltage_mv = 3401U;
-             voltage_mv <= 3501U;
-             voltage_mv++)
-        {
-            expectedPwrRsrcCfg.ldoCfg[i].ldoVoltage_mv = voltage_mv;
-            status = tps6522xSetPwrRsrcCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
-            TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_VOLTAGE, status);
-        }
-
-        // Ensure that only the target bit field has been changed and no other registers/bit fields are modified
-        status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &actualPwrRsrcCfg);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-        comparePwrRsrcCfg_ignoreBitField(initialPwrRsrcCfg,
-                                         actualPwrRsrcCfg,
-                                         expectedPwrRsrcCfg.validParams,
-                                         expectedPwrRsrcCfg.ldoCfg[i].validParams);
-    }
-}
-
-static void setPwrConfig_ldo1Vout_test(const uint16_t voltageRangeMin_mv,
-                                       const uint16_t voltageRangeMax_mv,
-                                       const uint8_t  voltageStep)
-{
-    uint16_t voltage_mv = 0U;
-    int32_t status = PMIC_ST_SUCCESS;
+    const uint8_t ldoMinVset = 0x0U, ldoMaxVset = 0x3FU;
     tps6522xPwrRsrcCfg_t expectedPwrRsrcCfg, actualPwrRsrcCfg, initialPwrRsrcCfg;
 
     // Initialize power resource CFGs
@@ -1711,125 +1508,30 @@ static void setPwrConfig_ldo1Vout_test(const uint16_t voltageRangeMin_mv,
     resetBurtonPwrCfg_withNoValidParams(&actualPwrRsrcCfg);
     resetBurtonPwrCfg_withAllValidParams(&initialPwrRsrcCfg);
 
-    // Set LDO validParam and LDO_VOLTAGE_MV validParam
-    // for both expected and actual power resource CFGs
-    expectedPwrRsrcCfg.validParams = TPS6522X_LDO1_VALID_SHIFT;
-    expectedPwrRsrcCfg.ldoCfg[TPS6522X_REGULATOR_LDO1].validParams =
-        TPS6522X_LDO_VOLTAGE_MV_VALID_SHIFT;
-    actualPwrRsrcCfg.validParams = expectedPwrRsrcCfg.validParams;
-    actualPwrRsrcCfg.ldoCfg[TPS6522X_REGULATOR_LDO1].validParams =
-        expectedPwrRsrcCfg.ldoCfg[TPS6522X_REGULATOR_LDO1].validParams;
-
-    // Capture current configuration state of power resources for later comparison
-    status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    if (voltageStep == 0U)
+    for (i = TPS6522X_REGULATOR_LDO1; i <= TPS6522X_REGULATOR_LDO3; i++)
     {
-        // Set voltage
-        expectedPwrRsrcCfg.ldoCfg[TPS6522X_REGULATOR_LDO1].ldoVoltage_mv = voltageRangeMin_mv;
-        status = tps6522xSetPwrRsrcCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-        // Get actual voltage and compare expected vs. actual voltage
-        status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &actualPwrRsrcCfg);
-        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-        TEST_ASSERT_EQUAL(expectedPwrRsrcCfg.ldoCfg[TPS6522X_REGULATOR_LDO1].ldoVoltage_mv,
-                          actualPwrRsrcCfg.ldoCfg[TPS6522X_REGULATOR_LDO1].ldoVoltage_mv);
-    }
-    else
-    {
-        for (voltage_mv = voltageRangeMin_mv; voltage_mv <= voltageRangeMax_mv; voltage_mv += voltageStep)
-        {
-            // Set voltage
-            expectedPwrRsrcCfg.ldoCfg[TPS6522X_REGULATOR_LDO1].ldoVoltage_mv = voltage_mv;
-            status = tps6522xSetPwrRsrcCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
-            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-            // Get actual voltage and compare expected vs. actual voltage
-            status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &actualPwrRsrcCfg);
-            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-            TEST_ASSERT_EQUAL(expectedPwrRsrcCfg.ldoCfg[TPS6522X_REGULATOR_LDO1].ldoVoltage_mv,
-                              actualPwrRsrcCfg.ldoCfg[TPS6522X_REGULATOR_LDO1].ldoVoltage_mv);
-        }
-    }
-
-    // Ensure that only the target bit field has been changed and no other registers/bit fields are modified
-    resetBurtonPwrCfg_withAllValidParams(&actualPwrRsrcCfg);
-    status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &actualPwrRsrcCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-    comparePwrRsrcCfg_ignoreBitField(initialPwrRsrcCfg,
-                                     actualPwrRsrcCfg,
-                                     expectedPwrRsrcCfg.validParams,
-                                     expectedPwrRsrcCfg.ldoCfg[TPS6522X_REGULATOR_LDO1].validParams);
-}
-
-/**
- *  \brief  tps6522xSetPwrRsrcCfg:  Test whether API can set LDO1 output voltage
- */
-void test_power_setConfiguration_ldo1_ldoVout(void)
-{
-    setPwrConfig_ldo1Vout_test(1200U, 1200U, 0U);
-    setPwrConfig_ldo1Vout_test(1250U, 3250U, 50U);
-    setPwrConfig_ldo1Vout_test(3300U, 3300U, 0U);
-}
-
-static void setPwrConfig_ldo2_3_Vout_test(const uint16_t voltageRangeMin_mv,
-                                          const uint16_t voltageRangeMax_mv,
-                                          const uint8_t  voltageStep)
-{
-    uint8_t ldoNum = 0;
-    uint16_t voltage_mv = 0U;
-    int32_t status = PMIC_ST_SUCCESS;
-    tps6522xPwrRsrcCfg_t expectedPwrRsrcCfg, actualPwrRsrcCfg, initialPwrRsrcCfg;
-
-    // Initialize power resource CFGs
-    resetBurtonPwrCfg_withNoValidParams(&expectedPwrRsrcCfg);
-    resetBurtonPwrCfg_withNoValidParams(&actualPwrRsrcCfg);
-    resetBurtonPwrCfg_withAllValidParams(&initialPwrRsrcCfg);
-
-    // For LDO2 and LDO3...
-    for (ldoNum = TPS6522X_REGULATOR_LDO2; ldoNum <= TPS6522X_REGULATOR_LDO3; ldoNum++)
-    {
-        // Set LDO validParam and LDO_VOLTAGE_MV validParam
+        // Set LDO validParam and LDO_VSET validParam
         // for both expected and actual power resource CFGs
-        expectedPwrRsrcCfg.validParams = TPS6522X_LDO1_VALID_SHIFT << ldoNum;
-        expectedPwrRsrcCfg.ldoCfg[ldoNum].validParams = TPS6522X_LDO_VOLTAGE_MV_VALID_SHIFT;
+        expectedPwrRsrcCfg.validParams = TPS6522X_LDO1_VALID_SHIFT << i;
+        expectedPwrRsrcCfg.ldoCfg[i].validParams = TPS6522X_LDO_VSET_VALID_SHIFT;
         actualPwrRsrcCfg.validParams = expectedPwrRsrcCfg.validParams;
-        actualPwrRsrcCfg.ldoCfg[ldoNum].validParams = expectedPwrRsrcCfg.ldoCfg[ldoNum].validParams;
+        actualPwrRsrcCfg.ldoCfg[i].validParams = expectedPwrRsrcCfg.ldoCfg[i].validParams;
 
-        // Capture current configuration state of power resources for later comparison
+        // Capture initial configuration state of power resources for later comparison
         status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-        if (voltageStep == 0U)
+        for (vset = ldoMinVset; vset <= ldoMaxVset; vset++)
         {
-            // Set voltage
-            expectedPwrRsrcCfg.ldoCfg[ldoNum].ldoVoltage_mv = voltageRangeMin_mv;
+            // Set VSET
+            expectedPwrRsrcCfg.ldoCfg[i].ldoVset = vset;
             status = tps6522xSetPwrRsrcCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
             TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-            // Get actual voltage and compare expected vs. actual voltage
+            // Get actual VSET and compare expected vs. actual VSET
             status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &actualPwrRsrcCfg);
             TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-            TEST_ASSERT_EQUAL(expectedPwrRsrcCfg.ldoCfg[ldoNum].ldoVoltage_mv,
-                              actualPwrRsrcCfg.ldoCfg[ldoNum].ldoVoltage_mv);
-        }
-        else
-        {
-            for (voltage_mv = voltageRangeMin_mv; voltage_mv <= voltageRangeMax_mv; voltage_mv += voltageStep)
-            {
-                // Set voltage
-                expectedPwrRsrcCfg.ldoCfg[ldoNum].ldoVoltage_mv = voltage_mv;
-                status = tps6522xSetPwrRsrcCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
-                TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-                // Get actual voltage and compare expected vs. actual voltage
-                status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &actualPwrRsrcCfg);
-                TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-                TEST_ASSERT_EQUAL(expectedPwrRsrcCfg.ldoCfg[ldoNum].ldoVoltage_mv,
-                                  actualPwrRsrcCfg.ldoCfg[ldoNum].ldoVoltage_mv);
-            }
+            TEST_ASSERT_EQUAL(expectedPwrRsrcCfg.ldoCfg[i].ldoVset, actualPwrRsrcCfg.ldoCfg[i].ldoVset);
         }
 
         // Ensure that only the target bit field has been changed and no other registers/bit fields are modified
@@ -1837,19 +1539,10 @@ static void setPwrConfig_ldo2_3_Vout_test(const uint16_t voltageRangeMin_mv,
         status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &actualPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
         comparePwrRsrcCfg_ignoreBitField(initialPwrRsrcCfg,
-                                         actualPwrRsrcCfg,
-                                         expectedPwrRsrcCfg.validParams,
-                                         expectedPwrRsrcCfg.ldoCfg[ldoNum].validParams);
+                                        actualPwrRsrcCfg,
+                                        expectedPwrRsrcCfg.validParams,
+                                        expectedPwrRsrcCfg.ldoCfg[i].validParams);
     }
-}
-
-/**
- *  \brief  tps6522xSetPwrRsrcCfg:  Test whether API can set LDO1 output voltage
- */
-void test_power_setConfiguration_ldo2_3_ldoVout(void)
-{
-    setPwrConfig_ldo2_3_Vout_test(600U, 3350U, 50U);
-    setPwrConfig_ldo2_3_Vout_test(3400U, 3400U, 0U);
 }
 
 /**
@@ -1870,7 +1563,7 @@ void test_power_setConfiguration_ldoVmonThr(void)
     // For each LDO...
     for (i = 0U; i < TPS6522X_MAX_LDO_NUM; i++)
     {
-        // Capture current configuration state of power resources for later comparison
+        // Capture initial configuration state of power resources for later comparison
         status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -1920,7 +1613,7 @@ void test_power_setConfiguration_ldoRailGrpSel(void)
     // For each LDO...
     for (i = 0U; i < TPS6522X_MAX_LDO_NUM; i++)
     {
-        // Capture current configuration state of power resources for later comparison
+        // Capture initial configuration state of power resources for later comparison
         status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -1966,7 +1659,7 @@ void test_power_setConfiguration_vmonDeglitch(void)
     resetBurtonPwrCfg_withAllValidParams(&actualPwrRsrcCfg);
     resetBurtonPwrCfg_withAllValidParams(&initialPwrRsrcCfg);
 
-    // Capture current configuration state of power resources for later comparison
+    // Capture initial configuration state of power resources for later comparison
     status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -2014,7 +1707,7 @@ void test_power_setConfiguration_VMON1_2_VCCA_VMON_EnableDisable(void)
     vmonNum = TPS6522X_VOLTAGE_MONITOR_VCCA_VMON;
     do
     {
-        // Capture current configuration state of power resources for later comparison
+        // Capture initial configuration state of power resources for later comparison
         status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -2108,9 +1801,9 @@ void test_power_setConfiguration_VMON1_2_VCCA_VMON_EnableDisable(void)
 }
 
 /**
- *  \brief  tps6522xSetPwrRsrcCfg: Test whether API can set VCCA_VMON PG Level
+ *  \brief  tps6522xSetPwrRsrcCfg: Test whether API can set VCCA_VMON PG_SET
  */
-void test_power_setConfiguration_vccaPgLevel(void)
+void test_power_setConfiguration_vccaPgSet(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     tps6522xPwrRsrcCfg_t expectedPwrRsrcCfg, actualPwrRsrcCfg, initialPwrRsrcCfg;
@@ -2120,35 +1813,35 @@ void test_power_setConfiguration_vccaPgLevel(void)
     resetBurtonPwrCfg_withAllValidParams(&actualPwrRsrcCfg);
     resetBurtonPwrCfg_withAllValidParams(&initialPwrRsrcCfg);
 
-    // Capture current configuration state of power resources for later comparison
+    // Capture initial configuration state of power resources for later comparison
     status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    // Set VCCA_VMON validParam and VCCA_PG_LEVEL validParam
+    // Set VCCA_VMON validParam and VCCA_PG_SET validParam
     expectedPwrRsrcCfg.validParams = TPS6522X_VCCA_VALID_SHIFT;
-    expectedPwrRsrcCfg.vccaVmonCfg.validParams = TPS6522X_VCCA_PG_LEVEL_VALID_SHIFT;
+    expectedPwrRsrcCfg.vccaVmonCfg.validParams = TPS6522X_VCCA_PG_SET_VALID_SHIFT;
 
-    // Set the VCCA PG level to 3.3V
-    expectedPwrRsrcCfg.vccaVmonCfg.vccaPgLevel = TPS6522X_VCCA_PG_LEVEL_3_3_V;
+    // Set the VCCA PG_SET to 3.3V
+    expectedPwrRsrcCfg.vccaVmonCfg.vccaPgSet = TPS6522X_VCCA_PG_SET_3_3_V;
     status = tps6522xSetPwrRsrcCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    // Read actual VCCA PG level and compare expected vs. actual value
+    // Read actual VCCA PG_SET and compare expected vs. actual value
     status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &actualPwrRsrcCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-    TEST_ASSERT_EQUAL(expectedPwrRsrcCfg.vccaVmonCfg.vccaPgLevel,
-                      actualPwrRsrcCfg.vccaVmonCfg.vccaPgLevel);
+    TEST_ASSERT_EQUAL(expectedPwrRsrcCfg.vccaVmonCfg.vccaPgSet,
+                      actualPwrRsrcCfg.vccaVmonCfg.vccaPgSet);
 
-    // Set the VCCA PG level to 5.0V
-    expectedPwrRsrcCfg.vccaVmonCfg.vccaPgLevel = TPS6522X_VCCA_PG_LEVEL_5_0_V;
+    // Set the VCCA PG_SET to 5.0V
+    expectedPwrRsrcCfg.vccaVmonCfg.vccaPgSet = TPS6522X_VCCA_PG_SET_5_0_V;
     status = tps6522xSetPwrRsrcCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    // Read actual VCCA PG level and compare expected vs. actual value
+    // Read actual VCCA PG_SET and compare expected vs. actual value
     status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &actualPwrRsrcCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-    TEST_ASSERT_EQUAL(expectedPwrRsrcCfg.vccaVmonCfg.vccaPgLevel,
-                      actualPwrRsrcCfg.vccaVmonCfg.vccaPgLevel);
+    TEST_ASSERT_EQUAL(expectedPwrRsrcCfg.vccaVmonCfg.vccaPgSet,
+                      actualPwrRsrcCfg.vccaVmonCfg.vccaPgSet);
 
     // Ensure that only the target bit field has been changed and no other registers/bit fields are modified
     comparePwrRsrcCfg_ignoreBitField(initialPwrRsrcCfg,
@@ -2171,7 +1864,7 @@ void test_power_setConfiguration_vccaVmonThr(void)
     resetBurtonPwrCfg_withAllValidParams(&actualPwrRsrcCfg);
     resetBurtonPwrCfg_withAllValidParams(&initialPwrRsrcCfg);
 
-    // Capture current configuration state of power resources for later comparison
+    // Capture initial configuration state of power resources for later comparison
     status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -2216,7 +1909,7 @@ void test_power_setConfiguration_vccaRailGrpSel(void)
     resetBurtonPwrCfg_withAllValidParams(&actualPwrRsrcCfg);
     resetBurtonPwrCfg_withAllValidParams(&initialPwrRsrcCfg);
 
-    // Capture current configuration state of power resources for later comparison
+    // Capture initial configuration state of power resources for later comparison
     status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -2248,13 +1941,14 @@ void test_power_setConfiguration_vccaRailGrpSel(void)
 }
 
 /**
- *  \brief  tps6522xSetPwrRsrcCfg: Test API error handing for when VMON1 voltage is below range
- *                                           and above range
+ *  \brief  tps6522xSetPwrRsrcCfg: Test API error handling for when VMON1 PG_SET is out of acceptable 
+ *                                 range
  */
-void test_power_setConfiguration_vmon1PgSet_voltageOutOfRange(void)
+void test_power_setConfiguration_vmon1PgSet_outOfRange(void)
 {
-    uint16_t voltage_mv = 0U;
+    uint8_t pgSet = 0U;
     int32_t status = PMIC_ST_SUCCESS;
+    const uint8_t vmon1MinPgSet = 0xAU;
     tps6522xPwrRsrcCfg_t expectedPwrRsrcCfg, actualPwrRsrcCfg, initialPwrRsrcCfg;
 
     // Initialize power resource CFGs
@@ -2262,26 +1956,18 @@ void test_power_setConfiguration_vmon1PgSet_voltageOutOfRange(void)
     resetBurtonPwrCfg_withAllValidParams(&actualPwrRsrcCfg);
     resetBurtonPwrCfg_withAllValidParams(&initialPwrRsrcCfg);
 
-    // Capture current configuration state of power resources for later comparison
+    // Capture initial configuration state of power resources for later comparison
     status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    // Set VMON1 validParam and VMON1_PG_LEVEL_MV validParam
+    // Set VMON1 validParam and VMON1 PG_SET validParam
     expectedPwrRsrcCfg.validParams = TPS6522X_VMON1_VALID_SHIFT;
-    expectedPwrRsrcCfg.vccaVmonCfg.validParams = TPS6522X_VMON1_PG_LEVEL_MV_VALID_SHIFT;
-
-    // Setting voltage_mv to anything less than 500 mV for VMON1 should result in an error
-    for (voltage_mv = 499U; voltage_mv != 0U; voltage_mv--)
+    expectedPwrRsrcCfg.vccaVmonCfg.validParams = TPS6522X_VMON1_PG_SET_VALID_SHIFT;
+    
+    // Set PG_SET to values less than the min VMON1 PG_SET
+    for (pgSet = (vmon1MinPgSet - 1U); pgSet != UINT8_MAX; pgSet--)
     {
-        expectedPwrRsrcCfg.vccaVmonCfg.vmon1PgLevel_mv = voltage_mv;
-        status = tps6522xSetPwrRsrcCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
-        TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_VOLTAGE, status);
-    }
-
-    // Setting voltage_mv to anything above 3340 mV for VMON1 should result in an error
-    for (voltage_mv = 3341U; voltage_mv <= 3441U; voltage_mv++)
-    {
-        expectedPwrRsrcCfg.vccaVmonCfg.vmon1PgLevel_mv = voltage_mv;
+        expectedPwrRsrcCfg.vccaVmonCfg.vmon1PgSet = pgSet;
         status = tps6522xSetPwrRsrcCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_VOLTAGE, status);
     }
@@ -2296,13 +1982,14 @@ void test_power_setConfiguration_vmon1PgSet_voltageOutOfRange(void)
 }
 
 /**
- *  \brief  tps6522xSetPwrRsrcCfg: Test API error handing for when VMON2 voltage is below range
- *                                           and above range
+ *  \brief  tps6522xSetPwrRsrcCfg: Test API error handling for when VMON2 PG_SET is out of acceptable
+ *                                 range
  */
-void test_power_setConfiguration_vmon2PgSet_voltageOutOfRange(void)
+void test_power_setConfiguration_vmon2PgSet_outOfRange(void)
 {
-    uint16_t voltage_mv = 0U;
+    uint8_t pgSet = 0U;
     int32_t status = PMIC_ST_SUCCESS;
+    const uint8_t vmon2MaxPgSet = 0x45U;
     tps6522xPwrRsrcCfg_t expectedPwrRsrcCfg, actualPwrRsrcCfg, initialPwrRsrcCfg;
 
     // Initialize power resource CFGs
@@ -2310,28 +1997,18 @@ void test_power_setConfiguration_vmon2PgSet_voltageOutOfRange(void)
     resetBurtonPwrCfg_withAllValidParams(&actualPwrRsrcCfg);
     resetBurtonPwrCfg_withAllValidParams(&initialPwrRsrcCfg);
 
-    // Capture current configuration state of power resources for later comparison
+    // Capture initial configuration state of power resources for later comparison
     status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
-    // Set VMON2 validParam and VMON2_PG_LEVEL_MV validParam
+    // Set VMON2 validParam and VMON2 PG_SET validParam
     expectedPwrRsrcCfg.validParams = TPS6522X_VMON2_VALID_SHIFT;
-    expectedPwrRsrcCfg.vccaVmonCfg.validParams = TPS6522X_VMON2_PG_LEVEL_MV_VALID_SHIFT;
-
-    // Setting voltage_mv to anything less than 500 mV for VMON2 should result in an error
-    for (voltage_mv = 499U; voltage_mv != 0; voltage_mv--)
+    expectedPwrRsrcCfg.vccaVmonCfg.validParams = TPS6522X_VMON2_PG_SET_VALID_SHIFT;
+    
+    // Set PG_SET to values greater than the max VMON1 PG_SET
+    for (pgSet = (vmon2MaxPgSet + 1U); pgSet != 0U; pgSet++)
     {
-        expectedPwrRsrcCfg.vccaVmonCfg.vmon2PgLevel_mv = voltage_mv;
-        status = tps6522xSetPwrRsrcCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
-        TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_VOLTAGE, status);
-    }
-
-    // Setting voltage_mv to anything above 3300 mV for VMON2 should result in an error
-    for (voltage_mv = 3301U;
-         voltage_mv <= 3401U;
-         voltage_mv++)
-    {
-        expectedPwrRsrcCfg.vccaVmonCfg.vmon2PgLevel_mv = voltage_mv;
+        expectedPwrRsrcCfg.vccaVmonCfg.vmon2PgSet = pgSet;
         status = tps6522xSetPwrRsrcCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_VOLTAGE, status);
     }
@@ -2345,13 +2022,14 @@ void test_power_setConfiguration_vmon2PgSet_voltageOutOfRange(void)
                                      expectedPwrRsrcCfg.vccaVmonCfg.validParams);
 }
 
-static void setPwrConfig_vmon1_2_Vout_test(const uint8_t  vmonNum,
-                                           const uint16_t voltageRangeMin_mv,
-                                           const uint16_t voltageRangeMax_mv,
-                                           const uint8_t  voltageStep)
+/**
+ *  \brief  tps6522xSetPwrRsrcCfg: Test whether API can set VMON1 and VMON2 PG_SET
+ */
+void test_power_setConfiguration_vmonPgSet(void)
 {
-    uint16_t voltage_mv = 0U;
+    uint8_t i = 0U;
     int32_t status = PMIC_ST_SUCCESS;
+    uint16_t pgSet = 0U, vmonMinPgSet, vmonMaxPgSet;
     tps6522xPwrRsrcCfg_t expectedPwrRsrcCfg, actualPwrRsrcCfg, initialPwrRsrcCfg;
 
     // Initialize power resource CFG
@@ -2359,93 +2037,83 @@ static void setPwrConfig_vmon1_2_Vout_test(const uint8_t  vmonNum,
     resetBurtonPwrCfg_withNoValidParams(&actualPwrRsrcCfg);
     resetBurtonPwrCfg_withAllValidParams(&initialPwrRsrcCfg);
 
-    // Set VMONx validParam and VMONx_PG_LEVEL_MV validParam
-    // for both expected and actual power resource CFGs
-    expectedPwrRsrcCfg.validParams = (vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON1) ?
-                                         TPS6522X_VMON1_VALID_SHIFT :
-                                         TPS6522X_VMON2_VALID_SHIFT;
-    expectedPwrRsrcCfg.vccaVmonCfg.validParams = (vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON1) ?
-                                                            TPS6522X_VMON1_PG_LEVEL_MV_VALID_SHIFT :
-                                                            TPS6522X_VMON2_PG_LEVEL_MV_VALID_SHIFT;
-    actualPwrRsrcCfg.validParams = expectedPwrRsrcCfg.validParams;
-    actualPwrRsrcCfg.vccaVmonCfg.validParams = expectedPwrRsrcCfg.vccaVmonCfg.validParams;
-
-    // Capture current configuration state of power resources for later comparison
-    status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-    // for each voltage step...
-    for (voltage_mv = voltageRangeMin_mv; voltage_mv <= voltageRangeMax_mv; voltage_mv += voltageStep)
+    // For each VMON...
+    for (i = TPS6522X_VOLTAGE_MONITOR_VMON1; i <= TPS6522X_VOLTAGE_MONITOR_VMON2; i++)
     {
-        switch (vmonNum)
+        vmonMinPgSet = (i == TPS6522X_VOLTAGE_MONITOR_VMON1) ? 0xAU : 0x0U;
+        vmonMaxPgSet = (i == TPS6522X_VOLTAGE_MONITOR_VMON1) ? 0xFFU : 0x45U;
+
+        // Set VMON validParam and VMON PG_SET validParam
+        // for both expected and actual power resource CFGs
+        expectedPwrRsrcCfg.validParams = TPS6522X_VMON1_VALID_SHIFT << i;
+        expectedPwrRsrcCfg.vccaVmonCfg.validParams = (i == TPS6522X_VOLTAGE_MONITOR_VMON1) ? 
+                                                        TPS6522X_VMON1_PG_SET_VALID_SHIFT : 
+                                                        TPS6522X_VMON2_PG_SET_VALID_SHIFT;
+        actualPwrRsrcCfg.validParams = expectedPwrRsrcCfg.validParams;
+        actualPwrRsrcCfg.vccaVmonCfg.validParams = expectedPwrRsrcCfg.vccaVmonCfg.validParams;
+
+        // Capture initial configuration state of power resources for later comparison
+        status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        // The initial VMONx PG_SET value may be set to a reserved value. 
+        // If this is the case, consider the VMONx PG_SET value to be the min value
+        if (initialPwrRsrcCfg.vccaVmonCfg.vmon1PgSet < 0xAU)
         {
-            case TPS6522X_VOLTAGE_MONITOR_VMON1:
-                // Set voltage
-                expectedPwrRsrcCfg.vccaVmonCfg.vmon1PgLevel_mv = voltage_mv;
-                status = tps6522xSetPwrRsrcCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
-                TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-                // Get actual voltage and compare expected vs. actual voltage
-                status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &actualPwrRsrcCfg);
-                TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-                TEST_ASSERT_EQUAL(expectedPwrRsrcCfg.vccaVmonCfg.vmon1PgLevel_mv,
-                                  actualPwrRsrcCfg.vccaVmonCfg.vmon1PgLevel_mv);
-
-                break;
-            case TPS6522X_VOLTAGE_MONITOR_VMON2:
-                // Set voltage
-                expectedPwrRsrcCfg.vccaVmonCfg.vmon2PgLevel_mv = voltage_mv;
-                status = tps6522xSetPwrRsrcCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
-                TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-
-                // Get actual voltage and compare expected vs. actual voltage
-                status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &actualPwrRsrcCfg);
-                TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-                TEST_ASSERT_EQUAL(expectedPwrRsrcCfg.vccaVmonCfg.vmon2PgLevel_mv,
-                                  actualPwrRsrcCfg.vccaVmonCfg.vmon2PgLevel_mv);
-
-                break;
+            initialPwrRsrcCfg.vccaVmonCfg.vmon1PgSet = 0xAU; // Min VMON1 PG_SET
         }
+        if (initialPwrRsrcCfg.vccaVmonCfg.vmon2PgSet > 0x45U)
+        {
+            initialPwrRsrcCfg.vccaVmonCfg.vmon2PgSet = 0x0U; // Min VMON2 PG_SET
+        }
+
+        for (pgSet = vmonMinPgSet; pgSet <= vmonMaxPgSet; pgSet++)
+        {
+            // Set PG_SET
+            if (i == TPS6522X_VOLTAGE_MONITOR_VMON1)
+            {
+                expectedPwrRsrcCfg.vccaVmonCfg.vmon1PgSet = (uint8_t)pgSet;
+            }
+            else 
+            {
+                expectedPwrRsrcCfg.vccaVmonCfg.vmon2PgSet = (uint8_t)pgSet;
+            }
+            status = tps6522xSetPwrRsrcCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
+            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+            // Get actual PG_SET and compare expected vs. actual PG_SET
+            status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &actualPwrRsrcCfg);
+            TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+            if (i == TPS6522X_VOLTAGE_MONITOR_VMON1)
+            {
+                TEST_ASSERT_EQUAL(expectedPwrRsrcCfg.vccaVmonCfg.vmon1PgSet, actualPwrRsrcCfg.vccaVmonCfg.vmon1PgSet);
+
+            }
+            else 
+            {
+                TEST_ASSERT_EQUAL(expectedPwrRsrcCfg.vccaVmonCfg.vmon2PgSet, actualPwrRsrcCfg.vccaVmonCfg.vmon2PgSet);
+            }
+        }
+
+        // Revert VMON1 PG_SET and VMON2 PG_SET to initial values
+        expectedPwrRsrcCfg.validParams = TPS6522X_VMON1_VALID_SHIFT | TPS6522X_VMON2_VALID_SHIFT;
+        expectedPwrRsrcCfg.vccaVmonCfg.validParams = TPS6522X_VMON1_PG_SET_VALID_SHIFT | 
+                                                     TPS6522X_VMON2_PG_SET_VALID_SHIFT;
+        expectedPwrRsrcCfg.vccaVmonCfg.vmon1PgSet = initialPwrRsrcCfg.vccaVmonCfg.vmon1PgSet;
+        expectedPwrRsrcCfg.vccaVmonCfg.vmon2PgSet = initialPwrRsrcCfg.vccaVmonCfg.vmon2PgSet;
+        status = tps6522xSetPwrRsrcCfg(&pmicCoreHandle, expectedPwrRsrcCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+
+        // Ensure that only the target bit field has been changed and no other registers/bit fields are modified
+        resetBurtonPwrCfg_withAllValidParams(&actualPwrRsrcCfg);
+        status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &actualPwrRsrcCfg);
+        TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
+        comparePwrRsrcCfg_ignoreBitField(
+            initialPwrRsrcCfg,
+            actualPwrRsrcCfg,
+            expectedPwrRsrcCfg.validParams,
+            expectedPwrRsrcCfg.buckCfg[i].validParams);
     }
-
-    // Ensure that only the target bit field has been changed and no other registers/bit fields are modified
-    resetBurtonPwrCfg_withAllValidParams(&actualPwrRsrcCfg);
-    status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &actualPwrRsrcCfg);
-    TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
-    comparePwrRsrcCfg_ignoreBitField(initialPwrRsrcCfg,
-                                     actualPwrRsrcCfg,
-                                     expectedPwrRsrcCfg.validParams,
-                                     expectedPwrRsrcCfg.vccaVmonCfg.validParams);
-}
-
-/**
- *  \brief  tps6522xSetPwrRsrcCfg: Test whether API can set VMON1 PG Level
- */
-void test_power_setConfiguration_vmon1PgSet(void)
-{
-    const uint8_t vmonNum = TPS6522X_VOLTAGE_MONITOR_VMON1;
-
-    // Test setting VMON1 PG_SET within the range of 500 mV to 580 mV (20 mV steps)
-    setPwrConfig_vmon1_2_Vout_test(vmonNum, 500U, 580U, 20U);
-    // Test setting VMON1 PG_SET within the range of 600 mV to 1095 mV (5 mV steps)
-    setPwrConfig_vmon1_2_Vout_test(vmonNum, 600U, 1095U, 5U);
-    // Test setting VMON1 PG_SET within the range of 1100 mV to 1650 mV (10 mV steps)
-    setPwrConfig_vmon1_2_Vout_test(vmonNum, 1100U, 1650U, 10U);
-    // Test setting VMON1 PG_SET within the range of 1660 mV to 3340 mV (20 mV steps)
-    setPwrConfig_vmon1_2_Vout_test(vmonNum, 1660U, 3340U, 20U);
-}
-
-/**
- *  \brief  tps6522xSetPwrRsrcCfg: Test whether API can set VMON2 PG Level
- */
-void test_power_setConfiguration_vmon2PgSet(void)
-{
-    const uint8_t vmonNum = TPS6522X_VOLTAGE_MONITOR_VMON2;
-
-    // Test setting VMON2 PG_SET within the range of 500 mV to 1150 mV (25 mV steps)
-    setPwrConfig_vmon1_2_Vout_test(vmonNum, 500U, 1150U, 25U);
-    // Test setting VMON2 PG_SET within the range of 1200 mV to 3300 mV (50 mV steps)
-    setPwrConfig_vmon1_2_Vout_test(vmonNum, 1200U, 3300U, 50U);
 }
 
 /**
@@ -2456,7 +2124,7 @@ void test_power_setConfiguration_vmon1_2_Thr(void)
     uint8_t i = 0U;
     int32_t status = PMIC_ST_SUCCESS;
     tps6522xPwrRsrcCfg_t expectedPwrRsrcCfg, actualPwrRsrcCfg, initialPwrRsrcCfg;
-    uint8_t         vmon1Thr;
+    uint8_t vmon1Thr;
 
     // Initialize power resource CFGs
     resetBurtonPwrCfg_withNoValidParams(&expectedPwrRsrcCfg);
@@ -2465,7 +2133,7 @@ void test_power_setConfiguration_vmon1_2_Thr(void)
 
     for (i = TPS6522X_VOLTAGE_MONITOR_VMON1; i <= TPS6522X_VOLTAGE_MONITOR_VMON2; i++)
     {
-        // Capture current configuration state of power resources for later comparison
+        // Capture initial configuration state of power resources for later comparison
         status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -2535,7 +2203,7 @@ void test_power_setConfiguration_vmon1_2_RailGrpSel(void)
 
     for (i = TPS6522X_VOLTAGE_MONITOR_VMON1; i <= TPS6522X_VOLTAGE_MONITOR_VMON2; i++)
     {
-        // Capture current configuration state of power resources for later comparison
+        // Capture initial configuration state of power resources for later comparison
         status = tps6522xGetPwrRsrcCfg(&pmicCoreHandle, &initialPwrRsrcCfg);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
@@ -2641,14 +2309,13 @@ void test_power_getPwrRsrcStat_vmon1_2_UVOVStatDetection(void)
     // Initialize pwrRsrcCfg with VMON1 and VMON2 configuration
     resetBurtonPwrCfg_withNoValidParams(&pwrRsrcCfg);
     pwrRsrcCfg.validParams = TPS6522X_VMON1_VALID_SHIFT | TPS6522X_VMON2_VALID_SHIFT;
-    pwrRsrcCfg.vccaVmonCfg.validParams =
-        TPS6522X_VMON1_EN_VALID | TPS6522X_VMON2_EN_VALID |
-        TPS6522X_VMON1_PG_LEVEL_MV_VALID | TPS6522X_VMON1_RAIL_GRP_SEL_VALID |
-        TPS6522X_VMON2_PG_LEVEL_MV_VALID | TPS6522X_VMON2_RAIL_GRP_SEL_VALID;
+    pwrRsrcCfg.vccaVmonCfg.validParams = TPS6522X_VMON1_EN_VALID    | TPS6522X_VMON2_EN_VALID           |
+                                        TPS6522X_VMON1_PG_SET_VALID | TPS6522X_VMON1_RAIL_GRP_SEL_VALID |
+                                        TPS6522X_VMON2_PG_SET_VALID | TPS6522X_VMON2_RAIL_GRP_SEL_VALID;
     pwrRsrcCfg.vccaVmonCfg.vmon1En = TPS6522X_VMON1_ENABLE;
     pwrRsrcCfg.vccaVmonCfg.vmon2En = TPS6522X_VMON2_ENABLE;
-    pwrRsrcCfg.vccaVmonCfg.vmon1PgLevel_mv = 3000;
-    pwrRsrcCfg.vccaVmonCfg.vmon2PgLevel_mv = 3000;
+    pwrRsrcCfg.vccaVmonCfg.vmon1PgSet = 0xFFU; // 3.34 V
+    pwrRsrcCfg.vccaVmonCfg.vmon2PgSet = 0x45U; // 3.3 V
     pwrRsrcCfg.vccaVmonCfg.vmon1RailGrpSel = TPS6522X_VMON1_RAIL_SEL_MCU;
     pwrRsrcCfg.vccaVmonCfg.vmon2RailGrpSel = TPS6522X_VMON2_RAIL_SEL_MCU;
 

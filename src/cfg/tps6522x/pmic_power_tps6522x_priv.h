@@ -120,6 +120,19 @@ extern "C"
 #define TPS6522X_BUCK_VMON_THR_MASK          (0x3U << TPS6522X_BUCK_VMON_THR_SHIFT)
 
 /**
+ *  \anchor     Tps6522x_buckVoutRegShiftVal
+ *  \name       BUCK_VOUT register shift values supported by TPS6522x Burton
+ */
+#define TPS6522X_BUCK_VSET_SHIFT            (0x0U)
+
+/**
+ *  \anchor     Tps6522x_buckVoutRegMaskVal
+ *  \name       BUCK_VOUT register mask values supported by TPS6522x Burton
+ */
+#define TPS6522X_BUCK1_VSET_MASK            (0xFFU << TPS6522X_BUCK_VSET_SHIFT)
+#define TPS6522X_BUCK2_3_4_VSET_MASK        (0x7FU << TPS6522X_BUCK_VSET_SHIFT)
+
+/**
  *  \anchor     Tps6522x_railSel1RegShiftVal
  *  \name       RAIL_SEL_1 register shift values supported by TPS6522x Burton
  *

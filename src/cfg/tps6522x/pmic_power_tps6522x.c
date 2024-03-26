@@ -208,24 +208,25 @@ static int32_t tps6522xParamCheck_constPwrRsrcCfg(const Pmic_CoreHandle_t *pPmic
 }
 
 /**
- *  \brief      This function is used to check whether a voltage is valid for a Buck.
+ *  \brief      This function is used to check whether a VSET value is valid for a Buck.
  *
  *  \param      buckCfg     [IN]    Buck power resource configuration struct
  *  \param      buckNum     [IN]    Indicates which BUCK the API is working with
  *
- *  \return     Success code if Buck voltage is within range, error code otherwise.
+ *  \return     Success code if Buck VSET is within range, error code otherwise.
  *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
  */
-static int32_t tps6522xBuckVoltageWithinRangeCheck(const tps6522xBuckCfg_t buckCfg, const uint8_t buckNum)
+static int32_t tps6522xBuckVsetWithinRangeCheck(const tps6522xBuckCfg_t buckCfg, const uint8_t buckNum)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if (pmic_validParamCheck(buckCfg.validParams, TPS6522X_BUCK_VOLTAGE_MV_VALID))
+    if (pmic_validParamCheck(buckCfg.validParams, TPS6522X_BUCK_VSET_VALID))
     {
         switch (buckNum)
         {
             case TPS6522X_REGULATOR_BUCK1:
-                if ((buckCfg.buckVoltage_mv < 500U) || (buckCfg.buckVoltage_mv > 3300U))
+                if ((buckCfg.buckVset < TPS6522X_BUCK1_MIN_VSET) || 
+                    (buckCfg.buckVset > TPS6522X_BUCK1_MAX_VSET))
                 {
                     status = PMIC_ST_ERR_INV_VOLTAGE;
                 }
@@ -233,7 +234,9 @@ static int32_t tps6522xBuckVoltageWithinRangeCheck(const tps6522xBuckCfg_t buckC
             case TPS6522X_REGULATOR_BUCK2:
             case TPS6522X_REGULATOR_BUCK3:
             case TPS6522X_REGULATOR_BUCK4:
-                if ((buckCfg.buckVoltage_mv < 500U) || (buckCfg.buckVoltage_mv > 3300U))
+                // The min BUCK2, BUCK3, and BUCK4 VSET is 0, 
+                // hence we do not need to check for a uint8_t < 0
+                if (buckCfg.buckVset > TPS6522X_BUCK2_3_4_MAX_VSET)
                 {
                     status = PMIC_ST_ERR_INV_VOLTAGE;
                 }
@@ -248,74 +251,56 @@ static int32_t tps6522xBuckVoltageWithinRangeCheck(const tps6522xBuckCfg_t buckC
 }
 
 /**
- *  \brief      This function is used to check whether a voltage is valid for a LDO.
+ *  \brief      This function is used to check whether a VSET value is valid for a LDO.
  *
  *  \param      ldoCfg      [IN]    LDO power resource configuration struct
- *  \param      ldoNum      [IN]    Indicates which LDO the API is working with
  *
- *  \return     Success code if LDO voltage is within range, error code otherwise.
+ *  \return     Success code if LDO VSET is within range, error code otherwise.
  *              For valid success/error codes, refer to \ref Pmic_ErrorCodes
  */
-static int32_t tps6522xLdoVoltageWithinRangeCheck(const tps6522xLdoCfg_t ldoCfg, const uint8_t ldoNum)
+static int32_t tps6522xLdoVsetWithinRangeCheck(const tps6522xLdoCfg_t ldoCfg)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    if (pmic_validParamCheck(ldoCfg.validParams, TPS6522X_LDO_VOLTAGE_MV_VALID))
+    // The min LDO1, LDO2, and LDO3 VSET is 0, hence 
+    // we do not need to check for a uint8_t < 0
+    if (pmic_validParamCheck(ldoCfg.validParams, TPS6522X_LDO_VSET_VALID) && 
+        (ldoCfg.ldoVset > TPS6522X_LDO1_2_3_MAX_VSET))
     {
-        switch (ldoNum)
-        {
-            case TPS6522X_REGULATOR_LDO1:
-                if ((ldoCfg.ldoVoltage_mv < 1200U) || (ldoCfg.ldoVoltage_mv > 3300U))
-                {
-                    status = PMIC_ST_ERR_INV_VOLTAGE;
-                }
-                break;
-            case TPS6522X_REGULATOR_LDO2:
-            case TPS6522X_REGULATOR_LDO3:
-                if ((ldoCfg.ldoVoltage_mv < 600U) || (ldoCfg.ldoVoltage_mv > 3400U))
-                {
-                    status = PMIC_ST_ERR_INV_VOLTAGE;
-                }
-                break;
-            // Invalid LDO number
-            default:
-                break;
-        }
+        status = PMIC_ST_ERR_INV_VOLTAGE;
     }
 
     return status;
 }
 
 /**
- *  \brief      This function is used as a helper function to check whether the 
- *              user-specified voltage for VMON1 or VMON2 is valid.
+ *  \brief      This function is used to check whether a PG_SET value is valid for VMON1
+ *              or VMON2 (depending on the \p vmonNum parameter).
  * 
  *  \param      vccaVmonCfg     VCCA/VMON power resource configuration struct
  *  \param      vmonNum         VMON number (either VMON1 or VMON2)
  * 
- *  \return     Success code if voltage is valid for the VMON specified by \p vmonNum 
- *              error code otherwise. For valid success/error codes, refer to 
- *              \ref Pmic_ErrorCodes
+ *  \return     Success code if the PG_SET is within range for the VMON (specified by 
+ *              \p vmonNum parameter), error code otherwise. For valid success/error 
+ *              codes, refer to \ref Pmic_ErrorCodes
  */
-static int32_t tps6522xVmonVoltageWithinRangeCheck(const tps6522xVccaVmonCfg_t vccaVmonCfg, const uint8_t vmonNum)
+static int32_t tps6522xVmonPgSetWithinRangeCheck(const tps6522xVccaVmonCfg_t vccaVmonCfg, const uint8_t vmonNum)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
+    // The max VMON1 PG_SET is 0xFF, hence we do not need to check for a uint8_t > 0xFF
     if ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON1) && 
-        pmic_validParamCheck(vccaVmonCfg.validParams, TPS6522X_VMON1_PG_LEVEL_MV_VALID))
+        pmic_validParamCheck(vccaVmonCfg.validParams, TPS6522X_VMON1_PG_SET_VALID) &&
+        (vccaVmonCfg.vmon1PgSet < TPS6522X_VMON1_MIN_PG_SET))
     {
-        if ((vccaVmonCfg.vmon1PgLevel_mv < 500U) || (vccaVmonCfg.vmon1PgLevel_mv > 3340U))
-        {
-            status = PMIC_ST_ERR_INV_VOLTAGE;
-        }
+        status = PMIC_ST_ERR_INV_VOLTAGE;
     }
+    // The min VMON2 PG_SET is 0, hence we do not need to check for a uint8_t < 0
     else if ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON2) && 
-            pmic_validParamCheck(vccaVmonCfg.validParams, TPS6522X_VMON2_PG_LEVEL_MV_VALID))
+            pmic_validParamCheck(vccaVmonCfg.validParams, TPS6522X_VMON2_PG_SET_VALID) &&
+            (vccaVmonCfg.vmon2PgSet > TPS6522X_VMON2_MAX_PG_SET))
     {
-        if ((vccaVmonCfg.vmon2PgLevel_mv < 500U) || (vccaVmonCfg.vmon2PgLevel_mv > 3300U))
-        {
-            status = PMIC_ST_ERR_INV_VOLTAGE;
-        }
+        status = PMIC_ST_ERR_INV_VOLTAGE;
     }
     else
     {
@@ -376,90 +361,6 @@ static void tps6522xGetBuckConfRegBitFields(tps6522xBuckCfg_t *pBuckCfg, const u
 }
 
 /**
- *  \brief      This function is used to convert a BUCK VSET value to a BUCK voltage value.
- *
- *  \param      pBuckVoltage_mv     [OUT]   BUCK voltage value in millivolts
- *  \param      buckVoltage_vset    [IN]    BUCK voltage value in VSET form
- *  \param      buckNum             [IN]    Indicates which BUCK the API is working with
- */
-static void tps6522xBuckConvertVsetVal2Voltage(uint16_t *pBuckVoltage_mv,
-                                               const uint8_t buckVoltage_vset,
-                                               const uint8_t buckNum)
-{
-    uint16_t baseVoltage_mv = 0, baseVoltage_vset = 0, voltageStep = 0;
-
-    switch (buckNum)
-    {
-        case TPS6522X_REGULATOR_BUCK1:
-            // BUCK1 voltage range 1: 500 mV to 580 mV in 20 mV steps (VSET: 0xA to 0xE)
-            if ((buckVoltage_vset >= 0xAU) && (buckVoltage_vset <= 0xEU))
-            {
-                baseVoltage_mv = 500U;
-                baseVoltage_vset = 0xAU;
-                voltageStep = 20U;
-            }
-            // BUCK1 voltage range 2: 600 mV to 1095 mV in 5 mV steps (VSET: 0xF to 0x72)
-            else if (buckVoltage_vset <= 0x72U)
-            {
-                baseVoltage_mv = 600U;
-                baseVoltage_vset = 0xFU;
-                voltageStep = 5U;
-            }
-            // BUCK1 voltage range 3: 1100 mV to 1650 mV in 10 mV steps (VSET: 0x73 to 0xAA)
-            else if (buckVoltage_vset <= 0xAAU)
-            {
-                baseVoltage_mv = 1100U;
-                baseVoltage_vset = 0x73U;
-                voltageStep = 10U;
-            }
-            // BUCK1 voltage range 4: 1660 mV to 3300 mV in 20 mV steps (VSET: 0xAB to 0xFD)
-            else if (buckVoltage_vset <= 0xFDU)
-            {
-                baseVoltage_mv = 1660U;
-                baseVoltage_vset = 0xABU;
-                voltageStep = 20U;
-            }
-            else
-            {
-                /* Invalid VSET value */
-            }
-
-            break;
-        case TPS6522X_REGULATOR_BUCK2:
-        case TPS6522X_REGULATOR_BUCK3:
-        case TPS6522X_REGULATOR_BUCK4:
-            // BUCK2, BUCK3, BUCK4 voltage range 1: 500 mV to 1150 mV in 25 mV steps (VSET: 0x0 to 0x1A)
-            if (buckVoltage_vset <= 0x1AU)
-            {
-                baseVoltage_mv = 500U;
-                baseVoltage_vset = 0x0U;
-                voltageStep = 25U;
-            }
-            // BUCK2, BUCK3, BUCK4 voltage range 2: 1200 mV to 3300 mV in 50 mV steps (VSET: 0x1B to 0x45)
-            else if (buckVoltage_vset <= 0x45U)
-            {
-                baseVoltage_mv = 1200U;
-                baseVoltage_vset = 0x1BU;
-                voltageStep = 50U;
-            }
-            else 
-            {
-                /* Invalid VSET value */ 
-            }
-
-            break;
-        // Invalid Buck number
-        default:
-            break;
-    }
-
-    if ((baseVoltage_mv != 0U) && (voltageStep != 0U))
-    {
-        *pBuckVoltage_mv = baseVoltage_mv + (voltageStep * (buckVoltage_vset - baseVoltage_vset));
-    }
-}
-
-/**
  *  \brief      This function is used to convert BUCK_VOUT register data from VSET to voltage (mV)
  *              and store it into the BUCK power resource CFG struct (if validParam is set).
  *
@@ -467,14 +368,27 @@ static void tps6522xBuckConvertVsetVal2Voltage(uint16_t *pBuckVoltage_mv,
  *  \param      buckVoutRegData     [IN]        BUCK_VOUT register data obtained from a prior read of the PMIC
  *  \param      buckNum             [IN]        Indicates which BUCK the API is working with
  */
-static void tps6522xGetBuckVoutRegBitFields(tps6522xBuckCfg_t *pBuckCfg,
-                                            const uint8_t buckVoutRegData,
-                                            const uint8_t buckNum)
+static void tps6522xGetBuckVoutRegBitFields(
+    tps6522xBuckCfg_t *pBuckCfg, const uint8_t buckVoutRegData, const uint8_t buckNum)
 {
-    if (pmic_validParamCheck(pBuckCfg->validParams, TPS6522X_BUCK_VOLTAGE_MV_VALID))
+    if (pmic_validParamCheck(pBuckCfg->validParams, TPS6522X_BUCK_VSET_VALID))
     {
-        tps6522xBuckConvertVsetVal2Voltage(
-            &(pBuckCfg->buckVoltage_mv), buckVoutRegData, buckNum);
+        switch(buckNum)
+        {
+            case TPS6522X_REGULATOR_BUCK1: 
+                pBuckCfg->buckVset = Pmic_getBitField(
+                    buckVoutRegData, TPS6522X_BUCK_VSET_SHIFT, TPS6522X_BUCK1_VSET_MASK);
+                break;
+            case TPS6522X_REGULATOR_BUCK2:
+            case TPS6522X_REGULATOR_BUCK3:
+            case TPS6522X_REGULATOR_BUCK4:
+                pBuckCfg->buckVset = Pmic_getBitField(
+                    buckVoutRegData, TPS6522X_BUCK_VSET_SHIFT, TPS6522X_BUCK2_3_4_VSET_MASK);
+                break;
+            default:
+                /* Invalid Buck number */
+                break;
+        }
     }
 }
 
@@ -490,10 +404,8 @@ static void tps6522xGetBuckPgWindowRegBitFields(tps6522xBuckCfg_t *pBuckCfg, con
 {
     if (pmic_validParamCheck(pBuckCfg->validParams, TPS6522X_BUCK_VMON_THR_VALID))
     {
-        pBuckCfg->buckVmonThr =
-            Pmic_getBitField(buckPgWindowRegData, 
-                                      TPS6522X_BUCK_VMON_THR_SHIFT,
-                                      TPS6522X_BUCK_VMON_THR_MASK);
+        pBuckCfg->buckVmonThr = Pmic_getBitField(
+            buckPgWindowRegData, TPS6522X_BUCK_VMON_THR_SHIFT, TPS6522X_BUCK_VMON_THR_MASK);
     }
 }
 
@@ -698,106 +610,24 @@ static void tps6522xGetLdoCtrlRegBitFields(tps6522xLdoCfg_t *pLdoCfg, const uint
 }
 
 /**
- *  \brief      This function is used to convert a LDO VSET value to LDO voltage value (mV).
- *
- *  \param      pLdoVoltage_mv      [OUT]       LDO voltage value in millivolts
- *  \param      ldoVoltage_vset     [IN]        LDO voltage value in VSET form
- *  \param      ldoNum              [IN]        Indicates which LDO the API is working with
- */
-static void tps6522xLdoConvertVsetVal2Voltage(uint16_t *pLdoVoltage_mv,
-                                              const uint8_t ldoVoltage_vset,
-                                              const uint8_t ldoNum)
-{
-    uint16_t baseVoltage_mv = 0, baseVoltage_vset = 0, voltageStep = 0;
-
-    switch (ldoNum)
-    {
-        case TPS6522X_REGULATOR_LDO1:
-            // LDO1 voltage range 1: 1200 mV to 1200 mV in 0 mV steps (VSET: 0x0 to 0xC)
-            if (ldoVoltage_vset <= 0xCU)
-            {
-                baseVoltage_mv = 1200U;
-                baseVoltage_vset = 0x0U;
-                voltageStep = 0U;
-            }
-            // LDO1 voltage range 2: 1250 mV to 3250 mV in 50 mV steps (VSET: 0xD to 0x35)
-            else if (ldoVoltage_vset <= 0x35U)
-            {
-                baseVoltage_mv = 1250U;
-                baseVoltage_vset = 0xDU;
-                voltageStep = 50U;
-            }
-            // LDO1 voltage range 3: 3300 mV to 3300 mV in 0 mV steps (VSET: 0x36 to 0x3F)
-            else if (ldoVoltage_vset <= 0x3FU)
-            {
-                baseVoltage_mv = 3300U;
-                baseVoltage_vset = 0x36U;
-                voltageStep = 0U;
-            }
-            else 
-            {
-                /* Invalid VSET value */
-            }
-
-            break;
-        case TPS6522X_REGULATOR_LDO2:
-        case TPS6522X_REGULATOR_LDO3:
-            // LDO2 and LDO3 voltage range 1: 600 mV to 3350 mV in 50 mV steps (VSET: 0x0 to 0x37)
-            if (ldoVoltage_vset <= 0x37U)
-            {
-                baseVoltage_mv = 600U;
-                baseVoltage_vset = 0x0U;
-                voltageStep = 50U;
-            }
-            // LDO2 and LDO3 voltage range 2: 3400 mV to 3400 mV in 0 mV steps (VSET: 0x38 to 0x3F)
-            else if (ldoVoltage_vset <= 0x3FU)
-            {
-                baseVoltage_mv = 3400U;
-                baseVoltage_vset = 0x38U;
-                voltageStep = 0U;
-            }
-            else
-            {
-                /* Invalid VSET value */
-            }
-
-            break;
-        // Invalid LDO number
-        default:
-            break;
-    }
-
-    if (baseVoltage_mv != 0U)
-    {
-        *pLdoVoltage_mv = baseVoltage_mv + (voltageStep * (ldoVoltage_vset - baseVoltage_vset));
-    }
-}
-
-/**
  *  \brief      This function is used to get the desired bit fields of the LDO_VOUT register
  *              (desired bit fields are governed by validParams).
  *
  *  \param      pLdoCfg             [IN/OUT]    Pointer to LDO power resource configuration struct
  *  \param      ldoVoutRegData      [IN]        LDO_VOUT register data obtained from a prior read of the PMIC
- *  \param      ldoNum              [IN]        Indicates which LDO the API is working with
  */
 static void tps6522xGetLdoVoutRegBitFields(tps6522xLdoCfg_t *pLdoCfg, 
-                                           const uint8_t ldoVoutRegData, 
-                                           const uint8_t ldoNum)
+                                           const uint8_t ldoVoutRegData)
 {
-    uint8_t ldoVoltage_vset = 0;
-
     if (pmic_validParamCheck(pLdoCfg->validParams, TPS6522X_LDO_MODE_VALID))
     {
         pLdoCfg->ldoMode = Pmic_getBitField(
             ldoVoutRegData, TPS6522X_LDO_MODE_SHIFT, TPS6522X_LDO_MODE_MASK);
     }
-    if (pmic_validParamCheck(pLdoCfg->validParams, TPS6522X_LDO_VOLTAGE_MV_VALID))
+    if (pmic_validParamCheck(pLdoCfg->validParams, TPS6522X_LDO_VSET_VALID))
     {
-        ldoVoltage_vset = Pmic_getBitField(
+        pLdoCfg->ldoVset = Pmic_getBitField(
             ldoVoutRegData, TPS6522X_LDO_VSET_SHIFT, TPS6522X_LDO_VSET_MASK);
-
-        tps6522xLdoConvertVsetVal2Voltage(&(pLdoCfg->ldoVoltage_mv), ldoVoltage_vset, ldoNum);
     }
 }
 
@@ -926,7 +756,7 @@ static inline void tps6522xGetLdoInfo(tps6522xLdoCfg_t *pLdoCfg, const uint8_t *
     tps6522xGetLdoCtrlRegBitFields(pLdoCfg, regData[TPS6522X_LDO_CTRL_REGDATA_INDEX]);
 
     // LDO_VOUT register
-    tps6522xGetLdoVoutRegBitFields(pLdoCfg, regData[TPS6522X_LDO_VOUT_REGDATA_INDEX], ldoNum);
+    tps6522xGetLdoVoutRegBitFields(pLdoCfg, regData[TPS6522X_LDO_VOUT_REGDATA_INDEX]);
 
     // LDO_PG_WINDOW register
     tps6522xGetLdoPgWindowRegBitFields(pLdoCfg, regData[TPS6522X_LDO_PG_WINDOW_REGDATA_INDEX]);
@@ -1021,9 +851,9 @@ static void tps6522xGetVccaVmonCtrlBitFields(tps6522xVccaVmonCfg_t *pVccaVmonCfg
  */
 static void tps6522xGetVccaPgWindowBitFields(tps6522xVccaVmonCfg_t *pVccaVmonPwrRsrcCfg, uint8_t vccaPgWindowRegData)
 {
-    if (pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, TPS6522X_VCCA_PG_LEVEL_VALID))
+    if (pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, TPS6522X_VCCA_PG_SET_VALID))
     {
-        pVccaVmonPwrRsrcCfg->vccaPgLevel = Pmic_getBitField(
+        pVccaVmonPwrRsrcCfg->vccaPgSet = Pmic_getBitField(
             vccaPgWindowRegData, TPS6522X_VCCA_PG_SET_SHIFT, TPS6522X_VCCA_PG_SET_MASK);
     }
 
@@ -1066,88 +896,8 @@ static void tps6522xGetVmonPgWindowBitFields(tps6522xVccaVmonCfg_t *pVccaVmonPwr
 }
 
 /**
- *  \brief      This function is used to convert a VMON PG_SET value to VMON voltage value (mV).
- *
- *  \param      pVmonPgLevel_mv         [OUT]       VMON voltage value in millivolts
- *  \param      vmonPgLevel_pgSet       [IN]        VMON voltage value in PG_SET form
- *  \param      vmonNum                 [IN]        Indicates which VCCA/VMONx the API is working with
- */
-static void tps6522xVmonConvertPgSet2Voltage(uint16_t *pVmonPgLevel_mv,
-                                             const uint8_t vmonPgLevel_pgSet,
-                                             const uint8_t vmonNum)
-{
-    uint16_t baseVoltage_mv = 0, baseVoltage_pgSet = 0, voltageStep = 0;
-
-    switch (vmonNum)
-    {
-        case TPS6522X_VOLTAGE_MONITOR_VMON1:
-            // VMON1 voltage range 1: 500 mV to 580 mV in 20 mV steps (PG_SET: 0xA to 0xE)
-            if ((vmonPgLevel_pgSet >= 0xAU) && (vmonPgLevel_pgSet <= 0xEU))
-            {
-                baseVoltage_mv = 500U;
-                baseVoltage_pgSet = 0xAU;
-                voltageStep = 20U;
-            }
-            // VMON1 voltage range 2: 600 mV to 1095 mV in 5 mV steps (PG_SET: 0xF to 0x72)
-            else if ((vmonPgLevel_pgSet >= 0xFU) && (vmonPgLevel_pgSet <= 0x72U))
-            {
-                baseVoltage_mv = 600U;
-                baseVoltage_pgSet = 0xFU;
-                voltageStep = 5U;
-            }
-            // VMON1 voltage range 3: 1100 mV to 1650 mV in 10 mV steps (PG_SET: 0x73 to 0xAA)
-            else if ((vmonPgLevel_pgSet >= 0x73U) && (vmonPgLevel_pgSet <= 0xAAU))
-            {
-                baseVoltage_mv = 1100U;
-                baseVoltage_pgSet = 0x73U;
-                voltageStep = 10U;
-            }
-            // VMON1 voltage range 4: 1660 mV to 3340 mV in 20 mV steps (PG_SET: 0xAB to 0xFF)
-            else if (vmonPgLevel_pgSet >= 0xABU)
-            {
-                baseVoltage_mv = 1660U;
-                baseVoltage_pgSet = 0xABU;
-                voltageStep = 20U;
-            }
-            else
-            {
-                /* Invalid PG_SET value */
-            }
-            break;
-        case TPS6522X_VOLTAGE_MONITOR_VMON2:
-            // VMON2 voltage range 1: 500 mV to 1150 mV in 25 mV steps (PG_SET: 0x0 to 0x1A)
-            if (vmonPgLevel_pgSet <= 0x1AU)
-            {
-                baseVoltage_mv = 500U;
-                baseVoltage_pgSet = 0x0U;
-                voltageStep = 25U;
-            }
-            // VMON2 voltage range 2: 1200 mV to 3300 mV in 50 mV steps (PG_SET: 0x1B to 0x45)
-            else if (vmonPgLevel_pgSet <= 0x45U)
-            {
-                baseVoltage_mv = 1200U;
-                baseVoltage_pgSet = 0x1BU;
-                voltageStep = 50U;
-            }
-            else
-            {
-                /* Invalid PG_SET value */
-            }
-            break;
-        // Invalid VMON number
-        default:
-            break;
-    }
-
-    if ((baseVoltage_mv != 0U) && (voltageStep != 0U))
-    {
-        *pVmonPgLevel_mv = baseVoltage_mv + (voltageStep * (vmonPgLevel_pgSet - baseVoltage_pgSet));
-    }
-}
-
-/**
- *  \brief      This function is used to convert VMON_PG_LEVEL register data from PG_SET to voltage (mV)
- *              and store it into the VCCA/VMON power resource CFG struct (if validParam is set).
+ *  \brief      This function is used to store desired bit fields of the VMON_PG_LEVEL register into the
+ *              VCCA/VMON power resource CFG struct (desired bit fields are governed by validParams).
  *
  *  \param      pVccaVmonPwrRsrcCfg     [IN/OUT]    Pointer to VCCA/VMON power resource configuration struct
  *  \param      vmonPgLevelRegData      [IN]        VMON_PG_LEVEL register data obtained from a prior read of the PMIC
@@ -1158,16 +908,16 @@ static void tps6522xGetVmonPgLevelBitFields(tps6522xVccaVmonCfg_t *pVccaVmonPwrR
                                             const uint8_t vmonNum)
 {
     if ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON1) &&
-        pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, TPS6522X_VMON1_PG_LEVEL_MV_VALID))
+        pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, TPS6522X_VMON1_PG_SET_VALID))
     {
-        tps6522xVmonConvertPgSet2Voltage(
-            &(pVccaVmonPwrRsrcCfg->vmon1PgLevel_mv), vmonPgLevelRegData, vmonNum);
+        pVccaVmonPwrRsrcCfg->vmon1PgSet = Pmic_getBitField(
+            vmonPgLevelRegData, TPS6522X_VMON1_PG_SET_SHIFT, TPS6522X_VMON1_PG_SET_MASK);
     }
     else if ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON2) &&
-             pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, TPS6522X_VMON2_PG_LEVEL_MV_VALID))
+             pmic_validParamCheck(pVccaVmonPwrRsrcCfg->validParams, TPS6522X_VMON2_PG_SET_VALID))
     {
-        tps6522xVmonConvertPgSet2Voltage(
-            &(pVccaVmonPwrRsrcCfg->vmon2PgLevel_mv), vmonPgLevelRegData, vmonNum);
+        pVccaVmonPwrRsrcCfg->vmon2PgSet = Pmic_getBitField(
+            vmonPgLevelRegData, TPS6522X_VMON2_PG_SET_SHIFT, TPS6522X_VMON2_PG_SET_MASK);
     }
     else
     {
@@ -1539,90 +1289,8 @@ static void tps6522xSetBuckConfRegBitFields(const tps6522xBuckCfg_t buckCfg, uin
 }
 
 /**
- *  \brief      This function is used to convert a BUCK voltage value (mV) to BUCK VSET value.
- *
- *  \param      pBuckVoltage_vset       [OUT]       BUCK voltage in VSET form
- *  \param      buckVoltage_mv          [IN]        BUCK voltage in millivolts
- *  \param      buckNum                 [IN]        Indicates which BUCK the API is working with
- */
-static void tps6522xBuckConvertVoltage2VsetVal(uint8_t *pBuckVoltage_vset,
-                                               const uint16_t buckVoltage_mv,
-                                               const uint8_t buckNum)
-{
-    uint16_t baseVoltage_vset = 0, baseVoltage_mv = 0, voltageStep = 0;
-
-    switch (buckNum)
-    {
-        case TPS6522X_REGULATOR_BUCK1:
-            // BUCK1 voltage range 1: 500 mV to 580 mV in 20 mV steps (VSET: 0xA to 0xE)
-            if ((buckVoltage_mv >= 500U) && (buckVoltage_mv <= 580U))
-            {
-                baseVoltage_vset = 0xAU;
-                baseVoltage_mv = 500U;
-                voltageStep = 20U;
-            }
-            // BUCK1 voltage range 2: 600 mV to 1095 mV in 5 mV steps (VSET: 0xF to 0x72)
-            else if ((buckVoltage_mv >= 600U) && (buckVoltage_mv <= 1095U))
-            {
-                baseVoltage_vset = 0xFU;
-                baseVoltage_mv = 600U;
-                voltageStep = 5U;
-            }
-            // BUCK1 voltage range 3: 1100 mV to 1650 mV in 10 mV steps (VSET: 0x73 to 0xAA)
-            else if ((buckVoltage_mv >= 1100U) && (buckVoltage_mv <= 1650U))
-            {
-                baseVoltage_vset = 0x73U;
-                baseVoltage_mv = 1100U;
-                voltageStep = 10U;
-            }
-            // BUCK1 voltage range 4: 1660 mV to 3300 mV in 20 mV steps (VSET: 0xAB to 0xFD)
-            else if ((buckVoltage_mv >= 1660U) && (buckVoltage_mv <= 3300U))
-            {
-                baseVoltage_vset = 0xABU;
-                baseVoltage_mv = 1660U;
-                voltageStep = 20U;
-            }
-            else
-            {
-                /* Invalid voltage value */
-            }
-            break;
-        case TPS6522X_REGULATOR_BUCK2:
-        case TPS6522X_REGULATOR_BUCK3:
-        case TPS6522X_REGULATOR_BUCK4:
-        // BUCK2, BUCK3, BUCK4 voltage range 1: 500 mV to 1150 mV in 25 mV steps (VSET: 0x0 to 0x1A)
-            if ((buckVoltage_mv >= 500U) && (buckVoltage_mv <= 1150U))
-            {
-                baseVoltage_vset = 0x0U;
-                baseVoltage_mv = 500U;
-                voltageStep = 25U;
-            }
-            // BUCK2, BUCK3, BUCK4 voltage range 2: 1200 mV to 3300 mV in 50 mV steps (VSET: 0x1B to 0x45)
-            else if ((buckVoltage_mv >= 1200U) && (buckVoltage_mv <= 3300U))
-            {
-                baseVoltage_vset = 0x1BU;
-                baseVoltage_mv = 1200U;
-                voltageStep = 50U;
-            }
-            else
-            {
-                /* Invalid voltage value */
-            }
-            break;
-        // Invalid Buck number
-        default:
-            break;
-    }
-
-    if (voltageStep != 0U)
-    {
-        *pBuckVoltage_vset = (uint8_t)(baseVoltage_vset + ((buckVoltage_mv - baseVoltage_mv) / voltageStep));
-    }
-}
-
-/**
- *  \brief      This function calculates a VSET value given a milivolt value (obtained from BUCK power resource CFG)
- *              and sets the BUCK_VOUT register data equal to the VSET value (if validParam is set).
+ *  \brief      This function is used to set desired bit fields of the BUCK_VOUT register (desired bit fields
+ *              are governed by validParams).
  *
  *  \param      buckCfg                 [IN]        BUCK power resource configuration struct
  *  \param      pBuckVoutRegData        [OUT]       Pointer to BUCK_VOUT register data
@@ -1632,9 +1300,37 @@ static void tps6522xSetBuckVoutRegBitFields(const tps6522xBuckCfg_t buckCfg,
                                             uint8_t *pBuckVoutRegData,
                                             const uint8_t buckNum)
 {
-    if (pmic_validParamCheck(buckCfg.validParams, TPS6522X_BUCK_VOLTAGE_MV_VALID))
+    if (pmic_validParamCheck(buckCfg.validParams, TPS6522X_BUCK_VSET_VALID))
     {
-        tps6522xBuckConvertVoltage2VsetVal(pBuckVoutRegData, buckCfg.buckVoltage_mv, buckNum);
+        switch (buckNum)
+        {
+            case TPS6522X_REGULATOR_BUCK1:
+                if ((buckCfg.buckVset >= TPS6522X_BUCK1_MIN_VSET) && 
+                    (buckCfg.buckVset <= TPS6522X_BUCK1_MAX_VSET)) 
+                {
+                    Pmic_setBitField(pBuckVoutRegData, 
+                                    TPS6522X_BUCK_VSET_SHIFT, 
+                                    TPS6522X_BUCK1_VSET_MASK, 
+                                    buckCfg.buckVset);
+                }
+                break;
+            case TPS6522X_REGULATOR_BUCK2:
+            case TPS6522X_REGULATOR_BUCK3:
+            case TPS6522X_REGULATOR_BUCK4:
+                // The min BUCK2, BUCK3, and BUCK4 VSET is 0, 
+                // hence we do not need to check for a uint8_t >= 0
+                if (buckCfg.buckVset <= TPS6522X_BUCK2_3_4_MAX_VSET)
+                {
+                    Pmic_setBitField(pBuckVoutRegData, 
+                                    TPS6522X_BUCK_VSET_SHIFT, 
+                                    TPS6522X_BUCK2_3_4_VSET_MASK, 
+                                    buckCfg.buckVset);
+                }
+                break;
+            default:
+                /* Invalid regulator number */
+                break;
+        }
     }
 }
 
@@ -1802,7 +1498,7 @@ int32_t tps6522xSetBuckCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const tps6522xBuc
     }
     if (status == PMIC_ST_SUCCESS)
     {
-        status = tps6522xBuckVoltageWithinRangeCheck(buckCfg, buckNum);
+        status = tps6522xBuckVsetWithinRangeCheck(buckCfg, buckNum);
     }
 
     // Read all registers pertaining to the BUCK resource
@@ -1860,76 +1556,6 @@ static void tps6522xSetLdoCtrlRegBitFields(const tps6522xLdoCfg_t ldoCfg, uint8_
 }
 
 /**
- *  \brief      This function is used to convert LDO voltage (mV) to LDO VSET value.
- *
- *  \param      pLdoVoltage_vset    [OUT]       LDO voltage value in VSET form
- *  \param      ldoVoltage_mv       [IN]        LDO voltage value in millivolts
- *  \param      ldoNum              [IN]        Indicates which LDO the API is working with
- */
-static void tps6522xLdoConvertVoltage2VsetVal(uint8_t *pLdoVoltage_vset,
-                                              const uint16_t ldoVoltage_mv,
-                                              const uint8_t  ldoNum)
-{
-    uint16_t baseVoltage_vset = 0, baseVoltage_mv = 0, voltageStep = 0;
-
-    switch (ldoNum)
-    {
-        case TPS6522X_REGULATOR_LDO1:
-        // LDO1 voltage range 1: 1200 mV to 1200 mV in 0 mV steps (VSET: 0x0 to 0xC)
-            if (ldoVoltage_mv == 1200U)
-            {
-                *pLdoVoltage_vset = 0x0U;
-            }
-            // LDO1 voltage range 2: 1250 mV to 3250 mV in 50 mV steps (VSET: 0xD to 0x35)
-            else if ((ldoVoltage_mv >= 1250U) && (ldoVoltage_mv <= 3250U))
-            {
-                baseVoltage_vset = 0xDU;
-                baseVoltage_mv = 1250U;
-                voltageStep = 50U;
-            }
-            // LDO1 voltage range 3: 3300 mV to 3300 mV in 0 mV steps (VSET: 0x36 to 0x3F)
-            else if (ldoVoltage_mv == 3300U)
-            {
-                *pLdoVoltage_vset = 0x36U;
-            }
-            else
-            {
-                /* Invalid voltage number */
-            }
-
-            break;
-        case TPS6522X_REGULATOR_LDO2:
-        case TPS6522X_REGULATOR_LDO3:
-        // LDO2 and LDO3 voltage range 1: 600 mV to 3350 mV in 50 mV steps (VSET: 0x0 to 0x37)
-            if ((ldoVoltage_mv >= 600U) && (ldoVoltage_mv <= 3350U))
-            {
-                baseVoltage_vset = 0x0U;
-                baseVoltage_mv = 600U;
-                voltageStep = 50U;
-            }
-            // LDO2 and LDO3 voltage range 2: 3400 mV to 3400 mV in 0 mV steps (VSET: 0x38 to 0x3F)
-            else if (ldoVoltage_mv == 3400U)
-            {
-                *pLdoVoltage_vset = 0x38U;
-            }
-            else
-            {
-                /* Invalid voltage number */
-            }
-
-            break;
-        // Invalid LDO number
-        default:
-            break;
-    }
-
-    if (voltageStep != 0U)
-    {
-        *pLdoVoltage_vset = (uint8_t)(baseVoltage_vset + ((ldoVoltage_mv - baseVoltage_mv) / voltageStep));
-    }
-}
-
-/**
  *  \brief      This function is used to set the desired bit fields of the LDO_VOUT register
  *              (desired bit fields are governed by validParams).
  *
@@ -1937,28 +1563,18 @@ static void tps6522xLdoConvertVoltage2VsetVal(uint8_t *pLdoVoltage_vset,
  *  \param      pLdoVoutRegData         [OUT]       Pointer to LDO_VOUT register data
  *  \param      ldoNum                  [IN]        Indicates which LDO the API is working with
  */
-static void tps6522xSetLdoVoutRegBitFields(const tps6522xLdoCfg_t ldoCfg,
-                                           uint8_t *pLdoVoutRegData,
-                                           const uint8_t ldoNum)
+static void tps6522xSetLdoVoutRegBitFields(const tps6522xLdoCfg_t ldoCfg, uint8_t *pLdoVoutRegData)
 {
-    uint8_t ldoVoltage_vset = 0;
-
     if (pmic_validParamCheck(ldoCfg.validParams, TPS6522X_LDO_MODE_VALID))
     {
-        Pmic_setBitField(pLdoVoutRegData,
-                         TPS6522X_LDO_MODE_SHIFT,
-                         TPS6522X_LDO_MODE_MASK,
-                         ldoCfg.ldoMode);
+        Pmic_setBitField(pLdoVoutRegData, TPS6522X_LDO_MODE_SHIFT, TPS6522X_LDO_MODE_MASK, ldoCfg.ldoMode);
     }
 
-    if (pmic_validParamCheck(ldoCfg.validParams, TPS6522X_LDO_VOLTAGE_MV_VALID))
+    // The min LDO1, LDO2, and LDO3 VSET is 0, hence we do not need to check for a uint8_t >= 0
+    if (pmic_validParamCheck(ldoCfg.validParams, TPS6522X_LDO_VSET_VALID) && 
+        (ldoCfg.ldoVset <= TPS6522X_LDO1_2_3_MAX_VSET))
     {
-        tps6522xLdoConvertVoltage2VsetVal(&ldoVoltage_vset, ldoCfg.ldoVoltage_mv, ldoNum);
-
-        Pmic_setBitField(pLdoVoutRegData,
-                         TPS6522X_LDO_VSET_SHIFT,
-                         TPS6522X_LDO_VSET_MASK,
-                         ldoVoltage_vset);
+        Pmic_setBitField(pLdoVoutRegData, TPS6522X_LDO_VSET_SHIFT, TPS6522X_LDO_VSET_MASK, ldoCfg.ldoVset);
     }
 }
 
@@ -2036,7 +1652,7 @@ static inline void tps6522xModifyLdoData(const tps6522xLdoCfg_t ldoCfg, uint8_t 
     tps6522xSetLdoCtrlRegBitFields(ldoCfg, &(regData[TPS6522X_LDO_CTRL_REGDATA_INDEX]));
 
     // LDO_VOUT register
-    tps6522xSetLdoVoutRegBitFields(ldoCfg, &(regData[TPS6522X_LDO_VOUT_REGDATA_INDEX]), ldoNum);
+    tps6522xSetLdoVoutRegBitFields(ldoCfg, &(regData[TPS6522X_LDO_VOUT_REGDATA_INDEX]));
 
     // LDO_PG_WINDOW register
     tps6522xSetLdoPgWindowRegBitFields(ldoCfg, &(regData[TPS6522X_LDO_PG_WINDOW_REGDATA_INDEX]));
@@ -2108,7 +1724,7 @@ int32_t tps6522xSetLdoCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const tps6522xLdoC
     }
     if (status == PMIC_ST_SUCCESS)
     {
-        status = tps6522xLdoVoltageWithinRangeCheck(ldoCfg, ldoNum);
+        status = tps6522xLdoVsetWithinRangeCheck(ldoCfg);
     }
 
     // As we are about to read, start critical section
@@ -2189,12 +1805,12 @@ static void tps6522xSetVccaVmonCtrlBitFields(const tps6522xVccaVmonCfg_t vccaVmo
  */
 static void tps6522xSetVccaPgWindowBitFields(const tps6522xVccaVmonCfg_t vccaVmonCfg, uint8_t *pVccaPgWindowRegData)
 {
-    if (pmic_validParamCheck(vccaVmonCfg.validParams, TPS6522X_VCCA_PG_LEVEL_VALID))
+    if (pmic_validParamCheck(vccaVmonCfg.validParams, TPS6522X_VCCA_PG_SET_VALID))
     {
         Pmic_setBitField(pVccaPgWindowRegData,
                          TPS6522X_VCCA_PG_SET_SHIFT,
                          TPS6522X_VCCA_PG_SET_MASK,
-                         vccaVmonCfg.vccaPgLevel);
+                         vccaVmonCfg.vccaPgSet);
     }
 
     if (pmic_validParamCheck(vccaVmonCfg.validParams, TPS6522X_VCCA_VMON_THR_VALID))
@@ -2241,91 +1857,10 @@ static void tps6522xSetVmonPgWindowBitFields(const tps6522xVccaVmonCfg_t vccaVmo
 }
 
 /**
- *  \brief      This function is used to convert a VMON voltage value (mV) to VMON PG_SET value.
+ *  \brief      This function is used to set the desired bit fields of the VMON_PG_LEVEL register
+ *              (desired bit fields are governed by validParams).
  *
- *  \param      pVmonPgLevel_pgSet      [OUT]       VMON PG level in PG_SET form
- *  \param      vmonPgLevel_mv          [IN]        VMON PG level in millivolts
- *  \param      vmonNum                 [IN]        Indicates which VCCA/VMONx the API is working with
- */
-static void tps6522xVmonConvertVoltage2PgSet(uint8_t *pVmonPgLevel_pgSet,
-                                             const uint16_t vmonPgLevel_mv,
-                                             const uint8_t vmonNum)
-{
-    uint16_t baseVoltage_vset = 0, baseVoltage_mv = 0, voltageStep = 0;
-
-    switch (vmonNum)
-    {
-        case TPS6522X_VOLTAGE_MONITOR_VMON1:
-            // VMON1 voltage range 1: 500 mV to 580 mV in 20 mV steps (PG_SET: 0xA to 0xE)
-            if ((vmonPgLevel_mv >= 500U) && (vmonPgLevel_mv <= 580U))
-            {
-                baseVoltage_vset = 0xAU;
-                baseVoltage_mv = 500U;
-                voltageStep = 20U;
-            }
-            // VMON1 voltage range 2: 600 mV to 1095 mV in 5 mV steps (PG_SET: 0xF to 0x72)
-            else if ((vmonPgLevel_mv >= 600U) && (vmonPgLevel_mv <= 1095U))
-            {
-                baseVoltage_vset = 0xFU;
-                baseVoltage_mv = 600U;
-                voltageStep = 5U;
-            }
-            // VMON1 voltage range 3: 1100 mV to 1650 mV in 10 mV steps (PG_SET: 0x73 to 0xAA)
-            else if ((vmonPgLevel_mv >= 1100U) && (vmonPgLevel_mv <= 1650U))
-            {
-                baseVoltage_vset = 0x73U;
-                baseVoltage_mv = 1100U;
-                voltageStep = 10U;
-            }
-            // VMON1 voltage range 4: 1660 mV to 3340 mV in 20 mV steps (PG_SET: 0xAB to 0xFD)
-            else if ((vmonPgLevel_mv >= 1660U) && (vmonPgLevel_mv <= 3340U))
-            {
-                baseVoltage_vset = 0xABU;
-                baseVoltage_mv = 1660U;
-                voltageStep = 20U;
-            }
-            else
-            {
-                /* Invalid voltage value */
-            }
-            break;
-        case TPS6522X_VOLTAGE_MONITOR_VMON2:
-            // VMON2 voltage range 1: 500 mV to 1150 mV in 25 mV steps (PG_SET: 0x0 to 0x1A)
-            if ((vmonPgLevel_mv >= 500U) && (vmonPgLevel_mv <= 1150U))
-            {
-                baseVoltage_vset = 0x0U;
-                baseVoltage_mv = 500U;
-                voltageStep = 25U;
-            }
-            // VMON2 voltage range 2: 1200 mV to 3300 mV in 50 mV steps (PG_SET: 0x1B to 0x45)
-            else if ((vmonPgLevel_mv >= 1200U) && (vmonPgLevel_mv <= 3300U))
-            {
-                baseVoltage_vset = 0x1BU;
-                baseVoltage_mv = 1200U;
-                voltageStep = 50U;
-            }
-            else
-            {
-                /* Invalid voltage value */
-            }
-            break;
-        // Invalid VMON number
-        default:
-            break;
-    }
-
-    if (voltageStep != 0U)
-    {
-        *pVmonPgLevel_pgSet = (uint8_t)(baseVoltage_vset + ((vmonPgLevel_mv - baseVoltage_mv) / voltageStep));
-    }
-}
-
-/**
- *  \brief      This function is used to set the desired bit fields of the VMON_PG_LEVEL register.
- *              It converts a millivolt value obtained from the VCCA/VMON power resource CFG struct
- *              to PG_SET and sets the VMON_PG_LEVEL register equal to the PG_SET value.
- *
- *  \param      vccaVmonCfg      [IN]        VCCA/VMON power resource configuration register
+ *  \param      vccaVmonCfg             [IN]        VCCA/VMON power resource configuration register
  *  \param      pVmonPgLevelRegData     [OUT]       Pointer to VMON_PG_LEVEL register data
  *  \param      vmonNum                 [IN]        Indicates which VCCA/VMONx the API is working with
  */
@@ -2333,15 +1868,25 @@ static void tps6522xSetVmonPgLevelBitFields(const tps6522xVccaVmonCfg_t vccaVmon
                                             uint8_t *pVmonPgLevelRegData,
                                             const uint8_t vmonNum)
 {
+    // The max VMON1 PG_SET is 0xFF, hence we do not need to check for a uint8_t <= 0xFF
     if ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON1) &&
-        pmic_validParamCheck(vccaVmonCfg.validParams, TPS6522X_VMON1_PG_LEVEL_MV_VALID))
+        pmic_validParamCheck(vccaVmonCfg.validParams, TPS6522X_VMON1_PG_SET_VALID) &&
+        (vccaVmonCfg.vmon1PgSet >= TPS6522X_VMON1_MIN_PG_SET))
     {
-        tps6522xVmonConvertVoltage2PgSet(pVmonPgLevelRegData, vccaVmonCfg.vmon1PgLevel_mv, vmonNum);
+        Pmic_setBitField(pVmonPgLevelRegData, 
+                        TPS6522X_VMON1_PG_SET_SHIFT, 
+                        TPS6522X_VMON1_PG_SET_MASK, 
+                        vccaVmonCfg.vmon1PgSet);
     }
+    // The min VMON2 VSET is 0, hence we do not need to check for a uint8_t >= 0
     else if ((vmonNum == TPS6522X_VOLTAGE_MONITOR_VMON2) &&
-             pmic_validParamCheck(vccaVmonCfg.validParams, TPS6522X_VMON2_PG_LEVEL_MV_VALID))
+             pmic_validParamCheck(vccaVmonCfg.validParams, TPS6522X_VMON2_PG_SET_VALID) && 
+             (vccaVmonCfg.vmon2PgSet <= TPS6522X_VMON2_MAX_PG_SET))
     {
-        tps6522xVmonConvertVoltage2PgSet(pVmonPgLevelRegData, vccaVmonCfg.vmon2PgLevel_mv, vmonNum);
+        Pmic_setBitField(pVmonPgLevelRegData, 
+                        TPS6522X_VMON2_PG_SET_SHIFT, 
+                        TPS6522X_VMON2_PG_SET_MASK, 
+                        vccaVmonCfg.vmon2PgSet);
     }
     else
     {
@@ -2499,7 +2044,7 @@ int32_t tps6522xSetVccaVmonCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
     }
     if (status == PMIC_ST_SUCCESS)
     {
-        status = tps6522xVmonVoltageWithinRangeCheck(vccaVmonCfg, vmonNum);
+        status = tps6522xVmonPgSetWithinRangeCheck(vccaVmonCfg, vmonNum);
     }
     
     // Read all registers pertaining to the VCCA_VMON/VMONx resource
@@ -2525,15 +2070,15 @@ int32_t tps6522xSetVccaVmonCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- *  @brief      This function is used to set the configuration of all valid Bucks.
+ *  \brief      This function is used to set the configuration of all valid Bucks.
  *              Valid Bucks are specified by the end-user via the \p pwrRsrcCfg
  *              parameter. 
  * 
- *  @param      pPmicCoreHandle     [IN]    PMIC interface handle
- *  @param      pwrRsrcCfg          [IN]    Power resource configuration struct
+ *  \param      pPmicCoreHandle     [IN]    PMIC interface handle
+ *  \param      pwrRsrcCfg          [IN]    Power resource configuration struct
  *                                          holding all user-specified BUCK information
  * 
- *  @return     Success code if the configuration of all valid Bucks are set, error
+ *  \return     Success code if the configuration of all valid Bucks are set, error
  *              code otherwise. For valid success/error codes, refer to \ref Pmic_ErrorCodes
  */
 static int32_t tps6522xSetAllValidBuckCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
@@ -2563,15 +2108,15 @@ static int32_t tps6522xSetAllValidBuckCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- *  @brief      This function is used to set the configuration of all valid LDOs.
+ *  \brief      This function is used to set the configuration of all valid LDOs.
  *              Valid LDOs are specified by the end-user via the \p pwrRsrcCfg
  *              parameter. 
  * 
- *  @param      pPmicCoreHandle     [IN]    PMIC interface handle
- *  @param      pwrRsrcCfg          [IN]    Power resource configuration struct
+ *  \param      pPmicCoreHandle     [IN]    PMIC interface handle
+ *  \param      pwrRsrcCfg          [IN]    Power resource configuration struct
  *                                          holding all user-specified LDO information
  * 
- *  @return     Success code if the configuration of all valid LDOs are set, error
+ *  \return     Success code if the configuration of all valid LDOs are set, error
  *              code otherwise. For valid success/error codes, refer to \ref Pmic_ErrorCodes
  */
 static int32_t tps6522xSetAllValidLdoCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
@@ -2601,15 +2146,15 @@ static int32_t tps6522xSetAllValidLdoCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 
 /**
- *  @brief      This function is used to set the configuration of all valid VMONs
+ *  \brief      This function is used to set the configuration of all valid VMONs
  *              (VCCA_VMON/VMONx). Valid VMONs are specified by the end-user via the 
  *              \p pwrRsrcCfg parameter. 
  * 
- *  @param      pPmicCoreHandle     [IN]    PMIC interface handle
- *  @param      pwrRsrcCfg          [IN]    Power resource configuration struct
+ *  \param      pPmicCoreHandle     [IN]    PMIC interface handle
+ *  \param      pwrRsrcCfg          [IN]    Power resource configuration struct
  *                                          holding all user-specified VMON information
  * 
- *  @return     Success code if the configuration of all valid VMONs are set, error
+ *  \return     Success code if the configuration of all valid VMONs are set, error
  *              code otherwise. For valid success/error codes, refer to \ref Pmic_ErrorCodes
  */
 static int32_t tps6522xSetAllValidVccaVmonCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
@@ -2853,11 +2398,66 @@ int32_t tps6522xGetPwrRsrcStat(Pmic_CoreHandle_t *pPmicCoreHandle,
     return status;
 }
 
-int32_t tps6522xGetThermalStat(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               tps6522xThermalStat_t *pThermalStat)
+static int32_t tps6522xDecipherTwarnStat(Pmic_CoreHandle_t *pPmicCoreHandle, tps6522xThermalStat_t *pThermalStat)
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0;
+
+    // If TWARN_STAT validParam set, read STAT_MISC register and extract the TWARN_STAT bit
+    if (pmic_validParamCheck(pThermalStat->validParams, PMIC_THERMAL_STAT_WARN_VALID))
+    {
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_STAT_MISC_REGADDR, &regData);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            pThermalStat->twarnStat = Pmic_getBitField_b(regData, TPS6522X_TWARN_STAT_SHIFT);
+        }
+    }
+
+    return status;
+}
+
+static int32_t tps6522xDecipherTsdOrdStat(Pmic_CoreHandle_t *pPmicCoreHandle, tps6522xThermalStat_t *pThermalStat)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0;
+
+    // If TWARN_ORD_STAT validParam set, read STAT_MODERATE_ERR register and extract the TSD_ORD_STAT bit
+    if (pmic_validParamCheck(pThermalStat->validParams, PMIC_THERMAL_STAT_ORD_SHTDWN_VALID))
+    {
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_STAT_MODERATE_ERR_REGADDR, &regData);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            pThermalStat->tsdOrdStat = Pmic_getBitField_b(regData, TPS6522X_TSD_ORD_STAT_SHIFT);
+        }
+    }
+
+    return status;
+}
+
+static int32_t tps6522xDecipherTsdImmStat(Pmic_CoreHandle_t *pPmicCoreHandle, tps6522xThermalStat_t *pThermalStat)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0;
+
+    // If TSD_IMM_STAT validParam set, read STAT_SEVERE_ERR register and extract the TSD_IMM_STAT bit
+    if (pmic_validParamCheck(pThermalStat->validParams, PMIC_THERMAL_STAT_IMM_SHTDWN_VALID))
+    {
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_STAT_SEVERE_ERR_REGADDR, &regData);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            pThermalStat->tsdImmStat = Pmic_getBitField_b(regData, TPS6522X_TSD_IMM_STAT_SHIFT);
+        }
+    }
+
+    return status;
+}
+
+int32_t tps6522xGetThermalStat(Pmic_CoreHandle_t *pPmicCoreHandle, tps6522xThermalStat_t *pThermalStat)
+{
+    int32_t status = PMIC_ST_SUCCESS;
 
     // Parameter check
     status = tps6522xParamCheck_pmicHandle(pPmicCoreHandle);
@@ -2873,39 +2473,19 @@ int32_t tps6522xGetThermalStat(Pmic_CoreHandle_t *pPmicCoreHandle,
     // Start critical section before reading
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    // If TWARN_STAT validParam set, read STAT_MISC register and extract the TWARN_STAT bit
-    if ((status == PMIC_ST_SUCCESS) && pmic_validParamCheck(pThermalStat->validParams, PMIC_THERMAL_STAT_WARN_VALID))
+    if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_STAT_MISC_REGADDR, &regData);
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            pThermalStat->twarnStat = Pmic_getBitField_b(regData, TPS6522X_TWARN_STAT_SHIFT);
-        }
+        status = tps6522xDecipherTwarnStat(pPmicCoreHandle, pThermalStat);
     }
 
-    // If TWARN_ORD_STAT validParam set, read STAT_MODERATE_ERR register and extract the TSD_ORD_STAT bit
-    if ((status == PMIC_ST_SUCCESS) &&
-        pmic_validParamCheck(pThermalStat->validParams, PMIC_THERMAL_STAT_ORD_SHTDWN_VALID))
+    if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_STAT_MODERATE_ERR_REGADDR, &regData);
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            pThermalStat->tsdOrdStat = Pmic_getBitField_b(regData, TPS6522X_TSD_ORD_STAT_SHIFT);
-        }
+        status = tps6522xDecipherTsdOrdStat(pPmicCoreHandle, pThermalStat);
     }
 
-    // If TSD_IMM_STAT validParam set, read STAT_SEVERE_ERR register and extract the TSD_IMM_STAT bit
-    if ((status == PMIC_ST_SUCCESS) &&
-        pmic_validParamCheck(pThermalStat->validParams, PMIC_THERMAL_STAT_IMM_SHTDWN_VALID))
+    if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_STAT_SEVERE_ERR_REGADDR, &regData);
-
-        if (status == PMIC_ST_SUCCESS)
-        {
-            pThermalStat->tsdImmStat = Pmic_getBitField_b(regData, TPS6522X_TSD_IMM_STAT_SHIFT);
-        }
+        status = tps6522xDecipherTsdImmStat(pPmicCoreHandle, pThermalStat);
     }
 
     // Stop critical section after reading
