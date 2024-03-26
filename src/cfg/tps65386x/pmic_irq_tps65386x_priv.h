@@ -62,13 +62,12 @@ extern "C" {
 /*                         Function Declarations                            */
 /*==========================================================================*/
 
-void pmic_get_tps65386x_intrCfg(Pmic_IntrCfg_t **pIntrCfg);
+void pmic_get_tps65386x_intrCfg(Pmic_IntrCfg_t ** pIntrCfg);
 
-void pmic_get_tps65386x_intrGpioCfg(Pmic_GpioIntrTypeCfg_t **pIntGpioCfg);
+void pmic_get_tps65386x_intrGpioCfg(Pmic_GpioIntrTypeCfg_t ** pIntGpioCfg);
 
-int32_t Pmic_tps65386x_irqGetL2Error(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                     uint16_t l1RegAddr,
-                                     Pmic_IrqStatus_t *pErrStat);
+int32_t Pmic_tps65386x_irqGetL2Error(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint16_t l1RegAddr, Pmic_IrqStatus_t * pErrStat);
 
 void Pmic_tps65386x_reInitInterruptConfig(void);
 

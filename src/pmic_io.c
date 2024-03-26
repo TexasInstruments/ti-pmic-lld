@@ -41,18 +41,19 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
+
 #include "pmic_core_priv.h"
 #include "pmic_io_priv.h"
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
-#define CMD_RD_EN (0x10)
-#define CMD_WR_EN (0x00)
-#define CMD_SHIFT (24U)
-#define RW_SHIFT (16U)
-#define DAT_SHIFT (8U)
-#define CMD_DEVICE_ID (0x00)
+#define CMD_RD_EN       (0x10)
+#define CMD_WR_EN       (0x00)
+#define CMD_SHIFT       (24U)
+#define RW_SHIFT        (16U)
+#define DAT_SHIFT       (8U)
+#define CMD_DEVICE_ID   (0x00)
 
 /* ========================================================================== */
 /*                          Function Declarations                             */
@@ -64,215 +65,155 @@ uint8_t PMIC_calcCRC8(uint8_t cmd, uint8_t rdwr, uint8_t dat);
 /* ========================================================================== */
 
 static int32_t
-Pmic_validateCorehandle(const Pmic_CoreHandle_t *pPmicCoreHandle);
+Pmic_validateCorehandle(const Pmic_CoreHandle_t * pPmicCoreHandle);
 
-static int32_t Pmic_commIoReadData(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                   uint16_t *pRegAddr, uint8_t *pBuffLength,
-                                   uint8_t *pRxBuf, uint8_t *pInstType);
+static int32_t Pmic_commIoReadData(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint16_t * pRegAddr, uint8_t * pBuffLength,
+    uint8_t * pRxBuf, uint8_t * pInstType);
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
 
-/**
- * @brief: Function call wrappers for LLD write API with CRC8 support
- *         This function does the following:
- *         1. If CRC8 is enabled, calculates CRC8 value for given data byte
- *         2. In case of SPI, forms SPI transfer header for PMIC to understand
- *             which register needs to be accessed - 2 byte header
- *             formation is as per TRM
- *         3. If the register to be addressed is Watchdog register, it updates
- *            the Slave and Register address as per TRM to properly communicate
- *            with PMIC Watchdog module and access it's registers
- *         4. Calls Application provided Transfer function to send the
- *            data byte, along with CRC8 if supported.
- *         5. Works with the valid PMIC instance else does not do any operation
- *
- * @param   pPmicCoreHandle   [IN]    PMIC Interface Handle
- * @param   regAddr           [IN]    Register address
- * @param   txData            [IN]    Data to be written
- * @return  pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
- * otherwise, returns an error code.
- */
-int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               uint16_t regAddr, uint8_t txData) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t buffLength = 1U;
-  uint8_t instType = PMIC_MAIN_INST;
-  uint8_t txBuf[PMIC_IO_BUF_SIZE] = {0U};
-  uint16_t pmicRegAddr = regAddr;
-  uint8_t data = txData;
+int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint16_t regAddr, uint8_t txData) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t buffLength = 1U;
+    uint8_t instType = PMIC_MAIN_INST;
+    uint8_t txBuf[PMIC_IO_BUF_SIZE] = {0U};
+    uint16_t pmicRegAddr = regAddr;
+    uint8_t data = txData;
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    /*
-     * Frame 3 Bytes with IO header+data as per PMIC SPI IO algorithm
-     * explained in PMIC TRM
-     */
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        /*
+         * Frame 3 Bytes with IO header+data as per PMIC SPI IO algorithm
+         * explained in PMIC TRM
+         */
 
-    buffLength = 0;
-    /* Set ADDR to txbuf[0] with ADDR[7:0] */
-    txBuf[buffLength] = (uint8_t)(pmicRegAddr & 0xFFU);
-    buffLength++;
+        buffLength = 0;
+        /* Set ADDR to txbuf[0] with ADDR[7:0] */
+        txBuf[buffLength] = (uint8_t)(pmicRegAddr & 0xFFU);
+        buffLength++;
 
-    /* Set PAGE to txBuf[1] 7:5 bits with PAGE[2:0] */
-    txBuf[buffLength] = (uint8_t)(((pmicRegAddr >> 8U) & 0x7U) << 5U);
+        /* Set PAGE to txBuf[1] 7:5 bits with PAGE[2:0] */
+        txBuf[buffLength] = (uint8_t)(((pmicRegAddr >> 8U) & 0x7U) << 5U);
 
-    /* Set R/W in txBuf[1] as bit-4, for Write Request */
-    txBuf[buffLength] &= (uint8_t)~PMIC_IO_REQ_RW;
-    buffLength++;
+        /* Set R/W in txBuf[1] as bit-4, for Write Request */
+        txBuf[buffLength] &= (uint8_t) ~PMIC_IO_REQ_RW;
+        buffLength++;
 
-    /* Set write data to txBuf[2], with WDATA[7:0] */
-    txBuf[buffLength] = data;
-    buffLength++;
+        /* Set write data to txBuf[2], with WDATA[7:0] */
+        txBuf[buffLength] = data;
+        buffLength++;
 
-    /* Set CRC data to txBuf[3], Bits 25-32 CRC */
-    txBuf[buffLength] =
-        PMIC_calcCRC8((char)txBuf[0], (char)txBuf[1], (char)txBuf[2]);
-    /* Increment 1 more byte to store CRC8 */
-    buffLength++;
-  }
-
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    pmicStatus = pPmicCoreHandle->pFnPmicCommIoWrite(
-        pPmicCoreHandle, instType, pmicRegAddr, txBuf, buffLength);
-  }
-  return pmicStatus;
-}
-
-/**
- * @brief Validate the PMIC core handle.
- * This function validates the PMIC core handle to ensure that it is properly
- * initialized.
- *
- * @param pPmicCoreHandle Pointer to the PMIC core handle.
- * @return pmicStatus Returns PMIC_ST_SUCCESS if the core handle is valid;
- * otherwise, returns an error code.
- */
-static int32_t
-Pmic_validateCorehandle(const Pmic_CoreHandle_t *pPmicCoreHandle) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-
-  if (NULL == pPmicCoreHandle->pCommHandle) {
-    pmicStatus = PMIC_ST_ERR_NULL_PARAM;
-  }
-
-  if ((PMIC_ST_SUCCESS == pmicStatus) &&
-      (NULL == pPmicCoreHandle->pFnPmicCommIoRead)) {
-    pmicStatus = PMIC_ST_ERR_NULL_FPTR;
-  }
-
-  return pmicStatus;
-}
-
-/**
- * @brief Read data from the PMIC communication interface.
- * This function reads data from the PMIC communication interface based on the
- * provided parameters.
- *
- * @param pPmicCoreHandle Pointer to the PMIC core handle.
- * @param pRegAddr Pointer to the PMIC register address to read from.
- * @param pBuffLength Pointer to the length of the buffer for received data.
- * @param pRxBuf Pointer to the buffer to store received data.
- * @param pInstType Pointer to the instruction type for the communication.
- * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
- * otherwise, returns an error code.
- */
-static int32_t Pmic_commIoReadData(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                   uint16_t *pRegAddr, uint8_t *pBuffLength,
-                                   uint8_t *pRxBuf, uint8_t *pInstType) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t buffLength = *pBuffLength;
-  uint16_t pmicRegAddr = *pRegAddr;
-  uint8_t *tempCfg = pInstType;
-  uint8_t instType = *tempCfg;
-
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    /*
-     * Frame 3 Bytes with IO header+data as per PMIC SPI IO algorithm
-     * explained in PMIC TRM
-     */
-    buffLength = 0U;
-    /* Set ADDR to pRxBuf[0], with ADDR[7:0] */
-    pRxBuf[buffLength] = (uint8_t)(pmicRegAddr & 0xFFU);
-
-    buffLength++;
-    /* Set PAGE to pRxBuf[1] 7:5 bits, with PAGE[2:0] */
-    pRxBuf[buffLength] = (uint8_t)(((pmicRegAddr >> 8U) & 0x7U) << 5U);
-
-    /* Set R/W in pRxBuf[1] as bit-4, for read Request */
-    pRxBuf[buffLength] |= PMIC_IO_REQ_RW;
-    buffLength++;
-    /* Increment 1 more byte for 8-bit data read from PMIC register */
-    buffLength++;
-
-    /* Increment 1 more byte to read CRC8 */
-    buffLength++;
-
-    *pBuffLength = buffLength;
-    *pRegAddr = pmicRegAddr;
-  }
-
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    pmicStatus = pPmicCoreHandle->pFnPmicCommIoRead(
-        pPmicCoreHandle, instType, pmicRegAddr, pRxBuf, buffLength);
-  }
-
-  return pmicStatus;
-}
-
-/**
- * @brief: Function call wrappers for LLD write API with CRC8 support
- *         This function does the following:
- *         1. If CRC8 is enabled, calculates CRC8 value for given data byte
- *         2. In case of SPI, forms SPI transfer header for PMIC to understand
- *             which register needs to be accessed - 2 byte header
- *             formation is as per TRM
- *         3. If the register to be addressed is Watchdog register, it updates
- *            the Slave and Register address as per TRM to properly communicate
- *            with PMIC Watchdog module and access it's registers
- *         4. Calls Application provided Transfer function to recive  the
- *            data byte, along with CRC8 if supported.
- *         5. Copies received data byte into pRxBuffer byte buffer
- *         6. Works with the valid PMIC instance else does not do any operation
- *
- * @param   pPmicCoreHandle   [IN]    PMIC Interface Handle.
- * @param   regAddr           [IN]    Register address.
- * @param   pRxBuffer         [OUT]   BUffer to receive data
- * @return  pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
- * otherwise, returns an error code.
- */
-int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               uint16_t regAddr, uint8_t *pRxBuffer) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t buffLength = 1U;
-  uint8_t rxBuf[PMIC_IO_BUF_SIZE] = {0};
-  uint8_t crcData[PMIC_IO_BUF_SIZE] = {0};
-  uint8_t instType = PMIC_MAIN_INST;
-  uint8_t crcDataLen = 0U;
-  uint16_t pmicRegAddr = regAddr;
-
-  pmicStatus = Pmic_commIoReadData(pPmicCoreHandle, &pmicRegAddr, &buffLength,
-                                   rxBuf, &instType);
-  if (PMIC_ST_SUCCESS != pmicStatus) {
-    pmicStatus = PMIC_ST_ERR_FAIL;
-  }
-
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    if (PMIC_INTF_SPI == pPmicCoreHandle->commMode) {
-      /* Copy SPI frame data to crcData */
-      for (crcDataLen = 0U; crcDataLen < (PMIC_IO_BUF_SIZE - 1U);
-           crcDataLen++) {
-        crcData[crcDataLen] = rxBuf[crcDataLen];
-      }
-    } else {
-      pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        /* Set CRC data to txBuf[3], Bits 25-32 CRC */
+        txBuf[buffLength] =
+            PMIC_calcCRC8((char) txBuf[0], (char) txBuf[1], (char) txBuf[2]);
+        /* Increment 1 more byte to store CRC8 */
+        buffLength++;
     }
-    buffLength--;
-  }
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    /* Copy data which shall be in rxBuf[2]/rxBuf[0] to pRxBuffer */
-    *pRxBuffer = rxBuf[2];
-  }
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        pmicStatus = pPmicCoreHandle -> pFnPmicCommIoWrite(
+            pPmicCoreHandle, instType, pmicRegAddr, txBuf, buffLength);
+    }
+    return pmicStatus;
+}
 
-  return pmicStatus;
+static int32_t
+Pmic_validateCorehandle(const Pmic_CoreHandle_t * pPmicCoreHandle) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+
+    if (NULL == pPmicCoreHandle -> pCommHandle) {
+        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if ((PMIC_ST_SUCCESS == pmicStatus) &&
+        (NULL == pPmicCoreHandle -> pFnPmicCommIoRead)) {
+        pmicStatus = PMIC_ST_ERR_NULL_FPTR;
+    }
+
+    return pmicStatus;
+}
+
+static int32_t Pmic_commIoReadData(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint16_t * pRegAddr, uint8_t * pBuffLength,
+    uint8_t * pRxBuf, uint8_t * pInstType) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t buffLength = * pBuffLength;
+    uint16_t pmicRegAddr = * pRegAddr;
+    uint8_t * tempCfg = pInstType;
+    uint8_t instType = * tempCfg;
+
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        /*
+         * Frame 3 Bytes with IO header+data as per PMIC SPI IO algorithm
+         * explained in PMIC TRM
+         */
+        buffLength = 0U;
+        /* Set ADDR to pRxBuf[0], with ADDR[7:0] */
+        pRxBuf[buffLength] = (uint8_t)(pmicRegAddr & 0xFFU);
+
+        buffLength++;
+        /* Set PAGE to pRxBuf[1] 7:5 bits, with PAGE[2:0] */
+        pRxBuf[buffLength] = (uint8_t)(((pmicRegAddr >> 8U) & 0x7U) << 5U);
+
+        /* Set R/W in pRxBuf[1] as bit-4, for read Request */
+        pRxBuf[buffLength] |= PMIC_IO_REQ_RW;
+        buffLength++;
+        /* Increment 1 more byte for 8-bit data read from PMIC register */
+        buffLength++;
+
+        /* Increment 1 more byte to read CRC8 */
+        buffLength++;
+
+        * pBuffLength = buffLength;
+        * pRegAddr = pmicRegAddr;
+    }
+
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        pmicStatus = pPmicCoreHandle -> pFnPmicCommIoRead(
+            pPmicCoreHandle, instType, pmicRegAddr, pRxBuf, buffLength);
+    }
+
+    return pmicStatus;
+}
+
+int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint16_t regAddr, uint8_t * pRxBuffer) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t buffLength = 1U;
+    uint8_t rxBuf[PMIC_IO_BUF_SIZE] = {
+        0
+    };
+    uint8_t crcData[PMIC_IO_BUF_SIZE] = {
+        0
+    };
+    uint8_t instType = PMIC_MAIN_INST;
+    uint8_t crcDataLen = 0U;
+    uint16_t pmicRegAddr = regAddr;
+
+    pmicStatus = Pmic_commIoReadData(pPmicCoreHandle, & pmicRegAddr, & buffLength,
+        rxBuf, & instType);
+    if (PMIC_ST_SUCCESS != pmicStatus) {
+        pmicStatus = PMIC_ST_ERR_FAIL;
+    }
+
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        if (PMIC_INTF_SPI == pPmicCoreHandle -> commMode) {
+            /* Copy SPI frame data to crcData */
+            for (crcDataLen = 0U; crcDataLen < (PMIC_IO_BUF_SIZE - 1U); crcDataLen++) {
+                crcData[crcDataLen] = rxBuf[crcDataLen];
+            }
+        } else {
+            pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        }
+        buffLength--;
+    }
+
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        /* Copy data which shall be in rxBuf[2]/rxBuf[0] to pRxBuffer */
+        * pRxBuffer = rxBuf[2];
+    }
+
+    return pmicStatus;
 }

@@ -51,8 +51,8 @@
  *
  *  @{
  */
-#define PMIC_WDG_DISABLE 0
-#define PMIC_WDG_ENABLE 1
+#define PMIC_WDG_DISABLE                            (0x0U)
+#define PMIC_WDG_ENABLE                             (0x1U)
 /** @} */
 
 /**
@@ -61,8 +61,8 @@
  *
  *  @{
  */
-#define PMIC_WDG_RESET_DISABLE (0x0U)
-#define PMIC_WDG_RESET_ENABLE (0x1U)
+#define PMIC_WDG_RESET_DISABLE                      (0x0U)
+#define PMIC_WDG_RESET_ENABLE                       (0x1U)
 /** @} */
 
 /**
@@ -71,8 +71,8 @@
  *
  *  @{
  */
-#define PMIC_WDG_RETLONGWIN_DISABLE 0
-#define PMIC_WDG_RETLONGWIN_ENABLE 1
+#define PMIC_WDG_RETLONGWIN_DISABLE                 (0x0U)
+#define PMIC_WDG_RETLONGWIN_ENABLE                  (0x1U)
 /** @} */
 
 /**
@@ -81,8 +81,8 @@
  *
  *  @{
  */
-#define PMIC_WDG_PWRHOLD_DISABLE (0x0U)
-#define PMIC_WDG_PWRHOLD_ENABLE (0x1U)
+#define PMIC_WDG_PWRHOLD_DISABLE                    (0x0U)
+#define PMIC_WDG_PWRHOLD_ENABLE                     (0x1U)
 /** @} */
 
 /**
@@ -91,8 +91,8 @@
  *
  *  @{
  */
-#define PMIC_WDG_TRIGGER_MODE (0x0U)
-#define PMIC_WDG_QA_MODE (0x1U)
+#define PMIC_WDG_TRIGGER_MODE                       (0x0U)
+#define PMIC_WDG_QA_MODE                            (0x1U)
 /** @} */
 
 /**
@@ -101,14 +101,14 @@
  *
  *  @{
  */
-#define PMIC_WDG_RESET_THRESHOLD_COUNT_0 (0x0U)
-#define PMIC_WDG_RESET_THRESHOLD_COUNT_1 (0x1U)
-#define PMIC_WDG_RESET_THRESHOLD_COUNT_2 (0x2U)
-#define PMIC_WDG_RESET_THRESHOLD_COUNT_3 (0x3U)
-#define PMIC_WDG_RESET_THRESHOLD_COUNT_4 (0x4U)
-#define PMIC_WDG_RESET_THRESHOLD_COUNT_5 (0x5U)
-#define PMIC_WDG_RESET_THRESHOLD_COUNT_6 (0x6U)
-#define PMIC_WDG_RESET_THRESHOLD_COUNT_7 (0x7U)
+#define PMIC_WDG_RESET_THRESHOLD_COUNT_0            (0x0U)
+#define PMIC_WDG_RESET_THRESHOLD_COUNT_1            (0x1U)
+#define PMIC_WDG_RESET_THRESHOLD_COUNT_2            (0x2U)
+#define PMIC_WDG_RESET_THRESHOLD_COUNT_3            (0x3U)
+#define PMIC_WDG_RESET_THRESHOLD_COUNT_4            (0x4U)
+#define PMIC_WDG_RESET_THRESHOLD_COUNT_5            (0x5U)
+#define PMIC_WDG_RESET_THRESHOLD_COUNT_6            (0x6U)
+#define PMIC_WDG_RESET_THRESHOLD_COUNT_7            (0x7U)
 /** @} */
 
 /**
@@ -117,14 +117,14 @@
  *
  *  @{
  */
-#define PMIC_WDG_FAIL_THRESHOLD_COUNT_0 (0x0U)
-#define PMIC_WDG_FAIL_THRESHOLD_COUNT_1 (0x1U)
-#define PMIC_WDG_FAIL_THRESHOLD_COUNT_2 (0x2U)
-#define PMIC_WDG_FAIL_THRESHOLD_COUNT_3 (0x3U)
-#define PMIC_WDG_FAIL_THRESHOLD_COUNT_4 (0x4U)
-#define PMIC_WDG_FAIL_THRESHOLD_COUNT_5 (0x5U)
-#define PMIC_WDG_FAIL_THRESHOLD_COUNT_6 (0x6U)
-#define PMIC_WDG_FAIL_THRESHOLD_COUNT_7 (0x7U)
+#define PMIC_WDG_FAIL_THRESHOLD_COUNT_0             (0x0U)
+#define PMIC_WDG_FAIL_THRESHOLD_COUNT_1             (0x1U)
+#define PMIC_WDG_FAIL_THRESHOLD_COUNT_2             (0x2U)
+#define PMIC_WDG_FAIL_THRESHOLD_COUNT_3             (0x3U)
+#define PMIC_WDG_FAIL_THRESHOLD_COUNT_4             (0x4U)
+#define PMIC_WDG_FAIL_THRESHOLD_COUNT_5             (0x5U)
+#define PMIC_WDG_FAIL_THRESHOLD_COUNT_6             (0x6U)
+#define PMIC_WDG_FAIL_THRESHOLD_COUNT_7             (0x7U)
 /** @} */
 
 /**
@@ -133,10 +133,10 @@
  *
  *  @{
  */
-#define PMIC_WDG_QA_FEEDBACK_VALUE_0 (0x0U)
-#define PMIC_WDG_QA_FEEDBACK_VALUE_1 (0x1U)
-#define PMIC_WDG_QA_FEEDBACK_VALUE_2 (0x2U)
-#define PMIC_WDG_QA_FEEDBACK_VALUE_3 (0x3U)
+#define PMIC_WDG_QA_FEEDBACK_VALUE_0                (0x0U)
+#define PMIC_WDG_QA_FEEDBACK_VALUE_1                (0x1U)
+#define PMIC_WDG_QA_FEEDBACK_VALUE_2                (0x2U)
+#define PMIC_WDG_QA_FEEDBACK_VALUE_3                (0x3U)
 /** @} */
 
 /**
@@ -145,10 +145,10 @@
  *
  *  @{
  */
-#define PMIC_WDG_QA_LFSR_VALUE_0 (0x0U)
-#define PMIC_WDG_QA_LFSR_VALUE_1 (0x1U)
-#define PMIC_WDG_QA_LFSR_VALUE_2 (0x2U)
-#define PMIC_WDG_QA_LFSR_VALUE_3 (0x3U)
+#define PMIC_WDG_QA_LFSR_VALUE_0                    (0x0U)
+#define PMIC_WDG_QA_LFSR_VALUE_1                    (0x1U)
+#define PMIC_WDG_QA_LFSR_VALUE_2                    (0x2U)
+#define PMIC_WDG_QA_LFSR_VALUE_3                    (0x3U)
 /** @} */
 
 /**
@@ -157,22 +157,22 @@
  *
  *  @{
  */
-#define PMIC_WDG_QA_QUES_SEED_VALUE_0 (0x0U)
-#define PMIC_WDG_QA_QUES_SEED_VALUE_1 (0x1U)
-#define PMIC_WDG_QA_QUES_SEED_VALUE_2 (0x2U)
-#define PMIC_WDG_QA_QUES_SEED_VALUE_3 (0x3U)
-#define PMIC_WDG_QA_QUES_SEED_VALUE_4 (0x4U)
-#define PMIC_WDG_QA_QUES_SEED_VALUE_5 (0x5U)
-#define PMIC_WDG_QA_QUES_SEED_VALUE_6 (0x6U)
-#define PMIC_WDG_QA_QUES_SEED_VALUE_7 (0x7U)
-#define PMIC_WDG_QA_QUES_SEED_VALUE_8 (0x8U)
-#define PMIC_WDG_QA_QUES_SEED_VALUE_9 (0x9U)
-#define PMIC_WDG_QA_QUES_SEED_VALUE_10 (0xAU)
-#define PMIC_WDG_QA_QUES_SEED_VALUE_11 (0xBU)
-#define PMIC_WDG_QA_QUES_SEED_VALUE_12 (0xCU)
-#define PMIC_WDG_QA_QUES_SEED_VALUE_13 (0xDU)
-#define PMIC_WDG_QA_QUES_SEED_VALUE_14 (0xEU)
-#define PMIC_WDG_QA_QUES_SEED_VALUE_15 (0xFU)
+#define PMIC_WDG_QA_QUES_SEED_VALUE_0               (0x0U)
+#define PMIC_WDG_QA_QUES_SEED_VALUE_1               (0x1U)
+#define PMIC_WDG_QA_QUES_SEED_VALUE_2               (0x2U)
+#define PMIC_WDG_QA_QUES_SEED_VALUE_3               (0x3U)
+#define PMIC_WDG_QA_QUES_SEED_VALUE_4               (0x4U)
+#define PMIC_WDG_QA_QUES_SEED_VALUE_5               (0x5U)
+#define PMIC_WDG_QA_QUES_SEED_VALUE_6               (0x6U)
+#define PMIC_WDG_QA_QUES_SEED_VALUE_7               (0x7U)
+#define PMIC_WDG_QA_QUES_SEED_VALUE_8               (0x8U)
+#define PMIC_WDG_QA_QUES_SEED_VALUE_9               (0x9U)
+#define PMIC_WDG_QA_QUES_SEED_VALUE_10              (0xAU)
+#define PMIC_WDG_QA_QUES_SEED_VALUE_11              (0xBU)
+#define PMIC_WDG_QA_QUES_SEED_VALUE_12              (0xCU)
+#define PMIC_WDG_QA_QUES_SEED_VALUE_13              (0xDU)
+#define PMIC_WDG_QA_QUES_SEED_VALUE_14              (0xEU)
+#define PMIC_WDG_QA_QUES_SEED_VALUE_15              (0xFU)
 /** @} */
 
 /**
@@ -184,11 +184,11 @@
 /** @brief +1/-1 counting scheme. WD_FAIL_CNT is incremented by one
  *          for a bad event and decremented by one for a good event
  */
-#define PMIC_WDG_CNT_SEL_1_1_SCHEME (0x0U)
+#define PMIC_WDG_CNT_SEL_1_1_SCHEME                 (0x0U)
 /** @brief +2/-1 counting scheme. WD_FAIL_CNT is incremented by two
  *          for a bad event and decremented by one for a good event
  */
-#define PMIC_WDG_CNT_SEL_2_1_SCHEME (0x1U)
+#define PMIC_WDG_CNT_SEL_2_1_SCHEME                 (0x1U)
 /** @} */
 
 /**
@@ -199,10 +199,10 @@
  */
 /** @brief ENABLE_DRV not cleared when WD_FAIL_INT is high
  */
-#define PMIC_WDG_ENDRV_SEL_NO_CLR (0x0U)
+#define PMIC_WDG_ENDRV_SEL_NO_CLR                   (0x0U)
 /** @brief ENABLE_DRV cleared when WD_FAIL_INT is high
  */
-#define PMIC_WDG_ENDRV_SEL_CLR (0x1U)
+#define PMIC_WDG_ENDRV_SEL_CLR                      (0x1U)
 /** @} */
 
 /**
@@ -212,43 +212,40 @@
  *  @{
  */
 /** @brief validParams value used to set/get Long Window duration */
-#define PMIC_CFG_WDG_LONGWINDURATION_VALID (0U)
+#define PMIC_CFG_WDG_LONGWINDURATION_VALID          (0U)
 /** @brief validParams value used to set/get Window-1 duration */
-#define PMIC_CFG_WDG_WIN1DURATION_VALID (1U)
+#define PMIC_CFG_WDG_WIN1DURATION_VALID             (1U)
 /** @brief validParams value used to set/get Window-2 duration */
-#define PMIC_CFG_WDG_WIN2DURATION_VALID (2U)
+#define PMIC_CFG_WDG_WIN2DURATION_VALID             (2U)
 /** @brief validParams value used to set/get Fail threshold value */
-#define PMIC_CFG_WDG_FAILTHRESHOLD_VALID (3U)
+#define PMIC_CFG_WDG_FAILTHRESHOLD_VALID            (3U)
 /** @brief validParams value used to set/get Reset threshold Value */
-#define PMIC_CFG_WDG_RSTTHRESHOLD_VALID (4U)
-/** @brief validParams value used to set/get to enable or diable warm reset on
- *         fail */
-#define PMIC_CFG_WDG_RSTENABLE_VALID (5U)
+#define PMIC_CFG_WDG_RSTTHRESHOLD_VALID             (4U)
+/** @brief validParams value used to set/get to enable or diable warm reset on fail */
+#define PMIC_CFG_WDG_RSTENABLE_VALID                (5U)
 /** @brief validParams value used to set/get watchdog mode */
-#define PMIC_CFG_WDG_WDGMODE_VALID (6U)
-/** @brief validParams value used to set/get to Enable or disable  watchdog
- *         pwrHold */
-#define PMIC_CFG_WDG_PWRHOLD_VALID (7U)
-/** @brief validParams value used to set/get to enable or disable return to long
- *         window */
-#define PMIC_CFG_WDG_RETLONGWIN_VALID (8U)
+#define PMIC_CFG_WDG_WDGMODE_VALID                  (6U)
+/** @brief validParams value used to set/get to Enable or disable  watchdog pwrHold */
+#define PMIC_CFG_WDG_PWRHOLD_VALID                  (7U)
+/** @brief validParams value used to set/get to enable or disable return to long window */
+#define PMIC_CFG_WDG_RETLONGWIN_VALID               (8U)
 /** @brief validParams value used to set/get QA feed back value */
-#define PMIC_CFG_WDG_QA_FDBK_VALID (9U)
+#define PMIC_CFG_WDG_QA_FDBK_VALID                  (9U)
 /** @brief validParams value used to set/get QA LFSR value */
-#define PMIC_CFG_WDG_QA_LFSR_VALID (10U)
+#define PMIC_CFG_WDG_QA_LFSR_VALID                  (10U)
 /** @brief validParams value used to set/get QA question seed value */
-#define PMIC_CFG_WDG_QA_QUES_SEED_VALID (11U)
+#define PMIC_CFG_WDG_QA_QUES_SEED_VALID             (11U)
 /** @brief validParams value used to set/get fail counter configuration */
-#define PMIC_CFG_WDG_CNT_SEL_VALID (12U)
+#define PMIC_CFG_WDG_CNT_SEL_VALID                  (12U)
 /** @brief validParams value used to set/get Watchdog ENDRV configuration */
-#define PMIC_CFG_WDG_ENDRV_SEL_VALID (13U)
+#define PMIC_CFG_WDG_ENDRV_SEL_VALID                (13U)
 /** @} */
 
 /**
  * @name PMIC Watchdog Min Wait Count
  * @brief Minimum number of iterations to wait for a Good/Bad event
  */
-#define PMIC_WDG_WAIT_CNT_MIN_VAL (30U)
+#define PMIC_WDG_WAIT_CNT_MIN_VAL                   (30U)
 
 /**
  *  @anchor Pmic_WdgCfgValidParamBitShiftVal
@@ -259,27 +256,20 @@
  *
  *  @{
  */
-#define PMIC_CFG_WDG_LONGWINDURATION_VALID_SHIFT                               \
-  (1U << PMIC_CFG_WDG_LONGWINDURATION_VALID)
-#define PMIC_CFG_WDG_WIN1DURATION_VALID_SHIFT                                  \
-  (1U << PMIC_CFG_WDG_WIN1DURATION_VALID)
-#define PMIC_CFG_WDG_WIN2DURATION_VALID_SHIFT                                  \
-  (1U << PMIC_CFG_WDG_WIN2DURATION_VALID)
-#define PMIC_CFG_WDG_FAILTHRESHOLD_VALID_SHIFT                                 \
-  (1U << PMIC_CFG_WDG_FAILTHRESHOLD_VALID)
-#define PMIC_CFG_WDG_RSTTHRESHOLD_VALID_SHIFT                                  \
-  (1U << PMIC_CFG_WDG_RSTTHRESHOLD_VALID)
-#define PMIC_CFG_WDG_RSTENABLE_VALID_SHIFT (1U << PMIC_CFG_WDG_RSTENABLE_VALID)
-#define PMIC_CFG_WDG_WDGMODE_VALID_SHIFT (1U << PMIC_CFG_WDG_WDGMODE_VALID)
-#define PMIC_CFG_WDG_PWRHOLD_VALID_SHIFT (1U << PMIC_CFG_WDG_PWRHOLD_VALID)
-#define PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT                                    \
-  (1U << PMIC_CFG_WDG_RETLONGWIN_VALID)
-#define PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT (1U << PMIC_CFG_WDG_QA_FDBK_VALID)
-#define PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT (1U << PMIC_CFG_WDG_QA_LFSR_VALID)
-#define PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT                                  \
-  (1U << PMIC_CFG_WDG_QA_QUES_SEED_VALID)
-#define PMIC_CFG_WDG_CNT_SEL_VALID_SHIFT (1U << PMIC_CFG_WDG_CNT_SEL_VALID)
-#define PMIC_CFG_WDG_ENDRV_SEL_VALID_SHIFT (1U << PMIC_CFG_WDG_ENDRV_SEL_VALID)
+#define PMIC_CFG_WDG_LONGWINDURATION_VALID_SHIFT    (1U << PMIC_CFG_WDG_LONGWINDURATION_VALID)
+#define PMIC_CFG_WDG_WIN1DURATION_VALID_SHIFT       (1U << PMIC_CFG_WDG_WIN1DURATION_VALID)
+#define PMIC_CFG_WDG_WIN2DURATION_VALID_SHIFT       (1U << PMIC_CFG_WDG_WIN2DURATION_VALID)
+#define PMIC_CFG_WDG_FAILTHRESHOLD_VALID_SHIFT      (1U << PMIC_CFG_WDG_FAILTHRESHOLD_VALID)
+#define PMIC_CFG_WDG_RSTTHRESHOLD_VALID_SHIFT       (1U << PMIC_CFG_WDG_RSTTHRESHOLD_VALID)
+#define PMIC_CFG_WDG_RSTENABLE_VALID_SHIFT          (1U << PMIC_CFG_WDG_RSTENABLE_VALID)
+#define PMIC_CFG_WDG_WDGMODE_VALID_SHIFT            (1U << PMIC_CFG_WDG_WDGMODE_VALID)
+#define PMIC_CFG_WDG_PWRHOLD_VALID_SHIFT            (1U << PMIC_CFG_WDG_PWRHOLD_VALID)
+#define PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT         (1U << PMIC_CFG_WDG_RETLONGWIN_VALID)
+#define PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT            (1U << PMIC_CFG_WDG_QA_FDBK_VALID)
+#define PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT            (1U << PMIC_CFG_WDG_QA_LFSR_VALID)
+#define PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT       (1U << PMIC_CFG_WDG_QA_QUES_SEED_VALID)
+#define PMIC_CFG_WDG_CNT_SEL_VALID_SHIFT            (1U << PMIC_CFG_WDG_CNT_SEL_VALID)
+#define PMIC_CFG_WDG_ENDRV_SEL_VALID_SHIFT          (1U << PMIC_CFG_WDG_ENDRV_SEL_VALID)
 /** @} */
 
 /**
@@ -289,23 +279,23 @@
  *  @{
  */
 /** @brief validParams value used to get Long Window timeout error status */
-#define PMIC_CFG_WD_LONGWIN_TIMEOUT_ERRSTAT_VALID (0U)
+#define PMIC_CFG_WD_LONGWIN_TIMEOUT_ERRSTAT_VALID   (0U)
 /** @brief validParams value used to get Window1 and window2 timeout error
  *         status */
-#define PMIC_CFG_WD_TIMEOUT_ERRSTAT_VALID (1U)
+#define PMIC_CFG_WD_TIMEOUT_ERRSTAT_VALID           (1U)
 /** @brief validParams value used to get Watchdog trigger mode error status */
-#define PMIC_CFG_WD_TRIG_EARLY_ERRSTAT_VALID (2U)
+#define PMIC_CFG_WD_TRIG_EARLY_ERRSTAT_VALID        (2U)
 /** @brief validParams value used to get Watchdog early answer error status */
-#define PMIC_CFG_WD_ANSW_EARLY_ERRSTAT_VALID (3U)
+#define PMIC_CFG_WD_ANSW_EARLY_ERRSTAT_VALID        (3U)
 /** @brief validParams value used to get Watchdog QA sequence error status */
-#define PMIC_CFG_WD_SEQ_ERR_ERRSTAT_VALID (4U)
+#define PMIC_CFG_WD_SEQ_ERR_ERRSTAT_VALID           (4U)
 /** @brief validParams value used to get Watchdog QA wrong Answer error status
  */
-#define PMIC_CFG_WD_ANSW_ERR_ERRSTAT_VALID (5U)
+#define PMIC_CFG_WD_ANSW_ERR_ERRSTAT_VALID          (5U)
 /** @brief validParams value used to get Watchdog fail error status */
-#define PMIC_CFG_WD_FAIL_INT_ERRSTAT_VALID (6U)
+#define PMIC_CFG_WD_FAIL_INT_ERRSTAT_VALID          (6U)
 /** @brief validParams value used to get Watchdog reset error status */
-#define PMIC_CFG_WD_RST_INT_ERRSTAT_VALID (7U)
+#define PMIC_CFG_WD_RST_INT_ERRSTAT_VALID           (7U)
 /** @} */
 
 /**
@@ -316,12 +306,11 @@
  */
 /** @brief validParams value used to get status of Bad Event is detected or not
  */
-#define PMIC_CFG_WD_BAD_EVENT_STAT_VALID (0U)
-/** @brief validParams value used to get status of Good Event is detected or not
- */
-#define PMIC_CFG_WD_GOOD_EVENT_STAT_VALID (1U)
+#define PMIC_CFG_WD_BAD_EVENT_STAT_VALID            (0U)
+/** @brief validParams value used to get status of Good Event is detected or not */
+#define PMIC_CFG_WD_GOOD_EVENT_STAT_VALID           (1U)
 /** @brief validParams value used to get To get Watchdog Fail Count value */
-#define PMIC_CFG_WD_FAIL_CNT_VAL_VALID (2U)
+#define PMIC_CFG_WD_FAIL_CNT_VAL_VALID              (2U)
 /** @} */
 
 /**
@@ -372,7 +361,7 @@
 /**
  * @name  Macro for PMIC Watchdog QA infinite sequence
  */
-#define PMIC_WD_QA_INFINITE_SEQ (0xFFFFFFFFU)
+#define PMIC_WD_QA_INFINITE_SEQ                     (0xFFFFFFFFU)
 
 /**
  *  @anchor Pmic_WdgErrType
@@ -380,30 +369,28 @@
  *
  *  @{
  */
-#define PMIC_WDG_ERR_TIMEOUT (0x0U)
-#define PMIC_WDG_ERR_TRIGGER_EARLY (0x1U)
-#define PMIC_WDG_ERR_ANSWER_EARLY (0x2U)
-#define PMIC_WDG_ERR_SEQ_ERR (0x3U)
-#define PMIC_WDG_ERR_ANS_ERR (0x4U)
-#define PMIC_WDG_ERR_LONG_WIN_TIMEOUT (0x5U)
-#define PMIC_WDG_ERR_THRES1 (0x6U)
-#define PMIC_WDG_ERR_THRES2 (0x7U)
-#define PMIC_WDG_ERR_ALL (0x8U)
+#define PMIC_WDG_ERR_TIMEOUT                        (0x0U)
+#define PMIC_WDG_ERR_TRIGGER_EARLY                  (0x1U)
+#define PMIC_WDG_ERR_ANSWER_EARLY                   (0x2U)
+#define PMIC_WDG_ERR_SEQ_ERR                        (0x3U)
+#define PMIC_WDG_ERR_ANS_ERR                        (0x4U)
+#define PMIC_WDG_ERR_LONG_WIN_TIMEOUT               (0x5U)
+#define PMIC_WDG_ERR_THRES1                         (0x6U)
+#define PMIC_WDG_ERR_THRES2                         (0x7U)
+#define PMIC_WDG_ERR_ALL                            (0x8U)
 /** @} */
 
 /*!
  * @brief WD_ERR_STATUS Register bit mask values
  */
-#define PMIC_WDG_ERR_TIMEOUT_MASK (0x1U << PMIC_WDG_ERR_TIMEOUT_SHIFT)
-#define PMIC_WDG_ERR_TRIGGER_EARLY_MASK                                        \
-  (0x1U << PMIC_WDG_ERR_TRIGGER_EARLY_SHIFT)
-#define PMIC_WDG_ERR_ANSWER_EARLY_MASK (0x1U << PMIC_WDG_ERR_ANSWER_EARLY_SHIFT)
-#define PMIC_WDG_ERR_SEQ_ERR_MASK (0x1U << PMIC_WDG_ERR_SEQ_ERR_SHIFT)
-#define PMIC_WDG_ERR_ANS_ERR_MASK (0x1U << PMIC_WDG_ERR_ANS_ERR_SHIFT)
-#define PMIC_WDG_ERR_LONGWIN_TIMEOUT_MASK                                      \
-  (0x1U << PMIC_WDG_ERR_LONGWIN_TIMEOUT_SHIFT)
-#define PMIC_WDG_ERR_THRES1_MASK (0x1U << PMIC_WDG_ERR_THRES1_SHIFT)
-#define PMIC_WDG_ERR_THRES2_MASK (0x1U << PMIC_WDG_ERR_THRES2_SHIFT)
+#define PMIC_WDG_ERR_TIMEOUT_MASK                   (0x1U << PMIC_WDG_ERR_TIMEOUT_SHIFT)
+#define PMIC_WDG_ERR_TRIGGER_EARLY_MASK             (0x1U << PMIC_WDG_ERR_TRIGGER_EARLY_SHIFT)
+#define PMIC_WDG_ERR_ANSWER_EARLY_MASK              (0x1U << PMIC_WDG_ERR_ANSWER_EARLY_SHIFT)
+#define PMIC_WDG_ERR_SEQ_ERR_MASK                   (0x1U << PMIC_WDG_ERR_SEQ_ERR_SHIFT)
+#define PMIC_WDG_ERR_ANS_ERR_MASK                   (0x1U << PMIC_WDG_ERR_ANS_ERR_SHIFT)
+#define PMIC_WDG_ERR_LONGWIN_TIMEOUT_MASK           (0x1U << PMIC_WDG_ERR_LONGWIN_TIMEOUT_SHIFT)
+#define PMIC_WDG_ERR_THRES1_MASK                    (0x1U << PMIC_WDG_ERR_THRES1_SHIFT)
+#define PMIC_WDG_ERR_THRES2_MASK                    (0x1U << PMIC_WDG_ERR_THRES2_SHIFT)
 
 /* ========================================================================== */
 /*                            Structures and Enums                            */
@@ -481,27 +468,28 @@
  * @{
  */
 typedef struct Pmic_WdgCfg_s {
-  uint32_t validParams;
+    uint32_t validParams;
 
-  uint32_t longWinDuration_ms;
-  uint32_t win1Duration_us;
-  uint32_t win2Duration_us;
+    uint32_t longWinDuration_ms;
+    uint32_t win1Duration_us;
+    uint32_t win2Duration_us;
 
-  uint8_t failThreshold;
-  uint8_t rstThreshold;
+    uint8_t failThreshold;
+    uint8_t rstThreshold;
 
-  bool wdgMode;
-  bool pwrHold;
-  bool rstEnable;
-  bool retLongWin;
-  uint8_t cntSel;
-  uint8_t enDrvSel;
+    bool wdgMode;
+    bool pwrHold;
+    bool rstEnable;
+    bool retLongWin;
+    uint8_t cntSel;
+    uint8_t enDrvSel;
 
-  uint8_t qaFdbk;
-  uint8_t qaLfsr;
-  uint8_t qaQuesSeed;
+    uint8_t qaFdbk;
+    uint8_t qaLfsr;
+    uint8_t qaQuesSeed;
 
-} Pmic_WdgCfg_t;
+}
+Pmic_WdgCfg_t;
 /** @} */
 
 /**
@@ -529,16 +517,17 @@ typedef struct Pmic_WdgCfg_s {
  * @{
  */
 typedef struct Pmic_WdgErrStatus_s {
-  uint32_t validParams;
-  bool wdLongWinTimeout;
-  bool wdTimeout;
-  bool wdTrigEarly;
-  bool wdAnswearly;
-  bool wdSeqErr;
-  bool wdAnswErr;
-  bool wdFailInt;
-  bool wdRstInt;
-} Pmic_WdgErrStatus_t;
+    uint32_t validParams;
+    bool wdLongWinTimeout;
+    bool wdTimeout;
+    bool wdTrigEarly;
+    bool wdAnswearly;
+    bool wdSeqErr;
+    bool wdAnswErr;
+    bool wdFailInt;
+    bool wdRstInt;
+}
+Pmic_WdgErrStatus_t;
 /** @} */
 
 /**
@@ -561,11 +550,12 @@ typedef struct Pmic_WdgErrStatus_s {
  * @{
  */
 typedef struct Pmic_WdgFailCntStat_s {
-  uint32_t validParams;
-  bool wdBadEvent;
-  bool wdGudEvent;
-  uint32_t wdFailCnt;
-} Pmic_WdgFailCntStat_t;
+    uint32_t validParams;
+    bool wdBadEvent;
+    bool wdGudEvent;
+    uint32_t wdFailCnt;
+}
+Pmic_WdgFailCntStat_t;
 /** @} */
 
 /* ========================================================================== */
@@ -587,7 +577,7 @@ typedef struct Pmic_WdgFailCntStat_s {
  * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_wdgEnable(Pmic_CoreHandle_t *pPmicCoreHandle);
+int32_t Pmic_wdgEnable(Pmic_CoreHandle_t * pPmicCoreHandle);
 
 /**
  * @brief   API to Disable Watchdog timer.
@@ -605,7 +595,7 @@ int32_t Pmic_wdgEnable(Pmic_CoreHandle_t *pPmicCoreHandle);
  * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_wdgDisable(Pmic_CoreHandle_t *pPmicCoreHandle);
+int32_t Pmic_wdgDisable(Pmic_CoreHandle_t * pPmicCoreHandle);
 
 /**
  *  @brief      This function is used to get the Watchdog Enable state (that is
@@ -618,8 +608,8 @@ int32_t Pmic_wdgDisable(Pmic_CoreHandle_t *pPmicCoreHandle);
  *  @return     Success code if Watchdog Enable state is obtained, error code
  * otherwise. For valid success/error codes, refer to \ref Pmic_ErrorCodes
  */
-int32_t Pmic_wdgGetEnableState(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               bool *pWdgEnabled);
+int32_t Pmic_wdgGetEnableState(Pmic_CoreHandle_t * pPmicCoreHandle,
+    bool * pWdgEnabled);
 
 /**
  * @brief   API to set PMIC watchdog configurations.
@@ -641,8 +631,8 @@ int32_t Pmic_wdgGetEnableState(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
-                       const Pmic_WdgCfg_t wdgCfg);
+int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const Pmic_WdgCfg_t wdgCfg);
 
 /**
  * @brief   API to get PMIC watchdog configurations.
@@ -664,8 +654,8 @@ int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
-                       Pmic_WdgCfg_t *pWdgCfg);
+int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
+    Pmic_WdgCfg_t * pWdgCfg);
 
 /**
  * @brief   API to Start watchdog QA mode.
@@ -707,8 +697,8 @@ int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_wdgStartQaSequence(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                uint32_t num_of_sequences, uint32_t maxCnt);
+int32_t Pmic_wdgStartQaSequence(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint32_t num_of_sequences, uint32_t maxCnt);
 
 /**
  * @brief   API to get PMIC watchdog error status.
@@ -729,8 +719,8 @@ int32_t Pmic_wdgStartQaSequence(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               Pmic_WdgErrStatus_t *pErrStatus);
+int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t * pPmicCoreHandle,
+    Pmic_WdgErrStatus_t * pErrStatus);
 
 /**
  * @brief   API to get PMIC watchdog fail count status.
@@ -749,8 +739,8 @@ int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_wdgGetFailCntStat(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               Pmic_WdgFailCntStat_t *pFailCount);
+int32_t Pmic_wdgGetFailCntStat(Pmic_CoreHandle_t * pPmicCoreHandle,
+    Pmic_WdgFailCntStat_t * pFailCount);
 
 /**
  * @brief   API to Start watchdog Trigger mode.
@@ -788,7 +778,7 @@ int32_t Pmic_wdgGetFailCntStat(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_wdgStartTriggerSequence(Pmic_CoreHandle_t *pPmicCoreHandle);
+int32_t Pmic_wdgStartTriggerSequence(Pmic_CoreHandle_t * pPmicCoreHandle);
 
 /**
  * @brief   API to clear PMIC watchdog error status.
@@ -810,8 +800,8 @@ int32_t Pmic_wdgStartTriggerSequence(Pmic_CoreHandle_t *pPmicCoreHandle);
  * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_wdgClrErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
-                             const uint8_t wdgErrType);
+int32_t Pmic_wdgClrErrStatus(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const uint8_t wdgErrType);
 
 /**
  * @brief   API to Write Answers in Long Window/ Window1/ Window2 Interval for
@@ -850,7 +840,7 @@ int32_t Pmic_wdgClrErrStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_wdgQaSequenceWriteAnswer(Pmic_CoreHandle_t *pPmicCoreHandle);
+int32_t Pmic_wdgQaSequenceWriteAnswer(Pmic_CoreHandle_t * pPmicCoreHandle);
 
 /**
  *  @brief      This API is used to initiate Watchdog (WDG) sequences - either
@@ -911,114 +901,114 @@ int32_t Pmic_wdgQaSequenceWriteAnswer(Pmic_CoreHandle_t *pPmicCoreHandle);
  * PMIC WDG is ready to receive triggers from MCU, error code otherwise. For
  * valid success/error codes, refer to \ref Pmic_ErrorCodes
  */
-int32_t Pmic_wdgBeginSequences(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               const uint8_t wdgMde);
+int32_t Pmic_wdgBeginSequences(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const uint8_t wdgMde);
 
 static int32_t
-Pmic_checkPmicCoreHandle(const Pmic_CoreHandle_t *pPmicCoreHandle);
+Pmic_checkPmicCoreHandle(const Pmic_CoreHandle_t * pPmicCoreHandle);
 
 static int32_t
-Pmic_WdgValidatePmicCoreHandle(const Pmic_CoreHandle_t *pPmicCoreHandle);
+Pmic_WdgValidatePmicCoreHandle(const Pmic_CoreHandle_t * pPmicCoreHandle);
 
 static uint8_t
 Pmic_WdgCovertLongWinTimeIntervaltoRegBits(const Pmic_WdgCfg_t wdgCfg);
 
 static int32_t
-Pmic_WdgSetWindow1Window2TimeIntervals(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                       const Pmic_WdgCfg_t wdgCfg);
+Pmic_WdgSetWindow1Window2TimeIntervals(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const Pmic_WdgCfg_t wdgCfg);
 
 static int32_t
-Pmic_WdgSetWindowsTimeIntervals(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                const Pmic_WdgCfg_t wdgCfg);
+Pmic_WdgSetWindowsTimeIntervals(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const Pmic_WdgCfg_t wdgCfg);
 
 static int32_t
-Pmic_WdgGetWindow1Window2TimeIntervals(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                       Pmic_WdgCfg_t *pWdgCfg);
+Pmic_WdgGetWindow1Window2TimeIntervals(Pmic_CoreHandle_t * pPmicCoreHandle,
+    Pmic_WdgCfg_t * pWdgCfg);
 
 static int32_t
-Pmic_WdgGetWindowsTimeIntervals(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                Pmic_WdgCfg_t *pWdgCfg);
+Pmic_WdgGetWindowsTimeIntervals(Pmic_CoreHandle_t * pPmicCoreHandle,
+    Pmic_WdgCfg_t * pWdgCfg);
 
-static int32_t Pmic_WdgSetThresholdValues(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                          const Pmic_WdgCfg_t wdgCfg);
+static int32_t Pmic_WdgSetThresholdValues(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const Pmic_WdgCfg_t wdgCfg);
 
-static int32_t Pmic_WdgGetThresholdValues(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                          Pmic_WdgCfg_t *pWdgCfg);
+static int32_t Pmic_WdgGetThresholdValues(Pmic_CoreHandle_t * pPmicCoreHandle,
+    Pmic_WdgCfg_t * pWdgCfg);
 
-static int32_t Pmic_WdgSetRetToLongWindowCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                             bool returnLongWindow);
+static int32_t Pmic_WdgSetRetToLongWindowCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
+    bool returnLongWindow);
 
-static int32_t Pmic_WdgSetWarmRstEnableCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                           bool rstEnble);
+static int32_t Pmic_WdgSetWarmRstEnableCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
+    bool rstEnble);
 
-static int32_t Pmic_WdgSetPwrHoldCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                     bool pwrHld);
+static int32_t Pmic_WdgSetPwrHoldCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
+    bool pwrHld);
 
-static int32_t Pmic_WdgSetModeCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                  bool wdgMde);
+static int32_t Pmic_WdgSetModeCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
+    bool wdgMde);
 
-int32_t Pmic_WdgSetCntSelCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
-                             uint8_t wdgCntSel);
+int32_t Pmic_WdgSetCntSelCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t wdgCntSel);
 
-int32_t Pmic_WdgSetEnDrvSelCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               uint8_t wdgEnDrvSel);
+int32_t Pmic_WdgSetEnDrvSelCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t wdgEnDrvSel);
 
-static int32_t Pmic_WdgSetCtrlParams(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                     const Pmic_WdgCfg_t wdgCfg);
+static int32_t Pmic_WdgSetCtrlParams(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const Pmic_WdgCfg_t wdgCfg);
 
-static int32_t Pmic_WdgGetCtrlParams(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                     Pmic_WdgCfg_t *pWdgCfg);
+static int32_t Pmic_WdgGetCtrlParams(Pmic_CoreHandle_t * pPmicCoreHandle,
+    Pmic_WdgCfg_t * pWdgCfg);
 
-static int32_t Pmic_wdgSetQaQuesSeedValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                          const Pmic_WdgCfg_t wdgCfg);
+static int32_t Pmic_wdgSetQaQuesSeedValue(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const Pmic_WdgCfg_t wdgCfg);
 
-static int32_t Pmic_WdgSetQaConfigurations(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                           const Pmic_WdgCfg_t wdgCfg);
+static int32_t Pmic_WdgSetQaConfigurations(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const Pmic_WdgCfg_t wdgCfg);
 
-static int32_t Pmic_WdgGetQaConfigurations(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                           Pmic_WdgCfg_t *pWdgCfg);
+static int32_t Pmic_WdgGetQaConfigurations(Pmic_CoreHandle_t * pPmicCoreHandle,
+    Pmic_WdgCfg_t * pWdgCfg);
 
-static int32_t Pmic_wdgEnDisState(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                  bool enable);
+static int32_t Pmic_wdgEnDisState(Pmic_CoreHandle_t * pPmicCoreHandle,
+    bool enable);
 
 static int32_t
-Pmic_wdgReadQuesandAnswerCount(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               uint8_t *pQaAnsCnt, uint8_t *pQaQuesCnt);
+Pmic_wdgReadQuesandAnswerCount(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t * pQaAnsCnt, uint8_t * pQaQuesCnt);
 
-static bool is_wdgBadEventDetected(Pmic_CoreHandle_t *pPmicCoreHandle);
+static bool is_wdgBadEventDetected(Pmic_CoreHandle_t * pPmicCoreHandle);
 
 static uint8_t mux_4x1(uint8_t x0, uint8_t x1, uint8_t x2, uint8_t x3,
-                       uint8_t qaFdk);
+    uint8_t qaFdk);
 
 static uint8_t Pmic_getAnswerByte(uint8_t qaQuesCnt, uint8_t qaAnsCnt,
-                                  uint8_t qaFbk);
+    uint8_t qaFbk);
 
 static int32_t
-Pmic_wdgQaEvaluateAndWriteAnswer(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                 uint8_t qaAnsCnt, uint8_t qaQuesCnt,
-                                 uint8_t qaFbk);
+Pmic_wdgQaEvaluateAndWriteAnswer(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t qaAnsCnt, uint8_t qaQuesCnt,
+    uint8_t qaFbk);
 
 static int32_t
-Pmic_wdgQaEvaluateAndWriteAnswers(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                  uint8_t qaFbk);
+Pmic_wdgQaEvaluateAndWriteAnswers(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t qaFbk);
 
-static int32_t Pmic_wdgQaWriteAnswers(Pmic_CoreHandle_t *pPmicCoreHandle);
+static int32_t Pmic_wdgQaWriteAnswers(Pmic_CoreHandle_t * pPmicCoreHandle);
 
 static int32_t Pmic_wdgQaSetModeRetlongwinCfgWriteAnswersLongwindow(
-    Pmic_CoreHandle_t *pPmicCoreHandle);
+    Pmic_CoreHandle_t * pPmicCoreHandle);
 
 static int32_t
-Pmic_wdgQaWriteAnswersNumSequence(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                  uint32_t sequences, uint32_t maxCnt);
+Pmic_wdgQaWriteAnswersNumSequence(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint32_t sequences, uint32_t maxCnt);
 
-static void Pmic_wdgGetSeqAnswErrFailRstIntStat(Pmic_WdgErrStatus_t *pErrStatus,
-                                                uint8_t regVal);
+static void Pmic_wdgGetSeqAnswErrFailRstIntStat(Pmic_WdgErrStatus_t * pErrStatus,
+    uint8_t regVal);
 
 static void Pmic_wdgGetLongwintointTimeoutTrigAnswEarlyErrStat(
-    Pmic_WdgErrStatus_t *pErrStatus, uint8_t regVal);
+    Pmic_WdgErrStatus_t * pErrStatus, uint8_t regVal);
 
 static int32_t
-Pmic_wdgClrErrStatusWdgErrType(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               const uint8_t wdgErrType, uint8_t regVal);
+Pmic_wdgClrErrStatusWdgErrType(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const uint8_t wdgErrType, uint8_t regVal);
 
 #endif /* PMIC_INC_PMIC_WDG_H_ */

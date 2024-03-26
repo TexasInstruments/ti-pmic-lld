@@ -67,39 +67,45 @@
  * @param  pBitVal         Pointer to bit value
  * @return void
  */
-void Pmic_fsmGetstandByCfgRegFields(uint8_t pmicNextState, uint8_t *pRegAddr,
-                                    uint8_t *pBitPos, uint8_t *pBitMask,
-                                    uint8_t *pBitVal, uint8_t *pDeviceState) {
-  *pRegAddr = PMIC_STATE_CTRL_REGADDR;
-  *pBitPos = PMIC_STATE_CTRL_SHIFT;
-  *pBitMask = PMIC_STATE_CTRL_MASK;
+void Pmic_fsmGetstandByCfgRegFields(uint8_t pmicNextState, uint8_t * pRegAddr,
+    uint8_t * pBitPos, uint8_t * pBitMask,
+    uint8_t * pBitVal, uint8_t * pDeviceState) {
+    * pRegAddr = PMIC_STATE_CTRL_REGADDR;
+    * pBitPos = PMIC_STATE_CTRL_SHIFT;
+    * pBitMask = PMIC_STATE_CTRL_MASK;
 
-  switch (pmicNextState) {
-  case PMIC_FSM_STANBY_STATE:
-    *pBitVal = PMIC_STATE_CTRL_STANDBY;
-    *pDeviceState = PMIC_FSM_STAT_STANDBY;
-    break;
-  case PMIC_FSM_OFF_STATE:
-    *pBitVal = PMIC_STATE_CTRL_OFF;
-    *pDeviceState = PMIC_FSM_STAT_OFF_1;
-    break;
-  case PMIC_FSM_SAFE_STATE:
-    *pBitVal = PMIC_STATE_CTRL_ACTIVE_TO_SAFE;
-    *pDeviceState = PMIC_FSM_STAT_SAFE;
-    break;
-  case PMIC_FSM_ACTIVE_STATE:
-    *pBitVal = PMIC_STATE_CTRL_SAFE_TO_ACTIVE;
-    *pDeviceState = PMIC_FSM_STAT_ACTIVE;
-    break;
-  case PMIC_FSM_MCU_ONLY_STATE:
-    *pBitVal = PMIC_STATE_CTRL_RESET_MCU;
-    *pDeviceState = PMIC_FSM_STAT_RESET_MCU;
-    break;
-  default:
-    *pBitVal = PMIC_STATE_CTRL_NO_CHANGE;
-    *pDeviceState = PMIC_FSM_STAT_OFF_1;
-    break;
-  }
+    switch (pmicNextState) {
+    case PMIC_FSM_STANBY_STATE:
+        *
+        pBitVal = PMIC_STATE_CTRL_STANDBY;
+        * pDeviceState = PMIC_FSM_STAT_STANDBY;
+        break;
+    case PMIC_FSM_OFF_STATE:
+        *
+        pBitVal = PMIC_STATE_CTRL_OFF;
+        * pDeviceState = PMIC_FSM_STAT_OFF_1;
+        break;
+    case PMIC_FSM_SAFE_STATE:
+        *
+        pBitVal = PMIC_STATE_CTRL_ACTIVE_TO_SAFE;
+        * pDeviceState = PMIC_FSM_STAT_SAFE;
+        break;
+    case PMIC_FSM_ACTIVE_STATE:
+        *
+        pBitVal = PMIC_STATE_CTRL_SAFE_TO_ACTIVE;
+        * pDeviceState = PMIC_FSM_STAT_ACTIVE;
+        break;
+    case PMIC_FSM_MCU_ONLY_STATE:
+        *
+        pBitVal = PMIC_STATE_CTRL_RESET_MCU;
+        * pDeviceState = PMIC_FSM_STAT_RESET_MCU;
+        break;
+    default:
+        *
+        pBitVal = PMIC_STATE_CTRL_NO_CHANGE;
+        * pDeviceState = PMIC_FSM_STAT_OFF_1;
+        break;
+    }
 }
 
 /**
@@ -110,17 +116,17 @@ void Pmic_fsmGetstandByCfgRegFields(uint8_t pmicNextState, uint8_t *pRegAddr,
  * @param  pBitMask    Pointer to bit mask
  * @return void
  */
-void Pmic_fsmGetNsleepMaskBitField(uint8_t nsleepType, uint8_t *pBitPos,
-                                   uint8_t *pBitMask) {
-  if (nsleepType == PMIC_NSLEEP1_SIGNAL) {
-    *pBitPos = PMIC_WAKE1_DGL_CFG_SHIFT;
-    *pBitMask = PMIC_WAKE1_DGL_CFG_MASK;
-  }
+void Pmic_fsmGetNsleepMaskBitField(uint8_t nsleepType, uint8_t * pBitPos,
+    uint8_t * pBitMask) {
+    if (nsleepType == PMIC_NSLEEP1_SIGNAL) {
+        * pBitPos = PMIC_WAKE1_DGL_CFG_SHIFT;
+        * pBitMask = PMIC_WAKE1_DGL_CFG_MASK;
+    }
 
-  if (nsleepType == PMIC_NSLEEP2_SIGNAL) {
-    *pBitPos = PMIC_WAKE2_DGL_CFG_SHIFT;
-    *pBitMask = PMIC_WAKE2_DGL_CFG_MASK;
-  }
+    if (nsleepType == PMIC_NSLEEP2_SIGNAL) {
+        * pBitPos = PMIC_WAKE2_DGL_CFG_SHIFT;
+        * pBitMask = PMIC_WAKE2_DGL_CFG_MASK;
+    }
 }
 
 /**
@@ -130,50 +136,50 @@ void Pmic_fsmGetNsleepMaskBitField(uint8_t nsleepType, uint8_t *pBitPos,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_setS2RState(Pmic_CoreHandle_t *pPmicCoreHandle) {
-  int32_t status = PMIC_ST_SUCCESS;
-  uint8_t regData = 0U;
+int32_t Pmic_setS2RState(Pmic_CoreHandle_t * pPmicCoreHandle) {
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
 
-  if (NULL == pPmicCoreHandle) {
-    status = PMIC_ST_ERR_INV_HANDLE;
-  }
-
-  if (PMIC_ST_SUCCESS == status) {
-    /* Standby CFG to set STBY_EN bit */
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_STBY_CFG_REGADDR,
-                                    &regData);
-
-    if (PMIC_ST_SUCCESS == status) {
-      Pmic_setBitField(&regData, PMIC_STBY_CFG_STBY_SEL_SHIFT,
-                       (uint8_t)PMIC_STBY_CFG_STBY_SEL_MASK,
-                       (uint8_t)PMIC_STBY_CFG_STBY_VAL);
-
-      status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_STBY_CFG_REGADDR,
-                                      regData);
+    if (NULL == pPmicCoreHandle) {
+        status = PMIC_ST_ERR_INV_HANDLE;
     }
 
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    /* State CTRL to set the STANDBY request */
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_STATE_CTRL_REGADDR,
-                                    &regData);
-
     if (PMIC_ST_SUCCESS == status) {
-      Pmic_setBitField(&regData, PMIC_STATE_CTRL_SHIFT, PMIC_STATE_CTRL_MASK,
-                       PMIC_STATE_CTRL_STANDBY);
+        /* Standby CFG to set STBY_EN bit */
+        Pmic_criticalSectionStart(pPmicCoreHandle);
 
-      status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_STATE_CTRL_REGADDR,
-                                      regData);
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_STBY_CFG_REGADDR, &
+            regData);
+
+        if (PMIC_ST_SUCCESS == status) {
+            Pmic_setBitField( & regData, PMIC_STBY_CFG_STBY_SEL_SHIFT,
+                (uint8_t) PMIC_STBY_CFG_STBY_SEL_MASK,
+                (uint8_t) PMIC_STBY_CFG_STBY_VAL);
+
+            status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_STBY_CFG_REGADDR,
+                regData);
+        }
+
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+
+        /* State CTRL to set the STANDBY request */
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_STATE_CTRL_REGADDR, &
+            regData);
+
+        if (PMIC_ST_SUCCESS == status) {
+            Pmic_setBitField( & regData, PMIC_STATE_CTRL_SHIFT, PMIC_STATE_CTRL_MASK,
+                PMIC_STATE_CTRL_STANDBY);
+
+            status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_STATE_CTRL_REGADDR,
+                regData);
+        }
+
+        Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-  }
-
-  return status;
+    return status;
 }
 
 /**
@@ -183,30 +189,29 @@ int32_t Pmic_setS2RState(Pmic_CoreHandle_t *pPmicCoreHandle) {
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_fsmGetDeviceStateCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                  uint8_t *deviceState) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regData = 0U;
+int32_t Pmic_fsmGetDeviceStateCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t * deviceState) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
 
-  if (NULL == pPmicCoreHandle) {
-    pmicStatus = PMIC_ST_ERR_INV_HANDLE;
-  }
-
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        PMIC_STATE_STAT_REGADDR, &regData);
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    *deviceState = Pmic_getBitField(regData, PMIC_STATE_SHIFT,
-                                    PMIC_STATE_MASK);
-
-    if (pmicStatus != PMIC_ST_SUCCESS) {
-      pmicStatus = PMIC_ST_ERR_FAIL;
+    if (NULL == pPmicCoreHandle) {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
-  }
 
-  return pmicStatus;
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+            PMIC_STATE_STAT_REGADDR, & regData);
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+
+        * deviceState = Pmic_getBitField(regData, PMIC_STATE_SHIFT, PMIC_STATE_MASK);
+
+        if (pmicStatus != PMIC_ST_SUCCESS) {
+            pmicStatus = PMIC_ST_ERR_FAIL;
+        }
+    }
+
+    return pmicStatus;
 }
 
 /**
@@ -217,46 +222,46 @@ int32_t Pmic_fsmGetDeviceStateCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_fsmDeviceRequestCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                 uint8_t fsmState) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regAddr = 0U;
-  uint8_t regData = 0U;
-  uint8_t bitPos = 0U;
-  uint8_t bitMask = 0U;
-  uint8_t bitVal = 0U;
-  uint8_t deviceState = 0;
+int32_t Pmic_fsmDeviceRequestCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t fsmState) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regAddr = 0U;
+    uint8_t regData = 0U;
+    uint8_t bitPos = 0U;
+    uint8_t bitMask = 0U;
+    uint8_t bitVal = 0U;
+    uint8_t deviceState = 0;
 
-  if (NULL == pPmicCoreHandle) {
-    pmicStatus = PMIC_ST_ERR_INV_HANDLE;
-  }
-
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    Pmic_fsmGetstandByCfgRegFields(fsmState, &regAddr, &bitPos, &bitMask,
-                                   &bitVal, &deviceState);
-
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-    pmicStatus =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, &regData);
+    if (NULL == pPmicCoreHandle) {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
-      Pmic_setBitField(&regData, bitPos, bitMask, bitVal);
+        Pmic_fsmGetstandByCfgRegFields(fsmState, & regAddr, & bitPos, & bitMask, &
+            bitVal, & deviceState);
 
-      pmicStatus =
-          Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t)regAddr, regData);
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus =
+            Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAddr, & regData);
+
+        if (PMIC_ST_SUCCESS == pmicStatus) {
+            Pmic_setBitField( & regData, bitPos, bitMask, bitVal);
+
+            pmicStatus =
+                Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t) regAddr, regData);
+        }
+
+        Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-  }
-
-  pmicStatus = Pmic_fsmGetDeviceStateCfg(pPmicCoreHandle, &deviceState);
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    if (pmicStatus != (int32_t)deviceState) {
-      pmicStatus = PMIC_ST_ERR_INV_FSM_MODE;
+    pmicStatus = Pmic_fsmGetDeviceStateCfg(pPmicCoreHandle, & deviceState);
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        if (pmicStatus != (int32_t) deviceState) {
+            pmicStatus = PMIC_ST_ERR_INV_FSM_MODE;
+        }
     }
-  }
 
-  return pmicStatus;
+    return pmicStatus;
 }
 
 /**
@@ -267,36 +272,36 @@ int32_t Pmic_fsmDeviceRequestCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_setState(Pmic_CoreHandle_t *pPmicCoreHandle,
-                      uint8_t pmicNextState) {
-  int32_t status = PMIC_ST_SUCCESS;
+int32_t Pmic_setState(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t pmicNextState) {
+    int32_t status = PMIC_ST_SUCCESS;
 
-  switch (pmicNextState) {
-  case PMIC_FSM_OFF_STATE:
-    status = Pmic_fsmDeviceRequestCfg(pPmicCoreHandle, PMIC_FSM_OFF_STATE);
-    break;
-  case PMIC_FSM_STANBY_STATE:
-    status = Pmic_fsmDeviceRequestCfg(pPmicCoreHandle, PMIC_FSM_STANBY_STATE);
-    break;
-  case PMIC_FSM_SAFE_STATE:
-    status = Pmic_fsmDeviceRequestCfg(pPmicCoreHandle, PMIC_FSM_SAFE_STATE);
-    break;
-  case PMIC_FSM_ACTIVE_STATE:
-    status = Pmic_fsmDeviceRequestCfg(pPmicCoreHandle, PMIC_FSM_ACTIVE_STATE);
-    break;
-  case PMIC_FSM_MCU_ONLY_STATE:
-    status = Pmic_fsmDeviceRequestCfg(pPmicCoreHandle, PMIC_FSM_MCU_ONLY_STATE);
-    break;
-  case PMIC_FSM_S2R_STATE:
-    status = Pmic_setS2RState(pPmicCoreHandle);
-    break;
-  default:
-    /* Default case is valid only for STANBY_STATE */
-    status = Pmic_fsmDeviceRequestCfg(pPmicCoreHandle, PMIC_FSM_STANBY_STATE);
-    break;
-  }
+    switch (pmicNextState) {
+    case PMIC_FSM_OFF_STATE:
+        status = Pmic_fsmDeviceRequestCfg(pPmicCoreHandle, PMIC_FSM_OFF_STATE);
+        break;
+    case PMIC_FSM_STANBY_STATE:
+        status = Pmic_fsmDeviceRequestCfg(pPmicCoreHandle, PMIC_FSM_STANBY_STATE);
+        break;
+    case PMIC_FSM_SAFE_STATE:
+        status = Pmic_fsmDeviceRequestCfg(pPmicCoreHandle, PMIC_FSM_SAFE_STATE);
+        break;
+    case PMIC_FSM_ACTIVE_STATE:
+        status = Pmic_fsmDeviceRequestCfg(pPmicCoreHandle, PMIC_FSM_ACTIVE_STATE);
+        break;
+    case PMIC_FSM_MCU_ONLY_STATE:
+        status = Pmic_fsmDeviceRequestCfg(pPmicCoreHandle, PMIC_FSM_MCU_ONLY_STATE);
+        break;
+    case PMIC_FSM_S2R_STATE:
+        status = Pmic_setS2RState(pPmicCoreHandle);
+        break;
+    default:
+        /* Default case is valid only for STANBY_STATE */
+        status = Pmic_fsmDeviceRequestCfg(pPmicCoreHandle, PMIC_FSM_STANBY_STATE);
+        break;
+    }
 
-  return status;
+    return status;
 }
 
 /**
@@ -307,36 +312,36 @@ int32_t Pmic_setState(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_fsmRequestRuntimeBist(Pmic_CoreHandle_t *pPmicCoreHandle) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regData = 0U;
-  uint8_t bitPos = PMIC_BIST_CTRL_EN_SHIFT;
-  uint8_t bitMask = (uint8_t)PMIC_BIST_CTRL_CFG_MASK;
-  uint8_t maskEnableVal = 0U;
+int32_t Pmic_fsmRequestRuntimeBist(Pmic_CoreHandle_t * pPmicCoreHandle) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+    uint8_t bitPos = PMIC_BIST_CTRL_EN_SHIFT;
+    uint8_t bitMask = (uint8_t) PMIC_BIST_CTRL_CFG_MASK;
+    uint8_t maskEnableVal = 0U;
 
-  if (NULL == pPmicCoreHandle) {
-    pmicStatus = PMIC_ST_ERR_INV_HANDLE;
-  }
-
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_BIST_CTRL_REGADDR,
-                                        &regData);
-
-    if (PMIC_ST_SUCCESS == pmicStatus) {
-      maskEnableVal = 1U;
-
-      Pmic_setBitField(&regData, bitPos, bitMask, maskEnableVal);
-
-      pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                          PMIC_BIST_CTRL_REGADDR, regData);
+    if (NULL == pPmicCoreHandle) {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-  }
+    if (PMIC_ST_SUCCESS == pmicStatus) {
 
-  return pmicStatus;
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_BIST_CTRL_REGADDR, &
+            regData);
+
+        if (PMIC_ST_SUCCESS == pmicStatus) {
+            maskEnableVal = 1U;
+
+            Pmic_setBitField( & regData, bitPos, bitMask, maskEnableVal);
+
+            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                PMIC_BIST_CTRL_REGADDR, regData);
+        }
+
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
+
+    return pmicStatus;
 }
 
 /**
@@ -347,24 +352,24 @@ int32_t Pmic_fsmRequestRuntimeBist(Pmic_CoreHandle_t *pPmicCoreHandle) {
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_fsmSetMissionState(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                const uint8_t pmicState) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
+int32_t Pmic_fsmSetMissionState(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const uint8_t pmicState) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-  if (NULL == pPmicCoreHandle) {
-    pmicStatus = PMIC_ST_ERR_INV_HANDLE;
-  }
+    if (NULL == pPmicCoreHandle) {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
 
-  if ((PMIC_ST_SUCCESS == pmicStatus) &&
-      ((int32_t)pmicState > PMIC_FSM_STATE_MAX)) {
-    pmicStatus = PMIC_ST_ERR_INV_PARAM;
-  }
+    if ((PMIC_ST_SUCCESS == pmicStatus) &&
+        ((int32_t) pmicState > PMIC_FSM_STATE_MAX)) {
+        pmicStatus = PMIC_ST_ERR_INV_PARAM;
+    }
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    pmicStatus = Pmic_setState(pPmicCoreHandle, pmicState);
-  }
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        pmicStatus = Pmic_setState(pPmicCoreHandle, pmicState);
+    }
 
-  return pmicStatus;
+    return pmicStatus;
 }
 
 /**
@@ -376,42 +381,42 @@ int32_t Pmic_fsmSetMissionState(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_fsmSetNsleepSignalMask(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                    const uint8_t nsleepType,
-                                    const bool maskEnable) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regData = 0U;
-  uint8_t bitPos = 0U;
-  uint8_t bitMask = 0U;
-  uint8_t maskEnableVal = 0U;
+int32_t Pmic_fsmSetNsleepSignalMask(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const uint8_t nsleepType,
+        const bool maskEnable) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+    uint8_t bitPos = 0U;
+    uint8_t bitMask = 0U;
+    uint8_t maskEnableVal = 0U;
 
-  if (NULL == pPmicCoreHandle) {
-    pmicStatus = PMIC_ST_ERR_INV_HANDLE;
-  }
-
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WAKE_CFG_REGADDR,
-                                        &regData);
-
-    if (PMIC_ST_SUCCESS == pmicStatus) {
-      maskEnableVal = 1U;
-
-      Pmic_fsmGetNsleepMaskBitField(nsleepType, &bitPos, &bitMask);
-
-      if (true == maskEnable) {
-        maskEnableVal = 1U;
-      }
-
-      Pmic_setBitField(&regData, bitPos, bitMask, maskEnableVal);
-      pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                          PMIC_WAKE_CFG_REGADDR, regData);
+    if (NULL == pPmicCoreHandle) {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-  }
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WAKE_CFG_REGADDR, &
+            regData);
 
-  return pmicStatus;
+        if (PMIC_ST_SUCCESS == pmicStatus) {
+            maskEnableVal = 1U;
+
+            Pmic_fsmGetNsleepMaskBitField(nsleepType, & bitPos, & bitMask);
+
+            if (true == maskEnable) {
+                maskEnableVal = 1U;
+            }
+
+            Pmic_setBitField( & regData, bitPos, bitMask, maskEnableVal);
+            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                PMIC_WAKE_CFG_REGADDR, regData);
+        }
+
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
+
+    return pmicStatus;
 }
 
 /**
@@ -424,42 +429,42 @@ int32_t Pmic_fsmSetNsleepSignalMask(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_fsmGetNsleepSignalMaskStat(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                        const uint8_t nsleepType,
-                                        bool *pNsleepStat) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regData = 0U;
-  uint8_t bitPos = 0U;
-  uint8_t bitMask = 0U;
-  uint8_t maskEnableStat = 0U;
+int32_t Pmic_fsmGetNsleepSignalMaskStat(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const uint8_t nsleepType,
+        bool * pNsleepStat) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+    uint8_t bitPos = 0U;
+    uint8_t bitMask = 0U;
+    uint8_t maskEnableStat = 0U;
 
-  if (NULL == pPmicCoreHandle) {
-    pmicStatus = PMIC_ST_ERR_INV_HANDLE;
-  }
-
-  if ((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pNsleepStat)) {
-    pmicStatus = PMIC_ST_ERR_NULL_PARAM;
-  }
-
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WAKE_CFG_REGADDR,
-                                        &regData);
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-  }
-
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    *pNsleepStat = false;
-
-    Pmic_fsmGetNsleepMaskBitField(nsleepType, &bitPos, &bitMask);
-    maskEnableStat = Pmic_getBitField(regData, bitPos, bitMask);
-
-    if (maskEnableStat == 1U) {
-      *pNsleepStat = true;
+    if (NULL == pPmicCoreHandle) {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
-  }
 
-  return pmicStatus;
+    if ((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pNsleepStat)) {
+        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WAKE_CFG_REGADDR, &
+            regData);
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
+
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        * pNsleepStat = false;
+
+        Pmic_fsmGetNsleepMaskBitField(nsleepType, & bitPos, & bitMask);
+        maskEnableStat = Pmic_getBitField(regData, bitPos, bitMask);
+
+        if (maskEnableStat == 1U) {
+            * pNsleepStat = true;
+        }
+    }
+
+    return pmicStatus;
 }
 
 /**
@@ -470,38 +475,38 @@ int32_t Pmic_fsmGetNsleepSignalMaskStat(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_fsmEnableFastBIST(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                      const Pmic_FsmCfg_t fsmCfg) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regAddr = 0U;
-  uint8_t regData = 0U;
-  uint8_t bitMask = 0U;
-  uint8_t bitPos = 0U;
+static int32_t Pmic_fsmEnableFastBIST(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const Pmic_FsmCfg_t fsmCfg) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regAddr = 0U;
+    uint8_t regData = 0U;
+    uint8_t bitMask = 0U;
+    uint8_t bitPos = 0U;
 
-  Pmic_criticalSectionStart(pPmicCoreHandle);
-  regAddr = PMIC_BIST_CTRL_REGADDR;
-  bitMask = (uint8_t)PMIC_BIST_CTRL_EN_MASK;
-  bitPos = PMIC_BIST_CTRL_EN_SHIFT;
-
-  pmicStatus =
-      Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, &regData);
-
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    if (PMIC_FSM_FAST_BIST_ENABLE == fsmCfg.fastBistEn) {
-      /* Enable BIST (set bit 2) and set BIST_CFG to 00 (bits 1-0) */
-      Pmic_setBitField(&regData, bitPos, bitMask, PMIC_BIST_BIT_ENABLE);
-    } else {
-      /* Disable BIST (clear bit 2) and set BIST_CFG to 00 (bits 1-0) */
-      Pmic_setBitField(&regData, bitPos, bitMask, PMIC_BIST_BIT_DISABLE);
-    }
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    regAddr = PMIC_BIST_CTRL_REGADDR;
+    bitMask = (uint8_t) PMIC_BIST_CTRL_EN_MASK;
+    bitPos = PMIC_BIST_CTRL_EN_SHIFT;
 
     pmicStatus =
-        Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t)regAddr, regData);
-  }
+        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAddr, & regData);
 
-  Pmic_criticalSectionStop(pPmicCoreHandle);
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        if (PMIC_FSM_FAST_BIST_ENABLE == fsmCfg.fastBistEn) {
+            /* Enable BIST (set bit 2) and set BIST_CFG to 00 (bits 1-0) */
+            Pmic_setBitField( & regData, bitPos, bitMask, PMIC_BIST_BIT_ENABLE);
+        } else {
+            /* Disable BIST (clear bit 2) and set BIST_CFG to 00 (bits 1-0) */
+            Pmic_setBitField( & regData, bitPos, bitMask, PMIC_BIST_BIT_DISABLE);
+        }
 
-  return pmicStatus;
+        pmicStatus =
+            Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t) regAddr, regData);
+    }
+
+    Pmic_criticalSectionStop(pPmicCoreHandle);
+
+    return pmicStatus;
 }
 
 /**
@@ -512,36 +517,36 @@ static int32_t Pmic_fsmEnableFastBIST(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_fsmGetFastBISTCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                      Pmic_FsmCfg_t *pFsmCfg) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regAddr = 0U;
-  uint8_t regData = 0U;
-  uint8_t bitMask = 0U;
-  uint8_t bitPos = 0U;
-  uint8_t bistMode = 0U;
+static int32_t Pmic_fsmGetFastBISTCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
+    Pmic_FsmCfg_t * pFsmCfg) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regAddr = 0U;
+    uint8_t regData = 0U;
+    uint8_t bitMask = 0U;
+    uint8_t bitPos = 0U;
+    uint8_t bistMode = 0U;
 
-  regAddr = PMIC_BIST_CTRL_REGADDR;
-  bitMask = (uint8_t)PMIC_BIST_CTRL_CFG_MASK;
-  bitPos = PMIC_BIST_CTRL_CFG_SHIFT;
+    regAddr = PMIC_BIST_CTRL_REGADDR;
+    bitMask = (uint8_t) PMIC_BIST_CTRL_CFG_MASK;
+    bitPos = PMIC_BIST_CTRL_CFG_SHIFT;
 
-  Pmic_criticalSectionStart(pPmicCoreHandle);
-  pmicStatus =
-      Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, &regData);
-  Pmic_criticalSectionStop(pPmicCoreHandle);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
+    pmicStatus =
+        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAddr, & regData);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    bistMode = Pmic_getBitField(regData, bitPos, bitMask);
-    if (bistMode == PMIC_ABIST_MODE_SEL) {
-      pFsmCfg->fastBistEn = true;
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        bistMode = Pmic_getBitField(regData, bitPos, bitMask);
+        if (bistMode == PMIC_ABIST_MODE_SEL) {
+            pFsmCfg -> fastBistEn = true;
+        } else {
+            pFsmCfg -> fastBistEn = false;
+        }
     } else {
-      pFsmCfg->fastBistEn = false;
+        pmicStatus = PMIC_ST_ERR_FAIL;
     }
-  } else {
-    pmicStatus = PMIC_ST_ERR_FAIL;
-  }
 
-  return pmicStatus;
+    return pmicStatus;
 }
 
 /**
@@ -554,40 +559,40 @@ static int32_t Pmic_fsmGetFastBISTCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
  * otherwise, returns an error code.
  */
 static int32_t
-Pmic_fsmEnabBckLdoIlimIntAffect(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                const Pmic_FsmCfg_t fsmCfg) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regData = 0U;
+Pmic_fsmEnabBckLdoIlimIntAffect(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const Pmic_FsmCfg_t fsmCfg) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
 
-  if (NULL == pPmicCoreHandle) {
-    pmicStatus = PMIC_ST_ERR_INV_HANDLE;
-  }
-
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_ILIM_CFG_REGADDR,
-                                        &regData);
-
-    if (PMIC_ST_SUCCESS == pmicStatus) {
-      if (PMIC_FSM_ILIM_INT_ENABLE == fsmCfg.ilimIntfsmCtrlEn) {
-        Pmic_setBitField(&regData, PMIC_CFG1_EN_ILM_FSM_CTRL_SHIFT,
-                         PMIC_CFG1_EN_ILIM_FSM_CTRL_MASK,
-                         PMIC_FSM_ILIM_INT_ENABLE);
-      } else {
-        Pmic_setBitField(&regData, PMIC_CFG1_EN_ILM_FSM_CTRL_SHIFT,
-                         PMIC_CFG1_EN_ILIM_FSM_CTRL_MASK,
-                         PMIC_FSM_ILIM_INT_DISABLE);
-      }
-
-      pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                          PMIC_ILIM_CFG_REGADDR, regData);
+    if (NULL == pPmicCoreHandle) {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
     }
 
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-  }
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
 
-  return pmicStatus;
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_ILIM_CFG_REGADDR, &
+            regData);
+
+        if (PMIC_ST_SUCCESS == pmicStatus) {
+            if (PMIC_FSM_ILIM_INT_ENABLE == fsmCfg.ilimIntfsmCtrlEn) {
+                Pmic_setBitField( & regData, PMIC_CFG1_EN_ILM_FSM_CTRL_SHIFT,
+                    PMIC_CFG1_EN_ILIM_FSM_CTRL_MASK,
+                    PMIC_FSM_ILIM_INT_ENABLE);
+            } else {
+                Pmic_setBitField( & regData, PMIC_CFG1_EN_ILM_FSM_CTRL_SHIFT,
+                    PMIC_CFG1_EN_ILIM_FSM_CTRL_MASK,
+                    PMIC_FSM_ILIM_INT_DISABLE);
+            }
+
+            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+                PMIC_ILIM_CFG_REGADDR, regData);
+        }
+
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+    }
+
+    return pmicStatus;
 }
 
 /**
@@ -599,34 +604,34 @@ Pmic_fsmEnabBckLdoIlimIntAffect(Pmic_CoreHandle_t *pPmicCoreHandle,
  * otherwise, returns an error code.
  */
 static int32_t
-Pmic_fsmGetBuckLdoIlimIntAftCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                Pmic_FsmCfg_t *pFsmCfg) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regData = 0U;
+Pmic_fsmGetBuckLdoIlimIntAftCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
+    Pmic_FsmCfg_t * pFsmCfg) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
 
-  if (NULL == pPmicCoreHandle) {
-    pmicStatus = PMIC_ST_ERR_INV_HANDLE;
-  }
-
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_ILIM_CFG_REGADDR,
-                                        &regData);
-
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+    if (NULL == pPmicCoreHandle) {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
-      pFsmCfg->ilimIntfsmCtrlEn = false;
+        Pmic_criticalSectionStart(pPmicCoreHandle);
 
-      if (1U == Pmic_getBitField(regData, PMIC_CFG1_EN_ILM_FSM_CTRL_SHIFT,
-                                 PMIC_CFG1_EN_ILIM_FSM_CTRL_MASK)) {
-        pFsmCfg->ilimIntfsmCtrlEn = true;
-      }
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_ILIM_CFG_REGADDR, &
+            regData);
+
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+
+        if (PMIC_ST_SUCCESS == pmicStatus) {
+            pFsmCfg -> ilimIntfsmCtrlEn = false;
+
+            if (1U == Pmic_getBitField(regData, PMIC_CFG1_EN_ILM_FSM_CTRL_SHIFT,
+                    PMIC_CFG1_EN_ILIM_FSM_CTRL_MASK)) {
+                pFsmCfg -> ilimIntfsmCtrlEn = true;
+            }
+        }
     }
-  }
 
-  return pmicStatus;
+    return pmicStatus;
 }
 
 /**
@@ -639,30 +644,30 @@ Pmic_fsmGetBuckLdoIlimIntAftCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_fsmSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                 const Pmic_FsmCfg_t fsmCfg) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
+int32_t Pmic_fsmSetConfiguration(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const Pmic_FsmCfg_t fsmCfg) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-  if (NULL == pPmicCoreHandle) {
-    pmicStatus = PMIC_ST_ERR_INV_HANDLE;
-  }
+    if (NULL == pPmicCoreHandle) {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
 
-  if ((PMIC_ST_SUCCESS == pmicStatus) &&
-      (true == pmic_validParamCheck((uint32_t)fsmCfg.validParams,
-                                    PMIC_FSM_CFG_FAST_BIST_EN_VALID))) {
-    /* Enable/Disable Fast BIST */
-    pmicStatus = Pmic_fsmEnableFastBIST(pPmicCoreHandle, fsmCfg);
-  }
+    if ((PMIC_ST_SUCCESS == pmicStatus) &&
+        (true == pmic_validParamCheck((uint32_t) fsmCfg.validParams,
+            PMIC_FSM_CFG_FAST_BIST_EN_VALID))) {
+        /* Enable/Disable Fast BIST */
+        pmicStatus = Pmic_fsmEnableFastBIST(pPmicCoreHandle, fsmCfg);
+    }
 
-  if ((PMIC_ST_SUCCESS == pmicStatus) &&
-      (true == pmic_validParamCheck((uint32_t)fsmCfg.validParams,
-                                    PMIC_FSM_CFG_ILIM_INT_EN_VALID))) {
-    /* Enable/Disable Buck/LDO regulators ILIM interrupts affect FSM
-     * triggers */
-    pmicStatus = Pmic_fsmEnabBckLdoIlimIntAffect(pPmicCoreHandle, fsmCfg);
-  }
+    if ((PMIC_ST_SUCCESS == pmicStatus) &&
+        (true == pmic_validParamCheck((uint32_t) fsmCfg.validParams,
+            PMIC_FSM_CFG_ILIM_INT_EN_VALID))) {
+        /* Enable/Disable Buck/LDO regulators ILIM interrupts affect FSM
+         * triggers */
+        pmicStatus = Pmic_fsmEnabBckLdoIlimIntAffect(pPmicCoreHandle, fsmCfg);
+    }
 
-  return pmicStatus;
+    return pmicStatus;
 }
 
 /**
@@ -674,32 +679,32 @@ int32_t Pmic_fsmSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_fsmGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                 Pmic_FsmCfg_t *pFsmCfg) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
+int32_t Pmic_fsmGetConfiguration(Pmic_CoreHandle_t * pPmicCoreHandle,
+    Pmic_FsmCfg_t * pFsmCfg) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-  if (NULL == pPmicCoreHandle) {
-    pmicStatus = PMIC_ST_ERR_INV_HANDLE;
-  }
+    if (NULL == pPmicCoreHandle) {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
 
-  if ((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pFsmCfg)) {
-    pmicStatus = PMIC_ST_ERR_NULL_PARAM;
-  }
+    if ((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pFsmCfg)) {
+        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
+    }
 
-  if ((PMIC_ST_SUCCESS == pmicStatus) &&
-      (true == pmic_validParamCheck((uint32_t)pFsmCfg->validParams,
-                                    PMIC_FSM_CFG_FAST_BIST_EN_VALID))) {
-    /* Get Fast BIST is enabled or not*/
-    pmicStatus = Pmic_fsmGetFastBISTCfg(pPmicCoreHandle, pFsmCfg);
-  }
+    if ((PMIC_ST_SUCCESS == pmicStatus) &&
+        (true == pmic_validParamCheck((uint32_t) pFsmCfg -> validParams,
+            PMIC_FSM_CFG_FAST_BIST_EN_VALID))) {
+        /* Get Fast BIST is enabled or not*/
+        pmicStatus = Pmic_fsmGetFastBISTCfg(pPmicCoreHandle, pFsmCfg);
+    }
 
-  if ((PMIC_ST_SUCCESS == pmicStatus) &&
-      (true == pmic_validParamCheck((uint32_t)pFsmCfg->validParams,
-                                    PMIC_FSM_CFG_ILIM_INT_EN_VALID))) {
-    /* Get Buck/LDO regulators ILIM interrupts affect FSM
-     * triggers is enabled or not */
-    pmicStatus = Pmic_fsmGetBuckLdoIlimIntAftCfg(pPmicCoreHandle, pFsmCfg);
-  }
+    if ((PMIC_ST_SUCCESS == pmicStatus) &&
+        (true == pmic_validParamCheck((uint32_t) pFsmCfg -> validParams,
+            PMIC_FSM_CFG_ILIM_INT_EN_VALID))) {
+        /* Get Buck/LDO regulators ILIM interrupts affect FSM
+         * triggers is enabled or not */
+        pmicStatus = Pmic_fsmGetBuckLdoIlimIntAftCfg(pPmicCoreHandle, pFsmCfg);
+    }
 
-  return pmicStatus;
+    return pmicStatus;
 }

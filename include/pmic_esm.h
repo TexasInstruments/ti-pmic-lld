@@ -69,14 +69,13 @@ extern "C" {
  * @brief Contains macros used in the ESM module of PMIC driver.
  */
 
-
 /**
  * @brief Boolean value representing the mode of the Error Signaling Module (ESM) as MCU mode.
  * The MCU mode indicates that the ESM is configured for MCU operation.
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_MODE_MCU (bool)false
+#define PMIC_ESM_MODE_MCU   (bool) false
 
 /**
  * @brief Boolean value representing the mode of the Error Signaling Module (ESM) as SoC mode.
@@ -84,7 +83,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_MODE_SOC (bool)true
+#define PMIC_ESM_MODE_SOC   (bool) true
 
 /**
  * @brief Boolean value representing the state of the Error Signaling Module (ESM) as stopped.
@@ -92,7 +91,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_STOP (bool)false
+#define PMIC_ESM_STOP       (bool) false
 
 /**
  * @brief Boolean value representing the state of the Error Signaling Module (ESM) as started.
@@ -100,7 +99,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_START (bool)true
+#define PMIC_ESM_START      (bool) true
 
 /**
  * @brief Boolean value representing the state of the Error Signaling Module (ESM) as disabled.
@@ -108,7 +107,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_DISABLE (bool)false
+#define PMIC_ESM_DISABLE    (bool) false
 
 /**
  * @brief Boolean value representing the state of the Error Signaling Module (ESM) as enabled.
@@ -116,7 +115,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_ENABLE (bool)true
+#define PMIC_ESM_ENABLE     (bool) true
 
 /**
  * @brief Boolean value representing the mode of the Error Signaling Module (ESM) as level mode.
@@ -124,7 +123,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_LEVEL_MODE (bool)false
+#define PMIC_ESM_LEVEL_MODE (bool) false
 
 /**
  * @brief Boolean value representing the mode of the Error Signaling Module (ESM) as PWM mode.
@@ -132,7 +131,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_PWM_MODE (bool)true
+#define PMIC_ESM_PWM_MODE   (bool) true
 
 /**
  * @brief Boolean value representing the configuration of error enable drive clear as disabled.
@@ -140,7 +139,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_ERR_EN_DRV_CLEAR_DISABLE (bool)false
+#define PMIC_ESM_ERR_EN_DRV_CLEAR_DISABLE   (bool) false
 
 /**
  * @brief Boolean value representing the configuration of error enable drive clear as enabled.
@@ -148,7 +147,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE (bool)true
+#define PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE    (bool) true
 
 /**
  * @brief Boolean value representing the configuration of ESM interrupt as disabled.
@@ -156,7 +155,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_INTERRUPT_DISABLE (bool)false
+#define PMIC_ESM_INTERRUPT_DISABLE          (bool) false
 
 /**
  * @brief Boolean value representing the configuration of ESM interrupt as enabled.
@@ -164,14 +163,14 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_INTERRUPT_ENABLE (bool)true
+#define PMIC_ESM_INTERRUPT_ENABLE           (bool) true
 
 /**
  * @brief Numeric value representing the value 1 for error state machine.
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_VAL_1 (1U)
+#define PMIC_ESM_VAL_1  (1U)
 
 /**
  * @brief Bit mask indicating the validity of delay1 configuration parameter.
@@ -179,7 +178,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_CFG_DELAY1_VALID (0x00U)
+#define PMIC_ESM_CFG_DELAY1_VALID   (0x00U)
 
 /**
  * @brief Bit mask indicating the validity of delay2 configuration parameter.
@@ -187,7 +186,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_CFG_DELAY2_VALID (0x01U)
+#define PMIC_ESM_CFG_DELAY2_VALID   (0x01U)
 
 /**
  * @brief Bit mask indicating the validity of error count threshold configuration parameter.
@@ -195,7 +194,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_CFG_ERR_CNT_THR_VALID (0x02U)
+#define PMIC_ESM_CFG_ERR_CNT_THR_VALID  (0x02U)
 
 /**
  * @brief Bit mask indicating the validity of Hmax configuration parameter.
@@ -203,7 +202,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_CFG_HMAX_VALID (0x03U)
+#define PMIC_ESM_CFG_HMAX_VALID     (0x03U)
 
 /**
  * @brief Bit mask indicating the validity of Hmin configuration parameter.
@@ -211,7 +210,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_CFG_HMIN_VALID (0x04U)
+#define PMIC_ESM_CFG_HMIN_VALID     (0x04U)
 
 /**
  * @brief Bit mask indicating the validity of Lmax configuration parameter.
@@ -219,7 +218,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_CFG_LMAX_VALID (0x05U)
+#define PMIC_ESM_CFG_LMAX_VALID     (0x05U)
 
 /**
  * @brief Bit mask indicating the validity of Lmin configuration parameter.
@@ -227,7 +226,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_CFG_LMIN_VALID (0x06U)
+#define PMIC_ESM_CFG_LMIN_VALID     (0x06U)
 
 /**
  * @brief Bit mask indicating the validity of error enable drive clear configuration parameter.
@@ -235,7 +234,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_CFG_EN_DRV_VALID (0x07U)
+#define PMIC_ESM_CFG_EN_DRV_VALID   (0x07U)
 
 /**
  * @brief Bit mask indicating the validity of ESM mode configuration parameter.
@@ -243,7 +242,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_CFG_MODE_VALID (0x08U)
+#define PMIC_ESM_CFG_MODE_VALID     (0x08U)
 
 /**
  * @brief Bit shift representing the validity of delay1 configuration parameter.
@@ -267,7 +266,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_CFG_ERR_CNT_THR_VALID_SHIFT                                   \
+#define PMIC_ESM_CFG_ERR_CNT_THR_VALID_SHIFT\
     (0x01U << PMIC_ESM_CFG_ERR_CNT_THR_VALID)
 
 /**
@@ -320,7 +319,8 @@ extern "C" {
 
 /**
  * @}
- */ /* End of Pmic_ESMMacros */
+ */
+/* End of Pmic_ESMMacros */
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
@@ -414,7 +414,8 @@ typedef struct Pmic_EsmCfg_s {
     uint8_t esmErrCntThr;
     bool esmEnDrv;
     bool esmMode;
-} Pmic_EsmCfg_t;
+}
+Pmic_EsmCfg_t;
 
 /**
  * @brief   PMIC ESM Interrupt Configuration Structure.
@@ -432,11 +433,13 @@ typedef struct Pmic_EsmIntrCfg_s {
     bool esmPinIntr;
     bool esmFailIntr;
     bool esmRstIntr;
-} Pmic_EsmIntrCfg_t;
+}
+Pmic_EsmIntrCfg_t;
 
 /**
  * @}
- */ /* End of Pmic_ESMStructures */
+ */
+/* End of Pmic_ESMStructures */
 
 /*==========================================================================*/
 /*                         Function Declarations                            */
@@ -446,7 +449,7 @@ typedef struct Pmic_EsmIntrCfg_s {
  * @defgroup Pmic_ESMFunctions PMIC Error State Machine Functions
  * @{
  * @ingroup Pmic_ESM
- * @brief Contains functions used in the core module of PMIC driver.
+ * @brief Contains functions used in the ESM module of PMIC driver.
  */
 
 /**
@@ -479,7 +482,7 @@ static uint8_t Pmic_esmGetU8Val(bool esmVal);
  * @ingroup Pmic_ESMFunctions
  */
 static int32_t
-Pmic_esmValidateParams(const Pmic_CoreHandle_t *pPmicCoreHandle);
+Pmic_esmValidateParams(const Pmic_CoreHandle_t * pPmicCoreHandle);
 
 /**
  * @brief Get the base register address for Error Signaling Module (ESM).
@@ -495,7 +498,7 @@ Pmic_esmValidateParams(const Pmic_CoreHandle_t *pPmicCoreHandle);
  *
  * @ingroup Pmic_ESMFunctions
  */
-static void Pmic_esmGetBaseRegAddr(uint8_t *pEsmBaseAddr);
+static void Pmic_esmGetBaseRegAddr(uint8_t * pEsmBaseAddr);
 
 /**
  * @brief Check the state of Error Signaling Module (ESM).
@@ -508,7 +511,7 @@ static void Pmic_esmGetBaseRegAddr(uint8_t *pEsmBaseAddr);
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the ESM is inactive;
  * otherwise, returns an error code (PMIC_ST_ERR_ESM_STARTED) indicating that the ESM is already active.
  */
-static int32_t Pmic_esmCheckState(Pmic_CoreHandle_t *pPmicCoreHandle);
+static int32_t Pmic_esmCheckState(Pmic_CoreHandle_t * pPmicCoreHandle);
 
 /**
  * @brief Start or stop the Error Signaling Module (ESM).
@@ -521,8 +524,8 @@ static int32_t Pmic_esmCheckState(Pmic_CoreHandle_t *pPmicCoreHandle);
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code indicating the failure to modify the ESM state.
  */
-static int32_t Pmic_esmXStart(Pmic_CoreHandle_t *pPmicCoreHandle,
-                              const bool esmState);
+static int32_t Pmic_esmXStart(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const bool esmState);
 
 /**
  * @brief Enable or disable Error Signaling Module (ESM).
@@ -537,8 +540,8 @@ static int32_t Pmic_esmXStart(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-static int32_t Pmic_esmXEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               const bool esmToggle);
+static int32_t Pmic_esmXEnable(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const bool esmToggle);
 
 /**
  * @brief Set the delay value for the Error Signaling Module (ESM).
@@ -558,8 +561,8 @@ static int32_t Pmic_esmXEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-static int32_t Pmic_esmSetDelay1Value(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                      const Pmic_EsmCfg_t esmCfg);
+static int32_t Pmic_esmSetDelay1Value(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const Pmic_EsmCfg_t esmCfg);
 
 /**
  * @brief Set the delay value for the secondary Error Signaling Module (ESM).
@@ -575,8 +578,8 @@ static int32_t Pmic_esmSetDelay1Value(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-static int32_t Pmic_esmSetDelay2Value(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                      const Pmic_EsmCfg_t esmCfg);
+static int32_t Pmic_esmSetDelay2Value(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const Pmic_EsmCfg_t esmCfg);
 
 /**
  * @brief Set the error count threshold value for the Error Signaling Module (ESM).
@@ -593,8 +596,8 @@ static int32_t Pmic_esmSetDelay2Value(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-static int32_t Pmic_esmSetErrCntThrValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                         const Pmic_EsmCfg_t esmCfg);
+static int32_t Pmic_esmSetErrCntThrValue(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const Pmic_EsmCfg_t esmCfg);
 
 /**
  * @brief Set the maximum high pulse duration value for the Error Signaling Module (ESM).
@@ -613,8 +616,8 @@ static int32_t Pmic_esmSetErrCntThrValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-static int32_t Pmic_esmSetHmaxValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                    const Pmic_EsmCfg_t esmCfg);
+static int32_t Pmic_esmSetHmaxValue(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const Pmic_EsmCfg_t esmCfg);
 
 /**
  * @brief Set the minimum high pulse duration value for the Error Signaling Module (ESM).
@@ -632,8 +635,8 @@ static int32_t Pmic_esmSetHmaxValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-static int32_t Pmic_esmSetHminValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                    const Pmic_EsmCfg_t esmCfg);
+static int32_t Pmic_esmSetHminValue(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const Pmic_EsmCfg_t esmCfg);
 
 /**
  * @brief Get the maximum low pulse duration value for the Error Signaling Module (ESM).
@@ -651,8 +654,8 @@ static int32_t Pmic_esmSetHminValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-static int32_t Pmic_esmGetLmaxValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                    Pmic_EsmCfg_t *pEsmCfg);
+static int32_t Pmic_esmGetLmaxValue(Pmic_CoreHandle_t * pPmicCoreHandle,
+    Pmic_EsmCfg_t * pEsmCfg);
 
 /**
  * @brief Get the minimum low pulse duration value for the Error Signaling Module (ESM).
@@ -670,8 +673,8 @@ static int32_t Pmic_esmGetLmaxValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-static int32_t Pmic_esmGetLminValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                    Pmic_EsmCfg_t *pEsmCfg);
+static int32_t Pmic_esmGetLminValue(Pmic_CoreHandle_t * pPmicCoreHandle,
+    Pmic_EsmCfg_t * pEsmCfg);
 
 /**
  * @brief Set the mode for the Error Signaling Module (ESM).
@@ -688,8 +691,8 @@ static int32_t Pmic_esmGetLminValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-static int32_t Pmic_esmSetMode(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               const Pmic_EsmCfg_t esmCfg);
+static int32_t Pmic_esmSetMode(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const Pmic_EsmCfg_t esmCfg);
 
 /**
  * @brief Get the delay value for ESM delay 1.
@@ -705,8 +708,8 @@ static int32_t Pmic_esmSetMode(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-static int32_t Pmic_esmGetDelay1Value(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                      Pmic_EsmCfg_t *pEsmCfg);
+static int32_t Pmic_esmGetDelay1Value(Pmic_CoreHandle_t * pPmicCoreHandle,
+    Pmic_EsmCfg_t * pEsmCfg);
 
 /**
  * @brief Get the delay value for ESM delay 2.
@@ -722,8 +725,8 @@ static int32_t Pmic_esmGetDelay1Value(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-static int32_t Pmic_esmGetDelay2Value(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                      Pmic_EsmCfg_t *pEsmCfg);
+static int32_t Pmic_esmGetDelay2Value(Pmic_CoreHandle_t * pPmicCoreHandle,
+    Pmic_EsmCfg_t * pEsmCfg);
 
 /**
  * @brief Get the error count threshold value for the Error Signaling Module (ESM).
@@ -740,8 +743,8 @@ static int32_t Pmic_esmGetDelay2Value(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-static int32_t Pmic_esmGetErrCntThrValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                         Pmic_EsmCfg_t *pEsmCfg);
+static int32_t Pmic_esmGetErrCntThrValue(Pmic_CoreHandle_t * pPmicCoreHandle,
+    Pmic_EsmCfg_t * pEsmCfg);
 
 /**
  * @brief Get the mode value for the Error Signaling Module (ESM).
@@ -756,8 +759,8 @@ static int32_t Pmic_esmGetErrCntThrValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-static int32_t Pmic_esmGetModeValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                    Pmic_EsmCfg_t *pEsmCfg);
+static int32_t Pmic_esmGetModeValue(Pmic_CoreHandle_t * pPmicCoreHandle,
+    Pmic_EsmCfg_t * pEsmCfg);
 
 /**
  * @brief Start or stop the Error Signaling Module (ESM) based on the specified type and state.
@@ -775,7 +778,8 @@ static int32_t Pmic_esmGetModeValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-int32_t Pmic_esmStart(Pmic_CoreHandle_t *pPmicCoreHandle, const bool esmState);
+int32_t Pmic_esmStart(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const bool esmState);
 
 /**
  * @brief Enable or disable the Error Signaling Module (ESM) based on the specified type and toggle.
@@ -793,8 +797,8 @@ int32_t Pmic_esmStart(Pmic_CoreHandle_t *pPmicCoreHandle, const bool esmState);
  *
  * @ingroup Pmic_ESMFunctions
  */
-int32_t Pmic_esmEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
-                       const bool esmToggle);
+int32_t Pmic_esmEnable(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const bool esmToggle);
 
 /**
  * @brief Get the enable state of the Error Signaling Module (ESM) based on the specified type.
@@ -812,8 +816,8 @@ int32_t Pmic_esmEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-int32_t Pmic_esmGetEnableState(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               bool *pEsmState);
+int32_t Pmic_esmGetEnableState(Pmic_CoreHandle_t * pPmicCoreHandle,
+    bool * pEsmState);
 
 /**
  * @brief Set error count threshold and endrv/clr mode configuration for the Error Signaling Module (ESM).
@@ -832,8 +836,8 @@ int32_t Pmic_esmGetEnableState(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @ingroup Pmic_ESMFunctions
  */
 static int32_t
-Pmic_esmSetErrcntthresholdEndrvClrModeCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                          const Pmic_EsmCfg_t esmCfg);
+Pmic_esmSetErrcntthresholdEndrvClrModeCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const Pmic_EsmCfg_t esmCfg);
 
 /**
  * @brief Set Hmax, Hmin, Lmax, and Lmin configuration for the Error Signaling Module (ESM).
@@ -851,8 +855,8 @@ Pmic_esmSetErrcntthresholdEndrvClrModeCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @ingroup Pmic_ESMFunctions
  */
 static int32_t
-Pmic_esmSetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               const Pmic_EsmCfg_t esmCfg);
+Pmic_esmSetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const Pmic_EsmCfg_t esmCfg);
 
 /**
  * @brief Set the configuration parameters for the Error Signaling Module (ESM).
@@ -870,8 +874,8 @@ Pmic_esmSetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-static int32_t Pmic_esmSetConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                 const Pmic_EsmCfg_t esmCfg);
+static int32_t Pmic_esmSetConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const Pmic_EsmCfg_t esmCfg);
 
 /**
  * @brief Retrieve the Hmax, Hmin, Lmax, and Lmin configuration parameters for the Error Signaling Module (ESM).
@@ -891,8 +895,8 @@ static int32_t Pmic_esmSetConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @ingroup Pmic_ESMFunctions
  */
 static int32_t
-Pmic_esmGetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               Pmic_EsmCfg_t *pEsmCfg);
+Pmic_esmGetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
+    Pmic_EsmCfg_t * pEsmCfg);
 
 /**
  * @brief Retrieve the configuration parameters for the Error Signaling Module (ESM).
@@ -911,8 +915,8 @@ Pmic_esmGetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-static int32_t Pmic_esmGetConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                 Pmic_EsmCfg_t *pEsmCfg);
+static int32_t Pmic_esmGetConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
+    Pmic_EsmCfg_t * pEsmCfg);
 
 /**
  * @brief Set the configuration for the Error Signaling Module (ESM).
@@ -928,8 +932,8 @@ static int32_t Pmic_esmGetConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-int32_t Pmic_esmSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                 const Pmic_EsmCfg_t esmCfg);
+int32_t Pmic_esmSetConfiguration(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const Pmic_EsmCfg_t esmCfg);
 
 /**
  * @brief Get the configuration for the Error Signaling Module (ESM).
@@ -947,8 +951,8 @@ int32_t Pmic_esmSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-int32_t Pmic_esmGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                 Pmic_EsmCfg_t *pEsmCfg);
+int32_t Pmic_esmGetConfiguration(Pmic_CoreHandle_t * pPmicCoreHandle,
+    Pmic_EsmCfg_t * pEsmCfg);
 
 /**
  * @brief Get the error count for the Error Signaling Module (ESM).
@@ -966,8 +970,8 @@ int32_t Pmic_esmGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-int32_t Pmic_esmGetErrCnt(Pmic_CoreHandle_t *pPmicCoreHandle,
-                          uint8_t *pEsmErrCnt);
+int32_t Pmic_esmGetErrCnt(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t * pEsmErrCnt);
 
 /**
  * @brief Get the status of the Error Signaling Module (ESM).
@@ -985,17 +989,18 @@ int32_t Pmic_esmGetErrCnt(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-int32_t Pmic_esmGetStatus(Pmic_CoreHandle_t *pPmicCoreHandle,
-                          bool *pEsmState);
-
-
-/**
- * @}
- */ /* End of Pmic_ESMFunctions */
+int32_t Pmic_esmGetStatus(Pmic_CoreHandle_t * pPmicCoreHandle,
+    bool * pEsmState);
 
 /**
  * @}
- */ /* End of Pmic_ESM */
+ */
+/* End of Pmic_ESMFunctions */
+
+/**
+ * @}
+ */
+/* End of Pmic_ESM */
 
 #ifdef __cplusplus
 }

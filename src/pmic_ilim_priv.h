@@ -32,92 +32,114 @@
  *****************************************************************************/
 
 /**
-*   @file    pmic_ilim_priv.h
-*
-*   @brief   This file contains the private MACRO's and function definitions for
-*            PMIC ILIM configuration
-*
-*/
+ *   @file    pmic_ilim_priv.h
+ *
+ *   @brief   This file contains the private MACRO's and function definitions for
+ *            PMIC ILIM configuration
+ *
+ */
 
 #ifndef PMIC_INC_ILIM_PRIV_H_
 #define PMIC_INC_ILIM_PRIV_H_
+
+/**
+ * @defgroup Pmic_ILIM PMIC ILIM Module
+ * @{
+ * @brief Contains definitions related to PMIC ILIM functionality.
+ */
+
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/*!
- * \brief  PMIC ILIM register Addresses
+/**
+ * @defgroup Pmic_ILIMPrivMacros PMIC ILIM Private Macros
+ * @{
+ * @ingroup Pmic_ILIM
+ * @brief Contains private macros used in the ILIM module of PMIC driver.
  */
-#define PMIC_ILIM_CFG_REGADDR                       (0x60U)
-#define PMIC_ILIM_DGL_CFG_REGADDR                   (0x61U)
-#define PMIC_ILIM_STAT_REGADDR                      (0x62U)
 
-/*!
- * \brief  PMIC ILIM Config register Shift Values
+
+/**
+ * @brief  PMIC ILIM register Addresses
+ * @ingroup Pmic_ILIMPrivMacros
  */
-#define PMIC_LDO1_ILIM_CFG_SHIFT           (0x00U)
-#define PMIC_LDO2_ILIM_CFG_SHIFT           (0x01U)
-#define PMIC_LDO3_ILIM_CFG_SHIFT           (0x02U)
-#define PMIC_LDO4_ILIM_CFG_SHIFT           (0x03U)
-#define PMIC_PLDO1_ILIM_CFG_SHIFT          (0x04U)
-#define PMIC_PLDO2_ILIM_CFG_SHIFT          (0x05U)
+#define PMIC_ILIM_CFG_REGADDR           (0x60U)
+#define PMIC_ILIM_DGL_CFG_REGADDR       (0x61U)
+#define PMIC_ILIM_STAT_REGADDR          (0x62U)
 
-/*!
- * \brief  PMIC ILIM_DGL_CFG register Shift Values
+/**
+ * @brief  Shift values for PMIC ILIM Config registers
+ * @ingroup Pmic_ILIMPrivMacros
  */
-#define PMIC_LDO1_ILIM_DGL_CFG_SHIFT   (0x00U)
-#define PMIC_LDO2_ILIM_DGL_CFG_SHIFT   (0x01U)
-#define PMIC_LDO3_ILIM_DGL_CFG_SHIFT   (0x02U)
-#define PMIC_LDO4_ILIM_DGL_CFG_SHIFT   (0x03U)
-#define PMIC_PLDO1_ILIM_DGL_CFG_SHIFT  (0x04U)
-#define PMIC_PLDO2_ILIM_DGL_CFG_SHIFT  (0x05U)
+#define PMIC_LDO1_ILIM_CFG_SHIFT        (0x00U)
+#define PMIC_LDO2_ILIM_CFG_SHIFT        (0x01U)
+#define PMIC_LDO3_ILIM_CFG_SHIFT        (0x02U)
+#define PMIC_LDO4_ILIM_CFG_SHIFT        (0x03U)
+#define PMIC_PLDO1_ILIM_CFG_SHIFT       (0x04U)
+#define PMIC_PLDO2_ILIM_CFG_SHIFT       (0x05U)
 
-/*!
- * \brief  PMIC ILIM_STAT register Shift Values
+/**
+ * @brief  Shift values for PMIC ILIM DGL Config registers
+ * @ingroup Pmic_ILIMPrivMacros
  */
-#define PMIC_LDO1_ILIM_ERR_SHIFT          (0x00U)
-#define PMIC_LDO2_ILIM_ERR_SHIFT          (0x01U)
-#define PMIC_LDO3_ILIM_ERR_SHIFT          (0x02U)
-#define PMIC_LDO4_ILIM_ERR_SHIFT          (0x03U)
-#define PMIC_PLDO1_ILIM_ERR_SHIFT         (0x04U)
-#define PMIC_PLDO2_ILIM_ERR_SHIFT         (0x05U)
-#define PMIC_BB_AVG_ILIM_ERR_SHIFT        (0x06U)
+#define PMIC_LDO1_ILIM_DGL_CFG_SHIFT    (0x00U)
+#define PMIC_LDO2_ILIM_DGL_CFG_SHIFT    (0x01U)
+#define PMIC_LDO3_ILIM_DGL_CFG_SHIFT    (0x02U)
+#define PMIC_LDO4_ILIM_DGL_CFG_SHIFT    (0x03U)
+#define PMIC_PLDO1_ILIM_DGL_CFG_SHIFT   (0x04U)
+#define PMIC_PLDO2_ILIM_DGL_CFG_SHIFT   (0x05U)
 
-/*!
- * \brief  PMIC ILIM CFG register Mask Values
+/**
+ * @brief  Shift values for PMIC ILIM Error registers
+ * @ingroup Pmic_ILIMPrivMacros
  */
-#define PMIC_LDO1_ILIM_CFG_MASK                        \
-                  ((uint8_t)(0x01U << PMIC_LDO1_ILIM_CFG_SHIFT))
-#define PMIC_LDO2_ILIM_CFG_MASK                        \
-                  ((uint8_t)(0x01U << PMIC_LDO2_ILIM_CFG_SHIFT))
-#define PMIC_LDO3_ILIM_CFG_MASK                        \
-                  ((uint8_t)(0x01U << PMIC_LDO3_ILIM_CFG_SHIFT))
-#define PMIC_LDO4_ILIM_CFG_MASK                        \
-                  ((uint8_t)(0x01U << PMIC_LDO4_ILIM_CFG_SHIFT))
-#define PMIC_PLDO1_ILIM_CFG_MASK                        \
-                  ((uint8_t)(0x01U << PMIC_PLDO1_ILIM_CFG_SHIFT))
-#define PMIC_PLDO2_ILIM_CFG_MASK                        \
-                  ((uint8_t)(0x01U << PMIC_PLDO2_ILIM_CFG_SHIFT))
+#define PMIC_LDO1_ILIM_ERR_SHIFT        (0x00U)
+#define PMIC_LDO2_ILIM_ERR_SHIFT        (0x01U)
+#define PMIC_LDO3_ILIM_ERR_SHIFT        (0x02U)
+#define PMIC_LDO4_ILIM_ERR_SHIFT        (0x03U)
+#define PMIC_PLDO1_ILIM_ERR_SHIFT       (0x04U)
+#define PMIC_PLDO2_ILIM_ERR_SHIFT       (0x05U)
+#define PMIC_BB_AVG_ILIM_ERR_SHIFT      (0x06U)
 
-/*!
- * \brief  PMIC ILIM DGL CFG register Mask Values
+/**
+ * @brief  Masks for PMIC ILIM Config registers
+ * @ingroup Pmic_ILIMPrivMacros
  */
-#define PMIC_LDO1_ILIM_DGL_CFG_MASK                        \
-                  ((uint8_t)(0x01U << PMIC_LDO1_ILIM_DGL_CFG_SHIFT))
-#define PMIC_LDO2_ILIM_DGL_CFG_MASK                        \
-                  ((uint8_t)(0x01U << PMIC_LDO2_ILIM_DGL_CFG_SHIFT))
-#define PMIC_LDO3_ILIM_DGL_CFG_MASK                        \
-                  ((uint8_t)(0x01U << PMIC_LDO3_ILIM_DGL_CFG_SHIFT))
-#define PMIC_LDO4_ILIM_DGL_CFG_MASK                        \
-                  ((uint8_t)(0x01U << PMIC_LDO4_ILIM_DGL_CFG_SHIFT))
-#define PMIC_PLDO1_ILIM_DGL_CFG_MASK                        \
-                  ((uint8_t)(0x01U << PMIC_PLDO1_ILIM_DGL_CFG_SHIFT))
-#define PMIC_PLDO2_ILIM_DGL_CFG_MASK                        \
-                  ((uint8_t)(0x01U << PMIC_PLDO2_ILIM_DGL_CFG_SHIFT))
+#define PMIC_LDO1_ILIM_CFG_MASK\
+    ((uint8_t)(0x01U << PMIC_LDO1_ILIM_CFG_SHIFT))
+#define PMIC_LDO2_ILIM_CFG_MASK\
+    ((uint8_t)(0x01U << PMIC_LDO2_ILIM_CFG_SHIFT))
+#define PMIC_LDO3_ILIM_CFG_MASK\
+    ((uint8_t)(0x01U << PMIC_LDO3_ILIM_CFG_SHIFT))
+#define PMIC_LDO4_ILIM_CFG_MASK\
+    ((uint8_t)(0x01U << PMIC_LDO4_ILIM_CFG_SHIFT))
+#define PMIC_PLDO1_ILIM_CFG_MASK\
+    ((uint8_t)(0x01U << PMIC_PLDO1_ILIM_CFG_SHIFT))
+#define PMIC_PLDO2_ILIM_CFG_MASK\
+    ((uint8_t)(0x01U << PMIC_PLDO2_ILIM_CFG_SHIFT))
 
-/*!
- * \brief  PMIC ILIM_STAT register Mask Values
+/**
+ * @brief  Masks for PMIC ILIM DGL Config registers
+ * @ingroup Pmic_ILIMPrivMacros
+ */
+#define PMIC_LDO1_ILIM_DGL_CFG_MASK\
+    ((uint8_t)(0x01U << PMIC_LDO1_ILIM_DGL_CFG_SHIFT))
+#define PMIC_LDO2_ILIM_DGL_CFG_MASK\
+    ((uint8_t)(0x01U << PMIC_LDO2_ILIM_DGL_CFG_SHIFT))
+#define PMIC_LDO3_ILIM_DGL_CFG_MASK\
+    ((uint8_t)(0x01U << PMIC_LDO3_ILIM_DGL_CFG_SHIFT))
+#define PMIC_LDO4_ILIM_DGL_CFG_MASK\
+    ((uint8_t)(0x01U << PMIC_LDO4_ILIM_DGL_CFG_SHIFT))
+#define PMIC_PLDO1_ILIM_DGL_CFG_MASK\
+    ((uint8_t)(0x01U << PMIC_PLDO1_ILIM_DGL_CFG_SHIFT))
+#define PMIC_PLDO2_ILIM_DGL_CFG_MASK\
+    ((uint8_t)(0x01U << PMIC_PLDO2_ILIM_DGL_CFG_SHIFT))
+
+/**
+ * @brief  Masks for PMIC ILIM Error registers
+ * @ingroup Pmic_ILIMPrivMacros
  */
 #define PMIC_LDO1_ILIM_ERR_MASK                        \
                   ((uint8_t)(0x01U << PMIC_LDO1_ILIM_ERR_SHIFT))
@@ -134,16 +156,26 @@
 #define PMIC_BB_AVG_ILIM_ERR_MASK                        \
                   ((uint8_t)(0x01U << PMIC_BB_AVG_ILIM_ERR_SHIFT))
 
-/* ILIM_CFG Data*/
-#define PMIC_ILIM_CFG_DATA1         (0x00U) /* interrupt signal set (NINT low and STAT[0] bit set) upon error condition          */
-#define PMIC_ILIM_CFG_DATA2         (0x01U) /* interrupt signal set (NINT low and STAT[0] bit set) and device in-activates the
-                                               PLDO2 until the error condition is removed and the LDO1_ILIM_ERR flag is cleared  */
-/* ILIM_DGL_CFG Data*/
-#define PMIC_ILIM_DGL_CFG_DATA1     (0x00U) /* 10 µs (typical)     */
-#define PMIC_ILIM_DGL_CFG_DATA2     (0x01U) /* 1  ms (typical)     */
 
-/* ILIM_STAT Data*/
-#define PMIC_ILIM_AFTER_CLEAR_DATA  (0x00U) /* Data after bit is cleared */
-#define PMIC_ILIM_ERR_CLEAR_DATA    (0x01U) /* Write 1 to clear    */
+/**
+ * @brief  Configuration, De-Glitch and error data for PMIC ILIM Error registers
+ * @ingroup Pmic_ILIMPrivMacros
+ */
+#define PMIC_ILIM_CFG_DATA1             (0x00U)
+#define PMIC_ILIM_CFG_DATA2             (0x01U)
+#define PMIC_ILIM_DGL_CFG_DATA1         (0x00U)
+#define PMIC_ILIM_DGL_CFG_DATA2         (0x01U)
+#define PMIC_ILIM_AFTER_CLEAR_DATA      (0x00U)
+#define PMIC_ILIM_ERR_CLEAR_DATA        (0x01U)
+
+/**
+ * @}
+ */
+/* End of Pmic_ILIMPrivMacros */
+
+/**
+ * @}
+ */
+/* End of Pmic_ILIM */
 
 #endif /* PMIC_INC_ILIM_PRIV_H_ */

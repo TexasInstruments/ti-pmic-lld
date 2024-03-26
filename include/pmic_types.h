@@ -61,8 +61,8 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_CRC_DISABLE (0U)
-#define PMIC_CRC_ENABLE (1U)
+#define PMIC_CRC_DISABLE    (0U)
+#define PMIC_CRC_ENABLE     (1U)
 /* @} */
 
 /*==========================================================================*/

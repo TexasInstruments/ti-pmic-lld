@@ -43,6 +43,7 @@
 /* ========================================================================== */
 
 #include "pmic_low_iq_timer.h"
+
 #include "pmic_low_iq_timer_priv.h"
 
 /* ========================================================================== */
@@ -71,61 +72,61 @@
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_SetTimerConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
-                            uint8_t tmrData) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regData = 0U;
+int32_t Pmic_SetTimerConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t tmrData) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
 
-  Pmic_criticalSectionStart(pPmicCoreHandle);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CFG_REG_REGADDR,
-                                      &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CFG_REG_REGADDR, &
+        regData);
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    switch (tmrData) {
-    case PMIC_TMR_CFG_DATA0:
-      Pmic_setBitField(&regData, PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
-                       PMIC_TMR_CFG_REG_TMR_CFG_MASK, PMIC_TMR_CFG_DATA0);
-      break;
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        switch (tmrData) {
+        case PMIC_TMR_CFG_DATA0:
+            Pmic_setBitField( & regData, PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
+                PMIC_TMR_CFG_REG_TMR_CFG_MASK, PMIC_TMR_CFG_DATA0);
+            break;
 
-    case PMIC_TMR_CFG_DATA1:
-      Pmic_setBitField(&regData, PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
-                       PMIC_TMR_CFG_REG_TMR_CFG_MASK, PMIC_TMR_CFG_DATA1);
-      break;
+        case PMIC_TMR_CFG_DATA1:
+            Pmic_setBitField( & regData, PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
+                PMIC_TMR_CFG_REG_TMR_CFG_MASK, PMIC_TMR_CFG_DATA1);
+            break;
 
-    case PMIC_TMR_CFG_DATA2:
-      Pmic_setBitField(&regData, PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
-                       PMIC_TMR_CFG_REG_TMR_CFG_MASK, PMIC_TMR_CFG_DATA2);
-      break;
+        case PMIC_TMR_CFG_DATA2:
+            Pmic_setBitField( & regData, PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
+                PMIC_TMR_CFG_REG_TMR_CFG_MASK, PMIC_TMR_CFG_DATA2);
+            break;
 
-    case PMIC_TMR_CFG_DATA3:
-      Pmic_setBitField(&regData, PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
-                       PMIC_TMR_CFG_REG_TMR_CFG_MASK, PMIC_TMR_CFG_DATA3);
-      break;
+        case PMIC_TMR_CFG_DATA3:
+            Pmic_setBitField( & regData, PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
+                PMIC_TMR_CFG_REG_TMR_CFG_MASK, PMIC_TMR_CFG_DATA3);
+            break;
 
-    case PMIC_TMR_CFG_DATA4:
-      Pmic_setBitField(&regData, PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
-                       PMIC_TMR_CFG_REG_TMR_CFG_MASK, PMIC_TMR_CFG_DATA4);
-      break;
+        case PMIC_TMR_CFG_DATA4:
+            Pmic_setBitField( & regData, PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
+                PMIC_TMR_CFG_REG_TMR_CFG_MASK, PMIC_TMR_CFG_DATA4);
+            break;
 
-    case PMIC_TMR_CFG_DATA5:
-      Pmic_setBitField(&regData, PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
-                       PMIC_TMR_CFG_REG_TMR_CFG_MASK, PMIC_TMR_CFG_DATA5);
-      break;
+        case PMIC_TMR_CFG_DATA5:
+            Pmic_setBitField( & regData, PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
+                PMIC_TMR_CFG_REG_TMR_CFG_MASK, PMIC_TMR_CFG_DATA5);
+            break;
 
-    default:
-      /* Invalid Pin */
-      pmicStatus = PMIC_ST_ERR_INV_PARAM;
-      break;
+        default:
+            /* Invalid Pin */
+            pmicStatus = PMIC_ST_ERR_INV_PARAM;
+            break;
+        }
+
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+            PMIC_TMR_CFG_REG_REGADDR, regData);
     }
 
-    pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                        PMIC_TMR_CFG_REG_REGADDR, regData);
-  }
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
-  Pmic_criticalSectionStop(pPmicCoreHandle);
-
-  return pmicStatus;
+    return pmicStatus;
 }
 
 /**
@@ -137,24 +138,24 @@ int32_t Pmic_SetTimerConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_GetTimerConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
-                            uint8_t *tmrConfigData) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regData = 0U;
+int32_t Pmic_GetTimerConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t * tmrConfigData) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
 
-  Pmic_criticalSectionStart(pPmicCoreHandle);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CFG_REG_REGADDR,
-                                      &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CFG_REG_REGADDR, &
+        regData);
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    *tmrConfigData = Pmic_getBitField(regData, PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
-                                      PMIC_TMR_CFG_REG_TMR_CFG_MASK);
-  }
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        * tmrConfigData = Pmic_getBitField(regData, PMIC_TMR_CFG_REG_TMR_CFG_SHIFT,
+            PMIC_TMR_CFG_REG_TMR_CFG_MASK);
+    }
 
-  Pmic_criticalSectionStop(pPmicCoreHandle);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
-  return pmicStatus;
+    return pmicStatus;
 }
 
 /**
@@ -167,51 +168,51 @@ int32_t Pmic_GetTimerConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_SetTimerPrescale(Pmic_CoreHandle_t *pPmicCoreHandle,
-                              uint8_t tmrPSData) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regData = 0U;
+int32_t Pmic_SetTimerPrescale(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t tmrPSData) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
 
-  Pmic_criticalSectionStart(pPmicCoreHandle);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CFG_REG_REGADDR,
-                                      &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CFG_REG_REGADDR, &
+        regData);
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    switch (tmrPSData) {
-    case PMIC_TMR_PS_DATA0:
-      Pmic_setBitField(&regData, PMIC_TMR_CFG_REG_TMR_PS_SHIFT,
-                       PMIC_TMR_CFG_REG_TMR_PS_MASK, PMIC_TMR_PS_DATA0);
-      break;
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        switch (tmrPSData) {
+        case PMIC_TMR_PS_DATA0:
+            Pmic_setBitField( & regData, PMIC_TMR_CFG_REG_TMR_PS_SHIFT,
+                PMIC_TMR_CFG_REG_TMR_PS_MASK, PMIC_TMR_PS_DATA0);
+            break;
 
-    case PMIC_TMR_PS_DATA1:
-      Pmic_setBitField(&regData, PMIC_TMR_CFG_REG_TMR_PS_SHIFT,
-                       PMIC_TMR_CFG_REG_TMR_PS_MASK, PMIC_TMR_PS_DATA1);
-      break;
+        case PMIC_TMR_PS_DATA1:
+            Pmic_setBitField( & regData, PMIC_TMR_CFG_REG_TMR_PS_SHIFT,
+                PMIC_TMR_CFG_REG_TMR_PS_MASK, PMIC_TMR_PS_DATA1);
+            break;
 
-    case PMIC_TMR_PS_DATA2:
-      Pmic_setBitField(&regData, PMIC_TMR_CFG_REG_TMR_PS_SHIFT,
-                       PMIC_TMR_CFG_REG_TMR_PS_MASK, PMIC_TMR_PS_DATA2);
-      break;
+        case PMIC_TMR_PS_DATA2:
+            Pmic_setBitField( & regData, PMIC_TMR_CFG_REG_TMR_PS_SHIFT,
+                PMIC_TMR_CFG_REG_TMR_PS_MASK, PMIC_TMR_PS_DATA2);
+            break;
 
-    case PMIC_TMR_PS_DATA3:
-      Pmic_setBitField(&regData, PMIC_TMR_CFG_REG_TMR_PS_SHIFT,
-                       PMIC_TMR_CFG_REG_TMR_PS_MASK, PMIC_TMR_CFG_DATA3);
-      break;
+        case PMIC_TMR_PS_DATA3:
+            Pmic_setBitField( & regData, PMIC_TMR_CFG_REG_TMR_PS_SHIFT,
+                PMIC_TMR_CFG_REG_TMR_PS_MASK, PMIC_TMR_CFG_DATA3);
+            break;
 
-    default:
-      /* Invalid Pin */
-      pmicStatus = PMIC_ST_ERR_INV_PARAM;
-      break;
+        default:
+            /* Invalid Pin */
+            pmicStatus = PMIC_ST_ERR_INV_PARAM;
+            break;
+        }
+
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+            PMIC_TMR_CFG_REG_REGADDR, regData);
     }
 
-    pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                        PMIC_TMR_CFG_REG_REGADDR, regData);
-  }
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
-  Pmic_criticalSectionStop(pPmicCoreHandle);
-
-  return pmicStatus;
+    return pmicStatus;
 }
 
 /**
@@ -223,24 +224,24 @@ int32_t Pmic_SetTimerPrescale(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_GetTimerPrescale(Pmic_CoreHandle_t *pPmicCoreHandle,
-                              uint8_t *tmrPSData) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regData = 0U;
+int32_t Pmic_GetTimerPrescale(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t * tmrPSData) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
 
-  Pmic_criticalSectionStart(pPmicCoreHandle);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CFG_REG_REGADDR,
-                                      &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CFG_REG_REGADDR, &
+        regData);
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    *tmrPSData = Pmic_getBitField(regData, PMIC_TMR_CFG_REG_TMR_PS_SHIFT,
-                                  PMIC_TMR_CFG_REG_TMR_PS_MASK);
-  }
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        * tmrPSData = Pmic_getBitField(regData, PMIC_TMR_CFG_REG_TMR_PS_SHIFT,
+            PMIC_TMR_CFG_REG_TMR_PS_MASK);
+    }
 
-  Pmic_criticalSectionStop(pPmicCoreHandle);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
-  return pmicStatus;
+    return pmicStatus;
 }
 
 /**
@@ -251,26 +252,26 @@ int32_t Pmic_GetTimerPrescale(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_TimerClear(Pmic_CoreHandle_t *pPmicCoreHandle) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regData = 0U;
+int32_t Pmic_TimerClear(Pmic_CoreHandle_t * pPmicCoreHandle) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
 
-  Pmic_criticalSectionStart(pPmicCoreHandle);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CFG_REG_REGADDR,
-                                      &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CFG_REG_REGADDR, &
+        regData);
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    Pmic_setBitField(&regData, PMIC_TMR_CFG_REG_TMR_CLR_SHIFT,
-                     PMIC_TMR_CFG_REG_TMR_CLR_MASK, PMIC_TMR_CLR_DATA);
-  }
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        Pmic_setBitField( & regData, PMIC_TMR_CFG_REG_TMR_CLR_SHIFT,
+            PMIC_TMR_CFG_REG_TMR_CLR_MASK, PMIC_TMR_CLR_DATA);
+    }
 
-  pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_TMR_CFG_REG_REGADDR,
-                                      regData);
+    pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_TMR_CFG_REG_REGADDR,
+        regData);
 
-  Pmic_criticalSectionStop(pPmicCoreHandle);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
-  return pmicStatus;
+    return pmicStatus;
 }
 
 /**
@@ -282,24 +283,24 @@ int32_t Pmic_TimerClear(Pmic_CoreHandle_t *pPmicCoreHandle) {
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_GetLPWake0(Pmic_CoreHandle_t *pPmicCoreHandle,
-                        uint8_t *tmrlpwakeData) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regData = 0U;
+int32_t Pmic_GetLPWake0(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t * tmrlpwakeData) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
 
-  Pmic_criticalSectionStart(pPmicCoreHandle);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                      PMIC_TMR_LP_WAKE0_REGADDR, &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+        PMIC_TMR_LP_WAKE0_REGADDR, & regData);
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    *tmrlpwakeData = Pmic_getBitField(regData, PMIC_TMR_LP_WAKE_B0_SHIFT,
-                                      PMIC_TMR_LP_WAKE_B0_MASK);
-  }
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        * tmrlpwakeData = Pmic_getBitField(regData, PMIC_TMR_LP_WAKE_B0_SHIFT,
+            PMIC_TMR_LP_WAKE_B0_MASK);
+    }
 
-  Pmic_criticalSectionStop(pPmicCoreHandle);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
-  return pmicStatus;
+    return pmicStatus;
 }
 
 /**
@@ -311,27 +312,27 @@ int32_t Pmic_GetLPWake0(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_SetLPWake0(Pmic_CoreHandle_t *pPmicCoreHandle,
-                        uint8_t tmrlpwakeData) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regData = 0U;
+int32_t Pmic_SetLPWake0(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t tmrlpwakeData) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
 
-  Pmic_criticalSectionStart(pPmicCoreHandle);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                      PMIC_TMR_LP_WAKE0_REGADDR, &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+        PMIC_TMR_LP_WAKE0_REGADDR, & regData);
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    Pmic_setBitField(&regData, PMIC_TMR_LP_WAKE_B0_SHIFT,
-                     PMIC_TMR_LP_WAKE_B0_MASK, tmrlpwakeData);
-  }
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        Pmic_setBitField( & regData, PMIC_TMR_LP_WAKE_B0_SHIFT,
+            PMIC_TMR_LP_WAKE_B0_MASK, tmrlpwakeData);
+    }
 
-  pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                      PMIC_TMR_LP_WAKE0_REGADDR, regData);
+    pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+        PMIC_TMR_LP_WAKE0_REGADDR, regData);
 
-  Pmic_criticalSectionStop(pPmicCoreHandle);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
-  return pmicStatus;
+    return pmicStatus;
 }
 
 /**
@@ -343,24 +344,24 @@ int32_t Pmic_SetLPWake0(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_GetLPWake1(Pmic_CoreHandle_t *pPmicCoreHandle,
-                        uint8_t *tmrlpwakeData) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regData = 0U;
+int32_t Pmic_GetLPWake1(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t * tmrlpwakeData) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
 
-  Pmic_criticalSectionStart(pPmicCoreHandle);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                      PMIC_TMR_LP_WAKE1_REGADDR, &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+        PMIC_TMR_LP_WAKE1_REGADDR, & regData);
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    *tmrlpwakeData = Pmic_getBitField(regData, PMIC_TMR_LP_WAKE_B1_SHIFT,
-                                      PMIC_TMR_LP_WAKE_B1_MASK);
-  }
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        * tmrlpwakeData = Pmic_getBitField(regData, PMIC_TMR_LP_WAKE_B1_SHIFT,
+            PMIC_TMR_LP_WAKE_B1_MASK);
+    }
 
-  Pmic_criticalSectionStop(pPmicCoreHandle);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
-  return pmicStatus;
+    return pmicStatus;
 }
 
 /**
@@ -372,27 +373,27 @@ int32_t Pmic_GetLPWake1(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_SetLPWake1(Pmic_CoreHandle_t *pPmicCoreHandle,
-                        uint8_t tmrlpwakeData) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regData = 0U;
+int32_t Pmic_SetLPWake1(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t tmrlpwakeData) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
 
-  Pmic_criticalSectionStart(pPmicCoreHandle);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                      PMIC_TMR_LP_WAKE1_REGADDR, &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+        PMIC_TMR_LP_WAKE1_REGADDR, & regData);
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    Pmic_setBitField(&regData, PMIC_TMR_LP_WAKE_B1_SHIFT,
-                     PMIC_TMR_LP_WAKE_B1_MASK, tmrlpwakeData);
-  }
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        Pmic_setBitField( & regData, PMIC_TMR_LP_WAKE_B1_SHIFT,
+            PMIC_TMR_LP_WAKE_B1_MASK, tmrlpwakeData);
+    }
 
-  pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                      PMIC_TMR_LP_WAKE1_REGADDR, regData);
+    pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+        PMIC_TMR_LP_WAKE1_REGADDR, regData);
 
-  Pmic_criticalSectionStop(pPmicCoreHandle);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
-  return pmicStatus;
+    return pmicStatus;
 }
 
 /**
@@ -404,24 +405,24 @@ int32_t Pmic_SetLPWake1(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_GetLPWake2(Pmic_CoreHandle_t *pPmicCoreHandle,
-                        uint8_t *tmrlpwakeData) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regData = 0U;
+int32_t Pmic_GetLPWake2(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t * tmrlpwakeData) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
 
-  Pmic_criticalSectionStart(pPmicCoreHandle);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                      PMIC_TMR_LP_WAKE2_REGADDR, &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+        PMIC_TMR_LP_WAKE2_REGADDR, & regData);
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    *tmrlpwakeData = Pmic_getBitField(regData, PMIC_TMR_LP_WAKE_B2_SHIFT,
-                                      PMIC_TMR_LP_WAKE_B2_MASK);
-  }
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        * tmrlpwakeData = Pmic_getBitField(regData, PMIC_TMR_LP_WAKE_B2_SHIFT,
+            PMIC_TMR_LP_WAKE_B2_MASK);
+    }
 
-  Pmic_criticalSectionStop(pPmicCoreHandle);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
-  return pmicStatus;
+    return pmicStatus;
 }
 
 /**
@@ -433,27 +434,27 @@ int32_t Pmic_GetLPWake2(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_SetLPWake2(Pmic_CoreHandle_t *pPmicCoreHandle,
-                        uint8_t tmrlpwakeData) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regData = 0U;
+int32_t Pmic_SetLPWake2(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t tmrlpwakeData) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
 
-  Pmic_criticalSectionStart(pPmicCoreHandle);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-  pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                      PMIC_TMR_LP_WAKE2_REGADDR, &regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
+        PMIC_TMR_LP_WAKE2_REGADDR, & regData);
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    Pmic_setBitField(&regData, PMIC_TMR_LP_WAKE_B2_SHIFT,
-                     PMIC_TMR_LP_WAKE_B2_MASK, tmrlpwakeData);
-  }
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        Pmic_setBitField( & regData, PMIC_TMR_LP_WAKE_B2_SHIFT,
+            PMIC_TMR_LP_WAKE_B2_MASK, tmrlpwakeData);
+    }
 
-  pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                                      PMIC_TMR_LP_WAKE2_REGADDR, regData);
+    pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
+        PMIC_TMR_LP_WAKE2_REGADDR, regData);
 
-  Pmic_criticalSectionStop(pPmicCoreHandle);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
-  return pmicStatus;
+    return pmicStatus;
 }
 
 /**
@@ -465,24 +466,24 @@ int32_t Pmic_SetLPWake2(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_GetTimerCounter0(Pmic_CoreHandle_t *pPmicCoreHandle,
-                              uint8_t *tmrcntData0) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regData = 0U;
+int32_t Pmic_GetTimerCounter0(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t * tmrcntData0) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
 
-  Pmic_criticalSectionStart(pPmicCoreHandle);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-  pmicStatus =
-      Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CNT0_REGADDR, &regData);
+    pmicStatus =
+        Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CNT0_REGADDR, & regData);
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    *tmrcntData0 = Pmic_getBitField(regData, PMIC_TMR_CNT0_TMR_CNT_B0_SHIFT,
-                                    PMIC_TMR_CNT0_TMR_CNT_B0_MASK);
-  }
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        * tmrcntData0 = Pmic_getBitField(regData, PMIC_TMR_CNT0_TMR_CNT_B0_SHIFT,
+            PMIC_TMR_CNT0_TMR_CNT_B0_MASK);
+    }
 
-  Pmic_criticalSectionStop(pPmicCoreHandle);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
-  return pmicStatus;
+    return pmicStatus;
 }
 
 /**
@@ -494,27 +495,27 @@ int32_t Pmic_GetTimerCounter0(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_SetTimerCounter0(Pmic_CoreHandle_t *pPmicCoreHandle,
-                              uint8_t tmrcntData0) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regData = 0U;
+int32_t Pmic_SetTimerCounter0(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t tmrcntData0) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
 
-  Pmic_criticalSectionStart(pPmicCoreHandle);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-  pmicStatus =
-      Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CNT0_REGADDR, &regData);
+    pmicStatus =
+        Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CNT0_REGADDR, & regData);
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    Pmic_setBitField(&regData, PMIC_TMR_CNT0_TMR_CNT_B0_SHIFT,
-                     PMIC_TMR_CNT0_TMR_CNT_B0_MASK, tmrcntData0);
-  }
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        Pmic_setBitField( & regData, PMIC_TMR_CNT0_TMR_CNT_B0_SHIFT,
+            PMIC_TMR_CNT0_TMR_CNT_B0_MASK, tmrcntData0);
+    }
 
-  pmicStatus =
-      Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_TMR_CNT0_REGADDR, regData);
+    pmicStatus =
+        Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_TMR_CNT0_REGADDR, regData);
 
-  Pmic_criticalSectionStop(pPmicCoreHandle);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
-  return pmicStatus;
+    return pmicStatus;
 }
 
 /**
@@ -526,24 +527,24 @@ int32_t Pmic_SetTimerCounter0(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_GetTimerCounter1(Pmic_CoreHandle_t *pPmicCoreHandle,
-                              uint8_t *tmrcntData1) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regData = 0U;
+int32_t Pmic_GetTimerCounter1(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t * tmrcntData1) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
 
-  Pmic_criticalSectionStart(pPmicCoreHandle);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-  pmicStatus =
-      Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CNT1_REGADDR, &regData);
+    pmicStatus =
+        Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CNT1_REGADDR, & regData);
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    *tmrcntData1 = Pmic_getBitField(regData, PMIC_TMR_CNT1_TMR_CNT_B1_SHIFT,
-                                    PMIC_TMR_CNT1_TMR_CNT_B1_MASK);
-  }
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        * tmrcntData1 = Pmic_getBitField(regData, PMIC_TMR_CNT1_TMR_CNT_B1_SHIFT,
+            PMIC_TMR_CNT1_TMR_CNT_B1_MASK);
+    }
 
-  Pmic_criticalSectionStop(pPmicCoreHandle);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
-  return pmicStatus;
+    return pmicStatus;
 }
 
 /**
@@ -555,27 +556,27 @@ int32_t Pmic_GetTimerCounter1(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_SetTimerCounter1(Pmic_CoreHandle_t *pPmicCoreHandle,
-                              uint8_t tmrcntData1) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regData = 0U;
+int32_t Pmic_SetTimerCounter1(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t tmrcntData1) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
 
-  Pmic_criticalSectionStart(pPmicCoreHandle);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-  pmicStatus =
-      Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CNT1_REGADDR, &regData);
+    pmicStatus =
+        Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CNT1_REGADDR, & regData);
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    Pmic_setBitField(&regData, PMIC_TMR_CNT1_TMR_CNT_B1_SHIFT,
-                     PMIC_TMR_CNT1_TMR_CNT_B1_MASK, tmrcntData1);
-  }
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        Pmic_setBitField( & regData, PMIC_TMR_CNT1_TMR_CNT_B1_SHIFT,
+            PMIC_TMR_CNT1_TMR_CNT_B1_MASK, tmrcntData1);
+    }
 
-  pmicStatus =
-      Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_TMR_CNT1_REGADDR, regData);
+    pmicStatus =
+        Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_TMR_CNT1_REGADDR, regData);
 
-  Pmic_criticalSectionStop(pPmicCoreHandle);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
-  return pmicStatus;
+    return pmicStatus;
 }
 
 /**
@@ -587,24 +588,24 @@ int32_t Pmic_SetTimerCounter1(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_GetTimerCounter2(Pmic_CoreHandle_t *pPmicCoreHandle,
-                              uint8_t *tmrcntData2) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regData = 0U;
+int32_t Pmic_GetTimerCounter2(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t * tmrcntData2) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
 
-  Pmic_criticalSectionStart(pPmicCoreHandle);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-  pmicStatus =
-      Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CNT2_REGADDR, &regData);
+    pmicStatus =
+        Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CNT2_REGADDR, & regData);
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    *tmrcntData2 = Pmic_getBitField(regData, PMIC_TMR_CNT2_TMR_CNT_B2_SHIFT,
-                                   PMIC_TMR_CNT2_TMR_CNT_B2_MASK);
-  }
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        * tmrcntData2 = Pmic_getBitField(regData, PMIC_TMR_CNT2_TMR_CNT_B2_SHIFT,
+            PMIC_TMR_CNT2_TMR_CNT_B2_MASK);
+    }
 
-  Pmic_criticalSectionStop(pPmicCoreHandle);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
-  return pmicStatus;
+    return pmicStatus;
 }
 
 /**
@@ -616,25 +617,25 @@ int32_t Pmic_GetTimerCounter2(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_SetTimerCounter2(Pmic_CoreHandle_t *pPmicCoreHandle,
-                              uint8_t tmrcntData2) {
-  int32_t pmicStatus = PMIC_ST_SUCCESS;
-  uint8_t regData = 0U;
+int32_t Pmic_SetTimerCounter2(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t tmrcntData2) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
 
-  Pmic_criticalSectionStart(pPmicCoreHandle);
+    Pmic_criticalSectionStart(pPmicCoreHandle);
 
-  pmicStatus =
-      Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CNT2_REGADDR, &regData);
+    pmicStatus =
+        Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_TMR_CNT2_REGADDR, & regData);
 
-  if (PMIC_ST_SUCCESS == pmicStatus) {
-    Pmic_setBitField(&regData, PMIC_TMR_CNT2_TMR_CNT_B2_SHIFT,
-                     PMIC_TMR_CNT2_TMR_CNT_B2_MASK, tmrcntData2);
-  }
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        Pmic_setBitField( & regData, PMIC_TMR_CNT2_TMR_CNT_B2_SHIFT,
+            PMIC_TMR_CNT2_TMR_CNT_B2_MASK, tmrcntData2);
+    }
 
-  pmicStatus =
-      Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_TMR_CNT2_REGADDR, regData);
+    pmicStatus =
+        Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_TMR_CNT2_REGADDR, regData);
 
-  Pmic_criticalSectionStop(pPmicCoreHandle);
+    Pmic_criticalSectionStop(pPmicCoreHandle);
 
-  return pmicStatus;
+    return pmicStatus;
 }

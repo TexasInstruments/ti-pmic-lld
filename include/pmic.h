@@ -61,8 +61,8 @@
 /* @} */
 
 /**
- *  \ingroup DRV_PMIC_MODULE
- *  \defgroup DRV_PMIC_API_MODULE PMIC Driver Initialization API
+ *  @ingroup DRV_PMIC_MODULE
+ *  @defgroup DRV_PMIC_API_MODULE PMIC Driver Initialization API
  *  This is PMIC driver core handle initialization APIs common for all supported
  *  PMIC devices. Like, Pmic init, and deinit APIs
  *
