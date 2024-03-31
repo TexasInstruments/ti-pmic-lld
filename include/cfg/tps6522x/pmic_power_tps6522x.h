@@ -690,7 +690,8 @@ extern "C"
  *                                      \ref Tps6522x_buckEnBitField
  *  \param      buckSlewRate        BUCK slew rate. For valid values, refer to
  *                                      \ref Tps6522x_buckSlewRateBitField
- *  \param      buckVset            BUCK voltage in VSET form
+ *  \param      buckVset            BUCK voltage in VSET form. For valid values, refer to
+ *                                      \ref Tps6522x_buckLdoMinMaxVset
  *                                  For possible ranges of BUCK2, BUCK3, BUCK4, refer to
  *                                      \ref Tps6522x_buck2_3_4_VoltageRangesMV
  *  \param      buckVmonThr         BUCK VMON threshold. For valid values, refer to
@@ -736,9 +737,8 @@ typedef struct tps6522xBuckCfg_s
  *                                      \ref Tps6522x_ldoEnBitField
  *  \param      ldoMode             LDO mode. For valid values, refer to
  *                                      \ref Tps6522x_bypConfigBitField
- *  \param      ldoVset             LDO voltage in VSET form
- *                                  For possible ranges of LDO2 and LDO3, refer to
- *                                      \ref Tps6522x_ldo2_3_VoltageRangesMV
+ *  \param      ldoVset             LDO voltage in VSET form. For valid values, refer to
+ *                                      \ref Tps6522x_buckLdoMinMaxVset
  *  \param      ldoVmonThr          LDO VMON threshold. For valid values, refer to
  *                                      \ref Tps6522x_ldoVmonThrBitField
  *  \param      ldoRailGrpSel       LDO rail group selection. For valid values, refer to
@@ -787,12 +787,14 @@ typedef struct tps6522xLdoCfg_s
  *                                      refer to \ref Tps6522x_vccaRailSelBitField
  *  \param      vmon1Thr            VMON1 threshold. For valid values, refer to
  *                                      \ref Tps6522x_vmon1ThrBitField
- *  \param      vmon1PgSet          VMON1 PG level in PG_SET form
+ *  \param      vmon1PgSet          VMON1 PG level in PG_SET form. For valid values, refer to 
+ *                                      \ref Tps6522x_vmonMinMaxPgSet
  *  \param      vmon1RailGrpSel     VMON1 rail group selection. For valid values, refer to
  *                                      \ref Tps6522x_vmon1RailSelBitField
  *  \param      vmon2Thr            VMON2 treshold. For valid values, refer to
  *                                      \ref Tps6522x_vmon2ThrBitField
- *  \param      vmon2PgSet          VMON2 PG level in PG_SET form
+ *  \param      vmon2PgSet          VMON2 PG level in PG_SET form. For valid values, refer to 
+ *                                      \ref Tps6522x_vmonMinMaxPgSet
  *  \param      vmon2RailGrpSel     VMON2 rail group selection. For valid values, refer to
  *                                      \ref Tps6522x_vmon2RailSelBitField
  *  @{
