@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2023 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2023-2024 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -30,7 +30,6 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-
 /**
  *  \defgroup DRV_PMIC_MODULE PMIC Driver
  *
