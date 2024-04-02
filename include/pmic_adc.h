@@ -138,15 +138,13 @@ extern "C"
  *
  *  \brief      ADC continuous conversion enable/disable options
  *
- *  \param  PMIC_ADC_CONTINUOUS_CONVERSION_DISABLED     When selected, disables
- *                                                      ADC continuous conversion.
- *  \param  PMIC_ADC_CONTINUOUS_CONVERSION_ENABLED      When selected, enables
- *                                                      ADC continuous conversion.
+ *  \param  PMIC_ADC_CONT_CONV_DISABLED     When selected, disables ADC continuous conversion.
+ *  \param  PMIC_ADC_CONT_CONV_ENABLED      When selected, enables ADC continuous conversion.
  *
  *  @{
  */
-#define PMIC_ADC_CONTINUOUS_CONVERSION_DISABLED (0U)
-#define PMIC_ADC_CONTINUOUS_CONVERSION_ENABLED  (1U)
+#define PMIC_ADC_CONT_CONV_DISABLED (0U)
+#define PMIC_ADC_CONT_CONV_ENABLED  (1U)
 /** @} */
 
 /**

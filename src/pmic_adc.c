@@ -212,17 +212,12 @@ int32_t Pmic_ADCGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_adcCfg
 static int32_t Pmic_ADCContConvCheck(const uint8_t adcCtrlRegData)
 {
     int32_t status = PMIC_ST_SUCCESS;
-    uint8_t contConv = PMIC_ADC_CONTINUOUS_CONVERSION_DISABLED;
+    uint8_t contConv = Pmic_getBitField(
+        adcCtrlRegData, PMIC_ADC_CONT_CONV_SHIFT, PMIC_ADC_CONT_CONV_MASK);
 
-    contConv = Pmic_getBitField(adcCtrlRegData, PMIC_ADC_CONT_CONV_SHIFT, PMIC_ADC_CONT_CONV_MASK);
-
-    if (contConv == PMIC_ADC_CONTINUOUS_CONVERSION_ENABLED)
+    if (contConv == PMIC_ADC_CONT_CONV_ENABLED)
     {
         status = PMIC_ST_ERR_ADC_CONT_CONV_EN;
-    }
-    else
-    {
-        status = PMIC_ST_SUCCESS;
     }
 
     return status;
