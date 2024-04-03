@@ -57,7 +57,42 @@
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
-
+/**
+ * @brief Array of structures to configure GPIO input and output pins for TPS65386.
+ * @ingroup Pmic_GPIOPrivStructures
+ */
+ Pmic_GpioInOutCfg_t gTps65386_gpioInOutCfg[] = {
+    {
+        PMIC_GPI_1_CONF_REGADDR,
+        PMIC_GPI_1_GPI_1_SHIFT,
+        PMIC_GPI_1_GPI_1_MASK,
+    },
+    {
+        PMIC_GPI_1_CONF_REGADDR,
+        PMIC_GPI_4_GPI_2_SHIFT,
+        PMIC_GPI_4_GPI_2_MASK,
+    },
+    {
+        PMIC_GPO_1_CONF_REGADDR,
+        PMIC_GPO_1_GPO_1_SHIFT,
+        PMIC_GPO_1_GPO_2_MASK,
+    },
+    {
+        PMIC_GPO_1_CONF_REGADDR,
+        PMIC_GPO_2_GPI_3_SHIFT,
+        PMIC_GPO_2_GPO_3_MASK,
+    },
+    {
+        PMIC_GPO_2_CONF_REGADDR,
+        PMIC_GPO_3_GPO_1_SHIFT,
+        PMIC_GPO_3_GPO_2_MASK,
+    },
+    {
+        PMIC_GPO_2_CONF_REGADDR,
+        PMIC_GPO_4_GPO_3_SHIFT,
+        PMIC_GPO_4_GPO_3_MASK,
+    },
+};
 /**
  * @brief  Get the pointer to the GPIO input/output configuration.
  * This function retrieves the pointer to the GPIO input/output configuration.
@@ -77,9 +112,9 @@ void pmic_get_tps653860_gpioInOutCfg(Pmic_GpioInOutCfg_t ** pGpioInOutCfg) {
  * @param pGpioInOutCfg Pointer to store the GPIO input/output configuration.
  * @return void
  */
-void Pmic_get_gpioInOutCfg(const Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_GpioInOutCfg_t * pGpioInOutCfg) {
-    pmic_get_tps653860_gpioInOutCfg( & pGpioInOutCfg);
+void Pmic_get_gpioInOutCfg(Pmic_GpioInOutCfg_t * pGpioInOutCfg) {
+    Pmic_GpioInOutCfg_t * temppGpioInOutCfg = pGpioInOutCfg;
+    pmic_get_tps653860_gpioInOutCfg(&temppGpioInOutCfg);
 }
 
 /**
@@ -191,11 +226,10 @@ void Pmic_gpioSelectRegister(uint8_t gpo, uint8_t * pRegAddr) {
  * otherwise, returns an error code.
  */
 static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t pin,
     const Pmic_GpioCfg_t gpioCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
-    uint8_t regAddr = 0x7DU; /* Register address for GPO_CFG2 */
+    uint8_t regAdr = 0x7DU; /* Register address for GPO_CFG2 */
     Pmic_GpioInOutCfg_t * pGpioInOutCfg = NULL;
 
     if (gpioCfg.pullCtrl > PMIC_GPIO_PULL_UP_TO_LDO) {
@@ -204,20 +238,20 @@ static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
         /* Get PMIC gpio configuration */
-        Pmic_get_gpioInOutCfg(pPmicCoreHandle, pGpioInOutCfg);
+        Pmic_get_gpioInOutCfg( pGpioInOutCfg);
 
         /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         /* Reading GPO_CFG2 register */
         pmicStatus =
-            Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAddr, & regData);
+            Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAdr, & regData);
 
         if (PMIC_ST_SUCCESS == pmicStatus) {
             if (PMIC_GPIO_PULL_DISABLED == gpioCfg.pullCtrl) {
                 /* Set as high impedance (internal pull-up not enabled) */
                 Pmic_setBitField( & regData, PMIC_GPO_CFG2_EN_OUT_PU_CFG_SHIFT,
-                    PMIC_GPO_CFG2_EN_OUT_PU_CFG_MASK,
+                                  (uint8_t)PMIC_GPO_CFG2_EN_OUT_PU_CFG_MASK,
                     PMIC_GPO_HIGH_IMPEDANCE);
             }
 
@@ -225,17 +259,17 @@ static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
                 /* Set pull-up to VDDIO or LDO_IN */
                 if (gpioCfg.pullCtrl == PMIC_GPIO_PULL_UP_TO_LDO) {
                     Pmic_setBitField( & regData, PMIC_GPO_CFG2_EN_OUT_PU_CFG_SHIFT,
-                        PMIC_GPO_CFG2_EN_OUT_PU_CFG_MASK,
+                                      (uint8_t)PMIC_GPO_CFG2_EN_OUT_PU_CFG_MASK,
                         PMIC_GPO_PULL_UP_LDO);
                 } else {
                     Pmic_setBitField( & regData, PMIC_GPO_CFG2_EN_OUT_PU_CFG_SHIFT,
-                        PMIC_GPO_CFG2_EN_OUT_PU_CFG_MASK,
+                                      (uint8_t)PMIC_GPO_CFG2_EN_OUT_PU_CFG_MASK,
                         PMIC_GPO_PULL_UP_VDDIO);
                 }
             }
 
             pmicStatus =
-                Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t) regAddr, regData);
+                Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t) regAdr, regData);
         }
 
         /* Stop Critical Section */
@@ -256,21 +290,21 @@ static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
  * otherwise, returns an error code.
  */
 int32_t Pmic_gpioGetPullCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const uint8_t pin, Pmic_GpioCfg_t * pGpioCfg) {
+                             Pmic_GpioCfg_t * pGpioCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
-    uint8_t regAddr = 0x7DU; /* Register address for GPO_CFG2 */
+    uint8_t regAdr = 0x7DU; /* Register address for GPO_CFG2 */
     Pmic_GpioInOutCfg_t * pGpioInOutCfg = NULL;
 
     /* Get PMIC gpio configuration */
-    Pmic_get_gpioInOutCfg(pPmicCoreHandle, pGpioInOutCfg);
+    Pmic_get_gpioInOutCfg( pGpioInOutCfg);
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     /* Reading the GPO_CFG2 register */
     pmicStatus =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAddr, & regData);
+        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAdr, & regData);
 
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -278,15 +312,15 @@ int32_t Pmic_gpioGetPullCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
     if (PMIC_ST_SUCCESS == pmicStatus) {
         /* Reading gpio pull control */
         if (Pmic_getBitField(regData, PMIC_GPO_CFG2_EN_OUT_PU_CFG_SHIFT,
-                PMIC_GPO_CFG2_EN_OUT_PU_CFG_MASK) ==
+                             (uint8_t)PMIC_GPO_CFG2_EN_OUT_PU_CFG_MASK) ==
             PMIC_GPO_HIGH_IMPEDANCE) {
             pGpioCfg -> pullCtrl = PMIC_GPIO_PULL_DISABLED;
         } else if (Pmic_getBitField(regData, PMIC_GPO_CFG2_EN_OUT_PU_CFG_SHIFT,
-                PMIC_GPO_CFG2_EN_OUT_PU_CFG_MASK) ==
+                                    (uint8_t)PMIC_GPO_CFG2_EN_OUT_PU_CFG_MASK) ==
             PMIC_GPO_PULL_UP_VDDIO) {
             pGpioCfg -> pullCtrl = PMIC_GPIO_PULL_UP;
         } else if (Pmic_getBitField(regData, PMIC_GPO_CFG2_EN_OUT_PU_CFG_SHIFT,
-                PMIC_GPO_CFG2_EN_OUT_PU_CFG_MASK) ==
+                                    (uint8_t)PMIC_GPO_CFG2_EN_OUT_PU_CFG_MASK) ==
             PMIC_GPO_PULL_UP_LDO) {
             pGpioCfg -> pullCtrl = PMIC_GPIO_PULL_UP_TO_LDO;
         } else {
@@ -339,21 +373,21 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t * pPmicCoreHandle,
     const uint8_t pin,
         const Pmic_GpioCfg_t gpioCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint8_t regAddr = 0U;
+    uint8_t regAdr = 0U;
     uint8_t regData = 0U;
 
     switch (pin) {
     case PMIC_GPO1:
-        regAddr = PMIC_GPO_CFG1_REG_ADDR;
+        regAdr = PMIC_GPO_CFG1_REG_ADDR;
         break;
     case PMIC_GPO2:
-        regAddr = PMIC_GPO_CFG1_REG_ADDR;
+        regAdr = PMIC_GPO_CFG1_REG_ADDR;
         break;
     case PMIC_GPO3:
-        regAddr = PMIC_GPO_CFG2_REG_ADDR;
+        regAdr = PMIC_GPO_CFG2_REG_ADDR;
         break;
     case PMIC_GPO4:
-        regAddr = PMIC_GPO_CFG2_REG_ADDR;
+        regAdr = PMIC_GPO_CFG2_REG_ADDR;
         break;
     default:
         pmicStatus = PMIC_ST_ERR_INV_PARAM; /* Invalid pin */
@@ -368,7 +402,7 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t * pPmicCoreHandle,
 
         /* Reading the GPO_CFG register */
         pmicStatus =
-            Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAddr, & regData);
+            Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAdr, & regData);
 
         if (PMIC_ST_SUCCESS == pmicStatus) {
             /* Setting configurations for PMIC_BB_GPO1, PMIC_BB_GPO2,
@@ -378,26 +412,26 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t * pPmicCoreHandle,
             case PMIC_GPO1:
                 /* Modify GPO1_CFG bits in GPO_CFG1*/
                 Pmic_setBitField( & regData, PMIC_GPO_CFG1_GPO1_CFG_SHIFT,
-                    PMIC_GPO_CFG1_GPO1_CFG_MASK, gpioCfg.gpo1Cfg);
+                    (uint8_t)PMIC_GPO_CFG1_GPO1_CFG_MASK, gpioCfg.gpo1Cfg);
                 break;
             case PMIC_GPO2:
                 /* Modify GPO2_CFG bits in GPO_CFG1*/
                 Pmic_setBitField( & regData, PMIC_GPO_CFG1_GPO2_CFG_SHIFT,
-                    PMIC_GPO_CFG1_GPO2_CFG_MASK, gpioCfg.gpo2Cfg);
+                                  (uint8_t)PMIC_GPO_CFG1_GPO2_CFG_MASK, gpioCfg.gpo2Cfg);
                 break;
             case PMIC_GPO3:
                 /* Modify GPO3_CFG bits in GPO_CFG2*/
                 Pmic_setBitField( & regData, PMIC_GPO_CFG2_GPO3_CFG_SHIFT,
-                    PMIC_GPO_CFG2_GPO3_CFG_MASK, gpioCfg.gpo3Cfg);
+                                  (uint8_t)PMIC_GPO_CFG2_GPO3_CFG_MASK, gpioCfg.gpo3Cfg);
                 Pmic_setBitField( & regData, PMIC_GPO_CFG2_GPO_EN_SHIFT,
-                    PMIC_GPO_CFG2_GPO_EN_MASK, gpioCfg.pinDir);
+                                  (uint8_t)PMIC_GPO_CFG2_GPO_EN_MASK, gpioCfg.pinDir);
                 break;
             case PMIC_GPO4:
                 /* Modify GPO4_CFG bits in GPO_CFG2*/
                 Pmic_setBitField( & regData, PMIC_GPO_CFG2_GPO_EN_SHIFT,
-                    PMIC_GPO_CFG2_GPO_EN_MASK, gpioCfg.pinDir);
+                                  (uint8_t)PMIC_GPO_CFG2_GPO_EN_MASK, gpioCfg.pinDir);
                 Pmic_setBitField( & regData, PMIC_GPO_CFG2_GPO4_CFG_SHIFT,
-                    PMIC_GPO_CFG2_GPO4_CFG_MASK, gpioCfg.gpo4Cfg);
+                                  (uint8_t)PMIC_GPO_CFG2_GPO4_CFG_MASK, gpioCfg.gpo4Cfg);
                 break;
             default:
                 /* Invalid Pin */
@@ -408,7 +442,7 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t * pPmicCoreHandle,
             if (PMIC_ST_SUCCESS == pmicStatus) {
                 /* Sending modified configuration back to the register */
                 pmicStatus =
-                    Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t) regAddr, regData);
+                    Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t) regAdr, regData);
             }
         }
 
@@ -430,7 +464,7 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t * pPmicCoreHandle,
  * otherwise, returns an error code.
  */
 int32_t Pmic_gpioGetGPOConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t regAddr, Pmic_GpioCfg_t * pGpioCfg) {
+    uint8_t regAdr, Pmic_GpioCfg_t * pGpioCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
@@ -439,27 +473,27 @@ int32_t Pmic_gpioGetGPOConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
 
     /* Read GPO configuration register */
     pmicStatus =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAddr, & regData);
+        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAdr, & regData);
 
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
         /* Process and populate the GPIO configuration */
-        if (regAddr == PMIC_GPO_CFG1_REG_ADDR) {
+        if (regAdr == PMIC_GPO_CFG1_REG_ADDR) {
             /* PMIC_BB_GPO1 and PMIC_BB_GPO2 configurations */
             pGpioCfg -> gpo1Cfg = Pmic_getBitField(
-                regData, PMIC_GPO_CFG1_GPO1_CFG_SHIFT, PMIC_GPO_CFG1_GPO1_CFG_MASK);
+                regData, PMIC_GPO_CFG1_GPO1_CFG_SHIFT, (uint8_t)PMIC_GPO_CFG1_GPO1_CFG_MASK);
             pGpioCfg -> gpo2Cfg = Pmic_getBitField(
-                regData, PMIC_GPO_CFG1_GPO2_CFG_SHIFT, PMIC_GPO_CFG1_GPO2_CFG_MASK);
-        } else if (regAddr == PMIC_GPO_CFG2_REG_ADDR) {
+                regData, PMIC_GPO_CFG1_GPO2_CFG_SHIFT, (uint8_t)PMIC_GPO_CFG1_GPO2_CFG_MASK);
+        } else if (regAdr == PMIC_GPO_CFG2_REG_ADDR) {
             /* PMIC_BB_GPO3 and PMIC_BB_GPO4 configurations */
             pGpioCfg -> gpo3Cfg = Pmic_getBitField(
-                regData, PMIC_GPO_CFG2_GPO3_CFG_SHIFT, PMIC_GPO_CFG2_GPO3_CFG_MASK);
+                regData, PMIC_GPO_CFG2_GPO3_CFG_SHIFT, (uint8_t)PMIC_GPO_CFG2_GPO3_CFG_MASK);
             pGpioCfg -> gpo4Cfg = Pmic_getBitField(
-                regData, PMIC_GPO_CFG2_GPO4_CFG_SHIFT, PMIC_GPO_CFG2_GPO4_CFG_MASK);
+                regData, PMIC_GPO_CFG2_GPO4_CFG_SHIFT, (uint8_t)PMIC_GPO_CFG2_GPO4_CFG_MASK);
             pGpioCfg -> pinDir = Pmic_getBitField(regData, PMIC_GPO_CFG2_GPO_EN_SHIFT,
-                PMIC_GPO_CFG2_GPO_EN_MASK);
+                                                  (uint8_t)PMIC_GPO_CFG2_GPO_EN_MASK);
         } else {
             pmicStatus = PMIC_ST_ERR_FAIL;
         }
@@ -481,8 +515,7 @@ int32_t Pmic_gpioGetGPOConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
  * otherwise, returns an error code.
  */
 int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const uint8_t pin, Pmic_GpioCfg_t * pGpioCfg,
-        Pmic_GpioRdbkDglCfg_t * GpioRdbkDglCfg) {
+    const uint8_t pin, Pmic_GpioCfg_t * pGpioCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
@@ -537,19 +570,19 @@ static int32_t Pmic_gpioSetPinValue(Pmic_CoreHandle_t * pPmicCoreHandle,
 
     /* checking for the pin direction to be output */
     pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-        pGpioInOutCfg[index].regAddr, & regData);
+                                        (uint16_t)pGpioInOutCfg[index].regAddr, & regData);
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
         /* Setting the GPIO value */
         pmicStatus = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, pGpioInOutCfg[index].outRegAddr, & regData);
+            pPmicCoreHandle, (uint16_t)pGpioInOutCfg[index].outRegAddr, & regData);
         if (PMIC_ST_SUCCESS == pmicStatus) {
-            bitMask = (PMIC_GPIO_IN_OUT_X_GPIOX_IN_OUT_BITFIELD <<
-                pGpioInOutCfg[index].outRegBitPos);
+            bitMask = (uint8_t)(PMIC_GPIO_IN_OUT_X_GPIOX_IN_OUT_BITFIELD <<
+                    (uint16_t)pGpioInOutCfg[index].outRegBitPos);
             Pmic_setBitField( & regData, pGpioInOutCfg[index].outRegBitPos, bitMask,
                 pinValue);
             pmicStatus = Pmic_commIntf_sendByte(
-                pPmicCoreHandle, pGpioInOutCfg[index].outRegAddr, regData);
+                pPmicCoreHandle, (uint16_t)pGpioInOutCfg[index].outRegAddr, regData);
         }
     }
 
@@ -587,11 +620,18 @@ int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t * pPmicCoreHandle,
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
         /* Get PMIC gpio configuration */
-        Pmic_get_gpioInOutCfg(pPmicCoreHandle, pGpioInOutCfg);
+        Pmic_get_gpioInOutCfg( pGpioInOutCfg);
 
+        if(pGpioInOutCfg == NULL)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
+        }
+        else
+        {
         /* Set PMIC gpio pin value */
-        pmicStatus =
-            Pmic_gpioSetPinValue(pPmicCoreHandle, pGpioInOutCfg, pinValue, index);
+            pmicStatus =
+                Pmic_gpioSetPinValue(pPmicCoreHandle, pGpioInOutCfg, pinValue, index);
+        }
     }
 
     return pmicStatus;
@@ -628,20 +668,27 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t * pPmicCoreHandle,
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
         /* Get PMIC gpio configuration */
-        Pmic_get_gpioInOutCfg(pPmicCoreHandle, pGpioInOutCfg);
+        Pmic_get_gpioInOutCfg( pGpioInOutCfg);
 
         /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        /* Reading the pin value */
-        pmicStatus = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, pGpioInOutCfg[index].inRegAddr, & regData);
+        if(pGpioInOutCfg == NULL)
+        {
+            pmicStatus = PMIC_ST_ERR_FAIL;
+        }
+        else
+        {
+            /* Reading the pin value */
+            pmicStatus = Pmic_commIntf_recvByte(
+                pPmicCoreHandle, (uint16_t)pGpioInOutCfg[index].inRegAddr, & regData);
+        }
         /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
-        bitMask = (PMIC_GPIO_IN_OUT_X_GPIOX_IN_OUT_BITFIELD <<
+        bitMask = (uint8_t)(PMIC_GPIO_IN_OUT_X_GPIOX_IN_OUT_BITFIELD <<
             pGpioInOutCfg[index].inRegBitPos);
 
         if (Pmic_getBitField(regData, pGpioInOutCfg[index].inRegBitPos, bitMask) !=
@@ -669,7 +716,7 @@ int32_t Pmic_gpiSetConfiguration(Pmic_CoreHandle_t * pPmicCoreHandle,
     const uint8_t pin,
         const Pmic_GpioCfg_t gpioCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint8_t regAddr = PMIC_GPI_CFG_REG_ADDR;
+    uint8_t regAdr = PMIC_GPI_CFG_REG_ADDR;
     uint8_t regData = 0U;
 
     pmicStatus = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
@@ -679,7 +726,7 @@ int32_t Pmic_gpiSetConfiguration(Pmic_CoreHandle_t * pPmicCoreHandle,
 
     /* Reading the GPO_CFG register */
     pmicStatus =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAddr, & regData);
+        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAdr, & regData);
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
         /* Setting configurations for PMIC_BB_GPO1, PMIC_BB_GPO2, PMIC_BB_GPO3,
@@ -688,12 +735,12 @@ int32_t Pmic_gpiSetConfiguration(Pmic_CoreHandle_t * pPmicCoreHandle,
         case PMIC_GPI1:
             /* Modify GPI1_CFG bits in GPI_CFG*/
             Pmic_setBitField( & regData, PMIC_GPI_CFG_GPI1_SHIFT,
-                PMIC_GPI_CFG_GPI1_MASK, gpioCfg.gpi1Cfg);
+                              (uint8_t)PMIC_GPI_CFG_GPI1_MASK, gpioCfg.gpi1Cfg);
             break;
         case PMIC_GPI4:
             /* Modify GPI4_CFG bits in GPI_CFG*/
             Pmic_setBitField( & regData, PMIC_GPI_CFG_GPI4_SHIFT,
-                PMIC_GPI_CFG_GPI4_MASK, gpioCfg.gpi4Cfg);
+                              (uint8_t)PMIC_GPI_CFG_GPI4_MASK, gpioCfg.gpi4Cfg);
             break;
         default:
             /* Invalid pin */
@@ -703,7 +750,7 @@ int32_t Pmic_gpiSetConfiguration(Pmic_CoreHandle_t * pPmicCoreHandle,
         if (PMIC_ST_SUCCESS == pmicStatus) {
             /* Sending modified configuration back to the register */
             pmicStatus =
-                Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t) regAddr, regData);
+                Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t) regAdr, regData);
         }
     }
     /* Stop Critical Section */
@@ -725,7 +772,7 @@ int32_t Pmic_gpiSetConfiguration(Pmic_CoreHandle_t * pPmicCoreHandle,
  */
 
 int32_t Pmic_gpioGetGPIConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t regAddr, Pmic_GpioCfg_t * pGpioCfg) {
+    uint8_t regAdr, Pmic_GpioCfg_t * pGpioCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
@@ -734,7 +781,7 @@ int32_t Pmic_gpioGetGPIConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
 
     /* Read GPO configuration register */
     pmicStatus =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAddr, & regData);
+        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAdr, & regData);
 
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -744,9 +791,9 @@ int32_t Pmic_gpioGetGPIConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
 
         /* PMIC_BB_GPO1 and PMIC_BB_GPO2 configurations*/
         pGpioCfg -> gpi1Cfg = Pmic_getBitField(regData, PMIC_GPI_CFG_GPI1_SHIFT,
-            PMIC_GPI_CFG_GPI1_MASK);
+                                               (uint8_t)PMIC_GPI_CFG_GPI1_MASK);
         pGpioCfg -> gpi4Cfg = Pmic_getBitField(regData, PMIC_GPI_CFG_GPI4_SHIFT,
-            PMIC_GPI_CFG_GPI4_MASK);
+                                               (uint8_t)PMIC_GPI_CFG_GPI4_MASK);
     }
     return pmicStatus;
 }

@@ -75,7 +75,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_MODE_MCU   (bool) false
+#define PMIC_ESM_MODE_MCU   (0x0U)
 
 /**
  * @brief Boolean value representing the mode of the Error Signaling Module (ESM) as SoC mode.
@@ -83,7 +83,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_MODE_SOC   (bool) true
+#define PMIC_ESM_MODE_SOC   (0x1U)
 
 /**
  * @brief Boolean value representing the state of the Error Signaling Module (ESM) as stopped.
@@ -91,7 +91,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_STOP       (bool) false
+#define PMIC_ESM_STOP       (0x0U)
 
 /**
  * @brief Boolean value representing the state of the Error Signaling Module (ESM) as started.
@@ -99,7 +99,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_START      (bool) true
+#define PMIC_ESM_START      (0x01U)
 
 /**
  * @brief Boolean value representing the state of the Error Signaling Module (ESM) as disabled.
@@ -107,7 +107,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_DISABLE    (bool) false
+#define PMIC_ESM_DISABLE    (0x0U)
 
 /**
  * @brief Boolean value representing the state of the Error Signaling Module (ESM) as enabled.
@@ -115,7 +115,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_ENABLE     (bool) true
+#define PMIC_ESM_ENABLE     (0x01U)
 
 /**
  * @brief Boolean value representing the mode of the Error Signaling Module (ESM) as level mode.
@@ -123,7 +123,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_LEVEL_MODE (bool) false
+#define PMIC_ESM_LEVEL_MODE (0x0U)
 
 /**
  * @brief Boolean value representing the mode of the Error Signaling Module (ESM) as PWM mode.
@@ -131,7 +131,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_PWM_MODE   (bool) true
+#define PMIC_ESM_PWM_MODE   (0x1U)
 
 /**
  * @brief Boolean value representing the configuration of error enable drive clear as disabled.
@@ -139,7 +139,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_ERR_EN_DRV_CLEAR_DISABLE   (bool) false
+#define PMIC_ESM_ERR_EN_DRV_CLEAR_DISABLE   (0x0U)
 
 /**
  * @brief Boolean value representing the configuration of error enable drive clear as enabled.
@@ -147,7 +147,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE    (bool) true
+#define PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE    (0x1U)
 
 /**
  * @brief Boolean value representing the configuration of ESM interrupt as disabled.
@@ -155,7 +155,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_INTERRUPT_DISABLE          (bool) false
+#define PMIC_ESM_INTERRUPT_DISABLE          (0x0U)
 
 /**
  * @brief Boolean value representing the configuration of ESM interrupt as enabled.
@@ -163,7 +163,7 @@ extern "C" {
  *
  * @ingroup Pmic_ESMMacros
  */
-#define PMIC_ESM_INTERRUPT_ENABLE           (bool) true
+#define PMIC_ESM_INTERRUPT_ENABLE           (0x1U)
 
 /**
  * @brief Numeric value representing the value 1 for error state machine.
@@ -990,7 +990,61 @@ int32_t Pmic_esmGetErrCnt(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @ingroup Pmic_ESMFunctions
  */
 int32_t Pmic_esmGetStatus(Pmic_CoreHandle_t * pPmicCoreHandle,
-    bool * pEsmState);
+    uint8_t *pEsmState);
+
+/**
+ * @brief Set the maximum low pulse duration value for ESM.
+ * This function sets the maximum low pulse duration value for ESM.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param esmCfg ESM configuration.
+ * @param esmBaseRegAddr Base register address for ESM.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
+static int32_t Pmic_esmSetLmaxValue(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const Pmic_EsmCfg_t esmCfg);
+
+/**
+ * @brief Set the minimum low pulse duration value for ESM.
+ * This function sets the minimum low pulse duration value for ESM.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param esmCfg ESM configuration.
+ * @param esmBaseRegAddr Base register address for ESM.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
+static int32_t Pmic_esmSetLminValue(Pmic_CoreHandle_t * pPmicCoreHandle,
+    const Pmic_EsmCfg_t esmCfg);
+
+/**
+ * @brief Get the maximum high pulse duration value for ESM.
+ * This function gets the maximum high pulse duration value for ESM.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pEsmCfg Pointer to store the ESM configuration.
+ * @param esmBaseRegAddr Base register address for ESM.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
+static int32_t Pmic_esmGetHmaxValue(Pmic_CoreHandle_t * pPmicCoreHandle,
+    Pmic_EsmCfg_t * pEsmCfg);
+
+/**
+ * @brief Get the minimum high pulse duration value for ESM.
+ * This function gets the minimum high pulse duration value for ESM.
+ *
+ * @param pPmicCoreHandle Pointer to the PMIC core handle.
+ * @param pEsmCfg Pointer to store the ESM configuration.
+ * @param esmBaseRegAddr Base register address for ESM.
+ * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
+ * otherwise, returns an error code.
+ */
+static int32_t Pmic_esmGetHminValue(Pmic_CoreHandle_t * pPmicCoreHandle,
+    Pmic_EsmCfg_t * pEsmCfg);
+
+
 
 /**
  * @}

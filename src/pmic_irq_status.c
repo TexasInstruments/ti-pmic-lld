@@ -278,7 +278,7 @@ static int32_t Pmic_irqGpioMask(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_maskGpioIntr(Pmic_CoreHandle_t * pPmicCoreHandle,
+int32_t Pmic_maskGpioIntr(Pmic_CoreHandle_t * pPmicCoreHandle,
                                  const uint8_t irqGpioNum,
                                  const bool mask,
                                  const uint8_t gpioIntrType) {
@@ -385,7 +385,7 @@ static int32_t Pmic_irqClearStatus(Pmic_CoreHandle_t * pPmicCoreHandle,
 static int32_t Pmic_irqMask(Pmic_CoreHandle_t * pPmicCoreHandle,
                             const uint8_t irqNum,
                             const bool mask,
-                            Pmic_IntrCfg_t ** pIntrCfg) {
+                            Pmic_IntrCfg_t * pIntrCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     uint8_t bitMask = 0U;
@@ -395,18 +395,18 @@ static int32_t Pmic_irqMask(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     pmicStatus = Pmic_commIntf_recvByte(
-        pPmicCoreHandle, (uint16_t) pIntrCfg[irqNum] -> intrMaskRegAddr, & regData);
+            pPmicCoreHandle, (uint16_t) pIntrCfg[irqNum].intrMaskRegAddr, & regData);
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
         if (true == mask) {
             maskVal = 1U;
         }
         bitMask = (uint8_t)(PMIC_IRQ_MASK_CLR_BITFIELD <<
-            pIntrCfg[irqNum] -> intrMaskBitPos);
-        Pmic_setBitField( & regData, pIntrCfg[irqNum] -> intrMaskBitPos, bitMask,
+            pIntrCfg[irqNum].intrMaskBitPos);
+        Pmic_setBitField( & regData, pIntrCfg[irqNum].intrMaskBitPos, bitMask,
             maskVal);
         pmicStatus = Pmic_commIntf_sendByte(
-            pPmicCoreHandle, (uint16_t) pIntrCfg[irqNum] -> intrMaskRegAddr, regData);
+            pPmicCoreHandle, (uint16_t) pIntrCfg[irqNum].intrMaskRegAddr, regData);
     }
 
     /* Stop Critical Section */
@@ -432,12 +432,14 @@ static int32_t Pmic_maskIntr(Pmic_CoreHandle_t * pPmicCoreHandle,
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t irqId = 0U;
     uint8_t maxVal = 0U;
-    Pmic_IntrCfg_t * pIntrCfg[PMIC_BB_IRQ_MAX_NUM];
+    /* Pmic_IntrCfg_t * pIntrCfg[PMIC_BB_IRQ_MAX_NUM]; */
 
-    Pmic_get_intrCfg(pPmicCoreHandle, pIntrCfg);
+    Pmic_IntrCfg_t *pIntrCfg = NULL;
+
+    Pmic_get_intrCfg(pPmicCoreHandle, &pIntrCfg);
 
     if (PMIC_IRQ_ALL != irqNum) {
-        if (PMIC_IRQ_INVALID_REGADDR == pIntrCfg[irqNum] -> intrMaskRegAddr) {
+        if (PMIC_IRQ_INVALID_REGADDR == pIntrCfg[irqNum].intrMaskRegAddr) {
             pmicStatus = PMIC_ST_ERR_FAIL;
         }
 
@@ -449,7 +451,7 @@ static int32_t Pmic_maskIntr(Pmic_CoreHandle_t * pPmicCoreHandle,
     if ((PMIC_ST_SUCCESS == pmicStatus) && (PMIC_IRQ_ALL == irqNum)) {
         Pmic_getMaxVal( & maxVal);
         for (irqId = 0U; irqId < maxVal; irqId++) {
-            if (PMIC_IRQ_INVALID_REGADDR == pIntrCfg[irqId] -> intrMaskRegAddr) {
+            if (PMIC_IRQ_INVALID_REGADDR == pIntrCfg[irqId].intrMaskRegAddr) {
                 pmicStatus = (int32_t) PMIC_IRQ_INVALID_REGADDR;
             }
 
@@ -770,7 +772,7 @@ int32_t Pmic_irqGpioMaskIntr(Pmic_CoreHandle_t * pPmicCoreHandle,
  */
 static int32_t Pmic_getIrqMaskStatus(Pmic_CoreHandle_t * pPmicCoreHandle,
                                      const uint8_t irqNum, bool * pMaskStatus,
-                                     Pmic_IntrCfg_t ** pIntrCfg) {
+                                     Pmic_IntrCfg_t * pIntrCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     uint8_t bitMask = 0U;
@@ -779,17 +781,17 @@ static int32_t Pmic_getIrqMaskStatus(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     pmicStatus = Pmic_commIntf_recvByte(
-        pPmicCoreHandle, (uint16_t) pIntrCfg[irqNum] -> intrMaskRegAddr, & regData);
+        pPmicCoreHandle, (uint16_t) pIntrCfg[irqNum].intrMaskRegAddr, & regData);
 
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
         bitMask = (uint8_t)(PMIC_IRQ_MASK_CLR_BITFIELD <<
-            pIntrCfg[irqNum] -> intrMaskBitPos);
+            pIntrCfg[irqNum].intrMaskBitPos);
         * pMaskStatus = PMIC_IRQ_UNMASK;
 
-        if ((Pmic_getBitField(regData, pIntrCfg[irqNum] -> intrMaskBitPos,
+        if ((Pmic_getBitField(regData, pIntrCfg[irqNum].intrMaskBitPos,
                 bitMask)) == PMIC_IRQ_MASK_VAL_1) {
             * pMaskStatus = PMIC_IRQ_MASK;
         }
@@ -811,11 +813,13 @@ static int32_t Pmic_getIrqMaskStatus(Pmic_CoreHandle_t * pPmicCoreHandle,
 static int32_t Pmic_getMaskIntrStatus(Pmic_CoreHandle_t * pPmicCoreHandle,
                                       const uint8_t irqNum, bool * pMaskStatus) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    Pmic_IntrCfg_t * pIntrCfg[PMIC_BB_IRQ_MAX_NUM];
+    /* Pmic_IntrCfg_t * pIntrCfg[PMIC_BB_IRQ_MAX_NUM]; */
 
-    Pmic_get_intrCfg(pPmicCoreHandle, pIntrCfg);
+    Pmic_IntrCfg_t *pIntrCfg = NULL;
 
-    if (PMIC_IRQ_INVALID_REGADDR == pIntrCfg[irqNum] -> intrMaskRegAddr) {
+    Pmic_get_intrCfg(pPmicCoreHandle, &pIntrCfg);
+
+    if (PMIC_IRQ_INVALID_REGADDR == pIntrCfg[irqNum].intrMaskRegAddr) {
         pmicStatus = PMIC_ST_ERR_FAIL;
     }
 

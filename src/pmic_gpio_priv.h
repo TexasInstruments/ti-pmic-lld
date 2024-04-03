@@ -717,44 +717,6 @@ typedef struct Pmic_GpioIntRegCfg_s {
 } Pmic_GpioIntRegCfg_t;
 
 /**
- * @brief Array of structures to configure GPIO input and output pins for TPS65386.
- * @ingroup Pmic_GPIOPrivStructures
- */
-static Pmic_GpioInOutCfg_t gTps65386_gpioInOutCfg[] = {
-    {
-        PMIC_GPI_1_CONF_REGADDR,
-        PMIC_GPI_1_GPI_1_SHIFT,
-        PMIC_GPI_1_GPI_1_MASK,
-    },
-    {
-        PMIC_GPI_1_CONF_REGADDR,
-        PMIC_GPI_4_GPI_2_SHIFT,
-        PMIC_GPI_4_GPI_2_MASK,
-    },
-    {
-        PMIC_GPO_1_CONF_REGADDR,
-        PMIC_GPO_1_GPO_1_SHIFT,
-        PMIC_GPO_1_GPO_2_MASK,
-    },
-    {
-        PMIC_GPO_1_CONF_REGADDR,
-        PMIC_GPO_2_GPI_3_SHIFT,
-        PMIC_GPO_2_GPO_3_MASK,
-    },
-    {
-        PMIC_GPO_2_CONF_REGADDR,
-        PMIC_GPO_3_GPO_1_SHIFT,
-        PMIC_GPO_3_GPO_2_MASK,
-    },
-    {
-        PMIC_GPO_2_CONF_REGADDR,
-        PMIC_GPO_4_GPO_3_SHIFT,
-        PMIC_GPO_4_GPO_3_MASK,
-    },
-};
-
-
-/**
  * @}
  */
 /* End of Pmic_GPIOPrivStructures */

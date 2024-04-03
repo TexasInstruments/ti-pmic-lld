@@ -72,14 +72,14 @@
  *
  * @ingroup Pmic_GPIOMacros
  */
-#define PMIC_GPIO_ENABLE true
+#define PMIC_GPIO_ENABLE (true)
 
 /**
  * @brief Macro to disable a GPIO pin.
  *
  * @ingroup Pmic_GPIOMacros
  */
-#define PMIC_GPIO_DISABLE false
+#define PMIC_GPIO_DISABLE (false)
 
 /**
  * @brief Macro defining the pin for PMIC_BB_GPO1.
@@ -554,8 +554,7 @@ void pmic_get_tps653860_gpioInOutCfg(Pmic_GpioInOutCfg_t **pGpioInOutCfg);
  *
  * @ingroup Pmic_GPIOFunctions
  */
-void Pmic_get_gpioInOutCfg(const Pmic_CoreHandle_t *pPmicCoreHandle,
-                           Pmic_GpioInOutCfg_t *pGpioInOutCfg);
+void Pmic_get_gpioInOutCfg(Pmic_GpioInOutCfg_t *pGpioInOutCfg);
 
 /**
  * @brief Validates the GPIO pin number.
@@ -651,7 +650,6 @@ void Pmic_gpioSelectRegister(uint8_t gpo, uint8_t *pRegAddr);
  * @ingroup Pmic_GPIOFunctions
  */
 static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                     uint8_t pin,
                                      const Pmic_GpioCfg_t gpioCfg);
 
 /**
@@ -676,7 +674,6 @@ static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @ingroup Pmic_GPIOFunctions
  */
 int32_t Pmic_gpioGetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
-                             const uint8_t pin,
                              Pmic_GpioCfg_t *pGpioCfg);
 
 /**
@@ -750,7 +747,7 @@ int32_t Pmic_gpioSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @ingroup Pmic_GPIOFunctions
  */
 int32_t Pmic_gpioGetGPOConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
-                              uint8_t regAddr,
+                              uint8_t regAdr,
                               Pmic_GpioCfg_t *pGpioCfg);
 
 /**
@@ -775,8 +772,7 @@ int32_t Pmic_gpioGetGPOConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
  */
 int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
                                   const uint8_t pin,
-                                  Pmic_GpioCfg_t *pGpioCfg,
-                                  Pmic_GpioRdbkDglCfg_t *GpioRdbkDglCfg);
+                                  Pmic_GpioCfg_t *pGpioCfg);
 
 /**
  * @brief Sets the value of a specific GPIO pin.
@@ -894,9 +890,8 @@ int32_t Pmic_gpiSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_GPIOFunctions
  */
-int32_t Pmic_gpioGetGPIConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
-                              uint8_t regAddr,
-                              Pmic_GpioCfg_t *pGpioCfg);
+int32_t Pmic_gpioGetGPIConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t regAdr, Pmic_GpioCfg_t * pGpioCfg);
 
 /**
  * @brief Retrieves the configuration of a specified GPI pin.

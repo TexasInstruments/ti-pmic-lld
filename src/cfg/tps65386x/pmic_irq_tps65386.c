@@ -118,7 +118,7 @@ Pmic_IntrCfg_t gTps65386x_intCfg[] = {
         PMIC_CM_COMP_INT_MSKCFG_REGADDR,
         PMIC_COMP1_INT_CFG_SHIFT,
         PMIC_CM_COMP_INT_MSKCFG_REGADDR,
-        PMIC_COMP1_INT_MASK_SHIFT
+        NULL
     },
     {
         PMIC_CM_COMP_INT_MSKCFG_REGADDR,

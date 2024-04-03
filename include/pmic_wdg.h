@@ -477,10 +477,10 @@ typedef struct Pmic_WdgCfg_s {
     uint8_t failThreshold;
     uint8_t rstThreshold;
 
-    bool wdgMode;
-    bool pwrHold;
-    bool rstEnable;
-    bool retLongWin;
+    uint8_t wdgMode;
+    uint8_t pwrHold;
+    uint8_t rstEnable;
+    uint8_t retLongWin;
     uint8_t cntSel;
     uint8_t enDrvSel;
 
@@ -603,13 +603,12 @@ int32_t Pmic_wdgDisable(Pmic_CoreHandle_t * pPmicCoreHandle);
  *
  *  @param      pPmicCoreHandle     [IN]        PMIC interface handle
  *  @param      pWdgEnabled         [OUT]       Pointer to Watchdog Enable
- * Boolean
  *
  *  @return     Success code if Watchdog Enable state is obtained, error code
  * otherwise. For valid success/error codes, refer to \ref Pmic_ErrorCodes
  */
 int32_t Pmic_wdgGetEnableState(Pmic_CoreHandle_t * pPmicCoreHandle,
-    bool * pWdgEnabled);
+    uint8_t *pWdgEnabled);
 
 /**
  * @brief   API to set PMIC watchdog configurations.
@@ -936,16 +935,16 @@ static int32_t Pmic_WdgGetThresholdValues(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_WdgCfg_t * pWdgCfg);
 
 static int32_t Pmic_WdgSetRetToLongWindowCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    bool returnLongWindow);
+                                             uint8_t returnLongWindow);
 
 static int32_t Pmic_WdgSetWarmRstEnableCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    bool rstEnble);
+                                           uint8_t rstEnble);
 
 static int32_t Pmic_WdgSetPwrHoldCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    bool pwrHld);
+                                     uint8_t pwrHld);
 
 static int32_t Pmic_WdgSetModeCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    bool wdgMde);
+                                  uint8_t wdgMde);
 
 int32_t Pmic_WdgSetCntSelCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
     uint8_t wdgCntSel);
@@ -969,7 +968,7 @@ static int32_t Pmic_WdgGetQaConfigurations(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_WdgCfg_t * pWdgCfg);
 
 static int32_t Pmic_wdgEnDisState(Pmic_CoreHandle_t * pPmicCoreHandle,
-    bool enable);
+                                  uint8_t enable);
 
 static int32_t
 Pmic_wdgReadQuesandAnswerCount(Pmic_CoreHandle_t * pPmicCoreHandle,

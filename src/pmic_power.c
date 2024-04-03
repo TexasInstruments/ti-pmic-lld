@@ -51,25 +51,6 @@
 /*                         Structure Declarations                             */
 /* ========================================================================== */
 
-static Pmic_powerRsrcRegCfg_t tps65386x_pwrRsrcRegCfg = {
-    .buckConfigRegAddr = PMIC_POWER_BUCK_CFG_REGADDR,
-    .ldo1ConfigRegAddr = PMIC_LDO1_CFG_REGADDR,
-    .ldo2ConfigRegAddr = PMIC_LDO2_CFG_REGADDR,
-    .ldo3ConfigRegAddr = PMIC_LDO3_CFG_REGADDR,
-    .ldo4ConfigRegAddr = PMIC_LDO4_CFG_REGADDR,
-    .pldo1ConfigRegAddr = PMIC_PLDO1_CFG_REGADDR,
-    .pldo2ConfigRegAddr = PMIC_PLDO2_CFG_REGADDR,
-    .pldoConfigRegAddr = PMIC_PLDO_CFG_REGADDR,
-    .dscgConfigRegAddr = PMIC_LDO_DSCG_CFG_REGADDR,
-    .pgoodConfigRegAddr = PMIC_LDO_PGOOD_CFG_REGADDR,
-    .ldoCtrlRegAddr = PMIC_LDO_CTRL_REGADDR,
-    .enoutCtrlRegAddr = PMIC_PLDO_EN_OUT_CTRL_REGADDR
-};
-
-void pmic_get_bb_pwrRsrceRegCfg(Pmic_powerRsrcRegCfg_t ** pPwrRsrcRegCfg) {
-    * pPwrRsrcRegCfg = & tps65386x_pwrRsrcRegCfg;
-}
-
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
@@ -1142,8 +1123,8 @@ int32_t Pmic_setLdoPgoodCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
 }
 
 int32_t Pmic_getLdoPgoodCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t ldoNumber,
-    Pmic_pgoodCfgReg_t * ldoPgoodCfg) {
+                            uint8_t ldoNumber,
+                            Pmic_pgoodCfgReg_t * ldoPgoodCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regAddr = ldoPgoodCfg -> pgoodRegAddr;
     uint8_t regData = 0U;
@@ -1182,9 +1163,9 @@ int32_t Pmic_getLdoPgoodCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
     return pmicStatus;
 }
 
-int32_t Pmic_setLdoCtrl(Pmic_CoreHandle_t * pPmicCoreHandle, uint8_t ldoNumber,
-    uint8_t ldoCtrlFeature,
-    const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg) {
+int32_t Pmic_setLdoCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
+                        uint8_t ldoCtrlFeature,
+                        const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regAddr = pwrRsrcRegCfg -> ldoCtrlRegAddr;
     uint8_t regData = 0U;
@@ -1200,7 +1181,7 @@ int32_t Pmic_setLdoCtrl(Pmic_CoreHandle_t * pPmicCoreHandle, uint8_t ldoNumber,
         } else {
             Pmic_criticalSectionStart(pPmicCoreHandle);
             pmicStatus =
-                Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAddr, & regData);
+                Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, & regData);
 
             if (pmicStatus != PMIC_ST_SUCCESS) {
                 pmicStatus = PMIC_ST_ERR_FAIL;
@@ -1208,7 +1189,7 @@ int32_t Pmic_setLdoCtrl(Pmic_CoreHandle_t * pPmicCoreHandle, uint8_t ldoNumber,
                 Pmic_setBitField( & regData, bitPos, bitMask, ldoCtrlFeature);
 
                 pmicStatus =
-                    Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t) regAddr, regData);
+                    Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t)regAddr, regData);
 
                 Pmic_criticalSectionStop(pPmicCoreHandle);
             }
@@ -1218,7 +1199,7 @@ int32_t Pmic_setLdoCtrl(Pmic_CoreHandle_t * pPmicCoreHandle, uint8_t ldoNumber,
     return pmicStatus;
 }
 
-int32_t Pmic_getLdoCtrl(Pmic_CoreHandle_t * pPmicCoreHandle, uint8_t ldoNumber,
+int32_t Pmic_getLdoCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
     uint8_t * ldoCtrlFeature,
     const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;

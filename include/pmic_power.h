@@ -592,12 +592,10 @@ int32_t Pmic_getLdoPgoodCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
 void Pmic_getLDOCtrlFields(uint8_t ldoNumber, uint8_t * pBitPos,
     uint8_t * pBitMask);
 
-int32_t Pmic_setLdoCtrl(Pmic_CoreHandle_t * pPmicCoreHandle, uint8_t ldoNumber,
-    uint8_t ldoCtrlFeature,
+int32_t Pmic_setLdoCtrl(Pmic_CoreHandle_t * pPmicCoreHandle, uint8_t ldoCtrlFeature,
     const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
 
-int32_t Pmic_getLdoCtrl(Pmic_CoreHandle_t * pPmicCoreHandle, uint8_t ldoNumber,
-    uint8_t * ldoCtrlFeature,
+int32_t Pmic_getLdoCtrl(Pmic_CoreHandle_t * pPmicCoreHandle, uint8_t * ldoCtrlFeature,
     const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
 
 void Pmic_getEnOutCtrlFields(uint8_t enableNumber, uint8_t * pBitPos,

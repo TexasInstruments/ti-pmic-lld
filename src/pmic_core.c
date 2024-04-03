@@ -53,7 +53,7 @@
 const Pmic_DiagMUXFeatureMapping Pmic_amuxFeatureMappings[AMUX_NUM_FEATURES] = {
     [FEATURE_BUCK_BOOST_OUTPUT_VOLTAGE] = {
         1,
-        0
+        NULL
     },
     [FEATURE_LDO1_OUTPUT_VOLTAGE] = {
         1,
@@ -101,7 +101,7 @@ const Pmic_DiagMUXFeatureMapping Pmic_amuxFeatureMappings[AMUX_NUM_FEATURES] = {
     },
     [FEATURE_TEMP_SENSOR_BUCK_BOOST] = {
         12,
-        0
+        NULL
     },
     [FEATURE_TEMP_SENSOR_LDO1] = {
         12,
@@ -117,7 +117,7 @@ const Pmic_DiagMUXFeatureMapping Pmic_amuxFeatureMappings[AMUX_NUM_FEATURES] = {
     },
     [FEATURE_TEMP_SENSOR_LDO4] = {
         13,
-        0
+        NULL
     },
     [FEATURE_TEMP_SENSOR_PLDO1] = {
         13,
@@ -132,16 +132,16 @@ const Pmic_DiagMUXFeatureMapping Pmic_amuxFeatureMappings[AMUX_NUM_FEATURES] = {
 /* Define the lookup table mapping features to group and channel numbers */
 const Pmic_DiagMUXFeatureMapping Pmic_dmuxFeatureMappings[DMUX_NUM_FEATURES] = {
     [FEATURE_DIGITAL_0_OUTPUT] = {
-        0,
-        0
+        NULL,
+        NULL
     },
     [FEATURE_DIGITAL_1_OUTPUT] = {
-        0,
+        NULL,
         1
     },
     [FEATURE_BUCK_BOOST_AVG_CURRENT_LIMIT] = {
         1,
-        0
+        NULL
     },
     [FEATURE_BUCK_BOOST_DEGLITCHED_AVG_CURRENT_LIMIT] = {
         1,
@@ -157,11 +157,11 @@ const Pmic_DiagMUXFeatureMapping Pmic_dmuxFeatureMappings[DMUX_NUM_FEATURES] = {
     },
     [FEATURE_RESERVED_2] = {
         2,
-        0
+        NULL
     },
     [FEATURE_LDO1_CURRENT_LIMIT] = {
         3,
-        0
+        NULL
     },
     [FEATURE_LDO1_DEGLITCHED_CURRENT_LIMIT] = {
         3,
@@ -173,7 +173,7 @@ const Pmic_DiagMUXFeatureMapping Pmic_dmuxFeatureMappings[DMUX_NUM_FEATURES] = {
     },
     [FEATURE_LDO2_CURRENT_LIMIT] = {
         4,
-        0
+        NULL
     },
     [FEATURE_LDO2_DEGLITCHED_CURRENT_LIMIT] = {
         4,
@@ -185,7 +185,7 @@ const Pmic_DiagMUXFeatureMapping Pmic_dmuxFeatureMappings[DMUX_NUM_FEATURES] = {
     },
     [FEATURE_LDO3_CURRENT_LIMIT] = {
         5,
-        0
+        NULL
     },
     [FEATURE_LDO3_DEGLITCHED_CURRENT_LIMIT] = {
         5,
@@ -197,7 +197,7 @@ const Pmic_DiagMUXFeatureMapping Pmic_dmuxFeatureMappings[DMUX_NUM_FEATURES] = {
     },
     [FEATURE_LDO4_CURRENT_LIMIT] = {
         6,
-        0
+        NULL
     },
     [FEATURE_LDO4_DEGLITCHED_CURRENT_LIMIT] = {
         6,
@@ -209,7 +209,7 @@ const Pmic_DiagMUXFeatureMapping Pmic_dmuxFeatureMappings[DMUX_NUM_FEATURES] = {
     },
     [FEATURE_PLDO1_CURRENT_LIMIT] = {
         7,
-        0
+        NULL
     },
     [FEATURE_PLDO1_DEGLITCHED_CURRENT_LIMIT] = {
         7,
@@ -225,7 +225,7 @@ const Pmic_DiagMUXFeatureMapping Pmic_dmuxFeatureMappings[DMUX_NUM_FEATURES] = {
     },
     [FEATURE_PLDO2_CURRENT_LIMIT] = {
         8,
-        0
+        NULL
     },
     [FEATURE_PLDO2_DEGLITCHED_CURRENT_LIMIT] = {
         8,
@@ -245,7 +245,7 @@ const Pmic_DiagMUXFeatureMapping Pmic_dmuxFeatureMappings[DMUX_NUM_FEATURES] = {
     },
     [FEATURE_RESERVED_29] = {
         9,
-        0
+        NULL
     },
     [FEATURE_VBAT_DEGLITCHED_OV] = {
         9,
@@ -341,7 +341,7 @@ const Pmic_DiagMUXFeatureMapping Pmic_dmuxFeatureMappings[DMUX_NUM_FEATURES] = {
     },
     [FEATURE_EXT_VMON2_DEGLITCHED_OV] = {
         10,
-        0
+        NULL
     },
     [FEATURE_VBAT_OV] = {
         10,
@@ -437,7 +437,7 @@ const Pmic_DiagMUXFeatureMapping Pmic_dmuxFeatureMappings[DMUX_NUM_FEATURES] = {
     },
     [FEATURE_EXT_VMON2_OV] = {
         11,
-        0
+        NULL
     },
     [FEATURE_BUCK_BOOST_TEMP_PREWARNING] = {
         11,
@@ -501,7 +501,7 @@ const Pmic_DiagMUXFeatureMapping Pmic_dmuxFeatureMappings[DMUX_NUM_FEATURES] = {
     },
     [FEATURE_PLDO2_OVERTEMP_SHUTDOWN] = {
         12,
-        0
+        NULL
     },
     [FEATURE_VREG_OVP_MONITOR_1] = {
         12,

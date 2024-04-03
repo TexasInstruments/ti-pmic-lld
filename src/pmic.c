@@ -59,7 +59,7 @@
 /*                            Global Variables                                */
 /* ========================================================================== */
 
-extern PMIC_Config gPmicConfig[];
+extern PMIC_Config gPmicConfig[2];
 extern uint32_t gPmicConfigNum;
 
 /* ========================================================================== */
@@ -84,7 +84,8 @@ PMIC_Handle PMIC_open(uint32_t instanceId, const PMIC_Params *params) {
 
   if (instanceId < gPmicConfigNum) {
     config = &gPmicConfig[instanceId];
-    if (config->fxns && config->fxns->openFxn) {
+    bool res = (config->fxns) && (config->fxns->openFxn);
+    if (res == true) {
       int32_t status;
 
       status = config->fxns->openFxn(config, params);
@@ -112,7 +113,7 @@ int32_t PMIC_configure(PMIC_Handle handle) {
 
   PMIC_Config *config = (PMIC_Config *)handle;
 
-  if (config && config->fxns && config->fxns->configureFxn) {
+  if (config && ((config->fxns) && (config->fxns->configureFxn))) {
     config->fxns->configureFxn(config);
   }
 
@@ -129,7 +130,7 @@ int32_t PMIC_configure(PMIC_Handle handle) {
 void PMIC_close(PMIC_Handle handle) {
   PMIC_Config *config = (PMIC_Config *)handle;
 
-  if (config && config->fxns && config->fxns->closeFxn) {
+  if (config && ((config->fxns) && (config->fxns->closeFxn))) {
     config->fxns->closeFxn(config);
   }
 

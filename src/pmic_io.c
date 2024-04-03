@@ -69,7 +69,7 @@ Pmic_validateCorehandle(const Pmic_CoreHandle_t * pPmicCoreHandle);
 
 static int32_t Pmic_commIoReadData(Pmic_CoreHandle_t * pPmicCoreHandle,
     uint16_t * pRegAddr, uint8_t * pBuffLength,
-    uint8_t * pRxBuf, uint8_t * pInstType);
+    uint8_t * pRxBuf, uint8_t * pintType);
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
@@ -78,7 +78,7 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t * pPmicCoreHandle,
     uint16_t regAddr, uint8_t txData) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t buffLength = 1U;
-    uint8_t instType = PMIC_MAIN_INST;
+    uint8_t intType = (uint8_t)PMIC_MAIN_INST;
     uint8_t txBuf[PMIC_IO_BUF_SIZE] = {0U};
     uint16_t pmicRegAddr = regAddr;
     uint8_t data = txData;
@@ -95,7 +95,7 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t * pPmicCoreHandle,
         buffLength++;
 
         /* Set PAGE to txBuf[1] 7:5 bits with PAGE[2:0] */
-        txBuf[buffLength] = (uint8_t)(((pmicRegAddr >> 8U) & 0x7U) << 5U);
+        txBuf[buffLength] = (uint8_t)((uint8_t)((uint8_t)(pmicRegAddr >> 8U) & 0x7U) << 5U);
 
         /* Set R/W in txBuf[1] as bit-4, for Write Request */
         txBuf[buffLength] &= (uint8_t) ~PMIC_IO_REQ_RW;
@@ -107,14 +107,14 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t * pPmicCoreHandle,
 
         /* Set CRC data to txBuf[3], Bits 25-32 CRC */
         txBuf[buffLength] =
-            PMIC_calcCRC8((char) txBuf[0], (char) txBuf[1], (char) txBuf[2]);
+            PMIC_calcCRC8((uint8_t) txBuf[0], (uint8_t) txBuf[1], (uint8_t) txBuf[2]);
         /* Increment 1 more byte to store CRC8 */
         buffLength++;
     }
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
         pmicStatus = pPmicCoreHandle -> pFnPmicCommIoWrite(
-            pPmicCoreHandle, instType, pmicRegAddr, txBuf, buffLength);
+            pPmicCoreHandle, intType, pmicRegAddr, txBuf, buffLength);
     }
     return pmicStatus;
 }
@@ -137,12 +137,12 @@ Pmic_validateCorehandle(const Pmic_CoreHandle_t * pPmicCoreHandle) {
 
 static int32_t Pmic_commIoReadData(Pmic_CoreHandle_t * pPmicCoreHandle,
     uint16_t * pRegAddr, uint8_t * pBuffLength,
-    uint8_t * pRxBuf, uint8_t * pInstType) {
+    uint8_t * pRxBuf, uint8_t * pintType) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t buffLength = * pBuffLength;
     uint16_t pmicRegAddr = * pRegAddr;
-    uint8_t * tempCfg = pInstType;
-    uint8_t instType = * tempCfg;
+    uint8_t * tempCfg = pintType;
+    uint8_t intType = * tempCfg;
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
         /*
@@ -155,10 +155,10 @@ static int32_t Pmic_commIoReadData(Pmic_CoreHandle_t * pPmicCoreHandle,
 
         buffLength++;
         /* Set PAGE to pRxBuf[1] 7:5 bits, with PAGE[2:0] */
-        pRxBuf[buffLength] = (uint8_t)(((pmicRegAddr >> 8U) & 0x7U) << 5U);
+        pRxBuf[buffLength] = (uint8_t)((uint8_t)((uint8_t)(pmicRegAddr >> 8U) & 0x7U) << 5U);
 
         /* Set R/W in pRxBuf[1] as bit-4, for read Request */
-        pRxBuf[buffLength] |= PMIC_IO_REQ_RW;
+        pRxBuf[buffLength] |= (uint8_t)PMIC_IO_REQ_RW;
         buffLength++;
         /* Increment 1 more byte for 8-bit data read from PMIC register */
         buffLength++;
@@ -172,7 +172,7 @@ static int32_t Pmic_commIoReadData(Pmic_CoreHandle_t * pPmicCoreHandle,
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
         pmicStatus = pPmicCoreHandle -> pFnPmicCommIoRead(
-            pPmicCoreHandle, instType, pmicRegAddr, pRxBuf, buffLength);
+            pPmicCoreHandle, intType, pmicRegAddr, pRxBuf, buffLength);
     }
 
     return pmicStatus;
@@ -188,12 +188,12 @@ int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t * pPmicCoreHandle,
     uint8_t crcData[PMIC_IO_BUF_SIZE] = {
         0
     };
-    uint8_t instType = PMIC_MAIN_INST;
+    uint8_t intType = (uint8_t)PMIC_MAIN_INST;
     uint8_t crcDataLen = 0U;
     uint16_t pmicRegAddr = regAddr;
 
     pmicStatus = Pmic_commIoReadData(pPmicCoreHandle, & pmicRegAddr, & buffLength,
-        rxBuf, & instType);
+        rxBuf, & intType);
     if (PMIC_ST_SUCCESS != pmicStatus) {
         pmicStatus = PMIC_ST_ERR_FAIL;
     }
