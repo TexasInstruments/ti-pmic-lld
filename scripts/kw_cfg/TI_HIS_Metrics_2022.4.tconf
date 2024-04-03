@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<errors language="Any" version="2.0">
+    <categories name="TI HIS Metrics 2022.04" locale="en">
+		<error id="METRICS.W.Cyclomatic_v_G_"/>
+		<error id="METRICS.E.Cyclomatic_v_G_"/>
+		<error id="METRICS.W.Max_nesting_level_LEVEL"/>
+		<error id="METRICS.E.Max_nesting_level_LEVEL"/>
+		<error id="METRICS.W.Number_of_paths_PATH"/>
+		<error id="METRICS.E.Number_of_paths_PATH"/>
+		<error id="METRICS.W.Number_of_parameters_PARAM"/>
+		<error id="METRICS.E.Number_of_parameters_PARAM"/>
+    </categories>
+</errors>
