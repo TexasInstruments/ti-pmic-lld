@@ -64,117 +64,100 @@ Pmic_CoreHandle_t *pPmicCoreHandle_esm = NULL;
  * @param   void
  * @return  Returns the status of the initialization process.
  */
-int32_t test_pmic_esm_config_init(void)
-{
-    int32_t status                = PMIC_ST_SUCCESS;
+int32_t test_pmic_esm_config_init(void) {
+    int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreCfg_t pmicConfigData = {0U};
 
     /* Fill parameters to pmicConfigData */
-    pmicConfigData.pmicDeviceType      = PMIC_DEV_BB_TPS65386X;
-    pmicConfigData.validParams        |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
+    pmicConfigData.pmicDeviceType = PMIC_DEV_BB_TPS65386X;
+    pmicConfigData.validParams |= PMIC_CFG_DEVICE_TYPE_VALID_SHIFT;
 
-    pmicConfigData.commMode            = PMIC_INTF_SPI;
-    pmicConfigData.validParams        |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
+    pmicConfigData.commMode = PMIC_INTF_SPI;
+    pmicConfigData.validParams |= PMIC_CFG_COMM_MODE_VALID_SHIFT;
 
-    pmicConfigData.pFnPmicCommIoRead    = test_pmic_regRead;
-    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
+    pmicConfigData.pFnPmicCommIoRead = test_pmic_regRead;
+    pmicConfigData.validParams |= PMIC_CFG_COMM_IO_RD_VALID_SHIFT;
 
-    pmicConfigData.pFnPmicCommIoWrite   = test_pmic_regWrite;
-    pmicConfigData.validParams         |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
+    pmicConfigData.pFnPmicCommIoWrite = test_pmic_regWrite;
+    pmicConfigData.validParams |= PMIC_CFG_COMM_IO_WR_VALID_SHIFT;
 
-    pmicConfigData.pFnPmicCritSecStart  = test_pmic_criticalSectionStartFn;
-    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
+    pmicConfigData.pFnPmicCritSecStart = test_pmic_criticalSectionStartFn;
+    pmicConfigData.validParams |= PMIC_CFG_CRITSEC_START_VALID_SHIFT;
 
-    pmicConfigData.pFnPmicCritSecStop   = test_pmic_criticalSectionStopFn;
-    pmicConfigData.validParams         |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
+    pmicConfigData.pFnPmicCritSecStop = test_pmic_criticalSectionStopFn;
+    pmicConfigData.validParams |= PMIC_CFG_CRITSEC_STOP_VALID_SHIFT;
 
     status = test_pmic_appInit(&pPmicCoreHandle_esm, &pmicConfigData);
-    if (PMIC_ST_SUCCESS != status)
-    {
-        DebugP_log("%s(): %d: FAILED with status: %d\r\n",
-                 __func__, __LINE__, status);
+    if (PMIC_ST_SUCCESS != status) {
+        DebugP_log("%s(): %d: FAILED with status: %d\r\n", __func__, __LINE__,
+                   status);
     }
     return status;
 }
 
 /*!
  * @brief   Deinitialize the PMIC ESM configuration after testing.
- * This function deinitializes the PMIC ESM configuration after testing is completed.
- * It deinitializes the PMIC core handle and frees up any allocated memory.
+ * This function deinitializes the PMIC ESM configuration after testing is
+ * completed. It deinitializes the PMIC core handle and frees up any allocated
+ * memory.
  *
  * @param   void
  * @return  Returns the status of the deinitialization process.
  */
-int32_t test_pmic_esm_config_deinit(void)
-{
+int32_t test_pmic_esm_config_deinit(void) {
     int32_t status = PMIC_ST_SUCCESS;
 
     status = Pmic_deinit(pPmicCoreHandle_esm);
     free(pPmicCoreHandle_esm);
     SemaphoreP_destruct(&gpmicCoreObj);
-    if (PMIC_ST_SUCCESS != status)
-    {
-        DebugP_log("%s(): %d: FAILED with status: %d\r\n",
-                 __func__, __LINE__,  status);
+    if (PMIC_ST_SUCCESS != status) {
+        DebugP_log("%s(): %d: FAILED with status: %d\r\n", __func__, __LINE__,
+                   status);
     }
     return status;
 }
 
 /*!
  * @brief   Test the functionality of starting and stopping ESM for MCU mode.
- * This function tests the functionality of starting and stopping the ESM for MCU mode.
- * It verifies the behavior of starting and stopping ESM and enabling/disabling it.
+ * This function tests the functionality of starting and stopping the ESM for
+ * MCU mode. It verifies the behavior of starting and stopping ESM and
+ * enabling/disabling it.
  *
  * @param   void
  * @return  NULL
  */
-static void test_pmic_esm_startEsm_esmMcuStart(void)
-{
+static void test_pmic_esm_startEsm_esmMcuStart(void) {
     uint32_t pmicStatus = PMIC_ST_SUCCESS;
-    bool esmType       = PMIC_ESM_MODE_MCU;
-    bool esmState      = PMIC_ESM_START;
+    bool esmState = PMIC_ESM_START;
 
-
-    pmicStatus = Pmic_esmStart(pPmicCoreHandle_esm, esmType, esmState);
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
+    pmicStatus = Pmic_esmStart(pPmicCoreHandle_esm, esmState);
+    if (PMIC_ST_SUCCESS == pmicStatus) {
         DebugP_log("Test Passed \r\n");
-    }
-    else
-    {
+    } else {
         DebugP_log("Test Failed \r\n");
     }
 
-    pmicStatus = Pmic_esmEnable(pPmicCoreHandle_esm, esmType, PMIC_ESM_ENABLE);
+    pmicStatus = Pmic_esmEnable(pPmicCoreHandle_esm, PMIC_ESM_ENABLE);
 
-    if(PMIC_ST_ERR_ESM_STARTED == pmicStatus)
-    {
+    if (PMIC_ST_ERR_ESM_STARTED == pmicStatus) {
         DebugP_log("Expected Result \n");
-    }
-    else
-    {
+    } else {
         DebugP_log("Unexpected Result\n");
     }
 
     esmState = PMIC_ESM_STOP;
-    pmicStatus = Pmic_esmStart(pPmicCoreHandle_esm,esmType, esmState);
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
+    pmicStatus = Pmic_esmStart(pPmicCoreHandle_esm, esmState);
+    if (PMIC_ST_SUCCESS == pmicStatus) {
         DebugP_log("Test Passed \r\n");
-    }
-    else
-    {
+    } else {
         DebugP_log("Test Failed \r\n");
     }
 
-    pmicStatus = Pmic_esmEnable(pPmicCoreHandle_esm, esmType, PMIC_ESM_ENABLE);
+    pmicStatus = Pmic_esmEnable(pPmicCoreHandle_esm, PMIC_ESM_ENABLE);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
+    if (PMIC_ST_SUCCESS == pmicStatus) {
         DebugP_log("Test Passed \r\n");
-    }
-    else
-    {
+    } else {
         DebugP_log("Test Failed \r\n");
     }
 }
@@ -188,22 +171,16 @@ static void test_pmic_esm_startEsm_esmMcuStart(void)
  * @param   void
  * @return  NULL
  */
-static void test_pmic_esm_enableEsmPrmValTest_handle(void)
-{
+static void test_pmic_esm_enableEsmPrmValTest_handle(void) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    bool esmType       = PMIC_ESM_MODE_SOC;
-    bool esmToggle     = PMIC_ESM_ENABLE;
+    bool esmToggle = PMIC_ESM_ENABLE;
 
-    pmicStatus = Pmic_esmEnable(pPmicCoreHandle_esm, esmType, esmToggle);
-    if(PMIC_ST_ERR_INV_HANDLE == pmicStatus)
-    {
+    pmicStatus = Pmic_esmEnable(pPmicCoreHandle_esm, esmToggle);
+    if (PMIC_ST_ERR_INV_HANDLE == pmicStatus) {
         DebugP_log("Expected Result \n");
-    }
-    else
-    {
+    } else {
         DebugP_log("Unexpected Result\n");
     }
-
 }
 
 /*!
@@ -215,38 +192,27 @@ static void test_pmic_esm_enableEsmPrmValTest_handle(void)
  * @param   void
  * @return  NULL
  */
-static void test_pmic_esm_setConfigurationPrmValTest_hmaxValue(void)
-{
+static void test_pmic_esm_setConfigurationPrmValTest_hmaxValue(void) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    bool esmType       = PMIC_ESM_MODE_MCU;
-    Pmic_EsmCfg_t esmCfg =
-    {
-        PMIC_ESM_CFG_DELAY1_VALID_SHIFT,
-        4096U,
-        2048U,
-        30U,
-        30U,
-        30U,
-        30U,
-        4U,
-        PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE,
-        PMIC_ESM_LEVEL_MODE
-    };
-
+    Pmic_EsmCfg_t esmCfg = {PMIC_ESM_CFG_DELAY1_VALID_SHIFT,
+                            4096U,
+                            2048U,
+                            30U,
+                            30U,
+                            30U,
+                            30U,
+                            4U,
+                            PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE,
+                            PMIC_ESM_LEVEL_MODE};
 
     esmCfg.validParams = PMIC_ESM_CFG_HMAX_VALID_SHIFT;
     esmCfg.esmHmax_us = 3850U;
-    pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle_esm, esmType, esmCfg);
-    if(PMIC_ST_ERR_INV_ESM_VAL == pmicStatus)
-    {
+    pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle_esm, esmCfg);
+    if (PMIC_ST_ERR_INV_ESM_VAL == pmicStatus) {
         DebugP_log("Expected Result \n");
-    }
-    else
-    {
+    } else {
         DebugP_log("Unexpected Result\n");
     }
-
-
 }
 
 /*!
@@ -258,37 +224,27 @@ static void test_pmic_esm_setConfigurationPrmValTest_hmaxValue(void)
  * @param   void
  * @return  NULL
  */
-static void test_pmic_esm_setConfigurationPrmValTest_hminValue(void)
-{
+static void test_pmic_esm_setConfigurationPrmValTest_hminValue(void) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    bool esmType       = PMIC_ESM_MODE_MCU;
-    Pmic_EsmCfg_t esmCfg =
-    {
-        PMIC_ESM_CFG_DELAY1_VALID_SHIFT,
-        4096U,
-        2048U,
-        30U,
-        30U,
-        30U,
-        30U,
-        4U,
-        PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE,
-        PMIC_ESM_LEVEL_MODE
-    };
-
+    Pmic_EsmCfg_t esmCfg = {PMIC_ESM_CFG_DELAY1_VALID_SHIFT,
+                            4096U,
+                            2048U,
+                            30U,
+                            30U,
+                            30U,
+                            30U,
+                            4U,
+                            PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE,
+                            PMIC_ESM_LEVEL_MODE};
 
     esmCfg.validParams = PMIC_ESM_CFG_HMIN_VALID_SHIFT;
     esmCfg.esmHmin_us = 3850U;
-    pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle_esm, esmType, esmCfg);
-    if(PMIC_ST_ERR_INV_ESM_VAL == pmicStatus)
-    {
+    pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle_esm, esmCfg);
+    if (PMIC_ST_ERR_INV_ESM_VAL == pmicStatus) {
         DebugP_log("Expected Result \n");
-    }
-    else
-    {
+    } else {
         DebugP_log("Unexpected Result\n");
     }
-
 }
 
 /*!
@@ -300,37 +256,27 @@ static void test_pmic_esm_setConfigurationPrmValTest_hminValue(void)
  * @param   void
  * @return  NULL
  */
-static void test_pmic_esm_setConfigurationPrmValTest_lmaxValue(void)
-{
+static void test_pmic_esm_setConfigurationPrmValTest_lmaxValue(void) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    bool esmType       = PMIC_ESM_MODE_MCU;
-    Pmic_EsmCfg_t esmCfg =
-    {
-        PMIC_ESM_CFG_DELAY1_VALID_SHIFT,
-        4096U,
-        2048U,
-        30U,
-        30U,
-        30U,
-        30U,
-        4U,
-        PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE,
-        PMIC_ESM_LEVEL_MODE
-    };
-
+    Pmic_EsmCfg_t esmCfg = {PMIC_ESM_CFG_DELAY1_VALID_SHIFT,
+                            4096U,
+                            2048U,
+                            30U,
+                            30U,
+                            30U,
+                            30U,
+                            4U,
+                            PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE,
+                            PMIC_ESM_LEVEL_MODE};
 
     esmCfg.validParams = PMIC_ESM_CFG_LMAX_VALID_SHIFT;
     esmCfg.esmLmax_us = 3850U;
-    pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle_esm, esmType, esmCfg);
-    if(PMIC_ST_ERR_INV_ESM_VAL == pmicStatus)
-    {
+    pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle_esm, esmCfg);
+    if (PMIC_ST_ERR_INV_ESM_VAL == pmicStatus) {
         DebugP_log("Expected Result \n");
-    }
-    else
-    {
+    } else {
         DebugP_log("Unexpected Result\n");
     }
-
 }
 
 /*!
@@ -342,72 +288,58 @@ static void test_pmic_esm_setConfigurationPrmValTest_lmaxValue(void)
  * @param   void
  * @return  NULL
  */
-static void test_pmic_esm_setConfigurationPrmValTest_lminValue(void)
-{
+static void test_pmic_esm_setConfigurationPrmValTest_lminValue(void) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    bool esmType       = PMIC_ESM_MODE_MCU;
-    Pmic_EsmCfg_t esmCfg =
-    {
-        PMIC_ESM_CFG_DELAY1_VALID_SHIFT,
-        4096U,
-        2048U,
-        30U,
-        30U,
-        30U,
-        30U,
-        4U,
-        PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE,
-        PMIC_ESM_LEVEL_MODE
-    };
+    Pmic_EsmCfg_t esmCfg = {PMIC_ESM_CFG_DELAY1_VALID_SHIFT,
+                            4096U,
+                            2048U,
+                            30U,
+                            30U,
+                            30U,
+                            30U,
+                            4U,
+                            PMIC_ESM_ERR_EN_DRV_CLEAR_ENABLE,
+                            PMIC_ESM_LEVEL_MODE};
 
     esmCfg.validParams = PMIC_ESM_CFG_LMIN_VALID_SHIFT;
     esmCfg.esmLmin_us = 3850U;
-    pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle_esm, esmType, esmCfg);
-    if(PMIC_ST_ERR_INV_ESM_VAL == pmicStatus)
-    {
+    pmicStatus = Pmic_esmSetConfiguration(pPmicCoreHandle_esm, esmCfg);
+    if (PMIC_ST_ERR_INV_ESM_VAL == pmicStatus) {
         DebugP_log("Expected Result \n");
-    }
-    else
-    {
+    } else {
         DebugP_log("Unexpected Result\n");
     }
-
-
 }
 
 /*!
- * @brief   Parameter validation test for getting ESM configuration with valid parameters.
- * This function performs parameter validation tests for getting ESM configuration
- * with valid parameters. It checks for insufficient configurations and ensures
- * the API behavior is as expected.
+ * @brief   Parameter validation test for getting ESM configuration with valid
+ * parameters. This function performs parameter validation tests for getting ESM
+ * configuration with valid parameters. It checks for insufficient
+ * configurations and ensures the API behavior is as expected.
  *
  * @param   void
  * @return  NULL
  */
-static void test_pmic_esm_getconfiguration_PrmValTest_validParams(void)
-{
+static void test_pmic_esm_getconfiguration_PrmValTest_validParams(void) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    bool esmType       = PMIC_ESM_MODE_MCU;
     Pmic_EsmCfg_t esmCfg_rd = {0U};
 
-
-    pmicStatus = Pmic_esmGetConfiguration(pPmicCoreHandle_esm, esmType, &esmCfg_rd);
-    if(pmicStatus == PMIC_ST_ERR_INSUFFICIENT_CFG)
-    {
+    pmicStatus =
+        Pmic_esmGetConfiguration(pPmicCoreHandle_esm, &esmCfg_rd);
+    if (pmicStatus == PMIC_ST_ERR_INSUFFICIENT_CFG) {
         DebugP_log("Insufficient Configurations \r\n");
-    }
-    else
-    {void test_pmic_set_scratchpad();
-    void test_pmic_get_scratchpad();
-    void test_pmic_set_spreadSpectrum();
-    void test_pmic_clear_spreadSpectrum();
-    void test_pmic_get_spreadSpectrum();
-    void test_pmic_deviceonbus();
-    void test_pmic_get_common_stat();
-    void test_pmic_get_diagout();
-    void test_pmic_enable_diagout();
-    void test_pmic_get_safeout_cfg();
-    void test_pmic_enable_safeout_cfg();
+    } else {
+        void test_pmic_set_scratchpad();
+        void test_pmic_get_scratchpad();
+        void test_pmic_set_spreadSpectrum();
+        void test_pmic_clear_spreadSpectrum();
+        void test_pmic_get_spreadSpectrum();
+        void test_pmic_deviceonbus();
+        void test_pmic_get_common_stat();
+        void test_pmic_get_diagout();
+        void test_pmic_enable_diagout();
+        void test_pmic_get_safeout_cfg();
+        void test_pmic_enable_safeout_cfg();
 
         DebugP_log("Sufficient Configurations \r\n");
     }
@@ -421,187 +353,152 @@ static void test_pmic_esm_getconfiguration_PrmValTest_validParams(void)
  * @param   void
  * @return  NULL
  */
-static void test_Pmic_esmGetErrCnt(void)
-{
-    int32_t pmicStatus = PMIC_ST_SUCCESS;;
-    uint8_t esmErrCnt  = 0U;
-    bool esmType       = PMIC_ESM_MODE_SOC;
+static void test_Pmic_esmGetErrCnt(void) {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+    ;
+    uint8_t esmErrCnt = 0U;
 
-    pmicStatus = Pmic_esmGetErrCnt(pPmicCoreHandle_esm, esmType, &esmErrCnt);
+    pmicStatus = Pmic_esmGetErrCnt(pPmicCoreHandle_esm, &esmErrCnt);
 
-    if(PMIC_ST_ERR_INV_DEVICE == pmicStatus)
-    {
+    if (PMIC_ST_ERR_INV_DEVICE == pmicStatus) {
         DebugP_log("Expected Result \n");
-    }
-    else
-    {
+    } else {
         DebugP_log("Unexpected Result\n");
     }
-
 }
 
 /*!
  * @brief   Test the functionality of getting ESM status for MCU mode.
  * This function tests the functionality of getting ESM status for MCU mode.
- * It verifies the behavior of starting and stopping ESM and checking its status.
+ * It verifies the behavior of starting and stopping ESM and checking its
+ * status.
  *
  * @param   void
  * @return  NULL
  */
-static void test_pmic_esm_getStatusEsmMcu(void)
-{
+static void test_pmic_esm_getStatusEsmMcu(void) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    bool esmType       = PMIC_ESM_MODE_MCU;
-    bool esmState      = PMIC_ESM_START;
-    bool esmState_rd;
+    uint8_t esmState_rd;
 
+    pmicStatus = Pmic_esmStart(pPmicCoreHandle_esm, PMIC_ESM_START);
 
-    pmicStatus = Pmic_esmStart(pPmicCoreHandle_esm, esmType, esmState);
-    
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
+    if (PMIC_ST_SUCCESS == pmicStatus) {
         DebugP_log("Expected Result \n");
-    }
-    else
-    {
+    } else {
         DebugP_log("Unexpected Result\n");
     }
 
-    pmicStatus = Pmic_esmEnable(pPmicCoreHandle_esm, esmType, PMIC_ESM_ENABLE);
-    if(PMIC_ST_ERR_ESM_STARTED == pmicStatus)
-    {
+    pmicStatus = Pmic_esmEnable(pPmicCoreHandle_esm, PMIC_ESM_ENABLE);
+    if (PMIC_ST_ERR_ESM_STARTED == pmicStatus) {
         DebugP_log("Expected Result \n");
-    }
-    else
-    {
+    } else {
         DebugP_log("Unexpected Result\n");
     }
 
-    pmicStatus = Pmic_esmGetStatus(pPmicCoreHandle_esm, esmType, &esmState_rd);
+    pmicStatus = Pmic_esmGetStatus(pPmicCoreHandle_esm, &esmState_rd);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
+    if (PMIC_ST_SUCCESS == pmicStatus) {
         DebugP_log("Expected Result \n");
-    }
-    else
-    {
+    } else {
         DebugP_log("Unexpected Result\n");
     }
 
-    if(PMIC_ESM_START == esmState_rd)
-    {
+    if (PMIC_ESM_START == esmState_rd) {
         DebugP_log("Expected Result \n");
-    }
-    else
-    {
+    } else {
         DebugP_log("Unexpected Result\n");
     }
 
-    esmState = PMIC_ESM_STOP;
-    pmicStatus = Pmic_esmStart(pPmicCoreHandle_esm,esmType, esmState);
+    pmicStatus = Pmic_esmStart(pPmicCoreHandle_esm, PMIC_ESM_STOP);
 
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
+    if (PMIC_ST_SUCCESS == pmicStatus) {
         DebugP_log("Expected Result \n");
-    }
-    else
-    {
+    } else {
         DebugP_log("Unexpected Result\n");
     }
 
-
-    pmicStatus = Pmic_esmEnable(pPmicCoreHandle_esm, esmType, PMIC_ESM_ENABLE);
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
+    pmicStatus = Pmic_esmEnable(pPmicCoreHandle_esm, PMIC_ESM_ENABLE);
+    if (PMIC_ST_SUCCESS == pmicStatus) {
         DebugP_log("Expected Result \n");
-    }
-    else
-    {
+    } else {
         DebugP_log("Unexpected Result\n");
     }
 
-    pmicStatus = Pmic_esmGetStatus(pPmicCoreHandle_esm, esmType, &esmState_rd);
-    if(PMIC_ST_SUCCESS == pmicStatus)
-    {
+    pmicStatus = Pmic_esmGetStatus(pPmicCoreHandle_esm, &esmState_rd);
+    if (PMIC_ST_SUCCESS == pmicStatus) {
         DebugP_log("Expected Result \n");
-    }
-    else
-    {
-        DebugP_log("Unexpected Result\n");
-    }
-    
-    if(PMIC_ESM_STOP == esmState_rd)
-    {
-        DebugP_log("Expected Result \n");
-    }
-    else
-    {
+    } else {
         DebugP_log("Unexpected Result\n");
     }
 
+    if (PMIC_ESM_STOP == esmState_rd) {
+        DebugP_log("Expected Result \n");
+    } else {
+        DebugP_log("Unexpected Result\n");
+    }
 }
 
 /*!
  * @brief   Main function for testing PMIC ESM.
- * This function serves as the main entry point for testing PMIC ESM functionality.
- * It initializes the necessary drivers and hardware, performs various tests,
- * and then deinitializes the configuration.
+ * This function serves as the main entry point for testing PMIC ESM
+ * functionality. It initializes the necessary drivers and hardware, performs
+ * various tests, and then deinitializes the configuration.
  *
  * @param args Arguments passed to the function (not used).
  * @return void* Returns NULL when testing is completed.
  */
 void *test_pmic_esm(void *args) {
-  Drivers_open();
-  Board_driversOpen();
+    Drivers_open();
+    Board_driversOpen();
 
-  mcspi_mux_pmic();
+    mcspi_mux_pmic();
 
-  /* Initialization */
-  DebugP_log("Initializing...\r\n");
-  test_pmic_esm_config_init();
-  DebugP_log("Initialization Completed!\r\n\n");
+    /* Initialization */
+    DebugP_log("Initializing...\r\n");
+    test_pmic_esm_config_init();
+    DebugP_log("Initialization Completed!\r\n\n");
 
-  /* Lock config register initially */
-  DebugP_log("[INIT] Configuration Register Lock Sequence:\r\n");
-  test_pmic_LockUnlock(pPmicCoreHandle_esm, 0);
+    /* Lock config register initially */
+    DebugP_log("[INIT] Configuration Register Lock Sequence:\r\n");
+    test_pmic_LockUnlock(pPmicCoreHandle_esm, 0);
 
-  /*API to unlock configuration register */
-  DebugP_log("[INIT] Configuration Register Unlock Sequence:\r\n");
-  test_pmic_LockUnlock(pPmicCoreHandle_esm, 1);
+    /*API to unlock configuration register */
+    DebugP_log("[INIT] Configuration Register Unlock Sequence:\r\n");
+    test_pmic_LockUnlock(pPmicCoreHandle_esm, 1);
 
-  test_pmic_esm_startEsm_esmMcuStart();
-  delay(1000);
+    test_pmic_esm_startEsm_esmMcuStart();
+    delay(1000);
 
-  test_pmic_esm_enableEsmPrmValTest_handle();
-  delay(1000);
+    test_pmic_esm_enableEsmPrmValTest_handle();
+    delay(1000);
 
-  test_pmic_esm_setConfigurationPrmValTest_hmaxValue();
-  delay(1000);
+    test_pmic_esm_setConfigurationPrmValTest_hmaxValue();
+    delay(1000);
 
-  test_pmic_esm_setConfigurationPrmValTest_hminValue();
-  delay(1000);
+    test_pmic_esm_setConfigurationPrmValTest_hminValue();
+    delay(1000);
 
-  test_pmic_esm_setConfigurationPrmValTest_lmaxValue();
-  delay(1000);
+    test_pmic_esm_setConfigurationPrmValTest_lmaxValue();
+    delay(1000);
 
-  test_pmic_esm_setConfigurationPrmValTest_lminValue();
-  delay(1000);
+    test_pmic_esm_setConfigurationPrmValTest_lminValue();
+    delay(1000);
 
-  test_pmic_esm_getconfiguration_PrmValTest_validParams();
-  delay(1000);
+    test_pmic_esm_getconfiguration_PrmValTest_validParams();
+    delay(1000);
 
-  test_Pmic_esmGetErrCnt();
-  delay(1000);
+    test_Pmic_esmGetErrCnt();
+    delay(1000);
 
-  test_pmic_esm_getStatusEsmMcu();
-  delay(1000);
+    test_pmic_esm_getStatusEsmMcu();
+    delay(1000);
 
-  /* Deinitialization */
-  test_pmic_esm_config_deinit();
-  DebugP_log("Deinitialization Completed\r\n");
+    /* Deinitialization */
+    test_pmic_esm_config_deinit();
+    DebugP_log("Deinitialization Completed\r\n");
 
-  Board_driversClose();
-  Drivers_close();
+    Board_driversClose();
+    Drivers_close();
 
-  return NULL;
+    return NULL;
 }

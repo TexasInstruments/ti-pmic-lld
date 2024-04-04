@@ -340,8 +340,6 @@ void test_power_setBuckBst_Level_Cfg(void) {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
-
 void test_pmic_set_ldoVmonCtrl() {
   int32_t pmicStatus = PMIC_ST_SUCCESS;
   Pmic_lpVMonCtrlReg_t *lpVMonCtrlCfg = NULL;
@@ -672,6 +670,47 @@ void test_pmic_ldoVmon_deglitch() {
   }
 }
 
+void test_pmic_setLdo() {
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+
+    uint8_t ldoNumber = 0U;
+    uint8_t ldoCtrlFeature = PMIC_LDO_ENABLED_LDO_MODE;
+    Pmic_ldoCfgReg_t ldoCfg_exp, ldoCfg_act;
+    Pmic_powerRsrcCfg_t *pwrRscCfg = NULL;
+    Pmic_powerRsrcRegCfg_t *setLDOpwrRscRegCfg = NULL;
+
+    setLDOpwrRscRegCfg->ldo1ConfigRegAddr = PMIC_LDO1_CFG_REGADDR;
+    setLDOpwrRscRegCfg->ldo2ConfigRegAddr = PMIC_LDO2_CFG_REGADDR;
+    setLDOpwrRscRegCfg->ldo3ConfigRegAddr = PMIC_LDO3_CFG_REGADDR;
+    setLDOpwrRscRegCfg->ldo4ConfigRegAddr = PMIC_LDO4_CFG_REGADDR;
+    setLDOpwrRscRegCfg->ldoCtrlRegAddr = PMIC_LDO_CTRL_REGADDR;
+
+    ldoCfg_exp.ldoRegShift = LDO_LVL_CFG_SHIFT;
+    ldoCfg_exp.ldoRegMask = LDO_LVL_CFG_MASK;
+
+    /* Set LDO 3.3V configurations */
+    ldoNumber = PMIC_LDO2;
+    ldoCfg_exp.ldoLvlCfg = PMIC_LDO_PLDO_LVL_CFG_VOLT_3_3V;
+    setLDOpwrRscRegCfg->bitPosVal = LDO1_CTRL_SHIFT;
+    setLDOpwrRscRegCfg->bitMaskVal = LDO1_CTRL_MASK;
+    pmicStatus += Pmic_powerSetLdoConfigRegister(
+            pPmicCoreHandle_power, ldoNumber, &ldoCfg_exp, pwrRscCfg, setLDOpwrRscRegCfg);
+    if (PMIC_ST_SUCCESS == pmicStatus) {
+        pmicStatus = Pmic_powerGetLdoConfigRegister(
+                pPmicCoreHandle_power, ldoNumber, &ldoCfg_act, pwrRscCfg, setLDOpwrRscRegCfg);
+    }
+
+    if(ldoCfg_exp.ldoLvlCfg == ldoCfg_act.ldoLvlCfg) {
+        pmicStatus = Pmic_setLdoCtrl(pPmicCoreHandle_power, ldoCtrlFeature, setLDOpwrRscRegCfg);
+        if(PMIC_ST_SUCCESS == pmicStatus)
+        {
+            DebugP_log("Test Passed: Set LDO Configuration passed!\r\n");
+        } else {
+            DebugP_log("Test Failed: Set LDO Configuration failed!\r\n");
+        }
+    }
+}
+
 void test_low_powerMode_pmic() {
   test_pmic_get_ldoVmonCtrl();
   test_pmic_set_ldoVmonCtrl();
@@ -724,6 +763,7 @@ void *test_pmic_power(void *args) {
   DebugP_log("[INIT] Configuration Register Unlock Sequence:\r\n");
   test_pmic_LockUnlock(pPmicCoreHandle_power, 1);
 
+  /* Commenting for quick test
   test_power_setBuckBst_PGood_Cfg();
   delay(1000);
 
@@ -736,8 +776,6 @@ void *test_pmic_power(void *args) {
   test_power_setBuckBst_Level_Cfg();
   delay(1000);
 
-  /* Power Test Cases */
-  DebugP_log("[TEST] :\r\n");
   test_low_powerMode_pmic();
   delay(1000);
 
@@ -746,6 +784,10 @@ void *test_pmic_power(void *args) {
 
   test_pmic_ldoVmon_deglitch();
   delay(1000);
+  */
+
+  DebugP_log("[TEST] Set LDO Configuration :\r\n");
+  test_pmic_setLdo();
 
   /* De-initialization */
   test_pmic_power_config_deinit();

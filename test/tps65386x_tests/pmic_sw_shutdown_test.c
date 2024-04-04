@@ -115,40 +115,40 @@ void test_pmic_get_offstatestat1()
     }
     else
     {
-        if((pPmicOffStateStat1Config -> initTMO) == PMIC_OFF_STATE_STAT1_INIT_AN_TMO_DATA1) {
+        if((pPmicOffStateStat1Config -> initTMO) == PMIC_INIT_AN_TMO_DATA1) {
             DebugP_log("Device timeout during INIT state flag : The device has not been in the unpowered state since this bit was cleared\r\n\n");
         }
         else    {
             DebugP_log("Device timeout during INIT state flag : ERROR!!! - The INIT_AN_TMO timeout indicates a powerup issue where the digital did not start before the timeout\r\n\n");
         }
-        if((pPmicOffStateStat1Config -> internalOV) == PMIC_OFF_STATE_STAT1_INTERNAL_OV_DATA1) {
+        if((pPmicOffStateStat1Config -> internalOV) == PMIC_INTERNAL_OV_DATA1) {
             DebugP_log("Device Power-On error flag : The device has not been in the unpowered state since this bit was cleared\r\n\n");
         }
         else    {
             DebugP_log("Device Power-On error flag : ERROR!!! - An internal OV was detected in V1P8, VREG or VSAFETY\r\n\n");
         }
-        if((pPmicOffStateStat1Config -> ClkErr) == PMIC_OFF_STATE_STAT1_CLK_ERR_DATA1) {
+        if((pPmicOffStateStat1Config -> ClkErr) == PMIC_CLK_ERR_DATA1) {
             DebugP_log("No clock failure(No system clock or low power clock or low power clock error detected)\r\n\n");
         }
         else    {
             DebugP_log("ERROR!!! - Low power or system clock error occurred\r\n\n");
         }
-        if((pPmicOffStateStat1Config -> firstPWROn) == PMIC_OFF_STATE_STAT1_FIRST_PWR_ON_DATA1) {
+        if((pPmicOffStateStat1Config -> firstPWROn) == PMIC_FIRST_PWR_ON_DATA1) {
             DebugP_log("The device has not been in the unpowered state since this bit was cleared\r\n\n");
         }
-        if((pPmicOffStateStat1Config -> OffprotEvt) == PMIC_OFF_STATE_STAT1_OFF_PROT_EVT_DATA1) {
+        if((pPmicOffStateStat1Config -> OffprotEvt) == PMIC_OFF_PROT_EVT_DATA1) {
             DebugP_log("No OFF state protection event error\r\n\n");
         }
         else    {
             DebugP_log("ERROR!!! - OFF state protection event error\r\n\n");
         }
-        if((pPmicOffStateStat1Config -> OffinitEvtErr) == PMIC_OFF_STATE_STAT1_OFF_INT_EVT_ERR_DATA1) {
+        if((pPmicOffStateStat1Config -> OffinitEvtErr) == PMIC_OFF_INT_EVT_ERR_DATA1) {
             DebugP_log("No OFF state interrupt event error\r\n\n");
         }
         else    {
             DebugP_log("ERROR!!! - OFF state interrupt event error\r\n\n");
         }
-        if((pPmicOffStateStat1Config -> normalOff) == PMIC_OFF_STATE_STAT1_NORMAL_OFF_DATA1) {
+        if((pPmicOffStateStat1Config -> normalOff) == PMIC_NORMAL_OFF_DATA1) {
             DebugP_log("No clock failure\r\n\n");
         }
         else    {
@@ -169,49 +169,49 @@ void test_pmic_get_offstatestat2()
     }
     else
     {
-        if((pPmicOffStateStat2Config -> BBIlimErr) == PMIC_OFF_STATE_STAT2_BB_PK_ILIM_ERR_DATA1) {
+        if((pPmicOffStateStat2Config -> BBIlimErr) == PMIC_BB_PK_ILIM_ERR_DATA1) {
             DebugP_log("Buck-boost average current-limit error flag : No current-limit\r\n\n");
         }
         else    {
             DebugP_log("Buck-boost average current-limit error flag : ERROR!!! - Current-limit\r\n\n");
         }
-        if((pPmicOffStateStat2Config -> BBTMO) == PMIC_OFF_STATE_STAT2_BB_BST_TMO_DATA1) {
+        if((pPmicOffStateStat2Config -> BBTMO) == PMIC_BB_BST_TMO_DATA1) {
             DebugP_log("OFF state caused by boost mode time-out event from Buck-Boost flag : No buck-boost boost mode timeout\r\n\n");
         }
         else    {
             DebugP_log("OFF state caused by boost mode time-out event from Buck-Boost flag : ERROR!!! - Buck-boost operated in boost timeout event\r\n\n");
         }
-        if((pPmicOffStateStat2Config -> BBOVPErr) == PMIC_OFF_STATE_STAT2_BB_OVP_ERR_DATA1) {
+        if((pPmicOffStateStat2Config -> BBOVPErr) == PMIC_BB_OVP_ERR_DATA1) {
             DebugP_log("Buck-Boost overvoltage protection flag : No overvoltage\r\n\n");
         }
         else    {
             DebugP_log("Buck-Boost overvoltage protection flag : ERROR!!! - Overvoltage\r\n\n");
         }
-        if((pPmicOffStateStat2Config -> VbatOVPErr) == PMIC_OFF_STATE_STAT2_VBAT_OVP_ERR_DATA1) {
+        if((pPmicOffStateStat2Config -> VbatOVPErr) == PMIC_VBAT_OVP_ERR_DATA1) {
             DebugP_log("VBAT overvoltage protection error flag : No overvoltage\r\n\n");
         }
         else    {
             DebugP_log("VBAT overvoltage protection error flag : ERROR!!! - Overvoltage\r\n\n");
         }
-        if((pPmicOffStateStat2Config -> BGXMErr) == PMIC_OFF_STATE_STAT2_BGXM_ERR_DATA1) {
+        if((pPmicOffStateStat2Config -> BGXMErr) == PMIC_BGXM_ERR_DATA1) {
             DebugP_log("Bandgap cross monitor (BG XMON) protection error flag : No BGXM error\r\n\n");
         }
         else    {
             DebugP_log("Bandgap cross monitor (BG XMON) protection error flag : ERROR!!! - BGXM error\r\n\n");
         }
-        if((pPmicOffStateStat2Config -> RstMcuTMO) == PMIC_OFF_STATE_STAT2_RST_MCU_TMO_DATA1) {
+        if((pPmicOffStateStat2Config -> RstMcuTMO) == PMIC_RST_MCU_TMO_DATA1) {
             DebugP_log("OFF state caused due to RESET-MCU state time-out event flag : No RESET-MCU Timeout\r\n\n");
         }
         else    {
             DebugP_log("OFF state caused due to RESET-MCU state time-out event flag : ERROR!!! - RESET-MCU Timeout\r\n\n");
         }
-        if((pPmicOffStateStat2Config -> SysClkErr) == PMIC_OFF_STATE_STAT2_SYS_CLK_ERR_PROT_DATA1) {
+        if((pPmicOffStateStat2Config -> SysClkErr) == PMIC_SYS_CLK_ERR_PROT_DATA1) {
             DebugP_log("System Clock Protection error flag : No clock failure\r\n\n");
         }
         else    {
             DebugP_log("System Clock Protection error flag : ERROR!!! - Clock failure\r\n\n");
         }
-        if((pPmicOffStateStat2Config -> CRCErr) == PMIC_OFF_STATE_STAT2_CRC_ERR_DATA1) {
+        if((pPmicOffStateStat2Config -> CRCErr) == PMIC_CRC_ERR_DATA1) {
             DebugP_log("OFF state caused by a CRC error flag : No CRC Error\r\n\n");
         }
         else    {
@@ -254,7 +254,7 @@ void test_pmic_get_thermalstat1()
         else    {
             DebugP_log("LDO4 overtemperature thermal shutdown flag: ERROR!!! - Overtemperature Thermal Shutdown\r\n\n");
         }
-        if((pPmicThermalStat1Config -> ldo4TpreErr) == PMIC_THERMAL_STAT_T_PRE_ERR_DATA1) {
+        if((pPmicThermalStat1Config -> ldo4TpreErr) == PMIC_THERMAL_STAT_TPRE_ER_DATA1) {
             DebugP_log("LDO4 temperature prewarning flag: No overtemperature\r\n\n");
         }
         else    {
@@ -266,7 +266,7 @@ void test_pmic_get_thermalstat1()
         else    {
             DebugP_log("LDO3 overtemperature thermal shutdown flag: ERROR!!! - Overtemperature Thermal Shutdown\r\n\n");
         }
-        if((pPmicThermalStat1Config -> ldo3TpreErr) == PMIC_THERMAL_STAT_T_PRE_ERR_DATA1) {
+        if((pPmicThermalStat1Config -> ldo3TpreErr) == PMIC_THERMAL_STAT_TPRE_ER_DATA1) {
             DebugP_log("LDO3 temperature prewarning flag: No overtemperature\r\n\n");
         }
         else    {
@@ -278,7 +278,7 @@ void test_pmic_get_thermalstat1()
         else    {
             DebugP_log("LDO2 overtemperature thermal shutdown flag: ERROR!!! - Overtemperature Thermal Shutdown\r\n\n");
         }
-        if((pPmicThermalStat1Config -> ldo2TpreErr) == PMIC_THERMAL_STAT_T_PRE_ERR_DATA1) {
+        if((pPmicThermalStat1Config -> ldo2TpreErr) == PMIC_THERMAL_STAT_TPRE_ER_DATA1) {
             DebugP_log("LDO2 temperature prewarning flag: No overtemperature\r\n\n");
         }
         else    {
@@ -290,7 +290,7 @@ void test_pmic_get_thermalstat1()
         else    {
             DebugP_log("LDO1 overtemperature thermal shutdown flag: ERROR!!! - Overtemperature Thermal Shutdown\r\n\n");
         }
-        if((pPmicThermalStat1Config -> ldo1TpreErr) == PMIC_THERMAL_STAT_T_PRE_ERR_DATA1) {
+        if((pPmicThermalStat1Config -> ldo1TpreErr) == PMIC_THERMAL_STAT_TPRE_ER_DATA1) {
             DebugP_log("LDO1 temperature prewarning flag: No overtemperature\r\n\n");
         }
         else    {
@@ -317,7 +317,7 @@ void test_pmic_get_thermalstat2()
         else    {
             DebugP_log("Buck-Boost overtemperature thermal shutdown flag : ERROR!!! - LDO4 overtemperature thermal shutdown flag: Overtemperature Thermal Shutdown\r\n\n");
         }
-        if((pPmicThermalStat2Config -> BBTpreErr) == PMIC_THERMAL_STAT_T_PRE_ERR_DATA1) {
+        if((pPmicThermalStat2Config -> BBTpreErr) == PMIC_THERMAL_STAT_TPRE_ER_DATA1) {
             DebugP_log("Buck-Boost temperature prewarning flag: No overtemperature\r\n\n");
         }
         else    {
@@ -329,7 +329,7 @@ void test_pmic_get_thermalstat2()
         else    {
             DebugP_log("PLDO2 overtemperature thermal shutdown flag : ERROR!!! - Overtemperature Thermal Shutdown\r\n\n");
         }
-        if((pPmicThermalStat2Config -> pldo2TpreErr) == PMIC_THERMAL_STAT_T_PRE_ERR_DATA1) {
+        if((pPmicThermalStat2Config -> pldo2TpreErr) == PMIC_THERMAL_STAT_TPRE_ER_DATA1) {
             DebugP_log("PLDO2 temperature prewarning flag : No overtemperature\r\n\n");
         }
         else    {
@@ -341,7 +341,7 @@ void test_pmic_get_thermalstat2()
         else    {
             DebugP_log("PLDO1 overtemperature thermal shutdown flag : ERROR!!! - Overtemperature Thermal Shutdown\r\n\n");
         }
-        if((pPmicThermalStat2Config -> pldo1TpreErr) == PMIC_THERMAL_STAT_T_PRE_ERR_DATA1) {
+        if((pPmicThermalStat2Config -> pldo1TpreErr) == PMIC_THERMAL_STAT_TPRE_ER_DATA1) {
             DebugP_log("PLDO1 temperature prewarning flag: No overtemperature\r\n\n");
         }
         else    {

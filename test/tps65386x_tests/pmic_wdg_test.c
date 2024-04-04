@@ -123,7 +123,7 @@ int32_t test_pmic_wdg_config_deinit(void) {
  */
 void test_wdg_enableDisable(void) {
     int32_t status = PMIC_ST_SUCCESS;
-    bool wdgEnabled = false;
+    uint8_t wdgEnabled = 0U;
 
     /* Enable Watchdog */
     status = Pmic_wdgEnable(pPmicCoreHandle_wdg);
@@ -161,7 +161,7 @@ void test_wdg_enableDisable(void) {
  */
 static void checkWdgEnabled(void) {
     int32_t status = PMIC_ST_SUCCESS;
-    bool wdgEnabled = false;
+    uint8_t wdgEnabled = 0U;
 
     status = Pmic_wdgGetEnableState(pPmicCoreHandle_wdg, &wdgEnabled);
     if (PMIC_ST_SUCCESS == status) {

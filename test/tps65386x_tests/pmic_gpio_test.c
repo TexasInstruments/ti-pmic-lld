@@ -226,12 +226,10 @@ void test_get_gpo12_deglitch_time() {
  */
 void test_gpoGetConfiguration() {
   int32_t status = PMIC_ST_SUCCESS;
-  Pmic_GpioRdbkDglCfg_t *GpioRdbkDglCfg = NULL;
   Pmic_GpioCfg_t *pGpioCfg = NULL;
   uint8_t pin = PMIC_GPO3;
 
-  status = Pmic_gpioGetConfiguration(pPmicCoreHandle_gpio, pin, pGpioCfg,
-                                     GpioRdbkDglCfg);
+  status = Pmic_gpioGetConfiguration(pPmicCoreHandle_gpio, pin, pGpioCfg);
   if (PMIC_ST_SUCCESS != status) {
     DebugP_log("2nd Failed set GPO value %d\r\n", status);
   }
@@ -276,8 +274,8 @@ void test_gpoSetConfiguration() {
   int32_t status = PMIC_ST_SUCCESS;
   Pmic_GpioCfg_t pGpioCfg;
   uint8_t pin = PMIC_GPO3;
-  pGpioCfg.gpo3Cfg = HIGH_LEVEL;
-  pGpioCfg.pinDir = INTL_PULL_UP;
+  pGpioCfg.gpo3Cfg = PMIC_GPIO_HIGH_LEVEL;
+  pGpioCfg.pinDir = PMIC_GPIO_INTL_PULL_UP;
 
   status = Pmic_gpioSetConfiguration(pPmicCoreHandle_gpio, pin, pGpioCfg);
   if (PMIC_ST_SUCCESS != status) {
@@ -299,7 +297,7 @@ void test_gpiSetConfiguration() {
   int32_t status = PMIC_ST_SUCCESS;
   Pmic_GpioCfg_t pGpioCfg;
   uint8_t pin = PMIC_GPI4;
-  pGpioCfg.gpi4Cfg = WD_IN;
+  pGpioCfg.gpi4Cfg = PMIC_GPIO_WD_IN;
 
   status = Pmic_gpiSetConfiguration(pPmicCoreHandle_gpio, pin, pGpioCfg);
   if (PMIC_ST_SUCCESS != status) {
