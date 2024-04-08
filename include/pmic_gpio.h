@@ -796,8 +796,7 @@ int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
  */
 static int32_t Pmic_gpioSetPinValue(Pmic_CoreHandle_t *pPmicCoreHandle,
                                     const Pmic_GpioInOutCfg_t *pGpioInOutCfg,
-                                    const uint8_t pinValue,
-                                    uint8_t index);
+                                    const uint8_t pinValue);
 
 /**
  * @brief Sets the value of a specified GPIO pin.

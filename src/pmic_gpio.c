@@ -560,7 +560,7 @@ int32_t Pmic_gpioGetConfiguration(Pmic_CoreHandle_t * pPmicCoreHandle,
  */
 static int32_t Pmic_gpioSetPinValue(Pmic_CoreHandle_t * pPmicCoreHandle,
     const Pmic_GpioInOutCfg_t * pGpioInOutCfg,
-        const uint8_t pinValue, uint8_t index) {
+        const uint8_t pinValue) {
     uint8_t regData = 0U;
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t bitMask = 0U;
@@ -570,19 +570,19 @@ static int32_t Pmic_gpioSetPinValue(Pmic_CoreHandle_t * pPmicCoreHandle,
 
     /* checking for the pin direction to be output */
     pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                                        (uint16_t)pGpioInOutCfg[index].regAddr, & regData);
+                                        (uint16_t)pGpioInOutCfg->regAddr, & regData);
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
         /* Setting the GPIO value */
         pmicStatus = Pmic_commIntf_recvByte(
-            pPmicCoreHandle, (uint16_t)pGpioInOutCfg[index].outRegAddr, & regData);
+            pPmicCoreHandle, (uint16_t)pGpioInOutCfg->outRegAddr, & regData);
         if (PMIC_ST_SUCCESS == pmicStatus) {
             bitMask = (uint8_t)(PMIC_GPIO_IN_OUT_X_GPIOX_IN_OUT_BITFIELD <<
-                    (uint16_t)pGpioInOutCfg[index].outRegBitPos);
-            Pmic_setBitField( & regData, pGpioInOutCfg[index].outRegBitPos, bitMask,
+                    (uint16_t)pGpioInOutCfg->outRegBitPos);
+            Pmic_setBitField( & regData, pGpioInOutCfg->outRegBitPos, bitMask,
                 pinValue);
             pmicStatus = Pmic_commIntf_sendByte(
-                pPmicCoreHandle, (uint16_t)pGpioInOutCfg[index].outRegAddr, regData);
+                pPmicCoreHandle, (uint16_t)pGpioInOutCfg->outRegAddr, regData);
         }
     }
 
@@ -606,13 +606,9 @@ int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t * pPmicCoreHandle,
     const uint8_t pin,
         const uint8_t pinValue) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint8_t index = 0U;
     Pmic_GpioInOutCfg_t *pGpioInOutCfg = NULL;
 
     pmicStatus = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
-
-    /* Set Pmic_GpioIntRegCfg_t array index for given GPIO Pin */
-    index = pin - 1U;
 
     if ((PMIC_ST_SUCCESS == pmicStatus) && (pinValue > PMIC_GPIO_HIGH_LEVEL)) {
         pmicStatus = PMIC_ST_ERR_INV_PARAM;
@@ -629,7 +625,7 @@ int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t * pPmicCoreHandle,
         else
         {
         /* Set PMIC gpio pin value */
-            pmicStatus = Pmic_gpioSetPinValue(pPmicCoreHandle, pGpioInOutCfg, pinValue, index);
+            pmicStatus = Pmic_gpioSetPinValue(pPmicCoreHandle, pGpioInOutCfg, pinValue);
         }
     }
 
@@ -651,15 +647,11 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t * pPmicCoreHandle,
         uint8_t * pPinValue) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
-    uint8_t index = 0U;
     Pmic_GpioInOutCfg_t * pGpioInOutCfg = NULL;
     uint8_t bitMask = 0U;
 
     /* Parameter Validation */
     pmicStatus = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
-
-    /* Set Pmic_GpioIntRegCfg_t array index for given GPIO Pin */
-    index = pin - 1U;
 
     if ((PMIC_ST_SUCCESS == pmicStatus) && (NULL == pPinValue)) {
         pmicStatus = PMIC_ST_ERR_NULL_PARAM;
@@ -680,7 +672,7 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t * pPmicCoreHandle,
         {
             /* Reading the pin value */
             pmicStatus = Pmic_commIntf_recvByte(
-                pPmicCoreHandle, (uint16_t)pGpioInOutCfg[index].inRegAddr, & regData);
+                pPmicCoreHandle, (uint16_t)pGpioInOutCfg->inRegAddr, & regData);
         }
         /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -688,9 +680,9 @@ int32_t Pmic_gpioGetValue(Pmic_CoreHandle_t * pPmicCoreHandle,
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
         bitMask = (uint8_t)(PMIC_GPIO_IN_OUT_X_GPIOX_IN_OUT_BITFIELD <<
-            pGpioInOutCfg[index].inRegBitPos);
+            pGpioInOutCfg->inRegBitPos);
 
-        if (Pmic_getBitField(regData, pGpioInOutCfg[index].inRegBitPos, bitMask) !=
+        if (Pmic_getBitField(regData, pGpioInOutCfg->inRegBitPos, bitMask) !=
             0U) {
             * pPinValue = PMIC_GPIO_HIGH_LEVEL;
         } else {

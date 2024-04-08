@@ -1298,6 +1298,12 @@ typedef struct {
 }
 Pmic_DiagMUXFeatureMapping;
 
+#define PMIC_START_AMUX (0U)
+#define PMIC_END_AMUX (19U)
+
+#define PMIC_START_DMUX (0U)
+#define PMIC_END_DMUX (131U)
+
 typedef enum {
     FEATURE_BUCK_BOOST_OUTPUT_VOLTAGE,
     FEATURE_LDO1_OUTPUT_VOLTAGE,
@@ -2286,13 +2292,13 @@ int32_t Pmic_setDiagAMUXFeatureCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                    Pmic_AMUXFeatures feature);
 
 int32_t Pmic_getDiagAMUXFeatureCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                   Pmic_AMUXFeatures *feature);
+                                   uint32_t *feature);
 
 int32_t Pmic_setDiagDMUXFeatureCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                    Pmic_DMUXFeatures feature);
 
 int32_t Pmic_getDiagDMUXFeatureCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                   Pmic_DMUXFeatures *feature);
+                                   uint32_t *feature);
 
 int32_t Pmic_setAmuxDmuxPinCtrlCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                    const Pmic_DiagOutCfgCtrl_t diagoutCfgCtrl);

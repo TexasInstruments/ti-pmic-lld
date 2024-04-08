@@ -51,82 +51,25 @@
 /* ========================================================================== */
 
 const Pmic_DiagMUXFeatureMapping Pmic_amuxFeatureMappings[AMUX_NUM_FEATURES] = {
-    [FEATURE_BUCK_BOOST_OUTPUT_VOLTAGE] = {
-        1,
-        NULL
-    },
-    [FEATURE_LDO1_OUTPUT_VOLTAGE] = {
-        1,
-        1
-    },
-    [FEATURE_LDO2_OUTPUT_VOLTAGE] = {
-        1,
-        2
-    },
-    [FEATURE_LDO3_OUTPUT_VOLTAGE] = {
-        1,
-        3
-    },
-    [FEATURE_LDO4_OUTPUT_VOLTAGE] = {
-        1,
-        4
-    },
-    [FEATURE_PROTECTED_PLDO1_OUTPUT_VOLTAGE] = {
-        1,
-        5
-    },
-    [FEATURE_PROTECTED_PLDO2_OUTPUT_VOLTAGE] = {
-        1,
-        6
-    },
-    [FEATURE_VOLTAGE_ON_TRACK_PIN] = {
-        1,
-        7
-    },
-    [FEATURE_SECONDARY_BATTERY_SUPPLY_VOLTAGE] = {
-        1,
-        8
-    },
-    [FEATURE_POWER_BATTERY_SUPPLY_VOLTAGE] = {
-        1,
-        9
-    },
-    [FEATURE_MAIN_BANDGAP] = {
-        1,
-        10
-    },
-    [FEATURE_COMPARE_BANDGAP] = {
-        1,
-        11
-    },
-    [FEATURE_TEMP_SENSOR_BUCK_BOOST] = {
-        12,
-        NULL
-    },
-    [FEATURE_TEMP_SENSOR_LDO1] = {
-        12,
-        1
-    },
-    [FEATURE_TEMP_SENSOR_LDO2] = {
-        12,
-        2
-    },
-    [FEATURE_TEMP_SENSOR_LDO3] = {
-        12,
-        3
-    },
-    [FEATURE_TEMP_SENSOR_LDO4] = {
-        13,
-        NULL
-    },
-    [FEATURE_TEMP_SENSOR_PLDO1] = {
-        13,
-        1
-    },
-    [FEATURE_TEMP_SENSOR_PLDO2] = {
-        13,
-        2
-    }
+    [FEATURE_BUCK_BOOST_OUTPUT_VOLTAGE] = {1, NULL},
+    [FEATURE_LDO1_OUTPUT_VOLTAGE] = {1,1},
+    [FEATURE_LDO2_OUTPUT_VOLTAGE] = {1,2},
+    [FEATURE_LDO3_OUTPUT_VOLTAGE] = {1,3},
+    [FEATURE_LDO4_OUTPUT_VOLTAGE] = {1,4},
+    [FEATURE_PROTECTED_PLDO1_OUTPUT_VOLTAGE] = {1,5},
+    [FEATURE_PROTECTED_PLDO2_OUTPUT_VOLTAGE] = {1,6},
+    [FEATURE_VOLTAGE_ON_TRACK_PIN] = {1,7},
+    [FEATURE_SECONDARY_BATTERY_SUPPLY_VOLTAGE] = {1,8},
+    [FEATURE_POWER_BATTERY_SUPPLY_VOLTAGE] = {1,9},
+    [FEATURE_MAIN_BANDGAP] = {1,10},
+    [FEATURE_COMPARE_BANDGAP] = {1,11},
+    [FEATURE_TEMP_SENSOR_BUCK_BOOST] = {12,NULL},
+    [FEATURE_TEMP_SENSOR_LDO1] = {12,1},
+    [FEATURE_TEMP_SENSOR_LDO2] = {12,2},
+    [FEATURE_TEMP_SENSOR_LDO3] = {12,3},
+    [FEATURE_TEMP_SENSOR_LDO4] = {13,NULL},
+    [FEATURE_TEMP_SENSOR_PLDO1] = {13,1},
+    [FEATURE_TEMP_SENSOR_PLDO2] = {13,2}
 };
 
 /* Define the lookup table mapping features to group and channel numbers */
@@ -1626,7 +1569,7 @@ int32_t Pmic_setDiagAMUXFeatureCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
 }
 
 int32_t Pmic_getDiagAMUXFeatureCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_AMUXFeatures * feature) {
+                                   uint32_t * feature) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     Pmic_DiagOutCfgCtrl_t diagoutCfgCtrl;
     uint32_t diagGrpSel = 0U;
@@ -1639,11 +1582,11 @@ int32_t Pmic_getDiagAMUXFeatureCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
         /* Loop through the feature mappings to find a match */
-        for (int8_t i = 0; i < (int8_t) AMUX_NUM_FEATURES; ++i) {
+        for (int8_t i = 0; i < (int8_t) PMIC_END_AMUX; ++i) {
             if ((Pmic_amuxFeatureMappings[i].group == diagGrpSel) &&
                 (Pmic_amuxFeatureMappings[i].channel == diagChannelSel)) {
                 /* Return the corresponding feature */
-                * feature = (Pmic_AMUXFeatures) i;
+                * feature = (uint32_t)PMIC_START_AMUX + (uint32_t)i;
             }
         }
     }
@@ -1669,7 +1612,7 @@ int32_t Pmic_setDiagDMUXFeatureCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
 }
 
 int32_t Pmic_getDiagDMUXFeatureCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_DMUXFeatures * feature) {
+                                   uint32_t * feature) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     Pmic_DiagOutCfgCtrl_t diagoutCfgCtrl;
     uint32_t diagGrpSel = 0U;
@@ -1682,11 +1625,11 @@ int32_t Pmic_getDiagDMUXFeatureCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
         /* Loop through the feature mappings to find a match */
-        for (int8_t i = 0; i < (int8_t) DMUX_NUM_FEATURES; ++i) {
+        for (int8_t i = 0; i < (int8_t) PMIC_END_DMUX; ++i) {
             if ((Pmic_dmuxFeatureMappings[i].group == diagGrpSel) &&
                 (Pmic_dmuxFeatureMappings[i].channel == diagChannelSel)) {
                 /* Return the corresponding feature */
-                * feature = (Pmic_DMUXFeatures) i;
+                * feature = (uint32_t)PMIC_START_DMUX + (uint32_t)i;
             }
         }
     }

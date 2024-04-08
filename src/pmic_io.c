@@ -137,7 +137,7 @@ Pmic_validateCorehandle(const Pmic_CoreHandle_t *pPmicCoreHandle) {
 
 static int32_t Pmic_commIoReadData(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint16_t *pRegAddr, uint8_t *pBuffLength,
-    uint8_t *pRxBuf, uint8_t *pinstanceType) {
+    uint8_t pRxBuf[], uint8_t *pinstanceType) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t buffLength = *pBuffLength;
     uint16_t pmicRegAddr = *pRegAddr;

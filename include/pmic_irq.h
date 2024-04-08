@@ -357,9 +357,8 @@ static int32_t Pmic_irqClearStatus(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @ingroup Pmic_IRQFunctions
  */
 static int32_t Pmic_irqMask(Pmic_CoreHandle_t * pPmicCoreHandle,
-                            const uint8_t irqNum,
                             const bool mask,
-                            Pmic_IntrCfg_t * pIntrCfg);
+                            const Pmic_IntrCfg_t * pIntrCfg);
 
 /**
  * @brief Mask or unmask interrupts.
@@ -519,8 +518,8 @@ int32_t Pmic_irqGpioMaskIntr(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @ingroup Pmic_IRQFunctions
  */
 static int32_t Pmic_getIrqMaskStatus(Pmic_CoreHandle_t * pPmicCoreHandle,
-                                     const uint8_t irqNum, bool * pMaskStatus,
-                                     Pmic_IntrCfg_t * pIntrCfg);
+                                     bool * pMaskStatus,
+                                     const Pmic_IntrCfg_t * pIntrCfg);
 
 /**
  * @brief Get the mask status of a specific interrupt.
@@ -536,7 +535,7 @@ static int32_t Pmic_getIrqMaskStatus(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @ingroup Pmic_IRQFunctions
  */
 static int32_t Pmic_getMaskIntrStatus(Pmic_CoreHandle_t * pPmicCoreHandle,
-                                      const uint8_t irqNum, bool * pMaskStatus);
+                                      bool * pMaskStatus);
 
 /**
  * @brief Get the mask status of a specific IRQ.
