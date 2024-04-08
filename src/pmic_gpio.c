@@ -607,7 +607,7 @@ int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t * pPmicCoreHandle,
         const uint8_t pinValue) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t index = 0U;
-    Pmic_GpioInOutCfg_t * pGpioInOutCfg = NULL;
+    Pmic_GpioInOutCfg_t *pGpioInOutCfg = NULL;
 
     pmicStatus = Pmic_gpioParamCheck(pPmicCoreHandle, pin);
 
@@ -620,7 +620,7 @@ int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t * pPmicCoreHandle,
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
         /* Get PMIC gpio configuration */
-        Pmic_get_gpioInOutCfg( pGpioInOutCfg);
+        Pmic_get_gpioInOutCfg(pGpioInOutCfg);
 
         if(pGpioInOutCfg == NULL)
         {
@@ -629,8 +629,7 @@ int32_t Pmic_gpioSetValue(Pmic_CoreHandle_t * pPmicCoreHandle,
         else
         {
         /* Set PMIC gpio pin value */
-            pmicStatus =
-                Pmic_gpioSetPinValue(pPmicCoreHandle, pGpioInOutCfg, pinValue, index);
+            pmicStatus = Pmic_gpioSetPinValue(pPmicCoreHandle, pGpioInOutCfg, pinValue, index);
         }
     }
 

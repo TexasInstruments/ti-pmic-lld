@@ -131,530 +131,137 @@ const Pmic_DiagMUXFeatureMapping Pmic_amuxFeatureMappings[AMUX_NUM_FEATURES] = {
 
 /* Define the lookup table mapping features to group and channel numbers */
 const Pmic_DiagMUXFeatureMapping Pmic_dmuxFeatureMappings[DMUX_NUM_FEATURES] = {
-    [FEATURE_DIGITAL_0_OUTPUT] = {
-        NULL,
-        NULL
-    },
-    [FEATURE_DIGITAL_1_OUTPUT] = {
-        NULL,
-        1
-    },
-    [FEATURE_BUCK_BOOST_AVG_CURRENT_LIMIT] = {
-        1,
-        NULL
-    },
-    [FEATURE_BUCK_BOOST_DEGLITCHED_AVG_CURRENT_LIMIT] = {
-        1,
-        1
-    },
-    [FEATURE_BUCK_BOOST_PEAK_CURRENT_LIMIT] = {
-        1,
-        2
-    },
-    [FEATURE_BUCK_BOOST_DEGLITCHED_PEAK_CURRENT_LIMIT] = {
-        1,
-        3
-    },
-    [FEATURE_RESERVED_2] = {
-        2,
-        NULL
-    },
-    [FEATURE_LDO1_CURRENT_LIMIT] = {
-        3,
-        NULL
-    },
-    [FEATURE_LDO1_DEGLITCHED_CURRENT_LIMIT] = {
-        3,
-        1
-    },
-    [FEATURE_LDO1_BYPASS_ENABLE] = {
-        3,
-        2
-    },
-    [FEATURE_LDO2_CURRENT_LIMIT] = {
-        4,
-        NULL
-    },
-    [FEATURE_LDO2_DEGLITCHED_CURRENT_LIMIT] = {
-        4,
-        1
-    },
-    [FEATURE_LDO2_BYPASS_ENABLE] = {
-        4,
-        2
-    },
-    [FEATURE_LDO3_CURRENT_LIMIT] = {
-        5,
-        NULL
-    },
-    [FEATURE_LDO3_DEGLITCHED_CURRENT_LIMIT] = {
-        5,
-        1
-    },
-    [FEATURE_LDO3_BYPASS_ENABLE] = {
-        5,
-        2
-    },
-    [FEATURE_LDO4_CURRENT_LIMIT] = {
-        6,
-        NULL
-    },
-    [FEATURE_LDO4_DEGLITCHED_CURRENT_LIMIT] = {
-        6,
-        1
-    },
-    [FEATURE_LDO4_BYPASS_ENABLE] = {
-        6,
-        2
-    },
-    [FEATURE_PLDO1_CURRENT_LIMIT] = {
-        7,
-        NULL
-    },
-    [FEATURE_PLDO1_DEGLITCHED_CURRENT_LIMIT] = {
-        7,
-        1
-    },
-    [FEATURE_RESERVED_22] = {
-        7,
-        2
-    },
-    [FEATURE_PLDO1_TRACKING_MODE_ENABLE] = {
-        7,
-        3
-    },
-    [FEATURE_PLDO2_CURRENT_LIMIT] = {
-        8,
-        NULL
-    },
-    [FEATURE_PLDO2_DEGLITCHED_CURRENT_LIMIT] = {
-        8,
-        1
-    },
-    [FEATURE_RESERVED_25] = {
-        8,
-        2
-    },
-    [FEATURE_PLDO2_TRACKING_MODE_ENABLE] = {
-        8,
-        3
-    },
-    [FEATURE_RESERVED_28] = {
-        8,
-        4
-    },
-    [FEATURE_RESERVED_29] = {
-        9,
-        NULL
-    },
-    [FEATURE_VBAT_DEGLITCHED_OV] = {
-        9,
-        1
-    },
-    [FEATURE_VBAT_DEGLITCHED_OVP] = {
-        9,
-        2
-    },
-    [FEATURE_VBAT_DEGLITCHED_UV] = {
-        9,
-        3
-    },
-    [FEATURE_BUCK_BOOST_DEGLITCHED_OV] = {
-        9,
-        4
-    },
-    [FEATURE_BUCK_BOOST_DEGLITCHED_OVP] = {
-        9,
-        5
-    },
-    [FEATURE_BUCK_BOOST_DEGLITCHED_UV] = {
-        9,
-        6
-    },
-    [FEATURE_RESERVED_37] = {
-        9,
-        7
-    },
-    [FEATURE_RESERVED_38] = {
-        9,
-        8
-    },
-    [FEATURE_LDO1_DEGLITCHED_UV] = {
-        9,
-        9
-    },
-    [FEATURE_LDO2_DEGLITCHED_UV] = {
-        9,
-        10
-    },
-    [FEATURE_LDO3_DEGLITCHED_UV] = {
-        9,
-        11
-    },
-    [FEATURE_LDO4_DEGLITCHED_UV] = {
-        9,
-        12
-    },
-    [FEATURE_LDO1_DEGLITCHED_OV] = {
-        9,
-        13
-    },
-    [FEATURE_LDO2_DEGLITCHED_OV] = {
-        9,
-        14
-    },
-    [FEATURE_LDO3_DEGLITCHED_OV] = {
-        9,
-        15
-    },
-    [FEATURE_LDO4_DEGLITCHED_OV] = {
-        9,
-        16
-    },
-    [FEATURE_PLDO1_DEGLITCHED_UV] = {
-        9,
-        17
-    },
-    [FEATURE_PLDO2_DEGLITCHED_UV] = {
-        9,
-        18
-    },
-    [FEATURE_PLDO1_DEGLITCHED_OV] = {
-        9,
-        19
-    },
-    [FEATURE_PLDO2_DEGLITCHED_OV] = {
-        9,
-        20
-    },
-    [FEATURE_EXT_VMON1_DEGLITCHED_UV] = {
-        9,
-        21
-    },
-    [FEATURE_EXT_VMON2_DEGLITCHED_UV] = {
-        9,
-        22
-    },
-    [FEATURE_EXT_VMON1_DEGLITCHED_OV] = {
-        9,
-        23
-    },
-    [FEATURE_EXT_VMON2_DEGLITCHED_OV] = {
-        10,
-        NULL
-    },
-    [FEATURE_VBAT_OV] = {
-        10,
-        1
-    },
-    [FEATURE_VBAT_OVP] = {
-        10,
-        2
-    },
-    [FEATURE_VBAT_UV] = {
-        10,
-        3
-    },
-    [FEATURE_BUCK_BOOST_OV] = {
-        10,
-        4
-    },
-    [FEATURE_BUCK_BOOST_OVP] = {
-        10,
-        5
-    },
-    [FEATURE_BUCK_BOOST_UV] = {
-        10,
-        6
-    },
-    [FEATURE_RESERVED_67] = {
-        10,
-        7
-    },
-    [FEATURE_RESERVED_68] = {
-        10,
-        8
-    },
-    [FEATURE_LDO1_UV] = {
-        10,
-        9
-    },
-    [FEATURE_LDO2_UV] = {
-        10,
-        10
-    },
-    [FEATURE_LDO3_UV] = {
-        10,
-        11
-    },
-    [FEATURE_LDO4_UV] = {
-        10,
-        12
-    },
-    [FEATURE_LDO1_OV] = {
-        10,
-        13
-    },
-    [FEATURE_LDO2_OV] = {
-        10,
-        14
-    },
-    [FEATURE_LDO3_OV] = {
-        10,
-        15
-    },
-    [FEATURE_LDO4_OV] = {
-        10,
-        16
-    },
-    [FEATURE_PLDO1_UV] = {
-        10,
-        17
-    },
-    [FEATURE_PLDO2_UV] = {
-        10,
-        18
-    },
-    [FEATURE_PLDO1_OV] = {
-        10,
-        19
-    },
-    [FEATURE_PLDO2_OV] = {
-        10,
-        20
-    },
-    [FEATURE_EXT_VMON1_UV] = {
-        10,
-        21
-    },
-    [FEATURE_EXT_VMON2_UV] = {
-        10,
-        22
-    },
-    [FEATURE_EXT_VMON1_OV] = {
-        10,
-        23
-    },
-    [FEATURE_EXT_VMON2_OV] = {
-        11,
-        NULL
-    },
-    [FEATURE_BUCK_BOOST_TEMP_PREWARNING] = {
-        11,
-        1
-    },
-    [FEATURE_BUCK_BOOST_OVERTEMP_SHUTDOWN] = {
-        11,
-        2
-    },
-    [FEATURE_RESERVED_90] = {
-        11,
-        3
-    },
-    [FEATURE_RESERVED_91] = {
-        11,
-        4
-    },
-    [FEATURE_LDO1_TEMP_PREWARNING] = {
-        11,
-        5
-    },
-    [FEATURE_LDO1_OVERTEMP_SHUTDOWN] = {
-        11,
-        6
-    },
-    [FEATURE_LDO2_TEMP_PREWARNING] = {
-        11,
-        7
-    },
-    [FEATURE_LDO2_OVERTEMP_SHUTDOWN] = {
-        11,
-        8
-    },
-    [FEATURE_LDO3_TEMP_PREWARNING] = {
-        11,
-        9
-    },
-    [FEATURE_LDO3_OVERTEMP_SHUTDOWN] = {
-        11,
-        10
-    },
-    [FEATURE_LDO4_TEMP_PREWARNING] = {
-        11,
-        11
-    },
-    [FEATURE_LDO4_OVERTEMP_SHUTDOWN] = {
-        11,
-        12
-    },
-    [FEATURE_PLDO1_TEMP_PREWARNING] = {
-        11,
-        13
-    },
-    [FEATURE_PLDO1_OVERTEMP_SHUTDOWN] = {
-        11,
-        14
-    },
-    [FEATURE_PLDO2_TEMP_PREWARNING] = {
-        11,
-        15
-    },
-    [FEATURE_PLDO2_OVERTEMP_SHUTDOWN] = {
-        12,
-        NULL
-    },
-    [FEATURE_VREG_OVP_MONITOR_1] = {
-        12,
-        1
-    },
-    [FEATURE_VREG_UVLO_MONITOR_1] = {
-        12,
-        2
-    },
-    [FEATURE_VREG_SAFETY_OVP_MONITOR_1] = {
-        12,
-        3
-    },
-    [FEATURE_VREG_SAFETY_UVLO_MONITOR_1] = {
-        12,
-        4
-    },
-    [FEATURE_VREG_1P8_OVP_MONITOR_1] = {
-        12,
-        5
-    },
-    [FEATURE_VREG_1P8_UVLO_MONITOR_1] = {
-        12,
-        6
-    },
-    [FEATURE_VREG_OVP_MONITOR_2] = {
-        12,
-        7
-    },
-    [FEATURE_VREG_UVLO_MONITOR_2] = {
-        12,
-        8
-    },
-    [FEATURE_VREG_SAFETY_OVP_MONITOR_2] = {
-        12,
-        9
-    },
-    [FEATURE_VREG_SAFETY_UVLO_MONITOR_2] = {
-        12,
-        10
-    },
-    [FEATURE_VREG_1P8_OVP_MONITOR_2] = {
-        12,
-        11
-    },
-    [FEATURE_VREG_1P8_UVLO_MONITOR_2] = {
-        12,
-        12
-    },
-    [FEATURE_125KHZ_CLOCK] = {
-        12,
-        13
-    },
-    [FEATURE_250KHZ_CLOCK] = {
-        12,
-        14
-    },
-    [FEATURE_500KHZ_CLOCK] = {
-        12,
-        15
-    },
-    [FEATURE_1_25MHZ_CLOCK] = {
-        12,
-        16
-    },
-    [FEATURE_10MHZ_CLOCK] = {
-        13,
-        0
-    },
-    [FEATURE_GPI1_INPUT_LEVEL] = {
-        13,
-        1
-    },
-    [FEATURE_GPI2_INPUT_LEVEL] = {
-        13,
-        2
-    },
-    [FEATURE_GPI3_INPUT_LEVEL] = {
-        13,
-        3
-    },
-    [FEATURE_GPI4_INPUT_LEVEL] = {
-        13,
-        4
-    },
-    [FEATURE_GPI5_INPUT_LEVEL] = {
-        13,
-        5
-    },
-    [FEATURE_WAKE1_INPUT_LEVEL] = {
-        13,
-        6
-    },
-    [FEATURE_WAKE2_INPUT_LEVEL] = {
-        13,
-        7
-    },
-    [FEATURE_RESERVED_122] = {
-        13,
-        8
-    },
-    [FEATURE_EXT_VMON1_INPUT_DIGITAL_MODE] = {
-        13,
-        9
-    },
-    [FEATURE_EXT_VMON2_INPUT_DIGITAL_MODE] = {
-        13,
-        10
-    },
-    [FEATURE_EN_OUT_READBACK_LEVEL] = {
-        13,
-        11
-    },
-    [FEATURE_GPO1_READBACK_LEVEL] = {
-        13,
-        12
-    },
-    [FEATURE_GPO2_READBACK_LEVEL] = {
-        13,
-        13
-    },
-    [FEATURE_GPO3_READBACK_LEVEL] = {
-        13,
-        14
-    },
-    [FEATURE_GPO4_READBACK_LEVEL] = {
-        13,
-        15
-    },
-    [FEATURE_NRST_READBACK_LEVEL] = {
-        13,
-        16
-    },
-    [FEATURE_SAFE_OUT1_READBACK_LEVEL] = {
-        13,
-        17
-    },
-    [FEATURE_SPI_NCS_INPUT_LEVEL] = {
-        13,
-        18
-    },
-    [FEATURE_SPI_SCLK_INPUT_LEVEL] = {
-        13,
-        19
-    },
-    [FEATURE_SPI_SDI_INPUT_LEVEL] = {
-        13,
-        20
-    },
-    [FEATURE_SPI_SDO_READBACK_LEVEL] = {
-        13,
-        21
-    }
+    [FEATURE_DIGITAL_0_OUTPUT] = {NULL,NULL},
+    [FEATURE_DIGITAL_1_OUTPUT] = {NULL,1},
+    [FEATURE_BUCK_BOOST_AVG_CURRENT_LIMIT] = {1,NULL},
+    [FEATURE_BUCK_BOOST_DEGLITCHED_AVG_CURRENT_LIMIT] = {1,1},
+    [FEATURE_BUCK_BOOST_PEAK_CURRENT_LIMIT] = {1,2},
+    [FEATURE_BUCK_BOOST_DEGLITCHED_PEAK_CURRENT_LIMIT] = {1,3},
+    [FEATURE_RESERVED_2] = {2,NULL},
+    [FEATURE_LDO1_CURRENT_LIMIT] = {3,NULL},
+    [FEATURE_LDO1_DEGLITCHED_CURRENT_LIMIT] = {3,1},
+    [FEATURE_LDO1_BYPASS_ENABLE] = {3,2},
+    [FEATURE_LDO2_CURRENT_LIMIT] = {4,NULL},
+    [FEATURE_LDO2_DEGLITCHED_CURRENT_LIMIT] = {4,1},
+    [FEATURE_LDO2_BYPASS_ENABLE] = {4,2},
+    [FEATURE_LDO3_CURRENT_LIMIT] = {5,NULL},
+    [FEATURE_LDO3_DEGLITCHED_CURRENT_LIMIT] = {5,1},
+    [FEATURE_LDO3_BYPASS_ENABLE] = {5,2},
+    [FEATURE_LDO4_CURRENT_LIMIT] = {6,NULL},
+    [FEATURE_LDO4_DEGLITCHED_CURRENT_LIMIT] = {6,1},
+    [FEATURE_LDO4_BYPASS_ENABLE] = {6,2},
+    [FEATURE_PLDO1_CURRENT_LIMIT] = {7,NULL},
+    [FEATURE_PLDO1_DEGLITCHED_CURRENT_LIMIT] = {7,1},
+    [FEATURE_RESERVED_22] = {7,2},
+    [FEATURE_PLDO1_TRACKING_MODE_ENABLE] = {7,3},
+    [FEATURE_PLDO2_CURRENT_LIMIT] = {8,NULL},
+    [FEATURE_PLDO2_DEGLITCHED_CURRENT_LIMIT] = {8,1},
+    [FEATURE_RESERVED_25] = {8,2},
+    [FEATURE_PLDO2_TRACKING_MODE_ENABLE] = {8,3},
+    [FEATURE_RESERVED_28] = {8,4},
+    [FEATURE_RESERVED_29] = {9,NULL},
+    [FEATURE_VBAT_DEGLITCHED_OV] = {9,1},
+    [FEATURE_VBAT_DEGLITCHED_OVP] = {9,2},
+    [FEATURE_VBAT_DEGLITCHED_UV] = {9,3},
+    [FEATURE_BUCK_BOOST_DEGLITCHED_OV] = {9,4},
+    [FEATURE_BUCK_BOOST_DEGLITCHED_OVP] = {9,5},
+    [FEATURE_BUCK_BOOST_DEGLITCHED_UV] = {9,6},
+    [FEATURE_RESERVED_37] = {9,7},
+    [FEATURE_RESERVED_38] = {9,8},
+    [FEATURE_LDO1_DEGLITCHED_UV] = {9,9},
+    [FEATURE_LDO2_DEGLITCHED_UV] = {9,10},
+    [FEATURE_LDO3_DEGLITCHED_UV] = {9,11},
+    [FEATURE_LDO4_DEGLITCHED_UV] = {9,12},
+    [FEATURE_LDO1_DEGLITCHED_OV] = {9,13},
+    [FEATURE_LDO2_DEGLITCHED_OV] = {9,14},
+    [FEATURE_LDO3_DEGLITCHED_OV] = {9,15},
+    [FEATURE_LDO4_DEGLITCHED_OV] = {9,16},
+    [FEATURE_PLDO1_DEGLITCHED_UV] = {9,17},
+    [FEATURE_PLDO2_DEGLITCHED_UV] = {9,18},
+    [FEATURE_PLDO1_DEGLITCHED_OV] = {9,19},
+    [FEATURE_PLDO2_DEGLITCHED_OV] = {9,20},
+    [FEATURE_EXT_VMON1_DEGLITCHED_UV] = {9,21},
+    [FEATURE_EXT_VMON2_DEGLITCHED_UV] = {9,22},
+    [FEATURE_EXT_VMON1_DEGLITCHED_OV] = {9,23},
+    [FEATURE_EXT_VMON2_DEGLITCHED_OV] = {10,NULL},
+    [FEATURE_VBAT_OV] = {10,1},
+    [FEATURE_VBAT_OVP] = {10,2},
+    [FEATURE_VBAT_UV] = {10,3},
+    [FEATURE_BUCK_BOOST_OV] = {10,4},
+    [FEATURE_BUCK_BOOST_OVP] = {10,5},
+    [FEATURE_BUCK_BOOST_UV] = {10,6},
+    [FEATURE_RESERVED_67] = {10,7},
+    [FEATURE_RESERVED_68] = {10,8},
+    [FEATURE_LDO1_UV] = {10,9},
+    [FEATURE_LDO2_UV] = {10,10},
+    [FEATURE_LDO3_UV] = {10,11},
+    [FEATURE_LDO4_UV] = {10,12},
+    [FEATURE_LDO1_OV] = {10,13},
+    [FEATURE_LDO2_OV] = {10,14},
+    [FEATURE_LDO3_OV] = {10,15},
+    [FEATURE_LDO4_OV] = {10,16},
+    [FEATURE_PLDO1_UV] = {10,17},
+    [FEATURE_PLDO2_UV] = {10,18},
+    [FEATURE_PLDO1_OV] = {10,19},
+    [FEATURE_PLDO2_OV] = {10,20},
+    [FEATURE_EXT_VMON1_UV] = {10,21},
+    [FEATURE_EXT_VMON2_UV] = {10,22},
+    [FEATURE_EXT_VMON1_OV] = {10,23},
+    [FEATURE_EXT_VMON2_OV] = {11,NULL},
+    [FEATURE_BUCK_BOOST_TEMP_PREWARNING] = {11,1},
+    [FEATURE_BUCK_BOOST_OVERTEMP_SHUTDOWN] = {11,2},
+    [FEATURE_RESERVED_90] = {11,3},
+    [FEATURE_RESERVED_91] = {11,4},
+    [FEATURE_LDO1_TEMP_PREWARNING] = {11,5},
+    [FEATURE_LDO1_OVERTEMP_SHUTDOWN] = {11,6},
+    [FEATURE_LDO2_TEMP_PREWARNING] = {11,7},
+    [FEATURE_LDO2_OVERTEMP_SHUTDOWN] = {11,8},
+    [FEATURE_LDO3_TEMP_PREWARNING] = {11,9},
+    [FEATURE_LDO3_OVERTEMP_SHUTDOWN] = {11,10},
+    [FEATURE_LDO4_TEMP_PREWARNING] = {11,11},
+    [FEATURE_LDO4_OVERTEMP_SHUTDOWN] = {11,12},
+    [FEATURE_PLDO1_TEMP_PREWARNING] = {11,13},
+    [FEATURE_PLDO1_OVERTEMP_SHUTDOWN] = {11,14},
+    [FEATURE_PLDO2_TEMP_PREWARNING] = {11,15},
+    [FEATURE_PLDO2_OVERTEMP_SHUTDOWN] = {12,NULL},
+    [FEATURE_VREG_OVP_MONITOR_1] = {12,1},
+    [FEATURE_VREG_UVLO_MONITOR_1] = {12,2},
+    [FEATURE_VREG_SAFETY_OVP_MONITOR_1] = {12,3},
+    [FEATURE_VREG_SAFETY_UVLO_MONITOR_1] = {12,4},
+    [FEATURE_VREG_1P8_OVP_MONITOR_1] = {12,5},
+    [FEATURE_VREG_1P8_UVLO_MONITOR_1] = {12,6},
+    [FEATURE_VREG_OVP_MONITOR_2] = {12,7},
+    [FEATURE_VREG_UVLO_MONITOR_2] = {12,8},
+    [FEATURE_VREG_SAFETY_OVP_MONITOR_2] = {12,9},
+    [FEATURE_VREG_SAFETY_UVLO_MONITOR_2] = {12,10},
+    [FEATURE_VREG_1P8_OVP_MONITOR_2] = {12,11},
+    [FEATURE_VREG_1P8_UVLO_MONITOR_2] = {12,12},
+    [FEATURE_125KHZ_CLOCK] = {12,13},
+    [FEATURE_250KHZ_CLOCK] = {12,14},
+    [FEATURE_500KHZ_CLOCK] = {12,15},
+    [FEATURE_1_25MHZ_CLOCK] = {12,16},
+    [FEATURE_10MHZ_CLOCK] = {13,0},
+    [FEATURE_GPI1_INPUT_LEVEL] = {13,1},
+    [FEATURE_GPI2_INPUT_LEVEL] = {13,2},
+    [FEATURE_GPI3_INPUT_LEVEL] = {13,3},
+    [FEATURE_GPI4_INPUT_LEVEL] = {13,4},
+    [FEATURE_GPI5_INPUT_LEVEL] = {13,5},
+    [FEATURE_WAKE1_INPUT_LEVEL] = {13,6},
+    [FEATURE_WAKE2_INPUT_LEVEL] = {13,7},
+    [FEATURE_RESERVED_122] = {13,8},
+    [FEATURE_EXT_VMON1_INPUT_DIGITAL_MODE] = {13,9},
+    [FEATURE_EXT_VMON2_INPUT_DIGITAL_MODE] = {13,10},
+    [FEATURE_EN_OUT_READBACK_LEVEL] = {13,11},
+    [FEATURE_GPO1_READBACK_LEVEL] = {13,12},
+    [FEATURE_GPO2_READBACK_LEVEL] = {13,13},
+    [FEATURE_GPO3_READBACK_LEVEL] = {13,14},
+    [FEATURE_GPO4_READBACK_LEVEL] = {13,15},
+    [FEATURE_NRST_READBACK_LEVEL] = {13,16},
+    [FEATURE_SAFE_OUT1_READBACK_LEVEL] = {13,17},
+    [FEATURE_SPI_NCS_INPUT_LEVEL] = {13,18},
+    [FEATURE_SPI_SCLK_INPUT_LEVEL] = {13,19},
+    [FEATURE_SPI_SDI_INPUT_LEVEL] = {13,20},
+    [FEATURE_SPI_SDO_READBACK_LEVEL] = {13,21}
 };
 
 /* ========================================================================== */

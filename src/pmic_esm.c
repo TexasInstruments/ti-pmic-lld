@@ -82,7 +82,7 @@ static uint8_t Pmic_esmGetU8Val(bool esmVal) {
  * otherwise, returns an error code.
  */
 static int32_t
-Pmic_esmValidateParams(const Pmic_CoreHandle_t * pPmicCoreHandle) {
+Pmic_esmValidateParams(const Pmic_CoreHandle_t *pPmicCoreHandle) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
     if (NULL == pPmicCoreHandle) {
@@ -118,7 +118,7 @@ static void Pmic_esmGetBaseRegAddr(uint8_t * pEsmBaseAddr) {
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_esmCheckState(Pmic_CoreHandle_t * pPmicCoreHandle) {
+static int32_t Pmic_esmCheckState(Pmic_CoreHandle_t *pPmicCoreHandle) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint16_t regAddr = 0U;
     uint8_t regData = 0U;
@@ -129,7 +129,7 @@ static int32_t Pmic_esmCheckState(Pmic_CoreHandle_t * pPmicCoreHandle) {
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     pmicStatus =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAddr, & regData);
+        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, &regData);
 
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         (Pmic_getBitField(regData, PMIC_ESM_CTRL_REG_SHIFT,
@@ -153,7 +153,7 @@ static int32_t Pmic_esmCheckState(Pmic_CoreHandle_t * pPmicCoreHandle) {
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_esmXStart(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_esmXStart(Pmic_CoreHandle_t *pPmicCoreHandle,
     const bool esmState) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint16_t regAddr = 0U;
@@ -168,15 +168,15 @@ static int32_t Pmic_esmXStart(Pmic_CoreHandle_t * pPmicCoreHandle,
 
     /* Read the PMIC ESM_MCU/ESM_SOC START Register */
     pmicStatus =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAddr, & regData);
+        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, &regData);
 
     /* Write 0 or 1 to ESM_MCU/ESM_SOC START BIT to Start/Stop ESM */
     if (PMIC_ST_SUCCESS == pmicStatus) {
-        Pmic_setBitField( & regData, PMIC_ESM_CTRL_REG_SHIFT, PMIC_ESM_CTRL_REG_MASK,
+        Pmic_setBitField( &regData, PMIC_ESM_CTRL_REG_SHIFT, PMIC_ESM_CTRL_REG_MASK,
             esmU8Val);
 
         pmicStatus =
-            Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t) regAddr, regData);
+            Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t)regAddr, regData);
     }
 
     /* Stop Critical Section */
@@ -195,7 +195,7 @@ static int32_t Pmic_esmXStart(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_esmXEnable(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_esmXEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
     const bool esmToggle) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint16_t regAddr = 0U;
@@ -214,7 +214,7 @@ static int32_t Pmic_esmXEnable(Pmic_CoreHandle_t * pPmicCoreHandle,
 
         /* Read the PMIC ESM MODE CFG Register */
         pmicStatus =
-            Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, & regData);
+            Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, &regData);
 
         /* Configure ESM_X_EN(where X is ESM_MCU or ESM_SOC) Bit to enable
          * or Disable.
@@ -244,7 +244,7 @@ static int32_t Pmic_esmXEnable(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_esmSetDelay1Value(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_esmSetDelay1Value(Pmic_CoreHandle_t *pPmicCoreHandle,
     const Pmic_EsmCfg_t esmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -262,7 +262,7 @@ static int32_t Pmic_esmSetDelay1Value(Pmic_CoreHandle_t * pPmicCoreHandle,
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         pmicStatus =
-            Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t) regAddr, regData);
+            Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t)regAddr, regData);
 
         /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -281,7 +281,7 @@ static int32_t Pmic_esmSetDelay1Value(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_esmSetDelay2Value(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_esmSetDelay2Value(Pmic_CoreHandle_t *pPmicCoreHandle,
     const Pmic_EsmCfg_t esmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -299,7 +299,7 @@ static int32_t Pmic_esmSetDelay2Value(Pmic_CoreHandle_t * pPmicCoreHandle,
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         pmicStatus =
-            Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t) regAddr, regData);
+            Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t)regAddr, regData);
 
         /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -318,7 +318,7 @@ static int32_t Pmic_esmSetDelay2Value(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_esmSetErrCntThrValue(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_esmSetErrCntThrValue(Pmic_CoreHandle_t *pPmicCoreHandle,
     const Pmic_EsmCfg_t esmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -330,14 +330,14 @@ static int32_t Pmic_esmSetErrCntThrValue(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     pmicStatus =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAddr, & regData);
+        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, &regData);
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
         Pmic_setBitField( &regData, PMIC_ESM_ERR_STAT_ESM_ERR_CNT_SHIFT,
             (uint8_t)PMIC_ESM_ERR_STAT_ESM_ERR_CNT_MASK, esmCfg.esmErrCntThr);
 
         pmicStatus =
-            Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t) regAddr, regData);
+            Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t)regAddr, regData);
     }
 
     /* Stop Critical Section */
@@ -356,7 +356,7 @@ static int32_t Pmic_esmSetErrCntThrValue(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_esmSetHmaxValue(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_esmSetHmaxValue(Pmic_CoreHandle_t *pPmicCoreHandle,
     const Pmic_EsmCfg_t esmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -377,7 +377,7 @@ static int32_t Pmic_esmSetHmaxValue(Pmic_CoreHandle_t * pPmicCoreHandle,
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         pmicStatus =
-            Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t) regAddr, regData);
+            Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t)regAddr, regData);
 
         /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -396,7 +396,7 @@ static int32_t Pmic_esmSetHmaxValue(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_esmSetHminValue(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_esmSetHminValue(Pmic_CoreHandle_t *pPmicCoreHandle,
     const Pmic_EsmCfg_t esmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -417,7 +417,7 @@ static int32_t Pmic_esmSetHminValue(Pmic_CoreHandle_t * pPmicCoreHandle,
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         pmicStatus =
-            Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t) regAddr, regData);
+            Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t)regAddr, regData);
 
         /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -436,7 +436,7 @@ static int32_t Pmic_esmSetHminValue(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_esmSetLmaxValue(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_esmSetLmaxValue(Pmic_CoreHandle_t *pPmicCoreHandle,
     const Pmic_EsmCfg_t esmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -457,7 +457,7 @@ static int32_t Pmic_esmSetLmaxValue(Pmic_CoreHandle_t * pPmicCoreHandle,
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         pmicStatus =
-            Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t) regAddr, regData);
+            Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t)regAddr, regData);
 
         /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -476,7 +476,7 @@ static int32_t Pmic_esmSetLmaxValue(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_esmSetLminValue(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_esmSetLminValue(Pmic_CoreHandle_t *pPmicCoreHandle,
     const Pmic_EsmCfg_t esmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -497,7 +497,7 @@ static int32_t Pmic_esmSetLminValue(Pmic_CoreHandle_t * pPmicCoreHandle,
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         pmicStatus =
-            Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t) regAddr, regData);
+            Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t)regAddr, regData);
 
         /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -516,8 +516,8 @@ static int32_t Pmic_esmSetLminValue(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_esmGetHmaxValue(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_EsmCfg_t * pEsmCfg) {
+static int32_t Pmic_esmGetHmaxValue(Pmic_CoreHandle_t *pPmicCoreHandle,
+    Pmic_EsmCfg_t *pEsmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     uint16_t regAddr = 0U;
@@ -528,7 +528,7 @@ static int32_t Pmic_esmGetHmaxValue(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     pmicStatus =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAddr, & regData);
+        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, &regData);
 
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -552,8 +552,8 @@ static int32_t Pmic_esmGetHmaxValue(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_esmGetHminValue(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_EsmCfg_t * pEsmCfg) {
+static int32_t Pmic_esmGetHminValue(Pmic_CoreHandle_t *pPmicCoreHandle,
+    Pmic_EsmCfg_t *pEsmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     uint16_t regAddr = 0U;
@@ -564,7 +564,7 @@ static int32_t Pmic_esmGetHminValue(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     pmicStatus =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAddr, & regData);
+        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, &regData);
 
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -588,8 +588,8 @@ static int32_t Pmic_esmGetHminValue(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_esmGetLmaxValue(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_EsmCfg_t * pEsmCfg) {
+static int32_t Pmic_esmGetLmaxValue(Pmic_CoreHandle_t *pPmicCoreHandle,
+    Pmic_EsmCfg_t *pEsmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     uint16_t regAddr = 0U;
@@ -600,7 +600,7 @@ static int32_t Pmic_esmGetLmaxValue(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     pmicStatus =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAddr, & regData);
+        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, &regData);
 
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -624,8 +624,8 @@ static int32_t Pmic_esmGetLmaxValue(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_esmGetLminValue(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_EsmCfg_t * pEsmCfg) {
+static int32_t Pmic_esmGetLminValue(Pmic_CoreHandle_t *pPmicCoreHandle,
+    Pmic_EsmCfg_t *pEsmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     uint16_t regAddr = 0U;
@@ -636,7 +636,7 @@ static int32_t Pmic_esmGetLminValue(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     pmicStatus =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAddr, & regData);
+        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, &regData);
 
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -660,7 +660,7 @@ static int32_t Pmic_esmGetLminValue(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_esmSetMode(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_esmSetMode(Pmic_CoreHandle_t *pPmicCoreHandle,
     const Pmic_EsmCfg_t esmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -674,14 +674,14 @@ static int32_t Pmic_esmSetMode(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     pmicStatus =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAddr, & regData);
+        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, &regData);
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
-        Pmic_setBitField( & regData, PMIC_ESM_CFG1_ESM_CFG_SHIFT,
+        Pmic_setBitField( &regData, PMIC_ESM_CFG1_ESM_CFG_SHIFT,
             (uint8_t)PMIC_ESM_CFG1_ESM_CFG_MASK, esmU8Val);
 
         pmicStatus =
-            Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t) regAddr, regData);
+            Pmic_commIntf_sendByte(pPmicCoreHandle, (uint16_t)regAddr, regData);
     }
 
     /* Stop Critical Section */
@@ -700,8 +700,8 @@ static int32_t Pmic_esmSetMode(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_esmGetDelay1Value(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_EsmCfg_t * pEsmCfg) {
+static int32_t Pmic_esmGetDelay1Value(Pmic_CoreHandle_t *pPmicCoreHandle,
+    Pmic_EsmCfg_t *pEsmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     uint16_t regAddr = 0U;
@@ -711,7 +711,7 @@ static int32_t Pmic_esmGetDelay1Value(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     pmicStatus =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAddr, & regData);
+        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, &regData);
 
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -733,8 +733,8 @@ static int32_t Pmic_esmGetDelay1Value(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_esmGetDelay2Value(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_EsmCfg_t * pEsmCfg) {
+static int32_t Pmic_esmGetDelay2Value(Pmic_CoreHandle_t *pPmicCoreHandle,
+    Pmic_EsmCfg_t *pEsmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     uint16_t regAddr = 0U;
@@ -745,7 +745,7 @@ static int32_t Pmic_esmGetDelay2Value(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     pmicStatus =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAddr, & regData);
+        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, &regData);
 
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -767,8 +767,8 @@ static int32_t Pmic_esmGetDelay2Value(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_esmGetErrCntThrValue(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_EsmCfg_t * pEsmCfg) {
+static int32_t Pmic_esmGetErrCntThrValue(Pmic_CoreHandle_t *pPmicCoreHandle,
+    Pmic_EsmCfg_t *pEsmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     uint16_t regAddr = 0U;
@@ -779,7 +779,7 @@ static int32_t Pmic_esmGetErrCntThrValue(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     pmicStatus =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAddr, & regData);
+        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, &regData);
 
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -803,8 +803,8 @@ static int32_t Pmic_esmGetErrCntThrValue(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_esmGetModeValue(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_EsmCfg_t * pEsmCfg) {
+static int32_t Pmic_esmGetModeValue(Pmic_CoreHandle_t *pPmicCoreHandle,
+    Pmic_EsmCfg_t *pEsmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
     uint16_t regAddr = 0U;
@@ -815,7 +815,7 @@ static int32_t Pmic_esmGetModeValue(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     pmicStatus =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAddr, & regData);
+        Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, &regData);
 
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -844,7 +844,7 @@ static int32_t Pmic_esmGetModeValue(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_esmStart(Pmic_CoreHandle_t * pPmicCoreHandle,
+int32_t Pmic_esmStart(Pmic_CoreHandle_t *pPmicCoreHandle,
     const bool esmState) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t esmBaseRegAddr = 0U;
@@ -870,7 +870,7 @@ int32_t Pmic_esmStart(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_esmEnable(Pmic_CoreHandle_t * pPmicCoreHandle,
+int32_t Pmic_esmEnable(Pmic_CoreHandle_t *pPmicCoreHandle,
     const bool esmToggle) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t esmBaseRegAddr = 0U;
@@ -896,8 +896,8 @@ int32_t Pmic_esmEnable(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_esmGetEnableState(Pmic_CoreHandle_t * pPmicCoreHandle,
-    bool * pEsmState) {
+int32_t Pmic_esmGetEnableState(Pmic_CoreHandle_t *pPmicCoreHandle,
+    bool *pEsmState) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t esmBaseRegAddr = 0U;
     uint16_t regAddr = 0U;
@@ -912,13 +912,13 @@ int32_t Pmic_esmGetEnableState(Pmic_CoreHandle_t * pPmicCoreHandle,
     if (PMIC_ST_SUCCESS == pmicStatus) {
         Pmic_esmGetBaseRegAddr( & esmBaseRegAddr);
         regAddr = (uint16_t)esmBaseRegAddr + (uint16_t)PMIC_PMIC_ESM_CFG1_REG_OFFSET;
-        * pEsmState = false;
+        *pEsmState = false;
 
         /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         pmicStatus =
-            Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAddr, & regData);
+            Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, &regData);
 
         /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -926,7 +926,7 @@ int32_t Pmic_esmGetEnableState(Pmic_CoreHandle_t * pPmicCoreHandle,
         if ((PMIC_ST_SUCCESS == pmicStatus) &&
             (Pmic_getBitField(regData, PMIC_ESM_CFG1_ESM_EN_SHIFT,
                 (uint8_t)PMIC_ESM_CFG1_ESM_EN_MASK) == PMIC_ESM_VAL_1)) {
-            * pEsmState = true;
+            *pEsmState = true;
         }
     }
 
@@ -945,7 +945,7 @@ int32_t Pmic_esmGetEnableState(Pmic_CoreHandle_t * pPmicCoreHandle,
  * otherwise, returns an error code.
  */
 static int32_t
-Pmic_esmSetErrcntthresholdEndrvClrModeCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
+Pmic_esmSetErrcntthresholdEndrvClrModeCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
     const Pmic_EsmCfg_t esmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
@@ -982,7 +982,7 @@ Pmic_esmSetErrcntthresholdEndrvClrModeCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
  * otherwise, returns an error code.
  */
 static int32_t
-Pmic_esmSetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
+Pmic_esmSetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
     const Pmic_EsmCfg_t esmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
@@ -1023,7 +1023,7 @@ Pmic_esmSetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_esmSetConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_esmSetConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
     const Pmic_EsmCfg_t esmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
@@ -1057,8 +1057,8 @@ static int32_t Pmic_esmSetConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
  * otherwise, returns an error code.
  */
 static int32_t
-Pmic_esmGetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_EsmCfg_t * pEsmCfg) {
+Pmic_esmGetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
+    Pmic_EsmCfg_t *pEsmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
     if (true ==
@@ -1098,8 +1098,8 @@ Pmic_esmGetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_esmGetConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_EsmCfg_t * pEsmCfg) {
+static int32_t Pmic_esmGetConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
+    Pmic_EsmCfg_t *pEsmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
     if (true ==
@@ -1144,7 +1144,7 @@ static int32_t Pmic_esmGetConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_esmSetConfiguration(Pmic_CoreHandle_t * pPmicCoreHandle,
+int32_t Pmic_esmSetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
     const Pmic_EsmCfg_t esmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t esmBaseRegAddr = 0U;
@@ -1178,8 +1178,8 @@ int32_t Pmic_esmSetConfiguration(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_esmGetConfiguration(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_EsmCfg_t * pEsmCfg) {
+int32_t Pmic_esmGetConfiguration(Pmic_CoreHandle_t *pPmicCoreHandle,
+    Pmic_EsmCfg_t *pEsmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t esmBaseRegAddr = 0U;
 
@@ -1213,7 +1213,7 @@ int32_t Pmic_esmGetConfiguration(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_esmGetErrCnt(Pmic_CoreHandle_t * pPmicCoreHandle,
+int32_t Pmic_esmGetErrCnt(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint8_t * pEsmErrCnt) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t esmBaseRegAddr = 0U;
@@ -1234,7 +1234,7 @@ int32_t Pmic_esmGetErrCnt(Pmic_CoreHandle_t * pPmicCoreHandle,
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         pmicStatus =
-            Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t) regAddr, & regData);
+            Pmic_commIntf_recvByte(pPmicCoreHandle, (uint16_t)regAddr, &regData);
 
         /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
