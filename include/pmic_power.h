@@ -108,18 +108,18 @@ extern "C" {
 #define PMIC_LDO_PLDO_LVL_CFG_VOLT1_35V     (7U)
 #define PMIC_LDO_PLDO_LVL_CFG_VOLT_1_4V     (8U)
 #define PMIC_LDO_PLDO_LVL_CFG_VOLT1_45V     (9U)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT_1_5V     (AU)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT1_55V     (BU)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT_1_6V     (CU)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT1_65V     (DU)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT_1_7V     (EU)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT1_75V     (FU)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT_1_8V     (10U)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT_2_5V     (11U)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT_3V       (12U)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT_3_3V     (13U)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT_5V       (14U)
-#define PMIC_LDO_LVL_CFG_VOLT_BYPASS        (15U)
+#define PMIC_LDO_PLDO_LVL_CFG_VOLT_1_5V     (10U)
+#define PMIC_LDO_PLDO_LVL_CFG_VOLT1_55V     (11U)
+#define PMIC_LDO_PLDO_LVL_CFG_VOLT_1_6V     (12U)
+#define PMIC_LDO_PLDO_LVL_CFG_VOLT1_65V     (13U)
+#define PMIC_LDO_PLDO_LVL_CFG_VOLT_1_7V     (14U)
+#define PMIC_LDO_PLDO_LVL_CFG_VOLT1_75V     (15U)
+#define PMIC_LDO_PLDO_LVL_CFG_VOLT_1_8V     (16U)
+#define PMIC_LDO_PLDO_LVL_CFG_VOLT_2_5V     (17U)
+#define PMIC_LDO_PLDO_LVL_CFG_VOLT_3V       (18U)
+#define PMIC_LDO_PLDO_LVL_CFG_VOLT_3_3V     (19U)
+#define PMIC_LDO_PLDO_LVL_CFG_VOLT_5V       (20U)
+#define PMIC_LDO_LVL_CFG_VOLT_BYPASS        (21U)
 
 /* PLDO Voltage monitoring range macros */
 #define PMIC_PLDO_VTRACK_RNG_LT_2V          (0U)
@@ -144,10 +144,15 @@ extern "C" {
 #define PMIC_PLDO_VMON_TH_10                (3U)
 
 /* LDO Control ranges */
-#define PMIC_LDO_NOT_ENABLED                (0U)
-#define PMIC_LDO_ENABLED_LDO_MODE           (1U)
-#define PMIC_LDO_ENABLED_STBY_MODE          (2U)
-#define PMIC_LDO_ENABLED_VMON_MODE          (3U)
+#define PMIC_LDO_NOT_ENABLED                (0x00)
+#define PMIC_LDO_ENABLED_LDO_MODE           (0x01)
+#define PMIC_LDO_ENABLED_STBY_MODE          (0x02)
+#define PMIC_LDO_ENABLED_VMON_MODE          (0x03)
+
+#define PMIC_ALL_LDO_NOT_ENABLED            (0x00)
+#define PMIC_ALL_LDO_ENABLED_LDO_MODE       (0x55)
+#define PMIC_ALL_LDO_ENABLED_STBY_MODE      (0xAA)
+#define PMIC_ALL_LDO_ENABLED_VMON_MODE      (0xFF)
 
 /* Buck-Boost Timeout configuration ranges */
 #define PMIC_BB_TMO_CFG_NO_TIMEOUT          (0U)
@@ -237,11 +242,16 @@ typedef struct Pmic_ldoCfgReg_s {
     uint8_t ldoRtCfg;
     uint8_t ldoIlimLvlCfg;
     uint8_t ldoLvlCfg;
-    uint8_t ldoRegAddr;
-    uint8_t ldoRegShift;
-    uint8_t ldoRegMask;
 }
 Pmic_ldoCfgReg_t;
+
+typedef struct Pmic_ldoCtrlReg_s {
+    uint8_t ldo1Ctrl;
+    uint8_t ldo2Ctrl;
+    uint8_t ldo3Ctrl;
+    uint8_t ldo4Ctrl;
+}
+Pmic_ldoCtrlReg_t;
 
 typedef struct Pmic_pldoCfgReg_s {
     uint8_t pldoModeSel;
@@ -500,15 +510,11 @@ int32_t Pmic_powerGetBuckBstCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
 
 int32_t
 Pmic_powerSetLdoConfigRegister(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t ldoNumber, Pmic_ldoCfgReg_t * ldoConfig,
-    const Pmic_powerRsrcCfg_t * pwrRsrcCfg,
-        const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
+                               uint8_t ldoNumber, Pmic_ldoCfgReg_t *ldoConfig);
 
 int32_t
 Pmic_powerGetLdoConfigRegister(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t ldoNumber, Pmic_ldoCfgReg_t * ldoConfig,
-    const Pmic_powerRsrcCfg_t * pwrRsrcCfg,
-        const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
+                               uint8_t ldoNumber, Pmic_ldoCfgReg_t *ldoConfig);
 
 void Pmic_getPLDOCfgFields(uint8_t pldoNumber, Pmic_pldoCfgReg_t * pldoCfg,
     const Pmic_powerRsrcCfg_t * pwrRsrcCfg,
@@ -592,11 +598,12 @@ int32_t Pmic_getLdoPgoodCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
 void Pmic_getLDOCtrlFields(uint8_t ldoNumber, uint8_t * pBitPos,
     uint8_t * pBitMask);
 
-int32_t Pmic_setLdoCtrl(Pmic_CoreHandle_t * pPmicCoreHandle, uint8_t ldoCtrlFeature,
-    const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
+int32_t Pmic_setLdoCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
+                        Pmic_ldoCtrlReg_t *ldoControl);
 
-int32_t Pmic_getLdoCtrl(Pmic_CoreHandle_t * pPmicCoreHandle, uint8_t * ldoCtrlFeature,
-    const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
+int32_t Pmic_getLdoCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
+                        uint8_t ldoNumber,
+                        Pmic_ldoCtrlReg_t *ldoControl);
 
 void Pmic_getEnOutCtrlFields(uint8_t enableNumber, uint8_t * pBitPos,
     uint8_t * pBitMask);

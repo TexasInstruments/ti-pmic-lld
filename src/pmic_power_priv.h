@@ -146,6 +146,9 @@ extern "C" {
 #define LDO_LVL_CFG_SHIFT                   (0x00U)
 #define LDO_LVL_CFG_MASK                    (0x1FU)
 
+#define LDO_ALL_CFG_SHIFT                   (0x00U)
+#define LDO_ALL_CFG_MASK                    (0xFFU)
+
 /* Define macros for PLDO Config bit positions and masks */
 #define PLDO_MODE_SEL_CFG_SHIFT             (0x07U)
 #define PLDO_MODE_SEL_CFG_MASK              (0x01U)
@@ -197,6 +200,9 @@ extern "C" {
 
 #define LDO1_CTRL_SHIFT                     (0x00U)
 #define LDO1_CTRL_MASK                      (0x03U)
+
+#define LDO_ALL_CTRL_SHIFT                  (0x00U)
+#define LDO_ALL_CTRL_MASK                   (0xFFU)
 
 /* Define Macros for PLDO and EN_OUT Control Register configuration */
 #define EN_OUTALL_ENABLE_SHIFT              (0x05U)
