@@ -391,7 +391,12 @@ extern "C" {
  */
 static inline void Pmic_setBitField(uint8_t * pRegVal, uint8_t regFieldShift,
     uint8_t regFieldMask, uint8_t fieldVal) {
-    * pRegVal = ( * pRegVal & (uint8_t) ~regFieldMask) | ((uint8_t)(fieldVal << regFieldShift) & regFieldMask);
+    // Calculate the mask for the field location
+    uint8_t mask = (uint8_t)(regFieldMask << regFieldShift);
+    // Shift the field value into the correct position in the register
+    uint8_t value = (uint8_t)(fieldVal << regFieldShift) & mask;
+    // Clear the bits of the field in *pRegVal and set them to the new value
+    *pRegVal = (*pRegVal & ~mask) | value;
 }
 
 /**
@@ -401,8 +406,7 @@ static inline uint8_t Pmic_getBitField(uint8_t regData, uint8_t regFieldShift,
     uint8_t regFieldMask) {
     uint8_t fieldVal;
 
-    fieldVal = (regData & (uint8_t) regFieldMask) >> (uint8_t) regFieldShift;
-
+    fieldVal = (regData >> regFieldShift) & regFieldMask;
     return fieldVal;
 }
 
