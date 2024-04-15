@@ -480,7 +480,6 @@ Pmic_powerSetLdoConfigRegister(Pmic_CoreHandle_t * pPmicCoreHandle,
                 pmicStatus = PMIC_ST_ERR_INV_PARAM;
                 break;
             }
-            initializeLDOCfgReg(ldoConfig);
         }
     }
 
@@ -579,7 +578,6 @@ Pmic_powerGetLdoConfigRegister(Pmic_CoreHandle_t * pPmicCoreHandle,
                 break;
             }
 
-            initializeLDOCfgReg(ldoConfig);
         }
     }
 
