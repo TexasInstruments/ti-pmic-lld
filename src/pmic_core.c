@@ -660,6 +660,20 @@ Pmic_initCoreHandleBasicDevCfgParams(const Pmic_CoreCfg_t * pPmicConfigData,
         }
     }
 
+    /* Check and update PMIC Handle Comm Handle */
+    if ((PMIC_ST_SUCCESS == pmicStatus) &&
+        ((true) == pmic_validParamCheck(pPmicConfigData -> validParams,
+            PMIC_CFG_COMM_HANDLE_VALID))) {
+        if (NULL == pPmicConfigData -> pCommHandle) {
+            pmicStatus = PMIC_ST_ERR_INV_PARAM;
+        } else {
+            pPmicCoreHandle -> pCommHandle = pPmicConfigData -> pCommHandle;
+        }
+        if (PMIC_ST_SUCCESS != pmicStatus) {
+            pmicStatus = PMIC_ST_ERR_FAIL;
+        }
+    }
+
     return pmicStatus;
 }
 
