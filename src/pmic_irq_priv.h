@@ -559,16 +559,15 @@ extern "C" {
  * @ingroup Pmic_IRQPrivStructures
  */
 typedef struct Pmic_IntrCfg_s {
-    uint16_t intrClrRegAddr; /**< Address of the interrupt clear register. */
+    /**< Address of the interrupt clear register. */
+    uint16_t intrClrRegAddr;
+    /**< Bit position of the interrupt in the clear register. */
     uint8_t intrClrBitPos;
-    /**< Bit position of the interrupt in the clear
-                               register. */
-    uint16_t intrMaskRegAddr; /**< Address of the interrupt mask register. */
+    /**< Address of the interrupt mask register. */
+    uint16_t intrMaskRegAddr;
+    /**< Bit position of the interrupt in the mask register. */
     uint8_t intrMaskBitPos;
-    /**< Bit position of the interrupt in the mask
-                                register. */
-}
-Pmic_IntrCfg_t;
+} Pmic_IntrCfg_t;
 
 /**
  * @brief Structure for configuring GPIO interrupt type.

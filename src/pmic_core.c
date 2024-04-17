@@ -48,7 +48,7 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 const Pmic_DiagMUXFeatureMapping Pmic_amuxFeatureMappings[AMUX_NUM_FEATURES] = {
-    [FEATURE_BUCK_BOOST_OUTPUT_VOLTAGE] = {1, NULL},
+    [FEATURE_BUCK_BOOST_OUTPUT_VOLTAGE] = {1, PMIC_FEATURE_NO_CHANNEL},
     [FEATURE_LDO1_OUTPUT_VOLTAGE] = {1, 1},
     [FEATURE_LDO2_OUTPUT_VOLTAGE] = {1, 2},
     [FEATURE_LDO3_OUTPUT_VOLTAGE] = {1, 3},
@@ -60,46 +60,46 @@ const Pmic_DiagMUXFeatureMapping Pmic_amuxFeatureMappings[AMUX_NUM_FEATURES] = {
     [FEATURE_POWER_BATTERY_SUPPLY_VOLTAGE] = {1, 9},
     [FEATURE_MAIN_BANDGAP] = {1, 10},
     [FEATURE_COMPARE_BANDGAP] = {1, 11},
-    [FEATURE_TEMP_SENSOR_BUCK_BOOST] = {12, NULL},
+    [FEATURE_TEMP_SENSOR_BUCK_BOOST] = {12, PMIC_FEATURE_NO_CHANNEL},
     [FEATURE_TEMP_SENSOR_LDO1] = {12, 1},
     [FEATURE_TEMP_SENSOR_LDO2] = {12, 2},
     [FEATURE_TEMP_SENSOR_LDO3] = {12, 3},
-    [FEATURE_TEMP_SENSOR_LDO4] = {13, NULL},
+    [FEATURE_TEMP_SENSOR_LDO4] = {13, PMIC_FEATURE_NO_CHANNEL},
     [FEATURE_TEMP_SENSOR_PLDO1] = {13, 1},
     [FEATURE_TEMP_SENSOR_PLDO2] = {13, 2}
 };
 
 /* Define the lookup table mapping features to group and channel numbers */
 const Pmic_DiagMUXFeatureMapping Pmic_dmuxFeatureMappings[DMUX_NUM_FEATURES] = {
-    [FEATURE_DIGITAL_0_OUTPUT] = {NULL, NULL},
-    [FEATURE_DIGITAL_1_OUTPUT] = {NULL, 1},
-    [FEATURE_BUCK_BOOST_AVG_CURRENT_LIMIT] = {1, NULL},
+    [FEATURE_DIGITAL_0_OUTPUT] = {PMIC_FEATURE_NO_GROUP, PMIC_FEATURE_NO_CHANNEL},
+    [FEATURE_DIGITAL_1_OUTPUT] = {PMIC_FEATURE_NO_GROUP, 1},
+    [FEATURE_BUCK_BOOST_AVG_CURRENT_LIMIT] = {1, PMIC_FEATURE_NO_CHANNEL},
     [FEATURE_BUCK_BOOST_DEGLITCHED_AVG_CURRENT_LIMIT] = {1, 1},
     [FEATURE_BUCK_BOOST_PEAK_CURRENT_LIMIT] = {1, 2},
     [FEATURE_BUCK_BOOST_DEGLITCHED_PEAK_CURRENT_LIMIT] = {1, 3},
-    [FEATURE_RESERVED_2] = {2, NULL},
-    [FEATURE_LDO1_CURRENT_LIMIT] = {3, NULL},
+    [FEATURE_RESERVED_2] = {2, PMIC_FEATURE_NO_CHANNEL},
+    [FEATURE_LDO1_CURRENT_LIMIT] = {3, PMIC_FEATURE_NO_CHANNEL},
     [FEATURE_LDO1_DEGLITCHED_CURRENT_LIMIT] = {3, 1},
     [FEATURE_LDO1_BYPASS_ENABLE] = {3, 2},
-    [FEATURE_LDO2_CURRENT_LIMIT] = {4, NULL},
+    [FEATURE_LDO2_CURRENT_LIMIT] = {4, PMIC_FEATURE_NO_CHANNEL},
     [FEATURE_LDO2_DEGLITCHED_CURRENT_LIMIT] = {4, 1},
     [FEATURE_LDO2_BYPASS_ENABLE] = {4, 2},
-    [FEATURE_LDO3_CURRENT_LIMIT] = {5, NULL},
+    [FEATURE_LDO3_CURRENT_LIMIT] = {5, PMIC_FEATURE_NO_CHANNEL},
     [FEATURE_LDO3_DEGLITCHED_CURRENT_LIMIT] = {5, 1},
     [FEATURE_LDO3_BYPASS_ENABLE] = {5, 2},
-    [FEATURE_LDO4_CURRENT_LIMIT] = {6, NULL},
+    [FEATURE_LDO4_CURRENT_LIMIT] = {6, PMIC_FEATURE_NO_CHANNEL},
     [FEATURE_LDO4_DEGLITCHED_CURRENT_LIMIT] = {6, 1},
     [FEATURE_LDO4_BYPASS_ENABLE] = {6, 2},
-    [FEATURE_PLDO1_CURRENT_LIMIT] = {7, NULL},
+    [FEATURE_PLDO1_CURRENT_LIMIT] = {7, PMIC_FEATURE_NO_CHANNEL},
     [FEATURE_PLDO1_DEGLITCHED_CURRENT_LIMIT] = {7, 1},
     [FEATURE_RESERVED_22] = {7, 2},
     [FEATURE_PLDO1_TRACKING_MODE_ENABLE] = {7, 3},
-    [FEATURE_PLDO2_CURRENT_LIMIT] = {8, NULL},
+    [FEATURE_PLDO2_CURRENT_LIMIT] = {8, PMIC_FEATURE_NO_CHANNEL},
     [FEATURE_PLDO2_DEGLITCHED_CURRENT_LIMIT] = {8, 1},
     [FEATURE_RESERVED_25] = {8, 2},
     [FEATURE_PLDO2_TRACKING_MODE_ENABLE] = {8, 3},
     [FEATURE_RESERVED_28] = {8, 4},
-    [FEATURE_RESERVED_29] = {9, NULL},
+    [FEATURE_RESERVED_29] = {9, PMIC_FEATURE_NO_CHANNEL},
     [FEATURE_VBAT_DEGLITCHED_OV] = {9, 1},
     [FEATURE_VBAT_DEGLITCHED_OVP] = {9, 2},
     [FEATURE_VBAT_DEGLITCHED_UV] = {9, 3},
@@ -123,7 +123,7 @@ const Pmic_DiagMUXFeatureMapping Pmic_dmuxFeatureMappings[DMUX_NUM_FEATURES] = {
     [FEATURE_EXT_VMON1_DEGLITCHED_UV] = {9, 21},
     [FEATURE_EXT_VMON2_DEGLITCHED_UV] = {9, 22},
     [FEATURE_EXT_VMON1_DEGLITCHED_OV] = {9, 23},
-    [FEATURE_EXT_VMON2_DEGLITCHED_OV] = {10, NULL},
+    [FEATURE_EXT_VMON2_DEGLITCHED_OV] = {10, PMIC_FEATURE_NO_CHANNEL},
     [FEATURE_VBAT_OV] = {10, 1},
     [FEATURE_VBAT_OVP] = {10, 2},
     [FEATURE_VBAT_UV] = {10, 3},
@@ -147,7 +147,7 @@ const Pmic_DiagMUXFeatureMapping Pmic_dmuxFeatureMappings[DMUX_NUM_FEATURES] = {
     [FEATURE_EXT_VMON1_UV] = {10, 21},
     [FEATURE_EXT_VMON2_UV] = {10, 22},
     [FEATURE_EXT_VMON1_OV] = {10, 23},
-    [FEATURE_EXT_VMON2_OV] = {11, NULL},
+    [FEATURE_EXT_VMON2_OV] = {11, PMIC_FEATURE_NO_CHANNEL},
     [FEATURE_BUCK_BOOST_TEMP_PREWARNING] = {11, 1},
     [FEATURE_BUCK_BOOST_OVERTEMP_SHUTDOWN] = {11, 2},
     [FEATURE_RESERVED_90] = {11, 3},
@@ -163,7 +163,7 @@ const Pmic_DiagMUXFeatureMapping Pmic_dmuxFeatureMappings[DMUX_NUM_FEATURES] = {
     [FEATURE_PLDO1_TEMP_PREWARNING] = {11, 13},
     [FEATURE_PLDO1_OVERTEMP_SHUTDOWN] = {11, 14},
     [FEATURE_PLDO2_TEMP_PREWARNING] = {11, 15},
-    [FEATURE_PLDO2_OVERTEMP_SHUTDOWN] = {12, NULL},
+    [FEATURE_PLDO2_OVERTEMP_SHUTDOWN] = {12, PMIC_FEATURE_NO_CHANNEL},
     [FEATURE_VREG_OVP_MONITOR_1] = {12, 1},
     [FEATURE_VREG_UVLO_MONITOR_1] = {12, 2},
     [FEATURE_VREG_SAFETY_OVP_MONITOR_1] = {12, 3},
@@ -496,12 +496,10 @@ int32_t Pmic_setStateCtrlReg(Pmic_CoreHandle_t *pPmicCoreHandle,
         Pmic_criticalSectionStop(pPmicCoreHandle);
 
         if (PMIC_ST_SUCCESS == pmicStatus) {
-            if (tempCfg->state_req != NULL) {
-                Pmic_setBitField(&regData,
-                    PMIC_STATE_CTRL_STATE_REQ_SHIFT,
-                    PMIC_STATE_CTRL_STATE_REQ_MASK,
-                     tempCfg->state_req);
-            }
+            Pmic_setBitField(&regData,
+                PMIC_STATE_CTRL_STATE_REQ_SHIFT,
+                PMIC_STATE_CTRL_STATE_REQ_MASK,
+                tempCfg->stateReq);
         } else {
             pmicStatus = PMIC_ST_ERR_FAIL;
         }
@@ -534,11 +532,10 @@ int32_t Pmic_getStateCtrlReg(Pmic_CoreHandle_t *pPmicCoreHandle,
         Pmic_criticalSectionStop(pPmicCoreHandle);
 
         if (PMIC_ST_SUCCESS == pmicStatus) {
-            if (pCommonStateCtrl -> state_req != (uint8_t) NULL) {
-                pCommonStateCtrl -> state_req =
-                    Pmic_getBitField(regData, PMIC_STATE_CTRL_STATE_REQ_SHIFT,
-                        PMIC_STATE_CTRL_STATE_REQ_MASK);
-            }
+            pCommonStateCtrl->stateReq = Pmic_getBitField(
+                regData,
+                PMIC_STATE_CTRL_STATE_REQ_SHIFT,
+                PMIC_STATE_CTRL_STATE_REQ_MASK);
         } else {
             pmicStatus = PMIC_ST_ERR_FAIL;
         }
@@ -1568,7 +1565,7 @@ int32_t Pmic_getDiagAMUXFeatureCfg(Pmic_CoreHandle_t *pPmicCoreHandle, uint32_t 
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
         /* Loop through the feature mappings to find a match */
-        for (int8_t i = 0; i < (int8_t)PMIC_END_AMUX; ++i) {
+        for (uint8_t i = 0; i < PMIC_END_AMUX; i++) {
             if ((Pmic_amuxFeatureMappings[i].group == diagGrpSel) &&
                 (Pmic_amuxFeatureMappings[i].channel == diagChannelSel)) {
                 /* Return the corresponding feature */
@@ -1610,7 +1607,7 @@ int32_t Pmic_getDiagDMUXFeatureCfg(Pmic_CoreHandle_t *pPmicCoreHandle, uint32_t 
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
         /* Loop through the feature mappings to find a match */
-        for (int8_t i = 0; i < (int8_t) PMIC_END_DMUX; ++i) {
+        for (uint8_t i = 0; i < PMIC_END_DMUX; i++) {
             if ((Pmic_dmuxFeatureMappings[i].group == diagGrpSel) &&
                 (Pmic_dmuxFeatureMappings[i].channel == diagChannelSel)) {
                 /* Return the corresponding feature */

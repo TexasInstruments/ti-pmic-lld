@@ -1280,7 +1280,7 @@ typedef struct Pmic_CommonStateStat_s {
  * @ingroup Pmic_CoreStructures
  */
 typedef struct Pmic_CommonStateCtrl_s {
-    uint8_t state_req;
+    uint8_t stateReq;
 } Pmic_CommonStateCtrl_t;
 
 typedef struct {
@@ -1451,6 +1451,9 @@ typedef enum {
 
 #define PMIC_START_DMUX (0U)
 #define PMIC_END_DMUX   (DMUX_NUM_FEATURES)
+
+#define PMIC_FEATURE_NO_GROUP   (0U)
+#define PMIC_FEATURE_NO_CHANNEL (0U)
 
 extern const Pmic_DiagMUXFeatureMapping Pmic_amuxFeatureMappings[AMUX_NUM_FEATURES];
 extern const Pmic_DiagMUXFeatureMapping Pmic_dmuxFeatureMappings[DMUX_NUM_FEATURES];
