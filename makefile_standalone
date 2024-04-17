@@ -31,31 +31,40 @@
 #
 #
 ifdef OS
-	RM = rm
-	RMDIR = rmdir
-	MKDIR = mkdir
-	FixPath = $(subst /,\,$1)
-	unix_to_dos = $(subst /,\,$1)
-	OSP = windows
-
+RM = rm
+RMDIR = rmdir
+MKDIR = mkdir
+unix_to_dos = $(subst /,\,$1)
+OSP = windows
 else
-	ifeq ($(shell uname), Linux)
-	RM = rm -f
-	RMDIR = rm -rf
-	MKDIR = mkdir -p
-	FixPath = $1
-	OSP = unix
+ifeq ($(shell uname), Linux)
+RM = rm -f
+RMDIR = rm -rf
+MKDIR = mkdir -p
+OSP = unix
+else
+RM = rm -f
+RMDIR = rm -rf
+MKDIR = mkdir -p
+OSP = macos
+CC = clang
 endif
 endif
 
-CC           =  gcc
-INC          = -Iinclude -I. -Iinclude/cfg/tps6594x/ -Iinclude/cfg/lp8764x/ \
-	       -I./src   -I./src/cfg/tps6594x/  -I./src/cfg/lp8764x/
-CFLAGS       = -fPIC $(INC) -Wall
-LDFLAGS      = -shared
-LIB_DIR      = lib
+ifeq ($(CC),)
+CC := gcc
+endif
 
-DEBUGFLAGS   = -O0 -g -D _DEBUG
+INC	= -I./include \
+		  -I./include/cfg/tps65386x \
+		  -I./src \
+		  -I./src/cfg/tps65386x \
+
+CFLAGS = -fPIC $(INC) -Wall -Wno-unused-function
+LDFLAGS = -shared
+LIB_DIR = lib
+
+DEBUGFLAGS = -O0 -g -D _DEBUG
 RELEASEFLAGS = -O2 -D NDEBUG
 build ?= release
 
@@ -69,15 +78,27 @@ ifeq ($(build), release)
     TARGET  = $(LIB_DIR)/pmic_lib_$(build).so
 endif
 
-$(info $(OSP))
-SOURCES = src/pmic_core.c  src/pmic_io.c  src/pmic_gpio.c  src/cfg/tps6594x/pmic_gpio_tps6594x.c  src/pmic_rtc.c  src/pmic_irq_status.c src/cfg/lp8764x/pmic_gpio_lp8764x.c  src/pmic_power.c src/cfg/lp8764x/pmic_power_lp8764x.c  src/cfg/tps6594x/pmic_power_tps6594x.c  src/cfg/tps6594x/pmic_irq_tps6594x.c  src/cfg/lp8764x/pmic_irq_lp8764x.c src/pmic_wdg.c src/pmic_fsm.c src/pmic_esm.c
+SOURCES = src/pmic_core.c \
+	src/pmic_esm.c \
+	src/pmic_fsm.c \
+	src/pmic_gpio.c \
+	src/pmic_ilim.c \
+	src/pmic_io.c \
+	src/pmic_irq_status.c \
+	src/pmic_low_iq_timer.c \
+	src/pmic_power.c \
+	src/pmic_wdg.c \
+	src/cfg/tps65386x/pmic_irq_tps65386.c
 OBJECTS = $(SOURCES:.c=.o)
 
+.PHONY: clean help
+
 all: $(TARGET)
+
 $(TARGET): $(OBJECTS)
-	 $(call FixPath, $(MKDIR) $(LIB_DIR))
-	 $(call FixPath,$(CC) $(FLAGS) $(LDFLAGS)  -o $(TARGET) $(OBJECTS))
-	 $(call FixPath,${RM} ${OBJECTS})
+	$(call $(MKDIR) $(LIB_DIR))
+	$(call $(CC) $(CFLAGS) $(LDFLAGS) -o $(TARGET) $(OBJECTS))
+	$(call $(RM) $(OBJECTS))
 
 help:
 	    @echo "# make help"
@@ -95,6 +116,8 @@ help:
 	    @echo "    Default: release"
 	    @echo "OS=[Windows_NT linux]"
 	    @echo "    Default: Windows_NT"
+
 clean:
-	${RM} $(call FixPath, ${TARGET})
-	${RMDIR} $(call FixPath, $(LIB_DIR))
+	$(RM) $(TARGET)
+	$(RM) $(OBJECTS)
+	$(RMDIR) $(LIB_DIR)
