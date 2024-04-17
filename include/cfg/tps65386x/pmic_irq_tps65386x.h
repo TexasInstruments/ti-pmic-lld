@@ -45,8 +45,6 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#include "pmic_irq_tps65386x_priv.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
