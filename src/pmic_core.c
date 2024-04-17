@@ -214,11 +214,10 @@ const Pmic_DevSubSysInfo_t pmicSubSysInfo[] = {
     /* PMIC_DEV_BB_TPS65386x */
     {
         .gpioEnable = true,
-            .rtcEnable = true,
-            .wdgEnable = true,
-            .buckEnable = true,
-            .ldoEnable = true,
-            .esmEnable = true
+        .wdgEnable = true,
+        .buckEnable = true,
+        .ldoEnable = true,
+        .esmEnable = true
     }
 };
 

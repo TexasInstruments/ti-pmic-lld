@@ -91,7 +91,6 @@
 #include <pmic_types.h>
 #include <pmic_core.h>
 #include <pmic_gpio.h>
-#include <pmic_rtc.h>
 #include <pmic_irq.h>
 #include <pmic_power.h>
 #include <pmic_wdg.h>
