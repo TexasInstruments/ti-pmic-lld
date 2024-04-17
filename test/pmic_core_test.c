@@ -184,7 +184,7 @@ void test_pmic_get_scratchpad() {
 void test_pmic_set_spreadSpectrum() {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     Pmic_CommonCtrlCfg_t commonCtrlCfg;
-    commonCtrlCfg.sreadSpectrumEn = 1;
+    commonCtrlCfg.spreadSpectrumEn = 1;
     DebugP_log("Enabling DRSS...\r\n");
     pmicStatus = Pmic_spreadSpectrumEnable(pPmicCoreHandle_core, commonCtrlCfg);
     if (PMIC_ST_SUCCESS != pmicStatus) {
@@ -205,7 +205,7 @@ void test_pmic_set_spreadSpectrum() {
 void test_pmic_clear_spreadSpectrum() {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     Pmic_CommonCtrlCfg_t commonCtrlCfg;
-    commonCtrlCfg.sreadSpectrumEn = 0;
+    commonCtrlCfg.spreadSpectrumEn = 0;
     DebugP_log("Disabling DRSS...\r\n");
     pmicStatus = Pmic_spreadSpectrumEnable(pPmicCoreHandle_core, commonCtrlCfg);
     if (PMIC_ST_SUCCESS != pmicStatus) {
@@ -232,7 +232,7 @@ void test_pmic_get_spreadSpectrum() {
         DebugP_log("%s(): %d: FAILED with status: %d\n", __func__, __LINE__,
                    pmicStatus);
     }
-    if ((commonCtrlCfg->sreadSpectrumEn) == 1) {
+    if ((commonCtrlCfg->spreadSpectrumEn) == 1) {
         DebugP_log("DRSS modulation is enabled!\r\n\n");
     } else {
         DebugP_log("DRSS modulation is disabled!\r\n");
@@ -315,9 +315,9 @@ void test_pmic_get_diagout() {
         DebugP_log("%s(): %d: FAILED with status: %d\n", __func__, __LINE__,
                    pmicStatus);
     }
-    if ((pDiagOutCfgCtrl->DiagOutCtrl) == 1) {
+    if ((pDiagOutCfgCtrl->diagOutCtrl) == 1) {
         DebugP_log("AMUX Enabled!\r\n\n");
-    } else if ((pDiagOutCfgCtrl->DiagOutCtrl) == 2) {
+    } else if ((pDiagOutCfgCtrl->diagOutCtrl) == 2) {
         DebugP_log("DMUX Enabled!\r\n\n");
     } else {
         DebugP_log("AMUX/DMUX not Enabled!\r\n\n");
@@ -337,8 +337,8 @@ void test_pmic_get_diagout() {
 void test_pmic_enable_diagout() {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     Pmic_DiagOutCfgCtrl_t DiagOutCfgCtrl;
-    DiagOutCfgCtrl.DiagOutCtrl_AMUXEn = 1;
-    DiagOutCfgCtrl.DiagOutCtrl_DMUXEn = 0;
+    DiagOutCfgCtrl.diagOutCtrl_AMUXEn = 1;
+    DiagOutCfgCtrl.diagOutCtrl_DMUXEn = 0;
     DebugP_log("Enabling AMUX...\r\n");
     pmicStatus =
         Pmic_setDiagOutCtrlConfig(pPmicCoreHandle_core, DiagOutCfgCtrl);

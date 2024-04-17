@@ -943,8 +943,7 @@ typedef struct Pmic_RecovCntCfg_s {
     uint8_t validParams;
     uint8_t thrVal;
     bool clrCnt;
-}
-Pmic_RecovCntCfg_t;
+} Pmic_RecovCntCfg_t;
 
 /**
  * @brief  PMIC common control param configuration
@@ -1026,7 +1025,7 @@ Pmic_RecovCntCfg_t;
  */
 typedef struct Pmic_CommonCtrlCfg_s {
     uint32_t validParams;
-    uint32_t sreadSpectrumEn;
+    uint32_t spreadSpectrumEn;
     bool skipEepromDefaultLoadEn;
     uint8_t eepromDefaultLoad;
     uint8_t enDrv;
@@ -1038,8 +1037,7 @@ typedef struct Pmic_CommonCtrlCfg_s {
     uint8_t regLock_2;
     uint8_t cntLock_1;
     uint8_t cntLock_2;
-}
-Pmic_CommonCtrlCfg_t;
+} Pmic_CommonCtrlCfg_t;
 
 /**
  * @brief PMIC Safe State Configuration
@@ -1056,8 +1054,7 @@ typedef struct Pmic_SafeStateCfg_s {
     uint8_t validParams;
     uint8_t safeStateTMO;
     uint8_t safeLockThreshold;
-}
-Pmic_SafeStateCfg_t;
+} Pmic_SafeStateCfg_t;
 
 /**
  * @brief  PMIC Miscellaneous control param Configuration
@@ -1126,8 +1123,7 @@ typedef struct Pmic_MiscCtrlCfg_s {
     uint8_t syncClkInFreq;
     uint8_t nRstOutSocSignal;
     uint8_t nRstOutSignal;
-}
-Pmic_MiscCtrlCfg_t;
+} Pmic_MiscCtrlCfg_t;
 
 /**
  * @brief PMIC Diagnostic Output Configuration Control
@@ -1136,23 +1132,22 @@ Pmic_MiscCtrlCfg_t;
  * information.
  *
  * @param validParams           Selection of structure parameters to be set.
- * @param DiagOutCtrl           Diagnostic output control.
- * @param DiagOutCtrl_AMUXEn    Diagnostic output AMUX enable.
- * @param DiagOutCtrl_DMUXEn    Diagnostic output DMUX enable.
- * @param DiagGrpSel            Diagnostic group selection.
- * @param DiagChannelSel        Diagnostic channel selection.
+ * @param diagOutCtrl           Diagnostic output control.
+ * @param diagOutCtrl_AMUXEn    Diagnostic output AMUX enable.
+ * @param diagOutCtrl_DMUXEn    Diagnostic output DMUX enable.
+ * @param diagGroupSel          Diagnostic group selection.
+ * @param diagChannelSel        Diagnostic channel selection.
  *
  * @ingroup Pmic_CoreStructures
  */
 typedef struct Pmic_DiagOutCfgCtrl_s {
     uint8_t validParams;
-    uint8_t DiagOutCtrl;
-    uint8_t DiagOutCtrl_AMUXEn;
-    uint8_t DiagOutCtrl_DMUXEn;
-    uint8_t DiagGrpSel;
-    uint8_t DiagChannelSel;
-}
-Pmic_DiagOutCfgCtrl_t;
+    uint8_t diagOutCtrl;
+    uint8_t diagOutCtrl_AMUXEn;
+    uint8_t diagOutCtrl_DMUXEn;
+    uint8_t diagGroupSel;
+    uint8_t diagChannelSel;
+} Pmic_DiagOutCfgCtrl_t;
 
 /**
  * @brief  PMIC common control param status
@@ -1233,8 +1228,7 @@ typedef struct Pmic_CommonCtrlStat_s {
     uint8_t nRstPin;
     uint8_t cfgregLockStat;
     uint8_t cntregLockStat;
-}
-Pmic_CommonCtrlStat_t;
+} Pmic_CommonCtrlStat_t;
 
 /**
  * @brief  PMIC Device Information
@@ -1255,8 +1249,7 @@ typedef struct Pmic_DeviceInfo_s {
     uint8_t nvmRev;
     uint8_t siliconRev;
     uint8_t customNvmID;
-}
-Pmic_DeviceInfo_t;
+} Pmic_DeviceInfo_t;
 
 /**
  * @brief Common PMIC State Status Information
@@ -1271,12 +1264,11 @@ Pmic_DeviceInfo_t;
  * @ingroup Pmic_CoreStructures
  */
 typedef struct Pmic_CommonStateStat_s {
-    uint8_t * rstMcuCnt;
-    uint8_t * rstMcuRqFlag;
-    uint8_t * pwrdDlyActv;
-    uint8_t * state;
-}
-Pmic_CommonStateStat_t;
+    uint8_t *rstMcuCnt;
+    uint8_t *rstMcuRqFlag;
+    uint8_t *pwrdDlyActv;
+    uint8_t *state;
+} Pmic_CommonStateStat_t;
 
 /**
  * @brief Common PMIC State Control Information
@@ -1289,20 +1281,12 @@ Pmic_CommonStateStat_t;
  */
 typedef struct Pmic_CommonStateCtrl_s {
     uint8_t state_req;
-}
-Pmic_CommonStateCtrl_t;
+} Pmic_CommonStateCtrl_t;
 
 typedef struct {
     uint8_t group;
     uint8_t channel;
-}
-Pmic_DiagMUXFeatureMapping;
-
-#define PMIC_START_AMUX (0U)
-#define PMIC_END_AMUX (19U)
-
-#define PMIC_START_DMUX (0U)
-#define PMIC_END_DMUX (131U)
+} Pmic_DiagMUXFeatureMapping;
 
 typedef enum {
     FEATURE_BUCK_BOOST_OUTPUT_VOLTAGE,
@@ -1325,8 +1309,10 @@ typedef enum {
     FEATURE_TEMP_SENSOR_PLDO1,
     FEATURE_TEMP_SENSOR_PLDO2,
     AMUX_NUM_FEATURES
-}
-Pmic_AMUXFeatures;
+} Pmic_AMUXFeatures;
+
+#define PMIC_START_AMUX (0U)
+#define PMIC_END_AMUX   (AMUX_NUM_FEATURES)
 
 typedef enum {
     FEATURE_DIGITAL_0_OUTPUT,
@@ -1461,15 +1447,13 @@ typedef enum {
     FEATURE_SPI_SDI_INPUT_LEVEL,
     FEATURE_SPI_SDO_READBACK_LEVEL,
     DMUX_NUM_FEATURES
-}
-Pmic_DMUXFeatures;
+} Pmic_DMUXFeatures;
 
-extern
-const Pmic_DiagMUXFeatureMapping
-Pmic_amuxFeatureMappings[AMUX_NUM_FEATURES];
-extern
-const Pmic_DiagMUXFeatureMapping
-Pmic_dmuxFeatureMappings[DMUX_NUM_FEATURES];
+#define PMIC_START_DMUX (0U)
+#define PMIC_END_DMUX   (DMUX_NUM_FEATURES)
+
+extern const Pmic_DiagMUXFeatureMapping Pmic_amuxFeatureMappings[AMUX_NUM_FEATURES];
+extern const Pmic_DiagMUXFeatureMapping Pmic_dmuxFeatureMappings[DMUX_NUM_FEATURES];
 
 /**
  * @}
@@ -1935,7 +1919,8 @@ int32_t Pmic_setScratchPadValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @ingroup Pmic_CoreFunctions
  */
 int32_t Pmic_getScratchPadValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                const uint8_t scratchPadRegId, uint8_t *pData);
+                                const uint8_t scratchPadRegId,
+                                uint8_t *pData);
 
 /**
  * @brief Enable or disable spread spectrum.
@@ -2175,7 +2160,8 @@ int32_t Pmic_getDiagOutCtrlConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @ingroup Pmic_CoreFunctions
  */
 static void Pmic_getPinTypeRegBitFields(const uint8_t pinType,
-                                        uint8_t *pBitShift, uint8_t *pBitMask);
+                                        uint8_t *pBitShift,
+                                        uint8_t *pBitMask);
 
 /**
  * @brief Get the pin value.
@@ -2194,7 +2180,8 @@ static void Pmic_getPinTypeRegBitFields(const uint8_t pinType,
  * @ingroup Pmic_CoreFunctions
  */
 int32_t Pmic_getPinValue(Pmic_CoreHandle_t *pPmicCoreHandle,
-                         const uint8_t pinType, uint8_t *pPinValue);
+                         const uint8_t pinType,
+                         uint8_t *pPinValue);
 
 /**
  * @brief Get the status of the safe output 1 pin.
