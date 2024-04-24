@@ -39,8 +39,8 @@
  *
  */
 
-#ifndef PMIC_PMIC_LOW_IQ_TIMER_H_
-#define PMIC_PMIC_LOW_IQ_TIMER_H_
+#ifndef __PMIC_LOW_IQ_TIMER_H__
+#define __PMIC_LOW_IQ_TIMER_H__
 
 /* ==========================================================================*/
 /*                             Include Files                                 */
@@ -92,4 +92,4 @@ int32_t Pmic_SetLPWake1(Pmic_CoreHandle_t * pPmicCoreHandle,
 int32_t Pmic_SetLPWake2(Pmic_CoreHandle_t * pPmicCoreHandle,
     uint8_t tmrlpwakeData);
 
-#endif /* PMIC_PMIC_LOW_IQ_TIMER_H_ */
+#endif /* __PMIC_LOW_IQ_TIMER_H__ */

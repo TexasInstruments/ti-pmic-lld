@@ -82,8 +82,8 @@
  *  \brief PMIC Driver initialization API/interface file.
  */
 
-#ifndef PMIC_H_
-#define PMIC_H_
+#ifndef __PMIC_H__
+#define __PMIC_H__
 
 /* ========================================================================= */
 /*                             Include Files                                 */
@@ -517,6 +517,6 @@ int32_t Pmic_deinit(Pmic_CoreHandle_t  *pPmicCoreHandle);
 
 #endif /* __cplusplus */
 
-#endif /* PMIC_H_ */
+#endif /* __PMIC_H__ */
 
 /* @} */

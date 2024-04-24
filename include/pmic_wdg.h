@@ -31,8 +31,8 @@
  *
  *****************************************************************************/
 
-#ifndef PMIC_INC_PMIC_WDG_H_
-#define PMIC_INC_PMIC_WDG_H_
+#ifndef __PMIC_WDG_H__
+#define __PMIC_WDG_H__
 
 /* ==========================================================================*/
 /*                             Include Files                                 */
@@ -1010,4 +1010,4 @@ static int32_t
 Pmic_wdgClrErrStatusWdgErrType(Pmic_CoreHandle_t * pPmicCoreHandle,
     const uint8_t wdgErrType, uint8_t regVal);
 
-#endif /* PMIC_INC_PMIC_WDG_H_ */
+#endif /* __PMIC_WDG_H__ */

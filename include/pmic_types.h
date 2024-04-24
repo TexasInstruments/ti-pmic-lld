@@ -37,8 +37,8 @@
  *  @brief PMIC Driver Common data types file.
  */
 
-#ifndef PMIC_TYPES_H_
-#define PMIC_TYPES_H_
+#ifndef __PMIC_TYPES_H__
+#define __PMIC_TYPES_H__
 
 /* ========================================================================= */
 /*                             Include Files                                 */
@@ -172,4 +172,4 @@ typedef struct Pmic_CoreHandle_s {
 
 #endif /* __cplusplus */
 
-#endif /* PMIC_TYPES_H_ */
+#endif /* __PMIC_TYPES_H__ */

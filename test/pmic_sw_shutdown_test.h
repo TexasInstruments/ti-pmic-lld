@@ -36,8 +36,8 @@
  *  @brief  This file contains all the testing related files APIs for the PMIC core
  *          and basic register lock/unlock and other miscellaneous tests.
  */
-#ifndef PMIC_SW_SHUTDOWN_TEST_H_
-#define PMIC_SW_SHUTDOWN_TEST_H_
+#ifndef __PMIC_SW_SHUTDOWN_TEST_H__
+#define __PMIC_SW_SHUTDOWN_TEST_H__
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -65,4 +65,4 @@
 }
 #endif /* __cplusplus */
 
-#endif /* PMIC_SW_SHUTDOWN_TEST_H_ */
+#endif /* __PMIC_SW_SHUTDOWN_TEST_H__ */

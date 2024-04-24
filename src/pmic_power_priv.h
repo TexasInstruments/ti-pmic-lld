@@ -38,8 +38,8 @@
  *         prototypes for driver specific PMIC power configuration
  */
 
-#ifndef PMIC_POWER_PRIV_H_
-#define PMIC_POWER_PRIV_H_
+#ifndef __PMIC_POWER_PRIV_H__
+#define __PMIC_POWER_PRIV_H__
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -385,4 +385,4 @@ static inline uint8_t Pmic_powerGetPwrRsrcType(uint16_t pwrRsrc) {
 }
 #endif /* __cplusplus */
 
-#endif /* PMIC_POWER_PRIV_H_ */
+#endif /* __PMIC_POWER_PRIV_H__ */

@@ -38,8 +38,8 @@
  *         configuring PMIC IRQ.
  */
 
-#ifndef PMIC_IRQ_PRIV_H_
-#define PMIC_IRQ_PRIV_H_
+#ifndef __PMIC_IRQ_PRIV_H__
+#define __PMIC_IRQ_PRIV_H__
 
 /* ========================================================================= */
 /*                             Include Files                                 */
@@ -597,4 +597,4 @@ Pmic_GpioIntrTypeCfg_t;
 
 #endif /* __cplusplus */
 
-#endif /* PMIC_IRQ_PRIV_H_ */
+#endif /* __PMIC_IRQ_PRIV_H__ */

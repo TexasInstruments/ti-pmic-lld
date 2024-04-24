@@ -38,8 +38,8 @@
  *
  */
 
-#ifndef PMIC_POWER_TPS65386x_PRIV_H_
-#define PMIC_POWER_TPS65386x_PRIV_H_
+#ifndef __PMIC_POWER_TPS65386x_PRIV_H__
+#define __PMIC_POWER_TPS65386x_PRIV_H__
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -72,4 +72,4 @@
 /* ========================================================================== */
 
 
-#endif /* PMIC_POWER_TPS65386x_PRIV_H_ */
+#endif /* __PMIC_POWER_TPS65386x_PRIV_H__ */

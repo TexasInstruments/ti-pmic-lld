@@ -38,8 +38,8 @@
  *          for the PMIC GPI/GPO.
  */
 
-#ifndef TESTS_PMIC_GPIO_TEST_H_
-#define TESTS_PMIC_GPIO_TEST_H_
+#ifndef __PMIC_GPIO_TEST_H__
+#define __PMIC_GPIO_TEST_H__
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -74,4 +74,4 @@ void *test_pmic_gpio(void *args);
 }
 #endif /* __cplusplus */
 
-#endif /* TESTS_PMIC_GPIO_TEST_H_ */
+#endif /* __PMIC_GPIO_TEST_H__ */

@@ -38,8 +38,8 @@
  *
  */
 
-#ifndef PMIC_POWER_H_
-#define PMIC_POWER_H_
+#ifndef __PMIC_POWER_H__
+#define __PMIC_POWER_H__
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -784,4 +784,4 @@ int32_t Pmic_GetLowPowerConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
 }
 #endif /* __cplusplus */
 
-#endif /* PMIC_POWER_H_ */
+#endif /* __PMIC_POWER_H__ */

@@ -36,8 +36,8 @@
  *  @brief  Header file for PMIC POWER Unit Tests
  */
 
-#ifndef PMIC_POWER_TEST_H_
-#define PMIC_POWER_TEST_H_
+#ifndef __PMIC_POWER_TEST_H__
+#define __PMIC_POWER_TEST_H__
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -93,4 +93,4 @@ void *test_pmic_power(void *args);
 }
 #endif /* __cplusplus */
 
-#endif /* PMIC_POWER_TEST_H_ */
+#endif /* __PMIC_POWER_TEST_H__ */

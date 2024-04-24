@@ -39,8 +39,8 @@
  *
  */
 
-#ifndef PMIC_INC_LOW_IQ_TIMER_PRIV_H_
-#define PMIC_INC_LOW_IQ_TIMER_PRIV_H_
+#ifndef __PMIC_LOW_IQ_TIMER_PRIV_H__
+#define __PMIC_LOW_IQ_TIMER_PRIV_H__
 
 /* ==========================================================================*/
 /*                             Include Files                                 */
@@ -179,4 +179,4 @@
 #define PMIC_TMR_CFG6\
     (0X05U) /* STANDBY State with wakeup and Operating States Timer */
 
-#endif /* PMIC_INC_LOW_IQ_TIMER_PRIV_H_ */
+#endif /* __PMIC_LOW_IQ_TIMER_PRIV_H__ */

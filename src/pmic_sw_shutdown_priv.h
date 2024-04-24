@@ -39,8 +39,8 @@
  *
  */
 
-#ifndef PMIC_INC_SW_SHUTDOWN_PRIV_H_
-#define PMIC_INC_SW_SHUTDOWN_PRIV_H_
+#ifndef __PMIC_SW_SHUTDOWN_PRIV_H__
+#define __PMIC_SW_SHUTDOWN_PRIV_H__
 
 /*!
  * \brief  PMIC SW SHUTDOWN register Addresses
@@ -226,4 +226,4 @@
 #define PMIC_THERMAL_STAT_TSD_ERR_DATA2             (0x01U)
 #define PMIC_THERMAL_STAT_CLEAR_DATA                (0x01U)
 
-#endif /* PMIC_INC_SW_SHUTDOWN_PRIV_H_ */
+#endif /* __PMIC_SW_SHUTDOWN_PRIV_H__ */

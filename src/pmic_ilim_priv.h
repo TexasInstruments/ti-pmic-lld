@@ -39,8 +39,8 @@
  *
  */
 
-#ifndef PMIC_INC_ILIM_PRIV_H_
-#define PMIC_INC_ILIM_PRIV_H_
+#ifndef __PMIC_ILIM_PRIV_H__
+#define __PMIC_ILIM_PRIV_H__
 
 /**
  * @defgroup Pmic_ILIM PMIC ILIM Module
@@ -178,4 +178,4 @@
  */
 /* End of Pmic_ILIM */
 
-#endif /* PMIC_INC_ILIM_PRIV_H_ */
+#endif /* __PMIC_ILIM_PRIV_H__ */

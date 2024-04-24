@@ -37,8 +37,8 @@
  *  @brief PMIC Driver Common API/interface file.
  */
 
-#ifndef PMIC_CORE_H_
-#define PMIC_CORE_H_
+#ifndef __PMIC_CORE_H__
+#define __PMIC_CORE_H__
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -2314,4 +2314,4 @@ int32_t Pmic_getDiagMUXSelectionCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 #endif /* __cplusplus */
 
-#endif /* PMIC_CORE_H_ */
+#endif /* __PMIC_CORE_H__ */

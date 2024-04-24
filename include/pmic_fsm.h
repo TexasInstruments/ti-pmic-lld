@@ -39,8 +39,8 @@
  *
  */
 
-#ifndef PMIC_FSM_H_
-#define PMIC_FSM_H_
+#ifndef __PMIC_FSM_H__
+#define __PMIC_FSM_H__
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -529,4 +529,4 @@ int32_t Pmic_fsmGetConfiguration(Pmic_CoreHandle_t * pPmicCoreHandle,
 }
 #endif /* __cplusplus */
 
-#endif /* PMIC_FSM_H_ */
+#endif /* __PMIC_FSM_H__ */

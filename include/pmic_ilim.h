@@ -39,8 +39,8 @@
  *
  */
 
-#ifndef PMIC_INC_ILIM_H_
-#define PMIC_INC_ILIM_H_
+#ifndef __PMIC_ILIM_H__
+#define __PMIC_ILIM_H__
 
 #include "pmic.h"
 #include "pmic_core.h"
@@ -308,4 +308,4 @@ int32_t Pmic_GetILIMErrStat(Pmic_CoreHandle_t *pPmicCoreHandle,
  */
 /* End of Pmic_ILIM */
 
-#endif /* PMIC_INC_ILIM_H_ */
+#endif /* __PMIC_ILIM_H__ */

@@ -38,8 +38,8 @@
  *          test cases
  */
 
-#ifndef PMIC_ESM_TEST_H_
-#define PMIC_ESM_TEST_H_
+#ifndef __PMIC_ESM_TEST_H__
+#define __PMIC_ESM_TEST_H__
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -76,4 +76,4 @@ void *test_pmic_ESM(void *args);
 }
 #endif /* __cplusplus */
 
-#endif /* PMIC_ESM_TEST_H_ */
+#endif /* __PMIC_ESM_TEST_H__ */

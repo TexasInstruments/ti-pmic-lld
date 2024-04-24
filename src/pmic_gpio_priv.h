@@ -38,8 +38,8 @@
  *         prototypes for driver specific PMIC GPIO private configuration.
  */
 
-#ifndef PMIC_GPIO_PRIV_H_
-#define PMIC_GPIO_PRIV_H_
+#ifndef __PMIC_GPIO_PRIV_H__
+#define __PMIC_GPIO_PRIV_H__
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -730,4 +730,4 @@ typedef struct Pmic_GpioIntRegCfg_s {
 }
 #endif /* __cplusplus */
 
-#endif /* PMIC_GPIO_PRIV_H_ */
+#endif /* __PMIC_GPIO_PRIV_H__ */

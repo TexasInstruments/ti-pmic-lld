@@ -31,12 +31,12 @@
  ****************************************************************************/
 
 /**
- *  @file  pmic_ILIM_test.h
+ *  @file  pmic_ilim_test.h
  *
  *  @brief  This file contains all the testing related files APIs for the ILIM.
  */
-#ifndef PMIC_ILIM_TEST_H_
-#define PMIC_ILIM_TEST_H_
+#ifndef __PMIC_ILIM_TEST_H__
+#define __PMIC_ILIM_TEST_H__
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -73,4 +73,4 @@ int32_t Pmic_GetILIMErrStat(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_ilimStatReg
 }
 #endif /* __cplusplus */
 
-#endif /* PMIC_LOWIQTIMER_TEST_H_ */
+#endif /* __PMIC_LOWIQTIMER_TEST_H__ */

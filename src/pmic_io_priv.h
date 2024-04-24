@@ -38,8 +38,8 @@
  *          I2C/SPI
  */
 
-#ifndef PMIC_IO_PRIV_H_
-#define PMIC_IO_PRIV_H_
+#ifndef __PMIC_IO_PRIV_H__
+#define __PMIC_IO_PRIV_H__
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -106,4 +106,4 @@ int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 #endif /* __cplusplus */
 
-#endif /*PMIC_IO_PRIV_H_*/
+#endif /*__PMIC_IO_PRIV_H__*/

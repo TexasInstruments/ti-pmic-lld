@@ -38,8 +38,8 @@
  *  core and basic register lock/unlock and other miscellaneous tests.
  */
 
-#ifndef PMIC_FSMROTATIONALONOFF_TEST_H_
-#define PMIC_FSMROTATIONALONOFF_TEST_H_
+#ifndef __PMIC_FSMROTATIONALONOFF_TEST_H__
+#define __PMIC_FSMROTATIONALONOFF_TEST_H__
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -76,4 +76,4 @@ void *test_pmic_FSM(void *args);
 }
 #endif /* __cplusplus */
 
-#endif /* PMIC_FSMROTATIONALONOFF_TEST_H_ */
+#endif /* __PMIC_FSMROTATIONALONOFF_TEST_H__ */

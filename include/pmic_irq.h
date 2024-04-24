@@ -37,8 +37,8 @@
  * @brief  PMIC IRQ Driver API/interface file.
  */
 
-#ifndef PMIC_IRQ_H_
-#define PMIC_IRQ_H_
+#ifndef __PMIC_IRQ_H__
+#define __PMIC_IRQ_H__
 
 /* ==========================================================================*/
 /*                             Include Files                                 */
@@ -623,5 +623,5 @@ int32_t Pmic_irqGetGpioMaskIntr(Pmic_CoreHandle_t * pPmicCoreHandle,
 
 #endif /* __cplusplus */
 
-#endif /* PMIC_IRQ_H_ */
+#endif /* __PMIC_IRQ_H__ */
 

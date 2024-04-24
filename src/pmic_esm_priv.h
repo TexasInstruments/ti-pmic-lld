@@ -38,8 +38,8 @@
  *         prototypes for driver specific PMIC ESM configuration
  */
 
-#ifndef PMIC_ESM_PRIV_H_
-#define PMIC_ESM_PRIV_H_
+#ifndef __PMIC_ESM_PRIV_H__
+#define __PMIC_ESM_PRIV_H__
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -527,4 +527,4 @@ extern "C" {
 }
 #endif /* __cplusplus */
 
-#endif /* PMIC_ESM_PRIV_H_ */
+#endif /* __PMIC_ESM_PRIV_H__ */

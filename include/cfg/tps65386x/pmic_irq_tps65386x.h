@@ -38,8 +38,8 @@
  *
  */
 
-#ifndef PMIC_IRQ_TPS65386X_H_
-#define PMIC_IRQ_TPS65386X_H_
+#ifndef __PMIC_IRQ_TPS65386X_H__
+#define __PMIC_IRQ_TPS65386X_H__
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -779,4 +779,4 @@ void Pmic_BB_reInitInterruptConfig(void);
 }
 #endif /* __cplusplus */
 
-#endif /* PMIC_IRQ_TPS65386X_H_ */
+#endif /* __PMIC_IRQ_TPS65386X_H__ */

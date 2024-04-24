@@ -37,8 +37,8 @@
  * @brief  PMIC Low Level Driver API/interface file for ESM API
  */
 
-#ifndef PMIC_ESM_H_
-#define PMIC_ESM_H_
+#ifndef __PMIC_ESM_H__
+#define __PMIC_ESM_H__
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
@@ -1060,4 +1060,4 @@ static int32_t Pmic_esmGetHminValue(Pmic_CoreHandle_t * pPmicCoreHandle,
 }
 #endif /* __cplusplus */
 
-#endif /* PMIC_ESM_H_ */
+#endif /* __PMIC_ESM_H__ */

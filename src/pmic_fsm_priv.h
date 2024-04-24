@@ -39,8 +39,8 @@
  *
  */
 
-#ifndef PMIC_INC_PMIC_FSM_PRIV_H_
-#define PMIC_INC_PMIC_FSM_PRIV_H_
+#ifndef __PMIC_FSM_PRIV_H__
+#define __PMIC_FSM_PRIV_H__
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -625,4 +625,4 @@ extern "C" {
 }
 #endif /* __cplusplus */
 
-#endif /* PMIC_INC_PMIC_FSM_PRIV_H_ */
+#endif /* __PMIC_FSM_PRIV_H__ */

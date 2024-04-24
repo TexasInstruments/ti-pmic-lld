@@ -31,8 +31,8 @@
  *
  *****************************************************************************/
 
-#ifndef PMIC_INC_PMIC_WDG_PRIV_H_
-#define PMIC_INC_PMIC_WDG_PRIV_H_
+#ifndef __PMIC_WDG_PRIV_H__
+#define __PMIC_WDG_PRIV_H__
 
 /* ==========================================================================*/
 /*                             Include Files                                 */
@@ -275,4 +275,4 @@
 #define PMIC_WD_MODE_REG_WD_ENDRV_SEL_MASK                                     \
   (0x1U << PMIC_WD_MODE_REG_WD_ENDRV_SEL_SHIFT)
 
-#endif /* PMIC_INC_PMIC_WDG_PRIV_H_ */
+#endif /* __PMIC_WDG_PRIV_H__ */

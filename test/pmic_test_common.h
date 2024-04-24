@@ -36,8 +36,8 @@
  *  @brief  This file contains all the testing related files APIs for the common tests.
  */
 
-#ifndef TESTS_PMIC_TEST_COMMON_H_
-#define TESTS_PMIC_TEST_COMMON_H_
+#ifndef __PMIC_TEST_COMMON_H__
+#define __PMIC_TEST_COMMON_H__
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -107,5 +107,5 @@ void test_pmic_CNT_LockUnlock(Pmic_CoreHandle_t  *pmicCorehandle, int unlock);
 }
 #endif /* __cplusplus */
 
-#endif /* TESTS_PMIC_TEST_COMMON_H_ */
+#endif /* __PMIC_TEST_COMMON_H__ */
 

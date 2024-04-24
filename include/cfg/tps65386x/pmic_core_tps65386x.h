@@ -38,8 +38,8 @@
  *          PMIC common configuration
  */
 
-#ifndef PMIC_CORE_TPS65386X_H_
-#define PMIC_CORE_TPS65386X_H_
+#ifndef __PMIC_CORE_TPS65386X_H__
+#define __PMIC_CORE_TPS65386X_H__
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -122,4 +122,4 @@ uint8_t PMIC_calcCRC8(uint8_t cmd, uint8_t rdwr, uint8_t dat);
 }
 #endif /* __cplusplus */
 
-#endif /* PMIC_CORE_TPS65386X_H_ */
+#endif /* __PMIC_CORE_TPS65386X_H__ */

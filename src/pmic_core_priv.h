@@ -36,8 +36,8 @@
  *  @brief This file contains PMIC Driver specific common API
  */
 
-#ifndef PMIC_CORE_PRIV_H_
-#define PMIC_CORE_PRIV_H_
+#ifndef __PMIC_CORE_PRIV_H__
+#define __PMIC_CORE_PRIV_H__
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -420,4 +420,4 @@ void Pmic_criticalSectionStop(const Pmic_CoreHandle_t * pPmicCoreHandle);
 }
 #endif /* __cplusplus */
 
-#endif /* PMIC_CORE_PRIV_H_ */
+#endif /* __PMIC_CORE_PRIV_H__ */

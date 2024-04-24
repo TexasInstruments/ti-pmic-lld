@@ -38,8 +38,8 @@
  *         prototypes for driver specific PMIC GPIO configuration
  */
 
-#ifndef PMIC_GPIO_H_
-#define PMIC_GPIO_H_
+#ifndef __PMIC_GPIO_H__
+#define __PMIC_GPIO_H__
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -1014,4 +1014,4 @@ int32_t Pmic_gpo34GetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
  */
 /* End of Pmic_GPIO */
 
-#endif /* PMIC_GPIO_H_ */
+#endif /* __PMIC_GPIO_H__ */

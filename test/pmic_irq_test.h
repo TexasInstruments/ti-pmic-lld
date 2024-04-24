@@ -36,8 +36,8 @@
  *  @brief  This file contains all the testing related files APIs for the PMIC IRQ
  *          and basic register lock/unlock and other miscellaneous tests.
  */
-#ifndef PMIC_IRQ_TEST_H_
-#define PMIC_IRQ_TEST_H_
+#ifndef __PMIC_IRQ_TEST_H__
+#define __PMIC_IRQ_TEST_H__
 
 /* ========================================================================== */
 /*                             Include Files                                  */
@@ -93,4 +93,4 @@ int32_t Pmic_maskGpioIntr(Pmic_CoreHandle_t *pPmicCoreHandle,
 }
 #endif /* __cplusplus */
 
-#endif /* PMIC_IRQ_TEST_H_ */
+#endif /* __PMIC_IRQ_TEST_H__ */
