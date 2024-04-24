@@ -53,6 +53,38 @@
  * @{
  * @brief Contains definitions related to PMIC ILIM functionality.
  */
+#define PMIC_ILIM_LDO1_VALID    (0U)
+#define PMIC_ILIM_LDO2_VALID    (1U)
+#define PMIC_ILIM_LDO3_VALID    (2U)
+#define PMIC_ILIM_LDO4_VALID    (3U)
+#define PMIC_ILIM_PLDO1_VALID   (4U)
+#define PMIC_ILIM_PLDO2_VALID   (5U)
+#define PMIC_ILIM_BB_AVG_VALID  (6U)
+
+#define PMIC_ILIM_LDO1_VALID_SHIFT    (1U << PMIC_ILIM_LDO1_VALID)
+#define PMIC_ILIM_LDO2_VALID_SHIFT    (1U << PMIC_ILIM_LDO2_VALID)
+#define PMIC_ILIM_LDO3_VALID_SHIFT    (1U << PMIC_ILIM_LDO3_VALID)
+#define PMIC_ILIM_LDO4_VALID_SHIFT    (1U << PMIC_ILIM_LDO4_VALID)
+#define PMIC_ILIM_PLDO1_VALID_SHIFT   (1U << PMIC_ILIM_PLDO1_VALID)
+#define PMIC_ILIM_PLDO2_VALID_SHIFT   (1U << PMIC_ILIM_PLDO2_VALID)
+#define PMIC_ILIM_BB_AVG_VALID_SHIFT  (1U << PMIC_ILIM_BB_AVG_VALID)
+
+/**
+ * @defgroup PMIC_ILIMErrorReactConfig
+ */
+#define PMIC_ILIM_ERR_REACT_INT_ONLY           (0U)
+#define PMIC_ILIM_ERR_REACT_INT_AND_DEACTIVATE (1U)
+
+/**
+ * @defgroup Pmic_ILIMDeglitchConfig
+ */
+#define PMIC_ILIM_DEGLITCH_10US (0U)
+#define PMIC_ILIM_DEGLITCH_1MS  (1U)
+
+typedef struct Pmic_ILIMLDOConfig {
+    uint8_t errReact;
+    uint8_t deglitch;
+} Pmic_ILIMLDOConfig_t;
 
 /*==========================================================================*/
 /*                         Structures and Enums                             */
@@ -64,72 +96,26 @@
  * @ingroup Pmic_ILIM
  * @brief Contains structures used in the ILIM module of PMIC driver.
  */
+typedef struct Pmic_ILIMConfig {
+    uint8_t validParams;
+    Pmic_ILIMLDOConfig_t ldo1;
+    Pmic_ILIMLDOConfig_t ldo2;
+    Pmic_ILIMLDOConfig_t ldo3;
+    Pmic_ILIMLDOConfig_t ldo4;
+    Pmic_ILIMLDOConfig_t pldo1;
+    Pmic_ILIMLDOConfig_t pldo2;
+} Pmic_ILIMConfig_t;
 
-/**
- * @brief Structure to hold ILIM configuration register values.
- *
- * @param pldo2ILIMCfg  Bit field for PLDO2 ILIM configuration.
- * @param pldo1ILIMCfg  Bit field for PLDO1 ILIM configuration.
- * @param ldo4ILIMCfg   Bit field for LDO4 ILIM configuration.
- * @param ldo3ILIMCfg   Bit field for LDO3 ILIM configuration.
- * @param ldo2ILIMCfg   Bit field for LDO2 ILIM configuration.
- * @param ldo1ILIMCfg   Bit field for LDO1 ILIM configuration.
- *
- * @ingroup Pmic_ILIMStructures
- */
-typedef struct Pmic_ilimCfgReg_s {
-    uint8_t pldo2ILIMCfg;
-    uint8_t pldo1ILIMCfg;
-    uint8_t ldo4ILIMCfg;
-    uint8_t ldo3ILIMCfg;
-    uint8_t ldo2ILIMCfg;
-    uint8_t ldo1ILIMCfg;
-} Pmic_ilimCfgReg_t;
-
-/**
- * @brief Structure to hold ILIM deglitch configuration register values.
- *
- * @param pldo2ILIMdglCfg  Bit field for PLDO2 ILIM DGL(de-glitch) configuration.
- * @param pldo1ILIMdglCfg  Bit field for PLDO1 ILIM DGL(de-glitch) configuration.
- * @param ldo4ILIMdglCfg   Bit field for LDO4 ILIM DGL(de-glitch) configuration.
- * @param ldo3ILIMdglCfg   Bit field for LDO3 ILIM DGL(de-glitch) configuration.
- * @param ldo2ILIMdglCfg   Bit field for LDO2 ILIM DGL(de-glitch) configuration.
- * @param ldo1ILIMdglCfg   Bit field for LDO1 ILIM DGL(de-glitch) configuration.
- *
- * @ingroup Pmic_ILIMStructures
- */
-typedef struct Pmic_ilimDglCfgReg_s {
-    uint8_t pldo2ILIMdglCfg;
-    uint8_t pldo1ILIMdglCfg;
-    uint8_t ldo4ILIMdglCfg;
-    uint8_t ldo3ILIMdglCfg;
-    uint8_t ldo2ILIMdglCfg;
-    uint8_t ldo1ILIMdglCfg;
-} Pmic_ilimDglCfgReg_t;
-
-/**
- * @brief Structure to hold ILIM status register values.
- *
- * @param bbavgILIMErr  Bit field for BB ILIM ERR configuration.
- * @param pldo2ILIMErr  Bit field for PLDO2 ILIM ERR configuration.
- * @param pldo1ILIMErr  Bit field for PLDO1 ILIM ERR configuration.
- * @param ldo4ILIMErr   Bit field for LDO4 ILIM ERR configuration.
- * @param ldo3ILIMErr   Bit field for LDO3 ILIM ERR configuration.
- * @param ldo2ILIMErr   Bit field for LDO2 ILIM ERR configuration.
- * @param ldo1ILIMErr   Bit field for LDO1 ILIM ERR configuration.
- *
- * @ingroup Pmic_ILIMStructures
- */
-typedef struct Pmic_ilimStatReg_s {
-    uint8_t bbavgILIMErr;
-    uint8_t pldo2ILIMErr;
-    uint8_t pldo1ILIMErr;
-    uint8_t ldo4ILIMErr;
-    uint8_t ldo3ILIMErr;
-    uint8_t ldo2ILIMErr;
-    uint8_t ldo1ILIMErr;
-} Pmic_ilimStatReg_t;
-
+typedef struct Pmic_ILIMStatus {
+    uint8_t validParams;
+    uint8_t ldo1;
+    uint8_t ldo2;
+    uint8_t ldo3;
+    uint8_t ldo4;
+    uint8_t pldo1;
+    uint8_t pldo2;
+    uint8_t bbAvg;
+} Pmic_ILIMStatus_t;
 
 /**
  * @}
@@ -148,41 +134,6 @@ typedef struct Pmic_ilimStatReg_s {
  */
 
 /**
- * @brief Initializes the ILIM error register configuration structure with default values.
- * The provided Pmic_ilimStatReg_t structure pointed to by 'config' is populated with default values.
- * This function is typically used during the initialization of ILIM error register settings.
- *
- * @param config Pointer to the ILIM error register configuration structure.
- *
- * @ingroup Pmic_ILIMFunctions
- */
-static void initializeILIMeRRReg(Pmic_ilimStatReg_t * config);
-
-/**
- * @brief Initializes the ILIM configuration register structure with default values.
- * This function populates the provided Pmic_ilimCfgReg_t structure pointed to by 'config'
- * with default values for PLDO2, PLDO1, LDO4, LDO3, LDO2, and LDO1 ILIM configurations.
- * It is typically used during the initialization of ILIM configuration settings.
- *
- * @param config Pointer to the ILIM configuration register structure.
- *
- * @ingroup Pmic_ILIMFunctions
- */
-static void initializeILIMCfgReg(Pmic_ilimCfgReg_t * config);
-
-/**
- * @brief Initializes the ILIM deglitch configuration register structure with default values.
- * This function populates the provided Pmic_ilimDglCfgReg_t structure pointed to by 'config'
- * with default values for PLDO2, PLDO1, LDO4, LDO3, LDO2, and LDO1 ILIM deglitch configurations.
- * It is typically used during the initialization of ILIM deglitch configuration settings.
- *
- * @param config Pointer to the ILIM deglitch configuration register structure.
- *
- * @ingroup Pmic_ILIMFunctions
- */
-static void initializeILIMDglCfgReg(Pmic_ilimDglCfgReg_t * config);
-
-/**
  * @brief Sets the ILIM configuration register with the provided ILIM configuration settings.
  * This function configures the ILIM configuration register with the settings specified
  * in the provided Pmic_ilimCfgReg_t structure pointed to by 'pPmicILIMConfig'.
@@ -199,27 +150,8 @@ static void initializeILIMDglCfgReg(Pmic_ilimDglCfgReg_t * config);
  * @ingroup Pmic_ILIMFunctions
  */
 int32_t Pmic_SetILIMConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-                           Pmic_ilimCfgReg_t * pPmicILIMConfig);
+                           Pmic_ILIMConfig_t * pPmicILIMConfig);
 
-
-/**
- * @brief Sets the ILIM DGL (Dynamic Gain Limiting) configuration register with the provided settings.
- * This function configures the ILIM DGL configuration register with the settings specified
- * in the provided Pmic_ilimDglCfgReg_t structure pointed to by 'pPmicILIMdglConfig'.
- * It reads the current register value, modifies the necessary fields according to the
- * provided configuration settings, and writes back the updated value to the register.
- * The function also ensures that the critical section is entered before accessing
- * the PMIC to prevent potential race conditions.
- *
- * @param pPmicCoreHandle Pointer to the PMIC core handle.
- * @param pPmicILIMdglConfig Pointer to the ILIM DGL configuration structure.
- *
- * @return Returns PMIC_ST_SUCCESS if the operation is successful; otherwise, an error code.
- *
- * @ingroup Pmic_ILIMFunctions
- */
-int32_t Pmic_SetILIMDglConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               Pmic_ilimDglCfgReg_t *pPmicILIMdglConfig);
 
 /**
  * @brief Clears the ILIM error status bits in the ILIM status register.
@@ -238,7 +170,7 @@ int32_t Pmic_SetILIMDglConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @ingroup Pmic_ILIMFunctions
  */
 int32_t Pmic_ClearILIMErrStat(Pmic_CoreHandle_t *pPmicCoreHandle,
-                              Pmic_ilimStatReg_t *pPmicILIMStat);
+                              Pmic_ILIMStatus_t *pPmicILIMStat);
 
 /**
  * @brief Retrieves the ILIM configuration from the ILIM configuration register.
@@ -257,26 +189,7 @@ int32_t Pmic_ClearILIMErrStat(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @ingroup Pmic_ILIMFunctions
  */
 int32_t Pmic_GetILIMConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
-                            Pmic_ilimCfgReg_t *pPmicILIMConfig);
-
-/**
- * @brief Retrieves the ILIM DGL (Dynamic Gain Limit) configuration from the ILIM DGL configuration register.
- * This function reads the ILIM DGL configuration register from the PMIC via the communication
- * interface specified in the PMIC core handle 'pPmicCoreHandle'. It then extracts the
- * individual ILIM DGL configuration settings for PLDO2, PLDO1, LDO4, LDO3, LDO2, and LDO1
- * from the register data and stores them in the provided Pmic_ilimDglCfgReg_t structure
- * pointed to by 'pPmicILIMdglConfig'. The function ensures the critical section is entered
- * before accessing the PMIC to prevent potential race conditions.
- *
- * @param pPmicCoreHandle Pointer to the PMIC core handle.
- * @param pPmicILIMdglConfig Pointer to the ILIM DGL configuration structure to store the retrieved values.
- *
- * @return Returns PMIC_ST_SUCCESS if the operation is successful; otherwise, an error code.
- *
- * @ingroup Pmic_ILIMFunctions
- */
-int32_t Pmic_GetILIMDglConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
-                              Pmic_ilimDglCfgReg_t *pPmicILIMdglConfig);
+                           Pmic_ILIMConfig_t *pPmicILIMConfig);
 
 /**
  * @brief Retrieves the ILIM (Current Limit) error status from the ILIM status register.
@@ -295,7 +208,7 @@ int32_t Pmic_GetILIMDglConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @ingroup Pmic_ILIMFunctions
  */
 int32_t Pmic_GetILIMErrStat(Pmic_CoreHandle_t *pPmicCoreHandle,
-                             Pmic_ilimStatReg_t *pPmicILIMStat);
+                            Pmic_ILIMStatus_t *pPmicILIMStat);
 
 
 /**

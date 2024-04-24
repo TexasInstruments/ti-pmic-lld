@@ -36,130 +36,63 @@
  *
  *   @brief   This file contains the default API's for PMIC ILIM configuration
  */
-
 #include "pmic_ilim.h"
 #include "pmic_ilim_priv.h"
-
-static void initializeILIMeRRReg(Pmic_ilimStatReg_t * config) {
-    /* Set default initialization values */
-    config -> bbavgILIMErr = PMIC_ST_DEFAULT_DATA;
-    config -> pldo2ILIMErr = PMIC_ST_DEFAULT_DATA;
-    config -> pldo1ILIMErr = PMIC_ST_DEFAULT_DATA;
-    config -> ldo4ILIMErr = PMIC_ST_DEFAULT_DATA;
-    config -> ldo3ILIMErr = PMIC_ST_DEFAULT_DATA;
-    config -> ldo2ILIMErr = PMIC_ST_DEFAULT_DATA;
-    config -> ldo1ILIMErr = PMIC_ST_DEFAULT_DATA;
-}
-
-static void initializeILIMCfgReg(Pmic_ilimCfgReg_t * config) {
-    /* Set default initialization values */
-    config -> pldo2ILIMCfg = PMIC_ST_DEFAULT_DATA;
-    config -> pldo1ILIMCfg = PMIC_ST_DEFAULT_DATA;
-    config -> ldo4ILIMCfg = PMIC_ST_DEFAULT_DATA;
-    config -> ldo3ILIMCfg = PMIC_ST_DEFAULT_DATA;
-    config -> ldo2ILIMCfg = PMIC_ST_DEFAULT_DATA;
-    config -> ldo1ILIMCfg = PMIC_ST_DEFAULT_DATA;
-}
-
-static void initializeILIMDglCfgReg(Pmic_ilimDglCfgReg_t * config) {
-    /* Set default initialization values */
-    config -> pldo2ILIMdglCfg = PMIC_ST_DEFAULT_DATA;
-    config -> pldo1ILIMdglCfg = PMIC_ST_DEFAULT_DATA;
-    config -> ldo4ILIMdglCfg = PMIC_ST_DEFAULT_DATA;
-    config -> ldo3ILIMdglCfg = PMIC_ST_DEFAULT_DATA;
-    config -> ldo2ILIMdglCfg = PMIC_ST_DEFAULT_DATA;
-    config -> ldo1ILIMdglCfg = PMIC_ST_DEFAULT_DATA;
-}
 
 /**
  * @brief API to set ILIM Configuration
  */
-int32_t Pmic_SetILIMConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_ilimCfgReg_t * pPmicILIMConfig) {
+int32_t Pmic_SetILIMConfig(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_ILIMConfig_t *pPmicILIMConfig) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint8_t regData = 0U;
-    Pmic_ilimCfgReg_t * tempCfg = pPmicILIMConfig;
+    uint8_t cfgReg = 0U;
+    uint8_t degReg = 0U;
 
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    pmicStatus =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_ILIM_CFG_REGADDR, & regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_ILIM_CFG_REGADDR, &cfgReg);
 
-    if (PMIC_ST_SUCCESS == pmicStatus) {
-        if ((tempCfg -> pldo2ILIMCfg) != PMIC_ST_DEFAULT_DATA) {
-            Pmic_setBitField( & regData, PMIC_PLDO2_ILIM_CFG_SHIFT,
-                PMIC_PLDO2_ILIM_CFG_MASK, tempCfg -> pldo2ILIMCfg);
-        }
-        if ((tempCfg -> pldo1ILIMCfg) != PMIC_ST_DEFAULT_DATA) {
-            Pmic_setBitField( & regData, PMIC_PLDO1_ILIM_CFG_SHIFT,
-                PMIC_PLDO1_ILIM_CFG_MASK, tempCfg -> pldo1ILIMCfg);
-        }
-        if ((tempCfg -> ldo4ILIMCfg) != PMIC_ST_DEFAULT_DATA) {
-            Pmic_setBitField( & regData, PMIC_LDO4_ILIM_CFG_SHIFT,
-                PMIC_LDO4_ILIM_CFG_MASK, tempCfg -> ldo4ILIMCfg);
-        }
-        if ((tempCfg -> ldo3ILIMCfg) != PMIC_ST_DEFAULT_DATA) {
-            Pmic_setBitField( & regData, PMIC_LDO3_ILIM_CFG_SHIFT,
-                PMIC_LDO3_ILIM_CFG_MASK, tempCfg -> ldo3ILIMCfg);
-        }
-        if ((tempCfg -> ldo2ILIMCfg) != PMIC_ST_DEFAULT_DATA) {
-            Pmic_setBitField( & regData, PMIC_LDO2_ILIM_CFG_SHIFT,
-                PMIC_LDO2_ILIM_CFG_MASK, tempCfg -> ldo2ILIMCfg);
-        }
-        if ((tempCfg -> ldo1ILIMCfg) != PMIC_ST_DEFAULT_DATA) {
-            Pmic_setBitField( & regData, PMIC_LDO1_ILIM_CFG_SHIFT,
-                PMIC_LDO1_ILIM_CFG_MASK, tempCfg -> ldo1ILIMCfg);
-        }
-        pmicStatus =
-            Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_ILIM_CFG_REGADDR, regData);
+    if (pmicStatus == PMIC_ST_SUCCESS) {
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_ILIM_DGL_CFG_REGADDR, &degReg);
     }
 
-    Pmic_criticalSectionStop(pPmicCoreHandle);
+    if (pmicStatus == PMIC_ST_SUCCESS) {
+        if (pmic_validParamCheck(pPmicILIMConfig->validParams, PMIC_ILIM_LDO1_VALID)) {
+            Pmic_setBitField(&cfgReg, PMIC_LDO1_ILIM_CFG_SHIFT, PMIC_LDO1_ILIM_CFG_MASK, pPmicILIMConfig->ldo1.errReact);
+            Pmic_setBitField(&degReg, PMIC_LDO1_ILIM_DGL_CFG_SHIFT, PMIC_LDO1_ILIM_DGL_CFG_MASK, pPmicILIMConfig->ldo1.deglitch);
+        }
 
-    return pmicStatus;
-}
+        if (pmic_validParamCheck(pPmicILIMConfig->validParams, PMIC_ILIM_LDO2_VALID)) {
+            Pmic_setBitField(&cfgReg, PMIC_LDO2_ILIM_CFG_SHIFT, PMIC_LDO2_ILIM_CFG_MASK, pPmicILIMConfig->ldo2.errReact);
+            Pmic_setBitField(&degReg, PMIC_LDO2_ILIM_DGL_CFG_SHIFT, PMIC_LDO2_ILIM_DGL_CFG_MASK, pPmicILIMConfig->ldo2.deglitch);
+        }
 
-/**
- * @brief API to set ILIM DGL Configuration
- */
-int32_t Pmic_SetILIMDglConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_ilimDglCfgReg_t * pPmicILIMdglConfig) {
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint8_t regData = 0U;
-    Pmic_ilimDglCfgReg_t * tempCfg = pPmicILIMdglConfig;
+        if (pmic_validParamCheck(pPmicILIMConfig->validParams, PMIC_ILIM_LDO3_VALID)) {
+            Pmic_setBitField(&cfgReg, PMIC_LDO3_ILIM_CFG_SHIFT, PMIC_LDO3_ILIM_CFG_MASK, pPmicILIMConfig->ldo3.errReact);
+            Pmic_setBitField(&degReg, PMIC_LDO3_ILIM_DGL_CFG_SHIFT, PMIC_LDO3_ILIM_DGL_CFG_MASK, pPmicILIMConfig->ldo3.deglitch);
+        }
 
-    Pmic_criticalSectionStart(pPmicCoreHandle);
+        if (pmic_validParamCheck(pPmicILIMConfig->validParams, PMIC_ILIM_LDO4_VALID)) {
+            Pmic_setBitField(&cfgReg, PMIC_LDO4_ILIM_CFG_SHIFT, PMIC_LDO4_ILIM_CFG_MASK, pPmicILIMConfig->ldo4.errReact);
+            Pmic_setBitField(&degReg, PMIC_LDO4_ILIM_DGL_CFG_SHIFT, PMIC_LDO4_ILIM_DGL_CFG_MASK, pPmicILIMConfig->ldo4.deglitch);
+        }
 
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-        PMIC_ILIM_DGL_CFG_REGADDR, & regData);
+        if (pmic_validParamCheck(pPmicILIMConfig->validParams, PMIC_ILIM_PLDO1_VALID)) {
+            Pmic_setBitField(&cfgReg, PMIC_PLDO1_ILIM_CFG_SHIFT, PMIC_PLDO1_ILIM_CFG_MASK, pPmicILIMConfig->pldo1.errReact);
+            Pmic_setBitField(&degReg, PMIC_PLDO1_ILIM_DGL_CFG_SHIFT, PMIC_PLDO1_ILIM_DGL_CFG_MASK, pPmicILIMConfig->pldo1.deglitch);
+        }
 
-    if (PMIC_ST_SUCCESS == pmicStatus) {
-        if ((tempCfg -> pldo2ILIMdglCfg) != PMIC_ST_DEFAULT_DATA) {
-            Pmic_setBitField( & regData, PMIC_PLDO2_ILIM_DGL_CFG_SHIFT,
-                PMIC_PLDO2_ILIM_DGL_CFG_MASK, tempCfg -> pldo2ILIMdglCfg);
+        if (pmic_validParamCheck(pPmicILIMConfig->validParams, PMIC_ILIM_PLDO2_VALID)) {
+            Pmic_setBitField(&cfgReg, PMIC_PLDO2_ILIM_CFG_SHIFT, PMIC_PLDO2_ILIM_CFG_MASK, pPmicILIMConfig->pldo2.errReact);
+            Pmic_setBitField(&degReg, PMIC_PLDO2_ILIM_DGL_CFG_SHIFT, PMIC_PLDO2_ILIM_DGL_CFG_MASK, pPmicILIMConfig->pldo2.deglitch);
         }
-        if ((tempCfg -> pldo1ILIMdglCfg) != PMIC_ST_DEFAULT_DATA) {
-            Pmic_setBitField( & regData, PMIC_PLDO1_ILIM_DGL_CFG_SHIFT,
-                PMIC_PLDO1_ILIM_DGL_CFG_MASK, tempCfg -> pldo1ILIMdglCfg);
-        }
-        if ((tempCfg -> ldo4ILIMdglCfg) != PMIC_ST_DEFAULT_DATA) {
-            Pmic_setBitField( & regData, PMIC_LDO4_ILIM_DGL_CFG_SHIFT,
-                PMIC_LDO4_ILIM_DGL_CFG_MASK, tempCfg -> ldo4ILIMdglCfg);
-        }
-        if ((tempCfg -> ldo3ILIMdglCfg) != PMIC_ST_DEFAULT_DATA) {
-            Pmic_setBitField( & regData, PMIC_LDO3_ILIM_DGL_CFG_SHIFT,
-                PMIC_LDO3_ILIM_DGL_CFG_MASK, tempCfg -> ldo3ILIMdglCfg);
-        }
-        if ((tempCfg -> ldo2ILIMdglCfg) != PMIC_ST_DEFAULT_DATA) {
-            Pmic_setBitField( & regData, PMIC_LDO2_ILIM_DGL_CFG_SHIFT,
-                PMIC_LDO2_ILIM_DGL_CFG_MASK, tempCfg -> ldo2ILIMdglCfg);
-        }
-        if ((tempCfg -> ldo1ILIMdglCfg) != PMIC_ST_DEFAULT_DATA) {
-            Pmic_setBitField( & regData, PMIC_LDO1_ILIM_DGL_CFG_SHIFT,
-                PMIC_LDO1_ILIM_DGL_CFG_MASK, tempCfg -> ldo1ILIMdglCfg);
-        }
-        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle,
-            PMIC_ILIM_DGL_CFG_REGADDR, regData);
+    }
+
+    if (pmicStatus == PMIC_ST_SUCCESS) {
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_ILIM_CFG_REGADDR, cfgReg);
+    }
+
+    if (pmicStatus == PMIC_ST_SUCCESS) {
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_ILIM_CFG_REGADDR, degReg);
     }
 
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -170,48 +103,45 @@ int32_t Pmic_SetILIMDglConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
 /**
  * @brief API to clear ILIM STAT Configuration
  */
-int32_t Pmic_ClearILIMErrStat(Pmic_CoreHandle_t * pPmicCoreHandle,
-                              Pmic_ilimStatReg_t * pPmicILIMStat) {
+int32_t Pmic_ClearILIMErrStat(Pmic_CoreHandle_t *pPmicCoreHandle,
+                              Pmic_ILIMStatus_t *pPmicILIMStat) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
-    Pmic_ilimStatReg_t * tempStat = pPmicILIMStat;
 
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    pmicStatus =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_ILIM_STAT_REGADDR, & regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_ILIM_STAT_REGADDR, &regData);
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
-        if ((tempStat -> bbavgILIMErr) != PMIC_ST_DEFAULT_DATA) {
-            Pmic_setBitField( & regData, PMIC_BB_AVG_ILIM_ERR_SHIFT,
-                PMIC_BB_AVG_ILIM_ERR_MASK, tempStat -> bbavgILIMErr);
+        if (pmic_validParamCheck(pPmicILIMStat->validParams, PMIC_ILIM_LDO1_VALID)) {
+            Pmic_setBitField(& regData, PMIC_LDO1_ILIM_ERR_SHIFT, PMIC_LDO1_ILIM_ERR_MASK, pPmicILIMStat->ldo1);
         }
-        if ((tempStat -> pldo2ILIMErr) != PMIC_ST_DEFAULT_DATA) {
-            Pmic_setBitField( & regData, PMIC_PLDO2_ILIM_ERR_SHIFT,
-                PMIC_PLDO2_ILIM_ERR_MASK, tempStat -> pldo2ILIMErr);
+
+        if (pmic_validParamCheck(pPmicILIMStat->validParams, PMIC_ILIM_LDO2_VALID)) {
+            Pmic_setBitField(&regData, PMIC_LDO2_ILIM_ERR_SHIFT, PMIC_LDO2_ILIM_ERR_MASK, pPmicILIMStat->ldo2);
         }
-        if ((tempStat -> pldo1ILIMErr) != PMIC_ST_DEFAULT_DATA) {
-            Pmic_setBitField( & regData, PMIC_PLDO1_ILIM_ERR_SHIFT,
-                PMIC_PLDO1_ILIM_ERR_MASK, tempStat -> pldo1ILIMErr);
+
+        if (pmic_validParamCheck(pPmicILIMStat->validParams, PMIC_ILIM_LDO3_VALID)) {
+            Pmic_setBitField(&regData, PMIC_LDO3_ILIM_ERR_SHIFT, PMIC_LDO3_ILIM_ERR_MASK, pPmicILIMStat->ldo3);
         }
-        if ((tempStat -> ldo4ILIMErr) != PMIC_ST_DEFAULT_DATA) {
-            Pmic_setBitField( & regData, PMIC_LDO4_ILIM_ERR_SHIFT,
-                PMIC_LDO4_ILIM_ERR_MASK, tempStat -> ldo4ILIMErr);
+
+        if (pmic_validParamCheck(pPmicILIMStat->validParams, PMIC_ILIM_LDO4_VALID)) {
+            Pmic_setBitField(&regData, PMIC_LDO4_ILIM_ERR_SHIFT, PMIC_LDO4_ILIM_ERR_MASK, pPmicILIMStat->ldo4);
         }
-        if ((tempStat -> ldo3ILIMErr) != PMIC_ST_DEFAULT_DATA) {
-            Pmic_setBitField( & regData, PMIC_LDO3_ILIM_ERR_SHIFT,
-                PMIC_LDO3_ILIM_ERR_MASK, tempStat -> ldo3ILIMErr);
+
+        if (pmic_validParamCheck(pPmicILIMStat->validParams, PMIC_ILIM_PLDO1_VALID)) {
+            Pmic_setBitField(&regData, PMIC_PLDO1_ILIM_ERR_SHIFT, PMIC_PLDO1_ILIM_ERR_MASK, pPmicILIMStat->pldo1);
         }
-        if ((tempStat -> ldo2ILIMErr) != PMIC_ST_DEFAULT_DATA) {
-            Pmic_setBitField( & regData, PMIC_LDO2_ILIM_ERR_SHIFT,
-                PMIC_LDO2_ILIM_ERR_MASK, tempStat -> ldo2ILIMErr);
+
+        if (pmic_validParamCheck(pPmicILIMStat->validParams, PMIC_ILIM_PLDO2_VALID)) {
+            Pmic_setBitField(&regData, PMIC_PLDO2_ILIM_ERR_SHIFT, PMIC_PLDO2_ILIM_ERR_MASK, pPmicILIMStat->pldo2);
         }
-        if ((tempStat -> ldo1ILIMErr) != PMIC_ST_DEFAULT_DATA) {
-            Pmic_setBitField( & regData, PMIC_LDO1_ILIM_ERR_SHIFT,
-                PMIC_LDO1_ILIM_ERR_MASK, tempStat -> ldo1ILIMErr);
+
+        if (pmic_validParamCheck(pPmicILIMStat->validParams, PMIC_ILIM_BB_AVG_VALID)) {
+            Pmic_setBitField(&regData, PMIC_BB_AVG_ILIM_ERR_SHIFT, PMIC_BB_AVG_ILIM_ERR_MASK, pPmicILIMStat->bbAvg);
         }
-        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_ILIM_STAT_REGADDR,
-            regData);
+
+        pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_ILIM_STAT_REGADDR, regData);
     }
 
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -222,72 +152,35 @@ int32_t Pmic_ClearILIMErrStat(Pmic_CoreHandle_t * pPmicCoreHandle,
 /**
  * @brief API to get ILIM Configuration
  */
-int32_t Pmic_GetILIMConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-                           Pmic_ilimCfgReg_t * pPmicILIMConfig) {
+int32_t Pmic_GetILIMConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
+                           Pmic_ILIMConfig_t *pPmicILIMConfig) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint8_t regData = 0U;
+    uint8_t cfgReg = 0U;
+    uint8_t degReg = 0U;
 
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    pmicStatus =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_ILIM_CFG_REGADDR, & regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_ILIM_CFG_REGADDR, &cfgReg);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_ILIM_DGL_CFG_REGADDR, &degReg);
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
-        pPmicILIMConfig -> pldo2ILIMCfg = Pmic_getBitField(
-            regData, PMIC_PLDO2_ILIM_CFG_SHIFT, PMIC_PLDO2_ILIM_CFG_MASK);
+        pPmicILIMConfig->ldo1.errReact = Pmic_getBitField(cfgReg, PMIC_LDO1_ILIM_CFG_SHIFT, PMIC_LDO1_ILIM_CFG_MASK);
+        pPmicILIMConfig->ldo1.deglitch = Pmic_getBitField(degReg, PMIC_LDO1_ILIM_DGL_CFG_SHIFT, PMIC_LDO1_ILIM_DGL_CFG_MASK);
 
-        pPmicILIMConfig -> pldo1ILIMCfg = Pmic_getBitField(
-            regData, PMIC_PLDO1_ILIM_CFG_SHIFT, PMIC_PLDO1_ILIM_CFG_MASK);
+        pPmicILIMConfig->ldo2.errReact = Pmic_getBitField(cfgReg, PMIC_LDO2_ILIM_CFG_SHIFT, PMIC_LDO2_ILIM_CFG_MASK);
+        pPmicILIMConfig->ldo2.deglitch = Pmic_getBitField(degReg, PMIC_LDO2_ILIM_DGL_CFG_SHIFT, PMIC_LDO2_ILIM_DGL_CFG_MASK);
 
-        pPmicILIMConfig -> ldo4ILIMCfg = Pmic_getBitField(
-            regData, PMIC_LDO4_ILIM_CFG_SHIFT, PMIC_LDO4_ILIM_CFG_MASK);
+        pPmicILIMConfig->ldo3.errReact = Pmic_getBitField(cfgReg, PMIC_LDO3_ILIM_CFG_SHIFT, PMIC_LDO3_ILIM_CFG_MASK);
+        pPmicILIMConfig->ldo3.deglitch = Pmic_getBitField(degReg, PMIC_LDO3_ILIM_DGL_CFG_SHIFT, PMIC_LDO3_ILIM_DGL_CFG_MASK);
 
-        pPmicILIMConfig -> ldo3ILIMCfg = Pmic_getBitField(
-            regData, PMIC_LDO3_ILIM_CFG_SHIFT, PMIC_LDO3_ILIM_CFG_MASK);
+        pPmicILIMConfig->ldo4.errReact = Pmic_getBitField(cfgReg, PMIC_LDO4_ILIM_CFG_SHIFT, PMIC_LDO4_ILIM_CFG_MASK);
+        pPmicILIMConfig->ldo4.deglitch = Pmic_getBitField(degReg, PMIC_LDO4_ILIM_DGL_CFG_SHIFT, PMIC_LDO4_ILIM_DGL_CFG_MASK);
 
-        pPmicILIMConfig -> ldo2ILIMCfg = Pmic_getBitField(
-            regData, PMIC_LDO2_ILIM_CFG_SHIFT, PMIC_LDO2_ILIM_CFG_MASK);
+        pPmicILIMConfig->pldo1.errReact = Pmic_getBitField(cfgReg, PMIC_PLDO1_ILIM_CFG_SHIFT, PMIC_PLDO1_ILIM_CFG_MASK);
+        pPmicILIMConfig->pldo1.deglitch = Pmic_getBitField(degReg, PMIC_PLDO1_ILIM_DGL_CFG_SHIFT, PMIC_PLDO1_ILIM_DGL_CFG_MASK);
 
-        pPmicILIMConfig -> ldo1ILIMCfg = Pmic_getBitField(
-            regData, PMIC_LDO1_ILIM_CFG_SHIFT, PMIC_LDO1_ILIM_CFG_MASK);
-    }
-
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    return pmicStatus;
-}
-
-/**
- * @brief API to get ILIM DGL Configuration
- */
-int32_t Pmic_GetILIMDglConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-                              Pmic_ilimDglCfgReg_t * pPmicILIMdglConfig) {
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-    uint8_t regData = 0U;
-
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-        PMIC_ILIM_DGL_CFG_REGADDR, & regData);
-
-    if (PMIC_ST_SUCCESS == pmicStatus) {
-        pPmicILIMdglConfig -> pldo2ILIMdglCfg = Pmic_getBitField(
-            regData, PMIC_PLDO2_ILIM_DGL_CFG_SHIFT, PMIC_PLDO2_ILIM_DGL_CFG_MASK);
-
-        pPmicILIMdglConfig -> pldo1ILIMdglCfg = Pmic_getBitField(
-            regData, PMIC_PLDO1_ILIM_DGL_CFG_SHIFT, PMIC_PLDO1_ILIM_DGL_CFG_MASK);
-
-        pPmicILIMdglConfig -> ldo4ILIMdglCfg = Pmic_getBitField(
-            regData, PMIC_LDO4_ILIM_DGL_CFG_SHIFT, PMIC_LDO4_ILIM_DGL_CFG_MASK);
-
-        pPmicILIMdglConfig -> ldo3ILIMdglCfg = Pmic_getBitField(
-            regData, PMIC_LDO3_ILIM_DGL_CFG_SHIFT, PMIC_LDO3_ILIM_DGL_CFG_MASK);
-
-        pPmicILIMdglConfig -> ldo2ILIMdglCfg = Pmic_getBitField(
-            regData, PMIC_LDO2_ILIM_DGL_CFG_SHIFT, PMIC_LDO2_ILIM_DGL_CFG_MASK);
-
-        pPmicILIMdglConfig -> ldo1ILIMdglCfg = Pmic_getBitField(
-            regData, PMIC_LDO1_ILIM_DGL_CFG_SHIFT, PMIC_LDO1_ILIM_DGL_CFG_MASK);
+        pPmicILIMConfig->pldo2.errReact = Pmic_getBitField(cfgReg, PMIC_PLDO2_ILIM_CFG_SHIFT, PMIC_PLDO2_ILIM_CFG_MASK);
+        pPmicILIMConfig->pldo2.deglitch = Pmic_getBitField(degReg, PMIC_PLDO2_ILIM_DGL_CFG_SHIFT, PMIC_PLDO2_ILIM_DGL_CFG_MASK);
     }
 
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -298,37 +191,22 @@ int32_t Pmic_GetILIMDglConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
 /**
  * @brief API to get ILIM STAT Configuration
  */
-int32_t Pmic_GetILIMErrStat(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_ilimStatReg_t * pPmicILIMStat) {
+int32_t Pmic_GetILIMErrStat(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_ILIMStatus_t *pPmicILIMStat) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    pmicStatus =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_ILIM_STAT_REGADDR, & regData);
+    pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_ILIM_STAT_REGADDR, &regData);
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
-        pPmicILIMStat -> bbavgILIMErr = Pmic_getBitField(
-            regData, PMIC_BB_AVG_ILIM_ERR_SHIFT, PMIC_BB_AVG_ILIM_ERR_MASK);
-
-        pPmicILIMStat -> pldo2ILIMErr = Pmic_getBitField(
-            regData, PMIC_PLDO2_ILIM_ERR_SHIFT, PMIC_PLDO2_ILIM_ERR_MASK);
-
-        pPmicILIMStat -> pldo1ILIMErr = Pmic_getBitField(
-            regData, PMIC_PLDO1_ILIM_ERR_SHIFT, PMIC_PLDO1_ILIM_ERR_MASK);
-
-        pPmicILIMStat -> ldo4ILIMErr = Pmic_getBitField(
-            regData, PMIC_LDO4_ILIM_ERR_SHIFT, PMIC_LDO4_ILIM_ERR_MASK);
-
-        pPmicILIMStat -> ldo3ILIMErr = Pmic_getBitField(
-            regData, PMIC_LDO3_ILIM_ERR_SHIFT, PMIC_LDO3_ILIM_ERR_MASK);
-
-        pPmicILIMStat -> ldo2ILIMErr = Pmic_getBitField(
-            regData, PMIC_LDO2_ILIM_ERR_SHIFT, PMIC_LDO2_ILIM_ERR_MASK);
-
-        pPmicILIMStat -> ldo1ILIMErr = Pmic_getBitField(
-            regData, PMIC_LDO1_ILIM_ERR_SHIFT, PMIC_LDO1_ILIM_ERR_MASK);
+        pPmicILIMStat->ldo1 = Pmic_getBitField(regData, PMIC_LDO1_ILIM_ERR_SHIFT, PMIC_LDO1_ILIM_ERR_MASK);
+        pPmicILIMStat->ldo2 = Pmic_getBitField(regData, PMIC_LDO2_ILIM_ERR_SHIFT, PMIC_LDO2_ILIM_ERR_MASK);
+        pPmicILIMStat->ldo3 = Pmic_getBitField(regData, PMIC_LDO3_ILIM_ERR_SHIFT, PMIC_LDO3_ILIM_ERR_MASK);
+        pPmicILIMStat->ldo4 = Pmic_getBitField(regData, PMIC_LDO4_ILIM_ERR_SHIFT, PMIC_LDO4_ILIM_ERR_MASK);
+        pPmicILIMStat->pldo1 = Pmic_getBitField(regData, PMIC_PLDO1_ILIM_ERR_SHIFT, PMIC_PLDO1_ILIM_ERR_MASK);
+        pPmicILIMStat->pldo2 = Pmic_getBitField(regData, PMIC_PLDO2_ILIM_ERR_SHIFT, PMIC_PLDO2_ILIM_ERR_MASK);
+        pPmicILIMStat->bbAvg = Pmic_getBitField(regData, PMIC_BB_AVG_ILIM_ERR_SHIFT, PMIC_BB_AVG_ILIM_ERR_MASK);
     }
 
     Pmic_criticalSectionStop(pPmicCoreHandle);

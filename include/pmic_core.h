@@ -958,7 +958,7 @@ typedef struct Pmic_RecovCntCfg_s {
  *                                  updated
  *                                    Valid values
  *                                        @ref Pmic_CommonCtrlValidParamCfg
- *  @param  sreadSpectrumEn         Spread Spectrum Enable Value
+ *  @param  spreadSpectrumEn        Spread Spectrum Enable Value
  *                                  Valid only when
  *                                  PMIC_CFG_SPREAD_SPECTRUM_EN_VALID bit is set
  *                                    Valid values @ref Pmic_SpreadSpectrum_Cfg

@@ -107,54 +107,35 @@
  * @brief  Masks for PMIC ILIM Config registers
  * @ingroup Pmic_ILIMPrivMacros
  */
-#define PMIC_LDO1_ILIM_CFG_MASK\
-    ((uint8_t)(0x01U << PMIC_LDO1_ILIM_CFG_SHIFT))
-#define PMIC_LDO2_ILIM_CFG_MASK\
-    ((uint8_t)(0x01U << PMIC_LDO2_ILIM_CFG_SHIFT))
-#define PMIC_LDO3_ILIM_CFG_MASK\
-    ((uint8_t)(0x01U << PMIC_LDO3_ILIM_CFG_SHIFT))
-#define PMIC_LDO4_ILIM_CFG_MASK\
-    ((uint8_t)(0x01U << PMIC_LDO4_ILIM_CFG_SHIFT))
-#define PMIC_PLDO1_ILIM_CFG_MASK\
-    ((uint8_t)(0x01U << PMIC_PLDO1_ILIM_CFG_SHIFT))
-#define PMIC_PLDO2_ILIM_CFG_MASK\
-    ((uint8_t)(0x01U << PMIC_PLDO2_ILIM_CFG_SHIFT))
+#define PMIC_LDO1_ILIM_CFG_MASK  ((uint8_t)(0x01U << PMIC_LDO1_ILIM_CFG_SHIFT))
+#define PMIC_LDO2_ILIM_CFG_MASK  ((uint8_t)(0x01U << PMIC_LDO2_ILIM_CFG_SHIFT))
+#define PMIC_LDO3_ILIM_CFG_MASK  ((uint8_t)(0x01U << PMIC_LDO3_ILIM_CFG_SHIFT))
+#define PMIC_LDO4_ILIM_CFG_MASK  ((uint8_t)(0x01U << PMIC_LDO4_ILIM_CFG_SHIFT))
+#define PMIC_PLDO1_ILIM_CFG_MASK ((uint8_t)(0x01U << PMIC_PLDO1_ILIM_CFG_SHIFT))
+#define PMIC_PLDO2_ILIM_CFG_MASK ((uint8_t)(0x01U << PMIC_PLDO2_ILIM_CFG_SHIFT))
 
 /**
  * @brief  Masks for PMIC ILIM DGL Config registers
  * @ingroup Pmic_ILIMPrivMacros
  */
-#define PMIC_LDO1_ILIM_DGL_CFG_MASK\
-    ((uint8_t)(0x01U << PMIC_LDO1_ILIM_DGL_CFG_SHIFT))
-#define PMIC_LDO2_ILIM_DGL_CFG_MASK\
-    ((uint8_t)(0x01U << PMIC_LDO2_ILIM_DGL_CFG_SHIFT))
-#define PMIC_LDO3_ILIM_DGL_CFG_MASK\
-    ((uint8_t)(0x01U << PMIC_LDO3_ILIM_DGL_CFG_SHIFT))
-#define PMIC_LDO4_ILIM_DGL_CFG_MASK\
-    ((uint8_t)(0x01U << PMIC_LDO4_ILIM_DGL_CFG_SHIFT))
-#define PMIC_PLDO1_ILIM_DGL_CFG_MASK\
-    ((uint8_t)(0x01U << PMIC_PLDO1_ILIM_DGL_CFG_SHIFT))
-#define PMIC_PLDO2_ILIM_DGL_CFG_MASK\
-    ((uint8_t)(0x01U << PMIC_PLDO2_ILIM_DGL_CFG_SHIFT))
+#define PMIC_LDO1_ILIM_DGL_CFG_MASK  ((uint8_t)(0x01U << PMIC_LDO1_ILIM_DGL_CFG_SHIFT))
+#define PMIC_LDO2_ILIM_DGL_CFG_MASK  ((uint8_t)(0x01U << PMIC_LDO2_ILIM_DGL_CFG_SHIFT))
+#define PMIC_LDO3_ILIM_DGL_CFG_MASK  ((uint8_t)(0x01U << PMIC_LDO3_ILIM_DGL_CFG_SHIFT))
+#define PMIC_LDO4_ILIM_DGL_CFG_MASK  ((uint8_t)(0x01U << PMIC_LDO4_ILIM_DGL_CFG_SHIFT))
+#define PMIC_PLDO1_ILIM_DGL_CFG_MASK ((uint8_t)(0x01U << PMIC_PLDO1_ILIM_DGL_CFG_SHIFT))
+#define PMIC_PLDO2_ILIM_DGL_CFG_MASK ((uint8_t)(0x01U << PMIC_PLDO2_ILIM_DGL_CFG_SHIFT))
 
 /**
  * @brief  Masks for PMIC ILIM Error registers
  * @ingroup Pmic_ILIMPrivMacros
  */
-#define PMIC_LDO1_ILIM_ERR_MASK                        \
-                  ((uint8_t)(0x01U << PMIC_LDO1_ILIM_ERR_SHIFT))
-#define PMIC_LDO2_ILIM_ERR_MASK                        \
-                  ((uint8_t)(0x01U << PMIC_LDO2_ILIM_ERR_SHIFT))
-#define PMIC_LDO3_ILIM_ERR_MASK                        \
-                  ((uint8_t)(0x01U << PMIC_LDO3_ILIM_ERR_SHIFT))
-#define PMIC_LDO4_ILIM_ERR_MASK                        \
-                  ((uint8_t)(0x01U << PMIC_LDO4_ILIM_ERR_SHIFT))
-#define PMIC_PLDO1_ILIM_ERR_MASK                        \
-                  ((uint8_t)(0x01U << PMIC_PLDO1_ILIM_ERR_SHIFT))
-#define PMIC_PLDO2_ILIM_ERR_MASK                        \
-                  ((uint8_t)(0x01U << PMIC_PLDO2_ILIM_ERR_SHIFT))
-#define PMIC_BB_AVG_ILIM_ERR_MASK                        \
-                  ((uint8_t)(0x01U << PMIC_BB_AVG_ILIM_ERR_SHIFT))
+#define PMIC_LDO1_ILIM_ERR_MASK   ((uint8_t)(0x01U << PMIC_LDO1_ILIM_ERR_SHIFT))
+#define PMIC_LDO2_ILIM_ERR_MASK   ((uint8_t)(0x01U << PMIC_LDO2_ILIM_ERR_SHIFT))
+#define PMIC_LDO3_ILIM_ERR_MASK   ((uint8_t)(0x01U << PMIC_LDO3_ILIM_ERR_SHIFT))
+#define PMIC_LDO4_ILIM_ERR_MASK   ((uint8_t)(0x01U << PMIC_LDO4_ILIM_ERR_SHIFT))
+#define PMIC_PLDO1_ILIM_ERR_MASK  ((uint8_t)(0x01U << PMIC_PLDO1_ILIM_ERR_SHIFT))
+#define PMIC_PLDO2_ILIM_ERR_MASK  ((uint8_t)(0x01U << PMIC_PLDO2_ILIM_ERR_SHIFT))
+#define PMIC_BB_AVG_ILIM_ERR_MASK ((uint8_t)(0x01U << PMIC_BB_AVG_ILIM_ERR_SHIFT))
 
 
 /**
