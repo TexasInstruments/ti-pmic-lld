@@ -32,7 +32,7 @@
  *****************************************************************************/
 
 /**
- * @file   pmic_irq_tps65386.c
+ * @file   pmic_irq.c
  *
  * @brief  This file contains the TPS65386 BB(Black-Bird) PMIC Interrupt APIs
  * definitions and structures.
@@ -42,13 +42,9 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
-
 #include "pmic_core_priv.h"
-
 #include "pmic_irq.h"
-
 #include "pmic_irq_priv.h"
-
 #include "pmic_irq_tps65386x.h"
 
 /* ========================================================================== */
@@ -377,7 +373,7 @@ void pmic_get_bb_intrGpioCfg(Pmic_GpioIntrTypeCfg_t ** pGpioIntrCfg) {
 /**
  * @brief  Function to CHECK CM VMON Error
  */
-static int32_t Pmic_bb_getCMVMONErr(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_getCMVMONErr(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_IrqStatus_t * pErrStat) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -429,7 +425,7 @@ static int32_t Pmic_bb_getCMVMONErr(Pmic_CoreHandle_t * pPmicCoreHandle,
 /**
  * @brief  Function to CHECK COMP Error
  */
-static int32_t Pmic_bb_getCOMPErr(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_getCOMPErr(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_IrqStatus_t * pErrStat) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -458,7 +454,7 @@ static int32_t Pmic_bb_getCOMPErr(Pmic_CoreHandle_t * pPmicCoreHandle,
 /**
  * @brief  Function to CHECK ESM Error
  */
-static int32_t Pmic_bb_getESMErr(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_getESMErr(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_IrqStatus_t * pErrStat) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -487,7 +483,7 @@ static int32_t Pmic_bb_getESMErr(Pmic_CoreHandle_t * pPmicCoreHandle,
 /**
  * @brief  Function to decipher WDG Error
  */
-static int32_t Pmic_bb_getWDGErr(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_getWDGErr(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_IrqStatus_t * pErrStat) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -516,7 +512,7 @@ static int32_t Pmic_bb_getWDGErr(Pmic_CoreHandle_t * pPmicCoreHandle,
 /**
  * @brief  Function to Check PMIC LDO UV Error
  */
-static int32_t Pmic_bb_getUV_LDO_Err(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_getUV_LDO_Err(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_IrqStatus_t * pErrStat) {
 
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -554,7 +550,7 @@ static int32_t Pmic_bb_getUV_LDO_Err(Pmic_CoreHandle_t * pPmicCoreHandle,
 /**
  * @brief  Function to Check PMIC UV VMON and PLDO Error
  */
-static int32_t Pmic_bb_getUV_VMONPLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_getUV_VMONPLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_IrqStatus_t * pErrStat) {
 
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -592,8 +588,7 @@ static int32_t Pmic_bb_getUV_VMONPLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
 /**
  * @brief  Function to decipher UV LDO VMON Error
  */
-static int32_t
-Pmic_bb_getUV_LDO_VMON_PLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_getUV_LDO_VMON_PLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
     uint8_t regValue, Pmic_IrqStatus_t * pErrStat) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -614,12 +609,12 @@ Pmic_bb_getUV_LDO_VMON_PLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
 
     /* PMIC UV LDO Interrupt Status Check */
     if (regValue != 0U) {
-        pmicStatus = Pmic_bb_getUV_LDO_Err(pPmicCoreHandle, pErrStat);
+        pmicStatus = Pmic_getUV_LDO_Err(pPmicCoreHandle, pErrStat);
     }
 
     /* PMIC PLDO VMON Interrupt Status Check */
     if (regValue != 0U) {
-        pmicStatus = Pmic_bb_getUV_VMONPLDOErr(pPmicCoreHandle, pErrStat);
+        pmicStatus = Pmic_getUV_VMONPLDOErr(pPmicCoreHandle, pErrStat);
     }
 
     return pmicStatus;
@@ -628,7 +623,7 @@ Pmic_bb_getUV_LDO_VMON_PLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
 /**
  * @brief  Function to Check PMIC LDO OV Error
  */
-static int32_t Pmic_bb_getOV_LDO_Err(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_getOV_LDO_Err(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_IrqStatus_t * pErrStat) {
 
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -666,7 +661,7 @@ static int32_t Pmic_bb_getOV_LDO_Err(Pmic_CoreHandle_t * pPmicCoreHandle,
 /**
  * @brief  Function to Check PMIC VMON and PLDO Error
  */
-static int32_t Pmic_bb_getOV_VMONPLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_getOV_VMONPLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_IrqStatus_t * pErrStat) {
 
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -704,8 +699,7 @@ static int32_t Pmic_bb_getOV_VMONPLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
 /**
  * @brief  Function to decipher LDO VMON Error
  */
-static int32_t
-Pmic_bb_getOV_LDO_VMON_PLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_getOV_LDO_VMON_PLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
     uint8_t regValue, Pmic_IrqStatus_t * pErrStat) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -726,12 +720,12 @@ Pmic_bb_getOV_LDO_VMON_PLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
 
     /* PMIC OV LDO Interrupt Status Check */
     if (regValue != 0U) {
-        pmicStatus = Pmic_bb_getOV_LDO_Err(pPmicCoreHandle, pErrStat);
+        pmicStatus = Pmic_getOV_LDO_Err(pPmicCoreHandle, pErrStat);
     }
 
     /* PMIC PLDO VMON Interrupt Status Check */
     if (regValue != 0U) {
-        pmicStatus = Pmic_bb_getOV_VMONPLDOErr(pPmicCoreHandle, pErrStat);
+        pmicStatus = Pmic_getOV_VMONPLDOErr(pPmicCoreHandle, pErrStat);
     }
 
     return pmicStatus;
@@ -740,7 +734,7 @@ Pmic_bb_getOV_LDO_VMON_PLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
 /**
  * @brief  Function to check SafeOut, En_Out, NRST and GPO Readback  Error
  */
-static int32_t Pmic_bb_getRDBKErr(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_getRDBKErr(Pmic_CoreHandle_t * pPmicCoreHandle,
     uint8_t regValue,
     Pmic_IrqStatus_t * pErrStat) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
@@ -790,7 +784,7 @@ static int32_t Pmic_bb_getRDBKErr(Pmic_CoreHandle_t * pPmicCoreHandle,
  * @brief  Function to decipher Configuration Register CRC Error Interrupt
  * Configuration Bit Error.
  */
-static int32_t Pmic_bb_getSafetyOffStateErr(uint8_t regValue,
+static int32_t Pmic_getSafetyOffStateErr(uint8_t regValue,
     Pmic_IrqStatus_t * pErrStat) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
@@ -804,7 +798,7 @@ static int32_t Pmic_bb_getSafetyOffStateErr(uint8_t regValue,
 /**
  * @brief  Function to decipher the L2 Error for TPS6594x Leo PMIC.
  */
-int32_t Pmic_bb_irqGetL2Error(Pmic_CoreHandle_t * pPmicCoreHandle,
+int32_t Pmic_irqGetL2Error(Pmic_CoreHandle_t * pPmicCoreHandle,
     uint16_t l1RegAddr, Pmic_IrqStatus_t * pErrStat) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regValue = 0U;
@@ -821,33 +815,33 @@ int32_t Pmic_bb_irqGetL2Error(Pmic_CoreHandle_t * pPmicCoreHandle,
     if (PMIC_ST_SUCCESS == pmicStatus) {
         switch (l1RegAddr) {
         case PMIC_SAFETY_CFG_REGADDR:
-            pmicStatus = Pmic_bb_getSafetyOffStateErr(regValue, pErrStat);
+            pmicStatus = Pmic_getSafetyOffStateErr(regValue, pErrStat);
             break;
 
         case PMIC_RDBK_INT_CFG1_REGADDR:
-            pmicStatus = Pmic_bb_getRDBKErr(pPmicCoreHandle, regValue, pErrStat);
+            pmicStatus = Pmic_getRDBKErr(pPmicCoreHandle, regValue, pErrStat);
             break;
 
         case PMIC_OV_INT_CFG1_REGADDR:
             pmicStatus =
-                Pmic_bb_getOV_LDO_VMON_PLDOErr(pPmicCoreHandle, regValue, pErrStat);
+                Pmic_getOV_LDO_VMON_PLDOErr(pPmicCoreHandle, regValue, pErrStat);
             break;
 
         case PMIC_UV_INT_CFG1_REGADDR:
             pmicStatus =
-                Pmic_bb_getUV_LDO_VMON_PLDOErr(pPmicCoreHandle, regValue, pErrStat);
+                Pmic_getUV_LDO_VMON_PLDOErr(pPmicCoreHandle, regValue, pErrStat);
             break;
         case PMIC_WDG_INT_CFG_REGADDR:
-            pmicStatus = Pmic_bb_getWDGErr(pPmicCoreHandle, pErrStat);
+            pmicStatus = Pmic_getWDGErr(pPmicCoreHandle, pErrStat);
             break;
         case PMIC_ESM_INT_CFG_REGADDR:
-            pmicStatus = Pmic_bb_getESMErr(pPmicCoreHandle, pErrStat);
+            pmicStatus = Pmic_getESMErr(pPmicCoreHandle, pErrStat);
             break;
         case PMIC_CM_COMP_INT_MSKCFG_REGADDR:
-            pmicStatus = Pmic_bb_getCOMPErr(pPmicCoreHandle, pErrStat);
+            pmicStatus = Pmic_getCOMPErr(pPmicCoreHandle, pErrStat);
             break;
         case PMIC_CM_VMON_INT_CFG_REGADDR:
-            pmicStatus = Pmic_bb_getCMVMONErr(pPmicCoreHandle, pErrStat);
+            pmicStatus = Pmic_getCMVMONErr(pPmicCoreHandle, pErrStat);
             break;
         default:
             pmicStatus = PMIC_ST_ERR_INV_INT;

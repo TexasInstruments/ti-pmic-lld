@@ -703,57 +703,57 @@ int32_t Pmic_BB_irqGetL2Error(Pmic_CoreHandle_t * pPmicCoreHandle,
     uint16_t l1RegAddr, Pmic_IrqStatus_t * pErrStat);
 
 
-static int32_t Pmic_bb_getCMVMONErr(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_getCMVMONErr(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_IrqStatus_t * pErrStat);
 
 
-static int32_t Pmic_bb_getCOMPErr(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_getCOMPErr(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_IrqStatus_t * pErrStat);
 
 
-static int32_t Pmic_bb_getESMErr(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_getESMErr(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_IrqStatus_t * pErrStat);
 
 
-static int32_t Pmic_bb_getOV_VMONPLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_getOV_VMONPLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_IrqStatus_t * pErrStat);
 
 
-static int32_t Pmic_bb_getRDBKErr(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_getRDBKErr(Pmic_CoreHandle_t * pPmicCoreHandle,
     uint8_t regValue, Pmic_IrqStatus_t * pErrStat);
 
 
-static int32_t Pmic_bb_getUV_LDO_Err(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_getUV_LDO_Err(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_IrqStatus_t * pErrStat);
 
 
-static int32_t Pmic_bb_getUV_VMONPLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_getUV_VMONPLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_IrqStatus_t * pErrStat);
 
 
-static int32_t Pmic_bb_getOV_LDO_Err(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_getOV_LDO_Err(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_IrqStatus_t * pErrStat);
 
 
 static int32_t
-Pmic_bb_getOV_LDO_VMON_PLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
+Pmic_getOV_LDO_VMON_PLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
     uint8_t regValue, Pmic_IrqStatus_t * pErrStat);
 
 
 static int32_t
-Pmic_bb_getUV_LDO_VMON_PLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
+Pmic_getUV_LDO_VMON_PLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
     uint8_t regValue, Pmic_IrqStatus_t * pErrStat);
 
 
-static int32_t Pmic_bb_getWDGErr(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_getWDGErr(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_IrqStatus_t * pErrStat);
 
 
-static int32_t Pmic_bb_getSafetyOffStateErr(uint8_t regValue,
+static int32_t Pmic_getSafetyOffStateErr(uint8_t regValue,
     Pmic_IrqStatus_t * pErrStat);
 
 
-int32_t Pmic_bb_irqGetL2Error(Pmic_CoreHandle_t * pPmicCoreHandle,
+int32_t Pmic_irqGetL2Error(Pmic_CoreHandle_t * pPmicCoreHandle,
     uint16_t l1RegAddr, Pmic_IrqStatus_t * pErrStat);
 
 
