@@ -81,7 +81,6 @@
 /* ========================================================================= */
 /*                             Include Files                                 */
 /* ========================================================================= */
-
 #include "pmic_types.h"
 
 #ifdef __cplusplus
@@ -101,8 +100,6 @@ extern "C" {
  */
 /** @brief Error Code for SUCCESS */
 #define PMIC_ST_SUCCESS (0)
-/** @brief Error Code for Invalid PMIC Default Data */
-#define PMIC_ST_DEFAULT_DATA ((uint8_t)9)
 /** @brief Error Code for Invalid input Handle */
 #define PMIC_ST_ERR_INV_HANDLE (-((int32_t)1))
 /** @brief Error Code when input Param is NULL */
@@ -198,6 +195,8 @@ extern "C" {
 #define PMIC_ST_INVALID_DATA (-((int32_t)44))
 /** @brief Error Code for Invalid PMIC Watchdog */
 #define PMIC_ST_ERR_WDG_DISABLED (-((int32_t)45))
+/** @brief Error Code for Invalid PMIC Default Data */
+#define PMIC_ST_DEFAULT_DATA (-((int32_t)9))
 /* @} */
 
 /**
@@ -218,8 +217,8 @@ extern "C" {
  *  @{
  */
 #define PMIC_INTF_SINGLE_I2C (0U)
-#define PMIC_INTF_DUAL_I2C (1U)
-#define PMIC_INTF_SPI (2U)
+#define PMIC_INTF_DUAL_I2C   (1U)
+#define PMIC_INTF_SPI        (2U)
 /* @} */
 
 /**
@@ -233,6 +232,7 @@ extern "C" {
  */
 /** @brief  Standard or Fast or Fast+ Mode  */
 #define PMIC_I2C_STANDARD_MODE (0U)
+
 /** @brief  High-Speed Mode */
 #define PMIC_I2C_FORCED_HS_MODE (1U)
 /* @} */
@@ -245,6 +245,7 @@ extern "C" {
  */
 #define PMIC_MAIN_INST (1U << 0U)
 #define PMIC_QA_INST (1U << 1U)
+
 /** @brief  Valid only to read CRC status from Page-1 using NVM Slave Address
  *          Valid only while calling the pFnPmicCommIoRead API
  */
@@ -307,19 +308,19 @@ extern "C" {
  *
  *  @{
  */
-#define PMIC_CFG_DEVICE_TYPE_VALID_SHIFT (1U << PMIC_CFG_DEVICE_TYPE_VALID)
-#define PMIC_CFG_COMM_MODE_VALID_SHIFT (1U << PMIC_CFG_COMM_MODE_VALID)
-#define PMIC_CFG_SLAVEADDR_VALID_SHIFT (1U << PMIC_CFG_SLAVEADDR_VALID)
-#define PMIC_CFG_QASLAVEADDR_VALID_SHIFT (1U << PMIC_CFG_QASLAVEADDR_VALID)
-#define PMIC_CFG_NVMSLAVEADDR_VALID_SHIFT (1U << PMIC_CFG_NVMSLAVEADDR_VALID)
-#define PMIC_CFG_COMM_HANDLE_VALID_SHIFT (1U << PMIC_CFG_COMM_HANDLE_VALID)
-#define PMIC_CFG_QACOMM_HANDLE_VALID_SHIFT (1U << PMIC_CFG_QACOMM_HANDLE_VALID)
-#define PMIC_CFG_COMM_IO_RD_VALID_SHIFT (1U << PMIC_CFG_COMM_IO_RD_VALID)
-#define PMIC_CFG_COMM_IO_WR_VALID_SHIFT (1U << PMIC_CFG_COMM_IO_WR_VALID)
-#define PMIC_CFG_CRITSEC_START_VALID_SHIFT (1U << PMIC_CFG_CRITSEC_START_VALID)
-#define PMIC_CFG_CRITSEC_STOP_VALID_SHIFT (1U << PMIC_CFG_CRITSEC_STOP_VALID)
-#define PMIC_CFG_I2C1_SPEED_VALID_SHIFT (1U << PMIC_CFG_I2C1_SPEED_VALID)
-#define PMIC_CFG_I2C2_SPEED_VALID_SHIFT (1U << PMIC_CFG_I2C2_SPEED_VALID)
+#define PMIC_CFG_DEVICE_TYPE_VALID_SHIFT    (1U << PMIC_CFG_DEVICE_TYPE_VALID)
+#define PMIC_CFG_COMM_MODE_VALID_SHIFT      (1U << PMIC_CFG_COMM_MODE_VALID)
+#define PMIC_CFG_SLAVEADDR_VALID_SHIFT      (1U << PMIC_CFG_SLAVEADDR_VALID)
+#define PMIC_CFG_QASLAVEADDR_VALID_SHIFT    (1U << PMIC_CFG_QASLAVEADDR_VALID)
+#define PMIC_CFG_NVMSLAVEADDR_VALID_SHIFT   (1U << PMIC_CFG_NVMSLAVEADDR_VALID)
+#define PMIC_CFG_COMM_HANDLE_VALID_SHIFT    (1U << PMIC_CFG_COMM_HANDLE_VALID)
+#define PMIC_CFG_QACOMM_HANDLE_VALID_SHIFT  (1U << PMIC_CFG_QACOMM_HANDLE_VALID)
+#define PMIC_CFG_COMM_IO_RD_VALID_SHIFT     (1U << PMIC_CFG_COMM_IO_RD_VALID)
+#define PMIC_CFG_COMM_IO_WR_VALID_SHIFT     (1U << PMIC_CFG_COMM_IO_WR_VALID)
+#define PMIC_CFG_CRITSEC_START_VALID_SHIFT  (1U << PMIC_CFG_CRITSEC_START_VALID)
+#define PMIC_CFG_CRITSEC_STOP_VALID_SHIFT   (1U << PMIC_CFG_CRITSEC_STOP_VALID)
+#define PMIC_CFG_I2C1_SPEED_VALID_SHIFT     (1U << PMIC_CFG_I2C1_SPEED_VALID)
+#define PMIC_CFG_I2C2_SPEED_VALID_SHIFT     (1U << PMIC_CFG_I2C2_SPEED_VALID)
 /* @} */
 
 /*==========================================================================*/
@@ -427,11 +428,15 @@ typedef struct Pmic_CoreCfg_s {
     void *pCommHandle;
     void *pQACommHandle;
     int32_t (*pFnPmicCommIoRead)(struct Pmic_CoreHandle_s *pmicCorehandle,
-                                 uint8_t instType, uint16_t regAddr,
-                                 uint8_t *pRxBuf, uint8_t bufLen);
+                                 uint8_t instType,
+                                 uint16_t regAddr,
+                                 uint8_t *pRxBuf,
+                                 uint8_t bufLen);
     int32_t (*pFnPmicCommIoWrite)(struct Pmic_CoreHandle_s *pmicCorehandle,
-                                  uint8_t instType, uint16_t regAddr,
-                                  uint8_t *pTxBuf, uint8_t bufLen);
+                                  uint8_t instType,
+                                  uint16_t regAddr,
+                                  uint8_t *pTxBuf,
+                                  uint8_t bufLen);
     void (*pFnPmicCritSecStart)(void);
     void (*pFnPmicCritSecStop)(void);
 } Pmic_CoreCfg_t;
@@ -440,9 +445,38 @@ typedef struct Pmic_CoreCfg_s {
 /*                         Function Declarations                            */
 /*==========================================================================*/
 
+/*!
+ * \brief  API to Initialize pmic core handle for PMIC LLD.
+ *
+ *         This function gets device configuration from pPmicConfigData and
+ *         initializes device specific information in pPmicCoreHandle after
+ *         validation of given params depends on validParams bit fields
+ *         and does some basic validation on PMIC interface I2C/SPI,
+ *         confirming that PMIC is accessible for PMIC configuration and
+ *         monitor features.
+ *
+ *  \param   pPmicConfigData [IN]   PMIC Configuration data
+ *  \param   pPmicCoreHandle [OUT]  PMIC Interface Handle.
+ *
+ *  \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *           For valid values \ref Pmic_ErrorCodes
+ */
 int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
                   Pmic_CoreHandle_t *pPmicCoreHandle);
 
+/*!
+ * \brief  API to De-initialize an existing PMIC Instance.
+ *
+ *         This function takes an existing Instance pPmicCoreHandle and
+ *         closes the LLD being used for this Instance. It should be called
+ *         only once per valid pPmicCoreHandle. Should not be called
+ *         if Pmic_init() is not called
+ *
+ *  \param   pPmicCoreHandle  [IN] PMIC Interface Handle.
+ *
+ *  \retval  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *           For valid values \ref Pmic_ErrorCodes
+ */
 int32_t Pmic_deinit(Pmic_CoreHandle_t *pPmicCoreHandle);
 
 #ifdef __cplusplus
