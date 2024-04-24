@@ -89,7 +89,7 @@ SOURCES = src/pmic_core.c \
 
 OBJECTS = $(SOURCES:.c=.o)
 
-.PHONY: clean help
+.PHONY: docs clean help
 
 all: $(TARGET)
 
@@ -98,6 +98,9 @@ $(TARGET): $(OBJECTS)
 	$(call $(CC) $(CFLAGS) $(LDFLAGS) -o $(TARGET) $(OBJECTS))
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $(TARGET) $(OBJECTS)
 	$(RM) $(OBJECTS)
+
+docs:
+	doxygen docs/ti.doxyfile
 
 help:
 	@echo "# make help"
@@ -119,4 +122,5 @@ help:
 clean:
 	$(RM) $(TARGET)
 	$(RM) $(OBJECTS)
+	$(RMDIR) docs/html/
 	$(RMDIR) $(LIB_DIR)
