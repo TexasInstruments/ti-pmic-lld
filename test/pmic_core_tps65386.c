@@ -41,14 +41,12 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 
-#include "board/pmic/pmic_tps653860xx.h"
-
 #include "pmic_core_tps65386x.h"
 
 #include <board/pmic.h>
+#include <board/pmic/pmic_tps653860xx.h>
 
 #include <drivers/hw_include/csl_types.h>
-
 #include <drivers/mcspi.h>
 
 /* ========================================================================== */
@@ -81,44 +79,6 @@ uint32_t gPmicMcspiRxBuffer[PMIC_MCSPI_MSGSIZE];
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
-
-/**
- * @brief Calculate CRC-8 checksum for PMIC SPI communication.
- * This function calculates the CRC-8 checksum based on the command, read/write
- * flag, and data provided for communication between the MCU and the
- * TPS653850A-Q1 device.
- *
- * @param cmd Command byte for communication.
- * @param rdwr Read/Write flag for communication (CMD_RD_EN or CMD_WR_EN).
- * @param dat Data byte for communication.
- * @return crc Calculated CRC-8 checksum value.
- */
-uint8_t PMIC_calcCRC8(uint8_t cmd, uint8_t rdwr, uint8_t dat) {
-    int8_t i = 0;
-    uint32_t crc;
-    uint32_t tmp;
-
-    tmp = ((uint32_t) cmd << 16) | ((uint32_t) rdwr << 8) | (uint32_t) dat;
-    crc = (uint32_t) 0xFF;
-
-    /* Standard CRC-8 polynomial ,X8 + X2 + X1 + 1.,is used to calculate the
-     * checksum value based on the command and data which the MCU transmits
-     * to the TPS653850A-Q1 device.
-     */
-
-    for (i = 0; i < 24; i++) {
-        uint64_t D;
-        D = (uint64_t)((uint64_t) tmp & (uint64_t) 0x800000) / (uint64_t) 8388608;
-        tmp = (tmp & (uint32_t) 0x7FFFFF) * (uint32_t) 2;
-        D = D ^ ((uint64_t)((uint64_t) crc & (uint64_t) 0x80) / (uint64_t) 128);
-        crc = (crc & 0x7FU) * 2U;
-        D = D * (uint64_t) 7;
-        crc = crc ^ (uint32_t) D;
-    }
-
-    /* Return the PMIC SPI MCRC value */
-    return (uint8_t) crc;
-}
 
 /**
  * @brief Initialize PMIC communication interface and resources.

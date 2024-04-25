@@ -1,5 +1,4 @@
-#
-# Copyright (c) 2019, Texas Instruments Incorporated
+# Copyright (c) 2024, Texas Instruments Incorporated
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -28,8 +27,7 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#
-#
+
 ifdef OS
 RM = rm
 RMDIR = rmdir
@@ -56,7 +54,7 @@ CC := gcc
 endif
 
 INC	= -I./include \
-		  -I./include/cfg/tps65386x \
+			-I./include/cfg/tps65386x/ \
 			-I./include/private/
 
 CFLAGS = -fPIC $(INC) -Wall -Wno-unused-function
@@ -69,12 +67,12 @@ build ?= release
 
 ifeq ($(build), debug)
     CFLAGS += $(DEBUGFLAGS)
-    TARGET  = $(LIB_DIR)/pmic_lib_$(build).so
+    TARGET = $(LIB_DIR)/pmic_lib_$(build).so
 endif
 
 ifeq ($(build), release)
     CFLAGS += $(RELEASEFLAGS)
-    TARGET  = $(LIB_DIR)/pmic_lib_$(build).so
+    TARGET = $(LIB_DIR)/pmic_lib_$(build).so
 endif
 
 SOURCES = src/pmic_core.c \
@@ -84,10 +82,11 @@ SOURCES = src/pmic_core.c \
 	src/pmic_ilim.c \
 	src/pmic_io.c \
 	src/pmic_irq.c \
-	src/pmic_irq_status.c \
 	src/pmic_low_iq_timer.c \
 	src/pmic_power.c \
+	src/pmic_sw_shutdown.c \
 	src/pmic_wdg.c
+
 OBJECTS = $(SOURCES:.c=.o)
 
 .PHONY: clean help
@@ -95,26 +94,27 @@ OBJECTS = $(SOURCES:.c=.o)
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-	$(call $(MKDIR) $(LIB_DIR))
+	$(MKDIR) $(LIB_DIR)
 	$(call $(CC) $(CFLAGS) $(LDFLAGS) -o $(TARGET) $(OBJECTS))
-	$(call $(RM) $(OBJECTS))
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $(TARGET) $(OBJECTS)
+	$(RM) $(OBJECTS)
 
 help:
-	    @echo "# make help"
-	    @echo "# ------------------------------------------------------"
-	    @echo "#  make [OPTIONAL MAKE VARIABLES] Note: use gmake for windows"
-	    @echo "Supported targets: "
-	    @echo "------------------"
-	    @echo "all            : Builds the library"
-	    @echo "clean          : Cleans the library"
-	    @echo "Optional make variables:"
-	    @echo "------------------------"
-	    @echo "CC=[Cross-compiler to be used]"
-	    @echo "    Default: gcc"
-	    @echo "BUILD_PROFILE=[release debug]"
-	    @echo "    Default: release"
-	    @echo "OS=[Windows_NT linux]"
-	    @echo "    Default: Windows_NT"
+	@echo "# make help"
+	@echo "# ------------------------------------------------------"
+	@echo "#  make [OPTIONAL MAKE VARIABLES] Note: use gmake for windows"
+	@echo "Supported targets: "
+	@echo "------------------"
+	@echo "all            : Builds the library"
+	@echo "clean          : Cleans the library"
+	@echo "Optional make variables:"
+	@echo "------------------------"
+	@echo "CC=[Cross-compiler to be used]"
+	@echo "    Default: gcc"
+	@echo "BUILD_PROFILE=[release debug]"
+	@echo "    Default: release"
+	@echo "OS=[Windows_NT linux]"
+	@echo "    Default: Windows_NT"
 
 clean:
 	$(RM) $(TARGET)

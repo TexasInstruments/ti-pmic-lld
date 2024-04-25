@@ -703,15 +703,18 @@ int32_t Pmic_BB_irqGetL2Error(Pmic_CoreHandle_t * pPmicCoreHandle,
     uint16_t l1RegAddr, Pmic_IrqStatus_t * pErrStat);
 
 
-static int32_t Pmic_getCMVMONErr(Pmic_CoreHandle_t * pPmicCoreHandle,
+int32_t Pmic_getCMVMONErr(
+    Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_IrqStatus_t * pErrStat);
 
 
-static int32_t Pmic_getCOMPErr(Pmic_CoreHandle_t * pPmicCoreHandle,
+int32_t Pmic_getCOMPErr(
+    Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_IrqStatus_t * pErrStat);
 
 
-static int32_t Pmic_getESMErr(Pmic_CoreHandle_t * pPmicCoreHandle,
+int32_t Pmic_getESMErr(
+    Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_IrqStatus_t * pErrStat);
 
 
@@ -719,8 +722,10 @@ static int32_t Pmic_getOV_VMONPLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_IrqStatus_t * pErrStat);
 
 
-static int32_t Pmic_getRDBKErr(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t regValue, Pmic_IrqStatus_t * pErrStat);
+int32_t Pmic_getRDBKErr(
+    Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t regValue,
+     Pmic_IrqStatus_t * pErrStat);
 
 
 static int32_t Pmic_getUV_LDO_Err(Pmic_CoreHandle_t * pPmicCoreHandle,
@@ -731,37 +736,30 @@ static int32_t Pmic_getUV_VMONPLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_IrqStatus_t * pErrStat);
 
 
-static int32_t Pmic_getOV_LDO_Err(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_IrqStatus_t * pErrStat);
+int32_t Pmic_getOV_LDO_Err(
+    Pmic_CoreHandle_t *pPmicCoreHandle,
+    Pmic_IrqStatus_t *pErrStat);
 
 
-static int32_t
-Pmic_getOV_LDO_VMON_PLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t regValue, Pmic_IrqStatus_t * pErrStat);
+int32_t Pmic_getOV_LDO_VMON_PLDOErr(
+    Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t regValue,
+     Pmic_IrqStatus_t * pErrStat);
 
 
-static int32_t
-Pmic_getUV_LDO_VMON_PLDOErr(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t regValue, Pmic_IrqStatus_t * pErrStat);
+int32_t Pmic_getUV_LDO_VMON_PLDOErr(
+    Pmic_CoreHandle_t * pPmicCoreHandle,
+    uint8_t regValue,
+     Pmic_IrqStatus_t * pErrStat);
 
 
-static int32_t Pmic_getWDGErr(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_IrqStatus_t * pErrStat);
+int32_t Pmic_getWDGErr(Pmic_CoreHandle_t * pPmicCoreHandle, Pmic_IrqStatus_t * pErrStat);
 
-
-static int32_t Pmic_getSafetyOffStateErr(uint8_t regValue,
-    Pmic_IrqStatus_t * pErrStat);
-
-
-int32_t Pmic_irqGetL2Error(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint16_t l1RegAddr, Pmic_IrqStatus_t * pErrStat);
-
+int32_t Pmic_getSafetyOffStateErr(uint8_t regValue, Pmic_IrqStatus_t * pErrStat);
 
 void pmic_get_bb_intrCfg(Pmic_IntrCfg_t ** pIntrCfg);
 
-
 void pmic_get_bb_intrGpioCfg(Pmic_GpioIntrTypeCfg_t ** pGpioIntrCfg);
-
 
 void Pmic_BB_reInitInterruptConfig(void);
 
