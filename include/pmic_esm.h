@@ -485,22 +485,6 @@ static int32_t
 Pmic_esmValidateParams(const Pmic_CoreHandle_t * pPmicCoreHandle);
 
 /**
- * @brief Get the base register address for Error Signaling Module (ESM).
- * This function retrieves the base register address associated with the specified type of ESM.
- * The base register address is necessary for accessing the configuration and status registers
- * related to the ESM functionality. It takes a boolean parameter to determine the type of ESM,
- * where true indicates one type of ESM and false indicates another type. The base register address
- * is then stored in the memory location pointed to by the provided pointer.
- *
- * @param esmType Type of ESM.
- * @param pEsmBaseAddr Pointer to store the base register address.
- * @return void
- *
- * @ingroup Pmic_ESMFunctions
- */
-static void Pmic_esmGetBaseRegAddr(uint8_t * pEsmBaseAddr);
-
-/**
  * @brief Check the state of Error Signaling Module (ESM).
  * This function checks the current state of the specified ESM.
  * It queries the ESM control register to determine if the ESM is currently active or inactive.

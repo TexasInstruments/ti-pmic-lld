@@ -105,8 +105,7 @@
  * \brief  PMIC OFF_STATE_STAT1 register Mask Values
  */
 #define PMIC_NORMAL_OFF_MASK ((uint8_t)(0X01U << PMIC_NORMAL_OFF_SHIFT))
-#define PMIC_OFF_INT_EVT_ERR_MASK                                              \
-  ((uint8_t)(0X01U << PMIC_OFF_INT_EVT_ERR_SHIFT))
+#define PMIC_OFF_INT_EVT_ERR_MASK ((uint8_t)(0X01U << PMIC_OFF_INT_EVT_ERR_SHIFT))
 #define PMIC_OFF_PROT_EVT_MASK ((uint8_t)(0X01U << PMIC_OFF_PROT_EVT_SHIFT))
 #define PMIC_FIRST_PWR_ON_MASK ((uint8_t)(0X01U << PMIC_FIRST_PWR_ON_SHIFT))
 #define PMIC_CLK_ERR_MASK ((uint8_t)(0X01U << PMIC_CLK_ERR_SHIFT))
