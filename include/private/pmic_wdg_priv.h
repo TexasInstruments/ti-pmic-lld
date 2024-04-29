@@ -93,10 +93,10 @@
 /**
  * @brief PMIC Watchdog Threshold Value Configuration Register (WD_TH_CFG)
  */
-#define PMIC_WD_THR_CFG_WD_TH1_SHIFT (3U)
-#define PMIC_WD_THR_CFG_WD_TH1_MASK  (0x07U << PMIC_WD_THR_CFG_WD_TH1_SHIFT)
-#define PMIC_WD_THR_CFG_WD_TH2_SHIFT (0U)
-#define PMIC_WD_THR_CFG_WD_TH2_MASK  (0x07U << PMIC_WD_THR_CFG_WD_TH2_SHIFT)
+#define PMIC_WD_TH1_SHIFT            (3U)
+#define PMIC_WD_TH1_MASK             (0x07U << PMIC_WD_TH1_SHIFT)
+#define PMIC_WD_TH2_SHIFT            (0U)
+#define PMIC_WD_TH2_MASK             (0x07U << PMIC_WD_TH2_SHIFT)
 
 /**
  * @brief PMIC Watchdog Question & Answer Configuration Register (WD_QA_CFG)

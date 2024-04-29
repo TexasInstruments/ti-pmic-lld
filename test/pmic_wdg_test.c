@@ -356,11 +356,11 @@ void test_wdg_setCfg_wdgMode(void) {
     wdgCfg_actual.validParams = PMIC_CFG_WDG_WDGMODE_VALID_SHIFT;
 
     /* Set Watchdog mode to be Q&A mode */
-    wdgCfg_expected.wdgMode = PMIC_WDG_QA_MODE;
+    wdgCfg_expected.mode = PMIC_WDG_QA_MODE;
     status = Pmic_wdgSetCfg(pPmicCoreHandle_wdg, wdgCfg_expected);
     if (PMIC_ST_SUCCESS == status) {
         status = Pmic_wdgGetCfg(pPmicCoreHandle_wdg, &wdgCfg_actual);
-        if (wdgCfg_actual.wdgMode == wdgCfg_expected.wdgMode) {
+        if (wdgCfg_actual.mode == wdgCfg_expected.mode) {
             DebugP_log("Test Passed: Watchdog set to Q&A mode passed!\r\n");
         } else {
             DebugP_log("Test Failed: Watchdog set to Q&A mode failed!\r\n");
@@ -368,11 +368,11 @@ void test_wdg_setCfg_wdgMode(void) {
     }
 
     /* Set Watchdog mode to be trigger mode */
-    wdgCfg_expected.wdgMode = PMIC_WDG_TRIGGER_MODE;
+    wdgCfg_expected.mode = PMIC_WDG_TRIGGER_MODE;
     status = Pmic_wdgSetCfg(pPmicCoreHandle_wdg, wdgCfg_expected);
     if (PMIC_ST_SUCCESS == status) {
         status = Pmic_wdgGetCfg(pPmicCoreHandle_wdg, &wdgCfg_actual);
-        if (wdgCfg_actual.wdgMode == wdgCfg_expected.wdgMode) {
+        if (wdgCfg_actual.mode == wdgCfg_expected.mode) {
             DebugP_log("Test Passed: Watchdog set to Trigger mode passed!\r\n");
         } else {
             DebugP_log("Test Failed: Watchdog set to Trigger mode failed!\r\n");
@@ -410,7 +410,7 @@ void test_wdg_setCfg_powerHold(void) {
     }
 
     /* Disable Watchdog PWRHOLD */
-    wdgCfg_expected.wdgMode = PMIC_WDG_PWRHOLD_DISABLE;
+    wdgCfg_expected.mode = PMIC_WDG_PWRHOLD_DISABLE;
     status = Pmic_wdgSetCfg(pPmicCoreHandle_wdg, wdgCfg_expected);
     if (PMIC_ST_SUCCESS == status) {
         status = Pmic_wdgGetCfg(pPmicCoreHandle_wdg, &wdgCfg_actual);
