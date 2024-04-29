@@ -378,6 +378,8 @@ void Pmic_criticalSectionStart(const Pmic_CoreHandle_t * pPmicCoreHandle);
 
 void Pmic_criticalSectionStop(const Pmic_CoreHandle_t * pPmicCoreHandle);
 
+int32_t Pmic_checkPmicCoreHandle(const Pmic_CoreHandle_t *handle);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

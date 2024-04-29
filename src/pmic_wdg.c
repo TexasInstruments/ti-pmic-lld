@@ -42,8 +42,8 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
-
 #include "pmic_wdg.h"
+#include "pmic_core_priv.h"
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -57,37 +57,7 @@
 /*                          Function Definitions                              */
 /* ========================================================================== */
 
-static int32_t
-Pmic_checkPmicCoreHandle(const Pmic_CoreHandle_t * pPmicCoreHandle) {
-    int32_t status = PMIC_ST_SUCCESS;
-    uint32_t drvInitStats = 0U;
-
-    /* Validate pPmicCoreHandle */
-    if (NULL == pPmicCoreHandle) {
-        status = PMIC_ST_ERR_INV_HANDLE;
-    }
-
-    if (PMIC_ST_SUCCESS == status) {
-        if (PMIC_INTF_SINGLE_I2C == pPmicCoreHandle -> commMode) {
-            drvInitStats = (uint32_t)(DRV_INIT_SUCCESS | (uint8_t)PMIC_MAIN_INST);
-        } else if (PMIC_INTF_DUAL_I2C == pPmicCoreHandle -> commMode) {
-            drvInitStats = (uint32_t)(DRV_INIT_SUCCESS | (uint8_t)PMIC_MAIN_INST | (uint8_t)PMIC_QA_INST);
-        } else if (PMIC_INTF_SPI == pPmicCoreHandle -> commMode) {
-            drvInitStats = (uint32_t)(DRV_INIT_SUCCESS | (uint8_t)PMIC_MAIN_INST);
-        } else {
-            drvInitStats = 0x00U;
-        }
-
-        if (drvInitStats != pPmicCoreHandle -> drvInitStatus) {
-            status = PMIC_ST_ERR_INV_HANDLE;
-        }
-    }
-
-    return status;
-}
-
-static int32_t
-Pmic_WdgValidatePmicCoreHandle(const Pmic_CoreHandle_t * pPmicCoreHandle) {
+static int32_t Pmic_WdgValidatePmicCoreHandle(const Pmic_CoreHandle_t * pPmicCoreHandle) {
     int32_t wdgStatus = PMIC_ST_SUCCESS;
 
     wdgStatus = Pmic_checkPmicCoreHandle(pPmicCoreHandle);

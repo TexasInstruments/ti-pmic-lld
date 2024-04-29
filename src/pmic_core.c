@@ -263,6 +263,33 @@ void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *pPmicCoreHandle) {
     }
 }
 
+int32_t Pmic_checkPmicCoreHandle(const Pmic_CoreHandle_t * pPmicCoreHandle) {
+    int32_t status = PMIC_ST_SUCCESS;
+    uint32_t expectedInitStatus = 0U;
+
+    if (pPmicCoreHandle == NULL) {
+        status = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        if (pPmicCoreHandle->commMode == PMIC_INTF_SINGLE_I2C) {
+            expectedInitStatus = (uint32_t)(DRV_INIT_SUCCESS | (uint8_t)PMIC_MAIN_INST);
+        } else if (pPmicCoreHandle->commMode == PMIC_INTF_DUAL_I2C) {
+            expectedInitStatus = (uint32_t)(DRV_INIT_SUCCESS | (uint8_t)PMIC_MAIN_INST | (uint8_t)PMIC_QA_INST);
+        } else if (pPmicCoreHandle->commMode == PMIC_INTF_SPI) {
+            expectedInitStatus = (uint32_t)(DRV_INIT_SUCCESS | (uint8_t)PMIC_MAIN_INST);
+        } else {
+            expectedInitStatus = 0x00U;
+        }
+
+        if (expectedInitStatus != pPmicCoreHandle->drvInitStatus) {
+            status = PMIC_ST_ERR_INV_HANDLE;
+        }
+    }
+
+    return status;
+}
+
 /**
  * @brief Calculate CRC-8 checksum for PMIC SPI communication.
  * This function calculates the CRC-8 checksum based on the command, read/write
