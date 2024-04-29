@@ -73,8 +73,6 @@ void test_wdg_setCfg_ReturnLongWindow(void);
 void test_wdg_setCfg_QA_feedback(void);
 void test_wdg_setCfg_QA_LFSR(void);
 void test_wdg_setCfg_QA_questionSeed(void);
-void test_wdg_setCfg_cntSel(void);
-void test_wdg_setCfg_enDrvSel(void);
 void test_wdg_QaMode_noErrors(void);
 void *test_pmic_WDG(void *args);
 

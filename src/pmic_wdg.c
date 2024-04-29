@@ -106,18 +106,18 @@ static uint8_t
 Pmic_WdgCovertLongWinTimeIntervaltoRegBits(const Pmic_WdgCfg_t wdgCfg) {
     uint8_t regVal = 0U, baseVal = 0U;
 
-    if (PMIC_WD_LONGWIN_80_MILLISEC == wdgCfg.longWinDuration_ms) {
+    if (PMIC_WD_LONGWIN_80_MS == wdgCfg.longWinDuration_ms) {
         regVal = PMIC_WD_LONGWIN_REG_VAL_0;
-    } else if (wdgCfg.longWinDuration_ms <= PMIC_WD_LONGWIN_8000_MILLISEC) {
+    } else if (wdgCfg.longWinDuration_ms <= PMIC_WD_LONGWIN_8000_MS) {
         regVal =
-            (uint8_t)(wdgCfg.longWinDuration_ms / PMIC_WD_LONGWIN_MILLISEC_DIV_125);
+            (uint8_t)(wdgCfg.longWinDuration_ms / PMIC_WD_LONGWIN_MS_DIV_125);
     } else {
-        baseVal = (uint8_t)(PMIC_WD_LONGWIN_8000_MILLISEC /
-            PMIC_WD_LONGWIN_MILLISEC_DIV_125);
+        baseVal = (uint8_t)(PMIC_WD_LONGWIN_8000_MS /
+            PMIC_WD_LONGWIN_MS_DIV_125);
         regVal =
             baseVal +
-            (uint8_t)((wdgCfg.longWinDuration_ms - PMIC_WD_LONGWIN_8000_MILLISEC) /
-                PMIC_WD_LONGWIN_MILLISEC_DIV_4000);
+            (uint8_t)((wdgCfg.longWinDuration_ms - PMIC_WD_LONGWIN_8000_MS) /
+                PMIC_WD_LONGWIN_MS_DIV_4000);
     }
 
     return regVal;
@@ -132,18 +132,18 @@ Pmic_WdgSetWindow1Window2TimeIntervals(Pmic_CoreHandle_t * pPmicCoreHandle,
     /* Set wdg window1 time interval */
     if (true == pmic_validParamCheck(wdgCfg.validParams,
             PMIC_CFG_WDG_WIN1DURATION_VALID)) {
-        if ((PMIC_WD_WIN1_2_MICROSEC_MIN > wdgCfg.win1Duration_us) ||
-            (PMIC_WD_WIN1_2_MICROSEC_MAX < wdgCfg.win1Duration_us)) {
+        if ((PMIC_WD_WIN1_2_US_MIN > wdgCfg.win1Duration_us) ||
+            (PMIC_WD_WIN1_2_US_MAX < wdgCfg.win1Duration_us)) {
             wdgStatus = PMIC_ST_ERR_INV_WDG_WINDOW;
         }
         if (PMIC_ST_SUCCESS == wdgStatus) {
             regVal = (uint8_t)(
-                (wdgCfg.win1Duration_us / PMIC_WD_WIN1_2_MICROSEC_DIV) - 1U);
-            regVal &= (uint8_t) PMIC_WD_WIN1_CFG_WD_WIN1_MASK;
+                (wdgCfg.win1Duration_us / PMIC_WD_WIN1_2_US_DIV) - 1U);
+            regVal &= (uint8_t) PMIC_WD_WIN1_MASK;
 
             Pmic_criticalSectionStart(pPmicCoreHandle);
 
-            wdgStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_WIN1_CFG_REGADDR,
+            wdgStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_WIN1_CFG_REG,
                 regVal);
 
             Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -154,18 +154,18 @@ Pmic_WdgSetWindow1Window2TimeIntervals(Pmic_CoreHandle_t * pPmicCoreHandle,
     if ((PMIC_ST_SUCCESS == wdgStatus) &&
         (true == pmic_validParamCheck(wdgCfg.validParams,
             PMIC_CFG_WDG_WIN2DURATION_VALID))) {
-        if ((PMIC_WD_WIN1_2_MICROSEC_MIN > wdgCfg.win2Duration_us) ||
-            (PMIC_WD_WIN1_2_MICROSEC_MAX < wdgCfg.win2Duration_us)) {
+        if ((PMIC_WD_WIN1_2_US_MIN > wdgCfg.win2Duration_us) ||
+            (PMIC_WD_WIN1_2_US_MAX < wdgCfg.win2Duration_us)) {
             wdgStatus = PMIC_ST_ERR_INV_WDG_WINDOW;
         }
         if (PMIC_ST_SUCCESS == wdgStatus) {
             regVal = (uint8_t)(
-                (wdgCfg.win2Duration_us / PMIC_WD_WIN1_2_MICROSEC_DIV) - 1U);
-            regVal &= (uint8_t) PMIC_WD_WIN2_CFG_WD_WIN2_MASK;
+                (wdgCfg.win2Duration_us / PMIC_WD_WIN1_2_US_DIV) - 1U);
+            regVal &= (uint8_t) PMIC_WD_WIN2_MASK;
 
             Pmic_criticalSectionStart(pPmicCoreHandle);
 
-            wdgStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_WIN2_CFG_REGADDR,
+            wdgStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_WIN2_CFG_REG,
                 regVal);
 
             Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -187,24 +187,24 @@ Pmic_WdgSetWindowsTimeIntervals(Pmic_CoreHandle_t * pPmicCoreHandle,
         if (((pPmicCoreHandle -> pmicDeviceType == PMIC_DEV_HERA_LP8764X) ||
                 (pPmicCoreHandle -> pmicDeviceType == PMIC_DEV_LEO_TPS6594X)) &&
             (pPmicCoreHandle -> pmicDevSiliconRev == PMIC_SILICON_REV_ID_PG_1_0)) {
-            if ((wdgCfg.longWinDuration_ms != PMIC_WD_LONGWIN_100_MILLISEC) &&
-                ((wdgCfg.longWinDuration_ms < PMIC_WD_LONGWIN_MILLISEC_MIN) ||
-                    (wdgCfg.longWinDuration_ms > PMIC_WD_LONGWIN_MILLISEC_MAX))) {
+            if ((wdgCfg.longWinDuration_ms != PMIC_WD_LONGWIN_100_MS) &&
+                ((wdgCfg.longWinDuration_ms < PMIC_WD_LONGWIN_MS_MIN) ||
+                    (wdgCfg.longWinDuration_ms > PMIC_WD_LONGWIN_MS_MAX))) {
                 status = PMIC_ST_ERR_INV_WDG_WINDOW;
             }
 
             if (status == PMIC_ST_SUCCESS) {
-                if (wdgCfg.longWinDuration_ms == PMIC_WD_LONGWIN_100_MILLISEC) {
+                if (wdgCfg.longWinDuration_ms == PMIC_WD_LONGWIN_100_MS) {
                     regVal = PMIC_WD_LONGWIN_REG_VAL_0;
                 } else {
                     regVal = (uint8_t)(wdgCfg.longWinDuration_ms /
-                        PMIC_WD_LONGWIN_MILLISEC_DIV);
+                        PMIC_WD_LONGWIN_MS_DIV);
                 }
             }
         } else {
-            if ((wdgCfg.longWinDuration_ms != PMIC_WD_LONGWIN_80_MILLISEC) &&
-                ((wdgCfg.longWinDuration_ms < PMIC_WD_LONGWIN_MILLISEC_MIN_PG_2_0) ||
-                    (wdgCfg.longWinDuration_ms > PMIC_WD_LONGWIN_MILLISEC_MAX_PG_2_0))) {
+            if ((wdgCfg.longWinDuration_ms != PMIC_WD_LONGWIN_80_MS) &&
+                ((wdgCfg.longWinDuration_ms < PMIC_WD_LONGWIN_MS_MIN_PG_2_0) ||
+                    (wdgCfg.longWinDuration_ms > PMIC_WD_LONGWIN_MS_MAX_PG_2_0))) {
                 status = PMIC_ST_ERR_INV_WDG_WINDOW;
             }
 
@@ -216,7 +216,7 @@ Pmic_WdgSetWindowsTimeIntervals(Pmic_CoreHandle_t * pPmicCoreHandle,
             Pmic_criticalSectionStart(pPmicCoreHandle);
 
             status = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                PMIC_WD_LONGWIN_CFG_REGADDR, regVal);
+                PMIC_WD_LONGWIN_CFG_REG, regVal);
 
             Pmic_criticalSectionStop(pPmicCoreHandle);
         }
@@ -241,16 +241,16 @@ Pmic_WdgGetWindow1Window2TimeIntervals(Pmic_CoreHandle_t * pPmicCoreHandle,
             PMIC_CFG_WDG_WIN1DURATION_VALID)) {
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_WIN1_CFG_REGADDR, &
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_WIN1_CFG_REG, &
             regVal);
 
         Pmic_criticalSectionStop(pPmicCoreHandle);
 
         if (PMIC_ST_SUCCESS == status) {
-            regVal &= (uint8_t) PMIC_WD_WIN1_CFG_WD_WIN1_MASK;
+            regVal &= (uint8_t) PMIC_WD_WIN1_MASK;
 
             pWdgCfg -> win1Duration_us =
-                ((uint32_t) regVal + 1U) * (uint32_t) PMIC_WD_WIN1_2_MICROSEC_DIV;
+                ((uint32_t) regVal + 1U) * (uint32_t)PMIC_WD_WIN1_2_US_DIV;
         }
     }
 
@@ -260,16 +260,16 @@ Pmic_WdgGetWindow1Window2TimeIntervals(Pmic_CoreHandle_t * pPmicCoreHandle,
             PMIC_CFG_WDG_WIN2DURATION_VALID))) {
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_WIN2_CFG_REGADDR, &
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_WIN2_CFG_REG, &
             regVal);
 
         Pmic_criticalSectionStop(pPmicCoreHandle);
 
         if (PMIC_ST_SUCCESS == status) {
-            regVal &= (uint8_t) PMIC_WD_WIN2_CFG_WD_WIN2_MASK;
+            regVal &= (uint8_t) PMIC_WD_WIN2_MASK;
 
             pWdgCfg -> win2Duration_us =
-                ((uint32_t) regVal + 1U) * (uint32_t) PMIC_WD_WIN1_2_MICROSEC_DIV;
+                ((uint32_t) regVal + 1U) * (uint32_t)PMIC_WD_WIN1_2_US_DIV;
         }
     }
 
@@ -288,7 +288,7 @@ Pmic_WdgGetWindowsTimeIntervals(Pmic_CoreHandle_t * pPmicCoreHandle,
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         status = Pmic_commIntf_recvByte(pPmicCoreHandle,
-            PMIC_WD_LONGWIN_CFG_REGADDR, & regVal);
+            PMIC_WD_LONGWIN_CFG_REG, & regVal);
 
         Pmic_criticalSectionStop(pPmicCoreHandle);
 
@@ -297,22 +297,22 @@ Pmic_WdgGetWindowsTimeIntervals(Pmic_CoreHandle_t * pPmicCoreHandle,
                     (pPmicCoreHandle -> pmicDeviceType == PMIC_DEV_LEO_TPS6594X)) &&
                 (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle -> pmicDevSiliconRev)) {
                 if (PMIC_WD_LONGWIN_REG_VAL_0 == regVal) {
-                    pWdgCfg -> longWinDuration_ms = PMIC_WD_LONGWIN_100_MILLISEC;
+                    pWdgCfg -> longWinDuration_ms = PMIC_WD_LONGWIN_100_MS;
                 } else {
                     pWdgCfg -> longWinDuration_ms =
-                        (uint32_t) regVal * PMIC_WD_LONGWIN_MILLISEC_DIV;
+                        (uint32_t) regVal * PMIC_WD_LONGWIN_MS_DIV;
                 }
             } else {
                 if (PMIC_WD_LONGWIN_REG_VAL_0 == regVal) {
-                    pWdgCfg -> longWinDuration_ms = PMIC_WD_LONGWIN_80_MILLISEC;
+                    pWdgCfg -> longWinDuration_ms = PMIC_WD_LONGWIN_80_MS;
                 } else if (regVal <= PMIC_WD_LONGWIN_REG_VAL_64) {
                     pWdgCfg -> longWinDuration_ms =
-                        (uint32_t) regVal * PMIC_WD_LONGWIN_MILLISEC_DIV_125;
+                        (uint32_t) regVal * PMIC_WD_LONGWIN_MS_DIV_125;
                 } else {
                     pWdgCfg -> longWinDuration_ms =
                         regVal - ((PMIC_WD_LONGWIN_REG_VAL_64 *
-                                PMIC_WD_LONGWIN_MILLISEC_DIV_4000) +
-                            PMIC_WD_LONGWIN_8000_MILLISEC);
+                                PMIC_WD_LONGWIN_MS_DIV_4000) +
+                            PMIC_WD_LONGWIN_8000_MS);
                 }
             }
         }
@@ -341,7 +341,7 @@ static int32_t Pmic_WdgSetThresholdValues(Pmic_CoreHandle_t * pPmicCoreHandle,
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         if (PMIC_ST_SUCCESS == status) {
-            status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_THR_CFG_REGADDR, &
+            status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_TH_CFG_REG, &
                 regVal);
         }
         if (PMIC_ST_SUCCESS == status) {
@@ -349,7 +349,7 @@ static int32_t Pmic_WdgSetThresholdValues(Pmic_CoreHandle_t * pPmicCoreHandle,
                 (uint8_t) PMIC_WD_THR_CFG_WD_FAIL_TH_MASK,
                 wdgCfg.failThreshold);
 
-            status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_THR_CFG_REGADDR,
+            status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_TH_CFG_REG,
                 regVal);
         }
 
@@ -367,7 +367,7 @@ static int32_t Pmic_WdgSetThresholdValues(Pmic_CoreHandle_t * pPmicCoreHandle,
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         if (PMIC_ST_SUCCESS == status) {
-            status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_THR_CFG_REGADDR, &
+            status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_TH_CFG_REG, &
                 regVal);
         }
 
@@ -376,7 +376,7 @@ static int32_t Pmic_WdgSetThresholdValues(Pmic_CoreHandle_t * pPmicCoreHandle,
                 (uint8_t) PMIC_WD_THR_CFG_WD_RST_TH_MASK,
                 wdgCfg.rstThreshold);
 
-            status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_THR_CFG_REGADDR,
+            status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_TH_CFG_REG,
                 regVal);
         }
 
@@ -394,7 +394,7 @@ static int32_t Pmic_WdgGetThresholdValues(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     status =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_THR_CFG_REGADDR, & regVal);
+        Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_TH_CFG_REG, & regVal);
 
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
@@ -416,15 +416,6 @@ static int32_t Pmic_WdgGetThresholdValues(Pmic_CoreHandle_t * pPmicCoreHandle,
                 (uint8_t)PMIC_WD_THR_CFG_WD_RST_TH_MASK);
     }
 
-    /* Get wdg warm reset value */
-    if ((PMIC_ST_SUCCESS == status) &&
-        (true == pmic_validParamCheck(pWdgCfg -> validParams,
-            PMIC_CFG_WDG_RSTENABLE_VALID))) {
-        pWdgCfg -> rstEnable =
-            Pmic_getBitField(regVal, PMIC_WD_THR_CFG_WD_RST_EN_SHIFT,
-                (uint8_t)PMIC_WD_THR_CFG_WD_RST_EN_MASK);
-    }
-
     return status;
 }
 
@@ -435,17 +426,14 @@ static int32_t Pmic_WdgSetRetToLongWindowCfg(Pmic_CoreHandle_t * pPmicCoreHandle
                                              uint8_t returnLongWindow) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
-    uint8_t retrnLongWindow = returnLongWindow;
+
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_MODE_REG_REGADDR, &regVal);
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_CFG_REG, &regVal);
 
     if (PMIC_ST_SUCCESS == status) {
-        Pmic_setBitField(&regVal, PMIC_WD_MODE_REG_WD_RETURN_LONGWIN_SHIFT,
-            (uint8_t)PMIC_WD_MODE_REG_WD_RETURN_LONGWIN_MASK, retrnLongWindow);
-
-        status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_MODE_REG_REGADDR,
-            regVal);
+        Pmic_setBitField(&regVal, PMIC_WD_RETURN_LONGWIN_SHIFT, PMIC_WD_RETURN_LONGWIN_MASK, returnLongWindow);
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_CFG_REG, regVal);
     }
 
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -454,50 +442,20 @@ static int32_t Pmic_WdgSetRetToLongWindowCfg(Pmic_CoreHandle_t * pPmicCoreHandle
 }
 
 /*!
- * \brief  Function to set wdg warm reset enable value
+ * \brief Set the WD_PWRHOLD field in the WD_CFG register.
  */
-static int32_t Pmic_WdgSetWarmRstEnableCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-                                           uint8_t rstEnble) {
-    int32_t status = PMIC_ST_SUCCESS;
-    uint8_t regVal = 0U;
-
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    status =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_THR_CFG_REGADDR, & regVal);
-
-    if (PMIC_ST_SUCCESS == status) {
-        Pmic_setBitField( &regVal, PMIC_WD_THR_CFG_WD_RST_EN_SHIFT,
-            (uint8_t)PMIC_WD_THR_CFG_WD_RST_EN_MASK, rstEnble);
-
-        status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_THR_CFG_REGADDR,
-            regVal);
-    }
-
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    return status;
-}
-
-/*!
- * \brief  Function to set wdg power hold value
- */
-static int32_t Pmic_WdgSetPwrHoldCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_WdgSetPwrHoldCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                      uint8_t pwrHld) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_MODE_REG_REGADDR, &
-        regVal);
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_CFG_REG, &regVal);
 
     if (PMIC_ST_SUCCESS == status) {
-        Pmic_setBitField( &regVal, PMIC_WD_MODE_REG_WD_PWRHOLD_SHIFT,
-            (uint8_t)PMIC_WD_MODE_REG_WD_PWRHOLD_MASK, pwrHld);
-
-        status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_MODE_REG_REGADDR,
-            regVal);
+        Pmic_setBitField(&regVal, PMIC_WD_PWRHOLD_SHIFT, PMIC_WD_PWRHOLD_MASK, pwrHld);
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_CFG_REG, regVal);
     }
 
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -506,23 +464,20 @@ static int32_t Pmic_WdgSetPwrHoldCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
 }
 
 /*!
- * \brief  Function to set wdg Mode
+ * \brief Set the WD_MODE field in the WD_CFG register.
  */
-static int32_t Pmic_WdgSetModeCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_WdgSetModeCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
                                   uint8_t wdgMde) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_MODE_REG_REGADDR, &
-        regVal);
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_CFG_REG, &regVal);
+
     if (PMIC_ST_SUCCESS == status) {
-        Pmic_setBitField( &regVal, PMIC_WD_MODE_REG_WD_MODE_SELECT_SHIFT,
-            (uint8_t)PMIC_WD_MODE_REG_WD_MODE_SELECT_MASK, wdgMde);
-
-        status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_MODE_REG_REGADDR,
-            regVal);
+        Pmic_setBitField(&regVal, PMIC_WD_MODE_SHIFT, PMIC_WD_MODE_MASK, wdgMde);
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_CFG_REG, regVal);
     }
 
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -530,58 +485,19 @@ static int32_t Pmic_WdgSetModeCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
     return status;
 }
 
-int32_t Pmic_WdgSetCntSelCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t wdgCntSel) {
+int32_t Pmic_WdgSetTimeBase(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t timeBase) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0;
 
-    if ((status == PMIC_ST_SUCCESS) &&
-        (wdgCntSel > PMIC_WDG_CNT_SEL_2_1_SCHEME)) {
+    if (timeBase > PMIC_WDG_TIME_BASE_1100_US) {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     if (status == PMIC_ST_SUCCESS) {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_MODE_REG_REGADDR, &
-            regVal);
-    }
-
-    if (status == PMIC_ST_SUCCESS) {
-        Pmic_setBitField( &regVal, PMIC_WD_MODE_REG_WD_CNT_SEL_SHIFT,
-            (uint8_t)PMIC_WD_MODE_REG_WD_CNT_SEL_MASK, wdgCntSel);
-
-        status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_MODE_REG_REGADDR,
-            regVal);
-    }
-
-    Pmic_criticalSectionStop(pPmicCoreHandle);
-
-    return status;
-}
-
-int32_t Pmic_WdgSetEnDrvSelCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t wdgEnDrvSel) {
-    int32_t status = PMIC_ST_SUCCESS;
-    uint8_t regVal = 0;
-
-    if ((status == PMIC_ST_SUCCESS) && (wdgEnDrvSel > PMIC_WDG_ENDRV_SEL_CLR)) {
-        status = PMIC_ST_ERR_INV_PARAM;
-    }
-
-    Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    if (status == PMIC_ST_SUCCESS) {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_MODE_REG_REGADDR, &
-            regVal);
-    }
-
-    if (status == PMIC_ST_SUCCESS) {
-        Pmic_setBitField( &regVal, PMIC_WD_MODE_REG_WD_ENDRV_SEL_SHIFT,
-            (uint8_t)PMIC_WD_MODE_REG_WD_ENDRV_SEL_MASK, wdgEnDrvSel);
-
-        status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_MODE_REG_REGADDR,
-            regVal);
+        Pmic_setBitField(&regVal, PMIC_WD_TIME_CFG_SHIFT, PMIC_WD_TIME_CFG_MASK, timeBase);
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_CFG_REG, regVal);
     }
 
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -592,49 +508,36 @@ int32_t Pmic_WdgSetEnDrvSelCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
 /*!
  * \brief  Function to set watchdog control parameters
  */
-static int32_t Pmic_WdgSetCtrlParams(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_WdgCfg_t wdgCfg) {
+static int32_t Pmic_WdgSetCtrlParams(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_WdgCfg_t wdgCfg) {
     int32_t status = PMIC_ST_SUCCESS;
 
     /* Set wdg mode */
-    if (true ==
-        pmic_validParamCheck(wdgCfg.validParams, PMIC_CFG_WDG_WDGMODE_VALID)) {
+    if (pmic_validParamCheck(wdgCfg.validParams, PMIC_CFG_WDG_WDGMODE_VALID)) {
         status = Pmic_WdgSetModeCfg(pPmicCoreHandle, wdgCfg.wdgMode);
     }
 
     /* Set wdg power hold value */
     if ((PMIC_ST_SUCCESS == status) &&
-        (true ==
-            pmic_validParamCheck(wdgCfg.validParams, PMIC_CFG_WDG_PWRHOLD_VALID))) {
+        pmic_validParamCheck(wdgCfg.validParams, PMIC_CFG_WDG_PWRHOLD_VALID)) {
         status = Pmic_WdgSetPwrHoldCfg(pPmicCoreHandle, wdgCfg.pwrHold);
-    }
-
-    /* Set wdg warm reset enable value */
-    if ((PMIC_ST_SUCCESS == status) &&
-        (true == pmic_validParamCheck(wdgCfg.validParams,
-            PMIC_CFG_WDG_RSTENABLE_VALID))) {
-        status = Pmic_WdgSetWarmRstEnableCfg(pPmicCoreHandle, wdgCfg.rstEnable);
     }
 
     /* Set wdg return to long window bit */
     if ((PMIC_ST_SUCCESS == status) &&
-        (true == pmic_validParamCheck(wdgCfg.validParams,
-            PMIC_CFG_WDG_RETLONGWIN_VALID))) {
+        pmic_validParamCheck(wdgCfg.validParams, PMIC_CFG_WDG_RETLONGWIN_VALID)) {
         status = Pmic_WdgSetRetToLongWindowCfg(pPmicCoreHandle, wdgCfg.retLongWin);
     }
 
-    /* Set wdg fail counter configuration */
+    /* Set wdg time base configuration */
     if ((PMIC_ST_SUCCESS == status) &&
-        (true ==
-            pmic_validParamCheck(wdgCfg.validParams, PMIC_CFG_WDG_CNT_SEL_VALID))) {
-        status = Pmic_WdgSetCntSelCfg(pPmicCoreHandle, wdgCfg.cntSel);
+        pmic_validParamCheck(wdgCfg.validParams, PMIC_CFG_WDG_TIME_BASE_VALID)) {
+        status = Pmic_WdgSetTimeBase(pPmicCoreHandle, wdgCfg.timeBase);
     }
 
-    /* Set wdg effect on ENDRV_SEL */
+    /* Set whether wdg is enabled or not */
     if ((PMIC_ST_SUCCESS == status) &&
-        (true == pmic_validParamCheck(wdgCfg.validParams,
-            PMIC_CFG_WDG_ENDRV_SEL_VALID))) {
-        status = Pmic_WdgSetEnDrvSelCfg(pPmicCoreHandle, wdgCfg.enDrvSel);
+        pmic_validParamCheck(wdgCfg.validParams, PMIC_CFG_WDG_EN_VALID)) {
+        status = Pmic_wdgEnDisState(pPmicCoreHandle, wdgCfg.wdgEn);
     }
 
     return status;
@@ -643,61 +546,39 @@ static int32_t Pmic_WdgSetCtrlParams(Pmic_CoreHandle_t * pPmicCoreHandle,
 /*!
  * \brief  Function to get watchdog control parameters
  */
-static int32_t Pmic_WdgGetCtrlParams(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_WdgCfg_t * pWdgCfg) {
+static int32_t Pmic_WdgGetCtrlParams(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_WdgCfg_t *pWdgCfg) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
+    /* Read from register while in a critical section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
-
-    status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_MODE_REG_REGADDR, &
-        regVal);
-
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_CFG_REG, &regVal);
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
-    /* Get wdg mode */
+    /* Extract all relevant bitfields from register */
     if ((PMIC_ST_SUCCESS == status) &&
-        (true == pmic_validParamCheck(pWdgCfg -> validParams,
-            PMIC_CFG_WDG_WDGMODE_VALID))) {
-        pWdgCfg -> wdgMode =
-            Pmic_getBitField(regVal, PMIC_WD_MODE_REG_WD_MODE_SELECT_SHIFT,
-                (uint8_t)PMIC_WD_MODE_REG_WD_MODE_SELECT_MASK);
+        pmic_validParamCheck(pWdgCfg->validParams, PMIC_CFG_WDG_WDGMODE_VALID)) {
+        pWdgCfg->wdgMode = Pmic_getBitField(regVal, PMIC_WD_MODE_SHIFT, PMIC_WD_MODE_MASK);
     }
 
-    /* Get wdg power hold value */
     if ((PMIC_ST_SUCCESS == status) &&
-        (true == pmic_validParamCheck(pWdgCfg -> validParams,
-            PMIC_CFG_WDG_PWRHOLD_VALID))) {
-        pWdgCfg -> pwrHold =
-            Pmic_getBitField(regVal, PMIC_WD_MODE_REG_WD_PWRHOLD_SHIFT,
-                             (uint8_t)PMIC_WD_MODE_REG_WD_PWRHOLD_MASK);
+        pmic_validParamCheck(pWdgCfg->validParams, PMIC_CFG_WDG_PWRHOLD_VALID)) {
+        pWdgCfg->pwrHold = Pmic_getBitField(regVal, PMIC_WD_PWRHOLD_SHIFT, PMIC_WD_PWRHOLD_MASK);
     }
 
-    /* Get wdg return to long window bit */
     if ((PMIC_ST_SUCCESS == status) &&
-        (true == pmic_validParamCheck(pWdgCfg -> validParams,
-            PMIC_CFG_WDG_RETLONGWIN_VALID))) {
-        pWdgCfg -> retLongWin =
-            Pmic_getBitField(regVal, PMIC_WD_MODE_REG_WD_RETURN_LONGWIN_SHIFT,
-                             (uint8_t)PMIC_WD_MODE_REG_WD_RETURN_LONGWIN_MASK);
+        pmic_validParamCheck(pWdgCfg->validParams, PMIC_CFG_WDG_RETLONGWIN_VALID)) {
+        pWdgCfg->retLongWin = Pmic_getBitField(regVal, PMIC_WD_RETURN_LONGWIN_SHIFT, PMIC_WD_RETURN_LONGWIN_MASK);
     }
 
-    /* Get wdg fail counter configuration */
     if ((PMIC_ST_SUCCESS == status) &&
-        (true == pmic_validParamCheck(pWdgCfg -> validParams,
-            PMIC_CFG_WDG_CNT_SEL_VALID))) {
-        pWdgCfg -> cntSel =
-            Pmic_getBitField(regVal, PMIC_WD_MODE_REG_WD_CNT_SEL_SHIFT,
-                             (uint8_t)PMIC_WD_MODE_REG_WD_CNT_SEL_MASK);
+        pmic_validParamCheck(pWdgCfg->validParams, PMIC_CFG_WDG_TIME_BASE_VALID)) {
+        pWdgCfg->timeBase = Pmic_getBitField(regVal, PMIC_WD_TIME_CFG_SHIFT, PMIC_WD_TIME_CFG_MASK);
     }
 
-    /* Get wdg ENDRV_SEL configuration */
     if ((PMIC_ST_SUCCESS == status) &&
-        (true == pmic_validParamCheck(pWdgCfg -> validParams,
-            PMIC_CFG_WDG_ENDRV_SEL_VALID))) {
-        pWdgCfg -> enDrvSel =
-            Pmic_getBitField(regVal, PMIC_WD_MODE_REG_WD_ENDRV_SEL_SHIFT,
-                             (uint8_t)PMIC_WD_MODE_REG_WD_ENDRV_SEL_MASK);
+        pmic_validParamCheck(pWdgCfg->validParams, PMIC_CFG_WDG_EN_VALID)) {
+        pWdgCfg->wdgEn = Pmic_getBitField(regVal, PMIC_WD_EN_SHIFT, PMIC_WD_EN_MASK);
     }
 
     return status;
@@ -721,15 +602,15 @@ static int32_t Pmic_wdgSetQaQuesSeedValue(Pmic_CoreHandle_t * pPmicCoreHandle,
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         if (PMIC_ST_SUCCESS == status) {
-            status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_QA_CFG_REGADDR, &
+            status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_QA_CFG_REG, &
                 regVal);
         }
 
         if (PMIC_ST_SUCCESS == status) {
-            Pmic_setBitField( &regVal, PMIC_WD_QA_CFG_WD_QUESTION_SEED_SHIFT,
-                              (uint8_t)PMIC_WD_QA_CFG_WD_QUESTION_SEED_MASK, wdgCfg.qaQuesSeed);
+            Pmic_setBitField( &regVal, PMIC_WD_QA_CFG_WD_QA_SEED_SHIFT,
+                              (uint8_t)PMIC_WD_QA_CFG_WD_QA_SEED_MASK, wdgCfg.qaQuesSeed);
 
-            status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_QA_CFG_REGADDR,
+            status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_QA_CFG_REG,
                 regVal);
         }
 
@@ -757,14 +638,14 @@ static int32_t Pmic_WdgSetQaConfigurations(Pmic_CoreHandle_t * pPmicCoreHandle,
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         if (PMIC_ST_SUCCESS == status) {
-            status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_QA_CFG_REGADDR, &
+            status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_QA_CFG_REG, &
                 regVal);
         }
         if (PMIC_ST_SUCCESS == status) {
             Pmic_setBitField( & regVal, PMIC_WD_QA_CFG_WD_QA_FDBK_SHIFT,
                               (uint8_t)PMIC_WD_QA_CFG_WD_QA_FDBK_MASK, wdgCfg.qaFdbk);
 
-            status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_QA_CFG_REGADDR,
+            status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_QA_CFG_REG,
                 regVal);
         }
 
@@ -782,7 +663,7 @@ static int32_t Pmic_WdgSetQaConfigurations(Pmic_CoreHandle_t * pPmicCoreHandle,
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         if (PMIC_ST_SUCCESS == status) {
-            status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_QA_CFG_REGADDR, &
+            status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_QA_CFG_REG, &
                 regVal);
         }
 
@@ -790,7 +671,7 @@ static int32_t Pmic_WdgSetQaConfigurations(Pmic_CoreHandle_t * pPmicCoreHandle,
             Pmic_setBitField( &regVal, PMIC_WD_QA_CFG_WD_QA_LFSR_SHIFT,
                               (uint8_t)PMIC_WD_QA_CFG_WD_QA_LFSR_MASK, wdgCfg.qaLfsr);
 
-            status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_QA_CFG_REGADDR,
+            status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_QA_CFG_REG,
                 regVal);
         }
 
@@ -816,7 +697,7 @@ static int32_t Pmic_WdgGetQaConfigurations(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     status =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_QA_CFG_REGADDR, & regVal);
+        Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_QA_CFG_REG, & regVal);
 
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
@@ -841,8 +722,8 @@ static int32_t Pmic_WdgGetQaConfigurations(Pmic_CoreHandle_t * pPmicCoreHandle,
         (true == pmic_validParamCheck(pWdgCfg -> validParams,
             PMIC_CFG_WDG_QA_QUES_SEED_VALID))) {
         pWdgCfg -> qaQuesSeed =
-            Pmic_getBitField(regVal, PMIC_WD_QA_CFG_WD_QUESTION_SEED_SHIFT,
-                             (uint8_t)PMIC_WD_QA_CFG_WD_QUESTION_SEED_MASK);
+            Pmic_getBitField(regVal, PMIC_WD_QA_CFG_WD_QA_SEED_SHIFT,
+                             (uint8_t)PMIC_WD_QA_CFG_WD_QA_SEED_MASK);
     }
 
     return status;
@@ -851,22 +732,18 @@ static int32_t Pmic_WdgGetQaConfigurations(Pmic_CoreHandle_t * pPmicCoreHandle,
 /*!
  * \brief  Function to Enable/Disable Watchdog Timer
  */
-static int32_t Pmic_wdgEnDisState(Pmic_CoreHandle_t * pPmicCoreHandle,
+static int32_t Pmic_wdgEnDisState(Pmic_CoreHandle_t *pPmicCoreHandle,
                                   uint8_t enable) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    status =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_THR_CFG_REGADDR, & regVal);
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_CFG_REG, &regVal);
 
     if (PMIC_ST_SUCCESS == status) {
-        Pmic_setBitField( &regVal, PMIC_WD_THR_CFG_WD_EN_SHIFT,
-                          (uint8_t)PMIC_WD_THR_CFG_WD_EN_MASK, enable);
-
-        status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_THR_CFG_REGADDR,
-            regVal);
+        Pmic_setBitField(&regVal, PMIC_WD_EN_SHIFT, PMIC_WD_EN_MASK, enable);
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_TH_CFG_REG, regVal);
     }
 
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -888,18 +765,18 @@ Pmic_wdgReadQuesandAnswerCount(Pmic_CoreHandle_t * pPmicCoreHandle,
 
     /*! Reading answer count and question value */
     status =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_QA_CNT_REGADDR, & regVal);
+        Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_QA_CNT_REG, & regVal);
 
     /*! Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if (PMIC_ST_SUCCESS == status) {
         * pQaAnsCnt =
-            Pmic_getBitField(regVal, PMIC_WD_QUESTION_ANSW_CNT_WD_ANSW_CNT_SHIFT,
-                             (uint8_t)PMIC_WD_QUESTION_ANSW_CNT_WD_ANSW_CNT_MASK);
+            Pmic_getBitField(regVal, PMIC_WD_QA_CNT_WD_ANSW_CNT_SHIFT,
+                             (uint8_t)PMIC_WD_QA_CNT_WD_ANSW_CNT_MASK);
         * pQaQuesCnt =
-            Pmic_getBitField(regVal, PMIC_WD_QUESTION_ANSW_CNT_WD_QUESTION_SHIFT,
-                             (uint8_t)PMIC_WD_QUESTION_ANSW_CNT_WD_QUESTION_MASK);
+            Pmic_getBitField(regVal, PMIC_WD_QA_CNT_WD_QUESTION_SHIFT,
+                             (uint8_t)PMIC_WD_QA_CNT_WD_QUESTION_MASK);
     }
 
     return status;
@@ -917,7 +794,7 @@ static bool is_wdgBadEventDetected(Pmic_CoreHandle_t * pPmicCoreHandle) {
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     status =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_STATUS_REGADDR, & regVal);
+        Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_STAT_REG, & regVal);
 
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -1015,7 +892,7 @@ Pmic_wdgQaEvaluateAndWriteAnswer(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     /*! Writing watch dog four Answers */
-    status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_ANSWER_REG_REGADDR,
+    status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_ANSWER_REG_REG,
         answer);
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -1067,7 +944,7 @@ static int32_t Pmic_wdgQaWriteAnswers(Pmic_CoreHandle_t * pPmicCoreHandle) {
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     status =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_QA_CFG_REGADDR, & qaFbk);
+        Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_QA_CFG_REG, & qaFbk);
 
     /* Stop Critical Section */
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -1112,26 +989,25 @@ int32_t Pmic_wdgDisable(Pmic_CoreHandle_t * pPmicCoreHandle) {
     return status;
 }
 
-int32_t Pmic_wdgGetEnableState(Pmic_CoreHandle_t *pPmicCoreHandle,
-    uint8_t *pWdgEnabled) {
+int32_t Pmic_wdgGetEnableState(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t *pWdgEnabled) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0;
 
+    // Validate parameters
     status = Pmic_WdgValidatePmicCoreHandle(pPmicCoreHandle);
     if ((status == PMIC_ST_SUCCESS) && (pWdgEnabled == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
+    // Read from register and extract bitfield.
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     if (status == PMIC_ST_SUCCESS) {
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_THR_CFG_REGADDR, &
-            regData);
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_CFG_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS) {
-        *pWdgEnabled = Pmic_getBitField(regData, PMIC_WD_THR_CFG_WD_EN_SHIFT,
-                                         (uint8_t)PMIC_WD_THR_CFG_WD_EN_MASK);
+        *pWdgEnabled = Pmic_getBitField(regData, PMIC_WD_EN_SHIFT, PMIC_WD_EN_MASK);
     }
 
     Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -1200,7 +1076,7 @@ int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
  *         Write Answers for Long Window
  */
 static int32_t Pmic_wdgQaSetModeRetlongwinCfgWriteAnswersLongwindow(
-    Pmic_CoreHandle_t * pPmicCoreHandle) {
+    Pmic_CoreHandle_t *pPmicCoreHandle) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0x0U;
 
@@ -1208,15 +1084,12 @@ static int32_t Pmic_wdgQaSetModeRetlongwinCfgWriteAnswersLongwindow(
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     /* Reading watchdog mode value */
-    status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_MODE_REG_REGADDR, &
-        regVal);
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_CFG_REG, &regVal);
 
+    /* Set watchdog mode to QA mode */
     if (PMIC_ST_SUCCESS == status) {
-        Pmic_setBitField( & regVal, PMIC_WD_MODE_REG_WD_MODE_SELECT_SHIFT,
-            (uint8_t)PMIC_WD_MODE_REG_WD_MODE_SELECT_MASK, PMIC_WDG_QA_MODE);
-        /* Set watchdog mode to QA mode */
-        status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_MODE_REG_REGADDR,
-            regVal);
+        Pmic_setBitField(&regVal, PMIC_WD_MODE_SHIFT, PMIC_WD_MODE_MASK, PMIC_WDG_QA_MODE);
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_CFG_REG, regVal);
     }
 
     /* Stop Critical Section */
@@ -1224,8 +1097,7 @@ static int32_t Pmic_wdgQaSetModeRetlongwinCfgWriteAnswersLongwindow(
 
     /* Disable ret to Long Window */
     if (PMIC_ST_SUCCESS == status) {
-        status = Pmic_WdgSetRetToLongWindowCfg(pPmicCoreHandle,
-            PMIC_WDG_RETLONGWIN_DISABLE);
+        status = Pmic_WdgSetRetToLongWindowCfg(pPmicCoreHandle, PMIC_WDG_RETURN_LONGWIN_DISABLE);
     }
 
     /* Clear WDG Error bits */
@@ -1233,11 +1105,10 @@ static int32_t Pmic_wdgQaSetModeRetlongwinCfgWriteAnswersLongwindow(
         /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_ERR_STATUS_REGADDR, &
-            regVal);
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_ERR_STAT_REG, &regVal);
+
         if (PMIC_ST_SUCCESS == status) {
-            status = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                PMIC_WD_ERR_STATUS_REGADDR, regVal);
+            status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_ERR_STAT_REG, regVal);
         }
 
         /* Stop Critical Section */
@@ -1247,12 +1118,12 @@ static int32_t Pmic_wdgQaSetModeRetlongwinCfgWriteAnswersLongwindow(
     /* Write Answers for Long Window */
     if (PMIC_ST_SUCCESS == status) {
         status = Pmic_wdgQaWriteAnswers(pPmicCoreHandle);
+
         if (PMIC_ST_ERR_INV_WDG_ANSWER == status) {
             /* Start Critical Section */
             Pmic_criticalSectionStart(pPmicCoreHandle);
 
-            status = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                PMIC_WD_ERR_STATUS_REGADDR, & regVal);
+            status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_ERR_STAT_REG, &regVal);
 
             /* Stop Critical Section */
             Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -1291,7 +1162,7 @@ Pmic_wdgQaWriteAnswersNumSequence(Pmic_CoreHandle_t * pPmicCoreHandle,
             /* Start Critical Section */
             Pmic_criticalSectionStart(pPmicCoreHandle);
             status = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                PMIC_WD_ERR_STATUS_REGADDR, & regVal);
+                PMIC_WD_ERR_STAT_REG, & regVal);
             /* Stop Critical Section */
             Pmic_criticalSectionStop(pPmicCoreHandle);
 
@@ -1309,12 +1180,12 @@ Pmic_wdgQaWriteAnswersNumSequence(Pmic_CoreHandle_t * pPmicCoreHandle,
             /* Start Critical Section */
             Pmic_criticalSectionStart(pPmicCoreHandle);
 
-            status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_STATUS_REGADDR, &
+            status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_STAT_REG, &
                 failCnt);
 
             if ((PMIC_ST_SUCCESS == status) && ((uint8_t)0U != (failCnt & (uint8_t)0x40U))) {
                 status = Pmic_commIntf_recvByte(pPmicCoreHandle,
-                    PMIC_WD_ERR_STATUS_REGADDR, & regVal);
+                    PMIC_WD_ERR_STAT_REG, & regVal);
                 if ((PMIC_ST_SUCCESS == status) && ((uint8_t)0U != (regVal & (uint8_t)0x08U))) {
                     status = PMIC_ST_ERR_WDG_EARLY_ANSWER;
                 }
@@ -1367,11 +1238,11 @@ int32_t Pmic_wdgStartQaSequence(Pmic_CoreHandle_t * pPmicCoreHandle,
         /* Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_ERR_STATUS_REGADDR, &
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_ERR_STAT_REG, &
             regVal);
 
         if (PMIC_ST_SUCCESS == status) {
-            status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_STATUS_REGADDR, &
+            status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_STAT_REG, &
                 regVal);
         }
 
@@ -1388,7 +1259,7 @@ int32_t Pmic_wdgStartQaSequence(Pmic_CoreHandle_t * pPmicCoreHandle,
     if (PMIC_ST_SUCCESS == status) {
         /* Enable Return long window Enable */
         status = Pmic_WdgSetRetToLongWindowCfg(pPmicCoreHandle,
-            PMIC_WDG_RETLONGWIN_ENABLE);
+            PMIC_WDG_RETURN_LONGWIN_ENABLE);
     }
 
     return status;
@@ -1507,7 +1378,7 @@ int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t * pPmicCoreHandle,
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         /* Reading error status register */
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_ERR_STATUS_REGADDR, &
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_ERR_STAT_REG, &
             regVal);
 
         /* Stop Critical Section */
@@ -1544,7 +1415,7 @@ int32_t Pmic_wdgGetFailCntStat(Pmic_CoreHandle_t * pPmicCoreHandle,
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         /* Reading error status register */
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_STATUS_REGADDR, &
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_STAT_REG, &
             regVal);
 
         /* Stop Critical Section */
@@ -1599,16 +1470,16 @@ int32_t Pmic_wdgStartTriggerSequence(Pmic_CoreHandle_t * pPmicCoreHandle) {
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         /* Reading watchdog mode value */
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_MODE_REG_REGADDR, &
-            regVal);
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_CFG_REG, &regVal);
 
+        /* Set watchdog mode to trigger mode */
         if (PMIC_ST_SUCCESS == status) {
-            Pmic_setBitField( & regVal, PMIC_WD_MODE_REG_WD_MODE_SELECT_SHIFT,
-                (uint8_t)PMIC_WD_MODE_REG_WD_MODE_SELECT_MASK,
+            Pmic_setBitField(&regVal,
+                PMIC_WD_MODE_SHIFT,
+                PMIC_WD_MODE_MASK,
                 PMIC_WDG_TRIGGER_MODE);
-            /* Set watchdog mode to trigger mode */
-            status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_MODE_REG_REGADDR,
-                regVal);
+
+            status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_CFG_REG, regVal);
         }
 
         /* Stop Critical Section */
@@ -1676,7 +1547,7 @@ Pmic_wdgClrErrStatusWdgErrType(Pmic_CoreHandle_t * pPmicCoreHandle,
         /*! Start Critical Section */
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
-        status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_ERR_STATUS_REGADDR,
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_ERR_STAT_REG,
             regData);
         /*! Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -1702,7 +1573,7 @@ int32_t Pmic_wdgClrErrStatus(Pmic_CoreHandle_t * pPmicCoreHandle,
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         /* Reading error status register */
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_ERR_STATUS_REGADDR, &
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_ERR_STAT_REG, &
             regVal);
         if (0U == regVal) {
             status = PMIC_ST_ERR_FAIL;
@@ -1710,7 +1581,7 @@ int32_t Pmic_wdgClrErrStatus(Pmic_CoreHandle_t * pPmicCoreHandle,
 
         if ((PMIC_ST_SUCCESS == status) && (PMIC_WDG_ERR_ALL == wdgErrType)) {
             status = Pmic_commIntf_sendByte(pPmicCoreHandle,
-                PMIC_WD_ERR_STATUS_REGADDR, regVal);
+                PMIC_WD_ERR_STAT_REG, regVal);
         }
 
         /* Stop Critical Section */
@@ -1740,7 +1611,7 @@ int32_t Pmic_wdgQaSequenceWriteAnswer(Pmic_CoreHandle_t * pPmicCoreHandle) {
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         status =
-            Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_QA_CFG_REGADDR, & qaFbk);
+            Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_QA_CFG_REG, & qaFbk);
 
         /* Stop Critical Section */
         Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -1765,62 +1636,60 @@ int32_t Pmic_wdgQaSequenceWriteAnswer(Pmic_CoreHandle_t * pPmicCoreHandle) {
     return status;
 }
 
-int32_t Pmic_wdgBeginSequences(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const uint8_t wdgMde) {
+int32_t Pmic_wdgBeginSequences(Pmic_CoreHandle_t *pPmicCoreHandle, const uint8_t wdgMde) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t wdgEnabled = 0U;
     uint8_t regVal = 0U;
 
-    /* Parameter check*/
+    /* Parameter validation */
     status = Pmic_WdgValidatePmicCoreHandle(pPmicCoreHandle);
     if ((status == PMIC_ST_SUCCESS) && (wdgMde > PMIC_WDG_QA_MODE)) {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    /* Check if WDG is enabled*/
+    /* Check if WDG is enabled */
     if (status == PMIC_ST_SUCCESS) {
         status = Pmic_wdgGetEnableState(pPmicCoreHandle, &wdgEnabled);
+
         if ((status == PMIC_ST_SUCCESS) && (wdgEnabled == 0U)) {
             status = PMIC_ST_ERR_WDG_DISABLED;
         }
     }
 
-    /* Start critical section before serial comm. operations*/
+    /* Start critical section before serial comm. operations */
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    /* Clear all WDG error statuses (all bit fields in the*/
-    /* WD_ERR_STATUS register are W1C - write 1 to clear)*/
+    /* Clear all WDG error statuses (all bit fields in the */
+    /* WD_ERR_STATUS register are W1C - write 1 to clear) */
     regVal = 0xFFU;
-    status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_ERR_STATUS_REGADDR,
-        regVal);
+    status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_ERR_STAT_REG, regVal);
 
     if (status == PMIC_ST_SUCCESS) {
-        /* Read WD_MODE_REG register*/
-        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_MODE_REG_REGADDR, &
-            regVal);
+        /* Read WD_MODE_REG register */
+        status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_CFG_REG, &regVal);
     }
 
     if (status == PMIC_ST_SUCCESS) {
-        /* Select WDG mode of operation*/
-        Pmic_setBitField( & regVal, PMIC_WD_MODE_REG_WD_MODE_SELECT_SHIFT,
-                          (uint8_t)PMIC_WD_MODE_REG_WD_MODE_SELECT_MASK, wdgMde);
+        /* Select WDG mode of operation */
+        Pmic_setBitField(&regVal, PMIC_WD_MODE_SHIFT, PMIC_WD_MODE_MASK, wdgMde);
 
-        /* Clear WD_PWRHOLD bit field to enable WDG to exit Long Window*/
-        Pmic_setBitField( & regVal, PMIC_WD_MODE_REG_WD_PWRHOLD_SHIFT,
-                          (uint8_t)PMIC_WD_MODE_REG_WD_PWRHOLD_MASK,
-                          PMIC_WDG_PWRHOLD_DISABLE);
+        /* Clear WD_PWRHOLD bit field to enable WDG to exit Long Window */
+        Pmic_setBitField(&regVal,
+            PMIC_WD_PWRHOLD_SHIFT,
+            PMIC_WD_PWRHOLD_MASK,
+            PMIC_WDG_PWRHOLD_DISABLE);
 
-        /* Clear WD_RETURN_LONGWIN bit field to disable return to Long Window*/
-        Pmic_setBitField( & regVal, PMIC_WD_MODE_REG_WD_RETURN_LONGWIN_SHIFT,
-                          (uint8_t)PMIC_WD_MODE_REG_WD_RETURN_LONGWIN_MASK,
-                          PMIC_WDG_RETLONGWIN_DISABLE);
+        /* Clear WD_RETURN_LONGWIN bit field to disable return to Long Window */
+        Pmic_setBitField(&regVal,
+            PMIC_WD_RETURN_LONGWIN_SHIFT,
+            PMIC_WD_RETURN_LONGWIN_MASK,
+            PMIC_WDG_RETURN_LONGWIN_DISABLE);
 
-        /* Write new register value back to PMIC*/
-        status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_MODE_REG_REGADDR,
-            regVal);
+        /* Write new register value back to PMIC */
+        status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_CFG_REG, regVal);
     }
 
-    /* Stop critical section after serial comm. operations*/
+    /* Stop critical section after serial comm. operations */
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
     return status;

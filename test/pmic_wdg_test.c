@@ -339,48 +339,6 @@ void test_wdg_setCfg_resetThreshold(void) {
 }
 
 /**
- * @brief Test setting the reset enable/disable for the watchdog.
- * This function tests setting and getting the reset enable/disable
- * configuration for the watchdog.
- *
- * @param void
- * @return NULL
- */
-void test_wdg_setCfg_resetEnable(void) {
-    int32_t status = PMIC_ST_SUCCESS;
-    Pmic_WdgCfg_t wdgCfg_expected, wdgCfg_actual;
-
-    checkWdgEnabled();
-
-    wdgCfg_expected.validParams = PMIC_CFG_WDG_RSTENABLE_VALID_SHIFT;
-    wdgCfg_actual.validParams = PMIC_CFG_WDG_RSTENABLE_VALID_SHIFT;
-
-    /* Enable Watchdog Reset */
-    wdgCfg_expected.rstEnable = PMIC_WDG_RESET_ENABLE;
-    status = Pmic_wdgSetCfg(pPmicCoreHandle_wdg, wdgCfg_expected);
-    if (PMIC_ST_SUCCESS == status) {
-        status = Pmic_wdgGetCfg(pPmicCoreHandle_wdg, &wdgCfg_actual);
-        if (wdgCfg_actual.rstEnable == wdgCfg_expected.rstEnable) {
-            DebugP_log("Test Passed: Watchdog Reset Enable passed!\r\n");
-        } else {
-            DebugP_log("Test Failed: Watchdog Reset Enable failed!\r\n");
-        }
-    }
-
-    /* Disable Watchdog Reset */
-    wdgCfg_expected.rstEnable = PMIC_WDG_RESET_DISABLE;
-    status = Pmic_wdgSetCfg(pPmicCoreHandle_wdg, wdgCfg_expected);
-    if (PMIC_ST_SUCCESS == status) {
-        status = Pmic_wdgGetCfg(pPmicCoreHandle_wdg, &wdgCfg_actual);
-        if (wdgCfg_actual.rstEnable == wdgCfg_expected.rstEnable) {
-            DebugP_log("Test Passed: Watchdog Reset Disable passed!\r\n");
-        } else {
-            DebugP_log("Test Failed: Watchdog Reset Disable failed!\r\n");
-        }
-    }
-}
-
-/**
  * @brief Test setting the watchdog mode for the watchdog.
  * This function tests setting and getting the watchdog mode configuration for
  * the watchdog.
@@ -482,7 +440,7 @@ void test_wdg_setCfg_ReturnLongWindow(void) {
     wdgCfg_actual.validParams = PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT;
 
     /* Enable Watchdog return to Long Window */
-    wdgCfg_expected.retLongWin = PMIC_WDG_RETLONGWIN_ENABLE;
+    wdgCfg_expected.retLongWin = PMIC_WDG_RETURN_LONGWIN_ENABLE;
     status = Pmic_wdgSetCfg(pPmicCoreHandle_wdg, wdgCfg_expected);
     if (PMIC_ST_SUCCESS == status) {
         status = Pmic_wdgGetCfg(pPmicCoreHandle_wdg, &wdgCfg_actual);
@@ -496,7 +454,7 @@ void test_wdg_setCfg_ReturnLongWindow(void) {
     }
 
     /* Disable Watchdog return to Long Window */
-    wdgCfg_expected.retLongWin = PMIC_WDG_RETLONGWIN_DISABLE;
+    wdgCfg_expected.retLongWin = PMIC_WDG_RETURN_LONGWIN_DISABLE;
     status = Pmic_wdgSetCfg(pPmicCoreHandle_wdg, wdgCfg_expected);
     if (PMIC_ST_SUCCESS == status) {
         status = Pmic_wdgGetCfg(pPmicCoreHandle_wdg, &wdgCfg_actual);
@@ -625,90 +583,6 @@ void test_wdg_setCfg_QA_questionSeed(void) {
                            "configuration for Ques-%u failed!\r\n",
                            i);
             }
-        }
-    }
-}
-
-/**
- * @brief Test setting the count selection bit for the watchdog.
- * This function tests setting and getting the count selection bit configuration
- * for the watchdog.
- *
- * @param void
- * @return NULL
- */
-void test_wdg_setCfg_cntSel(void) {
-    int32_t status = PMIC_ST_SUCCESS;
-    Pmic_WdgCfg_t wdgCfg_expected = {.validParams =
-                                         PMIC_CFG_WDG_CNT_SEL_VALID_SHIFT};
-    Pmic_WdgCfg_t wdgCfg_actual = {.validParams =
-                                       PMIC_CFG_WDG_CNT_SEL_VALID_SHIFT};
-
-    /* Set WD_CNT_SEL bit to 1 */
-    wdgCfg_expected.cntSel = PMIC_WDG_CNT_SEL_2_1_SCHEME;
-    status = Pmic_wdgSetCfg(pPmicCoreHandle_wdg, wdgCfg_expected);
-    if (PMIC_ST_SUCCESS == status) {
-        status = Pmic_wdgGetCfg(pPmicCoreHandle_wdg, &wdgCfg_actual);
-        if (wdgCfg_actual.cntSel == wdgCfg_expected.cntSel) {
-            DebugP_log("Test Passed: Watchdog set count selection bit to 1 "
-                       "passed!\r\n");
-        } else {
-            DebugP_log("Test Failed: Watchdog set count selection bit to 1 "
-                       "failed!\r\n");
-        }
-    }
-
-    /* Set WD_CNT_SEL bit to 0 */
-    wdgCfg_expected.cntSel = PMIC_WDG_CNT_SEL_1_1_SCHEME;
-    status = Pmic_wdgSetCfg(pPmicCoreHandle_wdg, wdgCfg_expected);
-    if (PMIC_ST_SUCCESS == status) {
-        status = Pmic_wdgGetCfg(pPmicCoreHandle_wdg, &wdgCfg_actual);
-        if (wdgCfg_actual.cntSel == wdgCfg_expected.cntSel) {
-            DebugP_log("Test Passed: Watchdog set count selection bit to 0 "
-                       "passed!\r\n");
-        } else {
-            DebugP_log("Test Failed: Watchdog set count selection bit to 0 "
-                       "failed!\r\n");
-        }
-    }
-}
-
-/**
- * @brief Test setting the ENDRV bit for the watchdog.
- * This function tests setting and getting the ENDRV bit configuration for the
- * watchdog.
- *
- * @param void
- * @return NULL
- */
-void test_wdg_setCfg_enDrvSel(void) {
-    int32_t status = PMIC_ST_SUCCESS;
-    Pmic_WdgCfg_t wdgCfg_expected = {.validParams =
-                                         PMIC_CFG_WDG_ENDRV_SEL_VALID_SHIFT};
-    Pmic_WdgCfg_t wdgCfg_actual = {.validParams =
-                                       PMIC_CFG_WDG_ENDRV_SEL_VALID_SHIFT};
-
-    /* Set WD_ENDRV_SEL bit to 1 */
-    wdgCfg_expected.enDrvSel = PMIC_WDG_ENDRV_SEL_CLR;
-    status = Pmic_wdgSetCfg(pPmicCoreHandle_wdg, wdgCfg_expected);
-    if (PMIC_ST_SUCCESS == status) {
-        status = Pmic_wdgGetCfg(pPmicCoreHandle_wdg, &wdgCfg_actual);
-        if (wdgCfg_actual.enDrvSel == wdgCfg_expected.enDrvSel) {
-            DebugP_log("Test Passed: Watchdog set ENDRV bit to 1 passed!\r\n");
-        } else {
-            DebugP_log("Test Failed: Watchdog set ENDRV bit to 1 failed!\r\n");
-        }
-    }
-
-    /* Set WD_ENDRV_SEL bit to 0 */
-    wdgCfg_expected.enDrvSel = PMIC_WDG_ENDRV_SEL_NO_CLR;
-    status = Pmic_wdgSetCfg(pPmicCoreHandle_wdg, wdgCfg_expected);
-    if (PMIC_ST_SUCCESS == status) {
-        status = Pmic_wdgGetCfg(pPmicCoreHandle_wdg, &wdgCfg_actual);
-        if (wdgCfg_actual.enDrvSel == wdgCfg_expected.enDrvSel) {
-            DebugP_log("Test Passed: Watchdog set ENDRV bit to 0 passed!\r\n");
-        } else {
-            DebugP_log("Test Failed: Watchdog set ENDRV bit to 0 failed!\r\n");
         }
     }
 }
@@ -863,12 +737,6 @@ void *test_pmic_WDG(void *args) {
     delay(1000);
 
     test_wdg_setCfg_QA_questionSeed();
-    delay(1000);
-
-    test_wdg_setCfg_cntSel();
-    delay(1000);
-
-    test_wdg_setCfg_enDrvSel();
     delay(1000);
 
     test_wdg_QaMode_noErrors();

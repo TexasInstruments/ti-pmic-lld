@@ -98,7 +98,7 @@ extern "C" {
 /**
  * @brief  PMIC Watchdog Long Window Config register Addresses
  */
-#define PMIC_WD_LONGWIN_CFG_REGADDR (0x3DU)
+#define PMIC_WD_LONGWIN_CFG_REG (0x3DU)
 
 /**
  * @brief  PMIC SAFE_TMO_CFG register Addresses

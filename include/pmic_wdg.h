@@ -71,8 +71,8 @@
  *
  *  @{
  */
-#define PMIC_WDG_RETLONGWIN_DISABLE                 (0x0U)
-#define PMIC_WDG_RETLONGWIN_ENABLE                  (0x1U)
+#define PMIC_WDG_RETURN_LONGWIN_DISABLE             (0x0U)
+#define PMIC_WDG_RETURN_LONGWIN_ENABLE              (0x1U)
 /** @} */
 
 /**
@@ -92,7 +92,9 @@
  *  @{
  */
 #define PMIC_WDG_TRIGGER_MODE                       (0x0U)
-#define PMIC_WDG_QA_MODE                            (0x1U)
+#define PMIC_WDG_SW_TRIGGER_MODE                    (0x1U)
+#define PMIC_WDG_QA_MODE                            (0x2U)
+#define PMIC_WDG_QA_SINGLE_ANSW_MODE                (0x3U)
 /** @} */
 
 /**
@@ -176,33 +178,14 @@
 /** @} */
 
 /**
- *  @anchor Pmic_WdgCntSel
- *  @name PMIC Watchdog Fail Counter Schemes
- *
- *  @{
+ * @anchor Pmic_WdgTimeBase
+ * @name PMIC Watchdog Time Base Configuration
+ * @{
  */
-/** @brief +1/-1 counting scheme. WD_FAIL_CNT is incremented by one
- *          for a bad event and decremented by one for a good event
- */
-#define PMIC_WDG_CNT_SEL_1_1_SCHEME                 (0x0U)
-/** @brief +2/-1 counting scheme. WD_FAIL_CNT is incremented by two
- *          for a bad event and decremented by one for a good event
- */
-#define PMIC_WDG_CNT_SEL_2_1_SCHEME                 (0x1U)
-/** @} */
-
-/**
- *  @anchor Pmic_WdgEnDrvSel
- *  @name PMIC Watchdog Effect on ENABLE_DRV
- *
- *  @{
- */
-/** @brief ENABLE_DRV not cleared when WD_FAIL_INT is high
- */
-#define PMIC_WDG_ENDRV_SEL_NO_CLR                   (0x0U)
-/** @brief ENABLE_DRV cleared when WD_FAIL_INT is high
- */
-#define PMIC_WDG_ENDRV_SEL_CLR                      (0x1U)
+#define PMIC_WDG_TIME_BASE_137_5_US                 (0U)
+#define PMIC_WDG_TIME_BASE_275_US                   (1U)
+#define PMIC_WDG_TIME_BASE_550_US                   (2U)
+#define PMIC_WDG_TIME_BASE_1100_US                  (3U)
 /** @} */
 
 /**
@@ -221,8 +204,6 @@
 #define PMIC_CFG_WDG_FAILTHRESHOLD_VALID            (3U)
 /** @brief validParams value used to set/get Reset threshold Value */
 #define PMIC_CFG_WDG_RSTTHRESHOLD_VALID             (4U)
-/** @brief validParams value used to set/get to enable or diable warm reset on fail */
-#define PMIC_CFG_WDG_RSTENABLE_VALID                (5U)
 /** @brief validParams value used to set/get watchdog mode */
 #define PMIC_CFG_WDG_WDGMODE_VALID                  (6U)
 /** @brief validParams value used to set/get to Enable or disable  watchdog pwrHold */
@@ -235,10 +216,10 @@
 #define PMIC_CFG_WDG_QA_LFSR_VALID                  (10U)
 /** @brief validParams value used to set/get QA question seed value */
 #define PMIC_CFG_WDG_QA_QUES_SEED_VALID             (11U)
-/** @brief validParams value used to set/get fail counter configuration */
-#define PMIC_CFG_WDG_CNT_SEL_VALID                  (12U)
-/** @brief validParams value used to set/get Watchdog ENDRV configuration */
-#define PMIC_CFG_WDG_ENDRV_SEL_VALID                (13U)
+/** @brief validParams value used to set/get the watchdog time base configuration */
+#define PMIC_CFG_WDG_TIME_BASE_VALID                (12U)
+/** @brief validParams value used to enable/disable Watchdog */
+#define PMIC_CFG_WDG_EN_VALID                       (13U)
 /** @} */
 
 /**
@@ -261,15 +242,14 @@
 #define PMIC_CFG_WDG_WIN2DURATION_VALID_SHIFT       (1U << PMIC_CFG_WDG_WIN2DURATION_VALID)
 #define PMIC_CFG_WDG_FAILTHRESHOLD_VALID_SHIFT      (1U << PMIC_CFG_WDG_FAILTHRESHOLD_VALID)
 #define PMIC_CFG_WDG_RSTTHRESHOLD_VALID_SHIFT       (1U << PMIC_CFG_WDG_RSTTHRESHOLD_VALID)
-#define PMIC_CFG_WDG_RSTENABLE_VALID_SHIFT          (1U << PMIC_CFG_WDG_RSTENABLE_VALID)
 #define PMIC_CFG_WDG_WDGMODE_VALID_SHIFT            (1U << PMIC_CFG_WDG_WDGMODE_VALID)
 #define PMIC_CFG_WDG_PWRHOLD_VALID_SHIFT            (1U << PMIC_CFG_WDG_PWRHOLD_VALID)
 #define PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT         (1U << PMIC_CFG_WDG_RETLONGWIN_VALID)
 #define PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT            (1U << PMIC_CFG_WDG_QA_FDBK_VALID)
 #define PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT            (1U << PMIC_CFG_WDG_QA_LFSR_VALID)
 #define PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT       (1U << PMIC_CFG_WDG_QA_QUES_SEED_VALID)
-#define PMIC_CFG_WDG_CNT_SEL_VALID_SHIFT            (1U << PMIC_CFG_WDG_CNT_SEL_VALID)
-#define PMIC_CFG_WDG_ENDRV_SEL_VALID_SHIFT          (1U << PMIC_CFG_WDG_ENDRV_SEL_VALID)
+#define PMIC_CFG_WDG_TIME_BASE_VALID_SHIFT          (1U << PMIC_CFG_WDG_TIME_BASE_VALID)
+#define PMIC_CFG_WDG_EN_VALID_SHIFT                 (1U << PMIC_CFG_WDG_EN_VALID)
 /** @} */
 
 /**
@@ -436,25 +416,22 @@
  * @param   rstThreshold        Reset threshold Value.
  *                              For valid Values:
  *                                   \ref Pmic_WdgResetThresholdCount.
+ * @param   wdgEn               To enable or disable the watchdog functionality.
+ *                              For valid Values:
+ *                                   \ref Pmic_WdgEnDisableMode.
  * @param   wdgMode             Value to set watchdog mode.
  *                              For valid Values:
  *                                   \ref Pmic_WdgTriggerQAMode.
  * @param   pwrHold             Value to Enable or disable  watchdog pwrHold.
  *                              For valid Values:
  *                                   \ref Pmic_WdgPwrHoldEnDisable.
- * @param   rstEnable           To enable or diable warm reset on fail.
+ * @param   timeBase            Value to set the watchdog time base configuration to.
  *                              For valid Values:
- *                                   \ref Pmic_WdgResetEnDisable.
+ *                                   \ref Pmic_WdgTimeBase
  * @param   retLongWin          To enable or disable return to long window
  *                              after completion of the curent sequence.
  *                              For valid Values:
  *                                   \ref Pmic_WdgReturnLongWinEnDisable.
- * @param   cntSel              Configure counting scheme of the watchdog
- *                              fail counter. For valid Values:
- *                                   \ref Pmic_WdgCntSel
- * @param   enDrvSel            Configure Watchdog effect on ENABLE_DRV.
- *                              For valid values:
- *                                   \ref Pmic_WdgEnDrvSel
  * @param   qaFdbk              Configure QA feed back value.
  *                              For valid Values:
  *                                   \ref Pmic_WdgQaFdbkVal.
@@ -477,19 +454,16 @@ typedef struct Pmic_WdgCfg_s {
     uint8_t failThreshold;
     uint8_t rstThreshold;
 
+    uint8_t wdgEn;
     uint8_t wdgMode;
     uint8_t pwrHold;
-    uint8_t rstEnable;
+    uint8_t timeBase;
     uint8_t retLongWin;
-    uint8_t cntSel;
-    uint8_t enDrvSel;
 
     uint8_t qaFdbk;
     uint8_t qaLfsr;
     uint8_t qaQuesSeed;
-
-}
-Pmic_WdgCfg_t;
+} Pmic_WdgCfg_t;
 /** @} */
 
 /**
@@ -937,20 +911,13 @@ static int32_t Pmic_WdgGetThresholdValues(Pmic_CoreHandle_t * pPmicCoreHandle,
 static int32_t Pmic_WdgSetRetToLongWindowCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
                                              uint8_t returnLongWindow);
 
-static int32_t Pmic_WdgSetWarmRstEnableCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-                                           uint8_t rstEnble);
-
 static int32_t Pmic_WdgSetPwrHoldCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
                                      uint8_t pwrHld);
 
 static int32_t Pmic_WdgSetModeCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
                                   uint8_t wdgMde);
 
-int32_t Pmic_WdgSetCntSelCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t wdgCntSel);
-
-int32_t Pmic_WdgSetEnDrvSelCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t wdgEnDrvSel);
+int32_t Pmic_WdgSetTimeBase(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t timeBase);
 
 static int32_t Pmic_WdgSetCtrlParams(Pmic_CoreHandle_t * pPmicCoreHandle,
     const Pmic_WdgCfg_t wdgCfg);

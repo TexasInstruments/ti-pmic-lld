@@ -839,7 +839,7 @@ static int32_t Pmic_updateSubSysInfoValidateMainQaCommIFRdWr(
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
-            PMIC_WD_LONGWIN_CFG_REGADDR, &regVal);
+            PMIC_WD_LONGWIN_CFG_REG, &regVal);
 
         Pmic_criticalSectionStop(pPmicCoreHandle);
 

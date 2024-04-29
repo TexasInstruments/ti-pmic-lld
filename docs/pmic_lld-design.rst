@@ -1510,9 +1510,6 @@ Watchdog Configuration
       * \param   pwrHold             Value to Enable or disable  watchdog pwrHold.
       *                              For valid Values:
       *                                   \ref Pmic_WdgPwrHoldEnDisable.
-      * \param   rstEnable           To enable or diable warm reset on fail.
-      *                              For valid Values:
-      *                                   \ref Pmic_WdgResetEnDisable.
       * \param   retLongWin          To enable or disable return to long window
       *                              after completion of the curent sequence.
       *                              For valid Values:
@@ -1540,7 +1537,6 @@ Watchdog Configuration
 
           bool        wdgMode;
           bool        pwrHold;
-          bool        rstEnable;
           bool        retLongWin;
 
           uint8_t     qaFdbk;
