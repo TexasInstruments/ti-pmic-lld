@@ -3912,7 +3912,7 @@ Watchdog Configuration Readback
     | Prototype              | int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t   |
     |                        | \*pPmicCoreHandle,                         |
     |                        |                                            |
-    |                        | Pmic_WdgCfg_t \*pWdgCfg);                  |
+    |                        | Pmic_WdgCfg_t \*wdgCfg);                  |
     +========================+============================================+
     | Design IDs             | did_pmic_wdg_cfg_readback                  |
     +------------------------+--------------------------------------------+
@@ -3926,7 +3926,7 @@ Watchdog Configuration Readback
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
     |                        |    PMIC Interface Handle                   |
-    |                        | 2. Pmic_WdgCfg_t \*pWdgCfg – Watchdog      |
+    |                        | 2. Pmic_WdgCfg_t \*wdgCfg – Watchdog      |
     |                        |    configuration pointer                   |
     +------------------------+--------------------------------------------+
     | Return Code            | On Success:                                |

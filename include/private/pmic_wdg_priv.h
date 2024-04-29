@@ -98,14 +98,6 @@
 #define PMIC_WD_THR_CFG_WD_TH2_SHIFT (0U)
 #define PMIC_WD_THR_CFG_WD_TH2_MASK  (0x07U << PMIC_WD_THR_CFG_WD_TH2_SHIFT)
 
-// START: REMOVE ME
-// From Burton?
-#define PMIC_WD_THR_CFG_WD_RST_TH_SHIFT  (0x00U)
-#define PMIC_WD_THR_CFG_WD_RST_TH_MASK   (0x7U << PMIC_WD_THR_CFG_WD_RST_TH_SHIFT)
-#define PMIC_WD_THR_CFG_WD_FAIL_TH_SHIFT (0x03U)
-#define PMIC_WD_THR_CFG_WD_FAIL_TH_MASK  (0x7U << PMIC_WD_THR_CFG_WD_FAIL_TH_SHIFT)
-// END: REMOVE ME
-
 /**
  * @brief PMIC Watchdog Question & Answer Configuration Register (WD_QA_CFG)
  */

@@ -103,42 +103,43 @@ Pmic_WdgValidatePmicCoreHandle(const Pmic_CoreHandle_t * pPmicCoreHandle) {
 }
 
 static uint8_t
-Pmic_WdgCovertLongWinTimeIntervaltoRegBits(const Pmic_WdgCfg_t wdgCfg) {
+Pmic_WdgCovertLongWinTimeIntervaltoRegBits(const Pmic_WdgCfg_t *wdgCfg) {
     uint8_t regVal = 0U, baseVal = 0U;
 
-    if (PMIC_WD_LONGWIN_80_MS == wdgCfg.longWinDuration_ms) {
+    if (PMIC_WD_LONGWIN_80_MS == wdgCfg->longWinDuration_ms) {
         regVal = PMIC_WD_LONGWIN_REG_VAL_0;
-    } else if (wdgCfg.longWinDuration_ms <= PMIC_WD_LONGWIN_8000_MS) {
+    } else if (wdgCfg->longWinDuration_ms <= PMIC_WD_LONGWIN_8000_MS) {
         regVal =
-            (uint8_t)(wdgCfg.longWinDuration_ms / PMIC_WD_LONGWIN_MS_DIV_125);
+            (uint8_t)(wdgCfg->longWinDuration_ms / PMIC_WD_LONGWIN_MS_DIV_125);
     } else {
         baseVal = (uint8_t)(PMIC_WD_LONGWIN_8000_MS /
             PMIC_WD_LONGWIN_MS_DIV_125);
         regVal =
             baseVal +
-            (uint8_t)((wdgCfg.longWinDuration_ms - PMIC_WD_LONGWIN_8000_MS) /
+            (uint8_t)((wdgCfg->longWinDuration_ms - PMIC_WD_LONGWIN_8000_MS) /
                 PMIC_WD_LONGWIN_MS_DIV_4000);
     }
 
     return regVal;
 }
 
-static int32_t
-Pmic_WdgSetWindow1Window2TimeIntervals(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_WdgCfg_t wdgCfg) {
+static int32_t Pmic_WdgSetWindow1Window2TimeIntervals(
+    Pmic_CoreHandle_t * pPmicCoreHandle,
+    const Pmic_WdgCfg_t *wdgCfg)
+{
     int32_t wdgStatus = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
     /* Set wdg window1 time interval */
-    if (true == pmic_validParamCheck(wdgCfg.validParams,
+    if (true == pmic_validParamCheck(wdgCfg->validParams,
             PMIC_CFG_WDG_WIN1DURATION_VALID)) {
-        if ((PMIC_WD_WIN1_2_US_MIN > wdgCfg.win1Duration_us) ||
-            (PMIC_WD_WIN1_2_US_MAX < wdgCfg.win1Duration_us)) {
+        if ((PMIC_WD_WIN1_2_US_MIN > wdgCfg->win1Duration_us) ||
+            (PMIC_WD_WIN1_2_US_MAX < wdgCfg->win1Duration_us)) {
             wdgStatus = PMIC_ST_ERR_INV_WDG_WINDOW;
         }
         if (PMIC_ST_SUCCESS == wdgStatus) {
             regVal = (uint8_t)(
-                (wdgCfg.win1Duration_us / PMIC_WD_WIN1_2_US_DIV) - 1U);
+                (wdgCfg->win1Duration_us / PMIC_WD_WIN1_2_US_DIV) - 1U);
             regVal &= (uint8_t) PMIC_WD_WIN1_MASK;
 
             Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -152,15 +153,15 @@ Pmic_WdgSetWindow1Window2TimeIntervals(Pmic_CoreHandle_t * pPmicCoreHandle,
 
     /* Set wdg window2 time interval */
     if ((PMIC_ST_SUCCESS == wdgStatus) &&
-        (true == pmic_validParamCheck(wdgCfg.validParams,
+        (true == pmic_validParamCheck(wdgCfg->validParams,
             PMIC_CFG_WDG_WIN2DURATION_VALID))) {
-        if ((PMIC_WD_WIN1_2_US_MIN > wdgCfg.win2Duration_us) ||
-            (PMIC_WD_WIN1_2_US_MAX < wdgCfg.win2Duration_us)) {
+        if ((PMIC_WD_WIN1_2_US_MIN > wdgCfg->win2Duration_us) ||
+            (PMIC_WD_WIN1_2_US_MAX < wdgCfg->win2Duration_us)) {
             wdgStatus = PMIC_ST_ERR_INV_WDG_WINDOW;
         }
         if (PMIC_ST_SUCCESS == wdgStatus) {
             regVal = (uint8_t)(
-                (wdgCfg.win2Duration_us / PMIC_WD_WIN1_2_US_DIV) - 1U);
+                (wdgCfg->win2Duration_us / PMIC_WD_WIN1_2_US_DIV) - 1U);
             regVal &= (uint8_t) PMIC_WD_WIN2_MASK;
 
             Pmic_criticalSectionStart(pPmicCoreHandle);
@@ -176,35 +177,34 @@ Pmic_WdgSetWindow1Window2TimeIntervals(Pmic_CoreHandle_t * pPmicCoreHandle,
 }
 
 static int32_t
-Pmic_WdgSetWindowsTimeIntervals(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_WdgCfg_t wdgCfg) {
+Pmic_WdgSetWindowsTimeIntervals(Pmic_CoreHandle_t * pPmicCoreHandle, const Pmic_WdgCfg_t *wdgCfg) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
     /* Set wdg long window time interval */
-    if (pmic_validParamCheck(wdgCfg.validParams,
+    if (pmic_validParamCheck(wdgCfg->validParams,
             PMIC_CFG_WDG_LONGWINDURATION_VALID) == true) {
         if (((pPmicCoreHandle -> pmicDeviceType == PMIC_DEV_HERA_LP8764X) ||
                 (pPmicCoreHandle -> pmicDeviceType == PMIC_DEV_LEO_TPS6594X)) &&
             (pPmicCoreHandle -> pmicDevSiliconRev == PMIC_SILICON_REV_ID_PG_1_0)) {
-            if ((wdgCfg.longWinDuration_ms != PMIC_WD_LONGWIN_100_MS) &&
-                ((wdgCfg.longWinDuration_ms < PMIC_WD_LONGWIN_MS_MIN) ||
-                    (wdgCfg.longWinDuration_ms > PMIC_WD_LONGWIN_MS_MAX))) {
+            if ((wdgCfg->longWinDuration_ms != PMIC_WD_LONGWIN_100_MS) &&
+                ((wdgCfg->longWinDuration_ms < PMIC_WD_LONGWIN_MS_MIN) ||
+                    (wdgCfg->longWinDuration_ms > PMIC_WD_LONGWIN_MS_MAX))) {
                 status = PMIC_ST_ERR_INV_WDG_WINDOW;
             }
 
             if (status == PMIC_ST_SUCCESS) {
-                if (wdgCfg.longWinDuration_ms == PMIC_WD_LONGWIN_100_MS) {
+                if (wdgCfg->longWinDuration_ms == PMIC_WD_LONGWIN_100_MS) {
                     regVal = PMIC_WD_LONGWIN_REG_VAL_0;
                 } else {
-                    regVal = (uint8_t)(wdgCfg.longWinDuration_ms /
+                    regVal = (uint8_t)(wdgCfg->longWinDuration_ms /
                         PMIC_WD_LONGWIN_MS_DIV);
                 }
             }
         } else {
-            if ((wdgCfg.longWinDuration_ms != PMIC_WD_LONGWIN_80_MS) &&
-                ((wdgCfg.longWinDuration_ms < PMIC_WD_LONGWIN_MS_MIN_PG_2_0) ||
-                    (wdgCfg.longWinDuration_ms > PMIC_WD_LONGWIN_MS_MAX_PG_2_0))) {
+            if ((wdgCfg->longWinDuration_ms != PMIC_WD_LONGWIN_80_MS) &&
+                ((wdgCfg->longWinDuration_ms < PMIC_WD_LONGWIN_MS_MIN_PG_2_0) ||
+                    (wdgCfg->longWinDuration_ms > PMIC_WD_LONGWIN_MS_MAX_PG_2_0))) {
                 status = PMIC_ST_ERR_INV_WDG_WINDOW;
             }
 
@@ -232,12 +232,12 @@ Pmic_WdgSetWindowsTimeIntervals(Pmic_CoreHandle_t * pPmicCoreHandle,
 
 static int32_t
 Pmic_WdgGetWindow1Window2TimeIntervals(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_WdgCfg_t * pWdgCfg) {
+    Pmic_WdgCfg_t * wdgCfg) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
     /* Get wdg window1 time interval */
-    if (true == pmic_validParamCheck(pWdgCfg -> validParams,
+    if (true == pmic_validParamCheck(wdgCfg -> validParams,
             PMIC_CFG_WDG_WIN1DURATION_VALID)) {
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
@@ -249,14 +249,14 @@ Pmic_WdgGetWindow1Window2TimeIntervals(Pmic_CoreHandle_t * pPmicCoreHandle,
         if (PMIC_ST_SUCCESS == status) {
             regVal &= (uint8_t) PMIC_WD_WIN1_MASK;
 
-            pWdgCfg -> win1Duration_us =
+            wdgCfg -> win1Duration_us =
                 ((uint32_t) regVal + 1U) * (uint32_t)PMIC_WD_WIN1_2_US_DIV;
         }
     }
 
     /* Get wdg window2 time interval */
     if ((PMIC_ST_SUCCESS == status) &&
-        (true == pmic_validParamCheck(pWdgCfg -> validParams,
+        (true == pmic_validParamCheck(wdgCfg -> validParams,
             PMIC_CFG_WDG_WIN2DURATION_VALID))) {
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
@@ -268,7 +268,7 @@ Pmic_WdgGetWindow1Window2TimeIntervals(Pmic_CoreHandle_t * pPmicCoreHandle,
         if (PMIC_ST_SUCCESS == status) {
             regVal &= (uint8_t) PMIC_WD_WIN2_MASK;
 
-            pWdgCfg -> win2Duration_us =
+            wdgCfg -> win2Duration_us =
                 ((uint32_t) regVal + 1U) * (uint32_t)PMIC_WD_WIN1_2_US_DIV;
         }
     }
@@ -278,12 +278,12 @@ Pmic_WdgGetWindow1Window2TimeIntervals(Pmic_CoreHandle_t * pPmicCoreHandle,
 
 static int32_t
 Pmic_WdgGetWindowsTimeIntervals(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_WdgCfg_t * pWdgCfg) {
+    Pmic_WdgCfg_t * wdgCfg) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
     /* Get wdg long window time interval */
-    if (true == pmic_validParamCheck(pWdgCfg -> validParams,
+    if (true == pmic_validParamCheck(wdgCfg -> validParams,
             PMIC_CFG_WDG_LONGWINDURATION_VALID)) {
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
@@ -297,19 +297,19 @@ Pmic_WdgGetWindowsTimeIntervals(Pmic_CoreHandle_t * pPmicCoreHandle,
                     (pPmicCoreHandle -> pmicDeviceType == PMIC_DEV_LEO_TPS6594X)) &&
                 (PMIC_SILICON_REV_ID_PG_1_0 == pPmicCoreHandle -> pmicDevSiliconRev)) {
                 if (PMIC_WD_LONGWIN_REG_VAL_0 == regVal) {
-                    pWdgCfg -> longWinDuration_ms = PMIC_WD_LONGWIN_100_MS;
+                    wdgCfg -> longWinDuration_ms = PMIC_WD_LONGWIN_100_MS;
                 } else {
-                    pWdgCfg -> longWinDuration_ms =
+                    wdgCfg -> longWinDuration_ms =
                         (uint32_t) regVal * PMIC_WD_LONGWIN_MS_DIV;
                 }
             } else {
                 if (PMIC_WD_LONGWIN_REG_VAL_0 == regVal) {
-                    pWdgCfg -> longWinDuration_ms = PMIC_WD_LONGWIN_80_MS;
+                    wdgCfg -> longWinDuration_ms = PMIC_WD_LONGWIN_80_MS;
                 } else if (regVal <= PMIC_WD_LONGWIN_REG_VAL_64) {
-                    pWdgCfg -> longWinDuration_ms =
+                    wdgCfg -> longWinDuration_ms =
                         (uint32_t) regVal * PMIC_WD_LONGWIN_MS_DIV_125;
                 } else {
-                    pWdgCfg -> longWinDuration_ms =
+                    wdgCfg -> longWinDuration_ms =
                         regVal - ((PMIC_WD_LONGWIN_REG_VAL_64 *
                                 PMIC_WD_LONGWIN_MS_DIV_4000) +
                             PMIC_WD_LONGWIN_8000_MS);
@@ -320,64 +320,60 @@ Pmic_WdgGetWindowsTimeIntervals(Pmic_CoreHandle_t * pPmicCoreHandle,
 
     if (PMIC_ST_SUCCESS == status) {
         /* Get wdg window1 and window2 time interval */
-        status = Pmic_WdgGetWindow1Window2TimeIntervals(pPmicCoreHandle, pWdgCfg);
+        status = Pmic_WdgGetWindow1Window2TimeIntervals(pPmicCoreHandle, wdgCfg);
     }
 
     return status;
 }
 
-static int32_t Pmic_WdgSetThresholdValues(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_WdgCfg_t wdgCfg) {
+static int32_t Pmic_WdgSetThresholdValues(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_WdgCfg_t *wdgCfg) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
-    /* Set wdg fail threshold value */
-    if (true == pmic_validParamCheck(wdgCfg.validParams,
-            PMIC_CFG_WDG_FAILTHRESHOLD_VALID)) {
-        if (wdgCfg.failThreshold > PMIC_WDG_FAIL_THRESHOLD_COUNT_7) {
+    /* Set wdg threshold-2 value */
+    if (pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_THRESHOLD_1_VALID)) {
+        if (wdgCfg->threshold1 > PMIC_WDG_THRESHOLD_COUNT_MAX) {
             status = PMIC_ST_ERR_INV_PARAM;
         }
 
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         if (PMIC_ST_SUCCESS == status) {
-            status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_TH_CFG_REG, &
-                regVal);
+            status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_TH_CFG_REG, &regVal);
         }
-        if (PMIC_ST_SUCCESS == status) {
-            Pmic_setBitField( & regVal, PMIC_WD_THR_CFG_WD_FAIL_TH_SHIFT,
-                (uint8_t) PMIC_WD_THR_CFG_WD_FAIL_TH_MASK,
-                wdgCfg.failThreshold);
 
-            status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_TH_CFG_REG,
-                regVal);
+        if (PMIC_ST_SUCCESS == status) {
+            Pmic_setBitField(&regVal,
+                PMIC_WD_THR_CFG_WD_TH1_SHIFT,
+                PMIC_WD_THR_CFG_WD_TH1_MASK,
+                wdgCfg->threshold1);
+
+            status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_TH_CFG_REG, regVal);
         }
 
         Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
-    /* Set wdg reset threshold value */
+    /* Set wdg threshold-2 value */
     if ((PMIC_ST_SUCCESS == status) &&
-        (true == pmic_validParamCheck(wdgCfg.validParams,
-            PMIC_CFG_WDG_RSTTHRESHOLD_VALID))) {
-        if (wdgCfg.rstThreshold > PMIC_WDG_RESET_THRESHOLD_COUNT_7) {
+        pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_THRESHOLD_1_VALID)) {
+        if (wdgCfg->threshold2 > PMIC_WDG_THRESHOLD_COUNT_MAX) {
             status = PMIC_ST_ERR_INV_PARAM;
         }
 
         Pmic_criticalSectionStart(pPmicCoreHandle);
 
         if (PMIC_ST_SUCCESS == status) {
-            status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_TH_CFG_REG, &
-                regVal);
+            status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_TH_CFG_REG, &regVal);
         }
 
         if (PMIC_ST_SUCCESS == status) {
-            Pmic_setBitField( & regVal, PMIC_WD_THR_CFG_WD_RST_TH_SHIFT,
-                (uint8_t) PMIC_WD_THR_CFG_WD_RST_TH_MASK,
-                wdgCfg.rstThreshold);
+            Pmic_setBitField(&regVal,
+                PMIC_WD_THR_CFG_WD_TH2_SHIFT,
+                PMIC_WD_THR_CFG_WD_TH2_MASK,
+                wdgCfg->threshold2);
 
-            status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_TH_CFG_REG,
-                regVal);
+            status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_TH_CFG_REG, regVal);
         }
 
         Pmic_criticalSectionStop(pPmicCoreHandle);
@@ -386,34 +382,30 @@ static int32_t Pmic_WdgSetThresholdValues(Pmic_CoreHandle_t * pPmicCoreHandle,
     return status;
 }
 
-static int32_t Pmic_WdgGetThresholdValues(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_WdgCfg_t * pWdgCfg) {
+static int32_t Pmic_WdgGetThresholdValues(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_WdgCfg_t *wdgCfg) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
-    status =
-        Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_TH_CFG_REG, & regVal);
+    status = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_WD_TH_CFG_REG, &regVal);
 
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
-    /* Get wdg fail threshold value */
+    /* Get wdg threshold-2 value */
     if ((PMIC_ST_SUCCESS == status) &&
-        (true == pmic_validParamCheck(pWdgCfg -> validParams,
-            PMIC_CFG_WDG_FAILTHRESHOLD_VALID))) {
-        pWdgCfg -> failThreshold =
-            Pmic_getBitField(regVal, PMIC_WD_THR_CFG_WD_FAIL_TH_SHIFT,
-                (uint8_t) PMIC_WD_THR_CFG_WD_FAIL_TH_MASK);
+        pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_THRESHOLD_1_VALID)) {
+        wdgCfg->threshold1 = Pmic_getBitField(regVal,
+            PMIC_WD_THR_CFG_WD_TH1_SHIFT,
+            PMIC_WD_THR_CFG_WD_TH1_MASK);
     }
 
-    /* Get wdg reset threshold value */
+    /* Get wdg threshold-2 value */
     if ((PMIC_ST_SUCCESS == status) &&
-        (true == pmic_validParamCheck(pWdgCfg -> validParams,
-            PMIC_CFG_WDG_RSTTHRESHOLD_VALID))) {
-        pWdgCfg -> rstThreshold =
-            Pmic_getBitField(regVal, PMIC_WD_THR_CFG_WD_RST_TH_SHIFT,
-                (uint8_t)PMIC_WD_THR_CFG_WD_RST_TH_MASK);
+        pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_THRESHOLD_2_VALID)) {
+        wdgCfg->threshold2 = Pmic_getBitField(regVal,
+            PMIC_WD_THR_CFG_WD_TH2_SHIFT,
+            PMIC_WD_THR_CFG_WD_TH2_MASK);
     }
 
     return status;
@@ -508,36 +500,36 @@ int32_t Pmic_WdgSetTimeBase(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t timeBase
 /*!
  * \brief  Function to set watchdog control parameters
  */
-static int32_t Pmic_WdgSetCtrlParams(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_WdgCfg_t wdgCfg) {
+static int32_t Pmic_WdgSetCtrlParams(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_WdgCfg_t *wdgCfg) {
     int32_t status = PMIC_ST_SUCCESS;
 
     /* Set wdg mode */
-    if (pmic_validParamCheck(wdgCfg.validParams, PMIC_CFG_WDG_WDGMODE_VALID)) {
-        status = Pmic_WdgSetModeCfg(pPmicCoreHandle, wdgCfg.wdgMode);
+    if (pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_WDGMODE_VALID)) {
+        status = Pmic_WdgSetModeCfg(pPmicCoreHandle, wdgCfg->wdgMode);
     }
 
     /* Set wdg power hold value */
     if ((PMIC_ST_SUCCESS == status) &&
-        pmic_validParamCheck(wdgCfg.validParams, PMIC_CFG_WDG_PWRHOLD_VALID)) {
-        status = Pmic_WdgSetPwrHoldCfg(pPmicCoreHandle, wdgCfg.pwrHold);
+        pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_PWRHOLD_VALID)) {
+        status = Pmic_WdgSetPwrHoldCfg(pPmicCoreHandle, wdgCfg->pwrHold);
     }
 
     /* Set wdg return to long window bit */
     if ((PMIC_ST_SUCCESS == status) &&
-        pmic_validParamCheck(wdgCfg.validParams, PMIC_CFG_WDG_RETLONGWIN_VALID)) {
-        status = Pmic_WdgSetRetToLongWindowCfg(pPmicCoreHandle, wdgCfg.retLongWin);
+        pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_RETLONGWIN_VALID)) {
+        status = Pmic_WdgSetRetToLongWindowCfg(pPmicCoreHandle, wdgCfg->retLongWin);
     }
 
     /* Set wdg time base configuration */
     if ((PMIC_ST_SUCCESS == status) &&
-        pmic_validParamCheck(wdgCfg.validParams, PMIC_CFG_WDG_TIME_BASE_VALID)) {
-        status = Pmic_WdgSetTimeBase(pPmicCoreHandle, wdgCfg.timeBase);
+        pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_TIME_BASE_VALID)) {
+        status = Pmic_WdgSetTimeBase(pPmicCoreHandle, wdgCfg->timeBase);
     }
 
     /* Set whether wdg is enabled or not */
     if ((PMIC_ST_SUCCESS == status) &&
-        pmic_validParamCheck(wdgCfg.validParams, PMIC_CFG_WDG_EN_VALID)) {
-        status = Pmic_wdgEnDisState(pPmicCoreHandle, wdgCfg.wdgEn);
+        pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_EN_VALID)) {
+        status = Pmic_wdgEnDisState(pPmicCoreHandle, wdgCfg->wdgEn);
     }
 
     return status;
@@ -546,7 +538,7 @@ static int32_t Pmic_WdgSetCtrlParams(Pmic_CoreHandle_t *pPmicCoreHandle, const P
 /*!
  * \brief  Function to get watchdog control parameters
  */
-static int32_t Pmic_WdgGetCtrlParams(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_WdgCfg_t *pWdgCfg) {
+static int32_t Pmic_WdgGetCtrlParams(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_WdgCfg_t *wdgCfg) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
@@ -557,28 +549,28 @@ static int32_t Pmic_WdgGetCtrlParams(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_Wd
 
     /* Extract all relevant bitfields from register */
     if ((PMIC_ST_SUCCESS == status) &&
-        pmic_validParamCheck(pWdgCfg->validParams, PMIC_CFG_WDG_WDGMODE_VALID)) {
-        pWdgCfg->wdgMode = Pmic_getBitField(regVal, PMIC_WD_MODE_SHIFT, PMIC_WD_MODE_MASK);
+        pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_WDGMODE_VALID)) {
+        wdgCfg->wdgMode = Pmic_getBitField(regVal, PMIC_WD_MODE_SHIFT, PMIC_WD_MODE_MASK);
     }
 
     if ((PMIC_ST_SUCCESS == status) &&
-        pmic_validParamCheck(pWdgCfg->validParams, PMIC_CFG_WDG_PWRHOLD_VALID)) {
-        pWdgCfg->pwrHold = Pmic_getBitField(regVal, PMIC_WD_PWRHOLD_SHIFT, PMIC_WD_PWRHOLD_MASK);
+        pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_PWRHOLD_VALID)) {
+        wdgCfg->pwrHold = Pmic_getBitField(regVal, PMIC_WD_PWRHOLD_SHIFT, PMIC_WD_PWRHOLD_MASK);
     }
 
     if ((PMIC_ST_SUCCESS == status) &&
-        pmic_validParamCheck(pWdgCfg->validParams, PMIC_CFG_WDG_RETLONGWIN_VALID)) {
-        pWdgCfg->retLongWin = Pmic_getBitField(regVal, PMIC_WD_RETURN_LONGWIN_SHIFT, PMIC_WD_RETURN_LONGWIN_MASK);
+        pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_RETLONGWIN_VALID)) {
+        wdgCfg->retLongWin = Pmic_getBitField(regVal, PMIC_WD_RETURN_LONGWIN_SHIFT, PMIC_WD_RETURN_LONGWIN_MASK);
     }
 
     if ((PMIC_ST_SUCCESS == status) &&
-        pmic_validParamCheck(pWdgCfg->validParams, PMIC_CFG_WDG_TIME_BASE_VALID)) {
-        pWdgCfg->timeBase = Pmic_getBitField(regVal, PMIC_WD_TIME_CFG_SHIFT, PMIC_WD_TIME_CFG_MASK);
+        pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_TIME_BASE_VALID)) {
+        wdgCfg->timeBase = Pmic_getBitField(regVal, PMIC_WD_TIME_CFG_SHIFT, PMIC_WD_TIME_CFG_MASK);
     }
 
     if ((PMIC_ST_SUCCESS == status) &&
-        pmic_validParamCheck(pWdgCfg->validParams, PMIC_CFG_WDG_EN_VALID)) {
-        pWdgCfg->wdgEn = Pmic_getBitField(regVal, PMIC_WD_EN_SHIFT, PMIC_WD_EN_MASK);
+        pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_EN_VALID)) {
+        wdgCfg->wdgEn = Pmic_getBitField(regVal, PMIC_WD_EN_SHIFT, PMIC_WD_EN_MASK);
     }
 
     return status;
@@ -587,15 +579,13 @@ static int32_t Pmic_WdgGetCtrlParams(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_Wd
 /*!
  * \brief  Function to set watchdog QA Question Seed value
  */
-static int32_t Pmic_wdgSetQaQuesSeedValue(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_WdgCfg_t wdgCfg) {
+static int32_t Pmic_wdgSetQaQuesSeedValue(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_WdgCfg_t *wdgCfg) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
     /* Set wdg QA Question Seed value */
-    if (true == pmic_validParamCheck(wdgCfg.validParams,
-            PMIC_CFG_WDG_QA_QUES_SEED_VALID)) {
-        if (wdgCfg.qaQuesSeed > PMIC_WDG_QA_QUES_SEED_VALUE_15) {
+    if (true == pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_QA_QUES_SEED_VALID)) {
+        if (wdgCfg->qaQuesSeed > PMIC_WDG_QA_QUES_SEED_VALUE_15) {
             status = PMIC_ST_ERR_INV_PARAM;
         }
 
@@ -608,7 +598,7 @@ static int32_t Pmic_wdgSetQaQuesSeedValue(Pmic_CoreHandle_t * pPmicCoreHandle,
 
         if (PMIC_ST_SUCCESS == status) {
             Pmic_setBitField( &regVal, PMIC_WD_QA_CFG_WD_QA_SEED_SHIFT,
-                              (uint8_t)PMIC_WD_QA_CFG_WD_QA_SEED_MASK, wdgCfg.qaQuesSeed);
+                              (uint8_t)PMIC_WD_QA_CFG_WD_QA_SEED_MASK, wdgCfg->qaQuesSeed);
 
             status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_QA_CFG_REG,
                 regVal);
@@ -623,15 +613,14 @@ static int32_t Pmic_wdgSetQaQuesSeedValue(Pmic_CoreHandle_t * pPmicCoreHandle,
 /*!
  * \brief  Function to set watchdog QA configurations
  */
-static int32_t Pmic_WdgSetQaConfigurations(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_WdgCfg_t wdgCfg) {
+static int32_t Pmic_WdgSetQaConfigurations(Pmic_CoreHandle_t * pPmicCoreHandle, const Pmic_WdgCfg_t *wdgCfg) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
     /* Set wdg QA Feedback value */
     if (true ==
-        pmic_validParamCheck(wdgCfg.validParams, PMIC_CFG_WDG_QA_FDBK_VALID)) {
-        if (wdgCfg.qaFdbk > PMIC_WDG_QA_FEEDBACK_VALUE_3) {
+        pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_QA_FDBK_VALID)) {
+        if (wdgCfg->qaFdbk > PMIC_WDG_QA_FEEDBACK_VALUE_3) {
             status = PMIC_ST_ERR_INV_PARAM;
         }
 
@@ -643,7 +632,7 @@ static int32_t Pmic_WdgSetQaConfigurations(Pmic_CoreHandle_t * pPmicCoreHandle,
         }
         if (PMIC_ST_SUCCESS == status) {
             Pmic_setBitField( & regVal, PMIC_WD_QA_CFG_WD_QA_FDBK_SHIFT,
-                              (uint8_t)PMIC_WD_QA_CFG_WD_QA_FDBK_MASK, wdgCfg.qaFdbk);
+                              (uint8_t)PMIC_WD_QA_CFG_WD_QA_FDBK_MASK, wdgCfg->qaFdbk);
 
             status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_QA_CFG_REG,
                 regVal);
@@ -655,8 +644,8 @@ static int32_t Pmic_WdgSetQaConfigurations(Pmic_CoreHandle_t * pPmicCoreHandle,
     /* Set wdg QA LFSR value */
     if ((PMIC_ST_SUCCESS == status) &&
         (true ==
-            pmic_validParamCheck(wdgCfg.validParams, PMIC_CFG_WDG_QA_LFSR_VALID))) {
-        if (wdgCfg.qaLfsr > PMIC_WDG_QA_LFSR_VALUE_3) {
+            pmic_validParamCheck(wdgCfg->validParams, PMIC_CFG_WDG_QA_LFSR_VALID))) {
+        if (wdgCfg->qaLfsr > PMIC_WDG_QA_LFSR_VALUE_3) {
             status = PMIC_ST_ERR_INV_PARAM;
         }
 
@@ -669,7 +658,7 @@ static int32_t Pmic_WdgSetQaConfigurations(Pmic_CoreHandle_t * pPmicCoreHandle,
 
         if (PMIC_ST_SUCCESS == status) {
             Pmic_setBitField( &regVal, PMIC_WD_QA_CFG_WD_QA_LFSR_SHIFT,
-                              (uint8_t)PMIC_WD_QA_CFG_WD_QA_LFSR_MASK, wdgCfg.qaLfsr);
+                              (uint8_t)PMIC_WD_QA_CFG_WD_QA_LFSR_MASK, wdgCfg->qaLfsr);
 
             status = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_WD_QA_CFG_REG,
                 regVal);
@@ -690,7 +679,7 @@ static int32_t Pmic_WdgSetQaConfigurations(Pmic_CoreHandle_t * pPmicCoreHandle,
  * \brief  Function to get watchdog QA configurations
  */
 static int32_t Pmic_WdgGetQaConfigurations(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_WdgCfg_t * pWdgCfg) {
+    Pmic_WdgCfg_t * wdgCfg) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
@@ -703,25 +692,25 @@ static int32_t Pmic_WdgGetQaConfigurations(Pmic_CoreHandle_t * pPmicCoreHandle,
 
     /* Get wdg QA Feedback value */
     if ((PMIC_ST_SUCCESS == status) &&
-        (true == pmic_validParamCheck(pWdgCfg -> validParams,
+        (true == pmic_validParamCheck(wdgCfg -> validParams,
             PMIC_CFG_WDG_QA_FDBK_VALID))) {
-        pWdgCfg -> qaFdbk = Pmic_getBitField(regVal, PMIC_WD_QA_CFG_WD_QA_FDBK_SHIFT,
+        wdgCfg -> qaFdbk = Pmic_getBitField(regVal, PMIC_WD_QA_CFG_WD_QA_FDBK_SHIFT,
                                              (uint8_t)PMIC_WD_QA_CFG_WD_QA_FDBK_MASK);
     }
 
     /* Get wdg QA LFSR value */
     if ((PMIC_ST_SUCCESS == status) &&
-        (true == pmic_validParamCheck(pWdgCfg -> validParams,
+        (true == pmic_validParamCheck(wdgCfg -> validParams,
             PMIC_CFG_WDG_QA_LFSR_VALID))) {
-        pWdgCfg -> qaLfsr = Pmic_getBitField(regVal, PMIC_WD_QA_CFG_WD_QA_LFSR_SHIFT,
+        wdgCfg -> qaLfsr = Pmic_getBitField(regVal, PMIC_WD_QA_CFG_WD_QA_LFSR_SHIFT,
                                              (uint8_t)PMIC_WD_QA_CFG_WD_QA_LFSR_MASK);
     }
 
     /* Get wdg QA Question Seed value */
     if ((PMIC_ST_SUCCESS == status) &&
-        (true == pmic_validParamCheck(pWdgCfg -> validParams,
+        (true == pmic_validParamCheck(wdgCfg -> validParams,
             PMIC_CFG_WDG_QA_QUES_SEED_VALID))) {
-        pWdgCfg -> qaQuesSeed =
+        wdgCfg -> qaQuesSeed =
             Pmic_getBitField(regVal, PMIC_WD_QA_CFG_WD_QA_SEED_SHIFT,
                              (uint8_t)PMIC_WD_QA_CFG_WD_QA_SEED_MASK);
     }
@@ -1015,8 +1004,7 @@ int32_t Pmic_wdgGetEnableState(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t *pWdg
     return status;
 }
 
-int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_WdgCfg_t wdgCfg) {
+int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t * pPmicCoreHandle, const Pmic_WdgCfg_t *wdgCfg) {
     int32_t status = PMIC_ST_SUCCESS;
 
     /* Validate pPmicCoreHandle and WDG subsystem */
@@ -1042,30 +1030,30 @@ int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
 }
 
 int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_WdgCfg_t * pWdgCfg) {
+    Pmic_WdgCfg_t * wdgCfg) {
     int32_t status = PMIC_ST_SUCCESS;
 
     /* Validate pPmicCoreHandle and WDG subsystem */
     status = Pmic_WdgValidatePmicCoreHandle(pPmicCoreHandle);
 
-    if ((PMIC_ST_SUCCESS == status) && (NULL == pWdgCfg)) {
+    if ((PMIC_ST_SUCCESS == status) && (NULL == wdgCfg)) {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
     if (PMIC_ST_SUCCESS == status) {
-        status = Pmic_WdgGetWindowsTimeIntervals(pPmicCoreHandle, pWdgCfg);
+        status = Pmic_WdgGetWindowsTimeIntervals(pPmicCoreHandle, wdgCfg);
     }
 
     if (PMIC_ST_SUCCESS == status) {
-        status = Pmic_WdgGetThresholdValues(pPmicCoreHandle, pWdgCfg);
+        status = Pmic_WdgGetThresholdValues(pPmicCoreHandle, wdgCfg);
     }
 
     if (PMIC_ST_SUCCESS == status) {
-        status = Pmic_WdgGetCtrlParams(pPmicCoreHandle, pWdgCfg);
+        status = Pmic_WdgGetCtrlParams(pPmicCoreHandle, wdgCfg);
     }
 
     if (PMIC_ST_SUCCESS == status) {
-        status = Pmic_WdgGetQaConfigurations(pPmicCoreHandle, pWdgCfg);
+        status = Pmic_WdgGetQaConfigurations(pPmicCoreHandle, wdgCfg);
     }
 
     return status;
