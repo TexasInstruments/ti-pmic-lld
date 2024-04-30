@@ -60,16 +60,6 @@
 /* ========================================================================== */
 
 /**
- * @anchor Pmic_WdgEnDisableMode
- * @name PMIC Watchdog Enable/Disable
- *
- * @{
- */
-#define PMIC_WDG_DISABLE                            (0U)
-#define PMIC_WDG_ENABLE                             (1U)
-/** @} */
-
-/**
  * @anchor Pmic_WdgReturnLongWinEnDisable
  * @name PMIC Watchdog Return Long Window Enable/Disable
  *
@@ -108,6 +98,7 @@
 #define PMIC_WDG_SW_TRIGGER_MODE                    (1U)
 #define PMIC_WDG_QA_MODE                            (2U)
 #define PMIC_WDG_QA_SINGLE_MODE                     (3U)
+#define PMIC_WDG_MODE_MAX                           (PMIC_WDG_QA_SINGLE_MODE)
 /** @} */
 
 /**
@@ -185,6 +176,7 @@
 #define PMIC_WDG_TIME_BASE_275_US                   (1U)
 #define PMIC_WDG_TIME_BASE_550_US                   (2U)
 #define PMIC_WDG_TIME_BASE_1100_US                  (3U)
+#define PMIC_WDG_TIME_BASE_MAX                      (PMIC_WDG_TIME_BASE_1100_US)
 /** @} */
 
 /**
@@ -204,7 +196,7 @@
 /** @brief validParams value used to set/get threshold-2 Value */
 #define PMIC_CFG_WDG_THRESHOLD_2_VALID              (4U)
 /** @brief validParams value used to set/get watchdog mode */
-#define PMIC_CFG_WDG_WDGMODE_VALID                  (6U)
+#define PMIC_CFG_WDG_MODE_VALID                     (6U)
 /** @brief validParams value used to set/get to Enable or disable watchdog pwrHold */
 #define PMIC_CFG_WDG_PWRHOLD_VALID                  (7U)
 /** @brief validParams value used to set/get to enable or disable return to long window */
@@ -217,8 +209,6 @@
 #define PMIC_CFG_WDG_QA_QUES_SEED_VALID             (11U)
 /** @brief validParams value used to set/get the watchdog time base configuration */
 #define PMIC_CFG_WDG_TIME_BASE_VALID                (12U)
-/** @brief validParams value used to enable/disable Watchdog */
-#define PMIC_CFG_WDG_EN_VALID                       (13U)
 /** @} */
 
 /**
@@ -241,14 +231,13 @@
 #define PMIC_CFG_WDG_WIN2DURATION_VALID_SHIFT       (1U << PMIC_CFG_WDG_WIN2DURATION_VALID)
 #define PMIC_CFG_WDG_THRESHOLD_1_VALID_SHIFT        (1U << PMIC_CFG_WDG_THRESHOLD_1_VALID)
 #define PMIC_CFG_WDG_THRESHOLD_2_VALID_SHIFT        (1U << PMIC_CFG_WDG_THRESHOLD_2_VALID)
-#define PMIC_CFG_WDG_WDGMODE_VALID_SHIFT            (1U << PMIC_CFG_WDG_WDGMODE_VALID)
+#define PMIC_CFG_WDG_MODE_VALID_SHIFT               (1U << PMIC_CFG_WDG_MODE_VALID)
 #define PMIC_CFG_WDG_PWRHOLD_VALID_SHIFT            (1U << PMIC_CFG_WDG_PWRHOLD_VALID)
 #define PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT         (1U << PMIC_CFG_WDG_RETLONGWIN_VALID)
 #define PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT            (1U << PMIC_CFG_WDG_QA_FDBK_VALID)
 #define PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT            (1U << PMIC_CFG_WDG_QA_LFSR_VALID)
 #define PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT       (1U << PMIC_CFG_WDG_QA_QUES_SEED_VALID)
 #define PMIC_CFG_WDG_TIME_BASE_VALID_SHIFT          (1U << PMIC_CFG_WDG_TIME_BASE_VALID)
-#define PMIC_CFG_WDG_EN_VALID_SHIFT                 (1U << PMIC_CFG_WDG_EN_VALID)
 /** @} */
 
 /**
@@ -377,9 +366,6 @@
  * To get more effective results user has to program window1 with multiples of
  * 550. The valid range is (550, 1100, 1650, 2200, 2750, ..., 70400).
  *
- * @param enable Enable or disable watchdog functionality. See @ref
- * Pmic_WdgEnDisableMode.
- *
  * @param mode Value to set watchdog mode to. See @ref Pmic_WdgTriggerQAMode.
  *
  * @param pwrHold Value to Enable or disable watchdog pwrHold. See @ref
@@ -407,17 +393,16 @@
 typedef struct Pmic_WdgCfg_s {
     uint32_t validParams;
 
+    uint8_t mode;
+    uint8_t pwrHold;     // To be removed
+    uint8_t retLongWin;  // To be removed
+    uint8_t timeBase;
+    uint8_t threshold1;
+    uint8_t threshold2;
+
     uint32_t longWinDuration_ms;
     uint32_t win1Duration_us;
     uint32_t win2Duration_us;
-
-    uint8_t enable;
-    uint8_t mode;
-    uint8_t pwrHold;
-    uint8_t timeBase;
-    uint8_t retLongWin;
-    uint8_t threshold1;
-    uint8_t threshold2;
 
     uint8_t qaFdbk;
     uint8_t qaLfsr;
@@ -522,24 +507,24 @@ int32_t Pmic_wdgDisable(Pmic_CoreHandle_t *handle);
  * @brief This function is used to set the Watchdog Enable state.
  *
  * @param handle [IN]  PMIC interface handle
- * @param enable [OUT] Pointer to Watchdog Enable
+ * @param enable [IN]  Set to true to enable watchdog, false to disable
  *
  * @return Success code if Watchdog Enable state is set, error code otherwise.
  * For possible success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_wdgSetEnableState(Pmic_CoreHandle_t *handle, uint8_t enable);
+int32_t Pmic_wdgSetEnableState(Pmic_CoreHandle_t *handle, bool enable);
 
 /**
  * @brief This function is used to get the Watchdog Enable state (that is to
  * say, whether WD_EN bit is set to 1 or 0).
  *
  * @param handle  [IN]  PMIC interface handle
- * @param enabled [OUT] Pointer to Watchdog Enable
+ * @param enabled [OUT] true if watchdog is enabled, otherwise false
  *
  * @return Success code if Watchdog Enable state is obtained, error code
  * otherwise. For possible success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_wdgGetEnableState(Pmic_CoreHandle_t *handle, uint8_t *enabled);
+int32_t Pmic_wdgGetEnableState(Pmic_CoreHandle_t *handle, bool *isEnabled);
 
 /**
  * @brief API to set PMIC watchdog configurations.
@@ -558,7 +543,7 @@ int32_t Pmic_wdgGetEnableState(Pmic_CoreHandle_t *handle, uint8_t *enabled);
 int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t *wdgCfg);
 
 /**
- * @brief   API to get PMIC watchdog configurations.
+ * @brief API to get PMIC watchdog configurations.
  *
  * This function is used to get configuration of the watchdog from the PMIC for
  * trigger mode or Q&A (question and answer) mode, when corresponding

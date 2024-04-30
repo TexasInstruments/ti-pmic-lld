@@ -123,7 +123,7 @@ int32_t test_pmic_wdg_config_deinit(void) {
  */
 void test_wdg_enableDisable(void) {
     int32_t status = PMIC_ST_SUCCESS;
-    uint8_t wdgEnabled = 0U;
+    bool wdgEnabled = false;
 
     /* Enable Watchdog */
     status = Pmic_wdgEnable(pPmicCoreHandle_wdg);
@@ -131,7 +131,8 @@ void test_wdg_enableDisable(void) {
         /* Get actual Watchdog enable/disable status and compare expected vs.
          * actual value */
         status = Pmic_wdgGetEnableState(pPmicCoreHandle_wdg, &wdgEnabled);
-        if (wdgEnabled == PMIC_WDG_ENABLE) {
+
+        if (wdgEnabled) {
             DebugP_log("Test Passed: Watchdog Enable Test successful!\r\n");
         } else {
             DebugP_log("Test Failed: Watchdog Enable Test failed!\r\n");
@@ -144,7 +145,8 @@ void test_wdg_enableDisable(void) {
         /* Get actual Watchdog enable/disable status and compare expected vs.
          * actual value */
         status = Pmic_wdgGetEnableState(pPmicCoreHandle_wdg, &wdgEnabled);
-        if (wdgEnabled == PMIC_WDG_DISABLE) {
+
+        if (wdgEnabled == false) {
             DebugP_log("Test Passed: Watchdog Disable Test successful!\r\n");
         } else {
             DebugP_log("Test Failed: Watchdog Disable Test failed!\r\n");
@@ -161,13 +163,14 @@ void test_wdg_enableDisable(void) {
  */
 static void checkWdgEnabled(void) {
     int32_t status = PMIC_ST_SUCCESS;
-    uint8_t wdgEnabled = 0U;
+    bool wdgEnabled = false;
 
     status = Pmic_wdgGetEnableState(pPmicCoreHandle_wdg, &wdgEnabled);
     if (PMIC_ST_SUCCESS == status) {
         status = Pmic_wdgEnable(pPmicCoreHandle_wdg);
+
         if (PMIC_ST_SUCCESS == status) {
-            if (wdgEnabled != PMIC_WDG_ENABLE) {
+            if (wdgEnabled) {
                 DebugP_log("Watchdog Enabled\r\n");
             } else {
                 DebugP_log("Watchdog Disabled\r\n");
@@ -352,8 +355,8 @@ void test_wdg_setCfg_wdgMode(void) {
 
     checkWdgEnabled();
 
-    wdgCfg_expected.validParams = PMIC_CFG_WDG_WDGMODE_VALID_SHIFT;
-    wdgCfg_actual.validParams = PMIC_CFG_WDG_WDGMODE_VALID_SHIFT;
+    wdgCfg_expected.validParams = PMIC_CFG_WDG_MODE_VALID_SHIFT;
+    wdgCfg_actual.validParams = PMIC_CFG_WDG_MODE_VALID_SHIFT;
 
     /* Set Watchdog mode to be Q&A mode */
     wdgCfg_expected.mode = PMIC_WDG_QA_MODE;
