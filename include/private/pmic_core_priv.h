@@ -372,12 +372,6 @@ static inline uint8_t Pmic_getBitField(uint8_t regData, uint8_t shift, uint8_t m
     return ((regData & mask) >> shift);
 }
 
-bool pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos);
-
-void Pmic_criticalSectionStart(const Pmic_CoreHandle_t * pPmicCoreHandle);
-
-void Pmic_criticalSectionStop(const Pmic_CoreHandle_t * pPmicCoreHandle);
-
 int32_t Pmic_checkPmicCoreHandle(const Pmic_CoreHandle_t *handle);
 
 #ifdef __cplusplus

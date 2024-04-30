@@ -222,17 +222,12 @@ const Pmic_DevSubSysInfo_t pmicSubSysInfo[] = {
 /*                          Function Definitions                              */
 /* ========================================================================== */
 
-/**
- * @brief Check if a specific bit position in a parameter validity value is set.
- * This function checks whether a specific bit position in a parameter validity
- * value is set.
- *
- * @param validParamVal Validity parameter value to check.
- * @param bitPos Bit position to check.
- * @return bool True if the specified bit is set, false otherwise.
- */
-bool pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos) {
+inline bool pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos) {
     return (((validParamVal >> bitPos) & 0x01U) != 0U);
+}
+
+inline bool pmic_validParamStatusCheck(uint32_t validParamVal, uint8_t bitPos, int32_t status) {
+    return (status == PMIC_ST_SUCCESS) && pmic_validParamCheck(validParamVal, bitPos);
 }
 
 /**
@@ -263,26 +258,26 @@ void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *pPmicCoreHandle) {
     }
 }
 
-int32_t Pmic_checkPmicCoreHandle(const Pmic_CoreHandle_t * pPmicCoreHandle) {
+int32_t Pmic_checkPmicCoreHandle(const Pmic_CoreHandle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
     uint32_t expectedInitStatus = 0U;
 
-    if (pPmicCoreHandle == NULL) {
+    if (handle == NULL) {
         status = PMIC_ST_ERR_INV_HANDLE;
     }
 
     if (status == PMIC_ST_SUCCESS) {
-        if (pPmicCoreHandle->commMode == PMIC_INTF_SINGLE_I2C) {
+        if (handle->commMode == PMIC_INTF_SINGLE_I2C) {
             expectedInitStatus = (uint32_t)(DRV_INIT_SUCCESS | (uint8_t)PMIC_MAIN_INST);
-        } else if (pPmicCoreHandle->commMode == PMIC_INTF_DUAL_I2C) {
+        } else if (handle->commMode == PMIC_INTF_DUAL_I2C) {
             expectedInitStatus = (uint32_t)(DRV_INIT_SUCCESS | (uint8_t)PMIC_MAIN_INST | (uint8_t)PMIC_QA_INST);
-        } else if (pPmicCoreHandle->commMode == PMIC_INTF_SPI) {
+        } else if (handle->commMode == PMIC_INTF_SPI) {
             expectedInitStatus = (uint32_t)(DRV_INIT_SUCCESS | (uint8_t)PMIC_MAIN_INST);
         } else {
             expectedInitStatus = 0x00U;
         }
 
-        if (expectedInitStatus != pPmicCoreHandle->drvInitStatus) {
+        if (expectedInitStatus != handle->drvInitStatus) {
             status = PMIC_ST_ERR_INV_HANDLE;
         }
     }
