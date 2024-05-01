@@ -139,34 +139,34 @@
 /**
  * @brief PMIC Watchdog Status Register (WD_STAT)
  */
-#define PMIC_WD_ERR_CNT_SHIFT            (0U)
-#define PMIC_WD_ERR_CNT_MASK             (uint8_t)(0xF << PMIC_WD_ERR_CNT_SHIFT)
-#define PMIC_WD_BAD_EVENT_SHIFT          (4U)
-#define PMIC_WD_BAD_EVENT_MASK           (uint8_t)(0x1 << PMIC_WD_BAD_EVENT_SHIFT)
-#define PMIC_WD_LONGWIN_ACTIVE_SHIFT     (6U)
-#define PMIC_WD_LONGWIN_ACTIVE_MASK      (uint8_t)(0x1 << PMIC_WD_LONGWIN_ACTIVE_SHIFT)
-#define PMIC_WD_FIRST_OK_SHIFT           (7U)
-#define PMIC_WD_FIRST_OK_MASK            (uint8_t)(0x1 << PMIC_WD_FIRST_OK_SHIFT)
+#define PMIC_WD_ERR_CNT_SHIFT        (0U)
+#define PMIC_WD_ERR_CNT_MASK         (uint8_t)(0xF << PMIC_WD_ERR_CNT_SHIFT)
+#define PMIC_WD_BAD_EVENT_SHIFT      (4U)
+#define PMIC_WD_BAD_EVENT_MASK       (uint8_t)(0x1 << PMIC_WD_BAD_EVENT_SHIFT)
+#define PMIC_WD_LONGWIN_ACTIVE_SHIFT (6U)
+#define PMIC_WD_LONGWIN_ACTIVE_MASK  (uint8_t)(0x1 << PMIC_WD_LONGWIN_ACTIVE_SHIFT)
+#define PMIC_WD_FIRST_OK_SHIFT       (7U)
+#define PMIC_WD_FIRST_OK_MASK        (uint8_t)(0x1 << PMIC_WD_FIRST_OK_SHIFT)
 
 /**
  * @brief PMIC Watchdog Error Status Register (WD_ERR_STAT)
  */
-#define PMIC_WD_TH2_ERR_SHIFT                    (0x07U)
-#define PMIC_WD_TH2_ERR_MASK                     (uint8_t)(0x1 << PMIC_WD_TH2_ERR_SHIFT)
-#define PMIC_WD_TH1_ERR_SHIFT                    (0x06U)
-#define PMIC_WD_TH1_ERR_MASK                     (uint8_t)(0x1 << PMIC_WD_TH1_ERR_SHIFT)
-#define PMIC_WD_LONGWIN_TMO_SHIFT                (0x05U)
-#define PMIC_WD_LONGWIN_TMO_MASK                 (uint8_t)(0x1 << PMIC_WD_LONGWIN_TMO_SHIFT)
-#define PMIC_WD_ANSW_ERR_SHIFT                   (0x04U)
-#define PMIC_WD_ANSW_ERR_MASK                    (uint8_t)(0x1 << PMIC_WD_ANSW_ERR_SHIFT)
-#define PMIC_WD_SEQ_ERR_SHIFT                    (0x03U)
-#define PMIC_WD_SEQ_ERR_MASK                     (uint8_t)(0x1 << PMIC_WD_SEQ_ERR_SHIFT)
-#define PMIC_WD_ANSW_EARLY_SHIFT                 (0x02U)
-#define PMIC_WD_ANSW_EARLY_MASK                  (uint8_t)(0x1 << PMIC_WD_ANSW_EARLY_SHIFT)
-#define PMIC_WD_TRIG_EARLY_SHIFT                 (0x01U)
-#define PMIC_WD_TRIG_EARLY_MASK                  (uint8_t)(0x1 << PMIC_WD_TRIG_EARLY_SHIFT)
-#define PMIC_WD_TMO_SHIFT                        (0x00U)
-#define PMIC_WD_TMO_MASK                         (uint8_t)(0x1 << PMIC_WD_TMO_SHIFT)
+#define PMIC_WD_TH2_ERR_SHIFT      (0x07U)
+#define PMIC_WD_TH2_ERR_MASK       (uint8_t)(0x1 << PMIC_WD_TH2_ERR_SHIFT)
+#define PMIC_WD_TH1_ERR_SHIFT      (0x06U)
+#define PMIC_WD_TH1_ERR_MASK       (uint8_t)(0x1 << PMIC_WD_TH1_ERR_SHIFT)
+#define PMIC_WD_LONGWIN_TMO_SHIFT  (0x05U)
+#define PMIC_WD_LONGWIN_TMO_MASK   (uint8_t)(0x1 << PMIC_WD_LONGWIN_TMO_SHIFT)
+#define PMIC_WD_ANSW_ERR_SHIFT     (0x04U)
+#define PMIC_WD_ANSW_ERR_MASK      (uint8_t)(0x1 << PMIC_WD_ANSW_ERR_SHIFT)
+#define PMIC_WD_SEQ_ERR_SHIFT      (0x03U)
+#define PMIC_WD_SEQ_ERR_MASK       (uint8_t)(0x1 << PMIC_WD_SEQ_ERR_SHIFT)
+#define PMIC_WD_ANSW_EARLY_SHIFT   (0x02U)
+#define PMIC_WD_ANSW_EARLY_MASK    (uint8_t)(0x1 << PMIC_WD_ANSW_EARLY_SHIFT)
+#define PMIC_WD_TRIG_EARLY_SHIFT   (0x01U)
+#define PMIC_WD_TRIG_EARLY_MASK    (uint8_t)(0x1 << PMIC_WD_TRIG_EARLY_SHIFT)
+#define PMIC_WD_TMO_SHIFT          (0x00U)
+#define PMIC_WD_TMO_MASK           (uint8_t)(0x1 << PMIC_WD_TMO_SHIFT)
 
 /**
  * @brief  Watchdog Long Window Max, Min and Divisor macros
@@ -198,5 +198,11 @@
 #define PMIC_WD_WIN1_2_US_MIN         (uint32_t)(550U)
 #define PMIC_WD_WIN1_2_US_MAX         (uint32_t)(70400U)
 #define PMIC_WD_WIN1_2_US_DIV         (uint32_t)(550U)
+
+/**
+ * @name PMIC Watchdog Min Wait Count
+ * @brief Minimum number of iterations to wait for a Good/Bad event
+ */
+#define PMIC_WDG_WAIT_CNT_MIN_VAL    (30U)
 
 #endif /* __PMIC_WDG_PRIV_H__ */
