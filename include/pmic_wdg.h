@@ -102,6 +102,7 @@
 #define PMIC_WDG_QA_FEEDBACK_VALUE_1                (1U)
 #define PMIC_WDG_QA_FEEDBACK_VALUE_2                (2U)
 #define PMIC_WDG_QA_FEEDBACK_VALUE_3                (3U)
+#define PMIC_WDG_QA_FEEDBACK_VALUE_MAX              (3U)
 /** @} */
 
 /**
@@ -114,6 +115,7 @@
 #define PMIC_WDG_QA_LFSR_VALUE_1                    (1U)
 #define PMIC_WDG_QA_LFSR_VALUE_2                    (2U)
 #define PMIC_WDG_QA_LFSR_VALUE_3                    (3U)
+#define PMIC_WDG_QA_LFSR_VALUE_MAX                  (3U)
 /** @} */
 
 /**
@@ -138,6 +140,7 @@
 #define PMIC_WDG_QA_QUES_SEED_VALUE_13              (13U)
 #define PMIC_WDG_QA_QUES_SEED_VALUE_14              (14U)
 #define PMIC_WDG_QA_QUES_SEED_VALUE_15              (15U)
+#define PMIC_WDG_QA_QUES_SEED_VALUE_MAX             (15U)
 /** @} */
 
 /**
@@ -244,6 +247,8 @@
 #define PMIC_CFG_WD_GOOD_EVENT_STAT_VALID           (1U)
 /** @brief validParams value used to get To get Watchdog Fail Count value */
 #define PMIC_CFG_WD_FAIL_CNT_VAL_VALID              (2U)
+/** @brief validParams value used to get To get Long-Window active value */
+#define PMIC_CFG_WD_LONGWIN_ACTIVE_VALID            (3U)
 /** @} */
 
 /**
@@ -286,6 +291,12 @@
 #define PMIC_CFG_WD_BAD_EVENT_STAT_VALID_SHIFT      (1U << PMIC_CFG_WD_BAD_EVENT_STAT_VALID)
 #define PMIC_CFG_WD_GOOD_EVENT_STAT_VALID_SHIFT     (1U << PMIC_CFG_WD_GOOD_EVENT_STAT_VALID)
 #define PMIC_CFG_WD_FAIL_CNT_VAL_VALID_SHIFT        (1U << PMIC_CFG_WD_FAIL_CNT_VAL_VALID)
+#define PMIC_CFG_WD_LONGWIN_ACTIVE_VALID_SHIFT      (1U << PMIC_CFG_WD_LONGWIN_ACTIVE_VALID)
+#define PMIC_CFG_WD_FAILCNT_ALL_VALID_SHIFT         (\
+    PMIC_CFG_WD_BAD_EVENT_STAT_VALID_SHIFT  |\
+    PMIC_CFG_WD_GOOD_EVENT_STAT_VALID_SHIFT |\
+    PMIC_CFG_WD_FAIL_CNT_VAL_VALID_SHIFT    |\
+    PMIC_CFG_WD_LONGWIN_ACTIVE_VALID_SHIFT)
 /** @} */
 
 /**
@@ -407,6 +418,7 @@ typedef struct Pmic_WdgError_s {
 
 /**
  * @name PMIC Watchdog Fail Count Status Structure
+ *
  * @brief This struct is used to get the Watchdog bad/good event and fail count
  * of supported PMICs.
  *
@@ -417,16 +429,19 @@ typedef struct Pmic_WdgError_s {
  * combination of the @ref Pmic_WdgFailCntStatCfgValidParamBitPos and the
  * corresponding member value will be updated.
  *
- * @param wdBadEvent To get status of Bad Event is detected or not
- * @param wdGudEvent To get status of Good Event is detected or not
+ * @param badEvent To get status of Bad Event is detected or not
+ * @param goodEvent To get status of Good Event is detected or not
+ * @param longWinActive Indicates that watchdog is in the Long-Window
+ *                      (including forced by PWRHOLD).
  * @param wdFailCnt To get Watchdog Fail Count value.
  */
 typedef struct Pmic_WdgFailCntStat_s {
     uint16_t validParams;
 
-    bool wdBadEvent;
-    bool wdGudEvent;
-    uint32_t wdFailCnt;
+    bool badEvent;
+    bool goodEvent;
+    bool longWinActive;
+    uint8_t wdFailCnt;
 } Pmic_WdgFailCntStat_t;
 
 /* ========================================================================== */
@@ -515,7 +530,7 @@ int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t *wdgCfg);
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t * handle, Pmic_WdgCfg_t *wdgCfg);
+int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t *handle, Pmic_WdgCfg_t *wdgCfg);
 
 /**
  * @brief API to set the WD_PWRHOLD bit, which pauses the Long-Window timer.
