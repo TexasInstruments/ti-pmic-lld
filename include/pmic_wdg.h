@@ -215,21 +215,21 @@
  *  @{
  */
 /** @brief validParams value used to get Long Window timeout error status */
-#define PMIC_CFG_WD_LONGWIN_TIMEOUT_ERRSTAT_VALID   (0U)
+#define PMIC_CFG_WD_LONGWIN_TIMEOUT_ERR_VALID   (0U)
 /** @brief validParams value used to get Window1/Window2 timeout error status */
-#define PMIC_CFG_WD_TIMEOUT_ERRSTAT_VALID           (1U)
+#define PMIC_CFG_WD_TIMEOUT_ERR_VALID           (1U)
 /** @brief validParams value used to get Watchdog trigger mode error status */
-#define PMIC_CFG_WD_TRIG_EARLY_ERRSTAT_VALID        (2U)
+#define PMIC_CFG_WD_TRIG_EARLY_ERR_VALID        (2U)
 /** @brief validParams value used to get Watchdog early answer error status */
-#define PMIC_CFG_WD_ANSW_EARLY_ERRSTAT_VALID        (3U)
+#define PMIC_CFG_WD_ANSW_EARLY_ERR_VALID        (3U)
 /** @brief validParams value used to get Watchdog Q&A sequence error status */
-#define PMIC_CFG_WD_SEQ_ERR_ERRSTAT_VALID           (4U)
+#define PMIC_CFG_WD_SEQ_ERR_ERR_VALID           (4U)
 /** @brief validParams value used to get Watchdog Q&A wrong Answer error status */
-#define PMIC_CFG_WD_ANSW_ERR_ERRSTAT_VALID          (5U)
-/** @brief validParams value used to get Watchdog fail error status */
-#define PMIC_CFG_WD_FAIL_INT_ERRSTAT_VALID          (6U)
-/** @brief validParams value used to get Watchdog reset error status */
-#define PMIC_CFG_WD_RST_INT_ERRSTAT_VALID           (7U)
+#define PMIC_CFG_WD_ANSW_ERR_ERR_VALID          (5U)
+/** @brief validParams value used to get Watchdog threshold-1 error status */
+#define PMIC_CFG_WD_TH1_INT_ERR_VALID           (6U)
+/** @brief validParams value used to get Watchdog threshold-2 error status */
+#define PMIC_CFG_WD_TH2_INT_ERR_VALID           (7U)
 /** @} */
 
 /**
@@ -251,18 +251,27 @@
  * @name PMIC WatchDog Error status Structure Params Bit shift values
  *
  * Application can use below shifted values to set the validParams structure
- * member defined in @ref Pmic_WdgErrStatus_t structure
+ * member defined in @ref Pmic_WdgError_t structure
  *
  *  @{
  */
-#define PMIC_CFG_WD_LONGWIN_TIMEOUT_ERRSTAT_VALID_SHIFT (1U << PMIC_CFG_WD_LONGWIN_TIMEOUT_ERRSTAT_VALID)
-#define PMIC_CFG_WD_TIMEOUT_ERRSTAT_VALID_SHIFT         (1U << PMIC_CFG_WD_TIMEOUT_ERRSTAT_VALID)
-#define PMIC_CFG_WD_TRIG_EARLY_ERRSTAT_VALID_SHIFT      (1U << PMIC_CFG_WD_TRIG_EARLY_ERRSTAT_VALID)
-#define PMIC_CFG_WD_ANSW_EARLY_ERRSTAT_VALID_SHIFT      (1U << PMIC_CFG_WD_ANSW_EARLY_ERRSTAT_VALID)
-#define PMIC_CFG_WD_SEQ_ERR_ERRSTAT_VALID_SHIFT         (1U << PMIC_CFG_WD_SEQ_ERR_ERRSTAT_VALID)
-#define PMIC_CFG_WD_ANSW_ERR_ERRSTAT_VALID_SHIFT        (1U << PMIC_CFG_WD_ANSW_ERR_ERRSTAT_VALID)
-#define PMIC_CFG_WD_FAIL_INT_ERRSTAT_VALID_SHIFT        (1U << PMIC_CFG_WD_FAIL_INT_ERRSTAT_VALID)
-#define PMIC_CFG_WD_RST_INT_ERRSTAT_VALID_SHIFT         (1U << PMIC_CFG_WD_RST_INT_ERRSTAT_VALID)
+#define PMIC_CFG_WD_LONGWIN_TIMEOUT_ERR_VALID_SHIFT (1U << PMIC_CFG_WD_LONGWIN_TIMEOUT_ERR_VALID)
+#define PMIC_CFG_WD_TIMEOUT_ERR_VALID_SHIFT         (1U << PMIC_CFG_WD_TIMEOUT_ERR_VALID)
+#define PMIC_CFG_WD_TRIG_EARLY_ERR_VALID_SHIFT      (1U << PMIC_CFG_WD_TRIG_EARLY_ERR_VALID)
+#define PMIC_CFG_WD_ANSW_EARLY_ERR_VALID_SHIFT      (1U << PMIC_CFG_WD_ANSW_EARLY_ERR_VALID)
+#define PMIC_CFG_WD_SEQ_ERR_ERR_VALID_SHIFT         (1U << PMIC_CFG_WD_SEQ_ERR_ERR_VALID)
+#define PMIC_CFG_WD_ANSW_ERR_ERR_VALID_SHIFT        (1U << PMIC_CFG_WD_ANSW_ERR_ERR_VALID)
+#define PMIC_CFG_WD_TH1_INT_ERR_VALID_SHIFT         (1U << PMIC_CFG_WD_TH1_INT_ERR_VALID)
+#define PMIC_CFG_WD_TH2_INT_ERR_VALID_SHIFT         (1U << PMIC_CFG_WD_TH2_INT_ERR_VALID)
+#define PMIC_CFG_WD_ERRSTAT_ALL_VALID_SHIFT (\
+    PMIC_CFG_WD_LONGWIN_TIMEOUT_ERR_VALID_SHIFT | \
+    PMIC_CFG_WD_TIMEOUT_ERR_VALID_SHIFT         | \
+    PMIC_CFG_WD_TRIG_EARLY_ERR_VALID_SHIFT      | \
+    PMIC_CFG_WD_ANSW_EARLY_ERR_VALID_SHIFT      | \
+    PMIC_CFG_WD_SEQ_ERR_ERR_VALID_SHIFT         | \
+    PMIC_CFG_WD_ANSW_ERR_ERR_VALID_SHIFT        | \
+    PMIC_CFG_WD_TH1_INT_ERR_VALID_SHIFT        | \
+    PMIC_CFG_WD_TH2_INT_ERR_VALID_SHIFT)
 /** @} */
 
 /**
@@ -270,7 +279,7 @@
  *  @name PMIC WatchDog Fail count status Structure Params Bit shift values
  *
  *  Application can use below shifted values to set the validParams
- *  structure member defined in @ref Pmic_WdgErrStatus_t structure.
+ *  structure member defined in @ref Pmic_WdgError_t structure.
  *
  *  @{
  */
@@ -283,23 +292,6 @@
  * @name  Macro for PMIC Watchdog Q&A infinite sequence
  */
 #define PMIC_WD_QA_INFINITE_SEQ                     (0xFFFFFFFFU)
-
-/**
- * @anchor Pmic_WdgErrType
- * @name PMIC WDG Error TYPE
- *
- * @{
- */
-#define PMIC_WDG_ERR_TIMEOUT                        (0U)
-#define PMIC_WDG_ERR_TRIGGER_EARLY                  (1U)
-#define PMIC_WDG_ERR_ANSWER_EARLY                   (2U)
-#define PMIC_WDG_ERR_SEQ_ERR                        (3U)
-#define PMIC_WDG_ERR_ANS_ERR                        (4U)
-#define PMIC_WDG_ERR_LONG_WIN_TIMEOUT               (5U)
-#define PMIC_WDG_ERR_THRES1                         (6U)
-#define PMIC_WDG_ERR_THRES2                         (7U)
-#define PMIC_WDG_ERR_ALL                            (8U)
-/** @} */
 
 /* ========================================================================== */
 /*                            Structures and Enums                            */
@@ -370,13 +362,18 @@ typedef struct Pmic_WdgCfg_s {
 } Pmic_WdgCfg_t;
 
 /**
- * @name PMIC Watchdog Error Status Structure
+ * @name PMIC Watchdog Error Structure
  *
- * @brief This struct is used to get the Watchdog error statuses of supported
- * PMICs.
+ * @brief This struct is used to get and clear the Watchdog error statuses of
+ * supported PMICs.
  *
- * @note `validParams is an input parameter for all Set and Get APIs. Other
+ * @note `validParams` is an input parameter for all Set and Get APIs. Other
  * struct members are input params for Set APIs and output params for Get APIs.
+ *
+ * @note For other parameters, when used with `*GetErrorStatus` functions these
+ * are output parameters, when used with `*ClrErrorStatus` functions these are
+ * input parameters. When clearing error status, both the `validParams` field
+ * and the relevant error status struct field must be set.
  *
  * @param validParams Selection of structure parameters to be set from the
  * combination of the @ref Pmic_WdgErrStatCfgValidParamBitPos and the
@@ -395,7 +392,7 @@ typedef struct Pmic_WdgCfg_s {
  * @param threshold1Error Watchdog failure counter exceeded `threshold1`.
  * @param threshold2Error Watchdog failure counter exceeded `threshold2`.
  */
-typedef struct Pmic_WdgErrStatus_s {
+typedef struct Pmic_WdgError_s {
     uint32_t validParams;
 
     bool timeout;
@@ -406,7 +403,7 @@ typedef struct Pmic_WdgErrStatus_s {
     bool answerError;
     bool threshold1Error;
     bool threshold2Error;
-} Pmic_WdgErrStatus_t;
+} Pmic_WdgError_t;
 
 /**
  * @name PMIC Watchdog Fail Count Status Structure
@@ -578,27 +575,24 @@ int32_t Pmic_wdgGetReturnToLongWindow(Pmic_CoreHandle_t *handle, bool *isEnabled
  *
  * This function is used to get the watchdog error status from the PMIC for
  * trigger mode or Q&A (question and answer) mode, when corresponding
- * validParam bit fields are set in @ref Pmic_WdgErrStatus_t structure.
+ * validParam bit fields are set in @ref Pmic_WdgError_t structure.
  *
  * @note User has to call Pmic_wdgEnable() before getting the error status,
  * otherwise the results are invalid.
  *
- * @param handle      [IN]     PMIC Interface Handle
- * @param errorStatus [IN/OUT] Watchdog error status pointer
+ * @param handle  [IN]     PMIC Interface Handle
+ * @param errors  [IN/OUT] Watchdog error status pointer
  *
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t *handle, Pmic_WdgErrStatus_t *errorStatus);
+int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t *handle, Pmic_WdgError_t *errors);
 
 /**
  * @brief API to clear PMIC watchdog error status.
  *
  * This function is used to clear the watchdog error status from the PMIC for
- * trigger mode or Q&A (question and answer) mode,
- *
- * @note User has to clear the WDG Error status only when Error status
- * bit is set for the corresponding errorType.
+ * trigger mode or Q&A (question and answer) mode.
  *
  * @param handle    [IN] PMIC Interface Handle
  * @param errorType [IN] Watchdog error type to clear the status. For Valid
@@ -607,7 +601,22 @@ int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t *handle, Pmic_WdgErrStatus_t *e
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgClrErrStatus(Pmic_CoreHandle_t *handle, const uint8_t errorType);
+int32_t Pmic_wdgClrErrStatus(Pmic_CoreHandle_t *handle, const Pmic_WdgError_t *errors);
+
+/**
+ * @brief API to clear all PMIC watchdog errors.
+ *
+ * This function is used to clear the watchdog error status from the PMIC for
+ * trigger mode or Q&A (question and answer) mode, clearing all errors. This is
+ * provided as a convenience method, @ref Pmic_wdgClrErrStatus should be
+ * preferred for typical operation as it will selectively clear interrupts.
+ *
+ * @param handle    [IN] PMIC Interface Handle
+ *
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * possible values, see @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_wdgClrErrStatusAll(Pmic_CoreHandle_t *handle);
 
 /**
  * @brief API to get PMIC watchdog fail count status.

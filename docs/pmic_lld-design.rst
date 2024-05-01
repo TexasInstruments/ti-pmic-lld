@@ -1568,7 +1568,7 @@ Watchdog Configuration
       * \param   wdFailInt          To get Watchdog fail error status.
       * \param   wdRstInt           To get Watchdog reset error status.
       */
-     typedef struct Pmic_WdgErrStatus_s
+     typedef struct Pmic_WdgError_s
      {
           uint32_t validParams;
           bool      wdLongWinTimeout;
@@ -1579,7 +1579,7 @@ Watchdog Configuration
           bool      wdAnswErr;
           bool      wdFailInt;
           bool      wdRstInt;
-     } Pmic_WdgErrStatus_t;
+     } Pmic_WdgError_t;
 
 
 .. code-block:: ruby
@@ -3959,7 +3959,7 @@ Watchdog Error Status
     +------------------------+--------------------------------------------+
     | Prototype              | int32_t                                    |
     |                        | Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t   |
-    |                        | \*pPmicCoreHandle, Pmic_WdgErrStatus_t     |
+    |                        | \*pPmicCoreHandle, Pmic_WdgError_t     |
     |                        | \*pErrStatus);                             |
     +========================+============================================+
     | Design IDs             | did_pmic_wdg_cfg_readback                  |
@@ -3970,7 +3970,7 @@ Watchdog Error Status
     +------------------------+--------------------------------------------+
     | Parameter              | 1. Pmic_CoreHandle_t \*pPmicCoreHandle –   |
     |                        |    PMIC Interface Handle                   |
-    |                        | 2. Pmic_WdgErrStatus_t \*pErrStatus –      |
+    |                        | 2. Pmic_WdgError_t \*pErrStatus –      |
     |                        |    Watchdog error status pointer           |
     +------------------------+--------------------------------------------+
     | Return Code            | On Success:                                |
