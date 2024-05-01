@@ -317,28 +317,6 @@ static int32_t Pmic_WdgGetThresholdValues(Pmic_CoreHandle_t *handle, Pmic_WdgCfg
 }
 
 /*!
- * \brief  Function to set watchdog return long window control
- */
-static int32_t Pmic_WdgSetRetToLongWindowCfg(Pmic_CoreHandle_t * handle,
-                                             uint8_t returnLongWindow) {
-    int32_t status = PMIC_ST_SUCCESS;
-    uint8_t regVal = 0U;
-
-    Pmic_criticalSectionStart(handle);
-
-    status = Pmic_commIntf_recvByte(handle, PMIC_WD_CFG_REG, &regVal);
-
-    if (PMIC_ST_SUCCESS == status) {
-        Pmic_setBitField(&regVal, PMIC_WD_RETURN_LONGWIN_SHIFT, PMIC_WD_RETURN_LONGWIN_MASK, returnLongWindow);
-        status = Pmic_commIntf_sendByte(handle, PMIC_WD_CFG_REG, regVal);
-    }
-
-    Pmic_criticalSectionStop(handle);
-
-    return status;
-}
-
-/*!
  * \brief Set the WD_MODE field in the WD_CFG register.
  */
 static int32_t Pmic_WdgSetModeCfg(Pmic_CoreHandle_t *handle,
@@ -388,10 +366,6 @@ static int32_t WDG_setCfgParams(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t *
         Pmic_setBitField(&regVal, PMIC_WD_TIME_CFG_SHIFT, PMIC_WD_TIME_CFG_MASK, config->timeBase);
     }
 
-    if (pmic_validParamStatusCheck(config->validParams, PMIC_CFG_WDG_RETLONGWIN_VALID, status)) {
-        Pmic_setBitField(&regVal, PMIC_WD_RETURN_LONGWIN_SHIFT, PMIC_WD_RETURN_LONGWIN_MASK, config->retLongWin);
-    }
-
     // Write modified WD_CFG data back
     if (status == PMIC_ST_SUCCESS) {
         Pmic_criticalSectionStart(handle);
@@ -418,11 +392,6 @@ static int32_t Pmic_WdgGetCtrlParams(Pmic_CoreHandle_t *handle, Pmic_WdgCfg_t *c
     if ((PMIC_ST_SUCCESS == status) &&
         pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_MODE_VALID)) {
         config->mode = Pmic_getBitField(regVal, PMIC_WD_MODE_SHIFT, PMIC_WD_MODE_MASK);
-    }
-
-    if ((PMIC_ST_SUCCESS == status) &&
-        pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_RETLONGWIN_VALID)) {
-        config->retLongWin = Pmic_getBitField(regVal, PMIC_WD_RETURN_LONGWIN_SHIFT, PMIC_WD_RETURN_LONGWIN_MASK);
     }
 
     if ((PMIC_ST_SUCCESS == status) &&
@@ -931,7 +900,7 @@ static int32_t Pmic_wdgQaSetModeRetlongwinCfgWriteAnswersLongwindow(
 
     /* Disable ret to Long Window */
     if (PMIC_ST_SUCCESS == status) {
-        status = Pmic_WdgSetRetToLongWindowCfg(handle, PMIC_WDG_RETURN_LONGWIN_DISABLE);
+        status = Pmic_wdgSetReturnToLongWindow(handle, false);
     }
 
     /* Clear WDG Error bits */
@@ -1229,6 +1198,54 @@ int32_t Pmic_wdgGetPowerHold(Pmic_CoreHandle_t *handle, bool *isEnabled) {
     return status;
 }
 
+int32_t Pmic_wdgSetReturnToLongWindow(Pmic_CoreHandle_t * handle, bool enable) {
+    int32_t status = WDG_validatePmicCoreHandle(handle);
+    uint8_t regVal = 0U;
+
+    Pmic_criticalSectionStart(handle);
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_commIntf_recvByte(handle, PMIC_WD_CFG_REG, &regVal);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        Pmic_setBitField(&regVal,
+            PMIC_WD_RETURN_LONGWIN_SHIFT,
+            PMIC_WD_RETURN_LONGWIN_MASK,
+            enable ? 1U : 0U);
+
+        status = Pmic_commIntf_sendByte(handle, PMIC_WD_CFG_REG, regVal);
+    }
+
+    Pmic_criticalSectionStop(handle);
+
+    return status;
+}
+
+int32_t Pmic_wdgGetReturnToLongWindow(Pmic_CoreHandle_t *handle, bool *isEnabled) {
+    int32_t status = WDG_validatePmicCoreHandle(handle);
+    uint8_t regData = 0U;
+
+    // Validate parameters
+    if ((status == PMIC_ST_SUCCESS) && (isEnabled == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    Pmic_criticalSectionStart(handle);
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_commIntf_recvByte(handle, PMIC_WD_CFG_REG, &regData);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        *isEnabled = (Pmic_getBitField(regData, PMIC_WD_RETURN_LONGWIN_SHIFT, PMIC_WD_RETURN_LONGWIN_MASK) == 1U);
+    }
+
+    Pmic_criticalSectionStop(handle);
+
+    return status;
+}
+
 int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t * handle,
     Pmic_WdgErrStatus_t * pErrStatus) {
     int32_t status = PMIC_ST_SUCCESS;
@@ -1411,8 +1428,7 @@ int32_t Pmic_wdgStartQaSequence(Pmic_CoreHandle_t * handle,
 
     if (PMIC_ST_SUCCESS == status) {
         /* Enable Return long window Enable */
-        status = Pmic_WdgSetRetToLongWindowCfg(handle,
-            PMIC_WDG_RETURN_LONGWIN_ENABLE);
+        status = Pmic_wdgSetReturnToLongWindow(handle, true);
     }
 
     return status;
@@ -1530,10 +1546,7 @@ int32_t Pmic_wdgBeginSequences(Pmic_CoreHandle_t *handle, const uint8_t mode) {
         Pmic_setBitField(&regVal, PMIC_WD_PWRHOLD_SHIFT, PMIC_WD_PWRHOLD_MASK, 0U);
 
         /* Clear WD_RETURN_LONGWIN bit field to disable return to Long Window */
-        Pmic_setBitField(&regVal,
-            PMIC_WD_RETURN_LONGWIN_SHIFT,
-            PMIC_WD_RETURN_LONGWIN_MASK,
-            PMIC_WDG_RETURN_LONGWIN_DISABLE);
+        Pmic_setBitField(&regVal, PMIC_WD_RETURN_LONGWIN_SHIFT, PMIC_WD_RETURN_LONGWIN_MASK, 0U);
 
         /* Write new register value back to PMIC */
         status = Pmic_commIntf_sendByte(handle, PMIC_WD_CFG_REG, regVal);

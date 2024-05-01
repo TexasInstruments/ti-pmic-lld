@@ -384,52 +384,6 @@ void test_wdg_setCfg_wdgMode(void) {
 }
 
 /**
- * @brief Test setting the return to Long Window enable/disable for the
- * watchdog. This function tests setting and getting the return to Long Window
- * enable/disable configuration for the watchdog.
- *
- * @param void
- * @return NULL
- */
-void test_wdg_setCfg_ReturnLongWindow(void) {
-    int32_t status = PMIC_ST_SUCCESS;
-    Pmic_WdgCfg_t wdgCfg_expected, wdgCfg_actual;
-
-    checkWdgEnabled();
-
-    wdgCfg_expected.validParams = PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT;
-    wdgCfg_actual.validParams = PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT;
-
-    /* Enable Watchdog return to Long Window */
-    wdgCfg_expected.retLongWin = PMIC_WDG_RETURN_LONGWIN_ENABLE;
-    status = Pmic_wdgSetCfg(pPmicCoreHandle_wdg, wdgCfg_expected);
-    if (PMIC_ST_SUCCESS == status) {
-        status = Pmic_wdgGetCfg(pPmicCoreHandle_wdg, &wdgCfg_actual);
-        if (wdgCfg_actual.retLongWin == wdgCfg_expected.retLongWin) {
-            DebugP_log("Test Passed: Watchdog return to Long Window enable "
-                       "passed!\r\n");
-        } else {
-            DebugP_log("Test Failed: Watchdog return to Long Window enable "
-                       "failed!\r\n");
-        }
-    }
-
-    /* Disable Watchdog return to Long Window */
-    wdgCfg_expected.retLongWin = PMIC_WDG_RETURN_LONGWIN_DISABLE;
-    status = Pmic_wdgSetCfg(pPmicCoreHandle_wdg, wdgCfg_expected);
-    if (PMIC_ST_SUCCESS == status) {
-        status = Pmic_wdgGetCfg(pPmicCoreHandle_wdg, &wdgCfg_actual);
-        if (wdgCfg_actual.retLongWin == wdgCfg_expected.retLongWin) {
-            DebugP_log("Test Passed: Watchdog return to Long Window disable "
-                       "passed!\r\n");
-        } else {
-            DebugP_log("Test Failed: Watchdog return to Long Window disable "
-                       "failed!\r\n");
-        }
-    }
-}
-
-/**
  * @brief Test setting the QA feedback configuration for the watchdog.
  * This function tests setting and getting the QA feedback configuration for the
  * watchdog.

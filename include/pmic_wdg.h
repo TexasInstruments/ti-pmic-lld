@@ -60,20 +60,6 @@
 /* ========================================================================== */
 
 /**
- * @anchor Pmic_WdgReturnLongWinEnDisable
- * @name PMIC Watchdog Return Long Window Enable/Disable
- *
- * @brief When this field is disabled the watchdog will operate normally, when
- * it is set the watchdog returns to Long-Window after completion of the
- * current watchdog sequence and restarts the Long-Window timer.
- *
- * @{
- */
-#define PMIC_WDG_RETURN_LONGWIN_DISABLE             (0U)
-#define PMIC_WDG_RETURN_LONGWIN_ENABLE              (1U)
-/** @} */
-
-/**
  * @anchor Pmic_WdgTriggerQAMode
  * @name PMIC watchdog timer Trigger/Q&A Mode
  *
@@ -185,8 +171,6 @@
 #define PMIC_CFG_WDG_THRESHOLD_2_VALID              (4U)
 /** @brief validParams value used to set/get watchdog mode */
 #define PMIC_CFG_WDG_MODE_VALID                     (6U)
-/** @brief validParams value used to set/get to enable or disable return to long window */
-#define PMIC_CFG_WDG_RETLONGWIN_VALID               (8U)
 /** @brief validParams value used to set/get Q&A feed back value */
 #define PMIC_CFG_WDG_QA_FDBK_VALID                  (9U)
 /** @brief validParams value used to set/get Q&A LFSR value */
@@ -218,7 +202,6 @@
 #define PMIC_CFG_WDG_THRESHOLD_1_VALID_SHIFT        (1U << PMIC_CFG_WDG_THRESHOLD_1_VALID)
 #define PMIC_CFG_WDG_THRESHOLD_2_VALID_SHIFT        (1U << PMIC_CFG_WDG_THRESHOLD_2_VALID)
 #define PMIC_CFG_WDG_MODE_VALID_SHIFT               (1U << PMIC_CFG_WDG_MODE_VALID)
-#define PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT         (1U << PMIC_CFG_WDG_RETLONGWIN_VALID)
 #define PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT            (1U << PMIC_CFG_WDG_QA_FDBK_VALID)
 #define PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT            (1U << PMIC_CFG_WDG_QA_LFSR_VALID)
 #define PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT       (1U << PMIC_CFG_WDG_QA_QUES_SEED_VALID)
@@ -337,9 +320,6 @@
  *
  * @param mode Value to set watchdog mode to. See @ref Pmic_WdgTriggerQAMode.
  *
- * @param retLongWin Enable or disable return to long window after completion
- * of the curent sequence. See @ref Pmic_WdgReturnLongWinEnDisable.
- *
  * @param timeBase Value to set the watchdog time base configuration to. See
  * @ref Pmic_WdgTimeBase
  *
@@ -349,7 +329,7 @@
  * @param threshold2 Value for Watchdog Threshold 2 (WD_TH2). See @ref
  * Pmic_WdgThresholdCount.
  *
- * @param longWinDuration_ms Long Window duration in milli seconds. To get
+ * @param longWinDuration_ms Long Window duration in milliseconds. To get
  * more effective results user has to program long window with multiples of
  * 3000.
  * - For PG1.0 Leo/Hera, the valid range is (100, 3000, 6000, 9000,....12000,
@@ -357,11 +337,11 @@
  * - For PG2.0 and Burton, the valid range is (80, 125, 250, 375,....8000,
  *   12000, 16000, 20000 ..., 772000).
  *
- * @param win1Duration_us Window-1 duration in Micro Seconds.
+ * @param win1Duration_us Window-1 duration in microseconds.
  * To get more effective results user has to program window1 with multiples of
  * 550. The valid range is (550, 1100, 1650, 2200, 2750, ..., 70400).
  *
- * @param win2Duration_us Window-2 duration in Micro Seconds.
+ * @param win2Duration_us Window-2 duration in microseconds.
  * To get more effective results user has to program window1 with multiples of
  * 550. The valid range is (550, 1100, 1650, 2200, 2750, ..., 70400).
  *
@@ -376,7 +356,6 @@ typedef struct Pmic_WdgCfg_s {
     uint32_t validParams;
 
     uint8_t mode;
-    uint8_t retLongWin;  // To be removed
     uint8_t timeBase;
     uint8_t threshold1;
     uint8_t threshold2;
@@ -566,6 +545,33 @@ int32_t Pmic_wdgSetPowerHold(Pmic_CoreHandle_t *handle, bool enable);
  * possible values, see @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_wdgGetPowerHold(Pmic_CoreHandle_t *handle, bool *isEnabled);
+
+/**
+ * @brief API to set the WD_RETURN_LONGWIN bit, which can be used while the WDG
+ * is in normal operating mode to return it to Long-Window mode.
+ *
+ * @param handle [IN] PMIC Interface Handle
+ * @param enable [IN] If set while the WDG is in normal operating mode it will
+ *               return to Long-Window mode, otherwise the WDG will return to
+ *               or remain in normal operation.
+ *
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * possible values, see @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_wdgSetReturnToLongWindow(Pmic_CoreHandle_t *handle, bool enable);
+
+/**
+ * @brief API to get the value of the WD_RETURN_LONGWIN bit, which can be used
+ * while the WDG is in normal operating mode to return it to Long-Window mode.
+ *
+ * @param handle    [IN] PMIC Interface Handle
+ * @param isEnabled [IN] Tracks the value of the WD_RETURN_LONGWIN bit, will be
+ *                  false if the WDG is in normal operating mode.
+ *
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * possible values, see @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_wdgGetReturnToLongWindow(Pmic_CoreHandle_t *handle, bool *isEnabled);
 
 /**
  * @brief API to get PMIC watchdog error status.
