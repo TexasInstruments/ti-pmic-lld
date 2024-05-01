@@ -91,7 +91,7 @@ static int32_t WDG_setLongWindowTimeInterval(Pmic_CoreHandle_t *handle, const Pm
         const bool longWinAboveMax = (config->longWinDuration_ms > PMIC_WD_LONGWIN_MS_MAX_PG_2_0);
 
         if (longWinNot80ms && (longWinBelowMin || longWinAboveMax)) {
-            status = PMIC_ST_ERR_INV_WDG_WINDOW;
+            status = PMIC_ST_ERR_INV_PARAM;
         }
 
         if (status == PMIC_ST_SUCCESS) {
@@ -117,7 +117,7 @@ static int32_t WDG_setWindow1TimeInterval(Pmic_CoreHandle_t *handle, const Pmic_
         const bool winAboveMax = (config->win1Duration_us > PMIC_WD_WIN1_2_US_MAX);
 
         if (winBelowMin || winAboveMax) {
-            status = PMIC_ST_ERR_INV_WDG_WINDOW;
+            status = PMIC_ST_ERR_INV_PARAM;
         }
 
         if (status == PMIC_ST_SUCCESS) {
@@ -144,7 +144,7 @@ static int32_t WDG_setWindow2TimeInterval(Pmic_CoreHandle_t *handle, const Pmic_
         const bool winAboveMax = (config->win2Duration_us > PMIC_WD_WIN1_2_US_MAX);
 
         if (winBelowMin || winAboveMax) {
-            status = PMIC_ST_ERR_INV_WDG_WINDOW;
+            status = PMIC_ST_ERR_INV_PARAM;
         }
 
         if (status == PMIC_ST_SUCCESS) {
