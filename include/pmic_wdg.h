@@ -74,18 +74,6 @@
 /** @} */
 
 /**
- * @anchor Pmic_WdgPwrHoldEnDisable
- * @name PMIC Watchdog Power-Hold Enable/Disable
- *
- * @brief If this field is enabled the Long-Window timer is paused.
- *
- * @{
- */
-#define PMIC_WDG_PWRHOLD_DISABLE                    (0U)
-#define PMIC_WDG_PWRHOLD_ENABLE                     (1U)
-/** @} */
-
-/**
  * @anchor Pmic_WdgTriggerQAMode
  * @name PMIC watchdog timer Trigger/Q&A Mode
  *
@@ -197,8 +185,6 @@
 #define PMIC_CFG_WDG_THRESHOLD_2_VALID              (4U)
 /** @brief validParams value used to set/get watchdog mode */
 #define PMIC_CFG_WDG_MODE_VALID                     (6U)
-/** @brief validParams value used to set/get to Enable or disable watchdog pwrHold */
-#define PMIC_CFG_WDG_PWRHOLD_VALID                  (7U)
 /** @brief validParams value used to set/get to enable or disable return to long window */
 #define PMIC_CFG_WDG_RETLONGWIN_VALID               (8U)
 /** @brief validParams value used to set/get Q&A feed back value */
@@ -232,7 +218,6 @@
 #define PMIC_CFG_WDG_THRESHOLD_1_VALID_SHIFT        (1U << PMIC_CFG_WDG_THRESHOLD_1_VALID)
 #define PMIC_CFG_WDG_THRESHOLD_2_VALID_SHIFT        (1U << PMIC_CFG_WDG_THRESHOLD_2_VALID)
 #define PMIC_CFG_WDG_MODE_VALID_SHIFT               (1U << PMIC_CFG_WDG_MODE_VALID)
-#define PMIC_CFG_WDG_PWRHOLD_VALID_SHIFT            (1U << PMIC_CFG_WDG_PWRHOLD_VALID)
 #define PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT         (1U << PMIC_CFG_WDG_RETLONGWIN_VALID)
 #define PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT            (1U << PMIC_CFG_WDG_QA_FDBK_VALID)
 #define PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT            (1U << PMIC_CFG_WDG_QA_LFSR_VALID)
@@ -350,6 +335,20 @@
  * combination of the @ref Pmic_WdgCfgValidParamBitPos and the corresponding
  * member value will be updated.
  *
+ * @param mode Value to set watchdog mode to. See @ref Pmic_WdgTriggerQAMode.
+ *
+ * @param retLongWin Enable or disable return to long window after completion
+ * of the curent sequence. See @ref Pmic_WdgReturnLongWinEnDisable.
+ *
+ * @param timeBase Value to set the watchdog time base configuration to. See
+ * @ref Pmic_WdgTimeBase
+ *
+ * @param threshold1 Value for Watchdog Threshold 1 (WD_TH1). See @ref
+ * Pmic_WdgThresholdCount.
+ *
+ * @param threshold2 Value for Watchdog Threshold 2 (WD_TH2). See @ref
+ * Pmic_WdgThresholdCount.
+ *
  * @param longWinDuration_ms Long Window duration in milli seconds. To get
  * more effective results user has to program long window with multiples of
  * 3000.
@@ -366,23 +365,6 @@
  * To get more effective results user has to program window1 with multiples of
  * 550. The valid range is (550, 1100, 1650, 2200, 2750, ..., 70400).
  *
- * @param mode Value to set watchdog mode to. See @ref Pmic_WdgTriggerQAMode.
- *
- * @param pwrHold Value to Enable or disable watchdog pwrHold. See @ref
- * Pmic_WdgPwrHoldEnDisable.
- *
- * @param timeBase Value to set the watchdog time base configuration to. See
- * @ref Pmic_WdgTimeBase
- *
- * @param retLongWin Enable or disable return to long window after completion
- * of the curent sequence. See @ref Pmic_WdgReturnLongWinEnDisable.
- *
- * @param threshold1 Value for Watchdog Threshold 1 (WD_TH1). See @ref
- * Pmic_WdgThresholdCount.
- *
- * @param threshold2 Value for Watchdog Threshold 2 (WD_TH2). See @ref
- * Pmic_WdgThresholdCount.
- *
  * @param qaFdbk Configure Q&A Feedback value. See @ref Pmic_WdgQaFdbkVal.
  *
  * @param qaLfsr Configure Q&A LFSR value. See @ref Pmic_WdgQaLfsrVal.
@@ -394,7 +376,6 @@ typedef struct Pmic_WdgCfg_s {
     uint32_t validParams;
 
     uint8_t mode;
-    uint8_t pwrHold;     // To be removed
     uint8_t retLongWin;  // To be removed
     uint8_t timeBase;
     uint8_t threshold1;
@@ -559,6 +540,32 @@ int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t *wdgCfg);
  * possible values, see @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t * handle, Pmic_WdgCfg_t *wdgCfg);
+
+/**
+ * @brief API to set the WD_PWRHOLD bit, which pauses the Long-Window timer.
+ *
+ * @param handle [IN] PMIC Interface Handle
+ * @param enable [IN] If set, both WDG and Long-Window timer are paused and do
+ *               not cause the device to reset. Otherwise, the WDG operates as
+ *               normally configured.
+ *
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * possible values, see @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_wdgSetPowerHold(Pmic_CoreHandle_t *handle, bool enable);
+
+/**
+ * @brief API to get the WD_PWRHOLD bit, which pauses the Long-Window timer.
+ *
+ * @param handle    [IN] PMIC Interface Handle
+ * @param isEnabled [OUT] IF set, both WDG and Long-Window timer are paused and do
+ *                  not cause the device to reset. Otherwise, the WDG is
+ *                  operating as normally configured.
+ *
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * possible values, see @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_wdgGetPowerHold(Pmic_CoreHandle_t *handle, bool *isEnabled);
 
 /**
  * @brief API to get PMIC watchdog error status.

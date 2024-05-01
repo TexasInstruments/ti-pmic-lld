@@ -339,28 +339,6 @@ static int32_t Pmic_WdgSetRetToLongWindowCfg(Pmic_CoreHandle_t * handle,
 }
 
 /*!
- * \brief Set the WD_PWRHOLD field in the WD_CFG register.
- */
-static int32_t Pmic_WdgSetPwrHoldCfg(Pmic_CoreHandle_t *handle,
-                                     uint8_t pwrHld) {
-    int32_t status = PMIC_ST_SUCCESS;
-    uint8_t regVal = 0U;
-
-    Pmic_criticalSectionStart(handle);
-
-    status = Pmic_commIntf_recvByte(handle, PMIC_WD_CFG_REG, &regVal);
-
-    if (PMIC_ST_SUCCESS == status) {
-        Pmic_setBitField(&regVal, PMIC_WD_PWRHOLD_SHIFT, PMIC_WD_PWRHOLD_MASK, pwrHld);
-        status = Pmic_commIntf_sendByte(handle, PMIC_WD_CFG_REG, regVal);
-    }
-
-    Pmic_criticalSectionStop(handle);
-
-    return status;
-}
-
-/*!
  * \brief Set the WD_MODE field in the WD_CFG register.
  */
 static int32_t Pmic_WdgSetModeCfg(Pmic_CoreHandle_t *handle,
@@ -406,10 +384,6 @@ static int32_t WDG_setCfgParams(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t *
         Pmic_setBitField(&regVal, PMIC_WD_MODE_SHIFT, PMIC_WD_MODE_MASK, config->mode);
     }
 
-    if (pmic_validParamStatusCheck(config->validParams, PMIC_CFG_WDG_PWRHOLD_VALID, status)) {
-        Pmic_setBitField(&regVal, PMIC_WD_PWRHOLD_SHIFT, PMIC_WD_PWRHOLD_MASK, config->pwrHold);
-    }
-
     if (pmic_validParamStatusCheck(config->validParams, PMIC_CFG_WDG_TIME_BASE_VALID, status)) {
         Pmic_setBitField(&regVal, PMIC_WD_TIME_CFG_SHIFT, PMIC_WD_TIME_CFG_MASK, config->timeBase);
     }
@@ -444,11 +418,6 @@ static int32_t Pmic_WdgGetCtrlParams(Pmic_CoreHandle_t *handle, Pmic_WdgCfg_t *c
     if ((PMIC_ST_SUCCESS == status) &&
         pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_MODE_VALID)) {
         config->mode = Pmic_getBitField(regVal, PMIC_WD_MODE_SHIFT, PMIC_WD_MODE_MASK);
-    }
-
-    if ((PMIC_ST_SUCCESS == status) &&
-        pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_PWRHOLD_VALID)) {
-        config->pwrHold = Pmic_getBitField(regVal, PMIC_WD_PWRHOLD_SHIFT, PMIC_WD_PWRHOLD_MASK);
     }
 
     if ((PMIC_ST_SUCCESS == status) &&
@@ -1155,7 +1124,6 @@ int32_t Pmic_wdgGetEnableState(Pmic_CoreHandle_t *handle, bool *isEnabled) {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    // Read from register and extract bitfield.
     Pmic_criticalSectionStart(handle);
 
     if (status == PMIC_ST_SUCCESS) {
@@ -1171,7 +1139,7 @@ int32_t Pmic_wdgGetEnableState(Pmic_CoreHandle_t *handle, bool *isEnabled) {
     return status;
 }
 
-int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t * handle, const Pmic_WdgCfg_t *config) {
+int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t *config) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
 
     if (PMIC_ST_SUCCESS == status) {
@@ -1193,12 +1161,8 @@ int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t * handle, const Pmic_WdgCfg_t *config) 
     return status;
 }
 
-int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t * handle,
-    Pmic_WdgCfg_t * config) {
-    int32_t status = PMIC_ST_SUCCESS;
-
-    /* Validate handle and WDG subsystem */
-    status = WDG_validatePmicCoreHandle(handle);
+int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t *handle, Pmic_WdgCfg_t *config) {
+    int32_t status = WDG_validatePmicCoreHandle(handle);
 
     if ((PMIC_ST_SUCCESS == status) && (NULL == config)) {
         status = PMIC_ST_ERR_NULL_PARAM;
@@ -1219,6 +1183,48 @@ int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t * handle,
     if (PMIC_ST_SUCCESS == status) {
         status = Pmic_WdgGetQaConfigurations(handle, config);
     }
+
+    return status;
+}
+
+int32_t Pmic_wdgSetPowerHold(Pmic_CoreHandle_t *handle, bool enable) {
+    int32_t status = WDG_validatePmicCoreHandle(handle);
+    uint8_t regVal = 0U;
+
+    Pmic_criticalSectionStart(handle);
+
+    status = Pmic_commIntf_recvByte(handle, PMIC_WD_CFG_REG, &regVal);
+
+    if (PMIC_ST_SUCCESS == status) {
+        Pmic_setBitField(&regVal, PMIC_WD_PWRHOLD_SHIFT, PMIC_WD_PWRHOLD_MASK, enable ? 1U : 0U);
+        status = Pmic_commIntf_sendByte(handle, PMIC_WD_CFG_REG, regVal);
+    }
+
+    Pmic_criticalSectionStop(handle);
+
+    return status;
+}
+
+int32_t Pmic_wdgGetPowerHold(Pmic_CoreHandle_t *handle, bool *isEnabled) {
+    int32_t status = WDG_validatePmicCoreHandle(handle);
+    uint8_t regData = 0U;
+
+    // Validate parameters
+    if ((status == PMIC_ST_SUCCESS) && (isEnabled == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    Pmic_criticalSectionStart(handle);
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_commIntf_recvByte(handle, PMIC_WD_CFG_REG, &regData);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        *isEnabled = (Pmic_getBitField(regData, PMIC_WD_PWRHOLD_SHIFT, PMIC_WD_PWRHOLD_MASK) == 1U);
+    }
+
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
@@ -1521,10 +1527,7 @@ int32_t Pmic_wdgBeginSequences(Pmic_CoreHandle_t *handle, const uint8_t mode) {
         Pmic_setBitField(&regVal, PMIC_WD_MODE_SHIFT, PMIC_WD_MODE_MASK, mode);
 
         /* Clear WD_PWRHOLD bit field to enable WDG to exit Long Window */
-        Pmic_setBitField(&regVal,
-            PMIC_WD_PWRHOLD_SHIFT,
-            PMIC_WD_PWRHOLD_MASK,
-            PMIC_WDG_PWRHOLD_DISABLE);
+        Pmic_setBitField(&regVal, PMIC_WD_PWRHOLD_SHIFT, PMIC_WD_PWRHOLD_MASK, 0U);
 
         /* Clear WD_RETURN_LONGWIN bit field to disable return to Long Window */
         Pmic_setBitField(&regVal,

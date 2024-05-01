@@ -384,48 +384,6 @@ void test_wdg_setCfg_wdgMode(void) {
 }
 
 /**
- * @brief Test setting the power hold enable/disable for the watchdog.
- * This function tests setting and getting the power hold enable/disable
- * configuration for the watchdog.
- *
- * @param void
- * @return NULL
- */
-void test_wdg_setCfg_powerHold(void) {
-    int32_t status = PMIC_ST_SUCCESS;
-    Pmic_WdgCfg_t wdgCfg_expected, wdgCfg_actual;
-
-    checkWdgEnabled();
-
-    wdgCfg_expected.validParams = PMIC_CFG_WDG_PWRHOLD_VALID_SHIFT;
-    wdgCfg_actual.validParams = PMIC_CFG_WDG_PWRHOLD_VALID_SHIFT;
-
-    /* Enable Watchdog PWRHOLD */
-    wdgCfg_expected.pwrHold = PMIC_WDG_PWRHOLD_ENABLE;
-    status = Pmic_wdgSetCfg(pPmicCoreHandle_wdg, wdgCfg_expected);
-    if (PMIC_ST_SUCCESS == status) {
-        status = Pmic_wdgGetCfg(pPmicCoreHandle_wdg, &wdgCfg_actual);
-        if (wdgCfg_actual.pwrHold == wdgCfg_expected.pwrHold) {
-            DebugP_log("Test Passed: Watchdog Power Hold enable passed!\r\n");
-        } else {
-            DebugP_log("Test Failed: Watchdog Power Hold enable failed!\r\n");
-        }
-    }
-
-    /* Disable Watchdog PWRHOLD */
-    wdgCfg_expected.mode = PMIC_WDG_PWRHOLD_DISABLE;
-    status = Pmic_wdgSetCfg(pPmicCoreHandle_wdg, wdgCfg_expected);
-    if (PMIC_ST_SUCCESS == status) {
-        status = Pmic_wdgGetCfg(pPmicCoreHandle_wdg, &wdgCfg_actual);
-        if (wdgCfg_actual.pwrHold == wdgCfg_expected.pwrHold) {
-            DebugP_log("Test Passed: Watchdog Power Hold disable passed!\r\n");
-        } else {
-            DebugP_log("Test Failed: Watchdog Power Hold disable failed!\r\n");
-        }
-    }
-}
-
-/**
  * @brief Test setting the return to Long Window enable/disable for the
  * watchdog. This function tests setting and getting the return to Long Window
  * enable/disable configuration for the watchdog.
