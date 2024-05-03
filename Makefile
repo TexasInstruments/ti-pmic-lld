@@ -54,7 +54,6 @@ CC := gcc
 endif
 
 INC	= -I./include \
-			-I./include/cfg/tps65386x/ \
 			-I./include/private/
 
 CFLAGS = -fPIC $(INC) -Wall

@@ -45,7 +45,6 @@
 #include "pmic_core_priv.h"
 #include "pmic_irq.h"
 #include "pmic_irq_priv.h"
-#include "pmic_irq_tps65386x.h"
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
