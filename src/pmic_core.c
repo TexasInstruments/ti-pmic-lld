@@ -42,7 +42,6 @@
 /* ========================================================================== */
 #include "pmic_core.h"
 #include "pmic_core_priv.h"
-#include "pmic_core_tps65386x.h"
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -296,7 +295,7 @@ int32_t Pmic_checkPmicCoreHandle(const Pmic_CoreHandle_t *handle) {
  * @param dat Data byte for communication.
  * @return crc Calculated CRC-8 checksum value.
  */
-uint8_t PMIC_calcCRC8(uint8_t cmd, uint8_t rdwr, uint8_t dat) {
+uint8_t Pmic_calcCRC8(uint8_t cmd, uint8_t rdwr, uint8_t dat) {
     int8_t i = 0;
     uint32_t crc;
     uint32_t tmp;

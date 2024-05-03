@@ -58,7 +58,7 @@
 /*========================================================================== */
 /*                         Function Declarations                             */
 /*========================================================================== */
-uint8_t PMIC_calcCRC8(uint8_t cmd, uint8_t rdwr, uint8_t dat);
+uint8_t Pmic_calcCRC8(uint8_t cmd, uint8_t rdwr, uint8_t dat);
 
 /*========================================================================== */
 /*                         Function Prototypes                               */
@@ -107,7 +107,7 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
 
         /*Set CRC data to txBuf[3], Bits 25-32 CRC */
         txBuf[buffLength] =
-            PMIC_calcCRC8((uint8_t) txBuf[0], (uint8_t) txBuf[1], (uint8_t) txBuf[2]);
+            Pmic_calcCRC8((uint8_t) txBuf[0], (uint8_t) txBuf[1], (uint8_t) txBuf[2]);
         /*Increment 1 more byte to store CRC8 */
         buffLength++;
     }

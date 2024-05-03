@@ -352,6 +352,60 @@ extern "C" {
  */
 #define PMIC_CONFIG_2_REGADDR (0x7EU)
 
+/* Sub address command as per tps653860xx datasheet */
+#define CRC_POLY			(0x107U)
+#define CRC_LEN 			(9U)
+#define CMD_SHIFT 			(24U)
+#define RW_SHIFT 			(16U)
+#define DAT_SHIFT 			(8U)
+#define CRC_SHIFT 			(0U)
+#define CMD_RD_EN 			(0x10U)
+#define CMD_WR_EN 			(0x00U)
+
+#define CMD_DEVICE_ID		(0x00U)
+#define CMD_REV_ID 			(0x01U)
+
+#define CMD_REG_UNLOCK		(0x03U)
+#define CNT_REG_UNLOCK 		(0x04U)
+#define CMD_REG_STATUS 		(0x09U)
+
+#define CMD_LDO2_CFG 		(0x1FU)
+#define CMD_LDO3_CFG 		(0x20U)
+#define CMD_LDO4_CFG 		(0x21U)
+#define CMD_LDO_CTRL 		(0x26U)
+
+#define DAT_REG_UNLOCK_1 	(0x98U)
+#define DAT_REG_UNLOCK_2 	(0xB8U)
+
+#define DAT_REG_LOCK 		(0x10U)
+
+#define CNT_REG_UNLOCK_1 	(0x13U)
+#define CNT_REG_UNLOCK_2 	(0x7DU)
+
+#define DAT_LDO2_CFG 		(0x93U)
+#define DAT_LDO3_CFG 		(0x94U)
+#define DAT_LDO4_CFG 		(0x90U)
+#define DAT_LDO_CTRL 		(0x55U)
+
+#define CFG_REG_LOCK_MASK 	(0x01U) /* Bit mask for CFG_REG_LOCK */
+#define CNT_REG_LOCK_MASK 	(0x02U) /* Bit mask for CNT_REG_LOCK */
+
+#define PMIC_MCSPI_MSGSIZE 	(1U)
+
+#define PMIC_TPS65386X_DEV_ID	(0x3CU)
+
+/**
+ *  @name   PMIC DIAG OUT Pin Control Configuration
+ *
+ *  @{
+ */
+/** @brief AMUX Enabled */
+#define PMIC_BB_DIAG_OUT_AMUX_ENABLE 	(1U)
+/** @brief DMUX Enabled */
+#define PMIC_BB_DIAG_OUT_DMUX_ENABLE 	(2U)
+/** @brief AMUX/DMUX Disabled */
+#define PMIC_BB_DIAG_OUT_DISABLE 		(0U)
+/*  @} */
 /*==========================================================================*/
 /*                         Function Declarations                            */
 /*==========================================================================*/
@@ -381,6 +435,8 @@ static inline bool Pmic_getBitField_b(uint8_t regData, uint8_t shift, uint8_t ma
 }
 
 int32_t Pmic_checkPmicCoreHandle(const Pmic_CoreHandle_t *handle);
+
+uint8_t Pmic_calcCRC8(uint8_t cmd, uint8_t rdwr, uint8_t dat);
 
 #ifdef __cplusplus
 }
