@@ -45,7 +45,9 @@ RM = rm -f
 RMDIR = rm -rf
 MKDIR = mkdir -p
 OSP = macos
-CC = clang
+ifeq ($(CC),)
+CC := clang
+endif
 endif
 endif
 

@@ -32,7 +32,7 @@
  *****************************************************************************/
 
 /**
- *   @file    pmic_low_iq_timer_priv.h
+ *   @file    regmap/timer.h
  *
  *   @brief   This file contains the private MACRO's and function definitions
  * for PMIC LOW IQ Timer state configuration

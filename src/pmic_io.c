@@ -31,19 +31,10 @@
  *
  *****************************************************************************/
 
-/**
- * @file  pmic_io.c
- *
- * @brief  This file contains LLD-Communication wrappers with CRC8 support for
- *         I2C/SPI
- */
-
 /*========================================================================== */
 /*                            Include Files                                  */
 /*========================================================================== */
-
-#include "private/pmic_core_priv.h"
-#include "private/pmic_io_priv.h"
+#include "pmic_io.h"
 
 /*========================================================================== */
 /*                          Macros & Typedefs                                */
@@ -55,24 +46,71 @@
 #define DAT_SHIFT       (8U)
 #define CMD_DEVICE_ID   (0x00)
 
+/**
+ * @brief: PMIC SERIAL_IF_CONFIG register address (Bank/Page 1 Register address)
+ *         Application can only read this register to check I2C1SPI/I2C2 CRC
+ *         is enabled or not
+ */
+#define PMIC_SERIAL_IF_CONFIG_PAGEADDR (0x100U)
+#define PMIC_SERIAL_IF_CONFIG_PAGEADDR_MASK (0xFFU)
+
+/** @brief: SPI R/W bit Position */
+#define PMIC_IO_REQ_RW (((uint32_t)1U) << 4U)
+
+/** @brief: IO Buffer Size */
+#define PMIC_IO_BUF_SIZE (4U)
+
+/** @brief: Initial value for CRC */
+#define PMIC_COMM_CRC_INITIAL_VALUE (0xFF)
+
+/** @brief: IO READ bits */
+#define PMIC_IO_READ (0x01U)
+
 /*========================================================================== */
 /*                         Function Declarations                             */
 /*========================================================================== */
-uint8_t Pmic_calcCRC8(uint8_t cmd, uint8_t rdwr, uint8_t dat);
 
-/*========================================================================== */
-/*                         Function Prototypes                               */
-/*========================================================================== */
-
-static int32_t
-Pmic_validateCorehandle(const Pmic_CoreHandle_t *pPmicCoreHandle);
-
-static int32_t Pmic_commIoReadData(Pmic_CoreHandle_t *pPmicCoreHandle,
-    uint16_t *pRegAddr, uint8_t *pBuffLength,
-    uint8_t *pRxBuf, uint8_t *pinstanceType);
 /*========================================================================== */
 /*                         Function Definitions                              */
 /*========================================================================== */
+
+/**
+ * @brief Calculate CRC-8 checksum for PMIC SPI communication.
+ * This function calculates the CRC-8 checksum based on the command, read/write
+ * flag, and data provided for communication between the MCU and the
+ * TPS653850A-Q1 device.
+ *
+ * @param cmd Command byte for communication.
+ * @param rdwr Read/Write flag for communication (CMD_RD_EN or CMD_WR_EN).
+ * @param dat Data byte for communication.
+ * @return crc Calculated CRC-8 checksum value.
+ */
+uint8_t Pmic_calcCRC8(uint8_t cmd, uint8_t rdwr, uint8_t dat) {
+    int8_t i = 0;
+    uint32_t crc;
+    uint32_t tmp;
+
+    tmp = ((uint32_t)cmd << 16) | ((uint32_t) rdwr << 8) | (uint32_t) dat;
+    crc = (uint32_t)0xFF;
+
+    /* Standard CRC-8 polynomial ,X8 + X2 + X1 + 1.,is used to calculate the
+     * checksum value based on the command and data which the MCU transmits
+     * to the TPS653850A-Q1 device.
+     */
+
+    for (i = 0; i < 24; i++) {
+        uint64_t D;
+        D = (uint64_t)((uint64_t)tmp & (uint64_t) 0x800000) / (uint64_t) 8388608;
+        tmp = (tmp & (uint32_t) 0x7FFFFF) * (uint32_t) 2;
+        D = D ^ ((uint64_t)((uint64_t) crc & (uint64_t) 0x80) / (uint64_t) 128);
+        crc = (crc & 0x7FU) * 2U;
+        D = D * (uint64_t) 7;
+        crc = crc ^ (uint32_t) D;
+    }
+
+    /* Return the PMIC SPI MCRC value */
+    return (uint8_t) crc;
+}
 
 int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint16_t regAddr, uint8_t txData) {

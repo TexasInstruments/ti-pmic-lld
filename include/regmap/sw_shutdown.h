@@ -32,7 +32,7 @@
  *****************************************************************************/
 
 /**
- *   @file    pmic_sw_shutdown_priv.h
+ *   @file    regmap/sw_shutdown.h
  *
  *   @brief   This file contains the private MACRO's and function definitions
  * for PMIC SW SHUTDOWN Timer state configuration

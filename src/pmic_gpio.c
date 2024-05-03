@@ -36,19 +36,60 @@
  *
  *   @brief   This file contains the default API's for PMIC gpio
  *            configuration
- *
  */
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
-
 #include "pmic_gpio.h"
-#include "private/pmic_gpio_priv.h"
+#include "regmap/gpio.h"
+#include "pmic_io.h"
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
+/**
+ * @brief Device ID for the TPS653860XX PMIC.
+ * @ingroup Pmic_GPIOPrivMacros
+ */
+#define PMIC_DEV_BB_TPS653860XX                     (3U)
+
+/**
+ * @brief GPIO pin identifier for GPO1 of the TPS653860XX PMIC.
+ * @ingroup Pmic_GPIOPrivMacros
+ */
+#define PMIC_BB_GPO1                                (1U)
+
+/**
+ * @brief GPIO pin identifier for GPO2 of the TPS653860XX PMIC.
+ * @ingroup Pmic_GPIOPrivMacros
+ */
+#define PMIC_BB_GPO2                                (2U)
+
+/**
+ * @brief GPIO pin identifier for GPO3 of the TPS653860XX PMIC.
+ * @ingroup Pmic_GPIOPrivMacros
+ */
+#define PMIC_BB_GPO3                                (3U)
+
+/**
+ * @brief GPIO pin identifier for GPO4 of the TPS653860XX PMIC.
+ * @ingroup Pmic_GPIOPrivMacros
+ */
+#define PMIC_BB_GPO4                                (4U)
+
+/**
+ * @brief Minimum GPIO pin number for the TPS653860XX PMIC.
+ * @ingroup Pmic_GPIOPrivMacros
+ */
+#define PMIC_TPS653860XX_GPIO_PIN_MIN               (1U)
+
+/**
+ * @brief Maximum GPIO pin number for the TPS653860XX PMIC.
+ * @ingroup Pmic_GPIOPrivMacros
+ */
+#define PMIC_TPS653860XX_GPIO_PIN_MAX               (6U)
+
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */

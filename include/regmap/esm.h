@@ -30,33 +30,12 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-
-/**
- * @file   pmic_esm_priv.h
- *
- * @brief  This file contains macro definitions, structures and function
- *         prototypes for driver specific PMIC ESM configuration.
- */
-#ifndef __PMIC_ESM_PRIV_H__
-#define __PMIC_ESM_PRIV_H__
-
-/* ========================================================================== */
-/*                             Include Files                                  */
-/* ========================================================================== */
+#ifndef __PMIC_REGMAP_ESM_H__
+#define __PMIC_REGMAP_ESM_H__
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/**
- * @defgroup Pmic_ESM PMIC Error State Machine
- * @{
- * @brief Contains definitions related to PMIC ESM functionality.
- */
-
-/* ========================================================================== */
-/*                             Macros & Typedefs                              */
-/* ========================================================================== */
 
 /**
  * @defgroup Pmic_ESMRegDefs PMIC Error State Machine Register Address Definitions
@@ -84,14 +63,10 @@ extern "C" {
  * @brief Bitfield position definitions related to ESM control and configuration.
  */
 
-/**
- * @brief Bit shift position for enabling ESM in the control register.
- */
+/** @brief Bit shift position for enabling ESM in the control register. */
 #define PMIC_ESM_CTRL_REG_SHIFT     (0x00U)
 
-/**
- * @brief Bit mask for enabling ESM in the control register.
- */
+/** @brief Bit mask for enabling ESM in the control register. */
 #define PMIC_ESM_CTRL_REG_MASK      (0x01U << PMIC_ESM_CTRL_REG_SHIFT)
 
 /**
@@ -204,47 +179,8 @@ extern "C" {
  */
 /* End of Pmic_ESMFieldDefs */
 
-/**
- * @brief Maximum value for error count threshold in ESM configuration.
- */
-#define PMIC_ESM_ERR_CNT_THR_MAX (15U)
-
-/**
- * @brief Maximum value for delay in microseconds for ESM configuration.
- */
-#define PMIC_ESM_DELAY_MICROSEC_MAX (522240U)
-
-/**
- * @brief Divider value for converting delay from microseconds to internal
- * units.
- */
-#define PMIC_ESM_DELAY_MICROSEC_DIV (2048U)
-
-/**
- * @brief Minimum value for PWM pulse duration in microseconds for ESM
- * configuration.
- */
-#define PMIC_ESM_PWM_PULSE_MICROSEC_MIN (15U)
-
-/**
- * @brief Maximum value for PWM pulse duration in microseconds for ESM
- * configuration.
- */
-#define PMIC_ESM_PWM_PULSE_MICROSEC_MAX (3840U)
-
-/**
- * @brief Divider value for converting PWM pulse duration from microseconds to
- * internal units.
- */
-#define PMIC_ESM_PWM_PULSE_MICROSEC_DIV (15U)
-
-/**
- * @}
- */
-/* End of Pmic_ESM */
-
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif /* __PMIC_ESM_PRIV_H__ */
+#endif /* __PMIC_REGMAP_ESM_H__ */

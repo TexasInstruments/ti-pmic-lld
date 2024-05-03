@@ -44,11 +44,9 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
-
 #include "pmic.h"
 #include "pmic_core.h"
 #include "pmic_types.h"
-#include "private/pmic_core_priv.h"
 
 /**
  * @defgroup Pmic_GPIO PMIC General Purpose Input/Output

@@ -30,20 +30,14 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-
-/**
- *  @file  pmic_io_priv.h
- *
- *  @brief  This file contains LLD-Communication wrappers with CRC8 support for
- *          I2C/SPI
- */
-
-#ifndef __PMIC_IO_PRIV_H__
-#define __PMIC_IO_PRIV_H__
+#ifndef __PMIC_IO_H__
+#define __PMIC_IO_H__
 
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
+#include <stdint.h>
+
 #include "pmic.h"
 
 #ifdef __cplusplus
@@ -54,56 +48,21 @@ extern "C" {
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/**
- * @brief: WatchDog register I2C access
- */
-#define PMIC_WDG_PAGEADDR (0x400U)
-#define PMIC_WDG_PAGEADDR_MASK (0x3FFU)
-
-/**
- * @brief: PMIC SERIAL_IF_CONFIG register address (Bank/Page 1 Register address)
- *         Application can only read this register to check I2C1SPI/I2C2 CRC
- *         is enabled or not
- */
-#define PMIC_SERIAL_IF_CONFIG_PAGEADDR (0x100U)
-#define PMIC_SERIAL_IF_CONFIG_PAGEADDR_MASK (0xFFU)
-
-/**
- * @brief: SPI R/W bit Position
- */
-#define PMIC_IO_REQ_RW (((uint32_t)1U) << 4U)
-
-/**
- * @brief: IO Buffer Size
- */
-#define PMIC_IO_BUF_SIZE (4U)
-
-/**
- * @brief: Initial value for CRC
- */
-#define PMIC_COMM_CRC_INITIAL_VALUE (0xFF)
-
-/**
- * @brief: IO READ bits
- */
-#define PMIC_IO_READ (0x01U)
-
-/*==========================================================================*/
-/*                         Structures and Enums                             */
-/*==========================================================================*/
-
 /*==========================================================================*/
 /*                         Function Declarations                            */
 /*==========================================================================*/
-
 int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               uint16_t regAddr, uint8_t txData);
+    uint16_t regAddr,
+    uint8_t txData);
 
 int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
-                               uint16_t regAddr, uint8_t *pRxBuffer);
+    uint16_t regAddr,
+    uint8_t *pRxBuffer);
+
+uint8_t Pmic_calcCRC8(uint8_t cmd, uint8_t rdwr, uint8_t dat);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif /*__PMIC_IO_PRIV_H__*/
+#endif /*__PMIC_IO_H__*/

@@ -30,24 +30,15 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __PMIC_WDG_PRIV_H__
-#define __PMIC_WDG_PRIV_H__
+#ifndef __PMIC_REGMAP_WDG_H__
+#define __PMIC_REGMAP_WDG_H__
 
 /* ==========================================================================*/
 /*                             Include Files                                 */
 /* ==========================================================================*/
 #include <stdint.h>
 
-#include "pmic.h"
-#include "pmic_core.h"
-
-/* ========================================================================== */
-/*                             Macros & Typedefs                              */
-/* ========================================================================== */
-
-/**
- * @brief  PMIC Watchdog Register Offsets
- */
+/** @brief  PMIC Watchdog Register Offsets */
 #define PMIC_WD_CFG_REG         (0x3CU)
 #define PMIC_WD_LONGWIN_CFG_REG (0x3DU)
 #define PMIC_WD_WIN1_CFG_REG    (0x3EU)
@@ -60,9 +51,7 @@
 #define PMIC_WD_STAT_REG        (0x45U)
 #define PMIC_WD_ERR_STAT_REG    (0x46U)
 
-/**
- * @brief  PMIC Watchdog Configuration Register (WD_CFG)
- */
+/** @brief  PMIC Watchdog Configuration Register (WD_CFG) */
 #define PMIC_WD_RETURN_LONGWIN_SHIFT (0U)
 #define PMIC_WD_RETURN_LONGWIN_MASK  (uint8_t)(0x1 << PMIC_WD_RETURN_LONGWIN_SHIFT)
 #define PMIC_WD_PWRHOLD_SHIFT        (2U)
@@ -74,35 +63,25 @@
 #define PMIC_WD_TIME_CFG_SHIFT       (6U)
 #define PMIC_WD_TIME_CFG_MASK        (uint8_t)(0x3 << PMIC_WD_TIME_CFG_SHIFT)
 
-/**
- * @brief PMIC Watchdog Long Window Time Configuration Register (WD_LONGWIN_CFG)
- */
+/** @brief PMIC Watchdog Long Window Time Configuration Register (WD_LONGWIN_CFG) */
 #define PMIC_WD_LONGWIN_SHIFT        (0U)
 #define PMIC_WD_LONGWIN_MASK         (uint8_t)(0xFF << PMIC_WD_LONGWIN_SHIFT)
 
-/**
- * @brief PMIC Watchdog Window 1 Configuration Register (WD_WIN1_CFG)
- */
+/** @brief PMIC Watchdog Window 1 Configuration Register (WD_WIN1_CFG) */
 #define PMIC_WD_WIN1_SHIFT           (0U)
 #define PMIC_WD_WIN1_MASK            (uint8_t)(0xFF << PMIC_WD_WIN1_SHIFT)
 
-/**
- * @brief PMIC Watchdog Window 2 Configuration Register (WD_WIN2_CFG)
- */
+/** @brief PMIC Watchdog Window 2 Configuration Register (WD_WIN2_CFG) */
 #define PMIC_WD_WIN2_SHIFT           (0U)
 #define PMIC_WD_WIN2_MASK            (uint8_t)(0xFF << PMIC_WD_WIN2_SHIFT)
 
-/**
- * @brief PMIC Watchdog Threshold Value Configuration Register (WD_TH_CFG)
- */
+/** @brief PMIC Watchdog Threshold Value Configuration Register (WD_TH_CFG) */
 #define PMIC_WD_TH1_SHIFT            (3U)
 #define PMIC_WD_TH1_MASK             (uint8_t)(0x7 << PMIC_WD_TH1_SHIFT)
 #define PMIC_WD_TH2_SHIFT            (0U)
 #define PMIC_WD_TH2_MASK             (uint8_t)(0x7 << PMIC_WD_TH2_SHIFT)
 
-/**
- * @brief PMIC Watchdog Question & Answer Configuration Register (WD_QA_CFG)
- */
+/** @brief PMIC Watchdog Question & Answer Configuration Register (WD_QA_CFG) */
 #define PMIC_WD_QA_SEED_SHIFT        (0U)
 #define PMIC_WD_QA_SEED_MASK         (uint8_t)(0xF << PMIC_WD_QA_SEED_SHIFT)
 #define PMIC_WD_QA_LFSR_SHIFT        (4U)
@@ -110,9 +89,7 @@
 #define PMIC_WD_QA_FDBK_SHIFT        (6U)
 #define PMIC_WD_QA_FDBK_MASK         (uint8_t)(0x3 << PMIC_WD_QA_FDBK_SHIFT)
 
-/**
- * @brief PMIC Watchdog Interrupt Configuration Register (WD_INT_CFG)
- */
+/** @brief PMIC Watchdog Interrupt Configuration Register (WD_INT_CFG) */
 #define PMIC_WD_TH1_INT_MASK_SHIFT       (0U)
 #define PMIC_WD_TH1_INT_MASK_MASK        (uint8_t)(0x1 << PMIC_WD_TH1_INT_MASK_SHIFT)
 #define PMIC_WD_TH1_INT_CFG_SHIFT        (1U)
@@ -122,23 +99,17 @@
 #define PMIC_WD_TH2_INT_CFG_SHIFT        (5U)
 #define PMIC_WD_TH2_INT_CFG_MASK         (uint8_t)(0x3 << PMIC_WD_TH2_INT_CFG_SHIFT)
 
-/**
- * @brief PMIC Watchdog Question & Answer Count Register (WD_QA_CNT)
- */
+/** @brief PMIC Watchdog Question & Answer Count Register (WD_QA_CNT) */
 #define PMIC_WD_QUESTION_SHIFT (0U)
 #define PMIC_WD_QUESTION_MASK  (uint8_t)(0xF << PMIC_WD_QUESTION_SHIFT)
 #define PMIC_WD_ANSW_CNT_SHIFT (4U)
 #define PMIC_WD_ANSW_CNT_MASK  (uint8_t)(0x3 << PMIC_WD_ANSW_CNT_SHIFT)
 
-/**
- * @brief PMIC Watchdog Answer Register (WD_ANSWER_REG)
- */
+/** @brief PMIC Watchdog Answer Register (WD_ANSWER_REG) */
 #define PMIC_WD_ANSWER_SHIFT             (0U)
 #define PMIC_WD_ANSWER_MASK              (uint8_t)(0xFF << PMIC_WD_ANSWER_SHIFT)
 
-/**
- * @brief PMIC Watchdog Status Register (WD_STAT)
- */
+/** @brief PMIC Watchdog Status Register (WD_STAT) */
 #define PMIC_WD_ERR_CNT_SHIFT        (0U)
 #define PMIC_WD_ERR_CNT_MASK         (uint8_t)(0xF << PMIC_WD_ERR_CNT_SHIFT)
 #define PMIC_WD_BAD_EVENT_SHIFT      (4U)
@@ -148,9 +119,7 @@
 #define PMIC_WD_FIRST_OK_SHIFT       (7U)
 #define PMIC_WD_FIRST_OK_MASK        (uint8_t)(0x1 << PMIC_WD_FIRST_OK_SHIFT)
 
-/**
- * @brief PMIC Watchdog Error Status Register (WD_ERR_STAT)
- */
+/** @brief PMIC Watchdog Error Status Register (WD_ERR_STAT) */
 #define PMIC_WD_TH2_ERR_SHIFT      (0x07U)
 #define PMIC_WD_TH2_ERR_MASK       (uint8_t)(0x1 << PMIC_WD_TH2_ERR_SHIFT)
 #define PMIC_WD_TH1_ERR_SHIFT      (0x06U)
@@ -168,41 +137,4 @@
 #define PMIC_WD_TMO_SHIFT          (0x00U)
 #define PMIC_WD_TMO_MASK           (uint8_t)(0x1 << PMIC_WD_TMO_SHIFT)
 
-/**
- * @brief  Watchdog Long Window Max, Min and Divisor macros
- */
-/** @brief  Valid only for PG2.0 */
-#define PMIC_WD_LONGWIN_80_MS         (uint32_t)(80U)
-#define PMIC_WD_LONGWIN_125_MS        (uint32_t)(125U)
-#define PMIC_WD_LONGWIN_8000_MS       (uint32_t)(8000U)
-
-#define PMIC_WD_LONGWIN_MS_DIV_125    (uint32_t)(125U)
-#define PMIC_WD_LONGWIN_MS_DIV_4000   (uint32_t)(4000U)
-
-#define PMIC_WD_LONGWIN_MS_MIN_PG_2_0 (uint32_t)(125U)
-#define PMIC_WD_LONGWIN_MS_MAX_PG_2_0 (uint32_t)(772000U)
-
-#define PMIC_WD_LONGWIN_RANGE_LOW     (0x0U)
-#define PMIC_WD_LONGWIN_RANGE_MID     (0x1U)
-#define PMIC_WD_LONGWIN_RANGE_HI      (0x40U)
-
-/** @brief  Valid only for PG1.0 */
-#define PMIC_WD_LONGWIN_100_MS        (uint32_t)(100U)
-#define PMIC_WD_LONGWIN_MS_MIN        (uint32_t)(3000U)
-#define PMIC_WD_LONGWIN_MS_MAX        (uint32_t)(765000U)
-#define PMIC_WD_LONGWIN_MS_DIV        (uint32_t)(3000U)
-
-/**
- * @brief  Watchdog Window1 Max, Min and Divisor macros
- */
-#define PMIC_WD_WIN1_2_US_MIN         (uint32_t)(550U)
-#define PMIC_WD_WIN1_2_US_MAX         (uint32_t)(70400U)
-#define PMIC_WD_WIN1_2_US_DIV         (uint32_t)(550U)
-
-/**
- * @name PMIC Watchdog Min Wait Count
- * @brief Minimum number of iterations to wait for a Good/Bad event
- */
-#define PMIC_WDG_WAIT_CNT_MIN_VAL    (30U)
-
-#endif /* __PMIC_WDG_PRIV_H__ */
+#endif /* __PMIC_REGMAP_WDG_H__ */

@@ -45,7 +45,6 @@
 /* ========================================================================== */
 
 #include "pmic.h"
-#include "private/pmic_core_priv.h"
 #include "pmic_types.h"
 
 #ifdef __cplusplus
@@ -904,6 +903,19 @@ extern "C" {
  * @ingroup Pmic_CoreMacros
  */
 #define PMIC_SAFE_OUT2_PRESCALE_65MS (0x07U)
+
+/**
+ *  @name   PMIC DIAG OUT Pin Control Configuration
+ *
+ *  @{
+ */
+/** @brief AMUX Enabled */
+#define PMIC_BB_DIAG_OUT_AMUX_ENABLE 	(1U)
+/** @brief DMUX Enabled */
+#define PMIC_BB_DIAG_OUT_DMUX_ENABLE 	(2U)
+/** @brief AMUX/DMUX Disabled */
+#define PMIC_BB_DIAG_OUT_DISABLE 		(0U)
+/*  @} */
 
 /**
  * @}

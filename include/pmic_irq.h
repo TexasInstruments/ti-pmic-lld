@@ -43,10 +43,7 @@
 /* ==========================================================================*/
 /*                             Include Files                                 */
 /* ==========================================================================*/
-
 #include "pmic_core.h"
-#include "private/pmic_core_priv.h"
-#include "private/pmic_irq_priv.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -137,15 +134,37 @@ extern "C" {
 
 /**
  * @brief Structure for storing PMIC interrupt status.
+ * @ingroup Pmic_IRQStructures
  *
  * @param intStatus Array to store interrupt status.
- *
- * @ingroup Pmic_IRQStructures
  */
 typedef struct Pmic_IrqStatus_s {
     uint32_t intStatus[4];
-}
-Pmic_IrqStatus_t;
+} Pmic_IrqStatus_t;
+
+/**
+ * @brief Structure for configuring PMIC interrupt handling.
+ * @ingroup Pmic_IRQStructures
+ */
+typedef struct Pmic_IntrCfg_s {
+    /**< Address of the interrupt clear register. */
+    uint16_t intrClrRegAddr;
+    /**< Bit position of the interrupt in the clear register. */
+    uint8_t intrClrBitPos;
+    /**< Address of the interrupt mask register. */
+    uint16_t intrMaskRegAddr;
+    /**< Bit position of the interrupt in the mask register. */
+    uint8_t intrMaskBitPos;
+} Pmic_IntrCfg_t;
+
+/**
+ * @brief Structure for configuring GPIO interrupt type.
+ * @ingroup Pmic_IRQStructures
+ */
+typedef struct Pmic_GpioIntrTypeCfg_s {
+    uint8_t gpioIntrMaskRegAddr; /**< Address of the GPIO interrupt mask register. */
+    uint8_t gpioMaskBitPos;      /**< Bit position of the GPIO interrupt mask. */
+} Pmic_GpioIntrTypeCfg_t;
 
 /**
  * @}

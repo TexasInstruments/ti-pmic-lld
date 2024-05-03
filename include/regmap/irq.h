@@ -30,36 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-
-/**
- * @file   pmic_irq_priv.h
- *
- * @brief  The macro definitions, structures and function prototypes for
- *         configuring PMIC IRQ.
- */
-
-#ifndef __PMIC_IRQ_PRIV_H__
-#define __PMIC_IRQ_PRIV_H__
-
-/* ========================================================================= */
-/*                             Include Files                                 */
-/* ========================================================================= */
-
-#include "pmic_irq.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/**
- * @defgroup Pmic_IRQ PMIC Interrupt Request
- * @{
- * @brief Contains definitions related to PMIC IRQ functionality.
- */
-
-/* ========================================================================= */
-/*                             Macros & Typedefs                             */
-/* ========================================================================= */
+#ifndef __PMIC_REGMAP_IRQ_H__
+#define __PMIC_REGMAP_IRQ_H__
 
 /**
  * @defgroup Pmic_IRQPrivMacros PMIC Interrupt Request Private Macros
@@ -1145,95 +1117,4 @@ extern "C" {
  */
 #define PMIC_BB_IRQ_GPO_3_INT_MASK_NUM      (3U)
 
-/**
- * @}
- */
-/* End of Pmic_BB_IRQMacros */
-
-/*==========================================================================*/
-/*                         Structures and Enums                             */
-/*==========================================================================*/
-
-/**
- * @defgroup Pmic_IRQPrivStructures PMIC IRQ Private Structures
- * @{
- * @ingroup Pmic_IRQ
- * @brief Contains private structures used in the IRQ module of PMIC driver.
- */
-
-
-/**
- * @brief Structure for configuring PMIC interrupt handling.
- *
- * @ingroup Pmic_IRQPrivStructures
- */
-typedef struct Pmic_IntrCfg_s {
-    /**< Address of the interrupt clear register. */
-    uint16_t intrClrRegAddr;
-    /**< Bit position of the interrupt in the clear register. */
-    uint8_t intrClrBitPos;
-    /**< Address of the interrupt mask register. */
-    uint16_t intrMaskRegAddr;
-    /**< Bit position of the interrupt in the mask register. */
-    uint8_t intrMaskBitPos;
-} Pmic_IntrCfg_t;
-
-/**
- * @brief Structure for configuring GPIO interrupt type.
- */
-typedef struct Pmic_GpioIntrTypeCfg_s {
-    uint8_t gpioIntrMaskRegAddr; /**< Address of the GPIO interrupt mask register. */
-    uint8_t gpioMaskBitPos;      /**< Bit position of the GPIO interrupt mask. */
-}
-Pmic_GpioIntrTypeCfg_t;
-
-/**
- * @}
- */
-/* End of Pmic_IRQPrivStructures */
-
-/*==========================================================================*/
-/*                         Function Declarations                            */
-/*==========================================================================*/
-
-/**
- * @defgroup Pmic_BB_IRQFunctions PMIC Interrupt Request Blackbird Functions
- * @{
- * @ingroup Pmic_IRQ
- * @brief Contains black-bird TPS65386 functions used in the IRQ module of PMIC driver.
- */
-
-/**
- * @brief   Get TPS65386x Interrupt config.
- *          This function is used to get TPS65386x Interrupt configuration.
- *
- * @param   pIntrCfg to store tps65386x Interrupt configuration.
- * @ingroup Pmic_BB_IRQFunctions
- */
-void pmic_get_bb_intrCfg(Pmic_IntrCfg_t ** pIntrCfg);
-
-/**
- * @brief   Get TPS65386x Interrupt config.
- *          This function is used to get TPS65386x Interrupt configuration.
- *
-* @param   pGpioIntrCfg to store tps65386x Interrupt configuration.
-* @ingroup Pmic_BB_IRQFunctions
-*/
- void pmic_get_bb_intrGpioCfg(Pmic_GpioIntrTypeCfg_t ** pGpioIntrCfg);
-
-/**
- * @}
- */
-/* End of Pmic_BB_IRQFunctions */
-
-/**
- * @}
- */
-/* End of Pmic_IRQ */
-
-#ifdef __cplusplus
-}
-
-#endif /* __cplusplus */
-
-#endif /* __PMIC_IRQ_PRIV_H__ */
+#endif /* __PMIC_REGMAP_IRQ_H__ */

@@ -34,8 +34,43 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
+#include "pmic.h"
 #include "pmic_wdg.h"
-#include "private/pmic_core_priv.h"
+#include "pmic_core.h"
+#include "pmic_io.h"
+#include "regmap/wdg.h"
+
+/* ========================================================================== */
+/*                             Macros & Typedefs                              */
+/* ========================================================================== */
+/**
+ * @brief Watchdog Long Window Max, Min and Divisor macros
+ * @note  Valid only for PG2.0
+ */
+#define PMIC_WD_LONGWIN_80_MS         (uint32_t)(80U)
+#define PMIC_WD_LONGWIN_125_MS        (uint32_t)(125U)
+#define PMIC_WD_LONGWIN_8000_MS       (uint32_t)(8000U)
+
+#define PMIC_WD_LONGWIN_MS_DIV_125    (uint32_t)(125U)
+#define PMIC_WD_LONGWIN_MS_DIV_4000   (uint32_t)(4000U)
+
+#define PMIC_WD_LONGWIN_MS_MIN_PG_2_0 (uint32_t)(125U)
+#define PMIC_WD_LONGWIN_MS_MAX_PG_2_0 (uint32_t)(772000U)
+
+#define PMIC_WD_LONGWIN_RANGE_LOW     (0x0U)
+#define PMIC_WD_LONGWIN_RANGE_MID     (0x1U)
+#define PMIC_WD_LONGWIN_RANGE_HI      (0x40U)
+
+/** @note Valid only for PG1.0 */
+#define PMIC_WD_LONGWIN_100_MS        (uint32_t)(100U)
+#define PMIC_WD_LONGWIN_MS_MIN        (uint32_t)(3000U)
+#define PMIC_WD_LONGWIN_MS_MAX        (uint32_t)(765000U)
+#define PMIC_WD_LONGWIN_MS_DIV        (uint32_t)(3000U)
+
+/** @brief  Watchdog Window1 Max, Min and Divisor macros */
+#define PMIC_WD_WIN1_2_US_MIN         (uint32_t)(550U)
+#define PMIC_WD_WIN1_2_US_MAX         (uint32_t)(70400U)
+#define PMIC_WD_WIN1_2_US_DIV         (uint32_t)(550U)
 
 /* ========================================================================== */
 /*                          Function Definitions                              */

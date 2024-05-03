@@ -30,49 +30,19 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-
-/**
- *   @file    pmic_ilim_priv.h
- *
- *   @brief   This file contains the private MACRO's and function definitions for
- *            PMIC ILIM configuration
- *
- */
-
-#ifndef __PMIC_ILIM_PRIV_H__
-#define __PMIC_ILIM_PRIV_H__
-
-/**
- * @defgroup Pmic_ILIM PMIC ILIM Module
- * @{
- * @brief Contains definitions related to PMIC ILIM functionality.
- */
-
+#ifndef __PMIC_REGMAP_ILIM_H__
+#define __PMIC_REGMAP_ILIM_H__
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
 
-/**
- * @defgroup Pmic_ILIMPrivMacros PMIC ILIM Private Macros
- * @{
- * @ingroup Pmic_ILIM
- * @brief Contains private macros used in the ILIM module of PMIC driver.
- */
-
-
-/**
- * @brief  PMIC ILIM register Addresses
- * @ingroup Pmic_ILIMPrivMacros
- */
+/** @brief  PMIC ILIM register Addresses */
 #define PMIC_ILIM_CFG_REGADDR           (0x60U)
 #define PMIC_ILIM_DGL_CFG_REGADDR       (0x61U)
 #define PMIC_ILIM_STAT_REGADDR          (0x62U)
 
-/**
- * @brief  Shift values for PMIC ILIM Config registers
- * @ingroup Pmic_ILIMPrivMacros
- */
+/** @brief  Shift values for PMIC ILIM Config registers */
 #define PMIC_LDO1_ILIM_CFG_SHIFT        (0x00U)
 #define PMIC_LDO2_ILIM_CFG_SHIFT        (0x01U)
 #define PMIC_LDO3_ILIM_CFG_SHIFT        (0x02U)
@@ -80,10 +50,7 @@
 #define PMIC_PLDO1_ILIM_CFG_SHIFT       (0x04U)
 #define PMIC_PLDO2_ILIM_CFG_SHIFT       (0x05U)
 
-/**
- * @brief  Shift values for PMIC ILIM DGL Config registers
- * @ingroup Pmic_ILIMPrivMacros
- */
+/** @brief  Shift values for PMIC ILIM DGL Config registers */
 #define PMIC_LDO1_ILIM_DGL_CFG_SHIFT    (0x00U)
 #define PMIC_LDO2_ILIM_DGL_CFG_SHIFT    (0x01U)
 #define PMIC_LDO3_ILIM_DGL_CFG_SHIFT    (0x02U)
@@ -91,10 +58,7 @@
 #define PMIC_PLDO1_ILIM_DGL_CFG_SHIFT   (0x04U)
 #define PMIC_PLDO2_ILIM_DGL_CFG_SHIFT   (0x05U)
 
-/**
- * @brief  Shift values for PMIC ILIM Error registers
- * @ingroup Pmic_ILIMPrivMacros
- */
+/** @brief  Shift values for PMIC ILIM Error registers */
 #define PMIC_LDO1_ILIM_ERR_SHIFT        (0x00U)
 #define PMIC_LDO2_ILIM_ERR_SHIFT        (0x01U)
 #define PMIC_LDO3_ILIM_ERR_SHIFT        (0x02U)
@@ -103,10 +67,7 @@
 #define PMIC_PLDO2_ILIM_ERR_SHIFT       (0x05U)
 #define PMIC_BB_AVG_ILIM_ERR_SHIFT      (0x06U)
 
-/**
- * @brief  Masks for PMIC ILIM Config registers
- * @ingroup Pmic_ILIMPrivMacros
- */
+/** @brief  Masks for PMIC ILIM Config registers */
 #define PMIC_LDO1_ILIM_CFG_MASK  ((uint8_t)(0x01U << PMIC_LDO1_ILIM_CFG_SHIFT))
 #define PMIC_LDO2_ILIM_CFG_MASK  ((uint8_t)(0x01U << PMIC_LDO2_ILIM_CFG_SHIFT))
 #define PMIC_LDO3_ILIM_CFG_MASK  ((uint8_t)(0x01U << PMIC_LDO3_ILIM_CFG_SHIFT))
@@ -114,10 +75,7 @@
 #define PMIC_PLDO1_ILIM_CFG_MASK ((uint8_t)(0x01U << PMIC_PLDO1_ILIM_CFG_SHIFT))
 #define PMIC_PLDO2_ILIM_CFG_MASK ((uint8_t)(0x01U << PMIC_PLDO2_ILIM_CFG_SHIFT))
 
-/**
- * @brief  Masks for PMIC ILIM DGL Config registers
- * @ingroup Pmic_ILIMPrivMacros
- */
+/** @brief  Masks for PMIC ILIM DGL Config registers */
 #define PMIC_LDO1_ILIM_DGL_CFG_MASK  ((uint8_t)(0x01U << PMIC_LDO1_ILIM_DGL_CFG_SHIFT))
 #define PMIC_LDO2_ILIM_DGL_CFG_MASK  ((uint8_t)(0x01U << PMIC_LDO2_ILIM_DGL_CFG_SHIFT))
 #define PMIC_LDO3_ILIM_DGL_CFG_MASK  ((uint8_t)(0x01U << PMIC_LDO3_ILIM_DGL_CFG_SHIFT))
@@ -125,10 +83,7 @@
 #define PMIC_PLDO1_ILIM_DGL_CFG_MASK ((uint8_t)(0x01U << PMIC_PLDO1_ILIM_DGL_CFG_SHIFT))
 #define PMIC_PLDO2_ILIM_DGL_CFG_MASK ((uint8_t)(0x01U << PMIC_PLDO2_ILIM_DGL_CFG_SHIFT))
 
-/**
- * @brief  Masks for PMIC ILIM Error registers
- * @ingroup Pmic_ILIMPrivMacros
- */
+/** @brief  Masks for PMIC ILIM Error registers */
 #define PMIC_LDO1_ILIM_ERR_MASK   ((uint8_t)(0x01U << PMIC_LDO1_ILIM_ERR_SHIFT))
 #define PMIC_LDO2_ILIM_ERR_MASK   ((uint8_t)(0x01U << PMIC_LDO2_ILIM_ERR_SHIFT))
 #define PMIC_LDO3_ILIM_ERR_MASK   ((uint8_t)(0x01U << PMIC_LDO3_ILIM_ERR_SHIFT))
@@ -138,10 +93,7 @@
 #define PMIC_BB_AVG_ILIM_ERR_MASK ((uint8_t)(0x01U << PMIC_BB_AVG_ILIM_ERR_SHIFT))
 
 
-/**
- * @brief  Configuration, De-Glitch and error data for PMIC ILIM Error registers
- * @ingroup Pmic_ILIMPrivMacros
- */
+/** @brief  Configuration, De-Glitch and error data for PMIC ILIM Error registers */
 #define PMIC_ILIM_CFG_DATA1             (0x00U)
 #define PMIC_ILIM_CFG_DATA2             (0x01U)
 #define PMIC_ILIM_DGL_CFG_DATA1         (0x00U)
@@ -149,14 +101,4 @@
 #define PMIC_ILIM_AFTER_CLEAR_DATA      (0x00U)
 #define PMIC_ILIM_ERR_CLEAR_DATA        (0x01U)
 
-/**
- * @}
- */
-/* End of Pmic_ILIMPrivMacros */
-
-/**
- * @}
- */
-/* End of Pmic_ILIM */
-
-#endif /* __PMIC_ILIM_PRIV_H__ */
+#endif /* __PMIC_REGMAP_ILIM_H__ */

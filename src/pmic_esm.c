@@ -41,13 +41,32 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
-
 #include "pmic_esm.h"
-#include "private/pmic_esm_priv.h"
+#include "regmap/esm.h"
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
+/** @brief Maximum value for error count threshold in ESM configuration. */
+#define PMIC_ESM_ERR_CNT_THR_MAX (15U)
+
+/** @brief Maximum value for delay in microseconds for ESM configuration. */
+#define PMIC_ESM_DELAY_MICROSEC_MAX (522240U)
+
+/** @brief Divider value for converting delay from microseconds to internal units. */
+#define PMIC_ESM_DELAY_MICROSEC_DIV (2048U)
+
+/** @brief Minimum value for PWM pulse duration in microseconds for ESM
+ * configuration. */
+#define PMIC_ESM_PWM_PULSE_MICROSEC_MIN (15U)
+
+/** @brief Maximum value for PWM pulse duration in microseconds for ESM
+ * configuration. */
+#define PMIC_ESM_PWM_PULSE_MICROSEC_MAX (3840U)
+
+/** @brief Divider value for converting PWM pulse duration from microseconds to
+ * internal units. */
+#define PMIC_ESM_PWM_PULSE_MICROSEC_DIV (15U)
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */

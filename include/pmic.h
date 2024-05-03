@@ -479,6 +479,32 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
  */
 int32_t Pmic_deinit(Pmic_CoreHandle_t *pPmicCoreHandle);
 
+/** @brief Set a bit field value in `pRegVal`. */
+static inline void Pmic_setBitField(uint8_t *pRegVal, uint8_t shift, uint8_t mask, uint8_t value)
+{
+    *pRegVal = ((*pRegVal & ~mask) | ((value << shift) & mask));
+}
+
+/** @brief Set a bit field value in `pRegVal`, accepts a boolean `value`. */
+static inline void Pmic_setBitField_b(uint8_t *pRegVal, uint8_t shift, uint8_t mask, bool value)
+{
+    Pmic_setBitField(pRegVal, shift, mask, value ? 1U : 0U);
+}
+
+/** @brief Get a bit field value from `regData`. */
+static inline uint8_t Pmic_getBitField(uint8_t regData, uint8_t shift, uint8_t mask)
+{
+    return ((regData & mask) >> shift);
+}
+
+/** @brief Get a bit field value from `regData`, returned as a boolean type. */
+static inline bool Pmic_getBitField_b(uint8_t regData, uint8_t shift, uint8_t mask)
+{
+    return Pmic_getBitField(regData, shift, mask) == 1;
+}
+
+int32_t Pmic_checkPmicCoreHandle(const Pmic_CoreHandle_t *handle);
+
 #ifdef __cplusplus
 }
 

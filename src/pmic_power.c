@@ -40,12 +40,52 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
-#include "pmic_core.h"
 #include "pmic_power.h"
+#include "regmap/power.h"
+
+#include "pmic_core.h"
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
+#define PMIC_POWER_LDO_MAX                  (4U)
+#define PMIC_POWER_LDO_MIN                  (1U)
+#define PMIC_POWER_PLDO_MAX                 (2U)
+#define PMIC_POWER_PLDO_MIN                 (1U)
+
+#define PMIC_LDO1                           (1U)
+#define PMIC_LDO2                           (2U)
+#define PMIC_LDO3                           (3U)
+#define PMIC_LDO4                           (4U)
+
+#define PMIC_PLDO1                          (1U)
+#define PMIC_PLDO2                          (2U)
+
+#define PMIC_EXT_VMON1                      (1U)
+#define PMIC_EXT_VMON2                      (2U)
+
+#define PMIC_EN_OUT1                        (1U)
+#define PMIC_EN_OUT2                        (2U)
+#define PMIC_EN_OUT_ALL                     (3U)
+
+/* Define PMIC Power EN-OUT Switch case macros*/
+#define PMIC_ONLY_ENOUT1_EN                 (0b01U)
+#define PMIC_ONLY_ENOUT2_EN                 (0b10U)
+#define PMIC_BOTH_ENOUT1_ENOUT2_EN          (0b11U)
+
+/* Blackbird specific */
+#define PMIC_BB_CFG_STATUS_NOT_INCLUDED 	(0x0U)
+#define PMIC_BB_CFG_STATUS_INCLUDED 		(0x1U)
+
+#define PMIC_BB_CFG_DRSS_DISABLED 			(0x0U)
+#define PMIC_BB_CFG_DRSS_ENABLED 			(0x1U)
+
+#define PMIC_BB_CFG_4V 						(0x0U)
+#define PMIC_BB_CFG_SAME_BBCFG 				(0x1U)
+
+#define PMIC_BB_CFG_BB_LVL_CFG_4_3V 		(0x0U)
+#define PMIC_BB_CFG_BB_LVL_CFG_5V 			(0x1U)
+#define PMIC_BB_CFG_BB_LVL_CFG_6V 			(0x2U)
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */

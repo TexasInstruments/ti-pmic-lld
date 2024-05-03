@@ -30,41 +30,102 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-
-/**
- * @file   pmic_gpio_priv.h
- *
- * @brief  This file contains macro definitions, structures and function
- *         prototypes for driver specific PMIC GPIO private configuration.
- */
-
-#ifndef __PMIC_GPIO_PRIV_H__
-#define __PMIC_GPIO_PRIV_H__
-
-/* ========================================================================== */
-/*                             Include Files                                  */
-/* ========================================================================== */
+#ifndef __PMIC_REGMAP_GPIO_H__
+#define __PMIC_REGMAP_GPIO_H__
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /**
- * @defgroup Pmic_GPIO PMIC General Purpose Input/Output
- * @{
- * @brief Contains definitions related to PMIC GPIO functionality.
+ * @brief Register address for configuring GPI 1.
+ * @ingroup Pmic_GPIOPrivMacros
  */
-
-/* ========================================================================== */
-/*                             Macros & Typedefs                              */
-/* ========================================================================== */
+#define PMIC_GPI_1_CONF_REGADDR                     (0x7EU)
 
 /**
- * @defgroup Pmic_GPIOPrivMacros PMIC General Purpose Input/Output Private Macros
- * @{
- * @ingroup Pmic_GPIO
- * @brief Contains private macros used in the GPIO module of PMIC driver.
+ * @brief Register address for configuring GPO 1.
+ * @ingroup Pmic_GPIOPrivMacros
  */
+#define PMIC_GPO_1_CONF_REGADDR                     (0x7CU)
+
+/**
+ * @brief Register address for configuring GPO 2.
+ * @ingroup Pmic_GPIOPrivMacros
+ */
+#define PMIC_GPO_2_CONF_REGADDR                     (0x7DU)
+
+/**
+ * @brief Bit shift value for GPI 1 within its configuration register.
+ * @ingroup Pmic_GPIOPrivMacros
+ */
+#define PMIC_GPI_1_GPI_1_SHIFT                      (0x00U)
+
+/**
+ * @brief Bit shift value for GPI 4 within its configuration register.
+ * @ingroup Pmic_GPIOPrivMacros
+ */
+#define PMIC_GPI_4_GPI_2_SHIFT                      (0x01U)
+
+/**
+ * @brief Bit shift value for GPO 1 within its configuration register.
+ * @ingroup Pmic_GPIOPrivMacros
+ */
+#define PMIC_GPO_1_GPO_1_SHIFT                      (0x00U)
+
+/**
+ * @brief Bit shift value for GPO 2 within its configuration register.
+ * @ingroup Pmic_GPIOPrivMacros
+ */
+#define PMIC_GPO_2_GPI_3_SHIFT                      (0x02U)
+
+/**
+ * @brief Bit shift value for GPO 3 within its configuration register.
+ * @ingroup Pmic_GPIOPrivMacros
+ */
+#define PMIC_GPO_3_GPO_1_SHIFT                      (0x00U)
+
+/**
+ * @brief Bit shift value for GPO 4 within its configuration register.
+ * @ingroup Pmic_GPIOPrivMacros
+ */
+#define PMIC_GPO_4_GPO_3_SHIFT                      (0x03U)
+
+/**
+ * @brief Mask for GPI 1 within its configuration register.
+ * @ingroup Pmic_GPIOPrivMacros
+ */
+#define PMIC_GPI_1_GPI_1_MASK                       (uint8_t)(0x01U << PMIC_GPI_1_GPI_1_SHIFT)
+
+/**
+ * @brief Mask for GPI 4 within its configuration register.
+ * @ingroup Pmic_GPIOPrivMacros
+ */
+#define PMIC_GPI_4_GPI_2_MASK                       (uint8_t)(0x03U << PMIC_GPI_4_GPI_2_SHIFT)
+
+/**
+ * @brief Mask for GPO 2 within its configuration register.
+ * @ingroup Pmic_GPIOPrivMacros
+ */
+#define PMIC_GPO_1_GPO_2_MASK                       (uint8_t)(0x07U << PMIC_GPO_1_GPO_1_SHIFT)
+
+/**
+ * @brief Mask for GPO 3 within its configuration register.
+ * @ingroup Pmic_GPIOPrivMacros
+ */
+#define PMIC_GPO_2_GPO_3_MASK                       (uint8_t)(0x07U << PMIC_GPO_2_GPI_3_SHIFT)
+
+/**
+ * @brief Mask for GPO 2 within its configuration register.
+ * @ingroup Pmic_GPIOPrivMacros
+ */
+#define PMIC_GPO_3_GPO_2_MASK                       (uint8_t)(0x07U << PMIC_GPO_3_GPO_1_SHIFT)
+
+/**
+ * @brief Mask for GPO 3 within its configuration register.
+ * @ingroup Pmic_GPIOPrivMacros
+ */
+#define PMIC_GPO_4_GPO_3_MASK                       (uint8_t)(0x07U << PMIC_GPO_4_GPO_3_SHIFT)
 
 /**
  * @brief Bit shift value for selecting GPIO configuration in GPIOX_CONF register.
@@ -281,138 +342,6 @@ extern "C" {
  * @ingroup Pmic_GPIOPrivMacros
  */
 #define PMIC_GPIO_INT_MASK                          (1U)
-
-/**
- * @brief Device ID for the TPS653860XX PMIC.
- * @ingroup Pmic_GPIOPrivMacros
- */
-#define PMIC_DEV_BB_TPS653860XX                     (3U)
-
-/**
- * @brief GPIO pin identifier for GPO1 of the TPS653860XX PMIC.
- * @ingroup Pmic_GPIOPrivMacros
- */
-#define PMIC_BB_GPO1                                (1U)
-
-/**
- * @brief GPIO pin identifier for GPO2 of the TPS653860XX PMIC.
- * @ingroup Pmic_GPIOPrivMacros
- */
-#define PMIC_BB_GPO2                                (2U)
-
-/**
- * @brief GPIO pin identifier for GPO3 of the TPS653860XX PMIC.
- * @ingroup Pmic_GPIOPrivMacros
- */
-#define PMIC_BB_GPO3                                (3U)
-
-/**
- * @brief GPIO pin identifier for GPO4 of the TPS653860XX PMIC.
- * @ingroup Pmic_GPIOPrivMacros
- */
-#define PMIC_BB_GPO4                                (4U)
-
-/**
- * @brief Minimum GPIO pin number for the TPS653860XX PMIC.
- * @ingroup Pmic_GPIOPrivMacros
- */
-#define PMIC_TPS653860XX_GPIO_PIN_MIN               (1U)
-
-/**
- * @brief Maximum GPIO pin number for the TPS653860XX PMIC.
- * @ingroup Pmic_GPIOPrivMacros
- */
-#define PMIC_TPS653860XX_GPIO_PIN_MAX               (6U)
-
-/**
- * @brief Register address for configuring GPI 1.
- * @ingroup Pmic_GPIOPrivMacros
- */
-#define PMIC_GPI_1_CONF_REGADDR                     (0x7EU)
-
-/**
- * @brief Register address for configuring GPO 1.
- * @ingroup Pmic_GPIOPrivMacros
- */
-#define PMIC_GPO_1_CONF_REGADDR                     (0x7CU)
-
-/**
- * @brief Register address for configuring GPO 2.
- * @ingroup Pmic_GPIOPrivMacros
- */
-#define PMIC_GPO_2_CONF_REGADDR                     (0x7DU)
-
-/**
- * @brief Bit shift value for GPI 1 within its configuration register.
- * @ingroup Pmic_GPIOPrivMacros
- */
-#define PMIC_GPI_1_GPI_1_SHIFT                      (0x00U)
-
-/**
- * @brief Bit shift value for GPI 4 within its configuration register.
- * @ingroup Pmic_GPIOPrivMacros
- */
-#define PMIC_GPI_4_GPI_2_SHIFT                      (0x01U)
-
-/**
- * @brief Bit shift value for GPO 1 within its configuration register.
- * @ingroup Pmic_GPIOPrivMacros
- */
-#define PMIC_GPO_1_GPO_1_SHIFT                      (0x00U)
-
-/**
- * @brief Bit shift value for GPO 2 within its configuration register.
- * @ingroup Pmic_GPIOPrivMacros
- */
-#define PMIC_GPO_2_GPI_3_SHIFT                      (0x02U)
-
-/**
- * @brief Bit shift value for GPO 3 within its configuration register.
- * @ingroup Pmic_GPIOPrivMacros
- */
-#define PMIC_GPO_3_GPO_1_SHIFT                      (0x00U)
-
-/**
- * @brief Bit shift value for GPO 4 within its configuration register.
- * @ingroup Pmic_GPIOPrivMacros
- */
-#define PMIC_GPO_4_GPO_3_SHIFT                      (0x03U)
-
-/**
- * @brief Mask for GPI 1 within its configuration register.
- * @ingroup Pmic_GPIOPrivMacros
- */
-#define PMIC_GPI_1_GPI_1_MASK                       (uint8_t)(0x01U << PMIC_GPI_1_GPI_1_SHIFT)
-
-/**
- * @brief Mask for GPI 4 within its configuration register.
- * @ingroup Pmic_GPIOPrivMacros
- */
-#define PMIC_GPI_4_GPI_2_MASK                       (uint8_t)(0x03U << PMIC_GPI_4_GPI_2_SHIFT)
-
-/**
- * @brief Mask for GPO 2 within its configuration register.
- * @ingroup Pmic_GPIOPrivMacros
- */
-#define PMIC_GPO_1_GPO_2_MASK                       (uint8_t)(0x07U << PMIC_GPO_1_GPO_1_SHIFT)
-
-/**
- * @brief Mask for GPO 3 within its configuration register.
- * @ingroup Pmic_GPIOPrivMacros
- */
-#define PMIC_GPO_2_GPO_3_MASK                       (uint8_t)(0x07U << PMIC_GPO_2_GPI_3_SHIFT)
-
-/**
- * @brief Mask for GPO 2 within its configuration register.
- * @ingroup Pmic_GPIOPrivMacros
- */
-#define PMIC_GPO_3_GPO_2_MASK                       (uint8_t)(0x07U << PMIC_GPO_3_GPO_1_SHIFT)
-
-/**
- * @brief Mask for GPO 3 within its configuration register.
- * @ingroup Pmic_GPIOPrivMacros
- */
-#define PMIC_GPO_4_GPO_3_MASK                       (uint8_t)(0x07U << PMIC_GPO_4_GPO_3_SHIFT)
 
 /**
  * @brief Register address for reading deglitch configuration 2.
@@ -685,49 +614,9 @@ extern "C" {
  */
 #define PMIC_GPI_CFG_GPI4_MASK                      (0x3U << PMIC_GPI_CFG_GPI4_SHIFT)
 
-/**
- * @}
- */
-/* End of Pmic_GPIOPrivMacros */
-
-/*==========================================================================*/
-/*                         Structures and Enums                             */
-/*==========================================================================*/
-
-/**
- * @defgroup Pmic_GPIOPrivStructures PMIC GPIO Structures
- * @{
- * @ingroup Pmic_GPIO
- * @brief Contains private structures used in the GPIO module of PMIC driver.
- */
-
-/**
- * @brief Structure to hold GPIO interrupt register configuration.
- *
- * @param   intRegAddr      Address of the interrupt register
- * @param   intRegBitPos    Bit position in the interrupt register
- * @param   intRegPolBitPos Bit position of the interrupt polarity in the register
- *
- * @ingroup Pmic_GPIOPrivStructures
- */
-typedef struct Pmic_GpioIntRegCfg_s {
-    uint8_t intRegAddr;
-    uint8_t intRegBitPos;
-    uint8_t intRegPolBitPos;
-} Pmic_GpioIntRegCfg_t;
-
-/**
- * @}
- */
-/* End of Pmic_GPIOPrivStructures */
-
-/**
- * @}
- */
-/* End of Pmic_GPIO */
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif /* __PMIC_GPIO_PRIV_H__ */
+#endif /* __PMIC_REGMAP_GPIO_H__ */

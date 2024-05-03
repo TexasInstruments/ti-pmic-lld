@@ -44,7 +44,7 @@
 
 #include "pmic_low_iq_timer.h"
 
-#include "private/pmic_low_iq_timer_priv.h"
+#include "regmap/timer.h"
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */

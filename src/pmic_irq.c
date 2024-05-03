@@ -42,9 +42,9 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
-#include "private/pmic_core_priv.h"
 #include "pmic_irq.h"
-#include "private/pmic_irq_priv.h"
+#include "pmic_io.h"
+#include "regmap/irq.h"
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
@@ -355,7 +355,7 @@ Pmic_GpioIntrTypeCfg_t tps65386x_gpioIntrCfg[] = {
  *
  * @param   pIntrCfg to store tps65386x Interrupt configuration.
  */
-void pmic_get_bb_intrCfg(Pmic_IntrCfg_t ** pIntrCfg) {
+void Pmic_getBBInterCfg(Pmic_IntrCfg_t ** pIntrCfg) {
     * pIntrCfg = gTps65386x_intCfg;
 }
 
@@ -365,7 +365,7 @@ void pmic_get_bb_intrCfg(Pmic_IntrCfg_t ** pIntrCfg) {
  *
  * @param   pGpioIntrCfg to store tps65386x Interrupt configuration.
  */
-void pmic_get_bb_intrGpioCfg(Pmic_GpioIntrTypeCfg_t ** pGpioIntrCfg) {
+void Pmic_getBBInterGpioCfg(Pmic_GpioIntrTypeCfg_t ** pGpioIntrCfg) {
     * pGpioIntrCfg = tps65386x_gpioIntrCfg;
 }
 
@@ -933,7 +933,7 @@ void Pmic_getMaxVal(uint8_t * maxVal) {
 static void Pmic_get_intrCfg(const Pmic_CoreHandle_t * pPmicCoreHandle,
                              Pmic_IntrCfg_t ** pIntrCfg) {
     if ((pPmicCoreHandle -> pmicDeviceType) == PMIC_DEV_BB_TPS65386X) {
-        pmic_get_bb_intrCfg(pIntrCfg);
+        Pmic_getBBInterCfg(pIntrCfg);
     }
 }
 
@@ -947,7 +947,7 @@ static void Pmic_get_intrCfg(const Pmic_CoreHandle_t * pPmicCoreHandle,
  * @return void
  */
 static void Pmic_get_gpioIntrCfg(Pmic_GpioIntrTypeCfg_t ** pGpioIntrCfg) {
-    pmic_get_bb_intrGpioCfg(pGpioIntrCfg);
+    Pmic_getBBInterGpioCfg(pGpioIntrCfg);
 }
 
 /**
