@@ -222,12 +222,12 @@ const Pmic_DevSubSysInfo_t pmicSubSysInfo[] = {
 /*                          Function Definitions                              */
 /* ========================================================================== */
 
-inline bool pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos) {
+inline bool Pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos) {
     return (((validParamVal >> bitPos) & 0x01U) != 0U);
 }
 
-inline bool pmic_validParamStatusCheck(uint32_t validParamVal, uint8_t bitPos, int32_t status) {
-    return (status == PMIC_ST_SUCCESS) && pmic_validParamCheck(validParamVal, bitPos);
+inline bool Pmic_validParamStatusCheck(uint32_t validParamVal, uint8_t bitPos, int32_t status) {
+    return (status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(validParamVal, bitPos);
 }
 
 /**
@@ -683,7 +683,7 @@ Pmic_initCoreHandleBasicDevCfgParams(const Pmic_CoreCfg_t *pPmicConfigData,
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
     /* Check and update PMIC Handle device type */
-    if (pmic_validParamCheck(pPmicConfigData->validParams, PMIC_CFG_DEVICE_TYPE_VALID)) {
+    if (Pmic_validParamCheck(pPmicConfigData->validParams, PMIC_CFG_DEVICE_TYPE_VALID)) {
         if (PMIC_DEV_BB_TPS65386X != pPmicConfigData->pmicDeviceType) {
             pmicStatus = PMIC_ST_ERR_INV_PARAM;
         }
@@ -695,7 +695,7 @@ Pmic_initCoreHandleBasicDevCfgParams(const Pmic_CoreCfg_t *pPmicConfigData,
 
     /* Check and update PMIC Handle Comm Mode */
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
-        (pmic_validParamCheck(pPmicConfigData->validParams, PMIC_CFG_COMM_MODE_VALID))) {
+        (Pmic_validParamCheck(pPmicConfigData->validParams, PMIC_CFG_COMM_MODE_VALID))) {
         if (PMIC_INTF_SPI != pPmicConfigData->commMode) {
             pmicStatus = PMIC_ST_ERR_INV_PARAM;
         } else {
@@ -709,7 +709,7 @@ Pmic_initCoreHandleBasicDevCfgParams(const Pmic_CoreCfg_t *pPmicConfigData,
 
     /* Check and update PMIC Handle Comm Handle */
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
-        (pmic_validParamCheck(pPmicConfigData->validParams, PMIC_CFG_COMM_HANDLE_VALID))) {
+        (Pmic_validParamCheck(pPmicConfigData->validParams, PMIC_CFG_COMM_HANDLE_VALID))) {
         if (NULL == pPmicConfigData->pCommHandle) {
             pmicStatus = PMIC_ST_ERR_INV_PARAM;
         } else {
@@ -740,7 +740,7 @@ static int32_t Pmic_initCoreHandleCommIOCriticalSectionFns(
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
     /* Check and update PMIC Handle Comm IO RD Fn */
-    if (pmic_validParamCheck(pPmicConfigData->validParams, PMIC_CFG_COMM_IO_RD_VALID)) {
+    if (Pmic_validParamCheck(pPmicConfigData->validParams, PMIC_CFG_COMM_IO_RD_VALID)) {
         if (NULL == pPmicConfigData->pFnPmicCommIoRead) {
             pmicStatus = PMIC_ST_ERR_NULL_FPTR;
         } else {
@@ -750,7 +750,7 @@ static int32_t Pmic_initCoreHandleCommIOCriticalSectionFns(
 
     /* Check and update PMIC Handle Comm IO WR Fn */
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
-        (pmic_validParamCheck(pPmicConfigData->validParams, PMIC_CFG_COMM_IO_WR_VALID))) {
+        (Pmic_validParamCheck(pPmicConfigData->validParams, PMIC_CFG_COMM_IO_WR_VALID))) {
         if (NULL == pPmicConfigData->pFnPmicCommIoWrite) {
             pmicStatus = PMIC_ST_ERR_NULL_FPTR;
         } else {
@@ -760,7 +760,7 @@ static int32_t Pmic_initCoreHandleCommIOCriticalSectionFns(
 
     /* Check and update PMIC Handle Critical Section Start Fn */
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
-        (pmic_validParamCheck(pPmicConfigData->validParams, PMIC_CFG_CRITSEC_START_VALID))) {
+        (Pmic_validParamCheck(pPmicConfigData->validParams, PMIC_CFG_CRITSEC_START_VALID))) {
         if (NULL == pPmicConfigData->pFnPmicCritSecStart) {
             pmicStatus = PMIC_ST_ERR_NULL_FPTR;
         } else {
@@ -770,7 +770,7 @@ static int32_t Pmic_initCoreHandleCommIOCriticalSectionFns(
 
     /* Check and update PMIC Handle Critical Section Stop Fn */
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
-        (pmic_validParamCheck(pPmicConfigData->validParams, PMIC_CFG_CRITSEC_STOP_VALID))) {
+        (Pmic_validParamCheck(pPmicConfigData->validParams, PMIC_CFG_CRITSEC_STOP_VALID))) {
         if (NULL == pPmicConfigData->pFnPmicCritSecStop) {
             pmicStatus = PMIC_ST_ERR_NULL_FPTR;
         } else {
@@ -1352,21 +1352,21 @@ int32_t Pmic_setCommonCtrlConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
     }
 
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
-        (pmic_validParamCheck(CommonCtrlCfg.spreadSpectrumEn, PMIC_CFG_SPREAD_SPECTRUM_EN_VALID))) {
+        (Pmic_validParamCheck(CommonCtrlCfg.spreadSpectrumEn, PMIC_CFG_SPREAD_SPECTRUM_EN_VALID))) {
         /* Enable/Disable Spread Spectrum */
         pmicStatus = Pmic_spreadSpectrumEnable(pPmicCoreHandle, CommonCtrlCfg);
     }
 
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
-        (pmic_validParamCheck((uint32_t)CommonCtrlCfg.eNsafeOut1, PMIC_CFG_ENABLE_SAFEOUT_VALID) ||
-         pmic_validParamCheck((uint32_t)CommonCtrlCfg.eNsafeOut2, PMIC_CFG_ENABLE_SAFEOUT_VALID))) {
+        (Pmic_validParamCheck((uint32_t)CommonCtrlCfg.eNsafeOut1, PMIC_CFG_ENABLE_SAFEOUT_VALID) ||
+         Pmic_validParamCheck((uint32_t)CommonCtrlCfg.eNsafeOut2, PMIC_CFG_ENABLE_SAFEOUT_VALID))) {
         /* Set ENABLE_DRV Pin Configuration */
         pmicStatus = Pmic_setEnableSafeOutCfg(pPmicCoreHandle, CommonCtrlCfg);
     }
 
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
-        (pmic_validParamCheck((uint32_t)CommonCtrlCfg.regLock_1, PMIC_REGISTER_UNLOCK_DATA1) ||
-         pmic_validParamCheck((uint32_t)CommonCtrlCfg.regLock_2, PMIC_REGISTER_UNLOCK_DATA2))) {
+        (Pmic_validParamCheck((uint32_t)CommonCtrlCfg.regLock_1, PMIC_REGISTER_UNLOCK_DATA1) ||
+         Pmic_validParamCheck((uint32_t)CommonCtrlCfg.regLock_2, PMIC_REGISTER_UNLOCK_DATA2))) {
         /* Set Register Lock/UnLock Configuration */
         pmicStatus = Pmic_setRegisterLockUnlock(pPmicCoreHandle, CommonCtrlCfg);
     }
@@ -1396,7 +1396,7 @@ int32_t Pmic_getCommonCtrlConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
     }
 
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
-        pmic_validParamCheck(pCommonCtrlCfg -> validParams, PMIC_CFG_SPREAD_SPECTRUM_EN_VALID)) {
+        Pmic_validParamCheck(pCommonCtrlCfg -> validParams, PMIC_CFG_SPREAD_SPECTRUM_EN_VALID)) {
         /* Get the status of Spread Spectrum is Enabled/Disabled  */
         pmicStatus = Pmic_getSpreadSpectrumEnable(pPmicCoreHandle, pCommonCtrlCfg);
     }
@@ -1839,20 +1839,20 @@ Pmic_getEnOutNrstSafeOut1PinStat(Pmic_CoreHandle_t *pPmicCoreHandle,
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
-        (true == pmic_validParamCheck(pCommonCtrlStat->validParams,
+        (true == Pmic_validParamCheck(pCommonCtrlStat->validParams,
             PMIC_CFG_SAFE_OUT1_PIN_STAT_VALID))) {
         /* Get SAFE_OUT1 Pin Status*/
         pmicStatus = Pmic_getSafeOut1Stat(pPmicCoreHandle, pCommonCtrlStat);
     }
 
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
-        (true == pmic_validParamCheck(pCommonCtrlStat->validParams,
+        (true == Pmic_validParamCheck(pCommonCtrlStat->validParams,
             PMIC_CFG_NRST_PIN_STAT_VALID))) {
         /* Get NRST Pin Status*/
         pmicStatus = Pmic_getNRstPinStat(pPmicCoreHandle, pCommonCtrlStat);
     }
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
-        (true == pmic_validParamCheck(pCommonCtrlStat-> validParams,
+        (true == Pmic_validParamCheck(pCommonCtrlStat-> validParams,
             PMIC_CFG_EN_OUT_PIN_STAT_VALID))) {
         /* Get EN_OUT Pin Status*/
         pmicStatus = Pmic_getEnOutPinStat(pPmicCoreHandle, pCommonCtrlStat);
@@ -1879,7 +1879,7 @@ int32_t Pmic_getCommonStat(Pmic_CoreHandle_t *pPmicCoreHandle,
     }
 
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
-        (true == pmic_validParamCheck(pCommonCtrlStat->validParams,
+        (true == Pmic_validParamCheck(pCommonCtrlStat->validParams,
             PMIC_CFG_REG_LOCK_STAT_VALID))) {
         /* Get Register Lock Status*/
         pmicStatus = Pmic_getRegLockStat(pPmicCoreHandle, pCommonCtrlStat);

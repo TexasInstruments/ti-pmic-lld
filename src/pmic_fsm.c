@@ -653,14 +653,14 @@ int32_t Pmic_fsmSetConfiguration(Pmic_CoreHandle_t * pPmicCoreHandle,
     }
 
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
-        (true == pmic_validParamCheck((uint32_t) fsmCfg.validParams,
+        (true == Pmic_validParamCheck((uint32_t) fsmCfg.validParams,
             PMIC_FSM_CFG_FAST_BIST_EN_VALID))) {
         /* Enable/Disable Fast BIST */
         pmicStatus = Pmic_fsmEnableFastBIST(pPmicCoreHandle, fsmCfg);
     }
 
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
-        (true == pmic_validParamCheck((uint32_t) fsmCfg.validParams,
+        (true == Pmic_validParamCheck((uint32_t) fsmCfg.validParams,
             PMIC_FSM_CFG_ILIM_INT_EN_VALID))) {
         /* Enable/Disable Buck/LDO regulators ILIM interrupts affect FSM
          * triggers */
@@ -692,14 +692,14 @@ int32_t Pmic_fsmGetConfiguration(Pmic_CoreHandle_t * pPmicCoreHandle,
     }
 
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
-        (true == pmic_validParamCheck((uint32_t) pFsmCfg -> validParams,
+        (true == Pmic_validParamCheck((uint32_t) pFsmCfg -> validParams,
             PMIC_FSM_CFG_FAST_BIST_EN_VALID))) {
         /* Get Fast BIST is enabled or not*/
         pmicStatus = Pmic_fsmGetFastBISTCfg(pPmicCoreHandle, pFsmCfg);
     }
 
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
-        (true == pmic_validParamCheck((uint32_t) pFsmCfg -> validParams,
+        (true == Pmic_validParamCheck((uint32_t) pFsmCfg -> validParams,
             PMIC_FSM_CFG_ILIM_INT_EN_VALID))) {
         /* Get Buck/LDO regulators ILIM interrupts affect FSM
          * triggers is enabled or not */

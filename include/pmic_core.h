@@ -1484,10 +1484,10 @@ extern const Pmic_DiagMUXFeatureMapping Pmic_dmuxFeatureMappings[DMUX_NUM_FEATUR
  *
  * @ingroup Pmic_CoreFunctions
  */
-bool pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos);
+bool Pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos);
 
 /**
- * @brief This function is identical to @ref pmic_validParamCheck but
+ * @brief This function is identical to @ref Pmic_validParamCheck but
  * additionally checks a `status` variable to ensure that it is equal to
  * PMIC_ST_SUCCESS.
  *
@@ -1499,7 +1499,7 @@ bool pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos);
  *
  * @ingroup Pmic_CoreFunctions
  */
-bool pmic_validParamStatusCheck(uint32_t validParamVal, uint8_t bitPos, int32_t status);
+bool Pmic_validParamStatusCheck(uint32_t validParamVal, uint8_t bitPos, int32_t status);
 
 /**
  * @brief Start a critical section for PMIC operations.

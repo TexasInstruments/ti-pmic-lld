@@ -56,32 +56,32 @@ int32_t Pmic_SetILIMConfig(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_ILIMConfig_t
     }
 
     if (pmicStatus == PMIC_ST_SUCCESS) {
-        if (pmic_validParamCheck(pPmicILIMConfig->validParams, PMIC_ILIM_LDO1_VALID)) {
+        if (Pmic_validParamCheck(pPmicILIMConfig->validParams, PMIC_ILIM_LDO1_VALID)) {
             Pmic_setBitField(&cfgReg, PMIC_LDO1_ILIM_CFG_SHIFT, PMIC_LDO1_ILIM_CFG_MASK, pPmicILIMConfig->ldo1.errReact);
             Pmic_setBitField(&degReg, PMIC_LDO1_ILIM_DGL_CFG_SHIFT, PMIC_LDO1_ILIM_DGL_CFG_MASK, pPmicILIMConfig->ldo1.deglitch);
         }
 
-        if (pmic_validParamCheck(pPmicILIMConfig->validParams, PMIC_ILIM_LDO2_VALID)) {
+        if (Pmic_validParamCheck(pPmicILIMConfig->validParams, PMIC_ILIM_LDO2_VALID)) {
             Pmic_setBitField(&cfgReg, PMIC_LDO2_ILIM_CFG_SHIFT, PMIC_LDO2_ILIM_CFG_MASK, pPmicILIMConfig->ldo2.errReact);
             Pmic_setBitField(&degReg, PMIC_LDO2_ILIM_DGL_CFG_SHIFT, PMIC_LDO2_ILIM_DGL_CFG_MASK, pPmicILIMConfig->ldo2.deglitch);
         }
 
-        if (pmic_validParamCheck(pPmicILIMConfig->validParams, PMIC_ILIM_LDO3_VALID)) {
+        if (Pmic_validParamCheck(pPmicILIMConfig->validParams, PMIC_ILIM_LDO3_VALID)) {
             Pmic_setBitField(&cfgReg, PMIC_LDO3_ILIM_CFG_SHIFT, PMIC_LDO3_ILIM_CFG_MASK, pPmicILIMConfig->ldo3.errReact);
             Pmic_setBitField(&degReg, PMIC_LDO3_ILIM_DGL_CFG_SHIFT, PMIC_LDO3_ILIM_DGL_CFG_MASK, pPmicILIMConfig->ldo3.deglitch);
         }
 
-        if (pmic_validParamCheck(pPmicILIMConfig->validParams, PMIC_ILIM_LDO4_VALID)) {
+        if (Pmic_validParamCheck(pPmicILIMConfig->validParams, PMIC_ILIM_LDO4_VALID)) {
             Pmic_setBitField(&cfgReg, PMIC_LDO4_ILIM_CFG_SHIFT, PMIC_LDO4_ILIM_CFG_MASK, pPmicILIMConfig->ldo4.errReact);
             Pmic_setBitField(&degReg, PMIC_LDO4_ILIM_DGL_CFG_SHIFT, PMIC_LDO4_ILIM_DGL_CFG_MASK, pPmicILIMConfig->ldo4.deglitch);
         }
 
-        if (pmic_validParamCheck(pPmicILIMConfig->validParams, PMIC_ILIM_PLDO1_VALID)) {
+        if (Pmic_validParamCheck(pPmicILIMConfig->validParams, PMIC_ILIM_PLDO1_VALID)) {
             Pmic_setBitField(&cfgReg, PMIC_PLDO1_ILIM_CFG_SHIFT, PMIC_PLDO1_ILIM_CFG_MASK, pPmicILIMConfig->pldo1.errReact);
             Pmic_setBitField(&degReg, PMIC_PLDO1_ILIM_DGL_CFG_SHIFT, PMIC_PLDO1_ILIM_DGL_CFG_MASK, pPmicILIMConfig->pldo1.deglitch);
         }
 
-        if (pmic_validParamCheck(pPmicILIMConfig->validParams, PMIC_ILIM_PLDO2_VALID)) {
+        if (Pmic_validParamCheck(pPmicILIMConfig->validParams, PMIC_ILIM_PLDO2_VALID)) {
             Pmic_setBitField(&cfgReg, PMIC_PLDO2_ILIM_CFG_SHIFT, PMIC_PLDO2_ILIM_CFG_MASK, pPmicILIMConfig->pldo2.errReact);
             Pmic_setBitField(&degReg, PMIC_PLDO2_ILIM_DGL_CFG_SHIFT, PMIC_PLDO2_ILIM_DGL_CFG_MASK, pPmicILIMConfig->pldo2.deglitch);
         }
@@ -113,31 +113,31 @@ int32_t Pmic_ClearILIMErrStat(Pmic_CoreHandle_t *pPmicCoreHandle,
     pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_ILIM_STAT_REGADDR, &regData);
 
     if (PMIC_ST_SUCCESS == pmicStatus) {
-        if (pmic_validParamCheck(pPmicILIMStat->validParams, PMIC_ILIM_LDO1_VALID)) {
+        if (Pmic_validParamCheck(pPmicILIMStat->validParams, PMIC_ILIM_LDO1_VALID)) {
             Pmic_setBitField(& regData, PMIC_LDO1_ILIM_ERR_SHIFT, PMIC_LDO1_ILIM_ERR_MASK, pPmicILIMStat->ldo1);
         }
 
-        if (pmic_validParamCheck(pPmicILIMStat->validParams, PMIC_ILIM_LDO2_VALID)) {
+        if (Pmic_validParamCheck(pPmicILIMStat->validParams, PMIC_ILIM_LDO2_VALID)) {
             Pmic_setBitField(&regData, PMIC_LDO2_ILIM_ERR_SHIFT, PMIC_LDO2_ILIM_ERR_MASK, pPmicILIMStat->ldo2);
         }
 
-        if (pmic_validParamCheck(pPmicILIMStat->validParams, PMIC_ILIM_LDO3_VALID)) {
+        if (Pmic_validParamCheck(pPmicILIMStat->validParams, PMIC_ILIM_LDO3_VALID)) {
             Pmic_setBitField(&regData, PMIC_LDO3_ILIM_ERR_SHIFT, PMIC_LDO3_ILIM_ERR_MASK, pPmicILIMStat->ldo3);
         }
 
-        if (pmic_validParamCheck(pPmicILIMStat->validParams, PMIC_ILIM_LDO4_VALID)) {
+        if (Pmic_validParamCheck(pPmicILIMStat->validParams, PMIC_ILIM_LDO4_VALID)) {
             Pmic_setBitField(&regData, PMIC_LDO4_ILIM_ERR_SHIFT, PMIC_LDO4_ILIM_ERR_MASK, pPmicILIMStat->ldo4);
         }
 
-        if (pmic_validParamCheck(pPmicILIMStat->validParams, PMIC_ILIM_PLDO1_VALID)) {
+        if (Pmic_validParamCheck(pPmicILIMStat->validParams, PMIC_ILIM_PLDO1_VALID)) {
             Pmic_setBitField(&regData, PMIC_PLDO1_ILIM_ERR_SHIFT, PMIC_PLDO1_ILIM_ERR_MASK, pPmicILIMStat->pldo1);
         }
 
-        if (pmic_validParamCheck(pPmicILIMStat->validParams, PMIC_ILIM_PLDO2_VALID)) {
+        if (Pmic_validParamCheck(pPmicILIMStat->validParams, PMIC_ILIM_PLDO2_VALID)) {
             Pmic_setBitField(&regData, PMIC_PLDO2_ILIM_ERR_SHIFT, PMIC_PLDO2_ILIM_ERR_MASK, pPmicILIMStat->pldo2);
         }
 
-        if (pmic_validParamCheck(pPmicILIMStat->validParams, PMIC_ILIM_BB_AVG_VALID)) {
+        if (Pmic_validParamCheck(pPmicILIMStat->validParams, PMIC_ILIM_BB_AVG_VALID)) {
             Pmic_setBitField(&regData, PMIC_BB_AVG_ILIM_ERR_SHIFT, PMIC_BB_AVG_ILIM_ERR_MASK, pPmicILIMStat->bbAvg);
         }
 

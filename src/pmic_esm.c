@@ -928,7 +928,7 @@ int32_t Pmic_esmGetEnableState(Pmic_CoreHandle_t *pPmicCoreHandle,
 static int32_t Pmic_esmSetErrcntthresholdEndrvClrModeCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_EsmCfg_t esmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    if (true == pmic_validParamCheck(esmCfg.validParams, PMIC_ESM_CFG_ERR_CNT_THR_VALID)) {
+    if (true == Pmic_validParamCheck(esmCfg.validParams, PMIC_ESM_CFG_ERR_CNT_THR_VALID)) {
         if (PMIC_ESM_ERR_CNT_THR_MAX < esmCfg.esmErrCntThr) {
             pmicStatus = PMIC_ST_ERR_INV_PARAM;
         }
@@ -939,7 +939,7 @@ static int32_t Pmic_esmSetErrcntthresholdEndrvClrModeCfg(Pmic_CoreHandle_t *pPmi
     }
 
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
-        (true == pmic_validParamCheck(esmCfg.validParams, PMIC_ESM_CFG_MODE_VALID))) {
+        (true == Pmic_validParamCheck(esmCfg.validParams, PMIC_ESM_CFG_MODE_VALID))) {
         /* Set ESM Mode */
         pmicStatus = Pmic_esmSetMode(pPmicCoreHandle, esmCfg);
     }
@@ -964,25 +964,25 @@ Pmic_esmSetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
     if (true ==
-        pmic_validParamCheck(esmCfg.validParams, PMIC_ESM_CFG_HMAX_VALID)) {
+        Pmic_validParamCheck(esmCfg.validParams, PMIC_ESM_CFG_HMAX_VALID)) {
         pmicStatus = Pmic_esmSetHmaxValue(pPmicCoreHandle, esmCfg);
     }
 
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         (true ==
-            pmic_validParamCheck(esmCfg.validParams, PMIC_ESM_CFG_HMIN_VALID))) {
+            Pmic_validParamCheck(esmCfg.validParams, PMIC_ESM_CFG_HMIN_VALID))) {
         pmicStatus = Pmic_esmSetHminValue(pPmicCoreHandle, esmCfg);
     }
 
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         (true ==
-            pmic_validParamCheck(esmCfg.validParams, PMIC_ESM_CFG_LMAX_VALID))) {
+            Pmic_validParamCheck(esmCfg.validParams, PMIC_ESM_CFG_LMAX_VALID))) {
         pmicStatus = Pmic_esmSetLmaxValue(pPmicCoreHandle, esmCfg);
     }
 
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         (true ==
-            pmic_validParamCheck(esmCfg.validParams, PMIC_ESM_CFG_LMIN_VALID))) {
+            Pmic_validParamCheck(esmCfg.validParams, PMIC_ESM_CFG_LMIN_VALID))) {
         pmicStatus = Pmic_esmSetLminValue(pPmicCoreHandle, esmCfg);
     }
 
@@ -1005,13 +1005,13 @@ static int32_t Pmic_esmSetConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
     if (true ==
-        pmic_validParamCheck(esmCfg.validParams, PMIC_ESM_CFG_DELAY1_VALID)) {
+        Pmic_validParamCheck(esmCfg.validParams, PMIC_ESM_CFG_DELAY1_VALID)) {
         pmicStatus = Pmic_esmSetDelay1Value(pPmicCoreHandle, esmCfg);
     }
 
     if (((PMIC_ST_SUCCESS == pmicStatus) &&
             (true ==
-                pmic_validParamCheck(esmCfg.validParams, PMIC_ESM_CFG_DELAY2_VALID)))) {
+                Pmic_validParamCheck(esmCfg.validParams, PMIC_ESM_CFG_DELAY2_VALID)))) {
         pmicStatus = Pmic_esmSetDelay2Value(pPmicCoreHandle, esmCfg);
     }
 
@@ -1039,25 +1039,25 @@ Pmic_esmGetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
     if (true ==
-        pmic_validParamCheck(pEsmCfg -> validParams, PMIC_ESM_CFG_HMAX_VALID)) {
+        Pmic_validParamCheck(pEsmCfg -> validParams, PMIC_ESM_CFG_HMAX_VALID)) {
         pmicStatus = Pmic_esmGetHmaxValue(pPmicCoreHandle, pEsmCfg);
     }
 
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         (true ==
-            pmic_validParamCheck(pEsmCfg -> validParams, PMIC_ESM_CFG_HMIN_VALID))) {
+            Pmic_validParamCheck(pEsmCfg -> validParams, PMIC_ESM_CFG_HMIN_VALID))) {
         pmicStatus = Pmic_esmGetHminValue(pPmicCoreHandle, pEsmCfg);
     }
 
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         (true ==
-            pmic_validParamCheck(pEsmCfg -> validParams, PMIC_ESM_CFG_LMAX_VALID))) {
+            Pmic_validParamCheck(pEsmCfg -> validParams, PMIC_ESM_CFG_LMAX_VALID))) {
         pmicStatus = Pmic_esmGetLmaxValue(pPmicCoreHandle, pEsmCfg);
     }
 
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         (true ==
-            pmic_validParamCheck(pEsmCfg -> validParams, PMIC_ESM_CFG_LMIN_VALID))) {
+            Pmic_validParamCheck(pEsmCfg -> validParams, PMIC_ESM_CFG_LMIN_VALID))) {
         pmicStatus = Pmic_esmGetLminValue(pPmicCoreHandle, pEsmCfg);
     }
 
@@ -1080,25 +1080,25 @@ static int32_t Pmic_esmGetConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
     if (true ==
-        pmic_validParamCheck(pEsmCfg -> validParams, PMIC_ESM_CFG_DELAY1_VALID)) {
+        Pmic_validParamCheck(pEsmCfg -> validParams, PMIC_ESM_CFG_DELAY1_VALID)) {
         pmicStatus = Pmic_esmGetDelay1Value(pPmicCoreHandle, pEsmCfg);
     }
 
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         (true ==
-            pmic_validParamCheck(pEsmCfg -> validParams, PMIC_ESM_CFG_DELAY2_VALID))) {
+            Pmic_validParamCheck(pEsmCfg -> validParams, PMIC_ESM_CFG_DELAY2_VALID))) {
         pmicStatus = Pmic_esmGetDelay2Value(pPmicCoreHandle, pEsmCfg);
     }
 
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
-        (true == pmic_validParamCheck(pEsmCfg -> validParams,
+        (true == Pmic_validParamCheck(pEsmCfg -> validParams,
             PMIC_ESM_CFG_ERR_CNT_THR_VALID))) {
         pmicStatus = Pmic_esmGetErrCntThrValue(pPmicCoreHandle, pEsmCfg);
     }
 
     if ((PMIC_ST_SUCCESS == pmicStatus) &&
         (true ==
-            pmic_validParamCheck(pEsmCfg -> validParams, PMIC_ESM_CFG_MODE_VALID))) {
+            Pmic_validParamCheck(pEsmCfg -> validParams, PMIC_ESM_CFG_MODE_VALID))) {
         /* Get ESM Mode */
         pmicStatus = Pmic_esmGetModeValue(pPmicCoreHandle, pEsmCfg);
     }
