@@ -57,7 +57,7 @@ INC	= -I./include \
 			-I./include/cfg/tps65386x/ \
 			-I./include/private/
 
-CFLAGS = -fPIC $(INC) -Wall -Wno-unused-function
+CFLAGS = -fPIC $(INC) -Wall
 LDFLAGS = -shared
 LIB_DIR = lib
 
