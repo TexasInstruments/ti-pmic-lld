@@ -39,7 +39,7 @@
 
 #include "pmic_sw_shutdown.h"
 
-#include "pmic_sw_shutdown_priv.h"
+#include "private/pmic_sw_shutdown_priv.h"
 
 /*!
  * \brief API to get OFF STATE STAT1 Configuration

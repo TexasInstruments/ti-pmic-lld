@@ -45,7 +45,7 @@
 /* ========================================================================== */
 
 #include "pmic.h"
-#include "pmic_core_priv.h"
+#include "private/pmic_core_priv.h"
 #include "pmic_types.h"
 
 #ifdef __cplusplus

@@ -44,7 +44,7 @@
 /* ========================================================================== */
 
 #include "pmic_power.h"
-#include "pmic_power_priv.h"
+#include "private/pmic_power_priv.h"
 #include "pmic_test_common.h"
 
 /* ========================================================================= */

@@ -46,7 +46,7 @@
 /* ========================================================================== */
 #include "pmic_test_common.h"
 #include "pmic_wdg.h"
-#include "pmic_wdg_priv.h"
+#include "private/pmic_wdg_priv.h"
 
 /* ========================================================================= */
 /*                             Macros & Typedefs                             */

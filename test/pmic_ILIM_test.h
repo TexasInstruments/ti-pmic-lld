@@ -44,7 +44,7 @@
 
 #include "pmic_test_common.h"
 #include "pmic_ilim.h"
-#include "pmic_ilim_priv.h"
+#include "private/pmic_ilim_priv.h"
 
 
 /* ========================================================================== */

@@ -43,7 +43,7 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 #include "pmic.h"
-#include "pmic_io_priv.h"
+#include "private/pmic_io_priv.h"
 
 #ifdef __cplusplus
 extern "C" {

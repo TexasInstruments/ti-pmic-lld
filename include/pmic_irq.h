@@ -45,8 +45,8 @@
 /* ==========================================================================*/
 
 #include "pmic_core.h"
-#include "pmic_core_priv.h"
-#include "pmic_irq_priv.h"
+#include "private/pmic_core_priv.h"
+#include "private/pmic_irq_priv.h"
 
 #ifdef __cplusplus
 extern "C" {

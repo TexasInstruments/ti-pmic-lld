@@ -42,9 +42,9 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
-#include "pmic_core_priv.h"
+#include "private/pmic_core_priv.h"
 #include "pmic_irq.h"
-#include "pmic_irq_priv.h"
+#include "private/pmic_irq_priv.h"
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */

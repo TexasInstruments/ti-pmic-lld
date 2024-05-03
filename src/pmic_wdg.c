@@ -35,7 +35,7 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 #include "pmic_wdg.h"
-#include "pmic_core_priv.h"
+#include "private/pmic_core_priv.h"
 
 /* ========================================================================== */
 /*                          Function Definitions                              */

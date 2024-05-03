@@ -43,8 +43,8 @@
 #define __PMIC_SW_SHUTDOWN_H__
 
 #include "pmic_core.h"
-#include "pmic_core_priv.h"
-#include "pmic_io_priv.h"
+#include "private/pmic_core_priv.h"
+#include "private/pmic_io_priv.h"
 #include "pmic_types.h"
 
 /* ============================================================================================

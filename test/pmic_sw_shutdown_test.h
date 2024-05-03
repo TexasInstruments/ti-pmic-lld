@@ -45,7 +45,7 @@
 
 #include "pmic_test_common.h"
 #include "pmic_sw_shutdown.h"
-#include "pmic_sw_shutdown_priv.h"
+#include "private/pmic_sw_shutdown_priv.h"
 
 
 /* ========================================================================== */

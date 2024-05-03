@@ -53,8 +53,7 @@ ifeq ($(CC),)
 CC := gcc
 endif
 
-INC	= -I./include \
-			-I./include/private/
+INC	= -I./include
 
 CFLAGS = -fPIC $(INC) -Wall
 LDFLAGS = -shared

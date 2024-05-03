@@ -46,7 +46,7 @@
 /* ========================================================================== */
 
 #include "pmic_gpio.h"
-#include "pmic_gpio_priv.h"
+#include "private/pmic_gpio_priv.h"
 #include "pmic_test_common.h"
 
 /* ========================================================================== */

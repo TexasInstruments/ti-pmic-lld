@@ -49,7 +49,7 @@
 /* PMIC INCLUDES */
 #include "pmic.h"
 #include "pmic_core.h"
-#include "pmic_io_priv.h"
+#include "private/pmic_io_priv.h"
 
 /* DEVICE INCLUDES */
 #include <kernel/dpl/DebugP.h>

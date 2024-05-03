@@ -41,7 +41,7 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 #include "pmic_core.h"
-#include "pmic_core_priv.h"
+#include "private/pmic_core_priv.h"
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
