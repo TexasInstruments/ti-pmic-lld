@@ -31,10 +31,10 @@
  *
  *****************************************************************************/
 /**
- *   @file    pmic_power_tps65386x.c
+ *   @file pmic_power.c
  *
- *   @brief   This file contains the TPS65386x BB PMIC power Specific
- *            configuration API's and structures
+ *   @brief This file contains the PMIC power module configuration API's and
+ *   structures.
  */
 
 /* ========================================================================== */

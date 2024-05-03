@@ -45,7 +45,6 @@
 
 #include "pmic_power.h"
 #include "pmic_power_priv.h"
-#include "pmic_power_tps65386x_priv.h"
 #include "pmic_test_common.h"
 
 /* ========================================================================= */
