@@ -526,6 +526,39 @@ int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t *handle, Pmic_WdgCfg_t *wdgCfg);
 
 /**
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
+ * @brief Helper API to set WDG mode.
+ *
+ * While the Watchdog mode can, and typically should, be set through
+ * `Pmic_wdgSetCfg()` some scenarios may call for independent control of the
+ * mode outside of typical configuration. This API is provided as shorthand for
+ * such cases.
+ *
+ * @param handle [IN] PMIC Interface Handle
+ * @param mode   [IN] Desired WDG mode, see @ref Pmic_WdgTriggerQAMode.
+ *
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * possible values, see @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_wdgSetMode(Pmic_CoreHandle_t *handle, uint8_t mode);
+
+/**
+ * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
+ * @brief Helper API to get WDG mode.
+ *
+ * Watchdog mode is available through `Pmic_wdgGetCfg()`, however in cases
+ * where the other configuration information contained in `Pmic_WdgCfg_t` is
+ * not of interest this API is provided as shorthand.
+ *
+ * @param handle [IN]  PMIC Interface Handle
+ * @param mode   [OUT] Current WDG mode, see @ref Pmic_WdgTriggerQAMode.
+ *
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * possible values, see @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_wdgGetMode(Pmic_CoreHandle_t *handle, uint8_t *mode);
+
+/**
+ * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
  * @brief API to set the WD_PWRHOLD bit, which pauses the Long-Window timer.
  *
  * @param handle [IN] PMIC Interface Handle

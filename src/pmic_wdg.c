@@ -644,6 +644,57 @@ int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t *handle, Pmic_WdgCfg_t *config) {
     return status;
 }
 
+int32_t Pmic_wdgSetMode(Pmic_CoreHandle_t *handle, uint8_t mode) {
+    int32_t status = WDG_validatePmicCoreHandle(handle);
+    uint8_t regVal = 0x0U;
+
+    /* Validate input parameter */
+    if ((status == PMIC_ST_SUCCESS) && (mode > PMIC_WDG_MODE_MAX)) {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        /* Start Critical Section */
+        Pmic_criticalSectionStart(handle);
+
+        /* Reading watchdog mode value */
+        status = Pmic_commIntf_recvByte(handle, PMIC_WD_CFG_REG, &regVal);
+
+        /* Set watchdog mode accordingly */
+        if (status == PMIC_ST_SUCCESS) {
+            Pmic_setBitField(&regVal, PMIC_WD_MODE_SHIFT, PMIC_WD_MODE_MASK, mode);
+            status = Pmic_commIntf_sendByte(handle, PMIC_WD_CFG_REG, regVal);
+        }
+
+        /* Stop Critical Section */
+        Pmic_criticalSectionStop(handle);
+    }
+
+    return status;
+}
+
+int32_t Pmic_wdgGetMode(Pmic_CoreHandle_t *handle, uint8_t *mode) {
+    int32_t status = WDG_validatePmicCoreHandle(handle);
+    uint8_t regVal = 0x0U;
+
+    /* Validate input parameter */
+    if ((status == PMIC_ST_SUCCESS) && (mode == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    /* Reading watchdog mode value with critical section */
+    if (status == PMIC_ST_SUCCESS) {
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_commIntf_recvByte(handle, PMIC_WD_CFG_REG, &regVal);
+        Pmic_criticalSectionStop(handle);
+
+        /* Set the mode parameter accordingly */
+        *mode = Pmic_getBitField(regVal, PMIC_WD_MODE_SHIFT, PMIC_WD_MODE_MASK);
+    }
+
+    return status;
+}
+
 int32_t Pmic_wdgSetPowerHold(Pmic_CoreHandle_t *handle, bool enable) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
     uint8_t regVal = 0U;
