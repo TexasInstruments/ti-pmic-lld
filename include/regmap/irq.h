@@ -33,6 +33,10 @@
 #ifndef __PMIC_REGMAP_IRQ_H__
 #define __PMIC_REGMAP_IRQ_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @defgroup Pmic_IRQPrivMacros PMIC Interrupt Request Private Macros
  * @{
@@ -1117,4 +1121,7 @@
  */
 #define PMIC_BB_IRQ_GPO_3_INT_MASK_NUM      (3U)
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* __PMIC_REGMAP_IRQ_H__ */

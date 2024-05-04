@@ -66,6 +66,10 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
@@ -720,4 +724,7 @@ int32_t Pmic_wdgGetFailCntStat(Pmic_CoreHandle_t *handle, Pmic_WdgFailCntStat_t 
  */
 int32_t Pmic_wdgQaSequenceWriteAnswer(Pmic_CoreHandle_t *handle);
 
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 #endif /* __PMIC_WDG_H__ */

@@ -42,10 +42,17 @@
 #ifndef __PMIC_ILIM_H__
 #define __PMIC_ILIM_H__
 
+/* ========================================================================== */
+/*                             Include Files                                  */
+/* ========================================================================== */
 #include "pmic.h"
 #include "pmic_core.h"
 #include "pmic_types.h"
 #include "pmic_io.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
  * @defgroup Pmic_ILIM PMIC ILIM Module
@@ -209,7 +216,6 @@ int32_t Pmic_GetILIMConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
 int32_t Pmic_GetILIMErrStat(Pmic_CoreHandle_t *pPmicCoreHandle,
                             Pmic_ILIMStatus_t *pPmicILIMStat);
 
-
 /**
  * @}
  */
@@ -219,5 +225,9 @@ int32_t Pmic_GetILIMErrStat(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @}
  */
 /* End of Pmic_ILIM */
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* __PMIC_ILIM_H__ */

@@ -42,6 +42,10 @@
 #ifndef __PMIC_SW_SHUTDOWN_H__
 #define __PMIC_SW_SHUTDOWN_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "pmic_core.h"
 #include "pmic_io.h"
 #include "pmic_types.h"
@@ -168,5 +172,9 @@ Pmic_GetThermalStat2Config(Pmic_CoreHandle_t * pPmicCoreHandle,
     Pmic_thermalstat2Reg_t * pPmicThermalStat2Config);
 int32_t Pmic_ClearThermalStat1flags(Pmic_CoreHandle_t * pPmicCoreHandle);
 int32_t Pmic_ClearThermalStat2flags(Pmic_CoreHandle_t * pPmicCoreHandle);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* __PMIC_SW_SHUTDOWN_H__ */

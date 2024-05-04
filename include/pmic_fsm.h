@@ -38,7 +38,6 @@
  * for PMIC FSM state configuration
  *
  */
-
 #ifndef __PMIC_FSM_H__
 #define __PMIC_FSM_H__
 

@@ -507,7 +507,6 @@ int32_t Pmic_checkPmicCoreHandle(const Pmic_CoreHandle_t *handle);
 
 #ifdef __cplusplus
 }
-
 #endif /* __cplusplus */
 
 #endif /* __PMIC_H__ */

@@ -48,6 +48,10 @@
 #include "pmic_core.h"
 #include "pmic_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @defgroup Pmic_GPIO PMIC General Purpose Input/Output
  * @{
@@ -1011,5 +1015,9 @@ int32_t Pmic_gpo34GetDeglitchTime(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @}
  */
 /* End of Pmic_GPIO */
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* __PMIC_GPIO_H__ */

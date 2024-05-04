@@ -169,7 +169,6 @@ typedef struct Pmic_CoreHandle_s {
 
 #ifdef __cplusplus
 }
-
 #endif /* __cplusplus */
 
 #endif /* __PMIC_TYPES_H__ */

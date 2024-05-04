@@ -42,6 +42,10 @@
 #ifndef __PMIC_SW_SHUTDOWN_PRIV_H__
 #define __PMIC_SW_SHUTDOWN_PRIV_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*!
  * \brief  PMIC SW SHUTDOWN register Addresses
  */
@@ -225,4 +229,7 @@
 #define PMIC_THERMAL_STAT_TSD_ERR_DATA2             (0x01U)
 #define PMIC_THERMAL_STAT_CLEAR_DATA                (0x01U)
 
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 #endif /* __PMIC_SW_SHUTDOWN_PRIV_H__ */

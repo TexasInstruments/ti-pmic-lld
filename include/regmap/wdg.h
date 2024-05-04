@@ -33,6 +33,10 @@
 #ifndef __PMIC_REGMAP_WDG_H__
 #define __PMIC_REGMAP_WDG_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* ==========================================================================*/
 /*                             Include Files                                 */
 /* ==========================================================================*/
@@ -137,4 +141,7 @@
 #define PMIC_WD_TMO_SHIFT          (0x00U)
 #define PMIC_WD_TMO_MASK           (uint8_t)(0x1 << PMIC_WD_TMO_SHIFT)
 
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 #endif /* __PMIC_REGMAP_WDG_H__ */

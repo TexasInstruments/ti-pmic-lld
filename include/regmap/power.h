@@ -33,6 +33,10 @@
 #ifndef __PMIC_REGMAP_POWER_H__
 #define __PMIC_REGMAP_POWER_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @brief  BUCK configuration Register Address */
 #define PMIC_POWER_BUCK_CFG_REGADDR         (0x1BU)
 
@@ -238,4 +242,7 @@
 #define PMIC_VMON_DGL_CFG3_PLDO1_SHIFT      (0x00U)
 #define PMIC_VMON_DGL_CFG3_PLDO1_MASK       (0x03U)
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* __PMIC_REGMAP_POWER_H__ */

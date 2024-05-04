@@ -33,6 +33,10 @@
 #ifndef __PMIC_REGMAP_CORE_H__
 #define __PMIC_REGMAP_CORE_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** @brief: PMIC Module Device Revision Infos */
 #define PMIC_DEV_ID_REGADDR (0x00U)
 
@@ -272,4 +276,7 @@
 #define CFG_REG_LOCK_MASK 	(0x01U) /* Bit mask for CFG_REG_LOCK */
 #define CNT_REG_LOCK_MASK 	(0x02U) /* Bit mask for CNT_REG_LOCK */
 
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 #endif /* __PMIC_REGMAP_CORE_H__ */

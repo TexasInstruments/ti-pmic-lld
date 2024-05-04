@@ -49,6 +49,10 @@
 #include "pmic_io.h"
 #include "pmic_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* ========================================================================== */
 /*                          Function Prototypess */
 /* ========================================================================== */
@@ -86,5 +90,9 @@ int32_t Pmic_SetLPWake1(Pmic_CoreHandle_t * pPmicCoreHandle,
     uint8_t tmrlpwakeData);
 int32_t Pmic_SetLPWake2(Pmic_CoreHandle_t * pPmicCoreHandle,
     uint8_t tmrlpwakeData);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* __PMIC_LOW_IQ_TIMER_H__ */
