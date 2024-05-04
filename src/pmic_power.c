@@ -104,13 +104,6 @@ initializeBuckBoostCfgReg(Pmic_powerBuckBoostCfgReg_t * config) {
     config -> bbLvlCfg = (uint8_t) PMIC_ST_DEFAULT_DATA;
 }
 
-static inline void initializeLDOCfgReg(Pmic_ldoCfgReg_t * config) {
-    /* Set default initialization values */
-    config -> ldoRtCfg = (uint8_t) PMIC_ST_DEFAULT_DATA;
-    config -> ldoIlimLvlCfg = (uint8_t) PMIC_ST_DEFAULT_DATA;
-    config -> ldoLvlCfg = (uint8_t) PMIC_ST_DEFAULT_DATA;
-}
-
 static inline void initializePLDOCfgReg(Pmic_pldoCfgReg_t * config) {
     /* Set default initialization values */
     config -> pldoModeSel = (uint8_t) PMIC_ST_DEFAULT_DATA;
@@ -124,37 +117,6 @@ static inline void initializePLDOVTrackRTReg(Pmic_pldoVTrackRtReg_t * config) {
     config -> pldoVTrackRng = (uint8_t) PMIC_ST_DEFAULT_DATA;
     config -> pldo1RTCfgVal = (uint8_t) PMIC_ST_DEFAULT_DATA;
     config -> pldo2RTCfgVal = (uint8_t) PMIC_ST_DEFAULT_DATA;
-}
-
-static inline void initializePLDOEnOutReg(Pmic_pldoEnOutCtrlReg_t * config) {
-    /* Set default initialization values */
-    config -> enOut1Enable = (uint8_t) PMIC_ST_DEFAULT_DATA;
-    config -> enOut2Enable = (uint8_t) PMIC_ST_DEFAULT_DATA;
-    config -> pldo1Ctrl = (uint8_t) PMIC_ST_DEFAULT_DATA;
-    config -> pldo2Ctrl = (uint8_t) PMIC_ST_DEFAULT_DATA;
-    config -> pldoEnOutRegAddr = (uint8_t) PMIC_ST_DEFAULT_DATA;
-}
-
-static inline void initializeLPVMonCtrlReg(Pmic_lpVMonCtrlReg_t * config) {
-    /* Set default initialization values */
-    config -> lpExtVMon2Ctrl = (uint8_t) PMIC_ST_DEFAULT_DATA;
-    config -> lpExtVMon1Ctrl = (uint8_t) PMIC_ST_DEFAULT_DATA;
-    config -> lppldo2VMonCtrl = (uint8_t) PMIC_ST_DEFAULT_DATA;
-    config -> lppldo1VMonCtrl = (uint8_t) PMIC_ST_DEFAULT_DATA;
-    config -> lpldo4VMonCtrl = (uint8_t) PMIC_ST_DEFAULT_DATA;
-    config -> lpldo3VMonCtrl = (uint8_t) PMIC_ST_DEFAULT_DATA;
-    config -> lpldo2VMonCtrl = (uint8_t) PMIC_ST_DEFAULT_DATA;
-    config -> lpldo1VMonCtrl = (uint8_t) PMIC_ST_DEFAULT_DATA;
-    config -> lpVmonCtrlRegAddr = (uint8_t) PMIC_ST_DEFAULT_DATA;
-}
-
-static inline void initializeLPConfigReg(Pmic_lpConfigCtrlReg_t * config) {
-    /* Set default initialization values */
-    config -> lpBBOVPCtrl = (uint8_t) PMIC_ST_DEFAULT_DATA;
-    config -> lpBBVMonCtrl = (uint8_t) PMIC_ST_DEFAULT_DATA;
-    config -> lpTSDperConfig = (uint8_t) PMIC_ST_DEFAULT_DATA;
-    config -> lpVMonperConfig = (uint8_t) PMIC_ST_DEFAULT_DATA;
-    config -> lpCfgRegAddr = (uint8_t) PMIC_ST_DEFAULT_DATA;
 }
 
 static inline void initializeLDOControlReg(Pmic_ldoCtrlReg_t * config) {

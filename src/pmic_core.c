@@ -265,8 +265,12 @@ int32_t Pmic_checkPmicCoreHandle(const Pmic_CoreHandle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
     uint32_t expectedInitStatus = 0U;
 
-    if (handle == NULL) {
+    if ((handle == NULL) || (handle->pCommHandle == NULL)) {
         status = PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if ((status == PMIC_ST_SUCCESS) && (handle->pFnPmicCommIoRead == NULL)) {
+        status = PMIC_ST_ERR_NULL_FPTR;
     }
 
     if (status == PMIC_ST_SUCCESS) {
@@ -642,9 +646,10 @@ int32_t Pmic_getStateStatReg(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t
-Pmic_initCoreHandleBasicDevCfgParams(const Pmic_CoreCfg_t *pPmicConfigData,
-    Pmic_CoreHandle_t *pPmicCoreHandle) {
+int32_t Pmic_initCoreHandleBasicDevCfgParams(
+    const Pmic_CoreCfg_t *pPmicConfigData,
+    Pmic_CoreHandle_t *pPmicCoreHandle)
+{
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
     /* Check and update PMIC Handle device type */
@@ -700,8 +705,10 @@ Pmic_initCoreHandleBasicDevCfgParams(const Pmic_CoreCfg_t *pPmicConfigData,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_initCoreHandleCommIOCriticalSectionFns(
-    const Pmic_CoreCfg_t *pPmicConfigData, Pmic_CoreHandle_t *pPmicCoreHandle) {
+int32_t Pmic_initCoreHandleCommIOCriticalSectionFns(
+    const Pmic_CoreCfg_t *pPmicConfigData,
+    Pmic_CoreHandle_t *pPmicCoreHandle)
+{
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
     /* Check and update PMIC Handle Comm IO RD Fn */
@@ -809,7 +816,7 @@ int32_t Pmic_validateDevOnBus(Pmic_CoreHandle_t *pPmicCoreHandle) {
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_updateSubSysInfoValidateMainQaCommIFRdWr(
+int32_t Pmic_updateSubSysInfoValidateMainQaCommIFRdWr(
     const Pmic_CoreCfg_t *pPmicConfigData, Pmic_CoreHandle_t *pPmicCoreHandle) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
@@ -939,8 +946,7 @@ int32_t Pmic_deinit(Pmic_CoreHandle_t *pPmicCoreHandle) {
  * @param pRegAddr Pointer to store the address of the scratch pad register.
  * @return void
  */
-static void Pmic_getScratchPadRegAddr(uint8_t scratchPadRegId,
-    uint8_t *pRegAddr) {
+static void Pmic_getScratchPadRegAddr(uint8_t scratchPadRegId, uint8_t *pRegAddr) {
     switch (scratchPadRegId) {
     case PMIC_SCRATCH_PAD_REG_1:
         *pRegAddr = PMIC_CUSTOMER_SCRATCH1_REGADDR;
@@ -1716,7 +1722,7 @@ int32_t Pmic_getPinValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_getSafeOut1Stat(Pmic_CoreHandle_t *pPmicCoreHandle,
+int32_t Pmic_getSafeOut1Stat(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_CommonCtrlStat_t *pCommonCtrlStat) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -1743,8 +1749,7 @@ static int32_t Pmic_getSafeOut1Stat(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_getNRstPinStat(Pmic_CoreHandle_t *pPmicCoreHandle,
-    Pmic_CommonCtrlStat_t *pCommonCtrlStat) {
+int32_t Pmic_getNRstPinStat(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_CommonCtrlStat_t *pCommonCtrlStat) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
 
@@ -1770,7 +1775,7 @@ static int32_t Pmic_getNRstPinStat(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_getEnOutPinStat(Pmic_CoreHandle_t *pPmicCoreHandle,
+int32_t Pmic_getEnOutPinStat(Pmic_CoreHandle_t *pPmicCoreHandle,
     Pmic_CommonCtrlStat_t *pCommonCtrlStat) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
@@ -1798,9 +1803,10 @@ static int32_t Pmic_getEnOutPinStat(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t
-Pmic_getEnOutNrstSafeOut1PinStat(Pmic_CoreHandle_t *pPmicCoreHandle,
-    Pmic_CommonCtrlStat_t *pCommonCtrlStat) {
+int32_t Pmic_getEnOutNrstSafeOut1PinStat(
+    Pmic_CoreHandle_t *pPmicCoreHandle, 
+    Pmic_CommonCtrlStat_t *pCommonCtrlStat)
+{
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
     if ((PMIC_ST_SUCCESS == pmicStatus) &&

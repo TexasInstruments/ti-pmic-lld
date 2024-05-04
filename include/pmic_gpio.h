@@ -651,8 +651,8 @@ void Pmic_gpioSelectRegister(uint8_t gpo, uint8_t *pRegAddr);
  *
  * @ingroup Pmic_GPIOFunctions
  */
-static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                     const Pmic_GpioCfg_t gpioCfg);
+int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
+                             const Pmic_GpioCfg_t gpioCfg);
 
 /**
  * @brief Gets the pull control configuration for a GPIO pin.
@@ -677,30 +677,6 @@ static int32_t Pmic_gpioSetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
  */
 int32_t Pmic_gpioGetPullCtrl(Pmic_CoreHandle_t *pPmicCoreHandle,
                              Pmic_GpioCfg_t *pGpioCfg);
-
-/**
- * @brief Sets the deglitch, output signal type, and pull control configurations for a GPIO pin.
- *
- * This function sets the deglitch time, output signal type, and pull control configurations
- * for the specified GPIO pin (`pin`). Depending on the pin number, it invokes the corresponding
- * function to configure the deglitch time for either GPO1/GPO2 or GPO3/GPO4. The deglitch time
- * configuration is provided through the `GpioRdbkDglCfg` parameter. The function then returns
- * the status of the operation.
- *
- * @param pPmicCoreHandle Pointer to the PMIC core handle.
- * @param pin GPIO pin number for which to set the configurations.
- * @param GpioRdbkDglCfg Pointer to the GPIO read-back deglitch configuration structure.
- *
- * @return Status of the operation.
- *         - PMIC_ST_SUCCESS if the operation is successful.
- *         - Error code if the operation fails.
- *
- * @ingroup Pmic_GPIOFunctions
- */
-static int32_t Pmic_gpioSetDeglitchOutsigtypePulCtrlCfg(
-    Pmic_CoreHandle_t *pPmicCoreHandle,
-    const uint8_t pin,
-    Pmic_GpioRdbkDglCfg_t *GpioRdbkDglCfg);
 
 /**
  * @brief Sets the configuration for a GPIO pin.

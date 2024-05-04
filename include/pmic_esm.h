@@ -818,9 +818,7 @@ int32_t Pmic_esmGetEnableState(Pmic_CoreHandle_t * pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-static int32_t
-Pmic_esmSetErrcntthresholdEndrvClrModeCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_EsmCfg_t esmCfg);
+int32_t Pmic_esmSetErrcntthresholdEndrvClrModeCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_EsmCfg_t esmCfg);
 
 /**
  * @brief Set Hmax, Hmin, Lmax, and Lmin configuration for the Error Signaling Module (ESM).
@@ -837,9 +835,7 @@ Pmic_esmSetErrcntthresholdEndrvClrModeCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-static int32_t
-Pmic_esmSetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_EsmCfg_t esmCfg);
+int32_t Pmic_esmSetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t * pPmicCoreHandle, const Pmic_EsmCfg_t esmCfg);
 
 /**
  * @brief Set the configuration parameters for the Error Signaling Module (ESM).
@@ -857,8 +853,7 @@ Pmic_esmSetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-static int32_t Pmic_esmSetConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_EsmCfg_t esmCfg);
+int32_t Pmic_esmSetConfig(Pmic_CoreHandle_t * pPmicCoreHandle, const Pmic_EsmCfg_t esmCfg);
 
 /**
  * @brief Retrieve the Hmax, Hmin, Lmax, and Lmin configuration parameters for the Error Signaling Module (ESM).
@@ -877,9 +872,7 @@ static int32_t Pmic_esmSetConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-static int32_t
-Pmic_esmGetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_EsmCfg_t * pEsmCfg);
+int32_t Pmic_esmGetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t * pPmicCoreHandle, Pmic_EsmCfg_t * pEsmCfg);
 
 /**
  * @brief Retrieve the configuration parameters for the Error Signaling Module (ESM).
@@ -898,8 +891,7 @@ Pmic_esmGetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
  *
  * @ingroup Pmic_ESMFunctions
  */
-static int32_t Pmic_esmGetConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_EsmCfg_t * pEsmCfg);
+int32_t Pmic_esmGetConfig(Pmic_CoreHandle_t * pPmicCoreHandle, Pmic_EsmCfg_t * pEsmCfg);
 
 /**
  * @brief Set the configuration for the Error Signaling Module (ESM).

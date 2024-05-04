@@ -1785,9 +1785,8 @@ int32_t Pmic_getStateStatReg(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_CoreFunctions
  */
-static int32_t
-Pmic_initCoreHandleBasicDevCfgParams(const Pmic_CoreCfg_t *pPmicConfigData,
-                                     Pmic_CoreHandle_t *pPmicCoreHandle);
+int32_t Pmic_initCoreHandleBasicDevCfgParams(const Pmic_CoreCfg_t *pPmicConfigData,
+                                             Pmic_CoreHandle_t *pPmicCoreHandle);
 
 /**
  * @brief Initialize the PMIC core handle with communication I/O critical
@@ -1811,8 +1810,8 @@ Pmic_initCoreHandleBasicDevCfgParams(const Pmic_CoreCfg_t *pPmicConfigData,
  *
  * @ingroup Pmic_CoreFunctions
  */
-static int32_t Pmic_initCoreHandleCommIOCriticalSectionFns(
-    const Pmic_CoreCfg_t *pPmicConfigData, Pmic_CoreHandle_t *pPmicCoreHandle);
+int32_t Pmic_initCoreHandleCommIOCriticalSectionFns(const Pmic_CoreCfg_t *pPmicConfigData,
+                                                    Pmic_CoreHandle_t *pPmicCoreHandle);
 
 /**
  * @brief Validate the presence of the device on the bus.
@@ -1853,8 +1852,8 @@ int32_t Pmic_validateDevOnBus(Pmic_CoreHandle_t *pPmicCoreHandle);
  *
  * @ingroup Pmic_CoreFunctions
  */
-static int32_t Pmic_updateSubSysInfoValidateMainQaCommIFRdWr(
-    const Pmic_CoreCfg_t *pPmicConfigData, Pmic_CoreHandle_t *pPmicCoreHandle);
+int32_t Pmic_updateSubSysInfoValidateMainQaCommIFRdWr(const Pmic_CoreCfg_t *pPmicConfigData,
+                                                      Pmic_CoreHandle_t *pPmicCoreHandle);
 
 /**
  * @brief Initialize the PMIC core.
@@ -1894,22 +1893,6 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pPmicConfigData,
  * @ingroup Pmic_CoreFunctions
  */
 int32_t Pmic_deinit(Pmic_CoreHandle_t *pPmicCoreHandle);
-
-/**
- * @brief Get the address of the scratch pad register.
- * This function retrieves the address of the specified scratch pad register
- * based on the provided register ID. The scratch pad registers are used for
- * storing temporary data or configuration values. This function is typically
- * called before reading from or writing to a scratch pad register.
- *
- * @param scratchPadRegId Scratch pad register ID.
- * @param pRegAddr Pointer to store the address of the scratch pad register.
- * @return void
- *
- * @ingroup Pmic_CoreFunctions
- */
-static void Pmic_getScratchPadRegAddr(uint8_t scratchPadRegId,
-                                      uint8_t *pRegAddr);
 
 /**
  * @brief Set a value to the scratch pad register.
@@ -2177,22 +2160,6 @@ int32_t Pmic_getDiagOutCtrlConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
                                   Pmic_DiagOutCfgCtrl_t *pDiagOutCfgCtrl);
 
 /**
- * @brief Get the bit field shift and mask values for a given pin type.
- * This function retrieves the bit field shift and mask values from the PMIC
- * device registers based on the specified pin type. It is used internally to
- * decode the register values related to various pin types.
- *
- * @param pinType The type of pin for which bit field values are required.
- * @param pBitShift Pointer to store the bit field shift value.
- * @param pBitMask Pointer to store the bit field mask value.
- *
- * @ingroup Pmic_CoreFunctions
- */
-static void Pmic_getPinTypeRegBitFields(const uint8_t pinType,
-                                        uint8_t *pBitShift,
-                                        uint8_t *pBitMask);
-
-/**
  * @brief Get the pin value.
  * This function retrieves the value of the specified pin from the PMIC device.
  * It reads the status register associated with the pin type and extracts the
@@ -2227,8 +2194,8 @@ int32_t Pmic_getPinValue(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_CoreFunctions
  */
-static int32_t Pmic_getSafeOut1Stat(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                    Pmic_CommonCtrlStat_t *pCommonCtrlStat);
+int32_t Pmic_getSafeOut1Stat(Pmic_CoreHandle_t *pPmicCoreHandle,
+                             Pmic_CommonCtrlStat_t *pCommonCtrlStat);
 
 /**
  * @brief Get the status of the nRST pin.
@@ -2245,8 +2212,8 @@ static int32_t Pmic_getSafeOut1Stat(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_CoreFunctions
  */
-static int32_t Pmic_getNRstPinStat(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                   Pmic_CommonCtrlStat_t *pCommonCtrlStat);
+int32_t Pmic_getNRstPinStat(Pmic_CoreHandle_t *pPmicCoreHandle,
+                            Pmic_CommonCtrlStat_t *pCommonCtrlStat);
 
 /**
  * @brief Get the status of the EN_OUT pin.
@@ -2263,8 +2230,8 @@ static int32_t Pmic_getNRstPinStat(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_CoreFunctions
  */
-static int32_t Pmic_getEnOutPinStat(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                    Pmic_CommonCtrlStat_t *pCommonCtrlStat);
+int32_t Pmic_getEnOutPinStat(Pmic_CoreHandle_t *pPmicCoreHandle,
+                             Pmic_CommonCtrlStat_t *pCommonCtrlStat);
 
 /**
  * @brief Get the status of the EN_OUT, nRST, and safe output 1 pins.
@@ -2282,9 +2249,8 @@ static int32_t Pmic_getEnOutPinStat(Pmic_CoreHandle_t *pPmicCoreHandle,
  *
  * @ingroup Pmic_CoreFunctions
  */
-static int32_t
-Pmic_getEnOutNrstSafeOut1PinStat(Pmic_CoreHandle_t *pPmicCoreHandle,
-                                 Pmic_CommonCtrlStat_t *pCommonCtrlStat);
+int32_t Pmic_getEnOutNrstSafeOut1PinStat(Pmic_CoreHandle_t *pPmicCoreHandle,
+                                         Pmic_CommonCtrlStat_t *pCommonCtrlStat);
 
 /**
  * @brief Get the common status.

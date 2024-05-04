@@ -157,22 +157,6 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
     return pmicStatus;
 }
 
-static int32_t
-Pmic_validateCorehandle(const Pmic_CoreHandle_t *pPmicCoreHandle) {
-    int32_t pmicStatus = PMIC_ST_SUCCESS;
-
-    if (NULL == pPmicCoreHandle -> pCommHandle) {
-        pmicStatus = PMIC_ST_ERR_NULL_PARAM;
-    }
-
-    if ((PMIC_ST_SUCCESS == pmicStatus) &&
-        (NULL == pPmicCoreHandle -> pFnPmicCommIoRead)) {
-        pmicStatus = PMIC_ST_ERR_NULL_FPTR;
-    }
-
-    return pmicStatus;
-}
-
 static int32_t Pmic_commIoReadData(Pmic_CoreHandle_t *pPmicCoreHandle,
     uint16_t *pRegAddr, uint8_t *pBuffLength,
     uint8_t pRxBuf[], uint8_t *pinstanceType) {

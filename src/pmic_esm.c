@@ -944,7 +944,7 @@ int32_t Pmic_esmGetEnableState(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_esmSetErrcntthresholdEndrvClrModeCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_EsmCfg_t esmCfg) {
+int32_t Pmic_esmSetErrcntthresholdEndrvClrModeCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_EsmCfg_t esmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
     if (true == Pmic_validParamCheck(esmCfg.validParams, PMIC_ESM_CFG_ERR_CNT_THR_VALID)) {
@@ -977,9 +977,7 @@ static int32_t Pmic_esmSetErrcntthresholdEndrvClrModeCfg(Pmic_CoreHandle_t *pPmi
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t
-Pmic_esmSetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
-    const Pmic_EsmCfg_t esmCfg) {
+int32_t Pmic_esmSetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_EsmCfg_t esmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
     if (true ==
@@ -1019,8 +1017,7 @@ Pmic_esmSetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_esmSetConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
-    const Pmic_EsmCfg_t esmCfg) {
+int32_t Pmic_esmSetConfig(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_EsmCfg_t esmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
     if (true ==
@@ -1052,9 +1049,7 @@ static int32_t Pmic_esmSetConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t
-Pmic_esmGetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
-    Pmic_EsmCfg_t *pEsmCfg) {
+int32_t Pmic_esmGetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_EsmCfg_t *pEsmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
     if (true ==
@@ -1094,8 +1089,7 @@ Pmic_esmGetHmaxHminLmaxLminCfg(Pmic_CoreHandle_t *pPmicCoreHandle,
  * @return pmicStatus Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t Pmic_esmGetConfig(Pmic_CoreHandle_t *pPmicCoreHandle,
-    Pmic_EsmCfg_t *pEsmCfg) {
+int32_t Pmic_esmGetConfig(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_EsmCfg_t *pEsmCfg) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
     if (true ==
