@@ -37,7 +37,11 @@
  *   @brief   This file contains the default API's for PMIC ILIM configuration
  */
 #include "pmic_ilim.h"
+
 #include "regmap/ilim.h"
+#include "pmic.h"
+#include "pmic_core.h"
+#include "pmic_io.h"
 
 /**
  * @brief API to set ILIM Configuration

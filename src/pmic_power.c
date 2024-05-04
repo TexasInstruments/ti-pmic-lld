@@ -40,10 +40,15 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
+#include <stddef.h>
+#include <stdint.h>
+
 #include "pmic_power.h"
 #include "regmap/power.h"
-
 #include "pmic_core.h"
+#include "pmic.h"
+#include "pmic_io.h"
+#include "pmic_types.h"
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */

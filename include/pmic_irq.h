@@ -40,10 +40,14 @@
 #ifndef __PMIC_IRQ_H__
 #define __PMIC_IRQ_H__
 
+#include <stdbool.h>
+#include <stdint.h>
+
 /* ==========================================================================*/
 /*                             Include Files                                 */
 /* ==========================================================================*/
 #include "pmic_core.h"
+#include "pmic_types.h"
 
 #ifdef __cplusplus
 extern "C" {

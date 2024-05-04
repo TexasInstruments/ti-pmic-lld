@@ -42,7 +42,13 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 #include "pmic_esm.h"
+
+#include <stddef.h>
+
 #include "regmap/esm.h"
+#include "pmic.h"
+#include "pmic_core.h"
+#include "pmic_io.h"
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */

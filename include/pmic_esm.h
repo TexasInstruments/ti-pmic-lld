@@ -40,12 +40,16 @@
 #ifndef __PMIC_ESM_H__
 #define __PMIC_ESM_H__
 
+#include <stdbool.h>
+#include <stdint.h>
+
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
 #include "pmic.h"
 #include "pmic_core.h"
 #include "pmic_io.h"
+#include "pmic_types.h"
 
 #ifdef __cplusplus
 extern "C" {

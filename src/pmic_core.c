@@ -41,6 +41,9 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 #include "pmic_core.h"
+
+#include <stddef.h>
+
 #include "pmic_io.h"
 #include "regmap/core.h"
 

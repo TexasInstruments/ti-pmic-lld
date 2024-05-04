@@ -43,8 +43,13 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 #include "pmic_irq.h"
+
+#include <stddef.h>
+
 #include "pmic_io.h"
 #include "regmap/irq.h"
+#include "pmic.h"
+#include "pmic_core.h"
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */

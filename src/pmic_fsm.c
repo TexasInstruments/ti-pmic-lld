@@ -42,8 +42,15 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 #include "pmic_fsm.h"
+
+#include <stddef.h>
+
 #include "regmap/fsm.h"
 #include "regmap/ilim.h"
+#include "pmic.h"
+#include "pmic_core.h"
+#include "pmic_io.h"
+#include "regmap/core.h"
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */

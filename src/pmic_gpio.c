@@ -42,8 +42,13 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 #include "pmic_gpio.h"
+
+#include <stddef.h>
+
 #include "regmap/gpio.h"
 #include "pmic_io.h"
+#include "pmic.h"
+#include "pmic_core.h"
 
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
