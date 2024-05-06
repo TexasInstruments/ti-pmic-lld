@@ -244,7 +244,7 @@ void test_wdg_setCfg_longWindowDuration(void)
 
     // Set Watchdog Long Window duration to be maximum duration
     wdgCfg_expected.longWinDuration_ms = 772000;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg_expected);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg_expected);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Get actual Long Window duration and compare expected vs. actual value
@@ -265,7 +265,7 @@ void test_wdg_setCfg_window1Duration(void)
 
     // Set Watchdog Window-1 duration to be maximum duration
     wdgCfg_expected.win1Duration_us = 70400;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg_expected);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg_expected);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Get actual Window-1 duration and compare expected vs. actual value
@@ -286,7 +286,7 @@ void test_wdg_setCfg_window2Duration(void)
 
     // Set Watchdog Window-2 duration to be maximum duration
     wdgCfg_expected.win2Duration_us = 70400;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg_expected);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg_expected);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Get actual Window-2 duration and compare expected vs. actual value
@@ -307,7 +307,7 @@ void test_wdg_setCfg_failThreshold(void)
 
     // Set fail threshold to maximum value
     wdgCfg_expected.failThreshold = 7;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg_expected);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg_expected);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Get actual fail threshold and compare expected vs. actual value
@@ -328,7 +328,7 @@ void test_wdg_setCfg_resetThreshold(void)
 
     // Set fail threshold to maximum value
     wdgCfg_expected.rstThreshold = 7;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg_expected);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg_expected);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Get actual fail threshold and compare expected vs. actual value
@@ -349,7 +349,7 @@ void test_wdg_setCfg_resetEnable(void)
 
     // Enable Watchdog Reset
     wdgCfg_expected.rstEnable = PMIC_WDG_RESET_ENABLE;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg_expected);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg_expected);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Get actual Watchdog Reset Enable status and compare expected vs. actual value
@@ -359,7 +359,7 @@ void test_wdg_setCfg_resetEnable(void)
 
     // Disable Watchdog Reset
     wdgCfg_expected.rstEnable = PMIC_WDG_RESET_DISABLE;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg_expected);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg_expected);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Get actual Watchdog Reset Enable status and compare expected vs. actual value
@@ -380,7 +380,7 @@ void test_wdg_setCfg_wdgMode(void)
 
     // Set Watchdog mode to be Q&A mode
     wdgCfg_expected.wdgMode = PMIC_WDG_QA_MODE;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg_expected);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg_expected);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Get actual Watchdog mode and compare expected vs. actual value
@@ -390,7 +390,7 @@ void test_wdg_setCfg_wdgMode(void)
 
     // Set Watchdog mode to be trigger mode
     wdgCfg_expected.wdgMode = PMIC_WDG_TRIGGER_MODE;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg_expected);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg_expected);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Get actual Watchdog mode status and compare expected vs. actual value
@@ -411,7 +411,7 @@ void test_wdg_setCfg_powerHold(void)
 
     // Enable Watchdog PWRHOLD
     wdgCfg_expected.pwrHold = PMIC_WDG_PWRHOLD_ENABLE;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg_expected);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg_expected);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Get actual Watchdog PWRHOLD status and compare expected vs. actual value
@@ -421,7 +421,7 @@ void test_wdg_setCfg_powerHold(void)
 
     // Disable Watchdog PWRHOLD
     wdgCfg_expected.wdgMode = PMIC_WDG_PWRHOLD_DISABLE;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg_expected);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg_expected);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Get actual Watchdog PWRHOLD status and compare expected vs. actual value
@@ -442,7 +442,7 @@ void test_wdg_setCfg_ReturnLongWindow(void)
 
     // Enable Watchdog return to Long Window
     wdgCfg_expected.retLongWin = PMIC_WDG_RETLONGWIN_ENABLE;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg_expected);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg_expected);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Get actual Watchdog return to Long Window status and compare expected vs. actual value
@@ -452,7 +452,7 @@ void test_wdg_setCfg_ReturnLongWindow(void)
 
     // Disable Watchdog return to Long Window
     wdgCfg_expected.retLongWin = PMIC_WDG_RETLONGWIN_DISABLE;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg_expected);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg_expected);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Get actual Watchdog return to Long Window status and compare expected vs. actual value
@@ -478,7 +478,7 @@ void test_wdg_setCfg_QA_feedback(void)
     {
         // Set the feedback configuration
         wdgCfg_expected.qaFdbk = i;
-        status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg_expected);
+        status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg_expected);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
         // Get actual feedback value and compare expected vs. actual
@@ -505,7 +505,7 @@ void test_wdg_setCfg_QA_LFSR(void)
     {
         // Set the LFSR configuration
         wdgCfg_expected.qaLfsr = i;
-        status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg_expected);
+        status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg_expected);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
         // Get actual LFSR value and compare expected vs. actual
@@ -532,7 +532,7 @@ void test_wdg_setCfg_QA_questionSeed(void)
     {
         // Set the question seed
         wdgCfg_expected.qaQuesSeed = i;
-        status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg_expected);
+        status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg_expected);
         TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
         // Get actual question seed value and compare expected vs. actual
@@ -550,7 +550,7 @@ void test_wdg_setCfg_cntSel(void)
 
     // Set WD_CNT_SEL bit to 1
     wdgCfg_expected.cntSel = PMIC_WDG_CNT_SEL_2_1_SCHEME;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg_expected);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg_expected);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Get actual WD_CNT_SEL bit value and compare expected vs. actual
@@ -560,7 +560,7 @@ void test_wdg_setCfg_cntSel(void)
 
     // Set WD_CNT_SEL bit to 0
     wdgCfg_expected.cntSel = PMIC_WDG_CNT_SEL_1_1_SCHEME;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg_expected);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg_expected);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Get actual WD_CNT_SEL bit value and compare expected vs. actual
@@ -577,7 +577,7 @@ void test_wdg_setCfg_enDrvSel(void)
 
     // Set WD_ENDRV_SEL bit to 1
     wdgCfg_expected.enDrvSel = PMIC_WDG_ENDRV_SEL_CLR;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg_expected);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg_expected);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Get actual WD_ENDRV_SEL bit value and compare expected vs. actual
@@ -587,7 +587,7 @@ void test_wdg_setCfg_enDrvSel(void)
 
     // Set WD_ENDRV_SEL bit to 0
     wdgCfg_expected.cntSel = PMIC_WDG_ENDRV_SEL_NO_CLR;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg_expected);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg_expected);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Get actual WD_ENDRV_SEL bit value and compare expected vs. actual
@@ -629,7 +629,7 @@ void test_wdg_QaMode_noErrors(void)
     checkWdgEnabled();
 
     // Configure Watchdog
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Wait a small period of time so that changes propagate
@@ -655,7 +655,7 @@ void test_wdg_QaMode_noErrors(void)
         {
             wdgCfg.validParams = PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT;
             wdgCfg.retLongWin = true;
-            status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg);
+            status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg);
             TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
         }
 
@@ -683,7 +683,7 @@ void test_wdg_QaMode_noErrors(void)
     // WDG has returned to Long Window; set WD_PWRHOLD so that WDG remains in Long Window
     wdgCfg.validParams = PMIC_CFG_WDG_PWRHOLD_VALID_SHIFT;
     wdgCfg.pwrHold = true;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
     status = Pmic_wdgGetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -714,7 +714,7 @@ void test_wdg_QaMode_detect_longWindowTimeout(void)
     checkWdgEnabled();
 
     // Configure Watchdog
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Wait a small period of time so that changes propagate
@@ -733,7 +733,7 @@ void test_wdg_QaMode_detect_longWindowTimeout(void)
     wdgCfg.validParams = (PMIC_CFG_WDG_PWRHOLD_VALID_SHIFT | PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT);
     wdgCfg.pwrHold = true;
     wdgCfg.retLongWin = true;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Check whether WD_LONGWIN_TIMEOUT_INT error is raised
@@ -776,7 +776,7 @@ void test_wdg_QaMode_detect_windowTimeout(void)
     checkWdgEnabled();
 
     // Configure Watchdog
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Wait a small period of time so that changes propagate
@@ -797,7 +797,7 @@ void test_wdg_QaMode_detect_windowTimeout(void)
     // Return to Long Window after this sequence
     wdgCfg.validParams = PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT;
     wdgCfg.retLongWin = true;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Watchdog has entered Window-1; wait duration of Window-1 to cause WD_TIMEOUT error
@@ -809,7 +809,7 @@ void test_wdg_QaMode_detect_windowTimeout(void)
     // WDG has returned to Long Window; set WD_PWRHOLD so that WDG remains in Long Window
     wdgCfg.validParams = PMIC_CFG_WDG_PWRHOLD_VALID_SHIFT;
     wdgCfg.pwrHold = true;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
     status = Pmic_wdgGetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -855,7 +855,7 @@ void test_wdg_QaMode_detect_answerEarly(void)
     checkWdgEnabled();
 
     // Configure Watchdog
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Wait a small period of time so that changes propagate
@@ -876,7 +876,7 @@ void test_wdg_QaMode_detect_answerEarly(void)
     // Return to Long Window after this sequence
     wdgCfg.validParams = PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT;
     wdgCfg.retLongWin = true;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Watchdog has entered Window-1; send all answer bytes in this window to cause WD_ANSW_EARLY error
@@ -895,7 +895,7 @@ void test_wdg_QaMode_detect_answerEarly(void)
     // WDG has returned to Long Window; set WD_PWRHOLD so that WDG remains in Long Window
     wdgCfg.validParams = PMIC_CFG_WDG_PWRHOLD_VALID_SHIFT;
     wdgCfg.pwrHold = true;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
     status = Pmic_wdgGetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -941,7 +941,7 @@ void test_wdg_QaMode_detect_sequenceError(void)
     checkWdgEnabled();
 
     // Configure Watchdog
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Wait a small period of time so that changes propagate
@@ -962,7 +962,7 @@ void test_wdg_QaMode_detect_sequenceError(void)
     // Return to Long Window after this sequence
     wdgCfg.validParams = PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT;
     wdgCfg.retLongWin = true;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Watchdog has entered Window-1; wait until Window-1
@@ -979,7 +979,7 @@ void test_wdg_QaMode_detect_sequenceError(void)
     // WDG has returned to Long Window; set WD_PWRHOLD so that WDG remains in Long Window
     wdgCfg.validParams = PMIC_CFG_WDG_PWRHOLD_VALID_SHIFT;
     wdgCfg.pwrHold = true;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
     status = Pmic_wdgGetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -1027,7 +1027,7 @@ void test_wdg_QaMode_detect_answerError(void)
     checkWdgEnabled();
 
     // Configure Watchdog
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Wait a small period of time so that changes propagate
@@ -1048,7 +1048,7 @@ void test_wdg_QaMode_detect_answerError(void)
     // Return to Long Window after this sequence
     wdgCfg.validParams = PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT;
     wdgCfg.retLongWin = true;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Watchdog has entered Window-1; send incorrect Window-1 answer bytes
@@ -1069,7 +1069,7 @@ void test_wdg_QaMode_detect_answerError(void)
     // WDG has returned to Long Window; set WD_PWRHOLD so that WDG remains in Long Window
     wdgCfg.validParams = PMIC_CFG_WDG_PWRHOLD_VALID_SHIFT;
     wdgCfg.pwrHold = true;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
     status = Pmic_wdgGetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -1118,7 +1118,7 @@ void test_wdg_QaMode_detect_failError(void)
     checkWdgEnabled();
 
     // Configure Watchdog
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Wait a small period of time so that changes propagate
@@ -1144,7 +1144,7 @@ void test_wdg_QaMode_detect_failError(void)
         {
             wdgCfg.validParams = PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT;
             wdgCfg.retLongWin = true;
-            status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg);
+            status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg);
             TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
         }
 
@@ -1177,7 +1177,7 @@ void test_wdg_QaMode_detect_failError(void)
     // WDG has returned to Long Window; set WD_PWRHOLD so that WDG remains in Long Window
     wdgCfg.validParams = PMIC_CFG_WDG_PWRHOLD_VALID_SHIFT;
     wdgCfg.pwrHold = true;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
     status = Pmic_wdgGetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
@@ -1226,7 +1226,7 @@ void test_wdg_QaMode_detect_resetError(void)
     checkWdgEnabled();
 
     // Configure Watchdog
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Wait a small period of time so that changes propagate
@@ -1252,7 +1252,7 @@ void test_wdg_QaMode_detect_resetError(void)
         {
             wdgCfg.validParams = PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT;
             wdgCfg.retLongWin = true;
-            status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg);
+            status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg);
             TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
         }
 
@@ -1266,7 +1266,7 @@ void test_wdg_QaMode_detect_resetError(void)
     // WDG has returned to Long Window; set WD_PWRHOLD so that WDG remains in Long Window
     wdgCfg.validParams = PMIC_CFG_WDG_PWRHOLD_VALID_SHIFT;
     wdgCfg.pwrHold = true;
-    status = Pmic_wdgSetCfg(&pmicCoreHandle, wdgCfg);
+    status = Pmic_wdgSetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
     status = Pmic_wdgGetCfg(&pmicCoreHandle, &wdgCfg);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
