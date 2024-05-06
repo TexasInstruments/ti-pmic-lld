@@ -632,12 +632,12 @@ int32_t Pmic_wdgGetEnableState(Pmic_CoreHandle_t *pPmicCoreHandle, bool *pWdgEna
  *          User has to call Pmic_wdgEnable() before setting the configuration.
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle
- * \param   wdgCfg          [IN]    Watchdog configuration
+ * \param   pWdgCfg         [IN]    Watchdog configuration pointer
  *
  * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
  *          For valid values \ref Pmic_ErrorCodes
  */
-int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_WdgCfg_t *wdgCfg);
+int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t *pPmicCoreHandle, const Pmic_WdgCfg_t *pWdgCfg);
 
 /**
  * \brief   API to get PMIC watchdog configurations.
