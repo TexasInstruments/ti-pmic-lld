@@ -76,7 +76,6 @@ ifeq ($(build), release)
 endif
 
 SOURCES = src/pmic_core.c \
-	src/pmic_gpio.c \
 	src/pmic_ilim.c \
 	src/pmic_io.c \
 	src/pmic_irq.c \
