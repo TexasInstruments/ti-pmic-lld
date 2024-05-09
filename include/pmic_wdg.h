@@ -297,9 +297,6 @@ extern "C" {
     PMIC_CFG_WD_LONGWIN_ACTIVE_VALID_SHIFT)
 /** @} */
 
-/** @brief  Macro for PMIC Watchdog Q&A infinite sequence */
-#define PMIC_WD_QA_INFINITE_SEQ                     (0xFFFFFFFFU)
-
 /* ========================================================================== */
 /*                            Structures and Enums                            */
 /* ========================================================================== */

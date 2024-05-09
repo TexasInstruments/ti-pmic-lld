@@ -94,24 +94,24 @@ extern "C" {
 #define PMIC_WD_QA_FDBK_MASK         (uint8_t)(0x3 << PMIC_WD_QA_FDBK_SHIFT)
 
 /** @brief PMIC Watchdog Interrupt Configuration Register (WD_INT_CFG) */
-#define PMIC_WD_TH1_INT_MASK_SHIFT       (0U)
-#define PMIC_WD_TH1_INT_MASK_MASK        (uint8_t)(0x1 << PMIC_WD_TH1_INT_MASK_SHIFT)
-#define PMIC_WD_TH1_INT_CFG_SHIFT        (1U)
-#define PMIC_WD_TH1_INT_CFG_MASK         (uint8_t)(0x3 << PMIC_WD_TH1_INT_CFG_SHIFT)
-#define PMIC_WD_TH2_INT_MASK_SHIFT       (4U)
-#define PMIC_WD_TH2_INT_MASK_MASK        (uint8_t)(0x1 << PMIC_WD_TH2_INT_MASK_SHIFT)
-#define PMIC_WD_TH2_INT_CFG_SHIFT        (5U)
-#define PMIC_WD_TH2_INT_CFG_MASK         (uint8_t)(0x3 << PMIC_WD_TH2_INT_CFG_SHIFT)
+#define PMIC_WD_TH1_INT_MASK_SHIFT   (0U)
+#define PMIC_WD_TH1_INT_MASK_MASK    (uint8_t)(0x1 << PMIC_WD_TH1_INT_MASK_SHIFT)
+#define PMIC_WD_TH1_INT_CFG_SHIFT    (1U)
+#define PMIC_WD_TH1_INT_CFG_MASK     (uint8_t)(0x3 << PMIC_WD_TH1_INT_CFG_SHIFT)
+#define PMIC_WD_TH2_INT_MASK_SHIFT   (4U)
+#define PMIC_WD_TH2_INT_MASK_MASK    (uint8_t)(0x1 << PMIC_WD_TH2_INT_MASK_SHIFT)
+#define PMIC_WD_TH2_INT_CFG_SHIFT    (5U)
+#define PMIC_WD_TH2_INT_CFG_MASK     (uint8_t)(0x3 << PMIC_WD_TH2_INT_CFG_SHIFT)
 
 /** @brief PMIC Watchdog Question & Answer Count Register (WD_QA_CNT) */
-#define PMIC_WD_QUESTION_SHIFT (0U)
-#define PMIC_WD_QUESTION_MASK  (uint8_t)(0xF << PMIC_WD_QUESTION_SHIFT)
-#define PMIC_WD_ANSW_CNT_SHIFT (4U)
-#define PMIC_WD_ANSW_CNT_MASK  (uint8_t)(0x3 << PMIC_WD_ANSW_CNT_SHIFT)
+#define PMIC_WD_QUESTION_SHIFT       (0U)
+#define PMIC_WD_QUESTION_MASK        (uint8_t)(0xF << PMIC_WD_QUESTION_SHIFT)
+#define PMIC_WD_ANSW_CNT_SHIFT       (4U)
+#define PMIC_WD_ANSW_CNT_MASK        (uint8_t)(0x3 << PMIC_WD_ANSW_CNT_SHIFT)
 
 /** @brief PMIC Watchdog Answer Register (WD_ANSWER_REG) */
-#define PMIC_WD_ANSWER_SHIFT             (0U)
-#define PMIC_WD_ANSWER_MASK              (uint8_t)(0xFF << PMIC_WD_ANSWER_SHIFT)
+#define PMIC_WD_ANSWER_SHIFT         (0U)
+#define PMIC_WD_ANSWER_MASK          (uint8_t)(0xFF << PMIC_WD_ANSWER_SHIFT)
 
 /** @brief PMIC Watchdog Status Register (WD_STAT) */
 #define PMIC_WD_ERR_CNT_SHIFT        (0U)
@@ -124,22 +124,22 @@ extern "C" {
 #define PMIC_WD_FIRST_OK_MASK        (uint8_t)(0x1 << PMIC_WD_FIRST_OK_SHIFT)
 
 /** @brief PMIC Watchdog Error Status Register (WD_ERR_STAT) */
-#define PMIC_WD_TH2_ERR_SHIFT      (0x07U)
-#define PMIC_WD_TH2_ERR_MASK       (uint8_t)(0x1 << PMIC_WD_TH2_ERR_SHIFT)
-#define PMIC_WD_TH1_ERR_SHIFT      (0x06U)
-#define PMIC_WD_TH1_ERR_MASK       (uint8_t)(0x1 << PMIC_WD_TH1_ERR_SHIFT)
-#define PMIC_WD_LONGWIN_TMO_SHIFT  (0x05U)
-#define PMIC_WD_LONGWIN_TMO_MASK   (uint8_t)(0x1 << PMIC_WD_LONGWIN_TMO_SHIFT)
-#define PMIC_WD_ANSW_ERR_SHIFT     (0x04U)
-#define PMIC_WD_ANSW_ERR_MASK      (uint8_t)(0x1 << PMIC_WD_ANSW_ERR_SHIFT)
-#define PMIC_WD_SEQ_ERR_SHIFT      (0x03U)
-#define PMIC_WD_SEQ_ERR_MASK       (uint8_t)(0x1 << PMIC_WD_SEQ_ERR_SHIFT)
-#define PMIC_WD_ANSW_EARLY_SHIFT   (0x02U)
-#define PMIC_WD_ANSW_EARLY_MASK    (uint8_t)(0x1 << PMIC_WD_ANSW_EARLY_SHIFT)
-#define PMIC_WD_TRIG_EARLY_SHIFT   (0x01U)
-#define PMIC_WD_TRIG_EARLY_MASK    (uint8_t)(0x1 << PMIC_WD_TRIG_EARLY_SHIFT)
-#define PMIC_WD_TMO_SHIFT          (0x00U)
-#define PMIC_WD_TMO_MASK           (uint8_t)(0x1 << PMIC_WD_TMO_SHIFT)
+#define PMIC_WD_TH2_ERR_SHIFT        (0x07U)
+#define PMIC_WD_TH2_ERR_MASK         (uint8_t)(0x1 << PMIC_WD_TH2_ERR_SHIFT)
+#define PMIC_WD_TH1_ERR_SHIFT        (0x06U)
+#define PMIC_WD_TH1_ERR_MASK         (uint8_t)(0x1 << PMIC_WD_TH1_ERR_SHIFT)
+#define PMIC_WD_LONGWIN_TMO_SHIFT    (0x05U)
+#define PMIC_WD_LONGWIN_TMO_MASK     (uint8_t)(0x1 << PMIC_WD_LONGWIN_TMO_SHIFT)
+#define PMIC_WD_ANSW_ERR_SHIFT       (0x04U)
+#define PMIC_WD_ANSW_ERR_MASK        (uint8_t)(0x1 << PMIC_WD_ANSW_ERR_SHIFT)
+#define PMIC_WD_SEQ_ERR_SHIFT        (0x03U)
+#define PMIC_WD_SEQ_ERR_MASK         (uint8_t)(0x1 << PMIC_WD_SEQ_ERR_SHIFT)
+#define PMIC_WD_ANSW_EARLY_SHIFT     (0x02U)
+#define PMIC_WD_ANSW_EARLY_MASK      (uint8_t)(0x1 << PMIC_WD_ANSW_EARLY_SHIFT)
+#define PMIC_WD_TRIG_EARLY_SHIFT     (0x01U)
+#define PMIC_WD_TRIG_EARLY_MASK      (uint8_t)(0x1 << PMIC_WD_TRIG_EARLY_SHIFT)
+#define PMIC_WD_TMO_SHIFT            (0x00U)
+#define PMIC_WD_TMO_MASK             (uint8_t)(0x1 << PMIC_WD_TMO_SHIFT)
 
 #ifdef __cplusplus
 }
