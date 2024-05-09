@@ -195,8 +195,6 @@ extern "C" {
 #define PMIC_ST_INVALID_DATA (-((int32_t)44))
 /** @brief Error Code for Invalid PMIC Watchdog */
 #define PMIC_ST_ERR_WDG_DISABLED (-((int32_t)45))
-/** @brief Error Code for Invalid PMIC Default Data */
-#define PMIC_ST_DEFAULT_DATA (-((int32_t)9))
 /* @} */
 
 /**
