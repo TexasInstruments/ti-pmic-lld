@@ -242,7 +242,7 @@ extern "C" {
  *  @{
  */
 #define PMIC_MAIN_INST (1U << 0U)
-#define PMIC_QA_INST (1U << 1U)
+#define PMIC_QA_INST   (1U << 1U)
 
 /** @brief  Valid only to read CRC status from Page-1 using NVM Slave Address
  *          Valid only while calling the pFnPmicCommIoRead API

@@ -202,30 +202,23 @@ static int32_t Pmic_commIoReadData(Pmic_CoreHandle_t *pPmicCoreHandle,
     return pmicStatus;
 }
 
-int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
-    uint16_t regAddr, uint8_t *pRxBuffer) {
+int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t regAddr, uint8_t *pRxBuffer) {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t buffLength = 1U;
-    uint8_t rxBuf[PMIC_IO_BUF_SIZE] = {
-        0
-    };
-    uint8_t crcData[PMIC_IO_BUF_SIZE] = {
-        0
-    };
+    uint8_t rxBuf[PMIC_IO_BUF_SIZE] = {0};
+    uint8_t crcData[PMIC_IO_BUF_SIZE] = {0};
     uint8_t instanceType = (uint8_t)PMIC_MAIN_INST;
-    uint8_t crcDataLen = 0U;
     uint16_t pmicRegAddr = regAddr;
 
-    pmicStatus = Pmic_commIoReadData(pPmicCoreHandle, & pmicRegAddr, & buffLength,
-        rxBuf, & instanceType);
-    if (PMIC_ST_SUCCESS != pmicStatus) {
+    pmicStatus = Pmic_commIoReadData(pPmicCoreHandle, &pmicRegAddr, &buffLength, rxBuf, &instanceType);
+    if (pmicStatus != PMIC_ST_SUCCESS) {
         pmicStatus = PMIC_ST_ERR_FAIL;
     }
 
-    if (PMIC_ST_SUCCESS == pmicStatus) {
-        if (PMIC_INTF_SPI == pPmicCoreHandle -> commMode) {
+    if (pmicStatus == PMIC_ST_SUCCESS) {
+        if (pPmicCoreHandle->commMode == PMIC_INTF_SPI) {
             /*Copy SPI frame data to crcData */
-            for (crcDataLen = 0U; crcDataLen < (PMIC_IO_BUF_SIZE - 1U); crcDataLen++) {
+            for (uint8_t crcDataLen = 0U; crcDataLen < (PMIC_IO_BUF_SIZE - 1U); crcDataLen++) {
                 crcData[crcDataLen] = rxBuf[crcDataLen];
             }
         } else {

@@ -71,15 +71,6 @@ extern "C" {
  */
 
 /**
- * @brief  PMIC driver Core Handle INIT status Magic Number.
- *         Used to validate Handle to avoid corrupted PmicHandle usage.
- *         On Success: (DRV_INIT_SUCCESS | Pmic_InstType_t)
- *
- * @ingroup Pmic_CoreMacros
- */
-#define DRV_INIT_SUCCESS (0xABCD0000U)
-
-/**
  * @brief Silicon Revision ID for Power Group 2.0.
  *
  * @ingroup Pmic_CoreMacros
