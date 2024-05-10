@@ -48,6 +48,15 @@ extern "C" {
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
+/**
+ * @anchor Pmic_CrcEnableCfg
+ * @name PMIC CRC Enable/Disable Configuration
+ *
+ *  @{
+ */
+#define PMIC_CRC_DISABLE    (0U)
+#define PMIC_CRC_ENABLE     (1U)
+/* @} */
 
 /*==========================================================================*/
 /*                         Function Declarations                            */
