@@ -67,12 +67,12 @@ build ?= release
 
 ifeq ($(build), debug)
     CFLAGS += $(DEBUGFLAGS)
-    TARGET = $(LIB_DIR)/pmic_lib_$(build).so
+    TARGET = $(LIB_DIR)/libpmic.so
 endif
 
 ifeq ($(build), release)
     CFLAGS += $(RELEASEFLAGS)
-    TARGET = $(LIB_DIR)/pmic_lib_$(build).so
+    TARGET = $(LIB_DIR)/libpmic.so
 endif
 
 SOURCES = src/pmic_core.c \
