@@ -229,23 +229,20 @@ static int32_t CORE_validateDeviceOnBus(Pmic_CoreHandle_t *handle) {
  * @return status Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-static int32_t CORE_updateSubSysInfoAndValidateCommsIF(
-    const Pmic_CoreCfg_t *config, Pmic_CoreHandle_t *handle) {
+static int32_t CORE_updateSubSysInfoAndValidateCommsIF(const Pmic_CoreCfg_t *config, Pmic_CoreHandle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
     /* Update PMIC subsystem info to PMIC handle */
     handle->pPmic_SubSysInfo = &pmicSubSysInfo[handle->pmicDeviceType];
 
-    if (status == PMIC_ST_SUCCESS) {
-        /* Start Critical Section */
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_commIntf_recvByte(handle, PMIC_WD_LONGWIN_CFG_REG, &regVal);
-        Pmic_criticalSectionStop(handle);
+    /* Start Critical Section */
+    Pmic_criticalSectionStart(handle);
+    status = Pmic_commIntf_recvByte(handle, PMIC_WD_LONGWIN_CFG_REG, &regVal);
+    Pmic_criticalSectionStop(handle);
 
-        if (status == PMIC_ST_SUCCESS) {
-            handle->drvInitStatus |= config->instType;
-        }
+    if (status == PMIC_ST_SUCCESS) {
+        handle->drvInitStatus |= config->instType;
     }
 
     return status;
@@ -293,6 +290,12 @@ int32_t Pmic_init(Pmic_CoreHandle_t *handle, const Pmic_CoreCfg_t *config) {
         status = CORE_initApplicationFunctions(config, handle);
     }
 
+    // Set up the valid subsystems for this device and ensure that we can
+    // communicate with the selected IO interface.
+    if (status == PMIC_ST_SUCCESS) {
+        status = CORE_updateSubSysInfoAndValidateCommsIF(config, handle);
+    }
+
     /* Check for required members for I2C/SPI Main handle comm */
     if ((status == PMIC_ST_SUCCESS) &&
          ((handle->pFnPmicCritSecStart == NULL) ||
@@ -301,6 +304,9 @@ int32_t Pmic_init(Pmic_CoreHandle_t *handle, const Pmic_CoreCfg_t *config) {
           (handle->pFnPmicCommIoWrite == NULL))) {
         status = PMIC_ST_ERR_INSUFFICIENT_CFG;
     }
+
+    // Initialization is complete, mark it with magic.
+    handle->drvInitStatus |= DRV_INIT_SUCCESS;
 
     return status;
 }
