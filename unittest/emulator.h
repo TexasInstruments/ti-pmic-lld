@@ -8,7 +8,12 @@ typedef struct {
     uint8_t id;
 } tCommunicationHandle;
 
+typedef struct sTestFramework tTestFramework;
+
 void CommunicationHandleInit(tCommunicationHandle *handle, bool isQAComm);
+void TestFrameworkInit(tTestFramework *framework, struct Pmic_CoreHandle_s *pmicCoreHandle);
+void TestFrameworkReset(tTestFramework *framework);
+
 void PrintRegisterMap(void);
 
 int32_t PmicCommIoRead(
