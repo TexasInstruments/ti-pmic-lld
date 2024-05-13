@@ -41,6 +41,11 @@
 /*                             Include Files                                  */
 /* ========================================================================== */
 #include <stddef.h>
+#include <stdbool.h>
+#include <stdint.h>
+
+#include "pmic.h"
+#include "pmic_types.h"
 
 #include "pmic_core.h"
 #include "pmic_io.h"
@@ -204,10 +209,6 @@ static int32_t CORE_validateDeviceOnBus(Pmic_CoreHandle_t *handle) {
         }
     }
 
-    if ((status != PMIC_ST_WARN_INV_DEVICE_ID) && (status != PMIC_ST_SUCCESS)) {
-        status = PMIC_ST_ERR_FAIL;
-    }
-
     return status;
 }
 
@@ -231,27 +232,15 @@ static int32_t CORE_updateSubSysInfoAndValidateCommsIF(
     /* Update PMIC subsystem info to PMIC handle */
     handle->pPmic_SubSysInfo = &pmicSubSysInfo[handle->pmicDeviceType];
 
-    if (status != PMIC_ST_SUCCESS) {
-        status = PMIC_ST_ERR_FAIL;
-    }
-
     if (status == PMIC_ST_SUCCESS) {
         /* Start Critical Section */
         Pmic_criticalSectionStart(handle);
         status = Pmic_commIntf_recvByte(handle, PMIC_WD_LONGWIN_CFG_REG, &regVal);
         Pmic_criticalSectionStop(handle);
 
-        if (status != PMIC_ST_SUCCESS) {
-            status = PMIC_ST_ERR_FAIL;
-        }
-
         if (status == PMIC_ST_SUCCESS) {
             handle->drvInitStatus |= config->instType;
         }
-    }
-
-    if (status != PMIC_ST_SUCCESS) {
-        status = PMIC_ST_ERR_FAIL;
     }
 
     return status;
@@ -273,13 +262,14 @@ inline bool Pmic_validParamStatusCheck(uint32_t validParamVal, uint8_t bitPos, i
  * This function initializes the PMIC core based on the provided configuration
  * data.
  *
- * @param config Pointer to the PMIC core configuration data structure.
  * @param handle Pointer to the PMIC core handle structure to be
  * initialized.
+ * @param config Pointer to the PMIC core configuration data structure.
+ *
  * @return status Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
-int32_t Pmic_init(const Pmic_CoreCfg_t *config, Pmic_CoreHandle_t *handle) {
+int32_t Pmic_init(Pmic_CoreHandle_t *handle, const Pmic_CoreCfg_t *config) {
     int32_t status = PMIC_ST_SUCCESS;
 
     if ((handle == NULL) || (config == NULL)) {
@@ -380,9 +370,9 @@ int32_t Pmic_checkPmicCoreHandle(const Pmic_CoreHandle_t *handle) {
     }
 
     if (status == PMIC_ST_SUCCESS) {
-        if (handle->commMode == PMIC_INTF_SINGLE_I2C) {
+        if (handle->commMode == PMIC_INTF_I2C_SINGLE) {
             expectedInitStatus = (uint32_t)(DRV_INIT_SUCCESS | (uint8_t)PMIC_MAIN_INST);
-        } else if (handle->commMode == PMIC_INTF_DUAL_I2C) {
+        } else if (handle->commMode == PMIC_INTF_I2C_DUAL) {
             expectedInitStatus = (uint32_t)(DRV_INIT_SUCCESS | (uint8_t)PMIC_MAIN_INST | (uint8_t)PMIC_QA_INST);
         } else if (handle->commMode == PMIC_INTF_SPI) {
             expectedInitStatus = (uint32_t)(DRV_INIT_SUCCESS | (uint8_t)PMIC_MAIN_INST);

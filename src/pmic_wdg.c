@@ -40,7 +40,6 @@
 
 #include "pmic.h"
 #include "pmic_wdg.h"
-#include "pmic_core.h"
 #include "pmic_io.h"
 #include "regmap/wdg.h"
 #include "pmic_types.h"
@@ -85,7 +84,7 @@ static int32_t WDG_validatePmicCoreHandle(const Pmic_CoreHandle_t *handle) {
 
     /* Check the watch dog sub-system supported by pmic device */
     if ((status == PMIC_ST_SUCCESS) && !handle->pPmic_SubSysInfo->wdgEnable) {
-        status = PMIC_ST_ERR_INV_DEVICE;
+        status = PMIC_ST_ERR_INV_SUBSYSTEM;
     }
 
     return status;

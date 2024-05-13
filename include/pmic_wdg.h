@@ -32,9 +32,10 @@
  *****************************************************************************/
 #ifndef __PMIC_WDG_H__
 #define __PMIC_WDG_H__
+
 /**
- *  @file pmic_wdg.h
- *  @brief PMIC Driver Watchdog API/Interface
+ * @file pmic_wdg.h
+ * @brief PMIC Driver Watchdog API/Interface
  */
 
 /**
@@ -63,8 +64,8 @@
 /* ==========================================================================*/
 /*                             Include Files                                 */
 /* ==========================================================================*/
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -273,7 +274,7 @@ extern "C" {
     PMIC_CFG_WD_ANSW_EARLY_ERR_VALID_SHIFT      | \
     PMIC_CFG_WD_SEQ_ERR_ERR_VALID_SHIFT         | \
     PMIC_CFG_WD_ANSW_ERR_ERR_VALID_SHIFT        | \
-    PMIC_CFG_WD_TH1_INT_ERR_VALID_SHIFT        | \
+    PMIC_CFG_WD_TH1_INT_ERR_VALID_SHIFT         | \
     PMIC_CFG_WD_TH2_INT_ERR_VALID_SHIFT)
 /** @} */
 

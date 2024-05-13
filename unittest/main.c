@@ -48,7 +48,7 @@ int32_t PmicHandleInit(void) {
         .pFnPmicCritSecStop = CritSecStop,
     };
 
-    return Pmic_init(&coreCfg, &PmicHandle);
+    return Pmic_init(&PmicHandle, &coreCfg);
 }
 
 void PmicHandleInitSetup(void) {

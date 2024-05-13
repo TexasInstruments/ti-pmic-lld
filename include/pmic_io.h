@@ -38,7 +38,6 @@
 /* ========================================================================== */
 #include <stdint.h>
 
-#include "pmic.h"
 #include "pmic_types.h"
 
 #ifdef __cplusplus

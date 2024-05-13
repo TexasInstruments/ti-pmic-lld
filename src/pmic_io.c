@@ -34,9 +34,11 @@
 /*========================================================================== */
 /*                            Include Files                                  */
 /*========================================================================== */
-#include "pmic_io.h"
+#include <stdint.h>
 
 #include "pmic.h"
+
+#include "pmic_io.h"
 
 /*========================================================================== */
 /*                          Macros & Typedefs                                */
@@ -211,9 +213,6 @@ int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t regA
     uint16_t pmicRegAddr = regAddr;
 
     pmicStatus = Pmic_commIoReadData(pPmicCoreHandle, &pmicRegAddr, &buffLength, rxBuf, &instanceType);
-    if (pmicStatus != PMIC_ST_SUCCESS) {
-        pmicStatus = PMIC_ST_ERR_FAIL;
-    }
 
     if (pmicStatus == PMIC_ST_SUCCESS) {
         if (pPmicCoreHandle->commMode == PMIC_INTF_SPI) {
