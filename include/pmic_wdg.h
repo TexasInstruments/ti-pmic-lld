@@ -45,20 +45,20 @@
 
 /**
  * @defgroup DRV_PMIC_WDG_CONFIG_GROUP PMIC Watchdog Configuration
- * @brief Types and functions for configuring the PMIC watchdog module.
  * @ingroup DRV_PMIC_WDG_MODULE
+ * @brief Types and functions for configuring the PMIC watchdog module.
 */
 
 /**
  * @defgroup DRV_PMIC_WDG_ERROR_GROUP PMIC Watchdog Error Handling
- * @brief Types and functions for handling errors related to PMIC watchdog.
  * @ingroup DRV_PMIC_WDG_MODULE
+ * @brief Types and functions for handling errors related to PMIC watchdog.
  */
 
 /**
  * @defgroup DRV_PMIC_WDG_APP_GROUP PMIC Watchdog Application Use
- * @brief Types and functions intended to simplify use of WDG by application code.
  * @ingroup DRV_PMIC_WDG_MODULE
+ * @brief Types and functions intended to simplify use of WDG by application code.
  */
 
 /* ==========================================================================*/
@@ -643,8 +643,8 @@ int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t *handle, Pmic_WdgError_t *error
  * trigger mode or Q&A (question and answer) mode.
  *
  * @param handle [IN] PMIC Interface Handle
- * @param errors [IN] Watchdog error type to clear the status. For Valid
- * values, see @ref Pmic_WdgErrType
+ * @param errors [IN] Errors to clear, the relevant `validParams` must be set,
+ * as well as the desired struct member(s) to clear.
  *
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.

@@ -55,7 +55,7 @@ extern "C" {
  */
 #define PMIC_CRC_DISABLE    (0U)
 #define PMIC_CRC_ENABLE     (1U)
-/* @} */
+/** @} */
 
 /*==========================================================================*/
 /*                         Function Declarations                            */
@@ -73,5 +73,4 @@ uint8_t Pmic_calcCRC8(uint8_t cmd, uint8_t rdwr, uint8_t dat);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-
 #endif /*__PMIC_IO_H__*/

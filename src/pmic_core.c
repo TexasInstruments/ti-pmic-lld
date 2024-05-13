@@ -31,12 +31,6 @@
  *
  *****************************************************************************/
 
-/**
- *  @file  pmic_core.c
- *
- *  @brief This file contains PMIC generic driver APIs
- */
-
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
@@ -64,6 +58,17 @@
 #define DRV_INIT_SUCCESS (uint32_t)(0xBEEF0000)
 #define DRV_INIT_UNINIT  (uint32_t)(0x00000000)
 
+#define PMIC_SILICON_REV_ID_PG_1_0 (0x0U)
+#define PMIC_SILICON_REV_ID_PG_2_0 (0x08U)
+
+#define REG_UNLOCK_DATA1    (0x98U)
+#define REG_UNLOCK_DATA2    (0xB8U)
+#define CNT_UNLOCK_DATA1    (0x13U)
+#define CNT_UNLOCK_DATA2    (0x7DU)
+
+#define PMIC_CRC_STATUS_DISABLED (0U)
+#define PMIC_CRC_STATUS_ENABLED  (1U)
+
 /* ========================================================================== */
 /*                         Structure Declarations                             */
 /* ========================================================================== */
@@ -81,7 +86,6 @@ const Pmic_DevSubSysInfo_t pmicSubSysInfo[] = {
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
-
 /**
  * @brief Initialize the PMIC core handle with basic device configuration
  * parameters. This function initializes the PMIC core handle with basic device
@@ -136,6 +140,7 @@ static int32_t CORE_initHandleBasicDevCfg(const Pmic_CoreCfg_t *config, Pmic_Cor
  * @param config Pointer to the PMIC core configuration data structure.
  * @param handle Pointer to the PMIC core handle structure to be
  * initialized.
+ *
  * @return status Returns PMIC_ST_SUCCESS if the operation is successful;
  * otherwise, returns an error code.
  */
@@ -388,59 +393,134 @@ int32_t Pmic_checkPmicCoreHandle(const Pmic_CoreHandle_t *handle) {
     return status;
 }
 
-/**
- * @brief Set register lock/unlock configuration.
- * This function sets the register lock/unlock configuration based on the
- * provided parameters.
- *
- * @param handle Pointer to the PMIC core handle structure.
- * @param commonCtrlCfg Common control configuration structure.
- * @return status Returns PMIC_ST_SUCCESS if the operation is successful;
- * otherwise, returns an error code.
- */
-int32_t Pmic_setRegisterLockUnlock(Pmic_CoreHandle_t *handle, const Pmic_CommonCtrlCfg_t commonCtrlCfg) {
+int32_t Pmic_setRegLockState(Pmic_CoreHandle_t *handle, uint8_t lockState) {
+    int32_t status = Pmic_checkPmicCoreHandle(handle);
+
+    // Holds the sequence used for register lock/unlock. For locking, writing
+    // any sequence other than the correct one will lock the registers, in
+    // which case 0->0 is fine (which is why it is the default).
+    uint8_t seq[2] = {0, 0};
+
+    // If unlocking registers, set the correct unlock sequence.
+    if ((status == PMIC_ST_SUCCESS) && (lockState == PMIC_LOCK_DISABLE)) {
+        seq[0] = REG_UNLOCK_DATA1;
+        seq[1] = REG_UNLOCK_DATA2;
+    }
+
+    // Obtain Critical Section
+    Pmic_criticalSectionStart(handle);
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_commIntf_sendByte(handle, CFG_REG_UNLOCK_SEQ_REG, seq[0]);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_commIntf_sendByte(handle, CFG_REG_UNLOCK_SEQ_REG, seq[1]);
+    }
+
+    // Release Critical Section
+    Pmic_criticalSectionStop(handle);
+
+    return status;
+}
+
+int32_t Pmic_setCntLockState(Pmic_CoreHandle_t *handle, uint8_t lockState) {
+    int32_t status = Pmic_checkPmicCoreHandle(handle);
+
+    // Holds the sequence used for register lock/unlock. For locking, writing
+    // any sequence other than the correct one will lock the registers, in
+    // which case 0->0 is fine (which is why it is the default).
+    uint8_t seq[2] = {0, 0};
+
+    // If unlocking registers, set the correct unlock sequence.
+    if ((status == PMIC_ST_SUCCESS) && (lockState == PMIC_LOCK_DISABLE)) {
+        seq[0] = CNT_UNLOCK_DATA1;
+        seq[1] = CNT_UNLOCK_DATA2;
+    }
+
+    // Obtain Critical Section
+    Pmic_criticalSectionStart(handle);
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_commIntf_sendByte(handle, CNT_REG_UNLOCK_SEQ_REG, seq[0]);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_commIntf_sendByte(handle, CNT_REG_UNLOCK_SEQ_REG, seq[1]);
+    }
+
+    // Release Critical Section
+    Pmic_criticalSectionStop(handle);
+
+    return status;
+}
+
+int32_t Pmic_setLockCfg(Pmic_CoreHandle_t *handle, const Pmic_Lock_t *config) {
+    // Skip core handle check, this function uses other user facing APIs to do
+    // all handle related work, it does not need to check the handle itself.
     int32_t status = PMIC_ST_SUCCESS;
 
-    if (PMIC_ST_SUCCESS == status) {
-        Pmic_criticalSectionStart(handle);
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_REG_LOCK_VALID, status)) {
+        const uint8_t lockState = config->cfgLock ? PMIC_LOCK_ENABLE : PMIC_LOCK_DISABLE;
+        Pmic_setRegLockState(handle, lockState);
+    }
 
-        status = Pmic_commIntf_sendByte(
-            handle, PMIC_REGISTER_UNLOCK_REGADDR, commonCtrlCfg.regLock_1);
-
-        status = Pmic_commIntf_sendByte(
-            handle, PMIC_REGISTER_UNLOCK_REGADDR, commonCtrlCfg.regLock_2);
-
-        Pmic_criticalSectionStop(handle);
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_CNT_LOCK_VALID, status)) {
+        const uint8_t lockState = config->cntLock ? PMIC_LOCK_ENABLE : PMIC_LOCK_DISABLE;
+        Pmic_setCntLockState(handle, lockState);
     }
 
     return status;
 }
 
-/**
- * @brief Get register lock status.
- * This function retrieves the register lock status.
- *
- * @param handle Pointer to the PMIC core handle structure.
- * @param pCommonCtrlStat Pointer to the common control status structure to
- * store the retrieved status.
- * @return status Returns PMIC_ST_SUCCESS if the operation is successful;
- * otherwise, returns an error code.
- */
-int32_t Pmic_getRegLockStat(Pmic_CoreHandle_t *handle, Pmic_CommonCtrlStat_t *pCommonCtrlStat) {
+int32_t Pmic_getLockCfg(Pmic_CoreHandle_t *handle, Pmic_Lock_t *config) {
+    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    uint8_t regData = 0U;
+
+    // Read from REG_STAT_REG with critical section
+    if (status == PMIC_ST_SUCCESS) {
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_commIntf_recvByte(handle, REG_STAT_REG, &regData);
+        Pmic_criticalSectionStop(handle);
+    }
+
+    // Extract requested bitfields from register data
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_REG_LOCK_VALID, status)) {
+        config->cfgLock = Pmic_getBitField_b(regData, CFG_REG_LOCKED_SHIFT, CFG_REG_LOCKED_MASK);
+    }
+
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_CNT_LOCK_VALID, status)) {
+        config->cntLock = Pmic_getBitField_b(regData, CNT_REG_LOCKED_SHIFT, CNT_REG_LOCKED_MASK);
+    }
+
+    return status;
+}
+
+int32_t Pmic_getRegLockState(Pmic_CoreHandle_t *handle, uint8_t *lockState) {
+    // Skip core handle check, this function uses other user facing APIs to do
+    // all handle related work, it does not need to check the handle itself.
     int32_t status = PMIC_ST_SUCCESS;
 
-    Pmic_criticalSectionStart(handle);
+    Pmic_Lock_t lockStatus = { .validParams = PMIC_CFG_REG_LOCK_VALID_SHIFT };
+    status = Pmic_getLockCfg(handle, &lockStatus);
 
-    status = Pmic_commIntf_recvByte(
-        handle, PMIC_REG_LOCK_STATUS_REGADDR, &pCommonCtrlStat->cfgregLockStat);
+    if (status == PMIC_ST_SUCCESS) {
+        *lockState = lockStatus.cfgLock ? PMIC_LOCK_ENABLE : PMIC_LOCK_DISABLE;
+    }
 
-    Pmic_criticalSectionStop(handle);
+    return status;
+}
 
-    if (PMIC_ST_SUCCESS == status) {
-        pCommonCtrlStat->cfgregLockStat = Pmic_getBitField(
-            pCommonCtrlStat->cfgregLockStat,
-            PMIC_CFGREG_LOCKED_STATUS_SHIFT,
-            PMIC_CFGREG_LOCK_STATUS_RD_MASK);
+int32_t Pmic_getCntLockState(Pmic_CoreHandle_t *handle, uint8_t *lockState) {
+    // Skip core handle check, this function uses other user facing APIs to do
+    // all handle related work, it does not need to check the handle itself.
+    int32_t status = PMIC_ST_SUCCESS;
+
+    Pmic_Lock_t lockStatus = { .validParams = PMIC_CFG_CNT_LOCK_VALID_SHIFT };
+    status = Pmic_getLockCfg(handle, &lockStatus);
+
+    if (status == PMIC_ST_SUCCESS) {
+        *lockState = lockStatus.cntLock ? PMIC_LOCK_ENABLE : PMIC_LOCK_DISABLE;
     }
 
     return status;

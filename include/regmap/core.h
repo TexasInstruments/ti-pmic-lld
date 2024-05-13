@@ -33,6 +33,8 @@
 #ifndef __PMIC_REGMAP_CORE_H__
 #define __PMIC_REGMAP_CORE_H__
 
+#include <stdint.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -56,9 +58,9 @@ extern "C" {
 #define PMIC_BUCK_BST_CFG_REGADDR (0x1BU)
 
 /** @brief  PMIC Register, Timer and Counter Lock register Addresses */
-#define PMIC_REGISTER_UNLOCK_REGADDR    (0x03U)
-#define PMIC_TMR_COUNTER_UNLOCK_REGADDR (0x04U)
-#define PMIC_REG_LOCK_STATUS_REGADDR    (0x09U)
+#define CFG_REG_UNLOCK_SEQ_REG          (uint16_t)(0x03)
+#define CNT_REG_UNLOCK_SEQ_REG          (uint16_t)(0x04)
+#define REG_STAT_REG                    (uint16_t)(0x09)
 
 /** @brief  PMIC Scratchpad register Addresses */
 #define PMIC_CUSTOMER_SCRATCH1_REGADDR (0x68U)
@@ -104,10 +106,11 @@ extern "C" {
 /** @brief   PMIC Register Unlock Seq Register Shift Values */
 #define PMIC_REG_UNLOCK_SEQ_SHIFT (0x0U)
 
-/** @brief   PMIC Register Unlock Status Register Shift Values */
-#define PMIC_CFGREG_LOCKED_STATUS_SHIFT (0x0U)
-#define PMIC_CNTREG_LOCKED_STATUS_SHIFT (0x1U)
-#define PMIC_REGISTER_LOCK_STATUS_SHIFT (0x0U)
+/** @brief   PMIC Register Unlock Status Register Shift/Mask Values */
+#define CFG_REG_LOCKED_SHIFT      (0U)
+#define CFG_REG_LOCKED_MASK       ((uint8_t)(0x01U << CFG_REG_LOCKED_SHIFT))
+#define CNT_REG_LOCKED_SHIFT      (1U)
+#define CNT_REG_LOCKED_MASK       ((uint8_t)(0x01U << CNT_REG_LOCKED_SHIFT))
 
 /** @brief   PMIC BB DIAGANOSTIC OUT Register Shift Values */
 #define PMIC_DIAG_GRP_SEL_SHIFT (0x0U)
@@ -146,11 +149,6 @@ extern "C" {
 
 /** @brief   PMIC Register Lock Register Mask Values */
 #define PMIC_LOCK_REG_CFG_STATUS_MASK ((uint8_t)(0x01U << PMIC_REG_UNLOCK_SEQ_SHIFT))
-
-/*  PMIC Register Lock Register Mask Values to read the register lock status */
-#define PMIC_REG_LOCK_STATUS_READ_MASK  ((uint8_t)(0x03U << PMIC_REGISTER_LOCK_STATUS_SHIFT))
-#define PMIC_CFGREG_LOCK_STATUS_RD_MASK ((uint8_t)(0x01U << PMIC_CFGREG_LOCKED_STATUS_SHIFT))
-#define PMIC_CNTREG_LOCK_STATUS_RD_MASK ((uint8_t)(0x01U << PMIC_CNTREG_LOCKED_STATUS_SHIFT))
 
 /**  PMIC Register Lock Register Mask Values to write lock/unlock value to
  *   register lock register */
