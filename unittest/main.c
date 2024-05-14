@@ -68,20 +68,20 @@ Test(core, write_and_read, .init = PmicHandleInitSetup) {
     const uint8_t testPattern = 0x55;
 
     // Read the initial value of the register so we can set it back when done.
-    status = Pmic_commIntf_recvByte(&PmicHandle, PMIC_CUSTOMER_SCRATCH1_REGADDR, &regDataInitial);
+    status = Pmic_ioRxByte(&PmicHandle, PMIC_CUSTOMER_SCRATCH1_REGADDR, &regDataInitial);
     cr_assert(eq(i32, status, PMIC_ST_SUCCESS));
 
     // Write to the customer scratch 1 register, then read it back to confirm
     // transport layer.
-    status = Pmic_commIntf_sendByte(&PmicHandle, PMIC_CUSTOMER_SCRATCH1_REGADDR, testPattern);
+    status = Pmic_ioTxByte(&PmicHandle, PMIC_CUSTOMER_SCRATCH1_REGADDR, testPattern);
     cr_assert(eq(i32, status, PMIC_ST_SUCCESS));
 
-    status = Pmic_commIntf_recvByte(&PmicHandle, PMIC_CUSTOMER_SCRATCH1_REGADDR, &regData);
+    status = Pmic_ioRxByte(&PmicHandle, PMIC_CUSTOMER_SCRATCH1_REGADDR, &regData);
     cr_assert(eq(i32, status, PMIC_ST_SUCCESS));
     cr_assert(eq(u8, regData, testPattern));
 
     // Now set the register back to what it was originally
-    status = Pmic_commIntf_sendByte(&PmicHandle, PMIC_CUSTOMER_SCRATCH1_REGADDR, regDataInitial);
+    status = Pmic_ioTxByte(&PmicHandle, PMIC_CUSTOMER_SCRATCH1_REGADDR, regDataInitial);
     cr_assert(eq(i32, status, PMIC_ST_SUCCESS));
 }
 
@@ -113,13 +113,13 @@ Test(core, locking_reg_lock_starts_locked, .init = PmicHandleInitSetup) {
     uint8_t startData = 0;
     uint8_t endData = 0;
 
-    status = Pmic_commIntf_recvByte(&PmicHandle, NVM_REV_REG, &startData);
+    status = Pmic_ioRxByte(&PmicHandle, NVM_REV_REG, &startData);
     cr_assert(eq(i32, status, PMIC_ST_SUCCESS));
 
-    status = Pmic_commIntf_sendByte(&PmicHandle, NVM_REV_REG, ~startData);
+    status = Pmic_ioTxByte(&PmicHandle, NVM_REV_REG, ~startData);
     cr_assert(eq(i32, status, PMIC_ST_SUCCESS));
 
-    status = Pmic_commIntf_recvByte(&PmicHandle, NVM_REV_REG, &endData);
+    status = Pmic_ioRxByte(&PmicHandle, NVM_REV_REG, &endData);
     cr_assert(eq(i32, status, PMIC_ST_SUCCESS));
     cr_assert(eq(u8, startData, endData));
 }
@@ -129,10 +129,10 @@ void TestRegisterIsLocked(uint16_t regAddr, uint8_t startData) {
     uint8_t endData = 0;
 
     // Write and then read-back from the register and confirm no change
-    status = Pmic_commIntf_sendByte(&PmicHandle, regAddr, ~startData);
+    status = Pmic_ioTxByte(&PmicHandle, regAddr, ~startData);
     cr_assert(eq(i32, status, PMIC_ST_SUCCESS));
 
-    status = Pmic_commIntf_recvByte(&PmicHandle, regAddr, &endData);
+    status = Pmic_ioRxByte(&PmicHandle, regAddr, &endData);
     cr_assert(eq(i32, status, PMIC_ST_SUCCESS));
     cr_assert(eq(u8, startData, endData));
 }
@@ -142,10 +142,10 @@ void TestRegisterIsUnlocked(uint16_t regAddr, uint8_t startData) {
     uint8_t endData = 0;
 
     // Write and then read-back from the register and confirm the write took
-    status = Pmic_commIntf_sendByte(&PmicHandle, regAddr, ~startData);
+    status = Pmic_ioTxByte(&PmicHandle, regAddr, ~startData);
     cr_assert(eq(i32, status, PMIC_ST_SUCCESS));
 
-    status = Pmic_commIntf_recvByte(&PmicHandle, regAddr, &endData);
+    status = Pmic_ioRxByte(&PmicHandle, regAddr, &endData);
     cr_assert(eq(i32, status, PMIC_ST_SUCCESS));
     cr_assert(eq(u8, endData, ~startData));
 }
@@ -155,7 +155,7 @@ void TestLockStatusDedicatedFn(uint16_t regAddr, int32_t (setLockState(struct Pm
     uint8_t startData = 0;
     uint8_t endData = 0;
 
-    status = Pmic_commIntf_recvByte(&PmicHandle, regAddr, &startData);
+    status = Pmic_ioRxByte(&PmicHandle, regAddr, &startData);
     cr_assert(eq(i32, status, PMIC_ST_SUCCESS));
 
     // Unlock the area and then test that it can be changed
@@ -164,7 +164,7 @@ void TestLockStatusDedicatedFn(uint16_t regAddr, int32_t (setLockState(struct Pm
     TestRegisterIsUnlocked(regAddr, startData);
 
     // Set the register back to what it started the test as
-    status = Pmic_commIntf_sendByte(&PmicHandle, regAddr, startData);
+    status = Pmic_ioTxByte(&PmicHandle, regAddr, startData);
     cr_assert(eq(i32, status, PMIC_ST_SUCCESS));
 
     // Re-lock the area and then test that it can't be changed
@@ -199,11 +199,11 @@ Test(core, locking_control_through_struct, .init = PmicHandleInitSetup) {
     cr_assert(eq(u8, lockState.cntLock, 1));
 
     // Validate that each of the test registers cannot be modified
-    status = Pmic_commIntf_recvByte(&PmicHandle, NVM_REV_REG, &startData);
+    status = Pmic_ioRxByte(&PmicHandle, NVM_REV_REG, &startData);
     cr_assert(eq(i32, status, PMIC_ST_SUCCESS));
     TestRegisterIsLocked(NVM_REV_REG, startData);
 
-    status = Pmic_commIntf_recvByte(&PmicHandle, RC_SIN0_REG, &startData);
+    status = Pmic_ioRxByte(&PmicHandle, RC_SIN0_REG, &startData);
     cr_assert(eq(i32, status, PMIC_ST_SUCCESS));
     TestRegisterIsLocked(RC_SIN0_REG, startData);
 
@@ -214,11 +214,11 @@ Test(core, locking_control_through_struct, .init = PmicHandleInitSetup) {
     cr_assert(eq(i32, status, PMIC_ST_SUCCESS));
 
     // Validate that each of the test registers can now be modified
-    status = Pmic_commIntf_recvByte(&PmicHandle, NVM_REV_REG, &startData);
+    status = Pmic_ioRxByte(&PmicHandle, NVM_REV_REG, &startData);
     cr_assert(eq(i32, status, PMIC_ST_SUCCESS));
     TestRegisterIsUnlocked(NVM_REV_REG, startData);
 
-    status = Pmic_commIntf_recvByte(&PmicHandle, RC_SIN0_REG, &startData);
+    status = Pmic_ioRxByte(&PmicHandle, RC_SIN0_REG, &startData);
     cr_assert(eq(i32, status, PMIC_ST_SUCCESS));
     TestRegisterIsUnlocked(RC_SIN0_REG, startData);
 
@@ -238,11 +238,11 @@ Test(core, locking_control_through_struct, .init = PmicHandleInitSetup) {
     status = Pmic_setLockCfg(&PmicHandle, &lockState);
     cr_assert(eq(i32, status, PMIC_ST_SUCCESS));
 
-    status = Pmic_commIntf_recvByte(&PmicHandle, NVM_REV_REG, &startData);
+    status = Pmic_ioRxByte(&PmicHandle, NVM_REV_REG, &startData);
     cr_assert(eq(i32, status, PMIC_ST_SUCCESS));
     TestRegisterIsLocked(NVM_REV_REG, startData);
 
-    status = Pmic_commIntf_recvByte(&PmicHandle, RC_SIN0_REG, &startData);
+    status = Pmic_ioRxByte(&PmicHandle, RC_SIN0_REG, &startData);
     cr_assert(eq(i32, status, PMIC_ST_SUCCESS));
     TestRegisterIsLocked(RC_SIN0_REG, startData);
 }

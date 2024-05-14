@@ -119,7 +119,7 @@ static int32_t CORE_validateDeviceOnBus(Pmic_CoreHandle_t *handle) {
 
     /* Read DEV_ID register with critical section */
     Pmic_criticalSectionStart(handle);
-    status = Pmic_commIntf_recvByte(handle, PMIC_DEV_ID_REGADDR, &regVal);
+    status = Pmic_ioRxByte(handle, PMIC_DEV_ID_REGADDR, &regVal);
     Pmic_criticalSectionStop(handle);
 
     if (status == PMIC_ST_SUCCESS) {
@@ -145,7 +145,7 @@ static int32_t CORE_updateSubSysInfoAndValidateCommsIF(const Pmic_CoreCfg_t *con
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(handle);
-    status = Pmic_commIntf_recvByte(handle, PMIC_WD_LONGWIN_CFG_REG, &regVal);
+    status = Pmic_ioRxByte(handle, PMIC_WD_LONGWIN_CFG_REG, &regVal);
     Pmic_criticalSectionStop(handle);
 
     if (status == PMIC_ST_SUCCESS) {

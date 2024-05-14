@@ -244,8 +244,6 @@ extern "C" {
 #define RW_SHIFT 			(16U)
 #define DAT_SHIFT 			(8U)
 #define CRC_SHIFT 			(0U)
-#define CMD_RD_EN 			(0x10U)
-#define CMD_WR_EN 			(0x00U)
 
 #define CMD_DEVICE_ID		(0x00U)
 #define CMD_REV_ID 			(0x01U)

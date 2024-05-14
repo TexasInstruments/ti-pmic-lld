@@ -186,9 +186,9 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_MAIN_INST (1U << 0U)
-#define PMIC_QA_INST   (1U << 1U)
-#define PMIC_NVM_INST  (1U << 2U)
+#define PMIC_MAIN_INST  (uint32_t)(1U << 0U)
+#define PMIC_QA_INST    (uint32_t)(1U << 1U)
+#define PMIC_NVM_INST   (uint32_t)(1U << 2U)
 /** @} */
 
 /**

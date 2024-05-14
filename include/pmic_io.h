@@ -33,6 +33,16 @@
 #ifndef __PMIC_IO_H__
 #define __PMIC_IO_H__
 
+/**
+ * @file pmic_io.h
+ * @brief PMIC Driver Communications I/O API
+ */
+
+/**
+ * @defgroup DRV_PMIC_IO_MODULE PMIC I/O Module
+ * @brief Communications APIs to read from and write to PMIC registers.
+ */
+
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
@@ -60,15 +70,33 @@ extern "C" {
 /*==========================================================================*/
 /*                         Function Declarations                            */
 /*==========================================================================*/
-int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle,
-    uint16_t regAddr,
-    uint8_t txData);
+/**
+ * @ingroup DRV_PMIC_IO_MODULE
+ * @brief Write a byte to the given PMIC `regAddr`, performing CRC on
+ * communications if necessary and enabled.
+ *
+ * @param handle  [IN] PMIC Interface Handle
+ * @param regAddr [IN] Register address to write to
+ * @param txData  [IN] Data to send to `regAddr`
+ *
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * possible values, see @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_ioTxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txData);
 
-int32_t Pmic_commIntf_recvByte(Pmic_CoreHandle_t *pPmicCoreHandle,
-    uint16_t regAddr,
-    uint8_t *pRxBuffer);
-
-uint8_t Pmic_calcCRC8(uint8_t cmd, uint8_t rdwr, uint8_t dat);
+/**
+ * @ingroup DRV_PMIC_IO_MODULE
+ * @brief Read a byte from the given PMIC `regAddr`, extracting the desired
+ * register data from the CRC framed data returned by the PMIC.
+ *
+ * @param handle   [IN] PMIC Interface Handle
+ * @param regAddr  [IN] Register address to read from
+ * @param rxBuffer [IN] Buffer to store result data in
+ *
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * possible values, see @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_ioRxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *rxBuffer);
 
 #ifdef __cplusplus
 }

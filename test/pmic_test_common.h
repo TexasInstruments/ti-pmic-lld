@@ -77,7 +77,7 @@ SemaphoreP_Object gpmicCoreObj;
 uint32_t gPmicMcspiTxBuffer[PMIC_MCSPI_MSGSIZE];
 uint32_t gPmicMcspiRxBuffer[PMIC_MCSPI_MSGSIZE];
 
-uint8_t Pmic_calcCRC8(uint8_t cmd, uint8_t rdwr, uint8_t dat);
+uint8_t IO_calcCRC8(uint8_t cmd, uint8_t rdwr, uint8_t dat);
 int32_t PMIC_mcspiReadRegister(MCSPI_Handle handle, MCSPI_Transaction *spiTransaction, uint8_t cmd, uint8_t* data);
 int32_t PMIC_mcspiWriteRegister(MCSPI_Handle handle, MCSPI_Transaction *spiTransaction, uint8_t cmd, uint8_t data);
 

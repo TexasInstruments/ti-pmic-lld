@@ -77,11 +77,11 @@ int32_t Pmic_setRegLockState(Pmic_CoreHandle_t *handle, uint8_t lockState) {
     Pmic_criticalSectionStart(handle);
 
     if (status == PMIC_ST_SUCCESS) {
-        status = Pmic_commIntf_sendByte(handle, CFG_REG_UNLOCK_SEQ_REG, seq[0]);
+        status = Pmic_ioTxByte(handle, CFG_REG_UNLOCK_SEQ_REG, seq[0]);
     }
 
     if (status == PMIC_ST_SUCCESS) {
-        status = Pmic_commIntf_sendByte(handle, CFG_REG_UNLOCK_SEQ_REG, seq[1]);
+        status = Pmic_ioTxByte(handle, CFG_REG_UNLOCK_SEQ_REG, seq[1]);
     }
 
     // Release Critical Section
@@ -108,11 +108,11 @@ int32_t Pmic_setCntLockState(Pmic_CoreHandle_t *handle, uint8_t lockState) {
     Pmic_criticalSectionStart(handle);
 
     if (status == PMIC_ST_SUCCESS) {
-        status = Pmic_commIntf_sendByte(handle, CNT_REG_UNLOCK_SEQ_REG, seq[0]);
+        status = Pmic_ioTxByte(handle, CNT_REG_UNLOCK_SEQ_REG, seq[0]);
     }
 
     if (status == PMIC_ST_SUCCESS) {
-        status = Pmic_commIntf_sendByte(handle, CNT_REG_UNLOCK_SEQ_REG, seq[1]);
+        status = Pmic_ioTxByte(handle, CNT_REG_UNLOCK_SEQ_REG, seq[1]);
     }
 
     // Release Critical Section
@@ -146,7 +146,7 @@ int32_t Pmic_getLockCfg(Pmic_CoreHandle_t *handle, Pmic_Lock_t *config) {
     // Read from REG_STAT_REG with critical section
     if (status == PMIC_ST_SUCCESS) {
         Pmic_criticalSectionStart(handle);
-        status = Pmic_commIntf_recvByte(handle, REG_STAT_REG, &regData);
+        status = Pmic_ioRxByte(handle, REG_STAT_REG, &regData);
         Pmic_criticalSectionStop(handle);
     }
 
