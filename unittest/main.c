@@ -7,8 +7,6 @@
 #include "emulator.h"
 
 #include "pmic.h"
-#include "pmic_io.h"
-#include "pmic_core.h"
 #include "regmap/core.h"
 
 extern struct sTestFramework Emulator;

@@ -80,6 +80,53 @@ typedef struct Pmic_CoreHandle_s {
     void (*pFnPmicCritSecStop)(void);
 } Pmic_CoreHandle_t;
 
+/*==========================================================================*/
+/*                         Function Declarations                            */
+/*==========================================================================*/
+bool Pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos);
+
+bool Pmic_validParamStatusCheck(uint32_t validParamVal, uint8_t bitPos, int32_t status);
+
+/**
+ * @brief Start a critical section for PMIC operations.
+ * This function starts a critical section for PMIC operations, if the critical
+ * section start function pointer is not NULL.
+ *
+ * @param handle Pointer to the PMIC core handle structure.
+ * @return void No return value.
+ */
+void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *handle);
+
+/**
+ * @brief Stop a critical section for PMIC operations.
+ * This function stops a critical section for PMIC operations, if the critical
+ * section stop function pointer is not NULL.
+ *
+ * @param handle Pointer to the PMIC core handle structure.
+ * @return void No return value.
+ */
+void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *handle);
+
+static inline void Pmic_setBitField(uint8_t *regData, uint8_t shift, uint8_t mask, uint8_t value)
+{
+    *regData = ((*regData & ~mask) | ((value << shift) & mask));
+}
+
+static inline void Pmic_setBitField_b(uint8_t *regData, uint8_t shift, uint8_t mask, bool value)
+{
+    Pmic_setBitField(regData, shift, mask, value ? 1U : 0U);
+}
+
+static inline uint8_t Pmic_getBitField(uint8_t regData, uint8_t shift, uint8_t mask)
+{
+    return ((regData & mask) >> shift);
+}
+
+static inline bool Pmic_getBitField_b(uint8_t regData, uint8_t shift, uint8_t mask)
+{
+    return Pmic_getBitField(regData, shift, mask) == 1;
+}
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

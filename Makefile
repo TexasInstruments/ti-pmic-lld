@@ -75,7 +75,10 @@ ifeq ($(build), release)
     TARGET = $(LIB_DIR)/libpmic.so
 endif
 
-SOURCES = src/pmic_core.c \
+SOURCES = \
+	src/pmic.c \
+	src/pmic_types.c \
+	src/pmic_core.c \
 	src/pmic_io.c \
 	src/pmic_wdg.c
 

@@ -53,7 +53,9 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "pmic_types.h"
+#include "pmic_core.h"
+#include "pmic_io.h"
+#include "pmic_wdg.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -363,7 +365,7 @@ typedef struct Pmic_CoreCfg_s {
 } Pmic_CoreCfg_t;
 
 /*==========================================================================*/
-/*                      Public Function Declarations                        */
+/*                         Function Declarations                            */
 /*==========================================================================*/
 /*!
  * @ingroup DRV_PMIC_MODULE
@@ -397,46 +399,7 @@ int32_t Pmic_init(Pmic_CoreHandle_t *handle, const Pmic_CoreCfg_t *coreCfg);
  */
 int32_t Pmic_deinit(Pmic_CoreHandle_t *handle);
 
-/*==========================================================================*/
-/*                     Private Function Declarations                        */
-/*==========================================================================*/
-/// @private
-bool Pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos);
 
-/// @private
-bool Pmic_validParamStatusCheck(uint32_t validParamVal, uint8_t bitPos, int32_t status);
-
-/// @private
-void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *handle);
-
-/// @private
-void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *handle);
-
-/// @private
-static inline void Pmic_setBitField(uint8_t *regData, uint8_t shift, uint8_t mask, uint8_t value)
-{
-    *regData = ((*regData & ~mask) | ((value << shift) & mask));
-}
-
-/// @private
-static inline void Pmic_setBitField_b(uint8_t *regData, uint8_t shift, uint8_t mask, bool value)
-{
-    Pmic_setBitField(regData, shift, mask, value ? 1U : 0U);
-}
-
-/// @private
-static inline uint8_t Pmic_getBitField(uint8_t regData, uint8_t shift, uint8_t mask)
-{
-    return ((regData & mask) >> shift);
-}
-
-/// @private
-static inline bool Pmic_getBitField_b(uint8_t regData, uint8_t shift, uint8_t mask)
-{
-    return Pmic_getBitField(regData, shift, mask) == 1;
-}
-
-/// @private
 int32_t Pmic_checkPmicCoreHandle(const Pmic_CoreHandle_t *handle);
 
 #ifdef __cplusplus
