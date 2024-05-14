@@ -36,7 +36,7 @@ const Pmic_DevSubSysInfo_t pmicSubSysInfo[] = {
 /* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
-static int32_t CORE_initHandleBasicDevCfg(const Pmic_CoreCfg_t *config, Pmic_CoreHandle_t *handle) {
+static int32_t initHandleBasicDevCfg(const Pmic_CoreCfg_t *config, Pmic_CoreHandle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
 
     /* Check and update PMIC Handle device type */
@@ -71,7 +71,7 @@ static int32_t CORE_initHandleBasicDevCfg(const Pmic_CoreCfg_t *config, Pmic_Cor
     return status;
 }
 
-static int32_t CORE_initApplicationFunctions(const Pmic_CoreCfg_t *config, Pmic_CoreHandle_t *handle) {
+static int32_t initApplicationFunctions(const Pmic_CoreCfg_t *config, Pmic_CoreHandle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
 
     /* Check and update PMIC Handle Comm IO RD Fn */
@@ -113,7 +113,7 @@ static int32_t CORE_initApplicationFunctions(const Pmic_CoreCfg_t *config, Pmic_
     return status;
 }
 
-static int32_t CORE_validateDeviceOnBus(Pmic_CoreHandle_t *handle) {
+static int32_t validateDeviceOnBus(Pmic_CoreHandle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
@@ -136,7 +136,7 @@ static int32_t CORE_validateDeviceOnBus(Pmic_CoreHandle_t *handle) {
     return status;
 }
 
-static int32_t CORE_updateSubSysInfoAndValidateCommsIF(const Pmic_CoreCfg_t *config, Pmic_CoreHandle_t *handle) {
+static int32_t updateSubSysInfoAndValidateComms(const Pmic_CoreCfg_t *config, Pmic_CoreHandle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
@@ -168,19 +168,19 @@ int32_t Pmic_init(Pmic_CoreHandle_t *handle, const Pmic_CoreCfg_t *config) {
     /* Check and update PMIC Handle for device type, Comm Mode, Main Slave Address
      * and NVM Slave Address */
     if (status == PMIC_ST_SUCCESS) {
-        status = CORE_initHandleBasicDevCfg(config, handle);
+        status = initHandleBasicDevCfg(config, handle);
     }
 
     /* Check and update PMIC Handle for Comm IO RD Fn, Comm IO Wr Fn, Critical
      * Section Start Fn and Critical Section Stop Fn */
     if (status == PMIC_ST_SUCCESS) {
-        status = CORE_initApplicationFunctions(config, handle);
+        status = initApplicationFunctions(config, handle);
     }
 
     // Set up the valid subsystems for this device and ensure that we can
     // communicate with the selected IO interface.
     if (status == PMIC_ST_SUCCESS) {
-        status = CORE_updateSubSysInfoAndValidateCommsIF(config, handle);
+        status = updateSubSysInfoAndValidateComms(config, handle);
     }
 
     /* Check for required members for I2C/SPI Main handle comm */

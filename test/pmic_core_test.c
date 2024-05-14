@@ -242,7 +242,7 @@ void test_pmic_get_spreadSpectrum() {
 /**
  * @brief Checks if device is present on the bus.
  * This function checks if the device is present on the bus by calling
- * CORE_validateDeviceOnBus() and logs any failure status using DebugP_log().
+ * validateDeviceOnBus() and logs any failure status using DebugP_log().
  *
  * @param   void
  * @return  NULL
@@ -250,7 +250,7 @@ void test_pmic_get_spreadSpectrum() {
 void test_pmic_deviceonbus() {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
-    pmicStatus = CORE_validateDeviceOnBus(pPmicCoreHandle_core);
+    pmicStatus = validateDeviceOnBus(pPmicCoreHandle_core);
     if (PMIC_ST_SUCCESS != pmicStatus) {
         DebugP_log("%s(): %d: FAILED with status: %d\n", __func__, __LINE__,
                    pmicStatus);
