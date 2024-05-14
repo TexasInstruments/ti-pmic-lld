@@ -23,7 +23,7 @@
 /* ========================================================================== */
 /*                         Structure Declarations                             */
 /* ========================================================================== */
-const Pmic_DevSubSysInfo_t pmicSubSysInfo[] = {
+static const Pmic_DevSubSysInfo_t pmicSubSysInfo[] = {
     /* PMIC_DEV_BB_TPS65386x */
     {
         .gpioEnable = PMIC_ENABLE,
