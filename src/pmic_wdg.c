@@ -45,38 +45,6 @@
 #include "pmic_common.h"
 
 /* ========================================================================== */
-/*                             Macros & Typedefs                              */
-/* ========================================================================== */
-/**
- * @brief Watchdog Long Window Max, Min and Divisor macros
- * @note  Valid only for PG2.0
- */
-#define PMIC_WD_LONGWIN_80_MS         (uint32_t)(80U)
-#define PMIC_WD_LONGWIN_125_MS        (uint32_t)(125U)
-#define PMIC_WD_LONGWIN_8000_MS       (uint32_t)(8000U)
-
-#define PMIC_WD_LONGWIN_MS_DIV_125    (uint32_t)(125U)
-#define PMIC_WD_LONGWIN_MS_DIV_4000   (uint32_t)(4000U)
-
-#define PMIC_WD_LONGWIN_MS_MIN_PG_2_0 (uint32_t)(125U)
-#define PMIC_WD_LONGWIN_MS_MAX_PG_2_0 (uint32_t)(772000U)
-
-#define PMIC_WD_LONGWIN_RANGE_LOW     (0x0U)
-#define PMIC_WD_LONGWIN_RANGE_MID     (0x1U)
-#define PMIC_WD_LONGWIN_RANGE_HI      (0x40U)
-
-/** @note Valid only for PG1.0 */
-#define PMIC_WD_LONGWIN_100_MS        (uint32_t)(100U)
-#define PMIC_WD_LONGWIN_MS_MIN        (uint32_t)(3000U)
-#define PMIC_WD_LONGWIN_MS_MAX        (uint32_t)(765000U)
-#define PMIC_WD_LONGWIN_MS_DIV        (uint32_t)(3000U)
-
-/** @brief  Watchdog Window1 Max, Min and Divisor macros */
-#define PMIC_WD_WIN1_2_US_MIN         (uint32_t)(550U)
-#define PMIC_WD_WIN1_2_US_MAX         (uint32_t)(70400U)
-#define PMIC_WD_WIN1_2_US_DIV         (uint32_t)(550U)
-
-/* ========================================================================== */
 /*                          Function Definitions                              */
 /* ========================================================================== */
 static int32_t WDG_validatePmicCoreHandle(const Pmic_CoreHandle_t *handle) {
@@ -90,129 +58,28 @@ static int32_t WDG_validatePmicCoreHandle(const Pmic_CoreHandle_t *handle) {
     return status;
 }
 
-static uint8_t WDG_convertLongWinTimeToBits(uint32_t longWinDuration_ms) {
-    uint8_t regVal = 0U;
-
-    if (longWinDuration_ms == PMIC_WD_LONGWIN_80_MS) {
-        regVal = PMIC_WD_LONGWIN_RANGE_LOW;
-    } else if (longWinDuration_ms <= PMIC_WD_LONGWIN_8000_MS) {
-        regVal = (uint8_t)(longWinDuration_ms / PMIC_WD_LONGWIN_MS_DIV_125);
-    } else {
-        regVal = (uint8_t)(longWinDuration_ms / PMIC_WD_LONGWIN_MS_DIV_4000) + 62U;
-    }
-
-    return regVal;
-}
-
-static uint32_t WDG_convertLongWinTimeFromBits(uint32_t longWinDuration) {
-    uint32_t valInMs = 0U;
-
-    if (longWinDuration == PMIC_WD_LONGWIN_RANGE_LOW) {
-        valInMs = PMIC_WD_LONGWIN_80_MS;
-    } else if (longWinDuration <= PMIC_WD_LONGWIN_RANGE_HI) {
-        valInMs = (uint32_t)(longWinDuration * PMIC_WD_LONGWIN_MS_DIV_125);
-    } else {
-        valInMs = (uint32_t)((longWinDuration * PMIC_WD_LONGWIN_MS_DIV_4000) - 24800U);
-    }
-
-    return valInMs;
-}
-
-static int32_t WDG_setLongWindowTimeInterval(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t *config) {
-    int32_t status = PMIC_ST_SUCCESS;
-    uint8_t regVal = 0U;
-
-    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_LONGWINDURATION_VALID)) {
-        const bool longWinNot80ms = (config->longWinDuration_ms != PMIC_WD_LONGWIN_80_MS);
-        const bool longWinBelowMin = (config->longWinDuration_ms < PMIC_WD_LONGWIN_MS_MIN_PG_2_0);
-        const bool longWinAboveMax = (config->longWinDuration_ms > PMIC_WD_LONGWIN_MS_MAX_PG_2_0);
-
-        if (longWinNot80ms && (longWinBelowMin || longWinAboveMax)) {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-
-        if (status == PMIC_ST_SUCCESS) {
-            regVal = WDG_convertLongWinTimeToBits(config->longWinDuration_ms);
-        }
-
-        if (status == PMIC_ST_SUCCESS) {
-            Pmic_criticalSectionStart(handle);
-            status = Pmic_ioTxByte(handle, PMIC_WD_LONGWIN_CFG_REG, regVal);
-            Pmic_criticalSectionStop(handle);
-        }
-    }
-
-    return status;
-}
-
-static int32_t WDG_setWindow1TimeInterval(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t *config) {
-    int32_t status = PMIC_ST_SUCCESS;
-    uint8_t regVal = 0U;
-
-    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_WIN1DURATION_VALID)) {
-        const bool winBelowMin = (config->win1Duration_us < PMIC_WD_WIN1_2_US_MIN);
-        const bool winAboveMax = (config->win1Duration_us > PMIC_WD_WIN1_2_US_MAX);
-
-        if (winBelowMin || winAboveMax) {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-
-        if (status == PMIC_ST_SUCCESS) {
-            Pmic_setBitField(&regVal,
-                PMIC_WD_WIN1_SHIFT,
-                PMIC_WD_WIN1_MASK,
-                (uint8_t)(config->win1Duration_us / PMIC_WD_WIN1_2_US_DIV) - 1U);
-
-            Pmic_criticalSectionStart(handle);
-            status = Pmic_ioTxByte(handle, PMIC_WD_WIN1_CFG_REG, regVal);
-            Pmic_criticalSectionStop(handle);
-        }
-    }
-
-    return status;
-}
-
-static int32_t WDG_setWindow2TimeInterval(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t *config) {
-    int32_t status = PMIC_ST_SUCCESS;
-    uint8_t regVal = 0U;
-
-    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_WIN2DURATION_VALID)) {
-        const bool winBelowMin = (config->win2Duration_us < PMIC_WD_WIN1_2_US_MIN);
-        const bool winAboveMax = (config->win2Duration_us > PMIC_WD_WIN1_2_US_MAX);
-
-        if (winBelowMin || winAboveMax) {
-            status = PMIC_ST_ERR_INV_PARAM;
-        }
-
-        if (status == PMIC_ST_SUCCESS) {
-            Pmic_setBitField(&regVal,
-                PMIC_WD_WIN2_SHIFT,
-                PMIC_WD_WIN2_MASK,
-                (uint8_t)(config->win2Duration_us / PMIC_WD_WIN1_2_US_DIV) - 1U);
-
-            Pmic_criticalSectionStart(handle);
-            status = Pmic_ioTxByte(handle, PMIC_WD_WIN2_CFG_REG, regVal);
-            Pmic_criticalSectionStop(handle);
-        }
-    }
-
-    return status;
-}
-
 static int32_t WDG_setWindowsTimeIntervals(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t *config) {
     int32_t status = PMIC_ST_SUCCESS;
 
     /* Set wdg long window time interval */
-    status = WDG_setLongWindowTimeInterval(handle, config);
+    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_LONGWINDURATION_VALID)) {
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioTxByte(handle, PMIC_WD_LONGWIN_CFG_REG, config->longWinCode);
+        Pmic_criticalSectionStop(handle);
+    }
 
     /* Set Window 1 time interval */
-    if (status == PMIC_ST_SUCCESS) {
-        status = WDG_setWindow1TimeInterval(handle, config);
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_WDG_WIN1DURATION_VALID, status)) {
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioTxByte(handle, PMIC_WD_WIN1_CFG_REG, config->win1Code);
+        Pmic_criticalSectionStop(handle);
     }
 
     /* Set Window 2 time interval */
-    if (status == PMIC_ST_SUCCESS) {
-        status = WDG_setWindow2TimeInterval(handle, config);
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_WDG_WIN2DURATION_VALID, status)) {
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioTxByte(handle, PMIC_WD_WIN2_CFG_REG, config->win2Code);
+        Pmic_criticalSectionStop(handle);
     }
 
     return status;
@@ -228,7 +95,7 @@ static int32_t WDG_getLongWindowTimeInterval(Pmic_CoreHandle_t *handle, Pmic_Wdg
         Pmic_criticalSectionStop(handle);
 
         if (status == PMIC_ST_SUCCESS) {
-            config->longWinDuration_ms = WDG_convertLongWinTimeFromBits(regVal);
+            config->longWinCode = regVal;
         }
     }
 
@@ -244,9 +111,8 @@ static int32_t WDG_getWindow1TimeInterval(Pmic_CoreHandle_t *handle, Pmic_WdgCfg
         status = Pmic_ioRxByte(handle, PMIC_WD_WIN1_CFG_REG, &regVal);
         Pmic_criticalSectionStop(handle);
 
-        if (PMIC_ST_SUCCESS == status) {
-            regVal = Pmic_getBitField(regVal, PMIC_WD_WIN1_SHIFT, PMIC_WD_WIN1_MASK);
-            config->win1Duration_us = ((uint32_t)regVal + 1U) * PMIC_WD_WIN1_2_US_DIV;
+        if (status == PMIC_ST_SUCCESS) {
+            config->win1Code = regVal;
         }
     }
 
@@ -263,8 +129,7 @@ static int32_t WDG_getWindow2TimeInterval(Pmic_CoreHandle_t *handle, Pmic_WdgCfg
         Pmic_criticalSectionStop(handle);
 
         if (PMIC_ST_SUCCESS == status) {
-            regVal = Pmic_getBitField(regVal, PMIC_WD_WIN2_SHIFT, PMIC_WD_WIN2_MASK);
-            config->win2Duration_us = ((uint32_t)regVal + 1U) * PMIC_WD_WIN1_2_US_DIV;
+            config->win2Code = regVal;
         }
     }
 

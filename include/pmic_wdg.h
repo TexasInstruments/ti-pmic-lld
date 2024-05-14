@@ -324,20 +324,14 @@ extern "C" {
  * @param threshold2 Value for Watchdog Threshold 2 (WD_TH2). See @ref
  * Pmic_WdgThresholdCount.
  *
- * @param longWinDuration_ms Long Window duration in milliseconds. To get
- * more effective results user has to program long window with multiples of 3000.
- * - For PG1.0 Leo/Hera, the valid range is (100, 3000, 6000, 9000,....12000,
- *   ..., 765000).
- * - For PG2.0 and Burton, the valid range is (80, 125, 250, 375,....8000,
- *   12000, 16000, 20000 ..., 772000).
+ * @param longWinCode Long Window duration code for WD_LONGWIN_CFG register.
+ * See datasheet for calculation of code to time.
  *
- * @param win1Duration_us Window-1 duration in microseconds.
- * This window should be programmed in multiples of 550.
- * - The valid range is (550, 1100, 1650, 2200, 2750, ..., 70400).
+ * @param win1Code Window-1 duration code for WD_WIN1_CFG register. See
+ * datasheet for calculation of code to time.
  *
- * @param win2Duration_us Window-2 duration in microseconds.
- * This window should be programmed in multiples of 550.
- * - The valid range is (550, 1100, 1650, 2200, 2750, ..., 70400).
+ * @param win2Code Window-2 duration code for WD_WIN2_CFG register. See
+ * datasheet for calculation of code to time.
  *
  * @param qaFdbk Configure Q&A Feedback value. See @ref Pmic_WdgQaFdbkVal.
  *
@@ -354,9 +348,9 @@ typedef struct Pmic_WdgCfg_s {
     uint8_t threshold1;
     uint8_t threshold2;
 
-    uint32_t longWinDuration_ms;
-    uint32_t win1Duration_us;
-    uint32_t win2Duration_us;
+    uint8_t longWinCode;
+    uint8_t win1Code;
+    uint8_t win2Code;
 
     uint8_t qaFdbk;
     uint8_t qaLfsr;

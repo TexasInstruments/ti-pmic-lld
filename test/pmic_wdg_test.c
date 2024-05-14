@@ -197,12 +197,12 @@ void test_wdg_setCfg_longWindowDuration(void) {
     wdgCfg_actual.validParams = PMIC_CFG_WDG_LONGWINDURATION_VALID_SHIFT;
 
     /* Set Watchdog Long Window duration to be maximum duration */
-    wdgCfg_expected.longWinDuration_ms = 772000;
+    wdgCfg_expected.longWinCode = 772000;
     status = Pmic_wdgSetCfg(pPmicCoreHandle_wdg, wdgCfg_expected);
     if (PMIC_ST_SUCCESS == status) {
         status = Pmic_wdgGetCfg(pPmicCoreHandle_wdg, &wdgCfg_actual);
-        if (wdgCfg_actual.longWinDuration_ms ==
-            wdgCfg_expected.longWinDuration_ms) {
+        if (wdgCfg_actual.longWinCode ==
+            wdgCfg_expected.longWinCode) {
             DebugP_log("Test Passed: Watchdog Long Window duration set/get "
                        "configuration passed!\r\n");
         } else {
@@ -230,12 +230,12 @@ void test_wdg_setCfg_window1Duration(void) {
     wdgCfg_actual.validParams = PMIC_CFG_WDG_WIN1DURATION_VALID_SHIFT;
 
     /* Set Watchdog Window-1 duration to be maximum duration */
-    wdgCfg_expected.win1Duration_us = 70400;
+    wdgCfg_expected.win1Code = 70400;
     status = Pmic_wdgSetCfg(pPmicCoreHandle_wdg, wdgCfg_expected);
     if (PMIC_ST_SUCCESS == status) {
         /* Get actual Window-1 duration and compare expected vs. actual value */
         status = Pmic_wdgGetCfg(pPmicCoreHandle_wdg, &wdgCfg_actual);
-        if (wdgCfg_actual.win1Duration_us == wdgCfg_expected.win1Duration_us) {
+        if (wdgCfg_actual.win1Code == wdgCfg_expected.win1Code) {
             DebugP_log("Test Passed: Watchdog Window-1 duration set/get "
                        "configuration passed!\r\n");
         } else {
@@ -263,11 +263,11 @@ void test_wdg_setCfg_window2Duration(void) {
     wdgCfg_actual.validParams = PMIC_CFG_WDG_WIN2DURATION_VALID_SHIFT;
 
     /* Set Watchdog Window-2 duration to be maximum duration */
-    wdgCfg_expected.win2Duration_us = 70400;
+    wdgCfg_expected.win2Code = 70400;
     status = Pmic_wdgSetCfg(pPmicCoreHandle_wdg, wdgCfg_expected);
     if (PMIC_ST_SUCCESS == status) {
         status = Pmic_wdgGetCfg(pPmicCoreHandle_wdg, &wdgCfg_actual);
-        if (wdgCfg_actual.win2Duration_us == wdgCfg_expected.win2Duration_us) {
+        if (wdgCfg_actual.win2Code == wdgCfg_expected.win2Code) {
             DebugP_log("Test Passed: Watchdog Window-2 duration set/get "
                        "configuration passed!\r\n");
         } else {
@@ -512,9 +512,9 @@ void test_wdg_QaMode_noErrors(void) {
                                  PMIC_CFG_WDG_RSTTHRESHOLD_VALID_SHIFT | PMIC_CFG_WDG_PWRHOLD_VALID_SHIFT |
                                  PMIC_CFG_WDG_RETLONGWIN_VALID_SHIFT | PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT |
                                  PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT | PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT),
-                            .longWinDuration_ms = 5000,
-                            .win1Duration_us = 70400,
-                            .win2Duration_us = 70400,
+                            .longWinCode = 5000,
+                            .win1Code = 70400,
+                            .win2Code = 70400,
                             .failThreshold = 7,
                             .rstThreshold = 7,
                             .pwrHold = true,
