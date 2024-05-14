@@ -128,12 +128,12 @@ int32_t Pmic_setLockCfg(Pmic_CoreHandle_t *handle, const Pmic_Lock_t *config) {
 
     if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_REG_LOCK_VALID, status)) {
         const uint8_t lockState = config->cfgLock ? PMIC_LOCK_ENABLE : PMIC_LOCK_DISABLE;
-        Pmic_setRegLockState(handle, lockState);
+        status = Pmic_setRegLockState(handle, lockState);
     }
 
     if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_CNT_LOCK_VALID, status)) {
         const uint8_t lockState = config->cntLock ? PMIC_LOCK_ENABLE : PMIC_LOCK_DISABLE;
-        Pmic_setCntLockState(handle, lockState);
+        status = Pmic_setCntLockState(handle, lockState);
     }
 
     return status;

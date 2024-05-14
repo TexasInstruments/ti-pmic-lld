@@ -47,10 +47,6 @@ inline bool Pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos) {
     return (((validParamVal >> bitPos) & 0x01U) != 0U);
 }
 
-inline bool Pmic_validParamStatusCheck(uint32_t validParamVal, uint8_t bitPos, int32_t status) {
-    return (status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(validParamVal, bitPos);
-}
-
 void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *handle) {
     if (handle->pFnPmicCritSecStart != NULL) {
         handle->pFnPmicCritSecStart();

@@ -469,7 +469,8 @@ int32_t Pmic_wdgDisable(Pmic_CoreHandle_t *handle);
  * @brief This function is used to set the Watchdog Enable state.
  *
  * @param handle [IN]  PMIC interface handle
- * @param enable [IN]  Set to true to enable watchdog, false to disable
+ * @param enable [IN]  Set to true (PMIC_ENABLE) to enable watchdog, false
+ * (PMIC_DISABLE) to disable. See @ref Pmic_EnableDisable.
  *
  * @return Success code if Watchdog Enable state is set, error code otherwise.
  * For possible success/error codes, refer to @ref Pmic_ErrorCodes
@@ -482,7 +483,8 @@ int32_t Pmic_wdgSetEnableState(Pmic_CoreHandle_t *handle, bool enable);
  * say, whether WD_EN bit is set to 1 or 0).
  *
  * @param handle    [IN]  PMIC interface handle
- * @param isEnabled [OUT] true if watchdog is enabled, otherwise false
+ * @param isEnabled [OUT] true (PMIC_ENABLE) if watchdog is enabled, otherwise
+ * false (PMIC_DISABLE). See @ref Pmic_EnableDisable.
  *
  * @return Success code if Watchdog Enable state is obtained, error code
  * otherwise. For possible success/error codes, refer to @ref Pmic_ErrorCodes
@@ -564,9 +566,9 @@ int32_t Pmic_wdgGetMode(Pmic_CoreHandle_t *handle, uint8_t *mode);
  * @brief API to set the WD_PWRHOLD bit, which pauses the Long-Window timer.
  *
  * @param handle [IN] PMIC Interface Handle
- * @param enable [IN] If set, both WDG and Long-Window timer are paused and do
- *               not cause the device to reset. Otherwise, the WDG operates as
- *               normally configured.
+ * @param enable [IN] If set to true (PMIC_ENABLE), both WDG and Long-Window
+ * timer are paused and do not cause the device to reset. Otherwise, the WDG
+ * operates as normally configured. See @ref Pmic_EnableDisable.
  *
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
@@ -578,9 +580,10 @@ int32_t Pmic_wdgSetPowerHold(Pmic_CoreHandle_t *handle, bool enable);
  * @brief API to get the WD_PWRHOLD bit, which pauses the Long-Window timer.
  *
  * @param handle    [IN] PMIC Interface Handle
- * @param isEnabled [OUT] IF set, both WDG and Long-Window timer are paused and do
- *                  not cause the device to reset. Otherwise, the WDG is
- *                  operating as normally configured.
+ * @param isEnabled [OUT] If set to true (PMIC_ENABLE), both WDG and
+ * Long-Window timer are paused and do not cause the device to reset.
+ * Otherwise, the WDG is operating as normally configured. See @ref
+ * Pmic_EnableDisable.
  *
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
@@ -593,9 +596,9 @@ int32_t Pmic_wdgGetPowerHold(Pmic_CoreHandle_t *handle, bool *isEnabled);
  * is in normal operating mode to return it to Long-Window mode.
  *
  * @param handle [IN] PMIC Interface Handle
- * @param enable [IN] If set while the WDG is in normal operating mode it will
- *               return to Long-Window mode, otherwise the WDG will return to
- *               or remain in normal operation.
+ * @param enable [IN] If set to true (PMIC_ENABLE) while the WDG is in normal
+ * operating mode it will return to Long-Window mode, otherwise the WDG will
+ * return to or remain in normal operation. See @ref Pmic_EnableDisable.
  *
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
@@ -609,7 +612,8 @@ int32_t Pmic_wdgSetReturnToLongWindow(Pmic_CoreHandle_t *handle, bool enable);
  *
  * @param handle    [IN] PMIC Interface Handle
  * @param isEnabled [IN] Tracks the value of the WD_RETURN_LONGWIN bit, will be
- *                  false if the WDG is in normal operating mode.
+ * false (PMIC_DISABLE) if the WDG is in normal operating mode. See @ref
+ * Pmic_EnableDisable.
  *
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.

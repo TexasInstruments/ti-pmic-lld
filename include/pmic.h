@@ -141,6 +141,16 @@ extern "C" {
 /** @} */
 
 /**
+ * @anchor Pmic_EnableDisable
+ * @name PMIC Enable/Disable features control
+ *
+ * @{
+ */
+#define PMIC_ENABLE     ((bool)true)
+#define PMIC_DISABLE    ((bool)false)
+/** @} */
+
+/**
  * @anchor Pmic_DeviceType
  * @name PMIC Device type
  *

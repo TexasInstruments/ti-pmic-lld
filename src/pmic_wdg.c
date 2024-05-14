@@ -586,11 +586,11 @@ static int32_t WDG_qaEvalAndWriteAnswer(
 /*                        Interface Implementations                           */
 /* ========================================================================== */
 int32_t Pmic_wdgEnable(Pmic_CoreHandle_t *handle) {
-    return Pmic_wdgSetEnableState(handle, true);
+    return Pmic_wdgSetEnableState(handle, PMIC_ENABLE);
 }
 
 int32_t Pmic_wdgDisable(Pmic_CoreHandle_t *handle) {
-    return Pmic_wdgSetEnableState(handle, false);
+    return Pmic_wdgSetEnableState(handle, PMIC_DISABLE);
 }
 
 int32_t Pmic_wdgSetEnableState(Pmic_CoreHandle_t *handle, bool enable) {
@@ -599,7 +599,9 @@ int32_t Pmic_wdgSetEnableState(Pmic_CoreHandle_t *handle, bool enable) {
 
     Pmic_criticalSectionStart(handle);
 
-    status = Pmic_ioRxByte(handle, PMIC_WD_CFG_REG, &regVal);
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_ioRxByte(handle, PMIC_WD_CFG_REG, &regVal);
+    }
 
     if (status == PMIC_ST_SUCCESS) {
         Pmic_setBitField_b(&regVal, PMIC_WD_EN_SHIFT, PMIC_WD_EN_MASK, enable);
@@ -740,9 +742,11 @@ int32_t Pmic_wdgSetPowerHold(Pmic_CoreHandle_t *handle, bool enable) {
 
     Pmic_criticalSectionStart(handle);
 
-    status = Pmic_ioRxByte(handle, PMIC_WD_CFG_REG, &regVal);
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_ioRxByte(handle, PMIC_WD_CFG_REG, &regVal);
+    }
 
-    if (PMIC_ST_SUCCESS == status) {
+    if (status == PMIC_ST_SUCCESS) {
         Pmic_setBitField_b(&regVal, PMIC_WD_PWRHOLD_SHIFT, PMIC_WD_PWRHOLD_MASK, enable);
         status = Pmic_ioTxByte(handle, PMIC_WD_CFG_REG, regVal);
     }
@@ -877,7 +881,7 @@ int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t *handle, Pmic_WdgError_t *error
                 PMIC_WD_TH1_ERR_MASK);
         }
 
-        if (Pmic_validParamCheck(errors -> validParams, PMIC_CFG_WD_TH2_INT_ERR_VALID)) {
+        if (Pmic_validParamCheck(errors->validParams, PMIC_CFG_WD_TH2_INT_ERR_VALID)) {
             errors->threshold2Error = Pmic_getBitField_b(regVal,
                 PMIC_WD_TH2_ERR_SHIFT,
                 PMIC_WD_TH2_ERR_MASK);
@@ -984,7 +988,7 @@ int32_t Pmic_wdgGetFailCntStat(Pmic_CoreHandle_t *handle, Pmic_WdgFailCntStat_t 
 
     /* Get watchdog Fail count Value */
     if (Pmic_validParamStatusCheck(failCount->validParams, PMIC_CFG_WD_FAIL_CNT_VAL_VALID, status)) {
-        failCount->wdFailCnt = Pmic_getBitField_b(regVal, PMIC_WD_ERR_CNT_SHIFT, PMIC_WD_ERR_CNT_MASK);
+        failCount->wdFailCnt = Pmic_getBitField(regVal, PMIC_WD_ERR_CNT_SHIFT, PMIC_WD_ERR_CNT_MASK);
     }
 
     return status;

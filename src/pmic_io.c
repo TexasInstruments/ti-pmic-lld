@@ -65,9 +65,9 @@
 /*========================================================================== */
 /*                         Function Definitions                              */
 /*========================================================================== */
-uint8_t IO_calcCRC8(uint8_t cmd, uint8_t rdwr, uint8_t dat) {
+static uint8_t IO_calcCRC8(uint8_t cmd, uint8_t rdwr, uint8_t dat) {
     uint32_t crc = PMIC_COMM_CRC_INITIAL_VALUE;
-    uint32_t tmp = (uint32_t)(cmd << 16) | (uint32_t)(rdwr << 8) | (uint32_t)dat;
+    uint32_t tmp = (uint32_t)((uint32_t)cmd << 16) | ((uint32_t)rdwr << 8) | (uint32_t)dat;
 
     /* Standard CRC-8 polynomial, X8 + X2 + X1 + 1, is used to calculate the
      * checksum value based on the command and data which the MCU transmits to
@@ -127,7 +127,7 @@ int32_t Pmic_ioTxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txDat
     /*Set PAGE to txBuf[1] 7:5 bits with PAGE[2:0] */
     /*Set R/W in txBuf[1] as bit-4, for Write Request */
     txBuf[1U] = (uint8_t)((uint8_t)((uint8_t)(regAddr >> 8U) & 0x7U) << 5U);
-    txBuf[1U] &= ~PMIC_IO_REQ_RW;
+    txBuf[1U] &= (uint8_t)(~PMIC_IO_REQ_RW);
 
     /*Set CRC data to txBuf[3], Bits 25-32 CRC */
     txBuf[3U] = IO_calcCRC8(txBuf[0], txBuf[1], txData);

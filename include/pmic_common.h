@@ -84,8 +84,7 @@ typedef struct Pmic_CoreHandle_s {
 /*                         Function Declarations                            */
 /*==========================================================================*/
 bool Pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos);
-
-bool Pmic_validParamStatusCheck(uint32_t validParamVal, uint8_t bitPos, int32_t status);
+#define Pmic_validParamStatusCheck(vpv, bPos, status) ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(vpv, bPos))
 
 /**
  * @brief Start a critical section for PMIC operations.

@@ -3,6 +3,7 @@
 #include <stddef.h>
 
 #include "pmic.h"
+#include "pmic_common.h"
 #include "pmic_io.h"
 #include "regmap/core.h"
 
@@ -16,8 +17,8 @@
 
    Note that this is used as the upper 16-bits of a 32-bit bitfield, the lower
    16-bits should be left 0. */
-#define DRV_INIT_SUCCESS (uint32_t)(0xBEEF0000)
-#define DRV_INIT_UNINIT  (uint32_t)(0x00000000)
+#define DRV_INIT_SUCCESS (uint32_t)(0xBEEF0000U)
+#define DRV_INIT_UNINIT  (uint32_t)(0x00000000U)
 
 /* ========================================================================== */
 /*                         Structure Declarations                             */
@@ -25,11 +26,11 @@
 const Pmic_DevSubSysInfo_t pmicSubSysInfo[] = {
     /* PMIC_DEV_BB_TPS65386x */
     {
-        .gpioEnable = true,
-        .wdgEnable = true,
-        .buckEnable = true,
-        .ldoEnable = true,
-        .esmEnable = true
+        .gpioEnable = PMIC_ENABLE,
+        .wdgEnable = PMIC_ENABLE,
+        .buckEnable = PMIC_ENABLE,
+        .ldoEnable = PMIC_ENABLE,
+        .esmEnable = PMIC_ENABLE,
     }
 };
 
@@ -71,7 +72,7 @@ static int32_t initHandleBasicDevCfg(const Pmic_CoreCfg_t *config, Pmic_CoreHand
     return status;
 }
 
-static int32_t initApplicationFunctions(const Pmic_CoreCfg_t *config, Pmic_CoreHandle_t *handle) {
+static int32_t initCommsFunctions(const Pmic_CoreCfg_t *config, Pmic_CoreHandle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
 
     /* Check and update PMIC Handle Comm IO RD Fn */
@@ -92,7 +93,12 @@ static int32_t initApplicationFunctions(const Pmic_CoreCfg_t *config, Pmic_CoreH
         }
     }
 
-    /* Check and update PMIC Handle Critical Section Start Fn */
+    return status;
+}
+
+static int32_t initCritSecFunctions(const Pmic_CoreCfg_t *config, Pmic_CoreHandle_t *handle) {
+    int32_t status = PMIC_ST_SUCCESS;
+
     if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_CRITSEC_START_VALID, status)) {
         if (config->pFnPmicCritSecStart == NULL) {
             status = PMIC_ST_ERR_NULL_FPTR;
@@ -171,10 +177,14 @@ int32_t Pmic_init(Pmic_CoreHandle_t *handle, const Pmic_CoreCfg_t *config) {
         status = initHandleBasicDevCfg(config, handle);
     }
 
-    /* Check and update PMIC Handle for Comm IO RD Fn, Comm IO Wr Fn, Critical
-     * Section Start Fn and Critical Section Stop Fn */
+    /* Check and update PMIC Handle for Comm IO RD Fn, Comm IO Wr Fn */
     if (status == PMIC_ST_SUCCESS) {
-        status = initApplicationFunctions(config, handle);
+        status = initCommsFunctions(config, handle);
+    }
+
+    /* Check and update PMIC handle for Critical section Start/Stop */
+    if (status == PMIC_ST_SUCCESS) {
+        status = initCritSecFunctions(config, handle);
     }
 
     // Set up the valid subsystems for this device and ensure that we can
@@ -193,7 +203,9 @@ int32_t Pmic_init(Pmic_CoreHandle_t *handle, const Pmic_CoreCfg_t *config) {
     }
 
     // Initialization is complete, mark it with magic.
-    handle->drvInitStatus |= DRV_INIT_SUCCESS;
+    if (status == PMIC_ST_SUCCESS) {
+        handle->drvInitStatus |= DRV_INIT_SUCCESS;
+    }
 
     return status;
 }
@@ -241,10 +253,10 @@ int32_t Pmic_checkPmicCoreHandle(const Pmic_CoreHandle_t *handle) {
         } else {
             expectedInitStatus = DRV_INIT_UNINIT;
         }
+    }
 
-        if (expectedInitStatus != handle->drvInitStatus) {
-            status = PMIC_ST_ERR_INV_HANDLE;
-        }
+    if ((status == PMIC_ST_SUCCESS) && (expectedInitStatus != handle->drvInitStatus)) {
+        status = PMIC_ST_ERR_INV_HANDLE;
     }
 
     return status;
