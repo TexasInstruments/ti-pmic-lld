@@ -42,24 +42,8 @@
 /*========================================================================== */
 /*                          Macros & Typedefs                                */
 /*========================================================================== */
-#define CMD_RD_EN       (0x10U)
-#define CMD_WR_EN       (0x00U)
-#define CMD_SHIFT       (24U)
-#define RW_SHIFT        (16U)
-#define DAT_SHIFT       (8U)
-#define CMD_DEVICE_ID   (0x00)
-
-/**
- * @brief: PMIC SERIAL_IF_CONFIG register address (Bank/Page 1 Register address)
- *         Application can only read this register to check I2C1SPI/I2C2 CRC
- *         is enabled or not
- */
-#define PMIC_SERIAL_IF_CONFIG_PAGEADDR      (0x100U)
-#define PMIC_SERIAL_IF_CONFIG_PAGEADDR_MASK (0xFFU)
-
-// SPI R/W bit Position
-#define PMIC_IO_REQ_RW   (uint8_t)(1U << 4U)
 #define PMIC_IO_BUF_SIZE (4U)
+#define PMIC_IO_REQ_RW   (uint8_t)(1U << 4U)
 #define PMIC_COMM_CRC_INITIAL_VALUE (uint32_t)(0xFF)
 
 /*========================================================================== */

@@ -48,9 +48,6 @@
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
-#define PMIC_SILICON_REV_ID_PG_1_0 (0x0U)
-#define PMIC_SILICON_REV_ID_PG_2_0 (0x08U)
-
 #define REG_UNLOCK_DATA1    (0x98U)
 #define REG_UNLOCK_DATA2    (0xB8U)
 #define CNT_UNLOCK_DATA1    (0x13U)
