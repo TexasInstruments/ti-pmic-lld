@@ -38,7 +38,7 @@
 #include <stddef.h>
 
 #include "pmic.h"
-#include "pmic_types.h"
+#include "pmic_common.h"
 
 /* ========================================================================== */
 /*                        Interface Implementations                           */

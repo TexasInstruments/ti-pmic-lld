@@ -77,7 +77,7 @@ endif
 
 SOURCES = \
 	src/pmic.c \
-	src/pmic_types.c \
+	src/pmic_common.c \
 	src/pmic_core.c \
 	src/pmic_io.c \
 	src/pmic_wdg.c

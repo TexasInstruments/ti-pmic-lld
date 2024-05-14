@@ -42,7 +42,7 @@
 #include "pmic_wdg.h"
 #include "pmic_io.h"
 #include "regmap/wdg.h"
-#include "pmic_types.h"
+#include "pmic_common.h"
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */

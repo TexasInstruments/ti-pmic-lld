@@ -61,7 +61,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "pmic_types.h"
+#include "pmic_common.h"
 
 #ifdef __cplusplus
 extern "C" {

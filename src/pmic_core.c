@@ -39,7 +39,7 @@
 #include <stdint.h>
 
 #include "pmic.h"
-#include "pmic_types.h"
+#include "pmic_common.h"
 
 #include "pmic_core.h"
 #include "pmic_io.h"

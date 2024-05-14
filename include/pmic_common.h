@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __PMIC_TYPES_H__
-#define __PMIC_TYPES_H__
+#ifndef __PMIC_COMMON_H__
+#define __PMIC_COMMON_H__
 
 /* ========================================================================= */
 /*                             Include Files                                 */
@@ -130,5 +130,4 @@ static inline bool Pmic_getBitField_b(uint8_t regData, uint8_t shift, uint8_t ma
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-
-#endif /* __PMIC_TYPES_H__ */
+#endif /* __PMIC_COMMON_H__ */
