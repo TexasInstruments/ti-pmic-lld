@@ -57,7 +57,10 @@ endif
 
 INC	= -I./include
 
-CFLAGS = -fPIC $(INC) -Wall
+CFLAGS = -fPIC $(INC) -Weverything \
+				 -Wno-documentation \
+				 -Wno-padded \
+				 -Wno-poison-system-directories
 LDFLAGS = -shared
 LIB_DIR = lib
 
