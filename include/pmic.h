@@ -236,7 +236,7 @@ extern "C" {
 #define PMIC_CFG_CRITSEC_STOP_VALID_SHIFT   (1U << PMIC_CFG_CRITSEC_STOP_VALID)
 #define PMIC_CFG_I2C1_SPEED_VALID_SHIFT     (1U << PMIC_CFG_I2C1_SPEED_VALID)
 #define PMIC_CFG_I2C2_SPEED_VALID_SHIFT     (1U << PMIC_CFG_I2C2_SPEED_VALID)
-/*! @brief Helper macro to set all `validParams` necessary for configuring I2C
+/** @brief Helper macro to set all `validParams` necessary for configuring I2C
  * based driver. */
 #define PMIC_CFG_ALL_I2C_VALID_SHIFT        (\
     PMIC_CFG_DEVICE_TYPE_VALID_SHIFT    |\
@@ -252,7 +252,7 @@ extern "C" {
     PMIC_CFG_QACOMM_HANDLE_VALID_SHIFT  |\
     PMIC_CFG_CRITSEC_START_VALID_SHIFT  |\
     PMIC_CFG_CRITSEC_STOP_VALID_SHIFT)
-/*! @brief Helper macro to set all `validParams` necessary for configuring SPI
+/** @brief Helper macro to set all `validParams` necessary for configuring SPI
  * based driver. */
 #define PMIC_CFG_ALL_SPI_VALID_SHIFT        (\
     PMIC_CFG_DEVICE_TYPE_VALID_SHIFT    |\
@@ -267,7 +267,7 @@ extern "C" {
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
-/*!
+/**
  * @brief PMIC configuration structure.
  *
  * Contains various parameters which are needed to prepare PMIC driver handle
@@ -367,7 +367,7 @@ typedef struct Pmic_CoreCfg_s {
 /*==========================================================================*/
 /*                         Function Declarations                            */
 /*==========================================================================*/
-/*!
+/**
  * @ingroup DRV_PMIC_MODULE
  * @brief API to Initialize PMIC core handle for the PMIC LLD.
  *
@@ -380,12 +380,12 @@ typedef struct Pmic_CoreCfg_s {
  * @param handle  [OUT] PMIC Interface Handle
  * @param coreCfg [IN]  PMIC Configuration Data
  *
- * @retval PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * valid values @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_init(Pmic_CoreHandle_t *handle, const Pmic_CoreCfg_t *coreCfg);
 
-/*!
+/**
  * @ingroup DRV_PMIC_MODULE
  * @brief API to De-initialize an existing PMIC Instance.
  *
@@ -394,12 +394,24 @@ int32_t Pmic_init(Pmic_CoreHandle_t *handle, const Pmic_CoreCfg_t *coreCfg);
  *
  * @param  handle  [IN] PMIC Interface Handle
  *
- * @retval PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * valid values @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_deinit(Pmic_CoreHandle_t *handle);
 
-
+/**
+ * @ingroup DRV_PMIC_MODULE
+ * @brief API to verify the proper construction of the PMIC handle instance.
+ *
+ * This API is primarily intended for use internal to the driver, as all public
+ * functions must verify the integrity of the handle before performing
+ * operations using it.
+ *
+ * @param  handle  [IN] PMIC Interface Handle
+ *
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * valid values @ref Pmic_ErrorCodes.
+ */
 int32_t Pmic_checkPmicCoreHandle(const Pmic_CoreHandle_t *handle);
 
 #ifdef __cplusplus
