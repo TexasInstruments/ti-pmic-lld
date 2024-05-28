@@ -98,7 +98,7 @@ const uint8_t CRC_8_TABLE[] =
 };
 
 /*!
- * \brief: API to Get CRC8 data
+ * \brief   API to Get CRC8 data
  *
  * \param   data     [IN]     Data for which CRC is to be determined
  * \param   length   [IN]     Length of the buffer in bytes.
@@ -107,8 +107,9 @@ const uint8_t CRC_8_TABLE[] =
 static uint8_t Pmic_getCRC8Val(const uint8_t *data, uint8_t length)
 {
     uint8_t crc = PMIC_COMM_CRC_INITIAL_VALUE;
-    uint8_t i;
-    for (i = 0; i < length; i++)
+    uint8_t i = 0U;
+
+    for (i = 0U; i < length; i++)
     {
         crc = CRC_8_TABLE[data[i] ^ crc];
     }
@@ -152,7 +153,7 @@ static int32_t Pmic_getRegWriteProtectionStatus(Pmic_CoreHandle_t *pPmicCoreHand
                     pmicStatus = PMIC_ST_ERR_REG_LOCKED_WR_FAIL;
                 }
             }
-            else
+            else if (PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType)
             {
                 if (((regAddr >= PMIC_BUCK1_CTRL_REGADDR) && (regAddr <= PMIC_BUCK4_PG_WIN_REGADDR)) ||
                     ((regAddr >= PMIC_VCCA_VMON_CTRL_REGADDR) && (regAddr <= PMIC_MISC_CTRL_REGADDR)) ||
@@ -205,9 +206,9 @@ int32_t Pmic_commIntf_sendByte(Pmic_CoreHandle_t *pPmicCoreHandle, uint16_t regA
     int32_t  pmicStatus = PMIC_ST_SUCCESS;
     uint8_t  buffLength = 1U;
     uint8_t  instType = PMIC_MAIN_INST;
-    uint8_t  txBuf[PMIC_IO_BUF_SIZE] = {0};
-    uint8_t  crcData[PMIC_IO_BUF_SIZE] = {0};
-    uint8_t  crcDataLen = 0;
+    uint8_t  txBuf[PMIC_IO_BUF_SIZE] = {0U};
+    uint8_t  crcData[PMIC_IO_BUF_SIZE] = {0U};
+    uint8_t  crcDataLen = 0U;
     uint16_t pmicRegAddr = regAddr;
 
     pmicStatus = Pmic_validatePmicHandleGetRegWrProtectStat(pPmicCoreHandle, regAddr);

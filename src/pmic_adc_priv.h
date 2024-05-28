@@ -69,7 +69,7 @@ extern "C"
  *  \anchor Pmic_ADC_CTRL_shiftVal
     \name PMIC ADC_CTRL Register Shift Values
  */
-#define PMIC_ADC_STATUS_SHIFT                 (4U)
+#define PMIC_ADC_STATUS_SHIFT                 (7U)
 #define PMIC_ADC_RDIV_EN_SHIFT                (3U)
 #define PMIC_ADC_THERMAL_SEL_SHIFT            (2U)
 #define PMIC_ADC_CONT_CONV_SHIFT              (1U)

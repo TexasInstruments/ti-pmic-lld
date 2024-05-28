@@ -93,12 +93,12 @@ extern "C"
 /** \brief Used to configure SCL_I2C2/CS_SPI Function.
  *         Valid only for GPIO2 Pin */
 #define PMIC_TPS6522X_GPIO_PINFUNC_GPIO2_SCL_I2C2_CS_SPI  (1U)
-/** \brief Used to configure TRIG_WDOG Function.
- *         Valid only for GPIO2 Pin */
-#define PMIC_TPS6522X_GPIO_PINFUNC_GPIO2_TRIG_WDOG        (2U)
 /** \brief Used to configure nSLEEP1 Function.
  *         Valid only for GPIO2 Pin */
-#define PMIC_TPS6522X_GPIO_PINFUNC_GPIO2_NSLEEP1          (3U)
+#define PMIC_TPS6522X_GPIO_PINFUNC_GPIO2_NSLEEP1          (2U)
+/** \brief Used to configure TRIG_WDOG Function.
+ *         Valid only for GPIO2 Pin */
+#define PMIC_TPS6522X_GPIO_PINFUNC_GPIO2_TRIG_WDOG        (3U)
 /** \brief Used to configure VMON1_m Function.
  *         Valid only for GPIO3 Pin */
 #define PMIC_TPS6522X_GPIO_PINFUNC_GPIO3_VMON1_M          (1U)

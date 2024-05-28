@@ -95,7 +95,6 @@
 #include "pmic_esm.h"
 #include "pmic_fsm.h"
 #include "pmic_adc.h"
-#include "pmic_io_priv.h"
 
 #ifdef __cplusplus
 extern "C"

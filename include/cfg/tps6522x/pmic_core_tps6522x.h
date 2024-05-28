@@ -70,6 +70,17 @@ extern "C"
 #define PMIC_TPS6522X_SYNCCLKIN_8_8_MHZ (3U)
 /** @} */
 
+/**
+ *  \anchor Pmic_Tps6522xBurton_config2_regBitFields 
+ *  \name PMIC CONFIG_2 Register Bit Field Masks and Shifts
+ * 
+ *  @{
+ */
+#define PMIC_TPS6522X_I2C2_CRC_EN_SHIFT         (5U)
+#define PMIC_TPS6522X_I2C2_CRC_EN_MASK          (1U << PMIC_TPS6522X_I2C2_CRC_EN_SHIFT)
+#define PMIC_TPS6522X_I2C1_SPI_CRC_EN_SHIFT     (4U)
+#define PMIC_TPS6522X_I2C1_SPI_CRC_EN_MASK      (1U << PMIC_TPS6522X_I2C1_SPI_CRC_EN_SHIFT)
+/** @} */
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/

@@ -516,9 +516,18 @@ static int32_t Pmic_validateDevOnBus(Pmic_CoreHandle_t *pPmicCoreHandle, int32_t
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
-        pPmicCoreHandle->pmicDevRev = Pmic_getBitField(regVal,
-                                                       PMIC_DEV_ID_PG2_0_SIL_REV_SHIFT,
-                                                       PMIC_DEV_ID_PG2_0_SIL_REV_MASK);
+        if ((PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType) || 
+            (PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType))
+        {
+            pPmicCoreHandle->pmicDevRev = Pmic_getBitField(regVal,
+                                                        PMIC_DEV_ID_PG2_0_SIL_REV_SHIFT,
+                                                        PMIC_DEV_ID_PG2_0_SIL_REV_MASK);
+        }
+        /* For Burton, the entire register value is the device ID */
+        else
+        {
+            pPmicCoreHandle->pmicDevRev = regVal;
+        }
 
         /* Validate if the device requested is the one on the bus */
         switch (pPmicCoreHandle->pmicDeviceType)
@@ -3000,6 +3009,7 @@ int32_t Pmic_getI2CSpeed(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t *pI2C1Speed
 
 int32_t Pmic_enableCRC(Pmic_CoreHandle_t *pPmicCoreHandle)
 {
+    uint8_t regData = 0U;
     int32_t pmicStatus = PMIC_ST_SUCCESS;
 
     if (NULL == pPmicCoreHandle)
@@ -3009,12 +3019,79 @@ int32_t Pmic_enableCRC(Pmic_CoreHandle_t *pPmicCoreHandle)
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle, PMIC_FSM_I2C_TRIGGER2, PMIC_FSM_I2C_TRIGGER_VAL_1);
+        if ((PMIC_DEV_HERA_LP8764X == pPmicCoreHandle->pmicDeviceType) || 
+            (PMIC_DEV_LEO_TPS6594X == pPmicCoreHandle->pmicDeviceType))
+        {
+            pmicStatus = Pmic_fsmEnableI2cTrigger(pPmicCoreHandle, PMIC_FSM_I2C_TRIGGER2, PMIC_FSM_I2C_TRIGGER_VAL_1);
+        }
+        else
+        {
+            Pmic_criticalSectionStart(pPmicCoreHandle);
+            pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_CONFIG_2_REGADDR, &regData);   
+            Pmic_criticalSectionStop(pPmicCoreHandle);
+
+            if (PMIC_ST_SUCCESS == pmicStatus)
+            {
+                Pmic_setBitField(&regData, PMIC_TPS6522X_I2C1_SPI_CRC_EN_SHIFT, PMIC_TPS6522X_I2C1_SPI_CRC_EN_MASK, 1U);
+
+                if (PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode)
+                {
+                    Pmic_setBitField(&regData, PMIC_TPS6522X_I2C2_CRC_EN_SHIFT, PMIC_TPS6522X_I2C2_CRC_EN_MASK, 1U);
+                }
+
+                Pmic_criticalSectionStart(pPmicCoreHandle);
+                pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_CONFIG_2_REGADDR, regData);   
+                Pmic_criticalSectionStop(pPmicCoreHandle);
+            }
+        }
     }
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
         pPmicCoreHandle->crcEnable = (bool)true;
+    }
+
+    return pmicStatus;
+}
+
+int32_t Pmic_disableCRC(Pmic_CoreHandle_t *pPmicCoreHandle)
+{
+    uint8_t regData = 0U;
+    int32_t pmicStatus = PMIC_ST_SUCCESS;
+
+    if (NULL == pPmicCoreHandle)
+    {
+        pmicStatus = PMIC_ST_ERR_INV_HANDLE;
+    }
+    if ((PMIC_ST_SUCCESS == pmicStatus) && (PMIC_DEV_BURTON_TPS6522X != pPmicCoreHandle->pmicDeviceType))
+    {
+        pmicStatus = PMIC_ST_ERR_INV_DEVICE;
+    }
+
+    if (PMIC_ST_SUCCESS == pmicStatus)
+    {
+        Pmic_criticalSectionStart(pPmicCoreHandle);
+        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_CONFIG_2_REGADDR, &regData);   
+        Pmic_criticalSectionStop(pPmicCoreHandle);
+
+        if (PMIC_ST_SUCCESS == pmicStatus)
+        {
+            Pmic_setBitField(&regData, PMIC_TPS6522X_I2C1_SPI_CRC_EN_SHIFT, PMIC_TPS6522X_I2C1_SPI_CRC_EN_MASK, 0U);
+
+            if (PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode)
+            {
+                Pmic_setBitField(&regData, PMIC_TPS6522X_I2C2_CRC_EN_SHIFT, PMIC_TPS6522X_I2C2_CRC_EN_MASK, 0U);
+            }
+
+            Pmic_criticalSectionStart(pPmicCoreHandle);
+            pmicStatus = Pmic_commIntf_sendByte(pPmicCoreHandle, PMIC_CONFIG_2_REGADDR, regData);   
+            Pmic_criticalSectionStop(pPmicCoreHandle);
+        }
+    }
+
+    if (PMIC_ST_SUCCESS == pmicStatus)
+    {
+        pPmicCoreHandle->crcEnable = (bool)false;
     }
 
     return pmicStatus;
@@ -3043,19 +3120,40 @@ int32_t Pmic_getCrcStatus(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t *pI2c1SpiC
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
         Pmic_criticalSectionStart(pPmicCoreHandle);
-        pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_SERIAL_IF_CONFIG_REGADDR, &regVal);
+        if (PMIC_DEV_BURTON_TPS6522X == pPmicCoreHandle->pmicDeviceType)
+        {
+            pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_CONFIG_2_REGADDR, &regVal);
+        }
+        else
+        {
+            pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle, PMIC_SERIAL_IF_CONFIG_REGADDR, &regVal);
+        }
         Pmic_criticalSectionStop(pPmicCoreHandle);
     }
 
     if (PMIC_ST_SUCCESS == pmicStatus)
     {
-        *pI2c1SpiCrcStatus = Pmic_getBitField(
-            regVal, PMIC_I2C1_SPI_CRC_EN_SHIFT, PMIC_I2C1_SPI_CRC_EN_MASK);
-
-        if (PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode)
+        if (PMIC_DEV_BURTON_TPS6522X == pPmicCoreHandle->pmicDeviceType)
         {
-            *pI2c2CrcStatus = Pmic_getBitField(
-                regVal, PMIC_I2C2_CRC_EN_SHIFT, PMIC_I2C2_CRC_EN_MASK);
+            *pI2c1SpiCrcStatus = Pmic_getBitField(
+                regVal, PMIC_TPS6522X_I2C1_SPI_CRC_EN_SHIFT, PMIC_TPS6522X_I2C1_SPI_CRC_EN_MASK);
+
+            if (PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode)
+            {
+                *pI2c2CrcStatus = Pmic_getBitField(
+                    regVal, PMIC_TPS6522X_I2C2_CRC_EN_SHIFT, PMIC_TPS6522X_I2C2_CRC_EN_MASK);
+            }
+        }
+        else
+        {
+            *pI2c1SpiCrcStatus = Pmic_getBitField(
+                regVal, PMIC_I2C1_SPI_CRC_EN_SHIFT, PMIC_I2C1_SPI_CRC_EN_MASK);
+
+            if (PMIC_INTF_DUAL_I2C == pPmicCoreHandle->commMode)
+            {
+                *pI2c2CrcStatus = Pmic_getBitField(
+                    regVal, PMIC_I2C2_CRC_EN_SHIFT, PMIC_I2C2_CRC_EN_MASK);
+            }
         }
     }
 
