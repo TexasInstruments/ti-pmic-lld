@@ -1177,7 +1177,7 @@ int32_t Pmic_getCommonCtrlStat(Pmic_CoreHandle_t *pPmicCoreHandle, Pmic_CommonCt
 int32_t Pmic_getI2CSpeed(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t *pI2C1Speed, uint8_t *pI2C2Speed);
 
 /**
- * \brief   API to Enable CRC
+ * \brief   API to enable CRC
  *
  * Requirement: REQ_TAG(PDK-9119)
  * Design: did_pmic_crc_enable
@@ -1185,10 +1185,11 @@ int32_t Pmic_getI2CSpeed(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t *pI2C1Speed
  *
  *          This function is used to enable CRC on Primary PMIC which enables
  *          CRC for I2C1, I2C2, SPI interface of both Primary and Secondary PMIC
- *          Note: Application shall not do reads and writes of the any
- *          PMIC registers for at least 2ms to allow the recalculation of the
- *          register CRC value due to the change
- *          Valid only for TPS6594x Leo PMIC PG2.0 and LP8764x Hera PMIC PG2.0
+ * 
+ * \note    Application shall not do reads and writes of the any PMIC registers 
+ *          for at least 2ms to allow the recalculation of the register CRC value
+ *          due to the change. This API is valid only for TPS6594x Leo PMIC PG2.0,
+ *          LP8764x Hera PMIC PG2.0, and TPS6522x Burton PMIC
  *
  * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
  *
@@ -1196,6 +1197,26 @@ int32_t Pmic_getI2CSpeed(Pmic_CoreHandle_t *pPmicCoreHandle, uint8_t *pI2C1Speed
  *          For valid values \ref Pmic_ErrorCodes
  */
 int32_t Pmic_enableCRC(Pmic_CoreHandle_t *pPmicCoreHandle);
+
+/**
+ * \brief   API to disable CRC
+ *
+ * Requirement: REQ_TAG(PDK-9119)
+ * Design: did_pmic_crc_enable
+ * Architecture: aid_pmic_core_misc_cfg
+ *
+ *          This function is used to disable CRC on Primary PMIC which disables
+ *          CRC for I2C1, I2C2, SPI interface of both Primary and Secondary PMIC
+ * 
+ * \note    This API is valid only for TPS6594x Leo PMIC PG2.0, LP8764x Hera PMIC
+ *          PG2.0, and TPS6522x Burton PMIC
+ *
+ * \param   pPmicCoreHandle [IN]    PMIC Interface Handle.
+ *
+ * \return  PMIC_ST_SUCCESS in case of success or appropriate error code
+ *          For valid values \ref Pmic_ErrorCodes
+ */
+int32_t Pmic_disableCRC(Pmic_CoreHandle_t *pPmicCoreHandle);
 
 /**
  * \brief   API to get CRC Status
