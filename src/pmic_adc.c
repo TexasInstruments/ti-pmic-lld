@@ -348,7 +348,7 @@ int32_t Pmic_ADCGetStatus(Pmic_CoreHandle_t *pPmicCoreHandle, bool *pAdcBusy)
     // Extract ADC_STATUS bit
     if (status == PMIC_ST_SUCCESS)
     {
-        *pAdcBusy = Pmic_getBitField_b(PMIC_ADC_CTRL_REGADDR, PMIC_ADC_STATUS_SHIFT);
+        *pAdcBusy = Pmic_getBitField_b(adcCtrlRegData, PMIC_ADC_STATUS_SHIFT);
     }
 
     // Stop critical section after reading
