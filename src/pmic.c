@@ -66,6 +66,11 @@ static int32_t initHandleBasicDevCfg(const Pmic_CoreCfg_t *config, Pmic_CoreHand
         }
     }
 
+    /* Assign PMIC slaveAddr */
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_SLAVEADDR_VALID, status)) {
+        handle->slaveAddr = config->slaveAddr;
+    }
+
     return status;
 }
 
