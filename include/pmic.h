@@ -199,16 +199,6 @@ extern "C" {
 /** @} */
 
 /**
- * @anchor Pmic_CrcEnableCfg
- * @name PMIC CRC Enable/Disable Configuration
- *
- *  @{
- */
-#define PMIC_CRC_DISABLE    (0U)
-#define PMIC_CRC_ENABLE     (1U)
-/** @} */
-
-/**
  * @anchor Pmic_ValidParamCfg
  * @name  PMIC Config Structure Param Bits
  * @brief The `validParams` values to be used when checking configuration of
@@ -216,20 +206,21 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_DEVICE_TYPE_VALID   (0U)
-#define PMIC_CFG_COMM_MODE_VALID     (1U)
-#define PMIC_CFG_SLAVEADDR_VALID     (2U)
-#define PMIC_CFG_QASLAVEADDR_VALID   (3U)
-#define PMIC_CFG_NVMSLAVEADDR_VALID  (4U)
-#define PMIC_CFG_COMM_HANDLE_VALID   (5U)
-#define PMIC_CFG_QACOMM_HANDLE_VALID (6U)
-#define PMIC_CFG_COMM_IO_RD_VALID    (7U)
-#define PMIC_CFG_COMM_IO_WR_VALID    (8U)
-#define PMIC_CFG_CRITSEC_START_VALID (9U)
-#define PMIC_CFG_CRITSEC_STOP_VALID  (10U)
-#define PMIC_CFG_I2C1_SPEED_VALID    (11U)
-#define PMIC_CFG_I2C2_SPEED_VALID    (12U)
-#define PMIC_CFG_CRC_ENABLE_VALID    (13U)
+#define PMIC_CFG_DEVICE_TYPE_VALID    (0U)
+#define PMIC_CFG_COMM_MODE_VALID      (1U)
+#define PMIC_CFG_SLAVEADDR_VALID      (2U)
+#define PMIC_CFG_QASLAVEADDR_VALID    (3U)
+#define PMIC_CFG_NVMSLAVEADDR_VALID   (4U)
+#define PMIC_CFG_COMM_HANDLE_VALID    (5U)
+#define PMIC_CFG_QACOMM_HANDLE_VALID  (6U)
+#define PMIC_CFG_COMM_IO_RD_VALID     (7U)
+#define PMIC_CFG_COMM_IO_WR_VALID     (8U)
+#define PMIC_CFG_CRITSEC_START_VALID  (9U)
+#define PMIC_CFG_CRITSEC_STOP_VALID   (10U)
+#define PMIC_CFG_I2C1_SPEED_VALID     (11U)
+#define PMIC_CFG_I2C2_SPEED_VALID     (12U)
+#define PMIC_CFG_CRC_ENABLE_VALID     (13U)
+#define PMIC_CFG_CFG_CRC_ENABLE_VALID (14U)
 /** @} */
 
 /**
@@ -255,6 +246,7 @@ extern "C" {
 #define PMIC_CFG_I2C1_SPEED_VALID_SHIFT     (1U << PMIC_CFG_I2C1_SPEED_VALID)
 #define PMIC_CFG_I2C2_SPEED_VALID_SHIFT     (1U << PMIC_CFG_I2C2_SPEED_VALID)
 #define PMIC_CFG_CRC_ENABLE_VALID_SHIFT     (1U << PMIC_CFG_CRC_ENABLE_VALID)
+#define PMIC_CFG_CFG_CRC_ENABLE_VALID_SHIFT (1U << PMIC_CFG_CFG_CRC_ENABLE_VALID)
 /** @brief Helper macro to set all `validParams` necessary for configuring I2C
  * based driver. */
 #define PMIC_CFG_ALL_I2C_VALID_SHIFT        (\
@@ -263,6 +255,7 @@ extern "C" {
     PMIC_CFG_SLAVEADDR_VALID_SHIFT      |\
     PMIC_CFG_I2C1_SPEED_VALID_SHIFT     |\
     PMIC_CFG_CRC_ENABLE_VALID_SHIFT     |\
+    PMIC_CFG_CFG_CRC_ENABLE_VALID_SHIFT |\
     PMIC_CFG_COMM_IO_RD_VALID_SHIFT     |\
     PMIC_CFG_COMM_IO_WR_VALID_SHIFT     |\
     PMIC_CFG_COMM_HANDLE_VALID_SHIFT    |\
@@ -342,6 +335,11 @@ extern "C" {
  * the CRC feature will be disabled in HW and no calculations will be performed
  * by the driver.
  *
+ * @param configCrcEnable Controls whether configuration register CRC is enabled
+ * or disabled. If enabled, APIs are provided to enable, disable, and recalcuate
+ * this CRC value. Otherwise, this feature is left disabled and no further user
+ * input is required.
+ *
  * @param pFnPmicCommIoRd Pointer to I2C/SPI Comm LLD Read Function. Valid
  * only when `PMIC_CFG_COMM_IO_RD_VALID` bit of `validParams` is set.
  *
@@ -371,6 +369,7 @@ typedef struct Pmic_CoreCfg_s {
     uint8_t i2c1Speed;
     uint8_t i2c2Speed;
     bool crcEnable;
+    bool configCrcEnable;
     void *pCommHandle;
     void *pQACommHandle;
     int32_t (*pFnPmicCommIoRd)(struct Pmic_CoreHandle_s *handle,

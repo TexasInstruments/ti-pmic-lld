@@ -55,6 +55,15 @@ extern "C" {
 #define PMIC_REGISTER_LOCK_STATUS_SHIFT (0U)
 #define PMIC_REGISTER_LOCK_STATUS_MASK  (1U << PMIC_REGISTER_LOCK_STATUS_SHIFT)
 
+/* CONFIG_CRC_* register definitions */
+#define PMIC_CONFIG_CRC_CONFIG_REG ((uint8_t)0x60U)
+#define PMIC_CONFIG_CRC_REG_1_REG  ((uint8_t)0x44U)
+#define PMIC_CONFIG_CRC_REG_2_REG  ((uint8_t)0x45U)
+
+#define PMIC_CONFIG_CRC_EN_SHIFT     (0U)
+#define PMIC_CONFIG_CRC_CALC_SHIFT   (1U)
+#define PMIC_CONFIG_CRC_STATUS_SHIFT (2U)
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

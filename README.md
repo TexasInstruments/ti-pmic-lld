@@ -140,20 +140,22 @@ Pmic_CoreHandle_t PmicHandle;
 
 Pmic_CoreCfg_t coreCfg = {
     .validParams = (
-        PMIC_CFG_DEVICE_TYPE_VALID_SHIFT   |
-        PMIC_CFG_COMM_MODE_VALID_SHIFT     |
-        PMIC_CFG_CRC_ENABLE_VALID_SHIFT    |
-        PMIC_CFG_SLAVEADDR_VALID_SHIFT     |
-        PMIC_CFG_COMM_HANDLE_VALID_SHIFT   |
-        PMIC_CFG_COMM_IO_RD_VALID_SHIFT    |
-        PMIC_CFG_COMM_IO_WR_VALID_SHIFT    |
-        PMIC_CFG_CRITSEC_START_VALID_SHIFT |
+        PMIC_CFG_DEVICE_TYPE_VALID_SHIFT    |
+        PMIC_CFG_COMM_MODE_VALID_SHIFT      |
+        PMIC_CFG_CRC_ENABLE_VALID_SHIFT     |
+        PMIC_CFG_CFG_CRC_ENABLE_VALID_SHIFT |
+        PMIC_CFG_SLAVEADDR_VALID_SHIFT      |
+        PMIC_CFG_COMM_HANDLE_VALID_SHIFT    |
+        PMIC_CFG_COMM_IO_RD_VALID_SHIFT     |
+        PMIC_CFG_COMM_IO_WR_VALID_SHIFT     |
+        PMIC_CFG_CRITSEC_START_VALID_SHIFT  |
         PMIC_CFG_CRITSEC_STOP_VALID_SHIFT
     ),
     .instType = PMIC_MAIN_INST,
     .pmicDeviceType = PMIC_DEV_COACH_LP8772X,
     .commMode = PMIC_INTF_I2C_SINGLE,
     .crcEnable = PMIC_ENABLE,
+    .configCrcEnable = PMIC_ENABLE,
     .slaveAddr = <Device I2C Address>,
     .pCommHandle = &commHandle,
     .pFnPmicCommIoRead = PmicCommIoRead,

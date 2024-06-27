@@ -140,6 +140,54 @@ static int32_t updateSubSysInfoAndValidateComms(const Pmic_CoreCfg_t *config, Pm
     return status;
 }
 
+static int32_t configureDeviceCrc(const Pmic_CoreCfg_t *config, Pmic_CoreHandle_t *handle) {
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Determine the initial state of the communications CRC, this must be known
+    // in order to configure the CRC state later as the config CRC must be
+    // disabled and the register space needs to be unlocked
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_ioGetCrcEnableState(handle, &handle->crcEnable);
+    }
+
+    // Unconditionally unlock config register space to ensure comms CRC can be
+    // configured
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_setRegLockState(handle, PMIC_LOCK_DISABLE);
+    }
+
+    // Unconditionally disable config CRC to ensure comms CRC can be configured
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_configCrcDisable(handle);
+    }
+
+    // Update PMIC Comms CRC status, note that this performs communications with
+    // the device to ensure handle `crcEnable` property and HW status are in
+    // sync, and this relies on the handle being fully initialized so it must
+    // come after DRV_INIT_SUCCESS.
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_CRC_ENABLE_VALID, status)) {
+        status = Pmic_ioSetCrcEnableState(handle, config->crcEnable);
+    }
+
+    // If the user requested that register CRC be enabled, re-enable it here, if
+    // they listed this as a don't care, or explicitly marked it as disabled,
+    // just leave it disabled.
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_CFG_CRC_ENABLE_VALID, status)) {
+        handle->configCrcEnable = config->configCrcEnable;
+
+        if (config->configCrcEnable) {
+            status = Pmic_configCrcEnable(handle, PMIC_CFG_CRC_RECALCULATE);
+        }
+    }
+
+    // Re-lock config register space
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_setRegLockState(handle, PMIC_LOCK_ENABLE);
+    }
+
+    return status;
+}
+
 /* ========================================================================== */
 /*                        Interface Implementations                           */
 /* ========================================================================== */
@@ -186,12 +234,9 @@ int32_t Pmic_init(Pmic_CoreHandle_t *handle, const Pmic_CoreCfg_t *config) {
         handle->drvInitStatus |= DRV_INIT_SUCCESS;
     }
 
-    // Update PMIC Comms CRC status, note that this performs communications with
-    // the device to ensure handle `crcEnable` property and HW status are in
-    // sync, and this relies on the handle being fully initialized so it must
-    // come after DRV_INIT_SUCCESS.
-    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_CRC_ENABLE_VALID, status)) {
-        status = Pmic_ioSetCrcEnableState(handle, config->crcEnable);
+    // Configure CRC for HW and PMIC handle
+    if (status == PMIC_ST_SUCCESS) {
+        status = configureDeviceCrc(config, handle);
     }
 
     return status;

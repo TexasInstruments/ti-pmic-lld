@@ -80,6 +80,16 @@ extern "C" {
 /** @} */
 
 /**
+ * @anchor Pmic_ConfigCrcRecalculate
+ * @name PMIC Config CRC recalculate value
+ *
+ * @{
+ */
+#define PMIC_CFG_CRC_RECALCULATE ((bool)true)
+#define PMIC_CFG_CRC_ENABLE_ONLY ((bool)false)
+/** @} */
+
+/**
  * @brief Write a value to a target scratch pad register on the PMIC.
  *
  * @param handle           [IN] PMIC interface handle.
@@ -129,6 +139,35 @@ int32_t Pmic_setRegLockState(Pmic_CoreHandle_t *handle, bool lockState);
  * Pmic_ErrorCodes.
  */
 int32_t Pmic_getRegLockState(Pmic_CoreHandle_t *handle, bool *lockState);
+
+/**
+ * @brief Enables config register CRC.
+ *
+ * @param handle    [IN] Pointer to the PMIC core handle structure.
+ * @param calculate [IN] If true (PMIC_CFG_CRC_RECALCULATE), this API will
+ * calculate the new CONFIG_CRC value and write it to CONFIG_CRC_REG_{1,2}
+ * before enabling CONFIG_CRC. If false (PMIC_CFG_CRC_ENABLE_ONLY), this API
+ * will only enable the CONFIG_CRC feature. See @ref Pmic_ConfigCrcRecalculate.
+ *
+ * @warning The `calculate` parameter is currently unimplemented and does
+ * nothing.
+ *
+ * @return Returns PMIC_ST_SUCCESS if the operation is successful; otherwise,
+ * it returns an appropriate error code. For possible values, see @ref
+ * Pmic_ErrorCodes.
+ */
+int32_t Pmic_configCrcEnable(Pmic_CoreHandle_t *handle, bool calculate);
+
+/**
+ * @brief Disables config register CRC.
+ *
+ * @param handle    [IN] Pointer to the PMIC core handle structure.
+ *
+ * @return Returns PMIC_ST_SUCCESS if the operation is successful; otherwise,
+ * it returns an appropriate error code. For possible values, see @ref
+ * Pmic_ErrorCodes.
+ */
+int32_t Pmic_configCrcDisable(Pmic_CoreHandle_t *handle);
 
 #ifdef __cplusplus
 }

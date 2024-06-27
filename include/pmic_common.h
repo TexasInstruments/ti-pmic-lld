@@ -68,6 +68,7 @@ typedef struct Pmic_CoreHandle_s {
     uint8_t i2c1Speed;
     uint8_t i2c2Speed;
     bool crcEnable;
+    bool configCrcEnable;
     void *pCommHandle;
     void *pQACommHandle;
     int32_t (*pFnPmicCommIoRd)(struct Pmic_CoreHandle_s *pmicCorehandle,

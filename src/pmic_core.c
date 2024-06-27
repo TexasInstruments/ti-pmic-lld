@@ -31,6 +31,7 @@
  *
  *****************************************************************************/
 #include <stdint.h>
+#include <stdbool.h>
 #include <stddef.h>
 
 #include "pmic.h"
@@ -130,6 +131,53 @@ int32_t Pmic_getRegLockState(Pmic_CoreHandle_t *handle, bool *lockState)
     {
         // Extract REGISTER_LOCK_STATUS bit field
         *lockState = Pmic_getBitField_b(regData, PMIC_REGISTER_LOCK_STATUS_SHIFT);
+    }
+
+    return status;
+}
+
+int32_t Pmic_configCrcEnable(Pmic_CoreHandle_t *handle, bool calculate)
+{
+    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    uint8_t regData = 0U;
+
+    if ((status == PMIC_ST_SUCCESS) && (calculate == PMIC_CFG_CRC_RECALCULATE)) {
+        // PMICDRV-180
+        // Intentionally do nothing, to be implemented in a future update
+    }
+
+    // Set the CRC_EN bit (only) and write it to the CONFIG_CRC_CONFIG register
+    if (status == PMIC_ST_SUCCESS) {
+        Pmic_setBitField_b(&regData, PMIC_CONFIG_CRC_EN_SHIFT, PMIC_ENABLE);
+
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioTxByte(handle, PMIC_CONFIG_CRC_CONFIG_REG, regData);
+        Pmic_criticalSectionStop(handle);
+    }
+
+    // Update the handle
+    if (status == PMIC_ST_SUCCESS) {
+        handle->configCrcEnable = PMIC_ENABLE;
+    }
+
+    return status;
+}
+
+int32_t Pmic_configCrcDisable(Pmic_CoreHandle_t *handle)
+{
+    int32_t status = Pmic_checkPmicCoreHandle(handle);
+
+    // Write 0x00 to the CONFIG_CRC_CONFIG register in order to disable this
+    // feature as described in the TRM.
+    if (status == PMIC_ST_SUCCESS) {
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioTxByte(handle, PMIC_CONFIG_CRC_CONFIG_REG, 0x00U);
+        Pmic_criticalSectionStop(handle);
+    }
+
+    // Update the handle
+    if (status == PMIC_ST_SUCCESS) {
+        handle->configCrcEnable = PMIC_DISABLE;
     }
 
     return status;
