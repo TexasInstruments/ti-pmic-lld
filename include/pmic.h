@@ -336,6 +336,12 @@ extern "C" {
  * values, see @ref Pmic_I2CSpeedSel. Valid only when
  * `PMIC_CFG_I2C2_SPEED_VALID` bit is set. Only necessary for I2C interfaces.
  *
+ * @param crcEnable Controls whether communications layer CRC is enabled or
+ * disabled. If enabled the driver will enable the CRC feature in HW and perform
+ * the necessary CRC calculations when communication with the PMIC. If disabled,
+ * the CRC feature will be disabled in HW and no calculations will be performed
+ * by the driver.
+ *
  * @param pFnPmicCommIoRd Pointer to I2C/SPI Comm LLD Read Function. Valid
  * only when `PMIC_CFG_COMM_IO_RD_VALID` bit of `validParams` is set.
  *

@@ -85,6 +85,58 @@ int32_t Pmic_ioTxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txDat
  */
 int32_t Pmic_ioRxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *rxBuffer);
 
+/**
+ * @ingroup DRV_PMIC_IO_MODULE
+ * @brief Determine whether I2C CRC is enabled or disabled.
+ *
+ * @param handle    [IN]  PMIC Interface Handle
+ * @param isEnabled [OUT] Set to true (PMIC_ENABLE) if comms CRC is enabled,
+ * false (PMIC_DISABLE) if disabled. See @ref Pmic_EnableDisable.
+ *
+ * @return Returns PMIC_ST_SUCCESS if the operation is successful; otherwise,
+ * it returns an appropriate error code. For possible values, see @ref
+ * Pmic_ErrorCodes.
+ */
+int32_t Pmic_ioGetCrcEnableState(Pmic_CoreHandle_t *handle, bool *isEnabled);
+
+/**
+ * @ingroup DRV_PMIC_IO_MODULE
+ * @brief Control whether I2C CRC is enabled or disabled.
+ *
+ * @param handle   [IN] PMIC Interface Handle
+ * @param enable   [IN] Set to true (PMIC_ENABLE) to enable comms CRC, false
+ * (PMIC_DISABLE) to disable. See @ref Pmic_EnableDisable.
+ *
+ * @return Returns PMIC_ST_SUCCESS if the operation is successful; otherwise,
+ * it returns an appropriate error code. For possible values, see @ref
+ * Pmic_ErrorCodes.
+ */
+int32_t Pmic_ioSetCrcEnableState(Pmic_CoreHandle_t *handle, bool enable);
+
+/**
+ * @ingroup DRV_PMIC_IO_MODULE
+ * @brief Enable I2C CRC.
+ *
+ * @param handle   [IN] PMIC Interface Handle
+ *
+ * @return Returns PMIC_ST_SUCCESS if the operation is successful; otherwise,
+ * it returns an appropriate error code. For possible values, see @ref
+ * Pmic_ErrorCodes.
+ */
+int32_t Pmic_ioCrcEnable(Pmic_CoreHandle_t *handle);
+
+/**
+ * @ingroup DRV_PMIC_IO_MODULE
+ * @brief Disable I2C CRC.
+ *
+ * @param handle   [IN] PMIC Interface Handle
+ *
+ * @return Returns PMIC_ST_SUCCESS if the operation is successful; otherwise,
+ * it returns an appropriate error code. For possible values, see @ref
+ * Pmic_ErrorCodes.
+ */
+int32_t Pmic_ioCrcDisable(Pmic_CoreHandle_t *handle);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

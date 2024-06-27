@@ -38,6 +38,7 @@
 
 #include "pmic.h"
 #include "pmic_io.h"
+#include "regmap/io.h"
 
 /*========================================================================== */
 /*                          Macros & Typedefs                                */
@@ -101,4 +102,56 @@ int32_t Pmic_ioTxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txDat
     }
 
     return handle->pFnPmicCommIoWr(handle, (uint8_t)PMIC_MAIN_INST, regAddr, &txBuf[0], frameSize);
+}
+
+int32_t Pmic_ioGetCrcEnableState(Pmic_CoreHandle_t *handle, bool *isEnabled) {
+    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    uint8_t regData = 0U;
+
+    // Read the INTERFACE_CONF register
+    if (status == PMIC_ST_SUCCESS) {
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioRxByte(handle, PMIC_IO_INTERFACE_CONF, &regData);
+        Pmic_criticalSectionStop(handle);
+    }
+
+    // Extract the relevant bit
+    if (status == PMIC_ST_SUCCESS) {
+        *isEnabled = Pmic_getBitField_b(regData, PMIC_INTF_CONF_I2C_CRC_EN_SHIFT);
+    }
+
+    return status;
+}
+
+int32_t Pmic_ioSetCrcEnableState(Pmic_CoreHandle_t *handle, bool enable) {
+    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    uint8_t regData = 0U;
+
+    // Read the INTERFACE_CONF register
+    Pmic_criticalSectionStart(handle);
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_ioRxByte(handle, PMIC_IO_INTERFACE_CONF, &regData);
+    }
+
+    // Set the I2C_CRC_EN bit accordingly and then write back to the register
+    if (status == PMIC_ST_SUCCESS) {
+        Pmic_setBitField_b(&regData, PMIC_INTF_CONF_I2C_CRC_EN_SHIFT, enable);
+        status = Pmic_ioTxByte(handle, PMIC_IO_INTERFACE_CONF, regData);
+    }
+    Pmic_criticalSectionStop(handle);
+
+    // Update the handle crcEnable property to track with the HW status
+    if (status == PMIC_ST_SUCCESS) {
+        handle->crcEnable = enable;
+    }
+
+    return status;
+}
+
+int32_t Pmic_ioCrcEnable(Pmic_CoreHandle_t *handle) {
+    return Pmic_ioSetCrcEnableState(handle, PMIC_ENABLE);
+}
+
+int32_t Pmic_ioCrcDisable(Pmic_CoreHandle_t *handle) {
+    return Pmic_ioSetCrcEnableState(handle, PMIC_DISABLE);
 }

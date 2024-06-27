@@ -186,6 +186,14 @@ int32_t Pmic_init(Pmic_CoreHandle_t *handle, const Pmic_CoreCfg_t *config) {
         handle->drvInitStatus |= DRV_INIT_SUCCESS;
     }
 
+    // Update PMIC Comms CRC status, note that this performs communications with
+    // the device to ensure handle `crcEnable` property and HW status are in
+    // sync, and this relies on the handle being fully initialized so it must
+    // come after DRV_INIT_SUCCESS.
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_CRC_ENABLE_VALID, status)) {
+        status = Pmic_ioSetCrcEnableState(handle, config->crcEnable);
+    }
+
     return status;
 }
 
