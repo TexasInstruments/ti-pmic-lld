@@ -22,6 +22,7 @@ Device support is subdivided based on feature set:
 | LP8764x     | Hera          | `device/leo-hera-burton` |
 | TPS6522x    | Burton        | `device/leo-hera-burton` |
 | TPS653860xx | Blackbird     | `device/blackbird`       |
+| LP8772X     | Coach         | `device/coach`           |
 
 ## Contributing
 
