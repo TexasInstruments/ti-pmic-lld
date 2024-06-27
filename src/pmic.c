@@ -50,7 +50,7 @@ static int32_t initHandleBasicDevCfg(const Pmic_CoreCfg_t *config, Pmic_CoreHand
 
     /* Check and update PMIC Handle Comm Mode */
     if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_COMM_MODE_VALID, status)) {
-        if (config->commMode != PMIC_INTF_SPI) {
+        if (config->commMode != PMIC_INTF_I2C_SINGLE) {
             status = PMIC_ST_ERR_INV_PARAM;
         } else {
             handle->commMode = config->commMode;
