@@ -72,6 +72,7 @@ extern "C" {
 #define PMIC_CONFIG_1_REGADDR               ((uint8_t)0x3CU)
 #define PMIC_STAT_STARTUP_REGADDR           ((uint8_t)0x58U)
 #define PMIC_STAT_MISC_REGADDR              ((uint8_t)0x59U)
+#define PMIC_STAT_SEVERE_ERR_REGADDR        ((uint8_t)0x5BU)
 #define PMIC_CONFIG_CRC_CONFIG_REGADDR      ((uint8_t)0x61U)
 
 /* ========================================================================== */
@@ -245,6 +246,52 @@ extern "C" {
 #define PMIC_SSM_SEL_MASK                   ((uint8_t)1U << PMIC_SSM_SEL_SHIFT)
 #define PMIC_FORCE_INTERRUPT_SHIFT          ((uint8_t)0U)
 #define PMIC_FORCE_INTERRUPT_MASK           ((uint8_t)1U << PMIC_FORCE_INTERRUPT_SHIFT)
+/** @} */
+
+/**
+ * @anchor Pmic_statStartupBitFields
+ * @name TPS65036x STAT_STARTUP Register Bit Fields
+ *
+ * @brief Mask and shift values for all bit fields of the STAT_STARTUP register.
+ *
+ * @{
+ */
+#define PMIC_BUCK3_ACTIVE_SHIFT             ((uint8_t)7U)
+#define PMIC_BUCK3_ACTIVE_MASK              ((uint8_t)1U << PMIC_BUCK3_ACTIVE_SHIFT)
+#define PMIC_BUCK2_ACTIVE_SHIFT             ((uint8_t)6U)
+#define PMIC_BUCK2_ACTIVE_MASK              ((uint8_t)1U << PMIC_BUCK2_ACTIVE_SHIFT)
+#define PMIC_BUCK1_ACTIVE_SHIFT             ((uint8_t)5U)
+#define PMIC_BUCK1_ACTIVE_MASK              ((uint8_t)1U << PMIC_BUCK1_ACTIVE_SHIFT)
+#define PMIC_LDO_ACTIVE_SHIFT               ((uint8_t)3U)
+#define PMIC_LDO_ACTIVE_MASK                ((uint8_t)1U << PMIC_LDO_ACTIVE_SHIFT)
+/** @} */
+
+/**
+ * @anchor Pmic_config1BitFields
+ * @name TPS65036x CONFIG_1 Register Bit Fields
+ *
+ * @brief Mask and shift values for all bit fields of the CONFIG_1 register.
+ *
+ * @{
+ */
+#define PMIC_TWARN_CONFIG_SHIFT             ((uint8_t)2U)
+#define PMIC_TWARN_CONFIG_MASK              ((uint8_t)1U << PMIC_TWARN_CONFIG_SHIFT)
+#define PMIC_TSD_IMM_LEVEL_SHIFT            ((uint8_t)1U)
+#define PMIC_TSD_IMM_LEVEL_MASK             ((uint8_t)1U << PMIC_TSD_IMM_LEVEL_SHIFT)
+#define PMIC_TWARN_LEVEL_SHIFT              ((uint8_t)0U)
+#define PMIC_TWARN_LEVEL_MASK               ((uint8_t)1U << PMIC_TWARN_LEVEL_SHIFT)
+/** @} */
+
+/**
+ * @anchor Pmic_statSevereErrBitFields
+ * @name TPS65036x STAT_SEVERE_ERR Register Bit Fields
+ *
+ * @brief Mask and shift values for all bit fields of the STAT_SEVERE_ERR register.
+ *
+ * @{
+ */
+#define PMIC_TSD_IMM_STAT_SHIFT             ((uint8_t)0U)
+#define PMIC_TSD_IMM_STAT_MASK              ((uint8_t)1U << PMIC_TSD_IMM_STAT_SHIFT)
 /** @} */
 
 /**

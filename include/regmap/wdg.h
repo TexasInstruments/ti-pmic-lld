@@ -31,10 +31,10 @@
  *
  *****************************************************************************/
 /**
- *  @file wdg.h
+ * @file wdg.h
  *
- *  @brief PMIC LLD register addresses and bit fields pertaining to the
- *  Watchdog module.
+ * @brief PMIC LLD register addresses and bit fields pertaining to the
+ * Watchdog module.
  */
 #ifndef __WDG_H__
 #define __WDG_H__
