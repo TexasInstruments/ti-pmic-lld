@@ -392,20 +392,6 @@ static inline void IRQ_setIntrStat(Pmic_IrqStat_t *irqStat, uint32_t irqNum)
     }
 }
 
-/*!
- * @brief Function to clear the intrStat bit position.
- */
-static inline void IRQ_clearIntrStat(Pmic_IrqStat_t *irqStat, uint32_t irqNum)
-{
-    if (irqNum <= PMIC_IRQ_MAX)
-    {
-        // IRQs 0 to 31 go to index 0, IRQs 32 to 63 go to index 1.
-        // At an index, an IRQ's corresponding bit is cleared
-        // (e.g., IRQ 49's status at bit 17 at index 1 will be cleared)
-        irqStat->intrStat[irqNum / PMIC_NUM_BITS_IN_INTR_STAT] &= ~((uint32_t)1U << (irqNum % PMIC_NUM_BITS_IN_INTR_STAT));
-    }
-}
-
 int32_t Pmic_irqSetMask(const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMasks, const Pmic_IrqMask_t *irqMasks)
 {
     uint8_t regData = 0U;
@@ -437,7 +423,7 @@ int32_t Pmic_irqSetMask(const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMasks
             {
                 irqMaskRegAddr = pmicIRQs[irqNum].irqMaskRegAddr;
                 irqMaskBitShift = pmicIRQs[irqNum].irqMaskBitPos;
-                irqMaskBitMask = 1U << pmicIRQs[irqNum].irqMaskBitPos;
+                irqMaskBitMask = (uint8_t)(1U << pmicIRQs[irqNum].irqMaskBitPos);
             }
 
             // Check whether IRQ is maskable
@@ -1150,7 +1136,7 @@ int32_t Pmic_irqClrFlag(const Pmic_CoreHandle_t *pmicHandle, uint8_t irqNum)
     if (status == PMIC_ST_SUCCESS)
     {
         // IRQ statuses are W1C - write 1 to clear
-        Pmic_setBitField(&regData, pmicIRQs[irqNum].irqStatBitPos, (1U << pmicIRQs[irqNum].irqStatBitPos), 1U);
+        Pmic_setBitField(&regData, pmicIRQs[irqNum].irqStatBitPos, (uint8_t)(1U << pmicIRQs[irqNum].irqStatBitPos), 1U);
 
         // Write data to PMIC
         Pmic_criticalSectionStart(pmicHandle);

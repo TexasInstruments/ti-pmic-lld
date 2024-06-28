@@ -54,7 +54,7 @@
  *  link to generate custom CRC table from polynomial:
  *  http://www.sunshine2k.de/coding/javascript/crc/crc_js.html
  */
-const uint8_t CRC8_TABLE[] =
+const static uint8_t CRC8_TABLE[] =
 {
     0x00U, 0x07U, 0x0eU, 0x09U, 0x1cU, 0x1bU, 0x12U, 0x15U,
     0x38U, 0x3fU, 0x36U, 0x31U, 0x24U, 0x23U, 0x2aU, 0x2dU,
@@ -152,7 +152,7 @@ int32_t Pmic_ioTx(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t 
     if (status == PMIC_ST_SUCCESS)
     {
         // Index 0 is most significant byte, last index is the least significant byte
-        i2cFrame[0U] = (pmicHandle->i2cAddr << 1U);
+        i2cFrame[0U] = (uint8_t)((pmicHandle->i2cAddr & 0x7FU) << 1U);
         i2cFrame[1U] = regAddr;
         i2cFrame[2U] = txData;
         i2cFrameLen = 3U;
@@ -191,9 +191,9 @@ int32_t Pmic_ioRx(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t 
     if (status == PMIC_ST_SUCCESS)
     {
         // Index 0 is most significant byte, last index is the least significant byte
-        i2cFrame[0U] = (pmicHandle->i2cAddr << 1U);
+        i2cFrame[0U] = (uint8_t)((pmicHandle->i2cAddr & 0x7FU) << 1U);
         i2cFrame[1U] = regAddr;
-        i2cFrame[2U] = (pmicHandle->i2cAddr << 1U) | 1U;
+        i2cFrame[2U] = (uint8_t)((pmicHandle->i2cAddr & 0x7FU) | 1U);
         i2cFrameLen = (pmicHandle->crcEnable == PMIC_ENABLE) ? 5U : 4U;
 
         // Begin read exchange. Data will be stored beginning at i2cFrame[3U]
