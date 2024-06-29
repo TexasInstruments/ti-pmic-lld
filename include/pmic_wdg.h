@@ -276,7 +276,7 @@ extern "C" {
 
 /**
  * @brief This structure is used in setting or getting the Watchdog
- * configurations of supported PMICs (TPS6522x, TPS6594x, LP8764x).
+ * configurations of supported PMICs.
  *
  * @note `validParams` is an input parameter for all Set and Get APIs. Other
  * struct members are input params for Set APIs and output params for Get APIs.

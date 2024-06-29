@@ -155,11 +155,11 @@ Pmic_CoreCfg_t coreCfg = {
     .pmicDeviceType = PMIC_DEV_COACH_LP8772X,
     .commMode = PMIC_INTF_I2C_SINGLE,
     .crcEnable = PMIC_ENABLE,
-    .configCrcEnable = PMIC_ENABLE,
+    .configCrcEnable = PMIC_DISABLE,
     .slaveAddr = <Device I2C Address>,
     .pCommHandle = &commHandle,
-    .pFnPmicCommIoRead = PmicCommIoRead,
-    .pFnPmicCommIoWrite = PmicCommIoWrite,
+    .pFnPmicCommIoRd = PmicCommIoRead,
+    .pFnPmicCommIoWr = PmicCommIoWrite,
     .pFnPmicCritSecStart = CritSecStart,
     .pFnPmicCritSecStop = CritSecStop,
 };
@@ -192,3 +192,47 @@ reporting for PMIC watchdog features, and supports calculation and response for
 Q&A watchdog mode.
 
 See `include/pmic_wdg.h` for more information on these APIs.
+
+### IRQ Mask Control, Status Read, and Clear
+
+The IRQ module for the PMIC driver supports masking (disable) and un-masking
+(enable) of individual interrupt sources on the PMIC, supports reading the
+status of all interrupts using an optimal algorithm based on the heirarchical
+structure of the IRQs, and supports clearing individual IRQs as handled or all
+at once.
+
+See `include/pmic_irq.h` for more information on these APIs.
+
+#### IRQ Status Read and Clear Example
+
+A common pattern for end-user is to recieve an nINT interrupt on the MCU, check
+IRQ status on the PMIC, handle relevant interrupts, and then clear these IRQ
+sources. An example of how this can be done using the pmic-lld APIs is shown
+below:
+
+``` c
+// Create IRQ status structure
+Pmic_IrqStat_t irqStat;
+
+// Reads all IRQ status registers (optimally, only if relevant), and populates 
+// `irqStat` with information necessary for further processing
+pmicStatus = Pmic_irqGetStat(&pmicHandle, &irqStat);
+
+void HandleIrqNum(uint8 irqNum) {
+    // User implemented function to handle IRQs as desired
+}
+
+if (pmicStatus == PMIC_ST_SUCCESS) {
+    uint8_t irqFlagStat;
+    uint8_t irqNum;
+
+    do {
+        irqFlagStat = Pmic_irqGetNextFlag(&irqStat, &irqNum);
+
+        if (irqFlagStat == PMIC_ST_SUCCESS) {
+            HandleIrqNum(irqNum);
+            Pmic_irqClrFlag(&pmicHandle, irqNum);
+        }
+    } while (irqFlagStat == PMIC_ST_SUCCESS);
+}
+```

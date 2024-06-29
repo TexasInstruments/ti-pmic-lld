@@ -55,6 +55,7 @@
 
 #include "pmic_core.h"
 #include "pmic_io.h"
+#include "pmic_irq.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -136,7 +137,9 @@ extern "C" {
 #define PMIC_ST_ERR_DATA_IO_CRC                               (-((int32_t)10))
 #define PMIC_ST_ERR_INTF_SETUP_FAILED                         (-((int32_t)11))
 #define PMIC_ST_ERR_COMM_INTF_INIT_FAIL                       (-((int32_t)12))
+#define PMIC_ST_ERR_NOT_SUPPORTED                             (-((int32_t)13))
 #define PMIC_ST_WARN_INV_DEVICE_ID                            (-((int32_t)40))
+#define PMIC_ST_WARN_NO_IRQ_REMAINING                         (-((int32_t)41))
 /** @} */
 
 /**
@@ -147,6 +150,16 @@ extern "C" {
  */
 #define PMIC_ENABLE     ((bool)true)
 #define PMIC_DISABLE    ((bool)false)
+/** @} */
+
+/**
+ * @anchor Pmic_IrqMaskControl
+ * @name PMIC IRQ Mask Control
+ *
+ * @{
+ */
+#define PMIC_IRQ_MASK   ((bool)true)
+#define PMIC_IRQ_UNMASK ((bool)false)
 /** @} */
 
 /**
