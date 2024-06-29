@@ -37,6 +37,7 @@
 #include <stdint.h>
 
 #include "pmic.h"
+#include "pmic_common.h"
 #include "pmic_io.h"
 #include "regmap/io.h"
 
@@ -84,6 +85,16 @@ int32_t Pmic_ioRxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *pRxB
     return status;
 }
 
+int32_t Pmic_ioRxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *rxBuffer) {
+    int32_t status;
+
+    Pmic_criticalSectionStart(handle);
+    status = Pmic_ioRxByte(handle, regAddr, rxBuffer);
+    Pmic_criticalSectionStop(handle);
+
+    return status;
+}
+
 int32_t Pmic_ioTxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txData) {
     /* Set write data to txBuf[2], with WDATA[7:0] */
     uint8_t txBuf[PMIC_IO_BUF_SIZE] = {0U, 0U, txData, 0U};
@@ -102,6 +113,16 @@ int32_t Pmic_ioTxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txDat
     }
 
     return handle->pFnPmicCommIoWr(handle, (uint8_t)PMIC_MAIN_INST, regAddr, &txBuf[0], frameSize);
+}
+
+int32_t Pmic_ioTxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txData) {
+    int32_t status;
+
+    Pmic_criticalSectionStart(handle);
+    status = Pmic_ioTxByte(handle, regAddr, txData);
+    Pmic_criticalSectionStop(handle);
+
+    return status;
 }
 
 int32_t Pmic_ioGetCrcEnableState(Pmic_CoreHandle_t *handle, bool *isEnabled) {

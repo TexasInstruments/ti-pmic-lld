@@ -73,6 +73,21 @@ int32_t Pmic_ioTxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txDat
 
 /**
  * @ingroup DRV_PMIC_IO_MODULE
+ * @brief Write a byte to the given PMIC `regAddr`, performing CRC on
+ * communications if necessary and enabled. Additionally, obtain and release a
+ * critical section before/after the write.
+ *
+ * @param handle  [IN] PMIC Interface Handle
+ * @param regAddr [IN] Register address to write to
+ * @param txData  [IN] Data to send to `regAddr`
+ *
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * possible values, see @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_ioTxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txData);
+
+/**
+ * @ingroup DRV_PMIC_IO_MODULE
  * @brief Read a byte from the given PMIC `regAddr`, extracting the desired
  * register data from the CRC framed data returned by the PMIC.
  *
@@ -84,6 +99,21 @@ int32_t Pmic_ioTxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txDat
  * possible values, see @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_ioRxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *rxBuffer);
+
+/**
+ * @ingroup DRV_PMIC_IO_MODULE
+ * @brief Read a byte from the given PMIC `regAddr`, extracting the desired
+ * register data from the CRC framed data returned by the PMIC. Additionally,
+ * obtain and release a critical section before/after the read.
+ *
+ * @param handle   [IN] PMIC Interface Handle
+ * @param regAddr  [IN] Register address to read from
+ * @param rxBuffer [IN] Buffer to store result data in
+ *
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * possible values, see @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_ioRxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *rxBuffer);
 
 /**
  * @ingroup DRV_PMIC_IO_MODULE
