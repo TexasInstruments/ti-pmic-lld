@@ -180,7 +180,7 @@ typedef struct Pmic_IrqStat_s
  * @return Success code if IRQ mask configuration(s) have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_irqSetMask(const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMasks, const Pmic_IrqMask_t *irqMasks);
+int32_t Pmic_irqSetMasks(const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMasks, const Pmic_IrqMask_t *irqMasks);
 
 /**
  * @brief Get the mask configuration for PMIC IRQs.
@@ -195,7 +195,7 @@ int32_t Pmic_irqSetMask(const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMasks
  * @return Success code if IRQ mask configuration(s) have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_irqGetMask(const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMasks, Pmic_IrqMask_t *irqMasks);
+int32_t Pmic_irqGetMasks(const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMasks, Pmic_IrqMask_t *irqMasks);
 
 /**
  * @brief Get the status of all PMIC IRQs.

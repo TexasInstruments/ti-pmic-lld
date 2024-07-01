@@ -74,6 +74,7 @@ extern "C" {
 #define PMIC_ST_ERR_FAIL                    (-((int32_t)7))
 #define PMIC_ST_ERR_NOT_SUPPORTED           (-((int32_t)8))
 #define PMIC_ST_WARN_NO_IRQ_REMAINING       (-((int32_t)9))
+#define PMIC_ST_IRQ_NON_MASKABLE            (-((int32_t)10))
 /** @} */
 
 /* ========================================================================== */
