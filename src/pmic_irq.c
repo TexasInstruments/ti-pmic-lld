@@ -996,6 +996,7 @@ int32_t Pmic_irqGetStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_IrqStat_t *irq
 static uint8_t IRQ_getNextFlag(Pmic_IrqStat_t *irqStat)
 {
     uint8_t index = 0U, bitPos = 0U;
+    bool foundFlag = (bool)false;
 
     // For each element in struct member intrStat of irqStat...
     for (index = 0U; index < PMIC_NUM_ELEM_IN_INTR_STAT; index++)
@@ -1014,8 +1015,14 @@ static uint8_t IRQ_getNextFlag(Pmic_IrqStat_t *irqStat)
             {
                 // Clear bit in intrStat element and exit loop
                 irqStat->intrStat[index] &= ~(1U << bitPos);
+                foundFlag = (bool)true;
                 break;
             }
+        }
+
+        if (foundFlag)
+        {
+            break;
         }
     }
 
