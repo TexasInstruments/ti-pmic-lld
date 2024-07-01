@@ -75,8 +75,9 @@ static uint8_t IO_calcCRC8(uint8_t cmd, uint8_t rdwr, uint8_t dat) {
 int32_t Pmic_ioRxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *pRxBuffer) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t rxBuf[PMIC_IO_BUF_SIZE] = {0};
+    const uint8_t frameSize = handle->crcEnable ? 2U : 1U;
 
-    status = handle->pFnPmicCommIoRd(handle, (uint8_t)PMIC_MAIN_INST, regAddr, &rxBuf[0], 2U);
+    status = handle->pFnPmicCommIoRd(handle, (uint8_t)PMIC_MAIN_INST, regAddr, &rxBuf[0], frameSize);
 
     if (status == PMIC_ST_SUCCESS) {
         *pRxBuffer = rxBuf[0];
@@ -98,7 +99,7 @@ int32_t Pmic_ioRxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *r
 int32_t Pmic_ioTxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txData) {
     /* Set write data to txBuf[2], with WDATA[7:0] */
     uint8_t txBuf[PMIC_IO_BUF_SIZE] = {0U, 0U, txData, 0U};
-    const uint8_t frameSize = handle->crcEnable ? 4U : 3U;
+    const uint8_t frameSize = handle->crcEnable ? 2U : 1U;
 
     /* Frame 3 Bytes with IO header+data as per PMIC I2C IO algorithm explained
      * in PMIC TRM */
@@ -112,7 +113,7 @@ int32_t Pmic_ioTxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txDat
         txBuf[3U] = IO_calcCRC8(txBuf[0], txBuf[1], txData);
     }
 
-    return handle->pFnPmicCommIoWr(handle, (uint8_t)PMIC_MAIN_INST, regAddr, &txBuf[0], frameSize);
+    return handle->pFnPmicCommIoWr(handle, (uint8_t)PMIC_MAIN_INST, regAddr, &txBuf[2], frameSize);
 }
 
 int32_t Pmic_ioTxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txData) {
