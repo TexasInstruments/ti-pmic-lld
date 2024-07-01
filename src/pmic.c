@@ -198,6 +198,9 @@ int32_t Pmic_init(Pmic_CoreHandle_t *handle, const Pmic_CoreCfg_t *config) {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
+    // Ensure starting condition of drvInitStatus is uninit
+    handle->drvInitStatus = DRV_INIT_UNINIT;
+
     /* Check and update PMIC Handle for device type, Comm Mode, Main Slave Address
      * and NVM Slave Address */
     if (status == PMIC_ST_SUCCESS) {
