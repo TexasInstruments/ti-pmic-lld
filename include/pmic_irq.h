@@ -219,8 +219,6 @@ int32_t Pmic_irqGetStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_IrqStat_t *irq
  * this API so that the next IRQ flag can be discovered. Once the next flag is
  * found, end-user can call `Pmic_irqClrFlag()` to clear the flag.
  *
- * @param pmicHandle [IN] PMIC interface handle.
- *
  * @param irqStat [IN/OUT] Status of all PMIC IRQs. Once the next IRQ flag has
  * been found, the corresponding status bit in struct member `intrStat` will be
  * cleared.
@@ -231,7 +229,7 @@ int32_t Pmic_irqGetStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_IrqStat_t *irq
  * @return Success code if the next IRQ that has its flag set has been obtained,
  * error code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_irqGetNextFlag(const Pmic_CoreHandle_t *pmicHandle, Pmic_IrqStat_t *irqStat, uint8_t *irqNum);
+int32_t Pmic_irqGetNextFlag(Pmic_IrqStat_t *irqStat, uint8_t *irqNum);
 
 /**
  * @brief Get the flag status of a specific IRQ.

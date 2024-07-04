@@ -1148,11 +1148,11 @@ static uint8_t IRQ_getNextFlag(Pmic_IrqStat_t *irqStat)
     return (bitPos + (PMIC_NUM_BITS_IN_INTR_STAT * index));
 }
 
-int32_t Pmic_irqGetNextFlag(const Pmic_CoreHandle_t *pmicHandle, Pmic_IrqStat_t *irqStat, uint8_t *irqNum)
+int32_t Pmic_irqGetNextFlag(Pmic_IrqStat_t *irqStat, uint8_t *irqNum)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = PMIC_ST_SUCCESS;
 
-    if ((status == PMIC_ST_SUCCESS) && ((irqStat == NULL) || (irqNum == NULL)))
+    if (((irqStat == NULL) || (irqNum == NULL)))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
