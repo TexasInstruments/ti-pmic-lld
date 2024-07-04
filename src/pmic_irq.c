@@ -43,6 +43,7 @@
 
 #include "regmap/irq.h"
 #include "regmap/wdg.h"
+#include <stdint.h>
 
 #define PMIC_NUM_MASK_REGS ((uint8_t)6U)
 
@@ -348,20 +349,6 @@ static inline void IRQ_setIntrStat(Pmic_IrqStat_t *irqStat, uint32_t irqNum)
     }
 }
 
-/*!
- * @brief Function to clear the intrStat bit position.
- */
-static inline void IRQ_clearIntrStat(Pmic_IrqStat_t *irqStat, uint32_t irqNum)
-{
-    if (irqNum <= PMIC_IRQ_MAX)
-    {
-        // IRQs 0 to 31 go to index 0, IRQs 32 to 63 go to index 1.
-        // At an index, an IRQ's corresponding bit is cleared
-        // (e.g., IRQ 49's status at bit 17 at index 1 will be cleared)
-        irqStat->intrStat[irqNum / PMIC_NUM_BITS_IN_INTR_STAT] &= ~((uint32_t)1U << (irqNum % PMIC_NUM_BITS_IN_INTR_STAT));
-    }
-}
-
 static void IRQ_markMaskReg(uint8_t irqNum, uint8_t *markedMaskRegs)
 {
     // Iterate over markedMaskRegs array to see if the IRQ's mask
@@ -428,7 +415,7 @@ static int32_t IRQ_configMarkedMaskedRegs(
                 {
                     Pmic_setBitField_b(&regData,
                                        pmicIRQs[irqNum].bitShift,
-                                       1U << pmicIRQs[irqNum].bitShift,
+                                       (uint8_t)(1U << pmicIRQs[irqNum].bitShift),
                                        irqMasks[j].mask);
                 }
             }
@@ -595,6 +582,17 @@ int32_t Pmic_irqGetMasks(const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMask
     return status;
 }
 
+static inline void IRQ_extractBits(Pmic_IrqStat_t *irqStat, uint8_t regData, const uint8_t *irqs, uint8_t numIrqs)
+{
+    for (uint8_t i = 0; i < numIrqs; i++)
+    {
+        if (Pmic_getBitField_b(regData, pmicIRQs[irqs[i]].bitShift))
+        {
+            IRQ_setIntrStat(irqStat, irqs[i]);
+        }
+    }
+}
+
 static int32_t IRQ_readL2IntCommErr(const Pmic_CoreHandle_t *pmicHandle, Pmic_IrqStat_t *irqStat)
 {
     uint8_t regData = 0U;
@@ -607,23 +605,13 @@ static int32_t IRQ_readL2IntCommErr(const Pmic_CoreHandle_t *pmicHandle, Pmic_Ir
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Store MCU_COMM_ERR_INT status
-        if (Pmic_getBitField_b(regData, PMIC_MCU_COMM_ERR_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_MCU_COMM_ERR_INT);
-        }
+        const uint8_t irqs[] = {
+            PMIC_MCU_COMM_ERR_INT,
+            PMIC_COMM_ADR_ERR_INT,
+            PMIC_COMM_CRC_ERR_INT
+        };
 
-        // Store COMM_ADR_ERR_INT status
-        if (Pmic_getBitField_b(regData, PMIC_COMM_ADR_ERR_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_COMM_ADR_ERR_INT);
-        }
-
-        // Store COMM_CRC_ERR_INT status
-        if (Pmic_getBitField_b(regData, PMIC_COMM_CRC_ERR_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_COMM_CRC_ERR_INT);
-        }
+        IRQ_extractBits(irqStat, regData, irqs, COUNT(irqs));
     }
 
     return status;
@@ -640,23 +628,13 @@ static int32_t IRQ_readL2IntEsm(const Pmic_CoreHandle_t *pmicHandle, Pmic_IrqSta
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Store ESM_MCU_RST_INT status
-        if (Pmic_getBitField_b(regData, PMIC_ESM_MCU_RST_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_ESM_MCU_RST_INT);
-        }
+        const uint8_t irqs[] = {
+            PMIC_ESM_MCU_RST_INT,
+            PMIC_ESM_MCU_FAIL_INT,
+            PMIC_ESM_MCU_PIN_INT
+        };
 
-        // Store ESM_MCU_FAIL_INT status
-        if (Pmic_getBitField_b(regData, PMIC_ESM_MCU_FAIL_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_ESM_MCU_FAIL_INT);
-        }
-
-        // Store ESM_MCU_PIN_INT status
-        if (Pmic_getBitField_b(regData, PMIC_ESM_MCU_PIN_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_ESM_MCU_PIN_INT);
-        }
+        IRQ_extractBits(irqStat, regData, irqs, COUNT(irqs));
     }
 
     return status;
@@ -674,23 +652,13 @@ static int32_t IRQ_readL2WdErrStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_I
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Store WD_RST_INT status
-        if (Pmic_getBitField_b(regData, PMIC_WD_RST_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_WD_RST_INT);
-        }
+        const uint8_t irqs[] = {
+            PMIC_WD_RST_INT,
+            PMIC_WD_FAIL_INT,
+            PMIC_WD_LONGWIN_TIMEOUT_INT
+        };
 
-        // Store WD_FAIL_INT status
-        if (Pmic_getBitField_b(regData, PMIC_WD_FAIL_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_WD_FAIL_INT);
-        }
-
-        // Store WD_LONGWIN_TIMEOUT_INT status
-        if (Pmic_getBitField_b(regData, PMIC_WD_LONGWIN_TIMEOUT_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_WD_LONGWIN_TIMEOUT_INT);
-        }
+        IRQ_extractBits(irqStat, regData, irqs, COUNT(irqs));
     }
 
     return status;
@@ -726,35 +694,15 @@ static int32_t IRQ_readL1IntFsmErr(const Pmic_CoreHandle_t *pmicHandle, Pmic_Irq
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Store WD_FIRST_NOK_INT status
-        if (Pmic_getBitField_b(regData, PMIC_WD_FIRST_NOK_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_WD_FIRST_NOK_INT);
-        }
+        const uint8_t irqs[] = {
+            PMIC_WD_FIRST_NOK_INT,
+            PMIC_WAIT_FOR_PWRCYCLE_INT,
+            PMIC_WARM_RESET_INT,
+            PMIC_ORD_SHUTDOWN_INT,
+            PMIC_IMM_SHUTDOWN_INT
+        };
 
-        // Store WAIT_FOR_PWRCYCLE_INT status
-        if (Pmic_getBitField_b(regData, PMIC_WAIT_FOR_PWRCYCLE_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_WAIT_FOR_PWRCYCLE_INT);
-        }
-
-        // Store WARM_RESET_INT status
-        if (Pmic_getBitField_b(regData, PMIC_WARM_RESET_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_WARM_RESET_INT);
-        }
-
-        // Store ORD_SHUTDOWN_INT status
-        if (Pmic_getBitField_b(regData, PMIC_ORD_SHUTDOWN_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_ORD_SHUTDOWN_INT);
-        }
-
-        // Store IMM_SHUTDOWN_INT status
-        if (Pmic_getBitField_b(regData, PMIC_IMM_SHUTDOWN_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_IMM_SHUTDOWN_INT);
-        }
+        IRQ_extractBits(irqStat, regData, irqs, COUNT(irqs));
     }
 
     return status;
@@ -772,11 +720,11 @@ static int32_t IRQ_readL1IntSevereErr(const Pmic_CoreHandle_t *pmicHandle, Pmic_
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Store TSD_IMM_INT status
-        if (Pmic_getBitField_b(regData, PMIC_TSD_IMM_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_TSD_IMM_INT);
-        }
+        const uint8_t irqs[] = {
+            PMIC_TSD_IMM_INT
+        };
+
+        IRQ_extractBits(irqStat, regData, irqs, COUNT(irqs));
     }
 
     return status;
@@ -794,35 +742,15 @@ static int32_t IRQ_readL1IntModerateErr(const Pmic_CoreHandle_t *pmicHandle, Pmi
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Store GPO_READBACK_INT status
-        if (Pmic_getBitField_b(regData, PMIC_GPO_READBACK_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_GPO_READBACK_INT);
-        }
+        const uint8_t irqs[] = {
+            PMIC_GPO_READBACK_INT,
+            PMIC_NINT_READBACK_INT,
+            PMIC_CONFIG_CRC_INT,
+            PMIC_TRIM_TEST_CRC_INT,
+            PMIC_RECOV_CNT_INT
+        };
 
-        // Store NINT_READBACK_INT status
-        if (Pmic_getBitField_b(regData, PMIC_NINT_READBACK_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_NINT_READBACK_INT);
-        }
-
-        // Store CONFIG_CRC_INT status
-        if (Pmic_getBitField_b(regData, PMIC_CONFIG_CRC_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_CONFIG_CRC_INT);
-        }
-
-        // Store TRIM_TEST_CRC_INT status
-        if (Pmic_getBitField_b(regData, PMIC_TRIM_TEST_CRC_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_TRIM_TEST_CRC_INT);
-        }
-
-        // Store RECOV_CNT_INT status
-        if (Pmic_getBitField_b(regData, PMIC_RECOV_CNT_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_RECOV_CNT_INT);
-        }
+        IRQ_extractBits(irqStat, regData, irqs, COUNT(irqs));
     }
 
     return status;
@@ -840,53 +768,18 @@ static int32_t IRQ_readL1IntMisc(const Pmic_CoreHandle_t *pmicHandle, Pmic_IrqSt
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Store TWARN_INT status
-        if (Pmic_getBitField_b(regData, PMIC_TWARN_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_TWARN_INT);
-        }
+        const uint8_t irqs[] = {
+            PMIC_TWARN_INT,
+            PMIC_B1_PVIN_UVLO_INT,
+            PMIC_BUCKS_VSET_ERR_INT,
+            PMIC_CFG_NVM_VERIFY_ERR,
+            PMIC_CFG_NVM_VERIFY_DONE,
+            PMIC_CFG_NVM_PRG_DONE,
+            PMIC_ABIST_FAIL_INT,
+            PMIC_ABIST_DONE_INT
+        };
 
-        // Store B1_PVIN_UVLO_INT status
-        if (Pmic_getBitField_b(regData, PMIC_B1_PVIN_UVLO_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_B1_PVIN_UVLO_INT);
-        }
-
-        // Store BUCKS_VSET_ERR_INT status
-        if (Pmic_getBitField_b(regData, PMIC_BUCKS_VSET_ERR_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_BUCKS_VSET_ERR_INT);
-        }
-
-        // Store CFG_NVM_VERIFY_ERR status
-        if (Pmic_getBitField_b(regData, PMIC_CFG_NVM_VERIFY_ERR_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_CFG_NVM_VERIFY_ERR);
-        }
-
-        // Store CFG_NVM_VERIFY_DONE status
-        if (Pmic_getBitField_b(regData, PMIC_CFG_NVM_VERIFY_DONE_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_CFG_NVM_VERIFY_DONE);
-        }
-
-        // Store CFG_NVM_PRG_DONE status
-        if (Pmic_getBitField_b(regData, PMIC_CFG_NVM_PRG_DONE_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_CFG_NVM_PRG_DONE);
-        }
-
-        // Store ABIST_FAIL_INT status
-        if (Pmic_getBitField_b(regData, PMIC_ABIST_FAIL_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_ABIST_FAIL_INT);
-        }
-
-        // Store ABIST_DONE_INT status
-        if (Pmic_getBitField_b(regData, PMIC_ABIST_DONE_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_ABIST_DONE_INT);
-        }
+        IRQ_extractBits(irqStat, regData, irqs, COUNT(irqs));
     }
 
     return status;
@@ -904,41 +797,16 @@ static int32_t IRQ_readL2IntBuck3Ldo(const Pmic_CoreHandle_t *pmicHandle, Pmic_I
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Store LDO_OVP_INT status
-        if (Pmic_getBitField_b(regData, PMIC_LDO_OVP_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_LDO_OVP_INT);
-        }
+        const uint8_t irqs[] = {
+            PMIC_LDO_OVP_INT,
+            PMIC_LDO_UV_INT,
+            PMIC_LDO_OV_INT,
+            PMIC_BUCK3_OVP_INT,
+            PMIC_BUCK3_UV_INT,
+            PMIC_BUCK3_OV_INT
+        };
 
-        // Store LDO_UV_INT status
-        if (Pmic_getBitField_b(regData, PMIC_LDO_UV_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_LDO_UV_INT);
-        }
-
-        // Store LDO_OV_INT status
-        if (Pmic_getBitField_b(regData, PMIC_LDO_OV_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_LDO_OV_INT);
-        }
-
-        // Store BUCK3_OVP_INT status
-        if (Pmic_getBitField_b(regData, PMIC_BUCK3_OVP_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_BUCK3_OVP_INT);
-        }
-
-        // Store BUCK3_UV_INT status
-        if (Pmic_getBitField_b(regData, PMIC_BUCK3_UV_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_BUCK3_UV_INT);
-        }
-
-        // Store BUCK3_OV_INT status
-        if (Pmic_getBitField_b(regData, PMIC_BUCK3_OV_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_BUCK3_OV_INT);
-        }
+        IRQ_extractBits(irqStat, regData, irqs, COUNT(irqs));
     }
 
     return status;
@@ -956,41 +824,16 @@ static int32_t IRQ_readL2IntBuck1_2(const Pmic_CoreHandle_t *pmicHandle, Pmic_Ir
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Store BUCK2_OVP_INT status
-        if (Pmic_getBitField_b(regData, PMIC_BUCK2_OVP_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_BUCK2_OVP_INT);
-        }
+        const uint8_t irqs[] = {
+            PMIC_BUCK2_OVP_INT,
+            PMIC_BUCK2_UV_INT,
+            PMIC_BUCK2_OV_INT,
+            PMIC_BUCK1_OVP_INT,
+            PMIC_BUCK1_UV_INT,
+            PMIC_BUCK1_OV_INT,
+        };
 
-        // Store BUCK2_UV_INT status
-        if (Pmic_getBitField_b(regData, PMIC_BUCK2_UV_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_BUCK2_UV_INT);
-        }
-
-        // Store BUCK2_OV_INT status
-        if (Pmic_getBitField_b(regData, PMIC_BUCK2_OV_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_BUCK2_OV_INT);
-        }
-
-        // Store BUCK1_OVP_INT status
-        if (Pmic_getBitField_b(regData, PMIC_BUCK1_OVP_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_BUCK1_OVP_INT);
-        }
-
-        // Store BUCK1_UV_INT status
-        if (Pmic_getBitField_b(regData, PMIC_BUCK1_UV_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_BUCK1_UV_INT);
-        }
-
-        // Store BUCK1_OV_INT status
-        if (Pmic_getBitField_b(regData, PMIC_BUCK1_OV_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_BUCK1_OV_INT);
-        }
+        IRQ_extractBits(irqStat, regData, irqs, COUNT(irqs));
     }
 
     return status;
@@ -1008,29 +851,14 @@ static int32_t IRQ_readL1IntBuckLdo(const Pmic_CoreHandle_t *pmicHandle, Pmic_Ir
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Store LDO_SC_INT status
-        if (Pmic_getBitField_b(regData, PMIC_LDO_SC_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_LDO_SC_INT);
-        }
+        const uint8_t irqs[] = {
+            PMIC_LDO_SC_INT,
+            PMIC_BUCK3_SC_INT,
+            PMIC_BUCK2_SC_INT,
+            PMIC_BUCK1_SC_INT,
+        };
 
-        // Store BUCK3_SC_INT status
-        if (Pmic_getBitField_b(regData, PMIC_BUCK3_SC_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_BUCK3_SC_INT);
-        }
-
-        // Store BUCK2_SC_INT status
-        if (Pmic_getBitField_b(regData, PMIC_BUCK2_SC_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_BUCK2_SC_INT);
-        }
-
-        // Store BUCK1_SC_INT status
-        if (Pmic_getBitField_b(regData, PMIC_BUCK1_SC_INT_SHIFT))
-        {
-            IRQ_setIntrStat(irqStat, PMIC_BUCK1_SC_INT);
-        }
+        IRQ_extractBits(irqStat, regData, irqs, COUNT(irqs));
 
         // If LDO_INT bit or BUCK3_INT bit is set, read INT_BUCK3_LDO register
         if (Pmic_getBitField_b(regData, PMIC_LDO_INT_SHIFT) || Pmic_getBitField_b(regData, PMIC_BUCK3_INT_SHIFT))
@@ -1215,7 +1043,7 @@ int32_t Pmic_irqClrFlag(const Pmic_CoreHandle_t *pmicHandle, uint8_t irqNum)
     if (status == PMIC_ST_SUCCESS)
     {
         // IRQ statuses are W1C - write 1 to clear
-        Pmic_setBitField(&regData, pmicIRQs[irqNum].bitShift, (1U << pmicIRQs[irqNum].bitShift), 1U);
+        Pmic_setBitField(&regData, pmicIRQs[irqNum].bitShift, (uint8_t)(1U << pmicIRQs[irqNum].bitShift), 1U);
 
         // Write data to PMIC
         Pmic_criticalSectionStart(pmicHandle);

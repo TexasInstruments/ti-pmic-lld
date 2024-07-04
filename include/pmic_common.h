@@ -56,6 +56,17 @@ extern "C" {
 /* ========================================================================== */
 
 /**
+ * @anchor Pmic_arraySizeMacro
+ * @name PMIC Array Size Macro
+ *
+ * @brief Macro used to find the size of an array.
+ *
+ * @{
+ */
+#define COUNT(x)                    (sizeof(x) / sizeof(x[0]))
+/** @} */
+
+/**
  * @anchor Pmic_commonDefines
  * @name PMIC LLD Common Defines
  *
