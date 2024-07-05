@@ -96,20 +96,20 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_RST_INT_VALID                      ((uint32_t)(1U << 0U))
-#define PMIC_FAIL_INT_VALID                     ((uint32_t)(1U << 1U))
-#define PMIC_ANSW_ERR_VALID                     ((uint32_t)(1U << 2U))
-#define PMIC_SEQ_ERR_VALID                      ((uint32_t)(1U << 3U))
-#define PMIC_ANSW_EARLY_ERR_VALID               ((uint32_t)(1U << 4U))
-#define PMIC_TIMEOUT_ERR_VALID                  ((uint32_t)(1U << 5U))
-#define PMIC_LONGWIN_TIMEOUT_INT_VALID          ((uint32_t)(1U << 6U))
-#define PMIC_WDG_ERR_STAT_VALID_ALL             (PMIC_RST_INT_VALID        | \
-                                                PMIC_FAIL_INT_VALID        | \
-                                                PMIC_ANSW_ERR_VALID        | \
-                                                PMIC_SEQ_ERR_VALID         | \
-                                                PMIC_ANSW_EARLY_ERR_VALID  | \
-                                                PMIC_TIMEOUT_ERR_VALID     | \
-                                                PMIC_LONGWIN_TIMEOUT_INT_VALID)
+#define PMIC_WDG_RST_INT_VALID                  ((uint32_t)(1U << 0U))
+#define PMIC_WDG_FAIL_INT_VALID                 ((uint32_t)(1U << 1U))
+#define PMIC_WDG_ANSW_ERR_VALID                 ((uint32_t)(1U << 2U))
+#define PMIC_WDG_SEQ_ERR_VALID                  ((uint32_t)(1U << 3U))
+#define PMIC_WDG_ANSW_EARLY_ERR_VALID           ((uint32_t)(1U << 4U))
+#define PMIC_WDG_TIMEOUT_ERR_VALID              ((uint32_t)(1U << 5U))
+#define PMIC_WDG_LONGWIN_TIMEOUT_INT_VALID      ((uint32_t)(1U << 6U))
+#define PMIC_WDG_ERR_STAT_ALL_VALID             (PMIC_WDG_RST_INT_VALID        | \
+                                                PMIC_WDG_FAIL_INT_VALID        | \
+                                                PMIC_WDG_ANSW_ERR_VALID        | \
+                                                PMIC_WDG_SEQ_ERR_VALID         | \
+                                                PMIC_WDG_ANSW_EARLY_ERR_VALID  | \
+                                                PMIC_WDG_TIMEOUT_ERR_VALID     | \
+                                                PMIC_WDG_LONGWIN_TIMEOUT_INT_VALID)
 /** @} */
 
 /**
@@ -270,7 +270,7 @@ typedef struct Pmic_WdgCfg_s
  * @anchor Pmic_WdgErrStat
  * @name TPS65036x Watchdog Error Status Struct
  *
- * @brief Struct used to get the PMIC watchdog error statuses.
+ * @brief Struct used to get and clear PMIC watchdog error statuses.
  *
  * @param validParams Each bit in this variable represents whether a struct
  * member is valid. For valid values, refer to @ref Pmic_WdgErrStatValidParams.

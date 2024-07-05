@@ -871,7 +871,8 @@ int32_t Pmic_wdgClrErrStat(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgEr
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (wdgErrStat->validParams == 0U))
+    if ((status == PMIC_ST_SUCCESS) &&
+        ((wdgErrStat->validParams == 0U) || (wdgErrStat->validParams > PMIC_WDG_ERR_STAT_ALL_VALID)))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -880,45 +881,42 @@ int32_t Pmic_wdgClrErrStat(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgEr
     if (status == PMIC_ST_SUCCESS)
     {
         // Clear WD_RST_INT
-        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_RST_INT_VALID))
+        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_WDG_RST_INT_VALID))
         {
             Pmic_setBitField(&regData, PMIC_WD_RST_INT_SHIFT, PMIC_WD_RST_INT_MASK, 1U);
         }
         // Clear WD_FAIL_INT
-        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_FAIL_INT_VALID))
+        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_WDG_FAIL_INT_VALID))
         {
             Pmic_setBitField(&regData, PMIC_WD_FAIL_INT_SHIFT, PMIC_WD_FAIL_INT_MASK, 1U);
         }
         // Clear WD_ANSW_ERR
-        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_ANSW_ERR_VALID))
+        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_WDG_ANSW_ERR_VALID))
         {
             Pmic_setBitField(&regData, PMIC_WD_ANSW_ERR_SHIFT, PMIC_WD_ANSW_ERR_MASK, 1U);
         }
         // Clear WD_SEQ_ERR
-        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_SEQ_ERR_VALID))
+        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_WDG_SEQ_ERR_VALID))
         {
             Pmic_setBitField(&regData, PMIC_WD_SEQ_ERR_SHIFT, PMIC_WD_SEQ_ERR_MASK, 1U);
         }
         // Clear WD_ANSW_EARLY
-        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_ANSW_EARLY_ERR_VALID))
+        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_WDG_ANSW_EARLY_ERR_VALID))
         {
             Pmic_setBitField(&regData, PMIC_WD_ANSW_EARLY_SHIFT, PMIC_WD_ANSW_EARLY_MASK, 1U);
         }
         // Clear WD_TIMEOUT
-        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_TIMEOUT_ERR_VALID))
+        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_WDG_TIMEOUT_ERR_VALID))
         {
             Pmic_setBitField(&regData, PMIC_WD_TIMEOUT_SHIFT, PMIC_WD_TIMEOUT_MASK, 1U);
         }
         // Clear WD_LONGWIN_TIMEOUT_INT
-        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_LONGWIN_TIMEOUT_INT_VALID))
+        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_WDG_LONGWIN_TIMEOUT_INT_VALID))
         {
             Pmic_setBitField(&regData, PMIC_WD_LONGWIN_TIMEOUT_INT_SHIFT, PMIC_WD_LONGWIN_TIMEOUT_INT_MASK, 1U);
         }
-    }
 
-    // Write new WD_ERR_STATUS register value back to PMIC
-    if (status == PMIC_ST_SUCCESS)
-    {
+        // Write new WD_ERR_STATUS register value back to PMIC
         Pmic_criticalSectionStart(pmicHandle);
         status = Pmic_ioTx(pmicHandle, PMIC_WD_ERR_STATUS_REGADDR, regData);
         Pmic_criticalSectionStop(pmicHandle);
@@ -937,7 +935,8 @@ int32_t Pmic_wdgGetErrStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgErrStat_
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (wdgErrStat->validParams == 0U))
+    if ((status == PMIC_ST_SUCCESS) &&
+        ((wdgErrStat->validParams == 0U) || (wdgErrStat->validParams > PMIC_WDG_ERR_STAT_ALL_VALID)))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -953,37 +952,37 @@ int32_t Pmic_wdgGetErrStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgErrStat_
     if (status == PMIC_ST_SUCCESS)
     {
         // Extract WD_RST_INT bit field
-        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_RST_INT_VALID))
+        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_WDG_RST_INT_VALID))
         {
             wdgErrStat->rstInt = Pmic_getBitField_b(regData, PMIC_WD_RST_INT_SHIFT);
         }
         // Extract WD_FAIL_INT bit field
-        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_FAIL_INT_VALID))
+        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_WDG_FAIL_INT_VALID))
         {
             wdgErrStat->failInt = Pmic_getBitField_b(regData, PMIC_WD_FAIL_INT_SHIFT);
         }
         // Extract WD_ANSW_ERR bit field
-        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_ANSW_ERR_VALID))
+        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_WDG_ANSW_ERR_VALID))
         {
             wdgErrStat->answErr = Pmic_getBitField_b(regData, PMIC_WD_ANSW_ERR_SHIFT);
         }
         // Extract WD_SEQ_ERR bit field
-        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_SEQ_ERR_VALID))
+        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_WDG_SEQ_ERR_VALID))
         {
             wdgErrStat->seqErr = Pmic_getBitField_b(regData, PMIC_WD_SEQ_ERR_SHIFT);
         }
         // Extract WD_ANSW_EARLY bit field
-        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_ANSW_EARLY_ERR_VALID))
+        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_WDG_ANSW_EARLY_ERR_VALID))
         {
             wdgErrStat->answEarlyErr = Pmic_getBitField_b(regData, PMIC_WD_ANSW_EARLY_SHIFT);
         }
         // Extract WD_TIMEOUT bit field
-        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_TIMEOUT_ERR_VALID))
+        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_WDG_TIMEOUT_ERR_VALID))
         {
             wdgErrStat->timeoutErr = Pmic_getBitField_b(regData, PMIC_WD_TIMEOUT_SHIFT);
         }
         // Extract WD_LONGWIN_TIMEOUT_INT bit field
-        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_LONGWIN_TIMEOUT_INT_VALID))
+        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_WDG_LONGWIN_TIMEOUT_INT_VALID))
         {
             wdgErrStat->longWinTimeoutInt = Pmic_getBitField_b(regData, PMIC_WD_LONGWIN_TIMEOUT_INT_SHIFT);
         }

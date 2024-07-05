@@ -305,19 +305,6 @@ extern "C" {
 #define PMIC_COMM_CRC_ERR_INT_SHIFT         ((uint8_t)1U)
 /** @} */
 
-/**
- * @anchor Pmic_intEsmBitPos
- * @name TPS65036x INT_ESM Register Bit Positions
- *
- * @brief Register bit positions/shifts of the INT_ESM register.
- *
- * @{
- */
-#define PMIC_ESM_MCU_RST_INT_SHIFT          ((uint8_t)5U)
-#define PMIC_ESM_MCU_FAIL_INT_SHIFT         ((uint8_t)4U)
-#define PMIC_ESM_MCU_PIN_INT_SHIFT          ((uint8_t)3U)
-/** @} */
-
 #ifdef __cplusplus
 }
 

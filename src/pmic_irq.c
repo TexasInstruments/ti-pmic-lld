@@ -36,14 +36,18 @@
  * @brief PMIC LLD IRQ module source file containing definitions to APIs that
  * interact with PMIC IRQs.
  */
+#include <stdint.h>
+
 #include "pmic.h"
 #include "pmic_irq.h"
-
 #include "pmic_io.h"
 
+#include "regmap/esm.h"
 #include "regmap/irq.h"
 #include "regmap/wdg.h"
 #include <stdint.h>
+
+#define PMIC_NUM_MASK_REGS ((uint8_t)6U)
 
 #define PMIC_NUM_MASK_REGS ((uint8_t)6U)
 

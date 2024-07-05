@@ -44,6 +44,7 @@
 
 #include "regmap/power.h"
 #include "regmap/core.h"
+#include <stdint.h>
 
 static int32_t PWR_getSpreadSpectrumCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
 {

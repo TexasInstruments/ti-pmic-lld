@@ -49,7 +49,9 @@ extern "C" {
 /* ========================================================================== */
 #include "pmic_common.h"
 #include "pmic_core.h"
+#include "pmic_power.h"
 #include "pmic_wdg.h"
+#include "pmic_esm.h"
 #include "pmic_io.h"
 
 /* ========================================================================== */

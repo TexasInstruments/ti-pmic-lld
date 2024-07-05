@@ -737,10 +737,10 @@ void checkWdgStatus(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgErrStat_t wdgErrStat = {
-        .validParams = (PMIC_RST_INT_VALID | PMIC_FAIL_INT_VALID |
-                        PMIC_ANSW_ERR_VALID | PMIC_SEQ_ERR_VALID |
-                        PMIC_ANSW_EARLY_ERR_VALID | PMIC_TIMEOUT_ERR_VALID |
-                        PMIC_LONGWIN_TIMEOUT_INT_VALID)
+        .validParams = (PMIC_WDG_RST_INT_VALID | PMIC_WDG_FAIL_INT_VALID |
+                        PMIC_WDG_ANSW_ERR_VALID | PMIC_WDG_SEQ_ERR_VALID |
+                        PMIC_WDG_ANSW_EARLY_ERR_VALID | PMIC_WDG_TIMEOUT_ERR_VALID |
+                        PMIC_WDG_LONGWIN_TIMEOUT_INT_VALID)
     };
     Pmic_WdgFailCntStat_t wdgFailCntStat = {
         .validParams = (PMIC_BAD_EVENT_VALID | PMIC_GOOD_EVENT_VALID | PMIC_FAIL_CNT_VALID)
@@ -975,7 +975,7 @@ void test_errorDetection_wdg_longWinTimeoutInt(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // check whether WD_LONGWIN_TIMEOUT_INT error is set
-    wdgErrStat.validParams = PMIC_LONGWIN_TIMEOUT_INT_VALID;
+    wdgErrStat.validParams = PMIC_WDG_LONGWIN_TIMEOUT_INT_VALID;
     status = Pmic_wdgGetErrStat(&pmicHandle, &wdgErrStat);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
     TEST_ASSERT_EQUAL((bool)true, wdgErrStat.longWinTimeoutInt);
@@ -1042,7 +1042,7 @@ void test_errorDetection_wdg_timeout(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // check whether WD_TIMEOUT error is set
-    wdgErrStat.validParams = PMIC_TIMEOUT_ERR_VALID;
+    wdgErrStat.validParams = PMIC_WDG_TIMEOUT_ERR_VALID;
     status = Pmic_wdgGetErrStat(&pmicHandle, &wdgErrStat);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
     TEST_ASSERT_EQUAL((bool)true, wdgErrStat.timeoutErr);

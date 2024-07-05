@@ -119,7 +119,7 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pmicCfg, Pmic_CoreHandle_t *pmicHandle)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    // Parameter check
+    // Check whether pmicCfg parameter is valid
     if ((pmicCfg == NULL) || (pmicCfg->commHandle == NULL) || (pmicCfg->ioRead == NULL) ||
         (pmicCfg->ioWrite == NULL) || (pmicCfg->critSecStart == NULL) ||
         (pmicCfg->critSecStop == NULL) || (pmicHandle == NULL))
@@ -127,7 +127,7 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pmicCfg, Pmic_CoreHandle_t *pmicHandle)
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    // Initialize PMIC handle
+    // Initialize PMIC handle with values from pmicCfg
     if (status == PMIC_ST_SUCCESS)
     {
         setPmicHandleMembers(pmicCfg, pmicHandle);
