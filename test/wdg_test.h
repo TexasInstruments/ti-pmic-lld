@@ -25,19 +25,19 @@ void wdgTest(void *args);
  * @brief wdgTest0 - Test Pmic_wdgGetEnableStat() API error handling for when
  *                   NULL parameters are passed as input.
  */
-void test_apiParameters_wdgGetEnableStat_nullParams(void);
+void test_faultHandling_wdgGetEnableStat_nullParams(void);
 
 /**
  * @brief wdgTest1 - Test Pmic_wdgDisable() API error handling for when NULL
  *                   parameters are passed as input.
  */
-void test_apiParameters_wdgDisable_nullParams(void);
+void test_faultHandling_wdgDisable_nullParams(void);
 
 /**
  * @brief wdgTest2 - Test Pmic_wdgEnable() API error handling for when NULL
  *                   parameters are passed as input.
  */
-void test_apiParameters_wdgEnable_nullParams(void);
+void test_faultHandling_wdgEnable_nullParams(void);
 
 /**
  * @brief wdgTest3 - Test whether PMIC LLD can enable and disable PMIC watchdog
@@ -49,13 +49,13 @@ void test_functionality_wdgEnableDisable(void);
  * @brief wdgTest4 - Test Pmic_wdgGetPwrHoldStat() API error handling for when
  *                   NULL parameters are passed as input.
  */
-void test_apiParameters_wdgGetPwrHold_nullParams(void);
+void test_faultHandling_wdgGetPwrHold_nullParams(void);
 
 /**
  * @brief wdgTest5 - Test Pmic_wdgSetPwrHold() API error handling for when NULL
  *                   parameters are passed as input.
  */
-void test_apiParameters_wdgSetPwrHold_nullParams(void);
+void test_faultHandling_wdgSetPwrHold_nullParams(void);
 
 /**
  * @brief wdgTest6 - Test whether PMIC LLD can set and clear WD_PWR_HOLD in addition
@@ -67,13 +67,13 @@ void test_functionality_wdgSetClrPwrHold(void);
  * @brief wdgTest7 - Test Pmic_wdgGetRetLongWinStat() API error handling for when
  *                   NULL parameters are passed as input.
  */
-void test_apiParameters_wdgGetRetLongWin_nullParams(void);
+void test_faultHandling_wdgGetRetLongWin_nullParams(void);
 
 /**
  * @brief wdgTest8 - Test Pmic_wdgSetRetLongWin() API error handling for when NULL
  *                   parameters are passed as input.
  */
-void test_apiParameters_wdgSetRetLongWin_nullParams(void);
+void test_faultHandling_wdgSetRetLongWin_nullParams(void);
 
 /**
  * @brief wdgTest9 - Test whether PMIC LLD can set and clear WD_RETURN_LONGWIN in
@@ -85,25 +85,25 @@ void test_functionality_wdgSetClrRetLongWin(void);
  * @brief wdgTest10 - Test Pmic_wdgGetCfg() API error handling for when NULL parameters
  *                    are passed as input.
  */
-void test_apiParameters_wdgGetCfg_nullParams(void);
+void test_faultHandling_wdgGetCfg_nullParams(void);
 
 /**
  * @brief wdgTest11 - Test Pmic_wdgGetCfg() API error handling for when no valid parameters
  *                    are specified.
  */
-void test_apiParameters_wdgGetCfg_noValidParams(void);
+void test_faultHandling_wdgGetCfg_noValidParams(void);
 
 /**
  * @brief wdgTest12 - Test Pmic_wdgSetCfg() API error handling for when NULL parameters
  *                    are passed as input.
  */
-void test_apiParameters_wdgSetCfg_nullParams(void);
+void test_faultHandling_wdgSetCfg_nullParams(void);
 
 /**
  * @brief wdgTest13 - Test Pmic_wdgSetCfg() API error handling for when no valid parameters
  *                    are specified.
  */
-void test_apiParameters_wdgSetCfg_noValidParams(void);
+void test_faultHandling_wdgSetCfg_noValidParams(void);
 
 /**
  * @brief wdgTest14 - Test whether PMIC LLD can set and get watchdog Reset Enable
@@ -165,19 +165,19 @@ void test_functionality_wdgSetGetCfg_qaSeed(void);
  * @brief wdgTest25 - Test Pmic_wdgGetErrStat() API error handling for when NULL
  *                    parameters are passed as input.
  */
-void test_apiParameters_wdgGetErrStat_nullParams(void);
+void test_faultHandling_wdgGetErrStat_nullParams(void);
 
 /**
  * @brief wdgTest26 - Test Pmic_wdgClrErrStat() API error handling for when NULL
  *                    parameters are passed as input.
  */
-void test_apiParameters_wdgClrErrStat_nullParams(void);
+void test_faultHandling_wdgClrErrStat_nullParams(void);
 
 /**
  * @brief wdgTest27 - Test Pmic_wdgGetFailCntStat() API error handling for when NULL
  *                    parameters are passed as input.
  */
-void test_apiParameters_wdgGetFailCntStat_nullParams(void);
+void test_faultHandling_wdgGetFailCntStat_nullParams(void);
 
 /**
  * @brief wdgTest28 - Test whether PMIC LLD can facilitate Watchdog operation in the

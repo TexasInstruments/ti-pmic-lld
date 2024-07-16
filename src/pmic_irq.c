@@ -45,9 +45,6 @@
 #include "regmap/esm.h"
 #include "regmap/irq.h"
 #include "regmap/wdg.h"
-#include <stdint.h>
-
-#define PMIC_NUM_MASK_REGS ((uint8_t)6U)
 
 #define PMIC_NUM_MASK_REGS ((uint8_t)6U)
 
@@ -353,69 +350,56 @@ static inline void IRQ_setIntrStat(Pmic_IrqStat_t *irqStat, uint32_t irqNum)
     }
 }
 
-static void IRQ_markMaskReg(uint8_t irqNum, uint8_t *markedMaskRegs)
+static void IRQ_storeMaskReg(uint8_t irqNum, uint8_t maskRegs[])
 {
-    // Iterate over markedMaskRegs array to see if the IRQ's mask
-    // register has already been marked for read/write. Mark the
-    // register if it hasn't been marked yet.
+    // Iterate over maskRegs array to see if the IRQ's mask
+    // register has already been stored. If not, store the
+    // register address
     for (uint8_t i = 0U; i < PMIC_NUM_MASK_REGS; i++)
     {
-        // Element is non-empty if its value is non-zero
-        if (markedMaskRegs[i] != 0U)
+        // If element is non-zero...
+        if (maskRegs[i] != 0U)
         {
-            // Mask register has already been marked; exit loop
-            if (markedMaskRegs[i] == pmicIRQs[irqNum].maskRegAddr)
+            // Break out of loop if mask register has already been stored
+            if (maskRegs[i] == pmicIRQs[irqNum].maskRegAddr)
             {
                 break;
             }
-            // Element is occupied by another mask register; move onto next element
-            else
-            {
-                continue;
-            }
+            // Else continue
         }
-        // Element is empty. Store/mark IRQ's mask register and exit loop
+        // Element is empty. Store IRQ's mask register and exit loop
         else
         {
-            markedMaskRegs[i] = pmicIRQs[irqNum].maskRegAddr;
+            maskRegs[i] = pmicIRQs[irqNum].maskRegAddr;
             break;
         }
     }
 }
 
-static inline void IRQ_markMaskRegForConfig(uint8_t irqNum, uint8_t *markedMaskRegs)
-{
-    IRQ_markMaskReg(irqNum, markedMaskRegs);
-}
-
-static inline void IRQ_markMaskRegForRead(uint8_t irqNum, uint8_t *markedMaskRegs)
-{
-    IRQ_markMaskReg(irqNum, markedMaskRegs);
-}
-
-static int32_t IRQ_configMarkedMaskedRegs(
-    const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMasks, const Pmic_IrqMask_t *irqMasks, const uint8_t *markedMaskRegs)
+static int32_t IRQ_configStoredMaskRegs(
+    const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMasks, const Pmic_IrqMask_t irqMasks[], const uint8_t maskRegs[])
 {
     uint8_t regData = 0U, i = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
-    // While there are marked mask registers...
-    while (markedMaskRegs[i] != 0U)
+    // While there are mask registers...
+    while (maskRegs[i] != 0U)
     {
-        // Read marked mask register
+        // Read PMIC mask register
         Pmic_criticalSectionStart(pmicHandle);
-        status = Pmic_ioRx(pmicHandle, markedMaskRegs[i], &regData);
+        status = Pmic_ioRx(pmicHandle, maskRegs[i], &regData);
         Pmic_criticalSectionStop(pmicHandle);
 
         if (status == PMIC_ST_SUCCESS)
         {
-            // For each mask configuration in irqMasks array, if the configuration's
-            // mask register equals the marked mask register, set the mask configuration
+            // For every element in irqMasks array, if the element's mask register
+            // equals the stored mask register, set the mask configuration
             for (uint8_t j = 0U; j < numIrqMasks; j++)
             {
                 const uint8_t irqNum = irqMasks[j].irqNum;
+                const uint8_t irqMaskReg = pmicIRQs[irqNum].maskRegAddr;
 
-                if (pmicIRQs[irqNum].maskRegAddr == markedMaskRegs[i])
+                if (irqMaskReg == maskRegs[i])
                 {
                     Pmic_setBitField_b(&regData,
                                        pmicIRQs[irqNum].bitShift,
@@ -428,7 +412,7 @@ static int32_t IRQ_configMarkedMaskedRegs(
             if (status == PMIC_ST_SUCCESS)
             {
                 Pmic_criticalSectionStart(pmicHandle);
-                status = Pmic_ioTx(pmicHandle, markedMaskRegs[i], regData);
+                status = Pmic_ioTx(pmicHandle, maskRegs[i], regData);
                 Pmic_criticalSectionStop(pmicHandle);
             }
         }
@@ -443,9 +427,9 @@ static int32_t IRQ_configMarkedMaskedRegs(
     return status;
 }
 
-int32_t Pmic_irqSetMasks(const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMasks, const Pmic_IrqMask_t *irqMasks)
+int32_t Pmic_irqSetMasks(const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMasks, const Pmic_IrqMask_t irqMasks[])
 {
-    uint8_t markedMaskRegs[PMIC_NUM_MASK_REGS] = {0U};
+    uint8_t maskRegs[PMIC_NUM_MASK_REGS] = {0U};
     int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
 
     if ((status == PMIC_ST_SUCCESS) && (irqMasks == NULL))
@@ -458,7 +442,7 @@ int32_t Pmic_irqSetMasks(const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMask
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    // Mark all the IRQ mask registers that require configuration
+    // Store all the IRQ mask registers that require configuration
     if (status == PMIC_ST_SUCCESS)
     {
         // For each mask configuration...
@@ -478,46 +462,47 @@ int32_t Pmic_irqSetMasks(const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMask
                 status = PMIC_ST_IRQ_NON_MASKABLE;
             }
 
-            // Mark mask register that corresponds to the IRQ for configuration
+            // Store mask register that corresponds to the IRQ for later configuration
             if (status == PMIC_ST_SUCCESS)
             {
-                IRQ_markMaskRegForConfig(irqNum, markedMaskRegs);
+                IRQ_storeMaskReg(irqNum, maskRegs);
             }
         }
     }
 
-    // Configure all IRQ mask registers that are marked for configuration
+    // Configure all IRQ mask registers that have been stored for configuration
     if (status == PMIC_ST_SUCCESS)
     {
-        status = IRQ_configMarkedMaskedRegs(pmicHandle, numIrqMasks, irqMasks, markedMaskRegs);
+        status = IRQ_configStoredMaskRegs(pmicHandle, numIrqMasks, irqMasks, maskRegs);
     }
 
     return status;
 }
 
-static int32_t IRQ_readMarkedMaskedRegs(
-    const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMasks, Pmic_IrqMask_t *irqMasks, const uint8_t *markedMaskRegs)
+static int32_t IRQ_readStoredMaskedRegs(
+    const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMasks, Pmic_IrqMask_t irqMasks[], const uint8_t maskRegs[])
 {
     uint8_t regData = 0U, i = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
-    // While there are marked mask registers...
-    while (markedMaskRegs[i] != 0U)
+    // While there are mask registers...
+    while (maskRegs[i] != 0U)
     {
-        // Read marked mask register
+        // Read PMIC mask register
         Pmic_criticalSectionStart(pmicHandle);
-        status = Pmic_ioRx(pmicHandle, markedMaskRegs[i], &regData);
+        status = Pmic_ioRx(pmicHandle, maskRegs[i], &regData);
         Pmic_criticalSectionStop(pmicHandle);
 
         if (status == PMIC_ST_SUCCESS)
         {
-            // For each mask configuration in irqMasks array, if the configuration's
-            // mask register equals the marked mask register, extract the mask configuration
+            // For every element in irqMasks array, if the element's mask register
+            // equals the stored mask register, extract the mask configuration
             for (uint8_t j = 0U; j < numIrqMasks; j++)
             {
                 const uint8_t irqNum = irqMasks[j].irqNum;
+                const uint8_t irqMaskReg = pmicIRQs[irqNum].maskRegAddr;
 
-                if (pmicIRQs[irqNum].maskRegAddr == markedMaskRegs[i])
+                if (irqMaskReg == maskRegs[i])
                 {
                     irqMasks[j].mask = Pmic_getBitField_b(regData, pmicIRQs[irqNum].bitShift);
                 }
@@ -534,9 +519,9 @@ static int32_t IRQ_readMarkedMaskedRegs(
     return status;
 }
 
-int32_t Pmic_irqGetMasks(const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMasks, Pmic_IrqMask_t *irqMasks)
+int32_t Pmic_irqGetMasks(const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMasks, Pmic_IrqMask_t irqMasks[])
 {
-    uint8_t markedMaskRegs[PMIC_NUM_MASK_REGS] = {0U};
+    uint8_t maskRegs[PMIC_NUM_MASK_REGS] = {0U};
     int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
 
     if ((status == PMIC_ST_SUCCESS) && (irqMasks == NULL))
@@ -549,7 +534,7 @@ int32_t Pmic_irqGetMasks(const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMask
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
-    // Mark all the IRQ mask registers that require a read
+    // Store all the IRQ mask registers that require a read
     if (status == PMIC_ST_SUCCESS)
     {
         // For each mask configuration...
@@ -569,24 +554,24 @@ int32_t Pmic_irqGetMasks(const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMask
                 status = PMIC_ST_IRQ_NON_MASKABLE;
             }
 
-            // Mark mask register that corresponds to the IRQ for read
+            // Store mask register that corresponds to the IRQ for later read
             if (status == PMIC_ST_SUCCESS)
             {
-                IRQ_markMaskRegForRead(irqNum, markedMaskRegs);
+                IRQ_storeMaskReg(irqNum, maskRegs);
             }
         }
     }
 
-    // Read all IRQ mask registers that are marked
+    // Read all IRQ mask registers that have been stored
     if (status == PMIC_ST_SUCCESS)
     {
-        status = IRQ_readMarkedMaskedRegs(pmicHandle, numIrqMasks, irqMasks, markedMaskRegs);
+        status = IRQ_readStoredMaskedRegs(pmicHandle, numIrqMasks, irqMasks, maskRegs);
     }
 
     return status;
 }
 
-static inline void IRQ_extractBits(Pmic_IrqStat_t *irqStat, uint8_t regData, const uint8_t *irqs, uint8_t numIrqs)
+static inline void IRQ_extractBits(Pmic_IrqStat_t *irqStat, uint8_t regData, const uint8_t irqs[], uint8_t numIrqs)
 {
     for (uint8_t i = 0; i < numIrqs; i++)
     {
@@ -626,6 +611,7 @@ static int32_t IRQ_readL2IntEsm(const Pmic_CoreHandle_t *pmicHandle, Pmic_IrqSta
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
+    // Read INT_ESM register
     Pmic_criticalSectionStart(pmicHandle);
     status = Pmic_ioRx(pmicHandle, PMIC_INT_ESM_REGADDR, &regData);
     Pmic_criticalSectionStop(pmicHandle);

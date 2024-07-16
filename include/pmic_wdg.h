@@ -391,17 +391,17 @@ int32_t Pmic_wdgGetEnable(const Pmic_CoreHandle_t *pmicHandle, bool *wdgEnabled)
  * @brief Set PMIC watchdog configurations.
  *
  * @details The following options are configurable via this API
- * 1. Reset enable
- * 2. Mode of operation
- * 3. Trigger select
- * 4. Fail threshold
- * 5. Reset threshold
- * 6. Long Window duration
- * 7. Window-1 duration
- * 8. Window-2 duration
- * 9. Q&A Feedback
- * 10. Q&A LFSR
- * 11. Q&A question seed
+ * 1. Reset enable (validParam: PMIC_WD_RST_EN_VALID)
+ * 2. Mode of operation (validParam: PMIC_WD_MODE_VALID)
+ * 3. Trigger select (validParam: PMIC_WD_TRIG_SEL_VALID)
+ * 4. Fail threshold (validParam: PMIC_WD_FAIL_THR_VALID)
+ * 5. Reset threshold (validParam: PMIC_WD_RST_THR_VALID)
+ * 6. Long Window duration (validParam: PMIC_WD_LONG_WIN_DURATION_VALID)
+ * 7. Window-1 duration (validParam: PMIC_WD_WIN1_DURATION_VALID)
+ * 8. Window-2 duration (validParam: PMIC_WD_WIN2_DURATION_VALID)
+ * 9. Q&A Feedback (validParam: PMIC_WD_QA_FDBK_VALID)
+ * 10. Q&A LFSR (validParam: PMIC_WD_QA_LFSR_VALID)
+ * 11. Q&A question seed (validParam: PMIC_WD_QA_SEED_VALID)
  * For more information on watchdog configurations, refer to @ref Pmic_WdgCfg.
  *
  * @attention Watchdog must be in Long Window and enabled before configuration.
@@ -417,21 +417,8 @@ int32_t Pmic_wdgGetEnable(const Pmic_CoreHandle_t *pmicHandle, bool *wdgEnabled)
 int32_t Pmic_wdgSetCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgCfg_t *wdgCfg);
 
 /**
- * @brief Get PMIC watchdog configurations.
- *
- * @details The following configurations are obtainable from this API
- * 1. Reset enable
- * 2. Mode of operation
- * 3. Trigger select
- * 4. Fail threshold
- * 5. Reset threshold
- * 6. Long Window duration
- * 7. Window-1 duration
- * 8. Window-2 duration
- * 9. Q&A Feedback
- * 10. Q&A LFSR
- * 11. Q&A question seed
- * For more information on watchdog configurations, refer to @ref Pmic_WdgCfg.
+ * @brief Get PMIC watchdog configurations. This "get" API supports obtaining
+ * the same parameters that are settable through the "Set" API (`Pmic_wdgSetCfg`).
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -536,42 +523,16 @@ int32_t Pmic_wdgSendSwTrigger(const Pmic_CoreHandle_t *pmicHandle);
 int32_t Pmic_wdgWriteAnswer(const Pmic_CoreHandle_t *pmicHandle);
 
 /**
- * @brief Clear all PMIC watchdog error statuses.
- *
- * @details The following watchdog error statuses are cleared by this API
- * 1. WD_RST_INT
- * 2. WD_FAIL_INT
- * 3. WD_ANSW_ERR
- * 4. WD_SEQ_ERR
- * 5. WD_ANSW_EARLY
- * 6. WD_TIMEOUT
- * 7. WD_LONGWIN_TIMEOUT_INT
- * For more information on the watchdog error statuses, refer to
- * @ref Pmic_WdgErrStat.
- *
- * @attention If end-user calls this API without addressing the root cause of the
- * watchdog error statuses, the statuses could continue to be set after API call.
- * Additionally, it may be required to enable watchdog by calling `Pmic_wdgEnable()`
- * before clearing the error statuses.
- *
- * @param pmicHandle [IN] PMIC interface handle.
- *
- * @return Success code if all watchdog error statuses have been cleared, error
- * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
- */
-int32_t Pmic_wdgClrErrStatAll(const Pmic_CoreHandle_t *pmicHandle);
-
-/**
  * @brief Clear PMIC watchdog error statuses.
  *
  * @details The following watchdog error statuses can be cleared by this API
- * 1. WD_RST_INT
- * 2. WD_FAIL_INT
- * 3. WD_ANSW_ERR
- * 4. WD_SEQ_ERR
- * 5. WD_ANSW_EARLY
- * 6. WD_TIMEOUT
- * 7. WD_LONGWIN_TIMEOUT_INT
+ * 1. WD_RST_INT (validParam: PMIC_WDG_RST_INT_VALID)
+ * 2. WD_FAIL_INT (validParam: PMIC_WDG_FAIL_INT_VALID)
+ * 3. WD_ANSW_ERR (validParam: PMIC_WDG_ANSW_ERR_VALID)
+ * 4. WD_SEQ_ERR (validParam: PMIC_WDG_SEQ_ERR_VALID)
+ * 5. WD_ANSW_EARLY (validParam: PMIC_WDG_ANSW_EARLY_ERR_VALID)
+ * 6. WD_TIMEOUT (validParam: PMIC_WDG_TIMEOUT_ERR_VALID)
+ * 7. WD_LONGWIN_TIMEOUT_INT (validParam: PMIC_WDG_LONGWIN_TIMEOUT_INT_VALID)
  * For more information on the watchdog error statuses, refer to
  * @ref Pmic_WdgErrStat.
  *
@@ -596,18 +557,24 @@ int32_t Pmic_wdgClrErrStatAll(const Pmic_CoreHandle_t *pmicHandle);
 int32_t Pmic_wdgClrErrStat(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgErrStat_t *wdgErrStat);
 
 /**
- * @brief Get PMIC watchdog error statuses.
+ * @brief Clear all PMIC watchdog error statuses. For the statuses that are
+ * cleared by this API, see Pmic_wdgClrErrStat().
  *
- * @details The following watchdog error statuses can be obtained from this API
- * 1. WD_RST_INT
- * 2. WD_FAIL_INT
- * 3. WD_ANSW_ERR
- * 4. WD_SEQ_ERR
- * 5. WD_ANSW_EARLY
- * 6. WD_TIMEOUT
- * 7. WD_LONGWIN_TIMEOUT_INT
- * For more information on the watchdog error statuses, refer to
- * @ref Pmic_WdgErrStat.
+ * @attention If end-user calls this API without addressing the root cause of the
+ * watchdog error statuses, the statuses could continue to be set after API call.
+ * Additionally, it may be required to enable watchdog by calling `Pmic_wdgEnable()`
+ * before clearing the error statuses.
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ *
+ * @return Success code if all watchdog error statuses have been cleared, error
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ */
+int32_t Pmic_wdgClrErrStatAll(const Pmic_CoreHandle_t *pmicHandle);
+
+/**
+ * @brief Get PMIC watchdog error statuses. This "get" API supports obtaining
+ * the same statuses that are clearable by Pmic_wdgClrErrStat().
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -622,9 +589,9 @@ int32_t Pmic_wdgGetErrStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgErrStat_
  * @brief Get PMIC watchdog fail counter statuses.
  *
  * @details The following watchdog fail counter statuses can be obtained from this API
- * 1. WD_BAD_EVENT
- * 2. WD_FIRST_OK
- * 3. WD_FAIL_CNT
+ * 1. WD_BAD_EVENT (validParam: PMIC_BAD_EVENT_VALID)
+ * 2. WD_FIRST_OK (validParam: PMIC_GOOD_EVENT_VALID)
+ * 3. WD_FAIL_CNT (validParam: PMIC_FAIL_CNT_VALID)
  * For more information on the watchdog fail counter statuses, refer to
  * @ref Pmic_WdgFailCntStat.
  *

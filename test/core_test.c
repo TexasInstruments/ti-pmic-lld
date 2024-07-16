@@ -5,31 +5,31 @@
  */
 #include "core_test.h"
 
-#define RUN_CORE_TESTS()    RUN_TEST(test_apiParameters_setScratchPadVal_nullParams);           \
-                            RUN_TEST(test_apiParameters_setScratchPadVal_invalidScratchPadReg); \
-                            RUN_TEST(test_apiParameters_getScratchPadVal_nullParams);           \
-                            RUN_TEST(test_apiParameters_getScratchPadVal_invalidScratchPadReg); \
+#define RUN_CORE_TESTS()    RUN_TEST(test_faultHandling_setScratchPadVal_nullParams);           \
+                            RUN_TEST(test_faultHandling_setScratchPadVal_invalidScratchPadReg); \
+                            RUN_TEST(test_faultHandling_getScratchPadVal_nullParams);           \
+                            RUN_TEST(test_faultHandling_getScratchPadVal_invalidScratchPadReg); \
                             RUN_TEST(test_functionality_setGetScratchPadVal);                   \
-                            RUN_TEST(test_apiParameters_enableCRC8_nullParams);                 \
-                            RUN_TEST(test_apiParameters_disableCRC8_nullParams);                \
-                            RUN_TEST(test_apiParameters_getCRC8Enable_nullParams);              \
+                            RUN_TEST(test_faultHandling_enableCRC8_nullParams);                 \
+                            RUN_TEST(test_faultHandling_disableCRC8_nullParams);                \
+                            RUN_TEST(test_faultHandling_getCRC8Enable_nullParams);              \
                             RUN_TEST(test_functionality_enableDisableCRC8);                     \
-                            RUN_TEST(test_apiParameters_unlockRegs_nullParams);                 \
-                            RUN_TEST(test_apiParameters_lockRegs_nullParams);                   \
-                            RUN_TEST(test_apiParameters_getRegLock_nullParams);                 \
+                            RUN_TEST(test_faultHandling_unlockRegs_nullParams);                 \
+                            RUN_TEST(test_faultHandling_lockRegs_nullParams);                   \
+                            RUN_TEST(test_faultHandling_getRegLock_nullParams);                 \
                             RUN_TEST(test_functionality_LockUnlockRegs);                        \
-                            RUN_TEST(test_apiParameters_setPwrOn_nullParams);                   \
-                            RUN_TEST(test_apiParameters_getPwrOn_nullParams);                   \
+                            RUN_TEST(test_faultHandling_setPwrOn_nullParams);                   \
+                            RUN_TEST(test_faultHandling_getPwrOn_nullParams);                   \
                             RUN_TEST(test_functionality_setPwrOn);                              \
-                            RUN_TEST(test_apiParameters_sendFsmCmd_nullParams);                 \
-                            RUN_TEST(test_apiParameters_sendFsmCmd_invalidFsmCmd);              \
+                            RUN_TEST(test_faultHandling_sendFsmCmd_nullParams);                 \
+                            RUN_TEST(test_faultHandling_sendFsmCmd_invalidFsmCmd);              \
                             RUN_TEST(test_functionality_sendFsmCmd_lpmEntryExit);               \
-                            RUN_TEST(test_apiParameters_runABIST_nullParams);                   \
+                            RUN_TEST(test_faultHandling_runABIST_nullParams);                   \
                             RUN_TEST(test_functionality_runABIST);                              \
-                            RUN_TEST(test_apiParameters_setLpmCfg_nullParams);                  \
-                            RUN_TEST(test_apiParameters_setLpmCfg_noValidParams);               \
-                            RUN_TEST(test_apiParameters_getLpmCfg_nullParams);                  \
-                            RUN_TEST(test_apiParameters_getLpmCfg_noValidParams);               \
+                            RUN_TEST(test_faultHandling_setLpmCfg_nullParams);                  \
+                            RUN_TEST(test_faultHandling_setLpmCfg_noValidParams);               \
+                            RUN_TEST(test_faultHandling_getLpmCfg_nullParams);                  \
+                            RUN_TEST(test_faultHandling_getLpmCfg_noValidParams);               \
                             RUN_TEST(test_functionality_SetGetLpmCfg_pinDetection);             \
                             RUN_TEST(test_functionality_SetGetLpmCfg_detectionDelay);           \
                             RUN_TEST(test_functionality_SetGetLpmCfg_vmonEn);                   \
@@ -76,7 +76,7 @@ void coreTest(void *args)
     Drivers_close();
 }
 
-void test_apiParameters_setScratchPadVal_nullParams(void)
+void test_faultHandling_setScratchPadVal_nullParams(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -84,7 +84,7 @@ void test_apiParameters_setScratchPadVal_nullParams(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_apiParameters_setScratchPadVal_invalidScratchPadReg(void)
+void test_faultHandling_setScratchPadVal_invalidScratchPadReg(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -92,7 +92,7 @@ void test_apiParameters_setScratchPadVal_invalidScratchPadReg(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 }
 
-void test_apiParameters_getScratchPadVal_nullParams(void)
+void test_faultHandling_getScratchPadVal_nullParams(void)
 {
     uint8_t regVal = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -107,7 +107,7 @@ void test_apiParameters_getScratchPadVal_nullParams(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_apiParameters_getScratchPadVal_invalidScratchPadReg(void)
+void test_faultHandling_getScratchPadVal_invalidScratchPadReg(void)
 {
     uint8_t regVal = 0U;
     int32_t status = PMIC_ST_SUCCESS;
@@ -143,7 +143,7 @@ void test_functionality_setGetScratchPadVal(void)
     }
 }
 
-void test_apiParameters_enableCRC8_nullParams(void)
+void test_faultHandling_enableCRC8_nullParams(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -151,7 +151,7 @@ void test_apiParameters_enableCRC8_nullParams(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_apiParameters_disableCRC8_nullParams(void)
+void test_faultHandling_disableCRC8_nullParams(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -159,7 +159,7 @@ void test_apiParameters_disableCRC8_nullParams(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_apiParameters_getCRC8Enable_nullParams(void)
+void test_faultHandling_getCRC8Enable_nullParams(void)
 {
     bool crcEnabled = (bool)false;
     int32_t status = PMIC_ST_SUCCESS;
@@ -198,7 +198,7 @@ void test_functionality_enableDisableCRC8(void)
     TEST_ASSERT_EQUAL((bool)false, crcEnabled);
 }
 
-void test_apiParameters_unlockRegs_nullParams(void)
+void test_faultHandling_unlockRegs_nullParams(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -206,7 +206,7 @@ void test_apiParameters_unlockRegs_nullParams(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_apiParameters_lockRegs_nullParams(void)
+void test_faultHandling_lockRegs_nullParams(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -214,7 +214,7 @@ void test_apiParameters_lockRegs_nullParams(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_apiParameters_getRegLock_nullParams(void)
+void test_faultHandling_getRegLock_nullParams(void)
 {
     bool regLocked = (bool)false;
     int32_t status = PMIC_ST_SUCCESS;
@@ -253,7 +253,7 @@ void test_functionality_LockUnlockRegs(void)
     TEST_ASSERT_EQUAL((bool)false, regLocked);
 }
 
-void test_apiParameters_setPwrOn_nullParams(void)
+void test_faultHandling_setPwrOn_nullParams(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -261,7 +261,7 @@ void test_apiParameters_setPwrOn_nullParams(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_apiParameters_getPwrOn_nullParams(void)
+void test_faultHandling_getPwrOn_nullParams(void)
 {
     bool pwrOnStat = (bool)false;
     int32_t status = PMIC_ST_SUCCESS;
@@ -300,7 +300,7 @@ void test_functionality_setPwrOn(void)
     TEST_ASSERT_EQUAL((bool)false, pwrOnStat);
 }
 
-void test_apiParameters_sendFsmCmd_nullParams(void)
+void test_faultHandling_sendFsmCmd_nullParams(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -308,7 +308,7 @@ void test_apiParameters_sendFsmCmd_nullParams(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_apiParameters_sendFsmCmd_invalidFsmCmd(void)
+void test_faultHandling_sendFsmCmd_invalidFsmCmd(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -329,7 +329,7 @@ void test_functionality_sendFsmCmd_lpmEntryExit(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_apiParameters_runABIST_nullParams(void)
+void test_faultHandling_runABIST_nullParams(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -392,7 +392,7 @@ void test_functionality_runABIST(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_apiParameters_setLpmCfg_nullParams(void)
+void test_faultHandling_setLpmCfg_nullParams(void)
 {
     Pmic_CoreLpmCfg_t lpmCfg;
     int32_t status = PMIC_ST_SUCCESS;
@@ -407,7 +407,7 @@ void test_apiParameters_setLpmCfg_nullParams(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_apiParameters_setLpmCfg_noValidParams(void)
+void test_faultHandling_setLpmCfg_noValidParams(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t lpmCfg = {.validParams = 0U};
@@ -416,7 +416,7 @@ void test_apiParameters_setLpmCfg_noValidParams(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 }
 
-void test_apiParameters_getLpmCfg_nullParams(void)
+void test_faultHandling_getLpmCfg_nullParams(void)
 {
     Pmic_CoreLpmCfg_t lpmCfg;
     int32_t status = PMIC_ST_SUCCESS;
@@ -431,7 +431,7 @@ void test_apiParameters_getLpmCfg_nullParams(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 
-void test_apiParameters_getLpmCfg_noValidParams(void)
+void test_faultHandling_getLpmCfg_noValidParams(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_CoreLpmCfg_t lpmCfg = {.validParams = 0U};

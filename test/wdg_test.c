@@ -5,20 +5,20 @@
  */
 #include "wdg_test.h"
 
-#define RUN_WDG_TESTS()     RUN_TEST(test_apiParameters_wdgGetEnableStat_nullParams);       \
-                            RUN_TEST(test_apiParameters_wdgDisable_nullParams);             \
-                            RUN_TEST(test_apiParameters_wdgEnable_nullParams);              \
+#define RUN_WDG_TESTS()     RUN_TEST(test_faultHandling_wdgGetEnableStat_nullParams);       \
+                            RUN_TEST(test_faultHandling_wdgDisable_nullParams);             \
+                            RUN_TEST(test_faultHandling_wdgEnable_nullParams);              \
                             RUN_TEST(test_functionality_wdgEnableDisable);                  \
-                            RUN_TEST(test_apiParameters_wdgGetPwrHold_nullParams);          \
-                            RUN_TEST(test_apiParameters_wdgSetPwrHold_nullParams);          \
+                            RUN_TEST(test_faultHandling_wdgGetPwrHold_nullParams);          \
+                            RUN_TEST(test_faultHandling_wdgSetPwrHold_nullParams);          \
                             RUN_TEST(test_functionality_wdgSetClrPwrHold);                  \
-                            RUN_TEST(test_apiParameters_wdgGetRetLongWin_nullParams);       \
-                            RUN_TEST(test_apiParameters_wdgSetRetLongWin_nullParams);       \
+                            RUN_TEST(test_faultHandling_wdgGetRetLongWin_nullParams);       \
+                            RUN_TEST(test_faultHandling_wdgSetRetLongWin_nullParams);       \
                             RUN_TEST(test_functionality_wdgSetClrRetLongWin);               \
-                            RUN_TEST(test_apiParameters_wdgGetCfg_nullParams);              \
-                            RUN_TEST(test_apiParameters_wdgGetCfg_noValidParams);           \
-                            RUN_TEST(test_apiParameters_wdgSetCfg_nullParams);              \
-                            RUN_TEST(test_apiParameters_wdgSetCfg_noValidParams);           \
+                            RUN_TEST(test_faultHandling_wdgGetCfg_nullParams);              \
+                            RUN_TEST(test_faultHandling_wdgGetCfg_noValidParams);           \
+                            RUN_TEST(test_faultHandling_wdgSetCfg_nullParams);              \
+                            RUN_TEST(test_faultHandling_wdgSetCfg_noValidParams);           \
                             RUN_TEST(test_functionality_wdgSetGetCfg_rstEn);                \
                             RUN_TEST(test_functionality_wdgSetGetCfg_mode);                 \
                             RUN_TEST(test_functionality_wdgSetGetCfg_trigSel);              \
@@ -30,9 +30,9 @@
                             RUN_TEST(test_functionality_wdgSetGetCfg_qaFdbk);               \
                             RUN_TEST(test_functionality_wdgSetGetCfg_qaLfsr);               \
                             RUN_TEST(test_functionality_wdgSetGetCfg_qaSeed);               \
-                            RUN_TEST(test_apiParameters_wdgGetErrStat_nullParams);          \
-                            RUN_TEST(test_apiParameters_wdgClrErrStat_nullParams);          \
-                            RUN_TEST(test_apiParameters_wdgGetFailCntStat_nullParams);      \
+                            RUN_TEST(test_faultHandling_wdgGetErrStat_nullParams);          \
+                            RUN_TEST(test_faultHandling_wdgClrErrStat_nullParams);          \
+                            RUN_TEST(test_faultHandling_wdgGetFailCntStat_nullParams);      \
                             RUN_TEST(test_functionality_wdgSwTriggerMode_noErrors);         \
                             RUN_TEST(test_functionality_wdgQaMode_noErrors);                \
                             RUN_TEST(test_errorDetection_wdg_longWinTimeoutInt)
@@ -88,7 +88,7 @@ void wdgTest(void *args)
     Drivers_close();
 }
 
-void test_apiParameters_wdgGetEnableStat_nullParams(void)
+void test_faultHandling_wdgGetEnableStat_nullParams(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     bool enable = (bool)false;
@@ -106,13 +106,13 @@ void test_apiParameters_wdgGetEnableStat_nullParams(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_apiParameters_wdgDisable_nullParams(void)
+void test_faultHandling_wdgDisable_nullParams(void)
 {
     int32_t status = Pmic_wdgDisable(NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_apiParameters_wdgEnable_nullParams(void)
+void test_faultHandling_wdgEnable_nullParams(void)
 {
     int32_t status = Pmic_wdgEnable(NULL);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
@@ -142,7 +142,7 @@ void test_functionality_wdgEnableDisable(void)
     TEST_ASSERT_EQUAL((bool)true, wdgEnabled);
 }
 
-void test_apiParameters_wdgGetPwrHold_nullParams(void)
+void test_faultHandling_wdgGetPwrHold_nullParams(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     bool pwrHold = (bool)false;
@@ -160,7 +160,7 @@ void test_apiParameters_wdgGetPwrHold_nullParams(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_apiParameters_wdgSetPwrHold_nullParams(void)
+void test_faultHandling_wdgSetPwrHold_nullParams(void)
 {
     int32_t status = Pmic_wdgSetPwrHold(NULL, (bool)true);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
@@ -190,7 +190,7 @@ void test_functionality_wdgSetClrPwrHold(void)
     TEST_ASSERT_EQUAL((bool)true, pwrHold);
 }
 
-void test_apiParameters_wdgGetRetLongWin_nullParams(void)
+void test_faultHandling_wdgGetRetLongWin_nullParams(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     bool retLongWin = (bool)false;
@@ -208,7 +208,7 @@ void test_apiParameters_wdgGetRetLongWin_nullParams(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_apiParameters_wdgSetRetLongWin_nullParams(void)
+void test_faultHandling_wdgSetRetLongWin_nullParams(void)
 {
     int32_t status = Pmic_wdgSetRetLongWin(NULL, (bool)true);
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
@@ -238,7 +238,7 @@ void test_functionality_wdgSetClrRetLongWin(void)
     TEST_ASSERT_EQUAL((bool)true, retLongWin);
 }
 
-void test_apiParameters_wdgGetCfg_nullParams(void)
+void test_faultHandling_wdgGetCfg_nullParams(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t wdgCfg;
@@ -256,7 +256,7 @@ void test_apiParameters_wdgGetCfg_nullParams(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_apiParameters_wdgGetCfg_noValidParams(void)
+void test_faultHandling_wdgGetCfg_noValidParams(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t wdgCfg = {.validParams = 0U};
@@ -265,7 +265,7 @@ void test_apiParameters_wdgGetCfg_noValidParams(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_INV_PARAM, status);
 }
 
-void test_apiParameters_wdgSetCfg_nullParams(void)
+void test_faultHandling_wdgSetCfg_nullParams(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t wdgCfg;
@@ -283,7 +283,7 @@ void test_apiParameters_wdgSetCfg_nullParams(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_apiParameters_wdgSetCfg_noValidParams(void)
+void test_faultHandling_wdgSetCfg_noValidParams(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgCfg_t wdgCfg = {.validParams = 0U};
@@ -670,7 +670,7 @@ void test_functionality_wdgSetGetCfg_qaSeed(void)
     }
 }
 
-void test_apiParameters_wdgGetErrStat_nullParams(void)
+void test_faultHandling_wdgGetErrStat_nullParams(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgErrStat_t wdgErrStat;
@@ -688,7 +688,7 @@ void test_apiParameters_wdgGetErrStat_nullParams(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_apiParameters_wdgClrErrStat_nullParams(void)
+void test_faultHandling_wdgClrErrStat_nullParams(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgErrStat_t wdgErrStat;
@@ -706,7 +706,7 @@ void test_apiParameters_wdgClrErrStat_nullParams(void)
     TEST_ASSERT_EQUAL(PMIC_ST_ERR_NULL_PARAM, status);
 }
 
-void test_apiParameters_wdgGetFailCntStat_nullParams(void)
+void test_faultHandling_wdgGetFailCntStat_nullParams(void)
 {
     int32_t status = PMIC_ST_SUCCESS;
     Pmic_WdgFailCntStat_t wdgFailCntStat;

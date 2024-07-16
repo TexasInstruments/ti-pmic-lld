@@ -180,7 +180,7 @@ typedef struct Pmic_IrqStat_s
  * @return Success code if IRQ mask configuration(s) have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_irqSetMasks(const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMasks, const Pmic_IrqMask_t *irqMasks);
+int32_t Pmic_irqSetMasks(const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMasks, const Pmic_IrqMask_t irqMasks[]);
 
 /**
  * @brief Get the mask configuration for PMIC IRQs.
@@ -195,7 +195,7 @@ int32_t Pmic_irqSetMasks(const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMask
  * @return Success code if IRQ mask configuration(s) have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_irqGetMasks(const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMasks, Pmic_IrqMask_t *irqMasks);
+int32_t Pmic_irqGetMasks(const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMasks, Pmic_IrqMask_t irqMasks[]);
 
 /**
  * @brief Get the status of all PMIC IRQs.
@@ -251,7 +251,7 @@ int32_t Pmic_irqGetFlag(const Pmic_CoreHandle_t *pmicHandle, uint8_t irqNum, boo
  * @brief Clear a specific PMIC IRQ flag.
  *
  * @attention This API is meant to be called after getting the next flag status from
- * `Pmic_irqGetNextFlag()` or getting a specific flag status from `Pmic_irqGetFlag()`
+ * `Pmic_irqGetNextFlag()` or getting a specific flag status from `Pmic_irqGetFlag()`.
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *

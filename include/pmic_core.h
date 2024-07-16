@@ -448,11 +448,13 @@ int32_t Pmic_getPwrOn(const Pmic_CoreHandle_t *pmicHandle, bool *pwrOnStat);
  * @brief Set PMIC low power mode configurations.
  *
  * @details The following options are configurable via this API
- * 1. LPM pin detection option
+ * 1. LPM pin detection option (validParam: PMIC_LPM_PIN_DETECTION_VALID)
  * 2. Delay time after nRSTOUT has been activated before LPM pin is recognized
- * 3. VMON activation in LPM mode
- * 4. ESM activation in LPM mode
- * 5. WDG activation in LPM mode
+ * (validParam: PMIC_LPM_DETECTION_DELAY_VALID)
+ * 3. VMON activation in LPM mode (validParam: PMIC_LPM_VMON_EN_VALID)
+ * 4. ESM activation in LPM mode (validParam: PMIC_LPM_ESM_EN_VALID)
+ * 5. WDG activation in LPM mode (validParam: PMIC_LPM_WDG_EN_VALID)
+ * For more information on LPM configurations, refer to @ref Pmic_CoreLpmCfg.
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -464,14 +466,9 @@ int32_t Pmic_getPwrOn(const Pmic_CoreHandle_t *pmicHandle, bool *pwrOnStat);
 int32_t Pmic_setLpmCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_CoreLpmCfg_t *lpmCfg);
 
 /**
- * @brief Get PMIC low power mode configurations.
- *
- * @details The following configurations are obtainable from this API
- * 1. LPM pin detection option
- * 2. Delay time after nRSTOUT has been activated before LPM pin is recognized
- * 3. VMON activation in LPM mode
- * 4. ESM activation in LPM mode
- * 5. WDG activation in LPM mode
+ * @brief Get PMIC low power mode configurations. This "get" API supports
+ * obtaining the same parameters that are settable through the "Set" API
+ * (`Pmic_setLpmCfg`).
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -485,9 +482,14 @@ int32_t Pmic_getLpmCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_CoreLpmCfg_t *l
 /**
  * @brief Set PMIC CRC16 configurations.
  *
+ * @details The following options are configurable via this API
+ * 1. enable (validParam: PMIC_CRC16_ENABLE_VALID)
+ * 2. activateCalc (validParam: PMIC_CRC16_ACTIVATE_CALC_VALID)
+ * For more information on CRC configurations, refer to @ref Pmic_CoreCrc16Cfg.
+ *
  * @param pmicHandle [IN] PMIC interface handle.
  *
- * @param crc16Cfg  [IN] CRC16 configurations to write to PMIC.
+ * @param crc16Cfg [IN] CRC16 configurations to write to PMIC.
  *
  * @attention CRC16 is not yet supported by PMIC LLD. It is recommended to
  * keep CRC16 disabled.
@@ -498,7 +500,8 @@ int32_t Pmic_getLpmCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_CoreLpmCfg_t *l
 int32_t Pmic_setCRC16Cfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_CoreCrc16Cfg_t *crc16Cfg);
 
 /**
- * @brief Get PMIC CRC16 configurations.
+ * @brief Get PMIC CRC16 configurations. This "get" API supports obtaining the
+ * same parameters that are settable through the "Set" API (`Pmic_setCRC16Cfg`).
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *

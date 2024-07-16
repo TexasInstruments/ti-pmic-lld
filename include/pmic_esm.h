@@ -242,19 +242,8 @@ typedef struct Pmic_EsmStat_s
 int32_t Pmic_esmSetCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_EsmCfg_t *esmCfg);
 
 /**
- * @brief Get PMIC ESM configurations.
- *
- * @details The following configurations are obtainable from this API
- * 1. Enable
- * 2. Mode
- * 3. Error count threshold
- * 4. Delay-1
- * 5. Delay-2
- * 6. HMAX (maximum high-pulse time threshold)
- * 7. HMIN (minimum high-pulse time threshold)
- * 8. LMAX (maximum low-pulse time threshold)
- * 9. HMIN (minimum low-pulse time threshold)
- * For more information on ESM configurations, refer to @ref Pmic_EsmCfg.
+ * @brief Get PMIC ESM configurations. This "get" API supports obtaining
+ * the same parameters that are settable through the "Set" API (`Pmic_esmSetCfg`).
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
