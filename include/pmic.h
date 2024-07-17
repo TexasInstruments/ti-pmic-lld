@@ -50,6 +50,7 @@ extern "C" {
 #include "pmic_common.h"
 #include "pmic_core.h"
 #include "pmic_power.h"
+#include "pmic_irq.h"
 #include "pmic_wdg.h"
 #include "pmic_esm.h"
 #include "pmic_io.h"
@@ -76,7 +77,7 @@ extern "C" {
 #define PMIC_ST_ERR_FAIL                    (-((int32_t)7))
 #define PMIC_ST_ERR_NOT_SUPPORTED           (-((int32_t)8))
 #define PMIC_ST_WARN_NO_IRQ_REMAINING       (-((int32_t)9))
-#define PMIC_ST_IRQ_NON_MASKABLE            (-((int32_t)10))
+#define PMIC_ST_WARN_NON_MASKABLE_INT       (-((int32_t)10))
 /** @} */
 
 /* ========================================================================== */

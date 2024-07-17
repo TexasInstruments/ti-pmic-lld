@@ -459,7 +459,7 @@ int32_t Pmic_irqSetMasks(const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMask
             // Check whether IRQ is a NMI
             if ((status == PMIC_ST_SUCCESS) && (pmicIRQs[irqNum].maskRegAddr == PMIC_INVALID_REGADDR))
             {
-                status = PMIC_ST_IRQ_NON_MASKABLE;
+                status = PMIC_ST_WARN_NON_MASKABLE_INT;
             }
 
             // Store mask register that corresponds to the IRQ for later configuration
@@ -551,7 +551,7 @@ int32_t Pmic_irqGetMasks(const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMask
             // Check whether IRQ is a NMI
             if ((status == PMIC_ST_SUCCESS) && (pmicIRQs[irqNum].maskRegAddr == PMIC_INVALID_REGADDR))
             {
-                status = PMIC_ST_IRQ_NON_MASKABLE;
+                status = PMIC_ST_WARN_NON_MASKABLE_INT;
             }
 
             // Store mask register that corresponds to the IRQ for later read
