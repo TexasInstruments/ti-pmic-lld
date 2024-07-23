@@ -152,13 +152,11 @@ extern "C" {
  * refer to @ref Pmic_EsmErrCntThrMaxValue.
  *
  * @param delay1 Delay-1 time interval configuration. The ESM starts the delay-1
- * timer upon detecting an ESM error. For the maximum delay-1 value, refer to
- * @ref Pmic_EsmDelayMaxValue.
+ * timer upon detecting an ESM error.
  *
  * @param delay2 Delay-2 time interval configuration. The ESM starts the delay-2
  * timer if the ESM error is still present or any ESM interrupts are pending
- * after delay-1 interval has elapsed. For the maximum delay-2 value, refer to
- * @ref Pmic_EsmDelayMaxValue.
+ * after delay-1 interval has elapsed.
  *
  * @param hmax Maximum high-pulse time threshold for the ESM operating in PWM mode.
  *
@@ -242,7 +240,7 @@ typedef struct Pmic_EsmStat_s
 int32_t Pmic_esmSetCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_EsmCfg_t *esmCfg);
 
 /**
- * @brief Get PMIC ESM configurations. This "get" API supports obtaining
+ * @brief Get PMIC ESM configurations. This "Get" API supports obtaining
  * the same parameters that are settable through the "Set" API (`Pmic_esmSetCfg`).
  *
  * @param pmicHandle [IN] PMIC interface handle.
@@ -294,6 +292,20 @@ int32_t Pmic_esmStart(const Pmic_CoreHandle_t *pmicHandle);
 int32_t Pmic_esmStop(const Pmic_CoreHandle_t *pmicHandle);
 
 /**
+ * @brief Get the PMIC ESM start/stop status.
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ *
+ * @param start [OUT] ESM start/stop status. If set to true or `PMIC_ESM_START`,
+ * ESM has started. Otherwise, if set to false or `PMIC_ESM_STOP`, ESM has
+ * stopped.
+ *
+ * @return Success code if PMIC ESM start/stop status has been obtained, error
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ */
+int32_t Pmic_esmGetStartStop(const Pmic_CoreHandle_t *pmicHandle, bool *start);
+
+/**
  * @brief Get PMIC ESM status.
  *
  * @details The following ESM statuses are obtainable from this API
@@ -312,13 +324,8 @@ int32_t Pmic_esmStop(const Pmic_CoreHandle_t *pmicHandle);
 int32_t Pmic_esmGetStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_EsmStat_t *esmStat);
 
 /**
- * @brief Clear PMIC ESM statuses.
- *
- * @details The following ESM statuses can be cleared by this API
- * 1. ESM_MCU_RST_INT
- * 2. ESM_MCU_FAIL_INT
- * 3. ESM_MCU_PIN_INT
- * For more information on the ESM statuses, refer to @ref Pmic_EsmStat.
+ * @brief Clear PMIC ESM statuses. This API supports clearing the same statuses
+ * that are obtainable through the "Get" API (`Pmic_esmGetStat`).
  *
  * @attention If end-user calls this API without addressing the root cause of
  * the ESM error statuses, the statuses could continue to be set after API call.

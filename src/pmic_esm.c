@@ -493,6 +493,33 @@ int32_t Pmic_esmStartStop(const Pmic_CoreHandle_t *pmicHandle, bool start)
     return status;
 }
 
+int32_t Pmic_esmGetStartStop(const Pmic_CoreHandle_t *pmicHandle, bool *start)
+{
+    uint8_t regData = 0U;
+    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+
+    if ((status == PMIC_ST_SUCCESS) && (start == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        // Read ESM_START_REG register
+        Pmic_criticalSectionStart(pmicHandle);
+        status = Pmic_ioRx(pmicHandle, PMIC_ESM_START_REG_REGADDR, &regData);
+        Pmic_criticalSectionStop(pmicHandle);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            // Extract ESM_MCU_START bit
+            *start = Pmic_getBitField_b(regData, PMIC_ESM_MCU_START_SHIFT);
+        }
+    }
+
+    return status;
+}
+
 int32_t Pmic_esmStart(const Pmic_CoreHandle_t *pmicHandle)
 {
     return Pmic_esmStartStop(pmicHandle, PMIC_ESM_START);
