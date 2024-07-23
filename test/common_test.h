@@ -1,8 +1,8 @@
 /**
- *  @file       common_test.h
+ * @file common_test.h
  *
- *  @brief      Header file for commonly used APIs and macros/defines for
- *              PMIC LLD testing on the AM263x platform.
+ * @brief Header file for commonly used APIs and macros/defines for PMIC LLD
+ * testing on the AM263x platform.
  */
 #ifndef __COMMON_TEST_H__
 #define __COMMON_TEST_H__

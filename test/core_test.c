@@ -581,3 +581,17 @@ void test_functionality_SetGetLpmCfg_wdEn(void)
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
     TEST_ASSERT_EQUAL((bool)true, actLpmCfg.wdgEn);
 }
+
+/**
+ * @brief Unity testing framework calls this API before each test.
+ */
+void setUp(void)
+{
+}
+
+/**
+ * @brief Unity testing framework calls this API after each test.
+ */
+void tearDown(void)
+{
+}

@@ -526,3 +526,17 @@ void test_errorDetection_esm_pinInt(void)
 {
 
 }
+
+/**
+ * @brief Unity testing framework calls this API before each test.
+ */
+void setUp(void)
+{
+}
+
+/**
+ * @brief Unity testing framework calls this API after each test.
+ */
+void tearDown(void)
+{
+}

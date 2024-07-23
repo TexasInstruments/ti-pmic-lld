@@ -216,15 +216,15 @@ typedef struct Pmic_EsmStat_s
  * @brief Set PMIC ESM configurations.
  *
  * @details The following options are configurable via this API
- * 1. Enable
- * 2. Mode
- * 3. Error count threshold
- * 4. Delay-1
- * 5. Delay-2
- * 6. HMAX (maximum high-pulse time threshold)
- * 7. HMIN (minimum high-pulse time threshold)
- * 8. LMAX (maximum low-pulse time threshold)
- * 9. HMIN (minimum low-pulse time threshold)
+ * 1. Enable (validParam: PMIC_ESM_ENABLE_VALID)
+ * 2. Mode (validParam: PMIC_ESM_MODE_VALID)
+ * 3. Error count threshold (validParam: PMIC_ESM_ERR_CNT_THR_VALID)
+ * 4. Delay-1 (validParam: PMIC_ESM_DELAY1_VALID)
+ * 5. Delay-2 (validParam: PMIC_ESM_DELAY2_VALID)
+ * 6. Maximum high-pulse time threshold (validParam: PMIC_ESM_HMAX_VALID)
+ * 7. Minimum high-pulse time threshold (validParam: PMIC_ESM_HMIN_VALID)
+ * 8. Maximum low-pulse time threshold (validParam: PMIC_ESM_LMAX_VALID)
+ * 9. Minimum low-pulse time threshold (validParam: PMIC_ESM_LMIN_VALID)
  * For more information on ESM configurations, refer to @ref Pmic_EsmCfg.
  *
  * @attention Some ESM configurations can only be set when the ESM is stopped
@@ -309,9 +309,9 @@ int32_t Pmic_esmGetStartStop(const Pmic_CoreHandle_t *pmicHandle, bool *start);
  * @brief Get PMIC ESM status.
  *
  * @details The following ESM statuses are obtainable from this API
- * 1. ESM_MCU_RST_INT
- * 2. ESM_MCU_FAIL_INT
- * 3. ESM_MCU_PIN_INT
+ * 1. ESM_MCU_RST_INT (validParam: PMIC_ESM_RST_INT_VALID)
+ * 2. ESM_MCU_FAIL_INT (validParam: PMIC_ESM_FAIL_INT_VALID)
+ * 3. ESM_MCU_PIN_INT (validParam: PMIC_ESM_PIN_INT_VALID)
  * For more information on the ESM statuses, refer to @ref Pmic_EsmStat.
  *
  * @param pmicHandle [IN] PMIC interface handle.

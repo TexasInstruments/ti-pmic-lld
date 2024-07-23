@@ -1,7 +1,7 @@
 /**
  * @file wdg_test.h
  *
- * @brief Header file containing prototypes of all Watchdog module tests
+ * @brief Header file containing prototypes of all Watchdog module tests.
  */
 #ifndef __WDG_TEST_H__
 #define __WDG_TEST_H__

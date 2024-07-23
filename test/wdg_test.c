@@ -1068,14 +1068,14 @@ void test_errorDetection_wdg_RstInt(void)
 }
 
 /**
- *  @brief  Unity testing framework calls this API before each test
+ * @brief Unity testing framework calls this API before each test.
  */
 void setUp(void)
 {
 }
 
 /**
- *  @brief  Unity testing framework calls this API after each test
+ * @brief Unity testing framework calls this API after each test.
  */
 void tearDown(void)
 {

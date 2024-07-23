@@ -668,3 +668,17 @@ void test_functionality_irqClrFlags(void)
 
     TEST_ASSERT_NOT_EQUAL(UINT8_MAX, iter);
 }
+
+/**
+ * @brief Unity testing framework calls this API before each test.
+ */
+void setUp(void)
+{
+}
+
+/**
+ * @brief Unity testing framework calls this API after each test.
+ */
+void tearDown(void)
+{
+}
