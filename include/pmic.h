@@ -395,7 +395,7 @@ typedef struct Pmic_CoreCfg_s {
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * valid values @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_init(Pmic_CoreHandle_t *handle, const Pmic_CoreCfg_t *coreCfg);
+int32_t Pmic_init(const Pmic_CoreCfg_t *coreCfg, Pmic_CoreHandle_t *handle);
 
 /**
  * @ingroup DRV_PMIC_MODULE
