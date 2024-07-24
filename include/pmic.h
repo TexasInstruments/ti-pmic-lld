@@ -137,7 +137,9 @@ extern "C" {
 #define PMIC_ST_ERR_DATA_IO_CRC                               (-((int32_t)10))
 #define PMIC_ST_ERR_INTF_SETUP_FAILED                         (-((int32_t)11))
 #define PMIC_ST_ERR_COMM_INTF_INIT_FAIL                       (-((int32_t)12))
+#define PMIC_ST_ERR_FAIL                                      (-((int32_t)13))
 #define PMIC_ST_WARN_INV_DEVICE_ID                            (-((int32_t)40))
+#define PMIC_ST_DEFAULT_DATA                                  (-((int32_t)100))
 /** @} */
 
 /**
