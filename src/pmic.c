@@ -164,7 +164,7 @@ static int32_t updateSubSysInfoAndValidateComms(const Pmic_CoreCfg_t *config, Pm
 /* ========================================================================== */
 /*                        Interface Implementations                           */
 /* ========================================================================== */
-int32_t Pmic_init(Pmic_CoreHandle_t *handle, const Pmic_CoreCfg_t *config) {
+int32_t Pmic_init(const Pmic_CoreCfg_t *config, Pmic_CoreHandle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
 
     if ((handle == NULL) || (config == NULL)) {
