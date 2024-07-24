@@ -506,7 +506,7 @@ extern "C" {
 #define PMIC_WARM_RESET_AND_ASSERT_NINT_PIN         ((uint8_t)1U)
 #define PMIC_ORD_SHUTDOWN_AND_ASSERT_NINT_PIN       ((uint8_t)2U)
 #define PMIC_WAIT_PWR_CYCLE_AND_ASSERT_NINT_PIN     ((uint8_t)3U)
-#define PMIC_REGULATOR_FAULT_MAX                    (PMIC_WAIT_PWR_CYCLE_AND_ASSERT_NINT_PIN)
+#define PMIC_REGULATOR_FAULT_RESPONSE_MAX           (PMIC_WAIT_PWR_CYCLE_AND_ASSERT_NINT_PIN)
 /** @} */
 
 /**
@@ -581,15 +581,6 @@ extern "C" {
  * true, the regulator is forced to PWM operation. Else, automatic transitions
  * between PFM and PWM modes will occur (AUTO mode).
  *
- * @param slewRate BUCK1, BUCK2, or BUCK3 output voltage slew rate. For valid
- * values, refer to @ref Pmic_BuckSlewRateValues.
- *
- * @param deglitchSel BUCK1, BUCK2, or BUCK3 deglitch selection. For valid
- * values, refer to @ref Pmic_buckDeglitchSelValues.
- *
- * @param dischargeSel BUCK1, BUCK2, or BUCK3 discharge selection. For valid
- * values, refer to @ref Pmic_BuckDischargeSelValues.
- *
  * @param uvThr BUCK1, BUCK2, or BUCK3 powergood low threshold level. For valid
  * values, refer to @ref Pmic_buckUvThrValues.
  *
@@ -614,6 +605,15 @@ extern "C" {
  *
  * @param rvConf BUCK1, BUCK2, BUCK3 residual voltage configuration. For valid
  * values, refer to @ref Pmic_rvConfValues.
+ *
+ * @param slewRate BUCK1, BUCK2, or BUCK3 output voltage slew rate. For valid
+ * values, refer to @ref Pmic_BuckSlewRateValues.
+ *
+ * @param deglitchSel BUCK1, BUCK2, or BUCK3 deglitch selection. For valid
+ * values, refer to @ref Pmic_buckDeglitchSelValues.
+ *
+ * @param dischargeSel BUCK1, BUCK2, or BUCK3 discharge selection. For valid
+ * values, refer to @ref Pmic_BuckDischargeSelValues.
  *
  * @param ssEn Device internal spread spectrum for buck regulators. When set to
  * true, spread spectrum is enabled. Otherwise, spread spectrum is disabled.

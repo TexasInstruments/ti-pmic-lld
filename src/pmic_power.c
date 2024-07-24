@@ -81,7 +81,7 @@ static int32_t PWR_getBuckVSET(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuck
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
 
-    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VSET_ACTIVE_VALID))
+    if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VSET_VALID))
     {
         // Read BUCK1_VOUT register
         Pmic_criticalSectionStart(pmicHandle);
@@ -381,7 +381,7 @@ static int32_t PWR_getBuckMonConf(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrB
         // Extract BUCKx_OV_THR bit field (x=1, x=2, or x=3)
         if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_OV_THR_VALID))
         {
-            buckCfg->ovThr = Pmic_getBitField(regData, PMIC_BUCK_OV_THR_MASK, PMIC_BUCK_OV_THR_SHIFT);
+            buckCfg->ovThr = Pmic_getBitField(regData, PMIC_BUCK_OV_THR_SHIFT, PMIC_BUCK_OV_THR_MASK);
         }
 
         // Extract BUCKx_RV_CONF bit field (x=1, x=2, or x=3)
@@ -592,9 +592,16 @@ static int32_t PWR_getBuck1Uvlo(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuc
     // Read BUCK1_UVLO register
     if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_UVLO_FALLING_VALID | PMIC_BUCK_UVLO_RISING_VALID))
     {
-        Pmic_criticalSectionStart(pmicHandle);
-        status = Pmic_ioRx(pmicHandle, PMIC_BUCK1_UVLO_REGADDR, &regData);
-        Pmic_criticalSectionStop(pmicHandle);
+        if (buckCfg->resource == PMIC_BUCK1)
+        {
+            Pmic_criticalSectionStart(pmicHandle);
+            status = Pmic_ioRx(pmicHandle, PMIC_BUCK1_UVLO_REGADDR, &regData);
+            Pmic_criticalSectionStop(pmicHandle);
+        }
+        else
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -661,8 +668,8 @@ int32_t Pmic_pwrGetBuckCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckCfg_
         status = PWR_getBuckFaultResponses(pmicHandle, buckCfg);
     }
 
-    // If resource is BUCK1, read BUCK1_UVLO
-    if ((status == PMIC_ST_SUCCESS) && (buckCfg->resource == PMIC_BUCK1))
+    // Get BUCK1_UVLO
+    if (status == PMIC_ST_SUCCESS)
     {
         status = PWR_getBuck1Uvlo(pmicHandle, buckCfg);
     }
@@ -720,10 +727,18 @@ static int32_t PWR_setBuckVSET(const Pmic_CoreHandle_t *pmicHandle, const Pmic_P
 
     if (Pmic_validParamCheck(buckCfg->validParams, PMIC_BUCK_VSET_VALID))
     {
+        if (buckCfg->vset > PMIC_BUCK1_VSET_MAX)
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
+
         // Read BUCK1_VOUT register
-        Pmic_criticalSectionStart(pmicHandle);
-        status = Pmic_ioRx(pmicHandle, PMIC_BUCK1_VOUT_REGADDR, &regData);
-        Pmic_criticalSectionStop(pmicHandle);
+        if (status == PMIC_ST_SUCCESS)
+        {
+            Pmic_criticalSectionStart(pmicHandle);
+            status = Pmic_ioRx(pmicHandle, PMIC_BUCK1_VOUT_REGADDR, &regData);
+            Pmic_criticalSectionStop(pmicHandle);
+        }
 
         if (status == PMIC_ST_SUCCESS)
         {
@@ -1223,7 +1238,7 @@ static int32_t PWR_setBuckOvpResponse(const Pmic_CoreHandle_t *pmicHandle, const
             }
 
             // Modify BUCKx_OVP_SEL bit field (x=1, x=2, or x=3)
-            if (buckCfg->ovpSel > PMIC_REGULATOR_FAULT_MAX)
+            if (buckCfg->ovpSel > PMIC_REGULATOR_FAULT_RESPONSE_MAX)
             {
                 status = PMIC_ST_ERR_INV_PARAM;
             }
@@ -1278,7 +1293,7 @@ static int32_t PWR_setBuckOvResponse(const Pmic_CoreHandle_t *pmicHandle, const 
             }
 
             // Modify BUCKx_OV_SEL bit field (x=1, x=2, or x=3)
-            if (buckCfg->ovSel > PMIC_REGULATOR_FAULT_MAX)
+            if (buckCfg->ovSel > PMIC_REGULATOR_FAULT_RESPONSE_MAX)
             {
                 status = PMIC_ST_ERR_INV_PARAM;
             }
@@ -1333,7 +1348,7 @@ static int32_t PWR_setBuckUvResponse(const Pmic_CoreHandle_t *pmicHandle, const 
             }
 
             // Modify BUCKx_UV_SEL bit field (x=1, x=2, or x=3)
-            if (buckCfg->uvSel > PMIC_REGULATOR_FAULT_MAX)
+            if (buckCfg->uvSel > PMIC_REGULATOR_FAULT_RESPONSE_MAX)
             {
                 status = PMIC_ST_ERR_INV_PARAM;
             }
@@ -1388,7 +1403,7 @@ static int32_t PWR_setBuckScResponse(const Pmic_CoreHandle_t *pmicHandle, const 
             }
 
             // Modify BUCKx_SC_SEL bit field (x=1, x=2, or x=3)
-            if (buckCfg->scSel > PMIC_REGULATOR_FAULT_MAX)
+            if (buckCfg->scSel > PMIC_REGULATOR_FAULT_RESPONSE_MAX)
             {
                 status = PMIC_ST_ERR_INV_PARAM;
             }
@@ -1445,9 +1460,16 @@ static int32_t PWR_setBuck1Uvlo(const Pmic_CoreHandle_t *pmicHandle, const Pmic_
     // Read BUCK1_UVLO register
     if (Pmic_validParamCheck(buckCfg->validParams, buck1UvloValidParams))
     {
-        Pmic_criticalSectionStart(pmicHandle);
-        status = Pmic_ioRx(pmicHandle, PMIC_BUCK1_UVLO_REGADDR, &regData);
-        Pmic_criticalSectionStop(pmicHandle);
+        if (buckCfg->resource == PMIC_BUCK1)
+        {
+            Pmic_criticalSectionStart(pmicHandle);
+            status = Pmic_ioRx(pmicHandle, PMIC_BUCK1_UVLO_REGADDR, &regData);
+            Pmic_criticalSectionStop(pmicHandle);
+        }
+        else
+        {
+            status = PMIC_ST_ERR_INV_PARAM;
+        }
     }
 
     // Modify BUCK1_UVLO_FALLING bit field
@@ -1525,8 +1547,8 @@ int32_t Pmic_pwrSetBuckCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBu
         status = PWR_setBuckFaultResponses(pmicHandle, buckCfg);
     }
 
-    // If resource is BUCK1, Set BUCK1_UVLO
-    if ((status == PMIC_ST_SUCCESS) && (buckCfg->resource == PMIC_BUCK1))
+    // Set BUCK1_UVLO
+    if (status == PMIC_ST_SUCCESS)
     {
         status = PWR_setBuck1Uvlo(pmicHandle, buckCfg);
     }
@@ -1852,7 +1874,7 @@ static int32_t PWR_setLdoConf(const Pmic_CoreHandle_t *pmicHandle, const Pmic_Pw
     // Modify LDO_VSET bit field
     if (Pmic_validParamStatusCheck(ldoCfg->validParams, PMIC_LDO_VSET_VALID, status))
     {
-        if (ldoCfg->vset > PMIC_LDO_VSET_MAX)
+        if ((ldoCfg->vset > PMIC_LDO_VSET_MAX) || (ldoCfg->vset < PMIC_LDO_VSET_MIN))
         {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -2036,7 +2058,7 @@ static int32_t PWR_setLdoOvpResponse(const Pmic_CoreHandle_t *pmicHandle, const 
         // Modify LDO_OVP_SEL bit field
         if (status == PMIC_ST_SUCCESS)
         {
-            if (ldoCfg->ovpSel > PMIC_REGULATOR_FAULT_MAX)
+            if (ldoCfg->ovpSel > PMIC_REGULATOR_FAULT_RESPONSE_MAX)
             {
                 status = PMIC_ST_ERR_INV_PARAM;
             }
@@ -2073,7 +2095,7 @@ static int32_t PWR_setLdoOvResponse(const Pmic_CoreHandle_t *pmicHandle, const P
         // Modify LDO_OV_SEL bit field
         if (status == PMIC_ST_SUCCESS)
         {
-            if (ldoCfg->ovSel > PMIC_REGULATOR_FAULT_MAX)
+            if (ldoCfg->ovSel > PMIC_REGULATOR_FAULT_RESPONSE_MAX)
             {
                 status = PMIC_ST_ERR_INV_PARAM;
             }
@@ -2110,7 +2132,7 @@ static int32_t PWR_setLdoUvResponse(const Pmic_CoreHandle_t *pmicHandle, const P
         // Modify LDO_UV_SEL bit field
         if (status == PMIC_ST_SUCCESS)
         {
-            if (ldoCfg->uvSel > PMIC_REGULATOR_FAULT_MAX)
+            if (ldoCfg->uvSel > PMIC_REGULATOR_FAULT_RESPONSE_MAX)
             {
                 status = PMIC_ST_ERR_INV_PARAM;
             }
@@ -2147,7 +2169,7 @@ static int32_t PWR_setLdoScResponse(const Pmic_CoreHandle_t *pmicHandle, const P
         // Modify LDO_SC_SEL bit field
         if (status == PMIC_ST_SUCCESS)
         {
-            if (ldoCfg->scSel > PMIC_REGULATOR_FAULT_MAX)
+            if (ldoCfg->scSel > PMIC_REGULATOR_FAULT_RESPONSE_MAX)
             {
                 status = PMIC_ST_ERR_INV_PARAM;
             }
@@ -2541,6 +2563,33 @@ static inline uint8_t PWR_getSeqTrigBitPos(uint16_t seqTrig)
     return (seqTrig & 0xFFU);
 }
 
+static inline void PWR_getSeqTrigReg(uint8_t pwrRsrc, uint8_t *regAddr)
+{
+    switch (pwrRsrc)
+    {
+        case PMIC_BUCK1:
+        {
+            *regAddr = PMIC_SEQ_TRIG_BUCK1_REGADDR;
+            break;
+        }
+        case PMIC_BUCK2:
+        {
+            *regAddr = PMIC_SEQ_TRIG_BUCK2_REGADDR;
+            break;
+        }
+        case PMIC_BUCK3:
+        {
+            *regAddr = PMIC_SEQ_TRIG_BUCK3_REGADDR;
+            break;
+        }
+        default:
+        {
+            *regAddr = PMIC_SEQ_TRIG_LDO_REGADDR;
+            break;
+        }
+    }
+}
+
 int32_t Pmic_pwrGetBuckLdoSeqTrig(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckLdoSeqTrig_t seqTrigCfg[], uint8_t len)
 {
     const uint8_t maxSeqTrigBitPos = 5U;
@@ -2550,6 +2599,11 @@ int32_t Pmic_pwrGetBuckLdoSeqTrig(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrB
     if ((status == PMIC_ST_SUCCESS) && (seqTrigCfg == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if ((status == PMIC_ST_SUCCESS) && (len == 0U))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -2577,29 +2631,7 @@ int32_t Pmic_pwrGetBuckLdoSeqTrig(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrB
             // Read the associated sequence trigger register
             if (status == PMIC_ST_SUCCESS)
             {
-                switch (pwrRsrc)
-                {
-                    case PMIC_BUCK1:
-                    {
-                        regAddr = PMIC_SEQ_TRIG_BUCK1_REGADDR;
-                        break;
-                    }
-                    case PMIC_BUCK2:
-                    {
-                        regAddr = PMIC_SEQ_TRIG_BUCK2_REGADDR;
-                        break;
-                    }
-                    case PMIC_BUCK3:
-                    {
-                        regAddr = PMIC_SEQ_TRIG_BUCK3_REGADDR;
-                        break;
-                    }
-                    default:
-                    {
-                        regAddr = PMIC_SEQ_TRIG_LDO_REGADDR;
-                        break;
-                    }
-                }
+                PWR_getSeqTrigReg(pwrRsrc, &regAddr);
 
                 Pmic_criticalSectionStart(pmicHandle);
                 status = Pmic_ioRx(pmicHandle, regAddr, &regData);
@@ -2632,6 +2664,11 @@ int32_t Pmic_pwrSetBuckLdoSeqTrig(const Pmic_CoreHandle_t *pmicHandle, const Pmi
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
+    if ((status == PMIC_ST_SUCCESS) && (len == 0U))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
     if (status == PMIC_ST_SUCCESS)
     {
         // For each sequence trigger...
@@ -2657,29 +2694,7 @@ int32_t Pmic_pwrSetBuckLdoSeqTrig(const Pmic_CoreHandle_t *pmicHandle, const Pmi
             // Read the associated sequence trigger register
             if (status == PMIC_ST_SUCCESS)
             {
-                switch (pwrRsrc)
-                {
-                    case PMIC_BUCK1:
-                    {
-                        regAddr = PMIC_SEQ_TRIG_BUCK1_REGADDR;
-                        break;
-                    }
-                    case PMIC_BUCK2:
-                    {
-                        regAddr = PMIC_SEQ_TRIG_BUCK2_REGADDR;
-                        break;
-                    }
-                    case PMIC_BUCK3:
-                    {
-                        regAddr = PMIC_SEQ_TRIG_BUCK3_REGADDR;
-                        break;
-                    }
-                    default:
-                    {
-                        regAddr = PMIC_SEQ_TRIG_LDO_REGADDR;
-                        break;
-                    }
-                }
+                PWR_getSeqTrigReg(pwrRsrc, &regAddr);
 
                 Pmic_criticalSectionStart(pmicHandle);
                 status = Pmic_ioRx(pmicHandle, regAddr, &regData);
@@ -2707,6 +2722,33 @@ int32_t Pmic_pwrSetBuckLdoSeqTrig(const Pmic_CoreHandle_t *pmicHandle, const Pmi
     return status;
 }
 
+static inline void PWR_getSeqDlyReg(uint8_t pwrRsrc, uint8_t *regAddr)
+{
+    switch (pwrRsrc)
+    {
+        case PMIC_BUCK1:
+        {
+            *regAddr = PMIC_BUCK1_SEQ_DLY_REGADDR;
+            break;
+        }
+        case PMIC_BUCK2:
+        {
+            *regAddr = PMIC_BUCK2_SEQ_DLY_REGADDR;
+            break;
+        }
+        case PMIC_BUCK3:
+        {
+            *regAddr = PMIC_BUCK3_SEQ_DLY_REGADDR;
+            break;
+        }
+        default:
+        {
+            *regAddr = PMIC_LDO_SEQ_DLY_REGADDR;
+            break;
+        }
+    }
+}
+
 int32_t Pmic_pwrGetBuckLdoSeqDly(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[], uint8_t len)
 {
     uint8_t regData = 0U, regAddr = 0U;
@@ -2715,6 +2757,11 @@ int32_t Pmic_pwrGetBuckLdoSeqDly(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBu
     if ((status == PMIC_ST_SUCCESS) && (seqDlyCfg == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if ((status == PMIC_ST_SUCCESS) && (len == 0U))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -2731,29 +2778,7 @@ int32_t Pmic_pwrGetBuckLdoSeqDly(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBu
             // Read from associated sequence delay register
             if (status == PMIC_ST_SUCCESS)
             {
-                switch (seqDlyCfg->resource)
-                {
-                    case PMIC_BUCK1:
-                    {
-                        regAddr = PMIC_BUCK1_SEQ_DLY_REGADDR;
-                        break;
-                    }
-                    case PMIC_BUCK2:
-                    {
-                        regAddr = PMIC_BUCK2_SEQ_DLY_REGADDR;
-                        break;
-                    }
-                    case PMIC_BUCK3:
-                    {
-                        regAddr = PMIC_BUCK3_SEQ_DLY_REGADDR;
-                        break;
-                    }
-                    default:
-                    {
-                        regAddr = PMIC_LDO_SEQ_DLY_REGADDR;
-                        break;
-                    }
-                }
+                PWR_getSeqDlyReg(seqDlyCfg->resource, &regAddr);
 
                 Pmic_criticalSectionStart(pmicHandle);
                 status = Pmic_ioRx(pmicHandle, regAddr, &regData);
@@ -2792,6 +2817,11 @@ int32_t Pmic_pwrSetBuckLdoSeqDly(const Pmic_CoreHandle_t *pmicHandle, const Pmic
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
+    if ((status == PMIC_ST_SUCCESS) && (len == 0U))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
     if (status == PMIC_ST_SUCCESS)
     {
         // For each sequence delay configuration...
@@ -2806,29 +2836,7 @@ int32_t Pmic_pwrSetBuckLdoSeqDly(const Pmic_CoreHandle_t *pmicHandle, const Pmic
             // Read from associated sequence delay register
             if (status == PMIC_ST_SUCCESS)
             {
-                switch (seqDlyCfg->resource)
-                {
-                    case PMIC_BUCK1:
-                    {
-                        regAddr = PMIC_BUCK1_SEQ_DLY_REGADDR;
-                        break;
-                    }
-                    case PMIC_BUCK2:
-                    {
-                        regAddr = PMIC_BUCK2_SEQ_DLY_REGADDR;
-                        break;
-                    }
-                    case PMIC_BUCK3:
-                    {
-                        regAddr = PMIC_BUCK3_SEQ_DLY_REGADDR;
-                        break;
-                    }
-                    default:
-                    {
-                        regAddr = PMIC_LDO_SEQ_DLY_REGADDR;
-                        break;
-                    }
-                }
+                PWR_getSeqDlyReg(seqDlyCfg->resource, &regAddr);
 
                 Pmic_criticalSectionStart(pmicHandle);
                 status = Pmic_ioRx(pmicHandle, regAddr, &regData);
