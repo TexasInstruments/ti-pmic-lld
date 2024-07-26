@@ -83,6 +83,7 @@ SOURCES = \
 	src/pmic_common.c \
 	src/pmic_core.c \
 	src/pmic_io.c \
+	src/pmic_irq.c \
 	src/pmic_power.c \
 	src/pmic_wdg.c
 

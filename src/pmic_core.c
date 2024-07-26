@@ -149,11 +149,11 @@ int32_t Pmic_getLockCfg(Pmic_CoreHandle_t *handle, Pmic_Lock_t *config) {
 
     // Extract requested bitfields from register data
     if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_REG_LOCK_VALID, status)) {
-        config->cfgLock = Pmic_getBitField_b(regData, CFG_REG_LOCKED_SHIFT, CFG_REG_LOCKED_MASK);
+        config->cfgLock = Pmic_getBitField_b(regData, CFG_REG_LOCKED_SHIFT);
     }
 
     if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_CNT_LOCK_VALID, status)) {
-        config->cntLock = Pmic_getBitField_b(regData, CNT_REG_LOCKED_SHIFT, CNT_REG_LOCKED_MASK);
+        config->cntLock = Pmic_getBitField_b(regData, CNT_REG_LOCKED_SHIFT);
     }
 
     return status;

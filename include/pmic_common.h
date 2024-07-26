@@ -44,6 +44,11 @@ extern "C" {
 #endif
 
 /*==========================================================================*/
+/*                          Macros and Defines                              */
+/*==========================================================================*/
+#define COUNT(x) (sizeof(x) / sizeof(x[0]))
+
+/*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
 typedef struct Pmic_DevSubSysInfo_s {
@@ -111,9 +116,9 @@ static inline void Pmic_setBitField(uint8_t *regData, uint8_t shift, uint8_t mas
     *regData = ((*regData & ~mask) | ((value << shift) & mask));
 }
 
-static inline void Pmic_setBitField_b(uint8_t *regData, uint8_t shift, uint8_t mask, bool value)
+static inline void Pmic_setBitField_b(uint8_t *regData, uint8_t shift, bool value)
 {
-    Pmic_setBitField(regData, shift, mask, value ? 1U : 0U);
+    Pmic_setBitField(regData, shift, (uint8_t)(1U << shift), value ? 1U : 0U);
 }
 
 static inline uint8_t Pmic_getBitField(uint8_t regData, uint8_t shift, uint8_t mask)
@@ -121,9 +126,9 @@ static inline uint8_t Pmic_getBitField(uint8_t regData, uint8_t shift, uint8_t m
     return ((regData & mask) >> shift);
 }
 
-static inline bool Pmic_getBitField_b(uint8_t regData, uint8_t shift, uint8_t mask)
+static inline bool Pmic_getBitField_b(uint8_t regData, uint8_t shift)
 {
-    return Pmic_getBitField(regData, shift, mask) == 1;
+    return Pmic_getBitField(regData, shift, (uint8_t)(1U << shift)) == 1;
 }
 
 #ifdef __cplusplus
