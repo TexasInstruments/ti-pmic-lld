@@ -24,11 +24,11 @@
 static const Pmic_DevSubSysInfo_t pmicSubSysInfo[] = {
     /* PMIC_DEV_BB_TPS65386x */
     {
-        .gpioEnable = PMIC_ENABLE,
+        .gpioEnable = PMIC_DISABLE,
         .wdgEnable = PMIC_ENABLE,
         .buckEnable = PMIC_ENABLE,
         .ldoEnable = PMIC_ENABLE,
-        .esmEnable = PMIC_ENABLE,
+        .esmEnable = PMIC_DISABLE,
     }
 };
 
