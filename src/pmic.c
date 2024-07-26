@@ -10,8 +10,6 @@
 /* ========================================================================== */
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
-#define PMIC_TPS65386X_DEV_ID  (0x3CU)
-
 /* PMIC driver Core Handle INIT status Magic Number. Used to validate Handle to
    avoid corrupted PmicHandle usage.
 
@@ -113,30 +111,6 @@ static int32_t initCritSecFunctions(const Pmic_CoreCfg_t *config, Pmic_CoreHandl
             status = PMIC_ST_ERR_NULL_FPTR;
         } else {
             handle->pFnPmicCritSecStop = config->pFnPmicCritSecStop;
-        }
-    }
-
-    return status;
-}
-
-static int32_t validateDeviceOnBus(Pmic_CoreHandle_t *handle) {
-    int32_t status = PMIC_ST_SUCCESS;
-    uint8_t regVal = 0U;
-    bool handleForBB, devIsNotBB;
-
-    /* Read DEV_ID register with critical section */
-    Pmic_criticalSectionStart(handle);
-    status = Pmic_ioRxByte(handle, PMIC_DEV_ID_REGADDR, &regVal);
-    Pmic_criticalSectionStop(handle);
-
-    if (status == PMIC_ST_SUCCESS) {
-        handle -> pmicDevRev = Pmic_getBitField(regVal, PMIC_DEV_ID_SHIFT, PMIC_DEV_ID_MASK);
-
-        /* Validate if the device requested is the one on the bus */
-        handleForBB = (handle->pmicDeviceType == PMIC_DEV_BB_TPS65386X);
-        devIsNotBB = (handle->pmicDevRev != PMIC_TPS65386X_DEV_ID);
-        if (handleForBB && devIsNotBB) {
-            status = PMIC_ST_WARN_INV_DEVICE_ID;
         }
     }
 
