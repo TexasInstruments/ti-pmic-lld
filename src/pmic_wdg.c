@@ -305,6 +305,11 @@ static int32_t WDG_getQuestionAndAnswer(Pmic_CoreHandle_t *handle, uint8_t *ansC
         *quesVal = Pmic_getBitField(regVal, PMIC_WD_QUESTION_SHIFT, PMIC_WD_QUESTION_MASK);
     }
 
+    /* Check whether INT_TOP_STATUS is set or not, if so indicate this to the user. */
+    if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(regVal, PMIC_INT_TOP_STATUS_SHIFT)) {
+        Pmic_pseudoIrqTrigger(handle);
+    }
+
     return status;
 }
 

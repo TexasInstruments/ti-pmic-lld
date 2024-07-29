@@ -86,6 +86,7 @@ typedef struct Pmic_CoreHandle_s {
                                uint8_t *pTxBuf, uint8_t bufLen);
     void (*pFnPmicCritSecStart)(void);
     void (*pFnPmicCritSecStop)(void);
+    void (*pFnPmicPseudoIrq)(void);
 } Pmic_CoreHandle_t;
 
 /*==========================================================================*/
@@ -100,7 +101,6 @@ bool Pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos);
  * section start function pointer is not NULL.
  *
  * @param handle Pointer to the PMIC core handle structure.
- * @return void No return value.
  */
 void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *handle);
 
@@ -110,9 +110,16 @@ void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *handle);
  * section stop function pointer is not NULL.
  *
  * @param handle Pointer to the PMIC core handle structure.
- * @return void No return value.
  */
 void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *handle);
+
+/**
+ * @brief Indicate via callback function that an INT event has been detected on
+ * the PMIC.
+ *
+ * @param handle Pointer to the PMIC core handle structure.
+ */
+void Pmic_pseudoIrqTrigger(const Pmic_CoreHandle_t *handle);
 
 static inline void Pmic_setBitField(uint8_t *regData, uint8_t shift, uint8_t mask, uint8_t value)
 {

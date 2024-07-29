@@ -37,7 +37,6 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#include "pmic.h"
 #include "pmic_common.h"
 
 /* ========================================================================== */
@@ -56,5 +55,11 @@ void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *handle) {
 void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *handle) {
     if (handle->pFnPmicCritSecStop != NULL) {
         handle->pFnPmicCritSecStop();
+    }
+}
+
+void Pmic_pseudoIrqTrigger(const Pmic_CoreHandle_t *handle) {
+    if (handle->pFnPmicPseudoIrq != NULL) {
+        handle->pFnPmicPseudoIrq();
     }
 }

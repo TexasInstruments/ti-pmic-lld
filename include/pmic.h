@@ -236,6 +236,7 @@ extern "C" {
 #define PMIC_CFG_I2C2_SPEED_VALID     (12U)
 #define PMIC_CFG_CRC_ENABLE_VALID     (13U)
 #define PMIC_CFG_CFG_CRC_ENABLE_VALID (14U)
+#define PMIC_CFG_PSEUDO_IRQ_VALID     (15U)
 /** @} */
 
 /**
@@ -262,8 +263,14 @@ extern "C" {
 #define PMIC_CFG_I2C2_SPEED_VALID_SHIFT     (1U << PMIC_CFG_I2C2_SPEED_VALID)
 #define PMIC_CFG_CRC_ENABLE_VALID_SHIFT     (1U << PMIC_CFG_CRC_ENABLE_VALID)
 #define PMIC_CFG_CFG_CRC_ENABLE_VALID_SHIFT (1U << PMIC_CFG_CFG_CRC_ENABLE_VALID)
+#define PMIC_CFG_PSEUDO_IRQ_VALID_SHIFT     (1U << PMIC_CFG_PSEUDO_IRQ_VALID)
 /** @brief Helper macro to set all `validParams` necessary for configuring I2C
- * based driver. */
+ * based driver.
+ *
+ * @note This does not include the Pseudo-IRQ function as this is not strictly
+ * necessary for the driver to function. If this is needed in user application,
+ * ensure that it is set accordingly.
+ * */
 #define PMIC_CFG_ALL_I2C_VALID_SHIFT        (\
     PMIC_CFG_DEVICE_TYPE_VALID_SHIFT    |\
     PMIC_CFG_COMM_MODE_VALID_SHIFT      |\
@@ -372,6 +379,13 @@ extern "C" {
  *
  * @param pFnPmicCritSecStop Pointer to Pmic Critical-Section Stop Function.
  * Valid only when `PMIC_CFG_CRITSECSTOP_VALID` bit of `validParams` is set.
+ *
+ * @param pFnPmicPseudoIrq Pointer to a user provided callback function that can
+ * be used to support Pseudo-nINT functionality when servicing WD QA sequences.
+ * While performing a WD QA sequence, the PMIC LLD will check the INT_TOP_STATUS
+ * field, and if set will call this function to notify the user that an
+ * interrupt is pending. Valid only when `PMIC_CFG_PSEUDO_IRQ_VALID` bit of
+ * `validParams` is set.
  */
 typedef struct Pmic_CoreCfg_s {
     uint32_t validParams;
@@ -399,6 +413,7 @@ typedef struct Pmic_CoreCfg_s {
                                uint8_t bufLen);
     void (*pFnPmicCritSecStart)(void);
     void (*pFnPmicCritSecStop)(void);
+    void (*pFnPmicPseudoIrq)(void);
 } Pmic_CoreCfg_t;
 
 /*==========================================================================*/

@@ -121,6 +121,20 @@ static int32_t initCritSecFunctions(const Pmic_CoreCfg_t *config, Pmic_CoreHandl
     return status;
 }
 
+static int32_t initCallbackFunctions(const Pmic_CoreCfg_t *config, Pmic_CoreHandle_t *handle) {
+    int32_t status = PMIC_ST_SUCCESS;
+
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_PSEUDO_IRQ_VALID, status)) {
+        if (config->pFnPmicPseudoIrq == NULL) {
+            status = PMIC_ST_ERR_NULL_FPTR;
+        } else {
+            handle->pFnPmicPseudoIrq = config->pFnPmicPseudoIrq;
+        }
+    }
+
+    return status;
+}
+
 static int32_t updateSubSysInfoAndValidateComms(const Pmic_CoreCfg_t *config, Pmic_CoreHandle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
@@ -215,6 +229,11 @@ int32_t Pmic_init(Pmic_CoreHandle_t *handle, const Pmic_CoreCfg_t *config) {
     /* Check and update PMIC handle for Critical section Start/Stop */
     if (status == PMIC_ST_SUCCESS) {
         status = initCritSecFunctions(config, handle);
+    }
+
+    // Initialize any other user provided callback functions
+    if (status == PMIC_ST_SUCCESS) {
+        status = initCallbackFunctions(config, handle);
     }
 
     // Set up the valid subsystems for this device and ensure that we can

@@ -102,6 +102,7 @@ extern "C" {
 #define PMIC_WD_QUESTION_MASK        (uint8_t)(0xFU << PMIC_WD_QUESTION_SHIFT)
 #define PMIC_WD_ANSW_CNT_SHIFT       (4U)
 #define PMIC_WD_ANSW_CNT_MASK        (uint8_t)(0x3U << PMIC_WD_ANSW_CNT_SHIFT)
+#define PMIC_INT_TOP_STATUS_SHIFT    (7U)
 
 /** @brief PMIC Watchdog Error Status Register (WD_ERR_STAT) */
 #define PMIC_WD_LONGWIN_TMO_SHIFT    (0U)
