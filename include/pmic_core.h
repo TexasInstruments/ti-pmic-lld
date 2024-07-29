@@ -149,9 +149,6 @@ int32_t Pmic_getRegLockState(Pmic_CoreHandle_t *handle, bool *lockState);
  * before enabling CONFIG_CRC. If false (PMIC_CFG_CRC_ENABLE_ONLY), this API
  * will only enable the CONFIG_CRC feature. See @ref Pmic_ConfigCrcRecalculate.
  *
- * @warning The `calculate` parameter is currently unimplemented and does
- * nothing.
- *
  * @return Returns PMIC_ST_SUCCESS if the operation is successful; otherwise,
  * it returns an appropriate error code. For possible values, see @ref
  * Pmic_ErrorCodes.
@@ -168,6 +165,32 @@ int32_t Pmic_configCrcEnable(Pmic_CoreHandle_t *handle, bool calculate);
  * Pmic_ErrorCodes.
  */
 int32_t Pmic_configCrcDisable(Pmic_CoreHandle_t *handle);
+
+/**
+ * @brief Calculate config register CRC, writes value to PMIC, and verifies
+ * correctness.
+ *
+ * @param handle    [IN] Pointer to the PMIC core handle structure.
+ *
+ * @return Returns PMIC_ST_SUCCESS if the operation is successful; otherwise,
+ * it returns an appropriate error code. For possible values, see @ref
+ * Pmic_ErrorCodes.
+ */
+int32_t Pmic_configCrcCalculate(Pmic_CoreHandle_t *handle);
+
+/**
+ * @brief Retrieve the config register CRC value currently stored on the PMIC as
+ * a result of continuous CRC calculation. This API does not start a new CRC
+ * calculation or affect the CRC value provided by the MCU.
+ *
+ * @param handle    [IN]  Pointer to the PMIC core handle structure.
+ * @param crc       [OUT] The current CRC value on device.
+ *
+ * @return Returns PMIC_ST_SUCCESS if the operation is successful; otherwise,
+ * it returns an appropriate error code. For possible values, see @ref
+ * Pmic_ErrorCodes.
+ */
+int32_t Pmic_configCrcGetFromDevice(Pmic_CoreHandle_t *handle, uint16_t *crc);
 
 #ifdef __cplusplus
 }
