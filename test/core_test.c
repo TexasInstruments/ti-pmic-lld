@@ -59,10 +59,21 @@ void coreTest(void *args)
 
     if (status == PMIC_ST_SUCCESS)
     {
-        DebugP_log("Running PMIC Core tests...\r\n");
-        UNITY_BEGIN();
-        RUN_CORE_TESTS();
-        UNITY_END();
+        status = Pmic_unlockRegs(&pmicHandle);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            DebugP_log("Running PMIC Core tests...\r\n");
+
+            UNITY_BEGIN();
+            RUN_CORE_TESTS();
+            UNITY_END();
+        }
+        else
+        {
+            DebugP_log("Failed to unlock PMIC registers\r\n");
+            DebugP_log("\tStatus code: %d\r\n", status);
+        }
     }
     else
     {

@@ -97,7 +97,7 @@ static uint8_t findInverse(uint8_t num)
 {
     uint8_t inverse = 0U;
 
-    for (uint8_t i = 0U; i < 4U; i++)
+    for (uint8_t i = 0U; i < 8U; i++)
     {
         if ((num & (1U << i)) != 0U)
         {
@@ -193,14 +193,14 @@ int32_t Pmic_ioRx(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t 
         // Index 0 is most significant byte, last index is the least significant byte
         i2cFrame[0U] = (uint8_t)((pmicHandle->i2cAddr & 0x7FU) << 1U);
         i2cFrame[1U] = regAddr;
-        i2cFrame[2U] = (uint8_t)((pmicHandle->i2cAddr & 0x7FU) | 1U);
+        i2cFrame[2U] = (uint8_t)(((pmicHandle->i2cAddr & 0x7FU) << 1U) | 1U);
         i2cFrameLen = (pmicHandle->crcEnable == PMIC_ENABLE) ? 5U : 4U;
 
         // Begin read exchange. Data will be stored beginning at i2cFrame[3U]
         status = pmicHandle->ioRead(pmicHandle, regAddr, i2cFrameLen - 3U, &i2cFrame[3U]);
     }
 
-    // If read exchange was good and PMIC CRC is enabled, compare SCRC to expected CRC
+    // If read exchange was successful and PMIC CRC is enabled, compare SCRC to expected CRC
     if ((status == PMIC_ST_SUCCESS) && (pmicHandle->crcEnable == PMIC_ENABLE))
     {
         // i2cFrame[0U] - Target device I2C address with write bit

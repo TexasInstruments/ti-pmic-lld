@@ -706,10 +706,10 @@ int32_t Pmic_setRegLock(const Pmic_CoreHandle_t *pmicHandle, bool lock)
 
 int32_t Pmic_unlockRegs(const Pmic_CoreHandle_t *pmicHandle)
 {
-    return Pmic_setRegLock(pmicHandle, PMIC_LOCK);
+    return Pmic_setRegLock(pmicHandle, PMIC_UNLOCK);
 }
 
 int32_t Pmic_lockRegs(const Pmic_CoreHandle_t *pmicHandle)
 {
-    return Pmic_setRegLock(pmicHandle, PMIC_UNLOCK);
+    return Pmic_setRegLock(pmicHandle, PMIC_LOCK);
 }
