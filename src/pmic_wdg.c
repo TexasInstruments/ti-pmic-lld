@@ -470,7 +470,7 @@ int32_t Pmic_wdgSetEnableState(Pmic_CoreHandle_t *handle, bool enable) {
 
     if (status == PMIC_ST_SUCCESS) {
         Pmic_setBitField_b(&regVal, PMIC_WD_EN_SHIFT, PMIC_WD_EN_MASK, enable);
-        status = Pmic_ioTxByte(handle, PMIC_WD_TH_CFG_REG, regVal);
+        status = Pmic_ioTxByte(handle, PMIC_WD_CFG_REG, regVal);
     }
 
     Pmic_criticalSectionStop(handle);
