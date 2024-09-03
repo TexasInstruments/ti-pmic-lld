@@ -50,6 +50,7 @@ static inline void setPmicHandleMembers(const Pmic_CoreCfg_t *pmicCfg, Pmic_Core
     pmicHandle->ioWrite = pmicCfg->ioWrite;
     pmicHandle->critSecStart = pmicCfg->critSecStart;
     pmicHandle->critSecStop = pmicCfg->critSecStop;
+    pmicHandle->irqResponse = pmicCfg->irqResponse;
 }
 
 static int32_t getPmicInfo(Pmic_CoreHandle_t *pmicHandle)
@@ -119,7 +120,7 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pmicCfg, Pmic_CoreHandle_t *pmicHandle)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
-    // Check whether pmicCfg parameter is valid
+    // Check whether parameters are valid
     if ((pmicCfg == NULL) || (pmicCfg->commHandle == NULL) || (pmicCfg->ioRead == NULL) ||
         (pmicCfg->ioWrite == NULL) || (pmicCfg->critSecStart == NULL) ||
         (pmicCfg->critSecStop == NULL) || (pmicHandle == NULL))
@@ -171,6 +172,7 @@ int32_t Pmic_deinit(Pmic_CoreHandle_t *pmicHandle)
         pmicHandle->ioWrite = NULL;
         pmicHandle->critSecStart = NULL;
         pmicHandle->critSecStop = NULL;
+        pmicHandle->irqResponse = NULL;
     }
 
     return status;

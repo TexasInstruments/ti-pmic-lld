@@ -89,26 +89,34 @@ extern "C" {
  * @name PMIC LLD Configuration
  *
  * @brief Configuration struct holding end-user settings/parameters relating to
- * the PMIC handle
+ * the PMIC handle.
  *
- * @attention All parameters of the struct must be set by the end-user. Otherwise,
- * an error may occur during the Pmic_init() API call
+ * @attention All parameters of the struct except `nIntResponse` must be set by the
+ * end-user. Otherwise, an error may occur during the Pmic_init() API call.
  *
  * @note Once the user sets all struct members, the struct should be passed into
  * Pmic_init() so that the PMIC driver handle can be initialized with the user's
- * desired configurations
+ * desired configurations.
  *
- * @param i2cAddr TPS65036x PMIC I2C address
+ * @param i2cAddr TPS65036x PMIC I2C address.
  *
- * @param commHandle Pointer to platform-specific transport layer communication handle
+ * @param commHandle Pointer to platform-specific transport layer communication handle.
  *
- * @param ioRead Function pointer to platform-specific transport layer read API
+ * @param ioRead Function pointer to platform-specific transport layer read API.
  *
- * @param ioWrite Function pointer to platform-specific transport layer write API
+ * @param ioWrite Function pointer to platform-specific transport layer write API.
  *
- * @param critSecStart Function pointer to platform-specific critical section start API
+ * @param critSecStart Function pointer to platform-specific critical section start API.
  *
- * @param critSecStop Function pointer to platform-specific critical section stop API
+ * @param critSecStop Function pointer to platform-specific critical section stop API.
+ *
+ * @param irqResponse Optional function pointer to application-specific response
+ * to detected PMIC IRQ while servicing the PMIC WDG. There are two main methods of
+ * detecting PMIC IRQs; the first of which is a direct hardware connection between
+ * the MCU and the PMIC nINT pin. The second is by reading the PMIC WD_QUESTION_ANSW_CNT
+ * register for the INT_TOP_STATUS bit during each WDG answer calculation. The driver uses
+ * this function pointer in the second scenario to execute the application-specific response
+ * upon detecting that there is a pending IRQ.
  */
 typedef struct Pmic_CoreCfg_s
 {
@@ -124,6 +132,7 @@ typedef struct Pmic_CoreCfg_s
                        const uint8_t *txBuf);
     void (*critSecStart)(void);
     void (*critSecStop)(void);
+    void (*irqResponse)(void);
 } Pmic_CoreCfg_t;
 
 /* ========================================================================== */

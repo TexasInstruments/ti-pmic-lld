@@ -129,7 +129,7 @@ static uint8_t WDG_getAnswerByte(uint8_t question, uint8_t qaAnsCnt, uint8_t qaF
 
 int32_t Pmic_wdgWriteAnswer(const Pmic_CoreHandle_t *pmicHandle)
 {
-    uint8_t regData = 0U, qaFdbk = 0U, qaAnsCnt = 0U, question = 0U;
+    uint8_t regData = 0U, qaFdbk = 0U, qaAnsCnt = 0U, question = 0U, intTopStatus = 0U;
     int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
 
     // Get the Q&A feedback value
@@ -145,7 +145,7 @@ int32_t Pmic_wdgWriteAnswer(const Pmic_CoreHandle_t *pmicHandle)
         }
     }
 
-    // Get the Q&A answer count and question value
+    // Get the Q&A answer count, question, and status of INT_TOP
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_criticalSectionStart(pmicHandle);
@@ -154,8 +154,15 @@ int32_t Pmic_wdgWriteAnswer(const Pmic_CoreHandle_t *pmicHandle)
 
         if (status == PMIC_ST_SUCCESS)
         {
+            intTopStatus = Pmic_getBitField(regData, PMIC_INT_TOP_STATUS_SHIFT, PMIC_INT_TOP_STATUS_MASK);
             qaAnsCnt = Pmic_getBitField(regData, PMIC_WD_ANSW_CNT_SHIFT, PMIC_WD_ANSW_CNT_MASK);
             question = Pmic_getBitField(regData, PMIC_WD_QUESTION_SHIFT, PMIC_WD_QUESTION_MASK);
+
+            // Call the IRQ response API hook if INT_TOP_STATUS bit is set to 1
+            if (intTopStatus != 0U)
+            {
+                Pmic_irqResponse(pmicHandle);
+            }
         }
     }
 
