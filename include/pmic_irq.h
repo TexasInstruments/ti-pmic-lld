@@ -119,6 +119,18 @@ extern "C" {
 /** @} */
 
 /**
+ * @anchor Pmic_IrqMaskControl
+ * @name PMIC IRQ Mask Control
+ *
+ * @brief Valid values used to mask/unmask PMIC IRQs.
+ *
+ * @{
+ */
+#define PMIC_IRQ_MASK                   ((bool)true)
+#define PMIC_IRQ_UNMASK                 ((bool)false)
+/** @} */
+
+/**
  * @brief Defines used internally by PMIC LLD for the IRQ module.
  *
  * @{
@@ -168,34 +180,41 @@ typedef struct Pmic_IrqStat_s
 /* ========================================================================== */
 
 /**
- * @brief Set the mask configuration for PMIC IRQs.
+ * @brief Set the mask configuration for a single PMIC IRQ.
  *
- * @param pmicHandle [IN] PMIC interface handle.
- *
- * @param numIrqMasks [IN] Number of IRQ mask configurations to set. The value
- * of this parameter specifies the size of the `irqMasks` array.
- *
- * @param irqMasks [IN] Array of IRQ mask configurations.
+ * @param handle     [IN] PMIC interface handle.
+ * @param irqNum     [IN] Number of IRQ mask configurations to set.
+ * @param shouldMask [IN] Whether this IRQ should be masked or not. See @ref
+ * Pmic_IrqMaskControl.
  *
  * @return Success code if IRQ mask configuration(s) have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_irqSetMasks(const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMasks, const Pmic_IrqMask_t irqMasks[]);
+int32_t Pmic_irqSetMask(Pmic_CoreHandle_t *handle, uint8_t irqNum, bool shouldMask);
+
+/**
+ * @brief Set the mask configuration for multiple PMIC IRQs.
+ *
+ * @param handle      [IN] PMIC interface handle.
+ * @param numIrqMasks [IN] Number of IRQ mask configurations to set.
+ * @param irqMasks    [IN] Array of IRQ mask configurations.
+ *
+ * @return Success code if IRQ mask configuration(s) have been set, error code
+ * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ */
+int32_t Pmic_irqSetMasks(Pmic_CoreHandle_t *handle, uint8_t numIrqMasks, const Pmic_IrqMask_t *irqMasks);
 
 /**
  * @brief Get the mask configuration for PMIC IRQs.
  *
- * @param pmicHandle [IN] PMIC interface handle.
- *
- * @param numIrqMasks [IN] Number of IRQ mask configurations to obtain. The value
- * of this parameter specifies the size of the `irqMasks` array.
- *
- * @param irqMasks [OUT] Array of IRQ mask configurations.
+ * @param handle      [IN] PMIC interface handle.
+ * @param numIrqMasks [IN] Number of IRQ mask configurations to obtain.
+ * @param irqMasks    [OUT] Array of IRQ mask configurations.
  *
  * @return Success code if IRQ mask configuration(s) have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_irqGetMasks(const Pmic_CoreHandle_t *pmicHandle, uint8_t numIrqMasks, Pmic_IrqMask_t irqMasks[]);
+int32_t Pmic_irqGetMask(Pmic_CoreHandle_t *handle, uint8_t numIrqMasks, Pmic_IrqMask_t *irqMasks);
 
 /**
  * @brief Get the status of all PMIC IRQs.
@@ -266,12 +285,12 @@ int32_t Pmic_irqClrFlag(const Pmic_CoreHandle_t *pmicHandle, uint8_t irqNum);
 /**
  * @brief Clear all PMIC IRQ flags.
  *
- * @param pmicHandle [IN] PMIC interface handle.
+ * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if all PMIC IRQ flags have been cleared, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_irqClrAllFlags(const Pmic_CoreHandle_t *pmicHandle);
+int32_t Pmic_irqClrAllFlags(const Pmic_CoreHandle_t *handle);
 
 #ifdef __cplusplus
 }
