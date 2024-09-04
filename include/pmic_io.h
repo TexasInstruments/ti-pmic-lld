@@ -66,7 +66,7 @@ extern "C" {
  * @return Success code if byte has been successfully transmitted to PMIC, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioTx(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t txData);
+int32_t Pmic_ioTxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t txData);
 
 /**
  * @brief Read a single byte from a target register of the PMIC. This function
@@ -83,7 +83,7 @@ int32_t Pmic_ioTx(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t 
  * @return Success code if byte has been successfully obtained from PMIC, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_ioRx(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t *rxData);
+int32_t Pmic_ioRxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t *rxData);
 
 #ifdef __cplusplus
 }

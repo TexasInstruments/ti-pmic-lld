@@ -395,7 +395,7 @@ static int32_t IRQ_setMask(Pmic_CoreHandle_t *handle, uint8_t irqNum, bool shoul
     // Read IRQ mask register
     if (status == PMIC_ST_SUCCESS) {
         Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRx(handle, irqMaskRegAddr, &regData);
+        status = Pmic_ioRxByte(handle, irqMaskRegAddr, &regData);
         Pmic_criticalSectionStop(handle);
     }
 
@@ -405,7 +405,7 @@ static int32_t IRQ_setMask(Pmic_CoreHandle_t *handle, uint8_t irqNum, bool shoul
 
         // Write new register value back to PMIC
         Pmic_criticalSectionStart(handle);
-        status = Pmic_ioTx(handle, irqMaskRegAddr, regData);
+        status = Pmic_ioTxByte(handle, irqMaskRegAddr, regData);
         Pmic_criticalSectionStop(handle);
     }
 
@@ -436,7 +436,7 @@ static int32_t IRQ_handleRecordsForReg(Pmic_CoreHandle_t *handle,
     if (anyMasks) {
         // Get the current value of this IRQ mask register
         Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRx(handle, regAddr, &regData);
+        status = Pmic_ioRxByte(handle, regAddr, &regData);
         Pmic_criticalSectionStop(handle);
     }
 
@@ -466,7 +466,7 @@ static int32_t IRQ_handleRecordsForReg(Pmic_CoreHandle_t *handle,
     // register, write the new value of this register back to the device
     if ((status == PMIC_ST_SUCCESS) && *processedMasks > 0) {
         Pmic_criticalSectionStart(handle);
-        status = Pmic_ioTx(handle, regAddr, regData);
+        status = Pmic_ioTxByte(handle, regAddr, regData);
         Pmic_criticalSectionStop(handle);
     }
 
@@ -545,7 +545,7 @@ int32_t Pmic_irqGetMask(Pmic_CoreHandle_t *handle, uint8_t numIrqMasks, Pmic_Irq
             // Read IRQ mask register
             if (status == PMIC_ST_SUCCESS) {
                 Pmic_criticalSectionStart(handle);
-                status = Pmic_ioRx(handle, irqMaskRegAddr, &regData);
+                status = Pmic_ioRxByte(handle, irqMaskRegAddr, &regData);
                 Pmic_criticalSectionStop(handle);
             }
 
@@ -579,7 +579,7 @@ static int32_t IRQ_readL2IntCommErr(const Pmic_CoreHandle_t *pmicHandle, Pmic_Ir
 
     // Read INT_COMM_ERR register
     Pmic_criticalSectionStart(pmicHandle);
-    status = Pmic_ioRx(pmicHandle, PMIC_INT_COMM_ERR_REGADDR, &regData);
+    status = Pmic_ioRxByte(pmicHandle, PMIC_INT_COMM_ERR_REGADDR, &regData);
     Pmic_criticalSectionStop(pmicHandle);
 
     if (status == PMIC_ST_SUCCESS)
@@ -603,7 +603,7 @@ static int32_t IRQ_readL2IntEsm(const Pmic_CoreHandle_t *pmicHandle, Pmic_IrqSta
 
     // Read INT_ESM register
     Pmic_criticalSectionStart(pmicHandle);
-    status = Pmic_ioRx(pmicHandle, PMIC_INT_ESM_REGADDR, &regData);
+    status = Pmic_ioRxByte(pmicHandle, PMIC_INT_ESM_REGADDR, &regData);
     Pmic_criticalSectionStop(pmicHandle);
 
     if (status == PMIC_ST_SUCCESS)
@@ -627,7 +627,7 @@ static int32_t IRQ_readL2WdErrStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_I
 
     // Read WD_ERR_STATUS register
     Pmic_criticalSectionStart(pmicHandle);
-    status = Pmic_ioRx(pmicHandle, PMIC_WD_ERR_STATUS_REGADDR, &regData);
+    status = Pmic_ioRxByte(pmicHandle, PMIC_WD_ERR_STATUS_REGADDR, &regData);
     Pmic_criticalSectionStop(pmicHandle);
 
     if (status == PMIC_ST_SUCCESS)
@@ -651,7 +651,7 @@ static int32_t IRQ_readL1IntFsmErr(const Pmic_CoreHandle_t *pmicHandle, Pmic_Irq
 
     // Read INT_FSM_ERR register
     Pmic_criticalSectionStart(pmicHandle);
-    status = Pmic_ioRx(pmicHandle, PMIC_INT_FSM_ERR_REGADDR, &regData);
+    status = Pmic_ioRxByte(pmicHandle, PMIC_INT_FSM_ERR_REGADDR, &regData);
     Pmic_criticalSectionStop(pmicHandle);
 
     // If WD_INT bit is set, read WD_ERR_STATUS register
@@ -695,7 +695,7 @@ static int32_t IRQ_readL1IntSevereErr(const Pmic_CoreHandle_t *pmicHandle, Pmic_
 
     // Read INT_SEVERE_ERR register
     Pmic_criticalSectionStart(pmicHandle);
-    status = Pmic_ioRx(pmicHandle, PMIC_INT_SEVERE_ERR_REGADDR, &regData);
+    status = Pmic_ioRxByte(pmicHandle, PMIC_INT_SEVERE_ERR_REGADDR, &regData);
     Pmic_criticalSectionStop(pmicHandle);
 
     if (status == PMIC_ST_SUCCESS)
@@ -717,7 +717,7 @@ static int32_t IRQ_readL1IntModerateErr(const Pmic_CoreHandle_t *pmicHandle, Pmi
 
     // Read INT_MODERATE_ERR register
     Pmic_criticalSectionStart(pmicHandle);
-    status = Pmic_ioRx(pmicHandle, PMIC_INT_MODERATE_ERR_REGADDR, &regData);
+    status = Pmic_ioRxByte(pmicHandle, PMIC_INT_MODERATE_ERR_REGADDR, &regData);
     Pmic_criticalSectionStop(pmicHandle);
 
     if (status == PMIC_ST_SUCCESS)
@@ -743,7 +743,7 @@ static int32_t IRQ_readL1IntMisc(const Pmic_CoreHandle_t *pmicHandle, Pmic_IrqSt
 
     // Read INT_MISC register
     Pmic_criticalSectionStart(pmicHandle);
-    status = Pmic_ioRx(pmicHandle, PMIC_INT_MISC_REGADDR, &regData);
+    status = Pmic_ioRxByte(pmicHandle, PMIC_INT_MISC_REGADDR, &regData);
     Pmic_criticalSectionStop(pmicHandle);
 
     if (status == PMIC_ST_SUCCESS)
@@ -772,7 +772,7 @@ static int32_t IRQ_readL2IntBuck3Ldo(const Pmic_CoreHandle_t *pmicHandle, Pmic_I
 
     // Read INT_BUCK3_LDO register
     Pmic_criticalSectionStart(pmicHandle);
-    status = Pmic_ioRx(pmicHandle, PMIC_INT_BUCK3_LDO_REGADDR, &regData);
+    status = Pmic_ioRxByte(pmicHandle, PMIC_INT_BUCK3_LDO_REGADDR, &regData);
     Pmic_criticalSectionStop(pmicHandle);
 
     if (status == PMIC_ST_SUCCESS)
@@ -799,7 +799,7 @@ static int32_t IRQ_readL2IntBuck1_2(const Pmic_CoreHandle_t *pmicHandle, Pmic_Ir
 
     // Read INT_BUCK1_2 register
     Pmic_criticalSectionStart(pmicHandle);
-    status = Pmic_ioRx(pmicHandle, PMIC_INT_BUCK1_2_REGADDR, &regData);
+    status = Pmic_ioRxByte(pmicHandle, PMIC_INT_BUCK1_2_REGADDR, &regData);
     Pmic_criticalSectionStop(pmicHandle);
 
     if (status == PMIC_ST_SUCCESS)
@@ -826,7 +826,7 @@ static int32_t IRQ_readL1IntBuckLdo(const Pmic_CoreHandle_t *pmicHandle, Pmic_Ir
 
     // Read INT_BUCK_LDO register
     Pmic_criticalSectionStart(pmicHandle);
-    status = Pmic_ioRx(pmicHandle, PMIC_INT_BUCK_LDO_REGADDR, &regData);
+    status = Pmic_ioRxByte(pmicHandle, PMIC_INT_BUCK_LDO_REGADDR, &regData);
     Pmic_criticalSectionStop(pmicHandle);
 
     if (status == PMIC_ST_SUCCESS)
@@ -864,7 +864,7 @@ static int32_t IRQ_readL0(const Pmic_CoreHandle_t *pmicHandle, Pmic_IrqStat_t *i
 
     // Read INT_TOP register
     Pmic_criticalSectionStart(pmicHandle);
-    status = Pmic_ioRx(pmicHandle, PMIC_INT_TOP_REGADDR, &regData);
+    status = Pmic_ioRxByte(pmicHandle, PMIC_INT_TOP_REGADDR, &regData);
     Pmic_criticalSectionStop(pmicHandle);
 
     // If FSM_ERR_INT bit is set, read INT_FSM_ERR register
@@ -997,7 +997,7 @@ int32_t Pmic_irqGetFlag(const Pmic_CoreHandle_t *pmicHandle, uint8_t irqNum, boo
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_criticalSectionStart(pmicHandle);
-        status = Pmic_ioRx(pmicHandle, pmicIRQs[irqNum].statRegAddr, &regData);
+        status = Pmic_ioRxByte(pmicHandle, pmicIRQs[irqNum].statRegAddr, &regData);
         Pmic_criticalSectionStop(pmicHandle);
     }
 
@@ -1027,7 +1027,7 @@ int32_t Pmic_irqClrFlag(const Pmic_CoreHandle_t *pmicHandle, uint8_t irqNum)
 
         // Write data to PMIC
         Pmic_criticalSectionStart(pmicHandle);
-        status = Pmic_ioTx(pmicHandle, pmicIRQs[irqNum].statRegAddr, regData);
+        status = Pmic_ioTxByte(pmicHandle, pmicIRQs[irqNum].statRegAddr, regData);
         Pmic_criticalSectionStop(pmicHandle);
     }
 
@@ -1042,7 +1042,7 @@ int32_t Pmic_irqClrAllFlags(const Pmic_CoreHandle_t *handle) {
     Pmic_criticalSectionStart(handle);
     for (uint8_t i = 0U; i < NUM_CLEARABLE_REGISTERS; i++) {
         if (status == PMIC_ST_SUCCESS) {
-            status = Pmic_ioTx(handle, ClearableRegisters[i], 0xFFU);
+            status = Pmic_ioTxByte(handle, ClearableRegisters[i], 0xFFU);
         } else {
             break;
         }

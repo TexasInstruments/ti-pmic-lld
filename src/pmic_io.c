@@ -132,7 +132,7 @@ static uint8_t getCRC8Val(const uint8_t *data, uint8_t length)
     return findInverse(crc);
 }
 
-int32_t Pmic_ioTx(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t txData)
+int32_t Pmic_ioTxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t txData)
 {
     uint8_t i2cFrameLen = 0U;
     uint8_t i2cFrame[PMIC_I2C_TX_FRAME_LEN] = {0U};
@@ -171,7 +171,7 @@ int32_t Pmic_ioTx(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t 
     return status;
 }
 
-int32_t Pmic_ioRx(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t *rxData)
+int32_t Pmic_ioRxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t *rxData)
 {
     uint8_t i2cFrameLen = 0U;
     uint8_t i2cFrame[PMIC_I2C_RX_FRAME_LEN] = {0U};

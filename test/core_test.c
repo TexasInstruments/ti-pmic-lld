@@ -361,16 +361,16 @@ void test_functionality_runABIST(void)
     const uint8_t abistDoneInt_mask = 1U << abistDoneInt_shift;
 
     // Unmask ABIST_DONE_INT
-    status = Pmic_ioRx(&pmicHandle, maskMiscRegAddr, &regData);
+    status = Pmic_ioRxByte(&pmicHandle, maskMiscRegAddr, &regData);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
     Pmic_setBitField(&regData, abistDoneMask_shift, abistDoneMask_mask, 0U);
-    status = Pmic_ioTx(&pmicHandle, maskMiscRegAddr, regData);
+    status = Pmic_ioTxByte(&pmicHandle, maskMiscRegAddr, regData);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Clear ABIST_DONE_INT
     regData = 0U;
     Pmic_setBitField(&regData, abistDoneInt_shift, abistDoneInt_mask, 1U);
-    status = Pmic_ioTx(&pmicHandle, intMiscRegAddr, regData);
+    status = Pmic_ioTxByte(&pmicHandle, intMiscRegAddr, regData);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Initiate ABIST
@@ -385,21 +385,21 @@ void test_functionality_runABIST(void)
     } while(abistActive == (bool)true);
 
     // Check whether ABIST_DONE_INT is raised
-    status = Pmic_ioRx(&pmicHandle, intMiscRegAddr, &regData);
+    status = Pmic_ioRxByte(&pmicHandle, intMiscRegAddr, &regData);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
     TEST_ASSERT_EQUAL(1U, Pmic_getBitField(regData, abistDoneInt_shift, abistDoneInt_mask));
 
     // Mask ABIST_DONE_INT
-    status = Pmic_ioRx(&pmicHandle, maskMiscRegAddr, &regData);
+    status = Pmic_ioRxByte(&pmicHandle, maskMiscRegAddr, &regData);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
     Pmic_setBitField(&regData, abistDoneMask_shift, abistDoneMask_mask, 1U);
-    status = Pmic_ioTx(&pmicHandle, maskMiscRegAddr, regData);
+    status = Pmic_ioTxByte(&pmicHandle, maskMiscRegAddr, regData);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 
     // Clear ABIST_DONE_INT
     regData = 0U;
     Pmic_setBitField(&regData, abistDoneInt_shift, abistDoneInt_mask, 1U);
-    status = Pmic_ioTx(&pmicHandle, intMiscRegAddr, regData);
+    status = Pmic_ioTxByte(&pmicHandle, intMiscRegAddr, regData);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
 }
 

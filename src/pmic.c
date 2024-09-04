@@ -60,7 +60,7 @@ static int32_t getPmicInfo(Pmic_CoreHandle_t *pmicHandle)
 
     // Read INTERFACE_CONF register
     Pmic_criticalSectionStart(pmicHandle);
-    status = Pmic_ioRx(pmicHandle, PMIC_INTERFACE_CONF_REGADDR, &regData);
+    status = Pmic_ioRxByte(pmicHandle, PMIC_INTERFACE_CONF_REGADDR, &regData);
     Pmic_criticalSectionStop(pmicHandle);
 
     if (status == PMIC_ST_SUCCESS)
@@ -70,7 +70,7 @@ static int32_t getPmicInfo(Pmic_CoreHandle_t *pmicHandle)
 
         // Read DEV_REV register
         Pmic_criticalSectionStart(pmicHandle);
-        status = Pmic_ioRx(pmicHandle, PMIC_DEV_REV_REGADDR, &regData);
+        status = Pmic_ioRxByte(pmicHandle, PMIC_DEV_REV_REGADDR, &regData);
         Pmic_criticalSectionStop(pmicHandle);
     }
 
@@ -81,7 +81,7 @@ static int32_t getPmicInfo(Pmic_CoreHandle_t *pmicHandle)
 
         // Read NVM_CODE_1 register
         Pmic_criticalSectionStart(pmicHandle);
-        status = Pmic_ioRx(pmicHandle, PMIC_NVM_CODE_1_REGADDR, &regData);
+        status = Pmic_ioRxByte(pmicHandle, PMIC_NVM_CODE_1_REGADDR, &regData);
         Pmic_criticalSectionStop(pmicHandle);
     }
 
@@ -92,7 +92,7 @@ static int32_t getPmicInfo(Pmic_CoreHandle_t *pmicHandle)
 
         // Read NVM_CODE_2 register
         Pmic_criticalSectionStart(pmicHandle);
-        status = Pmic_ioRx(pmicHandle, PMIC_NVM_CODE_2_REGADDR, &regData);
+        status = Pmic_ioRxByte(pmicHandle, PMIC_NVM_CODE_2_REGADDR, &regData);
         Pmic_criticalSectionStop(pmicHandle);
     }
 
@@ -103,7 +103,7 @@ static int32_t getPmicInfo(Pmic_CoreHandle_t *pmicHandle)
 
         // Read MANUFACTURING_VER register
         Pmic_criticalSectionStart(pmicHandle);
-        status = Pmic_ioRx(pmicHandle, PMIC_MANUFACTURING_VER_REGADDR, &regData);
+        status = Pmic_ioRxByte(pmicHandle, PMIC_MANUFACTURING_VER_REGADDR, &regData);
         Pmic_criticalSectionStop(pmicHandle);
     }
 

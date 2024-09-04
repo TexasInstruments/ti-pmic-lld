@@ -836,7 +836,7 @@ static inline void checkForWdgErrors(const char *str)
     int32_t status = PMIC_ST_SUCCESS;
 
     // Read WD_ERR_STATUS register and check whether register value is zero
-    status = Pmic_ioRx(&pmicHandle, 0x5FU, &regData);
+    status = Pmic_ioRxByte(&pmicHandle, 0x5FU, &regData);
     TEST_ASSERT_EQUAL(PMIC_ST_SUCCESS, status);
     TEST_ASSERT_EQUAL_UINT8_MESSAGE(0U, regData, str);
 }
