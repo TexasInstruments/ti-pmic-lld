@@ -69,6 +69,22 @@ extern "C" {
 int32_t Pmic_ioTxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t txData);
 
 /**
+ * @brief Identical to Pmic_ioTxByte(), however, a critical section is started
+ * before the read operation occurs. After the operation, the critical section
+ * is stopped.
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ *
+ * @param regAddr [IN] PMIC register address.
+ *
+ * @param txData [IN] Data to write to PMIC register.
+ *
+ * @return Success code if byte has been successfully transmitted to PMIC, error
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ */
+int32_t Pmic_ioTxByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t txData);
+
+/**
  * @brief Read a single byte from a target register of the PMIC. This function
  * is only meant to be used internally by the driver, however the end-user could
  * use the API for direct register access.
@@ -84,6 +100,23 @@ int32_t Pmic_ioTxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
 int32_t Pmic_ioRxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t *rxData);
+
+/**
+ * @brief Identical to Pmic_ioRxByte(), however, a critical section is started
+ * before the read operation occurs. After the operation, the critical section
+ * is stopped.
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ *
+ * @param regAddr [IN] PMIC register address.
+ *
+ * @param rxData [OUT] Pointer to variable in which PMIC register data will
+ * be stored.
+ *
+ * @return Success code if byte has been successfully obtained from PMIC, error
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ */
+int32_t Pmic_ioRxByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t *rxData);
 
 #ifdef __cplusplus
 }

@@ -171,6 +171,17 @@ int32_t Pmic_ioTxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint
     return status;
 }
 
+int32_t Pmic_ioTxByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t txData)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    Pmic_criticalSectionStart(pmicHandle);
+    status = Pmic_ioTxByte(pmicHandle, regAddr, txData);
+    Pmic_criticalSectionStop(pmicHandle);
+
+    return status;
+}
+
 int32_t Pmic_ioRxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t *rxData)
 {
     uint8_t i2cFrameLen = 0U;
@@ -219,6 +230,17 @@ int32_t Pmic_ioRxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint
     {
         *rxData = i2cFrame[3U];
     }
+
+    return status;
+}
+
+int32_t Pmic_ioRxByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t *rxData)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    Pmic_criticalSectionStart(pmicHandle);
+    status = Pmic_ioRxByte(pmicHandle, regAddr, rxData);
+    Pmic_criticalSectionStop(pmicHandle);
 
     return status;
 }
