@@ -91,7 +91,7 @@ extern "C" {
  * @brief Configuration struct holding end-user settings/parameters relating to
  * the PMIC handle.
  *
- * @attention All parameters of the struct except `nIntResponse` must be set by the
+ * @attention All parameters of the struct except `irqResponse` must be set by the
  * end-user. Otherwise, an error may occur during the Pmic_init() API call.
  *
  * @note Once the user sets all struct members, the struct should be passed into
