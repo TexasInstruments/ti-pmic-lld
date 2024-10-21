@@ -40,7 +40,7 @@
 #include "pmic_io.h"
 #include "pmic_common.h"
 
-static inline int32_t setPmicCommsHandleMembers(const Pmic_CoreCfg_t *pmicCfg, Pmic_CoreHandle_t *pmicHandle)
+static int32_t setPmicCommsHandleMembers(const Pmic_CoreCfg_t *pmicCfg, Pmic_CoreHandle_t *pmicHandle)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -83,7 +83,7 @@ static inline int32_t setPmicCommsHandleMembers(const Pmic_CoreCfg_t *pmicCfg, P
     return status;
 }
 
-static inline int32_t setPmicSysHandleMembers(const Pmic_CoreCfg_t *pmicCfg, Pmic_CoreHandle_t *pmicHandle)
+static int32_t setPmicSysHandleMembers(const Pmic_CoreCfg_t *pmicCfg, Pmic_CoreHandle_t *pmicHandle)
 {
     int32_t status = PMIC_ST_SUCCESS;
 
@@ -117,13 +117,9 @@ static inline int32_t setPmicSysHandleMembers(const Pmic_CoreCfg_t *pmicCfg, Pmi
 static int32_t getPmicInfo(Pmic_CoreHandle_t *pmicHandle)
 {
     uint8_t regData = 0U;
-    int32_t status = PMIC_ST_SUCCESS;
 
-    if (status == PMIC_ST_SUCCESS)
-    {
-        // Read DEV_ID register
-        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_CMD_RD_DEV_ID, &regData);
-    }
+    // Read DEV_ID register
+    int32_t status = Pmic_ioRxByte_CS(pmicHandle, PMIC_CMD_RD_DEV_ID, &regData);
 
     if (status == PMIC_ST_SUCCESS)
     {
@@ -161,12 +157,12 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pmicCfg, Pmic_CoreHandle_t *pmicHandle)
     // Initialize PMIC handle with values from pmicCfg
     if (status == PMIC_ST_SUCCESS)
     {
-        setPmicCommsHandleMembers(pmicCfg, pmicHandle);
+        status = setPmicCommsHandleMembers(pmicCfg, pmicHandle);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        setPmicSysHandleMembers(pmicCfg, pmicHandle);
+        status = setPmicSysHandleMembers(pmicCfg, pmicHandle);
     }
 
     // Initialize PMIC command lookup table and obtain information about the PMIC

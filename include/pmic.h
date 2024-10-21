@@ -81,8 +81,7 @@ extern "C" {
  * @name PMIC LLD Configuration Valid Parameters
  *
  * @brief Indication of which parameters are valid within the Pmic_CoreCfg_t struct.
- *
- * @details For more information on the parameters, refer to @ref Pmic_CoreCfg.
+ * For more information on the parameters, refer to @ref Pmic_CoreCfg.
  *
  * @note End-user could combine multiple valid parameters using the OR operator.
  *
@@ -120,8 +119,9 @@ extern "C" {
  *
  * @param ioTransfer Function pointer to platform-specific SPI read/write API.
  * Platform-specific API must be capable of transmiting 24 bits and receiving 24
- * bits at once (a single SPI frame). The length parameter is specified in
- * number of bytes to be transmitted.
+ * bits at once (a single SPI frame). Parameter @p len specifies the number of
+ * bytes in a SPI frame (i.e., how many bytes are in @p txBuf and @p rxBuf
+ * parameters) - which should be 3 when communicating with TPS65385xx.
  *
  * @param critSecStart Function pointer to platform-specific critical section start API.
  *
@@ -136,7 +136,7 @@ typedef struct Pmic_CoreCfg_s
     uint32_t validParams;
 
     void *commHandle;
-    int32_t (*ioTransfer)(const struct Pmic_CoreHandle_s *pmicHandle, uint32_t *txBuf, uint32_t *rxBuf, uint8_t length);
+    int32_t (*ioTransfer)(const struct Pmic_CoreHandle_s *pmicHandle, uint32_t txBuf, uint32_t *rxBuf, uint8_t len);
     void (*critSecStart)(void);
     void (*critSecStop)(void);
     void (*irqResponse)(void);

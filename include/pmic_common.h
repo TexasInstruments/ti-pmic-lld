@@ -108,8 +108,9 @@ extern "C" {
  *
  * @param ioTransfer Function pointer to platform-specific SPI read/write API.
  * Platform-specific API must be capable of transmiting 24 bits and receiving 24
- * bits at once (a single SPI frame). The length parameter is specified in
- * number of bytes transmitted.
+ * bits at once (a single SPI frame). The parameter @p len specifies the number
+ * of bytes in a SPI frame (i.e., how many bytes are in @p txBuf and @p rxBuf
+ * parameters) - which should be 3 when communicating with TPS65385xx.
  *
  * @param critSecStart Function pointer to platform-specific critical section start API.
  *
@@ -125,7 +126,7 @@ typedef struct Pmic_CoreHandle_s
     uint8_t devId;
     uint8_t devRev;
     void *commHandle;
-    int32_t (*ioTransfer)(const struct Pmic_CoreHandle_s *pmicHandle, uint32_t *txBuf, uint32_t *rxBuf, uint8_t length);
+    int32_t (*ioTransfer)(const struct Pmic_CoreHandle_s *pmicHandle, uint32_t txBuf, uint32_t *rxBuf, uint8_t len);
     void (*critSecStart)(void);
     void (*critSecStop)(void);
     void (*irqResponse)(void);
@@ -161,7 +162,7 @@ static inline bool Pmic_validParamCheck(uint32_t validParamVal, uint32_t bitMask
 
 /**
  * @brief Check whether status is equal to the success code and whether a
- * parameter \p vpv (validParam value) has parameter \p bMask (bit mask) set.
+ * parameter @p vpv (validParam value) has parameter @p bMask (bit mask) set.
  */
 #define Pmic_validParamStatusCheck(vpv, bMask, status) \
     (((int32_t)status == PMIC_ST_SUCCESS) && Pmic_validParamCheck((uint32_t)vpv, (uint32_t)bMask))

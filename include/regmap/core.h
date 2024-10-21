@@ -51,55 +51,73 @@ extern "C" {
 /*                               Macros & Typedefs                            */
 /* ========================================================================== */
 
+// DEV_CFG_3 register bit field shifts and masks
+#define MCU_RST_RQ_FLAG_SHIFT       ((uint8_t)4U)
+#define MCU_RST_RQ_FLAG_MASK        ((uint8_t)1U << MCU_RST_RQ_FLAG_SHIFT)
+#define RES_EXT_SHIFT               ((uint8_t)0U)
+#define RES_EXT_MASK                ((uint8_t)0xFU << RES_EXT_SHIFT)
+
 // SAFETY_ERR_CFG_1 register bit field shifts and masks.
-#define SAFE_TO_SHIFT           ((uint8_t)5U)
-#define SAFE_TO_MASK            ((uint8_t)7U << SAFE_TO_SHIFT)
-#define SAFE_LOCK_THR_SHIFT     ((uint8_t)1U)
-#define SAFE_LOCK_THR_MASK      ((uint8_t)0xFU << SAFE_LOCK_THR_SHIFT)
-#define CFG_LOCK_SHIFT          ((uint8_t)0U)
-#define CFG_LOCK_MASK           ((uint8_t)1U << CFG_LOCK_SHIFT)
+#define SAFE_TO_SHIFT               ((uint8_t)5U)
+#define SAFE_TO_MASK                ((uint8_t)7U << SAFE_TO_SHIFT)
+#define SAFE_LOCK_THR_SHIFT         ((uint8_t)1U)
+#define SAFE_LOCK_THR_MASK          ((uint8_t)0xFU << SAFE_LOCK_THR_SHIFT)
+#define CFG_LOCK_SHIFT              ((uint8_t)0U)
+#define CFG_LOCK_MASK               ((uint8_t)1U << CFG_LOCK_SHIFT)
 
 // SAFETY_ERR_CFG_2 register bit field shifts and masks.
-#define MCU_ERR_CNT_TH_SHIFT    ((uint8_t)0U)
-#define MCU_ERR_CNT_TH_MASK     ((uint8_t)7U << MCU_ERR_CNT_TH_SHIFT)
+#define MCU_ERR_CNT_TH_SHIFT        ((uint8_t)0U)
+#define MCU_ERR_CNT_TH_MASK         ((uint8_t)7U << MCU_ERR_CNT_TH_SHIFT)
 
 // SAFETY_BIST_CTRL register bit field shifts and masks.
-#define AUTO_BIST_DIS_SHIFT     ((uint8_t)5U)
-#define AUTO_BIST_DIS_MASK      ((uint8_t)1U << AUTO_BIST_DIS_SHIFT)
-#define EE_CRC_CHK_SHIFT        ((uint8_t)4U)
-#define EE_CRC_CHK_MASK         ((uint8_t)1U << EE_CRC_CHK_SHIFT)
-#define LBIST_EN_SHIFT          ((uint8_t)2U)
-#define LBIST_EN_MASK           ((uint8_t)1U << LBIST_EN_SHIFT)
-#define ABIST_EN_SHIFT          ((uint8_t)1U)
-#define ABIST_EN_MASK           ((uint8_t)1U << ABIST_EN_SHIFT)
+#define AUTO_BIST_DIS_SHIFT         ((uint8_t)5U)
+#define AUTO_BIST_DIS_MASK          ((uint8_t)1U << AUTO_BIST_DIS_SHIFT)
+#define EE_CRC_CHK_SHIFT            ((uint8_t)4U)
+#define EE_CRC_CHK_MASK             ((uint8_t)1U << EE_CRC_CHK_SHIFT)
+#define LBIST_EN_SHIFT              ((uint8_t)2U)
+#define LBIST_EN_MASK               ((uint8_t)1U << LBIST_EN_SHIFT)
+#define ABIST_EN_SHIFT              ((uint8_t)1U)
+#define ABIST_EN_MASK               ((uint8_t)1U << ABIST_EN_SHIFT)
 
 // SAFETY_CHECK_CTRL register bit field shifts and masks.
-#define CFG_CRC_EN_SHIFT        ((uint8_t)7U)
-#define CFG_CRC_EN_MASK         ((uint8_t)1U << CFG_CRC_EN_SHIFT)
-#define ENABLE_DRV_SHIFT        ((uint8_t)5U)
-#define ENABLE_DRV_MASK         ((uint8_t)1U << ENABLE_DRV_SHIFT)
-#define NO_ERROR_SHIFT          ((uint8_t)2U)
-#define NO_ERROR_MASK           ((uint8_t)1U << NO_ERROR_SHIFT)
-#define DIAG_EXIT_MASK_SHIFT    ((uint8_t)1U)
-#define DIAG_EXIT_MASK_MASK     ((uint8_t)1U << DIAG_EXIT_MASK_SHIFT)
-#define DIAG_EXIT_SHIFT         ((uint8_t)0U)
-#define DIAG_EXIT_MASK          ((uint8_t)1U << DIAG_EXIT_SHIFT)
+#define CFG_CRC_EN_SHIFT            ((uint8_t)7U)
+#define CFG_CRC_EN_MASK             ((uint8_t)1U << CFG_CRC_EN_SHIFT)
+#define ENABLE_DRV_SHIFT            ((uint8_t)5U)
+#define ENABLE_DRV_MASK             ((uint8_t)1U << ENABLE_DRV_SHIFT)
+#define NO_ERROR_SHIFT              ((uint8_t)2U)
+#define NO_ERROR_MASK               ((uint8_t)1U << NO_ERROR_SHIFT)
+#define DIAG_EXIT_MASK_SHIFT        ((uint8_t)1U)
+#define DIAG_EXIT_MASK_MASK         ((uint8_t)1U << DIAG_EXIT_MASK_SHIFT)
+#define DIAG_EXIT_SHIFT             ((uint8_t)0U)
+#define DIAG_EXIT_MASK              ((uint8_t)1U << DIAG_EXIT_SHIFT)
 
 // SAFETY_FUNC_CFG register bit field shifts and masks.
-#define SAFE_LOCK_TO_DIS_SHIFT  ((uint8_t)7U)
-#define SAFE_LOCK_TO_DIS_MASK   ((uint8_t)1U << SAFE_LOCK_TO_DIS_SHIFT)
-#define ESM_CFG_SHIFT           ((uint8_t)6U)
-#define ESM_CFG_MASK            ((uint8_t)1U << ESM_CFG_SHIFT)
-#define WD_CFG_SHIFT            ((uint8_t)5U)
-#define WD_CFG_MASK             ((uint8_t)1U << WD_CFG_SHIFT)
-#define WD_RST_EN_SHIFT         ((uint8_t)3U)
-#define WD_RST_EN_MASK          ((uint8_t)1U << WD_RST_EN_SHIFT)
-#define DIS_NRES_MON_SHIFT      ((uint8_t)2U)
-#define DIS_NRES_MON_MASK       ((uint8_t)1U << DIS_NRES_MON_SHIFT)
-#define LOCK_STEP_RST_EN_SHIFT  ((uint8_t)1U)
-#define LOCK_STEP_RST_EN_MASK   ((uint8_t)1U << LOCK_STEP_RST_EN_SHIFT)
-#define WARM_RST_CFG_SHIFT      ((uint8_t)0U)
-#define WARM_RST_CFG_MASK       ((uint8_t)1U << WARM_RST_CFG_SHIFT)
+#define SAFE_LOCK_TO_DIS_SHIFT      ((uint8_t)7U)
+#define SAFE_LOCK_TO_DIS_MASK       ((uint8_t)1U << SAFE_LOCK_TO_DIS_SHIFT)
+#define ESM_CFG_SHIFT               ((uint8_t)6U)
+#define ESM_CFG_MASK                ((uint8_t)1U << ESM_CFG_SHIFT)
+#define WD_CFG_SHIFT                ((uint8_t)5U)
+#define WD_CFG_MASK                 ((uint8_t)1U << WD_CFG_SHIFT)
+#define WD_RST_EN_SHIFT             ((uint8_t)3U)
+#define WD_RST_EN_MASK              ((uint8_t)1U << WD_RST_EN_SHIFT)
+#define DIS_NRES_MON_SHIFT          ((uint8_t)2U)
+#define DIS_NRES_MON_MASK           ((uint8_t)1U << DIS_NRES_MON_SHIFT)
+#define LOCK_STEP_RST_EN_SHIFT      ((uint8_t)1U)
+#define LOCK_STEP_RST_EN_MASK       ((uint8_t)1U << LOCK_STEP_RST_EN_SHIFT)
+#define WARM_RST_CFG_SHIFT          ((uint8_t)0U)
+#define WARM_RST_CFG_MASK           ((uint8_t)1U << WARM_RST_CFG_SHIFT)
+
+// SAFETY_ERR_STAT_1 register bit field shifts and masks.
+#define ERROR_PIN_FAIL_SHIFT        ((uint8_t)5U)
+#define ERROR_PIN_FAIL_MASK         ((uint8_t)1U << ERROR_PIN_FAIL_SHIFT)
+#define WD_FAIL_SHIFT               ((uint8_t)4U)
+#define WD_FAIL_MASK                ((uint8_t)1U << WD_FAIL_SHIFT)
+#define DEV_ERR_CNT_SHIFT           ((uint8_t)0U)
+#define DEV_ERR_CNT_MASK            ((uint8_t)0xFU << DEV_ERR_CNT_SHIFT)
+
+// SAFETY_PWD_THR_CFG register bit field shifts and masks.
+#define PWD_THR_SHIFT               ((uint8_t)0x0U)
+#define PWD_THR_MASK                ((uint8_t)0xFU << PWD_THR_SHIFT)
 
 #ifdef __cplusplus
 }

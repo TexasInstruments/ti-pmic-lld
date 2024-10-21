@@ -37,17 +37,15 @@
  * interact with PMIC IRQs.
  */
 #include "pmic.h"
-#include "pmic_irq.h"
 #include "pmic_io.h"
+#include "pmic_irq.h"
 
 #include "regmap/irq.h"
 
-#define NUM_CLEARABLE_REGISTERS         ((uint8_t)12U)
-
-/** @brief SPI errors */
-#define PMIC_SPI_ERR_CMD                ((uint8_t)1U)
-#define PMIC_SPI_ERR_FORMAT             ((uint8_t)2U)
-#define PMIC_SPI_ERR_OUTPUT_MISMATCH    ((uint8_t)3U)
+// Valid values of the SPI_ERR[1:0] bit field
+#define SPI_ERR_CMD                 ((uint8_t)1U)
+#define SPI_ERR_FORMAT              ((uint8_t)2U)
+#define SPI_ERR_OUTPUT_MISMATCH     ((uint8_t)3U)
 
 /**
  * @anchor Pmic_IrqInfo
@@ -64,24 +62,9 @@ typedef struct Pmic_IrqInfo_s
     uint8_t bitShift;
 } Pmic_IrqInfo_t;
 
-static const uint8_t ClearableRegCmd[NUM_CLEARABLE_REGISTERS] = {
-    PMIC_CMD_RD_SAM_STAT,
-    PMIC_CMD_RD_SAM_SIG_STAT,
-    PMIC_CMD_RD_VMON_STAT_1,
-    PMIC_CMD_RD_VMON_STAT_2,
-    PMIC_CMD_RD_VMON_STAT_3,
-    PMIC_CMD_RD_SAFETY_STAT_1,
-    PMIC_CMD_RD_SAFETY_STAT_2,
-    PMIC_CMD_RD_SAFETY_STAT_3,
-    PMIC_CMD_RD_SAFETY_STAT_4,
-    PMIC_CMD_RD_SAFETY_ERR_STAT_1,
-    PMIC_CMD_RD_SAFETY_ERR_STAT_2,
-    PMIC_CMD_RD_SPI_INV_TRAN_STAT
-};
-
 /**
- * @brief All IRQ statuses that affect the status byte of the PMIC response
- * during an I/O transfer.
+ * All IRQ statuses that affect the status byte of the PMIC response during an
+ * I/O transfer.
  */
 static const Pmic_IrqInfo_t pmicIRQs[PMIC_IRQ_NUM] = {
     {PMIC_CMD_RD_VMON_STAT_1, VBATL_OV_SHIFT},              // 0
@@ -146,9 +129,7 @@ static const Pmic_IrqInfo_t pmicIRQs[PMIC_IRQ_NUM] = {
     {PMIC_CMD_RD_SAM_SIG_STAT, SIN_N_UV_SHIFT}              // 59
 };
 
-/*!
- * @brief Function to set the intrStat bit position.
- */
+// Function to set the intrStat bit position.
 static inline void IRQ_setIntrStat(Pmic_IrqStat_t *irqStat, uint32_t irqNum)
 {
     if (irqNum <= PMIC_IRQ_MAX)
@@ -309,17 +290,17 @@ static int32_t IRQ_readSafetyStat3_4(const Pmic_CoreHandle_t *pmicHandle, Pmic_I
         // Special case; certain SPI status errors share the same bit field
         switch (Pmic_getBitField(regData, SPI_ERR_SHIFT, SPI_ERR_MASK))
         {
-            case PMIC_SPI_ERR_CMD:
+            case SPI_ERR_CMD:
             {
                 IRQ_setIntrStat(irqStat, PMIC_IRQ_SPI_CMD_ERR);
                 break;
             }
-            case PMIC_SPI_ERR_FORMAT:
+            case SPI_ERR_FORMAT:
             {
                 IRQ_setIntrStat(irqStat, PMIC_IRQ_SPI_FORMAT_ERR);
                 break;
             }
-            case PMIC_SPI_ERR_OUTPUT_MISMATCH:
+            case SPI_ERR_OUTPUT_MISMATCH:
             {
                 IRQ_setIntrStat(irqStat, PMIC_IRQ_SPI_DATA_OUTPUT_MISMATCH);
                 break;
@@ -421,7 +402,6 @@ static int32_t IRQ_readSamStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_IrqSt
 static int32_t IRQ_readSpiInvTranStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_IrqStat_t *irqStat)
 {
     uint8_t regData = 0U;
-    uint8_t irq[5U] = {0U};
     int32_t status = PMIC_ST_SUCCESS;
     const uint8_t spiInvTranStatIrq[] = {
         PMIC_IRQ_INVALID_CMD,
@@ -439,6 +419,8 @@ static int32_t IRQ_readSpiInvTranStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_
         // Set the corresponding bit in irqStat
         IRQ_setIntrBits(irqStat, regData, spiInvTranStatIrq, COUNT(spiInvTranStatIrq));
     }
+
+    return status;
 }
 
 int32_t Pmic_irqGetStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_IrqStat_t *irqStat)
@@ -452,7 +434,7 @@ int32_t Pmic_irqGetStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_IrqStat_t *irq
 
     if (status == PMIC_ST_SUCCESS)
     {
-        memset(irqStat->intrStat, 0U, PMIC_NUM_ELEM_IN_INTR_STAT);
+        memset(irqStat->intrStat, 0U, PMIC_NUM_ELEM_IN_INTR_STAT * sizeof(irqStat->intrStat[0U]));
 
         status = IRQ_readVmonStat(pmicHandle, irqStat);
     }
@@ -480,7 +462,7 @@ int32_t Pmic_irqGetStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_IrqStat_t *irq
     // Clear irqStat if there was an error at any point
     if ((status != PMIC_ST_SUCCESS) && (irqStat != NULL))
     {
-        memset(irqStat->intrStat, 0U, PMIC_NUM_ELEM_IN_INTR_STAT);
+        memset(irqStat->intrStat, 0U, PMIC_NUM_ELEM_IN_INTR_STAT * sizeof(irqStat->intrStat[0U]));
     }
 
     return status;
@@ -574,9 +556,9 @@ int32_t Pmic_irqGetFlag(const Pmic_CoreHandle_t *pmicHandle, uint8_t irqNum, boo
         {
             uint8_t spiErr = Pmic_getBitField(regData, SPI_ERR_SHIFT, SPI_ERR_MASK);
 
-            if (((irqNum == PMIC_IRQ_SPI_CMD_ERR) && (spiErr == PMIC_SPI_ERR_CMD)) ||
-                ((irqNum == PMIC_IRQ_SPI_FORMAT_ERR) && (spiErr == PMIC_SPI_ERR_FORMAT)) ||
-                ((irqNum == PMIC_IRQ_SPI_DATA_OUTPUT_MISMATCH) && (spiErr == PMIC_SPI_ERR_OUTPUT_MISMATCH)))
+            if (((irqNum == PMIC_IRQ_SPI_CMD_ERR) && (spiErr == SPI_ERR_CMD)) ||
+                ((irqNum == PMIC_IRQ_SPI_FORMAT_ERR) && (spiErr == SPI_ERR_FORMAT)) ||
+                ((irqNum == PMIC_IRQ_SPI_DATA_OUTPUT_MISMATCH) && (spiErr == SPI_ERR_OUTPUT_MISMATCH)))
             {
                 *flag = (bool)true;
             }
@@ -586,46 +568,6 @@ int32_t Pmic_irqGetFlag(const Pmic_CoreHandle_t *pmicHandle, uint8_t irqNum, boo
             *flag = Pmic_getBitField_b(regData, pmicIRQs[irqNum].bitShift);
         }
     }
-
-    return status;
-}
-
-int32_t Pmic_irqClrFlag(const Pmic_CoreHandle_t *pmicHandle, uint8_t irqNum)
-{
-    uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
-
-    if ((status == PMIC_ST_SUCCESS) && (irqNum > PMIC_IRQ_MAX))
-    {
-        status = PMIC_ST_ERR_INV_PARAM;
-    }
-
-    if (status == PMIC_ST_SUCCESS)
-    {
-        // Read status register to clear the IRQ
-        status = Pmic_ioRxByte_CS(pmicHandle, pmicIRQs[irqNum].regCmd, &regData);
-    }
-
-    return status;
-}
-
-int32_t Pmic_irqClrAllFlags(const Pmic_CoreHandle_t *handle)
-{
-    uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
-
-    // Clear IRQ statuses by reading their register
-    Pmic_criticalSectionStart(handle);
-    for (uint8_t i = 0U; i < NUM_CLEARABLE_REGISTERS; i++)
-    {
-        if (status != PMIC_ST_SUCCESS)
-        {
-            break;
-        }
-
-        status = Pmic_ioTransfer(handle, ClearableRegCmd[i], PMIC_NO_WRITE_DATA, &regData);
-    }
-    Pmic_criticalSectionStop(handle);
 
     return status;
 }

@@ -68,15 +68,35 @@ extern "C"
 #define PMIC_CMD_SW_UNLOCK_DATA             ((uint8_t)0x55U)
 #define PMIC_CMD_SW_LOCK                    ((uint8_t)0xBDU)
 #define PMIC_CMD_SW_LOCK_DATA               ((uint8_t)0xAAU)
+#define PMIC_CMD_WR_DEV_CFG_1               ((uint8_t)0xB7U)
+#define PMIC_CMD_WR_DEV_CFG_2               ((uint8_t)0x95U)
+#define PMIC_CMD_WR_DEV_CFG_3               ((uint8_t)0x83U)
 #define PMIC_CMD_WR_WD_WIN1_CFG             ((uint8_t)0xEDU)
 #define PMIC_CMD_WR_WD_WIN2_CFG             ((uint8_t)0x09U)
 #define PMIC_CMD_WR_WD_QUESTION_FDBCK       ((uint8_t)0x77U)
 #define PMIC_CMD_WR_WD_ANSWER               ((uint8_t)0xE1U)
+#define PMIC_CMD_WR_SAFETY_CFG_CRC          ((uint8_t)0x63U)
 #define PMIC_CMD_WR_SAFETY_ERR_STAT_1       ((uint8_t)0xA9U)
+#define PMIC_CMD_WR_SAFETY_ERR_CFG_1        ((uint8_t)0xDBU)
+#define PMIC_CMD_WR_SAFETY_ERR_CFG_2        ((uint8_t)0xC9U)
 #define PMIC_CMD_WR_SAFETY_CHECK_CTRL       ((uint8_t)0x93U)
 #define PMIC_CMD_WR_SAFETY_FUNC_CFG         ((uint8_t)0x35U)
+#define PMIC_CMD_WR_SAFETY_BIST_CTRL        ((uint8_t)0x9FU)
+#define PMIC_CMD_WR_SAFETY_PWD_THR_CFG      ((uint8_t)0x99U)
+#define PMIC_CMD_WR_SAFETY_ERR_PWM_HMAX     ((uint8_t)0xD8U)
+#define PMIC_CMD_WR_SAFETY_ERR_PWM_HMIN     ((uint8_t)0xB0U)
+#define PMIC_CMD_WR_SAFETY_ERR_PWM_LMAX     ((uint8_t)0x7EU)
+#define PMIC_CMD_WR_SAFETY_ERR_PWM_LMIN     ((uint8_t)0x5FU)
+#define PMIC_CMD_WR_SENS_CTRL               ((uint8_t)0x7BU)
+#define PMIC_CMD_WR_SAM_CFG                 ((uint8_t)0x87U)
+#define PMIC_CMD_WR_LPSAM_PERIOD            ((uint8_t)0xE4U)
+#define PMIC_CMD_WR_LPSAM_IDLE              ((uint8_t)0x41U)
+#define PMIC_CMD_WR_LPSAM_SAMPLE            ((uint8_t)0xDFU)
 #define PMIC_CMD_RD_DEV_ID                  ((uint8_t)0x06U)
 #define PMIC_CMD_RD_DEV_REV                 ((uint8_t)0x0CU)
+#define PMIC_CMD_RD_DEV_CFG_1               ((uint8_t)0xAFU)
+#define PMIC_CMD_RD_DEV_CFG_2               ((uint8_t)0x48U)
+#define PMIC_CMD_RD_DEV_CFG_3               ((uint8_t)0x3FU)
 #define PMIC_CMD_RD_DEV_STAT                ((uint8_t)0x11U)
 #define PMIC_CMD_RD_SAM_STAT                ((uint8_t)0x31U)
 #define PMIC_CMD_RD_SAM_SIG_STAT            ((uint8_t)0xB9U)
@@ -84,7 +104,7 @@ extern "C"
 #define PMIC_CMD_RD_VMON_STAT_2             ((uint8_t)0xA6U)
 #define PMIC_CMD_RD_VMON_STAT_3             ((uint8_t)0xDAU)
 #define PMIC_CMD_RD_SAFETY_STAT_1           ((uint8_t)0x24U)
-#define PMIC_CMD_RD_SAFETY_STAT_2           ((uint8_t)0x4AU)
+#define PMIC_CMD_RD_SAFETY_STAT_2           ((uint8_t)0xC5U)
 #define PMIC_CMD_RD_SAFETY_STAT_3           ((uint8_t)0xA3U)
 #define PMIC_CMD_RD_SAFETY_STAT_4           ((uint8_t)0xA5U)
 #define PMIC_CMD_RD_SAFETY_STAT_5           ((uint8_t)0xC0U)
@@ -95,11 +115,22 @@ extern "C"
 #define PMIC_CMD_RD_SAFETY_ERR_CFG_2        ((uint8_t)0xE9U)
 #define PMIC_CMD_RD_SAFETY_CHECK_CTRL       ((uint8_t)0x44U)
 #define PMIC_CMD_RD_SAFETY_FUNC_CFG         ((uint8_t)0x3AU)
+#define PMIC_CMD_RD_SAFETY_BIST_CTRL        ((uint8_t)0x3CU)
+#define PMIC_CMD_RD_SAFETY_PWD_THR_CFG      ((uint8_t)0x39U)
+#define PMIC_CMD_RD_SAFETY_ERR_PWM_HMAX     ((uint8_t)0xD7U)
+#define PMIC_CMD_RD_SAFETY_ERR_PWM_HMIN     ((uint8_t)0x52U)
+#define PMIC_CMD_RD_SAFETY_ERR_PWM_LMAX     ((uint8_t)0x59U)
+#define PMIC_CMD_RD_SAFETY_ERR_PWM_LMIN     ((uint8_t)0x80U)
 #define PMIC_CMD_RD_WD_QUESTION_FDBCK       ((uint8_t)0x78U)
 #define PMIC_CMD_RD_WD_QUESTION             ((uint8_t)0x36U)
 #define PMIC_CMD_RD_WD_STATUS               ((uint8_t)0x4EU)
 #define PMIC_CMD_RD_WD_WIN1_CFG             ((uint8_t)0x2EU)
 #define PMIC_CMD_RD_WD_WIN2_CFG             ((uint8_t)0x05U)
+#define PMIC_CMD_RD_SENS_CTRL               ((uint8_t)0x56U)
+#define PMIC_CMD_RD_SAM_CFG                 ((uint8_t)0xD1U)
+#define PMIC_CMD_RD_LPSAM_PERIOD            ((uint8_t)0x0BU)
+#define PMIC_CMD_RD_LPSAM_IDLE              ((uint8_t)0x17U)
+#define PMIC_CMD_RD_LPSAM_SAMPLE            ((uint8_t)0x1CU)
 /** @} */
 
 /**
@@ -119,23 +150,23 @@ extern "C"
 /* ========================================================================== */
 
 /**
- * @brief Transfer serial data (i.e., conduct a write and/or read). End-users could
- * use this API for direct register access.
+ * @brief Write one byte to the PMIC and/or receive one byte from the PMIC.
+ * End-users could use this API for direct register access.
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
- * @param cmd [IN] PMIC command. For valid values, refer to \ref Pmic_CommandCodes.
+ * @param cmd [IN] PMIC command. For valid values, refer to @ref Pmic_CommandCodes.
  *
- * @param wData [IN] Write data. If \p cmd is a read command, the appropriate macro
- * defined under \ref Pmic_invalidData can be passed as input to this parameter.
- * Otherwise, the value of \p wData is ignored by the PMIC.
+ * @param wData [IN] Write data. If @p cmd is a read command, the appropriate macro
+ * defined under @ref Pmic_invalidData can be passed as input to this parameter.
+ * Otherwise, the value of @p wData is ignored by the PMIC.
  *
- * @param rData [OUT] Read data. If \p cmd is a write command, the appropriate macro
- * defined under \ref Pmic_invalidData can be passed as input to this parameter.
- * Otherwise, the dereferenced value of \p rData is set to zero by the PMIC.
+ * @param rData [OUT] Read data. If @p cmd is a write command, the appropriate macro
+ * defined under @ref Pmic_invalidData can be passed as input to this parameter.
+ * Otherwise, the dereferenced value of @p rData is set to zero by the PMIC.
  *
  * @return Success code if the SPI transfer is complete, error code otherwise.
- * For valid success/error codes, refer to \ref Pmic_errorCodes.
+ * For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
 int32_t Pmic_ioTransfer(const Pmic_CoreHandle_t *pmicHandle, uint8_t cmd, uint8_t wData, uint8_t *rData);
 
@@ -145,12 +176,12 @@ int32_t Pmic_ioTransfer(const Pmic_CoreHandle_t *pmicHandle, uint8_t cmd, uint8_
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
- * @param cmd [IN] PMIC command. For valid values, refer to \ref Pmic_CommandCodes.
+ * @param cmd [IN] PMIC command. For valid values, refer to @ref Pmic_CommandCodes.
  *
  * @param wData [IN] Data to be written to the PMIC.
  *
  * @return Success code if the SPI write is complete, error code otherwise.
- * For valid success/error codes, refer to \ref Pmic_errorCodes.
+ * For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
 static inline int32_t Pmic_ioTxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t cmd, uint8_t wData)
 {
@@ -163,12 +194,12 @@ static inline int32_t Pmic_ioTxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
- * @param cmd [IN] PMIC command. For valid values, refer to \ref Pmic_CommandCodes.
+ * @param cmd [IN] PMIC command. For valid values, refer to @ref Pmic_CommandCodes.
  *
  * @param rData [OUT] Data received from the PMIC.
  *
  * @return Success code if the SPI read is complete, error code otherwise.
- * For valid success/error codes, refer to \ref Pmic_errorCodes.
+ * For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
 static inline int32_t Pmic_ioRxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t cmd, uint8_t *rData)
 {
@@ -182,18 +213,18 @@ static inline int32_t Pmic_ioRxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
- * @param cmd [IN] PMIC command. For valid values, refer to \ref Pmic_CommandCodes.
+ * @param cmd [IN] PMIC command. For valid values, refer to @ref Pmic_CommandCodes.
  *
- * @param wData [IN] Write data. If \p cmd is a read command, the appropriate macro
- * defined under \ref Pmic_invalidData can be passed as input to this parameter.
- * Otherwise, the value of \p wData is ignored by the PMIC.
+ * @param wData [IN] Write data. If @p cmd is a read command, the appropriate macro
+ * defined under @ref Pmic_invalidData can be passed as input to this parameter.
+ * Otherwise, the value of @p wData is ignored by the PMIC.
  *
- * @param rData [OUT] Read data. If \p cmd is a write command, the appropriate macro
- * defined under \ref Pmic_invalidData can be passed as input to this parameter.
- * Otherwise, the dereferenced value of \p rData is set to zero by the PMIC.
+ * @param rData [OUT] Read data. If @p cmd is a write command, the appropriate macro
+ * defined under @ref Pmic_invalidData can be passed as input to this parameter.
+ * Otherwise, the dereferenced value of @p rData is set to zero by the PMIC.
  *
  * @return Success code if the SPI transfer is complete, error code otherwise.
- * For valid success/error codes, refer to \ref Pmic_errorCodes.
+ * For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
 int32_t Pmic_ioTransfer_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t cmd, uint8_t wData, uint8_t *rData);
 
@@ -204,12 +235,12 @@ int32_t Pmic_ioTransfer_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t cmd, uin
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
- * @param cmd [IN] PMIC command. For valid values, refer to \ref Pmic_CommandCodes.
+ * @param cmd [IN] PMIC command. For valid values, refer to @ref Pmic_CommandCodes.
  *
  * @param wData [IN] Data to be written to the PMIC.
  *
  * @return Success code if the SPI write is complete, error code otherwise.
- * For valid success/error codes, refer to \ref Pmic_errorCodes.
+ * For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
 int32_t Pmic_ioTxByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t cmd, uint8_t wData);
 
@@ -220,12 +251,12 @@ int32_t Pmic_ioTxByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t cmd, uint8
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
- * @param cmd [IN] PMIC command. For valid values, refer to \ref Pmic_CommandCodes.
+ * @param cmd [IN] PMIC command. For valid values, refer to @ref Pmic_CommandCodes.
  *
  * @param rData [OUT] Data received from the PMIC.
  *
  * @return Success code if the SPI read is complete, error code otherwise.
- * For valid success/error codes, refer to \ref Pmic_errorCodes.
+ * For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
 int32_t Pmic_ioRxByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t cmd, uint8_t *rData);
 

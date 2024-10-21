@@ -164,7 +164,9 @@ typedef struct Pmic_IrqStat_s
 /* ========================================================================== */
 
 /**
- * @brief Get the status of all PMIC IRQs.
+ * @brief Get the status of all PMIC IRQs. As TPS65385xx IRQs are cleared via
+ * register read, this API also clears all PMIC IRQs flags - IRQs whose
+ * underlying cause are not resolved will not be cleared.
  *
  * @attention End-user must call this API first before calling `Pmic_irqGetNextFlag()`.
  *
@@ -182,8 +184,7 @@ int32_t Pmic_irqGetStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_IrqStat_t *irq
  *
  * @attention End-user must call `Pmic_irqGetStat()` first to get all PMIC IRQ
  * statuses. Once the IRQ statuses have been obtained, it is passed as input to
- * this API so that the next IRQ flag can be discovered. Once the next flag is
- * found, end-user can call `Pmic_irqClrFlag()` to clear the flag.
+ * this API so that the next IRQ flag can be discovered.
  *
  * @param irqStat [IN/OUT] Status of all PMIC IRQs. Once the next IRQ flag has
  * been found, the corresponding status bit in struct member `intrStat` will be
@@ -198,7 +199,9 @@ int32_t Pmic_irqGetStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_IrqStat_t *irq
 int32_t Pmic_irqGetNextFlag(Pmic_IrqStat_t *irqStat, uint8_t *irqNum);
 
 /**
- * @brief Get the flag status of a specific IRQ.
+ * @brief Get the flag status of a specific IRQ. As TPS65385xx IRQs are cleared
+ * via register read, this API also clears the IRQ flag - If the cause of the IRQ
+ * is not yet resolved, the flag will not be cleared.
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -212,32 +215,6 @@ int32_t Pmic_irqGetNextFlag(Pmic_IrqStat_t *irqStat, uint8_t *irqNum);
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
 int32_t Pmic_irqGetFlag(const Pmic_CoreHandle_t *pmicHandle, uint8_t irqNum, bool *flag);
-
-/**
- * @brief Clear a specific PMIC IRQ flag.
- *
- * @attention This API is meant to be called after getting the next flag status from
- * `Pmic_irqGetNextFlag()` or getting a specific flag status from `Pmic_irqGetFlag()`.
- *
- * @param pmicHandle [IN] PMIC interface handle.
- *
- * @param irqNum [IN] Target PMIC IRQ to clear. For valid values, refer to
- * @ref Pmic_IRQs.
- *
- * @return Success code if the PMIC IRQ flag has been cleared, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
- */
-int32_t Pmic_irqClrFlag(const Pmic_CoreHandle_t *pmicHandle, uint8_t irqNum);
-
-/**
- * @brief Clear all PMIC IRQ flags.
- *
- * @param handle [IN] PMIC interface handle.
- *
- * @return Success code if all PMIC IRQ flags have been cleared, error code
- * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
- */
-int32_t Pmic_irqClrAllFlags(const Pmic_CoreHandle_t *handle);
 
 #ifdef __cplusplus
 }
