@@ -173,6 +173,19 @@ extern "C" {
 /** @} */
 
 /**
+ * @anchor Pmic_WdgThresholdIntBehavior
+ * @name PMIC Watchdog Threshold Interrupt Behavior
+ *
+ * @{
+ */
+#define PMIC_INTR_SET                                   (0U)
+#define PMIC_INTR_SET_AND_SAFE_STATE_TRANSITION         (1U)
+#define PMIC_INTR_SET_AND_RESET_MCU_STATE_TRANSITION    (3U)
+#define PMIC_INTR_SET_AND_OFF_STATE_TRANSITION          (4U)
+#define PMIC_WDG_THRESHOLD_INT_BEHAVIOR_MAX             (PMIC_INTR_SET_AND_OFF_STATE_TRANSITION)
+/** @} */
+
+/**
  * @anchor Pmic_WdgCfgValidParamBitPos
  * @name PMIC watchdog timer Config Structure Param Bit positions
  *
@@ -188,6 +201,8 @@ extern "C" {
 #define PMIC_CFG_WDG_QA_LFSR_VALID                  (7U)
 #define PMIC_CFG_WDG_QA_QUES_SEED_VALID             (8U)
 #define PMIC_CFG_WDG_TIME_BASE_VALID                (9U)
+#define PMIC_CFG_WDG_THRESHOLD1_INT_BEHAVIOR_VALID  (10U)
+#define PMIC_CFG_WDG_THRESHOLD2_INT_BEHAVIOR_VALID  (11U)
 /** @} */
 
 /**
@@ -199,27 +214,31 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_WDG_LONGWINDURATION_VALID_SHIFT    (1U << PMIC_CFG_WDG_LONGWINDURATION_VALID)
-#define PMIC_CFG_WDG_WIN1DURATION_VALID_SHIFT       (1U << PMIC_CFG_WDG_WIN1DURATION_VALID)
-#define PMIC_CFG_WDG_WIN2DURATION_VALID_SHIFT       (1U << PMIC_CFG_WDG_WIN2DURATION_VALID)
-#define PMIC_CFG_WDG_THRESHOLD_1_VALID_SHIFT        (1U << PMIC_CFG_WDG_THRESHOLD_1_VALID)
-#define PMIC_CFG_WDG_THRESHOLD_2_VALID_SHIFT        (1U << PMIC_CFG_WDG_THRESHOLD_2_VALID)
-#define PMIC_CFG_WDG_MODE_VALID_SHIFT               (1U << PMIC_CFG_WDG_MODE_VALID)
-#define PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT            (1U << PMIC_CFG_WDG_QA_FDBK_VALID)
-#define PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT            (1U << PMIC_CFG_WDG_QA_LFSR_VALID)
-#define PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT       (1U << PMIC_CFG_WDG_QA_QUES_SEED_VALID)
-#define PMIC_CFG_WDG_TIME_BASE_VALID_SHIFT          (1U << PMIC_CFG_WDG_TIME_BASE_VALID)
-#define PMIC_CFG_WDG_CFG_ALL_VALID_SHIFT            (\
-    PMIC_CFG_WDG_LONGWINDURATION_VALID_SHIFT |\
-    PMIC_CFG_WDG_WIN1DURATION_VALID_SHIFT    |\
-    PMIC_CFG_WDG_WIN2DURATION_VALID_SHIFT    |\
-    PMIC_CFG_WDG_THRESHOLD_1_VALID_SHIFT     |\
-    PMIC_CFG_WDG_THRESHOLD_2_VALID_SHIFT     |\
-    PMIC_CFG_WDG_MODE_VALID_SHIFT            |\
-    PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT         |\
-    PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT         |\
-    PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT    |\
-    PMIC_CFG_WDG_TIME_BASE_VALID_SHIFT)
+#define PMIC_CFG_WDG_LONGWINDURATION_VALID_SHIFT            (1U << PMIC_CFG_WDG_LONGWINDURATION_VALID)
+#define PMIC_CFG_WDG_WIN1DURATION_VALID_SHIFT               (1U << PMIC_CFG_WDG_WIN1DURATION_VALID)
+#define PMIC_CFG_WDG_WIN2DURATION_VALID_SHIFT               (1U << PMIC_CFG_WDG_WIN2DURATION_VALID)
+#define PMIC_CFG_WDG_THRESHOLD_1_VALID_SHIFT                (1U << PMIC_CFG_WDG_THRESHOLD_1_VALID)
+#define PMIC_CFG_WDG_THRESHOLD_2_VALID_SHIFT                (1U << PMIC_CFG_WDG_THRESHOLD_2_VALID)
+#define PMIC_CFG_WDG_MODE_VALID_SHIFT                       (1U << PMIC_CFG_WDG_MODE_VALID)
+#define PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT                    (1U << PMIC_CFG_WDG_QA_FDBK_VALID)
+#define PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT                    (1U << PMIC_CFG_WDG_QA_LFSR_VALID)
+#define PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT               (1U << PMIC_CFG_WDG_QA_QUES_SEED_VALID)
+#define PMIC_CFG_WDG_TIME_BASE_VALID_SHIFT                  (1U << PMIC_CFG_WDG_TIME_BASE_VALID)
+#define PMIC_CFG_WDG_THRESHOLD1_INT_BEHAVIOR_VALID_SHIFT    (1U << PMIC_CFG_WDG_THRESHOLD1_INT_BEHAVIOR_VALID)
+#define PMIC_CFG_WDG_THRESHOLD2_INT_BEHAVIOR_VALID_SHIFT    (1U << PMIC_CFG_WDG_THRESHOLD2_INT_BEHAVIOR_VALID)
+#define PMIC_CFG_WDG_CFG_ALL_VALID_SHIFT             (\
+    PMIC_CFG_WDG_LONGWINDURATION_VALID_SHIFT         |\
+    PMIC_CFG_WDG_WIN1DURATION_VALID_SHIFT            |\
+    PMIC_CFG_WDG_WIN2DURATION_VALID_SHIFT            |\
+    PMIC_CFG_WDG_THRESHOLD_1_VALID_SHIFT             |\
+    PMIC_CFG_WDG_THRESHOLD_2_VALID_SHIFT             |\
+    PMIC_CFG_WDG_MODE_VALID_SHIFT                    |\
+    PMIC_CFG_WDG_QA_FDBK_VALID_SHIFT                 |\
+    PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT                 |\
+    PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT            |\
+    PMIC_CFG_WDG_TIME_BASE_VALID_SHIFT               |\
+    PMIC_CFG_WDG_THRESHOLD1_INT_BEHAVIOR_VALID_SHIFT |\
+    PMIC_CFG_WDG_THRESHOLD2_INT_BEHAVIOR_VALID_SHIFT)
 /** @} */
 
 /**
@@ -236,6 +255,15 @@ extern "C" {
 #define PMIC_CFG_WD_ANSW_ERR_ERR_VALID          (5U)
 #define PMIC_CFG_WD_TH1_INT_ERR_VALID           (6U)
 #define PMIC_CFG_WD_TH2_INT_ERR_VALID           (7U)
+#define PMIC_CFG_WD_ERR_STAT_ALL_VALID_SHIFT    (\
+    PMIC_CFG_WD_LONGWIN_TIMEOUT_ERR_VALID |\
+    PMIC_CFG_WD_TIMEOUT_ERR_VALID         |\
+    PMIC_CFG_WD_TRIG_EARLY_ERR_VALID      |\
+    PMIC_CFG_WD_ANSW_EARLY_ERR_VALID      |\
+    PMIC_CFG_WD_SEQ_ERR_ERR_VALID         |\
+    PMIC_CFG_WD_ANSW_ERR_ERR_VALID        |\
+    PMIC_CFG_WD_TH1_INT_ERR_VALID         |\
+    PMIC_CFG_WD_TH2_INT_ERR_VALID)
 /** @} */
 
 /**
@@ -339,6 +367,12 @@ extern "C" {
  *
  * @param qaQuesSeed Configure Q&A question seed value. See @ref
  * Pmic_WdgQaQuestionSeedVal.
+ *
+ * @param threshold1IntBehavior Threshold 1 interrupt behavior. See @ref
+ * Pmic_WdgThresholdIntBehavior.
+ *
+ * @param threshold2IntBehavior Threshold 2 interrupt behavior. See @ref
+ * Pmic_WdgThresholdIntBehavior.
  */
 typedef struct Pmic_WdgCfg_s {
     uint32_t validParams;
@@ -355,6 +389,9 @@ typedef struct Pmic_WdgCfg_s {
     uint8_t qaFdbk;
     uint8_t qaLfsr;
     uint8_t qaQuesSeed;
+
+    uint8_t threshold1IntBehavior;
+    uint8_t threshold2IntBehavior;
 } Pmic_WdgCfg_t;
 
 /**

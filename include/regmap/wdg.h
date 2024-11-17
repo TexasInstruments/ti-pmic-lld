@@ -63,7 +63,7 @@ extern "C" {
 #define PMIC_WD_EN_SHIFT             (3U)
 #define PMIC_WD_EN_MASK              (uint8_t)(0x1U << PMIC_WD_EN_SHIFT)
 #define PMIC_WD_MODE_SHIFT           (4U)
-#define PMIC_WD_MODE_MASK            (uint8_t)(0x1U << PMIC_WD_MODE_SHIFT)
+#define PMIC_WD_MODE_MASK            (uint8_t)(0x3U << PMIC_WD_MODE_SHIFT)
 #define PMIC_WD_TIME_CFG_SHIFT       (6U)
 #define PMIC_WD_TIME_CFG_MASK        (uint8_t)(0x3U << PMIC_WD_TIME_CFG_SHIFT)
 
