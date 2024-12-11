@@ -112,15 +112,14 @@ extern "C" {
  *
  * @brief Handle to TPS65036x PMIC that is used as input to all driver APIs.
  *
- * @details The handle contains information related to the TPS65036x PMIC such as
- * device revision, NVM ID/revision, silicon revision, and whether CRC is enabled.
- * The handle contains function pointers that serve to abstract platform-specific
- * information, such as the transport layer write/read APIs and critical section
- * start/stop.
+ * @details The handle contains information related to the TPS65036x PMIC such
+ * as revision (device, NVM, silicon) and whether CRC is enabled. It also has
+ * function pointers that serve to abstract platform-specific information, like
+ * the transport layer write/read APIs and critical section start/stop.
  *
- * @attention Once a struct of type Pmic_CoreHandle_t is initialized via the
- * tps65036x_init() API, end-user must ensure members of the struct are unchanged
- * throughout application runtime.
+ * @attention Once the PMIC handle is initialized via the Pmic_init() API,
+ * end-user must ensure that the handle is unmodified throughout application
+ * runtime.
  *
  * @param drvInitStat Driver initialization status. When the driver is initialized,
  * the value comes out to be decimal value 1347242307, hex value 0x504D4943. When
@@ -151,13 +150,8 @@ extern "C" {
  *
  * @param critSecStop Function pointer to platform-specific critical section stop API.
  *
- * @param irqResponse Optional function pointer to application-specific response
- * to detected PMIC IRQ while servicing the PMIC WDG. There are two main methods of
- * detecting PMIC IRQs; the first of which is a direct hardware connection between
- * the MCU and the PMIC nINT pin. The second is by reading the PMIC WD_QUESTION_ANSW_CNT
- * register for the INT_TOP_STATUS bit during each WDG answer calculation. The driver uses
- * this function pointer in the second scenario to execute the application-specific response
- * upon detecting that there is a pending IRQ.
+ * @param irqResponse Function pointer to application IRQ response. Valid only when
+ * servicing the PMIC WDG in Q&A mode.
  */
 typedef struct Pmic_CoreHandle_s
 {

@@ -110,13 +110,8 @@ extern "C" {
  *
  * @param critSecStop Function pointer to platform-specific critical section stop API.
  *
- * @param irqResponse Optional function pointer to application-specific response
- * to detected PMIC IRQ while servicing the PMIC WDG. There are two main methods of
- * detecting PMIC IRQs; the first of which is a direct hardware connection between
- * the MCU and the PMIC nINT pin. The second is by reading the PMIC WD_QUESTION_ANSW_CNT
- * register for the INT_TOP_STATUS bit during each WDG answer calculation. The driver uses
- * this function pointer in the second scenario to execute the application-specific response
- * upon detecting that there is a pending IRQ.
+ * @param irqResponse Function pointer to application IRQ response. Valid only when
+ * servicing the PMIC WDG in Q&A mode.
  */
 typedef struct Pmic_CoreCfg_s
 {
