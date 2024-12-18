@@ -2252,11 +2252,14 @@ static int32_t Pmic_powerSetLowThreshold(
 {
     int32_t  pmicStatus = PMIC_ST_SUCCESS;
     uint8_t  regData    = 0U;
+    uint8_t pwrRsrcIndex = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
     /* Get PMIC power resources register configuration */
-    Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
-                            &pPwrRsrcRegCfg);
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                pwrRsrc,
+                                &pwrRsrcIndex,
+                                &pPwrRsrcRegCfg);
 
     pmicStatus = Pmic_validateThreshold(pPmicCoreHandle->pmicDeviceType,
                            pwrGudUvThresholdLvl);
@@ -2267,7 +2270,7 @@ static int32_t Pmic_powerSetLowThreshold(
         /* Setting the PGOOD LOW threshold value */
         pmicStatus = Pmic_commIntf_recvByte(
                                        pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrc].pgWindowRegAddr,
+                                       pPwrRsrcRegCfg[pwrRsrcIndex].pgWindowRegAddr,
                                        &regData);
 
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -2279,7 +2282,7 @@ static int32_t Pmic_powerSetLowThreshold(
                    pwrGudUvThresholdLvl);
             pmicStatus = Pmic_commIntf_sendByte(
                                         pPmicCoreHandle,
-                                        pPwrRsrcRegCfg[pwrRsrc].pgWindowRegAddr,
+                                        pPwrRsrcRegCfg[pwrRsrcIndex].pgWindowRegAddr,
                                         regData);
         }
 
@@ -2299,18 +2302,21 @@ static int32_t Pmic_powerGetLowThreshold(
 {
     int32_t  pmicStatus = PMIC_ST_SUCCESS;
     uint8_t  regData    = 0U;
+    uint8_t pwrRsrcIndex = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
     /* Get PMIC power resources register configuration */
-    Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
-                            &pPwrRsrcRegCfg);
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                pwrRsrc,
+                                &pwrRsrcIndex,
+                                &pPwrRsrcRegCfg);
 
     Pmic_criticalSectionStart(pPmicCoreHandle);
 
     /* Getting the PGOOD LOW threshold value */
     pmicStatus = Pmic_commIntf_recvByte(
                                     pPmicCoreHandle,
-                                    pPwrRsrcRegCfg[pwrRsrc].pgWindowRegAddr,
+                                    pPwrRsrcRegCfg[pwrRsrcIndex].pgWindowRegAddr,
                                     &regData);
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
@@ -2335,11 +2341,14 @@ static int32_t Pmic_powerSetHighThreshold(Pmic_CoreHandle_t *pPmicCoreHandle,
 {
     int32_t  pmicStatus = PMIC_ST_SUCCESS;
     uint8_t  regData    = 0U;
+    uint8_t pwrRsrcIndex = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
     /* Get PMIC power resources register configuration */
-    Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
-                                         &pPwrRsrcRegCfg);
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                pwrRsrc,
+                                &pwrRsrcIndex,
+                                &pPwrRsrcRegCfg);
 
     pmicStatus = Pmic_validateThreshold(pPmicCoreHandle->pmicDeviceType,
                                         powerGoodOvThr);
@@ -2351,7 +2360,7 @@ static int32_t Pmic_powerSetHighThreshold(Pmic_CoreHandle_t *pPmicCoreHandle,
         /* Setting the PGOOD HIGH threshold value */
         pmicStatus = Pmic_commIntf_recvByte(
                                        pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrc].pgWindowRegAddr,
+                                       pPwrRsrcRegCfg[pwrRsrcIndex].pgWindowRegAddr,
                                        &regData);
 
         if(PMIC_ST_SUCCESS == pmicStatus)
@@ -2363,7 +2372,7 @@ static int32_t Pmic_powerSetHighThreshold(Pmic_CoreHandle_t *pPmicCoreHandle,
                   powerGoodOvThr);
             pmicStatus = Pmic_commIntf_sendByte(
                                        pPmicCoreHandle,
-                                       pPwrRsrcRegCfg[pwrRsrc].pgWindowRegAddr,
+                                       pPwrRsrcRegCfg[pwrRsrcIndex].pgWindowRegAddr,
                                        regData);
         }
 
@@ -2383,17 +2392,20 @@ static int32_t Pmic_powerGetHighThreshold(Pmic_CoreHandle_t *pPmicCoreHandle,
 {
     int32_t  pmicStatus = PMIC_ST_SUCCESS;
     uint8_t  regData    = 0U;
+    uint8_t pwrRsrcIndex = 0U;
     Pmic_powerRsrcRegCfg_t *pPwrRsrcRegCfg = NULL;
 
     /* Get PMIC power resources register configuration */
-    Pmic_powerGetRsrcRegCfg(pPmicCoreHandle->pmicDeviceType,
-                            &pPwrRsrcRegCfg);
+    Pmic_powerGetPwrRsrcIdxRegCfg(pPmicCoreHandle->pmicDeviceType,
+                                pwrRsrc,
+                                &pwrRsrcIndex,
+                                &pPwrRsrcRegCfg);
 
     Pmic_criticalSectionStart(pPmicCoreHandle);
     /* Setting the PGOOD HIGH threshold value */
     pmicStatus = Pmic_commIntf_recvByte(
                                     pPmicCoreHandle,
-                                    pPwrRsrcRegCfg[pwrRsrc].pgWindowRegAddr,
+                                    pPwrRsrcRegCfg[pwrRsrcIndex].pgWindowRegAddr,
                                     &regData);
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
