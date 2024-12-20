@@ -609,27 +609,19 @@ static int32_t Pmic_initCoreHandleCommIOCriticalSectionFns(
 }
 
 /*!
- * \brief  API to check if the device requested is the one on the bus
- *
- *         Note: In this API, the default PMIC device is assumed as TPS6594x
- *               LEO PMIC. While adding support for New PMIC device, developer
- *               need to update the API functionality for New PMIC device
- *               accordingly.
+ * \brief  API to get PMIC device revision
  *
  */
-static int32_t Pmic_validateDevOnBus(Pmic_CoreHandle_t    *pPmicCoreHandle,
-                                     int32_t              *pStatus)
+static int32_t Pmic_getDevRev(Pmic_CoreHandle_t *pPmicCoreHandle)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
     /* Start Critical Section */
     Pmic_criticalSectionStart(pPmicCoreHandle);
-
     pmicStatus = Pmic_commIntf_recvByte(pPmicCoreHandle,
                                         PMIC_DEV_REV_REGADDR,
                                         &regVal);
-
     Pmic_criticalSectionStop(pPmicCoreHandle);
 
     if(PMIC_ST_SUCCESS == pmicStatus)
@@ -638,39 +630,18 @@ static int32_t Pmic_validateDevOnBus(Pmic_CoreHandle_t    *pPmicCoreHandle,
                         regVal,
                         PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_SHIFT,
                         PMIC_DEV_REV_TI_DEVICE_ID_PG_2_0_SILICON_REV_MASK);
-
-        /* Validate if the device requested is the one on the bus */
-        switch (pPmicCoreHandle->pmicDeviceType)
-        {
-            case PMIC_DEV_HERA_LP8764X:
-                if(PMIC_LP8764X_DEV_REV_ID_PG_2_0 !=
-                   pPmicCoreHandle->pmicDevRev)
-                {
-                    *pStatus = PMIC_ST_WARN_INV_DEVICE_ID;
-                }
-                break;
-            default:
-                /* Default case is valid only for TPS6594x LEO PMIC */
-                if(PMIC_TPS6594X_DEV_REV_ID_PG_2_0 !=
-                   pPmicCoreHandle->pmicDevRev)
-                {
-                    *pStatus = PMIC_ST_WARN_INV_DEVICE_ID;
-                }
-                break;
-        }
     }
 
     return pmicStatus;
 }
 
 /*!
- * \brief  API to update CRC Enable status info to PMIC handle and Check if the
- *        device requested is the one on the bus
+ * \brief  API to update CRC Enable status info to PMIC handle and get device
+           revision
  *
  */
-static int32_t Pmic_updateCrcEnableStatValidateDevOnBus(
-                                          Pmic_CoreHandle_t    *pPmicCoreHandle,
-                                          int32_t              *pStatus)
+static int32_t Pmic_updateCrcEnableStatGetDevRev(
+                                             Pmic_CoreHandle_t *pPmicCoreHandle)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
     uint8_t i2c1SpiCrcStat = 0xFF, i2c2CrcStat = 0xFF;
@@ -707,7 +678,7 @@ static int32_t Pmic_updateCrcEnableStatValidateDevOnBus(
 
     if(PMIC_ST_SUCCESS == pmicStatus)
     {
-        pmicStatus = Pmic_validateDevOnBus(pPmicCoreHandle, pStatus);
+        pmicStatus = Pmic_getDevRev(pPmicCoreHandle);
     }
 
     return pmicStatus;
@@ -722,7 +693,6 @@ static int32_t Pmic_updateSubSysInfoValidateMainQaCommIFRdWr(
                                           Pmic_CoreHandle_t    *pPmicCoreHandle)
 {
     int32_t pmicStatus = PMIC_ST_SUCCESS;
-    int32_t status = PMIC_ST_SUCCESS;
     uint8_t regVal = 0U;
 
     /* Update PMIC subsystem info to PMIC handle */
@@ -732,11 +702,10 @@ static int32_t Pmic_updateSubSysInfoValidateMainQaCommIFRdWr(
     /* Check the Main communication interface if PMIC handle is ready for rw */
     if(0x0U == pPmicCoreHandle->drvInitStatus)
     {
-        /* Update CRC Enable status info to PMIC handle and Check if the
-         * device requested is the one on the bus */
-        pmicStatus = Pmic_updateCrcEnableStatValidateDevOnBus(
-                                                           pPmicCoreHandle,
-                                                           &status);
+        /*
+         * Update CRC Enable status info to PMIC handle and get device revision
+         */
+        pmicStatus = Pmic_updateCrcEnableStatGetDevRev(pPmicCoreHandle);
 
         if(PMIC_ST_SUCCESS == pmicStatus)
         {
@@ -764,8 +733,6 @@ static int32_t Pmic_updateSubSysInfoValidateMainQaCommIFRdWr(
                 {
                     Pmic_tps6594x_reInitInterruptConfig();
                 }
-
-                pmicStatus = status;
             }
         }
     }
