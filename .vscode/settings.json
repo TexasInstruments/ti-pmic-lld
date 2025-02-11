@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "*.gui": "html",
+        "pmic.h": "c"
+    }
+}
