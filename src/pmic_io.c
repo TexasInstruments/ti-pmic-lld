@@ -118,3 +118,53 @@ int32_t Pmic_ioTxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txDat
 
     return handle->pFnPmicCommIoWrite(handle, (uint8_t)PMIC_MAIN_INST, regAddr, &txBuf[0], 4U);
 }
+
+int32_t Pmic_ioTxWordSeq(Pmic_CoreHandle_t *handle, uint16_t baseAddr, uint32_t txData, uint8_t count) {
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Validate that `count` is within bounds of the storage type
+    if (count > sizeof(uint32_t))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        for (uint8_t i = 0; ((i < count) && (status == PMIC_ST_SUCCESS)); i++)
+        {
+            status = Pmic_ioTxByte(handle, baseAddr + (uint16_t)i, (uint8_t)((txData >> (i * 8U)) & 0xFFU));
+        }
+    }
+
+    return status;
+}
+
+int32_t Pmic_ioRxWordSeq(Pmic_CoreHandle_t *handle, uint16_t baseAddr, uint32_t *rxData, uint8_t count) {
+    int32_t status = PMIC_ST_SUCCESS;
+    uint32_t value = 0U;
+    uint8_t regData = 0U;
+
+    // Validate that `count` is within bounds of the storage type
+    if (count > sizeof(uint32_t))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        // Read from registers sequentially, starting at baseAddr
+        for (uint8_t i = 0; ((i < count) && (status == PMIC_ST_SUCCESS)); i++)
+        {
+            status = Pmic_ioRxByte(handle, baseAddr + (uint16_t)i, &regData);
+            value |= (uint32_t)(regData << (i * 8U));
+        }
+    }
+
+    // Store composite value back to the user facing param if all transactions were successful.
+    if (status == PMIC_ST_SUCCESS)
+    {
+        *rxData = value;
+    }
+
+    return status;
+}

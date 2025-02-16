@@ -89,14 +89,47 @@ int32_t Pmic_ioTxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txDat
  * @brief Read a byte from the given PMIC `regAddr`, extracting the desired
  * register data from the CRC framed data returned by the PMIC.
  *
- * @param handle   [IN] PMIC Interface Handle
- * @param regAddr  [IN] Register address to read from
- * @param rxBuffer [IN] Buffer to store result data in
+ * @param handle   [IN]  PMIC Interface Handle
+ * @param regAddr  [IN]  Register address to read from
+ * @param rxBuffer [OUT] Buffer to store result data in
  *
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_ioRxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *rxBuffer);
+
+/**
+ * @ingroup DRV_PMIC_IO_MODULE
+ * @brief Write up to 4 bytes to a linear sequence of registers starting at
+ * `baseAddr`, performing CRC on communications if necessary and enabled.
+ *
+ * @param handle   [IN] PMIC Interface Handle
+ * @param baseAddr [IN] Register address to start writing to
+ * @param txData   [IN] Data to send
+ * @param count    [IN] Number of bytes to write, must not be more than what can
+ *                      be stored in a uint32_t.
+ *
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * possible values, see @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_ioTxWordSeq(Pmic_CoreHandle_t *handle, uint16_t baseAddr, uint32_t txData, uint8_t count);
+
+/**
+ * @ingroup DRV_PMIC_IO_MODULE
+ * @brief Read up to 4 bytes from a linear sequence of registers starting at
+ * `baseAddr`, extracting the desired register data from the CRC framed data
+ * returned by the PMIC.
+ *
+ * @param handle   [IN]  PMIC Interface Handle
+ * @param baseAddr [IN]  Register address to start reading from
+ * @param rxData   [OUT] Buffer to store result data in
+ * @param count    [IN]  Number of bytes to read, must not be more than what can
+ *                       be stored in a uint32_t.
+ *
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * possible values, see @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_ioRxWordSeq(Pmic_CoreHandle_t *handle, uint16_t baseAddr, uint32_t *rxData, uint8_t count);
 
 #ifdef __cplusplus
 }
