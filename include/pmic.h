@@ -59,6 +59,7 @@
 #include "pmic_fsm.h"
 #include "pmic_wdg.h"
 #include "pmic_gpio.h"
+#include "pmic_esm.h"
 
 #ifdef __cplusplus
 extern "C" {
