@@ -384,6 +384,20 @@ typedef struct Pmic_WdgFailCntStat_s {
     uint8_t wdFailCnt;
 } Pmic_WdgFailCntStat_t;
 
+/**
+ * @brief This struct contains the information needed to calculate WDG answer
+ * bytes.
+ *
+ * @param fdbk WDG Q&A feedback value.
+ * @param answCnt WDG Q&A answer count value.
+ * @param question WDG Q&A question.
+ */
+typedef struct Pmic_WdgAnsInfo_s {
+    uint8_t fdbk;
+    uint8_t ansCnt;
+    uint8_t question;
+} Pmic_WdgAnsInfo_t;
+
 /* ========================================================================== */
 /*                            Function Declarations                           */
 /* ========================================================================== */
@@ -645,6 +659,142 @@ int32_t Pmic_wdgGetFailCntStat(Pmic_CoreHandle_t *handle, Pmic_WdgFailCntStat_t 
  * possible values, see @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_wdgQaSequenceWriteAnswer(Pmic_CoreHandle_t *handle);
+
+/**
+ * @brief Read PMIC register that has the WDG Q&A feedback.
+ *
+ * @details To calculate and send the correct WDG answer byte, the MCU needs
+ * the correct WDG feedback, answer count, and question values. This API is
+ * used as part of a series of 5 APIs which can be used to write an answer
+ * byte to the PMIC.
+ * 1. Pmic_wdgGetFdbkRegData()
+ * 2. Pmic_wdgExtractFdbk()
+ * 3. Pmic_wdgGetAnsCntAndQuesRegData()
+ * 4. Pmic_wdgExtractAnsCntAndQues()
+ * 5. Pmic_wdgWriteAnswer()
+ *
+ * See also: `Pmic_wdgQaSequenceWriteAnswer()` which performs these steps
+ * automatically.
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param regData [OUT] Register data that contains the WDG Q&A feedback.
+ *
+ * @return PMIC_ST_SUCCESS if PMIC register data has been obtained, error code
+ * otherwise. For valid success/error codes, see @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_wdgGetFdbkRegData(Pmic_CoreHandle_t *handle, uint8_t *regData);
+
+/**
+ * @brief Extract WDG feedback value from the input register data.
+ *
+ * @details To calculate and send the correct WDG answer byte, the MCU needs
+ * the correct WDG feedback, answer count, and question values. This API is
+ * used as part of a series of 5 APIs which can be used to write an answer
+ * byte to the PMIC.
+ * 1. Pmic_wdgGetFdbkRegData()
+ * 2. Pmic_wdgExtractFdbk()
+ * 3. Pmic_wdgGetAnsCntAndQuesRegData()
+ * 4. Pmic_wdgExtractAnsCntAndQues()
+ * 5. Pmic_wdgWriteAnswer()
+ *
+ * See also: `Pmic_wdgQaSequenceWriteAnswer()` which performs these steps
+ * automatically.
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param regData [IN] Register data that contains the WDG Q&A feedback.
+ *
+ * @param wdgAnsInfo [OUT] WDG answer information structure. The feedback value
+ * will be stored in this structure.
+ *
+ * @return PMIC_ST_SUCCESS if the WDG feedback value has been extracted, error
+ * code otherwise. For valid success/error codes, see @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_wdgExtractFdbk(Pmic_CoreHandle_t *handle, uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsInfo);
+
+/**
+ * @brief Read PMIC register that has the WDG Q&A answer count and question.
+ *
+ * @details To calculate and send the correct WDG answer byte, the MCU needs
+ * the correct WDG feedback, answer count, and question values. This API is
+ * used as part of a series of 5 APIs which can be used to write an answer
+ * byte to the PMIC.
+ * 1. Pmic_wdgGetFdbkRegData()
+ * 2. Pmic_wdgExtractFdbk()
+ * 3. Pmic_wdgGetAnsCntAndQuesRegData()
+ * 4. Pmic_wdgExtractAnsCntAndQues()
+ * 5. Pmic_wdgWriteAnswer()
+ *
+ * See also: `Pmic_wdgQaSequenceWriteAnswer()` which performs these steps
+ * automatically.
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param regData [OUT] Register data that contains the WDG answer count and
+ * question.
+ *
+ * @return PMIC_ST_SUCCESS if PMIC register data has been obtained, error
+ * code otherwise. For valid success/error codes, see @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_wdgGetAnsCntAndQuesRegData(Pmic_CoreHandle_t *handle, uint8_t *regData);
+
+/**
+ * @brief Extract WDG answer count and question from the input register data.
+ *
+ * @details To calculate and send the correct WDG answer byte, the MCU needs
+ * the correct WDG feedback, answer count, and question values. This API is
+ * used as part of a series of 5 APIs which can be used to write an answer
+ * byte to the PMIC.
+ * 1. Pmic_wdgGetFdbkRegData()
+ * 2. Pmic_wdgExtractFdbk()
+ * 3. Pmic_wdgGetAnsntAndQuesRegData()
+ * 4. Pmic_wdgExtractAnsCntAndQues()
+ * 5. Pmic_wdgWriteAnswer()
+ *
+ * See also: `Pmic_wdgQaSequenceWriteAnswer()` which performs these steps
+ * automatically.
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param regData [IN] Register data that contains the WDG answer count and
+ * question.
+ *
+ * @param wdgAnsInfo [OUT] WDG answer information structure. The answer count
+ * and question will be stored in this structure.
+ *
+ * @return PMIC_ST_SUCCESS if the WDG answer count and question has been
+ * extracted, error code otherwise. For valid success/error codes, see
+ * @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_wdgExtractAnsCntAndQues(Pmic_CoreHandle_t *handle, uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsInfo);
+
+/**
+ * @brief Calculate and write WDG answer byte to the PMIC.
+ *
+ * @details To calculate and send the correct WDG answer byte, the MCU needs
+ * the correct WDG feedback, answer count, and question values. This API is
+ * used as part of a series of 5 APIs which can be used to write an answer
+ * byte to the PMIC.
+ * 1. Pmic_wdgGetFdbkRegData()
+ * 2. Pmic_wdgExtractFdbk()
+ * 3. Pmic_wdgGetAnsCntAndQuesRegData()
+ * 4. Pmic_wdgExtractAnsCntAndQues()
+ * 5. Pmic_wdgWriteAnswer()
+ *
+ * See also: `Pmic_wdgQaSequenceWriteAnswer()` which performs these steps
+ * automatically.
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param wdgAnsInfo [IN] WDG answer information structure that contains the
+ * necessary data to calculate the correct WDG answer byte.
+ *
+ * @return PMIC_ST_SUCCESS if the WDG answer has been calculated and sent to the
+ * PMIC, error code otherwise. For valid success/error codes, see
+ * @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_wdgWriteAnswer(Pmic_CoreHandle_t *handle, const Pmic_WdgAnsInfo_t *wdgAnsInfo);
 
 #ifdef __cplusplus
 }
