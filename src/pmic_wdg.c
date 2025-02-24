@@ -736,3 +736,76 @@ int32_t Pmic_wdgQaSequenceWriteAnswer(Pmic_CoreHandle_t *handle) {
 
     return status;
 }
+
+int32_t Pmic_wdgGetFdbkRegData(Pmic_CoreHandle_t *handle, uint8_t *regData) {
+    int32_t status = Pmic_checkPmicCoreHandle(handle);
+
+    if ((status == PMIC_ST_SUCCESS) && (regData == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_ioRxByte_CS(handle, PMIC_WD_QA_CFG_REG, regData);
+    }
+
+    return status;
+}
+
+int32_t Pmic_wdgExtractFdbk(Pmic_CoreHandle_t *handle, uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsInfo) {
+    int32_t status = Pmic_checkPmicCoreHandle(handle);
+
+    if ((status == PMIC_ST_SUCCESS) && (wdgAnsInfo == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        wdgAnsInfo->fdbk = Pmic_getBitField(regData, PMIC_WD_QA_FDBK_SHIFT, PMIC_WD_QA_FDBK_MASK);
+    }
+
+    return status;
+}
+
+int32_t Pmic_wdgGetAnsCntAndQuesRegData(Pmic_CoreHandle_t *handle, uint8_t *regData) {
+    int32_t status = Pmic_checkPmicCoreHandle(handle);
+
+    if ((status == PMIC_ST_SUCCESS) && (regData == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_ioRxByte_CS(handle, PMIC_WD_QA_CNT_REG, regData);
+    }
+
+    return status;
+}
+
+int32_t Pmic_wdgExtractAnsCntAndQues(Pmic_CoreHandle_t *handle, uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsInfo) {
+    int32_t status = Pmic_checkPmicCoreHandle(handle);
+
+    if ((status == PMIC_ST_SUCCESS) && (wdgAnsInfo == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        wdgAnsInfo->ansCnt = Pmic_getBitField(regData, PMIC_WD_ANSW_CNT_SHIFT, PMIC_WD_ANSW_CNT_MASK);
+        wdgAnsInfo->question = Pmic_getBitField(regData, PMIC_WD_QUESTION_SHIFT, PMIC_WD_QUESTION_MASK);
+    }
+
+    return status;
+}
+
+int32_t Pmic_wdgWriteAnswer(Pmic_CoreHandle_t *handle, const Pmic_WdgAnsInfo_t *wdgAnsInfo) {
+    uint8_t regData = 0U;
+    int32_t status = Pmic_checkPmicCoreHandle(handle);
+
+    if ((status == PMIC_ST_SUCCESS) && (wdgAnsInfo == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        regData = WDG_evalAnswerByte(wdgAnsInfo->question, wdgAnsInfo->ansCnt, wdgAnsInfo->fdbk);
+        status = Pmic_ioTxByte_CS(handle, PMIC_WD_ANSWER_REG, regData);
+    }
+
+    return status;
+}
