@@ -53,6 +53,7 @@ extern "C" {
 #include "pmic_irq.h"
 #include "pmic_wdg.h"
 #include "pmic_esm.h"
+#include "pmic_gpio.h"
 #include "pmic_io.h"
 
 /* ========================================================================== */
