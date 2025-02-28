@@ -46,10 +46,6 @@
 #include "regmap/gpio.h"
 
 /* ========================================================================== */
-/*                           Macros & Typedefs                                */
-/* ========================================================================== */
-
-/* ========================================================================== */
 /*                        Interface Implementations                           */
 /* ========================================================================== */
 
@@ -91,8 +87,8 @@ static int32_t GPIO_setCfgGpi1_4(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t
     if (status == PMIC_ST_SUCCESS)
     {
         status = Pmic_ioTxByte(handle, GPI_CFG_REG, regData);
-        Pmic_criticalSectionStop(handle);
     }
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
@@ -135,8 +131,8 @@ static int32_t GPIO_setCfgGpo1_2(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t
     if (status == PMIC_ST_SUCCESS)
     {
         status = Pmic_ioTxByte(handle, GPO_CFG1_REG, regData);
-        Pmic_criticalSectionStop(handle);
     }
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
@@ -179,20 +175,21 @@ static int32_t GPIO_setCfgGpo3_4(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t
     if (status == PMIC_ST_SUCCESS)
     {
         status = Pmic_ioTxByte(handle, GPO_CFG2_REG, regData);
-        Pmic_criticalSectionStop(handle);
     }
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
 
 int32_t Pmic_gpioSetCfg(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
 {
-    // Parameter check
     int32_t status = Pmic_checkPmicCoreHandle(handle);
+
     if ((status == PMIC_ST_SUCCESS) && (gpioCfg == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
+
     if ((status == PMIC_ST_SUCCESS) && (gpioCfg->validParams == 0U))
     {
         status = PMIC_ST_ERR_INV_PARAM;
@@ -308,12 +305,13 @@ static int32_t GPIO_getCfgGpo3_4(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpio
 
 int32_t Pmic_gpioGetCfg(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpioCfg)
 {
-    // Parameter check
     int32_t status = Pmic_checkPmicCoreHandle(handle);
+
     if ((status == PMIC_ST_SUCCESS) && (gpioCfg == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
+
     if ((status == PMIC_ST_SUCCESS) && (gpioCfg->validParams == 0U))
     {
         status = PMIC_ST_ERR_INV_PARAM;
@@ -349,13 +347,13 @@ int32_t Pmic_gpioGetCfg(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpioCfg)
 int32_t Pmic_gpioGetOutputVal(Pmic_CoreHandle_t *handle, uint8_t gpo, bool *high)
 {
     uint8_t regData = 0U;
-
-    // Parameter check
     int32_t status = Pmic_checkPmicCoreHandle(handle);
+
     if ((status == PMIC_ST_SUCCESS) && (gpo > PMIC_GPO_MAX))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
+
     if ((status == PMIC_ST_SUCCESS) && (high == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
@@ -364,13 +362,15 @@ int32_t Pmic_gpioGetOutputVal(Pmic_CoreHandle_t *handle, uint8_t gpo, bool *high
     // Read RDBK_LVL_STAT register
     if (status == PMIC_ST_SUCCESS)
     {
+        Pmic_criticalSectionStart(handle);
         status = Pmic_ioRxByte(handle, RDBK_LVL_STAT_REG, &regData);
+        Pmic_criticalSectionStop(handle);
     }
 
     // Extract GPO value
     if (status == PMIC_ST_SUCCESS)
     {
-        high = Pmic_getBitField_b(regData, GPO1_RDBK_LVL_SHIFT + (gpo - 1U));
+        *high = Pmic_getBitField_b(regData, GPO1_RDBK_LVL_SHIFT + (gpo - 1U));
     }
 
     return status;
