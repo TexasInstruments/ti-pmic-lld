@@ -86,6 +86,7 @@ SOURCES = \
 	src/pmic_io.c \
 	src/pmic_irq.c \
 	src/pmic_power.c \
+	src/pmic_fsm.c \
 	src/pmic_wdg.c
 
 OBJECTS = $(SOURCES:.c=.o)
