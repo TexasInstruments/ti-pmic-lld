@@ -62,87 +62,102 @@ extern "C" {
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
-#define PMIC_CFG_REG_CRC_ERR_INT                 (0)
-#define PMIC_NRST_RDBK_ERR_INT                   (1)
-#define PMIC_SAFE_OUT1_RDBK_ERR_INT              (2)
-#define PMIC_EN_OUT_RDBK_ERR_INT                 (3)
-#define PMIC_GPO1_RDBK_ERR_INT                   (4)
-#define PMIC_GPO2_RDBK_ERR_INT                   (5)
-#define PMIC_GPO3_RDBK_ERR_INT                   (6)
-#define PMIC_GPO4_RDBK_ERR_INT                   (7)
-#define PMIC_NORMAL_OFF_INT                      (8)
-#define PMIC_OFF_INT_EVT_ERR_INT                 (9)
-#define PMIC_OFF_PROT_EVT_INT                    (10)
-#define PMIC_FIRST_PWR_ON_INT                    (11)
-#define PMIC_CLK_ERR_INT                         (12)
-#define PMIC_INTERNAL_OV_INT                     (13)
-#define PMIC_INIT_AN_TMO_INT                     (14)
-#define PMIC_CRC_ERR_INT                         (15)
-#define PMIC_SYS_CLK_ERR_PROT_INT                (16)
-#define PMIC_RST_MCU_TMO_INT                     (17)
-#define PMIC_BGXM_ERR_INT                        (18)
-#define PMIC_VBAT_OVP_ERR_INT                    (19)
-#define PMIC_BB_OVP_ERR_INT                      (20)
-#define PMIC_BB_BST_TMO_INT                      (21)
-#define PMIC_BB_PK_ILIM_ERR_INT                  (22)
-#define PMIC_WD_TMO_INT                          (23)
-#define PMIC_WD_TRIG_EARLY_INT                   (24)
-#define PMIC_WD_ANSW_EARLY_INT                   (25)
-#define PMIC_WD_SEQ_ERR_INT                      (26)
-#define PMIC_WD_ANSW_ERR_INT                     (27)
-#define PMIC_WD_LONGWIN_TMO_INT                  (28)
-#define PMIC_WD_TH1_ERR_INT                      (29)
-#define PMIC_WD_TH2_ERR_INT                      (30)
-#define PMIC_ESM_ERR_INT                         (31)
-#define PMIC_ESM_DLY1_ERR_INT                    (32)
-#define PMIC_ESM_DLY2_ERR_INT                    (33)
-#define PMIC_BB_UV_ERR_INT                       (34)
-#define PMIC_BB_OV_ERR_INT                       (35)
-#define PMIC_LDO1_UV_ERR_INT                     (36)
-#define PMIC_LDO1_OV_ERR_INT                     (37)
-#define PMIC_LDO2_UV_ERR_INT                     (38)
-#define PMIC_LDO2_OV_ERR_INT                     (39)
-#define PMIC_LDO3_UV_ERR_INT                     (40)
-#define PMIC_LDO3_OV_ERR_INT                     (41)
-#define PMIC_LDO4_UV_ERR_INT                     (42)
-#define PMIC_LDO4_OV_ERR_INT                     (43)
-#define PMIC_PLDO1_UV_ERR_INT                    (44)
-#define PMIC_PLDO1_OV_ERR_INT                    (45)
-#define PMIC_PLDO2_UV_ERR_INT                    (46)
-#define PMIC_PLDO2_OV_ERR_INT                    (47)
-#define PMIC_EXT_VMON1_UV_ERR_INT                (48)
-#define PMIC_EXT_VMON1_OV_ERR_INT                (49)
-#define PMIC_EXT_VMON2_UV_ERR_INT                (50)
-#define PMIC_EXT_VMON2_OV_ERR_INT                (51)
-#define PMIC_LDO1_ILIM_ERR_INT                   (52)
-#define PMIC_LDO2_ILIM_ERR_INT                   (53)
-#define PMIC_LDO3_ILIM_ERR_INT                   (54)
-#define PMIC_LDO4_ILIM_ERR_INT                   (55)
-#define PMIC_PLDO1_ILIM_ERR_INT                  (56)
-#define PMIC_PLDO2_ILIM_ERR_INT                  (57)
-#define PMIC_BB_AVG_ILIM_ERR_INT                 (58)
-#define PMIC_ABIST_ERR_INT                       (59)
-#define PMIC_LBIST_ERR_INT                       (60)
-#define PMIC_TMR_REG_ERR_INT                     (61)
-#define PMIC_M_PMIC_HB_ERR_INT                   (62)
-#define PMIC_SAFE_ST_TMO_RST_ERR_INT             (63)
-#define PMIC_SPI_CRC_ERR_INT                     (64)
-#define PMIC_FRM_ERR_INT                         (65)
-#define PMIC_ADDR_ERR_INT                        (66)
-#define PMIC_SCLK_ERR_INT                        (67)
-#define PMIC_COMP1_ERR_INT                       (68)
-#define PMIC_COMP1P_UV_ERR_INT                   (69)
-#define PMIC_COMP1P_OV_ERR_INT                   (70)
-#define PMIC_COMP1N_UV_ERR_INT                   (71)
-#define PMIC_COMP1N_OV_ERR_INT                   (72)
-#define PMIC_COMP2_ERR_INT                       (73)
-#define PMIC_COMP2P_UV_ERR_INT                   (74)
-#define PMIC_COMP2P_OV_ERR_INT                   (75)
-#define PMIC_COMP2N_UV_ERR_INT                   (76)
-#define PMIC_COMP2N_OV_ERR_INT                   (77)
+
+/**
+ * @anchor Pmic_IRQs
+ * @name PMIC Interrupt Requests
+ *
+ * @brief Maskable and nonmaskable PMIC interrupt requests.
+ *
+ * @details IRQs below are labeled as STD_IRQ, CFG_NMI, or NCFG_NMI.
+ * 1. STD_IRQ indicates the IRQ is standard (configurable, maskable).
+ * 2. CFG_NMI indicates the IRQ is a configurable non-maskable interrupt.
+ * 3. NCFG_NMI indicates the IRQ is a non-configurable non-maskable interrupt.
+ *
+ * @{
+ */
+#define PMIC_CFG_REG_CRC_ERR_INT                 (0)  /** @brief NCFG_NMI */
+#define PMIC_NRST_RDBK_ERR_INT                   (1)  /** @brief STD_IRQ  */
+#define PMIC_SAFE_OUT1_RDBK_ERR_INT              (2)  /** @brief STD_IRQ  */
+#define PMIC_EN_OUT_RDBK_ERR_INT                 (3)  /** @brief STD_IRQ  */
+#define PMIC_GPO1_RDBK_ERR_INT                   (4)  /** @brief STD_IRQ  */
+#define PMIC_GPO2_RDBK_ERR_INT                   (5)  /** @brief STD_IRQ  */
+#define PMIC_GPO3_RDBK_ERR_INT                   (6)  /** @brief STD_IRQ  */
+#define PMIC_GPO4_RDBK_ERR_INT                   (7)  /** @brief STD_IRQ  */
+#define PMIC_NORMAL_OFF_INT                      (8)  /** @brief NCFG_NMI */
+#define PMIC_OFF_INT_EVT_ERR_INT                 (9)  /** @brief NCFG_NMI */
+#define PMIC_OFF_PROT_EVT_INT                    (10) /** @brief NCFG_NMI */
+#define PMIC_FIRST_PWR_ON_INT                    (11) /** @brief NCFG_NMI */
+#define PMIC_CLK_ERR_INT                         (12) /** @brief NCFG_NMI */
+#define PMIC_INTERNAL_OV_INT                     (13) /** @brief NCFG_NMI */
+#define PMIC_INIT_AN_TMO_INT                     (14) /** @brief NCFG_NMI */
+#define PMIC_CRC_ERR_INT                         (15) /** @brief NCFG_NMI */
+#define PMIC_SYS_CLK_ERR_PROT_INT                (16) /** @brief NCFG_NMI */
+#define PMIC_RST_MCU_TMO_INT                     (17) /** @brief NCFG_NMI */
+#define PMIC_BGXM_ERR_INT                        (18) /** @brief NCFG_NMI */
+#define PMIC_VBAT_OVP_ERR_INT                    (19) /** @brief NCFG_NMI */
+#define PMIC_BB_OVP_ERR_INT                      (20) /** @brief NCFG_NMI */
+#define PMIC_BB_BST_TMO_INT                      (21) /** @brief NCFG_NMI */
+#define PMIC_BB_PK_ILIM_ERR_INT                  (22) /** @brief NCFG_NMI */
+#define PMIC_WD_TMO_INT                          (23) /** @brief NCFG_NMI */
+#define PMIC_WD_TRIG_EARLY_INT                   (24) /** @brief NCFG_NMI */
+#define PMIC_WD_ANSW_EARLY_INT                   (25) /** @brief NCFG_NMI */
+#define PMIC_WD_SEQ_ERR_INT                      (26) /** @brief NCFG_NMI */
+#define PMIC_WD_ANSW_ERR_INT                     (27) /** @brief NCFG_NMI */
+#define PMIC_WD_LONGWIN_TMO_INT                  (28) /** @brief NCFG_NMI */
+#define PMIC_WD_TH1_ERR_INT                      (29) /** @brief STD_IRQ  */
+#define PMIC_WD_TH2_ERR_INT                      (30) /** @brief STD_IRQ  */
+#define PMIC_ESM_ERR_INT                         (31) /** @brief NCFG_NMI */
+#define PMIC_ESM_DLY1_ERR_INT                    (32) /** @brief STD_IRQ  */
+#define PMIC_ESM_DLY2_ERR_INT                    (33) /** @brief STD_IRQ  */
+#define PMIC_BB_UV_ERR_INT                       (34) /** @brief STD_IRQ  */
+#define PMIC_BB_OV_ERR_INT                       (35) /** @brief STD_IRQ  */
+#define PMIC_LDO1_UV_ERR_INT                     (36) /** @brief STD_IRQ  */
+#define PMIC_LDO1_OV_ERR_INT                     (37) /** @brief STD_IRQ  */
+#define PMIC_LDO2_UV_ERR_INT                     (38) /** @brief STD_IRQ  */
+#define PMIC_LDO2_OV_ERR_INT                     (39) /** @brief STD_IRQ  */
+#define PMIC_LDO3_UV_ERR_INT                     (40) /** @brief STD_IRQ  */
+#define PMIC_LDO3_OV_ERR_INT                     (41) /** @brief STD_IRQ  */
+#define PMIC_LDO4_UV_ERR_INT                     (42) /** @brief STD_IRQ  */
+#define PMIC_LDO4_OV_ERR_INT                     (43) /** @brief STD_IRQ  */
+#define PMIC_PLDO1_UV_ERR_INT                    (44) /** @brief STD_IRQ  */
+#define PMIC_PLDO1_OV_ERR_INT                    (45) /** @brief STD_IRQ  */
+#define PMIC_PLDO2_UV_ERR_INT                    (46) /** @brief STD_IRQ  */
+#define PMIC_PLDO2_OV_ERR_INT                    (47) /** @brief STD_IRQ  */
+#define PMIC_EXT_VMON1_UV_ERR_INT                (48) /** @brief STD_IRQ  */
+#define PMIC_EXT_VMON1_OV_ERR_INT                (49) /** @brief STD_IRQ  */
+#define PMIC_EXT_VMON2_UV_ERR_INT                (50) /** @brief STD_IRQ  */
+#define PMIC_EXT_VMON2_OV_ERR_INT                (51) /** @brief STD_IRQ  */
+#define PMIC_LDO1_ILIM_ERR_INT                   (52) /** @brief CFG_NMI  */
+#define PMIC_LDO2_ILIM_ERR_INT                   (53) /** @brief CFG_NMI  */
+#define PMIC_LDO3_ILIM_ERR_INT                   (54) /** @brief CFG_NMI  */
+#define PMIC_LDO4_ILIM_ERR_INT                   (55) /** @brief CFG_NMI  */
+#define PMIC_PLDO1_ILIM_ERR_INT                  (56) /** @brief CFG_NMI  */
+#define PMIC_PLDO2_ILIM_ERR_INT                  (57) /** @brief CFG_NMI  */
+#define PMIC_BB_AVG_ILIM_ERR_INT                 (58) /** @brief NCFG_NMI */
+#define PMIC_ABIST_ERR_INT                       (59) /** @brief NCFG_NMI */
+#define PMIC_LBIST_ERR_INT                       (60) /** @brief NCFG_NMI */
+#define PMIC_TMR_REG_ERR_INT                     (61) /** @brief NCFG_NMI */
+#define PMIC_M_PMIC_HB_ERR_INT                   (62) /** @brief NCFG_NMI */
+#define PMIC_SAFE_ST_TMO_RST_ERR_INT             (63) /** @brief NCFG_NMI */
+#define PMIC_SPI_CRC_ERR_INT                     (64) /** @brief NCFG_NMI */
+#define PMIC_FRM_ERR_INT                         (65) /** @brief NCFG_NMI */
+#define PMIC_ADDR_ERR_INT                        (66) /** @brief NCFG_NMI */
+#define PMIC_SCLK_ERR_INT                        (67) /** @brief NCFG_NMI */
+#define PMIC_COMP1_ERR_INT                       (68) /** @brief NCFG_NMI */
+#define PMIC_COMP1P_UV_ERR_INT                   (69) /** @brief STD_IRQ  */
+#define PMIC_COMP1P_OV_ERR_INT                   (70) /** @brief STD_IRQ  */
+#define PMIC_COMP1N_UV_ERR_INT                   (71) /** @brief STD_IRQ  */
+#define PMIC_COMP1N_OV_ERR_INT                   (72) /** @brief STD_IRQ  */
+#define PMIC_COMP2_ERR_INT                       (73) /** @brief NCFG_NMI */
+#define PMIC_COMP2P_UV_ERR_INT                   (74) /** @brief STD_IRQ  */
+#define PMIC_COMP2P_OV_ERR_INT                   (75) /** @brief STD_IRQ  */
+#define PMIC_COMP2N_UV_ERR_INT                   (76) /** @brief STD_IRQ  */
+#define PMIC_COMP2N_OV_ERR_INT                   (77) /** @brief STD_IRQ  */
 #define PMIC_IRQ_MAX                             (PMIC_COMP2N_OV_ERR_INT)
 #define PMIC_IRQ_NUM                             (PMIC_IRQ_MAX + 1U)
 #define PMIC_IRQ_ALL                             ((uint8_t)0xFFU)
+/** @} */
 
 // Defines used internally only
 #define PMIC_NUM_ELEM_IN_INTR_STAT               ((uint8_t)4)
@@ -155,14 +170,32 @@ extern "C" {
  * @brief Contains macros used in the IRQ module of PMIC driver.
  */
 
+/**
+ * @anchor Pmic_IrqCfgValidParams
+ * @name PMIC Interrupt Request Configuration Valid Parameters
+ *
+ * @brief Valid parameters of the Pmic_IrqCfg_t struct.
+ *
+ * @{
+ */
 #define PMIC_IRQ_CFG_MASK_VALID         (0U)
 #define PMIC_IRQ_CFG_CONFIG_VALID       (1U)
+/** @} */
 
+/**
+ * @anchor Pmic_IrqCfgValidParamShifts
+ * @name PMIC Interrupt Request Configuration Valid Parameter Shifts
+ *
+ * @brief Valid parameter shifts of the Pmic_IrqCfg_t struct.
+ *
+ * @{
+ */
 #define PMIC_IRQ_CFG_MASK_VALID_SHIFT   (1U << PMIC_IRQ_CFG_MASK_VALID)
 #define PMIC_IRQ_CFG_CONFIG_VALID_SHIFT (1U << PMIC_IRQ_CFG_CONFIG_VALID)
 #define PMIC_IRQ_CFG_ALL_VALID_SHIFT (\
     PMIC_IRQ_CFG_MASK_VALID_SHIFT |\
     PMIC_IRQ_CFG_CONFIG_VALID_SHIFT)
+/** @} */
 
 /** * @} */
 /* End of Pmic_IRQMacros */
@@ -178,9 +211,29 @@ extern "C" {
  * @brief Contains structures used in the IRQ module of PMIC driver.
  */
 
-// TODO: Document this, be sure to note that some IRQs are non-maskable, some
-// are non-configurable, list them. Also note that for validParams, irqNum is
-// always required so does not have a corresponding VP.
+/**
+ * @brief Structure used to set/get PMIC IRQ configurations.
+ * @ingroup Pmic_IRQStructures
+ *
+ * @note The PMIC has three categories for interrupt requests: configurable
+ * maskable interrupts, configurable non-maskable interrupts, and
+ * non-configurable non-maskable interrupts. The `mask` parameter is invalid
+ * for non-maskable interrupts. The `config` parameter is invalid for
+ * non-configurable interrupts.
+ *
+ * @attention The `irqNum` field is always a required parameter to be specified.
+ * Consequently, there is no corresponding validParam value for it.
+ *
+ * @param validParams For valid values, see @ref Pmic_IrqCfgValidParamShifts.
+ *
+ * @param irqNum Interrupt request number. For valid values, see
+ * @ref Pmic_IRQs.
+ *
+ * @param mask When set to true, the IRQ is masked. When set to false, IRQ is
+ * unmasked.
+ *
+ * @param config Interrupt behavior configuration.
+ */
 typedef struct Pmic_IrqCfg_s {
     uint8_t validParams;
     uint8_t irqNum;
