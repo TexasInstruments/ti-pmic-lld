@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -55,10 +55,10 @@ extern "C" {
 /*==========================================================================*/
 
 /**
- * @anchor Pmic_configurableGpioNum
- * @name PMIC Configurable GPIO Number
+ * @anchor Pmic_configurableGpi
+ * @name PMIC Configurable GPIs
  *
- * @brief Enumeration of the configurable PMIC GPIOs.
+ * @brief Enumeration of the configurable PMIC GPIs.
  *
  * @{
  */
@@ -66,13 +66,33 @@ extern "C" {
 #define PMIC_GPI4                   (2U)
 #define PMIC_GPI_MIN                (PMIC_GPI1)
 #define PMIC_GPI_MAX                (PMIC_GPI4)
-#define PMIC_GPO1                   (1U)
-#define PMIC_GPO2                   (2U)
-#define PMIC_GPO3                   (3U)
-#define PMIC_GPO4                   (4U)
+/** @} */
+
+/**
+ * @anchor Pmic_configurableGpo
+ * @name PMIC Configurable GPOs
+ *
+ * @brief Enumeration of the configurable PMIC GPOs.
+ *
+ * @{
+ */
+#define PMIC_GPO1                   (3U)
+#define PMIC_GPO2                   (4U)
+#define PMIC_GPO3                   (5U)
+#define PMIC_GPO4                   (6U)
 #define PMIC_GPO_MIN                (PMIC_GPO1)
 #define PMIC_GPO_MAX                (PMIC_GPO4)
-#define PMIC_NUM_CONFIGURABLE_GPIO  (PMIC_GPI_MAX + PMIC_GPO_MAX)
+/** @} */
+
+/**
+ * @anchor Pmic_numConfigurableGpio
+ * @name PMIC Number of Configurable GPIOs
+ *
+ * @brief Number of Configurable GPIOs.
+ *
+ * @{
+ */
+#define PMIC_NUM_CONFIGURABLE_GPIO (6U)
 /** @} */
 
 /**
@@ -82,11 +102,11 @@ extern "C" {
  * @{
  */
 #define PMIC_CFG_GPI1_VALID (0U)
-#define PMIC_CFG_GPI4_VALID (0U)
-#define PMIC_CFG_GPO1_VALID (0U)
-#define PMIC_CFG_GPO2_VALID (0U)
-#define PMIC_CFG_GPO3_VALID (0U)
-#define PMIC_CFG_GPO4_VALID (0U)
+#define PMIC_CFG_GPI4_VALID (1U)
+#define PMIC_CFG_GPO1_VALID (2U)
+#define PMIC_CFG_GPO2_VALID (3U)
+#define PMIC_CFG_GPO3_VALID (4U)
+#define PMIC_CFG_GPO4_VALID (5U)
 /** @} */
 
 /**
@@ -125,12 +145,15 @@ extern "C" {
  *
  * @brief Possible functionalities of GPI4.
  *
+ * @attention It is not recommended to set GPI4 to COS_N functionality if your
+ * PMIC device does not have rotational counter.
+ *
  * @{
  */
-#define PMIC_GPI4_COMPARE_MODULE    (0U)
-#define PMIC_GPI4_WD_IN             (1U)
-#define PMIC_GPI4_COS_N             (2U)
-#define PMIC_GPI4_CFG_MAX           (PMIC_GPI4_COS_N)
+#define PMIC_GPI4_COMPARATOR    (0U)
+#define PMIC_GPI4_WD_IN         (1U)
+#define PMIC_GPI4_COS_N         (2U)
+#define PMIC_GPI4_CFG_MAX       (PMIC_GPI4_COS_N)
 /** @} */
 
 /**
@@ -139,16 +162,19 @@ extern "C" {
  *
  * @brief Possible functionalities of GPO1.
  *
+ * @attention It is not recommended to set GPO1 to SIN_N_O functionality if your
+ * PMIC device does not have rotational counter.
+ *
  * @{
  */
-#define PMIC_GPO1_LOW_LVL               (0U)
-#define PMIC_GPO1_HIGH_LVL              (1U)
-#define PMIC_GPO1_NOT_ENABLED_HIGH_Z    (2U)
-#define PMIC_GPO1_NINT                  (3U)
-#define PMIC_GPO1_EN_OUT                (4U)
-#define PMIC_GPO1_EN_OUT2               (5U)
-#define PMIC_GPO1_SIN_N_O               (7U)
-#define PMIC_GPO1_CFG_MAX               (PMIC_GPO1_SIN_N_O)
+#define PMIC_GPO1_LOW_LVL   (0U)
+#define PMIC_GPO1_HIGH_LVL  (1U)
+#define PMIC_GPO1_HIZ       (2U)
+#define PMIC_GPO1_NINT      (3U)
+#define PMIC_GPO1_EN_OUT    (4U)
+#define PMIC_GPO1_EN_OUT2   (5U)
+#define PMIC_GPO1_SIN_N_O   (7U)
+#define PMIC_GPO1_CFG_MAX   (PMIC_GPO1_SIN_N_O)
 /** @} */
 
 /**
@@ -157,17 +183,20 @@ extern "C" {
  *
  * @brief Possible functionalities of GPO2.
  *
+ * @attention It is not recommended to set GPO2 to SIN_P_O functionality if your
+ * PMIC device does not have rotational counter.
+ *
  * @{
  */
-#define PMIC_GPO2_LOW_LVL               (0U)
-#define PMIC_GPO2_HIGH_LVL              (1U)
-#define PMIC_GPO2_NOT_ENABLED_HIGH_Z    (2U)
-#define PMIC_GPO2_COMP1_OUT             (3U)
-#define PMIC_GPO2_EN_OUT2               (4U)
-#define PMIC_GPO2_SYNCCLKOUT            (5U)
-#define PMIC_GPO2_PGOOD                 (6U)
-#define PMIC_GPO2_SIN_P_O               (7U)
-#define PMIC_GPO2_CFG_MAX               (PMIC_GPO2_SIN_P_O)
+#define PMIC_GPO2_LOW_LVL       (0U)
+#define PMIC_GPO2_HIGH_LVL      (1U)
+#define PMIC_GPO2_HIZ           (2U)
+#define PMIC_GPO2_COMP1_OUT     (3U)
+#define PMIC_GPO2_EN_OUT2       (4U)
+#define PMIC_GPO2_SYNCCLKOUT    (5U)
+#define PMIC_GPO2_PGOOD         (6U)
+#define PMIC_GPO2_SIN_P_O       (7U)
+#define PMIC_GPO2_CFG_MAX       (PMIC_GPO2_SIN_P_O)
 /** @} */
 
 /**
@@ -176,17 +205,20 @@ extern "C" {
  *
  * @brief Possible functionalities of GPO3.
  *
+ * @attention It is not recommended to set GPO3 to COS_P_O functionality if your
+ * PMIC device does not have rotational counter.
+ *
  * @{
  */
-#define PMIC_GPO3_LOW_LVL               (0U)
-#define PMIC_GPO3_HIGH_LVL              (1U)
-#define PMIC_GPO3_NOT_ENABLED_HIGH_Z    (2U)
-#define PMIC_GPO3_PGOOD                 (3U)
-#define PMIC_GPO3_COMP2_OUT             (4U)
-#define PMIC_GPO3_EN_OUT2               (5U)
-#define PMIC_GPO3_SAFE_OUT2             (6U)
-#define PMIC_GPO3_COS_P_O               (7U)
-#define PMIC_GPO3_CFG_MAX               (PMIC_GPO3_COS_P_O)
+#define PMIC_GPO3_LOW_LVL   (0U)
+#define PMIC_GPO3_HIGH_LVL  (1U)
+#define PMIC_GPO3_HIZ       (2U)
+#define PMIC_GPO3_PGOOD     (3U)
+#define PMIC_GPO3_COMP2_OUT (4U)
+#define PMIC_GPO3_EN_OUT2   (5U)
+#define PMIC_GPO3_SAFE_OUT2 (6U)
+#define PMIC_GPO3_COS_P_O   (7U)
+#define PMIC_GPO3_CFG_MAX   (PMIC_GPO3_COS_P_O)
 /** @} */
 
 /**
@@ -195,17 +227,20 @@ extern "C" {
  *
  * @brief Possible functionalities of GPO4.
  *
+ * @attention It is not recommended to set GPO4 to COS_N_O functionality if your
+ * PMIC device does not have rotational counter.
+ *
  * @{
  */
-#define PMIC_GPO4_LOW_LVL               (0U)
-#define PMIC_GPO4_HIGH_LVL              (1U)
-#define PMIC_GPO4_NOT_ENABLED_HIGH_Z    (2U)
-#define PMIC_GPO4_SAFE_OUT2             (3U)
-#define PMIC_GPO4_EN_OUT                (4U)
-#define PMIC_GPO4_NINT                  (5U)
-#define PMIC_GPO4_PGOOD                 (6U)
-#define PMIC_GPO4_COS_N_O               (7U)
-#define PMIC_GPO4_CFG_MAX               (PMIC_GPO4_COS_N_O)
+#define PMIC_GPO4_LOW_LVL   (0U)
+#define PMIC_GPO4_HIGH_LVL  (1U)
+#define PMIC_GPO4_HIZ       (2U)
+#define PMIC_GPO4_SAFE_OUT2 (3U)
+#define PMIC_GPO4_EN_OUT    (4U)
+#define PMIC_GPO4_NINT      (5U)
+#define PMIC_GPO4_PGOOD     (6U)
+#define PMIC_GPO4_COS_N_O   (7U)
+#define PMIC_GPO4_CFG_MAX   (PMIC_GPO4_COS_N_O)
 /** @} */
 
 /*==========================================================================*/
@@ -297,7 +332,7 @@ int32_t Pmic_gpioGetCfg(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpioCfg);
  * @param handle [IN] PMIC interface handle.
  *
  * @param gpo [IN] General purpose output pin number. For valid GPOs, see
- * @ref Pmic_configurableGpioNum
+ * @ref Pmic_configurableGpo
  *
  * @param high [OUT] When returned as true, the GPO pin is high. Else, the GPO
  * pin is low.

@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -49,6 +49,13 @@
 /*                           Macros & Typedefs                                */
 /* ========================================================================== */
 
+/**
+ * @brief GPO1 has two bit fields that have the same functionality; namely,
+ * bit field 2 has the same functionality as bit field 6. This define is to
+ * indicate the duplicate bit field.
+ */
+#define GPO1_HIZ_DUPLICATE (6U)
+
 /* ========================================================================== */
 /*                        Interface Implementations                           */
 /* ========================================================================== */
@@ -56,10 +63,11 @@
 static int32_t GPIO_setCfgGpi1_4(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
 {
     uint8_t regData = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
 
     // Start critical section; read GPI_CFG register
     Pmic_criticalSectionStart(handle);
-    int32_t status = Pmic_ioRxByte(handle, PMIC_GPI_CFG_REG, &regData);
+    status = Pmic_ioRxByte(handle, GPI_CFG_REG, &regData);
 
     // Set GPI1 configuration
     if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPI1_VALID, status))
@@ -70,7 +78,7 @@ static int32_t GPIO_setCfgGpi1_4(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t
         }
         else
         {
-            Pmic_setBitField(&regData, PMIC_GPI1_CFG_SHIFT, PMIC_GPI1_CFG_MASK, gpioCfg->gpi1);
+            Pmic_setBitField(&regData, GPI1_CFG_SHIFT, GPI1_CFG_MASK, gpioCfg->gpi1);
         }
     }
 
@@ -83,16 +91,16 @@ static int32_t GPIO_setCfgGpi1_4(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t
         }
         else
         {
-            Pmic_setBitField(&regData, PMIC_GPI4_CFG_SHIFT, PMIC_GPI4_CFG_MASK, gpioCfg->gpi4);
+            Pmic_setBitField(&regData, GPI4_CFG_SHIFT, GPI4_CFG_MASK, gpioCfg->gpi4);
         }
     }
 
     // Write new register value back to PMIC; stop critical section
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte(handle, PMIC_GPI_CFG_REG, regData);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioTxByte(handle, GPI_CFG_REG, regData);
     }
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
@@ -100,10 +108,11 @@ static int32_t GPIO_setCfgGpi1_4(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t
 static int32_t GPIO_setCfgGpo1_2(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
 {
     uint8_t regData = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
 
     // Start critical section; read GPO_CFG1 register
     Pmic_criticalSectionStart(handle);
-    int32_t status = Pmic_ioRxByte(handle, PMIC_GPO_CFG1_REG, &regData);
+    status = Pmic_ioRxByte(handle, GPO_CFG1_REG, &regData);
 
     // Set GPO1 configuration
     if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPO1_VALID, status))
@@ -114,7 +123,7 @@ static int32_t GPIO_setCfgGpo1_2(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t
         }
         else
         {
-            Pmic_setBitField(&regData, PMIC_GPO1_CFG_SHIFT, PMIC_GPO1_CFG_MASK, gpioCfg->gpo1);
+            Pmic_setBitField(&regData, GPO1_CFG_SHIFT, GPO1_CFG_MASK, gpioCfg->gpo1);
         }
     }
 
@@ -127,16 +136,16 @@ static int32_t GPIO_setCfgGpo1_2(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t
         }
         else
         {
-            Pmic_setBitField(&regData, PMIC_GPO2_CFG_SHIFT, PMIC_GPO2_CFG_MASK, gpioCfg->gpo2);
+            Pmic_setBitField(&regData, GPO2_CFG_SHIFT, GPO2_CFG_MASK, gpioCfg->gpo2);
         }
     }
 
     // Write new register value back to PMIC; stop critical section
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte(handle, PMIC_GPO_CFG1_REG, regData);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioTxByte(handle, GPO_CFG1_REG, regData);
     }
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
@@ -144,10 +153,11 @@ static int32_t GPIO_setCfgGpo1_2(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t
 static int32_t GPIO_setCfgGpo3_4(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
 {
     uint8_t regData = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
 
     // Start critical section; read GPO_CFG2 register
     Pmic_criticalSectionStart(handle);
-    int32_t status = Pmic_ioRxByte(handle, PMIC_GPO_CFG2_REG, &regData);
+    status = Pmic_ioRxByte(handle,GPO_CFG2_REG, &regData);
 
     // Set GPO3 configuration
     if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPO3_VALID, status))
@@ -158,7 +168,7 @@ static int32_t GPIO_setCfgGpo3_4(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t
         }
         else
         {
-            Pmic_setBitField(&regData, PMIC_GPO3_CFG_SHIFT, PMIC_GPO3_CFG_MASK, gpioCfg->gpo3);
+            Pmic_setBitField(&regData, GPO3_CFG_SHIFT, GPO3_CFG_MASK, gpioCfg->gpo3);
         }
     }
 
@@ -171,28 +181,29 @@ static int32_t GPIO_setCfgGpo3_4(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t
         }
         else
         {
-            Pmic_setBitField(&regData, PMIC_GPO4_CFG_SHIFT, PMIC_GPO4_CFG_MASK, gpioCfg->gpo4);
+            Pmic_setBitField(&regData, GPO4_CFG_SHIFT, GPO4_CFG_MASK, gpioCfg->gpo4);
         }
     }
 
     // Write new register value back to PMIC; stop critical section
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioTxByte(handle, PMIC_GPO_CFG2_REG, regData);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioTxByte(handle, GPO_CFG2_REG, regData);
     }
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
 
 int32_t Pmic_gpioSetCfg(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
 {
-    // Parameter check
     int32_t status = Pmic_checkPmicCoreHandle(handle);
+
     if ((status == PMIC_ST_SUCCESS) && (gpioCfg == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
+
     if ((status == PMIC_ST_SUCCESS) && (gpioCfg->validParams == 0U))
     {
         status = PMIC_ST_ERR_INV_PARAM;
@@ -228,10 +239,11 @@ int32_t Pmic_gpioSetCfg(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t *gpioCfg
 static int32_t GPIO_getCfgGpi1_4(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpioCfg)
 {
     uint8_t regData = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
 
     // Read GPI_CFG register
     Pmic_criticalSectionStart(handle);
-    int32_t status = Pmic_ioRxByte(handle, PMIC_GPI_CFG_REG, &regData);
+    status = Pmic_ioRxByte(handle, GPI_CFG_REG, &regData);
     Pmic_criticalSectionStop(handle);
 
     if (status == PMIC_ST_SUCCESS)
@@ -239,13 +251,13 @@ static int32_t GPIO_getCfgGpi1_4(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpio
         // Get GPI1 configuration
         if (Pmic_validParamCheck(gpioCfg->validParams, PMIC_CFG_GPI1_VALID))
         {
-            gpioCfg->gpi1 = Pmic_getBitField(regData, PMIC_GPI1_CFG_SHIFT, PMIC_GPI1_CFG_MASK);
+            gpioCfg->gpi1 = Pmic_getBitField(regData, GPI1_CFG_SHIFT, GPI1_CFG_MASK);
         }
 
         // Get GPI4 configuration
         if (Pmic_validParamCheck(gpioCfg->validParams, PMIC_CFG_GPI4_VALID))
         {
-            gpioCfg->gpi4 = Pmic_getBitField(regData, PMIC_GPI4_CFG_SHIFT, PMIC_GPI4_CFG_MASK);
+            gpioCfg->gpi4 = Pmic_getBitField(regData, GPI4_CFG_SHIFT, GPI4_CFG_MASK);
         }
     }
 
@@ -255,10 +267,11 @@ static int32_t GPIO_getCfgGpi1_4(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpio
 static int32_t GPIO_getCfgGpo1_2(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpioCfg)
 {
     uint8_t regData = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
 
     // Read GPO_CFG1 register
     Pmic_criticalSectionStart(handle);
-    int32_t status = Pmic_ioRxByte(handle, PMIC_GPO_CFG1_REG, &regData);
+    status = Pmic_ioRxByte(handle, GPO_CFG1_REG, &regData);
     Pmic_criticalSectionStop(handle);
 
     if (status == PMIC_ST_SUCCESS)
@@ -266,13 +279,19 @@ static int32_t GPIO_getCfgGpo1_2(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpio
         // Get GPO1 configuration
         if (Pmic_validParamCheck(gpioCfg->validParams, PMIC_CFG_GPO1_VALID))
         {
-            gpioCfg->gpo1 = Pmic_getBitField(regData, PMIC_GPO1_CFG_SHIFT, PMIC_GPO1_CFG_MASK);
+            gpioCfg->gpo1 = Pmic_getBitField(regData, GPO1_CFG_SHIFT, GPO1_CFG_MASK);
+
+            // Account for duplicate functionality
+            if (gpioCfg->gpo1 == GPO1_HIZ_DUPLICATE)
+            {
+                gpioCfg->gpo1 = PMIC_GPO1_HIZ;
+            }
         }
 
         // Get GPO2 configuration
         if (Pmic_validParamCheck(gpioCfg->validParams, PMIC_CFG_GPO2_VALID))
         {
-            gpioCfg->gpo2 = Pmic_getBitField(regData, PMIC_GPO2_CFG_SHIFT, PMIC_GPO2_CFG_MASK);
+            gpioCfg->gpo2 = Pmic_getBitField(regData, GPO2_CFG_SHIFT, GPO2_CFG_MASK);
         }
     }
 
@@ -282,10 +301,11 @@ static int32_t GPIO_getCfgGpo1_2(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpio
 static int32_t GPIO_getCfgGpo3_4(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpioCfg)
 {
     uint8_t regData = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
 
     // Read GPO_CFG2 register
     Pmic_criticalSectionStart(handle);
-    int32_t status = Pmic_ioRxByte(handle, PMIC_GPO_CFG2_REG, &regData);
+    status = Pmic_ioRxByte(handle, GPO_CFG2_REG, &regData);
     Pmic_criticalSectionStop(handle);
 
     if (status == PMIC_ST_SUCCESS)
@@ -293,13 +313,13 @@ static int32_t GPIO_getCfgGpo3_4(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpio
         // Get GPO3 configuration
         if (Pmic_validParamCheck(gpioCfg->validParams, PMIC_CFG_GPO3_VALID))
         {
-            gpioCfg->gpo3 = Pmic_getBitField(regData, PMIC_GPO3_CFG_SHIFT, PMIC_GPO3_CFG_MASK);
+            gpioCfg->gpo3 = Pmic_getBitField(regData, GPO3_CFG_SHIFT, GPO3_CFG_MASK);
         }
 
         // Get GPO4 configuration
         if (Pmic_validParamCheck(gpioCfg->validParams, PMIC_CFG_GPO4_VALID))
         {
-            gpioCfg->gpo4 = Pmic_getBitField(regData, PMIC_GPO4_CFG_SHIFT, PMIC_GPO4_CFG_MASK);
+            gpioCfg->gpo4 = Pmic_getBitField(regData, GPO4_CFG_SHIFT, GPO4_CFG_MASK);
         }
     }
 
@@ -308,12 +328,13 @@ static int32_t GPIO_getCfgGpo3_4(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpio
 
 int32_t Pmic_gpioGetCfg(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpioCfg)
 {
-    // Parameter check
     int32_t status = Pmic_checkPmicCoreHandle(handle);
+
     if ((status == PMIC_ST_SUCCESS) && (gpioCfg == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
+
     if ((status == PMIC_ST_SUCCESS) && (gpioCfg->validParams == 0U))
     {
         status = PMIC_ST_ERR_INV_PARAM;
@@ -349,13 +370,13 @@ int32_t Pmic_gpioGetCfg(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpioCfg)
 int32_t Pmic_gpioGetOutputVal(Pmic_CoreHandle_t *handle, uint8_t gpo, bool *high)
 {
     uint8_t regData = 0U;
-
-    // Parameter check
     int32_t status = Pmic_checkPmicCoreHandle(handle);
-    if ((status == PMIC_ST_SUCCESS) && (gpo > PMIC_GPO_MAX))
+
+    if ((status == PMIC_ST_SUCCESS) && ((gpo < PMIC_GPO_MIN) || (gpo > PMIC_GPO_MAX)))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
+
     if ((status == PMIC_ST_SUCCESS) && (high == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
@@ -364,13 +385,15 @@ int32_t Pmic_gpioGetOutputVal(Pmic_CoreHandle_t *handle, uint8_t gpo, bool *high
     // Read RDBK_LVL_STAT register
     if (status == PMIC_ST_SUCCESS)
     {
-        status = Pmic_ioRxByte(handle, PMIC_RDBK_LVL_STAT_REG, &regData);
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioRxByte(handle, RDBK_LVL_STAT_REG, &regData);
+        Pmic_criticalSectionStop(handle);
     }
 
     // Extract GPO value
     if (status == PMIC_ST_SUCCESS)
     {
-        high = Pmic_getBitField_b(regData, PMIC_GPO1_RDBK_LVL_SHIFT + (gpo - 1U));
+        *high = Pmic_getBitField_b(regData, GPO1_RDBK_LVL_SHIFT + (gpo - PMIC_GPO1));
     }
 
     return status;

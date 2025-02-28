@@ -178,11 +178,11 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_INTR_SET                                   (0U)
-#define PMIC_INTR_SET_AND_SAFE_STATE_TRANSITION         (1U)
-#define PMIC_INTR_SET_AND_RESET_MCU_STATE_TRANSITION    (3U)
-#define PMIC_INTR_SET_AND_OFF_STATE_TRANSITION          (4U)
-#define PMIC_WDG_THRESHOLD_INT_BEHAVIOR_MAX             (PMIC_INTR_SET_AND_OFF_STATE_TRANSITION)
+#define PMIC_INT_SET                                   (0U)
+#define PMIC_INT_SET_AND_SAFE_STATE_TRANSITION         (1U)
+#define PMIC_INT_SET_AND_RESET_MCU_STATE_TRANSITION    (3U)
+#define PMIC_INT_SET_AND_OFF_STATE_TRANSITION          (4U)
+#define PMIC_WDG_THRESHOLD_INT_BEHAVIOR_MAX            (PMIC_INT_SET_AND_OFF_STATE_TRANSITION)
 /** @} */
 
 /**
