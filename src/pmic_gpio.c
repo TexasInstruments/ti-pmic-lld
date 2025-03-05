@@ -52,10 +52,11 @@
 static int32_t GPIO_setCfgGpi1_4(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
 {
     uint8_t regData = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
 
     // Start critical section; read GPI_CFG register
     Pmic_criticalSectionStart(handle);
-    int32_t status = Pmic_ioRxByte(handle, GPI_CFG_REG, &regData);
+    status = Pmic_ioRxByte(handle, GPI_CFG_REG, &regData);
 
     // Set GPI1 configuration
     if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPI1_VALID, status))
@@ -96,10 +97,11 @@ static int32_t GPIO_setCfgGpi1_4(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t
 static int32_t GPIO_setCfgGpo1_2(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
 {
     uint8_t regData = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
 
     // Start critical section; read GPO_CFG1 register
     Pmic_criticalSectionStart(handle);
-    int32_t status = Pmic_ioRxByte(handle, GPO_CFG1_REG, &regData);
+    status = Pmic_ioRxByte(handle, GPO_CFG1_REG, &regData);
 
     // Set GPO1 configuration
     if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPO1_VALID, status))
@@ -140,10 +142,11 @@ static int32_t GPIO_setCfgGpo1_2(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t
 static int32_t GPIO_setCfgGpo3_4(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
 {
     uint8_t regData = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
 
     // Start critical section; read GPO_CFG2 register
     Pmic_criticalSectionStart(handle);
-    int32_t status = Pmic_ioRxByte(handle,GPO_CFG2_REG, &regData);
+    status = Pmic_ioRxByte(handle,GPO_CFG2_REG, &regData);
 
     // Set GPO3 configuration
     if (Pmic_validParamStatusCheck(gpioCfg->validParams, PMIC_CFG_GPO3_VALID, status))
@@ -225,10 +228,11 @@ int32_t Pmic_gpioSetCfg(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t *gpioCfg
 static int32_t GPIO_getCfgGpi1_4(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpioCfg)
 {
     uint8_t regData = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
 
     // Read GPI_CFG register
     Pmic_criticalSectionStart(handle);
-    int32_t status = Pmic_ioRxByte(handle, GPI_CFG_REG, &regData);
+    status = Pmic_ioRxByte(handle, GPI_CFG_REG, &regData);
     Pmic_criticalSectionStop(handle);
 
     if (status == PMIC_ST_SUCCESS)
@@ -252,10 +256,11 @@ static int32_t GPIO_getCfgGpi1_4(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpio
 static int32_t GPIO_getCfgGpo1_2(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpioCfg)
 {
     uint8_t regData = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
 
     // Read GPO_CFG1 register
     Pmic_criticalSectionStart(handle);
-    int32_t status = Pmic_ioRxByte(handle, GPO_CFG1_REG, &regData);
+    status = Pmic_ioRxByte(handle, GPO_CFG1_REG, &regData);
     Pmic_criticalSectionStop(handle);
 
     if (status == PMIC_ST_SUCCESS)
@@ -279,10 +284,11 @@ static int32_t GPIO_getCfgGpo1_2(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpio
 static int32_t GPIO_getCfgGpo3_4(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpioCfg)
 {
     uint8_t regData = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
 
     // Read GPO_CFG2 register
     Pmic_criticalSectionStart(handle);
-    int32_t status = Pmic_ioRxByte(handle, GPO_CFG2_REG, &regData);
+    status = Pmic_ioRxByte(handle, GPO_CFG2_REG, &regData);
     Pmic_criticalSectionStop(handle);
 
     if (status == PMIC_ST_SUCCESS)
