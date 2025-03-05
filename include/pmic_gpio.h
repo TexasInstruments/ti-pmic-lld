@@ -127,10 +127,10 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_GPI4_COMPARE_MODULE    (0U)
-#define PMIC_GPI4_WD_IN             (1U)
-#define PMIC_GPI4_COS_N             (2U)
-#define PMIC_GPI4_CFG_MAX           (PMIC_GPI4_COS_N)
+#define PMIC_GPI4_COMPARATOR    (0U)
+#define PMIC_GPI4_WD_IN         (1U)
+#define PMIC_GPI4_COS_N         (2U)
+#define PMIC_GPI4_CFG_MAX       (PMIC_GPI4_COS_N)
 /** @} */
 
 /**
@@ -141,14 +141,14 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_GPO1_LOW_LVL               (0U)
-#define PMIC_GPO1_HIGH_LVL              (1U)
-#define PMIC_GPO1_NOT_ENABLED_HIGH_Z    (2U)
-#define PMIC_GPO1_NINT                  (3U)
-#define PMIC_GPO1_EN_OUT                (4U)
-#define PMIC_GPO1_EN_OUT2               (5U)
-#define PMIC_GPO1_SIN_N_O               (7U)
-#define PMIC_GPO1_CFG_MAX               (PMIC_GPO1_SIN_N_O)
+#define PMIC_GPO1_LOW_LVL   (0U)
+#define PMIC_GPO1_HIGH_LVL  (1U)
+#define PMIC_GPO1_HIZ       (2U)
+#define PMIC_GPO1_NINT      (3U)
+#define PMIC_GPO1_EN_OUT    (4U)
+#define PMIC_GPO1_EN_OUT2   (5U)
+#define PMIC_GPO1_SIN_N_O   (7U)
+#define PMIC_GPO1_CFG_MAX   (PMIC_GPO1_SIN_N_O)
 /** @} */
 
 /**
@@ -159,15 +159,15 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_GPO2_LOW_LVL               (0U)
-#define PMIC_GPO2_HIGH_LVL              (1U)
-#define PMIC_GPO2_NOT_ENABLED_HIGH_Z    (2U)
-#define PMIC_GPO2_COMP1_OUT             (3U)
-#define PMIC_GPO2_EN_OUT2               (4U)
-#define PMIC_GPO2_SYNCCLKOUT            (5U)
-#define PMIC_GPO2_PGOOD                 (6U)
-#define PMIC_GPO2_SIN_P_O               (7U)
-#define PMIC_GPO2_CFG_MAX               (PMIC_GPO2_SIN_P_O)
+#define PMIC_GPO2_LOW_LVL       (0U)
+#define PMIC_GPO2_HIGH_LVL      (1U)
+#define PMIC_GPO2_HIZ           (2U)
+#define PMIC_GPO2_COMP1_OUT     (3U)
+#define PMIC_GPO2_EN_OUT2       (4U)
+#define PMIC_GPO2_SYNCCLKOUT    (5U)
+#define PMIC_GPO2_PGOOD         (6U)
+#define PMIC_GPO2_SIN_P_O       (7U)
+#define PMIC_GPO2_CFG_MAX       (PMIC_GPO2_SIN_P_O)
 /** @} */
 
 /**
@@ -178,15 +178,15 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_GPO3_LOW_LVL               (0U)
-#define PMIC_GPO3_HIGH_LVL              (1U)
-#define PMIC_GPO3_NOT_ENABLED_HIGH_Z    (2U)
-#define PMIC_GPO3_PGOOD                 (3U)
-#define PMIC_GPO3_COMP2_OUT             (4U)
-#define PMIC_GPO3_EN_OUT2               (5U)
-#define PMIC_GPO3_SAFE_OUT2             (6U)
-#define PMIC_GPO3_COS_P_O               (7U)
-#define PMIC_GPO3_CFG_MAX               (PMIC_GPO3_COS_P_O)
+#define PMIC_GPO3_LOW_LVL   (0U)
+#define PMIC_GPO3_HIGH_LVL  (1U)
+#define PMIC_GPO3_HIZ       (2U)
+#define PMIC_GPO3_PGOOD     (3U)
+#define PMIC_GPO3_COMP2_OUT (4U)
+#define PMIC_GPO3_EN_OUT2   (5U)
+#define PMIC_GPO3_SAFE_OUT2 (6U)
+#define PMIC_GPO3_COS_P_O   (7U)
+#define PMIC_GPO3_CFG_MAX   (PMIC_GPO3_COS_P_O)
 /** @} */
 
 /**
@@ -197,15 +197,15 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_GPO4_LOW_LVL               (0U)
-#define PMIC_GPO4_HIGH_LVL              (1U)
-#define PMIC_GPO4_NOT_ENABLED_HIGH_Z    (2U)
-#define PMIC_GPO4_SAFE_OUT2             (3U)
-#define PMIC_GPO4_EN_OUT                (4U)
-#define PMIC_GPO4_NINT                  (5U)
-#define PMIC_GPO4_PGOOD                 (6U)
-#define PMIC_GPO4_COS_N_O               (7U)
-#define PMIC_GPO4_CFG_MAX               (PMIC_GPO4_COS_N_O)
+#define PMIC_GPO4_LOW_LVL   (0U)
+#define PMIC_GPO4_HIGH_LVL  (1U)
+#define PMIC_GPO4_HIZ       (2U)
+#define PMIC_GPO4_SAFE_OUT2 (3U)
+#define PMIC_GPO4_EN_OUT    (4U)
+#define PMIC_GPO4_NINT      (5U)
+#define PMIC_GPO4_PGOOD     (6U)
+#define PMIC_GPO4_COS_N_O   (7U)
+#define PMIC_GPO4_CFG_MAX   (PMIC_GPO4_COS_N_O)
 /** @} */
 
 /*==========================================================================*/
