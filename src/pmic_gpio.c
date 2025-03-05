@@ -46,6 +46,17 @@
 #include "regmap/gpio.h"
 
 /* ========================================================================== */
+/*                           Macros & Typedefs                                */
+/* ========================================================================== */
+
+/**
+ * @brief GPO1 has two bit fields that have the same functionality; namely,
+ * bit field 2 has the same functionality as bit field 6. This define is to
+ * indicate the duplicate bit field.
+ */
+#define GPO1_HIZ_DUPLICATE (6U)
+
+/* ========================================================================== */
 /*                        Interface Implementations                           */
 /* ========================================================================== */
 
@@ -269,6 +280,12 @@ static int32_t GPIO_getCfgGpo1_2(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpio
         if (Pmic_validParamCheck(gpioCfg->validParams, PMIC_CFG_GPO1_VALID))
         {
             gpioCfg->gpo1 = Pmic_getBitField(regData, GPO1_CFG_SHIFT, GPO1_CFG_MASK);
+
+            // Account for duplicate functionality
+            if (gpioCfg->gpo1 == GPO1_HIZ_DUPLICATE)
+            {
+                gpioCfg->gpo1 = PMIC_GPO1_HIZ;
+            }
         }
 
         // Get GPO2 configuration
