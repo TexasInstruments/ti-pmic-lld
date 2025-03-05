@@ -55,10 +55,10 @@ extern "C" {
 /*==========================================================================*/
 
 /**
- * @anchor Pmic_configurableGpioNum
- * @name PMIC Configurable GPIO Number
+ * @anchor Pmic_configurableGpi
+ * @name PMIC Configurable GPIs
  *
- * @brief Enumeration of the configurable PMIC GPIOs.
+ * @brief Enumeration of the configurable PMIC GPIs.
  *
  * @{
  */
@@ -66,12 +66,32 @@ extern "C" {
 #define PMIC_GPI4                   (2U)
 #define PMIC_GPI_MIN                (PMIC_GPI1)
 #define PMIC_GPI_MAX                (PMIC_GPI4)
+/** @} */
+
+/**
+ * @anchor Pmic_configurableGpo
+ * @name PMIC Configurable GPOs
+ *
+ * @brief Enumeration of the configurable PMIC GPOs.
+ *
+ * @{
+ */
 #define PMIC_GPO1                   (1U)
 #define PMIC_GPO2                   (2U)
 #define PMIC_GPO3                   (3U)
 #define PMIC_GPO4                   (4U)
 #define PMIC_GPO_MIN                (PMIC_GPO1)
 #define PMIC_GPO_MAX                (PMIC_GPO4)
+/** @} */
+
+/**
+ * @anchor Pmic_numConfigurableGpio
+ * @name PMIC Number of Configurable GPIOs
+ *
+ * @brief Number of Configurable GPIOs.
+ *
+ * @{
+ */
 #define PMIC_NUM_CONFIGURABLE_GPIO  (PMIC_GPI_MAX + PMIC_GPO_MAX)
 /** @} */
 
