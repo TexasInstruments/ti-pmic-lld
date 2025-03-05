@@ -161,7 +161,7 @@ extern "C" {
 
 // Defines used internally only
 #define PMIC_NUM_ELEM_IN_INTR_STAT               (4U)
-#define PMIC_NUM_BITS_IN_INTR_STAT               ((uint8_t)(PMIC_NUM_ELEM_IN_INTR_STAT * sizeof(uint32_t)))
+#define PMIC_NUM_BITS_IN_INTR_ELEM               ((uint8_t)(8U * sizeof(uint32_t)))
 
 /**
  * @defgroup Pmic_IRQMacros PMIC Interrupt Request Macros
