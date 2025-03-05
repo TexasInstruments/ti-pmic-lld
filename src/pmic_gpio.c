@@ -372,7 +372,7 @@ int32_t Pmic_gpioGetOutputVal(Pmic_CoreHandle_t *handle, uint8_t gpo, bool *high
     uint8_t regData = 0U;
     int32_t status = Pmic_checkPmicCoreHandle(handle);
 
-    if ((status == PMIC_ST_SUCCESS) && (gpo > PMIC_GPO_MAX))
+    if ((status == PMIC_ST_SUCCESS) && ((gpo < PMIC_GPO_MIN) || (gpo > PMIC_GPO_MAX)))
     {
         status = PMIC_ST_ERR_INV_PARAM;
     }
@@ -393,7 +393,7 @@ int32_t Pmic_gpioGetOutputVal(Pmic_CoreHandle_t *handle, uint8_t gpo, bool *high
     // Extract GPO value
     if (status == PMIC_ST_SUCCESS)
     {
-        *high = Pmic_getBitField_b(regData, GPO1_RDBK_LVL_SHIFT + (gpo - 1U));
+        *high = Pmic_getBitField_b(regData, GPO1_RDBK_LVL_SHIFT + (gpo - PMIC_GPO1));
     }
 
     return status;

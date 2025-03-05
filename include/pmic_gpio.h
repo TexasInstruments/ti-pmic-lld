@@ -76,10 +76,10 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_GPO1                   (1U)
-#define PMIC_GPO2                   (2U)
-#define PMIC_GPO3                   (3U)
-#define PMIC_GPO4                   (4U)
+#define PMIC_GPO1                   (3U)
+#define PMIC_GPO2                   (4U)
+#define PMIC_GPO3                   (5U)
+#define PMIC_GPO4                   (6U)
 #define PMIC_GPO_MIN                (PMIC_GPO1)
 #define PMIC_GPO_MAX                (PMIC_GPO4)
 /** @} */
@@ -92,7 +92,7 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_NUM_CONFIGURABLE_GPIO  (PMIC_GPI_MAX + PMIC_GPO_MAX)
+#define PMIC_NUM_CONFIGURABLE_GPIO (6U)
 /** @} */
 
 /**
@@ -317,7 +317,7 @@ int32_t Pmic_gpioGetCfg(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpioCfg);
  * @param handle [IN] PMIC interface handle.
  *
  * @param gpo [IN] General purpose output pin number. For valid GPOs, see
- * @ref Pmic_configurableGpioNum
+ * @ref Pmic_configurableGpo
  *
  * @param high [OUT] When returned as true, the GPO pin is high. Else, the GPO
  * pin is low.
