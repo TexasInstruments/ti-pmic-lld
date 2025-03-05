@@ -1110,6 +1110,7 @@ int32_t Pmic_irqGetFlag(Pmic_CoreHandle_t *handle, uint8_t irqNum, bool *flag) {
 
 int32_t Pmic_irqClrFlag(Pmic_CoreHandle_t *handle, uint8_t irqNum) {
     int32_t status = Pmic_checkPmicCoreHandle(handle);
+
     uint8_t regData = 0U;
     uint8_t shift = 0U;
     uint16_t reg = 0U;
@@ -1145,6 +1146,7 @@ int32_t Pmic_irqClrFlag(Pmic_CoreHandle_t *handle, uint8_t irqNum) {
 
 int32_t Pmic_irqClrAllFlags(Pmic_CoreHandle_t *handle) {
     int32_t status = Pmic_checkPmicCoreHandle(handle);
+
     uint16_t reg = 0U;
 
     // All IRQ statuses are W1C, writing to reserved bits has no effect, so just
