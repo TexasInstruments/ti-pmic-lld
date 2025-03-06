@@ -76,84 +76,84 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_CFG_REG_CRC_ERR_INT                 (0U)  /** @brief NCFG_NMI */
-#define PMIC_NRST_RDBK_ERR_INT                   (1U)  /** @brief STD_IRQ  */
-#define PMIC_SAFE_OUT1_RDBK_ERR_INT              (2U)  /** @brief STD_IRQ  */
-#define PMIC_EN_OUT_RDBK_ERR_INT                 (3U)  /** @brief STD_IRQ  */
-#define PMIC_GPO1_RDBK_ERR_INT                   (4U)  /** @brief STD_IRQ  */
-#define PMIC_GPO2_RDBK_ERR_INT                   (5U)  /** @brief STD_IRQ  */
-#define PMIC_GPO3_RDBK_ERR_INT                   (6U)  /** @brief STD_IRQ  */
-#define PMIC_GPO4_RDBK_ERR_INT                   (7U)  /** @brief STD_IRQ  */
-#define PMIC_NORMAL_OFF_INT                      (8U)  /** @brief NCFG_NMI */
-#define PMIC_OFF_INT_EVT_ERR_INT                 (9U)  /** @brief NCFG_NMI */
-#define PMIC_OFF_PROT_EVT_INT                    (10U) /** @brief NCFG_NMI */
-#define PMIC_FIRST_PWR_ON_INT                    (11U) /** @brief NCFG_NMI */
-#define PMIC_CLK_ERR_INT                         (12U) /** @brief NCFG_NMI */
-#define PMIC_INTERNAL_OV_INT                     (13U) /** @brief NCFG_NMI */
-#define PMIC_INIT_AN_TMO_INT                     (14U) /** @brief NCFG_NMI */
-#define PMIC_CRC_ERR_INT                         (15U) /** @brief NCFG_NMI */
-#define PMIC_SYS_CLK_ERR_PROT_INT                (16U) /** @brief NCFG_NMI */
-#define PMIC_RST_MCU_TMO_INT                     (17U) /** @brief NCFG_NMI */
-#define PMIC_BGXM_ERR_INT                        (18U) /** @brief NCFG_NMI */
-#define PMIC_VBAT_OVP_ERR_INT                    (19U) /** @brief NCFG_NMI */
-#define PMIC_BB_OVP_ERR_INT                      (20U) /** @brief NCFG_NMI */
-#define PMIC_BB_BST_TMO_INT                      (21U) /** @brief NCFG_NMI */
-#define PMIC_BB_PK_ILIM_ERR_INT                  (22U) /** @brief NCFG_NMI */
-#define PMIC_WD_TMO_INT                          (23U) /** @brief NCFG_NMI */
-#define PMIC_WD_TRIG_EARLY_INT                   (24U) /** @brief NCFG_NMI */
-#define PMIC_WD_ANSW_EARLY_INT                   (25U) /** @brief NCFG_NMI */
-#define PMIC_WD_SEQ_ERR_INT                      (26U) /** @brief NCFG_NMI */
-#define PMIC_WD_ANSW_ERR_INT                     (27U) /** @brief NCFG_NMI */
-#define PMIC_WD_LONGWIN_TMO_INT                  (28U) /** @brief NCFG_NMI */
-#define PMIC_WD_TH1_ERR_INT                      (29U) /** @brief STD_IRQ  */
-#define PMIC_WD_TH2_ERR_INT                      (30U) /** @brief STD_IRQ  */
-#define PMIC_ESM_ERR_INT                         (31U) /** @brief NCFG_NMI */
-#define PMIC_ESM_DLY1_ERR_INT                    (32U) /** @brief STD_IRQ  */
-#define PMIC_ESM_DLY2_ERR_INT                    (33U) /** @brief STD_IRQ  */
-#define PMIC_BB_UV_ERR_INT                       (34U) /** @brief STD_IRQ  */
-#define PMIC_BB_OV_ERR_INT                       (35U) /** @brief STD_IRQ  */
-#define PMIC_LDO1_UV_ERR_INT                     (36U) /** @brief STD_IRQ  */
-#define PMIC_LDO1_OV_ERR_INT                     (37U) /** @brief STD_IRQ  */
-#define PMIC_LDO2_UV_ERR_INT                     (38U) /** @brief STD_IRQ  */
-#define PMIC_LDO2_OV_ERR_INT                     (39U) /** @brief STD_IRQ  */
-#define PMIC_LDO3_UV_ERR_INT                     (40U) /** @brief STD_IRQ  */
-#define PMIC_LDO3_OV_ERR_INT                     (41U) /** @brief STD_IRQ  */
-#define PMIC_LDO4_UV_ERR_INT                     (42U) /** @brief STD_IRQ  */
-#define PMIC_LDO4_OV_ERR_INT                     (43U) /** @brief STD_IRQ  */
-#define PMIC_PLDO1_UV_ERR_INT                    (44U) /** @brief STD_IRQ  */
-#define PMIC_PLDO1_OV_ERR_INT                    (45U) /** @brief STD_IRQ  */
-#define PMIC_PLDO2_UV_ERR_INT                    (46U) /** @brief STD_IRQ  */
-#define PMIC_PLDO2_OV_ERR_INT                    (47U) /** @brief STD_IRQ  */
-#define PMIC_EXT_VMON1_UV_ERR_INT                (48U) /** @brief STD_IRQ  */
-#define PMIC_EXT_VMON1_OV_ERR_INT                (49U) /** @brief STD_IRQ  */
-#define PMIC_EXT_VMON2_UV_ERR_INT                (50U) /** @brief STD_IRQ  */
-#define PMIC_EXT_VMON2_OV_ERR_INT                (51U) /** @brief STD_IRQ  */
-#define PMIC_LDO1_ILIM_ERR_INT                   (52U) /** @brief CFG_NMI  */
-#define PMIC_LDO2_ILIM_ERR_INT                   (53U) /** @brief CFG_NMI  */
-#define PMIC_LDO3_ILIM_ERR_INT                   (54U) /** @brief CFG_NMI  */
-#define PMIC_LDO4_ILIM_ERR_INT                   (55U) /** @brief CFG_NMI  */
-#define PMIC_PLDO1_ILIM_ERR_INT                  (56U) /** @brief CFG_NMI  */
-#define PMIC_PLDO2_ILIM_ERR_INT                  (57U) /** @brief CFG_NMI  */
-#define PMIC_BB_AVG_ILIM_ERR_INT                 (58U) /** @brief NCFG_NMI */
-#define PMIC_ABIST_ERR_INT                       (59U) /** @brief NCFG_NMI */
-#define PMIC_LBIST_ERR_INT                       (60U) /** @brief NCFG_NMI */
-#define PMIC_TMR_REG_ERR_INT                     (61U) /** @brief NCFG_NMI */
-#define PMIC_M_PMIC_HB_ERR_INT                   (62U) /** @brief NCFG_NMI */
-#define PMIC_SAFE_ST_TMO_RST_ERR_INT             (63U) /** @brief NCFG_NMI */
-#define PMIC_SPI_CRC_ERR_INT                     (64U) /** @brief NCFG_NMI */
-#define PMIC_FRM_ERR_INT                         (65U) /** @brief NCFG_NMI */
-#define PMIC_ADDR_ERR_INT                        (66U) /** @brief NCFG_NMI */
-#define PMIC_SCLK_ERR_INT                        (67U) /** @brief NCFG_NMI */
-#define PMIC_COMP1_ERR_INT                       (68U) /** @brief NCFG_NMI */
-#define PMIC_COMP1P_UV_ERR_INT                   (69U) /** @brief STD_IRQ  */
-#define PMIC_COMP1P_OV_ERR_INT                   (70U) /** @brief STD_IRQ  */
-#define PMIC_COMP1N_UV_ERR_INT                   (71U) /** @brief STD_IRQ  */
-#define PMIC_COMP1N_OV_ERR_INT                   (72U) /** @brief STD_IRQ  */
-#define PMIC_COMP2_ERR_INT                       (73U) /** @brief NCFG_NMI */
-#define PMIC_COMP2P_UV_ERR_INT                   (74U) /** @brief STD_IRQ  */
-#define PMIC_COMP2P_OV_ERR_INT                   (75U) /** @brief STD_IRQ  */
-#define PMIC_COMP2N_UV_ERR_INT                   (76U) /** @brief STD_IRQ  */
-#define PMIC_COMP2N_OV_ERR_INT                   (77U) /** @brief STD_IRQ  */
+#define PMIC_CFG_REG_CRC_ERR_INT                 (0U)  // NCFG_NMI
+#define PMIC_NRST_RDBK_ERR_INT                   (1U)  // STD_IRQ
+#define PMIC_SAFE_OUT1_RDBK_ERR_INT              (2U)  // STD_IRQ
+#define PMIC_EN_OUT_RDBK_ERR_INT                 (3U)  // STD_IRQ
+#define PMIC_GPO1_RDBK_ERR_INT                   (4U)  // STD_IRQ
+#define PMIC_GPO2_RDBK_ERR_INT                   (5U)  // STD_IRQ
+#define PMIC_GPO3_RDBK_ERR_INT                   (6U)  // STD_IRQ
+#define PMIC_GPO4_RDBK_ERR_INT                   (7U)  // STD_IRQ
+#define PMIC_NORMAL_OFF_INT                      (8U)  // NCFG_NMI
+#define PMIC_OFF_INT_EVT_ERR_INT                 (9U)  // NCFG_NMI
+#define PMIC_OFF_PROT_EVT_INT                    (10U) // NCFG_NMI
+#define PMIC_FIRST_PWR_ON_INT                    (11U) // NCFG_NMI
+#define PMIC_CLK_ERR_INT                         (12U) // NCFG_NMI
+#define PMIC_INTERNAL_OV_INT                     (13U) // NCFG_NMI
+#define PMIC_INIT_AN_TMO_INT                     (14U) // NCFG_NMI
+#define PMIC_CRC_ERR_INT                         (15U) // NCFG_NMI
+#define PMIC_SYS_CLK_ERR_PROT_INT                (16U) // NCFG_NMI
+#define PMIC_RST_MCU_TMO_INT                     (17U) // NCFG_NMI
+#define PMIC_BGXM_ERR_INT                        (18U) // NCFG_NMI
+#define PMIC_VBAT_OVP_ERR_INT                    (19U) // NCFG_NMI
+#define PMIC_BB_OVP_ERR_INT                      (20U) // NCFG_NMI
+#define PMIC_BB_BST_TMO_INT                      (21U) // NCFG_NMI
+#define PMIC_BB_PK_ILIM_ERR_INT                  (22U) // NCFG_NMI
+#define PMIC_WD_TMO_INT                          (23U) // NCFG_NMI
+#define PMIC_WD_TRIG_EARLY_INT                   (24U) // NCFG_NMI
+#define PMIC_WD_ANSW_EARLY_INT                   (25U) // NCFG_NMI
+#define PMIC_WD_SEQ_ERR_INT                      (26U) // NCFG_NMI
+#define PMIC_WD_ANSW_ERR_INT                     (27U) // NCFG_NMI
+#define PMIC_WD_LONGWIN_TMO_INT                  (28U) // NCFG_NMI
+#define PMIC_WD_TH1_ERR_INT                      (29U) // STD_IRQ
+#define PMIC_WD_TH2_ERR_INT                      (30U) // STD_IRQ
+#define PMIC_ESM_ERR_INT                         (31U) // NCFG_NMI
+#define PMIC_ESM_DLY1_ERR_INT                    (32U) // STD_IRQ
+#define PMIC_ESM_DLY2_ERR_INT                    (33U) // STD_IRQ
+#define PMIC_BB_UV_ERR_INT                       (34U) // STD_IRQ
+#define PMIC_BB_OV_ERR_INT                       (35U) // STD_IRQ
+#define PMIC_LDO1_UV_ERR_INT                     (36U) // STD_IRQ
+#define PMIC_LDO1_OV_ERR_INT                     (37U) // STD_IRQ
+#define PMIC_LDO2_UV_ERR_INT                     (38U) // STD_IRQ
+#define PMIC_LDO2_OV_ERR_INT                     (39U) // STD_IRQ
+#define PMIC_LDO3_UV_ERR_INT                     (40U) // STD_IRQ
+#define PMIC_LDO3_OV_ERR_INT                     (41U) // STD_IRQ
+#define PMIC_LDO4_UV_ERR_INT                     (42U) // STD_IRQ
+#define PMIC_LDO4_OV_ERR_INT                     (43U) // STD_IRQ
+#define PMIC_PLDO1_UV_ERR_INT                    (44U) // STD_IRQ
+#define PMIC_PLDO1_OV_ERR_INT                    (45U) // STD_IRQ
+#define PMIC_PLDO2_UV_ERR_INT                    (46U) // STD_IRQ
+#define PMIC_PLDO2_OV_ERR_INT                    (47U) // STD_IRQ
+#define PMIC_EXT_VMON1_UV_ERR_INT                (48U) // STD_IRQ
+#define PMIC_EXT_VMON1_OV_ERR_INT                (49U) // STD_IRQ
+#define PMIC_EXT_VMON2_UV_ERR_INT                (50U) // STD_IRQ
+#define PMIC_EXT_VMON2_OV_ERR_INT                (51U) // STD_IRQ
+#define PMIC_LDO1_ILIM_ERR_INT                   (52U) // CFG_NMI
+#define PMIC_LDO2_ILIM_ERR_INT                   (53U) // CFG_NMI
+#define PMIC_LDO3_ILIM_ERR_INT                   (54U) // CFG_NMI
+#define PMIC_LDO4_ILIM_ERR_INT                   (55U) // CFG_NMI
+#define PMIC_PLDO1_ILIM_ERR_INT                  (56U) // CFG_NMI
+#define PMIC_PLDO2_ILIM_ERR_INT                  (57U) // CFG_NMI
+#define PMIC_BB_AVG_ILIM_ERR_INT                 (58U) // NCFG_NMI
+#define PMIC_ABIST_ERR_INT                       (59U) // NCFG_NMI
+#define PMIC_LBIST_ERR_INT                       (60U) // NCFG_NMI
+#define PMIC_TMR_REG_ERR_INT                     (61U) // NCFG_NMI
+#define PMIC_M_PMIC_HB_ERR_INT                   (62U) // NCFG_NMI
+#define PMIC_SAFE_ST_TMO_RST_ERR_INT             (63U) // NCFG_NMI
+#define PMIC_SPI_CRC_ERR_INT                     (64U) // NCFG_NMI
+#define PMIC_FRM_ERR_INT                         (65U) // NCFG_NMI
+#define PMIC_ADDR_ERR_INT                        (66U) // NCFG_NMI
+#define PMIC_SCLK_ERR_INT                        (67U) // NCFG_NMI
+#define PMIC_COMP1_ERR_INT                       (68U) // NCFG_NMI
+#define PMIC_COMP1P_UV_ERR_INT                   (69U) // STD_IRQ
+#define PMIC_COMP1P_OV_ERR_INT                   (70U) // STD_IRQ
+#define PMIC_COMP1N_UV_ERR_INT                   (71U) // STD_IRQ
+#define PMIC_COMP1N_OV_ERR_INT                   (72U) // STD_IRQ
+#define PMIC_COMP2_ERR_INT                       (73U) // NCFG_NMI
+#define PMIC_COMP2P_UV_ERR_INT                   (74U) // STD_IRQ
+#define PMIC_COMP2P_OV_ERR_INT                   (75U) // STD_IRQ
+#define PMIC_COMP2N_UV_ERR_INT                   (76U) // STD_IRQ
+#define PMIC_COMP2N_OV_ERR_INT                   (77U) // STD_IRQ
 #define PMIC_IRQ_MAX                             (PMIC_COMP2N_OV_ERR_INT)
 #define PMIC_IRQ_NUM                             (PMIC_IRQ_MAX + 1U)
 #define PMIC_IRQ_ALL                             ((uint8_t)0xFFU)
