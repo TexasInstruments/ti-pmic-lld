@@ -145,6 +145,9 @@ extern "C" {
  *
  * @brief Possible functionalities of GPI4.
  *
+ * @attention It is not recommended to set GPI4 to COS_N functionality if your
+ * PMIC device does not have rotational counter.
+ *
  * @{
  */
 #define PMIC_GPI4_COMPARATOR    (0U)
@@ -158,6 +161,9 @@ extern "C" {
  * @name PMIC GPO1 Configuration Values
  *
  * @brief Possible functionalities of GPO1.
+ *
+ * @attention It is not recommended to set GPO1 to SIN_N_O functionality if your
+ * PMIC device does not have rotational counter.
  *
  * @{
  */
@@ -176,6 +182,9 @@ extern "C" {
  * @name PMIC GPO2 Configuration Values
  *
  * @brief Possible functionalities of GPO2.
+ *
+ * @attention It is not recommended to set GPO2 to SIN_P_O functionality if your
+ * PMIC device does not have rotational counter.
  *
  * @{
  */
@@ -196,6 +205,9 @@ extern "C" {
  *
  * @brief Possible functionalities of GPO3.
  *
+ * @attention It is not recommended to set GPO3 to COS_P_O functionality if your
+ * PMIC device does not have rotational counter.
+ *
  * @{
  */
 #define PMIC_GPO3_LOW_LVL   (0U)
@@ -214,6 +226,9 @@ extern "C" {
  * @name PMIC GPO4 Configuration Values
  *
  * @brief Possible functionalities of GPO4.
+ *
+ * @attention It is not recommended to set GPO4 to COS_N_O functionality if your
+ * PMIC device does not have rotational counter.
  *
  * @{
  */
