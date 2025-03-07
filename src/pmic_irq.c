@@ -911,15 +911,68 @@ int32_t Pmic_irqSetCfgs(Pmic_CoreHandle_t *handle, uint8_t numIrqs, const Pmic_I
     return status;
 }
 
+static int32_t IRQ_getMaskOrConfig(Pmic_CoreHandle_t *handle, Pmic_IrqCfg_t *irqCfg, bool getMask)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+    uint8_t regData = 0U;
+    uint16_t reg = 0U;
+    uint8_t shift = 0U;
+    uint8_t mask = 0U;
+
+    // NOTE: This function does not validate param; that is handled in the
+    // higher level function that calls this one.
+
+    // Check for invalid IRQ number
+    if (irqCfg->irqNum > PMIC_IRQ_MAX) {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        if (getMask) {
+            reg = IRQ[irqCfg->irqNum].maskReg;
+            shift = IRQ[irqCfg->irqNum].maskShift;
+        } else {
+            reg = IRQ[irqCfg->irqNum].confReg;
+            shift = IRQ[irqCfg->irqNum].confShift;
+            mask = IRQ[irqCfg->irqNum].confMask;
+        }
+    }
+
+    // Check whether IRQ is configurable
+    if ((status == PMIC_ST_SUCCESS) && (reg == PMIC_IRQ_INVALID_REG)) {
+        status = PMIC_ST_ERR_NOT_SUPPORTED;
+    }
+
+    // Read mask/config register
+    if (status == PMIC_ST_SUCCESS) {
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioRxByte(handle, reg, &regData);
+        Pmic_criticalSectionStop(handle);
+    }
+
+    // Extract IRQ mask/config bit field
+    if (status == PMIC_ST_SUCCESS) {
+        if (getMask) {
+            irqCfg->mask = Pmic_getBitField_b(regData, shift);
+        } else {
+            irqCfg->config = Pmic_getBitField(regData, shift, mask);
+        }
+    }
+
+    return status;
+}
+
 static inline int32_t IRQ_getCfg(Pmic_CoreHandle_t *handle, Pmic_IrqCfg_t *irqCfg) {
     int32_t status = PMIC_ST_SUCCESS;
+    const bool getMask = (bool)true;
+    const bool getConfig = (bool)false;
 
     if (Pmic_validParamCheck(irqCfg->validParams, PMIC_IRQ_CFG_MASK_VALID)) {
-        status = IRQ_getMask(handle, irqCfg);
+        status = IRQ_getMaskOrConfig(handle, irqCfg, getMask);
     }
 
     if (Pmic_validParamStatusCheck(irqCfg->validParams, PMIC_IRQ_CFG_CONFIG_VALID, status)) {
-        status = IRQ_getConfig(handle, irqCfg);
+        status = IRQ_getMaskOrConfig(handle, irqCfg, getConfig);
     }
 
     return status;
