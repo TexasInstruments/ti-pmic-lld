@@ -674,6 +674,30 @@ static int32_t IRQ_setConfig(Pmic_CoreHandle_t *handle, uint8_t irqNum, uint8_t 
     return status;
 }
 
+// Check irqCfg->config param
+static inline int32_t IRQ_checkConfigParam(const Pmic_IrqCfg_t *irqCfg)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Check whether irqCfg->config is valid for irqNum=PMIC_CFG_REG_CRC_ERR_INT
+    if ((irqCfg->irqNum == PMIC_CFG_REG_CRC_ERR_INT) && (irqCfg->config > PMIC_IRQ_CONFIG1_MAX)) {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+    // Check whether irqCfg->config is valid for irqNum>=PMIC_COMP1P_UV_ERR_INT && irqNum<=PMIC_COMP2N_OV_ERR_INT
+    else if ((irqCfg->irqNum >= PMIC_COMP1P_UV_ERR_INT) && (irqCfg->irqNum <= PMIC_COMP2N_OV_ERR_INT) &&
+            (irqCfg->config > PMIC_IRQ_CONFIG2_MAX)) {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+    // Check whether irqCfg->config is valid for all other IRQs
+    else if (irqCfg->config > PMIC_IRQ_CONFIG0_MAX) {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+    else {
+    }
+
+    return status;
+}
+
 int32_t Pmic_irqSetCfg(Pmic_CoreHandle_t *handle, const Pmic_IrqCfg_t *irqCfg) {
     int32_t status = Pmic_checkPmicCoreHandle(handle);
 
@@ -684,6 +708,10 @@ int32_t Pmic_irqSetCfg(Pmic_CoreHandle_t *handle, const Pmic_IrqCfg_t *irqCfg) {
 
     if ((status == PMIC_ST_SUCCESS) && (irqCfg->irqNum > PMIC_IRQ_MAX)) {
        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        status = IRQ_checkConfigParam(irqCfg);
     }
 
     // Set IRQ mask if requested
@@ -710,15 +738,22 @@ static inline bool IRQ_anyMasksForReg(uint8_t numCfgs, const Pmic_IrqCfg_t *cfgs
     return anyRegs;
 }
 
-static inline bool IRQ_anyConfigsForReg(uint8_t numCfgs, const Pmic_IrqCfg_t *cfgs, uint16_t regAddr) {
-    bool anyRegs = false;
+static inline int32_t IRQ_anyConfigsForReg(uint8_t numCfgs, const Pmic_IrqCfg_t *cfgs, uint16_t regAddr, bool *anyConfig) {
+    int32_t status = PMIC_ST_SUCCESS;
 
-    for (uint8_t i = 0U; (i < numCfgs) && !anyRegs; i++) {
-        const uint8_t irqNum = cfgs[i].irqNum;
-        anyRegs = (IRQ[irqNum].confReg == regAddr);
+    *anyConfig = (bool)false;
+    for (uint8_t i = 0U; (i < numCfgs) && !(*anyConfig); i++) {
+        status = IRQ_checkConfigParam(&cfgs[i]);
+
+        if (status == PMIC_ST_SUCCESS) {
+            const uint8_t irqNum = cfgs[i].irqNum;
+            *anyConfig = (IRQ[irqNum].confReg == regAddr);
+        } else {
+            break;
+        }
     }
 
-    return anyRegs;
+    return status;
 }
 
 static int32_t IRQ_handleRecordsForRegMask(Pmic_CoreHandle_t *handle,
@@ -784,11 +819,13 @@ static int32_t IRQ_handleRecordsForRegConfig(Pmic_CoreHandle_t *handle,
                                              uint8_t *processedCfgs) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
-    const bool anyConfigs = IRQ_anyConfigsForReg(numCfgs, cfgs, regAddr);
+    bool anyConfigs = (bool)false;
 
-    if (anyConfigs) {
-        // Get the current value of this IRQ mask register
-        Pmic_criticalSectionStart(handle);
+    status = IRQ_anyConfigsForReg(numCfgs, cfgs, regAddr, &anyConfigs);
+
+    // Get the current value of this IRQ mask register
+    Pmic_criticalSectionStart(handle);
+    if ((status == PMIC_ST_SUCCESS) && anyConfigs) {
         status = Pmic_ioRxByte(handle, regAddr, &regData);
     }
 
@@ -818,14 +855,10 @@ static int32_t IRQ_handleRecordsForRegConfig(Pmic_CoreHandle_t *handle,
 
     // If status is still good and we did find records that apply to this
     // register, write the new value of this register back to the device
-    if ((status == PMIC_ST_SUCCESS) && *processedCfgs > 0) {
+    if ((status == PMIC_ST_SUCCESS) && (*processedCfgs > 0U)) {
         status = Pmic_ioTxByte(handle, regAddr, regData);
     }
-
-    // If a critical section was obtained earlier, it can now be released
-    if (anyConfigs) {
-        Pmic_criticalSectionStop(handle);
-    }
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }

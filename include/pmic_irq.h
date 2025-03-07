@@ -197,6 +197,47 @@ extern "C" {
     PMIC_IRQ_CFG_CONFIG_VALID_SHIFT)
 /** @} */
 
+/**
+ * @anchor Pmic_IrqConfig0
+ * @name Typical valid values of Pmic_IrqCfg_t.config
+ *
+ * @brief Typical valid values of Pmic_IrqCfg_t.config.
+ *
+ * @{
+ */
+#define PMIC_IRQ_CONFIG0_INT_SET                (0U)
+#define PMIC_IRQ_CONFIG0_SET_GOTO_SAFE          (1U)
+#define PMIC_IRQ_CONFIG0_INT_SET_GOTO_RESET_MCU (2U)
+#define PMIC_IRQ_CONFIG0_INT_SET_GOTO_OFF       (3U)
+#define PMIC_IRQ_CONFIG0_MAX                    (PMIC_IRQ_CONFIG0_INT_SET_GOTO_OFF)
+/** @} */
+
+/**
+ * @anchor Pmic_IrqConfig1
+ * @name Valid values of Pmic_IrqCfg_t.config for CFG_REG_CRC_INT_CFG
+ *
+ * @brief valid values of Pmic_IrqCfg_t.config for CFG_REG_CRC_INT_CFG bit field
+ * in SAFETY_CFG register.
+ *
+ * @{
+ */
+#define PMIC_IRQ_CONFIG1_INT_SET_GOTO_SAFE  (0U)
+#define PMIC_IRQ_CONFIG1_INT_SET_GOTO_OFF   (1U)
+#define PMIC_IRQ_CONFIG1_MAX                (PMIC_IRQ_CONFIG1_INT_SET_GOTO_OFF)
+/** @} */
+
+/**
+ * @anchor Pmic_IrqConfig2
+ * @name Valid values of Pmic_IrqCfg_t.config for CM_VMON_INT_CFG Register
+ *
+ * @brief valid values of Pmic_IrqCfg_t.config for all bits in CM_VMON_INT_CFG
+ * register.
+ */
+#define PMIC_IRQ_CONFIG2_INT_SET            (0U)
+#define PMIC_IRQ_CONFIG2_INT_SET_GOTO_SAFE  (1U)
+#define PMIC_IRQ_CONFIG2_MAX                (2U)
+/** @} */
+
 /** * @} */
 /* End of Pmic_IRQMacros */
 
@@ -232,7 +273,11 @@ extern "C" {
  * @param mask When set to true, the IRQ is masked. When set to false, IRQ is
  * unmasked.
  *
- * @param config Interrupt behavior configuration.
+ * @param config Interrupt behavior configuration. Valid values depend on the
+ * value of irqNum. If irqNum=PMIC_CFG_REG_CRC_ERR_INT, see
+ * @ref Pmic_CfgRegCrcIntCfgValues. Else if irqNum>=PMIC_COMP1P_UV_ERR_INT and
+ * irqNum<=PMIC_COMP2N_OV_ERR_INT, see @ref Pmic_CmVmonIntCfgValues. Otherwise,
+ * see @ref Pmic_IrqCfgTypicalConfigValues.
  */
 typedef struct Pmic_IrqCfg_s {
     uint8_t validParams;
