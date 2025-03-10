@@ -1149,6 +1149,7 @@ int32_t Pmic_irqClrFlag(Pmic_CoreHandle_t *handle, uint8_t irqNum) {
 
 int32_t Pmic_irqClrAllFlags(Pmic_CoreHandle_t *handle) {
     int32_t status = Pmic_checkPmicCoreHandle(handle);
+    uint8_t regData = 0U;
     uint16_t reg = 0U;
 
     // All IRQ statuses are W1C, writing to reserved bits has no effect, so just
@@ -1167,7 +1168,21 @@ int32_t Pmic_irqClrAllFlags(Pmic_CoreHandle_t *handle) {
             continue;
         }
 
-        status = Pmic_ioTxByte(handle, reg, 0xFFU);
+        if (reg != DEV_ERR_STAT_REG)
+        {
+            status = Pmic_ioTxByte(handle, reg, 0xFFU);
+        }
+        // Special case: DEV_ERR_STAT has DEV_ERR_CNT bit field in it. Setting it can
+        // incur unexpected or undesired behavior, such as causing PMIC to turn off
+        else
+        {
+            status = Pmic_ioRxByte(handle, reg, &regData);
+            if (status == PMIC_ST_SUCCESS)
+            {
+                Pmic_setBitField_b(&regData, SAFE_ST_TMO_RST_ERR_SHIFT, PMIC_ENABLE);
+                status = Pmic_ioTxByte(handle, reg, regData);
+            }
+        }
     }
 
     // Clear OFF_STATE_STAT{1,2}_REG
