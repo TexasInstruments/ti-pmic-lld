@@ -274,10 +274,9 @@ extern "C" {
  * unmasked.
  *
  * @param config Interrupt behavior configuration. Valid values depend on the
- * value of irqNum. If irqNum=PMIC_CFG_REG_CRC_ERR_INT, see
- * @ref Pmic_CfgRegCrcIntCfgValues. Else if irqNum>=PMIC_COMP1P_UV_ERR_INT and
- * irqNum<=PMIC_COMP2N_OV_ERR_INT, see @ref Pmic_CmVmonIntCfgValues. Otherwise,
- * see @ref Pmic_IrqCfgTypicalConfigValues.
+ * value of irqNum. If irqNum=PMIC_CFG_REG_CRC_ERR_INT, see @ref Pmic_IrqConfig1.
+ * Else if irqNum>=PMIC_COMP1P_UV_ERR_INT and irqNum<=PMIC_COMP2N_OV_ERR_INT, see
+ * @ref Pmic_IrqConfig2. Otherwise, see @ref Pmic_IrqConfig0.
  */
 typedef struct Pmic_IrqCfg_s {
     uint8_t validParams;
