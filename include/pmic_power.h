@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -55,752 +55,1122 @@ extern "C" {
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
 /* ========================================================================== */
-#define PMIC_LDO1                           (1U)
-#define PMIC_LDO2                           (2U)
-#define PMIC_LDO3                           (3U)
-#define PMIC_LDO4                           (4U)
-#define PMIC_POWER_LDO_MAX                  (4U)
-#define PMIC_POWER_LDO_MIN                  (1U)
 
-#define PMIC_PLDO1                          (1U)
-#define PMIC_PLDO2                          (2U)
-#define PMIC_POWER_PLDO_MAX                 (2U)
-#define PMIC_POWER_PLDO_MIN                 (1U)
+// Intended for internal use only
+#define PMIC_PWR_TYPE_BUCK_BOOST    (0U)
+#define PMIC_PWR_TYPE_LDO           (1U)
+#define PMIC_PWR_TYPE_PLDO          (2U)
+#define PMIC_PWR_TYPE_EXT_VMON      (3U)
+#define PMIC_PWR_RSRC_TYPE_SHIFT    (8U)
 
-#define PMIC_EXT_VMON1                      (1U)
-#define PMIC_EXT_VMON2                      (2U)
-
-#define PMIC_EN_OUT1                        (1U)
-#define PMIC_EN_OUT2                        (2U)
-#define PMIC_EN_OUT_ALL                     (3U)
-
-/* Define PMIC Power EN-OUT Switch case macros*/
-#define PMIC_ONLY_ENOUT1_EN                 (1U)
-#define PMIC_ONLY_ENOUT2_EN                 (2U)
-#define PMIC_BOTH_ENOUT1_ENOUT2_EN          (3U)
-
-#define PMIC_BB_PWR_RESOURCE_TYPE_VCCA      (0U)
-#define PMIC_BB_PWR_RESOURCE_TYPE_BUCK      (1U)
-#define PMIC_BB_PWR_RESOURCE_TYPE_LDO       (2U)
-#define PMIC_BB_PWR_RESOURCE_TYPE_PLDO      (3U)
-
-#define PMIC_BB_POWER_SOURCE_VCCA                                              \
-  ((((uint16_t)PMIC_BB_PWR_RESOURCE_TYPE_VCCA << 8U) | 0x0U))
-
-#define PMIC_BB_REGULATOR_BUCK                                                 \
-  ((((uint16_t)PMIC_BB_PWR_RESOURCE_TYPE_BUCK << 8U) | 0x1U))
-
-#define PMIC_TPS65386X_REGULATOR_LDO1                                          \
-  ((((uint16_t)PMIC_BB_PWR_RESOURCE_TYPE_LDO << 8U) | 0x2U))
-#define PMIC_TPS65386X_REGULATOR_LDO2                                          \
-  ((((uint16_t)PMIC_BB_PWR_RESOURCE_TYPE_LDO << 8U) | 0x3U))
-#define PMIC_TPS65386X_REGULATOR_LDO3                                          \
-  ((((uint16_t)PMIC_BB_PWR_RESOURCE_TYPE_LDO << 8U) | 0x4U))
-#define PMIC_TPS65386X_REGULATOR_LDO4                                          \
-  ((((uint16_t)PMIC_BB_PWR_RESOURCE_TYPE_LDO << 8U) | 0x5U))
-
-#define PMIC_TPS65386X_REGULATOR_PLDO1                                         \
-  ((((uint16_t)PMIC_BB_PWR_RESOURCE_TYPE_PLDO << 8U) | 0x6U))
-#define PMIC_TPS65386X_REGULATOR_PLDO2                                         \
-  ((((uint16_t)PMIC_BB_PWR_RESOURCE_TYPE_PLDO << 8U) | 0x7U))
-
-/* PMIC LDO Ramp Time for Soft-Start Configuration Bit */
-#define PMIC_LDO_PLDO_SHORT_RAMP_TIME       (0U)
-#define PMIC_LDO_PLDO_LONG_RAMP_TIME        (1U)
-
-/* PMIC PLDO Mode Selection Configuration Bit */
-#define PMIC_PLDO_NON_TRACKING_MODE         (0U)
-#define PMIC_PLDO_TRACKING_MODE             (1U)
-
-/* PMIC LDO Current Limit Level configuration Bit */
-#define PMIC_LDO_PLDO_ILIM_LVL_CFG_OPT0     (0U)
-#define PMIC_LDO_PLDO_ILIM_LVL_CFG_OPT1     (1U)
-#define PMIC_LDO_PLDO_ILIM_LVL_CFG_OPT2     (2U)
-#define PMIC_LDO_PLDO_ILIM_LVL_CFG_OPT3     (3U)
-
-/* LDO and PLDO voltage level configuration macros */
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT_1_0V     (0U)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT1_05V     (1U)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT_1_1V     (2U)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT1_15V     (3U)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT_1_2V     (4U)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT1_25V     (5U)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT_1_3V     (6U)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT1_35V     (7U)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT_1_4V     (8U)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT1_45V     (9U)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT_1_5V     (10U)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT1_55V     (11U)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT_1_6V     (12U)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT1_65V     (13U)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT_1_7V     (14U)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT1_75V     (15U)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT_1_8V     (16U)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT_2_5V     (17U)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT_3V       (18U)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT_3_3V     (19U)
-#define PMIC_LDO_PLDO_LVL_CFG_VOLT_5V       (20U)
-#define PMIC_LDO_LVL_CFG_VOLT_BYPASS        (21U)
-
-/* PLDO Voltage monitoring range macros */
-#define PMIC_PLDO_VTRACK_RNG_LT_2V          (0U)
-#define PMIC_PLDO_VTRACK_RNG_GT_2V          (1U)
-
-/* LDO VMON Threshold ranges */
-#define PMIC_LDO_VMON_TH_3_5                (0U)
-#define PMIC_LDO_VMON_TH_4                  (1U)
-#define PMIC_LDO_VMON_TH_5                  (2U)
-#define PMIC_LDO_VMON_TH_6                  (3U)
-
-/* EXT VMON Threshold ranges */
-#define PMIC_EXT_VMON_TH_3_5                (0U)
-#define PMIC_EXT_VMON_TH_4_5                (1U)
-#define PMIC_EXT_VMON_TH_6                  (2U)
-#define PMIC_EXT_VMON_TH_DIGITAL            (3U)
-
-/* PLDO VMON Threshold ranges */
-#define PMIC_PLDO_VMON_TH_4                 (0U)
-#define PMIC_PLDO_VMON_TH_6                 (1U)
-#define PMIC_PLDO_VMON_TH_8                 (2U)
-#define PMIC_PLDO_VMON_TH_10                (3U)
-
-/* LDO Control ranges */
-#define PMIC_LDO_NOT_ENABLED                (0x00)
-#define PMIC_LDO_ENABLED_LDO_MODE           (0x01)
-#define PMIC_LDO_ENABLED_STBY_MODE          (0x02)
-#define PMIC_LDO_ENABLED_VMON_MODE          (0x03)
-
-#define PMIC_ALL_LDO_NOT_ENABLED            (0x00)
-#define PMIC_ALL_LDO_ENABLED_LDO_MODE       (0x55)
-#define PMIC_ALL_LDO_ENABLED_STBY_MODE      (0xAA)
-#define PMIC_ALL_LDO_ENABLED_VMON_MODE      (0xFF)
-
-/* Buck-Boost Timeout configuration ranges */
-#define PMIC_BB_TMO_CFG_NO_TIMEOUT          (0U)
-#define PMIC_BB_TMO_CFG_8S                  (1U)
-#define PMIC_BB_TMO_CFG_12S                 (2U)
-#define PMIC_BB_TMO_CFG_16S                 (3U)
-
-/* Buck-Boost VMON Threshold ranges */
-#define PMIC_BB_VMON_TH_5                   (0U)
-#define PMIC_BB_VMON_TH_6                   (1U)
-#define PMIC_BB_VMON_TH_7                   (2U)
-#define PMIC_BB_VMON_TH_8                   (3U)
-
-/* Buck-Boost De-Glitch configuration bits */
-#define PMIC_VBAT_VMON_DGL_32US             (0U)
-#define PMIC_VBAT_VMON_DGL_64US             (1U)
-
-#define PMIC_BB_VMON_DGL_8US                (0U)
-#define PMIC_BB_VMON_DGL_16US               (1U)
-#define PMIC_BB_VMON_DGL_24US               (2U)
-#define PMIC_BB_VMON_DGL_32US               (3U)
-
-/* LDO De-Glitch configuration bits */
-#define PMIC_LDO_VMON_DGL_8US               (0U)
-#define PMIC_LDO_VMON_DGL_16US              (1U)
-#define PMIC_LDO_VMON_DGL_24US              (2U)
-#define PMIC_LDO_VMON_DGL_32US              (3U)
-
-/* PLDO De-Glitch configuration bits */
-#define PMIC_PLDO_VMON_DGL_8US              (0U)
-#define PMIC_PLDO_VMON_DGL_16US             (1U)
-#define PMIC_PLDO_VMON_DGL_24US             (2U)
-#define PMIC_PLDO_VMON_DGL_32US             (3U)
-
-/* EXT_VMON De-Glitch configuration bits */
-#define PMIC_EXT_VMON_DGL_8US               (0U)
-#define PMIC_EXT_VMON_DGL_16US              (1U)
-#define PMIC_EXT_VMON_DGL_24US              (2U)
-#define PMIC_EXT_VMON_DGL_32US              (3U)
-
-/* voltage monitored 192 us (typical) per LP_VMON_PER_CFG period in STANDBY
- * state */
-#define LP_VMON_CTRL_DATA1                  (0x00U)
-/* continuous voltage monitoring in STANDBY state */
-#define LP_VMON_CTRL_DATA2                  (0x01U)
-
-/* 131 ms (typ) */
-#define LP_TSD_PER_CFG_DATA1                (0X00U)
-/* 524 ms (typ) */
-#define LP_TSD_PER_CFG_DATA2                (0X01U)
-
-/* 32 ms (typ) */
-#define LP_VMON_PER_CFG_DATA1               (0X00U)
-/* 64 ms (typ) */
-#define LP_VMON_PER_CFG_DATA2               (0X01U)
-
-/*==========================================================================*/
-/*                         Structures and Enums                             */
-/*==========================================================================*/
+// Intended for internal use only
+#define PMIC_PWR_ID_BUCK_BOOST  (0U)
+#define PMIC_PWR_ID_LDO1        (0U)
+#define PMIC_PWR_ID_LDO2        (1U)
+#define PMIC_PWR_ID_LDO3        (2U)
+#define PMIC_PWR_ID_LDO4        (3U)
+#define PMIC_PWR_ID_PLDO1       (0U)
+#define PMIC_PWR_ID_PLDO2       (1U)
+#define PMIC_PWR_ID_EXT_VMON1   (0U)
+#define PMIC_PWR_ID_EXT_VMON2   (1U)
 
 /**
- * @struct Pmic_powerBuckBoostCfgReg_s
- * @brief Structure representing the configuration register for Buck-Boost
- * operation.
+ * @anchor Pmic_PwrRsrc
+ * @name PMIC Power Resource
  *
- * This structure provides a way to organize and access the individual bit
- * fields of the Buck-Boost Configuration Register.
+ * @brief Different power resources available on the PMIC.
+ *
+ * @{
  */
-typedef struct Pmic_powerBuckBoostCfgReg_s {
-    uint8_t bbPgoodCfg; /**< Bit field for Buck-Boost PGOOD configuration. */
-    uint8_t bbSsEn;
-    /**< Bit field for Buck-Boost Dual Random Spread Spectrum
-                        (DRSS) modulation. */
-    uint8_t bbStbyLvlCfg;
-    /**< Bit field for Buck-Boost voltage selection during
-                              low-power STANDBY state operation. */
-    uint8_t bbLvlCfg;
-    /**< Bit field for Buck-Boost voltage selection for
-                          operating and sequencing states. */
-    uint8_t bbCfgRegAddr; /**< Bit field for Buck-Boost Register Address. */
-    uint8_t bbCfgRegShift; /**< Bit field for Buck-Boost Register Shift Value. */
-    uint8_t bbCfgRegMask; /**< Bit field for Buck-Boost Register Mask Value. */
-}
-Pmic_powerBuckBoostCfgReg_t;
-
-typedef struct Pmic_ldoCfgReg_s {
-    uint8_t ldoRtCfg;
-    uint8_t ldoIlimLvlCfg;
-    uint8_t ldoLvlCfg;
-}
-Pmic_ldoCfgReg_t;
-
-typedef struct Pmic_ldoCtrlReg_s {
-    uint8_t ldo1Ctrl;
-    uint8_t ldo2Ctrl;
-    uint8_t ldo3Ctrl;
-    uint8_t ldo4Ctrl;
-}
-Pmic_ldoCtrlReg_t;
-
-typedef struct Pmic_pldoCfgReg_s {
-    uint8_t pldoModeSel;
-    uint8_t pldoIlimLvlCfg;
-    uint8_t pldoLvlCfg;
-    uint8_t pldoRegAddr;
-    uint8_t pldoRegShift;
-    uint8_t pldoRegMask;
-}
-Pmic_pldoCfgReg_t;
-
-typedef struct Pmic_pldoVTrackRtReg_s {
-    uint8_t pldoVTrackRng;
-    uint8_t pldo1RTCfgVal;
-    uint8_t pldo2RTCfgVal;
-    uint8_t pldoVTrackRTRegAddr;
-    uint8_t pldoVTrackRTRegShift;
-    uint8_t pldoVTrackRTRegMask;
-}
-Pmic_pldoVTrackRtReg_t;
-
-typedef struct Pmic_pgoodCfgReg_s {
-    uint8_t pldo2PgoodCfg; /**< Bit field for PLDO2 PGOOD configuration. */
-    uint8_t pldo1PgoodCfg; /**< Bit field for PLDO1 PGOOD configuration. */
-    uint8_t ldo4PgoodCfg; /**< Bit field for LDO4 PGOOD configuration. */
-    uint8_t ldo3PgoodCfg; /**< Bit field for LDO3 PGOOD configuration. */
-    uint8_t ldo2PgoodCfg; /**< Bit field for LDO2 PGOOD configuration. */
-    uint8_t ldo1PgoodCfg; /**< Bit field for LDO1 PGOOD configuration. */
-    uint8_t pgoodRegAddr;
-    uint8_t pgoodRegShift;
-    uint8_t pgoodRegMask;
-}
-Pmic_pgoodCfgReg_t;
-
-typedef struct Pmic_pldoEnOutCtrlReg_s {
-    uint8_t enOut2Enable;
-    uint8_t enOut1Enable;
-    uint8_t pldo2Ctrl;
-    uint8_t pldo1Ctrl;
-    uint8_t pldoEnOutRegAddr;
-}
-Pmic_pldoEnOutCtrlReg_t;
-
-typedef struct Pmic_DscgDisCtrlReg_s {
-    uint8_t pldo2DscgDis; /**< Bit 5 (PLDO2_DSCG_DIS). */
-    uint8_t pldo1DscgDis; /**< Bit 4 (PLDO1_DSCG_DIS). */
-    uint8_t ldo4DscgDis; /**< Bit 3 (LDO4_DSCG_DIS). */
-    uint8_t ldo3DscgDis; /**< Bit 2 (LDO3_DSCG_DIS). */
-    uint8_t ldo2DscgDis; /**< Bit 1 (LDO2_DSCG_DIS). */
-    uint8_t ldo1DscgDis; /**< Bit 0 (LDO1_DSCG_DIS). */
-    uint8_t dscgDisCtrlRegAddr;
-}
-Pmic_DscgDisCtrlReg_t;
-
-typedef struct Pmic_VbatBBVMONDglReg_s {
-    uint8_t vbatvmondgl;
-    /**< Bit 7   (Configuration bits for VBAT VMON deglitch
-                             time). */
-    uint8_t bbvmondgl;
-    /**< Bit 1-0 (Configuration bits for Buck-Boost VMON
-                           deglitch time). */
-}
-Pmic_VbatBBVMONDglReg_t;
-
-typedef struct Pmic_ldoVMONThresholdReg_s {
-    uint8_t ldo4vmonthresh;
-    /**< Bit 7-6 (Configuration bits for LDO4 VMON
-                             deglitch time). */
-    uint8_t ldo3vmonthresh;
-    /**< Bit 5-4 (Configuration bits for LDO3 VMON
-                             deglitch time). */
-    uint8_t ldo2vmonthresh;
-    /**< Bit 3-2 (Configuration bits for LDO2 VMON
-                             deglitch time). */
-    uint8_t ldo1vmonthresh;
-    /**< Bit 1-0 (Configuration bits for LDO1 VMON
-                             deglitch time). */
-}
-Pmic_ldoVMONThresholdReg_t;
-
-typedef struct Pmic_ldoVMONDglReg_s {
-    uint8_t ldo4vmondgl;
-    /**< Bit 7-6 (Configuration bits for LDO4 VMON deglitch
-                             time). */
-    uint8_t ldo3vmondgl;
-    /**< Bit 5-4 (Configuration bits for LDO3 VMON deglitch
-                             time). */
-    uint8_t ldo2vmondgl;
-    /**< Bit 3-2 (Configuration bits for LDO2 VMON deglitch
-                             time). */
-    uint8_t ldo1vmondgl;
-    /**< Bit 1-0 (Configuration bits for LDO1 VMON deglitch
-                             time). */
-}
-Pmic_ldoVMONDglReg_t;
-
-typedef struct Pmic_extpldoVMONDglReg_s {
-    uint8_t extvmon1dgl;
-    /**< Bit 7-6 (Configuration bits for EXT-VMON1 deglitch
-                             time). */
-    uint8_t extvmon2dgl;
-    /**< Bit 5-4 (Configuration bits for EXT-VMON2 deglitch
-                             time). */
-    uint8_t pldo2vmondgl;
-    /**< Bit 3-2 (Configuration bits for PLDO2 VMON
-                              deglitch time). */
-    uint8_t pldo1vmondgl;
-    /**< Bit 1-0 (Configuration bits for PLDO1 VMON
-                              deglitch time). */
-}
-Pmic_extpldoVMONDglReg_t;
-
-typedef struct Pmic_extpldoVMONThreshReg_s {
-    uint8_t extvmon1thresh;
-    uint8_t extvmon2thresh;
-    uint8_t pldo2vmonthresh;
-    uint8_t pldo1vmonthresh;
-}
-Pmic_extpldoVMONThreshReg_t;
-
-typedef struct Pmic_lpVMonCtrlReg_s {
-    uint8_t lpExtVMon2Ctrl; /**< Bit 7 (LP_EXT_VMON2_CTRL)  */
-    uint8_t lpExtVMon1Ctrl; /**< Bit 6 (LP_EXT_VMON1_CTRL)  */
-    uint8_t lppldo2VMonCtrl; /**< Bit 5 (LP_PLDO2_VMON_CTRL) */
-    uint8_t lppldo1VMonCtrl; /**< Bit 4 (LP_PLDO1_VMON_CTRL) */
-    uint8_t lpldo4VMonCtrl; /**< Bit 3 (LP_LDO4_VMON_CTRL)  */
-    uint8_t lpldo3VMonCtrl; /**< Bit 2 (LP_LDO3_VMON_CTRL)  */
-    uint8_t lpldo2VMonCtrl; /**< Bit 1 (LP_LDO2_VMON_CTRL)  */
-    uint8_t lpldo1VMonCtrl; /**< Bit 0 (LP_LDO1_VMON_CTRL)  */
-    uint8_t lpVmonCtrlRegAddr;
-}
-Pmic_lpVMonCtrlReg_t;
-
-typedef struct Pmic_lpConfigCtrlReg_s {
-    uint8_t lpBBOVPCtrl; /**< Bit 7 (LP_BB_OVP_CTRL)     */
-    uint8_t lpBBVMonCtrl; /**< Bit 6 (LP_BB_VMON_CTRL)    */
-    uint8_t lpTSDperConfig; /**< Bit 1 (LP_TSD_PER_CFG)     */
-    uint8_t lpVMonperConfig; /**< Bit 0 (LP_VMON_PER_CFG)    */
-    uint8_t lpCfgRegAddr;
-}
-Pmic_lpConfigCtrlReg_t;
-
-typedef struct Pmic_BuckBoostVMONConfigReg_s {
-    uint8_t buckBoostTmoCfg;
-    uint8_t buckBoostVmonTh;
-}
-Pmic_BuckBoostVMONConfigReg_t;
-
-typedef struct Pmic_powerResourceConfig_s {
-    uint8_t pmicConfigShiftVal;
-    uint8_t pmicConfigMaskVal;
-}
-Pmic_powerRsrcCfg_t;
-
-typedef struct Pmic_powerResourceRegCfg_s {
-    uint8_t buckConfigRegAddr;
-    uint8_t ldo1ConfigRegAddr;
-    uint8_t ldo2ConfigRegAddr;
-    uint8_t ldo3ConfigRegAddr;
-    uint8_t ldo4ConfigRegAddr;
-    uint8_t pldo1ConfigRegAddr;
-    uint8_t pldo2ConfigRegAddr;
-    uint8_t pldoConfigRegAddr;
-    uint8_t dscgConfigRegAddr;
-    uint8_t pgoodConfigRegAddr;
-    uint8_t ldoCtrlRegAddr;
-    uint8_t enoutCtrlRegAddr;
-    uint8_t vmonTHCfg1RegAddr;
-    uint8_t vmonTHCfg2RegAddr;
-    uint8_t vmonTHCfg3RegAddr;
-    uint8_t lpvmonCtrlRegAddr;
-    uint8_t lpConfigRegAddr;
-    uint8_t vmonDglCfg1RegAddr;
-    uint8_t vmonDglCfg2RegAddr;
-    uint8_t vmonDglCfg3RegAddr;
-    uint8_t extvmonCfgCtrlRegAddr;
-    uint8_t bitPosVal;
-    uint8_t bitMaskVal;
-}
-Pmic_powerRsrcRegCfg_t;
-
-/*==========================================================================*/
-/*                         Function Declarations                            */
-/*==========================================================================*/
-
-void pmic_get_bb_pwrRsrceRegCfg(Pmic_powerRsrcRegCfg_t ** pPwrRsrcRegCfg);
-
-int32_t
-Pmic_powerSetBuckBstPgoodCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_powerBuckBoostCfgReg_t * buckBstCfg);
-
-int32_t Pmic_powerGetBuckBstPgoodCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_powerBuckBoostCfgReg_t * buckBstCfg);
-
-int32_t Pmic_powerSetBuckBstSsEn(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_powerBuckBoostCfgReg_t * buckBstCfg);
-
-int32_t Pmic_powerGetBuckBstSsEn(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_powerBuckBoostCfgReg_t * buckBstCfg);
-
-int32_t
-Pmic_powerSetBuckBstStbyLvlCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_powerBuckBoostCfgReg_t * buckBstCfg);
-
-int32_t Pmic_powerGetBuckBstStbyLvlCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_powerBuckBoostCfgReg_t * buckBstCfg);
-
-int32_t
-Pmic_powerSetBuckBstLvlCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_powerBuckBoostCfgReg_t * buckBstCfg);
-
-int32_t Pmic_powerGetBuckBstLvlCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_powerBuckBoostCfgReg_t * buckBstCfg);
-
-int32_t Pmic_powerSetBuckBstCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_powerBuckBoostCfgReg_t * buckBstCfg,
-    const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg,
-        const Pmic_powerRsrcCfg_t * pwrRsrcCfg);
-
-int32_t Pmic_powerGetBuckBstCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_powerBuckBoostCfgReg_t * buckBstCfg,
-    const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg,
-        const Pmic_powerRsrcCfg_t * pwrRsrcCfg);
-
-void Pmic_getLDOCfgFields(uint8_t ldoNumber, Pmic_ldoCfgReg_t * ldoCfg,
-    const Pmic_powerRsrcCfg_t * pwrRsrcCfg,
-        const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-
-int32_t Pmic_powerSetLDORtCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_ldoCfgReg_t * ldoCfg);
-
-int32_t Pmic_powerGetLDORtCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_ldoCfgReg_t * ldoCfg);
-
-int32_t Pmic_powerSetLDOIlimLvlCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_ldoCfgReg_t * ldoCfg);
-
-int32_t Pmic_powerGetLDOIlimLvlCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_ldoCfgReg_t * ldoCfg);
-
-int32_t Pmic_powerSetLDOLvlCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_ldoCfgReg_t * ldoCfg);
-
-int32_t Pmic_powerGetLDOLvlCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_ldoCfgReg_t * ldoCfg);
-
-int32_t Pmic_powerSetBuckBstCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_powerBuckBoostCfgReg_t * buckBstCfg,
-    const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg,
-        const Pmic_powerRsrcCfg_t * pwrRsrcCfg);
-
-int32_t Pmic_powerGetBuckBstCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_powerBuckBoostCfgReg_t * buckBstCfg,
-    const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg,
-        const Pmic_powerRsrcCfg_t * pwrRsrcCfg);
-
-int32_t
-Pmic_powerSetLdoConfigRegister(Pmic_CoreHandle_t * pPmicCoreHandle,
-                               uint8_t ldoNumber, Pmic_ldoCfgReg_t *ldoConfig);
-
-int32_t
-Pmic_powerGetLdoConfigRegister(Pmic_CoreHandle_t * pPmicCoreHandle,
-                               uint8_t ldoNumber, Pmic_ldoCfgReg_t *ldoConfig);
-
-void Pmic_getPLDOCfgFields(uint8_t pldoNumber, Pmic_pldoCfgReg_t * pldoCfg,
-    const Pmic_powerRsrcCfg_t * pwrRsrcCfg,
-        const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-
-int32_t Pmic_powerSetPLDOModeSel(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_pldoCfgReg_t * pldoCfg);
-
-int32_t Pmic_powerGetPLDOModeSel(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_pldoCfgReg_t * pldoCfg);
-
-int32_t Pmic_powerSetPLDOIlimLvlCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_pldoCfgReg_t * pldoCfg);
-
-int32_t Pmic_powerGetPLDOIlimLvlCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_pldoCfgReg_t * pldoCfg);
-
-int32_t Pmic_powerSetPLDOLvlCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_pldoCfgReg_t * pldoCfg);
-
-int32_t Pmic_powerGetPLDOLvlCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_pldoCfgReg_t * pldoCfg);
-
-int32_t Pmic_powerSetPLDOConfigRegister(
-    Pmic_CoreHandle_t * pPmicCoreHandle, uint8_t pldoNumber,
-    Pmic_pldoCfgReg_t * pldoConfig,
-    const Pmic_powerRsrcCfg_t * pwrRsrcCfg,
-        const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-
-int32_t Pmic_powerGetPLDOConfigRegister(
-    Pmic_CoreHandle_t * pPmicCoreHandle, uint8_t pldoNumber,
-    Pmic_pldoCfgReg_t * pldoConfig,
-    const Pmic_powerRsrcCfg_t * pwrRsrcCfg,
-        const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-
-int32_t Pmic_setPLDOVTrackRng(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_pldoVTrackRtReg_t * pldoCfg);
-
-int32_t Pmic_getPLDOVTrackRng(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_pldoVTrackRtReg_t * pldoCfg);
-
-int32_t Pmic_setPLDO1RTCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_pldoVTrackRtReg_t * pldoCfg);
-
-int32_t Pmic_getPLDO1RTCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_pldoVTrackRtReg_t * pldoCfg);
-
-int32_t Pmic_setPLDO2RTCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_pldoVTrackRtReg_t * pldoCfg);
-
-int32_t Pmic_getPLDO2RTCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_pldoVTrackRtReg_t * pldoCfg);
-
-int32_t Pmic_SetPLDOVTrackRTRegCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t pldoNumber,
-    Pmic_pldoVTrackRtReg_t * pldoConfig,
-    const Pmic_powerRsrcCfg_t * pwrRsrcCfg,
-        const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-
-int32_t Pmic_GetPLDOVTrackRTRegCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t pldoNumber,
-    Pmic_pldoVTrackRtReg_t * pldoConfig,
-    const Pmic_powerRsrcCfg_t * pwrRsrcCfg,
-        const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-
-int32_t Pmic_setPldoPgoodCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t pldoNumber,
-    const Pmic_pgoodCfgReg_t * pldoPgoodCfg);
-
-int32_t Pmic_getPldoPgoodCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t pldoNumber,
-    Pmic_pgoodCfgReg_t * pldoPgoodCfg);
-
-int32_t Pmic_setLdoPgoodCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t ldoNumber,
-    const Pmic_pgoodCfgReg_t * ldoPgoodCfg);
-
-int32_t Pmic_getLdoPgoodCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t ldoNumber, Pmic_pgoodCfgReg_t * ldoPgoodCfg);
-
-void Pmic_getLDOCtrlFields(uint8_t ldoNumber, uint8_t * pBitPos,
-    uint8_t * pBitMask);
-
-int32_t Pmic_setLdoCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
-                        Pmic_ldoCtrlReg_t *ldoControl);
-
-int32_t Pmic_getLdoCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
-                        uint8_t ldoNumber,
-                        Pmic_ldoCtrlReg_t *ldoControl);
-
-void Pmic_getEnOutCtrlFields(uint8_t enableNumber, uint8_t * pBitPos,
-    uint8_t * pBitMask);
-
-void Pmic_getPLDOCtrlFields(uint8_t pldoNumber, uint8_t * pBitPos,
-    uint8_t * pBitMask);
-
-int32_t Pmic_setPowerEnOutCtrlReg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_pldoEnOutCtrlReg_t * pldoEnOutCfg);
-
-int32_t Pmic_setPowerPLDOCtrlReg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_pldoEnOutCtrlReg_t * pldoEnOutCfg);
-
-int32_t Pmic_setPowerPLDOEnOutControl(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_pldoEnOutCtrlReg_t * pldoEnOutCfg,
-    const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-
-int32_t Pmic_setPLDODscgDisCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_powerRsrcCfg_t * dscgConfig,
-        const Pmic_DscgDisCtrlReg_t * dscgDisCtrlCfg);
-
-int32_t Pmic_setLDODscgDisCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_powerRsrcCfg_t * dscgConfig,
-        const Pmic_DscgDisCtrlReg_t * dscgDisCtrlCfg);
-
-int32_t Pmic_setPowerDscgDisControl(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_DscgDisCtrlReg_t * dscgDisCtrlCfg,
-    const Pmic_powerRsrcCfg_t * dscgConfig,
-        const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-
-int32_t
-Pmic_setldoVmonThresholdConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t ldoNumber,
-    const Pmic_ldoVMONThresholdReg_t * ldomonThreshCfg,
-        const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-int32_t
-Pmic_getldoVmonThresholdConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t ldoNumber,
-    Pmic_ldoVMONThresholdReg_t * ldomonThreshCfg,
-    const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-
-int32_t Pmic_setpldoVMONThreshConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t pldoNumber,
-    const Pmic_extpldoVMONThreshReg_t * pldovmonthCfg,
-        const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-
-int32_t Pmic_getpldoVMONThreshConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t pldoNumber,
-    Pmic_extpldoVMONThreshReg_t * pldovmonthCfg,
-    const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-
-int32_t Pmic_setextVMONThreshConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t extVmonNumber,
-    const Pmic_extpldoVMONThreshReg_t * extvmonthCfg,
-        const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-
-int32_t Pmic_getextVMONThreshConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t extVmonNumber,
-    Pmic_extpldoVMONThreshReg_t * extvmonthCfg,
-    const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-
-int32_t Pmic_setbbTimeoutConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_BuckBoostVMONConfigReg_t * bbtmoCfg,
-        const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-
-int32_t Pmic_getbbTimeoutConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_BuckBoostVMONConfigReg_t * bbtmoCfg,
-    const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-
-int32_t Pmic_setbbVmonThConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_BuckBoostVMONConfigReg_t * bbtmoCfg,
-        const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-
-int32_t Pmic_getbbVmonThConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_BuckBoostVMONConfigReg_t * bbtmoCfg,
-    const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-
-int32_t Pmic_setBBVMONDeGlitchConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_VbatBBVMONDglReg_t * bbvmondglCfg,
-        const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-
-int32_t Pmic_getBBVMONDeGlitchConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg,
-        uint8_t * bbVmonDglStatus);
-
-int32_t Pmic_setVbatVMONDeGlitchConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_VbatBBVMONDglReg_t * vbatvmondglCfg,
-        const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-
-int32_t Pmic_getVbatVMONDeGlitchConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg,
-        uint8_t * VbatVmonDglStatus);
-
-int32_t Pmic_setldoVMONDeGlitchConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t ldoNumber,
-    const Pmic_ldoVMONDglReg_t * ldovmondglCfg,
-        const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-
-int32_t Pmic_getldoVMONDeGlitchConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t ldoNumber,
-    Pmic_ldoVMONDglReg_t * ldovmondglCfg,
-    const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-
-int32_t Pmic_setpldoVMONDeGlitchConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t pldoNumber,
-    const Pmic_extpldoVMONDglReg_t * pldovmondglCfg,
-        const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-
-int32_t Pmic_getpldoVMONDeGlitchConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t pldoNumber,
-    Pmic_extpldoVMONDglReg_t * pldovmondglCfg,
-    const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-
-int32_t Pmic_setextVMONDeGlitchConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t extVmonNumber,
-    const Pmic_extpldoVMONDglReg_t * extvmondglCfg,
-        const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-
-int32_t Pmic_getextVMONDeGlitchConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    uint8_t extVmonNumber,
-    Pmic_extpldoVMONDglReg_t * extvmondglCfg,
-    const Pmic_powerRsrcRegCfg_t * pwrRsrcRegCfg);
-
-int32_t Pmic_SetLPExtVMonCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_lpVMonCtrlReg_t * lpVMonCtrlCfg);
-
-int32_t Pmic_SetLPPLDOVMonCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_lpVMonCtrlReg_t * lpVMonCtrlCfg);
-
-int32_t Pmic_SetLPLDOVMonCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_lpVMonCtrlReg_t * lpVMonCtrlCfg);
-
-int32_t Pmic_GetLPPLDOVMonCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_lpVMonCtrlReg_t * lpVMonCtrlCfg);
-
-int32_t Pmic_GetLPLDOVMonCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_lpVMonCtrlReg_t * lpVMonCtrlCfg);
-
-int32_t Pmic_SetLowPowerVmonCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_lpVMonCtrlReg_t * lpVMonCtrlCfg);
-
-int32_t Pmic_GetLowPowerVmonCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_lpVMonCtrlReg_t * lpVMonCtrlCfg);
-
-int32_t Pmic_GetLPExtVMonCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_lpVMonCtrlReg_t * lpVMonCtrlCfg);
-
-int32_t Pmic_SetlpBBOVPCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_lpConfigCtrlReg_t * lpConfig);
-
-int32_t Pmic_GetlpBBOVPCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_lpConfigCtrlReg_t * lpConfig);
-
-int32_t Pmic_SetlpBBVmonCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_lpConfigCtrlReg_t * lpConfig);
-
-int32_t Pmic_GetlpBBVmonCtrl(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_lpConfigCtrlReg_t * lpConfig);
-
-int32_t Pmic_SetlpTSDperCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_lpConfigCtrlReg_t * lpConfig);
-
-int32_t Pmic_GetlpTSDperCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_lpConfigCtrlReg_t * lpConfig);
-
-int32_t Pmic_SetlpVmonperCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    const Pmic_lpConfigCtrlReg_t * lpConfig);
-
-int32_t Pmic_GetlpVmonperCfg(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_lpConfigCtrlReg_t * lpConfig);
-
-int32_t Pmic_SetLowPowerConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_lpConfigCtrlReg_t * lpConfig);
-
-int32_t Pmic_GetLowPowerConfig(Pmic_CoreHandle_t * pPmicCoreHandle,
-    Pmic_lpConfigCtrlReg_t * lpConfig);
+#define PMIC_PWR_BUCK_BOOST ((uint16_t)((PMIC_PWR_TYPE_BUCK_BOOST << PMIC_PWR_RSRC_TYPE_SHIFT) | PMIC_PWR_ID_BUCK_BOOST))
+#define PMIC_PWR_LDO1       ((uint16_t)((PMIC_PWR_TYPE_LDO << PMIC_PWR_RSRC_TYPE_SHIFT) | PMIC_PWR_ID_LDO1))
+#define PMIC_PWR_LDO2       ((uint16_t)((PMIC_PWR_TYPE_LDO << PMIC_PWR_RSRC_TYPE_SHIFT) | PMIC_PWR_ID_LDO2))
+#define PMIC_PWR_LDO3       ((uint16_t)((PMIC_PWR_TYPE_LDO << PMIC_PWR_RSRC_TYPE_SHIFT) | PMIC_PWR_ID_LDO3))
+#define PMIC_PWR_LDO4       ((uint16_t)((PMIC_PWR_TYPE_LDO << PMIC_PWR_RSRC_TYPE_SHIFT) | PMIC_PWR_ID_LDO4))
+#define PMIC_PWR_PLDO1      ((uint16_t)((PMIC_PWR_TYPE_PLDO << PMIC_PWR_RSRC_TYPE_SHIFT) | PMIC_PWR_ID_PLDO1))
+#define PMIC_PWR_PLDO2      ((uint16_t)((PMIC_PWR_TYPE_PLDO << PMIC_PWR_RSRC_TYPE_SHIFT) | PMIC_PWR_ID_PLDO2))
+#define PMIC_PWR_EXT_VMON1  ((uint16_t)((PMIC_PWR_TYPE_EXT_VMON << PMIC_PWR_RSRC_TYPE_SHIFT) | PMIC_PWR_ID_EXT_VMON1))
+#define PMIC_PWR_EXT_VMON2  ((uint16_t)((PMIC_PWR_TYPE_EXT_VMON << PMIC_PWR_RSRC_TYPE_SHIFT) | PMIC_PWR_ID_EXT_VMON2))
+/** @} */
+
+/**
+ * @anchor Pmic_PwrRsrcMinMax
+ * @name PMIC Power Resource Minimum and Maximum
+ *
+ * @brief Minimum and maximum power resources of the PMIC.
+ *
+ * @{
+ */
+#define PMIC_PWR_BUCK_BOOST_MIN (PMIC_PWR_BUCK_BOOST)
+#define PMIC_PWR_BUCK_BOOST_MAX (PMIC_PWR_BUCK_BOOST)
+#define PMIC_PWR_LDO_MIN        (PMIC_PWR_LDO1)
+#define PMIC_PWR_LDO_MAX        (PMIC_PWR_LDO4)
+#define PMIC_PWR_PLDO_MIN       (PMIC_PWR_PLDO1)
+#define PMIC_PWR_PLDO_MAX       (PMIC_PWR_PLDO2)
+#define PMIC_PWR_EXT_VMON_MIN   (PMIC_PWR_EXT_VMON1)
+#define PMIC_PWR_EXT_VMON_MAX   (PMIC_PWR_EXT_VMON2)
+/** @} */
+
+/**
+ * @anchor Pmic_PwrBuckBoostCfgValidParam
+ * @name PMIC Power Buck/Boost Configuration Valid Parameters
+ *
+ * @brief Valid parameters of the Pmic_PwrBuckBoostCfg_t struct.
+ *
+ * @{
+ */
+#define PMIC_PWR_CFG_BB_LVL_VALID                           (0U)
+#define PMIC_PWR_CFG_BB_STBY_LVL_VALID                      (1U)
+#define PMIC_PWR_CFG_BB_VMON_THR_VALID                      (2U)
+#define PMIC_PWR_CFG_BB_VMON_DGL_VALID                      (3U)
+#define PMIC_PWR_CFG_BB_BOOST_TMO_VALID                     (4U)
+#define PMIC_PWR_CFG_BB_SS_EN_VALID                         (5U)
+#define PMIC_PWR_CFG_BB_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID   (6U)
+/** @} */
+
+/**
+ * @anchor Pmic_PwrBuckBoostCfgValidParamShift
+ * @name PMIC Power Buck/Boost Configuration Valid Parameter Shifts
+ *
+ * @brief Valid parameter shifts of the Pmic_PwrBuckBoostCfg_t struct. End user
+ * can use the defines listed below to indicate valid Buck/Boost configurations.
+ * Multiple valid parameters can be indicated using the OR operator.
+ *
+ * @{
+ */
+#define PMIC_PWR_CFG_BB_LVL_VALID_SHIFT                         (1U << PMIC_PWR_CFG_BB_LVL_VALID)
+#define PMIC_PWR_CFG_BB_STBY_LVL_VALID_SHIFT                    (1U << PMIC_PWR_CFG_BB_STBY_LVL_VALID)
+#define PMIC_PWR_CFG_BB_VMON_THR_VALID_SHIFT                    (1U << PMIC_PWR_CFG_BB_VMON_THR_VALID)
+#define PMIC_PWR_CFG_BB_VMON_DGL_VALID_SHIFT                    (1U << PMIC_PWR_CFG_BB_VMON_DGL_VALID)
+#define PMIC_PWR_CFG_BB_BOOST_TMO_VALID_SHIFT                   (1U << PMIC_PWR_CFG_BB_BOOST_TMO_VALID)
+#define PMIC_PWR_CFG_BB_SS_EN_VALID_SHIFT                       (1U << PMIC_PWR_CFG_BB_SS_EN_VALID)
+#define PMIC_PWR_CFG_BB_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT (1U << PMIC_PWR_CFG_BB_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID)
+#define PMIC_PWR_CFG_BB_ALL                                     (PMIC_PWR_CFG_BB_LVL_VALID_SHIFT  | \
+                                                                 PMIC_PWR_CFG_BB_STBY_LVL_VALID_SHIFT | \
+                                                                 PMIC_PWR_CFG_BB_VMON_THR_VALID_SHIFT | \
+                                                                 PMIC_PWR_CFG_BB_VMON_DGL_VALID_SHIFT | \
+                                                                 PMIC_PWR_CFG_BB_BOOST_TMO_VALID_SHIFT | \
+                                                                 PMIC_PWR_CFG_BB_SS_EN_VALID_SHIFT | \
+                                                                 PMIC_PWR_CFG_BB_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT)
+/** @} */
+
+/**
+ * @anchor Pmic_PwrLdoCfgValidParam
+ * @name PMIC Power LDO Configuration Valid Parameters
+ *
+ * @brief Valid parameters of the Pmic_PwrLdoCfg_t struct.
+ *
+ * @{
+ */
+#define PMIC_PWR_CFG_LDO_MODE_VALID                         (0U)
+#define PMIC_PWR_CFG_LDO_LVL_VALID                          (1U)
+#define PMIC_PWR_CFG_LDO_ILIM_LVL_VALID                     (2U)
+#define PMIC_PWR_CFG_LDO_ILIM_DGL_VALID                     (3U)
+#define PMIC_PWR_CFG_LDO_VMON_THR_VALID                     (4U)
+#define PMIC_PWR_CFG_LDO_VMON_DGL_VALID                     (5U)
+#define PMIC_PWR_CFG_LDO_RAMP_TIME_VALID                    (6U)
+#define PMIC_PWR_CFG_LDO_DISABLE_DISCHARGE_VALID            (7U)
+#define PMIC_PWR_CFG_LDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID  (8U)
+/** @} */
+
+/**
+ * @anchor Pmic_PwrLdoCfgValidParamShifts
+ * @name PMIC Power LDO Configuration Valid Parameter Shifts
+ *
+ * @brief Valid parameter shifts of the Pmic_PwrLdoCfg_t struct. End user can
+ * use the defines listed below to indicate valid LDO configurations. Multiple
+ * valid parameters can be indicated using the OR operator.
+ *
+ * @{
+ */
+#define PMIC_PWR_CFG_LDO_MODE_VALID_SHIFT                           (1U << PMIC_PWR_CFG_LDO_MODE_VALID)
+#define PMIC_PWR_CFG_LDO_LVL_VALID_SHIFT                            (1U << PMIC_PWR_CFG_LDO_LVL_VALID)
+#define PMIC_PWR_CFG_LDO_ILIM_LVL_VALID_SHIFT                       (1U << PMIC_PWR_CFG_LDO_ILIM_LVL_VALID)
+#define PMIC_PWR_CFG_LDO_ILIM_DGL_VALID_SHIFT                       (1U << PMIC_PWR_CFG_LDO_ILIM_DGL_VALID)
+#define PMIC_PWR_CFG_LDO_VMON_THR_VALID_SHIFT                       (1U << PMIC_PWR_CFG_LDO_VMON_THR_VALID)
+#define PMIC_PWR_CFG_LDO_VMON_DGL_VALID_SHIFT                       (1U << PMIC_PWR_CFG_LDO_VMON_DGL_VALID)
+#define PMIC_PWR_CFG_LDO_RAMP_TIME_VALID_SHIFT                      (1U << PMIC_PWR_CFG_LDO_RAMP_TIME_VALID)
+#define PMIC_PWR_CFG_LDO_DISABLE_DISCHARGE_VALID_SHIFT              (1U << PMIC_PWR_CFG_LDO_DISABLE_DISCHARGE_VALID)
+#define PMIC_PWR_CFG_LDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT    (1U << PMIC_PWR_CFG_LDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID)
+#define PMIC_PWR_CFG_LDO_ALL                                        (PMIC_PWR_CFG_LDO_MODE_VALID_SHIFT | \
+                                                                     PMIC_PWR_CFG_LDO_LVL_VALID_SHIFT | \
+                                                                     PMIC_PWR_CFG_LDO_ILIM_LVL_VALID_SHIFT | \
+                                                                     PMIC_PWR_CFG_LDO_ILIM_DGL_VALID_SHIFT | \
+                                                                     PMIC_PWR_CFG_LDO_VMON_THR_VALID_SHIFT | \
+                                                                     PMIC_PWR_CFG_LDO_VMON_DGL_VALID_SHIFT | \
+                                                                     PMIC_PWR_CFG_LDO_RAMP_TIME_VALID_SHIFT | \
+                                                                     PMIC_PWR_CFG_LDO_DISABLE_DISCHARGE_VALID_SHIFT | \
+                                                                     PMIC_PWR_CFG_LDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT)
+/** @} */
+
+/**
+ * @anchor Pmic_PwrPldoCfgValidParam
+ * @name PMIC Power PLDO Configuration Valid Parameters
+ *
+ * @brief Valid parameters of the Pmic_PwrPldoCfg_t struct.
+ *
+ * @{
+ */
+#define PMIC_PWR_CFG_PLDO_MODE_VALID                        (0U)
+#define PMIC_PWR_CFG_PLDO_TRACKING_MODE_VALID               (1U)
+#define PMIC_PWR_CFG_PLDO_LVL_VALID                         (2U)
+#define PMIC_PWR_CFG_PLDO_ILIM_LVL_VALID                    (3U)
+#define PMIC_PWR_CFG_PLDO_ILIM_DGL_VALID                    (4U)
+#define PMIC_PWR_CFG_PLDO_VMON_THR_VALID                    (5U)
+#define PMIC_PWR_CFG_PLDO_VMON_DGL_VALID                    (6U)
+#define PMIC_PWR_CFG_PLDO_VTRACK_RANGE_VALID                (7U)
+#define PMIC_PWR_CFG_PLDO_RT_VALID                          (8U)
+#define PMIC_PWR_CFG_PLDO_DISABLE_DISCHARGE_VALID           (9U)
+#define PMIC_PWR_CFG_PLDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID (10U)
+/** @} */
+
+/**
+ * @anchor Pmic_PwrPldoCfgValidParamShifts
+ * @name PMIC Power PLDO Configuration Valid Parameter Shifts
+ *
+ * @brief Valid parameter shifts of the Pmic_PwrPldoCfg_t struct. End user can
+ * use the defines listed below to indicate valid PLDO configurations. Multiple
+ * valid parameters can be indicated using the OR operator.
+ *
+ * @{
+ */
+#define PMIC_PWR_CFG_PLDO_MODE_VALID_SHIFT                          (1U << PMIC_PWR_CFG_PLDO_MODE_VALID)
+#define PMIC_PWR_CFG_PLDO_TRACKING_MODE_VALID_SHIFT                 (1U << PMIC_PWR_CFG_PLDO_TRACKING_MODE_VALID)
+#define PMIC_PWR_CFG_PLDO_LVL_VALID_SHIFT                           (1U << PMIC_PWR_CFG_PLDO_LVL_VALID)
+#define PMIC_PWR_CFG_PLDO_ILIM_LVL_VALID_SHIFT                      (1U << PMIC_PWR_CFG_PLDO_ILIM_LVL_VALID)
+#define PMIC_PWR_CFG_PLDO_ILIM_DGL_VALID_SHIFT                      (1U << PMIC_PWR_CFG_PLDO_ILIM_DGL_VALID)
+#define PMIC_PWR_CFG_PLDO_VMON_THR_VALID_SHIFT                      (1U << PMIC_PWR_CFG_PLDO_VMON_THR_VALID)
+#define PMIC_PWR_CFG_PLDO_VMON_DGL_VALID_SHIFT                      (1U << PMIC_PWR_CFG_PLDO_VMON_DGL_VALID)
+#define PMIC_PWR_CFG_PLDO_VTRACK_RANGE_VALID_SHIFT                  (1U << PMIC_PWR_CFG_PLDO_VTRACK_RANGE_VALID)
+#define PMIC_PWR_CFG_PLDO_RT_VALID_SHIFT                            (1U << PMIC_PWR_CFG_PLDO_RT_VALID)
+#define PMIC_PWR_CFG_PLDO_DISABLE_DISCHARGE_VALID_SHIFT             (1U << PMIC_PWR_CFG_PLDO_DISABLE_DISCHARGE_VALID)
+#define PMIC_PWR_CFG_PLDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT   (1U << PMIC_PWR_CFG_PLDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID)
+#define PMIC_PWR_CFG_PLDO_ALL                                       (PMIC_PWR_CFG_PLDO_MODE_VALID_SHIFT | \
+                                                                     PMIC_PWR_CFG_PLDO_TRACKING_MODE_VALID_SHIFT | \
+                                                                     PMIC_PWR_CFG_PLDO_LVL_VALID_SHIFT | \
+                                                                     PMIC_PWR_CFG_PLDO_ILIM_LVL_VALID_SHIFT  | \
+                                                                     PMIC_PWR_CFG_PLDO_ILIM_DGL_VALID_SHIFT | \
+                                                                     PMIC_PWR_CFG_PLDO_VMON_THR_VALID_SHIFT | \
+                                                                     PMIC_PWR_CFG_PLDO_VMON_DGL_VALID_SHIFT | \
+                                                                     PMIC_PWR_CFG_PLDO_VTRACK_RANGE_VALID_SHIFT | \
+                                                                     PMIC_PWR_CFG_PLDO_RT_VALID_SHIFT | \
+                                                                     PMIC_PWR_CFG_PLDO_DISABLE_DISCHARGE_VALID_SHIFT | \
+                                                                     PMIC_PWR_CFG_PLDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT)
+/** @} */
+
+/**
+ * @anchor Pmic_PwrExtVmonCfgValidParam
+ * @name PMIC Power External VMON Configuration Valid Parameters
+ *
+ * @brief Valid parameters of the Pmic_PwrExtVmonCfg_t struct.
+ *
+ * @{
+ */
+#define PMIC_PWR_CFG_EXT_VMON_MODE_VALID                        (0U)
+#define PMIC_PWR_CFG_EXT_VMON_THR_VALID                         (1U)
+#define PMIC_PWR_CFG_EXT_VMON_DGL_VALID                         (2U)
+#define PMIC_PWR_CFG_EXT_VMON_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID (3U)
+/** @} */
+
+/**
+ * @anchor Pmic_PwrExtVmonCfgValidParamShifts
+ * @name PMIC Power External VMON Configuration Valid Parameter Shifts
+ *
+ * @brief Valid parameter shifts of the Pmic_PwrExtVmonCfg_t struct. End user
+ * can use the defines listed below to indicate valid external VMON
+ * configurations. Multiple valid parameters can be indicated using the OR
+ * operator.
+ *
+ */
+#define PMIC_PWR_CFG_EXT_VMON_MODE_VALID_SHIFT                          (1U << PMIC_PWR_CFG_EXT_VMON_MODE_VALID)
+#define PMIC_PWR_CFG_EXT_VMON_THR_VALID_SHIFT                           (1U << PMIC_PWR_CFG_EXT_VMON_THR_VALID)
+#define PMIC_PWR_CFG_EXT_VMON_DGL_VALID_SHIFT                           (1U << PMIC_PWR_CFG_EXT_VMON_DGL_VALID)
+#define PMIC_PWR_CFG_EXT_VMON_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT   (1U << PMIC_PWR_CFG_EXT_VMON_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID)
+#define PMIC_PWR_CFG_EXT_VMON_ALL                                       (PMIC_PWR_CFG_EXT_VMON_MODE_VALID_SHIFT | \
+                                                                         PMIC_PWR_CFG_EXT_VMON_THR_VALID_SHIFT | \
+                                                                         PMIC_PWR_CFG_EXT_VMON_DGL_VALID_SHIFT | \
+                                                                         PMIC_PWR_CFG_EXT_VMON_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT)
+/** @} */
+
+/**
+ * @anchor Pmic_PwrRsrcStatValidParams
+ * @name PMIC Power Resource Status Valid Parameters
+ *
+ * @brief Valid parameters of the Pmic_PwrRsrcStat_t struct.
+ *
+ * @{
+ */
+#define PMIC_PWR_RSRC_STAT_OV_ERR_VALID         (0U)
+#define PMIC_PWR_RSRC_STAT_UV_ERR_VALID         (1U)
+#define PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID       (2U)
+#define PMIC_PWR_RSRC_STAT_TSD_ERR_VALID        (3U)
+#define PMIC_PWR_RSRC_STAT_TSD_WARN_VALID       (4U)
+#define PMIC_PWR_RSRC_STAT_BB_LITE_VALID        (5U)
+#define PMIC_PWR_RSRC_STAT_BB_ILIM_LVL_VALID    (6U)
+#define PMIC_PWR_RSRC_STAT_BB_MODE_VALID        (7U)
+/** @} */
+
+/**
+ * @anchor Pmic_PwrRsrcStatValidParamShifts
+ * @name PMIC Power Resource Status Valid Parameter Shifts
+ *
+ * @brief Valid parameter shifts of the Pmic_PwrRsrcStat_t struct. End user
+ * can use the defines listed below to indicate valid power resource statuses.
+ * Multiple valid parameters can be indicated using the OR operator.
+ *
+ * @{
+ */
+#define PMIC_PWR_RSRC_STAT_OV_ERR_VALID_SHIFT       (1U << PMIC_PWR_RSRC_STAT_OV_ERR_VALID)
+#define PMIC_PWR_RSRC_STAT_UV_ERR_VALID_SHIFT       (1U << PMIC_PWR_RSRC_STAT_UV_ERR_VALID)
+#define PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID_SHIFT     (1U << PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID)
+#define PMIC_PWR_RSRC_STAT_TSD_ERR_VALID_SHIFT      (1U << PMIC_PWR_RSRC_STAT_TSD_ERR_VALID)
+#define PMIC_PWR_RSRC_STAT_TSD_WARN_VALID_SHIFT     (1U << PMIC_PWR_RSRC_STAT_TSD_WARN_VALID)
+#define PMIC_PWR_RSRC_STAT_BB_LITE_VALID_SHIFT      (1U << PMIC_PWR_RSRC_STAT_BB_LITE_VALID)
+#define PMIC_PWR_RSRC_STAT_BB_ILIM_LVL_VALID_SHIFT  (1U << PMIC_PWR_RSRC_STAT_BB_ILIM_LVL_VALID)
+#define PMIC_PWR_RSRC_STAT_BB_MODE_VALID_SHIFT      (1U << PMIC_PWR_RSRC_STAT_BB_MODE_VALID)
+#define PMIC_PWR_RSRC_STAT_BB_ALL                   (PMIC_PWR_RSRC_STAT_OV_ERR_VALID_SHIFT | \
+                                                     PMIC_PWR_RSRC_STAT_UV_ERR_VALID_SHIFT | \
+                                                     PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID_SHIFT | \
+                                                     PMIC_PWR_RSRC_STAT_BB_LITE_VALID_SHIFT | \
+                                                     PMIC_PWR_RSRC_STAT_BB_ILIM_LVL_VALID_SHIFT | \
+                                                     PMIC_PWR_RSRC_STAT_BB_MODE_VALID_SHIFT | \
+                                                     PMIC_PWR_RSRC_STAT_TSD_ERR_VALID_SHIFT | \
+                                                     PMIC_PWR_RSRC_STAT_TSD_WARN_VALID_SHIFT)
+#define PMIC_PWR_RSRC_STAT_LDO_ALL                  (PMIC_PWR_RSRC_STAT_OV_ERR_VALID_SHIFT | \
+                                                     PMIC_PWR_RSRC_STAT_UV_ERR_VALID_SHIFT | \
+                                                     PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID_SHIFT | \
+                                                     PMIC_PWR_RSRC_STAT_TSD_ERR_VALID_SHIFT | \
+                                                     PMIC_PWR_RSRC_STAT_TSD_WARN_VALID_SHIFT)
+#define PMIC_PWR_RSRC_STAT_PLDO_ALL                 (PMIC_PWR_RSRC_STAT_OV_ERR_VALID_SHIFT | \
+                                                     PMIC_PWR_RSRC_STAT_UV_ERR_VALID_SHIFT | \
+                                                     PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID_SHIFT | \
+                                                     PMIC_PWR_RSRC_STAT_TSD_ERR_VALID_SHIFT | \
+                                                     PMIC_PWR_RSRC_STAT_TSD_WARN_VALID_SHIFT)
+#define PMIC_PWR_RSRC_STAT_EXT_VMON_ALL             (PMIC_PWR_RSRC_STAT_OV_ERR_VALID_SHIFT | \
+                                                     PMIC_PWR_RSRC_STAT_UV_ERR_VALID_SHIFT)
+/** @} */
+
+/**
+ * @anchor Pmic_BbStbyLvl
+ * @name PMIC Buck/Boost Standby Level
+ *
+ * @brief PMIC Buck/Boost voltage level for STANDBY mode. See `stbyLvl` member
+ * of @ref Pmic_PwrBuckBoostCfg for more information.
+ *
+ * @{
+ */
+#define PMIC_PWR_BB_STBY_LVL_4V             (0U)
+#define PMIC_PWR_BB_STBY_LVL_SAME_AS_BB_LVL (1U)
+#define PMIC_PWR_BB_STBY_LVL_MAX            (PMIC_PWR_BB_STBY_LVL_SAME_AS_BB_LVL)
+/** @} */
+
+/**
+ * @anchor Pmic_BbLvl
+ * @name PMIC Buck/Boost Level
+ *
+ * @brief PMIC Buck/Boost voltage level for operating and sequencing states. See
+ * `lvl` member of @ref Pmic_PwrBuckBoostCfg for more information.
+ *
+ * @{
+ */
+#define PMIC_PWR_BB_LVL_4P3V    (0U)
+#define PMIC_PWR_BB_LVL_5V      (1U)
+#define PMIC_PWR_BB_LVL_6V      (2U)
+#define PMIC_PWR_BB_LVL_6P8V    (3U)
+#define PMIC_PWR_BB_LVL_MAX     (PMIC_PWR_BB_LVL_6P8V)
+/** @} */
+
+/**
+ * @anchor Pmic_Rt
+ * @name PMIC Ramp Time
+ *
+ * @brief PMIC ramp time for soft-start. See `rampTime` member of
+ * @ref Pmic_PwrLdoCfg and @ref Pmic_PwrPldoCfg for more information.
+ *
+ * @{
+ */
+#define PMIC_PWR_RT_SHORTER (0U)
+#define PMIC_PWR_RT_LONGER  (1U)
+#define PMIC_PWR_RT_MAX     (PMIC_PWR_RT_LONGER)
+/** @} */
+
+/**
+ * @anchor Pmic_LdoIlimLvl
+ * @name PMIC LDO Current Limit Level
+ *
+ * @brief PMIC LDO current limit level options. See `ilimLvl` member of
+ * @ref Pmic_PwrLdoCfg. For more information, refer to device user guide or data
+ * sheet. Search for LDOx_ILIM_LVL_CFG, where x=1,2,3,4.
+ *
+ * @{
+ */
+#define PMIC_PWR_LDO_ILIM_LVL_OPTION_0  (0U)
+#define PMIC_PWR_LDO_ILIM_LVL_OPTION_1  (1U)
+#define PMIC_PWR_LDO_ILIM_LVL_OPTION_2  (2U)
+#define PMIC_PWR_LDO_ILIM_LVL_OPTION_3  (3U)
+#define PMIC_PWR_LDO_ILIM_LVL_MAX       (PMIC_PWR_LDO_ILIM_LVL_OPTION_3)
+/** @} */
+
+/**
+ * @anchor Pmic_LdoLvl
+ * @name PMIC LDO Level
+ *
+ * @brief PMIC LDO and PLDO voltage levels for LDO mode, Bypass mode (for LDO
+ * only), and VMON mode. See `lvl` member of @ref Pmic_PwrLdoCfg and
+ * @ref Pmic_PwrPldoCfg for more information.
+ *
+ * @{
+ */
+#define PMIC_PWR_LDO_LVL_1V             (0x0U)
+#define PMIC_PWR_LDO_LVL_1P05V          (0x1U)
+#define PMIC_PWR_LDO_LVL_1P1V           (0x2U)
+#define PMIC_PWR_LDO_LVL_1P15V          (0x3U)
+#define PMIC_PWR_LDO_LVL_1P2V           (0x4U)
+#define PMIC_PWR_LDO_LVL_1P25V          (0x5U)
+#define PMIC_PWR_LDO_LVL_1P3V           (0x6U)
+#define PMIC_PWR_LDO_LVL_1P35V          (0x7U)
+#define PMIC_PWR_LDO_LVL_1P4V           (0x8U)
+#define PMIC_PWR_LDO_LVL_1P45V          (0x9U)
+#define PMIC_PWR_LDO_LVL_1P5V           (0xAU)
+#define PMIC_PWR_LDO_LVL_1P55V          (0xBU)
+#define PMIC_PWR_LDO_LVL_1P6V           (0xCU)
+#define PMIC_PWR_LDO_LVL_1P65V          (0xDU)
+#define PMIC_PWR_LDO_LVL_1P7V           (0xEU)
+#define PMIC_PWR_LDO_LVL_1P75V          (0xFU)
+#define PMIC_PWR_LDO_LVL_1P8V           (0x10U)
+#define PMIC_PWR_LDO_LVL_2P5V           (0x11U)
+#define PMIC_PWR_LDO_LVL_3V             (0x12U)
+#define PMIC_PWR_LDO_LVL_3P3V           (0x13U)
+#define PMIC_PWR_LDO_LVL_5V             (0x14U)
+#define PMIC_PWR_LDO_LVL_BYPASS_MODE    (0x15U)
+#define PMIC_PWR_LDO_LVL_MAX            (PMIC_PWR_LDO_LVL_BYPASS_MODE)
+#define PMIC_PWR_PLDO_LVL_MAX           (PMIC_PWR_LDO_LVL_5V)
+/** @} */
+
+/**
+ * @anchor Pmic_PldoIlimLvl
+ * @name PMIC PLDO Current Limit Level
+ *
+ * @brief PMIC PLDO current limit level. See `ilimLvl` member of
+ * @ref Pmic_PwrPldoCfg. For more information, refer to device user guide or
+ * data sheet. Search for PLDOx_ILIM_LVL_CFG, where x=1,2.
+ *
+ * @{
+ */
+#define PMIC_PWR_PLDO_ILIM_LVL_OPTION_0 (0U)
+#define PMIC_PWR_PLDO_ILIM_LVL_OPTION_1 (1U)
+#define PMIC_PWR_PLDO_ILIM_LVL_OPTION_2 (2U)
+#define PMIC_PWR_PLDO_ILIM_LVL_OPTION_3 (3U)
+#define PMIC_PWR_PLDO_ILIM_LVL_MAX      (PMIC_PWR_PLDO_ILIM_LVL_OPTION_3)
+/** @} */
+
+/**
+ * @anchor Pmic_VTrackRange
+ * @name PMIC VTRACK Range
+ *
+ * @brief PMIC VTRACK voltage monitoring range. See `vtrackRange` member of
+ * @ref Pmic_PwrPldoCfg for more information.
+ *
+ * @{
+ */
+#define PMIC_PWR_VTRACK_LT_2P2V     (0U)
+#define PMIC_PWR_VTRACK_GTE_2P2V    (1U)
+#define PMIC_PWR_VTRACK_RANGE_MAX   (PMIC_PWR_VTRACK_GTE_2P2V)
+/** @} */
+
+/**
+ * @anchor Pmic_LdoMode
+ * @name PMIC LDO Mode
+ *
+ * @brief PMIC LDO control of function, mode, and states. See `mode` member of
+ * @ref Pmic_PwrLdoCfg for more information.
+ *
+ * @{
+ */
+#define PMIC_PWR_LDO_DISABLED                   (0U)
+#define PMIC_PWR_LDO_EN_AS_LDO_IN_OPER          (1U)
+#define PMIC_PWR_LDO_EN_AS_LDO_IN_OPER_AND_STBY (2U)
+#define PMIC_PWR_LDO_EN_AS_VMON_IN_OPER         (3U)
+#define PMIC_PWR_LDO_MODE_MAX                   (PMIC_PWR_LDO_EN_AS_VMON_IN_OPER)
+/** @} */
+
+/**
+ * @anchor Pmic_PldoMode
+ * @name PMIC PLDO Mode
+ *
+ * @brief PMIC PLDO control of function, mode, and states. See `mode` member of
+ * @ref Pmic_PwrPldoCfg for more information.
+ *
+ * @{
+ */
+#define PMIC_PWR_PLDO_DISABLED                      (0U)
+#define PMIC_PWR_PLDO_EN_AS_LDO_IN_OPER             (1U)
+#define PMIC_PWR_PLDO_EN_AS_LDO_IN_OPER_AND_STBY    (2U)
+#define PMIC_PWR_PLDO_EN_AS_VMON_IN_OPER            (3U)
+#define PMIC_PWR_PLDO_EN_AS_ROTATION_COUNTER        (4U)
+#define PMIC_PWR_PLDO1_MODE_MAX                     (PMIC_PWR_PLDO_EN_AS_VMON_IN_OPER) // Max user-settable value
+#define PMIC_PWR_PLDO2_MODE_MAX                     (PMIC_PWR_PLDO_EN_AS_ROTATION_COUNTER) // Max user-settable value
+/** @} */
+
+/**
+ * @anchor Pmic_LdoVmonThr
+ * @name PMIC LDO Voltage Monitor Threshold
+ *
+ * @brief PMIC voltage monitoring thresholds for LDO. See `vmonThr` member of
+ * @ref Pmic_PwrLdoCfg for more information.
+ *
+ * @{
+ */
+#define PMIC_PWR_LDO_VMON_THR_3P5_PCT   (0U)
+#define PMIC_PWR_LDO_VMON_THR_4_PCT     (1U)
+#define PMIC_PWR_LDO_VMON_THR_5_PCT     (2U)
+#define PMIC_PWR_LDO_VMON_THR_6_PCT     (3U)
+#define PMIC_PWR_LDO_VMON_THR_MAX       (PMIC_PWR_LDO_VMON_THR_6_PCT)
+/** @} */
+
+/**
+ * @anchor Pmic_ExtVmonThr
+ * @name PMIC External Voltage Monitor Threshold
+ *
+ * @brief PMIC External voltage monitoring thresholds. See `vmonThr` member of
+ * @ref Pmic_PwrExtVmonCfg for more information.
+ *
+ * @{
+ */
+#define PMIC_PWR_EXT_VMON_THR_DIGITAL_MODE_HYSTERESIS   (0U)
+#define PMIC_PWR_EXT_VMON_THR_4_PCT_NO_HYSTERESIS       (1U)
+#define PMIC_PWR_EXT_VMON_THR_6_PCT_HYSTERESIS          (2U)
+#define PMIC_PWR_EXT_VMON_THR_6_PCT_NO_HYSTERESIS       (3U)
+#define PMIC_PWR_EXT_VMON_THR_8_PCT_HYSTERESIS          (4U)
+#define PMIC_PWR_EXT_VMON_THR_8_PCT_NO_HYSTERESIS       (5U)
+#define PMIC_PWR_EXT_VMON_THR_10_PCT_HYSTERESIS         (6U)
+#define PMIC_PWR_EXT_VMON_THR_10_PCT_NO_HYSTERESIS      (7U)
+#define PMIC_PWR_EXT_VMON_THR_MAX                       (PMIC_PWR_EXT_VMON_THR_10_PCT_NO_HYSTERESIS)
+/** @} */
+
+/**
+ * @anchor Pmic_PldoVmonThr
+ * @name PMIC PLDO Voltage Monitor Threshold
+ *
+ * @brief PMIC voltage monitoring thresholds for PLDO. See `vmonThr` member of
+ * @ref Pmic_PwrPldoCfg for more information.
+ *
+ * @{
+ */
+#define PMIC_PWR_PLDO_VMON_THR_4_PCT    (0U)
+#define PMIC_PWR_PLDO_VMON_THR_6_PCT    (1U)
+#define PMIC_PWR_PLDO_VMON_THR_8_PCT    (2U)
+#define PMIC_PWR_PLDO_VMON_THR_10_PCT   (3U)
+#define PMIC_PWR_PLDO_VMON_THR_MAX      (PMIC_PWR_PLDO_VMON_THR_10_PCT)
+/** @} */
+
+/**
+ * @anchor Pmic_BoostTmo
+ * @name PMIC Boost Timeout
+ *
+ * @brief PMIC boost timeout for Buck/Boost. See `boostTmo` member of
+ * @ref Pmic_PwrBuckBoostCfg for more information.
+ *
+ * @{
+ */
+#define PMIC_PWR_BOOST_TMO_NONE     (0U)
+#define PMIC_PWR_BOOST_TMO_8_SEC    (1U)
+#define PMIC_PWR_BOOST_TMO_12_SEC   (2U)
+#define PMIC_PWR_BOOST_TMO_16_SEC   (3U)
+#define PMIC_PWR_BOOST_TMO_MAX      (PMIC_PWR_BOOST_TMO_16_SEC)
+/** @} */
+
+/**
+ * @anchor Pmic_BbVmonThr
+ * @name PMIC Buck/Boost Voltage Monitor Thresholds
+ *
+ * @brief PMIC voltage monitoring thresholds for Buck/Boost. See `vmonThr`
+ * member of @ref Pmic_PwrBuckBoostCfg for more information.
+ *
+ * @{
+ */
+#define PMIC_PWR_BB_VMON_THR_5_PCT  (0U)
+#define PMIC_PWR_BB_VMON_THR_6_PCT  (1U)
+#define PMIC_PWR_BB_VMON_THR_7_PCT  (2U)
+#define PMIC_PWR_BB_VMON_THR_8_PCT  (3U)
+#define PMIC_PWR_BB_VMON_THR_MAX    (PMIC_PWR_BB_VMON_THR_8_PCT)
+/** @} */
+
+/**
+ * @anchor Pmic_VBatVmonDgl
+ * @name PMIC VBAT Voltage Monitor Deglitch
+ *
+ * @brief Voltage monitor deglitch for VBAT.
+ *
+ * @{
+ */
+#define PMIC_PWR_VBAT_VMON_DGL_32_US    (0U)
+#define PMIC_PWR_VBAT_VMON_DGL_64_US    (1U)
+#define PMIC_PWR_VBAT_VMON_DGL_MAX      (PMIC_PWR_VBAT_VMON_DGL_64_US)
+/** @} */
+
+/**
+ * @anchor Pmic_PwrRsrcVmonDgl
+ * @name PMIC Power Resource Voltage Monitor Deglitch
+ *
+ * @brief Voltage monitor deglitch for PMIC power resources (buck/boost, LDO,
+ * PLDO, external VMON). See `vmonDgl` of @ref Pmic_PwrBuckBoostCfg,
+ * @ref Pmic_PwrLdoCfg, @ref Pmic_PwrPldoCfg, and @ref Pmic_PwrExtVmonCfg for
+ * more information.
+ *
+ * @{
+ */
+#define PMIC_PWR_RSRC_VMON_DGL_8_US     (0U)
+#define PMIC_PWR_RSRC_VMON_DGL_16_US    (1U)
+#define PMIC_PWR_RSRC_VMON_DGL_24_US    (2U)
+#define PMIC_PWR_RSRC_VMON_DGL_32_US    (3U)
+#define PMIC_PWR_RSRC_VMON_DGL_MAX      (PMIC_PWR_RSRC_VMON_DGL_32_US)
+/** @} */
+
+/**
+ * @anchor Pmic_ExtVmonMode
+ * @name PMIC External Voltage Monitor Mode
+ *
+ * @brief PMIC external voltage monitor modes of operation. See `mode` member
+ * of @ref Pmic_PwrExtVmonCfg for more information.
+ *
+ * @{
+ */
+#define PMIC_PWR_EXT_VMON_DISABLED              (0U)
+#define PMIC_PWR_EXT_VMON_EN_IN_OPER            (1U)
+#define PMIC_PWR_EXT_VMON_EN_IN_OPER_AND_STBY   (2U)
+#define PMIC_PWR_EXT_VMON_MODE_MAX              (PMIC_PWR_EXT_VMON_EN_IN_OPER_AND_STBY) // Max user-settable value
+/** @} */
+
+/**
+ * @anchor Pmic_LdoPldoIlimDeglitch
+ * @name PMIC LDO and PLDO Current Limit Deglitch
+ *
+ * @brief Current Limit deglitch for LDOs and PLDOs. See `ilimDgl` member of
+ * @ref Pmic_PwrLdoCfg and @ref Pmic_PwrPldoCfg for more information.
+ *
+ * @{
+ */
+#define PMIC_PWR_LDO_ILIM_DEGLITCH_10_US    (0U)
+#define PMIC_PWR_LDO_ILIM_DEGLITCH_1_MS     (1U)
+#define PMIC_PWR_LDO_ILIM_DEGLITCH_MAX      (PMIC_PWR_LDO_ILIM_DEGLITCH_1_MS)
+/** @} */
+
+/**
+ * @anchor Pmic_BbIlimLvl
+ * @name PMIC Buck/Boost Current Limit Level
+ *
+ * @brief Current limit level statuses for Buck/Boost. See `bbIlimLvl` member of
+ * @ref Pmic_PwrRsrcStat for more information.
+ *
+ * @{
+ */
+#define PMIC_PWR_BB_ILIM_LVL_2P8A   (0U)
+#define PMIC_PWR_BB_ILIM_LVL_1P5A   (1U)
+#define PMIC_PWR_BB_ILIM_LVL_MAX    (PMIC_PWR_BB_ILIM_LVL_1P5A)
+/** @} */
+
+/**
+ * @anchor Pmic_BbMode
+ * @name PMIC Buck/Boost Mode
+ *
+ * @brief Mode statuses for Buck/Boost. See `bbMode` member of
+ * @ref Pmic_PwrRsrcStat for more information.
+ *
+ * @{
+ */
+#define PMIC_PWR_BB_MODE_BUCK   (0U)
+#define PMIC_PWR_BB_MODE_BOOST  (1U)
+#define PMIC_PWR_BB_MODE_MAX    (PMIC_PWR_BB_MODE_BOOST)
+/** @} */
+
+/* ========================================================================== */
+/*                            Structures and Enums                            */
+/* ========================================================================== */
+
+/**
+ * @anchor Pmic_PwrBuckBoostCfg
+ * @name PMIC Power Buck/Boost Configuration
+ *
+ * @brief Struct used to set/get Buck/Boost configurations.
+ *
+ * @param validParams For valid values, refer to @ref Pmic_PwrBuckBoostCfgValidParamShift.
+ *
+ * @param lvl Voltage level for operating and sequencing states. For valid
+ * values, refer to @ref Pmic_BbLvl.
+ *
+ * @param stbyLvl Voltage level for low-power STANDBY state operation. For valid
+ * values, refer to @ref Pmic_BbStbyLvl.
+ *
+ * @param vmonThr VMON threshold. For valid values, refer to @ref Pmic_BbVmonThr.
+ *
+ * @param vmonDgl VMON deglitch. For valid values, refer to @ref Pmic_PwrRsrcVmonDgl.
+ *
+ * @param boostTmo Configuration for how long the Buck/Boost can operate in Boost
+ * mode before a timeout to OFF state. For valid values, refer to @ref Pmic_BoostTmo.
+ *
+ * @param ssEn Dual random spread spectrum (DRSS) modulation enable.
+ *
+ * @param includeOvUvStatInPGood Include Buck/Boost OV and UV status in PGOOD
+ * output status.
+ */
+typedef struct Pmic_PwrBuckBoostCfg_s {
+    uint32_t validParams;
+
+    uint8_t lvl;
+    uint8_t stbyLvl;
+    uint8_t vmonThr;
+    uint8_t vmonDgl;
+    uint8_t boostTmo;
+    bool ssEn;
+    bool includeOvUvStatInPGood;
+} Pmic_PwrBuckBoostCfg_t;
+
+/**
+ * @anchor Pmic_PwrLdoCfg
+ * @name PMIC Power LDO Configuration
+ *
+ * @brief Struct used to set/get LDO configurations.
+ *
+ * @attention `ldo` parameter must be specified.
+ *
+ * @param validParams For valid values, refer to @ref Pmic_PwrLdoCfgValidParamShifts.
+ *
+ * @param ldo LDO identifier. For valid values, refer to @ref Pmic_PwrRsrc.
+ *
+ * @param mode Control LDO function, mode, and states. For valid values, refer
+ * to @ref Pmic_LdoMode.
+ *
+ * @param lvl Voltage level for operating in LDO mode, Bypass mode, or VMON mode.
+ * For valid values, refer to @ref Pmic_LdoLvl.
+ *
+ * @param ilimLvl Current limit level. For valid values, refer to
+ * @ref Pmic_LdoIlimLvl.
+ *
+ * @param ilimDgl Current limit deglitch. For valid values, refer to
+ * @ref Pmic_LdoPldoIlimDeglitch.
+ *
+ * @param vmonThr VMON threshold. For valid values, refer to @ref Pmic_PldoVmonThr.
+ *
+ * @param vmonDgl VMON deglitch. For valid values, refer to @ref Pmic_PwrRsrcVmonDgl.
+ *
+ * @param rampTime Ramp time for soft-start. For valid values, refer to
+ * @ref Pmic_Rt.
+ *
+ * @param disableDischarge Disable LDO discharge pull-down.
+ *
+ * @param includeOvUvStatInPGood Include LDO OV and UV status in PGOOD
+ * output status.
+ */
+typedef struct Pmic_PwrLdoCfg_s {
+    uint32_t validParams;
+    uint16_t ldo;
+
+    uint8_t mode;
+    uint8_t lvl;
+    uint8_t ilimLvl;
+    uint8_t ilimDgl;
+    uint8_t vmonThr;
+    uint8_t vmonDgl;
+    uint8_t rampTime;
+    bool disableDischarge;
+    bool includeOvUvStatInPGood;
+} Pmic_PwrLdoCfg_t;
+
+/**
+ * @anchor Pmic_PwrPldoCfg
+ * @name PMIC Power PLDO Configuration
+ *
+ * @brief Struct used to set/get PLDO configurations.
+ *
+ * @attention `pldo` parameter must be specified.
+ *
+ * @param validParams For valid values, refer to @ref Pmic_PwrPldoCfgValidParamShifts.
+ *
+ * @param pldo PLDO identifier. For valid values, refer to @ref Pmic_PwrRsrc.
+ *
+ * @param mode Control PLDO function, mode, and states. For valid values, refer
+ * to @ref Pmic_PldoMode.
+ *
+ * @param trackingMode PLDO tracking mode enable. When true, PLDO is in tracking
+ * mode during operating states, and the output voltage tracks the TRACK pin.
+ * Otherwise, PLDO is in fixed output (non-tracking) mode during operating states,
+ * and the output voltage is determined by the `lvl` parameter.
+ *
+ * @param lvl Voltage level for operating in Fixed Output Voltage LDO mode or
+ * VMON mode. For valid values, refer to @ref Pmic_LdoLvl.
+ *
+ * @param ilimLvl Current limit level. For valid values, refer to
+ * @ref Pmic_PldoIlimLvl.
+ *
+ * @param ilimDgl Current limit deglitch. For valid values, refer to
+ * @ref Pmic_LdoPldoIlimDeglitch.
+ *
+ * @param vmonThr VMON threshold. For valid values, refer to @ref Pmic_PldoVmonThr.
+ *
+ * @param vmonDgl VMON deglitch. For valid values, refer to @ref Pmic_PwrRsrcVmonDgl.
+ *
+ * @param vtrackRange Voltage monitoring range for the VTRACK pin. For valid
+ * values, refer to @ref Pmic_VTrackRange.
+ *
+ * @param rampTime Ramp time for soft-start. For valid values, refer to
+ * @ref Pmic_Rt.
+ *
+ * @param disableDischarge Disable PLDO discharge pull-down.
+ *
+ * @param includeOvUvStatInPGood Include PLDO OV and UV status in PGOOD
+ * output status.
+ */
+typedef struct Pmic_PwrPldoCfg_s {
+    uint32_t validParams;
+    uint16_t pldo;
+
+    uint8_t mode;
+    bool trackingMode;
+    uint8_t lvl;
+    uint8_t ilimLvl;
+    uint8_t ilimDgl;
+    uint8_t vmonThr;
+    uint8_t vmonDgl;
+    uint8_t vtrackRange;
+    uint8_t rampTime;
+    bool disableDischarge;
+    bool includeOvUvStatInPGood;
+} Pmic_PwrPldoCfg_t;
+
+/**
+ * @anchor Pmic_PwrExtVmonCfg
+ * @name PMIC Power External VMON Configuration
+ *
+ * @brief Struct used to set/get external VMON configurations.
+ *
+ * @attention `extVmon` parameter must be specified.
+ *
+ * @param validParams For valid values, refer to @ref Pmic_PwrExtVmonCfgValidParamShifts.
+ *
+ * @param extVmon External VMON identifier. For valid values, refer to @ref Pmic_PwrRsrc.
+ *
+ * @param mode Control external VMON operation. For valid values, refer to
+ * @ref Pmic_ExtVmonMode.
+ *
+ * @param vmonThr VMON threshold. For valid values, refer to @ref Pmic_ExtVmonThr.
+ *
+ * @param vmonDgl VMON deglitch. For valid values, refer to @ref Pmic_PwrRsrcVmonDgl.
+ *
+ * @param includeOvUvStatInPGood Include external VMON OV and UV status in PGOOD
+ * output status.
+ */
+typedef struct Pmic_PwrExtVmonCfg_s {
+    uint32_t validParams;
+    uint16_t extVmon;
+
+    uint8_t mode;
+    uint8_t vmonThr;
+    uint8_t vmonDgl;
+    bool includeOvUvStatInPGood;
+} Pmic_PwrExtVmonCfg_t;
+
+/**
+ * @anchor Pmic_PwrRsrcStat
+ * @name PMIC Power Resource Status
+ *
+ * @brief Struct used to get/clear the status of a power resource (Buck/Boost,
+ * LDO, PLDO, VMON).
+ *
+ * @attention `pwrRsrc` parameter must be specified.
+ *
+ * @param validParams For valid values, refer to @ref Pmic_PwrRsrcStatValidParams.
+ *
+ * @param pwrRsrc Power resource identifier. For valid values, refer to
+ * @ref Pmic_PwrRsrc.
+ *
+ * @param ovErr Over voltage error. Applicable to all regulators and VMONs.
+ * When returned as true, an over voltage error was detected for the power
+ * resource.
+ *
+ * @param uvErr Under voltage error. Applicable to all regulators and VMONs.
+ * When returned as true, an under voltage error was detected for the power
+ * resource.
+ *
+ * @param ilimErr Current limit error. Only applicable to Buck/Boost, LDOs,
+ * and PLDOs. When returned as true, a current limit error was detected for the
+ * power resource.
+ *
+ * @param tsdErr Thermal shutdown error. When returned as true, the device has
+ * shutdown due to overtemperature.
+ *
+ * @param tsdWarn Thermal shutdown warning. When returned as true, there is an
+ * imminent overtemperature.
+ *
+ * @param bbLite Buck/Boost "lite" device status indicator. When returned as
+ * true, the PMIC device has limited boost operating range.
+ *
+ * @param bbIlimLvl Buck/Boost current limit level status. For valid values that
+ * can be returned, see @ref Pmic_BbIlimLvl.
+ *
+ * @param bbMode Boost mode operation status for Buck/Boost. For valid values that
+ * can be returned, see @ref Pmic_BbMode.
+ */
+typedef struct Pmic_PwrRsrcStat_s {
+    uint32_t validParams;
+    uint16_t pwrRsrc;
+
+    /* All regulators and VMONs */
+    bool ovErr;
+    bool uvErr;
+
+    /* Buck/Boost LDO, and PLDO only */
+    bool ilimErr;
+    bool tsdErr;
+    bool tsdWarn;
+
+    /* Buck/Boost only */
+    bool bbLite;
+    uint8_t bbIlimLvl;
+    uint8_t bbMode;
+} Pmic_PwrRsrcStat_t;
+
+/* ========================================================================== */
+/*                           Function Declarations                            */
+/* ========================================================================== */
+
+/**
+ * @brief Set PMIC Buck/Boost configurations.
+ *
+ * @details The following options are configurable via this API
+ * 1. Voltage level (validParam: PMIC_PWR_CFG_BB_LVL_VALID_SHIFT)
+ * 2. Standby voltage level (validParam: PMIC_PWR_CFG_BB_STBY_LVL_VALID_SHIFT)
+ * 3. VMON threshold (validParam: PMIC_PWR_CFG_BB_VMON_THR_VALID_SHIFT)
+ * 4. VMON deglitch (validParam: PMIC_PWR_CFG_BB_VMON_DGL_VALID_SHIFT)
+ * 5. Boost timeout (validParam: PMIC_PWR_CFG_BB_BOOST_TMO_VALID_SHIFT)
+ * 6. Spread spectrum enable (validParam: PMIC_PWR_CFG_BB_SS_EN_VALID_SHIFT)
+ * 7. Include OV/UV status in PGOOD (validParam: PMIC_PWR_CFG_BB_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT)
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param buckBoostCfg [IN] Buck/Boost configurations to be set.
+ *
+ * @return Success code if PMIC Buck/Boost configurations have been set, error
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
+ */
+int32_t Pmic_pwrSetBuckBoostCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrBuckBoostCfg_t *buckBoostCfg);
+
+/**
+ * @brief Get PMIC Buck/Boost configurations. This API supports getting the same
+ * configurations that are settable through Pmic_pwrSetBuckBoostCfg().
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param buckBoostCfg [OUT] Buck/Boost configurations obtained from the PMIC.
+ *
+ * @return Success code if PMIC Buck/Boost configurations have been obtained,
+ * error code otherwise. For valid success/error codes, refer to
+ * @ref Pmic_ErrorCodes
+ */
+int32_t Pmic_pwrGetBuckBoostCfg(Pmic_CoreHandle_t *handle, Pmic_PwrBuckBoostCfg_t *buckBoostCfg);
+
+/**
+ * @brief Set PMIC LDO configurations.
+ *
+ * @details The following options are configurable via this API
+ * 1. LDO mode (validParam: PMIC_PWR_CFG_LDO_MODE_VALID_SHIFT)
+ * 2. Voltage level (validParam: PMIC_PWR_CFG_LDO_LVL_VALID_SHIFT)
+ * 3. Current limit level (validParam: PMIC_PWR_CFG_LDO_ILIM_LVL_VALID_SHIFT)
+ * 4. Current limit deglitch (validParam: PMIC_PWR_CFG_LDO_ILIM_DGL_VALID_SHIFT)
+ * 5. VMON threshold (validParam: PMIC_PWR_CFG_LDO_VMON_THR_VALID_SHIFT)
+ * 6. VMON deglitch (validParam: PMIC_PWR_CFG_LDO_VMON_DGL_VALID_SHIFT)
+ * 7. Ramp time (validParam: PMIC_PWR_CFG_LDO_RAMP_TIME_VALID_SHIFT)
+ * 8. Disable discharge (validParam: PMIC_PWR_CFG_LDO_DISABLE_DISCHARGE_VALID_SHIFT)
+ * 9. Include OV/UV status in PGOOD (validParam: PMIC_PWR_CFG_LDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT)
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param ldoCfg [IN] LDO configurations to be set. Note that `ldo` parameter
+ * must be specified.
+ *
+ * @return Success code if PMIC LDO configurations have been set, error code
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
+ */
+int32_t Pmic_pwrSetLdoCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg);
+
+/**
+ * @brief Get PMIC LDO configurations. This API supports getting the same
+ * configurations that are settable through Pmic_pwrSetLdoCfg().
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param ldoCfg [OUT] LDO configurations obtained from the PMIC. Note that
+ * `ldo` parameter must be specified.
+ *
+ * @return Success code if PMIC LDO configurations have been obtained, error
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
+ */
+int32_t Pmic_pwrGetLdoCfg(Pmic_CoreHandle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg);
+
+/**
+ * @brief Set PMIC PLDO configurations.
+ *
+ * @details The following options are configurable via this API
+ * 1. PLDO mode (validParam: PMIC_PWR_CFG_PLDO_MODE_VALID_SHIFT)
+ * 2. PLDO tracking mode (validParam: PMIC_PWR_CFG_PLDO_TRACKING_MODE_VALID_SHIFT)
+ * 3. Voltage level (validParam: PMIC_PWR_CFG_PLDO_LVL_VALID_SHIFT)
+ * 4. Current limit level (validParam: PMIC_PWR_CFG_PLDO_ILIM_LVL_VALID_SHIFT)
+ * 5. Current limit deglitch (validParam: PMIC_PWR_CFG_PLDO_ILIM_DGL_VALID_SHIFT)
+ * 6. VMON threshold (validParam: PMIC_PWR_CFG_PLDO_VMON_THR_VALID_SHIFT)
+ * 7. VMON deglitch (validParam: PMIC_PWR_CFG_PLDO_VMON_DGL_VALID_SHIFT)
+ * 8. VTRACK range (validParam: PMIC_PWR_CFG_PLDO_VTRACK_RANGE_VALID_SHIFT)
+ * 9. Ramp time (validParam: PMIC_PWR_CFG_PLDO_RT_VALID_SHIFT)
+ * 10. Disable discharge (validParam: PMIC_PWR_CFG_PLDO_DISABLE_DISCHARGE_VALID_SHIFT)
+ * 11. Include OV/UV status in PGOOD (validParam: PMIC_PWR_CFG_PLDO_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT)
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param pldoCfg [IN] PLDO configurations to be set. Note that the `pldo`
+ * parameter must be specified.
+ *
+ * @return Success code if PLDO configurations have been set, error code
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
+ */
+int32_t Pmic_pwrSetPldoCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg);
+
+/**
+ * @brief Get PMIC PLDO configurations. This API supports getting the same
+ * configurations that are settable through Pmic_pwrSetPldoCfg().
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param pldoCfg [OUT] PLDO configurations to be set. Note that the `pldo`
+ * parameter must be specified.
+ *
+ * @return Success code if PLDO configurations have been obtained, error code
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
+ */
+int32_t Pmic_pwrGetPldoCfg(Pmic_CoreHandle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg);
+
+/**
+ * @brief Set PMIC external VMON configurations.
+ *
+ * @details The following options are configurable via this API
+ * 1. External VMON mode (validParam: PMIC_PWR_CFG_EXT_VMON_MODE_VALID_SHIFT)
+ * 2. VMON threshold (validParam: PMIC_PWR_CFG_EXT_VMON_THR_VALID_SHIFT)
+ * 3. VMON deglitch (validParam: PMIC_PWR_CFG_EXT_VMON_DGL_VALID_SHIFT)
+ * 4. Include OV/UV status in PGOOD (validParam: PMIC_PWR_CFG_EXT_VMON_INCLUDE_OV_UV_STAT_IN_PGOOD_VALID_SHIFT)
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param extVmonCfg [IN] External VMON configurations to be set. Note that the
+ * `extVmon` parameter must be specified.
+ *
+ * @return Success code if external VMON configurations have been set, error
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
+ */
+int32_t Pmic_pwrSetExtVmonCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrExtVmonCfg_t *extVmonCfg);
+
+/**
+ * @brief Get PMIC external VMON configurations. This API supports getting the
+ * same configurations that are settable through Pmic_pwrSetExtVmonCfg().
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param extVmonCfg [OUT] External VMON configurations obtained from the PMIC.
+ * Note that the `extVmon` parameter must be specified.
+ *
+ * @return Success code if external VMON configurations have been set, error
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
+ */
+int32_t Pmic_pwrGetExtVmonCfg(Pmic_CoreHandle_t *handle, Pmic_PwrExtVmonCfg_t *extVmonCfg);
+
+/**
+ * @brief Get PMIC power resource statuses.
+ *
+ * @attention Certain power resources do not have certain statuses. Please see
+ * @ref Pmic_PwrRsrcStat for more information.
+ *
+ * @details Depending on the power resource specified, the following statuses
+ * can be obtained via this API
+ * 1. Over-voltage error (validParam: PMIC_PWR_RSRC_STAT_OV_ERR_VALID_SHIFT)
+ * 2. Under-voltage error (validParam: PMIC_PWR_RSRC_STAT_UV_ERR_VALID_SHIFT)
+ * 3. Current limit error (validParam: PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID_SHIFT)
+ * 4. Buck/Boost lite (validParam: PMIC_PWR_RSRC_STAT_BB_LITE_VALID_SHIFT)
+ * 5. Buck/Boost current limit level (validParam: PMIC_PWR_RSRC_STAT_BB_ILIM_LVL_VALID_SHIFT)
+ * 6. Buck/Boost mode (validParam: PMIC_PWR_RSRC_STAT_BB_MODE_VALID_SHIFT)
+ * 7. Thermal shutdown error (validParam: PMIC_PWR_RSRC_STAT_TSD_ERR_VALID_SHIFT)
+ * 8. Thermal shutdown warning (validParam: PMIC_PWR_RSRC_STAT_TSD_WARN_VALID_SHIFT)
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param pwrRsrcStat [OUT] Power resource status. Note that the `pwrRsrc`
+ * parameter must be specified.
+ *
+ * @return Success code if power resource statuses have been obtained, error
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
+ */
+int32_t Pmic_pwrGetRsrcStat(Pmic_CoreHandle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat);
+
+/**
+ * @brief Clear PMIC power resource statuses.
+ *
+ * @details The following statuses can be cleared via this API depending on the
+ * specified power resource
+ * 1. Over-voltage error (validParam: PMIC_PWR_RSRC_STAT_OV_ERR_VALID_SHIFT)
+ * 2. Under-voltage error (validParam: PMIC_PWR_RSRC_STAT_UV_ERR_VALID_SHIFT)
+ * 3. Current limit error (validParam: PMIC_PWR_RSRC_STAT_ILIM_ERR_VALID_SHIFT)
+ * 4. Buck/Boost mode (validParam: PMIC_PWR_RSRC_STAT_BB_MODE_VALID_SHIFT)
+ * 5. Thermal shutdown error (validParam: PMIC_PWR_RSRC_STAT_TSD_ERR_VALID_SHIFT)
+ * 6. Thermal shutdown warning (validParam: PMIC_PWR_RSRC_STAT_TSD_WARN_VALID_SHIFT)
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param pwrRsrcStat [IN] Power resource statuses to be cleared. `validParams`
+ * indicates the desired statuses to be cleared; all other parameters except for
+ * `pwrRsrc` are ignored by this API. Note that the `pwrRsrc` parameter must be
+ * specified.
+ *
+ * @return Success code if power resource statuses have been cleared, error code
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
+ */
+int32_t Pmic_pwrClrRsrcStat(Pmic_CoreHandle_t *handle, const Pmic_PwrRsrcStat_t *pwrRsrcStat);
+
+/**
+ * @brief Clear all PMIC power resource statuses. This API clears all statuses
+ * that are clearable through Pmic_pwrClrRsrcStat().
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @return Success code if all power resources have been cleared, error code
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
+ */
+int32_t Pmic_pwrClrRsrcStatAll(Pmic_CoreHandle_t *handle);
+
+/**
+ * @brief Enable or disable PGOOD from being active in STANDBY state.
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param enable [IN] True - PGOOD is active in STANDBY state and holds level
+ * when PMIC enters STANDBY state. False - PGOOD is not active in STANDBY state
+ * and outputs low.
+ *
+ * @return Success code if PGOOD is configured, error code otherwise. For valid
+ * success/error codes, refer to @ref Pmic_ErrorCodes
+ */
+int32_t Pmic_pwrSetPGoodInStby(Pmic_CoreHandle_t *handle, bool enable);
+
+/**
+ * @brief Get PMIC PGOOD enable/disable in STANDBY state.
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param isEnabled [OUT] True - PGOOD is active in STANDBY state and holds
+ * level when PMIC enters STANDBY state. False - PGOOD is not active in STANDBY
+ * state and outputs low.
+ *
+ * @return Success code if PGOOD enable/disable in STANDBY state has been
+ * obtained, error code otherwise. For valid success/error codes, refer to
+ * @ref Pmic_ErrorCodes
+ */
+int32_t Pmic_pwrGetPGoodInStby(Pmic_CoreHandle_t *handle, bool *isEnabled);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

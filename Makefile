@@ -82,12 +82,12 @@ SOURCES = \
 	src/pmic.c \
 	src/pmic_common.c \
 	src/pmic_core.c \
-	src/pmic_gpio.c \
 	src/pmic_esm.c \
+	src/pmic_fsm.c \
+	src/pmic_gpio.c \
 	src/pmic_io.c \
 	src/pmic_irq.c \
 	src/pmic_power.c \
-	src/pmic_fsm.c \
 	src/pmic_timer.c \
 	src/pmic_wdg.c
 

@@ -61,6 +61,7 @@
 #include "pmic_gpio.h"
 #include "pmic_esm.h"
 #include "pmic_timer.h"
+#include "pmic_power.h"
 
 #ifdef __cplusplus
 extern "C" {

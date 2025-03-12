@@ -48,6 +48,10 @@ extern "C" {
 /*==========================================================================*/
 #define COUNT(x) (sizeof(x) / sizeof(x[0]))
 
+// Used to clear statuses
+#define PMIC_CLEAR_STAT  ((bool)true)
+#define PMIC_RETAIN_STAT ((bool)false)
+
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
@@ -116,6 +120,13 @@ static inline void Pmic_setBitField(uint8_t *regData, uint8_t shift, uint8_t mas
     *regData = ((*regData & ~mask) | ((value << shift) & mask));
 }
 
+/**
+ * @brief Set the value of a bitfield based on the "NAME" of the field, rather
+ * than providing individual SHIFT/MASK values. A simplified version of
+ * `Pmic_setBitField()`
+ */
+#define Pmic_setBitFieldByName(reg, name, val) (Pmic_setBitField(reg, name##_SHIFT, name##_MASK, val))
+
 static inline void Pmic_setBitField_b(uint8_t *regData, uint8_t shift, bool value)
 {
     Pmic_setBitField(regData, shift, (uint8_t)(1U << shift), value ? 1U : 0U);
@@ -125,6 +136,13 @@ static inline uint8_t Pmic_getBitField(uint8_t regData, uint8_t shift, uint8_t m
 {
     return ((regData & mask) >> shift);
 }
+
+/**
+ * @brief Retrieve the value of a bitfield based on the "NAME" of the field,
+ * rather than providing individual SHIFT/MASK values. A simplified version of
+ * `Pmic_getBitField()`
+ */
+#define Pmic_getBitFieldByName(reg, name) (Pmic_getBitField(reg, name##_SHIFT, name##_MASK))
 
 static inline bool Pmic_getBitField_b(uint8_t regData, uint8_t shift)
 {

@@ -71,7 +71,7 @@ static uint8_t IO_calcCRC8(uint8_t cmd, uint8_t rdwr, uint8_t dat) {
     return (uint8_t)crc;
 }
 
-int32_t Pmic_ioRxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *pRxBuffer) {
+int32_t Pmic_ioRxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *rxBuffer) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t rxBuf[PMIC_IO_BUF_SIZE] = {0};
 
@@ -91,9 +91,19 @@ int32_t Pmic_ioRxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *pRxB
     status = handle->pFnPmicCommIoRead(handle, (uint8_t)PMIC_MAIN_INST, regAddr, &rxBuf[0], 4U);
 
     if (status == PMIC_ST_SUCCESS) {
-        /*Copy data which shall be in rxBuf[2]/rxBuf[0] to pRxBuffer */
-        *pRxBuffer = rxBuf[2];
+        /*Copy data which shall be in rxBuf[2]/rxBuf[0] to rxBuffer */
+        *rxBuffer = rxBuf[2];
     }
+
+    return status;
+}
+
+int32_t Pmic_ioRxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *rxBuffer) {
+    int32_t status = PMIC_ST_SUCCESS;
+
+    Pmic_criticalSectionStart(handle);
+    status = Pmic_ioRxByte(handle, regAddr, rxBuffer);
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
@@ -117,6 +127,16 @@ int32_t Pmic_ioTxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txDat
     txBuf[3U] = IO_calcCRC8(txBuf[0], txBuf[1], txData);
 
     return handle->pFnPmicCommIoWrite(handle, (uint8_t)PMIC_MAIN_INST, regAddr, &txBuf[0], 4U);
+}
+
+int32_t Pmic_ioTxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txData) {
+    int32_t status = PMIC_ST_SUCCESS;
+
+    Pmic_criticalSectionStart(handle);
+    status = Pmic_ioTxByte(handle, regAddr, txData);
+    Pmic_criticalSectionStop(handle);
+
+    return status;
 }
 
 int32_t Pmic_ioTxWordSeq(Pmic_CoreHandle_t *handle, uint16_t baseAddr, uint32_t txData, uint8_t count) {
