@@ -47,8 +47,8 @@ extern "C" {
 /*                                Include Files                               */
 /* ========================================================================== */
 
-/* GPIO register address and bit fields are already defined in regmap\core.h */
-#include "regmap\core.h"
+/* GPIO register address and bit fields are already defined in regmap/core.h */
+#include "core.h"
 
 #ifdef __cplusplus
 }
