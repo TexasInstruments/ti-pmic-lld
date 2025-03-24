@@ -46,6 +46,12 @@
 #include "regmap/timer.h"
 
 /* ========================================================================== */
+/*                            Macros & Typedefs                               */
+/* ========================================================================== */
+
+#define STOP_TIMER (0U)
+
+/* ========================================================================== */
 /*                        Interface Implementations                           */
 /* ========================================================================== */
 
@@ -127,9 +133,7 @@ int32_t Pmic_timerGetCfg(Pmic_CoreHandle_t *handle, Pmic_timerCfg_t *timerCfg)
     // Read TMR_CFG_REG
     if (status == PMIC_ST_SUCCESS)
     {
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, TMR_CFG_REG, &regData);
-        Pmic_criticalSectionStop(handle);
+        status = Pmic_ioRxByte_CS(handle, TMR_CFG_REG, &regData);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -145,6 +149,31 @@ int32_t Pmic_timerGetCfg(Pmic_CoreHandle_t *handle, Pmic_timerCfg_t *timerCfg)
         {
             timerCfg->mode = Pmic_getBitField(regData, TMR_CFG_SHIFT, TMR_CFG_MASK);
         }
+    }
+
+    return status;
+}
+
+int32_t Pmic_timerStop(Pmic_CoreHandle_t *handle)
+{
+    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    uint8_t regData = 0U;
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        // Read TMR_CFG_REG
+        Pmic_criticalSectionStart(handle);
+        status = Pmic_ioRxByte(handle, TMR_CFG_REG, &regData);
+
+        if (status == PMIC_ST_SUCCESS)
+        {
+            // Set TMR_CFG to zero to stop timer
+            Pmic_setBitField(&regData, TMR_CFG_SHIFT, TMR_CFG_MASK, STOP_TIMER);
+
+            // Write TMR_CFG_REG
+            status = Pmic_ioTxByte(handle, TMR_CFG_REG, regData);
+        }
+        Pmic_criticalSectionStop(handle);
     }
 
     return status;

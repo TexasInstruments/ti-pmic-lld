@@ -200,6 +200,18 @@ int32_t Pmic_timerSetCfg(Pmic_CoreHandle_t *handle, const Pmic_timerCfg_t *timer
 int32_t Pmic_timerGetCfg(Pmic_CoreHandle_t *handle, Pmic_timerCfg_t *timerCfg);
 
 /**
+ * @brief Stop PMIC timer. This API is a subset of Pmic_timerSetCfg(). That is
+ * to say, the Pmic_timerSetCfg() API can be used alternatively to stop the PMIC
+ * timer.
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @return Success code if timer is stopped, error code otherwise. For valid
+ * success/error codes, refer to @ref Pmic_ErrorCodes
+ */
+int32_t Pmic_timerStop(Pmic_CoreHandle_t *handle);
+
+/**
  * @brief Clear PMIC timer counter.
  *
  * @param handle [IN] PMIC interface handle.
