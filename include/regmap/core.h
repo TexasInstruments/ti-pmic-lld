@@ -67,6 +67,15 @@ extern "C" {
 #define CONFIG_CRC_CALC_SHIFT           (1U)
 #define CONFIG_CRC_STATUS_SHIFT         (2U)
 
+/* STAT_MODERATE_ERR definitions */
+#define STAT_MODERATE_ERR_REG           (0x59U)
+#define TSD_ORD_STAT_SHIFT              (0U)
+#define EXT_CLK_HIS_SHIFT               (1U)
+#define TRIM_TEST_CRC_STAT_SHIFT        (2U)
+#define CONFIG_CRC_STAT_SHIFT           (3U)
+#define NINT_GPO_READBACK_STAT_SHIFT    (4U)
+#define NRSTOUT_READBACK_STAT_SHIFT     (5U)
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

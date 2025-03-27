@@ -57,6 +57,8 @@
 #include "pmic_fsm.h"
 #include "pmic_io.h"
 #include "pmic_irq.h"
+#include "pmic_wdg.h"
+#include "pmic_power.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -140,6 +142,7 @@ extern "C" {
 #define PMIC_ST_ERR_COMM_INTF_INIT_FAIL                       (-((int32_t)12))
 #define PMIC_ST_ERR_NOT_SUPPORTED                             (-((int32_t)13))
 #define PMIC_ST_ERR_CONFIG_REG_CRC                            (-((int32_t)14))
+#define PMIC_ST_ERR_FAIL                                      (-((int32_t)15))
 #define PMIC_ST_WARN_INV_DEVICE_ID                            (-((int32_t)40))
 #define PMIC_ST_WARN_NO_IRQ_REMAINING                         (-((int32_t)41))
 /** @} */
@@ -183,9 +186,10 @@ extern "C" {
  *
  * @{
  */
-#define PMIC_MAIN_INST  (uint32_t)(1U << 0U)
-#define PMIC_QA_INST    (uint32_t)(1U << 1U)
-#define PMIC_NVM_INST   (uint32_t)(1U << 2U)
+#define PMIC_MAIN_INST      (uint32_t)(1U << 0U)
+#define PMIC_QA_INST        (uint32_t)(1U << 1U)
+#define PMIC_NVM_INST       (uint32_t)(1U << 2U)
+#define PMIC_INST_TYPE_MAX  (PMIC_NVM_INST)
 /** @} */
 
 /**
@@ -197,6 +201,7 @@ extern "C" {
 #define PMIC_INTF_I2C_SINGLE (0U)
 #define PMIC_INTF_I2C_DUAL   (1U)
 #define PMIC_INTF_SPI        (2U)
+#define PMIC_INTF_MAX        (PMIC_INTF_SPI)
 /** @} */
 
 /**
@@ -314,12 +319,20 @@ extern "C" {
  * `PMIC_CFG_DEVICE_TYPE_VALID_SHIFT` bit of `validParams` struct and then call
  * `Pmic_init()`.
  *
+ * @note The below parameters are not necessary to be specified for Coach PMIC.
+ * 1. qaSlaveAddr
+ * 2. nvmSlaveAddr
+ * 3. i2c1Speed
+ * 4. i2c2Speed
+ * 5. pQACommHandle
+ *
  * @param validParams Controls which parameters below shall be considered by
  * `Pmic_init()`, decided by the combination of @ref Pmic_ValidParamCfgShift.
  *
  * @param instType Driver instance type. For valid values, see @ref
  * Pmic_InstType. This parameter has no corresponding `validParams` shift value
- * as it is always expected to be provided.
+ * as it is always expected to be provided. In most cases, 'PMIC_MAIN_INST' is
+ * the common instance type.
  *
  * @param pmicDeviceType PMIC device type. For valid values, see @ref
  * Pmic_DeviceType. Valid only when `PMIC_CFG_DEVICE_TYPE_VALID` bit of
@@ -327,7 +340,8 @@ extern "C" {
  *
  * @param commMode Communications interface mode: Single I2C, Dual I2C or SPI.
  * For valid values, see @ref Pmic_CommMode. Valid only when
- * `PMIC_CFG_COMM_MODE_VALID` bit of `validParams` is set.
+ * `PMIC_CFG_COMM_MODE_VALID` bit of `validParams` is set. For Coach PMIC,
+ * 'PMIC_INTF_I2C_SINGLE' is the common communication mode.
  *
  * @param slaveAddr Main Interface Slave Address for I2C. Valid only when
  * `PMIC_CFG_SLAVEADDR_VALID` bit of `validParams` is set. Only necessary for

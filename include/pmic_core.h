@@ -53,6 +53,10 @@ extern "C" {
 
 #include "pmic_common.h"
 
+/* ========================================================================== */
+/*                               Macros & Typedefs                            */
+/* ========================================================================== */
+
 /**
  * @anchor Pmic_scratchPadRegSel
  * @name PMIC Scratch Pad Register Selection
@@ -88,6 +92,34 @@ extern "C" {
 #define PMIC_CFG_CRC_RECALCULATE ((bool)true)
 #define PMIC_CFG_CRC_ENABLE_ONLY ((bool)false)
 /** @} */
+
+/* ========================================================================== */
+/*                             Structures and Enums                           */
+/* ========================================================================== */
+
+/**
+ * @anchor Pmic_ConfigCrcStat
+ * @name PMIC Configuration Register CRC Status
+ *
+ * @brief Configuration register status obtained from the PMIC.
+ *
+ * @param crcEn True (`PMIC_ENABLE`) - configuration register CRC is enabled.
+ * False (`PMIC_DISABLE`) - configuration register CRC is disabled.
+ * @param crcCalc True (`PMIC_ENABLE`) - configuration register CRC calculation
+ * has been enabled/started. False (`PMIC_DISABLE`) - configuration register CRC
+ * calculation is disabled/stopped.
+ * @param errorDetected True - PMIC config CRC has detected an error. False - PMIC
+ * config CRC has not detected an error.
+ */
+typedef struct Pmic_ConfigCrcStat_s {
+    bool crcEn;
+    bool crcCalc;
+    bool errorDetected;
+} Pmic_ConfigCrcStat_t;
+
+/* ========================================================================== */
+/*                            Function Declarations                           */
+/* ========================================================================== */
 
 /**
  * @brief Write a value to a target scratch pad register on the PMIC.
@@ -165,6 +197,18 @@ int32_t Pmic_configCrcEnable(Pmic_CoreHandle_t *handle, bool calculate);
  * Pmic_ErrorCodes.
  */
 int32_t Pmic_configCrcDisable(Pmic_CoreHandle_t *handle);
+
+/**
+ * @brief Get configuration register CRC status.
+ *
+ * @param handle [IN] Pointer to the PMIC core handle structure.
+ * @param configCrcStat [OUT] Configuration register CRC status obtained from PMIC.
+ *
+ * @return Returns PMIC_ST_SUCCESS if the operation is successful; otherwise,
+ * it returns an appropriate error code. For possible values, see @ref
+ * Pmic_ErrorCodes.
+ */
+int32_t Pmic_getConfigCrcStat(Pmic_CoreHandle_t *handle, Pmic_ConfigCrcStat_t *configCrcStat);
 
 /**
  * @brief Calculate config register CRC, writes value to PMIC, and verifies

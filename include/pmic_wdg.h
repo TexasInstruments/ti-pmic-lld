@@ -146,6 +146,12 @@ extern "C" {
 /** @} */
 
 /**
+ * @anchor Pmic_WdgWinCodeMax
+ * @name PMIC watchdog timer maximum window code
+ */
+#define PMIC_WDG_WIN_CODE_MAX (0x7FU)
+
+/**
  * @anchor Pmic_WdgCfgValidParamBitPos
  * @name PMIC watchdog timer Config Structure Param Bit positions
  *
@@ -161,6 +167,7 @@ extern "C" {
 #define PMIC_CFG_WDG_QA_LFSR_VALID                  (7U)
 #define PMIC_CFG_WDG_QA_QUES_SEED_VALID             (8U)
 #define PMIC_CFG_WDG_TIME_BASE_VALID                (9U)
+#define PMIC_CFG_WDG_RST_EN_VALID                   (10U)
 /** @} */
 
 /**
@@ -182,6 +189,7 @@ extern "C" {
 #define PMIC_CFG_WDG_QA_LFSR_VALID_SHIFT            (1U << PMIC_CFG_WDG_QA_LFSR_VALID)
 #define PMIC_CFG_WDG_QA_QUES_SEED_VALID_SHIFT       (1U << PMIC_CFG_WDG_QA_QUES_SEED_VALID)
 #define PMIC_CFG_WDG_TIME_BASE_VALID_SHIFT          (1U << PMIC_CFG_WDG_TIME_BASE_VALID)
+#define PMIC_CFG_WDG_RST_EN_VALID_SHIFT             (1U << PMIC_CFG_WDG_RST_EN_VALID)
 #define PMIC_CFG_WDG_CFG_ALL_VALID_SHIFT            (\
     PMIC_CFG_WDG_LONGWINDURATION_VALID_SHIFT |\
     PMIC_CFG_WDG_WIN1DURATION_VALID_SHIFT    |\
@@ -285,6 +293,9 @@ extern "C" {
  * combination of the @ref Pmic_WdgCfgValidParamBitPos and the corresponding
  * member value will be updated.
  *
+ * @param rstEn Enable/disable warm reset when WDG fail counter (WD_FAIL_CNT) is
+ * greater than `thresholdReset` + `thresholdFail`.
+ *
  * @param thresholdReset Value for Watchdog Threshold 1 (WD_TH1). See @ref
  * Pmic_WdgThresholdCount.
  *
@@ -295,10 +306,12 @@ extern "C" {
  * See datasheet for calculation of code to time.
  *
  * @param win1Code Window-1 duration code for WD_WIN1_CFG register. See
- * datasheet for calculation of code to time.
+ * datasheet for calculation of code to time. For the maximum value, see
+ * @ref Pmic_WdgWinCodeMax.
  *
  * @param win2Code Window-2 duration code for WD_WIN2_CFG register. See
- * datasheet for calculation of code to time.
+ * datasheet for calculation of code to time. For the maximum value, see
+ * @ref Pmic_WdgWinCodeMax.
  *
  * @param qaFdbk Configure Q&A Feedback value. See @ref Pmic_WdgQaFdbkVal.
  *
@@ -309,6 +322,8 @@ extern "C" {
  */
 typedef struct Pmic_WdgCfg_s {
     uint32_t validParams;
+
+    bool rstEn;
 
     uint8_t thresholdReset;
     uint8_t thresholdFail;

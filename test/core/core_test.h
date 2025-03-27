@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -30,51 +30,53 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef PMIC_REGMAP_FSM_H
-#define PMIC_REGMAP_FSM_H
+#ifndef __CORE_TEST_H__
+#define __CORE_TEST_H__
+
+/**
+ * @file core_test.h
+ * @brief Contains macros/defines and test declarations specific to testing the
+ * Core module.
+ */
+
+/* ========================================================================== */
+/*                              Include Files                                 */
+/* ========================================================================== */
+
+#include "platform.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* ==========================================================================*/
-/*                             Include Files                                 */
-/* ==========================================================================*/
-#include <stdint.h>
-
 /* ========================================================================== */
-/*                           Macros & Typedefs                                */
+/*                          Function Declarations                             */
 /* ========================================================================== */
 
-// Register Address Definitions
-#define FSM_COMMAND_REG         ((uint8_t)0x05U)
-#define RECOV_CNT_CONTROL_REG   ((uint8_t)0x07U)
-#define RECOV_CNT_REG_1_REG     ((uint8_t)0x5BU)
-#define RECOV_CNT_REG_2_REG     ((uint8_t)0x37U)
+void core_test(void *args);
 
-// FSM_COMMAND_REG Bit Shifts and Masks
-#define FSM_COMMAND_SHIFT       (0U)
-#define FSM_COMMAND_MASK        (0xFFU << FSM_COMMAND_SHIFT)
-
-// RECOV_CNT_CONTROL_REG Bit Shifts and Masks
-#define RECOV_CNT_CLR_SHIFT (0U)
-#define RESET_CNT_CLR_SHIFT (1U)
-#define RECOV_CNT_CLR_MASK  (1U << RECOV_CNT_CLR_SHIFT)
-#define RESET_CNT_CLR_MASK  (1U << RESET_CNT_CLR_SHIFT)
-
-// RECOV_CNT_REG_1_REG Bit Shifts and Masks
-#define RECOV_CNT_SHIFT (0U)
-#define RESET_CNT_SHIFT (4U)
-#define RECOV_CNT_MASK  (0x0FU << RECOV_CNT_SHIFT)
-#define RESET_CNT_MASK  (0x0FU << RESET_CNT_SHIFT)
-
-// RECOV_CNT_REG_2_REG Bit Shifts and Masks
-#define RECOV_CNT_THR_SHIFT (0U)
-#define RESET_CNT_THR_SHIFT (4U)
-#define RECOV_CNT_THR_MASK  (0x0FU << RECOV_CNT_THR_SHIFT)
-#define RESET_CNT_THR_MASK  (0x0FU << RESET_CNT_THR_SHIFT)
+void test_negative_Pmic_setScratchPadVal_nullParam_handle(void);
+void test_negative_Pmic_setScratchPadVal_outOfBounds_scratchPadRegNum(void);
+void test_negative_Pmic_getScratchPadVal_nullParam_handle(void);
+void test_negative_Pmic_getScratchPadVal_nullParam_value(void);
+void test_negative_Pmic_getScratchPadVal_outOfBounds_scratchPadRegNum(void);
+void test_negative_Pmic_setRegLockState_nullParam_handle(void);
+void test_negative_Pmic_getRegLockState_nullParam_handle(void);
+void test_negative_Pmic_getRegLockState_nullParam_lockState(void);
+void test_negative_Pmic_configCrcEnable_nullParam_handle(void);
+void test_negative_Pmic_configCrcDisable_nullParam_handle(void);
+void test_negative_Pmic_getConfigCrcStat_nullParam_handle(void);
+void test_negative_Pmic_getConfigCrcStat_nullParam_configCrcStat(void);
+void test_negative_Pmic_configCrcCalculate_nullParam_handle(void);
+void test_negative_Pmic_configCrcGetFromDevice_nullParam_handle(void);
+void test_negative_Pmic_configCrcGetFromDevice_nullParam_crc(void);
+void test_positive_setGetRegLockState(void);
+void test_positive_setGetScratchpadReg1to4(void);
+void test_positive_enableDisableConfigRegCrc(void);
+void test_positive_configCrcCalclate(void);
+void test_positive_getConfigCrc(void);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif // PMIC_REGMAP_FSM_H
+#endif /*__CORE_TEST_H__*/

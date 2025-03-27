@@ -34,6 +34,7 @@
 /*========================================================================== */
 /*                            Include Files                                  */
 /*========================================================================== */
+#include <stddef.h>
 #include <stdint.h>
 
 #include "pmic.h"
@@ -75,7 +76,19 @@ static uint8_t IO_calcCRC8(uint8_t cmd, uint8_t rdwr, uint8_t dat) {
 int32_t Pmic_ioRxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *pRxBuffer) {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t rxBuf[PMIC_IO_BUF_SIZE] = {0};
-    const uint8_t frameSize = handle->crcEnable ? 2U : 1U;
+    uint8_t frameSize = 1U;
+
+    if ((handle == NULL) || (handle->pFnPmicCommIoRd == NULL)) {
+        return PMIC_ST_ERR_INV_HANDLE;
+    }
+
+    if (pRxBuffer == NULL) {
+        return PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (handle->crcEnable) {
+        frameSize = 2U;
+    }
 
     status = handle->pFnPmicCommIoRd(handle, (uint8_t)PMIC_MAIN_INST, regAddr, &rxBuf[0], frameSize);
 
@@ -97,6 +110,10 @@ int32_t Pmic_ioRxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *r
 }
 
 int32_t Pmic_ioTxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txData) {
+    if ((handle == NULL) || (handle->pFnPmicCommIoWr == NULL)) {
+        return PMIC_ST_ERR_INV_HANDLE;
+    }
+
     /* Set write data to txBuf[2], with WDATA[7:0] */
     uint8_t txBuf[PMIC_IO_BUF_SIZE] = {0U, 0U, txData, 0U};
     const uint8_t frameSize = handle->crcEnable ? 2U : 1U;
@@ -129,6 +146,10 @@ int32_t Pmic_ioTxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t tx
 int32_t Pmic_ioGetCrcEnableState(Pmic_CoreHandle_t *handle, bool *isEnabled) {
     int32_t status = Pmic_checkPmicCoreHandle(handle);
     uint8_t regData = 0U;
+
+    if ((status == PMIC_ST_SUCCESS) && (isEnabled == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
 
     // Read the INTERFACE_CONF register
     if (status == PMIC_ST_SUCCESS) {

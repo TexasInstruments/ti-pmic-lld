@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -30,51 +30,48 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef PMIC_REGMAP_FSM_H
-#define PMIC_REGMAP_FSM_H
+#ifndef __IO_TEST_H__
+#define __IO_TEST_H__
+
+/**
+ * @file io_test.h
+ * @brief Contains macros/defines and test declarations specific to testing the
+ * IO module.
+ */
+
+/* ========================================================================== */
+/*                              Include Files                                 */
+/* ========================================================================== */
+
+#include "platform.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* ==========================================================================*/
-/*                             Include Files                                 */
-/* ==========================================================================*/
-#include <stdint.h>
-
 /* ========================================================================== */
-/*                           Macros & Typedefs                                */
+/*                          Function Declarations                             */
 /* ========================================================================== */
 
-// Register Address Definitions
-#define FSM_COMMAND_REG         ((uint8_t)0x05U)
-#define RECOV_CNT_CONTROL_REG   ((uint8_t)0x07U)
-#define RECOV_CNT_REG_1_REG     ((uint8_t)0x5BU)
-#define RECOV_CNT_REG_2_REG     ((uint8_t)0x37U)
+void io_test(void *args);
 
-// FSM_COMMAND_REG Bit Shifts and Masks
-#define FSM_COMMAND_SHIFT       (0U)
-#define FSM_COMMAND_MASK        (0xFFU << FSM_COMMAND_SHIFT)
-
-// RECOV_CNT_CONTROL_REG Bit Shifts and Masks
-#define RECOV_CNT_CLR_SHIFT (0U)
-#define RESET_CNT_CLR_SHIFT (1U)
-#define RECOV_CNT_CLR_MASK  (1U << RECOV_CNT_CLR_SHIFT)
-#define RESET_CNT_CLR_MASK  (1U << RESET_CNT_CLR_SHIFT)
-
-// RECOV_CNT_REG_1_REG Bit Shifts and Masks
-#define RECOV_CNT_SHIFT (0U)
-#define RESET_CNT_SHIFT (4U)
-#define RECOV_CNT_MASK  (0x0FU << RECOV_CNT_SHIFT)
-#define RESET_CNT_MASK  (0x0FU << RESET_CNT_SHIFT)
-
-// RECOV_CNT_REG_2_REG Bit Shifts and Masks
-#define RECOV_CNT_THR_SHIFT (0U)
-#define RESET_CNT_THR_SHIFT (4U)
-#define RECOV_CNT_THR_MASK  (0x0FU << RECOV_CNT_THR_SHIFT)
-#define RESET_CNT_THR_MASK  (0x0FU << RESET_CNT_THR_SHIFT)
+void test_negative_Pmic_ioTxByte_nullParam_handle(void);
+void test_negative_Pmic_ioRxByte_nullParam_handle(void);
+void test_negative_Pmic_ioRxByte_nullParam_rxBuffer(void);
+void test_negative_Pmic_ioTxByte_CS_nullParam_handle(void);
+void test_negative_Pmic_ioRxByte_CS_nullParam_handle(void);
+void test_negative_Pmic_ioRxByte_CS_nullParam_rxBuffer(void);
+void test_negative_Pmic_ioGetCrcEnableState_nullParam_handle(void);
+void test_negative_Pmic_ioGetCrcEnableState_nullParam_isEnabled(void);
+void test_negative_Pmic_ioSetCrcEnableState_nullParam_handle(void);
+void test_negative_Pmic_ioCrcEnable_nullParam_handle(void);
+void test_negative_Pmic_ioCrcDisable_nullParam_handle(void);
+void test_positive_Pmic_ioTxByte_Pmic_ioRxByte_writeReadScratchpadReg1To4(void);
+void test_positive_Pmic_ioTxByte_CS_Pmic_ioRxByte_CS_writeReadScratchpadReg1To4(void);
+void test_positive_setGetCrcEnableState(void);
+void test_positive_enableDisableCrc(void);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif // PMIC_REGMAP_FSM_H
+#endif /*__IO_TEST_H__*/

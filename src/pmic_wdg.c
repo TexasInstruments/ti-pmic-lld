@@ -71,16 +71,24 @@ static int32_t WDG_setWindowsTimeIntervals(Pmic_CoreHandle_t *handle, const Pmic
 
     /* Set Window 1 time interval */
     if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_WDG_WIN1DURATION_VALID, status)) {
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioTxByte(handle, PMIC_WD_WIN1_CFG_REG, config->win1Code);
-        Pmic_criticalSectionStop(handle);
+        if (config->win1Code > PMIC_WDG_WIN_CODE_MAX) {
+            status = PMIC_ST_ERR_INV_PARAM;
+        } else {
+            Pmic_criticalSectionStart(handle);
+            status = Pmic_ioTxByte(handle, PMIC_WD_WIN1_CFG_REG, config->win1Code);
+            Pmic_criticalSectionStop(handle);
+        }
     }
 
     /* Set Window 2 time interval */
     if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_WDG_WIN2DURATION_VALID, status)) {
-        Pmic_criticalSectionStart(handle);
-        status = Pmic_ioTxByte(handle, PMIC_WD_WIN2_CFG_REG, config->win2Code);
-        Pmic_criticalSectionStop(handle);
+        if (config->win2Code > PMIC_WDG_WIN_CODE_MAX) {
+            status = PMIC_ST_ERR_INV_PARAM;
+        } else {
+            Pmic_criticalSectionStart(handle);
+            status = Pmic_ioTxByte(handle, PMIC_WD_WIN2_CFG_REG, config->win2Code);
+            Pmic_criticalSectionStop(handle);
+        }
     }
 
     return status;
@@ -175,7 +183,7 @@ static int32_t WDG_setThresholds(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t 
     }
 
     /* Set wdg Fail threshold value */
-    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_THRESHOLD_RESET_VALID)) {
+    if (Pmic_validParamCheck(config->validParams, PMIC_CFG_WDG_THRESHOLD_FAIL_VALID)) {
         if (config->thresholdFail > PMIC_WDG_THRESHOLD_COUNT_MAX) {
             status = PMIC_ST_ERR_INV_PARAM;
         }
@@ -282,6 +290,43 @@ static int32_t WDG_getQAConfigurations(Pmic_CoreHandle_t *handle, Pmic_WdgCfg_t 
     /* Get wdg QA Question Seed value */
     if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_WDG_QA_QUES_SEED_VALID, status)) {
         config->qaQuesSeed = Pmic_getBitField(regVal, PMIC_WD_QA_SEED_SHIFT, PMIC_WD_QA_SEED_MASK);
+    }
+
+    return status;
+}
+
+static int32_t WDG_setOtherConfigurations(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t *config)
+{
+    uint8_t regData = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Read WD_ENABLE_REG
+    status = Pmic_ioRxByte_CS(handle, PMIC_WD_ENABLE_REG, &regData);
+
+    // Modify WD_RST_EN
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_WDG_RST_EN_VALID, status)) {
+        Pmic_setBitField_b(&regData, PMIC_WD_RST_EN_SHIFT, config->rstEn);
+    }
+
+    // Write WD_ENABLE_REG
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_ioTxByte_CS(handle, PMIC_WD_ENABLE_REG, regData);
+    }
+
+    return status;
+}
+
+static int32_t WDG_getOtherConfigurations(Pmic_CoreHandle_t *handle, Pmic_WdgCfg_t *config)
+{
+    uint8_t regData = 0U;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Read WD_ENABLE_REG
+    status = Pmic_ioRxByte_CS(handle, PMIC_WD_ENABLE_REG, &regData);
+
+    // Extract WD_RST_EN
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_WDG_RST_EN_VALID, status)) {
+        config->rstEn = Pmic_getBitField_b(regData, PMIC_WD_RST_EN_SHIFT);
     }
 
     return status;
@@ -447,6 +492,10 @@ int32_t Pmic_wdgGetEnableState(Pmic_CoreHandle_t *handle, bool *isEnabled) {
 int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t *config) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
 
+    if ((status == PMIC_ST_SUCCESS) && (config == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
     if (status == PMIC_ST_SUCCESS) {
         status = WDG_setWindowsTimeIntervals(handle, config);
     }
@@ -457,6 +506,11 @@ int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t *config) {
 
     if (status == PMIC_ST_SUCCESS) {
         status = WDG_setQAConfigurations(handle, config);
+    }
+
+    // Set WD_RST_EN configuration
+    if (status == PMIC_ST_SUCCESS) {
+        status = WDG_setOtherConfigurations(handle, config);
     }
 
     return status;
@@ -479,6 +533,11 @@ int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t *handle, Pmic_WdgCfg_t *config) {
 
     if (status == PMIC_ST_SUCCESS) {
         status = WDG_getQAConfigurations(handle, config);
+    }
+
+    // Get WD_RST_EN configuration
+    if (status == PMIC_ST_SUCCESS) {
+        status = WDG_getOtherConfigurations(handle, config);
     }
 
     return status;
@@ -608,11 +667,11 @@ int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t *handle, Pmic_WdgError_t *error
         }
 
         if (Pmic_validParamCheck(errors->validParams, PMIC_CFG_WD_FAIL_INT_ERR_VALID)) {
-            errors->resetInt = Pmic_getBitField_b(regVal, PMIC_WD_RST_ERR_SHIFT);
+            errors->failInt = Pmic_getBitField_b(regVal, PMIC_WD_FAIL_ERR_SHIFT);
         }
 
         if (Pmic_validParamCheck(errors->validParams, PMIC_CFG_WD_RST_INT_ERR_VALID)) {
-            errors->failInt = Pmic_getBitField_b(regVal, PMIC_WD_FAIL_ERR_SHIFT);
+            errors->resetInt = Pmic_getBitField_b(regVal, PMIC_WD_RST_ERR_SHIFT);
         }
     }
 
@@ -622,6 +681,10 @@ int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t *handle, Pmic_WdgError_t *error
 int32_t Pmic_wdgClrErrStatus(Pmic_CoreHandle_t *handle, const Pmic_WdgError_t *errors) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
     uint8_t regVal = 0x0U;
+
+    if ((status == PMIC_ST_SUCCESS) && (errors == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
 
     if (status == PMIC_ST_SUCCESS) {
         if (Pmic_validParamCheck(errors->validParams, PMIC_CFG_WD_LONGWIN_TIMEOUT_ERR_VALID)) {

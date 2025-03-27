@@ -72,6 +72,17 @@ extern "C" {
 #define PMIC_FSM_COMMAND_OTA_FW_DOWNLOAD_REQ   (0x87U)
 /** @} */
 
+/**
+ * @anchor Pmic_FsmResetRecovCntThrMax
+ * @name PMIC FSM Reset/Recovery Counter Threshold
+ *
+ * @brief Maximum value for the reset/recovery counter threshold
+ *
+ * @{
+ */
+#define PMIC_FSM_RESET_RECOV_CNT_THR_MAX       (0x0FU)
+/** @} */
+
 /* ========================================================================== */
 /*                            Function Declarations                           */
 /* ========================================================================== */
@@ -89,6 +100,125 @@ extern "C" {
  * possible values @ref Pmic_ErrorCodes
  */
 int32_t Pmic_fsmMcuCommand(Pmic_CoreHandle_t *handle, uint8_t cmd);
+
+/**
+ * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
+ * @brief Set PMIC reset counter threshold (RESET_CNT_THR).
+ *
+ * @details Each time the PMIC goes through Warm Reset, the reset counter
+ * (RESET_CNT) increments. When RESET_CNT exceeds RESET_CNT_THR - the value in
+ * which this API configures - the PMIC power downs all its rails.
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param resetCntThr [IN] Desired reset counter threshold to set. For the
+ * maximum value, refer to @ref Pmic_FsmResetRecovCntThrMax.
+ *
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * possible values @ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmSetResetCntThr(Pmic_CoreHandle_t *handle, uint8_t resetCntThr);
+
+/**
+ * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
+ * @brief Get PMIC reset counter threshold (RESET_CNT_THR).
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param resetCntThr [OUT] Reset counter threshold value obtained from the
+ * PMIC.
+ *
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * possible values @ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmGetResetCntThr(Pmic_CoreHandle_t *handle, uint8_t *resetCntThr);
+
+/**
+ * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
+ * @brief Get PMIC reset counter.
+ *
+ * @details The PMIC increments the reset counter - the value in which this
+ * API obtains - each time it goes through warm reset.
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param resetCnt [OUT] Reset counter value obtained from the PMIC.
+ *
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * possible values @ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmGetResetCnt(Pmic_CoreHandle_t *handle, uint8_t *resetCnt);
+
+/**
+ * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
+ * @brief Clear PMIC reset counter to zero.
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * possible values @ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmClrResetCnt(Pmic_CoreHandle_t *handle);
+
+/**
+ * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
+ * @brief Set PMIC recovery counter threshold.
+ *
+ * @details The PMIC increments the recovery counter (RECOV_CNT) when it
+ * transitions from ACTIVE to SAFE state. When RECOV_CNT exceeds
+ * RECOV_CNT_THR - the value in which this API configures - the PMIC stays in
+ * SAFE state until supply power cycle occurs.
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param recovCntThr [IN] Desired recovery counter threshold value to be set.
+ * For the maximum value, refer to @ref Pmic_FsmResetRecovCntThrMax.
+ *
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * possible values @ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmSetRecovCntThr(Pmic_CoreHandle_t *handle, uint8_t recovCntThr);
+
+/**
+ * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
+ * @brief Get PMIC recovery counter threshold.
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param recovCntThr [OUT] Recovery counter threshold value obtained from the
+ * PMIC.
+ *
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * possible values @ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmGetRecovCntThr(Pmic_CoreHandle_t *handle, uint8_t *recovCntThr);
+
+/**
+ * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
+ * @brief Get PMIC recovery counter.
+ *
+ * @details The PMIC increments the recovery counter - the value in which this
+ * API obtains - each time it transitions from ACTIVE to SAFE state.
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param recovCnt [OUT] Recovery counter value obtained from the PMIC.
+ *
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * possible values @ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmGetRecovCnt(Pmic_CoreHandle_t *handle, uint8_t *recovCnt);
+
+/**
+ * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
+ * @brief Clear PMIC recovery counter.
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
+ * possible values @ref Pmic_ErrorCodes
+ */
+int32_t Pmic_fsmClrRecovCnt(Pmic_CoreHandle_t *handle);
 
 #ifdef __cplusplus
 }

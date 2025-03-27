@@ -1,5 +1,5 @@
 /******************************************************************************
- * Copyright (c) 2024 Texas Instruments Incorporated - http://www.ti.com
+ * Copyright (c) 2025 Texas Instruments Incorporated - http://www.ti.com
  *
  *  Redistribution and use in source and binary forms, with or without
  *  modification, are permitted provided that the following conditions
@@ -30,51 +30,53 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef PMIC_REGMAP_FSM_H
-#define PMIC_REGMAP_FSM_H
+#ifndef __PMIC_INIT_TEST_H__
+#define __PMIC_INIT_TEST_H__
+
+/**
+ * @file pmic_init_test.h
+ * @brief Contains macros/defines and test declarations specific to testing PMIC
+ * Init.
+ */
+
+/* ========================================================================== */
+/*                              Include Files                                 */
+/* ========================================================================== */
+
+#include "platform.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* ==========================================================================*/
-/*                             Include Files                                 */
-/* ==========================================================================*/
-#include <stdint.h>
-
 /* ========================================================================== */
-/*                           Macros & Typedefs                                */
+/*                          Function Declarations                             */
 /* ========================================================================== */
 
-// Register Address Definitions
-#define FSM_COMMAND_REG         ((uint8_t)0x05U)
-#define RECOV_CNT_CONTROL_REG   ((uint8_t)0x07U)
-#define RECOV_CNT_REG_1_REG     ((uint8_t)0x5BU)
-#define RECOV_CNT_REG_2_REG     ((uint8_t)0x37U)
+void pmic_init_test(void *args);
 
-// FSM_COMMAND_REG Bit Shifts and Masks
-#define FSM_COMMAND_SHIFT       (0U)
-#define FSM_COMMAND_MASK        (0xFFU << FSM_COMMAND_SHIFT)
-
-// RECOV_CNT_CONTROL_REG Bit Shifts and Masks
-#define RECOV_CNT_CLR_SHIFT (0U)
-#define RESET_CNT_CLR_SHIFT (1U)
-#define RECOV_CNT_CLR_MASK  (1U << RECOV_CNT_CLR_SHIFT)
-#define RESET_CNT_CLR_MASK  (1U << RESET_CNT_CLR_SHIFT)
-
-// RECOV_CNT_REG_1_REG Bit Shifts and Masks
-#define RECOV_CNT_SHIFT (0U)
-#define RESET_CNT_SHIFT (4U)
-#define RECOV_CNT_MASK  (0x0FU << RECOV_CNT_SHIFT)
-#define RESET_CNT_MASK  (0x0FU << RESET_CNT_SHIFT)
-
-// RECOV_CNT_REG_2_REG Bit Shifts and Masks
-#define RECOV_CNT_THR_SHIFT (0U)
-#define RESET_CNT_THR_SHIFT (4U)
-#define RECOV_CNT_THR_MASK  (0x0FU << RECOV_CNT_THR_SHIFT)
-#define RESET_CNT_THR_MASK  (0x0FU << RESET_CNT_THR_SHIFT)
+void test_negative_Pmic_init_nullParam_handle(void);
+void test_negative_Pmic_init_nullParam_coreCfg(void);
+void test_negative_Pmic_init_nullParam_coreCfg_pCommHandle(void);
+void test_negative_Pmic_init_nullParam_coreCfg_pQACommHandle(void);
+void test_negative_Pmic_init_nullParam_coreCfg_pFnPmicCommIoRd(void);
+void test_negative_Pmic_init_nullParam_coreCfg_pFnPmicCommIoWr(void);
+void test_negative_Pmic_init_nullParam_coreCfg_pFnPmicCritSecStart(void);
+void test_negative_Pmic_init_nullParam_coreCfg_pFnPmicCritSecStop(void);
+void test_negative_Pmic_init_nullParam_coreCfg_pFnPmicPseudoIrq(void);
+void test_negative_Pmic_init_incorrect_coreCfg_instType(void);
+void test_negative_Pmic_init_incorrect__coreCfg_pmicDeviceType(void);
+void test_negative_Pmic_init_incorrect_coreCfg_commMode(void);
+void test_negative_Pmic_deinit_nullParam_handle(void);
+void test_negative_Pmic_checkPmicCoreHandle_nullParam_handle(void);
+void test_negative_Pmic_checkPmicCoreHandle_nullParam_pCommHandle(void);
+void test_negative_Pmic_checkPmicCoreHandle_nullParam_pFnPmicCommIoRd(void);
+void test_negative_Pmic_checkPmicCoreHandle_incorrect_drvInitStatus(void);
+void test_positive_Pmic_init(void);
+void test_positive_Pmic_checkPmicCoreHandle(void);
+void test_positive_Pmic_deinit(void);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif // PMIC_REGMAP_FSM_H
+#endif /*__PMIC_INIT_TEST_H__*/

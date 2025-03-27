@@ -195,7 +195,7 @@ extern "C" {
 #define LDO_LS1_VMON1_VMON_EN_SHIFT   (2U)
 #define LDO_LS1_VMON1_DIS_PD_SHIFT    (3U)
 #define LDO_LS1_VMON1_OV_THR_SHIFT    (4U)
-#define LDO_LS1_VMON1_UV_THR_SHIFT    (5U)
+#define LDO_LS1_VMON1_UV_THR_SHIFT    (6U)
 #define LDO_LS1_VMON1_OV_THR_MASK     (0x3U << LDO_LS1_VMON1_OV_THR_SHIFT)
 #define LDO_LS1_VMON1_UV_THR_MASK     (0x3U << LDO_LS1_VMON1_UV_THR_SHIFT)
 
@@ -204,7 +204,7 @@ extern "C" {
 #define LS2_VMON2_VMON_EN_SHIFT       (2U)
 #define LS2_VMON2_DIS_PD_SHIFT        (3U)
 #define LS2_VMON2_OV_THR_SHIFT        (4U)
-#define LS2_VMON2_UV_THR_SHIFT        (5U)
+#define LS2_VMON2_UV_THR_SHIFT        (6U)
 #define LS2_VMON2_OV_THR_MASK         (0x3U << LS2_VMON2_OV_THR_SHIFT)
 #define LS2_VMON2_UV_THR_MASK         (0x3U << LS2_VMON2_UV_THR_SHIFT)
 
@@ -212,7 +212,7 @@ extern "C" {
 #define LS2_VMON2_DEGLITCH_SEL_SHIFT  (0U)
 #define VMONIN_DEGLITCH_SEL_SHIFT     (2U)
 #define VCCA_OV_THR_SHIFT             (4U)
-#define VCCA_UV_THR_SHIFT             (5U)
+#define VCCA_UV_THR_SHIFT             (6U)
 #define LS2_VMON2_DEGLITCH_SEL_MASK   (0x3U << LS2_VMON2_DEGLITCH_SEL_SHIFT)
 #define VMONIN_DEGLITCH_SEL_MASK      (0x3U << VMONIN_DEGLITCH_SEL_SHIFT)
 #define VCCA_OV_THR_MASK              (0x3U << VCCA_OV_THR_SHIFT)

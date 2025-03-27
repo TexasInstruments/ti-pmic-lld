@@ -180,7 +180,7 @@ static int32_t PWR_validateParams(uint8_t resource, uint8_t value, tPowerResourc
     }
 
     // Validate parameter within allowed range
-    if ((status == PMIC_ST_SUCCESS) && PWR_isInRangeU8(min, max, value)) {
+    if ((status == PMIC_ST_SUCCESS) && !PWR_isInRangeU8(min, max, value)) {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
@@ -241,6 +241,10 @@ int32_t Pmic_pwrGetResourceEnable(Pmic_CoreHandle_t *handle, uint8_t resource, b
 {
     int32_t status = Pmic_checkPmicCoreHandle(handle);
     uint8_t regData = 0U;
+
+    if ((status == PMIC_ST_SUCCESS) && (isEnabled == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
 
     // Validate that the requested resource is within range and supports
     // enablement. All power resource support enable/disable, this is mostly
@@ -305,10 +309,8 @@ static int32_t PWR_setModeCfgLdoLs1Vmon1(Pmic_CoreHandle_t *handle, const Pmic_P
         Pmic_setBitField(&regData, LDO_LS1_BYP_CONFIG_SHIFT, LDO_LS1_BYP_CONFIG_MASK, modeConfig.bypConfig);
         status = Pmic_ioTxByte(handle, LDO_LS1_VMON1_PG_LEVEL_REG, regData);
     }
-    Pmic_criticalSectionStop(handle);
 
     // Handle FUNC_CONF fields, this covers the remaining fields
-    Pmic_criticalSectionStart(handle);
     if (status == PMIC_ST_SUCCESS) {
         status = Pmic_ioRxByte(handle, FUNC_CONF_REG, &regData);
     }
@@ -430,14 +432,20 @@ static int32_t PWR_getModeCfgLdoLs1Vmon1(Pmic_CoreHandle_t *handle, Pmic_PowerRe
     // "BYP"  -> LDO_LS1_BYP_CONFIG=1, LDO_LS1_VMON1_SEL=0, LDO_LS1_LSW_CONFIG=0
     // "LSW"  -> LDO_LS1_BYP_CONFIG=1, LDO_LS1_VMON1_SEL=0, LDO_LS1_LSW_CONFIG=1
     // "VMON" -> LDO_LS1_BYP_CONFIG=1, LDO_LS1_VMON1_SEL=1, LDO_LS1_LSW_CONFIG=1 ??? (unsure about this one)
-    if (Pmic_getBitField_b(pgLevelReg, LDO_LS1_BYP_CONFIG_SHIFT)) {
+    const bool bypConfig = Pmic_getBitField_b(pgLevelReg, LDO_LS1_BYP_CONFIG_SHIFT);
+    const bool vmon1Sel = Pmic_getBitField_b(funcConfReg, LDO_LS1_VMON1_SEL_SHIFT);
+    const bool lswConfig = Pmic_getBitField_b(funcConfReg, LDO_LS1_LSW_CONFIG_SHIFT);
+    if (!bypConfig && !vmon1Sel && !lswConfig) {
         resolvedMode = PMIC_PWR_RSRC_MODE_REG;
-    } else if (Pmic_getBitField_b(funcConfReg, LDO_LS1_VMON1_SEL_SHIFT)) {
-        resolvedMode = PMIC_PWR_RSRC_MODE_VMON;
-    } else if (Pmic_getBitField_b(funcConfReg, LDO_LS1_LSW_CONFIG_SHIFT)) {
-        resolvedMode = PMIC_PWR_RSRC_MODE_LSW;
-    } else {
+    } else if (bypConfig && !vmon1Sel && !lswConfig) {
         resolvedMode = PMIC_PWR_RSRC_MODE_BYP;
+    } else if (bypConfig && !vmon1Sel && lswConfig) {
+        resolvedMode = PMIC_PWR_RSRC_MODE_LSW;
+    } else if (bypConfig && vmon1Sel && lswConfig) {
+        resolvedMode = PMIC_PWR_RSRC_MODE_VMON;
+    } else {
+        // This is an invalid state, return failure
+        status = PMIC_ST_ERR_FAIL;
     }
 
     if (status == PMIC_ST_SUCCESS) {
@@ -905,7 +913,7 @@ static int32_t PWR_setOvThreshCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerRes
     uint8_t regAddr = 0U;
     uint8_t shift = 0U;
     uint8_t mask = 0U;
-    const uint8_t value = config->uvThresh;
+    const uint8_t value = config->ovThresh;
 
     // Get register address and bit shifts/masks to use for this resource
     status = PWR_getOvThreshParamLoc(config->resource, &regAddr, &shift, &mask);
@@ -1185,7 +1193,7 @@ static int32_t PWR_setScReactionCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerR
     uint8_t regAddr = 0U;
     uint8_t shift = 0U;
     uint8_t mask = 0U;
-    const uint8_t value = config->rvReaction;
+    const uint8_t value = config->scReaction;
 
     // Get register address and bit shifts/masks to use for this resource
     status = PWR_getScReactionParamLoc(config->resource, &regAddr, &shift, &mask);
@@ -1232,7 +1240,7 @@ static int32_t PWR_getScReactionCfg(Pmic_CoreHandle_t *handle, Pmic_PowerResourc
     }
 
     if (status == PMIC_ST_SUCCESS) {
-        config->rvReaction = Pmic_getBitField(regData, shift, mask);
+        config->scReaction = Pmic_getBitField(regData, shift, mask);
     }
 
     return status;
@@ -1483,12 +1491,16 @@ int32_t Pmic_pwrSetResourceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, c
     int32_t status = Pmic_checkPmicCoreHandle(handle);
 
     // Validate parameters
-    if (config == NULL) {
+    if ((status == PMIC_ST_SUCCESS) && (config == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
     for (uint8_t i = 0; i < numConfigs; i++) {
-        status = PWR_setSingleResourceCfg(handle, &config[i]);
+            if (status != PMIC_ST_SUCCESS) {
+                break;
+            }
+
+            status = PWR_setSingleResourceCfg(handle, &config[i]);
     }
 
     return status;
@@ -1554,7 +1566,7 @@ int32_t Pmic_pwrGetResourceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, P
     int32_t status = Pmic_checkPmicCoreHandle(handle);
 
     // Validate parameters
-    if (config == NULL) {
+    if ((status == PMIC_ST_SUCCESS) && (config == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
@@ -1620,12 +1632,14 @@ static int32_t PWR_getSingleSequence(Pmic_CoreHandle_t *handle, Pmic_PowerSequen
     }
 
     // Extract the requested fields
-    if (Pmic_validParamCheck(config->validParams, PMIC_PWR_SEQ_STARTUP_VALID)) {
-        config->startupDelay = Pmic_getBitField(regData, SEQ_STARTUP_DELAY_SHIFT, SEQ_STARTUP_DELAY_MASK);
-    }
+    if (status == PMIC_ST_SUCCESS) {
+        if (Pmic_validParamCheck(config->validParams, PMIC_PWR_SEQ_STARTUP_VALID)) {
+            config->startupDelay = Pmic_getBitField(regData, SEQ_STARTUP_DELAY_SHIFT, SEQ_STARTUP_DELAY_MASK);
+        }
 
-    if (Pmic_validParamCheck(config->validParams, PMIC_PWR_SEQ_SHUTDOWN_VALID)) {
-        config->shutdownDelay = Pmic_getBitField(regData, SEQ_SHUTDOWN_DELAY_SHIFT, SEQ_SHUTDOWN_DELAY_MASK);
+        if (Pmic_validParamCheck(config->validParams, PMIC_PWR_SEQ_SHUTDOWN_VALID)) {
+            config->shutdownDelay = Pmic_getBitField(regData, SEQ_SHUTDOWN_DELAY_SHIFT, SEQ_SHUTDOWN_DELAY_MASK);
+        }
     }
 
     return status;
@@ -1644,14 +1658,21 @@ static int32_t PWR_setSingleSequence(Pmic_CoreHandle_t *handle, const Pmic_Power
         status = Pmic_ioRxByte_CS(handle, regAddr, &regData);
     }
 
-    // Modify requested fields, there are no invalid values for startup or
-    // shutdown delay, they saturate at the maximum size allowed by the mask
-    if (Pmic_validParamCheck(config->validParams, PMIC_PWR_SEQ_STARTUP_VALID)) {
-        Pmic_setBitField(&regData, SEQ_STARTUP_DELAY_SHIFT, SEQ_STARTUP_DELAY_MASK, config->startupDelay);
+    // Modify requested fields
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_PWR_SEQ_STARTUP_VALID, status)) {
+        if (config->startupDelay > PMIC_PWR_SEQ_DLY_MAX) {
+            status = PMIC_ST_ERR_INV_PARAM;
+        } else {
+            Pmic_setBitField(&regData, SEQ_STARTUP_DELAY_SHIFT, SEQ_STARTUP_DELAY_MASK, config->startupDelay);
+        }
     }
 
-    if (Pmic_validParamCheck(config->validParams, PMIC_PWR_SEQ_SHUTDOWN_VALID)) {
-        Pmic_setBitField(&regData, SEQ_SHUTDOWN_DELAY_SHIFT, SEQ_SHUTDOWN_DELAY_MASK, config->shutdownDelay);
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_PWR_SEQ_SHUTDOWN_VALID, status)) {
+        if (config->shutdownDelay > PMIC_PWR_SEQ_DLY_MAX) {
+            status = PMIC_ST_ERR_INV_PARAM;
+        } else {
+            Pmic_setBitField(&regData, SEQ_SHUTDOWN_DELAY_SHIFT, SEQ_SHUTDOWN_DELAY_MASK, config->shutdownDelay);
+        }
     }
 
     // Write the modifed register contents back
@@ -1667,7 +1688,7 @@ int32_t Pmic_pwrSetSequenceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, c
     int32_t status = Pmic_checkPmicCoreHandle(handle);
 
     // Validate parameters
-    if (config == NULL) {
+    if ((status == PMIC_ST_SUCCESS) && (config == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
@@ -1687,7 +1708,7 @@ int32_t Pmic_pwrGetSequenceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, P
     int32_t status = Pmic_checkPmicCoreHandle(handle);
 
     // Validate parameters
-    if (config == NULL) {
+    if ((status == PMIC_ST_SUCCESS) && (config == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 

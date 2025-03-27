@@ -1,0 +1,41 @@
+# Klocwork C and C++ Community Metrics - HIS Metrics 1.3.1
+#
+# Each line of this file, except comment lines and header lines, is a rule that
+# sets a threshold for one of the default or custom metrics.
+#
+# Format of each rule:
+# Name;Entity-Type;Metric-Expression;Error-Threshold;Warning-Threshold
+#
+# Name - the name of rule; ill be displayed if the rule is violated
+# Entity-Type - the FUNCTION, CLASS-METHOD, CLASS or FILE where the metric is
+# applicable
+# Metric-Expression - can contain +,-,*,/,%,(), function calls, numbers, basic
+# metrics and aliases
+#   Function calls: log, sin, exp, int, abs, cos, atan2, sqrt, rand :)
+# Error-Threshold: comparison expression; if violated, an Error is displayed
+# Warning-Threshold: comparison expression; if violated, a Warning is displayed
+#
+# Categories - You can use header lines to group your rules into categories.
+# For example:
+# WARNING.SEVERITY=4 ERROR.SEVERITY=2 WARNING.CATEGORY="User Defined Warning Category 1" ERROR.CATEGORY="User Defined Error Category 1"
+#
+# Aliases - The #!alias syntax allows you to substitute text in the rules.
+# Syntax: #!alias <Variable>=<Metric-Expression>
+# Following the #!alias line, <variable> will be substituted as <Metric-Expression>.
+#
+####################################################################################################################
+# [22/2/2024] Gayathri G Ajith
+# Below metrics have been commented out based on defined TI HIS metrics guideline. 
+####################################################################################################################
+#Comment density COMF;FILE;LINESCOMM/(RNOSTAT + 0.000001);<0.0;<0.2
+#Number of calls CALLS;FUNCTION,CLASS-METHOD;NOCALLS;7;7
+#Number of instructions per func STMT;FUNCTION,CLASS-METHOD;NOSTAT;50;50
+#Number of return points RETURN;FUNCTION,CLASS-METHOD;NORET;1;1
+#Language scope VOCF;FUNCTION,CLASS-METHOD;(NOOPRUSED + NOOPUSED)/(NODISOPRUSED + NODISOPUSED + 0.000001);4;4
+
+WARNING.SEVERITY=4 ERROR.SEVERITY=3 WARNING.CATEGORY="HIS Metrics Warning" ERROR.CATEGORY="HIS Metrics Error"
+Number of paths PATH;FUNCTION,CLASS-METHOD;exp(NOINDPATHS);80.0;80.0
+Cyclomatic v(G);FUNCTION,CLASS-METHOD;CYCLOMATIC;10;10
+Number of parameters PARAM;FUNCTION,CLASS-METHOD;NOPARMS;5;5
+Max nesting level LEVEL;FUNCTION,CLASS-METHOD;MAXLEVEL;4;4
+

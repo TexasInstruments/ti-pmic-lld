@@ -233,6 +233,41 @@ int32_t Pmic_configCrcDisable(Pmic_CoreHandle_t *handle)
     return status;
 }
 
+int32_t Pmic_getConfigCrcStat(Pmic_CoreHandle_t *handle, Pmic_ConfigCrcStat_t *configCrcStat)
+{
+    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    uint8_t regData = 0U;
+
+    if ((status == PMIC_ST_SUCCESS) && (configCrcStat == NULL)) {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    // Read CONFIG_CRC_CONFIG
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_ioRxByte_CS(handle, CONFIG_CRC_CONFIG_REG, &regData);
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        // Extract CONFIG_CRC_EN
+        configCrcStat->crcEn = Pmic_getBitField_b(regData, CONFIG_CRC_EN_SHIFT);
+
+        // Extract CONFIG_CRC_CALC
+        configCrcStat->crcCalc = Pmic_getBitField_b(regData, CONFIG_CRC_CALC_SHIFT);
+    }
+
+    // Read STAT_MODERATE_ERR
+    if (status == PMIC_ST_SUCCESS) {
+        status = Pmic_ioRxByte_CS(handle, STAT_MODERATE_ERR_REG, &regData);
+    }
+
+    // Extract CONFIG_CRC_STAT
+    if (status == PMIC_ST_SUCCESS) {
+        configCrcStat->errorDetected = Pmic_getBitField_b(regData, CONFIG_CRC_STAT_SHIFT);
+    }
+
+    return status;
+}
+
 static int32_t CORE_configCrcValidate(Pmic_CoreHandle_t *handle)
 {
     int32_t status = PMIC_ST_SUCCESS;

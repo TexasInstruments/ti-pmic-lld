@@ -54,16 +54,18 @@
 extern "C" {
 #endif
 
-/*==========================================================================*/
-/*                         Function Declarations                            */
-/*==========================================================================*/
+/* ========================================================================== */
+/*                          Function Declarations                             */
+/* ========================================================================== */
 /**
  * @ingroup DRV_PMIC_IO_MODULE
  * @brief Write a byte to the given PMIC `regAddr`, performing CRC on
  * communications if necessary and enabled.
  *
  * @param handle  [IN] PMIC Interface Handle
- * @param regAddr [IN] Register address to write to
+ *
+ * @param regAddr [IN] Register address to write to.
+ *
  * @param txData  [IN] Data to send to `regAddr`
  *
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
@@ -78,7 +80,9 @@ int32_t Pmic_ioTxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txDat
  * critical section before/after the write.
  *
  * @param handle  [IN] PMIC Interface Handle
- * @param regAddr [IN] Register address to write to
+ *
+ * @param regAddr [IN] Register address to write to.
+ *
  * @param txData  [IN] Data to send to `regAddr`
  *
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
@@ -92,7 +96,9 @@ int32_t Pmic_ioTxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t tx
  * register data from the CRC framed data returned by the PMIC.
  *
  * @param handle   [IN] PMIC Interface Handle
- * @param regAddr  [IN] Register address to read from
+ *
+ * @param regAddr  [IN] Register address to read from.
+ *
  * @param rxBuffer [IN] Buffer to store result data in
  *
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
@@ -107,7 +113,9 @@ int32_t Pmic_ioRxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *rxBu
  * obtain and release a critical section before/after the read.
  *
  * @param handle   [IN] PMIC Interface Handle
- * @param regAddr  [IN] Register address to read from
+ *
+ * @param regAddr  [IN] Register address to read from.
+ *
  * @param rxBuffer [IN] Buffer to store result data in
  *
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For

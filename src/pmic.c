@@ -66,9 +66,38 @@ static int32_t initHandleBasicDevCfg(const Pmic_CoreCfg_t *config, Pmic_CoreHand
         }
     }
 
+    /* Check and update PMIC Handle Comm Handle */
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_QACOMM_HANDLE_VALID, status)) {
+        if (config->pQACommHandle == NULL) {
+            status = PMIC_ST_ERR_NULL_PARAM;
+        } else {
+            handle->pQACommHandle = config->pQACommHandle;
+        }
+    }
+
     /* Assign PMIC slaveAddr */
     if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_SLAVEADDR_VALID, status)) {
         handle->slaveAddr = config->slaveAddr;
+    }
+
+    /* Assign PMIC QA address */
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_QASLAVEADDR_VALID, status)) {
+        handle->qaSlaveAddr = config->qaSlaveAddr;
+    }
+
+    /* Assign PMIC NVM address */
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_NVMSLAVEADDR_VALID, status)) {
+        handle->nvmSlaveAddr = config->nvmSlaveAddr;
+    }
+
+    /* Assign I2C1 speed */
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_I2C1_SPEED_VALID, status)) {
+        handle->i2c1Speed = config->i2c1Speed;
+    }
+
+    /* Assign I2C2 speed */
+    if (Pmic_validParamStatusCheck(config->validParams, PMIC_CFG_I2C2_SPEED_VALID, status)) {
+        handle->i2c2Speed = config->i2c2Speed;
     }
 
     return status;
@@ -210,8 +239,7 @@ int32_t Pmic_init(Pmic_CoreHandle_t *handle, const Pmic_CoreCfg_t *config) {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    /* Check and update PMIC Handle for device type, Comm Mode, Main Slave Address
-     * and NVM Slave Address */
+    /* Check and update PMIC Handle for device type, Comm Mode, I2C addresses */
     if (status == PMIC_ST_SUCCESS) {
         handle->drvInitStatus = DRV_INIT_UNINIT;
         status = initHandleBasicDevCfg(config, handle);
@@ -268,14 +296,26 @@ int32_t Pmic_deinit(Pmic_CoreHandle_t *handle) {
     }
 
     if (status == PMIC_ST_SUCCESS) {
+        handle->pPmic_SubSysInfo = NULL;
+        handle->drvInitStatus = 0U;
+        handle->pmicDeviceType = 0U;
+        handle->pmicDevRev = 0U;
+        handle->pmicDevSiliconRev = 0U;
+        handle->commMode = 0U;
+        handle->slaveAddr = 0U;
+        handle->qaSlaveAddr = 0U;
+        handle->nvmSlaveAddr = 0U;
+        handle->i2c1Speed = 0U;
+        handle->i2c2Speed = 0U;
+        handle->crcEnable = PMIC_DISABLE;
+        handle->configCrcEnable = PMIC_DISABLE;
         handle->pCommHandle = NULL;
         handle->pQACommHandle = NULL;
-        handle->pFnPmicCritSecStart = (void *)0U;
-        handle->pFnPmicCritSecStop = (void *)0U;
         handle->pFnPmicCommIoRd = (void *)0U;
         handle->pFnPmicCommIoWr = (void *)0U;
-        handle->pPmic_SubSysInfo = NULL;
-        handle->drvInitStatus = 0x00U;
+        handle->pFnPmicCritSecStart = (void *)0U;
+        handle->pFnPmicCritSecStop = (void *)0U;
+        handle->pFnPmicPseudoIrq = (void *)0U;
     }
 
     return status;

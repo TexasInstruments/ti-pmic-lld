@@ -72,6 +72,7 @@ extern "C" {
 #define PMIC_PWR_RSRC_VCCA_VMON               (5U)
 #define PMIC_PWR_RSRC_GPO                     (6U)
 #define PMIC_PWR_RSRC_NRSTOUT                 (7U)
+#define PMIC_PWR_RSRC_MIN                     (PMIC_PWR_RSRC_BUCK1)
 #define PMIC_PWR_RSRC_MAX                     (PMIC_PWR_RSRC_NRSTOUT)
 /** @} */
 
@@ -140,8 +141,8 @@ extern "C" {
 #define PMIC_PWR_BUCK_UV_OV_THR_4PERCENT      (1U)
 #define PMIC_PWR_BUCK_UV_OV_THR_5PERCENT      (2U)
 #define PMIC_PWR_BUCK_UV_OV_THR_6PERCENT      (3U)
-#define PMIC_PWR_BUCK_UV_OV_THR_MIN           (PMIC_PWR_UV_OV_THR_3PERCENT)
-#define PMIC_PWR_BUCK_UV_OV_THR_MAX           (PMIC_PWR_UV_OV_THR_6PERCENT)
+#define PMIC_PWR_BUCK_UV_OV_THR_MIN           (PMIC_PWR_BUCK_UV_OV_THR_3PERCENT)
+#define PMIC_PWR_BUCK_UV_OV_THR_MAX           (PMIC_PWR_BUCK_UV_OV_THR_6PERCENT)
 /** @} */
 
 /**
@@ -182,6 +183,8 @@ extern "C" {
  */
 #define PMIC_PWR_RV_CONF_INT_ONLY             (0U)
 #define PMIC_PWR_RV_CONF_SHUT_DOWN            (1U)
+#define PMIC_PWR_RV_REACT_MIN                 (PMIC_PWR_RV_CONF_INT_ONLY)
+#define PMIC_PWR_RV_REACT_MAX                 (PMIC_PWR_RV_CONF_SHUT_DOWN)
 /** @} */
 
 /**
@@ -329,9 +332,9 @@ extern "C" {
  * @param mode Configure the operating mode of this power resource.
  * - Bucks1/2/3 have non-configurable modes and do not require this parameter,
  * though no error will be raised if PMIC_PWR_RSRC_MODE_REG is selected (other
- * options will raise an error).
+ * options will raise an error). See @ref Pmic_PwrResourceModeConfig.
  * - LDO_LS1_VMON1 can select from all valid modes.
- * - LS2_VMON2 can select between PMIC_PWR_RSRC_LSW and PMIC_PWR_RSRC_VMON.
+ * - LS2_VMON2 can select between PMIC_PWR_RSRC_MODE_LSW and PMIC_PWR_RSRC_MODE_VMON.
  * - VCCA_VMON does not have a configurable mode and does not require this
  *   parameter, though no error will be raised if PMIC_PWR_RSRC_MODE_VMON is
  *   selected (other options will raise an error).
@@ -472,14 +475,18 @@ typedef struct Pmic_PowerResourceCfg_s {
  * @brief This structure is used in setting or getting the Power resource
  * sequencing information of the supported PMICs (Bucks, LDOs, etc.).
  *
+ * @param validParams Selection of structure parameters to be set from the
+ * combination of the @ref Pmic_PwrResourceSeqValidParamShiftVal and the
+ * corresponding member value will be updated or retrieved.
+ *
  * @param resource Which power resource to apply sequencing settings to. See
  * @ref Pmic_PwrResource.
  *
  * @param startupDelay Set the delay between rising edge of ENABLE and
- * enablement of this power resource.
+ * enablement of this power resource. See @ref Pmic_PwrSequenceDelay.
 
  * @param shutdownDelay Set the delay between falling edge of ENABLE and
- * disablement of this power resource.
+ * disablement of this power resource. See @ref Pmic_PwrSequenceDelay.
  */
 typedef struct Pmic_PowerSequenceCfg_s {
     uint8_t validParams;
@@ -584,6 +591,8 @@ int32_t Pmic_pwrGetResourceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, P
  * @brief API to set the power sequencing configuration of a PMIC power
  * resource.
  *
+ * @note VCCA_VMON does not support sequencing configuration.
+ *
  * @param handle [IN] PMIC Interface Handle
  * @param config [IN] Sequencing configuration options for this power
  * resource. See @ref Pmic_PowerSequenceCfg_t.
@@ -597,6 +606,8 @@ int32_t Pmic_pwrSetSequenceCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerSequen
  * @ingroup DRV_PMIC_PWR_MODULE
  * @brief API to get the power sequencing configuration of a PMIC power
  * resource.
+ *
+ * @note VCCA_VMON does not support sequencing configuration.
  *
  * @param handle [IN]     PMIC Interface Handle
  * @param config [IN/OUT] Sequencing configuration for this power resource. See
@@ -612,6 +623,8 @@ int32_t Pmic_pwrGetSequenceCfg(Pmic_CoreHandle_t *handle, Pmic_PowerSequenceCfg_
  * @brief API to set the power sequencing configuration of multiple PMIC power
  * resources.
  *
+ * @note VCCA_VMON does not support sequencing configuration.
+ *
  * @param handle     [IN] PMIC Interface Handle
  * @param numConfigs [IN] The number of configurations in the `config` array.
  * @param config     [IN] An array of configuration options for power resources.
@@ -626,6 +639,8 @@ int32_t Pmic_pwrSetSequenceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, c
  * @ingroup DRV_PMIC_PWR_MODULE
  * @brief API to get the power sequencing configuration of multiple PMIC power
  * resources.
+ *
+ * @note VCCA_VMON does not support sequencing configuration.
  *
  * @param handle     [IN] PMIC Interface Handle
  * @param numConfigs [IN] The number of configurations in the `config` array.

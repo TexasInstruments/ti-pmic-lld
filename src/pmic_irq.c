@@ -82,7 +82,7 @@ static const Pmic_IrqInfo_t IRQ[PMIC_IRQ_NUM] = {
     { INT_BUCK3_LDO_LS1_VMON1_REG, MASK_BUCK3_LDO_LS1_VMON1_REG, LDO_LS1_VMON1_UV_INT_SHIFT }, // 17
     { INT_BUCK3_LDO_LS1_VMON1_REG, MASK_BUCK3_LDO_LS1_VMON1_REG, LDO_LS1_VMON1_RV_INT_SHIFT }, // 18
     { INT_BUCK3_LDO_LS1_VMON1_REG, MASK_BUCK3_LDO_LS1_VMON1_REG, LDO_LS1_VMON1_ILIM_INT_SHIFT }, // 19
-    { INT_LS2_VMON2_REG, MASK_LS2_VMON2_REG, LS2_VMON2_SC_NMI_SHIFT }, // 20
+    { INT_LS2_VMON2_REG, PMIC_INVALID_REG, LS2_VMON2_SC_NMI_SHIFT }, // 20
     { INT_LS2_VMON2_REG, MASK_LS2_VMON2_REG, LS2_VMON2_OV_INT_SHIFT }, // 21
     { INT_LS2_VMON2_REG, MASK_LS2_VMON2_REG, LS2_VMON2_UV_INT_SHIFT }, // 22
     { INT_LS2_VMON2_REG, MASK_LS2_VMON2_REG, LS2_VMON2_RV_INT_SHIFT }, // 23
@@ -94,8 +94,8 @@ static const Pmic_IrqInfo_t IRQ[PMIC_IRQ_NUM] = {
     { INT_MISC_REG, MASK_MISC_REG, BUCKS_VSET_ERR_INT_SHIFT }, // 29
     { INT_MISC_REG, MASK_MISC_REG, EXT_CLK_INT_SHIFT }, // 30
     { INT_MISC_REG, MASK_MISC_REG, TWARN_INT_SHIFT }, // 31
-    { INT_MODERATE_ERR_REG, MASK_MODERATE_ERR_REG, TSD_ORD_NMI_SHIFT }, // 32
-    { INT_MODERATE_ERR_REG, MASK_MODERATE_ERR_REG, RECOV_CNT_NMI_SHIFT }, // 33
+    { INT_MODERATE_ERR_REG, PMIC_INVALID_REG, TSD_ORD_NMI_SHIFT }, // 32
+    { INT_MODERATE_ERR_REG, PMIC_INVALID_REG, RECOV_CNT_NMI_SHIFT }, // 33
     { INT_MODERATE_ERR_REG, MASK_MODERATE_ERR_REG, TRIM_TEST_CRC_INT_SHIFT }, // 34
     { INT_MODERATE_ERR_REG, MASK_MODERATE_ERR_REG, CONFIG_CRC_INT_SHIFT }, // 35
     { INT_MODERATE_ERR_REG, MASK_MODERATE_ERR_REG, NINT_GPO_RDBK_INT_SHIFT }, // 36
@@ -201,15 +201,29 @@ static int32_t IRQ_setMask(Pmic_CoreHandle_t *handle, uint8_t irqNum, bool shoul
     return status;
 }
 
-static inline bool IRQ_anyMasksForReg(uint8_t numMasks, const Pmic_IrqMask_t *masks, uint8_t regAddr) {
-    bool anyRegs = false;
+static int32_t IRQ_anyMasksForReg(uint8_t numMasks, const Pmic_IrqMask_t *masks, uint8_t regAddr, bool *anyMasks) {
+    int32_t status = PMIC_ST_SUCCESS;
+    bool anyRegs = (bool)false;
 
     for (uint8_t i = 0U; (i < numMasks) && !anyRegs; i++) {
         const uint8_t irqNum = masks[i].irqNum;
-        anyRegs = (IRQ[irqNum].maskReg == regAddr);
+
+        if (irqNum > PMIC_IRQ_MAX) {
+            status = PMIC_ST_ERR_INV_PARAM;
+            break;
+        } else if (IRQ[irqNum].maskReg == PMIC_INVALID_REG) {
+            status = PMIC_ST_ERR_NOT_SUPPORTED;
+            break;
+        } else {
+            anyRegs = (IRQ[irqNum].maskReg == regAddr);
+        }
     }
 
-    return anyRegs;
+    if (status == PMIC_ST_SUCCESS) {
+        *anyMasks = anyRegs;
+    }
+
+    return status;
 }
 
 static int32_t IRQ_handleRecordsForReg(Pmic_CoreHandle_t *handle,
@@ -220,9 +234,11 @@ static int32_t IRQ_handleRecordsForReg(Pmic_CoreHandle_t *handle,
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
-    const bool anyMasks = IRQ_anyMasksForReg(numMasks, masks, regAddr);
+    bool anyMasks = (bool)false;
 
-    if (anyMasks) {
+    status = IRQ_anyMasksForReg(numMasks, masks, regAddr, &anyMasks);
+
+    if ((status == PMIC_ST_SUCCESS) && anyMasks) {
         // Get the current value of this IRQ mask register
         Pmic_criticalSectionStart(handle);
         status = Pmic_ioRxByte(handle, regAddr, &regData);
@@ -293,6 +309,7 @@ int32_t Pmic_irqSetMasks(Pmic_CoreHandle_t *handle, uint8_t numMasks, const Pmic
 
         status = IRQ_handleRecordsForReg(handle, numMasks, masks, MaskableRegisters[regIndex], &lastProcessed);
         totalProcessed += lastProcessed;
+        lastProcessed = 0U;
     }
 
     return status;
@@ -306,7 +323,7 @@ int32_t Pmic_irqGetMask(Pmic_CoreHandle_t *handle, uint8_t numIrqMasks, Pmic_Irq
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (numIrqMasks > (PMIC_IRQ_MAX + 1U))) {
+    if ((status == PMIC_ST_SUCCESS) && (numIrqMasks > PMIC_IRQ_NUM)) {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
@@ -364,11 +381,11 @@ static int32_t IRQ_getStatFSM(Pmic_CoreHandle_t *handle, Pmic_IrqStat_t *irqStat
 
     // Top level IRQ numbers for INT_FSM_ERR
     const uint8_t fsmIrqs[] = {
-        PMIC_FSM_IMM_SHUTDOWN_INT,
-        PMIC_FSM_ORD_SHUTDOWN_INT,
-        PMIC_FSM_WARM_RESET_INT,
-        PMIC_REGULATOR_ERR_INT,
-        PMIC_WDG_FIRST_NOK_INT,
+        PMIC_FSM_IMM_SHUTDOWN_NMI,
+        PMIC_FSM_ORD_SHUTDOWN_NMI,
+        PMIC_FSM_WARM_RESET_NMI,
+        PMIC_REGULATOR_ERR_NMI,
+        PMIC_WDG_FIRST_NOK_NMI,
     };
 
     // Top level IRQ numbers for INT_COMM_ERR
@@ -388,13 +405,13 @@ static int32_t IRQ_getStatFSM(Pmic_CoreHandle_t *handle, Pmic_IrqStat_t *irqStat
 
     // Top level IRQ numbers for WD_ERR_STAT
     const uint8_t wdIrq[] = {
-        PMIC_WDG_LONGWIN_TIMEOUT_INT,
-        PMIC_WDG_TIMEOUT_INT,
-        PMIC_WDG_ANSWER_EARLY_INT,
-        PMIC_WDG_SEQ_ERR_INT,
-        PMIC_WDG_ANSWER_ERR_INT,
-        PMIC_WDG_FAIL_INT,
-        PMIC_WDG_RST_INT,
+        PMIC_WDG_LONGWIN_TIMEOUT_NMI,
+        PMIC_WDG_TIMEOUT_NMI,
+        PMIC_WDG_ANSWER_EARLY_NMI,
+        PMIC_WDG_SEQ_ERR_NMI,
+        PMIC_WDG_ANSWER_ERR_NMI,
+        PMIC_WDG_FAIL_NMI,
+        PMIC_WDG_RST_NMI,
     };
 
     // Parse L0 bits from INT_FSM_ERR
@@ -442,7 +459,7 @@ static int32_t IRQ_getStatSevere(Pmic_CoreHandle_t *handle, Pmic_IrqStat_t *irqS
     uint8_t regData = 0U;
     int32_t status = Pmic_ioRxByte(handle, INT_SEVERE_ERR_REG, &regData);
 
-    const uint8_t irqs[] = {PMIC_SE_TSD_IMM_INT, PMIC_SE_VCCA_OVP_INT};
+    const uint8_t irqs[] = {PMIC_SE_TSD_IMM_NMI, PMIC_SE_VCCA_OVP_NMI};
 
     if (status == PMIC_ST_SUCCESS) {
         IRQ_extractBits(irqStat, regData, irqs, COUNT(irqs));
@@ -457,8 +474,8 @@ static int32_t IRQ_getStatModerate(Pmic_CoreHandle_t *handle, Pmic_IrqStat_t *ir
     int32_t status = Pmic_ioRxByte(handle, INT_MODERATE_ERR_REG, &regData);
 
     const uint8_t irqs[] = {
-        PMIC_ME_TSD_ORD_INT,
-        PMIC_ME_RECOV_CNT_INT,
+        PMIC_ME_TSD_ORD_NMI,
+        PMIC_ME_RECOV_CNT_NMI,
         PMIC_ME_TRIM_TEST_CRC_INT,
         PMIC_ME_CONFIG_CRC_INT,
         PMIC_ME_NINT_READBACK_INT,
@@ -523,10 +540,11 @@ static int32_t IRQ_getStatLs2Vmon2(Pmic_CoreHandle_t *handle, Pmic_IrqStat_t *ir
     int32_t status = Pmic_ioRxByte(handle, INT_LS2_VMON2_REG, &regData);
 
     const uint8_t irqs[] = {
-        PMIC_LS2_VMON2_SC_INT,
         PMIC_LS2_VMON2_OV_INT,
         PMIC_LS2_VMON2_UV_INT,
         PMIC_LS2_VMON2_RV_INT,
+        PMIC_LS2_VMON2_ILIM_INT,
+        PMIC_LS2_VMON2_SC_NMI,
     };
 
     if (status == PMIC_ST_SUCCESS) {
@@ -546,7 +564,7 @@ static int32_t IRQ_getStatBucks(Pmic_CoreHandle_t *handle, Pmic_IrqStat_t *irqSt
         PMIC_BUCK1_SC_NMI,
         PMIC_BUCK2_SC_NMI,
         PMIC_BUCK3_SC_NMI,
-        PMIC_LDO_LS1_VMON1_SC_INT,
+        PMIC_LDO_LS1_VMON1_SC_NMI,
     };
 
     const uint8_t buck12Irqs[] = {
