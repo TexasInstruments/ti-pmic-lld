@@ -23,6 +23,8 @@ Device support is subdivided based on feature set:
 | TPS6522x    | Burton        | `device/leo-hera-burton` |
 | TPS653860xx | Blackbird     | `device/blackbird`       |
 | LP8772X     | Coach         | `device/coach`           |
+| TPS65036x   | Derby         | `device/derby`           |
+| TPS65385xx  | Green Hornet  | `device/green-hornet`    |
 
 ## Contributing
 
