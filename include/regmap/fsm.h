@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __PMIC_REGMAP_FSM_H__
-#define __PMIC_REGMAP_FSM_H__
+#ifndef PMIC_REGMAP_FSM_H
+#define PMIC_REGMAP_FSM_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -56,4 +56,4 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif // __PMIC_REGMAP_FSM_H__
+#endif // PMIC_REGMAP_FSM_H

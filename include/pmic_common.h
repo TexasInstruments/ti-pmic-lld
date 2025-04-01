@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __PMIC_COMMON_H__
-#define __PMIC_COMMON_H__
+#ifndef PMIC_COMMON_H
+#define PMIC_COMMON_H
 
 /* ========================================================================= */
 /*                             Include Files                                 */
@@ -93,7 +93,12 @@ typedef struct Pmic_CoreHandle_s {
 /*                         Function Declarations                            */
 /*==========================================================================*/
 bool Pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos);
-#define Pmic_validParamStatusCheck(vpv, bPos, status) ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(vpv, bPos))
+
+/**
+ * @brief Combine functionality of Pmic_validParamCheck() with check that the
+ * status variable is currently PMIC_ST_SUCCESS, this is a common code pattern.
+ */
+bool Pmic_validParamStatusCheck(uint32_t validParamVal, uint8_t bitPos, int32_t status);
 
 /**
  * @brief Start a critical section for PMIC operations.
@@ -138,10 +143,10 @@ static inline uint8_t Pmic_getBitField(uint8_t regData, uint8_t shift, uint8_t m
 
 static inline bool Pmic_getBitField_b(uint8_t regData, uint8_t shift)
 {
-    return Pmic_getBitField(regData, shift, (uint8_t)(1U << shift)) == 1;
+    return Pmic_getBitField(regData, shift, (uint8_t)(1U << shift)) == 1U;
 }
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /* __PMIC_COMMON_H__ */
+#endif /* PMIC_COMMON_H */

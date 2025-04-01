@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __PMIC_H__
-#define __PMIC_H__
+#ifndef PMIC_H
+#define PMIC_H
 
 /**
  * @file pmic.h
@@ -469,4 +469,4 @@ int32_t Pmic_checkPmicCoreHandle(const Pmic_CoreHandle_t *handle);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /* __PMIC_H__ */
+#endif /* PMIC_H */

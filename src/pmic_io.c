@@ -106,7 +106,7 @@ int32_t Pmic_ioTxByte(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t txDat
 
     /* Set I2C_ID and ADDR values */
     txBuf[0U] = (uint8_t)(handle->slaveAddr << 1U) | 0U;
-    txBuf[1U] = (uint8_t)(regAddr & 0xFF);
+    txBuf[1U] = (uint8_t)(regAddr & 0xFFU);
 
     /* If CRC is enabled, set CRC data to txBuf[3], Bits 25-32 CRC */
     if (handle->crcEnable) {

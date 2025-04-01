@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __PMIC_WDG_H__
-#define __PMIC_WDG_H__
+#ifndef PMIC_WDG_H
+#define PMIC_WDG_H
 
 /**
  * @file pmic_wdg.h
@@ -701,8 +701,6 @@ int32_t Pmic_wdgGetFdbkRegData(Pmic_CoreHandle_t *handle, uint8_t *regData);
  * See also: `Pmic_wdgQaSequenceWriteAnswer()` which performs these steps
  * automatically.
  *
- * @param handle [IN] PMIC interface handle.
- *
  * @param regData [IN] Register data that contains the WDG Q&A feedback.
  *
  * @param wdgAnsInfo [OUT] WDG answer information structure. The feedback value
@@ -711,7 +709,7 @@ int32_t Pmic_wdgGetFdbkRegData(Pmic_CoreHandle_t *handle, uint8_t *regData);
  * @return PMIC_ST_SUCCESS if the WDG feedback value has been extracted, error
  * code otherwise. For valid success/error codes, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgExtractFdbk(Pmic_CoreHandle_t *handle, uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsInfo);
+int32_t Pmic_wdgExtractFdbk(uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsInfo);
 
 /**
  * @brief Read PMIC register that has the WDG Q&A answer count and question.
@@ -755,8 +753,6 @@ int32_t Pmic_wdgGetAnsCntAndQuesRegData(Pmic_CoreHandle_t *handle, uint8_t *regD
  * See also: `Pmic_wdgQaSequenceWriteAnswer()` which performs these steps
  * automatically.
  *
- * @param handle [IN] PMIC interface handle.
- *
  * @param regData [IN] Register data that contains the WDG answer count and
  * question.
  *
@@ -767,7 +763,7 @@ int32_t Pmic_wdgGetAnsCntAndQuesRegData(Pmic_CoreHandle_t *handle, uint8_t *regD
  * extracted, error code otherwise. For valid success/error codes, see
  * @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgExtractAnsCntAndQues(Pmic_CoreHandle_t *handle, uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsInfo);
+int32_t Pmic_wdgExtractAnsCntAndQues(uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsInfo);
 
 /**
  * @brief Calculate and write WDG answer byte to the PMIC.
@@ -799,4 +795,4 @@ int32_t Pmic_wdgWriteAnswer(Pmic_CoreHandle_t *handle, const Pmic_WdgAnsInfo_t *
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /* __PMIC_WDG_H__ */
+#endif /* PMIC_WDG_H */

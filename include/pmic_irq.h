@@ -41,8 +41,8 @@
  * IRQs, getting the masking status of IRQs, getting IRQ statuses, and
  * clearing IRQ flags.
  */
-#ifndef __PMIC_IRQ_H__
-#define __PMIC_IRQ_H__
+#ifndef PMIC_IRQ_H
+#define PMIC_IRQ_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -289,4 +289,4 @@ int32_t Pmic_irqClrAllFlags(Pmic_CoreHandle_t *handle);
 }
 
 #endif /* __cplusplus */
-#endif /* __PMIC_IRQ_H__ */
+#endif /* PMIC_IRQ_H */

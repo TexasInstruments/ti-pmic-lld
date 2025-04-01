@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __PMIC_IO_H__
-#define __PMIC_IO_H__
+#ifndef PMIC_IO_H
+#define PMIC_IO_H
 
 /**
  * @file pmic_io.h
@@ -170,4 +170,4 @@ int32_t Pmic_ioCrcDisable(Pmic_CoreHandle_t *handle);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /*__PMIC_IO_H__*/
+#endif /*PMIC_IO_H*/

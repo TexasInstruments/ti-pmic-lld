@@ -86,11 +86,10 @@ static const uint16_t CRC16LUT[] = {
 
 static uint16_t CORE_Crc16Calc(uint16_t crc, uint16_t data)
 {
-    // MIN ensures index does not exceed bounds of the CRC16LUT array
-    const uint16_t index = MIN(data ^ ((crc & 0xFFFF) >> 8), 0xFFU);
-    crc = (uint16_t)(crc << 8U) ^ CRC16LUT[index];
+    const uint16_t index = MIN(data ^ (uint16_t)((crc & 0xFFFFU) >> 8U), 0xFFU);
+    const uint16_t calculatedCrc = (uint16_t)(crc << 8U) ^ CRC16LUT[index];
 
-    return crc & 0xFFFF;
+    return (uint16_t)(calculatedCrc & 0xFFFFU);
 }
 
 int32_t Pmic_setScratchPadVal(Pmic_CoreHandle_t *handle, uint8_t scratchPadRegNum, uint8_t value)
@@ -106,7 +105,7 @@ int32_t Pmic_setScratchPadVal(Pmic_CoreHandle_t *handle, uint8_t scratchPadRegNu
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_criticalSectionStart(handle);
-        status = Pmic_ioTxByte(handle, PMIC_SCRATCH_PAD_REG_1_REG + scratchPadRegNum, value);
+        status = Pmic_ioTxByte(handle, PMIC_SCRATCH_PAD_REG_1_REG + (uint16_t)scratchPadRegNum, value);
         Pmic_criticalSectionStop(handle);
     }
 
@@ -132,7 +131,7 @@ int32_t Pmic_getScratchPadVal(Pmic_CoreHandle_t *handle, uint8_t scratchPadRegNu
     if (status == PMIC_ST_SUCCESS)
     {
         Pmic_criticalSectionStart(handle);
-        status = Pmic_ioRxByte(handle, PMIC_SCRATCH_PAD_REG_1_REG + scratchPadRegNum, &regData);
+        status = Pmic_ioRxByte(handle, PMIC_SCRATCH_PAD_REG_1_REG + (uint16_t)scratchPadRegNum, &regData);
         Pmic_criticalSectionStop(handle);
     }
 
@@ -295,13 +294,14 @@ int32_t Pmic_configCrcCalculate(Pmic_CoreHandle_t *handle)
 
     // Read each register in the config CRC range, and calculate cumulative CRC
     for (uint8_t regAddr = CONFIG_CRC_REG_LO; regAddr <= CONFIG_CRC_REG_HI; regAddr++) {
-        status = Pmic_ioRxByte(handle, regAddr, &regData);
-        crc = CORE_Crc16Calc(crc, (uint16_t)regData);
-
-        // If a comms failure has occured, exit out of the calculation loop
+        // If a comms failure has occured or the handle failed to validate in
+        // the first place, exit out of the calculation loop.
         if (status != PMIC_ST_SUCCESS) {
             break;
         }
+
+        status = Pmic_ioRxByte(handle, regAddr, &regData);
+        crc = CORE_Crc16Calc(crc, (uint16_t)regData);
     }
 
     // Write calculated CRC (LSB)
@@ -347,7 +347,10 @@ int32_t Pmic_configCrcGetFromDevice(Pmic_CoreHandle_t *handle, uint16_t *crc)
 
     // Release critical section
     Pmic_criticalSectionStop(handle);
-    *crc = (uint16_t)(((uint16_t)crcMsb << 8U) | crcLsb);
+
+    if (status == PMIC_ST_SUCCESS) {
+        *crc = (uint16_t)(((uint16_t)crcMsb << 8U) | crcLsb);
+    }
 
     return status;
 }

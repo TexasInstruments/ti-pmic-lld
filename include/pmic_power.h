@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __PMIC_POWER_H__
-#define __PMIC_POWER_H__
+#ifndef PMIC_POWER_H
+#define PMIC_POWER_H
 
 /**
  * @file pmic_power.h
@@ -72,6 +72,7 @@ extern "C" {
 #define PMIC_PWR_RSRC_VCCA_VMON               (5U)
 #define PMIC_PWR_RSRC_GPO                     (6U)
 #define PMIC_PWR_RSRC_NRSTOUT                 (7U)
+#define PMIC_PWR_RSRC_MAX                     (PMIC_PWR_RSRC_NRSTOUT)
 /** @} */
 
 /**
@@ -639,4 +640,4 @@ int32_t Pmic_pwrGetSequenceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, P
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif // __PMIC_POWER_H__
+#endif // PMIC_POWER_H

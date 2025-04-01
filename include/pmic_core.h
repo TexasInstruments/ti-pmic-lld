@@ -38,8 +38,8 @@
  * @details This module contains declarations/definitions of macros, data
  * structures, and APIs used to interact with the PMIC core functionality.
  */
-#ifndef __PMIC_CORE_H__
-#define __PMIC_CORE_H__
+#ifndef PMIC_CORE_H
+#define PMIC_CORE_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -195,4 +195,4 @@ int32_t Pmic_configCrcGetFromDevice(Pmic_CoreHandle_t *handle, uint16_t *crc);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /* __PMIC_CORE_H__ */
+#endif /* PMIC_CORE_H */

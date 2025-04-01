@@ -37,29 +37,34 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#include "pmic.h"
 #include "pmic_common.h"
 
 /* ========================================================================== */
 /*                        Interface Implementations                           */
 /* ========================================================================== */
-inline bool Pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos) {
+bool Pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos) {
     return (((validParamVal >> bitPos) & 0x01U) != 0U);
 }
 
+bool Pmic_validParamStatusCheck(uint32_t validParamVal, uint8_t bitPos, int32_t status) {
+    return ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(validParamVal, bitPos));
+}
+
 void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *handle) {
-    if (handle->pFnPmicCritSecStart != NULL) {
+    if (handle->pFnPmicCritSecStart != (void *)0U) {
         handle->pFnPmicCritSecStart();
     }
 }
 
 void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *handle) {
-    if (handle->pFnPmicCritSecStop != NULL) {
+    if (handle->pFnPmicCritSecStop != (void *)0U) {
         handle->pFnPmicCritSecStop();
     }
 }
 
 void Pmic_pseudoIrqTrigger(const Pmic_CoreHandle_t *handle) {
-    if (handle->pFnPmicPseudoIrq != NULL) {
+    if (handle->pFnPmicPseudoIrq != (void *)0U) {
         handle->pFnPmicPseudoIrq();
     }
 }

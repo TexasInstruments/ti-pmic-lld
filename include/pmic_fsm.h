@@ -39,8 +39,8 @@
  * structures, and APIs used to interact with the PMIC FSM functionality.
  */
 
-#ifndef __PMIC_FSM_H__
-#define __PMIC_FSM_H__
+#ifndef PMIC_FSM_H
+#define PMIC_FSM_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -93,4 +93,4 @@ int32_t Pmic_fsmMcuCommand(Pmic_CoreHandle_t *handle, uint8_t cmd);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /* __PMIC_FSM_H__ */
+#endif /* PMIC_FSM_H */

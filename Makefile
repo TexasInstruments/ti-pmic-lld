@@ -60,7 +60,8 @@ INC	= -I./include
 CFLAGS = -fPIC $(INC) -Weverything \
 				 -Wno-documentation \
 				 -Wno-padded \
-				 -Wno-poison-system-directories
+				 -Wno-poison-system-directories \
+				 -Wno-covered-switch-default
 LDFLAGS = -shared
 LIB_DIR = lib
 

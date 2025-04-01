@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __IRQ_H__
-#define __IRQ_H__
+#ifndef IRQ_H
+#define IRQ_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -178,4 +178,4 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /* __IRQ_H__ */
+#endif /* IRQ_H */

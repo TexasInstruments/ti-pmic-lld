@@ -36,7 +36,6 @@
 /* ========================================================================== */
 #include <stddef.h>
 #include <stdint.h>
-#include <string.h>
 
 #include "pmic.h"
 #include "pmic_common.h"
@@ -205,7 +204,7 @@ static int32_t IRQ_setMask(Pmic_CoreHandle_t *handle, uint8_t irqNum, bool shoul
 static inline bool IRQ_anyMasksForReg(uint8_t numMasks, const Pmic_IrqMask_t *masks, uint8_t regAddr) {
     bool anyRegs = false;
 
-    for (uint8_t i = 0U; i < numMasks || anyRegs; i++) {
+    for (uint8_t i = 0U; (i < numMasks) && !anyRegs; i++) {
         const uint8_t irqNum = masks[i].irqNum;
         anyRegs = (IRQ[irqNum].maskReg == regAddr);
     }
@@ -247,14 +246,13 @@ static int32_t IRQ_handleRecordsForReg(Pmic_CoreHandle_t *handle,
                 regData &= ~userMask;
             }
 
-            // Increment the counter indicating we processed this record
-            *processedMasks += 1;
+            *processedMasks += 1U;
         }
     }
 
     // If status is still good and we did find records that apply to this
     // register, write the new value of this register back to the device
-    if ((status == PMIC_ST_SUCCESS) && *processedMasks > 0) {
+    if ((status == PMIC_ST_SUCCESS) && (*processedMasks > 0U)) {
         Pmic_criticalSectionStart(handle);
         status = Pmic_ioTxByte(handle, regAddr, regData);
         Pmic_criticalSectionStop(handle);
@@ -275,7 +273,8 @@ int32_t Pmic_irqSetMask(Pmic_CoreHandle_t *handle, uint8_t irqNum, bool shouldMa
 
 int32_t Pmic_irqSetMasks(Pmic_CoreHandle_t *handle, uint8_t numMasks, const Pmic_IrqMask_t *masks) {
     int32_t status = Pmic_checkPmicCoreHandle(handle);
-    uint8_t lastProcessed = 0U, totalProcessed = 0U;
+    uint32_t totalProcessed = 0U;
+    uint8_t lastProcessed = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (masks == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
@@ -292,10 +291,8 @@ int32_t Pmic_irqSetMasks(Pmic_CoreHandle_t *handle, uint8_t numMasks, const Pmic
             break;
         }
 
-        if (status == PMIC_ST_SUCCESS) {
-            status = IRQ_handleRecordsForReg(handle, numMasks, masks, MaskableRegisters[regIndex], &lastProcessed);
-            totalProcessed += lastProcessed;
-        }
+        status = IRQ_handleRecordsForReg(handle, numMasks, masks, MaskableRegisters[regIndex], &lastProcessed);
+        totalProcessed += lastProcessed;
     }
 
     return status;
@@ -612,7 +609,9 @@ static int32_t IRQ_getStat(Pmic_CoreHandle_t *handle, Pmic_IrqStat_t *irqStat) {
     uint8_t regData = 0U;
 
     // Clear register backing to ensure all data is fresh
-    memset(irqStat, 0U, sizeof(Pmic_IrqStat_t));
+    for (uint8_t i = 0U; i < PMIC_NUM_ELEM_IN_INTR_STAT; i++) {
+        irqStat->intrStat[i] = 0U;
+    }
 
     // Obtain critical section around all of these reads
     Pmic_criticalSectionStart(handle);
@@ -685,7 +684,7 @@ static uint8_t IRQ_getNextFlag(Pmic_IrqStat_t *irqStat) {
         // For each bit in the element...
         for (bitPos = 0U; bitPos < PMIC_NUM_BITS_IN_INTR_STAT; bitPos++) {
             // If the bit is set...
-            if ((irqStat->intrStat[index] & (1U << bitPos)) != 0U) {
+            if ((irqStat->intrStat[index] & (uint32_t)((uint32_t)1U << bitPos)) != 0U) {
                 // Clear bit in intrStat element and exit loop
                 irqStat->intrStat[index] &= ~(1U << bitPos);
 
@@ -705,12 +704,14 @@ static uint8_t IRQ_getNextFlag(Pmic_IrqStat_t *irqStat) {
 
 int32_t Pmic_irqGetNextFlag(Pmic_IrqStat_t *irqStat, uint8_t *irqNum) {
     int32_t status = PMIC_ST_SUCCESS;
+    bool irqStatEmpty = false;
 
-    const bool irqStatEmpty = ((irqStat->intrStat[0] == 0) && (irqStat->intrStat[1] == 0));
-
-    if ((status == PMIC_ST_SUCCESS) &&
-        ((irqStat == NULL) || (irqNum == NULL))) {
+    if (((irqStat == NULL) || (irqNum == NULL))) {
         status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    if (status == PMIC_ST_SUCCESS) {
+        irqStatEmpty = ((irqStat->intrStat[0U] == 0U) && (irqStat->intrStat[1U] == 0U));
     }
 
     if ((status == PMIC_ST_SUCCESS) && irqStatEmpty) {

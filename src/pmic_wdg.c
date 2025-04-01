@@ -692,17 +692,17 @@ int32_t Pmic_wdgGetFailCntStat(Pmic_CoreHandle_t *handle, Pmic_WdgFailCntStat_t 
     }
 
     /* Get watchdog Bad Event status */
-    if (Pmic_validParamStatusCheck(failCount->validParams, PMIC_CFG_WD_BAD_EVENT_STAT_VALID, status)) {
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(failCount->validParams, PMIC_CFG_WD_BAD_EVENT_STAT_VALID)) {
         failCount->badEvent = Pmic_getBitField_b(regVal, PMIC_WD_BAD_EVENT_SHIFT);
     }
 
     /* Get watchdog Good Event status */
-    if (Pmic_validParamStatusCheck(failCount->validParams, PMIC_CFG_WD_GOOD_EVENT_STAT_VALID, status)) {
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(failCount->validParams, PMIC_CFG_WD_GOOD_EVENT_STAT_VALID)) {
         failCount->goodEvent = Pmic_getBitField_b(regVal, PMIC_WD_FIRST_OK_SHIFT);
     }
 
     /* Get watchdog Fail count Value */
-    if (Pmic_validParamStatusCheck(failCount->validParams, PMIC_CFG_WD_FAIL_CNT_VAL_VALID, status)) {
+    if ((status == PMIC_ST_SUCCESS) && Pmic_validParamCheck(failCount->validParams, PMIC_CFG_WD_FAIL_CNT_VAL_VALID)) {
         failCount->wdFailCnt = Pmic_getBitField(regVal, PMIC_WD_ERR_CNT_SHIFT, PMIC_WD_ERR_CNT_MASK);
     }
 
@@ -751,10 +751,10 @@ int32_t Pmic_wdgGetFdbkRegData(Pmic_CoreHandle_t *handle, uint8_t *regData) {
     return status;
 }
 
-int32_t Pmic_wdgExtractFdbk(Pmic_CoreHandle_t *handle, uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsInfo) {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+int32_t Pmic_wdgExtractFdbk(uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsInfo) {
+    int32_t status = PMIC_ST_SUCCESS;
 
-    if ((status == PMIC_ST_SUCCESS) && (wdgAnsInfo == NULL)) {
+    if (wdgAnsInfo == NULL) {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
@@ -779,10 +779,10 @@ int32_t Pmic_wdgGetAnsCntAndQuesRegData(Pmic_CoreHandle_t *handle, uint8_t *regD
     return status;
 }
 
-int32_t Pmic_wdgExtractAnsCntAndQues(Pmic_CoreHandle_t *handle, uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsInfo) {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+int32_t Pmic_wdgExtractAnsCntAndQues(uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsInfo) {
+    int32_t status = PMIC_ST_SUCCESS;
 
-    if ((status == PMIC_ST_SUCCESS) && (wdgAnsInfo == NULL)) {
+    if (wdgAnsInfo == NULL) {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
