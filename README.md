@@ -1,8 +1,8 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://www.ti.com/etc/designs/ti/images/ui/ic-logo.svg" width="300">
-  <img alt="Texas Instruments Logo" src="https://www.ti.com/etc/designs/ti/images/ui/ic-logo.svg" width="300">
+  <source media="(prefers-color-scheme: dark)" srcset="https://www.ti.com/content/dam/ticom/images/identities/ti-brand/ti-logo-hz-1c-white.svg" width="300">
+  <img alt="Texas Instruments Logo" src="https://www.ti.com/content/dam/ticom/images/identities/ti-brand/ti-hz-2c-pos-rgb.svg" width="300">
 </picture>
 
 # Texas Instruments PMIC Low-Level Drivers (pmic-lld)
