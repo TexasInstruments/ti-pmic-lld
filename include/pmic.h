@@ -52,6 +52,7 @@
 /* ========================================================================= */
 #include <stdbool.h>
 #include <stdint.h>
+#include <stddef.h>
 
 #include "pmic_core.h"
 #include "pmic_fsm.h"

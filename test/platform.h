@@ -57,6 +57,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include <stddef.h>
 
 /**
  * @brief LLD include.
