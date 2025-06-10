@@ -842,7 +842,7 @@ int32_t Pmic_wdgGetAnsCntAndQuesRegData(Pmic_CoreHandle_t *handle, uint8_t *regD
     return status;
 }
 
-int32_t Pmic_wdgExtractAnsCntAndQues(uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsInfo) {
+int32_t Pmic_wdgExtractAnsCntAndQues(Pmic_CoreHandle_t *handle, uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsInfo) {
     int32_t status = PMIC_ST_SUCCESS;
 
     if (wdgAnsInfo == NULL) {
@@ -852,6 +852,11 @@ int32_t Pmic_wdgExtractAnsCntAndQues(uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsI
     if (status == PMIC_ST_SUCCESS) {
         wdgAnsInfo->ansCnt = Pmic_getBitField(regData, PMIC_WD_ANSW_CNT_SHIFT, PMIC_WD_ANSW_CNT_MASK);
         wdgAnsInfo->question = Pmic_getBitField(regData, PMIC_WD_QUESTION_SHIFT, PMIC_WD_QUESTION_MASK);
+
+        // Execute application-specific IRQ response if INT_TOP_STATUS is 1
+        if (Pmic_getBitField_b(regData, PMIC_INT_TOP_STATUS_SHIFT)) {
+            Pmic_pseudoIrqTrigger(handle);
+        }
     }
 
     return status;

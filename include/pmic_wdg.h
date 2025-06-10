@@ -768,6 +768,8 @@ int32_t Pmic_wdgGetAnsCntAndQuesRegData(Pmic_CoreHandle_t *handle, uint8_t *regD
  * See also: `Pmic_wdgQaSequenceWriteAnswer()` which performs these steps
  * automatically.
  *
+ * @param handle [IN] PMIC interface handle.
+ *
  * @param regData [IN] Register data that contains the WDG answer count and
  * question.
  *
@@ -778,7 +780,7 @@ int32_t Pmic_wdgGetAnsCntAndQuesRegData(Pmic_CoreHandle_t *handle, uint8_t *regD
  * extracted, error code otherwise. For valid success/error codes, see
  * @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgExtractAnsCntAndQues(uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsInfo);
+int32_t Pmic_wdgExtractAnsCntAndQues(Pmic_CoreHandle_t *handle, uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsInfo);
 
 /**
  * @brief Calculate and write WDG answer byte to the PMIC.

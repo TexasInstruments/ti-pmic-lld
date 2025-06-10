@@ -81,6 +81,7 @@
                            PLATFORM_RUN_TEST(test_negative_Pmic_wdgExtractFdbk_nullParam_wdgAnsInfo); \
                            PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetAnsCntAndQuesRegData_nullParam_handle); \
                            PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetAnsCntAndQuesRegData_nullParam_regData); \
+                           PLATFORM_RUN_TEST(test_negative_Pmic_wdgExtractAnsCntAndQues_nullParam_handle); \
                            PLATFORM_RUN_TEST(test_negative_Pmic_wdgExtractAnsCntAndQues_nullParam_wdgAnsInfo); \
                            PLATFORM_RUN_TEST(test_negative_Pmic_wdgWriteAnswer_nullParam_handle); \
                            PLATFORM_RUN_TEST(test_negative_Pmic_wdgWriteAnswer_nullParam_wdgAnsInfo); \
@@ -141,6 +142,7 @@
                                 PLATFORM_RUN_TEST(test_negative_Pmic_wdgExtractFdbk_nullParam_wdgAnsInfo); \
                                 PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetAnsCntAndQuesRegData_nullParam_handle); \
                                 PLATFORM_RUN_TEST(test_negative_Pmic_wdgGetAnsCntAndQuesRegData_nullParam_regData); \
+                                PLATFORM_RUN_TEST(test_negative_Pmic_wdgExtractAnsCntAndQues_nullParam_handle); \
                                 PLATFORM_RUN_TEST(test_negative_Pmic_wdgExtractAnsCntAndQues_nullParam_wdgAnsInfo); \
                                 PLATFORM_RUN_TEST(test_negative_Pmic_wdgWriteAnswer_nullParam_handle); \
                                 PLATFORM_RUN_TEST(test_negative_Pmic_wdgWriteAnswer_nullParam_wdgAnsInfo)
@@ -592,11 +594,21 @@ void test_negative_Pmic_wdgGetAnsCntAndQuesRegData_nullParam_regData(void)
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 
+void test_negative_Pmic_wdgExtractAnsCntAndQues_nullParam_handle(void)
+{
+    Pmic_WdgAnsInfo_t wdgAnsInfo = {0U};
+
+    // Pass NULL handle into Pmic_wdgExtractAnsCntAndQues()
+    const uint8_t regData = 0xAAU;
+    int32_t status = Pmic_wdgExtractAnsCntAndQues(NULL, regData, &wdgAnsInfo);
+    PLATFORM_ASSERT(status == PMIC_ST_ERR_INV_HANDLE);
+}
+
 void test_negative_Pmic_wdgExtractAnsCntAndQues_nullParam_wdgAnsInfo(void)
 {
     // Pass NULL wdgAnsInfo into Pmic_wdgExtractAnsCntAndQues()
     const uint8_t regData = 0xAAU;
-    int32_t status = Pmic_wdgExtractAnsCntAndQues(regData, NULL);
+    int32_t status = Pmic_wdgExtractAnsCntAndQues(&pmicHandle, regData, NULL);
     PLATFORM_ASSERT(status == PMIC_ST_ERR_NULL_PARAM);
 }
 

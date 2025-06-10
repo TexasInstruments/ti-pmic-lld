@@ -90,6 +90,7 @@ void test_negative_Pmic_wdgGetFdbkRegData_nullParam_regData(void);
 void test_negative_Pmic_wdgExtractFdbk_nullParam_wdgAnsInfo(void);
 void test_negative_Pmic_wdgGetAnsCntAndQuesRegData_nullParam_handle(void);
 void test_negative_Pmic_wdgGetAnsCntAndQuesRegData_nullParam_regData(void);
+void test_negative_Pmic_wdgExtractAnsCntAndQues_nullParam_handle(void);
 void test_negative_Pmic_wdgExtractAnsCntAndQues_nullParam_wdgAnsInfo(void);
 void test_negative_Pmic_wdgWriteAnswer_nullParam_handle(void);
 void test_negative_Pmic_wdgWriteAnswer_nullParam_wdgAnsInfo(void);
