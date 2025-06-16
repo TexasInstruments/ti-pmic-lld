@@ -61,9 +61,9 @@ extern "C" {
 #define PMIC_WD_LONGWIN_CFG_REGADDR             ((uint8_t)0x47U)
 #define PMIC_WD_QA_CFG_REGADDR                  ((uint8_t)0x48U)
 #define PMIC_WD_THR_CFG_REGADDR                 ((uint8_t)0x49U)
-#define PMIC_WD_QUESTION_ANSW_CNT_REGADDR       ((uint8_t)0x5EU)
-#define PMIC_WD_ERR_STATUS_REGADDR              ((uint8_t)0x5FU)
-#define PMIC_WD_FAIL_CNT_REG_REGADDR            ((uint8_t)0x60U)
+#define PMIC_WD_QUESTION_ANSW_CNT_REGADDR       ((uint8_t)0x61U)
+#define PMIC_WD_ERR_STATUS_REGADDR              ((uint8_t)0x62U)
+#define PMIC_WD_FAIL_CNT_REG_REGADDR            ((uint8_t)0x63U)
 
 /* ========================================================================== */
 /*                               Macros & Typedefs                            */
@@ -201,6 +201,8 @@ extern "C" {
 #define PMIC_WD_SEQ_ERR_MASK                    ((uint8_t)1U << PMIC_WD_SEQ_ERR_SHIFT)
 #define PMIC_WD_ANSW_EARLY_SHIFT                ((uint8_t)3U)
 #define PMIC_WD_ANSW_EARLY_MASK                 ((uint8_t)1U << PMIC_WD_ANSW_EARLY_SHIFT)
+#define PMIC_WD_TRIG_EARLY_SHIFT                ((uint8_t)2U)
+#define PMIC_WD_TRIG_EARLY_MASK                 ((uint8_t)1U << PMIC_WD_TRIG_EARLY_SHIFT)
 #define PMIC_WD_TIMEOUT_SHIFT                   ((uint8_t)1U)
 #define PMIC_WD_TIMEOUT_MASK                    ((uint8_t)1U << PMIC_WD_TIMEOUT_SHIFT)
 #define PMIC_WD_LONGWIN_TIMEOUT_INT_SHIFT       ((uint8_t)0U)

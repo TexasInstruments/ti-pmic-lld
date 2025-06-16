@@ -860,6 +860,11 @@ int32_t Pmic_wdgClrErrStat(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgEr
         {
             Pmic_setBitField(&regData, PMIC_WD_ANSW_EARLY_SHIFT, PMIC_WD_ANSW_EARLY_MASK, 1U);
         }
+        // Clear WD_TRIG_EARLY
+        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_WDG_TRIG_EARLY_ERR_VALID))
+        {
+            Pmic_setBitField(&regData, PMIC_WD_TRIG_EARLY_SHIFT, PMIC_WD_TRIG_EARLY_MASK, 1U);
+        }
         // Clear WD_TIMEOUT
         if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_WDG_TIMEOUT_ERR_VALID))
         {
@@ -926,6 +931,11 @@ int32_t Pmic_wdgGetErrStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgErrStat_
         if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_WDG_ANSW_EARLY_ERR_VALID))
         {
             wdgErrStat->answEarlyErr = Pmic_getBitField_b(regData, PMIC_WD_ANSW_EARLY_SHIFT);
+        }
+        // Extract WD_TRIG_EARLY bit field
+        if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_WDG_TRIG_EARLY_ERR_VALID))
+        {
+            wdgErrStat->trigEarlyErr = Pmic_getBitField_b(regData, PMIC_WD_TRIG_EARLY_SHIFT);
         }
         // Extract WD_TIMEOUT bit field
         if (Pmic_validParamCheck(wdgErrStat->validParams, PMIC_WDG_TIMEOUT_ERR_VALID))

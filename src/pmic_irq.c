@@ -369,7 +369,7 @@ static inline void IRQ_setIntrStat(Pmic_IrqStat_t *irqStat, uint32_t irqNum)
         // IRQs 0 to 31 go to index 0, IRQs 32 to 63 go to index 1.
         // At an index, the IRQ is stored at its corresponding bit
         // (e.g., IRQ 49's status will be stored at bit 17 at index 1)
-        irqStat->intrStat[irqNum / PMIC_NUM_BITS_IN_INTR_STAT] |= ((uint32_t)1U << (irqNum % PMIC_NUM_BITS_IN_INTR_STAT));
+        irqStat->intrStat[irqNum / PMIC_NUM_BITS_IN_INTR_STAT_ELEM] |= ((uint32_t)1U << (irqNum % PMIC_NUM_BITS_IN_INTR_STAT_ELEM));
     }
 }
 
@@ -399,10 +399,8 @@ static int32_t IRQ_setMask(Pmic_CoreHandle_t *handle, uint8_t irqNum, bool shoul
     }
 
     if (status == PMIC_ST_SUCCESS) {
-        // Modify IRQ mask bit field
-        Pmic_setBitField_b(&regData, irqMaskBitShift, (1U << irqMaskBitShift), shouldMask);
-
-        // Write new register value back to PMIC
+        // Modify IRQ mask bit field and write new register value back to PMIC
+        Pmic_setBitField_b(&regData, irqMaskBitShift, 1U << irqMaskBitShift, shouldMask);
         status = Pmic_ioTxByte(handle, irqMaskRegAddr, regData);
     }
     Pmic_criticalSectionStop(handle);
@@ -410,15 +408,29 @@ static int32_t IRQ_setMask(Pmic_CoreHandle_t *handle, uint8_t irqNum, bool shoul
     return status;
 }
 
-static inline bool IRQ_anyMasksForReg(uint8_t numMasks, const Pmic_IrqMask_t *masks, uint8_t regAddr) {
-    bool anyRegs = false;
+static int32_t IRQ_anyMasksForReg(uint8_t numMasks, const Pmic_IrqMask_t *masks, uint8_t regAddr, bool *anyMasks) {
+    int32_t status = PMIC_ST_SUCCESS;
+    bool anyRegs = (bool)false;
 
-    for (uint8_t i = 0U; i < numMasks || anyRegs; i++) {
+    for (uint8_t i = 0U; (i < numMasks) && !anyRegs; i++) {
         const uint8_t irqNum = masks[i].irqNum;
-        anyRegs = (pmicIRQs[irqNum].maskRegAddr == regAddr);
+
+        if (irqNum > PMIC_IRQ_MAX) {
+            status = PMIC_ST_ERR_INV_PARAM;
+            break;
+        } else if (pmicIRQs[irqNum].maskRegAddr == PMIC_INVALID_REGADDR) {
+            status = PMIC_ST_ERR_NOT_SUPPORTED;
+            break;
+        } else {
+            anyRegs = (pmicIRQs[irqNum].maskRegAddr == regAddr);
+        }
     }
 
-    return anyRegs;
+    if (status == PMIC_ST_SUCCESS) {
+        *anyMasks = anyRegs;
+    }
+
+    return status;
 }
 
 static int32_t IRQ_handleRecordsForReg(Pmic_CoreHandle_t *handle,
@@ -429,11 +441,14 @@ static int32_t IRQ_handleRecordsForReg(Pmic_CoreHandle_t *handle,
 {
     int32_t status = PMIC_ST_SUCCESS;
     uint8_t regData = 0U;
-    const bool anyMasks = IRQ_anyMasksForReg(numMasks, masks, regAddr);
+    bool anyMasks = (bool)false;
 
-    if (anyMasks) {
-        // Get the current value of this IRQ mask register
-        status = Pmic_ioRxByte_CS(handle, regAddr, &regData);
+    status = IRQ_anyMasksForReg(numMasks, masks, regAddr, &anyMasks);
+
+    // Get the current value of this IRQ mask register
+    Pmic_criticalSectionStart(handle);
+    if ((status == PMIC_ST_SUCCESS) && anyMasks) {
+        status = Pmic_ioRxByte(handle, regAddr, &regData);
     }
 
     if ((status == PMIC_ST_SUCCESS) && anyMasks) {
@@ -453,16 +468,16 @@ static int32_t IRQ_handleRecordsForReg(Pmic_CoreHandle_t *handle,
                 regData &= ~userMask;
             }
 
-            // Increment the counter indicating we processed this record
-            *processedMasks += 1;
+            *processedMasks += 1U;
         }
     }
 
     // If status is still good and we did find records that apply to this
     // register, write the new value of this register back to the device
-    if ((status == PMIC_ST_SUCCESS) && *processedMasks > 0) {
-        status = Pmic_ioTxByte_CS(handle, regAddr, regData);
+    if ((status == PMIC_ST_SUCCESS) && (*processedMasks > 0U)) {
+        status = Pmic_ioTxByte(handle, regAddr, regData);
     }
+    Pmic_criticalSectionStop(handle);
 
     return status;
 }
@@ -479,13 +494,14 @@ int32_t Pmic_irqSetMask(Pmic_CoreHandle_t *handle, uint8_t irqNum, bool shouldMa
 
 int32_t Pmic_irqSetMasks(Pmic_CoreHandle_t *handle, uint8_t numMasks, const Pmic_IrqMask_t *masks) {
     int32_t status = Pmic_checkPmicCoreHandle(handle);
-    uint8_t lastProcessed = 0U, totalProcessed = 0U;
+    uint32_t totalProcessed = 0U;
+    uint8_t lastProcessed = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (masks == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (numMasks > (PMIC_IRQ_MAX + 1U))) {
+    if ((status == PMIC_ST_SUCCESS) && (numMasks > PMIC_IRQ_MAX)) {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
@@ -496,10 +512,9 @@ int32_t Pmic_irqSetMasks(Pmic_CoreHandle_t *handle, uint8_t numMasks, const Pmic
             break;
         }
 
-        if (status == PMIC_ST_SUCCESS) {
-            status = IRQ_handleRecordsForReg(handle, numMasks, masks, MaskableRegisters[regIndex], &lastProcessed);
-            totalProcessed += lastProcessed;
-        }
+        status = IRQ_handleRecordsForReg(handle, numMasks, masks, MaskableRegisters[regIndex], &lastProcessed);
+        totalProcessed += lastProcessed;
+        lastProcessed = 0U;
     }
 
     return status;
@@ -513,7 +528,7 @@ int32_t Pmic_irqGetMask(Pmic_CoreHandle_t *handle, uint8_t numIrqMasks, Pmic_Irq
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (numIrqMasks > (PMIC_IRQ_MAX + 1U))) {
+    if ((status == PMIC_ST_SUCCESS) && (numIrqMasks > PMIC_IRQ_MAX)) {
         status = PMIC_ST_ERR_INV_PARAM;
     }
 
@@ -553,12 +568,9 @@ int32_t Pmic_irqGetMask(Pmic_CoreHandle_t *handle, uint8_t numIrqMasks, Pmic_Irq
     return status;
 }
 
-static inline void IRQ_extractBits(Pmic_IrqStat_t *irqStat, uint8_t regData, const uint8_t irqs[], uint8_t numIrqs)
-{
-    for (uint8_t i = 0; i < numIrqs; i++)
-    {
-        if (Pmic_getBitField_b(regData, pmicIRQs[irqs[i]].bitShift))
-        {
+static inline void IRQ_extractBits(Pmic_IrqStat_t *irqStat, uint8_t regData, const uint8_t irqs[], uint8_t numIrqs) {
+    for (uint8_t i = 0U; i < numIrqs; i++) {
+        if (Pmic_getBitField_b(regData, pmicIRQs[irqs[i]].bitShift)) {
             IRQ_setIntrStat(irqStat, irqs[i]);
         }
     }
@@ -904,7 +916,7 @@ static uint8_t IRQ_getNextFlag(Pmic_IrqStat_t *irqStat)
         }
 
         // For each bit in the element...
-        for (bitPos = 0U; bitPos < PMIC_NUM_BITS_IN_INTR_STAT; bitPos++)
+        for (bitPos = 0U; bitPos < PMIC_NUM_BITS_IN_INTR_STAT_ELEM; bitPos++)
         {
             // If the bit is set...
             if ((irqStat->intrStat[index] & (1U << bitPos)) != 0U)
@@ -923,19 +935,25 @@ static uint8_t IRQ_getNextFlag(Pmic_IrqStat_t *irqStat)
     }
 
     // Return the corresponding IRQ number
-    return (bitPos + (PMIC_NUM_BITS_IN_INTR_STAT * index));
+    return (bitPos + (PMIC_NUM_BITS_IN_INTR_STAT_ELEM * index));
 }
 
 int32_t Pmic_irqGetNextFlag(Pmic_IrqStat_t *irqStat, uint8_t *irqNum)
 {
     int32_t status = PMIC_ST_SUCCESS;
+    bool irqStatEmpty = (bool)false;
 
-    if (((irqStat == NULL) || (irqNum == NULL)))
+    if ((irqStat == NULL) || (irqNum == NULL))
     {
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (irqStat->intrStat[0U] == 0U) && (irqStat->intrStat[1U] == 0U))
+    if (status == PMIC_ST_SUCCESS)
+    {
+        irqStatEmpty = (irqStat->intrStat[0U] == 0U) && (irqStat->intrStat[1U] == 0U);
+    }
+
+    if ((status == PMIC_ST_SUCCESS) && irqStatEmpty)
     {
         status = PMIC_ST_WARN_NO_IRQ_REMAINING;
     }

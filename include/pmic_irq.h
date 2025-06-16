@@ -136,7 +136,7 @@ extern "C" {
  * @{
  */
 #define PMIC_NUM_ELEM_IN_INTR_STAT      ((uint8_t)2U)
-#define PMIC_NUM_BITS_IN_INTR_STAT      ((uint8_t)32U)
+#define PMIC_NUM_BITS_IN_INTR_STAT_ELEM ((uint8_t)32U)
 /** @} */
 
 /* ========================================================================== */

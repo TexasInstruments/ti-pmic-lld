@@ -70,10 +70,17 @@ extern "C" {
 #define PMIC_INTERFACE_CONF_REGADDR         ((uint8_t)0x24U)
 #define PMIC_FUNC_CONF_REGADDR              ((uint8_t)0x25U)
 #define PMIC_CONFIG_1_REGADDR               ((uint8_t)0x3CU)
-#define PMIC_STAT_STARTUP_REGADDR           ((uint8_t)0x58U)
-#define PMIC_STAT_MISC_REGADDR              ((uint8_t)0x59U)
-#define PMIC_STAT_SEVERE_ERR_REGADDR        ((uint8_t)0x5BU)
-#define PMIC_CONFIG_CRC_CONFIG_REGADDR      ((uint8_t)0x61U)
+#define PMIC_RECOV_CNT_REG_2_REGADDR        ((uint8_t)0x3DU)
+#define PMIC_STAT_STARTUP_REGADDR           ((uint8_t)0x5BU)
+#define PMIC_STAT_MISC_REGADDR              ((uint8_t)0x5CU)
+#define PMIC_STAT_MODERATE_ERR_REGADDR      ((uint8_t)0x5DU)
+#define PMIC_STAT_SEVERE_ERR_REGADDR        ((uint8_t)0x5EU)
+#define PMIC_RECOV_CNT_REG_1_REGADDR        ((uint8_t)0x5FU)
+#define PMIC_CONFIG_CRC_CONFIG_REGADDR      ((uint8_t)0x64U)
+#define PMIC_CALCUL_CONFIG_CRC_1_REGADDR    ((uint8_t)0x65U)
+#define PMIC_CALCUL_CONFIG_CRC_2_REGADDR    ((uint8_t)0x66U)
+#define PMIC_CFG_NVM_PRG_REGADDR            ((uint8_t)0xF1U)
+#define PMIC_CFG_NVM_VERIFY_REGADDR         ((uint8_t)0xF2U)
 
 /* ========================================================================== */
 /*                               Macros & Typedefs                            */
@@ -233,6 +240,24 @@ extern "C" {
 /** @} */
 
 /**
+ * @anchor Pmic_statModerateErrBitFields
+ * @name TPS65036x STAT_MODERATE_ERR Register Bit Fields
+ *
+ * @brief Mask and shift values for all bit fields of the STAT_MODERATE_ERR register.
+ *
+ * @{
+ */
+#define PMIC_GPO_READBACK_STAT_SHIFT        ((uint8_t)6U)
+#define PMIC_GPO_READBACK_STAT_MASK         ((uint8_t)1U << PMIC_GPO_READBACK_STAT_SHIFT)
+#define PMIC_NINT_READBACK_STAT_SHIFT       ((uint8_t)4U)
+#define PMIC_NINT_READBACK_STAT_MASK        ((uint8_t)1U << PMIC_NINT_READBACK_STAT_SHIFT)
+#define PMIC_CONFIG_CRC_STAT_SHIFT          ((uint8_t)3U)
+#define PMIC_CONFIG_CRC_STAT_MASK           ((uint8_t)1U << PMIC_CONFIG_CRC_STAT_SHIFT)
+#define PMIC_TRIM_TEST_CRC_STAT_SHIFT       ((uint8_t)2U)
+#define PMIC_TRIM_TEST_CRC_STAT_MASK        ((uint8_t)1U << PMIC_TRIM_TEST_CRC_STAT_SHIFT)
+/** @} */
+
+/**
  * @anchor Pmic_clkConfBitFields
  * @name TPS65036x CLK_CONF Register Bit Fields
  *
@@ -283,6 +308,20 @@ extern "C" {
 /** @} */
 
 /**
+ * @anchor Pmic_recovCntReg2BitFields
+ * @name TPS65036x RECOV_CNT_REG_2 Register Bit Fields
+ *
+ * @brief Mask and shift values for all bit fields of the RECOV_CNT_REG_2 register.
+ *
+ * @{
+ */
+#define PMIC_RESET_CNT_THR_SHIFT ((uint8_t)4U)
+#define PMIC_RESET_CNT_THR_MASK ((uint8_t)0xFU << PMIC_RESET_CNT_THR_SHIFT)
+#define PMIC_RECOV_CNT_THR_SHIFT ((uint8_t)0U)
+#define PMIC_RECOV_CNT_THR_MASK ((uint8_t)0xFU << PMIC_RECOV_CNT_THR_SHIFT)
+/** @} */
+
+/**
  * @anchor Pmic_statSevereErrBitFields
  * @name TPS65036x STAT_SEVERE_ERR Register Bit Fields
  *
@@ -292,6 +331,20 @@ extern "C" {
  */
 #define PMIC_TSD_IMM_STAT_SHIFT             ((uint8_t)0U)
 #define PMIC_TSD_IMM_STAT_MASK              ((uint8_t)1U << PMIC_TSD_IMM_STAT_SHIFT)
+/** @} */
+
+/**
+ * @anchor Pmic_recovCntRegBitFields
+ * @name TPS65036x RECOV_CNT_REG_1 Register Bit Fields
+ *
+ * @brief Mask and shift values for all bit fields of the RECOV_CNT_REG_1 register.
+ *
+ * @{
+ */
+#define PMIC_RESET_CNT_SHIFT                ((uint8_t)4U)
+#define PMIC_RESET_CNT_MASK                 ((uint8_t)0xFU << PMIC_RESET_CNT_SHIFT)
+#define PMIC_RECOV_CNT_SHIFT                ((uint8_t)0U)
+#define PMIC_RECOV_CNT_MASK                 ((uint8_t)0xFU << PMIC_RECOV_CNT_SHIFT)
 /** @} */
 
 /**

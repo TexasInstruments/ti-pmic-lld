@@ -101,13 +101,15 @@ extern "C" {
 #define PMIC_WDG_ANSW_ERR_VALID                 ((uint32_t)(1U << 2U))
 #define PMIC_WDG_SEQ_ERR_VALID                  ((uint32_t)(1U << 3U))
 #define PMIC_WDG_ANSW_EARLY_ERR_VALID           ((uint32_t)(1U << 4U))
-#define PMIC_WDG_TIMEOUT_ERR_VALID              ((uint32_t)(1U << 5U))
-#define PMIC_WDG_LONGWIN_TIMEOUT_INT_VALID      ((uint32_t)(1U << 6U))
+#define PMIC_WDG_TRIG_EARLY_ERR_VALID           ((uint32_t)(1U << 5U))
+#define PMIC_WDG_TIMEOUT_ERR_VALID              ((uint32_t)(1U << 6U))
+#define PMIC_WDG_LONGWIN_TIMEOUT_INT_VALID      ((uint32_t)(1U << 7U))
 #define PMIC_WDG_ERR_STAT_ALL_VALID             (PMIC_WDG_RST_INT_VALID        | \
                                                 PMIC_WDG_FAIL_INT_VALID        | \
                                                 PMIC_WDG_ANSW_ERR_VALID        | \
                                                 PMIC_WDG_SEQ_ERR_VALID         | \
                                                 PMIC_WDG_ANSW_EARLY_ERR_VALID  | \
+                                                PMIC_WDG_TRIG_EARLY_ERR_VALID  | \
                                                 PMIC_WDG_TIMEOUT_ERR_VALID     | \
                                                 PMIC_WDG_LONGWIN_TIMEOUT_INT_VALID)
 /** @} */
@@ -287,7 +289,10 @@ typedef struct Pmic_WdgCfg_s
  * incorrect sequence of answer-bytes.
  *
  * @param answEarlyErr Status/indication of whether watchdog has received the
- * final answer-byte in Window-1.
+ * final answer-byte in Window-1 (Q&A mode only).
+ *
+ * @param trigEarlyErr Status/indication of whether the watchdog trigger was
+ * received in Window-1 of the sequence (Trigger mode only).
  *
  * @param timeoutErr Status/indication of whether the watchdog has detected a
  * timeout event during a watchdog sequence.
@@ -304,6 +309,7 @@ typedef struct Pmic_WdgErrStat_s
     bool answErr;
     bool seqErr;
     bool answEarlyErr;
+    bool trigEarlyErr;
     bool timeoutErr;
     bool longWinTimeoutInt;
 } Pmic_WdgErrStat_t;
@@ -531,8 +537,9 @@ int32_t Pmic_wdgWriteAnswer(const Pmic_CoreHandle_t *pmicHandle);
  * 3. WD_ANSW_ERR (validParam: PMIC_WDG_ANSW_ERR_VALID)
  * 4. WD_SEQ_ERR (validParam: PMIC_WDG_SEQ_ERR_VALID)
  * 5. WD_ANSW_EARLY (validParam: PMIC_WDG_ANSW_EARLY_ERR_VALID)
- * 6. WD_TIMEOUT (validParam: PMIC_WDG_TIMEOUT_ERR_VALID)
- * 7. WD_LONGWIN_TIMEOUT_INT (validParam: PMIC_WDG_LONGWIN_TIMEOUT_INT_VALID)
+ * 6. WD_TRIG_EARLY (validParam: PMIC_WDG_TRIG_EARLY_ERR_VALID)
+ * 7. WD_TIMEOUT (validParam: PMIC_WDG_TIMEOUT_ERR_VALID)
+ * 8. WD_LONGWIN_TIMEOUT_INT (validParam: PMIC_WDG_LONGWIN_TIMEOUT_INT_VALID)
  * For more information on the watchdog error statuses, refer to
  * @ref Pmic_WdgErrStat.
  *

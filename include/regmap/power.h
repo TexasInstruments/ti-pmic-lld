@@ -51,6 +51,7 @@ extern "C" {
 /* ========================================================================== */
 /*                    TPS65036x Power Module Register Map                     */
 /* ========================================================================== */
+
 #define PMIC_BUCK1_VOUT_REGADDR                 ((uint8_t)0x11U)
 #define PMIC_BUCK2_VOUT_ACTIVE_REGADDR          ((uint8_t)0x12U)
 #define PMIC_BUCK3_VOUT_ACTIVE_REGADDR          ((uint8_t)0x13U)
@@ -78,8 +79,8 @@ extern "C" {
 #define PMIC_REG_OV_CONF_REGADDR                ((uint8_t)0x33U)
 #define PMIC_REG_UV_CONF_REGADDR                ((uint8_t)0x34U)
 #define PMIC_REG_SC_CONF_REGADDR                ((uint8_t)0x35U)
-#define PMIC_STAT_BUCK1_2_REGADDR               ((uint8_t)0x56U)
-#define PMIC_STAT_BUCK3_LDO_REGADDR             ((uint8_t)0x57U)
+#define PMIC_STAT_BUCK1_2_REGADDR               ((uint8_t)0x59U)
+#define PMIC_STAT_BUCK3_LDO_REGADDR             ((uint8_t)0x5AU)
 
 /* ========================================================================== */
 /*                               Macros & Typedefs                            */

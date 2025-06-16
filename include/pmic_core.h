@@ -184,6 +184,17 @@ extern "C" {
 #define PMIC_UNLOCK                         ((bool)false)
 /** @} */
 
+/**
+ * @anchor Pmic_resetRecovCntThrMax
+ * @name TPS65036x RESET_CNT and RECOV_CNT Maximum Threshold
+ *
+ * @brief Maximum thresholds of RESET_CNT and RECOV_CNT.
+ *
+ * @{
+ */
+#define PMIC_RESET_RECOV_CNT_THR_MAX        ((uint8_t)0xFU)
+/** @} */
+
 /* ========================================================================== */
 /*                             Structures and Enums                           */
 /* ========================================================================== */
@@ -563,6 +574,91 @@ int32_t Pmic_setScratchPadVal(const Pmic_CoreHandle_t *pmicHandle, uint8_t scrat
  * @ref Pmic_errorCodes.
  */
 int32_t Pmic_getScratchPadVal(const Pmic_CoreHandle_t *pmicHandle, uint8_t scratchPadRegNum, uint8_t *value);
+
+/**
+ * @brief Set PMIC recovery counter threshold.
+ *
+ * @details The PMIC has a counter called RECOV_CNT (recovery counter) that
+ * that is incremented each time the PMIC goes to SAFE state. If the counter
+ * meets or exceeds the recovery counter threshold (RECOV_CNT >= RECOV_CNT_THR),
+ * the PMIC stays in SAFE state until a power cycle occours.
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ *
+ * @param threshold [IN] Desired recovery counter threshold to be set. See
+ * @ref Pmic_resetRecovCntThrMax for the maximum valid value.
+ *
+ * @return Success code if PMIC recovery counter threshold has been set, error
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ */
+int32_t Pmic_setRecovCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t threshold);
+
+/**
+ * @brief Get PMIC recovery counter threshold.
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ *
+ * @param threshold [OUT] Recovery counter threshold value obtained from PMIC.
+ *
+ * @return Success code if PMIC recovery counter threshold has been obtained,
+ * error code otherwise. For valid success/error codes, refer to
+ * @ref Pmic_errorCodes.
+ */
+int32_t Pmic_getRecovCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t *threshold);
+
+/**
+ * @brief Clear PMIC recovery counter.
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ *
+ * @return Success code if PMIC recovery counter has been cleared without issues,
+ * error code otherwise. For valid success/error codes, refer to
+ * @ref Pmic_errorCodes.
+ */
+int32_t Pmic_clrRecovCnt(const Pmic_CoreHandle_t *pmicHandle);
+
+/**
+ * @brief Set PMIC reset counter threshold.
+ *
+ * @details The PMIC has a counter called RESET_CNT (reset counter) that
+ * increments each time the PMIC enters WARM RESET state. When the counter meets
+ * or exceeds the reset counter threshold (RESET_CNT >= RESET_CNT_THR), the PMIC
+ * executes an orderly shutdown, enters SAFE state, clears RESET_CNT, and
+ * RESET_CNT_INT is asserted.
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ *
+ * @param threshold [IN] Desired PMIC reset counter threshold to be set. See
+ * @ref Pmic_resetRecovCntThrMax for the maximum valid value.
+ *
+ * @return Success code if PMIC reset counter threshold has been set, error code
+ * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ */
+int32_t Pmic_setResetCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t threshold);
+
+/**
+ * @brief Get PMIC reset counter threshold.
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ *
+ * @param threshold [OUT] PMIC reset counter threshold value obtained from the
+ * PMIC.
+ *
+ * @return Success code if PMIC reset counter threshold has been obtained, error
+ * code otherwise. For valid success/error codes, refer to @ref  Pmic_errorCodes.
+ */
+int32_t Pmic_getResetCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t *threshold);
+
+/**
+ * @brief Clear PMIC reset counter.
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ *
+ * @return Success code if PMIC reset counter has been cleared without issues,
+ * error code otherwise. For valid success/error codes, refer to
+ * @ref Pmic_errorCodes.
+ */
+int32_t Pmic_clrResetCnt(const Pmic_CoreHandle_t *pmicHandle);
 
 #ifdef __cplusplus
 }

@@ -679,3 +679,129 @@ int32_t Pmic_lockRegs(const Pmic_CoreHandle_t *pmicHandle)
 {
     return Pmic_setRegLock(pmicHandle, PMIC_LOCK);
 }
+
+int32_t Pmic_setRecovCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t threshold)
+{
+    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    uint8_t regData = 0U;
+
+    if ((status == PMIC_ST_SUCCESS) && (threshold > PMIC_RESET_RECOV_CNT_THR_MAX))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    // Read RECOV_CNT_REG_2
+    Pmic_criticalSectionStart(pmicHandle);
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioRxByte(pmicHandle, PMIC_RECOV_CNT_REG_2_REGADDR, &regData);
+    }
+
+    // Modify RECOV_CNT_THR and Write RECOV_CNT_REG_2
+    if (status == PMIC_ST_SUCCESS)
+    {
+        Pmic_setBitField(&regData, PMIC_RECOV_CNT_THR_SHIFT, PMIC_RECOV_CNT_THR_MASK, threshold);
+        status = Pmic_ioTxByte(pmicHandle, PMIC_RECOV_CNT_REG_2_REGADDR, regData);
+    }
+    Pmic_criticalSectionStop(pmicHandle);
+
+    return status;
+}
+
+int32_t Pmic_getRecovCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t *threshold)
+{
+    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    uint8_t regData = 0U;
+
+    if ((status == PMIC_ST_SUCCESS) && (threshold == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    // Read RECOV_CNT_REG_2 and extract RECOV_CNT_THR
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_RECOV_CNT_REG_2_REGADDR, &regData);
+        *threshold = Pmic_getBitField(regData, PMIC_RECOV_CNT_THR_SHIFT, PMIC_RECOV_CNT_THR_MASK);
+    }
+
+    return status;
+}
+
+int32_t Pmic_clrRecovCnt(const Pmic_CoreHandle_t *pmicHandle)
+{
+    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    uint8_t regData = 0U;
+
+    // Set RECOV_CNT_CLR bit field to 1 and write to RECOV_CNT_CONTROL
+    if (status == PMIC_ST_SUCCESS)
+    {
+        Pmic_setBitField(&regData, PMIC_RECOV_CNT_CLR_SHIFT, PMIC_RECOV_CNT_CLR_MASK, 1U);
+        status = Pmic_ioTxByte_CS(pmicHandle, PMIC_RECOV_CNT_CONTROL_REGADDR, regData);
+    }
+
+    return status;
+}
+
+int32_t Pmic_setResetCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t threshold)
+{
+    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    uint8_t regData = 0U;
+
+    if ((status == PMIC_ST_SUCCESS) && (threshold > PMIC_RESET_RECOV_CNT_THR_MAX))
+    {
+        status = PMIC_ST_ERR_INV_PARAM;
+    }
+
+    // Read RECOV_CNT_REG_2
+    Pmic_criticalSectionStart(pmicHandle);
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioRxByte(pmicHandle, PMIC_RECOV_CNT_REG_2_REGADDR, &regData);
+    }
+
+    // Modify RESET_CNT_THR and write RECOV_CNT_REG_2
+    if (status == PMIC_ST_SUCCESS)
+    {
+        Pmic_setBitField(&regData, PMIC_RESET_CNT_THR_SHIFT, PMIC_RESET_CNT_THR_MASK, threshold);
+        status = Pmic_ioTxByte(pmicHandle, PMIC_RECOV_CNT_REG_2_REGADDR, regData);
+    }
+    Pmic_criticalSectionStop(pmicHandle);
+
+    return status;
+}
+
+int32_t Pmic_getResetCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t *threshold)
+{
+    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    uint8_t regData = 0U;
+
+    if ((status == PMIC_ST_SUCCESS) && (threshold == NULL))
+    {
+        status = PMIC_ST_ERR_NULL_PARAM;
+    }
+
+    // Read RECOV_CNT_REG_2 and extract RESET_CNT_THR
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioRxByte_CS(pmicHandle, PMIC_RECOV_CNT_REG_2_REGADDR, &regData);
+        *threshold = Pmic_getBitField(regData, PMIC_RESET_CNT_THR_SHIFT, PMIC_RESET_CNT_THR_MASK);
+    }
+
+    return status;
+}
+
+int32_t Pmic_clrResetCnt(const Pmic_CoreHandle_t *pmicHandle)
+{
+    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    uint8_t regData = 0U;
+
+    // Set RESET_CNT_CLR bit field to 1 and write to RECOV_CNT_CONTROL
+    if (status == PMIC_ST_SUCCESS)
+    {
+        Pmic_setBitField(&regData, PMIC_RESET_CNT_CLR_SHIFT, PMIC_RESET_CNT_CLR_MASK, 1U);
+        status = Pmic_ioTxByte_CS(pmicHandle, PMIC_RECOV_CNT_CONTROL_REGADDR, regData);
+    }
+
+    return status;
+}

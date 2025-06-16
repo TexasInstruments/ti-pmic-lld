@@ -60,7 +60,7 @@ extern "C" {
 #define PMIC_ESM_HMIN_REG_REGADDR           ((uint8_t)0x42U)
 #define PMIC_ESM_LMAX_REG_REGADDR           ((uint8_t)0x43U)
 #define PMIC_ESM_LMIN_REG_REGADDR           ((uint8_t)0x44U)
-#define PMIC_ESM_ERR_CNT_REG_REGADDR        ((uint8_t)0x5DU)
+#define PMIC_ESM_ERR_CNT_REG_REGADDR        ((uint8_t)0x60U)
 
 /* ========================================================================== */
 /*                               Macros & Typedefs                            */
