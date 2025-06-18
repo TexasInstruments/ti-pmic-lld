@@ -64,16 +64,17 @@ extern "C" {
  * @brief Defines to be passed into IRQ module APIs to unmask/mask, get IRQ
  * masking status, get IRQ flag status, and clear IRQ flags.
  *
- * @note The IRQs listed here are all clearable; some are nonmaskable. "Status"
- * IRQs are not listed, such as those in INT_TOP and the first four in INT_BUCK_LDO.
- * These IRQs are not directly maskable and are not W1C.
+ * @note The IRQs listed here are all clearable; some are nonmaskable. IRQs that
+ * are nonmaskable have the suffix "NMI". "Status" IRQs are not listed, such as
+ * those in INT_TOP and the first four in INT_BUCK_LDO. These IRQs are not
+ * directly maskable and are not clearable.
  *
  * @{
  */
-#define PMIC_LDO_SC_INT                 ((uint8_t)0U)
-#define PMIC_BUCK3_SC_INT               ((uint8_t)1U)
-#define PMIC_BUCK2_SC_INT               ((uint8_t)2U)
-#define PMIC_BUCK1_SC_INT               ((uint8_t)3U)
+#define PMIC_LDO_SC_NMI                 ((uint8_t)0U)
+#define PMIC_BUCK3_SC_NMI               ((uint8_t)1U)
+#define PMIC_BUCK2_SC_NMI               ((uint8_t)2U)
+#define PMIC_BUCK1_SC_NMI               ((uint8_t)3U)
 #define PMIC_BUCK2_OVP_INT              ((uint8_t)4U)
 #define PMIC_BUCK2_UV_INT               ((uint8_t)5U)
 #define PMIC_BUCK2_OV_INT               ((uint8_t)6U)
@@ -89,32 +90,33 @@ extern "C" {
 #define PMIC_TWARN_INT                  ((uint8_t)16U)
 #define PMIC_B1_PVIN_UVLO_INT           ((uint8_t)17U)
 #define PMIC_BUCKS_VSET_ERR_INT         ((uint8_t)18U)
-#define PMIC_CFG_NVM_VERIFY_ERR         ((uint8_t)19U)
-#define PMIC_CFG_NVM_VERIFY_DONE        ((uint8_t)20U)
-#define PMIC_CFG_NVM_PRG_DONE           ((uint8_t)21U)
+#define PMIC_CFG_NVM_VERIFY_ERR_NMI     ((uint8_t)19U)
+#define PMIC_CFG_NVM_VERIFY_DONE_NMI    ((uint8_t)20U)
+#define PMIC_CFG_NVM_PRG_DONE_NMI       ((uint8_t)21U)
 #define PMIC_ABIST_FAIL_INT             ((uint8_t)22U)
 #define PMIC_ABIST_DONE_INT             ((uint8_t)23U)
 #define PMIC_GPO_READBACK_INT           ((uint8_t)24U)
 #define PMIC_NINT_READBACK_INT          ((uint8_t)25U)
 #define PMIC_CONFIG_CRC_INT             ((uint8_t)26U)
 #define PMIC_TRIM_TEST_CRC_INT          ((uint8_t)27U)
-#define PMIC_RECOV_CNT_INT              ((uint8_t)28U)
-#define PMIC_TSD_IMM_INT                ((uint8_t)29U)
-#define PMIC_WD_FIRST_NOK_INT           ((uint8_t)30U)
-#define PMIC_WAIT_FOR_PWRCYCLE_INT      ((uint8_t)31U)
-#define PMIC_WARM_RESET_INT             ((uint8_t)32U)
-#define PMIC_ORD_SHUTDOWN_INT           ((uint8_t)33U)
-#define PMIC_IMM_SHUTDOWN_INT           ((uint8_t)34U)
+#define PMIC_RECOV_CNT_NMI              ((uint8_t)28U)
+#define PMIC_TSD_IMM_NMI                ((uint8_t)29U)
+#define PMIC_WD_FIRST_NOK_NMI           ((uint8_t)30U)
+#define PMIC_WAIT_FOR_PWRCYCLE_NMI      ((uint8_t)31U)
+#define PMIC_WARM_RESET_NMI             ((uint8_t)32U)
+#define PMIC_ORD_SHUTDOWN_NMI           ((uint8_t)33U)
+#define PMIC_IMM_SHUTDOWN_NMI           ((uint8_t)34U)
 #define PMIC_MCU_COMM_ERR_INT           ((uint8_t)35U)
 #define PMIC_COMM_ADR_ERR_INT           ((uint8_t)36U)
 #define PMIC_COMM_CRC_ERR_INT           ((uint8_t)37U)
 #define PMIC_ESM_MCU_RST_INT            ((uint8_t)38U)
 #define PMIC_ESM_MCU_FAIL_INT           ((uint8_t)39U)
 #define PMIC_ESM_MCU_PIN_INT            ((uint8_t)40U)
-#define PMIC_WD_RST_INT                 ((uint8_t)41U)
-#define PMIC_WD_FAIL_INT                ((uint8_t)42U)
-#define PMIC_WD_LONGWIN_TIMEOUT_INT     ((uint8_t)43U)
-#define PMIC_IRQ_MAX                    (PMIC_WD_LONGWIN_TIMEOUT_INT)
+#define PMIC_WD_RST_NMI                 ((uint8_t)41U)
+#define PMIC_WD_FAIL_NMI                ((uint8_t)42U)
+#define PMIC_WD_LONGWIN_TIMEOUT_NMI     ((uint8_t)43U)
+#define PMIC_IRQ_MAX                    (PMIC_WD_LONGWIN_TIMEOUT_NMI)
+#define PMIC_IRQ_NUM                    (PMIC_IRQ_MAX + 1U)
 #define PMIC_IRQ_ALL                    ((uint8_t)0xFFU)
 /** @} */
 

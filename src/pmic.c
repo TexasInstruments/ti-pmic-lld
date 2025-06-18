@@ -61,50 +61,33 @@ static int32_t getPmicInfo(Pmic_CoreHandle_t *pmicHandle)
     // Read INTERFACE_CONF register
     Pmic_criticalSectionStart(pmicHandle);
     status = Pmic_ioRxByte(pmicHandle, PMIC_INTERFACE_CONF_REGADDR, &regData);
-    Pmic_criticalSectionStop(pmicHandle);
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Extract I2C_CRC_EN bit field
+        // Extract I2C_CRC_EN bit field and read DEV_REV register
         pmicHandle->crcEnable = Pmic_getBitField_b(regData, PMIC_I2C_CRC_EN_SHIFT);
-
-        // Read DEV_REV register
-        Pmic_criticalSectionStart(pmicHandle);
         status = Pmic_ioRxByte(pmicHandle, PMIC_DEV_REV_REGADDR, &regData);
-        Pmic_criticalSectionStop(pmicHandle);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Extract TI_DEVICE_ID bit field
+        // Extract TI_DEVICE_ID bit field and read NVM_CODE_1 register
         pmicHandle->devRev = regData;
-
-        // Read NVM_CODE_1 register
-        Pmic_criticalSectionStart(pmicHandle);
         status = Pmic_ioRxByte(pmicHandle, PMIC_NVM_CODE_1_REGADDR, &regData);
-        Pmic_criticalSectionStop(pmicHandle);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Extract TI_NVM_ID bit field
+        // Extract TI_NVM_ID bit field and read NVM_CODE_2 register
         pmicHandle->nvmId = regData;
-
-        // Read NVM_CODE_2 register
-        Pmic_criticalSectionStart(pmicHandle);
         status = Pmic_ioRxByte(pmicHandle, PMIC_NVM_CODE_2_REGADDR, &regData);
-        Pmic_criticalSectionStop(pmicHandle);
     }
 
     if (status == PMIC_ST_SUCCESS)
     {
-        // Extract TI_NVM_REV bit field
+        // Extract TI_NVM_REV bit field and read MANUFACTURING_VER register
         pmicHandle->nvmRev = regData;
-
-        // Read MANUFACTURING_VER register
-        Pmic_criticalSectionStart(pmicHandle);
         status = Pmic_ioRxByte(pmicHandle, PMIC_MANUFACTURING_VER_REGADDR, &regData);
-        Pmic_criticalSectionStop(pmicHandle);
     }
 
     if (status == PMIC_ST_SUCCESS)
@@ -112,6 +95,7 @@ static int32_t getPmicInfo(Pmic_CoreHandle_t *pmicHandle)
         // Extract SILICON_REV bit field
         pmicHandle->siliconRev = regData;
     }
+    Pmic_criticalSectionStop(pmicHandle);
 
     return status;
 }
@@ -128,15 +112,12 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pmicCfg, Pmic_CoreHandle_t *pmicHandle)
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    // Initialize PMIC handle with values from pmicCfg
     if (status == PMIC_ST_SUCCESS)
     {
+        // Initialize PMIC handle with values from pmicCfg
         setPmicHandleMembers(pmicCfg, pmicHandle);
-    }
 
-    // Get PMIC info, store info in pmic handle
-    if (status == PMIC_ST_SUCCESS)
-    {
+        // Get PMIC info, store info in pmic handle
         status = getPmicInfo(pmicHandle);
     }
 
@@ -144,6 +125,10 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pmicCfg, Pmic_CoreHandle_t *pmicHandle)
     if (status == PMIC_ST_SUCCESS)
     {
         pmicHandle->drvInitStat = PMIC_DRV_INIT_SUCCESS;
+    }
+    else
+    {
+        pmicHandle->drvInitStat = ~PMIC_DRV_INIT_SUCCESS;
     }
 
     return status;
@@ -166,7 +151,7 @@ int32_t Pmic_deinit(Pmic_CoreHandle_t *pmicHandle)
         pmicHandle->nvmId = 0U;
         pmicHandle->nvmRev = 0U;
         pmicHandle->siliconRev = 0U;
-        pmicHandle->crcEnable = false;
+        pmicHandle->crcEnable = PMIC_DISABLE;
         pmicHandle->commHandle = NULL;
         pmicHandle->ioRead = NULL;
         pmicHandle->ioWrite = NULL;

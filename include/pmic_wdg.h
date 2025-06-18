@@ -81,6 +81,24 @@ extern "C" {
 #define PMIC_WD_QA_FDBK_VALID                   ((uint32_t)(1U << 8U))
 #define PMIC_WD_QA_LFSR_VALID                   ((uint32_t)(1U << 9U))
 #define PMIC_WD_QA_SEED_VALID                   ((uint32_t)(1U << 10U))
+#define PMIC_WD_CFG_TRIGGER_VALID_ALL           (PMIC_WD_RST_EN_VALID | \
+                                                 PMIC_WD_MODE_VALID | \
+                                                 PMIC_WD_TRIG_SEL_VALID | \
+                                                 PMIC_WD_FAIL_THR_VALID | \
+                                                 PMIC_WD_RST_THR_VALID | \
+                                                 PMIC_WD_LONG_WIN_DURATION_VALID | \
+                                                 PMIC_WD_WIN1_DURATION_VALID | \
+                                                 PMIC_WD_WIN2_DURATION_VALID)
+#define PMIC_WD_CFG_QA_VALID_ALL                (PMIC_WD_RST_EN_VALID | \
+                                                 PMIC_WD_MODE_VALID | \
+                                                 PMIC_WD_FAIL_THR_VALID | \
+                                                 PMIC_WD_RST_THR_VALID | \
+                                                 PMIC_WD_LONG_WIN_DURATION_VALID | \
+                                                 PMIC_WD_WIN1_DURATION_VALID | \
+                                                 PMIC_WD_WIN2_DURATION_VALID | \
+                                                 PMIC_WD_QA_FDBK_VALID | \
+                                                 PMIC_WD_QA_LFSR_VALID | \
+                                                 PMIC_WD_QA_SEED_VALID)
 /** @} */
 
 /**

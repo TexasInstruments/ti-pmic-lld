@@ -607,6 +607,18 @@ int32_t Pmic_setRecovCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t thresho
 int32_t Pmic_getRecovCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t *threshold);
 
 /**
+ * @brief Get value of the PMIC recovery counter.
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ *
+ * @param recovCnt [OUT] PMIC recovery counter value obtained from PMIC.
+ *
+ * @return Success code if PMIC recovery counter value has been obtained, error
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ */
+int32_t Pmic_getRecovCnt(const Pmic_CoreHandle_t *pmicHandle, uint8_t *recovCnt);
+
+/**
  * @brief Clear PMIC recovery counter.
  *
  * @param pmicHandle [IN] PMIC interface handle.
@@ -645,9 +657,21 @@ int32_t Pmic_setResetCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t thresho
  * PMIC.
  *
  * @return Success code if PMIC reset counter threshold has been obtained, error
- * code otherwise. For valid success/error codes, refer to @ref  Pmic_errorCodes.
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
 int32_t Pmic_getResetCntThr(const Pmic_CoreHandle_t *pmicHandle, uint8_t *threshold);
+
+/**
+ * @brief Get value of the PMIC reset counter.
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ *
+ * @param resetCnt [OUT] PMIC reset counter value obtained from PMIC.
+ *
+ * @return Success code if PMIC reset counter value has been obtained, error
+ * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ */
+int32_t Pmic_getResetCnt(const Pmic_CoreHandle_t *pmicHandle, uint8_t *resetCnt);
 
 /**
  * @brief Clear PMIC reset counter.

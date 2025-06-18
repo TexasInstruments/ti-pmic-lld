@@ -91,24 +91,6 @@ const static uint8_t CRC8_TABLE[] =
 };
 
 /**
- * Helper function to find the inverse of input parameter `num`
- */
-static uint8_t findInverse(uint8_t num)
-{
-    uint8_t inverse = 0U;
-
-    for (uint8_t i = 0U; i < 8U; i++)
-    {
-        if ((num & (1U << i)) != 0U)
-        {
-            inverse |= (uint8_t)(1U << (7U - i));
-        }
-    }
-
-    return inverse;
-}
-
-/**
  * @brief Helper function to get CRC8 data
  *
  * @details Initial value: 0xFF
@@ -129,7 +111,7 @@ static uint8_t getCRC8Val(const uint8_t *data, uint8_t length)
         crc = CRC8_TABLE[data[i] ^ crc];
     }
 
-    return findInverse(crc);
+    return crc;
 }
 
 int32_t Pmic_ioTxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t txData)

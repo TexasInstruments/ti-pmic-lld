@@ -631,9 +631,9 @@ static int32_t IRQ_readL2WdErrStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_I
     if (status == PMIC_ST_SUCCESS)
     {
         const uint8_t irqs[] = {
-            PMIC_WD_RST_INT,
-            PMIC_WD_FAIL_INT,
-            PMIC_WD_LONGWIN_TIMEOUT_INT
+            PMIC_WD_RST_NMI,
+            PMIC_WD_FAIL_NMI,
+            PMIC_WD_LONGWIN_TIMEOUT_NMI
         };
 
         IRQ_extractBits(irqStat, regData, irqs, COUNT(irqs));
@@ -671,11 +671,11 @@ static int32_t IRQ_readL1IntFsmErr(const Pmic_CoreHandle_t *pmicHandle, Pmic_Irq
     if (status == PMIC_ST_SUCCESS)
     {
         const uint8_t irqs[] = {
-            PMIC_WD_FIRST_NOK_INT,
-            PMIC_WAIT_FOR_PWRCYCLE_INT,
-            PMIC_WARM_RESET_INT,
-            PMIC_ORD_SHUTDOWN_INT,
-            PMIC_IMM_SHUTDOWN_INT
+            PMIC_WD_FIRST_NOK_NMI,
+            PMIC_WAIT_FOR_PWRCYCLE_NMI,
+            PMIC_WARM_RESET_NMI,
+            PMIC_ORD_SHUTDOWN_NMI,
+            PMIC_IMM_SHUTDOWN_NMI
         };
 
         IRQ_extractBits(irqStat, regData, irqs, COUNT(irqs));
@@ -695,7 +695,7 @@ static int32_t IRQ_readL1IntSevereErr(const Pmic_CoreHandle_t *pmicHandle, Pmic_
     if (status == PMIC_ST_SUCCESS)
     {
         const uint8_t irqs[] = {
-            PMIC_TSD_IMM_INT
+            PMIC_TSD_IMM_NMI
         };
 
         IRQ_extractBits(irqStat, regData, irqs, COUNT(irqs));
@@ -719,7 +719,7 @@ static int32_t IRQ_readL1IntModerateErr(const Pmic_CoreHandle_t *pmicHandle, Pmi
             PMIC_NINT_READBACK_INT,
             PMIC_CONFIG_CRC_INT,
             PMIC_TRIM_TEST_CRC_INT,
-            PMIC_RECOV_CNT_INT
+            PMIC_RECOV_CNT_NMI
         };
 
         IRQ_extractBits(irqStat, regData, irqs, COUNT(irqs));
@@ -742,9 +742,9 @@ static int32_t IRQ_readL1IntMisc(const Pmic_CoreHandle_t *pmicHandle, Pmic_IrqSt
             PMIC_TWARN_INT,
             PMIC_B1_PVIN_UVLO_INT,
             PMIC_BUCKS_VSET_ERR_INT,
-            PMIC_CFG_NVM_VERIFY_ERR,
-            PMIC_CFG_NVM_VERIFY_DONE,
-            PMIC_CFG_NVM_PRG_DONE,
+            PMIC_CFG_NVM_VERIFY_ERR_NMI,
+            PMIC_CFG_NVM_VERIFY_DONE_NMI,
+            PMIC_CFG_NVM_PRG_DONE_NMI,
             PMIC_ABIST_FAIL_INT,
             PMIC_ABIST_DONE_INT
         };
@@ -816,10 +816,10 @@ static int32_t IRQ_readL1IntBuckLdo(const Pmic_CoreHandle_t *pmicHandle, Pmic_Ir
     if (status == PMIC_ST_SUCCESS)
     {
         const uint8_t irqs[] = {
-            PMIC_LDO_SC_INT,
-            PMIC_BUCK3_SC_INT,
-            PMIC_BUCK2_SC_INT,
-            PMIC_BUCK1_SC_INT,
+            PMIC_LDO_SC_NMI,
+            PMIC_BUCK3_SC_NMI,
+            PMIC_BUCK2_SC_NMI,
+            PMIC_BUCK1_SC_NMI,
         };
 
         IRQ_extractBits(irqStat, regData, irqs, COUNT(irqs));
