@@ -38,6 +38,11 @@
  * @brief PMIC Driver Low IQ Timer API/Interface
  */
 
+/**
+ * @defgroup DRV_PMIC_TIMER_MODULE PMIC TIMER Module
+ * @brief APIs used to configure and interact with the PMIC timer.
+ */
+
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */

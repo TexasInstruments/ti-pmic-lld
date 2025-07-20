@@ -38,9 +38,15 @@
  * @brief PMIC Driver FSM API/Interface
  */
 
+/**
+ * @defgroup DRV_PMIC_FSM_MODULE PMIC FSM Module
+ * @brief APIs used to configure and interact with the PMIC finite state machine.
+ */
+
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
+
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -505,7 +511,7 @@ typedef struct Pmic_FsmPwrLatchCfg_s {
  *
  * @details When all power latches are disabled (i.e., cleared) and WAKEx pins
  * are low, the PMIC enters STANDBY or OFF state when the Power-down Delay time
- * (see \p pwdDly of Pmic_FsmPwrLatchCfg_t) expires.
+ * (see pwdDly of Pmic_FsmPwrLatchCfg_t) expires.
  *
  * @param validParams For valid values, see @ref Pmic_FsmPwrLatchValidParamShifts
  *
@@ -520,11 +526,11 @@ typedef struct Pmic_FsmPwrLatchCfg_s {
  * STANDBY in multi-device configuration.
  *
  * @param wake1Latch WAKE1 pin power-latch, set to 1 on wakeup event from WAKE1
- * pin while WAKE1 power latch is enabled (see \p wake1EventPwrlEn of
+ * pin while WAKE1 power latch is enabled (see wake1EventPwrlEn of
  * Pmic_FsmPwrLatchCfg_t).
  *
  * @param wake2Latch WAKE2 pin power-latch, set to 1 on wakeup event from WAKE2
- * pin while WAKE2 power latch is enabled (see \p wake2EventPwrlEn of
+ * pin while WAKE2 power latch is enabled (see wake2EventPwrlEn of
  * Pmic_FsmPwrLatchCfg_t).
  */
 typedef struct Pmic_FsmPwrLatch_s {

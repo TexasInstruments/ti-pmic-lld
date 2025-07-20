@@ -35,7 +35,12 @@
  * @file   pmic_power.h
  *
  * @brief  PMIC PMIC Power Resources Driver API/interface file.
- *
+ */
+
+/**
+ * @defgroup DRV_PMIC_POWER_MODULE PMIC POWER Module
+ * @brief APIs used to configure and interact with PMIC buck and LDO regulators.
+ * Includes thermal configuration and status management.
  */
 
 #ifndef __PMIC_POWER_H__

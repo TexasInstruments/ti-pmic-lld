@@ -38,9 +38,15 @@
  * @brief PMIC Driver GPIO API/Interface
  */
 
+/**
+ * @defgroup DRV_PMIC_GPIO_MODULE PMIC GPIO Module
+ * @brief APIs used to configure and interact with PMIC GPIOs.
+ */
+
 /*==========================================================================*/
 /*                             Include Files                                */
 /*==========================================================================*/
+
 #include <stdbool.h>
 #include <stdint.h>
 

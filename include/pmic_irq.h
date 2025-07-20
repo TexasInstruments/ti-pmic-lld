@@ -30,11 +30,15 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-
 /**
  * @file   pmic_irq.h
  *
  * @brief  PMIC IRQ Driver API/interface file.
+ */
+
+/**
+ * @defgroup DRV_PMIC_IRQ_MODULE PMIC IRQ Module
+ * @brief APIs used to configure and interact with PMIC interrupts.
  */
 
 #ifndef __PMIC_IRQ_H__
@@ -44,6 +48,7 @@
 /* ==========================================================================*/
 /*                             Include Files                                 */
 /* ==========================================================================*/
+
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -52,12 +57,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/**
- * @defgroup Pmic_IRQ PMIC Interrupt Request
- * @{
- * @brief Contains definitions related to PMIC IRQ functionality.
- */
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
@@ -246,15 +245,8 @@ extern "C" {
 /*==========================================================================*/
 
 /**
- * @defgroup Pmic_IRQStructures PMIC IRQ Structures
- * @{
- * @ingroup Pmic_IRQ
- * @brief Contains structures used in the IRQ module of PMIC driver.
- */
-
-/**
+ * @anchor Pmic_IrqCfg
  * @brief Structure used to set/get PMIC IRQ configurations.
- * @ingroup Pmic_IRQStructures
  *
  * @note The PMIC has three categories for interrupt requests: configurable
  * maskable interrupts, configurable non-maskable interrupts, and
@@ -287,8 +279,8 @@ typedef struct Pmic_IrqCfg_s {
 } Pmic_IrqCfg_t;
 
 /**
+ * @anchor Pmic_IrqStat
  * @brief Structure for storing PMIC interrupt status.
- * @ingroup Pmic_IRQStructures
  *
  * @param intStatus Array to store interrupt status.
  */
@@ -296,19 +288,9 @@ typedef struct Pmic_IrqStat_s {
     uint32_t intStat[PMIC_NUM_ELEM_IN_INTR_STAT];
 } Pmic_IrqStat_t;
 
-/** * @} */
-/* End of Pmic_IRQStructures */
-
 /*==========================================================================*/
 /*                         Function Declarations                            */
 /*==========================================================================*/
-
-/**
- * @defgroup Pmic_IRQFunctions PMIC Interrupt Request Functions
- * @{
- * @ingroup Pmic_IRQ
- * @brief Contains functions used in the IRQ module of PMIC driver.
- */
 
 /**
  * @brief Set the configuration for a single PMIC IRQ.
@@ -426,11 +408,6 @@ int32_t Pmic_irqClrFlag(Pmic_CoreHandle_t *handle, uint8_t irqNum);
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
 int32_t Pmic_irqClrAllFlags(Pmic_CoreHandle_t *handle);
-
-/** * @} */
-/* End of Pmic_IRQFunctions */
-/** * @} */
-/* End of Pmic_IRQ */
 
 #ifdef __cplusplus
 }

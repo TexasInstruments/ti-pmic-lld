@@ -38,9 +38,15 @@
  * @brief PMIC Driver ESM API/Interface
  */
 
+/**
+ * @defgroup DRV_PMIC_ESM_MODULE PMIC ESM Module
+ * @brief APIs used to configure and interact with the PMIC ESM.
+ */
+
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
+
 #include <stdbool.h>
 #include <stdint.h>
 
