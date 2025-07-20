@@ -51,6 +51,7 @@ extern "C" {
 /* ========================================================================== */
 /*                                Include Files                               */
 /* ========================================================================== */
+
 #include <stdint.h>
 
 #include "pmic_common.h"
@@ -234,7 +235,6 @@ int32_t Pmic_irqGetStat(Pmic_CoreHandle_t *handle, Pmic_IrqStat_t *irqStat);
  * this API so that the next IRQ flag can be discovered. Once the next flag is
  * found, end-user can call `Pmic_irqClrFlag()` to clear the flag.
  *
- * @param handle [IN] PMIC interface handle.
  * @param irqStat [IN/OUT] Status of all PMIC IRQs. Once the next IRQ flag has
  * been found, the corresponding status bit in struct member `intrStat` will be
  * cleared.

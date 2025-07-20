@@ -38,7 +38,6 @@
  * @details This module contains declarations/definitions of macros, data
  * structures, and APIs used to interact with the PMIC FSM functionality.
  */
-
 #ifndef PMIC_FSM_H
 #define PMIC_FSM_H
 
@@ -49,6 +48,7 @@ extern "C" {
 /* ========================================================================== */
 /*                                Include Files                               */
 /* ========================================================================== */
+
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -57,6 +57,7 @@ extern "C" {
 /* ========================================================================== */
 /*                               Macros & Typedefs                            */
 /* ========================================================================== */
+
 /**
  * @anchor Pmic_FsmMcuCommands
  * @name PMIC FSM MCU Commands
@@ -82,6 +83,10 @@ extern "C" {
  */
 #define PMIC_FSM_RESET_RECOV_CNT_THR_MAX       (0x0FU)
 /** @} */
+
+/* ========================================================================== */
+/*                             Structures and Enums                           */
+/* ========================================================================== */
 
 /* ========================================================================== */
 /*                            Function Declarations                           */

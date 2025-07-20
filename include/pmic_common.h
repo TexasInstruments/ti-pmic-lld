@@ -36,6 +36,7 @@
 /* ========================================================================= */
 /*                             Include Files                                 */
 /* ========================================================================= */
+
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -46,6 +47,7 @@ extern "C" {
 /*==========================================================================*/
 /*                               Macros & Typedefs                          */
 /*==========================================================================*/
+
 #define COUNT(x)  (sizeof(x) / sizeof(x[0]))
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
@@ -53,6 +55,26 @@ extern "C" {
 /*==========================================================================*/
 /*                         Structures and Enums                             */
 /*==========================================================================*/
+
+/**
+ * @anchor Pmic_DevSubSysInfo
+ * @name PMIC Device Subsystem Information
+ *
+ * @brief Used by LLD to figure out which subsystems are enabled for the PMIC
+ * device.
+ *
+ * @param gpioEnable GPIO subsystem enabled/disabled status.
+ *
+ * @param rtcEnable RTC subsystem enabled/disabled status.
+ *
+ * @param wdgEnable WDG subsystem enabled/disabled status.
+ *
+ * @param buckEnable Buck converter subsystem enabled/disabled status.
+ *
+ * @param ldoEnable LDO regulator subsystem enabled/disabled status.
+ *
+ * @param esmEnable ESM subsystem enabled/disabled status.
+ */
 typedef struct Pmic_DevSubSysInfo_s {
     bool gpioEnable;
     bool rtcEnable;
@@ -62,6 +84,66 @@ typedef struct Pmic_DevSubSysInfo_s {
     bool esmEnable;
 } Pmic_DevSubSysInfo_t;
 
+/**
+ * @anchor Pmic_CoreHandle
+ * @name PMIC Core Handle
+ *
+ * @brief Handle used by LLD to abstract platform and OS specific functionality.
+ * Also contains PMIC device information.
+ *
+ * @attention This structure is a central resource used by almost all LLD APIs
+ * and must be initialized via 'Pmic_init()' before it can be used by other LLD
+ * APIs. End-users should not modify the contents of this structure after it has
+ * been initialized.
+ *
+ * @param pPmic_SubSysInfo Structure used to indicate enabled/disabled subsystems.
+ *
+ * @param drvInitStatus Driver initialization status. Used by LLD as a measure to
+ * prevent corrupted handle usage.
+ *
+ * @param pmicDeviceType PMIC device type.
+ *
+ * @param pmicDevRev PMIC device revision.
+ *
+ * @param pmicDevSiliconRev PMIC device silicon revision.
+ *
+ * @param commMode Communication mode of the PMIC. Some PMICs may only have one
+ * communication mode while others could have multiple (e.g., single I2C, dual I2C,
+ * SPI).
+ *
+ * @param slaveAddr Main PMIC device address.
+ *
+ * @param qaSlaveAddr Address for interacting with PMIC WDG Q&A.
+ *
+ * @param nvmSlaveAddr Address for interacting with PMIC NVM space.
+ *
+ * @param i2c1Speed I2C1 speed.
+ *
+ * @param i2c2Speed I2C2 speed.
+ *
+ * @param crcEnable Status of whether serial communication CRC is enabled. Set to true
+ * if enabled, false otherwise.
+ *
+ * @param configCrcEnable Status of whether configuration CRC is enabled. Set to true
+ * if enabled, false otherwise.
+ *
+ * @param pCommHandle Pointer to serial communication handle for the PMIC device.
+ *
+ * @param pQACommHandle Pointer to serial communication handle for PMIC WDG.
+ *
+ * @param pFnPmicCommIoRd Function pointer to platform-specific serial communication
+ * read API.
+ *
+ * @param pFnPmicCommIoWr Function pointer to platform-specific serial communication
+ * write API.
+ *
+ * @param pFnPmicCritSecStart Function pointer to OS-specific critical section start.
+ *
+ * @param pFnPmicCritSecStop Function pointer to OS-specific critical section stop.
+ *
+ * @param pFnPmicPseudoIrq Function pointer to application-specific IRQ response
+ * when an IRQ is detected during WDG servicing.
+ */
 typedef struct Pmic_CoreHandle_s {
     const Pmic_DevSubSysInfo_t *pPmic_SubSysInfo;
     uint32_t drvInitStatus;
@@ -92,11 +174,33 @@ typedef struct Pmic_CoreHandle_s {
 /*==========================================================================*/
 /*                         Function Declarations                            */
 /*==========================================================================*/
+
+/**
+ * @brief Check valid parameters.
+ *
+ * @param validParamVal [IN] Valid parameter value. Each bit in this parameter
+ * represents whether or not a parameter is valid.
+ *
+ * @param bitPos [IN] Valid parameter to check for.
+ *
+ * @return True if parameter is valid, false otherwise.
+ */
 bool Pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos);
 
 /**
  * @brief Combine functionality of Pmic_validParamCheck() with check that the
  * status variable is currently PMIC_ST_SUCCESS, this is a common code pattern.
+ *
+ * @param validParamVal [IN] Valid parameter value. Each bit in this parameter
+ * represents whether or not a parameter is valid.
+ *
+ * @param bitPos [IN] Valid parameter value to check for.
+ *
+ * @param status [IN] API checks whether this parameter is equivalent to the
+ * PMIC LLD success code.
+ *
+ * @return True if parameter is valid and status is equal to LLD success code,
+ * false otherwise.
  */
 bool Pmic_validParamStatusCheck(uint32_t validParamVal, uint8_t bitPos, int32_t status);
 
@@ -126,21 +230,65 @@ void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *handle);
  */
 void Pmic_pseudoIrqTrigger(const Pmic_CoreHandle_t *handle);
 
+/**
+ * @brief Sets the bit field of an 8-bit unsigned integer to the desired value.
+ *
+ * @param regData [OUT] The API modifies the desired bit field of the value held
+ * at this address.
+ *
+ * @param shift [IN] Bit field position.
+ *
+ * @param mask [IN] Bit field mask.
+ *
+ * @param value [IN] Desired bit field value to set.
+ */
 static inline void Pmic_setBitField(uint8_t *regData, uint8_t shift, uint8_t mask, uint8_t value)
 {
     *regData = ((*regData & ~mask) | ((value << shift) & mask));
 }
 
+/**
+ * @brief Sets the bit field of an 8-bit unsigned integer to the desired boolean
+ * value.
+ *
+ * @param regData [OUT] The API modifies the desired bit field of the value held
+ * at this address.
+ *
+ * @param shift [IN] Bit field position.
+ *
+ * @param value [IN] Desired bit field value to set (either true or false).
+ */
 static inline void Pmic_setBitField_b(uint8_t *regData, uint8_t shift, bool value)
 {
     Pmic_setBitField(regData, shift, (uint8_t)(1U << shift), value ? 1U : 0U);
 }
 
+/**
+ * @brief Get desired bit field of an 8-bit unsigned integer.
+ *
+ * @param regData [IN] The API gets the desired bit field from this value.
+ *
+ * @param shift [IN] Bit field location.
+ *
+ * @param mask [IN] Bit field mask.
+ *
+ * @return Value of the desired bit field.
+ */
 static inline uint8_t Pmic_getBitField(uint8_t regData, uint8_t shift, uint8_t mask)
 {
     return ((regData & mask) >> shift);
 }
 
+/**
+ * @brief Gets the desired bit field of an 8-bit unsigned integer, casted as a
+ * boolean.
+ *
+ * @param regData [IN] The API gets the desired bit field from this value.
+ *
+ * @param shift [IN] Bit field location.
+ *
+ * @return Value of the desired bit field (either true or false).
+ */
 static inline bool Pmic_getBitField_b(uint8_t regData, uint8_t shift)
 {
     return Pmic_getBitField(regData, shift, (uint8_t)(1U << shift)) == 1U;

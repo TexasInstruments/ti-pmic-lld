@@ -43,7 +43,6 @@
  * @brief Power Resource control, configuration, and status information.
  */
 
-#include "pmic_common.h"
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -51,8 +50,11 @@ extern "C" {
 /* ========================================================================== */
 /*                                Include Files                               */
 /* ========================================================================== */
+
 #include <stdint.h>
 #include <stdbool.h>
+
+#include "pmic_common.h"
 
 /* ========================================================================== */
 /*                             Macros & Typedefs                              */
@@ -655,4 +657,4 @@ int32_t Pmic_pwrGetSequenceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, P
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif // PMIC_POWER_H
+#endif /* PMIC_POWER_H */

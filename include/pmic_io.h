@@ -46,6 +46,7 @@
 /* ========================================================================== */
 /*                             Include Files                                  */
 /* ========================================================================== */
+
 #include <stdint.h>
 
 #include "pmic_common.h"
@@ -178,4 +179,4 @@ int32_t Pmic_ioCrcDisable(Pmic_CoreHandle_t *handle);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /*PMIC_IO_H*/
+#endif /* PMIC_IO_H */
