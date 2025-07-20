@@ -262,6 +262,7 @@ typedef struct Pmic_CoreCrc16Cfg_s
     bool enable;
     bool activateCalc;
 }Pmic_CoreCrc16Cfg_t;
+/** @} */
 
 /* ========================================================================== */
 /*                             Function Declarations                          */

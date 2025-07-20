@@ -205,8 +205,15 @@ static inline bool Pmic_validParamCheck(uint32_t validParamVal, uint32_t bitMask
 }
 
 /**
- * @brief Check whether status is equal to the success code and whether a
- * parameter \p vpv (validParam value) has parameter \p bMask (bit mask) set.
+ * @brief Checks both status and valid parameters.
+ *
+ * @param vpv [IN] Valid parameter value.
+ *
+ * @param bMask [IN] Valid parameter bit mask. used to check whether the valid parameter is set in 'vpv'.
+ *
+ * @param status [IN] API checks whether this parameter is equal to LLD success code.
+ *
+ * @return True if valid parameter is set and status is equal to LLD success code, false otherwise.
  */
 #define Pmic_validParamStatusCheck(vpv, bMask, status) \
     (((int32_t)status == PMIC_ST_SUCCESS) && Pmic_validParamCheck((uint32_t)vpv, (uint32_t)bMask))

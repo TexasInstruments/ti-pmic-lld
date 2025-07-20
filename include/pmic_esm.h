@@ -105,6 +105,8 @@ extern "C" {
  * @name TPS65036x ESM Modes
  *
  * @brief Valid values of the ESM_MCU_MODE bit field.
+ *
+ * @{
  */
 #define ESM_LEVEL_MODE                      ((uint8_t)0U)
 #define ESM_PWM_MODE                        ((uint8_t)1U)
@@ -116,6 +118,8 @@ extern "C" {
  * @name TPS65036x ESM Error Count Threshold Max Value
  *
  * @brief Maximum value of the ESM_MCU_ERR_CNT_TH bit field.
+ *
+ * @{
  */
 #define ESM_ERR_CNT_THR_MAX                 ((uint8_t)0x0FU)
 /** @} */
@@ -125,6 +129,8 @@ extern "C" {
  * @name TPS65036x ESM Start/Stop Values
  *
  * @brief Valid values of the ESM_MCU_START bit field.
+ *
+ * @{
  */
 #define PMIC_ESM_START                      ((bool)true)
 #define PMIC_ESM_STOP                       ((bool)false)
@@ -165,7 +171,6 @@ extern "C" {
  * @param lmax Maximum low-pulse time threshold for the ESM operating in PWM mode.
  *
  * @param lmin Minimum low-pulse time threshold for the ESM operating in PWM mode.
- *
  */
 typedef struct Pmic_EsmCfg_s
 {

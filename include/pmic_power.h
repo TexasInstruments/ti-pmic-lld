@@ -64,6 +64,8 @@ extern "C" {
  * @name TPS65036x Power Resources
  *
  * @brief Valid power resources for the TPS65036x PMIC.
+ *
+ * @{
  */
 #define PMIC_BUCK1                                  ((uint8_t)1U)
 #define PMIC_BUCK2                                  ((uint8_t)2U)
@@ -195,6 +197,8 @@ extern "C" {
  * trigger APIs. The most significant 8 bits denote the PMIC power resource.
  * The least significant 8 bits denote the trigger bit positions in the register
  * map.
+ *
+ * @{
  */
 #define PMIC_BUCK1_TRIGGER_PWR_ON_BIT   (((uint16_t)PMIC_BUCK1 << 8U) | 5U)
 #define PMIC_BUCK1_TRIGGER_LDO_PG       (((uint16_t)PMIC_BUCK1 << 8U) | 4U)
@@ -528,6 +532,7 @@ extern "C" {
  *
  * @brief Valid Regulator sequence delay values.
  *
+ * @{
  */
 #define PMIC_SEQ_DLY_0_MS                           ((uint8_t)0x0U)
 #define PMIC_SEQ_DLY_0P5_MS                         ((uint8_t)0x1U)

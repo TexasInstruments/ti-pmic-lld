@@ -567,7 +567,7 @@ int32_t Pmic_wdgWriteAnswer(const Pmic_CoreHandle_t *pmicHandle);
  * before clearing the error status(es).
  *
  * @note To indicate the desired watchdog error status(es) to clear, the
- * validParams struct member of \p wdgErrStat parameter must be set. All other
+ * validParams struct member of wdgErrStat parameter must be set. All other
  * struct members will be ignored/unused throughout API execution. For valid
  * values of validParams, refer to @ref Pmic_WdgErrStatValidParams.
  *
