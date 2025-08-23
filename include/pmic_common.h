@@ -137,6 +137,8 @@ extern "C" {
  * @param siliconRev PMIC silicon revision identifier. SILICON_REV[7:6] - Reserved.
  * SILICON_REV[5:3] - ALR. SILICON_REV[2:0] - Metal.
  *
+ * @param isA0 Indication of whether the PMIC device silicon revision is A0.
+ *
  * @param crcEnable Indication of whether PMIC CRC is enabled. Used by LLD to determine
  * whether to calculate CRC during communication with PMIC.
  *
@@ -161,6 +163,7 @@ typedef struct Pmic_CoreHandle_s
     uint8_t nvmId;
     uint8_t nvmRev;
     uint8_t siliconRev;
+    bool isA0;
     bool crcEnable;
     void *commHandle;
     int32_t (*ioRead)(const struct Pmic_CoreHandle_s *pmicHandle,

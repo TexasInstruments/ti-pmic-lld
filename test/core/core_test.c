@@ -226,6 +226,8 @@ void core_test(void *args)
 
     if (status == PMIC_ST_SUCCESS)
     {
+        testCommon_printSiRev(&pmicHandle);
+
         platform_setupTests();
         CORE_TEST_RUN_ALL();
         platform_tearDownTests();
@@ -861,7 +863,8 @@ void test_positive_Pmic_runABIST(void)
 {
     uint8_t regData = 0U;
     int32_t status = PMIC_ST_SUCCESS;
-    const uint8_t maskMiscRegAddr = 0x38U, intMiscRegAddr = 0x53U, bufLen = 1U, abistDoneShift = 0U;
+    uint8_t intMiscRegAddr = (pmicHandle.isA0) ? 0x50U : 0x53U;
+    const uint8_t maskMiscRegAddr = 0x38U, bufLen = 1U, abistDoneShift = 0U;
 
     // Clear all PMIC IRQs
     status = testCommon_clrAllPmicIrq(&pmicHandle);

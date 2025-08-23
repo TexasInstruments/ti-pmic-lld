@@ -220,6 +220,8 @@ void irq_test(void *args)
 
     if (status == PMIC_ST_SUCCESS)
     {
+        testCommon_printSiRev(&pmicHandle);
+
         status = testCommon_unlockPmicRegs(&pmicHandle);
 
         if (status == PMIC_ST_SUCCESS)
@@ -516,7 +518,9 @@ void test_negative_irqSetGetMask_WD_LONGWIN_TIMEOUT_NMI(void)
 void test_positive_irqClrAllFlags(void)
 {
     uint8_t regData = 0U;
-    const uint8_t intTopReg = 0x4FU, intFsmErrReg = 0x56U, bufLen = 1U;
+    const uint8_t bufLen = 1U;
+    uint8_t intTopReg = (pmicHandle.isA0) ? 0x4CU : 0x4FU;
+    uint8_t intFsmErrReg = (pmicHandle.isA0) ? 0x53U : 0x56U;
 
     // Clear all PMIC IRQ flags
     int32_t status = Pmic_irqClrAllFlags(&pmicHandle);

@@ -205,6 +205,8 @@ void wdg_test(void *args)
 
     if (status == PMIC_ST_SUCCESS)
     {
+        testCommon_printSiRev(&pmicHandle);
+
         status = testCommon_unlockPmicRegs(&pmicHandle);
 
         if (status == PMIC_ST_SUCCESS)
@@ -801,8 +803,9 @@ void test_positive_wdgSetGetCfg_qaSeed(void)
 static void wdgTest_checkForWdgErrors(void)
 {
     uint8_t regData = 0U;
+    const uint8_t bufLen = 1U;
     int32_t status = PMIC_ST_SUCCESS;
-    const uint8_t wdErrStatusRegAddr = 0x62U, bufLen = 1U;
+    uint8_t wdErrStatusRegAddr = (pmicHandle.isA0) ? 0x5FU : 0x62U;
 
     status = platform_rxByte(&pmicHandle, wdErrStatusRegAddr, bufLen, &regData);
     PLATFORM_ASSERT(status == PMIC_ST_SUCCESS);

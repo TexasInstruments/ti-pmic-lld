@@ -74,6 +74,23 @@ int32_t testCommon_clrAllPmicIrq(const Pmic_CoreHandle_t *pmicHandle);
  */
 int32_t testCommon_unlockPmicRegs(const Pmic_CoreHandle_t *pmicHandle);
 
+/**
+ * @brief Print silicon revision of the PMIC device to the console.
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ */
+void testCommon_printSiRev(const Pmic_CoreHandle_t *pmicHandle);
+
+/**
+ * @brief Disable configuration CRC on the PMIC.
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ *
+ * @return Success code if PMIC configuration CRC has been disabled, error code
+ * otherwise. For valid success/error codes refer to @ref Pmic_errorCodes
+ */
+int32_t testCommon_disableConfigCrc(const Pmic_CoreHandle_t *pmicHandle);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

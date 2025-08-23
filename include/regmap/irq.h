@@ -149,6 +149,7 @@ extern "C" {
  * @{
  */
 #define PMIC_GPO_READBACK_MASK_SHIFT        ((uint8_t)6U)
+#define PMIC_NRSTOUT_READBACK_MASK_SHIFT    ((uint8_t)5U)
 #define PMIC_NINT_READBACK_MASK_SHIFT       ((uint8_t)4U)
 #define PMIC_CONFIG_CRC_MASK_SHIFT          ((uint8_t)3U)
 #define PMIC_TRIM_TEST_CRC_MASK_SHIFT       ((uint8_t)2U)

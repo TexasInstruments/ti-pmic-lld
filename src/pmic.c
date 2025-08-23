@@ -41,6 +41,16 @@
 #include "pmic_common.h"
 
 #include "regmap/core.h"
+#include "regmap/irq.h"
+
+// BIT3 of SILICON_REV[7:0] identifies whether the PMIC is PG1 (A0) or PG2 (B1)
+#define DEVICE_PG_IDENTIFER (3U)
+
+// Used to unlock PMIC registers
+#define REG_LOCK_KEY (0x9BU)
+
+// Used to lock PMIC registers
+#define REG_LOCK_VALUE (0xAAU)
 
 static inline void setPmicHandleMembers(const Pmic_CoreCfg_t *pmicCfg, Pmic_CoreHandle_t *pmicHandle)
 {
@@ -100,6 +110,57 @@ static int32_t getPmicInfo(Pmic_CoreHandle_t *pmicHandle)
     return status;
 }
 
+static int32_t decipherWhetherA0(Pmic_CoreHandle_t *pmicHandle)
+{
+    uint8_t regData = 0U;
+    bool regsLocked = (bool)false;
+    int32_t status = PMIC_ST_SUCCESS;
+
+    // Get register lock status
+    status = Pmic_ioRxByte(pmicHandle, PMIC_REGISTER_LOCK_REGADDR, &regData);
+
+    // Unlock registers if they are locked
+    if (status == PMIC_ST_SUCCESS)
+    {
+        regsLocked = Pmic_getBitField_b(regData, PMIC_REGISTER_LOCK_STATUS_SHIFT);
+
+        if (regsLocked)
+        {
+            status = Pmic_ioTxByte(pmicHandle, PMIC_REGISTER_LOCK_REGADDR, REG_LOCK_KEY);
+        }
+    }
+
+    // Set NRSTOUT_READBACK_MASK to 1. Only A0 silicon has this bit field.
+    // So if NRSTOUT_READBACK_MASK is writable, the device is A0
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioReadModifyWrite_b(pmicHandle, PMIC_MASK_MODERATE_ERR_REGADDR, PMIC_NRSTOUT_READBACK_MASK_SHIFT, (bool)true);
+    }
+
+    // Get actual NRSTOUT_READBACK_MASK value
+    if (status == PMIC_ST_SUCCESS)
+    {
+        status = Pmic_ioRxByte(pmicHandle, PMIC_MASK_MODERATE_ERR_REGADDR, &regData);
+    }
+
+    // Device is A0 if NRSTOUT_READBACK_MASK is 1. Otherwise, device is B0.
+    // NOTE: NRSTOUT_READBACK_MASK is recommended to be set to 1; it is not
+    // necessary to revert it back to 0 if it was previously 0
+    if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(regData, PMIC_NRSTOUT_READBACK_MASK_SHIFT))
+    {
+        pmicHandle->isA0 = (bool)true;
+    }
+
+    // Re-lock PMIC registers if they were previously locked
+    if ((status == PMIC_ST_SUCCESS) && regsLocked)
+    {
+
+        status = Pmic_ioTxByte(pmicHandle, PMIC_REGISTER_LOCK_REGADDR, REG_LOCK_VALUE);
+    }
+
+    return status;
+}
+
 int32_t Pmic_init(const Pmic_CoreCfg_t *pmicCfg, Pmic_CoreHandle_t *pmicHandle)
 {
     int32_t status = PMIC_ST_SUCCESS;
@@ -121,15 +182,19 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *pmicCfg, Pmic_CoreHandle_t *pmicHandle)
         status = getPmicInfo(pmicHandle);
     }
 
-    // Set the driver initialization status
     if (status == PMIC_ST_SUCCESS)
     {
-        pmicHandle->drvInitStat = PMIC_DRV_INIT_SUCCESS;
+        pmicHandle->isA0 = (bool)false;
+        const bool isB1 = Pmic_getBitField_b(pmicHandle->siliconRev, DEVICE_PG_IDENTIFER);
+        if (!isB1)
+        {
+            // Device is not B1. Decipher whether device is A0 or B0
+            status = decipherWhetherA0(pmicHandle);
+        }
     }
-    else
-    {
-        pmicHandle->drvInitStat = ~PMIC_DRV_INIT_SUCCESS;
-    }
+
+    // Set the driver initialization status
+    pmicHandle->drvInitStat = (status == PMIC_ST_SUCCESS) ? PMIC_DRV_INIT_SUCCESS : ~PMIC_DRV_INIT_SUCCESS;
 
     return status;
 }
@@ -151,6 +216,7 @@ int32_t Pmic_deinit(Pmic_CoreHandle_t *pmicHandle)
         pmicHandle->nvmId = 0U;
         pmicHandle->nvmRev = 0U;
         pmicHandle->siliconRev = 0U;
+        pmicHandle->isA0 = (bool)false;
         pmicHandle->crcEnable = PMIC_DISABLE;
         pmicHandle->commHandle = NULL;
         pmicHandle->ioRead = NULL;

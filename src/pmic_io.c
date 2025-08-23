@@ -39,9 +39,15 @@
 #include "pmic.h"
 #include "pmic_io.h"
 
-#define PMIC_I2C_TX_FRAME_LEN   ((uint8_t)4U)
-#define PMIC_I2C_RX_FRAME_LEN   ((uint8_t)5U)
-#define PMIC_MAX_REGADDR        ((uint8_t)0xEEU)
+// Used in composing the I2C transmit/receive frame.
+#define I2C_TX_FRAME_LEN ((uint8_t)4U)
+#define I2C_RX_FRAME_LEN ((uint8_t)5U)
+
+// Relevant differences between A0 and B0/B1 start at 0x4D.
+#define REGMAP_DIFF_START ((uint8_t)0x4DU)
+
+// B0/B1 register map differs from A0 register map by a factor of 3 starting at 0x4A.
+#define REGMAP_DIFF_FACTOR ((uint8_t)3U)
 
 /**
  *  Used CRC Polynomial:  x^8 + x^2 + x + 1
@@ -117,7 +123,7 @@ static uint8_t getCRC8Val(const uint8_t *data, uint8_t length)
 int32_t Pmic_ioTxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t txData)
 {
     uint8_t i2cFrameLen = 0U;
-    uint8_t i2cFrame[PMIC_I2C_TX_FRAME_LEN] = {0U};
+    uint8_t i2cFrame[I2C_TX_FRAME_LEN] = {0U};
     int32_t status = PMIC_ST_SUCCESS;
 
     if ((pmicHandle == NULL) || (pmicHandle->ioWrite == NULL) || (pmicHandle->commHandle == NULL))
@@ -125,9 +131,11 @@ int32_t Pmic_ioTxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (regAddr > PMIC_MAX_REGADDR))
+    // Register addresses defined in include/regmap/ are B0/B1. Subtract regAddr
+    // by 3 if PMIC device is A0 Since B0/B1 registers are ahead by 3
+    if (pmicHandle->isA0 && (regAddr >= REGMAP_DIFF_START))
     {
-        status = PMIC_ST_ERR_INV_PARAM;
+        regAddr -= REGMAP_DIFF_FACTOR;
     }
 
     // Write to PMIC
@@ -167,7 +175,7 @@ int32_t Pmic_ioTxByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, u
 int32_t Pmic_ioRxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t *rxData)
 {
     uint8_t i2cFrameLen = 0U;
-    uint8_t i2cFrame[PMIC_I2C_RX_FRAME_LEN] = {0U};
+    uint8_t i2cFrame[I2C_RX_FRAME_LEN] = {0U};
     int32_t status = PMIC_ST_SUCCESS;
 
     if ((pmicHandle == NULL) || (pmicHandle->ioRead == NULL) || (pmicHandle->commHandle == NULL) || (rxData == NULL))
@@ -175,9 +183,11 @@ int32_t Pmic_ioRxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint
         status = PMIC_ST_ERR_NULL_PARAM;
     }
 
-    if ((status == PMIC_ST_SUCCESS) && (regAddr > PMIC_MAX_REGADDR))
+    // Register addresses defined in include/regmap/ are B0/B1. Subtract regAddr
+    // by 3 if PMIC device is A0 Since B0/B1 registers are ahead by 3
+    if (pmicHandle->isA0 && (regAddr >= REGMAP_DIFF_START))
     {
-        status = PMIC_ST_ERR_INV_PARAM;
+        regAddr -= REGMAP_DIFF_FACTOR;
     }
 
     // Read from PMIC
@@ -222,6 +232,48 @@ int32_t Pmic_ioRxByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, u
 
     Pmic_criticalSectionStart(pmicHandle);
     status = Pmic_ioRxByte(pmicHandle, regAddr, rxData);
+    Pmic_criticalSectionStop(pmicHandle);
+
+    return status;
+}
+
+int32_t Pmic_ioReadModifyWrite(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value)
+{
+    uint8_t regData = 0U;
+    int32_t status = Pmic_ioRxByte(pmicHandle, regAddr, &regData);
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        Pmic_setBitField(&regData, shift, mask, value);
+
+        status = Pmic_ioTxByte(pmicHandle, regAddr, regData);
+    }
+
+    return status;
+}
+
+int32_t Pmic_ioReadModifyWrite_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    Pmic_criticalSectionStart(pmicHandle);
+    status = Pmic_ioReadModifyWrite(pmicHandle, regAddr, shift, mask, value);
+    Pmic_criticalSectionStop(pmicHandle);
+
+    return status;
+}
+
+int32_t Pmic_ioReadModifyWrite_b(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value)
+{
+    return Pmic_ioReadModifyWrite(pmicHandle, regAddr, shift, 1U << shift, value ? 1U : 0U);
+}
+
+int32_t Pmic_ioReadModifyWrite_bCS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    Pmic_criticalSectionStart(pmicHandle);
+    status = Pmic_ioReadModifyWrite_bCS(pmicHandle, regAddr, shift, value);
     Pmic_criticalSectionStop(pmicHandle);
 
     return status;

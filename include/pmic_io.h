@@ -118,6 +118,117 @@ int32_t Pmic_ioRxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint
  */
 int32_t Pmic_ioRxByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t *rxData);
 
+/**
+ * @brief Executes a read-modify-write routine such that the target bit field is
+ * modified without modifying other bit fields.
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ *
+ * @param regAddr [IN] Target register address.
+ *
+ * @param shift [IN] Target bit field position.
+ *
+ * @param mask [IN] Target bit field mask.
+ *
+ * @param value [IN] Desired value to set the bit field to.
+ *
+ * @return Success code if read-modify-write operation was successful, error code
+ * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ */
+int32_t Pmic_ioReadModifyWrite(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
+
+/**
+ * @brief Identical to Pmic_ioReadModifyWrite() API but starts a critical
+ * section before the read, modify, and write operations. Afterwards, the
+ * critical section is stopped.
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ *
+ * @param regAddr [IN] Target register address.
+ *
+ * @param shift [IN] Target bit field position.
+ *
+ * @param mask [IN] Target bit field mask.
+ *
+ * @param value [IN] Desired value to set the bit field to.
+ *
+ * @return Success code if read-modify-write operation was successful, error code
+ * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ */
+int32_t Pmic_ioReadModifyWrite_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value);
+
+/**
+ * @brief Identical to Pmic_ioReadModifyWrite() API, but only the name of the
+ * bit field needs to be specified (case-sensitive).
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ *
+ * @param regAddr [IN] Target register address.
+ *
+ * @param name [IN] Target bit field name.
+ *
+ * @param value [IN] Desired value to set the bit field to.
+ *
+ * @return Success code if read-modify-write operation was successful, error code
+ * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ */
+#define Pmic_ioReadModifyWriteByName(pmicHandle, regAddr, name, value) \
+    Pmic_ioReadModifyWrite((Pmic_CoreHandle_t*)pmicHandle, (uint8_t)regAddr, (uint8_t)(name##_SHIFT), (uint8_t)(name##_MASK), (uint8_t)value)
+
+/**
+ * @brief Identical to Pmic_ioReadModifyWrite_CS() API, but only the name of the
+ * bit field needs to be specified (case-sensitive).
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ *
+ * @param regAddr [IN] Target register address.
+ *
+ * @param name [IN] Target bit field name.
+ *
+ * @param value [IN] Desired value to set the bit field to.
+ *
+ * @return Success code if read-modify-write operation was successful, error code
+ * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ */
+#define Pmic_ioReadModifyWriteByName_CS(pmicHandle, regAddr, name, value) \
+    Pmic_ioReadModifyWrite_CS((Pmic_CoreHandle_t*)pmicHandle, (uint8_t)regAddr, (uint8_t)(name##_SHIFT), (uint8_t)(name##_MASK), (uint8_t)value)
+
+/**
+ * @brief Modify a target bit field of width 1 without modifying other bit fields.
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ *
+ * @param regAddr [IN] Target register address.
+ *
+ * @param shift [IN] Target bit field position.
+ *
+ * @param value [IN] Desired value to set the bit field to. If value is true,
+ * the bit field is set to 1. Otherwise, the bit field is set to 0.
+ *
+ * @return Success code if read-modify-write operation was successful, error code
+ * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ */
+int32_t Pmic_ioReadModifyWrite_b(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value);
+
+/**
+ * @brief Identical to Pmic_ioReadModifyWrite_b() API but starts a critical
+ * section before the read, modify, and write operations. Afterwards, the
+ * critical section is stopped.
+ *
+ * @param pmicHandle [IN] PMIC interface handle.
+ *
+ * @param regAddr [IN] Target register address.
+ *
+ * @param shift [IN] Target bit field position.
+ *
+ * @param value [IN] Desired value to set the bit field to. If value is true,
+ * the bit field is set to 1. Otherwise, the bit field is set to 0.
+ *
+ * @return Success code if read-modify-write operation was successful, error code
+ * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
+ */
+int32_t Pmic_ioReadModifyWrite_bCS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value);
+
 #ifdef __cplusplus
 }
 

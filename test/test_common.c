@@ -53,6 +53,9 @@
 #define TEST_COMMON_REGISTER_LOCK_REGADDR  ((uint8_t)0x09U)
 #define TEST_COMMON_REGISTER_UNLOCK_KEY    ((uint8_t)0x9BU)
 
+// BIT3 of SILICON_REV[7:0] identifies whether the PMIC is PG1 (A0) or PG2 (B1)
+#define DEVICE_PG_IDENTIFER_MASK (1U << 3U)
+
 /* ========================================================================== */
 /*                           Function Definitions                             */
 /* ========================================================================== */
@@ -91,4 +94,32 @@ int32_t testCommon_unlockPmicRegs(const Pmic_CoreHandle_t *pmicHandle)
     }
 
     return status;
+}
+
+void testCommon_printSiRev(const Pmic_CoreHandle_t *pmicHandle)
+{
+    char msg[50U] = {0};
+
+    if ((pmicHandle->siliconRev & DEVICE_PG_IDENTIFER_MASK) != 0U)
+    {
+        (void)sprintf(msg, "PMIC device is B1\r\n\r\n");
+        platform_printString(msg);
+    }
+    else if (pmicHandle->isA0)
+    {
+        (void)sprintf(msg, "PMIC device is A0\r\n\r\n");
+        platform_printString(msg);
+    }
+    else
+    {
+        (void)sprintf(msg, "PMIC device is B0\r\n\r\n");
+        platform_printString(msg);
+    }
+}
+
+int32_t testCommon_disableConfigCrc(const Pmic_CoreHandle_t *pmicHandle)
+{
+    const uint8_t bufLen = 0U;
+    uint8_t configCrcConfigRegAddr = (pmicHandle->isA0) ? 0x61U : 0x64U;
+    return platform_txByte(pmicHandle, configCrcConfigRegAddr, bufLen, 0x0U);
 }
