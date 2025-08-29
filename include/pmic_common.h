@@ -30,8 +30,8 @@
  *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *****************************************************************************/
-#ifndef __PMIC_COMMON_H__
-#define __PMIC_COMMON_H__
+#ifndef PMIC_COMMON_H
+#define PMIC_COMMON_H
 
 /**
  * @file pmic_common.h
@@ -304,4 +304,4 @@ static inline bool Pmic_getBitField_b(uint8_t regData, uint8_t shift) {
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-#endif /* __PMIC_COMMON_H__ */
+#endif /* PMIC_COMMON_H */
