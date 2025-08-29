@@ -218,10 +218,10 @@ int32_t Pmic_ioTxWordSeq(const Pmic_Handle_t *handle, uint16_t baseAddr, uint32_
     int32_t status = PMIC_ST_SUCCESS;
 
     if (count > sizeof(uint32_t)) {
-        status = PMIC_ST_ERR_INV_PARAM;
+        return PMIC_ST_ERR_INV_PARAM;
     }
 
-    for (uint8_t i = 0; i < count; i++) {
+    for (uint8_t i = 0U; i < count; i++) {
         status = Pmic_ioTxByte(handle, baseAddr + (uint16_t)i, (uint8_t)((txData >> (i * 8U)) & 0xFFU));
         if (status != PMIC_ST_SUCCESS) {
             return status;
