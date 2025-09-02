@@ -53,6 +53,7 @@
 
 #include "pmic_common.h"
 #include "pmic_io.h"
+#include "pmic_wdg.h"
 
 #ifdef __cplusplus
 extern "C" {
