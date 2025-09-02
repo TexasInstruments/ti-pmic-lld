@@ -175,6 +175,14 @@ int32_t Pmic_ioTxByte_CS(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t 
     return status;
 }
 
+int32_t Pmic_ioTxByte_endCS(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txData)
+{
+    int32_t status = Pmic_ioTxByte(handle, regAddr, txData);
+    Pmic_critSecStop(handle);
+
+    return status;
+}
+
 int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rxData) {
     uint8_t frame[SPI_FRAME_LEN] = {0U};
 
@@ -212,6 +220,12 @@ int32_t Pmic_ioRxByte_CS(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t 
     Pmic_critSecStop(handle);
 
     return status;
+}
+
+int32_t Pmic_ioRxByte_startCS(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rxData)
+{
+    Pmic_critSecStart(handle);
+    return Pmic_ioRxByte(handle, regAddr, rxData);
 }
 
 int32_t Pmic_ioTxWordSeq(const Pmic_Handle_t *handle, uint16_t baseAddr, uint32_t txData, uint8_t count) {

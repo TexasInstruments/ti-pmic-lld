@@ -96,6 +96,21 @@ int32_t Pmic_ioTxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txD
 int32_t Pmic_ioTxByte_CS(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txData);
 
 /**
+ * @brief Identical to Pmic_ioTxByte() in terms of functionality, but invokes
+ * the critical section stop hook after the write routine.
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param regAddr [IN] Register address to write to.
+ *
+ * @param txData [IN] Data to send to `regAddr`.
+ *
+ * @return PMIC_ST_SUCCESS if data was successfully transmitted, error code
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_ioTxByte_endCS(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t txData);
+
+/**
  * @brief Read a byte from the given PMIC `regAddr`, extracting the desired
  * register data from the CRC framed data returned by the PMIC.
  *
@@ -125,6 +140,21 @@ int32_t Pmic_ioRxByte(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rx
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
  */
 int32_t Pmic_ioRxByte_CS(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rxData);
+
+/**
+ * @brief Identical to Pmic_ioRxByte() in terms of functionality, but invokes
+ * the critical section start hook before the read routine.
+ *
+ * @param handle [IN] PMIC interface handle.
+ *
+ * @param regAddr [IN] Register address to read from.
+ *
+ * @param rxData [IN] Data received from the PMIC.
+ *
+ * @return PMIC_ST_SUCCESS if data was successfully obtained, error code
+ * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes.
+ */
+int32_t Pmic_ioRxByte_startCS(const Pmic_Handle_t *handle, uint16_t regAddr, uint8_t *rxData);
 
 /**
  * @brief Write up to 4 bytes to a linear sequence of registers starting at
