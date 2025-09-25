@@ -273,7 +273,7 @@ int32_t Pmic_ioReadModifyWrite_bCS(const Pmic_CoreHandle_t *pmicHandle, uint8_t 
     int32_t status = PMIC_ST_SUCCESS;
 
     Pmic_criticalSectionStart(pmicHandle);
-    status = Pmic_ioReadModifyWrite_bCS(pmicHandle, regAddr, shift, value);
+    status = Pmic_ioReadModifyWrite_b(pmicHandle, regAddr, shift, value);
     Pmic_criticalSectionStop(pmicHandle);
 
     return status;
