@@ -133,7 +133,7 @@ int32_t Pmic_ioTxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint
 
     // Register addresses defined in include/regmap/ are B0/B1. Subtract regAddr
     // by 3 if PMIC device is A0 Since B0/B1 registers are ahead by 3
-    if (pmicHandle->isA0 && (regAddr >= REGMAP_DIFF_START))
+    if ((status == PMIC_ST_SUCCESS) && pmicHandle->isA0 && (regAddr >= REGMAP_DIFF_START))
     {
         regAddr -= REGMAP_DIFF_FACTOR;
     }
@@ -185,7 +185,7 @@ int32_t Pmic_ioRxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint
 
     // Register addresses defined in include/regmap/ are B0/B1. Subtract regAddr
     // by 3 if PMIC device is A0 Since B0/B1 registers are ahead by 3
-    if (pmicHandle->isA0 && (regAddr >= REGMAP_DIFF_START))
+    if ((status == PMIC_ST_SUCCESS) && pmicHandle->isA0 && (regAddr >= REGMAP_DIFF_START))
     {
         regAddr -= REGMAP_DIFF_FACTOR;
     }
