@@ -342,7 +342,7 @@ static inline uint32_t GetExpectedInitStatus(uint8_t commMode) {
     return expectedInitStatus;
 }
 
-int32_t Pmic_checkPmicCoreHandle(const Pmic_CoreHandle_t *handle) {
+int32_t Pmic_checkHandle(const Pmic_CoreHandle_t *handle) {
     int32_t status = PMIC_ST_SUCCESS;
     uint32_t expectedInitStatus = 0U;
 

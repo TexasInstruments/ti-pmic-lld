@@ -176,7 +176,7 @@ typedef struct Pmic_CoreHandle_s {
 /*==========================================================================*/
 
 /**
- * @brief Check valid parameters.
+ * @brief Checks whether a parameter is valid.
  *
  * @param validParamVal [IN] Valid parameter value. Each bit in this parameter
  * represents whether or not a parameter is valid.
@@ -188,8 +188,8 @@ typedef struct Pmic_CoreHandle_s {
 bool Pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos);
 
 /**
- * @brief Combine functionality of Pmic_validParamCheck() with check that the
- * status variable is currently PMIC_ST_SUCCESS, this is a common code pattern.
+ * @brief Checks whether a parameter is valid and whether the status code is equal
+ * to LLD success code.
  *
  * @param validParamVal [IN] Valid parameter value. Each bit in this parameter
  * represents whether or not a parameter is valid.
@@ -205,18 +205,16 @@ bool Pmic_validParamCheck(uint32_t validParamVal, uint8_t bitPos);
 bool Pmic_validParamStatusCheck(uint32_t validParamVal, uint8_t bitPos, int32_t status);
 
 /**
- * @brief Start a critical section for PMIC operations.
- * This function starts a critical section for PMIC operations, if the critical
- * section start function pointer is not NULL.
+ * @brief Start a critical section when usage of a shared resource such as an I2C or
+ * SPI bus is required.
  *
  * @param handle Pointer to the PMIC core handle structure.
  */
 void Pmic_criticalSectionStart(const Pmic_CoreHandle_t *handle);
 
 /**
- * @brief Stop a critical section for PMIC operations.
- * This function stops a critical section for PMIC operations, if the critical
- * section stop function pointer is not NULL.
+ * @brief Stop a critical section after the usage of a shared resource such as an
+ * I2C or SPI bus is complete.
  *
  * @param handle Pointer to the PMIC core handle structure.
  */
@@ -228,7 +226,7 @@ void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *handle);
  *
  * @param handle Pointer to the PMIC core handle structure.
  */
-void Pmic_pseudoIrqTrigger(const Pmic_CoreHandle_t *handle);
+void Pmic_irqResponse(const Pmic_CoreHandle_t *handle);
 
 /**
  * @brief Sets the bit field of an 8-bit unsigned integer to the desired value.

@@ -126,7 +126,7 @@ int32_t Pmic_ioRxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t *r
 
 /**
  * @ingroup DRV_PMIC_IO_MODULE
- * @brief Determine whether I2C CRC is enabled or disabled.
+ * @brief Get serial communication CRC enable/disable state.
  *
  * @param handle    [IN]  PMIC Interface Handle
  * @param isEnabled [OUT] Set to true (PMIC_ENABLE) if comms CRC is enabled,
@@ -140,7 +140,8 @@ int32_t Pmic_ioGetCrcEnableState(Pmic_CoreHandle_t *handle, bool *isEnabled);
 
 /**
  * @ingroup DRV_PMIC_IO_MODULE
- * @brief Control whether I2C CRC is enabled or disabled.
+ * @brief Control whether serial communication CRC is enabled or disabled. This API
+ * is a superset of `Pmic_ioCrcEnable()` and `Pmic_ioCrcDisable()`.
  *
  * @param handle   [IN] PMIC Interface Handle
  * @param enable   [IN] Set to true (PMIC_ENABLE) to enable comms CRC, false
@@ -154,7 +155,8 @@ int32_t Pmic_ioSetCrcEnableState(Pmic_CoreHandle_t *handle, bool enable);
 
 /**
  * @ingroup DRV_PMIC_IO_MODULE
- * @brief Enable I2C CRC.
+ * @brief Enable serial communication CRC. This API is a subset of
+ * `Pmic_ioSetCrcEnableState()`.
  *
  * @param handle   [IN] PMIC Interface Handle
  *
@@ -166,7 +168,8 @@ int32_t Pmic_ioCrcEnable(Pmic_CoreHandle_t *handle);
 
 /**
  * @ingroup DRV_PMIC_IO_MODULE
- * @brief Disable I2C CRC.
+ * @brief Disable serial communication CRC. This API is a subset of
+ * Pmic_ioSetCrcEnableState().
  *
  * @param handle   [IN] PMIC Interface Handle
  *

@@ -93,10 +93,7 @@ extern "C" {
 /* ========================================================================== */
 /**
  * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
- * @brief API to perform an MCU command request.
- *
- * This function is used to perform one of the supported MCU command requests
- * which can command PMIC FSM state transitions.
+ * @brief Send MCU command request for a PMIC FSM state transition.
  *
  * @param handle [IN] PMIC Interface Handle
  * @param cmd    [IN] Command request to perform, see @ref Pmic_FsmMcuCommands.

@@ -49,7 +49,7 @@
 /*                          Function Definitions                              */
 /* ========================================================================== */
 static int32_t WDG_validatePmicCoreHandle(const Pmic_CoreHandle_t *handle) {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     /* Check the watch dog sub-system supported by pmic device */
     if ((status == PMIC_ST_SUCCESS) && !handle->pPmic_SubSysInfo->wdgEnable) {
@@ -352,7 +352,7 @@ static int32_t WDG_getQuestionAndAnswer(Pmic_CoreHandle_t *handle, uint8_t *ansC
 
     /* Check whether INT_TOP_STATUS is set or not, if so indicate this to the user. */
     if ((status == PMIC_ST_SUCCESS) && Pmic_getBitField_b(regVal, PMIC_INT_TOP_STATUS_SHIFT)) {
-        Pmic_pseudoIrqTrigger(handle);
+        Pmic_irqResponse(handle);
     }
 
     return status;
@@ -629,7 +629,7 @@ int32_t Pmic_wdgGetReturnToLongWindow(Pmic_CoreHandle_t *handle, bool *isEnabled
     return status;
 }
 
-int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t *handle, Pmic_WdgError_t *errors) {
+int32_t Pmic_wdgGetErrStatus(Pmic_CoreHandle_t *handle, Pmic_WdgError_t *errors) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
     uint8_t regVal = 0x0U;
 
@@ -739,7 +739,7 @@ int32_t Pmic_wdgClrErrStatusAll(Pmic_CoreHandle_t *handle) {
     return status;
 }
 
-int32_t Pmic_wdgGetFailCntStat(Pmic_CoreHandle_t *handle, Pmic_WdgFailCntStat_t *failCount) {
+int32_t Pmic_wdgGetFailCntStatus(Pmic_CoreHandle_t *handle, Pmic_WdgFailCntStat_t *failCount) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
     uint8_t regVal = 0x00U;
 
@@ -772,7 +772,7 @@ int32_t Pmic_wdgGetFailCntStat(Pmic_CoreHandle_t *handle, Pmic_WdgFailCntStat_t 
     return status;
 }
 
-int32_t Pmic_wdgQaSequenceWriteAnswer(Pmic_CoreHandle_t *handle) {
+int32_t Pmic_wdgQaWriteAnswer(Pmic_CoreHandle_t *handle) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
 
     uint8_t qaAnsCnt = 0U;
@@ -801,7 +801,7 @@ int32_t Pmic_wdgQaSequenceWriteAnswer(Pmic_CoreHandle_t *handle) {
 }
 
 int32_t Pmic_wdgGetFdbkRegData(Pmic_CoreHandle_t *handle, uint8_t *regData) {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (regData == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
@@ -829,7 +829,7 @@ int32_t Pmic_wdgExtractFdbk(uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsInfo) {
 }
 
 int32_t Pmic_wdgGetAnsCntAndQuesRegData(Pmic_CoreHandle_t *handle, uint8_t *regData) {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (regData == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
@@ -855,7 +855,7 @@ int32_t Pmic_wdgExtractAnsCntAndQues(Pmic_CoreHandle_t *handle, uint8_t regData,
 
         // Execute application-specific IRQ response if INT_TOP_STATUS is 1
         if (Pmic_getBitField_b(regData, PMIC_INT_TOP_STATUS_SHIFT)) {
-            Pmic_pseudoIrqTrigger(handle);
+            Pmic_irqResponse(handle);
         }
     }
 
@@ -864,7 +864,7 @@ int32_t Pmic_wdgExtractAnsCntAndQues(Pmic_CoreHandle_t *handle, uint8_t regData,
 
 int32_t Pmic_wdgWriteAnswer(Pmic_CoreHandle_t *handle, const Pmic_WdgAnsInfo_t *wdgAnsInfo) {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (wdgAnsInfo == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;

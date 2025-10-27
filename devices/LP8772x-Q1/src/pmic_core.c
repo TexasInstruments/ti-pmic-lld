@@ -92,9 +92,9 @@ static uint16_t CORE_Crc16Calc(uint16_t crc, uint16_t data)
     return (uint16_t)(calculatedCrc & 0xFFFFU);
 }
 
-int32_t Pmic_setScratchPadVal(Pmic_CoreHandle_t *handle, uint8_t scratchPadRegNum, uint8_t value)
+int32_t Pmic_setScratchPadValue(Pmic_CoreHandle_t *handle, uint8_t scratchPadRegNum, uint8_t value)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (scratchPadRegNum > PMIC_SCRATCH_PAD_REG_MAX))
     {
@@ -112,10 +112,10 @@ int32_t Pmic_setScratchPadVal(Pmic_CoreHandle_t *handle, uint8_t scratchPadRegNu
     return status;
 }
 
-int32_t Pmic_getScratchPadVal(Pmic_CoreHandle_t *handle, uint8_t scratchPadRegNum, uint8_t *value)
+int32_t Pmic_getScratchPadValue(Pmic_CoreHandle_t *handle, uint8_t scratchPadRegNum, uint8_t *value)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (scratchPadRegNum > PMIC_SCRATCH_PAD_REG_MAX))
     {
@@ -145,7 +145,7 @@ int32_t Pmic_getScratchPadVal(Pmic_CoreHandle_t *handle, uint8_t scratchPadRegNu
 
 int32_t Pmic_setRegLockState(Pmic_CoreHandle_t *handle, bool lockState)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     const uint8_t key = (lockState == PMIC_LOCK_ENABLE) ? PMIC_REG_LOCK : PMIC_REG_UNLOCK;
 
     // Write the key to REGISTER_LOCK
@@ -161,7 +161,7 @@ int32_t Pmic_setRegLockState(Pmic_CoreHandle_t *handle, bool lockState)
 
 int32_t Pmic_getRegLockState(Pmic_CoreHandle_t *handle, bool *lockState)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (lockState == NULL))
@@ -188,7 +188,7 @@ int32_t Pmic_getRegLockState(Pmic_CoreHandle_t *handle, bool *lockState)
 
 int32_t Pmic_configCrcEnable(Pmic_CoreHandle_t *handle, bool calculate)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
     // If user requested CRC calculation, do that now
@@ -215,7 +215,7 @@ int32_t Pmic_configCrcEnable(Pmic_CoreHandle_t *handle, bool calculate)
 
 int32_t Pmic_configCrcDisable(Pmic_CoreHandle_t *handle)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     // Write 0x00 to the CONFIG_CRC_CONFIG register in order to disable this
     // feature as described in the TRM.
@@ -233,9 +233,9 @@ int32_t Pmic_configCrcDisable(Pmic_CoreHandle_t *handle)
     return status;
 }
 
-int32_t Pmic_getConfigCrcStat(Pmic_CoreHandle_t *handle, Pmic_ConfigCrcStat_t *configCrcStat)
+int32_t Pmic_getConfigCrcStatus(Pmic_CoreHandle_t *handle, Pmic_ConfigCrcStat_t *configCrcStat)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (configCrcStat == NULL)) {
@@ -320,7 +320,7 @@ static int32_t CORE_configCrcValidate(Pmic_CoreHandle_t *handle)
 
 int32_t Pmic_configCrcCalculate(Pmic_CoreHandle_t *handle)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
     uint16_t crc = CONFIG_CRC_INIT;
 
@@ -362,7 +362,7 @@ int32_t Pmic_configCrcCalculate(Pmic_CoreHandle_t *handle)
 
 int32_t Pmic_configCrcGetFromDevice(Pmic_CoreHandle_t *handle, uint16_t *crc)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t crcMsb = 0U;
     uint8_t crcLsb = 0U;
 

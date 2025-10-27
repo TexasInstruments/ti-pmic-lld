@@ -72,7 +72,7 @@ static inline bool FSM_assertMcuCommandValid(uint8_t cmd)
 
 int32_t Pmic_fsmMcuCommand(Pmic_CoreHandle_t *handle, uint8_t cmd)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     // validate that the requested command is supported, otherwise return error
     if ((status == PMIC_ST_SUCCESS) && (FSM_assertMcuCommandValid(cmd) == false)) {
@@ -90,7 +90,7 @@ int32_t Pmic_fsmMcuCommand(Pmic_CoreHandle_t *handle, uint8_t cmd)
 
 int32_t Pmic_fsmSetResetCntThr(Pmic_CoreHandle_t *handle, uint8_t resetCntThr)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (resetCntThr > PMIC_FSM_RESET_RECOV_CNT_THR_MAX)) {
@@ -115,7 +115,7 @@ int32_t Pmic_fsmSetResetCntThr(Pmic_CoreHandle_t *handle, uint8_t resetCntThr)
 
 int32_t Pmic_fsmGetResetCntThr(Pmic_CoreHandle_t *handle, uint8_t *resetCntThr)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (resetCntThr == NULL)) {
@@ -137,7 +137,7 @@ int32_t Pmic_fsmGetResetCntThr(Pmic_CoreHandle_t *handle, uint8_t *resetCntThr)
 
 int32_t Pmic_fsmGetResetCnt(Pmic_CoreHandle_t *handle, uint8_t *resetCnt)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (resetCnt == NULL)) {
@@ -159,7 +159,7 @@ int32_t Pmic_fsmGetResetCnt(Pmic_CoreHandle_t *handle, uint8_t *resetCnt)
 
 int32_t Pmic_fsmClrResetCnt(Pmic_CoreHandle_t *handle)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
     // Read RECOV_CNT_CONTROL_REG
@@ -178,7 +178,7 @@ int32_t Pmic_fsmClrResetCnt(Pmic_CoreHandle_t *handle)
 
 int32_t Pmic_fsmSetRecovCntThr(Pmic_CoreHandle_t *handle, uint8_t recovCntThr)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (recovCntThr > PMIC_FSM_RESET_RECOV_CNT_THR_MAX)) {
@@ -203,7 +203,7 @@ int32_t Pmic_fsmSetRecovCntThr(Pmic_CoreHandle_t *handle, uint8_t recovCntThr)
 
 int32_t Pmic_fsmGetRecovCntThr(Pmic_CoreHandle_t *handle, uint8_t *recovCntThr)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (recovCntThr == NULL)) {
@@ -225,7 +225,7 @@ int32_t Pmic_fsmGetRecovCntThr(Pmic_CoreHandle_t *handle, uint8_t *recovCntThr)
 
 int32_t Pmic_fsmGetRecovCnt(Pmic_CoreHandle_t *handle, uint8_t *recovCnt)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (recovCnt == NULL)) {
@@ -247,7 +247,7 @@ int32_t Pmic_fsmGetRecovCnt(Pmic_CoreHandle_t *handle, uint8_t *recovCnt)
 
 int32_t Pmic_fsmClrRecovCnt(Pmic_CoreHandle_t *handle)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
     // Read RECOV_CNT_CONTROL_REG

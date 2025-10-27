@@ -226,7 +226,7 @@ int32_t Pmic_ioTxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t tx
 }
 
 int32_t Pmic_ioGetCrcEnableState(Pmic_CoreHandle_t *handle, bool *isEnabled) {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (isEnabled == NULL)) {
@@ -249,7 +249,7 @@ int32_t Pmic_ioGetCrcEnableState(Pmic_CoreHandle_t *handle, bool *isEnabled) {
 }
 
 int32_t Pmic_ioSetCrcEnableState(Pmic_CoreHandle_t *handle, bool enable) {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
     // Read the INTERFACE_CONF register

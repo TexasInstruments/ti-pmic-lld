@@ -207,7 +207,7 @@ static int32_t PWR_readModifyWrite(Pmic_CoreHandle_t *handle, uint8_t regAddr, u
 
 int32_t Pmic_pwrSetResourceEnable(Pmic_CoreHandle_t *handle, uint8_t resource, bool enable)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
     // Validate that the requested resource is within range and supports
@@ -239,7 +239,7 @@ int32_t Pmic_pwrSetResourceEnable(Pmic_CoreHandle_t *handle, uint8_t resource, b
 
 int32_t Pmic_pwrGetResourceEnable(Pmic_CoreHandle_t *handle, uint8_t resource, bool *isEnabled)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (isEnabled == NULL)) {
@@ -1488,7 +1488,7 @@ int32_t Pmic_pwrSetResourceCfg(Pmic_CoreHandle_t *handle, const Pmic_PowerResour
 
 int32_t Pmic_pwrSetResourceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, const Pmic_PowerResourceCfg_t config[])
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     // Validate parameters
     if ((status == PMIC_ST_SUCCESS) && (config == NULL)) {
@@ -1563,7 +1563,7 @@ int32_t Pmic_pwrGetResourceCfg(Pmic_CoreHandle_t *handle, Pmic_PowerResourceCfg_
 
 int32_t Pmic_pwrGetResourceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, Pmic_PowerResourceCfg_t config[])
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     // Validate parameters
     if ((status == PMIC_ST_SUCCESS) && (config == NULL)) {
@@ -1685,7 +1685,7 @@ static int32_t PWR_setSingleSequence(Pmic_CoreHandle_t *handle, const Pmic_Power
 
 int32_t Pmic_pwrSetSequenceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, const Pmic_PowerSequenceCfg_t config[])
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     // Validate parameters
     if ((status == PMIC_ST_SUCCESS) && (config == NULL)) {
@@ -1705,7 +1705,7 @@ int32_t Pmic_pwrSetSequenceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, c
 
 int32_t Pmic_pwrGetSequenceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, Pmic_PowerSequenceCfg_t config[])
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     // Validate parameters
     if ((status == PMIC_ST_SUCCESS) && (config == NULL)) {

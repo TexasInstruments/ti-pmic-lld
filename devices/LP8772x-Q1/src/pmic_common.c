@@ -63,7 +63,7 @@ void Pmic_criticalSectionStop(const Pmic_CoreHandle_t *handle) {
     }
 }
 
-void Pmic_pseudoIrqTrigger(const Pmic_CoreHandle_t *handle) {
+void Pmic_irqResponse(const Pmic_CoreHandle_t *handle) {
     if (handle->pFnPmicPseudoIrq != (void *)0U) {
         handle->pFnPmicPseudoIrq();
     }

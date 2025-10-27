@@ -503,7 +503,7 @@ typedef struct Pmic_PowerSequenceCfg_s {
 /* ========================================================================== */
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
- * @brief API to control the enable state of PMIC power resources.
+ * @brief Enable or disable a PMIC power resource.
  *
  * @param handle   [IN] PMIC Interface Handle
  * @param resource [IN] Power resource to control, see @ref Pmic_PwrResource.
@@ -518,7 +518,7 @@ int32_t Pmic_pwrSetResourceEnable(Pmic_CoreHandle_t *handle, uint8_t resource, b
 
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
- * @brief API to control the enable state of PMIC power resources.
+ * @brief Get the enable/disable state of a PMIC power resource.
  *
  * @param handle   [IN]  PMIC Interface Handle
  * @param resource [IN]  Power resource to get status of, see @ref Pmic_PwrResource.
@@ -558,7 +558,7 @@ int32_t Pmic_pwrGetResourceCfg(Pmic_CoreHandle_t *handle, Pmic_PowerResourceCfg_
 
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
- * @brief API to set the configuration of multiple PMIC power resources.
+ * @brief Set configurations of multiple PMIC power resources.
  *
  * @param handle     [IN] PMIC Interface Handle
  * @param numConfigs [IN] The number of configurations in the `config` array.
@@ -572,7 +572,7 @@ int32_t Pmic_pwrSetResourceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, c
 
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
- * @brief API to get the configuration of multiple PMIC power resources.
+ * @brief Get configurations of multiple PMIC power resources.
  *
  * @param handle     [IN]     PMIC Interface Handle
 
@@ -622,8 +622,7 @@ int32_t Pmic_pwrGetSequenceCfg(Pmic_CoreHandle_t *handle, Pmic_PowerSequenceCfg_
 
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
- * @brief API to set the power sequencing configuration of multiple PMIC power
- * resources.
+ * @brief Set the power sequencing configuration of multiple PMIC power resources.
  *
  * @note VCCA_VMON does not support sequencing configuration.
  *
@@ -639,8 +638,7 @@ int32_t Pmic_pwrSetSequenceCfgs(Pmic_CoreHandle_t *handle, uint8_t numConfigs, c
 
 /**
  * @ingroup DRV_PMIC_PWR_MODULE
- * @brief API to get the power sequencing configuration of multiple PMIC power
- * resources.
+ * @brief Get the power sequencing configuration of multiple PMIC power resources.
  *
  * @note VCCA_VMON does not support sequencing configuration.
  *

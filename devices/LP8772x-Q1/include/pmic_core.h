@@ -62,7 +62,7 @@ extern "C" {
  * @anchor Pmic_scratchPadRegSel
  * @name PMIC Scratch Pad Register Selection
  *
- * @brief Scratch pad register numbers used by the `Pmic_setScratchPadVal()`
+ * @brief Scratch pad register numbers used by the `Pmic_setScratchPadValue()`
  * PMIC Core API.
  *
  * @{
@@ -132,7 +132,7 @@ typedef struct Pmic_ConfigCrcStat_s {
  * @return Success code if value has been written to PMIC scratch pad register,
  * error code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_setScratchPadVal(Pmic_CoreHandle_t *handle, uint8_t scratchPadRegNum, uint8_t value);
+int32_t Pmic_setScratchPadValue(Pmic_CoreHandle_t *handle, uint8_t scratchPadRegNum, uint8_t value);
 
 /**
  * @brief Obtain the value of a scratch pad register on the PMIC.
@@ -145,7 +145,7 @@ int32_t Pmic_setScratchPadVal(Pmic_CoreHandle_t *handle, uint8_t scratchPadRegNu
  * from the PMIC, error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_errorCodes.
  */
-int32_t Pmic_getScratchPadVal(Pmic_CoreHandle_t *handle, uint8_t scratchPadRegNum, uint8_t *value);
+int32_t Pmic_getScratchPadValue(Pmic_CoreHandle_t *handle, uint8_t scratchPadRegNum, uint8_t *value);
 
 /**
  * @brief Set lock state for registers locked by REGISTER_LOCK.
@@ -209,7 +209,7 @@ int32_t Pmic_configCrcDisable(Pmic_CoreHandle_t *handle);
  * it returns an appropriate error code. For possible values, see @ref
  * Pmic_ErrorCodes.
  */
-int32_t Pmic_getConfigCrcStat(Pmic_CoreHandle_t *handle, Pmic_ConfigCrcStat_t *configCrcStat);
+int32_t Pmic_getConfigCrcStatus(Pmic_CoreHandle_t *handle, Pmic_ConfigCrcStat_t *configCrcStat);
 
 /**
  * @brief Calculate config register CRC, writes value to PMIC, and verifies

@@ -419,11 +419,7 @@ typedef struct Pmic_WdgAnsInfo_s {
 /* ========================================================================== */
 /**
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
- * @brief API to Enable Watchdog.
- *
- * This function is used to enable the PMIC watchdog. User needs to
- * ensure that this function is called to enable watchdog timer before
- * configuring or starting watchdog trigger or Q&A mode.
+ * @brief Enable PMIC watchdog. This API is a subset of `Pmic_wdgSetEnableState()`.
  *
  * @param handle [IN] PMIC Interface Handle
  *
@@ -434,11 +430,7 @@ int32_t Pmic_wdgEnable(Pmic_CoreHandle_t *handle);
 
 /**
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
- * @brief API to Disable Watchdog.
- *
- * This function is used to disable the PMIC watchdog. User needs to ensure
- * that after using this function, complete watchdog functionality and
- * configuration will be deactivated.
+ * @brief Disable PMIC watchdog. This API is a subset of `Pmic_wdgSetEnableState()`.
  *
  * @param handle [IN] PMIC Interface Handle
  *
@@ -449,7 +441,8 @@ int32_t Pmic_wdgDisable(Pmic_CoreHandle_t *handle);
 
 /**
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
- * @brief This function is used to set the Watchdog Enable state.
+ * @brief Enable or disable the PMIC watchdog. This API is a superset of
+ * `Pmic_wdgEnable()` and `Pmic_wdgDisable()`.
  *
  * @param handle [IN]  PMIC interface handle
  * @param enable [IN]  Set to true (PMIC_ENABLE) to enable watchdog, false
@@ -462,8 +455,7 @@ int32_t Pmic_wdgSetEnableState(Pmic_CoreHandle_t *handle, bool enable);
 
 /**
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
- * @brief This function is used to get the Watchdog Enable state (that is to
- * say, whether WD_EN bit is set to 1 or 0).
+ * @brief Get the enable state of the PMIC watchdog.
  *
  * @param handle    [IN]  PMIC interface handle
  * @param isEnabled [OUT] true (PMIC_ENABLE) if watchdog is enabled, otherwise
@@ -476,11 +468,7 @@ int32_t Pmic_wdgGetEnableState(Pmic_CoreHandle_t *handle, bool *isEnabled);
 
 /**
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
- * @brief API to set PMIC watchdog configurations.
- *
- * This function is used to configure the watchdog parameters in the PMIC for
- * trigger mode or Q&A (question and answer) mode, when corresponding
- * validParam bit fields are set in @ref Pmic_WdgCfg_t structure.
+ * @brief Set PMIC watchdog configurations.
  *
  * @note User has to call `Pmic_wdgEnable()` before setting the configuration.
  *
@@ -494,11 +482,8 @@ int32_t Pmic_wdgSetCfg(Pmic_CoreHandle_t *handle, const Pmic_WdgCfg_t *wdgCfg);
 
 /**
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
- * @brief API to get PMIC watchdog configurations.
- *
- * This function is used to get configuration of the watchdog from the PMIC for
- * trigger mode or Q&A (question and answer) mode, when corresponding
- * validParam bit fields are set in @ref Pmic_WdgCfg_t structure.
+ * @brief Get PMIC watchdog configurations. This API supports getting the same
+ * configurations that are settable by `Pmic_wdgSetCfg()`.
  *
  * @note User has to call `Pmic_wdgEnable()` before getting the configuration,
  * otherwise the results are invalid.
@@ -513,7 +498,8 @@ int32_t Pmic_wdgGetCfg(Pmic_CoreHandle_t *handle, Pmic_WdgCfg_t *wdgCfg);
 
 /**
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
- * @brief API to set the WD_PWRHOLD bit, which pauses the Long-Window timer.
+ * @brief Enable/disable WDG Power Hold, which controls whether WDG stays in Long-
+ * Window.
  *
  * @param handle [IN] PMIC Interface Handle
  * @param enable [IN] If set to true (PMIC_ENABLE), both WDG and Long-Window
@@ -527,7 +513,8 @@ int32_t Pmic_wdgSetPowerHold(Pmic_CoreHandle_t *handle, bool enable);
 
 /**
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
- * @brief API to get the WD_PWRHOLD bit, which pauses the Long-Window timer.
+ * @brief Get the WDG Power Hold enable/disable state, which indicates whether WDG
+ * stays in Long-Window.
  *
  * @param handle    [IN] PMIC Interface Handle
  * @param isEnabled [OUT] If set to true (PMIC_ENABLE), both WDG and
@@ -542,8 +529,8 @@ int32_t Pmic_wdgGetPowerHold(Pmic_CoreHandle_t *handle, bool *isEnabled);
 
 /**
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
- * @brief API to set the WD_RETURN_LONGWIN bit, which can be used while the WDG
- * is in normal operating mode to return it to Long-Window mode.
+ * @brief Enable/disable WDG Return to Long-Window, which controls whether WDG
+ * returns to Long-Window at the end of the current sequence.
  *
  * @param handle [IN] PMIC Interface Handle
  * @param enable [IN] If set to true (PMIC_ENABLE) while the WDG is in normal
@@ -557,8 +544,8 @@ int32_t Pmic_wdgSetReturnToLongWindow(Pmic_CoreHandle_t *handle, bool enable);
 
 /**
  * @ingroup DRV_PMIC_WDG_CONFIG_GROUP
- * @brief API to get the value of the WD_RETURN_LONGWIN bit, which can be used
- * while the WDG is in normal operating mode to return it to Long-Window mode.
+ * @brief Get WDG Return to Long-Window enable/disable state, which indicates
+ * whether WDG will return to Long-Window at the end of the current sequence.
  *
  * @param handle    [IN] PMIC Interface Handle
  * @param isEnabled [IN] Tracks the value of the WD_RETURN_LONGWIN bit, will be
@@ -572,11 +559,7 @@ int32_t Pmic_wdgGetReturnToLongWindow(Pmic_CoreHandle_t *handle, bool *isEnabled
 
 /**
  * @ingroup DRV_PMIC_WDG_ERROR_GROUP
- * @brief API to get PMIC watchdog error status.
- *
- * This function is used to get the watchdog error status from the PMIC for
- * trigger mode or Q&A (question and answer) mode, when corresponding
- * validParam bit fields are set in Pmic_WdgError_t structure.
+ * @brief Get PMIC watchdog error statuses.
  *
  * @note User has to call `Pmic_wdgEnable()` before getting the error status,
  * otherwise the results are invalid.
@@ -587,7 +570,7 @@ int32_t Pmic_wdgGetReturnToLongWindow(Pmic_CoreHandle_t *handle, bool *isEnabled
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgGetErrorStatus(Pmic_CoreHandle_t *handle, Pmic_WdgError_t *errors);
+int32_t Pmic_wdgGetErrStatus(Pmic_CoreHandle_t *handle, Pmic_WdgError_t *errors);
 
 /**
  * @ingroup DRV_PMIC_WDG_ERROR_GROUP
@@ -607,12 +590,9 @@ int32_t Pmic_wdgClrErrStatus(Pmic_CoreHandle_t *handle, const Pmic_WdgError_t *e
 
 /**
  * @ingroup DRV_PMIC_WDG_ERROR_GROUP
- * @brief API to clear all PMIC watchdog errors.
- *
- * This function is used to clear the watchdog error status from the PMIC for
- * trigger mode or Q&A (question and answer) mode, clearing all errors. This is
- * provided as a convenience method, `Pmic_wdgClrErrStatus()` should be
- * preferred for typical operation as it will selectively clear interrupts.
+ * @brief Clear all PMIC watchdog error statuses. Provided as a convenience,
+ * however, it is recommended to process watchdog statuses via
+ * `Pmic_wdgGetErrStatus()` and `Pmic_wdgClrErrStatus()` APIs.
  *
  * @param handle [IN] PMIC Interface Handle
  *
@@ -623,10 +603,7 @@ int32_t Pmic_wdgClrErrStatusAll(Pmic_CoreHandle_t *handle);
 
 /**
  * @ingroup DRV_PMIC_WDG_ERROR_GROUP
- * @brief API to get PMIC watchdog fail count status.
- *
- * This function is used to get the watchdog fail count status from the PMIC
- * for trigger mode or Q&A (question and answer) mode.
+ * @brief Get PMIC watchdog fail counter statuses.
  *
  * @note User has to call `Pmic_wdgEnable()` before getting the fail count,
  * otherwise the results are invalid.
@@ -637,26 +614,18 @@ int32_t Pmic_wdgClrErrStatusAll(Pmic_CoreHandle_t *handle);
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgGetFailCntStat(Pmic_CoreHandle_t *handle, Pmic_WdgFailCntStat_t *failCount);
+int32_t Pmic_wdgGetFailCntStatus(Pmic_CoreHandle_t *handle, Pmic_WdgFailCntStat_t *failCount);
 
 /**
  * @ingroup DRV_PMIC_WDG_APP_GROUP
- * @brief API to write answers in Long Window/Window1/Window2 intervals for
- * watchdog Q&A Sequence.
- *
- * This function is used to write Answers in Long Window/Window1/Window2
- * Interval for the WDG Q&A Sequence.
- *
- * User must ensure all Watchdog Q&A parameters are configured properly
- * using Pmic_wdgSetCfg() API, before writing Answers using this API
- * for the Q&A Sequence.
+ * @brief Calculate and send a WDG Q&A answer byte to the PMIC.
  *
  * @note In the event this API returns PMIC_ST_ERR_INV_WDG_ANSWER, the user
  * should adjust the Long window time interval, Window1 time interval, and
  * Window2 time interval.
  *
  * @note In the event this API returns PMIC_ST_ERR_INV_WDG_ANSWER, the user
- * should call `Pmic_wdgGetErrorStatus()` in order to read the WDG error. Based
+ * should call `Pmic_wdgGetErrStatus()` in order to read the WDG error. Based
  * on the determined error, the following actions may help:
  * - If the WDG error is Long Window Timeout or Timeout, user has to increase
  *   the Long window or window1 time interval accordingly
@@ -674,7 +643,7 @@ int32_t Pmic_wdgGetFailCntStat(Pmic_CoreHandle_t *handle, Pmic_WdgFailCntStat_t 
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values, see @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_wdgQaSequenceWriteAnswer(Pmic_CoreHandle_t *handle);
+int32_t Pmic_wdgQaWriteAnswer(Pmic_CoreHandle_t *handle);
 
 /**
  * @brief Read PMIC register that has the WDG Q&A feedback.
@@ -689,7 +658,7 @@ int32_t Pmic_wdgQaSequenceWriteAnswer(Pmic_CoreHandle_t *handle);
  * 4. Pmic_wdgExtractAnsCntAndQues()
  * 5. Pmic_wdgWriteAnswer()
  *
- * See also: `Pmic_wdgQaSequenceWriteAnswer()` which performs these steps
+ * See also: `Pmic_wdgQaWriteAnswer()` which performs these steps
  * automatically.
  *
  * @param handle [IN] PMIC interface handle.
@@ -714,7 +683,7 @@ int32_t Pmic_wdgGetFdbkRegData(Pmic_CoreHandle_t *handle, uint8_t *regData);
  * 4. Pmic_wdgExtractAnsCntAndQues()
  * 5. Pmic_wdgWriteAnswer()
  *
- * See also: `Pmic_wdgQaSequenceWriteAnswer()` which performs these steps
+ * See also: `Pmic_wdgQaWriteAnswer()` which performs these steps
  * automatically.
  *
  * @param regData [IN] Register data that contains the WDG Q&A feedback.
@@ -740,7 +709,7 @@ int32_t Pmic_wdgExtractFdbk(uint8_t regData, Pmic_WdgAnsInfo_t *wdgAnsInfo);
  * 4. Pmic_wdgExtractAnsCntAndQues()
  * 5. Pmic_wdgWriteAnswer()
  *
- * See also: `Pmic_wdgQaSequenceWriteAnswer()` which performs these steps
+ * See also: `Pmic_wdgQaWriteAnswer()` which performs these steps
  * automatically.
  *
  * @param handle [IN] PMIC interface handle.
@@ -766,7 +735,7 @@ int32_t Pmic_wdgGetAnsCntAndQuesRegData(Pmic_CoreHandle_t *handle, uint8_t *regD
  * 4. Pmic_wdgExtractAnsCntAndQues()
  * 5. Pmic_wdgWriteAnswer()
  *
- * See also: `Pmic_wdgQaSequenceWriteAnswer()` which performs these steps
+ * See also: `Pmic_wdgQaWriteAnswer()` which performs these steps
  * automatically.
  *
  * @param handle [IN] PMIC interface handle.
@@ -796,7 +765,7 @@ int32_t Pmic_wdgExtractAnsCntAndQues(Pmic_CoreHandle_t *handle, uint8_t regData,
  * 4. Pmic_wdgExtractAnsCntAndQues()
  * 5. Pmic_wdgWriteAnswer()
  *
- * See also: `Pmic_wdgQaSequenceWriteAnswer()` which performs these steps
+ * See also: `Pmic_wdgQaWriteAnswer()` which performs these steps
  * automatically.
  *
  * @param handle [IN] PMIC interface handle.
