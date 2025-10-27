@@ -192,7 +192,7 @@ int32_t Pmic_timerSetCfg(Pmic_CoreHandle_t *handle, const Pmic_timerCfg_t *timer
 
 /**
  * @brief Get PMIC timer configuration. This API supports getting the same
- * configurations that are supported by Pmic_timerSetCfg().
+ * configurations that are settable by `Pmic_timerSetCfg()`.
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -205,9 +205,8 @@ int32_t Pmic_timerSetCfg(Pmic_CoreHandle_t *handle, const Pmic_timerCfg_t *timer
 int32_t Pmic_timerGetCfg(Pmic_CoreHandle_t *handle, Pmic_timerCfg_t *timerCfg);
 
 /**
- * @brief Stop PMIC timer. This API is a subset of Pmic_timerSetCfg(). That is
- * to say, the Pmic_timerSetCfg() API can be used alternatively to stop the PMIC
- * timer.
+ * @brief Alternative routine to stop the PMIC timer. That is to say, this API can
+ * be used instead of `Pmic_timerSetCfg()` to stop the timer.
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -267,7 +266,7 @@ int32_t Pmic_timerGetCnt(Pmic_CoreHandle_t *handle, uint32_t *tmrCnt);
  * @return Success code if PMIC wakeup value has been set, error code otherwise.
  * For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_timerSetWakeupVal(Pmic_CoreHandle_t *handle, uint32_t wakeupVal);
+int32_t Pmic_timerSetWakeupValue(Pmic_CoreHandle_t *handle, uint32_t wakeupVal);
 
 /**
  * @brief Get PMIC wakeup value.
@@ -279,7 +278,7 @@ int32_t Pmic_timerSetWakeupVal(Pmic_CoreHandle_t *handle, uint32_t wakeupVal);
  * @return Success code if PMIC wakeup value has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_timerGetWakeupVal(Pmic_CoreHandle_t *handle, uint32_t *wakeupVal);
+int32_t Pmic_timerGetWakeupValue(Pmic_CoreHandle_t *handle, uint32_t *wakeupVal);
 
 #ifdef __cplusplus
 }

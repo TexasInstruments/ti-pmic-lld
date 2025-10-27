@@ -622,7 +622,7 @@ int32_t Pmic_fsmSetCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmCfg_t *fsmCfg);
 
 /**
  * @brief Get PMIC FSM configurations. This API supports getting the same
- * configurations that are settable by Pmic_fsmSetCfg().
+ * configurations that are settable by `Pmic_fsmSetCfg()`.
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -678,7 +678,7 @@ int32_t Pmic_fsmSetWakeupCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmWakeupCfg_
 
 /**
  * @brief Get PMIC Wakeup configurations. This API supports getting the same
- * configurations that are settable through Pmic_fsmSetWakeupCfg().
+ * configurations that are settable by `Pmic_fsmSetWakeupCfg()`.
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -723,11 +723,11 @@ int32_t Pmic_fsmGetWakeStatus(Pmic_CoreHandle_t *handle, Pmic_FsmWakeupStat_t *w
  * @return Success code if PMIC power latch configurations have been set, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmSetPwrLatchCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmPwrLatchCfg_t *pwrLatchCfg);
+int32_t Pmic_fsmSetPowerLatchCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmPwrLatchCfg_t *pwrLatchCfg);
 
 /**
- * @brief Get PMIC power latch configurations. This API supports getting the
- * same configurations that are settable through Pmic_fsmSetPwrLatchCfg().
+ * @brief Get PMIC power latch configurations. This API supports getting the same
+ * configurations that are settable by `Pmic_fsmSetPowerLatchCfg()`.
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -738,7 +738,7 @@ int32_t Pmic_fsmSetPwrLatchCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmPwrLatch
  * error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmGetPwrLatchCfg(Pmic_CoreHandle_t *handle, Pmic_FsmPwrLatchCfg_t *pwrLatchCfg);
+int32_t Pmic_fsmGetPowerLatchCfg(Pmic_CoreHandle_t *handle, Pmic_FsmPwrLatchCfg_t *pwrLatchCfg);
 
 /**
  * @brief Set PMIC power latches.
@@ -757,11 +757,11 @@ int32_t Pmic_fsmGetPwrLatchCfg(Pmic_CoreHandle_t *handle, Pmic_FsmPwrLatchCfg_t 
  * @return Success code if PMIC power latches have been set, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmSetPwrLatch(Pmic_CoreHandle_t *handle, const Pmic_FsmPwrLatch_t *pwrLatch);
+int32_t Pmic_fsmSetPowerLatch(Pmic_CoreHandle_t *handle, const Pmic_FsmPwrLatch_t *pwrLatch);
 
 /**
- * @brief Get PMIC power latches. This API supports getting the same power
- * latches that are settable through Pmic_fsmSetPwrLatch().
+ * @brief Get PMIC power latches. This API supports getting the same power latches
+ * that are settable by `Pmic_fsmSetPowerLatch()`.
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -770,7 +770,7 @@ int32_t Pmic_fsmSetPwrLatch(Pmic_CoreHandle_t *handle, const Pmic_FsmPwrLatch_t 
  * @return Success code if PMIC power latches have been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmGetPwrLatch(Pmic_CoreHandle_t *handle, Pmic_FsmPwrLatch_t *pwrLatch);
+int32_t Pmic_fsmGetPowerLatch(Pmic_CoreHandle_t *handle, Pmic_FsmPwrLatch_t *pwrLatch);
 
 /**
  * @brief Get the duration of the last RESET-MCU event.
@@ -785,7 +785,7 @@ int32_t Pmic_fsmGetPwrLatch(Pmic_CoreHandle_t *handle, Pmic_FsmPwrLatch_t *pwrLa
  * @return Success code if the duration has been obtained from the PMIC, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmGetLastRstMcuStateDuration(Pmic_CoreHandle_t *handle, uint8_t *duration);
+int32_t Pmic_fsmGetLastResetMcuStateDuration(Pmic_CoreHandle_t *handle, uint8_t *duration);
 
 #ifdef __cplusplus
 }

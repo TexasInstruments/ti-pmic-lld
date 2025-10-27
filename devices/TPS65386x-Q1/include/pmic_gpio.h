@@ -320,7 +320,7 @@ int32_t Pmic_gpioSetCfg(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t *gpioCfg
 
 /**
  * @brief Get PMIC GPIO configurations. This API supports getting the same
- * configurations that are settable by Pmic_gpioSetCfg().
+ * configurations that are settable by `Pmic_gpioSetCfg()`.
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -333,7 +333,7 @@ int32_t Pmic_gpioSetCfg(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t *gpioCfg
 int32_t Pmic_gpioGetCfg(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpioCfg);
 
 /**
- * @brief Get the output value of a PMIC GPO.
+ * @brief Get the output value of a general purpose output pin on the PMIC.
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -346,7 +346,7 @@ int32_t Pmic_gpioGetCfg(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpioCfg);
  * @return Success code if GPO output value has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_gpioGetOutputVal(Pmic_CoreHandle_t *handle, uint8_t gpo, bool *high);
+int32_t Pmic_gpioGetOutputValue(Pmic_CoreHandle_t *handle, uint8_t gpo, bool *high);
 
 #ifdef __cplusplus
 }

@@ -303,7 +303,7 @@ typedef struct Pmic_IrqStat_s {
 int32_t Pmic_irqSetCfg(Pmic_CoreHandle_t *handle, const Pmic_IrqCfg_t *irqCfg);
 
 /**
- * @brief Set the configuration for multiple PMIC IRQs.
+ * @brief Set the mask configuration for multiple PMIC IRQs.
  *
  * @param handle  [IN] PMIC interface handle.
  * @param numIrqs [IN] Number of IRQ configurations to set.
@@ -326,7 +326,7 @@ int32_t Pmic_irqSetCfgs(Pmic_CoreHandle_t *handle, uint8_t numIrqs, const Pmic_I
 int32_t Pmic_irqGetCfg(Pmic_CoreHandle_t *handle, Pmic_IrqCfg_t *irqCfg);
 
 /**
- * @brief Get the mask configuration for PMIC IRQs.
+ * @brief Get the mask configuration for multiple PMIC IRQs.
  *
  * @param handle      [IN]     PMIC interface handle.
  * @param numIrqMasks [IN]     Number of IRQ mask configurations to obtain.
@@ -348,12 +348,12 @@ int32_t Pmic_irqGetCfgs(Pmic_CoreHandle_t *handle, uint8_t numIrqs, Pmic_IrqCfg_
  * @return Success code if all PMIC IRQ statuses have been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_irqGetStat(Pmic_CoreHandle_t *handle, Pmic_IrqStat_t *irqStat);
+int32_t Pmic_irqGetStatus(Pmic_CoreHandle_t *handle, Pmic_IrqStat_t *irqStat);
 
 /**
  * @brief Get the next PMIC IRQ that has its flag set (status bit set to 1).
  *
- * @attention End-user must call `Pmic_irqGetStat()` first to get all PMIC IRQ
+ * @attention End-user must call `Pmic_irqGetStatus()` first to get all PMIC IRQ
  * statuses. Once the IRQ statuses have been obtained, it is passed as input to
  * this API so that the next IRQ flag can be discovered. Once the next flag is
  * found, end-user can call `Pmic_irqClrFlag()` to clear the flag.

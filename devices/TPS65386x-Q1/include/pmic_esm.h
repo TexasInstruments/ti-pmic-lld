@@ -298,8 +298,8 @@ typedef struct Pmic_EsmStatus_s {
 /* ========================================================================== */
 
 /**
- * @brief Start/stop the PMIC ESM. This API is a superset of Pmic_esmStart() and
- * Pmic_esmStop().
+ * @brief Start/stop the PMIC ESM. This API is a superset of `Pmic_esmStart()` and
+ * `Pmic_esmStop()`.
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -311,7 +311,7 @@ typedef struct Pmic_EsmStatus_s {
 int32_t Pmic_esmSetStartState(Pmic_CoreHandle_t *handle, bool start);
 
 /**
- * @brief Start PMIC ESM. This API is a subset of Pmic_esmSetStartState().
+ * @brief Start PMIC ESM. This API is a subset of `Pmic_esmSetStartState()`.
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -321,7 +321,7 @@ int32_t Pmic_esmSetStartState(Pmic_CoreHandle_t *handle, bool start);
 int32_t Pmic_esmStart(Pmic_CoreHandle_t *handle);
 
 /**
- * @brief Stop PMIC ESM. This API is a subset of Pmic_esmSetStartState().
+ * @brief Stop PMIC ESM. This API is a subset of `Pmic_esmSetStartState()`.
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -370,7 +370,7 @@ int32_t Pmic_esmSetCfg(Pmic_CoreHandle_t *handle, const Pmic_EsmCfg_t *esmCfg);
 
 /**
  * @brief Get PMIC ESM configurations. This API supports obtaining the same
- * configurations that are settable by Pmic_esmSetCfg().
+ * configurations that are settable by `Pmic_esmSetCfg()`.
  *
  * @param handle [IN] PMIC interface handle.
  *

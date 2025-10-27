@@ -57,7 +57,7 @@
 /*                        Interface Implementations                           */
 /* ========================================================================== */
 int32_t Pmic_setRegLockState(Pmic_CoreHandle_t *handle, uint8_t lockState) {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     // Holds the sequence used for register lock/unlock. For locking, writing
     // any sequence other than the correct one will lock the registers, in
@@ -88,7 +88,7 @@ int32_t Pmic_setRegLockState(Pmic_CoreHandle_t *handle, uint8_t lockState) {
 }
 
 int32_t Pmic_setCntLockState(Pmic_CoreHandle_t *handle, uint8_t lockState) {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     // Holds the sequence used for register lock/unlock. For locking, writing
     // any sequence other than the correct one will lock the registers, in
@@ -137,7 +137,7 @@ int32_t Pmic_setLockCfg(Pmic_CoreHandle_t *handle, const Pmic_Lock_t *config) {
 }
 
 int32_t Pmic_getLockCfg(Pmic_CoreHandle_t *handle, Pmic_Lock_t *config) {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
     // Read from REG_STAT_REG with critical section

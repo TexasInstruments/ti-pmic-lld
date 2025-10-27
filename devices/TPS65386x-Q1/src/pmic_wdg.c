@@ -48,7 +48,7 @@
 /*                          Function Definitions                              */
 /* ========================================================================== */
 static int32_t WDG_validatePmicCoreHandle(const Pmic_CoreHandle_t *handle) {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     /* Check the watch dog sub-system supported by pmic device */
     if ((status == PMIC_ST_SUCCESS) && !handle->pPmic_SubSysInfo->wdgEnable) {
@@ -879,7 +879,7 @@ int32_t Pmic_wdgClrErrStatusAll(Pmic_CoreHandle_t *handle) {
     return status;
 }
 
-int32_t Pmic_wdgGetFailCntStat(Pmic_CoreHandle_t *handle, Pmic_WdgFailCntStat_t *failCount) {
+int32_t Pmic_wdgGetFailCntStatus(Pmic_CoreHandle_t *handle, Pmic_WdgFailCntStat_t *failCount) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
     uint8_t regVal = 0x00U;
 
@@ -912,7 +912,7 @@ int32_t Pmic_wdgGetFailCntStat(Pmic_CoreHandle_t *handle, Pmic_WdgFailCntStat_t 
     return status;
 }
 
-int32_t Pmic_wdgQaSequenceWriteAnswer(Pmic_CoreHandle_t *handle) {
+int32_t Pmic_wdgQaWriteAnswer(Pmic_CoreHandle_t *handle) {
     int32_t status = WDG_validatePmicCoreHandle(handle);
 
     uint8_t qaAnsCnt = 0U;

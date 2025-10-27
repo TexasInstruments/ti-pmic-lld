@@ -251,7 +251,7 @@ static int32_t PWR_setBbVmonDgl(Pmic_CoreHandle_t *handle, const Pmic_PwrBuckBoo
 
 int32_t Pmic_pwrSetBuckBoostCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrBuckBoostCfg_t *buckBoostCfg)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (buckBoostCfg == NULL))
     {
@@ -376,7 +376,7 @@ static int32_t PWR_getBbVmonDgl(Pmic_CoreHandle_t *handle, Pmic_PwrBuckBoostCfg_
 
 int32_t Pmic_pwrGetBuckBoostCfg(Pmic_CoreHandle_t *handle, Pmic_PwrBuckBoostCfg_t *buckBoostCfg)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (buckBoostCfg == NULL))
     {
@@ -654,7 +654,7 @@ static int32_t PWR_setLdoIlimDgl(Pmic_CoreHandle_t *handle, const Pmic_PwrLdoCfg
 
 int32_t Pmic_pwrSetLdoCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (ldoCfg == NULL))
     {
@@ -882,7 +882,7 @@ static int32_t PWR_getLdoIlimDgl(Pmic_CoreHandle_t *handle, Pmic_PwrLdoCfg_t *ld
 
 int32_t Pmic_pwrGetLdoCfg(Pmic_CoreHandle_t *handle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (ldoCfg == NULL))
     {
@@ -1288,7 +1288,7 @@ static int32_t PWR_setPldoIlimDgl(Pmic_CoreHandle_t *handle, const Pmic_PwrPldoC
 
 int32_t Pmic_pwrSetPldoCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrPldoCfg_t *pldoCfg)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (pldoCfg == NULL))
     {
@@ -1585,7 +1585,7 @@ static int32_t PWR_getPldoIlimDgl(Pmic_CoreHandle_t *handle, Pmic_PwrPldoCfg_t *
 
 int32_t Pmic_pwrGetPldoCfg(Pmic_CoreHandle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (pldoCfg == NULL))
     {
@@ -1793,7 +1793,7 @@ static int32_t PWR_setExtVmonDgl(Pmic_CoreHandle_t *handle, const Pmic_PwrExtVmo
 
 int32_t Pmic_pwrSetExtVmonCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrExtVmonCfg_t *extVmonCfg)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (extVmonCfg == NULL))
     {
@@ -1932,7 +1932,7 @@ static int32_t PWR_getExtVmonDgl(Pmic_CoreHandle_t *handle, Pmic_PwrExtVmonCfg_t
 
 int32_t Pmic_pwrGetExtVmonCfg(Pmic_CoreHandle_t *handle, Pmic_PwrExtVmonCfg_t *extVmonCfg)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (extVmonCfg == NULL))
     {
@@ -2279,9 +2279,9 @@ static int32_t PWR_getExtVmonStat(Pmic_CoreHandle_t *handle, Pmic_PwrRsrcStat_t 
     return status;
 }
 
-int32_t Pmic_pwrGetRsrcStat(Pmic_CoreHandle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
+int32_t Pmic_pwrGetRsrcStatus(Pmic_CoreHandle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (pwrRsrcStat == NULL))
     {
@@ -2592,9 +2592,9 @@ static int32_t PWR_clrExtVmonStat(Pmic_CoreHandle_t *handle, const Pmic_PwrRsrcS
     return status;
 }
 
-int32_t Pmic_pwrClrRsrcStat(Pmic_CoreHandle_t *handle, const Pmic_PwrRsrcStat_t *pwrRsrcStat)
+int32_t Pmic_pwrClrRsrcStatus(Pmic_CoreHandle_t *handle, const Pmic_PwrRsrcStat_t *pwrRsrcStat)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (pwrRsrcStat == NULL))
     {
@@ -2636,9 +2636,9 @@ int32_t Pmic_pwrClrRsrcStat(Pmic_CoreHandle_t *handle, const Pmic_PwrRsrcStat_t 
     return status;
 }
 
-int32_t Pmic_pwrClrRsrcStatAll(Pmic_CoreHandle_t *handle)
+int32_t Pmic_pwrClrRsrcStatusAll(Pmic_CoreHandle_t *handle)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     for (uint8_t i = 0U; i < NUM_CLEARABLE_POWER_STAT_REGS; i++)
     {
@@ -2656,7 +2656,7 @@ int32_t Pmic_pwrClrRsrcStatAll(Pmic_CoreHandle_t *handle)
 
 int32_t Pmic_pwrSetPGoodInStby(Pmic_CoreHandle_t *handle, bool enable)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
     if (status == PMIC_ST_SUCCESS)
@@ -2679,7 +2679,7 @@ int32_t Pmic_pwrSetPGoodInStby(Pmic_CoreHandle_t *handle, bool enable)
 
 int32_t Pmic_pwrGetPGoodInStby(Pmic_CoreHandle_t *handle, bool *isEnabled)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
     // Validate parameters

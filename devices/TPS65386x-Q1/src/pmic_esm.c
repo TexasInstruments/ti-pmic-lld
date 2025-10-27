@@ -51,7 +51,7 @@
 
 int32_t Pmic_esmSetStartState(Pmic_CoreHandle_t *handle, bool start)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
     if (status == PMIC_ST_SUCCESS)
@@ -82,7 +82,7 @@ int32_t Pmic_esmStop(Pmic_CoreHandle_t *handle)
 
 int32_t Pmic_esmGetStartState(Pmic_CoreHandle_t *handle, bool *start)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (start == NULL))
@@ -268,7 +268,7 @@ static int32_t ESM_setCtrlConfig(Pmic_CoreHandle_t *handle, const Pmic_EsmCfg_t 
 
 int32_t Pmic_esmSetCfg(Pmic_CoreHandle_t *handle, const Pmic_EsmCfg_t *esmCfg)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (esmCfg == NULL))
     {
@@ -453,7 +453,7 @@ static int32_t ESM_getCtrlConfig(Pmic_CoreHandle_t *handle, Pmic_EsmCfg_t *esmCf
 
 int32_t Pmic_esmGetCfg(Pmic_CoreHandle_t *handle, Pmic_EsmCfg_t *esmCfg)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (esmCfg == NULL))
     {
@@ -486,7 +486,7 @@ int32_t Pmic_esmGetCfg(Pmic_CoreHandle_t *handle, Pmic_EsmCfg_t *esmCfg)
 
 int32_t Pmic_esmGetStatus(Pmic_CoreHandle_t *handle, Pmic_EsmStatus_t *esmStat)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (esmStat == NULL))
@@ -532,7 +532,7 @@ int32_t Pmic_esmGetStatus(Pmic_CoreHandle_t *handle, Pmic_EsmStatus_t *esmStat)
 
 int32_t Pmic_esmClrStatus(Pmic_CoreHandle_t *handle, const Pmic_EsmStatus_t *esmStat)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (esmStat == NULL))

@@ -387,13 +387,7 @@ typedef struct Pmic_CoreCfg_s {
 /*==========================================================================*/
 /**
  * @ingroup DRV_PMIC_MODULE
- * @brief API to Initialize PMIC core handle for the PMIC LLD.
- *
- * This function gets device configuration from coreCfg and initializes
- * device specific information in handle after validation of given
- * params. Depends on validParams bit fields and does some basic validation on
- * PMIC interface I2C/SPI, confirming that PMIC is accessible for PMIC
- * configuration and monitor features.
+ * @brief Initialize a PMIC handle instance for PMIC LLD.
  *
  * @param handle  [OUT] PMIC Interface Handle
  * @param coreCfg [IN]  PMIC Configuration Data
@@ -405,10 +399,7 @@ int32_t Pmic_init(const Pmic_CoreCfg_t *coreCfg, Pmic_CoreHandle_t *handle);
 
 /**
  * @ingroup DRV_PMIC_MODULE
- * @brief API to De-initialize an existing PMIC Instance.
- *
- * This function takes an existing Instance handle and closes the LLD
- * being used for this Instance.
+ * @brief De-initialize a PMIC handle instance.
  *
  * @param  handle  [IN] PMIC Interface Handle
  *
@@ -419,18 +410,17 @@ int32_t Pmic_deinit(Pmic_CoreHandle_t *handle);
 
 /**
  * @ingroup DRV_PMIC_MODULE
- * @brief API to verify the proper construction of the PMIC handle instance.
- *
- * This API is primarily intended for use internal to the driver, as all public
- * functions must verify the integrity of the handle before performing
- * operations using it.
+ * @brief Validate a PMIC handle instance for proper initialization and
+ * construction. Utilized by all public LLD APIs that accept a handle as input
+ * parameter to help prevent corrupt handle usage. Can be used in the application
+ * layer to check the handle independently.
  *
  * @param  handle  [IN] PMIC Interface Handle
  *
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * valid values @ref Pmic_ErrorCodes.
  */
-int32_t Pmic_checkPmicCoreHandle(const Pmic_CoreHandle_t *handle);
+int32_t Pmic_checkHandle(const Pmic_CoreHandle_t *handle);
 
 #ifdef __cplusplus
 }

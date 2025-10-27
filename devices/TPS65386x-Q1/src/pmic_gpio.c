@@ -197,7 +197,7 @@ static int32_t GPIO_setCfgGpo3_4(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t
 
 int32_t Pmic_gpioSetCfg(Pmic_CoreHandle_t *handle, const Pmic_GpioCfg_t *gpioCfg)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (gpioCfg == NULL))
     {
@@ -328,7 +328,7 @@ static int32_t GPIO_getCfgGpo3_4(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpio
 
 int32_t Pmic_gpioGetCfg(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpioCfg)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (gpioCfg == NULL))
     {
@@ -367,10 +367,10 @@ int32_t Pmic_gpioGetCfg(Pmic_CoreHandle_t *handle, Pmic_GpioCfg_t *gpioCfg)
     return status;
 }
 
-int32_t Pmic_gpioGetOutputVal(Pmic_CoreHandle_t *handle, uint8_t gpo, bool *high)
+int32_t Pmic_gpioGetOutputValue(Pmic_CoreHandle_t *handle, uint8_t gpo, bool *high)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && ((gpo < PMIC_GPO_MIN) || (gpo > PMIC_GPO_MAX)))
     {

@@ -157,14 +157,8 @@ typedef struct Pmic_Lock_s {
 /*==========================================================================*/
 /**
  * @ingroup DRV_PMIC_CORE_LOCK_GROUP
- * @brief Set register lock/unlock configuration.
- * This function is responsible for configuring the register lock/unlock
- * settings of the PMIC based on the provided parameters in the commonCtrlCfg
- * structure. The function initiates a critical section to ensure atomicity of
- * the operation. It then sends the register unlock configuration data to the
- * PMIC via the communication interface. Upon successful transmission of the
- * unlock data, it sends the register lock configuration data. Finally, it
- * terminates the critical section.
+ * @brief Set register lock and counter lock configurations. This API is a superset
+ * of `Pmic_setRegLockState()` and `Pmic_setCntLockState()`.
  *
  * @param handle [IN] Pointer to the PMIC core handle structure.
  * @param config [IN] Pointer to the lock configuration structure containing
@@ -178,7 +172,8 @@ int32_t Pmic_setLockCfg(Pmic_CoreHandle_t *handle, const Pmic_Lock_t *config);
 
 /**
  * @ingroup DRV_PMIC_CORE_LOCK_GROUP
- * @brief Get register lock status for all lockable registers on PMIC.
+ * @brief Get register lock and counter lock configurations. This API is a superset
+ * of `Pmic_getRegLockState()` and `Pmic_getCntLockState()`.
  *
  * @param handle Pointer to the PMIC core handle structure.
  * @param config [IN/OUT] Pointer to the lock configuration structure to store
@@ -192,7 +187,8 @@ int32_t Pmic_getLockCfg(Pmic_CoreHandle_t *handle, Pmic_Lock_t *config);
 
 /**
  * @ingroup DRV_PMIC_CORE_LOCK_GROUP
- * @brief Set lock state for registers locked by CFG_REG_LOCK.
+ * @brief Lock/unlock registers that are locked by CFG_REG_LOCK. This API is a
+ * subset of `Pmic_setLockCfg()`.
  *
  * @param handle    [IN] Pointer to the PMIC core handle structure.
  * @param lockState [IN] Lock registers with PMIC_LOCK_ENABLE, unlock with
@@ -206,7 +202,8 @@ int32_t Pmic_setRegLockState(Pmic_CoreHandle_t *handle, uint8_t lockState);
 
 /**
  * @ingroup DRV_PMIC_CORE_LOCK_GROUP
- * @brief Get lock state for registers locked by CFG_REG_LOCK.
+ * @brief Get lock state for registers locked by CFG_REG_LOCK. This API is a subset
+ * of `Pmic_getLockCfg()`.
  *
  * @param handle    [IN]  Pointer to the PMIC core handle structure.
  * @param lockState [OUT] If PMIC_LOCK_ENABLE, registers are locked. If
@@ -220,7 +217,8 @@ int32_t Pmic_getRegLockState(Pmic_CoreHandle_t *handle, uint8_t *lockState);
 
 /**
  * @ingroup DRV_PMIC_CORE_LOCK_GROUP
- * @brief Set lock state for registers locked by CNT_REG_LOCK.
+ * @brief Lock/unlock registers that are locked by CNT_REG_LOCK. This API is a
+ * subset of `Pmic_setLockCfg()`.
  *
  * @param handle    [IN] Pointer to the PMIC core handle structure.
  * @param lockState [IN] Lock registers with PMIC_LOCK_ENABLE, unlock with
@@ -234,7 +232,8 @@ int32_t Pmic_setCntLockState(Pmic_CoreHandle_t *handle, uint8_t lockState);
 
 /**
  * @ingroup DRV_PMIC_CORE_LOCK_GROUP
- * @brief Get lock state for registers locked by CNT_REG_LOCK.
+ * @brief Get lock state for registers locked by CNT_REG_LOCK. This API is a subset
+ * of `Pmic_getLockCfg()`.
  *
  * @param handle    [IN]  Pointer to the PMIC core handle structure.
  * @param lockState [OUT] If PMIC_LOCK_ENABLE, registers are locked. If

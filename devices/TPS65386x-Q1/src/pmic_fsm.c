@@ -65,7 +65,7 @@
 int32_t Pmic_fsmSetDevState(Pmic_CoreHandle_t *handle, uint8_t state)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (state > PMIC_STATE_REQUEST_MAX))
     {
@@ -93,7 +93,7 @@ int32_t Pmic_fsmSetDevState(Pmic_CoreHandle_t *handle, uint8_t state)
 int32_t Pmic_fsmGetDevState(Pmic_CoreHandle_t *handle, uint8_t *state)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (state == NULL))
     {
@@ -327,7 +327,7 @@ static int32_t FSM_setSafeTmoCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmCfg_t 
 
 int32_t Pmic_fsmSetCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmCfg_t *fsmCfg)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (fsmCfg == NULL))
     {
@@ -526,7 +526,7 @@ static int32_t FSM_getSafeTmoCfg(Pmic_CoreHandle_t *handle, Pmic_FsmCfg_t *fsmCf
 
 int32_t Pmic_fsmGetCfg(Pmic_CoreHandle_t *handle, Pmic_FsmCfg_t *fsmCfg)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (fsmCfg == NULL))
     {
@@ -588,7 +588,7 @@ int32_t Pmic_fsmGetCfg(Pmic_CoreHandle_t *handle, Pmic_FsmCfg_t *fsmCfg)
 int32_t Pmic_fsmSetDevErrCnt(Pmic_CoreHandle_t *handle, uint8_t devErrCnt)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (devErrCnt > PMIC_DEV_ERR_CNT_MAX))
     {
@@ -616,7 +616,7 @@ int32_t Pmic_fsmSetDevErrCnt(Pmic_CoreHandle_t *handle, uint8_t devErrCnt)
 int32_t Pmic_fsmGetDevErrCnt(Pmic_CoreHandle_t *handle, uint8_t *devErrCnt)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (devErrCnt == NULL))
     {
@@ -713,7 +713,7 @@ static int32_t FSM_setWakeupCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmWakeupC
 
 int32_t Pmic_fsmSetWakeupCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmWakeupCfg_t *wakeupCfg)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (wakeupCfg == NULL))
     {
@@ -779,7 +779,7 @@ static int32_t FSM_getWakeupCfg(Pmic_CoreHandle_t *handle, Pmic_FsmWakeupCfg_t *
 
 int32_t Pmic_fsmGetWakeupCfg(Pmic_CoreHandle_t *handle, Pmic_FsmWakeupCfg_t *wakeupCfg)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (wakeupCfg == NULL))
     {
@@ -806,7 +806,7 @@ int32_t Pmic_fsmGetWakeupCfg(Pmic_CoreHandle_t *handle, Pmic_FsmWakeupCfg_t *wak
 int32_t Pmic_fsmGetWakeStatus(Pmic_CoreHandle_t *handle, Pmic_FsmWakeupStat_t *wakeupStat)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (wakeupStat == NULL))
     {
@@ -885,9 +885,9 @@ static int32_t FSM_setPwrLatchCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmPwrLa
     return status;
 }
 
-int32_t Pmic_fsmSetPwrLatchCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmPwrLatchCfg_t *pwrLatchCfg)
+int32_t Pmic_fsmSetPowerLatchCfg(Pmic_CoreHandle_t *handle, const Pmic_FsmPwrLatchCfg_t *pwrLatchCfg)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (pwrLatchCfg == NULL))
     {
@@ -951,9 +951,9 @@ static int32_t FSM_getPwrLatchCfg(Pmic_CoreHandle_t *handle, Pmic_FsmPwrLatchCfg
     return status;
 }
 
-int32_t Pmic_fsmGetPwrLatchCfg(Pmic_CoreHandle_t *handle, Pmic_FsmPwrLatchCfg_t *pwrLatchCfg)
+int32_t Pmic_fsmGetPowerLatchCfg(Pmic_CoreHandle_t *handle, Pmic_FsmPwrLatchCfg_t *pwrLatchCfg)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (pwrLatchCfg == NULL))
     {
@@ -977,10 +977,10 @@ int32_t Pmic_fsmGetPwrLatchCfg(Pmic_CoreHandle_t *handle, Pmic_FsmPwrLatchCfg_t 
     return status;
 }
 
-int32_t Pmic_fsmSetPwrLatch(Pmic_CoreHandle_t *handle, const Pmic_FsmPwrLatch_t *pwrLatch)
+int32_t Pmic_fsmSetPowerLatch(Pmic_CoreHandle_t *handle, const Pmic_FsmPwrLatch_t *pwrLatch)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (pwrLatch == NULL))
     {
@@ -1042,10 +1042,10 @@ int32_t Pmic_fsmSetPwrLatch(Pmic_CoreHandle_t *handle, const Pmic_FsmPwrLatch_t 
     return status;
 }
 
-int32_t Pmic_fsmGetPwrLatch(Pmic_CoreHandle_t *handle, Pmic_FsmPwrLatch_t *pwrLatch)
+int32_t Pmic_fsmGetPowerLatch(Pmic_CoreHandle_t *handle, Pmic_FsmPwrLatch_t *pwrLatch)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (pwrLatch == NULL))
     {
@@ -1101,10 +1101,10 @@ int32_t Pmic_fsmGetPwrLatch(Pmic_CoreHandle_t *handle, Pmic_FsmPwrLatch_t *pwrLa
     return status;
 }
 
-int32_t Pmic_fsmGetLastRstMcuStateDuration(Pmic_CoreHandle_t *handle, uint8_t *duration)
+int32_t Pmic_fsmGetLastResetMcuStateDuration(Pmic_CoreHandle_t *handle, uint8_t *duration)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (duration == NULL))
     {

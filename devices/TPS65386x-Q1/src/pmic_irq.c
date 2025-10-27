@@ -699,7 +699,7 @@ static inline int32_t IRQ_checkConfigParam(const Pmic_IrqCfg_t *irqCfg)
 }
 
 int32_t Pmic_irqSetCfg(Pmic_CoreHandle_t *handle, const Pmic_IrqCfg_t *irqCfg) {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     // Parameter validation
     if ((status == PMIC_ST_SUCCESS) && (irqCfg == NULL)) {
@@ -864,7 +864,7 @@ static int32_t IRQ_handleRecordsForRegConfig(Pmic_CoreHandle_t *handle,
 }
 
 int32_t Pmic_irqSetCfgs(Pmic_CoreHandle_t *handle, uint8_t numIrqs, const Pmic_IrqCfg_t *irqCfgs) {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t lastProcessed = 0U, totalProcessed = 0U;
 
     // Parameter validation
@@ -979,7 +979,7 @@ static inline int32_t IRQ_getCfg(Pmic_CoreHandle_t *handle, Pmic_IrqCfg_t *irqCf
 }
 
 int32_t Pmic_irqGetCfg(Pmic_CoreHandle_t *handle, Pmic_IrqCfg_t *irqCfg) {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (irqCfg == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
@@ -993,7 +993,7 @@ int32_t Pmic_irqGetCfg(Pmic_CoreHandle_t *handle, Pmic_IrqCfg_t *irqCfg) {
 }
 
 int32_t Pmic_irqGetCfgs(Pmic_CoreHandle_t *handle, uint8_t numIrqs, Pmic_IrqCfg_t *irqCfgs) {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (irqCfgs == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
@@ -1039,8 +1039,8 @@ static int32_t IRQ_getIrqStatForReg(Pmic_CoreHandle_t *handle, Pmic_IrqStat_t *i
     return status;
 }
 
-int32_t Pmic_irqGetStat(Pmic_CoreHandle_t *handle, Pmic_IrqStat_t *irqStat) {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+int32_t Pmic_irqGetStatus(Pmic_CoreHandle_t *handle, Pmic_IrqStat_t *irqStat) {
+    int32_t status = Pmic_checkHandle(handle);
 
     if ((status == PMIC_ST_SUCCESS) && (irqStat == NULL)) {
         status = PMIC_ST_ERR_NULL_PARAM;
@@ -1085,7 +1085,7 @@ int32_t Pmic_irqGetNextFlag(Pmic_IrqStat_t *irqStat, uint8_t *irqNum) {
 }
 
 int32_t Pmic_irqGetFlag(Pmic_CoreHandle_t *handle, uint8_t irqNum, bool *flag) {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (irqNum > PMIC_IRQ_MAX)) {
@@ -1112,7 +1112,7 @@ int32_t Pmic_irqGetFlag(Pmic_CoreHandle_t *handle, uint8_t irqNum, bool *flag) {
 }
 
 int32_t Pmic_irqClrFlag(Pmic_CoreHandle_t *handle, uint8_t irqNum) {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     uint8_t regData = 0U;
     uint8_t shift = 0U;
@@ -1148,7 +1148,7 @@ int32_t Pmic_irqClrFlag(Pmic_CoreHandle_t *handle, uint8_t irqNum) {
 }
 
 int32_t Pmic_irqClrAllFlags(Pmic_CoreHandle_t *handle) {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
     uint16_t reg = 0U;
 

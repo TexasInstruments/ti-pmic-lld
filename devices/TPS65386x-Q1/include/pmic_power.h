@@ -962,7 +962,7 @@ int32_t Pmic_pwrSetBuckBoostCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrBuckBoo
 
 /**
  * @brief Get PMIC Buck/Boost configurations. This API supports getting the same
- * configurations that are settable through Pmic_pwrSetBuckBoostCfg().
+ * configurations that are settable by `Pmic_pwrSetBuckBoostCfg()`.
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -1000,7 +1000,7 @@ int32_t Pmic_pwrSetLdoCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrLdoCfg_t *ldo
 
 /**
  * @brief Get PMIC LDO configurations. This API supports getting the same
- * configurations that are settable through Pmic_pwrSetLdoCfg().
+ * configurations that are settable by `Pmic_pwrSetLdoCfg()`.
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -1040,7 +1040,7 @@ int32_t Pmic_pwrSetPldoCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrPldoCfg_t *p
 
 /**
  * @brief Get PMIC PLDO configurations. This API supports getting the same
- * configurations that are settable through Pmic_pwrSetPldoCfg().
+ * configurations that are settable by `Pmic_pwrSetPldoCfg()`.
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -1072,8 +1072,8 @@ int32_t Pmic_pwrGetPldoCfg(Pmic_CoreHandle_t *handle, Pmic_PwrPldoCfg_t *pldoCfg
 int32_t Pmic_pwrSetExtVmonCfg(Pmic_CoreHandle_t *handle, const Pmic_PwrExtVmonCfg_t *extVmonCfg);
 
 /**
- * @brief Get PMIC external VMON configurations. This API supports getting the
- * same configurations that are settable through Pmic_pwrSetExtVmonCfg().
+ * @brief Get PMIC external VMON configurations. This API supports getting the same
+ * configurations that are settable by `Pmic_pwrSetExtVmonCfg()`.
  *
  * @param handle [IN] PMIC interface handle.
  *
@@ -1110,7 +1110,7 @@ int32_t Pmic_pwrGetExtVmonCfg(Pmic_CoreHandle_t *handle, Pmic_PwrExtVmonCfg_t *e
  * @return Success code if power resource statuses have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrGetRsrcStat(Pmic_CoreHandle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat);
+int32_t Pmic_pwrGetRsrcStatus(Pmic_CoreHandle_t *handle, Pmic_PwrRsrcStat_t *pwrRsrcStat);
 
 /**
  * @brief Clear PMIC power resource statuses.
@@ -1134,18 +1134,18 @@ int32_t Pmic_pwrGetRsrcStat(Pmic_CoreHandle_t *handle, Pmic_PwrRsrcStat_t *pwrRs
  * @return Success code if power resource statuses have been cleared, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrClrRsrcStat(Pmic_CoreHandle_t *handle, const Pmic_PwrRsrcStat_t *pwrRsrcStat);
+int32_t Pmic_pwrClrRsrcStatus(Pmic_CoreHandle_t *handle, const Pmic_PwrRsrcStat_t *pwrRsrcStat);
 
 /**
  * @brief Clear all PMIC power resource statuses. This API clears all statuses
- * that are clearable through Pmic_pwrClrRsrcStat().
+ * that are clearable through Pmic_pwrClrRsrcStatus().
  *
  * @param handle [IN] PMIC interface handle.
  *
  * @return Success code if all power resources have been cleared, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_ErrorCodes
  */
-int32_t Pmic_pwrClrRsrcStatAll(Pmic_CoreHandle_t *handle);
+int32_t Pmic_pwrClrRsrcStatusAll(Pmic_CoreHandle_t *handle);
 
 /**
  * @brief Enable or disable PGOOD from being active in STANDBY state.
@@ -1162,7 +1162,8 @@ int32_t Pmic_pwrClrRsrcStatAll(Pmic_CoreHandle_t *handle);
 int32_t Pmic_pwrSetPGoodInStby(Pmic_CoreHandle_t *handle, bool enable);
 
 /**
- * @brief Get PMIC PGOOD enable/disable in STANDBY state.
+ * @brief Clear all PMIC power resource statuses. This API clears all statuses that
+ * are clearable by `Pmic_pwrClrRsrcStatus()`.
  *
  * @param handle [IN] PMIC interface handle.
  *
