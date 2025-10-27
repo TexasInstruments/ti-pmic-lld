@@ -136,9 +136,7 @@ typedef struct Pmic_CoreCfg_s
 /* ========================================================================== */
 
 /**
- * @brief Initialize the PMIC interface handle and validate that the TPS65036x
- * PMIC is on the I2C bus. This API should be called before calling any other
- * TPS65036x LLD APIs.
+ * @brief Initialize a PMIC handle instance for PMIC LLD.
  *
  * @param pmicCfg [IN] PMIC handle configuration struct. End-user will input
  * their settings/parameters in this struct to initialize the PMIC handle.
@@ -151,8 +149,7 @@ typedef struct Pmic_CoreCfg_s
 int32_t Pmic_init(const Pmic_CoreCfg_t *pmicCfg, Pmic_CoreHandle_t *pmicHandle);
 
 /**
- * @brief De-initialize the PMIC interface handle when the end-user wants to
- * close communication with the PMIC.
+ * @brief De-initialize a PMIC handle instance.
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *

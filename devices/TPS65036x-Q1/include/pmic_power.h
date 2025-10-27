@@ -958,10 +958,8 @@ int32_t Pmic_pwrGetBuckCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckCfg_
 int32_t Pmic_pwrSetLdoCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg);
 
 /**
- * @brief Get PMIC LDO configurations. This "get" API supports obtaining the
- * same parameters that are settable through the "Set" API
- * (`Pmic_pwrSetLdoCfg`).
-
+ * @brief Get PMIC LDO configurations. This API supports getting the same
+ * configurations that are settable by `Pmic_pwrSetLdoCfg()`.
  *
  * @param pmicHandle [IN]  PMIC interface handle.
  * @param ldoCfg     [OUT] LDO configurations obtained from the PMIC.
@@ -988,7 +986,7 @@ int32_t Pmic_pwrGetLdoCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrLdoCfg_t 
  * @return Success code if PMIC power resource statuses have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrGetRsrcStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrRsrcStat_t *pwrRsrcStat);
+int32_t Pmic_pwrGetRsrcStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrRsrcStat_t *pwrRsrcStat);
 
 /**
  * @brief Set PMIC thermal shutdown configurations.
@@ -1008,9 +1006,8 @@ int32_t Pmic_pwrGetRsrcStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrRsrcSta
 int32_t Pmic_pwrSetTsdCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrTsdCfg_t *tsdCfg);
 
 /**
- * @brief Get PMIC thermal shutdown configurations. This "get" API supports
- * obtaining the same parameters that are settable through the "Set" API
- * (`Pmic_pwrSetTsdCfg`).
+ * @brief Get PMIC thermal shutdown configurations. This API supports getting the
+ * same configurations that are settable by `Pmic_pwrSetTsdCfg()`.
  *
  * @param pmicHandle [IN]  PMIC interface handle.
  * @param tsdCfg     [OUT] TSD configurations obtained from the PMIC.
@@ -1031,7 +1028,7 @@ int32_t Pmic_pwrGetTsdCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrTsdCfg_t 
  * @return Success code if the PMIC immediate TSD status has been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_pwrGetTsdImmStat(const Pmic_CoreHandle_t *pmicHandle, bool *tsdImmStat);
+int32_t Pmic_pwrGetTsdImmStatus(const Pmic_CoreHandle_t *pmicHandle, bool *tsdImmStat);
 
 /**
  * @brief Set PMIC buck and LDO sequence triggers.

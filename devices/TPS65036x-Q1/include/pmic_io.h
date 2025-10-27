@@ -69,9 +69,9 @@ extern "C" {
 int32_t Pmic_ioTxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t txData);
 
 /**
- * @brief Identical to Pmic_ioTxByte(), however, a critical section is started
- * before the read operation occurs. After the operation, the critical section
- * is stopped.
+ * @brief Write a byte to the given PMIC `regAddr`, performing CRC on communications
+ * if necessary and enabled. Additionally, obtain and release a critical section
+ * before/after the write.
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -102,9 +102,9 @@ int32_t Pmic_ioTxByte_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, u
 int32_t Pmic_ioRxByte(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t *rxData);
 
 /**
- * @brief Identical to Pmic_ioRxByte(), however, a critical section is started
- * before the read operation occurs. After the operation, the critical section
- * is stopped.
+ * @brief Read a byte from the given PMIC `regAddr`, extracting the desired register
+ * data from the CRC framed data returned by the PMIC. Additionally, obtain and
+ * release a critical section before/after the read.
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -176,7 +176,7 @@ int32_t Pmic_ioReadModifyWrite_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t r
     Pmic_ioReadModifyWrite((Pmic_CoreHandle_t*)pmicHandle, (uint8_t)regAddr, (uint8_t)(name##_SHIFT), (uint8_t)(name##_MASK), (uint8_t)value)
 
 /**
- * @brief Identical to Pmic_ioReadModifyWrite_CS() API, but only the name of the
+ * @brief Identical to `Pmic_ioReadModifyWrite_CS()` API, but only the name of the
  * bit field needs to be specified (case-sensitive).
  *
  * @param pmicHandle [IN] PMIC interface handle.
@@ -211,9 +211,9 @@ int32_t Pmic_ioReadModifyWrite_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t r
 int32_t Pmic_ioReadModifyWrite_b(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value);
 
 /**
- * @brief Identical to Pmic_ioReadModifyWrite_b() API but starts a critical
- * section before the read, modify, and write operations. Afterwards, the
- * critical section is stopped.
+ * @brief Identical to `Pmic_ioReadModifyWrite_b()` API but starts a critical
+ * section before the read, modify, and write operations. Afterwards, the critical
+ * section is stopped.
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *

@@ -478,9 +478,8 @@ int32_t Pmic_getPwrOn(const Pmic_CoreHandle_t *pmicHandle, bool *pwrOnStat);
 int32_t Pmic_setLpmCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_CoreLpmCfg_t *lpmCfg);
 
 /**
- * @brief Get PMIC low power mode configurations. This "get" API supports
- * obtaining the same parameters that are settable through the "Set" API
- * (`Pmic_setLpmCfg`).
+ * @brief Get PMIC low power mode configurations. This API supports getting the same
+ * configurations that are settable by `Pmic_setLpmCfg()`.
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *

@@ -602,7 +602,7 @@ static int32_t PWR_getBuck1Uvlo(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuc
 
 int32_t Pmic_pwrGetBuckCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckCfg_t *buckCfg)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     if ((status == PMIC_ST_SUCCESS) && (buckCfg == NULL))
     {
@@ -1463,7 +1463,7 @@ static int32_t PWR_setBuck1Uvlo(const Pmic_CoreHandle_t *pmicHandle, const Pmic_
 
 int32_t Pmic_pwrSetBuckCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckCfg_t *buckCfg)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     if ((status == PMIC_ST_SUCCESS) && (buckCfg == NULL))
     {
@@ -1743,7 +1743,7 @@ static int32_t PWR_getLdoFaultResponses(const Pmic_CoreHandle_t *pmicHandle, Pmi
 
 int32_t Pmic_pwrGetLdoCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrLdoCfg_t *ldoCfg)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     if ((status == PMIC_ST_SUCCESS) && (ldoCfg == NULL))
     {
@@ -2143,7 +2143,7 @@ static int32_t PWR_setLdoFaultResponses(const Pmic_CoreHandle_t *pmicHandle, con
 
 int32_t Pmic_pwrSetLdoCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrLdoCfg_t *ldoCfg)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     if ((status == PMIC_ST_SUCCESS) && (ldoCfg == NULL))
     {
@@ -2290,9 +2290,9 @@ static int32_t PWR_getStatBuck3Ldo(const Pmic_CoreHandle_t *pmicHandle, Pmic_Pwr
     return status;
 }
 
-int32_t Pmic_pwrGetRsrcStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
+int32_t Pmic_pwrGetRsrcStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrRsrcStat_t *pwrRsrcStat)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     if ((status == PMIC_ST_SUCCESS) && (pwrRsrcStat == NULL))
     {
@@ -2330,7 +2330,7 @@ int32_t Pmic_pwrGetRsrcStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrRsrcSta
 int32_t Pmic_pwrSetTsdCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrTsdCfg_t *tsdCfg)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
     const uint32_t config1ValidParam = PMIC_TWARN_STAY_IN_SAFE_STATE_VALID |
         PMIC_TSD_IMM_LEVEL_VALID | PMIC_TWARN_LEVEL_VALID;
 
@@ -2396,7 +2396,7 @@ int32_t Pmic_pwrSetTsdCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrTsd
 int32_t Pmic_pwrGetTsdCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrTsdCfg_t *tsdCfg)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
     const uint32_t config1ValidParam = PMIC_TWARN_STAY_IN_SAFE_STATE_VALID |
         PMIC_TSD_IMM_LEVEL_VALID | PMIC_TWARN_LEVEL_VALID;
 
@@ -2440,10 +2440,10 @@ int32_t Pmic_pwrGetTsdCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrTsdCfg_t 
     return status;
 }
 
-int32_t Pmic_pwrGetTsdImmStat(const Pmic_CoreHandle_t *pmicHandle, bool *tsdImmStat)
+int32_t Pmic_pwrGetTsdImmStatus(const Pmic_CoreHandle_t *pmicHandle, bool *tsdImmStat)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     if ((status == PMIC_ST_SUCCESS) && (tsdImmStat == NULL))
     {
@@ -2506,7 +2506,7 @@ int32_t Pmic_pwrGetBuckLdoSeqTrig(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrB
 {
     const uint8_t maxSeqTrigBitPos = 5U;
     uint8_t regData = 0U, pwrRsrc = 0U, bitPos = 0U, regAddr = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     if ((status == PMIC_ST_SUCCESS) && (seqTrigCfg == NULL))
     {
@@ -2567,7 +2567,7 @@ int32_t Pmic_pwrSetBuckLdoSeqTrig(const Pmic_CoreHandle_t *pmicHandle, const Pmi
 {
     const uint8_t maxSeqTrigBitPos = 5U;
     uint8_t regData = 0U, pwrRsrc = 0U, bitPos = 0U, regAddr = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     if ((status == PMIC_ST_SUCCESS) && (seqTrigCfg == NULL))
     {
@@ -2660,7 +2660,7 @@ static inline void PWR_getSeqDlyReg(uint8_t pwrRsrc, uint8_t *regAddr)
 int32_t Pmic_pwrGetBuckLdoSeqDly(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[], uint8_t len)
 {
     uint8_t regData = 0U, regAddr = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     if ((status == PMIC_ST_SUCCESS) && (seqDlyCfg == NULL))
     {
@@ -2716,7 +2716,7 @@ int32_t Pmic_pwrGetBuckLdoSeqDly(const Pmic_CoreHandle_t *pmicHandle, Pmic_PwrBu
 int32_t Pmic_pwrSetBuckLdoSeqDly(const Pmic_CoreHandle_t *pmicHandle, const Pmic_PwrBuckLdoSeqDly_t seqDlyCfg[], uint8_t len)
 {
     uint8_t regData = 0U, regAddr = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     if ((status == PMIC_ST_SUCCESS) && (seqDlyCfg == NULL))
     {

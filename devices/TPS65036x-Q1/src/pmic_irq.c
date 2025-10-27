@@ -483,7 +483,7 @@ static int32_t IRQ_handleRecordsForReg(Pmic_CoreHandle_t *handle,
 }
 
 int32_t Pmic_irqSetMask(Pmic_CoreHandle_t *handle, uint8_t irqNum, bool shouldMask) {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     if (status == PMIC_ST_SUCCESS) {
         status = IRQ_setMask(handle, irqNum, shouldMask);
@@ -493,7 +493,7 @@ int32_t Pmic_irqSetMask(Pmic_CoreHandle_t *handle, uint8_t irqNum, bool shouldMa
 }
 
 int32_t Pmic_irqSetMasks(Pmic_CoreHandle_t *handle, uint8_t numMasks, const Pmic_IrqMask_t *masks) {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint32_t totalProcessed = 0U;
     uint8_t lastProcessed = 0U;
 
@@ -521,7 +521,7 @@ int32_t Pmic_irqSetMasks(Pmic_CoreHandle_t *handle, uint8_t numMasks, const Pmic
 }
 
 int32_t Pmic_irqGetMask(Pmic_CoreHandle_t *handle, uint8_t numIrqMasks, Pmic_IrqMask_t *irqMasks) {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
 
     if ((status == PMIC_ST_SUCCESS) && (irqMasks == NULL)) {
@@ -884,7 +884,7 @@ static int32_t IRQ_readL0(const Pmic_CoreHandle_t *pmicHandle, Pmic_IrqStat_t *i
 
 int32_t Pmic_irqGetStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_IrqStat_t *irqStat)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     if ((status == PMIC_ST_SUCCESS) && (irqStat == NULL))
     {
@@ -969,7 +969,7 @@ int32_t Pmic_irqGetNextFlag(Pmic_IrqStat_t *irqStat, uint8_t *irqNum)
 int32_t Pmic_irqGetFlag(const Pmic_CoreHandle_t *pmicHandle, uint8_t irqNum, bool *flag)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     if ((status == PMIC_ST_SUCCESS) && (irqNum > PMIC_IRQ_MAX))
     {
@@ -999,7 +999,7 @@ int32_t Pmic_irqGetFlag(const Pmic_CoreHandle_t *pmicHandle, uint8_t irqNum, boo
 int32_t Pmic_irqClrFlag(const Pmic_CoreHandle_t *pmicHandle, uint8_t irqNum)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     if ((status == PMIC_ST_SUCCESS) && (irqNum > PMIC_IRQ_MAX))
     {
@@ -1019,7 +1019,7 @@ int32_t Pmic_irqClrFlag(const Pmic_CoreHandle_t *pmicHandle, uint8_t irqNum)
 }
 
 int32_t Pmic_irqClrAllFlags(const Pmic_CoreHandle_t *handle) {
-    int32_t status = Pmic_checkPmicCoreHandle(handle);
+    int32_t status = Pmic_checkHandle(handle);
 
     // All IRQ statuses are W1C, writing to reserved bits has no effect, so just
     // write every bit to 1

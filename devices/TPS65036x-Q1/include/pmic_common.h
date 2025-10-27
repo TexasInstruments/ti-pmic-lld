@@ -184,14 +184,17 @@ typedef struct Pmic_CoreHandle_s
 /* ========================================================================== */
 
 /**
- * @brief Check whether the PMIC handle is valid.
+ * @brief Validate a PMIC handle instance for proper initialization and
+ * construction. Utilized by all public LLD APIs that accept a handle as input
+ * parameter to help prevent corrupt handle usage. Can be used in the application
+ * layer to check the handle independently.
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
  * @return Success code if the PMIC handle is valid, error code otherwise. For
  * valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_checkPmicCoreHandle(const Pmic_CoreHandle_t *pmicHandle);
+int32_t Pmic_checkHandle(const Pmic_CoreHandle_t *pmicHandle);
 
 /**
  * @brief Check whether a validParam is set.

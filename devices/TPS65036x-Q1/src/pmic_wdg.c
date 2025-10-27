@@ -47,7 +47,7 @@
 int32_t Pmic_wdgSendSwTrigger(const Pmic_CoreHandle_t *pmicHandle)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     // Read RECOV_CNT_CONTROL register
     Pmic_criticalSectionStart(pmicHandle);
@@ -125,10 +125,10 @@ static uint8_t WDG_getAnswerByte(uint8_t question, uint8_t qaAnsCnt, uint8_t qaF
     return qaAns;
 }
 
-int32_t Pmic_wdgWriteAnswer(const Pmic_CoreHandle_t *pmicHandle)
+int32_t Pmic_wdgQaWriteAnswer(const Pmic_CoreHandle_t *pmicHandle)
 {
     uint8_t regData = 0U, qaFdbk = 0U, qaAnsCnt = 0U, question = 0U, intTopStatus = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     // Get the Q&A feedback value
     if (status == PMIC_ST_SUCCESS)
@@ -171,10 +171,10 @@ int32_t Pmic_wdgWriteAnswer(const Pmic_CoreHandle_t *pmicHandle)
     return status;
 }
 
-int32_t Pmic_wdgSetPwrHold(const Pmic_CoreHandle_t *pmicHandle, bool pwrHold)
+int32_t Pmic_wdgSetPowerHold(const Pmic_CoreHandle_t *pmicHandle, bool pwrHold)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     // Read WD_MODE_REG register
     Pmic_criticalSectionStart(pmicHandle);
@@ -195,10 +195,10 @@ int32_t Pmic_wdgSetPwrHold(const Pmic_CoreHandle_t *pmicHandle, bool pwrHold)
     return status;
 }
 
-int32_t Pmic_wdgGetPwrHold(const Pmic_CoreHandle_t *pmicHandle, bool *pwrHoldStat)
+int32_t Pmic_wdgGetPowerHold(const Pmic_CoreHandle_t *pmicHandle, bool *pwrHoldStat)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     if ((status == PMIC_ST_SUCCESS) && (pwrHoldStat == NULL))
     {
@@ -220,10 +220,10 @@ int32_t Pmic_wdgGetPwrHold(const Pmic_CoreHandle_t *pmicHandle, bool *pwrHoldSta
     return status;
 }
 
-int32_t Pmic_wdgSetRetLongWin(const Pmic_CoreHandle_t *pmicHandle, bool retLongWin)
+int32_t Pmic_wdgSetReturnToLongWindow(const Pmic_CoreHandle_t *pmicHandle, bool retLongWin)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     // Read WD_MODE_REG register
     Pmic_criticalSectionStart(pmicHandle);
@@ -244,10 +244,10 @@ int32_t Pmic_wdgSetRetLongWin(const Pmic_CoreHandle_t *pmicHandle, bool retLongW
     return status;
 }
 
-int32_t Pmic_wdgGetRetLongWin(const Pmic_CoreHandle_t *pmicHandle, bool *retLongWinStat)
+int32_t Pmic_wdgGetReturnToLongWindow(const Pmic_CoreHandle_t *pmicHandle, bool *retLongWinStat)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     if ((status == PMIC_ST_SUCCESS) && (retLongWinStat == NULL))
     {
@@ -511,7 +511,7 @@ static int32_t WDG_setWindowTimeIntervals(const Pmic_CoreHandle_t *pmicHandle, c
 
 int32_t Pmic_wdgSetCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgCfg_t *wdgCfg)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     if ((status == PMIC_ST_SUCCESS) && (wdgCfg == NULL))
     {
@@ -550,10 +550,10 @@ int32_t Pmic_wdgSetCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgCfg_t 
     return status;
 }
 
-int32_t Pmic_wdgGetEnable(const Pmic_CoreHandle_t *pmicHandle, bool *wdgEnabled)
+int32_t Pmic_wdgGetEnableState(const Pmic_CoreHandle_t *pmicHandle, bool *wdgEnabled)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     if ((status == PMIC_ST_SUCCESS) && (wdgEnabled == NULL))
     {
@@ -578,7 +578,7 @@ int32_t Pmic_wdgGetEnable(const Pmic_CoreHandle_t *pmicHandle, bool *wdgEnabled)
 int32_t Pmic_wdgSetEnableState(const Pmic_CoreHandle_t *pmicHandle, bool enable)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     // Read WD_ENABLE_REG register
     Pmic_criticalSectionStart(pmicHandle);
@@ -764,7 +764,7 @@ static int32_t WDG_getWindowTimeIntervals(const Pmic_CoreHandle_t *pmicHandle, P
 
 int32_t Pmic_wdgGetCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgCfg_t *wdgCfg)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     if ((status == PMIC_ST_SUCCESS) && (wdgCfg == NULL))
     {
@@ -803,9 +803,9 @@ int32_t Pmic_wdgGetCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgCfg_t *wdgCf
     return status;
 }
 
-int32_t Pmic_wdgClrErrStatAll(const Pmic_CoreHandle_t *pmicHandle)
+int32_t Pmic_wdgClrErrStatusAll(const Pmic_CoreHandle_t *pmicHandle)
 {
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     // Bits of WD_ERR_STATUS register are W1C - write 1 to clear
     if (status == PMIC_ST_SUCCESS)
@@ -819,7 +819,7 @@ int32_t Pmic_wdgClrErrStatAll(const Pmic_CoreHandle_t *pmicHandle)
 int32_t Pmic_wdgClrErrStat(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgErrStat_t *wdgErrStat)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     if ((status == PMIC_ST_SUCCESS) && (wdgErrStat == NULL))
     {
@@ -883,10 +883,10 @@ int32_t Pmic_wdgClrErrStat(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgEr
     return status;
 }
 
-int32_t Pmic_wdgGetErrStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgErrStat_t *wdgErrStat)
+int32_t Pmic_wdgGetErrStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgErrStat_t *wdgErrStat)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     if ((status == PMIC_ST_SUCCESS) && (wdgErrStat == NULL))
     {
@@ -952,10 +952,10 @@ int32_t Pmic_wdgGetErrStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgErrStat_
     return status;
 }
 
-int32_t Pmic_wdgGetFailCntStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgFailCntStat_t *wdgFailCntStat)
+int32_t Pmic_wdgGetFailCntStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgFailCntStat_t *wdgFailCntStat)
 {
     uint8_t regData = 0U;
-    int32_t status = Pmic_checkPmicCoreHandle(pmicHandle);
+    int32_t status = Pmic_checkHandle(pmicHandle);
 
     if ((status == PMIC_ST_SUCCESS) && (wdgFailCntStat == NULL))
     {

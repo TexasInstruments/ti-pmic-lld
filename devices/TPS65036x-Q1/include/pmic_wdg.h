@@ -226,7 +226,7 @@ extern "C" {
  * @brief Struct used to write/read PMIC watchdog configurations.
  *
  * @attention In order to set watchdog configurations, the watchdog must be
- * enabled and in the Long Window. Please see `Pmic_wdgSetRetLongWin()` for
+ * enabled and in the Long Window. Please see `Pmic_wdgSetReturnToLongWindow()` for
  * how to return to Long Window and `Pmic_wdgEnable()` for enabling watchdog.
  *
  * @param validParams Each bit in this variable represents whether a struct member
@@ -364,8 +364,8 @@ typedef struct Pmic_WdgFailCntStat_s
 /* ========================================================================== */
 
 /**
- * @brief Enable or disable the PMIC watchdog. End-user could utilize this API
- * as an alternative to `Pmic_wdgEnable()` and `Pmic_wdgDisable()`.
+ * @brief Enable or disable the PMIC watchdog. This API is a superset of
+ * `Pmic_wdgEnable()` and `Pmic_wdgDisable()`.
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -378,8 +378,7 @@ typedef struct Pmic_WdgFailCntStat_s
 int32_t Pmic_wdgSetEnableState(const Pmic_CoreHandle_t *pmicHandle, bool enable);
 
 /**
- * @brief Enable the PMIC watchdog. End-user should call this API before
- * setting watchdog configurations.
+ * @brief Enable PMIC watchdog. This API is a subset of `Pmic_wdgSetEnableState()`.
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -389,7 +388,7 @@ int32_t Pmic_wdgSetEnableState(const Pmic_CoreHandle_t *pmicHandle, bool enable)
 int32_t Pmic_wdgEnable(const Pmic_CoreHandle_t *pmicHandle);
 
 /**
- * @brief Disable the PMIC watchdog.
+ * @brief Disable PMIC watchdog. This API is a subset of `Pmic_wdgSetEnableState()`.
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -399,7 +398,7 @@ int32_t Pmic_wdgEnable(const Pmic_CoreHandle_t *pmicHandle);
 int32_t Pmic_wdgDisable(const Pmic_CoreHandle_t *pmicHandle);
 
 /**
- * @brief Get the enable status of the PMIC watchdog.
+ * @brief Get the enable state of the PMIC watchdog.
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -409,7 +408,7 @@ int32_t Pmic_wdgDisable(const Pmic_CoreHandle_t *pmicHandle);
  * @return Success code if the PMIC watchdog enable status has been obtained,
  * error code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_wdgGetEnable(const Pmic_CoreHandle_t *pmicHandle, bool *wdgEnabled);
+int32_t Pmic_wdgGetEnableState(const Pmic_CoreHandle_t *pmicHandle, bool *wdgEnabled);
 
 /**
  * @brief Set PMIC watchdog configurations.
@@ -429,7 +428,7 @@ int32_t Pmic_wdgGetEnable(const Pmic_CoreHandle_t *pmicHandle, bool *wdgEnabled)
  * For more information on watchdog configurations, refer to @ref Pmic_WdgCfg.
  *
  * @attention Watchdog must be in Long Window and enabled before configuration.
- * See `Pmic_wdgEnable()` and `Pmic_wdgSetRetLongWin()` for more information.
+ * See `Pmic_wdgEnable()` and `Pmic_wdgSetReturnToLongWindow()` for more information.
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -441,8 +440,8 @@ int32_t Pmic_wdgGetEnable(const Pmic_CoreHandle_t *pmicHandle, bool *wdgEnabled)
 int32_t Pmic_wdgSetCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgCfg_t *wdgCfg);
 
 /**
- * @brief Get PMIC watchdog configurations. This "get" API supports obtaining
- * the same parameters that are settable through the "Set" API (`Pmic_wdgSetCfg`).
+ * @brief Get PMIC watchdog configurations. This API supports getting the same
+ * configurations that are settable by `Pmic_wdgSetCfg()`.
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -454,7 +453,8 @@ int32_t Pmic_wdgSetCfg(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgCfg_t 
 int32_t Pmic_wdgGetCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgCfg_t *wdgCfg);
 
 /**
- * @brief Set the PMIC WD_PWRHOLD bit.
+ * @brief Enable/disable WDG Power Hold, which controls whether WDG stays in Long-
+ * Window.
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -465,10 +465,11 @@ int32_t Pmic_wdgGetCfg(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgCfg_t *wdgCf
  * @return Success code the WD_PWRHOLD bit is set, error code otherwise.
  * For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_wdgSetPwrHold(const Pmic_CoreHandle_t *pmicHandle, bool pwrHold);
+int32_t Pmic_wdgSetPowerHold(const Pmic_CoreHandle_t *pmicHandle, bool pwrHold);
 
 /**
- * @brief Get the status of the PMIC WD_PWRHOLD bit.
+ * @brief Get the WDG Power Hold enable/disable state, which indicates whether WDG
+ * stays in Long-Window.
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -478,10 +479,11 @@ int32_t Pmic_wdgSetPwrHold(const Pmic_CoreHandle_t *pmicHandle, bool pwrHold);
  * @return Success code if the status of WD_PWRHOLD has been obtained, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_wdgGetPwrHold(const Pmic_CoreHandle_t *pmicHandle, bool *pwrHoldStat);
+int32_t Pmic_wdgGetPowerHold(const Pmic_CoreHandle_t *pmicHandle, bool *pwrHoldStat);
 
 /**
- * @brief Set the PMIC WD_RETURN_LONGWIN bit.
+ * @brief Enable/disable WDG Return to Long-Window, which controls whether WDG
+ * returns to Long-Window at the end of the current sequence.
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -493,10 +495,11 @@ int32_t Pmic_wdgGetPwrHold(const Pmic_CoreHandle_t *pmicHandle, bool *pwrHoldSta
  * @return Success code if WD_RETURN_LONGWIN bit is set, error code otherwise.
  * For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_wdgSetRetLongWin(const Pmic_CoreHandle_t *pmicHandle, bool retLongWin);
+int32_t Pmic_wdgSetReturnToLongWindow(const Pmic_CoreHandle_t *pmicHandle, bool retLongWin);
 
 /**
- * @brief Get the status of the PMIC WD_RETURN_LONGWIN bit.
+ * @brief Get WDG Return to Long-Window enable/disable state, which indicates
+ * whether WDG will return to Long-Window at the end of the current sequence.
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -506,7 +509,7 @@ int32_t Pmic_wdgSetRetLongWin(const Pmic_CoreHandle_t *pmicHandle, bool retLongW
  * @return success code if the status of WD_RETURN_LONGWIN has been obtained,
  * error code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_wdgGetRetLongWin(const Pmic_CoreHandle_t *pmicHandle, bool *retLongWinStat);
+int32_t Pmic_wdgGetReturnToLongWindow(const Pmic_CoreHandle_t *pmicHandle, bool *retLongWinStat);
 
 /**
  * @brief Send a software trigger to the PMIC watchdog.
@@ -529,7 +532,7 @@ int32_t Pmic_wdgGetRetLongWin(const Pmic_CoreHandle_t *pmicHandle, bool *retLong
 int32_t Pmic_wdgSendSwTrigger(const Pmic_CoreHandle_t *pmicHandle);
 
 /**
- * @brief Send a Q&A answer byte to the PMIC watchdog.
+ * @brief Calculate and send a WDG Q&A answer byte to the PMIC.
  *
  * @details When the watchdog is operating in Q&A mode, the API should be called
  * four times in Long Window to exit Long Window. For every Q&A sequence thereafter,
@@ -544,7 +547,7 @@ int32_t Pmic_wdgSendSwTrigger(const Pmic_CoreHandle_t *pmicHandle);
  * @return Success code if Q&A answer byte has been sent to the PMIC, error code
  * otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_wdgWriteAnswer(const Pmic_CoreHandle_t *pmicHandle);
+int32_t Pmic_wdgQaWriteAnswer(const Pmic_CoreHandle_t *pmicHandle);
 
 /**
  * @brief Clear PMIC watchdog error statuses.
@@ -582,8 +585,9 @@ int32_t Pmic_wdgWriteAnswer(const Pmic_CoreHandle_t *pmicHandle);
 int32_t Pmic_wdgClrErrStat(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgErrStat_t *wdgErrStat);
 
 /**
- * @brief Clear all PMIC watchdog error statuses. For the statuses that are
- * cleared by this API, see Pmic_wdgClrErrStat().
+ * @brief Clear all PMIC watchdog error statuses. Provided as a convenience,
+ * however, it is recommended to process watchdog statuses via
+ * `Pmic_wdgGetErrStatusus()` and `Pmic_wdgClrErrStatus()` APIs.
  *
  * @attention If end-user calls this API without addressing the root cause of the
  * watchdog error statuses, the statuses could continue to be set after API call.
@@ -595,11 +599,10 @@ int32_t Pmic_wdgClrErrStat(const Pmic_CoreHandle_t *pmicHandle, const Pmic_WdgEr
  * @return Success code if all watchdog error statuses have been cleared, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_wdgClrErrStatAll(const Pmic_CoreHandle_t *pmicHandle);
+int32_t Pmic_wdgClrErrStatusAll(const Pmic_CoreHandle_t *pmicHandle);
 
 /**
- * @brief Get PMIC watchdog error statuses. This "get" API supports obtaining
- * the same statuses that are clearable by Pmic_wdgClrErrStat().
+ * @brief Get PMIC watchdog error statuses.
  *
  * @param pmicHandle [IN] PMIC interface handle.
  *
@@ -608,7 +611,7 @@ int32_t Pmic_wdgClrErrStatAll(const Pmic_CoreHandle_t *pmicHandle);
  * @return Success code if watchdog error status(es) have been obtained, error
  * code otherwise. For valid success/error codes, refer to @ref Pmic_errorCodes.
  */
-int32_t Pmic_wdgGetErrStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgErrStat_t *wdgErrStat);
+int32_t Pmic_wdgGetErrStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgErrStat_t *wdgErrStat);
 
 /**
  * @brief Get PMIC watchdog fail counter statuses.
@@ -629,7 +632,7 @@ int32_t Pmic_wdgGetErrStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgErrStat_
  * obtained, error code otherwise. For valid success/error codes, refer to
  * @ref Pmic_errorCodes.
  */
-int32_t Pmic_wdgGetFailCntStat(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgFailCntStat_t *wdgFailCntStat);
+int32_t Pmic_wdgGetFailCntStatus(const Pmic_CoreHandle_t *pmicHandle, Pmic_WdgFailCntStat_t *wdgFailCntStat);
 
 #ifdef __cplusplus
 }
