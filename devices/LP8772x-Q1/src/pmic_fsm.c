@@ -70,7 +70,7 @@ static inline bool FSM_assertMcuCommandValid(uint8_t cmd)
     return commandValid;
 }
 
-int32_t Pmic_fsmMcuCommand(Pmic_CoreHandle_t *handle, uint8_t cmd)
+int32_t Pmic_fsmSetDevState(Pmic_CoreHandle_t *handle, uint8_t cmd)
 {
     int32_t status = Pmic_checkHandle(handle);
 

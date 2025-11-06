@@ -93,7 +93,7 @@ extern "C" {
 /* ========================================================================== */
 /**
  * @ingroup DRV_PMIC_FSM_CONFIG_GROUP
- * @brief Send MCU command request for a PMIC FSM state transition.
+ * @brief Set desired PMIC device state.
  *
  * @param handle [IN] PMIC Interface Handle
  * @param cmd    [IN] Command request to perform, see @ref Pmic_FsmMcuCommands.
@@ -101,7 +101,7 @@ extern "C" {
  * @return PMIC_ST_SUCCESS in case of success or appropriate error code. For
  * possible values @ref Pmic_ErrorCodes
  */
-int32_t Pmic_fsmMcuCommand(Pmic_CoreHandle_t *handle, uint8_t cmd);
+int32_t Pmic_fsmSetDevState(Pmic_CoreHandle_t *handle, uint8_t cmd);
 
 /**
  * @ingroup DRV_PMIC_FSM_CONFIG_GROUP

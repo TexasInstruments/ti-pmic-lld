@@ -225,6 +225,48 @@ int32_t Pmic_ioTxByte_CS(Pmic_CoreHandle_t *handle, uint16_t regAddr, uint8_t tx
     return status;
 }
 
+int32_t Pmic_ioReadModifyWrite(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value)
+{
+    uint8_t regData = 0U;
+    int32_t status = Pmic_ioRxByte(pmicHandle, regAddr, &regData);
+
+    if (status == PMIC_ST_SUCCESS)
+    {
+        Pmic_setBitField(&regData, shift, mask, value);
+
+        status = Pmic_ioTxByte(pmicHandle, regAddr, regData);
+    }
+
+    return status;
+}
+
+int32_t Pmic_ioReadModifyWrite_CS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, uint8_t mask, uint8_t value)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    Pmic_criticalSectionStart(pmicHandle);
+    status = Pmic_ioReadModifyWrite(pmicHandle, regAddr, shift, mask, value);
+    Pmic_criticalSectionStop(pmicHandle);
+
+    return status;
+}
+
+int32_t Pmic_ioReadModifyWrite_b(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value)
+{
+    return Pmic_ioReadModifyWrite(pmicHandle, regAddr, shift, 1U << shift, value ? 1U : 0U);
+}
+
+int32_t Pmic_ioReadModifyWrite_bCS(const Pmic_CoreHandle_t *pmicHandle, uint8_t regAddr, uint8_t shift, bool value)
+{
+    int32_t status = PMIC_ST_SUCCESS;
+
+    Pmic_criticalSectionStart(pmicHandle);
+    status = Pmic_ioReadModifyWrite_b(pmicHandle, regAddr, shift, value);
+    Pmic_criticalSectionStop(pmicHandle);
+
+    return status;
+}
+
 int32_t Pmic_ioGetCrcEnableState(Pmic_CoreHandle_t *handle, bool *isEnabled) {
     int32_t status = Pmic_checkHandle(handle);
     uint8_t regData = 0U;
