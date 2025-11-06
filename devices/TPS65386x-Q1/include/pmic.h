@@ -387,7 +387,8 @@ typedef struct Pmic_CoreCfg_s {
 /*==========================================================================*/
 /**
  * @ingroup DRV_PMIC_MODULE
- * @brief Initialize a PMIC handle instance for PMIC LLD.
+ * @brief Initialize a PMIC handle instance for PMIC LLD. Reads the PMIC device
+ * for information and stores obtained data in the handle instance.
  *
  * @param handle  [OUT] PMIC Interface Handle
  * @param coreCfg [IN]  PMIC Configuration Data
